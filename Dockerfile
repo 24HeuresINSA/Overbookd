@@ -1,11 +1,13 @@
-FROM node
-
-WORKDIR /assomaker
-
-COPY . .
-
+# build stage
+FROM node:lts-alpine as build-stage
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
+COPY . .
+RUN npm run build
 
-EXPOSE 1234
-
-CMD ["nmp", "run", "serve"]
+# production stage
+FROM nginx:stable-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
