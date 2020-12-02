@@ -25,7 +25,7 @@ let HTTP_tmp = axios.create({
   // For json-server interaction
   // baseURL: `http://localhost:3000/`
   // For back-end interaction
-  baseURL: "http://localhost:2424/"
+  baseURL: config.host
 });
 
 HTTP_tmp.interceptors.request.use(
