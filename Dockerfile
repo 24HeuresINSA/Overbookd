@@ -1,13 +1,16 @@
-# build stage
-FROM node:lts-alpine as build-stage
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
+FROM node:lts-alpine
 
-# production stage
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /assomaker
+
+COPY . .
+
+RUN npm ci\
+    && npm run build\
+    && find . -maxdepth 1 ! -name 'dist' -type f -exec rm -r {} +\
+    && find . -maxdepth 1 ! -name 'dist' ! -name '.' ! -name '..' -type d -exec rm -r {} +\
+    && npm install serve
+
+
+EXPOSE 1234
+
+CMD ["./node_modules/.bin/serve", "--single", "--listen", "1234", "dist"]
