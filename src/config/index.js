@@ -1,5 +1,5 @@
 const config = {
-  host: "http://localhost:1234/",
+  host: "http://localhost:2424/",
   hostAuth: "http://keycloak:8180/",
   locale: "fr"
 };
