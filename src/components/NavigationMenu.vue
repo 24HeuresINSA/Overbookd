@@ -144,7 +144,7 @@ export default {
     items: []
   }),
   created() {
-    this.roles = jwt_decode(localStorage.refreshToken).realm_access.roles;
+    this.roles = jwt_decode(localStorage.accessToken).realm_access.roles;
     this.items = this.itemsBeforeRoleFiltering
       .map(item => {
         let itemTmp = null;
