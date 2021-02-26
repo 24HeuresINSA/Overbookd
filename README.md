@@ -1,11 +1,20 @@
-Pour installer l'appweb : 
-`npm install`.
+# frontend
 
-Pour lancer l'appweb : 
-`npm run serve`. Cette commande lance le serveur de dev avec le hot-reload. 
+## Build Setup
 
-Pour build le projet et le minifier : 
-`npm run build`, cette commande compile le projet dans le dossier `/dist`.
-Pour lancer le projet, on utilise encore [pm2](https://pm2.keymetrics.io/) :
-`pm2 start serve.sh`. Le fichier `serve.sh` lance la commande `serve --single --listen 3500 dist`. 
-`serve` permet de servir un dossier donné en argument, ici `dist`, sur le port 3500.
+```bash
+# install dependencies
+$ npm install
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm run start
+
+# generate static project
+$ npm run generate
+```
+
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
