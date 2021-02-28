@@ -1,0 +1,12 @@
+{
+  "HOST": "http://localhost:2424/",
+
+  "KEYCLOAK": {
+    "BASE_URL": "http://keycloak:8180/",
+    "GET_TOKEN": "auth/realms/project_a/protocol/openid-connect/token/"
+  },
+
+  "BACKEND": {
+    "BASE_URL": "http://localhost:3000/"
+  }
+}
