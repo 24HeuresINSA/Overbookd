@@ -1,0 +1,61 @@
+<template>
+  <v-form>
+    <v-container>
+      <v-row>
+        <v-text-field
+          v-model="credentials.username"
+          label="username"
+          type="text"
+          required
+          autofocus
+        ></v-text-field>
+      </v-row>
+      <v-row>
+        <v-text-field
+          v-model="credentials.password"
+          label="password"
+          type="password"
+          required
+        ></v-text-field>
+      </v-row>
+    </v-container>
+    <v-btn color="primary" elevation="2" href="/signup">signup</v-btn>
+    <v-btn color="secondary" elevation="2" @click="login()">login</v-btn>
+  </v-form>
+</template>
+
+<script>
+import AuthenticationService from "~/plugins/AuthenticationService.ts";
+
+export default {
+  name: "login",
+  auth: false,
+  data: () => ({
+    credentials: {
+      username: undefined,
+      password: undefined,
+    },
+    error: "",
+    valid: false,
+    toast: {
+      snackbar: false,
+      timeout: 2000,
+    },
+    auth: new AuthenticationService(),
+  }),
+
+  methods: {
+    login: async function () {
+      try {
+        await this.auth.login(this.credentials);
+        console.log("yes");
+      } catch (e) {
+        console.log("an error has occurred");
+        this.toast.snackbar = true;
+      }
+    },
+  },
+};
+</script>
+
+<style scoped></style>

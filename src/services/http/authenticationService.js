@@ -8,7 +8,7 @@ export default class AuthenticationRequest {
       username: login.username,
       password: login.password,
       grant_type: "password",
-      client_id: "project_a_web"
+      client_id: "project_a_web",
     });
     return HTTPAUTH.post(
       `auth/realms/project_a/protocol/openid-connect/token`,
