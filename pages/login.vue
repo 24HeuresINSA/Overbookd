@@ -41,17 +41,16 @@ export default {
       snackbar: false,
       timeout: 2000,
     },
-    auth: new AuthenticationService(),
   }),
 
   methods: {
     login: async function () {
       try {
-        await this.auth.login(this.credentials);
-        console.log("yes");
+        await this.$auth.login("keycloak", this.credentials);
+        await this.$nuxt.$router.push("/");
       } catch (e) {
         console.log("an error has occurred");
-        this.toast.snackbar = true;
+        console.error(e);
       }
     },
   },

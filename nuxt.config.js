@@ -1,4 +1,5 @@
 import colors from "vuetify/es5/util/colors";
+import { KEYCLOAK, HOST } from "./config/url.json";
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -48,35 +49,40 @@ export default {
 
   auth: {
     strategies: {
-      social: {
-        scheme: "oauth2",
+      keycloak: {
+        scheme: "~/schemes/keycloak",
         endpoints: {
-          authorization: "https://accounts.google.com/o/oauth2/auth",
-          token: undefined,
-          userInfo: "https://www.googleapis.com/oauth2/v3/userinfo",
-          logout: "https://example.com/logout",
+          authorization: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH,
+          token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
+          userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
+          logout:
+            KEYCLOAK.BASE_URL +
+            KEYCLOAK.LOGOUT +
+            "?redirect_uri=" +
+            encodeURIComponent(KEYCLOAK.REDIRECT_URI),
         },
         token: {
           property: "access_token",
           type: "Bearer",
+          name: "Authorization",
           maxAge: 1800,
         },
         refreshToken: {
           property: "refresh_token",
           maxAge: 60 * 60 * 24 * 30,
         },
-        responseType: "token",
-        grantType: "authorization_code",
-        accessType: undefined,
-        redirectUri: undefined,
-        logoutRedirectUri: undefined,
-        clientId: "SET_ME",
-        scope: ["openid", "profile", "email"],
-        state: "UNIQUE_AND_NON_GUESSABLE",
-        codeChallengeMethod: "",
-        responseMode: "",
-        acrValues: "",
-        // autoLogout: false
+        // responseType: "code",
+        grantType: "password",
+        accessType: "public",
+        redirectUri: encodeURIComponent("http://localhost:3000/"),
+        // logoutRedirectUri: undefined,
+        clientId: "project_a_web",
+        scope: ["roles", "profile", "email", "web-origins"],
+        redirect: {
+          logout: "/",
+          callback: "/",
+          home: "/dashboard",
+        },
       },
     },
   },
@@ -86,7 +92,9 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: HOST,
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
