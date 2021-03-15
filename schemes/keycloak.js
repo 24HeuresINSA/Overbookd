@@ -31,12 +31,10 @@ export default class KeycloakScheme extends LocalScheme {
     );
 
     this.initializeRequestInterceptor();
-
-    this.$auth.$storage.setUniversal("loggedIn", true);
+    this.$auth.$storage.setState("loggedIn", true);
   }
 
-  async setUserToken(accessToken, refreshToken) {
-    localStorage.accessToken = accessToken;
-    localStorage.refreshToken = refreshToken;
+  fetchUser() {
+    return undefined;
   }
 }

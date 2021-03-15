@@ -43,6 +43,15 @@ export default {
     },
   }),
 
+  async beforeCreate() {
+    console.log("this.$auth.loggedIn", this.$auth.loggedIn);
+    if (this.$auth.loggedIn) {
+      await this.$router.push({
+        path: "/",
+      });
+    }
+  },
+
   methods: {
     login: async function () {
       try {
