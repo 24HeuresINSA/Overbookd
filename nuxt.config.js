@@ -82,6 +82,7 @@ export default {
           logout: "/",
           callback: "/",
           home: "/dashboard",
+          login: "/login",
         },
       },
     },

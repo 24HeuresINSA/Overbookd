@@ -73,7 +73,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
+          <v-btn color="primary" @click="test()"> Continue </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -81,13 +81,20 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import Logo from "~/components/Logo.vue";
+import VuetifyLogo from "~/components/VuetifyLogo.vue";
 
 export default {
   components: {
     Logo,
     VuetifyLogo,
   },
-}
+
+  methods: {
+    test: async function () {
+      await this.$axios.$get("");
+      console.log("request sent");
+    },
+  },
+};
 </script>

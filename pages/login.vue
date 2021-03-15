@@ -46,6 +46,7 @@ export default {
   async beforeCreate() {
     console.log("this.$auth.loggedIn", this.$auth.loggedIn);
     if (this.$auth.loggedIn) {
+      console.log("redirecting...");
       await this.$router.push({
         path: "/",
       });
