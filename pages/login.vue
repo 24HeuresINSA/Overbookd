@@ -47,7 +47,9 @@ export default {
     login: async function () {
       try {
         await this.$auth.login("keycloak", this.credentials);
-        await this.$nuxt.$router.push("/");
+        await this.$router.push({
+          path: "/",
+        });
       } catch (e) {
         console.log("an error has occurred");
         console.error(e);

@@ -12,44 +12,6 @@ export default class KeycloakScheme extends LocalScheme {
     },
   });
 
-  // Override `fetchUser` method of `local` scheme
-  async fetchUser(endpoint) {
-    // Token is required but not available
-    if (!this.check().valid) {
-      return;
-    }
-
-    // User endpoint is disabled.
-    if (!this.options.endpoints.user) {
-      this.$auth.setUser({});
-      return;
-    }
-
-    // Try to fetch user and then set
-    return this.$auth
-      .requestWith(this.name, endpoint, this.options.endpoints.user)
-      .then((response) => {
-        const user = getProp(response.data, this.options.user.property);
-
-        // Transform the user object
-        const customUser = {
-          ...user,
-          fullName: user.firstName + " " + user.lastName,
-          roles: ["user"],
-        };
-
-        // Set the custom user
-        // The `customUser` object will be accessible through `this.$auth.user`
-        // Like `this.$auth.user.fullName` or `this.$auth.user.roles`
-        this.$auth.setUser(customUser);
-
-        return response;
-      })
-      .catch((error) => {
-        this.$auth.callOnError(error, { method: "fetchUser" });
-      });
-  }
-
   async login(scheme, { username, password }) {
     const data = qs.stringify({
       username,
@@ -58,6 +20,23 @@ export default class KeycloakScheme extends LocalScheme {
       grant_type: "password",
     });
     const response = await this.keycloakServer.post(KEYCLOAK.TOKEN, data);
-    console.log(response);
+    if (response.status !== 200) {
+      // wrong credentials
+      throw Error;
+    }
+    // correct credentials
+    await this.setUserToken(
+      response.data.access_token,
+      response.data.refresh_token
+    );
+
+    this.initializeRequestInterceptor();
+
+    this.$auth.$storage.setUniversal("loggedIn", true);
+  }
+
+  async setUserToken(accessToken, refreshToken) {
+    localStorage.accessToken = accessToken;
+    localStorage.refreshToken = refreshToken;
   }
 }
