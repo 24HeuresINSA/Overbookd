@@ -56,10 +56,10 @@ export default {
   methods: {
     login: async function () {
       try {
-        await this.$auth.login("keycloak", this.credentials);
+        await this.$auth.login("keycloak", this.credentials); // try to log user in
         await this.$router.push({
-          path: "/",
-        });
+          path: "/", // TODO change this to eventSelector page
+        }); // redirect to homepage
       } catch (e) {
         console.log("an error has occurred");
         console.error(e);
