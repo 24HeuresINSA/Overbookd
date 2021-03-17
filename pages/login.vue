@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import AuthenticationService from "~/plugins/AuthenticationService.ts";
-
 export default {
   name: "login",
   auth: false,
@@ -56,7 +54,7 @@ export default {
   methods: {
     login: async function () {
       try {
-        await this.$auth.login("keycloak", this.credentials); // try to log user in
+        await this.$auth.loginWith("keycloak", this.credentials); // try to log user in
         await this.$router.push({
           path: "/", // TODO change this to eventSelector page
         }); // redirect to homepage

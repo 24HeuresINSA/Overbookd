@@ -12,7 +12,7 @@ export default class KeycloakScheme extends LocalScheme {
     },
   });
 
-  async login(scheme, { username, password }) {
+  async login({ username, password }) {
     const data = qs.stringify({
       username,
       password,
@@ -31,10 +31,6 @@ export default class KeycloakScheme extends LocalScheme {
     );
 
     this.initializeRequestInterceptor();
-    this.$auth.$storage.setState("loggedIn", true);
-  }
-
-  fetchUser() {
-    return undefined;
+    this.$auth.$storage.setState("loggedIn", true); // set state to let nuxt know user is logged in
   }
 }

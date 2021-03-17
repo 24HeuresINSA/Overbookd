@@ -55,6 +55,7 @@ export default {
           authorization: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH,
           token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
           userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
+          user: false,
           logout:
             KEYCLOAK.BASE_URL +
             KEYCLOAK.LOGOUT +
