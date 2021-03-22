@@ -56,7 +56,7 @@ export default {
           token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
           userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
           user: false,
-          refresh: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
+          refresh: { url: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH, method: "post" },
           logout:
             KEYCLOAK.BASE_URL +
             KEYCLOAK.LOGOUT +
@@ -72,8 +72,9 @@ export default {
         refreshToken: {
           property: "refresh_token",
           maxAge: 60 * 60 * 24 * 30,
+          grantType: "refresh_token",
+          clientId: "project_a_web",
         },
-        // responseType: "code",
         grantType: "password",
         accessType: "public",
         redirectUri: encodeURIComponent("http://localhost:3000/"),
