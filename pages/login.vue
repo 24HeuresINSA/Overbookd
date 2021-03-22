@@ -78,7 +78,7 @@ export default {
       } catch (e) {
         if (e.response.status === 401) {
           // wrong password or username
-          this.feedbackMessage = "Password ou username are incorrect 😞";
+          this.feedbackMessage = "Password or username are incorrect 😞";
         } else {
           this.feedbackMessage =
             "an error has occurred, please contact the ComSI team 😴";
