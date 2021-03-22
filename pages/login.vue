@@ -39,7 +39,7 @@
       >
     </v-form>
     <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ text }}
+      {{ feedbackMessage }}
 
       <template v-slot:action="{ attrs }">
         <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
@@ -62,7 +62,7 @@ export default {
       password: undefined,
     },
     snackbar: false,
-    text: "Password ou username are incorrect 😞",
+    feedbackMessage: undefined,
     timeout: 5000,
   }),
 
@@ -82,10 +82,16 @@ export default {
           path: REDIRECT_URL,
         }); // redirect to homepage
       } catch (e) {
-        // TODO display wrong password or username message
+        if (e.response.status === 401) {
+          // wrong password or username
+          this.feedbackMessage = "Password ou username are incorrect 😞";
+        } else {
+          this.feedbackMessage =
+            "an error has occurred, please contact the ComSI team 😴";
+        }
         this.snackbar = true;
         console.log("an error has occurred");
-        console.error(e);
+        console.error();
       }
     },
   },
