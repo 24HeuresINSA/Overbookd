@@ -1,37 +1,58 @@
 <template>
-  <v-form>
-    <v-container class="form-container">
-      <v-row>
-        <v-img :src="overbookd_logo" alt="overbookd logo" class="logo"></v-img>
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="credentials.username"
-          label="username"
-          type="text"
-          required
-          autofocus
-        ></v-text-field>
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="credentials.password"
-          label="password"
-          type="password"
-          required
-        ></v-text-field>
-      </v-row>
-    </v-container>
-    <v-btn color="secondary" elevation="2" href="/signup" class="signupBtn Btn"
-      >signup</v-btn
-    >
-    <v-btn color="primary" elevation="2" @click="login()" class="loginBtn Btn"
-      >login</v-btn
-    >
-  </v-form>
+  <div>
+    <v-form>
+      <v-container class="form-container">
+        <v-row>
+          <v-img
+            :src="overbookd_logo"
+            alt="overbookd logo"
+            class="logo"
+          ></v-img>
+        </v-row>
+        <v-row>
+          <v-text-field
+            v-model="credentials.username"
+            label="username"
+            type="text"
+            required
+            autofocus
+          ></v-text-field>
+        </v-row>
+        <v-row>
+          <v-text-field
+            v-model="credentials.password"
+            label="password"
+            type="password"
+            required
+          ></v-text-field>
+        </v-row>
+      </v-container>
+      <v-btn
+        color="secondary"
+        elevation="2"
+        href="/signup"
+        class="signupBtn Btn"
+        >signup</v-btn
+      >
+      <v-btn color="primary" elevation="2" @click="login()" class="loginBtn Btn"
+        >login</v-btn
+      >
+    </v-form>
+    <v-snackbar v-model="snackbar" :timeout="timeout">
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
+const REDIRECT_URL = "/"; // TODO change this to eventSelector page
+
 export default {
   name: "login",
   auth: false,
@@ -40,17 +61,29 @@ export default {
       username: undefined,
       password: undefined,
     },
+    snackbar: false,
+    text: "Password ou username are incorrect 😞",
+    timeout: 5000,
   }),
+
+  async beforeCreate() {
+    if (this.$auth.loggedIn) {
+      await this.$router.push({
+        path: REDIRECT_URL,
+      }); // redirect to homepage
+    }
+  },
 
   methods: {
     login: async function () {
       try {
         await this.$auth.loginWith("keycloak", this.credentials); // try to log user in
         await this.$router.push({
-          path: "/", // TODO change this to eventSelector page
+          path: REDIRECT_URL,
         }); // redirect to homepage
       } catch (e) {
         // TODO display wrong password or username message
+        this.snackbar = true;
         console.log("an error has occurred");
         console.error(e);
       }
