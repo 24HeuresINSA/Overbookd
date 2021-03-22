@@ -1,6 +1,9 @@
 <template>
   <v-form>
-    <v-container>
+    <v-container class="form-container">
+      <v-row>
+        <v-img :src="overbookd_logo" alt="overbookd logo" class="logo"></v-img>
+      </v-row>
       <v-row>
         <v-text-field
           v-model="credentials.username"
@@ -19,8 +22,12 @@
         ></v-text-field>
       </v-row>
     </v-container>
-    <v-btn color="primary" elevation="2" href="/signup">signup</v-btn>
-    <v-btn color="secondary" elevation="2" @click="login()">login</v-btn>
+    <v-btn color="secondary" elevation="2" href="/signup" class="signupBtn Btn"
+      >signup</v-btn
+    >
+    <v-btn color="primary" elevation="2" @click="login()" class="loginBtn Btn"
+      >login</v-btn
+    >
   </v-form>
 </template>
 
@@ -33,23 +40,7 @@ export default {
       username: undefined,
       password: undefined,
     },
-    error: "",
-    valid: false,
-    toast: {
-      snackbar: false,
-      timeout: 2000,
-    },
   }),
-
-  async beforeCreate() {
-    console.log("this.$auth.loggedIn", this.$auth.loggedIn);
-    if (this.$auth.loggedIn) {
-      console.log("redirecting...");
-      await this.$router.push({
-        path: "/",
-      });
-    }
-  },
 
   methods: {
     login: async function () {
@@ -64,7 +55,37 @@ export default {
       }
     },
   },
+
+  computed: {
+    overbookd_logo: function () {
+      return this.$vuetify.theme.dark
+        ? "overbookd_logo_blanc.png"
+        : "overbookd_logo_noir.png";
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.logo {
+  margin-bottom: 10%;
+}
+.form-container {
+  align-self: center;
+  justify-self: center;
+  margin-top: 20%;
+  width: 75%;
+}
+
+.Btn {
+  position: absolute;
+  bottom: 20px;
+}
+
+.loginBtn {
+  right: 20px;
+}
+.signupBtn {
+  left: 20px;
+}
+</style>
