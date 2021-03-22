@@ -56,6 +56,7 @@ export default {
           token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
           userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
           user: false,
+          refresh: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
           logout:
             KEYCLOAK.BASE_URL +
             KEYCLOAK.LOGOUT +

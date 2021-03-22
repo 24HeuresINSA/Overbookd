@@ -50,6 +50,7 @@ export default {
           path: "/", // TODO change this to eventSelector page
         }); // redirect to homepage
       } catch (e) {
+        // TODO display wrong password or username message
         console.log("an error has occurred");
         console.error(e);
       }
@@ -75,6 +76,7 @@ export default {
   justify-self: center;
   margin-top: 20%;
   width: 75%;
+  max-width: 600px;
 }
 
 .Btn {

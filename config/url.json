@@ -7,7 +7,8 @@
     "USER_INFO": "auth/realms/project_a/protocol/openid-connect/userinfo",
     "TOKEN": "auth/realms/project_a/protocol/openid-connect/token/",
     "LOGOUT": "auth/realms/project_a/protocol/openid-connect/logout/",
-    "REDIRECT_URI": "http://localhost:3000"
+    "REDIRECT_URI": "http://localhost:3000",
+    "REFRESH": "auth/realms/project_a/protocol/openid-connect/refresh"
   },
 
   "BACKEND": {
