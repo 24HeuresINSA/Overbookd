@@ -5,10 +5,10 @@ import jwt_decode from "jwt-decode";
 import config from "../../config";
 
 export const HTTPAUTH = axios.create({
-  baseURL: config.hostAuth
+  baseURL: config.hostAuth,
 });
 
-let refreshToken = function() {
+let refreshToken = function () {
   const refreshToken = localStorage.refreshToken;
   const body = qs.stringify({
     refresh_token: refreshToken,

@@ -1,4 +1,5 @@
 import colors from "vuetify/es5/util/colors";
+import { KEYCLOAK, HOST } from "./config/url.json";
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -43,10 +44,61 @@ export default {
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
+    "@nuxtjs/auth-next",
   ],
 
+  auth: {
+    strategies: {
+      keycloak: {
+        scheme: "~/schemes/keycloak",
+        endpoints: {
+          authorization: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH,
+          token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
+          userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
+          user: false,
+          refresh: { url: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH, method: "post" },
+          logout:
+            KEYCLOAK.BASE_URL +
+            KEYCLOAK.LOGOUT +
+            "?redirect_uri=" +
+            encodeURIComponent(KEYCLOAK.REDIRECT_URI),
+        },
+        token: {
+          property: "access_token",
+          type: "Bearer",
+          name: "Authorization",
+          maxAge: 1800,
+        },
+        refreshToken: {
+          property: "refresh_token",
+          maxAge: 60 * 60 * 24 * 30,
+          grantType: "refresh_token",
+          clientId: "project_a_web",
+        },
+        grantType: "password",
+        accessType: "public",
+        redirectUri: encodeURIComponent("http://localhost:3000/"),
+        // logoutRedirectUri: undefined,
+        clientId: "project_a_web",
+        scope: ["roles", "profile", "email", "web-origins"],
+        redirect: {
+          logout: "/",
+          callback: "/",
+          home: "/dashboard",
+          login: "/login",
+        },
+      },
+    },
+  },
+
+  router: {
+    middleware: ["auth"],
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: HOST,
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {

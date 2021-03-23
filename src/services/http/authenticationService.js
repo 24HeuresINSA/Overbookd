@@ -8,7 +8,7 @@ export default class AuthenticationRequest {
       username: login.username,
       password: login.password,
       grant_type: "password",
-      client_id: "project_a_web"
+      client_id: "project_a_web",
     });
     return HTTPAUTH.post(
       `auth/realms/project_a/protocol/openid-connect/token`,
@@ -24,12 +24,12 @@ export default class AuthenticationRequest {
       const body = qs.stringify({
         refresh_token: refreshToken,
         client_id: "project_a_web",
-        grant_type: "refresh_token"
+        grant_type: "refresh_token",
       });
       HTTPAUTH.post(
         `auth/realms/project_a/protocol/openid-connect/token`,
         body
-      ).then(res => {
+      ).then((res) => {
         localStorage.accessToken = res.data.access_token;
         localStorage.refreshToken = res.data.refresh_token;
       });
@@ -38,7 +38,7 @@ export default class AuthenticationRequest {
   logout(refresh_token = "") {
     const body = qs.stringify({
       client_id: "project_a_web",
-      refresh_token: refresh_token
+      refresh_token: refresh_token,
     });
     return HTTPAUTH.post(
       `auth/realms/project_a/protocol/openid-connect/logout`,
