@@ -24,6 +24,7 @@
             label="password"
             type="password"
             required
+            @keydown.enter="login()"
           ></v-text-field>
         </v-row>
       </v-container>
@@ -107,7 +108,7 @@ export default {
 .form-container {
   align-self: center;
   justify-self: center;
-  margin-top: 20%;
+  margin-top: 10%;
   width: 75%;
   max-width: 600px;
 }

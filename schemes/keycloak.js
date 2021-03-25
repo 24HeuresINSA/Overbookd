@@ -30,7 +30,6 @@ export default class KeycloakScheme extends RefreshScheme {
       response.data.access_token,
       response.data.refresh_token
     );
-    console.log(this.requestHandler.scheme.check(true));
     this.requestHandler.initializeRequestInterceptor(
       this.options.endpoints.refresh.url
     );
