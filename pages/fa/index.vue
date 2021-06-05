@@ -72,6 +72,12 @@
           >
             <v-card>
               <v-card-title>
+                <v-icon color="green" v-if="item.status === 'validated'">mdi-check-circle</v-icon>
+                <v-icon color="orange" v-else-if="item.status === 'submitted'">mdi-account-reactivate</v-icon>
+                <v-icon v-else-if="item.status === 'draft'">mdi-circle-edit-outline</v-icon>
+                <v-icon color="red" v-else-if="item.status === 'canceled'">mdi-cancel</v-icon>
+
+
                 <h4>{{ item.name }}</h4>
               </v-card-title>
               <v-switch
