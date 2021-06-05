@@ -119,6 +119,16 @@
         </v-row>
       </template>
     </v-data-iterator>
+
+    <v-btn
+        color="secondary"
+        elevation="2"
+        fab
+        to="/fa/newFA"
+        class="fab-right"
+    ><v-icon>
+      mdi-plus-thick
+    </v-icon></v-btn>
   </div>
 </template>
 
@@ -188,5 +198,9 @@ export default {
 </script>
 
 <style scoped>
-
+  .fab-right{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+  }
 </style>
