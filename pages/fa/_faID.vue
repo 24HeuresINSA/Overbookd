@@ -3,30 +3,43 @@
     <h2 v-if="isNewFA">Create new FA</h2>
     <v-form>
       <v-container>
-      <v-row v-for="field in form">
-        <v-col
-            cols="12"
-            md="4"
-        ></v-col>
-        <v-text-field
-            v-model="field.value"
-            v-if="field.type=== 'string'"
-            :rules="field.rule"
-            :counter="field.counter"
-            :label="field.name ? field.name : field.key"
-            required
-        ></v-text-field>
-        <v-date-picker
-          v-if="field.type.includes('date')"
-          :label="field.name ? field.name : field.key"
-          v-model="field.date"
-        ></v-date-picker>
-        <v-time-picker
-            v-if="field.type.includes('time')"
-            :label="field.name ? field.name : field.key"
-            v-model="field.time"
-        ></v-time-picker>
-      </v-row>
+        <v-row v-for="field in form" v-bind:key="field.key">
+          <v-col
+              cols="12"
+              md="4"
+          ></v-col>
+          <v-text-field
+              v-model="field.value"
+              v-if="field.type=== 'string'"
+              :rules="field.rule"
+              :counter="field.counter"
+              :label="field.name ? field.name : field.key"
+              required
+          ></v-text-field>
+          <v-switch
+              v-model="field.value"
+              :label="field.name ? field.name : field.key"
+              v-else-if="field.type === 'switch'"
+          ></v-switch>
+          <v-select
+              v-else-if="field.type === 'select'"
+              :label="field.name ? field.name : field.key"
+              v-model="field.value"
+              :items="field.options"
+          ></v-select>
+          <v-date-picker
+              v-if="field.type.includes('date')"
+              :label="field.name ? field.name : field.key"
+              v-model="field.date"
+          ></v-date-picker>
+          <v-time-picker
+              v-if="field.type.includes('time')"
+              :label="field.name ? field.name : field.key"
+              v-model="field.time"
+          ></v-time-picker>
+          <p v-if="field.description">{{field.description}}</p>
+
+        </v-row>
       </v-container>
     </v-form>
     <div>
@@ -154,69 +167,126 @@ export default {
   name: "_faID",
   data() {
     return {
-      faID : this.$route.params.faID,
+      faID: this.$route.params.faID,
       isNewFA: this.$route.params.faID === 'newFA',
       FA: {},
       dialog: false,
       dialogValidator: false,
       refuseComment: '',
-      dialogText : "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
-      form : [{
+      dialogText: "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
+      form: [{
         key: 'name',
         type: 'string',
-      },{
+      }, {
         key: 'description',
         type: 'string',
-      },{
+      }, {
         key: 'startDate',
         name: 'start date',
         type: 'datetime',
-      },{
+      }, {
         key: 'endDate',
         name: 'end date',
         type: 'datetime',
-      },]
+      }, {
+        key: 'location',
+        name: 'location',
+        type: 'string',
+      }, {
+        key: 'type',
+        name: 'type',
+        type: 'select',
+        options: ['Com', 'Divertissement']
+      }, {
+        key: 'pass',
+        name: 'Besoin de pass secu ? ',
+        type: 'switch',
+      },
+        {
+          key: 'isElectricityNeed',
+          name: "Besoin d'electricite ?",
+          type: 'switch',
+        },
+        {
+          key: 'isSignalisationNeeded',
+          name: "Besoin de signalique ?",
+          type: 'switch',
+        }, {
+          key: 'signalisationNeedDescription',
+          name: "Desctiption du dispositif",
+          type: 'string',
+        },
+      ]
     }
   },
   mounted() {
-    if(!this.isNewFA){
+    // this.$fire.firestore.collection('24heures').doc('46').set({
+    //   FA_form : this.form,
+    // })
+
+    if (!this.isNewFA) {
       this.fetchFAbyID();
     } else {
 
     }
   },
-  methods:{
-    fetchFAbyID(){
+  methods: {
+    fetchFAbyID() {
       // TODO fetch FA's details from api
-      this.FA = {
-        "name": "Ramener le fromage à la maison",
-        "description": "on a acheté bcp bcp (bcp) de fromage et on doit le stocker dans le frigos",
-        "startDate": "2019/05/11 12:00:00",
-        "endDate": "2019/05/11 18:00:00",
-        "eventId": 1,
-        "supervisorId": 2
-      }
+      console.log(this.faID)
+      this.FA = this.$fire.firestore.collection('24heures').doc('46').collection('FA').doc(this.faID).onSnapshot((FA) => {
+        const FAdata = FA.data();
+        const tmp = this.form;
+        for (let key of Object.keys(FAdata)) {
+          let field = tmp.find(e => e.key === key)
+          if (field) {
+            if (field.type !== 'datetime') {
+              field.value = FAdata[key];
+              console.log('set: ', field.value)
+            }
+          }
+
+        }
+        this.form = tmp;
+        console.log(this.form)
+      })
     },
 
-    saveFA(){
+    saveFA() {
       // save the FA in the DB
+      console.log(this.form)
+      let mFA = {};
+      this.form.forEach(field => {
+        mFA[field.key] = field.value;
+        if(field.type ==='datetime'){
+          console.log(field)
+          mFA[field.key] = new Date(field.date);
+          if(field.time){
+            const mTime = field.time.split(':');
+            console.log(mTime)
+            mFA[field.key].setHours(+mTime[0], +mTime[1])
+          }
+        }
+      })
+      console.log(mFA);
+
     },
 
-    submitForReview(){
+    submitForReview() {
       // change status to submitted for review and save in DB
       this.FA.status = 'submitted'
       this.dialog = false;
       this.saveFA();
     },
 
-    validate(tag){
+    validate(tag) {
       // validate FA by the tag and save
       // TODO validate
       this.dialog = false;
       this.saveFA();
     },
 
-    refuse(){
+    refuse() {
       // refuse FA
     }
   }

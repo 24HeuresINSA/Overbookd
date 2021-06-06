@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-data-iterator
-      :items="FAs"
-      item-key="id"
-      :items-per-page.sync="itemsPerPage"
-      :page.sync="page"
-      :search="search"
-      :sort-desc="sortDesc"
+        :items="FAs"
+        item-key="id"
+        :items-per-page.sync="itemsPerPage"
+        :page.sync="page"
+        :search="search"
+        :sort-desc="sortDesc"
     >
       <template v-slot:header>
         <v-toolbar
@@ -76,8 +76,6 @@
                 <v-icon color="orange" v-else-if="item.status === 'submitted'">mdi-account-reactivate</v-icon>
                 <v-icon v-else-if="item.status === 'draft'">mdi-circle-edit-outline</v-icon>
                 <v-icon color="red" v-else-if="item.status === 'canceled'">mdi-cancel</v-icon>
-
-
                 <h4>{{ item.name }}</h4>
               </v-card-title>
               <v-switch
@@ -126,36 +124,40 @@
         fab
         to="/fa/newFA"
         class="fab-right"
-    ><v-icon>
-      mdi-plus-thick
-    </v-icon></v-btn>
+    >
+      <v-icon>
+        mdi-plus-thick
+      </v-icon>
+    </v-btn>
   </div>
 </template>
 
 <script>
 export default {
   name: "fa",
-  data(){
+  data() {
     return {
-      FAs : [{
-        id: 1,
-        "name": "Ranger le QG orga",
-        "description": "la manif est fini c\"était bien rigolo mais maintenant au boulot on range tout",
-        "startDate": "2019/05/19 20:00:00",
-        "endDate": "2019/05/20 18:00:00",
-        "eventId": 1,
-        "supervisorId": 3,
-        status: 'draft'
-      },{
-        id: 2,
-        "name": "Ramener le fromage à la maison",
-        "description": "on a acheté bcp bcp (bcp) de fromage et on doit le stocker dans le frigos",
-        "startDate": "2019/05/11 12:00:00",
-        "endDate": "2019/05/11 18:00:00",
-        "eventId": 1,
-        "supervisorId": 2,
-        status: 'submitted'
-      },],
+      FAs: [
+      //     {
+      //   id: 1,
+      //   "name": "Ranger le QG orga",
+      //   "description": "la manif est fini c\"était bien rigolo mais maintenant au boulot on range tout",
+      //   "startDate": "2019/05/19 20:00:00",
+      //   "endDate": "2019/05/20 18:00:00",
+      //   "eventId": 1,
+      //   "supervisorId": 3,
+      //   status: 'draft'
+      // }, {
+      //   id: 2,
+      //   "name": "Ramener le fromage à la maison",
+      //   "description": "on a acheté bcp bcp (bcp) de fromage et on doit le stocker dans le frigos",
+      //   "startDate": "2019/05/11 12:00:00",
+      //   "endDate": "2019/05/11 18:00:00",
+      //   "eventId": 1,
+      //   "supervisorId": 2,
+      //   status: 'submitted'
+      // },
+      ],
       itemsPerPageArray: [4, 8, 12],
       search: '',
       filter: {},
@@ -176,31 +178,41 @@ export default {
     }
   },
   computed: {
-    numberOfPages () {
+    numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage)
     },
-    filteredKeys () {
+    filteredKeys() {
       return this.keys.filter(key => key !== 'Name')
     },
   },
   methods: {
-    nextPage () {
+    nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1
     },
-    formerPage () {
+    formerPage() {
       if (this.page - 1 >= 1) this.page -= 1
     },
-    updateItemsPerPage (number) {
+    updateItemsPerPage(number) {
       this.itemsPerPage = number
     },
   },
+  async mounted() {
+    // console.log()
+    this.$fire.firestore.collection('24heures').doc('46').collection('FA').onSnapshot(FAs => {
+      this.FAs = [];
+      FAs.forEach(FA => {
+        this.FAs.push(FA.data())
+      })
+    })
+
+  }
 }
 </script>
 
 <style scoped>
-  .fab-right{
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-  }
+.fab-right {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
 </style>
