@@ -1,6 +1,14 @@
 <template>
   <div>
     <h2 v-if="isNewFA">Create new FA</h2>
+    <div style="display: flex">
+      <h4>status {{ FA.status ? FA.status : 'draft' }}</h4>
+      <v-icon v-for="validator of validators"
+              :color="validator.status ? color[validator.status] : 'grey'"
+      >
+        {{ validator.icon }}
+      </v-icon>
+    </div>
     <v-form>
       <v-container>
         <v-row v-for="field in form" v-bind:key="field.key">
@@ -37,11 +45,59 @@
               :label="field.name ? field.name : field.key"
               v-model="field.time"
           ></v-time-picker>
-          <p v-if="field.description">{{field.description}}</p>
+          <p v-if="field.description">{{ field.description }}</p>
 
         </v-row>
       </v-container>
     </v-form>
+
+    <h2>Matos 🚚</h2>
+
+    <v-container>
+      <v-data-iterator
+          :items="equipments"
+          item-key="name"
+          :items-per-page="4"
+          hide-default-footer
+      >
+        <template v-slot:default="{ items, isExpanded, expand }">
+          <v-row>
+            <v-col
+                v-for="item in items"
+                :key="item.name"
+                cols="12"
+                sm="6"
+                md="4"
+                lg="3"
+            >
+              <v-card>
+                <v-img
+                    height="250"
+                    :src="item.img ? `https://firebasestorage.googleapis.com/v0/b/poc-overbookd.appspot.com/o/log%2F${item.img}?alt=media&token=30d6b298-a132-44a7-a23b-f55ff913ce56` : ''"
+                ></v-img>
+                <v-card-title>
+                  <h4>{{ item.name }}</h4>
+                </v-card-title>
+                <v-text-field></v-text-field>
+                <v-divider></v-divider>
+                <v-list
+                    dense
+                >
+                  <v-list-item>
+                    <v-list-item-content>Available:</v-list-item-content>
+                    <v-list-item-content class="align-end">
+                      {{ item.amount }}
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-col>
+          </v-row>
+        </template>
+      </v-data-iterator>
+    </v-container>
+
+
     <div>
 
       <v-btn
@@ -163,6 +219,8 @@
 </template>
 
 <script>
+import login from "../login";
+
 export default {
   name: "_faID",
   data() {
@@ -174,55 +232,34 @@ export default {
       dialogValidator: false,
       refuseComment: '',
       dialogText: "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
-      form: [{
-        key: 'name',
-        type: 'string',
-      }, {
-        key: 'description',
-        type: 'string',
-      }, {
-        key: 'startDate',
-        name: 'start date',
-        type: 'datetime',
-      }, {
-        key: 'endDate',
-        name: 'end date',
-        type: 'datetime',
-      }, {
-        key: 'location',
-        name: 'location',
-        type: 'string',
-      }, {
-        key: 'type',
-        name: 'type',
-        type: 'select',
-        options: ['Com', 'Divertissement']
-      }, {
-        key: 'pass',
-        name: 'Besoin de pass secu ? ',
-        type: 'switch',
+      eventDoc: this.$fire.firestore.collection('24heures').doc('46'),
+      validators: [],
+      color: {
+        'submitted': 'grey',
+        'validated': 'green',
+        'refused': 'red'
       },
-        {
-          key: 'isElectricityNeed',
-          name: "Besoin d'electricite ?",
-          type: 'switch',
-        },
-        {
-          key: 'isSignalisationNeeded',
-          name: "Besoin de signalique ?",
-          type: 'switch',
-        }, {
-          key: 'signalisationNeedDescription',
-          name: "Desctiption du dispositif",
-          type: 'string',
-        },
-      ]
+      form: [],
+      equipments: [],
     }
   },
-  mounted() {
-    // this.$fire.firestore.collection('24heures').doc('46').set({
+  async mounted() {
+    // this.eventDoc.set({
     //   FA_form : this.form,
     // })
+    // init
+    this.eventDoc.collection('equipments').onSnapshot(equipments => {
+      this.equipments = [];
+      equipments.forEach(equipment => {
+        this.equipments.push(equipment.data())
+      })
+    })
+
+    const mEvent = (await this.eventDoc.get()).data();
+    if(mEvent){
+      this.validators = mEvent.validators;
+      this.form = mEvent.FA_form;
+    }
 
     if (!this.isNewFA) {
       this.fetchFAbyID();
@@ -234,7 +271,7 @@ export default {
     fetchFAbyID() {
       // TODO fetch FA's details from api
       console.log(this.faID)
-      this.FA = this.$fire.firestore.collection('24heures').doc('46').collection('FA').doc(this.faID).onSnapshot((FA) => {
+      this.FA = this.eventDoc.collection('FA').doc(this.faID).onSnapshot((FA) => {
         const FAdata = FA.data();
         const tmp = this.form;
         for (let key of Object.keys(FAdata)) {
@@ -248,8 +285,18 @@ export default {
 
         }
         this.form = tmp;
-        console.log(this.form)
+        // update validators
+        this.updateValidators(FAdata.validations);
+        console.log(this.validators)
       })
+    },
+
+    updateValidators(validations){
+      console.log(validations)
+      this.validators.forEach(validator => {
+        validator.status = validations[validator.name];
+      })
+      console.log(this.validators)
     },
 
     saveFA() {
@@ -257,11 +304,11 @@ export default {
       console.log(this.form)
       let mFA = {};
       this.form.forEach(field => {
-        mFA[field.key] = field.value;
-        if(field.type ==='datetime'){
+        mFA[field.key] = field.value ? field.value : null;
+        if (field.type === 'datetime') {
           console.log(field)
           mFA[field.key] = new Date(field.date);
-          if(field.time){
+          if (field.time) {
             const mTime = field.time.split(':');
             console.log(mTime)
             mFA[field.key].setHours(+mTime[0], +mTime[1])
@@ -269,6 +316,11 @@ export default {
         }
       })
       console.log(mFA);
+
+      this.eventDoc.collection('FA').doc(mFA.name).set(mFA);
+      this.$router.push({
+        path: '/fa'
+      })
 
     },
 

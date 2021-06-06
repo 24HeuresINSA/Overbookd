@@ -74,8 +74,8 @@
               <v-card-title>
                 <v-icon color="green" v-if="item.status === 'validated'">mdi-check-circle</v-icon>
                 <v-icon color="orange" v-else-if="item.status === 'submitted'">mdi-account-reactivate</v-icon>
-                <v-icon v-else-if="item.status === 'draft'">mdi-circle-edit-outline</v-icon>
                 <v-icon color="red" v-else-if="item.status === 'canceled'">mdi-cancel</v-icon>
+                <v-icon v-else >mdi-circle-edit-outline</v-icon>
                 <h4>{{ item.name }}</h4>
               </v-card-title>
               <v-switch
@@ -137,27 +137,7 @@ export default {
   name: "fa",
   data() {
     return {
-      FAs: [
-      //     {
-      //   id: 1,
-      //   "name": "Ranger le QG orga",
-      //   "description": "la manif est fini c\"était bien rigolo mais maintenant au boulot on range tout",
-      //   "startDate": "2019/05/19 20:00:00",
-      //   "endDate": "2019/05/20 18:00:00",
-      //   "eventId": 1,
-      //   "supervisorId": 3,
-      //   status: 'draft'
-      // }, {
-      //   id: 2,
-      //   "name": "Ramener le fromage à la maison",
-      //   "description": "on a acheté bcp bcp (bcp) de fromage et on doit le stocker dans le frigos",
-      //   "startDate": "2019/05/11 12:00:00",
-      //   "endDate": "2019/05/11 18:00:00",
-      //   "eventId": 1,
-      //   "supervisorId": 2,
-      //   status: 'submitted'
-      // },
-      ],
+      FAs: [ ],
       itemsPerPageArray: [4, 8, 12],
       search: '',
       filter: {},
@@ -197,7 +177,6 @@ export default {
     },
   },
   async mounted() {
-    // console.log()
     this.$fire.firestore.collection('24heures').doc('46').collection('FA').onSnapshot(FAs => {
       this.FAs = [];
       FAs.forEach(FA => {
