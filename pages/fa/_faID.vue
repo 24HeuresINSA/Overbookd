@@ -75,7 +75,7 @@
       <v-btn
           color="red"
           class="fab-right"
-          @click="refuse()"
+          @click="dialogValidator = true"
           style="left: 150px"
       >
         <v-icon
@@ -114,6 +114,36 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+        v-model="dialogValidator"
+        persistent
+        max-width="600px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Refuse FA</span>
+        </v-card-title>
+        <v-card-text>
+          <h4>pourquoi c'est de la 💩</h4>
+          <p>sans trop de 🧂</p>
+          <v-text-field
+              required
+              v-model="refuseComment"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              text
+              @click="refuse"
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 
 
@@ -128,6 +158,8 @@ export default {
       isNewFA: this.$route.params.faID === 'newFA',
       FA: {},
       dialog: false,
+      dialogValidator: false,
+      refuseComment: '',
       dialogText : "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
       form : [{
         key: 'name',
