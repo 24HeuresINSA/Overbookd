@@ -50,9 +50,8 @@
         </v-row>
       </v-container>
     </v-form>
-
+    <v-divider></v-divider>
     <h2>Matos 🚚</h2>
-
     <v-container>
       <v-data-iterator
           :items="equipments"
@@ -97,7 +96,47 @@
       </v-data-iterator>
     </v-container>
 
+    <v-divider></v-divider>
 
+    <h2>Comments</h2>
+
+    <v-simple-table v-if="FA.comments">
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-left">
+            #
+          </th>
+          <th class="text-left">
+            Validator
+          </th>
+          <th class="text-left">
+            Author
+          </th>
+          <th class="text-left">
+            Date
+          </th>
+          <th class="text-left">
+            Comment
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+            v-for="comment in FA.comments"
+            :key="comment.text"
+        >
+          <td>{{ comment.action }}</td>
+          <td>{{ comment.validator}}</td>
+          <td>{{ comment.author}}</td>
+          <td>{{ comment.date}}</td>
+          <td>{{ comment.text}}</td>
+
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+    <h4 v-else>pas de commentaire pour l'instant il faut se mettre au charbon</h4>
     <div>
 
       <v-btn
@@ -273,6 +312,7 @@ export default {
       console.log(this.faID)
       this.FA = this.eventDoc.collection('FA').doc(this.faID).onSnapshot((FA) => {
         const FAdata = FA.data();
+        this.FA = FAdata;
         const tmp = this.form;
         for (let key of Object.keys(FAdata)) {
           let field = tmp.find(e => e.key === key)
@@ -316,6 +356,8 @@ export default {
         }
       })
       console.log(mFA);
+      // update validation status
+
 
       this.eventDoc.collection('FA').doc(mFA.name).set(mFA);
       this.$router.push({
