@@ -13,7 +13,7 @@
   },
 
   "BACKEND": {
-    "DEV_BASE_URL": "http://localhost:2424/",
+    "DEV_BASE_URL": "http://localhost:2424/api/",
     "BASE_URL": "https://overbookd.24heures.org/api/"
   }
 }

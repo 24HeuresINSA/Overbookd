@@ -52,49 +52,35 @@
     </v-form>
     <v-divider></v-divider>
     <h2>Matos 🚚</h2>
-    <v-container>
-      <v-data-iterator
-          :items="equipments"
-          item-key="name"
-          :items-per-page="4"
-          hide-default-footer
-      >
-        <template v-slot:default="{ items, isExpanded, expand }">
-          <v-row>
-            <v-col
-                v-for="item in items"
-                :key="item.name"
-                cols="12"
-                sm="6"
-                md="4"
-                lg="3"
-            >
-              <v-card>
-                <v-img
-                    height="250"
-                    :src="item.img ? `https://firebasestorage.googleapis.com/v0/b/poc-overbookd.appspot.com/o/log%2F${item.img}?alt=media&token=30d6b298-a132-44a7-a23b-f55ff913ce56` : ''"
-                ></v-img>
-                <v-card-title>
-                  <h4>{{ item.name }}</h4>
-                </v-card-title>
-                <v-text-field></v-text-field>
-                <v-divider></v-divider>
-                <v-list
-                    dense
-                >
-                  <v-list-item>
-                    <v-list-item-content>Available:</v-list-item-content>
-                    <v-list-item-content class="align-end">
-                      {{ item.amount }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-card>
-            </v-col>
-          </v-row>
-        </template>
-      </v-data-iterator>
-    </v-container>
+
+    <v-data-table
+      :headers="equipmentsHeader"
+      :items="selectedEquipments"
+    >
+      <template v-slot:top>
+        <v-toolbar
+            flat
+        >
+          <v-toolbar-title>Equipments</v-toolbar-title>
+          <v-divider
+              class="mx-4"
+              inset
+              vertical
+
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              @click="dialogModifySelectedItem=true"
+          >
+            Add new equipment
+          </v-btn>
+        </v-toolbar>
+      </template>
+    </v-data-table>
+
 
     <v-divider></v-divider>
 
@@ -252,6 +238,37 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+
+    <v-dialog
+        v-model="dialogModifySelectedItem"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Add new item</span>
+        </v-card-title>
+        <v-card-text>
+          <v-data-table
+              :headers="equipmentsHeader"
+              :items="availableEquipments"
+          >
+            <template v-slot:item.quantity="props">
+              <v-text-field type="number" v-model="props.item.selected"></v-text-field>
+            </template>
+          </v-data-table>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              text
+              @click="saveItems"
+          >
+            save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 
 
@@ -269,6 +286,7 @@ export default {
       FA: {},
       dialog: false,
       dialogValidator: false,
+      dialogModifySelectedItem: false,
       refuseComment: '',
       dialogText: "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
       eventDoc: this.$fire.firestore.collection('24heures').doc('46'),
@@ -279,7 +297,19 @@ export default {
         'refused': 'red'
       },
       form: [],
-      equipments: [],
+      availableEquipments: [],
+      selectedEquipments: [],
+      equipmentsHeader : [{
+        text: 'name',
+        value: 'name',
+      },{
+        text: 'image',
+        value: 'img',
+      },{
+        text: 'amount',
+        value: 'amount',
+      },{ text: 'Quantity', value: 'quantity' },]
+
     }
   },
   async mounted() {
@@ -288,9 +318,9 @@ export default {
     // })
     // init
     this.eventDoc.collection('equipments').onSnapshot(equipments => {
-      this.equipments = [];
+      this.availableEquipments = [];
       equipments.forEach(equipment => {
-        this.equipments.push(equipment.data())
+        this.availableEquipments.push(equipment.data())
       })
     })
 
@@ -320,6 +350,8 @@ export default {
             if (field.type !== 'datetime') {
               field.value = FAdata[key];
               console.log('set: ', field.value)
+            } else {
+              console.log(field)
             }
           }
 
@@ -355,6 +387,7 @@ export default {
           }
         }
       })
+      mFA.equipments = this.selectedEquipments;
       console.log(mFA);
       // update validation status
 
@@ -382,6 +415,11 @@ export default {
 
     refuse() {
       // refuse FA
+    },
+
+    saveItems(){
+      this.selectedEquipments = this.availableEquipments.filter(equipment => equipment.selected);
+      this.dialogModifySelectedItem = false;
     }
   }
 }
