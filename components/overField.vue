@@ -2,7 +2,7 @@
   <div>
     <v-text-field
         v-model="field.value"
-        v-if="field.type=== 'string'"
+        v-if="field.type=== 'string' || field.type === undefined"
         :rules="field.rule"
         :counter="field.counter"
         :label="field.name ? field.name : field.key"
@@ -40,8 +40,12 @@
 
 <script>
 export default {
-  name: "field",
+  name: "over-field",
   props: ["field"],
+  mounted() {
+    console.log('dads')
+  },
+
   watch: {
     field: function (){
       console.log('field emitted ...')
