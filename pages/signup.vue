@@ -3,7 +3,9 @@
     <over-form
       v-if="signupForm"
       :fields="signupForm"
+      @form-change="onFormChange"
     ></over-form>
+    <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
   </div>
 </template>
 
@@ -19,6 +21,7 @@ export default {
   data(){
     return {
       signupForm : undefined,
+      compiledForm : undefined,
     }
   },
 
@@ -38,13 +41,19 @@ export default {
 
   methods: {
     getConfig(key){
-      if (this.$store.state.config.data.data.find(e => e.key === key).value === 'false'){
-        return false
-      }
-      else if (this.$store.state.config.data.data.find(e => e.key === key).value === 'true'){
-        return true
-      }
       return this.$store.state.config.data.data.find(e => e.key === key).value
+    },
+
+    onFormChange(form){
+      this.compiledForm = form;
+    },
+
+    submitForm(){
+      // TODO verify the form validity
+      this.$axios.post('/user',this.compiledForm);
+      this.$router.push({
+        path: '/login',
+      })
     }
   }
 

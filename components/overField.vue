@@ -13,23 +13,28 @@
         v-model="value"
         :label="field.label ? field.label : field.key"
         v-else-if="field.type === 'switch'"
+        @change="onChange"
     ></v-switch>
     <v-select
         v-else-if="field.type === 'select'"
         :label="field.label ? field.label : field.key"
         v-model="value"
         :items="field.options"
+        @change="onChange"
     ></v-select>
     <v-datetime-picker
         v-if="field.type === 'datetime'"
         :label="field.label ? field.label : field.key"
         v-model="value"
+        @change="onChange"
     ></v-datetime-picker>
     <div v-if="field.type === 'date'">
       <p>{{field.label ? field.label : field.key}}</p>
       <v-date-picker
           :label="field.label ? field.label : field.key"
           v-model="value"
+          :active-picker.sync="activePicker"
+          @change="onChange"
       ></v-date-picker>
     </div>
 
@@ -37,6 +42,7 @@
         v-if="field.type == 'time'"
         :label="field.label ? field.label : field.key"
         v-model="value"
+        @change="onChange"
     ></v-time-picker>
     <p v-if="field.description">{{ field.description }}</p>
   </div>
@@ -49,24 +55,19 @@ export default {
   data(){
     return {
       value: undefined,
+      activePicker: null,
+      menu: false,
     }
   },
 
   methods: {
     onChange(){
-      this.$emit('value', this.value)
+      this.$emit('value', {key: this.field.key, value: this.value})
     }
   },
 
   mounted() {
   },
-
-  watch: {
-    field: function (){
-      console.log('field emitted ...' + this.field.value)
-      this.$emit('value', this.field)
-    }
-  }
 }
 
 
