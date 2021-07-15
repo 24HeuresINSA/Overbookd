@@ -2,7 +2,8 @@
   "HOST": "http://localhost:2424/",
 
   "KEYCLOAK": {
-    "BASE_URL": "http://localhost:8180/",
+    "DEV_BASE_URL": "http://localhost:8080/",
+    "BASE_URL": "http://localhost:8080/",
     "AUTH": "auth/realms/project_a/protocol/openid-connect/auth",
     "USER_INFO": "auth/realms/project_a/protocol/openid-connect/userinfo",
     "TOKEN": "auth/realms/project_a/protocol/openid-connect/token/",
@@ -12,6 +13,7 @@
   },
 
   "BACKEND": {
-    "BASE_URL": "http://localhost:2424/"
+    "DEV_BASE_URL": "http://localhost:2424/api/",
+    "BASE_URL": "https://overbookd.24heures.org/api/"
   }
 }
