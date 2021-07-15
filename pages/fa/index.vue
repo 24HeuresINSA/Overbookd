@@ -122,7 +122,18 @@
         :items="FAs"
         :items-per-page="5"
         class="elevation-1"
-    ></v-data-table>
+    >
+      <template v-slot:item="row">
+        <tr>
+          <td v-for="header of headers">{{row.item[header.value]}}</td>
+          <td>
+            <v-btn class="mx-2" fab dark small color="primary" @click="onItemSelected(row.item)">
+              <v-icon dark>mdi-circle-edit-outline</v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
 
     <v-btn
         color="secondary"
@@ -164,6 +175,7 @@ export default {
       ],
     }
   },
+
   computed: {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage)
@@ -172,7 +184,12 @@ export default {
       return this.keys.filter(key => key !== 'Name')
     },
   },
+
   methods: {
+    onItemSelected(item){
+      this.$router.push({path: 'fa/' + item.name})
+    },
+
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1
     },

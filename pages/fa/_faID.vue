@@ -9,50 +9,16 @@
         {{ validator.icon }}
       </v-icon>
     </div>
-    <v-form>
-      <v-container>
-        <v-row v-for="field in form" v-bind:key="field.key">
-          <v-col
-              cols="12"
-              md="4"
-          ></v-col>
-          <v-text-field
-              v-model="field.value"
-              v-if="field.type=== 'string'"
-              :rules="field.rule"
-              :counter="field.counter"
-              :label="field.name ? field.name : field.key"
-              required
-          ></v-text-field>
-          <v-switch
-              v-model="field.value"
-              :label="field.name ? field.name : field.key"
-              v-else-if="field.type === 'switch'"
-          ></v-switch>
-          <v-select
-              v-else-if="field.type === 'select'"
-              :label="field.name ? field.name : field.key"
-              v-model="field.value"
-              :items="field.options"
-          ></v-select>
-          <v-date-picker
-              v-if="field.type.includes('date')"
-              :label="field.name ? field.name : field.key"
-              v-model="field.date"
-          ></v-date-picker>
-          <v-time-picker
-              v-if="field.type.includes('time')"
-              :label="field.name ? field.name : field.key"
-              v-model="field.time"
-          ></v-time-picker>
-          <p v-if="field.description">{{ field.description }}</p>
 
-        </v-row>
-      </v-container>
-    </v-form>
+    <over-form
+      :fields="form"
+      @form-change="onFormChange"
+    >
+
+    </over-form>
+
     <v-divider></v-divider>
     <h2>Matos 🚚</h2>
-
     <v-data-table
       :headers="equipmentsHeader"
       :items="selectedEquipments"
@@ -83,9 +49,7 @@
 
 
     <v-divider></v-divider>
-
     <h2>Comments</h2>
-
     <v-simple-table v-if="FA.comments">
       <template v-slot:default>
         <thead>
@@ -239,7 +203,6 @@
       </v-card>
     </v-dialog>
 
-
     <v-dialog
         v-model="dialogModifySelectedItem"
     >
@@ -276,9 +239,12 @@
 
 <script>
 import login from "../login";
+import OverForm from "../../components/overForm";
 
 export default {
   name: "_faID",
+  components: {OverForm},
+
   data() {
     return {
       faID: this.$route.params.faID,
@@ -312,22 +278,8 @@ export default {
     }
   },
   async mounted() {
-    // this.eventDoc.set({
-    //   FA_form : this.form,
-    // })
-    // init
-    this.eventDoc.collection('equipments').onSnapshot(equipments => {
-      this.availableEquipments = [];
-      equipments.forEach(equipment => {
-        this.availableEquipments.push(equipment.data())
-      })
-    })
-
-    const mEvent = (await this.eventDoc.get()).data();
-    if(mEvent){
-      this.validators = mEvent.validators;
-      this.form = mEvent.FA_form;
-    }
+    // getFormConfig
+    this.form = this.getConfig('fa_form')
 
     if (!this.isNewFA) {
       this.fetchFAbyID();
@@ -338,60 +290,15 @@ export default {
   methods: {
     fetchFAbyID() {
       // TODO fetch FA's details from api
-      console.log(this.faID)
-      this.FA = this.eventDoc.collection('FA').doc(this.faID).onSnapshot((FA) => {
-        const FAdata = FA.data();
-        this.FA = FAdata;
-        const tmp = this.form;
-        for (let key of Object.keys(FAdata)) {
-          let field = tmp.find(e => e.key === key)
-          if (field) {
-            if (field.type !== 'datetime') {
-              field.value = FAdata[key];
-              console.log('set: ', field.value)
-            } else {
-              console.log(field)
-            }
-          }
 
-        }
-        this.form = tmp;
-        // update validators
-        this.updateValidators(FAdata.validations);
-        console.log(this.validators)
-      })
     },
 
     updateValidators(validations){
-      console.log(validations)
-      this.validators.forEach(validator => {
-        validator.status = validations[validator.name];
-      })
-      console.log(this.validators)
     },
 
     saveFA() {
       // save the FA in the DB
-      console.log(this.form)
-      let mFA = {};
-      this.form.forEach(field => {
-        mFA[field.key] = field.value ? field.value : null;
-        if (field.type === 'datetime') {
-          console.log(field)
-          mFA[field.key] = new Date(field.date);
-          if (field.time) {
-            const mTime = field.time.split(':');
-            console.log(mTime)
-            mFA[field.key].setHours(+mTime[0], +mTime[1])
-          }
-        }
-      })
-      mFA.equipments = this.selectedEquipments;
-      console.log(mFA);
-      // update validation status
 
-
-      this.eventDoc.collection('FA').doc(mFA.name).set(mFA);
       this.$router.push({
         path: '/fa'
       })
@@ -419,7 +326,15 @@ export default {
     saveItems(){
       this.selectedEquipments = this.availableEquipments.filter(equipment => equipment.selected);
       this.dialogModifySelectedItem = false;
-    }
+    },
+
+    onFormChange(form){
+      console.log(form)
+    },
+
+    getConfig(key){
+      return this.$store.state.config.data.data.find(e => e.key === key).value
+    },
   }
 }
 </script>
