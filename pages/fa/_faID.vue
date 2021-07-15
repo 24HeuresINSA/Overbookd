@@ -150,6 +150,11 @@
         width="500"
     >
       <v-card>
+        <v-img
+            height="620"
+            src="https://media.discordapp.net/attachments/726537148119122023/806793684598128640/WhatsApp_Image_2021-02-03_at_23.36.35.jpeg"
+        ></v-img>
+
         <v-card-title class="text-h5 grey lighten-2">
           ⚠️ Warning ⚠️
         </v-card-title>
@@ -238,7 +243,6 @@
 </template>
 
 <script>
-import login from "../login";
 import OverForm from "../../components/overForm";
 
 export default {
@@ -254,7 +258,7 @@ export default {
       dialogValidator: false,
       dialogModifySelectedItem: false,
       refuseComment: '',
-      dialogText: "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
+      dialogText: this.getConfig("fb_confirm_submit"),
       validators: [],
       color: {
         'submitted': 'grey',
