@@ -138,7 +138,7 @@ export default {
     },
 
     async sendFriendRequest(){
-      this.$axios.post('/user/')
+      await this.$axios.post('/user/')
     }
   },
 };

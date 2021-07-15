@@ -289,7 +289,6 @@ export default {
       dialogModifySelectedItem: false,
       refuseComment: '',
       dialogText: "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
-      eventDoc: this.$fire.firestore.collection('24heures').doc('46'),
       validators: [],
       color: {
         'submitted': 'grey',

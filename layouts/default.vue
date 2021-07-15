@@ -7,7 +7,15 @@
       fixed
       app
     >
+
       <v-list>
+        <v-list-item>
+          <v-img
+              src="overbookd_logo_blanc.png"
+              alt="overbookd logo"
+              class="logo"
+          ></v-img>
+        </v-list-item>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -77,8 +85,13 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
+          title: 'Fiche Anim 🥳',
+          to: '/fa',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Fiche tache 😱',
+          to: '/ft',
         },
       ],
       miniVariant: false,
