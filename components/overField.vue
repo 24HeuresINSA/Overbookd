@@ -9,6 +9,13 @@
         @change="onChange"
         required
     ></v-text-field>
+    <v-textarea
+        v-model="value"
+        v-else-if="field.type=== 'textarea'"
+        :label="field.label ? field.label : field.key"
+        @change="onChange"
+        required
+    ></v-textarea>
     <v-switch
         v-model="value"
         :label="field.label ? field.label : field.key"
