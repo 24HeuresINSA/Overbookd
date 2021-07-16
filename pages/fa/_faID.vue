@@ -87,11 +87,14 @@
       </template>
     </v-simple-table>
     <h4 v-else>pas de commentaire pour l'instant il faut se mettre au charbon</h4>
+
+    <div style="height: 100px"></div>
+
     <div>
 
       <v-btn
           color="primary"
-          class="fab-right"
+          class="fab"
           @click="saveFA"
       >
         <v-icon
@@ -100,11 +103,10 @@
           mdi-content-save
         </v-icon>
         Save
-
       </v-btn>
       <v-btn
           color="green"
-          class="fab-right"
+          class="fab"
           @click="dialog=true"
           style="right: 120px"
       >
@@ -118,7 +120,7 @@
 
       <v-btn
           color="green"
-          class="fab-right"
+          class="fab"
           @click="validate()"
           style="left: 10px"
       >
@@ -132,7 +134,7 @@
 
       <v-btn
           color="red"
-          class="fab-right"
+          class="fab"
           @click="dialogValidator = true"
           style="left: 150px"
       >
@@ -213,17 +215,18 @@
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">Add new item</span>
+          <span class="text-h5">Ajouter un nouveau item</span>
         </v-card-title>
         <v-card-text>
           <v-data-table
               :headers="equipmentsHeader"
               :items="availableEquipments"
           >
-            <template v-slot:item.quantity="props">
+            <template v-slot:item.selected="props">
               <v-text-field type="number" v-model="props.item.selected"></v-text-field>
             </template>
           </v-data-table>
+          <v-text-field v-model="requestedEquipment" label="Demander un material non present sur la liste<"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -237,6 +240,24 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar
+        v-model="isSnackbar"
+        :timeout="5000"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="blue"
+            text
+            v-bind="attrs"
+            @click="isSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 
 
@@ -257,7 +278,10 @@ export default {
       dialog: false,
       dialogValidator: false,
       dialogModifySelectedItem: false,
+      requestedEquipment: undefined,
       refuseComment: '',
+      isSnackbar : false,
+      snackbarMessage: 'la FA a bien ete sauvgarder 😅',
       dialogText: this.getConfig("fb_confirm_submit"),
       validators: [],
       color: {
@@ -265,25 +289,26 @@ export default {
         'validated': 'green',
         'refused': 'red'
       },
-      form: [],
+      form: [], // FA form settings
       availableEquipments: [],
       selectedEquipments: [],
       equipmentsHeader : [{
         text: 'name',
         value: 'name',
       },{
-        text: 'image',
-        value: 'img',
-      },{
-        text: 'amount',
+        text: 'disponible',
         value: 'amount',
-      },{ text: 'Quantity', value: 'quantity' },]
+      },{
+        text: 'sélectionner',
+        value: 'selected'
+      },]
 
     }
   },
   async mounted() {
     // getFormConfig
     this.form = this.getConfig('fa_form')
+    this.availableEquipments = await this.$axios.$get('/equipment');
 
     if (!this.isNewFA) {
       this.fetchFAbyID();
@@ -302,7 +327,7 @@ export default {
 
     saveFA() {
       // save the FA in the DB
-
+      this.$axios.put('/equipment', this.form);
       this.$router.push({
         path: '/fa'
       })
@@ -330,10 +355,11 @@ export default {
     saveItems(){
       this.selectedEquipments = this.availableEquipments.filter(equipment => equipment.selected);
       this.dialogModifySelectedItem = false;
+      console.log(this.selectedEquipments)
     },
 
     onFormChange(form){
-      console.log(form)
+      this.FA = form
     },
 
     getConfig(key){
@@ -344,8 +370,9 @@ export default {
 </script>
 
 <style scoped>
-.fab-right {
-  position: absolute;
+.fab {
+  position: fixed;
+  z-index: 5;
   right: 10px;
   bottom: 10px;
   color: white;

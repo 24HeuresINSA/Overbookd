@@ -80,7 +80,7 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Welcome 🤙',
           to: '/',
         },
         {
@@ -89,9 +89,19 @@ export default {
           to: '/fa',
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-format-color-highlight',
           title: 'Fiche tache 😱',
           to: '/ft',
+        },
+        {
+          icon: 'mdi-clock',
+          title: 'Mes Dispo 🤯',
+          to: '/availabilities',
+        },
+        {
+          icon: 'mdi-calendar',
+          title: 'Mon calendrier 📆',
+          to: '/availabilities',
         },
       ],
       miniVariant: false,
