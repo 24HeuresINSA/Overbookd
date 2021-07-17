@@ -20,6 +20,7 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
+          v-if="hasRole(item.roles)"
           router
           exact
         >
@@ -91,11 +92,13 @@ export default {
         {
           icon: 'mdi-chart-bubble',
           title: 'Fiche Anim 🥳',
+          roles: 'hard',
           to: '/fa',
         },
         {
           icon: 'mdi-format-color-highlight',
           title: 'Fiche tache 😱',
+          roles: 'hard',
           to: '/ft',
         },
         {
@@ -111,11 +114,13 @@ export default {
         {
           icon: 'mdi-calendar',
           title: 'les humains 👩‍👦‍👦',
+          roles: 'hard',
           to: '/user',
         },
         {
           icon: 'mdi-calendar',
           title: 'Log ‍🚎',
+          roles: 'hard',
           to: '/user',
         },
       ],
@@ -127,6 +132,21 @@ export default {
   },
 
   methods: {
+    getUser(){
+      return this.$store.state.user.data
+    },
+
+    hasRole(role){
+      if(role === undefined){
+        return true
+      }
+      const teams = this.getUser()?.team;
+      if (teams === undefined){
+        return false
+      }
+      return teams.includes(role);
+    },
+
     toggleTheme(){
       if (this.isDarkMode){
         this.$vuetify.theme.dark = true;
