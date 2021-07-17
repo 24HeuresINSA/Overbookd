@@ -16,8 +16,59 @@
       :fields="form"
       @form-change="onFormChange"
     >
-
     </over-form>
+
+    <v-divider></v-divider>
+    <h2>Horaires ⏱</h2>
+    <v-simple-table v-if="FA.schedules">
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-left">
+            jour
+          </th>
+          <th>debut</th>
+          <th class="text-left">
+            fin
+          </th>
+          <th class="text-left">
+            action
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+            v-for="schedule in FA.schedules"
+            :key="schedule.day + schedule.start + schedule.end"
+        >
+          <td>{{schedule.date}}</td>
+          <td>{{schedule.start}}</td>
+          <td>{{schedule.end}}</td>
+          <td><v-btn @click="deleteSchedule(schedule)">🗑</v-btn></td>
+
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+    <v-container style="display: flex; justify-content: space-around; align-content: baseline">
+      <v-date-picker v-model="schedule.date"></v-date-picker>
+      <h3>Debut</h3>
+      <v-time-picker format="24h" v-model="schedule.start"></v-time-picker>
+      <h3>Fin</h3>
+      <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
+      <v-btn
+          fab
+          style="margin: 20px;"
+          @click="addSchedule"
+      >
+        <v-icon>
+          mdi-plus-thick
+        </v-icon>
+      </v-btn>
+
+    </v-container>
+
+
 
     <v-divider></v-divider>
     <h2>Matos 🚚</h2>
@@ -71,7 +122,7 @@
         <tbody>
         <tr
             v-for="comment in FA.comments"
-            :key="comment.text"
+            :key="comment.time"
         >
           <td><v-icon :color="color[comment.action]">{{(validators.find(v => v.name === comment.by)).icon}}</v-icon></td>
           <td>{{ comment.by}}</td>
@@ -281,6 +332,11 @@ export default {
       snackbarMessage: 'la FA a bien ete sauvgarder 😅',
       dialogText: this.getConfig("fb_confirm_submit"),
       validators: this.getConfig("fa_validators"),
+      schedule: {
+        date: undefined,
+        start: undefined,
+        end: undefined
+      },
       color: {
         'submitted': 'grey',
         'validated': 'green',
@@ -429,6 +485,13 @@ export default {
             validator: this.getValidator(),
           });
 
+    },
+
+    addSchedule(){
+      if(!this.FA.schedules){
+        this.$set(this.FA, 'schedules' , [])
+      }
+      this.$set(this.FA.schedules,this.FA.schedules.length , {...this.schedule})
     },
 
     saveItems(){
