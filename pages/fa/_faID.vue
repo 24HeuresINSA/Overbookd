@@ -9,6 +9,8 @@
         {{ validator.icon }}
       </v-icon>
     </div>
+    <br>
+
 
     <over-form
       :fields="form"
@@ -123,6 +125,7 @@
           class="fab"
           @click="validate()"
           style="left: 10px"
+          v-if="isValidator()"
       >
         <v-icon
             left
@@ -137,6 +140,7 @@
           class="fab"
           @click="dialogValidator = true"
           style="left: 150px"
+          v-if="isValidator()"
       >
         <v-icon
             left
@@ -283,7 +287,7 @@ export default {
       isSnackbar : false,
       snackbarMessage: 'la FA a bien ete sauvgarder 😅',
       dialogText: this.getConfig("fb_confirm_submit"),
-      validators: [],
+      validators: this.getConfig("fa_validators"),
       color: {
         'submitted': 'grey',
         'validated': 'green',
@@ -306,6 +310,7 @@ export default {
     }
   },
   async mounted() {
+    console.log(this.validators)
     // getFormConfig
     this.form = this.getConfig('fa_form')
     this.availableEquipments = await this.$axios.$get('/equipment');
@@ -318,7 +323,6 @@ export default {
         if(mField){
           this.$set(mField, 'value', this.FA[key]);
           mField.value = this.FA[key];
-          console.log(this.FA[key])
         }
       })
     } else {
@@ -326,6 +330,18 @@ export default {
     }
   },
   methods: {
+    getUser(){
+      return this.$store.state.user.data
+    },
+
+    hasRole(role){
+      const teams = this.getUser()?.team;
+      if (teams === undefined){
+        return false
+      }
+      return teams.includes(role);
+    },
+
     async fetchFAbyName(name) {
       return this.$axios.get('fa/' + name);
     },
@@ -341,6 +357,16 @@ export default {
       //   path: '/fa'
       // })
 
+    },
+
+    isValidator(){
+      let isValidator = false;
+      this.validators.forEach(validator => {
+        if (this.hasRole(validator.name)){
+          isValidator = true
+        }
+      })
+      return isValidator
     },
 
     submitForReview() {
@@ -364,7 +390,6 @@ export default {
     saveItems(){
       this.selectedEquipments = this.availableEquipments.filter(equipment => equipment.selected);
       this.dialogModifySelectedItem = false;
-      console.log(this.selectedEquipments)
     },
 
     onFormChange(form){
