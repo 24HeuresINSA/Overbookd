@@ -203,7 +203,6 @@ export default {
   async mounted() {
     // get FAs
     this.FAs = (await this.$axios.get('/FA')).data;
-    console.log(this.FAs)
 
   }
 }

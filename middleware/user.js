@@ -4,7 +4,6 @@ export default async function (context){
     const keycloakID = getKeycloakID(context)
     const user = (await context.$axios.get('/user/' + keycloakID)).data;
     context.store.commit('user/setUser', user);
-    console.log(`user ${user.data} set`)
 }
 
 

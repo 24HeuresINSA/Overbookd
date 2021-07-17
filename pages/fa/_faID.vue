@@ -272,7 +272,7 @@ export default {
 
   data() {
     return {
-      faID: this.$route.params.faID,
+      faName: this.$route.params.faID,
       isNewFA: this.$route.params.faID === 'newFA',
       FA: {},
       dialog: false,
@@ -311,26 +311,35 @@ export default {
     this.availableEquipments = await this.$axios.$get('/equipment');
 
     if (!this.isNewFA) {
-      this.fetchFAbyID();
+      this.FA = (await this.fetchFAbyName(this.faName)).data;
+      // update the form that is going to be displayed
+      Object.keys(this.FA).forEach(key => {
+        let mField = this.form.find(field => field.key === key);
+        if(mField){
+          this.$set(mField, 'value', this.FA[key]);
+          mField.value = this.FA[key];
+          console.log(this.FA[key])
+        }
+      })
     } else {
 
     }
   },
   methods: {
-    fetchFAbyID() {
-      // TODO fetch FA's details from api
-
+    async fetchFAbyName(name) {
+      return this.$axios.get('fa/' + name);
     },
 
     updateValidators(validations){
     },
 
-    saveFA() {
+    async saveFA() {
       // save the FA in the DB
-      this.$axios.put('/equipment', this.form);
-      this.$router.push({
-        path: '/fa'
-      })
+      await this.$axios.put('/fa', this.FA);
+      this.isSnackbar = true;
+      // this.$router.push({
+      //   path: '/fa'
+      // })
 
     },
 
