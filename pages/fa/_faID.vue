@@ -2,7 +2,7 @@
   <div>
     <h2 v-if="isNewFA">Create new FA</h2>
     <div style="display: flex">
-      <h4>status {{ FA.status ? FA.status : 'draft' }}</h4>
+      <h3>status {{ FA.status ? FA.status : 'draft' }}</h3>
       <v-icon v-for="validator of validators"
               :color="validator.status ? color[validator.status] : 'grey'"
       >
@@ -57,19 +57,13 @@
         <thead>
         <tr>
           <th class="text-left">
-            #
+            validateur
           </th>
           <th class="text-left">
-            Validator
-          </th>
-          <th class="text-left">
-            Author
+            commentaire
           </th>
           <th class="text-left">
             Date
-          </th>
-          <th class="text-left">
-            Comment
           </th>
         </tr>
         </thead>
@@ -78,11 +72,9 @@
             v-for="comment in FA.comments"
             :key="comment.text"
         >
-          <td>{{ comment.action }}</td>
-          <td>{{ comment.validator}}</td>
-          <td>{{ comment.author}}</td>
-          <td>{{ comment.date}}</td>
-          <td>{{ comment.text}}</td>
+          <td><v-icon :color="comment.action == 'refused' ? 'red' : 'grey'">{{(validators.find(v => v.name === comment.by)).icon}}</v-icon>{{ comment.by }}</td>
+          <td>{{ comment.comment}}</td>
+          <td>{{(new Date(comment.time)).toLocaleString()}}</td>
 
         </tr>
         </tbody>
@@ -125,7 +117,7 @@
           class="fab"
           @click="validate()"
           style="left: 10px"
-          v-if="isValidator()"
+          v-if="getValidator()"
       >
         <v-icon
             left
@@ -140,7 +132,7 @@
           class="fab"
           @click="dialogValidator = true"
           style="left: 150px"
-          v-if="isValidator()"
+          v-if="getValidator()"
       >
         <v-icon
             left
@@ -186,7 +178,6 @@
 
     <v-dialog
         v-model="dialogValidator"
-        persistent
         max-width="600px"
     >
       <v-card>
@@ -325,6 +316,24 @@ export default {
           mField.value = this.FA[key];
         }
       })
+
+      // update validator status
+      if (this.FA.refused){
+        this.FA.refused.forEach(v => {
+          let refuse = this.validators.find(e => e.name === v);
+          console.log(refuse)
+          this.$set(refuse, 'status', 'refused')
+        })
+      }
+
+      if (this.FA.validated){
+        this.FA.validated.forEach(v => {
+          let refuse = this.validators.find(e => e.name === v);
+          console.log(refuse)
+          this.$set(refuse, 'status', 'validated')
+        })
+      }
+      
     } else {
 
     }
@@ -359,14 +368,14 @@ export default {
 
     },
 
-    isValidator(){
-      let isValidator = false;
+    getValidator(){
+      let mValidator = null;
       this.validators.forEach(validator => {
         if (this.hasRole(validator.name)){
-          isValidator = true
+          mValidator = validator.name
         }
       })
-      return isValidator
+      return mValidator
     },
 
     submitForReview() {
@@ -376,15 +385,33 @@ export default {
       this.saveFA();
     },
 
-    validate(tag) {
-      // validate FA by the tag and save
-      // TODO validate
+    validate() {
+      const validator = this.getValidator();
+      if(this.FA.validated === undefined){
+        this.FA.validated = []
+      }
+      if(this.FA.refused){
+        this.FA.refused = this.FA.refused.filter(e => e !== validator);
+      }
+      this.FA.validated.push(validator)
       this.dialog = false;
       this.saveFA();
     },
 
     refuse() {
       // refuse FA
+      const validator = this.getValidator();
+      if(this.FA.refused === undefined){
+        this.FA.refused = [];
+      }
+      if (!this.FA.comments){
+        this.FA.comments = [];
+      }
+      this.FA.comments.push({time : new Date(),action: 'refused', comment: this.refuseComment, by: validator});
+      this.FA.refused.push(validator);
+      this.FA.status = 'refused'
+      this.dialogValidator = false;
+      this.saveFA();
     },
 
     saveItems(){
