@@ -122,8 +122,7 @@ export default {
 
   async mounted() {
     const keycloakID = this.getUsername();
-    this.user = await this.getUser(keycloakID)
-    console.log(this.user)
+    this.user = await this.getUser(keycloakID);
   },
 
   methods: {

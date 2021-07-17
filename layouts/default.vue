@@ -34,6 +34,10 @@
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-title></v-app-bar-title>
+      <v-app-bar-nav-icon>
+        <v-btn icon @click="toggleTheme">🌙</v-btn>
+      </v-app-bar-nav-icon>
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
@@ -77,6 +81,7 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
+      isDarkMode : false,
       items: [
         {
           icon: 'mdi-apps',
@@ -101,14 +106,35 @@ export default {
         {
           icon: 'mdi-calendar',
           title: 'Mon calendrier 📆',
-          to: '/availabilities',
+          to: '/calendar',
+        },
+        {
+          icon: 'mdi-calendar',
+          title: 'les humains 👩‍👦‍👦',
+          to: '/user',
+        },
+        {
+          icon: 'mdi-calendar',
+          title: 'Log ‍🚎',
+          to: '/user',
         },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js',
+      title: 'Overbookd',
     }
   },
+
+  methods: {
+    toggleTheme(){
+      if (this.isDarkMode){
+        this.$vuetify.theme.dark = true;
+      } else {
+        this.$vuetify.theme.dark = false;
+      }
+      this.isDarkMode = !this.isDarkMode;
+    },
+  }
 }
 </script>
