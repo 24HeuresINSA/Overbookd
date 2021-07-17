@@ -59,6 +59,7 @@
           <th class="text-left">
             validateur
           </th>
+          <th>autheur</th>
           <th class="text-left">
             commentaire
           </th>
@@ -72,7 +73,8 @@
             v-for="comment in FA.comments"
             :key="comment.text"
         >
-          <td><v-icon :color="comment.action == 'refused' ? 'red' : 'grey'">{{(validators.find(v => v.name === comment.by)).icon}}</v-icon>{{ comment.by }}</td>
+          <td><v-icon :color="color[comment.action]">{{(validators.find(v => v.name === comment.by)).icon}}</v-icon></td>
+          <td>{{ comment.by}}</td>
           <td>{{ comment.comment}}</td>
           <td>{{(new Date(comment.time)).toLocaleString()}}</td>
 
@@ -393,7 +395,10 @@ export default {
       if(this.FA.refused){
         this.FA.refused = this.FA.refused.filter(e => e !== validator);
       }
+      this.addComment('validated')
+
       this.FA.validated.push(validator)
+      this.addComment('accepted')
       this.dialog = false;
       this.saveFA();
     },
@@ -404,14 +409,26 @@ export default {
       if(this.FA.refused === undefined){
         this.FA.refused = [];
       }
-      if (!this.FA.comments){
-        this.FA.comments = [];
-      }
-      this.FA.comments.push({time : new Date(),action: 'refused', comment: this.refuseComment, by: validator});
+      this.addComment('refused', this.refuseComment)
       this.FA.refused.push(validator);
       this.FA.status = 'refused'
       this.dialogValidator = false;
       this.saveFA();
+    },
+
+    addComment(action, comment){
+      if (!this.FA.comments){
+        this.FA.comments = [];
+      }
+      this.FA.comments.push(
+          {
+            time : new Date(),
+            action,
+            comment,
+            by: this.getUser().nickname ? this.getUser().nickname : this.getUser().lastname,
+            validator: this.getValidator(),
+          });
+
     },
 
     saveItems(){
