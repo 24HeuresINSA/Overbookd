@@ -92,6 +92,18 @@ export default {
 
   async mounted() {
     this.availabilities = (await this.$axios.get('/availabilities')).data;
+    const mAvailabilities = this.getUser().availabilities;
+    if(mAvailabilities){
+      // fill in availabilities
+      console.log('fillling in');
+      this.availabilities.forEach(availability => {
+        let mAvailability =  mAvailabilities.find(e => e._id === availability._id)
+        if(mAvailability){
+          this.$set(availability,'days', mAvailability.days);
+          console.log('ava', availability)
+        }
+      })
+    }
   },
 
   methods:{
@@ -104,8 +116,14 @@ export default {
       this.isAllToggled = !this.isAllToggled
     },
 
+    getUser(){
+      return this.$store.state.user.data
+    },
+
     save(){
       console.log(this.availabilities);
+      // save my availabilities
+      this.$axios.put('user/' + this.getUser().keycloakID, {availabilities: this.availabilities})
       this.isSnackbarOpen = true;
     },
 

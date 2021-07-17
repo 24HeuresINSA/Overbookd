@@ -44,6 +44,13 @@
           @change="onChange"
       ></v-date-picker>
     </div>
+    <v-select
+        v-else-if="field.type === 'user'"
+        :label="field.label ? field.label : field.key"
+        v-model="value"
+        :items="users"
+        @change="onChange"
+    ></v-select>
 
     <v-time-picker
         v-if="field.type == 'time'"
@@ -52,6 +59,7 @@
         @change="onChange"
     ></v-time-picker>
     <p v-if="field.description">{{ field.description }}</p>
+
   </div>
 </template>
 
@@ -64,6 +72,7 @@ export default {
       value: undefined,
       activePicker: null,
       menu: false,
+      users: undefined,
     }
   },
 
@@ -73,7 +82,10 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
+    if(this.field.type === 'user'){
+      this.users = (await this.$axios.get('/user/all')).data;
+    }
   },
 }
 
