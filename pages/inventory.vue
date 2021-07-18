@@ -143,7 +143,6 @@ export default {
       this.newEquipment.borrowed = this.borrowed;
       this.newEquipment = await this.$axios.put('/equipment', this.newEquipment);
       this.isFormOpened = false;
-      this.$set(this.inventory, this.inventory.length, this.newEquipment);
       this.borrowed = [];
     },
 
