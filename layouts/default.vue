@@ -82,7 +82,7 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      isDarkMode : false,
+      isWhiteMode : true, // let this set to true
       items: [
         {
           icon: 'mdi-apps',
@@ -148,12 +148,8 @@ export default {
     },
 
     toggleTheme(){
-      if (this.isDarkMode){
-        this.$vuetify.theme.dark = true;
-      } else {
-        this.$vuetify.theme.dark = false;
-      }
-      this.isDarkMode = !this.isDarkMode;
+      this.$vuetify.theme.dark = this.isWhiteMode;
+      this.isWhiteMode = !this.isWhiteMode;
     },
   }
 }
