@@ -115,7 +115,7 @@ export default {
           icon: 'mdi-account',
           title: 'les humains 👩‍👦‍👦',
           roles: 'hard',
-          to: '/user',
+          to: '/humans',
         },
         {
           icon: 'mdi-bus-articulated-front',
