@@ -35,7 +35,7 @@
       <v-btn
           color="primary"
           text
-          @click="dialog = false"
+          @click="addEquipment"
       >
         Ajouter
       </v-btn>
@@ -76,8 +76,14 @@ export default {
     },
 
     onFormChange(form){
-      this.FA = form
+      this.newEquipment = form
     },
+
+    async addEquipment(){
+      this.newEquipment = await this.$axios.put('/equipment', this.newEquipment);
+      this.isFormOpened = false;
+      this.$set(this.inventory, this.inventory.length, this.newEquipment);
+    }
   }
 }
 </script>
