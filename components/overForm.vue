@@ -30,6 +30,11 @@ export default {
   methods: {
     onValueChange({key, value}) {
       this.compiledForm[key] = value;
+      this.fields.forEach(field => {
+        if(field.value){
+          this.compiledForm[field.key] = field.value;
+        }
+      })
       this.$emit('form-change', this.compiledForm)
     }
   }

@@ -38,6 +38,7 @@ export default {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
+    '@nuxtjs/color-mode',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -47,25 +48,6 @@ export default {
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
     "@nuxtjs/auth-next",
-      [
-      '@nuxtjs/firebase',
-      {
-        config: {
-          apiKey: "AIzaSyBk01GKBGrnJbzGTBTIBK4ikU3vgACjmOg",
-          authDomain: "poc-overbookd.firebaseapp.com",
-          projectId: "poc-overbookd",
-          storageBucket: "poc-overbookd.appspot.com",
-          messagingSenderId: "437831092874",
-          appId: "1:437831092874:web:8e6c2d8a0382d7e40f3b73",
-          measurementId: "G-PZ36M4L4B5"
-
-        },
-        services: {
-          firestore: true, // Just as example. Can be any other service.
-          store: true,
-        },
-      },
-      ]
   ],
   
 
@@ -114,7 +96,7 @@ export default {
   },
 
   router: {
-    middleware: ["auth" , "config"],
+    middleware: ["auth" , "config", "user"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

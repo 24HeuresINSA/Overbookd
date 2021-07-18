@@ -16,7 +16,7 @@
       </v-card>
     </v-col>
 
-    <v-col cols="6" sm="4" md="4">
+    <v-col cols="6" sm="4" md="4" v-if="hasRole('hard')">
       <v-card v-if="user">
         <v-card-title>Compte perso 💰</v-card-title>
         <v-card-subtitle>Balance: {{user.balance || 0}} €</v-card-subtitle>
@@ -121,24 +121,24 @@ export default {
   },
 
   async mounted() {
-    const keycloakID = this.getUsername();
-    this.user = await this.getUser(keycloakID)
-    console.log(this.user)
+    this.user = await this.getUser();
   },
 
   methods: {
-    getUsername(){
-      const token = this.$auth.$storage._state["_token.keycloak"].split(' ')[1]
-      const decoded = jwt_decode(token)
-      return decoded.sub
+    getUser(){
+      return this.$store.state.user.data
     },
 
-    async getUser(keycloakID){
-      return this.$axios.$get(`/user/${keycloakID}`)
+    hasRole(role){
+      const teams = this.getUser()?.team;
+      if (teams === undefined){
+        return false
+      }
+      return teams.includes(role);
     },
 
     async sendFriendRequest(){
-      this.$axios.post('/user/')
+      await this.$axios.post('/user/')
     }
   },
 };

@@ -2,57 +2,76 @@
   <div>
     <h2 v-if="isNewFA">Create new FA</h2>
     <div style="display: flex">
-      <h4>status {{ FA.status ? FA.status : 'draft' }}</h4>
+      <h3>status {{ FA.status ? FA.status : 'draft' }}</h3>
       <v-icon v-for="validator of validators"
               :color="validator.status ? color[validator.status] : 'grey'"
       >
         {{ validator.icon }}
       </v-icon>
     </div>
-    <v-form>
-      <v-container>
-        <v-row v-for="field in form" v-bind:key="field.key">
-          <v-col
-              cols="12"
-              md="4"
-          ></v-col>
-          <v-text-field
-              v-model="field.value"
-              v-if="field.type=== 'string'"
-              :rules="field.rule"
-              :counter="field.counter"
-              :label="field.name ? field.name : field.key"
-              required
-          ></v-text-field>
-          <v-switch
-              v-model="field.value"
-              :label="field.name ? field.name : field.key"
-              v-else-if="field.type === 'switch'"
-          ></v-switch>
-          <v-select
-              v-else-if="field.type === 'select'"
-              :label="field.name ? field.name : field.key"
-              v-model="field.value"
-              :items="field.options"
-          ></v-select>
-          <v-date-picker
-              v-if="field.type.includes('date')"
-              :label="field.name ? field.name : field.key"
-              v-model="field.date"
-          ></v-date-picker>
-          <v-time-picker
-              v-if="field.type.includes('time')"
-              :label="field.name ? field.name : field.key"
-              v-model="field.time"
-          ></v-time-picker>
-          <p v-if="field.description">{{ field.description }}</p>
+    <br>
 
-        </v-row>
-      </v-container>
-    </v-form>
+
+    <over-form
+      :fields="form"
+      @form-change="onFormChange"
+    >
+    </over-form>
+
+    <v-divider></v-divider>
+    <h2>Horaires ⏱</h2>
+    <v-simple-table v-if="FA.schedules">
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-left">
+            jour
+          </th>
+          <th>debut</th>
+          <th class="text-left">
+            fin
+          </th>
+          <th class="text-left">
+            action
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+            v-for="schedule in FA.schedules"
+            :key="schedule.day + schedule.start + schedule.end"
+        >
+          <td>{{schedule.date}}</td>
+          <td>{{schedule.start}}</td>
+          <td>{{schedule.end}}</td>
+          <td><v-btn @click="deleteSchedule(schedule)">🗑</v-btn></td>
+
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+    <v-container style="display: flex; justify-content: space-around; align-content: baseline">
+      <v-date-picker v-model="schedule.date"></v-date-picker>
+      <h3>Debut</h3>
+      <v-time-picker format="24h" v-model="schedule.start"></v-time-picker>
+      <h3>Fin</h3>
+      <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
+      <v-btn
+          fab
+          style="margin: 20px;"
+          @click="addSchedule"
+      >
+        <v-icon>
+          mdi-plus-thick
+        </v-icon>
+      </v-btn>
+
+    </v-container>
+
+
+
     <v-divider></v-divider>
     <h2>Matos 🚚</h2>
-
     <v-data-table
       :headers="equipmentsHeader"
       :items="selectedEquipments"
@@ -83,51 +102,46 @@
 
 
     <v-divider></v-divider>
-
     <h2>Comments</h2>
-
     <v-simple-table v-if="FA.comments">
       <template v-slot:default>
         <thead>
         <tr>
           <th class="text-left">
-            #
+            validateur
           </th>
+          <th>autheur</th>
           <th class="text-left">
-            Validator
-          </th>
-          <th class="text-left">
-            Author
+            commentaire
           </th>
           <th class="text-left">
             Date
-          </th>
-          <th class="text-left">
-            Comment
           </th>
         </tr>
         </thead>
         <tbody>
         <tr
             v-for="comment in FA.comments"
-            :key="comment.text"
+            :key="comment.time"
         >
-          <td>{{ comment.action }}</td>
-          <td>{{ comment.validator}}</td>
-          <td>{{ comment.author}}</td>
-          <td>{{ comment.date}}</td>
-          <td>{{ comment.text}}</td>
+          <td><v-icon :color="color[comment.action]">{{(validators.find(v => v.name === comment.by)).icon}}</v-icon></td>
+          <td>{{ comment.by}}</td>
+          <td>{{ comment.comment}}</td>
+          <td>{{(new Date(comment.time)).toLocaleString()}}</td>
 
         </tr>
         </tbody>
       </template>
     </v-simple-table>
     <h4 v-else>pas de commentaire pour l'instant il faut se mettre au charbon</h4>
+
+    <div style="height: 100px"></div>
+
     <div>
 
       <v-btn
           color="primary"
-          class="fab-right"
+          class="fab"
           @click="saveFA"
       >
         <v-icon
@@ -136,11 +150,10 @@
           mdi-content-save
         </v-icon>
         Save
-
       </v-btn>
       <v-btn
           color="green"
-          class="fab-right"
+          class="fab"
           @click="dialog=true"
           style="right: 120px"
       >
@@ -154,9 +167,10 @@
 
       <v-btn
           color="green"
-          class="fab-right"
+          class="fab"
           @click="validate()"
           style="left: 10px"
+          v-if="getValidator()"
       >
         <v-icon
             left
@@ -168,9 +182,10 @@
 
       <v-btn
           color="red"
-          class="fab-right"
+          class="fab"
           @click="dialogValidator = true"
           style="left: 150px"
+          v-if="getValidator()"
       >
         <v-icon
             left
@@ -186,6 +201,11 @@
         width="500"
     >
       <v-card>
+        <v-img
+            height="620"
+            src="https://media.discordapp.net/attachments/726537148119122023/806793684598128640/WhatsApp_Image_2021-02-03_at_23.36.35.jpeg"
+        ></v-img>
+
         <v-card-title class="text-h5 grey lighten-2">
           ⚠️ Warning ⚠️
         </v-card-title>
@@ -211,7 +231,6 @@
 
     <v-dialog
         v-model="dialogValidator"
-        persistent
         max-width="600px"
     >
       <v-card>
@@ -239,23 +258,23 @@
       </v-card>
     </v-dialog>
 
-
     <v-dialog
         v-model="dialogModifySelectedItem"
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">Add new item</span>
+          <span class="text-h5">Ajouter un nouveau item</span>
         </v-card-title>
         <v-card-text>
           <v-data-table
               :headers="equipmentsHeader"
               :items="availableEquipments"
           >
-            <template v-slot:item.quantity="props">
+            <template v-slot:item.selected="props">
               <v-text-field type="number" v-model="props.item.selected"></v-text-field>
             </template>
           </v-data-table>
+          <v-text-field v-model="requestedEquipment" label="Demander un material non present sur la liste<"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -269,134 +288,152 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar
+        v-model="isSnackbar"
+        :timeout="5000"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="blue"
+            text
+            v-bind="attrs"
+            @click="isSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 
 
 </template>
 
 <script>
-import login from "../login";
+import OverForm from "../../components/overForm";
 
 export default {
   name: "_faID",
+  components: {OverForm},
+
   data() {
     return {
-      faID: this.$route.params.faID,
+      faName: this.$route.params.faID,
       isNewFA: this.$route.params.faID === 'newFA',
       FA: {},
       dialog: false,
       dialogValidator: false,
       dialogModifySelectedItem: false,
+      requestedEquipment: undefined,
       refuseComment: '',
-      dialogText: "Are you sure you want to submit this FA. les zumains seront pas content si c'est de la merde 🧂", // TODO should be fetched from API
-      eventDoc: this.$fire.firestore.collection('24heures').doc('46'),
-      validators: [],
+      isSnackbar : false,
+      snackbarMessage: 'la FA a bien ete sauvgarder 😅',
+      dialogText: this.getConfig("fb_confirm_submit"),
+      validators: this.getConfig("fa_validators"),
+      schedule: {
+        date: undefined,
+        start: undefined,
+        end: undefined
+      },
       color: {
         'submitted': 'grey',
         'validated': 'green',
         'refused': 'red'
       },
-      form: [],
+      form: [], // FA form settings
       availableEquipments: [],
       selectedEquipments: [],
       equipmentsHeader : [{
         text: 'name',
         value: 'name',
       },{
-        text: 'image',
-        value: 'img',
-      },{
-        text: 'amount',
+        text: 'disponible',
         value: 'amount',
-      },{ text: 'Quantity', value: 'quantity' },]
+      },{
+        text: 'sélectionner',
+        value: 'selected'
+      },]
 
     }
   },
   async mounted() {
-    // this.eventDoc.set({
-    //   FA_form : this.form,
-    // })
-    // init
-    this.eventDoc.collection('equipments').onSnapshot(equipments => {
-      this.availableEquipments = [];
-      equipments.forEach(equipment => {
-        this.availableEquipments.push(equipment.data())
-      })
-    })
-
-    const mEvent = (await this.eventDoc.get()).data();
-    if(mEvent){
-      this.validators = mEvent.validators;
-      this.form = mEvent.FA_form;
-    }
+    console.log(this.validators)
+    // getFormConfig
+    this.form = this.getConfig('fa_form')
+    this.availableEquipments = await this.$axios.$get('/equipment');
 
     if (!this.isNewFA) {
-      this.fetchFAbyID();
+      this.FA = (await this.fetchFAbyName(this.faName)).data;
+      // update the form that is going to be displayed
+      Object.keys(this.FA).forEach(key => {
+        let mField = this.form.find(field => field.key === key);
+        if(mField){
+          this.$set(mField, 'value', this.FA[key]);
+          mField.value = this.FA[key];
+        }
+      })
+
+      // update validator status
+      if (this.FA.refused){
+        this.FA.refused.forEach(v => {
+          let refuse = this.validators.find(e => e.name === v);
+          console.log(refuse)
+          this.$set(refuse, 'status', 'refused')
+        })
+      }
+
+      if (this.FA.validated){
+        this.FA.validated.forEach(v => {
+          let refuse = this.validators.find(e => e.name === v);
+          console.log(refuse)
+          this.$set(refuse, 'status', 'validated')
+        })
+      }
+      
     } else {
 
     }
   },
   methods: {
-    fetchFAbyID() {
-      // TODO fetch FA's details from api
-      console.log(this.faID)
-      this.FA = this.eventDoc.collection('FA').doc(this.faID).onSnapshot((FA) => {
-        const FAdata = FA.data();
-        this.FA = FAdata;
-        const tmp = this.form;
-        for (let key of Object.keys(FAdata)) {
-          let field = tmp.find(e => e.key === key)
-          if (field) {
-            if (field.type !== 'datetime') {
-              field.value = FAdata[key];
-              console.log('set: ', field.value)
-            } else {
-              console.log(field)
-            }
-          }
+    getUser(){
+      return this.$store.state.user.data
+    },
 
-        }
-        this.form = tmp;
-        // update validators
-        this.updateValidators(FAdata.validations);
-        console.log(this.validators)
-      })
+    hasRole(role){
+      const teams = this.getUser()?.team;
+      if (teams === undefined){
+        return false
+      }
+      return teams.includes(role);
+    },
+
+    async fetchFAbyName(name) {
+      return this.$axios.get('fa/' + name);
     },
 
     updateValidators(validations){
-      console.log(validations)
-      this.validators.forEach(validator => {
-        validator.status = validations[validator.name];
-      })
-      console.log(this.validators)
     },
 
-    saveFA() {
+    async saveFA() {
       // save the FA in the DB
-      console.log(this.form)
-      let mFA = {};
-      this.form.forEach(field => {
-        mFA[field.key] = field.value ? field.value : null;
-        if (field.type === 'datetime') {
-          console.log(field)
-          mFA[field.key] = new Date(field.date);
-          if (field.time) {
-            const mTime = field.time.split(':');
-            console.log(mTime)
-            mFA[field.key].setHours(+mTime[0], +mTime[1])
-          }
+      await this.$axios.put('/fa', this.FA);
+      this.isSnackbar = true;
+      // this.$router.push({
+      //   path: '/fa'
+      // })
+
+    },
+
+    getValidator(){
+      let mValidator = null;
+      this.validators.forEach(validator => {
+        if (this.hasRole(validator.name)){
+          mValidator = validator.name
         }
       })
-      mFA.equipments = this.selectedEquipments;
-      console.log(mFA);
-      // update validation status
-
-
-      this.eventDoc.collection('FA').doc(mFA.name).set(mFA);
-      this.$router.push({
-        path: '/fa'
-      })
-
+      return mValidator
     },
 
     submitForReview() {
@@ -406,28 +443,77 @@ export default {
       this.saveFA();
     },
 
-    validate(tag) {
-      // validate FA by the tag and save
-      // TODO validate
+    validate() {
+      const validator = this.getValidator();
+      if(this.FA.validated === undefined){
+        this.FA.validated = []
+      }
+      if(this.FA.refused){
+        this.FA.refused = this.FA.refused.filter(e => e !== validator);
+      }
+      this.addComment('validated')
+
+      this.FA.validated.push(validator)
+      this.addComment('accepted')
       this.dialog = false;
       this.saveFA();
     },
 
     refuse() {
       // refuse FA
+      const validator = this.getValidator();
+      if(this.FA.refused === undefined){
+        this.FA.refused = [];
+      }
+      this.addComment('refused', this.refuseComment)
+      this.FA.refused.push(validator);
+      this.FA.status = 'refused'
+      this.dialogValidator = false;
+      this.saveFA();
+    },
+
+    addComment(action, comment){
+      if (!this.FA.comments){
+        this.FA.comments = [];
+      }
+      this.FA.comments.push(
+          {
+            time : new Date(),
+            action,
+            comment,
+            by: this.getUser().nickname ? this.getUser().nickname : this.getUser().lastname,
+            validator: this.getValidator(),
+          });
+
+    },
+
+    addSchedule(){
+      if(!this.FA.schedules){
+        this.$set(this.FA, 'schedules' , [])
+      }
+      this.$set(this.FA.schedules,this.FA.schedules.length , {...this.schedule})
     },
 
     saveItems(){
       this.selectedEquipments = this.availableEquipments.filter(equipment => equipment.selected);
       this.dialogModifySelectedItem = false;
-    }
+    },
+
+    onFormChange(form){
+      this.FA = form
+    },
+
+    getConfig(key){
+      return this.$store.state.config.data.data.find(e => e.key === key).value
+    },
   }
 }
 </script>
 
 <style scoped>
-.fab-right {
-  position: absolute;
+.fab {
+  position: fixed;
+  z-index: 5;
   right: 10px;
   bottom: 10px;
   color: white;

@@ -7,11 +7,20 @@
       fixed
       app
     >
+
       <v-list>
+        <v-list-item>
+          <v-img
+              src="overbookd_logo_blanc.png"
+              alt="overbookd logo"
+              class="logo"
+          ></v-img>
+        </v-list-item>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
+          v-if="hasRole(item.roles)"
           router
           exact
         >
@@ -26,6 +35,10 @@
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-title></v-app-bar-title>
+      <v-app-bar-nav-icon>
+        <v-btn icon @click="toggleTheme">🌙</v-btn>
+      </v-app-bar-nav-icon>
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
@@ -69,23 +82,79 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
+      isDarkMode : false,
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Welcome 🤙',
           to: '/',
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
+          title: 'Fiche Anim 🥳',
+          roles: 'hard',
+          to: '/fa',
+        },
+        {
+          icon: 'mdi-format-color-highlight',
+          title: 'Fiche tache 😱',
+          roles: 'hard',
+          to: '/ft',
+        },
+        {
+          icon: 'mdi-clock',
+          title: 'Mes Dispo 🤯',
+          to: '/availabilities',
+        },
+        {
+          icon: 'mdi-calendar',
+          title: 'Mon calendrier 📆',
+          to: '/calendar',
+        },
+        {
+          icon: 'mdi-account',
+          title: 'les humains 👩‍👦‍👦',
+          roles: 'hard',
+          to: '/user',
+        },
+        {
+          icon: 'mdi-bus-articulated-front',
+          title: 'Inventaire 📦',
+          roles: 'hard',
+          to: '/inventory',
         },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js',
+      title: 'Overbookd',
     }
   },
+
+  methods: {
+    getUser(){
+      return this.$store.state.user.data
+    },
+
+    hasRole(role){
+      if(role === undefined){
+        return true
+      }
+      const teams = this.getUser()?.team;
+      if (teams === undefined){
+        return false
+      }
+      return teams.includes(role);
+    },
+
+    toggleTheme(){
+      if (this.isDarkMode){
+        this.$vuetify.theme.dark = true;
+      } else {
+        this.$vuetify.theme.dark = false;
+      }
+      this.isDarkMode = !this.isDarkMode;
+    },
+  }
 }
 </script>
