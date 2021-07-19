@@ -152,7 +152,6 @@
     <div style="height: 100px"></div>
 
     <div>
-
       <v-btn
           color="primary"
           class="fab"

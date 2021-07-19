@@ -123,7 +123,27 @@
         </v-card-text>
       </v-card>
     </v-col>
-    </v-row>
+
+        <v-col cols="6" sm="4" md="4">
+          <v-card v-if="user">
+            <v-img src="/cerise.png"></v-img>
+            <v-card-title>Le Clicker ⏱</v-card-title>
+            <v-card-subtitle>Le compteur de blague qui derrape 🚗</v-card-subtitle>
+            <v-card-text>
+              <h2>Le drift counter</h2>
+              <h3>tu es a 10 click 🚗</h3>
+            </v-card-text>
+            <v-card-actions>
+              <v-text-field
+                  label="username de ton pote"
+                  v-model="newFriend"
+              ></v-text-field>
+              <v-btn @click="sendFriendRequest">click </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+
+      </v-row>
     </v-container>
     <v-snackbar
         v-model="isSnackbarOpen"

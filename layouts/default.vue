@@ -6,6 +6,7 @@
       :clipped="clipped"
       fixed
       app
+      :style="isJauneActive ? jauneStyle : ''"
     >
 
       <v-list>
@@ -33,7 +34,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app :style="isJauneActive ? jauneStyle : ''">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-app-bar-title></v-app-bar-title>
       <v-app-bar-nav-icon>
@@ -48,7 +49,7 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>mdi-minus</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title @click="clickOnTitle()" v-text="title" />
       <v-spacer />
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
@@ -83,6 +84,9 @@ export default {
       drawer: false,
       fixed: false,
       isWhiteMode : true, // let this set to true
+      counter: 0,
+      isJauneActive: false,
+      jauneStyle: 'background-color: #FFD13C; color: #003C71',
       items: [
         {
           icon: 'mdi-apps',
@@ -151,6 +155,16 @@ export default {
       this.$vuetify.theme.dark = this.isWhiteMode;
       this.isWhiteMode = !this.isWhiteMode;
     },
+
+    async clickOnTitle(){
+      this.counter++;
+      if(this.counter > 10){
+        this.isJauneActive = true;
+        this.title = 'RICARD - Pastis'
+        const audio = new Audio('jaune.m4a');
+        await audio.play()
+      }
+    }
   }
 }
 </script>
