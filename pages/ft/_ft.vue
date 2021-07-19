@@ -1,6 +1,9 @@
 <template>
   <div>
+    <v-container style="display: flex; align-content: center;justify-content: space-between;">
     <h1>Fiche Tache 🤩</h1>
+    <h2>Status {{FT.status || 'draft'}}</h2>
+    </v-container>
     <over-form
         v-if="FT_FORM"
       :fields="FT_FORM"
@@ -109,6 +112,8 @@
       </v-card>
     </v-dialog>
 
+    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">{{snackbarMessage}}</v-snackbar>
+
     <div style="display: flex; justify-content: space-evenly">
       <v-btn color="green" v-if="getValidator" @click="validateFT">validate</v-btn>
       <v-btn color="red" v-if="getValidator" @click="isRefusedDialogOpen = true">refuse</v-btn>
@@ -133,6 +138,14 @@ export default {
       refusedComment: undefined,
       isRefusedDialogOpen: false,
       isSubmitDialogOpen: false,
+      isSnackbarOpen: false,
+      snackbarMessage: "",
+      feedbacks:{
+        validate: 'FT valide ',
+        refused: 'FT refuse  🥺',
+        save: 'FT sauvgarde',
+        submitted: 'FT soumise a validation 🥵 may the odds be with you' ,
+      },
       schedule: {
         date: undefined,
         start: undefined,
@@ -152,15 +165,19 @@ export default {
 
   async mounted() {
     let mFT = (await this.$axios.get('/ft/' + this.FTID)).data;
+    this.FT = mFT;
+    console.log(mFT);
     Object.keys(mFT).forEach(key => {
       let field = this.FT_FORM.find(field => field.key === key);
       if(field){
         this.$set(field, 'value', mFT[key])
-        console.log(field)
       }
     })
-    this.schedules = mFT.schedules || [];
+    this.$set(this, 'schedules', mFT.schedules || [])
     this.availableEquipment = (await this.$axios.get('/equipment')).data;
+    if (mFT.equipments){
+      this.selectedEquipment = mFT.equipments;
+    }
     // this.availableEquipment.filter(equipment => equipment.type === '') // TODO
   },
 
@@ -187,7 +204,7 @@ export default {
 
     getValidator(){
       let mValidator = null;
-      this.validators.forEach(validator => {
+      this.FT_VALIDATORS.forEach(validator => {
         if (this.hasRole(validator.name)){
           mValidator = validator.name
         }
@@ -215,6 +232,7 @@ export default {
     },
 
     saveFT(){
+      this.FT._id = this.FTID;
       this.$axios.put('/ft', this.FT);
     },
 
@@ -231,11 +249,16 @@ export default {
       if(this.FT.validated.length === this.FT_VALIDATORS.length){
         this.FT.status = 'validated'
       }
-      this.$axios.put('/ft', this.FT);
+      this.snackbarMessage = this.feedbacks.validate;
+      this.isSnackbarOpen = true;
+      this.saveFT();
     },
 
     submitForReview(){
       this.FT.status = 'submitted';
+      this.snackbarMessage = this.feedbacks.submitted;
+      this.isSnackbarOpen = true;
+      this.isSubmitDialogOpen = false;
       this.saveFT();
     },
 
@@ -246,6 +269,9 @@ export default {
         this.FT.refused = [];
       }
       this.FT.refused.push(validator);
+      this.snackbarMessage = this.feedbacks.refused;
+      this.isSnackbarOpen = true;
+      this.isRefusedDialogOpen = false;
       this.saveFT()
     }
   }
