@@ -16,3 +16,4 @@ buildx:
   only:
     - master
     - ci/cd
+    - rework
