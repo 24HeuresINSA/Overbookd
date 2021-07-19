@@ -86,10 +86,33 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="isRefusedDialogOpen">
+      <v-card>
+        <v-card-title>Refuser la FT</v-card-title>
+        <v-card-text>
+          <v-textarea v-model="refusedComment"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="refuse">refuse</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isSubmitDialogOpen" width="600px">
+      <v-card>
+        <v-img src="/submit_FT.gif" height="300px"></v-img>
+        <v-card-title>t'es sur de ta FT ? </v-card-title>
+        <v-card-actions>
+          <v-btn text @click="isSubmitDialogOpen=false">Non</v-btn>
+          <v-btn text @click="submitForReview">je suis sûr</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <div style="display: flex; justify-content: space-evenly">
-      <v-btn color="green" @click="saveFT">validate</v-btn>
-      <v-btn color="red" @click="saveFT">refuse</v-btn>
-      <v-btn color="secondary" @click="saveFT">submit</v-btn>
+      <v-btn color="green" v-if="getValidator" @click="validateFT">validate</v-btn>
+      <v-btn color="red" v-if="getValidator" @click="isRefusedDialogOpen = true">refuse</v-btn>
+      <v-btn color="secondary" @click="isSubmitDialogOpen = true">submit</v-btn>
       <v-btn color="warning" @click="saveFT">save 💾</v-btn>
     </div>
   </div>
@@ -105,7 +128,11 @@ export default {
       FTID: this.$route.params.ft,
       FT: {},
       FT_FORM: this.getConfig('ft_form'),
+      FT_VALIDATORS: this.getConfig('ft_validators'),
       schedules: [],
+      refusedComment: undefined,
+      isRefusedDialogOpen: false,
+      isSubmitDialogOpen: false,
       schedule: {
         date: undefined,
         start: undefined,
@@ -146,6 +173,29 @@ export default {
       return this.$store.state.config.data.data.find(e => e.key === key).value
     },
 
+    getUser(){
+      return this.$store.state.user.data
+    },
+
+    hasRole(role){
+      const teams = this.getUser()?.team;
+      if (teams === undefined){
+        return false
+      }
+      return teams.includes(role);
+    },
+
+    getValidator(){
+      let mValidator = null;
+      this.validators.forEach(validator => {
+        if (this.hasRole(validator.name)){
+          mValidator = validator.name
+        }
+      })
+      return mValidator
+    },
+
+
     addSchedule(){
       if(!this.FT.schedules){
         this.$set(this.FT, 'schedules' , [])
@@ -160,7 +210,43 @@ export default {
           this.selectedEquipment.push(e);
         }
       })
+      this.FT.equipments = this.selectedEquipment;
       this.isEquipmentDialogOpen = false;
+    },
+
+    saveFT(){
+      this.$axios.put('/ft', this.FT);
+    },
+
+    validateFT(){
+      const validator = this.getValidator();
+      if(this.FT.validated === undefined){
+        this.FT.validated = [];
+      }
+      if(this.FT.refused){
+        this.FT.refused = this.FA.refused.filter(e => e !== validator);
+      }
+      this.FT.validated.push(validator)
+
+      if(this.FT.validated.length === this.FT_VALIDATORS.length){
+        this.FT.status = 'validated'
+      }
+      this.$axios.put('/ft', this.FT);
+    },
+
+    submitForReview(){
+      this.FT.status = 'submitted';
+      this.saveFT();
+    },
+
+    refuse(){
+      this.FT.status = 'refused';
+      const validator = this.getValidator();
+      if(this.FT.refused === undefined){
+        this.FT.refused = [];
+      }
+      this.FT.refused.push(validator);
+      this.saveFT()
     }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Fiche Anime 🤯</h1>
     <h2 v-if="isNewFA">Create new FA</h2>
     <div style="display: flex">
       <h3>status {{ FA.status ? FA.status : 'draft' }}</h3>
@@ -377,7 +378,6 @@ export default {
     }
   },
   async mounted() {
-    console.log(this.validators)
     // getFormConfig
     this.form = this.getConfig('fa_form')
     this.availableEquipments = await this.$axios.$get('/equipment');
@@ -414,6 +414,7 @@ export default {
 
     }
   },
+
   methods: {
     getUser(){
       return this.$store.state.user.data
@@ -480,7 +481,11 @@ export default {
       this.addComment('validated')
 
       this.FA.validated.push(validator)
-      this.addComment('accepted')
+
+      if(this.FA.validated.length === this.validators.length){
+        this.FA.status = 'validated';
+        this.addComment('accepted')
+      }
       this.dialog = false;
       this.saveFA();
     },
