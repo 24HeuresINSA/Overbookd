@@ -229,6 +229,7 @@ export default {
       await this.$axios.post('/user/broadcast', this.notification);
       this.snackbarMessage = this.snackbarMessages.broadcasted;
       this.isSnackbarOpen = true;
+      this.isBroadcastDialogOpen = false;
     },
 
     async sendFriendRequest() {
