@@ -52,7 +52,6 @@
             <v-card-title>Amis ❤️</v-card-title>
             <v-card-subtitle>mes reuf</v-card-subtitle>
             <v-card-text v-if="user.friends.length !== 0">
-              <p>{{ user.friends }}</p>
               <v-simple-table>
                 <thead>
                 <tr>

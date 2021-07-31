@@ -83,9 +83,6 @@ export default {
       inventory: [],
       headers: [
         {text: 'nom', value: 'name'},
-        {text: 'longeur', value: 'length'},
-        {text: 'largeur', value: 'width'},
-        {text: 'hauteur', value: 'height'},
         {text: 'quantite (inventaire 24)', value: 'amount'},
         {text: 'quantite (emprunté)', value: 'borrowedCount'},
         {text: 'lieu de stockage', value: 'location'},
