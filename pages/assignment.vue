@@ -109,11 +109,7 @@ export default {
     // get FTs
     this.FTs = (await this.$axios.get('/FT')).data.data;
     this.filteredFTs = this.FTs;
-    console.log(this.filteredFTs)
 
-    setInterval(() => {
-      console.log(this.selectedUserAvailabilities)
-    }, 1000)
   },
 
   methods: {
@@ -145,11 +141,10 @@ export default {
                       end: new Date(Date.parse(day.date + ' ' + frame.end))
                     }
                     events.push({
-                      name: reason.name,
+                      name: 'Disponible',
                       start: this.getStupidAmericanTimeFormat(timeframe.start),
                       end: this.getStupidAmericanTimeFormat(timeframe.end),
                     })
-                    console.log(events)
                   })
                 }
               })

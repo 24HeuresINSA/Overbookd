@@ -69,6 +69,62 @@
     </v-card>
   </v-dialog>
 
+  <v-dialog v-model="isUserDialogOpen" max-width="600">
+    <v-card>
+      <v-card-title>{{selectedUser.nickname ? selectedUser.nickname : selectedUser.lastname}}</v-card-title>
+      <v-card-subtitle>
+        <v-chip-group>
+          <v-chip v-for="team of selectedUser.team">{{team}}</v-chip>
+        </v-chip-group>
+      </v-card-subtitle>
+      <v-card-text>
+        <v-text-field
+          label="ajouter un role"
+        ></v-text-field>
+        <v-btn>ajouter</v-btn>
+
+        <v-simple-table>
+          <tbody>
+          <tr>
+            <td>Nom</td>
+            <td>{{selectedUser.lastname}} {{selectedUser.firstname}}</td>
+          </tr>
+
+          <tr>
+            <td>Date de naissance</td>
+            <td>{{selectedUser.birthday}}</td>
+          </tr>
+
+          <tr>
+            <td>tel</td>
+            <td>{{selectedUser.phone}}</td>
+          </tr>
+
+          <tr>
+            <td>email</td>
+            <td>{{selectedUser.email}}</td>
+          </tr>
+
+          <tr>
+            <td>compte perso</td>
+            <td>{{selectedUser.balance}}</td>
+          </tr>
+
+          <tr>
+            <td>amis</td>
+            <td>{{selectedUser.friends}}</td>
+          </tr>
+
+          <tr>
+            <td>ID</td>
+            <td>{{selectedUser.keycloakID}}</td>
+          </tr>
+          </tbody>
+        </v-simple-table>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+
   <v-snackbar
       v-model="isSnackbarOpen"
       :timeout="timeout"
@@ -107,8 +163,11 @@ export default {
 
       isTransactionDialogOpen: false,
       isInformationDialogOpen: false,
+      isUserDialogOpen: false,
       isSnackbarOpen: false,
-      selectedUser: undefined,
+      selectedUser: {
+        nickname: undefined,
+      },
       newTransaction: {
         reason: 'recharge compte perso',
         amount: undefined,
@@ -157,8 +216,8 @@ export default {
     },
 
     openInformationDialog(user){
-      this.isInformationDialogOpen= true;
       this.selectedUser = user;
+      this.isUserDialogOpen = true;
     },
 
     async transaction(isNegative){
