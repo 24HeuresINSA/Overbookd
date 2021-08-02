@@ -25,6 +25,12 @@
             fin
           </th>
           <th class="text-left">
+            #
+          </th>
+          <th class="text-left">
+            type
+          </th>
+          <th class="text-left">
             action
           </th>
         </tr>
@@ -37,18 +43,28 @@
           <td>{{schedule.date}}</td>
           <td>{{schedule.start}}</td>
           <td>{{schedule.end}}</td>
+          <td>{{schedule.amount}}</td>
+          <td>{{schedule.type}}</td>
           <td><v-btn @click="deleteSchedule(schedule)">🗑</v-btn></td>
 
         </tr>
         </tbody>
       </template>
     </v-simple-table>
-    <v-container style="display: flex; justify-content: space-around; align-content: baseline">
+    <v-container style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap">
       <v-date-picker v-model="schedule.date"></v-date-picker>
       <h3>Debut</h3>
       <v-time-picker format="24h" v-model="schedule.start"></v-time-picker>
       <h3>Fin</h3>
       <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
+      <v-select
+        v-model="schedule.type"
+        :items="getConfig('teams')"
+      ></v-select>
+      <v-text-field
+        type="number"
+        v-model="schedule.amount"
+      ></v-text-field>
       <v-btn
           fab
           style="margin: 20px;"

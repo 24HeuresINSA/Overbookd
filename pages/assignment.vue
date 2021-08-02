@@ -126,6 +126,10 @@ export default {
       return this.users[this.selectedFTIndex]
     },
 
+    filteredFTs(){
+
+    },
+
     selectedUserAvailabilities() {
       let events = [];
       if (this.selectedUser && this.selectedUser.availabilities) {
