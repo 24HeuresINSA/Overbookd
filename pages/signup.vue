@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Inscription 👋</h1>
     <over-form
       v-if="signupForm"
       :fields="signupForm"
@@ -17,6 +18,7 @@ export default {
   components: {OverForm},
   // layout: "none",
   auth: false,
+  layout: 'none',
 
   data(){
     return {

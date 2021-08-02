@@ -10,7 +10,6 @@
           <v-btn
               style="margin: 5px"
               fab
-
           ><v-icon>mdi-text-search</v-icon></v-btn>
         </nuxt-link>
 

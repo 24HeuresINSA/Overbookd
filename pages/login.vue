@@ -51,6 +51,7 @@ const REDIRECT_URL = "/"; // TODO change this to eventSelector page
 export default {
   name: "login",
   auth: false,
+  layout: 'none',
   data: () => ({
     credentials: {
       username: undefined,
