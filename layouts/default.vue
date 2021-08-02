@@ -127,6 +127,12 @@ export default {
           roles: 'hard',
           to: '/inventory',
         },
+        {
+          icon: 'mdi-human-greeting',
+          title: 'Affectation 💃',
+          roles: 'hard',
+          to: '/assignment',
+        },
       ],
       miniVariant: false,
       right: true,

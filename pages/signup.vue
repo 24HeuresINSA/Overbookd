@@ -16,7 +16,6 @@ import OverForm from "../components/overForm";
 export default {
   name: "signup",
   components: {OverForm},
-  // layout: "none",
   auth: false,
   layout: 'none',
 
