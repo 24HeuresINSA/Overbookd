@@ -1,48 +1,50 @@
 <template>
   <v-container style="left: 0px; width: 100%; margin-left: 0; margin-right: 0; position: absolute; display: flex">
-    <!-- list of  filtered users -->
-    <v-card>
-      <v-list>
-        <v-subheader>Users</v-subheader>
-        <v-list-item-group
-            v-model="selectedUserIndex"
-        >
-          <v-list-item v-for="user of filteredUsers">
-            <v-list-item-content>
-              <h4>{{ user.lastname }} {{ user.firstname }}</h4>
-              <!--          <v-chip>{{user.charisma}}</v-chip>-->
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-icon>mdi-information-outline</v-icon>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
 
-    <!-- list of selected user's friend -->
-    <v-card v-if="selectedUser && selectedUser.friends">
-      <v-list>
-        <v-subheader>les amis du user selectionné</v-subheader>
-        <v-list-item-group
-            v-model="selectedUserFriend"
-        >
-          <v-list-item v-for="friend of selectedUser.friends">
-            <v-list-item-content>
-              <h4>{{ friend }}</h4>
-              <!--          <v-chip>{{user.charisma}}</v-chip>-->
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-icon>mdi-information-outline</v-icon>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
+    <div style="display: flex; flex-flow: column">
+      <!-- list of  filtered users -->
+      <v-card>
+        <v-list>
+          <v-subheader>Users</v-subheader>
+          <v-list-item-group
+              v-model="selectedUserIndex"
+          >
+            <v-list-item v-for="user of filteredUsers">
+              <v-list-item-content>
+                <h4>{{ user.lastname }} {{ user.firstname }}</h4>
+                <!--          <v-chip>{{user.charisma}}</v-chip>-->
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>mdi-information-outline</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
 
+      <!-- list of selected user's friend -->
+      <v-card v-if="selectedUser && selectedUser.friends">
+        <v-list>
+          <v-subheader>les amis du user selectionné</v-subheader>
+          <v-list-item-group
+              v-model="selectedUserFriend"
+          >
+            <v-list-item v-for="friend of selectedUser.friends">
+              <v-list-item-content>
+                <h4>{{ friend }}</h4>
+                <!--          <v-chip>{{user.charisma}}</v-chip>-->
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>mdi-information-outline</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
+    </div>
     <!-- calendar --->
     <v-calendar
-        style="flex-grow: 8"
+        style="flex-grow: 2"
         ref="calendar"
         :value="selectedDay"
         :events="selectedUserAvailabilities"
@@ -50,10 +52,26 @@
         type="week"
         :weekdays="[1, 2, 3, 4, 5, 6, 0]"
     ></v-calendar>
-    <v-date-picker
-      v-model="selectedDay"
-    ></v-date-picker>
 
+    <div style="display: flex; flex-flow: column">
+      <v-date-picker
+          v-model="selectedDay"
+      ></v-date-picker>
+
+      <!-- list of users -->
+      <v-card>
+        <v-list>
+          <v-subheader>FT</v-subheader>
+          <v-list-item-group
+              v-model="selectedFTIndex"
+          >
+            <v-list-item v-for="FT of filteredFTs">
+              <v-list-item-content>{{ FT.name }}</v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
+    </div>
   </v-container>
 </template>
 
@@ -67,8 +85,11 @@ export default {
       users: [],
       filteredUsers: [],
       selectedUserIndex: undefined,
+      selectedFTIndex: undefined,
       selectedUserFriend: undefined,
       selectedDay: undefined,
+      FTs: [],
+      filteredFTs: [],
     }
   },
 
@@ -85,30 +106,39 @@ export default {
     this.users = (await this.$axios.get('/user')).data;
     this.filteredUsers = this.users;
 
+    // get FTs
+    this.FTs = (await this.$axios.get('/FT')).data.data;
+    this.filteredFTs = this.FTs;
+    console.log(this.filteredFTs)
+
     setInterval(() => {
       console.log(this.selectedUserAvailabilities)
     }, 1000)
   },
 
   methods: {
-    getStupidAmericanTimeFormat(date){
+    getStupidAmericanTimeFormat(date) {
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
     }
   },
-  computed:{
-    selectedUser(){
+  computed: {
+    selectedUser() {
       return this.users[this.selectedUserIndex]
     },
 
-    selectedUserAvailabilities(){
+    selectedFT() {
+      return this.users[this.selectedFTIndex]
+    },
+
+    selectedUserAvailabilities() {
       let events = [];
-      if(this.selectedUser && this.selectedUser.availabilities){
+      if (this.selectedUser && this.selectedUser.availabilities) {
         let mAvailabilities = this.selectedUser.availabilities;
-        if(mAvailabilities.length !== 0){
+        if (mAvailabilities.length !== 0) {
           mAvailabilities.forEach(reason => {
-            if(reason.days){
-              reason.days.forEach(day =>{
-                if(day.frames){
+            if (reason.days) {
+              reason.days.forEach(day => {
+                if (day.frames) {
                   day.frames.forEach(frame => {
                     let timeframe = {
                       start: new Date(Date.parse(day.date + ' ' + frame.start)),
