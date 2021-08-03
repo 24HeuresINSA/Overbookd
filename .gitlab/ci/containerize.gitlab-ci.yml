@@ -15,4 +15,3 @@ containerize:
   only:
     - master
     - ci/cd
-    - rework
