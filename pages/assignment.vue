@@ -78,6 +78,9 @@
         </v-list>
       </v-card>
     </div>
+    <v-btn fab @click="saveAssignment" style="position: fixed; right: 20px; bottom: 40px;z-index: 20">
+      <v-icon>mdi-content-save</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -138,6 +141,10 @@ export default {
       } else {
       }
       return events;
+    },
+
+    saveAssignment(){
+
     }
   },
   computed: {
