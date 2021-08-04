@@ -1,5 +1,5 @@
 <template>
-  <v-container style="left: 0px; width: 100%; margin-left: 0; margin-right: 0; position: absolute; display: flex">
+  <v-container style="left: 0; max-width: none; margin-left: 0; margin-right: 0; position: absolute; display: flex">
 
     <div style="display: flex; flex-flow: column">
       <!-- list of  filtered users -->
@@ -23,13 +23,13 @@
       </v-card>
 
       <!-- list of selected user's friend -->
-      <v-card v-if="selectedUser && selectedUser.friends">
+      <v-card v-if="getSelectedUser && getSelectedUser.friends">
         <v-list>
           <v-subheader>les amis du user selectionné</v-subheader>
           <v-list-item-group
               v-model="selectedUserFriend"
           >
-            <v-list-item v-for="friend of selectedUser.friends">
+            <v-list-item v-for="friend of getSelectedUser.friends">
               <v-list-item-content>
                 <h4>{{ friend }}</h4>
                 <!--          <v-chip>{{user.charisma}}</v-chip>-->
@@ -63,10 +63,16 @@
         <v-list>
           <v-subheader>FT</v-subheader>
           <v-list-item-group
-              v-model="selectedFTIndex"
+              v-model="selectedAssignmentsIndex"
+              multiple
           >
-            <v-list-item v-for="FT of filteredFTs">
-              <v-list-item-content>{{ FT.name }}</v-list-item-content>
+            <v-list-item v-for="schedule in filteredSchedules">
+              <v-list-item-content>
+                {{ schedule.name }} {{schedule.schedule.date}} {{schedule.schedule.start}}➡️{{schedule.schedule.end}}
+              </v-list-item-content>
+              <v-list-item-icon><v-icon>
+                mdi-information
+              </v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -85,11 +91,10 @@ export default {
       users: [],
       filteredUsers: [],
       selectedUserIndex: undefined,
-      selectedFTIndex: undefined,
+      selectedAssignmentsIndex: undefined,
       selectedUserFriend: undefined,
       selectedDay: undefined,
       FTs: [],
-      filteredFTs: [],
     }
   },
 
@@ -107,33 +112,85 @@ export default {
     this.filteredUsers = this.users;
 
     // get FTs
-    this.FTs = (await this.$axios.get('/FT')).data.data;
-    this.filteredFTs = this.FTs;
-
+    this.FTs = (await this.$axios.get('/FT')).data.data; // idk but it works
   },
 
   methods: {
     getStupidAmericanTimeFormat(date) {
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+    },
+
+    getCalendarFormattedAssignedFTsOfSelectedUser(){
+      let events = [];
+      if(this.getSelectedUser && this.getSelectedUser.assigned !== undefined){
+        let assignedFTs = this.getSelectedUser.assigned;
+        console.log(assignedFTs)
+        assignedFTs.forEach(assignedFT => {
+          let start = new Date(Date.parse(assignedFT.schedule.date + ' ' + assignedFT.schedule.start));
+          let end =  new Date(Date.parse(assignedFT.schedule.date + ' ' + assignedFT.schedule.end));
+          events.push({
+            name: assignedFT.name,
+            start: this.getStupidAmericanTimeFormat(start),
+            end: this.getStupidAmericanTimeFormat(end),
+            color: '#ebc034'
+          })
+        })
+      } else {
+      }
+      return events;
     }
   },
   computed: {
-    selectedUser() {
+    getSelectedUser() {
       return this.users[this.selectedUserIndex]
     },
 
-    selectedFT() {
-      return this.users[this.selectedFTIndex]
+    selectedAssignments() {
+      if(this.selectedAssignmentsIndex){
+        return this.selectedAssignmentsIndex.map(i => this.filteredSchedules[i])
+      }
     },
 
-    filteredFTs(){
-
+    filteredSchedules(){
+      // FTs that are in the selected users availability
+      let filteredSchedules = [];
+      let userAvailabilities = [];
+      if(this.getSelectedUser){
+        this.getSelectedUser.availabilities.forEach(availability => {
+          availability.days.forEach(day => {
+            day.frames.forEach(frame => {
+              userAvailabilities.push({
+                start: new Date(Date.parse(day.date + ' ' + frame.start)),
+                end: new Date(Date.parse(day.date + ' ' + frame.end))
+              })
+            })
+          })
+        })
+        userAvailabilities.forEach(timeframe => {
+          this.FTs.forEach(FT => {
+            if(FT.schedules){
+              FT.schedules.forEach(schedule => {
+                let start = Date.parse(schedule.date + ' ' + (schedule.start));
+                let end = Date.parse(schedule.date + ' ' + (schedule.start));
+                if(timeframe.start <= start && timeframe.end >= end) {
+                  filteredSchedules.push({
+                    name: FT.name,
+                    FTID: FT._id,
+                    schedule
+                  });
+                }
+              })
+            }
+          })
+        })
+      }
+      return filteredSchedules
     },
 
     selectedUserAvailabilities() {
       let events = [];
-      if (this.selectedUser && this.selectedUser.availabilities) {
-        let mAvailabilities = this.selectedUser.availabilities;
+      if (this.getSelectedUser && this.getSelectedUser.availabilities) {
+        let mAvailabilities = this.getSelectedUser.availabilities;
         if (mAvailabilities.length !== 0) {
           mAvailabilities.forEach(reason => {
             if (reason.days) {
@@ -156,7 +213,20 @@ export default {
           })
         }
       }
+      // add assigned events
+      const assignedEvents = this.getCalendarFormattedAssignedFTsOfSelectedUser()
+      events = events.concat(assignedEvents);
       return events
+    }
+  },
+
+  watch:{
+    selectedAssignments(){
+      // selected assignment changed...
+      let user = this.getSelectedUser;
+      this.$set(user, 'assigned',this.selectedAssignments )
+      // save in FT
+      this.selectedAssignments
     }
   }
 }
