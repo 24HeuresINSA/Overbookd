@@ -78,14 +78,17 @@
         </v-list>
       </v-card>
     </div>
-    <v-btn fab @click="saveAssignment" style="position: fixed; right: 20px; bottom: 40px;z-index: 20">
+
+    <v-btn fab v-if="getSelectedUser" @click="saveAssignment" style="position: fixed; right: 20px; bottom: 40px;z-index: 20">
       <v-icon>mdi-content-save</v-icon>
     </v-btn>
+
+    <v-snackbar v-model="isFeedbackSnackbarOpen" :timeout="5000">aller au suivant 🥳</v-snackbar>
   </v-container>
 </template>
 
 <script>
-import {hasRole} from "../common/role";
+import {getUser, hasRole} from "../common/role";
 
 export default {
   name: "assignment",
@@ -98,8 +101,8 @@ export default {
       selectedUserFriend: undefined,
       selectedDay: undefined,
       FTs: [],
-      isFirstTimeWatchingSelectedAssignment: true,
       updatedFTs : [],
+      isFeedbackSnackbarOpen: false,
     }
   },
 
@@ -143,9 +146,13 @@ export default {
       return events;
     },
 
-    saveAssignment(){
+    async saveAssignment(){
       // save FT
-      console.log(this.updatedFTs);
+      // console.log(this.updatedFTs);
+      await this.$axios.put(`/user/${this.getSelectedUser.keycloakID}`, {
+        assigned: this.getSelectedUser.assigned,
+      });
+      this.isFeedbackSnackbarOpen = true;
     }
   },
   computed: {
@@ -234,34 +241,37 @@ export default {
       let user = this.getSelectedUser;
       this.$set(user, 'assigned', this.selectedAssignments)
 
+      console.log('sat, ',  this.selectedAssignments);
+      console.log('user.assigned', user.assigned)
+
       // save in FT
-      user.assigned.forEach(assignment => {
-        // get FT
-        let FT = this.FTs.find(FT => FT._id === assignment.FTID);
-        let schedule = FT.schedules.find(({date, start, end}) => {
-          const mSchedule = assignment.schedule;
-          return mSchedule.start === start && mSchedule.end === end && mSchedule.date === date
-        });
-        if(schedule.assigned === undefined){
-          schedule.assigned = [];
-        }
-        const isUserAlreadyAssigned = schedule.assigned.find(assignedUser => {
-          return assignedUser.keycloakID === user.keycloakID
-        })
-        if (!isUserAlreadyAssigned){
-          schedule.assigned.push({
-            username : `${user.lastname}.${user.firstname}`,
-            keycloakID: user.keycloakID,
-            id: user._id,
-          })
-        }
-        let oldFT = this.updatedFTs.find(mFT => mFT._id === FT._id);
-        if(oldFT === undefined){
-          this.updatedFTs.push(FT)
-        } else {
-          oldFT = FT
-        }
-      })
+      // user.assigned.forEach(assignment => {
+      //   // get FT
+      //   let FT = this.FTs.find(FT => FT._id === assignment.FTID);
+      //   let schedule = FT.schedules.find(({date, start, end}) => {
+      //     const mSchedule = assignment.schedule;
+      //     return mSchedule.start === start && mSchedule.end === end && mSchedule.date === date
+      //   });
+      //   if(schedule.assigned === undefined){
+      //     schedule.assigned = [];
+      //   }
+      //   const isUserAlreadyAssigned = schedule.assigned.find(assignedUser => {
+      //     return assignedUser.keycloakID === user.keycloakID
+      //   })
+      //   if (!isUserAlreadyAssigned){
+      //     schedule.assigned.push({
+      //       username : `${user.lastname}.${user.firstname}`,
+      //       keycloakID: user.keycloakID,
+      //       id: user._id,
+      //     })
+      //   }
+      //   let oldFTIndex = this.updatedFTs.findIndex(mFT => mFT._id === FT._id);
+      //   if(oldFTIndex === -1){
+      //     this.updatedFTs.push(FT)
+      //   } else {
+      //     this.updatedFTs[oldFTIndex] = FT
+      //   }
+      // })
     }
   }
 }
