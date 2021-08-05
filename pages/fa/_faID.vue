@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Fiche Anime 🤯</h1>
     <h2 v-if="isNewFA">Create new FA</h2>
     <div style="display: flex">
       <h3>status {{ FA.status ? FA.status : 'draft' }}</h3>
@@ -124,7 +125,7 @@
             v-for="comment in FA.comments"
             :key="comment.time"
         >
-          <td><v-icon :color="color[comment.action]">{{(validators.find(v => v.name === comment.by)).icon}}</v-icon></td>
+          <td><v-icon :color="color[comment.action]">{{ getIcon(comment) }}</v-icon></td>
           <td>{{ comment.by}}</td>
           <td>{{ comment.comment}}</td>
           <td>{{(new Date(comment.time)).toLocaleString()}}</td>
@@ -135,10 +136,23 @@
     </v-simple-table>
     <h4 v-else>pas de commentaire pour l'instant il faut se mettre au charbon</h4>
 
+    <br>
+    <v-divider></v-divider>
+    <h2>Fiche tâche  🤩</h2>
+    <v-data-table
+      :headers="FTHeader"
+      :items="FA.FTs"
+    >
+      <template v-slot:item.action = item>
+        <v-btn :href="'/ft/' + item.item._id"><v-icon>mdi-link</v-icon></v-btn>
+      </template>
+    </v-data-table>
+    <v-text-field v-model="FTname"></v-text-field>
+    <v-btn @click="addFT">ajouter une FT</v-btn>
+
     <div style="height: 100px"></div>
 
     <div>
-
       <v-btn
           color="primary"
           class="fab"
@@ -332,6 +346,7 @@ export default {
       snackbarMessage: 'la FA a bien ete sauvgarder 😅',
       dialogText: this.getConfig("fb_confirm_submit"),
       validators: this.getConfig("fa_validators"),
+      FTname: undefined,
       schedule: {
         date: undefined,
         start: undefined,
@@ -354,12 +369,15 @@ export default {
       },{
         text: 'sélectionner',
         value: 'selected'
-      },]
+      },],
+      FTHeader: [
+        {text: 'nom', value: 'name'},
+        {text: 'action', value: 'action'},
+      ]
 
     }
   },
   async mounted() {
-    console.log(this.validators)
     // getFormConfig
     this.form = this.getConfig('fa_form')
     this.availableEquipments = await this.$axios.$get('/equipment');
@@ -396,6 +414,7 @@ export default {
 
     }
   },
+
   methods: {
     getUser(){
       return this.$store.state.user.data
@@ -411,6 +430,14 @@ export default {
 
     async fetchFAbyName(name) {
       return this.$axios.get('fa/' + name);
+    },
+
+    getIcon(comment){
+      let mValidator = this.validators.find(v => v.name === comment.by)
+      if(mValidator){
+       return  mValidator.icon
+      }
+      return
     },
 
     updateValidators(validations){
@@ -454,7 +481,11 @@ export default {
       this.addComment('validated')
 
       this.FA.validated.push(validator)
-      this.addComment('accepted')
+
+      if(this.FA.validated.length === this.validators.length){
+        this.FA.status = 'validated';
+        this.addComment('accepted')
+      }
       this.dialog = false;
       this.saveFA();
     },
@@ -506,6 +537,18 @@ export default {
     getConfig(key){
       return this.$store.state.config.data.data.find(e => e.key === key).value
     },
+
+    async addFT(){
+      if(!this.FA.FTs){
+        this.FA.FTs = [];
+      }
+      const FT = (await this.$axios.post('/FT', {name: this.FTname})).data
+      this.FA.FTs.push(FT._id);
+      await this.saveFA();
+      this.$router.push({
+        path: '/ft/' + FT._id,
+      })
+    }
   }
 }
 </script>

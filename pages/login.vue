@@ -76,6 +76,8 @@ export default {
         await this.$router.push({
           path: REDIRECT_URL,
         }); // redirect to homepage
+        const audio = new Audio('jaune.m4a');
+        await audio.play()
       } catch (e) {
         if (e.response.status === 401) {
           // wrong password or username
