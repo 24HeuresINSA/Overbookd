@@ -98,6 +98,8 @@ export default {
       selectedUserFriend: undefined,
       selectedDay: undefined,
       FTs: [],
+      isFirstTimeWatchingSelectedAssignment: true,
+      updatedFTs : [],
     }
   },
 
@@ -127,7 +129,6 @@ export default {
       let events = [];
       if(this.getSelectedUser && this.getSelectedUser.assigned !== undefined){
         let assignedFTs = this.getSelectedUser.assigned;
-        console.log(assignedFTs)
         assignedFTs.forEach(assignedFT => {
           let start = new Date(Date.parse(assignedFT.schedule.date + ' ' + assignedFT.schedule.start));
           let end =  new Date(Date.parse(assignedFT.schedule.date + ' ' + assignedFT.schedule.end));
@@ -138,13 +139,13 @@ export default {
             color: '#ebc034'
           })
         })
-      } else {
       }
       return events;
     },
 
     saveAssignment(){
-
+      // save FT
+      console.log(this.updatedFTs);
     }
   },
   computed: {
@@ -231,9 +232,36 @@ export default {
     selectedAssignments(){
       // selected assignment changed...
       let user = this.getSelectedUser;
-      this.$set(user, 'assigned',this.selectedAssignments )
+      this.$set(user, 'assigned', this.selectedAssignments)
+
       // save in FT
-      this.selectedAssignments;
+      user.assigned.forEach(assignment => {
+        // get FT
+        let FT = this.FTs.find(FT => FT._id === assignment.FTID);
+        let schedule = FT.schedules.find(({date, start, end}) => {
+          const mSchedule = assignment.schedule;
+          return mSchedule.start === start && mSchedule.end === end && mSchedule.date === date
+        });
+        if(schedule.assigned === undefined){
+          schedule.assigned = [];
+        }
+        const isUserAlreadyAssigned = schedule.assigned.find(assignedUser => {
+          return assignedUser.keycloakID === user.keycloakID
+        })
+        if (!isUserAlreadyAssigned){
+          schedule.assigned.push({
+            username : `${user.lastname}.${user.firstname}`,
+            keycloakID: user.keycloakID,
+            id: user._id,
+          })
+        }
+        let oldFT = this.updatedFTs.find(mFT => mFT._id === FT._id);
+        if(oldFT === undefined){
+          this.updatedFTs.push(FT)
+        } else {
+          oldFT = FT
+        }
+      })
     }
   }
 }
