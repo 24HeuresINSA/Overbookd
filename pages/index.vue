@@ -142,7 +142,6 @@
             <v-card-actions>
               <v-text-field
                   label="username de ton pote"
-                  v-model="newFriend"
               ></v-text-field>
               <v-btn @click="sendFriendRequest">click</v-btn>
             </v-card-actions>
@@ -151,6 +150,7 @@
 
       </v-row>
     </v-container>
+
     <v-snackbar
         v-model="isSnackbarOpen"
         :timeout="5000"
@@ -170,6 +170,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="hasNotBeenApproved" max-width="600" persistent>
+      <v-card>
+        <v-card-title>Oupsss</v-card-title>
+        <v-card-text>
+          Merci de rejoindre l'asso mais ton compte n'est pas encore activer...
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -177,6 +186,7 @@
 <script>
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import { getUser, hasRole } from "../common/role";
 
 export default {
   components: {},
@@ -187,6 +197,7 @@ export default {
       newFriend: undefined,
       isSnackbarOpen: false,
       isBroadcastDialogOpen: false,
+      hasNotBeenApproved:false,
       snackbarMessage: "",
       snackbarMessages: {
         friendRequest: {
@@ -205,40 +216,35 @@ export default {
   },
 
   async mounted() {
-    this.user = await this.getUser();
+    this.user = await getUser(this);
+
+    if (this.user.team === undefined || this.user.team.length === 0){
+      this.hasNotBeenApproved = true;
+    }
   },
 
   methods: {
-    getUser() {
-      return this.$store.state.user.data
-    },
-
-    hasRole(role) {
-      const teams = this.getUser()?.team;
-      if (teams === undefined) {
-        return false
-      }
-      return teams.includes(role);
-    },
-
     async broadcast() {
       this.notification.date = new Date();
       this.notification.type = 'broadcast';
-      console.log(this.notification);
       await this.$axios.post('/user/broadcast', this.notification);
       this.snackbarMessage = this.snackbarMessages.broadcasted;
       this.isSnackbarOpen = true;
       this.isBroadcastDialogOpen = false;
     },
 
+    hasRole(team){
+      return hasRole(this, team)
+    },
+
     async sendFriendRequest() {
       let [firstname, lastname] = this.newFriend.split('.');
       await this.$axios.put(`/user/notification/${lastname}/${firstname}`, {
         type: 'friendRequest',
-        message: `${this.getUser().lastname} ${this.getUser().firstname} vous a envoye une demande d'ami ❤️`,
-        from: `${this.getUser().nickname ? this.getUser().nickname : this.getUser().lastname}`,
+        message: `${getUser(this).lastname} ${getUser(this).firstname} vous a envoye une demande d'ami ❤️`,
+        from: `${getUser(this).nickname ? getUser(this).nickname : getUser(this).lastname}`,
         date: new Date(),
-        data: `${this.getUser().lastname}.${this.getUser().firstname}`
+        data: { username : `${getUser(this).lastname}.${getUser(this).firstname}`, keycloakID: getUser(this).keycloakID }
       })
       this.snackbarMessage = this.snackbarMessages.friendRequest.sent;
       this.isSnackbarOpen = true;
@@ -247,7 +253,7 @@ export default {
     async acceptFriendRequest(notification) {
       if(notification.data) {
         let friends;
-        let user = this.getUser();
+        let user = getUser(this);
         if (user.friends === undefined) {
           friends = []
         } else {
@@ -267,7 +273,7 @@ export default {
     async refuseFriendRequest(notification) {
       if(notification.data) {
         let friends;
-        let user = this.getUser();
+        let user = getUser(this);
         if (user.friends === undefined) {
           friends = []
         } else {

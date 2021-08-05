@@ -31,7 +31,7 @@
           >
             <v-list-item v-for="friend of getSelectedUser.friends">
               <v-list-item-content>
-                <h4>{{ friend }}</h4>
+                <h4>{{ friend.username ? friend.username : friend }}</h4>
                 <!--          <v-chip>{{user.charisma}}</v-chip>-->
               </v-list-item-content>
               <v-list-item-action>
@@ -233,7 +233,7 @@ export default {
       let user = this.getSelectedUser;
       this.$set(user, 'assigned',this.selectedAssignments )
       // save in FT
-      this.selectedAssignments
+      this.selectedAssignments;
     }
   }
 }
