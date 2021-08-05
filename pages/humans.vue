@@ -224,11 +224,15 @@ export default {
       if(!this.selectedUser.transactionHistory){
         this.selectedUser.transactionHistory = []
       }
+      if(this.selectedUser.transactionHistory.length >= 3){
+        this.selectedUser.transactionHistory.shift()
+      }
       this.selectedUser.transactionHistory.push(this.newTransaction);
+
       if(isNegative){
-        this.selectedUser.balance = +this.selectedUser.balance - this.newTransaction.amount
+        this.selectedUser.balance = +this.selectedUser.balance - +this.newTransaction.amount
       } else{
-        this.selectedUser.balance += +this.selectedUser.balance + this.newTransaction.amount
+        this.selectedUser.balance += +this.selectedUser.balance + +this.newTransaction.amount
       }
       await this.$axios.put('/user/' + this.selectedUser.keycloakID, this.selectedUser);
       this.isSnackbarOpen = true;
