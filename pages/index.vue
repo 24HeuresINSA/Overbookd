@@ -66,18 +66,21 @@
                 <tr
                     v-for="item in user.friends"
                 >
-                  <td>{{ item }}</td>
+                  <td>{{ item.username ? item.username : item }}</td>
                 </tr>
                 </tbody>
               </v-simple-table>
             </v-card-text>
-            <v-card-text v-else>Lonely 🥲</v-card-text>
+            <v-card-text v-else>
+              <h2>Lonely 🥲</h2>
+              <p>pour demander en amis met le prenom.nom de tes potes</p>
+            </v-card-text>
             <v-card-actions>
               <v-text-field
                   label="username de ton pote"
                   v-model="newFriend"
               ></v-text-field>
-              <v-btn @click="sendFriendRequest">ajouter un amis</v-btn>
+              <v-btn text @click="sendFriendRequest">ajouter un amis</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
