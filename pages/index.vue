@@ -5,15 +5,17 @@
         <v-col cols="6" sm="6" md="4">
           <v-card v-if="user">
             <v-card-title>Bonsoir {{ user.nickname ? user.nickname : user.firstname }}</v-card-title>
-            <v-card-subtitle> {{ user.email }}</v-card-subtitle>
             <v-card-text>
-              <p>Charisme: {{ user.charisma }}</p>
+              <h3>📩 {{ user.email }}</h3>
+              <h3>📞 {{ user.phone }}</h3>
+              <h3>😎 {{ user.charisma }} charisme</h3>
               <v-chip-group>
                 <v-chip v-for="team in user.team">
                   {{ team }}
                 </v-chip>
               </v-chip-group>
-              <v-progress-linear value="15"></v-progress-linear>
+
+              <v-progress-linear :value="user.charisma"></v-progress-linear>
             </v-card-text>
           </v-card>
         </v-col>

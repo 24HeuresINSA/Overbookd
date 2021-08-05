@@ -68,7 +68,7 @@
           >
             <v-list-item v-for="schedule in filteredSchedules">
               <v-list-item-content>
-                {{ schedule.name }} {{schedule.schedule.date}} {{schedule.schedule.start}}➡️{{schedule.schedule.end}}
+                {{ schedule.name }} {{schedule.schedule.date}} {{schedule.schedule.start}} ➡️{{schedule.schedule.end}}
               </v-list-item-content>
               <v-list-item-icon><v-icon>
                 mdi-information
