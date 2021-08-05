@@ -79,7 +79,7 @@
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
 
-    <v-dialog v-model="isDialogOpen">
+    <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card>
         <v-card-title>Report un bug 🐞</v-card-title>
         <v-card-text>
@@ -96,37 +96,42 @@
           </ul>
 
           <br>
-          # Date
-
+          <strong># Date</strong>
           2021-08-04
+          <br>
 
-          # URL
-
+          <strong># URL</strong>
           https://overbookd.24heures.org/`chemin>`
+          <br>
 
-          # Description du bug
+          <strong># Description du bug</strong>
+          <p>Page blanche pour éditer une FT</p>
+          <br>
+          <h4># étapes pour reproduire le bug</h4>
 
-          Page blanche pour éditer une FT
+          <p>1. cliquer sur le menu des FT</p>
+          <p>2. Cliquer sur le bonton d'édition d'une FT</p>
+          <br>
 
-          # étapes pour reproduire le bug
-
-          1. cliquer sur le menu des FT
-          2. Cliquer sur le bonton d'édition d'une FT
-
-
-          Pour se connecter, on a mis en place différents rôle avec des mot de passe, c'est assez simple, le nom d'utilisateur et le meme que le mot de passe.
-          Liste des user [username (rôles)] :
-          - user.bureau (bureau, hard)
-          - user.hard (hard)
-          - user.humain (hard, humain)
-          - user.log (hard, log)
-          - user.secu (hard, secu)
-          - user.soft (soft)
-          - user.admin (hard, admin)
-          De plus, le formulaire d'inscription est ouvert. Vous pouvez faire des comptes pour vous. Bien mettre une adresse mail valide, y a un p'tit mail qui vous est envoyé pour confirmer votre adresse.
-
-          Voila, voila, amuser vous bien ;)
-          On reste dispo avec Hamza pour vos questions et retour
+          <ul>
+            <li>Pour se connecter, on a mis en place différents rôle avec des mot de passe, c'est assez simple, le nom d'utilisateur et le meme que le mot de passe.
+              Liste des user [username (rôles)] :</li>
+            <li>user.bureau (bureau, hard)</li>
+            <li>user.hard (hard)</li>
+            <li>user.humain (hard, humain)</li>
+            <li>user.log (hard, log)</li>
+            <li>user.secu (hard, secu)</li>
+            <li>user.soft (soft)</li>
+            <li>user.admin (hard, admin)</li>
+          </ul>
+          <p>
+            De plus, le formulaire d'inscription est ouvert. Vous pouvez faire des comptes pour vous. Bien mettre une
+            adresse mail valide, y a un p'tit mail qui vous est envoyé pour confirmer votre adresse.
+          </p>
+          <p>
+            Voila, voila, amuser vous bien ;)
+            On reste dispo avec Hamza pour vos questions et retour
+          </p>
         </v-card-text>
       </v-card>
     </v-dialog>
