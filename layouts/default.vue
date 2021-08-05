@@ -251,6 +251,9 @@ export default {
 
   computed: {
     logo() {
+      if(this.isJauneActive){
+        return 'Ricard.png'
+      }
       return this.$vuetify.theme.dark ? 'overbookd_logo_blanc.png' : 'overbookd_logo_noir.png'
     }
   }
