@@ -14,3 +14,6 @@ export function getUser(context: any) {
     return context.$store.state.user.data
 }
 
+export function getConfig(context: any, key : string){
+    return context.$store.state.config.data.data.find((e: { key: string; }) => e.key === key).value
+}

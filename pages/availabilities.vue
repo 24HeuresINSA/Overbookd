@@ -34,21 +34,22 @@
                   </v-list>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn @click="toggleAll(day)">selectionner tous</v-btn>
+                  <v-btn text @click="toggleAll(day)">selectionner tous</v-btn>
+                  <v-btn text v-if="hasRole('hard')" @click="">ajouter un creneau</v-btn>
                 </v-card-actions>
               </v-card>
         </v-container>
       </div>
     </template>
 
-    <v-btn @click="save">save</v-btn>
+    <v-btn fab style="bottom: 40px; position: fixed; right: 100px" @click="save"><v-icon>mdi-content-save</v-icon></v-btn>
 
     <v-btn
         color="secondary"
         elevation="2"
         fab
-        to="/newAvailabilities"
         style="bottom: 40px; position: fixed; right: 20px"
+        @click="isDialogOpen = true"
     >
       <v-icon>
         mdi-plus-thick
@@ -73,21 +74,43 @@
       </template>
     </v-snackbar>
 
+    <v-dialog
+      v-model="isDialogOpen"
+    >
+      <v-card>
+        <v-card-title>Ajouter des dispo 🤑</v-card-title>
+        <v-card-text>
+          <v-text-field label="Titre" v-model="newAvailability.title"></v-text-field>
+          <v-text-field label="Desciption" v-model="newAvailability.description"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text><v-icon>mdi-content-save</v-icon></v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
 <script>
+import {getConfig, getUser, hasRole} from "../common/role";
+
 export default {
   name: "availabilities",
 
   data(){
     return {
       detailMessage: this.getConfig("availabilities_description"),
-      userCharisma: 200,
+      userCharisma: getUser(this).charisma || 0,
       maxCharisma:  this.getConfig("max_charisma"),
       availabilities: [],
       isAllToggled: false,
       isSnackbarOpen: false,
+      isDialogOpen:false,
+      newAvailability: {
+        title: undefined,
+        description: undefined
+      }
     }
   },
 
@@ -95,21 +118,23 @@ export default {
     this.availabilities = (await this.$axios.get('/availabilities')).data;
     const mAvailabilities = this.getUser().availabilities;
     if(mAvailabilities){
-      // fill in availabilities
-      console.log('fillling in');
+      // fill in availabilities\
       this.availabilities.forEach(availability => {
         let mAvailability =  mAvailabilities.find(e => e._id === availability._id)
         if(mAvailability){
           this.$set(availability,'days', mAvailability.days);
-          console.log('ava', availability)
         }
       })
     }
   },
 
   methods:{
+    hasRole(role){
+      return hasRole(this, role)
+    },
+
     getConfig(key){
-      return this.$store.state.config.data.data.find(e => e.key === key).value
+      return getConfig(this,key)
     },
 
     toggleAll(day){
@@ -118,7 +143,7 @@ export default {
     },
 
     getUser(){
-      return this.$store.state.user.data
+      return getUser(this)
     },
 
     save(){
