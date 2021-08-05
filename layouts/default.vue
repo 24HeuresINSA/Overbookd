@@ -12,8 +12,8 @@
       <v-list>
         <v-list-item>
           <v-img
-              src="overbookd_logo_blanc.png"
-              alt="overbookd logo"
+              :src="logo"
+              alt="overbookd"
               class="logo"
           ></v-img>
         </v-list-item>
@@ -228,8 +228,7 @@ export default {
     },
 
     toggleTheme(){
-      this.$vuetify.theme.dark = this.isWhiteMode;
-      this.isWhiteMode = !this.isWhiteMode;
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     },
 
     async clickOnTitle(){
@@ -247,6 +246,12 @@ export default {
       await this.$router.push({
         path: '/login',
       })
+    }
+  },
+
+  computed: {
+    logo() {
+      return this.$vuetify.theme.dark ? 'overbookd_logo_blanc.png' : 'overbookd_logo_noir.png'
     }
   }
 }
