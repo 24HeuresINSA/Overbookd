@@ -25,8 +25,9 @@
                 <v-card-text>
                   <v-list>
                     <v-list-item v-for="frame of day.frames">
-                      <v-list-item-content>
-                        {{frame.start}} ➡️ {{frame.end}}
+                      <v-list-item-content style="display: flex">
+                        <h4>{{frame.start}} ➡️ {{frame.end}}</h4>
+                        <v-chip v-if="frame.charisma">{{frame.charisma}}</v-chip>
                       </v-list-item-content>
                       <v-switch v-model="frame.isSelected"></v-switch>
                     </v-list-item>

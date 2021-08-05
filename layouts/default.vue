@@ -51,8 +51,8 @@
       </v-btn>
       <v-toolbar-title @click="clickOnTitle()" v-text="title" />
       <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
+      <v-btn text @click="logout()">
+        DECONNEXION
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -127,6 +127,12 @@ export default {
           roles: 'hard',
           to: '/inventory',
         },
+        {
+          icon: 'mdi-human-greeting',
+          title: 'Affectation 💃',
+          roles: 'hard',
+          to: '/assignment',
+        },
       ],
       miniVariant: false,
       right: true,
@@ -164,6 +170,13 @@ export default {
         const audio = new Audio('jaune.m4a');
         await audio.play()
       }
+    },
+
+    async logout(){
+      await this.$auth.logout();
+      await this.$router.push({
+        path: '/login',
+      })
     }
   }
 }
