@@ -5,10 +5,16 @@
         <v-col cols="6" sm="6" md="4">
           <v-card v-if="user">
             <v-card-title>Bonsoir {{ user.nickname ? user.nickname : user.firstname }}</v-card-title>
+            <v-card-subtitle>👋 {{ user.firstname }}.{{ user.lastname }}</v-card-subtitle>
             <v-card-text>
               <h3>📩 {{ user.email }}</h3>
               <h3>📞 {{ user.phone }}</h3>
-              <h3>😎 {{ user.charisma }} charisme</h3>
+              <h3>😎 {{ user.charisma || 0 }} charisme</h3>
+              <h3>❤️ {{ user.friends ? user.friends.length : 0}} amis</h3>
+              <h3>📆 {{ (new Date(user.birthday)).toLocaleString()}}</h3>
+              <h3>🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés</h3>
+              <h3>🚗 {{ user.hasDriverLicense ? '✅' : '🛑' }}</h3>
+
               <v-chip-group>
                 <v-chip v-for="team in user.team">
                   {{ team }}
@@ -137,7 +143,7 @@
 
         <v-col cols="6" sm="4" md="4">
           <v-card v-if="user">
-            <v-img src="/cerise.png"></v-img>
+            <v-img src="https://64.media.tumblr.com/d238e0f637b17270021e457ace270453/b687e7a3a938ff5d-16/s540x810/12568a11bd04c2b5c7a26c17632f32387ecfc0bb.gifv"></v-img>
             <v-card-title>Le Clicker ⏱</v-card-title>
             <v-card-subtitle>Le compteur de blague qui derrape 🚗</v-card-subtitle>
             <v-card-text>
@@ -148,7 +154,7 @@
               <v-text-field
                   label="username de ton pote"
               ></v-text-field>
-              <v-btn @click="sendFriendRequest">click</v-btn>
+              <v-btn @click="">click</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>

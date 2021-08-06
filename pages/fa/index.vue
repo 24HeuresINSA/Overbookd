@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Fiche Anim 🎉</h1>
     <v-data-table
         :headers="headers"
         :items="FAs"
