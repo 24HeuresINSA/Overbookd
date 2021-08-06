@@ -26,11 +26,15 @@
                 <v-card-text>
                   <v-list>
                     <v-list-item v-for="frame of day.frames">
-                      <v-list-item-content style="display: flex">
+                      <v-list-item-content >
                         <h4>{{frame.start}} ➡️ {{frame.end}}</h4>
-                        <v-chip v-if="frame.charisma">{{frame.charisma}}</v-chip>
                       </v-list-item-content>
-                      <v-switch v-model="frame.isSelected"></v-switch>
+                      <v-list-item-action>
+                      <v-list-item-action-text style="display: flex; align-items: center">
+                        <v-chip style="margin-right: 10px" v-if="frame.charisma">{{frame.charisma}}</v-chip>
+                        <v-switch v-model="frame.isSelected"></v-switch>
+                      </v-list-item-action-text>
+                      </v-list-item-action>
                     </v-list-item>
                   </v-list>
                 </v-card-text>
