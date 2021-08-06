@@ -36,7 +36,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-btn text @click="toggleAll(day)">selectionner tous</v-btn>
-                  <v-btn text v-if="hasRole('hard')" @click="">ajouter un creneau</v-btn>
+                  <v-btn text v-if="hasRole('hard')" @click="openTimeframeDialog(availability,day)">ajouter un creneau</v-btn>
                 </v-card-actions>
               </v-card>
         </v-container>
@@ -103,6 +103,20 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="isTimeframeDialog" max-width="1000">
+      <v-card>
+        <v-card-title>Ajouter une creneau</v-card-title>
+        <v-card-text>
+          <v-time-picker v-model="newTimeframe.start"></v-time-picker>
+          <v-time-picker v-model="newTimeframe.end"></v-time-picker>
+          <v-text-field label="charisme" v-model="newTimeframe.charisma" type="number"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn left text @click="addTimeframe()">ajouter creneau</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -124,10 +138,16 @@ export default {
       isDayDialogOpen: false,
       newDay: undefined,
       selectedAvailability: false,
-      isTimeframeDialog: false
+      selectedDate: undefined,
+      isTimeframeDialog: false,
       newAvailability: {
         name: undefined,
         description: undefined
+      },
+      newTimeframe: {
+        start: undefined,
+        end: undefined,
+        charisma: undefined
       }
     }
   },
@@ -158,9 +178,20 @@ export default {
       this.selectedAvailability = availability
     },
 
-    openTimeframeDialog(availability){
+    openTimeframeDialog(availability, date){
       this.isTimeframeDialog = true;
-      this.selectedAvailability = availability
+      this.selectedAvailability = availability;
+      this.selectedDate = date;
+    },
+
+    async addTimeframe(){
+      let mAvailability = this.selectedAvailability;
+      let day = mAvailability.days.find(day => day === this.selectedDate);
+      if(day.frames === undefined){
+        day.frames = [];
+      }
+      day.frames.push(this.newTimeframe);
+      await this.$axios.put('/availabilities', mAvailability);
     },
 
     async addDay(){
@@ -171,7 +202,6 @@ export default {
       mAvailability.days.push({
         date: this.newDay,
       })
-      console.log(mAvailability);
       await this.$axios.put('/availabilities', mAvailability);
     },
 
