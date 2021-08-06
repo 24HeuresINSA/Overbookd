@@ -10,9 +10,18 @@
           ></v-img>
         </v-row>
         <v-row>
-          <h2 style="right: -40%; position: relative; color: red">ALPHA 0.2</h2>
+          <h2 style="right: -40%; position: relative; color: red">ALPHA 0.3</h2>
         </v-row>
         <v-row>
+          <h2>Patch note 0.3</h2>
+          <p>les fix apres les retours de Paul, Merci</p>
+          <ul>
+            <li>💰 fix des transactions dans les compte perso</li>
+            <li>🎨 admin et bureau peuvent ajouter des roles au gens depuis la page humain</li>
+            <li>😎 n'affiche plus les mdp en claire</li>
+            <li>🔖 affiche les champs requis</li>
+          </ul>
+
           <h2>Patch note 0.2</h2>
           <ul>
             <li>📈 ajout de la page stats, mais pour l'instant c'est juste un meme</li>

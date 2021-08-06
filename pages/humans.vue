@@ -14,11 +14,7 @@
       </template>
 
       <template v-slot:item.team="{ item }">
-        <v-chip-group>
-          <v-chip v-for="team in item.team">
-            {{team}}
-          </v-chip>
-        </v-chip-group>
+        <over-chips :roles="item.team"></over-chips>
       </template>
     </v-data-table>
   </template>
@@ -73,15 +69,17 @@
     <v-card>
       <v-card-title>{{selectedUser.nickname ? selectedUser.nickname : selectedUser.lastname}}</v-card-title>
       <v-card-subtitle>
-        <v-chip-group>
-          <v-chip v-for="team of selectedUser.team">{{team}}</v-chip>
-        </v-chip-group>
+        <over-chips :roles="selectedUser.team"></over-chips>
       </v-card-subtitle>
       <v-card-text>
-        <v-text-field
-          label="ajouter un role"
-        ></v-text-field>
-        <v-btn>ajouter</v-btn>
+        <div v-if="hasRole(['humain', 'admin', 'bureau'])">
+          <v-select
+            label="ajouter un role"
+            :items="getConfig('teams').map(e => e.name)"
+            v-model="newRole"
+          ></v-select>
+          <v-btn @click="addRole()">ajouter</v-btn>
+        </div>
 
         <v-simple-table>
           <tbody>
@@ -146,9 +144,12 @@
 </template>
 
 <script>
+import {getConfig, getUser, hasRole} from "../common/role";
+import OverChips from "../components/overChips";
+
 export default {
   name: "humans",
-
+  components: {OverChips},
   data(){
     return {
       users: [],
@@ -171,7 +172,8 @@ export default {
       newTransaction: {
         reason: 'recharge compte perso',
         amount: undefined,
-      }
+      },
+      newRole: undefined,
     }
   },
 
@@ -187,27 +189,30 @@ export default {
   },
 
   methods: {
+    async addRole(){
+      let user = this.selectedUser;
+      if(user.team === undefined){
+        user.team = [];
+      }
+      if(user.team.find(role => role === this.newRole)){
+        // already has role
+      } else {
+        user.team.push(this.newRole);
+        this.$set(user, 'team', user.team) // update rendering
+        await this.$axios.put(`/user/${user.keycloakID}`, {team: user.team});
+      }
+    },
+
+    getConfig(key){
+      return getConfig(this,key)
+    },
+
     getUser(){
-      return this.$store.state.user.data
+      return getUser(this)
     },
 
     hasRole(role){
-      const teams = this.getUser()?.team;
-      if (teams === undefined){
-        return false
-      }
-      if (typeof role === 'object'){
-        // list of roles
-        let res = false;
-        role.forEach(r => {
-          if(teams.includes(r)){
-            res = true
-          }
-        })
-        return res
-      } else {
-        return teams.includes(role);
-      }
+      return hasRole(this, role)
     },
 
     openTransactionDialog(user){
@@ -237,7 +242,7 @@ export default {
       await this.$axios.put('/user/' + this.selectedUser.keycloakID, this.selectedUser);
       this.isSnackbarOpen = true;
     }
-  }
+  },
 }
 </script>
 

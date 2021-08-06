@@ -1,6 +1,5 @@
 <template>
   <v-container style="left: 0; max-width: none; margin-left: 0; margin-right: 0; position: absolute; display: flex">
-
     <div style="display: flex; flex-flow: column">
       <!-- list of  filtered users -->
       <v-card>

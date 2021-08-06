@@ -4,10 +4,11 @@
         v-model="field.value"
         v-if="field.type=== 'string' || field.type === undefined"
         :rules="field.rule"
+        :type="field.option"
         :counter="field.counter"
-        :label="field.label ? field.label : field.key"
+        :label="(field.label ? field.label : field.key) + (field.isRequired ? '*' : '')"
         @change="onChange"
-        required
+
     ></v-text-field>
     <v-textarea
         v-model="field.value"
@@ -53,7 +54,7 @@
     ></v-select>
 
     <v-time-picker
-        v-if="field.type == 'time'"
+        v-if="field.type === 'time'"
         :label="field.label ? field.label : field.key"
         v-model="field.value"
         @change="onChange"

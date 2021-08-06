@@ -150,7 +150,7 @@ export default {
       isJauneActive: false,
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
-      version: 'ALPHA 0.2',
+      version: 'ALPHA 0.3',
       items: [
         {
           icon: 'mdi-apps',

@@ -15,11 +15,7 @@
               <h3>🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés</h3>
               <h3>🚗 {{ user.hasDriverLicense ? '✅' : '🛑' }}</h3>
 
-              <v-chip-group>
-                <v-chip v-for="team in user.team">
-                  {{ team }}
-                </v-chip>
-              </v-chip-group>
+              <over-chips :roles="user.team"></over-chips>
 
               <v-progress-linear :value="user.charisma"></v-progress-linear>
             </v-card-text>
@@ -144,7 +140,7 @@
         <v-col cols="6" sm="4" md="4">
           <v-card v-if="user">
             <v-img src="https://64.media.tumblr.com/d238e0f637b17270021e457ace270453/b687e7a3a938ff5d-16/s540x810/12568a11bd04c2b5c7a26c17632f32387ecfc0bb.gifv"></v-img>
-            <v-card-title>Le Clicker ⏱</v-card-title>
+            <v-card-title>Le Clicker ⏱ (Work in progess)</v-card-title>
             <v-card-subtitle>Le compteur de blague qui derrape 🚗</v-card-subtitle>
             <v-card-text>
               <h2>Le drift counter</h2>
@@ -198,9 +194,10 @@
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { getUser, hasRole } from "../common/role";
+import OverChips from "../components/overChips";
 
 export default {
-  components: {},
+  components: {OverChips},
 
   data() {
     return {
@@ -215,6 +212,8 @@ export default {
           sent: "votre demande d'ami a ete envoye",
           accepted: "T'as un nouveau ami",
           refused: "je suis d'accord c'est un batard",
+          lonely: "t'es seul a ce point là 🥺 ?",
+          alreadyFriend: "t'es con ou quoi? t'es deja ami avec "
         },
         error: "🥵 sheeshh une erreur ",
         broadcasted: "broadcast envoyé 📣"
@@ -249,7 +248,19 @@ export default {
     },
 
     async sendFriendRequest() {
+      const user = getUser(this)
       let [firstname, lastname] = this.newFriend.split('.');
+      if(firstname === user.firstname && lastname === user.lastname){
+        this.snackbarMessage = this.snackbarMessages.friendRequest.lonely;
+        this.isSnackbarOpen = true;
+        window.open('https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690')
+        return
+      }
+      if(this.user.friends.map(friend => friend.username === this.newFriend)){
+        this.snackbarMessage = this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
+        this.isSnackbarOpen = true;
+        return
+      }
       await this.$axios.put(`/user/notification/${lastname}/${firstname}`, {
         type: 'friendRequest',
         message: `${getUser(this).lastname} ${getUser(this).firstname} vous a envoye une demande d'ami ❤️`,

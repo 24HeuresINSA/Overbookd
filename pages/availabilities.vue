@@ -78,7 +78,7 @@
       v-model="isDialogOpen"
     >
       <v-card>
-        <v-card-title>Ajouter des dispo 🤑</v-card-title>
+        <v-card-title>Ajouter des dispo 🤑 (Work in progess 🔨)</v-card-title>
         <v-card-text>
           <v-text-field label="Titre" v-model="newAvailability.title"></v-text-field>
           <v-text-field label="Desciption" v-model="newAvailability.description"></v-text-field>
