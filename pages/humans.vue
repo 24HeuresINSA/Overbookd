@@ -14,11 +14,7 @@
       </template>
 
       <template v-slot:item.team="{ item }">
-        <v-chip-group>
-          <v-chip v-for="team in item.team">
-            {{team}}
-          </v-chip>
-        </v-chip-group>
+        <over-chips :roles="item.team"></over-chips>
       </template>
     </v-data-table>
   </template>
@@ -73,9 +69,7 @@
     <v-card>
       <v-card-title>{{selectedUser.nickname ? selectedUser.nickname : selectedUser.lastname}}</v-card-title>
       <v-card-subtitle>
-        <v-chip-group>
-          <v-chip v-for="team of selectedUser.team">{{team}}</v-chip>
-        </v-chip-group>
+        <over-chips :roles="selectedUser.team"></over-chips>
       </v-card-subtitle>
       <v-card-text>
         <div v-if="hasRole(['humain', 'admin', 'bureau'])">
@@ -151,10 +145,11 @@
 
 <script>
 import {getConfig, getUser, hasRole} from "../common/role";
+import OverChips from "../components/overChips";
 
 export default {
   name: "humans",
-
+  components: {OverChips},
   data(){
     return {
       users: [],
