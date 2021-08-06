@@ -10,6 +10,22 @@
           ></v-img>
         </v-row>
         <v-row>
+          <h2 style="right: -40%; position: relative; color: red">ALPHA 0.2</h2>
+        </v-row>
+        <v-row>
+          <h2>Patch note 0.2</h2>
+          <ul>
+            <li>📈 ajout de la page stats, mais pour l'instant c'est juste un meme</li>
+            <li>🤷‍♂️ l'affect marche des fois peut etre selon le mood d'overbookd</li>
+            <li>🐞 ajout des instructions pour signaler les bug</li>
+            <li>🟨 ajout d'un logo de ricard cache</li>
+            <li>🔨 fix le logo blanc qui s'affiche pas des fois</li>
+            <li>🔨 fix d'un bug ou le compte perso comptait 10 + 10 = 1010</li>
+            <li>😎 fix d'un bug ou tous le monde avait 15 charisme</li>
+
+          </ul>
+        </v-row>
+        <v-row>
           <v-text-field
             v-model="credentials.username"
             label="username"
