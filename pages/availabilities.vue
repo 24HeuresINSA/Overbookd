@@ -18,7 +18,7 @@
       <br>
       <h3>{{availability.name}}</h3>
       <p>{{availability.description}}</p>
-      <v-btn v-if="hasRole('admin')" @click="isDayDialogOpen = true">ajouter une journe</v-btn>
+      <v-btn v-if="hasRole('admin')" @click="openDayDialog(availability)">ajouter une journe</v-btn>
       <div style="display: flex">
         <v-container v-for="day of availability.days">
               <v-card width="400px">
@@ -98,7 +98,7 @@
           <v-date-picker v-model="newDay"></v-date-picker>
         </v-card-text>
         <v-card-actions>
-          <v-btn left text >ajouter</v-btn>
+          <v-btn left text @click="addDay()">ajouter</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -123,6 +123,8 @@ export default {
       isDialogOpen:false,
       isDayDialogOpen: false,
       newDay: undefined,
+      selectedAvailability: false,
+      isTimeframeDialog: false
       newAvailability: {
         name: undefined,
         description: undefined
@@ -149,6 +151,28 @@ export default {
       await this.$axios.post('/availabilities', this.newAvailability);
       this.isDialogOpen = false;
       this.isSnackbarOpen = true;
+    },
+
+    openDayDialog(availability){
+      this.isDayDialogOpen = true;
+      this.selectedAvailability = availability
+    },
+
+    openTimeframeDialog(availability){
+      this.isTimeframeDialog = true;
+      this.selectedAvailability = availability
+    },
+
+    async addDay(){
+      let mAvailability = this.selectedAvailability;
+      if(mAvailability.days === undefined){
+        mAvailability.days = [];
+      }
+      mAvailability.days.push({
+        date: this.newDay,
+      })
+      console.log(mAvailability);
+      await this.$axios.put('/availabilities', mAvailability);
     },
 
     hasRole(role){
