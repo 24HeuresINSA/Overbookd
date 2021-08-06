@@ -59,7 +59,7 @@
       <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
       <v-select
         v-model="schedule.type"
-        :items="getConfig('teams')"
+        :items="getConfig('teams').map(e => e.name)"
       ></v-select>
       <v-text-field
         type="number"

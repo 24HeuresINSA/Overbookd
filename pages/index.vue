@@ -15,11 +15,7 @@
               <h3>🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés</h3>
               <h3>🚗 {{ user.hasDriverLicense ? '✅' : '🛑' }}</h3>
 
-              <v-chip-group>
-                <v-chip v-for="team in user.team">
-                  {{ team }}
-                </v-chip>
-              </v-chip-group>
+              <over-chips :roles="user.team"></over-chips>
 
               <v-progress-linear :value="user.charisma"></v-progress-linear>
             </v-card-text>
@@ -198,9 +194,10 @@
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { getUser, hasRole } from "../common/role";
+import OverChips from "../components/overChips";
 
 export default {
-  components: {},
+  components: {OverChips},
 
   data() {
     return {
