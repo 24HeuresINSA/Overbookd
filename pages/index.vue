@@ -107,7 +107,7 @@
                   </thead>
                   <tbody>
                   <tr
-                      v-for="notification in user.notifications"
+                      v-for="(notification, index) in user.notifications"
                       :key="notification.date"
                   >
                     <td>{{ notification.type === 'friendRequest' ? '👨‍👩‍👧' : '📣' }}</td>
@@ -124,6 +124,9 @@
                     <td v-else-if="notification.type === 'broadcast'">
                       <v-btn :href="notification.link">
                         <v-icon>mdi-link</v-icon>
+                      </v-btn>
+                      <v-btn @click="deleteNotification(index)">
+                        <v-icon>mdi-trash-can</v-icon>
                       </v-btn>
                     </td>
                   </tr>
@@ -213,7 +216,7 @@ export default {
           accepted: "T'as un nouveau ami",
           refused: "je suis d'accord c'est un batard",
           lonely: "t'es seul a ce point là 🥺 ?",
-          alreadyFriend: "t'es con ou quoi? t'es deja ami avec "
+          alreadyFriend: "t'es deja ami avec "
         },
         error: "🥵 sheeshh une erreur ",
         broadcasted: "broadcast envoyé 📣"
@@ -243,6 +246,12 @@ export default {
       this.isBroadcastDialogOpen = false;
     },
 
+    deleteNotification(index){
+      let {keycloakID , notifications} = this.user
+      notifications.splice(index, index + 1);
+      this.$axios.put(`/user/${keycloakID}`, {notifications});
+    },
+
     hasRole(team){
       return hasRole(this, team)
     },
@@ -256,7 +265,7 @@ export default {
         window.open('https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690')
         return
       }
-      if(this.user.friends.map(friend => friend.username === this.newFriend)){
+      if(this.user.friends.find(friend => friend.username === this.newFriend)){
         this.snackbarMessage = this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
         this.isSnackbarOpen = true;
         return

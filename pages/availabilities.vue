@@ -18,6 +18,7 @@
       <br>
       <h3>{{availability.name}}</h3>
       <p>{{availability.description}}</p>
+      <v-btn v-if="hasRole('admin')" @click="isDayDialogOpen = true">ajouter une journe</v-btn>
       <div style="display: flex">
         <v-container v-for="day of availability.days">
               <v-card width="400px">
@@ -76,15 +77,28 @@
 
     <v-dialog
       v-model="isDialogOpen"
+      max-width="600"
     >
       <v-card>
-        <v-card-title>Ajouter des dispo 🤑 (Work in progess 🔨)</v-card-title>
+        <v-card-title>Ajouter des dispo 📆</v-card-title>
         <v-card-text>
-          <v-text-field label="Titre" v-model="newAvailability.title"></v-text-field>
+          <v-text-field label="Titre" v-model="newAvailability.name"></v-text-field>
           <v-text-field label="Desciption" v-model="newAvailability.description"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn text><v-icon>mdi-content-save</v-icon></v-btn>
+          <v-btn text @click="addAvailability()"><v-icon>mdi-content-save</v-icon></v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isDayDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Ajouter une journe</v-card-title>
+        <v-card-text>
+          <v-date-picker v-model="newDay"></v-date-picker>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn left text >ajouter</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -107,8 +121,10 @@ export default {
       isAllToggled: false,
       isSnackbarOpen: false,
       isDialogOpen:false,
+      isDayDialogOpen: false,
+      newDay: undefined,
       newAvailability: {
-        title: undefined,
+        name: undefined,
         description: undefined
       }
     }
@@ -129,6 +145,12 @@ export default {
   },
 
   methods:{
+    async addAvailability(){
+      await this.$axios.post('/availabilities', this.newAvailability);
+      this.isDialogOpen = false;
+      this.isSnackbarOpen = true;
+    },
+
     hasRole(role){
       return hasRole(this, role)
     },
