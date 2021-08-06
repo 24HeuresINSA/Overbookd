@@ -4,6 +4,7 @@
         v-model="field.value"
         v-if="field.type=== 'string' || field.type === undefined"
         :rules="field.rule"
+        :type="field.option"
         :counter="field.counter"
         :label="field.label ? field.label : field.key"
         @change="onChange"
