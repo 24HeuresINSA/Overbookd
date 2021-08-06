@@ -150,7 +150,7 @@ export default {
       isJauneActive: false,
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
-      version: 'ALPHA 0.3',
+      version: 'ALPHA 0.4',
       items: [
         {
           icon: 'mdi-apps',
@@ -202,6 +202,11 @@ export default {
           title: 'Stats 📈',
           roles: 'hard',
           to: '/stats',
+        },
+        {
+          icon: 'mdi-note',
+          title: 'Patch notes 📝',
+          to: '/patch_note',
         },
       ],
       miniVariant: false,
