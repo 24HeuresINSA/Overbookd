@@ -234,6 +234,10 @@ export default {
       }
       this.selectedUser.transactionHistory.push(this.newTransaction);
 
+      if(this.selectedUser.balance === undefined){
+        this.selectedUser.balance = 0;
+      }
+
       if(isNegative){
         this.selectedUser.balance = +this.selectedUser.balance - +this.newTransaction.amount
       } else{
@@ -241,6 +245,7 @@ export default {
       }
       await this.$axios.put('/user/' + this.selectedUser.keycloakID, this.selectedUser);
       this.isSnackbarOpen = true;
+      this.isTransactionDialogOpen = false;
     }
   },
 }

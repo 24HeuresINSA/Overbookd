@@ -18,6 +18,7 @@
       <br>
       <h3>{{availability.name}}</h3>
       <p>{{availability.description}}</p>
+      <v-btn v-if="hasRole('admin')" @click="openDayDialog(availability)">ajouter une journe</v-btn>
       <div style="display: flex">
         <v-container v-for="day of availability.days">
               <v-card width="400px">
@@ -25,17 +26,21 @@
                 <v-card-text>
                   <v-list>
                     <v-list-item v-for="frame of day.frames">
-                      <v-list-item-content style="display: flex">
+                      <v-list-item-content >
                         <h4>{{frame.start}} ➡️ {{frame.end}}</h4>
-                        <v-chip v-if="frame.charisma">{{frame.charisma}}</v-chip>
                       </v-list-item-content>
-                      <v-switch v-model="frame.isSelected"></v-switch>
+                      <v-list-item-action>
+                      <v-list-item-action-text style="display: flex; align-items: center">
+                        <v-chip style="margin-right: 10px" v-if="frame.charisma">{{frame.charisma}}</v-chip>
+                        <v-switch v-model="frame.isSelected"></v-switch>
+                      </v-list-item-action-text>
+                      </v-list-item-action>
                     </v-list-item>
                   </v-list>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn text @click="toggleAll(day)">selectionner tous</v-btn>
-                  <v-btn text v-if="hasRole('hard')" @click="">ajouter un creneau</v-btn>
+                  <v-btn text v-if="hasRole('hard')" @click="openTimeframeDialog(availability,day)">ajouter un creneau</v-btn>
                 </v-card-actions>
               </v-card>
         </v-container>
@@ -76,15 +81,42 @@
 
     <v-dialog
       v-model="isDialogOpen"
+      max-width="600"
     >
       <v-card>
-        <v-card-title>Ajouter des dispo 🤑 (Work in progess 🔨)</v-card-title>
+        <v-card-title>Ajouter des dispo 📆</v-card-title>
         <v-card-text>
-          <v-text-field label="Titre" v-model="newAvailability.title"></v-text-field>
+          <v-text-field label="Titre" v-model="newAvailability.name"></v-text-field>
           <v-text-field label="Desciption" v-model="newAvailability.description"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn text><v-icon>mdi-content-save</v-icon></v-btn>
+          <v-btn text @click="addAvailability()"><v-icon>mdi-content-save</v-icon></v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isDayDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Ajouter une journe</v-card-title>
+        <v-card-text>
+          <v-date-picker v-model="newDay"></v-date-picker>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn left text @click="addDay()">ajouter</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isTimeframeDialog" max-width="1000">
+      <v-card>
+        <v-card-title>Ajouter une creneau</v-card-title>
+        <v-card-text>
+          <v-time-picker v-model="newTimeframe.start"></v-time-picker>
+          <v-time-picker v-model="newTimeframe.end"></v-time-picker>
+          <v-text-field label="charisme" v-model="newTimeframe.charisma" type="number"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn left text @click="addTimeframe()">ajouter creneau</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -107,9 +139,19 @@ export default {
       isAllToggled: false,
       isSnackbarOpen: false,
       isDialogOpen:false,
+      isDayDialogOpen: false,
+      newDay: undefined,
+      selectedAvailability: false,
+      selectedDate: undefined,
+      isTimeframeDialog: false,
       newAvailability: {
-        title: undefined,
+        name: undefined,
         description: undefined
+      },
+      newTimeframe: {
+        start: undefined,
+        end: undefined,
+        charisma: undefined
       }
     }
   },
@@ -129,6 +171,44 @@ export default {
   },
 
   methods:{
+    async addAvailability(){
+      await this.$axios.post('/availabilities', this.newAvailability);
+      this.isDialogOpen = false;
+      this.isSnackbarOpen = true;
+    },
+
+    openDayDialog(availability){
+      this.isDayDialogOpen = true;
+      this.selectedAvailability = availability
+    },
+
+    openTimeframeDialog(availability, date){
+      this.isTimeframeDialog = true;
+      this.selectedAvailability = availability;
+      this.selectedDate = date;
+    },
+
+    async addTimeframe(){
+      let mAvailability = this.selectedAvailability;
+      let day = mAvailability.days.find(day => day === this.selectedDate);
+      if(day.frames === undefined){
+        day.frames = [];
+      }
+      day.frames.push(this.newTimeframe);
+      await this.$axios.put('/availabilities', mAvailability);
+    },
+
+    async addDay(){
+      let mAvailability = this.selectedAvailability;
+      if(mAvailability.days === undefined){
+        mAvailability.days = [];
+      }
+      mAvailability.days.push({
+        date: this.newDay,
+      })
+      await this.$axios.put('/availabilities', mAvailability);
+    },
+
     hasRole(role){
       return hasRole(this, role)
     },
