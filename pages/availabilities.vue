@@ -227,9 +227,20 @@ export default {
     },
 
     save(){
-      console.log(this.availabilities);
-      // save my availabilities
-      this.$axios.put('user/' + this.getUser().keycloakID, {availabilities: this.availabilities})
+      // compute new charisma
+      let charisma = 0
+      this.availabilities.forEach(availability => {
+        availability.days.forEach(day => {
+          if(day.frames){
+            day.frames.forEach(frame =>{
+              if(frame.isSelected){
+                charisma += +frame.charisma;
+              }
+            })
+          }
+        })
+      })
+      this.$axios.put('user/' + this.getUser().keycloakID, {availabilities: this.availabilities, charisma})
       this.isSnackbarOpen = true;
     },
 
