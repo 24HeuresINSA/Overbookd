@@ -204,6 +204,12 @@ export default {
           to: '/stats',
         },
         {
+          icon: 'mdi-cog',
+          roles: 'admin',
+          title: 'Admin ⚙️',
+          to: '/config',
+        },
+        {
           icon: 'mdi-note',
           title: 'Patch notes 📝',
           to: '/patch_note',
