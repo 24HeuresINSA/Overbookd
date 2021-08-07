@@ -71,21 +71,24 @@
 
     <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card>
-        <v-card-title>Report un bug 🐞</v-card-title>
+        <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>
         <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
           <v-switch label="nouvelle feature request ?" v-model="newRequest.isFeatureRequest"></v-switch>
-          <v-select :items="[0,1,2,3,4]" label="priorite" v-model="newRequest.priority"></v-select>
+          <v-select :items="['hard', 'soft', 'bureau']" label="scope" v-model="newRequest.scope"></v-select>
+          <v-select :items="priorities" label="priorite" v-model="newRequest.priority"></v-select>
           <v-text-field label="URL" v-model="newRequest.url"></v-text-field>
           <v-textarea label="desciption" v-model="newRequest.description"></v-textarea>
           <v-textarea label="etape pour reproduire le bug" v-if="!newRequest.isFeatureRequest" v-model="newRequest.reproduce"></v-textarea>
           <v-file-input label="capture d'ecran" v-model="newRequest.image"></v-file-input>
         </v-card-text>
         <v-card-actions>
-          <v-btn text right>submit</v-btn>
+          <v-btn text right @click="submitIssue()">submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="isSnackbarOpen" timeout="5000">Ca marche pas encore ce truc</v-snackbar>
   </v-app>
 </template>
 
@@ -102,6 +105,8 @@ export default {
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
       version: 'ALPHA 0.4',
+      priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
+      isSnackbarOpen: false,
       newRequest: {
         priority: undefined,
         url: undefined,
@@ -221,6 +226,12 @@ export default {
       await this.$router.push({
         path: '/login',
       })
+    },
+
+    async submitIssue(){
+      this.newRequest.priority = "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
+      this.isDialogOpen = false;
+      this.isSnackbarOpen = true;
     }
   },
 
