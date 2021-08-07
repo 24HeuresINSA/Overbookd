@@ -170,7 +170,6 @@ export default {
           mField.value = item[key];
         }
       })
-      console.log(this.equipmentForm)
     }
   }
 }

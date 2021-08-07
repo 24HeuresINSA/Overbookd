@@ -65,76 +65,30 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light> mdi-repeat </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card>
-        <v-card-title>Report un bug 🐞</v-card-title>
+        <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>
+        <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
-          <p>
-          Comme dis, c'est une version alpha avec encore des bugs et des fonctionnalités non dispo. Pour ce faire, nous avons mis en place une structure de mail pour nous remonter les bugs, les fonctionnalités manquantes...
-          Les bugs seront corriger que si on recoit un mail !
-          Comment qu'on envoi un mail ?
-          </p>
-          <ul>
-            <li>Destinataire : overbookd@24heures.org</li>
-            <li>Mettre comme objet : [Overbookd][bug] titre du bug</li>
-            <li>Mettre des Screenshots en PJ et uniquement en PJ</li>
-            <li>Mettre comme corps du mail :</li>
-          </ul>
-
-          <br>
-          <strong># Date</strong>
-          2021-08-04
-          <br>
-
-          <strong># URL</strong>
-          https://overbookd.24heures.org/`chemin>`
-          <br>
-
-          <strong># Description du bug</strong>
-          <p>Page blanche pour éditer une FT</p>
-          <br>
-          <h4># étapes pour reproduire le bug</h4>
-
-          <p>1. cliquer sur le menu des FT</p>
-          <p>2. Cliquer sur le bonton d'édition d'une FT</p>
-          <br>
-
-          <ul>
-            <li>Pour se connecter, on a mis en place différents rôle avec des mot de passe, c'est assez simple, le nom d'utilisateur et le meme que le mot de passe.
-              Liste des user [username (rôles)] :</li>
-            <li>user.bureau (bureau, hard)</li>
-            <li>user.hard (hard)</li>
-            <li>user.humain (hard, humain)</li>
-            <li>user.log (hard, log)</li>
-            <li>user.secu (hard, secu)</li>
-            <li>user.soft (soft)</li>
-            <li>user.admin (hard, admin)</li>
-          </ul>
-          <p>
-            De plus, le formulaire d'inscription est ouvert. Vous pouvez faire des comptes pour vous. Bien mettre une
-            adresse mail valide, y a un p'tit mail qui vous est envoyé pour confirmer votre adresse.
-          </p>
-          <p>
-            Voila, voila, amuser vous bien ;)
-            On reste dispo avec Hamza pour vos questions et retour
-          </p>
+          <v-switch label="nouvelle feature request ?" v-model="newRequest.isFeatureRequest"></v-switch>
+          <v-select :items="['hard', 'soft', 'bureau']" label="scope" v-model="newRequest.scope"></v-select>
+          <v-select :items="priorities" label="priorite" v-model="newRequest.priority"></v-select>
+          <v-text-field label="URL" v-model="newRequest.url"></v-text-field>
+          <v-textarea label="desciption" v-model="newRequest.description"></v-textarea>
+          <v-textarea label="etape pour reproduire le bug" v-if="!newRequest.isFeatureRequest" v-model="newRequest.reproduce"></v-textarea>
+          <v-file-input label="capture d'ecran" v-model="newRequest.image"></v-file-input>
         </v-card-text>
+        <v-card-actions>
+          <v-btn text right @click="submitIssue()">submit</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="isSnackbarOpen" timeout="5000">Ca marche pas encore ce truc</v-snackbar>
   </v-app>
 </template>
 
@@ -150,7 +104,17 @@ export default {
       isJauneActive: false,
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
-      version: 'ALPHA 0.4',
+      version: 'ALPHA 0.5',
+      priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
+      isSnackbarOpen: false,
+      newRequest: {
+        priority: undefined,
+        url: undefined,
+        description: undefined,
+        isFeatureRequest: false,
+        reproduce: undefined,
+        image: undefined,
+      },
       items: [
         {
           icon: 'mdi-apps',
@@ -204,6 +168,12 @@ export default {
           to: '/stats',
         },
         {
+          icon: 'mdi-cog',
+          roles: 'admin',
+          title: 'Admin ⚙️',
+          to: '/config',
+        },
+        {
           icon: 'mdi-note',
           title: 'Patch notes 📝',
           to: '/patch_note',
@@ -214,6 +184,10 @@ export default {
       rightDrawer: false,
       title: 'Overbookd',
     }
+  },
+
+  mounted() {
+    this.$vuetify.theme.dark = localStorage['theme'] || false;
   },
 
   methods: {
@@ -234,6 +208,7 @@ export default {
 
     toggleTheme(){
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage['theme'] = this.$vuetify.theme.dark;
     },
 
     async clickOnTitle(){
@@ -251,6 +226,12 @@ export default {
       await this.$router.push({
         path: '/login',
       })
+    },
+
+    async submitIssue(){
+      this.newRequest.priority = "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
+      this.isDialogOpen = false;
+      this.isSnackbarOpen = true;
     }
   },
 
