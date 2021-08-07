@@ -1,6 +1,15 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+      <h2>Patch note 0.5</h2>
+      <h3>les fix apres les retours de Tit ❤️</h3>
+      <ul>
+        <li>🔨 ajout de page de config pour les admins</li>
+        <li>🌙 mode sombre reste meme apres refresh </li>
+        <li>🐞 interface du bug report depuis overbookd</li>
+        <li>🥳 quality of life changes</li>
+      </ul>
+
     <h2>Patch note 0.4</h2>
     <p>les fix apres les retours de Paul et Tit, Merci ❤️</p>
     <ul>

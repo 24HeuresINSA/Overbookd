@@ -16,16 +16,14 @@
         </v-row>
         <v-img src="/home_meme.jpg"></v-img>
         <v-row>
-          <h2>Patch note 0.4</h2>
+          <h2>Patch note 0.5</h2>
         </v-row>
         <v-row>
-          <h3>les fix apres les retours de Paul et Tit, Merci ❤️</h3>
+          <h3>les fix apres les retours de Tit ❤️</h3>
           <ul>
-            <li>💰 fix des transactions dans les compte perso (pour de vrai cette fois ci)</li>
-            <li>📆 possibilite d'ajout de dispo par les admin et bureau (et ajouter des creneaux)</li>
-            <li>🔨 fix du systeme de broadcast (Merci Paul)</li>
-            <li>🗑 possibilite de supp les notifications</li>
-            <li>😱 l'ajout d'une page de patch note </li>
+            <li>🔨 ajout de page de config pour les admins</li>
+            <li>🌙 mode sombre reste meme apres refresh </li>
+            <li>🐞 interface du bug report depuis overbookd</li>
             <li>🥳 quality of life changes</li>
           </ul>
         </v-row>
