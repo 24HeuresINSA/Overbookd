@@ -147,7 +147,7 @@
         <v-btn :href="'/ft/' + item.item._id"><v-icon>mdi-link</v-icon></v-btn>
       </template>
     </v-data-table>
-    <v-text-field v-model="FTname"></v-text-field>
+    <v-text-field v-model="FTname" label="nom de la FT*"></v-text-field>
     <v-btn @click="addFT">ajouter une FT</v-btn>
 
     <div style="height: 100px"></div>
@@ -545,7 +545,7 @@ export default {
       const FT = (await this.$axios.post('/FT', {name: this.FTname})).data
       this.FA.FTs.push(FT._id);
       await this.saveFA();
-      this.$router.push({
+      await this.$router.push({
         path: '/ft/' + FT._id,
       })
     }

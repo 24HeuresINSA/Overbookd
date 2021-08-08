@@ -1,6 +1,16 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note 0.6</h2>
+      <h3>les fix apres les retours de Stoph et Paul ❤️</h3>
+      <ul>
+        <li>🔨 ajout des dispo que par les admin humain bureau (modifiable depuis l'interface admin)</li>
+        <li>📆 fix de la page calendrier qui affiche les creneau ou le pelo est assigné</li>
+        <li>⚙️ ajout de la page de config (work still in progress)</li>
+        <li>👀 le champs ou il faut mettre le nom de la FT s'affiche mieux (merci stoph)</li>
+        <li>📈 FIX DU CHARISME s'update apres refresh</li>
+      </ul>
+
       <h2>Patch note 0.5</h2>
       <h3>les fix apres les retours de Tit ❤️</h3>
       <ul>

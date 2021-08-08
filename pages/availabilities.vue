@@ -18,7 +18,7 @@
       <br>
       <h3>{{availability.name}}</h3>
       <p>{{availability.description}}</p>
-      <v-btn v-if="hasRole('admin')" @click="openDayDialog(availability)">ajouter une journe</v-btn>
+      <v-btn v-if="hasEditRole"  @click="openDayDialog(availability)">ajouter une journe</v-btn>
       <div style="display: flex">
         <v-container v-for="day of availability.days">
               <v-card width="400px">
@@ -40,7 +40,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-btn text @click="toggleAll(day)">selectionner tous</v-btn>
-                  <v-btn text v-if="hasRole('hard')" @click="openTimeframeDialog(availability,day)">ajouter un creneau</v-btn>
+                  <v-btn text v-if="hasEditRole"  @click="openTimeframeDialog(availability,day)">ajouter un creneau</v-btn>
                 </v-card-actions>
               </v-card>
         </v-container>
@@ -55,6 +55,7 @@
         fab
         style="bottom: 40px; position: fixed; right: 20px"
         @click="isDialogOpen = true"
+        v-if="hasEditRole"
     >
       <v-icon>
         mdi-plus-thick
@@ -116,7 +117,7 @@
           <v-text-field label="charisme" v-model="newTimeframe.charisma" type="number"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn left text @click="addTimeframe()">ajouter creneau</v-btn>
+          <v-btn left text v-if="hasEditRole" @click="addTimeframe()">ajouter creneau</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -140,6 +141,7 @@ export default {
       isSnackbarOpen: false,
       isDialogOpen:false,
       isDayDialogOpen: false,
+      hasEditRole: hasRole(this, getConfig(this, 'add_availabilities_roles')),
       newDay: undefined,
       selectedAvailability: false,
       selectedDate: undefined,
@@ -227,9 +229,20 @@ export default {
     },
 
     save(){
-      console.log(this.availabilities);
-      // save my availabilities
-      this.$axios.put('user/' + this.getUser().keycloakID, {availabilities: this.availabilities})
+      // compute new charisma
+      let charisma = 0
+      this.availabilities.forEach(availability => {
+        availability.days.forEach(day => {
+          if(day.frames){
+            day.frames.forEach(frame =>{
+              if(frame.isSelected){
+                charisma += +frame.charisma;
+              }
+            })
+          }
+        })
+      })
+      this.$axios.put('user/' + this.getUser().keycloakID, {availabilities: this.availabilities, charisma})
       this.isSnackbarOpen = true;
     },
 
