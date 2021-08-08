@@ -54,9 +54,9 @@
     <v-container style="display: flex; justify-content: space-around; align-content: baseline">
       <v-date-picker v-model="schedule.date"></v-date-picker>
       <h3>Debut</h3>
-      <v-time-picker format="24h" v-model="schedule.start"></v-time-picker>
+      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
       <h3>Fin</h3>
-      <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
+      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
       <v-btn
           fab
           style="margin: 20px;"
@@ -440,8 +440,8 @@ export default {
       return
     },
 
-    updateValidators(validations){
-    },
+    allowedMinutes: m => m % 15 === 0,
+
 
     async saveFA() {
       // save the FA in the DB

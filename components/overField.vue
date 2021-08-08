@@ -58,6 +58,8 @@
         :label="field.label ? field.label : field.key"
         v-model="field.value"
         @change="onChange"
+        format="24hr"
+        :allowed-minutes="allowedMinutes"
     ></v-time-picker>
     <p v-if="field.description">{{ field.description }}</p>
 
@@ -79,7 +81,9 @@ export default {
   methods: {
     onChange(){
       this.$emit('value', {key: this.field.key, value: this.field.value})
-    }
+    },
+
+    allowedMinutes: m => m % 15 === 0,
   },
 
   async mounted() {

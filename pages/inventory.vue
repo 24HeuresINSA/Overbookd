@@ -121,7 +121,7 @@ export default {
     },
 
     hasRole(role){
-      hasRole(this, role)
+      return hasRole(this, role)
     },
 
     getConfig(key){
