@@ -80,6 +80,9 @@ export default {
 
   methods: {
     onChange(){
+      if(typeof this.field.value === 'string'){
+        this.field.value = this.field.value.trim();
+      }
       this.$emit('value', {key: this.field.key, value: this.field.value})
     },
 
