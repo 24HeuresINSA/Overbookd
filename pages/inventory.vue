@@ -18,6 +18,7 @@
       fab
       style="right: 20px; bottom: 45px; position:fixed;"
       @click="isFormOpened = true"
+      v-if="hasRole(allowedTeams)"
     >
       <v-icon>
         mdi-plus
@@ -74,6 +75,7 @@
 
 <script>
 import OverForm from "../components/overForm";
+import {getConfig, hasRole} from "../common/role";
 
 export default {
   name: "inventory",
@@ -97,6 +99,7 @@ export default {
       ],
       borrowed: [],
       isFormOpened: false,
+      allowedTeams: getConfig(this, 'isInventoryOpen') ? ['log', 'hard'] : ['log'],
       equipmentForm: this.getConfig('equipment_form'),
       newEquipment: undefined,
       newBorrow: {
@@ -118,14 +121,7 @@ export default {
     },
 
     hasRole(role){
-      if(role === undefined){
-        return true
-      }
-      const teams = this.getUser()?.team;
-      if (teams === undefined){
-        return false
-      }
-      return teams.includes(role);
+      hasRole(this, role)
     },
 
     getConfig(key){
