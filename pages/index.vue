@@ -259,13 +259,13 @@ export default {
     async sendFriendRequest() {
       const user = getUser(this)
       let [firstname, lastname] = this.newFriend.split('.');
-      if(firstname === user.firstname && lastname === user.lastname){
+      if(firstname === user.firstname && lastname === user.lastname){ // asked himself to be friend
         this.snackbarMessage = this.snackbarMessages.friendRequest.lonely;
         this.isSnackbarOpen = true;
         window.open('https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690')
         return
       }
-      if(this.user.friends.find(friend => friend.username === this.newFriend)){
+      if(this.user.friends.find(friend => friend.username === this.newFriend)){ // already friends
         this.snackbarMessage = this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
         this.isSnackbarOpen = true;
         return
@@ -275,7 +275,7 @@ export default {
         message: `${getUser(this).lastname} ${getUser(this).firstname} vous a envoye une demande d'ami ❤️`,
         from: `${getUser(this).nickname ? getUser(this).nickname : getUser(this).lastname}`,
         date: new Date(),
-        data: { username : `${getUser(this).lastname}.${getUser(this).firstname}`, keycloakID: getUser(this).keycloakID }
+        data: { username : `${getUser(this).firstname}.${getUser(this).lastname}`, keycloakID: getUser(this).keycloakID }
       })
       this.snackbarMessage = this.snackbarMessages.friendRequest.sent;
       this.isSnackbarOpen = true;
