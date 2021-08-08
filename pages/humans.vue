@@ -90,7 +90,7 @@
 
           <tr>
             <td>Date de naissance</td>
-            <td>{{selectedUser.birthday}}</td>
+            <td>{{selectedUser.birthdate}}</td>
           </tr>
 
           <tr>
