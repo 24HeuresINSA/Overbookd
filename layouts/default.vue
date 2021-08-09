@@ -156,6 +156,12 @@ export default {
           to: '/inventory',
         },
         {
+          icon: 'mdi-truck',
+          title: 'Logistique 🚚',
+          roles: 'log',
+          to: '/logistics',
+        },
+        {
           icon: 'mdi-human-greeting',
           title: 'Affectation 💃',
           roles: 'hard',
