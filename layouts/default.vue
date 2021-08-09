@@ -96,7 +96,9 @@
 
 const AUTHORS = [
     'Hamza - Cookie 🍪',
-    // mettez vous nom ici
+    'Tit - Goelise 🦀',
+    'Tibo - Bigouu 🍊',
+    'Christophe - Stoph 🍺'
   ]
 
 export default {
