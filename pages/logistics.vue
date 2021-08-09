@@ -15,30 +15,14 @@
 
 <script>
 import {hasRole} from "../common/role";
-import OverChart from "../components/overChart";
 
 export default {
   name: "logistics",
-  components: {OverChart},
 
   data(){
     return {
       headers: [{
       }],
-      datacollection : {
-        labels: [this.getRandomInt(), this.getRandomInt()],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [this.getRandomInt(), this.getRandomInt()]
-          }, {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [this.getRandomInt(), this.getRandomInt()]
-          }
-        ]
-      }
     }
   },
 
