@@ -66,7 +66,7 @@
       </v-container>
     </v-main>
     <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>fait avec ❤️ par {{getRandomAuthor()}}</span>
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
@@ -93,6 +93,12 @@
 </template>
 
 <script>
+
+const AUTHORS = [
+    'Hamza - Cookie 🍪',
+    // mettez vous nom ici
+  ]
+
 export default {
   data() {
     return {
@@ -107,6 +113,7 @@ export default {
       version: 'ALPHA 0.6',
       priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
       isSnackbarOpen: false,
+      AUTHORS,
       newRequest: {
         priority: undefined,
         url: undefined,
@@ -199,6 +206,11 @@ export default {
   methods: {
     getUser(){
       return this.$store.state.user.data
+    },
+
+    getRandomAuthor(){
+      const items = this.AUTHORS;
+      return items[Math.floor(Math.random()*items.length)];
     },
 
     hasRole(role){
