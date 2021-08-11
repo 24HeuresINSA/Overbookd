@@ -13,6 +13,7 @@
       <li>🤪 les humains ne peuvent plus se donner le role admin ou bureau</li>
       <li>📝 corrige un bug causant les FA a ne pas se sauvgarder (merci stoph ❤️)</li>
       <li>⏰ on ne peut mettre que des multiple de 15 en minute (fix du format 24h )</li>
+    </ul>
 
     <h2>Patch note 0.6</h2>
       <h3>les fix apres les retours de Stoph et Paul ❤️</h3>
