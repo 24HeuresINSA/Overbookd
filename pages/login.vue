@@ -16,16 +16,20 @@
         </v-row>
         <v-img src="/home_meme.jpg"></v-img>
         <v-row>
-          <h2>Patch note 0.6</h2>
+          <h2>Patch note 0.7</h2>
         </v-row>
         <v-row>
-          <h3>les fix apres les retours de Stoph et Paul ❤️</h3>
+          <h3>les fix apres les retours de Stoph et Tit, Début de la LOG (marche pas encore)️</h3>
           <ul>
-            <li>🔨 ajout des dispo que par les admin humain bureau (modifiable depuis l'interface admin)</li>
-            <li>📆 fix de la page calendrier qui affiche les creneau ou le pelo est assigné</li>
-            <li>⚙️ ajout de la page de config (work still in progress)</li>
-            <li>👀 le champs ou il faut mettre le nom de la FT s'affiche mieux (merci stoph)</li>
-            <li>📈 FIX DU CHARISME s'update apres refresh</li>
+            <li>🚚 interface de la log pour user.log (selectionner un outil demande en FT puis valider les FT)</li>
+            <li>🗑 delete les FT (mercu stoph)</li>
+            <li>👀 les icons sont un peu plus propre</li>
+            <li>🗑 supp du code inutile (ca charge 0.002s plus rapidement)</li>
+            <li>📝 un remercimenet au auteure </li>
+            <li>🤯 fix buf des date de naissance qui s'affiche pas </li>
+            <li>🤪 les humains ne peuvent plus se donner le role admin ou bureau</li>
+            <li>📝 corrige un bug causant les FA a ne pas se sauvgarder (merci stoph ❤️)</li>
+            <li>⏰ on ne peut mettre que des multiple de 15 en minute (fix du format 24h )</li>
 
           </ul>
         </v-row>
