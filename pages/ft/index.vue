@@ -6,19 +6,35 @@
       :items="FTs"
     >
       <template v-slot:item.action="row">
-        <nuxt-link :to="'/ft/' + row.item._id">
           <v-btn
               style="margin: 5px"
-              fab
+              icon
+              small
+              :to="'/ft/' + row.item._id">
           ><v-icon>mdi-text-search</v-icon></v-btn>
-        </nuxt-link>
+        <v-btn
+            icon
+            small
+            @click="selectedFTID = row.item._id; isDialogOpen = true;"
+        ><v-icon>mdi-trash-can</v-icon></v-btn>
 
       </template>
     </v-data-table>
+
+    <v-dialog v-model="isDialogOpen" width="600">
+      <v-card>
+      <v-img src="sure.jpeg"></v-img>
+        <v-card-title>t'es sûr bébé ?</v-card-title>
+        <v-card-actions>
+          <v-btn right text @click="deleteFT()">oui 😏</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+const {hasRole} = require("../../common/role");
 export default {
   name: "index",
   data(){
@@ -38,15 +54,31 @@ export default {
       },],
 
       FTs: [],
+
+      selectedFTID: undefined,
+      isDialogOpen: false,
     }
   },
 
   async mounted() {
-    // TODO role check
+    if(hasRole('hard')){
+      this.FTs = (await this.$axios.$get('/FT')).data;
+    } else {
+      await this.$router.push({
+        path: '/'
+      })
+    }
+  },
 
-    // get FTs
-    this.FTs = (await this.$axios.$get('/FT')).data;
-    console.log(this.FTs)
+  methods:{
+    async deleteFT(){
+      await this.$axios.$delete('/ft', {
+        data: {
+          _id : this.selectedFTID,
+        },
+      });
+      this.isDialogOpen = false;
+    }
   }
 }
 </script>

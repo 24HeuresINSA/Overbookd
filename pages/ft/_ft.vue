@@ -54,9 +54,9 @@
     <v-container style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap">
       <v-date-picker v-model="schedule.date"></v-date-picker>
       <h3>Debut</h3>
-      <v-time-picker format="24h" v-model="schedule.start"></v-time-picker>
+      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
       <h3>Fin</h3>
-      <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
+      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
       <v-select
         v-model="schedule.type"
         :items="getConfig('teams').map(e => e.name)"
@@ -201,6 +201,8 @@ export default {
     onFormChange(form){
       this.FT = form
     },
+
+    allowedMinutes: m => m % 15 === 0,
 
     getConfig(key){
       return this.$store.state.config.data.data.find(e => e.key === key).value

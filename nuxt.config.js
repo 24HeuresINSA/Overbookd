@@ -1,7 +1,6 @@
 import colors from "vuetify/es5/util/colors";
 import { KEYCLOAK, BACKEND } from "./config/url.json";
 
-const BASE_URL = process.env.NODE_ENV === 'dev' ? KEYCLOAK.DEV_BASE_URL : KEYCLOAK.BASE_URL;
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -56,13 +55,13 @@ export default {
       keycloak: {
         scheme: "~/schemes/keycloak",
         endpoints: {
-          authorization: BASE_URL + KEYCLOAK.AUTH,
-          token: BASE_URL + KEYCLOAK.TOKEN,
-          userInfo: BASE_URL + KEYCLOAK.USER_INFO,
+          authorization: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH,
+          token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
+          userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
           user: false,
-          refresh: { url: BASE_URL + KEYCLOAK.AUTH, method: "post" },
+          refresh: { url: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH, method: "post" },
           logout:
-            BASE_URL +
+            KEYCLOAK.BASE_URL +
             KEYCLOAK.LOGOUT +
             "?redirect_uri=" +
             encodeURIComponent(KEYCLOAK.REDIRECT_URI),
@@ -101,7 +100,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.NODE_ENV === 'dev' ? BACKEND.DEV_BASE_URL : BACKEND.BASE_URL,
+    baseURL: process.env.NODE_ENV === 'development' ? BACKEND.DEV_BASE_URL : BACKEND.BASE_URL,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

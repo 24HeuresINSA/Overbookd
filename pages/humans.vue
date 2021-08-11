@@ -72,7 +72,7 @@
         <over-chips :roles="selectedUser.team"></over-chips>
       </v-card-subtitle>
       <v-card-text>
-        <div v-if="hasRole(['humain', 'admin', 'bureau'])">
+        <div v-if="hasRole(['admin', 'bureau'])">
           <v-select
             label="ajouter un role"
             :items="getConfig('teams').map(e => e.name)"
@@ -90,7 +90,7 @@
 
           <tr>
             <td>Date de naissance</td>
-            <td>{{selectedUser.birthday}}</td>
+            <td>{{selectedUser.birthdate}}</td>
           </tr>
 
           <tr>

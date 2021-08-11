@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1>Fiche Anime 🤯</h1>
-    <h2 v-if="isNewFA">Create new FA</h2>
-    <div style="display: flex">
-      <h3>status {{ FA.status ? FA.status : 'draft' }}</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <h1>Fiche Anime 🤯</h1>
+      <h2 v-if="isNewFA">Create new FA</h2>
+      <h3>{{ FA.status ? FA.status : 'draft' }}</h3>
       <v-icon v-for="validator of validators"
               :color="validator.status ? color[validator.status] : 'grey'"
       >
@@ -54,9 +54,9 @@
     <v-container style="display: flex; justify-content: space-around; align-content: baseline">
       <v-date-picker v-model="schedule.date"></v-date-picker>
       <h3>Debut</h3>
-      <v-time-picker format="24h" v-model="schedule.start"></v-time-picker>
+      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
       <h3>Fin</h3>
-      <v-time-picker format="24h" v-model="schedule.end"></v-time-picker>
+      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
       <v-btn
           fab
           style="margin: 20px;"
@@ -440,8 +440,8 @@ export default {
       return
     },
 
-    updateValidators(validations){
-    },
+    allowedMinutes: m => m % 15 === 0,
+
 
     async saveFA() {
       // save the FA in the DB

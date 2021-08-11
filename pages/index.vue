@@ -114,18 +114,18 @@
                     <td>{{ notification.message }}</td>
                     <td v-if="notification.type === 'friendRequest'"
                         style="display: flex; justify-content: space-between">
-                      <v-btn @click="acceptFriendRequest(notification)">
+                      <v-btn icon small @click="acceptFriendRequest(notification)">
                         <v-icon>mdi-account-check</v-icon>
                       </v-btn>
-                      <v-btn @click="refuseFriendRequest(notification)">
+                      <v-btn icon small  @click="refuseFriendRequest(notification)">
                         <v-icon>mdi-account-cancel</v-icon>
                       </v-btn>
                     </td>
                     <td v-else-if="notification.type === 'broadcast'">
-                      <v-btn :href="notification.link">
+                      <v-btn  icon   :href="notification.link">
                         <v-icon>mdi-link</v-icon>
                       </v-btn>
-                      <v-btn @click="deleteNotification(index)">
+                      <v-btn  icon   @click="deleteNotification(index)">
                         <v-icon>mdi-trash-can</v-icon>
                       </v-btn>
                     </td>
@@ -134,7 +134,7 @@
                 </template>
               </v-simple-table>
               <v-card-actions>
-                <v-btn @click="isBroadcastDialogOpen = true">broadcast</v-btn>
+                <v-btn text @click="isBroadcastDialogOpen = true">broadcast</v-btn>
               </v-card-actions>
             </v-card-text>
           </v-card>
@@ -259,13 +259,13 @@ export default {
     async sendFriendRequest() {
       const user = getUser(this)
       let [firstname, lastname] = this.newFriend.split('.');
-      if(firstname === user.firstname && lastname === user.lastname){
+      if(firstname === user.firstname && lastname === user.lastname){ // asked himself to be friend
         this.snackbarMessage = this.snackbarMessages.friendRequest.lonely;
         this.isSnackbarOpen = true;
         window.open('https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690')
         return
       }
-      if(this.user.friends.find(friend => friend.username === this.newFriend)){
+      if(this.user.friends.find(friend => friend.username === this.newFriend)){ // already friends
         this.snackbarMessage = this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
         this.isSnackbarOpen = true;
         return
@@ -275,7 +275,7 @@ export default {
         message: `${getUser(this).lastname} ${getUser(this).firstname} vous a envoye une demande d'ami ❤️`,
         from: `${getUser(this).nickname ? getUser(this).nickname : getUser(this).lastname}`,
         date: new Date(),
-        data: { username : `${getUser(this).lastname}.${getUser(this).firstname}`, keycloakID: getUser(this).keycloakID }
+        data: { username : `${getUser(this).firstname}.${getUser(this).lastname}`, keycloakID: getUser(this).keycloakID }
       })
       this.snackbarMessage = this.snackbarMessages.friendRequest.sent;
       this.isSnackbarOpen = true;

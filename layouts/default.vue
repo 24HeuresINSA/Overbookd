@@ -66,7 +66,7 @@
       </v-container>
     </v-main>
     <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>fait avec ❤️ par {{getRandomAuthor()}}</span>
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
@@ -93,6 +93,14 @@
 </template>
 
 <script>
+
+const AUTHORS = [
+    'Hamza - Cookie 🍪',
+    'Tit - Goelise 🦀',
+    'Tibo - Bigouu 🍊',
+    'Christophe - Stoph 🍺'
+  ]
+
 export default {
   data() {
     return {
@@ -104,9 +112,10 @@ export default {
       isJauneActive: false,
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
-      version: 'ALPHA 0.6',
+      version: 'ALPHA 0.7',
       priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
       isSnackbarOpen: false,
+      AUTHORS,
       newRequest: {
         priority: undefined,
         url: undefined,
@@ -156,6 +165,12 @@ export default {
           to: '/inventory',
         },
         {
+          icon: 'mdi-truck',
+          title: 'Logistique 🚚',
+          roles: 'log',
+          to: '/logistics',
+        },
+        {
           icon: 'mdi-human-greeting',
           title: 'Affectation 💃',
           roles: 'hard',
@@ -193,6 +208,11 @@ export default {
   methods: {
     getUser(){
       return this.$store.state.user.data
+    },
+
+    getRandomAuthor(){
+      const items = this.AUTHORS;
+      return items[Math.floor(Math.random()*items.length)];
     },
 
     hasRole(role){
