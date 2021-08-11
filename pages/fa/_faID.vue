@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1>Fiche Anime 🤯</h1>
-    <h2 v-if="isNewFA">Create new FA</h2>
-    <div style="display: flex">
-      <h3>status {{ FA.status ? FA.status : 'draft' }}</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <h1>Fiche Anime 🤯</h1>
+      <h2 v-if="isNewFA">Create new FA</h2>
+      <h3>{{ FA.status ? FA.status : 'draft' }}</h3>
       <v-icon v-for="validator of validators"
               :color="validator.status ? color[validator.status] : 'grey'"
       >

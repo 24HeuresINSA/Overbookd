@@ -9,7 +9,8 @@
         <nuxt-link :to="'/ft/' + row.item._id">
           <v-btn
               style="margin: 5px"
-              fab
+              icon
+              small
           ><v-icon>mdi-text-search</v-icon></v-btn>
         </nuxt-link>
 

@@ -10,7 +10,7 @@
       <template v-slot:item.action="row">
         <tr>
           <td>
-            <v-btn class="mx-2" fab dark small color="primary" @click="onItemSelected(row.item)">
+            <v-btn class="mx-2" icon dark small color="primary" @click="onItemSelected(row.item)">
               <v-icon dark>mdi-circle-edit-outline</v-icon>
             </v-btn>
           </td>
@@ -58,6 +58,7 @@ export default {
         { text: 'status', value: 'status'},
         { text: 'nom', value: 'name'},
         { text: 'equipe', value: 'team'},
+        { text: 'Resp', value: 'inCharge'},
         { text: 'action', value: 'action'},
       ],
       color: {
