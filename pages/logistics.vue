@@ -6,7 +6,13 @@
 
   <v-data-table
     :headers="headers"
-  ></v-data-table>
+    :items="selectedEquipments"
+  ><template v-slot:item.action="item">
+    <v-btn text>FT</v-btn>
+    <v-btn color="green" icon><v-icon>mdi-check</v-icon></v-btn>
+    <v-btn color="red" icon><v-icon>mdi-close</v-icon></v-btn>
+
+  </template></v-data-table>
 
 </v-container>
 </template>
@@ -20,7 +26,24 @@ export default {
   data(){
     return {
       headers: [{
-      }],
+        text: 'FT',
+        value: 'FT.name'
+      },{
+        text: 'quantite demandé',
+        value: 'amount'
+      },{
+        text: 'date',
+        value: 'date'
+      },{
+        text: 'debut',
+        value: 'start'
+      },{
+        text: 'fin',
+        value: 'end'
+      },{
+        text: 'action',
+        value: 'action'
+      },],
       equipments : [],
       selectedItem: undefined,
     }
@@ -74,6 +97,15 @@ export default {
     getRandomInt () {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
     }
+  },
+
+  computed: {
+    selectedEquipments() {
+      if(this.selectedItem === undefined){
+        return []
+      }
+      return this.equipments.find(e => e.name === this.selectedItem).requested
+    },
   }
 }
 </script>
