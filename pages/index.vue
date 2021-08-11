@@ -114,18 +114,18 @@
                     <td>{{ notification.message }}</td>
                     <td v-if="notification.type === 'friendRequest'"
                         style="display: flex; justify-content: space-between">
-                      <v-btn @click="acceptFriendRequest(notification)">
+                      <v-btn icon small @click="acceptFriendRequest(notification)">
                         <v-icon>mdi-account-check</v-icon>
                       </v-btn>
-                      <v-btn @click="refuseFriendRequest(notification)">
+                      <v-btn icon small  @click="refuseFriendRequest(notification)">
                         <v-icon>mdi-account-cancel</v-icon>
                       </v-btn>
                     </td>
                     <td v-else-if="notification.type === 'broadcast'">
-                      <v-btn :href="notification.link">
+                      <v-btn  icon   :href="notification.link">
                         <v-icon>mdi-link</v-icon>
                       </v-btn>
-                      <v-btn @click="deleteNotification(index)">
+                      <v-btn  icon   @click="deleteNotification(index)">
                         <v-icon>mdi-trash-can</v-icon>
                       </v-btn>
                     </td>
@@ -134,7 +134,7 @@
                 </template>
               </v-simple-table>
               <v-card-actions>
-                <v-btn @click="isBroadcastDialogOpen = true">broadcast</v-btn>
+                <v-btn text @click="isBroadcastDialogOpen = true">broadcast</v-btn>
               </v-card-actions>
             </v-card-text>
           </v-card>
