@@ -1,5 +1,9 @@
 
 export function hasRole(context: any, roles: string[] | string) {
+    if(roles === undefined){
+        return true;
+    }
+
     const teams = getUser(context)?.team;
     if (teams === undefined) {
         return false

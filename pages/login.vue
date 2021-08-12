@@ -16,21 +16,15 @@
         </v-row>
         <v-img src="/home_meme.jpg"></v-img>
         <v-row>
-          <h2>Patch note 0.7</h2>
+          <h2>Patch note 0.8</h2>
         </v-row>
         <v-row>
-          <h3>les fix apres les retours de Stoph et Tit, Début de la LOG (marche pas encore)️</h3>
+          <h3>ajout de filtrage pour les FA et fix des FA</h3>
           <ul>
-            <li>🚚 interface de la log pour user.log (selectionner un outil demande en FT puis valider les FT)</li>
-            <li>🗑 delete les FT (mercu stoph)</li>
-            <li>👀 les icons sont un peu plus propre</li>
-            <li>🗑 supp du code inutile (ca charge 0.002s plus rapidement)</li>
-            <li>📝 un remercimenet au auteure </li>
-            <li>🤯 fix buf des date de naissance qui s'affiche pas </li>
-            <li>🤪 les humains ne peuvent plus se donner le role admin ou bureau</li>
-            <li>📝 corrige un bug causant les FA a ne pas se sauvgarder (merci stoph ❤️)</li>
-            <li>⏰ on ne peut mettre que des multiple de 15 en minute (fix du format 24h )</li>
-
+            <li>📝 filtrage des FA par team et par status</li>
+            <li>🔎 ajout des recherche de FA</li>
+            <li>📆 on peut restreindre a qui s'affiche les dispo (hard only, bureau only ...)</li>
+            <li>🔨 correction de bug</li>
           </ul>
         </v-row>
         <v-row>

@@ -5,6 +5,9 @@
       :headers="headers"
       :items="FTs"
     >
+      <template v-slot:item.status="row">
+        <v-avatar size="30" :color="color[row.item.status]"></v-avatar>
+      </template>
       <template v-slot:item.action="row">
           <v-btn
               style="margin: 5px"
@@ -39,6 +42,13 @@ export default {
   name: "index",
   data(){
     return {
+      color: {
+        undefined: 'grey',
+        submitted: 'orange',
+        validated: 'green',
+        refused: 'red'
+      },
+
       headers: [{
         text: 'Status',
         value: 'status',
