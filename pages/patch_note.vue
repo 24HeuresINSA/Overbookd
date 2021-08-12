@@ -1,6 +1,16 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+
+    <h2>Patch note 0.8</h2>
+      <h3>ajout de filtrage pour les FA et fix des FA</h3>
+      <ul>
+        <li>📝 filtrage des FA par team et par status</li>
+        <li>🔎 ajout des recherche de FA</li>
+        <li>📆 on peut restreindre a qui s'affiche les dispo (hard only, bureau only ...)</li>
+        <li>🔨 correction de bug</li>
+      </ul>
+
     <h2>Patch note 0.7</h2>
     <h3>les fix apres les retours de Stoph et Tit, Début de la LOG (marche pas encore)️</h3>
     <ul>
