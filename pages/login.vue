@@ -16,15 +16,13 @@
         </v-row>
         <v-img src="/home_meme.jpg"></v-img>
         <v-row>
-          <h2>Patch note 0.8</h2>
+          <h2>Patch note 0.9</h2>
         </v-row>
         <v-row>
-          <h3>ajout de filtrage pour les FA et fix des FA</h3>
+          <h3>ajout d'une idee conne d'Adele </h3>
           <ul>
-            <li>📝 filtrage des FA par team et par status</li>
-            <li>🔎 ajout des recherche de FA</li>
-            <li>📆 on peut restreindre a qui s'affiche les dispo (hard only, bureau only ...)</li>
-            <li>🔨 correction de bug</li>
+            <li>❤️ ajout de OverTinder 🔥</li>
+            <li>📸 possibilite d'ajouter une PP</li>
           </ul>
         </v-row>
         <v-row>

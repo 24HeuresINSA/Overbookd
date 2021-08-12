@@ -2,6 +2,13 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.9</h2>
+      <h3>ajout d'une idee conne d'Adele </h3>
+      <ul>
+        <li>❤️ ajout de OverTinder 🔥</li>
+        <li>📸 possibilite d'ajouter une PP</li>
+      </ul>
+
     <h2>Patch note 0.8</h2>
       <h3>ajout de filtrage pour les FA et fix des FA</h3>
       <ul>

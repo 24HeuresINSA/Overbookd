@@ -4,6 +4,7 @@
       <v-row justify="center" align="center">
         <v-col cols="6" sm="6" md="4">
           <v-card v-if="user">
+            <v-img v-if="user.pp" :src=" ( getPPUrl() ) +  'api/user/pp/' + user.pp"></v-img>
             <v-card-title>Bonsoir {{ user.nickname ? user.nickname : user.firstname }}</v-card-title>
             <v-card-subtitle>👋 {{ user.firstname }}.{{ user.lastname }}</v-card-subtitle>
             <v-card-text>
@@ -19,6 +20,9 @@
 
               <v-progress-linear :value="user.charisma"></v-progress-linear>
             </v-card-text>
+            <v-card-actions>
+              <v-btn icon @click="isPPDialogOpen = true">📸</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
 
@@ -189,6 +193,18 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="isPPDialogOpen" max-width="600">
+      <v-card>
+        <v-card-text>
+          <v-file-input v-model="PP">
+          </v-file-input>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="uploadPP()">update</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -208,7 +224,9 @@ export default {
       newFriend: undefined,
       isSnackbarOpen: false,
       isBroadcastDialogOpen: false,
+      isPPDialogOpen: false,
       hasNotBeenApproved:false,
+      PP: undefined,
       snackbarMessage: "",
       snackbarMessages: {
         friendRequest: {
@@ -230,6 +248,7 @@ export default {
 
   async mounted() {
     this.user = await getUser(this);
+    console.log(this.user)
 
     if (this.user.team === undefined || this.user.team.length === 0){
       this.hasNotBeenApproved = true;
@@ -254,6 +273,14 @@ export default {
 
     hasRole(team){
       return hasRole(this, team)
+    },
+
+    async uploadPP(){
+      let form = new FormData();
+      form.append('files', this.PP, this.PP.name);
+      form.append('_id', getUser(this)._id)
+      console.log(this.PP)
+      await this.$axios.post('/user/pp', form)
     },
 
     async sendFriendRequest() {
@@ -318,6 +345,10 @@ export default {
         this.snackbarMessage = this.snackbarMessages.error;
         this.isSnackbarOpen = true;
       }
+    },
+
+    getPPUrl(){
+      return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
     }
   },
 
