@@ -1,31 +1,71 @@
 <template>
   <div>
     <h1>Fiche Anim 🎉</h1>
-    <v-data-table
-        :headers="headers"
-        :items="FAs"
-        :items-per-page="5"
-        class="elevation-1"
-    >
-      <template v-slot:item.action="row">
-        <tr>
-          <td>
-            <v-btn class="mx-2" icon dark small color="primary" @click="onItemSelected(row.item)">
-              <v-icon dark>mdi-circle-edit-outline</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </template>
 
-      <template v-slot:item.status="row">
-        <v-avatar
-            v-if="row.item"
-            :color="color[row.item.status]"
-            size="20"
-        ></v-avatar>
+    <v-container style="display: grid;" >
+      <v-row>
+        <v-col cols="2">
+          <v-container style="padding: 0">
+            <v-card>
+              <v-card-title>Filters</v-card-title>
+              <v-card-text>
+                <v-text-field label="recherche" v-model="search">
+                </v-text-field>
 
-      </template>
-    </v-data-table>
+
+                <v-list shaped style="font-size: 10px">
+                  <v-list-item-group v-model="selectedStatus">
+                    <v-list-item>
+                      <v-list-item-title class="small">Tous</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title class="small">Draft</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title class="small">Soumise</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title class="small">refuse</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title class="small">walidé</v-list-item-title>
+                    </v-list-item>
+                  </v-list-item-group>
+                </v-list>
+              </v-card-text>
+            </v-card>
+          </v-container>
+        </v-col>
+
+        <v-col cols="10">
+          <v-data-table
+              :headers="headers"
+              :items="selectedFAs"
+              :items-per-page="5"
+              class="elevation-1"
+          >
+            <template v-slot:item.action="row">
+              <tr>
+                <td>
+                  <v-btn class="mx-2" icon dark small color="primary" @click="onItemSelected(row.item)">
+                    <v-icon dark>mdi-circle-edit-outline</v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </template>
+
+            <template v-slot:item.status="row">
+              <v-avatar
+                  v-if="row.item"
+                  :color="color[row.item.status]"
+                  size="20"
+              ></v-avatar>
+
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <v-btn
         color="secondary"
@@ -54,6 +94,7 @@ export default {
       page: 1,
       itemsPerPage: 4,
       sortBy: 'name',
+      selectedStatus: 0,
       headers: [
         { text: 'status', value: 'status'},
         { text: 'nom', value: 'name'},
@@ -75,9 +116,37 @@ export default {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage)
     },
+
+    selectedFAs() {
+      const mFAs = this.filterByStatus(this.FAs, this.selectedStatus);
+      if(this.search === undefined){
+        return mFAs;
+      } else {
+        const s = this.search.toLowerCase()
+        return mFAs.filter(FA => FA?.name.toLowerCase().includes(s));
+      }
+    }
   },
 
   methods: {
+
+    filterByStatus(FAs, status){
+      if(status == 0){
+        return FAs
+      }
+      const s = ['', 'draft', 'submitted', 'refused', 'accepted'];
+      FAs = FAs.map(FA =>{
+        if(FA){
+          if(FA.status === undefined){
+            FA.status = 'draft';
+          }
+        }
+        return FA
+      })
+      return FAs.filter(FA => FA?.status === s[status])
+    },
+
+
     onItemSelected(item){
       this.$router.push({path: 'fa/' + item.name})
     },
@@ -95,8 +164,6 @@ export default {
   async mounted() {
     // get FAs
     this.FAs = (await this.$axios.get('/FA')).data;
-    console.log(this.FAs)
-
   }
 }
 </script>
@@ -106,5 +173,14 @@ export default {
   position: absolute;
   right: 10px;
   bottom: 10px;
+}
+
+.small{
+  font-size: small;
+  margin-left: 0;
+}
+
+.v-list-item{
+  padding: 0;
 }
 </style>
