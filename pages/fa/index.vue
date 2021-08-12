@@ -32,8 +32,12 @@
                     </v-list-item>
                   </v-list-item-group>
                 </v-list>
+
+                <br/>
+                <v-select label="équipe" v-model="selectedTeam" :items="getConfig('teams').map(e => e.name)"></v-select>
               </v-card-text>
             </v-card>
+
           </v-container>
         </v-col>
 
@@ -82,6 +86,8 @@
 </template>
 
 <script>
+import {getConfig} from "../../common/role";
+
 export default {
   name: "fa",
   data() {
@@ -95,6 +101,7 @@ export default {
       itemsPerPage: 4,
       sortBy: 'name',
       selectedStatus: 0,
+      selectedTeam: undefined,
       headers: [
         { text: 'status', value: 'status'},
         { text: 'nom', value: 'name'},
@@ -118,7 +125,8 @@ export default {
     },
 
     selectedFAs() {
-      const mFAs = this.filterByStatus(this.FAs, this.selectedStatus);
+      let mFAs = this.filterByStatus(this.FAs, this.selectedStatus);
+      mFAs = this.filterBySelectedTeam(mFAs, this.selectedTeam);
       if(this.search === undefined){
         return mFAs;
       } else {
@@ -129,6 +137,22 @@ export default {
   },
 
   methods: {
+    getConfig(key){
+      return getConfig(this, key)
+    },
+
+    filterBySelectedTeam(FAs, team){
+      if(team === undefined){
+        return FAs
+      }
+      return FAs.filter(FA => {
+        if(FA.team){
+          return FA.team === team;
+        } else {
+          return false
+        }
+      })
+    },
 
     filterByStatus(FAs, status){
       if(status == 0){
