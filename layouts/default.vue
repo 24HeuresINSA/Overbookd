@@ -189,6 +189,12 @@ export default {
           to: '/config',
         },
         {
+          icon: 'mdi-fire',
+          roles: 'hard',
+          title: 'OverTinder 🍑',
+          to: '/overTinder',
+        },
+        {
           icon: 'mdi-note',
           title: 'Patch notes 📝',
           to: '/patch_note',
