@@ -21,7 +21,7 @@
       <v-btn v-if="hasEditRole"  @click="openDayDialog(availability)">ajouter une journe</v-btn>
       <div style="display: flex">
         <v-container v-for="day of availability.days">
-              <v-card width="400px">
+              <v-card width="400px" v-if="hasRole(availability.role)">
                 <v-card-title>{{(new Date(day.date)).toLocaleString()}}</v-card-title>
                 <v-card-text>
                   <v-list>
@@ -89,6 +89,8 @@
         <v-card-text>
           <v-text-field label="Titre" v-model="newAvailability.name"></v-text-field>
           <v-text-field label="Desciption" v-model="newAvailability.description"></v-text-field>
+          <v-select label="qui peut voir ces dispo?" :items="getConfig('teams').map(e => e.name)" v-model="newAvailability.role"></v-select>
+
         </v-card-text>
         <v-card-actions>
           <v-btn text @click="addAvailability()"><v-icon>mdi-content-save</v-icon></v-btn>
@@ -148,7 +150,8 @@ export default {
       isTimeframeDialog: false,
       newAvailability: {
         name: undefined,
-        description: undefined
+        description: undefined,
+        role: undefined,
       },
       newTimeframe: {
         start: undefined,
