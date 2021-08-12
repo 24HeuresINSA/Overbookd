@@ -61,7 +61,7 @@ export default {
   },
 
   async mounted() {
-    if(hasRole('hard')){
+    if(hasRole(this, 'hard')){
       this.FTs = (await this.$axios.$get('/FT')).data;
     } else {
       await this.$router.push({
