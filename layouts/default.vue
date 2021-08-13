@@ -75,6 +75,7 @@
         <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
           <v-switch label="nouvelle feature request ?" v-model="newRequest.isFeatureRequest"></v-switch>
+          <v-text-field label="URL" v-model="newRequest.title"></v-text-field>
           <v-select :items="['hard', 'soft', 'bureau']" label="scope" v-model="newRequest.scope"></v-select>
           <v-select :items="priorities" label="priorite" v-model="newRequest.priority"></v-select>
           <v-text-field label="URL" v-model="newRequest.url"></v-text-field>
@@ -94,6 +95,7 @@
 
 <script>
 
+const {getUser} = require("../common/role");
 const AUTHORS = [
     'Hamza - Cookie 🍪',
     'Tit - Goelise 🦀',
@@ -117,6 +119,7 @@ export default {
       isSnackbarOpen: false,
       AUTHORS,
       newRequest: {
+        title: undefined,
         priority: undefined,
         url: undefined,
         description: undefined,
@@ -256,6 +259,18 @@ export default {
 
     async submitIssue(){
       this.newRequest.priority = "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
+      this.newRequest.git_platform = 'gitlab';
+      this.newRequest.author = getUser(this).username ? getUser(this).username : getUser(this).lastname;
+      this.newRequest.repo = '24-heures-insa/overbookd/frontend'
+      this.description += `
+
+      # Date
+      ${(new Date()).toLocaleString()}
+      `
+
+      await this.$axios.post('/', {
+
+      })
       this.isDialogOpen = false;
       this.isSnackbarOpen = true;
     }
