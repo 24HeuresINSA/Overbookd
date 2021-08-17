@@ -37,7 +37,7 @@
         @change="onChange"
     ></v-datetime-picker>
     <div v-if="field.type === 'date'">
-      <p>{{field.label ? field.label : field.key}}</p>
+      <p>{{(field.label ? field.label : field.key) + (field.isRequired ? '*' : '')}}</p>
       <v-date-picker
           :label="field.label ? field.label : field.key"
           v-model="field.value"
