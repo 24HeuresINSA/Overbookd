@@ -114,7 +114,7 @@ export default {
       isJauneActive: false,
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
-      version: 'ALPHA 0.9',
+      version: 'ALPHA 0.10',
       priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
       isSnackbarOpen: false,
       AUTHORS,
