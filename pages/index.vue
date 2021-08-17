@@ -68,7 +68,7 @@
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
-              <v-container v-if="!user.friends">
+              <v-container v-if="!user.friends || !user.friends.length">
                 <v-img src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"></v-img>
                 <p>pour demander en amis met le prenom.nom de tes potes puis a</p>
               </v-container>
