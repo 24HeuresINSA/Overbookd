@@ -191,6 +191,9 @@
         <v-card-text>
           Merci de rejoindre l'asso mais ton compte n'est pas encore activer...
         </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="logout">DECO</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -345,7 +348,14 @@ export default {
 
     getPPUrl(){
       return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
-    }
+    },
+
+    async logout(){
+      await this.$auth.logout();
+      await this.$router.push({
+        path: '/login',
+      })
+    },
   },
 
 };
