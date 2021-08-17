@@ -58,35 +58,27 @@
         <v-col cols="6" sm="4" md="4">
           <v-card v-if="user">
             <v-card-title>Amis ❤️</v-card-title>
-            <v-card-subtitle>mes reuf</v-card-subtitle>
-            <v-card-text v-if="user.friends.length !== 0">
-              <v-simple-table>
-                <thead>
-                <tr>
-                  <th class="text-left">
-                    Amis
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                    v-for="item in user.friends"
-                >
-                  <td>{{ item.username ? item.username : item }}</td>
-                </tr>
-                </tbody>
-              </v-simple-table>
-            </v-card-text>
-            <v-card-text v-else>
-              <h2>Lonely 🥲</h2>
-              <p>pour demander en amis met le prenom.nom de tes potes</p>
+            <v-card-text>
+              <v-list dense>
+                <v-list-item-group>
+                  <v-list-item v-for="item in user.friends" >
+                    <v-list-item-content>
+                      <v-list-item-title>{{item.username}}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+              <v-container v-if="!user.friends">
+                <v-img src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"></v-img>
+                <p>pour demander en amis met le prenom.nom de tes potes puis a</p>
+              </v-container>
             </v-card-text>
             <v-card-actions>
               <v-text-field
-                  label="username de ton pote"
+                  label="prénom.nom de ton pote"
                   v-model="newFriend"
               ></v-text-field>
-              <v-btn text @click="sendFriendRequest">ajouter un amis</v-btn>
+              <v-btn text @click="sendFriendRequest">demander en ami</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
