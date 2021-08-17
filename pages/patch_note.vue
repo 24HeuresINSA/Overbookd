@@ -2,6 +2,18 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.10</h2>
+      <h3>Corrections de quelques bugs signaler sur la page d'inscription et systeme de demande d'amis (Merci MAAF ❤️)</h3>
+      <ul>
+        <li>📝 l'appli check si tu as bien mis le meme mdp a l'inscription</li>
+        <li>🤪 l'appli explique comment se co apres avoir creer un compte</li>
+        <li>🔒 les champs avec un * sont obligatoirs</li>
+        <li>😏 les mdp ne sont plus stocke dans la base de donnee</li>
+        <li>❤️ quand qqun nous accepte en ami il se rajoute dans la liste d'ami (il faut refresh quand meme)</li>
+        <li>🧹 nettoyage du code de la backend (mais personne ne peux remaque la diff)</li>
+        <li>👀 preparation pour le magnifique webservice de Tit pour la prochaine MaJ</li>
+      </ul>
+
     <h2>Patch note 0.9</h2>
       <h3>ajout d'une idee conne d'Adele </h3>
       <ul>

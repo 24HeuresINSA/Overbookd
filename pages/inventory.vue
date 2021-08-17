@@ -117,7 +117,7 @@ export default {
 
   methods: {
     getUser(){
-      return this.$store.state.user.data
+      return getUser(this)
     },
 
     hasRole(role){

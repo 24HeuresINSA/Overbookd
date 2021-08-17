@@ -53,23 +53,11 @@ export default {
     if(hasRole(this, 'log')){
       const {data: {data : FTs }} = await this.$axios.get('/ft');
       FTs.forEach(FT => {
-        FT.equipments.forEach(FTequipment => {
-          let existingEquipment =  this.equipments.find(equipment => equipment.name === FTequipment.name);
-          if(existingEquipment){
-            existingEquipment.requested.push(FT.schedules.map(({date, start, end})=> {
-              return {
-                date, start, end,
-                amount: FTequipment.selectedAmount,
-                FT: {
-                  id: FT._id,
-                  name: FT.name
-                },
-              }
-            }))
-          } else {
-            this.equipments.push({
-              name: FTequipment.name,
-              requested: FT.schedules.map(({date, start, end})=> {
+        if(FT.equipments){
+          FT.equipments.forEach(FTequipment => {
+            let existingEquipment =  this.equipments.find(equipment => equipment.name === FTequipment.name);
+            if(existingEquipment){
+              existingEquipment.requested.push(FT.schedules.map(({date, start, end})=> {
                 return {
                   date, start, end,
                   amount: FTequipment.selectedAmount,
@@ -78,10 +66,27 @@ export default {
                     name: FT.name
                   },
                 }
-              })
-            })
-          }
-        })
+              }))
+            } else {
+              if(FT.schedules){
+                this.equipments.push({
+                  name: FTequipment.name,
+                  requested: FT.schedules.map(({date, start, end})=> {
+                    return {
+                      date, start, end,
+                      amount: FTequipment.selectedAmount,
+                      FT: {
+                        id: FT._id,
+                        name: FT.name
+                      },
+                    }
+                  })
+                })
+              }
+            }
+          })
+        }
+
       })
 
       console.log(this.equipments)

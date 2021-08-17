@@ -191,6 +191,9 @@
         <v-card-text>
           Merci de rejoindre l'asso mais ton compte n'est pas encore activer...
         </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="logout">DECO</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -302,7 +305,7 @@ export default {
         message: `${getUser(this).lastname} ${getUser(this).firstname} vous a envoye une demande d'ami ❤️`,
         from: `${getUser(this).nickname ? getUser(this).nickname : getUser(this).lastname}`,
         date: new Date(),
-        data: { username : `${getUser(this).firstname}.${getUser(this).lastname}`, keycloakID: getUser(this).keycloakID }
+        data: { username : `${getUser(this).firstname}.${getUser(this).lastname}`, id: getUser(this)._id }
       })
       this.snackbarMessage = this.snackbarMessages.friendRequest.sent;
       this.isSnackbarOpen = true;
@@ -310,16 +313,12 @@ export default {
 
     async acceptFriendRequest(notification) {
       if(notification.data) {
-        let friends;
         let user = getUser(this);
-        if (user.friends === undefined) {
-          friends = []
-        } else {
-          friends = user.friends
-        }
-        friends.push(notification.data);
         user.notifications.pop();
-        await this.$axios.put(`/user/${user.keycloakID}`,user);
+        await this.$axios.post(`/user/friends`,{
+          from: user._id,
+          to: notification.data
+        });
         this.snackbarMessage = this.snackbarMessages.friendRequest.accepted;
         this.isSnackbarOpen = true;
       } else {
@@ -349,7 +348,14 @@ export default {
 
     getPPUrl(){
       return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
-    }
+    },
+
+    async logout(){
+      await this.$auth.logout();
+      await this.$router.push({
+        path: '/login',
+      })
+    },
   },
 
 };

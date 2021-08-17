@@ -50,11 +50,19 @@ export default {
     },
 
     submitForm(){
-      // TODO verify the form validity
-      this.$axios.post('/user',this.compiledForm);
-      this.$router.push({
-        path: '/login',
-      })
+      if(this.compiledForm.password !== this.compiledForm.password2){
+        alert("t'as pas mis le meme mpd :P")
+      } else if (!this.compiledForm.isValid){
+        alert("les champs avec * sont OBLIGATOIRS XD ")
+      } else {
+        this.$axios.post('/user',this.compiledForm);
+        this.$router.push({
+          path: '/login',
+        })
+        alert(`Tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`)
+      }
+
+
     }
   }
 

@@ -30,11 +30,18 @@ export default {
   methods: {
     onValueChange({key, value}) {
       this.compiledForm[key] = value;
+      let isValid = true;
       this.fields.forEach(field => {
         if(field.value){
           this.compiledForm[field.key] = field.value;
+        } else {
+          if(field.isRequired === true){
+            isValid = false;
+            // console.log('field ' + field.key + ' is required')
+          }
         }
       })
+      this.compiledForm.isValid = isValid;
       this.$emit('form-change', this.compiledForm)
     }
   }
