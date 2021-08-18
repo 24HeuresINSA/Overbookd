@@ -71,6 +71,7 @@
 
     <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card>
+        <v-img src="img/memes/comsi_working.png" width="300px" style="left: 250px"></v-img>
         <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>
         <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
