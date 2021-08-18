@@ -12,7 +12,7 @@
               <h3>📞 {{ user.phone }}</h3>
               <h3>😎 {{ user.charisma || 0 }} charisme</h3>
               <h3>❤️ {{ user.friends ? user.friends.length : 0}} amis</h3>
-              <h3>📆 {{ (new Date(user.birthday)).toLocaleString()}}</h3>
+              <h3>📆 {{ (new Date(user.birthdate)).toLocaleString()}}</h3>
               <h3>🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés</h3>
               <h3>🚗 {{ user.hasDriverLicense ? '✅' : '🛑' }}</h3>
 
