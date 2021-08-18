@@ -81,6 +81,8 @@
           <v-btn @click="addRole()">ajouter</v-btn>
         </div>
 
+        <v-img v-if="selectedUser.pp" :src=" ( getPPUrl() ) +  'api/user/pp/' + selectedUser.pp"></v-img>
+
         <v-simple-table>
           <tbody>
           <tr>
@@ -99,6 +101,16 @@
           </tr>
 
           <tr>
+            <td>Charisme</td>
+            <td>{{selectedUser.charisma}}</td>
+          </tr>
+
+          <tr>
+            <td>Nombre de dispo </td>
+            <td>{{selectedUser.availabilities ? selectedUser.availabilities.length : 0}}</td>
+          </tr>
+
+          <tr>
             <td>email</td>
             <td>{{selectedUser.email}}</td>
           </tr>
@@ -110,12 +122,37 @@
 
           <tr>
             <td>amis</td>
-            <td>{{selectedUser.friends}}</td>
+            <td>{{selectedUser.friends ? selectedUser.friends.map(f => f.username).join(', ') : ''}}</td>
+          </tr>
+
+          <tr>
+            <td>keycloakID</td>
+            <td>{{selectedUser.keycloakID}}</td>
           </tr>
 
           <tr>
             <td>ID</td>
-            <td>{{selectedUser.keycloakID}}</td>
+            <td>{{selectedUser._id}}</td>
+          </tr>
+
+          <tr>
+            <td>Handicap</td>
+            <td>{{selectedUser.handicap}}</td>
+          </tr>
+
+          <tr>
+            <td>📚</td>
+            <td>{{selectedUser.year}}  {{selectedUser.departement}}</td>
+          </tr>
+
+          <tr>
+            <td>Commentaire</td>
+            <td>{{selectedUser.comment}}</td>
+          </tr>
+
+          <tr v-if="hasRole('admin')">
+            <td># secu social</td>
+            <td>{{selectedUser.socialSecurity}}</td>
           </tr>
           </tbody>
         </v-simple-table>
@@ -201,6 +238,10 @@ export default {
         this.$set(user, 'team', user.team) // update rendering
         await this.$axios.put(`/user/${user.keycloakID}`, {team: user.team});
       }
+    },
+
+    getPPUrl(){
+      return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
     },
 
     getConfig(key){
