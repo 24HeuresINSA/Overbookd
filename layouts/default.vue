@@ -12,7 +12,7 @@
       <v-list>
         <v-list-item>
           <v-img
-              :src="logo"
+              :src="'img/logo/' + logo"
               alt="overbookd"
               class="logo"
           ></v-img>
@@ -71,6 +71,7 @@
 
     <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card>
+        <v-img src="img/memes/comsi_working.png" width="300px" style="left: 250px"></v-img>
         <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>
         <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
@@ -94,7 +95,7 @@
 </template>
 
 <script>
-
+const { version } = require("../package.json");
 const {getUser} = require("../common/role");
 const AUTHORS = [
     'Hamza - Cookie 🍪',
@@ -114,7 +115,7 @@ export default {
       isJauneActive: false,
       jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
-      version: 'ALPHA 0.10',
+      version,
       priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
       isSnackbarOpen: false,
       AUTHORS,
@@ -245,7 +246,7 @@ export default {
       if(this.counter > 10){
         this.isJauneActive = true;
         this.title = 'RICARD - Pastis'
-        const audio = new Audio('jaune.m4a');
+        const audio = new Audio('audio/jaune.m4a');
         await audio.play()
       }
     },
@@ -266,6 +267,14 @@ export default {
 
       # Date
       ${(new Date()).toLocaleString()}
+
+      # Version
+      ${this.version}
+
+      # Additional Info
+      User Agent: ${navigator.userAgent}
+      Platform: ${navigator.platform}
+      Vendor: ${navigator.vendor}
       `
 
       await this.$axios.post('/', {

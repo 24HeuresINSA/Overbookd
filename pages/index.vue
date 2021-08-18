@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-container>
+    <v-container  no-gutters>
       <v-row justify="center" align="center">
-        <v-col cols="6" sm="6" md="4">
+        <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
             <v-img v-if="user.pp" :src=" ( getPPUrl() ) +  'api/user/pp/' + user.pp"></v-img>
             <v-card-title>Bonsoir {{ user.nickname ? user.nickname : user.firstname }}</v-card-title>
@@ -12,7 +12,7 @@
               <h3>📞 {{ user.phone }}</h3>
               <h3>😎 {{ user.charisma || 0 }} charisme</h3>
               <h3>❤️ {{ user.friends ? user.friends.length : 0}} amis</h3>
-              <h3>📆 {{ (new Date(user.birthday)).toLocaleString()}}</h3>
+              <h3>📆 {{ (new Date(user.birthdate)).toLocaleString()}}</h3>
               <h3>🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés</h3>
               <h3>🚗 {{ user.hasDriverLicense ? '✅' : '🛑' }}</h3>
 
@@ -26,64 +26,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6" sm="4" md="4" v-if="hasRole('hard')">
-          <v-card v-if="user">
-            <v-card-title>Compte perso 💰</v-card-title>
-            <v-card-subtitle>Balance: {{ user.balance || 0 }} €</v-card-subtitle>
-            <v-card-text v-if="user.transactionHistory">
-              <v-simple-table>
-                <thead>
-                <tr>
-                  <th class="text-left">
-                    Operation
-                  </th>
-                  <th class="text-right">
-                    €
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                    v-for="item in user.transactionHistory"
-                >
-                  <td>{{ item.reason }}</td>
-                  <td class="text-right">{{ item.amount }} €</td>
-                </tr>
-                </tbody>
-              </v-simple-table>
-            </v-card-text>
-          </v-card>
-        </v-col>
-
-        <v-col cols="6" sm="4" md="4">
-          <v-card v-if="user">
-            <v-card-title>Amis ❤️</v-card-title>
-            <v-card-text>
-              <v-list dense>
-                <v-list-item-group>
-                  <v-list-item v-for="item in user.friends" >
-                    <v-list-item-content>
-                      <v-list-item-title>{{item.username}}</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-              <v-container v-if="!user.friends || !user.friends.length">
-                <v-img src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"></v-img>
-                <p>pour demander en amis met le prenom.nom de tes potes puis a</p>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-text-field
-                  label="prénom.nom de ton pote"
-                  v-model="newFriend"
-              ></v-text-field>
-              <v-btn text @click="sendFriendRequest">demander en ami</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-
-        <v-col cols="6" sm="4" md="6">
+        <v-col cols="12" sm="4" md="6">
           <v-card v-if="user">
             <v-card-title>Notification 📣️</v-card-title>
             <v-card-text v-if="user.notifications">
@@ -104,7 +47,7 @@
                   <tbody>
                   <tr
                       v-for="(notification, index) in user.notifications"
-                      :key="notification.date"
+                      v-bind:key="notification.date"
                   >
                     <td>{{ notification.type === 'friendRequest' ? '👨‍👩‍👧' : '📣' }}</td>
                     <td>{{ notification.message }}</td>
@@ -136,24 +79,77 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6" sm="4" md="4">
+        <v-col cols="12" sm="6" md="4" v-if="hasRole('hard')">
           <v-card v-if="user">
-            <v-img src="https://64.media.tumblr.com/d238e0f637b17270021e457ace270453/b687e7a3a938ff5d-16/s540x810/12568a11bd04c2b5c7a26c17632f32387ecfc0bb.gifv"></v-img>
-            <v-card-title>Le Clicker ⏱ (Work in progess)</v-card-title>
-            <v-card-subtitle>Le compteur de blague qui derrape 🚗</v-card-subtitle>
+            <v-card-title>Compte perso 💰</v-card-title>
+            <v-card-subtitle>Balance: {{ user.balance || 0 }} €</v-card-subtitle>
+            <v-card-text v-if="user.transactionHistory">
+              <v-simple-table>
+                <thead>
+                <tr>
+                  <th class="text-left">
+                    Operation
+                  </th>
+                  <th class="text-right">
+                    €
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="item in user.transactionHistory"
+                    v-bind:key="item"
+                >
+                  <td>{{ item.reason }}</td>
+                  <td class="text-right">{{ item.amount }} €</td>
+                </tr>
+                </tbody>
+              </v-simple-table>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" sm="6" md="4">
+          <v-card v-if="user">
+            <v-card-title>Amis ❤️</v-card-title>
             <v-card-text>
-              <h2>Le drift counter</h2>
-              <h3>tu es a 10 click 🚗</h3>
+              <v-list dense>
+                <v-list-item-group>
+                  <v-list-item v-for="item in user.friends" v-bind:key="item.username">
+                    <v-list-item-content>
+                      <v-list-item-title>{{item.username}}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+              <v-container v-if="!user.friends || !user.friends.length">
+                <v-img src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"></v-img>
+                <p>pour demander en amis met le prenom.nom de tes potes puis a</p>
+              </v-container>
             </v-card-text>
             <v-card-actions>
               <v-text-field
-                  label="username de ton pote"
+                  label="prénom.nom de ton pote"
+                  v-model="newFriend"
               ></v-text-field>
-              <v-btn @click="">click</v-btn>
+              <v-btn text @click="sendFriendRequest">demander en ami</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
 
+        <v-col cols="12" sm="6" md="4">
+          <v-card v-if="user">
+            <v-img src="https://media.giphy.com/media/WJZbQEoljvfxK/giphy.gif"></v-img>
+            <v-card-title>Le Clicker ⏱ (Work in progess)</v-card-title>
+            <v-card-subtitle>Le compteur de blague qui derrape 🚗</v-card-subtitle>
+            <v-card-text>
+              <h2>{{user.clicks || 0}} 🚗</h2>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn text @click="clicker()">click</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
 
@@ -276,6 +272,17 @@ export default {
       form.append('_id', getUser(this)._id)
       console.log(this.PP)
       await this.$axios.post('/user/pp', form)
+    },
+
+    async clicker(){
+      if(this.user.clicks === undefined){
+        this.user.clicks = 0;
+      }
+      this.user.clicks += 1;
+      this.$set(this.user, 'clicks', this.user.clicks) // force update
+      await this.$axios.put(`/user/${this.user.keycloakID}`, {
+        clicks: this.user.clicks,
+      })
     },
 
     async sendFriendRequest() {

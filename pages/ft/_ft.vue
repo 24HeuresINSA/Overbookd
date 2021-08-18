@@ -119,7 +119,7 @@
 
     <v-dialog v-model="isSubmitDialogOpen" width="600px">
       <v-card>
-        <v-img src="/submit_FT.gif" height="300px"></v-img>
+        <v-img src="img/memes/submit_FT.gif" height="300px"></v-img>
         <v-card-title>t'es sur de ta FT ? </v-card-title>
         <v-card-actions>
           <v-btn text @click="isSubmitDialogOpen=false">Non</v-btn>

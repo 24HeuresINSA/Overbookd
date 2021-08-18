@@ -5,10 +5,10 @@
     <p>C'est tres important pour leur faire comprendre a quel point ils seront en retard</p>
     <h2>A quel point on  est en retard...</h2>
     <v-img
-      src="/stats.png"
+      src="img/stats.png"
     ></v-img>
     <v-img
-        src="/human_meme.png"
+        src="img/memes/human_meme.png"
     ></v-img>
   </v-container>
 </template>

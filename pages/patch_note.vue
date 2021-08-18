@@ -2,6 +2,16 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.10b</h2>
+      <h3>🔥 hotfix d'un bug qui faisait que toute l'appli crash (Merci Tit), du coup la version 0.11 est sorti plus tot que prevu en tant que v0.10b</h3>
+      <ul>
+        <li>📝 ajout d'une page 404 (avec un petit meme b1sur)</li>
+        <li>🥳 quand on est stoph on peut voir ca date de naissance</li>
+        <li>🔨 LE CLICKER MARCHE</li>
+        <li>🧹 nettoyage des fichiers static </li>
+        <li>👀 petits corrections de l'interface</li>
+      </ul>
+
     <h2>Patch note 0.10</h2>
       <h3>Corrections de quelques bugs signaler sur la page d'inscription et systeme de demande d'amis (Merci MAAF ❤️)</h3>
       <ul>
