@@ -266,6 +266,14 @@ export default {
 
       # Date
       ${(new Date()).toLocaleString()}
+
+      # Version
+      ${this.version}
+
+      # Additional Info
+      User Agent: ${navigator.userAgent}
+      Platform: ${navigator.platform}
+      Vendor: ${navigator.vendor}
       `
 
       await this.$axios.post('/', {
