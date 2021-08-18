@@ -4,7 +4,7 @@
       <v-container class="form-container">
         <v-row>
           <v-img
-            :src="overbookd_logo"
+            :src="'img/logo/' + overbookd_logo"
             alt="overbookd logo"
             class="logo"
           ></v-img>
@@ -14,7 +14,7 @@
         </v-row>
         <v-row>
         </v-row>
-        <v-img src="/home_meme.jpg"></v-img>
+        <v-img src="img/memes/home_meme.jpg"></v-img>
         <v-row>
           <h2>Patch note 0.10</h2>
         </v-row>
@@ -103,7 +103,7 @@ export default {
         await this.$router.push({
           path: REDIRECT_URL,
         }); // redirect to homepage
-        const audio = new Audio('jaune.m4a');
+        const audio = new Audio('audio/jaune.m4a');
         await audio.play()
       } catch (e) {
         if (e.response.status === 401) {

@@ -12,7 +12,7 @@
       <v-list>
         <v-list-item>
           <v-img
-              :src="logo"
+              :src="'img/logo/' + logo"
               alt="overbookd"
               class="logo"
           ></v-img>
@@ -245,7 +245,7 @@ export default {
       if(this.counter > 10){
         this.isJauneActive = true;
         this.title = 'RICARD - Pastis'
-        const audio = new Audio('jaune.m4a');
+        const audio = new Audio('audio/jaune.m4a');
         await audio.play()
       }
     },
