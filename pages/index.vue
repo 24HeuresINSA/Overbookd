@@ -47,7 +47,7 @@
                   <tbody>
                   <tr
                       v-for="(notification, index) in user.notifications"
-                      :key="notification.date"
+                      v-bind:key="notification.date"
                   >
                     <td>{{ notification.type === 'friendRequest' ? '👨‍👩‍👧' : '📣' }}</td>
                     <td>{{ notification.message }}</td>
@@ -98,6 +98,7 @@
                 <tbody>
                 <tr
                     v-for="item in user.transactionHistory"
+                    v-bind:key="item"
                 >
                   <td>{{ item.reason }}</td>
                   <td class="text-right">{{ item.amount }} €</td>
@@ -114,7 +115,7 @@
             <v-card-text>
               <v-list dense>
                 <v-list-item-group>
-                  <v-list-item v-for="item in user.friends" >
+                  <v-list-item v-for="item in user.friends" v-bind:key="item.username">
                     <v-list-item-content>
                       <v-list-item-title>{{item.username}}</v-list-item-title>
                     </v-list-item-content>

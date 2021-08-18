@@ -8,7 +8,7 @@
           <v-list-item-group
               v-model="selectedUserIndex"
           >
-            <v-list-item v-for="user of filteredUsers">
+            <v-list-item v-for="user of filteredUsers" v-bind:key="user._id">
               <v-list-item-content>
                 <h4>{{ user.lastname }} {{ user.firstname }}</h4>
                 <!--          <v-chip>{{user.charisma}}</v-chip>-->
@@ -28,7 +28,7 @@
           <v-list-item-group
               v-model="selectedUserFriend"
           >
-            <v-list-item v-for="friend of getSelectedUser.friends">
+            <v-list-item v-for="friend of getSelectedUser.friends" v-bind:key="item.username">
               <v-list-item-content>
                 <h4>{{ friend.username ? friend.username : friend }}</h4>
                 <!--          <v-chip>{{user.charisma}}</v-chip>-->
@@ -65,7 +65,7 @@
               v-model="selectedAssignmentsIndex"
               multiple
           >
-            <v-list-item v-for="schedule in filteredSchedules">
+            <v-list-item v-for="schedule in filteredSchedules" v-bind:key="schedule._id">
               <v-list-item-content>
                 {{ schedule.name }} {{schedule.schedule.date}} {{schedule.schedule.start}} ➡️{{schedule.schedule.end}}
               </v-list-item-content>
