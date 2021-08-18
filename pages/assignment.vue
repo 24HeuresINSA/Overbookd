@@ -91,6 +91,7 @@ import {getUser, hasRole} from "../common/role";
 
 export default {
   name: "assignment",
+
   data() {
     return {
       users: [],
@@ -154,6 +155,7 @@ export default {
       this.isFeedbackSnackbarOpen = true;
     }
   },
+
   computed: {
     getSelectedUser() {
       return this.users[this.selectedUserIndex]

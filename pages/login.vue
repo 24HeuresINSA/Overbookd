@@ -10,15 +10,23 @@
           ></v-img>
         </v-row>
         <v-row>
-          <h2 style="right: -40%; position: relative; color: red">ALPHA</h2>
+          <h2 style="right: -40%; position: relative; color: red; z-index: 20">{{version}}</h2>
         </v-row>
         <v-row>
-        </v-row>
-        <v-img src="img/memes/home_meme.jpg"></v-img>
-        <v-row>
-          <h2>Patch note 0.10</h2>
+          <v-img src="img/memes/home_meme.jpg"></v-img>
         </v-row>
         <v-row>
+          <h2>Patch note {{version}}</h2>
+        </v-row>
+        <v-row>
+          <h3>🔥 hotfix d'un bug qui faisait que toute l'appli crash (Merci Tit), du coup la version 0.11 est sorti plus tot que prevu en tant que v0.10b</h3>
+          <ul>
+            <li>📝 ajout d'une page 404 (avec un petit meme b1sur)</li>
+            <li>🥳 quand on est stoph on peut voir ca date de naissance</li>
+            <li>🔨 LE CLICKER MARCHE</li>
+            <li>🧹 nettoyage des fichiers static </li>
+            <li>👀 petits corrections de l'interface</li>
+          </ul>
           <h3>Corrections de quelques bugs signaler sur la page d'inscription et systeme de demande d'amis (Merci MAAF ❤️)</h3>
           <ul>
             <li>📝 l'appli check si tu as bien mis le meme mdp a l'inscription</li>
@@ -28,8 +36,6 @@
             <li>❤️ quand qqun nous accepte en ami il se rajoute dans la liste d'ami (il faut refresh quand meme)</li>
             <li>🧹 nettoyage du code de la backend (mais personne ne peux remaque la diff)</li>
             <li>👀 preparation pour le magnifique webservice de Tit pour la prochaine MaJ</li>
-
-
           </ul>
         </v-row>
         <v-row>
@@ -73,11 +79,13 @@
 
 <script>
 const REDIRECT_URL = "/"; // TODO change this to eventSelector page
+const {version} = require('../package.json')
 
 export default {
   name: "login",
   auth: false,
   layout: 'none',
+
   data: () => ({
     credentials: {
       username: undefined,
@@ -86,6 +94,7 @@ export default {
     snackbar: false,
     feedbackMessage: undefined,
     timeout: 5000,
+    version,
   }),
 
   async beforeCreate() {
@@ -132,7 +141,7 @@ export default {
 
 <style scoped lang="scss">
 .logo {
-  margin-bottom: 10%;
+  //margin-bottom: 10%;
 }
 .form-container {
   align-self: center;
