@@ -28,7 +28,7 @@
           <v-list-item-group
               v-model="selectedUserFriend"
           >
-            <v-list-item v-for="friend of getSelectedUser.friends" v-bind:key="item.username">
+            <v-list-item v-for="friend of getSelectedUser.friends" v-bind:key="friend.keycloakID">
               <v-list-item-content>
                 <h4>{{ friend.username ? friend.username : friend }}</h4>
                 <!--          <v-chip>{{user.charisma}}</v-chip>-->
@@ -43,7 +43,7 @@
     </div>
     <!-- calendar --->
     <v-calendar
-        style="flex-grow: 2"
+        style="flex-grow: 2; max-height: 100%"
         ref="calendar"
         :value="selectedDay"
         :events="selectedUserAvailabilities"
@@ -53,6 +53,41 @@
     ></v-calendar>
 
     <div style="display: flex; flex-flow: column">
+      <v-btn icon @click="isInfoDisplayed = true">
+        <v-icon>mdi-information-outline</v-icon>
+      </v-btn>
+
+      <v-card v-if="getSelectedUser">
+        <v-img v-if="getSelectedUser.pp" :src=" ( getPPUrl() ) +  'api/user/pp/' + getSelectedUser.pp" max-height="200px"></v-img>
+        <v-card-title>{{getSelectedUser.firstname}}.{{getSelectedUser.lastname}}</v-card-title>
+        <v-card-text v-if="isInfoDisplayed">
+          <v-list>
+            <v-list-item-group
+              v-model="isInfoDisplayed"
+            >
+              <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Charisme</v-list-item-title>
+                <v-list-item-subtitle>
+                  {{getSelectedUser.charisma}}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>Date de naissance</v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{(new Date(getSelectedUser.birthdate)).toLocaleString()}}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+          <v-progress-linear :value="getSelectedUser.charisma / getConfig('max_charisma')"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+
       <v-date-picker
           v-model="selectedDay"
       ></v-date-picker>
@@ -87,7 +122,7 @@
 </template>
 
 <script>
-import {getUser, hasRole} from "../common/role";
+import {getConfig, getUser, hasRole} from "../common/role";
 
 export default {
   name: "assignment",
@@ -103,6 +138,7 @@ export default {
       FTs: [],
       updatedFTs : [],
       isFeedbackSnackbarOpen: false,
+      isInfoDisplayed: false,
     }
   },
 
@@ -128,6 +164,10 @@ export default {
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
     },
 
+    getConfig(key){
+      return getConfig(this, key)
+    },
+
     getCalendarFormattedAssignedFTsOfSelectedUser(){
       let events = [];
       if(this.getSelectedUser && this.getSelectedUser.assigned !== undefined){
@@ -144,6 +184,10 @@ export default {
         })
       }
       return events;
+    },
+
+    getPPUrl(){
+      return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
     },
 
     async saveAssignment(){
@@ -171,16 +215,18 @@ export default {
       // FTs that are in the selected users availability
       let filteredSchedules = [];
       let userAvailabilities = [];
-      if(this.getSelectedUser){
+      if(this.getSelectedUser && this.getSelectedUser.availabilities){
         this.getSelectedUser.availabilities.forEach(availability => {
-          availability.days.forEach(day => {
-            day.frames.forEach(frame => {
-              userAvailabilities.push({
-                start: new Date(Date.parse(day.date + ' ' + frame.start)),
-                end: new Date(Date.parse(day.date + ' ' + frame.end))
+          if(availability.days){
+            availability.days.forEach(day => {
+              day.frames.forEach(frame => {
+                userAvailabilities.push({
+                  start: new Date(Date.parse(day.date + ' ' + frame.start)),
+                  end: new Date(Date.parse(day.date + ' ' + frame.end))
+                })
               })
             })
-          })
+          }
         })
         userAvailabilities.forEach(timeframe => {
           this.FTs.forEach(FT => {
