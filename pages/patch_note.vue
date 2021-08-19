@@ -2,6 +2,16 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.11</h2>
+    <h3>🤯 ajout du trombi et de filtres pour l'affect</h3>
+    <ul>
+      <li>🎆 ajout du trombi</li>
+      <li>🔎 ajout de recherche par nom/prenom/surnom dans l'affect</li>
+      <li>👀 lecture des infos du pelo selectionner dans l'affect</li>
+      <li>🔤 filtrage par roles dans l'affect</li>
+      <li>🗄 le clicker, page 404 et correction de la date de naissance de stoph</li>
+    </ul>
+
     <h2>Patch note 0.10b</h2>
       <h3>🔥 hotfix d'un bug qui faisait que toute l'appli crash (Merci Tit), du coup la version 0.11 est sorti plus tot que prevu en tant que v0.10b</h3>
       <ul>
