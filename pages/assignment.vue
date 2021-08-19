@@ -3,22 +3,46 @@
     <div style="display: flex; flex-flow: column">
       <!-- list of  filtered users -->
       <v-card>
-        <v-list>
-          <v-subheader>Users</v-subheader>
-          <v-list-item-group
-              v-model="selectedUserIndex"
+        <v-card-title>User</v-card-title>
+        <v-card-text>
+          <h3>Filtres</h3>
+          <v-text-field prepend-icon="mdi-card-search" v-model="filters.name"></v-text-field>
+          <v-combobox
+            chips
+            multiple
+            clearable
+            label="team"
+            :items="getConfig('teams').map(e => e.name)"
+            v-model="filters.teams"
           >
-            <v-list-item v-for="user of filteredUsers" v-bind:key="user._id">
-              <v-list-item-content>
-                <h4>{{ user.lastname }} {{ user.firstname }}</h4>
-                <!--          <v-chip>{{user.charisma}}</v-chip>-->
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-icon>mdi-information-outline</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+            <template v-slot:selection="{ attrs, item, select, selected }">
+              <v-chip
+                  v-bind="attrs"
+                  :input-value="selected"
+                  close
+                  :color="getRoleMetadata(item).color"
+              >
+                <v-icon left color="white">
+                  {{getRoleMetadata(item).icon}}
+                </v-icon>
+                <a style="color: white">{{getRoleMetadata(item).name}}</a>
+              </v-chip>
+            </template>
+
+          </v-combobox>
+          <v-divider></v-divider>
+          <v-list>
+            <v-list-item-group
+                v-model="selectedUserIndex"
+            >
+              <v-list-item v-for="user of filteredUsers" v-bind:key="user._id">
+                <v-list-item-content>
+                  <h4>{{ user.firstname }} {{ user.lastname.toUpperCase() }} {{user.nickname ? `(${user.nickname})` : ''}}</h4>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card-text>
       </v-card>
 
       <!-- list of selected user's friend -->
@@ -54,7 +78,6 @@
 
     <div style="display: flex; flex-flow: column">
       <v-btn icon @click="isInfoDisplayed = true">
-        <v-icon>mdi-information-outline</v-icon>
       </v-btn>
 
       <v-card v-if="getSelectedUser">
@@ -139,6 +162,11 @@ export default {
       updatedFTs : [],
       isFeedbackSnackbarOpen: false,
       isInfoDisplayed: false,
+      filters: {
+        name: undefined,
+        teams: [],
+      },
+      teams : this.getConfig('teams'),
     }
   },
 
@@ -188,6 +216,10 @@ export default {
 
     getPPUrl(){
       return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
+    },
+
+    getRoleMetadata(roleName){
+      return this.teams.find(e => e.name === roleName);
     },
 
     async saveAssignment(){
@@ -319,6 +351,43 @@ export default {
       //     this.updatedFTs[oldFTIndex] = FT
       //   }
       // })
+    },
+
+    filters: {
+      deep: true,
+
+      handler(){
+        const filters = this.filters;
+        let users = this.users;
+
+        // filter by name
+        if(filters.name){
+          let search = filters.name.toLowerCase()
+          users = users.filter(user => {
+            let isNickname = false
+            if(user.nickname){
+              isNickname = user.nickname.includes(search);
+            }
+            return user.firstname.includes(search) || user.firstname.includes(search) || isNickname
+          })
+        }
+
+        // filter by team
+        if(filters.teams.length !== 0){
+          users = users.filter(user => {
+            if(user.team && user.team.length !== 0){
+              let all = true;
+              filters.teams.forEach(t => {
+                all = all && user.team.includes(t)
+              })
+              return all;
+            }
+            return false
+          })
+        }
+
+        this.filteredUsers = users
+      }
     }
   }
 }
