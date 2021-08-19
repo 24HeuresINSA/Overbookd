@@ -199,6 +199,12 @@ export default {
           to: '/overTinder',
         },
         {
+          icon: 'mdi-image',
+          roles: 'hard',
+          title: 'Trombinoscope 🎆',
+          to: '/trombinoscope',
+        },
+        {
           icon: 'mdi-note',
           title: 'Patch notes 📝',
           to: '/patch_note',

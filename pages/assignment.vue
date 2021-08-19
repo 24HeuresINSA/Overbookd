@@ -3,22 +3,46 @@
     <div style="display: flex; flex-flow: column">
       <!-- list of  filtered users -->
       <v-card>
-        <v-list>
-          <v-subheader>Users</v-subheader>
-          <v-list-item-group
-              v-model="selectedUserIndex"
+        <v-card-title>User</v-card-title>
+        <v-card-text>
+          <h3>Filtres</h3>
+          <v-text-field prepend-icon="mdi-card-search" v-model="filters.name"></v-text-field>
+          <v-combobox
+            chips
+            multiple
+            clearable
+            label="team"
+            :items="getConfig('teams').map(e => e.name)"
+            v-model="filters.teams"
           >
-            <v-list-item v-for="user of filteredUsers" v-bind:key="user._id">
-              <v-list-item-content>
-                <h4>{{ user.lastname }} {{ user.firstname }}</h4>
-                <!--          <v-chip>{{user.charisma}}</v-chip>-->
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-icon>mdi-information-outline</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+            <template v-slot:selection="{ attrs, item, select, selected }">
+              <v-chip
+                  v-bind="attrs"
+                  :input-value="selected"
+                  close
+                  :color="getRoleMetadata(item).color"
+              >
+                <v-icon left color="white">
+                  {{getRoleMetadata(item).icon}}
+                </v-icon>
+                <a style="color: white">{{getRoleMetadata(item).name}}</a>
+              </v-chip>
+            </template>
+
+          </v-combobox>
+          <v-divider></v-divider>
+          <v-list>
+            <v-list-item-group
+                v-model="selectedUserIndex"
+            >
+              <v-list-item v-for="user of filteredUsers" v-bind:key="user._id">
+                <v-list-item-content>
+                  <h4>{{ user.firstname }} {{ user.lastname.toUpperCase() }} {{user.nickname ? `(${user.nickname})` : ''}}</h4>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card-text>
       </v-card>
 
       <!-- list of selected user's friend -->
@@ -28,7 +52,7 @@
           <v-list-item-group
               v-model="selectedUserFriend"
           >
-            <v-list-item v-for="friend of getSelectedUser.friends" v-bind:key="item.username">
+            <v-list-item v-for="friend of getSelectedUser.friends" v-bind:key="friend.keycloakID">
               <v-list-item-content>
                 <h4>{{ friend.username ? friend.username : friend }}</h4>
                 <!--          <v-chip>{{user.charisma}}</v-chip>-->
@@ -43,7 +67,7 @@
     </div>
     <!-- calendar --->
     <v-calendar
-        style="flex-grow: 2"
+        style="flex-grow: 2; max-height: 100%"
         ref="calendar"
         :value="selectedDay"
         :events="selectedUserAvailabilities"
@@ -53,6 +77,40 @@
     ></v-calendar>
 
     <div style="display: flex; flex-flow: column">
+      <v-btn icon @click="isInfoDisplayed = true">
+      </v-btn>
+
+      <v-card v-if="getSelectedUser">
+        <v-img v-if="getSelectedUser.pp" :src=" ( getPPUrl() ) +  'api/user/pp/' + getSelectedUser.pp" max-height="200px"></v-img>
+        <v-card-title>{{getSelectedUser.firstname}}.{{getSelectedUser.lastname}}</v-card-title>
+        <v-card-text v-if="isInfoDisplayed">
+          <v-list>
+            <v-list-item-group
+              v-model="isInfoDisplayed"
+            >
+              <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Charisme</v-list-item-title>
+                <v-list-item-subtitle>
+                  {{getSelectedUser.charisma}}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>Date de naissance</v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{(new Date(getSelectedUser.birthdate)).toLocaleString()}}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+          <v-progress-linear :value="getSelectedUser.charisma / getConfig('max_charisma')"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+
       <v-date-picker
           v-model="selectedDay"
       ></v-date-picker>
@@ -87,7 +145,7 @@
 </template>
 
 <script>
-import {getUser, hasRole} from "../common/role";
+import {getConfig, getUser, hasRole} from "../common/role";
 
 export default {
   name: "assignment",
@@ -103,6 +161,12 @@ export default {
       FTs: [],
       updatedFTs : [],
       isFeedbackSnackbarOpen: false,
+      isInfoDisplayed: false,
+      filters: {
+        name: undefined,
+        teams: [],
+      },
+      teams : this.getConfig('teams'),
     }
   },
 
@@ -128,6 +192,10 @@ export default {
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
     },
 
+    getConfig(key){
+      return getConfig(this, key)
+    },
+
     getCalendarFormattedAssignedFTsOfSelectedUser(){
       let events = [];
       if(this.getSelectedUser && this.getSelectedUser.assigned !== undefined){
@@ -144,6 +212,14 @@ export default {
         })
       }
       return events;
+    },
+
+    getPPUrl(){
+      return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
+    },
+
+    getRoleMetadata(roleName){
+      return this.teams.find(e => e.name === roleName);
     },
 
     async saveAssignment(){
@@ -171,16 +247,18 @@ export default {
       // FTs that are in the selected users availability
       let filteredSchedules = [];
       let userAvailabilities = [];
-      if(this.getSelectedUser){
+      if(this.getSelectedUser && this.getSelectedUser.availabilities){
         this.getSelectedUser.availabilities.forEach(availability => {
-          availability.days.forEach(day => {
-            day.frames.forEach(frame => {
-              userAvailabilities.push({
-                start: new Date(Date.parse(day.date + ' ' + frame.start)),
-                end: new Date(Date.parse(day.date + ' ' + frame.end))
+          if(availability.days){
+            availability.days.forEach(day => {
+              day.frames.forEach(frame => {
+                userAvailabilities.push({
+                  start: new Date(Date.parse(day.date + ' ' + frame.start)),
+                  end: new Date(Date.parse(day.date + ' ' + frame.end))
+                })
               })
             })
-          })
+          }
         })
         userAvailabilities.forEach(timeframe => {
           this.FTs.forEach(FT => {
@@ -273,6 +351,43 @@ export default {
       //     this.updatedFTs[oldFTIndex] = FT
       //   }
       // })
+    },
+
+    filters: {
+      deep: true,
+
+      handler(){
+        const filters = this.filters;
+        let users = this.users;
+
+        // filter by name
+        if(filters.name){
+          let search = filters.name.toLowerCase()
+          users = users.filter(user => {
+            let isNickname = false
+            if(user.nickname){
+              isNickname = user.nickname.toLowerCase().includes(search);
+            }
+            return user.firstname.toLowerCase().includes(search) || user.lastname.toLowerCase().includes(search) || isNickname
+          })
+        }
+
+        // filter by team
+        if(filters.teams.length !== 0){
+          users = users.filter(user => {
+            if(user.team && user.team.length !== 0){
+              let all = true;
+              filters.teams.forEach(t => {
+                all = all && user.team.includes(t)
+              })
+              return all;
+            }
+            return false
+          })
+        }
+
+        this.filteredUsers = users
+      }
     }
   }
 }

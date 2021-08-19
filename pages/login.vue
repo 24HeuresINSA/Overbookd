@@ -19,23 +19,13 @@
           <h2>Patch note {{version}}</h2>
         </v-row>
         <v-row>
-          <h3>🔥 hotfix d'un bug qui faisait que toute l'appli crash (Merci Tit), du coup la version 0.11 est sorti plus tot que prevu en tant que v0.10b</h3>
+          <h3>🤯 ajout du trombi et de filtres pour l'affect</h3>
           <ul>
-            <li>📝 ajout d'une page 404 (avec un petit meme b1sur)</li>
-            <li>🥳 quand on est stoph on peut voir ca date de naissance</li>
-            <li>🔨 LE CLICKER MARCHE</li>
-            <li>🧹 nettoyage des fichiers static </li>
-            <li>👀 petits corrections de l'interface</li>
-          </ul>
-          <h3>Corrections de quelques bugs signaler sur la page d'inscription et systeme de demande d'amis (Merci MAAF ❤️)</h3>
-          <ul>
-            <li>📝 l'appli check si tu as bien mis le meme mdp a l'inscription</li>
-            <li>🤪 l'appli explique comment se co apres avoir creer un compte</li>
-            <li>🔒 les champs avec un * sont obligatoirs</li>
-            <li>😏 les mdp ne sont plus stocke dans la base de donnee</li>
-            <li>❤️ quand qqun nous accepte en ami il se rajoute dans la liste d'ami (il faut refresh quand meme)</li>
-            <li>🧹 nettoyage du code de la backend (mais personne ne peux remaque la diff)</li>
-            <li>👀 preparation pour le magnifique webservice de Tit pour la prochaine MaJ</li>
+            <li>🎆 ajout du trombi</li>
+            <li>🔎 ajout de recherche par nom/prenom/surnom dans l'affect</li>
+            <li>👀 lecture des infos du pelo selectionner dans l'affect</li>
+            <li>🔤 filtrage par roles dans l'affect</li>
+            <li>🗄 le clicker, page 404 et correction de la date de naissance de stoph</li>
           </ul>
         </v-row>
         <v-row>
