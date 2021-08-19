@@ -366,9 +366,9 @@ export default {
           users = users.filter(user => {
             let isNickname = false
             if(user.nickname){
-              isNickname = user.nickname.includes(search);
+              isNickname = user.nickname.toLowerCase().includes(search);
             }
-            return user.firstname.includes(search) || user.firstname.includes(search) || isNickname
+            return user.firstname.toLowerCase().includes(search) || user.lastname.toLowerCase().includes(search) || isNickname
           })
         }
 
