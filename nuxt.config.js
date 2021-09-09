@@ -1,7 +1,7 @@
 import colors from "vuetify/es5/util/colors";
 import { KEYCLOAK, BACKEND } from "./config/url.json";
 
-const BASE_URL = process.env.BASE_URL || process.env.NODE_ENV === 'dev' ? KEYCLOAK.DEV_BASE_URL : KEYCLOAK.BASE_URL;
+const BASE_URL = process.env.BASE_URL || ( process.env.NODE_ENV === 'dev' ? KEYCLOAK.DEV_BASE_URL : KEYCLOAK.BASE_URL );
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -101,7 +101,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.NODE_ENV === 'dev' ? BACKEND.DEV_BASE_URL : BACKEND.BASE_URL,
+    baseURL: BASE_URL + `/api`,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
