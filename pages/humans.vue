@@ -1,22 +1,67 @@
 <template>
 <div>
-  <template>
-    <v-data-table
-        :headers="headers"
-        :items="users"
-        :items-per-page="30"
-        class="elevation-1"
-    >
-      <template v-slot:item.action="{ item }">
-        <v-btn fab style="color: blue;" class="fab" :href="('https://www.facebook.com/search/top?q=' + item.firstname + ' ' + item.lastname)">F</v-btn>
-        <v-btn fab @click="openTransactionDialog(item)" class="fab" v-if="hasRole('admin')"><v-icon>mdi-cash</v-icon></v-btn>
-        <v-btn fab @click="openInformationDialog(item)" class="fab" v-if="hasRole('hard')"><v-icon>mdi-information-outline</v-icon></v-btn>
-      </template>
+  <template style="display: grid">
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title>Filtres</v-card-title>
+          <v-card-text>
+            <v-text-field label="Recherche" v-model="filters.search"></v-text-field>
+            <v-switch label="Permis" v-model="filters.driverLicence" ></v-switch>
+            <v-container class="py-0">
+              <v-row
+                  align="center"
+                  justify="start"
+              >
+                <over-chips :roles="selected"></over-chips>
 
-      <template v-slot:item.team="{ item }">
-        <over-chips :roles="item.team"></over-chips>
-      </template>
-    </v-data-table>
+              </v-row>
+            </v-container>
+
+            <v-list>
+              <template v-for="item in teams">
+                <v-list-item
+                    v-if="!selected.includes(item)"
+                    :key="item.text"
+                    :disabled="loading"
+                    @click="selected.push(item.name)"
+                >
+                  <v-list-item-avatar>
+                    <v-icon
+                        :disabled="loading"
+                        v-text="item.icon"
+                    ></v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card-text>
+        </v-card>
+
+      </v-col>
+      <v-col>
+        <v-data-table
+            :headers="headers"
+            :items="users"
+            :items-per-page="30"
+            class="elevation-1"
+        >
+          <template v-slot:item.action="{ item }">
+            <v-btn fab style="color: blue;" class="fab" :href="('https://www.facebook.com/search/top?q=' + item.firstname + ' ' + item.lastname)">F</v-btn>
+            <v-btn fab @click="openTransactionDialog(item)" class="fab" v-if="hasRole('admin')"><v-icon>mdi-cash</v-icon></v-btn>
+            <v-btn fab @click="openInformationDialog(item)" class="fab" v-if="hasRole('hard')"><v-icon>mdi-information-outline</v-icon></v-btn>
+          </template>
+
+          <template v-slot:item.team="{ item }">
+            <over-chips :roles="item.team"></over-chips>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+    <div>
+    </div>
+
   </template>
 
   <v-dialog v-model="isTransactionDialogOpen" max-width="600">
@@ -162,7 +207,7 @@
 
   <v-snackbar
       v-model="isSnackbarOpen"
-      :timeout="timeout"
+      :timeout="5000"
   >
     💸 transaction done 🥳
 
@@ -198,6 +243,15 @@ export default {
         { text: 'charsime', value: 'charisma' },
         { text: 'action', value: 'action' },
       ],
+
+      teams: getConfig(this, 'teams'),
+      loading: false,
+      selected: [],
+
+      filters: {
+        search: undefined,
+        driverLicence: undefined
+      },
 
       isTransactionDialogOpen: false,
       isInformationDialogOpen: false,
@@ -289,6 +343,18 @@ export default {
       this.isTransactionDialogOpen = false;
     }
   },
+
+  watch:{
+    selections () {
+      const selections = []
+
+      for (const selection of this.selected) {
+        selections.push(selection)
+      }
+
+      return selections
+    },
+  }
 }
 </script>
 

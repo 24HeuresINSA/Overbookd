@@ -290,7 +290,7 @@
               <v-text-field type="number" v-model="props.item.selected"></v-text-field>
             </template>
           </v-data-table>
-          <v-text-field v-model="requestedEquipment" label="Demander un material non present sur la liste<"></v-text-field>
+          <v-text-field v-model="requestedEquipment" label="Demander un material non present sur la liste"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

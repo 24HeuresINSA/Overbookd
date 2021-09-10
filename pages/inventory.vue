@@ -38,6 +38,7 @@
           >
           </over-form>
           <v-divider></v-divider>
+          <h4>Ajout de matos emprunté</h4>
           <v-container style="display: flex; flex-wrap: wrap">
             <v-text-field label="qui" v-model="newBorrow.from"></v-text-field>
             <v-text-field type="number" v-model="newBorrow.amount" label="quantite"></v-text-field>
