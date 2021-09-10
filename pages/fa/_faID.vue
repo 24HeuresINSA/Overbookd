@@ -395,6 +395,10 @@ export default {
         }
       })
 
+      if(this.FA.equipments){ // update equipments
+        this.selectedEquipments = this.FA.equipments
+      }
+
       // update validator status
       if (this.FA.refused){
         this.FA.refused.forEach(v => {
@@ -447,6 +451,7 @@ export default {
 
     async saveFA() {
       // save the FA in the DB
+      this.FA.equipments = this.selectedEquipments
       await this.$axios.put('/fa', this.FA);
       this.isSnackbar = true;
       // this.$router.push({
