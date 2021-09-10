@@ -66,9 +66,7 @@
           mdi-plus-thick
         </v-icon>
       </v-btn>
-
     </v-container>
-
 
 
     <v-divider></v-divider>
@@ -138,7 +136,7 @@
 
     <br>
     <v-divider></v-divider>
-    <h2>Fiche tâche  🤩</h2>
+    <h2>Fiche tâche 🤩</h2>
     <v-data-table
       :headers="FTHeader"
       :items="FA.FTs"
@@ -284,6 +282,10 @@
               :headers="equipmentsHeader"
               :items="availableEquipments"
           >
+
+            <template v-slot:item.amount="props">
+              {{+(props.item.borrowed ? props.item.borrowed.map(i=> i.amount).reduce((a ,e) => +a + +e,0) : 0 ) + +props.item.amount}}
+            </template>
             <template v-slot:item.selected="props">
               <v-text-field type="number" v-model="props.item.selected"></v-text-field>
             </template>
