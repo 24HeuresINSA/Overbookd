@@ -152,7 +152,7 @@
 
     <div style="height: 100px"></div>
 
-    <div>
+    <div style="z-index: 20">
       <v-btn
           color="primary"
           class="fab"
@@ -322,7 +322,6 @@
     </v-snackbar>
   </div>
 
-
 </template>
 
 <script>
@@ -357,7 +356,7 @@ export default {
         'validated': 'green',
         'refused': 'red'
       },
-      form: [], // FA form settings
+      form: this.getConfig('fa_form'), // FA form settings
       availableEquipments: [],
       selectedEquipments: [],
       equipmentsHeader : [{
@@ -379,7 +378,10 @@ export default {
   },
   async mounted() {
     // getFormConfig
-    this.form = this.getConfig('fa_form')
+    const teamField = this.form.find(field => field.key === "team");
+    if(teamField){
+      teamField.options = this.getConfig('teams').map(team => team.name);
+    }
     this.availableEquipments = await this.$axios.$get('/equipment');
 
     if (!this.isNewFA) {
