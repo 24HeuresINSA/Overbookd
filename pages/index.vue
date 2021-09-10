@@ -270,7 +270,6 @@ export default {
       let form = new FormData();
       form.append('files', this.PP, this.PP.name);
       form.append('_id', getUser(this)._id)
-      console.log(this.PP)
       await this.$axios.post('/user/pp', form)
     },
 

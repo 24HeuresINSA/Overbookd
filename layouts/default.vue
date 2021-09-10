@@ -76,13 +76,11 @@
         <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
           <v-switch label="nouvelle feature request ?" v-model="newRequest.isFeatureRequest"></v-switch>
-          <v-text-field label="URL" v-model="newRequest.title"></v-text-field>
           <v-select :items="['hard', 'soft', 'bureau']" label="scope" v-model="newRequest.scope"></v-select>
           <v-select :items="priorities" label="priorite" v-model="newRequest.priority"></v-select>
-          <v-text-field label="URL" v-model="newRequest.url"></v-text-field>
           <v-textarea label="desciption" v-model="newRequest.description"></v-textarea>
-          <v-textarea label="etape pour reproduire le bug" v-if="!newRequest.isFeatureRequest" v-model="newRequest.reproduce"></v-textarea>
-          <v-file-input label="capture d'ecran" v-model="newRequest.image"></v-file-input>
+          <v-textarea label="etape pour reproduire le bug" v-if="!newRequest.isFeatureRequest" v-model="newRequest.steps[0]"></v-textarea>
+          <v-file-input label="capture d'ecran" v-model="file"></v-file-input>
         </v-card-text>
         <v-card-actions>
           <v-btn text right @click="submitIssue()">submit</v-btn>
@@ -119,14 +117,20 @@ export default {
       priorities: ["toute l'appli est cassé 🤯", "une fontionnalite ne marche pas 🥺", "un bug chiant mais contournable 😠", "cosmetique 🤮", "jsp 🤡"],
       isSnackbarOpen: false,
       AUTHORS,
+      file: undefined,
       newRequest: {
         title: undefined,
         priority: undefined,
         url: undefined,
         description: undefined,
         isFeatureRequest: false,
-        reproduce: undefined,
+        scope: [],
+        tags: [],
         image: undefined,
+        author: getUser(this).lastname,
+        repo: "24-heures-insa/issue-web-service",
+        git_platform: "gitlab",
+        steps: [''],
       },
       items: [
         {
@@ -228,7 +232,7 @@ export default {
 
     getRandomAuthor(){
       const items = this.AUTHORS;
-      return items[Math.floor(Math.random()*items.length)];
+      return items[Math.floor(Math.random() * items.length)];
     },
 
     hasRole(role){
@@ -265,12 +269,14 @@ export default {
     },
 
     async submitIssue(){
+      let form = new FormData();
+      this.newRequest.url = window.location.href;
       this.newRequest.priority = "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
-      this.newRequest.git_platform = 'gitlab';
       this.newRequest.author = getUser(this).username ? getUser(this).username : getUser(this).lastname;
-      this.newRequest.repo = '24-heures-insa/overbookd/frontend'
-      this.description += `
+      this.newRequest.tags = [this.newRequest.priority];
+      // this.newRequest.repo = '24-heures-insa/overbookd/frontend'
 
+      this.newRequest.description += `
       # Date
       ${(new Date()).toLocaleString()}
 
@@ -281,11 +287,13 @@ export default {
       User Agent: ${navigator.userAgent}
       Platform: ${navigator.platform}
       Vendor: ${navigator.vendor}
-      `
+      `;
 
-      await this.$axios.post('/', {
+      form.append('file',this.file);
+      form.append('json', this.newRequest);
 
-      })
+      await this.$axios.post('/issue', form)
+
       this.isDialogOpen = false;
       this.isSnackbarOpen = true;
     }
