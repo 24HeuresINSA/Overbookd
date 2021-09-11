@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container  no-gutters>
+    <v-container style="display: grid">
       <v-row justify="center" align="center">
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
@@ -106,6 +106,9 @@
                 </tbody>
               </v-simple-table>
             </v-card-text>
+            <v-card-actions>
+              <v-btn text @click="isTransferDialogOpen=true">Effectuer un virement</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
 
@@ -196,6 +199,22 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="isTransferDialogOpen" max-width="600">
+      <v-card >
+        <v-card-title>Effectuer un virement</v-card-title>
+        <v-card-text>
+          <over-form
+            :fields="transferForm"
+            @form-change="onFormChange"
+          >
+          </over-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="transferMoney()">validé</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -205,9 +224,10 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { getUser, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
+import OverForm from "../components/overForm";
 
 export default {
-  components: {OverChips},
+  components: {OverForm, OverChips},
 
   data() {
     return {
@@ -216,6 +236,24 @@ export default {
       isSnackbarOpen: false,
       isBroadcastDialogOpen: false,
       isPPDialogOpen: false,
+      isTransferDialogOpen: false,
+      transferForm: [{
+        key: 'user',
+        type: 'user',
+        isRequired: true,
+      },{
+        key: 'amount',
+        label: 'montant',
+        isRequired: true,
+      },{
+        key: 'reason',
+        label: 'raison',
+      }],
+      transfer: {
+        reason: '',
+        amount: undefined,
+        beneficiary: undefined
+      },
       hasNotBeenApproved:false,
       PP: undefined,
       snackbarMessage: "",
@@ -271,6 +309,10 @@ export default {
       form.append('files', this.PP, this.PP.name);
       form.append('_id', getUser(this)._id)
       await this.$axios.post('/user/pp', form)
+    },
+
+    onFormChange(form){
+      this.transfer = form;
     },
 
     async clicker(){
@@ -353,6 +395,16 @@ export default {
       await this.$router.push({
         path: '/login',
       })
+    },
+
+    async transferMoney() {
+      console.log(this.transfer);
+      if(this.transfer.isValid){
+        this.user.balance -= +this.transfer.amount;
+
+        // save user balance
+        await this.$axios.$post('user/transfer', this.transfer);
+      }
     },
   },
 
