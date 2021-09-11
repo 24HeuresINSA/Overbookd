@@ -8,6 +8,7 @@
           <v-card-text>
             <v-text-field label="Recherche" v-model="filters.search"></v-text-field>
             <v-switch label="Permis" v-model="filters.hasDriverLicence" ></v-switch>
+            <v-switch label="non validés" v-model="filters.notValidated" ></v-switch>
             <v-container class="py-0">
               <v-row
                   align="center"
@@ -255,6 +256,7 @@ export default {
         search: undefined,
         hasDriverLicence: undefined,
         teams: [],
+        notValidated: undefined,
       },
 
       isTransactionDialogOpen: false,
@@ -377,6 +379,17 @@ export default {
               return user.team.filter(value => this.filters.teams.includes(value)).length === this.filters.teams.length;
             } else {
               return false
+            }
+          })
+        }
+
+        // filter by not validated
+        if(this.filters.notValidated){
+          this.filteredUsers  = mUsers.filter(user => {
+            if(user.team){
+              return user.team.length === 0;
+            } else {
+              return true
             }
           })
         }
