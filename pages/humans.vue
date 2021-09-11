@@ -357,19 +357,16 @@ export default {
     filters: {
       handler(){
         const mUsers = this.users;
-        console.log(this.filters);
+
         // filter by team
         if(this.filters.teams){
-          mUsers.filter(user => {
+          this.filteredUsers  = mUsers.filter(user => {
             if(user.team){
-              console.log(user.team.filter(value => this.filters.teams.includes(value)))
-              return user.team.filter(value => this.filters.teams.includes(value)).length === 0;
+              return user.team.filter(value => this.filters.teams.includes(value)).length === this.filters.teams.length;
             } else {
               return false
             }
           })
-          console.log(mUsers)
-          this.$set(this, 'filteredUsers', mUsers)
         }
       },
       deep: true
