@@ -329,10 +329,7 @@ export default {
       if(!this.selectedUser.transactionHistory){
         this.selectedUser.transactionHistory = []
       }
-      if(this.selectedUser.transactionHistory.length >= 3){
-        this.selectedUser.transactionHistory.shift()
-      }
-      this.selectedUser.transactionHistory.push(this.newTransaction);
+      this.selectedUser.transactionHistory.unshift(this.newTransaction);
 
       if(this.selectedUser.balance === undefined){
         this.selectedUser.balance = 0;
