@@ -2,7 +2,7 @@
 <div>
   <template style="display: grid">
     <v-row>
-      <v-col>
+      <v-col md="2">
         <v-card>
           <v-card-title>Filtres</v-card-title>
           <v-card-text>
