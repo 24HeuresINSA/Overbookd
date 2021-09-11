@@ -277,7 +277,6 @@ export default {
 
   async mounted() {
     this.user = await getUser(this);
-    console.log(this.user)
 
     if (this.user.team === undefined || this.user.team.length === 0){
       this.hasNotBeenApproved = true;
@@ -399,6 +398,9 @@ export default {
 
     async transferMoney() {
       if(this.transfer.isValid){
+        if(this.transfer.user === this.user.firstname + '.' + this.user.lastname){
+          return
+        }
         this.user.balance -= +this.transfer.amount;
         this.user.transactionHistory.unshift({
           amount: this.transfer.amount,
