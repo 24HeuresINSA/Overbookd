@@ -398,12 +398,16 @@ export default {
     },
 
     async transferMoney() {
-      console.log(this.transfer);
       if(this.transfer.isValid){
         this.user.balance -= +this.transfer.amount;
+        this.user.transactionHistory.unshift({
+          amount: this.transfer.amount,
+          reason: `virement pour ${this.transfer.user}, ${this.transfer.reason}`
+        })
 
         // save user balance
         await this.$axios.$post('user/transfer', this.transfer);
+        this.isTransferDialogOpen = false;
       }
     },
   },

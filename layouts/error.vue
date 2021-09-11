@@ -6,7 +6,7 @@
     </v-container>
 
     <template v-else>
-      <v-img src="https://media.giphy.com/media/hrRJ41JB2zlgZiYcCw/giphy.gif"></v-img>
+      <v-img src="https://media1.giphy.com/media/EtB1yylKGGAUg/giphy.gif?cid=ecf05e47qaynhsxphvtrr3q7u3bskmwj15onszejof9z483h&rid=giphy.gif&ct=g"></v-img>
       <h1>La ComSI be like</h1>
     </template>
     <NuxtLink to="/login"> Revnier au login </NuxtLink>
