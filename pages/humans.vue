@@ -7,7 +7,7 @@
           <v-card-title>Filtres</v-card-title>
           <v-card-text>
             <v-text-field label="Recherche" v-model="filters.search"></v-text-field>
-            <v-switch label="Permis" v-model="filters.driverLicence" ></v-switch>
+            <v-switch label="Permis" v-model="filters.hasDriverLicence" ></v-switch>
             <v-container class="py-0">
               <v-row
                   align="center"
@@ -253,7 +253,7 @@ export default {
 
       filters: {
         search: undefined,
-        driverLicence: undefined,
+        hasDriverLicence: undefined,
         teams: [],
       },
 
@@ -356,7 +356,22 @@ export default {
   watch:{
     filters: {
       handler(){
-        const mUsers = this.users;
+        let mUsers = this.users;
+
+        // filter by search
+        if(this.filters.search){
+          mUsers = mUsers.filter(user => {
+            let s = this.filters.search.toLowerCase()
+            const seatchNickname = user.nickname ? user.nickname.toLowerCase().includes(s) : false
+            return user.firstname.toLowerCase().includes(s) || user.lastnam.toLowerCase().includes(s) || seatchNickname
+          })
+        }
+
+        // filter by driver licence
+        if(this.filters.hasDriverLicence){
+          mUsers = mUsers.filter(user => user.hasDriverLicence === this.filters.hasDriverLicence)
+        }
+
 
         // filter by team
         if(this.filters.teams){
