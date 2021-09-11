@@ -13,29 +13,32 @@
                   align="center"
                   justify="start"
               >
-                <over-chips :roles="selected"></over-chips>
+                <v-combobox
+                    chips
+                    multiple
+                    clearable
+                    label="team"
+                    :items="getConfig('teams').map(e => e.name)"
+                    v-model="filters.teams"
+                >
+                  <template v-slot:selection="{ attrs, item, select, selected }">
+                    <v-chip
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        :color="getRoleMetadata(item).color"
+                    >
+                      <v-icon left color="white">
+                        {{getRoleMetadata(item).icon}}
+                      </v-icon>
+                      <a style="color: white">{{getRoleMetadata(item).name}}</a>
+                    </v-chip>
+                  </template>
+
+                </v-combobox>
 
               </v-row>
             </v-container>
-
-            <v-list>
-              <template v-for="item in teams">
-                <v-list-item
-                    v-if="!selected.includes(item)"
-                    :key="item.text"
-                    :disabled="loading"
-                    @click="selected.push(item.name)"
-                >
-                  <v-list-item-avatar>
-                    <v-icon
-                        :disabled="loading"
-                        v-text="item.icon"
-                    ></v-icon>
-                  </v-list-item-avatar>
-                  <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item>
-              </template>
-            </v-list>
           </v-card-text>
         </v-card>
 
@@ -43,7 +46,7 @@
       <v-col>
         <v-data-table
             :headers="headers"
-            :items="users"
+            :items="filteredUsers"
             :items-per-page="30"
             class="elevation-1"
         >
@@ -235,6 +238,7 @@ export default {
   data(){
     return {
       users: [],
+      filteredUsers: [],
       headers: [
         { text: 'prenom', value: 'firstname' },
         { text: 'nom', value: 'lastname' },
@@ -246,11 +250,11 @@ export default {
 
       teams: getConfig(this, 'teams'),
       loading: false,
-      selected: [],
 
       filters: {
         search: undefined,
-        driverLicence: undefined
+        driverLicence: undefined,
+        teams: [],
       },
 
       isTransactionDialogOpen: false,
@@ -275,7 +279,8 @@ export default {
       })
     } else {
       // user has the HARD role
-      this.users = (await this.$axios.get('/user')).data;
+      this.users = (await this.$axios.get('/user')).data
+      this.filteredUsers = this.users;
     }
   },
 
@@ -341,14 +346,39 @@ export default {
       await this.$axios.put('/user/' + this.selectedUser.keycloakID, this.selectedUser);
       this.isSnackbarOpen = true;
       this.isTransactionDialogOpen = false;
-    }
+    },
+
+    getRoleMetadata(roleName){
+      return this.teams.find(e => e.name === roleName);
+    },
   },
 
   watch:{
+    filters: {
+      handler(){
+        const mUsers = this.users;
+        console.log(this.filters);
+        // filter by team
+        if(this.filters.teams){
+          mUsers.filter(user => {
+            if(user.team){
+              console.log(user.team.filter(value => this.filters.teams.includes(value)))
+              return user.team.filter(value => this.filters.teams.includes(value)).length === 0;
+            } else {
+              return false
+            }
+          })
+          console.log(mUsers)
+          this.$set(this, 'filteredUsers', mUsers)
+        }
+      },
+      deep: true
+    },
+
     selections () {
       const selections = []
 
-      for (const selection of this.selected) {
+      for (const selection of this.filters.teams) {
         selections.push(selection)
       }
 
