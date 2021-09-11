@@ -2,6 +2,16 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.12</h2>
+    <h3>🤯 ajout des filters humains et fix de bug</h3>
+    <ul>
+      <li>🔎 ajout de recherche par nom/prenom/surnom dans les humains</li>
+      <li>🔤 filtrage par team permis des humains</li>
+      <li>🤯 fix d'un bug pour bien sauvgarder le matos des FA (Merci Loic)</li>
+      <li>⚙ la base de donnee est mtn protege il faut etre co pour y acceder (ca change rien pour l'appli mais c'est plus secure mtn)</li>
+
+    </ul>
+
     <h2>Patch note 0.11</h2>
     <h3>🤯 ajout du trombi et de filtres pour l'affect</h3>
     <ul>

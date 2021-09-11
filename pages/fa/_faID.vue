@@ -66,9 +66,7 @@
           mdi-plus-thick
         </v-icon>
       </v-btn>
-
     </v-container>
-
 
 
     <v-divider></v-divider>
@@ -138,7 +136,7 @@
 
     <br>
     <v-divider></v-divider>
-    <h2>Fiche tâche  🤩</h2>
+    <h2>Fiche tâche 🤩</h2>
     <v-data-table
       :headers="FTHeader"
       :items="FA.FTs"
@@ -152,7 +150,7 @@
 
     <div style="height: 100px"></div>
 
-    <div>
+    <div style="z-index: 20">
       <v-btn
           color="primary"
           class="fab"
@@ -284,11 +282,15 @@
               :headers="equipmentsHeader"
               :items="availableEquipments"
           >
+
+            <template v-slot:item.amount="props">
+              {{+(props.item.borrowed ? props.item.borrowed.map(i=> i.amount).reduce((a ,e) => +a + +e,0) : 0 ) + +props.item.amount}}
+            </template>
             <template v-slot:item.selected="props">
               <v-text-field type="number" v-model="props.item.selected"></v-text-field>
             </template>
           </v-data-table>
-          <v-text-field v-model="requestedEquipment" label="Demander un material non present sur la liste<"></v-text-field>
+          <v-text-field v-model="requestedEquipment" label="Demander un material non present sur la liste"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -321,7 +323,6 @@
       </template>
     </v-snackbar>
   </div>
-
 
 </template>
 
@@ -357,7 +358,7 @@ export default {
         'validated': 'green',
         'refused': 'red'
       },
-      form: [], // FA form settings
+      form: this.getConfig('fa_form'), // FA form settings
       availableEquipments: [],
       selectedEquipments: [],
       equipmentsHeader : [{
@@ -379,7 +380,10 @@ export default {
   },
   async mounted() {
     // getFormConfig
-    this.form = this.getConfig('fa_form')
+    const teamField = this.form.find(field => field.key === "team");
+    if(teamField){
+      teamField.options = this.getConfig('teams').map(team => team.name);
+    }
     this.availableEquipments = await this.$axios.$get('/equipment');
 
     if (!this.isNewFA) {
@@ -392,6 +396,10 @@ export default {
           mField.value = this.FA[key];
         }
       })
+
+      if(this.FA.equipments){ // update equipments
+        this.selectedEquipments = this.FA.equipments
+      }
 
       // update validator status
       if (this.FA.refused){
@@ -445,6 +453,7 @@ export default {
 
     async saveFA() {
       // save the FA in the DB
+      this.FA.equipments = this.selectedEquipments
       await this.$axios.put('/fa', this.FA);
       this.isSnackbar = true;
       // this.$router.push({

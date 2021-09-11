@@ -19,13 +19,12 @@
           <h2>Patch note {{version}}</h2>
         </v-row>
         <v-row>
-          <h3>🤯 ajout du trombi et de filtres pour l'affect</h3>
+          <h3>Avant derniere version avant le lancement de la BETA</h3>
+          <h3>🤯 ajout des filters humains et fix de bug</h3>
           <ul>
-            <li>🎆 ajout du trombi</li>
-            <li>🔎 ajout de recherche par nom/prenom/surnom dans l'affect</li>
-            <li>👀 lecture des infos du pelo selectionner dans l'affect</li>
-            <li>🔤 filtrage par roles dans l'affect</li>
-            <li>🗄 le clicker, page 404 et correction de la date de naissance de stoph</li>
+            <li>🔎 ajout de recherche par nom/prenom/surnom dans les humains</li>
+            <li>🔤 filtrage par team permis des humains</li>
+            <li>🤯 fix d'un bug pour bien sauvgarder le matos des FA</li>
           </ul>
         </v-row>
         <v-row>

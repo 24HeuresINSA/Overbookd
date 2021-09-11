@@ -12,7 +12,6 @@
                 <v-text-field label="recherche" v-model="search">
                 </v-text-field>
 
-
                 <v-list shaped style="font-size: 10px">
                   <v-list-item-group v-model="selectedStatus">
                     <v-list-item>

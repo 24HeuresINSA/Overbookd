@@ -1,22 +1,70 @@
 <template>
 <div>
-  <template>
-    <v-data-table
-        :headers="headers"
-        :items="users"
-        :items-per-page="30"
-        class="elevation-1"
-    >
-      <template v-slot:item.action="{ item }">
-        <v-btn fab style="color: blue;" class="fab" :href="('https://www.facebook.com/search/top?q=' + item.firstname + ' ' + item.lastname)">F</v-btn>
-        <v-btn fab @click="openTransactionDialog(item)" class="fab" v-if="hasRole('admin')"><v-icon>mdi-cash</v-icon></v-btn>
-        <v-btn fab @click="openInformationDialog(item)" class="fab" v-if="hasRole('hard')"><v-icon>mdi-information-outline</v-icon></v-btn>
-      </template>
+  <template style="display: grid">
+    <v-row>
+      <v-col md="2">
+        <v-card>
+          <v-card-title>Filtres</v-card-title>
+          <v-card-text>
+            <v-text-field label="Recherche" v-model="filters.search"></v-text-field>
+            <v-switch label="Permis" v-model="filters.hasDriverLicence" ></v-switch>
+            <v-container class="py-0">
+              <v-row
+                  align="center"
+                  justify="start"
+              >
+                <v-combobox
+                    chips
+                    multiple
+                    clearable
+                    label="team"
+                    :items="getConfig('teams').map(e => e.name)"
+                    v-model="filters.teams"
+                >
+                  <template v-slot:selection="{ attrs, item, select, selected }">
+                    <v-chip
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        :color="getRoleMetadata(item).color"
+                    >
+                      <v-icon left color="white">
+                        {{getRoleMetadata(item).icon}}
+                      </v-icon>
+                      <a style="color: white">{{getRoleMetadata(item).name}}</a>
+                    </v-chip>
+                  </template>
 
-      <template v-slot:item.team="{ item }">
-        <over-chips :roles="item.team"></over-chips>
-      </template>
-    </v-data-table>
+                </v-combobox>
+
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </v-card>
+
+      </v-col>
+      <v-col>
+        <v-data-table
+            :headers="headers"
+            :items="filteredUsers"
+            :items-per-page="30"
+            class="elevation-1"
+        >
+          <template v-slot:item.action="{ item }">
+            <v-btn fab style="color: blue;" class="fab" :href="('https://www.facebook.com/search/top?q=' + item.firstname + ' ' + item.lastname)">F</v-btn>
+            <v-btn fab @click="openTransactionDialog(item)" class="fab" v-if="hasRole('admin')"><v-icon>mdi-cash</v-icon></v-btn>
+            <v-btn fab @click="openInformationDialog(item)" class="fab" v-if="hasRole('hard')"><v-icon>mdi-information-outline</v-icon></v-btn>
+          </template>
+
+          <template v-slot:item.team="{ item }">
+            <over-chips :roles="item.team"></over-chips>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+    <div>
+    </div>
+
   </template>
 
   <v-dialog v-model="isTransactionDialogOpen" max-width="600">
@@ -162,7 +210,7 @@
 
   <v-snackbar
       v-model="isSnackbarOpen"
-      :timeout="timeout"
+      :timeout="5000"
   >
     💸 transaction done 🥳
 
@@ -190,6 +238,7 @@ export default {
   data(){
     return {
       users: [],
+      filteredUsers: [],
       headers: [
         { text: 'prenom', value: 'firstname' },
         { text: 'nom', value: 'lastname' },
@@ -198,6 +247,15 @@ export default {
         { text: 'charsime', value: 'charisma' },
         { text: 'action', value: 'action' },
       ],
+
+      teams: getConfig(this, 'teams'),
+      loading: false,
+
+      filters: {
+        search: undefined,
+        hasDriverLicence: undefined,
+        teams: [],
+      },
 
       isTransactionDialogOpen: false,
       isInformationDialogOpen: false,
@@ -221,7 +279,8 @@ export default {
       })
     } else {
       // user has the HARD role
-      this.users = (await this.$axios.get('/user')).data;
+      this.users = (await this.$axios.get('/user')).data
+      this.filteredUsers = this.users;
     }
   },
 
@@ -287,8 +346,57 @@ export default {
       await this.$axios.put('/user/' + this.selectedUser.keycloakID, this.selectedUser);
       this.isSnackbarOpen = true;
       this.isTransactionDialogOpen = false;
-    }
+    },
+
+    getRoleMetadata(roleName){
+      return this.teams.find(e => e.name === roleName);
+    },
   },
+
+  watch:{
+    filters: {
+      handler(){
+        let mUsers = this.users;
+
+        // filter by search
+        if(this.filters.search){
+          mUsers = mUsers.filter(user => {
+            let s = this.filters.search.toLowerCase()
+            const seatchNickname = user.nickname ? user.nickname.toLowerCase().includes(s) : false
+            return user.firstname.toLowerCase().includes(s) || user.lastnam.toLowerCase().includes(s) || seatchNickname
+          })
+        }
+
+        // filter by driver licence
+        if(this.filters.hasDriverLicence){
+          mUsers = mUsers.filter(user => user.hasDriverLicence === this.filters.hasDriverLicence)
+        }
+
+
+        // filter by team
+        if(this.filters.teams){
+          this.filteredUsers  = mUsers.filter(user => {
+            if(user.team){
+              return user.team.filter(value => this.filters.teams.includes(value)).length === this.filters.teams.length;
+            } else {
+              return false
+            }
+          })
+        }
+      },
+      deep: true
+    },
+
+    selections () {
+      const selections = []
+
+      for (const selection of this.filters.teams) {
+        selections.push(selection)
+      }
+
+      return selections
+    },
+  }
 }
 </script>
 
