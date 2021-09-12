@@ -140,6 +140,14 @@
           </tr>
 
           <tr>
+            <td>Surnom</td>
+            <td>
+              <v-text-field v-if="hasRole( ['admin', 'SG'])" v-model="selectedUser.nickname"></v-text-field>
+              <span v-else>{{selectedUser.nickname}}</span>
+            </td>
+          </tr>
+
+          <tr>
             <td>Date de naissance</td>
             <td>{{selectedUser.birthdate}}</td>
           </tr>
@@ -206,6 +214,9 @@
           </tbody>
         </v-simple-table>
       </v-card-text>
+      <v-card-actions>
+        <v-btn text @click="saveUser()">save</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 
@@ -349,6 +360,10 @@ export default {
 
     getRoleMetadata(roleName){
       return this.teams.find(e => e.name === roleName);
+    },
+
+    async saveUser(){
+      await this.$axios.put(`/user/${this.selectedUser.keycloakID}`, this.selectedUser);
     },
   },
 
