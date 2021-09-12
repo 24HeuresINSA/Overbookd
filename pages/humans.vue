@@ -149,7 +149,7 @@
 
           <tr>
             <td>Date de naissance</td>
-            <td>{{selectedUser.birthdate}}</td>
+            <td>{{selectedUser.birthday}}</td>
           </tr>
 
           <tr>
@@ -364,6 +364,7 @@ export default {
 
     async saveUser(){
       await this.$axios.put(`/user/${this.selectedUser.keycloakID}`, this.selectedUser);
+      this.isInformationDialogOpen = false;
     },
   },
 
