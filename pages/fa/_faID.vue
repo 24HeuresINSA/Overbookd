@@ -51,21 +51,38 @@
         </tbody>
       </template>
     </v-simple-table>
-    <v-container style="display: flex; justify-content: space-around; align-content: baseline">
-      <v-date-picker v-model="schedule.date"></v-date-picker>
-      <h3>Debut</h3>
-      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
-      <h3>Fin</h3>
-      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
-      <v-btn
-          fab
-          style="margin: 20px;"
-          @click="addSchedule"
-      >
-        <v-icon>
-          mdi-plus-thick
-        </v-icon>
-      </v-btn>
+    <v-container style="display: grid;">
+      <v-row>
+        <v-col>
+          <h3>Date</h3>
+        </v-col>
+        <v-col>
+          <h3>Debut</h3>
+        </v-col>
+        <v-col>
+        <h3>Fin</h3>
+      </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-date-picker v-model="schedule.date" first-day-of-week="1"></v-date-picker>
+        </v-col>
+        <v-col>
+          <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
+        </v-col>
+        <v-col>
+          <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
+        </v-col>
+        <v-btn
+            fab
+            style="margin: 20px;"
+            @click="addSchedule"
+        >
+          <v-icon>
+            mdi-plus-thick
+          </v-icon>
+        </v-btn>
+      </v-row>
     </v-container>
 
 
@@ -563,6 +580,7 @@ export default {
 </script>
 
 <style scoped>
+
 .fab {
   position: fixed;
   z-index: 5;

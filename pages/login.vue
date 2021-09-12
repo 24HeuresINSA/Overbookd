@@ -23,6 +23,8 @@
           <h3>🤯 Rectification de bugs </h3>
           <ul>
             <li>🥳 Overbookd est pret pour acceuillir les orga</li>
+            <li>📝 autocomplete des user</li>
+            <li>🥳 better display timetable form</li>
             <li>🔨 fix des date de naissance</li>
             <li>📝 changement des surnom par les admin</li>
             <li>🔎 ajout de filters pour les humains</li>
