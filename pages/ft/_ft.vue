@@ -154,8 +154,8 @@
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">{{snackbarMessage}}</v-snackbar>
 
     <div style="display: flex; justify-content: space-evenly">
-      <v-btn color="green" v-if="getValidator" @click="validateFT">validate</v-btn>
-      <v-btn color="red" v-if="getValidator" @click="isRefusedDialogOpen = true">refuse</v-btn>
+      <v-btn color="green" v-if="getValidator()"  @click="validateFT">validate</v-btn>
+      <v-btn color="red" v-if="getValidator()" @click="isRefusedDialogOpen = true">refuse</v-btn>
       <v-btn color="secondary" @click="isSubmitDialogOpen = true">submit</v-btn>
       <v-btn color="warning" @click="saveFT">save 💾</v-btn>
     </div>
