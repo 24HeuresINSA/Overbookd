@@ -76,6 +76,8 @@
                 <v-btn text @click="isBroadcastDialogOpen = true">broadcast</v-btn>
               </v-card-actions>
             </v-card-text>
+
+            <v-card-title v-if="hasRole('admin')">{{notValidatedCount}} Orgas Non validé</v-card-title>
           </v-card>
         </v-col>
 
@@ -237,6 +239,7 @@ export default {
       isBroadcastDialogOpen: false,
       isPPDialogOpen: false,
       isTransferDialogOpen: false,
+      notValidatedCount: 0,
       transferForm: [{
         key: 'user',
         type: 'user',
@@ -278,12 +281,19 @@ export default {
   async mounted() {
     this.user = await getUser(this);
 
+    this.notValidatedCount = await this.getNotValidatedCount();
+
     if (this.user.team === undefined || this.user.team.length === 0){
       this.hasNotBeenApproved = true;
     }
   },
 
   methods: {
+    async getNotValidatedCount(){
+      let {data: users} = await this.$axios.get('/user');
+      return users.filter(user => user.team.length === 0).length
+    },
+
     async broadcast() {
       this.notification.date = new Date();
       this.notification.type = 'broadcast';
