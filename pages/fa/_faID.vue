@@ -3,6 +3,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center">
       <h1>Fiche Anime 🤯</h1>
       <h2 v-if="isNewFA">Create new FA</h2>
+      <h2 v-if="FA.count">FA: {{FA.count}}</h2>
       <h3>{{ FA.status ? FA.status : 'draft' }}</h3>
       <v-icon v-for="validator of validators"
               :color="validator.status ? color[validator.status] : 'grey'"
@@ -167,62 +168,11 @@
 
     <div style="height: 100px"></div>
 
-    <div style="z-index: 20">
-      <v-btn
-          color="primary"
-          class="fab"
-          @click="saveFA"
-      >
-        <v-icon
-            left
-        >
-          mdi-content-save
-        </v-icon>
-        Save
-      </v-btn>
-      <v-btn
-          color="green"
-          class="fab"
-          @click="dialog=true"
-          style="right: 120px"
-      >
-        <v-icon
-            left
-        >
-          mdi-clipboard-check
-        </v-icon>
-        Submit for review
-      </v-btn>
-
-      <v-btn
-          color="green"
-          class="fab"
-          @click="validate()"
-          style="left: 10px"
-          v-if="getValidator()"
-      >
-        <v-icon
-            left
-        >
-          mdi-check
-        </v-icon>
-        validate
-      </v-btn>
-
-      <v-btn
-          color="red"
-          class="fab"
-          @click="dialogValidator = true"
-          style="left: 150px"
-          v-if="getValidator()"
-      >
-        <v-icon
-            left
-        >
-          mdi-cancel
-        </v-icon>
-        refuse
-      </v-btn>
+    <div style="display: flex; justify-content: space-evenly; position: sticky; bottom: 20px">
+      <v-btn color="green" v-if="getValidator()"  @click="validate()">validate</v-btn>
+      <v-btn color="red" v-if="getValidator()" @click="dialogValidator = true">refuse</v-btn>
+      <v-btn color="secondary" @click="dialog = true">submit</v-btn>
+      <v-btn color="warning" @click="saveFA">save 💾</v-btn>
     </div>
 
     <v-dialog
@@ -352,7 +302,7 @@ export default {
 
   data() {
     return {
-      faName: this.$route.params.faID,
+      FAID: this.$route.params.faID,
       isNewFA: this.$route.params.faID === 'newFA',
       FA: {},
       dialog: false,
@@ -404,7 +354,7 @@ export default {
     this.availableEquipments = await this.$axios.$get('/equipment');
 
     if (!this.isNewFA) {
-      this.FA = (await this.fetchFAbyName(this.faName)).data;
+      this.FA = (await this.fetchFAbyID(this.FAID)).data;
       // update the form that is going to be displayed
       Object.keys(this.FA).forEach(key => {
         let mField = this.form.find(field => field.key === key);
@@ -453,12 +403,12 @@ export default {
       return teams.includes(role);
     },
 
-    async fetchFAbyName(name) {
-      return this.$axios.get('fa/' + name);
+    async fetchFAbyID(id) {
+      return this.$axios.get('fa/' + id);
     },
 
     getIcon(comment){
-      let mValidator = this.validators.find(v => v.name === comment.by)
+      let mValidator = this.validators.find(v => v.name === comment.validator)
       if(mValidator){
        return  mValidator.icon
       }
@@ -471,11 +421,12 @@ export default {
     async saveFA() {
       // save the FA in the DB
       this.FA.equipments = this.selectedEquipments
-      await this.$axios.put('/fa', this.FA);
+      if(this.isNewFA){
+        await this.$axios.post('/fa', this.FA);
+      } else {
+        await this.$axios.put('/fa', this.FA);
+      }
       this.isSnackbar = true;
-      // this.$router.push({
-      //   path: '/fa'
-      // })
     },
 
     deleteSchedule(schedule){
@@ -538,7 +489,7 @@ export default {
       if (!this.FA.comments){
         this.FA.comments = [];
       }
-      this.FA.comments.push(
+      this.FA.comments.unshift(
           {
             time : new Date(),
             action,

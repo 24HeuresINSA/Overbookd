@@ -171,7 +171,7 @@ export default {
 
 
     onItemSelected(item){
-      this.$router.push({path: 'fa/' + item.name})
+      this.$router.push({path: 'fa/' + item.count})
     },
 
     nextPage() {
