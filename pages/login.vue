@@ -20,11 +20,13 @@
         </v-row>
         <v-row>
           <h3>Avant derniere version avant le lancement de la BETA</h3>
-          <h3>🤯 ajout des filters humains et fix de bug</h3>
+          <h3>🤯 Rectification de bugs </h3>
           <ul>
-            <li>🔎 ajout de recherche par nom/prenom/surnom dans les humains</li>
-            <li>🔤 filtrage par team permis des humains</li>
-            <li>🤯 fix d'un bug pour bien sauvgarder le matos des FA</li>
+            <li>🥳 Overbookd est pret pour acceuillir les orga</li>
+            <li>🔨 fix des date de naissance</li>
+            <li>📝 changement des surnom par les admin</li>
+            <li>🔎 ajout de filters pour les humains</li>
+            <li>🤑 gestion de virement (Beta)</li>
           </ul>
         </v-row>
         <v-row>
