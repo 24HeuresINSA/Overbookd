@@ -149,12 +149,12 @@
 
           <tr>
             <td>Date de naissance</td>
-            <td>{{selectedUser.birthday}}</td>
+            <td>{{selectedUser.birthdate}}</td>
           </tr>
 
           <tr>
             <td>tel</td>
-            <td>{{selectedUser.phone}}</td>
+            <td>+33 {{selectedUser.phone}}</td>
           </tr>
 
           <tr>
