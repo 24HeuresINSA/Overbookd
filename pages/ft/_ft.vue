@@ -51,30 +51,53 @@
         </tbody>
       </template>
     </v-simple-table>
-    <v-container style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap">
-      <v-date-picker v-model="schedule.date"></v-date-picker>
-      <h3>Debut</h3>
-      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
-      <h3>Fin</h3>
-      <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
-      <v-select
-        v-model="schedule.type"
-        :items="getConfig('teams').map(e => e.name)"
-      ></v-select>
-      <v-text-field
-        type="number"
-        v-model="schedule.amount"
-      ></v-text-field>
-      <v-btn
-          fab
-          style="margin: 20px;"
-          @click="addSchedule"
-      >
-        <v-icon>
-          mdi-plus-thick
-        </v-icon>
-      </v-btn>
 
+    <v-container style="display: grid;">
+      <v-row>
+        <v-col>
+          <h3>Date</h3>
+        </v-col>
+        <v-col>
+          <h3>Debut</h3>
+        </v-col>
+        <v-col>
+          <h3>Fin</h3>
+        </v-col>
+        <v-col>
+          <h3>Membre requit</h3>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-date-picker v-model="schedule.date" first-day-of-week="1"></v-date-picker>
+        </v-col>
+        <v-col>
+          <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.start"></v-time-picker>
+        </v-col>
+        <v-col>
+          <v-time-picker :allowed-minutes="allowedMinutes" format="24h" v-model="schedule.end"></v-time-picker>
+        </v-col>
+        <v-col style="align-items: center">
+          <v-select
+              v-model="schedule.type"
+              label="team"
+              :items="getConfig('teams').map(e => e.name)"
+          ></v-select>
+          <v-text-field
+              type="number"
+              label="nombre"
+              v-model="schedule.amount"
+          ></v-text-field>
+          <v-btn
+              fab
+              @click="addSchedule"
+          >
+            <v-icon>
+              mdi-plus-thick
+            </v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
 
     <br>
