@@ -99,8 +99,10 @@ const AUTHORS = [
     'Hamza - Cookie 🍪',
     'Tit - Goelise 🦀',
     'Tibo - Bigouu 🍊',
-    'Christophe - Stoph 🍺'
-  ]
+    'Christophe - piStoph 🍺',
+    'Hugo - Cashless 💰',
+    'Tom - Nimbus ☁️',
+]
 
 export default {
   data() {

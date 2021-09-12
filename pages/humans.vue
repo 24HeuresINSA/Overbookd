@@ -8,6 +8,7 @@
           <v-card-text>
             <v-text-field label="Recherche" v-model="filters.search"></v-text-field>
             <v-switch label="Permis" v-model="filters.hasDriverLicence" ></v-switch>
+            <v-switch label="non validés" v-model="filters.notValidated" ></v-switch>
             <v-container class="py-0">
               <v-row
                   align="center"
@@ -139,13 +140,21 @@
           </tr>
 
           <tr>
+            <td>Surnom</td>
+            <td>
+              <v-text-field v-if="hasRole( ['admin', 'SG'])" v-model="selectedUser.nickname"></v-text-field>
+              <span v-else>{{selectedUser.nickname}}</span>
+            </td>
+          </tr>
+
+          <tr>
             <td>Date de naissance</td>
             <td>{{selectedUser.birthdate}}</td>
           </tr>
 
           <tr>
             <td>tel</td>
-            <td>{{selectedUser.phone}}</td>
+            <td>+33 {{selectedUser.phone}}</td>
           </tr>
 
           <tr>
@@ -205,6 +214,9 @@
           </tbody>
         </v-simple-table>
       </v-card-text>
+      <v-card-actions>
+        <v-btn text @click="saveUser()">save</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 
@@ -255,6 +267,7 @@ export default {
         search: undefined,
         hasDriverLicence: undefined,
         teams: [],
+        notValidated: undefined,
       },
 
       isTransactionDialogOpen: false,
@@ -329,10 +342,7 @@ export default {
       if(!this.selectedUser.transactionHistory){
         this.selectedUser.transactionHistory = []
       }
-      if(this.selectedUser.transactionHistory.length >= 3){
-        this.selectedUser.transactionHistory.shift()
-      }
-      this.selectedUser.transactionHistory.push(this.newTransaction);
+      this.selectedUser.transactionHistory.unshift(this.newTransaction);
 
       if(this.selectedUser.balance === undefined){
         this.selectedUser.balance = 0;
@@ -350,6 +360,11 @@ export default {
 
     getRoleMetadata(roleName){
       return this.teams.find(e => e.name === roleName);
+    },
+
+    async saveUser(){
+      await this.$axios.put(`/user/${this.selectedUser.keycloakID}`, this.selectedUser);
+      this.isInformationDialogOpen = false;
     },
   },
 
@@ -380,6 +395,17 @@ export default {
               return user.team.filter(value => this.filters.teams.includes(value)).length === this.filters.teams.length;
             } else {
               return false
+            }
+          })
+        }
+
+        // filter by not validated
+        if(this.filters.notValidated){
+          this.filteredUsers  = mUsers.filter(user => {
+            if(user.team){
+              return user.team.length === 0;
+            } else {
+              return true
             }
           })
         }

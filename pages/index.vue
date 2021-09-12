@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container  no-gutters>
+    <v-container style="display: grid">
       <v-row justify="center" align="center">
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
@@ -76,6 +76,8 @@
                 <v-btn text @click="isBroadcastDialogOpen = true">broadcast</v-btn>
               </v-card-actions>
             </v-card-text>
+
+            <v-card-title v-if="hasRole('admin')">{{notValidatedCount}} Orgas Non validé</v-card-title>
           </v-card>
         </v-col>
 
@@ -106,6 +108,9 @@
                 </tbody>
               </v-simple-table>
             </v-card-text>
+            <v-card-actions>
+              <v-btn text @click="isTransferDialogOpen=true">Effectuer un virement</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
 
@@ -196,6 +201,22 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="isTransferDialogOpen" max-width="600">
+      <v-card >
+        <v-card-title>Effectuer un virement</v-card-title>
+        <v-card-text>
+          <over-form
+            :fields="transferForm"
+            @form-change="onFormChange"
+          >
+          </over-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="transferMoney()">validé</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -205,9 +226,10 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { getUser, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
+import OverForm from "../components/overForm";
 
 export default {
-  components: {OverChips},
+  components: {OverForm, OverChips},
 
   data() {
     return {
@@ -216,6 +238,25 @@ export default {
       isSnackbarOpen: false,
       isBroadcastDialogOpen: false,
       isPPDialogOpen: false,
+      isTransferDialogOpen: false,
+      notValidatedCount: 0,
+      transferForm: [{
+        key: 'user',
+        type: 'user',
+        isRequired: true,
+      },{
+        key: 'amount',
+        label: 'montant',
+        isRequired: true,
+      },{
+        key: 'reason',
+        label: 'raison',
+      }],
+      transfer: {
+        reason: '',
+        amount: undefined,
+        beneficiary: undefined
+      },
       hasNotBeenApproved:false,
       PP: undefined,
       snackbarMessage: "",
@@ -239,7 +280,8 @@ export default {
 
   async mounted() {
     this.user = await getUser(this);
-    console.log(this.user)
+
+    this.notValidatedCount = await this.getNotValidatedCount();
 
     if (this.user.team === undefined || this.user.team.length === 0){
       this.hasNotBeenApproved = true;
@@ -247,6 +289,11 @@ export default {
   },
 
   methods: {
+    async getNotValidatedCount(){
+      let {data: users} = await this.$axios.get('/user');
+      return users.filter(user => user.team.length === 0).length
+    },
+
     async broadcast() {
       this.notification.date = new Date();
       this.notification.type = 'broadcast';
@@ -271,6 +318,10 @@ export default {
       form.append('files', this.PP, this.PP.name);
       form.append('_id', getUser(this)._id)
       await this.$axios.post('/user/pp', form)
+    },
+
+    onFormChange(form){
+      this.transfer = form;
     },
 
     async clicker(){
@@ -353,6 +404,23 @@ export default {
       await this.$router.push({
         path: '/login',
       })
+    },
+
+    async transferMoney() {
+      if(this.transfer.isValid){
+        if(this.transfer.user === this.user.firstname + '.' + this.user.lastname){
+          return
+        }
+        this.user.balance -= +this.transfer.amount;
+        this.user.transactionHistory.unshift({
+          amount: this.transfer.amount,
+          reason: `virement pour ${this.transfer.user}, ${this.transfer.reason}`
+        })
+
+        // save user balance
+        await this.$axios.$post('user/transfer', this.transfer);
+        this.isTransferDialogOpen = false;
+      }
     },
   },
 

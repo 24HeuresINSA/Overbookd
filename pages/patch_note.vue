@@ -2,6 +2,16 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.13</h2>
+    <h3>🤯 Rectification de bugs </h3>
+    <ul>
+      <li>🥳 Overbookd est pret pour acceuillir les orga</li>
+      <li>🔨 fix des date de naissance</li>
+      <li>📝 changement des surnom par les admin</li>
+      <li>🔎 ajout de filters pour les humains</li>
+      <li>🤑 gestion de virement (Beta)</li>
+    </ul>
+
     <h2>Patch note 0.12</h2>
     <h3>🤯 ajout des filters humains et fix de bug</h3>
     <ul>
