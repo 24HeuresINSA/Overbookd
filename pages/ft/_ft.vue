@@ -253,6 +253,11 @@ export default {
       return mValidator
     },
 
+    deleteSchedule(schedule){
+      this.FT.schedules = this.FT.schedules.filter(s => {
+        return s.date !== schedule.date && s.end !== schedule.end && s.start !== schedule.start
+      })
+    },
 
     addSchedule(){
       if(!this.FT.schedules){

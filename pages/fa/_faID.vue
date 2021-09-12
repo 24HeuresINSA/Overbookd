@@ -476,7 +476,12 @@ export default {
       // this.$router.push({
       //   path: '/fa'
       // })
+    },
 
+    deleteSchedule(schedule){
+      this.FA.schedules = this.FA.schedules.filter(s => {
+        return s.date !== schedule.date && s.end !== schedule.end && s.start !== schedule.start
+      })
     },
 
     getValidator(){
