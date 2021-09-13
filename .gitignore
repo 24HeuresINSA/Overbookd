@@ -5,3 +5,4 @@ node_modules
 .vscode
 
 sw.js
+.DS_Store

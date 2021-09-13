@@ -20,17 +20,15 @@
           @click="openDayDialog(availability)"
           v-bind:key="index"
       >ajouter une journe
-      </v-btn
-      >
+      </v-btn>
       <div style="display: flex" v-bind:key="index">
         <v-container
             v-for="(day, index) in availability.days"
             v-bind:key="index"
         >
           <v-card width="400px" v-if="hasRole(availability.role)">
-            <v-card-title>{{
-                new Date(day.date).toLocaleString()
-              }}
+            <v-card-title
+            >{{ new Date(day.date).toLocaleString() }}
             </v-card-title>
             <v-card-text>
               <v-list>
@@ -42,12 +40,9 @@
                     <v-list-item-action-text
                         style="display: flex; align-items: center"
                     >
-                      <v-chip
-                          style="margin-right: 10px"
-                          v-if="frame.charisma"
+                      <v-chip style="margin-right: 10px" v-if="frame.charisma"
                       >{{ frame.charisma }}
-                      </v-chip
-                      >
+                      </v-chip>
                       <v-switch v-model="frame.isSelected"></v-switch>
                     </v-list-item-action-text>
                   </v-list-item-action>

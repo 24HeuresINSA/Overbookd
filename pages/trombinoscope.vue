@@ -5,7 +5,8 @@
           v-if="user.pp"
           :src="getPPUrl() + 'api/user/pp/' + user.pp"
       ></v-img>
-      <v-card-title>{{
+      <v-card-title
+      >{{
           user.nickname
               ? user.nickname
               : `${user.firstname} ${user.lastname.toUpperCase()} `
