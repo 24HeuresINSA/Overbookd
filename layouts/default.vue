@@ -58,7 +58,7 @@
       />
       <v-spacer />
       <v-btn text @click="isDialogOpen = true"> 🐞 Signaler un bug </v-btn>
-      <v-btn text @click="logout()"> DECONNEXION </v-btn>
+      <v-btn text @click="logout()"> DÉCONNEXION</v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -167,24 +167,24 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Welcome 🤙",
+          title: "Accueil 🤙",
           to: "/",
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiche Anim 🥳",
+          title: "Fiches Anims 🥳",
           roles: "hard",
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
-          title: "Fiche tache 😱",
+          title: "Fiches Tâches  😱",
           roles: "hard",
           to: "/ft",
         },
         {
           icon: "mdi-clock",
-          title: "Mes Dispo 🤯",
+          title: "Mes dispos 🤯",
           to: "/availabilities",
         },
         {
@@ -194,7 +194,7 @@ export default {
         },
         {
           icon: "mdi-account",
-          title: "les humains 👩‍👦‍👦",
+          title: "Liste des Orgas 👩‍👦‍👦",
           roles: "hard",
           to: "/humans",
         },

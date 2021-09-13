@@ -3,7 +3,8 @@
     <v-text-field
         v-model="mField.value"
         v-if="mField.type === 'string' || mField.type === undefined"
-        :rules="mField.rule"
+        :rules="this.field.regex ?
+        [v => (new RegExp(this.field.regex)).test(v) || (this.field.error ? this.field.regex : `il y'a un probleme avec ce champ`)] : []"
         :type="mField.option"
         :counter="mField.counter"
         :label="
@@ -88,7 +89,7 @@ export default {
   methods: {
     onChange() {
       if (typeof this.field.value === "string") {
-        this.mField.value = this.field.value.trim();
+        this.mField.value = this.mField.value.trim();
       }
       this.$emit("value", { key: this.field.key, value: this.field.value });
     },
