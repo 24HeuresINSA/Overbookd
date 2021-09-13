@@ -4,7 +4,7 @@ WORKDIR /Overbookd-frontend
 
 COPY . .
 
-RUN npm install\
+RUN npm ci\
     && npm run build\
     && find . -maxdepth 1 ! -name 'dist' -type f -exec rm -r {} +\
     && find . -maxdepth 1 ! -name 'dist' ! -name '.' ! -name '..' -type d -exec rm -r {} +\
