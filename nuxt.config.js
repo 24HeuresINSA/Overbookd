@@ -1,7 +1,6 @@
 import colors from "vuetify/es5/util/colors";
 import { KEYCLOAK, BACKEND } from "./config/url.json";
 
-
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -37,7 +36,7 @@ export default {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
-    '@nuxtjs/color-mode',
+    "@nuxtjs/color-mode",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -48,7 +47,6 @@ export default {
     "@nuxtjs/pwa",
     "@nuxtjs/auth-next",
   ],
-  
 
   auth: {
     strategies: {
@@ -95,12 +93,15 @@ export default {
   },
 
   router: {
-    middleware: ["auth" , "config", "user"],
+    middleware: ["auth", "config", "user"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.NODE_ENV === 'development' ? BACKEND.DEV_BASE_URL : BACKEND.BASE_URL,
+    baseURL:
+      process.env.NODE_ENV === "development"
+        ? BACKEND.DEV_BASE_URL
+        : BACKEND.BASE_URL,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

@@ -4,17 +4,27 @@
       <v-row justify="center" align="center">
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
-            <v-img v-if="user.pp" :src=" ( getPPUrl() ) +  'api/user/pp/' + user.pp"></v-img>
-            <v-card-title>Bonsoir {{ user.nickname ? user.nickname : user.firstname }}</v-card-title>
-            <v-card-subtitle>👋 {{ user.firstname }}.{{ user.lastname }}</v-card-subtitle>
+            <v-img
+              v-if="user.pp"
+              :src="getPPUrl() + 'api/user/pp/' + user.pp"
+            ></v-img>
+            <v-card-title
+              >Bonsoir
+              {{ user.nickname ? user.nickname : user.firstname }}</v-card-title
+            >
+            <v-card-subtitle
+              >👋 {{ user.firstname }}.{{ user.lastname }}</v-card-subtitle
+            >
             <v-card-text>
               <h3>📩 {{ user.email }}</h3>
               <h3>📞 {{ user.phone }}</h3>
               <h3>😎 {{ user.charisma || 0 }} charisme</h3>
-              <h3>❤️ {{ user.friends ? user.friends.length : 0}} amis</h3>
-              <h3>📆 {{ (new Date(user.birthdate)).toLocaleString()}}</h3>
-              <h3>🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés</h3>
-              <h3>🚗 {{ user.hasDriverLicense ? '✅' : '🛑' }}</h3>
+              <h3>❤️ {{ user.friends ? user.friends.length : 0 }} amis</h3>
+              <h3>📆 {{ new Date(user.birthdate).toLocaleString() }}</h3>
+              <h3>
+                🗣 {{ user.assigned ? user.assigned.length : 0 }} taches affectés
+              </h3>
+              <h3>🚗 {{ user.hasDriverLicense ? "✅" : "🛑" }}</h3>
 
               <over-chips :roles="user.team"></over-chips>
 
@@ -33,83 +43,93 @@
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
-                  <tr>
-                    <th class="text-left">
-                    </th>
-                    <th class="text-left">
-                      Message
-                    </th>
-                    <th class="text-left">
-                      Action
-                    </th>
-                  </tr>
+                    <tr>
+                      <th class="text-left"></th>
+                      <th class="text-left">Message</th>
+                      <th class="text-left">Action</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <tr
+                    <tr
                       v-for="(notification, index) in user.notifications"
                       v-bind:key="notification.date"
-                  >
-                    <td>{{ notification.type === 'friendRequest' ? '👨‍👩‍👧' : '📣' }}</td>
-                    <td>{{ notification.message }}</td>
-                    <td v-if="notification.type === 'friendRequest'"
-                        style="display: flex; justify-content: space-between">
-                      <v-btn icon small @click="acceptFriendRequest(notification)">
-                        <v-icon>mdi-account-check</v-icon>
-                      </v-btn>
-                      <v-btn icon small  @click="refuseFriendRequest(notification)">
-                        <v-icon>mdi-account-cancel</v-icon>
-                      </v-btn>
-                    </td>
-                    <td v-else-if="notification.type === 'broadcast'">
-                      <v-btn  icon   :href="notification.link">
-                        <v-icon>mdi-link</v-icon>
-                      </v-btn>
-                      <v-btn  icon   @click="deleteNotification(index)">
-                        <v-icon>mdi-trash-can</v-icon>
-                      </v-btn>
-                    </td>
-                  </tr>
+                    >
+                      <td>
+                        {{
+                          notification.type === "friendRequest" ? "👨‍👩‍👧" : "📣"
+                        }}
+                      </td>
+                      <td>{{ notification.message }}</td>
+                      <td
+                        v-if="notification.type === 'friendRequest'"
+                        style="display: flex; justify-content: space-between"
+                      >
+                        <v-btn
+                          icon
+                          small
+                          @click="acceptFriendRequest(notification)"
+                        >
+                          <v-icon>mdi-account-check</v-icon>
+                        </v-btn>
+                        <v-btn
+                          icon
+                          small
+                          @click="refuseFriendRequest(notification)"
+                        >
+                          <v-icon>mdi-account-cancel</v-icon>
+                        </v-btn>
+                      </td>
+                      <td v-else-if="notification.type === 'broadcast'">
+                        <v-btn icon :href="notification.link">
+                          <v-icon>mdi-link</v-icon>
+                        </v-btn>
+                        <v-btn icon @click="deleteNotification(index)">
+                          <v-icon>mdi-trash-can</v-icon>
+                        </v-btn>
+                      </td>
+                    </tr>
                   </tbody>
                 </template>
               </v-simple-table>
               <v-card-actions>
-                <v-btn text @click="isBroadcastDialogOpen = true">broadcast</v-btn>
+                <v-btn text @click="isBroadcastDialogOpen = true"
+                  >broadcast</v-btn
+                >
               </v-card-actions>
             </v-card-text>
 
-            <v-card-title v-if="hasRole('admin')">{{notValidatedCount}} Orgas Non validé</v-card-title>
+            <v-card-title v-if="hasRole('admin')"
+              >{{ notValidatedCount }} Orgas Non validé</v-card-title
+            >
           </v-card>
         </v-col>
 
         <v-col cols="12" sm="6" md="4" v-if="hasRole('hard')">
           <v-card v-if="user">
             <v-card-title>Compte perso 💰</v-card-title>
-            <v-card-subtitle>Balance: {{ user.balance || 0 }} €</v-card-subtitle>
+            <v-card-subtitle
+              >Balance: {{ user.balance || 0 }} €</v-card-subtitle
+            >
             <v-card-text v-if="user.transactionHistory">
               <v-simple-table>
                 <thead>
-                <tr>
-                  <th class="text-left">
-                    Operation
-                  </th>
-                  <th class="text-right">
-                    €
-                  </th>
-                </tr>
+                  <tr>
+                    <th class="text-left">Operation</th>
+                    <th class="text-right">€</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr
-                    v-for="item in user.transactionHistory"
-                    v-bind:key="item"
-                >
-                  <td>{{ item.reason }}</td>
-                  <td class="text-right">{{ item.amount }} €</td>
-                </tr>
+                  <tr v-for="item in user.transactionHistory" v-bind:key="item">
+                    <td>{{ item.reason }}</td>
+                    <td class="text-right">{{ item.amount }} €</td>
+                  </tr>
                 </tbody>
               </v-simple-table>
             </v-card-text>
             <v-card-actions>
-              <v-btn text @click="isTransferDialogOpen=true">Effectuer un virement</v-btn>
+              <v-btn text @click="isTransferDialogOpen = true"
+                >Effectuer un virement</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-col>
@@ -120,22 +140,29 @@
             <v-card-text>
               <v-list dense>
                 <v-list-item-group>
-                  <v-list-item v-for="item in user.friends" v-bind:key="item.username">
+                  <v-list-item
+                    v-for="item in user.friends"
+                    v-bind:key="item.username"
+                  >
                     <v-list-item-content>
-                      <v-list-item-title>{{item.username}}</v-list-item-title>
+                      <v-list-item-title>{{ item.username }}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
               <v-container v-if="!user.friends || !user.friends.length">
-                <v-img src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"></v-img>
-                <p>pour demander en amis met le prenom.nom de tes potes puis a</p>
+                <v-img
+                  src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
+                ></v-img>
+                <p>
+                  pour demander en amis met le prenom.nom de tes potes puis a
+                </p>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-text-field
-                  label="prénom.nom de ton pote"
-                  v-model="newFriend"
+                label="prénom.nom de ton pote"
+                v-model="newFriend"
               ></v-text-field>
               <v-btn text @click="sendFriendRequest">demander en ami</v-btn>
             </v-card-actions>
@@ -144,11 +171,15 @@
 
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
-            <v-img src="https://media.giphy.com/media/WJZbQEoljvfxK/giphy.gif"></v-img>
+            <v-img
+              src="https://media.giphy.com/media/WJZbQEoljvfxK/giphy.gif"
+            ></v-img>
             <v-card-title>Le Clicker ⏱</v-card-title>
-            <v-card-subtitle>Le compteur de blague qui derrape 🚗</v-card-subtitle>
+            <v-card-subtitle
+              >Le compteur de blague qui derrape 🚗</v-card-subtitle
+            >
             <v-card-text>
-              <h2>{{user.clicks || 0}} 🚗</h2>
+              <h2>{{ user.clicks || 0 }} 🚗</h2>
             </v-card-text>
             <v-card-actions>
               <v-btn text @click="clicker()">click</v-btn>
@@ -158,11 +189,8 @@
       </v-row>
     </v-container>
 
-    <v-snackbar
-        v-model="isSnackbarOpen"
-        :timeout="5000"
-    >
-      {{snackbarMessage}}
+    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
+      {{ snackbarMessage }}
     </v-snackbar>
 
     <v-dialog v-model="isBroadcastDialogOpen" max-width="600">
@@ -170,7 +198,10 @@
         <v-card-title>Envoyer un message a l'asso</v-card-title>
         <v-card-text>
           <v-text-field label="lien" v-model="notification.link"></v-text-field>
-          <v-text-field label="message" v-model="notification.message"></v-text-field>
+          <v-text-field
+            label="message"
+            v-model="notification.message"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn @click="broadcast">📣</v-btn>
@@ -193,8 +224,7 @@
     <v-dialog v-model="isPPDialogOpen" max-width="600">
       <v-card>
         <v-card-text>
-          <v-file-input v-model="PP">
-          </v-file-input>
+          <v-file-input v-model="PP"> </v-file-input>
         </v-card-text>
         <v-card-actions>
           <v-btn text @click="uploadPP()">update</v-btn>
@@ -203,13 +233,10 @@
     </v-dialog>
 
     <v-dialog v-model="isTransferDialogOpen" max-width="600">
-      <v-card >
+      <v-card>
         <v-card-title>Effectuer un virement</v-card-title>
         <v-card-text>
-          <over-form
-            :fields="transferForm"
-            @form-change="onFormChange"
-          >
+          <over-form :fields="transferForm" @form-change="onFormChange">
           </over-form>
         </v-card-text>
         <v-card-actions>
@@ -220,7 +247,6 @@
   </div>
 </template>
 
-
 <script>
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -229,7 +255,7 @@ import OverChips from "../components/overChips";
 import OverForm from "../components/overForm";
 
 export default {
-  components: {OverForm, OverChips},
+  components: { OverForm, OverChips },
 
   data() {
     return {
@@ -240,24 +266,28 @@ export default {
       isPPDialogOpen: false,
       isTransferDialogOpen: false,
       notValidatedCount: 0,
-      transferForm: [{
-        key: 'user',
-        type: 'user',
-        isRequired: true,
-      },{
-        key: 'amount',
-        label: 'montant',
-        isRequired: true,
-      },{
-        key: 'reason',
-        label: 'raison',
-      }],
+      transferForm: [
+        {
+          key: "user",
+          type: "user",
+          isRequired: true,
+        },
+        {
+          key: "amount",
+          label: "montant",
+          isRequired: true,
+        },
+        {
+          key: "reason",
+          label: "raison",
+        },
+      ],
       transfer: {
-        reason: '',
+        reason: "",
         amount: undefined,
-        beneficiary: undefined
+        beneficiary: undefined,
       },
-      hasNotBeenApproved:false,
+      hasNotBeenApproved: false,
       PP: undefined,
       snackbarMessage: "",
       snackbarMessages: {
@@ -266,16 +296,16 @@ export default {
           accepted: "T'as un nouveau ami",
           refused: "je suis d'accord c'est un batard",
           lonely: "t'es seul a ce point là 🥺 ?",
-          alreadyFriend: "t'es deja ami avec "
+          alreadyFriend: "t'es deja ami avec ",
         },
         error: "🥵 sheeshh une erreur ",
-        broadcasted: "broadcast envoyé 📣"
+        broadcasted: "broadcast envoyé 📣",
       },
       notification: {
         link: undefined,
-        message: undefined
+        message: undefined,
       },
-    }
+    };
   },
 
   async mounted() {
@@ -283,90 +313,106 @@ export default {
 
     this.notValidatedCount = await this.getNotValidatedCount();
 
-    if (this.user.team === undefined || this.user.team.length === 0){
+    if (this.user.team === undefined || this.user.team.length === 0) {
       this.hasNotBeenApproved = true;
     }
   },
 
   methods: {
-    async getNotValidatedCount(){
-      let {data: users} = await this.$axios.get('/user');
-      return users.filter(user => user.team.length === 0).length
+    async getNotValidatedCount() {
+      let { data: users } = await this.$axios.get("/user");
+      return users.filter((user) => user.team.length === 0).length;
     },
 
     async broadcast() {
       this.notification.date = new Date();
-      this.notification.type = 'broadcast';
-      await this.$axios.post('/user/broadcast', this.notification);
+      this.notification.type = "broadcast";
+      await this.$axios.post("/user/broadcast", this.notification);
       this.snackbarMessage = this.snackbarMessages.broadcasted;
       this.isSnackbarOpen = true;
       this.isBroadcastDialogOpen = false;
     },
 
-    deleteNotification(index){
-      let {keycloakID , notifications} = this.user
+    deleteNotification(index) {
+      let { keycloakID, notifications } = this.user;
       notifications.splice(index, index + 1);
-      this.$axios.put(`/user/${keycloakID}`, {notifications});
+      this.$axios.put(`/user/${keycloakID}`, { notifications });
     },
 
-    hasRole(team){
-      return hasRole(this, team)
+    hasRole(team) {
+      return hasRole(this, team);
     },
 
-    async uploadPP(){
+    async uploadPP() {
       let form = new FormData();
-      form.append('files', this.PP, this.PP.name);
-      form.append('_id', getUser(this)._id)
-      await this.$axios.post('/user/pp', form)
+      form.append("files", this.PP, this.PP.name);
+      form.append("_id", getUser(this)._id);
+      await this.$axios.post("/user/pp", form);
     },
 
-    onFormChange(form){
+    onFormChange(form) {
       this.transfer = form;
     },
 
-    async clicker(){
-      if(this.user.clicks === undefined){
+    async clicker() {
+      if (this.user.clicks === undefined) {
         this.user.clicks = 0;
       }
       this.user.clicks += 1;
-      this.$set(this.user, 'clicks', this.user.clicks) // force update
+      this.$set(this.user, "clicks", this.user.clicks); // force update
       await this.$axios.put(`/user/${this.user.keycloakID}`, {
         clicks: this.user.clicks,
-      })
+      });
     },
 
     async sendFriendRequest() {
-      const user = getUser(this)
-      let [firstname, lastname] = this.newFriend.split('.');
-      if(firstname === user.firstname && lastname === user.lastname){ // asked himself to be friend
+      const user = getUser(this);
+      let [firstname, lastname] = this.newFriend.split(".");
+      if (firstname === user.firstname && lastname === user.lastname) {
+        // asked himself to be friend
         this.snackbarMessage = this.snackbarMessages.friendRequest.lonely;
         this.isSnackbarOpen = true;
-        window.open('https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690')
-        return
+        window.open(
+          "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690"
+        );
+        return;
       }
-      if(this.user.friends.find(friend => friend.username === this.newFriend)){ // already friends
-        this.snackbarMessage = this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
+      if (
+        this.user.friends.find((friend) => friend.username === this.newFriend)
+      ) {
+        // already friends
+        this.snackbarMessage =
+          this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
         this.isSnackbarOpen = true;
-        return
+        return;
       }
       await this.$axios.put(`/user/notification/${lastname}/${firstname}`, {
-        type: 'friendRequest',
-        message: `${getUser(this).lastname} ${getUser(this).firstname} vous a envoye une demande d'ami ❤️`,
-        from: `${getUser(this).nickname ? getUser(this).nickname : getUser(this).lastname}`,
+        type: "friendRequest",
+        message: `${getUser(this).lastname} ${
+          getUser(this).firstname
+        } vous a envoye une demande d'ami ❤️`,
+        from: `${
+          getUser(this).nickname
+            ? getUser(this).nickname
+            : getUser(this).lastname
+        }`,
         date: new Date(),
-        data: { username : `${getUser(this).firstname}.${getUser(this).lastname}`, id: getUser(this)._id }
-      })
+        data: {
+          username: `${getUser(this).firstname}.${getUser(this).lastname}`,
+          id: getUser(this)._id,
+        },
+      });
       this.snackbarMessage = this.snackbarMessages.friendRequest.sent;
       this.isSnackbarOpen = true;
     },
 
     async acceptFriendRequest(notification) {
-      if(notification.data) {
+      if (notification.data) {
         let user = getUser(this);
         user.notifications.pop();
-        await this.$axios.post(`/user/friends`,{
+        await this.$axios.post(`/user/friends`, {
           from: user._id,
-          to: notification.data
+          to: notification.data,
         });
         this.snackbarMessage = this.snackbarMessages.friendRequest.accepted;
         this.isSnackbarOpen = true;
@@ -377,16 +423,16 @@ export default {
     },
 
     async refuseFriendRequest(notification) {
-      if(notification.data) {
+      if (notification.data) {
         let friends;
         let user = getUser(this);
         if (user.friends === undefined) {
-          friends = []
+          friends = [];
         } else {
-          friends = user.friends
+          friends = user.friends;
         }
         user.notifications.pop();
-        await this.$axios.put(`/user/${user.keycloakID}`,user);
+        await this.$axios.put(`/user/${user.keycloakID}`, user);
         this.snackbarMessage = this.snackbarMessages.friendRequest.accepted;
         this.isSnackbarOpen = true;
       } else {
@@ -395,37 +441,39 @@ export default {
       }
     },
 
-    getPPUrl(){
-      return process.env.NODE_ENV === 'development' ? 'http://localhost:2424/' : ''
+    getPPUrl() {
+      return process.env.NODE_ENV === "development"
+        ? "http://localhost:2424/"
+        : "";
     },
 
-    async logout(){
+    async logout() {
       await this.$auth.logout();
       await this.$router.push({
-        path: '/login',
-      })
+        path: "/login",
+      });
     },
 
     async transferMoney() {
-      if(this.transfer.isValid){
-        if(this.transfer.user === this.user.firstname + '.' + this.user.lastname){
-          return
+      if (this.transfer.isValid) {
+        if (
+          this.transfer.user ===
+          this.user.firstname + "." + this.user.lastname
+        ) {
+          return;
         }
         this.user.balance -= +this.transfer.amount;
         this.user.transactionHistory.unshift({
           amount: this.transfer.amount,
-          reason: `virement pour ${this.transfer.user}, ${this.transfer.reason}`
-        })
+          reason: `virement pour ${this.transfer.user}, ${this.transfer.reason}`,
+        });
 
         // save user balance
-        await this.$axios.$post('user/transfer', this.transfer);
+        await this.$axios.$post("user/transfer", this.transfer);
         this.isTransferDialogOpen = false;
       }
     },
   },
-
 };
 </script>
-<style>
-
-</style>
+<style></style>

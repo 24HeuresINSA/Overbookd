@@ -1,9 +1,9 @@
 export const user = () => ({
-    data: null,
-})
+  data: null,
+});
 
 export const mutations = {
-    setUser(user, data) {
-        user.data = data;
-    }
-}
+  setUser(user, data) {
+    user.data = data;
+  },
+};

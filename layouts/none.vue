@@ -13,10 +13,8 @@
 
 <script>
 export default {
-  name: "none"
-}
+  name: "none",
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
