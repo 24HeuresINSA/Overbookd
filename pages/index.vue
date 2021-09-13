@@ -248,8 +248,6 @@
 </template>
 
 <script>
-import jwt_decode from "jwt-decode";
-import axios from "axios";
 import { getUser, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
 import OverForm from "../components/overForm";
@@ -457,12 +455,15 @@ export default {
     async transferMoney() {
       if (this.transfer.isValid) {
         if (
-          this.transfer.user ===
-          this.user.firstname + "." + this.user.lastname
+            this.transfer.user ===
+            this.user.firstname + "." + this.user.lastname
         ) {
           return;
         }
         this.user.balance -= +this.transfer.amount;
+        if (!this.user.transactionHistory) {
+          this.user.transactionHistory = [];
+        }
         this.user.transactionHistory.unshift({
           amount: this.transfer.amount,
           reason: `virement pour ${this.transfer.user}, ${this.transfer.reason}`,

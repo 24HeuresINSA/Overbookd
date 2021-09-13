@@ -117,10 +117,10 @@
         <v-card-title>ajouter du matos</v-card-title>
         <v-card-text>
           <v-data-table :headers="equipmentsHeader" :items="availableEquipment">
-            <template v-slot:item.selectedAmount="item">
+            <template v-slot:[`item.selectedAmount`]="item">
               <v-text-field
-                type="number"
-                v-model="item.item.selectedAmount"
+                  type="number"
+                  v-model="item.item.selectedAmount"
               ></v-text-field>
             </template>
           </v-data-table>

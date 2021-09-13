@@ -56,16 +56,16 @@
             :items-per-page="5"
             class="elevation-1"
           >
-            <template v-slot:item.action="row">
+            <template v-slot:[`item.action`]="row">
               <tr>
                 <td>
                   <v-btn
-                    class="mx-2"
-                    icon
-                    dark
-                    small
-                    color="primary"
-                    @click="onItemSelected(row.item)"
+                      class="mx-2"
+                      icon
+                      dark
+                      small
+                      color="primary"
+                      @click="onItemSelected(row.item)"
                   >
                     <v-icon dark>mdi-circle-edit-outline</v-icon>
                   </v-btn>
@@ -73,11 +73,11 @@
               </tr>
             </template>
 
-            <template v-slot:item.status="row">
+            <template v-slot:[`item.status`]="row">
               <v-avatar
-                v-if="row.item"
-                :color="color[row.item.status]"
-                size="20"
+                  v-if="row.item"
+                  :color="color[row.item.status]"
+                  size="20"
               ></v-avatar>
             </template>
           </v-data-table>
@@ -161,7 +161,7 @@ export default {
     },
 
     filterByStatus(FAs, status) {
-      if (status == 0) {
+      if (status === 0) {
         return FAs;
       }
       const s = ["", "draft", "submitted", "refused", "accepted"];
@@ -207,9 +207,5 @@ export default {
 .small {
   font-size: small;
   margin-left: 0;
-}
-
-.v-list-item {
-  padding: 0;
 }
 </style>

@@ -137,8 +137,10 @@
     <v-divider></v-divider>
     <h2>Fiche tâche 🤩</h2>
     <v-data-table :headers="FTHeader" :items="FA.FTs">
-      <template v-slot:item.action="item">
-        <v-btn :href="'/ft/' + item.item._id"><v-icon>mdi-link</v-icon></v-btn>
+      <template v-slot:[`item.action`]="item">
+        <v-btn :href="'/ft/' + item.item._id">
+          <v-icon>mdi-link</v-icon>
+        </v-btn>
       </template>
     </v-data-table>
     <v-text-field v-model="FTname" label="nom de la FT*"></v-text-field>
@@ -215,19 +217,19 @@
             :headers="equipmentsHeader"
             :items="availableEquipments"
           >
-            <template v-slot:item.amount="props">
+            <template v-slot:[`item.amount`]="props">
               {{
                 +(props.item.borrowed
-                  ? props.item.borrowed
-                      .map((i) => i.amount)
-                      .reduce((a, e) => +a + +e, 0)
-                  : 0) + +props.item.amount
+                    ? props.item.borrowed
+                        .map((i) => i.amount)
+                        .reduce((a, e) => +a + +e, 0)
+                    : 0) + +props.item.amount
               }}
             </template>
-            <template v-slot:item.selected="props">
+            <template v-slot:[`item.selected`]="props">
               <v-text-field
-                type="number"
-                v-model="props.item.selected"
+                  type="number"
+                  v-model="props.item.selected"
               ></v-text-field>
             </template>
           </v-data-table>

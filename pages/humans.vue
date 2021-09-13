@@ -56,18 +56,19 @@
             :items-per-page="30"
             class="elevation-1"
           >
-            <template v-slot:item.action="{ item }">
+            <template v-slot:[`item.action`]="{ item }">
               <v-btn
-                fab
-                style="color: blue"
-                class="fab"
-                :href="
+                  fab
+                  style="color: blue"
+                  class="fab"
+                  :href="
                   'https://www.facebook.com/search/top?q=' +
                   item.firstname +
                   ' ' +
                   item.lastname
                 "
-                >F</v-btn
+              >F
+              </v-btn
               >
               <v-btn
                 fab
@@ -85,7 +86,7 @@
               >
             </template>
 
-            <template v-slot:item.team="{ item }">
+            <template v-slot:[`item.team`]="{ item }">
               <over-chips :roles="item.team"></over-chips>
             </template>
           </v-data-table>

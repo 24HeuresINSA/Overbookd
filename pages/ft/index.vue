@@ -2,21 +2,25 @@
   <div>
     <h1>Fiche Tache 👻</h1>
     <v-data-table :headers="headers" :items="FTs">
-      <template v-slot:item.status="row">
+      <template v-slot:[`item.status`]="row">
         <v-avatar size="30" :color="color[row.item.status]"></v-avatar>
       </template>
-      <template v-slot:item.action="row">
+      <template v-slot:[`item.action`]="row">
         <v-btn style="margin: 5px" icon small :to="'/ft/' + row.item._id">
-          ><v-icon>mdi-text-search</v-icon></v-btn
+          >
+          <v-icon>mdi-text-search</v-icon>
+        </v-btn
         >
         <v-btn
-          icon
-          small
-          @click="
+            icon
+            small
+            @click="
             selectedFTID = row.item._id;
             isDialogOpen = true;
           "
-          ><v-icon>mdi-trash-can</v-icon></v-btn
+        >
+          <v-icon>mdi-trash-can</v-icon>
+        </v-btn
         >
       </template>
     </v-data-table>
