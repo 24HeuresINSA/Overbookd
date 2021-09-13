@@ -60,7 +60,8 @@ export default {
           path: "/login",
         });
         alert(
-          `Tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`
+            `tu viens de recevoir un mail de confirmation,
+          une fois confirme tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`
         );
       }
     },

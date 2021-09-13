@@ -17,7 +17,7 @@
             >
             <v-card-text>
               <h3>📩 {{ user.email }}</h3>
-              <h3>📞 {{ user.phone }}</h3>
+              <h3>📞 +33 {{ user.phone }}</h3>
               <h3>😎 {{ user.charisma || 0 }} charisme</h3>
               <h3>❤️ {{ user.friends ? user.friends.length : 0 }} amis</h3>
               <h3>📆 {{ new Date(user.birthdate).toLocaleString() }}</h3>
