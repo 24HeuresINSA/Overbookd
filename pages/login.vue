@@ -19,16 +19,12 @@
           <h2>Patch note {{version}}</h2>
         </v-row>
         <v-row>
-          <h3>Avant derniere version avant le lancement de la BETA</h3>
           <h3>🤯 Rectification de bugs </h3>
           <ul>
-            <li>🥳 Overbookd est pret pour acceuillir les orga</li>
-            <li>📝 autocomplete des user</li>
-            <li>🥳 better display timetable form</li>
-            <li>🔨 fix des date de naissance</li>
-            <li>📝 changement des surnom par les admin</li>
-            <li>🔎 ajout de filters pour les humains</li>
-            <li>🤑 gestion de virement (Beta)</li>
+            <li>📝 les FAs ont des id simple comme dans assomaker</li>
+            <li>🗑 fix de le boutton delete des horaires dans les FA/FT</li>
+            <li>🔨 fix des validateur de FT</li>
+            <li>📸 fix de l'UI des horraires dans les FT FA</li>
           </ul>
         </v-row>
         <v-row>
