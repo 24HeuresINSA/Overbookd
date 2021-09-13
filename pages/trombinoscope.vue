@@ -1,15 +1,16 @@
 <template>
   <v-container style="display: flex; flex-wrap: wrap">
-    <v-card v-for="user in users" style="margin: 5px">
+    <v-card v-for="(user, i) in users" style="margin: 5px" v-bind:key="i">
       <v-img
-        v-if="user.pp"
-        :src="getPPUrl() + 'api/user/pp/' + user.pp"
+          v-if="user.pp"
+          :src="getPPUrl() + 'api/user/pp/' + user.pp"
       ></v-img>
       <v-card-title>{{
-        user.nickname
-          ? user.nickname
-          : `${user.firstname} ${user.lastname.toUpperCase()} `
-      }}</v-card-title>
+          user.nickname
+              ? user.nickname
+              : `${user.firstname} ${user.lastname.toUpperCase()} `
+        }}
+      </v-card-title>
       <v-card-subtitle>
         <over-chips :roles="user.team"></over-chips>
       </v-card-subtitle>

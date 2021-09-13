@@ -3,7 +3,7 @@
     <h2>Mes disponibilités</h2>
     <p>{{ detailMessage }}</p>
 
-    <br />
+    <br/>
     <h2>Mes point de charisme: {{ userCharisma }}/{{ maxCharisma }}</h2>
     <v-progress-linear height="25" :value="(userCharisma / maxCharisma) * 100">
       <template v-slot:default="{ value }">
@@ -11,33 +11,42 @@
       </template>
     </v-progress-linear>
 
-    <template v-for="availability of availabilities">
-      <br />
-      <h3>{{ availability.name }}</h3>
-      <p>{{ availability.description }}</p>
-      <v-btn v-if="hasEditRole" @click="openDayDialog(availability)"
-        >ajouter une journe</v-btn
+    <template v-for="(availability, index) in availabilities">
+      <br v-bind:key="index"/>
+      <h3 v-bind:key="index">{{ availability.name }}</h3>
+      <p v-bind:key="index">{{ availability.description }}</p>
+      <v-btn
+          v-if="hasEditRole"
+          @click="openDayDialog(availability)"
+          v-bind:key="index"
+      >ajouter une journe
+      </v-btn
       >
-      <div style="display: flex">
-        <v-container v-for="day of availability.days">
+      <div style="display: flex" v-bind:key="index">
+        <v-container
+            v-for="(day, index) in availability.days"
+            v-bind:key="index"
+        >
           <v-card width="400px" v-if="hasRole(availability.role)">
             <v-card-title>{{
-              new Date(day.date).toLocaleString()
-            }}</v-card-title>
+                new Date(day.date).toLocaleString()
+              }}
+            </v-card-title>
             <v-card-text>
               <v-list>
-                <v-list-item v-for="frame of day.frames">
+                <v-list-item v-for="(frame, i2) in day.frames" v-bind:key="i2">
                   <v-list-item-content>
                     <h4>{{ frame.start }} ➡️ {{ frame.end }}</h4>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-list-item-action-text
-                      style="display: flex; align-items: center"
+                        style="display: flex; align-items: center"
                     >
                       <v-chip
-                        style="margin-right: 10px"
-                        v-if="frame.charisma"
-                        >{{ frame.charisma }}</v-chip
+                          style="margin-right: 10px"
+                          v-if="frame.charisma"
+                      >{{ frame.charisma }}
+                      </v-chip
                       >
                       <v-switch v-model="frame.isSelected"></v-switch>
                     </v-list-item-action-text>

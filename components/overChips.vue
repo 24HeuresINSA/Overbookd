@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-chip-group>
-      <v-chip v-for="role in mRoles" :color="role.color">
+      <v-chip v-for="(role, i) in mRoles" v-bind:key="i" :color="role.color">
         <v-icon left color="white">
           {{ role.icon }}
         </v-icon>

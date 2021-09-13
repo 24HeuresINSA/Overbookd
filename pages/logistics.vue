@@ -9,11 +9,17 @@
     ></v-select>
 
     <v-data-table :headers="headers" :items="selectedEquipments"
-      ><template v-slot:item.action="item">
+    >
+      <template v-slot:item.action>
         <v-btn text>FT</v-btn>
-        <v-btn color="green" icon><v-icon>mdi-check</v-icon></v-btn>
-        <v-btn color="red" icon><v-icon>mdi-close</v-icon></v-btn>
-      </template></v-data-table
+        <v-btn color="green" icon>
+          <v-icon>mdi-check</v-icon>
+        </v-btn>
+        <v-btn color="red" icon>
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table
     >
   </v-container>
 </template>

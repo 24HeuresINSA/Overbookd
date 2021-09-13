@@ -8,8 +8,9 @@
       <h2 v-if="FA.count">FA: {{ FA.count }}</h2>
       <h3>{{ FA.status ? FA.status : "draft" }}</h3>
       <v-icon
-        v-for="validator of validators"
-        :color="validator.status ? color[validator.status] : 'grey'"
+          v-for="(validator, i) of validators"
+          v-bind:key="i"
+          :color="validator.status ? color[validator.status] : 'grey'"
       >
         {{ validator.icon }}
       </v-icon>
@@ -377,7 +378,6 @@ export default {
       if (mValidator) {
         return mValidator.icon;
       }
-      return;
     },
 
     allowedMinutes: (m) => m % 15 === 0,
@@ -509,11 +509,4 @@ export default {
 </script>
 
 <style scoped>
-.fab {
-  position: fixed;
-  z-index: 5;
-  right: 10px;
-  bottom: 10px;
-  color: white;
-}
 </style>

@@ -27,12 +27,12 @@
             :items="getConfig('teams').map((e) => e.name)"
             v-model="filters.teams"
           >
-            <template v-slot:selection="{ attrs, item, select, selected }">
+            <template v-slot:selection="{ attrs, item, selected }">
               <v-chip
-                v-bind="attrs"
-                :input-value="selected"
-                close
-                :color="getRoleMetadata(item).color"
+                  v-bind="attrs"
+                  :input-value="selected"
+                  close
+                  :color="getRoleMetadata(item).color"
               >
                 <v-icon left color="white">
                   {{ getRoleMetadata(item).icon }}
@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import { getConfig, getUser, hasRole } from "../common/role";
+import {getConfig, hasRole} from "../common/role";
 
 export default {
   name: "assignment",
@@ -274,8 +274,10 @@ export default {
     selectedAssignments() {
       if (this.selectedAssignmentsIndex) {
         return this.selectedAssignmentsIndex.map(
-          (i) => this.filteredSchedules[i]
+            (i) => this.filteredSchedules[i]
         );
+      } else {
+        return [];
       }
     },
 
