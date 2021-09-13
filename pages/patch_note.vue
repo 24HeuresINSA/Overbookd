@@ -2,6 +2,15 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.14</h2>
+    <h3>🤯 Rectification de bugs </h3>
+    <ul>
+      <li>📝 les FAs ont des id simple comme dans assomaker</li>
+      <li>🗑 fix de le boutton delete des horaires dans les FA/FT</li>
+      <li>🔨 fix des validateur de FT</li>
+      <li>📸 fix de l'UI des horraires dans les FT FA</li>
+    </ul>
+
     <h2>Patch note 0.13</h2>
     <h3>🤯 Rectification de bugs </h3>
     <ul>

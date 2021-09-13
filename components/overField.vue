@@ -45,13 +45,13 @@
           @change="onChange"
       ></v-date-picker>
     </div>
-    <v-select
+    <v-autocomplete
         v-else-if="field.type === 'user'"
         :label="field.label ? field.label : field.key"
         v-model="field.value"
         :items="users"
         @change="onChange"
-    ></v-select>
+    ></v-autocomplete>
 
     <v-time-picker
         v-if="field.type === 'time'"
