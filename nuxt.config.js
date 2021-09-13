@@ -1,5 +1,5 @@
 import colors from "vuetify/es5/util/colors";
-import { KEYCLOAK, BACKEND } from "./config/url.json";
+import {BACKEND, KEYCLOAK} from "./config/url.json";
 
 const BASE_URL = process.env.BASE_URL || ( process.env.NODE_ENV === 'dev' ? KEYCLOAK.DEV_BASE_URL : KEYCLOAK.BASE_URL );
 
@@ -101,7 +101,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: BASE_URL + `/api`,
+    baseURL: process.env.NODE_ENV === 'dev' ? BACKEND.DEV_BASE_URL : BACKEND.BASE_URL,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
