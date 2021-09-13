@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "ALPHA 0.14.0",
+  "version": "ALPHA 0.14.1",
   "private": true,
   "scripts": {
     "dev": "nuxt",
