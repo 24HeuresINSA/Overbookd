@@ -1,6 +1,8 @@
 import colors from "vuetify/es5/util/colors";
 import { KEYCLOAK, BACKEND } from "./config/url.json";
 
+const BASE_URL = process.env.BASE_URL || ( process.env.NODE_ENV === 'dev' ? KEYCLOAK.DEV_BASE_URL : KEYCLOAK.BASE_URL );
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -36,7 +38,7 @@ export default {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
-    "@nuxtjs/color-mode",
+    '@nuxtjs/color-mode',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -48,18 +50,19 @@ export default {
     "@nuxtjs/auth-next",
   ],
 
+
   auth: {
     strategies: {
       keycloak: {
         scheme: "~/schemes/keycloak",
         endpoints: {
-          authorization: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH,
-          token: KEYCLOAK.BASE_URL + KEYCLOAK.TOKEN,
-          userInfo: KEYCLOAK.BASE_URL + KEYCLOAK.USER_INFO,
+          authorization: BASE_URL + KEYCLOAK.AUTH,
+          token: BASE_URL + KEYCLOAK.TOKEN,
+          userInfo: BASE_URL + KEYCLOAK.USER_INFO,
           user: false,
-          refresh: { url: KEYCLOAK.BASE_URL + KEYCLOAK.AUTH, method: "post" },
+          refresh: { url: BASE_URL + KEYCLOAK.AUTH, method: "post" },
           logout:
-            KEYCLOAK.BASE_URL +
+            BASE_URL +
             KEYCLOAK.LOGOUT +
             "?redirect_uri=" +
             encodeURIComponent(KEYCLOAK.REDIRECT_URI),
@@ -93,15 +96,12 @@ export default {
   },
 
   router: {
-    middleware: ["auth", "config", "user"],
+    middleware: ["auth" , "config", "user"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL:
-      process.env.NODE_ENV === "development"
-        ? BACKEND.DEV_BASE_URL
-        : BACKEND.BASE_URL,
+    baseURL: BASE_URL + `/api`,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
