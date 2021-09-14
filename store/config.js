@@ -1,9 +1,9 @@
 export const config = () => ({
-    data: [],
-})
+  data: [],
+});
 
 export const mutations = {
-    setConfig(config, data) {
-        config.data = data;
-    }
-}
+  setConfig(config, data) {
+    config.data = data;
+  },
+};

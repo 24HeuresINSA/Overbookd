@@ -5,152 +5,172 @@
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 
-describe('User lifecycle', () => {
-    it('signup user', ()=> {
-        cy.visit('http://localhost:3000/login');
-        cy.contains('signup').click()
-        cy.url()
-            .should('include', 'signup')
+describe("User lifecycle", () => {
+  it("signup user", () => {
+    cy.visit("http://localhost:3000/login");
+    cy.contains("signup").click();
+    cy.url().should("include", "signup");
 
-        // fill in form
-        cy.get('[id=input-19]').type('test')
-        cy.get('[id=input-23]').type('user')
+    // fill in form
+    cy.get("[id=input-19]").type("test");
+    cy.get("[id=input-23]").type("user");
 
-        cy.get('[id=input-31]').type('user.test1')
-        cy.get('[id=input-35]').type('user.test1')
+    cy.get("[id=input-31]").type("user.test1");
+    cy.get("[id=input-35]").type("user.test1");
 
-        cy.get('[id=input-65]').type('user.test@gmail.com')
+    cy.get("[id=input-65]").type("user.test@gmail.com");
+  });
 
+  it("login user and create FA", () => {
+    cy.visit("http://localhost:3000/login");
 
-    });
+    cy.get("[id=input-20]").type("hugo.courte");
+    cy.get("[id=input-23]").type("jesuistropcon");
 
-    it('login user and create FA', ()=> {
-        cy.visit('http://localhost:3000/login');
+    cy.contains("login").click();
 
-        cy.get('[id=input-20]').type('hugo.courte');
-        cy.get('[id=input-23]').type('jesuistropcon');
+    cy.contains("Bonsoir hugo");
 
-        cy.contains('login').click();
+    cy.visit("http://localhost:3000/fa");
+    cy.contains("Fiche Anim 🎉");
 
-        cy.contains('Bonsoir hugo');
+    cy.visit("http://localhost:3000/fa/newFA");
+    cy.get("[id=input-81]").type("FA test");
 
+    cy.get(
+      "#app > div > main > div > div > div > div.v-data-table.v-data-table--has-top.v-data-table--has-bottom.theme--light > header > div > button"
+    ).click();
 
-        cy.visit('http://localhost:3000/fa');
-        cy.contains('Fiche Anim 🎉')
+    cy.get("#input-234").type("5");
+    cy.get(
+      "#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button"
+    ).click();
 
-        cy.visit('http://localhost:3000/fa/newFA');
-        cy.get('[id=input-81]').type('FA test');
+    cy.get(
+      "#app > div.v-application--wrap > main > div > div > div > div:nth-child(20) > button.fab.v-btn.v-btn--is-elevated.v-btn--has-bg.theme--light.v-size--default.primary"
+    ).click();
 
-        cy.get('#app > div > main > div > div > div > div.v-data-table.v-data-table--has-top.v-data-table--has-bottom.theme--light > header > div > button').click();
+    // FA saved
+    cy.visit("http://localhost:3000/fa");
+    cy.contains("FA test");
 
-        cy.get('#input-234').type('5');
-        cy.get('#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button').click();
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.get(
+      "#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(2)"
+    ).click();
+    cy.get(
+      "#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button"
+    ).click();
 
-        cy.get('#app > div.v-application--wrap > main > div > div > div > div:nth-child(20) > button.fab.v-btn.v-btn--is-elevated.v-btn--has-bg.theme--light.v-size--default.primary').click()
+    cy.contains("submitted");
+    // FA submitted
+  });
 
-        // FA saved
-        cy.visit('http://localhost:3000/fa');
-        cy.contains('FA test');
+  it("validate FA as secu", () => {
+    cy.visit("http://localhost:3000/login");
 
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.get('#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(2)').click();
-        cy.get('#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button').click();
+    cy.get("[id=input-20]").type("corentin.mammi");
+    cy.get("[id=input-23]").type("123456789{enter}");
 
-        cy.contains('submitted');
-        // FA submitted
-    });
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.wait(1000);
 
-    it('validate FA as secu', () => {
-        cy.visit('http://localhost:3000/login');
+    cy.get(
+      "#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(3)"
+    ).click(); // validated
+  });
 
-        cy.get('[id=input-20]').type('corentin.mammi');
-        cy.get('[id=input-23]').type('123456789{enter}');
+  it("refuse FA as log", () => {
+    cy.visit("http://localhost:3000/login");
 
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.wait(1000)
+    cy.get("[id=input-20]").type("hugo.courte");
+    cy.get("[id=input-23]").type("jesuistropcon{enter}");
 
-        cy.get('#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(3)').click(); // validated
-    })
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.wait(1000);
 
-    it('refuse FA as log', ()=> {
-        cy.visit('http://localhost:3000/login');
+    cy.get(
+      "#app > div > main > div > div > div > div:nth-child(20) > button.fab.v-btn.v-btn--is-elevated.v-btn--has-bg.theme--light.v-size--default.red"
+    ).click();
+    cy.get("#input-229").type("refuse by bot");
 
-        cy.get('[id=input-20]').type('hugo.courte');
-        cy.get('[id=input-23]').type('jesuistropcon{enter}');
+    cy.get(
+      "#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button"
+    ).click();
+  });
 
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.wait(1000)
+  it("accept FA as humain", () => {
+    cy.visit("http://localhost:3000/login");
 
-        cy.get('#app > div > main > div > div > div > div:nth-child(20) > button.fab.v-btn.v-btn--is-elevated.v-btn--has-bg.theme--light.v-size--default.red').click();
-        cy.get('#input-229').type('refuse by bot');
+    cy.get("[id=input-20]").type("alexis.borel");
+    cy.get("[id=input-23]").type("mot de passe{enter}");
 
-        cy.get('#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button').click();
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.wait(1000);
 
-    })
+    cy.get(
+      "#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(3)"
+    ).click();
+  });
 
-    it('accept FA as humain', ()=> {
-        cy.visit('http://localhost:3000/login');
+  it("fix FA equipments", () => {
+    cy.visit("http://localhost:3000/login");
 
-        cy.get('[id=input-20]').type('alexis.borel');
-        cy.get('[id=input-23]').type('mot de passe{enter}');
+    cy.get("[id=input-20]").type("hugo.courte");
+    cy.get("[id=input-23]").type("jesuistropcon");
 
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.wait(1000)
+    cy.contains("login").click();
 
-        cy.get('#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(3)').click();
-    })
+    cy.contains("Bonsoir hugo");
 
-    it('fix FA equipments', ()=> {
-        cy.visit('http://localhost:3000/login');
+    cy.visit("http://localhost:3000/fa");
+    cy.contains("Fiche Anim 🎉");
 
-        cy.get('[id=input-20]').type('hugo.courte');
-        cy.get('[id=input-23]').type('jesuistropcon');
+    cy.visit("http://localhost:3000/fa/FA%20test");
 
-        cy.contains('login').click();
+    cy.get(
+      "#app > div > main > div > div > div > div.v-data-table.v-data-table--has-top.v-data-table--has-bottom.theme--light > header > div > button"
+    ).click();
 
-        cy.contains('Bonsoir hugo');
+    cy.get("#input-246").type("3");
+    cy.get(
+      "#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button"
+    ).click();
 
+    cy.get(
+      "#app > div.v-application--wrap > main > div > div > div > div:nth-child(20) > button.fab.v-btn.v-btn--is-elevated.v-btn--has-bg.theme--light.v-size--default.primary"
+    ).click();
 
-        cy.visit('http://localhost:3000/fa');
-        cy.contains('Fiche Anim 🎉')
+    // FA saved
+    cy.visit("http://localhost:3000/fa");
+    cy.contains("FA test");
 
-        cy.visit('http://localhost:3000/fa/FA%20test');
+    cy.wait(1000);
+    cy.get(
+      "#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button"
+    ).click();
 
-        cy.get('#app > div > main > div > div > div > div.v-data-table.v-data-table--has-top.v-data-table--has-bottom.theme--light > header > div > button').click();
+    cy.contains("submitted");
+    // FA submitted
+  });
 
-        cy.get('#input-246').type('3');
-        cy.get('#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button').click();
+  it("accept FA as log", () => {
+    cy.visit("http://localhost:3000/login");
 
-        cy.get('#app > div.v-application--wrap > main > div > div > div > div:nth-child(20) > button.fab.v-btn.v-btn--is-elevated.v-btn--has-bg.theme--light.v-size--default.primary').click()
+    cy.get("[id=input-20]").type("hugo.courte");
+    cy.get("[id=input-23]").type("jesuistropcon{enter}");
 
-        // FA saved
-        cy.visit('http://localhost:3000/fa');
-        cy.contains('FA test');
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.wait(1000);
 
-        cy.wait(1000)
-        cy.get('#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > button').click();
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.wait(1000);
 
-        cy.contains('submitted');
-        // FA submitted
-    });
+    cy.get(
+      "#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(3)"
+    ).click();
 
-    it('accept FA as log', ()=> {
-        cy.visit('http://localhost:3000/login');
-
-        cy.get('[id=input-20]').type('hugo.courte');
-        cy.get('[id=input-23]').type('jesuistropcon{enter}');
-
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.wait(1000)
-
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.wait(1000)
-
-        cy.get('#app > div > main > div > div > div > div:nth-child(20) > button:nth-child(3)').click();
-
-        cy.visit('http://localhost:3000/fa/FA%20test');
-        cy.contains('validated')
-    })
-
-
-})
+    cy.visit("http://localhost:3000/fa/FA%20test");
+    cy.contains("validated");
+  });
+});

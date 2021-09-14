@@ -1,31 +1,31 @@
 <template>
   <v-container>
     <v-chip-group>
-      <v-chip v-for="role in mRoles" :color="role.color">
+      <v-chip v-for="(role, i) in mRoles" v-bind:key="i" :color="role.color">
         <v-icon left color="white">
-          {{role.icon}}
+          {{ role.icon }}
         </v-icon>
-        <a style="color: white">{{role.name}}</a>
+        <a style="color: white">{{ role.name }}</a>
       </v-chip>
     </v-chip-group>
   </v-container>
 </template>
 
 <script>
-import {getConfig} from "../common/role";
+import { getConfig } from "../common/role";
 
 export default {
   name: "overChips",
-  props: ['roles'],
+  props: ["roles"],
 
-  computed:{
-    mRoles(){
-      return getConfig(this, 'teams').filter(team => this.roles.includes(team.name))
-    }
-  }
-}
+  computed: {
+    mRoles() {
+      return getConfig(this, "teams").filter((team) =>
+        this.roles.includes(team.name)
+      );
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

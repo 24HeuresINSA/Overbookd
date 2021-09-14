@@ -10,26 +10,28 @@
           ></v-img>
         </v-row>
         <v-row>
-          <h2 style="right: -40%; position: relative; color: red; z-index: 20">{{version}}</h2>
+          <h2 style="right: -40%; position: relative; color: red; z-index: 20">
+            {{ version }}
+          </h2>
         </v-row>
         <v-row>
           <v-img src="img/memes/home_meme.jpg"></v-img>
         </v-row>
         <v-row>
-          <h2>Patch note {{version}}</h2>
+          <h2>Patch note {{ version }}</h2>
         </v-row>
         <v-row>
-          <h3>🤯 Rectification de bugs </h3>
+          <h3>🤯 Rectification de bugs</h3>
           <ul>
             <li>📝 les FAs ont des id simple comme dans assomaker</li>
             <li>🗑 fix de le boutton delete des horaires dans les FA/FT</li>
             <li>🔨 fix des validateur de FT</li>
             <li>📸 fix de l'UI des horraires dans les FT FA</li>
+            <li>💻 lint du projet</li>
+
           </ul>
         </v-row>
-        <v-row>
-
-        </v-row>
+        <v-row> </v-row>
         <v-row>
           <v-text-field
             v-model="credentials.username"
@@ -68,12 +70,12 @@
 
 <script>
 const REDIRECT_URL = "/"; // TODO change this to eventSelector page
-const {version} = require('../package.json')
+const { version } = require("../package.json");
 
 export default {
   name: "login",
   auth: false,
-  layout: 'none',
+  layout: "none",
 
   data: () => ({
     credentials: {
@@ -101,8 +103,8 @@ export default {
         await this.$router.push({
           path: REDIRECT_URL,
         }); // redirect to homepage
-        const audio = new Audio('audio/jaune.m4a');
-        await audio.play()
+        const audio = new Audio("audio/jaune.m4a");
+        await audio.play();
       } catch (e) {
         if (e.response.status === 401) {
           // wrong password or username

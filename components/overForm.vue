@@ -1,10 +1,10 @@
 <template>
   <div>
     <over-field
-        v-for="field in fields"
-        :key="field.label"
-        :field="field"
-        @value="onValueChange"
+      v-for="field in fields"
+      :key="field.label"
+      :field="field"
+      @value="onValueChange"
     >
     </over-field>
   </div>
@@ -15,39 +15,36 @@ import OverField from "./overField";
 
 export default {
   name: "over-form",
-  components: {OverField},
+  components: { OverField },
   props: ["fields"],
 
-  data(){
+  data() {
     return {
       compiledForm: {},
-    }
+    };
   },
 
-  mounted() {
-  },
+  mounted() {},
 
   methods: {
-    onValueChange({key, value}) {
+    onValueChange({ key, value }) {
       this.compiledForm[key] = value;
       let isValid = true;
-      this.fields.forEach(field => {
-        if(field.value){
+      this.fields.forEach((field) => {
+        if (field.value) {
           this.compiledForm[field.key] = field.value;
         } else {
-          if(field.isRequired === true){
+          if (field.isRequired === true) {
             isValid = false;
             // console.log('field ' + field.key + ' is required')
           }
         }
-      })
+      });
       this.compiledForm.isValid = isValid;
-      this.$emit('form-change', this.compiledForm)
-    }
-  }
-}
+      this.$emit("form-change", this.compiledForm);
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

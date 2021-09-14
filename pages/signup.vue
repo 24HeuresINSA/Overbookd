@@ -15,60 +15,58 @@ import OverForm from "../components/overForm";
 
 export default {
   name: "signup",
-  components: {OverForm},
+  components: { OverForm },
   auth: false,
-  layout: 'none',
+  layout: "none",
 
-  data(){
+  data() {
     return {
-      signupForm : undefined,
-      compiledForm : undefined,
-    }
+      signupForm: undefined,
+      compiledForm: undefined,
+    };
   },
 
-  async mounted(){
+  async mounted() {
     // fetch from API to check that sign ups are open
-    const isSignupOpen = this.getConfig('isSignupOpen');
-    if(!isSignupOpen){
-      alert(this.getConfig('fb_signup_closed'));
+    const isSignupOpen = this.getConfig("isSignupOpen");
+    if (!isSignupOpen) {
+      alert(this.getConfig("fb_signup_closed"));
       await this.$router.push({
-        path: '/login',
-      })
+        path: "/login",
+      });
     } else {
-      this.signupForm = this.getConfig('signup_form');
-
+      this.signupForm = this.getConfig("signup_form");
     }
   },
 
   methods: {
-    getConfig(key){
-      return this.$store.state.config.data.data.find(e => e.key === key).value
+    getConfig(key) {
+      return this.$store.state.config.data.data.find((e) => e.key === key)
+        .value;
     },
 
-    onFormChange(form){
+    onFormChange(form) {
       this.compiledForm = form;
     },
 
-    submitForm(){
-      if(this.compiledForm.password !== this.compiledForm.password2){
-        alert("t'as pas mis le meme mpd :P")
-      } else if (!this.compiledForm.isValid){
-        alert("les champs avec * sont OBLIGATOIRS XD ")
+    submitForm() {
+      if (this.compiledForm.password !== this.compiledForm.password2) {
+        alert("t'as pas mis le meme mpd :P");
+      } else if (!this.compiledForm.isValid) {
+        alert("les champs avec * sont OBLIGATOIRS XD ");
       } else {
-        this.$axios.post('/user',this.compiledForm);
+        this.$axios.post("/user", this.compiledForm);
         this.$router.push({
-          path: '/login',
-        })
-        alert(`Tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`)
+          path: "/login",
+        });
+        alert(
+            `tu viens de recevoir un mail de confirmation,
+          une fois confirme tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`
+        );
       }
-
-
-    }
-  }
-
-}
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
