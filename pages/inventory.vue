@@ -2,11 +2,9 @@
   <div>
     <v-data-table :headers="headers" :items="inventory">
       <template v-slot:[`item.action`]="{ item }">
-        <v-btn v-if="hasRole('log')" fab @click="edit(item)"
-        >
+        <v-btn v-if="hasRole('log')" fab @click="edit(item)">
           <v-icon>mdi-circle-edit-outline</v-icon>
-        </v-btn
-        >
+        </v-btn>
       </template>
 
       <template v-slot:[`item.borrowedCount`]="{ item }">

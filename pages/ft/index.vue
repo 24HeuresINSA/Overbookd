@@ -9,8 +9,7 @@
         <v-btn style="margin: 5px" icon small :to="'/ft/' + row.item._id">
           >
           <v-icon>mdi-text-search</v-icon>
-        </v-btn
-        >
+        </v-btn>
         <v-btn
             icon
             small
@@ -20,8 +19,7 @@
           "
         >
           <v-icon>mdi-trash-can</v-icon>
-        </v-btn
-        >
+        </v-btn>
       </template>
     </v-data-table>
 

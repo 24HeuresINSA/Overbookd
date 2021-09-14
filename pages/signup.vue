@@ -60,7 +60,7 @@ export default {
           path: "/login",
         });
         alert(
-            `tu viens de recevoir un mail de confirmation,
+          `tu viens de recevoir un mail de confirmation,
           une fois confirme tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`
         );
       }

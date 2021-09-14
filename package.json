@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "ALPHA 0.14.1",
+  "version": "ALPHA 0.15.0",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -16,6 +16,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "@types/jwt-decode": "^3.1.0",
     "core-js": "^3.8.3",
+    "fuse.js": "^6.4.6",
     "jwt-decode": "^3.1.2",
     "nuxt": "^2.14.12",
     "qs": "^6.9.6",
