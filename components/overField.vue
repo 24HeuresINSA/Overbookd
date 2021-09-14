@@ -3,8 +3,17 @@
     <v-text-field
         v-model="mField.value"
         v-if="mField.type === 'string' || mField.type === undefined"
-        :rules="this.field.regex ?
-        [v => (new RegExp(this.field.regex)).test(v) || (this.field.error ? this.field.regex : `il y'a un probleme avec ce champ`)] : []"
+        :rules="
+        this.field.regex
+          ? [
+              (v) =>
+                new RegExp(this.field.regex).test(v) ||
+                (this.field.errorMessage
+                  ? this.field.errorMessage
+                  : `il y'a un probleme avec ce champ`),
+            ]
+          : []
+      "
         :type="mField.option"
         :counter="mField.counter"
         :label="

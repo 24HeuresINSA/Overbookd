@@ -3,10 +3,13 @@
     <v-form>
       <v-container class="form-container">
         <v-row>
+          <v-img src="img/memes/home_meme.jpg"></v-img>
+        </v-row>
+        <v-row>
           <v-img
-            :src="'img/logo/' + overbookd_logo"
-            alt="overbookd logo"
-            class="logo"
+              :src="'img/logo/' + overbookd_logo"
+              alt="overbookd logo"
+              class="logo"
           ></v-img>
         </v-row>
         <v-row>
@@ -14,24 +17,6 @@
             {{ version }}
           </h2>
         </v-row>
-        <v-row>
-          <v-img src="img/memes/home_meme.jpg"></v-img>
-        </v-row>
-        <v-row>
-          <h2>Patch note {{ version }}</h2>
-        </v-row>
-        <v-row>
-          <h3>🤯 Rectification de bugs</h3>
-          <ul>
-            <li>📝 les FAs ont des id simple comme dans assomaker</li>
-            <li>🗑 fix de le boutton delete des horaires dans les FA/FT</li>
-            <li>🔨 fix des validateur de FT</li>
-            <li>📸 fix de l'UI des horraires dans les FT FA</li>
-            <li>💻 lint du projet</li>
-
-          </ul>
-        </v-row>
-        <v-row> </v-row>
         <v-row>
           <v-text-field
             v-model="credentials.username"

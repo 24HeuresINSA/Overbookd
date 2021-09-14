@@ -50,14 +50,20 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>mdi-minus</v-icon>
       </v-btn>
-      <v-toolbar-title @click="clickOnTitle()" v-text="title" />
+      <v-toolbar-title @click="clickOnTitle()" v-text="title"/>
 
       <v-toolbar-title
-        style="color: red; margin-left: 4px; font-weight: bold"
-        v-text="version"
+          style="color: red; margin-left: 4px; font-weight: bold"
+          v-text="version"
       />
-      <v-spacer />
-      <v-btn text @click="isDialogOpen = true"> 🐞 Signaler un bug </v-btn>
+      <v-spacer/>
+      <v-btn
+          text
+          href="https://gitlab.com/24-heures-insa/overbookd/frontend/-/issues/new#"
+      >
+        🐞 Signaler un bug
+      </v-btn
+      >
       <v-btn text @click="logout()"> DÉCONNEXION</v-btn>
     </v-app-bar>
     <v-main>
@@ -79,6 +85,7 @@
         <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>
         <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
         <v-card-text>
+          <v-text-field label="titer" v-model="newRequest.title"></v-text-field>
           <v-switch
             label="nouvelle feature request ?"
             v-model="newRequest.isFeatureRequest"
@@ -89,19 +96,27 @@
             v-model="newRequest.scope"
           ></v-select>
           <v-select
-            :items="priorities"
-            label="priorite"
-            v-model="newRequest.priority"
+              :items="priorities"
+              label="priorite"
+              v-model="newRequest.priority"
           ></v-select>
           <v-textarea
-            label="desciption"
-            v-model="newRequest.description"
+              label="desciption"
+              v-model="newRequest.description"
           ></v-textarea>
-          <v-textarea
-            label="etape pour reproduire le bug"
-            v-if="!newRequest.isFeatureRequest"
-            v-model="newRequest.steps[0]"
-          ></v-textarea>
+          <template v-if="!newRequest.isFeatureRequest">
+            <v-list>
+              <v-list-item
+                  v-for="(step, index) in newRequest.steps"
+                  :key="index"
+              >
+                <v-list-item-content>{{ step }}</v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-text-field label="etape" v-model="stepDetail"></v-text-field>
+            <v-btn @click="addStep()">Ajouter</v-btn>
+          </template>
+
           <v-file-input label="capture d'ecran" v-model="file"></v-file-input>
         </v-card-text>
         <v-card-actions>
@@ -162,8 +177,9 @@ export default {
         author: getUser(this).lastname,
         repo: "24-heures-insa/issue-web-service",
         git_platform: "gitlab",
-        steps: [""],
+        steps: [],
       },
+      stepDetail: undefined,
       items: [
         {
           icon: "mdi-apps",
@@ -265,6 +281,13 @@ export default {
     getRandomAuthor() {
       const items = this.AUTHORS;
       return items[Math.floor(Math.random() * items.length)];
+    },
+
+    addStep() {
+      this.newRequest.steps.push(
+          `${this.newRequest.steps.length + 1} - ${this.stepDetail}`
+      );
+      this.stepDetail = "";
     },
 
     hasRole(role) {

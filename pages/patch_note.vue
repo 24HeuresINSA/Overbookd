@@ -2,6 +2,18 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note 0.15</h2>
+    <h3>🤯 Rectification de bugs</h3>
+    <ul>
+      <li>🔒 require robust password</li>
+      <li>💻 lint project</li>
+      <li>🐞 signalisation de bug rederige vers le gitlab</li>
+      <li>❤️ autocomplete des amis</li>
+      <li>💰 recharge des compte perso s'affiche mieux</li>
+      <li>🐞 fix de bug</li>
+      <li>📝 fix spelling errors</li>
+    </ul>
+
     <h2>Patch note 0.14</h2>
     <h3>🤯 Rectification de bugs</h3>
     <ul>

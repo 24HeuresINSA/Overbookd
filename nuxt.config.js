@@ -1,7 +1,6 @@
 import colors from "vuetify/es5/util/colors";
 import {KEYCLOAK} from "./config/url.json";
 
-
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -37,7 +36,7 @@ export default {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
-    '@nuxtjs/color-mode',
+    "@nuxtjs/color-mode",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -49,7 +48,6 @@ export default {
     "@nuxtjs/auth-next",
   ],
 
-
   auth: {
     strategies: {
       keycloak: {
@@ -59,7 +57,10 @@ export default {
           token: process.env.BASE_URL_KEYCLOAK + KEYCLOAK.TOKEN,
           userInfo: process.env.BASE_URL_KEYCLOAK + KEYCLOAK.USER_INFO,
           user: false,
-          refresh: {url: process.env.BASE_URL_KEYCLOAK + KEYCLOAK.AUTH, method: "post"},
+          refresh: {
+            url: process.env.BASE_URL_KEYCLOAK + KEYCLOAK.AUTH,
+            method: "post",
+          },
           logout:
               process.env.BASE_URL_KEYCLOAK +
               KEYCLOAK.LOGOUT +
@@ -95,7 +96,7 @@ export default {
   },
 
   router: {
-    middleware: ["auth" , "config", "user"],
+    middleware: ["auth", "config", "user"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
