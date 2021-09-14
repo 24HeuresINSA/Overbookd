@@ -11,7 +11,8 @@ containerize:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
   script:
     - docker buildx create --use
-    - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd/frontend:$IMAGE_TAG .
+    - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd/frontend:$IMAGE_TAG --build-arg BASE_URL=$BASE_URL --build-arg BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK .
   only:
     - master
-    - ci/cd
+    - pre-prod
+    - develop
