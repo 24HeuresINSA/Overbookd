@@ -1,8 +1,16 @@
 FROM node:15.3.0-alpine3.10
 
 WORKDIR /Overbookd-frontend
+ARG BASE_URL_KEYCLOAK
+ARG BASE_URL
+
+ENV BASE_URL=$BASE_URL
+ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
 
 COPY . .
+
+RUN echo $BASE_URL_KEYCLOAK\
+    && echo $BASE_URL
 
 RUN npm ci\
     && npm run build\
