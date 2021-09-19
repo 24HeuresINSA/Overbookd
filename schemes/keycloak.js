@@ -1,6 +1,6 @@
-import {RefreshScheme} from "~auth/runtime";
+import { RefreshScheme } from "~auth/runtime";
 import axios from "axios";
-import {KEYCLOAK} from "../config/url.json";
+import { KEYCLOAK } from "../config/url.json";
 import qs from "qs";
 
 export default class KeycloakScheme extends RefreshScheme {
@@ -22,8 +22,8 @@ export default class KeycloakScheme extends RefreshScheme {
     });
 
     const response = await axios.post(
-        "http://localhost:8080/" + KEYCLOAK.TOKEN,
-        data
+      process.env.BASE_URL_KEYCLOAK + KEYCLOAK.TOKEN,
+      data
     );
     if (response.status !== 200 && response.data === null) {
       // wrong credentials
@@ -31,11 +31,11 @@ export default class KeycloakScheme extends RefreshScheme {
     }
     // correct credentials
     await this.setUserToken(
-        response.data.access_token,
-        response.data.refresh_token
+      response.data.access_token,
+      response.data.refresh_token
     );
     this.requestHandler.initializeRequestInterceptor(
-        this.options.endpoints.refresh.url
+      this.options.endpoints.refresh.url
     );
     this.$auth.$storage.setState("loggedIn", true); // set state to let nuxt know user is logged in
   }

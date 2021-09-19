@@ -9,9 +9,6 @@ ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
 
 COPY . .
 
-RUN echo $BASE_URL_KEYCLOAK\
-    && echo $BASE_URL
-
 RUN npm ci\
     && npm run build\
     && find . -maxdepth 1 ! -name 'dist' -type f -exec rm -r {} +\
