@@ -1,7 +1,10 @@
 import colors from "vuetify/es5/util/colors";
-import {KEYCLOAK} from "./config/url.json";
+import { KEYCLOAK } from "./config/url.json";
 
 export default {
+  env: {
+    BASE_URL_KEYCLOAK: process.env.BASE_URL_KEYCLOAK,
+  },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
@@ -62,10 +65,10 @@ export default {
             method: "post",
           },
           logout:
-              process.env.BASE_URL_KEYCLOAK +
-              KEYCLOAK.LOGOUT +
-              "?redirect_uri=" +
-              encodeURIComponent(KEYCLOAK.REDIRECT_URI),
+            process.env.BASE_URL_KEYCLOAK +
+            KEYCLOAK.LOGOUT +
+            "?redirect_uri=" +
+            encodeURIComponent(KEYCLOAK.REDIRECT_URI),
         },
         token: {
           property: "access_token",
