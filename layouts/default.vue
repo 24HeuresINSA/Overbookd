@@ -59,7 +59,7 @@
       <v-spacer/>
       <v-btn
           text
-          href="https://gitlab.com/24-heures-insa/overbookd/frontend/-/issues/new#"
+          @click="isDialogOpen=true"
       >
         🐞 Signaler un bug
       </v-btn
@@ -82,47 +82,62 @@
           width="300px"
           style="left: 250px"
         ></v-img>
-        <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>
-        <v-card-subtitle>ou de nouvelle features</v-card-subtitle>
+        <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
-          <v-text-field label="titer" v-model="newRequest.title"></v-text-field>
-          <v-switch
-            label="nouvelle feature request ?"
-            v-model="newRequest.isFeatureRequest"
-          ></v-switch>
-          <v-select
-            :items="['hard', 'soft', 'bureau']"
-            label="scope"
-            v-model="newRequest.scope"
-          ></v-select>
-          <v-select
-              :items="priorities"
-              label="priorite"
-              v-model="newRequest.priority"
-          ></v-select>
-          <v-textarea
-              label="desciption"
-              v-model="newRequest.description"
-          ></v-textarea>
-          <template v-if="!newRequest.isFeatureRequest">
-            <v-list>
-              <v-list-item
-                  v-for="(step, index) in newRequest.steps"
-                  :key="index"
-              >
-                <v-list-item-content>{{ step }}</v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-text-field label="etape" v-model="stepDetail"></v-text-field>
-            <v-btn @click="addStep()">Ajouter</v-btn>
-          </template>
-
-          <v-file-input label="capture d'ecran" v-model="file"></v-file-input>
+          <h4>Pour signaler un bug veuiller envoyer un mail à
+            incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com de preference en anglais</h4>
         </v-card-text>
         <v-card-actions>
-          <v-btn text right @click="submitIssue()">submit</v-btn>
+          <v-btn @click="sendMail">envoyer le mail</v-btn>
         </v-card-actions>
       </v-card>
+      <!--      <v-card>-->
+      <!--        <v-img-->
+      <!--          src="img/memes/comsi_working.png"-->
+      <!--          width="300px"-->
+      <!--          style="left: 250px"-->
+      <!--        ></v-img>-->
+      <!--        <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>-->
+      <!--        <v-card-subtitle>ou de nouvelle features</v-card-subtitle>-->
+      <!--        <v-card-text>-->
+      <!--          <v-text-field label="titer" v-model="newRequest.title"></v-text-field>-->
+      <!--          <v-switch-->
+      <!--            label="nouvelle feature request ?"-->
+      <!--            v-model="newRequest.isFeatureRequest"-->
+      <!--          ></v-switch>-->
+      <!--          <v-select-->
+      <!--            :items="['hard', 'soft', 'bureau']"-->
+      <!--            label="scope"-->
+      <!--            v-model="newRequest.scope"-->
+      <!--          ></v-select>-->
+      <!--          <v-select-->
+      <!--              :items="priorities"-->
+      <!--              label="priorite"-->
+      <!--              v-model="newRequest.priority"-->
+      <!--          ></v-select>-->
+      <!--          <v-textarea-->
+      <!--              label="desciption"-->
+      <!--              v-model="newRequest.description"-->
+      <!--          ></v-textarea>-->
+      <!--          <template v-if="!newRequest.isFeatureRequest">-->
+      <!--            <v-list>-->
+      <!--              <v-list-item-->
+      <!--                  v-for="(step, index) in newRequest.steps"-->
+      <!--                  :key="index"-->
+      <!--              >-->
+      <!--                <v-list-item-content>{{ step }}</v-list-item-content>-->
+      <!--              </v-list-item>-->
+      <!--            </v-list>-->
+      <!--            <v-text-field label="etape" v-model="stepDetail"></v-text-field>-->
+      <!--            <v-btn @click="addStep()">Ajouter</v-btn>-->
+      <!--          </template>-->
+
+      <!--          <v-file-input label="capture d'ecran" v-model="file"></v-file-input>-->
+      <!--        </v-card-text>-->
+      <!--        <v-card-actions>-->
+      <!--          <v-btn text right @click="submitIssue()">submit</v-btn>-->
+      <!--        </v-card-actions>-->
+      <!--      </v-card>-->
     </v-dialog>
 
     <v-snackbar v-model="isSnackbarOpen" timeout="5000"
@@ -304,6 +319,30 @@ export default {
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage["theme"] = this.$vuetify.theme.dark;
+    },
+
+    sendMail() {
+      const BUG_TEMPLATE = `
+      # URL or page
+      <!---example: /fa or dashboard-humain--->
+
+      # Expected behavior
+      <!---What did you expected--->
+
+
+      # Actual behavior
+      <!---What is happening--->
+
+      # Steps to reproduce
+
+      - Step 1
+      - Step 2
+      ...
+
+      /label ~bug
+
+      `
+      window.open('mailto:incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com');
     },
 
     async clickOnTitle() {
