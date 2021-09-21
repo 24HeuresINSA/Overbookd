@@ -64,14 +64,14 @@
         🐞 Signaler un bug
       </v-btn
       >
-      <v-btn text @click="logout()"> DÉCONNEXION</v-btn>
+      <v-btn text @click="logout()">DÉCONNEXION</v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer :absolute="!fixed" app>
+    <v-footer :absolute="true" app>
       <span>fait avec ❤️ par {{ getRandomAuthor() }}</span>
     </v-footer>
 
@@ -88,7 +88,10 @@
             incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com de preference en anglais</h4>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="sendMail">envoyer le mail</v-btn>
+          <v-btn
+              href="mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A%3C%21---example%3A%20%2Ffa%20or%20dashboard-humain---%3E%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug">
+            envoyer le mail
+          </v-btn>
         </v-card-actions>
       </v-card>
       <!--      <v-card>-->
@@ -156,6 +159,8 @@ const AUTHORS = [
   "Christophe - piStoph 🍺",
   "Hugo - Cashless 💰",
   "Tom - Nimbus ☁️",
+  "Paul - Craker 💥",
+  "Thomas - Ginny 💡"
 ];
 
 export default {
@@ -321,29 +326,6 @@ export default {
       localStorage["theme"] = this.$vuetify.theme.dark;
     },
 
-    sendMail() {
-      const BUG_TEMPLATE = `
-      # URL or page
-      <!---example: /fa or dashboard-humain--->
-
-      # Expected behavior
-      <!---What did you expected--->
-
-
-      # Actual behavior
-      <!---What is happening--->
-
-      # Steps to reproduce
-
-      - Step 1
-      - Step 2
-      ...
-
-      /label ~bug
-
-      `
-      window.open('mailto:incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com');
-    },
 
     async clickOnTitle() {
       this.counter++;

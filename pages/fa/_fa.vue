@@ -65,16 +65,16 @@
         </v-col>
         <v-col>
           <v-time-picker
-            :allowed-minutes="allowedMinutes"
-            format="24h"
-            v-model="schedule.start"
+              :allowed-minutes="allowedMinutes"
+              format="24hr"
+              v-model="schedule.start"
           ></v-time-picker>
         </v-col>
         <v-col>
           <v-time-picker
-            :allowed-minutes="allowedMinutes"
-            format="24h"
-            v-model="schedule.end"
+              :allowed-minutes="allowedMinutes"
+              format="24hr"
+              v-model="schedule.end"
           ></v-time-picker>
         </v-col>
         <v-btn fab style="margin: 20px" @click="addSchedule">
@@ -157,13 +157,15 @@
       "
     >
       <v-btn color="green" v-if="getValidator()" @click="validate()"
-        >validate</v-btn
+      >validate
+      </v-btn
       >
       <v-btn color="red" v-if="getValidator()" @click="dialogValidator = true"
-        >refuse</v-btn
+      >refuse
+      </v-btn
       >
-      <v-btn color="secondary" @click="dialog = true">submit</v-btn>
-      <v-btn color="warning" @click="saveFA">save 💾</v-btn>
+      <v-btn color="secondary" @click="dialog = true">soumettre à validation</v-btn>
+      <v-btn color="warning" @click="saveFA">sauvgarder 💾</v-btn>
     </div>
 
     <v-dialog v-model="dialog" width="500">
@@ -261,12 +263,12 @@
 import OverForm from "../../components/overForm";
 
 export default {
-  name: "_faID",
-  components: { OverForm },
+  name: "fa",
+  components: {OverForm},
 
   data() {
     return {
-      FAID: this.$route.params.faID,
+      FAID: this.$route.params.fa,
       isNewFA: this.$route.params.faID === "newFA",
       FA: {},
       dialog: false,
@@ -322,6 +324,7 @@ export default {
 
     if (!this.isNewFA) {
       this.FA = (await this.fetchFAbyID(this.FAID)).data;
+      console.log(this.FA)
       // update the form that is going to be displayed
       Object.keys(this.FA).forEach((key) => {
         let mField = this.form.find((field) => field.key === key);
@@ -348,7 +351,6 @@ export default {
       if (this.FA.validated) {
         this.FA.validated.forEach((v) => {
           let refuse = this.validators.find((e) => e.name === v);
-          console.log(refuse);
           this.$set(refuse, "status", "validated");
         });
       }
@@ -487,7 +489,9 @@ export default {
     },
 
     onFormChange(form) {
+      const count = this.FA.count;
       this.FA = form;
+      this.FA.count = count;
     },
 
     getConfig(key) {
