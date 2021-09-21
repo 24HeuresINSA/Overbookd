@@ -5,8 +5,10 @@
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
             <v-img
-              v-if="user.pp"
-              :src="getPPUrl() + 'api/user/pp/' + user.pp"
+                v-if="user.pp"
+                :src="getPPUrl() + 'api/user/pp/' + user.pp"
+                max-width="600px"
+                max-height="500px"
             ></v-img>
             <v-card-title
               >Bonsoir
@@ -21,9 +23,7 @@
               <h3>😎 {{ user.charisma || 0 }} points de charisme</h3>
               <h3>❤️ {{ user.friends ? user.friends.length : 0 }} amis</h3>
               <h3>
-                📆 {{ new Date(user.birthdate).getDate() }}/{{
-                  new Date(user.birthdate).getMonth()
-                }}/{{ new Date(user.birthdate).getFullYear() }}
+                📆 {{ new Date(user.birthdate).toLocaleDateString() }}
               </h3>
               <h3>
                 🗣 {{ user.assigned ? user.assigned.length : 0 }} tâches
@@ -57,6 +57,7 @@
                   <thead>
                     <tr>
                       <th class="text-left"></th>
+                      <th class="text-left">Team</th>
                       <th class="text-left">Message</th>
                       <th class="text-left">Action</th>
                     </tr>
@@ -71,21 +72,21 @@
                         notification.type === "friendRequest" ? "👨‍👩‍👧" : "📣"
                       }}
                     </td>
+                    <td>
+                      <over-chips :roles="notification.team"></over-chips>
+                    </td>
                     <td>{{ notification.message }}</td>
                     <td
                         v-if="notification.type === 'friendRequest'"
-                        style="display: flex; justify-content: space-between"
                       >
                         <v-btn
                           icon
-                          small
                           @click="acceptFriendRequest(notification)"
                         >
                           <v-icon>mdi-account-check</v-icon>
                         </v-btn>
                         <v-btn
                           icon
-                          small
                           @click="refuseFriendRequest(notification)"
                         >
                           <v-icon>mdi-account-cancel</v-icon>
@@ -141,7 +142,7 @@
                 </thead>
                 <tbody>
                 <tr
-                    v-for="(item, i2) in user.transactionHistory"
+                    v-for="(item, i2) in displayedTransactionHistory"
                     v-bind:key="i2"
                 >
                   <td>{{ item.reason }}</td>
@@ -224,6 +225,8 @@
         <v-card-title>Envoyer un message a l'asso</v-card-title>
         <v-card-text>
           <v-text-field label="lien" v-model="notification.link"></v-text-field>
+          <v-autocomplete label="team" v-model="notification.team"
+                          :items="getConfig('teams').map(e=>e.name)"></v-autocomplete>
           <v-text-field
             label="message"
             v-model="notification.message"
@@ -274,13 +277,25 @@
 </template>
 
 <script>
-import { getUser, hasRole } from "../common/role";
+import {getConfig, getUser, hasRole} from "../common/role";
 import OverChips from "../components/overChips";
 import OverForm from "../components/overForm";
-import axios from "axios";
+
+const SNACKBAR_MESSAGES = {
+  friendRequest: {
+    sent: "votre demande d'ami a ete envoye",
+    accepted: "T'as un nouveau ami",
+    refused: "je suis d'accord c'est un batard",
+    lonely: "t'es seul a ce point là 🥺 ?",
+    alreadyFriend: "t'es deja ami avec ",
+  },
+  error: "🥵 sheeshh une erreur ",
+  broadcasted: "broadcast envoyé 📣",
+  imageUpdated: "image sauvgarder, rafraichissez la page pour la voir"
+};
 
 export default {
-  components: { OverForm, OverChips },
+  components: {OverForm, OverChips},
 
   data() {
     return {
@@ -316,20 +331,11 @@ export default {
       PP: undefined,
       usernames: [],
       snackbarMessage: "",
-      snackbarMessages: {
-        friendRequest: {
-          sent: "votre demande d'ami a ete envoye",
-          accepted: "T'as un nouveau ami",
-          refused: "je suis d'accord c'est un batard",
-          lonely: "t'es seul a ce point là 🥺 ?",
-          alreadyFriend: "t'es deja ami avec ",
-        },
-        error: "🥵 sheeshh une erreur ",
-        broadcasted: "broadcast envoyé 📣",
-      },
+      SNACKBAR_MESSAGES,
       notification: {
         link: undefined,
         message: undefined,
+        team: undefined,
       },
     };
   },
@@ -347,8 +353,12 @@ export default {
   },
 
   methods: {
+    getConfig(key) {
+      return getConfig(this, key)
+    },
+
     async getNotValidatedCount() {
-      let { data: users } = await this.$axios.get("/user");
+      let {data: users} = await this.$axios.get("/user");
       return users.filter((user) => user.team.length === 0).length;
     },
 
@@ -356,7 +366,7 @@ export default {
       this.notification.date = new Date();
       this.notification.type = "broadcast";
       await this.$axios.post("/user/broadcast", this.notification);
-      this.snackbarMessage = this.snackbarMessages.broadcasted;
+      this.snackbarMessage = this.SNACKBAR_MESSAGES.broadcasted;
       this.isSnackbarOpen = true;
       this.isBroadcastDialogOpen = false;
     },
@@ -376,6 +386,9 @@ export default {
       form.append("files", this.PP, this.PP.name);
       form.append("_id", getUser(this)._id);
       await this.$axios.post("/user/pp", form);
+      this.isPPDialogOpen = false;
+      this.snackbarMessage = this.SNACKBAR_MESSAGES.imageUpdated;
+      this.isSnackbarOpen = true;
     },
 
     onFormChange(form) {
@@ -398,7 +411,7 @@ export default {
       let [firstname, lastname] = this.newFriend.split(".");
       if (firstname === user.firstname && lastname === user.lastname) {
         // asked himself to be friend
-        this.snackbarMessage = this.snackbarMessages.friendRequest.lonely;
+        this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.lonely;
         this.isSnackbarOpen = true;
         window.open(
           "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690"
@@ -410,7 +423,7 @@ export default {
       ) {
         // already friends
         this.snackbarMessage =
-          this.snackbarMessages.friendRequest.alreadyFriend + this.newFriend;
+            this.SNACKBAR_MESSAGES.friendRequest.alreadyFriend + this.newFriend;
         this.isSnackbarOpen = true;
         return;
       }
@@ -420,9 +433,9 @@ export default {
           getUser(this).firstname
         } vous a envoye une demande d'ami ❤️`,
         from: `${
-          getUser(this).nickname
-            ? getUser(this).nickname
-            : getUser(this).lastname
+            getUser(this).nickname
+                ? getUser(this).nickname
+                : getUser(this).lastname
         }`,
         date: new Date(),
         data: {
@@ -430,7 +443,7 @@ export default {
           id: getUser(this)._id,
         },
       });
-      this.snackbarMessage = this.snackbarMessages.friendRequest.sent;
+      this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.sent;
       this.isSnackbarOpen = true;
     },
 
@@ -442,10 +455,10 @@ export default {
           from: user._id,
           to: notification.data,
         });
-        this.snackbarMessage = this.snackbarMessages.friendRequest.accepted;
+        this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
         this.isSnackbarOpen = true;
       } else {
-        this.snackbarMessage = this.snackbarMessages.error;
+        this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
         this.isSnackbarOpen = true;
       }
     },
@@ -461,10 +474,10 @@ export default {
         }
         user.notifications.pop();
         await this.$axios.put(`/user/${user.keycloakID}`, user);
-        this.snackbarMessage = this.snackbarMessages.friendRequest.accepted;
+        this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
         this.isSnackbarOpen = true;
       } else {
-        this.snackbarMessage = this.snackbarMessages.error;
+        this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
         this.isSnackbarOpen = true;
       }
     },
@@ -505,6 +518,21 @@ export default {
       }
     },
   },
+
+  computed: {
+    displayedTransactionHistory() {
+      let result = [];
+      if (this.user && this.user.transactionHistory) {
+        let fullTransactionHistory = this.user.transactionHistory;
+        fullTransactionHistory.forEach((transaction) => {
+          if (result.length < 3) {
+            result.push(transaction)
+          }
+        })
+      }
+      return result
+    }
+  }
 };
 </script>
 <style></style>

@@ -4,13 +4,6 @@ import { KEYCLOAK } from "../config/url.json";
 import qs from "qs";
 
 export default class KeycloakScheme extends RefreshScheme {
-  keycloakServer = axios.create({
-    baseURL: process.env.BASE_URL_KEYCLOAK,
-    headers: {
-      // "Access-Control-Allow-Credentials": true,
-      // "Access-Control-Allow-Origin:": "*",
-    },
-  });
 
   async login({ username, password }) {
     const data = qs.stringify({
@@ -44,7 +37,6 @@ export default class KeycloakScheme extends RefreshScheme {
     const refreshTokenStatus = this.refreshToken.status(); // session expired
     if (refreshTokenStatus.expired()) {
       this.$auth.reset();
-      throw new ExpiredAuthSessionError();
     }
 
     const data = qs.stringify({
@@ -52,7 +44,7 @@ export default class KeycloakScheme extends RefreshScheme {
       client_id: "project_a_web",
       grant_type: "refresh_token",
     });
-    const response = await this.keycloakServer.post(KEYCLOAK.TOKEN, data);
+    const response = await axios.post((process.env.BASE_URL_KEYCLOAK || 'http://localhost:8080/') + KEYCLOAK.TOKEN, data);
     this.updateTokens(response, { isRefreshing: true });
     return response;
   }

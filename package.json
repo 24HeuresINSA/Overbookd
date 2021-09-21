@@ -1,6 +1,6 @@
 {
-  "name": "frontend",
-  "version": "ALPHA 0.15.0",
+  "name": "Overbookd",
+  "version": "BETA 0.1",
   "private": true,
   "scripts": {
     "dev": "nuxt",

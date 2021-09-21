@@ -18,31 +18,48 @@
 
     <br />
     <v-divider></v-divider>
-    <h2>Horaires ⏱</h2>
+    <h2>Créneau ⏱</h2>
     <v-simple-table v-if="FT.schedules">
       <template v-slot:default>
         <thead>
-          <tr>
-            <th class="text-left">jour</th>
-            <th>debut</th>
-            <th class="text-left">fin</th>
-            <th class="text-left">#</th>
-            <th class="text-left">type</th>
-            <th class="text-left">action</th>
-          </tr>
+        <tr>
+          <th class="text-left">jour</th>
+          <th>debut</th>
+          <th class="text-left">fin</th>
+          <th class="text-left">orga requit</th>
+          <th class="text-left">orga affecté</th>
+          <th class="text-left">actions</th>
+        </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="schedule in FT.schedules"
+        <tr
+            v-for="(schedule, index) in FT.schedules"
             :key="schedule.day + schedule.start + schedule.end"
-          >
-            <td>{{ schedule.date }}</td>
-            <td>{{ schedule.start }}</td>
-            <td>{{ schedule.end }}</td>
-            <td>{{ schedule.amount }}</td>
-            <td>{{ schedule.type }}</td>
-            <td><v-btn @click="deleteSchedule(schedule)">🗑</v-btn></td>
-          </tr>
+        >
+          <td>{{ schedule.date }}</td>
+          <td>{{ new Date(schedule.start).toLocaleTimeString() }}</td>
+          <td>{{ new Date(schedule.end).toLocaleTimeString() }}</td>
+          <td>
+            <v-list-item v-for="(need, index) in schedule.needs" v-bind:key="index">
+              <v-list-item-content>
+                <v-list-item-title>{{ need.role ? `${need.amount} ${need.role}` : need }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </td>
+          <td>
+            <template v-if="schedule.assigned">
+              <v-list-item v-for="(assigned, index) in schedule.assigned" v-bind:key="index">
+                <v-list-item-content>
+                  <v-list-item-title>{{ assigned.username ? assigned.username : assigned }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </td>
+          <td>
+            <v-btn icon @click="deleteSchedule(schedule)">🗑</v-btn>
+            <v-btn text @click="openAssignmentDialog(index)">ajouter des orgas</v-btn>
+          </td>
+        </tr>
         </tbody>
       </template>
     </v-simple-table>
@@ -59,7 +76,7 @@
           <h3>Fin</h3>
         </v-col>
         <v-col>
-          <h3>Membre requit</h3>
+          <h3>Ajouter</h3>
         </v-col>
       </v-row>
       <v-row>
@@ -84,16 +101,6 @@
           ></v-time-picker>
         </v-col>
         <v-col style="align-items: center">
-          <v-select
-            v-model="schedule.type"
-            label="team"
-            :items="getConfig('teams').map((e) => e.name)"
-          ></v-select>
-          <v-text-field
-            type="number"
-            label="nombre"
-            v-model="schedule.amount"
-          ></v-text-field>
           <v-btn fab @click="addSchedule">
             <v-icon> mdi-plus-thick </v-icon>
           </v-btn>
@@ -127,6 +134,34 @@
         </v-card-text>
         <v-card-actions>
           <v-btn @click="saveEquipments">save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isAssignmentDialogOpen" max-width="600px">
+      <v-card>
+        <v-card-title>Humains</v-card-title>
+        <v-card-text>
+          <template v-if="requiredHumans">
+            <v-list-item v-for="(need, index) in requiredHumans" v-bind:key="index">
+              <v-list-item-content>
+                <v-list-item-title>{{ need }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+
+          <h4>Affecter une personne</h4>
+          <v-autocomplete :items="usernames" v-model="assignedHuman"></v-autocomplete>
+          <v-btn @click="addHuman()">ajouter</v-btn>
+          <h4>Affecter un role</h4>
+          <v-autocomplete label="role" v-model="assignedRole"
+                          :items="getConfig('teams').map(e => e.name)"></v-autocomplete>
+          <v-text-field label="Nombre" v-model="assignedAmount" type="number"></v-text-field>
+          <v-btn @click="addRole()">ajouter</v-btn>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="saveRequiredHuman()" text>💾</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -190,6 +225,13 @@ export default {
       isRefusedDialogOpen: false,
       isSubmitDialogOpen: false,
       isSnackbarOpen: false,
+      isAssignmentDialogOpen: false,
+      selectedTimeframeIndex: undefined,
+      assignedRole: undefined,
+      assignedAmount: undefined,
+      assignedHuman: undefined,
+      usernames: [],
+      requiredHumans: [],
       snackbarMessage: "",
       feedbacks: {
         validate: "FT valide ",
@@ -217,7 +259,6 @@ export default {
   async mounted() {
     let mFT = (await this.$axios.get("/ft/" + this.FTID)).data;
     this.FT = mFT;
-    console.log(mFT);
     Object.keys(mFT).forEach((key) => {
       let field = this.FT_FORM.find((field) => field.key === key);
       if (field) {
@@ -229,7 +270,7 @@ export default {
     if (mFT.equipments) {
       this.selectedEquipment = mFT.equipments;
     }
-    // this.availableEquipment.filter(equipment => equipment.type === '') // TODO
+    this.usernames = (await this.$axios.get('/user/all')).data
   },
 
   methods: {
@@ -237,11 +278,34 @@ export default {
       this.FT = form;
     },
 
+    saveRequiredHuman() {
+      this.$set(this.FT.schedules[this.selectedTimeframeIndex], 'needs', this.requiredHumans)
+      this.isAssignmentDialogOpen = false;
+      console.log(this.FT.schedules)
+    },
+
+    addHuman() {
+      this.requiredHumans.push(this.assignedHuman);
+    },
+
+    addRole() {
+      this.requiredHumans.push({
+        role: this.assignedRole,
+        amount: this.assignedAmount
+      })
+    },
+
+    openAssignmentDialog(timeframeIndex) {
+      this.selectedTimeframeIndex = timeframeIndex;
+      this.requiredHumans = this.FT.schedules[timeframeIndex].needs ? this.FT.schedules[timeframeIndex].needs : [];
+      this.isAssignmentDialogOpen = true;
+    },
+
     allowedMinutes: (m) => m % 15 === 0,
 
     getConfig(key) {
       return this.$store.state.config.data.data.find((e) => e.key === key)
-        .value;
+          .value;
     },
 
     getUser() {
@@ -280,6 +344,8 @@ export default {
       if (!this.FT.schedules) {
         this.$set(this.FT, "schedules", []);
       }
+      this.schedule.start = new Date(this.schedule.date + ' ' + this.schedule.start);
+      this.schedule.end = new Date(this.schedule.date + ' ' + this.schedule.end);
       this.$set(this.FT.schedules, this.FT.schedules.length, {
         ...this.schedule,
       });

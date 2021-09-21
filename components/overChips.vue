@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="padding: 0">
     <v-chip-group>
       <v-chip v-for="(role, i) in mRoles" v-bind:key="i" :color="role.color">
         <v-icon left color="white">
@@ -20,9 +20,12 @@ export default {
 
   computed: {
     mRoles() {
-      return getConfig(this, "teams").filter((team) =>
-        this.roles.includes(team.name)
-      );
+      if (this.roles) {
+        return getConfig(this, "teams").filter((team) =>
+            this.roles.includes(team.name)
+        );
+      }
+
     },
   },
 };

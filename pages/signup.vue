@@ -59,10 +59,7 @@ export default {
         this.$router.push({
           path: "/login",
         });
-        alert(
-          `tu viens de recevoir un mail de confirmation,
-          une fois confirme tu peux te connecte avec le username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}" et ton mdp`
-        );
+        alert(`Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}"`);
       }
     },
   },

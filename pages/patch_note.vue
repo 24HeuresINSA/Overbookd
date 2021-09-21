@@ -2,6 +2,18 @@
   <v-container>
     <h1>Patch notes 📝</h1>
 
+    <h2>Patch note BETA 0.1</h2>
+    <h3>🤯 Rectification de bugs et preparation au lancement</h3>
+    <ul>
+      <li>💻 l'affect marche beaucoup mieux</li>
+      <li>🐞 signalisation de bug rederige vers le mail</li>
+      <li>🔒 protection de la backend</li>
+      <li>📝 demande d'orga dans un creneau de FT</li>
+
+
+    </ul>
+
+    <h1>Passage a la BETA</h1>
     <h2>Patch note 0.15</h2>
     <h3>🤯 Rectification de bugs</h3>
     <ul>

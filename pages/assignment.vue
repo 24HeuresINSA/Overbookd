@@ -7,192 +7,44 @@
       margin-right: 0;
       position: absolute;
       display: flex;
+      height: 100%;
+      width: 100%;
     "
   >
-    <div style="display: flex; flex-flow: column">
-      <!-- list of  filtered users -->
-      <v-card>
-        <v-card-title>User</v-card-title>
-        <v-card-text>
-          <h3>Filtres</h3>
-          <v-text-field
-            prepend-icon="mdi-card-search"
-            v-model="filters.name"
-          ></v-text-field>
-          <v-combobox
-            chips
-            multiple
-            clearable
-            label="team"
-            :items="getConfig('teams').map((e) => e.name)"
-            v-model="filters.teams"
-          >
-            <template v-slot:selection="{ attrs, item, selected }">
-              <v-chip
-                  v-bind="attrs"
-                  :input-value="selected"
-                  close
-                  :color="getRoleMetadata(item).color"
-              >
-                <v-icon left color="white">
-                  {{ getRoleMetadata(item).icon }}
-                </v-icon>
-                <a style="color: white">{{ getRoleMetadata(item).name }}</a>
-              </v-chip>
-            </template>
-          </v-combobox>
-          <v-divider></v-divider>
-          <v-list>
-            <v-list-item-group v-model="selectedUserIndex">
-              <v-list-item v-for="user of filteredUsers" v-bind:key="user._id">
-                <v-list-item-content>
-                  <h4>
-                    {{ user.firstname }} {{ user.lastname.toUpperCase() }}
-                    {{ user.nickname ? `(${user.nickname})` : "" }}
-                  </h4>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card-text>
-      </v-card>
+    <filtered-users @selected-user="onSelectedUser" style="max-width: 350px"></filtered-users>
 
-      <!-- list of selected user's friend -->
-      <v-card v-if="getSelectedUser && getSelectedUser.friends">
-        <v-list>
-          <v-subheader>les amis du user selectionné</v-subheader>
-          <v-list-item-group v-model="selectedUserFriend">
-            <v-list-item
-              v-for="friend of getSelectedUser.friends"
-              v-bind:key="friend.keycloakID"
-            >
-              <v-list-item-content>
-                <h4>{{ friend.username ? friend.username : friend }}</h4>
-                <!--          <v-chip>{{user.charisma}}</v-chip>-->
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-icon>mdi-information-outline</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card>
-    </div>
     <!-- calendar --->
-    <v-calendar
-      style="flex-grow: 2; max-height: 100%"
-      ref="calendar"
-      :value="selectedDay"
-      :events="selectedUserAvailabilities"
-      color="primary"
-      type="week"
-      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-    ></v-calendar>
+    <over-calendar :events="calendarDisplayedEvents" @delete-assignment="unassign"></over-calendar>
 
-    <div style="display: flex; flex-flow: column">
-      <v-btn icon @click="isInfoDisplayed = true"> </v-btn>
-
-      <v-card v-if="getSelectedUser">
-        <v-img
-          v-if="getSelectedUser.pp"
-          :src="getPPUrl() + 'api/user/pp/' + getSelectedUser.pp"
-          max-height="200px"
-        ></v-img>
-        <v-card-title
-          >{{ getSelectedUser.firstname }}.{{
-            getSelectedUser.lastname
-          }}</v-card-title
-        >
-        <v-card-text v-if="isInfoDisplayed">
-          <v-list>
-            <v-list-item-group v-model="isInfoDisplayed">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Charisme</v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ getSelectedUser.charisma }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Date de naissance</v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ new Date(getSelectedUser.birthdate).toLocaleString() }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-          <v-progress-linear
-            :value="getSelectedUser.charisma / getConfig('max_charisma')"
-          ></v-progress-linear>
-        </v-card-text>
-      </v-card>
-
-      <v-date-picker v-model="selectedDay"></v-date-picker>
-
-      <!-- list of users -->
-      <v-card>
-        <v-list>
-          <v-subheader>FT</v-subheader>
-          <v-list-item-group v-model="selectedAssignmentsIndex" multiple>
-            <v-list-item
-              v-for="schedule in filteredSchedules"
-              v-bind:key="schedule._id"
-            >
-              <v-list-item-content>
-                {{ schedule.name }} {{ schedule.schedule.date }}
-                {{ schedule.schedule.start }} ➡️{{ schedule.schedule.end }}
-              </v-list-item-content>
-              <v-list-item-icon
-                ><v-icon> mdi-information </v-icon></v-list-item-icon
-              >
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card>
-    </div>
-
-    <v-btn
-      fab
-      v-if="getSelectedUser"
-      @click="saveAssignment"
-      style="position: fixed; right: 20px; bottom: 40px; z-index: 20"
-    >
-      <v-icon>mdi-content-save</v-icon>
-    </v-btn>
-
-    <v-snackbar v-model="isFeedbackSnackbarOpen" :timeout="5000"
-      >aller au suivant 🥳</v-snackbar
-    >
+    <over-tasks :user="selectedUser" @add-task="addTask" style="max-width: 550px"></over-tasks>
   </v-container>
 </template>
 
 <script>
 import {getConfig, hasRole} from "../common/role";
+import OverChips from "../components/overChips";
+import FilteredUsers from "../components/filtredUsers";
+import OverTasks from "../components/overTasks";
+import OverCalendar from "../components/overCalendar";
 
 export default {
   name: "assignment",
-
+  components: {OverCalendar, OverTasks, FilteredUsers, OverChips},
   data() {
     return {
-      users: [],
-      filteredUsers: [],
-      selectedUserIndex: undefined,
-      selectedAssignmentsIndex: undefined,
       selectedUserFriend: undefined,
+      selectedUser: undefined,
       selectedDay: undefined,
-      FTs: [],
-      updatedFTs: [],
+      selectedTimeframe: undefined,
       isFeedbackSnackbarOpen: false,
       isInfoDisplayed: false,
-      filters: {
-        name: undefined,
-        teams: [],
-      },
+      isNewEventDialogOpen: false,
+      isAssignmentUpdated: true,
+      newEventName: undefined,
+      events: [],
+
       teams: this.getConfig("teams"),
+      timeframes: this.getConfig("timeframes"),
     };
   },
 
@@ -203,237 +55,142 @@ export default {
         path: "/",
       });
     }
-
     // user has access to this page
-    // get user list
-    this.users = (await this.$axios.get("/user")).data;
-    this.filteredUsers = this.users;
-
-    // get FTs
-    this.FTs = (await this.$axios.get("/FT")).data.data; // idk but it works
   },
 
   methods: {
-    getStupidAmericanTimeFormat(date) {
-      return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+    async addTask(timeframe, FT) {
+      if (!this.selectedUser.assigned) {
+        this.selectedUser.assigned = [];
+      }
+      const assignmentID = this.uuidv4();
+      timeframe._id = assignmentID;
+      this.selectedUser.assigned.push(timeframe)
+      await this.saveUser();
+      await this.saveFT(assignmentID, timeframe.FTID, FT)
+    },
+
+    async saveUser() {
+      return this.$axios.put(`/user/${this.selectedUser.keycloakID}`, {assigned: this.selectedUser.assigned.filter(e => e.FTID)})
+    },
+
+    async saveFT(assignmentID, FTID, FT) {
+      const newSchedule = this.selectedUser.assigned.find(e => e.FTID === FTID); // the schedule that needs to be added to the FT
+      if (newSchedule) {
+        let schedules = FT.schedules;
+        let concernedSchedule = schedules.find(s => {
+          const start = new Date(s.start);
+          const end = new Date(s.end);
+          return start.getTime() === newSchedule.schedule.start.getTime() && end.getTime() === newSchedule.schedule.end.getTime()
+        })
+        if (concernedSchedule) {
+          if (!concernedSchedule.assigned) {
+            concernedSchedule.assigned = [];
+          }
+          concernedSchedule.assigned.push({
+            _id: assignmentID,
+            userID: this.selectedUser._id,
+            username: this.selectedUser.firstname + '.' + this.selectedUser.lastname,
+          })
+        }
+        return this.$axios.put('/ft', {
+          _id: FTID,
+          schedules,
+        })
+      }
+    },
+
+    async unassign(timeframe) {
+      console.log(timeframe)
+      if (this.selectedUser.assigned) {
+        this.selectedUser.assigned = this.selectedUser.assigned.filter(assignedTask => assignedTask.FTID !== timeframe.FTID);
+        // save in database
+        // save user
+        await this.$axios.$put(`user/${this.selectedUser.keycloakID}`, {
+          assigned: this.selectedUser.assigned
+        })
+        // save ft
+        await this.$axios.put('FT/unassign', timeframe)
+      }
+
+    },
+
+    uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      })
     },
 
     getConfig(key) {
       return getConfig(this, key);
     },
 
-    getCalendarFormattedAssignedFTsOfSelectedUser() {
-      let events = [];
-      if (this.getSelectedUser && this.getSelectedUser.assigned !== undefined) {
-        let assignedFTs = this.getSelectedUser.assigned;
-        assignedFTs.forEach((assignedFT) => {
-          let start = new Date(
-            Date.parse(
-              assignedFT.schedule.date + " " + assignedFT.schedule.start
-            )
-          );
-          let end = new Date(
-            Date.parse(assignedFT.schedule.date + " " + assignedFT.schedule.end)
-          );
-          events.push({
-            name: assignedFT.name,
-            start: this.getStupidAmericanTimeFormat(start),
-            end: this.getStupidAmericanTimeFormat(end),
-            color: "#ebc034",
-          });
-        });
-      }
-      return events;
+    onSelectedUser(user) {
+      this.selectedUser = user;
     },
-
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
-    },
-
-    getRoleMetadata(roleName) {
-      return this.teams.find((e) => e.name === roleName);
-    },
-
-    async saveAssignment() {
-      // save FT
-      // console.log(this.updatedFTs);
-      await this.$axios.put(`/user/${this.getSelectedUser.keycloakID}`, {
-        assigned: this.getSelectedUser.assigned,
-      });
-      this.isFeedbackSnackbarOpen = true;
-    },
+    // async saveAssignment() {
+    //   // save FT
+    //   await this.$axios.put(`/user/${this.getSelectedUser.keycloakID}`, {
+    //     assigned: this.getSelectedUser.assigned,
+    //   });
+    //   this.isFeedbackSnackbarOpen = true;
+    // },
   },
 
   computed: {
-    getSelectedUser() {
-      return this.users[this.selectedUserIndex];
-    },
-
-    selectedAssignments() {
-      if (this.selectedAssignmentsIndex) {
-        return this.selectedAssignmentsIndex.map(
-            (i) => this.filteredSchedules[i]
-        );
-      } else {
-        return [];
-      }
-    },
-
-    filteredSchedules() {
-      // FTs that are in the selected users availability
-      let filteredSchedules = [];
-      let userAvailabilities = [];
-      if (this.getSelectedUser && this.getSelectedUser.availabilities) {
-        this.getSelectedUser.availabilities.forEach((availability) => {
-          if (availability.days) {
-            availability.days.forEach((day) => {
-              day.frames.forEach((frame) => {
-                userAvailabilities.push({
-                  start: new Date(Date.parse(day.date + " " + frame.start)),
-                  end: new Date(Date.parse(day.date + " " + frame.end)),
-                });
-              });
-            });
-          }
-        });
-        userAvailabilities.forEach((timeframe) => {
-          this.FTs.forEach((FT) => {
-            if (FT.schedules) {
-              FT.schedules.forEach((schedule) => {
-                let start = Date.parse(schedule.date + " " + schedule.start);
-                let end = Date.parse(schedule.date + " " + schedule.start);
-                if (timeframe.start <= start && timeframe.end >= end) {
-                  filteredSchedules.push({
-                    name: FT.name,
-                    FTID: FT._id,
-                    schedule,
-                  });
+    calendarDisplayedEvents() {
+      let events = []
+      if (this.selectedUser) {
+        if (this.selectedUser.assigned) { // add assigned tasks
+          events = this.selectedUser.assigned;
+        }
+        if (this.selectedUser.availabilities) { // add availabilities
+          this.selectedUser.availabilities.forEach(availability => {
+            availability.days.forEach(day => {
+              day.frames.forEach(frame => {
+                let existingEvent = events.find(e => {
+                  return e.name === 'Disponible' && e.schedule.start === new Date(day.date + ' ' + frame.start) && e.end === new Date(day.date + ' ' + frame.end)
+                })
+                if (!existingEvent) {
+                  events.push({
+                    name: 'Disponible',
+                    color: 'rgba(92,138,217,0.56)',
+                    schedule: {
+                      start: new Date(day.date + ' ' + frame.start),
+                      end: new Date(day.date + ' ' + frame.end),
+                    }
+                  })
                 }
-              });
-            }
-          });
-        });
-      }
-      return filteredSchedules;
-    },
-
-    selectedUserAvailabilities() {
-      let events = [];
-      if (this.getSelectedUser && this.getSelectedUser.availabilities) {
-        let mAvailabilities = this.getSelectedUser.availabilities;
-        if (mAvailabilities.length !== 0) {
-          mAvailabilities.forEach((reason) => {
-            if (reason.days) {
-              reason.days.forEach((day) => {
-                if (day.frames) {
-                  day.frames.forEach((frame) => {
-                    let timeframe = {
-                      start: new Date(Date.parse(day.date + " " + frame.start)),
-                      end: new Date(Date.parse(day.date + " " + frame.end)),
-                    };
-                    events.push({
-                      name: "Disponible",
-                      start: this.getStupidAmericanTimeFormat(timeframe.start),
-                      end: this.getStupidAmericanTimeFormat(timeframe.end),
-                    });
-                  });
-                }
-              });
-            }
-          });
+              })
+            })
+          })
         }
       }
-      // add assigned events
-      const assignedEvents =
-        this.getCalendarFormattedAssignedFTsOfSelectedUser();
-      events = events.concat(assignedEvents);
+
       return events;
-    },
+    }
   },
 
   watch: {
-    selectedAssignments() {
-      // selected assignment changed...
-      let user = this.getSelectedUser;
-      this.$set(user, "assigned", this.selectedAssignments);
-
-      console.log("sat, ", this.selectedAssignments);
-      console.log("user.assigned", user.assigned);
-
-      // save in FT
-      // user.assigned.forEach(assignment => {
-      //   // get FT
-      //   let FT = this.FTs.find(FT => FT._id === assignment.FTID);
-      //   let schedule = FT.schedules.find(({date, start, end}) => {
-      //     const mSchedule = assignment.schedule;
-      //     return mSchedule.start === start && mSchedule.end === end && mSchedule.date === date
-      //   });
-      //   if(schedule.assigned === undefined){
-      //     schedule.assigned = [];
-      //   }
-      //   const isUserAlreadyAssigned = schedule.assigned.find(assignedUser => {
-      //     return assignedUser.keycloakID === user.keycloakID
-      //   })
-      //   if (!isUserAlreadyAssigned){
-      //     schedule.assigned.push({
-      //       username : `${user.lastname}.${user.firstname}`,
-      //       keycloakID: user.keycloakID,
-      //       id: user._id,
-      //     })
-      //   }
-      //   let oldFTIndex = this.updatedFTs.findIndex(mFT => mFT._id === FT._id);
-      //   if(oldFTIndex === -1){
-      //     this.updatedFTs.push(FT)
-      //   } else {
-      //     this.updatedFTs[oldFTIndex] = FT
-      //   }
-      // })
+    selectedTimeframe() {
+      const selectedDayTimestamp = this.timeframes.find(e => e.name === this.selectedTimeframe)
+      if (selectedDayTimestamp) {
+        this.selectedDay = selectedDayTimestamp.day;
+      }
     },
 
-    filters: {
-      deep: true,
-
-      handler() {
-        const filters = this.filters;
-        let users = this.users;
-
-        // filter by name
-        if (filters.name) {
-          let search = filters.name.toLowerCase();
-          users = users.filter((user) => {
-            let isNickname = false;
-            if (user.nickname) {
-              isNickname = user.nickname.toLowerCase().includes(search);
-            }
-            return (
-              user.firstname.toLowerCase().includes(search) ||
-              user.lastname.toLowerCase().includes(search) ||
-              isNickname
-            );
-          });
-        }
-
-        // filter by team
-        if (filters.teams.length !== 0) {
-          users = users.filter((user) => {
-            if (user.team && user.team.length !== 0) {
-              let all = true;
-              filters.teams.forEach((t) => {
-                all = all && user.team.includes(t);
-              });
-              return all;
-            }
-            return false;
-          });
-        }
-
-        this.filteredUsers = users;
-      },
+    selectedAssignments() {
+      // selected assignment changed...
+      // let user = this.getSelectedUser;
+      // this.$set(user, "assigned", this.selectedAssignments);
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  padding: 0;
+}
+</style>
