@@ -11,36 +11,36 @@
       width: 100%;
     "
   >
-    <filtered-users
-        @selected-user="onSelectedUser"
-        style="max-width: 350px"
-    ></filtered-users>
+    <FilteredUsers
+      style="max-width: 350px"
+      @selected-user="onSelectedUser"
+    ></FilteredUsers>
 
     <!-- calendar --->
-    <over-calendar
-        :center-day="new Date().setDate(new Date().getDate() - 5)"
-        :events="calendarDisplayedEvents"
-        @delete-assignment="unassign"
-    ></over-calendar>
+    <OverCalendar
+      :center-day="new Date().setDate(new Date().getDate() - 5)"
+      :events="calendarDisplayedEvents"
+      @delete-assignment="unassign"
+    ></OverCalendar>
 
-    <over-tasks
-        :user="selectedUser"
-        @add-task="addTask"
-        style="max-width: 550px"
-    ></over-tasks>
+    <OverTasks
+      :user="selectedUser"
+      style="max-width: 550px"
+      @add-task="addTask"
+    ></OverTasks>
   </v-container>
 </template>
 
 <script>
-import {getConfig, hasRole} from "../common/role";
+import { getConfig, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
 import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";
 
 export default {
-  name: "assignment",
-  components: {OverCalendar, OverTasks, FilteredUsers},
+  name: "Assignment",
+  components: { OverCalendar, OverTasks, FilteredUsers },
   data() {
     return {
       selectedUserFriend: undefined,
@@ -57,6 +57,64 @@ export default {
       teams: this.getConfig("teams"),
       timeframes: this.getConfig("timeframes"),
     };
+  },
+
+  computed: {
+    calendarDisplayedEvents() {
+      let events = [];
+      if (this.selectedUser) {
+        if (this.selectedUser.assigned) {
+          // add assigned tasks
+          events = this.selectedUser.assigned;
+        }
+        if (this.selectedUser.availabilities) {
+          // add availabilities
+          this.selectedUser.availabilities.forEach((availability) => {
+            availability.days.forEach((day) => {
+              day.frames.forEach((frame) => {
+                let existingEvent = events.find((e) => {
+                  return (
+                    e.name === "Disponible" &&
+                    e.schedule.start ===
+                      new Date(day.date + " " + frame.start) &&
+                    e.end === new Date(day.date + " " + frame.end)
+                  );
+                });
+                if (!existingEvent) {
+                  events.push({
+                    name: "Disponible",
+                    color: "rgba(92,138,217,0.56)",
+                    schedule: {
+                      start: new Date(day.date + " " + frame.start),
+                      end: new Date(day.date + " " + frame.end),
+                    },
+                  });
+                }
+              });
+            });
+          });
+        }
+      }
+
+      return events;
+    },
+  },
+
+  watch: {
+    selectedTimeframe() {
+      const selectedDayTimestamp = this.timeframes.find(
+        (e) => e.name === this.selectedTimeframe
+      );
+      if (selectedDayTimestamp) {
+        this.selectedDay = selectedDayTimestamp.day;
+      }
+    },
+
+    selectedAssignments() {
+      // selected assignment changed...
+      // let user = this.getSelectedUser;
+      // this.$set(user, "assigned", this.selectedAssignments);
+    },
   },
 
   async mounted() {
@@ -89,7 +147,7 @@ export default {
 
     async saveFT(assignmentID, FTID, FT) {
       const newSchedule = this.selectedUser.assigned.find(
-          (e) => e.FTID === FTID
+        (e) => e.FTID === FTID
       ); // the schedule that needs to be added to the FT
       if (newSchedule) {
         let schedules = FT.schedules;
@@ -97,8 +155,8 @@ export default {
           const start = new Date(s.start);
           const end = new Date(s.end);
           return (
-              start.getTime() === newSchedule.schedule.start.getTime() &&
-              end.getTime() === newSchedule.schedule.end.getTime()
+            start.getTime() === newSchedule.schedule.start.getTime() &&
+            end.getTime() === newSchedule.schedule.end.getTime()
           );
         });
         if (concernedSchedule) {
@@ -109,7 +167,7 @@ export default {
             _id: assignmentID,
             userID: this.selectedUser._id,
             username:
-                this.selectedUser.firstname + "." + this.selectedUser.lastname,
+              this.selectedUser.firstname + "." + this.selectedUser.lastname,
           });
         }
         return this.$axios.put("/ft", {
@@ -122,7 +180,7 @@ export default {
     async unassign(timeframe) {
       if (this.selectedUser.assigned) {
         this.selectedUser.assigned = this.selectedUser.assigned.filter(
-            (assignedTask) => assignedTask.FTID !== timeframe.FTID
+          (assignedTask) => assignedTask.FTID !== timeframe.FTID
         );
         // save in database
         // save user
@@ -136,12 +194,12 @@ export default {
 
     uuidv4() {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-          /[xy]/g,
-          function (c) {
-            const r = (Math.random() * 16) | 0,
-                v = c === "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-          }
+        /[xy]/g,
+        function (c) {
+          const r = (Math.random() * 16) | 0,
+            v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
       );
     },
 
@@ -159,64 +217,6 @@ export default {
     //   });
     //   this.isFeedbackSnackbarOpen = true;
     // },
-  },
-
-  computed: {
-    calendarDisplayedEvents() {
-      let events = [];
-      if (this.selectedUser) {
-        if (this.selectedUser.assigned) {
-          // add assigned tasks
-          events = this.selectedUser.assigned;
-        }
-        if (this.selectedUser.availabilities) {
-          // add availabilities
-          this.selectedUser.availabilities.forEach((availability) => {
-            availability.days.forEach((day) => {
-              day.frames.forEach((frame) => {
-                let existingEvent = events.find((e) => {
-                  return (
-                      e.name === "Disponible" &&
-                      e.schedule.start ===
-                      new Date(day.date + " " + frame.start) &&
-                      e.end === new Date(day.date + " " + frame.end)
-                  );
-                });
-                if (!existingEvent) {
-                  events.push({
-                    name: "Disponible",
-                    color: "rgba(92,138,217,0.56)",
-                    schedule: {
-                      start: new Date(day.date + " " + frame.start),
-                      end: new Date(day.date + " " + frame.end),
-                    },
-                  });
-                }
-              });
-            });
-          });
-        }
-      }
-
-      return events;
-    }
-  },
-
-  watch: {
-    selectedTimeframe() {
-      const selectedDayTimestamp = this.timeframes.find(
-          (e) => e.name === this.selectedTimeframe
-      );
-      if (selectedDayTimestamp) {
-        this.selectedDay = selectedDayTimestamp.day;
-      }
-    },
-
-    selectedAssignments() {
-      // selected assignment changed...
-      // let user = this.getSelectedUser;
-      // this.$set(user, "assigned", this.selectedAssignments);
-    },
   },
 };
 </script>

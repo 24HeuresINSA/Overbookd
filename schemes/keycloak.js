@@ -1,6 +1,6 @@
-import {RefreshScheme} from "~auth/runtime";
+import { RefreshScheme } from "~auth/runtime";
 import axios from "axios";
-import {KEYCLOAK} from "../config/url.json";
+import { KEYCLOAK } from "../config/url.json";
 import qs from "qs";
 
 export default class KeycloakScheme extends RefreshScheme {
@@ -44,11 +44,11 @@ export default class KeycloakScheme extends RefreshScheme {
       grant_type: "refresh_token",
     });
     const response = await axios.post(
-        (process.env.BASE_URL_KEYCLOAK || "http://localhost:8080/") +
+      (process.env.BASE_URL_KEYCLOAK || "http://localhost:8080/") +
         KEYCLOAK.TOKEN,
-        data
+      data
     );
-    this.updateTokens(response, {isRefreshing: true});
+    this.updateTokens(response, { isRefreshing: true });
     return response;
   }
 }

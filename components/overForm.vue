@@ -1,12 +1,12 @@
 <template>
   <div>
-    <over-field
+    <OverField
       v-for="field in fields"
       :key="field.label"
       :field="field"
       @value="onValueChange"
     >
-    </over-field>
+    </OverField>
   </div>
 </template>
 
@@ -14,7 +14,7 @@
 import OverField from "./overField";
 
 export default {
-  name: "over-form",
+  name: "OverForm",
   components: { OverField },
   props: ["fields"],
 

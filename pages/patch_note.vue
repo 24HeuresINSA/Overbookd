@@ -222,7 +222,7 @@
 
 <script>
 export default {
-  name: "patch_note",
+  name: "PatchNote",
 };
 </script>
 

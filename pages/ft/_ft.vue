@@ -10,71 +10,65 @@
       <h1>Fiche Tache 🤩</h1>
       <h2>Status {{ FT.status || "draft" }}</h2>
     </v-container>
-    <over-form
+    <OverForm
       v-if="FT_FORM"
       :fields="FT_FORM"
       @form-change="onFormChange"
-    ></over-form>
+    ></OverForm>
 
     <br />
     <v-divider></v-divider>
     <h2>Créneau ⏱</h2>
     <v-simple-table v-if="FT.schedules">
-      <template v-slot:default>
+      <template #default>
         <thead>
-        <tr>
-          <th class="text-left">jour</th>
-          <th>debut</th>
-          <th class="text-left">fin</th>
-          <th class="text-left">orga requit</th>
-          <th class="text-left">orga affecté</th>
-          <th class="text-left">actions</th>
-        </tr>
+          <tr>
+            <th class="text-left">jour</th>
+            <th>debut</th>
+            <th class="text-left">fin</th>
+            <th class="text-left">orga requit</th>
+            <th class="text-left">orga affecté</th>
+            <th class="text-left">actions</th>
+          </tr>
         </thead>
         <tbody>
-        <tr
+          <tr
             v-for="(schedule, index) in FT.schedules"
             :key="schedule.day + schedule.start + schedule.end"
-        >
-          <td>{{ schedule.date }}</td>
-          <td>{{ new Date(schedule.start).toLocaleTimeString() }}</td>
-          <td>{{ new Date(schedule.end).toLocaleTimeString() }}</td>
-          <td>
-            <v-list-item
-                v-for="(need, index) in schedule.needs"
-                v-bind:key="index"
-            >
-              <v-list-item-content>
-                <v-list-item-title>{{
-                    need.role ? `${need.amount} ${need.role}` : need
-                  }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </td>
-          <td>
-            <template v-if="schedule.assigned">
-              <v-list-item
-                  v-for="(assigned, index) in schedule.assigned"
-                  v-bind:key="index"
-              >
+          >
+            <td>{{ schedule.date }}</td>
+            <td>{{ new Date(schedule.start).toLocaleTimeString() }}</td>
+            <td>{{ new Date(schedule.end).toLocaleTimeString() }}</td>
+            <td>
+              <v-list-item v-for="(need, index) in schedule.needs" :key="index">
                 <v-list-item-content>
-                  <v-list-item-title>{{
-                      assigned.username ? assigned.username : assigned
-                    }}
+                  <v-list-item-title
+                    >{{ need.role ? `${need.amount} ${need.role}` : need }}
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-            </template>
-          </td>
-          <td>
-            <v-btn icon @click="deleteSchedule(schedule)">🗑</v-btn>
-            <v-btn text @click="openAssignmentDialog(index)"
-            >ajouter des orgas
-            </v-btn
-            >
-          </td>
-        </tr>
+            </td>
+            <td>
+              <template v-if="schedule.assigned">
+                <v-list-item
+                  v-for="(assigned, index) in schedule.assigned"
+                  :key="index"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title
+                      >{{ assigned.username ? assigned.username : assigned }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </td>
+            <td>
+              <v-btn icon @click="deleteSchedule(schedule)">🗑</v-btn>
+              <v-btn text @click="openAssignmentDialog(index)"
+                >ajouter des orgas
+              </v-btn>
+            </td>
+          </tr>
         </tbody>
       </template>
     </v-simple-table>
@@ -103,16 +97,16 @@
         </v-col>
         <v-col>
           <v-time-picker
+            v-model="schedule.start"
             :allowed-minutes="allowedMinutes"
             format="24h"
-            v-model="schedule.start"
           ></v-time-picker>
         </v-col>
         <v-col>
           <v-time-picker
+            v-model="schedule.end"
             :allowed-minutes="allowedMinutes"
             format="24h"
-            v-model="schedule.end"
           ></v-time-picker>
         </v-col>
         <v-col style="align-items: center">
@@ -139,10 +133,10 @@
         <v-card-title>ajouter du matos</v-card-title>
         <v-card-text>
           <v-data-table :headers="equipmentsHeader" :items="availableEquipment">
-            <template v-slot:[`item.selectedAmount`]="item">
+            <template #[`item.selectedAmount`]="item">
               <v-text-field
-                  type="number"
-                  v-model="item.item.selectedAmount"
+                v-model="item.item.selectedAmount"
+                type="number"
               ></v-text-field>
             </template>
           </v-data-table>
@@ -158,10 +152,7 @@
         <v-card-title>Humains</v-card-title>
         <v-card-text>
           <template v-if="requiredHumans">
-            <v-list-item
-                v-for="(need, index) in requiredHumans"
-                v-bind:key="index"
-            >
+            <v-list-item v-for="(need, index) in requiredHumans" :key="index">
               <v-list-item-content>
                 <v-list-item-title>{{ need }}</v-list-item-title>
               </v-list-item-content>
@@ -170,25 +161,25 @@
 
           <h4>Affecter une personne</h4>
           <v-autocomplete
-              :items="usernames"
-              v-model="assignedHuman"
+            v-model="assignedHuman"
+            :items="usernames"
           ></v-autocomplete>
           <v-btn @click="addHuman()">ajouter</v-btn>
           <h4>Affecter un role</h4>
           <v-autocomplete
-              label="role"
-              v-model="assignedRole"
-              :items="getConfig('teams').map((e) => e.name)"
+            v-model="assignedRole"
+            label="role"
+            :items="getConfig('teams').map((e) => e.name)"
           ></v-autocomplete>
           <v-text-field
-              label="Nombre"
-              v-model="assignedAmount"
-              type="number"
+            v-model="assignedAmount"
+            label="Nombre"
+            type="number"
           ></v-text-field>
           <v-btn @click="addRole()">ajouter</v-btn>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="saveRequiredHuman()" text>💾</v-btn>
+          <v-btn text @click="saveRequiredHuman()">💾</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -221,12 +212,12 @@
     }}</v-snackbar>
 
     <div style="display: flex; justify-content: space-evenly">
-      <v-btn color="green" v-if="getValidator()" @click="validateFT"
+      <v-btn v-if="getValidator()" color="green" @click="validateFT"
         >validate</v-btn
       >
       <v-btn
-        color="red"
         v-if="getValidator()"
+        color="red"
         @click="isRefusedDialogOpen = true"
         >refuse</v-btn
       >
@@ -239,7 +230,7 @@
 <script>
 import OverForm from "../../components/overForm";
 export default {
-  name: "_ft",
+  name: "Ft",
   components: { OverForm },
   data() {
     return {
@@ -307,9 +298,9 @@ export default {
 
     saveRequiredHuman() {
       this.$set(
-          this.FT.schedules[this.selectedTimeframeIndex],
-          "needs",
-          this.requiredHumans
+        this.FT.schedules[this.selectedTimeframeIndex],
+        "needs",
+        this.requiredHumans
       );
       this.isAssignmentDialogOpen = false;
       console.log(this.FT.schedules);
@@ -329,8 +320,8 @@ export default {
     openAssignmentDialog(timeframeIndex) {
       this.selectedTimeframeIndex = timeframeIndex;
       this.requiredHumans = this.FT.schedules[timeframeIndex].needs
-          ? this.FT.schedules[timeframeIndex].needs
-          : [];
+        ? this.FT.schedules[timeframeIndex].needs
+        : [];
       this.isAssignmentDialogOpen = true;
     },
 
@@ -338,7 +329,7 @@ export default {
 
     getConfig(key) {
       return this.$store.state.config.data.data.find((e) => e.key === key)
-          .value;
+        .value;
     },
 
     getUser() {
@@ -378,10 +369,10 @@ export default {
         this.$set(this.FT, "schedules", []);
       }
       this.schedule.start = new Date(
-          this.schedule.date + " " + this.schedule.start
+        this.schedule.date + " " + this.schedule.start
       );
       this.schedule.end = new Date(
-          this.schedule.date + " " + this.schedule.end
+        this.schedule.date + " " + this.schedule.end
       );
       this.$set(this.FT.schedules, this.FT.schedules.length, {
         ...this.schedule,

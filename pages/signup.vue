@@ -1,11 +1,11 @@
 <template>
   <div>
     <h1>Inscription 👋</h1>
-    <over-form
+    <OverForm
       v-if="signupForm"
       :fields="signupForm"
       @form-change="onFormChange"
-    ></over-form>
+    ></OverForm>
     <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
   </div>
 </template>
@@ -14,7 +14,7 @@
 import OverForm from "../components/overForm";
 
 export default {
-  name: "signup",
+  name: "Signup",
   components: { OverForm },
   auth: false,
   layout: "none",
@@ -60,7 +60,7 @@ export default {
           path: "/login",
         });
         alert(
-            `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}"`
+          `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}"`
         );
       }
     },
