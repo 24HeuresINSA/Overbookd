@@ -6,23 +6,23 @@
         <h3>Filtres</h3>
 
         <v-text-field
-            prepend-icon="mdi-card-search"
-            v-model="filters.name"
-            label="recherche d'orga"
+          v-model="filters.name"
+          prepend-icon="mdi-card-search"
+          label="recherche d'orga"
         ></v-text-field>
         <v-combobox
-            chips
-            multiple
-            clearable
-            label="team"
-            :items="getConfig('teams').map((e) => e.name)"
-            v-model="filters.teams"
+          v-model="filters.teams"
+          chips
+          multiple
+          clearable
+          label="team"
+          :items="getConfig('teams').map((e) => e.name)"
         >
-          <template v-slot:selection="{ attrs, item, selected }">
+          <template #selection="{ attrs, item, selected }">
             <v-chip
-                v-bind="attrs"
-                :input-value="selected"
-                :color="getRoleMetadata(item).color"
+              v-bind="attrs"
+              :input-value="selected"
+              :color="getRoleMetadata(item).color"
             >
               <v-icon left color="white">
                 {{ getRoleMetadata(item).icon }}
@@ -33,10 +33,10 @@
         </v-combobox>
         <v-divider></v-divider>
 
-        <users-list
-            :users="filteredUsers"
-            v-on:selected-user="onSelectedUser"
-        ></users-list>
+        <UsersList
+          :users="filteredUsers"
+          @selected-user="onSelectedUser"
+        ></UsersList>
       </v-card-text>
     </v-card>
   </div>
@@ -44,12 +44,12 @@
 
 <script>
 import UsersList from "./usersList";
-import {getConfig} from "../common/role";
+import { getConfig } from "../common/role";
 import Fuse from "fuse.js";
 
 export default {
-  name: "filteredUsers",
-  components: {UsersList},
+  name: "FilteredUsers",
+  components: { UsersList },
 
   data() {
     return {
@@ -64,42 +64,6 @@ export default {
       timeframes: this.getConfig("timeframes"),
       teams: this.getConfig("teams"),
     };
-  },
-
-  async mounted() {
-    // get user list
-    this.users = (await this.$axios.get("/user")).data;
-    this.filteredUsers = this.users;
-    this.sortFilteredUsers();
-  },
-
-  methods: {
-    sortFilteredUsers() {
-      this.filteredUsers = this.filteredUsers.sort((user1, user2) => {
-        user1.charisma = user1.charisma ? user1.charisma : 0;
-        user2.charisma = user2.charisma ? user2.charisma : 0;
-
-        if (user1.charisma > user2.charisma) {
-          return -1;
-        }
-        if (user1.charisma < user2.charisma) {
-          return 1;
-        }
-        return 0;
-      });
-    },
-
-    getRoleMetadata(roleName) {
-      return this.teams.find((e) => e.name === roleName);
-    },
-
-    getConfig(key) {
-      return getConfig(this, key);
-    },
-
-    onSelectedUser(user) {
-      this.$emit("selected-user", user);
-    },
   },
 
   watch: {
@@ -137,6 +101,42 @@ export default {
         this.filteredUsers = users;
         this.sortFilteredUsers();
       },
+    },
+  },
+
+  async mounted() {
+    // get user list
+    this.users = (await this.$axios.get("/user")).data;
+    this.filteredUsers = this.users;
+    this.sortFilteredUsers();
+  },
+
+  methods: {
+    sortFilteredUsers() {
+      this.filteredUsers = this.filteredUsers.sort((user1, user2) => {
+        user1.charisma = user1.charisma ? user1.charisma : 0;
+        user2.charisma = user2.charisma ? user2.charisma : 0;
+
+        if (user1.charisma > user2.charisma) {
+          return -1;
+        }
+        if (user1.charisma < user2.charisma) {
+          return 1;
+        }
+        return 0;
+      });
+    },
+
+    getRoleMetadata(roleName) {
+      return this.teams.find((e) => e.name === roleName);
+    },
+
+    getConfig(key) {
+      return getConfig(this, key);
+    },
+
+    onSelectedUser(user) {
+      this.$emit("selected-user", user);
     },
   },
 };

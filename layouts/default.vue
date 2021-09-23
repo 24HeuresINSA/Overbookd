@@ -14,17 +14,17 @@
         </v-list-item>
         <template v-for="(item, i) in items">
           <v-list-item
-              v-if="hasRole(item.roles)"
-              :key="i"
-              :to="item.to"
-              router
-              exact
+            v-if="hasRole(item.roles)"
+            :key="i"
+            :to="item.to"
+            router
+            exact
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"/>
+              <v-list-item-title v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -50,20 +50,14 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>mdi-minus</v-icon>
       </v-btn>
-      <v-toolbar-title @click="clickOnTitle()" v-text="title"/>
+      <v-toolbar-title @click="clickOnTitle()" v-text="title" />
 
       <v-toolbar-title
-          style="color: red; margin-left: 4px; font-weight: bold"
-          v-text="version"
+        style="color: red; margin-left: 4px; font-weight: bold"
+        v-text="version"
       />
-      <v-spacer/>
-      <v-btn
-          text
-          @click="isDialogOpen=true"
-      >
-        🐞 Signaler un bug
-      </v-btn
-      >
+      <v-spacer />
+      <v-btn text @click="isDialogOpen = true"> 🐞 Signaler un bug </v-btn>
       <v-btn text @click="logout()">DÉCONNEXION</v-btn>
     </v-app-bar>
     <v-main>
@@ -84,12 +78,16 @@
         ></v-img>
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
-          <h4>Pour signaler un bug veuiller envoyer un mail à
-            incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com de preference en anglais</h4>
+          <h4>
+            Pour signaler un bug veuiller envoyer un mail à
+            incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com
+            de preference en anglais
+          </h4>
         </v-card-text>
         <v-card-actions>
           <v-btn
-              href="mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A%3C%21---example%3A%20%2Ffa%20or%20dashboard-humain---%3E%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug">
+            href="mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A%3C%21---example%3A%20%2Ffa%20or%20dashboard-humain---%3E%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug"
+          >
             envoyer le mail
           </v-btn>
         </v-card-actions>
@@ -241,6 +239,17 @@ export default {
     };
   },
 
+  computed: {
+    logo() {
+      if (this.isJauneActive) {
+        return "Ricard.png";
+      }
+      return this.$vuetify.theme.dark
+        ? "overbookd_logo_blanc.png"
+        : "overbookd_logo_noir.png";
+    },
+  },
+
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
   },
@@ -257,7 +266,7 @@ export default {
 
     addStep() {
       this.newRequest.steps.push(
-          `${this.newRequest.steps.length + 1} - ${this.stepDetail}`
+        `${this.newRequest.steps.length + 1} - ${this.stepDetail}`
       );
       this.stepDetail = "";
     },
@@ -299,10 +308,10 @@ export default {
       let form = new FormData();
       this.newRequest.url = window.location.href;
       this.newRequest.priority =
-          "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
+        "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
       this.newRequest.author = getUser(this).username
-          ? getUser(this).username
-          : getUser(this).lastname;
+        ? getUser(this).username
+        : getUser(this).lastname;
       this.newRequest.tags = [this.newRequest.priority];
       // this.newRequest.repo = '24-heures-insa/overbookd/frontend'
 
@@ -326,17 +335,6 @@ export default {
 
       this.isDialogOpen = false;
       this.isSnackbarOpen = true;
-    },
-  },
-
-  computed: {
-    logo() {
-      if (this.isJauneActive) {
-        return "Ricard.png";
-      }
-      return this.$vuetify.theme.dark
-          ? "overbookd_logo_blanc.png"
-          : "overbookd_logo_noir.png";
     },
   },
 };

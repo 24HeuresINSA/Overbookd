@@ -1,18 +1,18 @@
 <template>
   <v-data-table :headers="headers" :items="tasks">
-    <template v-slot:item.action="item">
-      <v-btn @click="selectUser(item)" text>sélectionner</v-btn>
+    <template #[`item.action`]="item">
+      <v-btn text @click="selectUser(item)">sélectionner</v-btn>
     </template>
 
-    <template v-slot:item.date="row">
+    <template #[`item.date`]="row">
       {{ new Date(row.item.schedule.start).toLocaleDateString() }}
     </template>
 
-    <template v-slot:item.start="row">
+    <template #[`item.start`]="row">
       {{ new Date(row.item.schedule.start).toLocaleTimeString() }}
     </template>
 
-    <template v-slot:item.end="row">
+    <template #[`item.end`]="row">
       {{ new Date(row.item.schedule.end).toLocaleTimeString() }}
     </template>
   </v-data-table>
@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: "listTasks",
+  name: "ListTasks",
 
   props: ["tasks"],
 
@@ -54,7 +54,7 @@ export default {
   },
 
   methods: {
-    selectUser({item}) {
+    selectUser({ item }) {
       this.$emit("selected-task", item);
     },
   },

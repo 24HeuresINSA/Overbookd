@@ -3,7 +3,7 @@
     <!-- list of  filtered users -->
     <v-list style="overflow-y: auto; height: auto">
       <v-list-item-group v-model="selectedUserIndex">
-        <v-list-item v-for="user of users" v-bind:key="user._id">
+        <v-list-item v-for="user of users" :key="user._id">
           <v-list-item-content>
             <v-list-item-title>
               {{ user.firstname }} {{ user.lastname.toUpperCase() }}
@@ -16,7 +16,7 @@
           </v-list-item-content>
           <v-list-item-action>
             <v-tooltip top @click="selectedUser = user">
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon dark v-bind="attrs" v-on="on"> mdi-information</v-icon>
               </template>
               <span>{{ user.comment }}</span>
@@ -29,10 +29,10 @@
 </template>
 
 <script>
-import {getConfig} from "../common/role";
+import { getConfig } from "../common/role";
 
 export default {
-  name: "usersList",
+  name: "UsersList",
 
   props: ["users"],
 
