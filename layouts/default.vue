@@ -94,53 +94,6 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <!--      <v-card>-->
-      <!--        <v-img-->
-      <!--          src="img/memes/comsi_working.png"-->
-      <!--          width="300px"-->
-      <!--          style="left: 250px"-->
-      <!--        ></v-img>-->
-      <!--        <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>-->
-      <!--        <v-card-subtitle>ou de nouvelle features</v-card-subtitle>-->
-      <!--        <v-card-text>-->
-      <!--          <v-text-field label="titer" v-model="newRequest.title"></v-text-field>-->
-      <!--          <v-switch-->
-      <!--            label="nouvelle feature request ?"-->
-      <!--            v-model="newRequest.isFeatureRequest"-->
-      <!--          ></v-switch>-->
-      <!--          <v-select-->
-      <!--            :items="['hard', 'soft', 'bureau']"-->
-      <!--            label="scope"-->
-      <!--            v-model="newRequest.scope"-->
-      <!--          ></v-select>-->
-      <!--          <v-select-->
-      <!--              :items="priorities"-->
-      <!--              label="priorite"-->
-      <!--              v-model="newRequest.priority"-->
-      <!--          ></v-select>-->
-      <!--          <v-textarea-->
-      <!--              label="desciption"-->
-      <!--              v-model="newRequest.description"-->
-      <!--          ></v-textarea>-->
-      <!--          <template v-if="!newRequest.isFeatureRequest">-->
-      <!--            <v-list>-->
-      <!--              <v-list-item-->
-      <!--                  v-for="(step, index) in newRequest.steps"-->
-      <!--                  :key="index"-->
-      <!--              >-->
-      <!--                <v-list-item-content>{{ step }}</v-list-item-content>-->
-      <!--              </v-list-item>-->
-      <!--            </v-list>-->
-      <!--            <v-text-field label="etape" v-model="stepDetail"></v-text-field>-->
-      <!--            <v-btn @click="addStep()">Ajouter</v-btn>-->
-      <!--          </template>-->
-
-      <!--          <v-file-input label="capture d'ecran" v-model="file"></v-file-input>-->
-      <!--        </v-card-text>-->
-      <!--        <v-card-actions>-->
-      <!--          <v-btn text right @click="submitIssue()">submit</v-btn>-->
-      <!--        </v-card-actions>-->
-      <!--      </v-card>-->
     </v-dialog>
 
     <v-snackbar v-model="isSnackbarOpen" timeout="5000"
@@ -158,9 +111,9 @@ const AUTHORS = [
   "Tibo - Bigouu 🍊",
   "Christophe - piStoph 🍺",
   "Hugo - Cashless 💰",
-  "Tom - Nimbus ☁️",
+  "Tom - Nimbus 🧹",
   "Paul - Craker 💥",
-  "Thomas - Ginny 💡"
+  "Thomas - Ginny 💡",
 ];
 
 export default {
@@ -168,7 +121,6 @@ export default {
     return {
       clipped: false,
       drawer: false,
-      fixed: false,
       isWhiteMode: true, // let this set to true
       counter: 0,
       isJauneActive: false,
@@ -326,7 +278,6 @@ export default {
       localStorage["theme"] = this.$vuetify.theme.dark;
     },
 
-
     async clickOnTitle() {
       this.counter++;
       if (this.counter > 10) {
@@ -348,10 +299,10 @@ export default {
       let form = new FormData();
       this.newRequest.url = window.location.href;
       this.newRequest.priority =
-        "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
+          "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
       this.newRequest.author = getUser(this).username
-        ? getUser(this).username
-        : getUser(this).lastname;
+          ? getUser(this).username
+          : getUser(this).lastname;
       this.newRequest.tags = [this.newRequest.priority];
       // this.newRequest.repo = '24-heures-insa/overbookd/frontend'
 
@@ -384,8 +335,8 @@ export default {
         return "Ricard.png";
       }
       return this.$vuetify.theme.dark
-        ? "overbookd_logo_blanc.png"
-        : "overbookd_logo_noir.png";
+          ? "overbookd_logo_blanc.png"
+          : "overbookd_logo_noir.png";
     },
   },
 };

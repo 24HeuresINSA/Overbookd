@@ -40,24 +40,39 @@
           <td>{{ new Date(schedule.start).toLocaleTimeString() }}</td>
           <td>{{ new Date(schedule.end).toLocaleTimeString() }}</td>
           <td>
-            <v-list-item v-for="(need, index) in schedule.needs" v-bind:key="index">
+            <v-list-item
+                v-for="(need, index) in schedule.needs"
+                v-bind:key="index"
+            >
               <v-list-item-content>
-                <v-list-item-title>{{ need.role ? `${need.amount} ${need.role}` : need }}</v-list-item-title>
+                <v-list-item-title>{{
+                    need.role ? `${need.amount} ${need.role}` : need
+                  }}
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </td>
           <td>
             <template v-if="schedule.assigned">
-              <v-list-item v-for="(assigned, index) in schedule.assigned" v-bind:key="index">
+              <v-list-item
+                  v-for="(assigned, index) in schedule.assigned"
+                  v-bind:key="index"
+              >
                 <v-list-item-content>
-                  <v-list-item-title>{{ assigned.username ? assigned.username : assigned }}</v-list-item-title>
+                  <v-list-item-title>{{
+                      assigned.username ? assigned.username : assigned
+                    }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </template>
           </td>
           <td>
             <v-btn icon @click="deleteSchedule(schedule)">🗑</v-btn>
-            <v-btn text @click="openAssignmentDialog(index)">ajouter des orgas</v-btn>
+            <v-btn text @click="openAssignmentDialog(index)"
+            >ajouter des orgas
+            </v-btn
+            >
           </td>
         </tr>
         </tbody>
@@ -143,7 +158,10 @@
         <v-card-title>Humains</v-card-title>
         <v-card-text>
           <template v-if="requiredHumans">
-            <v-list-item v-for="(need, index) in requiredHumans" v-bind:key="index">
+            <v-list-item
+                v-for="(need, index) in requiredHumans"
+                v-bind:key="index"
+            >
               <v-list-item-content>
                 <v-list-item-title>{{ need }}</v-list-item-title>
               </v-list-item-content>
@@ -151,14 +169,23 @@
           </template>
 
           <h4>Affecter une personne</h4>
-          <v-autocomplete :items="usernames" v-model="assignedHuman"></v-autocomplete>
+          <v-autocomplete
+              :items="usernames"
+              v-model="assignedHuman"
+          ></v-autocomplete>
           <v-btn @click="addHuman()">ajouter</v-btn>
           <h4>Affecter un role</h4>
-          <v-autocomplete label="role" v-model="assignedRole"
-                          :items="getConfig('teams').map(e => e.name)"></v-autocomplete>
-          <v-text-field label="Nombre" v-model="assignedAmount" type="number"></v-text-field>
+          <v-autocomplete
+              label="role"
+              v-model="assignedRole"
+              :items="getConfig('teams').map((e) => e.name)"
+          ></v-autocomplete>
+          <v-text-field
+              label="Nombre"
+              v-model="assignedAmount"
+              type="number"
+          ></v-text-field>
           <v-btn @click="addRole()">ajouter</v-btn>
-
         </v-card-text>
         <v-card-actions>
           <v-btn @click="saveRequiredHuman()" text>💾</v-btn>
@@ -270,7 +297,7 @@ export default {
     if (mFT.equipments) {
       this.selectedEquipment = mFT.equipments;
     }
-    this.usernames = (await this.$axios.get('/user/all')).data
+    this.usernames = (await this.$axios.get("/user/all")).data;
   },
 
   methods: {
@@ -279,9 +306,13 @@ export default {
     },
 
     saveRequiredHuman() {
-      this.$set(this.FT.schedules[this.selectedTimeframeIndex], 'needs', this.requiredHumans)
+      this.$set(
+          this.FT.schedules[this.selectedTimeframeIndex],
+          "needs",
+          this.requiredHumans
+      );
       this.isAssignmentDialogOpen = false;
-      console.log(this.FT.schedules)
+      console.log(this.FT.schedules);
     },
 
     addHuman() {
@@ -291,13 +322,15 @@ export default {
     addRole() {
       this.requiredHumans.push({
         role: this.assignedRole,
-        amount: this.assignedAmount
-      })
+        amount: this.assignedAmount,
+      });
     },
 
     openAssignmentDialog(timeframeIndex) {
       this.selectedTimeframeIndex = timeframeIndex;
-      this.requiredHumans = this.FT.schedules[timeframeIndex].needs ? this.FT.schedules[timeframeIndex].needs : [];
+      this.requiredHumans = this.FT.schedules[timeframeIndex].needs
+          ? this.FT.schedules[timeframeIndex].needs
+          : [];
       this.isAssignmentDialogOpen = true;
     },
 
@@ -344,8 +377,12 @@ export default {
       if (!this.FT.schedules) {
         this.$set(this.FT, "schedules", []);
       }
-      this.schedule.start = new Date(this.schedule.date + ' ' + this.schedule.start);
-      this.schedule.end = new Date(this.schedule.date + ' ' + this.schedule.end);
+      this.schedule.start = new Date(
+          this.schedule.date + " " + this.schedule.start
+      );
+      this.schedule.end = new Date(
+          this.schedule.date + " " + this.schedule.end
+      );
       this.$set(this.FT.schedules, this.FT.schedules.length, {
         ...this.schedule,
       });

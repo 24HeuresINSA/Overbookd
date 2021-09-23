@@ -59,7 +59,9 @@ export default {
         this.$router.push({
           path: "/login",
         });
-        alert(`Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}"`);
+        alert(
+            `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}"`
+        );
       }
     },
   },

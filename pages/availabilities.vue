@@ -12,23 +12,23 @@
     </v-progress-linear>
 
     <template v-for="(availability, index) in availabilities">
-      <br v-bind:key="index"/>
-      <h3 v-bind:key="index">{{ availability.name }}</h3>
-      <p v-bind:key="index">{{ availability.description }}</p>
+      <br/>
+      <h3>{{ availability.name }}</h3>
+      <p>{{ availability.description }}</p>
       <v-btn
           v-if="hasEditRole"
           @click="openDayDialog(availability)"
-          v-bind:key="index"
+          v-bind:key="availability.name"
       >ajouter une journe
       </v-btn>
-      <div style="display: flex" v-bind:key="index">
+      <div style="display: flex">
         <v-container
             v-for="(day, index) in availability.days"
             v-bind:key="index"
         >
           <v-card width="400px" v-if="hasRole(availability.role)">
             <v-card-title
-            >{{ new Date(day.date).toLocaleString() }}
+            >{{ new Date(day.date).toLocaleDateString() }}
             </v-card-title>
             <v-card-text>
               <v-list>
