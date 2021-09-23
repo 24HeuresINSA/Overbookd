@@ -33,8 +33,10 @@
         </v-combobox>
         <v-divider></v-divider>
 
-        <users-list :users="filteredUsers" v-on:selected-user="onSelectedUser"></users-list>
-
+        <users-list
+            :users="filteredUsers"
+            v-on:selected-user="onSelectedUser"
+        ></users-list>
       </v-card-text>
     </v-card>
   </div>
@@ -61,8 +63,7 @@ export default {
 
       timeframes: this.getConfig("timeframes"),
       teams: this.getConfig("teams"),
-
-    }
+    };
   },
 
   async mounted() {
@@ -79,13 +80,13 @@ export default {
         user2.charisma = user2.charisma ? user2.charisma : 0;
 
         if (user1.charisma > user2.charisma) {
-          return -1
+          return -1;
         }
         if (user1.charisma < user2.charisma) {
-          return 1
+          return 1;
         }
-        return 0
-      })
+        return 0;
+      });
     },
 
     getRoleMetadata(roleName) {
@@ -93,12 +94,12 @@ export default {
     },
 
     getConfig(key) {
-      return getConfig(this, key)
+      return getConfig(this, key);
     },
 
     onSelectedUser(user) {
-      this.$emit('selected-user', user);
-    }
+      this.$emit("selected-user", user);
+    },
   },
 
   watch: {
@@ -113,7 +114,7 @@ export default {
         if (filters.name) {
           const options = {
             // Search in `author` and in `tags` array
-            keys: ["firstname", "lastname", 'nickname'],
+            keys: ["firstname", "lastname", "nickname"],
           };
           const fuse = new Fuse(users, options);
 
@@ -135,13 +136,10 @@ export default {
         }
         this.filteredUsers = users;
         this.sortFilteredUsers();
-
       },
     },
-  }
-}
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

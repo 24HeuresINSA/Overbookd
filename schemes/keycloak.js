@@ -1,10 +1,9 @@
-import { RefreshScheme } from "~auth/runtime";
+import {RefreshScheme} from "~auth/runtime";
 import axios from "axios";
-import { KEYCLOAK } from "../config/url.json";
+import {KEYCLOAK} from "../config/url.json";
 import qs from "qs";
 
 export default class KeycloakScheme extends RefreshScheme {
-
   async login({ username, password }) {
     const data = qs.stringify({
       // keycloak accepts www-urlencoded-form and not JSON
@@ -44,8 +43,12 @@ export default class KeycloakScheme extends RefreshScheme {
       client_id: "project_a_web",
       grant_type: "refresh_token",
     });
-    const response = await axios.post((process.env.BASE_URL_KEYCLOAK || 'http://localhost:8080/') + KEYCLOAK.TOKEN, data);
-    this.updateTokens(response, { isRefreshing: true });
+    const response = await axios.post(
+        (process.env.BASE_URL_KEYCLOAK || "http://localhost:8080/") +
+        KEYCLOAK.TOKEN,
+        data
+    );
+    this.updateTokens(response, {isRefreshing: true});
     return response;
   }
 }

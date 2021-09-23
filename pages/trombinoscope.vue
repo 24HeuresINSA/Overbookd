@@ -1,6 +1,6 @@
 <template>
   <v-container style="display: flex; flex-wrap: wrap">
-    <v-card v-for="(user, i) in users" style="margin: 5px" v-bind:key="i">
+    <v-card v-for="(user, i) in users" style="margin: 5px" v-bind:key="i" max-width="400px" max-height="400px">
       <v-img
           v-if="user.pp"
           :src="getPPUrl() + 'api/user/pp/' + user.pp"

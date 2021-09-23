@@ -1,7 +1,16 @@
 <template>
   <div>
-    <v-img src="img/memes/home_meme2.jpeg"
-           style="position: absolute; left: 0;top: 0; height: 100%;width: 100%; opacity: 0.5"></v-img>
+    <v-img
+        src="img/memes/home_meme2.jpeg"
+        style="
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0.5;
+      "
+    ></v-img>
     <v-form>
       <v-container class="form-container">
         <v-row>

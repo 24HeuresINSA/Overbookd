@@ -17,13 +17,7 @@
           <v-list-item-action>
             <v-tooltip top @click="selectedUser = user">
               <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                >
-                  mdi-information
-                </v-icon>
+                <v-icon dark v-bind="attrs" v-on="on"> mdi-information</v-icon>
               </template>
               <span>{{ user.comment }}</span>
             </v-tooltip>
@@ -40,7 +34,7 @@ import {getConfig} from "../common/role";
 export default {
   name: "usersList",
 
-  props: ['users'],
+  props: ["users"],
 
   data() {
     return {
@@ -53,24 +47,22 @@ export default {
 
       timeframes: this.getConfig("timeframes"),
       teams: this.getConfig("teams"),
-    }
+    };
   },
 
   watch: {
     selectedUserIndex() {
       const selectedUser = this.users[this.selectedUserIndex];
-      this.$emit('selected-user', selectedUser)
+      this.$emit("selected-user", selectedUser);
     },
   },
 
   methods: {
     getConfig(key) {
-      return getConfig(this, key)
-    }
-  }
-}
+      return getConfig(this, key);
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

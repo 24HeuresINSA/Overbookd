@@ -158,13 +158,14 @@
     >
       <v-btn color="green" v-if="getValidator()" @click="validate()"
       >validate
-      </v-btn
-      >
+      </v-btn>
       <v-btn color="red" v-if="getValidator()" @click="dialogValidator = true"
       >refuse
+      </v-btn>
+      <v-btn color="secondary" @click="dialog = true"
+      >soumettre à validation
       </v-btn
       >
-      <v-btn color="secondary" @click="dialog = true">soumettre à validation</v-btn>
       <v-btn color="warning" @click="saveFA">sauvgarder 💾</v-btn>
     </div>
 
@@ -324,7 +325,6 @@ export default {
 
     if (!this.isNewFA) {
       this.FA = (await this.fetchFAbyID(this.FAID)).data;
-      console.log(this.FA)
       // update the form that is going to be displayed
       Object.keys(this.FA).forEach((key) => {
         let mField = this.form.find((field) => field.key === key);

@@ -9,8 +9,6 @@
       <li>🐞 signalisation de bug rederige vers le mail</li>
       <li>🔒 protection de la backend</li>
       <li>📝 demande d'orga dans un creneau de FT</li>
-
-
     </ul>
 
     <h1>Passage a la BETA</h1>
