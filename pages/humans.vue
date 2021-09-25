@@ -282,7 +282,7 @@
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
-import OverChips from "../components/overChips";
+import OverChips from "../components/atoms/overChips";
 
 export default {
   name: "Humans",

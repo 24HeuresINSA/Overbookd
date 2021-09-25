@@ -3,7 +3,7 @@
     <v-container style="display: grid">
       <v-row justify="center" align="center">
         <v-col cols="12" sm="6" md="4">
-          <v-card v-if="user">
+          <!-- <v-card v-if="user">
             <v-img
               v-if="user.pp"
               :src="getPPUrl() + 'api/user/pp/' + user.pp"
@@ -43,11 +43,11 @@
                 }}
               </v-btn>
             </v-card-actions>
-          </v-card>
+          </v-card> -->
         </v-col>
 
         <v-col cols="12" sm="4" md="6">
-          <v-card v-if="user">
+          <!-- <v-card v-if="user">
             <v-card-title>Notifications 📣️</v-card-title>
             <v-card-text v-if="user.notifications">
               <v-simple-table>
@@ -113,7 +113,7 @@
                 >Liste des Orgas
               </v-btn>
             </v-card-actions>
-          </v-card>
+          </v-card> -->
         </v-col>
 
         <v-col v-if="hasRole('hard')" cols="12" sm="6" md="4">
@@ -210,7 +210,7 @@
       {{ snackbarMessage }}
     </v-snackbar>
 
-    <v-dialog v-model="isBroadcastDialogOpen" max-width="600">
+    <!-- <v-dialog v-model="isBroadcastDialogOpen" max-width="600">
       <v-card>
         <v-card-title>Envoyer un message a l'asso</v-card-title>
         <v-card-text>
@@ -229,7 +229,7 @@
           <v-btn @click="broadcast">📣</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <v-dialog v-model="hasNotBeenApproved" max-width="600" persistent>
       <v-card>
@@ -271,7 +271,7 @@
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
-import OverChips from "../components/overChips";
+import OverChips from "../components/atoms/overChips";
 import OverForm from "../components/overForm";
 
 const SNACKBAR_MESSAGES = {
@@ -288,7 +288,7 @@ const SNACKBAR_MESSAGES = {
 };
 
 export default {
-  components: { OverForm, OverChips },
+  components: { OverForm },
 
   data() {
     return {

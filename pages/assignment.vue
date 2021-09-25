@@ -33,7 +33,7 @@
 
 <script>
 import { getConfig, hasRole } from "../common/role";
-import OverChips from "../components/overChips";
+import OverChips from "../components/atoms/overChips";
 import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";

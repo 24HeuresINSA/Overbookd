@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { getConfig } from "../common/role";
+import { getConfig } from "@/common/role";
 
 export default {
   name: "OverChips",
