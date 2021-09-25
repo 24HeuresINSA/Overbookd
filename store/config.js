@@ -1,9 +1,13 @@
-export const config = () => ({
-  data: [],
+const configsData = require("../config/configs.json");
+
+export const state = () => ({
+  data: {
+    data: configsData,
+  },
 });
 
 export const mutations = {
-  setConfig(config, data) {
-    config.data = data;
+  setConfig(state, data) {
+    state.data = data;
   },
 };
