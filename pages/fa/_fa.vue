@@ -154,6 +154,7 @@
         justify-content: space-evenly;
         position: sticky;
         bottom: 20px;
+        z-index: 30;
       "
     >
       <v-btn v-if="getValidator()" color="green" @click="validate()"
@@ -269,7 +270,7 @@ export default {
   data() {
     return {
       FAID: this.$route.params.fa,
-      isNewFA: this.$route.params.faID === "newFA",
+      isNewFA: this.$route.params.fa === "newFA",
       FA: {},
       dialog: false,
       dialogValidator: false,
@@ -315,6 +316,7 @@ export default {
     };
   },
   async mounted() {
+    console.log(this.isNewFA);
     // getFormConfig
     const teamField = this.form.find((field) => field.key === "team");
     if (teamField) {
