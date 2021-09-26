@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Fiche Anim 🎉</h1>
+    <h1>Fiche Animation 🎉</h1>
 
     <v-container style="display: grid">
       <v-row>
@@ -27,13 +27,13 @@
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
-                        >refuse</v-list-item-title
-                      >
+                        >Refusée
+                      </v-list-item-title>
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
-                        >walidé</v-list-item-title
-                      >
+                        >Walidée
+                      </v-list-item-title>
                     </v-list-item>
                   </v-list-item-group>
                 </v-list>
