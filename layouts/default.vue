@@ -212,6 +212,12 @@ export default {
           to: "/config",
         },
         {
+          icon: "mdi-format-list-bulleted",
+          roles: "admin",
+          title: "SG 📝️",
+          to: "/SG",
+        },
+        {
           icon: "mdi-fire",
           roles: "hard",
           title: "OverTinder 🍑",
