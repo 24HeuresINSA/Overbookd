@@ -5,10 +5,10 @@
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
             <v-img
-                v-if="user.pp"
-                :src="getPPUrl() + 'api/user/pp/' + user.pp"
-                max-width="600px"
-                max-height="500px"
+              v-if="user.pp"
+              :src="getPPUrl() + 'api/user/pp/' + user.pp"
+              max-width="600px"
+              max-height="500px"
             ></v-img>
             <v-card-title
               >Bonsoir
@@ -22,26 +22,24 @@
               <h3>📞 +33 {{ user.phone }}</h3>
               <h3>😎 {{ user.charisma || 0 }} points de charisme</h3>
               <h3>❤️ {{ user.friends ? user.friends.length : 0 }} amis</h3>
-              <h3>
-                📆 {{ new Date(user.birthdate).toLocaleDateString() }}
-              </h3>
+              <h3>📆 {{ new Date(user.birthdate).toLocaleDateString() }}</h3>
               <h3>
                 🗣 {{ user.assigned ? user.assigned.length : 0 }} tâches
                 affectées
               </h3>
               <h3>🚗 {{ user.hasDriverLicense ? "✅" : "🛑" }}</h3>
 
-              <over-chips :roles="user.team"></over-chips>
+              <OverChips :roles="user.team"></OverChips>
 
               <v-progress-linear :value="user.charisma"></v-progress-linear>
             </v-card-text>
             <v-card-actions>
               <v-btn text @click="isPPDialogOpen = true"
-              >📸
+                >📸
                 {{
                   user.pp
-                      ? `Mettre à jour la photo de profil`
-                      : `Ajouter une photo de profil`
+                    ? `Mettre à jour la photo de profil`
+                    : `Ajouter une photo de profil`
                 }}
               </v-btn>
             </v-card-actions>
@@ -53,7 +51,7 @@
             <v-card-title>Notifications 📣️</v-card-title>
             <v-card-text v-if="user.notifications">
               <v-simple-table>
-                <template v-slot:default>
+                <template #default>
                   <thead>
                     <tr>
                       <th class="text-left"></th>
@@ -63,32 +61,24 @@
                     </tr>
                   </thead>
                   <tbody>
-                  <tr
+                    <tr
                       v-for="(notification, index) in user.notifications"
-                      v-bind:key="index"
-                  >
-                    <td>
-                      {{
-                        notification.type === "friendRequest" ? "👨‍👩‍👧" : "📣"
-                      }}
-                    </td>
-                    <td>
-                      <over-chips :roles="notification.team"></over-chips>
-                    </td>
-                    <td>{{ notification.message }}</td>
-                    <td
-                        v-if="notification.type === 'friendRequest'"
-                      >
-                        <v-btn
-                          icon
-                          @click="acceptFriendRequest(notification)"
-                        >
+                      :key="index"
+                    >
+                      <td>
+                        {{
+                          notification.type === "friendRequest" ? "👨‍👩‍👧" : "📣"
+                        }}
+                      </td>
+                      <td>
+                        <OverChips :roles="notification.team"></OverChips>
+                      </td>
+                      <td>{{ notification.message }}</td>
+                      <td v-if="notification.type === 'friendRequest'">
+                        <v-btn icon @click="acceptFriendRequest(notification)">
                           <v-icon>mdi-account-check</v-icon>
                         </v-btn>
-                        <v-btn
-                          icon
-                          @click="refuseFriendRequest(notification)"
-                        >
+                        <v-btn icon @click="refuseFriendRequest(notification)">
                           <v-icon>mdi-account-cancel</v-icon>
                         </v-btn>
                       </td>
@@ -108,29 +98,29 @@
 
             <template v-if="hasRole(['admin', 'bureau'])">
               <v-card-title
-              >{{ notValidatedCount }} Orgas non validés
+                >{{ notValidatedCount }} Orgas non validés
               </v-card-title>
             </template>
 
             <v-card-actions>
               <v-btn
-                  text
-                  v-if="hasRole('hard')"
-                  @click="isBroadcastDialogOpen = true"
-              >broadcast
+                v-if="hasRole('hard')"
+                text
+                @click="isBroadcastDialogOpen = true"
+                >broadcast
               </v-btn>
-              <v-btn text v-if="hasRole(['admin', 'bureau'])" to="/humans"
-              >Liste des Orgas
+              <v-btn v-if="hasRole(['admin', 'bureau'])" text to="/humans"
+                >Liste des Orgas
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
 
-        <v-col cols="12" sm="6" md="4" v-if="hasRole('hard')">
+        <v-col v-if="hasRole('hard')" cols="12" sm="6" md="4">
           <v-card v-if="user">
             <v-card-title>Compte Perso 💰</v-card-title>
             <v-card-subtitle
-            >Balance : {{ user.balance || 0 }} €
+              >Balance : {{ user.balance || 0 }} €
             </v-card-subtitle>
             <v-card-text v-if="user.transactionHistory">
               <v-simple-table>
@@ -141,13 +131,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                <tr
+                  <tr
                     v-for="(item, i2) in displayedTransactionHistory"
-                    v-bind:key="i2"
-                >
-                  <td>{{ item.reason }}</td>
-                  <td class="text-right">{{ item.amount }} €</td>
-                </tr>
+                    :key="i2"
+                  >
+                    <td>{{ item.reason }}</td>
+                    <td class="text-right">{{ item.amount }} €</td>
+                  </tr>
                 </tbody>
               </v-simple-table>
             </v-card-text>
@@ -167,7 +157,7 @@
                 <v-list-item-group>
                   <v-list-item
                     v-for="item in user.friends"
-                    v-bind:key="item.username"
+                    :key="item.username"
                   >
                     <v-list-item-content>
                       <v-list-item-title>{{ item.username }}</v-list-item-title>
@@ -187,9 +177,9 @@
             </v-card-text>
             <v-card-actions>
               <v-autocomplete
-                  label="prénom.nom de ton pote"
-                  v-model="newFriend"
-                  :items="usernames"
+                v-model="newFriend"
+                label="prénom.nom de ton pote"
+                :items="usernames"
               ></v-autocomplete>
               <v-btn text @click="sendFriendRequest">demander en ami</v-btn>
             </v-card-actions>
@@ -198,12 +188,9 @@
 
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
-            <v-img
-              src="https://media.giphy.com/media/WJZbQEoljvfxK/giphy.gif"
-            ></v-img>
             <v-card-title>Le Clicker ⏱</v-card-title>
             <v-card-subtitle
-            >Le compteur de blagues qui dérapent 🚗
+              >Le compteur de blagues qui dérapent 🚗
             </v-card-subtitle>
             <v-card-text>
               <h2>{{ user.clicks || 0 }} 🚗</h2>
@@ -224,12 +211,15 @@
       <v-card>
         <v-card-title>Envoyer un message a l'asso</v-card-title>
         <v-card-text>
-          <v-text-field label="lien" v-model="notification.link"></v-text-field>
-          <v-autocomplete label="team" v-model="notification.team"
-                          :items="getConfig('teams').map(e=>e.name)"></v-autocomplete>
+          <v-text-field v-model="notification.link" label="lien"></v-text-field>
+          <v-autocomplete
+            v-model="notification.team"
+            label="team"
+            :items="getConfig('teams').map((e) => e.name)"
+          ></v-autocomplete>
           <v-text-field
-            label="message"
             v-model="notification.message"
+            label="message"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
@@ -265,8 +255,8 @@
       <v-card>
         <v-card-title>Effectuer un virement</v-card-title>
         <v-card-text>
-          <over-form :fields="transferForm" @form-change="onFormChange">
-          </over-form>
+          <OverForm :fields="transferForm" @form-change="onFormChange">
+          </OverForm>
         </v-card-text>
         <v-card-actions>
           <v-btn @click="transferMoney()">Enregistrer</v-btn>
@@ -277,7 +267,7 @@
 </template>
 
 <script>
-import {getConfig, getUser, hasRole} from "../common/role";
+import { getConfig, getUser, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
 import OverForm from "../components/overForm";
 
@@ -291,11 +281,11 @@ const SNACKBAR_MESSAGES = {
   },
   error: "🥵 sheeshh une erreur ",
   broadcasted: "broadcast envoyé 📣",
-  imageUpdated: "image sauvgarder, rafraichissez la page pour la voir"
+  imageUpdated: "image sauvgarder, rafraichissez la page pour la voir",
 };
 
 export default {
-  components: {OverForm, OverChips},
+  components: { OverForm, OverChips },
 
   data() {
     return {
@@ -340,6 +330,21 @@ export default {
     };
   },
 
+  computed: {
+    displayedTransactionHistory() {
+      let result = [];
+      if (this.user && this.user.transactionHistory) {
+        let fullTransactionHistory = this.user.transactionHistory;
+        fullTransactionHistory.forEach((transaction) => {
+          if (result.length < 3) {
+            result.push(transaction);
+          }
+        });
+      }
+      return result;
+    },
+  },
+
   async mounted() {
     this.user = await getUser(this);
 
@@ -354,11 +359,11 @@ export default {
 
   methods: {
     getConfig(key) {
-      return getConfig(this, key)
+      return getConfig(this, key);
     },
 
     async getNotValidatedCount() {
-      let {data: users} = await this.$axios.get("/user");
+      let { data: users } = await this.$axios.get("/user");
       return users.filter((user) => user.team.length === 0).length;
     },
 
@@ -423,7 +428,7 @@ export default {
       ) {
         // already friends
         this.snackbarMessage =
-            this.SNACKBAR_MESSAGES.friendRequest.alreadyFriend + this.newFriend;
+          this.SNACKBAR_MESSAGES.friendRequest.alreadyFriend + this.newFriend;
         this.isSnackbarOpen = true;
         return;
       }
@@ -433,9 +438,9 @@ export default {
           getUser(this).firstname
         } vous a envoye une demande d'ami ❤️`,
         from: `${
-            getUser(this).nickname
-                ? getUser(this).nickname
-                : getUser(this).lastname
+          getUser(this).nickname
+            ? getUser(this).nickname
+            : getUser(this).lastname
         }`,
         date: new Date(),
         data: {
@@ -498,8 +503,8 @@ export default {
     async transferMoney() {
       if (this.transfer.isValid) {
         if (
-            this.transfer.user ===
-            this.user.firstname + "." + this.user.lastname
+          this.transfer.user ===
+          this.user.firstname + "." + this.user.lastname
         ) {
           return;
         }
@@ -518,21 +523,6 @@ export default {
       }
     },
   },
-
-  computed: {
-    displayedTransactionHistory() {
-      let result = [];
-      if (this.user && this.user.transactionHistory) {
-        let fullTransactionHistory = this.user.transactionHistory;
-        fullTransactionHistory.forEach((transaction) => {
-          if (result.length < 3) {
-            result.push(transaction)
-          }
-        })
-      }
-      return result
-    }
-  }
 };
 </script>
 <style></style>

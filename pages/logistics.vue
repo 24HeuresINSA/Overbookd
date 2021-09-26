@@ -3,13 +3,13 @@
     <h1>La Log 🚚 (work in progess 🔨)</h1>
 
     <v-select
-      label="item a verifier"
       v-model="selectedItem"
+      label="item a verifier"
       :items="equipments.map((e) => e.name)"
     ></v-select>
 
     <v-data-table :headers="headers" :items="selectedEquipments">
-      <template v-slot:[`item.action`]>
+      <template #[`item.action`]>
         <v-btn text>FT</v-btn>
         <v-btn color="green" icon>
           <v-icon>mdi-check</v-icon>
@@ -26,7 +26,7 @@
 import { hasRole } from "../common/role";
 
 export default {
-  name: "logistics",
+  name: "Logistics",
 
   data() {
     return {
@@ -59,6 +59,16 @@ export default {
       equipments: [],
       selectedItem: undefined,
     };
+  },
+
+  computed: {
+    selectedEquipments() {
+      if (this.selectedItem === undefined) {
+        return [];
+      }
+      return this.equipments.find((e) => e.name === this.selectedItem)
+        .requested;
+    },
   },
 
   async mounted() {
@@ -121,16 +131,6 @@ export default {
   methods: {
     getRandomInt() {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
-    },
-  },
-
-  computed: {
-    selectedEquipments() {
-      if (this.selectedItem === undefined) {
-        return [];
-      }
-      return this.equipments.find((e) => e.name === this.selectedItem)
-        .requested;
     },
   },
 };
