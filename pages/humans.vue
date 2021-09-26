@@ -56,11 +56,11 @@
             :items-per-page="30"
             class="elevation-1"
           >
-            <template #[`item.action`]="{ item }">
+            <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
-                fab
+                text
                 style="color: blue"
-                class="fab"
+                small
                 :href="
                   'https://www.facebook.com/search/top?q=' +
                   item.firstname +
@@ -71,18 +71,28 @@
               </v-btn>
               <v-btn
                 v-if="hasRole('admin')"
-                fab
-                class="fab"
+                text
+                small
                 @click="openTransactionDialog(item)"
-                ><v-icon>mdi-cash</v-icon></v-btn
               >
+                <v-icon>mdi-cash</v-icon>
+              </v-btn>
               <v-btn
                 v-if="hasRole('hard')"
-                fab
-                class="fab"
+                text
+                small
                 @click="openInformationDialog(item)"
-                ><v-icon>mdi-information-outline</v-icon></v-btn
               >
+                <v-icon>mdi-information-outline</v-icon>
+              </v-btn>
+              <v-btn
+                v-if="hasRole(['admin', 'bureau'])"
+                text
+                small
+                @click="openCharismaDialog(item)"
+              >
+                <v-icon>mdi-emoticon-cool</v-icon>
+              </v-btn>
             </template>
 
             <template #[`item.team`]="{ item }">
@@ -262,8 +272,28 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Charisme 😎</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="newCharisma.reason" label="raison">
+          </v-text-field>
+          <v-text-field
+            v-model="newCharisma.amount"
+            label="qunatité"
+            type="number"
+          >
+          </v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="saveNewCharisma()">+</v-btn>
+          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
-      💸 transaction done 🥳
+      {{ feedbackMessage }}
 
       <template #action="{ attrs }">
         <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
@@ -309,6 +339,7 @@ export default {
       isInformationDialogOpen: false,
       isUserDialogOpen: false,
       isSnackbarOpen: false,
+      isCharismaDialogOpen: false,
       selectedUser: {
         nickname: undefined,
       },
@@ -316,7 +347,13 @@ export default {
         reason: "recharge compte perso",
         amount: undefined,
       },
+      newCharisma: {
+        reason: undefined,
+        amount: undefined,
+      },
       newRole: undefined,
+
+      feedbackMessage: "sauvgardé 🥳",
     };
   },
 
@@ -395,6 +432,11 @@ export default {
   },
 
   methods: {
+    openCharismaDialog(user) {
+      this.selectedUser = user;
+      this.isCharismaDialogOpen = true;
+    },
+
     async addRole() {
       let user = this.selectedUser;
       if (user.team === undefined) {
@@ -437,6 +479,40 @@ export default {
       this.isUserDialogOpen = true;
     },
 
+    async saveNewCharisma(isNegative) {
+      if (!this.selectedUser.charisma) {
+        this.selectedUser.charisma = 0;
+      }
+
+      if (!this.selectedUser.charismaHistory) {
+        this.selectedUser.charismaHistory = [];
+      }
+      this.newCharisma.amount =
+        (isNegative ? "-" : "+") + this.newCharisma.amount;
+      this.selectedUser.charismaHistory.unshift(this.newCharisma);
+
+      this.selectedUser.charisma =
+        +this.selectedUser.charisma + +this.newCharisma.amount;
+
+      // update notifications
+      if (!this.selectedUser.notifications) {
+        this.selectedUser.notifications = [];
+      }
+      this.selectedUser.notifications.unshift({
+        date: new Date(),
+        team: "bureau",
+        message: `tu as reçu ${this.newCharisma.amount} points de charisme pour ${this.newCharisma.reason}`,
+        type: "charisma",
+      });
+
+      await this.$axios.put(
+        "/user/" + this.selectedUser.keycloakID,
+        this.selectedUser
+      );
+      this.isSnackbarOpen = true;
+      this.isCharismaDialogOpen = false;
+    },
+
     async transaction(isNegative) {
       if (!this.selectedUser.transactionHistory) {
         this.selectedUser.transactionHistory = [];
@@ -445,6 +521,8 @@ export default {
       if (this.selectedUser.balance === undefined) {
         this.selectedUser.balance = 0;
       }
+
+      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
 
       if (isNegative) {
         this.selectedUser.balance =
@@ -491,6 +569,6 @@ export default {
 
 <style scoped>
 .fab {
-  margin: 5px;
+  margin: 3px;
 }
 </style>
