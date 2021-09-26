@@ -1,7 +1,16 @@
 <template>
   <div>
-    <v-img src="img/memes/home_meme2.jpeg"
-           style="position: absolute; left: 0;top: 0; height: 100%;width: 100%; opacity: 0.5"></v-img>
+    <v-img
+      src="img/memes/home_meme2.jpeg"
+      style="
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0.5;
+      "
+    ></v-img>
     <v-form>
       <v-container class="form-container">
         <v-row>
@@ -9,9 +18,9 @@
         </v-row>
         <v-row>
           <v-img
-              :src="'img/logo/' + overbookd_logo"
-              alt="overbookd logo"
-              class="logo"
+            :src="'img/logo/' + overbookd_logo"
+            alt="overbookd logo"
+            class="logo"
           ></v-img>
         </v-row>
         <v-row>
@@ -22,7 +31,7 @@
         <v-row>
           <v-text-field
             v-model="credentials.username"
-            label="username"
+            label="username ou email"
             type="text"
             required
             autofocus
@@ -45,7 +54,7 @@
         class="signupBtn Btn"
         >signup</v-btn
       >
-      <v-btn color="primary" elevation="2" @click="login()" class="loginBtn Btn"
+      <v-btn color="primary" elevation="2" class="loginBtn Btn" @click="login()"
         >login</v-btn
       >
     </v-form>
@@ -60,7 +69,7 @@ const REDIRECT_URL = "/"; // TODO change this to eventSelector page
 const { version } = require("../package.json");
 
 export default {
-  name: "login",
+  name: "Login",
   auth: false,
   layout: "none",
 
@@ -74,6 +83,14 @@ export default {
     timeout: 5000,
     version,
   }),
+
+  computed: {
+    overbookd_logo: function () {
+      return this.$vuetify.theme.dark
+        ? "overbookd_logo_blanc.png"
+        : "overbookd_logo_noir.png";
+    },
+  },
 
   async beforeCreate() {
     if (this.$auth.loggedIn) {
@@ -104,14 +121,6 @@ export default {
         console.log("an error has occurred");
         console.error();
       }
-    },
-  },
-
-  computed: {
-    overbookd_logo: function () {
-      return this.$vuetify.theme.dark
-        ? "overbookd_logo_blanc.png"
-        : "overbookd_logo_noir.png";
     },
   },
 };

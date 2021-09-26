@@ -9,7 +9,7 @@
             <v-card>
               <v-card-title>Filters</v-card-title>
               <v-card-text>
-                <v-text-field label="recherche" v-model="search">
+                <v-text-field v-model="search" label="recherche">
                 </v-text-field>
 
                 <v-list shaped style="font-size: 10px">
@@ -40,8 +40,8 @@
 
                 <br />
                 <v-select
-                  label="équipe"
                   v-model="selectedTeam"
+                  label="équipe"
                   :items="getConfig('teams').map((e) => e.name)"
                 ></v-select>
               </v-card-text>
@@ -51,21 +51,21 @@
 
         <v-col cols="10">
           <v-data-table
-              :headers="headers"
-              :items="selectedFAs"
-              :items-per-page="20"
-              class="elevation-1"
+            :headers="headers"
+            :items="selectedFAs"
+            :items-per-page="20"
+            class="elevation-1"
           >
-            <template v-slot:[`item.action`]="row">
+            <template #[`item.action`]="row">
               <tr>
                 <td>
                   <v-btn
-                      class="mx-2"
-                      icon
-                      dark
-                      small
-                      color="primary"
-                      @click="onItemSelected(row.item)"
+                    class="mx-2"
+                    icon
+                    dark
+                    small
+                    color="primary"
+                    @click="onItemSelected(row.item)"
                   >
                     <v-icon dark>mdi-circle-edit-outline</v-icon>
                   </v-btn>
@@ -73,11 +73,11 @@
               </tr>
             </template>
 
-            <template v-slot:[`item.status`]="row">
+            <template #[`item.status`]="row">
               <v-avatar
-                  v-if="row.item"
-                  :color="color[row.item.status]"
-                  size="20"
+                v-if="row.item"
+                :color="color[row.item.status]"
+                size="20"
               ></v-avatar>
             </template>
           </v-data-table>
@@ -92,11 +92,11 @@
 </template>
 
 <script>
-import {getConfig} from "../../common/role";
+import { getConfig } from "../../common/role";
 import Fuse from "fuse.js";
 
 export default {
-  name: "fa",
+  name: "Fa",
   data() {
     return {
       FAs: [],
@@ -110,11 +110,11 @@ export default {
       selectedStatus: 0,
       selectedTeam: undefined,
       headers: [
-        {text: "status", value: "status"},
-        {text: "nom", value: "name"},
-        {text: "equipe", value: "team"},
-        {text: "Resp", value: "inCharge"},
-        {text: "action", value: "action"},
+        { text: "status", value: "status" },
+        { text: "nom", value: "name" },
+        { text: "equipe", value: "team" },
+        { text: "Resp", value: "inCharge" },
+        { text: "action", value: "action" },
       ],
       color: {
         submitted: "warning",
@@ -144,6 +144,10 @@ export default {
       }
       return fuse.search(this.search).map((e) => e.item);
     },
+  },
+  async mounted() {
+    // get FAs
+    this.FAs = (await this.$axios.get("/FA")).data;
   },
 
   methods: {
@@ -193,10 +197,6 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
     },
-  },
-  async mounted() {
-    // get FAs
-    this.FAs = (await this.$axios.get("/FA")).data;
   },
 };
 </script>

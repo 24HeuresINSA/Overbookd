@@ -8,21 +8,21 @@
       <h2 v-if="FA.count">FA: {{ FA.count }}</h2>
       <h3>{{ FA.status ? FA.status : "draft" }}</h3>
       <v-icon
-          v-for="(validator, i) of validators"
-          v-bind:key="i"
-          :color="validator.status ? color[validator.status] : 'grey'"
+        v-for="(validator, i) of validators"
+        :key="i"
+        :color="validator.status ? color[validator.status] : 'grey'"
       >
         {{ validator.icon }}
       </v-icon>
     </div>
     <br />
 
-    <over-form :fields="form" @form-change="onFormChange"> </over-form>
+    <OverForm :fields="form" @form-change="onFormChange"> </OverForm>
 
     <v-divider></v-divider>
     <h2>Horaires ⏱</h2>
     <v-simple-table v-if="FA.schedules">
-      <template v-slot:default>
+      <template #default>
         <thead>
           <tr>
             <th class="text-left">jour</th>
@@ -65,16 +65,16 @@
         </v-col>
         <v-col>
           <v-time-picker
-              :allowed-minutes="allowedMinutes"
-              format="24hr"
-              v-model="schedule.start"
+            v-model="schedule.start"
+            :allowed-minutes="allowedMinutes"
+            format="24hr"
           ></v-time-picker>
         </v-col>
         <v-col>
           <v-time-picker
-              :allowed-minutes="allowedMinutes"
-              format="24hr"
-              v-model="schedule.end"
+            v-model="schedule.end"
+            :allowed-minutes="allowedMinutes"
+            format="24hr"
           ></v-time-picker>
         </v-col>
         <v-btn fab style="margin: 20px" @click="addSchedule">
@@ -86,7 +86,7 @@
     <v-divider></v-divider>
     <h2>Matos 🚚</h2>
     <v-data-table :headers="equipmentsHeader" :items="selectedEquipments">
-      <template v-slot:top>
+      <template #top>
         <v-toolbar flat>
           <v-toolbar-title>Equipments</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -106,7 +106,7 @@
     <v-divider></v-divider>
     <h2>Comments</h2>
     <v-simple-table v-if="FA.comments">
-      <template v-slot:default>
+      <template #default>
         <thead>
           <tr>
             <th class="text-left">validateur</th>
@@ -137,7 +137,7 @@
     <v-divider></v-divider>
     <h2>Fiche tâche 🤩</h2>
     <v-data-table :headers="FTHeader" :items="FA.FTs">
-      <template v-slot:[`item.action`]="item">
+      <template #[`item.action`]="item">
         <v-btn :href="'/ft/' + item.item._id">
           <v-icon>mdi-link</v-icon>
         </v-btn>
@@ -154,17 +154,18 @@
         justify-content: space-evenly;
         position: sticky;
         bottom: 20px;
+        z-index: 30;
       "
     >
-      <v-btn color="green" v-if="getValidator()" @click="validate()"
-      >validate
-      </v-btn
-      >
-      <v-btn color="red" v-if="getValidator()" @click="dialogValidator = true"
-      >refuse
-      </v-btn
-      >
-      <v-btn color="secondary" @click="dialog = true">soumettre à validation</v-btn>
+      <v-btn v-if="getValidator()" color="green" @click="validate()"
+        >validate
+      </v-btn>
+      <v-btn v-if="getValidator()" color="red" @click="dialogValidator = true"
+        >refuse
+      </v-btn>
+      <v-btn color="secondary" @click="dialog = true"
+        >soumettre à validation
+      </v-btn>
       <v-btn color="warning" @click="saveFA">sauvgarder 💾</v-btn>
     </div>
 
@@ -200,7 +201,7 @@
         <v-card-text>
           <h4>pourquoi c'est de la 💩</h4>
           <p>sans trop de 🧂</p>
-          <v-text-field required v-model="refuseComment"></v-text-field>
+          <v-text-field v-model="refuseComment" required></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -219,19 +220,19 @@
             :headers="equipmentsHeader"
             :items="availableEquipments"
           >
-            <template v-slot:[`item.amount`]="props">
+            <template #[`item.amount`]="props">
               {{
                 +(props.item.borrowed
-                    ? props.item.borrowed
-                        .map((i) => i.amount)
-                        .reduce((a, e) => +a + +e, 0)
-                    : 0) + +props.item.amount
+                  ? props.item.borrowed
+                      .map((i) => i.amount)
+                      .reduce((a, e) => +a + +e, 0)
+                  : 0) + +props.item.amount
               }}
             </template>
-            <template v-slot:[`item.selected`]="props">
+            <template #[`item.selected`]="props">
               <v-text-field
-                  type="number"
-                  v-model="props.item.selected"
+                v-model="props.item.selected"
+                type="number"
               ></v-text-field>
             </template>
           </v-data-table>
@@ -250,7 +251,7 @@
     <v-snackbar v-model="isSnackbar" :timeout="5000">
       {{ snackbarMessage }}
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn color="blue" text v-bind="attrs" @click="isSnackbar = false">
           Close
         </v-btn>
@@ -263,13 +264,13 @@
 import OverForm from "../../components/overForm";
 
 export default {
-  name: "fa",
-  components: {OverForm},
+  name: "Fa",
+  components: { OverForm },
 
   data() {
     return {
       FAID: this.$route.params.fa,
-      isNewFA: this.$route.params.faID === "newFA",
+      isNewFA: this.$route.params.fa === "newFA",
       FA: {},
       dialog: false,
       dialogValidator: false,
@@ -315,6 +316,7 @@ export default {
     };
   },
   async mounted() {
+    console.log(this.isNewFA);
     // getFormConfig
     const teamField = this.form.find((field) => field.key === "team");
     if (teamField) {
@@ -324,7 +326,6 @@ export default {
 
     if (!this.isNewFA) {
       this.FA = (await this.fetchFAbyID(this.FAID)).data;
-      console.log(this.FA)
       // update the form that is going to be displayed
       Object.keys(this.FA).forEach((key) => {
         let mField = this.form.find((field) => field.key === key);
@@ -354,7 +355,6 @@ export default {
           this.$set(refuse, "status", "validated");
         });
       }
-    } else {
     }
   },
 

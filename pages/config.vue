@@ -9,30 +9,30 @@
 
     <h2>Inscription</h2>
     <v-switch
-      label="Ouverture des inscription"
       v-model="config.isSignupOpen"
+      label="Ouverture des inscription"
     ></v-switch>
     <v-text-field
-      label="message de fermeture"
       v-model="config.fb_signup_closed"
+      label="message de fermeture"
     ></v-text-field>
 
     <h2>FA</h2>
     <v-text-field
-      label="message de confirmation"
       v-model="config.fb_confirm_submit"
+      label="message de confirmation"
     ></v-text-field>
 
     <h2>Dispo</h2>
     <v-text-field
+      v-model="config.max_charisma"
       label="charisme max"
       type="number"
-      v-model="config.max_charisma"
     ></v-text-field>
     <v-textarea
+      v-model="config.availabilities_description"
       label="description des dispo"
       type="number"
-      v-model="config.availabilities_description"
     ></v-textarea>
 
     <h2>Log</h2>
@@ -47,7 +47,7 @@
 import { getConfig, hasRole } from "../common/role";
 
 export default {
-  name: "config",
+  name: "Config",
 
   data() {
     return {
@@ -67,6 +67,7 @@ export default {
 
   async mounted() {
     if (hasRole(this, ["admin", "bureau"])) {
+      //TODO: Invert this to avoid empty if
     } else {
       await this.$router.push({
         path: "/",

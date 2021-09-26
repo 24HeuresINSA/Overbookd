@@ -11,25 +11,36 @@
       width: 100%;
     "
   >
-    <filtered-users @selected-user="onSelectedUser" style="max-width: 350px"></filtered-users>
+    <FilteredUsers
+      style="max-width: 350px"
+      @selected-user="onSelectedUser"
+    ></FilteredUsers>
 
     <!-- calendar --->
-    <over-calendar :events="calendarDisplayedEvents" @delete-assignment="unassign"></over-calendar>
+    <OverCalendar
+      :center-day="new Date().setDate(new Date().getDate() - 5)"
+      :events="calendarDisplayedEvents"
+      @delete-assignment="unassign"
+    ></OverCalendar>
 
-    <over-tasks :user="selectedUser" @add-task="addTask" style="max-width: 550px"></over-tasks>
+    <OverTasks
+      :user="selectedUser"
+      style="max-width: 550px"
+      @add-task="addTask"
+    ></OverTasks>
   </v-container>
 </template>
 
 <script>
-import {getConfig, hasRole} from "../common/role";
+import { getConfig, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
 import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";
 
 export default {
-  name: "assignment",
-  components: {OverCalendar, OverTasks, FilteredUsers, OverChips},
+  name: "Assignment",
+  components: { OverCalendar, OverTasks, FilteredUsers },
   data() {
     return {
       selectedUserFriend: undefined,
@@ -46,6 +57,64 @@ export default {
       teams: this.getConfig("teams"),
       timeframes: this.getConfig("timeframes"),
     };
+  },
+
+  computed: {
+    calendarDisplayedEvents() {
+      let events = [];
+      if (this.selectedUser) {
+        if (this.selectedUser.assigned) {
+          // add assigned tasks
+          events = this.selectedUser.assigned;
+        }
+        if (this.selectedUser.availabilities) {
+          // add availabilities
+          this.selectedUser.availabilities.forEach((availability) => {
+            availability.days.forEach((day) => {
+              day.frames.forEach((frame) => {
+                let existingEvent = events.find((e) => {
+                  return (
+                    e.name === "Disponible" &&
+                    e.schedule.start ===
+                      new Date(day.date + " " + frame.start) &&
+                    e.end === new Date(day.date + " " + frame.end)
+                  );
+                });
+                if (!existingEvent) {
+                  events.push({
+                    name: "Disponible",
+                    color: "rgba(92,138,217,0.56)",
+                    schedule: {
+                      start: new Date(day.date + " " + frame.start),
+                      end: new Date(day.date + " " + frame.end),
+                    },
+                  });
+                }
+              });
+            });
+          });
+        }
+      }
+
+      return events;
+    },
+  },
+
+  watch: {
+    selectedTimeframe() {
+      const selectedDayTimestamp = this.timeframes.find(
+        (e) => e.name === this.selectedTimeframe
+      );
+      if (selectedDayTimestamp) {
+        this.selectedDay = selectedDayTimestamp.day;
+      }
+    },
+
+    selectedAssignments() {
+      // selected assignment changed...
+      // let user = this.getSelectedUser;
+      // this.$set(user, "assigned", this.selectedAssignments);
+    },
   },
 
   async mounted() {
@@ -65,24 +134,31 @@ export default {
       }
       const assignmentID = this.uuidv4();
       timeframe._id = assignmentID;
-      this.selectedUser.assigned.push(timeframe)
+      this.selectedUser.assigned.push(timeframe);
       await this.saveUser();
-      await this.saveFT(assignmentID, timeframe.FTID, FT)
+      await this.saveFT(assignmentID, timeframe.FTID, FT);
     },
 
     async saveUser() {
-      return this.$axios.put(`/user/${this.selectedUser.keycloakID}`, {assigned: this.selectedUser.assigned.filter(e => e.FTID)})
+      return this.$axios.put(`/user/${this.selectedUser.keycloakID}`, {
+        assigned: this.selectedUser.assigned.filter((e) => e.FTID),
+      });
     },
 
     async saveFT(assignmentID, FTID, FT) {
-      const newSchedule = this.selectedUser.assigned.find(e => e.FTID === FTID); // the schedule that needs to be added to the FT
+      const newSchedule = this.selectedUser.assigned.find(
+        (e) => e.FTID === FTID
+      ); // the schedule that needs to be added to the FT
       if (newSchedule) {
         let schedules = FT.schedules;
-        let concernedSchedule = schedules.find(s => {
+        let concernedSchedule = schedules.find((s) => {
           const start = new Date(s.start);
           const end = new Date(s.end);
-          return start.getTime() === newSchedule.schedule.start.getTime() && end.getTime() === newSchedule.schedule.end.getTime()
-        })
+          return (
+            start.getTime() === newSchedule.schedule.start.getTime() &&
+            end.getTime() === newSchedule.schedule.end.getTime()
+          );
+        });
         if (concernedSchedule) {
           if (!concernedSchedule.assigned) {
             concernedSchedule.assigned = [];
@@ -90,36 +166,41 @@ export default {
           concernedSchedule.assigned.push({
             _id: assignmentID,
             userID: this.selectedUser._id,
-            username: this.selectedUser.firstname + '.' + this.selectedUser.lastname,
-          })
+            username:
+              this.selectedUser.firstname + "." + this.selectedUser.lastname,
+          });
         }
-        return this.$axios.put('/ft', {
+        return this.$axios.put("/ft", {
           _id: FTID,
           schedules,
-        })
+        });
       }
     },
 
     async unassign(timeframe) {
-      console.log(timeframe)
       if (this.selectedUser.assigned) {
-        this.selectedUser.assigned = this.selectedUser.assigned.filter(assignedTask => assignedTask.FTID !== timeframe.FTID);
+        this.selectedUser.assigned = this.selectedUser.assigned.filter(
+          (assignedTask) => assignedTask.FTID !== timeframe.FTID
+        );
         // save in database
         // save user
         await this.$axios.$put(`user/${this.selectedUser.keycloakID}`, {
-          assigned: this.selectedUser.assigned
-        })
+          assigned: this.selectedUser.assigned,
+        });
         // save ft
-        await this.$axios.put('FT/unassign', timeframe)
+        await this.$axios.put("FT/unassign", timeframe);
       }
-
     },
 
     uuidv4() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      })
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          const r = (Math.random() * 16) | 0,
+            v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
     },
 
     getConfig(key) {
@@ -136,55 +217,6 @@ export default {
     //   });
     //   this.isFeedbackSnackbarOpen = true;
     // },
-  },
-
-  computed: {
-    calendarDisplayedEvents() {
-      let events = []
-      if (this.selectedUser) {
-        if (this.selectedUser.assigned) { // add assigned tasks
-          events = this.selectedUser.assigned;
-        }
-        if (this.selectedUser.availabilities) { // add availabilities
-          this.selectedUser.availabilities.forEach(availability => {
-            availability.days.forEach(day => {
-              day.frames.forEach(frame => {
-                let existingEvent = events.find(e => {
-                  return e.name === 'Disponible' && e.schedule.start === new Date(day.date + ' ' + frame.start) && e.end === new Date(day.date + ' ' + frame.end)
-                })
-                if (!existingEvent) {
-                  events.push({
-                    name: 'Disponible',
-                    color: 'rgba(92,138,217,0.56)',
-                    schedule: {
-                      start: new Date(day.date + ' ' + frame.start),
-                      end: new Date(day.date + ' ' + frame.end),
-                    }
-                  })
-                }
-              })
-            })
-          })
-        }
-      }
-
-      return events;
-    }
-  },
-
-  watch: {
-    selectedTimeframe() {
-      const selectedDayTimestamp = this.timeframes.find(e => e.name === this.selectedTimeframe)
-      if (selectedDayTimestamp) {
-        this.selectedDay = selectedDayTimestamp.day;
-      }
-    },
-
-    selectedAssignments() {
-      // selected assignment changed...
-      // let user = this.getSelectedUser;
-      // this.$set(user, "assigned", this.selectedAssignments);
-    },
   },
 };
 </script>
