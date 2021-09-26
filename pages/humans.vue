@@ -283,6 +283,7 @@
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
+import Fuse from "fuse.js";
 
 export default {
   name: "Humans",
@@ -332,17 +333,13 @@ export default {
 
         // filter by search
         if (this.filters.search) {
-          mUsers = mUsers.filter((user) => {
-            let s = this.filters.search.toLowerCase();
-            const seatchNickname = user.nickname
-              ? user.nickname.toLowerCase().includes(s)
-              : false;
-            return (
-              user.firstname.toLowerCase().includes(s) ||
-              user.lastnam.toLowerCase().includes(s) ||
-              seatchNickname
-            );
-          });
+          const options = {
+            // Search in `author` and in `tags` array
+            keys: ["firstname", "lastname", "nickname"],
+          };
+          const fuse = new Fuse(mUsers, options);
+
+          mUsers = fuse.search(this.filters.search).map((e) => e.item);
         }
 
         // filter by driver licence
