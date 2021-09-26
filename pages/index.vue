@@ -188,9 +188,6 @@
 
         <v-col cols="12" sm="6" md="4">
           <v-card v-if="user">
-            <v-img
-              src="https://media.giphy.com/media/WJZbQEoljvfxK/giphy.gif"
-            ></v-img>
             <v-card-title>Le Clicker ⏱</v-card-title>
             <v-card-subtitle
               >Le compteur de blagues qui dérapent 🚗

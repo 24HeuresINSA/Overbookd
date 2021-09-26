@@ -31,7 +31,7 @@
         <v-row>
           <v-text-field
             v-model="credentials.username"
-            label="username"
+            label="username ou email"
             type="text"
             required
             autofocus
