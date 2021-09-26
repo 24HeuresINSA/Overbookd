@@ -155,12 +155,16 @@
               label="ajouter un role"
               :items="getConfig('teams').map((e) => e.name)"
             ></v-select>
-            <v-btn @click="addRole()">ajouter</v-btn>
+            <v-btn text @click="addRole()">ajouter</v-btn>
+            <v-btn text @click="deleteAllTeams()"
+              >révoquer tous les rôles</v-btn
+            >
           </div>
 
           <v-img
             v-if="selectedUser.pp"
             :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
+            max-height="300px"
           ></v-img>
 
           <v-simple-table>
@@ -241,11 +245,6 @@
               </tr>
 
               <tr>
-                <td>Handicap</td>
-                <td>{{ selectedUser.handicap }}</td>
-              </tr>
-
-              <tr>
                 <td>📚</td>
                 <td>{{ selectedUser.year }} {{ selectedUser.departement }}</td>
               </tr>
@@ -253,11 +252,6 @@
               <tr>
                 <td>Commentaire</td>
                 <td>{{ selectedUser.comment }}</td>
-              </tr>
-
-              <tr v-if="hasRole('admin')">
-                <td># secu social</td>
-                <td>{{ selectedUser.socialSecurity }}</td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -481,7 +475,15 @@ export default {
         `/user/${this.selectedUser.keycloakID}`,
         this.selectedUser
       );
-      this.isInformationDialogOpen = false;
+      this.isUserDialogOpen = false;
+    },
+
+    async deleteAllTeams() {
+      this.selectedUser.team = [];
+      await this.$axios.put(
+        `/user/${this.selectedUser.keycloakID}`,
+        this.selectedUser
+      );
     },
   },
 };
