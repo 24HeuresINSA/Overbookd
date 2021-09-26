@@ -502,6 +502,7 @@ export default {
     },
 
     async transferMoney() {
+      this.transfer.amount = this.transfer.amount.replace(",", ".");
       if (this.transfer.isValid) {
         if (
           this.transfer.user ===
