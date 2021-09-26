@@ -3,45 +3,42 @@
     <h2>Mes disponibilités</h2>
     <p>{{ detailMessage }}</p>
 
-    <br/>
+    <br />
     <h2>Mes point de charisme: {{ userCharisma }}/{{ maxCharisma }}</h2>
     <v-progress-linear height="25" :value="(userCharisma / maxCharisma) * 100">
-      <template v-slot:default="{ value }">
+      <template #default="{ value }">
         <strong>{{ Math.ceil(value) }}%</strong>
       </template>
     </v-progress-linear>
 
     <template v-for="(availability, index) in availabilities">
-      <br v-bind:key="index"/>
-      <h3 v-bind:key="index">{{ availability.name }}</h3>
-      <p v-bind:key="index">{{ availability.description }}</p>
+      <br />
+      <h3>{{ availability.name }}</h3>
+      <p>{{ availability.description }}</p>
       <v-btn
-          v-if="hasEditRole"
-          @click="openDayDialog(availability)"
-          v-bind:key="index"
-      >ajouter une journe
+        v-if="hasEditRole"
+        :key="availability.name"
+        @click="openDayDialog(availability)"
+        >ajouter une journe
       </v-btn>
-      <div style="display: flex" v-bind:key="index">
-        <v-container
-            v-for="(day, index) in availability.days"
-            v-bind:key="index"
-        >
-          <v-card width="400px" v-if="hasRole(availability.role)">
+      <div style="display: flex">
+        <v-container v-for="(day, index) in availability.days" :key="index">
+          <v-card v-if="hasRole(availability.role)" width="400px">
             <v-card-title
-            >{{ new Date(day.date).toLocaleString() }}
+              >{{ new Date(day.date).toLocaleDateString() }}
             </v-card-title>
             <v-card-text>
               <v-list>
-                <v-list-item v-for="(frame, i2) in day.frames" v-bind:key="i2">
+                <v-list-item v-for="(frame, i2) in day.frames" :key="i2">
                   <v-list-item-content>
                     <h4>{{ frame.start }} ➡️ {{ frame.end }}</h4>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-list-item-action-text
-                        style="display: flex; align-items: center"
+                      style="display: flex; align-items: center"
                     >
-                      <v-chip style="margin-right: 10px" v-if="frame.charisma"
-                      >{{ frame.charisma }}
+                      <v-chip v-if="frame.charisma" style="margin-right: 10px"
+                        >{{ frame.charisma }}
                       </v-chip>
                       <v-switch v-model="frame.isSelected"></v-switch>
                     </v-list-item-action-text>
@@ -52,8 +49,8 @@
             <v-card-actions>
               <v-btn text @click="toggleAll(day)">selectionner tous</v-btn>
               <v-btn
-                text
                 v-if="hasEditRole"
+                text
                 @click="openTimeframeDialog(availability, day)"
                 >ajouter un creneau</v-btn
               >
@@ -68,12 +65,12 @@
     >
 
     <v-btn
+      v-if="hasEditRole"
       color="secondary"
       elevation="2"
       fab
       style="bottom: 40px; position: fixed; right: 20px"
       @click="isDialogOpen = true"
-      v-if="hasEditRole"
     >
       <v-icon> mdi-plus-thick </v-icon>
     </v-btn>
@@ -81,7 +78,7 @@
     <v-snackbar v-model="isSnackbarOpen" timeout="5000">
       disponibilite mis a jour 🚀
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn color="pink" text v-bind="attrs" @click="isSnackbarOpen = false">
           Close
         </v-btn>
@@ -93,17 +90,17 @@
         <v-card-title>Ajouter des dispo 📆</v-card-title>
         <v-card-text>
           <v-text-field
-            label="Titre"
             v-model="newAvailability.name"
+            label="Titre"
           ></v-text-field>
           <v-text-field
-            label="Desciption"
             v-model="newAvailability.description"
+            label="Desciption"
           ></v-text-field>
           <v-select
+            v-model="newAvailability.role"
             label="qui peut voir ces dispo?"
             :items="getConfig('teams').map((e) => e.name)"
-            v-model="newAvailability.role"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -133,13 +130,13 @@
           <v-time-picker v-model="newTimeframe.start"></v-time-picker>
           <v-time-picker v-model="newTimeframe.end"></v-time-picker>
           <v-text-field
-            label="charisme"
             v-model="newTimeframe.charisma"
+            label="charisme"
             type="number"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn left text v-if="hasEditRole" @click="addTimeframe()"
+          <v-btn v-if="hasEditRole" left text @click="addTimeframe()"
             >ajouter creneau</v-btn
           >
         </v-card-actions>
@@ -152,7 +149,7 @@
 import { getConfig, getUser, hasRole } from "../common/role";
 
 export default {
-  name: "availabilities",
+  name: "Availabilities",
 
   data() {
     return {

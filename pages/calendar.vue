@@ -16,7 +16,7 @@
 import { getUser } from "../common/role";
 
 export default {
-  name: "calendar",
+  name: "Calendar",
 
   data() {
     return {
