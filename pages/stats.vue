@@ -19,7 +19,7 @@
 import { hasRole } from "../common/role";
 
 export default {
-  name: "stats",
+  name: "Stats",
 
   mounted() {
     if (!hasRole(this, "hard")) {

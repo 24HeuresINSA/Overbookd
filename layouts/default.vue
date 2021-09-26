@@ -14,17 +14,17 @@
         </v-list-item>
         <template v-for="(item, i) in items">
           <v-list-item
-              v-if="hasRole(item.roles)"
-              :key="i"
-              :to="item.to"
-              router
-              exact
+            v-if="hasRole(item.roles)"
+            :key="i"
+            :to="item.to"
+            router
+            exact
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"/>
+              <v-list-item-title v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -47,23 +47,14 @@
       <v-btn icon @click.stop="clipped = !clipped">
         <v-icon>mdi-application</v-icon>
       </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title @click="clickOnTitle()" v-text="title"/>
+      <v-toolbar-title @click="clickOnTitle()" v-text="title" />
 
       <v-toolbar-title
-          style="color: red; margin-left: 4px; font-weight: bold"
-          v-text="version"
+        style="color: red; margin-left: 4px; font-weight: bold"
+        v-text="version"
       />
-      <v-spacer/>
-      <v-btn
-          text
-          @click="isDialogOpen=true"
-      >
-        🐞 Signaler un bug
-      </v-btn
-      >
+      <v-spacer />
+      <v-btn text @click="isDialogOpen = true">🐞 Signaler un bug</v-btn>
       <v-btn text @click="logout()">DÉCONNEXION</v-btn>
     </v-app-bar>
     <v-main>
@@ -71,7 +62,7 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer :absolute="true" app>
+    <v-footer :fixed="true" app>
       <span>fait avec ❤️ par {{ getRandomAuthor() }}</span>
     </v-footer>
 
@@ -84,63 +75,20 @@
         ></v-img>
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
-          <h4>Pour signaler un bug veuiller envoyer un mail à
-            incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com de preference en anglais</h4>
+          <h4>
+            Pour signaler un bug veuiller envoyer un mail à
+            incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com
+            de preference en anglais
+          </h4>
         </v-card-text>
         <v-card-actions>
           <v-btn
-              href="mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A%3C%21---example%3A%20%2Ffa%20or%20dashboard-humain---%3E%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug">
+            href="mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A%3C%21---example%3A%20%2Ffa%20or%20dashboard-humain---%3E%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug"
+          >
             envoyer le mail
           </v-btn>
         </v-card-actions>
       </v-card>
-      <!--      <v-card>-->
-      <!--        <v-img-->
-      <!--          src="img/memes/comsi_working.png"-->
-      <!--          width="300px"-->
-      <!--          style="left: 250px"-->
-      <!--        ></v-img>-->
-      <!--        <v-card-title>Report un bug 🐞 (work in progess 🔨)</v-card-title>-->
-      <!--        <v-card-subtitle>ou de nouvelle features</v-card-subtitle>-->
-      <!--        <v-card-text>-->
-      <!--          <v-text-field label="titer" v-model="newRequest.title"></v-text-field>-->
-      <!--          <v-switch-->
-      <!--            label="nouvelle feature request ?"-->
-      <!--            v-model="newRequest.isFeatureRequest"-->
-      <!--          ></v-switch>-->
-      <!--          <v-select-->
-      <!--            :items="['hard', 'soft', 'bureau']"-->
-      <!--            label="scope"-->
-      <!--            v-model="newRequest.scope"-->
-      <!--          ></v-select>-->
-      <!--          <v-select-->
-      <!--              :items="priorities"-->
-      <!--              label="priorite"-->
-      <!--              v-model="newRequest.priority"-->
-      <!--          ></v-select>-->
-      <!--          <v-textarea-->
-      <!--              label="desciption"-->
-      <!--              v-model="newRequest.description"-->
-      <!--          ></v-textarea>-->
-      <!--          <template v-if="!newRequest.isFeatureRequest">-->
-      <!--            <v-list>-->
-      <!--              <v-list-item-->
-      <!--                  v-for="(step, index) in newRequest.steps"-->
-      <!--                  :key="index"-->
-      <!--              >-->
-      <!--                <v-list-item-content>{{ step }}</v-list-item-content>-->
-      <!--              </v-list-item>-->
-      <!--            </v-list>-->
-      <!--            <v-text-field label="etape" v-model="stepDetail"></v-text-field>-->
-      <!--            <v-btn @click="addStep()">Ajouter</v-btn>-->
-      <!--          </template>-->
-
-      <!--          <v-file-input label="capture d'ecran" v-model="file"></v-file-input>-->
-      <!--        </v-card-text>-->
-      <!--        <v-card-actions>-->
-      <!--          <v-btn text right @click="submitIssue()">submit</v-btn>-->
-      <!--        </v-card-actions>-->
-      <!--      </v-card>-->
     </v-dialog>
 
     <v-snackbar v-model="isSnackbarOpen" timeout="5000"
@@ -151,16 +99,16 @@
 
 <script>
 const { version } = require("../package.json");
-const { getUser } = require("../common/role");
+const { getUser, getConfig } = require("../common/role");
 const AUTHORS = [
   "Hamza - Cookie 🍪",
   "Tit - Goelise 🦀",
   "Tibo - Bigouu 🍊",
   "Christophe - piStoph 🍺",
   "Hugo - Cashless 💰",
-  "Tom - Nimbus ☁️",
+  "Tom - Nimbus 🧹",
   "Paul - Craker 💥",
-  "Thomas - Ginny 💡"
+  "Thomas - Ginny 💡",
 ];
 
 export default {
@@ -168,7 +116,6 @@ export default {
     return {
       clipped: false,
       drawer: false,
-      fixed: false,
       isWhiteMode: true, // let this set to true
       counter: 0,
       isJauneActive: false,
@@ -208,14 +155,14 @@ export default {
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiches Anims 🥳",
-          roles: "hard",
+          title: "Fiches Animation 🥳",
+          roles: getConfig(this, "fa_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
           title: "Fiches Tâches  😱",
-          roles: "hard",
+          roles: getConfig(this, "ft_required_role"),
           to: "/ft",
         },
         {
@@ -249,7 +196,7 @@ export default {
         {
           icon: "mdi-human-greeting",
           title: "Affectation 💃",
-          roles: "hard",
+          roles: "humain",
           to: "/assignment",
         },
         {
@@ -289,6 +236,17 @@ export default {
     };
   },
 
+  computed: {
+    logo() {
+      if (this.isJauneActive) {
+        return "Ricard.png";
+      }
+      return this.$vuetify.theme.dark
+        ? "overbookd_logo_blanc.png"
+        : "overbookd_logo_noir.png";
+    },
+  },
+
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
   },
@@ -305,7 +263,7 @@ export default {
 
     addStep() {
       this.newRequest.steps.push(
-          `${this.newRequest.steps.length + 1} - ${this.stepDetail}`
+        `${this.newRequest.steps.length + 1} - ${this.stepDetail}`
       );
       this.stepDetail = "";
     },
@@ -325,7 +283,6 @@ export default {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage["theme"] = this.$vuetify.theme.dark;
     },
-
 
     async clickOnTitle() {
       this.counter++;
@@ -375,17 +332,6 @@ export default {
 
       this.isDialogOpen = false;
       this.isSnackbarOpen = true;
-    },
-  },
-
-  computed: {
-    logo() {
-      if (this.isJauneActive) {
-        return "Ricard.png";
-      }
-      return this.$vuetify.theme.dark
-        ? "overbookd_logo_blanc.png"
-        : "overbookd_logo_noir.png";
     },
   },
 };

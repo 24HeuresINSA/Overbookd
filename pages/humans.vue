@@ -7,40 +7,40 @@
             <v-card-title>Filtres</v-card-title>
             <v-card-text>
               <v-text-field
-                label="Recherche"
                 v-model="filters.search"
+                label="Recherche"
               ></v-text-field>
               <v-switch
-                label="Permis"
                 v-model="filters.hasDriverLicence"
+                label="Permis"
               ></v-switch>
               <v-switch
-                label="non validés"
                 v-model="filters.notValidated"
+                label="non validés"
               ></v-switch>
               <v-container class="py-0">
                 <v-row align="center" justify="start">
                   <v-combobox
+                    v-model="filters.teams"
                     chips
                     multiple
                     clearable
                     label="team"
                     :items="getConfig('teams').map((e) => e.name)"
-                    v-model="filters.teams"
                   >
-                    <template v-slot:selection="{ attrs, item, selected }">
+                    <template #selection="{ attrs, item, selected }">
                       <v-chip
-                          v-bind="attrs"
-                          :input-value="selected"
-                          close
-                          :color="getRoleMetadata(item).color"
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        :color="getRoleMetadata(item).color"
                       >
                         <v-icon left color="white">
                           {{ getRoleMetadata(item).icon }}
                         </v-icon>
                         <a style="color: white">{{
-                            getRoleMetadata(item).name
-                          }}</a>
+                          getRoleMetadata(item).name
+                        }}</a>
                       </v-chip>
                     </template>
                   </v-combobox>
@@ -56,37 +56,37 @@
             :items-per-page="30"
             class="elevation-1"
           >
-            <template v-slot:[`item.action`]="{ item }">
+            <template #[`item.action`]="{ item }">
               <v-btn
-                  fab
-                  style="color: blue"
-                  class="fab"
-                  :href="
+                fab
+                style="color: blue"
+                class="fab"
+                :href="
                   'https://www.facebook.com/search/top?q=' +
                   item.firstname +
                   ' ' +
                   item.lastname
                 "
-              >F
+                >F
               </v-btn>
               <v-btn
-                fab
-                @click="openTransactionDialog(item)"
-                class="fab"
                 v-if="hasRole('admin')"
+                fab
+                class="fab"
+                @click="openTransactionDialog(item)"
                 ><v-icon>mdi-cash</v-icon></v-btn
               >
               <v-btn
-                fab
-                @click="openInformationDialog(item)"
-                class="fab"
                 v-if="hasRole('hard')"
+                fab
+                class="fab"
+                @click="openInformationDialog(item)"
                 ><v-icon>mdi-information-outline</v-icon></v-btn
               >
             </template>
 
-            <template v-slot:[`item.team`]="{ item }">
-              <over-chips :roles="item.team"></over-chips>
+            <template #[`item.team`]="{ item }">
+              <OverChips :roles="item.team"></OverChips>
             </template>
           </v-data-table>
         </v-col>
@@ -99,13 +99,13 @@
         <v-card-title>Ajouter de 💰</v-card-title>
         <v-card-text>
           <v-text-field
-            label="reason"
             v-model="newTransaction.reason"
+            label="reason"
           ></v-text-field>
           <v-text-field
+            v-model="newTransaction.amount"
             label="montant (en euro)"
             type="number"
-            v-model="newTransaction.amount"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
@@ -121,7 +121,7 @@
         <!--      <v-card-subtitle>{{this.selectedUser.nickname ? this.selectedUser.nickname : this.selectedUser.lastname}}</v-card-subtitle>-->
         <v-card-text>
           <v-simple-table>
-            <template v-slot:default>
+            <template #default>
               <thead>
                 <tr>
                   <th class="text-left">champ</th>
@@ -146,14 +146,14 @@
           selectedUser.nickname ? selectedUser.nickname : selectedUser.lastname
         }}</v-card-title>
         <v-card-subtitle>
-          <over-chips :roles="selectedUser.team"></over-chips>
+          <OverChips :roles="selectedUser.team"></OverChips>
         </v-card-subtitle>
         <v-card-text>
           <div v-if="hasRole(['admin', 'bureau'])">
             <v-select
+              v-model="newRole"
               label="ajouter un role"
               :items="getConfig('teams').map((e) => e.name)"
-              v-model="newRole"
             ></v-select>
             <v-btn @click="addRole()">ajouter</v-btn>
           </div>
@@ -271,7 +271,7 @@
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
       💸 transaction done 🥳
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
           Close
         </v-btn>
@@ -285,7 +285,7 @@ import { getConfig, getUser, hasRole } from "../common/role";
 import OverChips from "../components/overChips";
 
 export default {
-  name: "humans",
+  name: "Humans",
   components: { OverChips },
   data() {
     return {
@@ -323,6 +323,72 @@ export default {
       },
       newRole: undefined,
     };
+  },
+
+  watch: {
+    filters: {
+      handler() {
+        let mUsers = this.users;
+
+        // filter by search
+        if (this.filters.search) {
+          mUsers = mUsers.filter((user) => {
+            let s = this.filters.search.toLowerCase();
+            const seatchNickname = user.nickname
+              ? user.nickname.toLowerCase().includes(s)
+              : false;
+            return (
+              user.firstname.toLowerCase().includes(s) ||
+              user.lastnam.toLowerCase().includes(s) ||
+              seatchNickname
+            );
+          });
+        }
+
+        // filter by driver licence
+        if (this.filters.hasDriverLicence) {
+          mUsers = mUsers.filter(
+            (user) => user.hasDriverLicence === this.filters.hasDriverLicence
+          );
+        }
+
+        // filter by team
+        if (this.filters.teams) {
+          this.filteredUsers = mUsers.filter((user) => {
+            if (user.team) {
+              return (
+                user.team.filter((value) => this.filters.teams.includes(value))
+                  .length === this.filters.teams.length
+              );
+            } else {
+              return false;
+            }
+          });
+        }
+
+        // filter by not validated
+        if (this.filters.notValidated) {
+          this.filteredUsers = mUsers.filter((user) => {
+            if (user.team) {
+              return user.team.length === 0;
+            } else {
+              return true;
+            }
+          });
+        }
+      },
+      deep: true,
+    },
+
+    selections() {
+      const selections = [];
+
+      for (const selection of this.filters.teams) {
+        selections.push(selection);
+      }
+
+      return selections;
+    },
   },
 
   async mounted() {
@@ -391,19 +457,19 @@ export default {
 
       if (isNegative) {
         this.selectedUser.balance =
-            +this.selectedUser.balance - +this.newTransaction.amount;
+          +this.selectedUser.balance - +this.newTransaction.amount;
       } else {
         this.selectedUser.balance +=
-            +this.selectedUser.balance + +this.newTransaction.amount;
+          +this.selectedUser.balance + +this.newTransaction.amount;
       }
 
       this.newTransaction.amount =
-          (isNegative ? "- " : "+ ") + this.newTransaction.amount;
+        (isNegative ? "- " : "+ ") + this.newTransaction.amount;
       this.selectedUser.transactionHistory.unshift(this.newTransaction);
 
       await this.$axios.put(
-          "/user/" + this.selectedUser.keycloakID,
-          this.selectedUser
+        "/user/" + this.selectedUser.keycloakID,
+        this.selectedUser
       );
       this.isSnackbarOpen = true;
       this.isTransactionDialogOpen = false;
@@ -419,72 +485,6 @@ export default {
         this.selectedUser
       );
       this.isInformationDialogOpen = false;
-    },
-  },
-
-  watch: {
-    filters: {
-      handler() {
-        let mUsers = this.users;
-
-        // filter by search
-        if (this.filters.search) {
-          mUsers = mUsers.filter((user) => {
-            let s = this.filters.search.toLowerCase();
-            const seatchNickname = user.nickname
-              ? user.nickname.toLowerCase().includes(s)
-              : false;
-            return (
-              user.firstname.toLowerCase().includes(s) ||
-              user.lastnam.toLowerCase().includes(s) ||
-              seatchNickname
-            );
-          });
-        }
-
-        // filter by driver licence
-        if (this.filters.hasDriverLicence) {
-          mUsers = mUsers.filter(
-            (user) => user.hasDriverLicence === this.filters.hasDriverLicence
-          );
-        }
-
-        // filter by team
-        if (this.filters.teams) {
-          this.filteredUsers = mUsers.filter((user) => {
-            if (user.team) {
-              return (
-                user.team.filter((value) => this.filters.teams.includes(value))
-                  .length === this.filters.teams.length
-              );
-            } else {
-              return false;
-            }
-          });
-        }
-
-        // filter by not validated
-        if (this.filters.notValidated) {
-          this.filteredUsers = mUsers.filter((user) => {
-            if (user.team) {
-              return user.team.length === 0;
-            } else {
-              return true;
-            }
-          });
-        }
-      },
-      deep: true,
-    },
-
-    selections() {
-      const selections = [];
-
-      for (const selection of this.filters.teams) {
-        selections.push(selection);
-      }
-
-      return selections;
     },
   },
 };

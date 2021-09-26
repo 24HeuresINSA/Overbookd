@@ -1,16 +1,21 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.17</h2>
+    <h3>🤯 Rectification de bugs et preparation au lancement</h3>
+    <ul>
+      <li>💻 lint</li>
+      <li>🔒 fermeture des FA/FT depuis l'admin</li>
+      <li>🔒 l'affect s'affiche que pour les humains</li>
+    </ul>
 
-    <h2>Patch note BETA 0.1</h2>
+    <h2>Patch note BETA 0.16</h2>
     <h3>🤯 Rectification de bugs et preparation au lancement</h3>
     <ul>
       <li>💻 l'affect marche beaucoup mieux</li>
       <li>🐞 signalisation de bug rederige vers le mail</li>
       <li>🔒 protection de la backend</li>
       <li>📝 demande d'orga dans un creneau de FT</li>
-
-
     </ul>
 
     <h1>Passage a la BETA</h1>
@@ -224,7 +229,7 @@
 
 <script>
 export default {
-  name: "patch_note",
+  name: "PatchNote",
 };
 </script>
 

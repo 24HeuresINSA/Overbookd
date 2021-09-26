@@ -1,22 +1,22 @@
 <template>
   <div>
     <v-data-table :headers="headers" :items="inventory">
-      <template v-slot:[`item.action`]="{ item }">
+      <template #[`item.action`]="{ item }">
         <v-btn v-if="hasRole('log')" fab @click="edit(item)">
           <v-icon>mdi-circle-edit-outline</v-icon>
         </v-btn>
       </template>
 
-      <template v-slot:[`item.borrowedCount`]="{ item }">
+      <template #[`item.borrowedCount`]="{ item }">
         {{ getBorrowedCount(item) }}
       </template>
     </v-data-table>
 
     <v-btn
+      v-if="hasRole(allowedTeams)"
       fab
       style="right: 20px; bottom: 45px; position: fixed"
       @click="isFormOpened = true"
-      v-if="hasRole(allowedTeams)"
     >
       <v-icon> mdi-plus </v-icon>
     </v-btn>
@@ -25,15 +25,15 @@
       <v-card>
         <v-card-title>Ajouter un nouveau objet</v-card-title>
         <v-card-text>
-          <over-form :fields="equipmentForm" @form-change="onFormChange">
-          </over-form>
+          <OverForm :fields="equipmentForm" @form-change="onFormChange">
+          </OverForm>
           <v-divider></v-divider>
           <h4>Ajout de matos emprunté</h4>
           <v-container style="display: flex; flex-wrap: wrap">
-            <v-text-field label="qui" v-model="newBorrow.from"></v-text-field>
+            <v-text-field v-model="newBorrow.from" label="qui"></v-text-field>
             <v-text-field
-              type="number"
               v-model="newBorrow.amount"
+              type="number"
               label="quantite"
             ></v-text-field>
           </v-container>
@@ -68,10 +68,10 @@
 
 <script>
 import OverForm from "../components/overForm";
-import { getConfig, hasRole } from "../common/role";
+import { getConfig, hasRole, getUser } from "../common/role";
 
 export default {
-  name: "inventory",
+  name: "Inventory",
   components: { OverForm },
   data() {
     return {
