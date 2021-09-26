@@ -1,9 +1,10 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
-    <h2>Patch note BETA 0.17</h2>
-    <h3>🤯 Rectification de bugs et preparation au lancement</h3>
+    <h2>Patch note BETA 0.17.1</h2>
+    <h3>🤯 Rectification de bugs</h3>
     <ul>
+      <li>🔨 HOTFIX correction d'orthographe (Merci Maëlle)</li>
       <li>💻 lint</li>
       <li>🔒 fermeture des FA/FT depuis l'admin</li>
       <li>🔒 l'affect s'affiche que pour les humains</li>

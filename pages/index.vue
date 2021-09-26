@@ -232,10 +232,11 @@
       <v-card>
         <v-card-title>Oupsss</v-card-title>
         <v-card-text>
-          Merci de rejoindre l'asso mais ton compte n'est pas encore activer...
+          Merci de rejoindre l'asso mais il faut qu'un admin active ton compte
+          (demande à Maëlle)..
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="logout">DECO</v-btn>
+          <v-btn text @click="logout">DECONNEXION</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -273,15 +274,15 @@ import OverForm from "../components/overForm";
 
 const SNACKBAR_MESSAGES = {
   friendRequest: {
-    sent: "votre demande d'ami a ete envoye",
-    accepted: "T'as un nouveau ami",
+    sent: "votre demande d'ami a été envoyée",
+    accepted: "T'as un nouvel ami",
     refused: "je suis d'accord c'est un batard",
     lonely: "t'es seul a ce point là 🥺 ?",
     alreadyFriend: "t'es deja ami avec ",
   },
   error: "🥵 sheeshh une erreur ",
   broadcasted: "broadcast envoyé 📣",
-  imageUpdated: "image sauvgarder, rafraichissez la page pour la voir",
+  imageUpdated: "image sauvgardée, rafraichissez la page pour la voir",
 };
 
 export default {
