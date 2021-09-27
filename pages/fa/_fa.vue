@@ -20,7 +20,7 @@
     <OverForm :fields="form" @form-change="onFormChange"> </OverForm>
 
     <v-divider></v-divider>
-    <h2>Horaires ⏱</h2>
+    <h2>Créneaux ⏱</h2>
     <v-simple-table v-if="FA.schedules">
       <template #default>
         <thead>
@@ -50,7 +50,7 @@
           <h3>Date</h3>
         </v-col>
         <v-col>
-          <h3>Debut</h3>
+          <h3>Début</h3>
         </v-col>
         <v-col>
           <h3>Fin</h3>
@@ -188,7 +188,9 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="submitForReview"> Submit </v-btn>
+          <v-btn color="primary" text @click="submitForReview">
+            soumettre</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
