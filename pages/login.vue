@@ -1,24 +1,24 @@
 <template>
   <div>
     <v-img
-      src="img/memes/home_meme2.jpeg"
+      :src="getRandomBackgroundURL()"
       style="
         position: absolute;
         left: 0;
         top: 0;
         height: 100%;
         width: 100%;
-        opacity: 0.5;
+        padding: 0;
       "
     ></v-img>
     <v-form>
       <v-container class="form-container">
         <v-row>
-          <v-img src="img/memes/home_meme.jpg"></v-img>
+          <v-img src="img/memes/home_meme.jpeg"></v-img>
         </v-row>
         <v-row>
           <v-img
-            :src="'img/logo/' + overbookd_logo"
+            src="img/logo/overbookd_logo_blanc.png"
             alt="overbookd logo"
             class="logo"
           ></v-img>
@@ -74,6 +74,40 @@
 
 <script>
 const REDIRECT_URL = "/";
+const BACKGROUNDS_URL = [
+  "https://www.24heures.org/img/background/24h_insa_2019_FEDER_2.jpg",
+  "https://www.24heures.org/img/background/a-propos-histoire.jpg",
+  "https://www.24heures.org/img/background/a-propos-partenaires.jpg",
+  "https://www.24heures.org/img/background/animations-1.jpg",
+  "https://www.24heures.org/img/background/animations-construction-back.jpg",
+  "https://www.24heures.org/img/background/animations-prevention-back.jpg",
+  "https://www.24heures.org/img/background/background_courses_2020.png",
+  "https://www.24heures.org/img/background/concerts-comah.jpg",
+  "https://www.24heures.org/img/background/courses-caritatives.jpg",
+  "https://www.24heures.org/img/background/courses-constructions-back.jpg",
+  "https://www.24heures.org/img/background/courses-parcours.jpg",
+  "https://www.24heures.org/img/background/courses_2020.jpg",
+  "https://www.24heures.org/img/background/courses_2021.jpg",
+  "https://www.24heures.org/img/background/courses_resultats.jpg",
+  "https://www.24heures.org/img/background/courses_resultats_2.jpg",
+  "https://www.24heures.org/img/background/footer_background.jpg",
+  "https://www.24heures.org/img/background/home-bellecour.jpg",
+  "https://www.24heures.org/img/background/home-mome.jpg",
+  "https://www.24heures.org/img/background/home-public-45.jpg",
+  "https://www.24heures.org/img/background/home-spot.jpg",
+  "https://www.24heures.org/img/background/infos-bars-back.jpg",
+  "https://www.24heures.org/img/background/infos-bars.jpg",
+  "https://www.24heures.org/img/background/infos-contact.jpg",
+  "https://www.24heures.org/img/background/infos-transports-back.jpg",
+  "https://www.24heures.org/img/background/infos-transports.jpg",
+  "https://www.24heures.org/img/background/live-nb.jpg",
+  "https://www.24heures.org/img/background/orga-equipe-paille.jpg",
+  "https://www.24heures.org/img/background/orga-equipe.jpg",
+  "https://www.24heures.org/img/background/pimpmybike.jpg",
+  "https://www.24heures.org/img/background/prevention-1.jpg",
+  "https://www.24heures.org/img/background/tremplin-fuzzcall.jpg",
+  "https://www.24heures.org/img/background/webtv.jpg",
+];
 const { version } = require("../package.json");
 
 export default {
@@ -118,6 +152,7 @@ export default {
         const audio = new Audio("audio/jaune.m4a");
         await audio.play();
       } catch (e) {
+        console.error(e);
         if (e.response.status === 401) {
           // wrong password or username
           this.feedbackMessage = "Password or username are incorrect 😞";
@@ -128,6 +163,12 @@ export default {
         this.snackbar = true;
         console.log("an error has occurred");
       }
+    },
+
+    getRandomBackgroundURL() {
+      return BACKGROUNDS_URL[
+        Math.floor(Math.random() * BACKGROUNDS_URL.length)
+      ];
     },
   },
 };
