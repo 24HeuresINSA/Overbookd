@@ -31,10 +31,14 @@
         <v-row>
           <v-text-field
             v-model="credentials.username"
-            label="username ou email"
+            label="email ou username"
             type="text"
             required
             autofocus
+            outlined
+            clearable
+            solo
+            filled
           ></v-text-field>
         </v-row>
         <v-row>
@@ -43,6 +47,10 @@
             label="password"
             type="password"
             required
+            outlined
+            clearable
+            solo
+            filled
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
@@ -52,11 +60,11 @@
         elevation="2"
         href="/signup"
         class="signupBtn Btn"
-        >signup</v-btn
-      >
+        >s'inscrire
+      </v-btn>
       <v-btn color="primary" elevation="2" class="loginBtn Btn" @click="login()"
-        >login</v-btn
-      >
+        >connexion
+      </v-btn>
     </v-form>
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ feedbackMessage }}
@@ -65,7 +73,7 @@
 </template>
 
 <script>
-const REDIRECT_URL = "/"; // TODO change this to eventSelector page
+const REDIRECT_URL = "/";
 const { version } = require("../package.json");
 
 export default {
@@ -119,7 +127,6 @@ export default {
         }
         this.snackbar = true;
         console.log("an error has occurred");
-        console.error();
       }
     },
   },
@@ -139,8 +146,9 @@ export default {
 }
 
 .Btn {
-  position: absolute;
+  position: fixed;
   bottom: 20px;
+  z-index: 20;
 }
 
 .loginBtn {
