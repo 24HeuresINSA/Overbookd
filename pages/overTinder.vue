@@ -1,7 +1,8 @@
 <template>
   <v-container>
     <h1>OverTinder 🔥</h1>
-    <p>tu peux telecharger un constat de choppe directepement depuis ici</p>
+    <v-btn text @click="openCP">Telecharger un constat de choppe</v-btn>
+    <br />
     <v-card v-if="user" max-width="400">
       <v-img
         v-if="user.pp"
@@ -12,8 +13,6 @@
       </v-card-title>
       <v-card-text>
         <p>Charisme: {{ user.charisma }}</p>
-        <p>Situation Maritalle : {{ user.isCouple }}</p>
-        <p>sex : {{ user.sex }}</p>
       </v-card-text>
       <v-card-actions style="display: flex; justify-content: space-between">
         <v-btn elevation="5" fab icon color="green" @click="next()"
@@ -54,6 +53,10 @@ export default {
       return process.env.NODE_ENV === "development"
         ? "http://localhost:2424/"
         : "";
+    },
+
+    openCP() {
+      window.open("Constat-Choppe.pdf");
     },
 
     next(isLeft) {
