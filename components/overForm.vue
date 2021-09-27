@@ -33,6 +33,14 @@ export default {
       this.fields.forEach((field) => {
         if (field.value) {
           this.compiledForm[field.key] = field.value;
+
+          // check regex
+          if (field.regex) {
+            let r = new RegExp(field.regex);
+            if (!r.test(field.value)) {
+              isValid = false;
+            }
+          }
         } else {
           if (field.isRequired === true) {
             isValid = false;
