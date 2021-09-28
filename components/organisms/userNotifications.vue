@@ -1,76 +1,108 @@
 <template>
-  <v-card v-if="theUser">
-    <v-card-title>Notifications 📣️</v-card-title>
-    <v-card-text v-if="theUser.notifications">
-      <v-simple-table>
-        <template #default>
-          <thead>
-            <tr>
-              <th class="text-left"></th>
-              <th class="text-left">Team</th>
-              <th class="text-left">Message</th>
-              <th class="text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <NotificationCard
-              v-for="(notif, index) in theUser.notifications"
-              :key="index"
-              :notif="notif"
-            />
-          </tbody>
+  <div style="height: 100%">
+    <NotificationBroadcastDialog />
+    <v-card
+      v-if="me"
+      height="100%"
+      class="d-flex flex-column justify-space-between"
+    >
+      <div>
+        <v-card-title>Notifications 📣️</v-card-title>
+        <v-card-text v-if="me.notifications">
+          <v-simple-table>
+            <template #default>
+              <thead>
+                <tr>
+                  <th class="text-left"></th>
+                  <th class="text-left">Team</th>
+                  <th class="text-left">Message</th>
+                  <th class="text-left">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <NotificationCard
+                  v-for="(notif, index) in me.notifications"
+                  :key="index"
+                  :notif="{ ...notif, index }"
+                />
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card-text>
+        <template v-if="IhaveRole(['admin', 'bureau'])">
+          <v-card-text>{{ notValidatedCount }} Orgas non validés </v-card-text>
         </template>
-      </v-simple-table>
-    </v-card-text>
+      </div>
 
-    <template v-if="hasRole(['admin', 'bureau'])">
-      <v-card-title>{{ notValidatedCount }} Orgas non validés </v-card-title>
-    </template>
-
-    <v-card-actions>
-      <v-btn v-if="hasRole('hard')" text @click="isBroadcastDialogOpen = true"
-        >broadcast
-      </v-btn>
-      <v-btn v-if="hasRole(['admin', 'bureau'])" text to="/humans"
-        >Liste des Orgas
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      <v-card-actions
+        class="
+          d-flex
+          justify-space-between
+          align-start align-sm-end
+          flex-column flex-sm-row
+        "
+      >
+        <v-btn v-if="IhaveRole('hard')" text @click="openBroadcastDialog()"
+          >broadcast
+        </v-btn>
+        <v-btn
+          v-if="IhaveRole(['admin', 'bureau'])"
+          text
+          to="/humans"
+          class="ml-0"
+          >Liste des Orgas
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </div>
 </template>
 
-<script>
-import { hasRole } from "@/common/role";
+<script lang="ts">
+import Vue from "vue";
+import { hasRole } from "~/utils/roles";
 import NotificationCard from "~/components/molecules/notificationCard.vue";
-export default {
+import NotificationBroadcastDialog from "~/components/molecules/notificationBroadcastDialog.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
+import { mapState } from "vuex";
+import { TMapState } from "~/utils/types/store";
+import { UserState } from "~/store/user";
+import { User } from "~/utils/models/repo";
+
+export default Vue.extend({
   name: "UserNotifications",
-  components: { NotificationCard },
-  props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          notifications: [
-            {
-              link: "wikipedia.fr",
-              message: "Daaaamn",
-              team: "bureau",
-              date: "2021-09-24T13:29:38.137Z",
-              type: "broadcast",
-            },
-          ],
-        };
-      },
-    },
-  },
+  components: { NotificationCard, NotificationBroadcastDialog },
   data() {
     return {
-      theUser: this.user,
+      notValidatedCount: 0,
     };
   },
+  computed: {
+    ...mapState<any, TMapState<UserState>>("user", {
+      me: (state) => state.me,
+    }),
+  },
+  async mounted() {
+    this.notValidatedCount = await this.getNotValidatedCount();
+  },
   methods: {
-    hasRole(team) {
-      return hasRole(this, team);
+    IhaveRole(roles: string[] | string) {
+      return hasRole(this.me, roles);
+    },
+    async getNotValidatedCount() {
+      const res = await safeCall(
+        this.$store,
+        RepoFactory.get("user").getAllUsers(this)
+      );
+      if (res) {
+        const users: User[] = res.data;
+        return users.filter((user: User) => user.team.length === 0).length;
+      }
+      return 0;
+    },
+    openBroadcastDialog() {
+      this.$store.dispatch("dialog/openDialog", "broadcast");
     },
   },
-};
+});
 </script>

@@ -12,7 +12,8 @@
     "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
     "lint": "npm run lint:js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "storybook": "npx nuxt storybook"
   },
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1613647907.37b1156",
@@ -22,6 +23,7 @@
     "core-js": "^3.8.3",
     "fuse.js": "^6.4.6",
     "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "nuxt": "^2.14.12",
     "nuxt-typed-vuex": "^0.2.0",
     "qs": "^6.9.6",
@@ -40,6 +42,7 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/storybook": "^4.1.1",
     "@nuxtjs/vuetify": "^1.11.3",
+    "@types/lodash": "^4.14.175",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
     "@vue/cli-plugin-babel": "^4.5.13",

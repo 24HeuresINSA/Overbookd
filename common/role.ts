@@ -1,3 +1,7 @@
+import _ from "lodash";
+/**
+ * @deprecated
+ */
 export function hasRole(context: any, roles: string[] | string) {
   if (roles === undefined) {
     return true;
@@ -13,12 +17,20 @@ export function hasRole(context: any, roles: string[] | string) {
   return roles.some((r) => teams.includes(r));
 }
 
+/**
+ * @deprecated
+ */
 export function getUser(context: any) {
-  return context.$store.state.user.data;
+  return context.$store.state.user.me;
 }
 
+/**
+ * @deprecated
+ */
 export function getConfig(context: any, key: string) {
-  return context.$store.state.config.data.data.find(
-    (e: { key: string }) => e.key === key
-  ).value;
+  return _.cloneDeep(
+    context.$store.state.config.data.data.find(
+      (e: { key: string }) => e.key === key
+    ).value
+  );
 }

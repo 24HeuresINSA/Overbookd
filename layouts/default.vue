@@ -256,7 +256,7 @@ export default {
 
   methods: {
     getUser() {
-      return this.$store.state.user.data;
+      return this.$store.state.user.me;
     },
 
     getRandomAuthor() {

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isBroadcastDialogOpen" max-width="600">
+  <v-dialog v-model="toggled" :retain-focus="false" max-width="600">
     <v-card>
       <v-card-title>Envoyer un message a l'asso</v-card-title>
       <v-card-text>
@@ -21,41 +21,76 @@
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { getConfig } from "@/common/role";
-export default {
+import { mapState } from "vuex";
+import { DialogState } from "~/store/dialog";
+import { TMapState } from "~/utils/types/store";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { BroadcastNotif } from "~/utils/models/repo";
+import { SnackNotif } from "~/utils/models/store";
+
+export default Vue.extend({
   name: "NotificationBroadcastDialog",
-  props: {
-    initialIsBroadcastDialogOpen: {
-      type: Boolean,
-      default: () => {
-        return false;
-      },
-    },
-  },
   data() {
     return {
-      notification: {
-        message: "",
-        link: "",
-        team: "",
-      },
-      isBroadcastDialogOpen: this.initialIsBroadcastDialogOpen,
+      notification: new BroadcastNotif(),
     };
   },
-  methods: {
-    getConfig(key) {
-      return getConfig(this, key);
-    },
-    async broadcast() {
-      this.notification.date = new Date();
-      this.notification.type = "broadcast";
-      await this.$axios.post("/user/broadcast", this.notification);
-      //TODO: Use Vuex store there
-      this.snackbarMessage = this.SNACKBAR_MESSAGES.broadcasted;
-      this.isSnackbarOpen = true;
-      this.isBroadcastDialogOpen = false;
+  computed: {
+    ...mapState<any, TMapState<DialogState>>("dialog", {
+      type: (state: DialogState) => state.type,
+      open: (state: DialogState) => state.open,
+    }),
+    toggled: {
+      get: function (): boolean | unknown {
+        if (this.type == "broadcast") {
+          return this.open;
+        }
+        if (!this.open) {
+          return false;
+        }
+        return false;
+      },
+      set(val): void {
+        if (!val) {
+          this.$store.dispatch("dialog/closeDialog");
+        }
+      },
     },
   },
-};
+  methods: {
+    getConfig(key: string): string {
+      return getConfig(this, key);
+    },
+    async broadcast(): Promise<void> {
+      this.toggled = false;
+      this.notification.type = "broadcast";
+      this.notification.date = new Date();
+      //TODO: Put this in generic post method
+      try {
+        // broadcast on server
+        let res = await RepoFactory.get("user").broadcast(
+          this,
+          this.notification
+        );
+        if (res.status !== 200) {
+          throw new Error("Server did not return 200 status");
+        }
+        let notif: SnackNotif = {
+          type: "success",
+          message: "Sent !",
+        };
+        this.$store.dispatch("notif/pushNotification", notif);
+      } catch (error: any) {
+        let notif: SnackNotif = {
+          type: "error",
+          message: "Could not broadcast",
+        };
+        this.$store.dispatch("notif/pushNotification", notif);
+      }
+    },
+  },
+});
 </script>

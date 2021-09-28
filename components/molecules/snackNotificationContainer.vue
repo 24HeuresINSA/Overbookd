@@ -4,11 +4,10 @@
       v-for="item in queue"
       :key="item.id"
       :set-timeout="item.timeout"
-      :set-message="item.message + item.id"
+      :set-message="item.message"
       :set-toggle="toggle"
       :set-id="item.id"
     />
-    <v-btn @click="addNotif">Push notification</v-btn>
   </div>
 </template>
 
@@ -25,7 +24,7 @@ export default Vue.extend({
     toggle: {
       type: Boolean,
       default: () => {
-        false;
+        true;
       },
     },
   },

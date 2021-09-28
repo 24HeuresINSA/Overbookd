@@ -1,87 +1,96 @@
 <template>
-  <v-card>
-    <v-img
-      v-if="theUser.pp"
-      :src="getPPUrl() + 'api/theUser/pp/' + theUser.pp"
-      max-width="600px"
-      max-height="500px"
-    ></v-img>
-    <v-card-title
-      >Bonsoir
-      {{
-        theUser.nickname ? theUser.nickname : theUser.firstname
-      }}</v-card-title
-    >
-    <v-card-subtitle
-      >👋 {{ theUser.firstname }}.{{ theUser.lastname }}</v-card-subtitle
-    >
-    <v-card-text>
-      <h3>📩 {{ theUser.email }}</h3>
-      <h3>📞 +33 {{ theUser.phone }}</h3>
-      <h3>😎 {{ theUser.charisma || 0 }} points de charisme</h3>
-      <h3>❤️ {{ theUser.friends ? theUser.friends.length : 0 }} amis</h3>
-      <h3>📆 {{ new Date(theUser.birthdate).toLocaleDateString() }}</h3>
-      <h3>
-        🗣 {{ theUser.assigned ? theUser.assigned.length : 0 }} tâches affectées
-      </h3>
-      <h3>🚗 {{ theUser.hasDriverLicense ? "✅" : "🛑" }}</h3>
+  <div>
+    <PPDialog />
+    <v-card v-if="me">
+      <v-container class="d-flex flex-no-wrap">
+        <v-img
+          v-if="me.pp"
+          :src="getPPUrl() + 'api/user/pp/' + me.pp"
+          max-width="80px"
+          max-height="80px"
+          class="pp"
+        ></v-img>
+        <div>
+          <v-card-title class="pt-2"
+            >Bonsoir
+            {{ me.nickname ? me.nickname : me.firstname }} 👋</v-card-title
+          >
+          <v-card-subtitle>
+            {{ me.firstname }}.{{ me.lastname }}</v-card-subtitle
+          >
+        </div>
+      </v-container>
+      <v-card-actions class="d-flex justify-start">
+        <v-btn text max-width="300px" @click="openPPDialog()"
+          >📸
+          {{ me.pp ? `Mettre à jour` : `Ajouter` }}
+        </v-btn>
+      </v-card-actions>
+      <v-card-text>
+        <h3 class="mt-1">📩 {{ me.email }}</h3>
+        <h3 class="mt-1">📞 +33 {{ me.phone }}</h3>
+        <h3 class="mt-1">😎 {{ me.charisma || 0 }} points de charisme</h3>
+        <h3 class="mt-1">❤️ {{ me.friends ? me.friends.length : 0 }} amis</h3>
+        <h3 class="mt-1">
+          📆 {{ new Date(me.birthdate).toLocaleDateString() }}
+        </h3>
+        <h3 class="mt-1">
+          🗣 {{ me.assigned ? me.assigned.length : 0 }} tâches affectées
+        </h3>
+        <h3 class="mt-1">🚗 {{ me.hasDriverLicense ? "✅" : "🛑" }}</h3>
 
-      <OverChips :roles="theUser.team"></OverChips>
+        <OverChips :roles="me.team"></OverChips>
 
-      <v-progress-linear :value="theUser.charisma"></v-progress-linear>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn text @click="isPPDialogOpen = true"
-        >📸
-        {{
-          theUser.pp
-            ? `Mettre à jour la photo de profil`
-            : `Ajouter une photo de profil`
-        }}
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+        <v-progress-linear :value="me.charisma"></v-progress-linear>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
 import OverChips from "@/components/atoms/overChips.vue";
+import Vue from "vue";
+import { mapState } from "vuex";
+import { UserState } from "~/store/user";
+import { TMapState } from "~/utils/types/store";
+import PPDialog from "@/components/molecules/ppDialog.vue";
+import { dispatch } from "~/utils/store";
 
-export default {
+export default Vue.extend({
   name: "UserCard",
-  components: { OverChips },
+  components: { OverChips, PPDialog },
   props: {
     user: {
       type: Object,
       default: () => {
-        return {
-          firstname: "Jean mi",
-          lastname: "Chel",
-          email: "jaune@24heures.org",
-          phone: "071234567890",
-          charisma: 20,
-          friends: [],
-          team: ["hard"],
-          birthdate: Date.now(),
-          hasDriverLicense: false,
-          pp: null,
-        };
+        undefined;
       },
     },
   },
 
   data() {
-    return {
-      isPPDialogOpen: false,
-      theUser: this.user,
-    };
+    return {};
   },
-
+  computed: {
+    ...mapState<any, TMapState<UserState>>("user", {
+      me: (state: UserState) => state.me,
+    }),
+  },
   methods: {
     getPPUrl() {
       return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
+        ? "http://overbookd.localhost/"
         : "";
     },
+    openPPDialog() {
+      dispatch(this, "dialog", "openDialog", "pp");
+    },
   },
-};
+});
 </script>
+
+<style scoped>
+.pp {
+  border-radius: 50%;
+}
+</style>

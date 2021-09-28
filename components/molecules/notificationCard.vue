@@ -19,31 +19,24 @@
       <v-btn icon :href="notification.link">
         <v-icon>mdi-link</v-icon>
       </v-btn>
-      <v-btn icon @click="deleteNotification(index)">
+      <v-btn icon @click="deleteNotification(notification.index)">
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
     </td>
   </tr>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { getUser } from "@/common/role";
 import OverChips from "@/components/atoms/overChips.vue";
-export default {
+export default Vue.extend({
   name: "NotificationCard",
   components: { OverChips },
   props: {
     notif: {
       type: Object,
-      default: () => {
-        return {
-          link: "wikipedia.fr",
-          message: "Daaaamn",
-          team: "bureau",
-          date: "2021-09-24T13:29:38.137Z",
-          type: "broadcast",
-        };
-      },
+      required: true,
     },
   },
   data() {
@@ -52,23 +45,26 @@ export default {
     };
   },
   methods: {
-    async acceptFriendRequest(notification) {
+    //TODO
+    async acceptFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
         let user = getUser(this);
+        //! TERRIBLE
         user.notifications.pop();
         await this.$axios.post(`/user/friends`, {
           from: user._id,
           to: notification.data,
         });
-        this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
-        this.isSnackbarOpen = true;
+        // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
+        // this.isSnackbarOpen = true;
       } else {
-        this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
-        this.isSnackbarOpen = true;
+        // this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
+        // this.isSnackbarOpen = true;
       }
     },
 
-    async refuseFriendRequest(notification) {
+    //TODO
+    async refuseFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
         let friends;
         let user = getUser(this);
@@ -77,15 +73,24 @@ export default {
         } else {
           friends = user.friends;
         }
+        //! TERRIBLE
         user.notifications.pop();
         await this.$axios.put(`/user/${user.keycloakID}`, user);
-        this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
-        this.isSnackbarOpen = true;
+        // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
+        // this.isSnackbarOpen = true;
       } else {
-        this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
-        this.isSnackbarOpen = true;
+        // this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
+        // this.isSnackbarOpen = true;
       }
     },
+    deleteNotification(index: number): void {
+      let { notifications, keycloakID: userId } = getUser(this);
+      const notifs = notifications.filter((_: any, i: number) => i != index);
+      this.$store.dispatch("user/updateUser", {
+        userId,
+        userData: { notifications: notifs },
+      });
+    },
   },
-};
+});
 </script>

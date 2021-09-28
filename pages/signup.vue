@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { getConfig } from "~/common/role";
 import OverForm from "../components/overForm";
 
 export default {
@@ -41,8 +42,7 @@ export default {
 
   methods: {
     getConfig(key) {
-      return this.$store.state.config.data.data.find((e) => e.key === key)
-        .value;
+      return getConfig(this, key);
     },
 
     onFormChange(form) {
