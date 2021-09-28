@@ -1,9 +1,13 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
-    <h2>Patch note BETA 0.17.1</h2>
+    <h2>Patch note BETA 0.17.5 : le Patch Hublot</h2>
     <h3>🤯 Rectification de bugs</h3>
     <ul>
+      <li>🔨fix du background d'acceuil</li>
+      <li>🥳 verification des regex avant de les envoyer (Putain de Hublot)</li>
+      <li>🤯 0.17.5 changer prenom nom d'un utilisateur et le supprimer ...</li>
+      <li>🔨 0.17.4 QoL: trombi, charisme ...</li>
       <li>🔨 HOTFIX correction d'orthographe (Merci Maëlle)</li>
       <li>💻 lint</li>
       <li>🔒 fermeture des FA/FT depuis l'admin</li>

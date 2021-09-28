@@ -152,13 +152,21 @@
 
     <v-dialog v-model="isUserDialogOpen" max-width="600">
       <v-card>
-        <v-card-title>{{
-          selectedUser.nickname ? selectedUser.nickname : selectedUser.lastname
-        }}</v-card-title>
-        <v-card-subtitle>
-          <OverChips :roles="selectedUser.team"></OverChips>
-        </v-card-subtitle>
+        <v-img
+          v-if="selectedUser.pp"
+          :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
+          max-height="300px"
+        ></v-img>
+        <v-card-title
+          >{{
+            selectedUser.nickname
+              ? selectedUser.nickname
+              : selectedUser.lastname
+          }}
+        </v-card-title>
+        <v-card-subtitle> </v-card-subtitle>
         <v-card-text>
+          <OverChips :roles="selectedUser.team"></OverChips>
           <div v-if="hasRole(['admin', 'bureau'])">
             <v-select
               v-model="newRole"
@@ -171,18 +179,25 @@
             >
           </div>
 
-          <v-img
-            v-if="selectedUser.pp"
-            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
-            max-height="300px"
-          ></v-img>
-
           <v-simple-table>
             <tbody>
               <tr>
                 <td>Nom</td>
                 <td>
-                  {{ selectedUser.lastname }} {{ selectedUser.firstname }}
+                  <v-text-field
+                    v-model="selectedUser.lastname"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-text-field>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Prénom</td>
+                <td>
+                  <v-text-field
+                    v-model="selectedUser.firstname"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-text-field>
                 </td>
               </tr>
 
@@ -190,10 +205,9 @@
                 <td>Surnom</td>
                 <td>
                   <v-text-field
-                    v-if="hasRole(['admin', 'SG'])"
                     v-model="selectedUser.nickname"
+                    :disabled="!hasRole(['admin', 'human'])"
                   ></v-text-field>
-                  <span v-else>{{ selectedUser.nickname }}</span>
                 </td>
               </tr>
 
@@ -204,7 +218,13 @@
 
               <tr>
                 <td>tel</td>
-                <td>+33 {{ selectedUser.phone }}</td>
+                <td>
+                  <v-text-field
+                    v-model="selectedUser.phone"
+                    :disabled="!hasRole(['admin', 'human'])"
+                    type="number"
+                  ></v-text-field>
+                </td>
               </tr>
 
               <tr>
@@ -224,12 +244,12 @@
               </tr>
 
               <tr>
-                <td>email</td>
+                <td>Email</td>
                 <td>{{ selectedUser.email }}</td>
               </tr>
 
               <tr>
-                <td>compte perso</td>
+                <td>Balance compte perso</td>
                 <td>{{ selectedUser.balance }}</td>
               </tr>
 
@@ -244,12 +264,12 @@
                 </td>
               </tr>
 
-              <tr>
+              <tr v-if="hasRole('informatique')">
                 <td>keycloakID</td>
                 <td>{{ selectedUser.keycloakID }}</td>
               </tr>
 
-              <tr>
+              <tr v-if="hasRole('informatique')">
                 <td>ID</td>
                 <td>{{ selectedUser._id }}</td>
               </tr>
@@ -267,7 +287,8 @@
           </v-simple-table>
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="saveUser()">save</v-btn>
+          <v-btn text @click="saveUser()">sauvgarder</v-btn>
+          <v-btn text @click="deleteUser()">supprimer</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -280,7 +301,7 @@
           </v-text-field>
           <v-text-field
             v-model="newCharisma.amount"
-            label="qunatité"
+            label="quantité"
             type="number"
           >
           </v-text-field>
@@ -554,6 +575,11 @@ export default {
         this.selectedUser
       );
       this.isUserDialogOpen = false;
+    },
+
+    async deleteUser() {
+      this.selectedUser.isValid = false;
+      await this.saveUser();
     },
 
     async deleteAllTeams() {
