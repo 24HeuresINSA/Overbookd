@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-img
-      :src="getRandomBackgroundURL()"
+      :src="randomURL"
       style="
         position: absolute;
         left: 0;
@@ -124,15 +124,8 @@ export default {
     feedbackMessage: undefined,
     timeout: 5000,
     version,
+    randomURL: undefined,
   }),
-
-  computed: {
-    overbookd_logo: function () {
-      return this.$vuetify.theme.dark
-        ? "overbookd_logo_blanc.png"
-        : "overbookd_logo_noir.png";
-    },
-  },
 
   async beforeCreate() {
     if (this.$auth.loggedIn) {
@@ -140,6 +133,10 @@ export default {
         path: REDIRECT_URL,
       }); // redirect to homepage
     }
+  },
+
+  mounted() {
+    this.randomURL = this.getRandomBackgroundURL();
   },
 
   methods: {

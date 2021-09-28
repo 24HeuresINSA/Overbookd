@@ -53,14 +53,18 @@ export default {
       if (this.compiledForm.password !== this.compiledForm.password2) {
         alert("t'as pas mis le meme mpd :P");
       } else if (!this.compiledForm.isValid) {
-        alert("les champs avec * sont OBLIGATOIRS XD ");
+        alert(
+          "les champs avec * sont OBLIGATOIRS XD, il y a une erreur dans le formulaire"
+        );
       } else {
         this.$axios.post("/user", this.compiledForm);
         this.$router.push({
           path: "/login",
         });
         alert(
-          `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname}.${this.compiledForm.lastname}"`
+          `Un mail a été envoyé à ${
+            this.compiledForm.email
+          }. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname.toLowerCase()}.${this.compiledForm.lastname.toLowerCase()}"`
         );
       }
     },
