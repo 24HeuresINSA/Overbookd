@@ -21,7 +21,7 @@ export function hasRole(context: any, roles: string[] | string) {
  * @deprecated
  */
 export function getUser(context: any) {
-  return context.$store.state.user.me;
+  return _.cloneDeep(context.$store.state.user.me);
 }
 
 /**

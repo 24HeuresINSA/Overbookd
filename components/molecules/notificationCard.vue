@@ -30,6 +30,7 @@
 import Vue from "vue";
 import { getUser } from "@/common/role";
 import OverChips from "@/components/atoms/overChips.vue";
+import { User, Notification } from "~/utils/models/repo";
 export default Vue.extend({
   name: "NotificationCard",
   components: { OverChips },
@@ -45,6 +46,11 @@ export default Vue.extend({
     };
   },
   methods: {
+    popNotification(index: number): Notification[] {
+      let user = getUser(this);
+      let notifs = (user as User).notifications.splice(index);
+      return notifs;
+    },
     //TODO
     async acceptFriendRequest(notification: any): Promise<void> {
       if (notification.data) {

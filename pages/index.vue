@@ -61,6 +61,9 @@ import FriendsCard from "@/components/molecules/friendsCard.vue";
 import ClickerCard from "@/components/molecules/clickerCard.vue";
 import { getKeycloakID } from "~/middleware/user";
 import { mapState } from "vuex";
+import { dispatch } from "~/utils/store";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {
   components: {
@@ -94,11 +97,18 @@ export default {
     },
   },
   async mounted() {
-    //TODO Better way ?
-    this.$store.dispatch("user/fetchUser", getKeycloakID(this));
+    dispatch(this, "user", "fetchUser", getKeycloakID(this));
 
-    //TODO: change to repo
-    this.usernames = (await this.$axios.get("/user/all")).data;
+    const res = await safeCall(
+      this.$store,
+      RepoFactory.get("user").getAllUsernames(this)
+    );
+    if (res) {
+      this.usernames = res.data;
+    } else {
+      this.usernames = [];
+    }
+
     this.notValidatedCount = await this.getNotValidatedCount();
   },
   methods: {

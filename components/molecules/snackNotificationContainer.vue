@@ -39,14 +39,5 @@ export default Vue.extend({
       queue: (state: NotificationState) => state.queue,
     }),
   },
-  methods: {
-    addNotif: function () {
-      this.$store.dispatch("notif/pushNotification", {
-        type: "error",
-        message: "Han naaan",
-        timeout: 3000,
-      });
-    },
-  },
 });
 </script>

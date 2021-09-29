@@ -451,7 +451,7 @@ export default {
         this.selectedUser.transactionHistory = [];
       }
 
-      if (this.selectedUser.balance === undefined) {
+      if (this.selectedUser.balance) {
         this.selectedUser.balance = 0;
       }
 
