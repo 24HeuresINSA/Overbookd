@@ -38,7 +38,7 @@ export default {
   },
   sendFriendRequest(context: Context, data: FriendRequestData) {
     return context.$axios.put(
-      `${resource}/notification/${data.to.firstname}/${data.to.lastname}`,
+      `${resource}/notification/${data.to.lastname}/${data.to.firstname}`,
       data.data
     );
   },
