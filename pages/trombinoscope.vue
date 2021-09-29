@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import OverChips from "../components/overChips";
+import OverChips from "~/components/atoms/overChips";
 export default {
   name: "Trombinoscope",
   components: { OverChips },

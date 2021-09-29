@@ -3,7 +3,6 @@
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
-      :clipped="clipped"
       fixed
       app
       :style="isJauneActive ? jauneStyle : ''"
@@ -30,32 +29,36 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-      :style="isJauneActive ? jauneStyle : ''"
-    >
+    <v-app-bar fixed app :style="isJauneActive ? jauneStyle : ''">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-app-bar-title></v-app-bar-title>
-      <v-app-bar-nav-icon>
-        <v-btn icon @click="toggleTheme">🌙</v-btn>
-      </v-app-bar-nav-icon>
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
+      <v-btn v-if="!isMobile" icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
       </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-toolbar-title @click="clickOnTitle()" v-text="title" />
+      <v-toolbar-title
+        v-if="!isMobile"
+        class="ml-2"
+        @click="clickOnTitle()"
+        v-text="title"
+      />
 
       <v-toolbar-title
+        v-if="!isMobile"
         style="color: red; margin-left: 4px; font-weight: bold"
         v-text="version"
       />
       <v-spacer />
-      <v-btn text @click="isDialogOpen = true"> 🐞 Signaler un bug </v-btn>
-      <v-btn text @click="logout()">DÉCONNEXION</v-btn>
+      <v-btn text @click="isDialogOpen = true">
+        <v-icon>mdi-bug-outline</v-icon>
+        {{ isMobile ? "" : "Signaler un bug" }}
+      </v-btn>
+      <v-app-bar-nav-icon>
+        <v-btn icon @click="toggleTheme">
+          <v-icon>mdi-theme-light-dark</v-icon>
+        </v-btn>
+      </v-app-bar-nav-icon>
+      <v-btn icon @click="logout()">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -114,7 +117,6 @@ const AUTHORS = [
 export default {
   data() {
     return {
-      clipped: false,
       drawer: false,
       isWhiteMode: true, // let this set to true
       counter: 0,
@@ -237,6 +239,9 @@ export default {
   },
 
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs;
+    },
     logo() {
       if (this.isJauneActive) {
         return "Ricard.png";

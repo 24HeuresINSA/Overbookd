@@ -7,13 +7,7 @@
     <div>
       <v-card-title>Le Clicker ⏱</v-card-title>
       <v-card-subtitle>Le compteur de blagues qui dérapent 🚗 </v-card-subtitle>
-      <v-container>
-        <v-img
-          max-height="400px"
-          max-width="400px"
-          src="https://media.giphy.com/media/WJZbQEoljvfxK/giphy.gif"
-        ></v-img>
-      </v-container>
+      <v-img src="https://i.imgur.com/sJWFi5s.gif"></v-img>
       <v-card-text>
         <h2>{{ me.clicks || 0 }} 🚗</h2>
       </v-card-text>

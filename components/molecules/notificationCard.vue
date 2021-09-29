@@ -30,7 +30,8 @@
 import Vue from "vue";
 import { getUser } from "@/common/role";
 import OverChips from "@/components/atoms/overChips.vue";
-import { User, Notification } from "~/utils/models/repo";
+import { Notification, User } from "~/utils/models/repo";
+
 export default Vue.extend({
   name: "NotificationCard",
   components: { OverChips },
@@ -48,7 +49,8 @@ export default Vue.extend({
   methods: {
     popNotification(index: number): Notification[] {
       let user = getUser(this);
-      let notifs = (user as User).notifications.splice(index);
+      (user as User).notifications.splice(index);
+      let notifs = (user as User).notifications;
       return notifs;
     },
     //TODO
@@ -56,11 +58,12 @@ export default Vue.extend({
       if (notification.data) {
         let user = getUser(this);
         //! TERRIBLE
-        user.notifications.pop();
+        // user.notifications.pop();
         await this.$axios.post(`/user/friends`, {
           from: user._id,
           to: notification.data,
         });
+        this.deleteNotification(this.notif.index);
         // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
         // this.isSnackbarOpen = true;
       } else {
@@ -80,8 +83,9 @@ export default Vue.extend({
           friends = user.friends;
         }
         //! TERRIBLE
-        user.notifications.pop();
-        await this.$axios.put(`/user/${user.keycloakID}`, user);
+        // user.notifications.pop();
+        // await this.$axios.put(`/user/${user.keycloakID}`, user);
+        this.deleteNotification(this.notif.index);
         // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
         // this.isSnackbarOpen = true;
       } else {

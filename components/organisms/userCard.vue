@@ -79,7 +79,7 @@ export default Vue.extend({
   methods: {
     getPPUrl() {
       return process.env.NODE_ENV === "development"
-        ? "http://overbookd.localhost/"
+        ? "http://localhost:2424/"
         : "";
     },
     openPPDialog() {

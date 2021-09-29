@@ -136,10 +136,6 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  server: {
-    port: 1234,
-  },
-
   storybook: {
     decorators: [
       // VApp decorator for Vuetify

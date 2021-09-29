@@ -17,10 +17,12 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
+import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
 import OverForm from "~/components/overForm.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { SnackNotif } from "~/utils/models/store";
+
 export default Vue.extend({
   name: "TransferDialog",
   components: { OverForm },
@@ -35,6 +37,7 @@ export default Vue.extend({
         {
           key: "amount",
           label: "montant",
+          option: "number",
           isRequired: true,
         },
         {
@@ -49,13 +52,15 @@ export default Vue.extend({
         isValid: false,
         user: null as any,
       },
-      user: null as any,
     };
   },
   computed: {
     ...mapState<any, TMapState<DialogState>>("dialog", {
       type: (state: DialogState) => state.type,
       open: (state: DialogState) => state.open,
+    }),
+    ...mapState<any, TMapState<UserState>>("user", {
+      me: (state: UserState) => state.me,
     }),
     toggled: {
       get: function (): boolean | unknown {
@@ -75,28 +80,15 @@ export default Vue.extend({
     },
   },
   methods: {
-    //TODO no any
     onFormChange(form: any) {
       this.transfer = form;
     },
     async transferMoney() {
       this.toggled = false;
-      //TODO: check all logic
       if (this.transfer.isValid) {
-        if (
-          this.transfer.user ===
-          this.user.firstname + "." + this.user.lastname
-        ) {
+        if (this.transfer.user === this.me.firstname + "." + this.me.lastname) {
           return;
         }
-        this.user.balance -= +this.transfer.amount;
-        if (!this.user.transactionHistory) {
-          this.user.transactionHistory = [];
-        }
-        this.user.transactionHistory.unshift({
-          amount: this.transfer.amount,
-          reason: `virement pour ${this.transfer.user}, ${this.transfer.reason}`,
-        });
 
         try {
           let res = await RepoFactory.get("user").transfer(this, this.transfer);
@@ -113,7 +105,7 @@ export default Vue.extend({
             type: "error",
             message: "Could not transfer",
           };
-          this.$store.dispatch("notif/pushNotification", notif);
+          await this.$store.dispatch("notif/pushNotification", notif);
         }
       }
     },

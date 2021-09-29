@@ -125,31 +125,6 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="isInformationDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Info sur l'utilisateur</v-card-title>
-        <!--      <v-card-subtitle>{{this.selectedUser.nickname ? this.selectedUser.nickname : this.selectedUser.lastname}}</v-card-subtitle>-->
-        <v-card-text>
-          <v-simple-table>
-            <template #default>
-              <thead>
-                <tr>
-                  <th class="text-left">champ</th>
-                  <th class="text-left">valeur</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in desserts" :key="item.name">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.calories }}</td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
     <v-dialog v-model="isUserDialogOpen" max-width="600">
       <v-card>
         <v-img
@@ -539,7 +514,7 @@ export default {
         this.selectedUser.transactionHistory = [];
       }
 
-      if (this.selectedUser.balance) {
+      if (!this.selectedUser.balance) {
         this.selectedUser.balance = 0;
       }
 
@@ -549,7 +524,7 @@ export default {
         this.selectedUser.balance =
           +this.selectedUser.balance - +this.newTransaction.amount;
       } else {
-        this.selectedUser.balance +=
+        this.selectedUser.balance =
           +this.selectedUser.balance + +this.newTransaction.amount;
       }
 
@@ -593,8 +568,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.fab {
-  margin: 3px;
-}
-</style>
+<style scoped></style>
