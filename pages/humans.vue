@@ -10,14 +10,49 @@
                 v-model="filters.search"
                 label="Recherche"
               ></v-text-field>
-              <v-switch
-                v-model="filters.hasDriverLicence"
-                label="Permis"
-              ></v-switch>
-              <v-switch
-                v-model="filters.notValidated"
-                label="non validés"
-              ></v-switch>
+
+              <template>
+                <p>Permis</p>
+                <v-btn-toggle
+                  v-model="filters.hasDriverLicence"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true"> Permis</v-btn>
+
+                  <v-btn :value="false"> pas de permis</v-btn>
+                </v-btn-toggle>
+              </template>
+
+              <template v-if="hasRole(['admin', 'bureau'])">
+                <p>Validé</p>
+                <v-btn-toggle
+                  v-model="filters.isValidated"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true"> Validé</v-btn>
+
+                  <v-btn :value="false"> Non Validé</v-btn>
+                </v-btn-toggle>
+              </template>
+
+              <template v-if="hasRole(['admin', 'bureau'])">
+                <p>Cotisation</p>
+                <v-btn-toggle
+                  v-model="filters.hasPayedContribution"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true"> Payé</v-btn>
+
+                  <v-btn :value="false"> Non payé</v-btn>
+                </v-btn-toggle>
+              </template>
+
               <v-container class="py-0">
                 <v-row align="center" justify="start">
                   <v-combobox
@@ -125,31 +160,6 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="isInformationDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Info sur l'utilisateur</v-card-title>
-        <!--      <v-card-subtitle>{{this.selectedUser.nickname ? this.selectedUser.nickname : this.selectedUser.lastname}}</v-card-subtitle>-->
-        <v-card-text>
-          <v-simple-table>
-            <template #default>
-              <thead>
-                <tr>
-                  <th class="text-left">champ</th>
-                  <th class="text-left">valeur</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in desserts" :key="item.name">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.calories }}</td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
     <v-dialog v-model="isUserDialogOpen" max-width="600">
       <v-card>
         <v-img
@@ -167,7 +177,7 @@
         <v-card-subtitle> </v-card-subtitle>
         <v-card-text>
           <OverChips :roles="selectedUser.team"></OverChips>
-          <div v-if="hasRole(['admin', 'bureau'])">
+          <div v-if="hasRole(['admin'])">
             <v-select
               v-model="newRole"
               label="ajouter un role"
@@ -175,12 +185,21 @@
             ></v-select>
             <v-btn text @click="addRole()">ajouter</v-btn>
             <v-btn text @click="deleteAllTeams()"
-              >révoquer tous les rôles</v-btn
-            >
+              >révoquer tous les rôles
+            </v-btn>
           </div>
 
           <v-simple-table>
             <tbody>
+              <tr>
+                <td>Cotisation</td>
+                <td>
+                  <v-switch
+                    v-model="selectedUser.hasPayedContribution"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-switch>
+                </td>
+              </tr>
               <tr>
                 <td>Nom</td>
                 <td>
@@ -224,6 +243,16 @@
                     :disabled="!hasRole(['admin', 'human'])"
                     type="number"
                   ></v-text-field>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Permis</td>
+                <td>
+                  <v-switch
+                    v-model="selectedUser.hasDriverLicence"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-switch>
                 </td>
               </tr>
 
@@ -353,11 +382,11 @@ export default {
         search: undefined,
         hasDriverLicence: undefined,
         teams: [],
-        notValidated: undefined,
+        isValidated: true,
+        hasPayedContribution: undefined,
       },
 
       isTransactionDialogOpen: false,
-      isInformationDialogOpen: false,
       isUserDialogOpen: false,
       isSnackbarOpen: false,
       isCharismaDialogOpen: false,
@@ -401,6 +430,33 @@ export default {
           );
         }
 
+        // filter by not validated
+        if (this.filters.isValidated !== undefined) {
+          console.log(this.filters.isValidated);
+          if (this.filters.isValidated) {
+            mUsers = mUsers.filter((user) => user.team.length !== 0);
+          } else {
+            mUsers = mUsers.filter((user) => user.team.length === 0);
+          }
+
+          // this.filteredUsers = mUsers.filter((user) => {
+          //   if (user.team) {
+          //     return user.team.length === 0;
+          //   } else {
+          //     return true;
+          //   }
+          // });
+        }
+
+        // filter by payed contributions
+        if (this.filters.hasPayedContribution !== undefined) {
+          if (this.filters.hasPayedContribution) {
+            mUsers = mUsers.filter((user) => user.hasPayedContribution);
+          } else {
+            mUsers = mUsers.filter((user) => !user.hasPayedContribution);
+          }
+        }
+
         // filter by team
         if (this.filters.teams) {
           this.filteredUsers = mUsers.filter((user) => {
@@ -411,17 +467,6 @@ export default {
               );
             } else {
               return false;
-            }
-          });
-        }
-
-        // filter by not validated
-        if (this.filters.notValidated) {
-          this.filteredUsers = mUsers.filter((user) => {
-            if (user.team) {
-              return user.team.length === 0;
-            } else {
-              return true;
             }
           });
         }
@@ -448,6 +493,7 @@ export default {
     } else {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
+      this.users.filter((user) => user.isValid);
       this.filteredUsers = this.users;
     }
   },
@@ -594,7 +640,7 @@ export default {
 </script>
 
 <style scoped>
-.fab {
-  margin: 3px;
+p {
+  margin: 0;
 }
 </style>
