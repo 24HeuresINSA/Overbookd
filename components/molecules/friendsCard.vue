@@ -93,7 +93,7 @@ export default Vue.extend({
         return;
       }
       let req: FriendRequest = {
-        type: "friendrequest",
+        type: "friendRequest",
         message: `${this.me.firstname}.${this.me.lastname} vous a envoye une demande d'ami ❤️`,
         from: `${this.me.nickname ? this.me.nickname : this.me.lastname}`,
         date: new Date(),

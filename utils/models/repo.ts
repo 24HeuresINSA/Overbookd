@@ -54,11 +54,12 @@ export interface User {
   __v: number;
   notifications: Notification[];
   clicks?: number;
-  transactionHistory: Transaction[];
+  transactionHistory?: Transaction[];
+  balance?: number;
 }
 
 export interface FriendRequest {
-  type: "friendrequest";
+  type: "friendRequest";
   message: string;
   from: string;
   date: Date;
