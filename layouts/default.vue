@@ -47,9 +47,6 @@
       <v-btn icon @click.stop="clipped = !clipped">
         <v-icon>mdi-application</v-icon>
       </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
       <v-toolbar-title @click="clickOnTitle()" v-text="title" />
 
       <v-toolbar-title
@@ -65,7 +62,7 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer :absolute="true" app>
+    <v-footer :fixed="true" app>
       <span>fait avec ❤️ par {{ getRandomAuthor() }}</span>
     </v-footer>
 
@@ -102,7 +99,7 @@
 
 <script>
 const { version } = require("../package.json");
-const { getUser } = require("../common/role");
+const { getUser, getConfig } = require("../common/role");
 const AUTHORS = [
   "Hamza - Cookie 🍪",
   "Tit - Goelise 🦀",
@@ -158,14 +155,14 @@ export default {
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiches Anims 🥳",
-          roles: "hard",
+          title: "Fiches Animation 🥳",
+          roles: getConfig(this, "fa_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
           title: "Fiches Tâches  😱",
-          roles: "hard",
+          roles: getConfig(this, "ft_required_role"),
           to: "/ft",
         },
         {
@@ -199,7 +196,7 @@ export default {
         {
           icon: "mdi-human-greeting",
           title: "Affectation 💃",
-          roles: "hard",
+          roles: "humain",
           to: "/assignment",
         },
         {

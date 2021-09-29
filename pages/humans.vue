@@ -56,11 +56,11 @@
             :items-per-page="30"
             class="elevation-1"
           >
-            <template #[`item.action`]="{ item }">
+            <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
-                fab
+                text
                 style="color: blue"
-                class="fab"
+                small
                 :href="
                   'https://www.facebook.com/search/top?q=' +
                   item.firstname +
@@ -71,18 +71,28 @@
               </v-btn>
               <v-btn
                 v-if="hasRole('admin')"
-                fab
-                class="fab"
+                text
+                small
                 @click="openTransactionDialog(item)"
-                ><v-icon>mdi-cash</v-icon></v-btn
               >
+                <v-icon>mdi-cash</v-icon>
+              </v-btn>
               <v-btn
                 v-if="hasRole('hard')"
-                fab
-                class="fab"
+                text
+                small
                 @click="openInformationDialog(item)"
-                ><v-icon>mdi-information-outline</v-icon></v-btn
               >
+                <v-icon>mdi-information-outline</v-icon>
+              </v-btn>
+              <v-btn
+                v-if="hasRole(['admin', 'bureau'])"
+                text
+                small
+                @click="openCharismaDialog(item)"
+              >
+                <v-icon>mdi-emoticon-cool</v-icon>
+              </v-btn>
             </template>
 
             <template #[`item.team`]="{ item }">
@@ -142,33 +152,52 @@
 
     <v-dialog v-model="isUserDialogOpen" max-width="600">
       <v-card>
-        <v-card-title>{{
-          selectedUser.nickname ? selectedUser.nickname : selectedUser.lastname
-        }}</v-card-title>
-        <v-card-subtitle>
-          <OverChips :roles="selectedUser.team"></OverChips>
-        </v-card-subtitle>
+        <v-img
+          v-if="selectedUser.pp"
+          :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
+          max-height="300px"
+        ></v-img>
+        <v-card-title
+          >{{
+            selectedUser.nickname
+              ? selectedUser.nickname
+              : selectedUser.lastname
+          }}
+        </v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-text>
+          <OverChips :roles="selectedUser.team"></OverChips>
           <div v-if="hasRole(['admin', 'bureau'])">
             <v-select
               v-model="newRole"
               label="ajouter un role"
               :items="getConfig('teams').map((e) => e.name)"
             ></v-select>
-            <v-btn @click="addRole()">ajouter</v-btn>
+            <v-btn text @click="addRole()">ajouter</v-btn>
+            <v-btn text @click="deleteAllTeams()"
+              >révoquer tous les rôles
+            </v-btn>
           </div>
-
-          <v-img
-            v-if="selectedUser.pp"
-            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
-          ></v-img>
 
           <v-simple-table>
             <tbody>
               <tr>
                 <td>Nom</td>
                 <td>
-                  {{ selectedUser.lastname }} {{ selectedUser.firstname }}
+                  <v-text-field
+                    v-model="selectedUser.lastname"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-text-field>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Prénom</td>
+                <td>
+                  <v-text-field
+                    v-model="selectedUser.firstname"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-text-field>
                 </td>
               </tr>
 
@@ -176,10 +205,9 @@
                 <td>Surnom</td>
                 <td>
                   <v-text-field
-                    v-if="hasRole(['admin', 'SG'])"
                     v-model="selectedUser.nickname"
+                    :disabled="!hasRole(['admin', 'human'])"
                   ></v-text-field>
-                  <span v-else>{{ selectedUser.nickname }}</span>
                 </td>
               </tr>
 
@@ -190,7 +218,13 @@
 
               <tr>
                 <td>tel</td>
-                <td>+33 {{ selectedUser.phone }}</td>
+                <td>
+                  <v-text-field
+                    v-model="selectedUser.phone"
+                    :disabled="!hasRole(['admin', 'human'])"
+                    type="number"
+                  ></v-text-field>
+                </td>
               </tr>
 
               <tr>
@@ -210,12 +244,12 @@
               </tr>
 
               <tr>
-                <td>email</td>
+                <td>Email</td>
                 <td>{{ selectedUser.email }}</td>
               </tr>
 
               <tr>
-                <td>compte perso</td>
+                <td>Balance compte perso</td>
                 <td>{{ selectedUser.balance }}</td>
               </tr>
 
@@ -230,19 +264,14 @@
                 </td>
               </tr>
 
-              <tr>
+              <tr v-if="hasRole('informatique')">
                 <td>keycloakID</td>
                 <td>{{ selectedUser.keycloakID }}</td>
               </tr>
 
-              <tr>
+              <tr v-if="hasRole('informatique')">
                 <td>ID</td>
                 <td>{{ selectedUser._id }}</td>
-              </tr>
-
-              <tr>
-                <td>Handicap</td>
-                <td>{{ selectedUser.handicap }}</td>
               </tr>
 
               <tr>
@@ -254,22 +283,38 @@
                 <td>Commentaire</td>
                 <td>{{ selectedUser.comment }}</td>
               </tr>
-
-              <tr v-if="hasRole('admin')">
-                <td># secu social</td>
-                <td>{{ selectedUser.socialSecurity }}</td>
-              </tr>
             </tbody>
           </v-simple-table>
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="saveUser()">save</v-btn>
+          <v-btn text @click="saveUser()">sauvgarder</v-btn>
+          <v-btn text @click="deleteUser()">supprimer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Charisme 😎</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="newCharisma.reason" label="raison">
+          </v-text-field>
+          <v-text-field
+            v-model="newCharisma.amount"
+            label="quantité"
+            type="number"
+          >
+          </v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="saveNewCharisma()">+</v-btn>
+          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
-      💸 transaction done 🥳
+      {{ feedbackMessage }}
 
       <template #action="{ attrs }">
         <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
@@ -283,6 +328,7 @@
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
 import OverChips from "../components/atoms/overChips";
+import Fuse from "fuse.js";
 
 export default {
   name: "Humans",
@@ -314,6 +360,7 @@ export default {
       isInformationDialogOpen: false,
       isUserDialogOpen: false,
       isSnackbarOpen: false,
+      isCharismaDialogOpen: false,
       selectedUser: {
         nickname: undefined,
       },
@@ -321,7 +368,13 @@ export default {
         reason: "recharge compte perso",
         amount: undefined,
       },
+      newCharisma: {
+        reason: undefined,
+        amount: undefined,
+      },
       newRole: undefined,
+
+      feedbackMessage: "sauvgardé 🥳",
     };
   },
 
@@ -332,17 +385,13 @@ export default {
 
         // filter by search
         if (this.filters.search) {
-          mUsers = mUsers.filter((user) => {
-            let s = this.filters.search.toLowerCase();
-            const seatchNickname = user.nickname
-              ? user.nickname.toLowerCase().includes(s)
-              : false;
-            return (
-              user.firstname.toLowerCase().includes(s) ||
-              user.lastnam.toLowerCase().includes(s) ||
-              seatchNickname
-            );
-          });
+          const options = {
+            // Search in `author` and in `tags` array
+            keys: ["firstname", "lastname", "nickname"],
+          };
+          const fuse = new Fuse(mUsers, options);
+
+          mUsers = fuse.search(this.filters.search).map((e) => e.item);
         }
 
         // filter by driver licence
@@ -404,6 +453,11 @@ export default {
   },
 
   methods: {
+    openCharismaDialog(user) {
+      this.selectedUser = user;
+      this.isCharismaDialogOpen = true;
+    },
+
     async addRole() {
       let user = this.selectedUser;
       if (user.team === undefined) {
@@ -446,6 +500,40 @@ export default {
       this.isUserDialogOpen = true;
     },
 
+    async saveNewCharisma(isNegative) {
+      if (!this.selectedUser.charisma) {
+        this.selectedUser.charisma = 0;
+      }
+
+      if (!this.selectedUser.charismaHistory) {
+        this.selectedUser.charismaHistory = [];
+      }
+      this.newCharisma.amount =
+        (isNegative ? "-" : "+") + this.newCharisma.amount;
+      this.selectedUser.charismaHistory.unshift(this.newCharisma);
+
+      this.selectedUser.charisma =
+        +this.selectedUser.charisma + +this.newCharisma.amount;
+
+      // update notifications
+      if (!this.selectedUser.notifications) {
+        this.selectedUser.notifications = [];
+      }
+      this.selectedUser.notifications.unshift({
+        date: new Date(),
+        team: "bureau",
+        message: `tu as reçu ${this.newCharisma.amount} points de charisme pour ${this.newCharisma.reason}`,
+        type: "charisma",
+      });
+
+      await this.$axios.put(
+        "/user/" + this.selectedUser.keycloakID,
+        this.selectedUser
+      );
+      this.isSnackbarOpen = true;
+      this.isCharismaDialogOpen = false;
+    },
+
     async transaction(isNegative) {
       if (!this.selectedUser.transactionHistory) {
         this.selectedUser.transactionHistory = [];
@@ -454,6 +542,8 @@ export default {
       if (this.selectedUser.balance) {
         this.selectedUser.balance = 0;
       }
+
+      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
 
       if (isNegative) {
         this.selectedUser.balance =
@@ -484,7 +574,20 @@ export default {
         `/user/${this.selectedUser.keycloakID}`,
         this.selectedUser
       );
-      this.isInformationDialogOpen = false;
+      this.isUserDialogOpen = false;
+    },
+
+    async deleteUser() {
+      this.selectedUser.isValid = false;
+      await this.saveUser();
+    },
+
+    async deleteAllTeams() {
+      this.selectedUser.team = [];
+      await this.$axios.put(
+        `/user/${this.selectedUser.keycloakID}`,
+        this.selectedUser
+      );
     },
   },
 };
@@ -492,6 +595,6 @@ export default {
 
 <style scoped>
 .fab {
-  margin: 5px;
+  margin: 3px;
 }
 </style>

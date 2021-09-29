@@ -30,10 +30,11 @@
       <v-card>
         <v-card-title>Oupsss</v-card-title>
         <v-card-text>
-          Merci de rejoindre l'asso mais ton compte n'est pas encore activer...
+          Merci de rejoindre l'asso mais il faut qu'un admin active ton compte
+          (demande à Maëlle)..
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="logout">DECO</v-btn>
+          <v-btn text @click="logout">DECONNEXION</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
