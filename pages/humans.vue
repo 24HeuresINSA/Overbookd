@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <template style="display: grid">
+  <div style="width: 100%; position: absolute; top: 0; left: 0">
+    <template style="width: 100%; display: grid">
       <v-row>
-        <v-col md="2">
+        <v-col md="3">
           <v-card>
             <v-card-title>Filtres</v-card-title>
             <v-card-text>
@@ -84,7 +84,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col md="9">
           <v-data-table
             :headers="headers"
             :items="filteredUsers"
@@ -136,7 +136,6 @@
           </v-data-table>
         </v-col>
       </v-row>
-      <div></div>
     </template>
 
     <v-dialog v-model="isTransactionDialogOpen" max-width="600">
@@ -367,7 +366,7 @@ export default {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "prenom", value: "firstname" },
+        { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team" },
@@ -495,6 +494,14 @@ export default {
       this.users = (await this.$axios.get("/user")).data;
       this.users.filter((user) => user.isValid);
       this.filteredUsers = this.users;
+
+      // add CP if admin
+      if (this.hasRole("admin")) {
+        this.headers.splice(this.headers.length - 1, 0, {
+          text: "CP",
+          value: "balance",
+        });
+      }
     }
   },
 
@@ -642,5 +649,9 @@ export default {
 <style scoped>
 p {
   margin: 0;
+}
+
+.container {
+  padding: 0;
 }
 </style>
