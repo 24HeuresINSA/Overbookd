@@ -188,6 +188,12 @@
             </v-btn>
           </div>
 
+          <v-img
+            v-if="selectedUser.pp"
+            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
+            max-height="300px"
+          ></v-img>
+
           <v-simple-table>
             <tbody>
               <tr>
@@ -330,6 +336,26 @@
           <v-text-field
             v-model="newCharisma.amount"
             label="quantité"
+            type="number"
+          >
+          </v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="saveNewCharisma()">+</v-btn>
+          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Charisme 😎</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="newCharisma.reason" label="raison">
+          </v-text-field>
+          <v-text-field
+            v-model="newCharisma.amount"
+            label="qunatité"
             type="number"
           >
           </v-text-field>
@@ -628,11 +654,6 @@ export default {
         this.selectedUser
       );
       this.isUserDialogOpen = false;
-    },
-
-    async deleteUser() {
-      this.selectedUser.isValid = false;
-      await this.saveUser();
     },
 
     async deleteAllTeams() {
