@@ -1,5 +1,4 @@
-import { ActionTree, MutationTree } from "vuex";
-import { RootState } from "~/store";
+import { actionTree, mutationTree } from "typed-vuex";
 import { SnackNotif } from "~/utils/models/store";
 
 export const state = () => ({
@@ -8,7 +7,7 @@ export const state = () => ({
 
 export type NotificationState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<NotificationState> = {
+export const mutations = mutationTree(state, {
   ADD_NOTIFICATION: function (state, payload: SnackNotif) {
     // generate id
     let count = 0;
@@ -24,17 +23,23 @@ export const mutations: MutationTree<NotificationState> = {
       return i.id != payload;
     });
   },
-};
+});
 
-export const actions: ActionTree<NotificationState, RootState> = {
-  pushNotification: function ({ commit }, payload: SnackNotif) {
-    commit("ADD_NOTIFICATION", payload);
-  },
-  popNotification: function ({ commit }, payload: number) {
-    commit("POP_NOTIFICATION", payload);
-  },
-};
+export const actions = actionTree(
+  { state, mutations },
+  {
+    pushNotification: function ({ commit }, payload: SnackNotif) {
+      commit("ADD_NOTIFICATION", payload);
+    },
+    popNotification: function ({ commit }, payload: number) {
+      commit("POP_NOTIFICATION", payload);
+    },
+  }
+);
 
+/**
+ * @deprecated
+ */
 export interface NotificationsActions {
   pushNotification: SnackNotif;
   popNotification: number;

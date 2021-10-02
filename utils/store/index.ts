@@ -10,6 +10,7 @@ interface Stores {
 }
 
 /**
+ * @deprecated
  * Wrapper to add types and autocomplete to vuex dispatch
  * @param context Vue context
  * @param scope module name

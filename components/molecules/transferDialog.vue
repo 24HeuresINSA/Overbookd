@@ -47,10 +47,10 @@ export default Vue.extend({
       ],
       transfer: {
         reason: "",
-        amount: 0,
+        amount: "0",
         beneficiary: undefined,
         isValid: false,
-        user: null as any,
+        user: {} as any,
       },
     };
   },
@@ -81,19 +81,27 @@ export default Vue.extend({
   },
   methods: {
     onFormChange(form: any) {
+      console.log(form);
       this.transfer = form;
     },
     async transferMoney() {
+      // console.log(this.transfer);
       this.toggled = false;
+      this.transfer.amount = this.transfer.amount.replace(",", ".");
       if (this.transfer.isValid) {
-        if (this.transfer.user === this.me.firstname + "." + this.me.lastname) {
+        if (this.transfer.user == `${this.me.firstname}.${this.me.lastname}`) {
+          this.$accessor.notif.pushNotification({
+            type: "error",
+            message: "Ca sert a rien de se transférer de l'argent soi-même...",
+          });
           return;
         }
-
+        //TODO: Broken. Fix
+        //TODO: Update balance ?
         try {
           let res = await RepoFactory.get("user").transfer(this, this.transfer);
           if (res.status !== 200) {
-            throw new Error("Server did not return 200 status");
+            throw new Error();
           }
           let notif: SnackNotif = {
             type: "success",

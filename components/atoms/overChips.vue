@@ -11,24 +11,23 @@
   </v-container>
 </template>
 
-<script>
-import { getConfig } from "@/common/role";
-
-export default {
+<script lang="ts">
+import Vue, { PropType } from "vue";
+export default Vue.extend({
   name: "OverChips",
-  props: ["roles"],
+  props: {
+    roles: {
+      type: Array as PropType<string[]>,
+      required: true,
+    },
+  },
 
   computed: {
     mRoles() {
-      if (this.roles) {
-        return getConfig(this, "teams").filter((team) =>
-          this.roles.includes(team.name)
-        );
-      }
-      return null;
+      return this.$accessor.config.getConfigTeams(this.roles);
     },
   },
-};
+});
 </script>
 
 <style scoped></style>

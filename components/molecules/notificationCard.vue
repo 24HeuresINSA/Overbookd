@@ -27,8 +27,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { getUser } from "@/common/role";
+import Vue, { PropType } from "vue";
 import OverChips from "@/components/atoms/overChips.vue";
 import { Notification, User } from "~/utils/models/repo";
 
@@ -37,7 +36,8 @@ export default Vue.extend({
   components: { OverChips },
   props: {
     notif: {
-      type: Object,
+      //TODO Add index to the notification basic interface + in database
+      type: Object as PropType<Notification & { index: number }>,
       required: true,
     },
   },
@@ -46,21 +46,23 @@ export default Vue.extend({
       notification: this.notif,
     };
   },
+  computed: {
+    me(): User {
+      return this.$accessor.user.me;
+    },
+  },
   methods: {
     popNotification(index: number): Notification[] {
-      let user = getUser(this);
-      (user as User).notifications.splice(index);
-      let notifs = (user as User).notifications;
+      let notifs = this.me.notifications;
+      notifs.splice(index);
       return notifs;
     },
     //TODO
     async acceptFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
-        let user = getUser(this);
-        //! TERRIBLE
-        // user.notifications.pop();
+        //TODO: RepoFactory + safeCall
         await this.$axios.post(`/user/friends`, {
-          from: user._id,
+          from: this.me._id,
           to: notification.data,
         });
         this.deleteNotification(this.notif.index);
@@ -75,15 +77,11 @@ export default Vue.extend({
     //TODO
     async refuseFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
-        let friends;
-        let user = getUser(this);
-        if (user.friends === undefined) {
-          friends = [];
-        } else {
-          friends = user.friends;
+        let friends = [];
+        if (this.me.friends) {
+          friends = this.me.friends;
         }
-        //! TERRIBLE
-        // user.notifications.pop();
+        //TODO Something happen on refusal ?
         // await this.$axios.put(`/user/${user.keycloakID}`, user);
         this.deleteNotification(this.notif.index);
         // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
@@ -94,11 +92,10 @@ export default Vue.extend({
       }
     },
     deleteNotification(index: number): void {
-      let { notifications, keycloakID: userId } = getUser(this);
-      const notifs = notifications.filter((_: any, i: number) => i != index);
-      this.$store.dispatch("user/updateUser", {
-        userId,
-        userData: { notifications: notifs },
+      const notifications = this.me.notifications.filter((_, i) => i != index);
+      this.$accessor.user.updateUser({
+        userId: this.me.keycloakID,
+        userData: { notifications },
       });
     },
   },

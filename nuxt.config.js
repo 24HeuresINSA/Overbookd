@@ -40,6 +40,7 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
     "@nuxtjs/color-mode",
+    "nuxt-typed-vuex",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

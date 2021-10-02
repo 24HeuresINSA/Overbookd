@@ -20,23 +20,18 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
-import { TMapState } from "~/utils/types/store";
-import { UserState } from "~/store/user";
-import { dispatch } from "~/utils/store";
 
 export default Vue.extend({
   name: "ClickerCard",
   computed: {
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state) => state.me,
-    }),
+    me() {
+      return this.$accessor.user.me;
+    },
   },
   methods: {
     clicker: function () {
       const clicks = this.me.clicks ? this.me.clicks + 1 : 1;
-      console.log(clicks);
-      dispatch(this, "user", "updateUser", {
+      this.$accessor.user.updateUser({
         userId: this.me.keycloakID,
         userData: { clicks },
       });

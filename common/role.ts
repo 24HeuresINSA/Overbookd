@@ -28,9 +28,11 @@ export function getUser(context: any) {
  * @deprecated
  */
 export function getConfig(context: any, key: string) {
-  return _.cloneDeep(
-    context.$store.state.config.data.data.find(
-      (e: { key: string }) => e.key === key
-    ).value
+  const conf = context.$store.state.config.data.data.find(
+    (e: { key: string }) => e.key === key
   );
+  if (conf) {
+    return _.cloneDeep(conf.value);
+  }
+  return undefined;
 }

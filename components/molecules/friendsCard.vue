@@ -41,10 +41,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
-import { TMapState } from "~/utils/types/store";
-import { UserState } from "~/store/user";
-import { dispatch } from "~/utils/store";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { FriendRequest } from "~/utils/models/repo";
@@ -58,9 +54,9 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state) => state.me,
-    }),
+    me() {
+      return this.$accessor.user.me;
+    },
   },
   async mounted() {
     const res = await safeCall(
@@ -86,12 +82,12 @@ export default Vue.extend({
         this.me.friends.find((friend) => friend.username === this.newFriend)
       ) {
         // already friends
-        dispatch(this, "notif", "pushNotification", {
+        this.$accessor.notif.pushNotification({
           type: "error",
           message: "Vous êtes déjà amis...",
         });
-        return;
       }
+      // generate a new friend request
       let req: FriendRequest = {
         type: "friendRequest",
         message: `${this.me.firstname}.${this.me.lastname} vous a envoye une demande d'ami ❤️`,
@@ -102,6 +98,7 @@ export default Vue.extend({
           id: this.me._id,
         },
       };
+      // Send it to the api
       await safeCall(
         this.$store,
         RepoFactory.get("user").sendFriendRequest(this, {
