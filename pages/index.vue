@@ -3,7 +3,7 @@
     <v-container style="display: grid">
       <v-row justify="center" align="center">
         <v-col cols="12" sm="6" md="4">
-          <v-card v-if="user">
+          <v-card v-if="user" max-width="350px">
             <v-img
               v-if="user.pp"
               :src="getPPUrl() + 'api/user/pp/' + user.pp"
@@ -12,8 +12,8 @@
             ></v-img>
             <v-card-title
               >Bonsoir
-              {{ user.nickname ? user.nickname : user.firstname }}</v-card-title
-            >
+              {{ user.nickname ? user.nickname : user.firstname }}
+            </v-card-title>
             <v-card-subtitle
               >👋 {{ user.firstname }}.{{ user.lastname }}</v-card-subtitle
             >

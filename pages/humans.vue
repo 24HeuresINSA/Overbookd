@@ -2,7 +2,7 @@
   <div style="width: 100%; position: absolute; top: 0; left: 0">
     <template style="width: 100%; display: grid">
       <v-row>
-        <v-col md="3">
+        <v-col md="2">
           <v-card>
             <v-card-title>Filtres</v-card-title>
             <v-card-text>
@@ -19,9 +19,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true"> Permis</v-btn>
+                  <v-btn :value="true" small> Permis</v-btn>
 
-                  <v-btn :value="false"> pas de permis</v-btn>
+                  <v-btn :value="false" small> pas de permis</v-btn>
                 </v-btn-toggle>
               </template>
 
@@ -33,9 +33,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true"> Validé</v-btn>
+                  <v-btn :value="true" small> Validé</v-btn>
 
-                  <v-btn :value="false"> Non Validé</v-btn>
+                  <v-btn :value="false" small> Non Validé</v-btn>
                 </v-btn-toggle>
               </template>
 
@@ -47,9 +47,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true"> Payé</v-btn>
+                  <v-btn :value="true" small> Payé</v-btn>
 
-                  <v-btn :value="false"> Non payé</v-btn>
+                  <v-btn :value="false" small> Non payé</v-btn>
                 </v-btn-toggle>
               </template>
 
@@ -93,16 +93,12 @@
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
+                v-if="hasRole('hard')"
                 text
-                style="color: blue"
                 small
-                :href="
-                  'https://www.facebook.com/search/top?q=' +
-                  item.firstname +
-                  ' ' +
-                  item.lastname
-                "
-                >F
+                @click="openInformationDialog(item)"
+              >
+                <v-icon>mdi-information-outline</v-icon>
               </v-btn>
               <v-btn
                 v-if="hasRole('admin')"
@@ -113,14 +109,6 @@
                 <v-icon>mdi-cash</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasRole('hard')"
-                text
-                small
-                @click="openInformationDialog(item)"
-              >
-                <v-icon>mdi-information-outline</v-icon>
-              </v-btn>
-              <v-btn
                 v-if="hasRole(['admin', 'bureau'])"
                 text
                 small
@@ -128,6 +116,22 @@
               >
                 <v-icon>mdi-emoticon-cool</v-icon>
               </v-btn>
+              <v-btn
+                text
+                small
+                :href="
+                  'https://www.facebook.com/search/top?q=' +
+                  item.firstname +
+                  ' ' +
+                  item.lastname
+                "
+              >
+                <v-icon>mdi-facebook</v-icon>
+              </v-btn>
+            </template>
+
+            <template #[`item.balance`]="{ item }">
+              {{ (item.balance || 0).toFixed(2) }} €
             </template>
 
             <template #[`item.team`]="{ item }">
