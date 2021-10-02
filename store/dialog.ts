@@ -1,5 +1,4 @@
-import { ActionTree, MutationTree } from "vuex";
-import { RootState } from "~/store";
+import { mutationTree, actionTree } from "typed-vuex";
 
 export const state = () => ({
   type: "",
@@ -8,7 +7,7 @@ export const state = () => ({
 
 export type DialogState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<DialogState> = {
+export const mutations = mutationTree(state, {
   OPEN_DIALOG: function (state, type: string) {
     state.type = type;
     state.open = true;
@@ -16,17 +15,23 @@ export const mutations: MutationTree<DialogState> = {
   CLOSE_DIALOG: function (state) {
     state.open = false;
   },
-};
+});
 
-export const actions: ActionTree<DialogState, RootState> = {
-  openDialog: function ({ commit }, payload: string) {
-    commit("OPEN_DIALOG", payload);
-  },
-  closeDialog: function ({ commit }) {
-    commit("CLOSE_DIALOG");
-  },
-};
+export const actions = actionTree(
+  { state },
+  {
+    openDialog: function ({ commit }, payload: string) {
+      commit("OPEN_DIALOG", payload);
+    },
+    closeDialog: function ({ commit }) {
+      commit("CLOSE_DIALOG");
+    },
+  }
+);
 
+/**
+ * @deprecated
+ */
 export interface DialogActions {
   openDialog: string;
   closeDialog: void;

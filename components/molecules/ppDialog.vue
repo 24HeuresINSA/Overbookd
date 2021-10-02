@@ -13,29 +13,26 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { DialogState } from "~/store/dialog";
-import { UserState } from "~/store/user";
 import { safeCall } from "~/utils/api/calls";
-import { dispatch } from "~/utils/store";
-import { TMapState } from "~/utils/types/store";
+
 export default Vue.extend({
   name: "PPDialog",
   data() {
     return {
-      //! Not safe
-      PP: {} as any,
+      PP: undefined as undefined | File,
     };
   },
   computed: {
-    ...mapState<any, TMapState<DialogState>>("dialog", {
-      type: (state: DialogState) => state.type,
-      open: (state: DialogState) => state.open,
-    }),
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state) => state.me,
-    }),
+    type() {
+      return this.$accessor.dialog.type;
+    },
+    open() {
+      return this.$accessor.dialog.open;
+    },
+    me() {
+      return this.$accessor.user.me;
+    },
     toggled: {
       get: function (): boolean | unknown {
         if (this.type == "pp") {
@@ -55,7 +52,7 @@ export default Vue.extend({
   },
   methods: {
     uploadPP: async function () {
-      if (this.me) {
+      if (this.me && this.PP) {
         let form = new FormData();
         form.append("files", this.PP, this.PP.name);
         form.append("_id", this.me._id);
@@ -64,11 +61,11 @@ export default Vue.extend({
           RepoFactory.get("user").addPP(this, form)
         );
         if (res) {
-          dispatch(this, "notif", "pushNotification", {
+          this.$accessor.notif.pushNotification({
             type: "success",
-            message: "PP added please reload the page",
+            message: "PP ajoutée, refresh la page pour la voir.",
           });
-          this.$store.dispatch("dialog/closeDialog");
+          this.$accessor.dialog.closeDialog();
         }
       }
     },

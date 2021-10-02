@@ -7,7 +7,7 @@
         <v-autocomplete
           v-model="notification.team"
           label="team"
-          :items="getConfig('teams').map((e) => e.name)"
+          :items="teams"
         ></v-autocomplete>
         <v-text-field
           v-model="notification.message"
@@ -23,13 +23,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { getConfig } from "@/common/role";
-import { mapState } from "vuex";
-import { DialogState } from "~/store/dialog";
-import { TMapState } from "~/utils/types/store";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
 import { BroadcastNotif } from "~/utils/models/repo";
-import { SnackNotif } from "~/utils/models/store";
 
 export default Vue.extend({
   name: "NotificationBroadcastDialog",
@@ -39,10 +35,19 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...mapState<any, TMapState<DialogState>>("dialog", {
-      type: (state: DialogState) => state.type,
-      open: (state: DialogState) => state.open,
-    }),
+    type() {
+      return this.$accessor.dialog.type;
+    },
+    open() {
+      return this.$accessor.dialog.open;
+    },
+    teams() {
+      const t = this.$accessor.config.getAllConfigTeams;
+      if (t) {
+        return t.value.map((e: any) => e.name);
+      }
+      return [];
+    },
     toggled: {
       get: function (): boolean | unknown {
         if (this.type == "broadcast") {
@@ -61,35 +66,17 @@ export default Vue.extend({
     },
   },
   methods: {
-    getConfig(key: string): string {
-      return getConfig(this, key);
-    },
     async broadcast(): Promise<void> {
       this.toggled = false;
       this.notification.type = "broadcast";
       this.notification.date = new Date();
-      //TODO: Put this in generic post method
-      try {
-        // broadcast on server
-        let res = await RepoFactory.get("user").broadcast(
-          this,
-          this.notification
-        );
-        if (res.status !== 200) {
-          throw new Error("Server did not return 200 status");
-        }
-        let notif: SnackNotif = {
-          type: "success",
-          message: "Sent !",
-        };
-        this.$store.dispatch("notif/pushNotification", notif);
-      } catch (error: any) {
-        let notif: SnackNotif = {
-          type: "error",
-          message: "Could not broadcast",
-        };
-        this.$store.dispatch("notif/pushNotification", notif);
-      }
+
+      await safeCall(
+        this.$store,
+        RepoFactory.get("user").broadcast(this, this.notification),
+        "sent",
+        "server"
+      );
     },
   },
 });

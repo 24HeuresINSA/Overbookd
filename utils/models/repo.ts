@@ -16,12 +16,12 @@ export class BroadcastNotif {
 
 export class Transfer {
   user: any;
-  amount: number;
+  amount: string;
   reason: string;
 
   constructor() {
     this.user = {};
-    this.amount = 0;
+    this.amount = "";
     this.reason = "";
   }
 }
@@ -32,6 +32,7 @@ export interface Notification {
   team: string;
   date: string;
   type: string;
+  index?: number;
 }
 
 export interface Transaction {

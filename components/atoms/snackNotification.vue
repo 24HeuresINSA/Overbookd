@@ -17,19 +17,19 @@ export default Vue.extend({
     setTimeout: {
       type: Number,
       default: () => {
-        3000;
+        return 3000;
       },
     },
     setMessage: {
       type: String,
       default: () => {
-        ("");
+        return "";
       },
     },
     setId: {
       type: Number,
       default: () => {
-        0;
+        return 0;
       },
     },
   },
@@ -54,6 +54,7 @@ export default Vue.extend({
       if (!val) {
         console.log("Delete notif with id : " + this.setId);
         this.$store.dispatch("notif/popNotification", this.setId);
+        this.$accessor.notif.popNotification(this.setId);
       }
     },
   },

@@ -13,10 +13,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
 import SnackNotification from "@/components/atoms/snackNotification.vue";
-import { NotificationState } from "~/store/notif";
-import { TMapState } from "~/utils/types/store";
+import { SnackNotif } from "~/utils/models/store";
+
 export default Vue.extend({
   name: "SnackNotificationContainer",
   components: { SnackNotification },
@@ -29,15 +28,12 @@ export default Vue.extend({
     },
   },
   data() {
-    return {
-      message: "Hello",
-      timeout: 1000,
-    };
+    return {};
   },
   computed: {
-    ...mapState<any, TMapState<NotificationState>>("notif", {
-      queue: (state: NotificationState) => state.queue,
-    }),
+    queue(): SnackNotif[] {
+      return this.$accessor.notif.queue;
+    },
   },
 });
 </script>
