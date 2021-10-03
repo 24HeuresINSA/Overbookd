@@ -12,6 +12,19 @@
             type="number"
           ></v-text-field>
           <label>Nombre de bâton total: {{ totalConsumptions }}</label>
+          <label>Mode</label>
+          <template>
+            <v-btn-toggle
+              v-model="isExpenseMode"
+              tile
+              color="deep-purple accent-3"
+              group
+            >
+              <v-btn :value="true" small> Dépense</v-btn>
+
+              <v-btn :value="false" small> Dépot</v-btn>
+            </v-btn-toggle>
+          </template>
           <v-btn text>Enregistrer</v-btn>
           <v-btn text>Envoyer un mail au négatif</v-btn>
         </v-card-text>
@@ -61,6 +74,8 @@ export default {
       filteredUsers: [],
       totalConsumption: undefined, // total coast of the barrel
       totalPrice: 0,
+
+      isExpenseMode: false,
 
       headers: [
         { text: "prénom", value: "firstname" },
