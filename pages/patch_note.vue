@@ -4,6 +4,8 @@
     <h2>Patch note BETA 0.17.5 : le Patch Hublot</h2>
     <h3>🤯 Rectification de bugs</h3>
     <ul>
+      <li>🔨 un peu plus responsive</li>
+      <li>🔨 0.17.6 filtres et cotisation</li>
       <li>🔨fix du background d'acceuil</li>
       <li>🥳 verification des regex avant de les envoyer (Putain de Hublot)</li>
       <li>🤯 0.17.5 changer prenom nom d'un utilisateur et le supprimer ...</li>

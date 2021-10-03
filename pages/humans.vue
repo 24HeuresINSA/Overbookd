@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <template style="display: grid">
+  <div style="width: 100%; position: absolute; top: 0; left: 0">
+    <template style="width: 100%; display: grid">
       <v-row>
         <v-col md="2">
           <v-card>
@@ -10,14 +10,49 @@
                 v-model="filters.search"
                 label="Recherche"
               ></v-text-field>
-              <v-switch
-                v-model="filters.hasDriverLicence"
-                label="Permis"
-              ></v-switch>
-              <v-switch
-                v-model="filters.notValidated"
-                label="non validés"
-              ></v-switch>
+
+              <template>
+                <p>Permis</p>
+                <v-btn-toggle
+                  v-model="filters.hasDriverLicence"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small> Permis</v-btn>
+
+                  <v-btn :value="false" small> pas de permis</v-btn>
+                </v-btn-toggle>
+              </template>
+
+              <template v-if="hasRole(['admin', 'bureau'])">
+                <p>Validé</p>
+                <v-btn-toggle
+                  v-model="filters.isValidated"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small> Validé</v-btn>
+
+                  <v-btn :value="false" small> Non Validé</v-btn>
+                </v-btn-toggle>
+              </template>
+
+              <template v-if="hasRole(['admin', 'bureau'])">
+                <p>Cotisation</p>
+                <v-btn-toggle
+                  v-model="filters.hasPayedContribution"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small> Payé</v-btn>
+
+                  <v-btn :value="false" small> Non payé</v-btn>
+                </v-btn-toggle>
+              </template>
+
               <v-container class="py-0">
                 <v-row align="center" justify="start">
                   <v-combobox
@@ -49,7 +84,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col md="9">
           <v-data-table
             :headers="headers"
             :items="filteredUsers"
@@ -58,16 +93,12 @@
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
+                v-if="hasRole('hard')"
                 text
-                style="color: blue"
                 small
-                :href="
-                  'https://www.facebook.com/search/top?q=' +
-                  item.firstname +
-                  ' ' +
-                  item.lastname
-                "
-                >F
+                @click="openInformationDialog(item)"
+              >
+                <v-icon>mdi-information-outline</v-icon>
               </v-btn>
               <v-btn
                 v-if="hasRole('admin')"
@@ -78,14 +109,6 @@
                 <v-icon>mdi-cash</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasRole('hard')"
-                text
-                small
-                @click="openInformationDialog(item)"
-              >
-                <v-icon>mdi-information-outline</v-icon>
-              </v-btn>
-              <v-btn
                 v-if="hasRole(['admin', 'bureau'])"
                 text
                 small
@@ -93,6 +116,22 @@
               >
                 <v-icon>mdi-emoticon-cool</v-icon>
               </v-btn>
+              <v-btn
+                text
+                small
+                :href="
+                  'https://www.facebook.com/search/top?q=' +
+                  item.firstname +
+                  ' ' +
+                  item.lastname
+                "
+              >
+                <v-icon>mdi-facebook</v-icon>
+              </v-btn>
+            </template>
+
+            <template #[`item.balance`]="{ item }">
+              {{ (item.balance || 0).toFixed(2) }} €
             </template>
 
             <template #[`item.team`]="{ item }">
@@ -101,7 +140,6 @@
           </v-data-table>
         </v-col>
       </v-row>
-      <div></div>
     </template>
 
     <v-dialog v-model="isTransactionDialogOpen" max-width="600">
@@ -142,7 +180,7 @@
         <v-card-subtitle></v-card-subtitle>
         <v-card-text>
           <OverChips :roles="selectedUser.team"></OverChips>
-          <div v-if="hasRole(['admin', 'bureau'])">
+          <div v-if="hasRole(['admin'])">
             <v-select
               v-model="newRole"
               label="ajouter un role"
@@ -154,8 +192,23 @@
             </v-btn>
           </div>
 
+          <v-img
+            v-if="selectedUser.pp"
+            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
+            max-height="300px"
+          ></v-img>
+
           <v-simple-table>
             <tbody>
+              <tr>
+                <td>Cotisation</td>
+                <td>
+                  <v-switch
+                    v-model="selectedUser.hasPayedContribution"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-switch>
+                </td>
+              </tr>
               <tr>
                 <td>Nom</td>
                 <td>
@@ -199,6 +252,16 @@
                     :disabled="!hasRole(['admin', 'human'])"
                     type="number"
                   ></v-text-field>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Permis</td>
+                <td>
+                  <v-switch
+                    v-model="selectedUser.hasDriverLicence"
+                    :disabled="!hasRole(['admin', 'human'])"
+                  ></v-switch>
                 </td>
               </tr>
 
@@ -288,6 +351,26 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Charisme 😎</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="newCharisma.reason" label="raison">
+          </v-text-field>
+          <v-text-field
+            v-model="newCharisma.amount"
+            label="qunatité"
+            type="number"
+          >
+          </v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="saveNewCharisma()">+</v-btn>
+          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
       {{ feedbackMessage }}
 
@@ -313,7 +396,7 @@ export default {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "prenom", value: "firstname" },
+        { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team" },
@@ -328,11 +411,11 @@ export default {
         search: undefined,
         hasDriverLicence: undefined,
         teams: [],
-        notValidated: undefined,
+        isValidated: true,
+        hasPayedContribution: undefined,
       },
 
       isTransactionDialogOpen: false,
-      isInformationDialogOpen: false,
       isUserDialogOpen: false,
       isSnackbarOpen: false,
       isCharismaDialogOpen: false,
@@ -376,6 +459,33 @@ export default {
           );
         }
 
+        // filter by not validated
+        if (this.filters.isValidated !== undefined) {
+          console.log(this.filters.isValidated);
+          if (this.filters.isValidated) {
+            mUsers = mUsers.filter((user) => user.team.length !== 0);
+          } else {
+            mUsers = mUsers.filter((user) => user.team.length === 0);
+          }
+
+          // this.filteredUsers = mUsers.filter((user) => {
+          //   if (user.team) {
+          //     return user.team.length === 0;
+          //   } else {
+          //     return true;
+          //   }
+          // });
+        }
+
+        // filter by payed contributions
+        if (this.filters.hasPayedContribution !== undefined) {
+          if (this.filters.hasPayedContribution) {
+            mUsers = mUsers.filter((user) => user.hasPayedContribution);
+          } else {
+            mUsers = mUsers.filter((user) => !user.hasPayedContribution);
+          }
+        }
+
         // filter by team
         if (this.filters.teams) {
           this.filteredUsers = mUsers.filter((user) => {
@@ -386,17 +496,6 @@ export default {
               );
             } else {
               return false;
-            }
-          });
-        }
-
-        // filter by not validated
-        if (this.filters.notValidated) {
-          this.filteredUsers = mUsers.filter((user) => {
-            if (user.team) {
-              return user.team.length === 0;
-            } else {
-              return true;
             }
           });
         }
@@ -423,7 +522,16 @@ export default {
     } else {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
+      this.users.filter((user) => user.isValid);
       this.filteredUsers = this.users;
+
+      // add CP if admin
+      if (this.hasRole("admin")) {
+        this.headers.splice(this.headers.length - 1, 0, {
+          text: "CP",
+          value: "balance",
+        });
+      }
     }
   },
 
@@ -568,4 +676,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+p {
+  margin: 0;
+}
+
+.container {
+  padding: 0;
+}
+</style>

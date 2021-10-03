@@ -1,6 +1,11 @@
 <template>
   <v-container style="display: flex; flex-wrap: wrap">
-    <v-card v-for="(user, i) in users" :key="i" style="margin: 5px">
+    <v-card
+      v-for="(user, i) in users"
+      :key="i"
+      style="margin: 5px"
+      max-width="250px"
+    >
       <v-img
         v-if="user.pp"
         :src="getPPUrl() + 'api/user/pp/' + user.pp"
@@ -25,7 +30,7 @@
 </template>
 
 <script>
-import OverChips from "~/components/atoms/overChips";
+import OverChips from "../components/overChips";
 export default {
   name: "Trombinoscope",
   components: { OverChips },

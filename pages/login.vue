@@ -36,7 +36,6 @@
             required
             autofocus
             outlined
-            clearable
             solo
             filled
           ></v-text-field>

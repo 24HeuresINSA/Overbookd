@@ -95,8 +95,8 @@
     </v-dialog>
 
     <v-snackbar v-model="isSnackbarOpen" timeout="5000"
-      >Ca marche pas encore ce truc</v-snackbar
-    >
+      >Ca marche pas encore ce truc
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -212,6 +212,12 @@ export default {
           roles: "admin",
           title: "Admin ⚙️",
           to: "/config",
+        },
+        {
+          icon: "mdi-format-list-bulleted",
+          roles: "admin",
+          title: "SG 📝️",
+          to: "/SG",
         },
         {
           icon: "mdi-fire",
