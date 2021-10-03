@@ -14,17 +14,36 @@ export class BroadcastNotif {
   }
 }
 
-export class Transfer {
-  user: any;
-  amount: string;
-  reason: string;
-
-  constructor() {
-    this.user = {};
-    this.amount = "";
-    this.reason = "";
-  }
+export interface Expense {
+  type: "expense";
+  from: User._id;
+  to: null;
+  amount: number;
+  context: string;
+  createdAt: date;
 }
+
+export interface Deposit {
+  type: "deposit";
+  from: User._id;
+  to: null;
+  amount: number;
+  context: null;
+  createdAt: date;
+}
+
+export interface Transfer {
+  type: "transfer";
+  from: User._id;
+  to: User._id;
+  amount: number;
+  context: string;
+  createdAt: date;
+}
+
+export type Transactions = Expense | Deposit | Transfer;
+
+export type transactions = Transaction[];
 
 export interface Notification {
   link: string;
