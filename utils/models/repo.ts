@@ -16,34 +16,32 @@ export class BroadcastNotif {
 
 export interface Expense {
   type: "expense";
-  from: User._id;
+  from: string;
   to: null;
   amount: number;
   context: string;
-  createdAt: date;
+  createdAt: Date;
 }
 
 export interface Deposit {
   type: "deposit";
-  from: User._id;
+  from: string;
   to: null;
   amount: number;
   context: null;
-  createdAt: date;
+  createdAt: Date;
 }
 
 export interface Transfer {
   type: "transfer";
-  from: User._id;
-  to: User._id;
+  from: string;
+  to: string;
   amount: number;
   context: string;
-  createdAt: date;
+  createdAt: Date;
 }
 
-export type Transactions = Expense | Deposit | Transfer;
-
-export type transactions = Transaction[];
+export type Transaction = Expense | Deposit | Transfer;
 
 export interface Notification {
   link: string;
@@ -52,11 +50,6 @@ export interface Notification {
   date: string;
   type: string;
   index?: number;
-}
-
-export interface Transaction {
-  amount: number;
-  reason: string;
 }
 
 export interface User {

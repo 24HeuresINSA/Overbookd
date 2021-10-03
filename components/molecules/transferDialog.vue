@@ -81,11 +81,9 @@ export default Vue.extend({
   },
   methods: {
     onFormChange(form: any) {
-      console.log(form);
       this.transfer = form;
     },
-    async transferMoney() {
-      // console.log(this.transfer);
+    async transferMoney(): Promise<any> {
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
       if (this.transfer.isValid) {

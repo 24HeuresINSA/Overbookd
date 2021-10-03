@@ -9,7 +9,7 @@
       <v-card-text>
         <v-list dense>
           <v-list-item-group>
-            <v-list-item v-for="item in me.friends" :key="item.username">
+            <v-list-item v-for="(item, index) in me.friends" :key="index">
               <v-list-item-content>
                 <v-list-item-title>{{ item.username }}</v-list-item-title>
               </v-list-item-content>

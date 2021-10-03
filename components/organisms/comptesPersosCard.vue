@@ -8,22 +8,13 @@
     >
       <div>
         <v-card-title>Compte Perso 💰</v-card-title>
-        <v-card-subtitle>Solde : {{ me.balance || 0 }} € </v-card-subtitle>
-        <v-card-text v-if="me.transactionHistory">
-          <v-simple-table>
-            <thead>
-              <tr>
-                <th class="text-left">Operation</th>
-                <th class="text-right">€</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, i) in displayedTransactionHistory" :key="i">
-                <td>{{ item.reason }}</td>
-                <td class="text-right">{{ item.amount }} €</td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+        <v-card-subtitle>Solde : {{ me.balance || 0 }} €</v-card-subtitle>
+        <v-card-text v-if="mTransactions">
+          <v-data-table :headers="headers" :items="displayedTransactionHistory">
+            <template #[`item.amount`]="{ item }">
+              {{ (item.amount || 0).toFixed(2) }} €
+            </template>
+          </v-data-table>
         </v-card-text>
       </div>
       <v-card-actions>
@@ -35,33 +26,33 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
-import { UserState } from "~/store/user";
-import { Transaction } from "~/utils/models/repo";
-import { TMapState } from "~/utils/types/store";
 import TransferDialog from "~/components/molecules/transferDialog.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
+
 export default Vue.extend({
   name: "ComptePersosCard",
   components: { TransferDialog },
+  data() {
+    return {
+      headers: [
+        { text: "type", value: "type" },
+        { text: "context", value: "context" },
+        { text: "montant", value: "amount", align: "end" },
+      ],
+
+      mTransactions: [],
+    };
+  },
   computed: {
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state) => state.me,
-    }),
-    displayedTransactionHistory() {
-      let result: Transaction[] = [];
-      if (this.me.transactionHistory) {
-        let fullTransactionHistory = this.me.transactionHistory;
-        fullTransactionHistory.forEach((transaction) => {
-          if (result.length < 3) {
-            result.push(transaction);
-          }
-        });
-      }
-      return result;
+    displayedTransactionHistory(): any {
+      return this.mTransactions.slice(-3);
     },
   },
+  mounted() {
+    this.mTransactions = RepoFactory.get("transaction");
+  },
   methods: {
-    openDialog() {
+    openDialog(): any {
       this.$store.dispatch("dialog/openDialog", "transfer");
     },
   },

@@ -34,21 +34,10 @@
           (demande à Maëlle)..
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="logout">DECONNEXION</v-btn>
+          <v-btn text @click="logout">DÉCONNEXION</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- <v-dialog v-model="isPPDialogOpen" max-width="600">
-      <v-card>
-        <v-card-text>
-          <v-file-input v-model="PP"> </v-file-input>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="uploadPP()">Enregistrer</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
   </div>
 </template>
 
@@ -91,10 +80,7 @@ export default {
         return true;
       }
       // user has no team
-      if (this.user.team === undefined || this.user.team.length === 0) {
-        return true;
-      }
-      return false;
+      return this.user.team === undefined || this.user.team.length === 0;
     },
   },
   async mounted() {

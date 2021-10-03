@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transaction, Transactions, Transfer } from "~/utils/models/repo";
+import { Transaction, Transfer } from "~/utils/models/repo";
 
 const resource = "/transaction";
 type Context = { $axios: NuxtAxiosInstance };
@@ -21,7 +21,7 @@ export default {
     return context.$axios.get(`${resource}/user/${keycloakID}`);
   },
 
-  createTransaction(context: Context, transaction: Transactions) {
+  createTransaction(context: Context, transaction: Transaction[]) {
     return context.$axios.post(`${resource}/sg`, transaction);
   },
 
@@ -38,6 +38,6 @@ export default {
   },
 
   deleteTransaction(context: Context, transactionID: string) {
-    return context.$axios.delete(`${resource}/${transactionID}`, transaction);
+    return context.$axios.delete(`${resource}/${transactionID}`);
   },
 };

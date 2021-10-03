@@ -2,17 +2,16 @@
   <div style="width: 100%; position: absolute; top: 0; left: 0">
     <template style="width: 100%; display: grid">
       <v-row>
-        <v-col md="2">
+        <v-col md="2" style="min-width: 250px">
           <v-card>
             <v-card-title>Filtres</v-card-title>
-            <v-card-text>
+            <v-card-text style="display: flex; flex-direction: column">
               <v-text-field
                 v-model="filters.search"
                 label="Recherche"
               ></v-text-field>
 
               <template>
-                <p>Permis</p>
                 <v-btn-toggle
                   v-model="filters.hasDriverLicence"
                   tile
@@ -26,7 +25,6 @@
               </template>
 
               <template v-if="hasRole(['admin', 'bureau'])">
-                <p>Validé</p>
                 <v-btn-toggle
                   v-model="filters.isValidated"
                   tile
@@ -53,38 +51,32 @@
                 </v-btn-toggle>
               </template>
 
-              <v-container class="py-0">
-                <v-row align="center" justify="start">
-                  <v-combobox
-                    v-model="filters.teams"
-                    chips
-                    multiple
-                    clearable
-                    label="team"
-                    :items="getConfig('teams').map((e) => e.name)"
+              <v-combobox
+                v-model="filters.teams"
+                chips
+                multiple
+                clearable
+                label="team"
+                :items="getConfig('teams').map((e) => e.name)"
+              >
+                <template #selection="{ attrs, item, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    :color="getRoleMetadata(item).color"
                   >
-                    <template #selection="{ attrs, item, selected }">
-                      <v-chip
-                        v-bind="attrs"
-                        :input-value="selected"
-                        close
-                        :color="getRoleMetadata(item).color"
-                      >
-                        <v-icon left color="white">
-                          {{ getRoleMetadata(item).icon }}
-                        </v-icon>
-                        <a style="color: white">{{
-                          getRoleMetadata(item).name
-                        }}</a>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </v-row>
-              </v-container>
+                    <v-icon left color="white">
+                      {{ getRoleMetadata(item).icon }}
+                    </v-icon>
+                    <a style="color: white">{{ getRoleMetadata(item).name }}</a>
+                  </v-chip>
+                </template>
+              </v-combobox>
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col md="10">
+        <v-col md="9">
           <v-data-table
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"
@@ -182,7 +174,6 @@
               : selectedUser.lastname
           }}
         </v-card-title>
-        <v-card-subtitle></v-card-subtitle>
         <v-card-text>
           <OverChips :roles="selectedUser.team"></OverChips>
           <div v-if="hasRole(['admin'])">
@@ -196,12 +187,6 @@
               >révoquer tous les rôles
             </v-btn>
           </div>
-
-          <v-img
-            v-if="selectedUser.pp"
-            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
-            max-height="300px"
-          ></v-img>
 
           <v-simple-table>
             <tbody>
@@ -250,8 +235,9 @@
               </tr>
 
               <tr>
-                <td>tel</td>
-                <td>
+                <td>📞</td>
+                <td style="display: flex; align-items: baseline">
+                  <p>+33&nbsp;</p>
                   <v-text-field
                     v-model="selectedUser.phone"
                     :disabled="!hasRole(['admin', 'human'])"
@@ -330,8 +316,8 @@
           </v-simple-table>
         </v-card-text>
         <v-card-actions>
+          <v-btn text color="red" @click="deleteUser()">supprimer</v-btn>
           <v-btn text @click="saveUser()">sauvgarder</v-btn>
-          <v-btn text @click="deleteUser()">supprimer</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -356,26 +342,6 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Charisme 😎</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="newCharisma.reason" label="raison">
-          </v-text-field>
-          <v-text-field
-            v-model="newCharisma.amount"
-            label="qunatité"
-            type="number"
-          >
-          </v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="saveNewCharisma()">+</v-btn>
-          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
       {{ feedbackMessage }}
 
@@ -385,6 +351,8 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
 
@@ -392,10 +360,13 @@
 import { getConfig, getUser, hasRole } from "../common/role";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
+import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
+
+const { RepoFactory } = require("../repositories/repoFactory");
 
 export default {
   name: "Humans",
-  components: { OverChips },
+  components: { SnackNotificationContainer, OverChips },
   data() {
     return {
       users: [],
@@ -472,14 +443,6 @@ export default {
           } else {
             mUsers = mUsers.filter((user) => user.team.length === 0);
           }
-
-          // this.filteredUsers = mUsers.filter((user) => {
-          //   if (user.team) {
-          //     return user.team.length === 0;
-          //   } else {
-          //     return true;
-          //   }
-          // });
         }
 
         // filter by payed contributions
@@ -624,32 +587,45 @@ export default {
     },
 
     async transaction(isNegative) {
-      if (!this.selectedUser.transactionHistory) {
-        this.selectedUser.transactionHistory = [];
-      }
+      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
+      const amountNumber = isNegative
+        ? -+this.newTransaction.amount
+        : +this.newTransaction.amount;
 
-      if (!this.selectedUser.balance) {
+      let mTransaction = {
+        type: isNegative ? "expense" : "deposit",
+        from: this.selectedUser.keycloakID,
+        to: null,
+        context: this.newTransaction.reason,
+        amount: amountNumber,
+        createdAt: new Date(),
+      };
+
+      // update on screen
+      if (this.selectedUser.balance === undefined) {
         this.selectedUser.balance = 0;
       }
-
-      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
-
-      if (isNegative) {
-        this.selectedUser.balance =
-          +this.selectedUser.balance - +this.newTransaction.amount;
-      } else {
-        this.selectedUser.balance =
-          +this.selectedUser.balance + +this.newTransaction.amount;
+      this.selectedUser.balance = +this.selectedUser.balance + amountNumber;
+      try {
+        let res = await RepoFactory.get("transaction").createTransaction(
+          this,
+          mTransaction
+        );
+        if (res.status !== 200) {
+          throw new Error();
+        }
+        // let notif: SnackNotif = {
+        //   type: "success",
+        //   message: "Transfer sent !",
+        // };
+        // await this.$store.dispatch("notif/pushNotification", notif);
+      } catch (error) {
+        // let notif: SnackNotif = {
+        //   type: "error",
+        //   message: "Could not transfer",
+        // };
+        // await this.$store.dispatch("notif/pushNotification", notif);
       }
-
-      this.newTransaction.amount =
-        (isNegative ? "- " : "+ ") + this.newTransaction.amount;
-      this.selectedUser.transactionHistory.unshift(this.newTransaction);
-
-      await this.$axios.put(
-        "/user/" + this.selectedUser.keycloakID,
-        this.selectedUser
-      );
       this.isSnackbarOpen = true;
       this.isTransactionDialogOpen = false;
     },
