@@ -19,7 +19,7 @@
         <v-row>
           <v-img
             src="img/logo/overbookd_logo_blanc.png"
-            alt="overbookd logo"
+            alt="overbookd"
             class="logo"
           ></v-img>
         </v-row>

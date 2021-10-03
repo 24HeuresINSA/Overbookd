@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO ::  HAVE FUN -->
   <v-container>
     <h1>SG 🥵</h1>
     <v-container style="display: flex; width: 100%; position: absolute">
@@ -57,8 +56,6 @@
 </template>
 
 <script>
-import OverChips from "../components/overChips";
-
 /**
  * the goal of this page is to make it easier for SG to enter new consumption and count them
  * after changing a barrel the SG goes to this page and enter the coast of that barrel (totalConsumption)

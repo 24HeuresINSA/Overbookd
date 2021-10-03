@@ -84,8 +84,9 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col md="9">
+        <v-col md="10">
           <v-data-table
+            style="max-height: 100%; overflow-y: auto"
             :headers="headers"
             :items="filteredUsers"
             :items-per-page="30"
@@ -132,6 +133,10 @@
 
             <template #[`item.balance`]="{ item }">
               {{ (item.balance || 0).toFixed(2) }} €
+            </template>
+
+            <template #[`item.charisma`]="{ item }">
+              {{ item.charisma || 0 }}
             </template>
 
             <template #[`item.team`]="{ item }">
@@ -400,7 +405,7 @@ export default {
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team" },
-        { text: "charsime", value: "charisma" },
+        { text: "charsime", value: "charisma", align: "end" },
         { text: "action", value: "action" },
       ],
 
@@ -530,6 +535,7 @@ export default {
         this.headers.splice(this.headers.length - 1, 0, {
           text: "CP",
           value: "balance",
+          align: "end",
         });
       }
     }
