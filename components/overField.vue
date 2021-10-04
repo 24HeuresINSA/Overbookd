@@ -97,7 +97,13 @@ export default {
 
   async mounted() {
     if (this.field.type === "user") {
-      this.users = (await this.$axios.get("/user/all")).data;
+      let users = (await this.$axios.get("/user/all")).data;
+      this.users = users.map((user) => {
+        return {
+          text: user.username,
+          value: user,
+        };
+      });
     }
   },
 
