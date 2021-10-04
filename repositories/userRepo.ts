@@ -1,11 +1,11 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   BroadcastNotif,
-  Transfer,
-  Notification,
   FriendRequestData,
+  Notification,
+  Transfer,
+  User,
 } from "~/utils/models/repo";
-import { User } from "~/utils/models/repo";
 
 const resource = "/user";
 
@@ -36,9 +36,20 @@ export default {
   updateUser(context: Context, userId: string, data: Partial<User>) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
-  sendFriendRequest(context: Context, data: FriendRequestData) {
+  // /**
+  //  * @deprecated
+  //  * @param context
+  //  * @param data
+  //  */
+  // sendFriendRequest(context: Context, data: FriendRequestData) {
+  //   return context.$axios.put(
+  //     `${resource}/notification/${data.to.lastname}/${data.to.firstname}`,
+  //     data.data
+  //   );
+  // },
+  sendFriendRequestByKeycloakID(context: Context, data: FriendRequestData) {
     return context.$axios.put(
-      `${resource}/notification/${data.to.lastname}/${data.to.firstname}`,
+      `${resource}/notification/keycloakID/${data.to}`,
       data.data
     );
   },

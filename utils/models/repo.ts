@@ -83,9 +83,6 @@ export interface FriendRequest {
 }
 
 export interface FriendRequestData {
-  to: {
-    firstname: string;
-    lastname: string;
-  };
+  to: string; // keycloakID
   data: FriendRequest;
 }

@@ -16,7 +16,7 @@
       </v-btn>
     </td>
     <td v-else-if="notification.type === 'broadcast'">
-      <v-btn icon :href="notification.link">
+      <v-btn icon @click="openLink(notification.link)">
         <v-icon>mdi-link</v-icon>
       </v-btn>
       <v-btn icon @click="deleteNotification(notification.index)">
@@ -52,6 +52,10 @@ export default Vue.extend({
     },
   },
   methods: {
+    openLink(link: string) {
+      window.open(link);
+    },
+
     popNotification(index: number): Notification[] {
       let notifs = this.me.notifications;
       notifs.splice(index);

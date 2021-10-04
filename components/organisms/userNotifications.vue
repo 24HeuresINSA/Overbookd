@@ -92,7 +92,7 @@ export default Vue.extend({
     async getNotValidatedCount() {
       const res = await safeCall(
         this.$store,
-        RepoFactory.get("user").getAllUsers(this)
+        RepoFactory.userRepo.getAllUsers(this)
       );
       if (res) {
         const users: User[] = res.data;

@@ -73,7 +73,7 @@ export default Vue.extend({
 
       await safeCall(
         this.$store,
-        RepoFactory.get("user").broadcast(this, this.notification),
+        RepoFactory.userRepo.broadcast(this, this.notification),
         "sent",
         "server"
       );

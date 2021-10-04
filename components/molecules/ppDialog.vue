@@ -58,7 +58,7 @@ export default Vue.extend({
         form.append("_id", this.me._id);
         const res = await safeCall(
           this.$store,
-          RepoFactory.get("user").addPP(this, form)
+          RepoFactory.userRepo.addPP(this, form)
         );
         if (res) {
           this.$accessor.notif.pushNotification({

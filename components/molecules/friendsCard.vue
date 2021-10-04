@@ -49,7 +49,10 @@ export default Vue.extend({
   name: "FriendsCard",
   data() {
     return {
-      newFriend: "",
+      newFriend: {
+        keycloakID: "",
+        username: "",
+      },
       usernames: undefined,
     };
   },
@@ -61,17 +64,22 @@ export default Vue.extend({
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.get("user").getAllUsernames(this)
+      RepoFactory.userRepo.getAllUsernames(this)
     );
     if (res) {
-      this.usernames = res.data;
+      this.usernames = res.data.map((user: any) => {
+        return {
+          text: user.username,
+          value: user,
+        };
+      });
     }
   },
   methods: {
     async sendFriendRequest() {
       //retrieve first and lastname
-      let [firstname, lastname] = this.newFriend.split(".");
-      if (firstname === this.me.firstname && lastname === this.me.lastname) {
+      // let [firstname, lastname] = this.newFriend.split(".");
+      if (this.me.keycloakID === this.newFriend.keycloakID) {
         // asked himself to be friend
         window.open(
           "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690"
@@ -79,7 +87,9 @@ export default Vue.extend({
         return;
       }
       if (
-        this.me.friends.find((friend) => friend.username === this.newFriend)
+        this.me.friends.find(
+          (friend) => friend.keycloakID === this.newFriend.keycloakID
+        )
       ) {
         // already friends
         this.$accessor.notif.pushNotification({
@@ -94,15 +104,15 @@ export default Vue.extend({
         from: `${this.me.nickname ? this.me.nickname : this.me.lastname}`,
         date: new Date(),
         data: {
-          username: `${this.me.firstname}.${this.me.lastname}`,
-          id: this.me._id,
+          username: `${this.me.firstname} ${this.me.lastname.toUpperCase()}`,
+          id: this.me.keycloakID,
         },
       };
       // Send it to the api
       await safeCall(
         this.$store,
-        RepoFactory.get("user").sendFriendRequest(this, {
-          to: { firstname, lastname },
+        RepoFactory.userRepo.sendFriendRequestByKeycloakID(this, {
+          to: this.newFriend.keycloakID,
           data: req,
         }),
         "sent",

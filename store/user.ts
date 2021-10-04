@@ -2,7 +2,8 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
-const UserRepo = RepoFactory.get("user");
+
+const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
   //TODO use class and change this

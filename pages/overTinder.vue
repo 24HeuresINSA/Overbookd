@@ -44,8 +44,9 @@ export default {
 
   async mounted() {
     this.users = (await this.$axios("/user")).data;
+    this.users.filter((u) => u.pp);
+    this.next();
     this.user = this.users[0];
-    console.log(this.user);
   },
 
   methods: {

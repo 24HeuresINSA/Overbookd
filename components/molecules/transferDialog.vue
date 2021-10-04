@@ -21,7 +21,6 @@ import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
 import OverForm from "~/components/overForm.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { SnackNotif } from "~/utils/models/store";
 
 export default Vue.extend({
   name: "TransferDialog",
@@ -48,7 +47,10 @@ export default Vue.extend({
       transfer: {
         reason: "",
         amount: "0",
-        beneficiary: undefined,
+        beneficiary: {
+          username: undefined,
+          keycloakID: "",
+        },
         isValid: false,
         user: {} as any,
       },
@@ -87,32 +89,55 @@ export default Vue.extend({
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
       if (this.transfer.isValid) {
-        if (this.transfer.user == `${this.me.firstname}.${this.me.lastname}`) {
+        // transaction to self...
+        if (this.transfer.user.keycloakID == this.me.keycloakID) {
           this.$accessor.notif.pushNotification({
             type: "error",
             message: "Ca sert a rien de se transférer de l'argent soi-même...",
           });
           return;
         }
+
+        if (this.transfer.user.keycloakID) {
+          const transactionRepo = RepoFactory.transactionRepo;
+
+          try {
+            let res = await transactionRepo.createTransfer(this, {
+              amount: +this.transfer.amount,
+              context: this.transfer.reason,
+              createdAt: new Date(),
+              from: this.me.keycloakID,
+              to: this.transfer.user.keycloakID,
+              type: "transfer",
+            });
+
+            if (res.status == 200) {
+              // add notification
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
         //TODO: Broken. Fix
         //TODO: Update balance ?
-        try {
-          let res = await RepoFactory.get("user").transfer(this, this.transfer);
-          if (res.status !== 200) {
-            throw new Error();
-          }
-          let notif: SnackNotif = {
-            type: "success",
-            message: "Transfer sent !",
-          };
-          this.$store.dispatch("notif/pushNotification", notif);
-        } catch (error: any) {
-          let notif: SnackNotif = {
-            type: "error",
-            message: "Could not transfer",
-          };
-          await this.$store.dispatch("notif/pushNotification", notif);
-        }
+        // try {
+        //   let res = await RepoFactory.userRepo.transfer(this, this.transfer);
+        //   if (res.status !== 200) {
+        //     throw new Error();
+        //   }
+        //   let notif: SnackNotif = {
+        //     type: "success",
+        //     message: "Transfer sent !",
+        //   };
+        //   this.$store.dispatch("notif/pushNotification", notif);
+        // } catch (error: any) {
+        //   let notif: SnackNotif = {
+        //     type: "error",
+        //     message: "Could not transfer",
+        //   };
+        //   await this.$store.dispatch("notif/pushNotification", notif);
+        // }
       }
     },
   },

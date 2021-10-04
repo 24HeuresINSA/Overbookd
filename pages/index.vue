@@ -88,7 +88,7 @@ export default {
 
     const res = await safeCall(
       this.$store,
-      RepoFactory.get("user").getAllUsernames(this)
+      RepoFactory.userRepo.getAllUsernames(this)
     );
     if (res) {
       this.usernames = res.data;

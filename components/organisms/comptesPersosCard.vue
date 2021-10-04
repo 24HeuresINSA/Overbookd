@@ -2,15 +2,19 @@
   <div style="height: 100%">
     <TransferDialog />
     <v-card
-      v-if="me"
       height="100%"
       class="d-flex flex-column justify-space-between"
+      :color="me.balance < 0 ? 'red' : ''"
     >
       <div>
         <v-card-title>Compte Perso 💰</v-card-title>
-        <v-card-subtitle>Solde : {{ me.balance || 0 }} €</v-card-subtitle>
-        <v-card-text v-if="mTransactions">
-          <v-data-table :headers="headers" :items="displayedTransactionHistory">
+        <v-card-subtitle>Solde : {{ me.balance }} €</v-card-subtitle>
+        <v-card-text>
+          <v-data-table
+            :headers="headers"
+            hide-default-footer
+            :items="displayedTransactionHistory"
+          >
             <template #[`item.amount`]="{ item }">
               {{ (item.amount || 0).toFixed(2) }} €
             </template>
@@ -47,9 +51,15 @@ export default Vue.extend({
     displayedTransactionHistory(): any {
       return this.mTransactions.slice(-3);
     },
+    me() {
+      return this.$accessor.user.me;
+    },
   },
-  mounted() {
-    this.mTransactions = RepoFactory.get("transaction");
+  async mounted() {
+    let res = await RepoFactory.transactionRepo.getUserTransactions(this);
+    if (res.status === 200) {
+      this.mTransactions = res.data;
+    }
   },
   methods: {
     openDialog(): any {

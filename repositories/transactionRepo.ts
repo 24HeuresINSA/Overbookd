@@ -26,7 +26,7 @@ export default {
   },
 
   createTransfer(context: Context, transfer: Transfer) {
-    return context.$axios.post(`${resource}/sg`, transfer);
+    return context.$axios.post(`${resource}/transfer`, transfer);
   },
 
   modifyTransaction(
