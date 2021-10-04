@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { getConfig } from "~/common/role";
 import OverForm from "../components/overForm";
 
 export default {
@@ -41,8 +42,7 @@ export default {
 
   methods: {
     getConfig(key) {
-      return this.$store.state.config.data.data.find((e) => e.key === key)
-        .value;
+      return getConfig(this, key);
     },
 
     onFormChange(form) {
@@ -53,9 +53,7 @@ export default {
       if (this.compiledForm.password !== this.compiledForm.password2) {
         alert("t'as pas mis le meme mpd :P");
       } else if (!this.compiledForm.isValid) {
-        alert(
-          "les champs avec * sont OBLIGATOIRS XD, il y a une erreur dans le formulaire"
-        );
+        alert("les champs avec * sont OBLIGATOIRS XD ");
       } else {
         this.$axios.post("/user", this.compiledForm);
         this.$router.push({

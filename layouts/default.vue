@@ -214,6 +214,12 @@ export default {
           to: "/config",
         },
         {
+          icon: "mdi-format-list-bulleted",
+          roles: "admin",
+          title: "SG 📝️",
+          to: "/SG",
+        },
+        {
           icon: "mdi-fire",
           roles: "hard",
           title: "OverTinder 🍑",
@@ -258,7 +264,7 @@ export default {
 
   methods: {
     getUser() {
-      return this.$store.state.user.data;
+      return this.$store.state.user.me;
     },
 
     getRandomAuthor() {

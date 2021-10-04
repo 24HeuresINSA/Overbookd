@@ -189,8 +189,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="submitForReview">
-            soumettre</v-btn
-          >
+            soumettre
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
