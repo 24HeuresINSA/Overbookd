@@ -2,40 +2,38 @@
   <div style="width: 100%; position: absolute; top: 0; left: 0">
     <template style="width: 100%; display: grid">
       <v-row>
-        <v-col md="3">
+        <v-col md="2" style="min-width: 250px">
           <v-card>
             <v-card-title>Filtres</v-card-title>
-            <v-card-text>
+            <v-card-text style="display: flex; flex-direction: column">
               <v-text-field
                 v-model="filters.search"
                 label="Recherche"
               ></v-text-field>
 
               <template>
-                <p>Permis</p>
                 <v-btn-toggle
                   v-model="filters.hasDriverLicence"
                   tile
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true"> Permis</v-btn>
+                  <v-btn :value="true" small> Permis</v-btn>
 
-                  <v-btn :value="false"> pas de permis</v-btn>
+                  <v-btn :value="false" small> pas de permis</v-btn>
                 </v-btn-toggle>
               </template>
 
               <template v-if="hasRole(['admin', 'bureau'])">
-                <p>Validé</p>
                 <v-btn-toggle
                   v-model="filters.isValidated"
                   tile
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true"> Validé</v-btn>
+                  <v-btn :value="true" small> Validé</v-btn>
 
-                  <v-btn :value="false"> Non Validé</v-btn>
+                  <v-btn :value="false" small> Non Validé</v-btn>
                 </v-btn-toggle>
               </template>
 
@@ -47,45 +45,40 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true"> Payé</v-btn>
+                  <v-btn :value="true" small> Payé</v-btn>
 
-                  <v-btn :value="false"> Non payé</v-btn>
+                  <v-btn :value="false" small> Non payé</v-btn>
                 </v-btn-toggle>
               </template>
 
-              <v-container class="py-0">
-                <v-row align="center" justify="start">
-                  <v-combobox
-                    v-model="filters.teams"
-                    chips
-                    multiple
-                    clearable
-                    label="team"
-                    :items="getConfig('teams').map((e) => e.name)"
+              <v-combobox
+                v-model="filters.teams"
+                chips
+                multiple
+                clearable
+                label="team"
+                :items="getConfig('teams').map((e) => e.name)"
+              >
+                <template #selection="{ attrs, item, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    :color="getRoleMetadata(item).color"
                   >
-                    <template #selection="{ attrs, item, selected }">
-                      <v-chip
-                        v-bind="attrs"
-                        :input-value="selected"
-                        close
-                        :color="getRoleMetadata(item).color"
-                      >
-                        <v-icon left color="white">
-                          {{ getRoleMetadata(item).icon }}
-                        </v-icon>
-                        <a style="color: white">{{
-                          getRoleMetadata(item).name
-                        }}</a>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </v-row>
-              </v-container>
+                    <v-icon left color="white">
+                      {{ getRoleMetadata(item).icon }}
+                    </v-icon>
+                    <a style="color: white">{{ getRoleMetadata(item).name }}</a>
+                  </v-chip>
+                </template>
+              </v-combobox>
             </v-card-text>
           </v-card>
         </v-col>
         <v-col md="9">
           <v-data-table
+            style="max-height: 100%; overflow-y: auto"
             :headers="headers"
             :items="filteredUsers"
             :items-per-page="30"
@@ -93,16 +86,12 @@
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
+                v-if="hasRole('hard')"
                 text
-                style="color: blue"
                 small
-                :href="
-                  'https://www.facebook.com/search/top?q=' +
-                  item.firstname +
-                  ' ' +
-                  item.lastname
-                "
-                >F
+                @click="openInformationDialog(item)"
+              >
+                <v-icon>mdi-information-outline</v-icon>
               </v-btn>
               <v-btn
                 v-if="hasRole('admin')"
@@ -113,14 +102,6 @@
                 <v-icon>mdi-cash</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasRole('hard')"
-                text
-                small
-                @click="openInformationDialog(item)"
-              >
-                <v-icon>mdi-information-outline</v-icon>
-              </v-btn>
-              <v-btn
                 v-if="hasRole(['admin', 'bureau'])"
                 text
                 small
@@ -128,6 +109,26 @@
               >
                 <v-icon>mdi-emoticon-cool</v-icon>
               </v-btn>
+              <v-btn
+                text
+                small
+                :href="
+                  'https://www.facebook.com/search/top?q=' +
+                  item.firstname +
+                  ' ' +
+                  item.lastname
+                "
+              >
+                <v-icon>mdi-facebook</v-icon>
+              </v-btn>
+            </template>
+
+            <template #[`item.balance`]="{ item }">
+              {{ (item.balance || 0).toFixed(2) }} €
+            </template>
+
+            <template #[`item.charisma`]="{ item }">
+              {{ item.charisma || 0 }}
             </template>
 
             <template #[`item.team`]="{ item }">
@@ -173,7 +174,6 @@
               : selectedUser.lastname
           }}
         </v-card-title>
-        <v-card-subtitle> </v-card-subtitle>
         <v-card-text>
           <OverChips :roles="selectedUser.team"></OverChips>
           <div v-if="hasRole(['admin'])">
@@ -235,8 +235,9 @@
               </tr>
 
               <tr>
-                <td>tel</td>
-                <td>
+                <td>📞</td>
+                <td style="display: flex; align-items: baseline">
+                  <p>+33&nbsp;</p>
                   <v-text-field
                     v-model="selectedUser.phone"
                     :disabled="!hasRole(['admin', 'human'])"
@@ -315,8 +316,8 @@
           </v-simple-table>
         </v-card-text>
         <v-card-actions>
+          <v-btn text color="red" @click="deleteUser()">supprimer</v-btn>
           <v-btn text @click="saveUser()">sauvgarder</v-btn>
-          <v-btn text @click="deleteUser()">supprimer</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -350,17 +351,22 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
-import OverChips from "../components/overChips";
+import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
+import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
+
+const { RepoFactory } = require("../repositories/repoFactory");
 
 export default {
   name: "Humans",
-  components: { OverChips },
+  components: { SnackNotificationContainer, OverChips },
   data() {
     return {
       users: [],
@@ -370,7 +376,7 @@ export default {
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team" },
-        { text: "charsime", value: "charisma" },
+        { text: "charsime", value: "charisma", align: "end" },
         { text: "action", value: "action" },
       ],
 
@@ -437,14 +443,6 @@ export default {
           } else {
             mUsers = mUsers.filter((user) => user.team.length === 0);
           }
-
-          // this.filteredUsers = mUsers.filter((user) => {
-          //   if (user.team) {
-          //     return user.team.length === 0;
-          //   } else {
-          //     return true;
-          //   }
-          // });
         }
 
         // filter by payed contributions
@@ -500,6 +498,7 @@ export default {
         this.headers.splice(this.headers.length - 1, 0, {
           text: "CP",
           value: "balance",
+          align: "end",
         });
       }
     }
@@ -588,32 +587,45 @@ export default {
     },
 
     async transaction(isNegative) {
-      if (!this.selectedUser.transactionHistory) {
-        this.selectedUser.transactionHistory = [];
-      }
+      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
+      const amountNumber = isNegative
+        ? -+this.newTransaction.amount
+        : +this.newTransaction.amount;
 
+      let mTransaction = {
+        type: isNegative ? "expense" : "deposit",
+        from: this.selectedUser.keycloakID,
+        to: null,
+        context: this.newTransaction.reason,
+        amount: amountNumber,
+        createdAt: new Date(),
+      };
+
+      // update on screen
       if (this.selectedUser.balance === undefined) {
         this.selectedUser.balance = 0;
       }
-
-      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
-
-      if (isNegative) {
-        this.selectedUser.balance =
-          +this.selectedUser.balance - +this.newTransaction.amount;
-      } else {
-        this.selectedUser.balance +=
-          +this.selectedUser.balance + +this.newTransaction.amount;
+      this.selectedUser.balance = +this.selectedUser.balance + amountNumber;
+      try {
+        let res = await RepoFactory.get("transaction").createTransaction(
+          this,
+          mTransaction
+        );
+        if (res.status !== 200) {
+          throw new Error();
+        }
+        // let notif: SnackNotif = {
+        //   type: "success",
+        //   message: "Transfer sent !",
+        // };
+        // await this.$store.dispatch("notif/pushNotification", notif);
+      } catch (error) {
+        // let notif: SnackNotif = {
+        //   type: "error",
+        //   message: "Could not transfer",
+        // };
+        // await this.$store.dispatch("notif/pushNotification", notif);
       }
-
-      this.newTransaction.amount =
-        (isNegative ? "- " : "+ ") + this.newTransaction.amount;
-      this.selectedUser.transactionHistory.unshift(this.newTransaction);
-
-      await this.$axios.put(
-        "/user/" + this.selectedUser.keycloakID,
-        this.selectedUser
-      );
       this.isSnackbarOpen = true;
       this.isTransactionDialogOpen = false;
     },
