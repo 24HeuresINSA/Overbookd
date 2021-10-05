@@ -21,6 +21,7 @@ import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
 import OverForm from "~/components/overForm.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { Transfer } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "TransferDialog",
@@ -93,7 +94,16 @@ export default Vue.extend({
         if (this.transfer.user.keycloakID == this.me.keycloakID) {
           this.$accessor.notif.pushNotification({
             type: "error",
-            message: "Ca sert a rien de se transférer de l'argent soi-même...",
+            message:
+              "Trouve toi des amis plutot que de faire des virements a toi meme...",
+          });
+          return;
+        }
+
+        if (+this.transfer.amount <= 0) {
+          this.$accessor.notif.pushNotification({
+            type: "error",
+            message: "c'est plus assomaker...",
           });
           return;
         }
@@ -102,18 +112,15 @@ export default Vue.extend({
           const transactionRepo = RepoFactory.transactionRepo;
 
           try {
-            let res = await transactionRepo.createTransfer(this, {
+            let newTransfer: Transfer = {
               amount: +this.transfer.amount,
               context: this.transfer.reason,
               createdAt: new Date(),
               from: this.me.keycloakID,
               to: this.transfer.user.keycloakID,
               type: "transfer",
-            });
-
-            if (res.status == 200) {
-              // add notification
-            }
+            };
+            await this.$accessor.transaction.addTransaction(newTransfer);
           } catch (e) {
             console.error(e);
           }
