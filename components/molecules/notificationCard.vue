@@ -4,7 +4,7 @@
       {{ notification.type === "friendRequest" ? "👨‍👩‍👧" : "📣" }}
     </td>
     <td>
-      <OverChips :roles="notification.team"></OverChips>
+      <OverChips :roles="[notification.team]"></OverChips>
     </td>
     <td>{{ notification.message }}</td>
     <td v-if="notification.type === 'friendRequest'">
