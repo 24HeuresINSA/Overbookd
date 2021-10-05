@@ -8,14 +8,25 @@
     >
       <div>
         <v-card-title>Compte Perso 💰</v-card-title>
-        <v-card-subtitle>Solde : {{ me.balance }} €</v-card-subtitle>
+        <v-card-subtitle>Solde : {{ me.balance.toFixed(2) }} €</v-card-subtitle>
         <v-card-text>
           <v-data-table
             :headers="headers"
             hide-default-footer
             :items="displayedTransactionHistory"
           >
+            <template #[`item.type`]="{ item }">
+              <v-icon>
+                {{
+                  isNegativeTransaction(item)
+                    ? "mdi-cash-minus"
+                    : "mdi-cash-plus"
+                }}
+              </v-icon>
+            </template>
+
             <template #[`item.amount`]="{ item }">
+              {{ isNegativeTransaction(item) ? "-" : "+" }}
               {{ (item.amount || 0).toFixed(2) }} €
             </template>
           </v-data-table>
@@ -31,7 +42,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TransferDialog from "~/components/molecules/transferDialog.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { Transaction } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "ComptePersosCard",
@@ -43,27 +54,30 @@ export default Vue.extend({
         { text: "context", value: "context" },
         { text: "montant", value: "amount", align: "end" },
       ],
-
-      mTransactions: [],
     };
   },
   computed: {
     displayedTransactionHistory(): any {
-      return this.mTransactions.slice(-3);
+      return this.mTransactions.slice(-3).reverse();
     },
     me() {
       return this.$accessor.user.me;
     },
+    mTransactions() {
+      return this.$accessor.transaction.mTransactions;
+    },
   },
   async mounted() {
-    let res = await RepoFactory.transactionRepo.getUserTransactions(this);
-    if (res.status === 200) {
-      this.mTransactions = res.data;
-    }
+    // let res = await RepoFactory.transactionRepo.getUserTransactions(this);
+    await this.$accessor.transaction.fetchMTransactions();
   },
   methods: {
     openDialog(): any {
       this.$store.dispatch("dialog/openDialog", "transfer");
+    },
+
+    isNegativeTransaction(transaction: Transaction) {
+      return transaction.from === this.me.keycloakID;
     },
   },
 });

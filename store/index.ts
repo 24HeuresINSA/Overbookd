@@ -1,10 +1,11 @@
-import { getAccessorType, mutationTree, actionTree } from "typed-vuex";
+import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 
 // Import all submodules
 import * as dialog from "./dialog";
 import * as notif from "./notif";
 import * as config from "./config";
 import * as user from "./user";
+import * as transaction from "./transaction";
 
 export const state = () => ({});
 
@@ -26,5 +27,6 @@ export const accessorType = getAccessorType({
     notif,
     config,
     user,
+    transaction,
   },
 });
