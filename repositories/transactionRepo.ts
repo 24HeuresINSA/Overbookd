@@ -21,7 +21,7 @@ export default {
     return context.$axios.get(`${resource}/user/${keycloakID}`);
   },
 
-  createTransaction(context: Context, transaction: Transaction[]) {
+  createTransactions(context: Context, transaction: Transaction[]) {
     return context.$axios.post(`${resource}/sg`, transaction);
   },
 

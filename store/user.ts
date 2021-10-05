@@ -44,6 +44,20 @@ export const actions = actionTree(
       }
       return false;
     },
+
+    hasRole(state, roles: string | string[]) {
+      if (roles === undefined) {
+        return true;
+      }
+      const teams = state.state.me.team;
+      if (teams === undefined) {
+        return false;
+      }
+      if (typeof roles == "string") {
+        roles = [roles];
+      }
+      return roles.some((r) => teams.includes(r));
+    },
   }
 );
 
