@@ -8,6 +8,10 @@ export const state = () => ({
 });
 
 export const getters = getterTree(state, {
+  getConfig: (state, key) => {
+    return state.data.data;
+  },
+
   /**
    * GET teams with matching name from config
    * @param state The config state
