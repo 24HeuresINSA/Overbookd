@@ -33,7 +33,9 @@
         </v-card-text>
       </div>
       <v-card-actions>
-        <v-btn text @click="openDialog()">Effectuer un virement</v-btn>
+        <v-btn v-if="areTransfersOpen" text @click="openDialog()"
+          >Effectuer un virement</v-btn
+        >
       </v-card-actions>
     </v-card>
   </div>
@@ -54,6 +56,7 @@ export default Vue.extend({
         { text: "context", value: "context" },
         { text: "montant", value: "amount", align: "end" },
       ],
+      areTransfersOpen: false,
     };
   },
   computed: {
@@ -70,6 +73,17 @@ export default Vue.extend({
   async mounted() {
     // let res = await RepoFactory.transactionRepo.getUserTransactions(this);
     await this.$accessor.transaction.fetchMTransactions();
+    let option = undefined;
+    try {
+      const { value: areTransfersOpen } =
+        await this.$accessor.config.getConfig.find(
+          (e: { key: string }) => e.key === "are_transfers_open"
+        );
+      option = areTransfersOpen;
+    } catch (e) {
+      option = false;
+    }
+    this.areTransfersOpen = option;
   },
   methods: {
     openDialog(): any {

@@ -1,29 +1,58 @@
 <template>
-  <tr>
-    <td>
-      {{ notification.type === "friendRequest" ? "👨‍👩‍👧" : "📣" }}
-    </td>
-    <td>
-      <OverChips :roles="[notification.team]"></OverChips>
-    </td>
-    <td>{{ notification.message }}</td>
-    <td v-if="notification.type === 'friendRequest'">
-      <v-btn icon @click="acceptFriendRequest(notification)">
-        <v-icon>mdi-account-check</v-icon>
-      </v-btn>
-      <v-btn icon @click="refuseFriendRequest(notification)">
-        <v-icon>mdi-account-cancel</v-icon>
-      </v-btn>
-    </td>
-    <td v-else-if="notification.type === 'broadcast'">
-      <v-btn icon @click="openLink(notification.link)">
-        <v-icon>mdi-link</v-icon>
-      </v-btn>
-      <v-btn icon @click="deleteNotification(notification.index)">
-        <v-icon>mdi-trash-can</v-icon>
-      </v-btn>
-    </td>
-  </tr>
+  <v-data-table
+    v-if="me.notifications"
+    :items="me.notifications"
+    :headers="headers"
+    hide-default-footer
+  >
+    <template #[`item.team`]="item">
+      <OverChips :roles="[item.item.team]"></OverChips>
+    </template>
+    <template #[`item.icon`]="item">
+      {{ item.item.type === "friendRequest" ? "👨‍👩‍👧" : "📣" }}
+    </template>
+    <template #[`item.action`]="notification">
+      <div v-if="notification.item.type === 'friendRequest'">
+        <v-btn icon @click="acceptFriendRequest(notification.item)">
+          <v-icon>mdi-account-check</v-icon>
+        </v-btn>
+        <v-btn icon @click="refuseFriendRequest(notification.item)">
+          <v-icon>mdi-account-cancel</v-icon>
+        </v-btn>
+      </div>
+      <div v-else-if="notification.item.type === 'broadcast'">
+        <v-btn
+          v-if="notification.item.link"
+          icon
+          @click="openLink(notification.item.link)"
+        >
+          <v-icon>mdi-link</v-icon>
+        </v-btn>
+      </div>
+    </template>
+  </v-data-table>
+  <!--  <tr>-->
+  <!--    <td>-->
+  <!--      -->
+  <!--    </td>-->
+  <!--    <td>-->
+  <!--      <OverChips :roles="[notification.team]"></OverChips>-->
+  <!--    </td>-->
+  <!--    <td>{{ notification.message }}</td>-->
+  <!--    <td v-if="notification.type === 'friendRequest'">-->
+  <!--      <v-btn icon @click="acceptFriendRequest(notification)">-->
+  <!--        <v-icon>mdi-account-check</v-icon>-->
+  <!--      </v-btn>-->
+  <!--      <v-btn icon @click="refuseFriendRequest(notification)">-->
+  <!--        <v-icon>mdi-account-cancel</v-icon>-->
+  <!--      </v-btn>-->
+  <!--    </td>-->
+  <!--    <td v-else-if="notification.type === 'broadcast'">-->
+  <!--      <v-btn v-if="notification.link" icon @click="openLink(notification.link)">-->
+  <!--        <v-icon>mdi-link</v-icon>-->
+  <!--      </v-btn>-->
+  <!--    </td>-->
+  <!--  </tr>-->
 </template>
 
 <script lang="ts">
@@ -44,6 +73,17 @@ export default Vue.extend({
   data() {
     return {
       notification: this.notif,
+
+      // table
+      headers: [
+        { text: "", value: "icon" },
+        { text: "depuis", value: "team" },
+        {
+          text: "message",
+          value: "message",
+        },
+        { text: "action", value: "action" },
+      ],
     };
   },
   computed: {

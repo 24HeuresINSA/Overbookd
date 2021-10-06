@@ -14,7 +14,7 @@
           <ComptesPersosCard />
         </v-col>
 
-        <v-col cols="12" sm="6" lg="4">
+        <v-col v-if="hasRole('soft')" cols="12" sm="6" lg="4">
           <FriendsCard />
         </v-col>
 
