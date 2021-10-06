@@ -9,25 +9,11 @@
       <div>
         <v-card-title>Notifications 📣️</v-card-title>
         <v-card-text v-if="me.notifications">
-          <v-simple-table>
-            <template #default>
-              <thead>
-                <tr>
-                  <th class="text-left"></th>
-                  <th class="text-left">Team</th>
-                  <th class="text-left">Message</th>
-                  <th class="text-left">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <NotificationCard
-                  v-for="(notif, index) in me.notifications"
-                  :key="index"
-                  :notif="{ ...notif, index }"
-                />
-              </tbody>
-            </template>
-          </v-simple-table>
+          <NotificationCard
+            v-for="(notif, index) in me.notifications"
+            :key="index"
+            :notif="{ ...notif, index }"
+          />
         </v-card-text>
         <template v-if="IhaveRole(['admin', 'bureau'])">
           <v-card-text>{{ notValidatedCount }} Orgas non validés </v-card-text>
