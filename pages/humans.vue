@@ -83,6 +83,7 @@
             :items="filteredUsers"
             :items-per-page="30"
             class="elevation-1"
+            dense
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
@@ -125,6 +126,10 @@
 
             <template #[`item.balance`]="{ item }">
               {{ (item.balance || 0).toFixed(2) }} €
+            </template>
+
+            <template #[`item.studies`]="{ item }">
+              {{ item.year }}{{ item.departement }}
             </template>
 
             <template #[`item.charisma`]="{ item }">
@@ -221,6 +226,7 @@ export default {
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team" },
+        { text: "étude", value: "studies" },
         { text: "charsime", value: "charisma", align: "end" },
         { text: "action", value: "action" },
       ],
@@ -268,7 +274,7 @@ export default {
         if (this.filters.search) {
           const options = {
             // Search in `author` and in `tags` array
-            keys: ["firstname", "lastname", "nickname"],
+            keys: ["firstname", "lastname", "nickname", "phone"],
           };
           const fuse = new Fuse(mUsers, options);
 

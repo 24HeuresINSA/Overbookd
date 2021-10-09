@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>SG 🥵</h1>
-    <v-container style="display: flex; width: 100%; position: absolute">
+    <v-container style="display: flex; width: 100%">
       <v-card>
         <v-card-text style="display: flex; flex-direction: column">
           <v-text-field
@@ -35,6 +35,8 @@
           </template>
           <v-btn text @click="saveTransactions">Enregistrer</v-btn>
           <v-btn text>Envoyer un mail au négatif</v-btn>
+          <br />
+          <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
         </v-card-text>
       </v-card>
 
@@ -44,6 +46,7 @@
         style="width: 100%"
         disable-pagination
         hide-default-footer
+        dense
       >
         <template #[`item.action`]="{ item }" style="display: flex">
           <v-text-field
@@ -93,6 +96,7 @@ export default {
       users: [],
       totalConsumption: undefined, // total coast of the barrel
       totalPrice: 0,
+      totalCPBalance: 0,
 
       isExpenseMode: true,
 
@@ -127,6 +131,11 @@ export default {
     if (res) {
       this.users = res.data;
     }
+    this.users.forEach((user) => {
+      if (user.balance) {
+        this.totalCPBalance += +user.balance;
+      }
+    });
   },
 
   methods: {
