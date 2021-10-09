@@ -41,7 +41,9 @@
 
         <OverChips :roles="me.team"></OverChips>
 
-        <v-progress-linear :value="me.charisma"></v-progress-linear>
+        <v-progress-linear
+          :value="(me.charisma / maxCharisma) * 100"
+        ></v-progress-linear>
       </v-card-text>
     </v-card>
   </div>
@@ -69,7 +71,13 @@ export default Vue.extend({
   },
 
   data() {
-    return {};
+    return {
+      maxCharisma: 1500,
+    };
+  },
+
+  mounted() {
+    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
   },
   computed: {
     ...mapState<any, TMapState<UserState>>("user", {

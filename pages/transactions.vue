@@ -1,63 +1,57 @@
 <template>
   <v-container>
     <h1>Transactions 💸</h1>
-    <v-data-table :headers="headers" :items="transactions">
-      <template #[`item.amount`]="{ item }">
-        {{ (item.amount || 0).toFixed(2) }} €
-      </template>
+    <v-card style="margin-bottom: 5px">
+      <v-card-text
+        style="display: flex; flex-direction: row; align-items: center"
+      >
+        <v-autocomplete
+          v-model="selectedUserKeycloakID"
+          label="Nom"
+          :items="usernames"
+          item-text="username"
+          item-value="keycloakID"
+          style="width: 300px"
+        ></v-autocomplete>
+        <v-btn text @click="search(selectedUserKeycloakID)">Chercher</v-btn>
+      </v-card-text>
+    </v-card>
 
-      <template #[`item.to`]="{ item }">
-        {{ users[item.to] }}
-      </template>
-
-      <template #[`item.from`]="{ item }">
-        {{ users[item.from] }}
-      </template>
-
-      <template #[`item.createdAt`]="{ item }">
-        {{ new Date(item.createdAt).toLocaleString() }}
-      </template>
-
-      <template #[`item.action`]="{ item }">
-        <v-btn icon small @click="deleteTransaction(item._id)">
-          <v-icon small>mdi-trash-can</v-icon>
-        </v-btn>
-      </template>
-    </v-data-table>
+    <OverTransactions
+      :transactions="filteredTransactions"
+      :action="true"
+    ></OverTransactions>
   </v-container>
 </template>
 
 <script>
+import OverTransactions from "../components/overTransactions";
 const { safeCall } = require("../utils/api/calls");
 import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {
   name: "Transactions",
+  components: { OverTransactions },
   data: () => {
     return {
       transactions: [],
-
-      headers: [
-        { text: "type", value: "type" },
-        { text: "depuis", value: "from" },
-        {
-          text: "vers",
-          value: "to",
-        },
-        { text: "context", value: "context" },
-        { text: "date", value: "createdAt" },
-        {
-          text: "montant",
-          value: "amount",
-          align: "end",
-        },
-        { text: "action", value: "action" },
-      ],
-
-      users: {},
+      filteredTransactions: [],
+      usernames: [],
+      selectedUserKeycloakID: undefined,
     };
   },
   computed: {},
+
+  async beforeMount() {
+    const usersCall = await safeCall(
+      this.$store,
+      RepoFactory.userRepo.getAllUsernames(this)
+    );
+    if (usersCall) {
+      this.usernames = usersCall.data;
+    }
+  },
+
   async mounted() {
     if (!(await this.$accessor.user.hasRole("admin"))) {
       await this.$router.push({
@@ -72,31 +66,15 @@ export default {
     );
     if (res) {
       this.transactions = res.data;
-    }
-
-    const usersCall = await safeCall(
-      this.$store,
-      RepoFactory.userRepo.getAllUsernames(this)
-    );
-    if (usersCall) {
-      usersCall.data.forEach((username) => {
-        this.users[username.keycloakID] = username.username;
-      });
+      this.filteredTransactions = this.transactions;
     }
   },
 
   methods: {
-    async deleteTransaction(transactionID) {
-      const deleteCall = await safeCall(
-        this.$store,
-        RepoFactory.transactionRepo.deleteTransaction(this, transactionID)
-      );
-      if (deleteCall) {
-        // update on screen
-        this.transactions = this.transactions.filter(
-          (t) => t._id !== transactionID
-        );
-      }
+    search(keycloakID) {
+      this.filteredTransactions = this.transactions.filter((t) => {
+        return t.from === keycloakID || t.to === keycloakID;
+      });
     },
   },
 };

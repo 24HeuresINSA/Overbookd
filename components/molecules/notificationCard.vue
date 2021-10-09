@@ -31,28 +31,6 @@
       </div>
     </template>
   </v-data-table>
-  <!--  <tr>-->
-  <!--    <td>-->
-  <!--      -->
-  <!--    </td>-->
-  <!--    <td>-->
-  <!--      <OverChips :roles="[notification.team]"></OverChips>-->
-  <!--    </td>-->
-  <!--    <td>{{ notification.message }}</td>-->
-  <!--    <td v-if="notification.type === 'friendRequest'">-->
-  <!--      <v-btn icon @click="acceptFriendRequest(notification)">-->
-  <!--        <v-icon>mdi-account-check</v-icon>-->
-  <!--      </v-btn>-->
-  <!--      <v-btn icon @click="refuseFriendRequest(notification)">-->
-  <!--        <v-icon>mdi-account-cancel</v-icon>-->
-  <!--      </v-btn>-->
-  <!--    </td>-->
-  <!--    <td v-else-if="notification.type === 'broadcast'">-->
-  <!--      <v-btn v-if="notification.link" icon @click="openLink(notification.link)">-->
-  <!--        <v-icon>mdi-link</v-icon>-->
-  <!--      </v-btn>-->
-  <!--    </td>-->
-  <!--  </tr>-->
 </template>
 
 <script lang="ts">
