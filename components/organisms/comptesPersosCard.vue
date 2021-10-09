@@ -76,9 +76,10 @@ export default Vue.extend({
     await this.$accessor.transaction.fetchMTransactions();
     let option = undefined;
     try {
-      const { value: areTransfersOpen } = await this.$accessor.config.getConfig(
-        "are_transfers_open"
-      );
+      const { value: areTransfersOpen } =
+        await this.$accessor.config.getConfig.find(
+          (e: { key: string }) => e.key === "are_transfers_open"
+        );
       option = areTransfersOpen;
     } catch (e) {
       option = false;
