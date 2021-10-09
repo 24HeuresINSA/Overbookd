@@ -69,6 +69,26 @@ export interface User {
   clicks?: number;
   transactionHistory?: Transaction[];
   balance?: number;
+  charisma?: number;
+  availabilities: availability[];
+}
+
+export interface availability {
+  name: string;
+  description: string;
+  days: daysFrame[];
+}
+
+export interface daysFrame {
+  date: string;
+  frames: timeframe[];
+}
+
+export interface timeframe {
+  start: string;
+  end: string;
+  charisma: string;
+  isSelected: boolean;
 }
 
 export interface FriendRequest {

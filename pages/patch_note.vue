@@ -1,6 +1,15 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.18.1 : le Patch Urhino 💰</h2>
+    <ul>
+      <li>🤯 Mes transactions</li>
+      <li>
+        🥳 Ajout des etudes dans la liste des orga et recherche par # de tel
+      </li>
+      <li>🔨 1 milliard de changemenr sur les transactions</li>
+      <li>📝 ajout de stat TRES IMPORTANTE</li>
+    </ul>
     <h2>Patch note BETA 0.18 : le Patch Moula 💰</h2>
     <ul>
       <li>🔨 plus responsive</li>

@@ -1,5 +1,10 @@
 <template>
-  <v-container style="display: flex; flex-wrap: wrap">
+  <v-container
+    style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    "
+  >
     <v-card
       v-for="(user, i) in users"
       :key="i"
@@ -9,20 +14,15 @@
       <v-img
         v-if="user.pp"
         :src="getPPUrl() + 'api/user/pp/' + user.pp"
-        max-width="300px"
-        max-height="500px"
+        max-height="250px"
       ></v-img>
       <v-card-title
-        >{{
-          user.nickname
-            ? user.nickname
-            : `${user.firstname} ${user.lastname.toUpperCase()} `
-        }}
+        >{{ user.nickname }} ({{ user.firstname }} {{ user.lastname }})
       </v-card-title>
       <v-card-subtitle>
         <OverChips :roles="user.team"></OverChips>
       </v-card-subtitle>
-      <v-card-text>
+      <v-card-text style="overflow-y: hidden">
         {{ user.comment }}
       </v-card-text>
     </v-card>
@@ -40,7 +40,6 @@ export default {
 
   async mounted() {
     this.users = (await this.$axios.get("/user")).data;
-    console.log(this.users);
   },
 
   methods: {

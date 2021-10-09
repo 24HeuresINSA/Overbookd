@@ -34,8 +34,9 @@
       </div>
       <v-card-actions>
         <v-btn v-if="areTransfersOpen" text @click="openDialog()"
-          >Effectuer un virement</v-btn
-        >
+          >Effectuer un virement
+        </v-btn>
+        <v-btn text to="/mTransactions">Mes transactions </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -75,10 +76,9 @@ export default Vue.extend({
     await this.$accessor.transaction.fetchMTransactions();
     let option = undefined;
     try {
-      const { value: areTransfersOpen } =
-        await this.$accessor.config.getConfig.find(
-          (e: { key: string }) => e.key === "are_transfers_open"
-        );
+      const { value: areTransfersOpen } = await this.$accessor.config.getConfig(
+        "are_transfers_open"
+      );
       option = areTransfersOpen;
     } catch (e) {
       option = false;

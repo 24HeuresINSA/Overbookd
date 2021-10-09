@@ -8,8 +8,15 @@ export const state = () => ({
 });
 
 export const getters = getterTree(state, {
-  getConfig: (state, key) => {
-    return state.data.data;
+  getConfig: (state) => (key: string) => {
+    if (state.data && state.data.data) {
+      const config = state.data.data.find((o: any) => o.key === key);
+      if (config) {
+        return config.value;
+      } else {
+        return;
+      }
+    }
   },
 
   /**
