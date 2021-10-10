@@ -65,7 +65,7 @@ export default Vue.extend({
       return this.mTransactions.slice(-3).reverse();
     },
     mBalance() {
-      return this.me.balance || 0;
+      return this.$accessor.user.me.balance || 0;
     },
     me() {
       return this.$accessor.user.me;
