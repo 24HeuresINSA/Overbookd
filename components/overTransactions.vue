@@ -91,8 +91,8 @@ export default {
       RepoFactory.userRepo.getAllUsernames(this)
     );
     if (usersCall) {
-      usersCall.data.forEach((username) => {
-        this.users[username.keycloakID] = username.username;
+      usersCall.data.forEach((user) => {
+        this.users[user.keycloakID] = user.username;
       });
     }
   },
