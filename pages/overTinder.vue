@@ -3,26 +3,39 @@
     <h1>OverTinder 🔥</h1>
     <v-btn text @click="openCP">Telecharger un constat de choppe</v-btn>
     <br />
-    <v-card v-if="user" max-width="400">
-      <v-img
-        v-if="user.pp"
-        :src="getPPUrl() + 'api/user/pp/' + user.pp"
-      ></v-img>
-      <v-card-title>
-        {{ user.nickname ? user.nickname : user.firstname }}
-      </v-card-title>
-      <v-card-text>
-        <p>Charisme: {{ user.charisma }}</p>
-      </v-card-text>
-      <v-card-actions style="display: flex; justify-content: space-between">
-        <v-btn elevation="5" fab icon color="green" @click="next()"
-          ><v-icon>mdi-check</v-icon></v-btn
-        >
-        <v-btn elevation="5" fab icon color="red" @click="next(true)"
-          ><v-icon>mdi-cancel</v-icon></v-btn
-        >
-      </v-card-actions>
-    </v-card>
+    <div style="display: flex; width: 100%; justify-content: center">
+      <v-card v-if="user" max-width="400" elevation="5">
+        <v-img
+          v-if="user.pp"
+          :src="getPPUrl() + 'api/user/pp/' + user.pp"
+        ></v-img>
+        <v-card-title>
+          {{ user.nickname ? user.nickname : user.firstname }}
+        </v-card-title>
+        <v-card-text>
+          <p>Charisme: {{ user.charisma }}</p>
+          <p>{{ user.comment }}</p>
+          <v-progress-linear
+            :value="(user.charisma / maxCharisma) * 100"
+          ></v-progress-linear>
+        </v-card-text>
+        <v-card-actions style="display: flex; justify-content: space-between">
+          <v-btn elevation="5" fab icon color="green" @click="next()">
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="!isBG(user)"
+            elevation="5"
+            fab
+            icon
+            color="red"
+            @click="next(true)"
+          >
+            <v-icon>mdi-cancel</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
   </v-container>
 </template>
 
@@ -39,14 +52,16 @@ export default {
         isCouple: undefined,
         sex: undefined,
       },
+      maxCharisma: 1500,
     };
   },
 
   async mounted() {
+    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
     this.users = (await this.$axios("/user")).data;
-    this.users.filter((u) => u.pp);
-    this.next();
+    this.users = this.users.filter(({ pp }) => pp !== undefined);
     this.user = this.users[0];
+    this.next();
   },
 
   methods: {
@@ -58,6 +73,16 @@ export default {
 
     openCP() {
       window.open("Constat-Choppe.pdf");
+    },
+
+    isBG(user) {
+      if (user && user.firstname && user.lastname) {
+        return (
+          user.firstname === "Hamza" ||
+          user.lastname.toLowerCase() === "badaoui"
+        );
+      }
+      return false;
     },
 
     next(isLeft) {
