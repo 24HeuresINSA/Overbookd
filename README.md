@@ -4,14 +4,6 @@
 ![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/pre-prod/pipeline.svg?key_text=pre-prod+pipeleine&key_width=110)
 ![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/master/pipeline.svg?key_text=master+pipeleine&key_width=100)
 
-![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/develop/pipeline.svg?key_text=develop+pipeleine&key_width=105)
-![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/pre-prod/pipeline.svg?key_text=pre-prod+pipeleine&key_width=110)
-![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/master/pipeline.svg?key_text=master+pipeleine&key_width=100)
-
-![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/develop/pipeline.svg?key_text=develop+pipeleine&key_width=105)
-![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/pre-prod/pipeline.svg?key_text=pre-prod+pipeleine&key_width=110)
-![](https://gitlab.com/24-heures-insa/overbookd/frontend/badges/master/pipeline.svg?key_text=master+pipeleine&key_width=100)
-
 ## Build Setup
 
 Overbookd is an ERM software specificly developed within the team to supply management needs of the association in the daily life.
@@ -26,6 +18,11 @@ Ca a quelquechose a voir avec docker-compose
 .env d'exemple ?
 docker-compose up
 -->
+
+### Installer et lancer Oberbookd
+
+Les instructions pour lancer et faire tourner Overbookd sont maintenant centralisées dans le repository [Management](https://gitlab.com/24-heures-insa/overbookd/management/)
+
 
 ### Env vars
 
