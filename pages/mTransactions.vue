@@ -18,8 +18,13 @@ export default {
   data: () => {
     return {
       mTransactions: [],
-      mBalance: 0,
     };
+  },
+
+  computed: {
+    mBalance() {
+      return this.$accessor.user.me.balance || 0;
+    },
   },
 
   async mounted() {
@@ -29,9 +34,7 @@ export default {
     );
     if (res) {
       this.mTransactions = res.data;
-      console.log(this.mTransactions);
     }
-    this.mBalance = this.$accessor.user.me.balance;
   },
 };
 </script>
