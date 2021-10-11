@@ -1,57 +1,62 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="transactions"
-    dense
-    :items-per-page="-1"
-    sort-by="createdAt"
-  >
-    <template #[`group.summary`]="{ group }">
-      {{ new Date(group).toLocaleString() }}
-    </template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="transactionsData"
+      dense
+      :items-per-page="-1"
+      sort-by="createdAt"
+    >
+      <template #[`group.summary`]="{ group }">
+        {{ new Date(group).toLocaleString() }}
+      </template>
 
-    <template #[`item.type`]="{ item }">
-      <label
-        v-if="item.isValid === false"
-        style="text-decoration: line-through"
-      >
-        {{ item.type }}
-      </label>
-      <label v-else>
-        {{ item.type }}
-      </label>
-    </template>
+      <template #[`item.type`]="{ item }">
+        <label
+          v-if="item.isValid === false"
+          style="text-decoration: line-through"
+        >
+          {{ item.type }}
+        </label>
+        <label v-else>
+          {{ item.type }}
+        </label>
+      </template>
 
-    <template #[`item.amount`]="{ item }">
-      {{ (item.amount || 0).toFixed(2) }} €
-    </template>
+      <template #[`item.amount`]="{ item }">
+        {{ (item.amount || 0).toFixed(2) }} €
+      </template>
 
-    <template #[`item.to`]="{ item }">
-      {{ getFullNameFromKeycloakID(item.to) }}
-    </template>
+      <template #[`item.to`]="{ item }">
+        {{ getFullNameFromKeycloakID(item.to) }}
+      </template>
 
-    <template #[`item.from`]="{ item }">
-      {{ getFullNameFromKeycloakID(item.from) }}
-    </template>
+      <template #[`item.from`]="{ item }">
+        {{ getFullNameFromKeycloakID(item.from) }}
+      </template>
 
-    <template #[`item.createdAt`]="{ item }">
-      {{ new Date(item.createdAt).toLocaleString() }}
-    </template>
+      <template #[`item.createdAt`]="{ item }">
+        {{ new Date(item.createdAt).toLocaleString() }}
+      </template>
 
-    <template #[`item.action`]="{ item }">
-      <v-btn icon small @click="deleteTransaction(item._id)">
-        <v-icon small>mdi-trash-can</v-icon>
-      </v-btn>
-    </template>
-  </v-data-table>
+      <template #[`item.action`]="{ item }">
+        <v-btn icon small @click="deleteTransaction(item._id)">
+          <v-icon small>mdi-trash-can</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+    <SnackNotificationContainer></SnackNotificationContainer>
+  </div>
 </template>
 
 <script>
+import SnackNotificationContainer from "./molecules/snackNotificationContainer";
 const { safeCall } = require("../utils/api/calls");
 import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {
   name: "OverTransactions",
+  components: { SnackNotificationContainer },
   props: {
     transactions: {
       type: Array,
@@ -80,9 +85,10 @@ export default {
         },
       ],
       users: {},
+      transactionsData: [],
     };
   },
-  async beforeMount() {
+  async mounted() {
     if (this.action) {
       this.headers.push({ text: "action", value: "action" });
     }
@@ -95,6 +101,7 @@ export default {
         this.users[user.keycloakID] = user.username;
       });
     }
+    this.transactionsData = this.transactions;
   },
   methods: {
     async deleteTransaction(transactionID) {
@@ -104,10 +111,14 @@ export default {
       );
       if (deleteCall) {
         // update on screen
-        let mTransactions = this.transactions.find(
+        let mTransaction = this.transactionsData.find(
           (t) => t._id !== transactionID
         );
-        mTransactions.isValid = false;
+        mTransaction.isValid = false;
+        this.$accessor.notif.pushNotification({
+          type: "success",
+          message: "Tranasction supprimé",
+        });
       }
     },
     getFullNameFromKeycloakID(keycloakID) {
