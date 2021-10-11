@@ -49,16 +49,12 @@
 
                   <v-btn :value="false" small> Non payé</v-btn>
                 </v-btn-toggle>
+                <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
 
-              <v-combobox
-                v-model="filters.teams"
-                chips
-                multiple
-                clearable
-                label="team"
-                :items="getConfig('teams').map((e) => e.name)"
-              >
+              <v-combobox>
+                v-model="filters.teams" chips multiple clearable label="team"
+                :items="getConfig('teams').map((e) => e.name)" >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
                     v-bind="attrs"
@@ -510,6 +506,75 @@ export default {
         `/user/${this.selectedUser.keycloakID}`,
         this.selectedUser
       );
+    },
+
+    download(filename, text) {
+      // We use the 'a' HTML element to incorporate file generation into
+      // the browser rather than server-side
+      var element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      );
+      element.setAttribute("download", filename);
+
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+
+    async exportCSV() {
+      // Parse data into a CSV string to be passed to the download function
+      var csv =
+        "Prénom,Nom,Surnom,Charisme,Poles,Email,Date de naissance,Téléphone,Département,Année,Solde,ContribPayée,A Le Permis?,Date permis,Commentaire\n";
+
+      const users = this.users;
+      console.log(users);
+
+      for (let i = 0; i < users.length; i++) {
+        csv +=
+          users[i].firstname +
+          ";" +
+          users[i].lastname +
+          ";" +
+          users[i].nickname +
+          ";" +
+          users[i].charisma +
+          ";" +
+          '"' +
+          users[i].team +
+          '"' +
+          ";" +
+          users[i].email +
+          ";" +
+          users[i].birthdate +
+          ";" +
+          "+33" +
+          users[i].phone +
+          ";" +
+          users[i].department +
+          ";" +
+          users[i].year +
+          ";" +
+          users[i].balance +
+          ";" +
+          users[i].hasPayedContribution +
+          ";" +
+          users[i].hasDriverLicense +
+          ";" +
+          users[i].driverLicenseDate +
+          ";" +
+          users[i].comment +
+          ";" +
+          "\n";
+      }
+
+      const regex = new RegExp(/undefined/i, "g");
+
+      let parsedCSV = csv.replaceAll(regex, "");
+      // Prompt the browser to start file download
+      this.download("utilisateurs.csv", parsedCSV);
     },
   },
 };
