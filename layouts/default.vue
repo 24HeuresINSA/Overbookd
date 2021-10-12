@@ -61,7 +61,7 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container style="max-width: none">
         <nuxt />
       </v-container>
     </v-main>
@@ -85,11 +85,7 @@
           </h4>
         </v-card-text>
         <v-card-actions>
-          <v-btn
-            href="mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A%3C%21---example%3A%20%2Ffa%20or%20dashboard-humain---%3E%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug"
-          >
-            envoyer le mail
-          </v-btn>
+          <v-btn :href="mailUrl"> envoyer le mail </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -110,8 +106,9 @@ const AUTHORS = [
   "Christophe - piStoph 🍺",
   "Hugo - Cashless 💰",
   "Tom - Nimbus 🧹",
-  "Paul - Craker 💥",
+  "Paul - Nuts 💥",
   "Thomas - Ginny 💡",
+  "Thibaut - Moule 🍑",
 ];
 
 export default {
@@ -214,6 +211,18 @@ export default {
           to: "/config",
         },
         {
+          icon: "mdi-format-list-bulleted",
+          roles: "admin",
+          title: "SG 📝️",
+          to: "/SG",
+        },
+        {
+          icon: "mdi-cash-multiple",
+          roles: "admin",
+          title: "Transactions 💰️",
+          to: "/transactions",
+        },
+        {
           icon: "mdi-fire",
           roles: "hard",
           title: "OverTinder 🍑",
@@ -250,6 +259,22 @@ export default {
         ? "overbookd_logo_blanc.png"
         : "overbookd_logo_noir.png";
     },
+
+    mailUrl() {
+      return `mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A${encodeURIComponent(
+        window.location.href
+      )}%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug%0A%0A%23%20Additional%20info%0Aversion%3A%20${encodeURI(
+        version
+      )}%0Auser%20agent%3A%20${encodeURI(
+        navigator.userAgent
+      )}%0Avendor%3A%20${encodeURI(
+        navigator.vendor
+      )}%20%0Adate%3A%20${encodeURI(
+        new Date().toLocaleString()
+      )}%20%0Aresolution%3A%20${encodeURI(
+        window.screen.availWidth + "x" + window.screen.availHeight
+      )}`;
+    },
   },
 
   mounted() {
@@ -258,19 +283,12 @@ export default {
 
   methods: {
     getUser() {
-      return this.$store.state.user.data;
+      return this.$store.state.user.me;
     },
 
     getRandomAuthor() {
       const items = this.AUTHORS;
       return items[Math.floor(Math.random() * items.length)];
-    },
-
-    addStep() {
-      this.newRequest.steps.push(
-        `${this.newRequest.steps.length + 1} - ${this.stepDetail}`
-      );
-      this.stepDetail = "";
     },
 
     hasRole(role) {

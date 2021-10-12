@@ -14,12 +14,12 @@
     <v-form>
       <v-container class="form-container">
         <v-row>
-          <v-img src="img/memes/home_meme.jpeg"></v-img>
+          <v-img src="img/memes/submit_FT.gif"></v-img>
         </v-row>
         <v-row>
           <v-img
             src="img/logo/overbookd_logo_blanc.png"
-            alt="overbookd logo"
+            alt="overbookd"
             class="logo"
           ></v-img>
         </v-row>
@@ -54,11 +54,7 @@
           ></v-text-field>
         </v-row>
       </v-container>
-      <v-btn
-        color="secondary"
-        elevation="2"
-        href="/signup"
-        class="signupBtn Btn"
+      <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn Btn"
         >s'inscrire
       </v-btn>
       <v-btn color="primary" elevation="2" class="loginBtn Btn" @click="login()"

@@ -333,7 +333,7 @@ export default {
     },
 
     getUser() {
-      return this.$store.state.user.data;
+      return this.$store.state.user.me;
     },
 
     hasRole(role) {
