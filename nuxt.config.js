@@ -4,6 +4,7 @@ import { KEYCLOAK } from "./config/url.json";
 export default {
   env: {
     BASE_URL_KEYCLOAK: process.env.BASE_URL_KEYCLOAK,
+    BASE_URL: process.env.BASE_URL,
   },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,

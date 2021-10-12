@@ -3,7 +3,9 @@
     v-if="me.notifications"
     :items="me.notifications"
     :headers="headers"
+    style="overflow-y: scroll; max-height: 300px"
     hide-default-footer
+    hide-default-header
   >
     <template #[`item.team`]="item">
       <OverChips :roles="[item.item.team]"></OverChips>

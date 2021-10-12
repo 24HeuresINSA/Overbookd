@@ -108,6 +108,7 @@ const AUTHORS = [
   "Tom - Nimbus 🧹",
   "Paul - Nuts 💥",
   "Thomas - Ginny 💡",
+  "Thibaut - Moule 🍑",
 ];
 
 export default {
