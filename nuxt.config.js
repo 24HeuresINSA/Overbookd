@@ -4,6 +4,7 @@ import { KEYCLOAK } from "./config/url.json";
 export default {
   env: {
     BASE_URL_KEYCLOAK: process.env.BASE_URL_KEYCLOAK,
+    BASE_URL: process.env.BASE_URL,
   },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -40,6 +41,7 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
     "@nuxtjs/color-mode",
+    "nuxt-typed-vuex",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -135,4 +137,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  storybook: {
+    decorators: [
+      // VApp decorator for Vuetify
+      "<v-app><story/></v-app>",
+    ],
+  },
 };

@@ -4,11 +4,11 @@ export default async function (context) {
   const keycloakID = getKeycloakID(context);
   if (keycloakID) {
     const user = (await context.$axios.get("/user/" + keycloakID)).data;
-    context.store.commit("user/setUser", user);
+    context.store.commit("user/SET_USER", user);
   }
 }
 
-function getKeycloakID(context) {
+export function getKeycloakID(context) {
   if (context.$auth.loggedIn) {
     const token =
       context.$auth.$storage._state["_token.keycloak"].split(" ")[1];

@@ -154,14 +154,17 @@ export default {
   data() {
     return {
       detailMessage: this.getConfig("availabilities_description"),
-      userCharisma: getUser(this).charisma || 0,
+      userCharisma: this.$accessor.user.me.charisma,
       maxCharisma: this.getConfig("max_charisma"),
       availabilities: [],
       isAllToggled: false,
       isSnackbarOpen: false,
       isDialogOpen: false,
       isDayDialogOpen: false,
-      hasEditRole: hasRole(this, getConfig(this, "add_availabilities_roles")),
+      hasEditRole: hasRole(
+        this,
+        this.getConfig(this, "add_availabilities_roles")
+      ),
       newDay: undefined,
       selectedAvailability: false,
       selectedDate: undefined,
@@ -239,7 +242,7 @@ export default {
     },
 
     getConfig(key) {
-      return getConfig(this, key);
+      return this.$accessor.config.getConfig(key);
     },
 
     toggleAll(day) {
@@ -253,7 +256,25 @@ export default {
 
     save() {
       // compute new charisma
+      const me = this.$accessor.user.me;
       let charisma = 0;
+      if (me.charisma !== undefined) {
+        charisma = me.charisma;
+      }
+
+      let oldCharisma = 0;
+      me.availabilities.forEach((availability) => {
+        availability.days.forEach((day) => {
+          if (day.frames) {
+            day.frames.forEach((frame) => {
+              if (frame.isSelected) {
+                oldCharisma += +frame.charisma;
+              }
+            });
+          }
+        });
+      });
+
       this.availabilities.forEach((availability) => {
         availability.days.forEach((day) => {
           if (day.frames) {
@@ -265,15 +286,17 @@ export default {
           }
         });
       });
-      this.$axios.put("user/" + this.getUser().keycloakID, {
-        availabilities: this.availabilities,
-        charisma,
+
+      charisma = charisma - oldCharisma;
+
+      this.$accessor.user.updateUser({
+        userId: me.keycloakID,
+        userData: {
+          availabilities: this.availabilities,
+          charisma,
+        },
       });
       this.isSnackbarOpen = true;
-    },
-
-    getAvailability(day) {
-      // return this.availabilities.find(avalability )
     },
   },
 };

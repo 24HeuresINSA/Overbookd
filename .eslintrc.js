@@ -8,8 +8,10 @@ module.exports = {
     "plugin:vue/recommended",
     "eslint:recommended",
     "prettier/vue",
+    "prettier/@typescript-eslint",
     "plugin:prettier/recommended",
     "plugin:cypress/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
   ],
   rules: {
     "vue/component-name-in-template-casing": ["error", "PascalCase"],
@@ -24,6 +26,6 @@ module.exports = {
     $nuxt: true,
   },
   parserOptions: {
-    parser: "babel-eslint",
+    parser: "@typescript-eslint/parser",
   },
 };

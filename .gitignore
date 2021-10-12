@@ -6,3 +6,9 @@ node_modules
 
 sw.js
 .DS_Store
+
+.env
+
+# Storybook
+.nuxt-storybook
+storybook-static

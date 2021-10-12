@@ -1,6 +1,25 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.18.1 : le Patch Urhino 💰</h2>
+    <ul>
+      <li>🤯 Mes transactions</li>
+      <li>
+        🥳 Ajout des etudes dans la liste des orga et recherche par # de tel
+      </li>
+      <li>🔨 1 milliard de changemenr sur les transactions</li>
+      <li>📝 ajout de stat TRES IMPORTANTE</li>
+    </ul>
+    <h2>Patch note BETA 0.18 : le Patch Moula 💰</h2>
+    <ul>
+      <li>🔨 plus responsive</li>
+      <li>🔨 rework du dashboard</li>
+      <li>🤯 ecran SG</li>
+      <li>🔨 QoL</li>
+      <li>🔒 Plus joli</li>
+      <li>🤯 Ajout des tranasctions</li>
+      <li>🤯 On ne peut que swiper a droite sur Hamza</li>
+    </ul>
     <h2>Patch note BETA 0.17.5 : le Patch Hublot</h2>
     <h3>🤯 Rectification de bugs</h3>
     <ul>
