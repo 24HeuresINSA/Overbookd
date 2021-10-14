@@ -10,7 +10,7 @@
           <UserNotifications />
         </v-col>
 
-        <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="4">
+        <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="8">
           <ComptesPersosCard />
         </v-col>
 

@@ -17,7 +17,7 @@
           >
           <label v-if="isExpenseMode"
             >Prix du bâton:
-            {{ (+totalPrice / +totalConsumptions).toFixed(2) }}
+            {{ stickPrice }}
             €</label
           >
           <label>Mode</label>
@@ -70,6 +70,17 @@
         </template>
       </v-data-table>
     </v-container>
+    <v-dialog v-model="isSwitchDialogOpen" width="600px">
+      <v-card>
+        <v-card-title>Attention</v-card-title>
+        <v-card-text
+          >Si tu change de mode les donnees non enregister seront effeace
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="cleanInputs">changer de mode</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <SnackNotificationContainer />
   </v-container>
 </template>
@@ -99,6 +110,7 @@ export default {
       totalCPBalance: 0,
 
       isExpenseMode: true,
+      isSwitchDialogOpen: false,
 
       headers: [
         { text: "prénom", value: "firstname" },
@@ -121,6 +133,15 @@ export default {
       });
       return totalConsumptions;
     },
+    stickPrice() {
+      return (+this.totalPrice / +this.totalConsumptions).toFixed(2);
+    },
+  },
+
+  watch: {
+    isExpenseMode() {
+      this.isSwitchDialogOpen = true;
+    },
   },
 
   async mounted() {
@@ -141,6 +162,50 @@ export default {
   methods: {
     async saveTransactions() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
+
+      let isCorrect = true;
+
+      // verify new consumptions are positive digits
+      usersWithConsumptions.forEach((user) => {
+        if (this.isExpenseMode) {
+          // mode depense (Baton)
+          try {
+            if (
+              user.newConsumption.includes(",") ||
+              user.newConsumption.includes(".")
+            ) {
+              isCorrect = false;
+            }
+            if (+user.newConsumption < 0) {
+              isCorrect = false;
+            }
+          } catch {
+            isCorrect = false;
+          }
+
+          // verify totalPrice
+          try {
+            this.totalPrice = +this.totalPrice;
+          } catch {
+            isCorrect = false;
+          }
+
+          if (this.totalPrice === 0) {
+            isCorrect = false;
+          }
+        } else {
+          // is depot mode
+        }
+      });
+
+      if (!isCorrect) {
+        await this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "Il faut mettre des nombre",
+        });
+        return;
+      }
+
       let transactions = usersWithConsumptions.map((user) => {
         if (this.isExpenseMode) {
           return {
@@ -151,7 +216,7 @@ export default {
             amount: +(
               (+this.totalPrice / +this.totalConsumptions) *
               user.newConsumption
-            ),
+            ).toFixed(2),
             context: `Conso au local de ${user.newConsumption} bâton à ${(
               +this.totalPrice / +this.totalConsumptions
             ).toFixed(2)} €`,
@@ -163,7 +228,7 @@ export default {
             from: null,
             to: user.keycloakID,
             createdAt: new Date(),
-            amount: +user.newConsumption,
+            amount: (+user.newConsumption).toFixed(2),
             context: `Recharge de compte perso`,
           };
         }
@@ -175,6 +240,12 @@ export default {
       });
 
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+    },
+
+    cleanInputs() {
+      let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
+      usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+      this.isSwitchDialogOpen = false;
     },
   },
 };

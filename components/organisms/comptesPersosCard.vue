@@ -13,6 +13,7 @@
           <v-data-table
             :headers="headers"
             hide-default-footer
+            hide-default-header
             :items="displayedTransactionHistory"
           >
             <template #[`item.type`]="{ item }">
@@ -23,11 +24,6 @@
                     : "mdi-cash-plus"
                 }}
               </v-icon>
-            </template>
-
-            <template #[`item.amount`]="{ item }">
-              {{ isNegativeTransaction(item) ? "-" : "+" }}
-              {{ (item.amount || 0).toFixed(2) }} €
             </template>
           </v-data-table>
         </v-card-text>
