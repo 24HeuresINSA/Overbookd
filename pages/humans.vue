@@ -2,7 +2,7 @@
   <div>
     <template style="width: 100%; display: grid">
       <v-row>
-        <v-col md="2" style="min-width: 250px">
+        <v-col md="2">
           <v-card>
             <v-card-title>Filtres</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
@@ -11,19 +11,7 @@
                 label="Recherche"
               ></v-text-field>
 
-              <template>
-                <v-btn-toggle
-                  v-model="filters.hasDriverLicence"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                >
-                  <v-btn :value="true" small> Permis</v-btn>
-
-                  <v-btn :value="false" small> pas de permis</v-btn>
-                </v-btn-toggle>
-              </template>
-
+              <label>Compte</label>
               <template v-if="hasRole(['admin', 'bureau'])">
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -36,7 +24,19 @@
                   <v-btn :value="false" small> Non Validé</v-btn>
                 </v-btn-toggle>
               </template>
+              <label>Permis</label>
+              <template>
+                <v-btn-toggle
+                  v-model="filters.hasDriverLicence"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small>oui</v-btn>
 
+                  <v-btn :value="false" small>non</v-btn>
+                </v-btn-toggle>
+              </template>
               <template v-if="hasRole(['admin', 'bureau'])">
                 <p>Cotisation</p>
                 <v-btn-toggle
@@ -52,9 +52,14 @@
                 <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
 
-              <v-combobox>
-                v-model="filters.teams" chips multiple clearable label="team"
-                :items="getConfig('teams').map((e) => e.name)" >
+              <v-combobox
+                v-model="filters.teams"
+                chips
+                multiple
+                clearable
+                label="team"
+                :items="getConfig('teams').map((e) => e.name)"
+              >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
                     v-bind="attrs"
@@ -72,7 +77,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col md="9">
+        <v-col md="10">
           <v-data-table
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"

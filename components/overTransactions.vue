@@ -2,10 +2,9 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="transactionsData"
+      :items="transactions"
       dense
       :items-per-page="-1"
-      sort-by="createdAt"
     >
       <template #[`group.summary`]="{ group }">
         {{ new Date(group).toLocaleString() }}
@@ -85,7 +84,6 @@ export default {
         },
       ],
       users: {},
-      transactionsData: [],
     };
   },
   async mounted() {
@@ -101,7 +99,6 @@ export default {
         this.users[user.keycloakID] = user.username;
       });
     }
-    this.transactionsData = this.transactions;
   },
   methods: {
     async deleteTransaction(transactionID) {
@@ -111,7 +108,7 @@ export default {
       );
       if (deleteCall) {
         // update on screen
-        let mTransaction = this.transactionsData.find(
+        let mTransaction = this.transactions.find(
           (t) => t._id !== transactionID
         );
         mTransaction.isValid = false;
