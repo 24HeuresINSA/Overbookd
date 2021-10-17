@@ -20,7 +20,6 @@ import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
 import OverForm from "~/components/overForm.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
 import { Transfer } from "~/utils/models/repo";
 
 export default Vue.extend({
@@ -109,8 +108,6 @@ export default Vue.extend({
         }
 
         if (this.transfer.user.keycloakID) {
-          const transactionRepo = RepoFactory.transactionRepo;
-
           try {
             let newTransfer: Transfer = {
               amount: +this.transfer.amount,
@@ -121,30 +118,14 @@ export default Vue.extend({
               type: "transfer",
             };
             await this.$accessor.transaction.addTransaction(newTransfer);
+            // clear fields
+            this.transfer.amount = "";
+            this.transfer.reason = "";
+            this.transfer.user = {};
           } catch (e) {
             console.error(e);
           }
         }
-
-        //TODO: Broken. Fix
-        //TODO: Update balance ?
-        // try {
-        //   let res = await RepoFactory.userRepo.transfer(this, this.transfer);
-        //   if (res.status !== 200) {
-        //     throw new Error();
-        //   }
-        //   let notif: SnackNotif = {
-        //     type: "success",
-        //     message: "Transfer sent !",
-        //   };
-        //   this.$store.dispatch("notif/pushNotification", notif);
-        // } catch (error: any) {
-        //   let notif: SnackNotif = {
-        //     type: "error",
-        //     message: "Could not transfer",
-        //   };
-        //   await this.$store.dispatch("notif/pushNotification", notif);
-        // }
       }
     },
   },

@@ -208,18 +208,18 @@ export default {
 
       let transactions = usersWithConsumptions.map((user) => {
         if (this.isExpenseMode) {
+          const amount = +(
+            (+this.totalPrice / +this.totalConsumptions) *
+            user.newConsumption
+          );
           return {
             type: "expense",
             from: user.keycloakID,
             to: null,
             createdAt: new Date(),
-            amount: +(
-              (+this.totalPrice / +this.totalConsumptions) *
-              user.newConsumption
-            ).toFixed(2),
-            context: `Conso au local de ${user.newConsumption} bâton à ${(
-              +this.totalPrice / +this.totalConsumptions
-            ).toFixed(2)} €`,
+            amount: this.round(amount),
+            context: `Conso au local de ${user.newConsumption} bâton à ${(+this
+              .stickPrice).toFixed(2)} €`,
           };
         } else {
           user.newConsumption = user.newConsumption.replace(",", ".");
@@ -229,7 +229,7 @@ export default {
             to: user.keycloakID,
             createdAt: new Date(),
             amount: (+user.newConsumption).toFixed(2),
-            context: `Recharge de compte perso`,
+            context: `Recharge de compte perso le ${new Date().toDateString()}`,
           };
         }
       });
@@ -246,6 +246,10 @@ export default {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
       this.isSwitchDialogOpen = false;
+    },
+
+    round(rawAmount) {
+      return (Math.round(+rawAmount * 100) / 100).toFixed(2);
     },
   },
 };

@@ -25,6 +25,9 @@
                 }}
               </v-icon>
             </template>
+            <template #[`item.amount`]="{ item }">
+              {{ item.amount }} €
+            </template>
           </v-data-table>
         </v-card-text>
       </div>
@@ -58,7 +61,7 @@ export default Vue.extend({
   },
   computed: {
     displayedTransactionHistory(): any {
-      return this.mTransactions.slice(-3).reverse();
+      return this.mTransactions.slice(0, 5);
     },
     mBalance() {
       return this.$accessor.user.me.balance || 0;
