@@ -4,33 +4,50 @@
     <v-container style="display: flex; width: 100%">
       <v-card>
         <v-card-text style="display: flex; flex-direction: column">
-          <v-text-field
-            v-if="isExpenseMode"
-            v-model="totalPrice"
-            label="Prix total"
-            type="number"
-          ></v-text-field>
-          <label
-            >{{
-              isExpenseMode ? "Nombre de bâton total" : "Nombre total d'argent"
-            }}: {{ totalConsumptions }}</label
-          >
-          <label v-if="isExpenseMode"
-            >Prix du bâton:
-            {{ stickPrice }}
-            €</label
-          >
+          <template v-if="mode === 'cask'">
+            <v-text-field
+              v-model="totalPrice"
+              label="Prix total"
+              type="number"
+              :rules="[
+                (v) =>
+                  new RegExp(regex.float).test(v) ||
+                  `il faut mettre un nombre (avec . comme virgule)`,
+              ]"
+            ></v-text-field>
+            <label> Nombre de bâton total {{ totalConsumptions }} </label>
+            <label
+              >Prix du bâton:
+              {{ stickPrice }}
+              €</label
+            >
+          </template>
+
+          <template v-if="mode === 'closet'">
+            <v-text-field
+              v-model="settledStickPrice"
+              label="Prix du bâton"
+              type="number"
+              :rules="[
+                (v) =>
+                  new RegExp(regex.float).test(v) ||
+                  `il faut mettre un nombre (avec . comme virgule)`,
+              ]"
+            ></v-text-field>
+            <label> Nombre de bâton total {{ totalConsumptions }} </label>
+          </template>
+
           <label>Mode</label>
           <template>
             <v-btn-toggle
-              v-model="isExpenseMode"
+              v-model="mode"
               tile
               color="deep-purple accent-3"
               group
             >
-              <v-btn :value="true" small> Dépense</v-btn>
-
-              <v-btn :value="false" small> Dépot</v-btn>
+              <v-btn value="cask" small> Fût</v-btn>
+              <v-btn value="closet" small> Placard</v-btn>
+              <v-btn value="deposit" small> Dépot</v-btn>
             </v-btn-toggle>
           </template>
           <v-btn text @click="saveTransactions">Enregistrer</v-btn>
@@ -47,12 +64,15 @@
         disable-pagination
         hide-default-footer
         dense
+        multi-sort
+        :sort-by="['firstname', 'lastname']"
       >
         <template #[`item.action`]="{ item }" style="display: flex">
           <v-text-field
             v-model="item.newConsumption"
             type="number"
             :label="isExpenseMode ? 'Nombre de bâton' : 'thunas (en euro)'"
+            :rules="rules"
           ></v-text-field>
         </template>
 
@@ -63,7 +83,8 @@
         <template #[`item.newConsumption`]="{ item }">
           {{
             (
-              (+totalPrice / +totalConsumptions) * item.newConsumption || 0
+              (mode === "cask" ? stickPrice : settledStickPrice) *
+                item.newConsumption || 0
             ).toFixed(2)
           }}
           €
@@ -106,11 +127,18 @@ export default {
     return {
       users: [],
       totalConsumption: undefined, // total coast of the barrel
-      totalPrice: 0,
+      totalPrice: undefined,
       totalCPBalance: 0,
+      settledStickPrice: 0.5,
 
-      isExpenseMode: true,
+      mode: "cask",
+
       isSwitchDialogOpen: false,
+
+      regex: {
+        int: "^[0-9]\\d*$",
+        float: "^[0-9]\\d*(\\.\\d+)?$",
+      },
 
       headers: [
         { text: "prénom", value: "firstname" },
@@ -134,7 +162,15 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      return (+this.totalPrice / +this.totalConsumptions).toFixed(2);
+      return this.round(+this.totalPrice / +this.totalConsumptions).toFixed(2);
+    },
+    rules() {
+      const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
+      console.log(regex);
+      return [(v) => new RegExp(regex).test(v) || `il faut mettre un entier `];
+    },
+    isExpenseMode() {
+      return this.mode === "cask" || this.mode === "closet";
     },
   },
 
@@ -167,6 +203,10 @@ export default {
 
       // verify new consumptions are positive digits
       usersWithConsumptions.forEach((user) => {
+        if (isNaN(user.newConsumption)) {
+          isCorrect = false;
+        }
+
         if (this.isExpenseMode) {
           // mode depense (Baton)
           try {
@@ -193,8 +233,6 @@ export default {
           if (this.totalPrice === 0) {
             isCorrect = false;
           }
-        } else {
-          // is depot mode
         }
       });
 
@@ -208,18 +246,23 @@ export default {
 
       let transactions = usersWithConsumptions.map((user) => {
         if (this.isExpenseMode) {
-          const amount = +(
-            (+this.totalPrice / +this.totalConsumptions) *
-            user.newConsumption
-          );
+          let amount;
+          if (this.mode === "cask") {
+            amount = this.round(this.stickPrice * user.newConsumption);
+          } else {
+            amount = this.round(+this.settledStickPrice * +user.newConsumption);
+          }
           return {
             type: "expense",
             from: user.keycloakID,
             to: null,
             createdAt: new Date(),
-            amount: this.round(amount),
-            context: `Conso au local de ${user.newConsumption} bâton à ${(+this
-              .stickPrice).toFixed(2)} €`,
+            amount,
+            context:
+              this.mode === "cask"
+                ? `Conso au local de ${user.newConsumption} bâton à ${(+this
+                    .stickPrice).toFixed(2)} €`
+                : `Conso placard:  ${user.newConsumption} bâton`,
           };
         } else {
           user.newConsumption = user.newConsumption.replace(",", ".");
@@ -249,7 +292,12 @@ export default {
     },
 
     round(rawAmount) {
-      return (Math.round(+rawAmount * 100) / 100).toFixed(2);
+      const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
+      let res = parseInt(round / 5) * 5;
+      if (res % 5 === 0) {
+        return res * 0.01;
+      }
+      return (res + 5) * 0.01;
     },
   },
 };

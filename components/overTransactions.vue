@@ -106,7 +106,7 @@ export default {
       if (deleteCall) {
         // update on screen
         let mTransaction = this.transactions.find(
-          (t) => t._id !== transactionID
+          (t) => t._id === transactionID
         );
         mTransaction.isValid = false;
         this.$accessor.notif.pushNotification({
@@ -116,7 +116,6 @@ export default {
       }
     },
     getFullNameFromKeycloakID(keycloakID) {
-      console.log(`resolve name ${this.users[keycloakID]}`);
       return this.users[keycloakID];
     },
   },

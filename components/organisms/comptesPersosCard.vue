@@ -28,6 +28,9 @@
             <template #[`item.amount`]="{ item }">
               {{ item.amount }} €
             </template>
+            <template #[`item.context`]="{ item }">
+              {{ !item.isValid ? "[SUPPRIME] " : "" }}{{ item.context }}
+            </template>
           </v-data-table>
         </v-card-text>
       </div>
