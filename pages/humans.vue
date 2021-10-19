@@ -11,7 +11,7 @@
                 label="Recherche"
               ></v-text-field>
 
-              <label>Compte</label>
+              <label>Compte validé</label>
               <template v-if="hasRole(['admin', 'bureau'])">
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -19,9 +19,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true" small> Validé</v-btn>
+                  <v-btn :value="true" small> oui</v-btn>
 
-                  <v-btn :value="false" small> Non Validé</v-btn>
+                  <v-btn :value="false" small> Non</v-btn>
                 </v-btn-toggle>
               </template>
               <label>Permis</label>
@@ -82,7 +82,6 @@
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"
             :items="filteredUsers"
-            :items-per-page="30"
             class="elevation-1"
             dense
           >
@@ -234,7 +233,7 @@ export default {
         { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
-        { text: "team", value: "team", cellClass: "width: 50px", width: "1" },
+        { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
         { text: "étude", value: "studies" },
         { text: "charsime", value: "charisma", align: "end" },
         { text: "action", value: "action" },
@@ -595,6 +594,10 @@ export default {
 
 <style scoped>
 p {
+  margin: 0;
+}
+
+.v-btn-toggle--group > .v-btn.v-btn {
   margin: 0;
 }
 
