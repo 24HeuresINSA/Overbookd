@@ -4,6 +4,30 @@
     <v-container style="display: flex; width: 100%">
       <v-card>
         <v-card-text style="display: flex; flex-direction: column">
+          <label>Mode</label>
+          <template>
+            <v-btn-toggle
+              v-model="mode"
+              tile
+              color="deep-purple accent-3"
+              group
+            >
+              <v-btn value="cask" small> Fût</v-btn>
+              <v-btn value="closet" small> Placard</v-btn>
+              <v-btn value="deposit" small> Dépot</v-btn>
+            </v-btn-toggle>
+          </template>
+          <v-list v-if="!areInputsValid.res">
+            <v-list-item
+              v-for="(reason, key) in areInputsValid.reason"
+              :key="key"
+            >
+              <v-list-item-content style="color: red">{{
+                reason
+              }}</v-list-item-content>
+            </v-list-item>
+          </v-list>
+
           <template v-if="mode === 'cask'">
             <v-text-field
               v-model="totalPrice"
@@ -37,20 +61,12 @@
             <label> Nombre de bâton total {{ totalConsumptions }} </label>
           </template>
 
-          <label>Mode</label>
-          <template>
-            <v-btn-toggle
-              v-model="mode"
-              tile
-              color="deep-purple accent-3"
-              group
-            >
-              <v-btn value="cask" small> Fût</v-btn>
-              <v-btn value="closet" small> Placard</v-btn>
-              <v-btn value="deposit" small> Dépot</v-btn>
-            </v-btn-toggle>
+          <template v-if="mode === 'deposit'">
+            <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
-          <v-btn text @click="saveTransactions">Enregistrer</v-btn>
+          <v-btn text :disabled="!areInputsValid.res" @click="saveTransactions"
+            >Enregistrer</v-btn
+          >
           <v-btn text>Envoyer un mail au négatif</v-btn>
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
@@ -70,7 +86,6 @@
         <template #[`item.action`]="{ item }" style="display: flex">
           <v-text-field
             v-model="item.newConsumption"
-            type="number"
             :label="isExpenseMode ? 'Nombre de bâton' : 'thunas (en euro)'"
             :rules="rules"
           ></v-text-field>
@@ -140,6 +155,14 @@ export default {
         float: "^[0-9]\\d*(\\.\\d+)?$",
       },
 
+      feedbacks: {
+        totalPrice: "Prix total n' est pas un nombre",
+        settledStickPrice: "Prix du baton n'est pas un nombre",
+        noNewConsumption: "pas de nouvelle consomation ou de dépot",
+        wrongNewConsumption: `champs non valide pour l'utilisateur: `,
+      },
+      reasons: [],
+
       headers: [
         { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
@@ -172,10 +195,62 @@ export default {
     isExpenseMode() {
       return this.mode === "cask" || this.mode === "closet";
     },
+    areInputsValid() {
+      let res = true;
+      let reason = [];
+
+      let mUsers = this.users.filter((u) => u.newConsumption);
+
+      if (mUsers === []) {
+        res = false;
+        reason.push(this.feedbacks.noNewConsumption);
+      }
+
+      switch (this.mode) {
+        case "cask":
+          if (!this.isFloat(this.totalPrice)) {
+            res = false;
+            reason.push(this.feedbacks.totalPrice);
+          }
+          mUsers.forEach((user) => {
+            if (!this.isInteger(user.newConsumption)) {
+              res = false;
+              reason.push(this.feedbacks.wrongNewConsumption + user.lastname);
+            }
+          });
+          break;
+
+        case "closet":
+          if (!this.isFloat(this.settledStickPrice)) {
+            res = false;
+            reason.push(this.feedbacks.settledStickPrice);
+          }
+          mUsers.forEach((user) => {
+            if (!this.isInteger(user.newConsumption)) {
+              res = false;
+              reason.push(this.feedbacks.wrongNewConsumption + user.lastname);
+            }
+          });
+          break;
+
+        case "deposit":
+          mUsers.forEach((user) => {
+            if (!this.isFloat(user.newConsumption)) {
+              res = false;
+              reason.push(this.feedbacks.wrongNewConsumption + user.lastname);
+            }
+          });
+          break;
+      }
+      return {
+        res,
+        reason,
+      };
+    },
   },
 
   watch: {
-    isExpenseMode() {
+    mode() {
       this.isSwitchDialogOpen = true;
     },
   },
@@ -196,6 +271,14 @@ export default {
   },
 
   methods: {
+    isFloat(number) {
+      const floatRegex = new RegExp(this.regex.float);
+      return floatRegex.test(number);
+    },
+    isInteger(number) {
+      const floatRegex = new RegExp(this.regex.int);
+      return floatRegex.test(number);
+    },
     async saveTransactions() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
 
@@ -294,9 +377,6 @@ export default {
     round(rawAmount) {
       const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
       let res = parseInt(round / 5) * 5;
-      if (res % 5 === 0) {
-        return res * 0.01;
-      }
       return (res + 5) * 0.01;
     },
   },

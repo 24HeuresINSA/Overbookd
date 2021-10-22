@@ -74,7 +74,7 @@ export default {
 
   methods: {
     search(keycloakID) {
-      this.filteredTransactions = this.filteredTransactions.filter((t) => {
+      this.filteredTransactions = this.transactions.filter((t) => {
         return t.from === keycloakID || t.to === keycloakID;
       });
       // this.$set(this, "filteredTransactions", filteredTransactions)
