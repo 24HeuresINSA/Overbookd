@@ -13,6 +13,7 @@
           <v-data-table
             :headers="headers"
             hide-default-footer
+            hide-default-header
             :items="displayedTransactionHistory"
           >
             <template #[`item.type`]="{ item }">
@@ -24,10 +25,11 @@
                 }}
               </v-icon>
             </template>
-
             <template #[`item.amount`]="{ item }">
-              {{ isNegativeTransaction(item) ? "-" : "+" }}
-              {{ (item.amount || 0).toFixed(2) }} €
+              {{ item.amount }} €
+            </template>
+            <template #[`item.context`]="{ item }">
+              {{ !item.isValid ? "[SUPPRIME] " : "" }}{{ item.context }}
             </template>
           </v-data-table>
         </v-card-text>
@@ -62,7 +64,7 @@ export default Vue.extend({
   },
   computed: {
     displayedTransactionHistory(): any {
-      return this.mTransactions.slice(-3).reverse();
+      return this.mTransactions.slice(0, 5);
     },
     mBalance() {
       return this.$accessor.user.me.balance || 0;

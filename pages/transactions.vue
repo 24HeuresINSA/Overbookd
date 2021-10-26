@@ -13,7 +13,9 @@
           item-value="keycloakID"
           style="width: 300px"
         ></v-autocomplete>
-        <v-btn text @click="search(selectedUserKeycloakID)">Chercher</v-btn>
+        <v-btn icon @click="search(selectedUserKeycloakID)">
+          <v-icon>mdi-account-search</v-icon>
+        </v-btn>
       </v-card-text>
     </v-card>
 
@@ -75,6 +77,7 @@ export default {
       this.filteredTransactions = this.transactions.filter((t) => {
         return t.from === keycloakID || t.to === keycloakID;
       });
+      // this.$set(this, "filteredTransactions", filteredTransactions)
     },
   },
 };

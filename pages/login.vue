@@ -14,7 +14,7 @@
     <v-form>
       <v-container class="form-container">
         <v-row>
-          <v-img src="img/memes/submit_FT.gif"></v-img>
+          <v-img src="img/memes/home_meme.png"></v-img>
         </v-row>
         <v-row>
           <v-img

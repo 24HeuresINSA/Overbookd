@@ -4,36 +4,69 @@
     <v-container style="display: flex; width: 100%">
       <v-card>
         <v-card-text style="display: flex; flex-direction: column">
-          <v-text-field
-            v-if="isExpenseMode"
-            v-model="totalPrice"
-            label="Prix total"
-            type="number"
-          ></v-text-field>
-          <label
-            >{{
-              isExpenseMode ? "Nombre de bâton total" : "Nombre total d'argent"
-            }}: {{ totalConsumptions }}</label
-          >
-          <label v-if="isExpenseMode"
-            >Prix du bâton:
-            {{ (+totalPrice / +totalConsumptions).toFixed(2) }}
-            €</label
-          >
           <label>Mode</label>
           <template>
             <v-btn-toggle
-              v-model="isExpenseMode"
+              v-model="mode"
               tile
               color="deep-purple accent-3"
               group
             >
-              <v-btn :value="true" small> Dépense</v-btn>
-
-              <v-btn :value="false" small> Dépot</v-btn>
+              <v-btn value="cask" small> Fût</v-btn>
+              <v-btn value="closet" small> Placard</v-btn>
+              <v-btn value="deposit" small> Dépot</v-btn>
             </v-btn-toggle>
           </template>
-          <v-btn text @click="saveTransactions">Enregistrer</v-btn>
+          <v-list v-if="!areInputsValid.res">
+            <v-list-item
+              v-for="(reason, key) in areInputsValid.reason"
+              :key="key"
+            >
+              <v-list-item-content style="color: red">{{
+                reason
+              }}</v-list-item-content>
+            </v-list-item>
+          </v-list>
+
+          <template v-if="mode === 'cask'">
+            <v-text-field
+              v-model="totalPrice"
+              label="Prix total"
+              type="number"
+              :rules="[
+                (v) =>
+                  new RegExp(regex.float).test(v) ||
+                  `il faut mettre un nombre (avec . comme virgule)`,
+              ]"
+            ></v-text-field>
+            <label> Nombre de bâton total {{ totalConsumptions }} </label>
+            <label
+              >Prix du bâton:
+              {{ stickPrice }}
+              €</label
+            >
+          </template>
+
+          <template v-if="mode === 'closet'">
+            <v-text-field
+              v-model="settledStickPrice"
+              label="Prix du bâton"
+              type="number"
+              :rules="[
+                (v) =>
+                  new RegExp(regex.float).test(v) ||
+                  `il faut mettre un nombre (avec . comme virgule)`,
+              ]"
+            ></v-text-field>
+            <label> Nombre de bâton total {{ totalConsumptions }} </label>
+          </template>
+
+          <template v-if="mode === 'deposit'">
+            <label> Depot total: {{ totalConsumptions }} €</label>
+          </template>
+          <v-btn text :disabled="!areInputsValid.res" @click="saveTransactions"
+            >Enregistrer</v-btn
+          >
           <v-btn text>Envoyer un mail au négatif</v-btn>
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
@@ -47,12 +80,14 @@
         disable-pagination
         hide-default-footer
         dense
+        multi-sort
+        :sort-by="['firstname', 'lastname']"
       >
         <template #[`item.action`]="{ item }" style="display: flex">
           <v-text-field
             v-model="item.newConsumption"
-            type="number"
             :label="isExpenseMode ? 'Nombre de bâton' : 'thunas (en euro)'"
+            :rules="rules"
           ></v-text-field>
         </template>
 
@@ -63,13 +98,25 @@
         <template #[`item.newConsumption`]="{ item }">
           {{
             (
-              (+totalPrice / +totalConsumptions) * item.newConsumption || 0
+              (mode === "cask" ? stickPrice : settledStickPrice) *
+                item.newConsumption || 0
             ).toFixed(2)
           }}
           €
         </template>
       </v-data-table>
     </v-container>
+    <v-dialog v-model="isSwitchDialogOpen" width="600px">
+      <v-card>
+        <v-card-title>Attention</v-card-title>
+        <v-card-text
+          >Si tu change de mode les donnees non enregister seront effeace
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="cleanInputs">changer de mode</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <SnackNotificationContainer />
   </v-container>
 </template>
@@ -95,10 +142,26 @@ export default {
     return {
       users: [],
       totalConsumption: undefined, // total coast of the barrel
-      totalPrice: 0,
+      totalPrice: undefined,
       totalCPBalance: 0,
+      settledStickPrice: 0.5,
 
-      isExpenseMode: true,
+      mode: "cask",
+
+      isSwitchDialogOpen: false,
+
+      regex: {
+        int: "^[0-9]\\d*$",
+        float: "^[0-9]\\d*(\\.\\d+)?$",
+      },
+
+      feedbacks: {
+        totalPrice: "Prix total n' est pas un nombre",
+        settledStickPrice: "Prix du baton n'est pas un nombre",
+        noNewConsumption: "pas de nouvelle consomation ou de dépot",
+        wrongNewConsumption: `champs non valide pour l'utilisateur: `,
+      },
+      reasons: [],
 
       headers: [
         { text: "prénom", value: "firstname" },
@@ -121,6 +184,75 @@ export default {
       });
       return totalConsumptions;
     },
+    stickPrice() {
+      return this.round(+this.totalPrice / +this.totalConsumptions).toFixed(2);
+    },
+    rules() {
+      const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
+      console.log(regex);
+      return [(v) => new RegExp(regex).test(v) || `il faut mettre un entier `];
+    },
+    isExpenseMode() {
+      return this.mode === "cask" || this.mode === "closet";
+    },
+    areInputsValid() {
+      let res = true;
+      let reason = [];
+
+      let mUsers = this.users.filter((u) => u.newConsumption);
+
+      if (mUsers === []) {
+        res = false;
+        reason.push(this.feedbacks.noNewConsumption);
+      }
+
+      switch (this.mode) {
+        case "cask":
+          if (!this.isFloat(this.totalPrice)) {
+            res = false;
+            reason.push(this.feedbacks.totalPrice);
+          }
+          mUsers.forEach((user) => {
+            if (!this.isInteger(user.newConsumption)) {
+              res = false;
+              reason.push(this.feedbacks.wrongNewConsumption + user.lastname);
+            }
+          });
+          break;
+
+        case "closet":
+          if (!this.isFloat(this.settledStickPrice)) {
+            res = false;
+            reason.push(this.feedbacks.settledStickPrice);
+          }
+          mUsers.forEach((user) => {
+            if (!this.isInteger(user.newConsumption)) {
+              res = false;
+              reason.push(this.feedbacks.wrongNewConsumption + user.lastname);
+            }
+          });
+          break;
+
+        case "deposit":
+          mUsers.forEach((user) => {
+            if (!this.isFloat(user.newConsumption)) {
+              res = false;
+              reason.push(this.feedbacks.wrongNewConsumption + user.lastname);
+            }
+          });
+          break;
+      }
+      return {
+        res,
+        reason,
+      };
+    },
+  },
+
+  watch: {
+    mode() {
+      this.isSwitchDialogOpen = true;
+    },
   },
 
   async mounted() {
@@ -139,22 +271,81 @@ export default {
   },
 
   methods: {
+    isFloat(number) {
+      const floatRegex = new RegExp(this.regex.float);
+      return floatRegex.test(number);
+    },
+    isInteger(number) {
+      const floatRegex = new RegExp(this.regex.int);
+      return floatRegex.test(number);
+    },
     async saveTransactions() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
+
+      let isCorrect = true;
+
+      // verify new consumptions are positive digits
+      usersWithConsumptions.forEach((user) => {
+        if (isNaN(user.newConsumption)) {
+          isCorrect = false;
+        }
+
+        if (this.isExpenseMode) {
+          // mode depense (Baton)
+          try {
+            if (
+              user.newConsumption.includes(",") ||
+              user.newConsumption.includes(".")
+            ) {
+              isCorrect = false;
+            }
+            if (+user.newConsumption < 0) {
+              isCorrect = false;
+            }
+          } catch {
+            isCorrect = false;
+          }
+
+          // verify totalPrice
+          try {
+            this.totalPrice = +this.totalPrice;
+          } catch {
+            isCorrect = false;
+          }
+
+          if (this.totalPrice === 0) {
+            isCorrect = false;
+          }
+        }
+      });
+
+      if (!isCorrect) {
+        await this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "Il faut mettre des nombre",
+        });
+        return;
+      }
+
       let transactions = usersWithConsumptions.map((user) => {
         if (this.isExpenseMode) {
+          let amount;
+          if (this.mode === "cask") {
+            amount = this.round(this.stickPrice * user.newConsumption);
+          } else {
+            amount = this.round(+this.settledStickPrice * +user.newConsumption);
+          }
           return {
             type: "expense",
             from: user.keycloakID,
             to: null,
             createdAt: new Date(),
-            amount: +(
-              (+this.totalPrice / +this.totalConsumptions) *
-              user.newConsumption
-            ),
-            context: `Conso au local de ${user.newConsumption} bâton à ${(
-              +this.totalPrice / +this.totalConsumptions
-            ).toFixed(2)} €`,
+            amount,
+            context:
+              this.mode === "cask"
+                ? `Conso au local de ${user.newConsumption} bâton à ${(+this
+                    .stickPrice).toFixed(2)} €`
+                : `Conso placard:  ${user.newConsumption} bâton`,
           };
         } else {
           user.newConsumption = user.newConsumption.replace(",", ".");
@@ -163,8 +354,8 @@ export default {
             from: null,
             to: user.keycloakID,
             createdAt: new Date(),
-            amount: +user.newConsumption,
-            context: `Recharge de compte perso`,
+            amount: (+user.newConsumption).toFixed(2),
+            context: `Recharge de compte perso le ${new Date().toDateString()}`,
           };
         }
       });
@@ -175,6 +366,18 @@ export default {
       });
 
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+    },
+
+    cleanInputs() {
+      let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
+      usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+      this.isSwitchDialogOpen = false;
+    },
+
+    round(rawAmount) {
+      const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
+      let res = parseInt(round / 5) * 5;
+      return (res + 5) * 0.01;
     },
   },
 };

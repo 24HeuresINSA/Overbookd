@@ -11,4 +11,4 @@ sw.js
 
 # Storybook
 .nuxt-storybook
-storybook-static
+storybook-static!/.env
