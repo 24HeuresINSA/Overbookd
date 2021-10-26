@@ -2,23 +2,16 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="transactionsData"
+      :items="transactions"
       dense
       :items-per-page="-1"
-      sort-by="createdAt"
     >
       <template #[`group.summary`]="{ group }">
         {{ new Date(group).toLocaleString() }}
       </template>
 
       <template #[`item.type`]="{ item }">
-        <label
-          v-if="item.isValid === false"
-          style="text-decoration: line-through"
-        >
-          {{ item.type }}
-        </label>
-        <label v-else>
+        <label :style="item.isValid ? '' : 'background-color: red'">
           {{ item.type }}
         </label>
       </template>
@@ -85,13 +78,9 @@ export default {
         },
       ],
       users: {},
-      transactionsData: [],
     };
   },
-  async mounted() {
-    if (this.action) {
-      this.headers.push({ text: "action", value: "action" });
-    }
+  async beforeMount() {
     const usersCall = await safeCall(
       this.$store,
       RepoFactory.userRepo.getAllUsernames(this)
@@ -100,8 +89,13 @@ export default {
       usersCall.data.forEach((user) => {
         this.users[user.keycloakID] = user.username;
       });
+      this.$forceUpdate();
     }
-    this.transactionsData = this.transactions;
+  },
+  async mounted() {
+    if (this.action) {
+      this.headers.push({ text: "action", value: "action" });
+    }
   },
   methods: {
     async deleteTransaction(transactionID) {
@@ -111,8 +105,8 @@ export default {
       );
       if (deleteCall) {
         // update on screen
-        let mTransaction = this.transactionsData.find(
-          (t) => t._id !== transactionID
+        let mTransaction = this.transactions.find(
+          (t) => t._id === transactionID
         );
         mTransaction.isValid = false;
         this.$accessor.notif.pushNotification({

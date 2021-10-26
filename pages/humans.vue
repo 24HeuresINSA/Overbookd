@@ -2,7 +2,7 @@
   <div>
     <template style="width: 100%; display: grid">
       <v-row>
-        <v-col md="2" style="min-width: 250px">
+        <v-col md="2">
           <v-card>
             <v-card-title>Filtres</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
@@ -11,19 +11,7 @@
                 label="Recherche"
               ></v-text-field>
 
-              <template>
-                <v-btn-toggle
-                  v-model="filters.hasDriverLicence"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                >
-                  <v-btn :value="true" small> Permis</v-btn>
-
-                  <v-btn :value="false" small> pas de permis</v-btn>
-                </v-btn-toggle>
-              </template>
-
+              <label>Compte validé</label>
               <template v-if="hasRole(['admin', 'bureau'])">
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -31,12 +19,24 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true" small> Validé</v-btn>
+                  <v-btn :value="true" small> oui</v-btn>
 
-                  <v-btn :value="false" small> Non Validé</v-btn>
+                  <v-btn :value="false" small> Non</v-btn>
                 </v-btn-toggle>
               </template>
+              <label>Permis</label>
+              <template>
+                <v-btn-toggle
+                  v-model="filters.hasDriverLicence"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small>oui</v-btn>
 
+                  <v-btn :value="false" small>non</v-btn>
+                </v-btn-toggle>
+              </template>
               <template v-if="hasRole(['admin', 'bureau'])">
                 <p>Cotisation</p>
                 <v-btn-toggle
@@ -52,9 +52,14 @@
                 <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
 
-              <v-combobox>
-                v-model="filters.teams" chips multiple clearable label="team"
-                :items="getConfig('teams').map((e) => e.name)" >
+              <v-combobox
+                v-model="filters.teams"
+                chips
+                multiple
+                clearable
+                label="team"
+                :items="getConfig('teams').map((e) => e.name)"
+              >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
                     v-bind="attrs"
@@ -72,12 +77,11 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col md="9">
+        <v-col md="10">
           <v-data-table
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"
             :items="filteredUsers"
-            :items-per-page="30"
             class="elevation-1"
             dense
           >
@@ -89,6 +93,12 @@
                 @click="openInformationDialog(item)"
               >
                 <v-icon small>mdi-information-outline</v-icon>
+              </v-btn>
+              <v-btn icon small :href="'tel:+33' + item.phone">
+                <v-icon small>mdi-phone</v-icon>
+              </v-btn>
+              <v-btn icon small :href="'mailto:' + item.email">
+                <v-icon small>mdi-email</v-icon>
               </v-btn>
               <v-btn
                 v-if="hasRole('admin')"
@@ -133,7 +143,9 @@
             </template>
 
             <template #[`item.team`]="{ item }">
-              <OverChips :roles="item.team"></OverChips>
+              <v-container style="max-width: 150px">
+                <OverChips :roles="item.team"></OverChips>
+              </v-container>
             </template>
           </v-data-table>
         </v-col>
@@ -221,7 +233,7 @@ export default {
         { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
-        { text: "team", value: "team" },
+        { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
         { text: "étude", value: "studies" },
         { text: "charsime", value: "charisma", align: "end" },
         { text: "action", value: "action" },
@@ -582,6 +594,10 @@ export default {
 
 <style scoped>
 p {
+  margin: 0;
+}
+
+.v-btn-toggle--group > .v-btn.v-btn {
   margin: 0;
 }
 
