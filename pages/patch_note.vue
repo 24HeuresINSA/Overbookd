@@ -1,6 +1,11 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.19: le Patch FA</h2>
+    <ul>
+      <li>🥳 Gros rework des FA</li>
+    </ul>
+
     <h2>Patch note BETA 0.18.1 : le Patch Urhino 💰</h2>
     <ul>
       <li>🤯 Mes transactions</li>
