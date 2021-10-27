@@ -6,6 +6,7 @@ import * as notif from "./notif";
 import * as config from "./config";
 import * as user from "./user";
 import * as transaction from "./transaction";
+import * as FA from "./FA";
 
 export const state = () => ({});
 
@@ -28,5 +29,6 @@ export const accessorType = getAccessorType({
     config,
     user,
     transaction,
+    FA,
   },
 });

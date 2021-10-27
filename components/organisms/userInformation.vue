@@ -92,14 +92,14 @@
               <v-text-field
                 v-model="mUser.year"
                 label="Année"
-                :disabled="hasEditingRole"
+                :disabled="!hasEditingRole"
               ></v-text-field>
             </v-col>
             <v-col md="6">
               <v-text-field
                 v-model="mUser.departement"
                 label="Département"
-                :disabled="hasEditingRole"
+                :disabled="!hasEditingRole"
               ></v-text-field>
             </v-col>
             <v-col md="6">
