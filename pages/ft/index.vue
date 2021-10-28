@@ -64,7 +64,7 @@ export default {
         },
         {
           text: "Resp",
-          value: "general.inCharge",
+          value: "general.inCharge.username",
         },
         {
           text: "Action",

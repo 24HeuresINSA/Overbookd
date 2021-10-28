@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "0.19.0-beta",
+  "version": "0.19.1-beta",
   "private": true,
   "lint-staged": {
     "**/*.(js|ts|vue)": "eslint --fix"

@@ -87,7 +87,7 @@ export default {
       this.$emit("add-timeframe", timeframe);
 
       this.mTimeframe = {
-        date: undefined,
+        date: this.$accessor.config.getConfig("event_date"),
         start: undefined,
         end: undefined,
       };
@@ -101,7 +101,7 @@ export default {
 
       this.$emit("add-timeframe", timeframe);
       this.mTimeframe = {
-        date: undefined,
+        date: this.$accessor.config.getConfig("event_date"),
         start: undefined,
         end: undefined,
       };
