@@ -8,125 +8,29 @@
       "
     >
       <h1>Fiche Tache 🤩</h1>
-      <h2>Status {{ FT.status || "draft" }}</h2>
-    </v-container>
-    <OverForm
-      v-if="FT_FORM"
-      :fields="FT_FORM"
-      @form-change="onFormChange"
-    ></OverForm>
-
-    <br />
-    <v-divider></v-divider>
-    <h2>Créneau ⏱</h2>
-    <v-simple-table v-if="FT.schedules">
-      <template #default>
-        <thead>
-          <tr>
-            <th class="text-left">jour</th>
-            <th>debut</th>
-            <th class="text-left">fin</th>
-            <th class="text-left">orga requit</th>
-            <th class="text-left">orga affecté</th>
-            <th class="text-left">actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(schedule, index) in FT.schedules"
-            :key="schedule.day + schedule.start + schedule.end"
-          >
-            <td>{{ schedule.date }}</td>
-            <td>{{ new Date(schedule.start).toLocaleTimeString() }}</td>
-            <td>{{ new Date(schedule.end).toLocaleTimeString() }}</td>
-            <td>
-              <v-list-item v-for="(need, index) in schedule.needs" :key="index">
-                <v-list-item-content>
-                  <v-list-item-title
-                    >{{ need.role ? `${need.amount} ${need.role}` : need }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </td>
-            <td>
-              <template v-if="schedule.assigned">
-                <v-list-item
-                  v-for="(assigned, index) in schedule.assigned"
-                  :key="index"
-                >
-                  <v-list-item-content>
-                    <v-list-item-title
-                      >{{ assigned.username ? assigned.username : assigned }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </td>
-            <td>
-              <v-btn icon @click="deleteSchedule(schedule)">🗑</v-btn>
-              <v-btn text @click="openAssignmentDialog(index)"
-                >ajouter des orgas
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
-
-    <v-container style="display: grid">
-      <v-row>
-        <v-col>
-          <h3>Date</h3>
-        </v-col>
-        <v-col>
-          <h3>Debut</h3>
-        </v-col>
-        <v-col>
-          <h3>Fin</h3>
-        </v-col>
-        <v-col>
-          <h3>Ajouter</h3>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-date-picker
-            v-model="schedule.date"
-            first-day-of-week="1"
-          ></v-date-picker>
-        </v-col>
-        <v-col>
-          <v-time-picker
-            v-model="schedule.start"
-            :allowed-minutes="allowedMinutes"
-            format="24h"
-          ></v-time-picker>
-        </v-col>
-        <v-col>
-          <v-time-picker
-            v-model="schedule.end"
-            :allowed-minutes="allowedMinutes"
-            format="24h"
-          ></v-time-picker>
-        </v-col>
-        <v-col style="align-items: center">
-          <v-btn fab @click="addSchedule">
-            <v-icon> mdi-plus-thick </v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
+      <h2>Status</h2>
     </v-container>
 
     <br />
-    <v-divider></v-divider>
-    <h2>Matériellllllll 🚎 🚐 🚅 ✈️</h2>
-    <v-data-table
-      :headers="equipmentsHeader"
-      :items="selectedEquipment"
-    ></v-data-table>
-    <v-btn fab @click="isEquipmentDialogOpen = true"
-      ><v-icon>mdi-plus</v-icon></v-btn
-    >
+    <FormCard
+      title="Général"
+      topic="general"
+      form-key="ft_general_form"
+      :form="FT"
+      @form-change="updateForm('general', $event)"
+    ></FormCard>
+
+    <br />
+    <FormCard
+      title="Détail"
+      topic="details"
+      form-key="ft_details_form"
+      :form="FT"
+      @form-change="updateForm('details', $event)"
+    ></FormCard>
+
+    <br />
+    <LogisticsCard title="Matos" type="petit" :store="store"> </LogisticsCard>
 
     <v-dialog v-model="isEquipmentDialogOpen">
       <v-card>
@@ -199,7 +103,7 @@
     <v-dialog v-model="isSubmitDialogOpen" width="600px">
       <v-card>
         <v-img src="img/memes/submit_FT.gif" height="300px"></v-img>
-        <v-card-title>t'es sur de ta FT ? </v-card-title>
+        <v-card-title>t'es sur de ta FT ?</v-card-title>
         <v-card-actions>
           <v-btn text @click="isSubmitDialogOpen = false">Non</v-btn>
           <v-btn text @click="submitForReview">je suis sûr</v-btn>
@@ -207,37 +111,43 @@
       </v-card>
     </v-dialog>
 
-    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">{{
-      snackbarMessage
-    }}</v-snackbar>
+    <v-snackbar v-model="isSnackbarOpen" :timeout="5000"
+      >{{ snackbarMessage }}
+    </v-snackbar>
+
+    <div style="height: 50px; width: 100%"></div>
 
     <div style="display: flex; justify-content: space-evenly">
       <v-btn v-if="getValidator()" color="green" @click="validateFT"
-        >validate</v-btn
-      >
+        >validate
+      </v-btn>
       <v-btn
         v-if="getValidator()"
         color="red"
         @click="isRefusedDialogOpen = true"
-        >refuse</v-btn
-      >
+        >refuse
+      </v-btn>
       <v-btn color="secondary" @click="isSubmitDialogOpen = true">submit</v-btn>
-      <v-btn color="warning" @click="saveFT">save 💾</v-btn>
+      <v-btn color="warning" @click="saveFT">sauvgarder</v-btn>
     </div>
   </div>
 </template>
 
 <script>
-import OverForm from "../../components/overForm";
+import { RepoFactory } from "~/repositories/repoFactory";
+import FormCard from "../../components/organisms/form/FormCard";
+import LogisticsCard from "../../components/organisms/form/LogisticsCard";
+
 export default {
   name: "Ft",
-  components: { OverForm },
+  components: { LogisticsCard, FormCard },
   data() {
     return {
-      FTID: this.$route.params.ft,
-      FT: {},
+      FTID: +this.$route.params.ft, // count
       FT_FORM: this.getConfig("ft_form"),
       FT_VALIDATORS: this.getConfig("ft_validators"),
+      FTRepo: RepoFactory.ftRepo,
+      store: undefined, // FT store
       schedules: [],
       refusedComment: undefined,
       isRefusedDialogOpen: false,
@@ -274,28 +184,19 @@ export default {
     };
   },
 
+  computed: {
+    FT: function () {
+      return this.$accessor.FT.mFT;
+    },
+  },
+
   async mounted() {
-    let mFT = (await this.$axios.get("/ft/" + this.FTID)).data;
-    this.FT = mFT;
-    Object.keys(mFT).forEach((key) => {
-      let field = this.FT_FORM.find((field) => field.key === key);
-      if (field) {
-        this.$set(field, "value", mFT[key]);
-      }
-    });
-    this.$set(this, "schedules", mFT.schedules || []);
-    this.availableEquipment = (await this.$axios.get("/equipment")).data;
-    if (mFT.equipments) {
-      this.selectedEquipment = mFT.equipments;
-    }
-    this.usernames = (await this.$axios.get("/user/all")).data;
+    // get FT and store it in store
+    this.store = this.$accessor.FT;
+    await this.store.getAndSetFT(this.FTID);
   },
 
   methods: {
-    onFormChange(form) {
-      this.FT = form;
-    },
-
     saveRequiredHuman() {
       this.$set(
         this.FT.schedules[this.selectedTimeframeIndex],
@@ -325,11 +226,8 @@ export default {
       this.isAssignmentDialogOpen = true;
     },
 
-    allowedMinutes: (m) => m % 15 === 0,
-
     getConfig(key) {
-      return this.$store.state.config.data.data.find((e) => e.key === key)
-        .value;
+      return this.$accessor.config.getConfig(key);
     },
 
     getUser() {
@@ -390,9 +288,14 @@ export default {
       this.isEquipmentDialogOpen = false;
     },
 
-    saveFT() {
-      this.FT._id = this.FTID;
-      this.$axios.put("/ft", this.FT);
+    async saveFT() {
+      await this.store.saveFT();
+    },
+
+    updateForm(section, form) {
+      let newForm = {};
+      newForm[section] = form;
+      this.store.assignFT(newForm);
     },
 
     validateFT() {

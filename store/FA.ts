@@ -194,9 +194,9 @@ export const actions = actionTree(
       } as FT;
       const resFT = await safeCall(this, repo.ftRepo.createFT(this, FT));
       if (resFT) {
-        // @ts-ignore
         const resFA = await safeCall(
           this,
+          // @ts-ignore
           repo.faRepo.updateFA(this, this.$accessor.FA.mFA)
         );
         if (resFA) {

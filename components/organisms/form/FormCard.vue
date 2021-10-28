@@ -41,6 +41,10 @@ export default {
         false;
       },
     },
+    form: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data: () => {
     return {
@@ -48,11 +52,11 @@ export default {
     };
   },
   computed: {
-    mFA: function () {
-      return this.$accessor.FA.mFA || {};
-    },
+    // mFA: function () {
+    //   return this.$accessor.FA.mFA;
+    // },
     data: function () {
-      return this.$store.state.FA.mFA[this.topic];
+      return this.form[this.topic];
     },
   },
   mounted() {
