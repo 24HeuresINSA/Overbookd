@@ -22,6 +22,7 @@
       form-key="fa_general_form"
       topic="general"
       :is-disabled="isValidated('humain')"
+      :form="FA"
       @form-change="updateForm('general', $event)"
     ></FormCard>
     <br />
@@ -30,6 +31,7 @@
       form-key="fa_details_form"
       topic="details"
       :is-disabled="isValidated('humain')"
+      :form="FA"
       @form-change="updateForm('details', $event)"
     ></FormCard>
     <br />
@@ -37,6 +39,7 @@
       :init-timeframes="FA.timeframes"
       :disabled="!isValidated('human')"
       :is-disabled="isValidated('humain')"
+      :form="FA"
       @form-change="updateForm('timeframes', $event)"
     ></TimeframeTable>
     <br />
@@ -45,6 +48,7 @@
       topic="security"
       form-key="fa_security_form"
       :is-disabled="isValidated('secu')"
+      :form="FA"
       @form-change="updateForm('security', $event)"
     ></FormCard>
 
