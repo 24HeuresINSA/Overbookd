@@ -523,7 +523,7 @@ export default {
     download(filename, text) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
-      var element = document.createElement("a");
+      const element = document.createElement("a");
       element.setAttribute(
         "href",
         "data:text/plain;charset=utf-8," + encodeURIComponent(text)
@@ -538,12 +538,10 @@ export default {
 
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-      var csv =
-        "Prénom,Nom,Surnom,Charisme,Poles,Email,Date de naissance,Téléphone,Département,Année,Solde,ContribPayée,A Le Permis?,Date permis,Commentaire\n";
+      let csv =
+        "Prénom;Nom;Surnom;Charisme;Poles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;A Le Permis?;Date permis;Commentaire\n";
 
       const users = this.users;
-      console.log(users);
-
       for (let i = 0; i < users.length; i++) {
         csv +=
           users[i].firstname +

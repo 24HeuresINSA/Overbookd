@@ -3,12 +3,19 @@
     <v-container
       style="
         display: flex;
-        align-content: center;
+        align-content: baseline;
         justify-content: space-between;
       "
     >
       <h1>Fiche Tache 🤩</h1>
-      <h2>Status</h2>
+      <h2>{{ FT ? FT.status : "draft" }}</h2>
+      <v-icon
+        v-for="(validator, i) of validators"
+        :key="i"
+        :color="getIconColor(validator)"
+      >
+        {{ getValidatorIcon(validator) }}
+      </v-icon>
     </v-container>
 
     <br />
@@ -17,6 +24,7 @@
       topic="general"
       form-key="ft_general_form"
       :form="FT"
+      :is-disabled="isValidated('humain')"
       @form-change="updateForm('general', $event)"
     ></FormCard>
 
@@ -26,69 +34,28 @@
       topic="details"
       form-key="ft_details_form"
       :form="FT"
+      :is-disabled="isValidated('humain')"
       @form-change="updateForm('details', $event)"
     ></FormCard>
 
     <br />
-    <LogisticsCard title="Matos" type="petit" :store="store"> </LogisticsCard>
+    <CompleteTimeframeCard
+      :store="store"
+      :is-disabled="isValidated('humain')"
+    ></CompleteTimeframeCard>
 
-    <v-dialog v-model="isEquipmentDialogOpen">
-      <v-card>
-        <v-card-title>ajouter du matos</v-card-title>
-        <v-card-text>
-          <v-data-table :headers="equipmentsHeader" :items="availableEquipment">
-            <template #[`item.selectedAmount`]="item">
-              <v-text-field
-                v-model="item.item.selectedAmount"
-                type="number"
-              ></v-text-field>
-            </template>
-          </v-data-table>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="saveEquipments">save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <br />
+    <LogisticsCard
+      title="Matos"
+      type="petit"
+      :store="store"
+      :disabled="isValidated('log')"
+    ></LogisticsCard>
 
-    <v-dialog v-model="isAssignmentDialogOpen" max-width="600px">
-      <v-card>
-        <v-card-title>Humains</v-card-title>
-        <v-card-text>
-          <template v-if="requiredHumans">
-            <v-list-item v-for="(need, index) in requiredHumans" :key="index">
-              <v-list-item-content>
-                <v-list-item-title>{{ need }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
+    <br />
+    <CommentCard :comments="FT.comments"></CommentCard>
 
-          <h4>Affecter une personne</h4>
-          <v-autocomplete
-            v-model="assignedHuman"
-            :items="usernames"
-          ></v-autocomplete>
-          <v-btn @click="addHuman()">ajouter</v-btn>
-          <h4>Affecter un role</h4>
-          <v-autocomplete
-            v-model="assignedRole"
-            label="role"
-            :items="getConfig('teams').map((e) => e.name)"
-          ></v-autocomplete>
-          <v-text-field
-            v-model="assignedAmount"
-            label="Nombre"
-            type="number"
-          ></v-text-field>
-          <v-btn @click="addRole()">ajouter</v-btn>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="saveRequiredHuman()">💾</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="isRefusedDialogOpen">
+    <v-dialog v-model="isRefusedDialogOpen" max-width="300">
       <v-card>
         <v-card-title>Refuser la FT</v-card-title>
         <v-card-text>
@@ -117,17 +84,27 @@
 
     <div style="height: 50px; width: 100%"></div>
 
-    <div style="display: flex; justify-content: space-evenly">
+    <div
+      style="
+        display: flex;
+        justify-content: space-evenly;
+        position: sticky;
+        bottom: 20px;
+        z-index: 30;
+      "
+    >
       <v-btn v-if="getValidator()" color="green" @click="validateFT"
-        >validate
+        >validé
       </v-btn>
       <v-btn
         v-if="getValidator()"
         color="red"
         @click="isRefusedDialogOpen = true"
-        >refuse
+        >refusé
       </v-btn>
-      <v-btn color="secondary" @click="isSubmitDialogOpen = true">submit</v-btn>
+      <v-btn color="secondary" @click="isSubmitDialogOpen = true"
+        >Soumettre a validation</v-btn
+      >
       <v-btn color="warning" @click="saveFT">sauvgarder</v-btn>
     </div>
   </div>
@@ -137,10 +114,12 @@
 import { RepoFactory } from "~/repositories/repoFactory";
 import FormCard from "../../components/organisms/form/FormCard";
 import LogisticsCard from "../../components/organisms/form/LogisticsCard";
+import CompleteTimeframeCard from "../../components/organisms/form/CompleteTimeframeCard";
+import CommentCard from "../../components/organisms/form/CommentCard";
 
 export default {
   name: "Ft",
-  components: { LogisticsCard, FormCard },
+  components: { CommentCard, CompleteTimeframeCard, LogisticsCard, FormCard },
   data() {
     return {
       FTID: +this.$route.params.ft, // count
@@ -181,6 +160,12 @@ export default {
 
       selectedEquipment: [],
       availableEquipment: [],
+      validators: undefined,
+      color: {
+        submitted: "grey",
+        validated: "green",
+        refused: "red",
+      },
     };
   },
 
@@ -188,104 +173,56 @@ export default {
     FT: function () {
       return this.$accessor.FT.mFT;
     },
+    me: function () {
+      return this.$accessor.user.me;
+    },
   },
 
   async mounted() {
+    this.validators = this.$accessor.config.getConfig("ft_validators");
+
     // get FT and store it in store
     this.store = this.$accessor.FT;
     await this.store.getAndSetFT(this.FTID);
   },
 
   methods: {
-    saveRequiredHuman() {
-      this.$set(
-        this.FT.schedules[this.selectedTimeframeIndex],
-        "needs",
-        this.requiredHumans
-      );
-      this.isAssignmentDialogOpen = false;
-      console.log(this.FT.schedules);
-    },
-
-    addHuman() {
-      this.requiredHumans.push(this.assignedHuman);
-    },
-
-    addRole() {
-      this.requiredHumans.push({
-        role: this.assignedRole,
-        amount: this.assignedAmount,
-      });
-    },
-
-    openAssignmentDialog(timeframeIndex) {
-      this.selectedTimeframeIndex = timeframeIndex;
-      this.requiredHumans = this.FT.schedules[timeframeIndex].needs
-        ? this.FT.schedules[timeframeIndex].needs
-        : [];
-      this.isAssignmentDialogOpen = true;
+    getIconColor(validator) {
+      if (this.FT.validated) {
+        if (this.FT.validated.find((v) => v === validator)) {
+          return this.color.validated;
+        }
+      }
+      if (this.FT.refused) {
+        if (this.FT.refused.find((v) => v === validator)) {
+          return this.color.refused;
+        }
+      }
+      if (this.FT.status === "submitted") {
+        return this.color.submitted;
+      }
     },
 
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
     },
 
-    getUser() {
-      return this.$store.state.user.me;
+    isValidated(validator) {
+      return this.FT.validated.find((v) => v === validator) !== undefined;
     },
 
     hasRole(role) {
-      const teams = this.getUser()?.team;
-      if (teams === undefined) {
-        return false;
-      }
-      return teams.includes(role);
+      return this.me.team.includes(role);
     },
 
     getValidator() {
       let mValidator = null;
       this.FT_VALIDATORS.forEach((validator) => {
-        if (this.hasRole(validator.name)) {
-          mValidator = validator.name;
+        if (this.hasRole(validator)) {
+          mValidator = validator;
         }
       });
       return mValidator;
-    },
-
-    deleteSchedule(schedule) {
-      this.FT.schedules = this.FT.schedules.filter((s) => {
-        return (
-          s.date !== schedule.date &&
-          s.end !== schedule.end &&
-          s.start !== schedule.start
-        );
-      });
-    },
-
-    addSchedule() {
-      if (!this.FT.schedules) {
-        this.$set(this.FT, "schedules", []);
-      }
-      this.schedule.start = new Date(
-        this.schedule.date + " " + this.schedule.start
-      );
-      this.schedule.end = new Date(
-        this.schedule.date + " " + this.schedule.end
-      );
-      this.$set(this.FT.schedules, this.FT.schedules.length, {
-        ...this.schedule,
-      });
-    },
-
-    saveEquipments() {
-      this.selectedEquipment = [];
-      this.availableEquipment.forEach((e) => {
-        if (e.selectedAmount !== undefined) {
-          this.selectedEquipment.push(e);
-        }
-      });
-      this.FT.equipments = this.selectedEquipment;
-      this.isEquipmentDialogOpen = false;
     },
 
     async saveFT() {
@@ -298,43 +235,39 @@ export default {
       this.store.assignFT(newForm);
     },
 
+    getValidatorIcon(validator) {
+      try {
+        return this.getConfig("teams").find((team) => team.name === validator)
+          .icon;
+      } catch (e) {
+        console.log(`can't find icon of team ${validator}`);
+      }
+    },
+
     validateFT() {
       const validator = this.getValidator();
-      if (this.FT.validated === undefined) {
-        this.FT.validated = [];
-      }
-      if (this.FT.refused) {
-        this.FT.refused = this.FA.refused.filter((e) => e !== validator);
-      }
-      this.FT.validated.push(validator);
 
-      if (this.FT.validated.length === this.FT_VALIDATORS.length) {
-        this.FT.status = "validated";
-      }
+      this.store.validate(validator);
+
       this.snackbarMessage = this.feedbacks.validate;
       this.isSnackbarOpen = true;
-      this.saveFT();
     },
 
     submitForReview() {
-      this.FT.status = "submitted";
+      this.store.submitForReview();
       this.snackbarMessage = this.feedbacks.submitted;
       this.isSnackbarOpen = true;
       this.isSubmitDialogOpen = false;
-      this.saveFT();
     },
 
     refuse() {
-      this.FT.status = "refused";
       const validator = this.getValidator();
-      if (this.FT.refused === undefined) {
-        this.FT.refused = [];
-      }
-      this.FT.refused.push(validator);
-      this.snackbarMessage = this.feedbacks.refused;
-      this.isSnackbarOpen = true;
+
+      this.store.refuse({
+        validator,
+        comment: this.refusedComment,
+      });
       this.isRefusedDialogOpen = false;
-      this.saveFT();
     },
   },
 };
