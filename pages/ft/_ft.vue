@@ -47,7 +47,7 @@
     <br />
     <LogisticsCard
       title="Matos"
-      type="petit"
+      :types="['petit']"
       :store="store"
       :disabled="isValidated('log')"
     ></LogisticsCard>

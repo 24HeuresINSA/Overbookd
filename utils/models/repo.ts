@@ -39,6 +39,7 @@ export interface Transfer {
   amount: number;
   context: string;
   createdAt: Date;
+  isValid: boolean;
 }
 
 export type Transaction = Expense | Deposit | Transfer;
@@ -59,11 +60,11 @@ export interface User {
   nickname?: string;
   firstname: string;
   lastname: string;
+  username?: [];
   isValid: boolean;
   birthdate: string;
   email: string;
   phone: number;
-  keycloakID: string;
   __v: number;
   notifications: Notification[];
   clicks?: number;
@@ -103,6 +104,6 @@ export interface FriendRequest {
 }
 
 export interface FriendRequestData {
-  to: string; // keycloakID
+  to: string; // _id
   data: FriendRequest;
 }

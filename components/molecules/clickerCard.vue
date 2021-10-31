@@ -32,7 +32,7 @@ export default Vue.extend({
     clicker: function () {
       const clicks = this.me.clicks ? this.me.clicks + 1 : 1;
       this.$accessor.user.updateUser({
-        userId: this.me.keycloakID,
+        userID: this.me._id,
         userData: { clicks },
       });
     },

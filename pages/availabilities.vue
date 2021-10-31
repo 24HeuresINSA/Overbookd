@@ -290,7 +290,7 @@ export default {
       charisma = charisma - oldCharisma;
 
       this.$accessor.user.updateUser({
-        userId: me.keycloakID,
+        userId: me._id,
         userData: {
           availabilities: this.availabilities,
           charisma,

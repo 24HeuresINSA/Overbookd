@@ -381,7 +381,7 @@ export default {
       } else {
         user.team.push(this.newRole);
         this.$set(user, "team", user.team); // update rendering
-        await this.$axios.put(`/user/${user.keycloakID}`, { team: user.team });
+        await this.$axios.put(`/user/${user._id}`, { team: user.team });
       }
     },
 
@@ -440,7 +440,7 @@ export default {
       });
 
       await this.$axios.put(
-        "/user/" + this.selectedUser.keycloakID,
+        "/user/" + this.selectedUser._id,
         this.selectedUser
       );
       this.isSnackbarOpen = true;
@@ -461,8 +461,8 @@ export default {
 
       let mTransaction = {
         type: isExpense ? "expense" : "deposit",
-        from: isExpense ? this.selectedUser.keycloakID : null,
-        to: isExpense ? null : this.selectedUser.keycloakID,
+        from: isExpense ? this.selectedUser._id : null,
+        to: isExpense ? null : this.selectedUser._id,
         context: this.newTransaction.reason,
         amount: amountNumber,
         createdAt: new Date(),
@@ -501,7 +501,7 @@ export default {
 
     async saveUser() {
       await this.$axios.put(
-        `/user/${this.selectedUser.keycloakID}`,
+        `/user/${this.selectedUser._id}`,
         this.selectedUser
       );
       this.isUserDialogOpen = false;
@@ -515,7 +515,7 @@ export default {
     async deleteAllTeams() {
       this.selectedUser.team = [];
       await this.$axios.put(
-        `/user/${this.selectedUser.keycloakID}`,
+        `/user/${this.selectedUser._id}`,
         this.selectedUser
       );
     },

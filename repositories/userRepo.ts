@@ -15,6 +15,9 @@ export default {
   getUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/${userId}`);
   },
+  getMyUser(context: Context) {
+    return context.$axios.get(`${resource}/me`);
+  },
   getAllUsers(context: Context) {
     return context.$axios.get(`${resource}`);
   },
@@ -36,6 +39,9 @@ export default {
   updateUser(context: Context, userId: string, data: Partial<User>) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
+  isMigrated(context: Context) {
+    return context.$axios.get(`${resource}/isMigrated`);
+  },
   // /**
   //  * @deprecated
   //  * @param context
@@ -49,7 +55,7 @@ export default {
   // },
   sendFriendRequestByKeycloakID(context: Context, data: FriendRequestData) {
     return context.$axios.put(
-      `${resource}/notification/keycloakID/${data.to}`,
+      `${resource}/notification/keycloakID/${data.to}`, // TODO ask tom about new name
       data.data
     );
   },

@@ -56,21 +56,21 @@
     <h2>Logistique 🚚</h2>
     <LogisticsCard
       title="Matos"
-      type="gros"
+      :types="['gros']"
       :store="FAStore"
       :disabled="isValidated('log')"
     ></LogisticsCard>
     <br />
     <LogisticsCard
       title="Barrieres"
-      type="barrieres"
+      :types="['barrieres']"
       :store="FAStore"
       :disabled="isValidated('barrieres')"
     ></LogisticsCard>
     <br />
     <LogisticsCard
       title="Elec"
-      type="elec"
+      :types="['elec']"
       :store="FAStore"
       :disabled="isValidated('elec')"
     ></LogisticsCard>
@@ -309,25 +309,6 @@ export default {
       let newForm = {};
       newForm[section] = form;
       this.FAStore.assignFA(newForm);
-    },
-
-    // onFormChange(form) {
-    //   console.log(form)
-    //   const count = this.FA.count;
-    //   this.FA = form;
-    //   this.FA.count = count;
-    // },
-
-    async addFT() {
-      if (!this.FA.FTs) {
-        this.FA.FTs = [];
-      }
-      const FT = (await this.$axios.post("/FT", { name: this.FTname })).data;
-      this.FA.FTs.push(FT._id);
-      await this.saveFA();
-      await this.$router.push({
-        path: "/ft/" + FT._id,
-      });
     },
   },
 };

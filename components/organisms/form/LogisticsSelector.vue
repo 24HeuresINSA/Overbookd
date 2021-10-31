@@ -1,11 +1,12 @@
 <template>
-  <v-data-table :headers="headers" :items="inventory" dense>
-    <template #[`item.action`]="{ item }">
-      <v-btn icon @click="addItemToFA(item)">
-        <v-icon> mdi-plus</v-icon>
+  <v-treeview :items="items" dense>
+    <template #label="{ item }">
+      <v-btn v-if="!item.children" icon @click="addItemToFA(item)">
+        <v-icon> mdi-plus </v-icon>
       </v-btn>
+      <label>{{ item.name }}</label>
     </template>
-  </v-data-table>
+  </v-treeview>
 </template>
 
 <script>
@@ -14,9 +15,9 @@ import { RepoFactory } from "../../../repositories/repoFactory";
 export default {
   name: "LogisticsSelector",
   props: {
-    type: {
-      type: String,
-      default: () => "",
+    types: {
+      type: Array,
+      default: () => [],
     },
     store: {
       type: Object,
@@ -25,22 +26,42 @@ export default {
   },
   data: () => ({
     repo: RepoFactory.equipmentRepo,
-    inventory: [],
     headers: [
       { text: "nom", value: "name" },
       { text: "action", value: "action" },
     ],
+    fullInventory: [],
+    inventory: [],
+    items: [],
   }),
+  watch: {
+    types() {
+      if (this.types) {
+        this.inventory = this.fullInventory.filter((e) =>
+          this.types.includes(e.type)
+        );
+
+        let items = [];
+        this.types.forEach((type) => {
+          items.push({
+            name: type,
+            children: this.inventory.filter((e) => e.type === type),
+          });
+        });
+        this.items = items;
+      }
+      return [];
+    },
+  },
   async mounted() {
-    const FullInventory = (await this.repo.getAllEquipments(this)).data;
-    this.inventory = FullInventory.filter((e) => e.type === this.type);
+    this.fullInventory = (await this.repo.getAllEquipments(this)).data;
   },
   methods: {
     addItemToFA(item) {
       this.store.addEquipmentToFA({
         _id: item._id,
         name: item.name,
-        type: this.type,
+        type: item.type,
       });
     },
   },

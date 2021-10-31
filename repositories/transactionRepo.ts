@@ -17,8 +17,8 @@ export default {
     return context.$axios.get(`${resource}/user`);
   },
 
-  getTransactionsByKeycloakID(context: Context, keycloakID: string) {
-    return context.$axios.get(`${resource}/user/${keycloakID}`);
+  getTransactionsByUserID(context: Context, _id: string) {
+    return context.$axios.get(`${resource}/user/${_id}`);
   },
 
   createTransactions(context: Context, transaction: Transaction[]) {
