@@ -49,7 +49,7 @@ import SnackNotificationContainer from "@/components/molecules/snackNotification
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
 import ClickerCard from "@/components/molecules/clickerCard.vue";
-import { getKeycloakID } from "~/middleware/user";
+import { getUserID } from "~/middleware/user";
 import { mapState } from "vuex";
 import { dispatch } from "~/utils/store";
 import { safeCall } from "~/utils/api/calls";
@@ -70,43 +70,35 @@ export default {
   },
 
   computed: {
-    // map user store state to user var
-    ...mapState("user", {
-      user: (state) => state.me,
-    }),
+    me() {
+      return this.$accessor.user.me;
+    },
     hasNotBeenApproved() {
       // user is not or could not be loaded from the store
-      if (!this.user) {
+      if (!this.me) {
         return true;
       }
       // user has no team
-      return this.user.team === undefined || this.user.team.length === 0;
+      return this.me.team === undefined || this.me.team.length === 0;
     },
   },
   async mounted() {
-    dispatch(this, "user", "fetchUser", getKeycloakID(this));
+    dispatch(this, "user", "fetchUser", getUserID(this));
 
-    const res = await safeCall(
-      this.$store,
-      RepoFactory.userRepo.getAllUsernames(this)
-    );
-    if (res) {
-      this.usernames = res.data;
-    } else {
-      this.usernames = [];
-    }
-
-    this.notValidatedCount = await this.getNotValidatedCount();
+    this.notValidatedCount = this.getNotValidatedCount();
   },
   methods: {
     async getNotValidatedCount() {
       //TODO: change to repo
-      let { data: users } = await this.$axios.get("/user");
-      return users.filter((user) => user.team.length === 0).length;
+      if (this.hasRole("admin")) {
+        let { data: users } = await this.$axios.get("/user");
+        return users.filter((user) => user.team.length === 0).length;
+      }
+      return 0;
     },
 
     hasRole(team) {
-      return hasRole(this, team);
+      return this.$accessor.user.hasRole(team);
     },
 
     async logout() {

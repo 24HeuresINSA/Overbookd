@@ -21,11 +21,11 @@
       </template>
 
       <template #[`item.to`]="{ item }">
-        {{ getFullNameFromKeycloakID(item.to) }}
+        {{ getFullNameFromID(item.to) }}
       </template>
 
       <template #[`item.from`]="{ item }">
-        {{ getFullNameFromKeycloakID(item.from) }}
+        {{ getFullNameFromID(item.from) }}
       </template>
 
       <template #[`item.createdAt`]="{ item }">
@@ -87,7 +87,7 @@ export default {
     );
     if (usersCall) {
       usersCall.data.forEach((user) => {
-        this.users[user.keycloakID] = user.username;
+        this.users[user._id] = user.username;
       });
       this.$forceUpdate();
     }
@@ -115,8 +115,8 @@ export default {
         });
       }
     },
-    getFullNameFromKeycloakID(keycloakID) {
-      return this.users[keycloakID];
+    getFullNameFromID(_id) {
+      return this.users[_id];
     },
   },
 };

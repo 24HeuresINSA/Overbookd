@@ -19,7 +19,8 @@ export default Vue.extend({
   props: {
     roles: {
       type: Array as PropType<string[]>,
-      required: true,
+      required: false,
+      default: () => [],
     },
   },
 

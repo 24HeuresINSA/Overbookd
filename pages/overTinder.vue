@@ -23,6 +23,7 @@
           <v-btn elevation="5" fab icon color="green" @click="next()">
             <v-icon>mdi-check</v-icon>
           </v-btn>
+          <v-tab v-if="isBG(user)" text @click="next(true)">SUPER LIKE</v-tab>
           <v-btn
             v-if="!isBG(user)"
             elevation="5"

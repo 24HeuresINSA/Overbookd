@@ -16,7 +16,7 @@ export const mutations = mutationTree(state, {
     state.mTransactions = data;
   },
   ADD_TRANSACTIONS(state: TransactionState, data: Transfer) {
-    state.mTransactions.push(data);
+    state.mTransactions.unshift(data);
   },
 });
 
@@ -38,6 +38,7 @@ export const actions = actionTree(
         transactionRepo.createTransfer(this, transfer)
       );
       if (res) {
+        transfer.isValid = true;
         commit("ADD_TRANSACTIONS", transfer);
         return true;
       }

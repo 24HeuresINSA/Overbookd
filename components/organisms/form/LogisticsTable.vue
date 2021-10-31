@@ -21,9 +21,9 @@
 export default {
   name: "LogisticsTable",
   props: {
-    type: {
-      type: String,
-      default: () => "",
+    types: {
+      type: Array,
+      default: () => [],
     },
     store: {
       type: Object,
@@ -45,7 +45,7 @@ export default {
       return this.$store.state.FA.mFA;
     },
     equipments: function () {
-      return this.mFA.equipments.filter((e) => e.type === this.type);
+      return this.mFA.equipments.filter((e) => this.types.includes(e.type));
     },
   },
   methods: {

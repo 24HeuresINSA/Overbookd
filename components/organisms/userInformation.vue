@@ -199,11 +199,11 @@ export default {
       } else {
         user.team.push(this.newRole);
         this.$set(user, "team", user.team); // update rendering
-        await this.$axios.put(`/user/${user.keycloakID}`, { team: user.team });
+        await this.$axios.put(`/user/${user._id}`, { team: user.team });
       }
     },
     async saveUser() {
-      await this.$axios.put(`/user/${this.mUser.keycloakID}`, this.mUser);
+      await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
       this.mToggle = false;
     },
     async deleteUser() {
@@ -212,10 +212,10 @@ export default {
     },
     async deleteAllTeams() {
       this.mUser.team = [];
-      await this.$axios.put(`/user/${this.mUser.keycloakID}`, this.mUser);
+      await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
     },
     isMe() {
-      return this.$accessor.user.me.keycloakID === this.mUser.keycloakID;
+      return this.$accessor.user.me._id === this.mUser._id;
     },
   },
 };
