@@ -77,6 +77,7 @@ export default {
       this.filteredTransactions = this.transactions.filter((t) => {
         return t.from === _id || t.to === _id;
       });
+      // this.$set(this, "filteredTransactions", filteredTransactions)
     },
   },
 };
