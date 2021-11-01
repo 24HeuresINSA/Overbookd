@@ -189,7 +189,6 @@ export default {
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
-      console.log(regex);
       return [(v) => new RegExp(regex).test(v) || `il faut mettre un entier `];
     },
     isExpenseMode() {
@@ -328,36 +327,34 @@ export default {
       }
 
       let transactions = usersWithConsumptions.map((user) => {
-        if (this.isExpenseMode) {
-          let amount;
-          if (this.mode === "cask") {
-            amount = this.round(this.stickPrice * user.newConsumption);
-          } else {
-            amount = this.round(+this.settledStickPrice * +user.newConsumption);
-          }
-          return {
-            type: "expense",
-            from: user._id,
-            to: null,
-            createdAt: new Date(),
-            amount,
-            context:
-              this.mode === "cask"
-                ? `Conso au local de ${user.newConsumption} bâton à ${(+this
-                    .stickPrice).toFixed(2)} €`
-                : `Conso placard:  ${user.newConsumption} bâton`,
-          };
-        } else {
-          user.newConsumption = user.newConsumption.replace(",", ".");
-          return {
-            type: "deposit",
-            from: null,
-            to: user._id,
-            createdAt: new Date(),
-            amount: (+user.newConsumption).toFixed(2),
-            context: `Recharge de compte perso le ${new Date().toDateString()}`,
-          };
+        let transaction = {
+          type: "expense",
+          createdAt: new Date(),
+          from: null,
+          to: null,
+        };
+
+        switch (this.mode) {
+          case "cask":
+            transaction.from = user._id;
+            transaction.amount = this.stickPrice * +user.newConsumption;
+            transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
+            break;
+
+          case "closet":
+            transaction.from = user._id;
+            transaction.amount = +this.settledStickPrice * +user.newConsumption;
+            transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
+            break;
+
+          case "deposit":
+            transaction.to = user._id;
+            transaction.amount = (+user.newConsumption).toFixed(2);
+            transaction.context = `Recharge de compte perso le ${new Date().toLocaleDateString()}`;
+            break;
         }
+
+        return transaction;
       });
       await transactionRepo.createTransactions(this, transactions);
       await this.$store.dispatch("notif/pushNotification", {
