@@ -55,14 +55,12 @@ export default {
       } else if (!this.compiledForm.isValid) {
         alert("les champs avec * sont OBLIGATOIRS XD ");
       } else {
-        this.$axios.post("/user", this.compiledForm);
+        this.$axios.post("/signup", this.compiledForm);
         this.$router.push({
           path: "/login",
         });
         alert(
-          `Un mail a été envoyé à ${
-            this.compiledForm.email
-          }. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre username: "${this.compiledForm.firstname.toLowerCase()}.${this.compiledForm.lastname.toLowerCase()}"`
+          `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre email: "${this.compiledForm.email}"`
         );
       }
     },

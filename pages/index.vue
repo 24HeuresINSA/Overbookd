@@ -76,7 +76,7 @@ export default {
     hasNotBeenApproved() {
       // user is not or could not be loaded from the store
       if (!this.me) {
-        return true;
+        return false; // not loaded yet
       }
       // user has no team
       return this.me.team === undefined || this.me.team.length === 0;
