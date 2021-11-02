@@ -98,7 +98,7 @@
 
 <script>
 const { version } = require("../package.json");
-const { getUser, getConfig } = require("../common/role");
+const { getConfig } = require("../common/role");
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
@@ -113,6 +113,7 @@ const AUTHORS = [
 ];
 
 export default {
+  middleware: "user",
   data() {
     return {
       drawer: false,
@@ -135,18 +136,19 @@ export default {
         {
           icon: "mdi-chart-bubble",
           title: "Fiches Animation 🥳",
-          roles: getConfig(this, "fa_required_role"),
+          roles: this.getConfig("ft_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
           title: "Fiches Tâches  😱",
-          roles: getConfig(this, "ft_required_role"),
+          roles: this.getConfig("fa_required_role"),
           to: "/ft",
         },
         {
           icon: "mdi-clock",
           title: "Mes dispos 🤯",
+          roles: ["hard"],
           to: "/availabilities",
         },
         {
@@ -263,6 +265,7 @@ export default {
 
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
+    console.log(this.items);
   },
 
   methods: {
@@ -272,10 +275,11 @@ export default {
     },
 
     hasRole(role) {
-      if (this.me.team) {
-        return this.me.team.includes(role);
-      }
-      return false;
+      return this.$accessor.user.hasRole(role);
+    },
+
+    getConfig(key) {
+      return this.$accessor.config.getConfig(key);
     },
 
     toggleTheme() {

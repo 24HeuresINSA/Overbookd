@@ -27,7 +27,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async fetchUser({ commit }, userID: string) {
+    async fetchUser({ commit }) {
       const res = await safeCall(this, UserRepo.getMyUser(this));
       if (res) {
         commit("SET_USER", res.data);
