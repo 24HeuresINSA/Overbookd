@@ -159,6 +159,7 @@ import FTCard from "../../components/organisms/form/FTCard";
 export default {
   name: "Fa",
   components: { FTCard, CommentCard, LogisticsCard, TimeframeTable, FormCard },
+  middleware: "user",
 
   data() {
     return {
@@ -204,6 +205,15 @@ export default {
     me: function () {
       return this.$store.state.user.me;
     },
+    validator: function () {
+      let mValidator = null;
+      this.FT_VALIDATORS.forEach((validator) => {
+        if (this.me.team && this.me.team.includes(validator)) {
+          mValidator = validator;
+        }
+      });
+      return mValidator;
+    },
   },
 
   async mounted() {
@@ -221,9 +231,6 @@ export default {
   },
 
   methods: {
-    getUser() {
-      return this.$accessor.user.me;
-    },
     getValidatorIcon(validator) {
       try {
         return this.teams.find((team) => team.name === validator).icon;
@@ -237,7 +244,10 @@ export default {
     },
 
     hasRole(role) {
-      return this.me.team.includes(role);
+      if (this.me.role) {
+        return this.me.team.includes(role);
+      }
+      return false;
     },
 
     getIconColor(validator) {
@@ -260,22 +270,11 @@ export default {
       // save the FA in the DB
       // this.FA.equipments = this.selectedEquipments;
       if (this.isNewFA) {
-        console.log(this.FA);
         await this.FARepo.createNewFA(this, this.FA);
       } else {
         await this.FARepo.updateFA(this, this.FA);
       }
       this.isSnackbar = true;
-    },
-
-    getValidator() {
-      let mValidator = null;
-      this.validators.forEach((validator) => {
-        if (this.hasRole(validator)) {
-          mValidator = validator;
-        }
-      });
-      return mValidator;
     },
 
     submitForReview() {
@@ -289,14 +288,16 @@ export default {
     },
 
     validate() {
-      const validator = this.getValidator();
-      this.FAStore.validate(validator);
-      this.saveFA();
+      const validator = this.validator();
+      if (validator) {
+        this.FAStore.validate(validator);
+        this.saveFA();
+      }
     },
 
     refuse() {
       // refuse FA
-      const validator = this.getValidator();
+      const validator = this.validator;
       this.FAStore.refuse({
         validator,
         comment: this.refuseComment,

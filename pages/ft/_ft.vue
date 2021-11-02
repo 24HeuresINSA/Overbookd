@@ -93,13 +93,8 @@
         z-index: 30;
       "
     >
-      <v-btn v-if="getValidator()" color="green" @click="validateFT"
-        >validé
-      </v-btn>
-      <v-btn
-        v-if="getValidator()"
-        color="red"
-        @click="isRefusedDialogOpen = true"
+      <v-btn v-if="validator" color="green" @click="validateFT">validé </v-btn>
+      <v-btn v-if="validator" color="red" @click="isRefusedDialogOpen = true"
         >refusé
       </v-btn>
       <v-btn color="secondary" @click="isSubmitDialogOpen = true"
@@ -176,6 +171,15 @@ export default {
     me: function () {
       return this.$accessor.user.me;
     },
+    validator: function () {
+      let mValidator = null;
+      this.FT_VALIDATORS.forEach((validator) => {
+        if (this.me.team && this.me.team.includes(validator)) {
+          mValidator = validator;
+        }
+      });
+      return mValidator;
+    },
   },
 
   async mounted() {
@@ -212,17 +216,10 @@ export default {
     },
 
     hasRole(role) {
-      return this.me.team.includes(role);
-    },
-
-    getValidator() {
-      let mValidator = null;
-      this.FT_VALIDATORS.forEach((validator) => {
-        if (this.hasRole(validator)) {
-          mValidator = validator;
-        }
-      });
-      return mValidator;
+      if (this.me.team) {
+        return this.me.team.includes(role);
+      }
+      return false;
     },
 
     async saveFT() {
@@ -245,12 +242,12 @@ export default {
     },
 
     validateFT() {
-      const validator = this.getValidator();
+      if (this.validator) {
+        this.store.validate(this.validator);
 
-      this.store.validate(validator);
-
-      this.snackbarMessage = this.feedbacks.validate;
-      this.isSnackbarOpen = true;
+        this.snackbarMessage = this.feedbacks.validate;
+        this.isSnackbarOpen = true;
+      }
     },
 
     submitForReview() {
@@ -261,13 +258,15 @@ export default {
     },
 
     refuse() {
-      const validator = this.getValidator();
+      const validator = this.validator;
 
-      this.store.refuse({
-        validator,
-        comment: this.refusedComment,
-      });
-      this.isRefusedDialogOpen = false;
+      if (validator) {
+        this.store.refuse({
+          validator,
+          comment: this.refusedComment,
+        });
+        this.isRefusedDialogOpen = false;
+      }
     },
   },
 };
