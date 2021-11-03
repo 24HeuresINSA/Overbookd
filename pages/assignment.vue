@@ -140,7 +140,7 @@ export default {
     },
 
     async saveUser() {
-      return this.$axios.put(`/user/${this.selectedUser.keycloakID}`, {
+      return this.$axios.put(`/user/${this.selectedUser._id}`, {
         assigned: this.selectedUser.assigned.filter((e) => e.FTID),
       });
     },
@@ -184,7 +184,7 @@ export default {
         );
         // save in database
         // save user
-        await this.$axios.$put(`user/${this.selectedUser.keycloakID}`, {
+        await this.$axios.$put(`user/${this.selectedUser._id}`, {
           assigned: this.selectedUser.assigned,
         });
         // save ft
@@ -212,7 +212,7 @@ export default {
     },
     // async saveAssignment() {
     //   // save FT
-    //   await this.$axios.put(`/user/${this.getSelectedUser.keycloakID}`, {
+    //   await this.$axios.put(`/user/${this.getSelectedUser._id}`, {
     //     assigned: this.getSelectedUser.assigned,
     //   });
     //   this.isFeedbackSnackbarOpen = true;

@@ -6,14 +6,14 @@
         style="display: flex; flex-direction: row; align-items: center"
       >
         <v-autocomplete
-          v-model="selectedUserKeycloakID"
+          v-model="selectedUserID"
           label="Nom"
           :items="usernames"
           item-text="username"
-          item-value="keycloakID"
+          item-value="_id"
           style="width: 300px"
         ></v-autocomplete>
-        <v-btn icon @click="search(selectedUserKeycloakID)">
+        <v-btn icon @click="search(selectedUserID)">
           <v-icon>mdi-account-search</v-icon>
         </v-btn>
       </v-card-text>
@@ -39,7 +39,7 @@ export default {
       transactions: [],
       filteredTransactions: [],
       usernames: [],
-      selectedUserKeycloakID: undefined,
+      selectedUserID: undefined,
     };
   },
   computed: {},
@@ -73,9 +73,9 @@ export default {
   },
 
   methods: {
-    search(keycloakID) {
+    search(_id) {
       this.filteredTransactions = this.transactions.filter((t) => {
-        return t.from === keycloakID || t.to === keycloakID;
+        return t.from === _id || t.to === _id;
       });
       // this.$set(this, "filteredTransactions", filteredTransactions)
     },

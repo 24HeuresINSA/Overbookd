@@ -106,7 +106,7 @@ export default Vue.extend({
           friends = this.me.friends;
         }
         //TODO Something happen on refusal ?
-        // await this.$axios.put(`/user/${user.keycloakID}`, user);
+        // await this.$axios.put(`/user/${user._id}`, user);
         this.deleteNotification(this.notif.index);
         // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
         // this.isSnackbarOpen = true;
@@ -118,7 +118,7 @@ export default Vue.extend({
     deleteNotification(index: number): void {
       const notifications = this.me.notifications.filter((_, i) => i != index);
       this.$accessor.user.updateUser({
-        userId: this.me.keycloakID,
+        userID: this.me._id,
         userData: { notifications },
       });
     },

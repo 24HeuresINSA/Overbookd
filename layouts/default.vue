@@ -8,7 +8,7 @@
       :style="isJauneActive ? jauneStyle : ''"
     >
       <v-list>
-        <v-list-item>
+        <v-list-item to="/">
           <v-img :src="'img/logo/' + logo" alt="overbookd" class="logo"></v-img>
         </v-list-item>
         <template v-for="(item, i) in items">
@@ -98,7 +98,8 @@
 
 <script>
 const { version } = require("../package.json");
-const { getUser, getConfig } = require("../common/role");
+const { getConfig } = require("../common/role");
+
 const AUTHORS = [
   "Hamza - Cookie 🍪",
   "Tit - Goelise 🦀",
@@ -112,6 +113,7 @@ const AUTHORS = [
 ];
 
 export default {
+  middleware: "user",
   data() {
     return {
       drawer: false,
@@ -121,30 +123,9 @@ export default {
       jauneStyle: "background-color: #FFD13C; color: #003C71",
       isDialogOpen: false,
       version,
-      priorities: [
-        "toute l'appli est cassé 🤯",
-        "une fontionnalite ne marche pas 🥺",
-        "un bug chiant mais contournable 😠",
-        "cosmetique 🤮",
-        "jsp 🤡",
-      ],
       isSnackbarOpen: false,
       AUTHORS,
       file: undefined,
-      newRequest: {
-        title: undefined,
-        priority: undefined,
-        url: undefined,
-        description: undefined,
-        isFeatureRequest: false,
-        scope: [],
-        tags: [],
-        image: undefined,
-        author: getUser(this).lastname,
-        repo: "24-heures-insa/issue-web-service",
-        git_platform: "gitlab",
-        steps: [],
-      },
       stepDetail: undefined,
       items: [
         {
@@ -155,18 +136,19 @@ export default {
         {
           icon: "mdi-chart-bubble",
           title: "Fiches Animation 🥳",
-          roles: getConfig(this, "fa_required_role"),
+          roles: this.getConfig("ft_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
           title: "Fiches Tâches  😱",
-          roles: getConfig(this, "ft_required_role"),
+          roles: this.getConfig("fa_required_role"),
           to: "/ft",
         },
         {
           icon: "mdi-clock",
           title: "Mes dispos 🤯",
+          roles: ["hard"],
           to: "/availabilities",
         },
         {
@@ -248,6 +230,10 @@ export default {
   },
 
   computed: {
+    me() {
+      return this.$accessor.user.me;
+    },
+
     isMobile() {
       return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs;
     },
@@ -261,7 +247,7 @@ export default {
     },
 
     mailUrl() {
-      return `mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?subject=REPLACE%20WITH%20TITLE&body=%23%20URL%20or%20page%0A${encodeURIComponent(
+      return `mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?body=%23%20URL%20or%20page%0A${encodeURIComponent(
         window.location.href
       )}%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug%0A%0A%23%20Additional%20info%0Aversion%3A%20${encodeURI(
         version
@@ -279,27 +265,21 @@ export default {
 
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
+    console.log(this.items);
   },
 
   methods: {
-    getUser() {
-      return this.$store.state.user.me;
-    },
-
     getRandomAuthor() {
       const items = this.AUTHORS;
       return items[Math.floor(Math.random() * items.length)];
     },
 
     hasRole(role) {
-      if (role === undefined) {
-        return true;
-      }
-      const teams = this.getUser()?.team;
-      if (teams === undefined) {
-        return false;
-      }
-      return teams.includes(role);
+      return this.$accessor.user.hasRole(role);
+    },
+
+    getConfig(key) {
+      return this.$accessor.config.getConfig(key);
     },
 
     toggleTheme() {
@@ -322,39 +302,6 @@ export default {
       await this.$router.push({
         path: "/login",
       });
-    },
-
-    async submitIssue() {
-      let form = new FormData();
-      this.newRequest.url = window.location.href;
-      this.newRequest.priority =
-        "P" + this.newRequest.priority.indexOf(this.newRequest.priority);
-      this.newRequest.author = getUser(this).username
-        ? getUser(this).username
-        : getUser(this).lastname;
-      this.newRequest.tags = [this.newRequest.priority];
-      // this.newRequest.repo = '24-heures-insa/overbookd/frontend'
-
-      this.newRequest.description += `
-      # Date
-      ${new Date().toLocaleString()}
-
-      # Version
-      ${this.version}
-
-      # Additional Info
-      User Agent: ${navigator.userAgent}
-      Platform: ${navigator.platform}
-      Vendor: ${navigator.vendor}
-      `;
-
-      form.append("file", this.file);
-      form.append("json", this.newRequest);
-
-      await this.$axios.post("/issue", form);
-
-      this.isDialogOpen = false;
-      this.isSnackbarOpen = true;
     },
   },
 };
