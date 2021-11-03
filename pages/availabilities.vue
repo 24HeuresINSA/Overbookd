@@ -11,6 +11,8 @@
       </template>
     </v-progress-linear>
 
+    <OverAvailabilities></OverAvailabilities>
+
     <template v-for="(availability, index) in availabilities">
       <br />
       <h3>{{ availability.name }}</h3>
@@ -147,10 +149,11 @@
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
+import OverAvailabilities from "../components/organisms/overAvailabilities";
 
 export default {
   name: "Availabilities",
-
+  components: { OverAvailabilities },
   data() {
     return {
       detailMessage: this.getConfig("availabilities_description"),

@@ -5,6 +5,7 @@
     <ul>
       <li>🥳 Gros rework des FA</li>
       <li>🥳 19.1 Gros rework des FT</li>
+      <li>☠️ RIP keycloak, migration vers une authentification home made</li>
     </ul>
 
     <h2>Patch note BETA 0.18.1 : le Patch Urhino 💰</h2>

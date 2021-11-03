@@ -52,22 +52,7 @@ export default {
   methods: {
     addFT: async function () {
       const FTName = this.newFTName;
-      const repo = RepoFactory;
-
-      // let res = await safeCall(this.$store, repo.ftRepo.createFT(this, {
-      //   general: {
-      //     name: FTName
-      //   }
-      // }))
-      this.$accessor.FA.addNewFT(FTName);
-
-      //   let r = await safeCall(this.$store, repo.faRepo.updateFA(this, this.$accessor.FA.mFA));
-      //   if (r){
-      //     console.log("new FA saved")
-      //   }
-      //
-      //   this.newFTDialog = false;
-      // }
+      await this.$accessor.FA.addNewFT(FTName);
     },
   },
 };

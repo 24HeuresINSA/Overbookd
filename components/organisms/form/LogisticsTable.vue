@@ -42,7 +42,7 @@ export default {
   }),
   computed: {
     mFA: function () {
-      return this.$store.state.FA.mFA;
+      return this.$accessor.FA.mFA;
     },
     equipments: function () {
       return this.mFA.equipments.filter((e) => this.types.includes(e.type));
@@ -50,8 +50,6 @@ export default {
   },
   methods: {
     updateItems(item, e) {
-      console.log(item);
-      console.log(e);
       this.store.updateEquipmentRequiredCount({ _id: item._id, count: +e });
     },
     deleteEquipment(id) {

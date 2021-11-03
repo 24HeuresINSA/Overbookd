@@ -200,10 +200,10 @@ export default {
 
   computed: {
     FA: function () {
-      return this.$store.state.FA.mFA;
+      return this.$accessor.FA.mFA;
     },
     me: function () {
-      return this.$store.state.user.me;
+      return this.$accessor.user.me;
     },
     validator: function () {
       let mValidator = null;

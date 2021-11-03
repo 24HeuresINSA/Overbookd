@@ -55,7 +55,7 @@ export default {
   }),
   computed: {
     mFA: function () {
-      return this.$store.state.FA.mFA;
+      return this.$accessor.FA.mFA;
     },
   },
   methods: {
