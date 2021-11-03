@@ -1,6 +1,6 @@
 FROM node:15.3.0-alpine3.10
 
-WORKDIR /Overbookd-frontend
+WORKDIR /Overbookd/frontend
 ARG BASE_URL_KEYCLOAK
 ARG BASE_URL
 
