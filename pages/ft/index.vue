@@ -6,7 +6,7 @@
         <v-avatar size="30" :color="color[row.item.status]"></v-avatar>
       </template>
       <template #[`item.action`]="row">
-        <v-btn style="margin: 5px" icon small :to="'/ft/' + row.item._id">
+        <v-btn style="margin: 5px" icon small :to="'/ft/' + row.item.count">
           >
           <v-icon>mdi-text-search</v-icon>
         </v-btn>
@@ -54,12 +54,17 @@ export default {
           value: "status",
         },
         {
+          text: "#",
+          value: "count",
+          align: "left",
+        },
+        {
           text: "Nom",
-          value: "name",
+          value: "general.name",
         },
         {
           text: "Resp",
-          value: "inCharge",
+          value: "general.inCharge.username",
         },
         {
           text: "Action",

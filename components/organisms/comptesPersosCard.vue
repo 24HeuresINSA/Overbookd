@@ -88,7 +88,7 @@ export default Vue.extend({
     },
 
     isNegativeTransaction(transaction: Transaction) {
-      return transaction.from === this.me.keycloakID;
+      return transaction.from === this.me._id;
     },
   },
 });

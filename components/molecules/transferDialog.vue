@@ -49,7 +49,7 @@ export default Vue.extend({
         amount: "0",
         beneficiary: {
           username: undefined,
-          keycloakID: "",
+          _id: "",
         },
         isValid: false,
         user: {} as any,
@@ -88,43 +88,49 @@ export default Vue.extend({
     async transferMoney(): Promise<any> {
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
-      if (this.transfer.isValid) {
-        // transaction to self...
-        if (this.transfer.user.keycloakID == this.me.keycloakID) {
-          this.$accessor.notif.pushNotification({
-            type: "error",
-            message:
-              "Trouve toi des amis plutot que de faire des virements a toi meme...",
-          });
-          return;
-        }
+      console.log(this.transfer);
+      // transaction to self...
+      if (this.transfer.user._id == this.me._id) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message:
+            "Trouve toi des amis plutot que de faire des virements a toi meme...",
+        });
+        return;
+      }
 
-        if (+this.transfer.amount <= 0) {
-          this.$accessor.notif.pushNotification({
-            type: "error",
-            message: "c'est plus assomaker...",
-          });
-          return;
-        }
+      if (+this.transfer.amount <= 0) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "c'est plus assomaker...",
+        });
+        return;
+      }
 
-        if (this.transfer.user.keycloakID) {
-          try {
-            let newTransfer: Transfer = {
-              amount: +this.transfer.amount,
-              context: this.transfer.reason,
-              createdAt: new Date(),
-              from: this.me.keycloakID,
-              to: this.transfer.user.keycloakID,
-              type: "transfer",
-            };
-            await this.$accessor.transaction.addTransaction(newTransfer);
+      if (this.transfer.user._id) {
+        try {
+          let newTransfer: Transfer = {
+            amount: +this.transfer.amount,
+            context: this.transfer.reason,
+            createdAt: new Date(),
+            from: this.me._id,
+            to: this.transfer.user._id,
+            type: "transfer",
+            isValid: true,
+          };
+          const res = await this.$accessor.transaction.addTransaction(
+            newTransfer
+          );
+          if (res) {
             // clear fields
             this.transfer.amount = "";
             this.transfer.reason = "";
             this.transfer.user = {};
-          } catch (e) {
-            console.error(e);
+          } else {
+            console.log("refused ...");
           }
+        } catch (e) {
+          console.error(e);
         }
       }
     },

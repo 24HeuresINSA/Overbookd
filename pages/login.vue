@@ -31,7 +31,7 @@
         <v-row>
           <v-text-field
             v-model="credentials.username"
-            label="email ou username"
+            label="email"
             type="text"
             required
             autofocus
@@ -68,6 +68,9 @@
 </template>
 
 <script>
+import qs from "qs";
+import jwt_decode from "jwt-decode";
+
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/img/background/24h_insa_2019_FEDER_2.jpg",
@@ -130,30 +133,70 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
     this.randomURL = this.getRandomBackgroundURL();
+    console.log(this.$auth);
+    if (this.$auth.loggedIn) {
+      await this.$router.push({
+        path: "/",
+      }); // redirect to homepage
+    }
   },
 
   methods: {
     login: async function () {
       try {
-        await this.$auth.loginWith("keycloak", this.credentials); // try to log user in
+        await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
+        console.log("connected to API");
         await this.$router.push({
-          path: REDIRECT_URL,
+          path: "/",
         }); // redirect to homepage
         const audio = new Audio("audio/jaune.m4a");
         await audio.play();
       } catch (e) {
         console.error(e);
-        if (e.response.status === 401) {
-          // wrong password or username
-          this.feedbackMessage = "Password or username are incorrect 😞";
+        console.log("starting migration process...");
+        await this.migrate();
+      }
+    },
+
+    migrate: async function () {
+      const data = qs.stringify({
+        // keycloak accepts www-urlencoded-form and not JSON
+        username: this.credentials.username,
+        password: this.credentials.password,
+        client_id: "project_a_web",
+        grant_type: "password",
+      });
+      console.log("connection to keycloak...");
+      try {
+        const response = await this.$axios.post(
+          process.env.BASE_URL_KEYCLOAK +
+            "auth/realms/project_a/protocol/openid-connect/token/",
+          data
+        );
+        if (
+          response.status === 200 &&
+          response.data.access_token !== undefined
+        ) {
+          console.log("connected to keycloak with success 🥳");
+          // right credentials, start migration process
+          const reset = await this.$axios.$post("/migrate", this.credentials);
+          if (reset.token) {
+            console.log("user migrated");
+            // await this.$auth.loginWith("local", this.credentials); // try to log user in
+            this.feedbackMessage =
+              "Ton compte a été migrée, dit pas ca au Z 🥳";
+            this.snackbar = true;
+          }
         } else {
-          this.feedbackMessage =
-            "an error has occurred, please contact the ComSI team 😴";
+          this.feedbackMessage = "Password or username are incorrect 😞";
+          this.snackbar = true;
         }
+      } catch (e) {
+        this.feedbackMessage =
+          "Password or username are incorrect 😞,pense a mettre ton email";
         this.snackbar = true;
-        console.log("an error has occurred");
       }
     },
 

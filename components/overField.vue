@@ -2,7 +2,7 @@
   <div>
     <v-text-field
       v-if="mField.type === 'string' || mField.type === undefined"
-      v-model="mField.value"
+      v-model="value"
       :rules="
         field.regex
           ? [
@@ -20,32 +20,55 @@
         (mField.label ? mField.label : mField.key) +
         (mField.isRequired ? '*' : '')
       "
+      :disabled="disabled"
       @change="onChange"
     ></v-text-field>
     <v-textarea
       v-else-if="mField.type === 'textarea'"
-      v-model="mField.value"
+      v-model="value"
       :label="mField.label ? mField.label : mField.key"
       required
+      :disabled="disabled"
       @change="onChange"
     ></v-textarea>
+    <RichEditor
+      v-else-if="mField.type === 'rich-text'"
+      v-model="value"
+      :disabled="disabled"
+      :data="value"
+      @change="onChange"
+    ></RichEditor>
     <v-switch
       v-else-if="mField.type === 'switch'"
-      v-model="mField.value"
+      v-model="value"
       :label="mField.label ? mField.label : mField.key"
+      :disabled="disabled"
       @change="onChange"
     ></v-switch>
     <v-select
       v-else-if="mField.type === 'select'"
-      v-model="mField.value"
+      v-model="value"
       :label="mField.label ? mField.label : mField.key"
       :items="mField.options"
+      :disabled="disabled"
+      :multiple="mField.multiple"
+      dense
+      @change="onChange"
+    ></v-select>
+    <v-select
+      v-else-if="mField.type === 'teams'"
+      v-model="value"
+      :label="mField.label ? mField.label : mField.key"
+      :items="teams"
+      :disabled="disabled"
+      dense
       @change="onChange"
     ></v-select>
     <v-datetime-picker
       v-if="mField.type === 'datetime'"
-      v-model="mField.value"
+      v-model="value"
       :label="mField.label ? mField.label : mField.key"
+      :disabled="disabled"
       @change="onChange"
     ></v-datetime-picker>
     <div v-if="mField.type === 'date'">
@@ -56,26 +79,30 @@
         }}
       </p>
       <v-date-picker
-        v-model="mField.value"
+        v-model="value"
         :label="mField.label ? mField.label : mField.key"
         :active-picker.sync="activePicker"
+        :disabled="disabled"
         @change="onChange"
       ></v-date-picker>
     </div>
     <v-autocomplete
       v-else-if="mField.type === 'user'"
-      v-model="mField.value"
+      v-model="value"
       :label="mField.label ? mField.label : mField.key"
       :items="users"
+      :disabled="disabled"
+      dense
       @change="onChange"
     ></v-autocomplete>
 
     <v-time-picker
       v-if="mField.type === 'time'"
-      v-model="mField.value"
+      v-model="value"
       :label="mField.label ? mField.label : mField.key"
       format="24hr"
       :allowed-minutes="allowedMinutes"
+      :disabled="disabled"
       @change="onChange"
     ></v-time-picker>
     <p v-if="mField.description">{{ mField.description }}</p>
@@ -83,16 +110,29 @@
 </template>
 
 <script>
+import RichEditor from "~/components/organisms/richEditor";
 export default {
   name: "OverField",
-  props: ["field"],
+  components: { RichEditor },
+  props: ["field", "data", "disabled"],
   data() {
     return {
       activePicker: null,
       menu: false,
       users: undefined,
       mField: this.field,
+      value: undefined,
+      teams: [],
     };
+  },
+
+  watch: {
+    data: {
+      deep: true,
+      handler() {
+        this.value = this.data;
+      },
+    },
   },
 
   async mounted() {
@@ -105,14 +145,17 @@ export default {
         };
       });
     }
+    if (this.field.type === "teams") {
+      this.teams = this.$accessor.config.getConfig("teams").map((t) => t.name);
+    }
   },
 
   methods: {
-    onChange() {
+    onChange(value) {
       if (typeof this.field.value === "string") {
-        this.mField.value = this.mField.value.trim();
+        value = value.trim();
       }
-      this.$emit("value", { key: this.field.key, value: this.field.value });
+      this.$emit("value", { key: this.field.key, value });
     },
 
     allowedMinutes: (m) => m % 15 === 0,
