@@ -348,6 +348,7 @@ export default {
             break;
 
           case "deposit":
+            transaction.type = "deposit";
             transaction.to = user._id;
             transaction.amount = (+user.newConsumption).toFixed(2);
             transaction.context = `Recharge de compte perso le ${new Date().toLocaleDateString()}`;
