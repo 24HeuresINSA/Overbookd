@@ -28,6 +28,10 @@ export const mutations = mutationTree(state, {
       // @ts-ignore
       mFA[key] = data[key];
     } else {
+      // @ts-ignore
+      if (mFA[key].length !== undefined) {
+        // array
+      }
       Object.assign(mFA[key], data[key]);
     }
   },
@@ -46,7 +50,9 @@ export const mutations = mutationTree(state, {
     };
   },
   ADD_TIMEFRAME: function (state, timeframe) {
+    // if (state.mFA.timeframes.find(e => e.name === timeframe.name) === undefined){
     state.mFA.timeframes.push(timeframe);
+    // }
   },
   ADD_EQUIPMENT: function (state, equipment) {
     state.mFA.equipments.push(equipment);
@@ -146,8 +152,13 @@ export const actions = actionTree(
     assignFA: function ({ commit }, payload) {
       commit("ASSIGN_FA", payload);
     },
-    addTimeframeToFA: function ({ commit }, payload) {
+    addTimeframe: function ({ commit }, payload) {
       commit("ADD_TIMEFRAME", payload);
+    },
+    addTimeframes: function ({ commit }, payload) {
+      payload.forEach((t: any) => {
+        commit("ADD_TIMEFRAME", t);
+      });
     },
     addEquipmentToFA: function ({ commit, state }, payload) {
       if (!state.mFA.equipments.find((e: any) => payload._id === e._id)) {

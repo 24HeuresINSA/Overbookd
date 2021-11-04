@@ -8,7 +8,7 @@ export interface FA {
     type: string;
   };
   equipments: { _id: string; name: string; required: number }[];
-  timeframes: { start: Date; end: Date }[];
+  timeframes: { start: Date; end: Date; name: string }[];
   validated: String[];
   refused: String[];
   comments: { time: Date; text: string; validator: string; topic?: string }[];

@@ -2,7 +2,7 @@
   <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
     <v-card-title>Créneaux</v-card-title>
 
-    <v-data-table :headers="headers" :items="mFA.timeframes">
+    <v-data-table :headers="headers" :items="timeframes">
       <template #[`item.date`]="{ item }">
         {{ new Date(item.start).toDateString() }}
       </template>
@@ -22,6 +22,7 @@
     <TimeframeSelector
       v-if="!isDisabled"
       @add-timeframe="addTimeframe"
+      @set-timeframes="setTimeframes"
     ></TimeframeSelector>
   </v-card>
 </template>
@@ -57,10 +58,18 @@ export default {
     mFA: function () {
       return this.$accessor.FA.mFA;
     },
+    timeframes: function () {
+      return this.$accessor.FA.mFA.timeframes;
+    },
   },
   methods: {
+    setTimeframes(timeframes) {
+      const store = this.$accessor.FA;
+      store.addTimeframes(timeframes);
+    },
+
     addTimeframe(timeframe) {
-      this.$accessor.FA.addTimeframeToFA(timeframe);
+      this.$accessor.FA.addTimeframe(timeframe);
     },
     deleteTimeframe(index) {
       this.$accessor.FA.deleteTimeframe(index);
