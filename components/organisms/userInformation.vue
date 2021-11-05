@@ -21,12 +21,24 @@
 
         <v-container>
           <v-row>
-            <v-col md="6">
-              <v-switch
-                v-model="mUser.hasPayedContribution"
-                label="Cotisation"
-                :disabled="!hasEditingRole"
-              ></v-switch>
+            <v-col
+              md="6"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <v-btn icon :href="'mailto:' + mUser.email">
+                <v-icon>mdi-send</v-icon>
+              </v-btn>
+              <h3>{{ mUser.email }}</h3>
+            </v-col>
+            <v-col md="6" style="display: flex; align-items: baseline">
+              <v-btn icon :href="'tel:+33:' + mUser.phone">
+                <v-icon>mdi-phone</v-icon>
+              </v-btn>
+              <h3>+33{{ mUser.phone }}</h3>
             </v-col>
             <v-col md="6">
               <v-text-field
@@ -109,6 +121,13 @@
                 :disabled="true"
               ></v-text-field>
             </v-col>
+            <v-col md="6">
+              <v-switch
+                v-model="mUser.hasPayedContribution"
+                label="Cotisation"
+                :disabled="!hasEditingRole"
+              ></v-switch>
+            </v-col>
             <v-col md="12">
               <v-text-field
                 v-model="mUser.comment"
@@ -120,7 +139,9 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-btn text color="red" @click="deleteUser()">supprimer</v-btn>
+        <v-btn v-if="hasEditingRole" text color="red" @click="deleteUser()"
+          >supprimer</v-btn
+        >
         <v-spacer />
         <v-btn text @click="saveUser()">sauvgarder</v-btn>
       </v-card-actions>
