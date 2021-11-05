@@ -40,7 +40,7 @@
       :disabled="!isValidated('human')"
       :is-disabled="isValidated('humain')"
       :form="FA"
-      @form-change="updateForm('timeframes', $event)"
+      :store="FAStore"
     ></TimeframeTable>
     <br />
     <FormCard
