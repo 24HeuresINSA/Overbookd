@@ -132,6 +132,7 @@ export default {
           icon: "mdi-apps",
           title: "Accueil 🤙",
           to: "/",
+          roles: "hard",
         },
         {
           icon: "mdi-chart-bubble",
@@ -148,13 +149,14 @@ export default {
         {
           icon: "mdi-clock",
           title: "Mes dispos 🤯",
-          roles: ["hard"],
+          roles: "hard",
           to: "/availabilities",
         },
         {
           icon: "mdi-calendar",
           title: "Mon calendrier 📆",
           to: "/calendar",
+          roles: "hard",
         },
         {
           icon: "mdi-account",
@@ -219,6 +221,7 @@ export default {
         {
           icon: "mdi-note",
           title: "Patch notes 📝",
+          roles: "hard",
           to: "/patch_note",
         },
       ],
@@ -265,7 +268,6 @@ export default {
 
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
-    console.log(this.items);
   },
 
   methods: {
@@ -275,7 +277,10 @@ export default {
     },
 
     hasRole(role) {
-      return this.$accessor.user.hasRole(role);
+      if (this.me.team) {
+        return this.me.team.includes(role);
+      }
+      return false;
     },
 
     getConfig(key) {

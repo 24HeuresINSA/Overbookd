@@ -98,7 +98,10 @@ export default {
     },
 
     hasRole(team) {
-      return this.$accessor.user.hasRole(team);
+      if (this.me.team) {
+        return this.me.team.includes(team);
+      }
+      return false;
     },
 
     async logout() {
