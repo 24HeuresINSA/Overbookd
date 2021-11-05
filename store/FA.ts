@@ -50,9 +50,11 @@ export const mutations = mutationTree(state, {
     };
   },
   ADD_TIMEFRAME: function (state, timeframe) {
-    // if (state.mFA.timeframes.find(e => e.name === timeframe.name) === undefined){
-    state.mFA.timeframes.push(timeframe);
-    // }
+    if (
+      state.mFA.timeframes.find((e) => e.name === timeframe.name) === undefined
+    ) {
+      state.mFA.timeframes.push(timeframe);
+    }
   },
   ADD_EQUIPMENT: function (state, equipment) {
     state.mFA.equipments.push(equipment);

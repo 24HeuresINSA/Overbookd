@@ -56,12 +56,16 @@ export default {
     createStart: null,
     extendOriginal: null,
   }),
-  computed: {},
+  computed: {
+    timeframes: function () {
+      return this.$accessor.FA.mFA.timeframes;
+    },
+  },
   watch: {
-    events: {
+    timeframes: {
       deep: true,
       handler() {
-        this.$emit("set-timeframes", this.events);
+        this.events = [...this.timeframes];
       },
     },
   },
@@ -142,6 +146,7 @@ export default {
       this.createEvent = null;
       this.createStart = null;
       this.extendOriginal = null;
+      this.$emit("set-timeframes", this.events);
     },
     cancelDrag() {
       if (this.createEvent) {
