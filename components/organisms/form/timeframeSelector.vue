@@ -1,39 +1,18 @@
 <template>
-  <div
-    v-if="!disabled"
-    style="
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      align-items: center;
-    "
-  >
-    <v-date-picker
-      v-model="mTimeframe.date"
-      first-day-of-week="1"
-    ></v-date-picker>
-    <div style="display: flex; flex-direction: column">
-      <v-select
-        v-model="mTimeframe.start"
-        label="début"
-        :items="possibleTimeframes"
-        item-text="text"
-        item-value="time"
-        dense
-      ></v-select>
-      <v-select
-        v-model="mTimeframe.end"
-        label="fin"
-        :items="possibleTimeframes"
-        item-text="text"
-        item-value="time"
-        dense
-      ></v-select>
-    </div>
-    <div style="display: flex; flex-direction: column">
-      <v-btn text @click="addTimeframe">ajouter</v-btn>
-      <v-btn text>ajouter toute la jounée</v-btn>
-    </div>
+  <div style="">
+    <v-calendar
+      v-model="value"
+      type="week"
+      color="primary"
+      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      :events="events"
+      :event-ripple="false"
+      @mousedown:event="startDrag"
+      @mousedown:time="startTime"
+      @mousemove:time="mouseMove"
+      @mouseup:time="endDrag"
+      @mouseleave.native="cancelDrag"
+    ></v-calendar>
   </div>
 </template>
 
@@ -47,6 +26,12 @@ export default {
         return false;
       },
     },
+    store: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
   },
   data: () => ({
     possibleTimeframes: [],
@@ -56,9 +41,31 @@ export default {
       end: undefined,
     },
     eventDate: undefined,
+
+    // calendar
+    value: "",
+    events: [],
+    dragEvent: null,
+    dragStart: null,
+    createEvent: null,
+    createStart: null,
+    extendOriginal: null,
   }),
+  computed: {
+    timeframes: function () {
+      return this.$accessor.FA.mFA.timeframes;
+    },
+  },
+  watch: {
+    timeframes: {
+      deep: true,
+      handler() {
+        this.events = [...this.timeframes];
+      },
+    },
+  },
   mounted() {
-    this.mTimeframe.date = this.$accessor.config.getConfig("event_date"); // center on event date
+    this.value = this.$accessor.config.getConfig("event_date");
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 15) {
         this.possibleTimeframes.push({
@@ -74,6 +81,122 @@ export default {
     }
   },
   methods: {
+    // calendar
+    startDrag({ event, timed }) {
+      if (this.disabled) {
+        return;
+      }
+
+      if (event && timed) {
+        this.dragEvent = event;
+        this.dragTime = null;
+        this.extendOriginal = null;
+      }
+    },
+    startTime(tms) {
+      if (this.disabled) {
+        return;
+      }
+      const mouse = this.toTime(tms);
+
+      if (this.dragEvent && this.dragTime === null) {
+        const start = this.dragEvent.start;
+
+        this.dragTime = mouse - start;
+      } else {
+        this.createStart = this.roundTime(mouse);
+        this.createEvent = {
+          name: `Créneau #${this.events.length}`,
+          start: this.createStart,
+          end: this.createStart,
+          timed: true,
+        };
+
+        this.events.push(this.createEvent);
+      }
+    },
+    extendBottom(event) {
+      if (this.disabled) {
+        return;
+      }
+      this.createEvent = event;
+      this.createStart = event.start;
+      this.extendOriginal = event.end;
+    },
+    mouseMove(tms) {
+      if (this.disabled) {
+        return;
+      }
+      const mouse = this.toTime(tms);
+
+      if (this.dragEvent && this.dragTime !== null) {
+        const start = this.dragEvent.start;
+        const end = this.dragEvent.end;
+        const duration = end - start;
+        const newStartTime = mouse - this.dragTime;
+        const newStart = this.roundTime(newStartTime);
+        const newEnd = newStart + duration;
+
+        this.dragEvent.start = newStart;
+        this.dragEvent.end = newEnd;
+      } else if (this.createEvent && this.createStart !== null) {
+        const mouseRounded = this.roundTime(mouse, false);
+        const min = Math.min(mouseRounded, this.createStart);
+        const max = Math.max(mouseRounded, this.createStart);
+
+        this.createEvent.start = min;
+        this.createEvent.end = max;
+      }
+    },
+    endDrag() {
+      if (this.disabled) {
+        return;
+      }
+      this.dragTime = null;
+      this.dragEvent = null;
+      this.createEvent = null;
+      this.createStart = null;
+      this.extendOriginal = null;
+      this.$emit("set-timeframes", this.events);
+    },
+    cancelDrag() {
+      if (this.disabled) {
+        return;
+      }
+      if (this.createEvent) {
+        if (this.extendOriginal) {
+          this.createEvent.end = this.extendOriginal;
+        } else {
+          const i = this.events.indexOf(this.createEvent);
+          if (i !== -1) {
+            this.events.splice(i, 1);
+          }
+        }
+      }
+
+      this.createEvent = null;
+      this.createStart = null;
+      this.dragTime = null;
+      this.dragEvent = null;
+    },
+    roundTime(time, down = true) {
+      const roundTo = 15; // minutes
+      const roundDownTime = roundTo * 60 * 1000;
+
+      return down
+        ? time - (time % roundDownTime)
+        : time + (roundDownTime - (time % roundDownTime));
+    },
+    toTime(tms) {
+      return new Date(
+        tms.year,
+        tms.month - 1,
+        tms.day,
+        tms.hour,
+        tms.minute
+      ).getTime();
+    },
+
     addTimeframe() {
       const timeframe = {
         start: new Date(this.mTimeframe.date),
