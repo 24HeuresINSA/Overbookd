@@ -34,12 +34,46 @@
       label="description des dispo"
       type="number"
     ></v-textarea>
-
     <h2>Log</h2>
     <v-switch
       v-model="config.isInventoryOpen"
       label="ouvrir l'edition de l'inventaire au hard"
     ></v-switch>
+
+    <v-dialog v-model="dialog" width="auto " @keydown.esc="cancel">
+      <template #activator="{ on, attrs }">
+        <v-btn color="primary" dark v-bind="attrs" v-on="on">
+          Enregistrer
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title> Confirmation </v-card-title>
+        <v-card-text>
+          Appui sur "confirmer" pour valider tes changements de configurations
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            :loading="load"
+            @click="submitConfigChanges"
+          >
+            Confirmer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="snackbar"
+      color="primary"
+      :timeout="timeout"
+      width="auto "
+    >
+      Configurations envoyées au serveur !
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -62,6 +96,10 @@ export default {
         max_charisma: getConfig(this, "max_charisma"),
         isInventoryOpen: getConfig(this, "isInventoryOpen"),
       },
+      dialog: false,
+      load: false,
+      timeout: 2000,
+      snackbar: false,
     };
   },
 
@@ -73,6 +111,27 @@ export default {
         path: "/",
       });
     }
+  },
+
+  methods: {
+    async submitConfigChanges() {
+      this.load = true;
+      const data = [];
+      for (const model in this.config) {
+        const tmp = {};
+        tmp["value"] = this.config[model];
+        tmp["key"] = model;
+        data.push(tmp);
+      }
+      try {
+        await this.$axios.put("/config", data);
+        this.load = false;
+        this.dialog = false;
+        this.snackbar = true;
+      } catch (e) {
+        alert("There was a problem !");
+      }
+    },
   },
 };
 </script>

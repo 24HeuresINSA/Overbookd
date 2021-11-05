@@ -268,6 +268,7 @@ export default {
 
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
+    console.log(this.items);
   },
 
   methods: {
