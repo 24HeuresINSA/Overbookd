@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!disabled" style="">
+  <div style="">
     <v-calendar
       v-model="value"
       type="week"
@@ -13,11 +13,6 @@
       @mouseup:time="endDrag"
       @mouseleave.native="cancelDrag"
     ></v-calendar>
-
-    <div style="display: flex; flex-direction: column">
-      <v-btn text @click="addTimeframe">ajouter</v-btn>
-      <v-btn text>ajouter toute la jounée</v-btn>
-    </div>
   </div>
 </template>
 
@@ -88,6 +83,10 @@ export default {
   methods: {
     // calendar
     startDrag({ event, timed }) {
+      if (this.disabled) {
+        return;
+      }
+
       if (event && timed) {
         this.dragEvent = event;
         this.dragTime = null;
@@ -95,6 +94,9 @@ export default {
       }
     },
     startTime(tms) {
+      if (this.disabled) {
+        return;
+      }
       const mouse = this.toTime(tms);
 
       if (this.dragEvent && this.dragTime === null) {
@@ -114,11 +116,17 @@ export default {
       }
     },
     extendBottom(event) {
+      if (this.disabled) {
+        return;
+      }
       this.createEvent = event;
       this.createStart = event.start;
       this.extendOriginal = event.end;
     },
     mouseMove(tms) {
+      if (this.disabled) {
+        return;
+      }
       const mouse = this.toTime(tms);
 
       if (this.dragEvent && this.dragTime !== null) {
@@ -141,6 +149,9 @@ export default {
       }
     },
     endDrag() {
+      if (this.disabled) {
+        return;
+      }
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
@@ -149,6 +160,9 @@ export default {
       this.$emit("set-timeframes", this.events);
     },
     cancelDrag() {
+      if (this.disabled) {
+        return;
+      }
       if (this.createEvent) {
         if (this.extendOriginal) {
           this.createEvent.end = this.extendOriginal;

@@ -20,7 +20,7 @@
     </v-data-table>
 
     <TimeframeSelector
-      v-if="!isDisabled"
+      :disabled="isDisabled"
       @add-timeframe="addTimeframe"
       @set-timeframes="setTimeframes"
     ></TimeframeSelector>
