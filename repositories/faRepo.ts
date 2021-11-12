@@ -17,7 +17,7 @@ export default {
   updateFA(context: Context, FA: FA) {
     return context.$axios.put(resource, FA);
   },
-  deleteFAByCount(context: Context, count: number) {
-    return context.$axios.delete(resource + `/${count}`);
+  deleteFA(context: Context, FA: FA) {
+    return context.$axios.delete(resource, { data: FA });
   },
 };

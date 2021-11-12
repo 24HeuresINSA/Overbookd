@@ -67,6 +67,9 @@
                   >
                     <v-icon small>mdi-circle-edit-outline</v-icon>
                   </v-btn>
+                  <v-btn class="mx-2" icon small @click="deleteFA(row.item)">
+                    <v-icon small>mdi-delete</v-icon>
+                  </v-btn>
                 </td>
               </tr>
             </template>
@@ -75,23 +78,31 @@
               <v-avatar
                 v-if="row.item"
                 :color="color[row.item.status]"
-                size="20"
-              ></v-avatar>
+                size="25"
+                >{{ row.item.count }}
+              </v-avatar>
             </template>
           </v-data-table>
         </v-col>
       </v-row>
     </v-container>
 
-    <v-btn color="secondary" elevation="2" fab to="/fa/newFA" class="fab-right">
-      <v-icon> mdi-plus-thick </v-icon>
+    <v-btn
+      color="secondary"
+      elevation="2"
+      fab
+      class="fab-right"
+      @click="createNewFA"
+    >
+      <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
   </div>
 </template>
 
 <script>
-import { getConfig } from "../../common/role";
 import Fuse from "fuse.js";
+import { safeCall } from "../../utils/api/calls";
+import { RepoFactory } from "../../repositories/repoFactory";
 
 export default {
   name: "Fa",
@@ -145,12 +156,14 @@ export default {
   },
   async mounted() {
     // get FAs
-    this.FAs = (await this.$axios.get("/FA")).data;
+    this.FAs = (await this.$axios.get("/FA")).data.filter(
+      (e) => e.isValid !== false
+    );
   },
 
   methods: {
     getConfig(key) {
-      return getConfig(this, key);
+      return this.$accessor.config.getConfig(key);
     },
 
     filterBySelectedTeam(FAs, team) {
@@ -184,6 +197,25 @@ export default {
 
     onItemSelected(item) {
       this.$router.push({ path: "fa/" + item.count });
+    },
+
+    async createNewFA() {
+      const res = await safeCall(
+        this.$store,
+        RepoFactory.faRepo.createNewFA(this, {}),
+        "FA created 🥳"
+      );
+      if (res) {
+        await this.$router.push({ path: "fa/" + res.count });
+      }
+    },
+    async deleteFA(FA) {
+      await safeCall(
+        this.$store,
+        RepoFactory.faRepo.deleteFA(this, FA),
+        "FA deleted 🥳"
+      );
+      this.FAs = this.FAs.filter((e) => e.count !== FA.count);
     },
 
     nextPage() {

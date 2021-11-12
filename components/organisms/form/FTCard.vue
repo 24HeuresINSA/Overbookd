@@ -3,7 +3,13 @@
     <v-card>
       <v-card-title>FT 👻</v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :items="FTs"> </v-data-table>
+        <v-data-table :headers="headers" :items="FTs">
+          <template #[`item.action`]="{ item }">
+            <v-btn small icon :to="`/ft/${item.count}`">
+              <v-icon small>mdi-link</v-icon>
+            </v-btn>
+          </template>
+        </v-data-table>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -53,6 +59,7 @@ export default {
     addFT: async function () {
       const FTName = this.newFTName;
       await this.$accessor.FA.addNewFT(FTName);
+      this.newFTDialog = false;
     },
   },
 };

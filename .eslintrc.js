@@ -19,6 +19,7 @@ module.exports = {
     "vue/no-unused-vars": "warn",
     "vue/require-v-for-key": "warn",
     "cypress/no-unnecessary-waiting": "off",
+    "vue/no-mutating-prop": "off",
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
   },

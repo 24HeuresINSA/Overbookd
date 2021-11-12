@@ -26,7 +26,7 @@
               </v-icon>
             </template>
             <template #[`item.amount`]="{ item }">
-              {{ item.amount }} €
+              {{ item.amount.toFixed ? item.amount.toFixed(2) : item.amount }} €
             </template>
             <template #[`item.context`]="{ item }">
               {{ !item.isValid ? "[SUPPRIME] " : "" }}{{ item.context }}
