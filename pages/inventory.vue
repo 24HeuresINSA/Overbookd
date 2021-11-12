@@ -1,14 +1,27 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="inventory" dense>
+    <v-data-table
+      :headers="headers"
+      :items="inventory"
+      group-by="type"
+      :item-class="rowClass"
+      dense
+    >
       <template #[`item.action`]="{ item }">
         <v-btn v-if="hasRole('log')" icon small @click="edit(item)">
           <v-icon small>mdi-circle-edit-outline</v-icon>
+        </v-btn>
+        <v-btn v-if="hasRole('log')" icon small @click="deleteItem(item)">
+          <v-icon small>mdi-delete</v-icon>
         </v-btn>
       </template>
 
       <template #[`item.borrowedCount`]="{ item }">
         {{ getBorrowedCount(item) }}
+      </template>
+
+      <template #[`item.totalCount`]="{ item }">
+        {{ +getBorrowedCount(item) + +item.amount }}
       </template>
     </v-data-table>
 
@@ -68,7 +81,8 @@
 
 <script>
 import OverForm from "../components/overForm";
-import { getConfig, hasRole, getUser } from "../common/role";
+import { safeCall } from "../utils/api/calls";
+import { RepoFactory } from "../repositories/repoFactory";
 
 export default {
   name: "Inventory",
@@ -78,10 +92,12 @@ export default {
       inventory: [],
       headers: [
         { text: "nom", value: "name" },
-        { text: "quantite (inventaire 24)", value: "amount" },
-        { text: "quantite (emprunté)", value: "borrowedCount" },
         { text: "lieu de stockage", value: "location" },
-        { text: "action", value: "action" },
+        { text: "quantite (inventaire 24)", value: "amount", align: "right" },
+        { text: "quantite (emprunté)", value: "borrowedCount", align: "right" },
+        { text: "quantite total", value: "totalCount", align: "right" },
+        { text: "requit", value: "required.count", align: "right" },
+        { text: "action", value: "action", align: "right" },
       ],
       borrowedHeader: [
         { text: "qui", value: "from" },
@@ -91,10 +107,8 @@ export default {
       ],
       borrowed: [],
       isFormOpened: false,
-      allowedTeams: getConfig(this, "isInventoryOpen")
-        ? ["log", "hard"]
-        : ["log"],
-      equipmentForm: this.getConfig("equipment_form"),
+      allowedTeams: ["log"],
+      equipmentForm: [],
       newEquipment: undefined,
       newBorrow: {
         start: undefined,
@@ -105,22 +119,57 @@ export default {
     };
   },
 
+  computed: {
+    me: () => this.$store.state.user.me,
+  },
+
   async mounted() {
-    this.inventory = await this.$axios.$get("/equipment");
+    // setup config
+    this.allowedTeams = (await this.getConfig(this, "isInventoryOpen"))
+      ? ["log", "hard"]
+      : ["log"];
+    this.equipmentForm = await this.getConfig("equipment_form");
+
+    this.inventory = (await this.$axios.$get("/equipment")).filter(
+      (e) => e.isValid !== false
+    );
+    const FTs = await safeCall(this.$store, RepoFactory.ftRepo.getAllFTs(this));
+    const FAs = await safeCall(this.$store, RepoFactory.faRepo.getAllFAs(this));
+
+    const Form = FAs.data.concat(FTs.data);
+
+    this.inventory.forEach((item) => {
+      item.required = {
+        count: 0,
+        form: [],
+      };
+      Form.forEach((form) => {
+        if (form.equipments && form.isValid !== false) {
+          const mEquipment = form.equipments.find((e) => e._id === item._id);
+          if (mEquipment) {
+            item.required.count += mEquipment.required;
+            item.required.form.push(form);
+          }
+        }
+      });
+    });
   },
 
   methods: {
-    getUser() {
-      return getUser(this);
+    rowClass(item) {
+      if (item.required) {
+        let isNegatif =
+          item.required.count > +this.getBorrowedCount(item) + +item.amount;
+        return isNegatif ? "color: red" : "";
+      }
     },
 
-    hasRole(role) {
-      return hasRole(this, role);
+    async hasRole(role) {
+      return this.$accessor.user.hasRole(role);
     },
 
     getConfig(key) {
-      return this.$store.state.config.data.data.find((e) => e.key === key)
-        .value;
+      return this.$accessor.config.getConfig(key);
     },
 
     onFormChange(form) {
@@ -164,6 +213,12 @@ export default {
           mField.value = item[key];
         }
       });
+    },
+
+    async deleteItem(item) {
+      item.isValid = false;
+      await this.$axios.put("/equipment", item);
+      this.inventory = this.inventory.filter((i) => i._id !== item._id);
     },
   },
 };
