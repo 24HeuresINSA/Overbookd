@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="inventory">
+    <v-data-table :headers="headers" :items="inventory" dense>
       <template #[`item.action`]="{ item }">
-        <v-btn v-if="hasRole('log')" fab @click="edit(item)">
-          <v-icon>mdi-circle-edit-outline</v-icon>
+        <v-btn v-if="hasRole('log')" icon small @click="edit(item)">
+          <v-icon small>mdi-circle-edit-outline</v-icon>
         </v-btn>
       </template>
 

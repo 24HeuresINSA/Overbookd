@@ -136,7 +136,7 @@ export default {
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiches Animation 🥳",
+          title: "Fiches Activitée 🥳",
           roles: this.getConfig("ft_required_role"),
           to: "/fa",
         },
@@ -268,7 +268,6 @@ export default {
 
   mounted() {
     this.$vuetify.theme.dark = localStorage["theme"] || false;
-    console.log(this.items);
   },
 
   methods: {

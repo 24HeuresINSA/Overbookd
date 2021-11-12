@@ -22,7 +22,7 @@ export async function safeCall(
 ): Promise<AxiosResponse | undefined> {
   try {
     const res = await repoFunction;
-    if (res.status !== 200) {
+    if (res.status >= 400) {
       throw new Error();
     }
     if (successMessage) {

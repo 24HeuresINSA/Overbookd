@@ -192,10 +192,10 @@ export const actions = actionTree(
     resetFA: function ({ commit }, payload) {
       commit("RESET_FA", payload);
     },
-    addNewFT: async function ({ commit }, name) {
+    addNewFT: async function ({ commit, state, dispatch }, name) {
       const repo = RepoFactory;
       const FT = {
-        FA: state().mFA.count,
+        FA: state.mFA.count,
         general: {
           name: name,
         },
@@ -213,7 +213,8 @@ export const actions = actionTree(
           repo.faRepo.updateFA(this, this.$accessor.FA.mFA)
         );
         if (resFA) {
-          commit("ADD_FT", FT);
+          commit("ADD_FT", resFT.data);
+          await safeCall(this, repo.faRepo.updateFA(this, state.mFA));
         }
       }
     },
