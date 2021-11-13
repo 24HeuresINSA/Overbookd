@@ -24,6 +24,16 @@
       </template>
     </v-data-table>
 
+    <v-btn
+      color="secondary"
+      elevation="2"
+      fab
+      class="fab-right"
+      @click="createNewFT"
+    >
+      <v-icon> mdi-plus-thick</v-icon>
+    </v-btn>
+
     <v-dialog v-model="isDialogOpen" width="600">
       <v-card>
         <v-img src="sure.jpeg"></v-img>
@@ -47,6 +57,7 @@ export default {
     return {
       color: {
         undefined: "grey",
+        draft: "grey",
         submitted: "orange",
         validated: "green",
         refused: "red",
@@ -91,6 +102,30 @@ export default {
   },
 
   methods: {
+    async createNewFT() {
+      const blankFT = {
+        FA: 0,
+        general: {
+          name: "",
+        },
+        status: "draft",
+        validated: [],
+        refused: [],
+        equipments: [],
+        timeframes: [],
+      };
+      let res = await safeCall(
+        this.$store,
+        ftRepo.createFT(this, blankFT),
+        "FT 🥳"
+      );
+      if (res) {
+        await this.$router.push({
+          path: "/ft/" + res.data.count,
+        });
+      }
+    },
+
     async deleteFT() {
       await safeCall(this.$store, ftRepo.deleteFT(this, this.mFT), "FT del");
       this.FTs = this.FTs.filter((ft) => ft.count !== this.mFT.count);

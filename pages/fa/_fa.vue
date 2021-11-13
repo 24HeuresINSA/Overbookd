@@ -111,7 +111,7 @@
       ></LogisticsCard>
 
       <br />
-      <CommentCard :comments="FA.comments"></CommentCard>
+      <CommentCard :comments="FA.comments" form="FA"></CommentCard>
 
       <br />
       <FTCard></FTCard>

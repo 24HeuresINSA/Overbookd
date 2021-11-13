@@ -53,7 +53,7 @@
     ></LogisticsCard>
 
     <br />
-    <CommentCard :comments="FT.comments"></CommentCard>
+    <CommentCard :comments="FT.comments" form="FT"></CommentCard>
 
     <v-dialog v-model="isRefusedDialogOpen" max-width="300">
       <v-card>
