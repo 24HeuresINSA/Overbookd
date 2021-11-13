@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="timeframes">
+    <v-data-table :headers="headers" :items="timeframes" dense>
       <template #[`item.date`]="{ item }">
         {{ new Date(item.start).toDateString() }}
       </template>

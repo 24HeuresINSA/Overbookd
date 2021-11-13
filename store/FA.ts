@@ -19,6 +19,9 @@ export const getters = getterTree(state, {
   getEquipments: function (state) {
     return state.mFA.equipments;
   },
+  timeframes: function (state) {
+    return state.mFA.timeframes;
+  },
 });
 
 export const mutations = mutationTree(state, {
