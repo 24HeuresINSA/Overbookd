@@ -146,6 +146,12 @@ export const mutations = mutationTree(state, {
     }
     state.mFA.FTs.push(FT);
   },
+  ADD_COMMENT: function (state, comment) {
+    if (!state.mFA.comments) {
+      state.mFA.comments = [];
+    }
+    state.mFA.comments.push(comment);
+  },
 });
 
 export const actions = actionTree(
@@ -191,6 +197,9 @@ export const actions = actionTree(
     },
     resetFA: function ({ commit }, payload) {
       commit("RESET_FA", payload);
+    },
+    addComment: function ({ commit }, payload) {
+      commit("ADD_COMMENT", payload);
     },
     addNewFT: async function ({ commit, state, dispatch }, name) {
       const repo = RepoFactory;
