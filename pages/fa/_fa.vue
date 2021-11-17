@@ -89,7 +89,21 @@
         <h2>Logistique 🚚</h2>
         <LogisticsCard
           title="Matos"
-          :types="['gros']"
+          :types="[
+            'BARS',
+            'BOIS',
+            'BRICOLAGE',
+            'CANAPE/FAUTEUIL',
+            'CUISINE',
+            'DECO',
+            'FRIGO',
+            'LITTERIE',
+            'PROPRETE',
+            'SCENE',
+            'SECU',
+            'TENTE',
+            'AUTRES MATOS',
+          ]"
           :store="FAStore"
           :disabled="isValidated('log')"
         ></LogisticsCard>
@@ -98,14 +112,14 @@
       <br />
       <LogisticsCard
         title="Barrieres"
-        :types="['barrieres']"
+        :types="['BARRIERE']"
         :store="FAStore"
         :disabled="isValidated('barrieres')"
       ></LogisticsCard>
       <br />
       <LogisticsCard
         title="Elec"
-        :types="['elec']"
+        :types="['ALIMENTATION ELECTRIQUE', 'ECLAIRAGE']"
         :store="FAStore"
         :disabled="isValidated('elec')"
       ></LogisticsCard>
