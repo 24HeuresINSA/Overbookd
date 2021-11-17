@@ -2,7 +2,7 @@
   <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
     <v-card-title>Créneaux</v-card-title>
 
-    <v-data-table :headers="headers" :items="timeframes">
+    <v-data-table :headers="headers" :items="timeframes" dense>
       <template #[`item.date`]="{ item }">
         {{ new Date(item.start).toDateString() }}
       </template>
@@ -21,6 +21,7 @@
 
     <TimeframeSelector
       :disabled="isDisabled"
+      :store="store"
       @add-timeframe="addTimeframe"
       @set-timeframes="setTimeframes"
     ></TimeframeSelector>
@@ -43,17 +44,20 @@ export default {
       default: () => false,
     },
   },
-  data: () => ({
-    headers: [
-      { text: "date", value: "date" },
-      { text: "debut", value: "start" },
-      {
-        text: "fin",
-        value: "end",
-      },
-      { text: "action", value: "action" },
-    ],
-  }),
+  data: function () {
+    return {
+      headers: [
+        { text: "date", value: "date" },
+        { text: "debut", value: "start" },
+        {
+          text: "fin",
+          value: "end",
+        },
+        { text: "action", value: "action" },
+      ],
+      store: this.$accessor.FA,
+    };
+  },
   computed: {
     mFA: function () {
       return this.$accessor.FA.mFA;

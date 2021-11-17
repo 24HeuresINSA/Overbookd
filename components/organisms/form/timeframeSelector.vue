@@ -1,6 +1,16 @@
 <template>
   <div style="">
+    <v-sheet tile height="54" class="d-flex">
+      <v-btn icon class="ma-2" @click="$refs.FormCalendar.prev()">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn icon class="ma-2" @click="$refs.FormCalendar.next()">
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </v-sheet>
     <v-calendar
+      ref="FormCalendar"
       v-model="value"
       type="week"
       color="primary"
@@ -19,8 +29,15 @@
 <script>
 export default {
   name: "TimeframeSelector",
+  components: {},
   props: {
     disabled: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
+    complete: {
       type: Boolean,
       default() {
         return false;
@@ -41,6 +58,8 @@ export default {
       end: undefined,
     },
     eventDate: undefined,
+    requiredDialog: false,
+    selectedEvent: null,
 
     // calendar
     value: "",
@@ -53,7 +72,7 @@ export default {
   }),
   computed: {
     timeframes: function () {
-      return this.$accessor.FA.mFA.timeframes;
+      return this.store.timeframes;
     },
   },
   watch: {

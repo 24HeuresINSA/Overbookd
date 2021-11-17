@@ -8,7 +8,10 @@
       ></CompleteTimeframeTable>
       <TimeframeSelector
         v-if="!isDisabled"
+        complete
+        :store="store"
         @add-timeframe="addTimeframe"
+        @set-timeframes="setTimeframes"
       ></TimeframeSelector>
     </v-card-text>
   </v-card>
@@ -35,6 +38,10 @@ export default {
   methods: {
     addTimeframe(timeframe) {
       this.store.addTimeframe(timeframe);
+    },
+    setTimeframes(timeframes) {
+      const store = this.$accessor.FT;
+      store.addTimeframes(timeframes);
     },
   },
 };

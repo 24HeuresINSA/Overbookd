@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- list of  filtered users -->
-    <v-list style="overflow-y: auto; height: auto">
+    <v-list style="overflow-y: auto; height: auto" dense>
       <v-list-item-group v-model="selectedUserIndex">
         <v-list-item v-for="user of users" :key="user._id">
           <v-list-item-content>
@@ -11,7 +11,10 @@
               {{ user.charisma }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              <over-chips :roles="user.team"></over-chips>
+              <OverChips :roles="user.team"></OverChips>
+              <v-progress-linear
+                :value="getAssignmentRatio(user)"
+              ></v-progress-linear>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
@@ -30,10 +33,11 @@
 
 <script>
 import { getConfig } from "../common/role";
+import OverChips from "~/components/atoms/overChips";
 
 export default {
   name: "UsersList",
-
+  components: { OverChips },
   props: ["users"],
 
   data() {
@@ -59,7 +63,16 @@ export default {
 
   methods: {
     getConfig(key) {
-      return getConfig(this, key);
+      return this.$accessor.config.getConfig(key);
+    },
+    /**
+     * compute the assignment ratio of a user
+     */
+    getAssignmentRatio({ assignments, availabilities }) {
+      if (!assignments || !availabilities) {
+        return 0;
+      }
+      return assignments.length / availabilities.length; // TODO change this
     },
   },
 };

@@ -17,7 +17,9 @@ export const state = () => ({
   } as FT,
 });
 
-export const getters = getterTree(state, {});
+export const getters = getterTree(state, {
+  timeframes: (state) => state.mFT.timeframes,
+});
 
 export const mutations = mutationTree(state, {
   SET_FT: function (state, mFT) {
@@ -36,6 +38,9 @@ export const mutations = mutationTree(state, {
       mFT.timeframes = [];
     }
     mFT.timeframes.push(timeframe);
+  },
+  SET_TIMEFRAME_FT: function (state, timeframes) {
+    state.mFT.timeframes = timeframes;
   },
   UPDATE_TIMEFRAME: function ({ mFT }, { index, timeframe }) {
     mFT.timeframes[index] = timeframe;
@@ -96,8 +101,19 @@ export const actions = actionTree(
     assignFT: function ({ commit }, payload) {
       commit("ASSIGN_FT", payload);
     },
-    addTimeframe: function ({ commit }, timeframe) {
-      commit("ADD_TIMEFRAME_FT", timeframe);
+    addTimeframe: function ({ commit, state }, timeframe) {
+      // @ts-ignore
+      const tf = state.mFT.timeframes.find((t) => t.name === timeframe.name);
+      console.log(tf);
+      if (tf === undefined) {
+        commit("ADD_TIMEFRAME_FT", timeframe);
+      }
+    },
+    addTimeframes: function ({ commit, dispatch }, timeframes) {
+      timeframes.forEach((t: any) => dispatch("addTimeframe", t));
+    },
+    setTimeframes: function ({ commit }, timeframes) {
+      commit("SET_TIMEFRAME_FT", timeframes);
     },
     updateTimeframe: function ({ commit }, payload) {
       commit("UPDATE_TIMEFRAME", payload);
