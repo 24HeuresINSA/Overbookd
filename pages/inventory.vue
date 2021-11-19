@@ -16,6 +16,18 @@
         </v-btn>
       </template>
 
+      <template #[`item.borrow`]="{ item }">
+        <v-list dense>
+          <v-list-item v-for="(borrow, index) of item.borrowed" :key="index">
+            <v-list-item-content>
+              <v-list-item-title style="padding: 0">
+                {{ borrow.amount }} {{ borrow.from }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </template>
+
       <template #[`item.borrowedCount`]="{ item }">
         {{ getBorrowedCount(item) }}
       </template>
@@ -38,7 +50,11 @@
       <v-card>
         <v-card-title>Ajouter un nouveau objet</v-card-title>
         <v-card-text>
-          <OverForm :fields="equipmentForm" @form-change="onFormChange">
+          <OverForm
+            :fields="equipmentForm"
+            :data="selectedItem"
+            @form-change="onFormChange"
+          >
           </OverForm>
           <v-divider></v-divider>
           <h4>Ajout de matos emprunté</h4>
@@ -95,6 +111,7 @@ export default {
         { text: "lieu de stockage", value: "location" },
         { text: "quantite (inventaire 24)", value: "amount", align: "right" },
         { text: "quantite (emprunté)", value: "borrowedCount", align: "right" },
+        { text: "emprunté", value: "borrow" },
         { text: "quantite total", value: "totalCount", align: "right" },
         { text: "requit", value: "required.count", align: "right" },
         { text: "action", value: "action", align: "right" },
@@ -109,7 +126,7 @@ export default {
       isFormOpened: false,
       allowedTeams: ["log"],
       equipmentForm: [],
-      newEquipment: undefined,
+      selectedItem: undefined,
       newBorrow: {
         start: undefined,
         end: undefined,
@@ -173,14 +190,14 @@ export default {
     },
 
     onFormChange(form) {
-      this.newEquipment = form;
+      Object.assign(this.selectedItem, form);
     },
 
     async addEquipment() {
-      this.newEquipment.borrowed = this.borrowed;
-      this.newEquipment = await this.$axios.put(
+      this.selectedItem.borrowed = this.borrowed;
+      this.selectedItem = await this.$axios.put(
         "/equipment",
-        this.newEquipment
+        this.selectedItem
       );
       this.isFormOpened = false;
       this.borrowed = [];
@@ -205,14 +222,10 @@ export default {
     },
 
     edit(item) {
-      this.isFormOpened = true;
+      console.log(item);
       this.borrowed = item.borrowed;
-      Object.keys(item).forEach((key) => {
-        let mField = this.equipmentForm.find((e) => e.key === key);
-        if (mField) {
-          mField.value = item[key];
-        }
-      });
+      this.selectedItem = item;
+      this.isFormOpened = true;
     },
 
     async deleteItem(item) {
@@ -224,4 +237,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-list-item {
+  padding: 0;
+}
+
+.v-list-item__content {
+  padding: 0;
+}
+</style>
