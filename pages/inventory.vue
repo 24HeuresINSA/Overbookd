@@ -41,7 +41,7 @@
       v-if="hasRole(allowedTeams)"
       fab
       style="right: 20px; bottom: 45px; position: fixed"
-      @click="isFormOpened = true"
+      @click="openDialog()"
     >
       <v-icon> mdi-plus </v-icon>
     </v-btn>
@@ -50,6 +50,8 @@
       <v-card>
         <v-card-title>Ajouter un nouveau objet</v-card-title>
         <v-card-text>
+          <v-btn color="primary" text @click="addEquipment"> Ajouter</v-btn>
+
           <OverForm
             :fields="equipmentForm"
             :data="selectedItem"
@@ -126,7 +128,7 @@ export default {
       isFormOpened: false,
       allowedTeams: ["log"],
       equipmentForm: [],
-      selectedItem: undefined,
+      selectedItem: {},
       newBorrow: {
         start: undefined,
         end: undefined,
@@ -193,13 +195,21 @@ export default {
       Object.assign(this.selectedItem, form);
     },
 
+    openDialog() {
+      this.selectedItem = {};
+      this.isFormOpened = true;
+    },
+
     async addEquipment() {
       this.selectedItem.borrowed = this.borrowed;
+      delete this.selectedItem._id;
       this.selectedItem = await this.$axios.put(
         "/equipment",
         this.selectedItem
       );
+      this.inventory.push(this.selectedItem);
       this.isFormOpened = false;
+      this.selectedItem = {};
       this.borrowed = [];
     },
 
