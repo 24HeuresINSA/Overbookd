@@ -18,6 +18,7 @@ module.exports = {
     "no-unused-vars": "warn",
     "vue/no-unused-vars": "warn",
     "vue/require-v-for-key": "warn",
+    "vue/valid-v-slot": ["error", { allowModifiers: true }],
     "cypress/no-unnecessary-waiting": "off",
     "vue/no-mutating-prop": "off",
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
