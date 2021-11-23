@@ -7,6 +7,7 @@ import * as config from "./config";
 import * as user from "./user";
 import * as transaction from "./transaction";
 import * as FA from "./FA";
+import * as timeslot from "./timeslot";
 
 export const state = () => ({});
 
@@ -30,5 +31,6 @@ export const accessorType = getAccessorType({
     user,
     transaction,
     FA,
+    timeslot,
   },
 });

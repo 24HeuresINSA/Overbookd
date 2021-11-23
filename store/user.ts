@@ -99,6 +99,17 @@ export const actions = actionTree(
       }
       return roles.some((r) => teams.includes(r));
     },
+
+    async acceptSelection({ commit }, timeslotIDS: string[]) {
+      const res = await safeCall(
+        this,
+        UserRepo.acceptSelection(this, timeslotIDS)
+      );
+      if (res) {
+        commit("UPDATE_USER", res.data);
+      }
+      return;
+    },
   }
 );
 
