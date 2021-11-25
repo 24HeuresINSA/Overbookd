@@ -1,0 +1,1 @@
+docker-compose -f docker-compose-dev.yml -p dev --env-file dev.env "$@"

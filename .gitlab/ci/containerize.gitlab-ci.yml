@@ -1,0 +1,54 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME== "master"'
+      variables:
+        BASE_URL: $BASE_URL_PROD
+        BASE_URL_KEYCLOAK: $BASE_URL_KEYCLOAK_PROD
+    - if: '$CI_COMMIT_REF_NAME == "pre-prod"'
+      variables:
+        BASE_URL: $BASE_URL_PREPROD
+        BASE_URL_KEYCLOAK: $BASE_URL_KEYCLOAK_PREPROD
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
+      variables:
+        BASE_URL: $BASE_URL_DEV
+        BASE_URL_KEYCLOAK: $BASE_URL_KEYCLOAK_DEV
+
+containerize:
+  image: docker
+  services:
+    - name: docker:dind
+      command: ["--experimental"]
+  stage: docker
+  before_script:
+    - mkdir -p ~/.docker/cli-plugins
+    - mv buildx ~/.docker/cli-plugins/docker-buildx
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
+    - if [ "$CI_COMMIT_REF_NAME" = "master" ]; then VERSION_TAG=$(cat package.json | grep version | tr -d '[[:space:]]' | sed 's/version//g' | sed 's/[\",:]//g'); else VERSION_TAG=${CI_COMMIT_REF_NAME}_$(cat package.json | grep version | tr -d '[[:space:]]' | sed 's/version//g' | sed 's/[\",:]//g'); fi
+    - if [ "$CI_COMMIT_REF_NAME" = "master" ]; then TAG="latest"; else TAG=$CI_COMMIT_REF_NAME; fi
+
+  script:
+    - docker buildx create --use
+    - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd/frontend:$VERSION_TAG --tag registry.gitlab.com/24-heures-insa/overbookd/frontend:$TAG --build-arg BASE_URL=$BASE_URL --build-arg BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK .
+  only:
+    - master
+    - pre-prod
+    - develop
+
+merge_requests_containerize:
+    image: docker
+    services:
+      - name: docker:dind
+        command: ["--experimental"]
+    stage: docker
+    before_script:
+      - mkdir -p ~/.docker/cli-plugins
+      - mv buildx ~/.docker/cli-plugins/docker-buildx
+      - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
+
+    script:
+      - docker buildx create --use
+      - docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE_URL=$BASE_URL --build-arg BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK .
+    only:
+      - merge_requests

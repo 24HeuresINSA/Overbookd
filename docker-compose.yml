@@ -1,0 +1,136 @@
+version: '3'
+
+networks:
+  overbookd_prod-net-api:
+  overbookd_prod-net-keycloak:
+  traefik-public:
+    external: true
+
+services:
+  db_keycloak:
+    container_name: overbookd_prod_db_keycloak
+    image: library/mysql
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data/prod/keycloak:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${KEYCLOAK_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${KEYCLOAK_MYSQL_DATABASE}
+      MYSQL_USER: ${KEYCLOAK_MYSQL_USER}
+      MYSQL_PASSWORD: ${KEYCLOAK_MYSQL_PASSWORD}
+    networks:
+      - overbookd_prod-net-keycloak
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 30s
+      retries: 15
+
+  keycloak:
+    image: jboss/keycloak
+    container_name: overbookd_prod_keycloak
+    depends_on:
+      - db_keycloak
+    restart: always
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: db_keycloak
+      DB_DATABASE: ${KEYCLOAK_MYSQL_DATABASE}
+      DB_USER: ${KEYCLOAK_MYSQL_USER}
+      DB_PASSWORD: ${KEYCLOAK_MYSQL_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_IMPORT: /tmp/realm-export.json
+      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_FRONTEND_URL}
+    volumes:
+      - ./assets/json/realm-export.json:/tmp/realm-export.json
+    # command:
+    #   - "-b 0.0.0.0 -Dkeycloak.import=/tmp/realm-export.json"
+    networks:
+      - overbookd_prod-net-keycloak
+      - overbookd_prod-net-api
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/auth`))"
+      - "traefik.http.routers.keycloak.tls=true"
+    healthcheck:
+      test: [ "CMD", "curl" ,"--fail", "http://localhost:8080/auth/realms/master" ]
+      interval: 60s
+      timeout: 3s
+      retries: 15
+  api:
+    container_name: overbookd_prod_api
+    image: registry.gitlab.com/24-heures-insa/overbookd/backend
+    restart: always
+    networks:
+      - overbookd_prod-net-keycloak
+      - overbookd_prod-net-api
+      - traefik-public
+    volumes:
+      - ./data/prod/images:/overbookd/backend/images
+    environment:
+#      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+#      DATABASE_HOST: db_project_a
+#      DATABASE_PORT: 3306
+      DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_prod_mongo:27017/
+      AUTH_URL: ${OVERBOOKD_AUTH_URL}
+      ADMIN_PASSWORD: ${OVERBOOKD_KEYCLOAK_ADMIN_PASSWORD}
+      ADMIN_USERNAME: ${OVERBOOKD_KEYCLOAK_ADMIN_USERNAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.services.api.loadbalancer.server.port=2424"
+      - "traefik.http.routers.api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.api.tls=true"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  mongodb:
+    container_name: overbookd_prod_mongo
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${OVERBOOKD_DATABASE_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${OVERBOOKD_DATABASE_PASSWORD}
+    networks:
+      - overbookd_prod-net-api
+    volumes:
+      - ./data/prod/mongo/db:/data/db
+      - ./data/prod/mongo/configdb:/data/configdb
+
+  front:
+    container_name: overbookd_prod_front
+    image: registry.gitlab.com/24-heures-insa/overbookd/frontend
+    restart: always
+    environment:
+      NODE_ENV: prod
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.entrypoints=websecure"
+      - "traefik.http.services.front.loadbalancer.server.port=1234"
+      - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.routers.front.tls=true"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # doc:
+  #   image: registry.gitlab.com/24-heures-insa/overbookd/documentation
+  #   restart: always
+  #   networks:
+  #     - traefik-public
+  #   environment:
+  #     SITE: overbookd-doc
+  #     WEBSITE_NAME: Documentation
+  #     TEMPLATE: classic
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.doc.entrypoints=websecure"
+  #     - "traefik.http.services.doc.loadbalancer.server.port=3001"
+  #     - "traefik.http.routers.doc.rule=Host(`overbookd.${DOMAIN}`) && PathPrefix(`/docs`)"
+  #     - "traefik.http.routers.doc.tls=true"
+  #     - "traefik.http.routers.doc.middlewares=doc-redirect"
+  #     - "traefik.http.middlewares.doc-redirect.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$"
+  #     - "traefik.http.middlewares.doc-redirect.redirectregex.replacement=https://$$1/docs"
