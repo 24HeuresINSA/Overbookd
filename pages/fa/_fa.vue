@@ -5,7 +5,12 @@
     >
       <h1>Fiche Activitée 🤯</h1>
       <h2 v-if="isNewFA">Create new FA</h2>
-      <h2 v-if="FA.count">FA: {{ FA.count }}</h2>
+      <h2
+        v-if="FA.count"
+        :style="FA.isValid === false ? `text-decoration:line-through;` : ``"
+      >
+        {{ FA.isValid === false ? "[SUPPRIME] " : "" }}FA: {{ FA.count }}
+      </h2>
       <h3>{{ FA.status ? FA.status : "draft" }}</h3>
       <v-icon
         v-for="(validator, i) of validators"
@@ -31,12 +36,13 @@
         </v-col>
         <v-col md="6">
           <FormCard
-            title="Presta"
-            form-key="fa_external_form"
-            topic="general"
-            :is-disabled="isValidated('humain')"
+            title="Signa"
+            topic="signalisation"
+            details="Contacter les signa à signalitique@24heures.org pour ajouter des lieux non existant dans la liste deroulante"
+            form-key="fa_signalisation_form"
+            :is-disabled="isValidated('signa')"
             :form="FA"
-            @form-change="updateForm('general', $event)"
+            @form-change="updateForm('signalisation', $event)"
           ></FormCard>
         </v-col>
       </v-row>
@@ -65,23 +71,16 @@
       </v-row>
       <v-row>
         <v-col md="6">
-          <FormCard
-            title="Sécu"
-            topic="security"
-            form-key="fa_security_form"
-            :is-disabled="isValidated('secu')"
-            :form="FA"
-            @form-change="updateForm('security', $event)"
-          ></FormCard>
+          <PassSecuCard></PassSecuCard>
         </v-col>
         <v-col md="6">
           <FormCard
-            title="Signa"
-            topic="signalisation"
-            form-key="fa_signalisation_form"
-            :is-disabled="isValidated('signa')"
+            title="Presta"
+            form-key="fa_external_form"
+            topic="general"
+            :is-disabled="isValidated('humain')"
             :form="FA"
-            @form-change="updateForm('signalisation', $event)"
+            @form-change="updateForm('general', $event)"
           ></FormCard>
         </v-col>
       </v-row>
@@ -123,6 +122,13 @@
         :store="FAStore"
         :disabled="isValidated('elec')"
       ></LogisticsCard>
+      <FormCard
+        form-key="fa_elec_form"
+        topic="elec"
+        :is-disabled="isValidated('elec')"
+        :form="FA"
+        @form-change="updateForm('elec', $event)"
+      ></FormCard>
 
       <br />
       <CommentCard :comments="FA.comments" form="FA"></CommentCard>
@@ -143,13 +149,21 @@
       "
     >
       <v-btn v-if="validator" color="red" @click="refuseDialog = true"
-        >refusé</v-btn
+        >refusé par {{ validator }}
+      </v-btn>
+      <v-btn v-if="validator" color="green" @click="validate"
+        >validé par {{ validator }}</v-btn
       >
-      <v-btn v-if="validator" color="green" @click="validate">validé</v-btn>
       <v-btn color="secondary" @click="validationDialog = true"
         >soumettre à validation
       </v-btn>
       <v-btn color="warning" @click="saveFA">sauvgarder</v-btn>
+      <v-btn
+        v-if="validator && FA.isValid === false"
+        color="red"
+        @click="undelete"
+        >récupérer
+      </v-btn>
     </div>
 
     <v-dialog v-model="validationDialog" width="500">
@@ -207,10 +221,19 @@ import { RepoFactory } from "../../repositories/repoFactory";
 import LogisticsCard from "../../components/organisms/form/LogisticsCard";
 import CommentCard from "../../components/organisms/form/CommentCard";
 import FTCard from "../../components/organisms/form/FTCard";
+import { safeCall } from "../../utils/api/calls";
+import PassSecuCard from "../../components/organisms/form/PassSecuCard";
 
 export default {
   name: "Fa",
-  components: { FTCard, CommentCard, LogisticsCard, TimeframeTable, FormCard },
+  components: {
+    PassSecuCard,
+    FTCard,
+    CommentCard,
+    LogisticsCard,
+    TimeframeTable,
+    FormCard,
+  },
   middleware: "user",
 
   data() {
@@ -286,6 +309,14 @@ export default {
   },
 
   methods: {
+    async undelete() {
+      await this.FAStore.undelete();
+      await safeCall(
+        this,
+        this.FARepo.updateFA(this, this.FAStore.mFA),
+        "undelete"
+      );
+    },
     getValidatorIcon(validator) {
       try {
         return this.teams.find((team) => team.name === validator).icon;
@@ -343,7 +374,7 @@ export default {
     },
 
     validate() {
-      const validator = this.validator();
+      const validator = this.validator;
       if (validator) {
         this.FAStore.validate(validator);
         this.saveFA();

@@ -13,4 +13,15 @@ export interface FA {
   refused: String[];
   comments: { time: Date; text: string; validator: string; topic?: string }[];
   FTs: FT[];
+  isValid: boolean;
+  securityPasses: SecurityPass[];
+}
+
+export interface SecurityPass {
+  fullname: string;
+  phone: string;
+  email: string;
+  comment: string;
+  licensePlate: string;
+  timeslots: string[];
 }
