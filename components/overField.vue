@@ -55,6 +55,16 @@
         dense
         @change="onChange"
     ></v-select>
+    <v-autocomplete
+        v-else-if="mField.type === 'autocomplete'"
+        v-model="data"
+        :label="mField.label ? mField.label : mField.key"
+        :items="mField.options"
+        :disabled="disabled"
+        :multiple="mField.multiple"
+        dense
+        @change="onChange"
+    ></v-autocomplete>
     <v-select
         v-else-if="mField.type === 'teams'"
         v-model="data"
