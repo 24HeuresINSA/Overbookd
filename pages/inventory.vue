@@ -345,6 +345,8 @@ export default {
 
     onFormChange(form) {
       console.log(form);
+      // because it doesn't work ...
+      form.isValid = true;
       Object.assign(this.selectedItem, form);
     },
 
