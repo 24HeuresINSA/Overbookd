@@ -143,11 +143,14 @@
       <v-icon> mdi-plus </v-icon>
     </v-btn>
 
-    <v-dialog v-model="isFormOpened" max-width="800">
+    <v-dialog v-model="isFormOpened" max-width="800" persistent>
       <v-card>
         <v-card-title>Ajouter un nouveau objet</v-card-title>
         <v-card-text>
-          <v-btn color="primary" text @click="addEquipment"> Ajouter</v-btn>
+          <v-btn color="primary" text @click="addEquipment">Sauvegarder</v-btn>
+          <v-btn color="error" text @click="isFormOpened = false">
+            Annuler
+          </v-btn>
 
           <OverForm
             :fields="equipmentForm"
@@ -194,7 +197,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="addEquipment"> Ajouter </v-btn>
+          <v-btn color="primary" text @click="addEquipment">
+            Sauvegarder
+          </v-btn>
+          <v-btn color="error" text @click="isFormOpened = false">
+            Annuler
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -351,7 +359,11 @@ export default {
       this.selectedItem = (
         await this.$axios.put("/equipment", this.selectedItem)
       ).data;
-      this.inventory.push(this.selectedItem);
+      if (
+        this.inventory.findIndex((e) => e._id === this.selectedItem._id) === -1
+      ) {
+        this.inventory.push(this.selectedItem);
+      }
       this.isFormOpened = false;
       this.selectedItem = {};
       this.borrowed = [];
