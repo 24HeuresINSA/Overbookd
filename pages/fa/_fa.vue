@@ -35,15 +35,16 @@
           ></FormCard>
         </v-col>
         <v-col md="6">
-          <FormCard
-            title="Signa"
-            topic="signalisation"
-            details="Contacter les signa à signalitique@24heures.org pour ajouter des lieux non existant dans la liste deroulante"
-            form-key="fa_signalisation_form"
-            :is-disabled="isValidated('signa')"
-            :form="FA"
-            @form-change="updateForm('signalisation', $event)"
-          ></FormCard>
+          <OverSigna></OverSigna>
+          <!--          <FormCard-->
+          <!--            title="Signa"-->
+          <!--            topic="signalisation"-->
+          <!--            details="Contacter les signa à signalitique@24heures.org pour ajouter des lieux non existant dans la liste deroulante"-->
+          <!--            form-key="fa_signalisation_form"-->
+          <!--            :is-disabled="isValidated('signa')"-->
+          <!--            :form="FA"-->
+          <!--            @form-change="updateForm('signalisation', $event)"-->
+          <!--          ></FormCard>-->
         </v-col>
       </v-row>
       <v-row>
@@ -223,10 +224,12 @@ import CommentCard from "../../components/organisms/form/CommentCard";
 import FTCard from "../../components/organisms/form/FTCard";
 import { safeCall } from "../../utils/api/calls";
 import PassSecuCard from "../../components/organisms/form/PassSecuCard";
+import OverSigna from "../../components/organisms/overSigna";
 
 export default {
   name: "Fa",
   components: {
+    OverSigna,
     PassSecuCard,
     FTCard,
     CommentCard,

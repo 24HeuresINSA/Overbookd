@@ -10,9 +10,15 @@
       <v-data-table
         :headers="headers"
         :items="securityPasses"
-        items-per-page="-1"
+        :items-per-page="-1"
         hide-default-footer
-      ></v-data-table>
+      >
+        <template #[`item.action`]="{ index }">
+          <v-btn icon small @click="removeSecurityPass(index)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
 
       <template v-if="isPassSecuRequired">
         <OverForm
@@ -20,7 +26,9 @@
           :disabled="isDisabled"
           @form-change="onFormChange"
         ></OverForm>
-        <v-btn text>Ajouter demande de pass secu</v-btn>
+        <v-btn text @click="addSecurityPass"
+          >Ajouter demande de pass secu</v-btn
+        >
       </template>
     </v-card-text>
   </v-card>
@@ -60,7 +68,9 @@ export default {
         },
         { text: "tel", value: "phone" },
         { text: "commentaire", value: "comment" },
+        { text: "actions", value: "action" },
       ],
+      newSecurityPass: {},
     };
   },
   computed: {
@@ -70,10 +80,19 @@ export default {
   },
   mounted() {
     this.FORM = Array.from(this.$accessor.config.getConfig(this.formKey));
+    if (this.securityPasses.length > 0) {
+      this.isPassSecuRequired = true;
+    }
   },
   methods: {
     onFormChange(form) {
-      this.$emit("form-change", form);
+      this.newSecurityPass = form;
+    },
+    addSecurityPass() {
+      this.$accessor.FA.addSecurityPass(this.newSecurityPass);
+    },
+    removeSecurityPass(index) {
+      this.$accessor.FA.deleteSecurityPass(index);
     },
   },
 };

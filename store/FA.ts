@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { FA, SecurityPass } from "~/utils/models/FA";
+import { FA, SecurityPass, Signalisation } from "~/utils/models/FA";
 import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -13,6 +13,7 @@ export const state = () => ({
     refused: [] as any,
     FTs: [] as FT[],
     securityPasses: [] as SecurityPass[],
+    signalisation: [] as Signalisation[],
   } as FA,
 });
 
@@ -53,6 +54,7 @@ export const mutations = mutationTree(state, {
       FTs: [],
       isValid: true,
       securityPasses: [],
+      signalisation: [],
     };
   },
   ADD_TIMEFRAME: function (state, timeframe) {
@@ -161,11 +163,44 @@ export const mutations = mutationTree(state, {
   UNDELETE: function (state) {
     state.mFA.isValid = true;
   },
+  ADD_SECURITY_PASS: function (state, securityPass) {
+    if (state.mFA.securityPasses === undefined) {
+      state.mFA.securityPasses = [];
+    }
+    state.mFA.securityPasses.push(securityPass);
+  },
+  DELETE_SECURITY_PASS: function (state, index) {
+    state.mFA.securityPasses.splice(index, 1);
+  },
+  ADD_SIGNALISATION: function (state, signalisation) {
+    state.mFA.signalisation.push(signalisation);
+  },
+  DELETE_SIGNALISATION: function (state, index) {
+    state.mFA.signalisation.splice(index, 1);
+  },
+  UPDATE_SIGNALISATION_NUMBER: function (state, { index, number }) {
+    state.mFA.signalisation[index].number = number;
+  },
 });
 
 export const actions = actionTree(
   { state },
   {
+    updateSignalisationNumber(context, signalisationNumber) {
+      context.commit("UPDATE_SIGNALISATION_NUMBER", signalisationNumber);
+    },
+    deleteSignalisation: ({ commit }, index) => {
+      commit("DELETE_SIGNALISATION", index);
+    },
+    addSignalisation: async ({ commit }, signalisation) => {
+      commit("ADD_SIGNALISATION", signalisation);
+    },
+    addSecurityPass: async function ({ commit }, securityPass) {
+      commit("ADD_SECURITY_PASS", securityPass);
+    },
+    deleteSecurityPass: async function ({ commit }, index) {
+      commit("DELETE_SECURITY_PASS", index);
+    },
     assignFA: function ({ commit }, payload) {
       commit("ASSIGN_FA", payload);
     },
