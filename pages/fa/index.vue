@@ -87,12 +87,25 @@
       </v-row>
     </v-container>
 
+    <v-dialog v-model="isNewFADialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>Ajouter une nouvelle FA</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="faName" label="nom de la FA"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="createNewFA">creé la FA</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-btn
       color="secondary"
       elevation="2"
       fab
       class="fab-right"
-      @click="createNewFA"
+      @click="isNewFADialogOpen = true"
     >
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
@@ -132,6 +145,8 @@ export default {
         draft: "grey",
         undefined: "grey",
       },
+      isNewFADialogOpen: false,
+      faName: undefined,
     };
   },
 
@@ -200,9 +215,17 @@ export default {
     },
 
     async createNewFA() {
+      if (!this.faName) {
+        return;
+      }
+      const FA = {
+        general: {
+          name: this.faName,
+        },
+      };
       const res = await safeCall(
         this.$store,
-        RepoFactory.faRepo.createNewFA(this, {}),
+        RepoFactory.faRepo.createNewFA(this, FA),
         "FA created 🥳"
       );
       if (res) {

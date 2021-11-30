@@ -15,6 +15,14 @@ export interface FA {
   FTs: FT[];
   isValid: boolean;
   securityPasses: SecurityPass[];
+  signalisation: Signalisation[];
+}
+
+export interface Signalisation {
+  name: string;
+  type: string;
+  number: number;
+  text: string;
 }
 
 export interface SecurityPass {
