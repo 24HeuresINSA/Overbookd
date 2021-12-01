@@ -57,15 +57,13 @@ export default {
     };
   },
   computed: {
-    // mFA: function () {
-    //   return this.$accessor.FA.mFA;
-    // },
     data: function () {
       return this.form[this.topic];
     },
   },
   mounted() {
     this.FORM = Array.from(this.$accessor.config.getConfig(this.formKey));
+    console.log(this.data);
   },
   methods: {
     onFormChange(form) {

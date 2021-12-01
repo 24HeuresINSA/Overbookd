@@ -56,19 +56,19 @@ export default {
     return {
       isPassSecuRequired: false,
       topic: "secu",
-      formKey: "fa_security_form",
+      formKey: "fa_security_pass_form",
       FORM: [],
       // datatable
       headers: [
-        { text: "nom", value: "fullname" },
-        { text: "email", value: "email" },
+        {text: "nom", value: "fullname"},
+        {text: "email", value: "email"},
         {
           text: "plaque d'immatriculation",
           value: "licensePlate",
         },
-        { text: "tel", value: "phone" },
-        { text: "commentaire", value: "comment" },
-        { text: "actions", value: "action" },
+        {text: "tel", value: "phone"},
+        {text: "commentaire", value: "comment"},
+        {text: "actions", value: "action"},
       ],
       newSecurityPass: {},
     };

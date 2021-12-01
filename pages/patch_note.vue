@@ -1,6 +1,13 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.20: le Patch Mammi 🚨</h2>
+    <ul>
+      <li>☕️ Le cafe de Hamza</li>
+      <li>💀 UN MILLARD DE CORRECTION SUR LES FA</li>
+      <li>🚨 OverSigna pour simplifier le taffe de la signa</li>
+      <li>🤐 gestion des pass secu dans les FA</li>
+    </ul>
     <h2>Patch note BETA 0.19: le Patch FA</h2>
     <ul>
       <li>🥳 Gros rework des FA</li>
