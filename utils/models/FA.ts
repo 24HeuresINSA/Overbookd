@@ -16,6 +16,12 @@ export interface FA {
   isValid: boolean;
   securityPasses: SecurityPass[];
   signalisation: Signalisation[];
+  electricityNeeds: ElectricityNeed[];
+}
+
+export interface ElectricityNeed {
+  connectionType: string;
+  power: number;
 }
 
 export interface Signalisation {

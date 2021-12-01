@@ -1,95 +1,37 @@
 <template>
   <div>
-    <v-container>
-      <v-row>
-        <v-col md="3">
-          <v-card>
-            <v-card-title>
-              <span class="headline">Filtres</span>
-            </v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-model="search.name"
-                label="Nom de l'objet"
-                append-icon="mdi-search"
-                single-line
-                hide-details
-              ></v-text-field>
-              <v-select
-                v-model="search.type"
-                :items="selectOptions"
-                label="Catégorie/type"
-                append-icon=""
-                single-line
-                hide-details
-              ></v-select>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="clear"> Clear </v-btn>
-            </v-card-actions>
-          </v-card>
-          <br />
-          <v-card>
-            <v-card-title>
-              <span class="headline">Lieux</span>
-            </v-card-title>
-            <v-card-text>
-              <v-chip-group
-                v-model="search.location"
-                column
-                multiple
-                active-class="primary--text"
-              >
-                <v-chip
-                  v-for="location in possibleLocations"
-                  :key="location"
-                  :value="location"
-                  >{{ location }}</v-chip
-                >
-              </v-chip-group>
-              <v-text-field
-                v-model="newLocation"
-                label="Nouveau lieu"
-                append-icon="mdi-search"
-                single-line
-                hide-details
-              ></v-text-field>
-            </v-card-text>
-            <v-card-actions v-if="hasRole('log')">
-              <v-btn color="primary" text @click="pushNewLocation(newLocation)"
-                >Ajouter</v-btn
-              >
-              <v-btn color="primary" text @click="tryDeleteLocation()"
-                >Supprimer</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col>
-          <v-data-table
-            :headers="headers"
-            :items="filteredInventory"
-            group-by="type"
-            :item-class="rowClass"
-            dense
-          >
-            <template #[`item.action`]="{ item }">
-              <v-tooltip bottom>
-                <template #activator="{ on }">
-                  <v-btn icon small @click="showPreciseLoc(item)" v-on="on">
-                    <v-icon small>mdi-help-circle</v-icon>
-                  </v-btn>
-                </template>
-                Afficher l'emplacement précis
-              </v-tooltip>
-              <v-btn v-if="hasRole('log')" icon small @click="edit(item)">
-                <v-icon small>mdi-circle-edit-outline</v-icon>
-              </v-btn>
-              <v-btn v-if="hasRole('log')" icon small @click="deleteItem(item)">
-                <v-icon small>mdi-delete</v-icon>
-              </v-btn>
-            </template>
+    <v-data-table
+        :headers="headers"
+        :items="inventory"
+        group-by="type"
+        :item-class="rowClass"
+        dense
+        :items-per-page="-1"
+    >
+      <template #[`item.action`]="{ item }">
+        <v-btn v-if="hasRole('log')" icon small @click="edit(item)">
+          <v-icon small>mdi-circle-edit-outline</v-icon>
+        </v-btn>
+        <v-btn v-if="hasRole('log')" icon small @click="deleteItem(item)">
+          <v-icon small>mdi-delete</v-icon>
+        </v-btn>
+      </template>
+
+      <template #[`item.borrow`]="{ item }">
+        <v-list dense>
+          <v-list-item v-for="(borrow, index) of item.borrowed" :key="index">
+            <v-list-item-content>
+              <v-list-item-title style="padding: 0">
+                {{ borrow.amount }} {{ borrow.from }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </template>
+
+      <template #[`item.borrowedCount`]="{ item }">
+        {{ getBorrowedCount(item) }}
+      </template>
 
             <template #[`item.borrow`]="{ item }">
               <v-list dense>

@@ -13,7 +13,7 @@
       </h2>
       <h3>{{ FA.status ? FA.status : "draft" }}</h3>
       <v-icon
-        v-for="(validator, i) of validators"
+        v-for="(validator, i) of VALIDATORS"
         :key="i"
         :color="getIconColor(validator)"
       >
@@ -27,6 +27,7 @@
           <FormCard
             style="height: 100%; width: 100%"
             title="Général"
+            details="N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu peux aussi t'aider en allant voir les FA d'avant sur cetaitmieuxavant.24heures.org/ en te connectant avec jeuneetcon@24heures.org "
             form-key="fa_general_form"
             topic="general"
             :is-disabled="isValidated('humain')"
@@ -35,16 +36,7 @@
           ></FormCard>
         </v-col>
         <v-col md="6">
-          <OverSigna></OverSigna>
-          <!--          <FormCard-->
-          <!--            title="Signa"-->
-          <!--            topic="signalisation"-->
-          <!--            details="Contacter les signa à signalitique@24heures.org pour ajouter des lieux non existant dans la liste deroulante"-->
-          <!--            form-key="fa_signalisation_form"-->
-          <!--            :is-disabled="isValidated('signa')"-->
-          <!--            :form="FA"-->
-          <!--            @form-change="updateForm('signalisation', $event)"-->
-          <!--          ></FormCard>-->
+          <OverSigna :is-disabled="isValidated('signa')"></OverSigna>
         </v-col>
       </v-row>
       <v-row>
@@ -52,6 +44,7 @@
           <FormCard
             title="Détail"
             form-key="fa_details_form"
+            details="Décris ici ton activité, soit assez exhaustif, si tu le demande, c'est ce texte qui sera publié sur le site 24heures.org"
             topic="details"
             :is-disabled="isValidated('humain')"
             :form="FA"
@@ -71,43 +64,63 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col md="6">
+        <v-col md="12">
           <PassSecuCard></PassSecuCard>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="6">
+          <FormCard
+            title="Sécurité"
+            form-key="fa_security_form"
+            topic="security"
+            details="Si tu as des questions sur les besoins ou non de dispositif de secu de ton activité, contacte securite@24heures.org"
+            :is-disabled="isValidated('secu')"
+            :form="FA"
+            @form-change="updateForm('security', $event)"
+          ></FormCard>
         </v-col>
         <v-col md="6">
           <FormCard
             title="Presta"
             form-key="fa_external_form"
-            topic="general"
+            topic="external"
             :is-disabled="isValidated('humain')"
             :form="FA"
-            @form-change="updateForm('general', $event)"
+            @form-change="updateForm('external', $event)"
           ></FormCard>
         </v-col>
       </v-row>
-      <v-col>
-        <h2>Logistique 🚚</h2>
-        <LogisticsCard
-          title="Matos"
-          :types="[
-            'BARS',
-            'BOIS',
-            'BRICOLAGE',
-            'CANAPE/FAUTEUIL',
-            'CUISINE',
-            'DECO',
-            'FRIGO',
-            'LITTERIE',
-            'PROPRETE',
-            'SCENE',
-            'SECU',
-            'TENTE',
-            'AUTRES MATOS',
-          ]"
-          :store="FAStore"
-          :disabled="isValidated('log')"
-        ></LogisticsCard>
-      </v-col>
+      <v-row>
+        <v-col>
+          <h2>Logistique 🚚</h2>
+          <h4>
+            Si il manque des informations, ou du matos veuillez contacter le
+            responsable de logistique sur
+            <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
+          </h4>
+          <LogisticsCard
+            title="Matos"
+            :types="[
+              'BARS',
+              'BOIS',
+              'BRICOLAGE',
+              'CANAPE/FAUTEUIL',
+              'CUISINE',
+              'DECO',
+              'FRIGO',
+              'LITTERIE',
+              'PROPRETE',
+              'SCENE',
+              'SECU',
+              'TENTE',
+              'AUTRES MATOS',
+            ]"
+            :store="FAStore"
+            :disabled="isValidated('log')"
+          ></LogisticsCard>
+        </v-col>
+      </v-row>
       <v-row />
       <br />
       <LogisticsCard
@@ -118,18 +131,29 @@
       ></LogisticsCard>
       <br />
       <LogisticsCard
-        title="Elec"
+        title="Matos Elec"
         :types="['ALIMENTATION ELECTRIQUE', 'ECLAIRAGE']"
         :store="FAStore"
         :disabled="isValidated('elec')"
       ></LogisticsCard>
-      <FormCard
-        form-key="fa_elec_form"
-        topic="elec"
-        :is-disabled="isValidated('elec')"
-        :form="FA"
-        @form-change="updateForm('elec', $event)"
-      ></FormCard>
+      <br />
+
+      <v-row>
+        <v-col md="6">
+          <ElecLogisticCard :disabled="isValidated('elec')"></ElecLogisticCard>
+        </v-col>
+        <v-col md="6">
+          <FormCard
+            title="Eau"
+            form-key="fa_water_form"
+            topic="elec"
+            details="Si ton animation a besoin d'élec , il faut savoir maintenant puissance et connectique, rapproche toi du prestataire pour avoir ces réponses ou voit avec la Log Elec via logistique@24heures.org"
+            :is-disabled="isValidated('elec')"
+            :form="FA"
+            @form-change="updateForm('elec', $event)"
+          ></FormCard>
+        </v-col>
+      </v-row>
 
       <br />
       <CommentCard :comments="FA.comments" form="FA"></CommentCard>
@@ -147,20 +171,88 @@
         position: sticky;
         bottom: 20px;
         z-index: 30;
+        align-items: baseline;
       "
     >
-      <v-btn v-if="validator" color="red" @click="refuseDialog = true"
-        >refusé par {{ validator }}
-      </v-btn>
-      <v-btn v-if="validator" color="green" @click="validate"
-        >validé par {{ validator }}</v-btn
-      >
+      <div>
+        <v-btn
+          v-if="validators.length === 1"
+          color="red"
+          @click="
+            v = validators[0];
+            refuseDialog = true;
+          "
+          >refusé par {{ validators[0] }}
+        </v-btn>
+        <v-menu v-if="validators.length > 1" offset-y>
+          <template #activator="{ attrs, on }">
+            <v-btn
+              class="white--text ma-5"
+              v-bind="attrs"
+              color="red"
+              v-on="on"
+            >
+              Refuser
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="(validator, i) of validators"
+              :key="validator"
+              link
+            >
+              <v-list-item-title
+                @click="
+                  v = validator;
+                  refuseDialog = true;
+                "
+                v-text="validator"
+              ></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+      <div>
+        <template v-if="validators.length === 1">
+          <v-btn color="green" @click="validate(validators[0])"
+            >validé par {{ validators[0] }}
+          </v-btn>
+        </template>
+        <v-menu v-if="validators.length > 1" offset-y>
+          <template #activator="{ attrs, on }">
+            <v-btn
+              class="white--text ma-5"
+              v-bind="attrs"
+              color="green"
+              v-on="on"
+            >
+              valider
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="(validator, i) of validators"
+              :key="validator"
+              link
+            >
+              <v-list-item-title
+                color="green"
+                @click="validate(validator)"
+                v-text="validator"
+              ></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+
       <v-btn color="secondary" @click="validationDialog = true"
         >soumettre à validation
       </v-btn>
       <v-btn color="warning" @click="saveFA">sauvgarder</v-btn>
       <v-btn
-        v-if="validator && FA.isValid === false"
+        v-if="validators.length >= 1 && FA.isValid === false"
         color="red"
         @click="undelete"
         >récupérer
@@ -225,10 +317,12 @@ import FTCard from "../../components/organisms/form/FTCard";
 import { safeCall } from "../../utils/api/calls";
 import PassSecuCard from "../../components/organisms/form/PassSecuCard";
 import OverSigna from "../../components/organisms/overSigna";
+import ElecLogisticCard from "../../components/organisms/form/ElecLogisticCard";
 
 export default {
   name: "Fa",
   components: {
+    ElecLogisticCard,
     OverSigna,
     PassSecuCard,
     FTCard,
@@ -271,8 +365,9 @@ export default {
         { text: "action", value: "action" },
       ],
 
-      validators: undefined,
       teams: undefined,
+      v: undefined,
+      VALIDATORS: [],
     };
   },
 
@@ -283,24 +378,29 @@ export default {
     me: function () {
       return this.$accessor.user.me;
     },
-    validator: function () {
-      let mValidator = null;
-      if (this.validators) {
-        this.validators.forEach((validator) => {
+    validators: function () {
+      let mValidator = [];
+      const validators = this.$accessor.config.getConfig("fa_validators");
+      if (this.me.team.includes("admin")) {
+        // admin has all the validators powers
+        return validators;
+      }
+      if (validators) {
+        validators.forEach((validator) => {
           if (this.me.team && this.me.team.includes(validator)) {
-            mValidator = validator;
+            mValidator.push(validator);
           }
         });
         return mValidator;
       }
-      return null;
+      return [];
     },
   },
 
   async mounted() {
-    this.validators = this.$accessor.config.getConfig("fa_validators");
     this.FAStore = this.$accessor.FA;
     this.teams = this.$accessor.config.getConfig("teams");
+    this.VALIDATORS = this.$accessor.config.getConfig("fa_validators");
 
     // get FA if not new FA
     if (!this.isNewFA) {
@@ -376,8 +476,7 @@ export default {
       this.saveFA();
     },
 
-    validate() {
-      const validator = this.validator;
+    validate(validator) {
       if (validator) {
         this.FAStore.validate(validator);
         this.saveFA();
@@ -385,8 +484,8 @@ export default {
     },
 
     refuse() {
+      const validator = this.v;
       // refuse FA
-      const validator = this.validator;
       this.FAStore.refuse({
         validator,
         comment: this.refuseComment,
