@@ -118,3 +118,11 @@ export interface timeslot {
   };
   charisma: number;
 }
+
+export interface location {
+  _id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  neededBy: string[];
+}
