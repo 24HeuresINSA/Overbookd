@@ -102,7 +102,7 @@
                 </v-list-item>
               </v-list>
             </template>
-            <template #group.header="{ group, headers, toggle, isOpen }">
+            <template #[`group.header`]="{ group, headers, toggle, isOpen }">
               <td :colspan="headers.length" class="primary">
                 <v-btn
                   :ref="group"
@@ -328,7 +328,7 @@ export default {
         name: [(v) => !!v || "Veuillez entrer un nom"],
         amount: [
           (v) => !!v || "Veuillez entrer une quantité",
-          (v) => v > 0 || "Veuillez entrer une quantité positive",
+          (v) => v >= 0 || "Veuillez entrer une quantité positive",
         ],
         location: [(v) => !!v || "Veuillez choisir un lieu de stockage"],
         type: [(v) => !!v || "Veuillez choisir un type"],
@@ -424,7 +424,6 @@ export default {
       this.$refs.form.validate();
       if (!this.valid) return;
       this.selectedItem.borrowed = this.borrowed;
-      delete this.selectedItem._id;
       this.selectedItem = (
         await this.$axios.put("/equipment", this.selectedItem)
       ).data;
