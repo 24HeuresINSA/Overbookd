@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-text-field
-        v-if="mField.type === 'string' || mField.type === undefined"
-        v-model="data"
-        :rules="
+      v-if="mField.type === 'string' || mField.type === undefined"
+      :value="data"
+      :rules="
         field.regex
           ? [
               (v) =>
@@ -14,46 +14,46 @@
             ]
           : []
       "
-        :type="mField.option"
-        :counter="mField.counter"
-        :label="
+      :type="mField.option"
+      :counter="mField.counter"
+      :label="
         (mField.label ? mField.label : mField.key) +
         (mField.isRequired ? '*' : '')
       "
-        :disabled="disabled"
-        @change="onChange"
+      :disabled="disabled"
+      @change="onChange"
     ></v-text-field>
     <v-textarea
-        v-else-if="mField.type === 'textarea'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        required
-        :disabled="disabled"
-        @change="onChange"
+      v-else-if="mField.type === 'textarea'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      required
+      :disabled="disabled"
+      @change="onChange"
     ></v-textarea>
     <RichEditor
-        v-else-if="mField.type === 'rich-text'"
-        v-model="data"
-        :disabled="disabled"
-        :data="data"
-        @change="onChange"
+      v-else-if="mField.type === 'rich-text'"
+      :value="data"
+      :disabled="disabled"
+      :data="data"
+      @change="onChange"
     ></RichEditor>
     <v-switch
-        v-else-if="mField.type === 'switch'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        :disabled="disabled"
-        @change="onChange"
+      v-else-if="mField.type === 'switch'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :disabled="disabled"
+      @change="onChange"
     ></v-switch>
     <v-select
-        v-else-if="mField.type === 'select'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        :items="mField.options"
-        :disabled="disabled"
-        :multiple="mField.multiple"
-        dense
-        @change="onChange"
+      v-else-if="mField.type === 'select'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :items="mField.options"
+      :disabled="disabled"
+      :multiple="mField.multiple"
+      dense
+      @change="onChange"
     ></v-select>
     <v-autocomplete
         v-else-if="mField.type === 'autocomplete'"
@@ -66,20 +66,20 @@
         @change="onChange"
     ></v-autocomplete>
     <v-select
-        v-else-if="mField.type === 'teams'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        :items="teams"
-        :disabled="disabled"
-        dense
-        @change="onChange"
+      v-else-if="mField.type === 'teams'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :items="teams"
+      :disabled="disabled"
+      dense
+      @change="onChange"
     ></v-select>
     <v-datetime-picker
-        v-if="mField.type === 'datetime'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        :disabled="disabled"
-        @change="onChange"
+      v-if="mField.type === 'datetime'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :disabled="disabled"
+      @change="onChange"
     ></v-datetime-picker>
     <div v-if="mField.type === 'date'">
       <p>
@@ -89,31 +89,31 @@
         }}
       </p>
       <v-date-picker
-          v-model="data"
-          :label="mField.label ? mField.label : mField.key"
-          :active-picker.sync="activePicker"
-          :disabled="disabled"
-          @change="onChange"
+        :value="data"
+        :label="mField.label ? mField.label : mField.key"
+        :active-picker.sync="activePicker"
+        :disabled="disabled"
+        @change="onChange"
       ></v-date-picker>
     </div>
     <v-autocomplete
-        v-else-if="mField.type === 'user'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        :items="users"
-        :disabled="disabled"
-        dense
-        @change="onChange"
+      v-else-if="mField.type === 'user'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :items="users"
+      :disabled="disabled"
+      dense
+      @change="onChange"
     ></v-autocomplete>
 
     <v-time-picker
-        v-if="mField.type === 'time'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        format="24hr"
-        :allowed-minutes="allowedMinutes"
-        :disabled="disabled"
-        @change="onChange"
+      v-if="mField.type === 'time'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      format="24hr"
+      :allowed-minutes="allowedMinutes"
+      :disabled="disabled"
+      @change="onChange"
     ></v-time-picker>
     <p v-if="mField.description">{{ mField.description }}</p>
   </div>
@@ -169,6 +169,13 @@ export default {
     onChange(value) {
       if (typeof this.field.value === "string") {
         value = value.trim();
+      }
+      if (this.field.type === "number") {
+        try {
+          value = +value;
+        } catch (e) {
+          console.log(e);
+        }
       }
       this.$emit("value", { key: this.field.key, value });
     },

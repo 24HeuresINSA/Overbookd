@@ -14,7 +14,14 @@
     <v-form>
       <v-container class="form-container">
         <v-row>
-          <v-img src="img/memes/home_meme.png"></v-img>
+          <v-col>
+            <v-img
+              style="transform: translate(100px, 0)"
+              src="img/memes/home_meme.jpg"
+              max-height="350"
+              max-width="350"
+            ></v-img>
+          </v-col>
         </v-row>
         <v-row>
           <v-img

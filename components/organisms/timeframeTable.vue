@@ -1,6 +1,10 @@
 <template>
   <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
     <v-card-title>Créneaux</v-card-title>
+    <v-card-subtitle
+      >Pour créer un créneau clique et étire le créneau, une fois créé tu peux
+      le déplacer
+    </v-card-subtitle>
 
     <v-data-table :headers="headers" :items="timeframes" dense>
       <template #[`item.date`]="{ item }">
