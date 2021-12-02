@@ -35,6 +35,7 @@
               <span class="headline">Lieux</span>
             </v-card-title>
             <v-card-text>
+              <location-adder ref="locationAdder"></location-adder>
               <v-chip-group
                 v-model="search.location"
                 column
@@ -43,26 +44,22 @@
               >
                 <v-chip
                   v-for="location in possibleLocations"
-                  :key="location"
-                  :value="location"
-                  >{{ location }}</v-chip
+                  :key="location._id"
+                  :value="location.name"
+                  >{{ location.name }}</v-chip
                 >
               </v-chip-group>
-              <v-text-field
-                v-model="newLocation"
-                label="Nouveau lieu"
-                append-icon="mdi-search"
-                single-line
-                hide-details
-              ></v-text-field>
             </v-card-text>
             <v-card-actions v-if="hasRole('log')">
-              <v-btn color="primary" text @click="pushNewLocation(newLocation)"
+              <v-btn
+                color="primary"
+                text
+                @click="$refs.locationAdder.openDialog()"
                 >Ajouter</v-btn
               >
-              <v-btn color="primary" text @click="tryDeleteLocation()"
+              <!-- <v-btn color="primary" text @click="tryDeleteLocation()"
                 >Supprimer</v-btn
-              >
+              > -->
             </v-card-actions>
           </v-card>
         </v-col>
@@ -152,48 +149,103 @@
             Annuler
           </v-btn>
 
-          <OverForm
+          <!-- <OverForm
             :fields="equipmentForm"
             :data="selectedItem"
             @form-change="onFormChange"
           >
-          </OverForm>
-          <br />
-          <v-divider></v-divider>
-          <br />
-          <h4>Ajout de matos emprunté</h4>
-          <v-container style="display: flex; flex-wrap: wrap">
-            <v-text-field v-model="newBorrow.from" label="qui"></v-text-field>
+          </OverForm> -->
+          <v-form ref="form" v-model="valid">
             <v-text-field
-              v-model="newBorrow.amount"
-              type="number"
-              label="quantite"
+              v-model="selectedItem.name"
+              label="Nom de l'objet"
+              append-icon="mdi-search"
+              single-line
+              hide-details
+              :rules="rules.name"
+              required
             ></v-text-field>
-          </v-container>
-          <v-container
-            style="
-              display: flex;
-              justify-content: space-around;
-              align-content: baseline;
-            "
-          >
-            <label>debut</label>
-            <v-date-picker v-model="newBorrow.start"></v-date-picker>
-            <label>fin</label>
-            <v-date-picker v-model="newBorrow.end"></v-date-picker>
-          </v-container>
+            <v-select
+              v-model="selectedItem.type"
+              required
+              :items="[...equipmentForm[1].options].sort()"
+              label="Catégorie/type"
+              append-icon=""
+              single-line
+              :rules="rules.type"
+            ></v-select>
+            <v-text-field
+              v-model="selectedItem.amount"
+              label="Quantité"
+              append-icon="mdi-search"
+              single-line
+              required
+              type="number"
+              :rules="rules.amount"
+            ></v-text-field>
 
-          <v-data-table :headers="borrowedHeader" :items="borrowed">
-            <template #[`item.action`]="{ item }">
-              <v-btn icon small @click="deleteBorrowed(item)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-data-table>
+            <v-switch
+              v-model="selectedItem.fromPool"
+              label="Vient du pool des assos ? 🐔"
+            ></v-switch>
+            <v-select
+              v-model="selectedItem.location"
+              :items="possibleLocations"
+              label="Lieux de l'objet"
+              item-text="name"
+              :rules="rules.location"
+              single-line
+            ></v-select>
+            <v-text-field
+              v-model="selectedItem.preciseLocation"
+              label="Espace de stockage exact"
+              append-icon="mdi-search"
+              single-line
+            ></v-text-field>
+            <v-text-field
+              v-model="selectedItem.comment"
+              label="Commentaire"
+              append-icon="mdi-search"
+              single-line
+            ></v-text-field>
 
-          <v-btn fab @click="addNewBorrowedItems"
-            ><v-icon>mdi-plus</v-icon></v-btn
-          >
+            <br />
+            <v-divider></v-divider>
+            <br />
+            <h4>Ajout de matos emprunté</h4>
+            <v-container style="display: flex; flex-wrap: wrap">
+              <v-text-field v-model="newBorrow.from" label="qui"></v-text-field>
+              <v-text-field
+                v-model="newBorrow.amount"
+                type="number"
+                label="quantite"
+              ></v-text-field>
+            </v-container>
+            <v-container
+              style="
+                display: flex;
+                justify-content: space-around;
+                align-content: baseline;
+              "
+            >
+              <label>debut</label>
+              <v-date-picker v-model="newBorrow.start"></v-date-picker>
+              <label>fin</label>
+              <v-date-picker v-model="newBorrow.end"></v-date-picker>
+            </v-container>
+
+            <v-data-table :headers="borrowedHeader" :items="borrowed">
+              <template #[`item.action`]="{ item }">
+                <v-btn icon small @click="deleteBorrowed(item)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+            </v-data-table>
+
+            <v-btn fab @click="addNewBorrowedItems"
+              ><v-icon>mdi-plus</v-icon></v-btn
+            >
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -222,14 +274,16 @@
 
 <script>
 import OverForm from "../components/overForm";
+import locationAdder from "../components/organisms/locationAdder";
 import { safeCall } from "../utils/api/calls";
 import { RepoFactory } from "../repositories/repoFactory";
 import { cloneDeep, isEqual } from "lodash";
 import Vue from "vue";
+import LocationAdder from "~/components/organisms/locationAdder.vue";
 
 export default {
   name: "Inventory",
-  components: { OverForm },
+  components: { locationAdder },
   data() {
     return {
       inventory: [],
@@ -269,6 +323,16 @@ export default {
       selectOptions: [],
       newLocation: "",
       isPreciseLocDialog: false,
+      valid: false,
+      rules: {
+        name: [(v) => !!v || "Veuillez entrer un nom"],
+        amount: [
+          (v) => !!v || "Veuillez entrer une quantité",
+          (v) => v > 0 || "Veuillez entrer une quantité positive",
+        ],
+        location: [(v) => !!v || "Veuillez choisir un lieu de stockage"],
+        type: [(v) => !!v || "Veuillez choisir un type"],
+      },
     };
   },
 
@@ -286,9 +350,9 @@ export default {
       });
     },
     possibleLocations() {
-      return this.getConfig("equipment_form").filter((item) => {
-        return item.key === "location";
-      })[0].options;
+      return this.$accessor.location.locations.filter((e) =>
+        e.neededBy.includes("INVENTAIRE")
+      );
     },
     equipmentForm() {
       return this.getConfig("equipment_form");
@@ -297,6 +361,7 @@ export default {
 
   async mounted() {
     // setup config
+    await this.$store.dispatch("location/getAllLocations");
     this.allowedTeams = (await this.getConfig(this, "isInventoryOpen"))
       ? ["log", "hard"]
       : ["log"];
@@ -356,13 +421,16 @@ export default {
     },
 
     async addEquipment() {
+      this.$refs.form.validate();
+      if (!this.valid) return;
       this.selectedItem.borrowed = this.borrowed;
       delete this.selectedItem._id;
       this.selectedItem = (
         await this.$axios.put("/equipment", this.selectedItem)
       ).data;
       if (
-        this.inventory.findIndex((e) => e._id === this.selectedItem._id) === -1
+        this.inventory.findIndex((e) => e.name === this.selectedItem.name) ===
+        -1
       ) {
         this.inventory.push(this.selectedItem);
       }
@@ -397,7 +465,7 @@ export default {
     },
 
     async deleteItem(item) {
-      if (item.required.count > 0) {
+      if (item.required && item.required.count > 0) {
         //TODO: Create this snackbar/toast for global use
         this.$store.commit("setSnackbar", {
           text: "Impossible de supprimer un équipement qui est requis",
@@ -407,7 +475,7 @@ export default {
       }
       item.isValid = false;
       await this.$axios.put("/equipment", item);
-      this.inventory = this.inventory.filter((i) => i._id !== item._id);
+      this.inventory = this.inventory.filter((i) => i.name !== item.name);
     },
     clear() {
       this.search = {
@@ -415,18 +483,6 @@ export default {
         location: "",
         type: "",
       };
-    },
-    async pushNewLocation(location) {
-      if (!location) return;
-      const index = this.equipmentForm.findIndex((e) => e.key === "location");
-      if (this.equipmentForm[index].options.includes(location)) return;
-      const newEquipmentForm = cloneDeep(this.equipmentForm);
-      newEquipmentForm[index].options.push(location);
-      this.$store.dispatch("config/setConfig", {
-        key: "equipment_form",
-        value: newEquipmentForm,
-      });
-      this.$forceUpdate();
     },
     async tryDeleteLocation() {
       const index = this.equipmentForm.findIndex((e) => e.key === "location");
