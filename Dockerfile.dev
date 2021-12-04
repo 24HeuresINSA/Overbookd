@@ -1,11 +1,20 @@
-FROM node:15.3.0-alpine3.10
+FROM node:16.13
 
-WORKDIR /Overbookd/frontend
+WORKDIR /Overbookd-frontend
+
+ARG BASE_URL_KEYCLOAK
+ARG BASE_URL
+
+ENV BASE_URL=$BASE_URL
+ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
+ENV HOST=0.0.0.0
+
+COPY package*.json ./
+
+RUN npm ci
 
 COPY . .
 
-RUN npm install
+EXPOSE 1234
 
-EXPOSE 3000
-
-CMD ["npm", "run", "dev:host"]
+CMD ["npm", "run", "dev"]
