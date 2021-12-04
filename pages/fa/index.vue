@@ -9,10 +9,18 @@
             <v-card>
               <v-card-title>Filters</v-card-title>
               <v-card-text>
-                <v-text-field v-model="search" label="recherche">
+                <v-text-field v-model="search" label="recherche" dense>
                 </v-text-field>
 
-                <v-list shaped style="font-size: 10px">
+                <v-select
+                  v-model="selectedTeam"
+                  label="équipe"
+                  :items="getConfig('teams').map((e) => e.name)"
+                  clearable
+                  dense
+                ></v-select>
+
+                <v-list dense shaped style="font-size: 10px">
                   <v-list-item-group v-model="selectedStatus">
                     <v-list-item>
                       <v-list-item-title class="small">Tous</v-list-item-title>
@@ -22,8 +30,8 @@
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
-                        >Soumise</v-list-item-title
-                      >
+                        >Soumise
+                      </v-list-item-title>
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
@@ -37,13 +45,28 @@
                     </v-list-item>
                   </v-list-item-group>
                 </v-list>
-
-                <br />
-                <v-select
-                  v-model="selectedTeam"
-                  label="équipe"
-                  :items="getConfig('teams').map((e) => e.name)"
-                ></v-select>
+                <div v-for="validator of validators" :key="validator">
+                  <v-btn-toggle
+                    v-model="filter[validator]"
+                    tile
+                    color="deep-purple accent-3"
+                    group
+                  >
+                    <v-icon small>{{ getTeamIcon(validator) }}</v-icon>
+                    <v-btn
+                      x-small
+                      :value="true"
+                      style="padding-right: 2px; padding-left: 2px"
+                      >valider
+                    </v-btn>
+                    <v-btn
+                      x-small
+                      :value="false"
+                      style="padding-right: 2px; padding-left: 2px"
+                      >refuser
+                    </v-btn>
+                  </v-btn-toggle>
+                </div>
               </v-card-text>
             </v-card>
           </v-container>
@@ -56,6 +79,9 @@
             :items-per-page="20"
             class="elevation-1"
           >
+            <template #[`item.validation`]="{ item }">
+              <ValidatorsIcons :form="item"></ValidatorsIcons>
+            </template>
             <template #[`item.action`]="row">
               <tr>
                 <td>
@@ -63,7 +89,7 @@
                     class="mx-2"
                     icon
                     small
-                    @click="onItemSelected(row.item)"
+                    :href="`/fa/${row.item.count}`"
                   >
                     <v-icon small>mdi-circle-edit-outline</v-icon>
                   </v-btn>
@@ -116,23 +142,25 @@
 import Fuse from "fuse.js";
 import { safeCall } from "../../utils/api/calls";
 import { RepoFactory } from "../../repositories/repoFactory";
+import ValidatorsIcons from "../../components/atoms/validators-icons";
 
 export default {
   name: "Fa",
+  components: { ValidatorsIcons },
   data() {
     return {
       FAs: [],
-      itemsPerPageArray: [4, 8, 12],
       search: undefined,
       filter: {},
       sortDesc: false,
       page: 1,
       itemsPerPage: 4,
-      sortBy: "name",
       selectedStatus: 0,
       selectedTeam: undefined,
+      validators: [],
       headers: [
         { text: "status", value: "status" },
+        { text: "validation", value: "validation" },
         { text: "nom", value: "general.name" },
         { text: "equipe", value: "general.team" },
         { text: "Resp", value: "general.inCharge.username" },
@@ -158,6 +186,7 @@ export default {
     selectedFAs() {
       let mFAs = this.filterByStatus(this.FAs, this.selectedStatus);
       mFAs = this.filterBySelectedTeam(mFAs, this.selectedTeam);
+      mFAs = this.filterByValidatorStatus(mFAs);
       const options = {
         // Search in `author` and in `tags` array
         keys: ["general.name", "details.description"],
@@ -170,6 +199,7 @@ export default {
     },
   },
   async mounted() {
+    this.validators = this.$accessor.config.getConfig("fa_validators");
     // get FAs
     this.FAs = (await this.$axios.get("/FA")).data.filter(
       (e) => e.isValid !== false
@@ -181,8 +211,12 @@ export default {
       return this.$accessor.config.getConfig(key);
     },
 
+    getTeamIcon(team) {
+      return this.$accessor.config.getTeamIcon(team);
+    },
+
     filterBySelectedTeam(FAs, team) {
-      if (team === undefined) {
+      if (!team) {
         return FAs;
       }
       return FAs.filter((FA) => {
@@ -192,6 +226,22 @@ export default {
           return false;
         }
       });
+    },
+
+    filterByValidatorStatus(FAs) {
+      const filter = this.filter;
+      Object.entries(filter).forEach(([validator, value]) => {
+        console.log(validator);
+        FAs = FAs.filter((FA) => {
+          if (value === true) {
+            return FA.validated.includes(validator);
+          } else if (value === false) {
+            return FA.refused.includes(validator);
+          }
+          return true;
+        });
+      });
+      return FAs;
     },
 
     filterByStatus(FAs, status) {
@@ -208,10 +258,6 @@ export default {
         return FA;
       });
       return FAs.filter((FA) => FA?.status === s[status]);
-    },
-
-    onItemSelected(item) {
-      this.$router.push({ path: "fa/" + item.count });
     },
 
     async createNewFA() {

@@ -41,6 +41,7 @@ const headers = [
     text: "puissance",
     value: "power",
   },
+  { text: "commentaire", value: "comment" },
   { text: "action", value: "action" },
 ];
 

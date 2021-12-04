@@ -56,14 +56,14 @@
       @change="onChange"
     ></v-select>
     <v-autocomplete
-        v-else-if="mField.type === 'autocomplete'"
-        v-model="data"
-        :label="mField.label ? mField.label : mField.key"
-        :items="mField.options"
-        :disabled="disabled"
-        :multiple="mField.multiple"
-        dense
-        @change="onChange"
+      v-else-if="mField.type === 'autocomplete'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :items="mField.options"
+      :disabled="disabled"
+      :multiple="mField.multiple"
+      dense
+      @change="onChange"
     ></v-autocomplete>
     <v-select
       v-else-if="mField.type === 'teams'"
@@ -136,15 +136,6 @@ export default {
     };
   },
 
-  watch: {
-    data: {
-      deep: true,
-      handler() {
-        this.value = this.data;
-      },
-    },
-  },
-
   async mounted() {
     if (this.field.type === "user") {
       let users = this.$accessor.user.usernames;
@@ -153,6 +144,7 @@ export default {
         await this.$accessor.user.getUsername();
         users = this.$accessor.user.usernames;
       }
+      // sort alphabetically
       this.users = users.map((user) => {
         return {
           text: user.username,
