@@ -101,21 +101,7 @@
           </h4>
           <LogisticsCard
             title="Matos"
-            :types="[
-              'BARS',
-              'BOIS',
-              'BRICOLAGE',
-              'CANAPE/FAUTEUIL',
-              'CUISINE',
-              'DECO',
-              'FRIGO',
-              'LITTERIE',
-              'PROPRETE',
-              'SCENE',
-              'SECU',
-              'TENTE',
-              'AUTRES MATOS',
-            ]"
+            :types="Object.values(EquipmentTypes)"
             :store="FAStore"
             :disabled="isValidated('log')"
           ></LogisticsCard>
@@ -125,14 +111,14 @@
       <br />
       <LogisticsCard
         title="Barrieres"
-        :types="['BARRIERE']"
+        :types="Object.values(BarrieresTypes)"
         :store="FAStore"
         :disabled="isValidated('barrieres')"
       ></LogisticsCard>
       <br />
       <LogisticsCard
         title="Matos Elec"
-        :types="['ALIMENTATION ELECTRIQUE', 'ECLAIRAGE']"
+        :types="Object.values(ElecTypes)"
         :store="FAStore"
         :disabled="isValidated('elec')"
       ></LogisticsCard>
@@ -318,6 +304,11 @@ import { safeCall } from "../../utils/api/calls";
 import PassSecuCard from "../../components/organisms/form/PassSecuCard";
 import OverSigna from "../../components/organisms/overSigna";
 import ElecLogisticCard from "../../components/organisms/form/ElecLogisticCard";
+import {
+  EquipmentTypes,
+  ElecTypes,
+  BarrieresTypes,
+} from "../../utils/models/FA";
 
 export default {
   name: "Fa",
@@ -335,6 +326,11 @@ export default {
 
   data() {
     return {
+      // Imports of enums for equipment types
+      EquipmentTypes,
+      ElecTypes,
+      BarrieresTypes,
+
       FAID: this.$route.params.fa,
       isNewFA: this.$route.params.fa === "newFA",
 
