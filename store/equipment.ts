@@ -15,12 +15,14 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    fecthAll: async function ({ commit }) {
+    fetchAll: async function ({ commit, state }) {
+      if (state.items.length > 0) {
+        return;
+      }
       const res = await safeCall(
         this,
         RepoFactory.equipmentRepo.getAllEquipments(this)
       );
-      console.log(res);
       if (res) {
         commit("SET_ALL_EQUIPMENT", res.data);
       }

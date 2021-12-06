@@ -70,6 +70,7 @@
             group-by="type"
             :item-class="rowClass"
             dense
+            :items-per-page="-1"
           >
             <template #[`item.action`]="{ item }">
               <v-tooltip bottom>
@@ -212,7 +213,7 @@
             <br />
             <v-divider></v-divider>
             <br />
-            <h4>Ajout de matos emprunté</h4>
+            <h3>Ajout de matos emprunté</h3>
             <v-container style="display: flex; flex-wrap: wrap">
               <v-text-field v-model="newBorrow.from" label="qui"></v-text-field>
               <v-text-field
@@ -229,7 +230,10 @@
               "
             >
               <label>debut</label>
-              <v-date-picker v-model="newBorrow.start"></v-date-picker>
+              <v-date-picker
+                v-model="newBorrow.start"
+                first-day-of-week="1"
+              ></v-date-picker>
               <label>fin</label>
               <v-date-picker v-model="newBorrow.end"></v-date-picker>
             </v-container>
@@ -258,6 +262,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <v-dialog v-model="isPreciseLocDialog" max-width="800">
       <v-card>
         <v-card-title>Emplacement précis</v-card-title>
@@ -307,7 +312,7 @@ export default {
       ],
       borrowed: [],
       isFormOpened: false,
-      allowedTeams: ["log"],
+      allowedTeams: ["log", "barriers", "elec"],
       selectedItem: {},
       newBorrow: {
         start: undefined,

@@ -5,7 +5,11 @@
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
           <template #item.action="{ index }">
-            <v-btn icon @click="deleteElectricityNeed(index)">
+            <v-btn
+              v-if="!isDisabled"
+              icon
+              @click="deleteElectricityNeed(index)"
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -16,8 +20,10 @@
         <v-btn text @click="isElectricityNeedDialogOpen = true">Ajouter</v-btn>
       </v-card-actions>
     </v-card>
+
     <v-dialog v-model="isElectricityNeedDialogOpen" max-width="600">
       <v-card>
+        <v-img src="/img/log/plugs.jpeg"></v-img>
         <v-card-title>Ajouter un besoin d'électricité</v-card-title>
         <v-card-text>
           <OverForm :fields="FORM" @form-change="onFormChange"></OverForm>
