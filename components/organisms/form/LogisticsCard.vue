@@ -53,8 +53,8 @@
 <script lang="ts">
 import LogisticsTable from "./LogisticsTable.vue";
 import LogisticsSelector from "./LogisticsSelector.vue";
-import Vue from "vue";
-import { PropType } from "vue";
+import Vue, { PropType } from "vue";
+
 /**
  * @displayName Logistics Card
  * Card to manage equipments in FAs
@@ -119,7 +119,7 @@ export default Vue.extend({
   },
   async mounted() {
     // fetchAll calls api to fetch all available equipment
-    await this.$accessor.equipment.fecthAll();
+    await this.$accessor.equipment.fetchAll();
   },
   methods: {
     /**

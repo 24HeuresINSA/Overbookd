@@ -16,7 +16,11 @@
         <div v-if="isSignaRequired">
           <v-data-table :headers="headers" :items="signalisation">
             <template #[`item.action`]="{ index }">
-              <v-btn icon @click="deleteSignalisation(index)">
+              <v-btn
+                v-if="!isDisabled"
+                icon
+                @click="deleteSignalisation(index)"
+              >
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -96,12 +100,19 @@ export default {
       return this.$accessor.FA.mFA.signalisation;
     },
   },
+  watch: {
+    signalisation: {
+      handler() {
+        if (this.signalisation.length > 0) {
+          this.isSignaRequired = true;
+        }
+      },
+      deep: true,
+    },
+  },
   mounted() {
     this.fields =
       this.$accessor.config.getConfig("fa_signalisation_form") || [];
-    if (this.signalisation.length > 0) {
-      this.isSignaRequired = true;
-    }
   },
   methods: {
     onFormChange(form) {

@@ -59,7 +59,7 @@
             :disabled="!isValidated('human')"
             :is-disabled="isValidated('humain')"
             :form="FA"
-            :store="FAStore"
+            :store="store"
           ></TimeframeTable>
         </v-col>
       </v-row>
@@ -102,7 +102,7 @@
           <LogisticsCard
             title="Matos"
             :types="Object.values(EquipmentTypes)"
-            :store="FAStore"
+            :store="store"
             :disabled="isValidated('log')"
           ></LogisticsCard>
         </v-col>
@@ -112,21 +112,23 @@
       <LogisticsCard
         title="Barrieres"
         :types="Object.values(BarrieresTypes)"
-        :store="FAStore"
+        :store="store"
         :disabled="isValidated('barrieres')"
       ></LogisticsCard>
       <br />
       <LogisticsCard
         title="Matos Elec"
         :types="Object.values(ElecTypes)"
-        :store="FAStore"
+        :store="store"
         :disabled="isValidated('elec')"
       ></LogisticsCard>
       <br />
 
       <v-row>
         <v-col md="6">
-          <ElecLogisticCard :disabled="isValidated('elec')"></ElecLogisticCard>
+          <ElecLogisticCard
+            :is-disabled="isValidated('elec')"
+          ></ElecLogisticCard>
         </v-col>
         <v-col md="6">
           <FormCard
@@ -368,6 +370,9 @@ export default {
   },
 
   computed: {
+    store: function () {
+      return this.$accessor.FA;
+    },
     FA: function () {
       return this.$accessor.FA.mFA;
     },
