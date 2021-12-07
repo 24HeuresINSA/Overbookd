@@ -1,5 +1,10 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { FA } from "~/utils/models/FA";
+import {
+  ElectricityNeed,
+  FA,
+  SecurityPass,
+  Signalisation,
+} from "~/utils/models/FA";
 import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -12,12 +17,18 @@ export const state = () => ({
     validated: [] as any,
     refused: [] as any,
     FTs: [] as FT[],
+    securityPasses: [] as SecurityPass[],
+    signalisation: [] as Signalisation[],
+    electricityNeeds: [] as ElectricityNeed[],
   } as FA,
 });
 
 export const getters = getterTree(state, {
   getEquipments: function (state) {
     return state.mFA.equipments;
+  },
+  timeframes: function (state) {
+    return state.mFA.timeframes;
   },
 });
 
@@ -28,6 +39,10 @@ export const mutations = mutationTree(state, {
       // @ts-ignore
       mFA[key] = data[key];
     } else {
+      // @ts-ignore
+      if (mFA[key].length !== undefined) {
+        // array
+      }
       Object.assign(mFA[key], data[key]);
     }
   },
@@ -43,10 +58,18 @@ export const mutations = mutationTree(state, {
       refused: [],
       comments: [],
       FTs: [],
+      isValid: true,
+      securityPasses: [],
+      signalisation: [],
+      electricityNeeds: [],
     };
   },
   ADD_TIMEFRAME: function (state, timeframe) {
-    state.mFA.timeframes.push(timeframe);
+    if (
+      state.mFA.timeframes.find((e) => e.name === timeframe.name) === undefined
+    ) {
+      state.mFA.timeframes.push(timeframe);
+    }
   },
   ADD_EQUIPMENT: function (state, equipment) {
     state.mFA.equipments.push(equipment);
@@ -138,16 +161,81 @@ export const mutations = mutationTree(state, {
     }
     state.mFA.FTs.push(FT);
   },
+  ADD_COMMENT: function (state, comment) {
+    if (!state.mFA.comments) {
+      state.mFA.comments = [];
+    }
+    state.mFA.comments.push(comment);
+  },
+  UNDELETE: function (state) {
+    state.mFA.isValid = true;
+  },
+  ADD_SECURITY_PASS: function (state, securityPass) {
+    if (state.mFA.securityPasses === undefined) {
+      state.mFA.securityPasses = [];
+    }
+    state.mFA.securityPasses.push(securityPass);
+  },
+  DELETE_SECURITY_PASS: function (state, index) {
+    state.mFA.securityPasses.splice(index, 1);
+  },
+  ADD_SIGNALISATION: function (state, signalisation) {
+    if (state.mFA.signalisation === undefined) {
+      state.mFA.signalisation = [];
+    }
+    state.mFA.signalisation.push(signalisation);
+  },
+  DELETE_SIGNALISATION: function (state, index) {
+    state.mFA.signalisation.splice(index, 1);
+  },
+  UPDATE_SIGNALISATION_NUMBER: function (state, { index, number }) {
+    state.mFA.signalisation[index].number = number;
+  },
+  DELETE_ELECTRICITY_NEED: function (state, index) {
+    state.mFA.electricityNeeds.splice(index, 1);
+  },
+  ADD_ELECTRICITY_NEED: function (state, electricityNeed) {
+    if (state.mFA.electricityNeeds === undefined) {
+      state.mFA.electricityNeeds = [];
+    }
+    state.mFA.electricityNeeds.push(electricityNeed);
+  },
 });
 
 export const actions = actionTree(
   { state },
   {
+    addElectricityNeed({ commit }, electricityNeed) {
+      commit("ADD_ELECTRICITY_NEED", electricityNeed);
+    },
+    deleteElectricityNeed({ commit }, index) {
+      commit("DELETE_ELECTRICITY_NEED", index);
+    },
+    updateSignalisationNumber(context, signalisationNumber) {
+      context.commit("UPDATE_SIGNALISATION_NUMBER", signalisationNumber);
+    },
+    deleteSignalisation: ({ commit }, index) => {
+      commit("DELETE_SIGNALISATION", index);
+    },
+    addSignalisation: async ({ commit }, signalisation) => {
+      commit("ADD_SIGNALISATION", { ...signalisation });
+    },
+    addSecurityPass: async function ({ commit }, securityPass) {
+      commit("ADD_SECURITY_PASS", { ...securityPass });
+    },
+    deleteSecurityPass: async function ({ commit }, index) {
+      commit("DELETE_SECURITY_PASS", index);
+    },
     assignFA: function ({ commit }, payload) {
       commit("ASSIGN_FA", payload);
     },
-    addTimeframeToFA: function ({ commit }, payload) {
+    addTimeframe: function ({ commit }, payload) {
       commit("ADD_TIMEFRAME", payload);
+    },
+    addTimeframes: function ({ commit }, payload) {
+      payload.forEach((t: any) => {
+        commit("ADD_TIMEFRAME", t);
+      });
     },
     addEquipmentToFA: function ({ commit, state }, payload) {
       if (!state.mFA.equipments.find((e: any) => payload._id === e._id)) {
@@ -167,6 +255,9 @@ export const actions = actionTree(
     setFA: function ({ commit }, payload) {
       commit("SET_FA", payload);
     },
+    undelete: function ({ commit }) {
+      commit("UNDELETE");
+    },
     validate: function ({ commit }, payload) {
       commit("VALIDATE_FA", payload);
     },
@@ -179,10 +270,13 @@ export const actions = actionTree(
     resetFA: function ({ commit }, payload) {
       commit("RESET_FA", payload);
     },
-    addNewFT: async function ({ commit }, name) {
+    addComment: function ({ commit }, payload) {
+      commit("ADD_COMMENT", payload);
+    },
+    addNewFT: async function ({ commit, state, dispatch }, name) {
       const repo = RepoFactory;
       const FT = {
-        FA: state().mFA.count,
+        FA: state.mFA.count,
         general: {
           name: name,
         },
@@ -200,7 +294,8 @@ export const actions = actionTree(
           repo.faRepo.updateFA(this, this.$accessor.FA.mFA)
         );
         if (resFA) {
-          commit("ADD_FT", FT);
+          commit("ADD_FT", resFT.data);
+          await safeCall(this, repo.faRepo.updateFA(this, state.mFA));
         }
       }
     },

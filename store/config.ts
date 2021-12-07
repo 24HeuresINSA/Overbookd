@@ -1,5 +1,7 @@
 const configsData = require("../config/configs.json");
-import { getterTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import configRepo from "../repositories/configRepo";
+import { safeCall } from "~/utils/api/calls";
 
 export const state = () => ({
   data: {
@@ -15,6 +17,20 @@ export const getters = getterTree(state, {
         return config.value;
       } else {
         return;
+      }
+    }
+  },
+
+  getTeamIcon: (state) => (teamName: string) => {
+    if (state.data && state.data.data) {
+      const config = state.data.data.find((o: any) => o.key === "teams");
+      if (config) {
+        const team = config.value.find((o: any) => o.name === teamName);
+        if (team) {
+          return team.icon;
+        } else {
+          return;
+        }
       }
     }
   },
@@ -65,4 +81,22 @@ export const mutations = mutationTree(state, {
   SET_CONFIG(state, data) {
     state.data = data;
   },
+  SET_ONE_CONFIG(state, data: { key: string; value: any }) {
+    const config = state.data.data.find((o: any) => o.key == data.key);
+    if (config) {
+      config.value = data.value;
+    } else {
+      state.data.data.push(data);
+    }
+  },
 });
+
+export const actions = actionTree(
+  { state },
+  {
+    async setConfig({ commit }, data: { key: string; value: any }) {
+      const resp = await safeCall(this, configRepo.setConfig(this, data));
+      commit("SET_ONE_CONFIG", data);
+    },
+  }
+);

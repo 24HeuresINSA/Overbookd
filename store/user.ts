@@ -1,4 +1,4 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
@@ -8,6 +8,8 @@ const UserRepo = RepoFactory.userRepo;
 export const state = () => ({
   me: {} as User,
   usernames: [] as Partial<User>[],
+  mUser: {} as User,
+  timeslots: [],
 });
 
 export type UserState = ReturnType<typeof state>;
@@ -16,17 +18,51 @@ export const mutations = mutationTree(state, {
   SET_USER(state: UserState, data: User) {
     state.me = data;
   },
+  SET_SELECTED_USER(state: UserState, data: User) {
+    state.mUser = data;
+  },
   SET_USERNAMES(state: UserState, data: User[]) {
+    data.sort(
+      ({ username: username1 }: User, { username: username2 }: User) => {
+        if (username1 && username2) {
+          if (username1 < username2) {
+            return -1;
+          }
+          if (username1 > username2) {
+            return -1;
+          }
+        }
+        return 0;
+      }
+    );
     state.usernames = data;
   },
   UPDATE_USER(state: UserState, data: Partial<User>) {
     Object.assign(state.me, data);
+  },
+  SET_TIMESLOTS(state: UserState, data: any) {
+    state.timeslots = data;
+  },
+});
+
+export const getters = getterTree(state, {
+  availabilities: (state: UserState) => {
+    return state.mUser.availabilities.map((_id) => {
+      return state.timeslots.find((_timeslot) => _timeslot === _id);
+    });
   },
 });
 
 export const actions = actionTree(
   { state },
   {
+    async setSelectedUser({ commit, state }, user: User) {
+      commit("SET_SELECTED_USER", user);
+      if (state.timeslots.length === 0) {
+        const timeslots = (await this.$axios.get("/availabilities")).data;
+        commit("SET_TIMESLOTS", timeslots);
+      }
+    },
     async fetchUser({ commit }) {
       const res = await safeCall(this, UserRepo.getMyUser(this));
       if (res) {
@@ -75,6 +111,17 @@ export const actions = actionTree(
         roles = [roles];
       }
       return roles.some((r) => teams.includes(r));
+    },
+
+    async acceptSelection({ commit }, timeslotIDS: string[]) {
+      const res = await safeCall(
+        this,
+        UserRepo.acceptSelection(this, timeslotIDS)
+      );
+      if (res) {
+        commit("UPDATE_USER", res.data);
+      }
+      return;
     },
   }
 );

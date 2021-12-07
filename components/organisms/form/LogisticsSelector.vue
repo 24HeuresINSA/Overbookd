@@ -11,6 +11,7 @@
 
 <script>
 import { RepoFactory } from "../../../repositories/repoFactory";
+import { safeCall } from "../../../utils/api/calls";
 
 export default {
   name: "LogisticsSelector",
@@ -54,7 +55,15 @@ export default {
     },
   },
   async mounted() {
-    this.fullInventory = (await this.repo.getAllEquipments(this)).data;
+    const res = await safeCall(
+      this,
+      this.repo.getAllEquipments(this),
+      null,
+      "erreur lors de la récupération des équipements"
+    );
+    if (res) {
+      this.fullInventory = res.data.filter((item) => item.isValid !== false);
+    }
   },
   methods: {
     addItemToFA(item) {

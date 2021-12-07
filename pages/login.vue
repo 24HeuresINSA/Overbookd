@@ -14,7 +14,14 @@
     <v-form>
       <v-container class="form-container">
         <v-row>
-          <v-img src="img/memes/home_meme.png"></v-img>
+          <v-col>
+            <v-img
+              style="transform: translate(100px, 0)"
+              src="img/memes/home_meme.jpg"
+              max-height="350"
+              max-width="350"
+            ></v-img>
+          </v-col>
         </v-row>
         <v-row>
           <v-img
@@ -52,6 +59,9 @@
             filled
             @keydown.enter="login()"
           ></v-text-field>
+        </v-row>
+        <v-row>
+          <a class="forgot-a" href="/forgot">Mot de passe oublié ?</a>
         </v-row>
       </v-container>
       <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn Btn"
@@ -210,9 +220,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.logo {
-  //margin-bottom: 10%;
-}
 .form-container {
   align-self: center;
   justify-self: center;
@@ -232,5 +239,12 @@ export default {
 }
 .signupBtn {
   left: 20px;
+}
+.forgot-a {
+  z-index: 2;
+  background-color: rgba(50, 50, 50, 0.7);
+  padding: 0.8rem;
+  border-radius: 0.2rem;
+  color: white;
 }
 </style>

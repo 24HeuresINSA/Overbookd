@@ -3,7 +3,7 @@
     <!-- Use the component in the right place of the template -->
     <TiptapVuetify
       v-model="content"
-      :aria-disabled="disabled"
+      :disabled="disabled"
       :extensions="extensions"
       :toolbar-attributes="{ color: 'black', dark: true }"
     />
@@ -37,7 +37,16 @@ export default {
   name: "RichEditor",
   // specify TiptapVuetify component in "components"
   components: { TiptapVuetify },
-  props: ["data", "disabled"],
+  props: {
+    data: {
+      type: String,
+      default: () => "",
+    },
+    disabled: {
+      type: Boolean,
+      default: () => false,
+    },
+  },
   data: () => ({
     // declare extensions you want to use
     extensions: [
@@ -81,3 +90,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.tiptap-vuetify-editor__content--disabled {
+  background-color: white;
+}
+</style>

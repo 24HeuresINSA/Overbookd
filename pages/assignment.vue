@@ -32,17 +32,19 @@
 </template>
 
 <script>
-import { getConfig, hasRole } from "../common/role";
-import OverChips from "../components/atoms/overChips";
 import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";
+import ftRepo from "../repositories/ftRepo";
+import { safeCall } from "../utils/api/calls";
 
 export default {
   name: "Assignment",
   components: { OverCalendar, OverTasks, FilteredUsers },
   data() {
     return {
+      timeslots: [],
+
       selectedUserFriend: undefined,
       selectedUser: undefined,
       selectedDay: undefined,
@@ -98,6 +100,15 @@ export default {
 
       return events;
     },
+
+    availableTimeslots() {
+      if (this.selectedUser && this.selectedUser.availabilities) {
+        return this.selectedUser.availabilities.map((_id) => {
+          return this.timeslots.find((timeslot) => timeslot._id === _id);
+        });
+      }
+      return [];
+    },
   },
 
   watch: {
@@ -118,16 +129,23 @@ export default {
   },
 
   async mounted() {
-    if (!hasRole(this, "hard")) {
+    if (!(await this.hasRole("hard"))) {
       alert("vous avez pas le role 'hard' pour acceder a cette page");
       await this.$router.push({
         path: "/",
       });
     }
-    // user has access to this page
+
+    const res = await safeCall(this.$store, ftRepo.getAllFTs(this));
+    if (res) {
+      this.FTs = res.data;
+    }
   },
 
   methods: {
+    async hasRole(role) {
+      return this.$accessor.user.hasRole(role);
+    },
     async addTask(timeframe, FT) {
       if (!this.selectedUser.assigned) {
         this.selectedUser.assigned = [];
@@ -204,19 +222,13 @@ export default {
     },
 
     getConfig(key) {
-      return getConfig(this, key);
+      return this.$accessor.config.getConfig(key);
     },
 
     onSelectedUser(user) {
+      this.$accessor.user.setSelectedUser(user);
       this.selectedUser = user;
     },
-    // async saveAssignment() {
-    //   // save FT
-    //   await this.$axios.put(`/user/${this.getSelectedUser._id}`, {
-    //     assigned: this.getSelectedUser.assigned,
-    //   });
-    //   this.isFeedbackSnackbarOpen = true;
-    // },
   },
 };
 </script>

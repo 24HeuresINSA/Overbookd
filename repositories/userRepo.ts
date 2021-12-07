@@ -59,4 +59,7 @@ export default {
       data.data
     );
   },
+  acceptSelection(context: Context, timeslotsIDS: String[]) {
+    return context.$axios.post(`${resource}/availabilities`, timeslotsIDS);
+  },
 };

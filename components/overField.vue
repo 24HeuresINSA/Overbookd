@@ -2,7 +2,7 @@
   <div>
     <v-text-field
       v-if="mField.type === 'string' || mField.type === undefined"
-      v-model="value"
+      :value="data"
       :rules="
         field.regex
           ? [
@@ -25,7 +25,7 @@
     ></v-text-field>
     <v-textarea
       v-else-if="mField.type === 'textarea'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       required
       :disabled="disabled"
@@ -33,21 +33,21 @@
     ></v-textarea>
     <RichEditor
       v-else-if="mField.type === 'rich-text'"
-      v-model="value"
+      :value="data"
       :disabled="disabled"
-      :data="value"
+      :data="data"
       @change="onChange"
     ></RichEditor>
     <v-switch
       v-else-if="mField.type === 'switch'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       :disabled="disabled"
       @change="onChange"
     ></v-switch>
     <v-select
       v-else-if="mField.type === 'select'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       :items="mField.options"
       :disabled="disabled"
@@ -55,9 +55,19 @@
       dense
       @change="onChange"
     ></v-select>
+    <v-autocomplete
+      v-else-if="mField.type === 'autocomplete'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :items="mField.options"
+      :disabled="disabled"
+      :multiple="mField.multiple"
+      dense
+      @change="onChange"
+    ></v-autocomplete>
     <v-select
       v-else-if="mField.type === 'teams'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       :items="teams"
       :disabled="disabled"
@@ -66,7 +76,7 @@
     ></v-select>
     <v-datetime-picker
       v-if="mField.type === 'datetime'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       :disabled="disabled"
       @change="onChange"
@@ -79,7 +89,7 @@
         }}
       </p>
       <v-date-picker
-        v-model="value"
+        :value="data"
         :label="mField.label ? mField.label : mField.key"
         :active-picker.sync="activePicker"
         :disabled="disabled"
@@ -88,7 +98,7 @@
     </div>
     <v-autocomplete
       v-else-if="mField.type === 'user'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       :items="users"
       :disabled="disabled"
@@ -98,7 +108,7 @@
 
     <v-time-picker
       v-if="mField.type === 'time'"
-      v-model="value"
+      :value="data"
       :label="mField.label ? mField.label : mField.key"
       format="24hr"
       :allowed-minutes="allowedMinutes"
@@ -126,18 +136,15 @@ export default {
     };
   },
 
-  watch: {
-    data: {
-      deep: true,
-      handler() {
-        this.value = this.data;
-      },
-    },
-  },
-
   async mounted() {
     if (this.field.type === "user") {
-      let users = (await this.$axios.get("/user/all")).data;
+      let users = this.$accessor.user.usernames;
+      if (users.length === 0) {
+        // fetch usernames
+        await this.$accessor.user.getUsername();
+        users = this.$accessor.user.usernames;
+      }
+      // sort alphabetically
       this.users = users.map((user) => {
         return {
           text: user.username,
@@ -154,6 +161,13 @@ export default {
     onChange(value) {
       if (typeof this.field.value === "string") {
         value = value.trim();
+      }
+      if (this.field.type === "number") {
+        try {
+          value = +value;
+        } catch (e) {
+          console.log(e);
+        }
       }
       this.$emit("value", { key: this.field.key, value });
     },

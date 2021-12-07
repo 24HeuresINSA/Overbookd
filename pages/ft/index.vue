@@ -3,25 +3,36 @@
     <h1>Fiche Tache 👻</h1>
     <v-data-table :headers="headers" :items="FTs">
       <template #[`item.status`]="row">
-        <v-avatar size="30" :color="color[row.item.status]"></v-avatar>
+        <v-avatar size="25" :color="color[row.item.status]">
+          {{ row.item.count }}
+        </v-avatar>
       </template>
       <template #[`item.action`]="row">
         <v-btn style="margin: 5px" icon small :to="'/ft/' + row.item.count">
-          >
-          <v-icon>mdi-text-search</v-icon>
+          <v-icon small>mdi-link</v-icon>
         </v-btn>
         <v-btn
           icon
           small
           @click="
-            selectedFTID = row.item._id;
+            mFT = row.item;
             isDialogOpen = true;
           "
         >
-          <v-icon>mdi-trash-can</v-icon>
+          <v-icon small>mdi-delete</v-icon>
         </v-btn>
       </template>
     </v-data-table>
+
+    <v-btn
+      color="secondary"
+      elevation="2"
+      fab
+      class="fab-right"
+      @click="createNewFT"
+    >
+      <v-icon> mdi-plus-thick</v-icon>
+    </v-btn>
 
     <v-dialog v-model="isDialogOpen" width="600">
       <v-card>
@@ -37,12 +48,16 @@
 
 <script>
 const { hasRole } = require("../../common/role");
+import { safeCall } from "../../utils/api/calls";
+import ftRepo from "../../repositories/ftRepo";
+
 export default {
   name: "Index",
   data() {
     return {
       color: {
         undefined: "grey",
+        draft: "grey",
         submitted: "orange",
         validated: "green",
         refused: "red",
@@ -52,11 +67,6 @@ export default {
         {
           text: "Status",
           value: "status",
-        },
-        {
-          text: "#",
-          value: "count",
-          align: "left",
         },
         {
           text: "Nom",
@@ -74,14 +84,16 @@ export default {
 
       FTs: [],
 
-      selectedFTID: undefined,
+      mFT: undefined,
       isDialogOpen: false,
     };
   },
 
   async mounted() {
     if (hasRole(this, "hard")) {
-      this.FTs = (await this.$axios.$get("/FT")).data;
+      this.FTs = (await this.$axios.$get("/FT")).data.filter(
+        (ft) => ft.isValid !== false
+      );
     } else {
       await this.$router.push({
         path: "/",
@@ -90,12 +102,33 @@ export default {
   },
 
   methods: {
-    async deleteFT() {
-      await this.$axios.$delete("/ft", {
-        data: {
-          _id: this.selectedFTID,
+    async createNewFT() {
+      const blankFT = {
+        FA: 0,
+        general: {
+          name: "",
         },
-      });
+        status: "draft",
+        validated: [],
+        refused: [],
+        equipments: [],
+        timeframes: [],
+      };
+      let res = await safeCall(
+        this.$store,
+        ftRepo.createFT(this, blankFT),
+        "FT 🥳"
+      );
+      if (res) {
+        await this.$router.push({
+          path: "/ft/" + res.data.count,
+        });
+      }
+    },
+
+    async deleteFT() {
+      await safeCall(this.$store, ftRepo.deleteFT(this, this.mFT), "FT del");
+      this.FTs = this.FTs.filter((ft) => ft.count !== this.mFT.count);
       this.isDialogOpen = false;
     },
   },

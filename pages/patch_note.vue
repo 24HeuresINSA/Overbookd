@@ -1,6 +1,46 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>
+      Patch note BETA 0.20.1: le Patch Stoph qui prefere la ComSA a sa meuf
+    </h2>
+
+    <h3>Index</h3>
+    <ul>
+      <li>☕️ can't unselect teams in filters #192</li>
+      <li>☕️ filter by validation of validator #191</li>
+      <li>☕️ add forgotten teams #183</li>
+      <li>☕️ add forgotten password handlin</li>
+    </ul>
+    <h3>Validation</h3>
+    <ul>
+      <li>☕️ rich text editor not disabled when validated by humans #196</li>
+      <li>☕️ refuse popup hide FA and is too small #190</li>
+      <li>☕️ comments in FA don't take into account break lines #190</li>
+    </ul>
+    <h3>General</h3>
+    <ul>
+      <li>☕️ add types of FA #181</li>
+      <li>☕️ order by alphabetical order users #180</li>
+    </ul>
+    <h3>Security</h3>
+    <ul>
+      <li>☕️ shallow copy on security passes #197</li>
+    </ul>
+    <ul>
+      <li>☕️ fix shallow copies bug</li>
+    </ul>
+    <h3>Log</h3>
+    <ul>
+      <li>☕️ add search in materials #180</li>
+    </ul>
+    <h2>Patch note BETA 0.20: le Patch Mammi 🚨</h2>
+    <ul>
+      <li>☕️ Le cafe de Hamza</li>
+      <li>💀 UN MILLARD DE CORRECTION SUR LES FA</li>
+      <li>🚨 OverSigna pour simplifier le taffe de la signa</li>
+      <li>🤐 gestion des pass secu dans les FA</li>
+    </ul>
     <h2>Patch note BETA 0.19: le Patch FA</h2>
     <ul>
       <li>🥳 Gros rework des FA</li>

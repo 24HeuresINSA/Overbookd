@@ -71,7 +71,7 @@ export interface User {
   transactionHistory?: Transaction[];
   balance?: number;
   charisma?: number;
-  availabilities: availability[];
+  availabilities: string[];
 }
 
 export interface availability {
@@ -106,4 +106,23 @@ export interface FriendRequest {
 export interface FriendRequestData {
   to: string; // _id
   data: FriendRequest;
+}
+
+export interface timeslot {
+  _id?: string;
+  groupTitle: string;
+  groupDescription?: string;
+  timeFrame: {
+    start: Date;
+    end: Date;
+  };
+  charisma: number;
+}
+
+export interface location {
+  _id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  neededBy: string[];
 }

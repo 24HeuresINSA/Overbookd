@@ -1,6 +1,7 @@
 <template>
   <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
     <v-card-title>{{ title }}</v-card-title>
+    <v-card-subtitle>{{ details }}</v-card-subtitle>
     <v-card-text>
       <OverForm
         :fields="FORM"
@@ -35,6 +36,10 @@ export default {
         null;
       },
     },
+    details: {
+      type: String,
+      default: () => "",
+    },
     isDisabled: {
       type: Boolean,
       default: () => {
@@ -52,9 +57,6 @@ export default {
     };
   },
   computed: {
-    // mFA: function () {
-    //   return this.$accessor.FA.mFA;
-    // },
     data: function () {
       return this.form[this.topic];
     },
