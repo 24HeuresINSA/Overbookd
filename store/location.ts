@@ -1,23 +1,42 @@
-import { mutationTree, actionTree } from "typed-vuex";
+import { mutationTree, actionTree, getterTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { location } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
 
 const locationRepo = RepoFactory.locationRepo;
 
-export const state = () => ({
-  locations: [] as location[],
+// The state types definitions
+interface State {
+  locations: location[];
+}
+
+export const state = (): State => ({
+  locations: [],
+});
+
+export const getters = getterTree(state, {
+  signa: (state) => {
+    return state.locations.filter((e) => {
+      return e.neededBy.length == 1 && e.neededBy[0] == "SIGNA";
+    });
+  },
+  inventaire: (state) => {
+    return state.locations.filter((e) => {
+      return e.neededBy.length == 1 && e.neededBy[0] == "INVENTAIRE";
+    });
+  },
 });
 
 export const mutations = mutationTree(state, {
   SET_LOCATIONS(state, locations: location[]) {
     state.locations = locations;
+    console.log("locations in state :", state.locations);
   },
   SET_LOCATION(state, location: location) {
     const id = state.locations.findIndex((l) => l.name === location.name);
     if (id !== -1) {
       state.locations[id] = location;
-      state.locations = [...state.locations];
+      // state.locations = [...state.locations];
     } else {
       state.locations.push(location);
     }
@@ -34,11 +53,12 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async getAllLocations(context) {
+    async getAllLocations(context): Promise<any> {
       const res = await safeCall(this, locationRepo.getAllLocations(this));
       if (res && res.data) {
         context.commit("SET_LOCATIONS", res.data);
       }
+      return res;
     },
     async deleteLocation(context, id: string) {
       const res = await safeCall(this, locationRepo.deleteLocation(this, id));
@@ -46,14 +66,18 @@ export const actions = actionTree(
         context.commit("DELETE_LOCATION", res.data);
       }
     },
-    async createNewLocation(context, location: location) {
+    async createNewLocation(
+      context,
+      location: Omit<location, "_id">
+    ): Promise<any> {
       const res = await safeCall(
         this,
-        locationRepo.updateLocation(this, location)
+        locationRepo.createNewLocation(this, location)
       );
       if (res && res.data) {
         context.commit("SET_LOCATION", res.data);
       }
+      return res;
     },
     async updateLocation(context, location: location) {
       const res = await safeCall(

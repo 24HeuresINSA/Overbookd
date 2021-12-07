@@ -122,7 +122,7 @@ export interface timeslot {
 export interface location {
   _id: string;
   name: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   neededBy: string[];
 }
