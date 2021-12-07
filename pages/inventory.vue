@@ -405,7 +405,7 @@ export default {
       }
     },
 
-    async hasRole(role) {
+    hasRole(role) {
       return this.$accessor.user.hasRole(role);
     },
 
