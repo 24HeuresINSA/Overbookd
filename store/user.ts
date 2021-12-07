@@ -51,6 +51,25 @@ export const getters = getterTree(state, {
       return state.timeslots.find((_timeslot) => _timeslot === _id);
     });
   },
+  hasRole(state: UserState) {
+    return (roles: string | string[]): boolean => {
+      if (roles === undefined) {
+        return false;
+      }
+      const teams = state.me.team;
+      if (teams === undefined) {
+        return false;
+      }
+      if (typeof roles == "string") {
+        roles = [roles];
+      }
+      //admin has access to everything
+      if (teams.includes("admin")) {
+        return true;
+      }
+      return roles.some((r) => teams.includes(r));
+    };
+  },
 });
 
 export const actions = actionTree(
@@ -99,19 +118,19 @@ export const actions = actionTree(
       return false;
     },
 
-    hasRole(state, roles: string | string[]) {
-      if (roles === undefined) {
-        return true;
-      }
-      const teams = state.state.me.team;
-      if (teams === undefined) {
-        return false;
-      }
-      if (typeof roles == "string") {
-        roles = [roles];
-      }
-      return roles.some((r) => teams.includes(r));
-    },
+    // hasRole(state, roles: string | string[]) {
+    //   if (roles === undefined) {
+    //     return false;
+    //   }
+    //   const teams = state.state.me.team;
+    //   if (teams === undefined) {
+    //     return false;
+    //   }
+    //   if (typeof roles == "string") {
+    //     roles = [roles];
+    //   }
+    //   return roles.some((r) => teams.includes(r));
+    // },
 
     async acceptSelection({ commit }, timeslotIDS: string[]) {
       const res = await safeCall(
