@@ -25,7 +25,7 @@
                 </v-btn-toggle>
               </template>
               <label>Permis</label>
-              <template>
+              <div>
                 <v-btn-toggle
                   v-model="filters.hasDriverLicence"
                   tile
@@ -36,7 +36,7 @@
 
                   <v-btn :value="false" small>non</v-btn>
                 </v-btn-toggle>
-              </template>
+              </div>
               <template v-if="hasRole(['admin', 'bureau'])">
                 <p>Cotisation</p>
                 <v-btn-toggle
@@ -221,7 +221,6 @@ import SnackNotificationContainer from "../components/molecules/snackNotificatio
 import UserInformation from "../components/organisms/userInformation";
 
 const { RepoFactory } = require("../repositories/repoFactory");
-const { SnackNotif } = require("../utils/models/store");
 
 export default {
   name: "Humans",
