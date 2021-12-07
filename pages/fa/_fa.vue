@@ -74,7 +74,7 @@
             title="Sécurité"
             form-key="fa_security_form"
             topic="security"
-            details="Si tu as des questions sur les besoins ou non de dispositif de secu de ton activité, contacte securite@24heures.org"
+            details="Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org"
             :is-disabled="isValidated('secu')"
             :form="FA"
             @form-change="updateForm('security', $event)"
@@ -117,7 +117,7 @@
       ></LogisticsCard>
       <br />
       <LogisticsCard
-        title="Matos Elec"
+        title="Matos Elec / Eau"
         :types="Object.values(ElecTypes)"
         :store="FAStore"
         :disabled="isValidated('elec')"
@@ -133,7 +133,7 @@
             title="Eau"
             form-key="fa_water_form"
             topic="elec"
-            details="Si ton animation a besoin d'élec , il faut savoir maintenant puissance et connectique, rapproche toi du prestataire pour avoir ces réponses ou voit avec la Log Elec via logistique@24heures.org"
+            details="Si ton animation a besoin d'eau , il faut savoir maintenant le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org"
             :is-disabled="isValidated('elec')"
             :form="FA"
             @form-change="updateForm('elec', $event)"
@@ -233,10 +233,13 @@
         </v-menu>
       </div>
 
-      <v-btn color="secondary" @click="validationDialog = true"
+      <v-btn
+        v-if="FA.status !== 'submitted'"
+        color="warning"
+        @click="validationDialog = true"
         >soumettre à validation
       </v-btn>
-      <v-btn color="warning" @click="saveFA">sauvgarder</v-btn>
+      <v-btn @click="saveFA">sauvegarder</v-btn>
       <v-btn
         v-if="validators.length >= 1 && FA.isValid === false"
         color="red"

@@ -43,7 +43,6 @@ export interface SecurityPass {
 export enum EquipmentTypes {
   BARS = "BARS",
   BOIS = "BOIS",
-  BRICOLAGE = "BRICOLAGE",
   CANAP = "CANAPE/FAUTEUIL",
   CUISINE = "CUISINE",
   DECO = "DECO",
@@ -52,6 +51,8 @@ export enum EquipmentTypes {
   PROPRETE = "PROPRETE",
   SCENE = "SCENE",
   SECU = "SECU",
+  SIGNA = "SIGNA",
+  OUTILLAGE = "OUTILLAGE",
   TENTE = "TENTE",
   AUTRE = "AUTRES MATOS",
 }
@@ -62,6 +63,7 @@ export enum BarrieresTypes {
 
 export enum ElecTypes {
   ALIM = "ALIMENTATION ELECTRIQUE",
+  EAU = "EAU",
   ECLAIRAGE = "ECLAIRAGE",
   AUTRE = "AUTRES ELEC",
 }

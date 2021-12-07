@@ -8,11 +8,11 @@
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
-          label="lieux"
+          label="Lieux"
           multiple
           :disabled="isDisabled"
         ></v-autocomplete>
-        <v-switch v-model="isSignaRequired" label="besoin signa"></v-switch>
+        <v-switch v-model="isSignaRequired" label="Besoin signa"></v-switch>
         <div v-if="isSignaRequired">
           <v-data-table :headers="headers" :items="signalisation">
             <template #[`item.action`]="{ index }">
