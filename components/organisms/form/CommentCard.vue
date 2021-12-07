@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Commentaire</v-card-title>
+    <v-card-title>Historique de validation</v-card-title>
     <v-card-text>
       <v-data-table
         :headers="headers"

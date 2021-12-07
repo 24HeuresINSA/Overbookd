@@ -3,14 +3,16 @@
     <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
-        >Contacter les signa à signalitique@24heures.org pour ajouter des lieux
+        >Contacter la signa à signalitique@24heures.org pour ajouter des lieux
         non existant dans la liste deroulante
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
           label="Lieux"
           multiple
+          :value="locations"
           :disabled="isDisabled"
+          @change="updateLocations"
         ></v-autocomplete>
         <v-switch v-model="isSignaRequired" label="Besoin signa"></v-switch>
         <div v-if="isSignaRequired">
@@ -86,7 +88,7 @@ export default {
       headers: [
         { text: "nombre", value: "number" },
         { text: "type", value: "type" },
-        { text: "text a afficher", value: "text" },
+        { text: "texte à afficher", value: "text" },
         { text: "commentaire", value: "comment" },
         { text: "", value: "action" },
       ],
@@ -98,6 +100,9 @@ export default {
   computed: {
     signalisation() {
       return this.$accessor.FA.mFA.signalisation;
+    },
+    locations() {
+      return this.$accessor.FA.mFA.details.locations;
     },
   },
   watch: {
@@ -115,6 +120,7 @@ export default {
       this.$accessor.config.getConfig("fa_signalisation_form") || [];
   },
   methods: {
+    updateLocations(locations) {},
     onFormChange(form) {
       this.newSignalisation = form;
     },

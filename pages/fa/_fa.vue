@@ -44,7 +44,7 @@
           <FormCard
             title="Détail"
             form-key="fa_details_form"
-            details="Décris ici ton activité, soit assez exhaustif, si tu le demande, c'est ce texte qui sera publié sur le site 24heures.org"
+            details="Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est ce texte qui sera publié sur le site 24heures.org"
             topic="details"
             :is-disabled="isValidated('humain')"
             :form="FA"
@@ -95,8 +95,8 @@
         <v-col>
           <h2>Logistique 🚚</h2>
           <h4>
-            Si il manque des informations, ou du matos veuillez contacter le
-            responsable de logistique sur
+            S'il manque des informations, ou du matos veuillez contacter le
+            responsable de la logistique sur
             <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
           </h4>
           <LogisticsCard
@@ -135,7 +135,7 @@
             title="Eau"
             form-key="fa_water_form"
             topic="elec"
-            details="Si ton animation a besoin d'eau , il faut savoir maintenant le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org"
+            details="Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org"
             :is-disabled="isValidated('elec')"
             :form="FA"
             @form-change="updateForm('elec', $event)"
