@@ -49,6 +49,15 @@
                   >{{ location.name }}</v-chip
                 >
               </v-chip-group>
+              <v-chip-group class="mt-3" column multiple>
+                <v-chip
+                  v-for="location in signaLocations"
+                  :key="location._id"
+                  :value="location.name"
+                  disabled
+                  >{{ location.name }}</v-chip
+                >
+              </v-chip-group>
             </v-card-text>
             <v-card-actions v-if="hasRole('log')">
               <v-btn
@@ -283,8 +292,6 @@ import locationAdder from "../components/organisms/locationAdder";
 import { safeCall } from "../utils/api/calls";
 import { RepoFactory } from "../repositories/repoFactory";
 import { cloneDeep, isEqual } from "lodash";
-import Vue from "vue";
-import LocationAdder from "~/components/organisms/locationAdder.vue";
 
 export default {
   name: "Inventory",
@@ -323,6 +330,7 @@ export default {
       search: {
         name: "",
         location: [],
+        locationSigna: [],
         type: "",
       },
       selectOptions: [],
@@ -344,7 +352,6 @@ export default {
   computed: {
     me: () => this.$store.state.user.me,
     filteredInventory() {
-      console.log(this.search.location);
       return this.inventory.filter((item) => {
         return (
           item.name.toLowerCase().includes(this.search.name.toLowerCase()) &&
@@ -359,6 +366,9 @@ export default {
         e.neededBy.includes("INVENTAIRE")
       );
     },
+    signaLocations() {
+      return this.$accessor.location.signa;
+    },
     equipmentForm() {
       return this.getConfig("equipment_form");
     },
@@ -366,7 +376,11 @@ export default {
 
   async mounted() {
     // setup config
-    await this.$store.dispatch("location/getAllLocations");
+    const res = await this.$accessor.location.getAllLocations();
+    if (!res) {
+      // todo display snackbar notif
+      console.log("Error, could not fetch the DB");
+    }
     this.allowedTeams = (await this.getConfig(this, "isInventoryOpen"))
       ? ["log", "hard"]
       : ["log"];
