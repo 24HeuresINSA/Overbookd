@@ -80,7 +80,7 @@
             </v-col>
             <v-col md="6">
               <v-switch
-                v-model="mUser.hasDriverLicence"
+                v-model="mUser.hasDriverLicense"
                 label="Permis"
                 :disabled="!(hasEditingRole || isMe())"
               ></v-switch>
@@ -151,7 +151,8 @@
 
 <script>
 import OverChips from "~/components/atoms/overChips";
-import { hasRole } from "../../common/role";
+import { safeCall } from "../../utils/api/calls";
+import userRepo from "~/repositories/userRepo";
 
 export default {
   name: "UserInformation",
@@ -224,7 +225,11 @@ export default {
       }
     },
     async saveUser() {
-      await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
+      await safeCall(
+        this,
+        userRepo.updateUser(this, this.mUser._id, this.mUser)
+      );
+      // await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
       this.mToggle = false;
     },
     async deleteUser() {
