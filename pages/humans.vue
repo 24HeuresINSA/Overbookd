@@ -10,6 +10,29 @@
                 v-model="filters.search"
                 label="Recherche"
               ></v-text-field>
+              <v-combobox
+                v-model="filters.teams"
+                chips
+                multiple
+                clearable
+                dense
+                label="Team"
+                :items="getConfig('teams').map((e) => e.name)"
+              >
+                <template #selection="{ attrs, item, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    :color="getRoleMetadata(item).color"
+                  >
+                    <v-icon left color="white">
+                      {{ getRoleMetadata(item).icon }}
+                    </v-icon>
+                    <a style="color: white">{{ getRoleMetadata(item).name }}</a>
+                  </v-chip>
+                </template>
+              </v-combobox>
 
               <label>Compte validé</label>
               <template v-if="hasRole(['admin', 'bureau'])">
@@ -27,7 +50,7 @@
               <label>Permis</label>
               <div>
                 <v-btn-toggle
-                  v-model="filters.hasDriverLicence"
+                  v-model="filters.hasDriverLicense"
                   tile
                   color="deep-purple accent-3"
                   group
@@ -51,29 +74,6 @@
                 </v-btn-toggle>
                 <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
-
-              <v-combobox
-                v-model="filters.teams"
-                chips
-                multiple
-                clearable
-                label="team"
-                :items="getConfig('teams').map((e) => e.name)"
-              >
-                <template #selection="{ attrs, item, selected }">
-                  <v-chip
-                    v-bind="attrs"
-                    :input-value="selected"
-                    close
-                    :color="getRoleMetadata(item).color"
-                  >
-                    <v-icon left color="white">
-                      {{ getRoleMetadata(item).icon }}
-                    </v-icon>
-                    <a style="color: white">{{ getRoleMetadata(item).name }}</a>
-                  </v-chip>
-                </template>
-              </v-combobox>
             </v-card-text>
           </v-card>
         </v-col>
@@ -244,7 +244,7 @@ export default {
 
       filters: {
         search: undefined,
-        hasDriverLicence: undefined,
+        hasDriverLicense: undefined,
         teams: [],
         isValidated: undefined,
         hasPayedContribution: undefined,
@@ -290,9 +290,9 @@ export default {
         }
 
         // filter by driver licence
-        if (this.filters.hasDriverLicence !== undefined) {
+        if (this.filters.hasDriverLicense !== undefined) {
           mUsers = mUsers.filter(
-            (user) => user.hasDriverLicence === this.filters.hasDriverLicence
+            (user) => user.hasDriverLicense === this.filters.hasDriverLicense
           );
         }
 

@@ -10,7 +10,6 @@
         <v-autocomplete
           label="Lieux"
           multiple
-          :value="locations"
           :disabled="isDisabled"
           @change="updateLocations"
         ></v-autocomplete>
@@ -100,9 +99,6 @@ export default {
   computed: {
     signalisation() {
       return this.$accessor.FA.mFA.signalisation;
-    },
-    locations() {
-      return this.$accessor.FA.mFA.details.locations;
     },
   },
   watch: {

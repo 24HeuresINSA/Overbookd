@@ -147,7 +147,7 @@
       <CommentCard :comments="FA.comments" form="FA"></CommentCard>
 
       <br />
-      <FTCard></FTCard>
+      <FTCard v-if="isFTOpen"></FTCard>
     </v-container>
 
     <div style="height: 100px"></div>
@@ -347,6 +347,8 @@ export default {
       validationDialog: false,
       refuseDialog: false,
 
+      isFTOpen: true,
+
       refuseComment: "",
       isSnackbar: false,
       snackbarMessage: "la FA a bien ete sauvgarder 😅",
@@ -405,6 +407,7 @@ export default {
     this.FAStore = this.$accessor.FA;
     this.teams = this.$accessor.config.getConfig("teams");
     this.VALIDATORS = this.$accessor.config.getConfig("fa_validators");
+    this.isFTOpen = this.$accessor.config.getConfig("is_ft_open");
 
     // get FA if not new FA
     if (!this.isNewFA) {
