@@ -42,12 +42,14 @@ export interface SecurityPass {
 
 export enum EquipmentTypes {
   BARS = "BARS",
+  BUREAUTIQUE = "BUREAUTIQUE",
   BOIS = "BOIS",
   CANAP = "CANAPE/FAUTEUIL",
   CUISINE = "CUISINE",
   DECO = "DECO",
   FRIGO = "FRIGO",
-  LITTERIE = "LITTERIE",
+  LITERIE = "LITERIE",
+  MOBILIER = "MOBILIER",
   PROPRETE = "PROPRETE",
   SCENE = "SCENE",
   SECU = "SECU",
