@@ -22,7 +22,7 @@
               v-model="fields.neededBy"
               :items="neededByList"
               :rules="[
-                (v) => v.length > 0 || 'Au moins 1 doit etre selectionné',
+                (v) => v.length > 0 || 'Au moins 1 doit être selectionné',
               ]"
               label="Pour qui ?"
               multiple
@@ -48,8 +48,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { location } from "../../utils/models/repo";
-import { Snack } from "../../utils/models/snack";
+import { location } from "~/utils/models/repo";
+import { Snack } from "~/utils/models/snack";
 
 // All Data ts types definitions
 declare interface Data {

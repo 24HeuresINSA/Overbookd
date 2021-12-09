@@ -226,10 +226,11 @@ export default {
     },
     async saveUser() {
       await safeCall(
-        this,
-        userRepo.updateUser(this, this.mUser._id, this.mUser)
+        this.$store,
+        userRepo.updateUser(this, this.mUser._id, this.mUser),
+        "🥳",
+        "une erreur est survenue lors de la sauvegarde de l'utilisateur"
       );
-      // await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
       this.mToggle = false;
     },
     async deleteUser() {

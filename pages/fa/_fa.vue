@@ -351,7 +351,7 @@ export default {
 
       refuseComment: "",
       isSnackbar: false,
-      snackbarMessage: "la FA a bien ete sauvgarder 😅",
+      snackbarMessage: "la FA à bien été sauvegardée 😅",
       schedule: {
         date: undefined,
         start: undefined,

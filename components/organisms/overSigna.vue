@@ -11,7 +11,6 @@
           label="Lieux"
           multiple
           :disabled="isDisabled"
-          @change="updateLocations"
         ></v-autocomplete>
         <v-switch v-model="isSignaRequired" label="Besoin signa"></v-switch>
         <div v-if="isSignaRequired">
@@ -116,7 +115,6 @@ export default {
       this.$accessor.config.getConfig("fa_signalisation_form") || [];
   },
   methods: {
-    updateLocations(locations) {},
     onFormChange(form) {
       this.newSignalisation = form;
     },

@@ -234,7 +234,7 @@ export default {
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
-        { text: "étude", value: "studies" },
+        { text: "études", value: "studies" },
         { text: "charisme", value: "charisma", align: "end" },
         { text: "action", value: "action" },
       ],

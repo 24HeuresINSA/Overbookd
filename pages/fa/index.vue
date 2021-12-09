@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Fiche Animation 🎉</h1>
+    <h1>Fiche Activité 🎉</h1>
 
     <v-container style="display: grid; width: 100%; margin: 0">
       <v-row>
@@ -115,15 +115,7 @@
                   >
                     <v-icon small>mdi-circle-edit-outline</v-icon>
                   </v-btn>
-                  <v-btn
-                    class="mx-2"
-                    icon
-                    small
-                    @click="
-                      mFA = row.item;
-                      isDeleteFAOpen = true;
-                    "
-                  >
+                  <v-btn class="mx-2" icon small @click="preDelete(row.item)">
                     <v-icon small>mdi-delete</v-icon>
                   </v-btn>
                 </td>
@@ -248,10 +240,20 @@ export default {
   async mounted() {
     this.validators = this.$accessor.config.getConfig("fa_validators");
     // get FAs
-    this.FAs = (await this.$axios.get("/FA")).data;
+    const res = await safeCall(this.$store, RepoFactory.faRepo.getAllFAs(this));
+    if (res) {
+      this.FAs = res.data;
+    } else {
+      alert("error");
+    }
   },
 
   methods: {
+    preDelete(fa) {
+      this.mFA = fa;
+      this.isDeleteFAOpen = true;
+    },
+
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
     },
@@ -335,14 +337,17 @@ export default {
       }
     },
     async deleteFA() {
-      await safeCall(
+      const res = await safeCall(
         this.$store,
         RepoFactory.faRepo.deleteFA(this, this.mFA),
-        "FA deleted 🥳"
+        "FA deleted 🥳",
+        "FA not deleted 😢"
       );
-      this.FAs = this.FAs.filter((e) => e.count !== this.mFA.count);
-      this.isDeleteFAOpen = false;
-      this.mFA = undefined;
+      if (res) {
+        this.FAs = this.FAs.filter((e) => e.count !== this.mFA.count);
+        this.isDeleteFAOpen = false;
+        this.mFA = undefined;
+      }
     },
 
     nextPage() {
