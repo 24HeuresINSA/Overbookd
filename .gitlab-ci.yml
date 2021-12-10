@@ -1,9 +1,11 @@
 stages:
   - test
   - setup
-  - docker
+  - docker-frontend
+  - docker-backend
 
 include:
   - template: Security/SAST.gitlab-ci.yml
   - local: /.gitlab/ci/buildxSetup.gitlab-ci.yml
-  - local: /.gitlab/ci/containerize.gitlab-ci.yml
+  - local: /.gitlab/ci/frontend_containerize.gitlab-ci.yml
+  - local: /.gitlab/ci/backend_containerize.gitlab-ci.yml

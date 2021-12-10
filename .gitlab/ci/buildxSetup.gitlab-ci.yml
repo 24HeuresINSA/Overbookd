@@ -16,4 +16,4 @@ buildx:
   only:
     - main
     - pre-prod
-    - develop
+    - merge_requests

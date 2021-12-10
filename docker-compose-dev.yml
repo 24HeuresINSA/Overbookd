@@ -59,12 +59,14 @@ services:
   api:
     container_name: overbookd_api
     build: 
-      context: ../../backend
+      context: ./backend
       dockerfile: Dockerfile.dev
     restart: always
     networks:
       - overbookd_net-api
       - traefik-public
+    ports:
+      - 2424:2424
     environment:
       DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_mongo:27017/
     labels:
@@ -92,13 +94,15 @@ services:
   front:
     container_name: overbookd_front
     build: 
-      context: ../../frontend
+      context: ./frontend
       dockerfile: Dockerfile.dev
     environment:
       - BASE_URL
     restart: always
     networks:
       - traefik-public
+    ports:
+      - 3000:3000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.front.entrypoints=websecure"

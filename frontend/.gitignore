@@ -1,0 +1,14 @@
+.idea
+dist
+node_modules
+.nuxt
+.vscode
+
+sw.js
+.DS_Store
+
+.env
+
+# Storybook
+.nuxt-storybook
+storybook-static!/.env
