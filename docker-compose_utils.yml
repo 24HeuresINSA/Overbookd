@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:v2.3
+    restart: always
+    command:
+      # Docker config
+      - "--providers.docker=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-public"
+      # Entrypoint
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # HTTP -> HTTPS
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      # Enable Dashboard
+      - "--api.dashboard=true"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    #      - ./passwd:/passwd
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=888"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    command: --label-enable --interval 300 --cleanup
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_NOTIFICATIONS=${WATCHTOWER_NOTIFICATIONS}
+      - WATCHTOWER_NOTIFICATION_EMAIL_FROM=${WATCHTOWER_NOTIFICATION_EMAIL_FROM}
+      - WATCHTOWER_NOTIFICATION_EMAIL_TO=${WATCHTOWER_NOTIFICATION_EMAIL_TO}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT}
+
+networks:
+  traefik-public:
+    external: true

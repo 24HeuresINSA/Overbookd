@@ -1,0 +1,10 @@
+put frontend files
+put backend files
+add rules for ci
+    backend path
+    frontend path
+    check SAST feature
+make script for simplify [dev, prod, preprod] deployment
+review path for backup script
+review docker-compose to remove keycloak
+write readme

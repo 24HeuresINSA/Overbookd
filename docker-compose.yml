@@ -1,0 +1,77 @@
+version: '3'
+
+networks:
+  overbookd_prod-net-api:
+  traefik-public:
+    external: true
+
+services:
+  api:
+    container_name: overbookd_prod_api
+    image: registry.gitlab.com/24-heures-insa/overbookd-mono/backend
+    restart: always
+    networks:
+      - overbookd_prod-net-api
+      - traefik-public
+    volumes:
+      - ./docker/data/prod/images:/overbookd/backend/images
+    environment:
+      DOMAIN: ${OVERBOOKD_DOMAIN}
+      DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_prod_mongo:27017/
+      GMAIL_USER: ${OVERBOOKD_EMAIL_USER}
+      GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.services.api.loadbalancer.server.port=2424"
+      - "traefik.http.routers.api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.api.tls=true"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  mongodb:
+    container_name: overbookd_prod_mongo
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${OVERBOOKD_DATABASE_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${OVERBOOKD_DATABASE_PASSWORD}
+    networks:
+      - overbookd_prod-net-api
+    volumes:
+      - ./docker/data/prod/mongo/db:/data/db
+      - ./docker/data/prod/mongo/configdb:/data/configdb
+
+  front:
+    container_name: overbookd_prod_front
+    image: registry.gitlab.com/24-heures-insa/overbookd-mono/frontend
+    restart: always
+    environment:
+      NODE_ENV: prod
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.entrypoints=websecure"
+      - "traefik.http.services.front.loadbalancer.server.port=1234"
+      - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.routers.front.tls=true"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # doc:
+  #   image: registry.gitlab.com/24-heures-insa/overbookd/documentation
+  #   restart: always
+  #   networks:
+  #     - traefik-public
+  #   environment:
+  #     SITE: overbookd-doc
+  #     WEBSITE_NAME: Documentation
+  #     TEMPLATE: classic
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.doc.entrypoints=websecure"
+  #     - "traefik.http.services.doc.loadbalancer.server.port=3001"
+  #     - "traefik.http.routers.doc.rule=Host(`overbookd.${DOMAIN}`) && PathPrefix(`/docs`)"
+  #     - "traefik.http.routers.doc.tls=true"
+  #     - "traefik.http.routers.doc.middlewares=doc-redirect"
+  #     - "traefik.http.middlewares.doc-redirect.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$"
+  #     - "traefik.http.middlewares.doc-redirect.redirectregex.replacement=https://$$1/docs"
