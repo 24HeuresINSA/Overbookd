@@ -45,8 +45,8 @@ Les instructions pour lancer et faire tourner Overbookd sont maintenant centrali
 
 **When contributing to the codebase you have to:**
 
- - Open an issue
- - Branch from develop with the issue ID in the name (ex: 24-fix-random-bugs)
- - Create a merge request from this branch to develop
+- Open an issue
+- Branch from develop with the issue ID in the name (ex: 24-fix-random-bugs)
+- Create a merge request from this branch to develop
 
 This leverage consistency and relaibility through the whole process.

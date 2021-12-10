@@ -43,6 +43,7 @@ There is 3 main branches in this repo
  - develop: Hosting under development version of Overbookd
 
 When contributing to the codebase you have to:
+
  - Open an issue
  - Branch from develop with the issue ID in the name (ex: 24-fix-random-bugs)
  - Create a merge request from this branch to develop
