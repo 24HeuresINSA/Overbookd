@@ -15,8 +15,8 @@ containerize:
     - docker buildx create --use
     - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd-mono/backend:$VERSION_TAG --tag registry.gitlab.com/24-heures-insa/overbookd-mono/backend:$TAG ./backend
   only:
-  - paths:
-      - "backend/"
+  - changes:
+      - backend/*
   - refs:
     - main
     - pre-prod
@@ -38,7 +38,7 @@ merge_requests_containerize:
     - docker buildx create --use
     - docker buildx build --platform linux/amd64,linux/arm64 ./backend
   only:
-  - paths:
-      - backend/
+  - changes:
+      - backend/*
   - refs:
     - merge_requests
