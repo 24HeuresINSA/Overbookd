@@ -1,0 +1,7 @@
+.gitub
+.gitlab
+.idea
+.vscode
+.nuxt
+node_modules
+dist
