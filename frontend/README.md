@@ -38,9 +38,9 @@ Then use `docker-compose up` to deploy the app.
 
 There is 3 main branches in this repo
 
- - master: Hosting production deployment
- - pre-prod: Hosting pre-production deployment
- - develop: Hosting under development version of Overbookd
+- master: Hosting production deployment
+- pre-prod: Hosting pre-production deployment
+- develop: Hosting under development version of Overbookd
 
 When contributing to the codebase you have to:
 
