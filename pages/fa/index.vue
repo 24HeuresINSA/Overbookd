@@ -101,7 +101,7 @@
                     ? `text-decoration:line-through;`
                     : `text-decoration:none;`
                 "
-                >{{ item.general.name }}</a
+                >{{ item.general?.name }}</a
               >
             </template>
             <template #[`item.action`]="row">
@@ -195,7 +195,7 @@ export default {
         { text: "status", value: "status" },
         { text: "validation", value: "validation" },
         { text: "nom", value: "general.name" },
-        { text: "equipe", value: "general.team" },
+        { text: "équipe", value: "general.team" },
         { text: "Resp", value: "general.inCharge.username" },
         { text: "action", value: "action" },
       ],
@@ -279,7 +279,7 @@ export default {
       if (this.isDeletedFilter === false) {
         return FAs.filter((FA) => FA.isValid !== false);
       }
-      return FAs;
+      return FAs.filter((FA) => FA.isValid === false);
     },
 
     filterByValidatorStatus(FAs) {
