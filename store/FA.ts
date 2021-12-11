@@ -200,7 +200,7 @@ export const mutations = mutationTree(state, {
     if (state.mFA.electricityNeeds === undefined) {
       state.mFA.electricityNeeds = [];
     }
-    state.mFA.electricityNeeds.push(electricityNeed);
+    state.mFA.electricityNeeds.push({ ...electricityNeed });
   },
 });
 
