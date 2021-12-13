@@ -53,7 +53,14 @@ export const mutations = mutationTree(state, {
       Object.assign(mFA[key], data[key]);
     }
   },
-  SET_FA: function (state, mFA) {
+  SET_FA: function (state, mFA: FA) {
+    mFA.timeframes = mFA.timeframes.map((tf) => {
+      return {
+        ...tf,
+        start: new Date(tf.start),
+        end: new Date(tf.end),
+      };
+    });
     state.mFA = mFA;
   },
   RESET_FA: function (state) {
@@ -271,8 +278,8 @@ export const actions = actionTree(
     deleteEquipment: function ({ commit }, payload) {
       commit("DELETE_EQUIPMENT", payload);
     },
-    setFA: function ({ commit }, payload) {
-      commit("SET_FA", payload);
+    setFA: function ({ commit }, FA: FA) {
+      commit("SET_FA", FA);
     },
     undelete: function ({ commit }) {
       commit("UNDELETE");
