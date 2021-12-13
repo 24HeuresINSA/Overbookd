@@ -33,13 +33,7 @@ export const mutations = mutationTree(state, {
     // console.log("locations in state :", state.locations);
   },
   SET_LOCATION(state, location: location) {
-    const id = state.locations.findIndex((l) => l.name === location.name);
-    if (id !== -1) {
-      state.locations[id] = location;
-      state.locations = [...state.locations];
-    } else {
-      state.locations.push(location);
-    }
+    state.locations.push(location);
   },
   DELETE_LOCATION(state, location: location) {
     state.locations = state.locations.filter((l) => l._id !== location._id);
