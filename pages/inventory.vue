@@ -312,7 +312,7 @@ export default Vue.extend({
       });
       let res = fuse.search(this.search.name).map((item) => {
         return item.item;
-      });
+      }) as Equipment[];
       res = res.length === 0 ? this.inventory : res;
       if (this.search.location.length > 0) {
         res = res.filter((i: any) => {
@@ -320,14 +320,14 @@ export default Vue.extend({
         });
       }
       if (this.search.fromPool) {
-        res = res.filter((i) => {
+        res = res.filter((i: any) => {
           return i.fromPool;
         });
       }
       return res;
     },
     possibleLocations(): location[] {
-      return this.$accessor.location.locations.filter((e) =>
+      return this.$accessor.location.locations.filter((e: any) =>
         e.neededBy.includes("INVENTAIRE")
       );
     },
@@ -368,7 +368,7 @@ export default Vue.extend({
       console.log("Error, could not fetch the DB");
     }
     const Form = FAs!.data.concat(FTs!.data);
-    this.inventory.forEach((item) => {
+    this.inventory.forEach((item: any) => {
       item.required = {
         count: 0,
         form: Array<any>(),
@@ -396,7 +396,7 @@ export default Vue.extend({
   },
 
   methods: {
-    rowClass(item: Equipment) {
+    rowClass(item: Equipment): any {
       if (item.required) {
         let isNegatif =
           item.required.count > +this.getBorrowedCount(item) + +item.amount;
@@ -404,11 +404,11 @@ export default Vue.extend({
       }
     },
 
-    hasRole(role: string | string[]) {
+    hasRole(role: string | string[]): boolean {
       return this.$accessor.user.hasRole(role);
     },
 
-    getConfig(key: string) {
+    getConfig(key: string): any {
       return this.$accessor.config.getConfig(key);
     },
 
@@ -427,7 +427,7 @@ export default Vue.extend({
     openProposalPage() {
       (this.$refs.equipPropPage as any).openDialog();
     },
-    getBorrowedCount(item: Equipment) {
+    getBorrowedCount(item: Equipment): number {
       let count = 0;
       if (item && item.borrowed) {
         if (item.borrowed.length) {
@@ -506,7 +506,11 @@ export default Vue.extend({
         (e: any) => e.key === "location"
       );
       //TODO add a notification to know why you can't delete
-      if (this.inventory.some((e) => this.search.location.includes(e.location)))
+      if (
+        this.inventory.some((e: Equipment) =>
+          this.search.location.includes(e.location)
+        )
+      )
         return;
       const newEquipmentForm = cloneDeep(this.equipmentForm);
       newEquipmentForm[index].options = newEquipmentForm[index].options.filter(

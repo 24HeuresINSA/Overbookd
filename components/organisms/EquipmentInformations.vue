@@ -53,7 +53,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  data() {
+  data(): any {
     return {
       dialog: false,
       title: "Informations sur l'équipement",
