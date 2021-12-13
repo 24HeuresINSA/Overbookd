@@ -43,7 +43,9 @@
 
 <script lang="ts">
 import cloneDeep from "lodash/cloneDeep";
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "EquipmentInformations",
   props: {
     equipment: {
@@ -67,7 +69,7 @@ export default {
       this.dialog = false;
     },
   },
-};
+});
 </script>
 
 <style></style>

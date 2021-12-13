@@ -210,17 +210,46 @@ import { RepoFactory } from "../repositories/repoFactory";
 import cloneDeep from "lodash/cloneDeep";
 import isEqual from "lodash/isEqual";
 import Vue from "vue";
-import LocationAdder from "~/components/organisms/locationAdder.vue";
 import EquipmentInformations from "~/components/organisms/EquipmentInformations.vue";
 import EquipmentProposalDialog from "~/components/organisms/EquipmentProposalDialog.vue";
 import EquipmentProposalDialogPage from "~/components/organisms/EquipmentProposalDialogPage.vue";
 import EquipmentDialog from "~/components/organisms/EquipmentDialog.vue";
 import Fuse from "fuse.js";
-import { User, location } from "~/utils/models/repo";
+import { location, User } from "~/utils/models/repo";
 import { Equipment } from "~/utils/models/Equipment";
 import { Snack } from "~/utils/models/snack";
+import { Header } from "~/utils/models/Data";
 
-export default {
+interface Data {
+  headers: Header[];
+  borrowedHeader: Header[];
+
+  borrowed: Equipment[];
+  isFormOpened: boolean;
+  changeProposalForm: boolean;
+  allowedTeams: string[];
+  selectedItem: Equipment;
+  search: Search;
+  selectOptions: string[];
+
+  newLocation: string;
+  isPreciseLocDialog: boolean;
+  valid: boolean;
+
+  isNewEquipment: boolean;
+  loading: boolean;
+  snack: Snack;
+}
+
+interface Search {
+  name: string;
+  location: string;
+  locationSigna: string;
+  type: string;
+  fromPool: boolean;
+}
+
+export default Vue.extend({
   name: "Inventory",
   components: {
     locationAdder,
@@ -229,7 +258,7 @@ export default {
     EquipmentProposalDialogPage,
     EquipmentDialog,
   },
-  data() {
+  data(): Data {
     return {
       headers: [
         { text: "nom", value: "name" },
@@ -261,7 +290,7 @@ export default {
         type: "",
         fromPool: false,
       },
-      selectOptions: Array<string>(),
+      selectOptions: [],
       newLocation: "",
       isPreciseLocDialog: false,
       valid: false,
@@ -502,7 +531,7 @@ export default {
       this.selectedItem.borrowed.splice(index, 1);
     },
   },
-};
+});
 </script>
 
 <style scoped>

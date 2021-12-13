@@ -133,7 +133,7 @@ import _ from "lodash";
 import Vue from "vue";
 import { Snack } from "~/utils/models/snack";
 
-export default {
+export default Vue.extend({
   name: "EquipmentProposalDialog",
   props: {
     equipment: Object,
@@ -269,7 +269,7 @@ export default {
       (this.$refs.proposalForm as HTMLFormElement).reset();
     },
   },
-};
+});
 </script>
 
 <style></style>
