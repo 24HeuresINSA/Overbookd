@@ -101,7 +101,7 @@
                     ? `text-decoration:line-through;`
                     : `text-decoration:none;`
                 "
-                >{{ item.general?.name }}</a
+                >{{ item.general ? item.general.name : "" }}</a
               >
             </template>
             <template #[`item.action`]="row">
