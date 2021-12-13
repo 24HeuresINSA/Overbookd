@@ -5,7 +5,7 @@
         <v-text-field
           style="max-width: 200px"
           type="number"
-          label="# requit"
+          label="# requis"
           :value="item.required"
           :disabled="disabled"
           @change="updateItems(item, $event)"

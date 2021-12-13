@@ -80,7 +80,7 @@
             </v-col>
             <v-col md="6">
               <v-switch
-                v-model="mUser.hasDriverLicence"
+                v-model="mUser.hasDriverLicense"
                 label="Permis"
                 :disabled="!(hasEditingRole || isMe())"
               ></v-switch>
@@ -143,7 +143,7 @@
           >supprimer</v-btn
         >
         <v-spacer />
-        <v-btn text @click="saveUser()">sauvgarder</v-btn>
+        <v-btn text @click="saveUser()">sauvegarder</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -151,7 +151,8 @@
 
 <script>
 import OverChips from "~/components/atoms/overChips";
-import { hasRole } from "../../common/role";
+import { safeCall } from "../../utils/api/calls";
+import userRepo from "~/repositories/userRepo";
 
 export default {
   name: "UserInformation",
@@ -224,7 +225,12 @@ export default {
       }
     },
     async saveUser() {
-      await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
+      await safeCall(
+        this.$store,
+        userRepo.updateUser(this, this.mUser._id, this.mUser),
+        "🥳",
+        "une erreur est survenue lors de la sauvegarde de l'utilisateur"
+      );
       this.mToggle = false;
     },
     async deleteUser() {

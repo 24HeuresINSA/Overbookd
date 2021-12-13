@@ -8,18 +8,25 @@ import {
 import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { FormComment } from "~/utils/models/Comment";
 
 export const state = () => ({
   mFA: {
     status: "draft",
+
+    general: {},
+    details: {},
+    security: {},
+
     equipments: [] as any,
     timeframes: [] as any,
     validated: [] as any,
     refused: [] as any,
-    FTs: [] as FT[],
     securityPasses: [] as SecurityPass[],
     signalisation: [] as Signalisation[],
     electricityNeeds: [] as ElectricityNeed[],
+    comments: [] as FormComment[],
+    FTs: [] as FT[],
   } as FA,
 });
 
@@ -52,6 +59,9 @@ export const mutations = mutationTree(state, {
   RESET_FA: function (state) {
     state.mFA = {
       status: "draft",
+      general: {},
+      details: {},
+      security: {},
       equipments: [],
       timeframes: [],
       validated: [],
@@ -116,7 +126,7 @@ export const mutations = mutationTree(state, {
         time: new Date(),
         text: `valide par ${validator}`,
         validator,
-        topic: "valide",
+        topic: "valider",
       });
     }
   },
@@ -139,7 +149,7 @@ export const mutations = mutationTree(state, {
     state.mFA.comments.push({
       time: new Date(),
       text: comment,
-      topic: "refuse",
+      topic: "refuser",
       validator,
     });
   },
@@ -198,13 +208,22 @@ export const mutations = mutationTree(state, {
     if (state.mFA.electricityNeeds === undefined) {
       state.mFA.electricityNeeds = [];
     }
-    state.mFA.electricityNeeds.push(electricityNeed);
+    state.mFA.electricityNeeds.push({ ...electricityNeed });
+  },
+  SET_LOCATIONS: function (state, locations) {
+    if (state.mFA.general === undefined) {
+      state.mFA.general = {};
+    }
+    state.mFA.general.locations = locations;
   },
 });
 
 export const actions = actionTree(
   { state },
   {
+    setLocations: async ({ commit }, locations: string[]) => {
+      commit("SET_LOCATIONS", locations);
+    },
     addElectricityNeed({ commit }, electricityNeed) {
       commit("ADD_ELECTRICITY_NEED", electricityNeed);
     },
@@ -270,8 +289,8 @@ export const actions = actionTree(
     resetFA: function ({ commit }, payload) {
       commit("RESET_FA", payload);
     },
-    addComment: function ({ commit }, payload) {
-      commit("ADD_COMMENT", payload);
+    addComment: function ({ commit }, comment: FormComment) {
+      commit("ADD_COMMENT", comment);
     },
     addNewFT: async function ({ commit, state, dispatch }, name) {
       const repo = RepoFactory;
