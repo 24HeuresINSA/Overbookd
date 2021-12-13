@@ -139,7 +139,7 @@ export default Vue.extend({
     equipment: Object,
     isNewEquipment: Boolean,
   },
-  data() {
+  data(): any {
     return {
       changeProposalForm: false,
       proposalValid: false,
@@ -194,7 +194,7 @@ export default Vue.extend({
   },
   computed: {
     possibleLocations(): any {
-      return this.$accessor.location.locations.filter((e) =>
+      return this.$accessor.location.locations.filter((e: any) =>
         e.neededBy.includes("INVENTAIRE")
       );
     },
@@ -205,7 +205,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    getConfig(key: string) {
+    getConfig(key: string): any {
       return this.$accessor.config.getConfig(key);
     },
     async addEquipmentProposal() {
