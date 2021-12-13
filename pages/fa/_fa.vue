@@ -44,7 +44,7 @@
           <FormCard
             title="Détail"
             form-key="fa_details_form"
-            details="Décris ici ton activité, soit assez exhaustif, si tu le demande, c'est ce texte qui sera publié sur le site 24heures.org"
+            details="Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est ce texte qui sera publié sur le site 24heures.org"
             topic="details"
             :is-disabled="isValidated('humain')"
             :form="FA"
@@ -74,7 +74,7 @@
             title="Sécurité"
             form-key="fa_security_form"
             topic="security"
-            details="Si tu as des questions sur les besoins ou non de dispositif de secu de ton activité, contacte securite@24heures.org"
+            details="Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org"
             :is-disabled="isValidated('secu')"
             :form="FA"
             @form-change="updateForm('security', $event)"
@@ -95,8 +95,8 @@
         <v-col>
           <h2>Logistique 🚚</h2>
           <h4>
-            Si il manque des informations, ou du matos veuillez contacter le
-            responsable de logistique sur
+            S'il manque des informations, ou du matos veuillez contacter le
+            responsable de la logistique sur
             <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
           </h4>
           <LogisticsCard
@@ -117,7 +117,7 @@
       ></LogisticsCard>
       <br />
       <LogisticsCard
-        title="Matos Elec"
+        title="Matos Elec / Eau"
         :types="Object.values(ElecTypes)"
         :store="store"
         :disabled="isValidated('elec')"
@@ -135,7 +135,7 @@
             title="Eau"
             form-key="fa_water_form"
             topic="elec"
-            details="Si ton animation a besoin d'élec , il faut savoir maintenant puissance et connectique, rapproche toi du prestataire pour avoir ces réponses ou voit avec la Log Elec via logistique@24heures.org"
+            details="Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org"
             :is-disabled="isValidated('elec')"
             :form="FA"
             @form-change="updateForm('elec', $event)"
@@ -147,7 +147,7 @@
       <CommentCard :comments="FA.comments" form="FA"></CommentCard>
 
       <br />
-      <FTCard></FTCard>
+      <FTCard v-if="isFTOpen"></FTCard>
     </v-container>
 
     <div style="height: 100px"></div>
@@ -163,6 +163,10 @@
       "
     >
       <div>
+        <v-btn v-if="FA.count > 1" small fab :href="`/fa/${FA.count - 1}`">
+          <v-icon small>mdi-arrow-left</v-icon>
+        </v-btn>
+
         <v-btn
           v-if="validators.length === 1"
           color="red"
@@ -235,15 +239,21 @@
         </v-menu>
       </div>
 
-      <v-btn color="secondary" @click="validationDialog = true"
+      <v-btn
+        v-if="FA.status !== 'submitted'"
+        color="warning"
+        @click="validationDialog = true"
         >soumettre à validation
       </v-btn>
-      <v-btn color="warning" @click="saveFA">sauvgarder</v-btn>
+      <v-btn @click="saveFA">sauvegarder</v-btn>
       <v-btn
         v-if="validators.length >= 1 && FA.isValid === false"
         color="red"
         @click="undelete"
         >récupérer
+      </v-btn>
+      <v-btn small fab :href="`/fa/${FA.count + 1}`">
+        <v-icon small>mdi-arrow-right</v-icon>
       </v-btn>
     </div>
 
@@ -344,9 +354,11 @@ export default {
       validationDialog: false,
       refuseDialog: false,
 
+      isFTOpen: true,
+
       refuseComment: "",
       isSnackbar: false,
-      snackbarMessage: "la FA a bien ete sauvgarder 😅",
+      snackbarMessage: "la FA à bien été sauvegardée 😅",
       schedule: {
         date: undefined,
         start: undefined,
@@ -402,6 +414,7 @@ export default {
     this.FAStore = this.$accessor.FA;
     this.teams = this.$accessor.config.getConfig("teams");
     this.VALIDATORS = this.$accessor.config.getConfig("fa_validators");
+    this.isFTOpen = this.$accessor.config.getConfig("is_ft_open");
 
     // get FA if not new FA
     if (!this.isNewFA) {

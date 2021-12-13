@@ -1,20 +1,20 @@
 <template>
   <div>
-    <h1>Fiche Animation 🎉</h1>
+    <h1>Fiche Activité 🎉</h1>
 
-    <v-container style="display: grid; width: 100%; margin: auto">
+    <v-container style="display: grid; width: 100%; margin: 0">
       <v-row>
-        <v-col md="2">
+        <v-col md="3">
           <v-container style="padding: 0">
             <v-card>
               <v-card-title>Filters</v-card-title>
               <v-card-text>
-                <v-text-field v-model="search" label="recherche" dense>
+                <v-text-field v-model="search" label="Recherche" dense>
                 </v-text-field>
 
                 <v-select
                   v-model="selectedTeam"
-                  label="équipe"
+                  label="Équipe"
                   :items="getConfig('teams').map((e) => e.name)"
                   clearable
                   dense
@@ -57,22 +57,33 @@
                       x-small
                       :value="true"
                       style="padding-right: 2px; padding-left: 2px"
-                      >valider
+                      >validée
                     </v-btn>
                     <v-btn
                       x-small
                       :value="false"
                       style="padding-right: 2px; padding-left: 2px"
-                      >refuser
+                      >refusée
+                    </v-btn>
+                    <v-btn
+                      x-small
+                      :value="2"
+                      style="padding-right: 2px; padding-left: 2px"
+                      >à valider
                     </v-btn>
                   </v-btn-toggle>
                 </div>
+                <v-switch
+                  v-if="isAdmin"
+                  v-model="isDeletedFilter"
+                  label="Afficher les FA supprimées"
+                ></v-switch>
               </v-card-text>
             </v-card>
           </v-container>
         </v-col>
 
-        <v-col md="10">
+        <v-col md="9">
           <v-data-table
             :headers="headers"
             :items="selectedFAs"
@@ -81,6 +92,17 @@
           >
             <template #[`item.validation`]="{ item }">
               <ValidatorsIcons :form="item"></ValidatorsIcons>
+            </template>
+            <template #item.general.name="{ item }">
+              <a
+                :href="`/fa/${item.count}`"
+                :style="
+                  item.isValid === false
+                    ? `text-decoration:line-through;`
+                    : `text-decoration:none;`
+                "
+                >{{ item.general ? item.general.name : "" }}</a
+              >
             </template>
             <template #[`item.action`]="row">
               <tr>
@@ -93,7 +115,7 @@
                   >
                     <v-icon small>mdi-circle-edit-outline</v-icon>
                   </v-btn>
-                  <v-btn class="mx-2" icon small @click="deleteFA(row.item)">
+                  <v-btn class="mx-2" icon small @click="preDelete(row.item)">
                     <v-icon small>mdi-delete</v-icon>
                   </v-btn>
                 </td>
@@ -123,6 +145,17 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="isDeleteFAOpen" max-width="600">
+      <v-card>
+        <v-card-title>Supprimer une FA</v-card-title>
+        <v-card-text> Voulez-vous vraiment supprimer cette FA ?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="deleteFA">supprimer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-btn
       elevation="2"
       fab
@@ -148,8 +181,10 @@ export default {
   data() {
     return {
       FAs: [],
+      mFA: null,
       search: undefined,
       filter: {},
+      isDeletedFilter: false, // true if deleted FAs are displayed
       sortDesc: false,
       page: 1,
       itemsPerPage: 4,
@@ -160,7 +195,7 @@ export default {
         { text: "status", value: "status" },
         { text: "validation", value: "validation" },
         { text: "nom", value: "general.name" },
-        { text: "equipe", value: "general.team" },
+        { text: "équipe", value: "general.team" },
         { text: "Resp", value: "general.inCharge.username" },
         { text: "action", value: "action" },
       ],
@@ -171,7 +206,9 @@ export default {
         draft: "grey",
         undefined: "grey",
       },
+
       isNewFADialogOpen: false,
+      isDeleteFAOpen: false,
       faName: undefined,
     };
   },
@@ -181,8 +218,12 @@ export default {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
 
+    isAdmin() {
+      return this.$accessor.user.hasRole("admin");
+    },
     selectedFAs() {
       let mFAs = this.filterByStatus(this.FAs, this.selectedStatus);
+      mFAs = this.filterByDeletedStatus(mFAs);
       mFAs = this.filterBySelectedTeam(mFAs, this.selectedTeam);
       mFAs = this.filterByValidatorStatus(mFAs);
       const options = {
@@ -199,12 +240,20 @@ export default {
   async mounted() {
     this.validators = this.$accessor.config.getConfig("fa_validators");
     // get FAs
-    this.FAs = (await this.$axios.get("/FA")).data.filter(
-      (e) => e.isValid !== false
-    );
+    const res = await safeCall(this.$store, RepoFactory.faRepo.getAllFAs(this));
+    if (res) {
+      this.FAs = res.data;
+    } else {
+      alert("error");
+    }
   },
 
   methods: {
+    preDelete(fa) {
+      this.mFA = fa;
+      this.isDeleteFAOpen = true;
+    },
+
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
     },
@@ -226,15 +275,26 @@ export default {
       });
     },
 
+    filterByDeletedStatus(FAs) {
+      if (this.isDeletedFilter === false) {
+        return FAs.filter((FA) => FA.isValid !== false);
+      }
+      return FAs.filter((FA) => FA.isValid === false);
+    },
+
     filterByValidatorStatus(FAs) {
       const filter = this.filter;
       Object.entries(filter).forEach(([validator, value]) => {
-        console.log(validator);
         FAs = FAs.filter((FA) => {
           if (value === true) {
             return FA.validated.includes(validator);
           } else if (value === false) {
             return FA.refused.includes(validator);
+          } else if (value === 2) {
+            return (
+              !FA.validated.includes(validator) &&
+              (FA.status === "submitted" || FA.status === "refused")
+            );
           }
           return true;
         });
@@ -276,13 +336,18 @@ export default {
         await this.$router.push({ path: "fa/" + res.count });
       }
     },
-    async deleteFA(FA) {
-      await safeCall(
+    async deleteFA() {
+      const res = await safeCall(
         this.$store,
-        RepoFactory.faRepo.deleteFA(this, FA),
-        "FA deleted 🥳"
+        RepoFactory.faRepo.deleteFA(this, this.mFA),
+        "FA deleted 🥳",
+        "FA not deleted 😢"
       );
-      this.FAs = this.FAs.filter((e) => e.count !== FA.count);
+      if (res) {
+        this.FAs = this.FAs.filter((e) => e.count !== this.mFA.count);
+        this.isDeleteFAOpen = false;
+        this.mFA = undefined;
+      }
     },
 
     nextPage() {

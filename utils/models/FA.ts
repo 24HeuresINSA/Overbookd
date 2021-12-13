@@ -4,9 +4,10 @@ export interface FA {
   count?: number;
   status: string;
   general?: {
-    name: string;
-    type: string;
+    locations?: string[];
   };
+  details: {};
+  security: {};
   equipments: { _id: string; name: string; required: number }[];
   timeframes: { start: Date; end: Date; name: string }[];
   validated: String[];
@@ -42,16 +43,19 @@ export interface SecurityPass {
 
 export enum EquipmentTypes {
   BARS = "BARS",
+  BUREAUTIQUE = "BUREAUTIQUE",
   BOIS = "BOIS",
-  BRICOLAGE = "BRICOLAGE",
   CANAP = "CANAPE/FAUTEUIL",
   CUISINE = "CUISINE",
   DECO = "DECO",
   FRIGO = "FRIGO",
-  LITTERIE = "LITTERIE",
+  LITERIE = "LITERIE",
+  MOBILIER = "MOBILIER",
   PROPRETE = "PROPRETE",
   SCENE = "SCENE",
   SECU = "SECU",
+  SIGNA = "SIGNA",
+  OUTILLAGE = "OUTILLAGE",
   TENTE = "TENTE",
   AUTRE = "AUTRES MATOS",
 }
@@ -62,6 +66,7 @@ export enum BarrieresTypes {
 
 export enum ElecTypes {
   ALIM = "ALIMENTATION ELECTRIQUE",
+  EAU = "EAU",
   ECLAIRAGE = "ECLAIRAGE",
   AUTRE = "AUTRES ELEC",
 }

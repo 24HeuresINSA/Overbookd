@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Commentaire</v-card-title>
+    <v-card-title>Historique de validation</v-card-title>
     <v-card-text>
       <v-data-table
         :headers="headers"
@@ -26,10 +26,22 @@
   </v-card>
 </template>
 
-<script>
-import { RepoFactory } from "../../../repositories/repoFactory";
+<script lang="ts">
+import { RepoFactory } from "~/repositories/repoFactory";
+import { Header } from "~/utils/models/Data";
+import Vue from "vue";
+import { FormComment } from "~/utils/models/Comment";
+import { safeCall } from "~/utils/api/calls";
 
-export default {
+declare interface Data {
+  headers: Header[];
+  newComment: string;
+}
+
+const reminderMessage = "N'oublie pas de sauvgarder ton commentaire!";
+const errorMessage = "Une erreur est survenue, veuillez réessayer plus tard.";
+
+export default Vue.extend({
   name: "CommentCard",
   props: {
     comments: {
@@ -41,40 +53,59 @@ export default {
       default: () => "FA",
     },
   },
-  data: () => ({
-    headers: [
-      { text: "validateur", value: "validator" },
-      { text: "sujet", value: "topic" },
-      {
-        text: "commentaire",
-        value: "text",
-      },
-      { text: "date", value: "time" },
-    ],
-    newComment: undefined,
-    store: undefined,
-  }),
-  mounted() {
-    this.store = this.$accessor[this.form];
+  data(): Data {
+    return {
+      headers: [
+        { text: "validateur", value: "validator" },
+        { text: "sujet", value: "topic" },
+        {
+          text: "commentaire",
+          value: "text",
+        },
+        { text: "date", value: "time" },
+      ],
+      newComment: "",
+    };
+  },
+  computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    store(): any {
+      if (this.form === "FA") {
+        return this.$accessor.FA;
+      } else if (this.form === "FT") {
+        return this.$accessor.FT;
+      }
+    },
   },
   methods: {
     async addComment() {
-      this.store.addComment({
+      const comment: FormComment = {
         topic: "commentaire",
         text: this.newComment,
         time: new Date(),
         validator: this.$accessor.user.me.lastname,
-      });
+      };
+      this.store.addComment(comment);
       // clean the input
-      this.newComment = undefined;
+      this.newComment = "";
       if (this.form === "FA") {
-        await RepoFactory.faRepo.updateFA(this, this.$accessor.FA.mFA);
+        await safeCall(
+          this.$store,
+          RepoFactory.faRepo.updateFA(this, this.$accessor.FA.mFA),
+          "sent",
+          "server"
+        );
       } else if (this.form === "FT") {
-        await RepoFactory.ftRepo.updateFT(this, this.$accessor.FT.mFT);
+        await safeCall(
+          this.$store,
+          RepoFactory.ftRepo.updateFT(this, this.$accessor.FT.mFT),
+          "sent",
+          "server"
+        );
       }
     },
   },
-};
+});
 </script>
 
 <style scoped></style>

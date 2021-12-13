@@ -3,16 +3,19 @@
     <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
-        >Contacter les signa à signalitique@24heures.org pour ajouter des lieux
+        >Contacter la signa à signalitique@24heures.org pour ajouter des lieux
         non existant dans la liste deroulante
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
-          label="lieux"
+          label="Lieux"
           multiple
+          :value="currentLocations"
+          :items="locations"
           :disabled="isDisabled"
+          @change="selectLocations"
         ></v-autocomplete>
-        <v-switch v-model="isSignaRequired" label="besoin signa"></v-switch>
+        <v-switch v-model="isSignaRequired" label="Besoin signa"></v-switch>
         <div v-if="isSignaRequired">
           <v-data-table :headers="headers" :items="signalisation">
             <template #[`item.action`]="{ index }">
@@ -47,6 +50,7 @@
     </v-card>
 
     <v-dialog v-model="isSignaFormOpen" max-width="600">
+      <v-img src="img/signa.png"></v-img>
       <v-card>
         <v-card-title>Ajouter une signalisation</v-card-title>
         <v-card-text>
@@ -66,10 +70,20 @@
   </div>
 </template>
 
-<script>
-import OverForm from "../overForm";
+<script lang="ts">
+import OverForm from "@/components/overForm.vue";
+import Vue from "vue";
+import { Header } from "~/utils/models/Data";
 
-export default {
+export interface Data {
+  isSignaRequired: boolean;
+  isSignaFormOpen: boolean;
+  headers: Header[];
+  fields: string[];
+  newSignalisation: any;
+}
+
+export default Vue.extend({
   name: "OverSigna",
   components: { OverForm },
   props: {
@@ -78,7 +92,7 @@ export default {
       default: () => false,
     },
   },
-  data() {
+  data(): Data {
     return {
       isSignaRequired: false,
       isSignaFormOpen: false,
@@ -86,7 +100,7 @@ export default {
       headers: [
         { text: "nombre", value: "number" },
         { text: "type", value: "type" },
-        { text: "text a afficher", value: "text" },
+        { text: "texte à afficher", value: "text" },
         { text: "commentaire", value: "comment" },
         { text: "", value: "action" },
       ],
@@ -96,8 +110,20 @@ export default {
     };
   },
   computed: {
-    signalisation() {
+    signalisation(): any[] {
       return this.$accessor.FA.mFA.signalisation;
+    },
+    currentLocations(): string[] {
+      if (
+        this.$accessor.FA.mFA.general &&
+        this.$accessor.FA.mFA.general.locations
+      ) {
+        return this.$accessor.FA.mFA.general.locations;
+      }
+      return [];
+    },
+    locations(): any[] {
+      return this.$accessor.location.signa.map((l) => l.name);
     },
   },
   watch: {
@@ -110,27 +136,32 @@ export default {
       deep: true,
     },
   },
-  mounted() {
+  async mounted() {
     this.fields =
       this.$accessor.config.getConfig("fa_signalisation_form") || [];
+
+    // get locations
+    await this.$accessor.location.getAllLocations();
   },
   methods: {
-    onFormChange(form) {
+    selectLocations(locations: string[]) {
+      this.$accessor.FA.setLocations(locations);
+    },
+    onFormChange(form: any) {
       this.newSignalisation = form;
     },
     onFormSubmit() {
       this.$accessor.FA.addSignalisation(this.newSignalisation);
       this.isSignaFormOpen = false;
-      console.log(this.$accessor.FA.mFA);
     },
-    deleteSignalisation(index) {
+    deleteSignalisation(index: number) {
       this.$accessor.FA.deleteSignalisation(index);
     },
-    onItemChange(number, index) {
+    onItemChange(number: number, index: number) {
       this.$accessor.FA.updateSignalisationNumber({ index, number });
     },
   },
-};
+});
 </script>
 
 <style scoped></style>
