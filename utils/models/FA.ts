@@ -4,9 +4,10 @@ export interface FA {
   count?: number;
   status: string;
   general?: {
-    name: string;
-    type: string;
+    locations?: string[];
   };
+  details: {};
+  security: {};
   equipments: { _id: string; name: string; required: number }[];
   timeframes: { start: Date; end: Date; name: string }[];
   validated: String[];

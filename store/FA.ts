@@ -13,6 +13,11 @@ import { FormComment } from "~/utils/models/Comment";
 export const state = () => ({
   mFA: {
     status: "draft",
+
+    general: {},
+    details: {},
+    security: {},
+
     equipments: [] as any,
     timeframes: [] as any,
     validated: [] as any,
@@ -54,6 +59,9 @@ export const mutations = mutationTree(state, {
   RESET_FA: function (state) {
     state.mFA = {
       status: "draft",
+      general: {},
+      details: {},
+      security: {},
       equipments: [],
       timeframes: [],
       validated: [],
@@ -202,11 +210,20 @@ export const mutations = mutationTree(state, {
     }
     state.mFA.electricityNeeds.push({ ...electricityNeed });
   },
+  SET_LOCATIONS: function (state, locations) {
+    if (state.mFA.general === undefined) {
+      state.mFA.general = {};
+    }
+    state.mFA.general.locations = locations;
+  },
 });
 
 export const actions = actionTree(
   { state },
   {
+    setLocations: async ({ commit }, locations: string[]) => {
+      commit("SET_LOCATIONS", locations);
+    },
     addElectricityNeed({ commit }, electricityNeed) {
       commit("ADD_ELECTRICITY_NEED", electricityNeed);
     },

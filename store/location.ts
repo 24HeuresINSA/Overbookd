@@ -17,7 +17,7 @@ export const state = (): State => ({
 export const getters = getterTree(state, {
   signa: (state) => {
     return state.locations.filter((e) => {
-      return e.neededBy.length == 1 && e.neededBy[0] == "SIGNA";
+      return e.neededBy.includes("SIGNA");
     });
   },
   inventaire: (state) => {
