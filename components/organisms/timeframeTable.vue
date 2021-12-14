@@ -124,7 +124,7 @@ export default {
     },
     updateTimeframe() {
       let start = new Date(this.timeframes[this.mIndex].start);
-      let end = new Date(this.timeframes[this.mIndex].start);
+      let end = new Date(this.timeframes[this.mIndex].end);
 
       start.setHours(
         this.mTimeframe.start.split(":")[0],
