@@ -292,8 +292,7 @@ export default {
             return FA.refused.includes(validator);
           } else if (value === 2) {
             return (
-              !FA.validated.includes(validator) &&
-              (FA.status === "submitted" || FA.status === "refused")
+              !FA.validated.includes(validator) && FA.status === "submitted"
             );
           }
           return true;
