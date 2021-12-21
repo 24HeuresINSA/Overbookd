@@ -4,6 +4,7 @@ import { SnackNotif } from "../models/store";
 // Define all success messages possible
 const successMessages = {
   sent: "Bien envoyé !",
+  saved: "Sauvegardé !",
 };
 
 // Define all error messages possible

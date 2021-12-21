@@ -15,7 +15,7 @@ export const state = (): State => ({
 });
 
 export const getters = getterTree(state, {
-  signa: (state) => {
+  signa(state): location[] {
     return state.locations.filter((e) => {
       return e.neededBy.includes("SIGNA");
     });

@@ -137,13 +137,13 @@ export default {
         {
           icon: "mdi-chart-bubble",
           title: "Fiches Activitée 🥳",
-          roles: this.getConfig("ft_required_role"),
+          roles: this.getConfig("fa_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
           title: "Fiches Tâches  😱",
-          roles: this.getConfig("fa_required_role"),
+          roles: this.getConfig("ft_required_role"),
           to: "/ft",
         },
         {
