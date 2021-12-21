@@ -146,6 +146,7 @@ export default {
       }
       this.required.amount = +this.required.amount;
       this.required.type = "user";
+      delete this.required.team;
       this.selectedTimeframe.required.push({ ...this.required });
       this.store.updateTimeframe({
         index: this.selectedTimeframeIndex,
@@ -159,6 +160,7 @@ export default {
       }
       this.required.amount = +this.required.amount;
       this.required.type = "team";
+      delete this.required.user;
       this.selectedTimeframe.required.push({ ...this.required });
       this.store.updateTimeframe({
         index: this.selectedTimeframeIndex,

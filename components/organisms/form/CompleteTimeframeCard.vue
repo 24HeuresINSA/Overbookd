@@ -17,11 +17,13 @@
   </v-card>
 </template>
 
-<script>
-import CompleteTimeframeTable from "./CompleteTimeframeTable";
-import TimeframeSelector from "./timeframeSelector";
+<script lang="ts">
+import Vue from "vue";
+import { Timeframe } from "~/utils/models/timeframe";
+import CompleteTimeframeTable from "~/components/organisms/form/CompleteTimeframeTable.vue";
+import TimeframeSelector from "~/components/organisms/form/timeframeSelector.vue";
 
-export default {
+export default Vue.extend({
   name: "CompleteTimeframeCard",
   components: { TimeframeSelector, CompleteTimeframeTable },
   props: {
@@ -36,15 +38,15 @@ export default {
   },
 
   methods: {
-    addTimeframe(timeframe) {
+    addTimeframe(timeframe: Timeframe) {
       this.store.addTimeframe(timeframe);
     },
-    setTimeframes(timeframes) {
+    setTimeframes(timeframes: Timeframe[]) {
       const store = this.$accessor.FT;
       store.addTimeframes(timeframes);
     },
   },
-};
+});
 </script>
 
 <style scoped></style>
