@@ -82,6 +82,9 @@ export const mutations = mutationTree(state, {
     }
     mFT.comments.unshift(comment);
   },
+  DELETE_TIMEFRAME_FT: function ({ mFT }, index) {
+    mFT.timeframes.splice(index, 1);
+  },
 });
 
 export const actions = actionTree(
@@ -114,6 +117,9 @@ export const actions = actionTree(
     },
     setTimeframes: function ({ commit }, timeframes) {
       commit("SET_TIMEFRAME_FT", timeframes);
+    },
+    deleteTimeframe: function ({ commit, state }, index) {
+      commit("DELETE_TIMEFRAME_FT", index);
     },
     updateTimeframe: function ({ commit }, payload) {
       commit("UPDATE_TIMEFRAME", payload);

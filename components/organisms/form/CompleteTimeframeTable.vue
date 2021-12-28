@@ -154,6 +154,10 @@ export default {
       });
     },
 
+    deleteTimeframe(timeframe) {
+      this.$accessor.FT.deleteTimeframe(timeframe);
+    },
+
     addTeam() {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
