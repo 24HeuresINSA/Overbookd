@@ -2,9 +2,9 @@
   <div>
     <h1>Fiche Tache 👻</h1>
 
-    <v-container>
+    <v-container style="display: grid; width: 100%; margin: 0">
       <v-row>
-        <v-col md="2">
+        <v-col md="3">
           <v-card>
             <v-card-title>Filtres</v-card-title>
             <v-card-text>
@@ -40,8 +40,19 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col md="10">
+        <v-col md="9">
           <v-data-table :headers="headers" :items="filteredFTs">
+            <template #item.general.name="{ item }">
+              <a
+                :href="`/ft/${item.count}`"
+                :style="
+                  item.isValid === false
+                    ? `text-decoration:line-through;`
+                    : `text-decoration:none;`
+                "
+                >{{ item.general ? item.general.name : "" }}</a
+              >
+            </template>
             <template #[`item.status`]="row">
               <v-chip small :color="color[row.item.status]">
                 {{ row.item.count }}
