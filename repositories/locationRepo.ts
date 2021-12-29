@@ -15,13 +15,13 @@ export default {
     return context.$axios.delete(resource + `/${id}`);
   },
   createNewLocation(context: Context, location: Omit<location, "_id">) {
-    //Axios behave strangely with post, we get the data and not the response so strange
-    return context.$axios.$post(resource, location);
+    //ITS post not **$**post  !!!
+    return context.$axios.post(resource, location);
   },
   updateLocation(context: Context, location: location) {
     return context.$axios.put(resource, location);
   },
   createManyLocations(context: Context, locations: location[]) {
-    return context.$axios.$post(resource, locations);
+    return context.$axios.post(resource, locations);
   },
 };

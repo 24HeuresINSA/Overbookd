@@ -128,6 +128,12 @@ export const actions = actionTree(
       }
       return;
     },
+    async findUserById({ commit }, id: string) {
+      const res = await UserRepo.getUser(this, id);
+
+      if (res && res.data) commit("SET_SELECTED_USER", res.data);
+      return res;
+    },
   }
 );
 

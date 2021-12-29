@@ -6,6 +6,7 @@ import equipmentRepo from "~/repositories/equipementRepo";
 import timeslotRepo from "./timeslotRepo";
 import locationRepo from "./locationRepo";
 import authRepo from "~/repositories/authRepo";
+import equipmentProposalRepo from "./equipmentProposalRepo";
 
 const repositories = {
   user: userRepo,
@@ -16,6 +17,7 @@ const repositories = {
   timeslot: timeslotRepo,
   location: locationRepo,
   authRepo: authRepo,
+  equipmentProposal: equipmentProposalRepo,
 };
 
 type repoKey = keyof typeof repositories;
@@ -30,4 +32,5 @@ export const RepoFactory = {
   timeslotRepo,
   locationRepo,
   authRepo,
+  equipmentProposalRepo,
 };
