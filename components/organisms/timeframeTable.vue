@@ -9,10 +9,13 @@
 
       <v-data-table :headers="headers" :items="timeframes" dense>
         <template #[`item.date`]="{ item }">
-          {{ new Date(item.start).toDateString() }}
+          {{ new Date(item.start).toLocaleDateString() }}
         </template>
         <template #[`item.start`]="{ item }">
           {{ new Date(item.start).toLocaleTimeString() }}
+        </template>
+        <template #[`item.dateEnd`]="{ item }">
+          {{ new Date(item.end).toLocaleDateString() }}
         </template>
         <template #[`item.end`]="{ item }">
           {{ new Date(item.end).toLocaleTimeString() }}
@@ -52,6 +55,7 @@
             type="time"
             :disabled="isDisabled"
           ></v-text-field>
+          <v-btn text @click="selectMidnight">Minuit</v-btn>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -94,6 +98,10 @@ export default {
         { text: "date", value: "date" },
         { text: "debut", value: "start" },
         {
+          text: "date de fin",
+          value: "dateEnd",
+        },
+        {
           text: "fin",
           value: "end",
         },
@@ -113,6 +121,9 @@ export default {
     },
   },
   methods: {
+    selectMidnight() {
+      this.mTimeframe.end = "23:59";
+    },
     setTimeframes(timeframes) {
       const store = this.$accessor.FA;
       store.addTimeframes(timeframes);
@@ -124,7 +135,7 @@ export default {
     },
     updateTimeframe() {
       let start = new Date(this.timeframes[this.mIndex].start);
-      let end = new Date(this.timeframes[this.mIndex].start);
+      let end = new Date(this.timeframes[this.mIndex].end);
 
       start.setHours(
         this.mTimeframe.start.split(":")[0],
@@ -144,8 +155,12 @@ export default {
         return;
       }
       if (
-        +this.mTimeframe.end.split(":")[1] % 15 !== 0 ||
-        +this.mTimeframe.start.split(":")[1] % 15 !== 0
+        (+this.mTimeframe.end.split(":")[1] % 15 !== 0 ||
+          +this.mTimeframe.start.split(":")[1] % 15 !== 0) &&
+        !(
+          this.mTimeframe.end.split(":")[1] === "59" &&
+          this.mTimeframe.end.split(":")[0] === "23"
+        )
       ) {
         alert("Les minutes doivent être divisible par 15");
         return;

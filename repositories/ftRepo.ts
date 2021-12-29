@@ -11,7 +11,7 @@ export default {
   getFT(context: Context, id: string) {
     return context.$axios.get(`${resource}/${id}`);
   },
-  createFT(context: Context, FT: FT) {
+  createFT(context: Context, FT: Partial<FT>) {
     return context.$axios.post(resource, FT);
   },
   updateFT(context: Context, FT: FT) {

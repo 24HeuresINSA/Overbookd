@@ -82,6 +82,9 @@ export const mutations = mutationTree(state, {
     }
     mFT.comments.unshift(comment);
   },
+  DELETE_TIMEFRAME_FT: function ({ mFT }, index) {
+    mFT.timeframes.splice(index, 1);
+  },
 });
 
 export const actions = actionTree(
@@ -96,7 +99,7 @@ export const actions = actionTree(
       }
     },
     saveFT: async function ({ state }) {
-      return safeCall(this, repo.updateFT(this, state.mFT));
+      return safeCall(this, repo.updateFT(this, state.mFT), "saved", "server");
     },
     assignFT: function ({ commit }, payload) {
       commit("ASSIGN_FT", payload);
@@ -114,6 +117,9 @@ export const actions = actionTree(
     },
     setTimeframes: function ({ commit }, timeframes) {
       commit("SET_TIMEFRAME_FT", timeframes);
+    },
+    deleteTimeframe: function ({ commit, state }, index) {
+      commit("DELETE_TIMEFRAME_FT", index);
     },
     updateTimeframe: function ({ commit }, payload) {
       commit("UPDATE_TIMEFRAME", payload);
@@ -154,6 +160,16 @@ export const actions = actionTree(
     },
     addComment: async function ({ dispatch, commit, state }, comment) {
       commit("ADD_COMMENT", comment);
+    },
+    readyForAssignment: async function ({ dispatch, commit }, by: string) {
+      await dispatch("addComment", {
+        topic: "ready",
+        text: "FT prêt a validation",
+        time: new Date(),
+        validator: by,
+      });
+      commit("UPDATE_STATUS", "ready");
+      await dispatch("saveFT");
     },
   }
 );
