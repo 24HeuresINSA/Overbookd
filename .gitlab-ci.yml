@@ -2,7 +2,6 @@ stages:
   - test
   - setup
   - docker-frontend
-  - mr-docker-backend
   - docker-backend
 
 include:

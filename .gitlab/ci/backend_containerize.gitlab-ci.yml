@@ -32,7 +32,7 @@ merge_requests_containerize-backend:
   services:
     - name: docker:dind
       command: ["--experimental"]
-  stage: mr-docker-backend
+  stage: docker-backend
   before_script:
     - mkdir -p ~/.docker/cli-plugins
     - mv buildx ~/.docker/cli-plugins/docker-buildx
