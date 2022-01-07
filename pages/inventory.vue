@@ -239,6 +239,7 @@ interface Data {
   isNewEquipment: boolean;
   loading: boolean;
   snack: Snack;
+  showDeleted: boolean;
 }
 
 interface Search {
@@ -298,6 +299,7 @@ export default Vue.extend({
       isNewEquipment: false,
       loading: false,
       snack: new Snack(),
+      showDeleted: false,
     };
   },
 
@@ -338,7 +340,11 @@ export default Vue.extend({
       return this.getConfig("equipment_form");
     },
     inventory(): Equipment[] {
-      return cloneDeep(this.$accessor.equipment.items);
+      return cloneDeep(this.$accessor.equipment.items).filter(
+        (e: Equipment) => {
+          return !(e.isValid === false);
+        }
+      );
     },
     nbProposals(): number {
       return this.$accessor.equipmentProposal.count;
