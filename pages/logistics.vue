@@ -10,7 +10,7 @@
               <v-select
                 v-model="selectedItem"
                 label="Filtrer par:"
-                :items="equipments.map((e) => e.name)"
+                :items="equipPerTimeFrame.map((e) => e.name)"
               >
               </v-select>
             </v-col>
@@ -31,7 +31,7 @@
           <v-select
             v-model="selectedItem"
             label="item a verifier"
-            :items="equipments.map((e) => e.name)"
+            :items="equipPerTimeFrame.map((e) => e.name)"
           ></v-select>
           <v-data-table :headers="headersFT" :items="selectedEquipments">
             <template #[`item.action`]>
@@ -80,11 +80,11 @@ export default {
         },
         {
           text: "debut",
-          value: "start",
+          value: "parsedStart",
         },
         {
           text: "fin",
-          value: "end",
+          value: "parsedEnd",
         },
         {
           text: "action",
@@ -92,6 +92,10 @@ export default {
         },
       ],
       headersFA: [
+        {
+          text: "status",
+          value: "FA.status",
+        },
         {
           text: "FA",
           value: "FA.name",
@@ -106,15 +110,15 @@ export default {
         },
         {
           text: "Début",
-          value: "start",
+          value: "parsedStart",
         },
         {
           text: "Fin",
-          value: "end",
+          value: "parsedEnd",
         },
         {
-          text: "Action",
-          value: "action",
+          text: "Manque?",
+          value: "conflict",
         },
       ],
       search: {
@@ -122,8 +126,16 @@ export default {
         location: [],
         type: "",
       },
-      equipments: [],
+      equipPerTimeFrame: [],
+      equipmentNames: [],
+      conflicts: [],
+      inventory: [],
       selectedItem: "none",
+      color: {
+        submitted: "grey",
+        validated: "green",
+        refused: "red",
+      },
     };
   },
 
@@ -143,23 +155,28 @@ export default {
 
     selectedEquipments() {
       if (this.selectedItem === "none") {
-        return this.equipments;
+        return this.equipPerTimeFrame;
       }
-
-      return this.equipments.filter((e) => e.name === this.selectedItem);
+      return this.equipPerTimeFrame.filter((e) => e.name === this.selectedItem);
     },
   },
 
   async mounted() {
     if (hasRole(this, "log")) {
       const { data: FAs } = await this.$axios.get("/fa");
+      console.log(FAs);
       FAs.forEach((FA) => {
         if (FA.equipments) {
           FA.equipments.forEach((FAequipment) => {
             if (FA.timeframes) {
+              if (this.equipmentNames.indexOf(FAequipment.name) == -1) {
+                this.equipmentNames.push(FAequipment.name);
+              }
+
               FA.timeframes.forEach((timeframe) => {
                 let dS = new Date(timeframe.start);
                 let dE = new Date(timeframe.end);
+                let conf = "";
                 dS =
                   [dS.getMonth() + 1, dS.getDate(), dS.getFullYear()].join(
                     "/"
@@ -172,15 +189,19 @@ export default {
                   ) +
                   " " +
                   [dE.getHours(), dE.getMinutes(), dE.getSeconds()].join(":");
-                this.equipments.push({
+                this.equipPerTimeFrame.push({
                   name: FAequipment.name,
-                  start: dS,
-                  end: dE,
+                  start: timeframe.start,
+                  end: timeframe.end,
+                  parsedStart: dS,
+                  parsedEnd: dE,
                   amount: FAequipment.required,
+                  conflict: conf,
                   FA: {
                     id: FA._id,
                     name: FA.general.name,
                     count: FA.count,
+                    status: FA.status,
                   },
                 });
               });
@@ -188,94 +209,8 @@ export default {
           });
         }
       });
-      // FAs.forEach((FA) => {
-      //   if (FA.equipments) {
-      //     FA.equipments.forEach((FAequipment) => {
-      //       let existingEquipment = this.equipments.find(
-      //         (equipment) => equipment.name === FAequipment.name
-      //       );
-      //       if (existingEquipment) {
-      //         existingEquipment.requested.push(
-      //           FA.timeframes.map(({ start, end }) => {
-      //             return {
-      //               start,
-      //               end,
-      //               amount: FAequipment.requested,
-      //               FA: {
-      //                 id: FA._id,
-      //                 name: FA.general.name,
-      //               },
-      //             };
-      //           })
-      //         );
-      //       } else {
-      //         if (FA.timeframes) {
-      //           this.equipments.push({
-      //             name: FAequipment.name,
-      //             requested: FA.timeframes.map(({ start, end }) => {
-      //               return {
-      //                 start,
-      //                 end,
-      //                 amount: FAequipment.required,
-      //                 FA: {
-      //                   id: FA._id,
-      //                   name: FA.general.name,
-      //                 },
-      //               };
-      //             }),
-      //           });
-      //         }
-      //       }
-      //     });
-      //   }
-      // });
-      // const {
-      //   data: { data: FTs },
-      // } = await this.$axios.get("/ft");
-      // FTs.forEach((FT) => {
-      //   if (FT.equipments) {
-      //     FT.equipments.forEach((FTequipment) => {
-      //       let existingEquipment = this.equipments.find(
-      //         (equipment) => equipment.name === FTequipment.name
-      //       );
-      //       if (existingEquipment) {
-      //         existingEquipment.requested.push(
-      //           FT.schedules.map(({ date, start, end }) => {
-      //             return {
-      //               date,
-      //               start,
-      //               end,
-      //               amount: FTequipment.selectedAmount,
-      //               FT: {
-      //                 id: FT._id,
-      //                 name: FT.name,
-      //               },
-      //             };
-      //           })
-      //         );
-      //       } else {
-      //         if (FT.schedules) {
-      //           this.equipments.push({
-      //             name: FTequipment.name,
-      //             requested: FT.schedules.map(({ date, start, end }) => {
-      //               return {
-      //                 date,
-      //                 start,
-      //                 end,
-      //                 amount: FTequipment.selectedAmount,
-      //                 FT: {
-      //                   id: FT._id,
-      //                   name: FT.name,
-      //                 },
-      //               };
-      //             }),
-      //           });
-      //         }
-      //       }
-      //     });
-      //   }
-
-      console.log("requested:", this.equipments[2].requested);
+      console.log(this.equipmentNames);
+      this.computeAllConflicts();
     } else {
       await this.$router.push({
         path: "/",
@@ -292,51 +227,82 @@ export default {
       this.selectedItem = "none";
     },
 
-    async redirectToFA(item, data) {
+    async redirectToFA(item) {
       await this.$router.push({
         path: "/fa/" + item.FA.count,
       });
     },
 
-    download(filename, text) {
-      // We use the 'a' HTML element to incorporate file generation into
-      // the browser rather than server-side
-      const element = document.createElement("a");
-      element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-      );
-      element.setAttribute("download", filename);
-
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+    colorize(status) {
+      console.log(status);
+      if (status == "submitted") {
+        return this.color.submitted;
+      } else if (status == "validated") {
+        return this.color.validated;
+      } else if (status == "refused") {
+        return this.color.refused;
+      }
     },
 
-    async exportCSV() {
-      // Parse data into a CSV string to be passed to the download function
-      let csv = "Nom;Validité;Type;COMBIEN?\n";
+    computeUsage(equipmentName) {
+      // Array of objects with the following footprint: [requested_amount, [equipIndex]].
+      // Index represents a 2-hour period starting from the week before the manif
+      // [equipIndex] is a list of all the equipments responsible for incrementation
 
-      const equipments = this.equipments;
-      for (let i = 0; i < equipments.length; i++) {
-        csv +=
-          equipments[i].name +
-          ";" +
-          equipments[i].isValid +
-          ";" +
-          equipments[i].type +
-          ";" +
-          equipments[i].amount +
-          ";" +
-          "\n";
-      }
+      let equipmentConflicts = [];
+      // List of all the timeframes where a specific equipment is requested
+      let allEquipmentSlots = this.equipPerTimeFrame
+        // We want to keep a trace of who's at fault
+        .map((equipment, index) => {
+          return [equipment, index];
+        });
+      // We only want the current equipment
+      allEquipmentSlots = allEquipmentSlots.filter(
+        (elem) => elem[0].name == equipmentName
+      );
 
-      const regex = new RegExp(/undefined/i, "g");
+      let magicNumber = 7200000;
+      let tenthOfMay = 1652140800000;
+      allEquipmentSlots.forEach((equipment) => {
+        let diff = Math.ceil(
+          (equipment[0].end - equipment[0].start) / magicNumber
+        );
+        let tabStart = Math.ceil(
+          (equipment[0].start - tenthOfMay) / magicNumber
+        );
+        for (let i = tabStart; i < tabStart + diff; i++) {
+          if (equipmentConflicts[i] != undefined) {
+            equipmentConflicts[i][1].push(equipment[1]);
+            equipmentConflicts[i][0] += equipment[0].amount;
+          } else {
+            equipmentConflicts[i] = [equipment[0].amount, [equipment[1]]];
+          }
+        }
+      });
 
-      let parsedCSV = csv.replaceAll(regex, "");
-      // Prompt the browser to start file download
-      this.download("utilisateurs.csv", parsedCSV);
+      return equipmentConflicts;
+    },
+
+    async computeAllConflicts() {
+      this.inventory = (await this.$axios.$get("/equipment")).filter(
+        (e) => e.isValid !== false
+      );
+      console.log("inv:", this.inventory);
+
+      this.equipmentNames.forEach((name) => {
+        let invIndex = this.inventory.findIndex((item) => item.name == name);
+        if (invIndex != -1) {
+          let conflict = this.computeUsage(name);
+          conflict.forEach((period) => {
+            if (period[0] > this.inventory[invIndex].amount) {
+              period[1].forEach((index) => {
+                this.equipPerTimeFrame[index].conflict = "Conflit";
+              });
+            }
+          });
+          this.conflicts.push([name, conflict]);
+        }
+      });
     },
   },
 };
