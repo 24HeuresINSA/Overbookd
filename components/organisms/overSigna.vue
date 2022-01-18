@@ -3,7 +3,7 @@
     <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
-        >Contacter la signa à signalitique@24heures.org pour ajouter des lieux
+        >Contacter la signa à signaletique@24heures.org pour ajouter des lieux
         non existant dans la liste deroulante
       </v-card-subtitle>
       <v-card-text>
