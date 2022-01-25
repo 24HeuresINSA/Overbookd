@@ -1,0 +1,8 @@
+{
+    "conventionalCommits.scopes": [
+        "global",
+        "docker-compose",
+        "repo import",
+        "configurator"
+    ]
+}

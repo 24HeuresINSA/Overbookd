@@ -1,0 +1,135 @@
+version: '3'
+
+networks:
+  overbookd_net-api:
+  traefik-public:
+    external: true
+
+volumes:
+  overbookd_api:
+  overbookd_mongo:
+  certs:
+
+services:
+  certs-downloader:
+    image: alpine
+    command: sh -c "cd /etc/ssl/traefik
+      && wget https://traefik.me/cert.pem -O cert.pem
+      && wget https://traefik.me/privkey.pem -O privkey.pem"
+    volumes:
+      - certs:/etc/ssl/traefik
+      
+  traefik:
+    image: traefik:v2.3
+    restart: always
+    command:
+      # Docker config
+      - "--providers.docker=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-public"
+      # Additional config with files
+      - "--providers.file=true"
+      - "--providers.file.directory=/etc/traefik"
+      # Entrypoint
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # HTTP -> HTTPS
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      # Enable Dashboard
+      - "--api.dashboard=true"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/ssl/traefik
+      - ./assets/traefik/tls.yml:/etc/traefik/tls.yml
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=888"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
+  backend:
+    container_name: overbookd_backend
+    build: 
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    # volumes:
+    #   - ../backend:/overbookd/backend
+    restart: always
+    networks:
+      - overbookd_net-api
+      - traefik-public
+    ports:
+      - 2424:2424
+    environment:
+      DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_mongo:27017/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.services.api.loadbalancer.server.port=2424"
+      - "traefik.http.routers.api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.api.tls=true"
+
+  mongodb:
+    container_name: overbookd_mongo
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${OVERBOOKD_DATABASE_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${OVERBOOKD_DATABASE_PASSWORD}
+    networks:
+      - overbookd_net-api
+    ports:
+      - 27017:27017
+    volumes:
+      - overbookd_mongo:/data/db
+      - overbookd_mongo:/data/configdb
+
+  frontend:
+    container_name: overbookd_frontend
+    build: 
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    # volumes:
+    #   - ../frontend:/overbookd/frontend
+    environment:
+      - BASE_URL
+    restart: always
+    networks:
+      - traefik-public
+    ports:
+      - 3000:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.entrypoints=websecure"
+      - "traefik.http.services.front.loadbalancer.server.port=3000"
+      - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.routers.front.tls=true"
+
+  # doc:
+  #   image: registry.gitlab.com/24-heures-insa/overbookd/documentation
+  #   restart: always
+  #   networks:
+  #     - traefik-public
+  #   environment:
+  #     SITE: overbookd-doc
+  #     WEBSITE_NAME: Documentation
+  #     TEMPLATE: classic
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.doc.entrypoints=websecure"
+  #     - "traefik.http.services.doc.loadbalancer.server.port=3001"
+  #     - "traefik.http.routers.doc.rule=Host(`overbookd.${DOMAIN}`) && PathPrefix(`/docs`)"
+  #     - "traefik.http.routers.doc.tls=true"
+  #     - "traefik.http.routers.doc.middlewares=doc-redirect"
+  #     - "traefik.http.middlewares.doc-redirect.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$"
+  #     - "traefik.http.middlewares.doc-redirect.redirectregex.replacement=https://$$1/docs"
