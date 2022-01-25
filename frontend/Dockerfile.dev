@@ -1,0 +1,20 @@
+FROM node:16.13
+
+WORKDIR /Overbookd-frontend
+
+ARG BASE_URL_KEYCLOAK
+ARG BASE_URL
+
+ENV BASE_URL=$BASE_URL
+ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
+ENV HOST=0.0.0.0
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+EXPOSE 1234
+
+CMD ["npm", "run", "dev"]
