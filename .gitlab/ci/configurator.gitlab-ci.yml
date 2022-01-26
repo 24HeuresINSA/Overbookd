@@ -1,0 +1,17 @@
+configurator:
+  stage: configurator
+  services:
+    - name: docker:dind
+      command: ["--experimental"]
+  image: ubuntu
+  before_script:
+    - apt update
+    - apt install curl -y
+  script:
+    - sh ./.gitlab/ci/configurator.sh
+  only:
+    changes:
+      - config/config.json
+    refs:
+      - main
+      - pre-prod
