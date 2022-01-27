@@ -7,6 +7,7 @@
     "lint": "eslint . --fix",
     "pretify:check": "prettier . --check",
     "pretify": "prettier . --write",
+    "prepare": "cd .. && husky install",
     "start": "node -r module-alias/register ./dist --env=production",
     "start:dev": "nodemon",
     "test": "jest --runInBand --verbose",

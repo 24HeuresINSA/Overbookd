@@ -13,7 +13,7 @@
     "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
     "lint": "npm run lint:js",
-    "prepare": "husky install",
+    "prepare": "cd .. && husky install",
     "storybook": "npx nuxt storybook"
   },
   "dependencies": {
