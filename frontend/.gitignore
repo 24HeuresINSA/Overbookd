@@ -43,3 +43,5 @@ npm-debug.log
 *.old
 
 dist
+.nuxt/
+sw.js
