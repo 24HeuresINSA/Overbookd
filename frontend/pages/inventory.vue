@@ -92,7 +92,7 @@
             group-by="type"
             :item-class="rowClass"
             dense
-            :items-per-page="-1"
+            :items-per-page="20"
             :loading="loading"
           >
             <template #[`item.action`]="{ item }">
