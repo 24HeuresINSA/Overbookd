@@ -108,7 +108,7 @@ export interface FriendRequestData {
   data: FriendRequest;
 }
 
-export interface timeslot {
+export interface Timeslot {
   _id?: string;
   groupTitle: string;
   groupDescription?: string;
