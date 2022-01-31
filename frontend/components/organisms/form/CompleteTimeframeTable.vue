@@ -54,6 +54,7 @@
             </v-list-item>
           </v-list>
           <h3>Ajouter un Orga</h3>
+          <br />
           <OverField
             :field="{ key: 'user', label: 'orga', type: 'user' }"
             @value="updateUser"
