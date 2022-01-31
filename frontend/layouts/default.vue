@@ -224,6 +224,12 @@ export default {
           roles: "hard",
           to: "/patch_note",
         },
+        {
+          icon: "mdi-human-greeting",
+          title: "Securité 🚨",
+          roles: "secu",
+          to: "/security",
+        },
       ],
       miniVariant: false,
       right: true,
