@@ -389,6 +389,11 @@
                 "icon": "mdi-sign-direction"
             },
             {
+                "name": "teck",
+                "color": "#bf69ad",
+                "icon": "mdi-hammer-screwdriver"
+            },
+            {
                 "name": "plaizir",
                 "color": "#c9406a",
                 "icon": "mdi-ferris-wheel"
