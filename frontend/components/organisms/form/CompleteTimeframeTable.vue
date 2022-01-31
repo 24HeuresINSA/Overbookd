@@ -26,7 +26,7 @@
                 >{{ required.amount }} {{ required.team }}
               </v-list-item-title>
               <v-list-item-title v-else-if="required.type === 'user'">{{
-                required.user.username
+                required.user ? required.user.username : ""
               }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -144,6 +144,9 @@ export default {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
       }
+      if (!this.required.user) {
+        return;
+      }
       this.required.amount = +this.required.amount;
       this.required.type = "user";
       delete this.required.team;
@@ -161,6 +164,9 @@ export default {
     addTeam() {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
+      }
+      if (!this.required.team) {
+        return;
       }
       this.required.amount = +this.required.amount;
       this.required.type = "team";
