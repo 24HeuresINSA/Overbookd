@@ -155,6 +155,7 @@ export default {
         index: this.selectedTimeframeIndex,
         timeframe: this.selectedTimeframe,
       });
+      this.closeRequireDialog();
     },
 
     deleteTimeframe(timeframe) {
@@ -176,6 +177,20 @@ export default {
         index: this.selectedTimeframeIndex,
         timeframe: this.selectedTimeframe,
       });
+      this.closeDialog();
+    },
+
+    async closeRequireDialog() {
+      this.requireDialog = false;
+      this.required = {
+        type: undefined,
+        team: undefined,
+        amount: 1,
+        user: {
+          username: undefined,
+          _id: undefined,
+        },
+      };
     },
   },
 };
