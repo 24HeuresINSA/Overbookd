@@ -2,6 +2,7 @@ stages:
   - test
   - setup
   - docker
+  - docker-scan
 
 include:
   - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
@@ -10,3 +11,5 @@ include:
   - local: /.gitlab/ci/buildxSetup.gitlab-ci.yml
   - local: /.gitlab/ci/frontend_containerize.gitlab-ci.yml
   - local: /.gitlab/ci/backend_containerize.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
+  - local: /.gitlab/ci/container_scan.gitlab-ci.yml

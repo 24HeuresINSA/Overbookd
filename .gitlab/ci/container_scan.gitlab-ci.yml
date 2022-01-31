@@ -1,0 +1,30 @@
+container_scanning:
+  stage: docker-scan
+
+frontend_scan_latest:
+  extends: container_scanning
+  variables:
+    DOCKER_IMAGE: registry.gitlab.com/24-heures-insa/overbookd-mono/frontend:latest
+    DOCKERFILE_PATH: "frontend/Dockerfile"
+  stage: docker-scan
+
+frontend_scan_preprod:
+  extends: container_scanning
+  variables:
+    DOCKER_IMAGE: registry.gitlab.com/24-heures-insa/overbookd-mono/frontend:pre-prod
+    DOCKERFILE_PATH: "frontend/Dockerfile"
+  stage: docker-scan
+
+backend_scan_latest:
+  extends: container_scanning
+  variables:
+    DOCKER_IMAGE: registry.gitlab.com/24-heures-insa/overbookd-mono/backend:latest
+    DOCKERFILE_PATH: "backend/Dockerfile"
+  stage: docker-scan
+
+backendend_scan_preprod:
+  extends: container_scanning
+  variables:
+    DOCKER_IMAGE: registry.gitlab.com/24-heures-insa/overbookd-mono/backend:pre-prod
+    DOCKERFILE_PATH: "backend/Dockerfile"
+  stage: docker-scan
