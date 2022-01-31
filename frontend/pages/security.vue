@@ -69,6 +69,11 @@ export default Vue.extend({
     }
     console.log(this.FAs[0]);
   },
+  beforeCreate() {
+    if (!this.$accessor.user.hasRole("secu")) {
+      this.$router.push("/");
+    }
+  },
 });
 </script>
 
