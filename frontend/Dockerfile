@@ -1,4 +1,4 @@
-FROM node:16.13-alpine3.14 AS builder
+FROM node:16.14-alpine3.15 AS builder
 
 WORKDIR /overbookd/frontend
 ARG BASE_URL_KEYCLOAK
@@ -15,7 +15,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:16.13-alpine3.14
+FROM node:16.14-alpine3.14
 
 WORKDIR /app
 
