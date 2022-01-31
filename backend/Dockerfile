@@ -1,22 +1,23 @@
-FROM node:16.14-alpine3.15
+FROM node:16.14-alpine-3.15 AS builder
 
-# Create app directory
 WORKDIR /overbookd/backend
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install 
-# If you are building your code for production
-# RUN npm ci --only=production
+RUN npm install
 
-# Bundle app source
 COPY . .
 
 RUN npm run build
 
+FROM node:16.13-alpine-3.14
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+COPY --from=builder /overbookd/backend/dist ./dist
+
 EXPOSE 2424
 
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]
