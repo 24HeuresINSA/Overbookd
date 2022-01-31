@@ -80,7 +80,7 @@
         <v-card-text>
           <h4>
             Pour signaler un bug veuiller envoyer un mail à
-            incoming+24-heures-insa-overbookd-frontend-24512226-issue-@incoming.gitlab.com
+            contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
             de preference en anglais
           </h4>
         </v-card-text>
@@ -250,9 +250,9 @@ export default {
     },
 
     mailUrl() {
-      return `mailto:incoming%2B24-heures-insa-overbookd-frontend-24512226-issue-%40incoming.gitlab.com?body=%23%20URL%20or%20page%0A${encodeURIComponent(
+      return `mailto:contact-project%2B24-heures-insa-overbookd-mono-31598236-issue-%40incoming.gitlab.com?body=%23%20URL%20or%20page%0A${encodeURIComponent(
         window.location.href
-      )}%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%2Flabel%20~bug%0A%0A%23%20Additional%20info%0Aversion%3A%20${encodeURI(
+      )}%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%23%20Additional%20info%0Aversion%3A%20${encodeURI(
         version
       )}%0Auser%20agent%3A%20${encodeURI(
         navigator.userAgent
