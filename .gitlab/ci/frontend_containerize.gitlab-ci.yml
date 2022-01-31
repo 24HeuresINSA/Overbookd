@@ -15,7 +15,7 @@ containerize-frontend:
   services:
     - name: docker:dind
       command: ["--experimental"]
-  stage: docker-frontend
+  stage: docker
   before_script:
     - mkdir -p ~/.docker/cli-plugins
     - mv buildx ~/.docker/cli-plugins/docker-buildx
@@ -39,7 +39,7 @@ merge_requests_containerize-frontend:
     services:
       - name: docker:dind
         command: ["--experimental"]
-    stage: docker-frontend
+    stage: docker
     before_script:
       - mkdir -p ~/.docker/cli-plugins
       - mv buildx ~/.docker/cli-plugins/docker-buildx

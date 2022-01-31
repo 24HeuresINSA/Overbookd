@@ -1,8 +1,7 @@
 stages:
   - test
   - setup
-  - docker-frontend
-  - docker-backend
+  - docker
 
 include:
   - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
