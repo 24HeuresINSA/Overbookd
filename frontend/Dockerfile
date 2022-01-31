@@ -1,4 +1,4 @@
-FROM node:16.13-alpine-3.14 AS builder
+FROM node:16.13-alpine3.14 AS builder
 
 WORKDIR /overbookd/frontend
 ARG BASE_URL_KEYCLOAK
