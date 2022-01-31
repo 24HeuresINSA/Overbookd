@@ -12,7 +12,7 @@ COPY . .
 RUN npm ci\
     && npm run build
 
-FROM node:16.13-alpine-3.14
+FROM node:16.13-alpine3.14
 
 WORKDIR /app
 
