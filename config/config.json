@@ -70,7 +70,7 @@
                 "label": "Gmail (important que ca soit une addresse gmail)",
                 "isRequired": true,
                 "option": "email",
-                "regex": "^[w.]+@(gmail.com|24heures.org)$"
+                "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
             },
             {
                 "key": "phone",
