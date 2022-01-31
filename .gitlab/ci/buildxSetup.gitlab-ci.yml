@@ -15,8 +15,8 @@ buildx:
     - docker build --platform=local -o . ./docker-buildx
   only:
     changes:
-      - backend/*
-      - frontend/*
+      - backend/**/*
+      - frontend/**/*
     refs:
       - main
       - pre-prod

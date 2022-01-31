@@ -12,4 +12,4 @@
 ## Requested priority (optional)
 <!---From 1 to 3, urgent to would-be-nice-but-not-a-prio**--->
 
-/label ~feature
+/label ~"Type::Feature"
