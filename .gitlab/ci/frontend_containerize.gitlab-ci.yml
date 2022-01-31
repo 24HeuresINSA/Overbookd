@@ -1,5 +1,6 @@
 containerize-frontend:
   image: docker
+  needs: ["buildx"]
   services:
     - name: docker:dind
       command: ["--experimental"]
@@ -24,6 +25,7 @@ containerize-frontend:
 
 merge_requests_containerize-frontend:
     image: docker
+    needs: ["buildx"]
     services:
       - name: docker:dind
         command: ["--experimental"]
