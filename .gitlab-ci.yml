@@ -22,6 +22,7 @@ stages:
   - setup
   - docker
   - docker-scan
+  - configurator
 
 include:
   - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
