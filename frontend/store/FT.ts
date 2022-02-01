@@ -85,6 +85,9 @@ export const mutations = mutationTree(state, {
   DELETE_TIMEFRAME_FT: function ({ mFT }, index) {
     mFT.timeframes.splice(index, 1);
   },
+  SET_PARENT_FA: function ({ mFT }, faCount) {
+    mFT.FA = faCount;
+  },
 });
 
 export const actions = actionTree(
@@ -170,6 +173,10 @@ export const actions = actionTree(
       });
       commit("UPDATE_STATUS", "ready");
       await dispatch("saveFT");
+    },
+    setParentFA: async function ({ dispatch, commit }, faCount) {
+      commit("SET_PARENT_FA", faCount);
+      dispatch("saveFT");
     },
   }
 );

@@ -1,10 +1,15 @@
 import { FT } from "~/utils/models/FT";
 
 export interface FA {
+  _id?: string;
   count?: number;
   status: string;
   general?: {
     locations?: string[];
+    name?: string;
+    team?: string;
+    isValid?: boolean;
+    isRequiringPass?: boolean;
   };
   details: {};
   security: {};
