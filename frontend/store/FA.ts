@@ -263,7 +263,7 @@ export const actions = actionTree(
         commit("ADD_TIMEFRAME", t);
       });
     },
-    addEquipmentToFA: function ({ commit, state }, payload) {
+    addEquipment: function ({ commit, state }, payload) {
       if (!state.mFA.equipments.find((e: any) => payload._id === e._id)) {
         payload.required = 1;
         commit("ADD_EQUIPMENT", payload);
