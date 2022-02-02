@@ -19,7 +19,6 @@
                 single-line
                 hide-details
                 :rules="rules.name"
-                :disabled="!isNewEquipment"
                 required
               ></v-text-field>
               <v-select
@@ -43,7 +42,7 @@
 
               <v-switch
                 v-model="item.fromPool"
-                :disabled="!isNewEquipment"
+                :disabled="true"
                 label="Vient du pool des assos ? 🐔"
               ></v-switch>
               <v-select
@@ -74,43 +73,7 @@
                 label="Référence facture 📃"
                 single-line
               ></v-text-field>
-            </v-container>
-            <br />
-            <v-divider></v-divider>
-            <br />
-            <h4>Ajout de matos emprunté</h4>
-            <v-container style="display: flex; flex-wrap: wrap">
-              <v-text-field v-model="newBorrow.from" label="qui"></v-text-field>
-              <v-text-field
-                v-model="newBorrow.amount"
-                type="number"
-                label="quantite"
-              ></v-text-field>
-            </v-container>
-            <v-container
-              style="
-                display: flex;
-                justify-content: space-around;
-                align-content: baseline;
-              "
-            >
-              <label>debut</label>
-              <v-date-picker v-model="newBorrow.start"></v-date-picker>
-              <label>fin</label>
-              <v-date-picker v-model="newBorrow.end"></v-date-picker>
-            </v-container>
-
-            <v-data-table :headers="borrowedHeader" :items="item.borrowed">
-              <template #[`item.action`]="{ item }">
-                <v-btn icon small @click="deleteBorrowedProposal(item)">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-            </v-data-table>
-
-            <v-btn fab @click="addNewBorrowedItems"
-              ><v-icon>mdi-plus</v-icon></v-btn
-            >
+            </v-container>            
           </v-form>
         </v-card-text>
         <v-card-actions>
