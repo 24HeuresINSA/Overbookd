@@ -222,7 +222,10 @@ export const mutations = mutationTree(state, {
     if (state.mFA.general === undefined) {
       state.mFA.general = {};
     }
-    state.mFA.general.locations = locations;
+    state.mFA.general!.locations = locations;
+  },
+  SET_ALL_FA: function (state, allFA: FA[]) {
+    state.FAs = allFA.filter((fa) => !(fa.isValid === false));
   },
   SET_ALL_FA: function (state, allFA: FA[]) {
     state.FAs = allFA.filter((fa) => !(fa.isValid === false));

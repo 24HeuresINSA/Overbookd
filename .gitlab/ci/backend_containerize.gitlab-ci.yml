@@ -1,9 +1,10 @@
 containerize-backend:
   image: docker
+  needs: ["buildx"]
   services:
     - name: docker:dind
       command: ["--experimental"]
-  stage: docker-backend
+  stage: docker
   before_script:
     - mkdir -p ~/.docker/cli-plugins
     - mv buildx ~/.docker/cli-plugins/docker-buildx
@@ -16,17 +17,18 @@ containerize-backend:
     - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd-mono/backend:$VERSION_TAG --tag registry.gitlab.com/24-heures-insa/overbookd-mono/backend:$TAG ./backend
   only:
     changes:
-      - backend/*
+      - backend/**/*
     refs:
       - main
       - pre-prod
 
 merge_requests_containerize-backend:
   image: docker
+  needs: ["buildx"]
   services:
     - name: docker:dind
       command: ["--experimental"]
-  stage: docker-backend
+  stage: docker
   before_script:
     - mkdir -p ~/.docker/cli-plugins
     - mv buildx ~/.docker/cli-plugins/docker-buildx
@@ -37,6 +39,6 @@ merge_requests_containerize-backend:
     - docker buildx build --platform linux/amd64,linux/arm64 ./backend
   only:
     changes:
-      - backend/*
+      - backend/**/*
     refs:
       - merge_requests

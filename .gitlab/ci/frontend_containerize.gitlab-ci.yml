@@ -1,9 +1,10 @@
 containerize-frontend:
   image: docker
+  needs: ["buildx"]
   services:
     - name: docker:dind
       command: ["--experimental"]
-  stage: docker-frontend
+  stage: docker
   before_script:
     - mkdir -p ~/.docker/cli-plugins
     - mv buildx ~/.docker/cli-plugins/docker-buildx
@@ -17,17 +18,18 @@ containerize-frontend:
     - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd-mono/frontend:$VERSION_TAG --tag registry.gitlab.com/24-heures-insa/overbookd-mono/frontend:$TAG --build-arg BASE_URL=$BASE_URL ./frontend
   only:
     changes:
-      - frontend/*
+      - frontend/**/*
     refs:
       - main
       - pre-prod
 
 merge_requests_containerize-frontend:
     image: docker
+    needs: ["buildx"]
     services:
       - name: docker:dind
         command: ["--experimental"]
-    stage: docker-frontend
+    stage: docker
     before_script:
       - mkdir -p ~/.docker/cli-plugins
       - mv buildx ~/.docker/cli-plugins/docker-buildx
@@ -39,6 +41,6 @@ merge_requests_containerize-frontend:
       - docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE_URL=$BASE_URL --build-arg BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK ./frontend
     only:
       changes:
-        - frontend/*
+        - frontend/**/*
       refs:
         - merge_requests

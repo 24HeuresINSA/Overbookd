@@ -6,22 +6,22 @@
     <v-container>
       <v-row>
         <v-col offset-md="5" md="7">
-          <OverTimeslotAdder
+          <TimeslotAdder
             v-if="
               $accessor.user.me.team.some((e) => {
                 return authorizedEditor.includes(e);
               })
             "
-          ></OverTimeslotAdder>
+          ></TimeslotAdder>
         </v-col>
       </v-row>
     </v-container>
     <v-container>
       <v-row>
         <v-col v-for="title in existingGroupTitles" :key="title" md="6">
-          <overTimeslotTable
-            :timeslots="timeslotDict[title]"
-          ></overTimeslotTable>
+          <TimeslotTable
+            :groupTitle="title"
+          ></TimeslotTable>
         </v-col>
       </v-row>
     </v-container>
@@ -30,15 +30,14 @@
 </template>
 
 <script>
-import { getConfig, getUser, hasRole } from "../common/role";
-import overTimeslotTable from "../components/organisms/overTimeslotTable";
-import { timeslotRepo } from "../repositories/repoFactory";
-import OverTimeslotAdder from "../components/organisms/OverTimeslotAdder";
+import Vue from 'vue'
+import TimeslotTable from "../components/organisms/TimeslotTable";
+import TimeslotAdder from "../components/organisms/TimeslotAdder";
 import TimeslotSnackBar from "../components/atoms/TimeslotSnackBar.vue";
 
-export default {
+export default Vue.extend({
   name: "Availabilities",
-  components: { overTimeslotTable, OverTimeslotAdder, TimeslotSnackBar },
+  components: { TimeslotTable, TimeslotAdder, TimeslotSnackBar },
   data() {
     return {
       detailMessage: this.getConfig("availabilities_description"),
@@ -59,16 +58,6 @@ export default {
         return acc;
       }, []);
     },
-    timeslotDict: function () {
-      return this.$accessor.timeslot.timeslots.reduce((acc, e) => {
-        if (acc[e.groupTitle]) {
-          acc[e.groupTitle].push(e);
-        } else {
-          acc[e.groupTitle] = [e];
-        }
-        return acc;
-      }, {});
-    },
   },
 
   async mounted() {
@@ -76,15 +65,11 @@ export default {
   },
 
   methods: {
-    hasRole(role) {
-      return hasRole(this, role);
-    },
-
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
     },
   },
-};
+});
 </script>
 
 <style scoped></style>
