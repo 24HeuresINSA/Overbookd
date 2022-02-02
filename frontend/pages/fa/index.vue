@@ -94,7 +94,7 @@
             <template #[`item.validation`]="{ item }">
               <ValidatorsIcons :form="item"></ValidatorsIcons>
             </template>
-            <template #item.general.name="{ item }">
+            <template #[`item.general.name`]="{ item }">
               <a
                 :href="`/fa/${item.count}`"
                 :style="
@@ -175,7 +175,6 @@ import Fuse from "fuse.js";
 import { safeCall } from "../../utils/api/calls";
 import { RepoFactory } from "../../repositories/repoFactory";
 import ValidatorsIcons from "../../components/atoms/validators-icons";
-import { hasRole } from "../../common/role";
 
 export default {
   name: "Fa",

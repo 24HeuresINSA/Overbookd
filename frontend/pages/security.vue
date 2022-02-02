@@ -26,21 +26,21 @@ export default Vue.extend({
     return {
       headers: [
         {
-          text: "Name",
+          text: "Nom FA",
           value: "name",
           sortable: true,
           align: "left",
           width: "200",
         },
         {
-          text: "Pass",
+          text: "Pass requis",
           value: "pass",
           sortable: true,
           align: "left",
           width: "200",
         },
         {
-          text: "Action",
+          text: "Génerer Pass",
           value: "action",
           sortable: false,
           align: "left",
@@ -69,10 +69,10 @@ export default Vue.extend({
     }
     console.log(this.FAs[0]);
   },
-  beforeCreate() {
-    if (!this.$accessor.user.hasRole("secu")) {
-      this.$router.push("/");
-    }
+  methods: {
+    generatePass(item) {
+      console.log(item);
+    },
   },
 });
 </script>

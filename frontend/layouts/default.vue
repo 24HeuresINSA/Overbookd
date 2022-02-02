@@ -98,7 +98,6 @@
 
 <script>
 const { version } = require("../package.json");
-const { getConfig } = require("../common/role");
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
@@ -157,6 +156,12 @@ export default {
           title: "Mon calendrier 📆",
           to: "/calendar",
           roles: "hard",
+        },
+        {
+          icon: "mdi-security",
+          title: "Securité 🚨",
+          roles: "secu",
+          to: "/security",
         },
         {
           icon: "mdi-account",
@@ -223,12 +228,6 @@ export default {
           title: "Patch notes 📝",
           roles: "hard",
           to: "/patch_note",
-        },
-        {
-          icon: "mdi-human-greeting",
-          title: "Securité 🚨",
-          roles: "secu",
-          to: "/security",
         },
       ],
       miniVariant: false,
