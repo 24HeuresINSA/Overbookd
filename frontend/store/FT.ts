@@ -76,6 +76,9 @@ export const mutations = mutationTree(state, {
       }
     }
   },
+  ADD_EQUIPMENT: function (state, equipment) {
+    state.mFT.equipments.push(equipment);
+  },
   ADD_COMMENT: function ({ mFT }, comment) {
     if (mFT.comments === undefined) {
       mFT.comments = [];
@@ -87,6 +90,21 @@ export const mutations = mutationTree(state, {
   },
   SET_PARENT_FA: function ({ mFT }, faCount) {
     mFT.FA = faCount;
+  },
+  ADD_REQUIREMENT: function ({ mFT }, { requirement, timeframeIndex }) {
+    const mTimeframe = mFT.timeframes[timeframeIndex];
+    if (mTimeframe.required === undefined) {
+      mTimeframe.required = [];
+    }
+    mTimeframe.required.push(requirement);
+  },
+  DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
+    const mTimeframe = mFT.timeframes[timeframeIndex];
+    console.log(mTimeframe);
+    if (mTimeframe.required) {
+      console.log(requirementIndex);
+      mTimeframe.required.splice(requirementIndex, 1);
+    }
   },
 });
 
@@ -120,6 +138,12 @@ export const actions = actionTree(
     },
     setTimeframes: function ({ commit }, timeframes) {
       commit("SET_TIMEFRAME_FT", timeframes);
+    },
+    addEquipment: function ({ commit, state }, equipment) {
+      if (!state.mFT.equipments.find((e: any) => equipment._id === e._id)) {
+        equipment.required = 1;
+        commit("ADD_EQUIPMENT", equipment);
+      }
     },
     deleteTimeframe: function ({ commit, state }, index) {
       commit("DELETE_TIMEFRAME_FT", index);
@@ -177,6 +201,12 @@ export const actions = actionTree(
     setParentFA: async function ({ dispatch, commit }, faCount) {
       commit("SET_PARENT_FA", faCount);
       dispatch("saveFT");
+    },
+    addRequirement: async function ({ dispatch, commit }, payload) {
+      commit("ADD_REQUIREMENT", payload);
+    },
+    deleteRequirement: async function ({ dispatch, commit }, payload) {
+      commit("DELETE_REQUIREMENT", payload);
     },
   }
 );

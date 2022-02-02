@@ -15,11 +15,21 @@ export interface FT {
   };
 
   equipments: { _id: string; name: string; required: number }[];
-  timeframes: { start: Date; end: Date }[];
+  timeframes: { start: Date; end: Date; required?: requirement[] }[];
 
   comments: { time: Date; text: string; validator: string; topic?: string }[];
 }
 
+export interface requirement {
+  type: "equipment" | "user" | "team";
+  amount: number;
+  equipment?: string;
+  user?: string;
+  team?: string;
+}
+
 export enum SmallTypes {
   QUINCAILLERIE = "QUINCAILLERIE",
+  OUTILLAGE = "OUTILLAGE",
+  CONSUMABLE = "CONSUMABLE",
 }
