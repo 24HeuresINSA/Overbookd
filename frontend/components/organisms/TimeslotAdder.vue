@@ -78,11 +78,12 @@
 </template>
 
 <script>
+import Vue from "vue";
 import OverDatePicker from "../atoms/OverDatePicker.vue";
 import OverTimePicker from "../atoms/OverTimePicker.vue";
 
-export default {
-  name: "OverTimeslotAdder",
+export default Vue.extend({
+  name: "TimeslotAdder",
   components: {
     OverDatePicker,
     OverTimePicker,
@@ -146,7 +147,7 @@ export default {
       this.dialog = false;
     },
   },
-};
+});
 </script>
 
 <style></style>
