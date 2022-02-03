@@ -9,10 +9,17 @@
       </template>
       <template #[`item.action`]="{ item }">
         <v-btn v-if="item.pass" color="red" @click="generatePass(item)">
-          <v-icon></v-icon>
+          Générer le pass
         </v-btn>
       </template>
     </v-data-table>
+
+    <v-dialog v-model="isGeneratingPass" max-width="600">
+      <v-card>
+        <v-card-title>Information du Pass</v-card-title>
+        <v-card-text>{{ currentPassInformation }}</v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -40,13 +47,15 @@ export default Vue.extend({
           width: "200",
         },
         {
-          text: "Génerer Pass",
+          text: "Générer Pass",
           value: "action",
           sortable: false,
           align: "left",
           width: "200",
         },
       ],
+      isGeneratingPass: false,
+      currentPassInformation: [],
     };
   },
   computed: {
@@ -71,7 +80,9 @@ export default Vue.extend({
   },
   methods: {
     generatePass(item) {
-      console.log(item);
+      this.isGeneratingPass = true;
+      this.currentPassInformation = item;
+      console.log(item.fa.securityPasses);
     },
   },
 });
