@@ -57,7 +57,7 @@ export default Vue.extend({
       return this.FAs.map((fa) => {
         return {
           name: fa.general!.name!,
-          pass: fa.general?.isRequiringPass,
+          pass: fa.securityPasses.length > 0,
           fa: fa,
         };
       });
