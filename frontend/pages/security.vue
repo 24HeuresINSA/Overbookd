@@ -8,7 +8,7 @@
         <span v-else> <v-icon color="red">mdi-close-thick</v-icon> </span>
       </template>
       <template #[`item.action`]="{ item }">
-        <v-btn v-if="item.pass" color="red" @click="generatePass(item)">
+        <v-btn v-if="item.pass" color="#62BA6B" @click="generatePass(item)">
           Générer le pass
         </v-btn>
       </template>
@@ -16,7 +16,9 @@
 
     <v-dialog v-model="isGeneratingPass" max-width="600">
       <v-card>
-        <v-card-title>Information du Pass</v-card-title>
+        <v-card-title>{{
+          "Nombre de pass nécessaire : " + currentPassInformation.length
+        }}</v-card-title>
         <v-card-text>{{ currentPassInformation }}</v-card-text>
       </v-card>
     </v-dialog>
@@ -81,8 +83,7 @@ export default Vue.extend({
   methods: {
     generatePass(item) {
       this.isGeneratingPass = true;
-      this.currentPassInformation = item;
-      console.log(item.fa.securityPasses);
+      this.currentPassInformation = item.fa.securityPasses;
     },
   },
 });
