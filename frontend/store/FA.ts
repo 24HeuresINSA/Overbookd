@@ -227,9 +227,6 @@ export const mutations = mutationTree(state, {
   SET_ALL_FA: function (state, allFA: FA[]) {
     state.FAs = allFA.filter((fa) => !(fa.isValid === false));
   },
-  SET_ALL_FA: function (state, allFA: FA[]) {
-    state.FAs = allFA.filter((fa) => !(fa.isValid === false));
-  },
 });
 
 export const actions = actionTree(
