@@ -81,7 +81,6 @@ export default Vue.extend({
      * The store to use when adding new equipment
      */
     store: {
-      // todo use accurate store definition
       type: Object,
       required: true,
     },

@@ -41,11 +41,14 @@ export default {
     ],
   }),
   computed: {
-    mFA: function () {
+    mForm: function () {
+      if (this.store.mFT) {
+        return this.store.mFT;
+      }
       return this.$accessor.FA.mFA;
     },
     equipments: function () {
-      return this.mFA.equipments.filter((e) => this.types.includes(e.type));
+      return this.mForm.equipments.filter((e) => this.types.includes(e.type));
     },
   },
   methods: {
