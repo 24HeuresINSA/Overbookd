@@ -625,17 +625,6 @@
                 "label": "Responsable",
                 "type": "user",
                 "filter": "hard"
-            },
-            {
-                "key": "driverLicenseRequired",
-                "label": "Permis requit",
-                "type": "select",
-                "options": [
-                    "non",
-                    "permis - un ans",
-                    "permis + un ans",
-                    "conducteur de Fen"
-                ]
             }
         ],
         "__v": 0
