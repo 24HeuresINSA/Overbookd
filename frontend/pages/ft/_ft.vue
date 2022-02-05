@@ -183,10 +183,14 @@
         </v-list>
       </v-menu>
 
-      <v-btn color="secondary" @click="isDialogOpen.submit = true"
+      <v-btn
+        v-if="FT.status !== 'submitted'"
+        color="secondary"
+        @click="isDialogOpen.submit = true"
         >Soumettre a validation
       </v-btn>
       <v-btn color="warning" @click="saveFT">sauvgarder</v-btn>
+      <SnackNotificationContainer></SnackNotificationContainer>
     </div>
   </v-container>
 </template>
@@ -202,6 +206,7 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
 import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
+import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 
 interface Data {
   FTID: number;
@@ -247,6 +252,7 @@ export interface schedule {
 export default Vue.extend({
   name: "Ft",
   components: {
+    SnackNotificationContainer,
     FormCard,
     CommentCard,
     CompleteTimeframeCard,
@@ -374,6 +380,7 @@ export default Vue.extend({
 
     submitForReview() {
       this.$accessor.FT.submitForReview();
+      this.isDialogOpen.submit = false;
     },
 
     refuse(validator: string) {
