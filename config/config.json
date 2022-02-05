@@ -239,7 +239,6 @@
         "key": "ft_validators",
         "value": [
             "humain",
-            "secu",
             "log"
         ],
         "__v": 0
