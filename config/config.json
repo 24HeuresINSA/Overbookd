@@ -799,7 +799,7 @@
     {
         "_id": "61b0ca5877783200108bd4c2",
         "key": "is_ft_open",
-        "value": false,
+        "value": true,
         "__v": 0
     }
 ]
