@@ -12,4 +12,4 @@
 - Step 2
  ...
 
-/label ~bug
+/label ~"Type::Bug"
