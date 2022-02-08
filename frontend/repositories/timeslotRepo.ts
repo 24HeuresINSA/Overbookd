@@ -34,5 +34,5 @@ export default {
 
   deleteByGroupTitle(context: Context, groupTitle: string) {
     return context.$axios.delete(`${resource}/groupTitle/${groupTitle}`);
-  }
+  },
 };

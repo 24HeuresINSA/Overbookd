@@ -44,17 +44,17 @@ export const mutations = mutationTree(state, {
     state.timeslots = state.timeslots.filter(
       (t) => t.groupTitle !== groupTitle
     );
-  }
+  },
 });
 
 export const getters = getterTree(state, {
-  getTimeslotsByGroupTitle (state) {
+  getTimeslotsByGroupTitle(state) {
     return (groupTitle: string) => {
       return state.timeslots.filter((timeslot) => {
         return timeslot.groupTitle === groupTitle;
       });
     };
-  }
+  },
 });
 
 export const actions = actionTree(
@@ -133,6 +133,6 @@ export const actions = actionTree(
         );
         return null;
       }
-    }
+    },
   }
 );

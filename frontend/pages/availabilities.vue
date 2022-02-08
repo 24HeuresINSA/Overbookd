@@ -19,9 +19,7 @@
     <v-container>
       <v-row>
         <v-col v-for="title in existingGroupTitles" :key="title" md="6">
-          <TimeslotTable
-            :groupTitle="title"
-          ></TimeslotTable>
+          <TimeslotTable :group-title="title"></TimeslotTable>
         </v-col>
       </v-row>
     </v-container>
@@ -30,7 +28,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 import TimeslotTable from "../components/organisms/TimeslotTable";
 import TimeslotAdder from "../components/organisms/TimeslotAdder";
 import TimeslotSnackBar from "../components/atoms/TimeslotSnackBar.vue";
