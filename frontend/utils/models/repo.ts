@@ -60,7 +60,7 @@ export interface User {
   nickname?: string;
   firstname: string;
   lastname: string;
-  username?: [];
+  username?: string;
   isValid: boolean;
   birthdate: string;
   email: string;

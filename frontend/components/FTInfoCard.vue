@@ -29,7 +29,9 @@
                   <v-btn :href="`/fa/${FT.FA}`" icon small>
                     <v-icon small>mdi-link</v-icon>
                   </v-btn>
-                  <v-btn small @click="openFAChooser">Choisir une FA parente</v-btn>
+                  <v-btn small @click="openFAChooser"
+                    >Choisir une FA parente</v-btn
+                  >
                 </td>
               </tr>
               <tr>
@@ -48,7 +50,6 @@
 <script lang="ts">
 import Vue from "vue";
 import FAChooser from "~/components/organisms/FAChooser.vue";
-
 
 export default Vue.extend({
   name: "FTInfoCard",

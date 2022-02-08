@@ -147,6 +147,12 @@ export default {
           to: "/ft",
         },
         {
+          icon: "mdi-calendar-clock",
+          title: "Mon planning 🤯",
+          roles: "hard",
+          to: "/planning",
+        },
+        {
           icon: "mdi-clock",
           title: "Mes dispos 🤯",
           roles: "hard",

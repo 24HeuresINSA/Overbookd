@@ -9,9 +9,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="error" text @click="dialog = false"
-          >Annuler</v-btn
-        >
+        <v-btn color="error" text @click="dialog = false">Annuler</v-btn>
         <v-btn
           color="blue darken-1"
           @click="
@@ -26,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
+import Vue from "vue";
 
 export default Vue.extend({
   name: "ConfirmDialog",

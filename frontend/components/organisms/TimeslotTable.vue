@@ -22,10 +22,7 @@
           </v-toolbar-title>
           <v-spacer></v-spacer>
 
-          <TimeslotDialog
-            ref="dialog"
-            :timeslot="editedItem"
-          ></TimeslotDialog>
+          <TimeslotDialog ref="dialog" :timeslot="editedItem"></TimeslotDialog>
         </v-toolbar>
       </template>
       <template
@@ -59,7 +56,11 @@
         </td>
       </template>
       <template #[`footer.prepend`]>
-        <v-btn color="error" @click="askConfirmDelete" v-if="roles.some((e) => authorizedEditor.includes(e))">
+        <v-btn
+          v-if="roles.some((e) => authorizedEditor.includes(e))"
+          color="error"
+          @click="askConfirmDelete"
+        >
           <v-icon left> mdi-plus </v-icon>
           Supprimer le tableau
         </v-btn>
@@ -82,7 +83,7 @@
 import Vue from "vue";
 import TimeslotDialog from "~/components/atoms/TimeslotDialog.vue";
 import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
-import { Timeslot } from "utils/models/repo"
+import { Timeslot } from "utils/models/repo";
 
 export default Vue.extend({
   name: "TimeslotTable",
@@ -160,7 +161,7 @@ export default Vue.extend({
         };
       });
     },
-    timeslots(): Timeslot[]{
+    timeslots(): Timeslot[] {
       return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
     },
     roles(): string[] {
@@ -189,11 +190,11 @@ export default Vue.extend({
     },
     async acceptSelection() {
       if (this.selectedItems.length == 0) return;
-      const ids = this.selectedItems.map((item :any) => item.id);
+      const ids = this.selectedItems.map((item: any) => item.id);
       await this.$store.dispatch("user/acceptSelection", ids);
       this.$store.dispatch(
         "timeslot/setCreateStatus",
-        "Créneaux selectionnés validés" 
+        "Créneaux selectionnés validés"
       );
       this.selectedItems = [];
     },

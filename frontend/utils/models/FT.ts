@@ -24,7 +24,10 @@ export interface requirement {
   type: "equipment" | "user" | "team";
   amount: number;
   equipment?: string;
-  user?: string;
+  user?: {
+    _id: string;
+    username: string;
+  };
   team?: string;
 }
 

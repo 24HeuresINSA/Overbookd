@@ -73,7 +73,7 @@
                 label="Référence facture 📃"
                 single-line
               ></v-text-field>
-            </v-container>            
+            </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
