@@ -3,7 +3,7 @@
     <v-data-table
       v-model="selectedItems"
       :headers="headers"
-      :items="items"
+      :items="tableItems"
       class="elevation-1"
       group-by="date"
       show-select
@@ -22,20 +22,17 @@
           </v-toolbar-title>
           <v-spacer></v-spacer>
 
-          <OverTimeslotDialog
-            ref="dialog"
-            :timeslot="editedItem"
-          ></OverTimeslotDialog>
+          <TimeslotDialog ref="dialog" :timeslot="editedItem"></TimeslotDialog>
         </v-toolbar>
       </template>
       <template
         v-if="roles.some((e) => authorizedEditor.includes(e))"
-        #item.actions="{ item }"
+        #[`item.actions`]="{ item }"
       >
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="removeItem(item)"> mdi-delete </v-icon>
       </template>
-      <template #item.data-table-select="{ isSelected, select, item }">
+      <template #[`item.data-table-select`]="{ isSelected, select, item }">
         <v-simple-checkbox
           v-if="item.isSelected"
           :value="item.isSelected"
@@ -49,7 +46,7 @@
           @input="select($event)"
         ></v-simple-checkbox>
       </template>
-      <template #group.header="{ group, headers, toggle, isOpen }">
+      <template #[`group.header`]="{ group, headers, toggle, isOpen }">
         <td :colspan="headers.length">
           <v-btn :ref="group" small icon :data-open="isOpen" @click="toggle">
             <v-icon v-if="isOpen">mdi-chevron-up</v-icon>
@@ -58,12 +55,18 @@
           {{ group }}
         </td>
       </template>
-      <template #footer.prepend>
-        <!-- <v-btn color="error" @click="removeItems" v-if="roles.some((e) => authorizedEditor.includes(e))">
+      <template #[`footer.prepend`]>
+        <v-btn
+          v-if="roles.some((e) => authorizedEditor.includes(e))"
+          color="error"
+          @click="askConfirmDelete"
+        >
           <v-icon left> mdi-plus </v-icon>
-          Supprimer la selection
-        </v-btn> -->
-
+          Supprimer le tableau
+        </v-btn>
+        <ConfirmDialog ref="confirmDelete" @confirm="removeTable"
+          >Les créneaux sont supprimés de façon <b>irreversible.</b>
+        </ConfirmDialog>
         <v-btn color="success" @click="$refs.confirm.open()"
           ><v-icon left> mdi-plus </v-icon> Me rendre disponible (ce tableau)
         </v-btn>
@@ -76,23 +79,25 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
-import OverTimeslotDialog from "../atoms/OverTimeslotDialog";
-import ConfirmDialog from "../atoms/ConfirmDialog";
-export default {
-  name: "OverTimeslotTable",
+import TimeslotDialog from "~/components/atoms/TimeslotDialog.vue";
+import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
+import { Timeslot } from "utils/models/repo";
+
+export default Vue.extend({
+  name: "TimeslotTable",
   components: {
-    OverTimeslotDialog,
+    TimeslotDialog,
     ConfirmDialog,
   },
   props: {
-    timeslots: {
-      type: Array,
+    groupTitle: {
+      type: String,
       required: true,
     },
   },
-  data() {
+  data(): any {
     return {
       headers: [
         {
@@ -129,28 +134,8 @@ export default {
     };
   },
   computed: {
-    items() {
-      return this.overTimeslotTable();
-    },
-    roles() {
-      return this.$accessor.user.me.team;
-    },
-    userSelectedAvailabilities() {
-      return this.$accessor.user.me.availabilities;
-    },
-  },
-  mounted() {
-    Object.keys(this.$refs).forEach((k) => {
-      console.log(this.$refs[k]);
-      if (this.$refs[k] && this.$refs[k].$attrs["data-open"]) {
-        this.$refs[k].$el.click();
-      }
-    });
-  },
-  methods: {
-    overTimeslotTable() {
-      //TODO better style for date !
-      return this.timeslots.map((timeslot) => {
+    tableItems(): any {
+      return this.timeslots.map((timeslot: Timeslot) => {
         return {
           id: timeslot._id,
           name: timeslot.groupTitle,
@@ -176,20 +161,36 @@ export default {
         };
       });
     },
-    async editItem(item) {
+    timeslots(): Timeslot[] {
+      return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
+    },
+    roles(): string[] {
+      return this.$accessor.user.me.team;
+    },
+    userSelectedAvailabilities(): any {
+      return this.$accessor.user.me.availabilities;
+    },
+  },
+  mounted() {
+    Object.keys(this.$refs).forEach((k) => {
+      if (this.$refs[k] && (this.$refs[k] as any).$attrs["data-open"]) {
+        (this.$refs[k] as any).$el.click();
+      }
+    });
+  },
+  methods: {
+    async editItem(item: any): Promise<void> {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = Object.assign({}, item);
       await Vue.nextTick();
       this.$refs.dialog.open();
     },
     async enterSelect() {
-      console.log(this.selectedItems.length);
       this.$emit("select", this.selectedItems);
     },
     async acceptSelection() {
       if (this.selectedItems.length == 0) return;
-      const ids = this.selectedItems.map((item) => item.id);
-      console.log(ids);
+      const ids = this.selectedItems.map((item: any) => item.id);
       await this.$store.dispatch("user/acceptSelection", ids);
       this.$store.dispatch(
         "timeslot/setCreateStatus",
@@ -197,17 +198,23 @@ export default {
       );
       this.selectedItems = [];
     },
-    async removeItem(item) {
+    async removeItem(item: any) {
       await this.$store.dispatch("timeslot/deleteTimeslot", item.id);
     },
-    padTime(time) {
+    async removeTable() {
+      await this.$accessor.timeslot.deleteByGroupTitle(this.groupTitle);
+    },
+    padTime(time: number): string {
       if (time < 10) {
         return "0" + time;
       }
-      return time;
+      return time + "";
+    },
+    async askConfirmDelete() {
+      (this.$refs.confirmDelete as any).open();
     },
   },
-};
+});
 </script>
 
 <style></style>

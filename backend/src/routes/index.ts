@@ -122,6 +122,11 @@ timeslotRouter.delete(
   authMiddleware.protect(),
   TimeslotHandler.deleteTimeslot
 );
+timeslotRouter.delete(
+  "/groupTitle/:groupTitle",
+  authMiddleware.protect(),
+  TimeslotHandler.deleteManyTimeslotsByGroupTitle
+);
 // Transactions routes
 
 const assignmentRouter = Router();

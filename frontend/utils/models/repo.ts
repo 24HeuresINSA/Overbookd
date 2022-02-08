@@ -60,7 +60,7 @@ export interface User {
   nickname?: string;
   firstname: string;
   lastname: string;
-  username?: [];
+  username?: string;
   isValid: boolean;
   birthdate: string;
   email: string;
@@ -108,7 +108,7 @@ export interface FriendRequestData {
   data: FriendRequest;
 }
 
-export interface timeslot {
+export interface Timeslot {
   _id?: string;
   groupTitle: string;
   groupDescription?: string;

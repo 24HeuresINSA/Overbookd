@@ -34,7 +34,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col cols="12" lg="2" md="1">
-                <v-btn :disabled="!validInput" rounded @click="addItemToFA">
+                <v-btn :disabled="!validInput" rounded @click="addItem">
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-col>
@@ -81,15 +81,7 @@ export default Vue.extend({
      * The store to use when adding new equipment
      */
     store: {
-      // todo use accurate store definition
-      type: Object as PropType<{
-        // eslint-disable-next-line no-unused-vars
-        addEquipmentToFA: (item: {
-          _id: string;
-          name: string;
-          type: string;
-        }) => any;
-      }>,
+      type: Object,
       required: true,
     },
     /**
@@ -125,14 +117,16 @@ export default Vue.extend({
     /**
      * Add item to FA store
      */
-    addItemToFA(): void {
+    async addItem() {
       if (this.item) {
-        this.store.addEquipmentToFA({
-          _id: this.item._id,
-          name: this.item.name,
-          type: this.item.type,
-        });
-        this.item = undefined;
+        if (this.store.addEquipment) {
+          await this.store.addEquipment({
+            _id: this.item._id,
+            name: this.item.name,
+            type: this.item.type,
+          });
+          this.item = undefined;
+        }
       }
     },
   },

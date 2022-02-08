@@ -14,25 +14,73 @@
         <v-btn v-if="!isDisabled" icon>
           <v-icon @click="deleteTimeframe(index)">mdi-trash-can</v-icon>
         </v-btn>
-        <v-btn icon @click="editTimeframe(index)">
+        <v-btn icon @click="editTimeframeRequirements(index)">
           <v-icon>mdi-account-multiple-plus-outline</v-icon>
         </v-btn>
+        <v-btn icon @click="editTimeframe(index)">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn icon @click="editTimeframe(index)">
+          <v-icon>mdi-note-multiple</v-icon>
+        </v-btn>
       </template>
-      <template #[`item.required`]="{ item }">
+      <template #[`item.required`]="{ item, index }">
         <v-list dense>
-          <v-list-item v-for="(required, index) in item.required" :key="index">
+          <v-list-item
+            v-for="(required, i) in selectedTimeframe.required"
+            :key="i"
+          >
             <v-list-item-content>
-              <v-list-item-title v-if="required.type === 'team'"
-                >{{ required.amount }} {{ required.team }}
-              </v-list-item-title>
-              <v-list-item-title v-else-if="required.type === 'user'">{{
-                required.user.username
-              }}</v-list-item-title>
+              <v-list-item-title
+                v-text="formatText(required)"
+              ></v-list-item-title>
             </v-list-item-content>
+            <v-list-item-action>
+              <v-btn icon @click="removeRequirement(i, index)">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </template>
     </v-data-table>
+
+    <v-dialog v-model="isEditDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Editer un créneau</span>
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="mTimeframe.start"
+            label="Début"
+            type="time"
+            :disabled="isDisabled"
+          ></v-text-field>
+          <v-text-field
+            v-model="mTimeframe.end"
+            label="Fin"
+            type="time"
+            :disabled="isDisabled"
+          ></v-text-field>
+          <!--          <v-btn text @click="selectMidnight">Minuit</v-btn>-->
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="isEditDialogOpen = false">
+            Annuler
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :disabled="isDisabled"
+            @click="updateTimeframe"
+          >
+            Valider
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="requireDialog" max-width="600">
       <v-card>
@@ -44,11 +92,15 @@
               :key="index"
             >
               <v-list-item-content>
-                <v-list-item-title v-if="required.type === 'team'"
-                  >{{ required.amount }} {{ required.team }}
+                <v-list-item-title v-if="required.type === 'team'">
+                  <p>{{ required.amount }} {{ required.team }}</p>
+                  <v-btn icon small>a<v-icon></v-icon></v-btn>
                 </v-list-item-title>
                 <v-list-item-title v-else-if="required.type === 'user'">{{
                   required.user.username
+                }}</v-list-item-title>
+                <v-list-item-title v-else-if="required.type === 'equipment'">{{
+                  required.equipment
                 }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -69,6 +121,13 @@
             label="Nombre"
           ></v-text-field>
           <v-btn text @click="addTeam">demander une team</v-btn>
+          <v-select
+            v-model="required.equipment"
+            :items="['12m2', '20m2']"
+            label="Camions"
+          >
+          </v-select>
+          <v-btn text @click="addEquipement">demander un camion</v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -107,6 +166,13 @@ export default {
     selectedTimeframeIndex: 0,
     selectedTimeframe: {},
 
+    isEditDialogOpen: false,
+
+    mTimeframe: {
+      start: "",
+      end: "",
+    },
+
     required: {
       type: undefined,
       team: undefined,
@@ -115,6 +181,7 @@ export default {
         username: undefined,
         _id: undefined,
       },
+      equipment: undefined,
     },
   }),
   computed: {
@@ -124,7 +191,7 @@ export default {
   },
 
   methods: {
-    editTimeframe(index) {
+    editTimeframeRequirements(index) {
       this.selectedTimeframeIndex = index;
       this.selectedTimeframe = this.timeframes[index];
       this.requireDialog = true;
@@ -140,12 +207,71 @@ export default {
       this.required.team = team.value;
     },
 
+    async removeRequirement(requirementIndex, timeframeIndex) {
+      await this.$accessor.FT.deleteRequirement({
+        timeframeIndex,
+        requirementIndex,
+      });
+    },
+
+    editTimeframe(index) {
+      this.selectedTimeframeIndex = index;
+      this.mTimeframe = { ...this.timeframes[index] };
+      this.isEditDialogOpen = true;
+    },
+
+    updateTimeframe() {
+      let oldTimeframe = { ...this.timeframes[this.selectedTimeframeIndex] };
+      let start = new Date(this.timeframes[this.selectedTimeframeIndex].start);
+      let end = new Date(this.timeframes[this.selectedTimeframeIndex].end);
+
+      start.setHours(+this.mTimeframe.start.split(":")[0]);
+      start.setMinutes(+this.mTimeframe.start.split(":")[1]);
+      end.setHours(+this.mTimeframe.end.split(":")[0]);
+      end.setMinutes(+this.mTimeframe.end.split(":")[1]);
+
+      oldTimeframe.start = start.getTime();
+      oldTimeframe.end = end.getTime();
+
+      this.$accessor.FT.updateTimeframe({
+        index: this.selectedTimeframeIndex,
+        timeframe: oldTimeframe,
+      });
+      this.mTimeframe = {
+        start: "",
+        end: "",
+      };
+      this.isEditDialogOpen = false;
+    },
+
     addUser() {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
       }
       this.required.amount = +this.required.amount;
       this.required.type = "user";
+      delete this.required.team;
+      let mTimeframe = { ...this.selectedTimeframe };
+      this.$accessor.FT.addRequirement({
+        timeframeIndex: this.selectedTimeframeIndex,
+        requirement: this.required,
+      });
+      // this.store.updateTimeframe({
+      //   index: this.selectedTimeframeIndex,
+      //   timeframe: mTimeframe,
+      // });
+    },
+
+    deleteTimeframe(timeframe) {
+      this.$accessor.FT.deleteTimeframe(timeframe);
+    },
+
+    addEquipement() {
+      if (this.selectedTimeframe.required === undefined) {
+        this.selectedTimeframe.required = [];
+      }
+      this.required.amount = 1;
+      this.required.type = "equipment";
       delete this.required.team;
       this.selectedTimeframe.required.push({ ...this.required });
       this.store.updateTimeframe({
@@ -154,8 +280,20 @@ export default {
       });
     },
 
-    deleteTimeframe(timeframe) {
-      this.$accessor.FT.deleteTimeframe(timeframe);
+    formatText(requirements) {
+      if (!requirements.type) {
+        return "";
+      }
+      switch (requirements.type) {
+        case "user":
+          return requirements.user.username;
+        case "team":
+          return requirements.team;
+        case "equipment":
+          return requirements.equipment;
+        default:
+          return requirements.type;
+      }
     },
 
     addTeam() {

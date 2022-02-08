@@ -9,12 +9,9 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false"
-          >Annuler</v-btn
-        >
+        <v-btn color="error" text @click="dialog = false">Annuler</v-btn>
         <v-btn
           color="blue darken-1"
-          text
           @click="
             dialog = false;
             $emit('confirm');
@@ -26,8 +23,10 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "ConfirmDialog",
   props: {},
   data() {
@@ -44,7 +43,7 @@ export default {
       this.dialog = true;
     },
   },
-};
+});
 </script>
 
 <style></style>

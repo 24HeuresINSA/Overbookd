@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     addItemToFA(item) {
-      this.store.addEquipmentToFA({
+      this.store.addEquipment({
         _id: item._id,
         name: item.name,
         type: item.type,

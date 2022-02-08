@@ -52,7 +52,7 @@ const UserSchema = new Schema<IUser>(
     birthday: {type: Date, required: false},
     friends: {type: Array, required: false},
     pp: {type: String, required: false},
-    availabilities: {type: [Schema.Types.ObjectId], required: false},
+    availabilities: {type: [Schema.Types.ObjectId], required: false, ref: "Timeslot"},
     resetPasswordToken: {type: String, required: false},
     resetTokenExpires: {type: Date, required: false},
     hasPayedContribution: {type: Boolean, required: false},

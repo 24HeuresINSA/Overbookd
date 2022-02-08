@@ -6,6 +6,7 @@ import {
   Transfer,
   User,
 } from "~/utils/models/repo";
+import { AxiosResponse } from "axios";
 
 const resource = "/user";
 
@@ -18,7 +19,7 @@ export default {
   getMyUser(context: Context) {
     return context.$axios.get(`${resource}/me`);
   },
-  getAllUsers(context: Context) {
+  getAllUsers(context: Context): Promise<AxiosResponse<User[]>> {
     return context.$axios.get(`${resource}`);
   },
   getAllUsernames(context: Context) {

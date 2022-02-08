@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { timeslot } from "~/utils/models/repo";
+import { Timeslot } from "~/utils/models/repo";
 
 const resource = "/timeslot";
 
@@ -14,11 +14,11 @@ export default {
   },
 
   // POST
-  createMany(context: Context, timeslot: timeslot[]) {
+  createMany(context: Context, timeslot: Timeslot[]) {
     return context.$axios.post(`${resource}/many`, timeslot);
   },
 
-  create(context: Context, timeslot: timeslot) {
+  create(context: Context, timeslot: Timeslot) {
     return context.$axios.post(`${resource}`, timeslot);
   },
 
@@ -30,5 +30,9 @@ export default {
   // PUT
   update(context: Context, id: string, charisma: number) {
     return context.$axios.put(`${resource}/${id}/${charisma}`);
+  },
+
+  deleteByGroupTitle(context: Context, groupTitle: string) {
+    return context.$axios.delete(`${resource}/groupTitle/${groupTitle}`);
   },
 };
