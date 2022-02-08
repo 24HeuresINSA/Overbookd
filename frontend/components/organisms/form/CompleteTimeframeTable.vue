@@ -1,8 +1,11 @@
 <template>
   <div>
     <v-data-table :headers="headers" :items="timeframes" dense>
-      <template #[`item.date`]="{ item }">
+      <template #[`item.dateStart`]="{ item }">
         {{ new Date(item.start).toDateString() }}
+      </template>
+      <template #[`item.dateEnd`]="{ item }">
+        {{ new Date(item.end).toDateString() }}
       </template>
       <template #[`item.start`]="{ item }">
         {{ new Date(item.start).toLocaleTimeString() }}
@@ -51,12 +54,22 @@
           <span class="headline">Editer un créneau</span>
         </v-card-title>
         <v-card-text>
+          <v-date-picker
+            v-model="date.start"
+            label="Date de début"
+            :disabled="isDisabled"
+          ></v-date-picker>
           <v-text-field
             v-model="mTimeframe.start"
             label="Début"
             type="time"
             :disabled="isDisabled"
           ></v-text-field>
+          <v-date-picker
+            v-model="date.end"
+            label="Date de fin"
+            :disabled="isDisabled"
+          ></v-date-picker>
           <v-text-field
             v-model="mTimeframe.end"
             label="Fin"
@@ -152,8 +165,9 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "date", value: "date" },
+      { text: "date début", value: "dateStart" },
       { text: "debut", value: "start" },
+      { text: "date fin", value: "dateEnd" },
       {
         text: "fin",
         value: "end",
@@ -169,6 +183,10 @@ export default {
     isEditDialogOpen: false,
 
     mTimeframe: {
+      start: "",
+      end: "",
+    },
+    date: {
       start: "",
       end: "",
     },
@@ -221,9 +239,19 @@ export default {
     },
 
     updateTimeframe() {
+      if (
+        !this.mTimeframe.start ||
+        !this.mTimeframe.end ||
+        !this.date.end ||
+        !this.date.start
+      ) {
+        alert("Veuillez remplir tous les champs");
+        return;
+      }
+
       let oldTimeframe = { ...this.timeframes[this.selectedTimeframeIndex] };
-      let start = new Date(this.timeframes[this.selectedTimeframeIndex].start);
-      let end = new Date(this.timeframes[this.selectedTimeframeIndex].end);
+      let start = new Date(this.date.start);
+      let end = new Date(this.date.end);
 
       start.setHours(+this.mTimeframe.start.split(":")[0]);
       start.setMinutes(+this.mTimeframe.start.split(":")[1]);

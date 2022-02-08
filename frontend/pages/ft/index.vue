@@ -53,6 +53,11 @@
                 >{{ item.general ? item.general.name : "" }}</a
               >
             </template>
+            <template #[`item.FA`]="row">
+              <v-chip small>
+                {{ row.item.FA }}
+              </v-chip>
+            </template>
             <template #[`item.status`]="row">
               <v-chip small :color="color[row.item.status]">
                 {{ row.item.count }}
@@ -162,7 +167,7 @@ export default Vue.extend({
         },
         {
           text: "FA",
-          value: "count",
+          value: "FA",
         },
         {
           text: "Resp",
