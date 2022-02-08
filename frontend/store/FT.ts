@@ -106,6 +106,15 @@ export const mutations = mutationTree(state, {
       mTimeframe.required.splice(requirementIndex, 1);
     }
   },
+  DELETE_EQUIPMENT: function ({ mFT }, index) {
+    mFT.equipments.splice(index, 1);
+  },
+  UPDATE_EQUIPMENT_REQUIRED_COUNT: function ({ mFT }, { _id, count }) {
+    const equipment = mFT.equipments.find((e: any) => e._id === _id);
+    if (equipment) {
+      equipment.required = count;
+    }
+  },
 });
 
 export const actions = actionTree(
@@ -207,6 +216,15 @@ export const actions = actionTree(
     },
     deleteRequirement: async function ({ dispatch, commit }, payload) {
       commit("DELETE_REQUIREMENT", payload);
+    },
+    deleteEquipment: async function ({ dispatch, commit }, payload) {
+      commit("DELETE_EQUIPMENT", payload);
+    },
+    updateEquipmentRequiredCount: async function (
+      { dispatch, commit },
+      payload
+    ) {
+      commit("UPDATE_EQUIPMENT_REQUIRED_COUNT", payload);
     },
   }
 );

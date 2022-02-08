@@ -625,17 +625,6 @@
                 "label": "Responsable",
                 "type": "user",
                 "filter": "hard"
-            },
-            {
-                "key": "driverLicenseRequired",
-                "label": "Permis requit",
-                "type": "select",
-                "options": [
-                    "non",
-                    "permis - un ans",
-                    "permis + un ans",
-                    "conducteur de Fen"
-                ]
             }
         ],
         "__v": 0
@@ -810,7 +799,7 @@
     {
         "_id": "61b0ca5877783200108bd4c2",
         "key": "is_ft_open",
-        "value": false,
+        "value": true,
         "__v": 0
     }
 ]

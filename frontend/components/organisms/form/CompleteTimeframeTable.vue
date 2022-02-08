@@ -20,6 +20,9 @@
         <v-btn icon @click="editTimeframe(index)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
+        <v-btn icon @click="editTimeframe(index)">
+          <v-icon>mdi-note-multiple</v-icon>
+        </v-btn>
       </template>
       <template #[`item.required`]="{ item, index }">
         <v-list dense>
