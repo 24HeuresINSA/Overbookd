@@ -39,7 +39,7 @@ export default Vue.extend({
 
   methods: {
     addTimeframe(timeframe: Timeframe) {
-      this.store.addTimeframe(timeframe);
+      this.store.addTimeframe({ ...timeframe });
     },
     setTimeframes(timeframes: Timeframe[]) {
       const store = this.$accessor.FT;

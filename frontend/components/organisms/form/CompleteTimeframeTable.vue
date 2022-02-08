@@ -29,14 +29,9 @@
       </template>
       <template #[`item.required`]="{ item, index }">
         <v-list dense>
-          <v-list-item
-            v-for="(required, i) in selectedTimeframe.required"
-            :key="i"
-          >
+          <v-list-item v-for="(req, i) in item.required" :key="i">
             <v-list-item-content>
-              <v-list-item-title
-                v-text="formatText(required)"
-              ></v-list-item-title>
+              <v-list-item-title>{{ formatText(req) }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-btn icon @click="removeRequirement(i, index)">
