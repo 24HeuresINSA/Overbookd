@@ -41,7 +41,7 @@
           </v-card>
         </v-col>
         <v-col md="9">
-          <v-data-table :headers="headers" :items="filteredFTs">
+          <v-data-table :headers="headers" :items="filteredFTs" sort-by="count">
             <template #item.general.name="{ item }">
               <a
                 :href="`/ft/${item.count}`"
@@ -159,6 +159,10 @@ export default Vue.extend({
         {
           text: "Nom",
           value: "general.name",
+        },
+        {
+          text: "FA",
+          value: "count",
         },
         {
           text: "Resp",
