@@ -311,7 +311,7 @@ export default {
         case "user":
           return requirements.user.username;
         case "team":
-          return requirements.team;
+          return requirements.amount + " " + requirements.team;
         case "equipment":
           return requirements.equipment;
         default:
