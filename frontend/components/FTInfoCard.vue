@@ -25,13 +25,14 @@
               <tr>
                 <td>FA</td>
                 <td>
-                  <a>{{ FT.FA }}</a>
+                  <a v-if="FT.FA && FT.FA > 0">{{ FT.FA }}</a>
                   <v-btn :href="`/fa/${FT.FA}`" icon small>
                     <v-icon small>mdi-link</v-icon>
                   </v-btn>
-                  <v-btn small @click="openFAChooser"
+                  <v-btn small text @click="openFAChooser"
                     >Choisir une FA parente</v-btn
                   >
+                  <v-btn small text @click="unlinkFA">Détacher la FA</v-btn>
                 </td>
               </tr>
               <tr>
@@ -94,6 +95,9 @@ export default Vue.extend({
           locations,
         },
       });
+    },
+    unlinkFA(): void {
+      this.$accessor.FT.unlinkFA();
     },
     openFAChooser(): void {
       (this.$refs.FAChooser as any).openDialog();
