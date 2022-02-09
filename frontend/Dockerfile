@@ -7,10 +7,13 @@ ARG BASE_URL
 ENV BASE_URL=$BASE_URL
 ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
 
+COPY package*.json ./
+
+RUN npm ci 
+
 COPY . .
 
-RUN npm ci\
-    && npm run build
+RUN npm run build
 
 FROM node:16.13-alpine3.14
 
