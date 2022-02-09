@@ -556,6 +556,11 @@
                 "label": "Responsable",
                 "type": "user",
                 "filter": "hard"
+            },
+            {
+                "key": "areTimeframesStatic",
+                "label": "Créneaux statiques",
+                "type": "switch"
             }
         ],
         "__v": 0

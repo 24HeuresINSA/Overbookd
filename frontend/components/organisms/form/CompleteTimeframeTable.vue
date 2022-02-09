@@ -216,7 +216,6 @@ export default {
       delete this.required.user;
       this.required.type = "team";
       this.required.team = { ...team }.value;
-      console.log(this.required);
     },
 
     async removeRequirement(requirementIndex, timeframeIndex) {
