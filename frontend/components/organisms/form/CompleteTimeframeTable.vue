@@ -23,9 +23,6 @@
         <v-btn icon @click="editTimeframe(index)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn icon @click="editTimeframe(index)">
-          <v-icon>mdi-note-multiple</v-icon>
-        </v-btn>
       </template>
       <template #[`item.required`]="{ item, index }">
         <v-list dense>
@@ -94,25 +91,25 @@
       <v-card>
         <v-card-title>Orga Requit</v-card-title>
         <v-card-text>
-          <v-list dense>
-            <v-list-item
-              v-for="(required, index) in selectedTimeframe.required"
-              :key="index"
-            >
-              <v-list-item-content>
-                <v-list-item-title v-if="required.type === 'team'">
-                  <p>{{ required.amount }} {{ required.team }}</p>
-                  <v-btn icon small>a<v-icon></v-icon></v-btn>
-                </v-list-item-title>
-                <v-list-item-title v-else-if="required.type === 'user'">{{
-                  required.user.username
-                }}</v-list-item-title>
-                <v-list-item-title v-else-if="required.type === 'equipment'">{{
-                  required.equipment
-                }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <!--          <v-list dense>-->
+          <!--            <v-list-item-->
+          <!--              v-for="(required, index) in selectedTimeframe.required"-->
+          <!--              :key="index"-->
+          <!--            >-->
+          <!--              <v-list-item-content>-->
+          <!--                <v-list-item-title v-if="required.type === 'team'">-->
+          <!--                  <p>{{ required.amount }} {{ required.team }}</p>-->
+          <!--                  <v-btn icon small>a<v-icon></v-icon></v-btn>-->
+          <!--                </v-list-item-title>-->
+          <!--                <v-list-item-title v-else-if="required.type === 'user'">{{-->
+          <!--                  required.user.username-->
+          <!--                }}</v-list-item-title>-->
+          <!--                <v-list-item-title v-else-if="required.type === 'equipment'">{{-->
+          <!--                  required.equipment-->
+          <!--                }}</v-list-item-title>-->
+          <!--              </v-list-item-content>-->
+          <!--            </v-list-item>-->
+          <!--          </v-list>-->
           <h3>Ajouter un Orga</h3>
           <OverField
             :field="{ key: 'user', label: 'orga', type: 'user' }"
@@ -212,12 +209,14 @@ export default {
 
     updateUser(user) {
       this.required.type = "user";
-      this.required.user = { ...user.value };
+      this.required.user = { ...user }.value;
     },
 
     updateTeam(team) {
+      delete this.required.user;
       this.required.type = "team";
-      this.required.team = team.value;
+      this.required.team = { ...team }.value;
+      console.log(this.required);
     },
 
     async removeRequirement(requirementIndex, timeframeIndex) {
@@ -279,10 +278,7 @@ export default {
         timeframeIndex: this.selectedTimeframeIndex,
         requirement: this.required,
       });
-      // this.store.updateTimeframe({
-      //   index: this.selectedTimeframeIndex,
-      //   timeframe: mTimeframe,
-      // });
+      this.resetRequirement();
     },
 
     deleteTimeframe(timeframe) {
@@ -319,6 +315,19 @@ export default {
       }
     },
 
+    resetRequirement() {
+      this.required = {
+        type: undefined,
+        team: undefined,
+        amount: 1,
+        user: {
+          username: undefined,
+          _id: undefined,
+        },
+        equipment: undefined,
+      };
+    },
+
     addTeam() {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
@@ -326,11 +335,11 @@ export default {
       this.required.amount = +this.required.amount;
       this.required.type = "team";
       delete this.required.user;
-      this.selectedTimeframe.required.push({ ...this.required });
-      this.store.updateTimeframe({
-        index: this.selectedTimeframeIndex,
-        timeframe: this.selectedTimeframe,
+      this.store.addRequirement({
+        timeframeIndex: this.selectedTimeframeIndex,
+        requirement: this.required,
       });
+      this.resetRequirement();
     },
   },
 };
