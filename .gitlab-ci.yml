@@ -12,6 +12,7 @@ workflow:
         PASSWORD: $PASSWORD_PREPROD
 
 stages:
+  - triage
   - test
   - setup
   - docker
@@ -20,6 +21,7 @@ stages:
 
 include:
   - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
+  - local: /.gitlab/ci/triage.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/License-Scanning.gitlab-ci.yml
