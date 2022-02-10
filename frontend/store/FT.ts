@@ -17,6 +17,8 @@ export const state = () => ({
   } as FT,
 });
 
+export type FTState = ReturnType<typeof state>;
+
 export const getters = getterTree(state, {
   timeframes: (state) => state.mFT.timeframes,
 });
@@ -43,7 +45,7 @@ export const mutations = mutationTree(state, {
     state.mFT.timeframes = timeframes;
   },
   UPDATE_TIMEFRAME: function ({ mFT }, { index, timeframe }) {
-    mFT.timeframes[index] = timeframe;
+    mFT.timeframes.splice(index, 1, timeframe);
   },
   UPDATE_STATUS: function ({ mFT }, status) {
     mFT.status = status;
