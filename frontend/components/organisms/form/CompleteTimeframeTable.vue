@@ -91,25 +91,6 @@
       <v-card>
         <v-card-title>Orga Requit</v-card-title>
         <v-card-text>
-          <!--          <v-list dense>-->
-          <!--            <v-list-item-->
-          <!--              v-for="(required, index) in selectedTimeframe.required"-->
-          <!--              :key="index"-->
-          <!--            >-->
-          <!--              <v-list-item-content>-->
-          <!--                <v-list-item-title v-if="required.type === 'team'">-->
-          <!--                  <p>{{ required.amount }} {{ required.team }}</p>-->
-          <!--                  <v-btn icon small>a<v-icon></v-icon></v-btn>-->
-          <!--                </v-list-item-title>-->
-          <!--                <v-list-item-title v-else-if="required.type === 'user'">{{-->
-          <!--                  required.user.username-->
-          <!--                }}</v-list-item-title>-->
-          <!--                <v-list-item-title v-else-if="required.type === 'equipment'">{{-->
-          <!--                  required.equipment-->
-          <!--                }}</v-list-item-title>-->
-          <!--              </v-list-item-content>-->
-          <!--            </v-list-item>-->
-          <!--          </v-list>-->
           <h3>Ajouter un Orga</h3>
           <OverField
             :field="{ key: 'user', label: 'orga', type: 'user' }"

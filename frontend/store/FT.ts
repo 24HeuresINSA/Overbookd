@@ -97,7 +97,6 @@ export const mutations = mutationTree(state, {
       mTimeframe.required = [];
     }
     mTimeframe.required.push(requirement);
-    console.log(mFT);
   },
   DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
     const mTimeframe = mFT.timeframes[timeframeIndex];
