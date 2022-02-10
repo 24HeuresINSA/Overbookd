@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 networks:
   overbookd_net-api:
@@ -18,7 +18,7 @@ services:
       && wget https://traefik.me/privkey.pem -O privkey.pem"
     volumes:
       - certs:/etc/ssl/traefik
-      
+
   traefik:
     image: traefik:v2.3
     restart: always
@@ -59,11 +59,11 @@ services:
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
   backend:
     container_name: overbookd_backend
-    build: 
+    build:
       context: ../backend
       dockerfile: Dockerfile.dev
-    # volumes:
-    #   - ../backend:/overbookd/backend
+    volumes:
+      - ../backend:/overbookd/backend
     restart: always
     networks:
       - overbookd_net-api
@@ -96,11 +96,11 @@ services:
 
   frontend:
     container_name: overbookd_frontend
-    build: 
+    build:
       context: ../frontend
       dockerfile: Dockerfile.dev
-    # volumes:
-    #   - ../frontend:/overbookd/frontend
+    volumes:
+      - ../frontend:/overbookd/frontend
     environment:
       - BASE_URL
     restart: always
