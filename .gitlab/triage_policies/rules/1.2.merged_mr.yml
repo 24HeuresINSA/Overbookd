@@ -1,0 +1,6 @@
+      - name: find all merged MR
+        conditions:
+          state: merged
+        actions:
+          labels:
+            - Status::Done
