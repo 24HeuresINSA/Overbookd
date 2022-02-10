@@ -1,0 +1,6 @@
+      - name: find all closed issues
+        conditions:
+          state: closed
+        actions:
+          labels:
+            - Status::Done
