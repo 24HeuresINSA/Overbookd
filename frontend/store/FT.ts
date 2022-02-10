@@ -103,7 +103,6 @@ export const mutations = mutationTree(state, {
   DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
     const mTimeframe = mFT.timeframes[timeframeIndex];
     if (mTimeframe.required) {
-      console.log(requirementIndex);
       mTimeframe.required.splice(requirementIndex, 1);
     }
   },
@@ -141,7 +140,6 @@ export const actions = actionTree(
     addTimeframe: function ({ commit, state }, timeframe) {
       // @ts-ignore
       const tf = state.mFT.timeframes.find((t) => t.name === timeframe.name);
-      console.log(tf);
       if (tf === undefined) {
         commit("ADD_TIMEFRAME_FT", timeframe);
       }
