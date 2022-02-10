@@ -1,0 +1,6 @@
+      - name: find all closed MR
+        conditions:
+          state: closed
+        actions:
+          labels:
+            - Status::Done
