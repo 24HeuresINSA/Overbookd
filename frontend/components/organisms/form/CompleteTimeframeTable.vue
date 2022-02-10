@@ -24,7 +24,7 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
-      <template #[`item.required`]="{ index }">
+      <template #[`item.required`]="{ index, item }">
         <v-list dense>
           <v-list-item v-for="(req, i) in item.required" :key="i">
             <v-list-item-content>
