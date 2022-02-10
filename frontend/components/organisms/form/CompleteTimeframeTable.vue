@@ -42,7 +42,7 @@
       <template #[`item.toSlice`]="{ item }">{{
         item.toSlice === undefined || item.toSlice === false
           ? "-"
-          : item.sliceTime
+          : `${item.sliceTime}h`
       }}</template>
     </v-data-table>
 
@@ -163,10 +163,10 @@ export default {
         text: "fin",
         value: "end",
       },
+      { text: "découpage", value: "toSlice" },
       { text: "requit", value: "required" },
       { text: "affecter", value: "assigned" },
       { text: "action", value: "action" },
-      { text: "Découpe", value: "toSlice" },
     ],
     requireDialog: false,
     selectedTimeframeIndex: 0,
