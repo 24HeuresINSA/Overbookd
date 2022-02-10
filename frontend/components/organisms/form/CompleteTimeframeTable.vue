@@ -8,10 +8,10 @@
         {{ new Date(item.end).toDateString() }}
       </template>
       <template #[`item.start`]="{ item }">
-        {{ new Date(item.start).toLocaleTimeString() }}
+        {{ formatMilliToLocalTime(item.start) }}
       </template>
       <template #[`item.end`]="{ item }">
-        {{ new Date(item.end).toLocaleTimeString() }}
+        {{ formatMilliToLocalTime(item.end) }}
       </template>
       <template #[`item.action`]="{ index }">
         <v-btn v-if="!isDisabled" icon>
@@ -24,7 +24,7 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
-      <template #[`item.required`]="{ item, index }">
+      <template #[`item.required`]="{ index, item }">
         <v-list dense>
           <v-list-item v-for="(req, i) in item.required" :key="i">
             <v-list-item-content>
@@ -38,58 +38,74 @@
           </v-list-item>
         </v-list>
       </template>
+      <!-- Partition displays "-" if it is not defined or false and the slot time else -->
+      <template #[`item.toSlice`]="{ item }">{{
+        item.toSlice === undefined || item.toSlice === false
+          ? "-"
+          : `${item.sliceTime}h`
+      }}</template>
     </v-data-table>
 
+    <!-- Dialog to edit a single timeslot -->
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <v-card>
         <v-card-title>
-          <span class="headline">Editer un créneau</span>
+          <span class="headline">Editer une plage</span>
         </v-card-title>
-        <v-card-text>
-          <v-date-picker
-            v-model="date.start"
-            label="Date de début"
-            :disabled="isDisabled"
-          ></v-date-picker>
-          <v-text-field
-            v-model="mTimeframe.start"
-            label="Début"
-            type="time"
-            :disabled="isDisabled"
-          ></v-text-field>
-          <v-date-picker
-            v-model="date.end"
-            label="Date de fin"
-            :disabled="isDisabled"
-          ></v-date-picker>
-          <v-text-field
-            v-model="mTimeframe.end"
-            label="Fin"
-            type="time"
-            :disabled="isDisabled"
-          ></v-text-field>
-          <!--          <v-btn text @click="selectMidnight">Minuit</v-btn>-->
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="isEditDialogOpen = false">
-            Annuler
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :disabled="isDisabled"
-            @click="updateTimeframe"
-          >
-            Valider
-          </v-btn>
-        </v-card-actions>
+        <v-form v-model="validTimeframeEdit" lazy-validation>
+          <v-card-text>
+            <v-text-field
+              v-model="mTimeframe.start"
+              label="Début"
+              type="datetime-local"
+              :disabled="isDisabled"
+              :rules="dateTimeValidationRules()"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="mTimeframe.end"
+              label="Fin"
+              type="datetime-local"
+              :disabled="isDisabled"
+              :rules="dateTimeValidationRules()"
+              required
+            ></v-text-field>
+            <v-checkbox
+              v-model="mTimeframe.toSlice"
+              label="Découper"
+            ></v-checkbox>
+            <v-slider
+              v-model="mTimeframe.sliceTime"
+              label="Nombre d'heures par decoupage"
+              :disabled="!mTimeframe.toSlice"
+              min="0.5"
+              max="4"
+              step="0.5"
+              thumb-label="always"
+            ></v-slider>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="isEditDialogOpen = false">
+              Annuler
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :disabled="isDisabled || !validTimeframeEdit"
+              @click="updateTimeframe"
+            >
+              Valider
+            </v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
 
+    <!-- Orga selection pop up -->
     <v-dialog v-model="requireDialog" max-width="600">
       <v-card>
-        <v-card-title>Orga Requit</v-card-title>
+        <v-card-title>Orga Requis</v-card-title>
         <v-card-text>
           <h3>Ajouter un Orga</h3>
           <OverField
@@ -123,6 +139,8 @@
 <script>
 import OverField from "../../overField";
 
+const DEFAULT_SLICE_TIME = 2;
+
 export default {
   name: "CompleteTimeframeTable",
   components: { OverField },
@@ -145,6 +163,7 @@ export default {
         text: "fin",
         value: "end",
       },
+      { text: "découpage", value: "toSlice" },
       { text: "requit", value: "required" },
       { text: "affecter", value: "assigned" },
       { text: "action", value: "action" },
@@ -152,6 +171,9 @@ export default {
     requireDialog: false,
     selectedTimeframeIndex: 0,
     selectedTimeframe: {},
+
+    // indicate if the new timeframe inputs in the form is valid
+    validTimeframeEdit: false,
 
     isEditDialogOpen: false,
 
@@ -176,12 +198,59 @@ export default {
     },
   }),
   computed: {
-    timeframes: function () {
-      return this.store.mFT ? this.store.mFT.timeframes : [];
+    timeframes() {
+      return this.$accessor.FT.mFT.timeframes;
     },
   },
-
+  watch: {
+    isEditDialogOpen: function (val) {
+      // If switched to false
+      if (!val) {
+        // Reset the dialog related content
+        this.mTimeframe = {};
+        this.selectedTimeframeIndex = -1;
+        this.validTimeframeEdit = false;
+      }
+    },
+  },
   methods: {
+    /**
+     * Format date in milliseconds to ##:## 24h formatted time
+     * @param milli String date in milliseconds
+     * @returns String time stringified in format hh:mm
+     */
+    formatMilliToLocalTime(milli) {
+      return new Date(milli).toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
+    /**
+     * @param milli Number date in milliseconds
+     * @returns String date stringified in format yyyy-mm-ddThh:mm in local time
+     */
+    formatMilliToLocalDate(milli) {
+      var tzoffset = new Date(milli).getTimezoneOffset() * 60000;
+      return new Date(milli - tzoffset).toISOString().slice(0, -8); // remove offset, seconds and milliseconds
+    },
+    /**
+     * @param date String date stringified in format yyyy-mm-ddThh:mm in local time
+     * @returns Number date in milli, offset is automatically set
+     */
+    formatLocalDatetoMilli(date) {
+      return new Date(date).getTime();
+    },
+    /**
+     * @returns Array<Function> Array of validation rules for datetime-local inputs
+     */
+    dateTimeValidationRules() {
+      return [
+        // Pattern regexp matching
+        (v) =>
+          /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}/.test(v) ||
+          "Entrez une date valide",
+      ];
+    },
     editTimeframeRequirements(index) {
       this.selectedTimeframeIndex = index;
       this.selectedTimeframe = this.timeframes[index];
@@ -206,43 +275,42 @@ export default {
       });
     },
 
+    /**
+     * Open timeFrame edit dialog and store current timeFrame
+     */
     editTimeframe(index) {
       this.selectedTimeframeIndex = index;
       this.mTimeframe = { ...this.timeframes[index] };
+
+      // Adapt format because input type datetime-local does not handle milliseconds format
+      this.mTimeframe.start = this.formatMilliToLocalDate(
+        this.mTimeframe.start
+      );
+      this.mTimeframe.end = this.formatMilliToLocalDate(this.mTimeframe.end);
+
+      // Default value for sliceTime
+      this.mTimeframe.sliceTime =
+        this.mTimeframe.sliceTime || DEFAULT_SLICE_TIME;
+
       this.isEditDialogOpen = true;
     },
-
+    /**
+     * Update Timeframe in store with the current mTimeframe's values
+     */
     updateTimeframe() {
-      if (
-        !this.mTimeframe.start ||
-        !this.mTimeframe.end ||
-        !this.date.end ||
-        !this.date.start
-      ) {
-        alert("Veuillez remplir tous les champs");
-        return;
-      }
+      // Format back timeFrame to the correct milliseconds format
+      this.mTimeframe.start = this.formatLocalDatetoMilli(
+        this.mTimeframe.start
+      );
+      this.mTimeframe.end = this.formatLocalDatetoMilli(this.mTimeframe.end);
 
-      let oldTimeframe = { ...this.timeframes[this.selectedTimeframeIndex] };
-      let start = new Date(this.date.start);
-      let end = new Date(this.date.end);
-
-      start.setHours(+this.mTimeframe.start.split(":")[0]);
-      start.setMinutes(+this.mTimeframe.start.split(":")[1]);
-      end.setHours(+this.mTimeframe.end.split(":")[0]);
-      end.setMinutes(+this.mTimeframe.end.split(":")[1]);
-
-      oldTimeframe.start = start.getTime();
-      oldTimeframe.end = end.getTime();
-
+      // update the store
       this.$accessor.FT.updateTimeframe({
         index: this.selectedTimeframeIndex,
-        timeframe: oldTimeframe,
+        timeframe: this.mTimeframe,
       });
-      this.mTimeframe = {
-        start: "",
-        end: "",
-      };
+
+      // Reset
       this.isEditDialogOpen = false;
     },
 
