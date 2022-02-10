@@ -53,6 +53,11 @@
                 >{{ item.general ? item.general.name : "" }}</a
               >
             </template>
+            <template #[`item.FA`]="row">
+              <v-chip small>
+                {{ row.item.FA }}
+              </v-chip>
+            </template>
             <template #[`item.status`]="row">
               <v-chip small :color="color[row.item.status]">
                 {{ row.item.count }}
@@ -94,10 +99,25 @@
       elevation="2"
       fab
       class="fab-right"
-      @click="createNewFT"
+      @click="isNewFTDialogOpen = true"
     >
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
+
+    <v-dialog v-model="isNewFTDialogOpen" width="600">
+      <v-card>
+        <v-card-title>Crée une nouvelle FT</v-card-title>
+        <v-card-subtitle>Cette FT n'est relié a aucune FT</v-card-subtitle>
+        <v-card-text>
+          <v-text-field v-model="FTName" label="Nom de la FT"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn :disabled="!FTName" @click="createNewFT"
+            >Crée une nouvelle FT</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="isDialogOpen" width="600">
       <v-card>
@@ -126,6 +146,8 @@ interface Data {
   FTs: any[];
   mFT: any;
   isDialogOpen: boolean;
+  isNewFTDialogOpen: boolean;
+  FTName: string;
 
   filters: {
     search: string;
@@ -162,7 +184,7 @@ export default Vue.extend({
         },
         {
           text: "FA",
-          value: "count",
+          value: "FA",
         },
         {
           text: "Resp",
@@ -173,6 +195,7 @@ export default Vue.extend({
           value: "action",
         },
       ],
+      FTName: "",
       FTs: [],
       filters: {
         search: "",
@@ -182,6 +205,7 @@ export default Vue.extend({
       },
       mFT: undefined,
       isDialogOpen: false,
+      isNewFTDialogOpen: false,
     };
   },
 
@@ -238,7 +262,7 @@ export default Vue.extend({
       const blankFT: Partial<FT> = {
         status: "draft",
         general: {
-          name: "",
+          name: this.FTName,
         },
         details: {},
         equipments: [],

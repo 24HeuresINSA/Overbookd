@@ -105,6 +105,9 @@ export default {
       if (this.disabled) {
         return;
       }
+      if (event) {
+        return;
+      }
 
       if (event && timed) {
         this.dragEvent = event;

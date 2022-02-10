@@ -100,7 +100,6 @@ export const mutations = mutationTree(state, {
   },
   DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
     const mTimeframe = mFT.timeframes[timeframeIndex];
-    console.log(mTimeframe);
     if (mTimeframe.required) {
       console.log(requirementIndex);
       mTimeframe.required.splice(requirementIndex, 1);
@@ -130,6 +129,9 @@ export const actions = actionTree(
     },
     saveFT: async function ({ state }) {
       return safeCall(this, repo.updateFT(this, state.mFT), "saved", "server");
+    },
+    unlinkFA: async function ({ commit }) {
+      commit("SET_PARENT_FA", 0);
     },
     assignFT: function ({ commit }, payload) {
       commit("ASSIGN_FT", payload);
