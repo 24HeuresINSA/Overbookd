@@ -1,5 +1,6 @@
-import {model, Schema} from "mongoose";
-import {IFT} from "@entities/FT";
+import { model, Schema } from "mongoose";
+import { IFT } from "@entities/FT";
+import { IEquipment } from "./Equipment";
 
 export interface ITimeframe {
   start: string;
@@ -7,7 +8,7 @@ export interface ITimeframe {
 }
 
 class timeframe implements ITimeframe {
-  constructor(public start: string, public end: string) {}
+  constructor(public start: string, public end: string) { }
 }
 
 
@@ -19,7 +20,7 @@ export interface IForm {
   general: {};
   count: number;
   isValid: boolean;
-  equipments: any[];
+  equipments: IEquipment[];
   status: string;
 }
 
@@ -55,8 +56,8 @@ export interface IFA extends IForm {
 
 const FASchema = new Schema<IFA>(
   {
-    name: {type: String, required: false},
-    FTs: {type: Array, required: false},
+    name: { type: String, required: false },
+    FTs: { type: Array, required: false },
   },
   { strict: false }
 );

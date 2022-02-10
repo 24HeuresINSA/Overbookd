@@ -1,17 +1,35 @@
 import StatusCodes from "http-status-codes";
-import {Request, Response} from "express";
-import FTModel, {IFT} from "@entities/FT";
+import { Request, Response } from "express";
+import FTModel, { IFT } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
+import EquipmentModel, { IEquipment } from "@entities/Equipment";
+import { ieNoOpen } from "helmet";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
-  res.json({data: mFTs});
+  res.json({ data: mFTs });
 }
 
 export async function getFTByID(req: Request, res: Response) {
-  const mFT = await FTModel.findOne({count: +req.params.FTID});
-  res.json(mFT);
+  const mFT = await FTModel.findOne({ count: +req.params.FTID });
+  const newMFT = mFT?.toObject();
+  const equipments = mFT?.toObject().equipments;
+  if (equipments) {
+    const equipmentsWithName = await Promise.all(
+      equipments.map(async (equipment: IEquipment): Promise<IEquipment> => {
+        const mEquipment = await EquipmentModel.findById(equipment._id);
+        if (mEquipment) {
+          equipment.name = mEquipment.name;
+        }
+        return equipment;
+      })
+    );
+    if (newMFT) {
+      newMFT.equipments = equipmentsWithName;
+    }
+  }
+  res.json(newMFT);
 }
 
 export async function createFT(req: Request, res: Response) {
@@ -57,17 +75,17 @@ export async function deleteFT(req: Request, res: Response) {
   const mFT = <IFT>req.body;
   logger.info(`deleting FT: ${mFT.count}...`)
   if (mFT.count) {
-    await FTModel.findOneAndUpdate({count: mFT.count}, {$set: {isValid: false}});
+    await FTModel.findOneAndUpdate({ count: mFT.count }, { $set: { isValid: false } });
     if (mFT.FA) {
       logger.info(`deleting FT: ${mFT.count} from FA ${mFT.FA}`)
-      let mFA = await FAModel.findOne({count: mFT.FA});
+      let mFA = await FAModel.findOne({ count: mFT.FA });
       if (mFA && mFA.FTs) {
         mFA.FTs = mFA.FTs.filter((FT: IFT) => FT.count !== mFT.count);
         mFA.save()
         logger.info(`deleted FT`)
       }
     }
-    res.status(StatusCodes.OK).json({mFT});
+    res.status(StatusCodes.OK).json({ mFT });
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);
   }

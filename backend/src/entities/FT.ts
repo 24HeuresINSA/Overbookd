@@ -1,5 +1,5 @@
-import {model, Schema} from "mongoose";
-import {IForm} from "@entities/FA";
+import { model, Schema } from "mongoose";
+import { IForm } from "@entities/FA";
 
 export interface IFT extends IForm {
   FA: number;
@@ -25,11 +25,13 @@ interface IAssign {
 }
 
 const FTSchema = new Schema<IFT>(
-  {},
-  {strict: false}
+  {
+    FA: { type: Number, default: 0 },
+  },
+  { strict: false }
 );
 
-const FTModel = model<FT>("FT", FTSchema);
+const FTModel = model<IFT>("FT", FTSchema);
 
 class FT implements IFT {
   constructor() {
