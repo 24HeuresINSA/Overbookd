@@ -329,8 +329,8 @@ export default {
       this.resetRequirement();
     },
 
-    deleteTimeframe(timeframe) {
-      this.$accessor.FT.deleteTimeframe(timeframe);
+    deleteTimeframe(timeframeIndex) {
+      this.$accessor.FT.deleteTimeframe(timeframeIndex);
     },
 
     addEquipement() {
