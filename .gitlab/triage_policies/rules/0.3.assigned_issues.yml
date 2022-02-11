@@ -1,0 +1,7 @@
+      - name: find all assigned issues
+        conditions:
+          state: opened
+          ruby: "!resource[:assignee].nil?"
+        actions:
+          labels:
+            - Status::Doing
