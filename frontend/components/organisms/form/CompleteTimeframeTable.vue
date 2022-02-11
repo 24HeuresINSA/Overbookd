@@ -47,7 +47,7 @@
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <v-card>
         <v-card-title>
-          <span class="headline">Editer une plage</span>
+          <span class="headline"> Editer une plage</span>
         </v-card-title>
         <v-form v-model="validTimeframeEdit" lazy-validation>
           <v-card-text>
@@ -122,7 +122,7 @@
             label="Nombre"
           ></v-text-field>
           <v-btn text :disabled="!required.team" @click="addTeam"
-            >demander une team</v-btn
+            >demander la team</v-btn
           >
         </v-card-text>
       </v-card>
