@@ -98,12 +98,14 @@ export const mutations = mutationTree(state, {
     if (mTimeframe.required === undefined) {
       mTimeframe.required = [];
     }
-    mTimeframe.required.push(requirement);
+    mTimeframe.required.push({ ...requirement });
+    mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
   },
   DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
     const mTimeframe = mFT.timeframes[timeframeIndex];
     if (mTimeframe.required) {
       mTimeframe.required.splice(requirementIndex, 1);
+      mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
     }
   },
   DELETE_EQUIPMENT: function ({ mFT }, index) {

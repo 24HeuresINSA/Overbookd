@@ -17,6 +17,7 @@
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       :events="events"
       :event-ripple="false"
+      event-name="plage"
       @mousedown:event="startDrag"
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
@@ -127,15 +128,25 @@ export default {
         this.dragTime = mouse - start;
       } else {
         this.createStart = this.roundTime(mouse);
+        const _id = this.uuidv4();
         this.createEvent = {
-          name: `Créneau #${this.events.length}`,
+          name: _id,
           start: this.createStart,
           end: this.createStart,
           timed: true,
+          _id,
         };
 
         this.events.push(this.createEvent);
       }
+    },
+    uuidv4() {
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        (
+          c ^
+          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+        ).toString(16)
+      );
     },
     extendBottom(event) {
       if (this.disabled) {
@@ -231,20 +242,6 @@ export default {
 
       this.$emit("add-timeframe", timeframe);
 
-      this.mTimeframe = {
-        date: this.$accessor.config.getConfig("event_date"),
-        start: undefined,
-        end: undefined,
-      };
-    },
-    addFullDay() {
-      const timeframe = {
-        start: new Date(this.mTimeframe.date),
-        end: new Date(this.mTimeframe.date),
-      };
-      timeframe.end.setDate(timeframe.end.getDate() + 1);
-
-      this.$emit("add-timeframe", timeframe);
       this.mTimeframe = {
         date: this.$accessor.config.getConfig("event_date"),
         start: undefined,

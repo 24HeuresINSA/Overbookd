@@ -1,9 +1,9 @@
 <template>
   <div>
     <h1>Planning 📆</h1>
-    <v-list v-if="plannings">
+    <v-list v-for="plan in p" :key="plan.username">
       <v-list-item>
-        <v-list-item-content v-for="plan in p" :key="plan.username">
+        <v-list-item-content>
           <v-list-item-title>{{ plan.username }}</v-list-item-title>
           <v-data-table
             :headers="[

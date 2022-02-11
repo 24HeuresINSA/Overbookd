@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "0.20.6-beta",
+  "version": "0.21.0-beta",
   "private": true,
   "lint-staged": {
     "**/*.(js|ts|vue)": "eslint --fix"
@@ -30,6 +30,7 @@
     "nuxt-typed-vuex": "^0.2.0",
     "qs": "^6.9.6",
     "tiptap-vuetify": "^2.24.0",
+    "uuid": "^8.3.2",
     "vue-chartjs": "^3.5.1",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",

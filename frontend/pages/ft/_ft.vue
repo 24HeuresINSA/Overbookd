@@ -117,7 +117,7 @@
       "
     >
       <v-btn v-if="hasRole('humain')" color="red" @click="readyForAssignment"
-        >prét a validation
+        >prêt à validation
       </v-btn>
       <v-btn
         v-if="validators.length === 1"
@@ -189,7 +189,7 @@
         @click="isDialogOpen.submit = true"
         >Soumettre a validation
       </v-btn>
-      <v-btn color="warning" @click="saveFT">sauvgarder</v-btn>
+      <v-btn color="warning" @click="saveFT">sauvegarder</v-btn>
       <SnackNotificationContainer></SnackNotificationContainer>
     </div>
   </v-container>
@@ -231,10 +231,10 @@ interface Data {
 }
 
 const feedbacks = {
-  validate: "FT valide ",
-  refused: "FT refuse  🥺",
-  save: "FT sauvgarde",
-  submitted: "FT soumise a validation 🥵 may the odds be with you",
+  validate: "FT validée ",
+  refused: "FT refusée  🥺",
+  save: "FT sauvegardée",
+  submitted: "FT soumise à validation 🥵 may the odds be with you",
 };
 
 const color = {
@@ -280,7 +280,7 @@ export default Vue.extend({
 
       equipmentsHeader: [
         { text: "item", value: "name" },
-        { text: "selectionné", value: "selectedAmount" },
+        { text: "sélectionné", value: "selectedAmount" },
       ],
       color,
       SMALL_TYPES: SmallTypes,
@@ -355,7 +355,7 @@ export default Vue.extend({
 
     async saveFT() {
       await this.$accessor.FT.saveFT();
-      this.snack.display("FT sauvgardé 🥳");
+      this.snack.display("FT sauvegardée 🥳");
     },
 
     updateForm(section: keyof FT, form: any) {

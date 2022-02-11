@@ -31,9 +31,6 @@
     </v-navigation-drawer>
     <v-app-bar fixed app :style="isJauneActive ? jauneStyle : ''">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn v-if="!isMobile" icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
-      </v-btn>
       <v-toolbar-title
         v-if="!isMobile"
         class="ml-2"
