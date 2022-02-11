@@ -1,0 +1,14 @@
+      - name: find all issues without priority labels and not updated for 3 days
+        conditions:
+          state: opened
+          date:
+              attribute: updated_at
+              condition: older_than
+              interval_type: days
+              interval: 3
+          ruby: resource[:labels].grep(/^Priority:/).empty?
+        actions:
+          comment: |
+            Hi {{assignee}},  
+            No Priority labels set...  
+            Please set one ~"Priority::1" ~"Priority::2" ~"Priority::3" ~"Priority::4"
