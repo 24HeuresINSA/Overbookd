@@ -105,6 +105,7 @@ export const mutations = mutationTree(state, {
     const mTimeframe = mFT.timeframes[timeframeIndex];
     if (mTimeframe.required) {
       mTimeframe.required.splice(requirementIndex, 1);
+      mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
     }
   },
   DELETE_EQUIPMENT: function ({ mFT }, index) {
