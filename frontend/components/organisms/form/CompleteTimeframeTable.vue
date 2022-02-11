@@ -25,18 +25,15 @@
         </v-btn>
       </template>
       <template #[`item.required`]="{ index, item }">
-        <v-list dense>
-          <v-list-item v-for="(req, i) in item.required" :key="i">
-            <v-list-item-content>
-              <v-list-item-title>{{ formatText(req) }}</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-btn icon @click="removeRequirement(i, index)">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
+        <v-chip-group column>
+          <v-chip
+            v-for="(req, i) in item.required"
+            :key="req._id"
+            close
+            @click:close="removeRequirement(i, index)"
+            >{{ formatText(req) }}</v-chip
+          >
+        </v-chip-group>
       </template>
       <!-- Partition displays "-" if it is not defined or false and the slot time else -->
       <template #[`item.toSlice`]="{ item }">{{
@@ -135,7 +132,7 @@
 
 <script>
 import OverField from "../../overField";
-
+import { v4 as uuidv4 } from "uuid";
 const DEFAULT_SLICE_TIME = 2;
 
 export default {
@@ -184,6 +181,7 @@ export default {
     },
 
     required: {
+      _id: undefined,
       type: undefined,
       team: undefined,
       amount: 1,
@@ -312,6 +310,7 @@ export default {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
       }
+      this.required._id = uuidv4();
       this.required.amount = +this.required.amount;
       this.required.type = "user";
       let mTimeframe = { ...this.selectedTimeframe };
@@ -344,6 +343,7 @@ export default {
 
     resetRequirement() {
       this.required = {
+        _id: undefined,
         type: undefined,
         team: undefined,
         amount: 1,
@@ -359,6 +359,7 @@ export default {
       if (this.selectedTimeframe.required === undefined) {
         this.selectedTimeframe.required = [];
       }
+      this.required._id = uuidv4();
       this.required.amount = +this.required.amount;
       this.required.type = "team";
       this.store.addRequirement({
