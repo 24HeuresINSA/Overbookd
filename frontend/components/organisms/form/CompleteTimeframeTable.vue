@@ -112,7 +112,9 @@
             :field="{ key: 'user', label: 'orga', type: 'user' }"
             @value="updateUser"
           ></OverField>
-          <v-btn text @click="addUser">demander l'orga</v-btn>
+          <v-btn text :disabled="!required.user._id" @click="addUser"
+            >demander l'orga</v-btn
+          >
           <OverField
             :field="{ key: 'team', label: 'team', type: 'teams' }"
             @value="updateTeam"
@@ -122,14 +124,9 @@
             type="number"
             label="Nombre"
           ></v-text-field>
-          <v-btn text @click="addTeam">demander une team</v-btn>
-          <v-select
-            v-model="required.equipment"
-            :items="['12m2', '20m2']"
-            label="Camions"
+          <v-btn text :disabled="!required.team" @click="addTeam"
+            >demander une team</v-btn
           >
-          </v-select>
-          <v-btn text @click="addEquipement">demander un camion</v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -258,13 +255,10 @@ export default {
     },
 
     updateUser(user) {
-      this.required.type = "user";
       this.required.user = { ...user }.value;
     },
 
     updateTeam(team) {
-      delete this.required.user;
-      this.required.type = "team";
       this.required.team = { ...team }.value;
     },
 
@@ -320,31 +314,16 @@ export default {
       }
       this.required.amount = +this.required.amount;
       this.required.type = "user";
-      delete this.required.team;
       let mTimeframe = { ...this.selectedTimeframe };
       this.$accessor.FT.addRequirement({
         timeframeIndex: this.selectedTimeframeIndex,
         requirement: this.required,
       });
-      this.resetRequirement();
+      // this.resetRequirement();
     },
 
     deleteTimeframe(timeframeIndex) {
       this.$accessor.FT.deleteTimeframe(timeframeIndex);
-    },
-
-    addEquipement() {
-      if (this.selectedTimeframe.required === undefined) {
-        this.selectedTimeframe.required = [];
-      }
-      this.required.amount = 1;
-      this.required.type = "equipment";
-      delete this.required.team;
-      this.selectedTimeframe.required.push({ ...this.required });
-      this.store.updateTimeframe({
-        index: this.selectedTimeframeIndex,
-        timeframe: this.selectedTimeframe,
-      });
     },
 
     formatText(requirements) {
@@ -382,12 +361,11 @@ export default {
       }
       this.required.amount = +this.required.amount;
       this.required.type = "team";
-      delete this.required.user;
       this.store.addRequirement({
         timeframeIndex: this.selectedTimeframeIndex,
         requirement: this.required,
       });
-      this.resetRequirement();
+      // this.resetRequirement();
     },
   },
 };
