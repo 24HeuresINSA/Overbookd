@@ -70,7 +70,7 @@
                 "label": "Gmail (important que ca soit une addresse gmail)",
                 "isRequired": true,
                 "option": "email",
-                "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
+                "regex": "^.+@(gmail.com|24heures.org)$"
             },
             {
                 "key": "phone",
@@ -112,18 +112,76 @@
                 "key": "year",
                 "label": "Année",
                 "type": "select",
-                "options": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    "cerise"
-                ]
+                "options": [1, 2, 3, 4, 5, "cerise"]
             },
             {
                 "key": "comment",
                 "label": "commentaire"
+            }
+        ],
+        "__v": 0
+    },
+    {
+        "_id": "614c8b0fae8c2c0010a35bc6",
+        "key": "fa_form",
+        "value": [
+            { "key": "name", "label": "nom de la FA" },
+            {
+                "key": "type",
+                "type": "select",
+                "options": [
+                    "Com",
+                    "Divertissement",
+                    "flemme de faire les aurte..."
+                ]
+            },
+            {
+                "key": "team",
+                "label": "equipe",
+                "type": "select",
+                "options": ["Sponso", "ComSI"]
+            },
+            {
+                "key": "inCharge",
+                "label": "Responsable",
+                "type": "user",
+                "filter": "hard"
+            },
+            {
+                "key": "isPublishable",
+                "label": "Publier sur le site / plaquette",
+                "type": "switch"
+            },
+            { "key": "isMajorAnim", "label": "Anime phare", "type": "switch" },
+            {
+                "key": "isForKids",
+                "label": "Anim pour les gosses",
+                "type": "switch"
+            },
+            {
+                "key": "description",
+                "label": "Description",
+                "type": "textarea"
+            },
+            {
+                "key": "isParticularSecurityMeasures",
+                "label": "Dispositif de sécurité particulier",
+                "type": "switch"
+            },
+            {
+                "key": "isRequiringPass",
+                "label": "Bessoin de pass",
+                "type": "switch"
+            },
+            {
+                "key": "isRequiringElectricity",
+                "label": "Besoin d'elec ",
+                "type": "switch"
+            },
+            {
+                "key": "isRequiringSignalisation",
+                "label": "Besoin de signalisation",
+                "type": "textarea"
             }
         ],
         "__v": 0
@@ -137,14 +195,7 @@
     {
         "_id": "614c8b0fae8c2c0010a35bcc",
         "key": "fa_validators",
-        "value": [
-            "humain",
-            "secu",
-            "log",
-            "barrieres",
-            "elec",
-            "signa"
-        ],
+        "value": ["humain", "secu", "log", "barrieres", "elec", "signa"],
         "__v": 0
     },
     {
@@ -162,10 +213,7 @@
     {
         "_id": "614c8b10ae8c2c0010a35bd5",
         "key": "ft_validators",
-        "value": [
-            "humain",
-            "log"
-        ],
+        "value": ["humain", "log"],
         "__v": 0
     },
     {
@@ -219,9 +267,7 @@
                 "key": "location",
                 "label": "Localisation",
                 "type": "autocomplete",
-                "options": [
-                    "local"
-                ]
+                "options": ["local"]
             },
             {
                 "key": "preciseLocation",
@@ -413,6 +459,11 @@
                 "name": "admin",
                 "color": "#000000",
                 "icon": "mdi-eye-circle"
+            },
+            {
+                "name": "matos",
+                "color": "#d4411e",
+                "icon": "mdi-truck"
             }
         ],
         "__v": 0
@@ -426,11 +477,7 @@
     {
         "_id": "614c8b11ae8c2c0010a35be4",
         "key": "add_availabilities_roles",
-        "value": [
-            "admin",
-            "bureau",
-            "humain"
-        ],
+        "value": ["admin", "bureau", "humain"],
         "__v": 0
     },
     {
@@ -695,11 +742,7 @@
                 "key": "type",
                 "label": "Type",
                 "type": "select",
-                "options": [
-                    "bannière",
-                    "panneau",
-                    "pancarte"
-                ]
+                "options": ["bannière", "panneau", "pancarte"]
             },
             {
                 "key": "text",
