@@ -2,13 +2,13 @@
     {
         "_id": "614c8b0eae8c2c0010a35bb7",
         "key": "error",
-        "value": "zebi",
+        "value": "Zebi",
         "__v": 0
     },
     {
         "_id": "614c8b0eae8c2c0010a35bba",
         "key": "error_basic",
-        "value": "something went wrong blame the bad devs 💩",
+        "value": "Something went wrong blame the bad devs 💩",
         "__v": 0
     },
     {
@@ -29,23 +29,23 @@
         "value": [
             {
                 "key": "firstname",
-                "label": "prénom",
+                "label": "Prénom",
                 "option": "given-name",
                 "isRequired": true
             },
             {
                 "key": "lastname",
-                "label": "nom",
+                "label": "Nom",
                 "option": "family-name",
                 "isRequired": true
             },
             {
                 "key": "nickname",
-                "label": "surnom"
+                "label": "Surnom"
             },
             {
                 "key": "password",
-                "label": "mot de passe",
+                "label": "Mot de passe",
                 "option": "password",
                 "isRequired": true,
                 "regex": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$",
@@ -53,7 +53,7 @@
             },
             {
                 "key": "password2",
-                "label": "confirme ton mot de passe",
+                "label": "Confirme ton mot de passe",
                 "option": "password",
                 "isRequired": true,
                 "regex": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$",
@@ -61,7 +61,7 @@
             },
             {
                 "key": "birthdate",
-                "label": "date de naissance",
+                "label": "Date de naissance",
                 "type": "date",
                 "isRequired": true
             },
@@ -70,28 +70,28 @@
                 "label": "Gmail (important que ca soit une addresse gmail)",
                 "isRequired": true,
                 "option": "email",
-                "regex": ".+@gmail.com"
+                "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
             },
             {
                 "key": "phone",
                 "label": "ton 06 ?",
                 "isRequired": true,
                 "option": "tel",
-                "regex": "0[6-7]{1}[0-9]{8}"
+                "regex": "0[6-7]{1}[0-9]{8}$"
             },
             {
                 "key": "hasDriverLicense",
-                "label": "est ce que tu as un permis de conduire ",
+                "label": "Est ce que tu as un permis de conduire ",
                 "type": "switch"
             },
             {
                 "key": "driverLicenseDate",
-                "label": "date de permis",
+                "label": "Date de permis",
                 "type": "date"
             },
             {
                 "key": "departement",
-                "label": "département",
+                "label": "Département",
                 "type": "select",
                 "options": [
                     "TC",
@@ -105,12 +105,12 @@
                     "SGM",
                     "FIMI",
                     "GE",
-                    "pas à l'INSA"
+                    "Pas à l'INSA"
                 ]
             },
             {
                 "key": "year",
-                "label": "année",
+                "label": "Année",
                 "type": "select",
                 "options": [
                     1,
@@ -124,81 +124,6 @@
             {
                 "key": "comment",
                 "label": "commentaire"
-            }
-        ],
-        "__v": 0
-    },
-    {
-        "_id": "614c8b0fae8c2c0010a35bc6",
-        "key": "fa_form",
-        "value": [
-            {
-                "key": "name",
-                "label": "nom de la FA"
-            },
-            {
-                "key": "type",
-                "type": "select",
-                "options": [
-                    "Com",
-                    "Divertissement",
-                    "flemme de faire les aurte..."
-                ]
-            },
-            {
-                "key": "team",
-                "label": "equipe",
-                "type": "select",
-                "options": [
-                    "Sponso",
-                    "ComSI"
-                ]
-            },
-            {
-                "key": "inCharge",
-                "label": "Responsable",
-                "type": "user",
-                "filter": "hard"
-            },
-            {
-                "key": "isPublishable",
-                "label": "Publier sur le site / plaquette",
-                "type": "switch"
-            },
-            {
-                "key": "isMajorAnim",
-                "label": "Anime phare",
-                "type": "switch"
-            },
-            {
-                "key": "isForKids",
-                "label": "Anim pour les gosses",
-                "type": "switch"
-            },
-            {
-                "key": "description",
-                "label": "Description",
-                "type": "textarea"
-            },
-            {
-                "key": "isParticularSecurityMeasures",
-                "label": "Dispositif de sécurité particulier",
-                "type": "switch"
-            },
-            {
-                "key": "isRequiringPass",
-                "label": "Bessoin de pass",
-                "type": "switch"
-            },
-            {
-                "key": "isRequiringElectricity",
-                "label": "Besoin d'elec ",
-                "type": "switch"
-            },
-            {
-                "key": "isRequiringSignalisation",
-                "label": "Besoin de signalisation",
-                "type": "textarea"
             }
         ],
         "__v": 0
@@ -282,7 +207,7 @@
             },
             {
                 "key": "amount",
-                "label": "quantite (en stock)",
+                "label": "Quantite (en stock)",
                 "option": "number"
             },
             {
@@ -304,7 +229,7 @@
             },
             {
                 "key": "comment",
-                "label": "commentaire"
+                "label": "Commentaire"
             }
         ],
         "__v": 0
@@ -315,7 +240,7 @@
         "value": [
             {
                 "key": "name",
-                "label": "nom de la FT"
+                "label": "Nom de la FT"
             },
             {
                 "key": "inCharge",
@@ -324,12 +249,18 @@
             },
             {
                 "key": "location",
-                "label": "lieu du rdv 📍"
+                "label": "Lieu du rdv 📍"
             },
             {
                 "key": "isDriverLicenseRequired",
                 "label": "Permis necessaire",
-                "type": "switch"
+                "type": "select",
+                "options": [
+                    "non",
+                    "permis - un ans",
+                    "permis + un ans",
+                    "conducteur de Fen"
+                ]
             },
             {
                 "key": "isSecurity",
@@ -579,7 +510,7 @@
         "value": [
             {
                 "key": "description",
-                "label": "description",
+                "label": "Description",
                 "type": "rich-text"
             },
             {
@@ -625,6 +556,11 @@
                 "label": "Responsable",
                 "type": "user",
                 "filter": "hard"
+            },
+            {
+                "key": "areTimeframesStatic",
+                "label": "Créneaux statiques",
+                "type": "switch"
             }
         ],
         "__v": 0
@@ -635,7 +571,7 @@
         "value": [
             {
                 "key": "description",
-                "label": "description",
+                "label": "Description",
                 "type": "rich-text"
             }
         ],
@@ -653,7 +589,7 @@
         "value": [
             {
                 "key": "fullname",
-                "label": "Nom complet du presta"
+                "label": "Nom complet de l'intervenant"
             },
             {
                 "key": "company",
@@ -670,6 +606,16 @@
             {
                 "key": "comment",
                 "label": "Commentaire"
+            },
+            {
+                "key": "needsHosting",
+                "label": "Besoin d'hébergement",
+                "type": "switch"
+            },
+            {
+                "key": "requiredSandwichFriday",
+                "label": "Nombre de sandwichs vendredi",
+                "option": "number"
             },
             {
                 "key": "requiredSandwichSaterday",
@@ -698,11 +644,11 @@
             },
             {
                 "key": "licensePlate",
-                "label": "plaque d'immatriculation"
+                "label": "Plaque d'immatriculation"
             },
             {
                 "key": "email",
-                "label": "email"
+                "label": "Email"
             },
             {
                 "key": "comment",
@@ -747,7 +693,7 @@
         "value": [
             {
                 "key": "type",
-                "label": "type",
+                "label": "Type",
                 "type": "select",
                 "options": [
                     "bannière",
@@ -757,7 +703,7 @@
             },
             {
                 "key": "text",
-                "label": "text signalétique"
+                "label": "Text signalétique"
             },
             {
                 "key": "comment",
@@ -772,7 +718,7 @@
         "value": [
             {
                 "key": "connectionType",
-                "label": "type de prise",
+                "label": "Type de prise",
                 "type": "select",
                 "options": [
                     "PC16",
@@ -786,12 +732,12 @@
             },
             {
                 "key": "power",
-                "label": "puissance",
+                "label": "Puissance",
                 "option": "number"
             },
             {
                 "key": "comment",
-                "label": "commentaire"
+                "label": "Commentaire"
             }
         ],
         "__v": 0

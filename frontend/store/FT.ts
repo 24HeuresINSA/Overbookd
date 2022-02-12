@@ -2,12 +2,13 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { FTStatus } from "~/utils/FT";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
   mFT: {
-    status: "draft",
+    status: FTStatus.draft,
     count: 0,
     equipments: [] as any,
     timeframes: [] as any,
@@ -17,9 +18,15 @@ export const state = () => ({
   } as FT,
 });
 
+export type FTState = ReturnType<typeof state>;
+
 export const getters = getterTree(state, {
   timeframes: (state) => state.mFT.timeframes,
 });
+
+/* ############################################ */
+/*                   mutations                  */
+/* ############################################ */
 
 export const mutations = mutationTree(state, {
   SET_FT: function (state, mFT) {
@@ -43,7 +50,7 @@ export const mutations = mutationTree(state, {
     state.mFT.timeframes = timeframes;
   },
   UPDATE_TIMEFRAME: function ({ mFT }, { index, timeframe }) {
-    mFT.timeframes[index] = timeframe;
+    mFT.timeframes.splice(index, 1, timeframe);
   },
   UPDATE_STATUS: function ({ mFT }, status) {
     mFT.status = status;
@@ -57,6 +64,7 @@ export const mutations = mutationTree(state, {
       mFT.validated.push(validator);
 
       // remove from refuse
+      // todo check for reactivity
       if (mFT.refused) {
         mFT.refused = mFT.refused.filter((v) => v !== validator);
       }
@@ -71,6 +79,7 @@ export const mutations = mutationTree(state, {
       mFT.refused.push(validator);
 
       // remove from refuse
+      // todo check for reactivity
       if (mFT.validated) {
         mFT.validated = mFT.validated.filter((v) => v !== validator);
       }
@@ -96,14 +105,14 @@ export const mutations = mutationTree(state, {
     if (mTimeframe.required === undefined) {
       mTimeframe.required = [];
     }
-    mTimeframe.required.push(requirement);
+    mTimeframe.required.push({ ...requirement });
+    mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
   },
   DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
     const mTimeframe = mFT.timeframes[timeframeIndex];
-    console.log(mTimeframe);
     if (mTimeframe.required) {
-      console.log(requirementIndex);
       mTimeframe.required.splice(requirementIndex, 1);
+      mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
     }
   },
   DELETE_EQUIPMENT: function ({ mFT }, index) {
@@ -116,6 +125,10 @@ export const mutations = mutationTree(state, {
     }
   },
 });
+
+/* ############################################ */
+/*                    actions                   */
+/* ############################################ */
 
 export const actions = actionTree(
   { state },
@@ -131,13 +144,15 @@ export const actions = actionTree(
     saveFT: async function ({ state }) {
       return safeCall(this, repo.updateFT(this, state.mFT), "saved", "server");
     },
+    unlinkFA: async function ({ commit }) {
+      commit("SET_PARENT_FA", 0);
+    },
     assignFT: function ({ commit }, payload) {
       commit("ASSIGN_FT", payload);
     },
     addTimeframe: function ({ commit, state }, timeframe) {
       // @ts-ignore
       const tf = state.mFT.timeframes.find((t) => t.name === timeframe.name);
-      console.log(tf);
       if (tf === undefined) {
         commit("ADD_TIMEFRAME_FT", timeframe);
       }
@@ -161,9 +176,13 @@ export const actions = actionTree(
       commit("UPDATE_TIMEFRAME", payload);
     },
     submitForReview: async function ({ dispatch, commit }) {
-      commit("UPDATE_STATUS", "submitted");
+      commit("UPDATE_STATUS", FTStatus.submitted);
       await dispatch("saveFT");
     },
+    /**
+     * Validate the FT from one validator
+     * @param validator validator name
+     */
     validate: async function ({ dispatch, commit, state }, validator) {
       const FT_VALIDATORS =
         // @ts-ignore
@@ -176,10 +195,14 @@ export const actions = actionTree(
       });
       if (state.mFT.validated.length === FT_VALIDATORS) {
         // validated by all validators
-        commit("UPDATE_STATUS", "validated");
+        commit("UPDATE_STATUS", FTStatus.validated);
       }
       await dispatch("saveFT");
     },
+    /**
+     * Refuse the FT from one of the validators
+     * @param payload validator name and comment from him
+     */
     refuse: async function (
       { dispatch, commit, state },
       { validator, comment }
@@ -191,20 +214,28 @@ export const actions = actionTree(
         time: new Date(),
         validator,
       });
-      commit("UPDATE_STATUS", "refused");
+      commit("UPDATE_STATUS", FTStatus.refused);
       await dispatch("saveFT");
     },
+    /**
+     * Add a comment to the FT
+     * @param comment Infos to push in history
+     */
     addComment: async function ({ dispatch, commit, state }, comment) {
       commit("ADD_COMMENT", comment);
     },
+    /**
+     * Mark FT as ready for assignment
+     * @param by validator name
+     */
     readyForAssignment: async function ({ dispatch, commit }, by: string) {
       await dispatch("addComment", {
         topic: "ready",
-        text: "FT prêt a validation",
+        text: "FT prête à affectation",
         time: new Date(),
         validator: by,
       });
-      commit("UPDATE_STATUS", "ready");
+      commit("UPDATE_STATUS", FTStatus.ready);
       await dispatch("saveFT");
     },
     setParentFA: async function ({ dispatch, commit }, faCount) {

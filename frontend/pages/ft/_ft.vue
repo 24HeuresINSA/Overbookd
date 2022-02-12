@@ -88,7 +88,7 @@
           <v-textarea v-model="refusedComment"></v-textarea>
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="refuse">refuse</v-btn>
+          <v-btn text @click="refuse(v)">refuser</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -106,6 +106,8 @@
 
     <div style="height: 50px; width: 100%"></div>
 
+    <!-- Buttons bar at the bottom of the page -->
+
     <div
       style="
         display: flex;
@@ -117,7 +119,7 @@
       "
     >
       <v-btn v-if="hasRole('humain')" color="red" @click="readyForAssignment"
-        >prét a validation
+        >prêt pour affectation
       </v-btn>
       <v-btn
         v-if="validators.length === 1"
@@ -184,12 +186,12 @@
       </v-menu>
 
       <v-btn
-        v-if="FT.status !== 'submitted'"
+        v-if="FT.status == 'draft' || FT.status == 'refused'"
         color="secondary"
         @click="isDialogOpen.submit = true"
         >Soumettre a validation
       </v-btn>
-      <v-btn color="warning" @click="saveFT">sauvgarder</v-btn>
+      <v-btn color="warning" @click="saveFT">sauvegarder</v-btn>
       <SnackNotificationContainer></SnackNotificationContainer>
     </div>
   </v-container>
@@ -231,10 +233,10 @@ interface Data {
 }
 
 const feedbacks = {
-  validate: "FT valide ",
-  refused: "FT refuse  🥺",
-  save: "FT sauvgarde",
-  submitted: "FT soumise a validation 🥵 may the odds be with you",
+  validate: "FT validée ",
+  refused: "FT refusée  🥺",
+  save: "FT sauvegardée",
+  submitted: "FT soumise à validation 🥵 may the odds be with you",
 };
 
 const color = {
@@ -280,7 +282,7 @@ export default Vue.extend({
 
       equipmentsHeader: [
         { text: "item", value: "name" },
-        { text: "selectionné", value: "selectedAmount" },
+        { text: "sélectionné", value: "selectedAmount" },
       ],
       color,
       SMALL_TYPES: SmallTypes,
@@ -298,16 +300,17 @@ export default Vue.extend({
     },
     validators: function (): string[] {
       let mValidators: string[] = [];
-      const validators: string[] =
+      const allValidators: string[] =
         this.$accessor.config.getConfig("ft_validators");
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
-        return validators;
+        console.log(allValidators);
+        return allValidators;
       }
-      if (validators) {
-        validators.forEach((validator) => {
-          if (this.me.team && this.me.team.includes(validator)) {
-            mValidators.push(validator);
+      if (allValidators) {
+        allValidators.forEach((val) => {
+          if (this.me.team && this.me.team.includes(val)) {
+            mValidators.push(val);
           }
         });
         return mValidators;
@@ -355,7 +358,8 @@ export default Vue.extend({
 
     async saveFT() {
       await this.$accessor.FT.saveFT();
-      this.snack.display("FT sauvgardé 🥳");
+      // todo check if the request did succeed
+      this.snack.display("FT sauvegardée 🥳");
     },
 
     updateForm(section: keyof FT, form: any) {
