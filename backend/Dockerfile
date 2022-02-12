@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:16.14-alpine3.15
 
 # Create app directory
 WORKDIR /overbookd/backend
