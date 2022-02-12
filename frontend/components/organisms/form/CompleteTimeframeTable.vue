@@ -120,8 +120,13 @@
             v-model="required.amount"
             type="number"
             label="Nombre"
+            value="1"
+            :rules="orgaAmountRules"
           ></v-text-field>
-          <v-btn text :disabled="!required.team" @click="addTeam"
+          <v-btn
+            text
+            :disabled="!required.team || !required.amount"
+            @click="addTeam"
             >demander la team</v-btn
           >
         </v-card-text>
@@ -191,6 +196,11 @@ export default {
       },
       equipment: undefined,
     },
+
+    orgaAmountRules: [
+      (v) => v == "0" || !!parseInt(v) || "Entre un nombre",
+      (v) => v > 0 || "Entre un nombre positif",
+    ],
   }),
   computed: {
     timeframes() {

@@ -54,7 +54,7 @@
               >
             </template>
             <template #[`item.FA`]="row">
-              <v-chip small>
+              <v-chip v-if="row.item.FA && row.item.FA > 0" small>
                 {{ row.item.FA }}
               </v-chip>
             </template>

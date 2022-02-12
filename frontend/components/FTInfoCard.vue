@@ -19,6 +19,7 @@
               <tr>
                 <th>Name</th>
                 <th>Value</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -29,10 +30,14 @@
                   <v-btn :href="`/fa/${FT.FA}`" icon small>
                     <v-icon small>mdi-link</v-icon>
                   </v-btn>
+                </td>
+                <td>
                   <v-btn small text @click="openFAChooser"
                     >Choisir une FA parente</v-btn
                   >
-                  <v-btn small text @click="unlinkFA">Détacher la FA</v-btn>
+                  <v-btn small text :disabled="FT.FA == 0" @click="unlinkFA"
+                    >Détacher la FA</v-btn
+                  >
                 </td>
               </tr>
               <tr>
