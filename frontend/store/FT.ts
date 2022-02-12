@@ -2,12 +2,13 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { FTStatus } from "~/utils/FT";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
   mFT: {
-    status: "draft",
+    status: FTStatus.draft,
     count: 0,
     equipments: [] as any,
     timeframes: [] as any,
@@ -22,6 +23,10 @@ export type FTState = ReturnType<typeof state>;
 export const getters = getterTree(state, {
   timeframes: (state) => state.mFT.timeframes,
 });
+
+/* ############################################ */
+/*                   mutations                  */
+/* ############################################ */
 
 export const mutations = mutationTree(state, {
   SET_FT: function (state, mFT) {
@@ -59,6 +64,7 @@ export const mutations = mutationTree(state, {
       mFT.validated.push(validator);
 
       // remove from refuse
+      // todo check for reactivity
       if (mFT.refused) {
         mFT.refused = mFT.refused.filter((v) => v !== validator);
       }
@@ -73,6 +79,7 @@ export const mutations = mutationTree(state, {
       mFT.refused.push(validator);
 
       // remove from refuse
+      // todo check for reactivity
       if (mFT.validated) {
         mFT.validated = mFT.validated.filter((v) => v !== validator);
       }
@@ -118,6 +125,10 @@ export const mutations = mutationTree(state, {
     }
   },
 });
+
+/* ############################################ */
+/*                    actions                   */
+/* ############################################ */
 
 export const actions = actionTree(
   { state },
@@ -165,9 +176,13 @@ export const actions = actionTree(
       commit("UPDATE_TIMEFRAME", payload);
     },
     submitForReview: async function ({ dispatch, commit }) {
-      commit("UPDATE_STATUS", "submitted");
+      commit("UPDATE_STATUS", FTStatus.submitted);
       await dispatch("saveFT");
     },
+    /**
+     * Validate the FT from one validator
+     * @param validator validator name
+     */
     validate: async function ({ dispatch, commit, state }, validator) {
       const FT_VALIDATORS =
         // @ts-ignore
@@ -180,10 +195,14 @@ export const actions = actionTree(
       });
       if (state.mFT.validated.length === FT_VALIDATORS) {
         // validated by all validators
-        commit("UPDATE_STATUS", "validated");
+        commit("UPDATE_STATUS", FTStatus.validated);
       }
       await dispatch("saveFT");
     },
+    /**
+     * Refuse the FT from one of the validators
+     * @param payload validator name and comment from him
+     */
     refuse: async function (
       { dispatch, commit, state },
       { validator, comment }
@@ -195,20 +214,28 @@ export const actions = actionTree(
         time: new Date(),
         validator,
       });
-      commit("UPDATE_STATUS", "refused");
+      commit("UPDATE_STATUS", FTStatus.refused);
       await dispatch("saveFT");
     },
+    /**
+     * Add a comment to the FT
+     * @param comment Infos to push in history
+     */
     addComment: async function ({ dispatch, commit, state }, comment) {
       commit("ADD_COMMENT", comment);
     },
+    /**
+     * Mark FT as ready for assignment
+     * @param by validator name
+     */
     readyForAssignment: async function ({ dispatch, commit }, by: string) {
       await dispatch("addComment", {
         topic: "ready",
-        text: "FT prêt a validation",
+        text: "FT prête à affectation",
         time: new Date(),
         validator: by,
       });
-      commit("UPDATE_STATUS", "ready");
+      commit("UPDATE_STATUS", FTStatus.ready);
       await dispatch("saveFT");
     },
     setParentFA: async function ({ dispatch, commit }, faCount) {
