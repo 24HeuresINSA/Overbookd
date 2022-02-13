@@ -7,6 +7,7 @@
         :items="comments"
         hide-default-footer
         :items-per-page="-1"
+        sort-by="time"
       >
         <template #[`item.time`]="{ item }">
           {{ new Date(item.time).toLocaleString() }}
