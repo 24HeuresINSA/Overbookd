@@ -1,0 +1,8 @@
+      - name: find all closed issues and forbidden Done label
+        conditions:
+          state: closed
+          forbidden_labels:
+            - Status::Done
+        actions:
+          labels:
+            - Status::Done

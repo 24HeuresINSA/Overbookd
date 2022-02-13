@@ -1,0 +1,8 @@
+      - name: find all merged MR and forbidden Done label
+        conditions:
+          state: merged
+          forbidden_labels:
+            - Status::Done
+        actions:
+          labels:
+            - Status::Done

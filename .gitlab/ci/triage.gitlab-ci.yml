@@ -1,0 +1,10 @@
+triage:
+  stage: triage
+  image: ruby:2.7
+  before_script:
+    - sh ./.gitlab/triage_policies/generate.sh
+  script:
+    - gem install gitlab-triage
+    - gitlab-triage --token $GITLAB_API_TOKEN --source projects --source-id $CI_PROJECT_PATH
+  only:
+    - schedules
