@@ -102,11 +102,17 @@ export default Vue.extend({
     equipment: function (): Array<any> {
       return this.$accessor.equipment.items;
     },
+    /**
+     * @returns validEquipments are filtered by isValid !== false (ie: does not exist or true)
+     */
+    validEquipments: function (): Array<any> {
+      return this.equipment.filter((e) => e.isValid !== false);
+    },
     validInput: function (): boolean {
       return !(this.item == undefined);
     },
     typeFilteredEquipment: function (): Array<any> {
-      return this.equipment.filter((e) => this.types.includes(e.type));
+      return this.validEquipments.filter((e) => this.types.includes(e.type));
     },
   },
   async mounted() {
