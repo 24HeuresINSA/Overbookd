@@ -18,7 +18,7 @@
               {{ item.start.toLocaleString() }}
             </template>
             <template #item.end="{ item }">
-              {{ item.start.toLocaleString() }}
+              {{ item.end.toLocaleString() }}
             </template>
           </v-data-table>
         </v-list-item-content>
@@ -67,15 +67,12 @@ export default Vue.extend({
 
     this.users.forEach(({ _id, username }) => {
       if (username) {
-        console.log(username);
-        const FTs = this.getTimeframes(_id);
         this.plannings[_id] = {
           username,
           timeframes: this.getTimeframes(_id),
         };
       }
     });
-    console.log(this.plannings);
     await Vue.nextTick();
     this.p = Object.keys(this.plannings).map((key) => {
       return this.plannings[key];
