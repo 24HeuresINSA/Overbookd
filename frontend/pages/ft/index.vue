@@ -169,6 +169,7 @@ import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import userRepo from "~/repositories/userRepo";
 
 interface Data {
   color: { [key: string]: string };
@@ -179,6 +180,7 @@ interface Data {
   isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
   FTName: string;
+  users: any[] | undefined;
 
   filters: {
     search: string;
@@ -238,6 +240,7 @@ export default Vue.extend({
       isRestoreDialogOpen: false,
       isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
+      users: undefined,
     };
   },
 
@@ -252,8 +255,23 @@ export default Vue.extend({
       } else {
         res = res.filter((e) => e.isValid !== false); // DO NOT CHANGE THIS LINE
       }
+      // todo improve this try catch there is just an uggly quick fix because things could be undefined
       if (teams) {
-        res = res.filter((e) => e.team === teams);
+        res = res.filter((ft) => {
+          if (!this.users) {
+            return true;
+          }
+          try {
+            let inCharge = this.users.find(
+              (user) => user._id == ft.general.inCharge._id
+            );
+            if (inCharge.team.includes(teams)) {
+              return true;
+            }
+          } catch (error) {
+            return false;
+          }
+        });
       }
       const fuse = new Fuse(res, {
         keys: ["general.name", "details.description"],
@@ -270,9 +288,14 @@ export default Vue.extend({
 
   async mounted() {
     if (this.hasRole("hard")) {
-      const res = await safeCall(this.$store, ftRepo.getAllFTs(this));
+      let res = await safeCall(this.$store, ftRepo.getAllFTs(this));
       if (res) {
         this.FTs = res.data.data; // includes deleted FTs
+      }
+      res = await safeCall(this.$store, userRepo.getAllUsers(this));
+      if (res) {
+        this.users = res.data;
+        console.log(this.users);
       }
     } else {
       await this.$router.push({
