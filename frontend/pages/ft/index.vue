@@ -79,15 +79,26 @@
                 <v-icon small>mdi-link</v-icon>
               </v-btn>
               <v-btn
+                v-if="row.item.isValid !== false"
                 icon
                 small
                 @click="
                   mFT = row.item;
-                  isDialogOpen = true;
+                  isDeleteDialogOpen = true;
                 "
               >
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
+              <v-btn
+                v-else
+                icon
+                small
+                @click="
+                  mFT = row.item;
+                  isRestoreDialogOpen = true;
+                "
+                ><v-icon small>mdi-delete-restore</v-icon></v-btn
+              >
             </template>
           </v-data-table>
         </v-col>
@@ -119,7 +130,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="isDialogOpen" width="600">
+    <v-dialog v-model="isDeleteDialogOpen" width="600">
       <v-card>
         <v-img src="sure.jpeg"></v-img>
         <v-card-title>t'es sûr bébé ?</v-card-title>
@@ -128,7 +139,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="isRestoreDialogOpen" width="600">
+      <v-card>
+        <v-img src="sure.jpeg"></v-img>
+        <v-card-title>t'es sûr bébé ?</v-card-title>
+        <v-card-actions>
+          <v-btn right text @click="restoreFT()">oui 😏</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
+
+  <!-- snack bar -->
 </template>
 
 <script lang="ts">
@@ -139,13 +163,15 @@ import Vue from "vue";
 import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
+import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 
 interface Data {
   color: { [key: string]: string };
   headers: Header[];
   FTs: any[];
   mFT: any;
-  isDialogOpen: boolean;
+  isDeleteDialogOpen: boolean;
+  isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
   FTName: string;
 
@@ -168,7 +194,7 @@ const color = {
 
 export default Vue.extend({
   name: "Index",
-  components: { ValidatorsIcons },
+  components: { ValidatorsIcons, SnackNotificationContainer },
   data(): Data {
     return {
       color,
@@ -204,7 +230,8 @@ export default Vue.extend({
         isDeleted: false,
       },
       mFT: undefined,
-      isDialogOpen: false,
+      isRestoreDialogOpen: false,
+      isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
     };
   },
@@ -284,14 +311,41 @@ export default Vue.extend({
     },
 
     async deleteFT() {
-      await safeCall(
+      const res = await safeCall(
         this.$store,
         ftRepo.deleteFT(this, this.mFT),
         "sent",
         "server"
       );
-      this.FTs = this.FTs.filter((ft) => ft.count !== this.mFT.count);
-      this.isDialogOpen = false;
+      if (res) {
+        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+        this.FTs[index].isValid = false;
+        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+      }
+      this.isDeleteDialogOpen = false;
+    },
+    /**
+     * Restore mFT
+     */
+    async restoreFT() {
+      // switch FT to valid
+      this.mFT.isValid = true;
+      // call update on backend
+      const res = await safeCall(
+        this.$store,
+        ftRepo.updateFT(this, this.mFT),
+        "sent",
+        "server"
+      );
+      // if success
+      if (res) {
+        // update current version
+        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+        this.FTs[index].isValid = true;
+        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+      }
+      // close dialog
+      this.isRestoreDialogOpen = false;
     },
   },
 });
