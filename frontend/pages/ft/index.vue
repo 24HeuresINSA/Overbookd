@@ -41,7 +41,12 @@
           </v-card>
         </v-col>
         <v-col md="9">
-          <v-data-table :headers="headers" :items="filteredFTs" sort-by="count">
+          <v-data-table
+            :headers="headers"
+            :items="filteredFTs"
+            sort-by="count"
+            :items-per-page="-1"
+          >
             <template #item.general.name="{ item }">
               <a
                 :href="`/ft/${item.count}`"
