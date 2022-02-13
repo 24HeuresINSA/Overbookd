@@ -170,6 +170,8 @@ import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 import userRepo from "~/repositories/userRepo";
+import faRepo from "~/repositories/faRepo";
+import { SnackNotif } from "~/utils/models/store";
 
 interface Data {
   color: { [key: string]: string };
@@ -181,6 +183,9 @@ interface Data {
   isNewFTDialogOpen: boolean;
   FTName: string;
   users: any[] | undefined;
+  FAs: any[] | undefined;
+
+  notifs: { [key: string]: SnackNotif };
 
   filters: {
     search: string;
@@ -241,6 +246,9 @@ export default Vue.extend({
       isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
       users: undefined,
+      FAs: undefined,
+
+      notifs: { serverError: { type: "error", message: "erreur serveur" } },
     };
   },
 
@@ -255,22 +263,24 @@ export default Vue.extend({
       } else {
         res = res.filter((e) => e.isValid !== false); // DO NOT CHANGE THIS LINE
       }
-      // todo improve this try catch there is just an uggly quick fix because things could be undefined
       if (teams) {
         res = res.filter((ft) => {
-          if (!this.users) {
+          // if db did not answer
+          if (!this.users || !this.FAs) {
+            this.$accessor.notif.pushNotification(this.notifs.serverError);
             return true;
           }
-          try {
-            let inCharge = this.users.find(
-              (user) => user._id == ft.general.inCharge._id
-            );
-            if (inCharge.team.includes(teams)) {
-              return true;
-            }
-          } catch (error) {
+          // if FA is not set do not select
+          if (!ft.FA) {
             return false;
           }
+          const fa = this.FAs.find((fa) => fa.count == ft.count);
+          // if FA fetching failed or if fa does not have a team
+          if (!fa || !fa.general.team) {
+            return false;
+          }
+          // returns if fa team is the good one or not
+          return teams == fa.general.team;
         });
       }
       const fuse = new Fuse(res, {
@@ -295,7 +305,11 @@ export default Vue.extend({
       res = await safeCall(this.$store, userRepo.getAllUsers(this));
       if (res) {
         this.users = res.data;
-        console.log(this.users);
+      }
+      res = await safeCall(this.$store, faRepo.getAllFAs(this));
+      if (res) {
+        this.FAs = res.data;
+        console.log(this.FAs);
       }
     } else {
       await this.$router.push({
