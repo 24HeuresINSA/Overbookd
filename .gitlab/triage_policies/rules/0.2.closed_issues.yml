@@ -3,6 +3,8 @@
           state: closed
           forbidden_labels:
             - Status::Done
+        limits:
+          most_recent: 50
         actions:
           labels:
             - Status::Done
