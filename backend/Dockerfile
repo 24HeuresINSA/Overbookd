@@ -1,4 +1,4 @@
-FROM node:16.14-alpine-3.15 AS builder
+FROM node:16.14-alpine3.15 AS builder
 
 WORKDIR /overbookd/backend
 
