@@ -118,6 +118,9 @@
         z-index: 30;
       "
     >
+      <v-btn v-if="FT.count > 1" small fab :href="`/ft/${FT.count - 1}`">
+        <v-icon small>mdi-arrow-left</v-icon>
+      </v-btn>
       <v-btn v-if="hasRole('humain')" color="red" @click="readyForAssignment"
         >prêt pour affectation
       </v-btn>
@@ -192,8 +195,11 @@
         >Soumettre a validation
       </v-btn>
       <v-btn color="warning" @click="saveFT">sauvegarder</v-btn>
-      <SnackNotificationContainer></SnackNotificationContainer>
+      <v-btn small fab :href="`/ft/${FT.count + 1}`">
+        <v-icon small>mdi-arrow-right</v-icon>
+      </v-btn>
     </div>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </v-container>
 </template>
 

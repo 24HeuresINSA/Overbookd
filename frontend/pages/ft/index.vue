@@ -41,7 +41,12 @@
           </v-card>
         </v-col>
         <v-col md="9">
-          <v-data-table :headers="headers" :items="filteredFTs" sort-by="count">
+          <v-data-table
+            :headers="headers"
+            :items="filteredFTs"
+            sort-by="count"
+            :items-per-page="-1"
+          >
             <template #item.general.name="{ item }">
               <a
                 :href="`/ft/${item.count}`"
@@ -79,15 +84,26 @@
                 <v-icon small>mdi-link</v-icon>
               </v-btn>
               <v-btn
+                v-if="row.item.isValid !== false"
                 icon
                 small
                 @click="
                   mFT = row.item;
-                  isDialogOpen = true;
+                  isDeleteDialogOpen = true;
                 "
               >
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
+              <v-btn
+                v-else
+                icon
+                small
+                @click="
+                  mFT = row.item;
+                  isRestoreDialogOpen = true;
+                "
+                ><v-icon small>mdi-delete-restore</v-icon></v-btn
+              >
             </template>
           </v-data-table>
         </v-col>
@@ -119,7 +135,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="isDialogOpen" width="600">
+    <v-dialog v-model="isDeleteDialogOpen" width="600">
       <v-card>
         <v-img src="sure.jpeg"></v-img>
         <v-card-title>t'es sûr bébé ?</v-card-title>
@@ -128,7 +144,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="isRestoreDialogOpen" width="600">
+      <v-card>
+        <v-img src="sure.jpeg"></v-img>
+        <v-card-title>t'es sûr bébé ?</v-card-title>
+        <v-card-actions>
+          <v-btn right text @click="restoreFT()">oui 😏</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
+
+  <!-- snack bar -->
 </template>
 
 <script lang="ts">
@@ -139,15 +168,24 @@ import Vue from "vue";
 import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
+import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import userRepo from "~/repositories/userRepo";
+import faRepo from "~/repositories/faRepo";
+import { SnackNotif } from "~/utils/models/store";
 
 interface Data {
   color: { [key: string]: string };
   headers: Header[];
   FTs: any[];
   mFT: any;
-  isDialogOpen: boolean;
+  isDeleteDialogOpen: boolean;
+  isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
   FTName: string;
+  users: any[] | undefined;
+  FAs: any[] | undefined;
+
+  notifs: { [key: string]: SnackNotif };
 
   filters: {
     search: string;
@@ -168,7 +206,7 @@ const color = {
 
 export default Vue.extend({
   name: "Index",
-  components: { ValidatorsIcons },
+  components: { ValidatorsIcons, SnackNotificationContainer },
   data(): Data {
     return {
       color,
@@ -204,8 +242,13 @@ export default Vue.extend({
         isDeleted: false,
       },
       mFT: undefined,
-      isDialogOpen: false,
+      isRestoreDialogOpen: false,
+      isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
+      users: undefined,
+      FAs: undefined,
+
+      notifs: { serverError: { type: "error", message: "erreur serveur" } },
     };
   },
 
@@ -221,7 +264,24 @@ export default Vue.extend({
         res = res.filter((e) => e.isValid !== false); // DO NOT CHANGE THIS LINE
       }
       if (teams) {
-        res = res.filter((e) => e.team === teams);
+        res = res.filter((ft) => {
+          // if db did not answer
+          if (!this.users || !this.FAs) {
+            this.$accessor.notif.pushNotification(this.notifs.serverError);
+            return true;
+          }
+          // if FA is not set do not select
+          if (!ft.FA) {
+            return false;
+          }
+          const fa = this.FAs.find((fa) => fa.count == ft.count);
+          // if FA fetching failed or if fa does not have a team
+          if (!fa || !fa.general.team) {
+            return false;
+          }
+          // returns if fa team is the good one or not
+          return teams == fa.general.team;
+        });
       }
       const fuse = new Fuse(res, {
         keys: ["general.name", "details.description"],
@@ -238,9 +298,18 @@ export default Vue.extend({
 
   async mounted() {
     if (this.hasRole("hard")) {
-      const res = await safeCall(this.$store, ftRepo.getAllFTs(this));
+      let res = await safeCall(this.$store, ftRepo.getAllFTs(this));
       if (res) {
         this.FTs = res.data.data; // includes deleted FTs
+      }
+      res = await safeCall(this.$store, userRepo.getAllUsers(this));
+      if (res) {
+        this.users = res.data;
+      }
+      res = await safeCall(this.$store, faRepo.getAllFAs(this));
+      if (res) {
+        this.FAs = res.data;
+        console.log(this.FAs);
       }
     } else {
       await this.$router.push({
@@ -284,14 +353,41 @@ export default Vue.extend({
     },
 
     async deleteFT() {
-      await safeCall(
+      const res = await safeCall(
         this.$store,
         ftRepo.deleteFT(this, this.mFT),
         "sent",
         "server"
       );
-      this.FTs = this.FTs.filter((ft) => ft.count !== this.mFT.count);
-      this.isDialogOpen = false;
+      if (res) {
+        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+        this.FTs[index].isValid = false;
+        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+      }
+      this.isDeleteDialogOpen = false;
+    },
+    /**
+     * Restore mFT
+     */
+    async restoreFT() {
+      // switch FT to valid
+      this.mFT.isValid = true;
+      // call update on backend
+      const res = await safeCall(
+        this.$store,
+        ftRepo.updateFT(this, this.mFT),
+        "sent",
+        "server"
+      );
+      // if success
+      if (res) {
+        // update current version
+        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+        this.FTs[index].isValid = true;
+        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+      }
+      // close dialog
+      this.isRestoreDialogOpen = false;
     },
   },
 });
