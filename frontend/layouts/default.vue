@@ -176,12 +176,12 @@ export default {
           roles: "log",
           to: "/logistics",
         },
-        {
-          icon: "mdi-truck",
-          title: "Gros équipements 🚚",
-          roles: "log",
-          to: "/big_equipments",
-        },
+        // {
+        //   icon: "mdi-truck",
+        //   title: "Gros équipements 🚚",
+        //   roles: "log",
+        //   to: "/big_equipments",
+        // },
         {
           icon: "mdi-human-greeting",
           title: "Affectation 💃",
