@@ -1,10 +1,11 @@
 <template>
     <div>
         <v-calendar
-        :now="dateToString(today)"
-        :value="dateToString(today)"
+        :now="dateToString(now)"
+        :value="dateToString(now)"
         :events="computedEvents"
         :weekdays="weekdays"
+        :event-color="getEventColor"
         color="primary"
         type="week"
         >
@@ -13,18 +14,29 @@
 </template>
 
 <script lang="ts">
+/**
+ * Props for this component:
+ * calendarEvents - List of event as describe by interface DetailsCalendarProps
+ * weekdays - List of weekdays as describe by interface Weekdays
+ *      A minimum of 4 weekdays is required or the display becomes broken
+ *      0 is sunday, 6 is saturday (american style)
+ * now - Date of the day you want to primarly display (as new Date())
+ */
+
 import Vue, {PropType} from "vue";
 
 declare interface DetailsCalendarProps {
   name: string;
   start: Date;
   end: Date;
+  color?: string;
 }
 
 declare interface DetailsCalendarData {
   name: string;
   start: string;
   end: string;
+  color?: string;
 }
 
 export default Vue.extend({
@@ -35,11 +47,17 @@ export default Vue.extend({
             type: Array as PropType<DetailsCalendarProps[]>,
             required: true
         },
+        weekdays: {
+            type: Array as PropType<number[]>,
+            default: () => [1, 2, 3, 4, 5, 6, 0]
+        },
+        now: {
+            type: Date,
+            default: () => new Date()
+        }
     },
     data(): any {
         return {
-            today: new Date(2020, 0, 3),
-            weekdays: [1,2,3,4,5,6,0],
         };
     },
     computed: {
@@ -48,7 +66,8 @@ export default Vue.extend({
                 return {
                     name: e.name,
                     start: this.dateToString(e.start),
-                    end: this.dateToString(e.end)
+                    end: this.dateToString(e.end),
+                    color: e.color,
                 };
             });
         }
@@ -61,8 +80,11 @@ export default Vue.extend({
                 ("0" + m.getUTCHours()).slice(-2) + ":" +
                 ("0" + m.getUTCMinutes()).slice(-2) + ":" +
                 ("0" + m.getUTCSeconds()).slice(-2);
+        },
+        getEventColor(e: DetailsCalendarData): string {
+            return e.color || "primary";
         }
-    }
+    },
 });
 </script>
 

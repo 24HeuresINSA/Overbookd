@@ -2,6 +2,8 @@
   <div>
       <details-calendar
       :calendarEvents="events"
+      :weekdays="[1,2,3,4,5]"
+      :now="new Date(2020, 0, 3)"
       >
       </details-calendar>
   </div>
@@ -21,7 +23,8 @@ export default Vue.extend({
         {
           name: "test1",
           start: new Date(2020, 0, 1),
-          end: new Date(2020, 0, 2)
+          end: new Date(2020, 0, 2),
+          color: "red",
         },
         {
           name: "test2",
