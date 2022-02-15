@@ -9,17 +9,20 @@
       </template>
       <template #[`item.action`]="{ item }">
         <v-btn v-if="item.pass" color="#62BA6B" @click="generatePass(item)">
-          Générer le pass
+          Voir le/les pass
         </v-btn>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="isGeneratingPass" max-width="600">
+    <v-dialog v-model="isGeneratingPass" max-width="1200">
       <v-card>
         <v-card-title>{{
           "Nombre de pass nécessaire : " + currentPassInformation.length
         }}</v-card-title>
-        <v-card-text>{{ currentPassInformation }}</v-card-text>
+        <v-data-table
+          :headers="detailedHeadr"
+          :items="currentPassInformation"
+        ></v-data-table>
       </v-card>
     </v-dialog>
   </div>
@@ -54,6 +57,36 @@ export default Vue.extend({
           sortable: false,
           align: "left",
           width: "200",
+        },
+      ],
+      detailedHeadr: [
+        {
+          text: "Nom prestataire",
+          value: "fullname",
+          sortable: true,
+          align: "left",
+          width: "100",
+        },
+        {
+          text: "Téléphone",
+          value: "phone",
+          sortable: false,
+          align: "left",
+          width: "100",
+        },
+        {
+          text: "Plaque Immatriculation",
+          value: "licensePlate",
+          sortable: false,
+          align: "left",
+          width: "100",
+        },
+        {
+          text: "E-mail",
+          value: "email",
+          sortable: false,
+          align: "left",
+          width: "100",
         },
       ],
       isGeneratingPass: false,
