@@ -9,24 +9,15 @@
       <v-switch
         v-model="wichForm"
         :label="`Inscription : ${switchLabel()}`"
+        @change="modifyForm"
       ></v-switch>
     </div>
-    <div v-if="wichForm">
-      <OverForm
-        v-if="signupForm"
-        :fields="signupForm"
-        @form-change="onFormChange"
-      ></OverForm>
-      <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
-    </div>
-    <div v-else>
-      <OverForm
-        v-if="softForm"
-        :fields="softForm"
-        @form-change="onFormChange"
-      ></OverForm>
-      <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
-    </div>
+    <OverForm
+      v-if="signupForm"
+      :fields="signupForm"
+      @form-change="onFormChange"
+    ></OverForm>
+    <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
   </div>
 </template>
 
@@ -43,7 +34,6 @@ export default {
   data() {
     return {
       signupForm: undefined,
-      softForm: undefined,
       compiledForm: undefined,
       wichForm: false,
     };
@@ -58,8 +48,9 @@ export default {
         path: "/login",
       });
     } else {
-      this.signupForm = this.getConfig("signup_form");
-      this.softForm = this.getConfig("signup_form_soft");
+      this.signupForm = this.wichForm
+        ? this.getConfig("signup_form")
+        : this.getConfig("signup_form_soft");
     }
   },
 
@@ -90,6 +81,13 @@ export default {
 
     switchLabel() {
       return this.wichForm ? "Hard" : "Soft";
+    },
+
+    modifyForm() {
+      this.compiledForm = undefined;
+      this.signupForm = this.wichForm
+        ? this.getConfig("signup_form")
+        : this.getConfig("signup_form_soft");
     },
   },
 };

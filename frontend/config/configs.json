@@ -799,7 +799,7 @@
   "value": [
     {
       "key": "firstname",
-      "label": "Prénom",
+      "label": "Prenom Soft",
       "option": "given-name",
       "isRequired": true
     },
