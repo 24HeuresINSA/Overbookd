@@ -798,19 +798,19 @@
   "key": "signup_form_soft",
   "value": [
     {
-      "key": "firstnameSoft",
+      "key": "firstname",
       "label": "Prénom",
       "option": "given-name",
       "isRequired": true
     },
     {
-      "key": "lastnameSoft",
+      "key": "lastname",
       "label": "Nom",
       "option": "family-name",
       "isRequired": true
     },
     {
-      "key": "passwordSoft",
+      "key": "password",
       "label": "Mot de passe",
       "option": "password",
       "isRequired": true,
@@ -818,7 +818,7 @@
       "errorMessage": "au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères "
     },
     {
-      "key": "password2Soft",
+      "key": "password2",
       "label": "Confirme ton mot de passe",
       "option": "password",
       "isRequired": true,
@@ -826,20 +826,41 @@
       "errorMessage": "au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères "
     },
     {
-      "key": "birthdateSoft",
+      "key": "birthdate",
       "label": "Date de naissance",
       "type": "date",
       "isRequired": true
     },
     {
-      "key": "hasDriverLicenseSoft",
+      "key": "hasDriverLicense",
       "label": "Est-ce que tu as un permis de conduire ?",
       "type": "switch"
     },
     {
-      "key": "driverLicenseDateSoft",
+      "key": "email",
+      "label": "Gmail (important que ca soit une addresse gmail)",
+      "isRequired": true,
+      "option": "email",
+      "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
+    },
+    {
+      "key": "driverLicenseDate",
       "label": "Date de permis",
       "type": "date"
+    },
+    {
+      "key": "team",
+      "label": "Team particulière",
+      "type": "select",
+      "options": [
+        "Aucune",
+        "BDE",
+        "Kfet"
+      ]
+    },
+    {
+      "key": "comment",
+      "label": "Commentaire (impossibilité de porter des charges lourdes etc...)"
     }
   ],
   "__v": 0

@@ -7,7 +7,7 @@
         Hard non justifié sera ignorée
       </h3>
       <v-switch
-        v-model="wichForm"
+        v-model="whichForm"
         :label="`Inscription : ${switchLabel()}`"
         @change="modifyForm"
       ></v-switch>
@@ -35,7 +35,7 @@ export default {
     return {
       signupForm: undefined,
       compiledForm: undefined,
-      wichForm: false,
+      whichForm: false,
     };
   },
 
@@ -48,7 +48,7 @@ export default {
         path: "/login",
       });
     } else {
-      this.signupForm = this.wichForm
+      this.signupForm = this.whichForm
         ? this.getConfig("signup_form")
         : this.getConfig("signup_form_soft");
     }
@@ -80,12 +80,12 @@ export default {
     },
 
     switchLabel() {
-      return this.wichForm ? "Hard" : "Soft";
+      return this.whichForm ? "Hard" : "Soft";
     },
 
     modifyForm() {
       this.compiledForm = undefined;
-      this.signupForm = this.wichForm
+      this.signupForm = this.whichForm
         ? this.getConfig("signup_form")
         : this.getConfig("signup_form_soft");
     },
