@@ -84,7 +84,7 @@ export default Vue.extend({
         topic: "commentaire",
         text: this.newComment,
         time: new Date(),
-        validator: this.$accessor.user.me.lastname,
+        validator: `${this.$accessor.user.me.firstname} ${this.$accessor.user.me.lastname}`,
       };
       this.store.addComment(comment);
       // clean the input
