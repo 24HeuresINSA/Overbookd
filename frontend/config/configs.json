@@ -798,16 +798,48 @@
   "key": "signup_form_soft",
   "value": [
     {
-      "key": "firstname",
-      "label": "Prenom Soft",
+      "key": "firstnameSoft",
+      "label": "Prénom",
       "option": "given-name",
       "isRequired": true
     },
     {
-      "key": "lastname",
+      "key": "lastnameSoft",
       "label": "Nom",
       "option": "family-name",
       "isRequired": true
+    },
+    {
+      "key": "passwordSoft",
+      "label": "Mot de passe",
+      "option": "password",
+      "isRequired": true,
+      "regex": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$",
+      "errorMessage": "au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères "
+    },
+    {
+      "key": "password2Soft",
+      "label": "Confirme ton mot de passe",
+      "option": "password",
+      "isRequired": true,
+      "regex": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$",
+      "errorMessage": "au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères "
+    },
+    {
+      "key": "birthdateSoft",
+      "label": "Date de naissance",
+      "type": "date",
+      "isRequired": true
+    },
+    {
+      "key": "hasDriverLicenseSoft",
+      "label": "Est-ce que tu as un permis de conduire ?",
+      "type": "switch"
+    },
+    {
+      "key": "driverLicenseDateSoft",
+      "label": "Date de permis",
+      "type": "date"
     }
   ],
   "__v": 0
