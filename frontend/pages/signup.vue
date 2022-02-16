@@ -69,6 +69,8 @@ export default {
       } else if (!this.compiledForm.isValid) {
         alert("les champs avec * sont OBLIGATOIRS XD ");
       } else {
+        this.compiledForm.team = this.whichForm ? "hard" : "soft";
+
         this.$axios.post("/signup", this.compiledForm);
         this.$router.push({
           path: "/login",
