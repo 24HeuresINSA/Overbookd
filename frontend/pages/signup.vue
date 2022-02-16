@@ -1,12 +1,32 @@
 <template>
   <div>
     <h1>Inscription 👋</h1>
-    <OverForm
-      v-if="signupForm"
-      :fields="signupForm"
-      @form-change="onFormChange"
-    ></OverForm>
-    <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
+    <div class="swicthContainer">
+      <h3 class="warning_title">
+        Veuillez impérativement séléctionner le bon formulaire, toute demande en
+        Hard non justifié sera ignorée
+      </h3>
+      <v-switch
+        v-model="wichForm"
+        :label="`Inscription : ${switchLabel()}`"
+      ></v-switch>
+    </div>
+    <div v-if="wichForm">
+      <OverForm
+        v-if="signupForm"
+        :fields="signupForm"
+        @form-change="onFormChange"
+      ></OverForm>
+      <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
+    </div>
+    <div v-else>
+      <OverForm
+        v-if="softForm"
+        :fields="softForm"
+        @form-change="onFormChange"
+      ></OverForm>
+      <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
+    </div>
   </div>
 </template>
 
@@ -23,7 +43,9 @@ export default {
   data() {
     return {
       signupForm: undefined,
+      softForm: undefined,
       compiledForm: undefined,
+      wichForm: false,
     };
   },
 
@@ -37,6 +59,7 @@ export default {
       });
     } else {
       this.signupForm = this.getConfig("signup_form");
+      this.softForm = this.getConfig("signup_form_soft");
     }
   },
 
@@ -64,8 +87,17 @@ export default {
         );
       }
     },
+
+    switchLabel() {
+      return this.wichForm ? "Hard" : "Soft";
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.warning_title {
+  color: red;
+  font-style: italic;
+}
+</style>
