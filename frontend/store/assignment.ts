@@ -54,6 +54,7 @@ export const actions = actionTree({ state }, {
             commit("SET_USERS", ret.data);
         }
         return ret;
+
     },
     /**
      * get all FTs
@@ -89,7 +90,7 @@ export const actions = actionTree({ state }, {
     /** 
      * set current user
      */
-    setCurrentUser({ commit }: any, user: User) {
+    async setCurrentUser({ commit }: any, user: User) {
         commit("SET_SELECTED_USER", user);
     },
 
