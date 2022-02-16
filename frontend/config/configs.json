@@ -833,7 +833,7 @@
     },
     {
       "key": "email",
-      "label": "Gmail (important que ca soit une addresse gmail)",
+      "label": "Gmail (important que ça soit une addresse gmail)",
       "isRequired": true,
       "option": "email",
       "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
@@ -850,7 +850,7 @@
     },
     {
       "key": "team",
-      "label": "Team particulière",
+      "label": "Team affiliée",
       "type": "select",
       "options": [
         "Aucune",
@@ -860,7 +860,7 @@
     },
     {
       "key": "comment",
-      "label": "Commentaire (impossibilité de porter des charges lourdes etc...)"
+      "label": "Commentaire (handicap éventuel, allergies, un mot doux pour les orgas...)"
     }
   ],
   "__v": 0
