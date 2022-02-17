@@ -1,27 +1,29 @@
-#/bin/bash
+#/!usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 case $1 in
 
 "--dev"|"-d") echo "starting dev containers"
-         docker-compose -f docker-compose-dev.yml -p dev --env-file docker/dev.env "${@:}"
+        MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up ${@:2}
          ;;
 
 "--utils"|"-u") echo "starting utils containers"
-           docker-compose -f docker-compose_utils.yml -p utils up -d
+           docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils up -d
            ;;
 
 "--prod"|"-p") echo "starting prod containers"
-          docker-compose -f docker-compose.yml -p prod up -d
+          docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod up -d
           ;;
 
 "--preprod"|"-t") echo "starting preprod containers"
-             docker-compose -f docker-compose-preprod.yml up -d
+             docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml up -d
              ;;
 
 "--all"|"-a") echo "starting utils, prod and prepord containers"
-         docker-compose -f docker-compose_utils.yml -p utils up -d
-         docker-compose -f docker-compose.yml -p prod up -d
-         docker-compose -f docker-compose-preprod.yml up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml up -d
          ;;
 
 *) echo "USAGE"

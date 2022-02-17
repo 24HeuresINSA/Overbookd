@@ -59,6 +59,7 @@ services:
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
   backend:
     container_name: overbookd_backend
+    user: ${MY_UID}:${MY_GID}
     build:
       context: ../backend
       dockerfile: Dockerfile.dev
@@ -96,6 +97,7 @@ services:
 
   frontend:
     container_name: overbookd_frontend
+    user: ${MY_UID}:${MY_GID}
     build:
       context: ../frontend
       dockerfile: Dockerfile.dev
