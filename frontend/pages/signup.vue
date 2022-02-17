@@ -1,17 +1,6 @@
 <template>
   <div>
     <h1>Inscription 👋</h1>
-    <div class="swicthContainer">
-      <h3 class="warning_title">
-        Veuillez impérativement séléctionner le bon formulaire, toute demande en
-        Hard non justifié sera ignorée
-      </h3>
-      <v-switch
-        v-model="whichForm"
-        :label="`Inscription : ${switchLabel()}`"
-        @change="modifyForm"
-      ></v-switch>
-    </div>
     <OverForm
       v-if="signupForm"
       :fields="signupForm"
@@ -35,7 +24,6 @@ export default {
     return {
       signupForm: undefined,
       compiledForm: undefined,
-      whichForm: false,
     };
   },
 
@@ -48,9 +36,7 @@ export default {
         path: "/login",
       });
     } else {
-      this.signupForm = this.whichForm
-        ? this.getConfig("signup_form")
-        : this.getConfig("signup_form_soft");
+      this.signupForm = this.getConfig("signup_form_soft");
     }
   },
 
@@ -69,7 +55,7 @@ export default {
       } else if (!this.compiledForm.isValid) {
         alert("les champs avec * sont OBLIGATOIRS XD ");
       } else {
-        this.compiledForm.team = this.whichForm ? "hard" : "soft";
+        //this.compiledForm.team = "soft"; --> Du coup pas sur que ce soit top étant donné que ça valide la personne automatiquement
 
         this.$axios.post("/signup", this.compiledForm);
         this.$router.push({
@@ -80,24 +66,8 @@ export default {
         );
       }
     },
-
-    switchLabel() {
-      return this.whichForm ? "Hard" : "Soft";
-    },
-
-    modifyForm() {
-      this.compiledForm = undefined;
-      this.signupForm = this.whichForm
-        ? this.getConfig("signup_form")
-        : this.getConfig("signup_form_soft");
-    },
   },
 };
 </script>
 
-<style scoped>
-.warning_title {
-  color: red;
-  font-style: italic;
-}
-</style>
+<style scoped></style>
