@@ -54,7 +54,6 @@ export const actions = actionTree({ state }, {
             commit("SET_USERS", ret.data);
         }
         return ret;
-
     },
     /**
      * get all FTs
