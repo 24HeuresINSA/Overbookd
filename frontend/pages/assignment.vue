@@ -226,7 +226,7 @@ export default {
     },
 
     onSelectedUser(user) {
-      this.$accessor.user.setSelectedUser(user);
+      this.$accessor.assignment.setCurrentUser(user);
       this.selectedUser = user;
     },
   },
