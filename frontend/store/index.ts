@@ -12,6 +12,7 @@ import * as timeslot from "./timeslot";
 import * as location from "./location";
 import * as equipment from "./equipment";
 import * as equipmentProposal from "./equipmentProposal";
+import * as assignment from './assignment';
 
 export const state = () => ({});
 
@@ -40,5 +41,6 @@ export const accessorType = getAccessorType({
     location,
     equipment,
     equipmentProposal,
+    assignment
   },
 });
