@@ -136,6 +136,8 @@ export default {
       });
     }
 
+    await this.$accessor.assignment.initStore();
+
     const res = await safeCall(this.$store, ftRepo.getAllFTs(this));
     if (res) {
       this.FTs = res.data;
