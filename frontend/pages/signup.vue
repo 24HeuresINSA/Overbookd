@@ -67,6 +67,9 @@ export default {
             .toLocaleString()
             .toLowerCase()
             .split(","); //Pour passer tout les labels en minuscule
+          this.compiledForm.team.append("softToValidate");
+        } else {
+          this.compiledForm.team = ["softToValidate"];
         }
         this.$axios.post("/signup", this.compiledForm);
         this.$router.push({

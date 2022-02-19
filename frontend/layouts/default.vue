@@ -280,11 +280,11 @@ export default {
     },
 
     hasRole(role) {
+      if (role === "everyone") {
+        return true;
+      }
       if (this.me.team) {
         //Permet de definir un cas de figure pour qu'une fenetre soit accessible par tout le monde
-        if (role === "everyone") {
-          return true;
-        }
         return this.me.team.includes(role);
       }
       return false;
