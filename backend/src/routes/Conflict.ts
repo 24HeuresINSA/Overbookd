@@ -17,7 +17,8 @@ export async function createConflict(req: Request, res: Response) {
 //get all conflicts
 export async function getConflicts(req: Request, res: Response) {
     try {
-        const conflicts = await ConflictModel.find();
+        const conflicts = await ConflictModel.find().populate('conflictUser', '-password').populate('conflictWith');
+        logger.info(`${conflicts}`);
         res.status(StatusCodes.OK).json(conflicts);
     } catch (error) {
         logger.info(error);
