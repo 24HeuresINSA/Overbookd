@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "0.2.0",
+  "version": "0.21.1",
   "scripts": {
     "build": "./node_modules/.bin/ts-node build.ts",
     "lint:check": "eslint .",
