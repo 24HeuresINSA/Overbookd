@@ -25,7 +25,7 @@
     </v-container>
 
     <SnackNotificationContainer />
-
+    <!-- On commente cette partie pour le moment pour que les personnes sans role puissent accéder a leur dispo
     <v-dialog v-model="hasNotBeenApproved" max-width="600" persistent>
       <v-card>
         <v-card-title>Oupsss</v-card-title>
@@ -38,6 +38,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    -->
   </div>
 </template>
 
