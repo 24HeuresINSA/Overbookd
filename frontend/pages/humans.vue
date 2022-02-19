@@ -215,6 +215,7 @@
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
+import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
 import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
@@ -299,9 +300,9 @@ export default {
         // filter by not validated
         if (this.filters.isValidated !== undefined) {
           if (this.filters.isValidated) {
-            mUsers = mUsers.filter((user) => user.team.length !== 0);
+            mUsers = mUsers.filter((user) => isValidated(user));
           } else {
-            mUsers = mUsers.filter((user) => user.team.length === 0);
+            mUsers = mUsers.filter((user) => !isValidated(user));
           }
         }
 
