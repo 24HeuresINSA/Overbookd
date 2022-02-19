@@ -57,7 +57,7 @@ export default {
   watch: {
     selectedUserIndex() {
       const selectedUser = this.users[this.selectedUserIndex];
-      this.$emit("selected-user", selectedUser);
+      this.$accessor.assignment.setSelectedUser(selectedUser);
     },
   },
 
