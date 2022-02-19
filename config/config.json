@@ -479,6 +479,36 @@
       "name": "matos",
       "color": "#d4411e",
       "icon": "mdi-truck"
+    },
+    {
+      "name": "bde",
+      "color": "#FF4343",
+      "icon": "mdi-bootstrap"
+    },
+    {
+      "name": "kfet",
+      "color": "#438EFF",
+      "icon": "mdi-beer"
+    },
+    {
+      "name": "karna",
+      "color": "#E4B613",
+      "icon": "mdi-party-popper"
+    },
+    {
+      "name": "woods",
+      "color": "#02AC18",
+      "icon": "mdi-forest"
+    },
+    {
+      "name": "confiances",
+      "color": "#CF02A9",
+      "icon": "mdi-account-check"
+    },
+    {
+      "name": "teckos",
+      "color": "#CFA602",
+      "icon": "mdi-hammer-wrench"
     }
   ],
   "__v": 0
@@ -854,10 +884,9 @@
     },
     {
       "key": "team",
-      "label": "Team affiliée",
+      "label": "Team affiliée (laisser vide si non concerné)",
       "type": "select",
       "options": [
-        "Aucune",
         "BDE",
         "Kfet",
         "Karna",
