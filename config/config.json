@@ -501,11 +501,6 @@
       "icon": "mdi-forest"
     },
     {
-      "name": "confiances",
-      "color": "#CF02A9",
-      "icon": "mdi-account-check"
-    },
-    {
       "name": "teckos",
       "color": "#CFA602",
       "icon": "mdi-hammer-wrench"
@@ -891,7 +886,7 @@
         "Kfet",
         "Karna",
         "Woods",
-        "Confiances",
+        "Confiance",
         "Teckos"
       ]
     },
