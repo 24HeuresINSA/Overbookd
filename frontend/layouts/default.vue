@@ -152,7 +152,7 @@ export default {
         {
           icon: "mdi-clock",
           title: "Mes dispos 🤯",
-          roles: "hard",
+          roles: "everyone",
           to: "/availabilities",
         },
         {
@@ -280,7 +280,11 @@ export default {
     },
 
     hasRole(role) {
+      if (role === "everyone") {
+        return true;
+      }
       if (this.me.team) {
+        //Permet de definir un cas de figure pour qu'une fenetre soit accessible par tout le monde
         return this.me.team.includes(role);
       }
       return false;

@@ -20,3 +20,16 @@ export function hasRole(user: User, roles: string[] | string) {
   }
   return roles.some((r) => teams.includes(r));
 }
+
+/**
+ * Check if a user is validated or not
+ * @param user The user to check
+ * @returns true if he is validated
+ */
+export function isValidated(user: User) {
+  const teams = user.team;
+  if (teams === undefined) {
+    return false;
+  }
+  return teams.includes("hard") || teams.includes("soft");
+}
