@@ -380,9 +380,9 @@ export default {
       return isValidated(user);
     },
     async validateUser(user) {
-      if (user.team.includes("softToValidate")) {
+      if (user.team.includes("toValidate")) {
         for (var i = 0; i < user.team.length; i++) {
-          if (user.team[i] === "softToValidate") {
+          if (user.team[i] === "toValidate") {
             user.team.splice(i, 1);
           }
         }
