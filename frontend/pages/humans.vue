@@ -79,14 +79,12 @@
         </v-col>
         <v-col md="10">
           <v-data-table
-            v-model="userSelected"
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"
             :items="filteredUsers"
             class="elevation-1"
             dense
             :items-per-page="20"
-            show-select
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
@@ -241,7 +239,6 @@ export default {
     return {
       users: [],
       filteredUsers: [],
-      userSelecte: [],
       headers: [
         { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
