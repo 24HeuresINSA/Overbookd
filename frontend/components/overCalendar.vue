@@ -181,12 +181,13 @@ export default {
     },
     isUserAvailableInTimeframe(timeframe) {
       // timeframe date object
-      const availabilities = this.events.filter((e) => !e.FTID);
+      const availabilities =
+        this.$accessor.assignment.selectedUserAvailabilities;
       let isUserAvailableInTimeframe = false;
       availabilities.forEach((availability) => {
-        if (availability.schedule) {
-          let start = new Date(availability.schedule.start);
-          let end = new Date(availability.schedule.end);
+        if (availability.timeFrame) {
+          let start = new Date(availability.timeFrame.start);
+          let end = new Date(availability.timeFrame.end);
           if (
             start.getTime() <= timeframe.getTime() + 5000 &&
             end.getTime() >= timeframe.getTime() + 5000
