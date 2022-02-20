@@ -79,12 +79,14 @@
         </v-col>
         <v-col md="10">
           <v-data-table
+            v-model="userSelected"
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"
             :items="filteredUsers"
             class="elevation-1"
             dense
-            :items-per-page="-1"
+            :items-per-page="20"
+            show-select
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
@@ -239,6 +241,7 @@ export default {
     return {
       users: [],
       filteredUsers: [],
+      userSelecte: [],
       headers: [
         { text: "prénom", value: "firstname" },
         { text: "nom", value: "lastname" },
@@ -246,7 +249,6 @@ export default {
         { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
         { text: "charisme", value: "charisma", align: "end" },
         { text: "action", value: "action", sortable: false },
-        { text: "validation", value: "validationAction", sortable: false },
       ],
 
       teams: getConfig(this, "teams"),
@@ -370,6 +372,15 @@ export default {
           text: "CP",
           value: "balance",
           align: "end",
+        });
+      }
+      //add validation if admin
+      if (this.hasRole("admin") || this.hasRole("humain")) {
+        this.headers.splice(this.headers.length - 1, 0, {
+          text: "validation",
+          value: "validationAction",
+          align: "end",
+          sortable: false,
         });
       }
     }
