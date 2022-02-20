@@ -1,10 +1,27 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.21.1</h2>
+    <h3>FT</h3>
+    <ul>
+      <li>Les commentaires de FT affichent le nom complet de la personne</li>
+      <li>Le matériel supprimé ne s'affiche plus dans l'interface FT</li>
+      <li>Les commentaires s'affichent par ordre croissant de date</li>
+      <li>Toutes les FTs s'affichent par default dans la table des FTs</li>
+      <li>Les fleches de naviation d'une FT à l'autre sont arrivées</li>
+      <li>
+        Les FTs peuvent maintenant etre filtrée par team lorsqu'elles sont
+        reliées à une FA
+      </li>
+      <li>
+        Les plannings affichent correctement les dates de début et de fin des
+        créneaux
+      </li>
+      <li>On peut restaurer une FT supprimée</li>
+    </ul>
     <h2>
       Patch note BETA 0.20.1: le Patch Stoph qui prefere la ComSA a sa meuf
     </h2>
-
     <h3>Index</h3>
     <ul>
       <li>☕️ can't unselect teams in filters #192</li>
