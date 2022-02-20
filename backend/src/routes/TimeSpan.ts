@@ -1,19 +1,18 @@
 import { Request, Response } from "express";
-import Timespan , { ITimespan } from "@entities/Timespan";
+import TimeSpan , { ITimeSpan } from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
-import logger from "@shared/Logger";
 import { Types } from "mongoose";
 
-export async function getAllTimespan(req: Request, res: Response) {
-  const timespan = await Timespan.find({});
+export async function getAllTimeSpan(req: Request, res: Response) {
+  const timespan = await TimeSpan.find({});
   return res.json(timespan);
 }
 
-export async function getTimespanById(req: Request, res: Response) {
-  const timespan = await Timespan.findById(req.params.id);
+export async function getTimeSpanById(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
-      message: "Timespan not found"
+      message: "TimeSpan not found"
     });
   }
   return res.json(timespan);
@@ -23,11 +22,11 @@ export async function getTimespanById(req: Request, res: Response) {
  assign user to a timespan
  /timespan/:id/user/:userId
  */
-export async function assignUserToTimespan(req: Request, res: Response) {
-  const timespan = await Timespan.findById(req.params.id);
+export async function assignUserToTimeSpan(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
-      message: "Timespan not found"
+      message: "TimeSpan not found"
     });
   }
   // is userID valid

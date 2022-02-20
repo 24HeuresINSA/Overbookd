@@ -25,7 +25,8 @@ import * as authMiddleware from "@src/middleware/auth";
 // import * as AssignmentHandlers from "./Assignment";
 import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
-import * as TimespanHandlers from "./Timespan";
+// @ts-ignore
+import * as TimeSpanHandlers from "./TimeSpan";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -222,9 +223,9 @@ locationRouter.post("/many", authMiddleware.protect(), LocationHandlers.createMa
 
 // Timespan routes
 const timespanRouter = Router();
-timespanRouter.get("/", authMiddleware.protect(), TimespanHandlers.getAllTimespan);
-timespanRouter.get("/:id", authMiddleware.protect(), TimespanHandlers.getTimespanById);
-timespanRouter.post("/:id/assigned/:userId", authMiddleware.protect(), TimespanHandlers.assignUserToTimespan);
+timespanRouter.get("/", authMiddleware.protect(), TimeSpanHandlers.getAllTimeSpan);
+timespanRouter.get("/:id", authMiddleware.protect(), TimeSpanHandlers.getTimeSpanById);
+timespanRouter.post("/:id/assigned/:userId", authMiddleware.protect(), TimeSpanHandlers.assignUserToTimeSpan);
 
 // Export the base-router
 const baseRouter = Router();
