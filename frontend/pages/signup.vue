@@ -7,10 +7,11 @@
       @form-change="onFormChange"
     ></OverForm>
     <p>
-      Une fois le formulaire remplit et envoyé vous serez directement redirigé
-      vers la page qui va permettre de renseigner vos disponibilités. <br />
+      Une fois le formulaire remplit veuillez vous connecter à Overbookd pour
+      remplir vos dispos ! <br />
       <span class="important"
-        >Pensez à immédiatement les remplir pour être accepté !</span
+        >Pensez à immédiatement les remplir pour être accepté au plus vite
+        !</span
       >
     </p>
     <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
@@ -73,7 +74,7 @@ export default {
         }
         this.$axios.post("/signup", this.compiledForm);
         this.$router.push({
-          path: "/availabilities",
+          path: "/login",
         });
         alert(
           `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre email: "${this.compiledForm.email}"`
