@@ -238,7 +238,7 @@ export default {
       await this.saveUser();
     },
     async deleteAllTeams() {
-      this.mUser.team = [];
+      this.mUser.team = ["toValidate"];
       await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
     },
     isMe() {

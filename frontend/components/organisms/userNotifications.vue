@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { hasRole } from "~/utils/roles";
+import { hasRole, isValidated } from "~/utils/roles";
 import NotificationCard from "~/components/molecules/notificationCard.vue";
 import NotificationBroadcastDialog from "~/components/molecules/notificationBroadcastDialog.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -78,7 +78,7 @@ export default Vue.extend({
       );
       if (res) {
         const users: User[] = res.data;
-        return users.filter((user: User) => user.team.length === 0).length;
+        return users.filter((user: User) => !isValidated(user)).length;
       }
       return 0;
     },
