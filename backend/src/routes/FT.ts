@@ -60,7 +60,7 @@ export async function deleteFT(req: Request, res: Response) {
     await FTModel.findOneAndUpdate({count: mFT.count}, {$set: {isValid: false}});
     if (mFT.FA) {
       logger.info(`deleting FT: ${mFT.count} from FA ${mFT.FA}`)
-      let mFA = await FAModel.findOne({count: mFT.FA});
+      const mFA = await FAModel.findOne({count: mFT.FA});
       if (mFA && mFA.FTs) {
         mFA.FTs = mFA.FTs.filter((FT: IFT) => FT.count !== mFT.count);
         mFA.save()

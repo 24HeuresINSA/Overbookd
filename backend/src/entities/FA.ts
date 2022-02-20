@@ -16,7 +16,9 @@ export interface IForm {
   comments: any[];
   refused: string[];
   validated: string[];
-  general: {};
+  general: {
+    team?: string;
+  };
   count: number;
   isValid: boolean;
   equipments: any[];

@@ -22,9 +22,10 @@ import * as TransactionHandlers from "./transactions";
 import * as AuthHandlers from "./Auth";
 import issueHandler from "./Issue";
 import * as authMiddleware from "@src/middleware/auth";
-import * as AssignmentHandlers from "./Assignment";
+// import * as AssignmentHandlers from "./Assignment";
 import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
+import * as TimespanHandlers from "./Timespan";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -130,32 +131,32 @@ timeslotRouter.delete(
 );
 // Transactions routes
 
-const assignmentRouter = Router();
-assignmentRouter.get(
-  "/",
-  authMiddleware.protect(),
-  AssignmentHandlers.getAssignments
-);
-assignmentRouter.post(
-  "/",
-  authMiddleware.protect(),
-  AssignmentHandlers.createAssignment
-);
-assignmentRouter.put(
-  "/",
-  authMiddleware.protect(),
-  AssignmentHandlers.updateAssignment
-);
-assignmentRouter.get(
-  "/user/:id",
-  authMiddleware.protect(),
-  AssignmentHandlers.getAssignmentsByUserId
-);
-assignmentRouter.get(
-  "/ft/:id",
-  authMiddleware.protect(),
-  AssignmentHandlers.getAssignmentsByFTId
-);
+// const assignmentRouter = Router();
+// assignmentRouter.get(
+//   "/",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.getAssignments
+// );
+// assignmentRouter.post(
+//   "/",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.createAssignment
+// );
+// assignmentRouter.put(
+//   "/",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.updateAssignment
+// );
+// assignmentRouter.get(
+//   "/user/:id",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.getAssignmentsByUserId
+// );
+// assignmentRouter.get(
+//   "/ft/:id",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.getAssignmentsByFTId
+// );
 
 const transactionRouter = Router();
 transactionRouter.get(
@@ -219,6 +220,12 @@ locationRouter.delete("/:id", authMiddleware.protect(), LocationHandlers.deleteL
 locationRouter.get("/:id", authMiddleware.protect(), LocationHandlers.getLocationById);
 locationRouter.post("/many", authMiddleware.protect(), LocationHandlers.createManyLocations);
 
+// Timespan routes
+const timespanRouter = Router();
+timespanRouter.get("/", authMiddleware.protect(), TimespanHandlers.getAllTimespan);
+timespanRouter.get("/:id", authMiddleware.protect(), TimespanHandlers.getTimespanById);
+timespanRouter.post("/:id/assigned/:userId", authMiddleware.protect(), TimespanHandlers.assignUserToTimespan);
+
 // Export the base-router
 const baseRouter = Router();
 baseRouter.use("/user", userRouter);
@@ -229,9 +236,10 @@ baseRouter.use('/equipment/proposal', equipmentProposalRouter);
 baseRouter.use("/equipment", equipmentRouter);
 baseRouter.use("/timeslot", timeslotRouter);
 baseRouter.use("/transaction", transactionRouter);
-baseRouter.use("/assignment", assignmentRouter);
+// baseRouter.use("/assignment", assignmentRouter);
 baseRouter.use("/location", locationRouter);
 baseRouter.use("/conflict", conflictRouter);
+baseRouter.use("/timespan", timespanRouter);
 
 baseRouter.post("/issue", issueHandler);
 

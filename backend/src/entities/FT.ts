@@ -3,6 +3,7 @@ import {IForm} from "@entities/FA";
 
 export interface IFT extends IForm {
   FA: number;
+  team?: string;
 }
 
 interface ISchedule {
