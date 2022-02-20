@@ -148,6 +148,15 @@
                 <OverChips :roles="item.team"></OverChips>
               </v-container>
             </template>
+
+            <template #[`item.validationAction`]="{ item }">
+              <v-btn
+                :disabled="isValidated(item)"
+                color="#48C52D"
+                @click="validateUser(item)"
+                >Valider</v-btn
+              >
+            </template>
           </v-data-table>
         </v-col>
       </v-row>
@@ -235,9 +244,9 @@ export default {
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
-        { text: "études", value: "studies" },
         { text: "charisme", value: "charisma", align: "end" },
-        { text: "action", value: "action" },
+        { text: "action", value: "action", sortable: false },
+        { text: "validation", value: "validationAction", sortable: false },
       ],
 
       teams: getConfig(this, "teams"),
@@ -367,6 +376,20 @@ export default {
   },
 
   methods: {
+    isValidated(user) {
+      return isValidated(user);
+    },
+    async validateUser(user) {
+      if (user.team.includes("softToValidate")) {
+        for (var i = 0; i < user.team.length; i++) {
+          if (user.team[i] === "softToValidate") {
+            user.team.splice(i, 1);
+          }
+        }
+        user.team.push("soft");
+        await this.$axios.put(`/user/${user._id}`, { team: user.team });
+      }
+    },
     openCharismaDialog(user) {
       this.selectedUser = user;
       this.isCharismaDialogOpen = true;
