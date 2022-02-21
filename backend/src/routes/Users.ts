@@ -82,7 +82,20 @@ export const addAvailabilities: RequestHandler = async function (req, res){
       } else {
         user.charisma = totalCharisma;
       }
-      await user.save()
+      if(!user.notifications){
+        user.notifications = [];
+      } 
+      user.notifications.push({
+          type: "broadcast",
+          message: `Tu as reçu ${totalCharisma} points de charisme pour ta disponibilité.`,
+          date: new Date(),
+          team: "hard",
+          link: ""
+      });
+      await UserModel.findByIdAndUpdate(user._id, {
+        notifications: user.notifications,
+      });
+      await user.save();
       res.status(StatusCodes.OK).json(new SafeUser(user));
     }else{
       res.sendStatus(StatusCodes.NOT_FOUND).json({
