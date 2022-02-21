@@ -77,7 +77,7 @@ export default {
           path: "/login",
         });
         alert(
-          `Inscription terminée, vous pouvez maintenant vous connecter à Overbookd !`
+          `Inscription terminée, veuillez maintenant vous connecter pour remplir IMMEDIATEMENT vos disponibilités. C'est absolument essentiel et va vous permettre d'être validé.`
         );
       }
     },
