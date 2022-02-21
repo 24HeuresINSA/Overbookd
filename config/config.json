@@ -862,7 +862,7 @@
     },
     {
       "key": "email",
-      "label": "Gmail (important que ça soit une addresse gmail)",
+      "label": "Adresse mail",
       "isRequired": true,
       "option": "email",
       "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
