@@ -82,7 +82,8 @@
         <v-card-text>
           <h4>
             Si vous avez rencontré un problème lors de l'inscription vous pouvez
-            nous envoyer un mail. Nous nous en occuperons au plus vite.
+            nous envoyer un mail à l'adresse humains@24h.org. Nous nous en
+            occuperons au plus vite.
           </h4>
         </v-card-text>
         <v-card-actions>
