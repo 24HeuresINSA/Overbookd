@@ -44,7 +44,7 @@
         v-text="version"
       />
       <v-spacer />
-      <v-btn text @click="isDialogOpen = true">
+      <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
       </v-btn>
@@ -107,6 +107,7 @@ const AUTHORS = [
   "Paul - Nuts 💥",
   "Thomas - Ginny 💡",
   "Thibaut - Moule 🍑",
+  "Antoine - Gyneco 🩺",
 ];
 
 export default {
