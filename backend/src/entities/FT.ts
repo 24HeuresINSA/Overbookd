@@ -12,16 +12,30 @@ export interface IFT extends IForm {
 
 type ITFRequiredType = "user" | "team";
 
-interface ITFRequiredUser {
+interface ITFRequiredUserField {
   _id: Types.ObjectId;
   username: string;
 }
-export interface ITFRequired {
+
+export interface ITFRequiredUser {
   _id: string;
-  type: ITFRequiredType;
-  amount?: number;
+  type: "user";
   team?: string;
-  user?: ITFRequiredUser;
+  amount?: number;
+  user: ITFRequiredUserField;
+}
+
+export interface ITFRequiredTeam {
+  _id: string;
+  type: "team";
+  team: string;
+  amount: number;
+  user?: ITFRequiredUserField;
+}
+export type ITFRequired = ITFRequiredTeam | ITFRequiredUser;
+
+export function isTFRequiredUser(req: ITFRequired): req is ITFRequiredUser {
+  return req.type === "user";
 }
 
 export interface ITimeFrame {

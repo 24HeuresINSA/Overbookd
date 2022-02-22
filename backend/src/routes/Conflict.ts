@@ -3,11 +3,14 @@ import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
 import ConflictModel, { IConflict } from "@entities/Conflict";
 import FTModel from "@entities/FT";
-import { ITimeFrame } from "../entities/FT";
+import { ITimeFrame, isTFRequiredUser, ITFRequiredUser } from "../entities/FT";
 import { Types } from "mongoose";
 
 //create conflict
-export async function createConflict(req: Request, res: Response) {
+export async function createConflict(
+  req: Request<Record<string, unknown>, Record<string, unknown>, IConflict>,
+  res: Response
+): Promise<void> {
   try {
     const conflict = new ConflictModel(req.body);
     await conflict.save();
@@ -18,7 +21,7 @@ export async function createConflict(req: Request, res: Response) {
 }
 
 //get all conflicts
-export async function getConflicts(req: Request, res: Response) {
+export async function getConflicts(req: Request, res: Response): Promise<void> {
   try {
     const conflicts = await ConflictModel.find()
       .populate("conflictUser", "-password")
@@ -32,7 +35,10 @@ export async function getConflicts(req: Request, res: Response) {
 }
 
 //get conflict by userID
-export async function getConflictsByUserId(req: Request, res: Response) {
+export async function getConflictsByUserId(
+  req: Request,
+  res: Response
+): Promise<void> {
   try {
     const conflicts = await ConflictModel.find({ user: req.params.id });
     res.json(conflicts);
@@ -45,7 +51,7 @@ export async function getConflictsByUserId(req: Request, res: Response) {
  * Very resource intensive function
  * Do not use unless this is completly necessary
  *
- * Detect all TimeFrames related conflicts
+ * Detect all TimeFrames related conflicts and send back an array of them
  */
 export async function detectAllConflits(
   req: Request,
@@ -57,27 +63,33 @@ export async function detectAllConflits(
     .replaceRoot("$timeframes")
     .match({ "required.type": "user" });
 
-  // Store them sorted by user
-  const TFsByOrga: Record<string, Array<ITimeFrame>> = {};
-
-  timeFramesWithOrgas.forEach((tfOrga) => {
-    tfOrga.required
-      .filter((req) => req.type == "user")
-      // assertion is true because type user is ensured
-      .forEach((req) => {
-        const id = req.user!._id.toString();
-        if (!TFsByOrga[id]) {
-          TFsByOrga[id] = [];
-        }
-        TFsByOrga[id].push(tfOrga);
-      });
-  });
-
-  // compute all
-  const conflicts = detectAllTFConflicts(TFsByOrga);
+  // sort by user and compute all
+  const conflicts = detectAllTFConflicts(sortTFByUser(timeFramesWithOrgas));
 
   // send them back
   res.send(conflicts);
+}
+
+/**
+ * Sorting timeframes by user required. A timeFrame can be present multiple times if multiple users are required
+ * @param tfs TimeFrames array
+ * @returns Dict with stringified user _id as key and array of timeFrames for each user as value
+ */
+function sortTFByUser(tfs: ITimeFrame[]): Record<string, Array<ITimeFrame>> {
+  // Store them sorted by user
+  const TFsByOrga: Record<string, Array<ITimeFrame>> = {};
+
+  tfs.forEach((tf) => {
+    tf.required.filter(isTFRequiredUser).forEach((req) => {
+      const id = req.user._id.toString();
+      if (!TFsByOrga[id]) {
+        TFsByOrga[id] = [];
+      }
+      TFsByOrga[id].push(tf);
+    });
+  });
+
+  return TFsByOrga;
 }
 
 /**

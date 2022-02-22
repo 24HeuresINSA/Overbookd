@@ -6,7 +6,6 @@ export interface ITFConflict {
   type: "TF";
   conflictUser: Types.ObjectId;
 }
-
 export interface ITSConflict {
   conflictTS1: Types.ObjectId;
   conflictTS2: Types.ObjectId;
