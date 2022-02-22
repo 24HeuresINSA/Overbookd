@@ -2,6 +2,8 @@ import { model, Schema, Types } from "mongoose";
 import { IForm } from "@entities/FA";
 import { IComment } from "./FA";
 
+/* ################ Interfaces ################ */
+
 type FTStatus = "draft" | "submitted" | "validated" | "refused" | "ready";
 export interface IFT extends IForm {
   FA?: number;
@@ -9,8 +11,6 @@ export interface IFT extends IForm {
   timeframes: ITimeFrame[];
   details: Record<string, unknown>;
 }
-
-type ITFRequiredType = "user" | "team";
 
 interface ITFRequiredUserField {
   _id: Types.ObjectId;
@@ -34,10 +34,6 @@ export interface ITFRequiredTeam {
 }
 export type ITFRequired = ITFRequiredTeam | ITFRequiredUser;
 
-export function isTFRequiredUser(req: ITFRequired): req is ITFRequiredUser {
-  return req.type === "user";
-}
-
 export interface ITimeFrame {
   _id: string;
   name: string;
@@ -48,6 +44,8 @@ export interface ITimeFrame {
   toSlice?: boolean;
   timed: boolean;
 }
+
+/* ################## Schemas ################# */
 
 const RequiredSchema = new Schema<ITFRequired>({
   _id: { type: String, required: true },
@@ -91,6 +89,34 @@ const FTSchema = new Schema<IFT>({
   general: Object,
 });
 
+/* ################## Models ################## */
+
 const FTModel = model<IFT>("FT", FTSchema);
+
+/* ################### Logic ################## */
+
+/**
+ * TS TypeGuard used to ensure requirement is a user requirement
+ * Used because ITFRequired is a union type
+ *
+ * @param req required interface to check
+ * @returns If it is an user requirement or not
+ */
+export function isTFRequiredUser(req: ITFRequired): req is ITFRequiredUser {
+  return req.type === "user";
+}
+
+/**
+ * TS TypeGuard used to ensure requirement is a team requirement
+ * Used because ITFRequired is a union type
+ *
+ * @param req required interface to check
+ * @returns If it is an team requirement or not
+ */
+export function isTFRequiredTeam(req: ITFRequired): req is ITFRequiredTeam {
+  return req.type === "team";
+}
+
+/* ################## Exports ################# */
 
 export default FTModel;
