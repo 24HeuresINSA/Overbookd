@@ -48,6 +48,10 @@
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
       </v-btn>
+      <v-btn v-else text @click="isDialogOpen = true">
+        <v-icon>mdi-help-box</v-icon>
+        {{ isMobile ? "" : "Demander de l'aide" }}
+      </v-btn>
       <v-app-bar-nav-icon>
         <v-btn icon @click="toggleTheme">
           <v-icon>mdi-theme-light-dark</v-icon>
@@ -67,7 +71,7 @@
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
-      <v-card>
+      <v-card v-if="hasRole('hard')">
         <v-img
           src="img/memes/comsi_working.png"
           width="300px"
@@ -83,6 +87,19 @@
         </v-card-text>
         <v-card-actions>
           <v-btn :href="mailUrl"> envoyer le mail </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-else>
+        <v-card-title>Demander de l'aide</v-card-title>
+        <v-card-text>
+          <h4>
+            Si vous avez un problème ou que vous vous posez une question vous
+            pouvez nous envoyer un mail à l'adresse humains@24heures.org <br />
+            Nous nous en occuperons au plus vite.
+          </h4>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
