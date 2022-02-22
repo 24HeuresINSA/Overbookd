@@ -82,12 +82,12 @@
         <v-card-text>
           <h4>
             Si vous avez rencontré un problème lors de l'inscription vous pouvez
-            nous envoyer un mail à l'adresse humains@24h.org. Nous nous en
-            occuperons au plus vite.
+            nous envoyer un mail à l'adresse humains@24heures.org <br />
+            Nous nous en occuperons au plus vite.
           </h4>
         </v-card-text>
         <v-card-actions>
-          <v-btn :href="`mailto:humains@24h.org`"> Envoyer le mail </v-btn>
+          <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
