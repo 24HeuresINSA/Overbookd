@@ -862,10 +862,10 @@
     },
     {
       "key": "email",
-      "label": "Gmail (important que ça soit une addresse gmail)",
+      "label": "Adresse mail",
       "isRequired": true,
       "option": "email",
-      "regex": "^[\\w.]+@(gmail\\.com|24heures\\.org)$"
+      "regex": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
     },
     {
       "key": "hasDriverLicense",
@@ -886,7 +886,6 @@
         "Kfet",
         "Karna",
         "Woods",
-        "Confiance",
         "Teckos"
       ]
     },
