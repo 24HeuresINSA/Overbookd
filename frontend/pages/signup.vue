@@ -61,7 +61,7 @@ export default {
       if (this.compiledForm.password !== this.compiledForm.password2) {
         alert("Les deux mots de passes ne sont pas les mêmes");
       } else if (!this.compiledForm.isValid) {
-        alert("Les champs avec * sont obligatoirs");
+        alert("Les champs avec * sont obligatoires");
       } else {
         if (this.compiledForm.team !== undefined) {
           this.compiledForm.team = this.compiledForm.team
