@@ -59,16 +59,16 @@ export default {
 
     submitForm() {
       if (this.compiledForm.password !== this.compiledForm.password2) {
-        alert("t'as pas mis le meme mpd :P");
+        alert("Les deux mots de passes ne sont pas les mêmes");
       } else if (!this.compiledForm.isValid) {
-        alert("les champs avec * sont OBLIGATOIRS XD ");
+        alert("Les champs avec * sont obligatoires");
       } else {
         if (this.compiledForm.team !== undefined) {
           this.compiledForm.team = this.compiledForm.team
             .toLocaleString()
             .toLowerCase()
             .split(","); //Pour passer tout les labels en minuscule
-          this.compiledForm.team.append("toValidate");
+          this.compiledForm.team.push("toValidate");
         } else {
           this.compiledForm.team = ["toValidate"];
         }
@@ -77,7 +77,7 @@ export default {
           path: "/login",
         });
         alert(
-          `Un mail a été envoyé à ${this.compiledForm.email}. Clickez sur le lien dans le mail pour compléter votre inscription puis vous pouvez vous connecter avec votre email: "${this.compiledForm.email}"`
+          `Inscription terminée, veuillez maintenant vous connecter pour remplir IMMEDIATEMENT vos disponibilités. C'est absolument essentiel et va vous permettre d'être validé.`
         );
       }
     },
