@@ -151,6 +151,7 @@ export default Vue.extend({
             month: "long",
             day: "2-digit",
             weekday: "long",
+            year: "numeric",
           }),
           charisma: timeslot.charisma,
           isSelected: this.$accessor.user.me.availabilities.includes(
