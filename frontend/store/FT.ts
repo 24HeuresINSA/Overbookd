@@ -3,6 +3,7 @@ import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { FTStatus } from "~/utils/FT";
+import FtRepo from "~/repositories/ftRepo";
 
 const repo = RepoFactory.ftRepo;
 
@@ -228,7 +229,10 @@ export const actions = actionTree(
      * Mark FT as ready for assignment
      * @param by validator name
      */
-    readyForAssignment: async function ({ dispatch, commit }, by: string) {
+    readyForAssignment: async function (
+      { dispatch, commit, state },
+      by: string
+    ) {
       await dispatch("addComment", {
         topic: "ready",
         text: "FT prête à affectation",
@@ -237,6 +241,13 @@ export const actions = actionTree(
       });
       commit("UPDATE_STATUS", FTStatus.ready);
       await dispatch("saveFT");
+      const res = await safeCall(
+        this,
+        FtRepo.markAsReady(this, state.mFT.count)
+      );
+      if (res) {
+        console.log(res.data);
+      }
     },
     setParentFA: async function ({ dispatch, commit }, faCount) {
       commit("SET_PARENT_FA", faCount);

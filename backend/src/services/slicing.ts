@@ -41,7 +41,7 @@ export async function timeframeToTimeSpan(timeframe: ITimeFrame): Promise<ITimeS
       }
       return timeSpans;
     } else { // can't be sliced
-      return ;
+      throw new Error(`timeframeToTimeSpan: can't slice timeframe: ${timeframe.start} - ${timeframe.end}`);
     }
   } else { // not to be sliced
     const res = required.map((requirement: ITFRequired) => {

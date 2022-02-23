@@ -97,15 +97,24 @@ export async function makeFTReady(req: Request, res: Response) {
     mFT.status = "ready";
     const r: ITimeSpan[][] = [];
 
-    // slice timeframes
-    for (const timeframe of mFT.timeframes) {
-      const timespan = await timeframeToTimeSpan(timeframe);
-      if (timespan) {
-        r.push(timespan);
+    try {
+      // slice timeframes
+      for (const timeframe of mFT.timeframes) {
+        const timespan = await timeframeToTimeSpan(timeframe);
+        if (timespan) {
+          r.push(timespan);
+        }
       }
+      // await FTModel.findOneAndUpdate({ count: mFT.count, }, mFT);
+      res.status(StatusCodes.OK).json(r);
+    } catch (e) {
+      logger.err(e);
+      res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Error while making FT ready, timeframe can't be sliced",
+      });
     }
-    // await FTModel.findOneAndUpdate({ count: mFT.count, }, mFT);
-    res.status(StatusCodes.OK).json(r);
+
+
   } else {
     res.status(StatusCodes.BAD_REQUEST).json({
       message: "FT not found or not validated",
