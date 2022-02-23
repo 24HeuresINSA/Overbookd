@@ -62,6 +62,10 @@
         </v-row>
         <v-row>
           <a class="forgot-a" href="/forgot">Mot de passe oublié ?</a>
+          <v-spacer />
+          <a class="forgot-a" @click="isDialogOpen = true"
+            >Un problème lors de l'inscription ?</a
+          >
         </v-row>
       </v-container>
       <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn Btn"
@@ -71,6 +75,23 @@
         >connexion
       </v-btn>
     </v-form>
+
+    <v-dialog v-model="isDialogOpen" max-width="800">
+      <v-card>
+        <v-card-title>Demander de l'aide</v-card-title>
+        <v-card-text>
+          <h4>
+            Si vous avez rencontré un problème lors de l'inscription vous pouvez
+            nous envoyer un mail à l'adresse humains@24heures.org <br />
+            Nous nous en occuperons au plus vite.
+          </h4>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ feedbackMessage }}
     </v-snackbar>
@@ -145,6 +166,7 @@ export default {
     timeout: 5000,
     version,
     randomURL: undefined,
+    isDialogOpen: false,
   }),
 
   async beforeCreate() {

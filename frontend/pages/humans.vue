@@ -84,7 +84,7 @@
             :items="filteredUsers"
             class="elevation-1"
             dense
-            :items-per-page="-1"
+            :items-per-page="20"
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
@@ -147,6 +147,15 @@
               <v-container style="max-width: 150px">
                 <OverChips :roles="item.team"></OverChips>
               </v-container>
+            </template>
+
+            <template #[`item.validationAction`]="{ item }">
+              <v-btn
+                :disabled="isValidated(item)"
+                color="#48C52D"
+                @click="validateUser(item)"
+                >Valider</v-btn
+              >
             </template>
           </v-data-table>
         </v-col>
@@ -215,6 +224,7 @@
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
+import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
 import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
@@ -234,9 +244,8 @@ export default {
         { text: "nom", value: "lastname" },
         { text: "surnom", value: "nickname" },
         { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
-        { text: "études", value: "studies" },
         { text: "charisme", value: "charisma", align: "end" },
-        { text: "action", value: "action" },
+        { text: "action", value: "action", sortable: false },
       ],
 
       teams: getConfig(this, "teams"),
@@ -299,9 +308,9 @@ export default {
         // filter by not validated
         if (this.filters.isValidated !== undefined) {
           if (this.filters.isValidated) {
-            mUsers = mUsers.filter((user) => user.team.length !== 0);
+            mUsers = mUsers.filter((user) => isValidated(user));
           } else {
-            mUsers = mUsers.filter((user) => user.team.length === 0);
+            mUsers = mUsers.filter((user) => !isValidated(user));
           }
         }
 
@@ -362,10 +371,33 @@ export default {
           align: "end",
         });
       }
+      //add validation if admin
+      if (this.hasRole("admin") || this.hasRole("humain")) {
+        this.headers.splice(this.headers.length - 1, 0, {
+          text: "validation",
+          value: "validationAction",
+          align: "end",
+          sortable: false,
+        });
+      }
     }
   },
 
   methods: {
+    isValidated(user) {
+      return isValidated(user);
+    },
+    async validateUser(user) {
+      if (user.team.includes("toValidate")) {
+        for (var i = 0; i < user.team.length; i++) {
+          if (user.team[i] === "toValidate") {
+            user.team.splice(i, 1);
+          }
+        }
+        user.team.push("soft");
+        await this.$axios.put(`/user/${user._id}`, { team: user.team });
+      }
+    },
     openCharismaDialog(user) {
       this.selectedUser = user;
       this.isCharismaDialogOpen = true;
