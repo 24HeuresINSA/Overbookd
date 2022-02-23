@@ -3,13 +3,14 @@
  */
 
 import { Schema, model, Types } from 'mongoose';
+import {ITFRequired} from "@entities/FT";
 
 export interface ITimeSpan {
     start: Date;
     end: Date;
-    timeframeID: Types.ObjectId;
-    assigned: Types.ObjectId; // assigned user
-    required: Types.ObjectId | string; // required user or team
+    timeframeID: string;
+    assigned: Types.ObjectId | null; // assigned user
+    required: ITFRequired | null; // required user or team
 }
 
 const TimeSpanSchema = new Schema<ITimeSpan>({

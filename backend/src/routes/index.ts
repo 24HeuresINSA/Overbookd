@@ -21,7 +21,7 @@ import {
   createFT,
   deleteFT,
   getAllFTs,
-  getFTByID,
+  getFTByID, makeFTReady,
   unassign,
   updateFT,
 } from "./FT";
@@ -85,6 +85,7 @@ FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);
 FTrouter.put("/unassign", authMiddleware.protect(), unassign);
+FTrouter.post("/:count/ready", authMiddleware.protect(), makeFTReady);
 FTrouter.delete("/", authMiddleware.protect(), deleteFT);
 
 // Equipment-routes

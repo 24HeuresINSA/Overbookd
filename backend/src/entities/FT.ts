@@ -1,6 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-import { IForm } from "@entities/FA";
-import { IComment } from "./FA";
+import {IComment, IForm} from "@entities/FA";
 
 /* ################ Interfaces ################ */
 
