@@ -131,29 +131,6 @@ export default Vue.extend({
       },
       selectedItems: [],
       authorizedEditor: ["admin", "humain", "bural"],
-      dayName: {
-        "0": "Dimanche",
-        "1": "Lundi",
-        "2": "Mardi",
-        "3": "Mercredi",
-        "4": "Jeudi",
-        "5": "Vendredi",
-        "6": "Samedi",
-      },
-      monthName: {
-        "0": "janvier",
-        "1": "février",
-        "2": "mars",
-        "3": "avril",
-        "4": "mai",
-        "5": "juin",
-        "6": "juillet",
-        "7": "août",
-        "8": "septembre",
-        "9": "octobre",
-        "10": "novembre",
-        "11": "décembre",
-      },
     };
   },
   computed: {
@@ -170,14 +147,11 @@ export default Vue.extend({
             this.padTime(new Date(timeslot.timeFrame.end).getHours()) +
             ":" +
             this.padTime(new Date(timeslot.timeFrame.end).getMinutes()),
-          date:
-            this.dayName[new Date(timeslot.timeFrame.start).getDay()] +
-            " " +
-            new Date(timeslot.timeFrame.start).getDate() +
-            " " +
-            this.monthName[new Date(timeslot.timeFrame.start).getMonth()] +
-            " " +
-            new Date(timeslot.timeFrame.start).getFullYear(),
+          date: new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
+            month: "long",
+            day: "2-digit",
+            weekday: "long",
+          }),
           charisma: timeslot.charisma,
           isSelected: this.$accessor.user.me.availabilities.includes(
             timeslot._id
