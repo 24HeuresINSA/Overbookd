@@ -99,6 +99,8 @@ const FTModel = model<IFT>("FT", FTSchema);
  * TS TypeGuard used to ensure requirement is a user requirement
  * Used because ITFRequired is a union type
  *
+ * @example req.filter(isTFRequiredUser)
+ *
  * @param req required interface to check
  * @returns If it is an user requirement or not
  */
@@ -109,6 +111,8 @@ export function isTFRequiredUser(req: ITFRequired): req is ITFRequiredUser {
 /**
  * TS TypeGuard used to ensure requirement is a team requirement
  * Used because ITFRequired is a union type
+ *
+ * @example req.filter(isTFRequiredTeam)
  *
  * @param req required interface to check
  * @returns If it is an team requirement or not

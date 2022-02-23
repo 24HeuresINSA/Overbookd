@@ -1,29 +1,65 @@
 import { Schema, model, Types } from "mongoose";
 
 export interface ITFConflict {
-  conflictTF1: string;
-  conflictTF2: string;
+  tf1: string;
+  tf2: string;
   type: "TF";
-  conflictUser: Types.ObjectId;
+  user: Types.ObjectId;
 }
 export interface ITSConflict {
-  conflictTS1: Types.ObjectId;
-  conflictTS2: Types.ObjectId;
+  ts1: Types.ObjectId;
+  ts2: Types.ObjectId;
   type: "TF";
-  conflictUser: Types.ObjectId;
+  user: Types.ObjectId;
 }
 
 export type IConflict = ITFConflict | ITSConflict;
 
 export const ConflictSchema = new Schema<IConflict>({
-  conflictTS1: [{ type: Schema.Types.ObjectId, ref: "TimeSpan" }],
-  conflictTS2: [{ type: Schema.Types.ObjectId, ref: "TimeSpan" }],
-  conflictTF1: [{ type: String, ref: "TimeFrame" }],
-  conflictTF2: [{ type: String, ref: "TimeFrame" }],
+  ts1: [{ type: Types.ObjectId, ref: "TimeSpan" }],
+  ts2: [{ type: Types.ObjectId, ref: "TimeSpan" }],
+  tf1: [{ type: String, ref: "TimeFrame" }],
+  tf2: [{ type: String, ref: "TimeFrame" }],
   type: { type: String, required: true },
-  conflictUser: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+  user: { type: Types.ObjectId, required: true, ref: "User" },
 });
 
 const ConflictModel = model<IConflict>("Conflict", ConflictSchema);
+
+/* ################### Logic ################## */
+
+/**
+ * Used to create a TFconflict with TimeFrames sorted by _id ( tf1._id < tf2._id )
+ * Needed for a good detection of duplicates
+ * Use the function everywhere when a new conflict is created
+ * todo: Maybe add a DB check for this to avoid issues
+ *
+ * @param tf1ID string _id in first timeframe
+ * @param tf2ID string _id in second timeframe
+ * @param user user _id
+ * @returns conflict
+ */
+export function newTFConflit(
+  tf1ID: string,
+  tf2ID: string,
+  user: Types.ObjectId
+): IConflict {
+  if (tf1ID < tf2ID) {
+    return {
+      type: "TF",
+      tf1: tf1ID,
+      tf2: tf2ID,
+      user: user,
+    };
+  }
+  return {
+    type: "TF",
+    tf1: tf2ID,
+    tf2: tf1ID,
+    user: user,
+  };
+}
+
+/* ################### Model ################## */
 
 export default ConflictModel;
