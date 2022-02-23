@@ -98,6 +98,7 @@ export function computeTFConflictsWithArray(
 /**
  * Useful to compute conflicts between an array of TimeFrames AND itself
  * Calculate TimeFrame Conflict between the TFsByOrga
+ *
  * @param TFsByOrga TimeFrames to include in the computation sorted with keys as stringified user required _id
  * @returns TimeFrame Conflict array
  */

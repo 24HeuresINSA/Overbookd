@@ -133,5 +133,5 @@ export async function detectAllTFConflictsHandler(
   const conflicts = computeAllTFConflicts(sortTFByUser(timeFramesWithOrgas));
 
   // send them back
-  res.send(conflicts);
+  res.send(timeFramesWithOrgas);
 }
