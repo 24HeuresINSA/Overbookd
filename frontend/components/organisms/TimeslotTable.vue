@@ -68,7 +68,7 @@
           >Les créneaux sont supprimés de façon <b>irreversible.</b>
         </ConfirmDialog>
         <v-btn color="success" @click="$refs.confirm.open()"
-          ><v-icon left> mdi-plus </v-icon> Me rendre disponible (ce tableau)
+          ><v-icon left> mdi-plus </v-icon> Valider mes disponibilités
         </v-btn>
         <ConfirmDialog ref="confirm" @confirm="acceptSelection()"
           >Les créneaux que tu as choisis deviendront
@@ -147,12 +147,12 @@ export default Vue.extend({
             this.padTime(new Date(timeslot.timeFrame.end).getHours()) +
             ":" +
             this.padTime(new Date(timeslot.timeFrame.end).getMinutes()),
-          date:
-            new Date(timeslot.timeFrame.start).getFullYear() +
-            "-" +
-            (new Date(timeslot.timeFrame.start).getMonth() + 1) +
-            "-" +
-            new Date(timeslot.timeFrame.start).getDate(),
+          date: new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
+            month: "long",
+            day: "2-digit",
+            weekday: "long",
+            year: "numeric",
+          }),
           charisma: timeslot.charisma,
           isSelected: this.$accessor.user.me.availabilities.includes(
             timeslot._id
