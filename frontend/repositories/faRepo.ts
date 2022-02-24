@@ -20,4 +20,7 @@ export default {
   deleteFA(context: Context, FA: FA) {
     return context.$axios.delete(resource, { data: FA });
   },
+  getFAsNumber(context: Context) {
+    return context.$axios.get(resource + '/count');
+  },
 };
