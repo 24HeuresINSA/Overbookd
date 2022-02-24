@@ -274,7 +274,7 @@ export default Vue.extend({
           if (!ft.FA) {
             return false;
           }
-          const fa = this.FAs.find((fa) => fa.count == ft.count);
+          const fa = this.FAs.find((fa) => fa.count == ft.FA);
           // if FA fetching failed or if fa does not have a team
           if (!fa || !fa.general.team) {
             return false;
