@@ -1,9 +1,9 @@
 <template>
-  <v-data-table :headers="headers" :items="availableTimeSpans">
-    <template #[`item.action`]="item">
-      <v-btn text @click="selectUser(item)">sélectionner</v-btn>
-    </template>
-
+  <v-data-table
+    :headers="headers"
+    :items="availableTimeSpans"
+    @click:row="assignTask"
+  >
     <template #[`item.date`]="row">
       {{ new Date(row.item.start).toLocaleDateString() }}
     </template>
@@ -29,7 +29,7 @@ export default {
       headers: [
         {
           text: "FT",
-          value: "name",
+          value: "timeframeID",
         },
         {
           text: "date",
@@ -43,10 +43,6 @@ export default {
           text: "fin",
           value: "end",
         },
-        {
-          text: "action",
-          value: "action",
-        },
       ],
     };
   },
@@ -58,8 +54,8 @@ export default {
   },
 
   methods: {
-    selectUser({ item }) {
-      this.$emit("selected-task", item);
+    assignTask(task) {
+      console.log(task);
     },
   },
 };
