@@ -5,6 +5,8 @@ import { User } from "~/utils/models/repo";
 import { FT } from "~/utils/models/FT";
 import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
+import { TimeSpan } from "~/utils/models/TimeSpan";
+import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
   user: {
@@ -33,6 +35,7 @@ export const state = () => ({
   FTs: [] as FT[],
   FAs: [] as FA[],
   timeslots: [] as any[],
+  timespans: [] as TimeSpan[],
 });
 
 export const mutations = mutationTree(state, {
@@ -53,6 +56,9 @@ export const mutations = mutationTree(state, {
   },
   SET_USER_FILTER(state: any, { key, value }) {
     state.filters.user[key] = value;
+  },
+  SET_TIMESPANS(state: any, data: any) {
+    state.timespans = data;
   },
 });
 
@@ -97,6 +103,17 @@ export const actions = actionTree(
     },
 
     /**
+     * get all timespans
+     */
+    async getTimespans({ commit }: any) {
+      const ret = await safeCall(this, TimeSpanRepo.getAll(this));
+      if (ret) {
+        commit("SET_TIMESPANS", ret.data);
+      }
+      return ret;
+    },
+
+    /**
      * get all timeslots
      *
      * @returns
@@ -114,6 +131,7 @@ export const actions = actionTree(
       await dispatch("getFTs");
       await dispatch("getFAs");
       await dispatch("getTimeslots");
+      await dispatch("getTimespans");
     },
 
     /**
@@ -192,6 +210,39 @@ export const getters = getterTree(state, {
       return availabilities.map((v) => {
         return state.timeslots.find((e: any) => e._id === v);
       });
+    }
+    return [];
+  },
+
+  availableTimeSpans: (state: any, getters: any) => {
+    const { selectedUser } = state;
+    const res = [];
+    if (selectedUser && state.timespans) {
+      const availableTimeSpans = state.timespans.filter((ts: any) => {
+        let isAvailable = false;
+        getters.selectedUserAvailabilities.forEach((av: any) => {
+          if (
+            new Date(av.timeFrame.start).getTime() ==
+              new Date(ts.start).getTime() &&
+            new Date(av.timeFrame.end).getTime() == new Date(ts.end).getTime()
+          ) {
+            isAvailable = true;
+          } else {
+            console.log("not available", av, ts);
+          }
+        });
+        return isAvailable;
+      });
+      console.log("availableTimeSpans", availableTimeSpans);
+      availableTimeSpans.filter((ts: any) => {
+        const requirement = ts.required;
+        if (requirement.type === "user") {
+          return requirement.user._id === selectedUser._id;
+        } else if (requirement.type === "team") {
+          return selectedUser.team.includes(requirement.team);
+        }
+      });
+      return availableTimeSpans;
     }
     return [];
   },

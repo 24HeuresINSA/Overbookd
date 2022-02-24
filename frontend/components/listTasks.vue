@@ -1,19 +1,19 @@
 <template>
-  <v-data-table :headers="headers" :items="tasks">
+  <v-data-table :headers="headers" :items="availableTimeSpans">
     <template #[`item.action`]="item">
       <v-btn text @click="selectUser(item)">sélectionner</v-btn>
     </template>
 
     <template #[`item.date`]="row">
-      {{ new Date(row.item.schedule.start).toLocaleDateString() }}
+      {{ new Date(row.item.start).toLocaleDateString() }}
     </template>
 
     <template #[`item.start`]="row">
-      {{ new Date(row.item.schedule.start).toLocaleTimeString() }}
+      {{ new Date(row.item.start).toLocaleTimeString() }}
     </template>
 
     <template #[`item.end`]="row">
-      {{ new Date(row.item.schedule.end).toLocaleTimeString() }}
+      {{ new Date(row.item.end).toLocaleTimeString() }}
     </template>
   </v-data-table>
 </template>
@@ -21,8 +21,6 @@
 <script>
 export default {
   name: "ListTasks",
-
-  props: ["tasks"],
 
   data() {
     return {
@@ -51,6 +49,12 @@ export default {
         },
       ],
     };
+  },
+
+  computed: {
+    availableTimeSpans() {
+      return this.$accessor.assignment.availableTimeSpans;
+    },
   },
 
   methods: {

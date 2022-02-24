@@ -23,11 +23,7 @@
       @delete-assignment="unassign"
     ></OverCalendar>
 
-    <OverTasks
-      :user="selectedUser"
-      style="max-width: 550px"
-      @add-task="addTask"
-    ></OverTasks>
+    <OverTasks style="max-width: 550px"></OverTasks>
   </v-container>
 </template>
 

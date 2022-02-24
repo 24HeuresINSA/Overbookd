@@ -115,8 +115,10 @@ export default Vue.extend({
       this.$refs.form.validate();
       /* eslint no-constant-condition: "off" */
       if (!this.valid) return;
-      let start = new Date(this.dayStart + "T" + this.hourStart + ":00");
-      const end = new Date(this.dayEnd + "T" + this.hourEnd + ":00");
+      let start = new Date(this.dayStart);
+      start.setHours(+this.hourStart);
+      const end = new Date(this.dayEnd);
+      end.setHours(+this.hourEnd);
       if (start.getTime() > end.getTime()) {
         this.$store.dispatch(
           "timeslot/setCreateStatus",
