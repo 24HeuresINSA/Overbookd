@@ -45,7 +45,7 @@
             :headers="headers"
             :items="filteredFTs"
             sort-by="count"
-            :items-per-page="-1"
+            :items-per-page="20"
           >
             <template #item.general.name="{ item }">
               <a
@@ -115,6 +115,7 @@
       elevation="2"
       fab
       class="fab-right"
+      style="position: absolute; bottom: 10px; right: 10px"
       @click="isNewFTDialogOpen = true"
     >
       <v-icon> mdi-plus-thick</v-icon>
