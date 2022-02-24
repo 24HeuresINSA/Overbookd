@@ -9,6 +9,8 @@ import {
   sortTFByUser,
 } from "@src/services/conflict";
 import { Types } from "mongoose";
+import { ITFConflict } from "../entities/Conflict";
+import { getTimeFrameById } from "@src/services/timeFrame";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -29,16 +31,23 @@ export async function createConflict(
 
 /**
  *  Get all TF conflicts
+ * todo: remove ts-ignore and improve structures
  */
 export async function getTFConflicts(
   req: Request,
   res: Response
 ): Promise<void> {
   try {
-    const conflicts = await ConflictModel.find({ type: "TF" })
-      .populate("conflictUser", "-password")
-      .populate("tf1")
-      .populate("tf2");
+    const conflicts: ITFConflict[] = await ConflictModel.find({ type: "TF" })
+      .populate("user", "-password")
+      .lean();
+
+    for (const c of conflicts) {
+      //@ts-ignore
+      c.tf1 = await getTimeFrameById(c.tf1);
+      //@ts-ignore
+      c.tf2 = await getTimeFrameById(c.tf2);
+    }
     res.status(StatusCodes.OK).json(conflicts);
   } catch (error) {
     logger.warn(error);
@@ -117,12 +126,18 @@ export async function getConflictsByUserId(
  * Very resource intensive function
  * Do not use unless this is completly necessary
  *
+ * Delete all timeFrames conflicts and recompute them
+ * Send a proper array to the database
+ *
  * Detect all TimeFrames related conflicts and send back an array of them
  */
 export async function detectAllTFConflictsHandler(
   req: Request,
   res: Response
 ): Promise<void> {
+  // Remove all existing TF conflicts
+  await ConflictModel.deleteMany({ type: "TF" });
+
   // Fetch all timeframes with a required user inside
   const timeFramesWithOrgas: ITimeFrame[] = await FTModel.aggregate()
     .unwind("$timeframes")
@@ -132,6 +147,8 @@ export async function detectAllTFConflictsHandler(
   // sort by user and compute all
   const conflicts = computeAllTFConflicts(sortTFByUser(timeFramesWithOrgas));
 
+  await ConflictModel.insertMany(conflicts);
+
   // send them back
-  res.send(timeFramesWithOrgas);
+  res.send(conflicts);
 }
