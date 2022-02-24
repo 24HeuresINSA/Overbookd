@@ -125,6 +125,11 @@ export const mutations = mutationTree(state, {
       equipment.required = count;
     }
   },
+  MARK_READY_FOR_ASSIGNMENT: function ({ mFT }) {
+    mFT.status = "ready";
+    mFT.refused = [];
+    mFT.validated = ["humain", "log"]; // change with config later
+  },
 });
 
 /* ############################################ */
@@ -233,20 +238,19 @@ export const actions = actionTree(
       { dispatch, commit, state },
       by: string
     ) {
-      await dispatch("addComment", {
-        topic: "ready",
-        text: "FT prête à affectation",
-        time: new Date(),
-        validator: by,
-      });
-      commit("UPDATE_STATUS", FTStatus.ready);
-      await dispatch("saveFT");
       const res = await safeCall(
         this,
         FtRepo.markAsReady(this, state.mFT.count)
       );
       if (res) {
-        console.log(res.data);
+        await dispatch("addComment", {
+          topic: "ready",
+          text: "FT prête à affectation",
+          time: new Date(),
+          validator: by,
+        });
+        commit("MARK_READY_FOR_ASSIGNMENT", by);
+        await dispatch("saveFT");
       }
     },
     setParentFA: async function ({ dispatch, commit }, faCount) {
