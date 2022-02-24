@@ -106,7 +106,6 @@ export async function makeFTReady(req: Request, res: Response) {
           await TimeSpanModel.insertMany(timespan);
         }
       }
-      // await FTModel.findOneAndUpdate({ count: mFT.count, }, mFT);
       res.status(StatusCodes.OK).json(r);
     } catch (e) {
       logger.err(e);

@@ -9,7 +9,7 @@ export async function timeframeToTimeSpan(timeframe: ITimeFrame): Promise<ITimeS
   const {toSlice, sliceTime, required } = timeframe;
   const start = new Date(timeframe.start);
   const end = new Date(timeframe.end);
-  const timeSpans: ITimeSpan[] = [] as ITimeSpan[];
+  let timeSpans: ITimeSpan[] = [] as ITimeSpan[];
   if (toSlice && sliceTime) {
     if (isSlicable(start, end, sliceTime)){ // slice;
       logger.info(`timeframeToTimeSpan: starting slicing...`);
@@ -29,12 +29,24 @@ export async function timeframeToTimeSpan(timeframe: ITimeFrame): Promise<ITimeS
           required: null,
         } as ITimeSpan;
         // timeSpans.push(mTimeSpan);
-        timeframe.required.forEach(r => {
-          timeSpans.push({
-            ...mTimeSpan,
-            required: r,
-          });
-        })
+        // timeframe.required.forEach(r => {
+        //   if (r.type === "user" && r.user){
+        //     timeSpans.push({
+        //       ...mTimeSpan,
+        //       required: r.user._id,
+        //       assigned: r.user._id,
+        //     });
+        //   } else if (r.type === "team") {
+        //     for(let i = 0; i < r.amount; i++){
+        //       timeSpans.push({
+        //         ...mTimeSpan,
+        //         required: r.team,
+        //       });
+        //     }
+        //   }
+        //
+        // })
+        timeSpans = timeSpans.concat(getTimeSpanFromRequirement(required, mTimeSpan));
         logger.info(`timeframeToTimeSpan: added timeSpan: ${new Date(mTimeSpan.start).toLocaleString()} - ${new Date(mTimeSpan.end).toLocaleString()}`);
         timeSpanStart = new Date(timeSpanStart.getTime() + timeSpanDelta);
         logger.info(`timeframeToTimeSpan: timeSpanStart: ${timeSpanStart.toLocaleString()}`);
@@ -44,16 +56,13 @@ export async function timeframeToTimeSpan(timeframe: ITimeFrame): Promise<ITimeS
       throw new Error(`timeframeToTimeSpan: can't slice timeframe: ${timeframe.start} - ${timeframe.end}`);
     }
   } else { // not to be sliced
-    const res = required.map((requirement: ITFRequired) => {
-      return {
-        start,
-        end,
-        assigned: null,
-        required: requirement,
-        timeframeID: timeframe._id,
-      };
-    }) as ITimeSpan[];
-    return res;
+    return getTimeSpanFromRequirement(required, {
+      start,
+      end,
+      assigned: null,
+      timeframeID: timeframe._id,
+      required: null,
+    });
 
   }
 
@@ -62,4 +71,30 @@ export async function timeframeToTimeSpan(timeframe: ITimeFrame): Promise<ITimeS
 function isSlicable(start: Date, end: Date, sliceTime: number) {
   const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
   return hours % sliceTime === 0;
+}
+
+function getTimeSpanFromRequirement(requirements: ITFRequired[], timeSpan: ITimeSpan): ITimeSpan[] {
+  const timeSpans: ITimeSpan[] = [];
+  requirements.forEach(r => {
+    if (r.type === "user" && r.user){
+      timeSpans.push({
+        start: timeSpan.start,
+        end: timeSpan.end,
+        assigned: r.user._id,
+        required: r.user._id,
+        timeframeID: timeSpan.timeframeID,
+      });
+    } else if (r.type === "team") {
+      for(let i = 0; i < r.amount; i++){
+        timeSpans.push({
+          start: timeSpan.start,
+          end: timeSpan.end,
+          assigned: null,
+          required: r.team,
+          timeframeID: timeSpan.timeframeID,
+        });
+      }
+    }
+  });
+  return timeSpans;
 }
