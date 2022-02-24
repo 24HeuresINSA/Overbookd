@@ -4,7 +4,7 @@ import FTModel, {IFT, ITimeFrame} from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel, {ITimeframe} from "@entities/FA";
 import {timeframeToTimeSpan} from "@src/services/slicing";
-import { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
@@ -103,6 +103,7 @@ export async function makeFTReady(req: Request, res: Response) {
         const timespan = await timeframeToTimeSpan(timeframe);
         if (timespan) {
           r.push(timespan);
+          await TimeSpanModel.insertMany(timespan);
         }
       }
       // await FTModel.findOneAndUpdate({ count: mFT.count, }, mFT);

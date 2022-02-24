@@ -16,9 +16,11 @@ export interface ITimeSpan {
 const TimeSpanSchema = new Schema<ITimeSpan>({
     start: { type: Date, required: true },
     end: { type: Date, required: true },
-    timeframeID: { type: Types.ObjectId, required: true },
-    assigned: { type: Types.ObjectId, required: false, ref: 'User' },
-    required: { type: Types.ObjectId ||  String, required: true, ref: 'User' },
+    timeframeID: { type: String, required: true },
+    assigned: { type: String, required: false, ref: 'User' },
+    required: {
+      type: Object,
+    },
 });
 
 const TimeSpanModel = model<ITimeSpan>('TimeSpan', TimeSpanSchema);
