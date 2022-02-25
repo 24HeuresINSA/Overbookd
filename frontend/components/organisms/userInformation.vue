@@ -1,150 +1,175 @@
 <template>
-  <v-dialog v-model="mToggle" max-width="600">
+  <v-dialog v-model="mToggle" width="100%">
     <v-card>
-      <v-img
-        v-if="mUser.pp"
-        :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
-        max-height="300px"
-      ></v-img>
-      <v-card-title
-        >{{ mUser.nickname ? mUser.nickname : mUser.lastname }}
-      </v-card-title>
-      <v-card-text>
-        <OverChips :roles="mUser.team"></OverChips>
-        <div v-if="hasEditingRole">
-          <v-select v-model="newRole" label="ajouter un role" :items="teams">
-          </v-select>
-          <v-btn text @click="addRole()">ajouter</v-btn>
-          <v-btn text @click="deleteAllTeams()">révoquer tous les rôles</v-btn>
-          <v-btn text @click="saveUser()">sauvgarder</v-btn>
-        </div>
+      <v-row>
+        <v-col md="5"
+          ><v-img
+            v-if="mUser.pp"
+            :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
+            max-height="200px"
+          ></v-img>
+          <v-card-title
+            >{{ mUser.nickname ? mUser.nickname : mUser.lastname }}
+          </v-card-title>
+          <v-card-text>
+            <OverChips :roles="mUser.team"></OverChips>
+            <div v-if="hasEditingRole">
+              <v-select
+                v-model="newRole"
+                label="ajouter un role"
+                :items="teams"
+              >
+              </v-select>
+              <v-row>
+                <v-col md="3"
+                  ><v-btn text @click="addRole()">ajouter</v-btn></v-col
+                >
+                <v-col md="6"
+                  ><v-btn text @click="deleteAllTeams()"
+                    >révoquer tous les rôles</v-btn
+                  ></v-col
+                >
+                <v-col md="2"
+                  ><v-btn text @click="saveUser()">sauvegarder</v-btn></v-col
+                >
+              </v-row>
+            </div>
 
-        <v-container>
+            <v-container>
+              <v-row>
+                <v-col
+                  md="6"
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  "
+                >
+                  <v-btn icon :href="'mailto:' + mUser.email">
+                    <v-icon>mdi-send</v-icon>
+                  </v-btn>
+                  <h3>{{ mUser.email }}</h3>
+                </v-col>
+                <v-col md="6" style="display: flex; align-items: baseline">
+                  <v-btn icon :href="'tel:+33:' + mUser.phone">
+                    <v-icon>mdi-phone</v-icon>
+                  </v-btn>
+                  <h3>+33{{ mUser.phone }}</h3>
+                </v-col>
+                <v-col md="6">
+                  <v-text-field
+                    v-model="mUser.lastname"
+                    label="Nom"
+                    :disabled="!(hasEditingRole || isMe())"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="6">
+                  <v-text-field
+                    v-model="mUser.firstname"
+                    label="Prénom"
+                    :disabled="!(hasEditingRole || isMe())"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="12">
+                  <v-text-field
+                    v-model="mUser.comment"
+                    label="Commentaire"
+                    :disabled="!(hasEditingRole || isMe())"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4">
+                  <v-text-field
+                    v-model="mUser.nickname"
+                    label="Surnom"
+                    :disabled="!(hasEditingRole || isMe())"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4">
+                  <v-text-field
+                    v-model="mUser.birthdate"
+                    label="Date de naissance"
+                    placeholder="AAAA-MM-JJ"
+                    :disabled="true"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4" style="display: flex; align-items: baseline">
+                  <p>+33&nbsp;</p>
+                  <v-text-field
+                    v-model="mUser.phone"
+                    label="Numéro de téléphone "
+                    :disabled="!(hasEditingRole || isMe())"
+                    type="number"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="3">
+                  <v-switch
+                    v-model="mUser.hasDriverLicense"
+                    label="Permis"
+                    :disabled="!(hasEditingRole || isMe())"
+                  ></v-switch>
+                </v-col>
+                <v-col md="6">
+                  <v-text-field
+                    v-model="mUser.driverLicenseDate"
+                    label="date d'obtention du permis"
+                    placeholder="AAAA-MM-JJ"
+                    :disabled="!hasEditingRole"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4">
+                  <v-text-field
+                    v-model="mUser.balance"
+                    label="Solde compte perso"
+                    :disabled="true"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4">
+                  <v-switch
+                    v-model="mUser.hasPayedContribution"
+                    label="Cotisation"
+                    :disabled="!hasEditingRole"
+                  ></v-switch>
+                </v-col>
+                <v-col md="6">
+                  <v-text-field
+                    v-model="mUser.year"
+                    label="Année"
+                    :disabled="!hasEditingRole"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="6">
+                  <v-text-field
+                    v-model="mUser.departement"
+                    label="Département"
+                    :disabled="!hasEditingRole"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container> </v-card-text
+        ></v-col>
+        <v-col md="7">
+          <v-text-field
+            v-model="mUser.charisma"
+            label="Charisme"
+            :disabled="true"
+          ></v-text-field>
+          <v-calendar type="week" class="myCal" />
           <v-row>
-            <v-col
-              md="6"
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              "
-            >
-              <v-btn icon :href="'mailto:' + mUser.email">
-                <v-icon>mdi-send</v-icon>
-              </v-btn>
-              <h3>{{ mUser.email }}</h3>
+            <v-col md="3">
+              <v-btn text @click="saveUser()">sauvegarder</v-btn>
             </v-col>
-            <v-col md="6" style="display: flex; align-items: baseline">
-              <v-btn icon :href="'tel:+33:' + mUser.phone">
-                <v-icon>mdi-phone</v-icon>
-              </v-btn>
-              <h3>+33{{ mUser.phone }}</h3>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.lastname"
-                label="Nom"
-                :disabled="!(hasEditingRole || isMe())"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.firstname"
-                label="Prénom"
-                :disabled="!(hasEditingRole || isMe())"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.nickname"
-                label="Surnom"
-                :disabled="!(hasEditingRole || isMe())"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.birthdate"
-                label="Date de naissance"
-                placeholder="AAAA-MM-JJ"
-                :disabled="true"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6" style="display: flex; align-items: baseline">
-              <p>+33&nbsp;</p>
-              <v-text-field
-                v-model="mUser.phone"
-                label="Numéro de téléphone "
-                :disabled="!(hasEditingRole || isMe())"
-                type="number"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-switch
-                v-model="mUser.hasDriverLicense"
-                label="Permis"
-                :disabled="!(hasEditingRole || isMe())"
-              ></v-switch>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.driverLicenseDate"
-                label="date d'obtention du permis"
-                placeholder="AAAA-MM-JJ"
-                :disabled="!hasEditingRole"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.charisma"
-                label="Charisme"
-                :disabled="true"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.year"
-                label="Année"
-                :disabled="!hasEditingRole"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.departement"
-                label="Département"
-                :disabled="!hasEditingRole"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-text-field
-                v-model="mUser.balance"
-                label="Solde compte perso"
-                :disabled="true"
-              ></v-text-field>
-            </v-col>
-            <v-col md="6">
-              <v-switch
-                v-model="mUser.hasPayedContribution"
-                label="Cotisation"
-                :disabled="!hasEditingRole"
-              ></v-switch>
-            </v-col>
-            <v-col md="12">
-              <v-text-field
-                v-model="mUser.comment"
-                label="Commentaire"
-                :disabled="!(hasEditingRole || isMe())"
-              ></v-text-field>
+            <v-col md="3">
+              <v-btn
+                v-if="hasEditingRole"
+                text
+                color="red"
+                @click="deleteUser()"
+                >supprimer</v-btn
+              >
             </v-col>
           </v-row>
-        </v-container>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn v-if="hasEditingRole" text color="red" @click="deleteUser()"
-          >supprimer</v-btn
-        >
-        <v-spacer />
-        <v-btn text @click="saveUser()">sauvegarder</v-btn>
-      </v-card-actions>
+        </v-col>
+      </v-row>
     </v-card>
   </v-dialog>
 </template>
@@ -248,4 +273,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.myCal {
+  height: 70vh;
+  width: 54vw;
+  margin-bottom: 20px;
+}
+</style>
