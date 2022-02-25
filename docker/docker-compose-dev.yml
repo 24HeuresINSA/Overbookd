@@ -91,8 +91,8 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - overbookd_mongo:/data/db
-      - overbookd_mongo:/data/configdb
+      - ./data/prod/mongo/db:/data/db
+      - ./data/prod/mongo/configdb:/data/configdb
 
   frontend:
     container_name: overbookd_frontend

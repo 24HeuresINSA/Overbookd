@@ -1,19 +1,20 @@
 <template>
   <div>
     <v-row
-        v-for="(com,index) in dataset"
+        v-for="com in dataset"
+        :key="com._id"
         class="mb-6"
         no-gutters
     >
-      <v-col>{{ index }}</v-col>
+      <v-col>{{ com._id }}</v-col>
       <v-col>
         <div class="d-flex">
           <div
-              v-for="status in sortLabel(com)"
-              :key="status.status"
+              v-for="status in com.status"
+              :key="status.state"
               :style="`flex-grow: ${status.count}`"
           >
-            <NeedsCard :status="status.status">
+            <NeedsCard :status="status.state">
               {{ status.count }}
             </NeedsCard>
           </div>
@@ -41,10 +42,5 @@ export default {
       },
     }
   },
-  methods: {
-    sortLabel(c) {
-      return c.sort((a,b) => this.possibleStatus[a.status] - this.possibleStatus[b.status]);
-    }
-  }
 };
 </script>

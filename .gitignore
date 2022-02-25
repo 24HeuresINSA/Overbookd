@@ -45,3 +45,5 @@ npm-debug.log
 dist
 
 .triage-policies.yml
+
+docker/data/**/*
