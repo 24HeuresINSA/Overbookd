@@ -1,4 +1,7 @@
-      - name: find all issues without priority labels and not updated for 3 days
+resource_rules:
+  issues:
+    rules:
+      - name: find all issues without priority labels
         conditions:
           state: opened
           date:

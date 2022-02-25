@@ -1,3 +1,6 @@
+resource_rules:
+  issues:
+    rules:
       - name: find all assigned issues
         conditions:
           state: opened
