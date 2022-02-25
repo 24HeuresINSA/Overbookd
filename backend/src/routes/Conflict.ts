@@ -13,6 +13,7 @@ import { ITFConflict } from "../entities/Conflict";
 import { getTimeFrameById } from "@src/services/timeFrame";
 import { getFTByID } from "./FT";
 import { getTimeFrameByIdOpts } from "../services/timeFrame";
+import { read } from "fs";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -48,7 +49,7 @@ export async function getTFConflicts(
 
     const queryOptions: getTimeFrameByIdOpts = {
       select: ["start", "end"],
-      ft: { include: true, fields: ["general", "FA"] },
+      ft: { include: true, fields: ["general", "FA", "count"] },
     };
 
     // Resolve all promises inside
@@ -77,7 +78,7 @@ export async function getTFConflicts(
  * @param res Send back the array of conflicts
  * @returns nothing
  */
-export async function getTFConflictsByFTId(
+export async function oldGetTFConflictsByFTId(
   req: Request,
   res: Response
 ): Promise<void> {
@@ -164,5 +165,69 @@ export async function detectAllTFConflictsHandler(
   await ConflictModel.insertMany(conflicts);
 
   // send them back
-  res.send(conflicts);
+  res.json(conflicts);
+}
+
+/**
+ * For a given FT find all conflicts and populate otherTf inside to have the other timeFrame infos
+ */
+export async function getTFConflictsByFTId(
+  req: Request,
+  res: Response
+): Promise<void> {
+  const ft = await FTModel.findOne({ _id: req.params.FTId }).lean();
+
+  if (!ft) {
+    throw new Error("Did not find the FT for conflicts");
+  }
+  let conflictsTf1: ITFConflict[] = [];
+  let conflictsTf2: ITFConflict[] = [];
+
+  // Fetch conflicts from both timeframes
+  await Promise.all(
+    ft.timeframes.map(async (tf) => {
+      conflictsTf1 = conflictsTf1.concat(
+        await ConflictModel.find({
+          // type: "FT",
+          tf1: tf._id,
+        }).lean()
+      );
+      conflictsTf2 = conflictsTf2.concat(
+        await ConflictModel.find({
+          // type: "TF",
+          tf2: tf._id,
+        }).lean()
+      );
+    })
+  );
+
+  // populate conflicts with the other timeframe
+
+  conflictsTf1 = await Promise.all(
+    conflictsTf1.map(async (c) =>
+      // remove tf1 and tf2 and populate other tf
+      ({
+        ...c,
+        otherTf: await getTimeFrameById(c.tf1, {
+          select: ["start", "end"],
+          ft: { include: true, fields: ["general"] },
+        }),
+      })
+    )
+  );
+  conflictsTf2 = await Promise.all(
+    conflictsTf2.map(async (c) =>
+      // remove tf1 and tf2 and populate other tf
+      ({
+        ...c,
+        otherTf: await getTimeFrameById(c.tf1, {
+          select: ["start", "end"],
+          ft: { include: true, fields: ["general"] },
+        }),
+      })
+    )
+  );
+
+  res.json(conflictsTf1.concat(conflictsTf2));
+  return;
 }

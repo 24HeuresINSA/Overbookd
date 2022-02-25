@@ -42,6 +42,7 @@ export async function getTimeFrameById(
     options.ft.fields.forEach((f) => {
       tf.ft[f] = ft[f];
     });
+    tf.ft._id = ft._id;
     return tf;
   }
   // nothing found
