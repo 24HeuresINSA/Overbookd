@@ -1,0 +1,10 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all issues with Status::Done labels
+        conditions:
+          state: opened
+          labels:
+            - Status::Done
+        actions:
+          status: close
