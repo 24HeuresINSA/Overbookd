@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import FTModel, { IFT } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
+import { ITimeFrame } from "../entities/FT";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});

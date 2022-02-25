@@ -11,6 +11,8 @@ import {
 import { Types } from "mongoose";
 import { ITFConflict } from "../entities/Conflict";
 import { getTimeFrameById } from "@src/services/timeFrame";
+import { getFTByID } from "./FT";
+import { getTimeFrameByIdOpts } from "../services/timeFrame";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -39,16 +41,28 @@ export async function getTFConflicts(
 ): Promise<void> {
   try {
     const conflicts: ITFConflict[] = await ConflictModel.find({ type: "TF" })
-      .populate("user", "-password")
+      .populate({ path: "user", select: "firstname lastname" })
       .lean();
 
-    for (const c of conflicts) {
-      //@ts-ignore
-      c.tf1 = await getTimeFrameById(c.tf1);
-      //@ts-ignore
-      c.tf2 = await getTimeFrameById(c.tf2);
-    }
-    res.status(StatusCodes.OK).json(conflicts);
+    const populatedConflicts: ITFConflict<unknown | undefined>[] = [];
+
+    const queryOptions: getTimeFrameByIdOpts = {
+      select: ["start", "end"],
+      ft: { include: true, fields: ["general", "FA"] },
+    };
+
+    // Resolve all promises inside
+    await Promise.all(
+      conflicts.map(async (c) => {
+        populatedConflicts.push({
+          ...c,
+          tf1: await getTimeFrameById(c.tf1, queryOptions),
+          tf2: await getTimeFrameById(c.tf2, queryOptions),
+        });
+      })
+    );
+
+    res.status(StatusCodes.OK).json(populatedConflicts);
   } catch (error) {
     logger.warn(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
