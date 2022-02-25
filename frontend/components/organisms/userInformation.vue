@@ -131,7 +131,7 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-row v-if="mUser.team.includes('hard')">
+              <v-row v-if="hasUserRole('hard')">
                 <v-col md="4">
                   <v-text-field
                     v-model="mUser.balance"
@@ -169,6 +169,14 @@
                 >supprimer</v-btn
               >
             </v-col>
+            <v-col md="3">
+              <v-btn
+                :disabled="isValidated()"
+                color="#48C52D"
+                @click="validateUser()"
+                >Valider (soft)</v-btn
+              ></v-col
+            >
           </v-row>
         </v-col>
       </v-row>
@@ -180,6 +188,7 @@
 import OverChips from "~/components/atoms/overChips";
 import { safeCall } from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
+import { isValidated } from "~/utils/roles/index.ts";
 
 export default {
   name: "UserInformation",
@@ -271,6 +280,30 @@ export default {
     isMe() {
       return this.$accessor.user.me._id === this.mUser._id;
     },
+    isValidated() {
+      return isValidated(this.mUser);
+    },
+    hasUserRole(roles) {
+      if (this.mUser.team === undefined) {
+        return false;
+      } else {
+        return this.mUser.team.includes(roles);
+      }
+    },
+    async validateUser() {
+      if (this.mUser.team.includes("toValidate")) {
+        for (var i = 0; i < this.mUser.team.length; i++) {
+          if (this.mUser.team[i] === "toValidate") {
+            this.mUser.team.splice(i, 1);
+          }
+        }
+        this.mUser.team.push("soft");
+        await this.$axios.put(`/user/${this.mUser._id}`, {
+          team: this.mUser.team,
+        });
+        this.saveUser();
+      }
+    },
   },
 };
 </script>
@@ -278,7 +311,7 @@ export default {
 <style scoped>
 .myCal {
   height: 70vh;
-  width: 54vw;
+  width: 50vw;
   margin-bottom: 20px;
 }
 </style>
