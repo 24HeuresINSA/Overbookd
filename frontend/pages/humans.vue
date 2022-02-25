@@ -77,7 +77,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col md="7">
+        <v-col md="10">
           <v-data-table
             style="max-height: 100%; overflow-y: auto"
             :headers="headers"
@@ -158,9 +158,6 @@
               >
             </template>
           </v-data-table>
-        </v-col>
-        <v-col md="3">
-          <v-calendar />
         </v-col>
       </v-row>
     </template>
