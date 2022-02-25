@@ -14,7 +14,6 @@ workflow:
 stages:
   - triage
   - test
-  - setup
   - docker
   - docker-scan
   - configurator
@@ -26,7 +25,6 @@ include:
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/License-Scanning.gitlab-ci.yml
   - local: /.gitlab/ci/security_rules.gitlab-ci.yml
-  - local: /.gitlab/ci/buildxSetup.gitlab-ci.yml
   - local: /.gitlab/ci/frontend_containerize.gitlab-ci.yml
   - local: /.gitlab/ci/backend_containerize.gitlab-ci.yml
   - local: /.gitlab/ci/configurator.gitlab-ci.yml

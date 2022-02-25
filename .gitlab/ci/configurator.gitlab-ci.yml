@@ -9,11 +9,13 @@ configurator:
     - apt install curl -y
   script:
     - sh ./.gitlab/ci/configurator.sh
-  only:
-    changes:
-      - config/config.json
-    refs:
-      - main
-      - pre-prod
-  except:
-    - schedules
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - config/config.json
+    - if: '$CI_COMMIT_BRANCH == "pre-prod"'
+      changes:
+        - config/config.json
+    - when: never
