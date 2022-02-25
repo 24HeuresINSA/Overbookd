@@ -116,20 +116,6 @@
                     :disabled="!hasEditingRole"
                   ></v-text-field>
                 </v-col>
-                <v-col md="4">
-                  <v-text-field
-                    v-model="mUser.balance"
-                    label="Solde compte perso"
-                    :disabled="true"
-                  ></v-text-field>
-                </v-col>
-                <v-col md="4">
-                  <v-switch
-                    v-model="mUser.hasPayedContribution"
-                    label="Cotisation"
-                    :disabled="!hasEditingRole"
-                  ></v-switch>
-                </v-col>
                 <v-col md="6">
                   <v-text-field
                     v-model="mUser.year"
@@ -145,8 +131,24 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-            </v-container> </v-card-text
-        ></v-col>
+              <v-row v-if="mUser.team.includes('hard')">
+                <v-col md="4">
+                  <v-text-field
+                    v-model="mUser.balance"
+                    label="Solde compte perso"
+                    :disabled="true"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4">
+                  <v-switch
+                    v-model="mUser.hasPayedContribution"
+                    label="Cotisation"
+                    :disabled="!hasEditingRole"
+                  ></v-switch> </v-col
+              ></v-row>
+            </v-container>
+          </v-card-text>
+        </v-col>
         <v-col md="7">
           <v-text-field
             v-model="mUser.charisma"
