@@ -57,6 +57,7 @@ const FASchema = new Schema<IFA>(
   {
     name: {type: String, required: false},
     FTs: {type: Array, required: false},
+    isValid: {type: Boolean, default: true},
   },
   { strict: false }
 );

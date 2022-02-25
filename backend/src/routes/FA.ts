@@ -13,17 +13,17 @@ export async function getFAByCount(req: Request, res: Response) {
   if (req.params.id === undefined) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "FA must contain an id" });
+      .json({error: "FA must contain an id"});
   }
   logger.info(`getting info ${req.params.id}`);
   // @ts-ignore
-  const mFAQuery = await FAModel.findOne({ count: +req.params.id });
+  const mFAQuery = await FAModel.findOne({count: +req.params.id});
   if (mFAQuery) {
     const mFA = mFAQuery.toObject();
     res.json(mFA);
-  }else {
-        res.sendStatus(StatusCodes.BAD_REQUEST)
-    }
+  } else {
+    res.sendStatus(StatusCodes.BAD_REQUEST)
+  }
 }
 
 export async function setFA(req: Request, res: Response) {
@@ -78,4 +78,27 @@ export async function createFA(req: Request, res: Response) {
   logger.info(`creating FA id: ${mFA.count}`);
   await FAModel.create(mFA);
   res.status(StatusCodes.CREATED).json(mFA);
+}
+
+interface stats {
+  team: string;
+  status: string;
+  count: number;
+}
+
+export async function getFAsNumber(req: Request, res: Response) {
+  const FAs = await FAModel.aggregate()
+    .match({isValid: {$ne: false}})
+    .group({
+        _id: {team: '$general.team', status: '$status'},
+        count: {$sum: 1}
+      }
+    ).sort('_id.status')
+    .group({
+      _id: '$_id.team',
+      status: {$push: {state: '$_id.status', count: '$count'}}
+    })
+    .sort('_id');
+  logger.info("getting FAs count");
+  res.json(FAs);
 }
