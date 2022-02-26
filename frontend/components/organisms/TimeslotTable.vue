@@ -26,7 +26,6 @@
         </v-toolbar>
       </template>
       <template
-        v-if="roles.some((e) => authorizedEditor.includes(e))"
         #[`item.actions`]="{ item }"
       >
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
@@ -108,28 +107,6 @@ export default Vue.extend({
   },
   data(): any {
     return {
-      headers: [
-        {
-          text: "Heure de début",
-          value: "start",
-          sortable: false,
-        },
-        {
-          text: "Heure de fin",
-          value: "end",
-          sortable: false,
-        },
-        {
-          text: "Date",
-          value: "date",
-        },
-        {
-          text: "Charisme",
-          value: "charisma",
-          sortable: false,
-        },
-        { text: "Actions", value: "actions", sortable: false },
-      ],
       editedIndex: -1,
       editedItem: {
         id: "",
@@ -179,6 +156,33 @@ export default Vue.extend({
     userSelectedAvailabilities(): any {
       return this.$accessor.user.me.availabilities;
     },
+    headers(): any {
+      const h = [
+        {
+          text: "Heure de début",
+          value: "start",
+          sortable: false,
+        },
+        {
+          text: "Heure de fin",
+          value: "end",
+          sortable: false,
+        },
+        {
+          text: "Date",
+          value: "date",
+        },
+        {
+          text: "Charisme",
+          value: "charisma",
+          sortable: false,
+        },
+      ];
+      if (this.editorMode) {
+        h.push({ text: "Actions", value: "actions", sortable: false },);
+      }
+      return h;
+    }
   },
   mounted() {
     Object.keys(this.$refs).forEach((k) => {
