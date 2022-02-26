@@ -349,6 +349,11 @@ export default Vue.extend({
     nbProposals(): number {
       return this.$accessor.equipmentProposal.count;
     },
+    equipmentMap(): Map<String, number> {
+      const faEquipmentMap = this.$accessor.FA.equipmentMap;
+      const ftEquipmentMap = this.$accessor.FT.equipmentMap;
+      return new Map([...faEquipmentMap, ...ftEquipmentMap]);
+    },
   },
 
   async mounted() {
@@ -356,8 +361,7 @@ export default Vue.extend({
     this.loading = true;
     let res = await this.$accessor.location.getAllLocations();
     if (!res) {
-      // todo display snackbar notif
-      console.log("Error, could not fetch the DB");
+      this.snack.display("Erreur lors du chargement des localisations");
     }
     this.allowedTeams = (await this.getConfig("isInventoryOpen"))
       ? ["log", "hard"]
@@ -367,26 +371,23 @@ export default Vue.extend({
     if (!equipRes) {
       this.snack.display("Erreur lors du chargement des équipements");
     }
-    await this.$accessor.FA.fetchAll();
-    res = await this.$accessor.FT.fetchAll();
-    if (!res) {
-      // todo display snackbar notif
-      console.log("Error, could not fetch the DB");
+    const resFA = await this.$accessor.FA.fetchAll();
+    const resFT = await this.$accessor.FT.fetchAll();
+    if (!resFA || !resFT) {
+      this.snack.display("Erreur lors du chargement des équipements");
     }
 
-    const equimentMap = this.countEquipment();
 
     this.inventory.forEach((item: any) => {
       item.required = {
         count: 0,
         form: Array<any>(),
       };
-      if(item._id && equimentMap.has(item._id)) {
-        item.required.count = equimentMap.get(item._id);
+      if(item._id && this.equipmentMap.has(item._id)) {
+        item.required.count = this.equipmentMap.get(item._id);
       }
     });
-    const propRes =
-      await this.$accessor.equipmentProposal.getEquipmentProposal();
+    const propRes = await this.$accessor.equipmentProposal.getEquipmentProposal();
     if (!propRes) {
       this.snack.display(
         "Erreur lors la récupération des équipements proposés"
@@ -534,43 +535,10 @@ export default Vue.extend({
       );
       this.selectedItem.borrowed.splice(index, 1);
     },
-    countEquipment(): Map<String, number>{
-      const equipmentMap = new Map<string, number>();
-      this.$accessor.FA.FAs.forEach(fa => {
-        if(fa.equipments){
-          fa.equipments.forEach(equipment => {
-            if(equipmentMap.has(equipment._id)){
-              equipmentMap.set(equipment._id, equipmentMap.get(equipment._id)! + equipment.required);
-            } else {
-              equipmentMap.set(equipment._id, equipment.required);
-            }
-          });
-        }
-      });
-      this.$accessor.FT.Fts.forEach(ft => {
-        if(ft.equipments){
-          ft.equipments.forEach(equipment => {
-            if(equipmentMap.has(equipment._id)){
-              equipmentMap.set(equipment._id, equipmentMap.get(equipment._id)! + equipment.required);
-            } else {
-              equipmentMap.set(equipment._id, equipment.required);
-              console.log("FT "+ ft.count +" : We go Here for " + equipment.name, equipment.required);
-            }
-          });
-        }
-      });
-      return equipmentMap;
-    }
   },
 });
 </script>
 
 <style scoped>
-/* .v-list-item {
-  padding: 0;
-}
 
-.v-list-item__content {
-  padding: 0;
-} */
 </style>

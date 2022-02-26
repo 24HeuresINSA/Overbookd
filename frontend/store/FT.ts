@@ -23,6 +23,21 @@ export type FTState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
   timeframes: (state) => state.mFT.timeframes,
+  equipmentMap: function (state): Map<String,number> {
+    const equipmentMap = new Map<string, number>();
+    state.Fts.forEach(ft => {
+      if(ft.equipments){
+        ft.equipments.forEach(equipment => {
+          if(equipmentMap.has(equipment._id)){
+            equipmentMap.set(equipment._id, equipmentMap.get(equipment._id)! + equipment.required);
+          } else {
+            equipmentMap.set(equipment._id, equipment.required);
+          }
+        });
+      }
+    });
+    return equipmentMap; 
+  },
 });
 
 /* ############################################ */
