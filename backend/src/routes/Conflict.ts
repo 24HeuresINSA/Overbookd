@@ -5,6 +5,7 @@ import ConflictModel, { IConflict } from "@entities/Conflict";
 import FTModel, { ITimeFrame } from "@entities/FT";
 import {
   computeAllTFConflicts,
+  computeFTConflicts,
   getFTConflicts,
   sortTFByUser,
 } from "@src/services/conflict";

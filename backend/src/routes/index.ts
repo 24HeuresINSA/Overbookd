@@ -82,8 +82,16 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
 FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
-FTrouter.post("/", authMiddleware.protect(), createFT);
-FTrouter.put("/", authMiddleware.protect(), updateFT);
+FTrouter.post(
+  "/",
+  // todo: Add authentication
+  createFT
+);
+FTrouter.put(
+  "/",
+  // todo: Add authentication
+  updateFT
+);
 FTrouter.put("/unassign", authMiddleware.protect(), unassign);
 FTrouter.delete("/", authMiddleware.protect(), deleteFT);
 

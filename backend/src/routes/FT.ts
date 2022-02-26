@@ -4,6 +4,7 @@ import FTModel, { IFT } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
 import { ITimeFrame } from "../entities/FT";
+import { updateConflictsByFTCount } from "@src/services/conflict";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
@@ -20,6 +21,7 @@ export async function createFT(req: Request, res: Response) {
   const count = await FTModel.countDocuments();
   mFT.count = count + 1;
   const FT = await FTModel.create(mFT);
+  await updateConflictsByFTCount(mFT.count);
   res.json(FT);
 }
 
@@ -31,6 +33,7 @@ export async function updateFT(
   if (mFT._id) {
     try {
       await FTModel.findByIdAndUpdate(mFT._id, mFT);
+      await updateConflictsByFTCount(mFT.count);
     } catch (e) {
       logger.err(e);
     }

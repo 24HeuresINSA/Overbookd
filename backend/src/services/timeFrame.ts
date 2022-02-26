@@ -48,3 +48,13 @@ export async function getTimeFrameById(
   // nothing found
   return undefined;
 }
+
+/**
+ * Get all Timeframes in DB with type user
+ */
+export async function getAllOrgaTFs(): Promise<ITimeFrame[]> {
+  return await FTModel.aggregate()
+    .unwind("$timeframes")
+    .replaceRoot("$timeframes")
+    .match({ "required.type": "user" });
+}
