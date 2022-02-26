@@ -1,12 +1,20 @@
 <template>
   <div>
-    <h2>Mes disponibilités</h2>
-    <p>{{ detailMessage }}</p>
+    <h2>Création des disponibilités pour la manif</h2>
     <v-spacer></v-spacer>
     <v-container>
       <v-row>
+        <v-col offset-md="5" md="7">
+          <TimeslotAdder
+
+          ></TimeslotAdder>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container>
+      <v-row>
         <v-col v-for="title in existingGroupTitles" :key="title" md="6">
-          <TimeslotTable :group-title="title"></TimeslotTable>
+          <TimeslotTable :group-title="title" :editorMode="true"></TimeslotTable>
         </v-col>
       </v-row>
     </v-container>
@@ -25,9 +33,6 @@ export default Vue.extend({
   components: { TimeslotTable, TimeslotAdder, TimeslotSnackBar },
   data() {
     return {
-      detailMessage: this.getConfig("availabilities_description"),
-      userCharisma: this.$accessor.user.me.charisma,
-      maxCharisma: this.getConfig("max_charisma"),
     };
   },
   computed: {
