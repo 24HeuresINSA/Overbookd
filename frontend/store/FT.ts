@@ -16,6 +16,7 @@ export const state = () => ({
     refused: [] as any,
     comments: [] as any,
   } as FT,
+  Fts: [] as FT[],
 });
 
 export type FTState = ReturnType<typeof state>;
@@ -29,6 +30,9 @@ export const getters = getterTree(state, {
 /* ############################################ */
 
 export const mutations = mutationTree(state, {
+  SET_ALL_FTS: function (state, Fts: FT[]) {
+    state.Fts = Fts;
+  },
   SET_FT: function (state, mFT) {
     state.mFT = mFT;
   },
@@ -136,10 +140,19 @@ export const actions = actionTree(
     getAndSetFT: async function ({ commit }, count: number) {
       // get FT
       const res = await safeCall(this, repo.getFT(this, count.toString()));
-      if (res) {
+      if (res && res.data) {
         commit("SET_FT", res.data);
         return res.data;
       }
+      return null;
+    },
+    fetchAll: async function ({ commit }) {
+      const res = await safeCall(this, repo.getAllFTs(this));
+      if (res) {
+        commit("SET_ALL_FTS", res.data.data);
+        return res.data;
+      }
+      return null;
     },
     saveFT: async function ({ state }) {
       return safeCall(this, repo.updateFT(this, state.mFT), "saved", "server");

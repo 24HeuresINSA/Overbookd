@@ -354,7 +354,7 @@ export default Vue.extend({
   async mounted() {
     // setup config
     this.loading = true;
-    const res = await this.$accessor.location.getAllLocations();
+    let res = await this.$accessor.location.getAllLocations();
     if (!res) {
       // todo display snackbar notif
       console.log("Error, could not fetch the DB");
@@ -367,29 +367,23 @@ export default Vue.extend({
     if (!equipRes) {
       this.snack.display("Erreur lors du chargement des équipements");
     }
-    const FTs = await safeCall(this.$store, RepoFactory.ftRepo.getAllFTs(this));
-    const FAs = await safeCall(this.$store, RepoFactory.faRepo.getAllFAs(this));
+    await this.$accessor.FA.fetchAll();
+    res = await this.$accessor.FT.fetchAll();
     if (!res) {
       // todo display snackbar notif
       console.log("Error, could not fetch the DB");
     }
-    const Form = FAs!.data.concat(FTs!.data);
+
+    const equimentMap = this.countEquipment();
+
     this.inventory.forEach((item: any) => {
       item.required = {
         count: 0,
         form: Array<any>(),
       };
-      Form.forEach((form: any) => {
-        if (form.equipments && form.isValid !== false) {
-          const mEquipment = form.equipments.find(
-            (e: any) => e._id === item._id
-          );
-          if (mEquipment) {
-            item.required!.count += mEquipment.required;
-            item.required!.form.push(form);
-          }
-        }
-      });
+      if(item._id && equimentMap.has(item._id)) {
+        item.required.count = equimentMap.get(item._id);
+      }
     });
     const propRes =
       await this.$accessor.equipmentProposal.getEquipmentProposal();
@@ -540,6 +534,33 @@ export default Vue.extend({
       );
       this.selectedItem.borrowed.splice(index, 1);
     },
+    countEquipment(): Map<String, number>{
+      const equipmentMap = new Map<string, number>();
+      this.$accessor.FA.FAs.forEach(fa => {
+        if(fa.equipments){
+          fa.equipments.forEach(equipment => {
+            if(equipmentMap.has(equipment._id)){
+              equipmentMap.set(equipment._id, equipmentMap.get(equipment._id)! + equipment.required);
+            } else {
+              equipmentMap.set(equipment._id, equipment.required);
+            }
+          });
+        }
+      });
+      this.$accessor.FT.Fts.forEach(ft => {
+        if(ft.equipments){
+          ft.equipments.forEach(equipment => {
+            if(equipmentMap.has(equipment._id)){
+              equipmentMap.set(equipment._id, equipmentMap.get(equipment._id)! + equipment.required);
+            } else {
+              equipmentMap.set(equipment._id, equipment.required);
+              console.log("FT "+ ft.count +" : We go Here for " + equipment.name, equipment.required);
+            }
+          });
+        }
+      });
+      return equipmentMap;
+    }
   },
 });
 </script>
