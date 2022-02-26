@@ -215,6 +215,8 @@ import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframe
 import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
 
 interface Data {
   FTID: number;
@@ -236,6 +238,8 @@ interface Data {
   color: { [key: string]: string };
   v: string | null;
   SMALL_TYPES: typeof SmallTypes;
+
+  conflicts: unknown[];
 }
 
 const feedbacks = {
@@ -292,6 +296,8 @@ export default Vue.extend({
       ],
       color,
       SMALL_TYPES: SmallTypes,
+
+      conflicts: [],
     };
   },
   computed: {
@@ -328,6 +334,11 @@ export default Vue.extend({
   async mounted() {
     // get FT and store it in store
     await this.$accessor.FT.getAndSetFT(this.FTID);
+
+    const res = await safeCall(
+      this.$store,
+      RepoFactory.conflictsRepo.getFTConflicts(this, this.FTID)
+    );
   },
 
   methods: {
