@@ -174,6 +174,12 @@ export default {
           to: "/availabilities",
         },
         {
+          icon: "mdi-clock",
+          title: "[Humain] créer dispos",
+          roles: "humain",
+          to: "/createavailibility",
+        },
+        {
           icon: "mdi-calendar",
           title: "Mon calendrier 📆",
           to: "/calendar",
