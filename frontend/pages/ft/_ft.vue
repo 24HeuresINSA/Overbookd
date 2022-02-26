@@ -141,11 +141,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(validator, i) of validators"
-            :key="validator"
-            link
-          >
+          <v-list-item v-for="validator of validators" :key="validator" link>
             <v-list-item-title
               @click="
                 v = validator;
@@ -174,11 +170,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(validator, i) of validators"
-            :key="validator"
-            link
-          >
+          <v-list-item v-for="validator of validators" :key="validator" link>
             <v-list-item-title
               color="green"
               @click="validate(validator)"
@@ -335,6 +327,14 @@ export default Vue.extend({
 
   methods: {
     readyForAssignment() {
+      // Check for conflicts
+      if (this.$accessor.conflict.conflicts.length != 0) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Attention il reste des conflits pour cette FT",
+        });
+        return;
+      }
       this.$accessor.FT.readyForAssignment(this.me.lastname);
     },
     getIconColor(validator: string): string | undefined {
@@ -369,6 +369,7 @@ export default Vue.extend({
       await this.$accessor.FT.saveFT();
       // todo check if the request did succeed
       this.snack.display("FT sauvegardée 🥳");
+      await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
     },
 
     updateForm(section: keyof FT, form: any) {
