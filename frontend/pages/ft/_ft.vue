@@ -238,8 +238,6 @@ interface Data {
   color: { [key: string]: string };
   v: string | null;
   SMALL_TYPES: typeof SmallTypes;
-
-  conflicts: unknown[];
 }
 
 const feedbacks = {
@@ -296,8 +294,6 @@ export default Vue.extend({
       ],
       color,
       SMALL_TYPES: SmallTypes,
-
-      conflicts: [],
     };
   },
   computed: {
@@ -332,13 +328,9 @@ export default Vue.extend({
   },
 
   async mounted() {
-    // get FT and store it in store
+    // fetch FT and conficts
     await this.$accessor.FT.getAndSetFT(this.FTID);
-
-    const res = await safeCall(
-      this.$store,
-      RepoFactory.conflictsRepo.getFTConflicts(this, this.FTID)
-    );
+    await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
   },
 
   methods: {
