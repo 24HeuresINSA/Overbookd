@@ -12,7 +12,9 @@ export default {
   getById(context: Context, id: string) {
     return context.$axios.get(`${resource}/${id}`);
   },
-
+  getUserNumber(context: Context) {
+    return context.$axios.get(`${resource}/usernumber`);
+  },
   // POST
   createMany(context: Context, timeslot: Timeslot[]) {
     return context.$axios.post(`${resource}/many`, timeslot);

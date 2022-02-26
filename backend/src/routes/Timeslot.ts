@@ -132,3 +132,18 @@ export async function deleteManyTimeslotsByGroupTitle(
   }
   res.sendStatus(StatusCodes.OK);
 }
+
+//calculate the numbers of user per timeslot
+export async function getTimeslotUserNumber(req: Request, res: Response) {
+  const users = await UserModel.find({});
+  const map = new Map<number, number>();
+  for(const user of users){
+    if(user.availabilities){
+      const timeslots = await TimeslotModel.find({}).where('_id').in(user.availabilities).exec();
+      for(const t of timeslots){
+        map.set(t.timeFrame.start.getTime(), (map.get(t.timeFrame.start.getTime()) || 0) + 1);
+      }
+    }
+  }
+  return res.json(Object.fromEntries(map));
+}

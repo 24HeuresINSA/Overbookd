@@ -8,13 +8,16 @@ const timeslotRepo = RepoFactory.timeslotRepo;
 export const state = () => ({
   timeslots: [] as Timeslot[],
   createStatus: "",
+  userNumberByDate: new Map<number,number>(),
 });
 
 export const mutations = mutationTree(state, {
   SET_TIMESLOTS(state, timeslots: Timeslot[]) {
     state.timeslots = timeslots;
   },
-
+  SET_USER_NUMBER_BY_DATE(state, userNumberByDate: Map<number,number>) {
+    state.userNumberByDate = userNumberByDate;
+  },
   ADD_TIMESLOT(state, timeslot: Timeslot) {
     state.timeslots.push(timeslot);
   },
@@ -134,5 +137,11 @@ export const actions = actionTree(
         return null;
       }
     },
+    async fetchUserNumberByDate(context) {
+      const res = await safeCall(this, timeslotRepo.getUserNumber(this));
+      if (res && res.data) {
+        context.commit("SET_USER_NUMBER_BY_DATE", new Map(Object.entries(res.data)));
+      }
+    }
   }
 );

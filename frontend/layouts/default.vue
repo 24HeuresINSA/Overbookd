@@ -187,6 +187,12 @@ export default {
           to: "/createavailibility",
         },
         {
+          icon: "mdi-clock",
+          title: "[Humain] besoin orgas",
+          roles: "humain",
+          to: "/organeeds",
+        },
+        {
           icon: "mdi-calendar",
           title: "Mon calendrier",
           to: "/calendar",

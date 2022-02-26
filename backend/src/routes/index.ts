@@ -225,6 +225,11 @@ timeslotRouter.put(
   TimeslotHandler.updateTimeslot
 );
 timeslotRouter.get(
+  "/usernumber",
+  authMiddleware.protect(),
+  TimeslotHandler.getTimeslotUserNumber
+)
+timeslotRouter.get(
   "/:id",
   authMiddleware.protect(),
   TimeslotHandler.getTimeslotById
@@ -253,6 +258,7 @@ timeslotRouter.delete(
   authMiddleware.verifyRoles("hard"),
   TimeslotHandler.deleteManyTimeslotsByGroupTitle
 );
+
 // Transactions routes
 
 // const assignmentRouter = Router();
