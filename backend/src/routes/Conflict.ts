@@ -171,11 +171,11 @@ export async function detectAllTFConflictsHandler(
 /**
  * For a given FT find all conflicts and populate otherTf inside to have the other timeFrame infos
  */
-export async function getTFConflictsByFTId(
+export async function getTFConflictsByFTCount(
   req: Request,
   res: Response
 ): Promise<void> {
-  const ft = await FTModel.findOne({ _id: req.params.FTId }).lean();
+  const ft = await FTModel.findOne({ count: req.params.FTCount }).lean();
 
   if (!ft) {
     throw new Error("Did not find the FT for conflicts");

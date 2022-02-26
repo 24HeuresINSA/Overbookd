@@ -259,9 +259,9 @@ TFConflictRouter.get(
 );
 
 TFConflictRouter.get(
-  "/:FTId",
+  "/:FTCount",
   // todo add auth
-  ConflictHandlers.getTFConflictsByFTId
+  ConflictHandlers.getTFConflictsByFTCount
 );
 
 TFConflictRouter.put(
