@@ -208,9 +208,9 @@ export async function getTFConflictsByFTCount(
       // remove tf1 and tf2 and populate other tf
       ({
         ...c,
-        otherTf: await getTimeFrameById(c.tf1, {
+        otherTf: await getTimeFrameById(c.tf2, {
           select: ["start", "end"],
-          ft: { include: true, fields: ["general"] },
+          ft: { include: true, fields: ["general", "count"] },
         }),
       })
     )
@@ -222,7 +222,7 @@ export async function getTFConflictsByFTCount(
         ...c,
         otherTf: await getTimeFrameById(c.tf1, {
           select: ["start", "end"],
-          ft: { include: true, fields: ["general"] },
+          ft: { include: true, fields: ["general", "count"] },
         }),
       })
     )
