@@ -101,21 +101,6 @@
                     type="number"
                   ></v-text-field>
                 </v-col>
-                <v-col md="3">
-                  <v-switch
-                    v-model="mUser.hasDriverLicense"
-                    label="Permis"
-                    :disabled="!(hasEditingRole || isMe())"
-                  ></v-switch>
-                </v-col>
-                <v-col md="6">
-                  <v-text-field
-                    v-model="mUser.driverLicenseDate"
-                    label="date d'obtention du permis"
-                    placeholder="AAAA-MM-JJ"
-                    :disabled="!hasEditingRole"
-                  ></v-text-field>
-                </v-col>
                 <v-col md="6">
                   <v-text-field
                     v-model="mUser.year"
@@ -132,6 +117,21 @@
                 </v-col>
               </v-row>
               <v-row v-if="hasUserRole('hard')">
+                <v-col md="3">
+                  <v-switch
+                    v-model="mUser.hasDriverLicense"
+                    label="Permis"
+                    :disabled="!(hasEditingRole || isMe())"
+                  ></v-switch>
+                </v-col>
+                <v-col md="6">
+                  <v-text-field
+                    v-model="mUser.driverLicenseDate"
+                    label="date d'obtention du permis"
+                    placeholder="AAAA-MM-JJ"
+                    :disabled="!hasEditingRole"
+                  ></v-text-field>
+                </v-col>
                 <v-col md="4">
                   <v-text-field
                     v-model="mUser.balance"
