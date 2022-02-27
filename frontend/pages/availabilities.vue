@@ -17,12 +17,11 @@
 <script>
 import Vue from "vue";
 import TimeslotTable from "../components/organisms/TimeslotTable";
-import TimeslotAdder from "../components/organisms/TimeslotAdder";
 import TimeslotSnackBar from "../components/atoms/TimeslotSnackBar.vue";
 
 export default Vue.extend({
   name: "Availabilities",
-  components: { TimeslotTable, TimeslotAdder, TimeslotSnackBar },
+  components: { TimeslotTable, TimeslotSnackBar },
   data() {
     return {
       detailMessage: this.getConfig("availabilities_description"),
