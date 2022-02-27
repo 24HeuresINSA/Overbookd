@@ -5,6 +5,7 @@ import UserModel, { IUser, SafeUser } from "@entities/User";
 import path from "path";
 import * as fs from "fs";
 import { Types } from "mongoose";
+import TimeslotModel from "@entities/Timeslot";
 
 export const getUsers: RequestHandler = async function (req, res) {
   const users = await UserModel.find({});
@@ -64,6 +65,8 @@ export const addAvailabilities: RequestHandler = async function (req, res){
   const id = res.locals.auth_user._id;
   const timeslotIds: Types.ObjectId[] = req.body;
   try{
+    const timeslot = await TimeslotModel.find().where('_id').in(timeslotIds).exec();
+    const totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
     const user = await UserModel.findById(id);
     if(user){
       if(user.availabilities){
@@ -74,7 +77,25 @@ export const addAvailabilities: RequestHandler = async function (req, res){
       } else {
         user.availabilities = timeslotIds;
       }
-      user.save()
+      if(user.charisma){
+        user.charisma += totalCharisma;
+      } else {
+        user.charisma = totalCharisma;
+      }
+      if(!user.notifications){
+        user.notifications = [];
+      } 
+      user.notifications.push({
+          type: "broadcast",
+          message: `Tu as reçu ${totalCharisma} points de charisme pour ta disponibilité.`,
+          date: new Date(),
+          team: "hard",
+          link: ""
+      });
+      await UserModel.findByIdAndUpdate(user._id, {
+        notifications: user.notifications,
+      });
+      await user.save();
       res.status(StatusCodes.OK).json(new SafeUser(user));
     }else{
       res.sendStatus(StatusCodes.NOT_FOUND).json({
