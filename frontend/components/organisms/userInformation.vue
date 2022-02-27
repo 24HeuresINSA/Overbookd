@@ -150,16 +150,33 @@
           </v-card-text>
         </v-col>
         <v-col md="7">
-          <v-text-field
-            v-model="mUser.charisma"
-            label="Charisme"
-            :disabled="true"
-          ></v-text-field>
+          <v-sheet
+            class="charismaContainer"
+            color="warning"
+            outlined
+            rounded
+            width="30%"
+            align="center"
+          >
+            <h2 class="userCharisma">
+              Charisme total :
+              {{ mUser.charisma === undefined ? 0 : mUser.charisma }}
+            </h2></v-sheet
+          >
           <div class="myCal">
             <v-sheet tile height="54" class="d-flex">
               <v-btn icon class="ma-2" @click="$refs.cal.prev()">
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
+              <v-spacer></v-spacer>
+              <h2 style="margin-top: 2%">
+                {{
+                  new Date(calendarValue).toLocaleDateString("fr-fr", {
+                    month: "long",
+                    year: "numeric",
+                  })
+                }}
+              </h2>
               <v-spacer></v-spacer>
               <v-btn icon class="ma-2" @click="$refs.cal.next()">
                 <v-icon>mdi-chevron-right</v-icon>
@@ -262,6 +279,7 @@ export default {
   },
 
   async mounted() {
+    this.calendarValue = this.getMonday(new Date());
     timeslotRepo.getAll(this).then((res) => {
       this.allTimeSlots = res.data;
     });
@@ -343,25 +361,39 @@ export default {
       let isUserAvailableInTimeframe = false;
       availabilities.forEach((availability) => {
         let slot = this.allTimeSlots.find((el) => el._id == availability);
-        let start = new Date(slot.timeFrame.start);
-        let end = new Date(slot.timeFrame.end);
-        if (
-          start.getTime() <= timeframe.getTime() + 5000 &&
-          end.getTime() >= timeframe.getTime() + 5000
-        ) {
-          isUserAvailableInTimeframe = true;
+        if (slot) {
+          let start = new Date(slot.timeFrame.start);
+          let end = new Date(slot.timeFrame.end);
+          if (
+            start.getTime() <= timeframe.getTime() + 5000 &&
+            end.getTime() >= timeframe.getTime() + 5000
+          ) {
+            isUserAvailableInTimeframe = true;
+          }
         }
       });
       return isUserAvailableInTimeframe;
+    },
+    getMonday(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
     },
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .myCal {
   height: 60vh;
   width: 50vw;
   margin-bottom: 10vh;
+}
+.charismaContainer {
+  margin-top: 4vh;
+  .userCharisma {
+    color: rgb(0, 0, 0);
+  }
 }
 </style>
