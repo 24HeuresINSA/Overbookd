@@ -875,16 +875,6 @@
       "regex": "0[6-7]{1}[0-9]{8}$"
     },
     {
-      "key": "hasDriverLicense",
-      "label": "Est-ce que tu as un permis de conduire ?",
-      "type": "switch"
-    },
-    {
-      "key": "driverLicenseDate",
-      "label": "Date de permis",
-      "type": "date"
-    },
-    {
       "key": "team",
       "label": "Team affiliée (laisser vide si non concerné)",
       "type": "select",
