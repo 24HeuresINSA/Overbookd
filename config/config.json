@@ -868,6 +868,13 @@
       "regex": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
     },
     {
+      "key": "phone",
+      "label": "Numéro de téléphone",
+      "isRequired": true,
+      "option": "tel",
+      "regex": "0[6-7]{1}[0-9]{8}$"
+    },
+    {
       "key": "hasDriverLicense",
       "label": "Est-ce que tu as un permis de conduire ?",
       "type": "switch"
@@ -891,7 +898,7 @@
     },
     {
       "key": "comment",
-      "label": "Commentaire (handicap éventuel, allergies, un mot doux pour les orgas...)"
+      "label": "Commentaire (handicap éventuel, allergies, amis avec qui tu voudrais être, un mot doux pour les orgas...)"
     }
   ],
   "__v": 0
