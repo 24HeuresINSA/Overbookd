@@ -183,7 +183,7 @@ export default {
           icon: "mdi-calendar",
           title: "Mon calendrier 📆",
           to: "/calendar",
-          roles: "hard",
+          roles: "everyone",
         },
         {
           icon: "mdi-account",
