@@ -9,9 +9,4 @@ triage:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: always
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "pre-prod"'
-      when: never
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: never
+    - when: never
