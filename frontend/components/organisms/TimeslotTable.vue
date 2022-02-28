@@ -25,16 +25,19 @@
           <TimeslotDialog ref="dialog" :timeslot="editedItem"></TimeslotDialog>
         </v-toolbar>
       </template>
-      <template
-        #[`item.actions`]="{ item }"
-      >
+      <template #[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="$refs.confirmDeleteSingle.open()"> mdi-delete </v-icon>
+        <v-icon small @click="$refs.confirmDeleteSingle.open()">
+          mdi-delete
+        </v-icon>
         <ConfirmDialog ref="confirmDeleteSingle" @confirm="removeItem(item)"
           >Le créneau sera supprimé de façon <b>irreversible</b> !
         </ConfirmDialog>
       </template>
-      <template #[`item.data-table-select`]="{ isSelected, select, item }" v-if="!editorMode">
+      <template
+        v-if="!editorMode"
+        #[`item.data-table-select`]="{ isSelected, select, item }"
+      >
         <v-simple-checkbox
           v-if="item.isSelected"
           :value="item.isSelected"
@@ -58,11 +61,7 @@
         </td>
       </template>
       <template #[`footer.prepend`]>
-        <v-btn
-          v-if="editorMode"
-          color="error"
-          @click="askConfirmDelete"
-        >
+        <v-btn v-if="editorMode" color="error" @click="askConfirmDelete">
           <v-icon left> mdi-plus </v-icon>
           Supprimer le tableau
         </v-btn>
@@ -102,7 +101,7 @@ export default Vue.extend({
     },
     editorMode: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   data(): any {
@@ -179,10 +178,10 @@ export default Vue.extend({
         },
       ];
       if (this.editorMode) {
-        h.push({ text: "Actions", value: "actions", sortable: false },);
+        h.push({ text: "Actions", value: "actions", sortable: false });
       }
       return h;
-    }
+    },
   },
   mounted() {
     Object.keys(this.$refs).forEach((k) => {

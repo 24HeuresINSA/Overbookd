@@ -504,6 +504,11 @@
       "name": "teckos",
       "color": "#CFA602",
       "icon": "mdi-hammer-wrench"
+    },
+    {
+      "name": "tendrestival",
+      "color": "#FF9300",
+      "icon": "mdi-balloon"
     }
   ],
   "__v": 0
@@ -868,14 +873,11 @@
       "regex": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
     },
     {
-      "key": "hasDriverLicense",
-      "label": "Est-ce que tu as un permis de conduire ?",
-      "type": "switch"
-    },
-    {
-      "key": "driverLicenseDate",
-      "label": "Date de permis",
-      "type": "date"
+      "key": "phone",
+      "label": "Numéro de téléphone",
+      "isRequired": true,
+      "option": "tel",
+      "regex": "0[6-7]{1}[0-9]{8}$"
     },
     {
       "key": "team",
@@ -886,7 +888,8 @@
         "Kfet",
         "Karna",
         "Woods",
-        "Teckos"
+        "Teckos",
+        "Tendrestival"
       ]
     },
     {
