@@ -9,21 +9,21 @@ case $1 in
          ;;
 
 "--utils"|"-u") echo "starting utils containers"
-           docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils up -d
+           docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
            ;;
 
 "--prod"|"-p") echo "starting prod containers"
-          docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod up -d
+          docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
           ;;
 
 "--preprod"|"-t") echo "starting preprod containers"
-             docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml up -d
+             docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
              ;;
 
 "--all"|"-a") echo "starting utils, prod and prepord containers"
-         docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils up -d
-         docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod up -d
-         docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
          ;;
 
 *) echo "USAGE"
