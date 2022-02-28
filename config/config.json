@@ -504,6 +504,11 @@
       "name": "teckos",
       "color": "#CFA602",
       "icon": "mdi-hammer-wrench"
+    },
+    {
+      "name": "tendrestival",
+      "color": "#FF9300",
+      "icon": "mdi-balloon"
     }
   ],
   "__v": 0
@@ -883,7 +888,8 @@
         "Kfet",
         "Karna",
         "Woods",
-        "Teckos"
+        "Teckos",
+        "Tendrestival"
       ]
     },
     {
