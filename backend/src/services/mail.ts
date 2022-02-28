@@ -100,7 +100,7 @@ export const sendValidationMail = async function (
   const mailOptions = {
     from: "tom26.sampic@gmail.com",
     to,
-    subject: "Tu as perdu ton mot de passe. LOL",
+    subject: "Validation Overbookd",
     html,
   };
 
