@@ -60,3 +60,56 @@ export const sendResetMail = async function (
     });
   });
 };
+
+export const sendValidationMail = async function (
+  to: string
+): Promise<unknown | undefined> {
+  const html = `
+  <table style="text-align: center;">
+  <h1>Validation Overbookd</h1>
+  <p>
+    Félicitation ton inscription sur Overbookd est dorénavant complète ! <br/>
+    Tu peux maintenant te connecter pour pouvoir renseigner tes dispos. 
+    N'oublie pas que plus de dispo = plus rapidement validé !!
+  </p>
+  <a
+    id="link-button"
+    href="overbookd.${process.env.DOMAIN}/login"
+    style="
+      background-color: green;
+      padding: 1rem 1rem 1rem 1rem;
+      border-radius: 0.5rem;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin: 1rem;
+    "
+    >Réinitiliser</a
+  >
+  <p>
+    Si le lien ne marche pas, va a cette adresse :
+    overbookd.${process.env.DOMAIN}/login
+  </p>
+
+  <p>
+    Bisous <br />
+    La Team OB
+  </p>
+</table>`;
+
+  const mailOptions = {
+    from: "tom26.sampic@gmail.com",
+    to,
+    subject: "Tu as perdu ton mot de passe. LOL",
+    html,
+  };
+
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(info);
+    });
+  });
+};
