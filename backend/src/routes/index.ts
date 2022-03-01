@@ -14,10 +14,10 @@ import {
   uploadPP,
   addAvailabilities,
 } from "./Users";
-import { createFA, deleteFA, getFAByCount, getFAs, getFAsNumber, setFA } from "./FA";
+import {createFA, deleteFA, getFAByCount, getFAs, getFAsNumber, setFA} from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from "./Timeslot";
-import {createFT, deleteFT, getAllFTs, getFTByID, unassign, updateFT,} from "./FT";
+import {createFT, deleteFT, getAllFTs, getFTByID, getFTsNumber, unassign, updateFT,} from "./FT";
 import * as TransactionHandlers from "./transactions";
 import * as AuthHandlers from "./Auth";
 import issueHandler from "./Issue";
@@ -63,6 +63,7 @@ configRouter.use(mCors);
 // FA-routes
 const FArouter = Router();
 FArouter.get("/", authMiddleware.protect(), getFAs);
+FArouter.get("/count", authMiddleware.protect(), getFAsNumber);
 FArouter.get("/:id", authMiddleware.protect(), getFAByCount);
 FArouter.post("/", authMiddleware.protect(), createFA);
 FArouter.put("/", authMiddleware.protect(), setFA);
