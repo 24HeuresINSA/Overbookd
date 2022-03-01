@@ -12,4 +12,7 @@ export default {
   ) {
     return context.$axios.post("/reset", data);
   },
+  sendValidationEmail(context: Context, data: { userEmail: string }) {
+    return context.$axios.post("/signupvalidation", data);
+  },
 };

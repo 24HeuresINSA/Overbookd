@@ -98,7 +98,7 @@ export const sendValidationMail = async function (
 </table>`;
 
   const mailOptions = {
-    from: "tom26.sampic@gmail.com",
+    from: process.env.GMAIL_USER,
     to,
     subject: "Validation Overbookd",
     html,

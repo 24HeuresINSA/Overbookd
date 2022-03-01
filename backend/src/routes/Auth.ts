@@ -6,7 +6,7 @@ import logger from "@shared/Logger";
 import ConfigModel from "@entities/Config";
 import { StatusCodes } from "http-status-codes";
 import { randomBytes } from "crypto";
-import { sendResetMail } from "@src/services/mail";
+import { sendResetMail, sendValidationMail } from "@src/services/mail";
 
 export const signup: RequestHandler = async function (req, res) {
   // checking if signup is possible beffore all
@@ -162,7 +162,7 @@ export const forgot: RequestHandler = async function (req, res) {
       user.save();
 
       // Even if this does not work we still return the same statusCode
-      await sendResetMail(resetToken, user.email)
+      await sendResetMail(resetToken, user.email);
 
       res.sendStatus(StatusCodes.OK);
     } else {
@@ -222,6 +222,20 @@ export const recoverPassword: RequestHandler = async function (req, res) {
         msg: "Token does not match any password reset request",
       });
     }
+  } catch (e) {
+    logger.err(e);
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "Error while processing the request",
+    });
+  }
+};
+
+export const signupvalidation: RequestHandler = async function (req, res) {
+  const email: string = req.body.userEmail;
+  try {
+    // Even if this does not work we still return the same statusCode
+    await sendValidationMail(email);
+    res.sendStatus(StatusCodes.OK);
   } catch (e) {
     logger.err(e);
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).json({
