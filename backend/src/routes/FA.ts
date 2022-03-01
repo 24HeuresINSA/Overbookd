@@ -96,9 +96,26 @@ export async function getFAsNumber(req: Request, res: Response) {
     ).sort('_id.status')
     .group({
       _id: '$_id.team',
-      status: {$push: {state: '$_id.status', count: '$count'}}
-    })
-    .sort('_id');
+      status: {$push: {state: '$_id.status', count: '$count'}},
+      total: {$sum: '$count'}
+    });
+  let result = FAs.map((fa) => {
+    let status: { draft: number, refused: number, submitted: number, validated: number } = {
+      draft: 0,
+      refused: 0,
+      submitted: 0,
+      validated: 0
+    };
+    for (let i in fa.status) {
+      // @ts-ignore
+      status[fa.status[i].state] = fa.status[i].count;
+    }
+    return {
+      team: fa._id,
+      status: status,
+      total: fa.total
+    };
+  }).sort((a, b) => (0 - (a.team.toLowerCase() > b.team.toLowerCase() ? -1 : 1)));
   logger.info("getting FAs count");
-  res.json(FAs);
+  res.json(result);
 }

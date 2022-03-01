@@ -17,7 +17,7 @@ import {
 import {createFA, deleteFA, getFAByCount, getFAs, getFAsNumber, setFA} from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from './Timeslot'
-import {createFT, deleteFT, getAllFTs, getFTByID, unassign, updateFT,} from "./FT";
+import {createFT, deleteFT, getAllFTs, getFTByID, getFTsNumber, unassign, updateFT,} from "./FT";
 import * as TransactionHandlers from "./transactions";
 import * as AuthHandlers from "./Auth";
 import issueHandler from "./Issue";
@@ -72,6 +72,7 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 // FT-routes
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
+FTrouter.get("/count", authMiddleware.protect(), getFTsNumber);
 FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);
