@@ -9,6 +9,9 @@ import { randomBytes } from "crypto";
 import { sendResetMail, sendValidationMail } from "@src/services/mail";
 
 export const signup: RequestHandler = async function (req, res) {
+  //send validation mail
+  const email = req.body.email;
+  await sendValidationMail(email);
   // checking if signup is possible beffore all
   try {
     const value = await ConfigModel.findOne({ key: "isSignupOpen" });
