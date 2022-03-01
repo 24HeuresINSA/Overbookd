@@ -276,7 +276,6 @@ baseRouter.post("/signup", AuthHandlers.signup);
 baseRouter.post("/login", AuthHandlers.login);
 baseRouter.post("/migrate", AuthHandlers.migrate);
 baseRouter.post("/forgot", AuthHandlers.forgot);
-baseRouter.post("/signupvalidation", AuthHandlers.signupvalidation);
 baseRouter.post("/reset", AuthHandlers.recoverPassword);
 
 baseRouter.get("/test", authMiddleware.protect(), (req, res) => {

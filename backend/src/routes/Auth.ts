@@ -232,17 +232,3 @@ export const recoverPassword: RequestHandler = async function (req, res) {
     });
   }
 };
-
-export const signupvalidation: RequestHandler = async function (req, res) {
-  const email: string = req.body.userEmail;
-  try {
-    // Even if this does not work we still return the same statusCode
-    await sendValidationMail(email);
-    res.sendStatus(StatusCodes.OK);
-  } catch (e) {
-    logger.err(e);
-    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      msg: "Error while processing the request",
-    });
-  }
-};
