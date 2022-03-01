@@ -69,9 +69,11 @@ export const sendValidationMail = async function (
   <h1>Validation Overbookd</h1>
   <p>
     Félicitation ton inscription sur Overbookd est dorénavant complète ! <br/>
-    Tu peux maintenant te connecter pour pouvoir renseigner tes dispos. 
-    N'oublie pas que plus de dispo = plus rapidement validé !!
   </p>
+  <h2>    
+    Tu peux maintenant te connecter pour pouvoir renseigner tes dispos. <br/>
+    <span style="color:red">N'oublie pas que plus de dispo = plus rapidement validé !!</span>
+  </h2>
   <a
     id="link-button"
     href="overbookd.${process.env.DOMAIN}/login"
@@ -84,7 +86,7 @@ export const sendValidationMail = async function (
       display: inline-block;
       margin: 1rem;
     "
-    >Réinitiliser</a
+    >Connexion à Overbookd</a
   >
   <p>
     Si le lien ne marche pas, va a cette adresse :
@@ -92,7 +94,7 @@ export const sendValidationMail = async function (
   </p>
 
   <p>
-    Bisous <br />
+    Merci de ton investissement ! <br />
     La Team OB
   </p>
 </table>`;
