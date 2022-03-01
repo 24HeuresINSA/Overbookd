@@ -34,8 +34,8 @@
                 </template>
               </v-combobox>
 
-              <label>Compte validé</label>
-              <template v-if="hasRole(['admin', 'bureau'])">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+                <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
                   tile

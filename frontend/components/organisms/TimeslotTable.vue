@@ -132,12 +132,16 @@ export default Vue.extend({
             this.padTime(new Date(timeslot.timeFrame.end).getHours()) +
             ":" +
             this.padTime(new Date(timeslot.timeFrame.end).getMinutes()),
-          date: new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
-            month: "long",
-            day: "2-digit",
-            weekday: "long",
-            year: "numeric",
-          }),
+          date:
+            new Date(timeslot.timeFrame.start).getFullYear() +
+            "-" +
+            (new Date(timeslot.timeFrame.start).getMonth() + 1) +
+            "-" +
+            new Date(timeslot.timeFrame.start).getDate() +
+            " " +
+            new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
+              weekday: "long",
+            }),
           charisma: timeslot.charisma,
           isSelected: this.$accessor.user.me.availabilities.includes(
             timeslot._id
