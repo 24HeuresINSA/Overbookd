@@ -2,10 +2,11 @@
   <div>
     <h2>Mes disponibilités</h2>
     <p>{{ detailMessage }}</p>
+    <h2>Mon Charisme : {{ charisma }}</h2>
     <v-spacer></v-spacer>
     <v-container>
       <v-row>
-        <v-col v-for="title in existingGroupTitles" :key="title" md="6">
+        <v-col v-for="title in existingGroupTitles" :key="title" md="12">
           <TimeslotTable :group-title="title"></TimeslotTable>
         </v-col>
       </v-row>
@@ -25,7 +26,6 @@ export default Vue.extend({
   data() {
     return {
       detailMessage: this.getConfig("availabilities_description"),
-      userCharisma: this.$accessor.user.me.charisma,
       maxCharisma: this.getConfig("max_charisma"),
     };
   },
@@ -41,15 +41,22 @@ export default Vue.extend({
         return acc;
       }, []);
     },
+    charisma() {
+      return this.$accessor.user.me.charisma;
+    },
   },
 
   async mounted() {
-    this.$store.dispatch("timeslot/fetchTimeslots");
+    await this.initStore();
   },
 
   methods: {
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
+    },
+    async initStore() {
+      await this.$accessor.user.fetchUser();
+      await this.$accessor.timeslot.fetchTimeslots();
     },
   },
 });
