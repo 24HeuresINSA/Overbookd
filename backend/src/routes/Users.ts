@@ -161,7 +161,8 @@ export const broadcastNotification: RequestHandler = async function (req, res) {
 };
 
 export const uploadPP: RequestHandler = async function (req, res) {
-  const user = await UserModel.findById(req.body.userID);
+  const id = res.locals.auth_user._id;
+  const user = await UserModel.findById(id);
   if (user) {
     const oldUser = user.toObject();
     if (oldUser.pp) {
@@ -172,7 +173,7 @@ export const uploadPP: RequestHandler = async function (req, res) {
         logger.info(`deleted ${filename} 🗑`);
       }
     }
-    await UserModel.findByIdAndUpdate(req.body.userID, {
+    await UserModel.findByIdAndUpdate(id, {
       // @ts-ignore
       pp: req.files[0].filename,
     });

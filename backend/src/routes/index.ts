@@ -58,7 +58,7 @@ const imageUpload = multer({
   dest: "images",
 });
 
-userRouter.post("/pp", imageUpload.array("files"), uploadPP);
+userRouter.post("/pp", authMiddleware.protect(), imageUpload.array("files"), uploadPP);
 userRouter.get("/pp/:filename", getPP);
 
 // Config-route
