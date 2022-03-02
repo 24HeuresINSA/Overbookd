@@ -14,9 +14,11 @@
           <ComptesPersosCard />
         </v-col>
 
+        <!-- Display disable because Friends not working
         <v-col v-if="hasRole('soft')" cols="12" sm="6" lg="4">
           <FriendsCard />
         </v-col>
+        -->
 
         <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="4">
           <ClickerCard />
