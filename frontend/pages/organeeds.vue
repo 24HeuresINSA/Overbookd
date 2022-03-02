@@ -113,8 +113,6 @@ export default Vue.extend({
           for(let i = 0; i < 8; i++){
             Vue.set(this.userDisponibilityTable[tableIndex.j], tableIndex.i + i, value);
           }
-          //this.userDisponibilityTable[tableIndex.j][tableIndex.i] = value;
-          console.log(this.userDisponibilityTable[tableIndex.j][tableIndex.i], tableIndex.i, tableIndex.j)
         }
       });
     },
