@@ -879,6 +879,31 @@
         "regex": "0[6-7]{1}[0-9]{8}$"
       },
       {
+        "key": "departement",
+        "label": "Département",
+        "type": "select",
+        "options": [
+          "TC",
+          "IF",
+          "BS",
+          "GCU",
+          "SGM",
+          "GI",
+          "GM",
+          "GEN",
+          "SGM",
+          "FIMI",
+          "GE",
+          "Pas à l'INSA"
+        ]
+      },
+      {
+        "key": "year",
+        "label": "Année",
+        "type": "select",
+        "options": [1, 2, 3, 4, 5, "5+"]
+      },
+      {
         "key": "team",
         "label": "Team affiliée (laisser vide si non concerné)",
         "type": "select",
