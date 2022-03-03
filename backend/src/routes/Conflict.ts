@@ -175,7 +175,8 @@ export async function getTFConflictsByFTCount(
   req: Request,
   res: Response
 ): Promise<void> {
-  const ft = await FTModel.findOne({ count: req.params.FTCount }).lean();
+  const count = parseInt(req.params.FTCount);
+  const ft = await FTModel.findOne({ count }).lean();
 
   if (!ft) {
     throw new Error("Did not find the FT for conflicts");
