@@ -32,7 +32,6 @@ const ConflictModel = model<IConflict>("Conflict", ConflictSchema);
  * Used to create a TFconflict with TimeFrames sorted by _id ( tf1._id < tf2._id )
  * Needed for a good detection of duplicates
  * Use the function everywhere when a new conflict is created
- * todo: Maybe add a DB check for this to avoid issues
  *
  * @param tf1ID string _id in first timeframe
  * @param tf2ID string _id in second timeframe

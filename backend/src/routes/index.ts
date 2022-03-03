@@ -82,16 +82,8 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
 FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
-FTrouter.post(
-  "/",
-  // todo: Add authentication
-  createFT
-);
-FTrouter.put(
-  "/",
-  // todo: Add authentication
-  updateFT
-);
+FTrouter.post("/", authMiddleware.protect(), createFT);
+FTrouter.put("/", authMiddleware.protect(), updateFT);
 FTrouter.put("/unassign", authMiddleware.protect(), unassign);
 FTrouter.delete("/", authMiddleware.protect(), deleteFT);
 
@@ -241,7 +233,6 @@ transactionRouter.delete(
 
 const conflictRouter = Router();
 
-// todo remove
 conflictRouter.get(
   "/",
   authMiddleware.protect(),
@@ -252,30 +243,19 @@ conflictRouter.get(
   authMiddleware.protect(),
   ConflictHandlers.getConflictsByUserId
 );
-conflictRouter.post(
-  "/",
-  authMiddleware.protect(),
-  ConflictHandlers.createConflict
-);
 conflictRouter.get("/detectAll", ConflictHandlers.detectAllTFConflictsHandler);
 
 const TFConflictRouter = Router();
 TFConflictRouter.get(
   "/",
-  // todo add auth
+  authMiddleware.protect(),
   ConflictHandlers.getTFConflicts
 );
 
 TFConflictRouter.get(
   "/:FTCount",
-  // todo add auth
+  authMiddleware.protect(),
   ConflictHandlers.getTFConflictsByFTCount
-);
-
-TFConflictRouter.put(
-  "/:FTId"
-  // todo add auth
-  // todo implement route logic
 );
 
 const locationRouter = Router();

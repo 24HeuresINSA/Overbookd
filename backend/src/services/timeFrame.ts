@@ -10,7 +10,6 @@ export type getTimeFrameByIdOpts = {
 /**
  * Find timeFrame from its ID
  * Not optimized this is done because of the lack of time to refactor database.
- * todo: Put timeframes in a separate collection
  * @param TFId TimeFrameId
  */
 export async function getTimeFrameById(

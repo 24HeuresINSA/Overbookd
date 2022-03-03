@@ -35,7 +35,6 @@ export async function createConflict(
 
 /**
  *  Get all TF conflicts
- * todo: remove ts-ignore and improve structures
  */
 export async function getTFConflicts(
   req: Request,
