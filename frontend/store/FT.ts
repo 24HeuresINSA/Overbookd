@@ -3,6 +3,7 @@ import { FT } from "~/utils/models/FT";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { FTStatus } from "~/utils/FT";
+import FtRepo from "~/repositories/ftRepo";
 
 const repo = RepoFactory.ftRepo;
 
@@ -143,6 +144,11 @@ export const mutations = mutationTree(state, {
       equipment.required = count;
     }
   },
+  MARK_READY_FOR_ASSIGNMENT: function ({ mFT }) {
+    mFT.status = "ready";
+    mFT.refused = [];
+    mFT.validated = ["humain", "log"]; // change with config later
+  },
 });
 
 /* ############################################ */
@@ -256,15 +262,24 @@ export const actions = actionTree(
      * Mark FT as ready for assignment
      * @param by validator name
      */
-    readyForAssignment: async function ({ dispatch, commit }, by: string) {
-      await dispatch("addComment", {
-        topic: "ready",
-        text: "FT prête à affectation",
-        time: new Date(),
-        validator: by,
-      });
-      commit("UPDATE_STATUS", FTStatus.ready);
-      await dispatch("saveFT");
+    readyForAssignment: async function (
+      { dispatch, commit, state },
+      by: string
+    ) {
+      const res = await safeCall(
+        this,
+        FtRepo.markAsReady(this, state.mFT.count)
+      );
+      if (res) {
+        await dispatch("addComment", {
+          topic: "ready",
+          text: "FT prête à affectation",
+          time: new Date(),
+          validator: by,
+        });
+        commit("MARK_READY_FOR_ASSIGNMENT", by);
+        await dispatch("saveFT");
+      }
     },
     setParentFA: async function ({ dispatch, commit }, faCount) {
       commit("SET_PARENT_FA", faCount);

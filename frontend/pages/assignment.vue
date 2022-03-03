@@ -136,6 +136,8 @@ export default {
       });
     }
 
+    await this.$accessor.assignment.initStore();
+
     const res = await safeCall(this.$store, ftRepo.getAllFTs(this));
     if (res) {
       this.FTs = res.data;
@@ -226,7 +228,7 @@ export default {
     },
 
     onSelectedUser(user) {
-      this.$accessor.user.setSelectedUser(user);
+      this.$accessor.assignment.setCurrentUser(user);
       this.selectedUser = user;
     },
   },

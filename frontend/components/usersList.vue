@@ -1,33 +1,37 @@
 <template>
   <div>
     <!-- list of  filtered users -->
-    <v-list style="overflow-y: auto; height: auto" dense>
-      <v-list-item-group v-model="selectedUserIndex">
-        <v-list-item v-for="user of users" :key="user._id">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ user.firstname }} {{ user.lastname.toUpperCase() }}
-              {{ user.nickname ? `(${user.nickname})` : "" }}
-              {{ user.charisma }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <OverChips :roles="user.team"></OverChips>
-              <v-progress-linear
-                :value="getAssignmentRatio(user)"
-              ></v-progress-linear>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-tooltip top @click="selectedUser = user">
-              <template #activator="{ on, attrs }">
-                <v-icon dark v-bind="attrs" v-on="on"> mdi-information</v-icon>
-              </template>
-              <span>{{ user.comment }}</span>
-            </v-tooltip>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
+    <v-lazy>
+      <v-list style="overflow-y: auto; height: auto" dense>
+        <v-list-item-group v-model="selectedUserIndex">
+          <v-list-item v-for="user of users" :key="user._id">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ user.firstname }} {{ user.lastname.toUpperCase() }}
+                {{ user.nickname ? `(${user.nickname})` : "" }}
+                {{ user.charisma }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                <OverChips :roles="user.team"></OverChips>
+                <v-progress-linear
+                  :value="getAssignmentRatio(user)"
+                ></v-progress-linear>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-tooltip top>
+                <template #activator="{ on, attrs }">
+                  <v-icon small v-bind="attrs" v-on="on">
+                    mdi-information</v-icon
+                  >
+                </template>
+                <span>{{ user.comment }}</span>
+              </v-tooltip>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-lazy>
   </div>
 </template>
 
@@ -57,7 +61,7 @@ export default {
   watch: {
     selectedUserIndex() {
       const selectedUser = this.users[this.selectedUserIndex];
-      this.$emit("selected-user", selectedUser);
+      this.$accessor.assignment.setSelectedUser(selectedUser);
     },
   },
 

@@ -21,7 +21,7 @@ import {
   createFT,
   deleteFT,
   getAllFTs,
-  getFTByID,
+  getFTByID, makeFTReady,
   unassign,
   updateFT,
 } from "./FT";
@@ -29,8 +29,11 @@ import * as TransactionHandlers from "./transactions";
 import * as AuthHandlers from "./Auth";
 import issueHandler from "./Issue";
 import * as authMiddleware from "@src/middleware/auth";
-import * as AssignmentHandlers from "./Assignment";
+// import * as AssignmentHandlers from "./Assignment";
 import * as LocationHandlers from "./Location";
+import * as ConflictHandlers from "./Conflict";
+// @ts-ignore
+import * as TimeSpanHandlers from "./TimeSpan";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -82,6 +85,7 @@ FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);
 FTrouter.put("/unassign", authMiddleware.protect(), unassign);
+FTrouter.post("/:count/ready", authMiddleware.protect(), makeFTReady);
 FTrouter.delete("/", authMiddleware.protect(), deleteFT);
 
 // Equipment-routes
@@ -164,32 +168,32 @@ timeslotRouter.delete(
 );
 // Transactions routes
 
-const assignmentRouter = Router();
-assignmentRouter.get(
-  "/",
-  authMiddleware.protect(),
-  AssignmentHandlers.getAssignments
-);
-assignmentRouter.post(
-  "/",
-  authMiddleware.protect(),
-  AssignmentHandlers.createAssignment
-);
-assignmentRouter.put(
-  "/",
-  authMiddleware.protect(),
-  AssignmentHandlers.updateAssignment
-);
-assignmentRouter.get(
-  "/user/:id",
-  authMiddleware.protect(),
-  AssignmentHandlers.getAssignmentsByUserId
-);
-assignmentRouter.get(
-  "/ft/:id",
-  authMiddleware.protect(),
-  AssignmentHandlers.getAssignmentsByFTId
-);
+// const assignmentRouter = Router();
+// assignmentRouter.get(
+//   "/",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.getAssignments
+// );
+// assignmentRouter.post(
+//   "/",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.createAssignment
+// );
+// assignmentRouter.put(
+//   "/",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.updateAssignment
+// );
+// assignmentRouter.get(
+//   "/user/:id",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.getAssignmentsByUserId
+// );
+// assignmentRouter.get(
+//   "/ft/:id",
+//   authMiddleware.protect(),
+//   AssignmentHandlers.getAssignmentsByFTId
+// );
 
 const transactionRouter = Router();
 transactionRouter.get(
@@ -228,6 +232,45 @@ transactionRouter.delete(
   TransactionHandlers.deleteTransaction
 );
 
+const conflictRouter = Router();
+
+// todo remove
+conflictRouter.get(
+  "/",
+  authMiddleware.protect(),
+  ConflictHandlers.getTFConflicts
+);
+conflictRouter.get(
+  "/user/:id",
+  authMiddleware.protect(),
+  ConflictHandlers.getConflictsByUserId
+);
+conflictRouter.post(
+  "/",
+  authMiddleware.protect(),
+  ConflictHandlers.createConflict
+);
+conflictRouter.get("/detectAll", ConflictHandlers.detectAllTFConflictsHandler);
+
+const TFConflictRouter = Router();
+TFConflictRouter.get(
+  "/",
+  // todo add auth
+  ConflictHandlers.getTFConflicts
+);
+
+TFConflictRouter.get(
+  "/:FTId",
+  // todo add auth
+  ConflictHandlers.getTFConflictsByFTId
+);
+
+TFConflictRouter.put(
+  "/:FTId"
+  // todo add auth
+  // todo implement route logic
+);
+
 const locationRouter = Router();
 locationRouter.get(
   "/",
@@ -256,6 +299,24 @@ locationRouter.post(
   LocationHandlers.createManyLocations
 );
 
+// Timespan routes
+const timespanRouter = Router();
+timespanRouter.get(
+  "/",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getAllTimeSpan
+);
+timespanRouter.get(
+  "/:id",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getTimeSpanById
+);
+timespanRouter.post(
+  "/:id/assigned/:userId",
+  authMiddleware.protect(),
+  TimeSpanHandlers.assignUserToTimeSpan
+);
+
 // Export the base-router
 const baseRouter = Router();
 baseRouter.use("/user", userRouter);
@@ -266,8 +327,11 @@ baseRouter.use("/equipment/proposal", equipmentProposalRouter);
 baseRouter.use("/equipment", equipmentRouter);
 baseRouter.use("/timeslot", timeslotRouter);
 baseRouter.use("/transaction", transactionRouter);
-baseRouter.use("/assignment", assignmentRouter);
+// baseRouter.use("/assignment", assignmentRouter);
 baseRouter.use("/location", locationRouter);
+baseRouter.use("/conflict", conflictRouter);
+baseRouter.use("/conflict/ft", TFConflictRouter);
+baseRouter.use("/timespan", timespanRouter);
 
 baseRouter.post("/issue", issueHandler);
 
