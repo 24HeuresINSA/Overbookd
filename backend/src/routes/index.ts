@@ -234,7 +234,6 @@ transactionRouter.delete(
 
 const conflictRouter = Router();
 
-// todo remove
 conflictRouter.get(
   "/",
   authMiddleware.protect(),
@@ -245,30 +244,19 @@ conflictRouter.get(
   authMiddleware.protect(),
   ConflictHandlers.getConflictsByUserId
 );
-conflictRouter.post(
-  "/",
-  authMiddleware.protect(),
-  ConflictHandlers.createConflict
-);
 conflictRouter.get("/detectAll", ConflictHandlers.detectAllTFConflictsHandler);
 
 const TFConflictRouter = Router();
 TFConflictRouter.get(
   "/",
-  // todo add auth
+  authMiddleware.protect(),
   ConflictHandlers.getTFConflicts
 );
 
 TFConflictRouter.get(
-  "/:FTId",
-  // todo add auth
-  ConflictHandlers.getTFConflictsByFTId
-);
-
-TFConflictRouter.put(
-  "/:FTId"
-  // todo add auth
-  // todo implement route logic
+  "/:FTCount",
+  authMiddleware.protect(),
+  ConflictHandlers.getTFConflictsByFTCount
 );
 
 const locationRouter = Router();

@@ -2,8 +2,9 @@ import StatusCodes from "http-status-codes";
 import { Request, Response } from "express";
 import FTModel, {IFT, ITimeFrame} from "@entities/FT";
 import logger from "@shared/Logger";
-import FAModel, {ITimeframe} from "@entities/FA";
-import {timeframeToTimeSpan} from "@src/services/slicing";
+import FAModel from "@entities/FA";
+import { updateConflictsByFTCount } from "@src/services/conflict";
+import { timeframeToTimeSpan } from "@src/services/slicing";
 import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
 
 export async function getAllFTs(req: Request, res: Response) {
@@ -21,6 +22,7 @@ export async function createFT(req: Request, res: Response) {
   const count = await FTModel.countDocuments();
   mFT.count = count + 1;
   const FT = await FTModel.create(mFT);
+  await updateConflictsByFTCount(mFT.count);
   res.json(FT);
 }
 
@@ -32,6 +34,7 @@ export async function updateFT(
   if (mFT._id) {
     try {
       await FTModel.findByIdAndUpdate(mFT._id, mFT);
+      await updateConflictsByFTCount(mFT.count);
     } catch (e) {
       logger.err(e);
     }
@@ -81,7 +84,8 @@ export async function deleteFT(req: Request, res: Response) {
         logger.info(`deleted FT`);
       }
     }
-    res.status(StatusCodes.OK).json({mFT});
+    await updateConflictsByFTCount(mFT.count);
+    res.status(StatusCodes.OK).json({ mFT });
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);
   }

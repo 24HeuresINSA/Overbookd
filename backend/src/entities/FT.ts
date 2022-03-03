@@ -84,6 +84,7 @@ const FTSchema = new Schema<IFT>({
   equipments: { type: [Object], default: [] },
   timeframes: { type: [TimeFrameSchema], default: [] },
   count: { type: Number, required: true },
+  isValid: { type: Boolean, default: true },
   details: Object,
   general: Object,
 });
