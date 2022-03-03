@@ -65,16 +65,19 @@ export const addAvailabilities: RequestHandler = async function (req, res){
   const id = res.locals.auth_user._id;
   const timeslotIds: Types.ObjectId[] = req.body;
   try{
-    const timeslot = await TimeslotModel.find().where('_id').in(timeslotIds).exec();
-    const totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
     const user = await UserModel.findById(id);
+    let totalCharisma = 0;
     if(user){
       if(user.availabilities){
         const toAdd = timeslotIds.filter((e) => {
           return !(user.availabilities!.includes(e))
         })
+        const timeslot = await TimeslotModel.find().where('_id').in(toAdd).exec();
+        totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities.push(...toAdd);
       } else {
+        const timeslot = await TimeslotModel.find().where('_id').in(timeslotIds).exec();
+        totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities = timeslotIds;
       }
       if(user.charisma){
