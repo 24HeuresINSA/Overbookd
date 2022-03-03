@@ -1,3 +1,6 @@
+resource_rules:
+  issues:
+    rules:
       - name: find all open issues with any label
         conditions:
           state: opened
