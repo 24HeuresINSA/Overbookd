@@ -83,6 +83,7 @@ export async function deleteFT(req: Request, res: Response) {
         logger.info(`deleted FT`);
       }
     }
+    await updateConflictsByFTCount(mFT.count);
     res.status(StatusCodes.OK).json({ mFT });
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);

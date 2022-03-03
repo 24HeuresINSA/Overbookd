@@ -267,10 +267,13 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
     })
   );
 
+  // Stop after deleting if the current FT is deleted
+  if (ft.isValid === false) {
+    return;
+  }
+
   // compute new conflicts
   const newConflicts = await computeFTConflicts(ft);
-
-  console.log(newConflicts);
 
   // save new conflicts
   if (newConflicts.length != 0) {

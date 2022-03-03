@@ -155,6 +155,7 @@ export async function detectAllTFConflictsHandler(
 
   // Fetch all timeframes with a required user inside
   const timeFramesWithOrgas: ITimeFrame[] = await FTModel.aggregate()
+    .match({ isValid: false })
     .unwind("$timeframes")
     .replaceRoot("$timeframes")
     .match({ "required.type": "user" });
