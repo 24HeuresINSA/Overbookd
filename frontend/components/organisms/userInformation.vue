@@ -12,11 +12,11 @@
             >{{
               mUser.nickname
                 ? mUser.nickname +
-                  "( " +
+                  " ( " +
                   mUser.firstname +
                   " " +
                   mUser.lastname +
-                  ")"
+                  " )"
                 : mUser.firstname + " " + mUser.lastname
             }}
           </v-card-title>
