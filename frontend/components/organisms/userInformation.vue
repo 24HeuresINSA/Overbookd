@@ -279,7 +279,7 @@ export default {
   },
 
   async mounted() {
-    this.calendarValue = this.getMonday(new Date());
+    this.calendarValue = this.$accessor.config.getConfig("event_date");
     timeslotRepo.getAll(this).then((res) => {
       this.allTimeSlots = res.data;
     });
