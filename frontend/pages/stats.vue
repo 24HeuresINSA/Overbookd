@@ -3,7 +3,7 @@
     <h1>Stats 📈 (work in progess 🔨)</h1>
     <v-row class="d-flex justify-space-around pt-6">
       <h1>FA</h1>
-      <v-switch v-model="switch1" @change="update" class="switch-width"></v-switch>
+      <v-switch v-model="switchType" @change="update" class="switch-width"></v-switch>
       <h1>FT</h1>
     </v-row>
     <Needs :dataset="dataset" :name="name"></Needs>
@@ -20,25 +20,27 @@ export default {
   components: {Needs},
   data() {
     return {
-      switch1: false,
+      switchType: false,
       dataset: [],
-      name: "FA"
+      name: "FA",
+      FA: null,
+      FT: null
     };
   },
   async mounted() {
     await this.update();
   },
   methods: {
-    async update(){
-      let res;
-      if(this.switch1){
-        res = await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this));
+    async update() {
+      if (this.switchType) {
+        this.FT = this.FT || (await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this)))['data'];
         this.name = "FT";
+        this.dataset = this.FT;
       } else {
-        res = await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this));
+        this.FA = this.FA || (await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this)))['data'];
         this.name = "FA";
+        this.dataset = this.FA;
       }
-      this.dataset = res['data'];
     }
   }
 };
