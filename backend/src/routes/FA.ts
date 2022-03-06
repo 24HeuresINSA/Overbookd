@@ -80,12 +80,6 @@ export async function createFA(req: Request, res: Response) {
   res.status(StatusCodes.CREATED).json(mFA);
 }
 
-interface stats {
-  team: string;
-  status: string;
-  count: number;
-}
-
 export async function getFAsNumber(req: Request, res: Response) {
   const FAs = await FAModel.aggregate()
     .match({isValid: {$ne: false}})
