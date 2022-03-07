@@ -28,24 +28,6 @@ export async function timeframeToTimeSpan(timeframe: ITimeFrame): Promise<ITimeS
           timeframeID: timeframe._id,
           required: null,
         } as ITimeSpan;
-        // timeSpans.push(mTimeSpan);
-        // timeframe.required.forEach(r => {
-        //   if (r.type === "user" && r.user){
-        //     timeSpans.push({
-        //       ...mTimeSpan,
-        //       required: r.user._id,
-        //       assigned: r.user._id,
-        //     });
-        //   } else if (r.type === "team") {
-        //     for(let i = 0; i < r.amount; i++){
-        //       timeSpans.push({
-        //         ...mTimeSpan,
-        //         required: r.team,
-        //       });
-        //     }
-        //   }
-        //
-        // })
         timeSpans = timeSpans.concat(getTimeSpanFromRequirement(required, mTimeSpan));
         logger.info(`timeframeToTimeSpan: added timeSpan: ${new Date(mTimeSpan.start).toLocaleString()} - ${new Date(mTimeSpan.end).toLocaleString()}`);
         timeSpanStart = new Date(timeSpanStart.getTime() + timeSpanDelta);

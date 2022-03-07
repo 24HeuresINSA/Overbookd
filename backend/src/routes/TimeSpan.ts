@@ -39,3 +39,13 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   await timespan.save();
   return res.json(timespan);
 }
+
+export async function getTimeSpansAssignedToUser(req: Request, res: Response) {
+  const timespan = TimeSpan.find({ assigned: req.params.userId });
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found"
+    });
+  }
+  return res.json(timespan);
+}

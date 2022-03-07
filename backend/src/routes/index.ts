@@ -34,6 +34,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
+import {getTimeSpansAssignedToUser} from "./TimeSpan";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -315,6 +316,11 @@ timespanRouter.post(
   "/:id/assigned/:userId",
   authMiddleware.protect(),
   TimeSpanHandlers.assignUserToTimeSpan
+);
+timespanRouter.get(
+  "assigned/:userId",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getTimeSpansAssignedToUser
 );
 
 // Export the base-router

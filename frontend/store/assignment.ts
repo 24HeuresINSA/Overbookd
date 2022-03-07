@@ -85,7 +85,7 @@ export const actions = actionTree(
     async getFTs({ commit }: any) {
       const ret = await safeCall(this, RepoFactory.ftRepo.getAllFTs(this));
       if (ret) {
-        commit("SET_FTs", ret.data);
+        commit("SET_FTs", ret.data.data);
       }
       return ret;
     },
@@ -216,24 +216,20 @@ export const getters = getterTree(state, {
 
   availableTimeSpans: (state: any, getters: any) => {
     const { selectedUser } = state;
-    const res = [];
     if (selectedUser && state.timespans) {
       const availableTimeSpans = state.timespans.filter((ts: any) => {
         let isAvailable = false;
         getters.selectedUserAvailabilities.forEach((av: any) => {
           if (
-            new Date(av.timeFrame.start).getTime() ==
+            new Date(av.timeFrame.start).getTime() <=
               new Date(ts.start).getTime() &&
-            new Date(av.timeFrame.end).getTime() == new Date(ts.end).getTime()
+            new Date(av.timeFrame.end).getTime() >= new Date(ts.end).getTime()
           ) {
             isAvailable = true;
-          } else {
-            console.log("not available", av, ts);
           }
         });
         return isAvailable;
       });
-      console.log("availableTimeSpans", availableTimeSpans);
       availableTimeSpans.filter((ts: any) => {
         const requirement = ts.required;
         if (requirement.type === "user") {
@@ -242,8 +238,34 @@ export const getters = getterTree(state, {
           return selectedUser.team.includes(requirement.team);
         }
       });
+      // availableTimeSpans = availableTimeSpans.map((ts: any) => {
+      //   return {
+      //     ...ts,
+      //     name: getFTNameById(this.state.FTs, ts.timeframe.FT),
+      //   };
+      // });
+      console.log("availableTimeSpans", availableTimeSpans);
       return availableTimeSpans;
     }
     return [];
   },
 });
+
+/**
+ * resolve FT id with name
+ */
+function getFTNameById(FTs: any, id: string) {
+  const ft = FTs.find((ft: FT) => {
+    if (ft.timeframes.length > 0) {
+      let res = false;
+      ft.timeframes.forEach((tf: any) => {
+        if (tf._id === id) {
+          res = true;
+        }
+      });
+      return res;
+    }
+  });
+  console.log(ft);
+  return ft ? ft.general.name : "";
+}
