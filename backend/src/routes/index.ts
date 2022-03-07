@@ -14,7 +14,7 @@ import {
   uploadPP,
   addAvailabilities,
 } from "./Users";
-import { createFA, deleteFA, getFAByCount, getFAs, setFA } from "./FA";
+import { createFA, deleteFA, getFAByCount, getFAs, setFA, getFAsNumber } from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from "./Timeslot";
 import {
@@ -22,6 +22,7 @@ import {
   deleteFT,
   getAllFTs,
   getFTByID,
+  getFTsNumber,
   unassign,
   updateFT,
 } from "./FT";
@@ -70,6 +71,7 @@ configRouter.use(mCors);
 // FA-routes
 const FArouter = Router();
 FArouter.get("/", authMiddleware.protect(), getFAs);
+FArouter.get("/count", authMiddleware.protect(), getFAsNumber);
 FArouter.get("/:id", authMiddleware.protect(), getFAByCount);
 FArouter.post("/", authMiddleware.protect(), createFA);
 FArouter.put("/", authMiddleware.protect(), setFA);
@@ -78,6 +80,7 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 // FT-routes
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
+FTrouter.get("/count", authMiddleware.protect(), getFTsNumber);
 FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);

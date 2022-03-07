@@ -20,4 +20,7 @@ export default {
   deleteFT(context: Context, FT: FT) {
     return context.$axios.delete(resource, { data: FT });
   },
+  getFTsNumber(context: Context) {
+    return context.$axios.get(resource + '/count');
+  },
 };
