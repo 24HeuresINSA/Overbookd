@@ -13,17 +13,17 @@ export async function getFAByCount(req: Request, res: Response) {
   if (req.params.id === undefined) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "FA must contain an id" });
+      .json({error: "FA must contain an id"});
   }
   logger.info(`getting info ${req.params.id}`);
   // @ts-ignore
-  const mFAQuery = await FAModel.findOne({ count: +req.params.id });
+  const mFAQuery = await FAModel.findOne({count: +req.params.id});
   if (mFAQuery) {
     const mFA = mFAQuery.toObject();
     res.json(mFA);
-  }else {
-        res.sendStatus(StatusCodes.BAD_REQUEST)
-    }
+  } else {
+    res.sendStatus(StatusCodes.BAD_REQUEST)
+  }
 }
 
 export async function setFA(req: Request, res: Response) {
@@ -78,4 +78,38 @@ export async function createFA(req: Request, res: Response) {
   logger.info(`creating FA id: ${mFA.count}`);
   await FAModel.create(mFA);
   res.status(StatusCodes.CREATED).json(mFA);
+}
+
+export async function getFAsNumber(req: Request, res: Response) {
+  const FAs = await FAModel.aggregate()
+    .match({isValid: {$ne: false}})
+    .group({
+        _id: {team: '$general.team', status: '$status'},
+        count: {$sum: 1}
+      }
+    ).sort('_id.status')
+    .group({
+      _id: '$_id.team',
+      status: {$push: {state: '$_id.status', count: '$count'}},
+      total: {$sum: '$count'}
+    });
+  let result = FAs.map((fa) => {
+    let status: { draft: number, refused: number, submitted: number, validated: number } = {
+      draft: 0,
+      refused: 0,
+      submitted: 0,
+      validated: 0
+    };
+    for (let i in fa.status) {
+      // @ts-ignore
+      status[fa.status[i].state] = fa.status[i].count;
+    }
+    return {
+      team: fa._id,
+      status: status,
+      total: fa.total
+    };
+  }).sort((a, b) => (0 - (a.team.toLowerCase() > b.team.toLowerCase() ? -1 : 1)));
+  logger.info("getting FAs count");
+  res.json(result);
 }
