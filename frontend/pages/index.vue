@@ -60,7 +60,6 @@ export default {
     UserNotifications,
     SnackNotificationContainer,
     ComptesPersosCard,
-    FriendsCard,
     ClickerCard,
   },
 
