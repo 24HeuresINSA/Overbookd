@@ -9,7 +9,16 @@
             max-height="200px"
           ></v-img>
           <v-card-title
-            >{{ mUser.nickname ? mUser.nickname : mUser.lastname }}
+            >{{
+              mUser.nickname
+                ? mUser.nickname +
+                  " ( " +
+                  mUser.firstname +
+                  " " +
+                  mUser.lastname +
+                  " )"
+                : mUser.firstname + " " + mUser.lastname
+            }}
           </v-card-title>
           <v-card-text>
             <OverChips :roles="mUser.team"></OverChips>
@@ -279,7 +288,7 @@ export default {
   },
 
   async mounted() {
-    this.calendarValue = this.getMonday(new Date());
+    this.calendarValue = this.$accessor.config.getConfig("event_date");
     timeslotRepo.getAll(this).then((res) => {
       this.allTimeSlots = res.data;
     });
