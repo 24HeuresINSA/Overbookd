@@ -5,7 +5,6 @@ license_scanning:
   variables:
     LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=frontend backend"
 
-
 bandit-sast:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

@@ -1,0 +1,15 @@
+clean-up-pipelines:
+  stage: clean-up-pipelines
+  image: alpine
+  before_script:
+    - apk update
+    - apk add --update coreutils
+    - apk add jq 
+    - apk add curl
+    - DATE=$(date --date="15 days ago"  '+%Y-%m-%d')
+  script:
+    - sh ./.gitlab/ci/clean.sh
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: never

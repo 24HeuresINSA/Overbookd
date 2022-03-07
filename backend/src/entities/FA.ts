@@ -1,90 +1,70 @@
-import {model, Schema} from "mongoose";
-import {IFT} from "@entities/FT";
+import { model, Schema, Types } from "mongoose";
+import { IFT } from "@entities/FT";
 
 export interface ITimeframe {
   start: string;
   end: string;
 }
 
-class timeframe implements ITimeframe {
-  constructor(public start: string, public end: string) {}
-}
+type ICommentTopic = "refused" | "validated" | "commentaire" | "ready";
 
+export type IComment = {
+  topic: ICommentTopic;
+  text: string;
+  time: Date;
+  validator: string;
+};
 
 export interface IForm {
-  _id: string;
-  comments: any[];
+  _id: Types.ObjectId;
+  comments: IComment[];
   refused: string[];
   validated: string[];
-  general: {};
+  general: Record<string, unknown>;
   count: number;
   isValid: boolean;
-  equipments: any[];
+  equipments: Record<string, unknown>[];
   status: string;
 }
 
 export interface ISecurityPass {
-  fullname: string,
-  licensePlate: string,
-  timeframe: string[],
-  phone: number,
+  fullname: string;
+  licensePlate: string;
+  timeframe: string[];
+  phone: number;
 }
 
 export interface ISignalisation {
-  type: string,
-  text: string,
-  number: number,
-
+  type: string;
+  text: string;
+  number: number;
 }
 
 export interface ElectricityNeed {
-  type: string,
-  power: number,
+  type: string;
+  power: number;
 }
 
 export interface IFA extends IForm {
   timeframes: ITimeframe[];
-  details: {};
-  security: {};
-  securityPasses: ISecurityPass[],
-  signalisation: ISignalisation[],
-  electricityNeeds: ElectricityNeed[],
+  details: Record<string, unknown>;
+  security: Record<string, unknown>;
+  securityPasses: ISecurityPass[];
+  signalisation: ISignalisation[];
+  electricityNeeds: ElectricityNeed[];
   name: string;
   FTs: Partial<IFT>[];
 }
 
 const FASchema = new Schema<IFA>(
   {
-    name: {type: String, required: false},
-    FTs: {type: Array, required: false},
-    isValid: {type: Boolean, default: true},
+    name: { type: String, required: false },
+    FTs: { type: Array, required: false },
+    isValid: { type: Boolean, default: true },
   },
   { strict: false }
 );
 
-const FAModel = model<FA>("FA", FASchema);
-
-class FA implements IFA {
-  FTs = [];
-
-  constructor(public name: string, public count: number) {
-  }
-
-  comments: any[] = [];
-  general = {};
-  refused = [];
-  validated = [];
-  details = {};
-  equipments = [];
-  security = {};
-  status = "draft";
-  timeframes = [];
-  isValid = true;
-  _id = "";
-  securityPasses = [];
-  electricityNeeds = [];
-  signalisation = [];
-
-}
+const FAModel = model<IFA>("FA", FASchema);
 
 export default FAModel;

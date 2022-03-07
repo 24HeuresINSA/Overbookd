@@ -5,10 +5,10 @@
 
 import path from "path";
 import dotenv from "dotenv";
-import commandLineArgs from "command-line-args";import ConfigModel from "@entities/Config";
-import * as INITIAL_CONFIG from './init_configs.json';
+import commandLineArgs from "command-line-args";
+import ConfigModel from "@entities/Config";
+import * as INITIAL_CONFIG from "./init_configs.json";
 import logger from "@shared/Logger";
-
 
 (async () => {
   // Setup command line options
@@ -28,24 +28,21 @@ import logger from "@shared/Logger";
     throw result2.error;
   }
 
-    // setup initial config
-    const setConfigs = await ConfigModel.find();
-    if (setConfigs){
-        // @ts-ignore
-        for (const config of INITIAL_CONFIG.default) {
-            // check if config is already set
-            let isConfigSet = setConfigs.find(c => c.key === config.key);
-            if (!isConfigSet){
-                logger.info(`config dont exist: ${config.key}`)
-                await ConfigModel.create({
-                    key: config.key,
-                    value: config.value,
-                })
-                logger.info(`config created ${config.key}`)
-
-            }
-        }
+  // setup initial config
+  const setConfigs = await ConfigModel.find();
+  if (setConfigs) {
+    // @ts-ignore
+    for (const config of INITIAL_CONFIG.default) {
+      // check if config is already set
+      const isConfigSet = setConfigs.find((c) => c.key === config.key);
+      if (!isConfigSet) {
+        logger.info(`config dont exist: ${config.key}`);
+        await ConfigModel.create({
+          key: config.key,
+          value: config.value,
+        });
+        logger.info(`config created ${config.key}`);
+      }
     }
+  }
 })();
-
-

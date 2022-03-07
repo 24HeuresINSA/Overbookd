@@ -377,17 +377,17 @@ export default Vue.extend({
       this.snack.display("Erreur lors du chargement des équipements");
     }
 
-
     this.inventory.forEach((item: any) => {
       item.required = {
         count: 0,
         form: Array<any>(),
       };
-      if(item._id && this.equipmentMap.has(item._id)) {
+      if (item._id && this.equipmentMap.has(item._id)) {
         item.required.count = this.equipmentMap.get(item._id);
       }
     });
-    const propRes = await this.$accessor.equipmentProposal.getEquipmentProposal();
+    const propRes =
+      await this.$accessor.equipmentProposal.getEquipmentProposal();
     if (!propRes) {
       this.snack.display(
         "Erreur lors la récupération des équipements proposés"
@@ -539,6 +539,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
