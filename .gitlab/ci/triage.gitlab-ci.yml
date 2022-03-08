@@ -1,8 +1,6 @@
 triage:
   stage: triage
   image: ruby:2.7
-  before_script:
-    - sh ./.gitlab/triage_policies/generate.sh
   script:
     - gem install gitlab-triage
     - |
