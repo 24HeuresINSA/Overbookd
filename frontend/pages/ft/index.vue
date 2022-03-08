@@ -46,6 +46,7 @@
             :items="filteredFTs"
             sort-by="count"
             :items-per-page="20"
+            :loading="loading"
           >
             <template #item.general.name="{ item }">
               <a
@@ -184,7 +185,7 @@ interface Data {
   FTName: string;
   users: any[] | undefined;
   FAs: any[] | undefined;
-
+  loading: boolean;
   notifs: { [key: string]: SnackNotif };
 
   filters: {
@@ -247,7 +248,7 @@ export default Vue.extend({
       isNewFTDialogOpen: false,
       users: undefined,
       FAs: undefined,
-
+      loading: true,
       notifs: { serverError: { type: "error", message: "erreur serveur" } },
     };
   },
@@ -316,6 +317,7 @@ export default Vue.extend({
         path: "/",
       });
     }
+    this.loading = false;
   },
 
   methods: {
