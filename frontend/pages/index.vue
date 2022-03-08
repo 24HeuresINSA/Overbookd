@@ -10,8 +10,15 @@
           <UserNotifications />
         </v-col>
 
-        <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="8">
-          <ComptesPersosCard />
+        <v-col cols="12" sm="6" lg="4">
+          <ComptesPersosCard v-if="hasRole('hard')" />
+        </v-col>
+
+        <v-col cols="12" sm="6" lg="8">
+          <v-card>
+            <v-card-title>Mes dispos :</v-card-title>
+            <AvailabilitiesCalendar :m-user="me" class="myCal" />
+          </v-card>
         </v-col>
 
         <!-- Display disable because Friends not working
@@ -19,10 +26,6 @@
           <FriendsCard />
         </v-col>
         -->
-
-        <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="4">
-          <ClickerCard />
-        </v-col>
       </v-row>
     </v-container>
 
@@ -50,6 +53,7 @@ import UserNotifications from "@/components/organisms/userNotifications.vue";
 import SnackNotificationContainer from "@/components/molecules/snackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
+import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
 import ClickerCard from "@/components/molecules/clickerCard.vue";
 import { getUserID } from "~/middleware/user";
 import { dispatch } from "~/utils/store";
@@ -60,7 +64,7 @@ export default {
     UserNotifications,
     SnackNotificationContainer,
     ComptesPersosCard,
-    ClickerCard,
+    AvailabilitiesCalendar,
   },
 
   data() {
@@ -111,4 +115,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.myCal {
+  height: 45vh;
+  margin-bottom: 4vh;
+}
+</style>

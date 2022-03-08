@@ -172,43 +172,7 @@
               {{ mUser.charisma === undefined ? 0 : mUser.charisma }}
             </h2></v-sheet
           >
-          <div class="myCal">
-            <v-sheet tile height="54" class="d-flex">
-              <v-btn icon class="ma-2" @click="$refs.cal.prev()">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-              <v-spacer></v-spacer>
-              <h2 style="margin-top: 2%">
-                {{
-                  new Date(calendarValue).toLocaleDateString("fr-fr", {
-                    month: "long",
-                    year: "numeric",
-                  })
-                }}
-              </h2>
-              <v-spacer></v-spacer>
-              <v-btn icon class="ma-2" @click="$refs.cal.next()">
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-            </v-sheet>
-            <v-calendar
-              ref="cal"
-              v-model="calendarValue"
-              color="primary"
-              type="week"
-              :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-            >
-              <template #interval="{ date, time }">
-                <div
-                  v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
-                  style="
-                    background-color: rgba(95, 219, 72, 0.45);
-                    height: 100%;
-                    width: 100%;
-                  "
-                ></div> </template
-            ></v-calendar>
-          </div>
+          <AvailabilitiesCalendar :m-user="mUser" class="myCal" />
           <v-row>
             <v-col md="3">
               <v-btn text @click="saveUser()">sauvegarder</v-btn>
@@ -242,11 +206,11 @@ import OverChips from "~/components/atoms/overChips";
 import { safeCall } from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
 import { isValidated } from "~/utils/roles/index.ts";
-import timeslotRepo from "~/repositories/timeslotRepo.ts";
+import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
 
 export default {
   name: "UserInformation",
-  components: { OverChips },
+  components: { OverChips, AvailabilitiesCalendar },
   props: {
     user: {
       type: Object,
@@ -263,8 +227,6 @@ export default {
       newRole: undefined,
       teams: [],
       hasEditingRole: false,
-      calendarValue: "",
-      allTimeSlots: [],
     };
   },
 
@@ -288,10 +250,6 @@ export default {
   },
 
   async mounted() {
-    this.calendarValue = this.$accessor.config.getConfig("event_date");
-    timeslotRepo.getAll(this).then((res) => {
-      this.allTimeSlots = res.data;
-    });
     this.teams = this.$accessor.config.data.data
       .find((e) => e.key === "teams")
       .value.map((e) => e.name);
@@ -363,25 +321,6 @@ export default {
         });
         this.saveUser();
       }
-    },
-    isUserAvailableInTimeframe(timeframe) {
-      // timeframe date object
-      const availabilities = this.mUser.availabilities;
-      let isUserAvailableInTimeframe = false;
-      availabilities.forEach((availability) => {
-        let slot = this.allTimeSlots.find((el) => el._id == availability);
-        if (slot) {
-          let start = new Date(slot.timeFrame.start);
-          let end = new Date(slot.timeFrame.end);
-          if (
-            start.getTime() <= timeframe.getTime() + 5000 &&
-            end.getTime() >= timeframe.getTime() + 5000
-          ) {
-            isUserAvailableInTimeframe = true;
-          }
-        }
-      });
-      return isUserAvailableInTimeframe;
     },
     getMonday(d) {
       d = new Date(d);
