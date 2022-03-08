@@ -11,14 +11,14 @@
         </v-col>
 
         <v-col cols="12" sm="6" lg="4">
+          <ComptesPersosCard v-if="hasRole('hard')" />
+        </v-col>
+
+        <v-col cols="12" sm="6" lg="8">
           <v-card>
             <v-card-title>Mes dispos :</v-card-title>
             <AvailabilitiesCalendar :m-user="me" class="myCal" />
           </v-card>
-        </v-col>
-
-        <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="8">
-          <ComptesPersosCard />
         </v-col>
 
         <!-- Display disable because Friends not working
@@ -118,6 +118,6 @@ export default {
 <style>
 .myCal {
   height: 45vh;
-  margin-bottom: 10%;
+  margin-bottom: 5%;
 }
 </style>
