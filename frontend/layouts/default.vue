@@ -43,7 +43,14 @@
         style="color: red; margin-left: 4px; font-weight: bold"
         v-text="version"
       />
+      
       <v-spacer />
+    <div
+      v-if="isPreProd"
+      class="watermark"
+      >
+        PREPROD
+    </div>
       <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
@@ -291,6 +298,9 @@ export default {
         window.screen.availWidth + "x" + window.screen.availHeight
       )}`;
     },
+    isPreProd() {
+      return process.env.BASE_URL.includes("preprod");
+    },
   },
 
   mounted() {
@@ -342,3 +352,37 @@ export default {
   },
 };
 </script>
+
+<style>
+  .watermark {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    
+    color: #ec0000;
+    font-size: 100px;
+    font-weight: 500px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    opacity: 1;
+    animation: wiggle 2s infinite;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently */
+  }
+
+  @keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   80% { transform: rotate(0deg); }
+   85% { transform: rotate(5deg); }
+   95% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }  
+  }
+</style>
