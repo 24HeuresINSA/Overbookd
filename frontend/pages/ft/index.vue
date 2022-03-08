@@ -45,7 +45,8 @@
             :headers="headers"
             :items="filteredFTs"
             sort-by="count"
-            :items-per-page="-1"
+            :items-per-page="20"
+            :loading="loading"
           >
             <template #item.general.name="{ item }">
               <a
@@ -184,7 +185,7 @@ interface Data {
   FTName: string;
   users: any[] | undefined;
   FAs: any[] | undefined;
-
+  loading: boolean;
   notifs: { [key: string]: SnackNotif };
 
   filters: {
@@ -247,7 +248,7 @@ export default Vue.extend({
       isNewFTDialogOpen: false,
       users: undefined,
       FAs: undefined,
-
+      loading: true,
       notifs: { serverError: { type: "error", message: "erreur serveur" } },
     };
   },
@@ -284,7 +285,7 @@ export default Vue.extend({
         });
       }
       const fuse = new Fuse(res, {
-        keys: ["general.name", "details.description"],
+        keys: ["general.name"],
       });
       if (search) {
         res = fuse.search(search).map((e) => e.item);
@@ -316,6 +317,7 @@ export default Vue.extend({
         path: "/",
       });
     }
+    this.loading = false;
   },
 
   methods: {
