@@ -118,6 +118,6 @@ export default {
 <style>
 .myCal {
   height: 45vh;
-  margin-bottom: 5%;
+  margin-bottom: 4vh;
 }
 </style>
