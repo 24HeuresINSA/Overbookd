@@ -89,25 +89,14 @@ export default Vue.extend({
           from: this.me._id,
           to: notification.data,
         });
-        this.deleteNotification(this.notif.index);
-        // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
-        // this.isSnackbarOpen = true;
-      } else {
-        // this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
-        // this.isSnackbarOpen = true;
+        this.deleteNotification(notification.date);
       }
     },
 
     //TODO
     async refuseFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
-        let friends = [];
-        if (this.me.friends) {
-          friends = this.me.friends;
-        }
-        //TODO Something happen on refusal ?
-        // await this.$axios.put(`/user/${user._id}`, user);
-        this.deleteNotification(this.notif.index);
+        this.deleteNotification(notification.date);
         // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
         // this.isSnackbarOpen = true;
       } else {
@@ -115,8 +104,10 @@ export default Vue.extend({
         // this.isSnackbarOpen = true;
       }
     },
-    deleteNotification(index: number): void {
-      const notifications = this.me.notifications.filter((_, i) => i != index);
+    deleteNotification(date: Date): void {
+      const notifications = this.me.notifications.filter(
+        (item) => item.date != date
+      );
       this.$accessor.user.updateUser({
         userID: this.me._id,
         userData: { notifications },
