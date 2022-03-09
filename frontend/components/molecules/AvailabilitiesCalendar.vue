@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="myCal">
     <v-sheet tile height="54" class="d-flex">
       <v-btn icon class="ma-2" @click="$refs.cal.prev()">
         <v-icon>mdi-chevron-left</v-icon>
@@ -87,4 +87,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.myCal {
+  padding-bottom: 10%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
+</style>

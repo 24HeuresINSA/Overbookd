@@ -10,13 +10,19 @@
           <UserNotifications />
         </v-col>
 
-        <v-col cols="12" sm="6" lg="4">
+        <v-col cols="12" sm="6" md="4">
           <ComptesPersosCard v-if="hasRole('hard')" />
         </v-col>
 
-        <v-col cols="12" sm="6" lg="8">
+        <v-col cols="12" sm="6" md="8">
           <v-card>
-            <v-card-title>Mes dispos :</v-card-title>
+            <v-card-title
+              >Mes dispos : <v-spacer /><v-btn
+                color="#5fdb48"
+                :to="availabilitiesPath"
+                >Renseigner plus de créneaux</v-btn
+              >
+            </v-card-title>
             <AvailabilitiesCalendar :m-user="me" class="myCal" />
           </v-card>
         </v-col>
@@ -68,7 +74,9 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      availabilitiesPath: "/availabilities",
+    };
   },
 
   computed: {
@@ -117,7 +125,6 @@ export default {
 </script>
 <style>
 .myCal {
-  height: 45vh;
-  margin-bottom: 4vh;
+  height: 50vh;
 }
 </style>

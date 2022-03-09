@@ -80,11 +80,11 @@
                   ></v-text-field>
                 </v-col>
                 <v-col md="12">
-                  <v-text-field
+                  <v-textarea
                     v-model="mUser.comment"
                     label="Commentaire"
                     :disabled="!(hasEditingRole || isMe())"
-                  ></v-text-field>
+                  ></v-textarea>
                 </v-col>
                 <v-col md="4">
                   <v-text-field
@@ -334,9 +334,8 @@ export default {
 
 <style scoped lang="scss">
 .myCal {
-  height: 60vh;
+  height: 65vh;
   width: 50vw;
-  margin-bottom: 10vh;
 }
 .charismaContainer {
   margin-top: 4vh;
