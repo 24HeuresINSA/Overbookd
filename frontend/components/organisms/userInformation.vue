@@ -334,9 +334,8 @@ export default {
 
 <style scoped lang="scss">
 .myCal {
-  height: 60vh;
+  height: 65vh;
   width: 50vw;
-  margin-bottom: 10vh;
 }
 .charismaContainer {
   margin-top: 4vh;

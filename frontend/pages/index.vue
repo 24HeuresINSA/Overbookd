@@ -10,11 +10,11 @@
           <UserNotifications />
         </v-col>
 
-        <v-col cols="12" sm="6" lg="4">
+        <v-col cols="12" sm="6" md="4">
           <ComptesPersosCard v-if="hasRole('hard')" />
         </v-col>
 
-        <v-col cols="12" sm="6" lg="8">
+        <v-col cols="12" sm="6" md="8">
           <v-card>
             <v-card-title
               >Mes dispos : <v-spacer /><v-btn
@@ -125,7 +125,6 @@ export default {
 </script>
 <style>
 .myCal {
-  height: 45vh;
-  margin-bottom: 4vh;
+  height: 50vh;
 }
 </style>
