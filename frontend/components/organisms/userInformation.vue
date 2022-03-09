@@ -80,11 +80,11 @@
                   ></v-text-field>
                 </v-col>
                 <v-col md="12">
-                  <v-text-field
+                  <v-textarea
                     v-model="mUser.comment"
                     label="Commentaire"
                     :disabled="!(hasEditingRole || isMe())"
-                  ></v-text-field>
+                  ></v-textarea>
                 </v-col>
                 <v-col md="4">
                   <v-text-field
