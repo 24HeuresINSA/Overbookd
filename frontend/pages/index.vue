@@ -27,11 +27,9 @@
           </v-card>
         </v-col>
 
-        <!-- Display disable because Friends not working
-        <v-col v-if="hasRole('soft')" cols="12" sm="6" lg="4">
+        <v-col cols="12" sm="6" lg="4">
           <FriendsCard />
         </v-col>
-        -->
       </v-row>
     </v-container>
 
@@ -71,6 +69,7 @@ export default {
     SnackNotificationContainer,
     ComptesPersosCard,
     AvailabilitiesCalendar,
+    FriendsCard,
   },
 
   data() {
