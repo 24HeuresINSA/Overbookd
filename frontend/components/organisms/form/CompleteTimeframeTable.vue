@@ -28,7 +28,7 @@
         <v-chip-group column>
           <template v-for="(req, i) in item.required">
             <v-chip
-              v-if="!isRequiredInConflict(req)"
+              v-if="!isRequiredInConflict(req, item)"
               :key="req._id"
               close
               @click:close="removeRequirement(i, index)"
@@ -47,7 +47,7 @@
                   {{ formatText(req) }}
                 </v-chip>
               </template>
-              <span>{{ formatConflictText(req) }}</span>
+              <span>{{ formatConflictText(req, item) }}</span>
             </v-tooltip>
           </template>
         </v-chip-group>
@@ -242,25 +242,25 @@ export default {
     /**
      * Return conflict array of a required field
      */
-    requiredConflicts(req) {
+    requiredConflicts(req, item) {
       // team requirement cannot have conflicts
-      if (req.type == "team") {
+      if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.user == req.user._id);
+      return this.conflicts.filter((c) => c.user == req.user._id && (c.tf1==item._id || c.tf2==item._id));
     },
     /**
      * Return if a required is in conflict
      */
-    isRequiredInConflict(req) {
-      return this.requiredConflicts(req).length != 0;
+    isRequiredInConflict(req, item) {
+      return this.requiredConflicts(req, item).length != 0;
     },
     /**
      * Return the hover text of first conflict
      * Does not recheck conflicts exists
      */
-    formatConflictText(req) {
-      const conflicts = this.requiredConflicts(req);
+    formatConflictText(req, item) {
+      const conflicts = this.requiredConflicts(req, item);
       const conflict = conflicts[0];
 
       const text = `En conflit avec la FT ${conflict.otherTf.ft.count} ${
