@@ -16,7 +16,13 @@
 
         <v-col cols="12" sm="6" lg="8">
           <v-card>
-            <v-card-title>Mes dispos :</v-card-title>
+            <v-card-title
+              >Mes dispos : <v-spacer /><v-btn
+                color="#5fdb48"
+                :to="availabilitiesPath"
+                >Renseigner plus de créneaux</v-btn
+              >
+            </v-card-title>
             <AvailabilitiesCalendar :m-user="me" class="myCal" />
           </v-card>
         </v-col>
@@ -68,7 +74,9 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      availabilitiesPath: "/availabilities",
+    };
   },
 
   computed: {
