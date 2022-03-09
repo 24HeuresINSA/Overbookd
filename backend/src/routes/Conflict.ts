@@ -40,11 +40,12 @@ export async function getTFConflicts(
   req: Request,
   res: Response
 ): Promise<void> {
+  logger.info("getTFConflicts");
   try {
     const conflicts: ITFConflict[] = await ConflictModel.find({ type: "TF" })
       .populate({ path: "user", select: "firstname lastname" })
       .lean();
-
+    logger.info(`Found ${conflicts.length} conflicts`);
     const populatedConflicts: ITFConflict<unknown | undefined>[] = [];
 
     const queryOptions: getTimeFrameByIdOpts = {
@@ -178,7 +179,7 @@ export async function getTFConflictsByFTCount(
 ): Promise<void> {
   const count = parseInt(req.params.FTCount);
   const ft = await FTModel.findOne({ count }).lean();
-
+  logger.info(`Found ${ft}`);
   if (!ft) {
     throw new Error("Did not find the FT for conflicts");
   }
@@ -192,13 +193,15 @@ export async function getTFConflictsByFTCount(
         await ConflictModel.find({
           // type: "FT",
           tf1: tf._id,
-        }).lean()
+        }).lean(),
+        conflictsTf1
       );
       conflictsTf2 = conflictsTf2.concat(
         await ConflictModel.find({
           // type: "TF",
           tf2: tf._id,
-        }).lean()
+        }).lean(),
+        conflictsTf2
       );
     })
   );
