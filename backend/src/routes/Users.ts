@@ -152,6 +152,35 @@ export const addNotificationByFullName: RequestHandler = async function (
   }
 };
 
+export const addNotificationByID: RequestHandler = async function (req, res) {
+  const query = req.params;
+  if (!query.id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide id" });
+  } else {
+    const user = await UserModel.findOne({
+      _id: query.id,
+    });
+    if (user) {
+      const mUser = user.toObject();
+      if (mUser.notifications === undefined) {
+        mUser.notifications = [];
+      }
+      mUser.notifications.push(req.body);
+
+      await UserModel.findByIdAndUpdate(user._id, {
+        notifications: mUser.notifications,
+      });
+      res.sendStatus(StatusCodes.OK);
+    } else {
+      res
+        .sendStatus(StatusCodes.NOT_FOUND)
+        .json({ msg: "Did not find the user" });
+    }
+  }
+};
+
 export const broadcastNotification: RequestHandler = async function (req, res) {
   const users = await UserModel.find({});
   await Promise.all(

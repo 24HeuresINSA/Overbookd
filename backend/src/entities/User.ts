@@ -66,6 +66,7 @@ const UserSchema = new Schema<IUser>(
     resetPasswordToken: { type: String, required: false },
     resetTokenExpires: { type: Date, required: false },
     hasPayedContribution: { type: Boolean, required: false },
+    notifications: { type: Array, required: false },
   },
   { strict: false }
 );
@@ -92,6 +93,7 @@ export class SafeUser {
   comment?: string;
   departement?: string;
   year?: string;
+  notifications?: any[];
 
   constructor(data: IUser) {
     this._id = data._id;
@@ -114,6 +116,7 @@ export class SafeUser {
     this.friends = data.friends;
     this.pp = data.pp;
     this.availabilities = data.availabilities;
+    this.notifications = data.notifications;
 
     this.hasDriverLicense = data.hasDriverLicense || false;
     this.hasPayedContribution = data.hasPayedContribution || false;

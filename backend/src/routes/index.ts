@@ -4,6 +4,7 @@ import mCors from "../cors";
 import {
   addAvailabilities,
   addNotificationByFullName,
+  addNotificationByID,
   broadcastNotification,
   createFriendship,
   getAllUsersName,
@@ -62,6 +63,11 @@ userRouter.put(
   "/notification/:lastname/:firstname",
   authMiddleware.protect(),
   addNotificationByFullName
+);
+userRouter.put(
+  "/notificationKeycloakID/:id",
+  authMiddleware.protect(),
+  addNotificationByID
 );
 userRouter.post("/broadcast", authMiddleware.protect(), broadcastNotification);
 userRouter.post("/friends", authMiddleware.protect(), createFriendship);

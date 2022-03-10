@@ -12,6 +12,7 @@
 
         <v-col cols="12" sm="6" md="4">
           <ComptesPersosCard v-if="hasRole('hard')" />
+          <FriendsCard v-else />
         </v-col>
 
         <v-col cols="12" sm="6" md="8">
@@ -26,12 +27,6 @@
             <AvailabilitiesCalendar :m-user="me" class="myCal" />
           </v-card>
         </v-col>
-
-        <!-- Display disable because Friends not working
-        <v-col v-if="hasRole('soft')" cols="12" sm="6" lg="4">
-          <FriendsCard />
-        </v-col>
-        -->
       </v-row>
     </v-container>
 
@@ -71,6 +66,7 @@ export default {
     SnackNotificationContainer,
     ComptesPersosCard,
     AvailabilitiesCalendar,
+    FriendsCard,
   },
 
   data() {
