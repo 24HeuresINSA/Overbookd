@@ -261,10 +261,9 @@ export default {
      */
     formatConflictText(req, item) {
       const conflicts = this.requiredConflicts(req, item);
-      const conflict = conflicts[0];
-      let ftCounts = ""
-      conflicts.forEach(conflict => {
-        ftCounts += `${conflict.otherTf.ft.count} `
+      let ftCounts = "";
+      conflicts.forEach((conflict) => {
+        ftCounts += `${conflict.otherTf.ft.count} `;
       });
 
       const text = `En conflit avec la/les FT ${ftCounts}`;
