@@ -27,10 +27,6 @@
             <AvailabilitiesCalendar :m-user="me" class="myCal" />
           </v-card>
         </v-col>
-
-        <v-col cols="12" sm="6" lg="4">
-          <FriendsCard v-if="hasRole('hard')" />
-        </v-col>
       </v-row>
     </v-container>
 
