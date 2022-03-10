@@ -1,7 +1,9 @@
 import ConflictModel, { IConflict, ITFConflict } from "@entities/Conflict";
+import UserModel from "@entities/User";
 import { isTFRequiredUser, ITimeFrame, IFT } from "@entities/FT";
+import { ITimeslot } from "@entities/Timeslot";
 import { Types } from "mongoose";
-import { newTFConflit } from "../entities/Conflict";
+import { newTFConflit, newAvailabilityConflit } from "../entities/Conflict";
 import { getAllOrgaTFs } from "./timeFrame";
 import FTModel from "@entities/FT";
 
@@ -177,34 +179,39 @@ export function computeTFConflictsBetweenArray(
 /**
  * Determine wether or not 2 timeFrames are overlapping in time
  *
- * Checks if :
- * 1 starts strictly after 2 starts AND 1 starts strictly before 2 ends OR
- * 1 ends after 2 strictly starts AND 1 ends strictly before 2 ends OR
- * 1 starts before 2 start AND 1 ends after 2 ends
- *
  * @param tf1 timeFrame 1
  * @param tf2 timeFrame 2
  * @returns If the timeFrames overlap or not
  */
 function isOverlappingTFs(tf1: ITimeFrame, tf2: ITimeFrame): boolean {
-  // 1 starts between the two borders of 2
-  if (tf1.start > tf2.start && tf1.start < tf2.end) {
-    return true;
-  }
-  // 1 ends between the two borders of 2
-  if (tf1.end > tf2.start && tf1.end < tf2.end) {
-    return true;
-  }
-  // 1 is larger or equal to 2
-  if (tf1.start <= tf2.start && tf1.end >= tf2.end) {
-    return true;
-  }
-  return false;
+  return dateRangeOverlaps(tf1.start, tf1.end, tf2.start, tf2.end);
 }
 
 /* ################# TimeSpans ################ */
 
 // todo
+
+/* ################# Availability ################ */
+async function computeAvailabilityConflicts(ft: IFT): Promise<IConflict[]> {
+  const timeframes = ft.timeframes;
+  let conflicts: IConflict[] = [];
+  const TFsByOrga: TFsByOrga = sortTFByUser(timeframes)
+  for (const [key, value] of Object.entries(TFsByOrga)) {
+    const user = await UserModel.findById(key).populate("availabilities");
+    if(!user || !user.availabilities) {
+      continue;
+    }
+    value.forEach((tf) => {
+      if (!isTimeFrameCovered(tf, user.availabilities!)) {
+        conflicts.push(
+          newAvailabilityConflit(tf._id, Types.ObjectId(key))
+        );
+      }
+    });
+  }
+  return conflicts;
+}
+
 
 /* ################## Global ################## */
 
@@ -274,9 +281,51 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
 
   // compute new conflicts
   const newConflicts = await computeFTConflicts(ft);
-
+  const newAvailabiltyConflicts = await computeAvailabilityConflicts(ft);
   // save new conflicts
   if (newConflicts.length != 0) {
     ConflictModel.insertMany(newConflicts);
   }
+  if(newAvailabiltyConflicts.length != 0) {
+    ConflictModel.insertMany(newAvailabiltyConflicts);
+  }
+}
+
+
+/* ################## Utils ################## */
+/*
+* Checks if :
+* 1 starts strictly after 2 starts AND 1 starts strictly before 2 ends OR
+* 1 ends after 2 strictly starts AND 1 ends strictly before 2 ends OR
+* 1 starts before 2 start AND 1 ends after 2 ends
+*
+*/
+function dateRangeOverlaps(a_start: number, a_end: number, b_start: number, b_end: number): boolean {
+  if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
+  if (a_start <= b_end   && b_end   <= a_end) return true; // b ends in a
+  if (b_start <  a_start && a_end   <  b_end) return true; // a in b
+  return false;
+}
+
+/**
+ * Check if a given timeframe is covered by others timeslot
+ */
+function isTimeFrameCovered(tf: ITimeFrame, timeslots: ITimeslot[]): boolean {
+  //sort timeslots by start date
+  console.log(tf);
+  timeslots.sort((a, b) => a.timeFrame.start.getTime() - b.timeFrame.start.getTime());
+  let totalOverlapSize = 0;
+  for (const ts of timeslots) {
+    if (dateRangeOverlaps(tf.start, tf.end, ts.timeFrame.start.getTime(), ts.timeFrame.end.getTime())) {
+      //calculate total overlap size over multiple iterations
+      totalOverlapSize += Math.min(tf.end, ts.timeFrame.end.getTime()) - Math.max(tf.start, ts.timeFrame.start.getTime());
+    }
+    console.log(totalOverlapSize);
+  }
+  const timeFrameSize = tf.end - tf.start;
+  console.log(timeFrameSize, totalOverlapSize);
+  if (totalOverlapSize === timeFrameSize) {
+    return true;
+  }
+  return false;
 }

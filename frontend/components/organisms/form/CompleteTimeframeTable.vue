@@ -35,6 +35,20 @@
             >
               {{ formatText(req) }}
             </v-chip>
+            <v-tooltip v-else-if="isRequiredAvailability(req, item)" :key="req._id" top>
+              <template #activator="{ on, attrs }">
+                <v-chip
+                  close
+                  color="orange"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click:close="removeRequirement(i, index)"
+                >
+                  {{ formatText(req) }}
+                </v-chip>
+              </template>
+              <span>Pas dispo sur ce créneau</span>
+            </v-tooltip>
             <v-tooltip v-else :key="req._id" top>
               <template #activator="{ on, attrs }">
                 <v-chip
@@ -249,11 +263,22 @@ export default {
       }
       return this.conflicts.filter((c) => c.user == req.user._id && (c.tf1==item._id || c.tf2==item._id));
     },
+    requiredConflictsAvailability(req, item) {
+      // team requirement cannot have conflicts
+      if (req.type == "team" || item == undefined) {
+        return [];
+      }
+      return this.conflicts.filter((c) => c.type=="availability" && c.user == req.user._id && c.tf1==item._id);
+    },
+
     /**
      * Return if a required is in conflict
      */
     isRequiredInConflict(req, item) {
       return this.requiredConflicts(req, item).length != 0;
+    },
+    isRequiredAvailability(req, item) {
+      return this.requiredConflictsAvailability(req, item).length != 0;
     },
     /**
      * Return the hover text of first conflict

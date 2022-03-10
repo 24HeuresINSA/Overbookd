@@ -9,11 +9,17 @@ export interface ITFConflict<T = string> {
 export interface ITSConflict {
   ts1: Types.ObjectId;
   ts2: Types.ObjectId;
-  type: "TF";
+  type: "TS";
   user: Types.ObjectId;
 }
 
-export type IConflict = ITFConflict | ITSConflict;
+export interface IAvailabilityConflict {
+  tf1: string;
+  type: "availability";
+  user: Types.ObjectId;
+}
+
+export type IConflict = ITFConflict | ITSConflict | IAvailabilityConflict;
 
 export const ConflictSchema = new Schema<IConflict>({
   ts1: Types.ObjectId,
@@ -59,6 +65,13 @@ export function newTFConflit(
   };
 }
 
+export function newAvailabilityConflit(tfId: string, user: Types.ObjectId): IConflict {
+  return {
+    type: "availability",
+    tf1: tfId,
+    user: user
+  }
+}
 /* ################### Model ################## */
 
 export default ConflictModel;
