@@ -12,7 +12,7 @@
 
         <v-col cols="12" sm="6" md="4">
           <ComptesPersosCard v-if="hasRole('hard')" />
-          <FriendsCard v-if="!hasRole('hard')" />
+          <FriendsCard v-else />
         </v-col>
 
         <v-col cols="12" sm="6" md="8">
