@@ -4,8 +4,8 @@
     :items="availableTimeSpans"
     @click:row="assignTask"
   >
-    <template #[`item.timeframeID`]="row">
-      {{ resolveFTName(row) }}
+    <template #[`item.timeframeID`]="{item}">
+      {{ timespanToFTName[item.timeframeID] }}
     </template>
     <template #[`item.date`]="row">
       {{ new Date(row.item.start).toLocaleDateString() }}
@@ -54,14 +54,17 @@ export default {
     availableTimeSpans() {
       return this.$accessor.assignment.availableTimeSpans;
     },
+    timespanToFTName() {
+      return this.$accessor.assignment.timespanToFTName;
+    },
   },
 
   methods: {
     assignTask(task) {
       console.log("assignTask", task);
     },
-    resolveFTName(task) {
-      const res = this.$accessor.assignment.getFTNameById(
+    async resolveFTName(task) {
+      const res = await  this.$accessor.assignment.getFTNameById(
         task.item.timeframeID
       );
       return res;

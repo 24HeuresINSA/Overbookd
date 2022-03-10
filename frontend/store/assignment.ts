@@ -7,6 +7,7 @@ import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
 import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
+import {Timeframe} from "~/utils/models/timeframe";
 
 declare interface filter {
   user: {
@@ -36,6 +37,7 @@ export const state = () => ({
   FAs: [] as FA[],
   timeslots: [] as any[],
   timespans: [] as TimeSpan[],
+  timespanToFTName: {} as { [key: string]: string },
 });
 
 export const mutations = mutationTree(state, {
@@ -126,12 +128,17 @@ export const actions = actionTree(
       return ret;
     },
 
-    async initStore({ dispatch }) {
+    async initStore({ dispatch, state }) {
       await dispatch("getUsers");
       await dispatch("getFTs");
       await dispatch("getFAs");
       await dispatch("getTimeslots");
       await dispatch("getTimespans");
+      state.timespans.forEach((timespan: TimeSpan) => {
+        // @ts-ignore
+        state.timespanToFTName[timespan._id] = state.FTs.find((FT: FT) =>
+            FT.timeframes.find((timeframe) => timespan.timeframeID === timeframe._id)).general?.name || "";
+      });
     },
 
     /**
@@ -154,6 +161,23 @@ export const actions = actionTree(
     setSelectedUser({ commit }: any, user: User) {
       commit("SET_SELECTED_USER", user);
     },
+
+    getFTNameById({ state }: any, id: string) {
+      console.log(state);
+      const ft = state.FTs.find((ft: FT) => {
+        if (ft.timeframes.length > 0) {
+          let res = false;
+          ft.timeframes.forEach((tf: any) => {
+            if (tf._id === id) {
+              res = true;
+            }
+          });
+          return res;
+        }
+      });
+      console.log(ft);
+      return ft ? ft.general.name : "";
+    }
   }
 );
 
