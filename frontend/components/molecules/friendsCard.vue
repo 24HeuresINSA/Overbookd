@@ -44,6 +44,7 @@ import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { FriendRequest } from "~/utils/models/repo";
+import { SnackNotif } from "../../utils/models/store";
 
 export default Vue.extend({
   name: "FriendsCard",
@@ -86,12 +87,13 @@ export default Vue.extend({
         );
         return;
       }
-      if (this.me.friends.find((friend) => friend._id === this.newFriend._id)) {
-        // already friends
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "Vous êtes déjà amis...",
-        });
+      if (this.me.friends.find((friend) => friend.id === this.newFriend._id)) {
+        const notif: SnackNotif = {
+          type: "success",
+          message: "Vous êtes déjà amis !",
+        };
+        this.$store.dispatch("notif/pushNotification", notif);
+        return;
       }
       // generate a new friend request
       let req: FriendRequest = {

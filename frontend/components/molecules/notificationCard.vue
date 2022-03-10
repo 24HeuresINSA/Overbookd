@@ -39,6 +39,7 @@
 import Vue, { PropType } from "vue";
 import OverChips from "@/components/atoms/overChips.vue";
 import { Notification, User } from "~/utils/models/repo";
+import { SnackNotif } from "../../utils/models/store";
 
 export default Vue.extend({
   name: "NotificationCard",
@@ -81,27 +82,29 @@ export default Vue.extend({
       notifs.splice(index);
       return notifs;
     },
-    //TODO
+
     async acceptFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
         //TODO: RepoFactory + safeCall
-        await this.$axios.post(`/user/friends`, {
-          from: this.me._id,
-          to: notification.data,
-        });
+        await this.$axios
+          .post(`/user/friends`, {
+            from: this.me._id,
+            to: notification.data,
+          })
+          .then(() => {
+            const notif: SnackNotif = {
+              type: "success",
+              message: "Ami ajouté !",
+            };
+            this.$store.dispatch("notif/pushNotification", notif);
+          });
         this.deleteNotification(notification.date);
       }
     },
 
-    //TODO
     async refuseFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
         this.deleteNotification(notification.date);
-        // this.snackbarMessage = this.SNACKBAR_MESSAGES.friendRequest.accepted;
-        // this.isSnackbarOpen = true;
-      } else {
-        // this.snackbarMessage = this.SNACKBAR_MESSAGES.error;
-        // this.isSnackbarOpen = true;
       }
     },
     deleteNotification(date: Date): void {
@@ -112,6 +115,11 @@ export default Vue.extend({
         userID: this.me._id,
         userData: { notifications },
       });
+      const notif: SnackNotif = {
+        type: "success",
+        message: "Demande refusée !",
+      };
+      this.$store.dispatch("notif/pushNotification", notif);
     },
   },
 });
