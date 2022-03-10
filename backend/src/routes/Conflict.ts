@@ -5,10 +5,16 @@ import ConflictModel, { IConflict } from "@entities/Conflict";
 import FTModel, { ITimeFrame } from "@entities/FT";
 import {
   computeAllTFConflicts,
+  computeFTConflicts,
   getFTConflicts,
   sortTFByUser,
 } from "@src/services/conflict";
 import { Types } from "mongoose";
+import { ITFConflict } from "../entities/Conflict";
+import { getTimeFrameById } from "@src/services/timeFrame";
+import { getFTByID } from "./FT";
+import { getTimeFrameByIdOpts } from "../services/timeFrame";
+import { read } from "fs";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -34,12 +40,31 @@ export async function getTFConflicts(
   req: Request,
   res: Response
 ): Promise<void> {
+  logger.info("getTFConflicts");
   try {
-    const conflicts = await ConflictModel.find({ type: "TF" })
-      .populate("conflictUser", "-password")
-      .populate("tf1")
-      .populate("tf2");
-    res.status(StatusCodes.OK).json(conflicts);
+    const conflicts: ITFConflict[] = await ConflictModel.find({ type: "TF" })
+      .populate({ path: "user", select: "firstname lastname" })
+      .lean();
+    logger.info(`Found ${conflicts.length} conflicts`);
+    const populatedConflicts: ITFConflict<unknown | undefined>[] = [];
+
+    const queryOptions: getTimeFrameByIdOpts = {
+      select: ["start", "end"],
+      ft: { include: true, fields: ["general", "FA", "count"] },
+    };
+
+    // Resolve all promises inside
+    await Promise.all(
+      conflicts.map(async (c) => {
+        populatedConflicts.push({
+          ...c,
+          tf1: await getTimeFrameById(c.tf1, queryOptions),
+          tf2: await getTimeFrameById(c.tf2, queryOptions),
+        });
+      })
+    );
+
+    res.status(StatusCodes.OK).json(populatedConflicts);
   } catch (error) {
     logger.warn(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
@@ -54,7 +79,7 @@ export async function getTFConflicts(
  * @param res Send back the array of conflicts
  * @returns nothing
  */
-export async function getTFConflictsByFTId(
+export async function oldGetTFConflictsByFTId(
   req: Request,
   res: Response
 ): Promise<void> {
@@ -117,14 +142,21 @@ export async function getConflictsByUserId(
  * Very resource intensive function
  * Do not use unless this is completly necessary
  *
+ * Delete all timeFrames conflicts and recompute them
+ * Send a proper array to the database
+ *
  * Detect all TimeFrames related conflicts and send back an array of them
  */
 export async function detectAllTFConflictsHandler(
   req: Request,
   res: Response
 ): Promise<void> {
+  // Remove all existing TF conflicts
+  await ConflictModel.deleteMany({ type: "TF" });
+
   // Fetch all timeframes with a required user inside
   const timeFramesWithOrgas: ITimeFrame[] = await FTModel.aggregate()
+    .match({ isValid: false })
     .unwind("$timeframes")
     .replaceRoot("$timeframes")
     .match({ "required.type": "user" });
@@ -132,6 +164,75 @@ export async function detectAllTFConflictsHandler(
   // sort by user and compute all
   const conflicts = computeAllTFConflicts(sortTFByUser(timeFramesWithOrgas));
 
+  await ConflictModel.insertMany(conflicts);
+
   // send them back
-  res.send(timeFramesWithOrgas);
+  res.json(conflicts);
+}
+
+/**
+ * For a given FT find all conflicts and populate otherTf inside to have the other timeFrame infos
+ */
+export async function getTFConflictsByFTCount(
+  req: Request,
+  res: Response
+): Promise<void> {
+  const count = parseInt(req.params.FTCount);
+  const ft = await FTModel.findOne({ count }).lean();
+  logger.info(`Found ${ft}`);
+  if (!ft) {
+    throw new Error("Did not find the FT for conflicts");
+  }
+  let conflictsTf1: ITFConflict[] = [];
+  let conflictsTf2: ITFConflict[] = [];
+
+  // Fetch conflicts from both timeframes
+  await Promise.all(
+    ft.timeframes.map(async (tf) => {
+      conflictsTf1 = conflictsTf1.concat(
+        await ConflictModel.find({
+          // type: "FT",
+          tf1: tf._id,
+        }).lean(),
+        conflictsTf1
+      );
+      conflictsTf2 = conflictsTf2.concat(
+        await ConflictModel.find({
+          // type: "TF",
+          tf2: tf._id,
+        }).lean(),
+        conflictsTf2
+      );
+    })
+  );
+
+  // populate conflicts with the other timeframe
+
+  conflictsTf1 = await Promise.all(
+    conflictsTf1.map(async (c) =>
+      // remove tf1 and tf2 and populate other tf
+      ({
+        ...c,
+        otherTf: await getTimeFrameById(c.tf2, {
+          select: ["start", "end"],
+          ft: { include: true, fields: ["general", "count"] },
+        }),
+      })
+    )
+  );
+  conflictsTf2 = await Promise.all(
+    conflictsTf2.map(async (c) =>
+      // remove tf1 and tf2 and populate other tf
+      ({
+        ...c,
+        otherTf: await getTimeFrameById(c.tf1, {
+          select: ["start", "end"],
+          ft: { include: true, fields: ["general", "count"] },
+        }),
+      })
+    )
+  );
+
+  res.json(conflictsTf1.concat(conflictsTf2));
+  return;
 }

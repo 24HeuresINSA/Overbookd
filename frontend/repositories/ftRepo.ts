@@ -23,4 +23,7 @@ export default {
   markAsReady(context: Context, FTCount: number) {
     return context.$axios.post(`${resource}/${FTCount}/ready`);
   },
+  getFTsNumber(context: Context) {
+    return context.$axios.get(resource + "/count");
+  },
 };

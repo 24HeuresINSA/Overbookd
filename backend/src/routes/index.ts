@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import { getConfig, setConfig } from "./Config";
 import mCors from "../cors";
 import {
+  addAvailabilities,
   addNotificationByFullName,
   broadcastNotification,
   createFriendship,
@@ -12,16 +13,24 @@ import {
   getUsers,
   updateUserByID,
   uploadPP,
-  addAvailabilities,
 } from "./Users";
-import { createFA, deleteFA, getFAByCount, getFAs, setFA } from "./FA";
+import {
+  createFA,
+  deleteFA,
+  getFAByCount,
+  getFAs,
+  getFAsNumber,
+  setFA,
+} from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from "./Timeslot";
 import {
   createFT,
   deleteFT,
   getAllFTs,
-  getFTByID, makeFTReady,
+  getFTByID,
+  getFTsNumber,
+  makeFTReady,
   unassign,
   updateFT,
 } from "./FT";
@@ -34,7 +43,6 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
-import {getTimeSpansAssignedToUser} from "./TimeSpan";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -62,7 +70,12 @@ const imageUpload = multer({
   dest: "images",
 });
 
-userRouter.post("/pp", imageUpload.array("files"), uploadPP);
+userRouter.post(
+  "/pp",
+  authMiddleware.protect(),
+  imageUpload.array("files"),
+  uploadPP
+);
 userRouter.get("/pp/:filename", getPP);
 
 // Config-route
@@ -74,6 +87,7 @@ configRouter.use(mCors);
 // FA-routes
 const FArouter = Router();
 FArouter.get("/", authMiddleware.protect(), getFAs);
+FArouter.get("/count", authMiddleware.protect(), getFAsNumber);
 FArouter.get("/:id", authMiddleware.protect(), getFAByCount);
 FArouter.post("/", authMiddleware.protect(), createFA);
 FArouter.put("/", authMiddleware.protect(), setFA);
@@ -82,6 +96,7 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 // FT-routes
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
+FTrouter.get("/count", authMiddleware.protect(), getFTsNumber);
 FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);
@@ -235,7 +250,6 @@ transactionRouter.delete(
 
 const conflictRouter = Router();
 
-// todo remove
 conflictRouter.get(
   "/",
   authMiddleware.protect(),
@@ -246,30 +260,19 @@ conflictRouter.get(
   authMiddleware.protect(),
   ConflictHandlers.getConflictsByUserId
 );
-conflictRouter.post(
-  "/",
-  authMiddleware.protect(),
-  ConflictHandlers.createConflict
-);
 conflictRouter.get("/detectAll", ConflictHandlers.detectAllTFConflictsHandler);
 
 const TFConflictRouter = Router();
 TFConflictRouter.get(
   "/",
-  // todo add auth
+  authMiddleware.protect(),
   ConflictHandlers.getTFConflicts
 );
 
 TFConflictRouter.get(
-  "/:FTId",
-  // todo add auth
-  ConflictHandlers.getTFConflictsByFTId
-);
-
-TFConflictRouter.put(
-  "/:FTId"
-  // todo add auth
-  // todo implement route logic
+  "/:FTCount",
+  authMiddleware.protect(),
+  ConflictHandlers.getTFConflictsByFTCount
 );
 
 const locationRouter = Router();
@@ -316,11 +319,6 @@ timespanRouter.post(
   "/:id/assigned/:userId",
   authMiddleware.protect(),
   TimeSpanHandlers.assignUserToTimeSpan
-);
-timespanRouter.get(
-  "assigned/:userId",
-  authMiddleware.protect(),
-  TimeSpanHandlers.getTimeSpansAssignedToUser
 );
 
 // Export the base-router

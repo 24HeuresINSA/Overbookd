@@ -17,12 +17,31 @@ export const state = () => ({
     refused: [] as any,
     comments: [] as any,
   } as FT,
+  Fts: [] as FT[],
 });
 
 export type FTState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
   timeframes: (state) => state.mFT.timeframes,
+  equipmentMap: function (state): Map<String, number> {
+    const equipmentMap = new Map<string, number>();
+    state.Fts.forEach((ft) => {
+      if (ft.equipments) {
+        ft.equipments.forEach((equipment) => {
+          if (equipmentMap.has(equipment._id)) {
+            equipmentMap.set(
+              equipment._id,
+              equipmentMap.get(equipment._id)! + equipment.required
+            );
+          } else {
+            equipmentMap.set(equipment._id, equipment.required);
+          }
+        });
+      }
+    });
+    return equipmentMap;
+  },
 });
 
 /* ############################################ */
@@ -30,6 +49,9 @@ export const getters = getterTree(state, {
 /* ############################################ */
 
 export const mutations = mutationTree(state, {
+  SET_ALL_FTS: function (state, Fts: FT[]) {
+    state.Fts = Fts;
+  },
   SET_FT: function (state, mFT) {
     state.mFT = mFT;
   },
@@ -142,10 +164,19 @@ export const actions = actionTree(
     getAndSetFT: async function ({ commit }, count: number) {
       // get FT
       const res = await safeCall(this, repo.getFT(this, count.toString()));
-      if (res) {
+      if (res && res.data) {
         commit("SET_FT", res.data);
         return res.data;
       }
+      return null;
+    },
+    fetchAll: async function ({ commit }) {
+      const res = await safeCall(this, repo.getAllFTs(this));
+      if (res) {
+        commit("SET_ALL_FTS", res.data.data);
+        return res.data;
+      }
+      return null;
     },
     saveFT: async function ({ state }) {
       return safeCall(this, repo.updateFT(this, state.mFT), "saved", "server");

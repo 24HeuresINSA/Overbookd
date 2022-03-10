@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-import {IComment, IForm} from "@entities/FA";
+import { IComment, IForm } from "@entities/FA";
 
 /* ################ Interfaces ################ */
 
@@ -84,6 +84,7 @@ const FTSchema = new Schema<IFT>({
   equipments: { type: [Object], default: [] },
   timeframes: { type: [TimeFrameSchema], default: [] },
   count: { type: Number, required: true },
+  isValid: { type: Boolean, default: true },
   details: Object,
   general: Object,
 });

@@ -38,6 +38,24 @@ export const getters = getterTree(state, {
   timeframes: function (state) {
     return state.mFA.timeframes;
   },
+  equipmentMap: function (state): Map<String, number> {
+    const equipmentMap = new Map<string, number>();
+    state.FAs.forEach((fa) => {
+      if (fa.equipments) {
+        fa.equipments.forEach((equipment) => {
+          if (equipmentMap.has(equipment._id)) {
+            equipmentMap.set(
+              equipment._id,
+              equipmentMap.get(equipment._id)! + equipment.required
+            );
+          } else {
+            equipmentMap.set(equipment._id, equipment.required);
+          }
+        });
+      }
+    });
+    return equipmentMap;
+  },
 });
 
 export const mutations = mutationTree(state, {

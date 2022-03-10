@@ -1,8 +1,8 @@
 import { Schema, model, Types } from "mongoose";
 
-export interface ITFConflict {
-  tf1: string;
-  tf2: string;
+export interface ITFConflict<T = string> {
+  tf1: T;
+  tf2: T;
   type: "TF";
   user: Types.ObjectId;
 }
@@ -16,10 +16,10 @@ export interface ITSConflict {
 export type IConflict = ITFConflict | ITSConflict;
 
 export const ConflictSchema = new Schema<IConflict>({
-  ts1: [{ type: Types.ObjectId, ref: "TimeSpan" }],
-  ts2: [{ type: Types.ObjectId, ref: "TimeSpan" }],
-  tf1: [{ type: String, ref: "TimeFrame" }],
-  tf2: [{ type: String, ref: "TimeFrame" }],
+  ts1: Types.ObjectId,
+  ts2: Types.ObjectId,
+  tf1: String,
+  tf2: String,
   type: { type: String, required: true },
   user: { type: Types.ObjectId, required: true, ref: "User" },
 });
@@ -32,7 +32,6 @@ const ConflictModel = model<IConflict>("Conflict", ConflictSchema);
  * Used to create a TFconflict with TimeFrames sorted by _id ( tf1._id < tf2._id )
  * Needed for a good detection of duplicates
  * Use the function everywhere when a new conflict is created
- * todo: Maybe add a DB check for this to avoid issues
  *
  * @param tf1ID string _id in first timeframe
  * @param tf2ID string _id in second timeframe

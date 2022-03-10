@@ -1,7 +1,9 @@
 import ConflictModel, { IConflict, ITFConflict } from "@entities/Conflict";
-import { isTFRequiredUser, ITimeFrame } from "@entities/FT";
+import { isTFRequiredUser, ITimeFrame, IFT } from "@entities/FT";
 import { Types } from "mongoose";
 import { newTFConflit } from "../entities/Conflict";
+import { getAllOrgaTFs } from "./timeFrame";
+import FTModel from "@entities/FT";
 
 /* ################ Interfaces ################ */
 
@@ -92,6 +94,29 @@ export function computeTFConflictsWithArray(
       });
     });
   }
+  return conflicts;
+}
+
+/**
+ * Compute conflicts for a given FT
+ * @param ft The FT to update
+ * @returns Array of conflicts for this FT
+ */
+export async function computeFTConflicts(ft: IFT): Promise<IConflict[]> {
+  const allTimeFrames = await getAllOrgaTFs();
+  const FTTimeFrames = ft.timeframes;
+  let conflicts: IConflict[] = [];
+
+  // compute conflicts inside FT itself
+  conflicts = conflicts.concat(
+    computeAllTFConflicts(sortTFByUser(FTTimeFrames))
+  );
+
+  // compute conflicts with the other timeFrames
+  conflicts = conflicts.concat(
+    computeTFConflictsBetweenArray(FTTimeFrames, allTimeFrames)
+  );
+
   return conflicts;
 }
 
@@ -216,4 +241,42 @@ export function compareTFConflicts(
 
   // return the results
   return { outdated, created };
+}
+
+/**
+ * Delete all conflicts for one FT and recompute them all
+ */
+export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
+  const ft = await FTModel.findOne({ count: FTCount }).lean();
+
+  if (!ft) {
+    throw new Error("Did not find the FT for conflicts");
+  }
+
+  // Delete conflicts from both timeframes
+  await Promise.all(
+    ft.timeframes.map(async (tf) => {
+      await ConflictModel.deleteMany({
+        // type: "FT",
+        tf1: tf._id,
+      });
+      await ConflictModel.deleteMany({
+        // type: "TF",
+        tf2: tf._id,
+      });
+    })
+  );
+
+  // Stop after deleting if the current FT is deleted
+  if (ft.isValid === false) {
+    return;
+  }
+
+  // compute new conflicts
+  const newConflicts = await computeFTConflicts(ft);
+
+  // save new conflicts
+  if (newConflicts.length != 0) {
+    ConflictModel.insertMany(newConflicts);
+  }
 }

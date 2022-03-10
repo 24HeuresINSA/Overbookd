@@ -34,8 +34,8 @@
                 </template>
               </v-combobox>
 
-              <label>Compte validé</label>
-              <template v-if="hasRole(['admin', 'bureau'])">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+                <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
                   tile
@@ -148,15 +148,6 @@
                 <OverChips :roles="item.team"></OverChips>
               </v-container>
             </template>
-
-            <template #[`item.validationAction`]="{ item }">
-              <v-btn
-                :disabled="isValidated(item)"
-                color="#48C52D"
-                @click="validateUser(item)"
-                >Valider</v-btn
-              >
-            </template>
           </v-data-table>
         </v-col>
       </v-row>
@@ -234,7 +225,11 @@ const { RepoFactory } = require("../repositories/repoFactory");
 
 export default {
   name: "Humans",
-  components: { UserInformation, SnackNotificationContainer, OverChips },
+  components: {
+    UserInformation,
+    SnackNotificationContainer,
+    OverChips,
+  },
   data() {
     return {
       users: [],
@@ -371,33 +366,10 @@ export default {
           align: "end",
         });
       }
-      //add validation if admin
-      if (this.hasRole("admin") || this.hasRole("humain")) {
-        this.headers.splice(this.headers.length - 1, 0, {
-          text: "validation",
-          value: "validationAction",
-          align: "end",
-          sortable: false,
-        });
-      }
     }
   },
 
   methods: {
-    isValidated(user) {
-      return isValidated(user);
-    },
-    async validateUser(user) {
-      if (user.team.includes("toValidate")) {
-        for (var i = 0; i < user.team.length; i++) {
-          if (user.team[i] === "toValidate") {
-            user.team.splice(i, 1);
-          }
-        }
-        user.team.push("soft");
-        await this.$axios.put(`/user/${user._id}`, { team: user.team });
-      }
-    },
     openCharismaDialog(user) {
       this.selectedUser = user;
       this.isCharismaDialogOpen = true;
