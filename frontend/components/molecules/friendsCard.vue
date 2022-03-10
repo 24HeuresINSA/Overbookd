@@ -63,18 +63,20 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
-      (res) => {
-        this.usernames = res.data
-          .map((user: any) => {
-            if (!user.team.includes("hard")) {
-              const username = user.firstname + " " + user.lastname;
-              return { text: username, value: user };
-            }
-          })
-          .filter((item) => item);
-      }
+    const res = await safeCall(
+      this.$store,
+      RepoFactory.userRepo.getAllUsers(this)
     );
+    if (res) {
+      this.usernames = res.data
+        .map((user: any) => {
+          if (!user.team.includes("hard")) {
+            const username = user.firstname + " " + user.lastname;
+            return { text: username, value: user };
+          }
+        })
+        .filter((item: any) => item);
+    }
   },
   methods: {
     async sendFriendRequest() {

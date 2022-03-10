@@ -109,7 +109,7 @@ export default Vue.extend({
     },
     deleteNotification(date: Date): void {
       const notifications = this.me.notifications.filter(
-        (item) => item.date != date
+        (item) => new Date(item.date) != date
       );
       this.$accessor.user.updateUser({
         userID: this.me._id,
