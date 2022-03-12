@@ -208,10 +208,41 @@ export default Vue.extend({
       if (this.selectedItems.length == 0) return;
       const ids = this.selectedItems.map((item: any) => item.id);
       await this.$store.dispatch("user/acceptSelection", ids);
-      this.$store.dispatch(
-        "timeslot/setCreateStatus",
-        "Créneaux selectionnés validés"
-      );
+
+      let charismaMessage = "";
+      const charisma = this.$accessor.user.me.charisma;
+      if (charisma) {
+        if (charisma < 100) {
+          charismaMessage =
+            " Snif, tu n'as pas coché beaucoup de créneaux," +
+            " ton charisme est assez faible pour le moment," +
+            " il t'en faudrait plus si tu veux faire bénévole." +
+            " Promis on ne t'affectera pas sur toutes tes dispo ";
+        } else if (charisma >= 100 && charisma < 150) {
+          charismaMessage =
+            " C'est pas mal, mais tu es sûr que tu n'as pas d'autres dispo ?" +
+            " Ton charisme est faible pour le moment, il t'en faudrait plus si" +
+            " tu veux être sûr de faire bénévole. Rappelle-toi aussi qu'on ne" +
+            " t'affectera pas sur toutes tes dispo, on te laissera du temps promis ";
+        } else if (charisma >= 150 && charisma < 200) {
+          charismaMessage =
+            " Cool tu mis pas mal de dispo, mais tu es sûr que tu n'as pas encore" +
+            " quelques autres dispo pour venir nous aider ? Rappelle-toi aussi qu'on" +
+            " ne t'affectera pas sur toutes tes dispo, on te laissera du temps promis";
+        } else {
+          charismaMessage =
+            " Au top ! Tu as mis plein de créneau, motive tes potes à faire pareil" +
+            " et n'oublie pas que tu peux toujours en rajouter si tu veux nous aider" +
+            " encore plus !";
+        }
+      } else {
+        charismaMessage = "Tu n'as pas de charismes ?...";
+      }
+      //dont need complex message if the user is a hard
+      charismaMessage = this.$accessor.user.hasRole("hard")
+        ? "Créneaux selectionnés validés"
+        : charismaMessage;
+      this.$store.dispatch("timeslot/setCreateStatus", charismaMessage);
       this.selectedItems = [];
     },
     async removeItem(item: any) {

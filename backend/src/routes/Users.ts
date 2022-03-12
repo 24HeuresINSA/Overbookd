@@ -101,9 +101,6 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         team: "hard",
         link: "",
       });
-      await UserModel.findByIdAndUpdate(user._id, {
-        notifications: user.notifications,
-      });
       await user.save();
       res.status(StatusCodes.OK).json(new SafeUser(user));
     } else {
