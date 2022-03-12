@@ -6,7 +6,8 @@ import { Types } from "mongoose";
 import { newTFConflit, newAvailabilityConflit } from "../entities/Conflict";
 import { getAllOrgaTFs } from "./timeFrame";
 import FTModel from "@entities/FT";
-
+import { Document } from "mongoose";
+import logger from "@shared/Logger";
 /* ################ Interfaces ################ */
 
 type TFsByOrga = Record<string, Array<ITimeFrame>>;
@@ -192,26 +193,25 @@ function isOverlappingTFs(tf1: ITimeFrame, tf2: ITimeFrame): boolean {
 // todo
 
 /* ################# Availability ################ */
-async function computeAvailabilityConflicts(ft: IFT): Promise<IConflict[]> {
+export async function computeAvailabilityConflicts(
+  ft: IFT
+): Promise<IConflict[]> {
   const timeframes = ft.timeframes;
-  let conflicts: IConflict[] = [];
-  const TFsByOrga: TFsByOrga = sortTFByUser(timeframes)
+  const conflicts: IConflict[] = [];
+  const TFsByOrga: TFsByOrga = sortTFByUser(timeframes);
   for (const [key, value] of Object.entries(TFsByOrga)) {
     const user = await UserModel.findById(key).populate("availabilities");
-    if(!user || !user.availabilities) {
+    if (!user || !user.availabilities) {
       continue;
     }
     value.forEach((tf) => {
       if (!isTimeFrameCovered(tf, user.availabilities!)) {
-        conflicts.push(
-          newAvailabilityConflit(tf._id, Types.ObjectId(key))
-        );
+        conflicts.push(newAvailabilityConflit(tf._id, Types.ObjectId(key)));
       }
     });
   }
   return conflicts;
 }
-
 
 /* ################## Global ################## */
 
@@ -259,7 +259,6 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
   if (!ft) {
     throw new Error("Did not find the FT for conflicts");
   }
-
   // Delete conflicts from both timeframes
   await Promise.all(
     ft.timeframes.map(async (tf) => {
@@ -268,7 +267,7 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
         tf1: tf._id,
       });
       await ConflictModel.deleteMany({
-        // type: "TF",
+        type: "TF",
         tf2: tf._id,
       });
     })
@@ -286,24 +285,28 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
   if (newConflicts.length != 0) {
     ConflictModel.insertMany(newConflicts);
   }
-  if(newAvailabiltyConflicts.length != 0) {
+  if (newAvailabiltyConflicts.length != 0) {
     ConflictModel.insertMany(newAvailabiltyConflicts);
   }
 }
 
-
 /* ################## Utils ################## */
 /*
-* Checks if :
-* 1 starts strictly after 2 starts AND 1 starts strictly before 2 ends OR
-* 1 ends after 2 strictly starts AND 1 ends strictly before 2 ends OR
-* 1 starts before 2 start AND 1 ends after 2 ends
-*
-*/
-function dateRangeOverlaps(a_start: number, a_end: number, b_start: number, b_end: number): boolean {
+ * Checks if :
+ * 1 starts strictly after 2 starts AND 1 starts strictly before 2 ends OR
+ * 1 ends after 2 strictly starts AND 1 ends strictly before 2 ends OR
+ * 1 starts before 2 start AND 1 ends after 2 ends
+ *
+ */
+function dateRangeOverlaps(
+  a_start: number,
+  a_end: number,
+  b_start: number,
+  b_end: number
+): boolean {
   if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
-  if (a_start <= b_end   && b_end   <= a_end) return true; // b ends in a
-  if (b_start <  a_start && a_end   <  b_end) return true; // a in b
+  if (a_start <= b_end && b_end <= a_end) return true; // b ends in a
+  if (b_start < a_start && a_end < b_end) return true; // a in b
   return false;
 }
 
@@ -312,20 +315,37 @@ function dateRangeOverlaps(a_start: number, a_end: number, b_start: number, b_en
  */
 function isTimeFrameCovered(tf: ITimeFrame, timeslots: ITimeslot[]): boolean {
   //sort timeslots by start date
-  console.log(tf);
-  timeslots.sort((a, b) => a.timeFrame.start.getTime() - b.timeFrame.start.getTime());
+  timeslots.sort(
+    (a, b) => a.timeFrame.start.getTime() - b.timeFrame.start.getTime()
+  );
   let totalOverlapSize = 0;
   for (const ts of timeslots) {
-    if (dateRangeOverlaps(tf.start, tf.end, ts.timeFrame.start.getTime(), ts.timeFrame.end.getTime())) {
+    if (
+      dateRangeOverlaps(
+        tf.start,
+        tf.end,
+        ts.timeFrame.start.getTime(),
+        ts.timeFrame.end.getTime()
+      )
+    ) {
       //calculate total overlap size over multiple iterations
-      totalOverlapSize += Math.min(tf.end, ts.timeFrame.end.getTime()) - Math.max(tf.start, ts.timeFrame.start.getTime());
+      totalOverlapSize +=
+        Math.min(tf.end, ts.timeFrame.end.getTime()) -
+        Math.max(tf.start, ts.timeFrame.start.getTime());
     }
-    console.log(totalOverlapSize);
   }
   const timeFrameSize = tf.end - tf.start;
-  console.log(timeFrameSize, totalOverlapSize);
   if (totalOverlapSize === timeFrameSize) {
     return true;
   }
   return false;
+}
+
+export async function computeFTAllConflicts(
+  ft: IFT & Document<any, any, IFT>
+): Promise<IConflict[]> {
+  const newConflicts = await computeFTConflicts(ft);
+  const newAvailabiltyConflicts = await computeAvailabilityConflicts(ft);
+  // save new conflicts
+  return [...newConflicts, ...newAvailabiltyConflicts];
 }

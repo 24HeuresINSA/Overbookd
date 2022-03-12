@@ -262,6 +262,16 @@ conflictRouter.get(
   ConflictHandlers.getTFConflicts
 );
 conflictRouter.get(
+  "/all",
+  authMiddleware.protect(),
+  ConflictHandlers.getConflicts
+);
+conflictRouter.get(
+  "/computeAll",
+  authMiddleware.protect(),
+  ConflictHandlers.computeAllConflicts
+);
+conflictRouter.get(
   "/user/:id",
   authMiddleware.protect(),
   ConflictHandlers.getConflictsByUserId

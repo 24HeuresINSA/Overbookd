@@ -6,15 +6,15 @@ import FTModel, { ITimeFrame } from "@entities/FT";
 import {
   computeAllTFConflicts,
   computeFTConflicts,
+  computeAvailabilityConflicts,
   getFTConflicts,
   sortTFByUser,
+  computeFTAllConflicts,
 } from "@src/services/conflict";
 import { Types } from "mongoose";
 import { ITFConflict } from "../entities/Conflict";
 import { getTimeFrameById } from "@src/services/timeFrame";
-import { getFTByID } from "./FT";
 import { getTimeFrameByIdOpts } from "../services/timeFrame";
-import { read } from "fs";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -28,6 +28,57 @@ export async function createConflict(
     const conflict = new ConflictModel(req.body);
     await conflict.save();
     res.status(StatusCodes.CREATED).json(conflict);
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+  }
+}
+
+declare type ReturnType = IConflict & { ft1: number; ft2: number };
+export async function getConflicts(req: Request, res: Response) {
+  try {
+    const conflicts = await ConflictModel.find()
+      .populate({
+        path: "user",
+        select: "firstname lastname",
+      })
+      .lean();
+    const ret: ReturnType[] = [];
+    await Promise.all(
+      conflicts.map(async (conflict: IConflict) => {
+        if (conflict.type === "TF") {
+          const ft1 = await FTModel.findOne({
+            "timeframes._id": conflict.tf1,
+          }).lean();
+          const ft2 = await FTModel.findOne({
+            "timeframes._id": conflict.tf2,
+          }).lean();
+          if (!ft1 || !ft2) {
+            logger.err("Conflict with unknown timeframe");
+            return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+          }
+          ret.push({
+            ...conflict,
+            ft1: ft1.count,
+            ft2: ft2.count,
+          });
+        } else if (conflict.type === "TS") {
+          //TODO
+        } else if (conflict.type === "availability") {
+          const ft = await FTModel.findOne({
+            "timeframes._id": conflict.tf1,
+          }).lean();
+          if (ft) {
+            ret.push({
+              ...conflict,
+              ft1: ft.count,
+              ft2: ft.count,
+            });
+          }
+        }
+      })
+    );
+
+    res.status(StatusCodes.OK).json(ret);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
   }
@@ -168,6 +219,41 @@ export async function detectAllTFConflictsHandler(
 
   // send them back
   res.json(conflicts);
+}
+
+export async function computeAllConflicts(
+  req: Request,
+  res: Response
+): Promise<void> {
+  // Remove all existing conflicts
+  await ConflictModel.deleteMany({});
+  // get ALL FTs
+  const FTs = await FTModel.find({ isValid: true });
+  // compute all conflicts
+  const conflicts = await FTs.reduce(async (previousPromise, ft) => {
+    const acc: IConflict[] = await previousPromise;
+    const newConflicts = await computeFTAllConflicts(ft);
+    acc.push(...newConflicts);
+    return Promise.resolve(acc);
+  }, Promise.resolve([] as IConflict[]));
+  // filter duplicate conflicts
+  const conflictsFiltered = conflicts.filter(
+    (conflict: IConflict, index: number, self: IConflict[]) =>
+      self.findIndex((c) => {
+        if (conflict.type === "TF" && c.type === "TF") {
+          return c.tf1 === conflict.tf1 && c.tf2 === conflict.tf2;
+        } else if (
+          c.type === "availability" &&
+          conflict.type === "availability"
+        ) {
+          return c.tf1 === conflict.tf1;
+        } else if (c.type === "TS" && conflict.type === "TS") {
+          return c.ts1 === conflict.ts1 && c.ts2 === conflict.ts2;
+        }
+        return false;
+      }) === index
+  );
+  await ConflictModel.insertMany(conflictsFiltered);
 }
 
 /**
