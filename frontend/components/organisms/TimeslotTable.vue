@@ -239,19 +239,11 @@ export default Vue.extend({
         charismaMessage = "Tu n'as pas de charismes ?...";
       }
       //dont need complex message if the user is a hard
-      charismaMessage = this.hasUserRole("hard")
+      charismaMessage = this.$accessor.user.hasRole("hard")
         ? "Créneaux selectionnés validés"
         : charismaMessage;
       this.$store.dispatch("timeslot/setCreateStatus", charismaMessage);
       this.selectedItems = [];
-    },
-    hasUserRole(role) {
-      const userTeams = this.$accessor.user.me.team;
-      if (userTeams) {
-        return userTeams.includes(role);
-      } else {
-        return false;
-      }
     },
     async removeItem(item: any) {
       await this.$store.dispatch("timeslot/deleteTimeslot", item.id);
