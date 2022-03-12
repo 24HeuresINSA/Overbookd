@@ -286,7 +286,7 @@ export default Vue.extend({
       }
       const fuse = new Fuse(res, {
         keys: ["general.name"],
-        threshold: 0.0,
+        threshold: 0.2,
       });
       if (search) {
         res = fuse.search(search).map((e) => e.item);
