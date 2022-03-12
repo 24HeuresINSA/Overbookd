@@ -310,7 +310,6 @@ export default Vue.extend({
       res = await safeCall(this.$store, faRepo.getAllFAs(this));
       if (res) {
         this.FAs = res.data;
-        console.log(this.FAs);
       }
     } else {
       await this.$router.push({
