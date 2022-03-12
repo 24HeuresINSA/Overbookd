@@ -193,20 +193,20 @@ function isOverlappingTFs(tf1: ITimeFrame, tf2: ITimeFrame): boolean {
 // todo
 
 /* ################# Availability ################ */
-async function computeAvailabilityConflicts(ft: IFT): Promise<IConflict[]> {
+export async function computeAvailabilityConflicts(
+  ft: IFT
+): Promise<IConflict[]> {
   const timeframes = ft.timeframes;
-  let conflicts: IConflict[] = [];
-  const TFsByOrga: TFsByOrga = sortTFByUser(timeframes)
+  const conflicts: IConflict[] = [];
+  const TFsByOrga: TFsByOrga = sortTFByUser(timeframes);
   for (const [key, value] of Object.entries(TFsByOrga)) {
     const user = await UserModel.findById(key).populate("availabilities");
-    if(!user || !user.availabilities) {
+    if (!user || !user.availabilities) {
       continue;
     }
     value.forEach((tf) => {
       if (!isTimeFrameCovered(tf, user.availabilities!)) {
-        conflicts.push(
-          newAvailabilityConflit(tf._id, Types.ObjectId(key))
-        );
+        conflicts.push(newAvailabilityConflit(tf._id, Types.ObjectId(key)));
       }
     });
   }

@@ -65,12 +65,15 @@ export function newTFConflit(
   };
 }
 
-export function newAvailabilityConflit(tfId: string, user: Types.ObjectId): IConflict {
+export function newAvailabilityConflit(
+  tfId: string,
+  user: Types.ObjectId
+): IConflict {
   return {
     type: "availability",
     tf1: tfId,
-    user: user
-  }
+    user: user,
+  };
 }
 /* ################### Model ################## */
 
