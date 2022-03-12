@@ -15,18 +15,7 @@
           <FriendsCard v-else />
         </v-col>
 
-        <v-col cols="12" sm="6" md="8">
-          <v-card :color="me.availabilities.length === 0 ? 'red' : ''">
-            <v-card-title
-              >Mes dispos : <v-spacer /><v-btn
-                color="#5fdb48"
-                :to="availabilitiesPath"
-                >Renseigner plus de créneaux</v-btn
-              >
-            </v-card-title>
-            <AvailabilitiesCalendar :m-user="me" class="myCal" />
-          </v-card>
-        </v-col>
+        <v-col cols="12" sm="6" md="8"> <AvailabilitiesCard /> </v-col>
       </v-row>
     </v-container>
 
@@ -54,7 +43,7 @@ import UserNotifications from "@/components/organisms/userNotifications.vue";
 import SnackNotificationContainer from "@/components/molecules/snackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
-import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
+import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
 import ClickerCard from "@/components/molecules/clickerCard.vue";
 import { getUserID } from "~/middleware/user";
 import { dispatch } from "~/utils/store";
@@ -65,14 +54,8 @@ export default {
     UserNotifications,
     SnackNotificationContainer,
     ComptesPersosCard,
-    AvailabilitiesCalendar,
     FriendsCard,
-  },
-
-  data() {
-    return {
-      availabilitiesPath: "/availabilities",
-    };
+    AvailabilitiesCard,
   },
 
   computed: {
@@ -92,7 +75,6 @@ export default {
     dispatch(this, "user", "fetchUser", getUserID(this));
 
     this.notValidatedCount = this.getNotValidatedCount();
-    console.log(this.me);
   },
   methods: {
     async getNotValidatedCount() {
@@ -120,8 +102,4 @@ export default {
   },
 };
 </script>
-<style>
-.myCal {
-  height: 50vh;
-}
-</style>
+<style></style>
