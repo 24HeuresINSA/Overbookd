@@ -16,7 +16,7 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="8">
-          <v-card>
+          <v-card :color="me.availabilities.length === 0 ? 'red' : ''">
             <v-card-title
               >Mes dispos : <v-spacer /><v-btn
                 color="#5fdb48"
@@ -92,6 +92,7 @@ export default {
     dispatch(this, "user", "fetchUser", getUserID(this));
 
     this.notValidatedCount = this.getNotValidatedCount();
+    console.log(this.me);
   },
   methods: {
     async getNotValidatedCount() {
