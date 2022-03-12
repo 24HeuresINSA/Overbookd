@@ -102,7 +102,7 @@
                 <v-icon small>mdi-email</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasRole('admin')"
+                v-if="isCpUseful(item)"
                 icon
                 small
                 @click="openTransactionDialog(item)"
@@ -132,7 +132,7 @@
             </template>
 
             <template #[`item.balance`]="{ item }">
-              {{ (item.balance || 0).toFixed(2) }} €
+              {{ getCP(item) }}
             </template>
 
             <template #[`item.studies`]="{ item }">
@@ -370,6 +370,24 @@ export default {
   },
 
   methods: {
+    isCpUseful(item) {
+      if (item.team) {
+        return item.team.includes("hard");
+      } else {
+        return false;
+      }
+    },
+    getCP(item) {
+      if (item.team) {
+        if (item.team.includes("hard")) {
+          return (item.balance || 0).toFixed(2) + " €";
+        } else {
+          return undefined;
+        }
+      } else {
+        return undefined;
+      }
+    },
     openCharismaDialog(user) {
       this.selectedUser = user;
       this.isCharismaDialogOpen = true;
