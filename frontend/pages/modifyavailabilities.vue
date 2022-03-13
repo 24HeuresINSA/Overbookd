@@ -60,52 +60,57 @@
             dense
             :items-per-page="20"
           >
+            <template #[`item.charisma`]="{ item }">
+              {{ item.charisma || 0 }}
+            </template>
+
             <template #[`item.team`]="{ item }">
               <v-container style="max-width: 150px">
                 <OverChips :roles="item.team"></OverChips>
               </v-container>
             </template>
+
+            <template #[`item.modification`]="{ item }">
+              <v-btn color="#4FA7C5" @click="toggleModification(item)"
+                >Modifier les dispos</v-btn
+              >
+            </template>
           </v-data-table>
         </v-col>
       </v-row>
     </template>
-
-    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
-      {{ feedbackMessage }}
-
-      <template #action="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-
-    <SnackNotificationContainer></SnackNotificationContainer>
+    <v-dialog v-model="isEditing"
+      ><ModificationCard :user="selectedUser"
+    /></v-dialog>
   </div>
 </template>
 
 <script>
-import { getUser } from "../common/role";
 import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
-import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
+import ModificationCard from "~/components/organisms/ModificationCard.vue";
 
 export default {
   name: "Humans",
   components: {
-    SnackNotificationContainer,
     OverChips,
+    ModificationCard,
   },
   data() {
     return {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "prénom", value: "firstname" },
-        { text: "nom", value: "lastname" },
-        { text: "surnom", value: "nickname" },
-        { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Charisme", value: "charisma" },
+        { text: "Team", value: "team", cellClass: "width: 250px", width: "1" },
+        {
+          text: "Modification",
+          value: "modification",
+          sortable: false,
+        },
       ],
 
       teams: this.getConfig(this, "teams"),
@@ -113,22 +118,12 @@ export default {
 
       filters: {
         search: undefined,
-        hasDriverLicense: undefined,
         teams: [],
         isValidated: undefined,
-        hasPayedContribution: undefined,
       },
 
-      isTransactionDialogOpen: false,
-      isUserDialogOpen: false,
-      isSnackbarOpen: false,
-      isCharismaDialogOpen: false,
-
-      selectedUser: {
-        nickname: undefined,
-      },
-
-      feedbackMessage: "sauvgardé 🥳",
+      isEditing: false,
+      selectedUser: undefined,
     };
   },
 
@@ -173,20 +168,9 @@ export default {
       },
       deep: true,
     },
-
-    selections() {
-      const selections = [];
-
-      for (const selection of this.filters.teams) {
-        selections.push(selection);
-      }
-
-      return selections;
-    },
   },
 
   async mounted() {
-    console.log(this.$accessor);
     if (!this.hasRole("hard")) {
       await this.$router.push({
         path: "/index",
@@ -202,18 +186,20 @@ export default {
 
   methods: {
     getConfig(key) {
-      return this.$accessor.config.getConfig(this, key);
-    },
-
-    getUser() {
-      return getUser(this);
+      return this.$accessor.config.getConfig(key);
     },
 
     hasRole(role) {
       return this.$accessor.user.hasRole(role);
     },
+
     getRoleMetadata(roleName) {
       return this.teams.find((e) => e.name === roleName);
+    },
+
+    toggleModification(user) {
+      this.selectedUser = user;
+      this.isEditing = true;
     },
   },
 };
