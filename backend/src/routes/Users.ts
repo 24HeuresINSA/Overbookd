@@ -101,9 +101,6 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         team: "hard",
         link: "",
       });
-      await UserModel.findByIdAndUpdate(user._id, {
-        notifications: user.notifications,
-      });
       await user.save();
       res.status(StatusCodes.OK).json(new SafeUser(user));
     } else {
@@ -132,6 +129,35 @@ export const addNotificationByFullName: RequestHandler = async function (
     const user = await UserModel.findOne({
       firstname: query.firstname,
       lastname: query.lastname,
+    });
+    if (user) {
+      const mUser = user.toObject();
+      if (mUser.notifications === undefined) {
+        mUser.notifications = [];
+      }
+      mUser.notifications.push(req.body);
+
+      await UserModel.findByIdAndUpdate(user._id, {
+        notifications: mUser.notifications,
+      });
+      res.sendStatus(StatusCodes.OK);
+    } else {
+      res
+        .sendStatus(StatusCodes.NOT_FOUND)
+        .json({ msg: "Did not find the user" });
+    }
+  }
+};
+
+export const addNotificationByID: RequestHandler = async function (req, res) {
+  const query = req.params;
+  if (!query.id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide id" });
+  } else {
+    const user = await UserModel.findOne({
+      _id: query.id,
     });
     if (user) {
       const mUser = user.toObject();

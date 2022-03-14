@@ -4,6 +4,7 @@ import mCors from "../cors";
 import {
   addAvailabilities,
   addNotificationByFullName,
+  addNotificationByID,
   broadcastNotification,
   createFriendship,
   getAllUsersName,
@@ -62,6 +63,11 @@ userRouter.put(
   "/notification/:lastname/:firstname",
   authMiddleware.protect(),
   addNotificationByFullName
+);
+userRouter.put(
+  "/notificationKeycloakID/:id",
+  authMiddleware.protect(),
+  addNotificationByID
 );
 userRouter.post("/broadcast", authMiddleware.protect(), broadcastNotification);
 userRouter.post("/friends", authMiddleware.protect(), createFriendship);
@@ -254,6 +260,16 @@ conflictRouter.get(
   "/",
   authMiddleware.protect(),
   ConflictHandlers.getTFConflicts
+);
+conflictRouter.get(
+  "/all",
+  authMiddleware.protect(),
+  ConflictHandlers.getConflicts
+);
+conflictRouter.get(
+  "/computeAll",
+  authMiddleware.protect(),
+  ConflictHandlers.computeAllConflicts
 );
 conflictRouter.get(
   "/user/:id",

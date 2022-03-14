@@ -22,7 +22,6 @@ export default {
   },
   created() {
     this.$store.subscribe((mutation) => {
-      console.log(mutation.payload);
       if (mutation.type === "timeslot/SET_CREATE_STATUS" && mutation.payload) {
         this.message = mutation.payload;
         this.snackbar = true;

@@ -170,7 +170,7 @@ export default {
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Mon planning 🤯",
+          title: "Orga requis🤯",
           roles: "hard",
           to: "/planning",
         },
@@ -215,6 +215,12 @@ export default {
           title: "Affectation 💃",
           roles: "humain",
           to: "/assignment",
+        },
+        {
+          icon: "mdi-alert-circle",
+          title: "Conflits 🤔",
+          roles: "hard",
+          to: "/listeconflits",
         },
         {
           icon: "mdi-chart-areaspline-variant",

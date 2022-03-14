@@ -1,6 +1,7 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema, Types, PopulatedDoc, Document } from "mongoose";
 import * as Factory from "factory.ts";
 import faker from "faker";
+import { ITimeslot } from "./Timeslot";
 
 export interface IUser {
   password?: string;
@@ -23,7 +24,7 @@ export interface IUser {
   friends?: string[];
   transactionHistory?: any;
   pp?: string;
-  availabilities?: Types.ObjectId[];
+  availabilities?: PopulatedDoc<ITimeslot & Document>[];
   resetPasswordToken?: string;
   resetTokenExpires?: Date;
   comment?: string;
@@ -58,14 +59,15 @@ const UserSchema = new Schema<IUser>(
     birthdate: { type: Date, required: false },
     friends: { type: Array, required: false },
     pp: { type: String, required: false },
-    availabilities: {
-      type: [Schema.Types.ObjectId],
+    availabilities: [{
+      type: Schema.Types.ObjectId,
       required: false,
       ref: "Timeslot",
-    },
+    }],
     resetPasswordToken: { type: String, required: false },
     resetTokenExpires: { type: Date, required: false },
     hasPayedContribution: { type: Boolean, required: false },
+    notifications: { type: Array, required: false },
   },
   { strict: false }
 );
@@ -92,6 +94,7 @@ export class SafeUser {
   comment?: string;
   departement?: string;
   year?: string;
+  notifications?: any[];
 
   constructor(data: IUser) {
     this._id = data._id;
@@ -114,6 +117,7 @@ export class SafeUser {
     this.friends = data.friends;
     this.pp = data.pp;
     this.availabilities = data.availabilities;
+    this.notifications = data.notifications;
 
     this.hasDriverLicense = data.hasDriverLicense || false;
     this.hasPayedContribution = data.hasPayedContribution || false;
