@@ -128,7 +128,7 @@ export const actions = actionTree(
       return ret;
     },
 
-    async initStore({ dispatch }) {
+    async initStore({ dispatch, state }) {
       await dispatch("getUsers");
       await dispatch("getFTs");
       await dispatch("getFAs");
