@@ -116,6 +116,7 @@
       elevation="2"
       fab
       class="fab-right"
+      style="position: absolute; bottom: 10px; right: 10px"
       @click="isNewFTDialogOpen = true"
     >
       <v-icon> mdi-plus-thick</v-icon>

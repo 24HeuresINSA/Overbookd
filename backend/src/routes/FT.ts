@@ -1,6 +1,6 @@
 import StatusCodes from "http-status-codes";
 import { Request, Response } from "express";
-import FTModel, { IFT, ITimeFrame } from "@entities/FT";
+import FTModel, {IFT, ITimeFrame } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
 import { updateConflictsByFTCount } from "@src/services/conflict";
