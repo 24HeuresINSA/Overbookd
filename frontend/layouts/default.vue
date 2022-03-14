@@ -217,6 +217,12 @@ export default {
           to: "/assignment",
         },
         {
+          icon: "mdi-alert-circle",
+          title: "Conflits 🤔",
+          roles: "hard",
+          to: "/listeconflits",
+        },
+        {
           icon: "mdi-chart-areaspline-variant",
           title: "Stats 📈",
           roles: "hard",

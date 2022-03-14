@@ -286,6 +286,7 @@ export default Vue.extend({
       }
       const fuse = new Fuse(res, {
         keys: ["general.name"],
+        threshold: 0.2,
       });
       if (search) {
         res = fuse.search(search).map((e) => e.item);
@@ -310,7 +311,6 @@ export default Vue.extend({
       res = await safeCall(this.$store, faRepo.getAllFAs(this));
       if (res) {
         this.FAs = res.data;
-        console.log(this.FAs);
       }
     } else {
       await this.$router.push({
