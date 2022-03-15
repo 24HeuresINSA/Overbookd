@@ -258,7 +258,7 @@ export const getters = getterTree(state, {
   availableTimeSpans: (state: any, getters: any) => {
     const { selectedUser } = state;
     if (selectedUser && state.timespans) {
-      const availableTimeSpans = state.timespans.filter((ts: any) => {
+      let availableTimeSpans = state.timespans.filter((ts: any) => {
         let isAvailable = false;
         getters.selectedUserAvailabilities.forEach((av: any) => {
           if(!av){
@@ -282,20 +282,15 @@ export const getters = getterTree(state, {
           return selectedUser.team.includes(requirement.team);
         }
       });
-      // availableTimeSpans = availableTimeSpans.map((ts: any) => {
-      //   return {
-      //     ...ts,
-      //     name: getFTNameById(this.state.FTs, ts.timeframe.FT),
-      //   };
-      // });
-      console.log("availableTimeSpans", availableTimeSpans);
+      // filter only avaialble timespans
+      availableTimeSpans = availableTimeSpans.filter((ts: TimeSpan) => !ts.assigned)
       return availableTimeSpans;
     }
     return [];
   },
 
   /**
-   * TODO :: get selected user's assigned timesSpans to display them on the calendar #330
+   * get selected user's assigned timesSpans to display them on the calendar #330
    * @param state
    */
   assignedTimeSpans: (state) => {
