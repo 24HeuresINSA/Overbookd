@@ -5,7 +5,7 @@
     @click:row="assignTask"
   >
     <template #[`item.FTID`]="{item}">
-      {{ item.FTID }}
+      {{ item.FTName || item.FTID }}
     </template>
     <template #[`item.date`]="row">
       {{ new Date(row.item.start).toLocaleDateString() }}

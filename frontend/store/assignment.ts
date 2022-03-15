@@ -114,10 +114,15 @@ export const actions = actionTree(
     /**
      * get all timespans
      */
-    async getTimespans({ commit }: any) {
+    async getTimespans({ commit , state}: any) {
       const ret = await safeCall(this, TimeSpanRepo.getAll(this));
       if (ret) {
-        commit("SET_TIMESPANS", ret.data.map((ts: any) => ({ ...ts, start: new Date(ts.start), end: new Date(ts.end), timed: true })));
+        commit("SET_TIMESPANS", ret.data.map((ts: any) => ({
+          ...ts,
+          start: new Date(ts.start),
+          end: new Date(ts.end),
+          timed: true,
+          FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general.name })));
       }
       return ret;
     },
