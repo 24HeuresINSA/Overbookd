@@ -190,7 +190,6 @@ export const actions = actionTree(
     },
 
     getFTNameById({ state }: any, id: string) {
-      console.log(state);
       const ft = state.FTs.find((ft: FT) => {
         if (ft.timeframes.length > 0) {
           let res = false;
@@ -202,17 +201,18 @@ export const actions = actionTree(
           return res;
         }
       });
-      console.log(ft);
       return ft ? ft.general.name : "";
     },
 
     /**
      * assign user to timespan
      */
-    async assignUserToTimespan({ commit }: any, data: { userID: string; timespanID: string }) {
+    async assignUserToTimespan({ commit, state }: any, data: { userID: string; timespanID: string }) {
       const res = await safeCall(this, TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID));
       if (res) {
-        commit("SET_ASSIGNMENT", res.data);
+        const assignedTimeSpan = {...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id)};
+        assignedTimeSpan.assigned = res.data.assigned;
+        commit("SET_ASSIGNMENT", assignedTimeSpan);
       }
     },
   }
@@ -339,6 +339,5 @@ function getFTNameById(FTs: any, id: string) {
       return res;
     }
   });
-  console.log(ft);
   return ft ? ft.general.name : "";
 }
