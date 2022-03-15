@@ -117,7 +117,7 @@ export const actions = actionTree(
     async getTimespans({ commit }: any) {
       const ret = await safeCall(this, TimeSpanRepo.getAll(this));
       if (ret) {
-        commit("SET_TIMESPANS", ret.data);
+        commit("SET_TIMESPANS", ret.data.map((ts: any) => ({ ...ts, start: new Date(ts.start), end: new Date(ts.end), timed: true })));
       }
       return ret;
     },
@@ -298,8 +298,14 @@ export const getters = getterTree(state, {
    * TODO :: get selected user's assigned timesSpans to display them on the calendar #330
    * @param state
    */
-  assignedTimespans: (state) => {
-    return [];
+  assignedTimeSpans: (state) => {
+    const { selectedUser, timespans } = state;
+    return timespans.filter((ts: any) => {
+      if (ts.assigned) {
+        return ts.assigned === selectedUser._id;
+      }
+      return false;
+    });
   },
 });
 

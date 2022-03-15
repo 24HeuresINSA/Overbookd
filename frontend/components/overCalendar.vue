@@ -13,7 +13,7 @@
     <v-calendar
       ref="cal"
       v-model="centralDay"
-      :events="calendarFormattedEvents"
+      :events="assignedTimeSlots"
       color="primary"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -58,15 +58,11 @@ export default {
   },
 
   computed: {
+    assignedTimeSlots() {
+      return this.$accessor.assignment.assignedTimeSpans;
+    },
     calendarFormattedEvents() {
-      let res = [];
-      if (this.selectedUser.assigned) {
-        res = this.selectedUser.assigned;
-      }
-      if (this.newEvent) {
-        res.push(this.newEvent);
-      }
-      return res;
+
     },
     selectedUser: function () {
       return this.$accessor.user.mUser;
