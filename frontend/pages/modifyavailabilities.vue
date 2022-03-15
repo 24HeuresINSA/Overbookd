@@ -171,6 +171,7 @@ export default {
   },
 
   async mounted() {
+    await this.initStore();
     if (!this.hasRole("hard")) {
       await this.$router.push({
         path: "/index",
@@ -200,6 +201,10 @@ export default {
     toggleModification(user) {
       this.selectedUser = user;
       this.isEditing = true;
+    },
+    async initStore() {
+      await this.$accessor.user.fetchUser();
+      await this.$accessor.timeslot.fetchTimeslots();
     },
   },
 };
