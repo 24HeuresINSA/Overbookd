@@ -5,6 +5,9 @@ import { User } from "~/utils/models/repo";
 import { FT } from "~/utils/models/FT";
 import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
+import { TimeSpan } from "~/utils/models/TimeSpan";
+import TimeSpanRepo from "~/repositories/timeSpanRepo";
+import {Timeframe} from "~/utils/models/timeframe";
 
 declare interface filter {
   user: {
@@ -33,6 +36,8 @@ export const state = () => ({
   FTs: [] as FT[],
   FAs: [] as FA[],
   timeslots: [] as any[],
+  timespans: [] as TimeSpan[],
+  timespanToFTName: {} as { [key: string]: string },
 });
 
 export const mutations = mutationTree(state, {
@@ -53,6 +58,9 @@ export const mutations = mutationTree(state, {
   },
   SET_USER_FILTER(state: any, { key, value }) {
     state.filters.user[key] = value;
+  },
+  SET_TIMESPANS(state: any, data: any) {
+    state.timespans = data;
   },
 });
 
@@ -79,7 +87,7 @@ export const actions = actionTree(
     async getFTs({ commit }: any) {
       const ret = await safeCall(this, RepoFactory.ftRepo.getAllFTs(this));
       if (ret) {
-        commit("SET_FTs", ret.data);
+        commit("SET_FTs", ret.data.data);
       }
       return ret;
     },
@@ -97,6 +105,17 @@ export const actions = actionTree(
     },
 
     /**
+     * get all timespans
+     */
+    async getTimespans({ commit }: any) {
+      const ret = await safeCall(this, TimeSpanRepo.getAll(this));
+      if (ret) {
+        commit("SET_TIMESPANS", ret.data);
+      }
+      return ret;
+    },
+
+    /**
      * get all timeslots
      *
      * @returns
@@ -109,11 +128,17 @@ export const actions = actionTree(
       return ret;
     },
 
-    async initStore({ dispatch }) {
+    async initStore({ dispatch, state }) {
       await dispatch("getUsers");
       await dispatch("getFTs");
       await dispatch("getFAs");
       await dispatch("getTimeslots");
+      await dispatch("getTimespans");
+      state.timespans.forEach((timespan: TimeSpan) => {
+        // @ts-ignore
+        state.timespanToFTName[timespan._id] = state.FTs.find((FT: FT) =>
+            FT.timeframes.find((timeframe) => timespan.timeframeID === timeframe._id)).general?.name || "";
+      });
     },
 
     /**
@@ -136,6 +161,23 @@ export const actions = actionTree(
     setSelectedUser({ commit }: any, user: User) {
       commit("SET_SELECTED_USER", user);
     },
+
+    getFTNameById({ state }: any, id: string) {
+      console.log(state);
+      const ft = state.FTs.find((ft: FT) => {
+        if (ft.timeframes.length > 0) {
+          let res = false;
+          ft.timeframes.forEach((tf: any) => {
+            if (tf._id === id) {
+              res = true;
+            }
+          });
+          return res;
+        }
+      });
+      console.log(ft);
+      return ft ? ft.general.name : "";
+    }
   }
 );
 
@@ -195,4 +237,59 @@ export const getters = getterTree(state, {
     }
     return [];
   },
+
+  availableTimeSpans: (state: any, getters: any) => {
+    const { selectedUser } = state;
+    if (selectedUser && state.timespans) {
+      const availableTimeSpans = state.timespans.filter((ts: any) => {
+        let isAvailable = false;
+        getters.selectedUserAvailabilities.forEach((av: any) => {
+          if (
+            new Date(av.timeFrame.start).getTime() <=
+              new Date(ts.start).getTime() &&
+            new Date(av.timeFrame.end).getTime() >= new Date(ts.end).getTime()
+          ) {
+            isAvailable = true;
+          }
+        });
+        return isAvailable;
+      });
+      availableTimeSpans.filter((ts: any) => {
+        const requirement = ts.required;
+        if (requirement.type === "user") {
+          return requirement.user._id === selectedUser._id;
+        } else if (requirement.type === "team") {
+          return selectedUser.team.includes(requirement.team);
+        }
+      });
+      // availableTimeSpans = availableTimeSpans.map((ts: any) => {
+      //   return {
+      //     ...ts,
+      //     name: getFTNameById(this.state.FTs, ts.timeframe.FT),
+      //   };
+      // });
+      console.log("availableTimeSpans", availableTimeSpans);
+      return availableTimeSpans;
+    }
+    return [];
+  },
 });
+
+/**
+ * resolve FT id with name
+ */
+function getFTNameById(FTs: any, id: string) {
+  const ft = FTs.find((ft: FT) => {
+    if (ft.timeframes.length > 0) {
+      let res = false;
+      ft.timeframes.forEach((tf: any) => {
+        if (tf._id === id) {
+          res = true;
+        }
+      });
+      return res;
+    }
+  });
+  console.log(ft);
+  return ft ? ft.general.name : "";
+}

@@ -30,6 +30,14 @@
         >
           <v-icon>mdi-link</v-icon>
         </v-btn>
+        <v-btn icon @click="deleteNotification(notification.item.date)"
+          ><v-icon>mdi-close-thick</v-icon></v-btn
+        >
+      </div>
+      <div v-else>
+        <v-btn icon @click="deleteNotification(notification.item.date)"
+          ><v-icon>mdi-close-thick</v-icon></v-btn
+        >
       </div>
     </template>
   </v-data-table>
@@ -105,21 +113,21 @@ export default Vue.extend({
     async refuseFriendRequest(notification: any): Promise<void> {
       if (notification.data) {
         this.deleteNotification(notification.date);
+        const notif: SnackNotif = {
+          type: "success",
+          message: "Demande refusée !",
+        };
+        this.$store.dispatch("notif/pushNotification", notif);
       }
     },
-    deleteNotification(date: Date): void {
+    deleteNotification(date: any): void {
       const notifications = this.me.notifications.filter(
-        (item) => new Date(item.date) != date
+        (item) => item.date != date
       );
       this.$accessor.user.updateUser({
         userID: this.me._id,
         userData: { notifications },
       });
-      const notif: SnackNotif = {
-        type: "success",
-        message: "Demande refusée !",
-      };
-      this.$store.dispatch("notif/pushNotification", notif);
     },
   },
 });
