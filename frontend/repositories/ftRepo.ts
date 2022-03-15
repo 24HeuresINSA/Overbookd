@@ -1,5 +1,5 @@
-import {NuxtAxiosInstance} from "@nuxtjs/axios";
-import {FT} from "~/utils/models/FT";
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { FT } from "~/utils/models/FT";
 
 const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };

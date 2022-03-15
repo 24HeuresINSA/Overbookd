@@ -11,11 +11,11 @@ import {Schema, Types} from "mongoose";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
-  res.json({data: mFTs});
+  res.json({ data: mFTs });
 }
 
 export async function getFTByID(req: Request, res: Response) {
-  const mFT = await FTModel.findOne({count: +req.params.FTID});
+  const mFT = await FTModel.findOne({ count: +req.params.FTID });
   res.json(mFT);
 }
 
@@ -74,12 +74,12 @@ export async function deleteFT(req: Request, res: Response) {
   logger.info(`deleting FT: ${mFT.count}...`);
   if (mFT.count) {
     await FTModel.findOneAndUpdate(
-      {count: mFT.count},
-      {$set: {isValid: false}}
+      { count: mFT.count },
+      { $set: { isValid: false } }
     );
     if (mFT.FA) {
       logger.info(`deleting FT: ${mFT.count} from FA ${mFT.FA}`);
-      const mFA = await FAModel.findOne({count: mFT.FA});
+      const mFA = await FAModel.findOne({ count: mFT.FA });
       if (mFA && mFA.FTs) {
         mFA.FTs = mFA.FTs.filter((FT) => FT.count !== mFT.count);
         mFA.save();
@@ -87,7 +87,7 @@ export async function deleteFT(req: Request, res: Response) {
       }
     }
     await updateConflictsByFTCount(mFT.count);
-    res.status(StatusCodes.OK).json({mFT});
+    res.status(StatusCodes.OK).json({ mFT });
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);
   }
@@ -97,7 +97,7 @@ export async function getFTsNumber(req: Request, res: Response) {
   const FTs: Array<{ _id: { count: number; status: string; FA: number } }> =
     await FTModel.aggregate()
       .match({
-        $and: [{isValid: {$ne: false}}],
+        $and: [{ isValid: { $ne: false } }],
       })
       .group({
         _id: {
@@ -184,7 +184,7 @@ export async function getFTsNumber(req: Request, res: Response) {
 
 export async function makeFTReady(req: Request, res: Response) {
   const FTCount = req.params.count as string;
-  const FT = await FTModel.findOne({count: +FTCount});
+  const FT = await FTModel.findOne({ count: +FTCount });
   if (FT) {
     const mFT = <IFT>FT.toObject();
     logger.info(`making FT ${mFT.general.name} ready...`);
@@ -195,7 +195,7 @@ export async function makeFTReady(req: Request, res: Response) {
     try {
       // slice timeframes
       for (const timeframe of mFT.timeframes) {
-        const timespan = await timeframeToTimeSpan(timeframe, mFT.count);
+        const timespan = await timeframeToTimeSpan(timeframe);
         if (timespan) {
           r.push(timespan);
           await TimeSpanModel.insertMany(timespan);
