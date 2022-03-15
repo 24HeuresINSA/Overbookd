@@ -5,6 +5,8 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
+      <v-switch label="mode tache-orga"></v-switch>
+      <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
@@ -128,7 +130,6 @@ export default {
       }
     },
     endDrag() {
-      console.log(this.calendarFormattedEvents);
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;

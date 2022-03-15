@@ -67,13 +67,12 @@ export default {
       });
     },
     resolveFTName(FTID) {
-      return this.FTs.find((FT) => FT.count === FTID)?.general.name;
-    },
-  },
-
-  created() {
-    console.log("ListTasks created");
-    console.log(this.resolveFTName(12));
+      const FT = this.FTs.find((FT) => FT.count === FTID);
+      if (FT) {
+        return FT.general.name;
+      }
+      return FTID;
+    }
   },
 };
 </script>
