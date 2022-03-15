@@ -73,6 +73,9 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_TIMESPAN(state: any, data: TimeSpan) {
     state.selectedTimeSpan = data;
   },
+  CHANGE_MODE(state: any, data: boolean) {
+    state.filters.isModeOrgaToTache = data;
+  },
 });
 
 export const actions = actionTree(
@@ -117,6 +120,10 @@ export const actions = actionTree(
 
     async selectTimeSpan({ commit }: any, timeSpan: TimeSpan) {
       commit("SET_SELECTED_TIMESPAN", timeSpan);
+    },
+
+    changeMode({ commit }: any, isModeOrgaToTache: boolean) {
+      commit("CHANGE_MODE", isModeOrgaToTache || false);
     },
 
     /**

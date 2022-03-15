@@ -5,7 +5,7 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-switch label="mode tache-orga"></v-switch>
+      <v-switch label="mode tache-orga" :value="mode" @change="changeMode"></v-switch>
       <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
@@ -73,6 +73,9 @@ export default {
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
+    mode(){
+      return this.$accessor.assignment.filters.isModeOrgaToTache;
+    }
   },
 
   methods: {
@@ -208,7 +211,10 @@ export default {
         return FT.general.name;
       }
       return FTID;
-    }
+    },
+    changeMode(isMode) {
+      this.$accessor.assignment.changeMode(isMode);
+    },
   },
 };
 </script>
