@@ -5,6 +5,8 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
+      <v-switch label="mode tache-orga" :value="mode" @change="changeMode"></v-switch>
+      <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
@@ -13,7 +15,8 @@
     <v-calendar
       ref="cal"
       v-model="centralDay"
-      :events="calendarFormattedEvents"
+      :events="assignedTimeSlots"
+      :event-name="resolveFTName"
       color="primary"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -58,24 +61,28 @@ export default {
   },
 
   computed: {
+    assignedTimeSlots() {
+      return this.$accessor.assignment.assignedTimeSpans;
+    },
+    FTs() {
+      return this.$accessor.assignment.FTs;
+    },
     calendarFormattedEvents() {
-      let res = [];
-      if (this.selectedUser.assigned) {
-        res = this.selectedUser.assigned;
-      }
-      if (this.newEvent) {
-        res.push(this.newEvent);
-      }
-      return res;
+
     },
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
+    mode(){
+      return this.$accessor.assignment.filters.isModeOrgaToTache;
+    }
   },
 
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
+      console.log("startDrag", event, timed);
+      this.$accessor.assignment.selectTimeSpan(event);
       if (event && timed) {
         this.dragEvent = event;
         this.dragTime = null;
@@ -128,7 +135,6 @@ export default {
       }
     },
     endDrag() {
-      console.log(this.calendarFormattedEvents);
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
@@ -185,7 +191,7 @@ export default {
         this.$accessor.assignment.selectedUserAvailabilities;
       let isUserAvailableInTimeframe = false;
       availabilities.forEach((availability) => {
-        if (availability.timeFrame) {
+        if (availability && availability.timeFrame) {
           let start = new Date(availability.timeFrame.start);
           let end = new Date(availability.timeFrame.end);
           if (
@@ -197,6 +203,17 @@ export default {
         }
       });
       return isUserAvailableInTimeframe;
+    },
+    resolveFTName(ev) {
+      const FTID = ev.input.FTID;
+      const FT = this.FTs.find((FT) => FT.count === FTID);
+      if (FT) {
+        return FT.general.name;
+      }
+      return FTID;
+    },
+    changeMode(isMode) {
+      this.$accessor.assignment.changeMode(isMode);
     },
   },
 };

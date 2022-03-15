@@ -29,13 +29,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  // is userID valid
-  if (!Types.ObjectId.isValid(req.params.userId)) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "User ID is not valid",
-    });
-  }
-  timespan.assigned = req.body.userId;
+  timespan.assigned = req.params.userId;
   await timespan.save();
   return res.json(timespan);
 }

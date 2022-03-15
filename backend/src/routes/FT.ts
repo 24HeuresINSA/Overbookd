@@ -195,7 +195,7 @@ export async function makeFTReady(req: Request, res: Response) {
     try {
       // slice timeframes
       for (const timeframe of mFT.timeframes) {
-        const timespan = await timeframeToTimeSpan(timeframe);
+        const timespan = await timeframeToTimeSpan(timeframe, mFT.count);
         if (timespan) {
           r.push(timespan);
           await TimeSpanModel.insertMany(timespan);
