@@ -8,6 +8,7 @@ import Fuse from "fuse.js";
 import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import {Timeframe} from "~/utils/models/timeframe";
+import user from "~/middleware/user";
 
 declare interface filter {
   user: {
@@ -61,6 +62,12 @@ export const mutations = mutationTree(state, {
   },
   SET_TIMESPANS(state: any, data: any) {
     state.timespans = data;
+  },
+  SET_ASSIGNMENT(state: any, assignedTimeSpan: TimeSpan) {
+    const timeSpanIndex = state.timespans.findIndex(
+      (ts: TimeSpan) => ts._id === assignedTimeSpan._id
+    );
+    state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
   },
 });
 
@@ -128,7 +135,7 @@ export const actions = actionTree(
       return ret;
     },
 
-    async initStore({ dispatch }) {
+    async initStore({ dispatch , state}) {
       await dispatch("getUsers");
       await dispatch("getFTs");
       await dispatch("getFAs");
@@ -177,7 +184,17 @@ export const actions = actionTree(
       });
       console.log(ft);
       return ft ? ft.general.name : "";
-    }
+    },
+
+    /**
+     * assign user to timespan
+     */
+    async assignUserToTimespan({ commit }: any, data: { userID: string; timespanID: string }) {
+      const res = await safeCall(this, TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID));
+      if (res) {
+        commit("SET_ASSIGNMENT", res.data);
+      }
+    },
   }
 );
 
