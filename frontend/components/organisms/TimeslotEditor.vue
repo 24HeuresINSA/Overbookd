@@ -38,6 +38,14 @@
           @input="select($event)"
         ></v-simple-checkbox>
       </template>
+      <template #[`item.deleteSlot`]="{ item }">
+        <v-btn
+          v-if="item.isSelected"
+          color="red"
+          @click="deleteAvailability(item.id)"
+          >Supprimer ce créneaux</v-btn
+        >
+      </template>
       <template #[`group.header`]="{ group, headers, toggle, isOpen }">
         <td :colspan="headers.length">
           <v-btn :ref="group" small icon :data-open="isOpen" @click="toggle">
@@ -95,6 +103,7 @@ export default Vue.extend({
         date: "",
       },
       selectedItems: [],
+      selectedDeletion: [],
       authorizedEditor: ["admin", "humain", "bural"],
     };
   },
@@ -157,6 +166,11 @@ export default Vue.extend({
           value: "charisma",
           sortable: false,
         },
+        {
+          text: "Suppresion",
+          value: "deleteSlot",
+          sortable: false,
+        },
       ];
       return h;
     },
@@ -198,6 +212,9 @@ export default Vue.extend({
     },
     async askConfirmDelete() {
       (this.$refs.confirmDelete as any).open();
+    },
+    async deleteAvailability(slotId: any) {
+      console.log(slotId);
     },
   },
 });

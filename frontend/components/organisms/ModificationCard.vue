@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title>{{ user.firstname + " " + user.lastname }}</v-card-title>
+    <v-card-title
+      ><h1>{{ user.firstname + " " + user.lastname }}</h1></v-card-title
+    >
     <v-card-text>Dispos actuels : </v-card-text>
     <v-row>
       <v-col v-for="title in existingGroupTitles" :key="title" md="12">
