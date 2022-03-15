@@ -7,7 +7,7 @@ import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
 import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
-import {Timeframe} from "~/utils/models/timeframe";
+import { Timeframe } from "~/utils/models/timeframe";
 
 declare interface filter {
   user: {
@@ -136,8 +136,12 @@ export const actions = actionTree(
       await dispatch("getTimespans");
       state.timespans.forEach((timespan: TimeSpan) => {
         // @ts-ignore
-        state.timespanToFTName[timespan._id] = state.FTs.find((FT: FT) =>
-            FT.timeframes.find((timeframe) => timespan.timeframeID === timeframe._id)).general?.name || "";
+        state.timespanToFTName[timespan._id] =
+          state.FTs.find((FT: FT) =>
+            FT.timeframes.find(
+              (timeframe) => timespan.timeframeID === timeframe._id
+            )
+          ).general?.name || "";
       });
     },
 
@@ -177,7 +181,7 @@ export const actions = actionTree(
       });
       console.log(ft);
       return ft ? ft.general.name : "";
-    }
+    },
   }
 );
 
@@ -196,15 +200,16 @@ export const getters = getterTree(state, {
       const fuse = new Fuse(users, options);
       users = fuse.search(search).map((e) => e.item);
     }
-
     if (team && team.length > 0) {
+      console.log(users);
       users = users.filter((user: User) => {
         if (user.team) {
           const userTeams = user.team as string[];
-          return userTeams.filter((v) => team.includes(v));
+          return userTeams.filter((v) => team.includes(v)).length > 0;
         }
         return false;
       });
+      console.log(users);
     }
     return users;
   },
