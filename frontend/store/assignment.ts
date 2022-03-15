@@ -34,6 +34,7 @@ export const state = () => ({
     isModeOrgaToTache: false,
   } as filter,
   selectedUser: {} as User,
+  selectedTimeSpan: {} as TimeSpan, // Selected TimeSpan from the calendar
   FTs: [] as FT[],
   FAs: [] as FA[],
   timeslots: [] as any[],
@@ -68,6 +69,9 @@ export const mutations = mutationTree(state, {
       (ts: TimeSpan) => ts._id === assignedTimeSpan._id
     );
     state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
+  },
+  SET_SELECTED_TIMESPAN(state: any, data: TimeSpan) {
+    state.selectedTimeSpan = data;
   },
 });
 
@@ -109,6 +113,10 @@ export const actions = actionTree(
         commit("SET_FAs", ret.data);
       }
       return ret;
+    },
+
+    async selectTimeSpan({ commit }: any, timeSpan: TimeSpan) {
+      commit("SET_SELECTED_TIMESPAN", timeSpan);
     },
 
     /**

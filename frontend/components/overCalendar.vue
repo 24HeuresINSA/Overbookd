@@ -78,6 +78,8 @@ export default {
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
+      console.log("startDrag", event, timed);
+      this.$accessor.assignment.selectTimeSpan(event);
       if (event && timed) {
         this.dragEvent = event;
         this.dragTime = null;
