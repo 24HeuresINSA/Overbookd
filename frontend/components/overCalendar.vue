@@ -185,7 +185,7 @@ export default {
         this.$accessor.assignment.selectedUserAvailabilities;
       let isUserAvailableInTimeframe = false;
       availabilities.forEach((availability) => {
-        if (availability.timeFrame) {
+        if (availability && availability.timeFrame) {
           let start = new Date(availability.timeFrame.start);
           let end = new Date(availability.timeFrame.end);
           if (

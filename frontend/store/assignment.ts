@@ -244,6 +244,9 @@ export const getters = getterTree(state, {
       const availableTimeSpans = state.timespans.filter((ts: any) => {
         let isAvailable = false;
         getters.selectedUserAvailabilities.forEach((av: any) => {
+          if(!av){
+            return;
+          }
           if (
             new Date(av.timeFrame.start).getTime() <=
               new Date(ts.start).getTime() &&
@@ -271,6 +274,14 @@ export const getters = getterTree(state, {
       console.log("availableTimeSpans", availableTimeSpans);
       return availableTimeSpans;
     }
+    return [];
+  },
+
+  /**
+   * TODO :: get selected user's assigned timesSpans to display them on the calendar #330
+   * @param state
+   */
+  assignedTimespans: (state) => {
     return [];
   },
 });
