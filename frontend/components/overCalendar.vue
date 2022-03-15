@@ -14,6 +14,7 @@
       ref="cal"
       v-model="centralDay"
       :events="assignedTimeSlots"
+      :event-name="resolveFTName"
       color="primary"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -60,6 +61,9 @@ export default {
   computed: {
     assignedTimeSlots() {
       return this.$accessor.assignment.assignedTimeSpans;
+    },
+    FTs() {
+      return this.$accessor.assignment.FTs;
     },
     calendarFormattedEvents() {
 
@@ -194,6 +198,14 @@ export default {
       });
       return isUserAvailableInTimeframe;
     },
+    resolveFTName(ev) {
+      const FTID = ev.input.FTID;
+      const FT = this.FTs.find((FT) => FT.count === FTID);
+      if (FT) {
+        return FT.general.name;
+      }
+      return FTID;
+    }
   },
 };
 </script>
