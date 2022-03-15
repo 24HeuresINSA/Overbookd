@@ -1,24 +1,24 @@
 <template>
   <div>
     <h1>Planning 📆</h1>
-    <v-list v-for="plan in p" :key="plan.username">
+    <v-list v-for="plan in orgaRequis" :key="plan._id">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>{{ plan.username }}</v-list-item-title>
+          <v-list-item-title>{{ plan._id }}</v-list-item-title>
           <v-data-table
             :headers="[
-              { text: 'FT', value: 'FT.general.name' },
-              { text: 'ID', value: 'FT.count' },
-              { text: 'Début', value: 'start' },
-              { text: 'Fin', value: 'end' },
+              { text: 'FT', value: 'name' },
+              { text: 'id', value: 'count' },
+              { text: 'début', value: 'start' },
+              { text: 'fin', value: 'end' },
             ]"
-            :items="plan.timeframes"
+            :items="plan.fts"
           >
             <template #item.start="{ item }">
-              {{ item.start.toLocaleString() }}
+              {{ (new Date(item.start)).toLocaleString() }}
             </template>
             <template #item.end="{ item }">
-              {{ item.end.toLocaleString() }}
+              {{ (new Date(item.end)).toLocaleString() }}
             </template>
           </v-data-table>
         </v-list-item-content>
@@ -38,6 +38,7 @@ interface Data {
   FTs: FT[];
   plannings: { [_id: string]: Planning };
   p: [];
+  orgaRequis: [];
 }
 
 interface Planning {
@@ -59,54 +60,20 @@ export default Vue.extend({
       FTs: [],
       plannings: {},
       p: [],
+      orgaRequis: []
     };
   },
   async mounted() {
-    await this.getUsers();
-    await this.getFTs();
+    await this.getOrgaRequis();
 
-    this.users.forEach(({ _id, username }) => {
-      if (username) {
-        this.plannings[_id] = {
-          username,
-          timeframes: this.getTimeframes(_id),
-        };
-      }
-    });
-    await Vue.nextTick();
-    this.p = Object.keys(this.plannings).map((key) => {
-      return this.plannings[key];
-    }) as any;
+    // await Vue.nextTick();
+    // this.p = Object.keys(this.plannings).map((key) => {
+    //   return this.plannings[key];
+    // }) as any;
   },
   methods: {
-    async getUsers() {
-      this.users = (await RepoFactory.userRepo.getAllUsernames(this)).data;
-    },
-    async getFTs() {
-      this.FTs = (await RepoFactory.ftRepo.getAllFTs(this)).data.data;
-    },
-    getTimeframes(_id: string): Timeframe[] {
-      let res: Timeframe[] = [];
-      this.FTs.forEach((FT) => {
-        if (FT.timeframes) {
-          FT.timeframes.forEach((timeframe) => {
-            if (timeframe && timeframe.required) {
-              timeframe.required.forEach((req) => {
-                if (req.type === "user") {
-                  if (req.user && req.user._id && req.user._id === _id) {
-                    res.push({
-                      start: new Date(timeframe.start),
-                      end: new Date(timeframe.end),
-                      FT,
-                    });
-                  }
-                }
-              });
-            }
-          });
-        }
-      });
-      return res;
+    async getOrgaRequis() {
+      this.orgaRequis = (await RepoFactory.ftRepo.getOrgaRequis(this)).data;
     },
   },
 });
