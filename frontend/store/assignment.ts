@@ -233,12 +233,11 @@ export const getters = getterTree(state, {
       const fuse = new Fuse(users, options);
       users = fuse.search(search).map((e) => e.item);
     }
-
     if (team && team.length > 0) {
       users = users.filter((user: User) => {
         if (user.team) {
           const userTeams = user.team as string[];
-          return userTeams.filter((v) => team.includes(v));
+          return userTeams.filter((v) => team.includes(v)).length > 0;
         }
         return false;
       });

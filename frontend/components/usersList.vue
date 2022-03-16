@@ -1,20 +1,20 @@
 <template>
   <div>
     <!-- list of  filtered users -->
-    <v-lazy>
-      <v-list style="overflow-y: auto; height: auto" dense>
-        <v-list-item-group v-model="selectedUserIndex">
-          <v-list-item v-for="user of users" :key="user._id">
+    <v-list-item-group v-model="selectedUserIndex">
+      <v-virtual-scroll :items="users" :height="height" item-height="90">
+        <template #default="{ item }">
+          <v-list-item :key="item._id">
             <v-list-item-content>
               <v-list-item-title>
-                {{ user.firstname }} {{ user.lastname.toUpperCase() }}
-                {{ user.nickname ? `(${user.nickname})` : "" }}
-                {{ user.charisma }}
+                {{ item.firstname }} {{ item.lastname.toUpperCase() }}
+                {{ item.nickname ? `(${item.nickname})` : "" }}
+                {{ item.charisma }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                <OverChips :roles="user.team"></OverChips>
+                <OverChipsLight :roles="item.team"></OverChipsLight>
                 <v-progress-linear
-                  :value="getAssignmentRatio(user)"
+                  :value="getAssignmentRatio(item)"
                 ></v-progress-linear>
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -25,23 +25,23 @@
                     mdi-information</v-icon
                   >
                 </template>
-                <span>{{ user.comment }}</span>
+                <span>{{ item.comment }}</span>
               </v-tooltip>
             </v-list-item-action>
           </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-lazy>
+        </template>
+      </v-virtual-scroll>
+    </v-list-item-group>
   </div>
 </template>
 
 <script>
 import { getConfig } from "../common/role";
-import OverChips from "~/components/atoms/overChips";
+import OverChipsLight from "~/components/atoms/overChipsLight";
 
 export default {
   name: "UsersList",
-  components: { OverChips },
+  components: { OverChipsLight },
   props: ["users"],
 
   data() {
@@ -55,6 +55,7 @@ export default {
 
       timeframes: this.getConfig("timeframes"),
       teams: this.getConfig("teams"),
+      height: window.innerHeight * 0.75,
     };
   },
 
