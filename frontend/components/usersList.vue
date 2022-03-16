@@ -1,47 +1,24 @@
 <template>
   <div>
     <!-- list of  filtered users -->
-    <v-list-item-group v-model="selectedUserIndex">
-      <v-virtual-scroll :items="users" :height="height" item-height="90">
-        <template #default="{ item }">
-          <v-list-item :key="item._id">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.firstname }} {{ item.lastname.toUpperCase() }}
-                {{ item.nickname ? `(${item.nickname})` : "" }}
-                {{ item.charisma }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                <OverChipsLight :roles="item.team"></OverChipsLight>
-                <v-progress-linear
-                  :value="getAssignmentRatio(item)"
-                ></v-progress-linear>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-tooltip top>
-                <template #activator="{ on, attrs }">
-                  <v-icon small v-bind="attrs" v-on="on">
-                    mdi-information</v-icon
-                  >
-                </template>
-                <span>{{ item.comment }}</span>
-              </v-tooltip>
-            </v-list-item-action>
+    <v-virtual-scroll :items="users" :height="height" item-height="60">
+      <template #default="{ item }">
+        <v-list-item-group v-model="selectedUserIndex">
+          <v-list-item :key="item._id" :value="item._id">
+            <UserResume :user="item"></UserResume>
           </v-list-item>
-        </template>
-      </v-virtual-scroll>
-    </v-list-item-group>
+        </v-list-item-group>
+      </template>
+    </v-virtual-scroll>
   </div>
 </template>
 
 <script>
-import { getConfig } from "../common/role";
-import OverChipsLight from "~/components/atoms/overChipsLight";
+import UserResume from "~/components/organisms/UserResume";
 
 export default {
   name: "UsersList",
-  components: { OverChipsLight },
+  components: { UserResume },
   props: ["users"],
 
   data() {
@@ -53,31 +30,16 @@ export default {
 
       selectedUserIndex: undefined,
 
-      timeframes: this.getConfig("timeframes"),
-      teams: this.getConfig("teams"),
       height: window.innerHeight * 0.75,
     };
   },
 
   watch: {
     selectedUserIndex() {
-      const selectedUser = this.users[this.selectedUserIndex];
+      const selectedUser = this.users.find(
+        (user) => user._id === this.selectedUserIndex
+      );
       this.$accessor.assignment.setSelectedUser(selectedUser);
-    },
-  },
-
-  methods: {
-    getConfig(key) {
-      return this.$accessor.config.getConfig(key);
-    },
-    /**
-     * compute the assignment ratio of a user
-     */
-    getAssignmentRatio({ assignments, availabilities }) {
-      if (!assignments || !availabilities) {
-        return 0;
-      }
-      return assignments.length / availabilities.length; // TODO change this
     },
   },
 };
