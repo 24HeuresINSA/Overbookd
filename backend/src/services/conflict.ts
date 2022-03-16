@@ -310,6 +310,18 @@ function dateRangeOverlaps(
   return false;
 }
 
+function dateRangeOverlapsAvailability(
+  a_start: number,
+  a_end: number,
+  b_start: number,
+  b_end: number
+): boolean {
+  if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
+  if (a_start <= b_end && b_end <= a_end) return true; // b ends in a
+  if (b_start < a_start && a_end < b_end) return true; // a in b
+  return false;
+}
+
 /**
  * Check if a given timeframe is covered by others timeslot
  */
@@ -321,7 +333,7 @@ function isTimeFrameCovered(tf: ITimeFrame, timeslots: ITimeslot[]): boolean {
   let totalOverlapSize = 0;
   for (const ts of timeslots) {
     if (
-      dateRangeOverlaps(
+      dateRangeOverlapsAvailability(
         tf.start,
         tf.end,
         ts.timeFrame.start.getTime(),
