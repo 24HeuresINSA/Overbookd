@@ -28,7 +28,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  timespan.assigned = req.params.userId;
+  timespan.assigned = Types.ObjectId(req.params.userId);
   await timespan.save();
   return res.json(timespan);
 }
