@@ -6,6 +6,7 @@ import FAModel from "@entities/FA";
 import {updateConflictsByFTCount} from "@src/services/conflict";
 import {timeframeToTimeSpan} from "@src/services/slicing";
 import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
+import ConflictModel from "@entities/Conflict";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
@@ -215,7 +216,8 @@ export async function makeFTReady(req: Request, res: Response) {
 }
 
 export async function getOrgaRequis(req: Request, res: Response) {
-  const FTs: Array<{ _id: { count: number; status: string; FA: number } }> =
+  const conflits = await ConflictModel.find();
+  const FTs =
     await FTModel.aggregate()
       .match({
         $and: [{isValid: {$ne: false}}],
@@ -223,18 +225,29 @@ export async function getOrgaRequis(req: Request, res: Response) {
       .unwind({path: "$timeframes"})
       .sort("timeframes.start")
       .unwind({path: "$timeframes.required"})
-      .group({
-        _id: "$timeframes.required.user.username",
-        fts: {
-          $push: {
-            count: "$count",
-            name: "$general.name",
-            start: "$timeframes.start",
-            end: "$timeframes.end"
-          },
-        }
+      .lookup({
+        from: "conflicts",
+        localField: "timeframes.required.user._id",
+        foreignField: "user",
+        as: "conflicts"
       })
-      .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
-      .sort("_id.username");
+      .unwind({path: "$conflicts", preserveNullAndEmptyArrays: true})
+      // .match({"timeframes._id": "5f0e73e7-4a4f-4522-887c-6942f5da8f84"});
+      .match({$or: [{"timeframes._id" : {$eq: "conflicts.tf1"}}, {"timeframes._id": {$eq: "conflicts.tf2"}}]});
+  // .group({
+  //     _id: "$timeframes.required.user.username",
+  //     fts: {
+  //       $push: {
+  //         count: "$count",
+  //         name: "$general.name",
+  //         start: "$timeframes.start",
+  //         end: "$timeframes.end",
+  //         conflits: "$conflicts"
+  //       },
+  //     }
+  //   }
+  // )
+  // .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
+  // .sort("_id");
   res.json(FTs);
 }
