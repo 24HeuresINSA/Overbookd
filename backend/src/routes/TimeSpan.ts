@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import TimeSpan , { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
 import { Types } from "mongoose";
 
@@ -29,13 +29,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  // is userID valid
-  if (!Types.ObjectId.isValid(req.params.userId)) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "User ID is not valid",
-    });
-  }
-  timespan.assigned = req.body.userId;
+  timespan.assigned = Types.ObjectId(req.params.userId);
   await timespan.save();
   return res.json(timespan);
 }

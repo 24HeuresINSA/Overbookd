@@ -8,6 +8,7 @@ import Fuse from "fuse.js";
 import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import {Timeframe} from "~/utils/models/timeframe";
+import user from "~/middleware/user";
 
 declare interface filter {
   user: {
@@ -33,6 +34,7 @@ export const state = () => ({
     isModeOrgaToTache: false,
   } as filter,
   selectedUser: {} as User,
+  selectedTimeSpan: {} as TimeSpan, // Selected TimeSpan from the calendar
   FTs: [] as FT[],
   FAs: [] as FA[],
   timeslots: [] as any[],
@@ -61,6 +63,18 @@ export const mutations = mutationTree(state, {
   },
   SET_TIMESPANS(state: any, data: any) {
     state.timespans = data;
+  },
+  SET_ASSIGNMENT(state: any, assignedTimeSpan: TimeSpan) {
+    const timeSpanIndex = state.timespans.findIndex(
+      (ts: TimeSpan) => ts._id === assignedTimeSpan._id
+    );
+    state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
+  },
+  SET_SELECTED_TIMESPAN(state: any, data: TimeSpan) {
+    state.selectedTimeSpan = data;
+  },
+  CHANGE_MODE(state: any, data: boolean) {
+    state.filters.isModeOrgaToTache = data;
   },
 });
 
@@ -104,13 +118,26 @@ export const actions = actionTree(
       return ret;
     },
 
+    async selectTimeSpan({ commit }: any, timeSpan: TimeSpan) {
+      commit("SET_SELECTED_TIMESPAN", timeSpan);
+    },
+
+    changeMode({ commit }: any, isModeOrgaToTache: boolean) {
+      commit("CHANGE_MODE", isModeOrgaToTache || false);
+    },
+
     /**
      * get all timespans
      */
-    async getTimespans({ commit }: any) {
+    async getTimespans({ commit , state}: any) {
       const ret = await safeCall(this, TimeSpanRepo.getAll(this));
       if (ret) {
-        commit("SET_TIMESPANS", ret.data);
+        commit("SET_TIMESPANS", ret.data.map((ts: any) => ({
+          ...ts,
+          start: new Date(ts.start),
+          end: new Date(ts.end),
+          timed: true,
+          FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general.name })));
       }
       return ret;
     },
@@ -163,7 +190,6 @@ export const actions = actionTree(
     },
 
     getFTNameById({ state }: any, id: string) {
-      console.log(state);
       const ft = state.FTs.find((ft: FT) => {
         if (ft.timeframes.length > 0) {
           let res = false;
@@ -175,9 +201,20 @@ export const actions = actionTree(
           return res;
         }
       });
-      console.log(ft);
       return ft ? ft.general.name : "";
-    }
+    },
+
+    /**
+     * assign user to timespan
+     */
+    async assignUserToTimespan({ commit, state }: any, data: { userID: string; timespanID: string }) {
+      const res = await safeCall(this, TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID));
+      if (res) {
+        const assignedTimeSpan = {...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id)};
+        assignedTimeSpan.assigned = res.data.assigned;
+        commit("SET_ASSIGNMENT", assignedTimeSpan);
+      }
+    },
   }
 );
 
@@ -196,12 +233,11 @@ export const getters = getterTree(state, {
       const fuse = new Fuse(users, options);
       users = fuse.search(search).map((e) => e.item);
     }
-
     if (team && team.length > 0) {
       users = users.filter((user: User) => {
         if (user.team) {
           const userTeams = user.team as string[];
-          return userTeams.filter((v) => team.includes(v));
+          return userTeams.filter((v) => team.includes(v)).length > 0;
         }
         return false;
       });
@@ -241,9 +277,12 @@ export const getters = getterTree(state, {
   availableTimeSpans: (state: any, getters: any) => {
     const { selectedUser } = state;
     if (selectedUser && state.timespans) {
-      const availableTimeSpans = state.timespans.filter((ts: any) => {
+      let availableTimeSpans = state.timespans.filter((ts: any) => {
         let isAvailable = false;
         getters.selectedUserAvailabilities.forEach((av: any) => {
+          if(!av){
+            return;
+          }
           if (
             new Date(av.timeFrame.start).getTime() <=
               new Date(ts.start).getTime() &&
@@ -262,16 +301,25 @@ export const getters = getterTree(state, {
           return selectedUser.team.includes(requirement.team);
         }
       });
-      // availableTimeSpans = availableTimeSpans.map((ts: any) => {
-      //   return {
-      //     ...ts,
-      //     name: getFTNameById(this.state.FTs, ts.timeframe.FT),
-      //   };
-      // });
-      console.log("availableTimeSpans", availableTimeSpans);
+      // filter only avaialble timespans
+      availableTimeSpans = availableTimeSpans.filter((ts: TimeSpan) => !ts.assigned)
       return availableTimeSpans;
     }
     return [];
+  },
+
+  /**
+   * get selected user's assigned timesSpans to display them on the calendar #330
+   * @param state
+   */
+  assignedTimeSpans: (state) => {
+    const { selectedUser, timespans } = state;
+    return timespans.filter((ts: any) => {
+      if (ts.assigned) {
+        return ts.assigned === selectedUser._id;
+      }
+      return false;
+    });
   },
 });
 
@@ -290,6 +338,5 @@ function getFTNameById(FTs: any, id: string) {
       return res;
     }
   });
-  console.log(ft);
   return ft ? ft.general.name : "";
 }
