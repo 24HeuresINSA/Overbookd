@@ -192,8 +192,8 @@ export default Vue.extend({
       charisma: 10,
       valid: false,
       charismaRules: [
-        (v) => !!v || "Charisma is required",
-        (v) => (v && v >= 0) || "Charisma must be greater than 0",
+        (v:any) => !!v || "Charisma is required",
+        (v:any) => (v && v >= 0) || "Charisma must be greater than 0",
       ],
     };
   },
@@ -352,15 +352,17 @@ export default Vue.extend({
         );
         return;
       }
-      let timeslot = {
+      let timeslot = [{
         timeFrame: {
           start: start,
           end: end,
         },
         groupTitle: this.groupTitle,
-        charisma: 10,
-      }
+        groupDescription: this.timeslots[0].groupDescription,
+        charisma: this.charisma,
+      }]
       await this.$store.dispatch("timeslot/addTimeslots", timeslot);
+      this.dialog = false;
     }
   },
 });
