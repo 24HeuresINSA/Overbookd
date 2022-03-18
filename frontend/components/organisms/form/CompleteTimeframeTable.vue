@@ -26,13 +26,44 @@
       </template>
       <template #[`item.required`]="{ index, item }">
         <v-chip-group column>
-          <v-chip
-            v-for="(req, i) in item.required"
-            :key="req._id"
-            close
-            @click:close="removeRequirement(i, index)"
-            >{{ formatText(req) }}</v-chip
-          >
+          <template v-for="(req, i) in item.required">
+            <v-chip
+              v-if="!isRequiredInConflict(req, item)"
+              :key="req._id"
+              close
+              @click:close="removeRequirement(i, index)"
+            >
+              {{ formatText(req) }}
+            </v-chip>
+            <v-tooltip v-else-if="isRequiredAvailability(req, item)" :key="req._id" top>
+              <template #activator="{ on, attrs }">
+                <v-chip
+                  close
+                  color="orange"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click:close="removeRequirement(i, index)"
+                >
+                  {{ formatText(req) }}
+                </v-chip>
+              </template>
+              <span>Pas dispo sur ce créneau</span>
+            </v-tooltip>
+            <v-tooltip v-else :key="req._id" top>
+              <template #activator="{ on, attrs }">
+                <v-chip
+                  close
+                  color="red"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click:close="removeRequirement(i, index)"
+                >
+                  {{ formatText(req) }}
+                </v-chip>
+              </template>
+              <span>{{ formatConflictText(req, item) }}</span>
+            </v-tooltip>
+          </template>
         </v-chip-group>
       </template>
       <!-- Partition displays "-" if it is not defined or false and the slot time else -->
@@ -206,6 +237,9 @@ export default {
     timeframes() {
       return this.$accessor.FT.mFT.timeframes;
     },
+    conflicts: function () {
+      return this.$accessor.conflict.conflicts;
+    },
   },
   watch: {
     isEditDialogOpen: function (val) {
@@ -219,6 +253,47 @@ export default {
     },
   },
   methods: {
+    /**
+     * Return conflict array of a required field
+     */
+    requiredConflicts(req, item) {
+      // team requirement cannot have conflicts
+      if (req.type == "team" || item == undefined) {
+        return [];
+      }
+      return this.conflicts.filter((c) => c.user == req.user._id && (c.tf1==item._id || c.tf2==item._id));
+    },
+    requiredConflictsAvailability(req, item) {
+      // team requirement cannot have conflicts
+      if (req.type == "team" || item == undefined) {
+        return [];
+      }
+      return this.conflicts.filter((c) => c.type=="availability" && c.user == req.user._id && c.tf1==item._id);
+    },
+
+    /**
+     * Return if a required is in conflict
+     */
+    isRequiredInConflict(req, item) {
+      return this.requiredConflicts(req, item).length != 0;
+    },
+    isRequiredAvailability(req, item) {
+      return this.requiredConflictsAvailability(req, item).length != 0;
+    },
+    /**
+     * Return the hover text of first conflict
+     * Does not recheck conflicts exists
+     */
+    formatConflictText(req, item) {
+      const conflicts = this.requiredConflicts(req, item);
+      let ftCounts = "";
+      conflicts.forEach((conflict) => {
+        ftCounts += `${conflict.otherTf.ft.count} `;
+      });
+
+      const text = `En conflit avec la/les FT ${ftCounts}`;
+      return text;
+    },
     /**
      * Format date in milliseconds to ##:## 24h formatted time
      * @param milli String date in milliseconds

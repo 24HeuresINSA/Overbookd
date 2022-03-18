@@ -15,24 +15,43 @@ export interface FT {
   };
 
   equipments: { _id: string; name: string; required: number }[];
-  timeframes: { start: Date; end: Date; required?: requirement[] }[];
+  timeframes: {
+    start: Date;
+    end: Date; //no maximum duration, no check on consistency of data
+    required?: requirement[];
+    _id: string;
+    timed: boolean;
+  }[];
 
   comments: { time: Date; text: string; validator: string; topic?: string }[];
 }
 
-export interface requirement {
-  type: "equipment" | "user" | "team";
-  amount: number;
-  equipment?: string;
-  user?: {
+export type requirement = requirementUser | requirementTeam;
+
+export interface requirementUser {
+  type: "user";
+  user: {
     _id: string;
     username: string;
   };
-  team?: string;
 }
+
+export interface requirementTeam {
+  type: "team";
+  team: string;
+  amount: number;
+}
+
+export interface requirementTeam {
+  type: "team";
+  team: string;
+  amount: number;
+}
+
 
 export enum SmallTypes {
   QUINCAILLERIE = "QUINCAILLERIE",
   OUTILLAGE = "OUTILLAGE",
   CONSUMABLE = "CONSUMABLE",
+  PROPRETE = "PROPRETE",
 }

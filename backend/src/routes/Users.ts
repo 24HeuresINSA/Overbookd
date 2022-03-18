@@ -20,11 +20,11 @@ export const getUser: RequestHandler = async function (req, res) {
 export const getUserByID: RequestHandler = async function (req, res) {
   const _id = req.params.userID;
   const user = await UserModel.findOne({ _id });
-  if(user){
+  if (user) {
     res.json(new SafeUser(user));
   } else {
     res.status(StatusCodes.NOT_FOUND).json({
-      error: "User not found"
+      error: "User not found",
     });
   }
 };
@@ -34,11 +34,11 @@ export const updateUserByID: RequestHandler = async function (req, res) {
     { _id: req.params.userID },
     req.body
   );
-  if(user){
+  if (user) {
     res.json(new SafeUser(user));
   } else {
     res.status(StatusCodes.NOT_FOUND).json({
-      error: "User not found"
+      error: "User not found",
     });
   }
 };
@@ -61,54 +61,60 @@ export const getAllUsersName: RequestHandler = async function (req, res) {
   );
 };
 
-export const addAvailabilities: RequestHandler = async function (req, res){
+export const addAvailabilities: RequestHandler = async function (req, res) {
   const id = res.locals.auth_user._id;
   const timeslotIds: Types.ObjectId[] = req.body;
-  try{
-    const timeslot = await TimeslotModel.find().where('_id').in(timeslotIds).exec();
-    const totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
+  try {
     const user = await UserModel.findById(id);
-    if(user){
-      if(user.availabilities){
+    let totalCharisma = 0;
+    if (user) {
+      if (user.availabilities) {
         const toAdd = timeslotIds.filter((e) => {
-          return !(user.availabilities!.includes(e))
-        })
+          return !user.availabilities!.includes(e);
+        });
+        const timeslot = await TimeslotModel.find()
+          .where("_id")
+          .in(toAdd)
+          .exec();
+        totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities.push(...toAdd);
       } else {
+        const timeslot = await TimeslotModel.find()
+          .where("_id")
+          .in(timeslotIds)
+          .exec();
+        totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities = timeslotIds;
       }
-      if(user.charisma){
+      if (user.charisma) {
         user.charisma += totalCharisma;
       } else {
         user.charisma = totalCharisma;
       }
-      if(!user.notifications){
+      if (!user.notifications) {
         user.notifications = [];
-      } 
+      }
       user.notifications.push({
-          type: "broadcast",
-          message: `Tu as reçu ${totalCharisma} points de charisme pour ta disponibilité.`,
-          date: new Date(),
-          team: "hard",
-          link: ""
-      });
-      await UserModel.findByIdAndUpdate(user._id, {
-        notifications: user.notifications,
+        type: "broadcast",
+        message: `Tu as reçu ${totalCharisma} points de charisme pour ta disponibilité.`,
+        date: new Date(),
+        team: "hard",
+        link: "",
       });
       await user.save();
       res.status(StatusCodes.OK).json(new SafeUser(user));
-    }else{
+    } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
-        'msg': 'User not found'
+        msg: "User not found",
       });
     }
-  }catch(e){
+  } catch (e) {
     logger.err(e);
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      'msg': 'Error, contact your admin'
+      msg: "Error, contact your admin",
     });
   }
-}
+};
 
 export const addNotificationByFullName: RequestHandler = async function (
   req,
@@ -123,6 +129,35 @@ export const addNotificationByFullName: RequestHandler = async function (
     const user = await UserModel.findOne({
       firstname: query.firstname,
       lastname: query.lastname,
+    });
+    if (user) {
+      const mUser = user.toObject();
+      if (mUser.notifications === undefined) {
+        mUser.notifications = [];
+      }
+      mUser.notifications.push(req.body);
+
+      await UserModel.findByIdAndUpdate(user._id, {
+        notifications: mUser.notifications,
+      });
+      res.sendStatus(StatusCodes.OK);
+    } else {
+      res
+        .sendStatus(StatusCodes.NOT_FOUND)
+        .json({ msg: "Did not find the user" });
+    }
+  }
+};
+
+export const addNotificationByID: RequestHandler = async function (req, res) {
+  const query = req.params;
+  if (!query.id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide id" });
+  } else {
+    const user = await UserModel.findOne({
+      _id: query.id,
     });
     if (user) {
       const mUser = user.toObject();
@@ -161,7 +196,8 @@ export const broadcastNotification: RequestHandler = async function (req, res) {
 };
 
 export const uploadPP: RequestHandler = async function (req, res) {
-  const user = await UserModel.findById(req.body.userID);
+  const id = res.locals.auth_user._id;
+  const user = await UserModel.findById(id);
   if (user) {
     const oldUser = user.toObject();
     if (oldUser.pp) {
@@ -172,7 +208,7 @@ export const uploadPP: RequestHandler = async function (req, res) {
         logger.info(`deleted ${filename} 🗑`);
       }
     }
-    await UserModel.findByIdAndUpdate(req.body.userID, {
+    await UserModel.findByIdAndUpdate(id, {
       // @ts-ignore
       pp: req.files[0].filename,
     });

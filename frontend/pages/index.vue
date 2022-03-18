@@ -10,17 +10,12 @@
           <UserNotifications />
         </v-col>
 
-        <v-col v-if="hasRole('hard')" cols="12" sm="6" lg="8">
-          <ComptesPersosCard />
+        <v-col cols="12" sm="6" md="4">
+          <ComptesPersosCard v-if="hasRole('hard')" />
+          <FriendsCard v-else />
         </v-col>
 
-        <v-col v-if="hasRole('soft')" cols="12" sm="6" lg="4">
-          <FriendsCard />
-        </v-col>
-
-        <v-col cols="12" sm="6" lg="4">
-          <ClickerCard />
-        </v-col>
+        <v-col cols="12" sm="6" md="8"> <AvailabilitiesCard /> </v-col>
       </v-row>
     </v-container>
 
@@ -43,18 +38,15 @@
 </template>
 
 <script>
-import { getConfig, getUser, hasRole } from "../common/role";
 import UserCard from "@/components/organisms/userCard.vue";
 import UserNotifications from "@/components/organisms/userNotifications.vue";
 import SnackNotificationContainer from "@/components/molecules/snackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
+import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
 import ClickerCard from "@/components/molecules/clickerCard.vue";
 import { getUserID } from "~/middleware/user";
-import { mapState } from "vuex";
 import { dispatch } from "~/utils/store";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {
   components: {
@@ -63,11 +55,7 @@ export default {
     SnackNotificationContainer,
     ComptesPersosCard,
     FriendsCard,
-    ClickerCard,
-  },
-
-  data() {
-    return {};
+    AvailabilitiesCard,
   },
 
   computed: {

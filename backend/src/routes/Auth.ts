@@ -6,7 +6,7 @@ import logger from "@shared/Logger";
 import ConfigModel from "@entities/Config";
 import { StatusCodes } from "http-status-codes";
 import { randomBytes } from "crypto";
-import { sendResetMail } from "@src/services/mail";
+import { sendResetMail, sendValidationMail } from "@src/services/mail";
 
 export const signup: RequestHandler = async function (req, res) {
   // checking if signup is possible beffore all
@@ -58,6 +58,9 @@ export const signup: RequestHandler = async function (req, res) {
         });
       }
     );
+    //send validation mail
+    const email = req.body.email;
+    await sendValidationMail(email);
   } catch (error) {
     //todo log errors
     res.status(500).send("Error while saving user");
@@ -162,7 +165,7 @@ export const forgot: RequestHandler = async function (req, res) {
       user.save();
 
       // Even if this does not work we still return the same statusCode
-      await sendResetMail(resetToken, user.email)
+      await sendResetMail(resetToken, user.email);
 
       res.sendStatus(StatusCodes.OK);
     } else {

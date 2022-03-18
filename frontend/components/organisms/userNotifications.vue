@@ -24,7 +24,10 @@
           flex-column flex-sm-row
         "
       >
-        <v-btn v-if="IhaveRole('hard')" text @click="openBroadcastDialog()"
+        <v-btn
+          v-if="IhaveRole(['admin', 'bureau', 'orga'])"
+          text
+          @click="openBroadcastDialog()"
           >broadcast
         </v-btn>
         <v-btn

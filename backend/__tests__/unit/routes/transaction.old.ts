@@ -1,5 +1,10 @@
-import TransactionModel, {DepositMock, ExpenseMock, ITransaction, TransferMock,} from "@entities/transaction";
-import UserModel, {IUser, UserMock} from "@entities/User";
+import TransactionModel, {
+  DepositMock,
+  ExpenseMock,
+  ITransaction,
+  TransferMock,
+} from "@entities/transaction";
+import UserModel, { IUser, UserMock } from "@entities/User";
 import * as db from "../../db";
 import qs from "qs";
 import app from "@server";
@@ -52,20 +57,20 @@ describe("transaction", () => {
 
     // user 1 adds 40
     data.transactions.push(
-      DepositMock.build({to: data.users[0]._id, amount: 40})
+      DepositMock.build({ to: data.users[0]._id, amount: 40 })
     );
     // user 2 adds 100
     data.transactions.push(
-      DepositMock.build({to: data.users[1]._id, amount: 100})
+      DepositMock.build({ to: data.users[1]._id, amount: 100 })
     );
     // user 3 adds 20
     data.transactions.push(
-      DepositMock.build({to: data.users[2]._id, amount: 20})
+      DepositMock.build({ to: data.users[2]._id, amount: 20 })
     );
 
     //user 3 uses 20
     data.transactions.push(
-      ExpenseMock.build({from: data.users[2]._id, amount: 20})
+      ExpenseMock.build({ from: data.users[2]._id, amount: 20 })
     );
 
     // user 1 gives 10 to user 2
@@ -79,7 +84,7 @@ describe("transaction", () => {
 
     // user 1 use 10
     data.transactions.push(
-      ExpenseMock.build({from: data.users[0]._id, amount: 10})
+      ExpenseMock.build({ from: data.users[0]._id, amount: 10 })
     );
 
     // user 2 gives 20 to user 3

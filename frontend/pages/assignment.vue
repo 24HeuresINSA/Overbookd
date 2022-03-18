@@ -23,11 +23,7 @@
       @delete-assignment="unassign"
     ></OverCalendar>
 
-    <OverTasks
-      :user="selectedUser"
-      style="max-width: 550px"
-      @add-task="addTask"
-    ></OverTasks>
+    <OverTasks style="max-width: 550px"></OverTasks>
   </v-container>
 </template>
 
@@ -136,6 +132,8 @@ export default {
       });
     }
 
+    await this.$accessor.assignment.initStore();
+
     const res = await safeCall(this.$store, ftRepo.getAllFTs(this));
     if (res) {
       this.FTs = res.data;
@@ -226,7 +224,7 @@ export default {
     },
 
     onSelectedUser(user) {
-      this.$accessor.user.setSelectedUser(user);
+      this.$accessor.assignment.setCurrentUser(user);
       this.selectedUser = user;
     },
   },

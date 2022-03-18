@@ -5,16 +5,17 @@
     <v-container>
       <v-row>
         <v-col offset-md="5" md="7">
-          <TimeslotAdder
-
-          ></TimeslotAdder>
+          <TimeslotAdder></TimeslotAdder>
         </v-col>
       </v-row>
     </v-container>
     <v-container>
       <v-row>
         <v-col v-for="title in existingGroupTitles" :key="title" md="6">
-          <TimeslotTable :group-title="title" :editorMode="true"></TimeslotTable>
+          <TimeslotTable
+            :group-title="title"
+            :editor-mode="true"
+          ></TimeslotTable>
         </v-col>
       </v-row>
     </v-container>
@@ -32,8 +33,7 @@ export default Vue.extend({
   name: "Availabilities",
   components: { TimeslotTable, TimeslotAdder, TimeslotSnackBar },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     timeslots: function () {
@@ -50,7 +50,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.$store.dispatch("timeslot/fetchTimeslots");
+    await this.$store.dispatch("timeslot/fetchTimeslots");
   },
 
   methods: {

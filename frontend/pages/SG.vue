@@ -255,13 +255,15 @@ export default {
   },
 
   async mounted() {
-    const res = await safeCall(
-      this.$store,
-      RepoFactory.userRepo.getAllUsers(this)
+    await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
+      (res) => {
+        this.users = res.data.filter((user) => {
+          if (user.team.includes("hard")) {
+            return user;
+          }
+        });
+      }
     );
-    if (res) {
-      this.users = res.data;
-    }
     this.users.forEach((user) => {
       if (user.balance) {
         this.totalCPBalance += +user.balance;

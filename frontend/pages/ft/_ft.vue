@@ -141,11 +141,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(validator, i) of validators"
-            :key="validator"
-            link
-          >
+          <v-list-item v-for="validator of validators" :key="validator" link>
             <v-list-item-title
               @click="
                 v = validator;
@@ -174,11 +170,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(validator, i) of validators"
-            :key="validator"
-            link
-          >
+          <v-list-item v-for="validator of validators" :key="validator" link>
             <v-list-item-title
               color="green"
               @click="validate(validator)"
@@ -215,6 +207,8 @@ import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframe
 import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
 
 interface Data {
   FTID: number;
@@ -326,12 +320,22 @@ export default Vue.extend({
   },
 
   async mounted() {
-    // get FT and store it in store
+    // fetch FT and conficts
     await this.$accessor.FT.getAndSetFT(this.FTID);
+    await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
+    document.title = "FT:" + this.FTID;
   },
 
   methods: {
     readyForAssignment() {
+      // Check for conflicts
+      if (this.$accessor.conflict.conflicts.length != 0) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Attention il reste des conflits pour cette FT",
+        });
+        return;
+      }
       this.$accessor.FT.readyForAssignment(this.me.lastname);
     },
     getIconColor(validator: string): string | undefined {
@@ -366,6 +370,7 @@ export default Vue.extend({
       await this.$accessor.FT.saveFT();
       // todo check if the request did succeed
       this.snack.display("FT sauvegardée 🥳");
+      await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
     },
 
     updateForm(section: keyof FT, form: any) {

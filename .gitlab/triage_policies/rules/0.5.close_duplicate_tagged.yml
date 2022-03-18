@@ -1,0 +1,12 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all issues with duplicate labels
+        conditions:
+          state: opened
+          labels:
+            - Duplicate
+        actions:
+          labels:
+            - Status::Done
+          status: close

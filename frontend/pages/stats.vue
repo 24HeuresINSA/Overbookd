@@ -1,5 +1,6 @@
 <template>
   <v-container>
+<<<<<<< HEAD
     <h1>Stats 📈 (work in progress 🔨)</h1>
     <h2>Overbookd</h2>
     <h3>Nombre de crash</h3>
@@ -16,65 +17,62 @@
     <v-container style="height: 400px">
       <OverBarChart :chart-data="FTData"></OverBarChart>
     </v-container>
+=======
+    <h1>Stats 📈 (work in progess 🔨)</h1>
+    <v-row class="d-flex justify-space-around pt-6">
+      <h1>FA</h1>
+      <v-switch
+        v-model="switchType"
+        class="switch-width"
+        @change="update"
+      ></v-switch>
+      <h1>FT</h1>
+    </v-row>
+    <Needs :dataset="dataset" :name="name"></Needs>
+>>>>>>> 3e96962604cb87460febce33af820efeb12b05ed
   </v-container>
 </template>
 
 <script>
-import { hasRole } from "../common/role";
-import overBarChart from "../components/overBarChart.js";
+import { safeCall } from "../utils/api/calls";
+import { RepoFactory } from "../repositories/repoFactory";
+import Needs from "../components/Needs";
 
 export default {
   name: "Stats",
-
-  components: { overBarChart },
-
-  data: () => {
+  components: { Needs },
+  data() {
     return {
-      crashData: {
-        labels: ["Overbookd", "Messenger"],
-        datasets: [
-          {
-            label: "Nombre de crash",
-            backgroundColor: "#f87979",
-            data: [0, 1],
-          },
-        ],
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-      FAData: {
-        labels: ["Draft", "Soumis", "Valide", "l'année d'avant"],
-        datasets: [
-          {
-            label: "Nombre de FA",
-            backgroundColor: "rgba(206,119,236,0.45)",
-            data: [0, 0, 0, 130],
-          },
-        ],
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-      FTData: {
-        labels: ["Draft", "Soumis", "Valide", "l'année d'avant"],
-        datasets: [
-          {
-            label: "Nombre de FT",
-            backgroundColor: "rgb(248,78,157)",
-            data: [0, 0, 0, 927],
-          },
-        ],
-        responsive: true,
-        maintainAspectRatio: false,
-      },
+      switchType: false,
+      dataset: [],
+      name: "FA",
+      FA: null,
+      FT: null,
     };
   },
-
-  mounted() {
-    if (!hasRole(this, "hard")) {
-      this.$router.push({
-        path: "/",
-      });
-    }
+  async mounted() {
+    await this.update();
+  },
+  methods: {
+    async update() {
+      if (this.switchType) {
+        this.FT =
+          this.FT ||
+          (await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this)))[
+            "data"
+          ];
+        this.name = "FT";
+        this.dataset = this.FT;
+      } else {
+        this.FA =
+          this.FA ||
+          (await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this)))[
+            "data"
+          ];
+        this.name = "FA";
+        this.dataset = this.FA;
+      }
+    },
   },
 };
 </script>

@@ -21,7 +21,7 @@ export async function getConfig(req: Request, res: Response) {
 
 export async function setConfig(req: Request, res: Response) {
   const confArr = <IConfig[]>req.body;
-  for (const { key, value } of confArr){
+  for (const { key, value } of confArr) {
     logger.info(`setting new config ${key}`);
     const isExisting = await ConfigModel.exists({ key });
     if (isExisting) {

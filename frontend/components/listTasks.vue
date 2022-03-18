@@ -1,19 +1,22 @@
 <template>
-  <v-data-table :headers="headers" :items="tasks">
-    <template #[`item.action`]="item">
-      <v-btn text @click="selectUser(item)">sélectionner</v-btn>
+  <v-data-table
+    :headers="headers"
+    :items="availableTimeSpans"
+    @click:row="assignTask"
+  >
+    <template #[`item.FTID`]="{item}">
+      {{ item.FTName || item.FTID }}
     </template>
-
     <template #[`item.date`]="row">
-      {{ new Date(row.item.schedule.start).toLocaleDateString() }}
+      {{ new Date(row.item.start).toLocaleDateString() }}
     </template>
 
     <template #[`item.start`]="row">
-      {{ new Date(row.item.schedule.start).toLocaleTimeString() }}
+      {{ new Date(row.item.start).toLocaleTimeString() }}
     </template>
 
     <template #[`item.end`]="row">
-      {{ new Date(row.item.schedule.end).toLocaleTimeString() }}
+      {{ new Date(row.item.end).toLocaleTimeString() }}
     </template>
   </v-data-table>
 </template>
@@ -22,8 +25,6 @@
 export default {
   name: "ListTasks",
 
-  props: ["tasks"],
-
   data() {
     return {
       selectedTasksIndex: undefined,
@@ -31,7 +32,7 @@ export default {
       headers: [
         {
           text: "FT",
-          value: "name",
+          value: "FTID",
         },
         {
           text: "Date",
@@ -53,10 +54,29 @@ export default {
     };
   },
 
-  methods: {
-    selectUser({ item }) {
-      this.$emit("selected-task", item);
+  computed: {
+    availableTimeSpans() {
+      return this.$accessor.assignment.availableTimeSpans;
     },
+    FTs() {
+      return this.$accessor.assignment.FTs;
+    },
+  },
+
+  methods: {
+    assignTask(task) {
+      this.$accessor.assignment.assignUserToTimespan({
+        userID: task._id,
+        timespanID: this.$accessor.assignment.selectedUser._id
+      });
+    },
+    resolveFTName(FTID) {
+      const FT = this.FTs.find((FT) => FT.count === FTID);
+      if (FT) {
+        return FT.general.name;
+      }
+      return FTID;
+    }
   },
 };
 </script>

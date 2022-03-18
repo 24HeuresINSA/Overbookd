@@ -44,6 +44,7 @@ import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { FriendRequest } from "~/utils/models/repo";
+import { SnackNotif } from "../../utils/models/store";
 
 export default Vue.extend({
   name: "FriendsCard",
@@ -64,21 +65,21 @@ export default Vue.extend({
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.userRepo.getAllUsernames(this)
+      RepoFactory.userRepo.getAllUsers(this)
     );
     if (res) {
-      this.usernames = res.data.map((user: any) => {
-        return {
-          text: user.username,
-          value: user,
-        };
-      });
+      this.usernames = res.data
+        .map((user: any) => {
+          if (!user.team.includes("hard")) {
+            const username = user.firstname + " " + user.lastname;
+            return { text: username, value: user };
+          }
+        })
+        .filter((item: any) => item);
     }
   },
   methods: {
     async sendFriendRequest() {
-      //retrieve first and lastname
-      // let [firstname, lastname] = this.newFriend.split(".");
       if (this.me._id === this.newFriend._id) {
         // asked himself to be friend
         window.open(
@@ -86,12 +87,13 @@ export default Vue.extend({
         );
         return;
       }
-      if (this.me.friends.find((friend) => friend._id === this.newFriend._id)) {
-        // already friends
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "Vous êtes déjà amis...",
-        });
+      if (this.me.friends.find((friend) => friend.id === this.newFriend._id)) {
+        const notif: SnackNotif = {
+          type: "success",
+          message: "Vous êtes déjà amis !",
+        };
+        this.$store.dispatch("notif/pushNotification", notif);
+        return;
       }
       // generate a new friend request
       let req: FriendRequest = {

@@ -1,6 +1,6 @@
 import logger from "@shared/Logger";
-import {RequestHandler} from "express";
-import TransactionModel, {ITransaction} from "../entities/transaction";
+import { RequestHandler } from "express";
+import TransactionModel, { ITransaction } from "../entities/transaction";
 import UserModel from "../entities/User";
 
 // GET
@@ -26,10 +26,11 @@ export const getSgTransactions: RequestHandler = async function (req, res) {
   let data;
   try {
     data = await TransactionModel.find({
-      $or: [{type: "deposit"}, {type: "expense"}],
+      $or: [{ type: "deposit" }, { type: "expense" }],
     })
       .sort({ createdAt: -1 })
-      .sort({createdAt: -1}).lean();
+      .sort({ createdAt: -1 })
+      .lean();
   } catch (error) {
     logger.info(error);
     // handle the error
@@ -67,10 +68,11 @@ export const getUserTransactions: RequestHandler = async function (req, res) {
     const mUser = await UserModel.findOne({ _id });
     if (mUser) {
       data = await TransactionModel.find({
-        $or: [{from: mUser._id}, {to: mUser._id }],
+        $or: [{ from: mUser._id }, { to: mUser._id }],
       })
-        .sort({ createdAt: -1})
-        .sort({createdAt: -1}).lean();
+        .sort({ createdAt: -1 })
+        .sort({ createdAt: -1 })
+        .lean();
     } else {
       throw new Error();
     }

@@ -34,8 +34,8 @@
                 </template>
               </v-combobox>
 
-              <label>Compte validé</label>
-              <template v-if="hasRole(['admin', 'bureau'])">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+                <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
                   tile
@@ -102,7 +102,7 @@
                 <v-icon small>mdi-email</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasRole('admin')"
+                v-if="isCpUseful(item)"
                 icon
                 small
                 @click="openTransactionDialog(item)"
@@ -132,7 +132,7 @@
             </template>
 
             <template #[`item.balance`]="{ item }">
-              {{ (item.balance || 0).toFixed(2) }} €
+              {{ getCP(item) }}
             </template>
 
             <template #[`item.studies`]="{ item }">
@@ -147,15 +147,6 @@
               <v-container style="max-width: 150px">
                 <OverChips :roles="item.team"></OverChips>
               </v-container>
-            </template>
-
-            <template #[`item.validationAction`]="{ item }">
-              <v-btn
-                :disabled="isValidated(item)"
-                color="#48C52D"
-                @click="validateUser(item)"
-                >Valider</v-btn
-              >
             </template>
           </v-data-table>
         </v-col>
@@ -234,7 +225,11 @@ const { RepoFactory } = require("../repositories/repoFactory");
 
 export default {
   name: "Humans",
-  components: { UserInformation, SnackNotificationContainer, OverChips },
+  components: {
+    UserInformation,
+    SnackNotificationContainer,
+    OverChips,
+  },
   data() {
     return {
       users: [],
@@ -371,6 +366,7 @@ export default {
           align: "end",
         });
       }
+<<<<<<< HEAD
       //add validation if admin
       if (this.hasRole("admin") || this.hasRole("humain")) {
         this.headers.splice(this.headers.length - 1, 0, {
@@ -380,22 +376,28 @@ export default {
           sortable: false,
         });
       }
+=======
+>>>>>>> 3e96962604cb87460febce33af820efeb12b05ed
     }
   },
 
   methods: {
-    isValidated(user) {
-      return isValidated(user);
+    isCpUseful(item) {
+      if (item.team) {
+        return item.team.includes("hard");
+      } else {
+        return false;
+      }
     },
-    async validateUser(user) {
-      if (user.team.includes("toValidate")) {
-        for (var i = 0; i < user.team.length; i++) {
-          if (user.team[i] === "toValidate") {
-            user.team.splice(i, 1);
-          }
+    getCP(item) {
+      if (item.team) {
+        if (item.team.includes("hard")) {
+          return (item.balance || 0).toFixed(2) + " €";
+        } else {
+          return undefined;
         }
-        user.team.push("soft");
-        await this.$axios.put(`/user/${user._id}`, { team: user.team });
+      } else {
+        return undefined;
       }
     },
     openCharismaDialog(user) {
