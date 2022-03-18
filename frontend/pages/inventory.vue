@@ -28,7 +28,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="clear"> Clear </v-btn>
+              <v-btn color="primary" text @click="clear">Réinitialiser</v-btn>
             </v-card-actions>
           </v-card>
           <br />
@@ -262,15 +262,15 @@ export default Vue.extend({
   data(): Data {
     return {
       headers: [
-        { text: "nom", value: "name" },
-        { text: "lieu de stockage", value: "location" },
-        { text: "quantite (inventaire 24)", value: "amount", align: "right" },
-        { text: "quantite (emprunté)", value: "borrowedCount", align: "right" },
-        { text: "emprunté", value: "borrow" },
+        { text: "Nom", value: "name" },
+        { text: "Lieu de stockage", value: "location" },
+        { text: "Quantité (inventaire 24)", value: "amount", align: "right" },
+        { text: "Quantité (emprunté)", value: "borrowedCount", align: "right" },
+        { text: "Emprunté", value: "borrow" },
         { text: "Poule", value: "fromPool" },
-        { text: "quantite total", value: "totalCount", align: "right" },
-        { text: "requis", value: "required.count", align: "right" },
-        { text: "action", value: "action", align: "right" },
+        { text: "Quantité total", value: "totalCount", align: "right" },
+        { text: "Requis", value: "required.count", align: "right" },
+        { text: "Action", value: "action", align: "right" },
       ],
       borrowedHeader: [
         { text: "qui", value: "from" },

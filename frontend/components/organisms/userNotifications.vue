@@ -12,7 +12,7 @@
           <NotificationCard :notif="{ ...me.notifications }" />
         </v-card-text>
         <template v-if="IhaveRole(['admin', 'bureau'])">
-          <v-card-text>{{ notValidatedCount }} Orgas non validés </v-card-text>
+          <v-card-text>{{ notValidatedCount }} orgas non validés </v-card-text>
         </template>
       </div>
 

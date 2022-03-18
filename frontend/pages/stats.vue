@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Stats 📈 (work in progess 🔨)</h1>
+    <h1>Stats 📈 (work in progress 🔨)</h1>
     <h2>Overbookd</h2>
     <h3>Nombre de crash</h3>
     <v-container style="height: 400px">

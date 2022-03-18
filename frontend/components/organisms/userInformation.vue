@@ -16,7 +16,7 @@
           </v-select>
           <v-btn text @click="addRole()">ajouter</v-btn>
           <v-btn text @click="deleteAllTeams()">révoquer tous les rôles</v-btn>
-          <v-btn text @click="saveUser()">sauvgarder</v-btn>
+          <v-btn text @click="saveUser()">sauvegarder</v-btn>
         </div>
 
         <v-container>
@@ -73,7 +73,7 @@
               <p>+33&nbsp;</p>
               <v-text-field
                 v-model="mUser.phone"
-                label="Numéro de téléphone "
+                label="Numéro de téléphone"
                 :disabled="!(hasEditingRole || isMe())"
                 type="number"
               ></v-text-field>
@@ -88,7 +88,7 @@
             <v-col md="6">
               <v-text-field
                 v-model="mUser.driverLicenseDate"
-                label="date d'obtention du permis"
+                label="Date d'obtention du permis"
                 placeholder="AAAA-MM-JJ"
                 :disabled="!hasEditingRole"
               ></v-text-field>

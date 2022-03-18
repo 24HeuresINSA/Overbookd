@@ -21,7 +21,7 @@
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
           ></v-img>
           <p>
-            Pour demander un orga (ou un soft) en ami, mets le prénom.nom de tes
+            Pour demander un orga en ami, mets le prénom.nom de tes
             potes !
           </p>
         </v-container>
@@ -96,7 +96,7 @@ export default Vue.extend({
       // generate a new friend request
       let req: FriendRequest = {
         type: "friendRequest",
-        message: `${this.me.firstname}.${this.me.lastname} vous a envoye une demande d'ami ❤️`,
+        message: `${this.me.firstname}.${this.me.lastname} vous a envoyé une demande d'ami ❤️`,
         from: `${this.me.nickname ? this.me.nickname : this.me.lastname}`,
         date: new Date(),
         data: {

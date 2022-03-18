@@ -80,9 +80,9 @@
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
-            Pour signaler un bug veuiller envoyer un mail à
+            Pour signaler un bug veuillez envoyer un mail à
             contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
-            de preference en anglais
+            de préférence en anglais
           </h4>
         </v-card-text>
         <v-card-actions>
@@ -145,31 +145,31 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Accueil 🤙",
+          title: "Accueil",
           to: "/",
           roles: "hard",
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiches Activitée 🥳",
+          title: "Fiches Activités",
           roles: this.getConfig("fa_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
-          title: "Fiches Tâches  😱",
+          title: "Fiches Tâches",
           roles: this.getConfig("ft_required_role"),
           to: "/ft",
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Mon planning 🤯",
+          title: "Mon planning",
           roles: "hard",
           to: "/planning",
         },
         {
           icon: "mdi-clock",
-          title: "Mes dispos 🤯",
+          title: "Mes dispos",
           roles: "everyone",
           to: "/availabilities",
         },
@@ -181,73 +181,73 @@ export default {
         },
         {
           icon: "mdi-calendar",
-          title: "Mon calendrier 📆",
+          title: "Mon calendrier",
           to: "/calendar",
           roles: "hard",
         },
         {
           icon: "mdi-account",
-          title: "Liste des Orgas 👩‍👦‍👦",
+          title: "Liste des Orgas",
           roles: "hard",
           to: "/humans",
         },
         {
           icon: "mdi-bus-articulated-front",
-          title: "Inventaire 📦",
+          title: "Inventaire",
           roles: "hard",
           to: "/inventory",
         },
         {
           icon: "mdi-truck",
-          title: "Logistique 🚚",
+          title: "Logistique",
           roles: "log",
           to: "/logistics",
         },
         {
           icon: "mdi-human-greeting",
-          title: "Affectation 💃",
+          title: "Affectation",
           roles: "humain",
           to: "/assignment",
         },
         {
           icon: "mdi-chart-areaspline-variant",
-          title: "Stats 📈",
+          title: "Stats",
           roles: "hard",
           to: "/stats",
         },
         {
           icon: "mdi-cog",
           roles: "admin",
-          title: "Admin ⚙️",
+          title: "Admin",
           to: "/config",
         },
         {
           icon: "mdi-format-list-bulleted",
           roles: "admin",
-          title: "SG 📝️",
+          title: "SG",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
           roles: "admin",
-          title: "Transactions 💰️",
+          title: "Transactions",
           to: "/transactions",
         },
         {
           icon: "mdi-fire",
           roles: "hard",
-          title: "OverTinder 🍑",
+          title: "OverTinder",
           to: "/overTinder",
         },
         {
           icon: "mdi-image",
           roles: "hard",
-          title: "Trombinoscope 🎆",
+          title: "Trombinoscope",
           to: "/trombinoscope",
         },
         {
           icon: "mdi-note",
-          title: "Patch notes 📝",
+          title: "Patch notes",
           roles: "hard",
           to: "/patch_note",
         },

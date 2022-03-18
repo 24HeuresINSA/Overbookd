@@ -8,7 +8,7 @@
         <v-text-field
           v-model="filters.name"
           prepend-icon="mdi-card-search"
-          label="recherche d'orga"
+          label="Recherche d'orga"
         ></v-text-field>
         <v-combobox
           v-model="filters.teams"

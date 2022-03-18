@@ -36,8 +36,8 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "nom", value: "name" },
-      { text: "action", value: "action" },
+      { text: "Nom", value: "name" },
+      { text: "Action", value: "action" },
     ],
   }),
   computed: {

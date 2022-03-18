@@ -63,7 +63,7 @@ export default Vue.extend({
         if (res) {
           this.$accessor.notif.pushNotification({
             type: "success",
-            message: "PP ajoutée, refresh la page pour la voir.",
+            message: "Photo ajoutée, rafraîchis la page pour la voir.",
           });
           this.$accessor.dialog.closeDialog();
         }

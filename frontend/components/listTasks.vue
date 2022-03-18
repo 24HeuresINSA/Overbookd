@@ -34,19 +34,19 @@ export default {
           value: "name",
         },
         {
-          text: "date",
+          text: "Date",
           value: "date",
         },
         {
-          text: "début",
+          text: "Début",
           value: "start",
         },
         {
-          text: "fin",
+          text: "Fin",
           value: "end",
         },
         {
-          text: "action",
+          text: "Action",
           value: "action",
         },
       ],

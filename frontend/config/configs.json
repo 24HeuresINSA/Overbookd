@@ -446,10 +446,11 @@
   "value": [
     {
       "key": "name",
-      "label": "nom de la FA"
+      "label": "Nom de la FA"
     },
     {
       "key": "type",
+      "label": "Type",
       "type": "select",
       "options": [
         "Concert",
@@ -466,7 +467,7 @@
     },
     {
       "key": "team",
-      "label": "equipe",
+      "label": "Equipe",
       "type": "teams"
     },
     {
@@ -493,7 +494,7 @@
     },
     {
       "key": "isMajorAnim",
-      "label": "Anime phare",
+      "label": "Anim phare",
       "type": "switch"
     },
     {
@@ -723,7 +724,7 @@
   "value": [
     {
       "key": "name",
-      "label": "nom de la FA"
+      "label": "Nom de la FA"
     },
     {
       "key": "type",
@@ -736,7 +737,7 @@
     },
     {
       "key": "team",
-      "label": "equipe",
+      "label": "Equipe",
       "type": "select",
       "options": [
         "Sponso",
@@ -756,7 +757,7 @@
     },
     {
       "key": "isMajorAnim",
-      "label": "Anime phare",
+      "label": "Anim phare",
       "type": "switch"
     },
     {

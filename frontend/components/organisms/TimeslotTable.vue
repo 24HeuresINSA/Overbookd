@@ -31,7 +31,7 @@
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="$refs.confirmDeleteSingle.open()"> mdi-delete </v-icon>
         <ConfirmDialog ref="confirmDeleteSingle" @confirm="removeItem(item)"
-          >Le créneau sera supprimé de façon <b>irreversible</b> !
+          >Le créneau sera supprimé de façon <b>irréversible</b> !
         </ConfirmDialog>
       </template>
       <template #[`item.data-table-select`]="{ isSelected, select, item }" v-if="!editorMode">

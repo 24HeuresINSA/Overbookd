@@ -1,6 +1,6 @@
 <template>
   <v-container style="display: grid">
-    <h1>Fiche Tache 🤩</h1>
+    <h1>Fiche Tâche</h1>
 
     <v-row>
       <v-col md="12">

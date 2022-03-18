@@ -164,12 +164,12 @@ export default {
       reasons: [],
 
       headers: [
-        { text: "prénom", value: "firstname" },
-        { text: "nom", value: "lastname" },
-        { text: "surnom", value: "nickname" },
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Surnom", value: "nickname" },
         { text: "CP", value: "balance" },
         { text: "Nouvelle conso", value: "newConsumption" },
-        { text: "action", value: "action" },
+        { text: "Action", value: "action" },
       ],
     };
   },
