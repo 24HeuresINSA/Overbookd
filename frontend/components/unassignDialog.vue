@@ -15,9 +15,21 @@
           <tr>
             <td>FT</td>
             <td>
+              {{ mFT.general.name }}
+            </td>
+          </tr>
+          <tr>
+            <td>Numero</td>
+            <td>
               <a :href="`/ft/${selectedTimeSpan.FTID}`">{{
                 selectedTimeSpan.FTID
               }}</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Lieu</td>
+            <td>
+              {{ mFT.general.location }}
             </td>
           </tr>
         </tbody>
