@@ -50,7 +50,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.$store.dispatch("timeslot/fetchTimeslots");
+    await this.$store.dispatch("timeslot/fetchTimeslots");
   },
 
   methods: {
