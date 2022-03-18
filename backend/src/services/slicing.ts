@@ -43,6 +43,7 @@ export async function timeframeToTimeSpan(
               timeSpans.push({
                 ...mTimeSpan,
                 required: r.user._id.toString(),
+                assigned: r.user._id.toString(),
               });
               break;
             case "team":
@@ -76,7 +77,7 @@ export async function timeframeToTimeSpan(
     }
   } else {
     // not to be sliced
-    let res = [] as ITimeSpan[];
+    const res = [] as ITimeSpan[];
 
     timeframe.required.forEach((r: ITFRequired) => {
       switch (r.type) {
@@ -84,7 +85,7 @@ export async function timeframeToTimeSpan(
           res.push({
             start,
             end,
-            assigned: null,
+            assigned: r.user._id.toString(),
             timeframeID: timeframe._id,
             required: r.user._id.toString(),
             FTID,

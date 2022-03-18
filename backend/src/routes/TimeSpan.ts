@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import TimeSpan , { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpan from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
-import { Types } from "mongoose";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
