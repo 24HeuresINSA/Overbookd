@@ -21,9 +21,14 @@
       :center-day="new Date().setDate(new Date().getDate() - 5)"
       :events="calendarDisplayedEvents"
       @delete-assignment="unassign"
+      @open-unassign-dialog="openUnassignDialog"
     ></OverCalendar>
 
     <OverTasks style="max-width: 550px"></OverTasks>
+
+    <v-dialog v-model="isUnassignDialogOpen" width="500px">
+      <unassign-dialog></unassign-dialog>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -51,6 +56,7 @@ export default {
       isAssignmentUpdated: true,
       newEventName: undefined,
       events: [],
+      isUnassignDialogOpen: false,
 
       teams: this.getConfig("teams"),
       timeframes: this.getConfig("timeframes"),
@@ -141,6 +147,9 @@ export default {
   },
 
   methods: {
+    openUnassignDialog() {
+      this.isUnassignDialogOpen = true;
+    },
     async hasRole(role) {
       return this.$accessor.user.hasRole(role);
     },
