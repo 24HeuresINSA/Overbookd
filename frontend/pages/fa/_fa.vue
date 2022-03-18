@@ -3,7 +3,7 @@
     <div
       style="display: flex; justify-content: space-between; align-items: center"
     >
-      <h1>Fiche Activitée 🤯</h1>
+      <h1>Fiche Activité</h1>
       <h2 v-if="isNewFA">Create new FA</h2>
       <h2
         v-if="FA.count"
@@ -110,7 +110,7 @@
       <v-row />
       <br />
       <LogisticsCard
-        title="Barrieres"
+        title="Barrières"
         :types="Object.values(BarrieresTypes)"
         :store="store"
         :disabled="isValidated('barrieres')"

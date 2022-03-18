@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>OverTinder 🔥</h1>
-    <v-btn text @click="openCP">Telecharger un constat de choppe</v-btn>
+    <v-btn text @click="openCP">Télécharger un constat de choppe</v-btn>
     <br />
     <div style="display: flex; width: 100%; justify-content: center">
       <v-card v-if="user" max-width="400" elevation="5">

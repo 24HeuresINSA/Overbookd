@@ -4,7 +4,7 @@
     :items="availableTimeSpans"
     @click:row="assignTask"
   >
-    <template #[`item.FTID`]="{item}">
+    <template #[`item.FTID`]="{ item }">
       {{ item.FTName || item.FTID }}
     </template>
     <template #[`item.date`]="row">
@@ -35,16 +35,20 @@ export default {
           value: "FTID",
         },
         {
-          text: "date",
+          text: "Date",
           value: "date",
         },
         {
-          text: "début",
+          text: "Début",
           value: "start",
         },
         {
-          text: "fin",
+          text: "Fin",
           value: "end",
+        },
+        {
+          text: "Action",
+          value: "action",
         },
       ],
     };
@@ -63,7 +67,7 @@ export default {
     assignTask(task) {
       this.$accessor.assignment.assignUserToTimespan({
         userID: task._id,
-        timespanID: this.$accessor.assignment.selectedUser._id
+        timespanID: this.$accessor.assignment.selectedUser._id,
       });
     },
     resolveFTName(FTID) {
@@ -72,7 +76,7 @@ export default {
         return FT.general.name;
       }
       return FTID;
-    }
+    },
   },
 };
 </script>
