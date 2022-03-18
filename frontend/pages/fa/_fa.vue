@@ -423,6 +423,7 @@ export default {
     } else {
       this.FAStore.resetFA();
     }
+    document.title = "FA:" + this.FAID;
   },
 
   methods: {

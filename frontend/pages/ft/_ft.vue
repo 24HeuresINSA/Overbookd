@@ -323,6 +323,7 @@ export default Vue.extend({
     // fetch FT and conficts
     await this.$accessor.FT.getAndSetFT(this.FTID);
     await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
+    document.title = "FT:" + this.FTID;
   },
 
   methods: {

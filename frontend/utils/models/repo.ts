@@ -117,6 +117,7 @@ export interface Timeslot {
     end: Date;
   };
   charisma: number;
+  forHardOnly?: boolean;
 }
 
 export interface location {

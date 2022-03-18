@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import TimeSpan from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
+import { Types } from "mongoose";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -28,7 +29,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  timespan.assigned = req.params.userId;
+  timespan.assigned = Types.ObjectId(req.params.userId);
   await timespan.save();
   return res.json(timespan);
 }
