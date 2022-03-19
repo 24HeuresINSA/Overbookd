@@ -43,14 +43,8 @@
         style="color: red; margin-left: 4px; font-weight: bold"
         v-text="version"
       />
-      
       <v-spacer />
-    <div
-      v-if="isPreProd"
-      class="watermark"
-      >
-        PREPROD
-    </div>
+      <div v-if="isPreProd" class="watermark">PREPROD</div>
       <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
@@ -89,7 +83,6 @@
           <h4>
             Pour signaler un bug veuillez envoyer un mail à
             contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
-            de préférence en anglais
           </h4>
         </v-card-text>
         <v-card-actions>
@@ -218,7 +211,7 @@ export default {
         },
         {
           icon: "mdi-alert-circle",
-          title: "Conflits 🤔",
+          title: "Conflits",
           roles: "hard",
           to: "/listeconflits",
         },
