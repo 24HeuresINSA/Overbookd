@@ -78,7 +78,7 @@
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <v-card>
         <v-card-title>
-          <span class="headline"> Editer une plage</span>
+          <span class="headline">Éditer une plage</span>
         </v-card-title>
         <v-form v-model="validTimeframeEdit" lazy-validation>
           <v-card-text>
@@ -104,7 +104,7 @@
             ></v-checkbox>
             <v-slider
               v-model="mTimeframe.sliceTime"
-              label="Nombre d'heures par decoupage"
+              label="Nombre d'heures par découpage"
               :disabled="!mTimeframe.toSlice"
               min="0.5"
               max="4"
@@ -133,9 +133,9 @@
     <!-- Orga selection pop up -->
     <v-dialog v-model="requireDialog" max-width="600">
       <v-card>
-        <v-card-title>Orga Requis</v-card-title>
+        <v-card-title>Orga requis</v-card-title>
         <v-card-text>
-          <h3>Ajouter un Orga</h3>
+          <h3>Ajouter un orga</h3>
           <OverField
             :field="{ key: 'user', label: 'orga', type: 'user' }"
             @value="updateUser"
@@ -186,17 +186,17 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "date début", value: "dateStart" },
-      { text: "debut", value: "start" },
-      { text: "date fin", value: "dateEnd" },
+      { text: "Date début", value: "dateStart" },
+      { text: "Début", value: "start" },
+      { text: "Date fin", value: "dateEnd" },
       {
-        text: "fin",
+        text: "Fin",
         value: "end",
       },
-      { text: "découpage", value: "toSlice" },
-      { text: "requit", value: "required" },
-      { text: "affecter", value: "assigned" },
-      { text: "action", value: "action" },
+      { text: "Découpage", value: "toSlice" },
+      { text: "Requis", value: "required" },
+      { text: "Affecté", value: "assigned" },
+      { text: "Action", value: "action" },
     ],
     requireDialog: false,
     selectedTimeframeIndex: 0,

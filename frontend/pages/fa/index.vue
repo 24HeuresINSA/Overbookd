@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1>Fiche Activité 🎉</h1>
+    <h1>Fiches Activités</h1>
 
     <v-container style="display: grid; width: 100%; margin: 0">
       <v-row>
         <v-col md="3">
           <v-container style="padding: 0">
             <v-card>
-              <v-card-title>Filters</v-card-title>
+              <v-card-title>Filtres</v-card-title>
               <v-card-text>
                 <v-text-field v-model="search" label="Recherche" dense>
                 </v-text-field>
@@ -26,7 +26,7 @@
                       <v-list-item-title class="small">Tous</v-list-item-title>
                     </v-list-item>
                     <v-list-item>
-                      <v-list-item-title class="small">Draft</v-list-item-title>
+                      <v-list-item-title class="small">Brouillon</v-list-item-title>
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
@@ -40,7 +40,7 @@
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
-                        >Walidée
+                        >Validée
                       </v-list-item-title>
                     </v-list-item>
                   </v-list-item-group>
@@ -137,7 +137,7 @@
       <v-card>
         <v-card-title>Ajouter une nouvelle FA</v-card-title>
         <v-card-text>
-          <v-text-field v-model="faName" label="nom de la FA"></v-text-field>
+          <v-text-field v-model="faName" label="Nom de la FA"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -194,12 +194,12 @@ export default {
       selectedTeam: undefined,
       validators: [],
       headers: [
-        { text: "status", value: "status" },
-        { text: "validation", value: "validation" },
-        { text: "nom", value: "general.name" },
-        { text: "équipe", value: "general.team" },
+        { text: "Statut", value: "status" },
+        { text: "Validation", value: "validation" },
+        { text: "Nom", value: "general.name" },
+        { text: "Equipe", value: "general.team" },
         { text: "Resp", value: "general.inCharge.username" },
-        { text: "action", value: "action" },
+        { text: "Action", value: "action" },
       ],
       color: {
         submitted: "warning",

@@ -39,7 +39,7 @@ declare interface Data {
   newComment: string;
 }
 
-const reminderMessage = "N'oublie pas de sauvgarder ton commentaire!";
+const reminderMessage = "N'oublie pas de sauvegarder ton commentaire!";
 const errorMessage = "Une erreur est survenue, veuillez réessayer plus tard.";
 
 export default Vue.extend({
@@ -57,13 +57,13 @@ export default Vue.extend({
   data(): Data {
     return {
       headers: [
-        { text: "validateur", value: "validator" },
-        { text: "sujet", value: "topic" },
+        { text: "Validateur", value: "validator" },
+        { text: "Sujet", value: "topic" },
         {
-          text: "commentaire",
+          text: "Commentaire",
           value: "text",
         },
-        { text: "date", value: "time" },
+        { text: "Date", value: "time" },
       ],
       newComment: "",
     };

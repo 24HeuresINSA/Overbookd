@@ -8,9 +8,9 @@
           <v-data-table
             :headers="[
               { text: 'FT', value: 'FT.general.name' },
-              { text: 'id', value: 'FT.count' },
-              { text: 'début', value: 'start' },
-              { text: 'fin', value: 'end' },
+              { text: 'ID', value: 'FT.count' },
+              { text: 'Début', value: 'start' },
+              { text: 'Fin', value: 'end' },
             ]"
             :items="plan.timeframes"
           >

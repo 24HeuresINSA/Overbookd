@@ -42,13 +42,13 @@ import Vue from "vue";
 import OverForm from "~/components/overForm.vue";
 
 const headers = [
-  { text: "type de raccordement", value: "connectionType" },
+  { text: "Type de raccordement", value: "connectionType" },
   {
-    text: "puissance",
+    text: "Puissance",
     value: "power",
   },
-  { text: "commentaire", value: "comment" },
-  { text: "action", value: "action" },
+  { text: "Commentaire", value: "comment" },
+  { text: "Action", value: "action" },
 ];
 
 export default Vue.extend({

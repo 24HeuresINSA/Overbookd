@@ -13,7 +13,7 @@
       ></v-img>
       <h1>La ComSI be like</h1>
     </template>
-    <NuxtLink to="/login"> Revnier au login </NuxtLink>
+    <NuxtLink to="/login"> Revenir au login </NuxtLink>
   </v-app>
 </template>
 

@@ -24,7 +24,7 @@
       :show-current="true"
     >
       <v-spacer></v-spacer>
-      <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
+      <v-btn text color="primary" @click="modal = false"> Annuler </v-btn>
       <v-btn text color="primary" @click="save2(date)"> OK </v-btn>
     </v-date-picker>
   </v-dialog>
