@@ -36,9 +36,11 @@
       </v-simple-table>
     </v-card-text>
     <v-card-actions>
-      <v-btn color="primary" :href="`/ft/${selectedTimeSpan.FTID}`">FT</v-btn>
+      <v-btn color="primary" text :href="`/ft/${selectedTimeSpan.FTID}`"
+        >FT</v-btn
+      >
       <v-spacer></v-spacer>
-      <v-btn color="warning">DEAFFECTER</v-btn>
+      <v-btn color="warning" text @click="unassign">DEAFFECTER</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -59,6 +61,14 @@ export default {
         return this.FTs.find((FT) => FT.count === this.selectedTimeSpan.FTID);
       }
       return;
+    },
+  },
+  methods: {
+    async unassign() {
+      await this.$accessor.assignment.unassign(
+        this.$accessor.assignment.selectedTimeSpan._id
+      );
+      this.$emit("close-dialog");
     },
   },
 };

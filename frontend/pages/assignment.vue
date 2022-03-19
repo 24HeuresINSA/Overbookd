@@ -27,7 +27,7 @@
     <OverTasks style="max-width: 550px"></OverTasks>
 
     <v-dialog v-model="isUnassignDialogOpen" width="500px">
-      <unassign-dialog></unassign-dialog>
+      <unassign-dialog @close-dialog="closeUnassignDialog"></unassign-dialog>
     </v-dialog>
   </v-container>
 </template>
@@ -235,6 +235,10 @@ export default {
     onSelectedUser(user) {
       this.$accessor.assignment.setCurrentUser(user);
       this.selectedUser = user;
+    },
+
+    closeUnassignDialog() {
+      this.isUnassignDialogOpen = false;
     },
   },
 };

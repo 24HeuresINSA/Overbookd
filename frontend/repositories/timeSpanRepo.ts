@@ -11,4 +11,8 @@ export default {
   assignUserToTimespan(context: Context, timespanId: string, userId: string) {
     return context.$axios.post(`${resource}/${timespanId}/assigned/${userId}`);
   },
+
+  unassignUserFromTimespan(context: Context, timespanId: string) {
+    return context.$axios.post(`${resource}/${timespanId}/unassign`);
+  },
 };
