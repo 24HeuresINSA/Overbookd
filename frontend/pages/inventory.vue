@@ -34,6 +34,15 @@
           <br />
           <v-card>
             <v-card-title>
+              <span class="headline">Export</span>
+            </v-card-title>
+            <v-card-text>
+              <v-btn text @click="exportCSV">Exporter l'inventaire</v-btn>
+            </v-card-text>
+          </v-card>
+          <br />
+          <v-card>
+            <v-card-title>
               <span class="headline">Lieux</span>
             </v-card-title>
             <v-card-text>
@@ -534,6 +543,53 @@ export default Vue.extend({
         isEqual(e, item)
       );
       this.selectedItem.borrowed.splice(index, 1);
+    },
+    download(filename, text) {
+      // We use the 'a' HTML element to incorporate file generation into
+      // the browser rather than server-side
+      const element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      );
+      element.setAttribute("download", filename);
+
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+
+    async exportCSV() {
+      // Parse data into a CSV string to be passed to the download function
+      let csv =
+        "Type;Nom;Lieu de stockage;Quantité (inventaire 24);Quantité (emprunté);Est au pool des assos;Quantité total;Quantité requises \n";
+      const iventaire = this.filteredInventory;
+      iventaire.forEach((element) => {
+        csv +=
+          element.type +
+          ";" +
+          element.name +
+          ";" +
+          element.location +
+          ";" +
+          element.amount +
+          ";" +
+          element.borrowedCount +
+          ";" +
+          element.fromPool +
+          ";" +
+          element.totalCount +
+          ";" +
+          element.required.count +
+          "\n";
+      });
+
+      const regex = new RegExp(/undefined/i, "g");
+
+      let parsedCSV = csv.replaceAll(regex, "");
+      // Prompt the browser to start file download
+      this.download("inventaire.csv", parsedCSV);
     },
   },
 });
