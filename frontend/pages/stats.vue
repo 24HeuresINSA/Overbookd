@@ -37,19 +37,11 @@ export default {
   methods: {
     async update() {
       if (this.switchType) {
-        this.FT =
-          this.FT ||
-          (await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this)))[
-            "data"
-          ];
+        this.FT = (await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this)))["data"];
         this.name = "FT";
         this.dataset = this.FT;
       } else {
-        this.FA =
-          this.FA ||
-          (await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this)))[
-            "data"
-          ];
+        this.FA = (await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this)))["data" ];
         this.name = "FA";
         this.dataset = this.FA;
       }
