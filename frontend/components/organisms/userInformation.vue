@@ -175,7 +175,7 @@
           <AvailabilitiesCalendar :m-user="mUser" class="myCal" />
           <v-row>
             <v-col md="3">
-              <v-btn text @click="saveUser()">Sauvegarder</v-btn>
+              <v-btn text @click="saveUser()">sauvegarder</v-btn>
             </v-col>
             <v-col md="3">
               <v-btn
