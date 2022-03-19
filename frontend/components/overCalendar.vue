@@ -67,15 +67,14 @@ export default {
     FTs() {
       return this.$accessor.assignment.FTs;
     },
-    calendarFormattedEvents() {
-
-    },
+    // eslint-disable-next-line vue/return-in-computed-property
+    calendarFormattedEvents() {},
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
-    mode(){
+    mode() {
       return this.$accessor.assignment.filters.isModeOrgaToTache;
-    }
+    },
   },
 
   methods: {
@@ -83,6 +82,8 @@ export default {
     startDrag({ event, timed }) {
       console.log("startDrag", event, timed);
       this.$accessor.assignment.selectTimeSpan(event);
+      this.$emit("open-unassign-dialog");
+
       if (event && timed) {
         this.dragEvent = event;
         this.dragTime = null;
