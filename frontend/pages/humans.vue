@@ -68,9 +68,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true" small> Payé</v-btn>
+                  <v-btn :value="true" small>Payée</v-btn>
 
-                  <v-btn :value="false" small> Non payé</v-btn>
+                  <v-btn :value="false" small> Non payée</v-btn>
                 </v-btn-toggle>
                 <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
@@ -235,12 +235,12 @@ export default {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "prénom", value: "firstname" },
-        { text: "nom", value: "lastname" },
-        { text: "surnom", value: "nickname" },
-        { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
-        { text: "charisme", value: "charisma", align: "end" },
-        { text: "action", value: "action", sortable: false },
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Surnom", value: "nickname" },
+        { text: "Team", value: "team", cellClass: "width: 250px", width: "1" },
+        { text: "Charisme", value: "charisma", align: "end" },
+        { text: "Action", value: "action", sortable: false },
       ],
 
       teams: getConfig(this, "teams"),
@@ -273,7 +273,7 @@ export default {
       },
       newRole: undefined,
 
-      feedbackMessage: "sauvgardé 🥳",
+      feedbackMessage: "Sauvegardé 🥳",
     };
   },
 
@@ -364,6 +364,15 @@ export default {
           text: "CP",
           value: "balance",
           align: "end",
+        });
+      }
+      //add validation if admin
+      if (this.hasRole("admin") || this.hasRole("humain")) {
+        this.headers.splice(this.headers.length - 1, 0, {
+          text: "Validation",
+          value: "validationAction",
+          align: "end",
+          sortable: false,
         });
       }
     }

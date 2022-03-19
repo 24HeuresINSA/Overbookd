@@ -140,7 +140,7 @@ export default Vue.extend({
           value: "start",
         },
         {
-          text: "fin",
+          text: "Fin",
           align: "left",
           value: "end",
         },

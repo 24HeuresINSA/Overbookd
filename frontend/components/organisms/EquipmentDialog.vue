@@ -47,7 +47,7 @@
               <v-select
                 v-model="item.location"
                 :items="possibleLocations"
-                label="Lieux de l'objet"
+                label="Lieu de l'objet"
                 item-text="name"
                 :rules="rules.location"
                 single-line
@@ -78,11 +78,11 @@
             <br />
             <h3>Ajout de matos emprunté</h3>
             <v-container style="display: flex; flex-wrap: wrap">
-              <v-text-field v-model="newBorrow.from" label="qui"></v-text-field>
+              <v-text-field v-model="newBorrow.from" label="Qui"></v-text-field>
               <v-text-field
                 v-model="newBorrow.amount"
                 type="number"
-                label="quantite"
+                label="Quantité"
               ></v-text-field>
             </v-container>
             <v-container
@@ -92,7 +92,7 @@
                 align-content: baseline;
               "
             >
-              <label>debut</label>
+              <label>Début</label>
               <v-date-picker
                 v-model="newBorrow.start"
                 first-day-of-week="1"
@@ -116,8 +116,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="addEquipment"> Sauvegarder </v-btn>
-          <v-btn color="error" text @click="closeDialog"> Annuler </v-btn>
+          <v-btn color="primary" @click="addEquipment">Sauvegarder</v-btn>
+          <v-btn color="error" text @click="closeDialog">Annuler</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -162,22 +162,22 @@ export default Vue.extend({
       },
       borrowedHeader: [
         {
-          text: "qui",
+          text: "Qui",
           align: "left",
           value: "from",
         },
         {
-          text: "quantité",
+          text: "Quantité",
           align: "left",
           value: "amount",
         },
         {
-          text: "debut",
+          text: "Début",
           align: "left",
           value: "start",
         },
         {
-          text: "fin",
+          text: "Fin",
           align: "left",
           value: "end",
         },

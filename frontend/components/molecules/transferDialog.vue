@@ -30,18 +30,19 @@ export default Vue.extend({
       transferForm: [
         {
           key: "user",
+          label: "Utilisateur",
           type: "user",
           isRequired: true,
         },
         {
           key: "amount",
-          label: "montant",
+          label: "Montant",
           option: "number",
           isRequired: true,
         },
         {
           key: "reason",
-          label: "raison",
+          label: "Raison",
         },
       ],
       transfer: {
@@ -94,7 +95,7 @@ export default Vue.extend({
         this.$accessor.notif.pushNotification({
           type: "error",
           message:
-            "Trouve toi des amis plutot que de faire des virements a toi meme...",
+            "Trouve toi des amis plutôt que de faire des virements a toi même...",
         });
         return;
       }
@@ -102,7 +103,7 @@ export default Vue.extend({
       if (+this.transfer.amount <= 0) {
         this.$accessor.notif.pushNotification({
           type: "error",
-          message: "c'est plus assomaker...",
+          message: "C'est plus assomaker...",
         });
         return;
       }
