@@ -61,7 +61,7 @@
         </td>
       </template>
       <template #[`footer.prepend`]>
-        <v-row class="justify-space-around mt-4">
+        <v-row class="justify-space-around mx-2 my-4">
           <v-btn v-if="editorMode" color="error" @click="askConfirmDelete">
             <v-icon left> mdi-plus</v-icon>
             Supprimer le tableau
@@ -227,7 +227,7 @@ export default Vue.extend({
           ),
           off: this.userSelectedAvailabilities.includes(timeslot._id),
         };
-      });
+      }).sort((a:any, b:any) => a.start.toLowerCase() < b.start.toLowerCase() ? -1 : 1);
     },
     timeslots(): Timeslot[] {
       return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
