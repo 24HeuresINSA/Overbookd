@@ -1,25 +1,6 @@
 <template>
   <v-dialog v-model="mToggle" width="100%">
     <v-card>
-<<<<<<< HEAD
-      <v-img
-        v-if="mUser.pp"
-        :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
-        max-height="300px"
-      ></v-img>
-      <v-card-title
-        >{{ mUser.nickname ? mUser.nickname : mUser.lastname }}
-      </v-card-title>
-      <v-card-text>
-        <OverChips :roles="mUser.team"></OverChips>
-        <div v-if="hasEditingRole">
-          <v-select v-model="newRole" label="ajouter un role" :items="teams">
-          </v-select>
-          <v-btn text @click="addRole()">ajouter</v-btn>
-          <v-btn text @click="deleteAllTeams()">révoquer tous les rôles</v-btn>
-          <v-btn text @click="saveUser()">sauvegarder</v-btn>
-        </div>
-=======
       <v-row>
         <v-col md="5"
           ><v-img
@@ -50,19 +31,18 @@
               </v-select>
               <v-row>
                 <v-col md="3"
-                  ><v-btn text @click="addRole()">ajouter</v-btn></v-col
+                  ><v-btn text @click="addRole()">Ajouter</v-btn></v-col
                 >
                 <v-col md="6"
                   ><v-btn text @click="deleteAllTeams()"
-                    >révoquer tous les rôles</v-btn
+                    >Révoquer tous les rôles</v-btn
                   ></v-col
                 >
                 <v-col md="2"
-                  ><v-btn text @click="saveUser()">sauvegarder</v-btn></v-col
+                  ><v-btn text @click="saveUser()">Sauvegarder</v-btn></v-col
                 >
               </v-row>
             </div>
->>>>>>> 3e96962604cb87460febce33af820efeb12b05ed
 
             <v-container>
               <v-row>
@@ -194,7 +174,6 @@
           >
           <AvailabilitiesCalendar :m-user="mUser" class="myCal" />
           <v-row>
-<<<<<<< HEAD
             <v-col
               md="6"
               style="
@@ -280,10 +259,8 @@
                 label="Année"
                 :disabled="!hasEditingRole"
               ></v-text-field>
-=======
             <v-col md="3">
-              <v-btn text @click="saveUser()">sauvegarder</v-btn>
->>>>>>> 3e96962604cb87460febce33af820efeb12b05ed
+              <v-btn text @click="saveUser()">Sauvegarder</v-btn>
             </v-col>
             <v-col md="3">
               <v-btn

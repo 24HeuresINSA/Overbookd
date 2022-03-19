@@ -366,7 +366,6 @@ export default {
           align: "end",
         });
       }
-<<<<<<< HEAD
       //add validation if admin
       if (this.hasRole("admin") || this.hasRole("humain")) {
         this.headers.splice(this.headers.length - 1, 0, {
@@ -376,8 +375,6 @@ export default {
           sortable: false,
         });
       }
-=======
->>>>>>> 3e96962604cb87460febce33af820efeb12b05ed
     }
   },
 

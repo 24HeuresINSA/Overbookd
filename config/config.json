@@ -74,14 +74,14 @@
       },
       {
         "key": "phone",
-        "label": "ton 06 ?",
+        "label": "Ton 06 ?",
         "isRequired": true,
         "option": "tel",
         "regex": "0[6-7]{1}[0-9]{8}$"
       },
       {
         "key": "hasDriverLicense",
-        "label": "Est ce que tu as un permis de conduire ",
+        "label": "Est-ce que tu as un permis de conduire ?",
         "type": "switch"
       },
       {
@@ -112,79 +112,11 @@
         "key": "year",
         "label": "Année",
         "type": "select",
-        "options": [1, 2, 3, 4, 5, "cerise"]
+        "options": [1, 2, 3, 4, 5,"6 et +","cerise"]
       },
       {
         "key": "comment",
         "label": "commentaire"
-      }
-    ],
-    "__v": 0
-  },
-  {
-    "_id": "614c8b0fae8c2c0010a35bc6",
-    "key": "fa_form",
-    "value": [
-      {
-        "key": "name",
-        "label": "nom de la FA"
-      },
-      {
-        "key": "type",
-        "type": "select",
-        "options": ["Com", "Divertissement", "flemme de faire les aurte..."]
-      },
-      {
-        "key": "team",
-        "label": "equipe",
-        "type": "select",
-        "options": ["Sponso", "ComSI"]
-      },
-      {
-        "key": "inCharge",
-        "label": "Responsable",
-        "type": "user",
-        "filter": "hard"
-      },
-      {
-        "key": "isPublishable",
-        "label": "Publier sur le site / plaquette",
-        "type": "switch"
-      },
-      {
-        "key": "isMajorAnim",
-        "label": "Anime phare",
-        "type": "switch"
-      },
-      {
-        "key": "isForKids",
-        "label": "Anim pour les gosses",
-        "type": "switch"
-      },
-      {
-        "key": "description",
-        "label": "Description",
-        "type": "textarea"
-      },
-      {
-        "key": "isParticularSecurityMeasures",
-        "label": "Dispositif de sécurité particulier",
-        "type": "switch"
-      },
-      {
-        "key": "isRequiringPass",
-        "label": "Bessoin de pass",
-        "type": "switch"
-      },
-      {
-        "key": "isRequiringElectricity",
-        "label": "Besoin d'elec ",
-        "type": "switch"
-      },
-      {
-        "key": "isRequiringSignalisation",
-        "label": "Besoin de signalisation",
-        "type": "textarea"
       }
     ],
     "__v": 0
@@ -225,7 +157,7 @@
     "value": [
       {
         "key": "name",
-        "label": "nom de l'objet"
+        "label": "Nom de l'objet"
       },
       {
         "key": "type",
@@ -552,7 +484,7 @@
     "value": [
       {
         "key": "name",
-        "label": "nom de la FA"
+        "label": "Nom de la FA"
       },
       {
         "key": "type",
@@ -572,7 +504,7 @@
       },
       {
         "key": "team",
-        "label": "equipe",
+        "label": "Equipe",
         "type": "teams"
       },
       {
@@ -600,7 +532,7 @@
       },
       {
         "key": "isMajorAnim",
-        "label": "Anime phare",
+        "label": "Anim phare",
         "type": "switch"
       },
       {
@@ -629,7 +561,7 @@
     "value": [
       {
         "key": "name",
-        "label": "nom de la FT"
+        "label": "Nom de la FT"
       },
       {
         "key": "inCharge",
@@ -783,7 +715,7 @@
       },
       {
         "key": "comment",
-        "label": "commentaire"
+        "label": "Commentaire"
       }
     ],
     "__v": 0

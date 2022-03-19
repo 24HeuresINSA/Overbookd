@@ -31,11 +31,7 @@
           mdi-delete
         </v-icon>
         <ConfirmDialog ref="confirmDeleteSingle" @confirm="removeItem(item)"
-<<<<<<< HEAD
-          >Le créneau sera supprimé de façon <b>irréversible</b> !
-=======
         >Le créneau sera supprimé de façon <b>irreversible</b> !
->>>>>>> 3e96962604cb87460febce33af820efeb12b05ed
         </ConfirmDialog>
       </template>
       <template
