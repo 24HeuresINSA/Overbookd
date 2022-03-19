@@ -36,6 +36,32 @@
           </v-combobox>
         </div>
 
+        <v-text-field
+          v-model="filters.name"
+          prepend-icon="mdi-card-search"
+          label="Recherche d'orga"
+        ></v-text-field>
+        <v-combobox
+          v-model="filters.teams"
+          chips
+          multiple
+          clearable
+          label="team"
+          :items="getConfig('teams').map((e) => e.name)"
+        >
+          <template #selection="{ attrs, item, selected }">
+            <v-chip
+              v-bind="attrs"
+              :input-value="selected"
+              :color="getRoleMetadata(item).color"
+            >
+              <v-icon left color="white">
+                {{ getRoleMetadata(item).icon }}
+              </v-icon>
+              <a style="color: white">{{ getRoleMetadata(item).name }}</a>
+            </v-chip>
+          </template>
+        </v-combobox>
         <v-divider></v-divider>
 
         <UsersList :users="filteredUsers"></UsersList>
