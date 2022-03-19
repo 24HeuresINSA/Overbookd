@@ -32,3 +32,19 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   await timespan.save();
   return res.json(timespan);
 }
+
+/*
+ unassign user from a timespan
+ /timespan/:id/unassign
+ */
+export async function unassignUserFromTimeSpan(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+  timespan.assigned = null;
+  await timespan.save();
+  return res.json(timespan);
+}

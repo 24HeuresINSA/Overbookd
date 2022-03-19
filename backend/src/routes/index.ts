@@ -336,6 +336,11 @@ timespanRouter.post(
   authMiddleware.protect(),
   TimeSpanHandlers.assignUserToTimeSpan
 );
+timespanRouter.post(
+  "/:id/unassign",
+  authMiddleware.protect(),
+  TimeSpanHandlers.unassignUserFromTimeSpan
+);
 
 // Export the base-router
 const baseRouter = Router();
