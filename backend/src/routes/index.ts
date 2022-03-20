@@ -31,6 +31,8 @@ import {
   getAllFTs,
   getFTByID,
   getFTsNumber,
+  myPlanning,
+  getOrgaRequis,
   makeFTReady,
   unassign,
   updateFT,
@@ -103,7 +105,9 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
 FTrouter.get("/count", authMiddleware.protect(), getFTsNumber);
-FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
+FTrouter.get("/orga-requis/:userID", authMiddleware.protect(), myPlanning);
+FTrouter.get("/orga-requis", authMiddleware.protect(), getOrgaRequis);
+FTrouter.get("/:FTID([0-9]+)", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);
 FTrouter.put("/unassign", authMiddleware.protect(), unassign);
@@ -335,11 +339,6 @@ timespanRouter.post(
   "/:id/assigned/:userId",
   authMiddleware.protect(),
   TimeSpanHandlers.assignUserToTimeSpan
-);
-timespanRouter.post(
-  "/:id/unassign",
-  authMiddleware.protect(),
-  TimeSpanHandlers.unassignUserFromTimeSpan
 );
 
 // Export the base-router
