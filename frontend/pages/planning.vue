@@ -11,10 +11,10 @@
       <h1 style="width: 25%; text-align: center;">Tous</h1>
     </v-row>
     <div v-if="!loading">
-      <v-list v-for="plan in orgaRequis" :key="plan._id">
+      <v-list class="my-4" v-for="plan in orgaRequis" :key="plan._id">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>{{ plan._id }}</v-list-item-title>
+            <v-list-item-title style="font-weight: bold; font-size: 25px;">{{ plan._id }}</v-list-item-title>
             <v-data-table
                 :headers="[
               { text: 'FT', value: 'name', width: '30%' },
@@ -65,6 +65,25 @@
           color="grey"
       ></v-progress-circular>
     </div>
+    <div class="mt-10" v-if="!switchType">
+      <v-sheet tile height="54" class="d-flex">
+        <v-btn icon class="ma-2" @click="$refs.FormCalendar.prev()">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn icon class="ma-2" @click="$refs.FormCalendar.next()">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-sheet>
+      <v-calendar
+          ref="FormCalendar"
+          color="primary"
+          type="week"
+          v-model="selectedDate"
+          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+          :events="events"
+      ></v-calendar>
+    </div>
   </div>
 </template>
 
@@ -78,7 +97,9 @@ export default Vue.extend({
     return {
       switchType: false,
       orgaRequis: [],
-      loading: false
+      loading: false,
+      selectedDate: "2022-05-22",
+      events: []
     };
   },
   async mounted() {
@@ -89,6 +110,16 @@ export default Vue.extend({
       this.loading = true;
       if (!this.switchType) {
         this.orgaRequis = (await RepoFactory.ftRepo.myPlanning(this, this.$accessor.user.me._id)).data;
+        if(this.events.length === 0){
+          this.orgaRequis[0].fts.forEach((timeslot) => {
+            this.events.push({
+              name: timeslot.name,
+              start: this.getFormattedDate(new Date(timeslot.start)),
+              end: this.getFormattedDate(new Date(timeslot.end)),
+              color: this.getColor(timeslot.status),
+            });
+          })
+        }
       } else {
         this.orgaRequis = (await RepoFactory.ftRepo.getOrgaRequis(this)).data;
       }
@@ -123,7 +154,16 @@ export default Vue.extend({
         default:
           return "CONFLIT";
       }
-    }
+    },
+    getFormattedDate(date) {
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + (date.getDate())).slice(-2);
+      const year = date.getFullYear();
+      const hour =  ("0" + (date.getHours())).slice(-2);
+      const min =  ("0" + (date.getMinutes())).slice(-2);
+      const seg = ("0" + (date.getSeconds())).slice(-2);
+      return year + "-" + month + "-" + day + " " + hour + ":" +  min + ":" + seg;
+    },
   },
 });
 </script>
