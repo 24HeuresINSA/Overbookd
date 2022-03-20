@@ -249,6 +249,7 @@ export async function getOrgaRequis(req: Request, res: Response) {
             $push: {
               count: "$count",
               name: "$general.name",
+              status: "$status",
               start: "$timeframes.start",
               end: "$timeframes.end",
               conflits: "$conflicts"

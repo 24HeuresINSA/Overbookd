@@ -1,20 +1,33 @@
 <template>
   <div>
-    <h1>Planning 📆</h1>
+    <h1>Orga requis 📆</h1>
     <v-list v-for="plan in orgaRequis" :key="plan._id">
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>{{ plan._id }}</v-list-item-title>
           <v-data-table
               :headers="[
-              { text: 'FT', value: 'name', sortable: false },
-              { text: 'id', value: 'count', sortable: false },
-              { text: 'début', value: 'start', sortable: false },
-              { text: 'fin', value: 'end', sortable: false },
-              { text: 'conflits', value: 'conflits', sortable: false },
+              { text: 'FT', value: 'name', width: '30%' },
+              { text: 'id', value: 'count', align: 'center', width: '10%'},
+              { text: 'status', value: 'status', align: 'center', width: '10%'},
+              { text: 'début', value: 'start', align: 'center', width: '10%'},
+              { text: 'fin', value: 'end', align: 'center', width: '10%'},
+              { text: 'conflits', value: 'conflits', width: '30%'},
             ]"
               :items="plan.fts"
+              :hide-default-footer="true"
+              :items-per-page="-1"
           >
+            <template #item.status="{ item }">
+              <v-chip
+                  :color="getColor(item.status)"
+              >
+                {{ item.status }}
+              </v-chip>
+            </template>
+            <template #item.count="{ item }">
+              <a :href="/ft/+item.count">{{item.count}}</a>
+            </template>
             <template #item.start="{ item }">
               {{ (new Date(item.start)).toLocaleString() }}
             </template>
@@ -26,6 +39,7 @@
                   v-for="conflit in item.conflits"
                   :key="conflit._id"
                   :color="getColor(conflit.type)"
+                  class="mx-2"
               >
                 {{ getText(conflit.type) }}
               </v-chip>
@@ -62,6 +76,16 @@ export default Vue.extend({
           return "orange";
         case "TF":
           return "red";
+        case "refused":
+          return "red";
+        case "submitted":
+          return "orange";
+        case "draft":
+          return "grey";
+        case "validated":
+          return "success";
+        case "ready":
+          return "deep-purple";
         default:
           return "grey";
       }
