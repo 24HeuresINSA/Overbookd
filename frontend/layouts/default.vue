@@ -43,8 +43,14 @@
         style="color: red; margin-left: 4px; font-weight: bold"
         v-text="version"
       />
+      
       <v-spacer />
-      <div v-if="isPreProd" class="watermark">PREPROD</div>
+    <div
+      v-if="isPreProd"
+      class="watermark"
+      >
+        PREPROD
+    </div>
       <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
@@ -81,8 +87,9 @@
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
-            Pour signaler un bug veuillez envoyer un mail à
+            Pour signaler un bug veuiller envoyer un mail à
             contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
+            de preference en anglais
           </h4>
         </v-card-text>
         <v-card-actions>
@@ -146,31 +153,31 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Accueil",
+          title: "Accueil 🤙",
           to: "/",
           roles: "hard",
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiches Activités",
+          title: "Fiches Activitée 🥳",
           roles: this.getConfig("fa_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
-          title: "Fiches Tâches",
+          title: "Fiches Tâches  😱",
           roles: this.getConfig("ft_required_role"),
           to: "/ft",
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Planning",
+          title: "Planning 🤯",
           roles: "hard",
           to: "/planning",
         },
         {
           icon: "mdi-clock",
-          title: "Mes dispos",
+          title: "Mes dispos 🤯",
           roles: "everyone",
           to: "/availabilities",
         },
@@ -182,79 +189,79 @@ export default {
         },
         {
           icon: "mdi-calendar",
-          title: "Mon calendrier",
+          title: "Mon calendrier 📆",
           to: "/calendar",
           roles: "everyone",
         },
         {
           icon: "mdi-account",
-          title: "Liste des Orgas",
+          title: "Liste des Orgas 👩‍👦‍👦",
           roles: "hard",
           to: "/humans",
         },
         {
           icon: "mdi-bus-articulated-front",
-          title: "Inventaire",
+          title: "Inventaire 📦",
           roles: "hard",
           to: "/inventory",
         },
         {
           icon: "mdi-truck",
-          title: "Logistique",
+          title: "Logistique 🚚",
           roles: "log",
           to: "/logistics",
         },
         {
           icon: "mdi-human-greeting",
-          title: "Affectation",
+          title: "Affectation 💃",
           roles: "humain",
           to: "/assignment",
         },
         {
           icon: "mdi-alert-circle",
-          title: "Conflits",
+          title: "Conflits 🤔",
           roles: "hard",
           to: "/listeconflits",
         },
         {
           icon: "mdi-chart-areaspline-variant",
-          title: "Stats",
+          title: "Stats 📈",
           roles: "hard",
           to: "/stats",
         },
         {
           icon: "mdi-cog",
           roles: "admin",
-          title: "Admin",
+          title: "Admin ⚙️",
           to: "/config",
         },
         {
           icon: "mdi-format-list-bulleted",
           roles: "admin",
-          title: "SG",
+          title: "SG 📝️",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
           roles: "admin",
-          title: "Transactions",
+          title: "Transactions 💰️",
           to: "/transactions",
         },
         {
           icon: "mdi-fire",
           roles: "hard",
-          title: "OverTinder",
+          title: "OverTinder 🍑",
           to: "/overTinder",
         },
         {
           icon: "mdi-image",
           roles: "hard",
-          title: "Trombinoscope",
+          title: "Trombinoscope 🎆",
           to: "/trombinoscope",
         },
         {
           icon: "mdi-note",
-          title: "Patch notes",
+          title: "Patch notes 📝",
           roles: "hard",
           to: "/patch_note",
         },
@@ -354,45 +361,35 @@ export default {
 </script>
 
 <style>
-.watermark {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
+  .watermark {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    
+    color: #ec0000;
+    font-size: 100px;
+    font-weight: 500px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    opacity: 1;
+    animation: wiggle 2s infinite;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently */
+  }
 
-  color: #ec0000;
-  font-size: 100px;
-  font-weight: 500px;
-  display: grid;
-  justify-content: center;
-  align-content: center;
-  opacity: 1;
-  animation: wiggle 2s infinite;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently */
-}
-
-@keyframes wiggle {
-  0% {
-    transform: rotate(0deg);
+  @keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   80% { transform: rotate(0deg); }
+   85% { transform: rotate(5deg); }
+   95% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }  
   }
-  80% {
-    transform: rotate(0deg);
-  }
-  85% {
-    transform: rotate(5deg);
-  }
-  95% {
-    transform: rotate(-5deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
 </style>
