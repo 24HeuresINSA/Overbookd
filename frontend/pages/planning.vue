@@ -7,11 +7,11 @@
           <v-list-item-title>{{ plan._id }}</v-list-item-title>
           <v-data-table
               :headers="[
-              { text: 'FT', value: 'name' },
-              { text: 'id', value: 'count' },
-              { text: 'début', value: 'start' },
-              { text: 'fin', value: 'end' },
-              { text: 'conflits', value: 'conflits' },
+              { text: 'FT', value: 'name', sortable: false },
+              { text: 'id', value: 'count', sortable: false },
+              { text: 'début', value: 'start', sortable: false },
+              { text: 'fin', value: 'end', sortable: false },
+              { text: 'conflits', value: 'conflits', sortable: false },
             ]"
               :items="plan.fts"
           >
@@ -22,7 +22,13 @@
               {{ (new Date(item.end)).toLocaleString() }}
             </template>
             <template #item.conflits="{ item }">
-              {{ item.conflits }}
+              <v-chip
+                  v-for="conflit in item.conflits"
+                  :key="conflit._id"
+                  :color="getColor(conflit.type)"
+              >
+                {{ getText(conflit.type) }}
+              </v-chip>
             </template>
           </v-data-table>
         </v-list-item-content>
@@ -31,7 +37,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import Vue from "vue";
 import {RepoFactory} from "~/repositories/repoFactory";
 import {FT} from "~/utils/models/FT";
@@ -50,6 +56,26 @@ export default Vue.extend({
     async getOrgaRequis() {
       this.orgaRequis = (await RepoFactory.ftRepo.getOrgaRequis(this)).data;
     },
+    getColor(type){
+      switch (type){
+        case "availability":
+          return "orange";
+        case "TF":
+          return "red";
+        default:
+          return "grey";
+      }
+    },
+    getText(type){
+      switch (type){
+        case "availability":
+          return "CONFLIT : PAS DISPO";
+        case "TF":
+          return "CONFLIT ENTRE FT";
+        default:
+          return "CONFLIT";
+      }
+    }
   },
 });
 </script>
