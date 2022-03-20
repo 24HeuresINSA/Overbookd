@@ -215,6 +215,55 @@ export async function makeFTReady(req: Request, res: Response) {
   }
 }
 
+export async function myPlanning(req: Request, res: Response) {
+  // console.log(req.params.userID);
+  const FTs =
+    await FTModel.aggregate()
+      .match({
+        $and: [{isValid: {$ne: false}}],
+      })
+      .unwind({path: "$timeframes"})
+      .sort("timeframes.start")
+      .unwind({path: "$timeframes.required"})
+      .match({"timeframes.required.user._id": req.params.userID})
+      .lookup({
+        from: "conflicts",
+        localField: "timeframes.required.user._id",
+        foreignField: "user",
+        let: {id: "$timeframes._id"},
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $or: [
+                  {$eq: ["$$id", "$tf1"]},
+                  {$eq: ["$$id", "$tf2"]}
+                ]
+              }
+            }
+          }
+        ],
+        as: "conflicts"
+      })
+      .group({
+          _id: "$timeframes.required.user.username",
+          fts: {
+            $push: {
+              count: "$count",
+              name: "$general.name",
+              status: "$status",
+              start: "$timeframes.start",
+              end: "$timeframes.end",
+              conflits: "$conflicts"
+            },
+          }
+        }
+      )
+      .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
+      .sort("_id");
+  res.json(FTs);
+}
+
 export async function getOrgaRequis(req: Request, res: Response) {
   const FTs =
     await FTModel.aggregate()

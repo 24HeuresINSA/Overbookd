@@ -29,4 +29,7 @@ export default {
     getOrgaRequis(context: Context) {
         return context.$axios.get(resource + "/orga-requis");
     },
+    myPlanning(context: Context, userId: string) {
+        return context.$axios.get(`${resource}/orga-requis/${userId}`);
+    },
 };

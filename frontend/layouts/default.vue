@@ -170,7 +170,7 @@ export default {
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Orga requis🤯",
+          title: "Planning 🤯",
           roles: "hard",
           to: "/planning",
         },
