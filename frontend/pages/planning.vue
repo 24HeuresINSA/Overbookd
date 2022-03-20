@@ -11,10 +11,10 @@
       <h1 style="width: 25%; text-align: center;">Tous</h1>
     </v-row>
     <div v-if="!loading">
-      <v-list class="my-4" v-for="plan in orgaRequis" :key="plan._id">
+      <v-list class="my-4" v-for="(plan, index) in orgaRequis" :key="index">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title style="font-weight: bold; font-size: 25px;">{{ plan._id }}</v-list-item-title>
+            <v-list-item-title style="font-weight: bold; font-size: 25px;">{{ plan._id.username }}</v-list-item-title>
             <v-data-table
                 :headers="[
               { text: 'FT', value: 'name', width: '30%' },
