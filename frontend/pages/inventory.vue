@@ -544,7 +544,7 @@ export default Vue.extend({
       );
       this.selectedItem.borrowed.splice(index, 1);
     },
-    download(filename, text) {
+    download(filename: string, text: string) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
       const element = document.createElement("a");
@@ -575,13 +575,13 @@ export default Vue.extend({
           ";" +
           element.amount +
           ";" +
-          element.borrowedCount +
+          this.getBorrowedCount(element) +
           ";" +
           element.fromPool +
           ";" +
-          element.totalCount +
+          (this.getBorrowedCount(element) + element.amount) +
           ";" +
-          element.required.count +
+          (element.required ? element.required.count : "undefined") +
           "\n";
       });
 
