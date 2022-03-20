@@ -164,7 +164,7 @@ export default {
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Mon planning",
+          title: "Planning",
           roles: "hard",
           to: "/planning",
         },
