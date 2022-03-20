@@ -4,6 +4,9 @@
       <template #[`item.fullname`]="{ item }">
         {{ item.fullname || "az" }}
       </template>
+      <template #[`item.phone`]="{ item }">
+        {{ item.phone || "az" }}
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -30,12 +33,12 @@ export default Vue.extend({
   },
 
   async beforeMount() {
-    this.pass = await this.getAllPassSecu();
+    await this.getAllPassSecu();
   },
 
   methods: {
     async getAllPassSecu() {
-      this.passsecu = (await this.$axios.get("/passsecu")).data;
+      this.pass = (await this.$axios.get("/passsecu")).data;
       console.log(this.passsecu);
     },
   },
