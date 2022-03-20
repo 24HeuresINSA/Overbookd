@@ -216,7 +216,6 @@ export async function makeFTReady(req: Request, res: Response) {
 }
 
 export async function getOrgaRequis(req: Request, res: Response) {
-  const conflits = await ConflictModel.find();
   const FTs =
     await FTModel.aggregate()
       .match({
@@ -229,25 +228,35 @@ export async function getOrgaRequis(req: Request, res: Response) {
         from: "conflicts",
         localField: "timeframes.required.user._id",
         foreignField: "user",
+        let: {id: "$timeframes._id"},
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $or: [
+                  {$eq: ["$$id", "$tf1"]},
+                  {$eq: ["$$id", "$tf2"]}
+                ]
+              }
+            }
+          }
+        ],
         as: "conflicts"
       })
-      .unwind({path: "$conflicts", preserveNullAndEmptyArrays: true})
-      // .match({"timeframes._id": "5f0e73e7-4a4f-4522-887c-6942f5da8f84"});
-      .match({$or: [{"timeframes._id" : {$eq: "conflicts.tf1"}}, {"timeframes._id": {$eq: "conflicts.tf2"}}]});
-  // .group({
-  //     _id: "$timeframes.required.user.username",
-  //     fts: {
-  //       $push: {
-  //         count: "$count",
-  //         name: "$general.name",
-  //         start: "$timeframes.start",
-  //         end: "$timeframes.end",
-  //         conflits: "$conflicts"
-  //       },
-  //     }
-  //   }
-  // )
-  // .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
-  // .sort("_id");
+      .group({
+          _id: "$timeframes.required.user.username",
+          fts: {
+            $push: {
+              count: "$count",
+              name: "$general.name",
+              start: "$timeframes.start",
+              end: "$timeframes.end",
+              conflits: "$conflicts"
+            },
+          }
+        }
+      )
+      .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
+      .sort("_id");
   res.json(FTs);
 }
