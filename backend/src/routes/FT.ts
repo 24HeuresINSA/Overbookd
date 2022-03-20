@@ -7,6 +7,7 @@ import {updateConflictsByFTCount} from "@src/services/conflict";
 import {timeframeToTimeSpan} from "@src/services/slicing";
 import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
 import ConflictModel from "@entities/Conflict";
+import {Schema, Types} from "mongoose";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
@@ -216,7 +217,6 @@ export async function makeFTReady(req: Request, res: Response) {
 }
 
 export async function myPlanning(req: Request, res: Response) {
-  // console.log(req.params.userID);
   const FTs =
     await FTModel.aggregate()
       .match({
@@ -225,7 +225,7 @@ export async function myPlanning(req: Request, res: Response) {
       .unwind({path: "$timeframes"})
       .sort("timeframes.start")
       .unwind({path: "$timeframes.required"})
-      .match({"timeframes.required.user._id": req.params.userID})
+      .match({"timeframes.required.user._id": Types.ObjectId(req.params.userID)})
       .lookup({
         from: "conflicts",
         localField: "timeframes.required.user._id",
