@@ -1,12 +1,22 @@
 <template>
   <div>
-    <h1>Orga requis 📆</h1>
-    <v-list v-for="plan in orgaRequis" :key="plan._id">
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>{{ plan._id }}</v-list-item-title>
-          <v-data-table
-              :headers="[
+    <h1>Planning 📆</h1>
+    <v-row class="d-flex justify-space-around py-6">
+      <h1 style="width: 25%; text-align: center;">Mon planning</h1>
+      <v-switch
+          v-model="switchType"
+          class="switch-width"
+          @change="getOrgaRequis"
+      ></v-switch>
+      <h1 style="width: 25%; text-align: center;">Tous</h1>
+    </v-row>
+    <div v-if="!loading">
+      <v-list v-for="plan in orgaRequis" :key="plan._id">
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>{{ plan._id }}</v-list-item-title>
+            <v-data-table
+                :headers="[
               { text: 'FT', value: 'name', width: '30%' },
               { text: 'id', value: 'count', align: 'center', width: '10%'},
               { text: 'status', value: 'status', align: 'center', width: '10%'},
@@ -14,53 +24,61 @@
               { text: 'fin', value: 'end', align: 'center', width: '10%'},
               { text: 'conflits', value: 'conflits', width: '30%'},
             ]"
-              :items="plan.fts"
-              :hide-default-footer="true"
-              :items-per-page="-1"
-          >
-            <template #item.status="{ item }">
-              <v-chip
-                  :color="getColor(item.status)"
-              >
-                {{ item.status }}
-              </v-chip>
-            </template>
-            <template #item.count="{ item }">
-              <a :href="/ft/+item.count">{{item.count}}</a>
-            </template>
-            <template #item.start="{ item }">
-              {{ (new Date(item.start)).toLocaleString() }}
-            </template>
-            <template #item.end="{ item }">
-              {{ (new Date(item.end)).toLocaleString() }}
-            </template>
-            <template #item.conflits="{ item }">
-              <v-chip
-                  v-for="conflit in item.conflits"
-                  :key="conflit._id"
-                  :color="getColor(conflit.type)"
-                  class="mx-2"
-              >
-                {{ getText(conflit.type) }}
-              </v-chip>
-            </template>
-          </v-data-table>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
+                :items="plan.fts"
+                :hide-default-footer="true"
+                :items-per-page="-1"
+            >
+              <template #item.status="{ item }">
+                <v-chip
+                    :color="getColor(item.status)"
+                >
+                  {{ item.status }}
+                </v-chip>
+              </template>
+              <template #item.count="{ item }">
+                <a :href="/ft/+item.count">{{ item.count }}</a>
+              </template>
+              <template #item.start="{ item }">
+                {{ (new Date(item.start)).toLocaleString() }}
+              </template>
+              <template #item.end="{ item }">
+                {{ (new Date(item.end)).toLocaleString() }}
+              </template>
+              <template #item.conflits="{ item }">
+                <v-chip
+                    v-for="conflit in item.conflits"
+                    :key="conflit._id"
+                    :color="getColor(conflit.type)"
+                    class="mx-2"
+                >
+                  {{ getText(conflit.type) }}
+                </v-chip>
+              </template>
+            </v-data-table>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </div>
+    <div class="d-flex justify-center" v-else>
+      <v-progress-circular
+          indeterminate
+          color="grey"
+      ></v-progress-circular>
+    </div>
   </div>
 </template>
 
 <script lang="js">
 import Vue from "vue";
 import {RepoFactory} from "~/repositories/repoFactory";
-import {FT} from "~/utils/models/FT";
 
 export default Vue.extend({
   name: "Planning",
   data() {
     return {
-      orgaRequis: []
+      switchType: false,
+      orgaRequis: [],
+      loading: false
     };
   },
   async mounted() {
@@ -68,10 +86,16 @@ export default Vue.extend({
   },
   methods: {
     async getOrgaRequis() {
-      this.orgaRequis = (await RepoFactory.ftRepo.getOrgaRequis(this)).data;
+      this.loading = true;
+      if (!this.switchType) {
+        this.orgaRequis = (await RepoFactory.ftRepo.myPlanning(this, this.$accessor.user.me._id)).data;
+      } else {
+        this.orgaRequis = (await RepoFactory.ftRepo.getOrgaRequis(this)).data;
+      }
+      this.loading = false;
     },
-    getColor(type){
-      switch (type){
+    getColor(type) {
+      switch (type) {
         case "availability":
           return "orange";
         case "TF":
@@ -90,8 +114,8 @@ export default Vue.extend({
           return "grey";
       }
     },
-    getText(type){
-      switch (type){
+    getText(type) {
+      switch (type) {
         case "availability":
           return "CONFLIT : PAS DISPO";
         case "TF":
