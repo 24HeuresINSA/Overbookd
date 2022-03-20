@@ -37,7 +37,7 @@ import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";
 import ftRepo from "../repositories/ftRepo";
-import { safeCall } from "../utils/api/calls";
+import {safeCall} from "../utils/api/calls";
 
 export default {
   name: "Assignment",
@@ -116,7 +116,7 @@ export default {
   watch: {
     selectedTimeframe() {
       const selectedDayTimestamp = this.timeframes.find(
-        (e) => e.name === this.selectedTimeframe
+          (e) => e.name === this.selectedTimeframe
       );
       if (selectedDayTimestamp) {
         this.selectedDay = selectedDayTimestamp.day;
@@ -124,9 +124,6 @@ export default {
     },
 
     selectedAssignments() {
-      // selected assignment changed...
-      // let user = this.getSelectedUser;
-      // this.$set(user, "assigned", this.selectedAssignments);
     },
   },
 

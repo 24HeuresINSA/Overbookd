@@ -1,8 +1,8 @@
 <template>
   <v-data-table
-    :headers="headers"
-    :items="availableTimeSpans"
-    @click:row="assignTask"
+      :headers="headers"
+      :items="availableTimeSpans"
+      @click:row="onSelectTimeSpan"
   >
     <template #[`item.FTID`]="{ item }">
       {{ item.FTName || item.FTID }}
@@ -64,11 +64,15 @@ export default {
   },
 
   methods: {
-    assignTask(task) {
-      this.$accessor.assignment.assignUserToTimespan({
-        userID: task._id,
-        timespanID: this.$accessor.assignment.selectedUser._id,
-      });
+    onSelectTimeSpan(timeSpan) {
+      if (this.$accessor.assignment.filters.isModeOrgaToTache) {
+        console.log("onSelectTimeSpan", timeSpan);
+      } else {
+        this.$accessor.assignment.assignUserToTimespan({
+          userID: timeSpan._id,
+          timespanID: this.$accessor.assignment.selectedUser._id,
+        });
+      }
     },
     resolveFTName(FTID) {
       const FT = this.FTs.find((FT) => FT.count === FTID);
