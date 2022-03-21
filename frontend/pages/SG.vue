@@ -64,7 +64,10 @@
           <template v-if="mode === 'deposit'">
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
-          <v-btn text :disabled="!areInputsValid.res" @click="saveTransactions"
+          <v-btn
+            v-if="hasRole('admin')"
+            :disabled="!areInputsValid.res"
+            @click="saveTransactions"
             >Enregistrer</v-btn
           >
           <v-btn text>Envoyer un mail au négatif</v-btn>
@@ -121,7 +124,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 /**
  * the goal of this page is to make it easier for SG to enter new consumption and count them
  * after changing a barrel the SG goes to this page and enter the coast of that barrel (totalConsumption)
@@ -255,23 +258,32 @@ export default {
   },
 
   async mounted() {
-    await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
-      (res) => {
-        this.users = res.data.filter((user) => {
-          if (user.team.includes("hard")) {
-            return user;
-          }
-        });
-      }
-    );
-    this.users.forEach((user) => {
-      if (user.balance) {
-        this.totalCPBalance += +user.balance;
-      }
-    });
+    if (this.$accessor.user.hasRole("admin")) {
+      await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
+        (res) => {
+          this.users = res.data.filter((user) => {
+            if (user.team.includes("hard")) {
+              return user;
+            }
+          });
+        }
+      );
+      this.users.forEach((user) => {
+        if (user.balance) {
+          this.totalCPBalance += +user.balance;
+        }
+      });
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
 
   methods: {
+    hasRole(role: string) {
+      return this.$accessor.user.hasRole(role);
+    },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);
       return floatRegex.test(number);

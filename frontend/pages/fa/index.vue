@@ -26,7 +26,9 @@
                       <v-list-item-title class="small">Tous</v-list-item-title>
                     </v-list-item>
                     <v-list-item>
-                      <v-list-item-title class="small">Brouillon</v-list-item-title>
+                      <v-list-item-title class="small"
+                        >Brouillon</v-list-item-title
+                      >
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-title class="small"
@@ -240,20 +242,26 @@ export default {
     },
   },
   async mounted() {
-    this.validators = this.$accessor.config.getConfig("fa_validators");
-    // get FAs
-    const res = await safeCall(this.$store, RepoFactory.faRepo.getAllFAs(this));
-    if (res) {
-      this.FAs = res.data;
+    if (this.$accessor.user.hasRole("hard")) {
+      this.validators = this.$accessor.config.getConfig("fa_validators");
+      // get FAs
+      const res = await safeCall(
+        this.$store,
+        RepoFactory.faRepo.getAllFAs(this)
+      );
+      if (res) {
+        this.FAs = res.data;
+      } else {
+        alert("error");
+      }
     } else {
-      alert("error");
+      await this.$router.push({
+        path: "/",
+      });
     }
   },
 
   methods: {
-    hasRole(role) {
-      return this.$accessor.user.hasRole(role);
-    },
     preDelete(fa) {
       this.mFA = fa;
       this.isDeleteFAOpen = true;

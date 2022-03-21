@@ -32,15 +32,17 @@
             </v-card-actions>
           </v-card>
           <br />
-          <v-card>
-            <v-card-title>
-              <span class="headline">Export</span>
-            </v-card-title>
-            <v-card-text>
-              <v-btn text @click="exportCSV">Exporter l'inventaire</v-btn>
-            </v-card-text>
-          </v-card>
-          <br />
+          <template v-if="hasRole(['log', 'admin'])">
+            <v-card>
+              <v-card-title>
+                <span class="headline">Export</span>
+              </v-card-title>
+              <v-card-text>
+                <v-btn text @click="exportCSV">Exporter l'inventaire</v-btn>
+              </v-card-text>
+            </v-card>
+            <br />
+          </template>
           <v-card>
             <v-card-title>
               <span class="headline">Lieux</span>
@@ -366,43 +368,49 @@ export default Vue.extend({
   },
 
   async mounted() {
-    // setup config
-    this.loading = true;
-    let res = await this.$accessor.location.getAllLocations();
-    if (!res) {
-      this.snack.display("Erreur lors du chargement des localisations");
-    }
-    this.allowedTeams = (await this.getConfig("isInventoryOpen"))
-      ? ["log", "hard"]
-      : ["log"];
-    this.selectOptions = this.equipmentForm[1].options;
-    const equipRes = await this.$accessor.equipment.fetchAll();
-    if (!equipRes) {
-      this.snack.display("Erreur lors du chargement des équipements");
-    }
-    const resFA = await this.$accessor.FA.fetchAll();
-    const resFT = await this.$accessor.FT.fetchAll();
-    if (!resFA || !resFT) {
-      this.snack.display("Erreur lors du chargement des équipements");
-    }
-
-    this.inventory.forEach((item: any) => {
-      item.required = {
-        count: 0,
-        form: Array<any>(),
-      };
-      if (item._id && this.equipmentMap.has(item._id)) {
-        item.required.count = this.equipmentMap.get(item._id);
+    if (this.$accessor.user.hasRole("hard")) {
+      // setup config
+      this.loading = true;
+      let res = await this.$accessor.location.getAllLocations();
+      if (!res) {
+        this.snack.display("Erreur lors du chargement des localisations");
       }
-    });
-    const propRes =
-      await this.$accessor.equipmentProposal.getEquipmentProposal();
-    if (!propRes) {
-      this.snack.display(
-        "Erreur lors la récupération des équipements proposés"
-      );
+      this.allowedTeams = (await this.getConfig("isInventoryOpen"))
+        ? ["log", "hard"]
+        : ["log"];
+      this.selectOptions = this.equipmentForm[1].options;
+      const equipRes = await this.$accessor.equipment.fetchAll();
+      if (!equipRes) {
+        this.snack.display("Erreur lors du chargement des équipements");
+      }
+      const resFA = await this.$accessor.FA.fetchAll();
+      const resFT = await this.$accessor.FT.fetchAll();
+      if (!resFA || !resFT) {
+        this.snack.display("Erreur lors du chargement des équipements");
+      }
+
+      this.inventory.forEach((item: any) => {
+        item.required = {
+          count: 0,
+          form: Array<any>(),
+        };
+        if (item._id && this.equipmentMap.has(item._id)) {
+          item.required.count = this.equipmentMap.get(item._id);
+        }
+      });
+      const propRes =
+        await this.$accessor.equipmentProposal.getEquipmentProposal();
+      if (!propRes) {
+        this.snack.display(
+          "Erreur lors la récupération des équipements proposés"
+        );
+      }
+      this.loading = false;
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
     }
-    this.loading = false;
   },
 
   methods: {
