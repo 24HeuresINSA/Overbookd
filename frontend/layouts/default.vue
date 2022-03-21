@@ -1,11 +1,11 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      fixed
-      app
-      :style="isJauneActive ? jauneStyle : ''"
+        v-model="drawer"
+        :mini-variant="miniVariant"
+        fixed
+        app
+        :style="isJauneActive ? jauneStyle : ''"
     >
       <v-list>
         <v-list-item to="/">
@@ -13,11 +13,11 @@
         </v-list-item>
         <template v-for="(item, i) in items">
           <v-list-item
-            v-if="hasRole(item.roles)"
-            :key="i"
-            :to="item.to"
-            router
-            exact
+              v-if="hasRole(item.roles)"
+              :key="i"
+              :to="item.to"
+              router
+              exact
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -32,16 +32,16 @@
     <v-app-bar fixed app :style="isJauneActive ? jauneStyle : ''">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title
-        v-if="!isMobile"
-        class="ml-2"
-        @click="clickOnTitle()"
-        v-text="title"
+          v-if="!isMobile"
+          class="ml-2"
+          @click="clickOnTitle()"
+          v-text="title"
       />
 
       <v-toolbar-title
-        v-if="!isMobile"
-        style="color: red; margin-left: 4px; font-weight: bold"
-        v-text="version"
+          v-if="!isMobile"
+          style="color: red; margin-left: 4px; font-weight: bold"
+          v-text="version"
       />
       <v-spacer />
       <div v-if="isPreProd" class="watermark">PREPROD</div>
@@ -74,9 +74,9 @@
     <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card v-if="hasRole('hard')">
         <v-img
-          src="img/memes/comsi_working.png"
-          width="300px"
-          style="left: 250px"
+            src="img/memes/comsi_working.png"
+            width="300px"
+            style="left: 250px"
         ></v-img>
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
@@ -105,7 +105,7 @@
     </v-dialog>
 
     <v-snackbar v-model="isSnackbarOpen" timeout="5000"
-      >Ca marche pas encore ce truc
+    >Ca marche pas encore ce truc
     </v-snackbar>
   </v-app>
 </template>
@@ -125,6 +125,7 @@ const AUTHORS = [
   "Thomas - Ginny 💡",
   "Thibaut - Moule 🍑",
   "Antoine - Gyneco 🩺",
+  "Damien - Hublot 🖐"
 ];
 
 export default {
@@ -163,7 +164,7 @@ export default {
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Mon planning",
+          title: "Planning",
           roles: "hard",
           to: "/planning",
         },
@@ -240,6 +241,12 @@ export default {
           to: "/transactions",
         },
         {
+          icon: "mdi-passport",
+          title: "Pass sécu",
+          roles: "secu",
+          to: "/passsecu",
+        },
+        {
           icon: "mdi-fire",
           roles: "hard",
           title: "OverTinder",
@@ -278,23 +285,23 @@ export default {
         return "Ricard.png";
       }
       return this.$vuetify.theme.dark
-        ? "overbookd_logo_blanc.png"
-        : "overbookd_logo_noir.png";
+          ? "overbookd_logo_blanc.png"
+          : "overbookd_logo_noir.png";
     },
 
     mailUrl() {
       return `mailto:contact-project%2B24-heures-insa-overbookd-mono-31598236-issue-%40incoming.gitlab.com?body=%23%20URL%20or%20page%0A${encodeURIComponent(
-        window.location.href
+          window.location.href
       )}%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%23%20Additional%20info%0Aversion%3A%20${encodeURI(
-        version
+          version
       )}%0Auser%20agent%3A%20${encodeURI(
-        navigator.userAgent
+          navigator.userAgent
       )}%0Avendor%3A%20${encodeURI(
-        navigator.vendor
+          navigator.vendor
       )}%20%0Adate%3A%20${encodeURI(
-        new Date().toLocaleString()
+          new Date().toLocaleString()
       )}%20%0Aresolution%3A%20${encodeURI(
-        window.screen.availWidth + "x" + window.screen.availHeight
+          window.screen.availWidth + "x" + window.screen.availHeight
       )}`;
     },
     isPreProd() {

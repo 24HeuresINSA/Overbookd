@@ -66,13 +66,19 @@ export default {
   }),
 
   async mounted() {
-    this.users = (await this.$axios.get("/user")).data;
-    this.userBornToday = this.users.find((user) => {
-      if (user.birthdate) {
-        const birthday = new Date(user.birthdate);
-        return this.isToday(birthday);
-      }
-    });
+    if (this.$accessor.user.hasRole("hard")) {
+      this.users = (await this.$axios.get("/user")).data;
+      this.userBornToday = this.users.find((user) => {
+        if (user.birthdate) {
+          const birthday = new Date(user.birthdate);
+          return this.isToday(birthday);
+        }
+      });
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
 
   methods: {

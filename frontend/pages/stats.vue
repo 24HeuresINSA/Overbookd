@@ -32,16 +32,26 @@ export default {
     };
   },
   async mounted() {
-    await this.update();
+    if (this.$accessor.user.hasRole("admin")) {
+      await this.update();
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
   methods: {
     async update() {
       if (this.switchType) {
-        this.FT = (await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this)))["data"];
+        this.FT = (
+          await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this))
+        )["data"];
         this.name = "FT";
         this.dataset = this.FT;
       } else {
-        this.FA = (await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this)))["data" ];
+        this.FA = (
+          await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this))
+        )["data"];
         this.name = "FA";
         this.dataset = this.FA;
       }

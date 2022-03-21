@@ -64,7 +64,10 @@
           <template v-if="mode === 'deposit'">
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
-          <v-btn text :disabled="!areInputsValid.res" @click="saveTransactions"
+          <v-btn
+            v-if="hasRole('admin')"
+            :disabled="!areInputsValid.res"
+            @click="saveTransactions"
             >Enregistrer</v-btn
           >
           <v-btn text>Envoyer un mail au négatif</v-btn>
@@ -255,23 +258,32 @@ export default {
   },
 
   async mounted() {
-    await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
-      (res) => {
-        this.users = res.data.filter((user) => {
-          if (user.team.includes("hard")) {
-            return user;
-          }
-        });
-      }
-    );
-    this.users.forEach((user) => {
-      if (user.balance) {
-        this.totalCPBalance += +user.balance;
-      }
-    });
+    if (this.$accessor.user.hasRole("admin")) {
+      await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
+        (res) => {
+          this.users = res.data.filter((user) => {
+            if (user.team.includes("hard") && !user.team.includes("matos")) {
+              return user;
+            }
+          });
+        }
+      );
+      this.users.forEach((user) => {
+        if (user.balance) {
+          this.totalCPBalance += +user.balance;
+        }
+      });
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
 
   methods: {
+    hasRole(role) {
+      return this.$accessor.user.hasRole(role);
+    },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);
       return floatRegex.test(number);

@@ -50,7 +50,13 @@ export default Vue.extend({
   },
 
   async mounted() {
-    await this.$store.dispatch("timeslot/fetchTimeslots");
+    if (this.$accessor.user.hasRole("humain")) {
+      await this.$store.dispatch("timeslot/fetchTimeslots");
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
 
   methods: {
