@@ -256,7 +256,7 @@ export const actions = actionTree(
 export const getters = getterTree(state, {
   filteredUsers: (state: any) => {
     // filter users by filters and search
-    const { user } = state.filters;
+    const {user} = state.filters;
     const {search, team} = user;
     let users = [...state.users];
 

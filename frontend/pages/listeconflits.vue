@@ -8,17 +8,17 @@
       Nombre de conflits : <b>{{ nbConflits }}</b>
     </p>
     <v-simple-table dense>
-      <template v-slot:default>
+      <template #default>
         <thead>
-          <tr>
-            <th>Qui ?</th>
-            <th>Type</th>
-            <th>FT1</th>
-            <th>FT2</th>
-          </tr>
+        <tr>
+          <th>Qui ?</th>
+          <th>Type</th>
+          <th>FT1</th>
+          <th>FT2</th>
+        </tr>
         </thead>
         <tbody>
-          <tr
+        <tr
             v-for="conflit in conflictsbyUser"
             :key="conflit.id"
             v-html="computeConflictRow(conflit)"
@@ -31,9 +31,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Conflict } from "~/utils/models/conflicts";
+import {Conflict} from "~/utils/models/conflicts";
 import sanitizeHtml from "sanitize-html";
-import { hasRole } from "~/utils/roles";
 
 declare type ConflictFT = Conflict & {
   ft1: number;

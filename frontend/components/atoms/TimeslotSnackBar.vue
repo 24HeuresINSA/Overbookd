@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       snackbar: false,
-      message: ""
+      message: "",
     };
   },
   created() {
