@@ -214,9 +214,9 @@ export default Vue.extend({
           date:
               new Date(timeslot.timeFrame.start).getFullYear() +
               "-" +
-              (new Date(timeslot.timeFrame.start).getMonth() + 1) +
+              String(new Date(timeslot.timeFrame.start).getMonth() + 1).padStart(2, '0') +
               "-" +
-              new Date(timeslot.timeFrame.start).getDate() +
+              String(new Date(timeslot.timeFrame.start).getDate()).padStart(2, '0') +
               " " +
               new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
                 weekday: "long",
