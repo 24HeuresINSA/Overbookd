@@ -13,6 +13,7 @@ export async function getPassSecu(req: Request, res: Response) {
     if (fa.securityPasses.length > 0) {
       fa.securityPasses.forEach((pass: any) => {
         if (Object.keys(pass).length) {
+          pass.linkedFA = fa.count;
           result.push(pass);
         }
       });

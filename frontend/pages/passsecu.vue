@@ -39,6 +39,11 @@
           <template #[`item.comment`]="{ item }">
             {{ item.comment }}
           </template>
+          <template #[`item.linkedFA`]="{ item }">
+            <a target="_blank" :href="`/fa/${item.linkedFA}`">{{
+              item.linkedFA
+            }}</a>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -46,6 +51,7 @@
 </template>
 
 <script lang="ts">
+import { values } from "lodash";
 import Vue from "vue";
 import { Header } from "~/utils/models/Data";
 
@@ -75,6 +81,7 @@ export default Vue.extend({
           width: "30%",
           sortable: false,
         },
+        { text: "FA", value: "linkedFA", width: "5%" },
       ],
       pass: [],
     };
@@ -113,7 +120,7 @@ export default Vue.extend({
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
       let csv =
-        "Email;ID;Nom Prenom;Pass_entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5 \n";
+        "Email;ID;Nom Prenom;Pass_entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;FA \n";
       for (let i = 0; i < this.pass.length; i++) {
         csv +=
           this.pass[i].email +
@@ -147,7 +154,8 @@ export default Vue.extend({
           (this.pass[i].timeslot
             ? this.pass[i].timeslot.includes("dicmanche 20h-00h")
             : "false") +
-          ";;;;;" +
+          ";;;;;;" +
+          this.pass[i].linkedFA +
           "\n";
       }
 
