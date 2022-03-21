@@ -124,7 +124,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 /**
  * the goal of this page is to make it easier for SG to enter new consumption and count them
  * after changing a barrel the SG goes to this page and enter the coast of that barrel (totalConsumption)
@@ -262,7 +262,7 @@ export default {
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
           this.users = res.data.filter((user) => {
-            if (user.team.includes("hard")) {
+            if (user.team.includes("hard") && !user.team.includes("matos")) {
               return user;
             }
           });
@@ -281,7 +281,7 @@ export default {
   },
 
   methods: {
-    hasRole(role: string) {
+    hasRole(role) {
       return this.$accessor.user.hasRole(role);
     },
     isFloat(number) {
