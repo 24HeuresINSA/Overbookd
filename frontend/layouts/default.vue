@@ -241,6 +241,12 @@ export default {
           to: "/transactions",
         },
         {
+          icon: "mdi-passport",
+          title: "Pass sécu",
+          roles: "secu",
+          to: "/passsecu",
+        },
+        {
           icon: "mdi-fire",
           roles: "hard",
           title: "OverTinder",
