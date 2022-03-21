@@ -1,19 +1,22 @@
-import { actionTree, mutationTree, getterTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
-import {Timeframe} from "~/utils/models/timeframe";
 import user from "~/middleware/user";
 
 declare interface filter {
   user: {
     search: string;
     team: string;
+    sortBy: {
+      isAscending: boolean;
+      field: string;
+    };
   };
   FT: {
     search: string;
@@ -27,6 +30,10 @@ export const state = () => ({
     user: {
       search: "",
       team: "",
+      sortBy: {
+        isAscending: false,
+        field: "charisma",
+      },
     },
     FT: {
       search: "",
@@ -89,7 +96,10 @@ export const actions = actionTree(
     async getUsers({ commit }: any) {
       const ret = await safeCall(this, RepoFactory.userRepo.getAllUsers(this));
       if (ret) {
-        commit("SET_USERS", ret.data);
+        let users = ret.data as User[];
+        // filter useless users
+        users = users.filter((user: User) => user.team.length > 0);
+        commit("SET_USERS", users);
       }
       return ret;
     },
@@ -129,15 +139,20 @@ export const actions = actionTree(
     /**
      * get all timespans
      */
-    async getTimespans({ commit , state}: any) {
+    async getTimespans({ commit, state }: any) {
       const ret = await safeCall(this, TimeSpanRepo.getAll(this));
       if (ret) {
-        commit("SET_TIMESPANS", ret.data.map((ts: any) => ({
-          ...ts,
-          start: new Date(ts.start),
-          end: new Date(ts.end),
-          timed: true,
-          FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general.name })));
+        commit(
+          "SET_TIMESPANS",
+          ret.data.map((ts: any) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+              .name,
+          }))
+        );
       }
       return ret;
     },
@@ -161,11 +176,6 @@ export const actions = actionTree(
       await dispatch("getFAs");
       await dispatch("getTimeslots");
       await dispatch("getTimespans");
-      state.timespans.forEach((timespan: TimeSpan) => {
-        // @ts-ignore
-        state.timespanToFTName[timespan._id] = state.FTs.find((FT: FT) =>
-            FT.timeframes.find((timeframe) => timespan.timeframeID === timeframe._id)).general?.name || "";
-      });
     },
 
     /**
@@ -207,10 +217,35 @@ export const actions = actionTree(
     /**
      * assign user to timespan
      */
-    async assignUserToTimespan({ commit, state }: any, data: { userID: string; timespanID: string }) {
-      const res = await safeCall(this, TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID));
+    async assignUserToTimespan(
+      { commit, state }: any,
+      data: { userID: string; timespanID: string }
+    ) {
+      const res = await safeCall(
+        this,
+        TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID)
+      );
       if (res) {
-        const assignedTimeSpan = {...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id)};
+        const assignedTimeSpan = {
+          ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
+        };
+        assignedTimeSpan.assigned = res.data.assigned;
+        commit("SET_ASSIGNMENT", assignedTimeSpan);
+      }
+    },
+
+    /**
+     * unassign user from timespan
+     */
+    async unassign({ commit, state }: any, timeSpanID: string) {
+      const res = await safeCall(
+        this,
+        TimeSpanRepo.unassignUserFromTimespan(this, timeSpanID)
+      );
+      if (res) {
+        const assignedTimeSpan = {
+          ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
+        };
         assignedTimeSpan.assigned = res.data.assigned;
         commit("SET_ASSIGNMENT", assignedTimeSpan);
       }
@@ -222,8 +257,8 @@ export const getters = getterTree(state, {
   filteredUsers: (state: any) => {
     // filter users by filters and search
     const { user } = state.filters;
-    const { search, team } = user;
-    let users = state.users;
+    const {search, team} = user;
+    let users = [...state.users];
 
     if (search && search.length > 0) {
       const options = {
@@ -240,6 +275,20 @@ export const getters = getterTree(state, {
           return userTeams.filter((v) => team.includes(v)).length > 0;
         }
         return false;
+      });
+    }
+
+    if (user.sortBy.field) {
+      users = users.sort((a: User, b: User) => {
+        // @ts-ignore
+        if (a[user.sortBy.field] < b[user.sortBy.field]) {
+          return user.sortBy.isAscending ? -1 : 1;
+        }
+        // @ts-ignore
+        if (a[user.sortBy.field] > b[user.sortBy.field]) {
+          return user.sortBy.isAscending ? 1 : -1;
+        }
+        return 0;
       });
     }
     return users;
@@ -280,7 +329,7 @@ export const getters = getterTree(state, {
       let availableTimeSpans = state.timespans.filter((ts: any) => {
         let isAvailable = false;
         getters.selectedUserAvailabilities.forEach((av: any) => {
-          if(!av){
+          if (!av) {
             return;
           }
           if (
@@ -302,7 +351,9 @@ export const getters = getterTree(state, {
         }
       });
       // filter only avaialble timespans
-      availableTimeSpans = availableTimeSpans.filter((ts: TimeSpan) => !ts.assigned)
+      availableTimeSpans = availableTimeSpans.filter(
+        (ts: TimeSpan) => !ts.assigned
+      );
       return availableTimeSpans;
     }
     return [];

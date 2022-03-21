@@ -5,7 +5,7 @@
         <span class="headline">Confirmation</span>
       </v-card-title>
       <v-card-text>
-        <slot>Validez-vous cetta action ?</slot>
+        <slot>Validez-vous cette action ?</slot>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

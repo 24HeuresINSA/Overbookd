@@ -95,17 +95,17 @@ export default {
   data: function () {
     return {
       headers: [
-        { text: "date", value: "date" },
-        { text: "debut", value: "start" },
+        { text: "Date", value: "date" },
+        { text: "Début", value: "start" },
         {
-          text: "date de fin",
+          text: "Date de fin",
           value: "dateEnd",
         },
         {
-          text: "fin",
+          text: "Fin",
           value: "end",
         },
-        { text: "action", value: "action" },
+        { text: "Action", value: "action" },
       ],
       store: this.$accessor.FA,
       isEditDialogOpen: false,
@@ -147,7 +147,7 @@ export default {
       );
 
       if (start > end) {
-        alert("La date de début doit être inférieur à la date de fin");
+        alert("La date de début doit être inférieure à la date de fin");
         return;
       }
       if (start === end) {

@@ -43,4 +43,4 @@ npm-debug.log
 *.old
 
 dist
-images
+images/*

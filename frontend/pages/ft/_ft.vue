@@ -1,6 +1,6 @@
 <template>
   <v-container style="display: grid">
-    <h1>Fiche Tache 🤩</h1>
+    <h1>Fiche Tâche</h1>
 
     <v-row>
       <v-col md="12">
@@ -323,6 +323,7 @@ export default Vue.extend({
     // fetch FT and conficts
     await this.$accessor.FT.getAndSetFT(this.FTID);
     await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
+    document.title = "FT:" + this.FTID;
   },
 
   methods: {
