@@ -203,9 +203,9 @@
 
 <script>
 import OverChips from "~/components/atoms/overChips";
-import { safeCall } from "../../utils/api/calls";
+import {safeCall} from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
-import { isValidated } from "~/utils/roles/index.ts";
+import {isValidated} from "~/utils/roles/index.ts";
 import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
 
 export default {

@@ -1,21 +1,21 @@
 <template>
   <v-card>
     <v-data-table
-        v-model="selectedItems"
-        :headers="headers"
-        :items="tableItems"
-        class="elevation-1"
-        group-by="date"
-        :show-select="!editorMode"
-        disable-pagination
-        dense
+      v-model="selectedItems"
+      :headers="headers"
+      :items="tableItems"
+      class="elevation-1"
+      group-by="date"
+      :show-select="!editorMode"
+      disable-pagination
+      dense
     >
       <template #top>
         <v-toolbar flat>
           <v-toolbar-title>
             <v-icon>mdi-clock-outline</v-icon>
             <span class="title"> {{ timeslots[0].groupTitle }}</span>
-            <br/>
+            <br />
             <span class="text-caption">
               {{ timeslots[0].groupDescription }}</span
             >
@@ -31,24 +31,24 @@
           mdi-delete
         </v-icon>
         <ConfirmDialog ref="confirmDeleteSingle" @confirm="removeItem(item)"
-        >Le créneau sera supprimé de façon <b>irreversible</b> !
+          >Le créneau sera supprimé de façon <b>irreversible</b> !
         </ConfirmDialog>
       </template>
       <template
-          v-if="!editorMode"
-          #[`item.data-table-select`]="{ isSelected, select, item }"
+        v-if="!editorMode"
+        #[`item.data-table-select`]="{ isSelected, select, item }"
       >
         <v-simple-checkbox
-            v-if="item.isSelected"
-            :value="item.isSelected"
-            color="primary"
-            :disabled="item.off"
+          v-if="item.isSelected"
+          :value="item.isSelected"
+          color="primary"
+          :disabled="item.off"
         ></v-simple-checkbox>
         <v-simple-checkbox
-            v-else
-            :value="isSelected"
-            color="primary"
-            @input="select($event)"
+          v-else
+          :value="isSelected"
+          color="primary"
+          @input="select($event)"
         ></v-simple-checkbox>
       </template>
       <template #[`group.header`]="{ group, headers, toggle, isOpen }">
@@ -83,35 +83,35 @@
                     <v-row>
                       <v-col>
                         <v-text-field
-                            v-model="charisma"
-                            type="number"
-                            label="Charisme"
-                            single-line
-                            :rules="charismaRules"
+                          v-model="charisma"
+                          type="number"
+                          label="Charisme"
+                          single-line
+                          :rules="charismaRules"
                         ></v-text-field>
                       </v-col>
                     </v-row>
                     <v-row>
                       <v-col>
                         <OverDatePicker
-                            label="Date de début"
-                            @update:date="dayStart = $event"
+                          label="Date de début"
+                          @update:date="dayStart = $event"
                         >
                         </OverDatePicker>
                         <OverDatePicker
-                            label="Date de fin"
-                            @update:date="dayEnd = $event"
+                          label="Date de fin"
+                          @update:date="dayEnd = $event"
                         >
                         </OverDatePicker>
                       </v-col>
                       <v-col>
                         <OverTimePicker
-                            label="Heure de début"
-                            @update:time="hourStart = $event"
+                          label="Heure de début"
+                          @update:time="hourStart = $event"
                         ></OverTimePicker>
                         <OverTimePicker
-                            label="Heure de fin"
-                            @update:time="hourEnd = $event"
+                          label="Heure de fin"
+                          @update:time="hourEnd = $event"
                         ></OverTimePicker>
                       </v-col>
                     </v-row>
@@ -120,24 +120,24 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="dialog = false">Cancel</v-btn>
+                <v-btn color="primary" text @click="dialog = false"
+                  >Cancel</v-btn
+                >
                 <v-btn color="primary" text @click="addTimeslot()">Add</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
-
         </v-row>
         <ConfirmDialog ref="confirmDelete" @confirm="removeTable"
-        >Les créneaux sont supprimés de façon <b>irreversible.</b>
+          >Les créneaux sont supprimés de façon <b>irreversible.</b>
         </ConfirmDialog>
         <div v-if="!editorMode">
-          <v-btn color="success" @click="$refs.confirm.open()"
-          >
+          <v-btn color="success" @click="$refs.confirm.open()">
             <v-icon left> mdi-plus</v-icon>
             Valider mes disponibilités
           </v-btn>
           <ConfirmDialog ref="confirm" @confirm="acceptSelection()"
-          >Les créneaux que tu as choisis deviendront
+            >Les créneaux que tu as choisis deviendront
             <b>non modifiable !</b></ConfirmDialog
           >
         </div>
@@ -150,7 +150,7 @@
 import Vue from "vue";
 import TimeslotDialog from "~/components/atoms/TimeslotDialog.vue";
 import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
-import {Timeslot} from "utils/models/repo";
+import { Timeslot } from "utils/models/repo";
 import OverDatePicker from "../atoms/OverDatePicker.vue";
 import OverTimePicker from "../atoms/OverTimePicker.vue";
 
@@ -160,7 +160,7 @@ export default Vue.extend({
     TimeslotDialog,
     ConfirmDialog,
     OverDatePicker,
-    OverTimePicker
+    OverTimePicker,
   },
   props: {
     groupTitle: {
@@ -192,42 +192,51 @@ export default Vue.extend({
       charisma: 10,
       valid: false,
       charismaRules: [
-        (v:any) => !!v || "Charisma is required",
-        (v:any) => (v && v >= 0) || "Charisma must be greater than 0",
+        (v: any) => !!v || "Charisma is required",
+        (v: any) => (v && v >= 0) || "Charisma must be greater than 0",
       ],
     };
   },
   computed: {
     tableItems(): any {
-      return this.timeslots.map((timeslot: Timeslot) => {
-        return {
-          id: timeslot._id,
-          name: timeslot.groupTitle,
-          start:
+      return this.timeslots
+        .map((timeslot: Timeslot) => {
+          return {
+            id: timeslot._id,
+            name: timeslot.groupTitle,
+            start:
               this.padTime(new Date(timeslot.timeFrame.start).getHours()) +
               ":" +
               this.padTime(new Date(timeslot.timeFrame.start).getMinutes()),
-          end:
+            end:
               this.padTime(new Date(timeslot.timeFrame.end).getHours()) +
               ":" +
               this.padTime(new Date(timeslot.timeFrame.end).getMinutes()),
-          date:
+            date:
               new Date(timeslot.timeFrame.start).getFullYear() +
               "-" +
-              (new Date(timeslot.timeFrame.start).getMonth() + 1) +
+              String(
+                new Date(timeslot.timeFrame.start).getMonth() + 1
+              ).padStart(2, "0") +
               "-" +
-              new Date(timeslot.timeFrame.start).getDate() +
+              String(new Date(timeslot.timeFrame.start).getDate()).padStart(
+                2,
+                "0"
+              ) +
               " " +
               new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
                 weekday: "long",
               }),
-          charisma: timeslot.charisma,
-          isSelected: this.$accessor.user.me.availabilities.includes(
+            charisma: timeslot.charisma,
+            isSelected: this.$accessor.user.me.availabilities.includes(
               timeslot._id
-          ),
-          off: this.userSelectedAvailabilities.includes(timeslot._id),
-        };
-      }).sort((a:any, b:any) => a.start.toLowerCase() < b.start.toLowerCase() ? -1 : 1);
+            ),
+            off: this.userSelectedAvailabilities.includes(timeslot._id),
+          };
+        })
+        .sort((a: any, b: any) =>
+          a.start.toLowerCase() < b.start.toLowerCase() ? -1 : 1
+        );
     },
     timeslots(): Timeslot[] {
       return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
@@ -261,7 +270,7 @@ export default Vue.extend({
         },
       ];
       if (this.editorMode) {
-        h.push({text: "Actions", value: "actions", sortable: false});
+        h.push({ text: "Actions", value: "actions", sortable: false });
       }
       return h;
     },
@@ -293,34 +302,34 @@ export default Vue.extend({
       if (charisma) {
         if (charisma < 100) {
           charismaMessage =
-              " Snif, tu n'as pas coché beaucoup de créneaux," +
-              " ton charisme est assez faible pour le moment," +
-              " il t'en faudrait plus si tu veux faire bénévole." +
-              " Promis on ne t'affectera pas sur toutes tes dispo ";
+            " Snif, tu n'as pas coché beaucoup de créneaux," +
+            " ton charisme est assez faible pour le moment," +
+            " il t'en faudrait plus si tu veux faire bénévole." +
+            " Promis on ne t'affectera pas sur toutes tes dispo ";
         } else if (charisma >= 100 && charisma < 150) {
           charismaMessage =
-              " C'est pas mal, mais tu es sûr que tu n'as pas d'autres dispo ?" +
-              " Ton charisme est faible pour le moment, il t'en faudrait plus si" +
-              " tu veux être sûr de faire bénévole. Rappelle-toi aussi qu'on ne" +
-              " t'affectera pas sur toutes tes dispo, on te laissera du temps promis ";
+            " C'est pas mal, mais tu es sûr que tu n'as pas d'autres dispo ?" +
+            " Ton charisme est faible pour le moment, il t'en faudrait plus si" +
+            " tu veux être sûr de faire bénévole. Rappelle-toi aussi qu'on ne" +
+            " t'affectera pas sur toutes tes dispo, on te laissera du temps promis ";
         } else if (charisma >= 150 && charisma < 200) {
           charismaMessage =
-              " Cool tu mis pas mal de dispo, mais tu es sûr que tu n'as pas encore" +
-              " quelques autres dispo pour venir nous aider ? Rappelle-toi aussi qu'on" +
-              " ne t'affectera pas sur toutes tes dispo, on te laissera du temps promis";
+            " Cool tu mis pas mal de dispo, mais tu es sûr que tu n'as pas encore" +
+            " quelques autres dispo pour venir nous aider ? Rappelle-toi aussi qu'on" +
+            " ne t'affectera pas sur toutes tes dispo, on te laissera du temps promis";
         } else {
           charismaMessage =
-              " Au top ! Tu as mis plein de créneau, motive tes potes à faire pareil" +
-              " et n'oublie pas que tu peux toujours en rajouter si tu veux nous aider" +
-              " encore plus !";
+            " Au top ! Tu as mis plein de créneau, motive tes potes à faire pareil" +
+            " et n'oublie pas que tu peux toujours en rajouter si tu veux nous aider" +
+            " encore plus !";
         }
       } else {
         charismaMessage = "Tu n'as pas de charismes ?...";
       }
       //dont need complex message if the user is a hard
       charismaMessage = this.$accessor.user.hasRole("hard")
-          ? "Créneaux selectionnés validés"
-          : charismaMessage;
+        ? "Créneaux selectionnés validés"
+        : charismaMessage;
       this.$store.dispatch("timeslot/setCreateStatus", charismaMessage);
       this.selectedItems = [];
     },
@@ -347,23 +356,25 @@ export default Vue.extend({
       const end = new Date(this.dayEnd + "T" + this.hourEnd + ":00");
       if (start.getTime() > end.getTime()) {
         await this.$store.dispatch(
-            "timeslot/setCreateStatus",
-            "La date de fin doit être supérieure à la date de début"
+          "timeslot/setCreateStatus",
+          "La date de fin doit être supérieure à la date de début"
         );
         return;
       }
-      let timeslot = [{
-        timeFrame: {
-          start: start,
-          end: end,
+      let timeslot = [
+        {
+          timeFrame: {
+            start: start,
+            end: end,
+          },
+          groupTitle: this.groupTitle,
+          groupDescription: this.timeslots[0].groupDescription,
+          charisma: this.charisma,
         },
-        groupTitle: this.groupTitle,
-        groupDescription: this.timeslots[0].groupDescription,
-        charisma: this.charisma,
-      }]
+      ];
       await this.$store.dispatch("timeslot/addTimeslots", timeslot);
       this.dialog = false;
-    }
+    },
   },
 });
 </script>

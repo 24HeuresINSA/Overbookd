@@ -121,17 +121,20 @@
       <v-btn v-if="FT.count > 1" small fab :href="`/ft/${FT.count - 1}`">
         <v-icon small>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-btn v-if="hasRole('humain')" color="red" @click="readyForAssignment"
-        >prêt pour affectation
+      <v-btn
+          v-if="hasRole('humain') || FT.status !== 'ready'"
+          color="red"
+          @click="readyForAssignment"
+      >prêt pour affectation
       </v-btn>
       <v-btn
-        v-if="validators.length === 1"
-        color="red"
-        @click="
+          v-if="validators.length === 1"
+          color="red"
+          @click="
           v = validators[0];
           isDialogOpen.refused = true;
         "
-        >refusé par {{ validators[0] }}
+      >refusé par {{ validators[0] }}
       </v-btn>
       <v-menu v-if="validators.length > 1" offset-y>
         <template #activator="{ attrs, on }">
@@ -181,9 +184,9 @@
       </v-menu>
 
       <v-btn
-        v-if="FT.status == 'draft' || FT.status == 'refused'"
-        color="secondary"
-        @click="isDialogOpen.submit = true"
+          v-if="FT.status === 'draft' || FT.status === 'refused'"
+          color="secondary"
+          @click="isDialogOpen.submit = true"
         >Soumettre a validation
       </v-btn>
       <v-btn color="warning" @click="saveFT">sauvegarder</v-btn>
@@ -197,18 +200,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Snack } from "~/utils/models/snack";
-import { Header } from "~/utils/models/Data";
-import { User } from "~/utils/models/repo";
+import {Snack} from "~/utils/models/snack";
+import {Header} from "~/utils/models/Data";
+import {User} from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
 import FormCard from "~/components/organisms/form/FormCard.vue";
-import { FT, SmallTypes } from "~/utils/models/FT";
+import {FT, SmallTypes} from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
 
 interface Data {
   FTID: number;

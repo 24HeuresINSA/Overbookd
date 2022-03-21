@@ -48,7 +48,6 @@ export interface requirementTeam {
   amount: number;
 }
 
-
 export enum SmallTypes {
   QUINCAILLERIE = "QUINCAILLERIE",
   OUTILLAGE = "OUTILLAGE",

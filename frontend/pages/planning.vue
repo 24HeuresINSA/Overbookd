@@ -2,54 +2,64 @@
   <div>
     <h1>Planning 📆</h1>
     <v-row class="d-flex justify-space-around py-6">
-      <h1 style="width: 25%; text-align: center;">Mon planning</h1>
+      <h1 style="width: 25%; text-align: center">Mon planning</h1>
       <v-switch
-          v-model="switchType"
-          class="switch-width"
-          @change="getOrgaRequis"
+        v-model="switchType"
+        class="switch-width"
+        @change="getOrgaRequis"
       ></v-switch>
-      <h1 style="width: 25%; text-align: center;">Tous</h1>
+      <h1 style="width: 25%; text-align: center">Tous</h1>
     </v-row>
     <div v-if="!loading">
-      <v-list class="my-4" v-for="(plan, index) in orgaRequis" :key="index">
+      <v-list v-for="(plan, index) in orgaRequis" :key="index" class="my-4">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title style="font-weight: bold; font-size: 25px;">{{ plan._id.username }}</v-list-item-title>
+            <v-list-item-title style="font-weight: bold; font-size: 25px"
+              >{{ plan._id.username }}
+            </v-list-item-title>
             <v-data-table
-                :headers="[
-              { text: 'FT', value: 'name', width: '30%' },
-              { text: 'id', value: 'count', align: 'center', width: '10%'},
-              { text: 'status', value: 'status', align: 'center', width: '10%'},
-              { text: 'début', value: 'start', align: 'center', width: '10%'},
-              { text: 'fin', value: 'end', align: 'center', width: '10%'},
-              { text: 'conflits', value: 'conflits', width: '30%'},
-            ]"
-                :items="plan.fts"
-                :hide-default-footer="true"
-                :items-per-page="-1"
+              :headers="[
+                { text: 'FT', value: 'name', width: '30%' },
+                { text: 'id', value: 'count', align: 'center', width: '10%' },
+                {
+                  text: 'status',
+                  value: 'status',
+                  align: 'center',
+                  width: '10%',
+                },
+                {
+                  text: 'début',
+                  value: 'start',
+                  align: 'center',
+                  width: '10%',
+                },
+                { text: 'fin', value: 'end', align: 'center', width: '10%' },
+                { text: 'conflits', value: 'conflits', width: '30%' },
+              ]"
+              :items="plan.fts"
+              :hide-default-footer="true"
+              :items-per-page="-1"
             >
               <template #item.status="{ item }">
-                <v-chip
-                    :color="getColor(item.status)"
-                >
+                <v-chip :color="getColor(item.status)">
                   {{ item.status }}
                 </v-chip>
               </template>
               <template #item.count="{ item }">
-                <a :href="/ft/+item.count">{{ item.count }}</a>
+                <a :href="/ft/ + item.count">{{ item.count }}</a>
               </template>
               <template #item.start="{ item }">
-                {{ (new Date(item.start)).toLocaleString() }}
+                {{ new Date(item.start).toLocaleString() }}
               </template>
               <template #item.end="{ item }">
-                {{ (new Date(item.end)).toLocaleString() }}
+                {{ new Date(item.end).toLocaleString() }}
               </template>
               <template #item.conflits="{ item }">
                 <v-chip
-                    v-for="conflit in item.conflits"
-                    :key="conflit._id"
-                    :color="getColor(conflit.type)"
-                    class="mx-2"
+                  v-for="conflit in item.conflits"
+                  :key="conflit._id"
+                  :color="getColor(conflit.type)"
+                  class="mx-2"
                 >
                   {{ getText(conflit.type) }}
                 </v-chip>
@@ -60,10 +70,7 @@
       </v-list>
     </div>
     <div class="d-flex justify-center" v-else>
-      <v-progress-circular
-          indeterminate
-          color="grey"
-      ></v-progress-circular>
+      <v-progress-circular indeterminate color="grey"></v-progress-circular>
     </div>
     <div class="mt-10" v-if="!switchType">
       <v-sheet tile height="54" class="d-flex">
@@ -76,12 +83,12 @@
         </v-btn>
       </v-sheet>
       <v-calendar
-          ref="FormCalendar"
-          color="primary"
-          type="week"
-          v-model="selectedDate"
-          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-          :events="events"
+        ref="FormCalendar"
+        color="primary"
+        type="week"
+        v-model="selectedDate"
+        :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+        :events="events"
       ></v-calendar>
     </div>
   </div>
@@ -103,7 +110,13 @@ export default Vue.extend({
     };
   },
   async mounted() {
-    await this.getOrgaRequis();
+    if (this.$accessor.user.hasRole("hard")) {
+      await this.getOrgaRequis();
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
   methods: {
     async getOrgaRequis() {

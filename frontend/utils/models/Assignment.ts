@@ -1,5 +1,5 @@
-import { FT } from "./FT";
-import { Timeslot, User } from "./repo";
+import {FT} from "./FT";
+import {Timeslot, User} from "./repo";
 
 export interface Assignment {
     name: string;

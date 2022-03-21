@@ -58,11 +58,17 @@ export default {
   },
 
   async mounted() {
-    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
-    this.users = (await this.$axios("/user")).data;
-    this.users = this.users.filter(({ pp }) => pp !== undefined);
-    this.user = this.users[0];
-    this.next();
+    if (this.$accessor.user.hasRole("hard")) {
+      this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
+      this.users = (await this.$axios("/user")).data;
+      this.users = this.users.filter(({ pp }) => pp !== undefined);
+      this.user = this.users[0];
+      this.next();
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
 
   methods: {

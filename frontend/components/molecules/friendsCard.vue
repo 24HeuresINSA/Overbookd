@@ -20,10 +20,7 @@
           <v-img
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
           ></v-img>
-          <p>
-            Pour demander un orga en ami, mets le prénom.nom de tes
-            potes !
-          </p>
+          <p>Pour demander un orga en ami, mets le prénom.nom de tes potes !</p>
         </v-container>
       </v-card-text>
     </div>

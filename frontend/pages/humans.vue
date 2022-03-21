@@ -347,11 +347,7 @@ export default {
   },
 
   async mounted() {
-    if (!this.hasRole("hard")) {
-      await this.$router.push({
-        path: "/index",
-      });
-    } else {
+    if (this.$accessor.user.hasRole("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
       this.users.filter((user) => user.isValid);
@@ -375,6 +371,10 @@ export default {
           sortable: false,
         });
       }
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
     }
   },
 
