@@ -59,16 +59,16 @@ export default Vue.extend({
   data(): Data {
     return {
       headers: [
-        { text: "Nom", value: "fullname" },
+        { text: "Nom", value: "fullname", width: "15%" },
         { text: "Tél", value: "phone" },
-        { text: "Mail", value: "email" },
+        { text: "Mail", value: "email", width: "10%" },
         {
           text: "Plaque",
           value: "licensePlate",
           width: "10%",
           sortable: false,
         },
-        { text: "Horaire", value: "timeslot", sortable: false },
+        { text: "Horaire", value: "timeslot", sortable: false, width: "15%" },
         {
           text: "Commentaire",
           value: "comment",
