@@ -347,6 +347,7 @@ export default {
   },
 
   async mounted() {
+    await this.initStore();
     if (this.$accessor.user.hasRole("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
@@ -379,6 +380,10 @@ export default {
   },
 
   methods: {
+    async initStore() {
+      await this.$accessor.user.fetchUser();
+      await this.$accessor.timeslot.fetchTimeslots();
+    },
     isCpUseful(item) {
       if (item.team) {
         return item.team.includes("hard");

@@ -43,7 +43,6 @@
         style="color: red; margin-left: 4px; font-weight: bold"
         v-text="version"
       />
-      <<<<<<< HEAD ======= >>>>>>> pre-prod
       <v-spacer />
       <div v-if="isPreProd" class="watermark">PREPROD</div>
       <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
@@ -180,12 +179,6 @@ export default {
           title: "Créer dispos",
           roles: "humain",
           to: "/createavailibility",
-        },
-        {
-          icon: "mdi-clock",
-          title: "Modifier dispos",
-          roles: "humain",
-          to: "/modifyavailabilities",
         },
         {
           icon: "mdi-calendar",
