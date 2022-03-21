@@ -116,6 +116,34 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
   }
 };
 
+export const removeAvailability: RequestHandler = async function (req, res) {
+  const id = req.body.userID;
+  const timeslotId = req.body.timeslotID;
+  try {
+    const user = await UserModel.findById(id);
+    if (user) {
+      if (user.availabilities) {
+        const newAvailabilities = user.availabilities;
+        newAvailabilities.filter((item) => {
+          item !== timeslotId;
+        });
+        user.availabilities = newAvailabilities;
+      }
+      await user.save();
+      res.status(StatusCodes.OK).json(new SafeUser(user));
+    } else {
+      res.sendStatus(StatusCodes.NOT_FOUND).json({
+        msg: "User not found",
+      });
+    }
+  } catch (e) {
+    logger.err(e);
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "Error, contact your admin",
+    });
+  }
+};
+
 export const addNotificationByFullName: RequestHandler = async function (
   req,
   res

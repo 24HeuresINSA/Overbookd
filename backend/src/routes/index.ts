@@ -3,6 +3,7 @@ import { getConfig, setConfig } from "./Config";
 import mCors from "../cors";
 import {
   addAvailabilities,
+  removeAvailability,
   addNotificationByFullName,
   addNotificationByID,
   broadcastNotification,
@@ -72,6 +73,11 @@ userRouter.put(
 userRouter.post("/broadcast", authMiddleware.protect(), broadcastNotification);
 userRouter.post("/friends", authMiddleware.protect(), createFriendship);
 userRouter.post("/availabilities", authMiddleware.protect(), addAvailabilities);
+userRouter.post(
+  "/removeAvailability",
+  authMiddleware.protect(),
+  removeAvailability
+);
 const imageUpload = multer({
   dest: "images",
 });
