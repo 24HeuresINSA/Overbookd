@@ -51,7 +51,7 @@ import { Header } from "~/utils/models/Data";
 
 interface Data {
   headers: Header[];
-  pass: [];
+  pass: any[];
 }
 
 export default Vue.extend({
