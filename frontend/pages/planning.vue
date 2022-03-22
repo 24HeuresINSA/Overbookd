@@ -83,12 +83,12 @@
         </v-btn>
       </v-sheet>
       <v-calendar
-        ref="FormCalendar"
-        color="primary"
-        type="week"
-        v-model="selectedDate"
-        :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-        :events="events"
+          ref="FormCalendar"
+          v-model="selectedDate"
+          color="primary"
+          type="week"
+          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+          :events="events"
       ></v-calendar>
     </div>
   </div>

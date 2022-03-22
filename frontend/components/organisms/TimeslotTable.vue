@@ -121,8 +121,8 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="dialog = false"
-                  >Cancel</v-btn
-                >
+                >Cancel
+                </v-btn>
                 <v-btn color="primary" text @click="addTimeslot()">Add</v-btn>
               </v-card-actions>
             </v-card>
@@ -150,7 +150,7 @@
 import Vue from "vue";
 import TimeslotDialog from "~/components/atoms/TimeslotDialog.vue";
 import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
-import { Timeslot } from "utils/models/repo";
+import {Timeslot} from "utils/models/repo";
 import OverDatePicker from "../atoms/OverDatePicker.vue";
 import OverTimePicker from "../atoms/OverTimePicker.vue";
 

@@ -10,8 +10,8 @@
           v-if="!isDisabled"
           complete
           :store="store"
-        @add-timeframe="addTimeframe"
-        @set-timeframes="setTimeframes"
+          @add-timeframe="addTimeframe"
+          @set-timeframes="setTimeframes"
       ></TimeframeSelector>
     </v-card-text>
   </v-card>

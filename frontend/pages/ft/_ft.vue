@@ -187,7 +187,7 @@
           v-if="FT.status === 'draft' || FT.status === 'refused'"
           color="secondary"
           @click="isDialogOpen.submit = true"
-        >Soumettre a validation
+      >Soumettre a validation
       </v-btn>
       <v-btn color="warning" @click="saveFT">sauvegarder</v-btn>
       <v-btn small fab :href="`/ft/${FT.count + 1}`">
