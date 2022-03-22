@@ -247,7 +247,7 @@ export async function myPlanning(req: Request, res: Response) {
         as: "conflicts"
       })
       .group({
-          _id: "$timeframes.required.user",
+          _id: "$timeframes.required.user.username",
           fts: {
             $push: {
               count: "$count",
@@ -259,9 +259,7 @@ export async function myPlanning(req: Request, res: Response) {
             },
           }
         }
-      )
-      .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
-      .sort("_id");
+      );
   res.json(FTs);
 }
 
@@ -295,7 +293,7 @@ export async function getOrgaRequis(req: Request, res: Response) {
         as: "conflicts"
       })
       .group({
-          _id: "$timeframes.required.user",
+          _id: "$timeframes.required.user.username",
           fts: {
             $push: {
               count: "$count",
@@ -309,6 +307,6 @@ export async function getOrgaRequis(req: Request, res: Response) {
         }
       )
       .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
-      .sort("_id.username");
+      .sort("_id");
   res.json(FTs);
 }
