@@ -4,14 +4,15 @@
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <v-icon
-          right
-          small
-          v-bind="attrs"
-          v-on="on"
-          class="icon"
-          @click.stop="toggleUserDialog"
+            right
+            small
+            v-bind="attrs"
+            class="icon"
+            v-on="on"
+            @click.stop="toggleUserDialog"
         >
-          mdi-information</v-icon
+          mdi-information
+        </v-icon
         >
       </template>
       <span>{{ user.comment }}</span>
@@ -33,13 +34,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { User } from "~/utils/models/repo";
+import Vue, {PropType} from "vue";
+import {User} from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 
 export default Vue.extend({
   name: "UserResume",
-  components: { UserInformation },
+  components: {UserInformation},
   props: {
     user: {
       type: Object as PropType<User>,

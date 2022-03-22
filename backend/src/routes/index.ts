@@ -47,6 +47,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
+import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -362,6 +363,7 @@ baseRouter.use("/location", locationRouter);
 baseRouter.use("/conflict", conflictRouter);
 baseRouter.use("/conflict/ft", TFConflictRouter);
 baseRouter.use("/timespan", timespanRouter);
+baseRouter.get("/passsecu", authMiddleware.protect(), getPassSecu);
 
 baseRouter.post("/issue", issueHandler);
 

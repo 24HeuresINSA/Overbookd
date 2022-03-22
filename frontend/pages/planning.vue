@@ -11,12 +11,12 @@
       <h1 style="width: 25%; text-align: center">Tous</h1>
     </v-row>
     <div v-if="!loading">
-      <v-list class="my-4" v-for="(plan, index) in orgaRequis" :key="index">
+      <v-list v-for="(plan, index) in orgaRequis" :key="index" class="my-4">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title style="font-weight: bold; font-size: 25px">{{
-              plan._id.username
-            }}</v-list-item-title>
+            <v-list-item-title style="font-weight: bold; font-size: 25px"
+              >{{ plan._id.username }}
+            </v-list-item-title>
             <v-data-table
               :headers="[
                 { text: 'FT', value: 'name', width: '30%' },
@@ -69,10 +69,10 @@
         </v-list-item>
       </v-list>
     </div>
-    <div class="d-flex justify-center" v-else>
+    <div v-else class="d-flex justify-center">
       <v-progress-circular indeterminate color="grey"></v-progress-circular>
     </div>
-    <div class="mt-10" v-if="!switchType">
+    <div v-if="!switchType" class="mt-10">
       <v-sheet tile height="54" class="d-flex">
         <v-btn icon class="ma-2" @click="$refs.FormCalendar.prev()">
           <v-icon>mdi-chevron-left</v-icon>
@@ -83,12 +83,12 @@
         </v-btn>
       </v-sheet>
       <v-calendar
-        ref="FormCalendar"
-        color="primary"
-        type="week"
-        v-model="selectedDate"
-        :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-        :events="events"
+          ref="FormCalendar"
+          v-model="selectedDate"
+          color="primary"
+          type="week"
+          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+          :events="events"
       ></v-calendar>
     </div>
   </div>

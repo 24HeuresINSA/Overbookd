@@ -14,15 +14,21 @@
         {{ formatMilliToLocalTime(item.end) }}
       </template>
       <template #[`item.action`]="{ index }">
-        <v-btn v-if="!isDisabled" icon>
-          <v-icon @click="deleteTimeframe(index)">mdi-trash-can</v-icon>
-        </v-btn>
-        <v-btn icon @click="editTimeframeRequirements(index)">
-          <v-icon>mdi-account-multiple-plus-outline</v-icon>
-        </v-btn>
-        <v-btn icon @click="editTimeframe(index)">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
+        <div v-if="!isDisabled">
+          <v-btn icon>
+            <v-icon @click="deleteTimeframe(index)">mdi-trash-can</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="!isDisabled"
+            icon
+            @click="editTimeframeRequirements(index)"
+          >
+            <v-icon>mdi-account-multiple-plus-outline</v-icon>
+          </v-btn>
+          <v-btn icon @click="editTimeframe(index)">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+        </div>
       </template>
       <template #[`item.required`]="{ index, item }">
         <v-chip-group column>
@@ -35,7 +41,11 @@
             >
               {{ formatText(req) }}
             </v-chip>
-            <v-tooltip v-else-if="isRequiredAvailability(req, item)" :key="req._id" top>
+            <v-tooltip
+              v-else-if="isRequiredAvailability(req, item)"
+              :key="req._id"
+              top
+            >
               <template #activator="{ on, attrs }">
                 <v-chip
                   close
@@ -169,6 +179,7 @@
 <script>
 import OverField from "../../overField";
 import { v4 as uuidv4 } from "uuid";
+
 const DEFAULT_SLICE_TIME = 2;
 
 export default {
@@ -261,14 +272,34 @@ export default {
       if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.user == req.user._id && (c.tf1==item._id || c.tf2==item._id));
+      return this.conflicts.filter(
+        (c) =>
+          c.user == req.user._id && (c.tf1 == item._id || c.tf2 == item._id)
+      );
     },
     requiredConflictsAvailability(req, item) {
       // team requirement cannot have conflicts
       if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.type=="availability" && c.user == req.user._id && c.tf1==item._id);
+      return this.conflicts.filter(
+        (c) =>
+          c.type == "availability" &&
+          c.user == req.user._id &&
+          c.tf1 == item._id
+      );
+    },
+    requiredConflictsAvailability(req, item) {
+      // team requirement cannot have conflicts
+      if (req.type == "team" || item == undefined) {
+        return [];
+      }
+      return this.conflicts.filter(
+        (c) =>
+          c.type == "availability" &&
+          c.user == req.user._id &&
+          c.tf1 == item._id
+      );
     },
 
     /**
@@ -346,6 +377,12 @@ export default {
     },
 
     async removeRequirement(requirementIndex, timeframeIndex) {
+      if (this.isDisabled) {
+        alert(
+          "Vous ne pouvez pas modifier les requis d'une FT déjà validée. Tu as cru que c'etait ASSOMAKER ou koi ?"
+        );
+        return;
+      }
       await this.$accessor.FT.deleteRequirement({
         timeframeIndex,
         requirementIndex,

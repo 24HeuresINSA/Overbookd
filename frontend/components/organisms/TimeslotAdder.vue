@@ -146,7 +146,7 @@ export default Vue.extend({
           groupTitle: this.title,
           groupDescription: this.description,
           charisma: this.charisma,
-          forHardOnly: this.forHard
+          forHardOnly: this.forHard,
         });
         start = new Date(newEnd);
       }
