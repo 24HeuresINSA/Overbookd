@@ -50,7 +50,13 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.initStore();
+    if (this.$accessor.user.hasRole("hard")) {
+      await this.initStore();
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
   methods: {
     async initStore() {

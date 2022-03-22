@@ -4,9 +4,11 @@
 import { ITFRequired, ITimeFrame } from "@entities/FT";
 import { ITimeSpan } from "@entities/TimeSpan";
 import logger from "@shared/Logger";
+import {Types} from "mongoose";
 
 export async function timeframeToTimeSpan(
-  timeframe: ITimeFrame
+  timeframe: ITimeFrame,
+  FTID: number,
 ): Promise<ITimeSpan[] | undefined> {
   const { toSlice, sliceTime, required } = timeframe;
   const start = new Date(timeframe.start);
@@ -32,13 +34,29 @@ export async function timeframeToTimeSpan(
           assigned: null,
           timeframeID: timeframe._id,
           required: null,
+          FTID,
         } as ITimeSpan;
         // timeSpans.push(mTimeSpan);
-        timeframe.required.forEach((r) => {
-          timeSpans.push({
-            ...mTimeSpan,
-            required: r,
-          });
+        timeframe.required.forEach((r: ITFRequired) => {
+          switch (r.type) {
+            case "user":
+              timeSpans.push({
+                ...mTimeSpan,
+                required: r.user._id.toString(),
+                assigned: r.user._id.toString(),
+              });
+              break;
+            case "team":
+              for(let i = 0; i <= r.amount; i++){
+                timeSpans.push({
+                  ...mTimeSpan,
+                  required: r.team,
+                });
+              }
+              break;
+            default:
+              break;
+          }
         });
         logger.info(
           `timeframeToTimeSpan: added timeSpan: ${new Date(
@@ -59,15 +77,36 @@ export async function timeframeToTimeSpan(
     }
   } else {
     // not to be sliced
-    const res = required.map((requirement: ITFRequired) => {
-      return {
-        start,
-        end,
-        assigned: null,
-        required: requirement,
-        timeframeID: timeframe._id,
-      };
-    }) as ITimeSpan[];
+    const res = [] as ITimeSpan[];
+
+    timeframe.required.forEach((r: ITFRequired) => {
+      switch (r.type) {
+        case "user":
+          res.push({
+            start,
+            end,
+            assigned: r.user._id.toString(),
+            timeframeID: timeframe._id,
+            required: r.user._id.toString(),
+            FTID,
+          });
+          break;
+        case "team":
+          for (let i = 0; i < r.amount; i++) {
+            res.push({
+              start,
+              end,
+              assigned: null,
+              timeframeID: timeframe._id,
+              required: r.team,
+              FTID,
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    });
     return res;
   }
 }

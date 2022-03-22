@@ -9,6 +9,7 @@ export interface ITimeslot {
     end: Date;
   };
   charisma: number;
+  forHardOnly?: boolean;
 }
 
 const TimeslotSchema = new Schema<ITimeslot>({
@@ -19,6 +20,7 @@ const TimeslotSchema = new Schema<ITimeslot>({
     end: { type: Date, required: true },
   },
   charisma: { type: Number, required: true },
+  forHardOnly: { type: Boolean, required: false},
 });
 
 TimeslotSchema.index({

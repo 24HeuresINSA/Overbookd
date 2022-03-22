@@ -31,15 +31,15 @@
               </v-select>
               <v-row>
                 <v-col md="3"
-                  ><v-btn text @click="addRole()">ajouter</v-btn></v-col
+                  ><v-btn text @click="addRole()">Ajouter</v-btn></v-col
                 >
                 <v-col md="6"
                   ><v-btn text @click="deleteAllTeams()"
-                    >révoquer tous les rôles</v-btn
+                    >Révoquer tous les rôles</v-btn
                   ></v-col
                 >
                 <v-col md="2"
-                  ><v-btn text @click="saveUser()">sauvegarder</v-btn></v-col
+                  ><v-btn text @click="saveUser()">Sauvegarder</v-btn></v-col
                 >
               </v-row>
             </div>
@@ -203,9 +203,9 @@
 
 <script>
 import OverChips from "~/components/atoms/overChips";
-import { safeCall } from "../../utils/api/calls";
+import {safeCall} from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
-import { isValidated } from "~/utils/roles/index.ts";
+import {isValidated} from "~/utils/roles/index.ts";
 import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
 
 export default {

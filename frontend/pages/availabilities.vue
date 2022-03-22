@@ -6,8 +6,11 @@
     <v-spacer></v-spacer>
     <v-container>
       <v-row>
-        <v-col v-for="title in existingGroupTitles" :key="title" md="12">
-          <TimeslotTable :group-title="title"></TimeslotTable>
+        <v-col v-for="group in existingGroupTitles" :key="group.title" md="12">
+          <TimeslotTable
+              v-if="!group.onlyForHard || $accessor.user.me.team.includes('hard')"
+              :group-title="group.title"
+          ></TimeslotTable>
         </v-col>
       </v-row>
     </v-container>
@@ -35,8 +38,11 @@ export default Vue.extend({
     },
     existingGroupTitles: function () {
       return this.$accessor.timeslot.timeslots.reduce((acc, cur) => {
-        if (!acc.includes(cur.groupTitle)) {
-          acc.push(cur.groupTitle);
+        if (!acc.some((obj) => obj.title === cur.groupTitle)) {
+          acc.push({
+            title: cur.groupTitle,
+            onlyForHard: cur.forHardOnly || false,
+          });
         }
         return acc;
       }, []);

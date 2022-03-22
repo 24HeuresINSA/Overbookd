@@ -40,7 +40,7 @@
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
       <v-col sm="1" class="text-center">{{ history(com.team) }}</v-col>
       <v-col sm="1" class="text-center">{{
-        com.status["validated"] / history(com.team)
+        (com.status["validated"] / history(com.team)).toFixed(2)
       }}</v-col>
     </v-row>
   </div>

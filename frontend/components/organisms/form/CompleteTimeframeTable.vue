@@ -14,15 +14,21 @@
         {{ formatMilliToLocalTime(item.end) }}
       </template>
       <template #[`item.action`]="{ index }">
-        <v-btn v-if="!isDisabled" icon>
-          <v-icon @click="deleteTimeframe(index)">mdi-trash-can</v-icon>
-        </v-btn>
-        <v-btn icon @click="editTimeframeRequirements(index)">
-          <v-icon>mdi-account-multiple-plus-outline</v-icon>
-        </v-btn>
-        <v-btn icon @click="editTimeframe(index)">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
+        <div v-if="!isDisabled">
+          <v-btn icon>
+            <v-icon @click="deleteTimeframe(index)">mdi-trash-can</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="!isDisabled"
+            icon
+            @click="editTimeframeRequirements(index)"
+          >
+            <v-icon>mdi-account-multiple-plus-outline</v-icon>
+          </v-btn>
+          <v-btn icon @click="editTimeframe(index)">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+        </div>
       </template>
       <template #[`item.required`]="{ index, item }">
         <v-chip-group column>
@@ -35,7 +41,11 @@
             >
               {{ formatText(req) }}
             </v-chip>
-            <v-tooltip v-else-if="isRequiredAvailability(req, item)" :key="req._id" top>
+            <v-tooltip
+              v-else-if="isRequiredAvailability(req, item)"
+              :key="req._id"
+              top
+            >
               <template #activator="{ on, attrs }">
                 <v-chip
                   close
@@ -78,7 +88,7 @@
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <v-card>
         <v-card-title>
-          <span class="headline"> Editer une plage</span>
+          <span class="headline">Éditer une plage</span>
         </v-card-title>
         <v-form v-model="validTimeframeEdit" lazy-validation>
           <v-card-text>
@@ -104,7 +114,7 @@
             ></v-checkbox>
             <v-slider
               v-model="mTimeframe.sliceTime"
-              label="Nombre d'heures par decoupage"
+              label="Nombre d'heures par découpage"
               :disabled="!mTimeframe.toSlice"
               min="0.5"
               max="4"
@@ -133,9 +143,9 @@
     <!-- Orga selection pop up -->
     <v-dialog v-model="requireDialog" max-width="600">
       <v-card>
-        <v-card-title>Orga Requis</v-card-title>
+        <v-card-title>Orga requis</v-card-title>
         <v-card-text>
-          <h3>Ajouter un Orga</h3>
+          <h3>Ajouter un orga</h3>
           <OverField
             :field="{ key: 'user', label: 'orga', type: 'user' }"
             @value="updateUser"
@@ -169,6 +179,7 @@
 <script>
 import OverField from "../../overField";
 import { v4 as uuidv4 } from "uuid";
+
 const DEFAULT_SLICE_TIME = 2;
 
 export default {
@@ -186,17 +197,17 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "date début", value: "dateStart" },
-      { text: "debut", value: "start" },
-      { text: "date fin", value: "dateEnd" },
+      { text: "Date début", value: "dateStart" },
+      { text: "Début", value: "start" },
+      { text: "Date fin", value: "dateEnd" },
       {
-        text: "fin",
+        text: "Fin",
         value: "end",
       },
-      { text: "découpage", value: "toSlice" },
-      { text: "requit", value: "required" },
-      { text: "affecter", value: "assigned" },
-      { text: "action", value: "action" },
+      { text: "Découpage", value: "toSlice" },
+      { text: "Requis", value: "required" },
+      { text: "Affecté", value: "assigned" },
+      { text: "Action", value: "action" },
     ],
     requireDialog: false,
     selectedTimeframeIndex: 0,
@@ -261,14 +272,34 @@ export default {
       if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.user == req.user._id && (c.tf1==item._id || c.tf2==item._id));
+      return this.conflicts.filter(
+        (c) =>
+          c.user == req.user._id && (c.tf1 == item._id || c.tf2 == item._id)
+      );
     },
     requiredConflictsAvailability(req, item) {
       // team requirement cannot have conflicts
       if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.type=="availability" && c.user == req.user._id && c.tf1==item._id);
+      return this.conflicts.filter(
+        (c) =>
+          c.type == "availability" &&
+          c.user == req.user._id &&
+          c.tf1 == item._id
+      );
+    },
+    requiredConflictsAvailability(req, item) {
+      // team requirement cannot have conflicts
+      if (req.type == "team" || item == undefined) {
+        return [];
+      }
+      return this.conflicts.filter(
+        (c) =>
+          c.type == "availability" &&
+          c.user == req.user._id &&
+          c.tf1 == item._id
+      );
     },
 
     /**
@@ -346,6 +377,12 @@ export default {
     },
 
     async removeRequirement(requirementIndex, timeframeIndex) {
+      if (this.isDisabled) {
+        alert(
+          "Vous ne pouvez pas modifier les requis d'une FT déjà validée. Tu as cru que c'etait ASSOMAKER ou koi ?"
+        );
+        return;
+      }
       await this.$accessor.FT.deleteRequirement({
         timeframeIndex,
         requirementIndex,

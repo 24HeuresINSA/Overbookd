@@ -10,7 +10,7 @@
                 new RegExp(field.regex).test(v) ||
                 (field.errorMessage
                   ? field.errorMessage
-                  : `il y'a un probleme avec ce champ`),
+                  : `il y'a un problème avec ce champ`),
             ]
           : []
       "

@@ -10,7 +10,8 @@ export interface ITimeSpan {
   end: Date;
   timeframeID: string;
   assigned: Types.ObjectId | null; // assigned user
-  required: ITFRequired | null; // required user or team
+  required: string | null; // required user or team
+  FTID: number;
 }
 
 const TimeSpanSchema = new Schema<ITimeSpan>({
@@ -19,8 +20,10 @@ const TimeSpanSchema = new Schema<ITimeSpan>({
   timeframeID: { type: String, required: true },
   assigned: { type: String, required: false, ref: "User" },
   required: {
-    type: Object,
+    type: String,
+    required: false,
   },
+  FTID: { type: Number, required: true },
 });
 
 const TimeSpanModel = model<ITimeSpan>("TimeSpan", TimeSpanSchema);

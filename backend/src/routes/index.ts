@@ -31,6 +31,8 @@ import {
   getAllFTs,
   getFTByID,
   getFTsNumber,
+  myPlanning,
+  getOrgaRequis,
   makeFTReady,
   unassign,
   updateFT,
@@ -44,6 +46,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
+import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -103,7 +106,9 @@ FArouter.delete("/", authMiddleware.protect(), deleteFA);
 const FTrouter = Router();
 FTrouter.get("/", authMiddleware.protect(), getAllFTs);
 FTrouter.get("/count", authMiddleware.protect(), getFTsNumber);
-FTrouter.get("/:FTID", authMiddleware.protect(), getFTByID);
+FTrouter.get("/orga-requis/:userID", authMiddleware.protect(), myPlanning);
+FTrouter.get("/orga-requis", authMiddleware.protect(), getOrgaRequis);
+FTrouter.get("/:FTID([0-9]+)", authMiddleware.protect(), getFTByID);
 FTrouter.post("/", authMiddleware.protect(), createFT);
 FTrouter.put("/", authMiddleware.protect(), updateFT);
 FTrouter.put("/unassign", authMiddleware.protect(), unassign);
@@ -352,6 +357,7 @@ baseRouter.use("/location", locationRouter);
 baseRouter.use("/conflict", conflictRouter);
 baseRouter.use("/conflict/ft", TFConflictRouter);
 baseRouter.use("/timespan", timespanRouter);
+baseRouter.get("/passsecu", authMiddleware.protect(), getPassSecu);
 
 baseRouter.post("/issue", issueHandler);
 

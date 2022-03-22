@@ -63,16 +63,16 @@ export default {
   data: () => {
     return {
       headers: [
-        { text: "type", value: "type" },
-        { text: "depuis", value: "from" },
+        { text: "Type", value: "type" },
+        { text: "Depuis", value: "from" },
         {
-          text: "vers",
+          text: "Vers",
           value: "to",
         },
-        { text: "context", value: "context" },
-        { text: "date", value: "createdAt" },
+        { text: "Contexte", value: "context" },
+        { text: "Date", value: "createdAt" },
         {
-          text: "montant",
+          text: "Montant",
           value: "amount",
           align: "end",
         },
@@ -94,7 +94,7 @@ export default {
   },
   async mounted() {
     if (this.action) {
-      this.headers.push({ text: "action", value: "action" });
+      this.headers.push({ text: "Action", value: "action" });
     }
   },
   methods: {

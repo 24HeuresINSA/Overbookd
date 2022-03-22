@@ -17,8 +17,8 @@
           <template #default>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Value</th>
+                <th>Nom</th>
+                <th>Valeurs</th>
                 <th>Actions</th>
               </tr>
             </thead>
