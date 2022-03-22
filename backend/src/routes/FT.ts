@@ -226,6 +226,7 @@ export async function myPlanning(req: Request, res: Response) {
       .sort("timeframes.start")
       .unwind({path: "$timeframes.required"})
       .match({"timeframes.required.user._id": Types.ObjectId(req.params.userID)})
+      .match({"timeframes.required.type": "user"})
       .lookup({
         from: "conflicts",
         localField: "timeframes.required.user._id",
@@ -273,6 +274,7 @@ export async function getOrgaRequis(req: Request, res: Response) {
       .unwind({path: "$timeframes"})
       .sort("timeframes.start")
       .unwind({path: "$timeframes.required"})
+      .match({"timeframes.required.type": "user"})
       .lookup({
         from: "conflicts",
         localField: "timeframes.required.user._id",
