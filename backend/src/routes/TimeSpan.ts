@@ -1,7 +1,7 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import TimeSpan from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
-import {Types} from "mongoose";
+import { Types } from "mongoose";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -10,6 +10,17 @@ export async function getAllTimeSpan(req: Request, res: Response) {
 
 export async function getTimeSpanById(req: Request, res: Response) {
   const timespan = await TimeSpan.findById(req.params.id);
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+  return res.json(timespan);
+}
+
+//get timespan where assigned is userid
+export async function getTimeSpanByAssigned(req: Request, res: Response) {
+  const timespan = await TimeSpan.find({ assigned: req.params.id });
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
