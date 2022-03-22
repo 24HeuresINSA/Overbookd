@@ -69,10 +69,10 @@
         </v-list-item>
       </v-list>
     </div>
-    <div class="d-flex justify-center" v-else>
+    <div v-else class="d-flex justify-center">
       <v-progress-circular indeterminate color="grey"></v-progress-circular>
     </div>
-    <div class="mt-10" v-if="!switchType">
+    <div v-if="!switchType" class="mt-10">
       <v-sheet tile height="54" class="d-flex">
         <v-btn icon class="ma-2" @click="$refs.FormCalendar.prev()">
           <v-icon>mdi-chevron-left</v-icon>

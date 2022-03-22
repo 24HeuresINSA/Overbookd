@@ -11,7 +11,8 @@
             v-on="on"
             @click.stop="toggleUserDialog"
         >
-          mdi-information</v-icon
+          mdi-information
+        </v-icon
         >
       </template>
       <span>{{ user.comment }}</span>
