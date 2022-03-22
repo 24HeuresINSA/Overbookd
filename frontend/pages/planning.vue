@@ -15,7 +15,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title style="font-weight: bold; font-size: 25px"
-              >{{ plan._id.username }}
+              >{{ plan._id }}
             </v-list-item-title>
             <v-data-table
               :headers="[
