@@ -32,7 +32,7 @@ export default {
     };
   },
   async mounted() {
-    if (this.$accessor.user.hasRole("admin")) {
+    if (this.$accessor.user.hasRole("hard")) {
       await this.update();
     } else {
       await this.$router.push({
