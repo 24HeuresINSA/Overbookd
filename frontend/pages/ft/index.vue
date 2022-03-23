@@ -47,6 +47,7 @@
             sort-by="count"
             :items-per-page="20"
             :loading="loading"
+            :footer-props="{'items-per-page-options': [20, 100, -1]}"
           >
             <template #item.general.name="{ item }">
               <a
