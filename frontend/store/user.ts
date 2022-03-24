@@ -144,7 +144,6 @@ export const actions = actionTree(
         UserRepo.removeAvailability(this, payload)
       );
       if (res) {
-        console.log(res.data.availabilities);
         commit("UPDATE_USER", res.data);
         return true;
       }

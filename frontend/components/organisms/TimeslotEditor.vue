@@ -215,9 +215,7 @@ export default Vue.extend({
     },
     async deleteAvailability(slotId: string) {
       const data = { userID: this.user._id, timeslotID: slotId };
-      this.$accessor.user
-        .removeAvailability(data)
-        .then((res) => console.log(res));
+      this.$accessor.user.removeAvailability(data);
     },
   },
 });
