@@ -9,6 +9,8 @@
       :show-select="true"
       disable-pagination
       dense
+      :hide-default-footer="true"
+      :items-per-page="-1"
     >
       <template #top>
         <v-toolbar flat>
