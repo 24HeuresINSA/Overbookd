@@ -55,17 +55,6 @@
           {{ group }}
         </td>
       </template>
-      <template #[`footer.prepend`]>
-        <div>
-          <v-btn color="success" @click="$refs.confirm.open()"
-            ><v-icon left> mdi-plus </v-icon> Valider les changements
-          </v-btn>
-          <ConfirmDialog ref="confirm" @confirm="acceptSelection()"
-            >Les créneaux que tu as choisis deviendront
-            <b>non modifiable !</b></ConfirmDialog
-          >
-        </div>
-      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -73,14 +62,12 @@
 <script lang="ts">
 import Vue from "vue";
 import TimeslotDialog from "~/components/atoms/TimeslotDialog.vue";
-import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
 import { Timeslot } from "utils/models/repo";
 
 export default Vue.extend({
   name: "TimeslotEditor",
   components: {
     TimeslotDialog,
-    ConfirmDialog,
   },
   props: {
     groupTitle: {
@@ -105,6 +92,7 @@ export default Vue.extend({
       selectedItems: [],
       selectedDeletion: [],
       authorizedEditor: ["admin", "humain", "bural"],
+      displayTable: true,
     };
   },
   computed: {
@@ -197,12 +185,6 @@ export default Vue.extend({
         : charismaMessage;
       this.$store.dispatch("timeslot/setCreateStatus", charismaMessage);
       this.selectedItems = [];
-    },
-    async removeItem(item: any) {
-      await this.$store.dispatch("timeslot/deleteTimeslot", item.id);
-    },
-    async removeTable() {
-      await this.$accessor.timeslot.deleteByGroupTitle(this.groupTitle);
     },
     padTime(time: number): string {
       if (time < 10) {
