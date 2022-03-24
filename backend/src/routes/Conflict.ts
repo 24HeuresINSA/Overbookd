@@ -53,7 +53,7 @@ export async function getConflicts(req: Request, res: Response) {
             "timeframes._id": conflict.tf2,
           }).lean();
           if (!ft1 || !ft2) {
-            logger.err("Conflict with unknown timeframe");
+            logger.err(`Conflict with unknown timeframe ${conflict.tf1} or ${conflict.tf2}`);
             return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
           }
           ret.push({
