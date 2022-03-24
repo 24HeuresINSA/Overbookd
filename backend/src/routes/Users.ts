@@ -123,10 +123,8 @@ export const removeAvailability: RequestHandler = async function (req, res) {
     const user = await UserModel.findById(id);
     if (user) {
       if (user.availabilities) {
-        logger.info(user.availabilities);
         const index = user.availabilities.indexOf(timeslotId);
         user.availabilities.splice(index, 1);
-        logger.info(user.availabilities);
       }
       await user.save();
       res.json(new SafeUser(user));
