@@ -134,6 +134,21 @@ export const actions = actionTree(
       if (res && res.data) commit("SET_SELECTED_USER", res.data);
       return res;
     },
+
+    async removeAvailability(
+      { commit },
+      payload: { userID: string; timeslotID: string }
+    ) {
+      const res = await safeCall(
+        this,
+        UserRepo.removeAvailability(this, payload)
+      );
+      if (res) {
+        commit("UPDATE_USER", res.data);
+        return true;
+      }
+      return false;
+    },
   }
 );
 

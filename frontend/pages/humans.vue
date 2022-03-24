@@ -347,6 +347,7 @@ export default {
   },
 
   async mounted() {
+    await this.initStore();
     if (this.$accessor.user.hasRole("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
@@ -362,15 +363,6 @@ export default {
           align: "end",
         });
       }
-      //add validation if admin
-      if (this.hasRole("admin") || this.hasRole("humain")) {
-        this.headers.splice(this.headers.length - 1, 0, {
-          text: "Validation",
-          value: "validationAction",
-          align: "end",
-          sortable: false,
-        });
-      }
     } else {
       await this.$router.push({
         path: "/",
@@ -379,6 +371,10 @@ export default {
   },
 
   methods: {
+    async initStore() {
+      await this.$accessor.user.fetchUser();
+      await this.$accessor.timeslot.fetchTimeslots();
+    },
     isCpUseful(item) {
       if (item.team) {
         return item.team.includes("hard");

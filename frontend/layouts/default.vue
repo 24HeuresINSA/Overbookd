@@ -176,7 +176,7 @@ export default {
         },
         {
           icon: "mdi-clock",
-          title: "[Humain] créer dispos",
+          title: "Créer dispos",
           roles: "humain",
           to: "/createavailibility",
         },

@@ -194,23 +194,32 @@
                 >Valider (soft)</v-btn
               ></v-col
             >
+            <v-col md="3">
+              <v-btn color="#65B3F3" @click="isEditingAvailability = true"
+                >Modifier dispos</v-btn
+              ></v-col
+            >
           </v-row>
         </v-col>
       </v-row>
     </v-card>
+    <v-dialog v-model="isEditingAvailability" width="80%"
+      ><ModificationCard :user="user"
+    /></v-dialog>
   </v-dialog>
 </template>
 
 <script>
 import OverChips from "~/components/atoms/overChips";
-import {safeCall} from "../../utils/api/calls";
+import { safeCall } from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
-import {isValidated} from "~/utils/roles/index.ts";
+import { isValidated } from "~/utils/roles/index.ts";
 import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
+import ModificationCard from "~/components/organisms/ModificationCard.vue";
 
 export default {
   name: "UserInformation",
-  components: { OverChips, AvailabilitiesCalendar },
+  components: { OverChips, AvailabilitiesCalendar, ModificationCard },
   props: {
     user: {
       type: Object,
@@ -227,6 +236,7 @@ export default {
       newRole: undefined,
       teams: [],
       hasEditingRole: false,
+      isEditingAvailability: false,
     };
   },
 
