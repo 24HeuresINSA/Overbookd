@@ -56,7 +56,7 @@ export default {
       this.store.updateEquipmentRequiredCount({ _id: item._id, count: +e });
     },
     deleteEquipment(id) {
-      this.store.deleteEquipment(id);
+      this.store.deleteEquipmentById(id);
     },
   },
 };
