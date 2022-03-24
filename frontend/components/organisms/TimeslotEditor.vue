@@ -25,7 +25,7 @@
           <TimeslotDialog ref="dialog" :timeslot="editedItem"></TimeslotDialog>
         </v-toolbar>
       </template>
-      <template #[`item.data-table-select`]="{ isSelected, select, item }">
+      <template #[`item.data-table-select`]="{ isSelected, item }">
         <v-simple-checkbox
           v-if="item.isSelected"
           :value="item.isSelected"
@@ -35,16 +35,16 @@
           v-else
           :value="isSelected"
           color="primary"
-          @input="select($event)"
         ></v-simple-checkbox>
       </template>
-      <template #[`item.deleteSlot`]="{ item }">
+      <template #[`item.modificationSlot`]="{ item }">
         <v-btn
           v-if="item.isSelected"
           color="red"
-          @click="deleteAvailability(item.id)"
-          >Supprimer ce créneaux</v-btn
+          @click="deleteAvailability(item)"
+          >Supprimer</v-btn
         >
+        <v-btn v-if="!item.isSelected" color="green">Ajouter</v-btn>
       </template>
       <template #[`group.header`]="{ group, headers, toggle, isOpen }">
         <td :colspan="headers.length">
@@ -56,6 +56,15 @@
         </td>
       </template>
     </v-data-table>
+    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
+      {{ feedbackMessage }}
+
+      <template #action="{ attrs }">
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -92,11 +101,71 @@ export default Vue.extend({
       selectedItems: [],
       selectedDeletion: [],
       authorizedEditor: ["admin", "humain", "bural"],
-      displayTable: true,
+      tableItems: [],
+      isSnackbarOpen: false,
+      feedbackMessage: "",
     };
   },
   computed: {
-    tableItems(): any {
+    timeslots(): Timeslot[] {
+      return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
+    },
+    headers(): any {
+      const h = [
+        {
+          text: "Heure de début",
+          value: "start",
+          sortable: false,
+        },
+        {
+          text: "Heure de fin",
+          value: "end",
+          sortable: false,
+        },
+        {
+          text: "Date",
+          value: "date",
+        },
+        {
+          text: "Charisme",
+          value: "charisma",
+          sortable: false,
+        },
+        {
+          text: "Modification",
+          value: "modificationSlot",
+          sortable: false,
+        },
+      ];
+      return h;
+    },
+  },
+  mounted() {
+    Object.keys(this.$refs).forEach((k) => {
+      if (this.$refs[k] && (this.$refs[k] as any).$attrs["data-open"]) {
+        (this.$refs[k] as any).$el.click();
+      }
+    });
+    this.tableItems = this.generateTableItems();
+  },
+  methods: {
+    padTime(time: number): string {
+      if (time < 10) {
+        return "0" + time;
+      }
+      return time + "";
+    },
+    async deleteAvailability(item: any) {
+      const data = { userID: this.user._id, timeslotID: item.id };
+      this.$accessor.user.removeAvailability(data).then(() => {
+        if (!this.isSnackbarOpen) {
+          this.feedbackMessage =
+            "Changement effectué ! Recharge la page pour le voir ou continue de supprimer des créneaux ils seront pris en compte !";
+          this.isSnackbarOpen = true;
+        }
+      });
+    },
+    generateTableItems(): any {
       return this.timeslots.map((timeslot: Timeslot) => {
         return {
           id: timeslot._id,
@@ -123,81 +192,6 @@ export default Vue.extend({
           isSelected: this.user.availabilities.includes(timeslot._id),
         };
       });
-    },
-    timeslots(): Timeslot[] {
-      return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
-    },
-    roles(): string[] {
-      return this.$accessor.user.me.team;
-    },
-    userSelectedAvailabilities(): any {
-      return this.$accessor.user.me.availabilities;
-    },
-    headers(): any {
-      const h = [
-        {
-          text: "Heure de début",
-          value: "start",
-          sortable: false,
-        },
-        {
-          text: "Heure de fin",
-          value: "end",
-          sortable: false,
-        },
-        {
-          text: "Date",
-          value: "date",
-        },
-        {
-          text: "Charisme",
-          value: "charisma",
-          sortable: false,
-        },
-        {
-          text: "Suppresion",
-          value: "deleteSlot",
-          sortable: false,
-        },
-      ];
-      return h;
-    },
-  },
-  mounted() {
-    Object.keys(this.$refs).forEach((k) => {
-      if (this.$refs[k] && (this.$refs[k] as any).$attrs["data-open"]) {
-        (this.$refs[k] as any).$el.click();
-      }
-    });
-  },
-  methods: {
-    async enterSelect() {
-      this.$emit("select", this.selectedItems);
-    },
-    async acceptSelection() {
-      if (this.selectedItems.length == 0) return;
-      const ids = this.selectedItems.map((item: any) => item.id);
-      await this.$store.dispatch("user/acceptSelection", ids);
-
-      let charismaMessage = "";
-      charismaMessage = this.$accessor.user.hasRole("hard")
-        ? "Créneaux selectionnés validés"
-        : charismaMessage;
-      this.$store.dispatch("timeslot/setCreateStatus", charismaMessage);
-      this.selectedItems = [];
-    },
-    padTime(time: number): string {
-      if (time < 10) {
-        return "0" + time;
-      }
-      return time + "";
-    },
-    async askConfirmDelete() {
-      (this.$refs.confirmDelete as any).open();
-    },
-    async deleteAvailability(slotId: string) {
-      const data = { userID: this.user._id, timeslotID: slotId };
-      this.$accessor.user.removeAvailability(data);
     },
   },
 });
