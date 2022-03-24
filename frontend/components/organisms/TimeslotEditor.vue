@@ -213,8 +213,11 @@ export default Vue.extend({
     async askConfirmDelete() {
       (this.$refs.confirmDelete as any).open();
     },
-    async deleteAvailability(slotId: any) {
-      console.log(slotId);
+    async deleteAvailability(slotId: string) {
+      const data = { userID: this.user._id, timeslotID: slotId };
+      this.$accessor.user
+        .removeAvailability(data)
+        .then((res) => console.log(res));
     },
   },
 });

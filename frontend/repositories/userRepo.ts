@@ -5,7 +5,6 @@ import {
   Notification,
   Transfer,
   User,
-  AvailabilitySuppression,
 } from "~/utils/models/repo";
 import { AxiosResponse } from "axios";
 
@@ -64,7 +63,10 @@ export default {
   acceptSelection(context: Context, timeslotsIDS: String[]) {
     return context.$axios.post(`${resource}/availabilities`, timeslotsIDS);
   },
-  removeAvailability(context: Context, data: AvailabilitySuppression) {
+  removeAvailability(
+    context: Context,
+    data: { userID: string; timeslotID: string }
+  ) {
     return context.$axios.post(`${resource}/removeAvailability`, data);
   },
 };

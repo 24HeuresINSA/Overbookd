@@ -123,14 +123,13 @@ export const removeAvailability: RequestHandler = async function (req, res) {
     const user = await UserModel.findById(id);
     if (user) {
       if (user.availabilities) {
-        const newAvailabilities = user.availabilities;
-        newAvailabilities.filter((item) => {
-          item !== timeslotId;
-        });
-        user.availabilities = newAvailabilities;
+        logger.info(user.availabilities);
+        const index = user.availabilities.indexOf(timeslotId);
+        user.availabilities.splice(index, 1);
+        logger.info(user.availabilities);
       }
       await user.save();
-      res.status(StatusCodes.OK).json(new SafeUser(user));
+      res.json(new SafeUser(user));
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
         msg: "User not found",

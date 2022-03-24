@@ -127,8 +127,3 @@ export interface location {
   longitude?: number;
   neededBy: string[];
 }
-
-export interface AvailabilitySuppression {
-  userID: string;
-  timeslotID: string;
-}
