@@ -33,7 +33,6 @@
 import Vue from "vue";
 import { Conflict } from "~/utils/models/conflicts";
 import sanitizeHtml from "sanitize-html";
-import { hasRole } from "~/utils/roles";
 
 declare type ConflictFT = Conflict & {
   ft1: number;
