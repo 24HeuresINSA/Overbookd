@@ -19,6 +19,7 @@ export interface IUser {
   email: string;
   team?: string[];
   hasDriverLicense?: boolean;
+  driverLicenseDate?: Date;
   hasPayedContribution?: boolean;
   birthdate?: Date;
   friends?: string[];
@@ -56,14 +57,17 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true },
     team: { type: Array, required: false },
     hasDriverLicense: { type: Boolean, required: false },
+    driverLicenseDate: { type: Date, required: false },
     birthdate: { type: Date, required: false },
     friends: { type: Array, required: false },
     pp: { type: String, required: false },
-    availabilities: [{
-      type: Schema.Types.ObjectId,
-      required: false,
-      ref: "Timeslot",
-    }],
+    availabilities: [
+      {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: "Timeslot",
+      },
+    ],
     resetPasswordToken: { type: String, required: false },
     resetTokenExpires: { type: Date, required: false },
     hasPayedContribution: { type: Boolean, required: false },
@@ -84,6 +88,7 @@ export class SafeUser {
   email: string;
   team?: string[];
   hasDriverLicense?: boolean;
+  driverLicenseDate?: Date;
   birthdate?: Date;
   friends?: string[];
   pp?: string;
@@ -120,6 +125,7 @@ export class SafeUser {
     this.notifications = data.notifications;
 
     this.hasDriverLicense = data.hasDriverLicense || false;
+    this.driverLicenseDate = data.driverLicenseDate;
     this.hasPayedContribution = data.hasPayedContribution || false;
   }
 }

@@ -122,7 +122,7 @@
         <v-icon small>mdi-arrow-left</v-icon>
       </v-btn>
       <v-btn
-          v-if="hasRole('humain') || FT.status !== 'ready'"
+          v-if="hasRole('humain') && FT.status !== 'ready'"
           color="red"
           @click="readyForAssignment"
       >prêt pour affectation

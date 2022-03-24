@@ -90,7 +90,7 @@
           <v-data-table
             :headers="headers"
             :items="selectedFAs"
-            :items-per-page="-1"
+            :footer-props="{'items-per-page-options': [20, 100, -1]}"
             class="elevation-1"
           >
             <template #[`item.validation`]="{ item }">

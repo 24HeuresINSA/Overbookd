@@ -14,9 +14,7 @@
       <v-list v-for="(plan, index) in orgaRequis" :key="index" class="my-4">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title style="font-weight: bold; font-size: 25px"
-              >{{ plan._id.username }}
-            </v-list-item-title>
+            <ShowCalendar :title="plan._id" :fts="plan.fts"/>
             <v-data-table
               :headers="[
                 { text: 'FT', value: 'name', width: '30%' },
@@ -72,41 +70,23 @@
     <div v-else class="d-flex justify-center">
       <v-progress-circular indeterminate color="grey"></v-progress-circular>
     </div>
-    <div v-if="!switchType" class="mt-10">
-      <v-sheet tile height="54" class="d-flex">
-        <v-btn icon class="ma-2" @click="$refs.FormCalendar.prev()">
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn icon class="ma-2" @click="$refs.FormCalendar.next()">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-sheet>
-      <v-calendar
-          ref="FormCalendar"
-          v-model="selectedDate"
-          color="primary"
-          type="week"
-          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-          :events="events"
-      ></v-calendar>
-    </div>
   </div>
 </template>
 
 <script lang="js">
 import Vue from "vue";
 import {RepoFactory} from "~/repositories/repoFactory";
+import ShowCalendar from "../components/ShowCalendar";
 
 export default Vue.extend({
   name: "Planning",
+  components: {ShowCalendar},
   data() {
     return {
       switchType: false,
       orgaRequis: [],
       loading: false,
       selectedDate: "2022-05-22",
-      events: []
     };
   },
   async mounted() {
@@ -123,16 +103,6 @@ export default Vue.extend({
       this.loading = true;
       if (!this.switchType) {
         this.orgaRequis = (await RepoFactory.ftRepo.myPlanning(this, this.$accessor.user.me._id)).data;
-        if(this.events.length === 0){
-          this.orgaRequis[0].fts.forEach((timeslot) => {
-            this.events.push({
-              name: timeslot.name,
-              start: this.getFormattedDate(new Date(timeslot.start)),
-              end: this.getFormattedDate(new Date(timeslot.end)),
-              color: this.getColor(timeslot.status),
-            });
-          })
-        }
       } else {
         this.orgaRequis = (await RepoFactory.ftRepo.getOrgaRequis(this)).data;
       }
@@ -167,15 +137,6 @@ export default Vue.extend({
         default:
           return "CONFLIT";
       }
-    },
-    getFormattedDate(date) {
-      const month = ("0" + (date.getMonth() + 1)).slice(-2);
-      const day = ("0" + (date.getDate())).slice(-2);
-      const year = date.getFullYear();
-      const hour =  ("0" + (date.getHours())).slice(-2);
-      const min =  ("0" + (date.getMinutes())).slice(-2);
-      const seg = ("0" + (date.getSeconds())).slice(-2);
-      return year + "-" + month + "-" + day + " " + hour + ":" +  min + ":" + seg;
     },
   },
 });

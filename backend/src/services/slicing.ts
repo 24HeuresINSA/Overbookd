@@ -4,11 +4,11 @@
 import { ITFRequired, ITimeFrame } from "@entities/FT";
 import { ITimeSpan } from "@entities/TimeSpan";
 import logger from "@shared/Logger";
-import {Types} from "mongoose";
+import { Types } from "mongoose";
 
 export async function timeframeToTimeSpan(
   timeframe: ITimeFrame,
-  FTID: number,
+  FTID: number
 ): Promise<ITimeSpan[] | undefined> {
   const { toSlice, sliceTime, required } = timeframe;
   const start = new Date(timeframe.start);
@@ -43,11 +43,11 @@ export async function timeframeToTimeSpan(
               timeSpans.push({
                 ...mTimeSpan,
                 required: r.user._id.toString(),
-                assigned: r.user._id.toString(),
+                assigned: r.user._id,
               });
               break;
             case "team":
-              for(let i = 0; i <= r.amount; i++){
+              for (let i = 0; i <= r.amount; i++) {
                 timeSpans.push({
                   ...mTimeSpan,
                   required: r.team,
@@ -85,7 +85,7 @@ export async function timeframeToTimeSpan(
           res.push({
             start,
             end,
-            assigned: r.user._id.toString(),
+            assigned: r.user._id,
             timeframeID: timeframe._id,
             required: r.user._id.toString(),
             FTID,

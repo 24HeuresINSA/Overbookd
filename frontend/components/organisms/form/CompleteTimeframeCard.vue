@@ -7,8 +7,8 @@
           :is-disabled="isDisabled"
       ></CompleteTimeframeTable>
       <TimeframeSelector
-          v-if="!isDisabled"
           complete
+          :disabled="isDisabled"
           :store="store"
           @add-timeframe="addTimeframe"
           @set-timeframes="setTimeframes"

@@ -304,10 +304,8 @@ function dateRangeOverlaps(
   b_start: number,
   b_end: number
 ): boolean {
-  if (a_start < b_start && b_start < a_end) return true; // b starts in a
-  if (a_start < b_end && b_end < a_end) return true; // b ends in a
-  if (b_start < a_start && a_end < b_end) return true; // a in b
-  return false;
+  //suppose that a_start < a_end and b_start < b_end
+  return a_start < b_end && a_end > b_start; //https://stackoverflow.com/a/325964
 }
 
 function dateRangeOverlapsAvailability(
