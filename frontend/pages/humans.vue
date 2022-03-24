@@ -363,15 +363,6 @@ export default {
           align: "end",
         });
       }
-      //add validation if admin
-      if (this.hasRole("admin") || this.hasRole("humain")) {
-        this.headers.splice(this.headers.length - 1, 0, {
-          text: "Validation",
-          value: "validationAction",
-          align: "end",
-          sortable: false,
-        });
-      }
     } else {
       await this.$router.push({
         path: "/",
