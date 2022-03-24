@@ -44,7 +44,6 @@
           @click="deleteAvailability(item)"
           >Supprimer</v-btn
         >
-        <v-btn v-if="!item.isSelected" color="green">Ajouter</v-btn>
       </template>
       <template #[`group.header`]="{ group, headers, toggle, isOpen }">
         <td :colspan="headers.length">
@@ -101,12 +100,39 @@ export default Vue.extend({
       selectedItems: [],
       selectedDeletion: [],
       authorizedEditor: ["admin", "humain", "bural"],
-      tableItems: [],
       isSnackbarOpen: false,
       feedbackMessage: "",
     };
   },
   computed: {
+    tableItems(): any {
+      return this.timeslots.map((timeslot: Timeslot) => {
+        return {
+          id: timeslot._id,
+          name: timeslot.groupTitle,
+          start:
+            this.padTime(new Date(timeslot.timeFrame.start).getHours()) +
+            ":" +
+            this.padTime(new Date(timeslot.timeFrame.start).getMinutes()),
+          end:
+            this.padTime(new Date(timeslot.timeFrame.end).getHours()) +
+            ":" +
+            this.padTime(new Date(timeslot.timeFrame.end).getMinutes()),
+          date:
+            new Date(timeslot.timeFrame.start).getFullYear() +
+            "-" +
+            (new Date(timeslot.timeFrame.start).getMonth() + 1) +
+            "-" +
+            new Date(timeslot.timeFrame.start).getDate() +
+            " " +
+            new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
+              weekday: "long",
+            }),
+          charisma: timeslot.charisma,
+          isSelected: this.user.availabilities.includes(timeslot._id),
+        };
+      });
+    },
     timeslots(): Timeslot[] {
       return this.$accessor.timeslot.getTimeslotsByGroupTitle(this.groupTitle);
     },
@@ -146,7 +172,6 @@ export default Vue.extend({
         (this.$refs[k] as any).$el.click();
       }
     });
-    this.tableItems = this.generateTableItems();
   },
   methods: {
     padTime(time: number): string {
@@ -163,34 +188,6 @@ export default Vue.extend({
             "Changement effectué ! Recharge la page pour le voir ou continue de supprimer des créneaux ils seront pris en compte !";
           this.isSnackbarOpen = true;
         }
-      });
-    },
-    generateTableItems(): any {
-      return this.timeslots.map((timeslot: Timeslot) => {
-        return {
-          id: timeslot._id,
-          name: timeslot.groupTitle,
-          start:
-            this.padTime(new Date(timeslot.timeFrame.start).getHours()) +
-            ":" +
-            this.padTime(new Date(timeslot.timeFrame.start).getMinutes()),
-          end:
-            this.padTime(new Date(timeslot.timeFrame.end).getHours()) +
-            ":" +
-            this.padTime(new Date(timeslot.timeFrame.end).getMinutes()),
-          date:
-            new Date(timeslot.timeFrame.start).getFullYear() +
-            "-" +
-            (new Date(timeslot.timeFrame.start).getMonth() + 1) +
-            "-" +
-            new Date(timeslot.timeFrame.start).getDate() +
-            " " +
-            new Date(timeslot.timeFrame.start).toLocaleDateString("fr-fr", {
-              weekday: "long",
-            }),
-          charisma: timeslot.charisma,
-          isSelected: this.user.availabilities.includes(timeslot._id),
-        };
       });
     },
   },
