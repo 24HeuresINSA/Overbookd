@@ -155,7 +155,11 @@
         <v-card-text>
           <h3>Ajouter un orga</h3>
           <OverField
-            :field="{ key: 'user', label: 'orga', type: 'user' }"
+            :field="{
+              key: 'validated_user',
+              label: 'orga',
+              type: 'validated_user',
+            }"
             @value="updateUser"
           ></OverField>
           <v-btn text :disabled="!required.user._id" @click="addUser"
@@ -365,7 +369,11 @@ export default {
     },
 
     updateUser(user) {
-      this.required.user = { ...user }.value;
+      const valid_user = {
+        username: user.value.firstname + " " + user.value.lastname,
+        _id: user.value._id,
+      };
+      this.required.user = { ...valid_user };
     },
 
     updateTeam(team) {
