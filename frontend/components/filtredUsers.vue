@@ -61,7 +61,9 @@ export default {
 
   computed: {
     filteredUsers() {
-      return this.$accessor.assignment.filteredUsers;
+      return this.$accessor.assignment.filteredUsers.filter(
+        (user) => user.team.includes("hard") || user.team.includes("soft")
+      );
     },
   },
 
