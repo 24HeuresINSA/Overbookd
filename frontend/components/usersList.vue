@@ -40,6 +40,7 @@ export default {
         (user) => user._id === this.selectedUserIndex
       );
       this.$accessor.assignment.setSelectedUser(selectedUser);
+      //this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
     },
   },
 };

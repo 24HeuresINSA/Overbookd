@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import TimeSpan from "@entities/TimeSpan";
+import User from "@entities/User";
 import StatusCodes from "http-status-codes";
 import { Types } from "mongoose";
+import { dateRangeOverlaps } from "../services/conflict";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -59,4 +61,30 @@ export async function unassignUserFromTimeSpan(req: Request, res: Response) {
   timespan.assigned = null;
   await timespan.save();
   return res.json(timespan);
+}
+
+// Find all timespan where user is not assigned and other timespan does not intersect with the timespans where user is assigned
+export async function getAvailableTimeSpan(req: Request, res: Response) {
+  const timespans = await TimeSpan.find({
+    assigned: null,
+  });
+  const assignedTimespans = await TimeSpan.find({
+    assigned: req.params.userId,
+  });
+  const user = await User.findById(req.params.userId);
+  if (!user || !user.availabilities) {
+    return res.json([]);
+  }
+  const availableTimespans = timespans.filter(
+    (timespan) =>
+      !assignedTimespans.some((assignedTimespan) =>
+        dateRangeOverlaps(
+          timespan.start.getTime(),
+          timespan.end.getTime(),
+          assignedTimespan.start.getTime(),
+          assignedTimespan.end.getTime()
+        )
+      )
+  );
+  return res.json(availableTimespans);
 }

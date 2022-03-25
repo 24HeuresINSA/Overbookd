@@ -157,6 +157,27 @@ export const actions = actionTree(
       return ret;
     },
 
+    async getAvailableTimespansForUser({ commit, state }: any, user: User) {
+      const ret = await safeCall(
+        this,
+        TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
+      );
+      if (ret) {
+        commit(
+          "SET_TIMESPANS",
+          ret.data.map((ts: any) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+              .name,
+          }))
+        );
+      }
+      return ret;
+    },
+
     /**
      * get all timeslots
      *
@@ -326,6 +347,8 @@ export const getters = getterTree(state, {
   availableTimeSpans: (state: any, getters: any) => {
     const { selectedUser } = state;
     if (selectedUser && state.timespans) {
+      console.log(selectedUser);
+      console.log(state.timespans);
       let availableTimeSpans = state.timespans.filter((ts: any) => {
         let isAvailable = false;
         getters.selectedUserAvailabilities.forEach((av: any) => {

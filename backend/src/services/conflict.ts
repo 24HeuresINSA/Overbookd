@@ -298,7 +298,7 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
  * 1 starts before 2 start AND 1 ends after 2 ends
  *
  */
-function dateRangeOverlaps(
+export function dateRangeOverlaps(
   a_start: number,
   a_end: number,
   b_start: number,
