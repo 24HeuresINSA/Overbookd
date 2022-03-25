@@ -304,8 +304,6 @@ export default Vue.extend({
       const allValidators: string[] =
         this.$accessor.config.getConfig("ft_validators");
       if (this.me.team.includes("admin")) {
-        // admin has all the validators powers
-        console.log(allValidators);
         return allValidators;
       }
       if (allValidators) {
