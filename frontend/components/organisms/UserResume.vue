@@ -4,22 +4,21 @@
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <v-icon
-            right
-            small
-            v-bind="attrs"
-            class="icon"
-            v-on="on"
-            @click.stop="toggleUserDialog"
+          right
+          small
+          v-bind="attrs"
+          class="icon"
+          v-on="on"
+          @click.stop="toggleUserDialog"
         >
           mdi-information
-        </v-icon
-        >
+        </v-icon>
       </template>
       <span>{{ user.comment }}</span>
     </v-tooltip>
     <br />
     <span
-      v-for="team of user.team"
+      v-for="team of user.team.filter((item) => item !== 'toValidate')"
       :key="team"
       :class="getClass(team) + ' role'"
     >
@@ -34,13 +33,13 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from "vue";
-import {User} from "~/utils/models/repo";
+import Vue, { PropType } from "vue";
+import { User } from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 
 export default Vue.extend({
   name: "UserResume",
-  components: {UserInformation},
+  components: { UserInformation },
   props: {
     user: {
       type: Object as PropType<User>,
