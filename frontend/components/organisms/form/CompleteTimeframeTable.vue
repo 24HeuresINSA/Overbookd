@@ -1,9 +1,12 @@
 <template>
   <div>
-    <v-data-table dense :headers="headers"
-                  :items="timeframes"
-                  :hide-default-footer="true"
-                  :items-per-page="-1">
+    <v-data-table
+      dense
+      :headers="headers"
+      :items="timeframes"
+      :hide-default-footer="true"
+      :items-per-page="-1"
+    >
       <template #[`item.dateStart`]="{ item }">
         {{ new Date(item.start).toDateString() }}
       </template>
@@ -22,9 +25,9 @@
             <v-icon @click="deleteTimeframe(index)">mdi-trash-can</v-icon>
           </v-btn>
           <v-btn
-              v-if="!isDisabled"
-              icon
-              @click="editTimeframeRequirements(index)"
+            v-if="!isDisabled"
+            icon
+            @click="editTimeframeRequirements(index)"
           >
             <v-icon>mdi-account-multiple-plus-outline</v-icon>
           </v-btn>
@@ -37,25 +40,25 @@
         <v-chip-group column>
           <template v-for="(req, i) in item.required">
             <v-chip
-                v-if="!isRequiredInConflict(req, item)"
-                :key="req._id"
-                close
-                @click:close="removeRequirement(i, index)"
+              v-if="!isRequiredInConflict(req, item)"
+              :key="req._id"
+              close
+              @click:close="removeRequirement(i, index)"
             >
               {{ formatText(req) }}
             </v-chip>
             <v-tooltip
-                v-else-if="isRequiredAvailability(req, item)"
-                :key="req._id"
-                top
+              v-else-if="isRequiredAvailability(req, item)"
+              :key="req._id"
+              top
             >
               <template #activator="{ on, attrs }">
                 <v-chip
-                    close
-                    color="orange"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click:close="removeRequirement(i, index)"
+                  close
+                  color="orange"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click:close="removeRequirement(i, index)"
                 >
                   {{ formatText(req) }}
                 </v-chip>
@@ -65,11 +68,11 @@
             <v-tooltip v-else :key="req._id" top>
               <template #activator="{ on, attrs }">
                 <v-chip
-                    close
-                    color="red"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click:close="removeRequirement(i, index)"
+                  close
+                  color="red"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click:close="removeRequirement(i, index)"
                 >
                   {{ formatText(req) }}
                 </v-chip>
@@ -80,10 +83,11 @@
         </v-chip-group>
       </template>
       <!-- Partition displays "-" if it is not defined or false and the slot time else -->
-      <template #[`item.toSlice`]="{ item }">{{
+      <template #[`item.toSlice`]="{ item }"
+        >{{
           item.toSlice === undefined || item.toSlice === false
-              ? "-"
-              : `${item.sliceTime}h`
+            ? "-"
+            : `${item.sliceTime}h`
         }}
       </template>
     </v-data-table>
@@ -97,33 +101,33 @@
         <v-form v-model="validTimeframeEdit" lazy-validation>
           <v-card-text>
             <v-text-field
-                v-model="mTimeframe.start"
-                label="Début"
-                type="datetime-local"
-                :disabled="isDisabled"
-                :rules="dateTimeValidationRules()"
-                required
+              v-model="mTimeframe.start"
+              label="Début"
+              type="datetime-local"
+              :disabled="isDisabled"
+              :rules="dateTimeValidationRules()"
+              required
             ></v-text-field>
             <v-text-field
-                v-model="mTimeframe.end"
-                label="Fin"
-                type="datetime-local"
-                :disabled="isDisabled"
-                :rules="dateTimeValidationRules()"
-                required
+              v-model="mTimeframe.end"
+              label="Fin"
+              type="datetime-local"
+              :disabled="isDisabled"
+              :rules="dateTimeValidationRules()"
+              required
             ></v-text-field>
             <v-checkbox
-                v-model="mTimeframe.toSlice"
-                label="Découper"
+              v-model="mTimeframe.toSlice"
+              label="Découper"
             ></v-checkbox>
             <v-slider
-                v-model="mTimeframe.sliceTime"
-                label="Nombre d'heures par découpage"
-                :disabled="!mTimeframe.toSlice"
-                min="0.5"
-                max="4"
-                step="0.5"
-                thumb-label="always"
+              v-model="mTimeframe.sliceTime"
+              label="Nombre d'heures par découpage"
+              :disabled="!mTimeframe.toSlice"
+              min="0.5"
+              max="4"
+              step="0.5"
+              thumb-label="always"
             ></v-slider>
           </v-card-text>
           <v-card-actions>
@@ -132,10 +136,10 @@
               Annuler
             </v-btn>
             <v-btn
-                color="blue darken-1"
-                text
-                :disabled="isDisabled || !validTimeframeEdit"
-                @click="updateTimeframe"
+              color="blue darken-1"
+              text
+              :disabled="isDisabled || !validTimeframeEdit"
+              @click="updateTimeframe"
             >
               Valider
             </v-btn>
@@ -151,31 +155,29 @@
         <v-card-text>
           <h3>Ajouter un orga</h3>
           <OverField
-              :field="{ key: 'user', label: 'orga', type: 'user' }"
-              @value="updateUser"
+            :field="{ key: 'user', label: 'orga', type: 'user' }"
+            @value="updateUser"
           ></OverField>
           <v-btn text :disabled="!required.user._id" @click="addUser"
-          >demander l'orga
-          </v-btn
-          >
+            >demander l'orga
+          </v-btn>
           <OverField
-              :field="{ key: 'team', label: 'team', type: 'teams' }"
-              @value="updateTeam"
+            :field="{ key: 'team', label: 'team', type: 'teams' }"
+            @value="updateTeam"
           ></OverField>
           <v-text-field
-              v-model="required.amount"
-              type="number"
-              label="Nombre"
-              value="1"
-              :rules="orgaAmountRules"
+            v-model="required.amount"
+            type="number"
+            label="Nombre"
+            value="1"
+            :rules="orgaAmountRules"
           ></v-text-field>
           <v-btn
-              text
-              :disabled="!required.team || !required.amount"
-              @click="addTeam"
-          >demander la team
-          </v-btn
-          >
+            text
+            :disabled="!required.team || !required.amount"
+            @click="addTeam"
+            >demander la team
+          </v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -184,13 +186,13 @@
 
 <script>
 import OverField from "../../overField";
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_SLICE_TIME = 2;
 
 export default {
   name: "CompleteTimeframeTable",
-  components: {OverField},
+  components: { OverField },
   props: {
     store: {
       type: Object,
@@ -203,17 +205,17 @@ export default {
   },
   data: () => ({
     headers: [
-      {text: "Date début", value: "dateStart"},
-      {text: "Début", value: "start"},
-      {text: "Date fin", value: "dateEnd"},
+      { text: "Date début", value: "dateStart" },
+      { text: "Début", value: "start" },
+      { text: "Date fin", value: "dateEnd" },
       {
         text: "Fin",
         value: "end",
       },
-      {text: "Découpage", value: "toSlice"},
-      {text: "Requis", value: "required"},
-      {text: "Affecté", value: "assigned"},
-      {text: "Action", value: "action"},
+      { text: "Découpage", value: "toSlice" },
+      { text: "Requis", value: "required" },
+      { text: "Affecté", value: "assigned" },
+      { text: "Action", value: "action" },
     ],
     requireDialog: false,
     selectedTimeframeIndex: 0,
@@ -279,8 +281,8 @@ export default {
         return [];
       }
       return this.conflicts.filter(
-          (c) =>
-              c.user == req.user._id && (c.tf1 == item._id || c.tf2 == item._id)
+        (c) =>
+          c.user == req.user._id && (c.tf1 == item._id || c.tf2 == item._id)
       );
     },
     requiredConflictsAvailability(req, item) {
@@ -289,22 +291,10 @@ export default {
         return [];
       }
       return this.conflicts.filter(
-          (c) =>
-              c.type == "availability" &&
-              c.user == req.user._id &&
-              c.tf1 == item._id
-      );
-    },
-    requiredConflictsAvailability(req, item) {
-      // team requirement cannot have conflicts
-      if (req.type == "team" || item == undefined) {
-        return [];
-      }
-      return this.conflicts.filter(
-          (c) =>
-              c.type == "availability" &&
-              c.user == req.user._id &&
-              c.tf1 == item._id
+        (c) =>
+          c.type == "availability" &&
+          c.user == req.user._id &&
+          c.tf1 == item._id
       );
     },
 
@@ -364,8 +354,8 @@ export default {
       return [
         // Pattern regexp matching
         (v) =>
-            /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}/.test(v) ||
-            "Entrez une date valide",
+          /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}/.test(v) ||
+          "Entrez une date valide",
       ];
     },
     editTimeframeRequirements(index) {
@@ -375,17 +365,17 @@ export default {
     },
 
     updateUser(user) {
-      this.required.user = {...user}.value;
+      this.required.user = { ...user }.value;
     },
 
     updateTeam(team) {
-      this.required.team = {...team}.value;
+      this.required.team = { ...team }.value;
     },
 
     async removeRequirement(requirementIndex, timeframeIndex) {
       if (this.isDisabled) {
         alert(
-            "Vous ne pouvez pas modifier les requis d'une FT déjà validée. Tu as cru que c'etait ASSOMAKER ou koi ?"
+          "Vous ne pouvez pas modifier les requis d'une FT déjà validée. Tu as cru que c'etait ASSOMAKER ou koi ?"
         );
         return;
       }
@@ -400,17 +390,17 @@ export default {
      */
     editTimeframe(index) {
       this.selectedTimeframeIndex = index;
-      this.mTimeframe = {...this.timeframes[index]};
+      this.mTimeframe = { ...this.timeframes[index] };
 
       // Adapt format because input type datetime-local does not handle milliseconds format
       this.mTimeframe.start = this.formatMilliToLocalDate(
-          this.mTimeframe.start
+        this.mTimeframe.start
       );
       this.mTimeframe.end = this.formatMilliToLocalDate(this.mTimeframe.end);
 
       // Default value for sliceTime
       this.mTimeframe.sliceTime =
-          this.mTimeframe.sliceTime || DEFAULT_SLICE_TIME;
+        this.mTimeframe.sliceTime || DEFAULT_SLICE_TIME;
 
       this.isEditDialogOpen = true;
     },
@@ -420,7 +410,7 @@ export default {
     updateTimeframe() {
       // Format back timeFrame to the correct milliseconds format
       this.mTimeframe.start = this.formatLocalDatetoMilli(
-          this.mTimeframe.start
+        this.mTimeframe.start
       );
       this.mTimeframe.end = this.formatLocalDatetoMilli(this.mTimeframe.end);
 
@@ -441,7 +431,7 @@ export default {
       this.required._id = uuidv4();
       this.required.amount = +this.required.amount;
       this.required.type = "user";
-      let mTimeframe = {...this.selectedTimeframe};
+      let mTimeframe = { ...this.selectedTimeframe };
       this.$accessor.FT.addRequirement({
         timeframeIndex: this.selectedTimeframeIndex,
         requirement: this.required,
