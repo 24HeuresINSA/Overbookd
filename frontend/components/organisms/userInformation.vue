@@ -188,6 +188,7 @@
             </v-col>
             <v-col md="3">
               <v-btn
+                v-if="hasEditingRole"
                 :disabled="isValidated()"
                 color="#48C52D"
                 @click="validateUser()"
@@ -195,7 +196,10 @@
               ></v-col
             >
             <v-col md="3">
-              <v-btn color="#65B3F3" @click="isEditingAvailability = true"
+              <v-btn
+                v-if="hasEditingRole"
+                color="#65B3F3"
+                @click="isEditingAvailability = true"
                 >Modifier dispos</v-btn
               ></v-col
             >
