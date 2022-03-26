@@ -66,7 +66,7 @@ export default {
 
   computed: {
     assignedTimeSlots() {
-      return this.$accessor.assignment.assignedTimeSpans;
+      return this.$accessor.assignment.assignedTimespans;
     },
     FTs() {
       return this.$accessor.assignment.FTs;

@@ -31,22 +31,7 @@ export default {
     },
   },
 
-  methods: {
-    addTask(task) {
-      this.$emit(
-        "add-task",
-        {
-          name: task.name,
-          FTID: task.FTID,
-          schedule: {
-            start: new Date(task.schedule.start),
-            end: new Date(task.schedule.end),
-          },
-        },
-        this.FTs.find((FT) => FT._id === task.FTID)
-      );
-    },
-  },
+  methods: {},
 };
 </script>
 

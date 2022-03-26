@@ -18,4 +18,7 @@ export default {
   getAvailableTimespansForUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/available/${userId}`);
   },
+  getUserAssignedTimespans(context: Context, userId: string) {
+    return context.$axios.get(`${resource}/user/${userId}`);
+  },
 };

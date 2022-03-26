@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import TimeSpan from "@entities/TimeSpan";
 import User from "@entities/User";
+import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
 import { Types } from "mongoose";
-import { dateRangeOverlaps } from "../services/conflict";
+import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -75,7 +76,12 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   if (!user || !user.availabilities) {
     return res.json([]);
   }
-  const availableTimespans = timespans.filter(
+  //fetch user timeslot
+  const userAvailabilities = await TimeslotModel.find({
+    _id: { $in: user.availabilities },
+  }).lean();
+
+  let availableTimespans = timespans.filter(
     (timespan) =>
       !assignedTimespans.some((assignedTimespan) =>
         dateRangeOverlaps(
@@ -86,5 +92,9 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
         )
       )
   );
+
+  availableTimespans = availableTimespans.filter((timespan) => {
+    return isTimespanCovered(timespan, userAvailabilities);
+  });
   return res.json(availableTimespans);
 }
