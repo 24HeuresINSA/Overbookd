@@ -1,6 +1,11 @@
 <template>
   <v-card v-if="selectedTimeSpan" max-width="600">
-    <v-card-title>FT {{ mFT.count }} - {{ mFT.general.name }}</v-card-title>
+    <v-card-title>
+      <v-btn icon dark @click="closeDialog">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      FT {{ mFT.count }} - {{ mFT.general.name }}
+    </v-card-title>
     <v-card-text>
       <v-simple-table>
         <tbody>
@@ -29,7 +34,9 @@
           <tr>
             <td>Lieu</td>
             <td>
-              {{ mFT.general.location }}
+              <div v-for="location in mFT.details.locations" :key="location">
+                {{ location }} <br />
+              </div>
             </td>
           </tr>
         </tbody>
@@ -68,6 +75,9 @@ export default {
       await this.$accessor.assignment.unassign(
         this.$accessor.assignment.selectedTimeSpan._id
       );
+      this.$emit("close-dialog");
+    },
+    closeDialog() {
       this.$emit("close-dialog");
     },
   },
