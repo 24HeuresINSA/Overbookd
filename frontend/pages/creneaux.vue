@@ -50,11 +50,11 @@ export default Vue.extend({
   data(): Data {
     return {
       headers: [
-        { text: "Début", value: "start", width: "20%" },
-        { text: "Fin", value: "end", width: "20%" },
+        { text: "Début", value: "start", width: "15%" },
+        { text: "Fin", value: "end", width: "15%" },
         { text: "Requis", value: "required" },
         { text: "Assigné", value: "assigned" },
-        { text: "FT", value: "FTID", width: "5%" },
+        { text: "FT", value: "FTID" },
       ],
       timeSpans: [],
       users: [],
