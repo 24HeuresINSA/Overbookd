@@ -5,7 +5,11 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-switch label="mode tache-orga" :value="mode" @change="changeMode"></v-switch>
+      <v-switch
+        label="mode tache-orga"
+        :value="mode"
+        @change="changeMode"
+      ></v-switch>
       <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
@@ -214,6 +218,7 @@ export default {
       return FTID;
     },
     changeMode(isMode) {
+      this.$accessor.assignment.unsetUser();
       this.$accessor.assignment.changeMode(isMode);
     },
   },

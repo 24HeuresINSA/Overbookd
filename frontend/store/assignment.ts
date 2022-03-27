@@ -72,7 +72,7 @@ export const mutations = mutationTree(state, {
   },
   SET_ASSIGNMENT(state: any, assignedTimeSpan: TimeSpan) {
     const timeSpanIndex = state.timeSpans.findIndex(
-        (ts: TimeSpan) => ts._id === assignedTimeSpan._id
+      (ts: TimeSpan) => ts._id === assignedTimeSpan._id
     );
     state.timeSpans.splice(timeSpanIndex, 1, assignedTimeSpan);
   },
@@ -198,6 +198,13 @@ export const actions = actionTree(
       commit("SET_SELECTED_USER", user);
     },
 
+    /**
+     * unset User
+     */
+    unsetUser({ commit }: any) {
+      commit("SET_SELECTED_USER", {});
+    },
+
     getFTNameById({ state }: any, id: string) {
       const ft = state.FTs.find((ft: FT) => {
         if (ft.timeframes.length > 0) {
@@ -263,8 +270,8 @@ function getUsersAvailable(users: User[], selectedTimeSpan: TimeSpan): User[] {
 export const getters = getterTree(state, {
   filteredUsers: (state: any) => {
     // filter users by filters and search
-    const {user, isModeOrgaToTache} = state.filters;
-    const {search, team} = user;
+    const { user, isModeOrgaToTache } = state.filters;
+    const { search, team } = user;
     let users = [...state.users];
 
     if (search && search.length > 0) {
@@ -334,8 +341,8 @@ export const getters = getterTree(state, {
   },
 
   availableTimeSpans: (state: any, getters: any) => {
-    const {selectedUser} = state;
-    const {isModeOrgaToTache} = state.filters as Filters;
+    const { selectedUser } = state;
+    const { isModeOrgaToTache } = state.filters as Filters;
     if (isModeOrgaToTache) {
       console.log("isModeOrgaToTache");
       console.log(state.timeSpans);
@@ -350,9 +357,9 @@ export const getters = getterTree(state, {
             return;
           }
           if (
-              new Date(av.timeFrame.start).getTime() <=
+            new Date(av.timeFrame.start).getTime() <=
               new Date(ts.start).getTime() &&
-              new Date(av.timeFrame.end).getTime() >= new Date(ts.end).getTime()
+            new Date(av.timeFrame.end).getTime() >= new Date(ts.end).getTime()
           ) {
             isAvailable = true;
           }
@@ -381,7 +388,7 @@ export const getters = getterTree(state, {
    * @param state
    */
   assignedTimeSpans: (state) => {
-    const {selectedUser, timeSpans} = state;
+    const { selectedUser, timeSpans } = state;
     return timeSpans.filter((ts: any) => {
       if (ts.assigned) {
         return ts.assigned === selectedUser._id;

@@ -35,7 +35,11 @@
             >
               {{ formatText(req) }}
             </v-chip>
-            <v-tooltip v-else-if="isRequiredAvailability(req, item)" :key="req._id" top>
+            <v-tooltip
+              v-else-if="isRequiredAvailability(req, item)"
+              :key="req._id"
+              top
+            >
               <template #activator="{ on, attrs }">
                 <v-chip
                   close
@@ -168,7 +172,8 @@
 
 <script>
 import OverField from "../../overField";
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
+
 const DEFAULT_SLICE_TIME = 2;
 
 export default {
@@ -261,14 +266,22 @@ export default {
       if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.user == req.user._id && (c.tf1==item._id || c.tf2==item._id));
+      return this.conflicts.filter(
+        (c) =>
+          c.user == req.user._id && (c.tf1 == item._id || c.tf2 == item._id)
+      );
     },
     requiredConflictsAvailability(req, item) {
       // team requirement cannot have conflicts
       if (req.type == "team" || item == undefined) {
         return [];
       }
-      return this.conflicts.filter((c) => c.type=="availability" && c.user == req.user._id && c.tf1==item._id);
+      return this.conflicts.filter(
+        (c) =>
+          c.type == "availability" &&
+          c.user == req.user._id &&
+          c.tf1 == item._id
+      );
     },
 
     /**

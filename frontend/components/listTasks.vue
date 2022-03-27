@@ -1,8 +1,8 @@
 <template>
   <v-data-table
-      :headers="headers"
-      :items="availableTimeSpans"
-      @click:row="onSelectTimeSpan"
+    :headers="headers"
+    :items="availableTimeSpans"
+    @click:row="onSelectTimeSpan"
   >
     <template #[`item.FTID`]="{ item }">
       {{ item.FTName || item.FTID }}

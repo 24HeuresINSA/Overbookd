@@ -20,10 +20,7 @@
           <v-img
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
           ></v-img>
-          <p>
-            Pour demander un orga en ami, mets le prénom.nom de tes
-            potes !
-          </p>
+          <p>Pour demander un orga en ami, mets le prénom.nom de tes potes !</p>
         </v-container>
       </v-card-text>
     </div>
@@ -41,10 +38,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { FriendRequest } from "~/utils/models/repo";
-import { SnackNotif } from "../../utils/models/store";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {FriendRequest} from "~/utils/models/repo";
+import {SnackNotif} from "../../utils/models/store";
 
 export default Vue.extend({
   name: "FriendsCard",

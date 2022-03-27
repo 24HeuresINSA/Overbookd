@@ -15,59 +15,59 @@
             <v-row>
               <v-col>
                 <v-text-field
-                    v-model="title"
-                    label="Titre"
-                    required
-                    :rules="groupTitleRules"
+                  v-model="title"
+                  label="Titre"
+                  required
+                  :rules="groupTitleRules"
                 ></v-text-field>
               </v-col>
               <v-col>
                 <v-text-field
-                    v-model="charisma"
-                    type="number"
-                    label="Charisme"
-                    single-line
-                    :rules="charismaRules"
+                  v-model="charisma"
+                  type="number"
+                  label="Charisme"
+                  single-line
+                  :rules="charismaRules"
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-row class="d-flex justify-center">
               <v-switch
-                  v-model="forHard"
-                  label="Créneau uniquement pour les hards"
+                v-model="forHard"
+                label="Créneau uniquement pour les hards"
               ></v-switch>
             </v-row>
             <v-row>
               <v-col>
                 <v-text-field
-                    v-model="description"
-                    label="Description"
-                    required
-                    :rules="groupDescriptionRules"
+                  v-model="description"
+                  label="Description"
+                  required
+                  :rules="groupDescriptionRules"
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <OverDatePicker
-                    label="Date de début"
-                    @update:date="dayStart = $event"
+                  label="Date de début"
+                  @update:date="dayStart = $event"
                 >
                 </OverDatePicker>
                 <OverDatePicker
-                    label="Date de fin"
-                    @update:date="dayEnd = $event"
+                  label="Date de fin"
+                  @update:date="dayEnd = $event"
                 >
                 </OverDatePicker>
               </v-col>
               <v-col>
                 <OverTimePicker
-                    label="Heure de début"
-                    @update:time="hourStart = $event"
+                  label="Heure de début"
+                  @update:time="hourStart = $event"
                 ></OverTimePicker>
                 <OverTimePicker
-                    label="Heure de fin"
-                    @update:time="hourEnd = $event"
+                  label="Heure de fin"
+                  @update:time="hourEnd = $event"
                 ></OverTimePicker>
               </v-col>
             </v-row>
@@ -126,8 +126,8 @@ export default Vue.extend({
       const end = new Date(this.dayEnd + "T" + this.hourEnd + ":00");
       if (start.getTime() > end.getTime()) {
         this.$store.dispatch(
-            "timeslot/setCreateStatus",
-            "La date de fin doit être supérieure à la date de début"
+          "timeslot/setCreateStatus",
+          "La date de fin doit être supérieure à la date de début"
         );
         return;
       }
@@ -146,7 +146,7 @@ export default Vue.extend({
           groupTitle: this.title,
           groupDescription: this.description,
           charisma: this.charisma,
-          forHardOnly: this.forHard
+          forHardOnly: this.forHard,
         });
         start = new Date(newEnd);
       }

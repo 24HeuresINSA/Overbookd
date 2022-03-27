@@ -116,15 +116,14 @@ export default {
   watch: {
     selectedTimeframe() {
       const selectedDayTimestamp = this.timeframes.find(
-          (e) => e.name === this.selectedTimeframe
+        (e) => e.name === this.selectedTimeframe
       );
       if (selectedDayTimestamp) {
         this.selectedDay = selectedDayTimestamp.day;
       }
     },
 
-    selectedAssignments() {
-    },
+    selectedAssignments() {},
   },
 
   async mounted() {
