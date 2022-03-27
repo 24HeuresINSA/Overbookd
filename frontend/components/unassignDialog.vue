@@ -32,6 +32,12 @@
               {{ mFT.general.location }}
             </td>
           </tr>
+          <tr>
+            <td>Affecté</td>
+            <td>
+              <v-chip v-for="user in UsersAssignedToTimeSpan">{{user}}</v-chip>
+            </td>
+          </tr>
         </tbody>
       </v-simple-table>
     </v-card-text>
@@ -60,7 +66,10 @@ export default {
       if (this.FTs) {
         return this.FTs.find((FT) => FT.count === this.selectedTimeSpan.FTID);
       }
-      return;
+
+    },
+    UsersAssignedToTimeSpan() {
+      return this.$accessor.assignment.UsersAssignedToTimeSpan;
     },
   },
   methods: {

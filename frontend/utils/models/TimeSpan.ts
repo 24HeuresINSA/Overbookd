@@ -5,4 +5,5 @@ export interface TimeSpan {
   assigned: string;
   required: string;
   _id: string;
+  FTID: string;
 }

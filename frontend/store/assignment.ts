@@ -1,11 +1,11 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import user from "~/middleware/user";
 
@@ -371,6 +371,21 @@ export const getters = getterTree(state, {
       }
       return false;
     });
+  },
+
+  /**
+   * users in the same TimeSpan as the selected TimeSpan
+   * users assigned to timespans with the same start and end time and FTID
+   * @param state
+   * @constructor
+   */
+  UsersAssignedToTimeSpan: (state) => {
+    const { selectedTimeSpan } = state;
+    const timeSpansOfTheSameFT = state.timespans.filter(
+      (ts: TimeSpan) => ts.FTID === selectedTimeSpan.FTID
+    );
+
+    return ["Hugo", "Lukas", "Lukas", "Lukas", "Lukas", "Lukas", "Lukas"];
   },
 });
 
