@@ -1,17 +1,17 @@
 <template>
   <v-dialog v-model="toggled" :retain-focus="false" max-width="600">
     <v-card>
-      <v-card-title>Envoyer un message a l'asso</v-card-title>
+      <v-card-title>Envoyer un message à l'asso</v-card-title>
       <v-card-text>
-        <v-text-field v-model="notification.link" label="lien"></v-text-field>
+        <v-text-field v-model="notification.link" label="Lien"></v-text-field>
         <v-autocomplete
           v-model="notification.team"
-          label="team"
+          label="Team"
           :items="teams"
         ></v-autocomplete>
         <v-text-field
           v-model="notification.message"
-          label="message"
+          label="Message"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>

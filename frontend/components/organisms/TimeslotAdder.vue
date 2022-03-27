@@ -7,7 +7,7 @@
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Ajout de multiple créneaux </span>
+        <span class="headline">Ajout de multiple créneaux</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -76,8 +76,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="dialog = false">Cancel</v-btn>
-        <v-btn color="primary" text @click="addOverTimeslot()">Add</v-btn>
+        <v-btn color="primary" text @click="dialog = false">Annuler</v-btn>
+        <v-btn color="primary" text @click="addOverTimeslot()">Ajouter</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -146,7 +146,7 @@ export default Vue.extend({
           groupTitle: this.title,
           groupDescription: this.description,
           charisma: this.charisma,
-          forHardOnly: this.forHard
+          forHardOnly: this.forHard,
         });
         start = new Date(newEnd);
       }

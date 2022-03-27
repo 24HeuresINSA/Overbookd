@@ -24,7 +24,7 @@
           </v-row>
           <v-row>
             <v-col md="2">
-              <v-subheader> Emplacment : </v-subheader>
+              <v-subheader> Emplacement : </v-subheader>
             </v-col>
             <v-col>
               <v-text-field

@@ -141,6 +141,9 @@ export const mutations = mutationTree(state, {
   DELETE_EQUIPMENT: function ({ mFT }, index) {
     mFT.equipments.splice(index, 1);
   },
+  DELETE_EQUIPMENT_BY_ID: function ({ mFT }, equipmentId) {
+    mFT.equipments = mFT.equipments.filter((e) => e._id !== equipmentId);
+  },
   UPDATE_EQUIPMENT_REQUIRED_COUNT: function ({ mFT }, { _id, count }) {
     const equipment = mFT.equipments.find((e: any) => e._id === _id);
     if (equipment) {
@@ -296,6 +299,9 @@ export const actions = actionTree(
     },
     deleteEquipment: async function ({ dispatch, commit }, payload) {
       commit("DELETE_EQUIPMENT", payload);
+    },
+    deleteEquipmentById: async function ({ dispatch, commit }, payload) {
+      commit("DELETE_EQUIPMENT_BY_ID", payload);
     },
     updateEquipmentRequiredCount: async function (
       { dispatch, commit },

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <v-card-title>FT 👻</v-card-title>
+      <v-card-title>FT associées</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="FTs">
           <template #[`item.action`]="{ item }">
@@ -42,7 +42,7 @@ export default {
   data: () => ({
     headers: [
       { text: "FT", value: "general.name" },
-      { text: "action", value: "action" },
+      { text: "Action", value: "action" },
     ],
 
     newFTDialog: false,

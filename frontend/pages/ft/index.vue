@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Fiche Tache 👻</h1>
+    <h1>Fiche Tâche</h1>
 
     <v-container style="display: grid; width: 100%; margin: 0">
       <v-row>
@@ -10,7 +10,7 @@
             <v-card-text>
               <v-text-field
                 v-model="filters.search"
-                label="recherche"
+                label="Recherche"
               ></v-text-field>
               <v-select
                 v-model="filters.teams"
@@ -19,7 +19,7 @@
                 clearable
                 dense
               ></v-select>
-              <label>Status</label>
+              <label>Statut</label>
               <v-btn-toggle
                 v-model="filters.status"
                 tile
@@ -27,7 +27,7 @@
                 color="deep-purple accent-3"
                 group
               >
-                <v-btn x-small value="draft">Draft</v-btn>
+                <v-btn x-small value="draft">Brouillon</v-btn>
                 <v-btn x-small value="submitted">Soumise</v-btn>
                 <v-btn x-small value="refused">Refusé</v-btn>
                 <v-btn x-small value="validated">Validé</v-btn>
@@ -47,6 +47,7 @@
             sort-by="count"
             :items-per-page="20"
             :loading="loading"
+            :footer-props="{'items-per-page-options': [20, 100, -1]}"
           >
             <template #item.general.name="{ item }">
               <a
@@ -214,7 +215,7 @@ export default Vue.extend({
       color,
       headers: [
         {
-          text: "Status",
+          text: "Statut",
           value: "status",
         },
         { text: "Validation", value: "validation" },

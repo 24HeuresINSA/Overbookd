@@ -31,15 +31,15 @@
               </v-select>
               <v-row>
                 <v-col md="3"
-                  ><v-btn text @click="addRole()">ajouter</v-btn></v-col
+                  ><v-btn text @click="addRole()">Ajouter</v-btn></v-col
                 >
                 <v-col md="6"
                   ><v-btn text @click="deleteAllTeams()"
-                    >révoquer tous les rôles</v-btn
+                    >Révoquer tous les rôles</v-btn
                   ></v-col
                 >
                 <v-col md="2"
-                  ><v-btn text @click="saveUser()">sauvegarder</v-btn></v-col
+                  ><v-btn text @click="saveUser()">Sauvegarder</v-btn></v-col
                 >
               </v-row>
             </div>
@@ -188,16 +188,28 @@
             </v-col>
             <v-col md="3">
               <v-btn
+                v-if="hasEditingRole"
                 :disabled="isValidated()"
                 color="#48C52D"
                 @click="validateUser()"
                 >Valider (soft)</v-btn
               ></v-col
             >
+            <v-col md="3">
+              <v-btn
+                v-if="hasEditingRole"
+                color="#65B3F3"
+                @click="isEditingAvailability = true"
+                >Modifier dispos</v-btn
+              ></v-col
+            >
           </v-row>
         </v-col>
       </v-row>
     </v-card>
+    <v-dialog v-model="isEditingAvailability" width="80%"
+      ><ModificationCard :user="user"
+    /></v-dialog>
   </v-dialog>
 </template>
 
@@ -207,10 +219,11 @@ import { safeCall } from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
 import { isValidated } from "~/utils/roles/index.ts";
 import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
+import ModificationCard from "~/components/organisms/ModificationCard.vue";
 
 export default {
   name: "UserInformation",
-  components: { OverChips, AvailabilitiesCalendar },
+  components: { OverChips, AvailabilitiesCalendar, ModificationCard },
   props: {
     user: {
       type: Object,
@@ -227,6 +240,7 @@ export default {
       newRole: undefined,
       teams: [],
       hasEditingRole: false,
+      isEditingAvailability: false,
     };
   },
 

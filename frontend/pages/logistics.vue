@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <h1>La Log 🚚 (work in progess 🔨)</h1>
+      <h1>La Log 🚚 (work in progress 🔨)</h1>
       <br />
       <Tabs>
         <Tab name="Matos FA" selected>

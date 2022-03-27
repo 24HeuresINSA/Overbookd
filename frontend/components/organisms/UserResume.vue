@@ -7,18 +7,18 @@
           right
           small
           v-bind="attrs"
-          v-on="on"
           class="icon"
+          v-on="on"
           @click.stop="toggleUserDialog"
         >
-          mdi-information</v-icon
-        >
+          mdi-information
+        </v-icon>
       </template>
       <span>{{ user.comment }}</span>
     </v-tooltip>
     <br />
     <span
-      v-for="team of user.team"
+      v-for="team of user.team.filter((item) => item !== 'toValidate')"
       :key="team"
       :class="getClass(team) + ' role'"
     >

@@ -5,7 +5,7 @@
 
       <template #action="{ attrs }">
         <v-btn color="pink" text v-bind="attrs" @click="dismiss()">
-          Close
+          Fermer
         </v-btn>
       </template>
     </v-snackbar>
@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       snackbar: false,
-      message: ""
+      message: "",
     };
   },
   created() {

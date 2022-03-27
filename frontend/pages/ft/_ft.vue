@@ -1,6 +1,6 @@
 <template>
   <v-container style="display: grid">
-    <h1>Fiche Tache 🤩</h1>
+    <h1>Fiche Tâche</h1>
 
     <v-row>
       <v-col md="12">
@@ -121,7 +121,10 @@
       <v-btn v-if="FT.count > 1" small fab :href="`/ft/${FT.count - 1}`">
         <v-icon small>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-btn v-if="hasRole('humain')" color="red" @click="readyForAssignment"
+      <v-btn
+        v-if="hasRole('humain') && FT.status !== 'ready'"
+        color="red"
+        @click="readyForAssignment"
         >prêt pour affectation
       </v-btn>
       <v-btn
@@ -181,7 +184,7 @@
       </v-menu>
 
       <v-btn
-        v-if="FT.status == 'draft' || FT.status == 'refused'"
+        v-if="FT.status === 'draft' || FT.status === 'refused'"
         color="secondary"
         @click="isDialogOpen.submit = true"
         >Soumettre a validation
@@ -207,8 +210,6 @@ import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframe
 import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
 
 interface Data {
   FTID: number;
@@ -303,8 +304,6 @@ export default Vue.extend({
       const allValidators: string[] =
         this.$accessor.config.getConfig("ft_validators");
       if (this.me.team.includes("admin")) {
-        // admin has all the validators powers
-        console.log(allValidators);
         return allValidators;
       }
       if (allValidators) {

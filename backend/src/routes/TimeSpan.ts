@@ -18,6 +18,17 @@ export async function getTimeSpanById(req: Request, res: Response) {
   return res.json(timespan);
 }
 
+//get timespan where assigned is userid
+export async function getTimeSpanByAssigned(req: Request, res: Response) {
+  const timespan = await TimeSpan.find({ assigned: req.params.id });
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+  return res.json(timespan);
+}
+
 /*
  assign user to a timespan
  /timespan/:id/user/:userId

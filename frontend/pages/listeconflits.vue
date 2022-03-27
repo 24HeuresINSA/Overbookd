@@ -33,7 +33,6 @@
 import Vue from "vue";
 import { Conflict } from "~/utils/models/conflicts";
 import sanitizeHtml from "sanitize-html";
-import { hasRole } from "~/utils/roles";
 
 declare type ConflictFT = Conflict & {
   ft1: number;
@@ -50,7 +49,13 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.initStore();
+    if (this.$accessor.user.hasRole("hard")) {
+      await this.initStore();
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
+    }
   },
   methods: {
     async initStore() {

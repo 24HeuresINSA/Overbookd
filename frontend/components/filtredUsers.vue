@@ -7,7 +7,7 @@
         <div style="display: flex">
           <v-text-field
             prepend-icon="mdi-card-search"
-            label="recherche"
+            label="Recherche"
             @input="updateFilter('search', $event)"
           ></v-text-field>
           <v-combobox
@@ -15,7 +15,7 @@
             multiple
             dense
             clearable
-            label="team"
+            label="Team"
             :items="getConfig('teams').map((e) => e.name)"
             @input="updateFilter('team', $event)"
           >
@@ -28,7 +28,9 @@
                 <v-icon left color="white">
                   {{ getRoleMetadata(item).icon }}
                 </v-icon>
-                <a style="color: white">{{ getRoleMetadata(item).name }}</a>
+                <a style="color: white">
+                  {{ getRoleMetadata(item).name }}
+                </a>
               </v-chip>
             </template>
           </v-combobox>
@@ -59,7 +61,9 @@ export default {
 
   computed: {
     filteredUsers() {
-      return this.$accessor.assignment.filteredUsers;
+      return this.$accessor.assignment.filteredUsers.filter(
+        (user) => user.team.includes("hard") || user.team.includes("soft")
+      );
     },
   },
 

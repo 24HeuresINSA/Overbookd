@@ -68,9 +68,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true" small> Payé</v-btn>
+                  <v-btn :value="true" small>Payée</v-btn>
 
-                  <v-btn :value="false" small> Non payé</v-btn>
+                  <v-btn :value="false" small> Non payée</v-btn>
                 </v-btn-toggle>
                 <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
@@ -235,12 +235,12 @@ export default {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "prénom", value: "firstname" },
-        { text: "nom", value: "lastname" },
-        { text: "surnom", value: "nickname" },
-        { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
-        { text: "charisme", value: "charisma", align: "end" },
-        { text: "action", value: "action", sortable: false },
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Surnom", value: "nickname" },
+        { text: "Team", value: "team", cellClass: "width: 250px", width: "1" },
+        { text: "Charisme", value: "charisma", align: "end" },
+        { text: "Action", value: "action", sortable: false },
       ],
 
       teams: getConfig(this, "teams"),
@@ -273,7 +273,7 @@ export default {
       },
       newRole: undefined,
 
-      feedbackMessage: "sauvgardé 🥳",
+      feedbackMessage: "Sauvegardé 🥳",
     };
   },
 
@@ -347,11 +347,8 @@ export default {
   },
 
   async mounted() {
-    if (!this.hasRole("hard")) {
-      await this.$router.push({
-        path: "/index",
-      });
-    } else {
+    await this.initStore();
+    if (this.$accessor.user.hasRole("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
       this.users.filter((user) => user.isValid);
@@ -366,10 +363,18 @@ export default {
           align: "end",
         });
       }
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
     }
   },
 
   methods: {
+    async initStore() {
+      await this.$accessor.user.fetchUser();
+      await this.$accessor.timeslot.fetchTimeslots();
+    },
     isCpUseful(item) {
       if (item.team) {
         return item.team.includes("hard");
