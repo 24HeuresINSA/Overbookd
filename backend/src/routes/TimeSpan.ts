@@ -93,8 +93,42 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
       )
   );
 
+  availableTimespans = availableTimespans.filter(
+    (timespan) => {
+      if (timespan.required && timespan.required.length < 24) {
+        const requiredTeam = timespan.required;
+        if(requiredTeam === "soft"){
+          if(user.team && (user.team.includes(requiredTeam) || user.team.includes("hard") || user.team.includes("confiance"))){
+            return true;
+          }
+        }
+        if(requiredTeam === "confiance"){
+          if(user.team && (user.team.includes(requiredTeam) || user.team.includes("hard"))){
+            return true;
+          }
+        }
+        if(user.team && user.team.includes(requiredTeam)) {
+          return true;
+        }
+      }
+    }
+  );
+
+  //verify if timespan is covered by user timeslot
   availableTimespans = availableTimespans.filter((timespan) => {
     return isTimespanCovered(timespan, userAvailabilities);
   });
+
+  //fiter duplicate timespan by every attribute
+  availableTimespans = availableTimespans.filter(
+    (timespan, index, self) =>
+      index ===
+      self.findIndex(
+        (t) =>
+          t.start.getTime() === timespan.start.getTime() &&
+          t.end.getTime() === timespan.end.getTime() &&
+          t.required === timespan.required
+      )
+  );
   return res.json(availableTimespans);
 }

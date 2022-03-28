@@ -76,13 +76,32 @@ export const mutations = mutationTree(state, {
     state.assignedTimespans = data;
   },
   SET_ASSIGNMENT(state: any, assignedTimeSpan: TimeSpan) {
-    const timeSpanIndex = state.timespans.findIndex(
-      (ts: TimeSpan) => ts._id === assignedTimeSpan._id
-    );
-    state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
+    // const timeSpanIndex = state.timespans.findIndex(
+    //   (ts: TimeSpan) => ts._id === assignedTimeSpan._id
+    // );
+    // state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
+    state.assignedTimespans.push(assignedTimeSpan);
   },
   SET_SELECTED_TIMESPAN(state: any, data: TimeSpan) {
     state.selectedTimeSpan = data;
+  },
+  ADD_ASSIGNED_TIMESPAN(state: any, data: TimeSpan) {
+    state.assignedTimespans.push(data);
+  },
+  ADD_AVAILABLE_TIMESPAN(state: any, data: TimeSpan) {
+    state.timespans.push(data);
+  },
+  REMOVE_AVAILAIBLE_TIMESPAN(state: any, data: TimeSpan) {
+    const timeSpanIndex = state.timespans.findIndex(
+      (ts: TimeSpan) => ts._id === data._id
+    );
+    state.timespans.splice(timeSpanIndex, 1);
+  },
+  REMOVE_ASSIGNED_TIMESPAN(state: any, data: TimeSpan) {
+    const timeSpanIndex = state.assignedTimespans.findIndex(
+      (ts: TimeSpan) => ts._id === data._id
+    );
+    state.assignedTimespans.splice(timeSpanIndex, 1);
   },
   CHANGE_MODE(state: any, data: boolean) {
     state.filters.isModeOrgaToTache = data;
@@ -275,7 +294,8 @@ export const actions = actionTree(
           ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
         };
         assignedTimeSpan.assigned = res.data.assigned;
-        commit("SET_ASSIGNMENT", assignedTimeSpan);
+        commit("ADD_ASSIGNED_TIMESPAN", assignedTimeSpan);
+        commit("REMOVE_AVAILAIBLE_TIMESPAN", assignedTimeSpan);
       }
     },
 
@@ -289,10 +309,11 @@ export const actions = actionTree(
       );
       if (res) {
         const assignedTimeSpan = {
-          ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
+          ...state.assignedTimespans.find((ts: TimeSpan) => ts._id === res.data._id),
         };
         assignedTimeSpan.assigned = res.data.assigned;
-        commit("SET_ASSIGNMENT", assignedTimeSpan);
+        commit("ADD_AVAILABLE_TIMESPAN", assignedTimeSpan);
+        commit("REMOVE_ASSIGNED_TIMESPAN", assignedTimeSpan);
       }
     },
   }
