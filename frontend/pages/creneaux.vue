@@ -37,7 +37,6 @@ import { Header } from "~/utils/models/Data";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import UserRepo from "~/repositories/userRepo";
 import { safeCall } from "../utils/api/calls";
-import _ from "lodash";
 
 interface Data {
   headers: Header[];
@@ -45,8 +44,12 @@ interface Data {
   users: any[];
 }
 
+declare interface Mymap {
+  [key: string]: any;
+}
+
 export default Vue.extend({
-  name: "PassSecu",
+  name: "Creneaux",
   data(): Data {
     return {
       headers: [
@@ -76,7 +79,7 @@ export default Vue.extend({
     async getAllTimeSpans() {
       const res = await safeCall(this.$store, TimeSpanRepo.getAll(this.$store));
       if (res) {
-        const helper = {};
+        const helper = {} as Mymap;
         const grouped = [...res.data].reduce((acc, cur) => {
           const key =
             cur.start.toString() +
