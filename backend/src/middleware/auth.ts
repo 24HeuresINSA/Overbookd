@@ -69,6 +69,7 @@ export const verifyRoles: (roles: string) => RequestHandler = function (
 
     if (user.team.includes("admin")) {
       next();
+      return;
     }
 
     if (!user.team.includes(roles)) {
