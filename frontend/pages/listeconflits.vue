@@ -93,8 +93,8 @@ export default Vue.extend({
       await this.$accessor.conflict.computeAll();
       await this.$accessor.conflict.fetchAll();
     },
-    async hasRole(role: string): Promise<boolean> {
-      return await this.$accessor.user.hasRole(role);
+    hasRole(role: string): boolean {
+      return this.$accessor.user.hasRole(role);
     },
   },
 });
