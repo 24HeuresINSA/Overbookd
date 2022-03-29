@@ -34,8 +34,10 @@
           <tr>
             <td>Lieu</td>
             <td>
-              <div v-for="location in mFT.details.locations" :key="location">
-                {{ location }} <br />
+              <div v-if="mFT.details !== undefined">
+                <div v-for="location in mFT.details.locations" :key="location">
+                  {{ location }} <br />
+                </div>
               </div>
             </td>
           </tr>

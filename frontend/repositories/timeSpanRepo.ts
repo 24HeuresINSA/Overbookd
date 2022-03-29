@@ -15,4 +15,10 @@ export default {
   unassignUserFromTimespan(context: Context, timespanId: string) {
     return context.$axios.post(`${resource}/${timespanId}/unassign`);
   },
+  getAvailableTimespansForUser(context: Context, userId: string) {
+    return context.$axios.get(`${resource}/available/${userId}`);
+  },
+  getUserAssignedTimespans(context: Context, userId: string) {
+    return context.$axios.get(`${resource}/user/${userId}`);
+  },
 };

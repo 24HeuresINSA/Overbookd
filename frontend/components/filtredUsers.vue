@@ -54,7 +54,6 @@ export default {
 
   data() {
     return {
-      timeframes: this.getConfig("timeframes"),
       teams: this.getConfig("teams"),
     };
   },
@@ -67,43 +66,7 @@ export default {
     },
   },
 
-  watch: {
-    // filters: {
-    //   deep: true,
-    //
-    //   handler() {
-    //     const filters = this.filters;
-    //     let users = this.users;
-    //
-    //     // filter by name
-    //     if (filters.name) {
-    //       const options = {
-    //         // Search in `author` and in `tags` array
-    //         keys: ["firstname", "lastname", "nickname"],
-    //       };
-    //       const fuse = new Fuse(users, options);
-    //
-    //       users = fuse.search(filters.name).map((e) => e.item);
-    //     }
-    //
-    //     // filter by team
-    //     if (filters.teams.length !== 0) {
-    //       users = users.filter((user) => {
-    //         if (user.team && user.team.length !== 0) {
-    //           let all = true;
-    //           filters.teams.forEach((t) => {
-    //             all = all && user.team.includes(t);
-    //           });
-    //           return all;
-    //         }
-    //         return false;
-    //       });
-    //     }
-    //     this.filteredUsers = users;
-    //     this.sortFilteredUsers();
-    //   },
-    // },
-  },
+  watch: {},
 
   async mounted() {},
 
@@ -114,20 +77,6 @@ export default {
         value: $event,
       });
     },
-    sortFilteredUsers() {
-      this.filteredUsers = this.filteredUsers.sort((user1, user2) => {
-        user1.charisma = user1.charisma ? user1.charisma : 0;
-        user2.charisma = user2.charisma ? user2.charisma : 0;
-
-        if (user1.charisma > user2.charisma) {
-          return -1;
-        }
-        if (user1.charisma < user2.charisma) {
-          return 1;
-        }
-        return 0;
-      });
-    },
 
     getRoleMetadata(roleName) {
       return this.teams.find((e) => e.name === roleName);
@@ -135,10 +84,6 @@ export default {
 
     getConfig(key) {
       return getConfig(this, key);
-    },
-
-    onSelectedUser(user) {
-      this.$emit("selected-user", user);
     },
   },
 };
