@@ -27,8 +27,6 @@
       @mousedown:event="startDrag"
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
-      @mouseup:time="endDrag"
-      @mouseleave.native="cancelDrag"
     >
       <template #interval="{ date, time }">
         <div
@@ -87,12 +85,6 @@ export default {
       console.log("startDrag", event, timed);
       this.$accessor.assignment.selectTimeSpan(event);
       this.$emit("open-unassign-dialog");
-
-      if (event && timed) {
-        this.dragEvent = event;
-        this.dragTime = null;
-        this.extendOriginal = null;
-      }
     },
     startTime(tms) {
       const mouse = this.toTime(tms);
@@ -101,21 +93,7 @@ export default {
         const start = this.dragEvent.start;
 
         this.dragTime = mouse - start;
-      } else {
-        this.createStart = this.roundTime(mouse);
-        this.createEvent = {
-          name: `Créneau #${this.calendarFormattedEvents.length}`,
-          start: this.createStart,
-          end: this.createStart,
-          timed: true,
-        };
-        this.newEvent = this.createEvent;
       }
-    },
-    extendBottom(event) {
-      this.createEvent = event;
-      this.createStart = event.start;
-      this.extendOriginal = event.end;
     },
     mouseMove(tms) {
       const mouse = this.toTime(tms);
@@ -138,33 +116,6 @@ export default {
         this.createEvent.start = min;
         this.createEvent.end = max;
       }
-    },
-    endDrag() {
-      this.dragTime = null;
-      this.dragEvent = null;
-      this.createEvent = null;
-      this.createStart = null;
-      this.extendOriginal = null;
-    },
-    cancelDrag() {
-      if (this.disabled) {
-        return;
-      }
-      if (this.createEvent) {
-        if (this.extendOriginal) {
-          this.createEvent.end = this.extendOriginal;
-        } else {
-          const i = this.events.indexOf(this.createEvent);
-          // if (i !== -1) {
-          //   this.events.splice(i, 1);
-          // }
-        }
-      }
-
-      this.createEvent = null;
-      this.createStart = null;
-      this.dragTime = null;
-      this.dragEvent = null;
     },
     roundTime(time, down = true) {
       const roundTo = 15; // minutes
