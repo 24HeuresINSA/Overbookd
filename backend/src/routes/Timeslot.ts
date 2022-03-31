@@ -4,6 +4,7 @@ import UserModel from "@entities/User";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
 import {Types} from "mongoose";
+import FTModel from "@entities/FT";
 
 export async function getTimeslot(req: Request, res: Response) {
   const availabilities = await TimeslotModel.find({});
@@ -131,4 +132,63 @@ export async function deleteManyTimeslotsByGroupTitle(
     await timeslot.remove();
   }
   res.sendStatus(StatusCodes.OK);
+}
+
+// Return the number of users available and require for each 15 minutes timeslot of the given day (start of the day)
+export async function getOrgaNeeds(req: Request, res: Response) {
+  const timestamp: number = +(req.params['timestamp']);
+  const start = new Date(timestamp);
+  const end = new Date(timestamp + 86400000); // The end is the start + 1 day in seconds
+  logger.info(`getting Timeslots for Timeslot ${timestamp}`);
+
+  const timeslots = await TimeslotModel.aggregate()
+    .match({
+      'timeFrame.start': {$gte: start},
+      'timeFrame.end': {$lte: end},
+    })
+    .lookup({
+      from: 'users',
+      localField: '_id',
+      foreignField: 'availabilities',
+      as: 'users',
+    })
+    .project({
+      _id: 1,
+      timeFrame: 1,
+      groupTitle: 1,
+      countUsers: {$size: '$users'},
+    });
+
+  // change the time range from 2 hours to 15 minutes
+  let smallTimeslots: Array<{ start: Date, end: Date, availableCount: number, requireCount: number }> = [];
+  timeslots.forEach(elem => {
+    for (let i = 0; i < 8; i++) {
+      smallTimeslots.push({
+        start: new Date(elem.timeFrame.start.getTime() + i * 900000),
+        end: new Date(elem.timeFrame.start.getTime() + (i + 1) * 900000),
+        availableCount: elem.countUsers,
+        requireCount: 0,
+      });
+    }
+  });
+
+  const required = await FTModel.aggregate()
+    .match({
+      $and: [{isValid: {$ne: false}}],
+    })
+    .project({
+      timeframes: 1
+    })
+    .unwind('$timeframes');
+
+  smallTimeslots.forEach((timeslot) => {
+    const requiredForTimeslot = required.filter(
+      (ft) =>
+        new Date(ft.timeframes.start) <= timeslot.start &&
+        new Date(ft.timeframes.end) >= timeslot.end
+    );
+    timeslot.requireCount = requiredForTimeslot.length;
+  });
+
+  return res.json(smallTimeslots);
 }

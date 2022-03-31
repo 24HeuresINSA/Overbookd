@@ -12,6 +12,9 @@ export default {
   getById(context: Context, id: string) {
     return context.$axios.get(`${resource}/${id}`);
   },
+  getOrgaNeeds(context: Context, timestamp: number) {
+    return context.$axios.get(`${resource}/getOrgaNeeds/${timestamp}`);
+  },
 
   // POST
   createMany(context: Context, timeslot: Timeslot[]) {

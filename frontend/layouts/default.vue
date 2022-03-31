@@ -217,6 +217,12 @@ export default {
           to: "/assignment",
         },
         {
+          icon: "mdi-clock",
+          title: "Besoin orgas",
+          roles: "humain",
+          to: "/organeeds",
+        },
+        {
           icon: "mdi-alert-circle",
           title: "Conflits",
           roles: "hard",
