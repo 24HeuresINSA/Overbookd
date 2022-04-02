@@ -46,7 +46,6 @@
 
 <script>
 import UsersList from "./usersList";
-import { getConfig } from "../common/role";
 
 export default {
   name: "FilteredUsers",
@@ -83,7 +82,7 @@ export default {
     },
 
     getConfig(key) {
-      return getConfig(this, key);
+      return this.$accessor.config.getConfig(key);
     },
   },
 };
