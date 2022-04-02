@@ -81,8 +81,14 @@ export async function createFA(req: Request, res: Response) {
 }
 
 export async function getFAsNumber(req: Request, res: Response) {
+  logger.info("getting FAs count");
   const FAs = await FAModel.aggregate()
-    .match({ isValid: { $ne: false } })
+    .match({
+      $and: [
+        { isValid: { $ne: false } },
+        { 'general.team': { $ne: null } }
+      ]
+    })
     .group({
       _id: { team: "$general.team", status: "$status" },
       count: { $sum: 1 },
@@ -115,6 +121,5 @@ export async function getFAsNumber(req: Request, res: Response) {
       total: fa.total,
     };
   }).sort((a, b) => 0 - (a.team.toLowerCase() > b.team.toLowerCase() ? -1 : 1));
-  logger.info("getting FAs count");
   res.json(result);
 }
