@@ -1,11 +1,11 @@
-import {actionTree, getterTree, mutationTree} from "typed-vuex";
-import {safeCall} from "~/utils/api/calls";
-import {RepoFactory} from "~/repositories/repoFactory";
-import {User} from "~/utils/models/repo";
-import {FT} from "~/utils/models/FT";
-import {FA} from "~/utils/models/FA";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { User } from "~/utils/models/repo";
+import { FT } from "~/utils/models/FT";
+import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import {TimeSpan} from "~/utils/models/TimeSpan";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import user from "~/middleware/user";
 
@@ -297,6 +297,7 @@ export const actions = actionTree(
         commit("ADD_ASSIGNED_TIMESPAN", assignedTimeSpan);
         commit("REMOVE_AVAILAIBLE_TIMESPAN", assignedTimeSpan);
       }
+      return res;
     },
 
     /**
@@ -309,7 +310,9 @@ export const actions = actionTree(
       );
       if (res) {
         const assignedTimeSpan = {
-          ...state.assignedTimespans.find((ts: TimeSpan) => ts._id === res.data._id),
+          ...state.assignedTimespans.find(
+            (ts: TimeSpan) => ts._id === res.data._id
+          ),
         };
         assignedTimeSpan.assigned = res.data.assigned;
         commit("ADD_AVAILABLE_TIMESPAN", assignedTimeSpan);
@@ -323,7 +326,7 @@ export const getters = getterTree(state, {
   filteredUsers: (state: any) => {
     // filter users by filters and search
     const { user } = state.filters;
-    const {search, team} = user;
+    const { search, team } = user;
     let users = [...state.users];
 
     if (search && search.length > 0) {
