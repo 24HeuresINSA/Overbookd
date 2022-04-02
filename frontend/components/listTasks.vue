@@ -1,27 +1,33 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="availableTimeSpans"
-    @click:row="assignTask"
-  >
-    <template #[`item.FTID`]="{ item }">
-      {{ item.FTName || item.FTID }}
-    </template>
-    <template #[`item.date`]="row">
-      {{ new Date(row.item.start).toLocaleDateString() }}
-    </template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="availableTimeSpans"
+      @click:row="assignTask"
+    >
+      <template #[`item.FTID`]="{ item }">
+        {{ item.FTName || item.FTID }}
+      </template>
+      <template #[`item.date`]="row">
+        {{ new Date(row.item.start).toLocaleDateString() }}
+      </template>
 
-    <template #[`item.start`]="row">
-      {{ new Date(row.item.start).toLocaleTimeString() }}
-    </template>
+      <template #[`item.start`]="row">
+        {{ new Date(row.item.start).toLocaleTimeString() }}
+      </template>
 
-    <template #[`item.end`]="row">
-      {{ new Date(row.item.end).toLocaleTimeString() }}
-    </template>
-  </v-data-table>
+      <template #[`item.end`]="row">
+        {{ new Date(row.item.end).toLocaleTimeString() }}
+      </template>
+    </v-data-table>
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      {{ snack.feedbackMessage }}
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
+import { Snack } from "~/utils/models/snack";
 export default {
   name: "ListTasks",
 
@@ -51,6 +57,7 @@ export default {
           value: "action",
         },
       ],
+      snack: new Snack(),
     };
   },
 
@@ -64,11 +71,17 @@ export default {
   },
 
   methods: {
-    assignTask(task) {
-      this.$accessor.assignment.assignUserToTimespan({
+    async assignTask(task) {
+      const res = await this.$accessor.assignment.assignUserToTimespan({
         userID: task._id,
         timespanID: this.$accessor.assignment.selectedUser._id,
       });
+      if (!res) {
+        console.log("testestetst");
+        this.snack.display(
+          "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
+        );
+      }
     },
     resolveFTName(FTID) {
       const FT = this.FTs.find((FT) => FT.count === FTID);
