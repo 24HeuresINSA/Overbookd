@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div>
+      <h1>Rapport des besoins en orgas</h1>
+      <p>Orgas disponibles - Orgas nécessaires toute FT | Orgas nécessaires FT validées (Orgas affectés)</p>
+    </div>
     <div class="d-flex">
       <v-btn-toggle
           class="justify-center"
@@ -28,7 +32,7 @@
           }}
         </div>
         <div v-for="day in days" :style="`width: 10%; color: ${getColor(day.data[i])};`">
-          {{ day.data[i].availableCount }} - {{ day.data[i].requireCount }} - {{ day.data[i].requireValidatedCount }} - {{ day.data[i].affectedCount }}
+          {{ day.data[i].availableCount }} - {{ day.data[i].requireCount }} | {{ day.data[i].requireValidatedCount }} ({{ day.data[i].affectedCount }})
         </div>
       </div>
     </div>
@@ -83,11 +87,11 @@ export default {
     },
     getColor(data) {
       if(data.affectedCount >= data.requireValidatedCount) {
-        return "blue";
+        return "#0066ff";
       } else if (data.availableCount >= data.requireCount + 5) {
         return "green";
       } else if (data.availableCount >= data.requireCount) {
-        return "lightgreen";
+        return "#00cc66";
       } else if (data.availableCount >= data.requireCount - 5) {
         return "#ff7f7f";
       } else {
