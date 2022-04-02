@@ -5,6 +5,7 @@ import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
 import {Types} from "mongoose";
 import FTModel from "@entities/FT";
+import TimeSpanModel from "@entities/TimeSpan";
 
 export async function getTimeslot(req: Request, res: Response) {
   const availabilities = await TimeslotModel.find({});
@@ -141,6 +142,25 @@ export async function getOrgaNeeds(req: Request, res: Response) {
   const end = new Date(timestamp + 86400000); // The end is the start + 1 day in seconds
   logger.info(`getting Timeslots for Timeslot ${timestamp}`);
 
+  let smallTimeslots: Array<{
+    id: number,
+    start: Date,
+    availableCount: number,
+    requireCount: number,
+    requireValidatedCount: number
+    affectedCount: number
+  }> = [];
+  for (let i = 0; i < 96; i++) {
+    smallTimeslots.push({
+      id: i,
+      start: new Date(start.getTime() + i * 900000),
+      availableCount: 0,
+      requireCount: 0,
+      requireValidatedCount: 0,
+      affectedCount: 0
+    });
+  }
+
   const timeslots = await TimeslotModel.aggregate()
     .match({
       'timeFrame.start': {$gte: start},
@@ -159,16 +179,14 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       countUsers: {$size: '$users'},
     });
 
-  // change the time range from 2 hours to 15 minutes
-  let smallTimeslots: Array<{ start: Date, end: Date, availableCount: number, requireCount: number }> = [];
   timeslots.forEach(elem => {
     for (let i = 0; i < 8; i++) {
-      smallTimeslots.push({
-        start: new Date(elem.timeFrame.start.getTime() + i * 900000),
-        end: new Date(elem.timeFrame.start.getTime() + (i + 1) * 900000),
-        availableCount: elem.countUsers,
-        requireCount: 0,
+      const index = smallTimeslots.findIndex(smallTimeslot => {
+        return smallTimeslot.start.getTime() === elem.timeFrame.start.getTime() + i * 900000;
       });
+      if (index !== -1) {
+        smallTimeslots[index].availableCount = elem.countUsers;
+      }
     }
   });
 
@@ -177,17 +195,50 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       $and: [{isValid: {$ne: false}}],
     })
     .project({
+      status: 1,
       timeframes: 1
     })
-    .unwind('$timeframes');
+    .unwind('$timeframes')
+    .unwind('$timeframes.required');
 
   smallTimeslots.forEach((timeslot) => {
     const requiredForTimeslot = required.filter(
       (ft) =>
         new Date(ft.timeframes.start) <= timeslot.start &&
-        new Date(ft.timeframes.end) >= timeslot.end
+        new Date(ft.timeframes.end) >= new Date(timeslot.start.getTime() + 900000)
     );
-    timeslot.requireCount = requiredForTimeslot.length;
+    // requireCount is the number of users required for the timeslot
+    timeslot.requireCount = requiredForTimeslot.reduce((acc, ft) => {
+      if (ft.timeframes.required.type === 'user') {
+        return acc + 1;
+      } else {
+        return acc + ft.timeframes.required.amount;
+      }
+    }, 0);
+    timeslot.requireValidatedCount = requiredForTimeslot.filter((ft) => ft.status === "validated")
+      .reduce((acc, ft) => {
+        if (ft.timeframes.required.type === 'user') {
+          return acc + 1;
+        } else {
+          return acc + ft.timeframes.required.amount;
+        }
+      }, 0);
+  });
+
+  const affected = await TimeSpanModel.aggregate()
+    .match({
+      start: {$gte: start},
+      end: {$lte: end},
+      assigned: {$ne: null},
+    });
+
+  smallTimeslots.forEach((timeslot) => {
+    const affectedForTimeslot = affected.filter(
+      (timespan) =>
+        new Date(timespan.start) <= timeslot.start &&
+        new Date(timespan.end) >= new Date(timeslot.start.getTime() + 900000)
+    );
+    timeslot.affectedCount = affectedForTimeslot.length;
   });
 
   return res.json(smallTimeslots);

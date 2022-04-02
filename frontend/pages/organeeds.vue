@@ -8,8 +8,29 @@
           dense
           @change="loadDay"
       >
-        <v-btn class="flex-grow-1" v-for="i in Array.from(Array(31).keys())" :key="i">{{i+1}}</v-btn>
+        <v-btn class="flex-grow-1" v-for="i in Array.from(Array(31).keys())" :key="i">{{ i + 1 }}</v-btn>
       </v-btn-toggle>
+    </div>
+    <div>
+      <div class="d-flex">
+        <div style="width: 10%;"></div>
+        <div style="width: 10%;" v-for="day in days">
+          {{ day.dayName }}
+        </div>
+      </div>
+      <div class="d-flex" v-for="i in Array.from(Array(96).keys())" :key="i">
+        <div style="width: 10%;">
+          {{
+            new Date(i * 15 * 60 * 1000 - 60 * 60 * 1000).toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          }}
+        </div>
+        <div v-for="day in days" :style="`width: 10%; color: ${getColor(day.data[i])};`">
+          {{ day.data[i].availableCount }} - {{ day.data[i].requireCount }} - {{ day.data[i].requireValidatedCount }} - {{ day.data[i].affectedCount }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,17 +43,57 @@ export default {
   name: "organeeds.vue",
   data() {
     return {
-      datepicker: [19,20,21,22],
+      datepicker: [19, 20, 21, 22],
+      displayed: [],
+      days: [],
+      loading: [],
     };
   },
+  mounted() {
+    this.loadDay();
+  },
   methods: {
-    async loadDay(){
-      for (const day of this.datepicker) {
-        const timestamp = new Date((new Date()).getFullYear(), 4, (day+1)).getTime();
-        const res = (await safeCall(this.$store, RepoFactory.timeslotRepo.getOrgaNeeds(this, timestamp)))['data'];
-        console.log(res);
+    async loadDay() {
+      for (let i = 0; i < this.datepicker.length; i++) {
+        if (!this.displayed.includes(this.datepicker[i]) && !this.loading.includes(this.datepicker[i])) {
+          // load the day
+          this.loading.push(this.datepicker[i]);
+          const timestamp = new Date((new Date()).getFullYear(), 4, (this.datepicker[i] + 1)).getTime();
+          await safeCall(this.$store, RepoFactory.timeslotRepo.getOrgaNeeds(this, timestamp))
+              .then(res => {
+                if (res.data.length > 0) {
+                  // add it to the displayed
+                  this.displayed.push(this.datepicker[i]);
+                  this.days.push({
+                    dayName: (new Date(timestamp)).toLocaleDateString("fr-FR", {weekday: 'long', day: 'numeric', month: 'long'}),
+                    data: res.data,
+                  });
+                  this.loading.splice(this.loading.indexOf(this.datepicker[i]), 1);
+                }
+              });
+        }
       }
-    }
+      // if displayed contains a value that is not in datepicker, remove it
+      for (let i = 0; i < this.displayed.length; i++) {
+        if (!this.datepicker.includes(this.displayed[i])) {
+          this.displayed.splice(i, 1);
+          this.days.splice(i, 1);
+        }
+      }
+    },
+    getColor(data) {
+      if(data.affectedCount >= data.requireValidatedCount) {
+        return "blue";
+      } else if (data.availableCount >= data.requireCount + 5) {
+        return "green";
+      } else if (data.availableCount >= data.requireCount) {
+        return "lightgreen";
+      } else if (data.availableCount >= data.requireCount - 5) {
+        return "#ff7f7f";
+      } else {
+        return "red";
+      }
+    },
   },
 }
 </script>
