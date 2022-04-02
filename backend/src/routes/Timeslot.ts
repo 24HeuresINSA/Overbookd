@@ -4,6 +4,8 @@ import UserModel from "@entities/User";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
 import {Types} from "mongoose";
+import FTModel from "@entities/FT";
+import TimeSpanModel from "@entities/TimeSpan";
 
 export async function getTimeslot(req: Request, res: Response) {
   const availabilities = await TimeslotModel.find({});
@@ -131,4 +133,113 @@ export async function deleteManyTimeslotsByGroupTitle(
     await timeslot.remove();
   }
   res.sendStatus(StatusCodes.OK);
+}
+
+// Return the number of users available and require for each 15 minutes timeslot of the given day (start of the day)
+export async function getOrgaNeeds(req: Request, res: Response) {
+  const timestamp: number = +(req.params['timestamp']);
+  const start = new Date(timestamp);
+  const end = new Date(timestamp + 86400000); // The end is the start + 1 day in seconds
+  logger.info(`getting Timeslots for Timeslot ${timestamp}`);
+
+  let smallTimeslots: Array<{
+    id: number,
+    start: Date,
+    availableCount: number,
+    requireCount: number,
+    requireValidatedCount: number
+    affectedCount: number
+  }> = [];
+  for (let i = 0; i < 96; i++) {
+    smallTimeslots.push({
+      id: i,
+      start: new Date(start.getTime() + i * 900000),
+      availableCount: 0,
+      requireCount: 0,
+      requireValidatedCount: 0,
+      affectedCount: 0
+    });
+  }
+
+  const timeslots = await TimeslotModel.aggregate()
+    .match({
+      'timeFrame.start': {$gte: start},
+      'timeFrame.end': {$lte: end},
+    })
+    .lookup({
+      from: 'users',
+      localField: '_id',
+      foreignField: 'availabilities',
+      as: 'users',
+    })
+    .project({
+      _id: 1,
+      timeFrame: 1,
+      groupTitle: 1,
+      countUsers: {$size: '$users'},
+    });
+
+  timeslots.forEach(elem => {
+    for (let i = 0; i < 8; i++) {
+      const index = smallTimeslots.findIndex(smallTimeslot => {
+        return smallTimeslot.start.getTime() === elem.timeFrame.start.getTime() + i * 900000;
+      });
+      if (index !== -1) {
+        smallTimeslots[index].availableCount = elem.countUsers;
+      }
+    }
+  });
+
+  const required = await FTModel.aggregate()
+    .match({
+      $and: [{isValid: {$ne: false}}],
+    })
+    .project({
+      status: 1,
+      timeframes: 1
+    })
+    .unwind('$timeframes')
+    .unwind('$timeframes.required');
+
+  smallTimeslots.forEach((timeslot) => {
+    const requiredForTimeslot = required.filter(
+      (ft) =>
+        new Date(ft.timeframes.start) <= timeslot.start &&
+        new Date(ft.timeframes.end) >= new Date(timeslot.start.getTime() + 900000)
+    );
+    // requireCount is the number of users required for the timeslot
+    timeslot.requireCount = requiredForTimeslot.reduce((acc, ft) => {
+      if (ft.timeframes.required.type === 'user') {
+        return acc + 1;
+      } else {
+        return acc + ft.timeframes.required.amount;
+      }
+    }, 0);
+    timeslot.requireValidatedCount = requiredForTimeslot.filter((ft) => ft.status === "validated")
+      .reduce((acc, ft) => {
+        if (ft.timeframes.required.type === 'user') {
+          return acc + 1;
+        } else {
+          return acc + ft.timeframes.required.amount;
+        }
+      }, 0);
+  });
+
+  const affected = await TimeSpanModel.aggregate()
+    .match({
+      start: {$gte: start},
+      end: {$lte: end},
+      assigned: {$ne: null},
+    });
+
+  smallTimeslots.forEach((timeslot) => {
+    const affectedForTimeslot = affected.filter(
+      (timespan) =>
+        new Date(timespan.start) <= timeslot.start &&
+        new Date(timespan.end) >= new Date(timeslot.start.getTime() + 900000)
+    );
+    timeslot.affectedCount = affectedForTimeslot.length;
+  });
+
+  return res.json(smallTimeslots);
 }
