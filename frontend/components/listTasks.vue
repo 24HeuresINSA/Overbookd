@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px; height: 100%">
+  <div style="width: 500px; height: 100%" @mouseleave="hoverTask({})">
     <v-simple-table dense fixed-header height="800">
       <template #default>
         <thead>
@@ -11,9 +11,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="timeSpan in availableTimeSpans" @click:row="assignTask(timeSpan)">
+        <tr v-for="timeSpan in availableTimeSpans" @click="assignTask(timeSpan)" @mouseover="hoverTask(timeSpan)">
           <td>
-            <a :href="'/ft/' + timeSpan.FTID">{{ timeSpan.FTID }} - {{ timeSpan.FTName }}</a>
+            {{ timeSpan.FTID }} - {{ timeSpan.FTName }}
           </td>
           <td>
             {{ timeSpan ? timeSpan.start.getHours() + ':' + timeSpan.start.getMinutes() : "" }}
@@ -27,34 +27,7 @@
         </tr>
         </tbody>
       </template>
-    </v-simple-table heig>
-
-    <!--        <v-list-item-group v-model="selectedTasksIndex">-->
-        <!--          <v-list-item :key="item._id" :value="item._id">-->
-        <!--            {{item}}-->
-        <!--          </v-list-item>-->
-        <!--        </v-list-item-group>-->
-    <!--    <v-data-table-->
-    <!--      :headers="headers"-->
-    <!--      :items="availableTimeSpans"-->
-    <!--      @click:row="assignTask"-->
-    <!--    >-->
-    <!--      <template #[`item.FTID`]="{ item }">-->
-    <!--        {{ item.FTName || item.FTID }}-->
-    <!--      </template>-->
-    <!--      <template #[`item.date`]="row">-->
-    <!--        {{ new Date(row.item.start).toLocaleDateString() }}-->
-    <!--      </template>-->
-
-    <!--      <template #[`item.start`]="row">-->
-    <!--        {{ new Date(row.item.start).toLocaleTimeString() }}-->
-    <!--      </template>-->
-
-    <!--      <template #[`item.end`]="row">-->
-    <!--        {{ new Date(row.item.end).toLocaleTimeString() }}-->
-    <!--      </template>-->
-    <!--    </v-data-table>-->
-
+    </v-simple-table>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       {{ snack.feedbackMessage }}
     </v-snackbar>
@@ -115,7 +88,7 @@ export default {
       });
       if (!res) {
         this.snack.display(
-          "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
+            "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
         );
       }
     },
@@ -125,6 +98,9 @@ export default {
         return FT.general.name;
       }
       return FTID;
+    },
+    hoverTask(timespan) {
+      this.$accessor.assignment.setHoverTask(timespan);
     },
   },
 };

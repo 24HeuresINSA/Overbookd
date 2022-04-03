@@ -11,18 +11,18 @@
       width: 100%;
     "
   >
-    <FilteredUsers style="max-width: 350px"></FilteredUsers>
+    <FilteredUsers style="max-width: 350px"/>
 
     <!-- calendar --->
     <OverCalendar
       :center-day="new Date().setDate(new Date().getDate() - 5)"
       @open-unassign-dialog="openUnassignDialog"
-    ></OverCalendar>
+    />
 
-    <OverTasks style="max-width: 550px"></OverTasks>
+    <OverTasks style="max-width: 550px"/>
 
     <v-dialog v-model="isUnassignDialogOpen" width="500px">
-      <unassign-dialog @close-dialog="closeUnassignDialog"></unassign-dialog>
+      <unassign-dialog @close-dialog="closeUnassignDialog"/>
     </v-dialog>
   </v-container>
 </template>
