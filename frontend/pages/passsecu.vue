@@ -120,7 +120,7 @@ export default Vue.extend({
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
       let csv =
-        "Email;ID;Nom Prenom;Pass_entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;FA \n";
+        "Email;ID;Nom Prenom;Pass_entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;FA;comment \n";
       for (let i = 0; i < this.pass.length; i++) {
         csv +=
           this.pass[i].email +
@@ -156,6 +156,8 @@ export default Vue.extend({
             : "false") +
           ";;;;;;" +
           this.pass[i].linkedFA +
+          ";" +
+          this.pass[i].comment +
           "\n";
       }
 
