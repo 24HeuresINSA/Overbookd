@@ -1,13 +1,12 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
-import user from "~/middleware/user";
 
 declare interface filter {
   user: {
@@ -40,7 +39,7 @@ export const state = () => ({
     },
     isModeOrgaToTache: false,
   } as filter,
-  selectedUser: {} as User,
+  selectedUser: {} as User, // selected User from the list
   selectedTimeSpan: {} as TimeSpan, // Selected TimeSpan from the calendar
   FTs: [] as FT[],
   FAs: [] as FA[],
@@ -393,61 +392,15 @@ export const getters = getterTree(state, {
   },
 
   availableTimeSpans: (state: any, getters: any) => {
-    // const { selectedUser } = state;
-    // if (selectedUser && state.timespans) {
-    //   console.log(selectedUser);
-    //   console.log(state.timespans);
-    //   let availableTimeSpans = state.timespans.filter((ts: any) => {
-    //     let isAvailable = false;
-    //     getters.selectedUserAvailabilities.forEach((av: any) => {
-    //       if (!av) {
-    //         return;
-    //       }
-    //       if (
-    //         new Date(av.timeFrame.start).getTime() <=
-    //           new Date(ts.start).getTime() &&
-    //         new Date(av.timeFrame.end).getTime() >= new Date(ts.end).getTime()
-    //       ) {
-    //         isAvailable = true;
-    //       }
-    //     });
-    //     return isAvailable;
-    //   });
-    //   availableTimeSpans.filter((ts: any) => {
-    //     const requirement = ts.required;
-    //     if (requirement.type === "user") {
-    //       return requirement.user._id === selectedUser._id;
-    //     } else if (requirement.type === "team") {
-    //       return selectedUser.team.includes(requirement.team);
-    //     }
-    //   });
-    //   // filter only avaialble timespans
-    //   availableTimeSpans = availableTimeSpans.filter(
-    //     (ts: TimeSpan) => !ts.assigned
-    //   );
-    //   return availableTimeSpans;
-    // }
-    // return [];
-
     //TODO: filter with future timespans filter
     return state.timespans;
   },
-});
 
-/**
- * resolve FT id with name
- */
-function getFTNameById(FTs: any, id: string) {
-  const ft = FTs.find((ft: FT) => {
-    if (ft.timeframes.length > 0) {
-      let res = false;
-      ft.timeframes.forEach((tf: any) => {
-        if (tf._id === id) {
-          res = true;
-        }
-      });
-      return res;
-    }
-  });
-  return ft ? ft.general.name : "";
-}
+  assignedUsersToSelectedTimeSpan: (state: any) => {
+    const { selectedTimeSpan, timespans } = state;
+    console.log(
+      timespans.filter((ts: TimeSpan) => ts.FTID === selectedTimeSpan.FTID)
+    );
+    return ["Hamza", "Sami", "Sami2"];
+  },
+});

@@ -1,4 +1,5 @@
 export interface TimeSpan {
+  FTID: number;
   start: Date;
   end: Date;
   timeframeID: string;

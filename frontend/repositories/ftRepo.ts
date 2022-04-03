@@ -18,7 +18,7 @@ export default {
     return context.$axios.put(resource, FT);
   },
   deleteFT(context: Context, FT: FT) {
-    return context.$axios.delete(resource, {data: FT});
+    return context.$axios.delete(resource, { data: FT });
   },
   markAsReady(context: Context, FTCount: number) {
     return context.$axios.post(`${resource}/${FTCount}/ready`);

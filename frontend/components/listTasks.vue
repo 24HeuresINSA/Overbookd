@@ -1,25 +1,60 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="availableTimeSpans"
-      @click:row="assignTask"
-    >
-      <template #[`item.FTID`]="{ item }">
-        {{ item.FTName || item.FTID }}
+  <div style="width: 500px; height: 100%">
+    <v-simple-table dense fixed-header height="800">
+      <template #default>
+        <thead>
+        <tr>
+          <td>FT</td>
+          <td>Debut</td>
+          <td>Fin</td>
+          <td>Requit</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="timeSpan in availableTimeSpans" @click:row="assignTask(timeSpan)">
+          <td>
+            <a :href="'/ft/' + timeSpan.FTID">{{ timeSpan.FTID }} - {{ timeSpan.FTName }}</a>
+          </td>
+          <td>
+            {{ timeSpan ? timeSpan.start.getHours() + ':' + timeSpan.start.getMinutes() : "" }}
+          </td>
+          <td>
+            {{ timeSpan ? timeSpan.end.getHours() + ':' + timeSpan.end.getMinutes() : "" }}
+          </td>
+          <td>
+            {{ timeSpan ? timeSpan.required : "" }}
+          </td>
+        </tr>
+        </tbody>
       </template>
-      <template #[`item.date`]="row">
-        {{ new Date(row.item.start).toLocaleDateString() }}
-      </template>
+    </v-simple-table heig>
 
-      <template #[`item.start`]="row">
-        {{ new Date(row.item.start).toLocaleTimeString() }}
-      </template>
+    <!--        <v-list-item-group v-model="selectedTasksIndex">-->
+        <!--          <v-list-item :key="item._id" :value="item._id">-->
+        <!--            {{item}}-->
+        <!--          </v-list-item>-->
+        <!--        </v-list-item-group>-->
+    <!--    <v-data-table-->
+    <!--      :headers="headers"-->
+    <!--      :items="availableTimeSpans"-->
+    <!--      @click:row="assignTask"-->
+    <!--    >-->
+    <!--      <template #[`item.FTID`]="{ item }">-->
+    <!--        {{ item.FTName || item.FTID }}-->
+    <!--      </template>-->
+    <!--      <template #[`item.date`]="row">-->
+    <!--        {{ new Date(row.item.start).toLocaleDateString() }}-->
+    <!--      </template>-->
 
-      <template #[`item.end`]="row">
-        {{ new Date(row.item.end).toLocaleTimeString() }}
-      </template>
-    </v-data-table>
+    <!--      <template #[`item.start`]="row">-->
+    <!--        {{ new Date(row.item.start).toLocaleTimeString() }}-->
+    <!--      </template>-->
+
+    <!--      <template #[`item.end`]="row">-->
+    <!--        {{ new Date(row.item.end).toLocaleTimeString() }}-->
+    <!--      </template>-->
+    <!--    </v-data-table>-->
+
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       {{ snack.feedbackMessage }}
     </v-snackbar>
@@ -27,7 +62,8 @@
 </template>
 
 <script>
-import { Snack } from "~/utils/models/snack";
+import {Snack} from "~/utils/models/snack";
+
 export default {
   name: "ListTasks",
 
@@ -57,6 +93,7 @@ export default {
           value: "action",
         },
       ],
+      height: window.innerHeight * 0.75,
       snack: new Snack(),
     };
   },
@@ -77,7 +114,6 @@ export default {
         timespanID: this.$accessor.assignment.selectedUser._id,
       });
       if (!res) {
-        console.log("testestetst");
         this.snack.display(
           "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
         );

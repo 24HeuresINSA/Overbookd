@@ -2,37 +2,54 @@
   <div>
     <div>
       <h1>Rapport des besoins en orgas</h1>
-      <p>Orgas disponibles - Orgas nécessaires toute FT | Orgas nécessaires FT validées (Orgas affectés)</p>
+      <p>
+        Orgas disponibles - Orgas nécessaires toute FT | Orgas nécessaires FT
+        validées (Orgas affectés)
+      </p>
     </div>
     <div class="d-flex">
       <v-btn-toggle
-          class="justify-center"
-          v-model="datepicker"
-          multiple
-          dense
-          @change="loadDay"
+        v-model="datepicker"
+        class="justify-center"
+        multiple
+        dense
+        @change="loadDay"
       >
-        <v-btn class="flex-grow-1" v-for="i in Array.from(Array(31).keys())" :key="i">{{ i + 1 }}</v-btn>
+        <v-btn
+          v-for="i in Array.from(Array(31).keys())"
+          :key="i"
+          class="flex-grow-1"
+          >{{ i + 1 }}</v-btn
+        >
       </v-btn-toggle>
     </div>
     <div>
       <div class="d-flex">
-        <div style="width: 10%;"></div>
-        <div style="width: 10%;" v-for="day in days">
+        <div style="width: 10%"></div>
+        <div v-for="day in days" style="width: 10%">
           {{ day.dayName }}
         </div>
       </div>
-      <div class="d-flex" v-for="i in Array.from(Array(96).keys())" :key="i">
-        <div style="width: 10%;">
+      <div v-for="i in Array.from(Array(96).keys())" :key="i" class="d-flex">
+        <div style="width: 10%">
           {{
-            new Date(i * 15 * 60 * 1000 - 60 * 60 * 1000).toLocaleTimeString('fr-FR', {
-              hour: '2-digit',
-              minute: '2-digit'
-            })
+            new Date(i * 15 * 60 * 1000 - 60 * 60 * 1000).toLocaleTimeString(
+              "fr-FR",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
+            )
           }}
         </div>
-        <div v-for="day in days" :style="`width: 10%; color: ${getColor(day.data[i])};`">
-          {{ day.data[i].availableCount }} - {{ day.data[i].requireCount }} | {{ day.data[i].requireValidatedCount }} ({{ day.data[i].affectedCount }})
+        <div
+          v-for="day in days"
+          :style="`width: 10%; color: ${getColor(day.data[i])};`"
+        >
+          {{ day.data[i].availableCount }} - {{ day.data[i].requireCount }} |
+          {{ day.data[i].requireValidatedCount }} ({{
+            day.data[i].affectedCount
+          }})
         </div>
       </div>
     </div>
@@ -59,22 +76,35 @@ export default {
   methods: {
     async loadDay() {
       for (let i = 0; i < this.datepicker.length; i++) {
-        if (!this.displayed.includes(this.datepicker[i]) && !this.loading.includes(this.datepicker[i])) {
+        if (
+          !this.displayed.includes(this.datepicker[i]) &&
+          !this.loading.includes(this.datepicker[i])
+        ) {
           // load the day
           this.loading.push(this.datepicker[i]);
-          const timestamp = new Date((new Date()).getFullYear(), 4, (this.datepicker[i] + 1)).getTime();
-          await safeCall(this.$store, RepoFactory.timeslotRepo.getOrgaNeeds(this, timestamp))
-              .then(res => {
-                if (res.data.length > 0) {
-                  // add it to the displayed
-                  this.displayed.push(this.datepicker[i]);
-                  this.days.push({
-                    dayName: (new Date(timestamp)).toLocaleDateString("fr-FR", {weekday: 'long', day: 'numeric', month: 'long'}),
-                    data: res.data,
-                  });
-                  this.loading.splice(this.loading.indexOf(this.datepicker[i]), 1);
-                }
+          const timestamp = new Date(
+            new Date().getFullYear(),
+            4,
+            this.datepicker[i] + 1
+          ).getTime();
+          await safeCall(
+            this.$store,
+            RepoFactory.timeslotRepo.getOrgaNeeds(this, timestamp)
+          ).then((res) => {
+            if (res.data.length > 0) {
+              // add it to the displayed
+              this.displayed.push(this.datepicker[i]);
+              this.days.push({
+                dayName: new Date(timestamp).toLocaleDateString("fr-FR", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                }),
+                data: res.data,
               });
+              this.loading.splice(this.loading.indexOf(this.datepicker[i]), 1);
+            }
+          });
         }
       }
       // if displayed contains a value that is not in datepicker, remove it
@@ -86,7 +116,7 @@ export default {
       }
     },
     getColor(data) {
-      if(data.affectedCount >= data.requireValidatedCount) {
+      if (data.affectedCount >= data.requireValidatedCount) {
         return "#0066ff";
       } else if (data.availableCount >= data.requireCount + 5) {
         return "green";
@@ -99,9 +129,7 @@ export default {
       }
     },
   },
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

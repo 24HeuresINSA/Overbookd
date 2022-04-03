@@ -41,6 +41,14 @@
               </div>
             </td>
           </tr>
+          <tr>
+            <td>Affecté</td>
+            <td>
+              <v-chip v-for="user in assignedUsersToSelectedTimeSpan" small>{{
+                user
+              }}</v-chip>
+            </td>
+          </tr>
         </tbody>
       </v-simple-table>
     </v-card-text>
@@ -69,7 +77,10 @@ export default {
       if (this.FTs) {
         return this.FTs.find((FT) => FT.count === this.selectedTimeSpan.FTID);
       }
-      return;
+
+    },
+    assignedUsersToSelectedTimeSpan() {
+      return this.$accessor.assignment.assignedUsersToSelectedTimeSpan;
     },
   },
   methods: {
