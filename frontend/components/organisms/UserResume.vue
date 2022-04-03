@@ -19,12 +19,18 @@
     <br />
     <v-chip
       v-for="team of user.team"
+      :key="team"
       small
       :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
     >
-      <v-icon v-if="getTeamMetadate(team)" small>{{
-        getTeamMetadate(team).icon
-      }}</v-icon>
+      <v-tooltip top>
+        <template #activator="{ on, attrs }">
+          <v-icon v-if="getTeamMetadate(team)" small v-bind="attrs" v-on="on">
+            {{ getTeamMetadate(team).icon }}
+          </v-icon>
+        </template>
+        <span>{{ getTeamMetadate(team).name }}</span>
+      </v-tooltip>
     </v-chip>
     <UserInformation
       :user="user"
@@ -35,8 +41,8 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from "vue";
-import {User} from "~/utils/models/repo";
+import Vue, { PropType } from "vue";
+import { User } from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 
 export default Vue.extend({
@@ -54,13 +60,15 @@ export default Vue.extend({
     };
   },
   computed: {
-    teamsConfig() {
+    teamsConfig(): any {
       return this.$accessor.config.getConfig("teams");
     },
   },
   methods: {
-    getTeamMetadate(team: string) {
-      return this.teamsConfig.find((item) => item.name === team);
+    getTeamMetadate(team: string): any {
+      return this.teamsConfig.find(
+        (item: { name: string }) => item.name === team
+      );
     },
     getClass(team: string) {
       switch (team) {
