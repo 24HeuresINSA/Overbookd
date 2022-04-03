@@ -187,12 +187,6 @@ export default {
           to: "/createavailibility",
         },
         {
-          icon: "mdi-calendar",
-          title: "Mon calendrier",
-          to: "/calendar",
-          roles: "everyone",
-        },
-        {
           icon: "mdi-account",
           title: "Liste des Orgas",
           roles: "hard",
