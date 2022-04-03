@@ -1,0 +1,10 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all issues with QoL milestone
+        conditions:
+          state: opened
+          milestone: QoL
+        actions:
+          labels:
+            - OB::QoL
