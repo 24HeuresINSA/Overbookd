@@ -389,7 +389,7 @@ export default Vue.extend({
     },
 
     validate(validator: string) {
-      this.$accessor.FT.validate(validator);
+      this.$accessor.FT.validate(validator + ' - ' + this.$accessor.user.me.firstname);
     },
 
     submitForReview() {
@@ -400,7 +400,7 @@ export default Vue.extend({
     refuse(validator: string) {
       if (validator) {
         this.$accessor.FT.refuse({
-          validator,
+          validator: validator + ' - ' + this.$accessor.user.me.firstname,
           comment: this.refusedComment,
         });
         this.isDialogOpen.refused = false;
