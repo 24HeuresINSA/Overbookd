@@ -35,7 +35,7 @@
 <script>
 export default {
   name: "ShowCalendar",
-  props: ["title", "fts"],
+  props: ["title", "slots"],
   data() {
     return {
       showCalendar: false,
@@ -46,7 +46,7 @@ export default {
   methods: {
     generateEvents() {
       if (this.events.length === 0) {
-        this.fts.forEach((timeslot) => {
+        this.slots.forEach((timeslot) => {
           this.events.push({
             name: timeslot.name,
             start: this.getFormattedDate(new Date(timeslot.start)),
@@ -77,7 +77,7 @@ export default {
           return "grey";
         case "validated":
           return "success";
-        case "ready":
+        case "affected":
           return "deep-purple";
         default:
           return "grey";

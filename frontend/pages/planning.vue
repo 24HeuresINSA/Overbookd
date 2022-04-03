@@ -14,7 +14,7 @@
       <v-list v-for="(plan, index) in orgaRequis" :key="index" class="my-4">
         <v-list-item>
           <v-list-item-content>
-            <ShowCalendar :title="plan._id" :fts="plan.fts" />
+            <ShowCalendar :title="plan._id" :slots="plan.slots" />
             <v-data-table
               :headers="[
                 { text: 'FT', value: 'name', width: '30%' },
@@ -34,7 +34,7 @@
                 { text: 'fin', value: 'end', align: 'center', width: '10%' },
                 { text: 'conflits', value: 'conflits', width: '30%' },
               ]"
-              :items="plan.fts"
+              :items="plan.slots"
               :hide-default-footer="true"
               :items-per-page="-1"
             >
@@ -122,7 +122,7 @@ export default Vue.extend({
           return "grey";
         case "validated":
           return "success";
-        case "ready":
+        case "affected":
           return "deep-purple";
         default:
           return "grey";

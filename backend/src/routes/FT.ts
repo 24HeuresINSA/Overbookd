@@ -6,8 +6,9 @@ import FAModel from "@entities/FA";
 import {updateConflictsByFTCount} from "@src/services/conflict";
 import {timeframeToTimeSpan} from "@src/services/slicing";
 import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
-import ConflictModel from "@entities/Conflict";
-import {Schema, Types} from "mongoose";
+import {Types} from "mongoose";
+import ConfigModel from "@entities/Config";
+import UserModel from "@entities/User";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
@@ -37,7 +38,7 @@ export async function updateFT(
     try {
       await FTModel.findByIdAndUpdate(mFT._id, mFT);
       await updateConflictsByFTCount(mFT.count);
-      if(mFT.status === "refused") {
+      if (mFT.status === "refused") {
         //delete all timespans of this FT
         logger.info(`delete all timespans of this FT ${mFT.count}`);
         await TimeSpanModel.deleteMany({FTID: mFT.count});
@@ -223,10 +224,24 @@ export async function makeFTReady(req: Request, res: Response) {
 }
 
 export async function myPlanning(req: Request, res: Response) {
-  const FTs =
-    await FTModel.aggregate()
+  const showFt = await ConfigModel.findOne({key: "show_ft_in_planning"});
+
+  let FTs: Array<{ _id: string, slots: any[] }> = [];
+  if (showFt && showFt.value) {
+    FTs = await FTModel.aggregate()
       .match({
-        $and: [{isValid: {$ne: false}}],
+        $and: [
+          {isValid: {$ne: false}},
+          {status: {$ne: "ready"}},
+        ],
+      })
+      .project({
+        _id: 0,
+        count: 1,
+        general: 1,
+        status: 1,
+        isValid: 1,
+        timeframes: 1,
       })
       .unwind({path: "$timeframes"})
       .sort("timeframes.start")
@@ -253,27 +268,60 @@ export async function myPlanning(req: Request, res: Response) {
         as: "conflicts"
       })
       .group({
-          _id: "$timeframes.required.user.username",
-          fts: {
-            $push: {
-              count: "$count",
-              name: "$general.name",
-              status: "$status",
-              start: "$timeframes.start",
-              end: "$timeframes.end",
-              conflits: "$conflicts"
-            },
-          }
+        _id: "$timeframes.required.user.username",
+        slots: {
+          $push: {
+            count: "$count",
+            name: "$general.name",
+            status: "$status",
+            start: "$timeframes.start",
+            end: "$timeframes.end",
+            conflits: "$conflicts"
+          },
         }
-      );
+      });
+  } else {
+    const user = await UserModel.findOne({_id: Types.ObjectId(req.params.userID)});
+    FTs = [{
+      // @ts-ignore
+      _id: user.firstname + " " + user.lastname,
+      slots: [],
+    }];
+  }
+
+  const timespans = await TimeSpanModel.aggregate()
+    .match({assigned: req.params.userID})
+    .lookup({
+      from: "fts",
+      localField: "FTID",
+      foreignField: "count",
+      as: "FT",
+    })
+    .project({
+      _id: 0,
+      count: "$FTID",
+      start: 1,
+      end: 1,
+      name: {$first: "$FT.general.name"},
+      status: "affected"
+    });
+
+  FTs[0].slots.push(...timespans);
+
   res.json(FTs);
 }
 
 export async function getOrgaRequis(req: Request, res: Response) {
-  const FTs =
-    await FTModel.aggregate()
+  const showFt = await ConfigModel.findOne({key: "show_ft_in_planning"});
+
+  let FTs: Array<{ _id: string, userId: string, slots: any[] }> = [];
+  if (showFt && showFt.value) {
+    FTs = await FTModel.aggregate()
       .match({
-        $and: [{isValid: {$ne: false}}],
+        $and: [
+          {isValid: {$ne: false}},
+          {status: {$ne: "ready"}},
+        ],
       })
       .unwind({path: "$timeframes"})
       .sort("timeframes.start")
@@ -300,7 +348,8 @@ export async function getOrgaRequis(req: Request, res: Response) {
       })
       .group({
           _id: "$timeframes.required.user.username",
-          fts: {
+          userId: {$first: "$timeframes.required.user._id"},
+          slots: {
             $push: {
               count: "$count",
               name: "$general.name",
@@ -314,5 +363,57 @@ export async function getOrgaRequis(req: Request, res: Response) {
       )
       .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
       .sort("_id");
+  } else {
+    const users = await UserModel.find({});
+    FTs = users.map(user => {
+      return {
+        // @ts-ignore
+        _id: user.firstname + " " + user.lastname,
+        userId: (user._id).toString(),
+        slots: [],
+      }
+    }).sort((a, b) => 0 - (a._id.toLowerCase() > b._id.toLowerCase() ? -1 : 1));
+  }
+
+  const timespans = await TimeSpanModel.aggregate()
+    .match({assigned: {$ne: null}})
+    .lookup({
+      from: "fts",
+      localField: "FTID",
+      foreignField: "count",
+      as: "FT",
+    })
+    .project({
+      _id: 0,
+      count: "$FTID",
+      start: 1,
+      end: 1,
+      name: {$first: "$FT.general.name"},
+      status: "affected",
+      assigned: 1
+    })
+    .group({
+      _id: "$assigned",
+      slots: {
+        $push: {
+          count: "$count",
+          name: "$name",
+          status: "affected",
+          start: "$start",
+          end: "$end",
+        },
+      }
+    });
+
+  for (let i = 0; i < FTs.length; i++) {
+    timespans.filter(ts => ts._id === FTs[i].userId).forEach(ts => {
+      FTs[i].slots.push(...ts.slots);
+    });
+  }
+
+  // remove all the FTs with empty slots
+  // Usefull as we can't filter by isValid user because it's not set for vehicle
+  FTs = FTs.filter(ft => ft.slots.length > 0);
+
   res.json(FTs);
 }
