@@ -29,7 +29,9 @@
             {{ getTeamMetadate(team).icon }}
           </v-icon>
         </template>
-        <span>{{ getTeamMetadate(team).name }}</span>
+        <span>{{
+          getTeamMetadate(team) ? getTeamMetadate(team).name : ""
+        }}</span>
       </v-tooltip>
     </v-chip>
     <UserInformation
