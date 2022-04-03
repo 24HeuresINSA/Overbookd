@@ -27,6 +27,12 @@
           <template #[`item.email`]="{ item }">
             {{ item.email }}
           </template>
+          <template #[`item.entity`]="{ item }">
+            {{ item.entity }}
+          </template>
+          <template #[`item.reason`]="{ item }">
+            {{ item.reason }}
+          </template>
           <template #[`item.licensePlate`]="{ item }">
             {{ item.licensePlate }}
           </template>
@@ -68,6 +74,8 @@ export default Vue.extend({
         { text: "Nom", value: "fullname", width: "15%" },
         { text: "Tél", value: "phone" },
         { text: "Mail", value: "email", width: "10%" },
+        { text: "Entité", value: "entity", width: "10%" },
+        { text: "Raison", value: "reason", width: "10%" },
         {
           text: "Plaque",
           value: "licensePlate",
@@ -78,7 +86,7 @@ export default Vue.extend({
         {
           text: "Commentaire",
           value: "comment",
-          width: "30%",
+          width: "25%",
           sortable: false,
         },
         { text: "FA", value: "linkedFA", width: "5%" },
@@ -120,7 +128,7 @@ export default Vue.extend({
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
       let csv =
-        "Email;ID;Nom Prenom;Pass_entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;FA;comment \n";
+        "Email;ID;Nom Prenom;Entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;Raison;FA;comment \n";
       for (let i = 0; i < this.pass.length; i++) {
         csv +=
           this.pass[i].email +
@@ -128,7 +136,9 @@ export default Vue.extend({
           i +
           ";" +
           this.pass[i].fullname +
-          ";;" +
+          ";" +
+          this.pass[i].entity +
+          ";" +
           this.pass[i].licensePlate +
           ";" +
           (this.pass[i].timeslot
@@ -155,6 +165,8 @@ export default Vue.extend({
             ? this.pass[i].timeslot.includes("dicmanche 20h-00h")
             : "false") +
           ";;;;;;" +
+          this.pass[i].reason +
+          ";" +
           this.pass[i].linkedFA +
           ";" +
           this.pass[i].comment +
