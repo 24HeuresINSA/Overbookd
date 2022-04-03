@@ -6,8 +6,9 @@ import FAModel from "@entities/FA";
 import {updateConflictsByFTCount} from "@src/services/conflict";
 import {timeframeToTimeSpan} from "@src/services/slicing";
 import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
-import ConflictModel from "@entities/Conflict";
-import {Schema, Types} from "mongoose";
+import {Types} from "mongoose";
+import ConfigModel from "@entities/Config";
+import UserModel from "@entities/User";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
@@ -223,8 +224,11 @@ export async function makeFTReady(req: Request, res: Response) {
 }
 
 export async function myPlanning(req: Request, res: Response) {
-  let FTs: Array<{ _id: string, slots: any[] }> =
-    await FTModel.aggregate()
+  const showFt = await ConfigModel.findOne({key: "show_ft_in_planning"});
+
+  let FTs: Array<{ _id: string, slots: any[] }> = [];
+  if (showFt && showFt.value) {
+    FTs = await FTModel.aggregate()
       .match({
         $and: [
           {isValid: {$ne: false}},
@@ -276,6 +280,14 @@ export async function myPlanning(req: Request, res: Response) {
           },
         }
       });
+  } else {
+    const user = await UserModel.findOne({_id: Types.ObjectId(req.params.userID)});
+    FTs = [{
+      // @ts-ignore
+      _id: user.firstname + " " + user.lastname,
+      slots: [],
+    }];
+  }
 
   const timespans = await TimeSpanModel.aggregate()
     .match({assigned: req.params.userID})
@@ -300,8 +312,11 @@ export async function myPlanning(req: Request, res: Response) {
 }
 
 export async function getOrgaRequis(req: Request, res: Response) {
-  let FTs =
-    await FTModel.aggregate()
+  const showFt = await ConfigModel.findOne({key: "show_ft_in_planning"});
+
+  let FTs: Array<{ _id: string, userId: string, slots: any[] }> = [];
+  if (showFt && showFt.value) {
+    FTs = await FTModel.aggregate()
       .match({
         $and: [
           {isValid: {$ne: false}},
@@ -348,6 +363,17 @@ export async function getOrgaRequis(req: Request, res: Response) {
       )
       .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
       .sort("_id");
+  } else {
+    const users = await UserModel.find({});
+    FTs = users.map(user => {
+      return {
+        // @ts-ignore
+        _id: user.firstname + " " + user.lastname,
+        userId: (user._id).toString(),
+        slots: [],
+      }
+    }).sort((a, b) => 0 - (a._id.toLowerCase() > b._id.toLowerCase() ? -1 : 1));
+  }
 
   const timespans = await TimeSpanModel.aggregate()
     .match({assigned: {$ne: null}})
@@ -384,6 +410,10 @@ export async function getOrgaRequis(req: Request, res: Response) {
       FTs[i].slots.push(...ts.slots);
     });
   }
+
+  // remove all the FTs with empty slots
+  // Usefull as we can't filter by isValid user because it's not set for vehicle
+  FTs = FTs.filter(ft => ft.slots.length > 0);
 
   res.json(FTs);
 }
