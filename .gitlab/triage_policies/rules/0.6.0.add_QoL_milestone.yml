@@ -1,0 +1,13 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all issues with QoL labels
+        conditions:
+          state: opened
+          labels:
+            - OB::QoL
+          milestone: none
+        actions:
+          comment: |
+            This issue have ~"OB::QoL" label, please move this to %7 milstone or reavaluate the OB scope.
+
