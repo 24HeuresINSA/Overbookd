@@ -56,7 +56,6 @@ export default {
       createEvent: null,
       createStart: null,
       extendOriginal: null,
-
       newEvent: undefined,
       centralDay: this.$accessor.config.getConfig("event_date"),
     };
@@ -64,7 +63,13 @@ export default {
 
   computed: {
     assignedTimeSlots() {
-      return this.$accessor.assignment.assignedTimespans;
+      let events = [...this.$accessor.assignment.assignedTimespans];
+      let hoverTask = this.$accessor.assignment.hoverTask;
+      if(hoverTask.FTID) {
+        hoverTask["color"] = "rgba(204,51,255,0.50)";
+        events.push(hoverTask);
+      }
+      return events;
     },
     FTs() {
       return this.$accessor.assignment.FTs;

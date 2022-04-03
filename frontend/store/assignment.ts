@@ -46,6 +46,7 @@ export const state = () => ({
   timeslots: [] as any[],
   timespans: [] as TimeSpan[],
   assignedTimespans: [] as TimeSpan[],
+  hoverTask: {} as TimeSpan,
   timespanToFTName: {} as { [key: string]: string },
 });
 
@@ -104,6 +105,9 @@ export const mutations = mutationTree(state, {
   },
   CHANGE_MODE(state: any, data: boolean) {
     state.filters.isModeOrgaToTache = data;
+  },
+  SET_HOVER_TASK(state: any, data: TimeSpan) {
+    state.hoverTask = data;
   },
 });
 
@@ -293,6 +297,7 @@ export const actions = actionTree(
           ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
         };
         assignedTimeSpan.assigned = res.data.assigned;
+        assignedTimeSpan.color = "primary";
         commit("ADD_ASSIGNED_TIMESPAN", assignedTimeSpan);
         commit("REMOVE_AVAILAIBLE_TIMESPAN", assignedTimeSpan);
       }
@@ -317,6 +322,10 @@ export const actions = actionTree(
         commit("ADD_AVAILABLE_TIMESPAN", assignedTimeSpan);
         commit("REMOVE_ASSIGNED_TIMESPAN", assignedTimeSpan);
       }
+    },
+
+    setHoverTask({ commit }: any, timeSpan: TimeSpan) {
+      commit("SET_HOVER_TASK", timeSpan);
     },
   }
 );
