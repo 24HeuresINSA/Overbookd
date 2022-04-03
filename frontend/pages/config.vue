@@ -17,11 +17,17 @@
       label="Message de fermeture"
     ></v-text-field>
 
-    <h2>FA</h2>
+    <h2>Humains</h2>
+    <h3>FA</h3>
     <v-text-field
       v-model="config.fb_confirm_submit"
       label="Message de confirmation"
-    ></v-text-field>
+    />
+
+    <h3>Affectation</h3>
+    <v-switch
+      v-model="config.show_ft_in_planning"
+      label="Montrer les FTs dans les plannings"/>
 
     <h2>Dispo</h2>
     <v-text-field
@@ -95,6 +101,7 @@ export default {
         ),
         max_charisma: getConfig(this, "max_charisma"),
         isInventoryOpen: getConfig(this, "isInventoryOpen"),
+        show_ft_in_planning: getConfig(this, "show_ft_in_planning"),
       },
       dialog: false,
       load: false,
