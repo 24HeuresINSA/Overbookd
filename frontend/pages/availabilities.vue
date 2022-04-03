@@ -8,8 +8,8 @@
       <v-row>
         <v-col v-for="group in existingGroupTitles" :key="group.title" md="12">
           <TimeslotTable
-              v-if="!group.onlyForHard || $accessor.user.me.team.includes('hard')"
-              :group-title="group.title"
+            v-if="!group.onlyForHard || $accessor.user.me.team.includes('hard')"
+            :group-title="group.title"
           ></TimeslotTable>
         </v-col>
       </v-row>

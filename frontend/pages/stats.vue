@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Stats 📈 (work in progess 🔨)</h1>
+    <h1>Stats 📈</h1>
     <v-row class="d-flex justify-space-around pt-6">
       <h1>FA</h1>
       <v-switch
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { safeCall } from "../utils/api/calls";
-import { RepoFactory } from "../repositories/repoFactory";
+import {safeCall} from "../utils/api/calls";
+import {RepoFactory} from "../repositories/repoFactory";
 import Needs from "../components/Needs";
 
 export default {

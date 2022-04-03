@@ -1,27 +1,42 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="availableTimeSpans"
-    @click:row="assignTask"
-  >
-    <template #[`item.FTID`]="{ item }">
-      {{ item.FTName || item.FTID }}
-    </template>
-    <template #[`item.date`]="row">
-      {{ new Date(row.item.start).toLocaleDateString() }}
-    </template>
-
-    <template #[`item.start`]="row">
-      {{ new Date(row.item.start).toLocaleTimeString() }}
-    </template>
-
-    <template #[`item.end`]="row">
-      {{ new Date(row.item.end).toLocaleTimeString() }}
-    </template>
-  </v-data-table>
+  <div style="width: 500px; height: 100%" @mouseleave="hoverTask({})">
+    <v-simple-table dense fixed-header height="800">
+      <template #default>
+        <thead>
+        <tr>
+          <td>FT</td>
+          <td>Debut</td>
+          <td>Fin</td>
+          <td>Requit</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="timeSpan in availableTimeSpans" @click="assignTask(timeSpan)" @mouseover="hoverTask(timeSpan)">
+          <td>
+            {{ timeSpan.FTID }} - {{ timeSpan.FTName }}
+          </td>
+          <td>
+            {{ timeSpan ? timeSpan.start.getHours() + ':' + timeSpan.start.getMinutes() : "" }}
+          </td>
+          <td>
+            {{ timeSpan ? timeSpan.end.getHours() + ':' + timeSpan.end.getMinutes() : "" }}
+          </td>
+          <td>
+            {{ timeSpan ? timeSpan.required : "" }}
+          </td>
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      {{ snack.feedbackMessage }}
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
+import {Snack} from "~/utils/models/snack";
+
 export default {
   name: "ListTasks",
 
@@ -51,6 +66,8 @@ export default {
           value: "action",
         },
       ],
+      height: window.innerHeight * 0.75,
+      snack: new Snack(),
     };
   },
 
@@ -64,11 +81,16 @@ export default {
   },
 
   methods: {
-    assignTask(task) {
-      this.$accessor.assignment.assignUserToTimespan({
+    async assignTask(task) {
+      const res = await this.$accessor.assignment.assignUserToTimespan({
         userID: task._id,
         timespanID: this.$accessor.assignment.selectedUser._id,
       });
+      if (!res) {
+        this.snack.display(
+            "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
+        );
+      }
     },
     resolveFTName(FTID) {
       const FT = this.FTs.find((FT) => FT.count === FTID);
@@ -76,6 +98,9 @@ export default {
         return FT.general.name;
       }
       return FTID;
+    },
+    hoverTask(timespan) {
+      this.$accessor.assignment.setHoverTask(timespan);
     },
   },
 };

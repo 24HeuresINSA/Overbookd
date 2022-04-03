@@ -1,13 +1,12 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
-import user from "~/middleware/user";
 
 declare interface filter {
   user: {
@@ -40,12 +39,14 @@ export const state = () => ({
     },
     isModeOrgaToTache: false,
   } as filter,
-  selectedUser: {} as User,
+  selectedUser: {} as User, // selected User from the list
   selectedTimeSpan: {} as TimeSpan, // Selected TimeSpan from the calendar
   FTs: [] as FT[],
   FAs: [] as FA[],
   timeslots: [] as any[],
   timespans: [] as TimeSpan[],
+  assignedTimespans: [] as TimeSpan[],
+  hoverTask: {} as TimeSpan,
   timespanToFTName: {} as { [key: string]: string },
 });
 
@@ -71,17 +72,42 @@ export const mutations = mutationTree(state, {
   SET_TIMESPANS(state: any, data: any) {
     state.timespans = data;
   },
+  SET_ASSIGN_TIMESPANS(state: any, data: any) {
+    state.assignedTimespans = data;
+  },
   SET_ASSIGNMENT(state: any, assignedTimeSpan: TimeSpan) {
-    const timeSpanIndex = state.timespans.findIndex(
-      (ts: TimeSpan) => ts._id === assignedTimeSpan._id
-    );
-    state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
+    // const timeSpanIndex = state.timespans.findIndex(
+    //   (ts: TimeSpan) => ts._id === assignedTimeSpan._id
+    // );
+    // state.timespans.splice(timeSpanIndex, 1, assignedTimeSpan);
+    state.assignedTimespans.push(assignedTimeSpan);
   },
   SET_SELECTED_TIMESPAN(state: any, data: TimeSpan) {
     state.selectedTimeSpan = data;
   },
+  ADD_ASSIGNED_TIMESPAN(state: any, data: TimeSpan) {
+    state.assignedTimespans.push(data);
+  },
+  ADD_AVAILABLE_TIMESPAN(state: any, data: TimeSpan) {
+    state.timespans.push(data);
+  },
+  REMOVE_AVAILAIBLE_TIMESPAN(state: any, data: TimeSpan) {
+    const timeSpanIndex = state.timespans.findIndex(
+      (ts: TimeSpan) => ts._id === data._id
+    );
+    state.timespans.splice(timeSpanIndex, 1);
+  },
+  REMOVE_ASSIGNED_TIMESPAN(state: any, data: TimeSpan) {
+    const timeSpanIndex = state.assignedTimespans.findIndex(
+      (ts: TimeSpan) => ts._id === data._id
+    );
+    state.assignedTimespans.splice(timeSpanIndex, 1);
+  },
   CHANGE_MODE(state: any, data: boolean) {
     state.filters.isModeOrgaToTache = data;
+  },
+  SET_HOVER_TASK(state: any, data: TimeSpan) {
+    state.hoverTask = data;
   },
 });
 
@@ -141,6 +167,47 @@ export const actions = actionTree(
      */
     async getTimespans({ commit, state }: any) {
       const ret = await safeCall(this, TimeSpanRepo.getAll(this));
+      if (ret) {
+        commit(
+          "SET_TIMESPANS",
+          ret.data.map((ts: any) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+              .name,
+          }))
+        );
+      }
+      return ret;
+    },
+    async getUserAssignedTimespans({ commit, state }: any, user: User) {
+      const ret = await safeCall(
+        this,
+        TimeSpanRepo.getUserAssignedTimespans(this, user._id)
+      );
+      if (ret) {
+        commit(
+          "SET_ASSIGN_TIMESPANS",
+          ret.data.map((ts: any) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+              .name,
+          }))
+        );
+      }
+      return ret;
+    },
+
+    async getAvailableTimespansForUser({ commit, state }: any, user: User) {
+      const ret = await safeCall(
+        this,
+        TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
+      );
       if (ret) {
         commit(
           "SET_TIMESPANS",
@@ -230,8 +297,11 @@ export const actions = actionTree(
           ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
         };
         assignedTimeSpan.assigned = res.data.assigned;
-        commit("SET_ASSIGNMENT", assignedTimeSpan);
+        assignedTimeSpan.color = "primary";
+        commit("ADD_ASSIGNED_TIMESPAN", assignedTimeSpan);
+        commit("REMOVE_AVAILAIBLE_TIMESPAN", assignedTimeSpan);
       }
+      return res;
     },
 
     /**
@@ -244,11 +314,18 @@ export const actions = actionTree(
       );
       if (res) {
         const assignedTimeSpan = {
-          ...state.timespans.find((ts: TimeSpan) => ts._id === res.data._id),
+          ...state.assignedTimespans.find(
+            (ts: TimeSpan) => ts._id === res.data._id
+          ),
         };
         assignedTimeSpan.assigned = res.data.assigned;
-        commit("SET_ASSIGNMENT", assignedTimeSpan);
+        commit("ADD_AVAILABLE_TIMESPAN", assignedTimeSpan);
+        commit("REMOVE_ASSIGNED_TIMESPAN", assignedTimeSpan);
       }
+    },
+
+    setHoverTask({ commit }: any, timeSpan: TimeSpan) {
+      commit("SET_HOVER_TASK", timeSpan);
     },
   }
 );
@@ -324,70 +401,15 @@ export const getters = getterTree(state, {
   },
 
   availableTimeSpans: (state: any, getters: any) => {
-    const { selectedUser } = state;
-    if (selectedUser && state.timespans) {
-      let availableTimeSpans = state.timespans.filter((ts: any) => {
-        let isAvailable = false;
-        getters.selectedUserAvailabilities.forEach((av: any) => {
-          if (!av) {
-            return;
-          }
-          if (
-            new Date(av.timeFrame.start).getTime() <=
-              new Date(ts.start).getTime() &&
-            new Date(av.timeFrame.end).getTime() >= new Date(ts.end).getTime()
-          ) {
-            isAvailable = true;
-          }
-        });
-        return isAvailable;
-      });
-      availableTimeSpans.filter((ts: any) => {
-        const requirement = ts.required;
-        if (requirement.type === "user") {
-          return requirement.user._id === selectedUser._id;
-        } else if (requirement.type === "team") {
-          return selectedUser.team.includes(requirement.team);
-        }
-      });
-      // filter only avaialble timespans
-      availableTimeSpans = availableTimeSpans.filter(
-        (ts: TimeSpan) => !ts.assigned
-      );
-      return availableTimeSpans;
-    }
-    return [];
+    //TODO: filter with future timespans filter
+    return state.timespans;
   },
 
-  /**
-   * get selected user's assigned timesSpans to display them on the calendar #330
-   * @param state
-   */
-  assignedTimeSpans: (state) => {
-    const { selectedUser, timespans } = state;
-    return timespans.filter((ts: any) => {
-      if (ts.assigned) {
-        return ts.assigned === selectedUser._id;
-      }
-      return false;
-    });
+  assignedUsersToSelectedTimeSpan: (state: any) => {
+    const { selectedTimeSpan, timespans } = state;
+    console.log(
+      timespans.filter((ts: TimeSpan) => ts.FTID === selectedTimeSpan.FTID)
+    );
+    return ["Hamza", "Sami", "Sami2"];
   },
 });
-
-/**
- * resolve FT id with name
- */
-function getFTNameById(FTs: any, id: string) {
-  const ft = FTs.find((ft: FT) => {
-    if (ft.timeframes.length > 0) {
-      let res = false;
-      ft.timeframes.forEach((tf: any) => {
-        if (tf._id === id) {
-          res = true;
-        }
-      });
-      return res;
-    }
-  });
-  return ft ? ft.general.name : "";
-}

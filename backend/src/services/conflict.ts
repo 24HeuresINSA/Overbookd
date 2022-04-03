@@ -1,12 +1,14 @@
 import ConflictModel, { IConflict, ITFConflict } from "@entities/Conflict";
 import UserModel from "@entities/User";
-import { isTFRequiredUser, ITimeFrame, IFT } from "@entities/FT";
+import FTModel from "@entities/FT";
+import { ITimeSpan } from "@entities/TimeSpan";
 import { ITimeslot } from "@entities/Timeslot";
+import { isTFRequiredUser, ITimeFrame, IFT } from "@entities/FT";
 import { Types } from "mongoose";
 import { newTFConflit, newAvailabilityConflit } from "../entities/Conflict";
 import { getAllOrgaTFs } from "./timeFrame";
-import FTModel from "@entities/FT";
 import { Document } from "mongoose";
+
 import logger from "@shared/Logger";
 /* ################ Interfaces ################ */
 
@@ -298,7 +300,7 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
  * 1 starts before 2 start AND 1 ends after 2 ends
  *
  */
-function dateRangeOverlaps(
+export function dateRangeOverlaps(
   a_start: number,
   a_end: number,
   b_start: number,
@@ -358,4 +360,34 @@ export async function computeFTAllConflicts(
   const newAvailabiltyConflicts = await computeAvailabilityConflicts(ft);
   // save new conflicts
   return [...newConflicts, ...newAvailabiltyConflicts];
+}
+
+export function isTimespanCovered(
+  timespan: ITimeSpan,
+  timeslots: ITimeslot[]
+): boolean {
+  timeslots.sort(
+    (a, b) => a.timeFrame.start.getTime() - b.timeFrame.start.getTime()
+  );
+  let totalOverlapSize = 0;
+  for (const ts of timeslots) {
+    if (
+      dateRangeOverlapsAvailability(
+        timespan.start.getTime(),
+        timespan.end.getTime(),
+        ts.timeFrame.start.getTime(),
+        ts.timeFrame.end.getTime()
+      )
+    ) {
+      //calculate total overlap size over multiple iterations
+      totalOverlapSize +=
+        Math.min(timespan.end.getTime(), ts.timeFrame.end.getTime()) -
+        Math.max(timespan.start.getTime(), ts.timeFrame.start.getTime());
+    }
+  }
+  const timeFrameSize = timespan.end.getTime() - timespan.start.getTime();
+  if (totalOverlapSize === timeFrameSize) {
+    return true;
+  }
+  return false;
 }

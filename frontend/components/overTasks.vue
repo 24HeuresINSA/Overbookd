@@ -1,10 +1,11 @@
 <template>
   <div>
     <v-card v-if="selectedUser">
-      <v-card-title
-        >{{ selectedUser.firstname }}.{{ selectedUser.lastname }}</v-card-title
-      >
       <v-card-text>
+        <div style="display: flex">
+          <v-text-field label="Recherche" style="padding: 2px"></v-text-field>
+          <v-text-field label="Team" style="padding: 2px"></v-text-field>
+        </div>
         <ListTasks></ListTasks>
       </v-card-text>
     </v-card>
@@ -31,22 +32,7 @@ export default {
     },
   },
 
-  methods: {
-    addTask(task) {
-      this.$emit(
-        "add-task",
-        {
-          name: task.name,
-          FTID: task.FTID,
-          schedule: {
-            start: new Date(task.schedule.start),
-            end: new Date(task.schedule.end),
-          },
-        },
-        this.FTs.find((FT) => FT._id === task.FTID)
-      );
-    },
-  },
+  methods: {},
 };
 </script>
 

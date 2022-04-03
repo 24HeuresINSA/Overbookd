@@ -666,6 +666,14 @@
         "key": "comment",
         "label": "Commentaire"
       },
+      { 
+        "key": "entity",
+        "label": "Entité"
+      },
+      {
+        "key": "reason",
+        "label": "Raison"
+      },
       {
         "key": "timeslot",
         "label": "plage horaire",

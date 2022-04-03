@@ -4,27 +4,36 @@
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <v-icon
-            right
-            small
-            v-bind="attrs"
-            class="icon"
-            v-on="on"
-            @click.stop="toggleUserDialog"
+          right
+          small
+          v-bind="attrs"
+          class="icon"
+          v-on="on"
+          @click.stop="toggleUserDialog"
         >
           mdi-information
-        </v-icon
-        >
+        </v-icon>
       </template>
       <span>{{ user.comment }}</span>
     </v-tooltip>
     <br />
-    <span
+    <v-chip
       v-for="team of user.team"
       :key="team"
-      :class="getClass(team) + ' role'"
+      small
+      :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
     >
-      {{ team }}
-    </span>
+      <v-tooltip top>
+        <template #activator="{ on, attrs }">
+          <v-icon v-if="getTeamMetadate(team)" small v-bind="attrs" v-on="on">
+            {{ getTeamMetadate(team).icon }}
+          </v-icon>
+        </template>
+        <span>{{
+          getTeamMetadate(team) ? getTeamMetadate(team).name : ""
+        }}</span>
+      </v-tooltip>
+    </v-chip>
     <UserInformation
       :user="user"
       :toggle="isUserDialogOpen"
@@ -34,13 +43,13 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from "vue";
-import {User} from "~/utils/models/repo";
+import Vue, { PropType } from "vue";
+import { User } from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 
 export default Vue.extend({
   name: "UserResume",
-  components: {UserInformation},
+  components: { UserInformation },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -52,7 +61,17 @@ export default Vue.extend({
       isUserDialogOpen: false,
     };
   },
+  computed: {
+    teamsConfig(): any {
+      return this.$accessor.config.getConfig("teams");
+    },
+  },
   methods: {
+    getTeamMetadate(team: string): any {
+      return this.teamsConfig.find(
+        (item: { name: string }) => item.name === team
+      );
+    },
     getClass(team: string) {
       switch (team) {
         case "hard":

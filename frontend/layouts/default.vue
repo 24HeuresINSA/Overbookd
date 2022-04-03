@@ -169,6 +169,12 @@ export default {
           to: "/planning",
         },
         {
+          icon: "mdi-calendar-multiple-check",
+          title: "Créneaux",
+          roles: "hard",
+          to: "/creneaux",
+        },
+        {
           icon: "mdi-clock",
           title: "Mes dispos",
           roles: "everyone",
@@ -209,6 +215,12 @@ export default {
           title: "Affectation",
           roles: "humain",
           to: "/assignment",
+        },
+        {
+          icon: "mdi-clock",
+          title: "Besoin orgas",
+          roles: "humain",
+          to: "/organeeds",
         },
         {
           icon: "mdi-alert-circle",

@@ -47,7 +47,7 @@
             sort-by="count"
             :items-per-page="20"
             :loading="loading"
-            :footer-props="{'items-per-page-options': [20, 100, -1]}"
+            :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
           >
             <template #item.general.name="{ item }">
               <a
@@ -164,17 +164,17 @@
 </template>
 
 <script lang="ts">
-import { safeCall } from "~/utils/api/calls";
+import {safeCall} from "~/utils/api/calls";
 import ftRepo from "../../repositories/ftRepo";
-import { Header } from "~/utils/models/Data";
+import {Header} from "~/utils/models/Data";
 import Vue from "vue";
-import { FT } from "~/utils/models/FT";
+import {FT} from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 import userRepo from "~/repositories/userRepo";
 import faRepo from "~/repositories/faRepo";
-import { SnackNotif } from "~/utils/models/store";
+import {SnackNotif} from "~/utils/models/store";
 
 interface Data {
   color: { [key: string]: string };

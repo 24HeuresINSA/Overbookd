@@ -1,6 +1,11 @@
 <template>
   <v-card v-if="selectedTimeSpan" max-width="600">
-    <v-card-title>FT {{ mFT.count }} - {{ mFT.general.name }}</v-card-title>
+    <v-card-title>
+      <v-btn icon dark @click="closeDialog">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      FT {{ mFT.count }} - {{ mFT.general.name }}
+    </v-card-title>
     <v-card-text>
       <v-simple-table>
         <tbody>
@@ -29,7 +34,19 @@
           <tr>
             <td>Lieu</td>
             <td>
-              {{ mFT.general.location }}
+              <div v-if="mFT.details !== undefined">
+                <div v-for="location in mFT.details.locations" :key="location">
+                  {{ location }} <br />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Affecté</td>
+            <td>
+              <v-chip v-for="user in assignedUsersToSelectedTimeSpan" small>{{
+                user
+              }}</v-chip>
             </td>
           </tr>
         </tbody>
@@ -60,7 +77,10 @@ export default {
       if (this.FTs) {
         return this.FTs.find((FT) => FT.count === this.selectedTimeSpan.FTID);
       }
-      return;
+
+    },
+    assignedUsersToSelectedTimeSpan() {
+      return this.$accessor.assignment.assignedUsersToSelectedTimeSpan;
     },
   },
   methods: {
@@ -68,6 +88,9 @@ export default {
       await this.$accessor.assignment.unassign(
         this.$accessor.assignment.selectedTimeSpan._id
       );
+      this.$emit("close-dialog");
+    },
+    closeDialog() {
       this.$emit("close-dialog");
     },
   },

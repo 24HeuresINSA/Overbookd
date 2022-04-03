@@ -2,9 +2,13 @@
   <div>
     <div class="d-flex">
       <v-list-item-title style="font-weight: bold; font-size: 25px"
-      >{{ title }}
+        >{{ title }}
       </v-list-item-title>
-      <v-switch v-model="showCalendar" @change="generateEvents" label="Voir son planning"></v-switch>
+      <v-switch
+        v-model="showCalendar"
+        label="Voir son planning"
+        @change="generateEvents"
+      ></v-switch>
     </div>
     <div v-if="showCalendar">
       <v-sheet tile height="54" class="d-flex">
@@ -17,12 +21,12 @@
         </v-btn>
       </v-sheet>
       <v-calendar
-          ref="FormCalendar"
-          v-model="selectedDate"
-          color="primary"
-          type="week"
-          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-          :events="events"
+        ref="FormCalendar"
+        v-model="selectedDate"
+        color="primary"
+        type="week"
+        :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+        :events="events"
       />
     </div>
   </div>
@@ -36,7 +40,7 @@ export default {
     return {
       showCalendar: false,
       selectedDate: "2022-05-22",
-      events: []
+      events: [],
     };
   },
   methods: {
@@ -49,17 +53,19 @@ export default {
             end: this.getFormattedDate(new Date(timeslot.end)),
             color: this.getColor(timeslot.status),
           });
-        })
+        });
       }
     },
     getFormattedDate(date) {
       const month = ("0" + (date.getMonth() + 1)).slice(-2);
-      const day = ("0" + (date.getDate())).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
       const year = date.getFullYear();
-      const hour = ("0" + (date.getHours())).slice(-2);
-      const min = ("0" + (date.getMinutes())).slice(-2);
-      const seg = ("0" + (date.getSeconds())).slice(-2);
-      return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg;
+      const hour = ("0" + date.getHours()).slice(-2);
+      const min = ("0" + date.getMinutes()).slice(-2);
+      const seg = ("0" + date.getSeconds()).slice(-2);
+      return (
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg
+      );
     },
     getColor(type) {
       switch (type) {
@@ -76,11 +82,9 @@ export default {
         default:
           return "grey";
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -67,6 +67,8 @@ export default {
           value: "licensePlate",
         },
         { text: "Tél", value: "phone" },
+        { text: "Entité", value: "entity" },
+        { text: "Raison", value: "reason" },
         { text: "Commentaire", value: "comment" },
         { text: "Action", value: "action" },
       ],

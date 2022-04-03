@@ -14,7 +14,7 @@
       <v-list v-for="(plan, index) in orgaRequis" :key="index" class="my-4">
         <v-list-item>
           <v-list-item-content>
-            <ShowCalendar :title="plan._id" :fts="plan.fts"/>
+            <ShowCalendar :title="plan._id" :fts="plan.fts" />
             <v-data-table
               :headers="[
                 { text: 'FT', value: 'name', width: '30%' },

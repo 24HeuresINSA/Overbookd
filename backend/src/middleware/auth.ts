@@ -56,8 +56,8 @@ export const protect: () => RequestHandler = () => {
   return f;
 };
 
-export const verifyRoles: (roles: Array<string>) => RequestHandler = function (
-  roles: Array<string>
+export const verifyRoles: (roles: string) => RequestHandler = function (
+  roles: string
 ) {
   const f: RequestHandler = (req, res, next) => {
     const user = res.locals.auth_user;
@@ -67,13 +67,16 @@ export const verifyRoles: (roles: Array<string>) => RequestHandler = function (
       });
     }
 
-    roles.forEach((role) => {
-      if (!(role in user.team)) {
-        return res.status(StatusCodes.UNAUTHORIZED).json({
-          msg: "User does not have required roles to access the resource.",
-        });
-      }
-    });
+    if (user.team.includes("admin")) {
+      next();
+      return;
+    }
+
+    if (!user.team.includes(roles)) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        msg: "User does not have required roles to access the resource.",
+      });
+    }
 
     next();
   };

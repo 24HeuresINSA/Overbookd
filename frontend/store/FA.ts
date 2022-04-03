@@ -1,14 +1,9 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import {
-  ElectricityNeed,
-  FA,
-  SecurityPass,
-  Signalisation,
-} from "~/utils/models/FA";
-import { FT } from "~/utils/models/FT";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { FormComment } from "~/utils/models/Comment";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {ElectricityNeed, FA, SecurityPass, Signalisation,} from "~/utils/models/FA";
+import {FT} from "~/utils/models/FT";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {FormComment} from "~/utils/models/Comment";
 
 export const state = () => ({
   mFA: {
@@ -297,7 +292,7 @@ export const actions = actionTree(
     updateEquipmentRequiredCount: function ({ commit }, payload) {
       commit("UPDATE_REQUIRED_EQUIPMENT", payload);
     },
-    deleteEquipment: function ({ commit }, payload) {
+    deleteEquipmentById: function ({ commit }, payload) {
       commit("DELETE_EQUIPMENT", payload);
     },
     setFA: function ({ commit }, FA: FA) {
