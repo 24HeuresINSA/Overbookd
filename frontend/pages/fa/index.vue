@@ -90,7 +90,7 @@
           <v-data-table
             :headers="headers"
             :items="selectedFAs"
-            :footer-props="{'items-per-page-options': [20, 100, -1]}"
+            :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
             class="elevation-1"
           >
             <template #[`item.validation`]="{ item }">
@@ -174,10 +174,9 @@
 
 <script>
 import Fuse from "fuse.js";
-import { safeCall } from "../../utils/api/calls";
-import { RepoFactory } from "../../repositories/repoFactory";
+import {safeCall} from "../../utils/api/calls";
+import {RepoFactory} from "../../repositories/repoFactory";
 import ValidatorsIcons from "../../components/atoms/validators-icons";
-import { hasRole } from "../../common/role";
 
 export default {
   name: "Fa",

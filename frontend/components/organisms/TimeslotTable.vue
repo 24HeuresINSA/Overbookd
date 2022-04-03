@@ -121,7 +121,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="dialog = false"
-                >Cancel
+                  >Cancel
                 </v-btn>
                 <v-btn color="primary" text @click="addTimeslot()">Add</v-btn>
               </v-card-actions>
