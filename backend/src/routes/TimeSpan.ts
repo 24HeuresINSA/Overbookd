@@ -32,6 +32,17 @@ export async function getTimeSpanByAssigned(req: Request, res: Response) {
   return res.json(timespan);
 }
 
+//get timespan by FTID
+export async function getTimeSpanByFTID(req: Request, res: Response) {
+  const timespan = await TimeSpan.find({ FTID: parseInt(req.params.id) });
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+  return res.json(timespan);
+}
+
 /*
  assign user to a timespan
  /timespan/:id/user/:userId
@@ -165,7 +176,6 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   return res.json(availableTimespans);
 }
 
-
 export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
@@ -182,30 +192,40 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   const allUsers = await User.find({});
   //find all users who can be assigned to this timespan
   let users = allUsers.filter((user) => {
-    for(const ts of twinTimespan) {
-      if(ts.assigned && ts.assigned.toString() === user._id.toString()) {
+    for (const ts of twinTimespan) {
+      if (ts.assigned && ts.assigned.toString() === user._id.toString()) {
         return false;
       }
     }
-    if(timespan.required && timespan.required === "soft") return true;
-    if(timespan.required && timespan.required === "confiance" && (user.team?.includes("hard") || user.team?.includes("confiance"))) return true;
+    if (timespan.required && timespan.required === "soft") return true;
+    if (
+      timespan.required &&
+      timespan.required === "confiance" &&
+      (user.team?.includes("hard") || user.team?.includes("confiance"))
+    )
+      return true;
     if (user.team && user.team.includes(timespan.required!)) {
       return true;
     }
   });
-  
+
   //verify if users is available for this timespan
-  users = await filter(users, async (user: IUser) => {
-      //fetch user timeslot
+  users = (await filter(users, async (user: IUser) => {
+    //fetch user timeslot
     const userAvailabilities = await TimeslotModel.find({
       _id: { $in: user.availabilities },
     }).lean();
     return isTimespanCovered(timespan, userAvailabilities);
-  }) as (IUser & Document<any, any, IUser>)[];
+  })) as (IUser & Document<any, any, IUser>)[];
   return res.json(users);
 }
 
+//helper function for the one just above
 async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
-  const fail = Symbol()
-  return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
+  const fail = Symbol();
+  return (
+    await Promise.all(
+      arr.map(async (item) => ((await callback(item)) ? item : fail))
+    )
+  ).filter((i) => i !== fail);
 }

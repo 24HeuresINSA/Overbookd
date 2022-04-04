@@ -276,10 +276,7 @@ export async function myPlanning(req: Request, res: Response) {
         },
       });
   } else {
-    const user = await UserModel.findOne({
-      // @ts-ignore
-      _id: Types.ObjectId(req.params.userID),
-    });
+    const user = await UserModel.findOne({ _id: req.params.userID });
     FTs = [
       {
         // @ts-ignore
