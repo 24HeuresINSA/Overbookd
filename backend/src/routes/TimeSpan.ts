@@ -43,8 +43,34 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  timespan.assigned = Types.ObjectId(req.params.userId);
-  await timespan.save();
+  let oneAssigned = false;
+  if (!timespan.assigned) {
+    timespan.assigned = Types.ObjectId(req.params.userId);
+    await timespan.save();
+    oneAssigned = true;
+  } else {
+    //find all identical timespans and assign user to one of them
+    const timespans = await TimeSpan.find({
+      start: timespan.start,
+      end: timespan.end,
+      assigned: null,
+      FTID: timespan.FTID,
+      required: timespan.required,
+    });
+    for (const ts of timespans) {
+      if (!ts.assigned) {
+        ts.assigned = Types.ObjectId(req.params.userId);
+        oneAssigned = true;
+        await ts.save();
+        return res.json(timespan);
+      }
+    }
+  }
+  if (!oneAssigned) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "No timespan available",
+    });
+  }
   return res.json(timespan);
 }
 
@@ -93,26 +119,32 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
       )
   );
 
-  availableTimespans = availableTimespans.filter(
-    (timespan) => {
-      if (timespan.required && timespan.required.length < 24) {
-        const requiredTeam = timespan.required;
-        if(requiredTeam === "soft"){
-          if(user.team && (user.team.includes(requiredTeam) || user.team.includes("hard") || user.team.includes("confiance"))){
-            return true;
-          }
-        }
-        if(requiredTeam === "confiance"){
-          if(user.team && (user.team.includes(requiredTeam) || user.team.includes("hard"))){
-            return true;
-          }
-        }
-        if(user.team && user.team.includes(requiredTeam)) {
+  availableTimespans = availableTimespans.filter((timespan) => {
+    if (timespan.required && timespan.required.length < 24) {
+      const requiredTeam = timespan.required;
+      if (requiredTeam === "soft") {
+        if (
+          user.team &&
+          (user.team.includes(requiredTeam) ||
+            user.team.includes("hard") ||
+            user.team.includes("confiance"))
+        ) {
           return true;
         }
       }
+      if (requiredTeam === "confiance") {
+        if (
+          user.team &&
+          (user.team.includes(requiredTeam) || user.team.includes("hard"))
+        ) {
+          return true;
+        }
+      }
+      if (user.team && user.team.includes(requiredTeam)) {
+        return true;
+      }
     }
-  );
+  });
 
   //verify if timespan is covered by user timeslot
   availableTimespans = availableTimespans.filter((timespan) => {

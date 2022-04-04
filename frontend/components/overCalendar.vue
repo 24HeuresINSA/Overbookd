@@ -21,7 +21,6 @@
       v-model="centralDay"
       :events="assignedTimeSlots"
       :event-name="resolveFTName"
-      color="primary"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       @mousedown:event="startDrag"
@@ -56,7 +55,6 @@ export default {
       createEvent: null,
       createStart: null,
       extendOriginal: null,
-
       newEvent: undefined,
       centralDay: this.$accessor.config.getConfig("event_date"),
     };
@@ -64,7 +62,14 @@ export default {
 
   computed: {
     assignedTimeSlots() {
-      return this.$accessor.assignment.assignedTimespans;
+      let events = [...this.$accessor.assignment.assignedTimespans];
+      let hoverTask = this.$accessor.assignment.hoverTask;
+      if(hoverTask.FTID) {
+        this.centralDay = hoverTask.start;
+        hoverTask["color"] = "rgba(204,51,255,0.50)";
+        events.push(hoverTask);
+      }
+      return events;
     },
     FTs() {
       return this.$accessor.assignment.FTs;
@@ -78,11 +83,9 @@ export default {
       return this.$accessor.assignment.filters.isModeOrgaToTache;
     },
   },
-
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
-      console.log("startDrag", event, timed);
       this.$accessor.assignment.selectTimeSpan(event);
       this.$emit("open-unassign-dialog");
     },

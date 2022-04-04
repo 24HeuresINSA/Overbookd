@@ -187,12 +187,6 @@ export default {
           to: "/createavailibility",
         },
         {
-          icon: "mdi-calendar",
-          title: "Mon calendrier",
-          to: "/calendar",
-          roles: "everyone",
-        },
-        {
           icon: "mdi-account",
           title: "Liste des Orgas",
           roles: "hard",
@@ -215,6 +209,12 @@ export default {
           title: "Affectation",
           roles: "humain",
           to: "/assignment",
+        },
+        {
+          icon: "mdi-clock",
+          title: "Besoin orgas",
+          roles: "humain",
+          to: "/organeeds",
         },
         {
           icon: "mdi-alert-circle",

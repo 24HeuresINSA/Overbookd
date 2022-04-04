@@ -225,7 +225,7 @@ timeslotRouter.put(
   TimeslotHandler.updateTimeslot
 );
 timeslotRouter.get(
-  "/:id",
+  "/:id([a-f|0-9]+)",
   authMiddleware.protect(),
   TimeslotHandler.getTimeslotById
 );
@@ -236,13 +236,13 @@ timeslotRouter.post(
   TimeslotHandler.createManyTimeslots
 );
 timeslotRouter.put(
-  "/:id/:charisma",
+  "/:id([a-f|0-9]+)/:charisma",
   authMiddleware.protect(),
   authMiddleware.verifyRoles("hard"),
   TimeslotHandler.updateTimeslotCharisma
 );
 timeslotRouter.delete(
-  "/:id",
+  "/:id([a-f|0-9]+)",
   authMiddleware.protect(),
   authMiddleware.verifyRoles("hard"),
   TimeslotHandler.deleteTimeslot
@@ -252,6 +252,12 @@ timeslotRouter.delete(
   authMiddleware.protect(),
   authMiddleware.verifyRoles("hard"),
   TimeslotHandler.deleteManyTimeslotsByGroupTitle
+);
+timeslotRouter.get(
+  "/getOrgaNeeds/:timestamp([0-9]+)",
+  authMiddleware.protect(),
+  authMiddleware.verifyRoles("hard"),
+  TimeslotHandler.getOrgaNeeds
 );
 // Transactions routes
 

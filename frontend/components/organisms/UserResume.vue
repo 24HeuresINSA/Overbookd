@@ -17,13 +17,23 @@
       <span>{{ user.comment }}</span>
     </v-tooltip>
     <br />
-    <span
-      v-for="team of user.team.filter((item) => item !== 'toValidate')"
+    <v-chip
+      v-for="team of user.team"
       :key="team"
-      :class="getClass(team) + ' role'"
+      small
+      :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
     >
-      {{ team }}
-    </span>
+      <v-tooltip top>
+        <template #activator="{ on, attrs }">
+          <v-icon v-if="getTeamMetadate(team)" small v-bind="attrs" v-on="on">
+            {{ getTeamMetadate(team).icon }}
+          </v-icon>
+        </template>
+        <span>{{
+          getTeamMetadate(team) ? getTeamMetadate(team).name : ""
+        }}</span>
+      </v-tooltip>
+    </v-chip>
     <UserInformation
       :user="user"
       :toggle="isUserDialogOpen"
@@ -51,7 +61,17 @@ export default Vue.extend({
       isUserDialogOpen: false,
     };
   },
+  computed: {
+    teamsConfig(): any {
+      return this.$accessor.config.getConfig("teams");
+    },
+  },
   methods: {
+    getTeamMetadate(team: string): any {
+      return this.teamsConfig.find(
+        (item: { name: string }) => item.name === team
+      );
+    },
     getClass(team: string) {
       switch (team) {
         case "hard":

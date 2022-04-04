@@ -3,11 +3,10 @@
     <!-- list of  filtered users -->
     <v-card>
       <v-card-text>
-        <h3>Filtres</h3>
         <div style="display: flex">
           <v-text-field
-            prepend-icon="mdi-card-search"
             label="Recherche"
+            style="padding: 2px"
             @input="updateFilter('search', $event)"
           ></v-text-field>
           <v-combobox
@@ -16,6 +15,7 @@
             dense
             clearable
             label="Team"
+            style="padding: 2px"
             :items="getConfig('teams').map((e) => e.name)"
             @input="updateFilter('team', $event)"
           >
