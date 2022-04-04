@@ -254,7 +254,13 @@ export default Vue.extend({
       users: undefined,
       FAs: undefined,
       loading: true,
-      notifs: { serverError: { type: "error", message: "erreur serveur" } },
+      notifs: {
+        serverError: { type: "error", message: "erreur serveur" },
+        deleteError: {
+          type: "error",
+          message: "La FT ne peut pas etre suprimée si elle est validé ou soumise",
+        },
+      },
     };
   },
 
@@ -366,16 +372,20 @@ export default Vue.extend({
     },
 
     async deleteFT() {
-      const res = await safeCall(
-        this.$store,
-        ftRepo.deleteFT(this, this.mFT),
-        "sent",
-        "server"
-      );
-      if (res) {
-        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
-        this.FTs[index].isValid = false;
-        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+      if (this.mFT.status === "validated" || this.mFT.status === "submitted") {
+        this.$accessor.notif.pushNotification(this.notifs.deleteError);
+      } else {
+        const res = await safeCall(
+          this.$store,
+          ftRepo.deleteFT(this, this.mFT),
+          "sent",
+          "server"
+        );
+        if (res) {
+          const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+          this.FTs[index].isValid = false;
+          this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+        }
       }
       this.isDeleteDialogOpen = false;
     },
