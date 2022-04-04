@@ -297,7 +297,7 @@ export default Vue.extend({
         });
       }
       const fuse = new Fuse(res, {
-        keys: ["general.name"],
+        keys: ["general.name", "count"],
         threshold: 0.2,
       });
       if (search) {
