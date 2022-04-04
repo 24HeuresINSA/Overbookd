@@ -1,22 +1,22 @@
 import StatusCodes from "http-status-codes";
-import {Request, Response} from "express";
-import FTModel, {IFT} from "@entities/FT";
+import { Request, Response } from "express";
+import FTModel, { IFT } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
-import {updateConflictsByFTCount} from "@src/services/conflict";
-import {timeframeToTimeSpan} from "@src/services/slicing";
-import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
-import {Types} from "mongoose";
+import { updateConflictsByFTCount } from "@src/services/conflict";
+import { timeframeToTimeSpan } from "@src/services/slicing";
+import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
+import { Types } from "mongoose";
 import ConfigModel from "@entities/Config";
 import UserModel from "@entities/User";
 
 export async function getAllFTs(req: Request, res: Response) {
   const mFTs = await FTModel.find({});
-  res.json({data: mFTs});
+  res.json({ data: mFTs });
 }
 
 export async function getFTByID(req: Request, res: Response) {
-  const mFT = await FTModel.findOne({count: +req.params.FTID});
+  const mFT = await FTModel.findOne({ count: +req.params.FTID });
   res.json(mFT);
 }
 
@@ -41,9 +41,8 @@ export async function updateFT(
       if (mFT.status === "refused") {
         //delete all timespans of this FT
         logger.info(`delete all timespans of this FT ${mFT.count}`);
-        await TimeSpanModel.deleteMany({FTID: mFT.count});
+        await TimeSpanModel.deleteMany({ FTID: mFT.count });
       }
-
     } catch (e) {
       logger.err(e);
     }
@@ -81,12 +80,12 @@ export async function deleteFT(req: Request, res: Response) {
   logger.info(`deleting FT: ${mFT.count}...`);
   if (mFT.count) {
     await FTModel.findOneAndUpdate(
-      {count: mFT.count},
-      {$set: {isValid: false}}
+      { count: mFT.count },
+      { $set: { isValid: false } }
     );
     if (mFT.FA) {
       logger.info(`deleting FT: ${mFT.count} from FA ${mFT.FA}`);
-      const mFA = await FAModel.findOne({count: mFT.FA});
+      const mFA = await FAModel.findOne({ count: mFT.FA });
       if (mFA && mFA.FTs) {
         mFA.FTs = mFA.FTs.filter((FT) => FT.count !== mFT.count);
         mFA.save();
@@ -94,7 +93,7 @@ export async function deleteFT(req: Request, res: Response) {
       }
     }
     await updateConflictsByFTCount(mFT.count);
-    res.status(StatusCodes.OK).json({mFT});
+    res.status(StatusCodes.OK).json({ mFT });
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);
   }
@@ -104,7 +103,7 @@ export async function getFTsNumber(req: Request, res: Response) {
   const FTs: Array<{ _id: { count: number; status: string; FA: number } }> =
     await FTModel.aggregate()
       .match({
-        $and: [{isValid: {$ne: false}}],
+        $and: [{ isValid: { $ne: false } }],
       })
       .group({
         _id: {
@@ -191,7 +190,7 @@ export async function getFTsNumber(req: Request, res: Response) {
 
 export async function makeFTReady(req: Request, res: Response) {
   const FTCount = req.params.count as string;
-  const FT = await FTModel.findOne({count: +FTCount});
+  const FT = await FTModel.findOne({ count: +FTCount });
   if (FT) {
     const mFT = <IFT>FT.toObject();
     logger.info(`making FT ${mFT.general.name} ready...`);
@@ -224,16 +223,13 @@ export async function makeFTReady(req: Request, res: Response) {
 }
 
 export async function myPlanning(req: Request, res: Response) {
-  const showFt = await ConfigModel.findOne({key: "show_ft_in_planning"});
+  const showFt = await ConfigModel.findOne({ key: "show_ft_in_planning" });
 
-  let FTs: Array<{ _id: string, slots: any[] }> = [];
+  let FTs: Array<{ _id: string; slots: any[] }> = [];
   if (showFt && showFt.value) {
     FTs = await FTModel.aggregate()
       .match({
-        $and: [
-          {isValid: {$ne: false}},
-          {status: {$ne: "ready"}},
-        ],
+        $and: [{ isValid: { $ne: false } }, { status: { $ne: "ready" } }],
       })
       .project({
         _id: 0,
@@ -243,29 +239,28 @@ export async function myPlanning(req: Request, res: Response) {
         isValid: 1,
         timeframes: 1,
       })
-      .unwind({path: "$timeframes"})
+      .unwind({ path: "$timeframes" })
       .sort("timeframes.start")
-      .unwind({path: "$timeframes.required"})
-      .match({"timeframes.required.user._id": Types.ObjectId(req.params.userID)})
-      .match({"timeframes.required.type": "user"})
+      .unwind({ path: "$timeframes.required" })
+      .match({
+        "timeframes.required.user._id": Types.ObjectId(req.params.userID),
+      })
+      .match({ "timeframes.required.type": "user" })
       .lookup({
         from: "conflicts",
         localField: "timeframes.required.user._id",
         foreignField: "user",
-        let: {id: "$timeframes._id"},
+        let: { id: "$timeframes._id" },
         pipeline: [
           {
             $match: {
               $expr: {
-                $or: [
-                  {$eq: ["$$id", "$tf1"]},
-                  {$eq: ["$$id", "$tf2"]}
-                ]
-              }
-            }
-          }
+                $or: [{ $eq: ["$$id", "$tf1"] }, { $eq: ["$$id", "$tf2"] }],
+              },
+            },
+          },
         ],
-        as: "conflicts"
+        as: "conflicts",
       })
       .group({
         _id: "$timeframes.required.user.username",
@@ -276,21 +271,26 @@ export async function myPlanning(req: Request, res: Response) {
             status: "$status",
             start: "$timeframes.start",
             end: "$timeframes.end",
-            conflits: "$conflicts"
+            conflits: "$conflicts",
           },
-        }
+        },
       });
   } else {
-    const user = await UserModel.findOne({_id: Types.ObjectId(req.params.userID)});
-    FTs = [{
+    const user = await UserModel.findOne({
       // @ts-ignore
-      _id: user.firstname + " " + user.lastname,
-      slots: [],
-    }];
+      _id: Types.ObjectId(req.params.userID),
+    });
+    FTs = [
+      {
+        // @ts-ignore
+        _id: user.firstname + " " + user.lastname,
+        slots: [],
+      },
+    ];
   }
 
   const timespans = await TimeSpanModel.aggregate()
-    .match({assigned: req.params.userID})
+    .match({ assigned: req.params.userID })
     .lookup({
       from: "fts",
       localField: "FTID",
@@ -302,8 +302,8 @@ export async function myPlanning(req: Request, res: Response) {
       count: "$FTID",
       start: 1,
       end: 1,
-      name: {$first: "$FT.general.name"},
-      status: "affected"
+      name: { $first: "$FT.general.name" },
+      status: "affected",
     });
 
   FTs[0].slots.push(...timespans);
@@ -312,71 +312,66 @@ export async function myPlanning(req: Request, res: Response) {
 }
 
 export async function getOrgaRequis(req: Request, res: Response) {
-  const showFt = await ConfigModel.findOne({key: "show_ft_in_planning"});
+  const showFt = await ConfigModel.findOne({ key: "show_ft_in_planning" });
 
-  let FTs: Array<{ _id: string, userId: string, slots: any[] }> = [];
+  let FTs: Array<{ _id: string; userId: string; slots: any[] }> = [];
   if (showFt && showFt.value) {
     FTs = await FTModel.aggregate()
       .match({
-        $and: [
-          {isValid: {$ne: false}},
-          {status: {$ne: "ready"}},
-        ],
+        $and: [{ isValid: { $ne: false } }, { status: { $ne: "ready" } }],
       })
-      .unwind({path: "$timeframes"})
+      .unwind({ path: "$timeframes" })
       .sort("timeframes.start")
-      .unwind({path: "$timeframes.required"})
-      .match({"timeframes.required.type": "user"})
+      .unwind({ path: "$timeframes.required" })
+      .match({ "timeframes.required.type": "user" })
       .lookup({
         from: "conflicts",
         localField: "timeframes.required.user._id",
         foreignField: "user",
-        let: {id: "$timeframes._id"},
+        let: { id: "$timeframes._id" },
         pipeline: [
           {
             $match: {
               $expr: {
-                $or: [
-                  {$eq: ["$$id", "$tf1"]},
-                  {$eq: ["$$id", "$tf2"]}
-                ]
-              }
-            }
-          }
+                $or: [{ $eq: ["$$id", "$tf1"] }, { $eq: ["$$id", "$tf2"] }],
+              },
+            },
+          },
         ],
-        as: "conflicts"
+        as: "conflicts",
       })
       .group({
-          _id: "$timeframes.required.user.username",
-          userId: {$first: "$timeframes.required.user._id"},
-          slots: {
-            $push: {
-              count: "$count",
-              name: "$general.name",
-              status: "$status",
-              start: "$timeframes.start",
-              end: "$timeframes.end",
-              conflits: "$conflicts"
-            },
-          }
-        }
-      )
-      .match({$and: [{_id: {$ne: {}}}, {_id: {$ne: null}}]})
+        _id: "$timeframes.required.user.username",
+        userId: { $first: "$timeframes.required.user._id" },
+        slots: {
+          $push: {
+            count: "$count",
+            name: "$general.name",
+            status: "$status",
+            start: "$timeframes.start",
+            end: "$timeframes.end",
+            conflits: "$conflicts",
+          },
+        },
+      })
+      .match({ $and: [{ _id: { $ne: {} } }, { _id: { $ne: null } }] })
       .sort("_id");
   } else {
     const users = await UserModel.find({});
-    FTs = users.map(user => {
-      return {
-        // @ts-ignore
-        _id: user.firstname + " " + user.lastname,
-        userId: (user._id).toString(),
-        slots: [],
-      }
-    }).sort((a, b) => 0 - (a._id.toLowerCase() > b._id.toLowerCase() ? -1 : 1));
+    FTs = users
+      .map((user) => {
+        return {
+          // @ts-ignore
+          _id: user.firstname + " " + user.lastname,
+          userId: user._id.toString(),
+          slots: [],
+        };
+      })
+      .sort((a, b) => 0 - (a._id.toLowerCase() > b._id.toLowerCase() ? -1 : 1));
   }
 
   const timespans = await TimeSpanModel.aggregate()
-    .match({assigned: {$ne: null}})
+    .match({ assigned: { $ne: null } })
     .lookup({
       from: "fts",
       localField: "FTID",
@@ -388,9 +383,9 @@ export async function getOrgaRequis(req: Request, res: Response) {
       count: "$FTID",
       start: 1,
       end: 1,
-      name: {$first: "$FT.general.name"},
+      name: { $first: "$FT.general.name" },
       status: "affected",
-      assigned: 1
+      assigned: 1,
     })
     .group({
       _id: "$assigned",
@@ -402,18 +397,20 @@ export async function getOrgaRequis(req: Request, res: Response) {
           start: "$start",
           end: "$end",
         },
-      }
+      },
     });
 
   for (let i = 0; i < FTs.length; i++) {
-    timespans.filter(ts => ts._id === FTs[i].userId).forEach(ts => {
-      FTs[i].slots.push(...ts.slots);
-    });
+    timespans
+      .filter((ts) => ts._id === FTs[i].userId)
+      .forEach((ts) => {
+        FTs[i].slots.push(...ts.slots);
+      });
   }
 
   // remove all the FTs with empty slots
   // Usefull as we can't filter by isValid user because it's not set for vehicle
-  FTs = FTs.filter(ft => ft.slots.length > 0);
+  FTs = FTs.filter((ft) => ft.slots.length > 0);
 
   res.json(FTs);
 }

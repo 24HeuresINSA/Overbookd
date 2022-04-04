@@ -121,10 +121,22 @@ export const removeAvailability: RequestHandler = async function (req, res) {
   const timeslotId = req.body.timeslotID;
   try {
     const user = await UserModel.findById(id);
+    let charismaToRemove = 0;
     if (user) {
       if (user.availabilities) {
         const index = user.availabilities.indexOf(timeslotId);
         user.availabilities.splice(index, 1);
+        const deletedTimeslot = await TimeslotModel.find()
+          .where("_id")
+          .in(timeslotId)
+          .exec();
+        charismaToRemove = deletedTimeslot.reduce(
+          (acc, cur) => acc + cur.charisma,
+          0
+        );
+      }
+      if (user.charisma) {
+        user.charisma -= charismaToRemove;
       }
       await user.save();
       res.json(new SafeUser(user));
