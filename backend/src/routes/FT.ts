@@ -39,7 +39,7 @@ export async function updateFT(
       await FTModel.findByIdAndUpdate(mFT._id, mFT);
       await updateConflictsByFTCount(mFT.count);
       if (mFT.status === "refused") {
-        //delete all timespans of this FT
+        //delete all ²timespans of this FT
         logger.info(`delete all timespans of this FT ${mFT.count}`);
         await TimeSpanModel.deleteMany({ FTID: mFT.count });
       }
