@@ -429,6 +429,11 @@
         "name": "tendrestival",
         "color": "#FF9300",
         "icon": "mdi-balloon"
+      },
+      {
+        "name": "vieux",
+        "color": "#B5C2CB",
+        "icon": "mdi-human-cane"
       }
     ],
     "__v": 0
