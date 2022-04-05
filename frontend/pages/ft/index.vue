@@ -37,6 +37,7 @@
                 v-model="filters.isDeleted"
                 label="FT supprimées"
               ></v-switch>
+              <v-switch v-model="filters.myFTs" label="Mes FTs"></v-switch>
             </v-card-text>
           </v-card>
         </v-col>
@@ -164,17 +165,17 @@
 </template>
 
 <script lang="ts">
-import {safeCall} from "~/utils/api/calls";
+import { safeCall } from "~/utils/api/calls";
 import ftRepo from "../../repositories/ftRepo";
-import {Header} from "~/utils/models/Data";
+import { Header } from "~/utils/models/Data";
 import Vue from "vue";
-import {FT} from "~/utils/models/FT";
+import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 import userRepo from "~/repositories/userRepo";
 import faRepo from "~/repositories/faRepo";
-import {SnackNotif} from "~/utils/models/store";
+import { SnackNotif } from "~/utils/models/store";
 
 interface Data {
   color: { [key: string]: string };
@@ -193,6 +194,7 @@ interface Data {
   filters: {
     search: string;
     teams: string;
+    myFTs: string;
     isDeleted: boolean;
     status: string;
   };
@@ -241,6 +243,7 @@ export default Vue.extend({
       filters: {
         search: "",
         teams: "",
+        myFTs: "",
         status: "",
         isDeleted: false,
       },
@@ -251,7 +254,13 @@ export default Vue.extend({
       users: undefined,
       FAs: undefined,
       loading: true,
-      notifs: { serverError: { type: "error", message: "erreur serveur" } },
+      notifs: {
+        serverError: { type: "error", message: "erreur serveur" },
+        deleteError: {
+          type: "error",
+          message: "La FT ne peut pas etre suprimée si elle est validé ou soumise",
+        },
+      },
     };
   },
 
@@ -259,7 +268,7 @@ export default Vue.extend({
     filteredFTs(): FT[] {
       let res = this.FTs;
       const { FTs, filters } = this;
-      const { search, teams, isDeleted, status } = filters;
+      const { search, teams, myFTs, isDeleted, status } = filters;
 
       if (isDeleted) {
         res = res.filter((e) => e.isValid === false);
@@ -286,8 +295,15 @@ export default Vue.extend({
           return teams == fa.general.team;
         });
       }
+      if (myFTs) {
+        res = res.filter((ft) => {
+          if (ft.general.inCharge) {
+            return ft.general.inCharge._id === this.$accessor.user.me._id;
+          }
+        });
+      }
       const fuse = new Fuse(res, {
-        keys: ["general.name"],
+        keys: ["general.name", "count"],
         threshold: 0.2,
       });
       if (search) {
@@ -326,7 +342,6 @@ export default Vue.extend({
     hasRole(role: string) {
       return this.$accessor.user.hasRole(role);
     },
-
     getConfig(key: string) {
       return this.$accessor.config.getConfig(key);
     },
@@ -357,16 +372,20 @@ export default Vue.extend({
     },
 
     async deleteFT() {
-      const res = await safeCall(
-        this.$store,
-        ftRepo.deleteFT(this, this.mFT),
-        "sent",
-        "server"
-      );
-      if (res) {
-        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
-        this.FTs[index].isValid = false;
-        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+      if (this.mFT.status === "validated" || this.mFT.status === "submitted") {
+        this.$accessor.notif.pushNotification(this.notifs.deleteError);
+      } else {
+        const res = await safeCall(
+          this.$store,
+          ftRepo.deleteFT(this, this.mFT),
+          "sent",
+          "server"
+        );
+        if (res) {
+          const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+          this.FTs[index].isValid = false;
+          this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
+        }
       }
       this.isDeleteDialogOpen = false;
     },
