@@ -15,10 +15,10 @@
           hide-default-footer
         >
           <template #[`item.action`]="row">
-            <v-btn icon small @click="removeSecurityPass(index)">
+            <v-btn icon small @click="removeSecurityPass(row.index)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn icon small @click="modifPass(row.item)">
+            <v-btn icon small @click="modifSecurityPass(row)">
               <v-icon small>mdi-circle-edit-outline</v-icon>
             </v-btn>
           </template>
@@ -45,11 +45,11 @@
           :fields="FORM"
           :data="mPass"
           :disabled="isDisabled"
-          @form-change="onFormChange"
+          @form-change="onModifFormChange"
         ></OverForm>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="savePass"> Enregistrer </v-btn>
+          <v-btn color="primary" @click="saveSecurityPass"> Enregistrer </v-btn>
           <v-btn color="error" @click="isModifPassDialogOpen = false">
             Annuler
           </v-btn>
@@ -99,6 +99,7 @@ export default {
       ],
       newSecurityPass: {},
       mPass: {},
+      mPassIndex: 0,
       isModifPassDialogOpen: false,
     };
   },
@@ -117,18 +118,25 @@ export default {
     onFormChange(form) {
       this.newSecurityPass = form;
     },
+    onModifFormChange(form) {
+      this.mPass = { ...this.mPass, ...form };
+    },
     addSecurityPass() {
       this.$accessor.FA.addSecurityPass(this.newSecurityPass);
     },
-    savePass() {
-      this.$accessor.FA.updateSecurityPass(this.mPass);
+    saveSecurityPass() {
+      this.$accessor.FA.updateSecurityPass({
+        index: this.mPassIndex,
+        securityPass: this.mPass,
+      });
       this.isModifPassDialogOpen = false;
     },
     removeSecurityPass(index) {
       this.$accessor.FA.deleteSecurityPass(index);
     },
-    modifPass(pass) {
-      this.mPass = pass;
+    modifSecurityPass(pass) {
+      this.mPass = pass.item;
+      this.mPassIndex = pass.index;
       this.isModifPassDialogOpen = true;
     },
   },
