@@ -423,6 +423,11 @@ timespanRouter.get(
   TimeSpanHandlers.getTimeSpanByAssigned
 );
 timespanRouter.get(
+  "/user/affected/:id",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getUsersAffectedToTimespan
+);
+timespanRouter.get(
   "/available/:userId",
   authMiddleware.protect(),
   TimeSpanHandlers.getAvailableTimeSpan
