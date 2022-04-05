@@ -765,9 +765,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "620cb64424568626d7f9e2a7"
-    },
+    "_id":  "620cb64424568626d7f9e2a7",
     "key": "signup_form_soft",
     "value": [
       {
@@ -854,6 +852,12 @@
         "label": "Commentaire (handicap éventuel, allergies, la liste de tes amis, un mot doux pour les orgas...)"
       }
     ],
+    "__v": 0
+  },
+  {
+    "_id": "624be11990b5de0011816811",
+    "key": "show_ft_in_planning",
+    "value": true,
     "__v": 0
   }
 ]
