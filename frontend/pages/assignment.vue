@@ -19,7 +19,8 @@
       @open-unassign-dialog="openUnassignDialog"
     />
 
-    <OverTasks style="max-width: 550px" />
+    <OverTasks v-if="!isModeOrgaToTache" style="max-width: 550px" />
+    <OverFT v-else style="max-width: 550px" />
 
     <v-dialog v-model="isUnassignDialogOpen" width="500px">
       <unassign-dialog @close-dialog="closeUnassignDialog" />
@@ -31,17 +32,22 @@
 import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";
+import OverFT from "../components/overFT.vue";
 
 export default {
   name: "Assignment",
-  components: { OverCalendar, OverTasks, FilteredUsers },
+  components: { OverCalendar, OverTasks, FilteredUsers, OverFT },
   data() {
     return {
       isUnassignDialogOpen: false,
     };
   },
 
-  computed: {},
+  computed: {
+    isModeOrgaToTache() {
+      return this.$accessor.assignment.filters.isModeOrgaToTache;
+    },
+  },
 
   watch: {},
 

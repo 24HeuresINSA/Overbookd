@@ -3,28 +3,40 @@
     <v-simple-table dense fixed-header height="800">
       <template #default>
         <thead>
-        <tr>
-          <td>FT</td>
-          <td>Debut</td>
-          <td>Fin</td>
-          <td>Requit</td>
-        </tr>
+          <tr>
+            <td>FT</td>
+            <td>Debut</td>
+            <td>Fin</td>
+            <td>Requit</td>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="timeSpan in availableTimeSpans" @click="assignTask(timeSpan)" @mouseover="hoverTask(timeSpan)">
-          <td>
-            {{ timeSpan.FTID }} - {{ timeSpan.FTName }}
-          </td>
-          <td>
-            {{ timeSpan ? timeSpan.start.getHours() + ':' + timeSpan.start.getMinutes() : "" }}
-          </td>
-          <td>
-            {{ timeSpan ? timeSpan.end.getHours() + ':' + timeSpan.end.getMinutes() : "" }}
-          </td>
-          <td>
-            {{ timeSpan ? timeSpan.required : "" }}
-          </td>
-        </tr>
+          <tr
+            v-for="timeSpan in availableTimeSpans"
+            @click="assignTask(timeSpan)"
+            @mouseover="hoverTask(timeSpan)"
+          >
+            <td>{{ timeSpan.FTID }} - {{ timeSpan.FTName }}</td>
+            <td>
+              {{
+                timeSpan
+                  ? timeSpan.start.getHours() +
+                    ":" +
+                    timeSpan.start.getMinutes()
+                  : ""
+              }}
+            </td>
+            <td>
+              {{
+                timeSpan
+                  ? timeSpan.end.getHours() + ":" + timeSpan.end.getMinutes()
+                  : ""
+              }}
+            </td>
+            <td>
+              {{ timeSpan ? timeSpan.required : "" }}
+            </td>
+          </tr>
         </tbody>
       </template>
     </v-simple-table>
@@ -35,7 +47,7 @@
 </template>
 
 <script>
-import {Snack} from "~/utils/models/snack";
+import { Snack } from "~/utils/models/snack";
 
 export default {
   name: "ListTasks",
@@ -88,7 +100,7 @@ export default {
       });
       if (!res) {
         this.snack.display(
-            "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
+          "Le créneau est déjà assigné, change d'utilisateur séléctionné pour recharger les créneaux"
         );
       }
     },
