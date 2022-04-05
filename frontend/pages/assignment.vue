@@ -11,7 +11,7 @@
       width: 100%;
     "
   >
-    <FilteredUsers style="max-width: 350px"/>
+    <FilteredUsers style="max-width: 350px" />
 
     <!-- calendar --->
     <OverCalendar
@@ -19,10 +19,10 @@
       @open-unassign-dialog="openUnassignDialog"
     />
 
-    <OverTasks style="max-width: 550px"/>
+    <OverTasks style="max-width: 550px" />
 
     <v-dialog v-model="isUnassignDialogOpen" width="500px">
-      <unassign-dialog @close-dialog="closeUnassignDialog"/>
+      <unassign-dialog @close-dialog="closeUnassignDialog" />
     </v-dialog>
   </v-container>
 </template>
