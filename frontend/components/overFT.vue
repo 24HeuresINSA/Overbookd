@@ -6,15 +6,18 @@
           <v-text-field label="Recherche" style="padding: 2px"></v-text-field>
           <v-text-field label="Team" style="padding: 2px"></v-text-field>
         </div>
+        <ListFT />
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
+import ListFT from "./listFT.vue";
+
 export default {
   name: "OverTasks",
-  components: {},
+  components: { ListFT },
 
   data() {
     return {
