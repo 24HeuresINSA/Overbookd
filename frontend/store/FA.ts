@@ -1,9 +1,14 @@
-import {actionTree, getterTree, mutationTree} from "typed-vuex";
-import {ElectricityNeed, FA, SecurityPass, Signalisation,} from "~/utils/models/FA";
-import {FT} from "~/utils/models/FT";
-import {safeCall} from "~/utils/api/calls";
-import {RepoFactory} from "~/repositories/repoFactory";
-import {FormComment} from "~/utils/models/Comment";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import {
+  ElectricityNeed,
+  FA,
+  SecurityPass,
+  Signalisation,
+} from "~/utils/models/FA";
+import { FT } from "~/utils/models/FT";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { FormComment } from "~/utils/models/Comment";
 
 export const state = () => ({
   mFA: {
@@ -207,6 +212,9 @@ export const mutations = mutationTree(state, {
     }
     state.mFA.securityPasses.push(securityPass);
   },
+  UPDATE_SECURITY_PASS: function (state, { index, securityPass }) {
+    state.mFA.securityPasses.splice(index, 1, securityPass);
+  },
   DELETE_SECURITY_PASS: function (state, index) {
     state.mFA.securityPasses.splice(index, 1);
   },
@@ -265,6 +273,9 @@ export const actions = actionTree(
     },
     addSecurityPass: async function ({ commit }, securityPass) {
       commit("ADD_SECURITY_PASS", { ...securityPass });
+    },
+    updateSecurityPass: async function ({ commit }, securityPass) {
+      commit("UPDATE_SECURITY_PASS", securityPass);
     },
     deleteSecurityPass: async function ({ commit }, index) {
       commit("DELETE_SECURITY_PASS", index);
