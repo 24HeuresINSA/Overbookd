@@ -44,9 +44,9 @@
           <tr>
             <td>Affecté</td>
             <td>
-              <v-chip v-for="user in assignedUsersToSelectedTimeSpan" small>{{
-                user
-              }}</v-chip>
+              <v-chip v-for="user in assignedUsersToSelectedTimeSpan" small :key="user._id">
+                {{ user.firstname }} {{ user.lastname }}
+              </v-chip>
             </td>
           </tr>
         </tbody>
@@ -80,7 +80,7 @@ export default {
 
     },
     assignedUsersToSelectedTimeSpan() {
-      return this.$accessor.assignment.assignedUsersToSelectedTimeSpan;
+      return this.$accessor.assignment.userAssignedToSameTimespan;
     },
   },
   methods: {

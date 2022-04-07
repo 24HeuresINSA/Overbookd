@@ -164,3 +164,30 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   );
   return res.json(availableTimespans);
 }
+
+export async function getUsersAffectedToTimespan(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+  const twinTimespan = await TimeSpan.find({
+    start: timespan.start,
+    end: timespan.end,
+    FTID: timespan.FTID,
+    required: timespan.required,
+  });
+  const usersId = [] as string[];
+  for (const ts of twinTimespan) {
+    if (ts.assigned) {
+      usersId.push(ts.assigned.toString());
+    }
+  }
+  //find users
+  const users = await User.find({
+    _id: { $in: usersId },
+  });
+  //return user firstname, lastname and _id
+  return res.json(users.map((user) => ({ _id: user._id, firstname: user.firstname, lastname: user.lastname })));
+}

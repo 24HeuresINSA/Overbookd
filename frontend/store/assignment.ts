@@ -48,6 +48,7 @@ export const state = () => ({
   assignedTimespans: [] as TimeSpan[],
   hoverTask: {} as TimeSpan,
   timespanToFTName: {} as { [key: string]: string },
+  userAssignedToSameTimespan: [] as { _id: string, firstname: string, lastname: string }[],
 });
 
 export const mutations = mutationTree(state, {
@@ -109,6 +110,18 @@ export const mutations = mutationTree(state, {
   SET_HOVER_TASK(state: any, data: TimeSpan) {
     state.hoverTask = data;
   },
+  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
+    state.userAssignedToSameTimespan = data;
+    state.userAssignedToSameTimespan.sort((a: any, b: any) => {
+      if (a.firstname < b.firstname) {
+        return -1;
+      }
+      if (a.firstname > b.firstname) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 });
 
 export const actions = actionTree(
@@ -327,6 +340,18 @@ export const actions = actionTree(
     setHoverTask({ commit }: any, timeSpan: TimeSpan) {
       commit("SET_HOVER_TASK", timeSpan);
     },
+    
+    //get user assigned to same timespan
+    async getUserAssignedToSameTimespan({ commit }: any, timeSpan: TimeSpan) {
+      const res = await safeCall(
+        this,
+        TimeSpanRepo.getUserAssignedToSameTimespan(this, timeSpan._id)
+      );
+      if (res) {
+        commit("SET_USER_ASSIGNED_TO_SAME_TIMESPAN", res.data);
+      }
+      return res;
+    }
   }
 );
 
@@ -403,13 +428,5 @@ export const getters = getterTree(state, {
   availableTimeSpans: (state: any, getters: any) => {
     //TODO: filter with future timespans filter
     return state.timespans;
-  },
-
-  assignedUsersToSelectedTimeSpan: (state: any) => {
-    const { selectedTimeSpan, timespans } = state;
-    console.log(
-      timespans.filter((ts: TimeSpan) => ts.FTID === selectedTimeSpan.FTID)
-    );
-    return ["Hamza", "Sami", "Sami2"];
   },
 });
