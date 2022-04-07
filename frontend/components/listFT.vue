@@ -36,9 +36,11 @@ export default {
 
   computed: {
     FTs() {
-      const fts = this.$accessor.assignment.FTs.filter(
-        (item) => item.general.name !== ""
-      );
+      const fts = this.$accessor.assignment.FTs.filter((item) => {
+        if (item.general.name !== "" && item.status === "ready") {
+          return item;
+        }
+      });
       return fts;
     },
   },
