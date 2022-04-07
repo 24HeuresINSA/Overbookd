@@ -18,7 +18,7 @@
     </v-tooltip>
     <br />
     <v-chip
-      v-for="team of user.team"
+      v-for="team of getCleanTeam"
       :key="team"
       small
       :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
@@ -64,6 +64,11 @@ export default Vue.extend({
   computed: {
     teamsConfig(): any {
       return this.$accessor.config.getConfig("teams");
+    },
+    getCleanTeam() {
+      return this.user.team.filter(
+        (team) => team !== "toValidate" && team !== "admin" && team !== "orga"
+      );
     },
   },
   methods: {
