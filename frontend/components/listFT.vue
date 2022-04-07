@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px; height: 100%" @mouseleave="hoverTask({})">
+  <div style="width: 500px; height: 100%">
     <v-simple-table dense fixed-header height="800">
       <template #default>
         <thead>
@@ -8,8 +8,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(ft, index) in FTs" :key="index">
-            <td>{{ ft.general.name }}</td>
+          <tr
+            v-for="(ft, index) in FTs"
+            :key="index"
+            @click="getFtTimeSpans(ft)"
+            @mouseover="multipleHoverTask(ft)"
+          >
+            <td>{{ "[" + ft.count + "] " + ft.general.name }}</td>
           </tr>
         </tbody>
       </template>
@@ -22,6 +27,7 @@
 
 <script>
 import { Snack } from "~/utils/models/snack";
+import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 export default {
   name: "ListTasks",
@@ -46,12 +52,15 @@ export default {
   },
 
   methods: {
-    resolveFTName(FTID) {
-      const FT = this.FTs.find((FT) => FT.count === FTID);
-      if (FT) {
-        return FT.general.name;
+    async getFtTimeSpans(ft) {
+      const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(this, ft.count);
+      return ftTimespans;
+    },
+    async multipleHoverTask(ft) {
+      const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(this, ft.count);
+      if (ftTimespans) {
+        this.$assignment.setMultipleHoverTask(ftTimespans);
       }
-      return FTID;
     },
   },
 };
