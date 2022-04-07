@@ -53,9 +53,6 @@ export default {
       }
       return FTID;
     },
-    hoverTask(timespan) {
-      this.$accessor.assignment.setHoverTask(timespan);
-    },
   },
 };
 </script>

@@ -47,8 +47,13 @@ export const state = () => ({
   timespans: [] as TimeSpan[],
   assignedTimespans: [] as TimeSpan[],
   hoverTask: {} as TimeSpan,
+  multipleHoverTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
-  userAssignedToSameTimespan: [] as { _id: string, firstname: string, lastname: string }[],
+  userAssignedToSameTimespan: [] as {
+    _id: string;
+    firstname: string;
+    lastname: string;
+  }[],
 });
 
 export const mutations = mutationTree(state, {
@@ -110,6 +115,9 @@ export const mutations = mutationTree(state, {
   SET_HOVER_TASK(state: any, data: TimeSpan) {
     state.hoverTask = data;
   },
+  SET_MULTIPLE_HOVER_TASK(state: any, data: TimeSpan[]) {
+    state.multipleHoverTask = data;
+  },
   SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
     state.userAssignedToSameTimespan = data;
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
@@ -121,7 +129,7 @@ export const mutations = mutationTree(state, {
       }
       return 0;
     });
-  }
+  },
 });
 
 export const actions = actionTree(
@@ -340,7 +348,11 @@ export const actions = actionTree(
     setHoverTask({ commit }: any, timeSpan: TimeSpan) {
       commit("SET_HOVER_TASK", timeSpan);
     },
-    
+
+    setMultipleHoverTask({ commit }: any, timeSpans: TimeSpan[]) {
+      commit("SET_MULTIPLE_HOVER_TASK", timeSpans);
+    },
+
     //get user assigned to same timespan
     async getUserAssignedToSameTimespan({ commit }: any, timeSpan: TimeSpan) {
       const res = await safeCall(
@@ -351,7 +363,7 @@ export const actions = actionTree(
         commit("SET_USER_ASSIGNED_TO_SAME_TIMESPAN", res.data);
       }
       return res;
-    }
+    },
   }
 );
 
