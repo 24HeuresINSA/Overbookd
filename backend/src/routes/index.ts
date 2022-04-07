@@ -423,6 +423,11 @@ timespanRouter.get(
   TimeSpanHandlers.getTimeSpanByAssigned
 );
 timespanRouter.get(
+  "/user/FT/:id",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getTimeSpanByFTID
+);
+timespanRouter.get(
   "/user/affected/:id",
   authMiddleware.protect(),
   TimeSpanHandlers.getUsersAffectedToTimespan
@@ -431,6 +436,11 @@ timespanRouter.get(
   "/available/:userId",
   authMiddleware.protect(),
   TimeSpanHandlers.getAvailableTimeSpan
+);
+timespanRouter.get(
+  "/availableUserByTimespan/:id",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getAvailableUserForTimeSpan
 );
 timespanRouter.post(
   "/:id/assigned/:userId",
@@ -459,7 +469,12 @@ baseRouter.use("/location", locationRouter);
 baseRouter.use("/conflict", conflictRouter);
 baseRouter.use("/conflict/ft", TFConflictRouter);
 baseRouter.use("/timespan", timespanRouter);
-baseRouter.get("/passsecu", authMiddleware.protect(), authMiddleware.verifyRoles("hard"), getPassSecu);
+baseRouter.get(
+  "/passsecu",
+  authMiddleware.protect(),
+  authMiddleware.verifyRoles("hard"),
+  getPassSecu
+);
 
 baseRouter.post("/issue", issueHandler);
 

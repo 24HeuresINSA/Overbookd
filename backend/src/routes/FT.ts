@@ -39,7 +39,7 @@ export async function updateFT(
       await FTModel.findByIdAndUpdate(mFT._id, mFT);
       await updateConflictsByFTCount(mFT.count);
       if (mFT.status === "refused") {
-        //delete all timespans of this FT
+        //delete all ²timespans of this FT
         logger.info(`delete all timespans of this FT ${mFT.count}`);
         await TimeSpanModel.deleteMany({ FTID: mFT.count });
       }
@@ -276,10 +276,7 @@ export async function myPlanning(req: Request, res: Response) {
         },
       });
   } else {
-    const user = await UserModel.findOne({
-      // @ts-ignore
-      _id: Types.ObjectId(req.params.userID),
-    });
+    const user = await UserModel.findOne({ _id: req.params.userID });
     FTs = [
       {
         // @ts-ignore
