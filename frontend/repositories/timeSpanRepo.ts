@@ -21,4 +21,7 @@ export default {
   getUserAssignedTimespans(context: Context, userId: string) {
     return context.$axios.get(`${resource}/user/${userId}`);
   },
+  getUserAssignedToSameTimespan(context: Context, timespanId: string) {
+    return context.$axios.get(`${resource}/user/affected/${timespanId}`);
+  }
 };

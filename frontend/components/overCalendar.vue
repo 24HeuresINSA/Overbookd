@@ -87,6 +87,7 @@ export default {
     // calendar drag and drop
     startDrag({ event, timed }) {
       this.$accessor.assignment.selectTimeSpan(event);
+      this.$accessor.assignment.getUserAssignedToSameTimespan(event);
       this.$emit("open-unassign-dialog");
     },
     startTime(tms) {
