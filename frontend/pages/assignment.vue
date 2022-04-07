@@ -14,10 +14,7 @@
     <FilteredUsers style="max-width: 350px" />
 
     <!-- calendar --->
-    <OverCalendar
-      :center-day="new Date().setDate(new Date().getDate() - 5)"
-      @open-unassign-dialog="openUnassignDialog"
-    />
+    <OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
     <OverTasks v-if="!isModeOrgaToTache" style="max-width: 550px" />
     <OverFT v-else style="max-width: 550px" />

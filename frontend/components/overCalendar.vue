@@ -44,7 +44,6 @@
 <script>
 export default {
   name: "OverCalendar",
-  props: ["events"],
 
   data() {
     return {
@@ -64,10 +63,20 @@ export default {
     assignedTimeSlots() {
       let events = [...this.$accessor.assignment.assignedTimespans];
       let hoverTask = this.$accessor.assignment.hoverTask;
-      if(hoverTask.FTID) {
+      if (hoverTask.FTID) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.centralDay = hoverTask.start;
         hoverTask["color"] = "rgba(204,51,255,0.50)";
         events.push(hoverTask);
+      }
+
+      let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
+      if (multipleHoverTask.length > 0) {
+        events = [];
+        multipleHoverTask.forEach((task) => {
+          task["color"] = "rgba(204,51,255,0.50)";
+          events.push(task);
+        });
       }
       return events;
     },

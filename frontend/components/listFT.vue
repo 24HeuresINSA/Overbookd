@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px; height: 100%">
+  <div style="width: 500px; height: 100%" @mouseleave="multipleHoverTask()">
     <v-simple-table dense fixed-header height="800">
       <template #default>
         <thead>
@@ -57,9 +57,21 @@ export default {
       return ftTimespans;
     },
     async multipleHoverTask(ft) {
-      const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(this, ft.count);
-      if (ftTimespans) {
-        this.$assignment.setMultipleHoverTask(ftTimespans);
+      if (ft) {
+        const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
+          this,
+          ft.count
+        );
+        if (ftTimespans) {
+          const sendValue = ftTimespans.data.filter((obj, index, arr) => {
+            return (
+              arr.map((mapObj) => mapObj.start).indexOf(obj.start) === index
+            );
+          });
+          this.$accessor.assignment.setMultipleHoverTask(sendValue);
+        }
+      } else {
+        this.$accessor.assignment.setMultipleHoverTask([]);
       }
     },
   },
