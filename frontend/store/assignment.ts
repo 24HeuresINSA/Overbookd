@@ -350,15 +350,7 @@ export const actions = actionTree(
     },
 
     setMultipleHoverTask({ commit }: any, timeSpans: TimeSpan[]) {
-      commit(
-        "SET_MULTIPLE_HOVER_TASK",
-        timeSpans.map((ts: any) => ({
-          ...ts,
-          start: new Date(ts.start),
-          end: new Date(ts.end),
-          timed: true,
-        }))
-      );
+      commit("SET_MULTIPLE_HOVER_TASK", timeSpans);
     },
 
     //get user assigned to same timespan

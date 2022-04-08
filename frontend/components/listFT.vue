@@ -63,12 +63,14 @@ export default {
           ft.count
         );
         if (ftTimespans) {
-          const sendValue = ftTimespans.data.filter((obj, index, arr) => {
-            return (
-              arr.map((mapObj) => mapObj.start).indexOf(obj.start) === index
-            );
-          });
-          this.$accessor.assignment.setMultipleHoverTask(sendValue);
+          const tosend = ftTimespans.data.map((ts) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: ft.general.name,
+          }));
+          this.$accessor.assignment.setMultipleHoverTask(tosend);
         }
       } else {
         this.$accessor.assignment.setMultipleHoverTask([]);
