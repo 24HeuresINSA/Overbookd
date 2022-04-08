@@ -187,7 +187,7 @@ export const actions = actionTree(
      * get all timespans
      */
     async getTimespans({ commit, state }: any) {
-      const ret = await safeCall(this, TimeSpanRepo.getAll(this));
+      const ret: any = await safeCall(this, TimeSpanRepo.getAll(this));
       if (ret) {
         commit(
           "SET_TIMESPANS",
