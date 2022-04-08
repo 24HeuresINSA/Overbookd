@@ -203,6 +203,7 @@ export default {
       //Security in case of locked hover
       this.$accessor.assignment.setMultipleHoverTask([]);
       this.$accessor.assignment.setHoverTask({});
+      this.$accessor.assignment.setMultipleSolidTask([]);
 
       this.$accessor.assignment.changeMode(!isMode);
     },

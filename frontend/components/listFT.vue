@@ -79,6 +79,13 @@ export default {
           ft.count
         );
         if (ftTimespans) {
+          let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
+          if (multipleSolidTask.length > 0) {
+            if (multipleSolidTask[0].FTName === ft.general.name) {
+              this.$accessor.assignment.setMultipleSolidTask([]);
+              return;
+            }
+          }
           const tosend = ftTimespans.data.map((ts) => ({
             ...ts,
             start: new Date(ts.start),
