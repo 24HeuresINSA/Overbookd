@@ -72,7 +72,7 @@ export default {
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
         if (multipleHoverTask.length > 0) {
           multipleHoverTask.forEach((task) => {
-            task["color"] = "rgba(204,51,255,0.50)";
+            task["color"] = this.getDisplayColor(task);
             events.push(task);
           });
         }

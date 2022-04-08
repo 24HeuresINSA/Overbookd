@@ -62,10 +62,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    teamsConfig(): any {
-      return this.$accessor.config.getConfig("teams");
-    },
-    getCleanTeam() {
+    getCleanTeam(): any {
       return this.user.team.filter(
         (team) => team !== "toValidate" && team !== "admin" && team !== "orga"
       );
@@ -73,11 +70,10 @@ export default Vue.extend({
   },
   methods: {
     getTeamMetadate(team: string): any {
-      return this.teamsConfig.find(
-        (item: { name: string }) => item.name === team
-      );
+      const teamsConfig = this.$accessor.config.getConfig("teams");
+      return teamsConfig.find((item: { name: string }) => item.name === team);
     },
-    getClass(team: string) {
+    getClass(team: string): string {
       switch (team) {
         case "hard":
           return "hard";
@@ -89,7 +85,7 @@ export default Vue.extend({
           return "normal";
       }
     },
-    toggleUserDialog() {
+    toggleUserDialog(): any {
       this.isUserDialogOpen = !this.isUserDialogOpen;
     },
   },
