@@ -163,7 +163,7 @@ export const actions = actionTree(
      * @returns
      */
     async getFTs({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.ftRepo.getAllFTs(this));
+      const ret: any = await safeCall(this, RepoFactory.ftRepo.getAllFTs(this));
       if (ret) {
         commit("SET_FTs", ret.data.data);
       }
@@ -175,7 +175,7 @@ export const actions = actionTree(
      * @returns
      */
     async getFAs({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.faRepo.getAllFAs(this));
+      const ret: any = await safeCall(this, RepoFactory.faRepo.getAllFAs(this));
       if (ret) {
         commit("SET_FAs", ret.data);
       }
@@ -211,45 +211,67 @@ export const actions = actionTree(
       return ret;
     },
     async getUserAssignedTimespans({ commit, state }: any, user: User) {
-      const ret = await safeCall(
-        this,
-        TimeSpanRepo.getUserAssignedTimespans(this, user._id)
-      );
-      if (ret) {
-        commit(
-          "SET_ASSIGN_TIMESPANS",
-          ret.data.map((ts: any) => ({
-            ...ts,
-            start: new Date(ts.start),
-            end: new Date(ts.end),
-            timed: true,
-            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-              .name,
-          }))
+      if (user) {
+        const ret: any = await safeCall(
+          this,
+          TimeSpanRepo.getUserAssignedTimespans(this, user._id)
         );
+        if (ret) {
+          commit(
+            "SET_ASSIGN_TIMESPANS",
+            ret.data.map((ts: any) => ({
+              ...ts,
+              start: new Date(ts.start),
+              end: new Date(ts.end),
+              timed: true,
+              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+                .name,
+            }))
+          );
+        }
+        return ret;
+      } else {
+        commit("SET_ASSIGN_TIMESPANS", []);
       }
-      return ret;
     },
 
     async getAvailableTimespansForUser({ commit, state }: any, user: User) {
-      const ret: any = await safeCall(
-        this,
-        TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
-      );
-      if (ret) {
-        commit(
-          "SET_TIMESPANS",
-          ret.data.map((ts: any) => ({
-            ...ts,
-            start: new Date(ts.start),
-            end: new Date(ts.end),
-            timed: true,
-            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-              .name,
-          }))
+      if (user) {
+        const ret: any = await safeCall(
+          this,
+          TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
         );
+        if (ret) {
+          commit(
+            "SET_TIMESPANS",
+            ret.data.map((ts: any) => ({
+              ...ts,
+              start: new Date(ts.start),
+              end: new Date(ts.end),
+              timed: true,
+              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+                .name,
+            }))
+          );
+        }
+        return ret;
+      } else {
+        const ret: any = await safeCall(this, TimeSpanRepo.getAll(this));
+        if (ret) {
+          commit(
+            "SET_TIMESPANS",
+            ret.data.map((ts: any) => ({
+              ...ts,
+              start: new Date(ts.start),
+              end: new Date(ts.end),
+              timed: true,
+              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+                .name,
+            }))
+          );
+        }
+        return ret;
       }
-      return ret;
     },
 
     /**
