@@ -1,11 +1,11 @@
-import {actionTree, getterTree, mutationTree} from "typed-vuex";
-import {safeCall} from "~/utils/api/calls";
-import {RepoFactory} from "~/repositories/repoFactory";
-import {User} from "~/utils/models/repo";
-import {FT} from "~/utils/models/FT";
-import {FA} from "~/utils/models/FA";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { User } from "~/utils/models/repo";
+import { FT } from "~/utils/models/FT";
+import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import {TimeSpan} from "~/utils/models/TimeSpan";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -47,8 +47,14 @@ export const state = () => ({
   timespans: [] as TimeSpan[],
   assignedTimespans: [] as TimeSpan[],
   hoverTask: {} as TimeSpan,
+  multipleHoverTask: [] as TimeSpan[],
+  multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
-  userAssignedToSameTimespan: [] as { _id: string, firstname: string, lastname: string }[],
+  userAssignedToSameTimespan: [] as {
+    _id: string;
+    firstname: string;
+    lastname: string;
+  }[],
 });
 
 export const mutations = mutationTree(state, {
@@ -110,6 +116,12 @@ export const mutations = mutationTree(state, {
   SET_HOVER_TASK(state: any, data: TimeSpan) {
     state.hoverTask = data;
   },
+  SET_MULTIPLE_HOVER_TASK(state: any, data: TimeSpan[]) {
+    state.multipleHoverTask = data;
+  },
+  SET_MULTIPLE_SOLID_TASK(state: any, data: TimeSpan[]) {
+    state.multipleSolidTask = data;
+  },
   SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
     state.userAssignedToSameTimespan = data;
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
@@ -121,7 +133,7 @@ export const mutations = mutationTree(state, {
       }
       return 0;
     });
-  }
+  },
 });
 
 export const actions = actionTree(
@@ -133,7 +145,10 @@ export const actions = actionTree(
      * @returns
      */
     async getUsers({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.userRepo.getAllUsers(this));
+      const ret: any = await safeCall(
+        this,
+        RepoFactory.userRepo.getAllUsers(this)
+      );
       if (ret) {
         let users = ret.data as User[];
         // filter useless users
@@ -148,7 +163,7 @@ export const actions = actionTree(
      * @returns
      */
     async getFTs({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.ftRepo.getAllFTs(this));
+      const ret: any = await safeCall(this, RepoFactory.ftRepo.getAllFTs(this));
       if (ret) {
         commit("SET_FTs", ret.data.data);
       }
@@ -160,7 +175,7 @@ export const actions = actionTree(
      * @returns
      */
     async getFAs({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.faRepo.getAllFAs(this));
+      const ret: any = await safeCall(this, RepoFactory.faRepo.getAllFAs(this));
       if (ret) {
         commit("SET_FAs", ret.data);
       }
@@ -179,7 +194,7 @@ export const actions = actionTree(
      * get all timespans
      */
     async getTimespans({ commit, state }: any) {
-      const ret = await safeCall(this, TimeSpanRepo.getAll(this));
+      const ret: any = await safeCall(this, TimeSpanRepo.getAll(this));
       if (ret) {
         commit(
           "SET_TIMESPANS",
@@ -196,45 +211,51 @@ export const actions = actionTree(
       return ret;
     },
     async getUserAssignedTimespans({ commit, state }: any, user: User) {
-      const ret = await safeCall(
-        this,
-        TimeSpanRepo.getUserAssignedTimespans(this, user._id)
-      );
-      if (ret) {
-        commit(
-          "SET_ASSIGN_TIMESPANS",
-          ret.data.map((ts: any) => ({
-            ...ts,
-            start: new Date(ts.start),
-            end: new Date(ts.end),
-            timed: true,
-            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-              .name,
-          }))
+      if (user) {
+        const ret: any = await safeCall(
+          this,
+          TimeSpanRepo.getUserAssignedTimespans(this, user._id)
         );
+        if (ret) {
+          commit(
+            "SET_ASSIGN_TIMESPANS",
+            ret.data.map((ts: any) => ({
+              ...ts,
+              start: new Date(ts.start),
+              end: new Date(ts.end),
+              timed: true,
+              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+                .name,
+            }))
+          );
+        }
+        return ret;
+      } else {
+        commit("SET_ASSIGN_TIMESPANS", []);
       }
-      return ret;
     },
 
     async getAvailableTimespansForUser({ commit, state }: any, user: User) {
-      const ret = await safeCall(
-        this,
-        TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
-      );
-      if (ret) {
-        commit(
-          "SET_TIMESPANS",
-          ret.data.map((ts: any) => ({
-            ...ts,
-            start: new Date(ts.start),
-            end: new Date(ts.end),
-            timed: true,
-            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-              .name,
-          }))
+      if (user) {
+        const ret: any = await safeCall(
+          this,
+          TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
         );
+        if (ret) {
+          commit(
+            "SET_TIMESPANS",
+            ret.data.map((ts: any) => ({
+              ...ts,
+              start: new Date(ts.start),
+              end: new Date(ts.end),
+              timed: true,
+              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
+                .name,
+            }))
+          );
+        }
+        return ret;
       }
-      return ret;
     },
 
     /**
@@ -243,11 +264,18 @@ export const actions = actionTree(
      * @returns
      */
     async getTimeslots({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.timeslotRepo.getAll(this));
+      const ret: any = await safeCall(
+        this,
+        RepoFactory.timeslotRepo.getAll(this)
+      );
       if (ret) {
         commit("SET_TIMESLOTS", ret.data);
       }
       return ret;
+    },
+
+    async initMode({ commit }: any) {
+      commit("CHANGE_MODE", true);
     },
 
     async initStore({ dispatch, state }) {
@@ -276,7 +304,11 @@ export const actions = actionTree(
      * set selected User
      */
     setSelectedUser({ commit }: any, user: User) {
-      commit("SET_SELECTED_USER", user);
+      if (user) {
+        commit("SET_SELECTED_USER", user);
+      } else {
+        commit("SET_SELECTED_USER", {});
+      }
     },
 
     getFTNameById({ state }: any, id: string) {
@@ -301,7 +333,7 @@ export const actions = actionTree(
       { commit, state }: any,
       data: { userID: string; timespanID: string }
     ) {
-      const res = await safeCall(
+      const res: any = await safeCall(
         this,
         TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID)
       );
@@ -340,7 +372,15 @@ export const actions = actionTree(
     setHoverTask({ commit }: any, timeSpan: TimeSpan) {
       commit("SET_HOVER_TASK", timeSpan);
     },
-    
+
+    setMultipleHoverTask({ commit }: any, timeSpans: TimeSpan[]) {
+      commit("SET_MULTIPLE_HOVER_TASK", timeSpans);
+    },
+
+    setMultipleSolidTask({ commit }: any, timeSpans: TimeSpan[]) {
+      commit("SET_MULTIPLE_SOLID_TASK", timeSpans);
+    },
+
     //get user assigned to same timespan
     async getUserAssignedToSameTimespan({ commit }: any, timeSpan: TimeSpan) {
       const res = await safeCall(
@@ -351,7 +391,7 @@ export const actions = actionTree(
         commit("SET_USER_ASSIGNED_TO_SAME_TIMESPAN", res.data);
       }
       return res;
-    }
+    },
   }
 );
 

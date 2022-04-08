@@ -20,7 +20,6 @@
       ref="cal"
       v-model="centralDay"
       :events="assignedTimeSlots"
-      :event-name="resolveFTName"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       @mousedown:event="startDrag"
@@ -49,7 +48,6 @@
 <script>
 export default {
   name: "OverCalendar",
-  props: ["events"],
 
   data() {
     return {
@@ -68,11 +66,30 @@ export default {
   computed: {
     assignedTimeSlots() {
       let events = [...this.$accessor.assignment.assignedTimespans];
-      let hoverTask = this.$accessor.assignment.hoverTask;
-      if (hoverTask.FTID) {
-        this.centralDay = hoverTask.start;
-        hoverTask["color"] = "rgba(204,51,255,0.50)";
-        events.push(hoverTask);
+      if (this.mode) {
+        events = [];
+        let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
+        let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
+        if (multipleHoverTask.length > 0) {
+          multipleHoverTask.forEach((task) => {
+            task["color"] = "rgba(204,51,255,0.50)";
+            events.push(task);
+          });
+        }
+        if (multipleSolidTask.length > 0) {
+          multipleSolidTask.forEach((task) => {
+            task["color"] = this.getDisplayColor(task);
+            events.push(task);
+          });
+        }
+      } else {
+        let hoverTask = this.$accessor.assignment.hoverTask;
+        if (hoverTask.FTID) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = hoverTask.start;
+          hoverTask["color"] = "rgba(204,51,255,0.50)";
+          events.push(hoverTask);
+        }
       }
       return events;
     },
@@ -85,7 +102,7 @@ export default {
       return this.$accessor.user.mUser;
     },
     mode() {
-      return this.$accessor.assignment.filters.isModeOrgaToTache;
+      return !this.$accessor.assignment.filters.isModeOrgaToTache;
     },
   },
   methods: {
@@ -151,34 +168,51 @@ export default {
       }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     },
     isUserAvailableInTimeframe(timeframe) {
-      // timeframe date object
-      const availabilities =
-        this.$accessor.assignment.selectedUserAvailabilities;
-      let isUserAvailableInTimeframe = false;
-      availabilities.forEach((availability) => {
-        if (availability && availability.timeFrame) {
-          let start = new Date(availability.timeFrame.start);
-          let end = new Date(availability.timeFrame.end);
-          if (
-            start.getTime() <= timeframe.getTime() + 5000 &&
-            end.getTime() >= timeframe.getTime() + 5000
-          ) {
-            isUserAvailableInTimeframe = true;
+      if (!this.mode) {
+        // timeframe date object
+        const availabilities =
+          this.$accessor.assignment.selectedUserAvailabilities;
+        let isUserAvailableInTimeframe = false;
+        availabilities.forEach((availability) => {
+          if (availability && availability.timeFrame) {
+            let start = new Date(availability.timeFrame.start);
+            let end = new Date(availability.timeFrame.end);
+            if (
+              start.getTime() <= timeframe.getTime() + 5000 &&
+              end.getTime() >= timeframe.getTime() + 5000
+            ) {
+              isUserAvailableInTimeframe = true;
+            }
           }
-        }
-      });
-      return isUserAvailableInTimeframe;
-    },
-    resolveFTName(ev) {
-      const FTID = ev.input.FTID;
-      const FT = this.FTs.find((FT) => FT.count === FTID);
-      if (FT) {
-        return FT.general.name;
+        });
+        return isUserAvailableInTimeframe;
+      } else {
+        return false;
       }
-      return FTID;
     },
     changeMode(isMode) {
-      this.$accessor.assignment.changeMode(isMode);
+      //Security in case of locked hover
+      this.$accessor.assignment.setMultipleHoverTask([]);
+      this.$accessor.assignment.setHoverTask({});
+      this.$accessor.assignment.setMultipleSolidTask([]);
+
+      this.$accessor.assignment.changeMode(!isMode);
+      this.$accessor.assignment.initStore();
+    },
+    getDisplayColor(timespan) {
+      const timespanLeft = this.$accessor.assignment.timespans.filter(
+        (ts) => ts.FTID === timespan.FTID && !ts.assigned
+      );
+      const userAssigned = this.$accessor.assignment.timespans.filter(
+        (ts) => ts.FTID === timespan.FTID && ts.assigned
+      );
+      if (timespanLeft.length === 0) {
+        return "rgba(0,255,0,0.50)";
+      } else if (userAssigned.length === 0) {
+        return "rgba(255,0,0,0.50)";
+      } else {
+        return "rgba(255,165,0,0.50)";
+      }
     },
   },
 };
