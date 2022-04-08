@@ -12,7 +12,8 @@
         </thead>
         <tbody>
           <tr
-            v-for="timeSpan in availableTimeSpans"
+            v-for="(timeSpan, index) in availableTimeSpans"
+            :key="index"
             @click="assignTask(timeSpan)"
             @mouseover="hoverTask(timeSpan)"
           >

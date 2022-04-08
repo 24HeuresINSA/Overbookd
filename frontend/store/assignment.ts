@@ -258,12 +258,17 @@ export const actions = actionTree(
       return ret;
     },
 
+    async initMode({ commit }: any) {
+      commit("CHANGE_MODE", true);
+    },
+
     async initStore({ dispatch, state }) {
       await dispatch("getUsers");
       await dispatch("getFTs");
       await dispatch("getFAs");
       await dispatch("getTimeslots");
       await dispatch("getTimespans");
+      await dispatch("initMode");
     },
 
     /**

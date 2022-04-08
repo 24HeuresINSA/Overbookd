@@ -73,7 +73,6 @@ export default {
         hoverTask["color"] = "rgba(204,51,255,0.50)";
         events.push(hoverTask);
       }
-
       let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
       if (multipleHoverTask.length > 0) {
         events = [];
@@ -93,7 +92,7 @@ export default {
       return this.$accessor.user.mUser;
     },
     mode() {
-      return this.$accessor.assignment.filters.isModeOrgaToTache;
+      return !this.$accessor.assignment.filters.isModeOrgaToTache;
     },
   },
   methods: {
@@ -186,7 +185,11 @@ export default {
       return FTID;
     },
     changeMode(isMode) {
-      this.$accessor.assignment.changeMode(isMode);
+      //Security in case of locked hover
+      this.$accessor.assignment.setMultipleHoverTask([]);
+      this.$accessor.assignment.setHoverTask({});
+
+      this.$accessor.assignment.changeMode(!isMode);
     },
   },
 };
