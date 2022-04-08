@@ -67,19 +67,30 @@ export default {
   computed: {
     assignedTimeSlots() {
       let events = [...this.$accessor.assignment.assignedTimespans];
-      let hoverTask = this.$accessor.assignment.hoverTask;
-      if (hoverTask.FTID) {
-        this.centralDay = hoverTask.start;
-        hoverTask["color"] = "rgba(204,51,255,0.50)";
-        events.push(hoverTask);
-      }
-      let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
-      if (multipleHoverTask.length > 0) {
+      if (this.mode) {
         events = [];
-        multipleHoverTask.forEach((task) => {
-          task["color"] = "rgba(204,51,255,0.50)";
-          events.push(task);
-        });
+        let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
+        let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
+        if (multipleHoverTask.length > 0) {
+          multipleHoverTask.forEach((task) => {
+            task["color"] = "rgba(204,51,255,0.50)";
+            events.push(task);
+          });
+        }
+        if (multipleSolidTask.length > 0) {
+          multipleSolidTask.forEach((task) => {
+            task["color"] = "rgba(50,255,75,0.50)";
+            events.push(task);
+          });
+        }
+      } else {
+        let hoverTask = this.$accessor.assignment.hoverTask;
+        if (hoverTask.FTID) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = hoverTask.start;
+          hoverTask["color"] = "rgba(204,51,255,0.50)";
+          events.push(hoverTask);
+        }
       }
       return events;
     },
@@ -158,23 +169,27 @@ export default {
       }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     },
     isUserAvailableInTimeframe(timeframe) {
-      // timeframe date object
-      const availabilities =
-        this.$accessor.assignment.selectedUserAvailabilities;
-      let isUserAvailableInTimeframe = false;
-      availabilities.forEach((availability) => {
-        if (availability && availability.timeFrame) {
-          let start = new Date(availability.timeFrame.start);
-          let end = new Date(availability.timeFrame.end);
-          if (
-            start.getTime() <= timeframe.getTime() + 5000 &&
-            end.getTime() >= timeframe.getTime() + 5000
-          ) {
-            isUserAvailableInTimeframe = true;
+      if (!this.mode) {
+        // timeframe date object
+        const availabilities =
+          this.$accessor.assignment.selectedUserAvailabilities;
+        let isUserAvailableInTimeframe = false;
+        availabilities.forEach((availability) => {
+          if (availability && availability.timeFrame) {
+            let start = new Date(availability.timeFrame.start);
+            let end = new Date(availability.timeFrame.end);
+            if (
+              start.getTime() <= timeframe.getTime() + 5000 &&
+              end.getTime() >= timeframe.getTime() + 5000
+            ) {
+              isUserAvailableInTimeframe = true;
+            }
           }
-        }
-      });
-      return isUserAvailableInTimeframe;
+        });
+        return isUserAvailableInTimeframe;
+      } else {
+        return false;
+      }
     },
     resolveFTName(ev) {
       const FTID = ev.input.FTID;

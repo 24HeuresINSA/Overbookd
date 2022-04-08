@@ -48,6 +48,7 @@ export const state = () => ({
   assignedTimespans: [] as TimeSpan[],
   hoverTask: {} as TimeSpan,
   multipleHoverTask: [] as TimeSpan[],
+  multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
   userAssignedToSameTimespan: [] as {
     _id: string;
@@ -118,6 +119,9 @@ export const mutations = mutationTree(state, {
   SET_MULTIPLE_HOVER_TASK(state: any, data: TimeSpan[]) {
     state.multipleHoverTask = data;
   },
+  SET_MULTIPLE_SOLID_TASK(state: any, data: TimeSpan[]) {
+    state.multipleSolidTask = data;
+  },
   SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
     state.userAssignedToSameTimespan = data;
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
@@ -141,7 +145,10 @@ export const actions = actionTree(
      * @returns
      */
     async getUsers({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.userRepo.getAllUsers(this));
+      const ret: any = await safeCall(
+        this,
+        RepoFactory.userRepo.getAllUsers(this)
+      );
       if (ret) {
         let users = ret.data as User[];
         // filter useless users
@@ -225,7 +232,7 @@ export const actions = actionTree(
     },
 
     async getAvailableTimespansForUser({ commit, state }: any, user: User) {
-      const ret = await safeCall(
+      const ret: any = await safeCall(
         this,
         TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
       );
@@ -314,7 +321,7 @@ export const actions = actionTree(
       { commit, state }: any,
       data: { userID: string; timespanID: string }
     ) {
-      const res = await safeCall(
+      const res: any = await safeCall(
         this,
         TimeSpanRepo.assignUserToTimespan(this, data.userID, data.timespanID)
       );
@@ -356,6 +363,10 @@ export const actions = actionTree(
 
     setMultipleHoverTask({ commit }: any, timeSpans: TimeSpan[]) {
       commit("SET_MULTIPLE_HOVER_TASK", timeSpans);
+    },
+
+    setMultipleSolidTask({ commit }: any, timeSpans: TimeSpan[]) {
+      commit("SET_MULTIPLE_SOLID_TASK", timeSpans);
     },
 
     //get user assigned to same timespan

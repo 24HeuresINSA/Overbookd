@@ -11,10 +11,10 @@
           <tr
             v-for="(ft, index) in FTs"
             :key="index"
-            @click="getFtTimeSpans(ft)"
+            @click="multipleSolidTask(ft)"
             @mouseover="multipleHoverTask(ft)"
           >
-            <td>{{ "[" + ft.count + "] " + ft.general.name }}</td>
+            <td>{{ ft.count + " - " + ft.general.name }}</td>
           </tr>
         </tbody>
       </template>
@@ -52,10 +52,6 @@ export default {
   },
 
   methods: {
-    async getFtTimeSpans(ft) {
-      const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(this, ft.count);
-      return ftTimespans;
-    },
     async multipleHoverTask(ft) {
       if (ft) {
         const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
@@ -74,6 +70,24 @@ export default {
         }
       } else {
         this.$accessor.assignment.setMultipleHoverTask([]);
+      }
+    },
+    async multipleSolidTask(ft) {
+      if (ft) {
+        const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
+          this,
+          ft.count
+        );
+        if (ftTimespans) {
+          const tosend = ftTimespans.data.map((ts) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: ft.general.name,
+          }));
+          this.$accessor.assignment.setMultipleSolidTask(tosend);
+        }
       }
     },
   },
