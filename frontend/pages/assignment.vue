@@ -55,7 +55,7 @@ export default {
         path: "/",
       });
     }
-
+    await this.$accessor.assignment.initMode();
     await this.$accessor.assignment.initStore();
   },
 

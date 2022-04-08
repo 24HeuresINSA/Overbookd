@@ -284,7 +284,6 @@ export const actions = actionTree(
       await dispatch("getFAs");
       await dispatch("getTimeslots");
       await dispatch("getTimespans");
-      await dispatch("initMode");
     },
 
     /**
