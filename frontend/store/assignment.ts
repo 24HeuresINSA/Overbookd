@@ -255,22 +255,6 @@ export const actions = actionTree(
           );
         }
         return ret;
-      } else {
-        const ret: any = await safeCall(this, TimeSpanRepo.getAll(this));
-        if (ret) {
-          commit(
-            "SET_TIMESPANS",
-            ret.data.map((ts: any) => ({
-              ...ts,
-              start: new Date(ts.start),
-              end: new Date(ts.end),
-              timed: true,
-              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-                .name,
-            }))
-          );
-        }
-        return ret;
       }
     },
 
@@ -280,7 +264,10 @@ export const actions = actionTree(
      * @returns
      */
     async getTimeslots({ commit }: any) {
-      const ret = await safeCall(this, RepoFactory.timeslotRepo.getAll(this));
+      const ret: any = await safeCall(
+        this,
+        RepoFactory.timeslotRepo.getAll(this)
+      );
       if (ret) {
         commit("SET_TIMESLOTS", ret.data);
       }
@@ -318,7 +305,11 @@ export const actions = actionTree(
      * set selected User
      */
     setSelectedUser({ commit }: any, user: User) {
-      commit("SET_SELECTED_USER", user);
+      if (user) {
+        commit("SET_SELECTED_USER", user);
+      } else {
+        commit("SET_SELECTED_USER", {});
+      }
     },
 
     getFTNameById({ state }: any, id: string) {
