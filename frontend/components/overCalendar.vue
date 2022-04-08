@@ -20,7 +20,6 @@
       ref="cal"
       v-model="centralDay"
       :events="assignedTimeSlots"
-      :event-name="resolveFTName"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       @mousedown:event="startDrag"
@@ -79,7 +78,7 @@ export default {
         }
         if (multipleSolidTask.length > 0) {
           multipleSolidTask.forEach((task) => {
-            task["color"] = "rgba(50,255,75,0.50)";
+            task["color"] = this.getDisplayColor(task);
             events.push(task);
           });
         }
@@ -191,14 +190,6 @@ export default {
         return false;
       }
     },
-    resolveFTName(ev) {
-      const FTID = ev.input.FTID;
-      const FT = this.FTs.find((FT) => FT.count === FTID);
-      if (FT) {
-        return FT.general.name;
-      }
-      return FTID;
-    },
     changeMode(isMode) {
       //Security in case of locked hover
       this.$accessor.assignment.setMultipleHoverTask([]);
@@ -206,6 +197,15 @@ export default {
       this.$accessor.assignment.setMultipleSolidTask([]);
 
       this.$accessor.assignment.changeMode(!isMode);
+    },
+    getDisplayColor(timespan) {
+      const timespanLeft = this.$accessor.assignment.availableTimeSpans.filter(
+        (ts) => ts.FTID === timespan.FTID
+      );
+      if (timespanLeft.length === 0) {
+        return "rgba(0,255,0,0.50)";
+      }
+      return "rgba(255,165,0,0.50)";
     },
   },
 };
