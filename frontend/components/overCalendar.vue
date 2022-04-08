@@ -27,6 +27,11 @@
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
     >
+      <template #event="{ event }">
+        <div class="text-wrap">
+          <strong>{{ event.FTName }}</strong>
+        </div>
+      </template>
       <template #interval="{ date, time }">
         <div
           v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
@@ -64,7 +69,6 @@ export default {
       let events = [...this.$accessor.assignment.assignedTimespans];
       let hoverTask = this.$accessor.assignment.hoverTask;
       if (hoverTask.FTID) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.centralDay = hoverTask.start;
         hoverTask["color"] = "rgba(204,51,255,0.50)";
         events.push(hoverTask);

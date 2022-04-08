@@ -57,7 +57,7 @@
         >FT</v-btn
       >
       <v-spacer></v-spacer>
-      <v-btn color="warning" text @click="unassign">DEAFFECTER</v-btn>
+      <v-btn color="warning" text @click="unassign" :disabled="selectedTimeSpan.required.length===24">DEAFFECTER</v-btn>
     </v-card-actions>
   </v-card>
 </template>

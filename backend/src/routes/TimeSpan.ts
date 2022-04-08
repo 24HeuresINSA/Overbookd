@@ -40,8 +40,21 @@ export async function getTimeSpanByFTID(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  return res.json(timespan);
+  //remove duplicate timespans
+  const filtered = timespan.filter(
+    (timespan, index, self) =>
+      index ===
+      self.findIndex(
+        (t) =>
+          t.start.getTime() === timespan.start.getTime() &&
+          t.end.getTime() === timespan.end.getTime() &&
+          t.required === timespan.required &&
+          t.FTID === timespan.FTID
+      )
+  );
+  return res.json(filtered);
 }
+
 
 /*
  assign user to a timespan
@@ -162,7 +175,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
     return isTimespanCovered(timespan, userAvailabilities);
   });
 
-  //fiter duplicate timespan by every attribute
+  //filter duplicate timespan by every attribute
   availableTimespans = availableTimespans.filter(
     (timespan, index, self) =>
       index ===
@@ -170,7 +183,8 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
         (t) =>
           t.start.getTime() === timespan.start.getTime() &&
           t.end.getTime() === timespan.end.getTime() &&
-          t.required === timespan.required
+          t.required === timespan.required && 
+          t.FTID === timespan.FTID
       )
   );
   return res.json(availableTimespans);
