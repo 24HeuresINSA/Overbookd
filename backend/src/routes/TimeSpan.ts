@@ -34,14 +34,23 @@ export async function getTimeSpanByAssigned(req: Request, res: Response) {
 
 //get timespan by FTID
 export async function getTimeSpanByFTID(req: Request, res: Response) {
-  const timespan = await TimeSpan.find({ FTID: parseInt(req.params.id) });
+  const timespan = await TimeSpan.find({
+    FTID: parseInt(req.params.id),
+    assigned: null,
+  });
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
     });
   }
+  //remove timespans where required.length === 24
+  //removes timespan where a user is already assigned
+  let filtered = timespan.filter((timespan) =>
+    timespan.required!.length === 24 ? false : true
+  );
+
   //remove duplicate timespans
-  const filtered = timespan.filter(
+  filtered = timespan.filter(
     (timespan, index, self) =>
       index ===
       self.findIndex(
@@ -54,7 +63,6 @@ export async function getTimeSpanByFTID(req: Request, res: Response) {
   );
   return res.json(filtered);
 }
-
 
 /*
  assign user to a timespan
@@ -183,7 +191,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
         (t) =>
           t.start.getTime() === timespan.start.getTime() &&
           t.end.getTime() === timespan.end.getTime() &&
-          t.required === timespan.required && 
+          t.required === timespan.required &&
           t.FTID === timespan.FTID
       )
   );
