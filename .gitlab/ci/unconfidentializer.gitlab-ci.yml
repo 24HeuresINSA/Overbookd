@@ -1,0 +1,26 @@
+unconfidentializer:
+  stage: unconfidentializer
+  image: alpine
+  before_script:
+    - apk update
+    - apk add --update coreutils
+    - apk add jq 
+    - apk add curl
+  script:
+    - echo "Get confidential issues"
+    - |
+      ISSUES=$(curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/issues?confidential=true" | jq '.[].iid')
+      for ISSUE in $ISSUES;
+      do
+          echo "Unconfidentialized $ISSUE";
+          curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "PUT" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/issues/$ISSUE" --header 'Content-Type: application/json' --data-raw '{"confidential":false}';
+      done
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "pre-prod"'
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
