@@ -146,6 +146,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
     id: number,
     start: Date,
     availableCount: number,
+    availableValidCount: number,
     requireCount: number,
     requireValidatedCount: number
     affectedCount: number
@@ -155,6 +156,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       id: i,
       start: new Date(start.getTime() + i * 900000),
       availableCount: 0,
+      availableValidCount: 0,
       requireCount: 0,
       requireValidatedCount: 0,
       affectedCount: 0
@@ -177,6 +179,15 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       timeFrame: 1,
       groupTitle: 1,
       countUsers: {$size: '$users'},
+      countValidUsers: {
+        $size: {
+          $filter: {
+            input: '$users',
+            as: 'user',
+            cond: {$eq: ['$$user.isValid', true]},
+          },
+        },
+      },
     });
 
   timeslots.forEach(elem => {
@@ -186,6 +197,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       });
       if (index !== -1) {
         smallTimeslots[index].availableCount = elem.countUsers;
+        smallTimeslots[index].availableValidCount = elem.countValidUsers;
       }
     }
   });
