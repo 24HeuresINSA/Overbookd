@@ -442,6 +442,11 @@ timespanRouter.get(
   authMiddleware.protect(),
   TimeSpanHandlers.getAvailableUserForTimeSpan
 );
+timespanRouter.get(
+  "/count/:FTID",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getTotalNumberOfTimespansAndAssignedTimespansByFTID
+);
 timespanRouter.post(
   "/:id/assigned/:userId",
   authMiddleware.protect(),

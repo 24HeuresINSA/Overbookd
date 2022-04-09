@@ -5,6 +5,7 @@ import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
 import { Types, Document } from "mongoose";
 import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
+import logger from "@shared/Logger";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -282,4 +283,22 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       lastname: user.lastname,
     }))
   );
+}
+
+export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+  req: Request,
+  res: Response
+) {
+  logger.info(`count for ft id ${req.params.FTID}`);
+  const timespans = await TimeSpan.find({ FTID: parseInt(req.params.FTID) });
+  const ret = {} as { [key: string]: { total: number; assigned: number } };
+  for (const ts of timespans) {
+    if (!ret[ts._id.toString()]) {
+      ret[ts._id.toString()] = { total: 0, assigned: 0 };
+    }
+    ret[ts._id.toString()].total++;
+    if (ts.assigned) ret[ts._id.toString()].assigned++;
+  }
+
+  return res.json(ret);
 }
