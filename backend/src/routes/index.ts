@@ -428,7 +428,7 @@ timespanRouter.get(
   TimeSpanHandlers.getTimeSpanByFTID
 );
 timespanRouter.get(
-  "/user/affected/:id",
+  "/user/affected/:id/:mode",
   authMiddleware.protect(),
   TimeSpanHandlers.getUsersAffectedToTimespan
 );

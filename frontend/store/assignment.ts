@@ -382,10 +382,17 @@ export const actions = actionTree(
     },
 
     //get user assigned to same timespan
-    async getUserAssignedToSameTimespan({ commit }: any, timeSpan: TimeSpan) {
+    async getUserAssignedToSameTimespan(
+      { commit, state }: any,
+      timeSpan: TimeSpan
+    ) {
       const res = await safeCall(
         this,
-        TimeSpanRepo.getUserAssignedToSameTimespan(this, timeSpan._id)
+        TimeSpanRepo.getUserAssignedToSameTimespan(
+          this,
+          timeSpan._id,
+          state.filters.isModeOrgaToTache
+        )
       );
       if (res) {
         commit("SET_USER_ASSIGNED_TO_SAME_TIMESPAN", res.data);

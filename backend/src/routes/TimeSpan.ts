@@ -254,13 +254,21 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-
-  const twinTimespan = await TimeSpan.find({
-    start: timespan.start,
-    end: timespan.end,
-    FTID: timespan.FTID,
-    required: timespan.required == "soft" ? "soft" : { $ne: "soft" },
-  });
+  let twinTimespan;
+  if (req.params.mode === "true") {
+    twinTimespan = await TimeSpan.find({
+      start: timespan.start,
+      end: timespan.end,
+      FTID: timespan.FTID,
+    });
+  } else {
+    twinTimespan = await TimeSpan.find({
+      start: timespan.start,
+      end: timespan.end,
+      FTID: timespan.FTID,
+      required: timespan.required == "soft" ? "soft" : { $ne: "soft" },
+    });
+  }
   const usersId = [] as string[];
   for (const ts of twinTimespan) {
     if (ts.assigned) {
