@@ -50,7 +50,9 @@ export async function getTimeSpanByFTID(req: Request, res: Response) {
         (t) =>
           t.start.getTime() === timespan.start.getTime() &&
           t.end.getTime() === timespan.end.getTime() &&
-          (t.required == "soft" ? t.required === timespan.required : true) &&
+          (timespan.required == "soft"
+            ? t.required === timespan.required
+            : true) &&
           t.FTID === timespan.FTID
       )
   );
@@ -252,11 +254,22 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  const twinTimespan = await TimeSpan.find({
-    start: timespan.start,
-    end: timespan.end,
-    FTID: timespan.FTID,
-  });
+
+  let twinTimespan;
+  if (timespan.required == "soft") {
+    twinTimespan = await TimeSpan.find({
+      start: timespan.start,
+      end: timespan.end,
+      FTID: timespan.FTID,
+      required: "soft",
+    });
+  } else {
+    twinTimespan = await TimeSpan.find({
+      start: timespan.start,
+      end: timespan.end,
+      FTID: timespan.FTID,
+    });
+  }
   const usersId = [] as string[];
   for (const ts of twinTimespan) {
     if (ts.assigned) {
