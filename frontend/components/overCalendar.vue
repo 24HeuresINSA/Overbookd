@@ -108,9 +108,15 @@ export default {
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
+      const isModeOrgaToTache = this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
-      this.$accessor.assignment.getUserAssignedToSameTimespan(event);
-      this.$emit("open-unassign-dialog");
+      if (isModeOrgaToTache){
+        this.$accessor.assignment.getUserAssignedToSameTimespan(event);
+        this.$emit("open-unassign-dialog");
+      } else {
+        this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
+      }
+
     },
     startTime(tms) {
       const mouse = this.toTime(tms);

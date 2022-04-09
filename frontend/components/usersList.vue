@@ -36,12 +36,21 @@ export default {
 
   watch: {
     selectedUserIndex() {
+      const isModeOrgaToTache = this.$accessor.assignment.filters.isModeOrgaToTache;
       const selectedUser = this.users.find(
-        (user) => user._id === this.selectedUserIndex
+          (user) => user._id === this.selectedUserIndex
       );
-      this.$accessor.assignment.setSelectedUser(selectedUser);
-      this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
-      this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
+      if (isModeOrgaToTache){
+        this.$accessor.assignment.setSelectedUser(selectedUser);
+        this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
+        this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
+      } else {
+        this.$accessor.assignment.setSelectedUser(selectedUser);
+        this.$accessor.assignment.assignUserToTimespan({
+          timespanID: selectedUser._id,
+          userID: this.$accessor.assignment.selectedTimeSpan._id,
+        });
+      }
     },
   },
 };

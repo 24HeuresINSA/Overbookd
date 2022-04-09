@@ -1,11 +1,11 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -377,8 +377,16 @@ export const actions = actionTree(
       commit("SET_MULTIPLE_HOVER_TASK", timeSpans);
     },
 
-    setMultipleSolidTask({ commit }: any, timeSpans: TimeSpan[]) {
+    setMultipleSolidTask({ commit, dispatch }: any, timeSpans: TimeSpan[]) {
       commit("SET_MULTIPLE_SOLID_TASK", timeSpans);
+    },
+
+    async filterAvailableUserForTimeSpan({commit}: any, timeSpan: TimeSpan) {
+      const usersData = await safeCall(this,
+          TimeSpanRepo.getAvailableUserForTimeSpan(this, timeSpan._id));
+      if (usersData) {
+        commit("SET_USERS", usersData.data);
+      }
     },
 
     //get user assigned to same timespan
