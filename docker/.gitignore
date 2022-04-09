@@ -1,1 +1,2 @@
-data/dev
+data/dev/images/*
+data/dev/mongo/*
