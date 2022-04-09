@@ -44,7 +44,11 @@
           <tr>
             <td>Affecté</td>
             <td>
-              <v-chip v-for="user in assignedUsersToSelectedTimeSpan" small :key="user._id">
+              <v-chip
+                v-for="user in assignedUsersToSelectedTimeSpan"
+                small
+                :key="user._id"
+              >
                 {{ user.firstname }} {{ user.lastname }}
               </v-chip>
             </td>
@@ -57,7 +61,13 @@
         >FT</v-btn
       >
       <v-spacer></v-spacer>
-      <v-btn color="warning" text @click="unassign" :disabled="selectedTimeSpan.required.length===24">DEAFFECTER</v-btn>
+      <v-btn
+        color="warning"
+        text
+        :disabled="selectedTimeSpan.required.length === 24"
+        @click="unassign"
+        >DEAFFECTER</v-btn
+      >
     </v-card-actions>
   </v-card>
 </template>
@@ -77,7 +87,6 @@ export default {
       if (this.FTs) {
         return this.FTs.find((FT) => FT.count === this.selectedTimeSpan.FTID);
       }
-
     },
     assignedUsersToSelectedTimeSpan() {
       return this.$accessor.assignment.userAssignedToSameTimespan;
