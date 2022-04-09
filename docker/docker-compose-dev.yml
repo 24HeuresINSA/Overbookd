@@ -6,8 +6,6 @@ networks:
     external: true
 
 volumes:
-  overbookd_api:
-  overbookd_mongo:
   certs:
 
 services:
@@ -59,10 +57,12 @@ services:
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
   backend:
     container_name: overbookd_backend
+    user: ${MY_UID}:${MY_GID}
     build:
       context: ../backend
       dockerfile: Dockerfile.dev
     volumes:
+      - ./data/dev/images:/overbookd/backend/images
       - ../backend:/overbookd/backend
     restart: always
     networks:
@@ -91,11 +91,12 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - overbookd_mongo:/data/db
-      - overbookd_mongo:/data/configdb
+      - ./data/dev/mongo/db:/data/db
+      - ./data/dev/mongo/configdb:/data/configdb
 
   frontend:
     container_name: overbookd_frontend
+    user: ${MY_UID}:${MY_GID}
     build:
       context: ../frontend
       dockerfile: Dockerfile.dev

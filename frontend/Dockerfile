@@ -1,20 +1,27 @@
-FROM node:15.3.0-alpine3.10
+FROM node:16.14-alpine3.15 AS builder
 
-WORKDIR /Overbookd/frontend
+WORKDIR /overbookd/frontend
 ARG BASE_URL_KEYCLOAK
 ARG BASE_URL
 
 ENV BASE_URL=$BASE_URL
 ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
 
+COPY package*.json ./
+
+RUN npm ci 
+
 COPY . .
 
-RUN npm ci\
-    && npm run build\
-    && find . -maxdepth 1 ! -name 'dist' -type f -exec rm -r {} +\
-    && find . -maxdepth 1 ! -name 'dist' ! -name '.' ! -name '..' -type d -exec rm -r {} +\
-    && npm install serve
+RUN npm run build
 
+FROM node:16.14-alpine3.15
+
+WORKDIR /app
+
+RUN npm install serve
+
+COPY --from=builder /overbookd/frontend/dist ./dist
 
 EXPOSE 1234
 

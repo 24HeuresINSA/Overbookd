@@ -1,35 +1,64 @@
-#/bin/bash
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 case $1 in
 
 "--dev"|"-d") echo "starting dev containers"
-         docker-compose -f docker-compose-dev.yml -p dev --env-file docker/dev.env "${@:}"
+        case $2 in
+        "--start"|"-s")
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d
+                ;;
+        "--stop")
+                docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env stop
+                ;;
+        "--down"|"-d")
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env down
+                ;;
+        "--restart"|"-r")
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env restart
+                ;;
+        "--logs"|"-l")
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env logs -f
+                ;;
+        "--build"|"-b")
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d --build
+                ;;
+        "-h"|"--help"|*)
+                echo "Usage: ./compose.sh [--dev|-d] [--start|-s] [--down|-d] [--restart|-r] [--logs|-l]"
+                echo "--dev|-d: start dev containers"
+                echo "--start|-s: start dev containers"
+                echo "--down|-d: stop dev containers"
+                echo "--restart|-r: restart dev containers"
+                echo "--logs|-l: show dev containers logs"
+                ;;
+        esac
          ;;
 
 "--utils"|"-u") echo "starting utils containers"
-           docker-compose -f docker-compose_utils.yml -p utils up -d
+           docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
            ;;
 
 "--prod"|"-p") echo "starting prod containers"
-          docker-compose -f docker-compose.yml -p prod up -d
+          docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
           ;;
 
 "--preprod"|"-t") echo "starting preprod containers"
-             docker-compose -f docker-compose-preprod.yml up -d
+             docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
              ;;
 
 "--all"|"-a") echo "starting utils, prod and prepord containers"
-         docker-compose -f docker-compose_utils.yml -p utils up -d
-         docker-compose -f docker-compose.yml -p prod up -d
-         docker-compose -f docker-compose-preprod.yml up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
+         docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
          ;;
 
-*) echo "USAGE"
+"-h"|"--help"|*) echo "USAGE"
 echo "./compose.sh [option]"
 echo "You should use one option :"
 echo "--dev, -d [docker-compose' options]"
 echo "\t Start all needed for development. You need dev.env and ./assets/traefik/tls.yml files to work"
-echo "\t You can add additional docker-compose options here (e.g. --build, --detach, --force-recreate. More information here https://docs.docker.com/compose/reference/up/)"
+echo "\t for more info about this option see ./compose.sh --dev --help"
 echo "--utils, -u"
 echo "\t Strat Traefik and Watchtower services"
 echo "--pord, -p"

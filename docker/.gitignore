@@ -1,1 +1,2 @@
-data/dev
+!/data/**/.gitkeep
+/data/**/*
