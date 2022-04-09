@@ -37,7 +37,6 @@ export async function getTimeSpanByAssigned(req: Request, res: Response) {
 export async function getTimeSpanByFTID(req: Request, res: Response) {
   const timespan = await TimeSpan.find({
     FTID: parseInt(req.params.id),
-    assigned: null,
   });
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
