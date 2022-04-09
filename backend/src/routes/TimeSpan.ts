@@ -6,6 +6,7 @@ import StatusCodes from "http-status-codes";
 import { Types, Document } from "mongoose";
 import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
 import logger from "@shared/Logger";
+import { constants } from "buffer";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -244,6 +245,7 @@ async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
 }
 
 export async function getUsersAffectedToTimespan(req: Request, res: Response) {
+  //Get the specific timespan
   const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
@@ -254,7 +256,6 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
     start: timespan.start,
     end: timespan.end,
     FTID: timespan.FTID,
-    required: timespan.required,
   });
   const usersId = [] as string[];
   for (const ts of twinTimespan) {
