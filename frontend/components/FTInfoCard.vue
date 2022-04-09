@@ -5,7 +5,7 @@
       <v-card-text>
         <v-autocomplete
           v-if="locations"
-          label="Lieux"
+          label="Lieux de rendez-vous"
           multiple
           :items="locations"
           :value="mLocations"
@@ -17,8 +17,8 @@
           <template #default>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Value</th>
+                <th>Nom</th>
+                <th>Valeurs</th>
                 <th>Actions</th>
               </tr>
             </thead>

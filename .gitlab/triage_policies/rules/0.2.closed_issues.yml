@@ -1,0 +1,13 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all closed issues and forbidden done label
+        conditions:
+          state: closed
+          forbidden_labels:
+            - Status::Done
+        limits:
+          most_recent: 50
+        actions:
+          labels:
+            - Status::Done

@@ -64,7 +64,10 @@
           <template v-if="mode === 'deposit'">
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
-          <v-btn text :disabled="!areInputsValid.res" @click="saveTransactions"
+          <v-btn
+            v-if="hasRole('admin')"
+            :disabled="!areInputsValid.res"
+            @click="saveTransactions"
             >Enregistrer</v-btn
           >
           <v-btn text>Envoyer un mail au négatif</v-btn>
@@ -164,12 +167,12 @@ export default {
       reasons: [],
 
       headers: [
-        { text: "prénom", value: "firstname" },
-        { text: "nom", value: "lastname" },
-        { text: "surnom", value: "nickname" },
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Surnom", value: "nickname" },
         { text: "CP", value: "balance" },
         { text: "Nouvelle conso", value: "newConsumption" },
-        { text: "action", value: "action" },
+        { text: "Action", value: "action" },
       ],
     };
   },
@@ -255,21 +258,32 @@ export default {
   },
 
   async mounted() {
-    const res = await safeCall(
-      this.$store,
-      RepoFactory.userRepo.getAllUsers(this)
-    );
-    if (res) {
-      this.users = res.data;
+    if (this.$accessor.user.hasRole("admin")) {
+      await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
+        (res) => {
+          this.users = res.data.filter((user) => {
+            if (user.team.includes("hard") && !user.team.includes("matos")) {
+              return user;
+            }
+          });
+        }
+      );
+      this.users.forEach((user) => {
+        if (user.balance) {
+          this.totalCPBalance += +user.balance;
+        }
+      });
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
     }
-    this.users.forEach((user) => {
-      if (user.balance) {
-        this.totalCPBalance += +user.balance;
-      }
-    });
   },
 
   methods: {
+    hasRole(role) {
+      return this.$accessor.user.hasRole(role);
+    },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);
       return floatRegex.test(number);

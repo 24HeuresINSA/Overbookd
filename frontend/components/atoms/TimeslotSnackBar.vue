@@ -5,7 +5,7 @@
 
       <template #action="{ attrs }">
         <v-btn color="pink" text v-bind="attrs" @click="dismiss()">
-          Close
+          Fermer
         </v-btn>
       </template>
     </v-snackbar>
@@ -18,11 +18,11 @@ export default {
   data() {
     return {
       snackbar: false,
+      message: "",
     };
   },
   created() {
     this.$store.subscribe((mutation) => {
-      console.log(mutation.payload);
       if (mutation.type === "timeslot/SET_CREATE_STATUS" && mutation.payload) {
         this.message = mutation.payload;
         this.snackbar = true;

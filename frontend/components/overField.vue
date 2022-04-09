@@ -10,7 +10,7 @@
                 new RegExp(field.regex).test(v) ||
                 (field.errorMessage
                   ? field.errorMessage
-                  : `il y'a un probleme avec ce champ`),
+                  : `il y'a un problème avec ce champ`),
             ]
           : []
       "
@@ -105,6 +105,15 @@
       dense
       @change="onChange"
     ></v-autocomplete>
+    <v-autocomplete
+      v-else-if="mField.type === 'validated_user'"
+      :value="data"
+      :label="mField.label ? mField.label : mField.key"
+      :items="validatedUsers"
+      :disabled="disabled"
+      dense
+      @change="onChange"
+    ></v-autocomplete>
 
     <v-time-picker
       v-if="mField.type === 'time'"
@@ -120,7 +129,10 @@
 </template>
 
 <script>
+import { forEach } from "lodash";
 import RichEditor from "~/components/organisms/richEditor";
+import userRepo from "~/repositories/userRepo";
+
 export default {
   name: "OverField",
   components: { RichEditor },
@@ -130,6 +142,7 @@ export default {
       activePicker: null,
       menu: false,
       users: undefined,
+      validatedUsers: undefined,
       mField: this.field,
       value: undefined,
       teams: [],
@@ -150,6 +163,21 @@ export default {
           text: user.username,
           value: user,
         };
+      });
+    }
+    if (this.field.type == "validated_user") {
+      await userRepo.getAllUsers(this).then((res) => {
+        let users = res.data
+          .map((user) => {
+            if (user.team) {
+              if (user.team.includes("hard") || user.team.includes("soft")) {
+                const username = user.firstname + " " + user.lastname;
+                return { text: username, value: user };
+              }
+            }
+          })
+          .filter((item) => item);
+        this.validatedUsers = users;
       });
     }
     if (this.field.type === "teams") {

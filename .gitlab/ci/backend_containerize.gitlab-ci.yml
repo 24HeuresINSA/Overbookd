@@ -1,44 +1,38 @@
 containerize-backend:
   image: docker
-  needs: ["buildx"]
   services:
     - name: docker:dind
       command: ["--experimental"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - backend/**/*
+    - if: '$CI_COMMIT_BRANCH == "pre-prod"'
+      changes:
+        - backend/**/*
+    - when: never
   stage: docker
   before_script:
-    - mkdir -p ~/.docker/cli-plugins
-    - mv buildx ~/.docker/cli-plugins/docker-buildx
-    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - if [ "$CI_COMMIT_REF_NAME" = "main" ]; then VERSION_TAG=$(cat ./backend/package.json | grep version | head -1  | head -1  | sed 's/[version:,\",]//g' | tr -d '[[:space:]]'); else VERSION_TAG=${CI_COMMIT_REF_NAME}_$(cat ./backend/package.json | grep version | head -1  | head -1  | sed 's/[version:,\",]//g' | tr -d '[[:space:]]'); fi
     - if [ "$CI_COMMIT_REF_NAME" = "main" ]; then TAG="latest"; else TAG=$CI_COMMIT_REF_NAME; fi
   script:
-    - docker buildx create --use
-    - docker buildx build --push --platform linux/amd64,linux/arm64 --tag registry.gitlab.com/24-heures-insa/overbookd-mono/backend:$VERSION_TAG --tag registry.gitlab.com/24-heures-insa/overbookd-mono/backend:$TAG ./backend
-  only:
-    changes:
-      - backend/**/*
-    refs:
-      - main
-      - pre-prod
+    - docker build --tag $CI_REGISTRY_IMAGE/backend:$VERSION_TAG --tag $CI_REGISTRY_IMAGE/backend:$TAG ./backend
+    - docker push $CI_REGISTRY_IMAGE/backend:$VERSION_TAG
+    - docker push $CI_REGISTRY_IMAGE/backend:$TAG
 
 merge_requests_containerize-backend:
   image: docker
-  needs: ["buildx"]
   services:
-    - name: docker:dind
-      command: ["--experimental"]
+  - name: docker:dind
+    command: ["--experimental"]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - backend/**/*
+    - when: never
   stage: docker
-  before_script:
-    - mkdir -p ~/.docker/cli-plugins
-    - mv buildx ~/.docker/cli-plugins/docker-buildx
-    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
   script:
-    - docker buildx create --use
-    - docker buildx build --platform linux/amd64,linux/arm64 ./backend
-  only:
-    changes:
-      - backend/**/*
-    refs:
-      - merge_requests
+    - docker build ./backend

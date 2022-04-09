@@ -1,0 +1,13 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all open issues with any label
+        conditions:
+          state: opened
+          labels:
+            - None
+        limits:
+          most_recent: 50
+        actions:
+          labels:
+            - Status::Needs attention

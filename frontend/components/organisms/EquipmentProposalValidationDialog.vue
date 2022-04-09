@@ -247,7 +247,7 @@
             >Annuler</v-btn
           >
           <v-btn color="error" @click="refuse">Refuser</v-btn>
-          <v-btn color="primary" @click="confirm">Accpeter</v-btn>
+          <v-btn color="primary" @click="confirm">Accepter</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

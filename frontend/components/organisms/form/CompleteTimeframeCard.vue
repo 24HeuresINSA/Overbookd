@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
     <v-card-title>Créneau</v-card-title>
     <v-card-text>
       <CompleteTimeframeTable
@@ -7,8 +7,8 @@
         :is-disabled="isDisabled"
       ></CompleteTimeframeTable>
       <TimeframeSelector
-        v-if="!isDisabled"
         complete
+        :disabled="isDisabled"
         :store="store"
         @add-timeframe="addTimeframe"
         @set-timeframes="setTimeframes"

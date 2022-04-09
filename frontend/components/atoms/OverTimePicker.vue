@@ -26,7 +26,7 @@
       :allowed-minutes="allowedMinutes"
     >
       <v-spacer></v-spacer>
-      <v-btn text color="primary" @click="modal2 = false"> Cancel </v-btn>
+      <v-btn text color="primary" @click="modal2 = false"> Annuler </v-btn>
       <v-btn
         text
         color="primary"

@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "0.21.0-beta",
+  "version": "0.22.1-beta",
   "private": true,
   "lint-staged": {
     "**/*.(js|ts|vue)": "eslint --fix"
@@ -29,6 +29,7 @@
     "nuxt": "^2.14.12",
     "nuxt-typed-vuex": "^0.2.0",
     "qs": "^6.9.6",
+    "sanitize-html": "^2.7.0",
     "tiptap-vuetify": "^2.24.0",
     "uuid": "^8.3.2",
     "vue-chartjs": "^3.5.1",
@@ -48,6 +49,7 @@
     "@nuxtjs/storybook": "^4.1.1",
     "@nuxtjs/vuetify": "^1.11.3",
     "@types/lodash": "^4.14.175",
+    "@types/sanitize-html": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
     "@vue/cli-plugin-babel": "^4.5.13",

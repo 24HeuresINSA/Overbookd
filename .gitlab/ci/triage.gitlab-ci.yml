@@ -1,0 +1,14 @@
+triage:
+  stage: triage
+  image: ruby:2.7
+  script:
+    - gem install gitlab-triage
+    - |
+      for FILE in $(ls .gitlab/triage_policies/rules)
+      do
+      gitlab-triage --token $GITLAB_API_TOKEN --source projects --source-id $CI_PROJECT_PATH --policies-file .gitlab/triage_policies/rules/$FILE
+      done
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: never

@@ -1,0 +1,11 @@
+resource_rules:
+  merge_requests:
+    rules:
+      - name: find all closed MR and forbidden Done label
+        conditions:
+          state: closed
+          forbidden_labels:
+            - Status::Done
+        actions:
+          labels:
+            - Status::Done

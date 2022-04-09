@@ -56,11 +56,17 @@ export default {
   // },
   sendFriendRequestByKeycloakID(context: Context, data: FriendRequestData) {
     return context.$axios.put(
-      `${resource}/notification/keycloakID/${data.to}`, // TODO ask tom about new name
+      `${resource}/notificationKeycloakID/${data.to}`, // TODO ask tom about new name
       data.data
     );
   },
   acceptSelection(context: Context, timeslotsIDS: String[]) {
     return context.$axios.post(`${resource}/availabilities`, timeslotsIDS);
+  },
+  removeAvailability(
+    context: Context,
+    data: { userID: string; timeslotID: string }
+  ) {
+    return context.$axios.post(`${resource}/removeAvailability`, data);
   },
 };

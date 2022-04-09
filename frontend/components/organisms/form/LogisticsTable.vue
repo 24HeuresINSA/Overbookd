@@ -36,8 +36,8 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "nom", value: "name" },
-      { text: "action", value: "action" },
+      { text: "Nom", value: "name" },
+      { text: "Action", value: "action" },
     ],
   }),
   computed: {
@@ -56,7 +56,7 @@ export default {
       this.store.updateEquipmentRequiredCount({ _id: item._id, count: +e });
     },
     deleteEquipment(id) {
-      this.store.deleteEquipment(id);
+      this.store.deleteEquipmentById(id);
     },
   },
 };

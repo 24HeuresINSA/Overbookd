@@ -34,8 +34,8 @@
                 </template>
               </v-combobox>
 
-              <label>Compte validé</label>
-              <template v-if="hasRole(['admin', 'bureau'])">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+                <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
                   tile
@@ -68,9 +68,9 @@
                   color="deep-purple accent-3"
                   group
                 >
-                  <v-btn :value="true" small> Payé</v-btn>
+                  <v-btn :value="true" small>Payée</v-btn>
 
-                  <v-btn :value="false" small> Non payé</v-btn>
+                  <v-btn :value="false" small> Non payée</v-btn>
                 </v-btn-toggle>
                 <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
@@ -84,7 +84,7 @@
             :items="filteredUsers"
             class="elevation-1"
             dense
-            :items-per-page="-1"
+            :items-per-page="20"
           >
             <template #[`item.action`]="{ item }" style="display: flex">
               <v-btn
@@ -102,7 +102,7 @@
                 <v-icon small>mdi-email</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasRole('admin')"
+                v-if="isCpUseful(item)"
                 icon
                 small
                 @click="openTransactionDialog(item)"
@@ -132,7 +132,7 @@
             </template>
 
             <template #[`item.balance`]="{ item }">
-              {{ (item.balance || 0).toFixed(2) }} €
+              {{ getCP(item) }}
             </template>
 
             <template #[`item.studies`]="{ item }">
@@ -215,6 +215,7 @@
 
 <script>
 import { getConfig, getUser, hasRole } from "../common/role";
+import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
 import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
@@ -224,19 +225,22 @@ const { RepoFactory } = require("../repositories/repoFactory");
 
 export default {
   name: "Humans",
-  components: { UserInformation, SnackNotificationContainer, OverChips },
+  components: {
+    UserInformation,
+    SnackNotificationContainer,
+    OverChips,
+  },
   data() {
     return {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "prénom", value: "firstname" },
-        { text: "nom", value: "lastname" },
-        { text: "surnom", value: "nickname" },
-        { text: "team", value: "team", cellClass: "width: 250px", width: "1" },
-        { text: "études", value: "studies" },
-        { text: "charisme", value: "charisma", align: "end" },
-        { text: "action", value: "action" },
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Surnom", value: "nickname" },
+        { text: "Team", value: "team", cellClass: "width: 250px", width: "1" },
+        { text: "Charisme", value: "charisma", align: "end" },
+        { text: "Action", value: "action", sortable: false },
       ],
 
       teams: getConfig(this, "teams"),
@@ -269,7 +273,7 @@ export default {
       },
       newRole: undefined,
 
-      feedbackMessage: "sauvgardé 🥳",
+      feedbackMessage: "Sauvegardé 🥳",
     };
   },
 
@@ -299,9 +303,9 @@ export default {
         // filter by not validated
         if (this.filters.isValidated !== undefined) {
           if (this.filters.isValidated) {
-            mUsers = mUsers.filter((user) => user.team.length !== 0);
+            mUsers = mUsers.filter((user) => isValidated(user));
           } else {
-            mUsers = mUsers.filter((user) => user.team.length === 0);
+            mUsers = mUsers.filter((user) => !isValidated(user));
           }
         }
 
@@ -343,11 +347,8 @@ export default {
   },
 
   async mounted() {
-    if (!this.hasRole("hard")) {
-      await this.$router.push({
-        path: "/index",
-      });
-    } else {
+    await this.initStore();
+    if (this.$accessor.user.hasRole("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
       this.users.filter((user) => user.isValid);
@@ -362,10 +363,36 @@ export default {
           align: "end",
         });
       }
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
     }
   },
 
   methods: {
+    async initStore() {
+      await this.$accessor.user.fetchUser();
+      await this.$accessor.timeslot.fetchTimeslots();
+    },
+    isCpUseful(item) {
+      if (item.team) {
+        return item.team.includes("hard");
+      } else {
+        return false;
+      }
+    },
+    getCP(item) {
+      if (item.team) {
+        if (item.team.includes("hard")) {
+          return (item.balance || 0).toFixed(2) + " €";
+        } else {
+          return undefined;
+        }
+      } else {
+        return undefined;
+      }
+    },
     openCharismaDialog(user) {
       this.selectedUser = user;
       this.isCharismaDialogOpen = true;

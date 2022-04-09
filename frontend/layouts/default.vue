@@ -44,9 +44,14 @@
         v-text="version"
       />
       <v-spacer />
-      <v-btn text @click="isDialogOpen = true">
+      <div v-if="isPreProd" class="watermark">PREPROD</div>
+      <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
+      </v-btn>
+      <v-btn v-else text @click="isDialogOpen = true">
+        <v-icon>mdi-help-box</v-icon>
+        {{ isMobile ? "" : "Demander de l'aide" }}
       </v-btn>
       <v-app-bar-nav-icon>
         <v-btn icon @click="toggleTheme">
@@ -67,7 +72,7 @@
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
-      <v-card>
+      <v-card v-if="hasRole('hard')">
         <v-img
           src="img/memes/comsi_working.png"
           width="300px"
@@ -76,13 +81,25 @@
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
-            Pour signaler un bug veuiller envoyer un mail à
+            Pour signaler un bug veuillez envoyer un mail à
             contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
-            de preference en anglais
           </h4>
         </v-card-text>
         <v-card-actions>
           <v-btn :href="mailUrl"> envoyer le mail </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-else>
+        <v-card-title>Demander de l'aide</v-card-title>
+        <v-card-text>
+          <h4>
+            Si vous avez un problème ou que vous vous posez une question vous
+            pouvez nous envoyer un mail à l'adresse humains@24heures.org <br />
+            Nous nous en occuperons au plus vite.
+          </h4>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -107,6 +124,8 @@ const AUTHORS = [
   "Paul - Nuts 💥",
   "Thomas - Ginny 💡",
   "Thibaut - Moule 🍑",
+  "Antoine - Gyneco 🩺",
+  "Damien - Hublot 🖐",
 ];
 
 export default {
@@ -127,103 +146,127 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Accueil 🤙",
+          title: "Accueil",
           to: "/",
           roles: "hard",
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Fiches Activitée 🥳",
+          title: "Fiches Activités",
           roles: this.getConfig("fa_required_role"),
           to: "/fa",
         },
         {
           icon: "mdi-format-color-highlight",
-          title: "Fiches Tâches  😱",
+          title: "Fiches Tâches",
           roles: this.getConfig("ft_required_role"),
           to: "/ft",
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Mon planning 🤯",
+          title: "Planning",
           roles: "hard",
           to: "/planning",
         },
         {
-          icon: "mdi-clock",
-          title: "Mes dispos 🤯",
+          icon: "mdi-calendar-multiple-check",
+          title: "Créneaux",
           roles: "hard",
+          to: "/creneaux",
+        },
+        {
+          icon: "mdi-clock",
+          title: "Mes dispos",
+          roles: "everyone",
           to: "/availabilities",
         },
         {
-          icon: "mdi-calendar",
-          title: "Mon calendrier 📆",
-          to: "/calendar",
-          roles: "hard",
+          icon: "mdi-clock",
+          title: "Créer dispos",
+          roles: "humain",
+          to: "/createavailibility",
         },
         {
           icon: "mdi-account",
-          title: "Liste des Orgas 👩‍👦‍👦",
+          title: "Liste des Orgas",
           roles: "hard",
           to: "/humans",
         },
         {
           icon: "mdi-bus-articulated-front",
-          title: "Inventaire 📦",
+          title: "Inventaire",
           roles: "hard",
           to: "/inventory",
         },
         {
           icon: "mdi-truck",
-          title: "Logistique 🚚",
+          title: "Logistique",
           roles: "log",
           to: "/logistics",
         },
         {
           icon: "mdi-human-greeting",
-          title: "Affectation 💃",
+          title: "Affectation",
           roles: "humain",
           to: "/assignment",
         },
         {
+          icon: "mdi-clock",
+          title: "Besoin orgas",
+          roles: "humain",
+          to: "/organeeds",
+        },
+        {
+          icon: "mdi-alert-circle",
+          title: "Conflits",
+          roles: "hard",
+          to: "/listeconflits",
+        },
+        {
           icon: "mdi-chart-areaspline-variant",
-          title: "Stats 📈",
+          title: "Stats",
           roles: "hard",
           to: "/stats",
         },
         {
           icon: "mdi-cog",
           roles: "admin",
-          title: "Admin ⚙️",
+          title: "Admin",
           to: "/config",
         },
         {
           icon: "mdi-format-list-bulleted",
           roles: "admin",
-          title: "SG 📝️",
+          title: "SG",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
           roles: "admin",
-          title: "Transactions 💰️",
+          title: "Transactions",
           to: "/transactions",
+        },
+        {
+          icon: "mdi-passport",
+          title: "Pass sécu",
+          roles: "secu",
+          to: "/passsecu",
         },
         {
           icon: "mdi-fire",
           roles: "hard",
-          title: "OverTinder 🍑",
+          title: "OverTinder",
           to: "/overTinder",
         },
         {
           icon: "mdi-image",
           roles: "hard",
-          title: "Trombinoscope 🎆",
+          title: "Trombinoscope",
           to: "/trombinoscope",
         },
         {
           icon: "mdi-note",
-          title: "Patch notes 📝",
+          title: "Patch notes",
           roles: "hard",
           to: "/patch_note",
         },
@@ -267,6 +310,9 @@ export default {
         window.screen.availWidth + "x" + window.screen.availHeight
       )}`;
     },
+    isPreProd() {
+      return process.env.BASE_URL.includes("preprod");
+    },
   },
 
   mounted() {
@@ -280,7 +326,11 @@ export default {
     },
 
     hasRole(role) {
+      if (role === "everyone") {
+        return true;
+      }
       if (this.me.team) {
+        //Permet de definir un cas de figure pour qu'une fenetre soit accessible par tout le monde
         return this.me.team.includes(role);
       }
       return false;
@@ -314,3 +364,47 @@ export default {
   },
 };
 </script>
+
+<style>
+.watermark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+
+  color: #ec0000;
+  font-size: 100px;
+  font-weight: 500px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  opacity: 1;
+  animation: wiggle 2s infinite;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently */
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(0deg);
+  }
+  85% {
+    transform: rotate(5deg);
+  }
+  95% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+</style>

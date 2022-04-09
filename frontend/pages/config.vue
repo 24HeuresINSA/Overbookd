@@ -14,30 +14,36 @@
     ></v-switch>
     <v-text-field
       v-model="config.fb_signup_closed"
-      label="message de fermeture"
+      label="Message de fermeture"
     ></v-text-field>
 
-    <h2>FA</h2>
+    <h2>Humains</h2>
+    <h3>FA</h3>
     <v-text-field
       v-model="config.fb_confirm_submit"
-      label="message de confirmation"
-    ></v-text-field>
+      label="Message de confirmation"
+    />
+
+    <h3>Affectation</h3>
+    <v-switch
+      v-model="config.show_ft_in_planning"
+      label="Montrer les FTs dans les plannings"/>
 
     <h2>Dispo</h2>
     <v-text-field
       v-model="config.max_charisma"
-      label="charisme max"
+      label="Charisme max"
       type="number"
     ></v-text-field>
     <v-textarea
       v-model="config.availabilities_description"
-      label="description des dispo"
+      label="Description des dispo"
       type="number"
     ></v-textarea>
     <h2>Log</h2>
     <v-switch
       v-model="config.isInventoryOpen"
-      label="ouvrir l'edition de l'inventaire au hard"
+      label="Ouvrir l'édition de l'inventaire au hard"
     ></v-switch>
 
     <v-dialog v-model="dialog" width="auto " @keydown.esc="cancel">
@@ -95,6 +101,7 @@ export default {
         ),
         max_charisma: getConfig(this, "max_charisma"),
         isInventoryOpen: getConfig(this, "isInventoryOpen"),
+        show_ft_in_planning: getConfig(this, "show_ft_in_planning"),
       },
       dialog: false,
       load: false,

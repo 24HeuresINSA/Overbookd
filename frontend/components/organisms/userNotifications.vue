@@ -12,7 +12,7 @@
           <NotificationCard :notif="{ ...me.notifications }" />
         </v-card-text>
         <template v-if="IhaveRole(['admin', 'bureau'])">
-          <v-card-text>{{ notValidatedCount }} Orgas non validés </v-card-text>
+          <v-card-text>{{ notValidatedCount }} orgas non validés </v-card-text>
         </template>
       </div>
 
@@ -24,7 +24,10 @@
           flex-column flex-sm-row
         "
       >
-        <v-btn v-if="IhaveRole('hard')" text @click="openBroadcastDialog()"
+        <v-btn
+          v-if="IhaveRole(['admin', 'bureau', 'orga'])"
+          text
+          @click="openBroadcastDialog()"
           >broadcast
         </v-btn>
         <v-btn
@@ -41,7 +44,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { hasRole } from "~/utils/roles";
+import { hasRole, isValidated } from "~/utils/roles";
 import NotificationCard from "~/components/molecules/notificationCard.vue";
 import NotificationBroadcastDialog from "~/components/molecules/notificationBroadcastDialog.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -78,7 +81,7 @@ export default Vue.extend({
       );
       if (res) {
         const users: User[] = res.data;
-        return users.filter((user: User) => user.team.length === 0).length;
+        return users.filter((user: User) => !isValidated(user)).length;
       }
       return 0;
     },

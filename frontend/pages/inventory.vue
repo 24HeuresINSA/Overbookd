@@ -28,8 +28,28 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="clear"> Clear </v-btn>
+              <v-btn color="primary" text @click="clear">Réinitialiser</v-btn>
             </v-card-actions>
+          </v-card>
+          <br />
+          <template v-if="hasRole(['log', 'admin'])">
+            <v-card>
+              <v-card-title>
+                <span class="headline">Export</span>
+              </v-card-title>
+              <v-card-text>
+                <v-btn text @click="exportCSV">Exporter l'inventaire</v-btn>
+              </v-card-text>
+            </v-card>
+            <br />
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">Export</span>
+            </v-card-title>
+            <v-card-text>
+              <v-btn text @click="exportCSV">Exporter l'inventaire</v-btn>
+            </v-card-text>
           </v-card>
           <br />
           <v-card>
@@ -262,15 +282,15 @@ export default Vue.extend({
   data(): Data {
     return {
       headers: [
-        { text: "nom", value: "name" },
-        { text: "lieu de stockage", value: "location" },
-        { text: "quantite (inventaire 24)", value: "amount", align: "right" },
-        { text: "quantite (emprunté)", value: "borrowedCount", align: "right" },
-        { text: "emprunté", value: "borrow" },
+        { text: "Nom", value: "name" },
+        { text: "Lieu de stockage", value: "location" },
+        { text: "Quantité (inventaire 24)", value: "amount", align: "right" },
+        { text: "Quantité (emprunté)", value: "borrowedCount", align: "right" },
+        { text: "Emprunté", value: "borrow" },
         { text: "Poule", value: "fromPool" },
-        { text: "quantite total", value: "totalCount", align: "right" },
-        { text: "requis", value: "required.count", align: "right" },
-        { text: "action", value: "action", align: "right" },
+        { text: "Quantité total", value: "totalCount", align: "right" },
+        { text: "Requis", value: "required.count", align: "right" },
+        { text: "Action", value: "action", align: "right" },
       ],
       borrowedHeader: [
         { text: "qui", value: "from" },
@@ -349,56 +369,57 @@ export default Vue.extend({
     nbProposals(): number {
       return this.$accessor.equipmentProposal.count;
     },
+    equipmentMap(): Map<String, number> {
+      const faEquipmentMap = this.$accessor.FA.equipmentMap;
+      const ftEquipmentMap = this.$accessor.FT.equipmentMap;
+      return new Map([...faEquipmentMap, ...ftEquipmentMap]);
+    },
   },
 
   async mounted() {
-    // setup config
-    this.loading = true;
-    const res = await this.$accessor.location.getAllLocations();
-    if (!res) {
-      // todo display snackbar notif
-      console.log("Error, could not fetch the DB");
-    }
-    this.allowedTeams = (await this.getConfig("isInventoryOpen"))
-      ? ["log", "hard"]
-      : ["log"];
-    this.selectOptions = this.equipmentForm[1].options;
-    const equipRes = await this.$accessor.equipment.fetchAll();
-    if (!equipRes) {
-      this.snack.display("Erreur lors du chargement des équipements");
-    }
-    const FTs = await safeCall(this.$store, RepoFactory.ftRepo.getAllFTs(this));
-    const FAs = await safeCall(this.$store, RepoFactory.faRepo.getAllFAs(this));
-    if (!res) {
-      // todo display snackbar notif
-      console.log("Error, could not fetch the DB");
-    }
-    const Form = FAs!.data.concat(FTs!.data);
-    this.inventory.forEach((item: any) => {
-      item.required = {
-        count: 0,
-        form: Array<any>(),
-      };
-      Form.forEach((form: any) => {
-        if (form.equipments && form.isValid !== false) {
-          const mEquipment = form.equipments.find(
-            (e: any) => e._id === item._id
-          );
-          if (mEquipment) {
-            item.required!.count += mEquipment.required;
-            item.required!.form.push(form);
-          }
+    if (this.$accessor.user.hasRole("hard")) {
+      // setup config
+      this.loading = true;
+      let res = await this.$accessor.location.getAllLocations();
+      if (!res) {
+        this.snack.display("Erreur lors du chargement des localisations");
+      }
+      this.allowedTeams = (await this.getConfig("isInventoryOpen"))
+        ? ["log", "hard"]
+        : ["log"];
+      this.selectOptions = this.equipmentForm[1].options;
+      const equipRes = await this.$accessor.equipment.fetchAll();
+      if (!equipRes) {
+        this.snack.display("Erreur lors du chargement des équipements");
+      }
+      const resFA = await this.$accessor.FA.fetchAll();
+      const resFT = await this.$accessor.FT.fetchAll();
+      if (!resFA || !resFT) {
+        this.snack.display("Erreur lors du chargement des équipements");
+      }
+
+      this.inventory.forEach((item: any) => {
+        item.required = {
+          count: 0,
+          form: Array<any>(),
+        };
+        if (item._id && this.equipmentMap.has(item._id)) {
+          item.required.count = this.equipmentMap.get(item._id);
         }
       });
-    });
-    const propRes =
-      await this.$accessor.equipmentProposal.getEquipmentProposal();
-    if (!propRes) {
-      this.snack.display(
-        "Erreur lors la récupération des équipements proposés"
-      );
+      const propRes =
+        await this.$accessor.equipmentProposal.getEquipmentProposal();
+      if (!propRes) {
+        this.snack.display(
+          "Erreur lors la récupération des équipements proposés"
+        );
+      }
+      this.loading = false;
+    } else {
+      await this.$router.push({
+        path: "/",
+      });
     }
-    this.loading = false;
   },
 
   methods: {
@@ -540,16 +561,55 @@ export default Vue.extend({
       );
       this.selectedItem.borrowed.splice(index, 1);
     },
+    download(filename: string, text: string) {
+      // We use the 'a' HTML element to incorporate file generation into
+      // the browser rather than server-side
+      const element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      );
+      element.setAttribute("download", filename);
+
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+
+    async exportCSV() {
+      // Parse data into a CSV string to be passed to the download function
+      let csv =
+        "Type;Nom;Lieu de stockage;Quantité (inventaire 24);Quantité (emprunté);Est au pool des assos;Quantité total;Quantité requises \n";
+      const iventaire = this.filteredInventory;
+      iventaire.forEach((element) => {
+        csv +=
+          element.type +
+          ";" +
+          element.name +
+          ";" +
+          element.location +
+          ";" +
+          element.amount +
+          ";" +
+          this.getBorrowedCount(element) +
+          ";" +
+          element.fromPool +
+          ";" +
+          (this.getBorrowedCount(element) + element.amount) +
+          ";" +
+          (element.required ? element.required.count : "undefined") +
+          "\n";
+      });
+
+      const regex = new RegExp(/undefined/i, "g");
+
+      let parsedCSV = csv.replaceAll(regex, "");
+      // Prompt the browser to start file download
+      this.download("inventaire.csv", parsedCSV);
+    },
   },
 });
 </script>
 
-<style scoped>
-/* .v-list-item {
-  padding: 0;
-}
-
-.v-list-item__content {
-  padding: 0;
-} */
-</style>
+<style scoped></style>

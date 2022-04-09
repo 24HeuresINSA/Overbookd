@@ -38,6 +38,24 @@ export const getters = getterTree(state, {
   timeframes: function (state) {
     return state.mFA.timeframes;
   },
+  equipmentMap: function (state): Map<String, number> {
+    const equipmentMap = new Map<string, number>();
+    state.FAs.forEach((fa) => {
+      if (fa.equipments) {
+        fa.equipments.forEach((equipment) => {
+          if (equipmentMap.has(equipment._id)) {
+            equipmentMap.set(
+              equipment._id,
+              equipmentMap.get(equipment._id)! + equipment.required
+            );
+          } else {
+            equipmentMap.set(equipment._id, equipment.required);
+          }
+        });
+      }
+    });
+    return equipmentMap;
+  },
 });
 
 export const mutations = mutationTree(state, {
@@ -194,6 +212,9 @@ export const mutations = mutationTree(state, {
     }
     state.mFA.securityPasses.push(securityPass);
   },
+  UPDATE_SECURITY_PASS: function (state, { index, securityPass }) {
+    state.mFA.securityPasses.splice(index, 1, securityPass);
+  },
   DELETE_SECURITY_PASS: function (state, index) {
     state.mFA.securityPasses.splice(index, 1);
   },
@@ -253,6 +274,9 @@ export const actions = actionTree(
     addSecurityPass: async function ({ commit }, securityPass) {
       commit("ADD_SECURITY_PASS", { ...securityPass });
     },
+    updateSecurityPass: async function ({ commit }, securityPass) {
+      commit("UPDATE_SECURITY_PASS", securityPass);
+    },
     deleteSecurityPass: async function ({ commit }, index) {
       commit("DELETE_SECURITY_PASS", index);
     },
@@ -279,7 +303,7 @@ export const actions = actionTree(
     updateEquipmentRequiredCount: function ({ commit }, payload) {
       commit("UPDATE_REQUIRED_EQUIPMENT", payload);
     },
-    deleteEquipment: function ({ commit }, payload) {
+    deleteEquipmentById: function ({ commit }, payload) {
       commit("DELETE_EQUIPMENT", payload);
     },
     setFA: function ({ commit }, FA: FA) {

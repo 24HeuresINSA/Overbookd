@@ -5,6 +5,12 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
+      <v-switch
+        label="mode tache-orga"
+        :value="mode"
+        @change="changeMode"
+      ></v-switch>
+      <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
@@ -13,16 +19,18 @@
     <v-calendar
       ref="cal"
       v-model="centralDay"
-      :events="calendarFormattedEvents"
-      color="primary"
+      :events="assignedTimeSlots"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       @mousedown:event="startDrag"
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
-      @mouseup:time="endDrag"
-      @mouseleave.native="cancelDrag"
     >
+      <template #event="{ event }">
+        <div class="text-wrap">
+          <strong>{{ event.FTName }}</strong>
+        </div>
+      </template>
       <template #interval="{ date, time }">
         <div
           v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
@@ -40,7 +48,6 @@
 <script>
 export default {
   name: "OverCalendar",
-  props: ["events"],
 
   data() {
     return {
@@ -51,36 +58,59 @@ export default {
       createEvent: null,
       createStart: null,
       extendOriginal: null,
-
       newEvent: undefined,
       centralDay: this.$accessor.config.getConfig("event_date"),
     };
   },
 
   computed: {
-    calendarFormattedEvents() {
-      let res = [];
-      if (this.selectedUser.assigned) {
-        res = this.selectedUser.assigned;
+    assignedTimeSlots() {
+      let events = [...this.$accessor.assignment.assignedTimespans];
+      if (this.mode) {
+        events = [];
+        let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
+        let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
+        if (multipleHoverTask.length > 0) {
+          multipleHoverTask.forEach((task) => {
+            task["color"] = this.getDisplayColor(task);
+            events.push(task);
+          });
+        }
+        if (multipleSolidTask.length > 0) {
+          multipleSolidTask.forEach((task) => {
+            task["color"] = this.getDisplayColor(task);
+            events.push(task);
+          });
+        }
+      } else {
+        let hoverTask = this.$accessor.assignment.hoverTask;
+        if (hoverTask.FTID) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = hoverTask.start;
+          hoverTask["color"] = "rgba(204,51,255,0.50)";
+          events.push(hoverTask);
+        }
       }
-      if (this.newEvent) {
-        res.push(this.newEvent);
-      }
-      return res;
+      return events;
     },
+    FTs() {
+      return this.$accessor.assignment.FTs;
+    },
+    // eslint-disable-next-line vue/return-in-computed-property
+    calendarFormattedEvents() {},
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
+    mode() {
+      return !this.$accessor.assignment.filters.isModeOrgaToTache;
+    },
   },
-
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
-      if (event && timed) {
-        this.dragEvent = event;
-        this.dragTime = null;
-        this.extendOriginal = null;
-      }
+      this.$accessor.assignment.selectTimeSpan(event);
+      this.$accessor.assignment.getUserAssignedToSameTimespan(event);
+      this.$emit("open-unassign-dialog");
     },
     startTime(tms) {
       const mouse = this.toTime(tms);
@@ -89,21 +119,7 @@ export default {
         const start = this.dragEvent.start;
 
         this.dragTime = mouse - start;
-      } else {
-        this.createStart = this.roundTime(mouse);
-        this.createEvent = {
-          name: `Créneau #${this.calendarFormattedEvents.length}`,
-          start: this.createStart,
-          end: this.createStart,
-          timed: true,
-        };
-        this.newEvent = this.createEvent;
       }
-    },
-    extendBottom(event) {
-      this.createEvent = event;
-      this.createStart = event.start;
-      this.extendOriginal = event.end;
     },
     mouseMove(tms) {
       const mouse = this.toTime(tms);
@@ -126,34 +142,6 @@ export default {
         this.createEvent.start = min;
         this.createEvent.end = max;
       }
-    },
-    endDrag() {
-      console.log(this.calendarFormattedEvents);
-      this.dragTime = null;
-      this.dragEvent = null;
-      this.createEvent = null;
-      this.createStart = null;
-      this.extendOriginal = null;
-    },
-    cancelDrag() {
-      if (this.disabled) {
-        return;
-      }
-      if (this.createEvent) {
-        if (this.extendOriginal) {
-          this.createEvent.end = this.extendOriginal;
-        } else {
-          const i = this.events.indexOf(this.createEvent);
-          // if (i !== -1) {
-          //   this.events.splice(i, 1);
-          // }
-        }
-      }
-
-      this.createEvent = null;
-      this.createStart = null;
-      this.dragTime = null;
-      this.dragEvent = null;
     },
     roundTime(time, down = true) {
       const roundTo = 15; // minutes
@@ -180,22 +168,51 @@ export default {
       }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     },
     isUserAvailableInTimeframe(timeframe) {
-      // timeframe date object
-      const availabilities = this.events.filter((e) => !e.FTID);
-      let isUserAvailableInTimeframe = false;
-      availabilities.forEach((availability) => {
-        if (availability.schedule) {
-          let start = new Date(availability.schedule.start);
-          let end = new Date(availability.schedule.end);
-          if (
-            start.getTime() <= timeframe.getTime() + 5000 &&
-            end.getTime() >= timeframe.getTime() + 5000
-          ) {
-            isUserAvailableInTimeframe = true;
+      if (!this.mode) {
+        // timeframe date object
+        const availabilities =
+          this.$accessor.assignment.selectedUserAvailabilities;
+        let isUserAvailableInTimeframe = false;
+        availabilities.forEach((availability) => {
+          if (availability && availability.timeFrame) {
+            let start = new Date(availability.timeFrame.start);
+            let end = new Date(availability.timeFrame.end);
+            if (
+              start.getTime() <= timeframe.getTime() + 5000 &&
+              end.getTime() >= timeframe.getTime() + 5000
+            ) {
+              isUserAvailableInTimeframe = true;
+            }
           }
-        }
-      });
-      return isUserAvailableInTimeframe;
+        });
+        return isUserAvailableInTimeframe;
+      } else {
+        return false;
+      }
+    },
+    changeMode(isMode) {
+      //Security in case of locked hover
+      this.$accessor.assignment.setMultipleHoverTask([]);
+      this.$accessor.assignment.setHoverTask({});
+      this.$accessor.assignment.setMultipleSolidTask([]);
+
+      this.$accessor.assignment.changeMode(!isMode);
+      this.$accessor.assignment.initStore();
+    },
+    getDisplayColor(timespan) {
+      const timespanLeft = this.$accessor.assignment.timespans.filter(
+        (ts) => ts.FTID === timespan.FTID && !ts.assigned
+      );
+      const userAssigned = this.$accessor.assignment.timespans.filter(
+        (ts) => ts.FTID === timespan.FTID && ts.assigned
+      );
+      if (timespanLeft.length === 0) {
+        return "rgba(0,255,0,0.50)";
+      } else if (userAssigned.length === 0) {
+        return "rgba(255,0,0,0.50)";
+      } else {
+        return "rgba(255,165,0,0.50)";
+      }
     },
   },
 };

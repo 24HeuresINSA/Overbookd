@@ -28,8 +28,8 @@ export default {
   data: () => ({
     repo: RepoFactory.equipmentRepo,
     headers: [
-      { text: "nom", value: "name" },
-      { text: "action", value: "action" },
+      { text: "Nom", value: "name" },
+      { text: "Action", value: "action" },
     ],
     fullInventory: [],
     inventory: [],
@@ -59,7 +59,7 @@ export default {
       this,
       this.repo.getAllEquipments(this),
       null,
-      "erreur lors de la récupération des équipements"
+      "Erreur lors de la récupération des équipements"
     );
     if (res) {
       this.fullInventory = res.data.filter((item) => item.isValid !== false);

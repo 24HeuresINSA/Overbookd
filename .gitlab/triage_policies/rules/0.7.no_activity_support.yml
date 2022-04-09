@@ -1,0 +1,18 @@
+resource_rules:
+  issues:
+    rules:
+      - name: find all issues with support label
+        conditions:
+          state: opened
+          labels:
+            - Support
+          date:
+              attribute: updated_at
+              condition: older_than
+              interval_type: days
+              interval: 3
+        actions:
+          comment: |
+            Hi @all,  
+            No activity in the last 3 days...  
+            Please close issue or reavaluate the labels

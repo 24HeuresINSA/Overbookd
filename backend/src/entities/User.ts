@@ -1,6 +1,7 @@
-import {model, Schema, Types} from "mongoose";
+import { model, Schema, Types, PopulatedDoc, Document } from "mongoose";
 import * as Factory from "factory.ts";
 import faker from "faker";
+import { ITimeslot } from "./Timeslot";
 
 export interface IUser {
   password?: string;
@@ -18,14 +19,18 @@ export interface IUser {
   email: string;
   team?: string[];
   hasDriverLicense?: boolean;
+  driverLicenseDate?: Date;
   hasPayedContribution?: boolean;
-  birthday?: Date;
+  birthdate?: Date;
   friends?: string[];
   transactionHistory?: any;
   pp?: string;
-  availabilities?: Types.ObjectId[];
+  availabilities?: PopulatedDoc<ITimeslot & Document>[];
   resetPasswordToken?: string;
   resetTokenExpires?: Date;
+  comment?: string;
+  departement?: string;
+  year?: string;
 }
 
 // Mock interface for data generation
@@ -41,21 +46,32 @@ const UserSchema = new Schema<IUser>(
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     nickname: { type: String, required: false },
+    comment: { type: String, required: false },
+    departement: { type: String, required: false },
+    year: { type: String, required: false },
     password: { type: String, require: false },
     balance: { type: Number, required: false },
     charisma: { type: Number, required: false },
     phone: { type: Number, required: false },
-    picture: {type: String, required: false},
-    email: {type: String, required: true},
-    team: {type: Array, required: false},
-    hasDriverLicense: {type: Boolean, required: false},
-    birthday: {type: Date, required: false},
-    friends: {type: Array, required: false},
-    pp: {type: String, required: false},
-    availabilities: {type: [Schema.Types.ObjectId], required: false, ref: "Timeslot"},
-    resetPasswordToken: {type: String, required: false},
-    resetTokenExpires: {type: Date, required: false},
-    hasPayedContribution: {type: Boolean, required: false},
+    picture: { type: String, required: false },
+    email: { type: String, required: true },
+    team: { type: Array, required: false },
+    hasDriverLicense: { type: Boolean, required: false },
+    driverLicenseDate: { type: Date, required: false },
+    birthdate: { type: Date, required: false },
+    friends: { type: Array, required: false },
+    pp: { type: String, required: false },
+    availabilities: [
+      {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: "Timeslot",
+      },
+    ],
+    resetPasswordToken: { type: String, required: false },
+    resetTokenExpires: { type: Date, required: false },
+    hasPayedContribution: { type: Boolean, required: false },
+    notifications: { type: Array, required: false },
   },
   { strict: false }
 );
@@ -72,13 +88,18 @@ export class SafeUser {
   email: string;
   team?: string[];
   hasDriverLicense?: boolean;
-  birthday?: Date;
+  driverLicenseDate?: Date;
+  birthdate?: Date;
   friends?: string[];
   pp?: string;
   availabilities?: Types.ObjectId[];
   resetPasswordToken?: string;
   resetTokenExpires?: Date;
   hasPayedContribution: boolean;
+  comment?: string;
+  departement?: string;
+  year?: string;
+  notifications?: any[];
 
   constructor(data: IUser) {
     this._id = data._id;
@@ -87,7 +108,9 @@ export class SafeUser {
     this.lastname = data.lastname;
     this.nickname = data.nickname;
     this.email = data.email;
-
+    this.departement = data.departement;
+    this.year = data.year;
+    this.comment = data.comment;
 
     this.balance = data.balance;
 
@@ -95,12 +118,14 @@ export class SafeUser {
     this.phone = data.phone;
     this.picture = data.picture;
     this.team = data.team;
-    this.birthday = data.birthday;
+    this.birthdate = data.birthdate;
     this.friends = data.friends;
     this.pp = data.pp;
     this.availabilities = data.availabilities;
+    this.notifications = data.notifications;
 
     this.hasDriverLicense = data.hasDriverLicense || false;
+    this.driverLicenseDate = data.driverLicenseDate;
     this.hasPayedContribution = data.hasPayedContribution || false;
   }
 }

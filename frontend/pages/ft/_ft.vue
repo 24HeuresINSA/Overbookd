@@ -1,6 +1,6 @@
 <template>
   <v-container style="display: grid">
-    <h1>Fiche Tache 🤩</h1>
+    <h1>Fiche Tâche</h1>
 
     <v-row>
       <v-col md="12">
@@ -118,7 +118,13 @@
         z-index: 30;
       "
     >
-      <v-btn v-if="hasRole('humain')" color="red" @click="readyForAssignment"
+      <v-btn v-if="FT.count > 1" small fab :href="`/ft/${FT.count - 1}`">
+        <v-icon small>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="hasRole('humain') && FT.status !== 'ready'"
+        color="red"
+        @click="readyForAssignment"
         >prêt pour affectation
       </v-btn>
       <v-btn
@@ -138,11 +144,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(validator, i) of validators"
-            :key="validator"
-            link
-          >
+          <v-list-item v-for="validator of validators" :key="validator" link>
             <v-list-item-title
               @click="
                 v = validator;
@@ -171,11 +173,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(validator, i) of validators"
-            :key="validator"
-            link
-          >
+          <v-list-item v-for="validator of validators" :key="validator" link>
             <v-list-item-title
               color="green"
               @click="validate(validator)"
@@ -186,14 +184,17 @@
       </v-menu>
 
       <v-btn
-        v-if="FT.status == 'draft' || FT.status == 'refused'"
+        v-if="FT.status === 'draft' || FT.status === 'refused'"
         color="secondary"
         @click="isDialogOpen.submit = true"
         >Soumettre a validation
       </v-btn>
       <v-btn color="warning" @click="saveFT">sauvegarder</v-btn>
-      <SnackNotificationContainer></SnackNotificationContainer>
+      <v-btn small fab :href="`/ft/${FT.count + 1}`">
+        <v-icon small>mdi-arrow-right</v-icon>
+      </v-btn>
     </div>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </v-container>
 </template>
 
@@ -303,8 +304,6 @@ export default Vue.extend({
       const allValidators: string[] =
         this.$accessor.config.getConfig("ft_validators");
       if (this.me.team.includes("admin")) {
-        // admin has all the validators powers
-        console.log(allValidators);
         return allValidators;
       }
       if (allValidators) {
@@ -320,12 +319,22 @@ export default Vue.extend({
   },
 
   async mounted() {
-    // get FT and store it in store
+    // fetch FT and conficts
     await this.$accessor.FT.getAndSetFT(this.FTID);
+    await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
+    document.title = "FT:" + this.FTID;
   },
 
   methods: {
     readyForAssignment() {
+      // Check for conflicts
+      if (this.$accessor.conflict.conflicts.length != 0) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Attention il reste des conflits pour cette FT",
+        });
+        return;
+      }
       this.$accessor.FT.readyForAssignment(this.me.lastname);
     },
     getIconColor(validator: string): string | undefined {
@@ -360,6 +369,7 @@ export default Vue.extend({
       await this.$accessor.FT.saveFT();
       // todo check if the request did succeed
       this.snack.display("FT sauvegardée 🥳");
+      await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
     },
 
     updateForm(section: keyof FT, form: any) {
