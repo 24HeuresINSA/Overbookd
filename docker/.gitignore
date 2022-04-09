@@ -1,2 +1,2 @@
-data/dev/images/*
-data/dev/mongo/*
+!/data/**/.gitkeep
+/data/**/*
