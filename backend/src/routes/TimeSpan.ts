@@ -255,21 +255,12 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
     });
   }
 
-  let twinTimespan;
-  if (timespan.required == "soft") {
-    twinTimespan = await TimeSpan.find({
-      start: timespan.start,
-      end: timespan.end,
-      FTID: timespan.FTID,
-      required: "soft",
-    });
-  } else {
-    twinTimespan = await TimeSpan.find({
-      start: timespan.start,
-      end: timespan.end,
-      FTID: timespan.FTID,
-    });
-  }
+  const twinTimespan = await TimeSpan.find({
+    start: timespan.start,
+    end: timespan.end,
+    FTID: timespan.FTID,
+    required: timespan.required == "soft" ? "soft" : { $ne: "soft" },
+  });
   const usersId = [] as string[];
   for (const ts of twinTimespan) {
     if (ts.assigned) {
