@@ -1,6 +1,20 @@
 <template>
   <v-container>
     <h1>Patch notes 📝</h1>
+    <h2>Patch note BETA 0.22.2</h2>
+    <h3>Fix planning</h3>
+    <ul>
+      <li>Les plannings ne sont plus dédoublés</li>
+    </ul>
+    <h3>Affect</h3>
+    <ul>
+      <li>Mode tache orga presque focntionnel</li>
+    </ul>
+    <h3>Fix FA et FT</h3>
+    <ul>
+      <li>Modifications des pass secu</li>
+      <li>Fix des problemes de demande de matos</li>
+    </ul>
     <h2>Patch note BETA 0.21.1</h2>
     <h3>FT</h3>
     <ul>
