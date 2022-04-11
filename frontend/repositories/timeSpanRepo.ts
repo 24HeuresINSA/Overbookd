@@ -31,4 +31,10 @@ export default {
       `${resource}/availableUserByTimespan/${timespanId}`
     );
   },
+  getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+    context: Context,
+    FTID: string
+  ) {
+    return context.$axios.get(`${resource}/count/${FTID}`);
+  },
 };

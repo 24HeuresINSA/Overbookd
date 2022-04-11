@@ -58,13 +58,22 @@ export default {
           this,
           ft.count
         );
-        if (ftTimespans) {
+        const timespanCompletion =
+          await TimeSpanRepo.getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+            this,
+            ft.count
+          );
+        if (ftTimespans && timespanCompletion) {
           const tosend = ftTimespans.data.map((ts) => ({
             ...ts,
             start: new Date(ts.start),
             end: new Date(ts.end),
             timed: true,
-            FTName: ft.general.name,
+            FTName: this.getFTName(
+              ts._id,
+              timespanCompletion.data,
+              ft.general.name
+            ),
           }));
           this.$accessor.assignment.setMultipleHoverTask(tosend);
         }
@@ -78,7 +87,12 @@ export default {
           this,
           ft.count
         );
-        if (ftTimespans) {
+        const timespanCompletion =
+          await TimeSpanRepo.getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+            this,
+            ft.count
+          );
+        if (ftTimespans && timespanCompletion) {
           let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
           if (multipleSolidTask.length > 0) {
             if (multipleSolidTask[0].FTName === ft.general.name) {
@@ -91,11 +105,26 @@ export default {
             start: new Date(ts.start),
             end: new Date(ts.end),
             timed: true,
-            FTName: ft.general.name,
+            FTName: this.getFTName(
+              ts._id,
+              timespanCompletion.data,
+              ft.general.name
+            ),
           }));
           this.$accessor.assignment.setMultipleSolidTask(tosend);
         }
       }
+    },
+    getFTName(timeSpanID, timespanCompletion, name) {
+      const count = timespanCompletion[timeSpanID];
+      return (
+        "[" +
+        count.assigned.toString() +
+        "/" +
+        count.total.toString() +
+        "] " +
+        name
+      );
     },
   },
 };
