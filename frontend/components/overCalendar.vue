@@ -208,18 +208,12 @@ export default {
       this.$accessor.assignment.initStore();
     },
     getDisplayColor(timespan) {
-      const timespanLeft = this.$accessor.assignment.timespans.filter(
-        (ts) => ts.FTID === timespan.FTID && !ts.assigned
-      );
-      const userAssigned = this.$accessor.assignment.timespans.filter(
-        (ts) => ts.FTID === timespan.FTID && ts.assigned
-      );
-      if (timespanLeft.length === 0) {
-        return "rgba(0,255,0,0.50)";
-      } else if (userAssigned.length === 0) {
-        return "rgba(255,0,0,0.50)";
-      } else {
-        return "rgba(255,165,0,0.50)";
+      if (timespan.required === "soft") {
+        return "rgba(0,255,0,0.75)";
+      } else if (timespan.required === "hard") {
+        return "rgba(200,0,125,0.75)";
+      } else if (timespan.required === "confiance") {
+        return "rgba(0,0,255,0.75)";
       }
     },
   },
