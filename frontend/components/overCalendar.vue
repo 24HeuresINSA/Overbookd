@@ -71,6 +71,8 @@ export default {
         let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
         if (multipleHoverTask.length > 0) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = multipleHoverTask[0].start;
           multipleHoverTask.forEach((task) => {
             task["color"] = this.getDisplayColor(task);
             events.push(task);
@@ -108,15 +110,15 @@ export default {
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
-      const isModeOrgaToTache = this.$accessor.assignment.filters.isModeOrgaToTache;
+      const isModeOrgaToTache =
+        this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
-      if (isModeOrgaToTache){
+      if (isModeOrgaToTache) {
         this.$accessor.assignment.getUserAssignedToSameTimespan(event);
         this.$emit("open-unassign-dialog");
       } else {
         this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
       }
-
     },
     startTime(tms) {
       const mouse = this.toTime(tms);
