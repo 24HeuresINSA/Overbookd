@@ -70,7 +70,7 @@ export default {
             end: new Date(ts.end),
             timed: true,
             FTName: this.getFTName(
-              ts._id,
+              ts,
               timespanCompletion.data,
               ft.general.name
             ),
@@ -106,7 +106,7 @@ export default {
             end: new Date(ts.end),
             timed: true,
             FTName: this.getFTName(
-              ts._id,
+              ts,
               timespanCompletion.data,
               ft.general.name
             ),
@@ -115,16 +115,21 @@ export default {
         }
       }
     },
-    getFTName(timeSpanID, timespanCompletion, name) {
-      const count = timespanCompletion[timeSpanID];
-      return (
-        "[" +
-        count.assigned.toString() +
-        "/" +
-        count.total.toString() +
-        "] " +
-        name
-      );
+    getFTName(timespan, timespanCompletion, name) {
+      let ret = { assigned: 0, total: 0 };
+      this.$accessor.assignment.timespans
+        .filter(
+          (ts) =>
+            ts.FTID === timespan.FTID &&
+            ts.start.toString() === new Date(timespan.start).toString() &&
+            ts.end.toString() === new Date(timespan.end).toString() &&
+            ts.required === timespan.required
+        )
+        .forEach((ts) => {
+          ret.assigned += timespanCompletion[ts._id].assigned;
+          ret.total += timespanCompletion[ts._id].total;
+        });
+      return "[" + ret.assigned + "/" + ret.total + "] " + name;
     },
   },
 };
