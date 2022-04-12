@@ -8,7 +8,7 @@
             style="padding: 2px"
             @input="updateFilters('search', $event)"
           ></v-text-field>
-          <v-text-field label="Team" style="padding: 2px"></v-text-field>
+          <TeamSearchField @input="updateFilters('team', $event)"></TeamSearchField>
         </div>
         <ListFT />
       </v-card-text>
@@ -18,10 +18,10 @@
 
 <script>
 import ListFT from "./listFT.vue";
-
+import TeamSearchField from "./atoms/TeamSearchField.vue";
 export default {
   name: "OverTasks",
-  components: { ListFT },
+  components: { ListFT, TeamSearchField },
 
   data() {
     return {

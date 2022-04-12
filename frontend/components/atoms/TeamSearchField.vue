@@ -7,7 +7,8 @@
     label="Team"
     style="padding: 2px"
     :items="getConfig('teams').map((e) => e.name)"
-    @input="updateFilter('team', $event)"
+    :value="selectedTeam"
+    @input="sendEvent($event)"
   >
     <template #selection="{ attrs, item, selected }">
       <v-chip
@@ -32,21 +33,27 @@ export default Vue.extend({
   name: "TeamSearchField",
   data() {
     return {
-      teams: this.getConfig("teams"),
+      //Not doing this causes bugs
+      teams: (this as any).getConfig("teams"),
     };
   },
 
   methods: {
-    sendEvent(team: string) {
-      this.$emit("input", team);
+    sendEvent(event: any): any {
+      this.$emit("input", event);
     },
 
-    getRoleMetadata(roleName: string) {
+    getRoleMetadata(roleName: string): any {
       return this.teams.find((e: any) => e.name === roleName);
     },
 
     getConfig(key: string): any {
       return this.$accessor.config.getConfig(key);
+    },
+  },
+  computed: {
+    selectedTeam() {
+      return this.$accessor.assignment.filters.FT.team;
     },
   },
 });
