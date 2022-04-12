@@ -301,3 +301,22 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
 
   return res.json(ret);
 }
+
+// /rolesByFT
+export async function getRolesByFT(req: Request, res: Response) {
+  const timespans = await TimeSpan.find({});
+  const ret = {} as { [key: string]: string[] };
+  for (const ts of timespans) {
+    if (!ret[ts.FTID]) {
+      ret[ts.FTID] = [];
+    }
+    if (
+      ts.required &&
+      ts.required.length !== 24 &&
+      !ret[ts.FTID].includes(ts.required)
+    ) {
+      ret[ts.FTID].push(ts.required);
+    }
+  }
+  return res.json(ret);
+}
