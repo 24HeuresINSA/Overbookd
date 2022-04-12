@@ -68,17 +68,10 @@ export default {
       let events = [...this.$accessor.assignment.assignedTimespans];
       if (this.mode) {
         events = [];
-        let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
-        if (multipleHoverTask.length > 0) {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.centralDay = multipleHoverTask[0].start;
-          multipleHoverTask.forEach((task) => {
-            task["color"] = this.getDisplayColor(task);
-            events.push(task);
-          });
-        }
         if (multipleSolidTask.length > 0) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = multipleSolidTask[0].start;
           multipleSolidTask.forEach((task) => {
             task["color"] = this.getDisplayColor(task);
             events.push(task);
@@ -200,7 +193,6 @@ export default {
     },
     changeMode(isMode) {
       //Security in case of locked hover
-      this.$accessor.assignment.setMultipleHoverTask([]);
       this.$accessor.assignment.setHoverTask({});
       this.$accessor.assignment.setMultipleSolidTask([]);
 
