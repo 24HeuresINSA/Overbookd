@@ -8,7 +8,9 @@
             style="padding: 2px"
             @input="updateFilters('search', $event)"
           ></v-text-field>
-          <TeamSearchField @input="updateFilters('team', $event)"></TeamSearchField>
+          <TeamSearchField
+            @input="updateFilters('team', $event)"
+          ></TeamSearchField>
         </div>
         <ListFT />
       </v-card-text>

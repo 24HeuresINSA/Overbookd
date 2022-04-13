@@ -35,7 +35,6 @@
 
 <script>
 import { Snack } from "~/utils/models/snack";
-import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default {
