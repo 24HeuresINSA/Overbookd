@@ -111,6 +111,7 @@ export const mutations = mutationTree(state, {
   },
   CHANGE_MODE(state: any, data: boolean) {
     state.filters.isModeOrgaToTache = data;
+    state.selectedUser = {};
   },
   SET_HOVER_TASK(state: any, data: TimeSpan) {
     state.hoverTask = data;
@@ -370,36 +371,31 @@ export const actions = actionTree(
     },
 
     async setMultipleSolidTask({ commit, state }: any, ft: FT) {
-      const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
-        this,
-        ft.count.toString()
-      );
-      const timespanCompletion =
-        await TimeSpanRepo.getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+      if (ft !== undefined) {
+        const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
           this,
           ft.count.toString()
         );
-      if (ftTimespans && timespanCompletion) {
-        const multipleSolidTask = state.multipleSolidTask;
-        if (multipleSolidTask.length > 0) {
-          if (multipleSolidTask[0].FTName === ft.general?.name) {
-            commit("SET_MULTIPLE_SOLID_TASK", []);
-            return;
-          }
+        const timespanCompletion =
+          await TimeSpanRepo.getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+            this,
+            ft.count.toString()
+          );
+        if (ftTimespans && timespanCompletion) {
+          const tosend = ftTimespans.data.map((ts: any) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: getFTName(
+              state.timespans,
+              ts,
+              timespanCompletion.data,
+              ft.general?.name || ""
+            ),
+          }));
+          commit("SET_MULTIPLE_SOLID_TASK", tosend);
         }
-        const tosend = ftTimespans.data.map((ts: any) => ({
-          ...ts,
-          start: new Date(ts.start),
-          end: new Date(ts.end),
-          timed: true,
-          FTName: getFTName(
-            state.timespans,
-            ts,
-            timespanCompletion.data,
-            ft.general?.name || ""
-          ),
-        }));
-        commit("SET_MULTIPLE_SOLID_TASK", tosend);
       }
     },
 

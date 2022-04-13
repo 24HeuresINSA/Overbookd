@@ -194,7 +194,8 @@ export default {
     changeMode(isMode) {
       //Security in case of locked hover
       this.$accessor.assignment.setHoverTask({});
-      this.$accessor.assignment.setMultipleSolidTask([]);
+      this.$accessor.assignment.setMultipleSolidTask();
+      this.events = [];
 
       this.$accessor.assignment.changeMode(!isMode);
       this.$accessor.assignment.initStore();

@@ -46,11 +46,13 @@ export default {
         this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
         this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
       } else {
-        this.$accessor.assignment.setSelectedUser(selectedUser);
-        this.$accessor.assignment.assignUserToTimespan({
-          timespanID: selectedUser._id,
-          userID: this.$accessor.assignment.selectedTimeSpan._id,
-        });
+        if (selectedUser) {
+          this.$accessor.assignment.setSelectedUser(selectedUser);
+          this.$accessor.assignment.assignUserToTimespan({
+            timespanID: selectedUser._id,
+            userID: this.$accessor.assignment.selectedTimeSpan._id,
+          });
+        }
       }
     },
   },
