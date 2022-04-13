@@ -493,7 +493,9 @@ export const getters = getterTree(state, {
     if (FTFilters.team.length > 0) {
       filtered = filtered.filter((item: any) => {
         for (const team of FTFilters.team) {
-          return state.roles[item.count].includes(team);
+          return (
+            state.roles[item.count] && state.roles[item.count].includes(team)
+          );
         }
       });
     }
