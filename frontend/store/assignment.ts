@@ -19,6 +19,7 @@ declare interface filter {
   };
   FT: {
     search: string;
+    team: string[];
   };
   isModeOrgaToTache: boolean;
 }
@@ -36,6 +37,7 @@ export const state = () => ({
     },
     FT: {
       search: "",
+      team: [] as string[],
     },
     isModeOrgaToTache: false,
   } as filter,
@@ -49,6 +51,7 @@ export const state = () => ({
   hoverTask: {} as TimeSpan,
   multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
+  roles: {} as { [key: string]: string[] },
   userAssignedToSameTimespan: [] as {
     _id: string;
     firstname: string;
@@ -75,8 +78,20 @@ export const mutations = mutationTree(state, {
   SET_USER_FILTER(state: any, { key, value }) {
     state.filters.user[key] = value;
   },
+  SET_FT_FILTER(state: any, { key, value }) {
+    state.filters.FT[key] = value;
+  },
+  ADD_TEAM_TO_FT_FILTER(state: any, team: string) {
+    state.filters.FT.team.push(team);
+  },
+  REMOVE_TEAM_FROM_FT_FILTER(state: any, team: string) {
+    state.filters.FT.team.splice(state.filters.FT.team.indexOf(team), 1);
+  },
   SET_TIMESPANS(state: any, data: any) {
     state.timespans = data;
+  },
+  SET_ROLES(state: any, data: any) {
+    state.roles = data;
   },
   SET_ASSIGN_TIMESPANS(state: any, data: any) {
     state.assignedTimespans = data;
@@ -271,6 +286,14 @@ export const actions = actionTree(
       return ret;
     },
 
+    async getRolesByFT({ commit }: any) {
+      const ret: any = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
+      if (ret) {
+        commit("SET_ROLES", ret.data);
+      }
+      return ret;
+    },
+
     async initMode({ commit }: any) {
       commit("CHANGE_MODE", true);
     },
@@ -281,6 +304,7 @@ export const actions = actionTree(
       await dispatch("getFAs");
       await dispatch("getTimeslots");
       await dispatch("getTimespans");
+      await dispatch("getRolesByFT");
     },
 
     /**
@@ -307,7 +331,19 @@ export const actions = actionTree(
         commit("SET_SELECTED_USER", {});
       }
     },
-
+    async setFTTeamFilter({ commit, state }: any, data: string) {
+      if (state.filters.FT.team.includes(data)) {
+        commit("REMOVE_TEAM_FROM_FT_FILTER", data);
+      } else {
+        commit("ADD_TEAM_TO_FT_FILTER", data);
+      }
+    },
+    async removeFTTeamFilter({ commit }: any, data: string) {
+      commit("REMOVE_TEAM_FROM_FT_FILTER", data);
+    },
+    async setFTFilter({ commit }: any, data: { key: string; value: string }) {
+      commit("SET_FT_FILTER", data);
+    },
     getFTNameById({ state }: any, id: string) {
       const ft = state.FTs.find((ft: FT) => {
         if (ft.timeframes.length > 0) {
@@ -466,20 +502,33 @@ export const getters = getterTree(state, {
 
   filteredFTs: (state: any) => {
     // filter FTs by filters and search
-    const { FT } = state.filters;
-    const { search } = FT;
-    let FTs = state.FTs;
-
-    if (search && search.length > 0) {
+    let filtered = state.FTs.filter((item: any) => {
+      if (item.general.name !== "" && item.status === "ready") {
+        return item;
+      }
+    });
+    const FTFilters = state.filters.FT;
+    if (FTFilters.team.length > 0) {
+      filtered = filtered.filter((item: any) => {
+        for (const team of FTFilters.team) {
+          return (
+            state.roles[item.count] && state.roles[item.count].includes(team)
+          );
+        }
+      });
+    }
+    if (FTFilters.search && FTFilters.search.length > 0) {
       const options = {
         // Search in `author` and in `tags` array
-        keys: ["name"],
+        keys: ["general.name", "count"],
+
+        threshold: 0.2,
       };
-      const fuse = new Fuse(FTs, options);
-      FTs = fuse.search(search).map((e) => e.item);
+      const fuse = new Fuse(filtered, options);
+      filtered = fuse.search(FTFilters.search).map((e) => e.item);
     }
 
-    return FTs;
+    return filtered;
   },
 
   selectedUserAvailabilities: (state: any) => {

@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <td>FT</td>
+            <td>Role</td>
           </tr>
         </thead>
         <tbody>
@@ -14,6 +15,14 @@
             @click="multipleSolidTask(ft)"
           >
             <td>{{ ft.count + " - " + ft.general.name }}</td>
+            <td>
+              <MiniUserBadge
+                v-for="team of rolesByFT[ft.count]"
+                :key="team"
+                :team="team"
+                @click.native.stop="clickBadge(ft, team)"
+              ></MiniUserBadge>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -26,9 +35,12 @@
 
 <script>
 import { Snack } from "~/utils/models/snack";
+import TimeSpanRepo from "~/repositories/timeSpanRepo";
+import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default {
   name: "ListTasks",
+  components: { MiniUserBadge },
 
   data() {
     return {
@@ -40,12 +52,10 @@ export default {
 
   computed: {
     FTs() {
-      const fts = this.$accessor.assignment.FTs.filter((item) => {
-        if (item.general.name !== "" && item.status === "ready") {
-          return item;
-        }
-      });
-      return fts;
+      return this.$accessor.assignment.filteredFTs;
+    },
+    rolesByFT() {
+      return this.$accessor.assignment.roles;
     },
   },
 
@@ -54,6 +64,9 @@ export default {
       if (ft) {
         this.$accessor.assignment.setMultipleSolidTask(ft);
       }
+    },
+    clickBadge(ft, team) {
+      this.$accessor.assignment.setFTTeamFilter(team);
     },
   },
 };

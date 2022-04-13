@@ -17,23 +17,8 @@
       <span>{{ user.comment }}</span>
     </v-tooltip>
     <br />
-    <v-chip
-      v-for="team of getCleanTeam"
-      :key="team"
-      small
-      :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
-    >
-      <v-tooltip top>
-        <template #activator="{ on, attrs }">
-          <v-icon v-if="getTeamMetadate(team)" small v-bind="attrs" v-on="on">
-            {{ getTeamMetadate(team).icon }}
-          </v-icon>
-        </template>
-        <span>{{
-          getTeamMetadate(team) ? getTeamMetadate(team).name : ""
-        }}</span>
-      </v-tooltip>
-    </v-chip>
+    <MiniUserBadge v-for="team of getCleanTeam" :key="team" :team="team">
+    </MiniUserBadge>
     <UserInformation
       :user="user"
       :toggle="isUserDialogOpen"
@@ -46,10 +31,11 @@
 import Vue, { PropType } from "vue";
 import { User } from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
+import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default Vue.extend({
   name: "UserResume",
-  components: { UserInformation },
+  components: { UserInformation, MiniUserBadge },
   props: {
     user: {
       type: Object as PropType<User>,

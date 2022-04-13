@@ -37,4 +37,7 @@ export default {
   ) {
     return context.$axios.get(`${resource}/count/${FTID}`);
   },
+  getRolesByFT(context: Context) {
+    return context.$axios.get(`${resource}/rolesByFT`);
+  },
 };
