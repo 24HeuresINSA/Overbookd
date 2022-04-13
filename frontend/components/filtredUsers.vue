@@ -46,7 +46,7 @@
 
 <script>
 import UsersList from "./usersList";
-import {getConfig} from "../common/role";
+import { getConfig } from "../common/role";
 
 export default {
   name: "FilteredUsers",
