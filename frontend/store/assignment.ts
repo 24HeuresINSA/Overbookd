@@ -49,7 +49,6 @@ export const state = () => ({
   timespans: [] as TimeSpan[],
   assignedTimespans: [] as TimeSpan[],
   hoverTask: {} as TimeSpan,
-  multipleHoverTask: [] as TimeSpan[],
   multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
   roles: {} as { [key: string]: string[] },
@@ -127,12 +126,10 @@ export const mutations = mutationTree(state, {
   },
   CHANGE_MODE(state: any, data: boolean) {
     state.filters.isModeOrgaToTache = data;
+    state.selectedUser = {};
   },
   SET_HOVER_TASK(state: any, data: TimeSpan) {
     state.hoverTask = data;
-  },
-  SET_MULTIPLE_HOVER_TASK(state: any, data: TimeSpan[]) {
-    state.multipleHoverTask = data;
   },
   SET_MULTIPLE_SOLID_TASK(state: any, data: TimeSpan[]) {
     state.multipleSolidTask = data;
@@ -409,12 +406,33 @@ export const actions = actionTree(
       commit("SET_HOVER_TASK", timeSpan);
     },
 
-    setMultipleHoverTask({ commit }: any, timeSpans: TimeSpan[]) {
-      commit("SET_MULTIPLE_HOVER_TASK", timeSpans);
-    },
-
-    setMultipleSolidTask({ commit, dispatch }: any, timeSpans: TimeSpan[]) {
-      commit("SET_MULTIPLE_SOLID_TASK", timeSpans);
+    async setMultipleSolidTask({ commit, state }: any, ft: FT) {
+      if (ft !== undefined) {
+        const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
+          this,
+          ft.count.toString()
+        );
+        const timespanCompletion =
+          await TimeSpanRepo.getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+            this,
+            ft.count.toString()
+          );
+        if (ftTimespans && timespanCompletion) {
+          const tosend = ftTimespans.data.map((ts: any) => ({
+            ...ts,
+            start: new Date(ts.start),
+            end: new Date(ts.end),
+            timed: true,
+            FTName: getFTName(
+              state.timespans,
+              ts,
+              timespanCompletion.data,
+              ft.general?.name || ""
+            ),
+          }));
+          commit("SET_MULTIPLE_SOLID_TASK", tosend);
+        }
+      }
     },
 
     async filterAvailableUserForTimeSpan({ commit }: any, timeSpan: TimeSpan) {
@@ -529,3 +547,25 @@ export const getters = getterTree(state, {
     return state.timespans;
   },
 });
+
+function getFTName(
+  allTimeSpans: TimeSpan[],
+  timespan: TimeSpan,
+  timespanCompletion: { [key: string]: { total: number; assigned: number } },
+  name: string
+) {
+  const ret: any = { assigned: 0, total: 0 };
+  allTimeSpans
+    .filter(
+      (ts: TimeSpan) =>
+        ts.FTID === timespan.FTID &&
+        ts.start.toString() === new Date(timespan.start).toString() &&
+        ts.end.toString() === new Date(timespan.end).toString() &&
+        ts.required === timespan.required
+    )
+    .forEach((ts: TimeSpan) => {
+      ret.assigned += timespanCompletion[ts._id].assigned;
+      ret.total += timespanCompletion[ts._id].total;
+    });
+  return "[" + ret.assigned + "/" + ret.total + "] " + name;
+}

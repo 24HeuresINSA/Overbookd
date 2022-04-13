@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px; height: 100%" @mouseleave="multipleHoverTask()">
+  <div style="width: 500px; height: 100%">
     <v-simple-table dense fixed-header height="800">
       <template #default>
         <thead>
@@ -13,7 +13,6 @@
             v-for="(ft, index) in FTs"
             :key="index"
             @click="multipleSolidTask(ft)"
-            @mouseover="multipleHoverTask(ft)"
           >
             <td>{{ ft.count + " - " + ft.general.name }}</td>
             <td>
@@ -36,7 +35,6 @@
 
 <script>
 import { Snack } from "~/utils/models/snack";
-import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default {
@@ -61,49 +59,9 @@ export default {
   },
 
   methods: {
-    async multipleHoverTask(ft) {
-      if (ft) {
-        const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
-          this,
-          ft.count
-        );
-        if (ftTimespans) {
-          const tosend = ftTimespans.data.map((ts) => ({
-            ...ts,
-            start: new Date(ts.start),
-            end: new Date(ts.end),
-            timed: true,
-            FTName: ft.general.name,
-          }));
-          this.$accessor.assignment.setMultipleHoverTask(tosend);
-        }
-      } else {
-        this.$accessor.assignment.setMultipleHoverTask([]);
-      }
-    },
     async multipleSolidTask(ft) {
       if (ft) {
-        const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
-          this,
-          ft.count
-        );
-        if (ftTimespans) {
-          let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
-          if (multipleSolidTask.length > 0) {
-            if (multipleSolidTask[0].FTName === ft.general.name) {
-              this.$accessor.assignment.setMultipleSolidTask([]);
-              return;
-            }
-          }
-          const tosend = ftTimespans.data.map((ts) => ({
-            ...ts,
-            start: new Date(ts.start),
-            end: new Date(ts.end),
-            timed: true,
-            FTName: ft.general.name,
-          }));
-          this.$accessor.assignment.setMultipleSolidTask(tosend);
-        }
+        this.$accessor.assignment.setMultipleSolidTask(ft);
       }
     },
     clickBadge(ft, team) {

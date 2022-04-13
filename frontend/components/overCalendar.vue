@@ -68,15 +68,10 @@ export default {
       let events = [...this.$accessor.assignment.assignedTimespans];
       if (this.mode) {
         events = [];
-        let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
-        if (multipleHoverTask.length > 0) {
-          multipleHoverTask.forEach((task) => {
-            task["color"] = this.getDisplayColor(task);
-            events.push(task);
-          });
-        }
         if (multipleSolidTask.length > 0) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = multipleSolidTask[0].start;
           multipleSolidTask.forEach((task) => {
             task["color"] = this.getDisplayColor(task);
             events.push(task);
@@ -108,15 +103,15 @@ export default {
   methods: {
     // calendar drag and drop
     startDrag({ event, timed }) {
-      const isModeOrgaToTache = this.$accessor.assignment.filters.isModeOrgaToTache;
+      const isModeOrgaToTache =
+        this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
-      if (isModeOrgaToTache){
+      if (isModeOrgaToTache) {
         this.$accessor.assignment.getUserAssignedToSameTimespan(event);
         this.$emit("open-unassign-dialog");
       } else {
         this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
       }
-
     },
     startTime(tms) {
       const mouse = this.toTime(tms);
@@ -198,26 +193,20 @@ export default {
     },
     changeMode(isMode) {
       //Security in case of locked hover
-      this.$accessor.assignment.setMultipleHoverTask([]);
       this.$accessor.assignment.setHoverTask({});
-      this.$accessor.assignment.setMultipleSolidTask([]);
+      this.$accessor.assignment.setMultipleSolidTask();
+      this.events = [];
 
       this.$accessor.assignment.changeMode(!isMode);
       this.$accessor.assignment.initStore();
     },
     getDisplayColor(timespan) {
-      const timespanLeft = this.$accessor.assignment.timespans.filter(
-        (ts) => ts.FTID === timespan.FTID && !ts.assigned
-      );
-      const userAssigned = this.$accessor.assignment.timespans.filter(
-        (ts) => ts.FTID === timespan.FTID && ts.assigned
-      );
-      if (timespanLeft.length === 0) {
-        return "rgba(0,255,0,0.50)";
-      } else if (userAssigned.length === 0) {
-        return "rgba(255,0,0,0.50)";
-      } else {
-        return "rgba(255,165,0,0.50)";
+      if (timespan.required === "soft") {
+        return "rgba(0,255,0,0.75)";
+      } else if (timespan.required === "hard") {
+        return "rgba(200,0,125,0.75)";
+      } else if (timespan.required === "confiance") {
+        return "rgba(0,0,255,0.75)";
       }
     },
   },
