@@ -2,12 +2,12 @@
   <div>
     <div class="d-flex">
       <v-list-item-title style="font-weight: bold; font-size: 25px"
-      >{{ title }}
+        >{{ title }}
       </v-list-item-title>
       <v-switch
-          v-model="showCalendar"
-          label="Voir son planning"
-          @change="generateEvents"
+        v-model="showCalendar"
+        label="Voir son planning"
+        @change="generateEvents"
       ></v-switch>
     </div>
     <div v-if="showCalendar">
@@ -21,13 +21,19 @@
         </v-btn>
       </v-sheet>
       <v-calendar
-          ref="FormCalendar"
-          v-model="selectedDate"
-          color="primary"
-          type="week"
-          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-          :events="events"
-      />
+        ref="FormCalendar"
+        v-model="selectedDate"
+        color="primary"
+        type="week"
+        :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+        :events="events"
+      >
+        <template #event="{ event }">
+          <div class="text-wrap">
+            <h3>{{ event.name }}</h3>
+          </div>
+        </template>
+      </v-calendar>
     </div>
   </div>
 </template>
@@ -64,7 +70,7 @@ export default {
       const min = ("0" + date.getMinutes()).slice(-2);
       const seg = ("0" + date.getSeconds()).slice(-2);
       return (
-          year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg
       );
     },
     getColor(type) {
