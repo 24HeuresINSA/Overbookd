@@ -21,7 +21,7 @@ export default Vue.extend({
   name: "MiniUserBadge",
   props: {
     team: {
-      type: Object as PropType<string>,
+      type: String,
       required: true,
     },
   },
