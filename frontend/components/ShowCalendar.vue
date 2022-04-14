@@ -30,7 +30,7 @@
       >
         <template #event="{ event }">
           <div class="text-wrap">
-            <h3>{{ event.name }}</h3>
+            <h3>[{{ event.count }}]{{ event.name }}</h3>
           </div>
         </template>
       </v-calendar>
@@ -58,6 +58,7 @@ export default {
             start: this.getFormattedDate(new Date(timeslot.start)),
             end: this.getFormattedDate(new Date(timeslot.end)),
             color: this.getColor(timeslot.status),
+            count: timeslot.count,
           });
         });
       }
