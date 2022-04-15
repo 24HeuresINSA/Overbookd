@@ -23,7 +23,12 @@ import { Snack } from "~/utils/models/snack";
 export default {
   name: "UsersList",
   components: { UserResume },
-  props: ["users"],
+  props: {
+    users: {
+      type: Array,
+      required: true,
+    },
+  },
 
   data() {
     return {
