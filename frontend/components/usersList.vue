@@ -64,12 +64,13 @@ export default {
       const selectedUser = this.users.find(
         (user) => user._id === this.selectedUserIndex
       );
+      const multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
       if (isModeOrgaToTache) {
         this.$accessor.assignment.setSelectedUser(selectedUser);
         this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
         this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
       } else {
-        if (selectedUser) {
+        if (selectedUser && multipleSolidTask.length > 0) {
           const ft = this.$accessor.assignment.FTs.find(
             (ft) => ft.count === this.$accessor.assignment.selectedTimeSpan.FTID
           );
