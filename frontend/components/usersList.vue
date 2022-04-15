@@ -4,7 +4,11 @@
     <v-virtual-scroll :items="users" :height="height" item-height="60">
       <template #default="{ item }">
         <v-list-item-group v-model="selectedUserIndex">
-          <v-list-item :key="item._id" :value="item._id">
+          <v-list-item
+            :key="item._id"
+            :value="item._id"
+            @click="selectedUserIndex = item._id"
+          >
             <UserResume :user="item"></UserResume>
           </v-list-item>
         </v-list-item-group>
@@ -37,11 +41,20 @@ export default {
         teams: [],
       },
 
-      selectedUserIndex: undefined,
-
       height: window.innerHeight * 0.75,
       snack: new Snack(),
     };
+  },
+
+  computed: {
+    selectedUserIndex: {
+      get() {
+        return this.$accessor.assignment.selectedUserIndex;
+      },
+      set(value) {
+        this.$accessor.assignment.setUserIndex(value);
+      },
+    },
   },
 
   watch: {
