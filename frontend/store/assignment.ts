@@ -390,6 +390,7 @@ export const actions = actionTree(
         assignedTimeSpan.color = "primary";
         commit("ADD_ASSIGNED_TIMESPAN", assignedTimeSpan);
         commit("REMOVE_AVAILAIBLE_TIMESPAN", assignedTimeSpan);
+        commit("SET_USER_INDEX", -1);
       }
       return res;
     },
