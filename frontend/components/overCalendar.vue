@@ -28,7 +28,7 @@
     >
       <template #event="{ event }">
         <div class="text-wrap">
-          <strong>{{ event.FTName }}</strong>
+          <h3>{{ event.FTName }}</h3>
         </div>
       </template>
       <template #interval="{ date, time }">

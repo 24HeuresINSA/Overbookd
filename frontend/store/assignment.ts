@@ -26,6 +26,7 @@ declare interface filter {
 
 export const state = () => ({
   users: [] as User[],
+  selectedUserIndex: Number,
   filters: {
     user: {
       search: "",
@@ -62,6 +63,9 @@ export const state = () => ({
 export const mutations = mutationTree(state, {
   SET_USERS(state: any, data: User[]) {
     state.users = data;
+  },
+  SET_USER_INDEX(state: any, index: number) {
+    state.selectedUserIndex = index;
   },
   SET_TIMESLOTS(state: any, data: any[]) {
     state.timeslots = data;
@@ -200,6 +204,10 @@ export const actions = actionTree(
 
     changeMode({ commit }: any, isModeOrgaToTache: boolean) {
       commit("CHANGE_MODE", isModeOrgaToTache || false);
+      commit("SET_MULTIPLE_SOLID_TASK", []);
+      commit("SET_ASSIGN_TIMESPANS", []);
+      commit("SET_SELECTED_USER", {});
+      commit("SET_USER_INDEX", -1);
     },
 
     /**
@@ -298,7 +306,7 @@ export const actions = actionTree(
       commit("CHANGE_MODE", true);
     },
 
-    async initStore({ dispatch, state }) {
+    async initStore({ dispatch }) {
       await dispatch("getUsers");
       await dispatch("getFTs");
       await dispatch("getFAs");
@@ -319,6 +327,10 @@ export const actions = actionTree(
      */
     setUserFilter({ commit }: any, data: { key: string; value: string }) {
       commit("SET_USER_FILTER", data);
+    },
+
+    setUserIndex({ commit }: any, index: number) {
+      commit("SET_USER_INDEX", index);
     },
 
     /**
@@ -378,6 +390,9 @@ export const actions = actionTree(
         assignedTimeSpan.color = "primary";
         commit("ADD_ASSIGNED_TIMESPAN", assignedTimeSpan);
         commit("REMOVE_AVAILAIBLE_TIMESPAN", assignedTimeSpan);
+        if (!state.filters.isModeOrgaToTache) {
+          commit("SET_USER_INDEX", -1);
+        }
       }
       return res;
     },
@@ -424,7 +439,7 @@ export const actions = actionTree(
             end: new Date(ts.end),
             timed: true,
             FTName: getFTName(
-              state.timespans,
+              [...state.timespans, ...state.assignedTimespans],
               ts,
               timespanCompletion.data,
               ft.general?.name || ""
@@ -542,7 +557,7 @@ export const getters = getterTree(state, {
     return [];
   },
 
-  availableTimeSpans: (state: any, getters: any) => {
+  availableTimeSpans: (state: any) => {
     //TODO: filter with future timespans filter
     return state.timespans;
   },
@@ -555,17 +570,16 @@ function getFTName(
   name: string
 ) {
   const ret: any = { assigned: 0, total: 0 };
-  allTimeSpans
-    .filter(
-      (ts: TimeSpan) =>
-        ts.FTID === timespan.FTID &&
-        ts.start.toString() === new Date(timespan.start).toString() &&
-        ts.end.toString() === new Date(timespan.end).toString() &&
-        ts.required === timespan.required
-    )
-    .forEach((ts: TimeSpan) => {
-      ret.assigned += timespanCompletion[ts._id].assigned;
-      ret.total += timespanCompletion[ts._id].total;
-    });
+  const filter = allTimeSpans.filter(
+    (ts: TimeSpan) =>
+      ts.FTID === timespan.FTID &&
+      ts.start.toString() === new Date(timespan.start).toString() &&
+      ts.end.toString() === new Date(timespan.end).toString() &&
+      ts.required === timespan.required
+  );
+  filter.forEach((ts: TimeSpan) => {
+    ret.assigned += timespanCompletion[ts._id].assigned;
+    ret.total += timespanCompletion[ts._id].total;
+  });
   return "[" + ret.assigned + "/" + ret.total + "] " + name;
 }

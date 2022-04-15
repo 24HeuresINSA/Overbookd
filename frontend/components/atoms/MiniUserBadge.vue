@@ -16,12 +16,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
+import Vue from "vue";
+
 export default Vue.extend({
   name: "MiniUserBadge",
   props: {
     team: {
-      type: Object as PropType<string>,
+      type: String,
       required: true,
     },
   },
