@@ -1,4 +1,4 @@
-import {NuxtAxiosInstance} from "@nuxtjs/axios";
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
 
 const resource = "/timespan";
 
@@ -27,6 +27,17 @@ export default {
     return context.$axios.get(`${resource}/user/affected/${timespanId}`);
   },
   getAvailableUserForTimeSpan(context: Context, timespanId: string) {
-    return context.$axios.get(`${resource}/availableUserByTimespan/${timespanId}`);
-  }
+    return context.$axios.get(
+      `${resource}/availableUserByTimespan/${timespanId}`
+    );
+  },
+  getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+    context: Context,
+    FTID: string
+  ) {
+    return context.$axios.get(`${resource}/count/${FTID}`);
+  },
+  getRolesByFT(context: Context) {
+    return context.$axios.get(`${resource}/rolesByFT`);
+  },
 };
