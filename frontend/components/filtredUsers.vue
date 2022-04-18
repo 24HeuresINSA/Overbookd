@@ -98,7 +98,6 @@ export default {
     grid-row: 1;
   }
   .friendsDisplay {
-    margin-top: 1vh;
     grid-row: 2;
   }
 }
