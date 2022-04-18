@@ -19,7 +19,10 @@
     <!-- calendar --->
     <OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
-    <OverTasks v-if="isModeOrgaToTache" style="max-width: 550px" />
+    <OverTasks
+      v-if="isModeOrgaToTache"
+      style="max-width: 550px; height: 100%"
+    />
     <OverFT v-else style="max-width: 550px" />
 
     <v-dialog v-model="isUnassignDialogOpen" width="500px">

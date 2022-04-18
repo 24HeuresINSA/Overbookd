@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h2>{{ "Amis de " + getSelectedUserName }}</h2>
+    <h2>{{ "Amis de " + getSelectedUserName + " :" }}</h2>
     <v-virtual-scroll :items="selectedUser" :height="height" item-height="40">
       <template #default="{ item }">
         <v-list-item :value="item">
@@ -33,7 +33,7 @@ export default {
       }
     },
     height() {
-      return window.innerHeight * 0.2;
+      return window.innerHeight * 0.15;
     },
     getSelectedUserName() {
       const user = this.$accessor.assignment.selectedUser;
