@@ -11,7 +11,10 @@
       width: 100%;
     "
   >
-    <FilteredUsers style="max-width: 350px" />
+    <FilteredUsers
+      style="max-width: 350px; height: 100%"
+      class="filteredUser"
+    />
 
     <!-- calendar --->
     <OverCalendar @open-unassign-dialog="openUnassignDialog" />
@@ -33,7 +36,12 @@ import OverFT from "../components/overFT.vue";
 
 export default {
   name: "Assignment",
-  components: { OverCalendar, OverTasks, FilteredUsers, OverFT },
+  components: {
+    OverCalendar,
+    OverTasks,
+    FilteredUsers,
+    OverFT,
+  },
   data() {
     return {
       isUnassignDialogOpen: false,
@@ -80,5 +88,8 @@ export default {
 <style scoped>
 .container {
   padding: 0;
+}
+.filteredUser {
+  height: 100vh;
 }
 </style>

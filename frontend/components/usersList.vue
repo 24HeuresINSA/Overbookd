@@ -41,7 +41,7 @@ export default {
         teams: [],
       },
 
-      height: window.innerHeight * 0.75,
+      height: window.innerHeight * 0.6,
       snack: new Snack(),
     };
   },
