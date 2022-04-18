@@ -4,17 +4,20 @@
       <v-col sm="2">Equipe</v-col>
       <v-col sm="7">
         <v-row>
-          <v-col sm="3">
+          <v-col class="flex-grow-1">
             <NeedsCard status="draft">draft</NeedsCard>
           </v-col>
-          <v-col sm="3">
+          <v-col class="flex-grow-1">
             <NeedsCard status="refused">refused</NeedsCard>
           </v-col>
-          <v-col sm="3">
+          <v-col class="flex-grow-1">
             <NeedsCard status="submitted">submitted</NeedsCard>
           </v-col>
-          <v-col sm="3">
+          <v-col class="flex-grow-1">
             <NeedsCard status="validated">validated</NeedsCard>
+          </v-col>
+          <v-col class="flex-grow-1" v-if="name === 'FT'">
+            <NeedsCard status="ready">ready</NeedsCard>
           </v-col>
         </v-row>
       </v-col>

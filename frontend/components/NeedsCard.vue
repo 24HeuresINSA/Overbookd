@@ -14,6 +14,7 @@ export default {
         validated: "green",
         submitted: "yellow",
         refused: "red",
+        ready: "deep-purple",
       },
     };
   },
