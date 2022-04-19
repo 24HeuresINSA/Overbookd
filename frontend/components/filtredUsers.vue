@@ -35,10 +35,11 @@
             </template>
           </v-combobox>
         </div>
-
         <v-divider></v-divider>
-
-        <UsersList :users="filteredUsers"></UsersList>
+        <div class="content">
+          <UsersList :users="filteredUsers" class="userList"></UsersList>
+          <FriendsDisplay class="friendsDisplay" />
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -47,10 +48,11 @@
 <script>
 import UsersList from "./usersList";
 import { getConfig } from "../common/role";
+import FriendsDisplay from "./molecules/friendsDisplay.vue";
 
 export default {
   name: "FilteredUsers",
-  components: { UsersList },
+  components: { UsersList, FriendsDisplay },
 
   data() {
     return {
@@ -89,4 +91,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.content {
+  display: grid;
+  .userList {
+    grid-row: 1;
+  }
+  .friendsDisplay {
+    grid-row: 2;
+  }
+}
+</style>

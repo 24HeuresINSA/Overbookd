@@ -5,11 +5,11 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-switch
-        label="mode tache-orga"
-        :value="mode"
-        @change="changeMode"
-      ></v-switch>
+      <div class="switch">
+        <p :class="customClass('ot')">Orga-Tâche</p>
+        <v-switch :value="mode" @change="changeMode"></v-switch>
+        <p :class="customClass('to')">Tâche-Orga</p>
+      </div>
       <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     // calendar drag and drop
-    startDrag({ event, timed }) {
+    startDrag({ event }) {
       const isModeOrgaToTache =
         this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
@@ -209,8 +209,34 @@ export default {
         return "rgba(0,0,255,0.75)";
       }
     },
+    customClass(mode) {
+      if (mode == "ot") {
+        return this.$accessor.assignment.filters.isModeOrgaToTache
+          ? "selected"
+          : "none";
+      } else {
+        return this.$accessor.assignment.filters.isModeOrgaToTache
+          ? "none"
+          : "selected";
+      }
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.switch {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  p {
+    margin-right: 1vh;
+    margin-top: 1.3vh;
+    font-weight: 400;
+    color: rgb(190, 190, 190);
+  }
+  .selected {
+    color: rgb(0, 255, 0);
+  }
+}
+</style>

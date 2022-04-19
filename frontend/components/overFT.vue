@@ -12,7 +12,10 @@
             @input="updateFilters('team', $event)"
           ></TeamSearchField>
         </div>
-        <ListFT />
+        <div class="content">
+          <ListFT class="ft" />
+          <CommentsDisplay class="comment" />
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -21,9 +24,10 @@
 <script>
 import ListFT from "./listFT.vue";
 import TeamSearchField from "./atoms/TeamSearchField.vue";
+import CommentsDisplay from "./molecules/commentsDisplay.vue";
 export default {
   name: "OverTasks",
-  components: { ListFT, TeamSearchField },
+  components: { ListFT, TeamSearchField, CommentsDisplay },
 
   data() {
     return {
@@ -45,4 +49,15 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.content {
+  display: grid;
+  .task {
+    grid-row: 1;
+  }
+  .comment {
+    margin-top: 1vh;
+    grid-row: 2;
+  }
+}
+</style>
