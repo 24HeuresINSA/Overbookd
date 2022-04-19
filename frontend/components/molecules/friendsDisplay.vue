@@ -13,7 +13,7 @@
     <div v-else>
       <h2>Amis</h2>
       <p style="font-style: italic">
-        Les amis ne sont disponible qu'en mode tâche-orga
+        Les amis ne sont disponible qu'en mode orga-tâche
       </p>
     </div>
   </div>

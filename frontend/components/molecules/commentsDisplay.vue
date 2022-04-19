@@ -7,7 +7,7 @@
     <div v-else>
       <h2>Commentaire</h2>
       <p style="font-style: italic">
-        Les commentaires ne sont disponible qu'en mode tâche-orga
+        Les commentaires ne sont disponible qu'en mode orga-tâche
       </p>
     </div>
   </div>
