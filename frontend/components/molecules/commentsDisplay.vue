@@ -1,7 +1,15 @@
 <template>
   <div class="content">
-    <h2>{{ "Commentaire de " + getSelectedUserName + " :" }}</h2>
-    <p>{{ getSelectedUserComment }}</p>
+    <div v-if="isModeOrgaToTache">
+      <h2>{{ "Commentaire de " + getSelectedUserName + " :" }}</h2>
+      <p>{{ getSelectedUserComment }}</p>
+    </div>
+    <div v-else>
+      <h2>Commentaire</h2>
+      <p style="font-style: italic">
+        Les commentaires ne sont disponible qu'en mode tâche-orga
+      </p>
+    </div>
   </div>
 </template>
 
@@ -23,6 +31,9 @@ export default {
       } else {
         return "";
       }
+    },
+    isModeOrgaToTache() {
+      return this.$accessor.assignment.filters.isModeOrgaToTache;
     },
   },
 };

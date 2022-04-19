@@ -1,13 +1,21 @@
 <template>
   <div class="content">
-    <h2>{{ "Amis de " + getSelectedUserName + " :" }}</h2>
-    <v-virtual-scroll :items="selectedUser" :height="height" item-height="40">
-      <template #default="{ item }">
-        <v-list-item :value="item">
-          {{ item.username }}
-        </v-list-item>
-      </template>
-    </v-virtual-scroll>
+    <div v-if="isModeOrgaToTache">
+      <h2>{{ "Amis de " + getSelectedUserName + " :" }}</h2>
+      <v-virtual-scroll :items="selectedUser" :height="height" item-height="40">
+        <template #default="{ item }">
+          <v-list-item :value="item">
+            {{ item.username }}
+          </v-list-item>
+        </template>
+      </v-virtual-scroll>
+    </div>
+    <div v-else>
+      <h2>Amis</h2>
+      <p style="font-style: italic">
+        Les amis ne sont disponible qu'en mode tâche-orga
+      </p>
+    </div>
   </div>
 </template>
 
@@ -43,13 +51,17 @@ export default {
         return "";
       }
     },
+    isModeOrgaToTache() {
+      return this.$accessor.assignment.filters.isModeOrgaToTache;
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
 .content {
-  h2 {
+  h2,
+  p {
     margin: 0.5vh;
   }
   border: 1px solid #e0e0e0;
