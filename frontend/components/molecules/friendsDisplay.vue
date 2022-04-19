@@ -2,7 +2,7 @@
   <div class="content">
     <div v-if="isModeOrgaToTache">
       <h2>{{ "Amis de " + getSelectedUserName + " :" }}</h2>
-      <v-virtual-scroll :items="selectedUser" :height="height" item-height="40">
+      <v-virtual-scroll :items="selectedUser" :height="height" item-height="30">
         <template #default="{ item }">
           <v-list-item :value="item">
             {{ item.username }}
@@ -65,6 +65,5 @@ export default {
     margin: 0.5vh;
   }
   border: 1px solid #e0e0e0;
-  border-radius: 5px;
 }
 </style>
