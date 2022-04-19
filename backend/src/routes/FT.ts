@@ -149,11 +149,13 @@ export async function getFTsNumber(req: Request, res: Response) {
       refused: number;
       submitted: number;
       validated: number;
+      ready: number;
     } = {
       draft: 0,
       refused: 0,
       submitted: 0,
       validated: 0,
+      ready: 0,
     };
     let total = 0;
     for (const j in t[i]) {
@@ -169,6 +171,9 @@ export async function getFTsNumber(req: Request, res: Response) {
           break;
         case "validated":
           status.validated++;
+          break;
+        case "ready":
+          status.ready++;
           break;
         default:
           logger.info("Error in the FT count endpoint");
@@ -388,16 +393,16 @@ export async function getOrgaRequis(req: Request, res: Response) {
     // As all the _id don't have the same type, we need to do AGAIN the group by
     const grouped = FTs.reduce((acc, cur) => {
       // @ts-ignore
-      if (!acc[cur._id]) {
+      if (!acc[cur._id.toString()]) {
         // @ts-ignore
-        acc[cur._id] = {
-          _id: cur._id,
+        acc[cur._id.toString()] = {
+          _id: cur._id.toString(),
           userName: cur.userName,
           slots: [],
         };
       }
       // @ts-ignore
-      acc[cur._id].slots.push(...cur.slots);
+      acc[cur._id.toString()].slots.push(...cur.slots);
       return acc;
     }, {});
     FTs = Object.values(grouped);
