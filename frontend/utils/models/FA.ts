@@ -1,4 +1,4 @@
-import { FT } from "~/utils/models/FT";
+import {FT} from "~/utils/models/FT";
 
 export interface FA {
   _id?: string;
@@ -51,6 +51,7 @@ export enum EquipmentTypes {
   BUREAUTIQUE = "BUREAUTIQUE",
   BOIS = "BOIS",
   CANAP = "CANAPE/FAUTEUIL",
+  CONSUMABLE = "CONSUMABLE",
   CUISINE = "CUISINE",
   DECO = "DECO",
   FRIGO = "FRIGO",
