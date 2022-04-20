@@ -413,6 +413,11 @@ timespanRouter.get(
   TimeSpanHandlers.getAllTimeSpan
 );
 timespanRouter.get(
+  "/rolesByFT",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getRolesByFT
+);
+timespanRouter.get(
   "/:id",
   authMiddleware.protect(),
   TimeSpanHandlers.getTimeSpanById
@@ -441,6 +446,11 @@ timespanRouter.get(
   "/availableUserByTimespan/:id",
   authMiddleware.protect(),
   TimeSpanHandlers.getAvailableUserForTimeSpan
+);
+timespanRouter.get(
+  "/count/:FTID",
+  authMiddleware.protect(),
+  TimeSpanHandlers.getTotalNumberOfTimespansAndAssignedTimespansByFTID
 );
 timespanRouter.post(
   "/:id/assigned/:userId",

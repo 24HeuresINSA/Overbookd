@@ -5,11 +5,11 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-switch
-        label="mode tache-orga"
-        :value="mode"
-        @change="changeMode"
-      ></v-switch>
+      <div class="switch">
+        <p :class="customClass('ot')">Orga-Tâche</p>
+        <v-switch :value="mode" @change="changeMode"></v-switch>
+        <p :class="customClass('to')">Tâche-Orga</p>
+      </div>
       <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.cal.next()">
         <v-icon>mdi-chevron-right</v-icon>
@@ -28,7 +28,7 @@
     >
       <template #event="{ event }">
         <div class="text-wrap">
-          <strong>{{ event.FTName }}</strong>
+          <h3>{{ event.FTName }}</h3>
         </div>
       </template>
       <template #interval="{ date, time }">
@@ -68,15 +68,10 @@ export default {
       let events = [...this.$accessor.assignment.assignedTimespans];
       if (this.mode) {
         events = [];
-        let multipleHoverTask = this.$accessor.assignment.multipleHoverTask;
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
-        if (multipleHoverTask.length > 0) {
-          multipleHoverTask.forEach((task) => {
-            task["color"] = this.getDisplayColor(task);
-            events.push(task);
-          });
-        }
         if (multipleSolidTask.length > 0) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.centralDay = multipleSolidTask[0].start;
           multipleSolidTask.forEach((task) => {
             task["color"] = this.getDisplayColor(task);
             events.push(task);
@@ -107,10 +102,16 @@ export default {
   },
   methods: {
     // calendar drag and drop
-    startDrag({ event, timed }) {
+    startDrag({ event }) {
+      const isModeOrgaToTache =
+        this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
-      this.$accessor.assignment.getUserAssignedToSameTimespan(event);
-      this.$emit("open-unassign-dialog");
+      if (isModeOrgaToTache) {
+        this.$accessor.assignment.getUserAssignedToSameTimespan(event);
+        this.$emit("open-unassign-dialog");
+      } else {
+        this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
+      }
     },
     startTime(tms) {
       const mouse = this.toTime(tms);
@@ -192,30 +193,50 @@ export default {
     },
     changeMode(isMode) {
       //Security in case of locked hover
-      this.$accessor.assignment.setMultipleHoverTask([]);
       this.$accessor.assignment.setHoverTask({});
-      this.$accessor.assignment.setMultipleSolidTask([]);
+      this.$accessor.assignment.setMultipleSolidTask();
+      this.events = [];
 
       this.$accessor.assignment.changeMode(!isMode);
       this.$accessor.assignment.initStore();
     },
     getDisplayColor(timespan) {
-      const timespanLeft = this.$accessor.assignment.timespans.filter(
-        (ts) => ts.FTID === timespan.FTID && !ts.assigned
-      );
-      const userAssigned = this.$accessor.assignment.timespans.filter(
-        (ts) => ts.FTID === timespan.FTID && ts.assigned
-      );
-      if (timespanLeft.length === 0) {
-        return "rgba(0,255,0,0.50)";
-      } else if (userAssigned.length === 0) {
-        return "rgba(255,0,0,0.50)";
+      if (timespan.required === "soft") {
+        return "rgba(0,255,0,0.75)";
+      } else if (timespan.required === "hard") {
+        return "rgba(200,0,125,0.75)";
+      } else if (timespan.required === "confiance") {
+        return "rgba(0,0,255,0.75)";
+      }
+    },
+    customClass(mode) {
+      if (mode == "ot") {
+        return this.$accessor.assignment.filters.isModeOrgaToTache
+          ? "selected"
+          : "none";
       } else {
-        return "rgba(255,165,0,0.50)";
+        return this.$accessor.assignment.filters.isModeOrgaToTache
+          ? "none"
+          : "selected";
       }
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.switch {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  p {
+    margin-right: 1vh;
+    margin-top: 1.3vh;
+    font-weight: 400;
+    color: rgb(190, 190, 190);
+  }
+  .selected {
+    color: rgb(0, 255, 0);
+  }
+}
+</style>

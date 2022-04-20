@@ -18,6 +18,7 @@ stages:
   - docker
   - docker-scan
   - configurator
+  - unconfidentializer
 
 include:
   - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
@@ -32,3 +33,4 @@ include:
   - local: /.gitlab/ci/configurator.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
   - local: /.gitlab/ci/container_scan.gitlab-ci.yml
+  - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
