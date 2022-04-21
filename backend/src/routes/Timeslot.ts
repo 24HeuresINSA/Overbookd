@@ -142,6 +142,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
   const end = new Date(timestamp + 86400000); // The end is the start + 1 day in seconds
   logger.info(`getting Timeslots for Timeslot ${timestamp}`);
 
+  // Creating all the 15 minutes timeslots
   let smallTimeslots: Array<{
     id: number,
     start: Date,
@@ -163,6 +164,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
     });
   }
 
+  // Filling the users count
   const timeslots = await TimeslotModel.aggregate()
     .match({
       'timeFrame.start': {$gte: start},
@@ -202,6 +204,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
     }
   });
 
+  // Filling the require count
   const required = await FTModel.aggregate()
     .match({
       $and: [{isValid: {$ne: false}}],
@@ -227,7 +230,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
         return acc + ft.timeframes.required.amount;
       }
     }, 0);
-    timeslot.requireValidatedCount = requiredForTimeslot.filter((ft) => ft.status === "validated")
+    timeslot.requireValidatedCount = requiredForTimeslot.filter((ft) => ft.status === "validated" || ft.status === "ready")
       .reduce((acc, ft) => {
         if (ft.timeframes.required.type === 'user') {
           return acc + 1;
@@ -237,6 +240,7 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       }, 0);
   });
 
+  // Filling the affected count
   const affected = await TimeSpanModel.aggregate()
     .match({
       start: {$gte: start},
