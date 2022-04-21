@@ -6,7 +6,10 @@
           <v-text-field label="Recherche" style="padding: 2px"></v-text-field>
           <v-text-field label="Team" style="padding: 2px"></v-text-field>
         </div>
-        <ListTasks></ListTasks>
+        <div class="content">
+          <ListTasks class="task" />
+          <CommentsDisplay class="comment" />
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -15,10 +18,11 @@
 <script>
 // list tasks that are assigned to user and available tasks
 import ListTasks from "./listTasks";
+import CommentsDisplay from "./molecules/commentsDisplay.vue";
 
 export default {
   name: "OverTasks",
-  components: { ListTasks },
+  components: { ListTasks, CommentsDisplay },
 
   data() {
     return {
@@ -36,4 +40,15 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.content {
+  display: grid;
+  .task {
+    grid-row: 1;
+  }
+  .comment {
+    margin-top: 1vh;
+    grid-row: 2;
+  }
+}
+</style>

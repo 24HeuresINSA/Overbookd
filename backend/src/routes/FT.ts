@@ -149,11 +149,13 @@ export async function getFTsNumber(req: Request, res: Response) {
       refused: number;
       submitted: number;
       validated: number;
+      ready: number;
     } = {
       draft: 0,
       refused: 0,
       submitted: 0,
       validated: 0,
+      ready: 0,
     };
     let total = 0;
     for (const j in t[i]) {
@@ -169,6 +171,9 @@ export async function getFTsNumber(req: Request, res: Response) {
           break;
         case "validated":
           status.validated++;
+          break;
+        case "ready":
+          status.ready++;
           break;
         default:
           logger.info("Error in the FT count endpoint");
