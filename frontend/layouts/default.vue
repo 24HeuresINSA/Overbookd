@@ -171,7 +171,7 @@ export default {
           icon: "mdi-calendar-export",
           title: "Export Planning",
           roles: "humain",
-          to: "/export_planning",
+          to: "/exportPlanning",
         },
         {
           icon: "mdi-calendar-multiple-check",
