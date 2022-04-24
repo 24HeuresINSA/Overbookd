@@ -22,6 +22,13 @@
               <v-icon small>mdi-circle-edit-outline</v-icon>
             </v-btn>
           </template>
+
+          <template #[`item.timeslot`]="{ item }">
+            <div v-for="slot in item.timeslot" :key="slot">
+              {{ slot }}
+              <br />
+            </div>
+          </template>
         </v-data-table>
 
         <template v-if="isPassSecuRequired">
@@ -94,6 +101,7 @@ export default {
         { text: "Tél", value: "phone" },
         { text: "Entité", value: "entity" },
         { text: "Raison", value: "reason" },
+        { text: "Horaire", value: "timeslot", width: "15%" },
         { text: "Commentaire", value: "comment" },
         { text: "Action", value: "action" },
       ],
