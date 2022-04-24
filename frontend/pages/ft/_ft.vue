@@ -338,8 +338,12 @@ export default Vue.extend({
       }
       // Check for slicing
       this.$accessor.FT.timeframes.forEach((tf) => {
-        if (tf.toSlice) {
-          if (((tf.end - tf.start) / (3600 * 1000)) % tf.sliceTime != 0) {
+        if (tf.toSlice && tf.sliceTime) {
+          if (
+            ((tf.end.getTime() - tf.start.getTime()) / (3600 * 1000)) %
+              tf.sliceTime !=
+            0
+          ) {
             this.$accessor.notif.pushNotification({
               type: "error",
               message: "Attention le découpage ne fonctionne pas",

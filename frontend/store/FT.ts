@@ -232,12 +232,8 @@ export const actions = actionTree(
         topic: "validated",
         time: new Date(),
         // @ts-ignore
-        validator:
-          validator +
-          " - " +
-          this.$accessor.user.me.firstname +
-          " " +
-          this.$accessor.user.me.lastname,
+        // eslint-disable-next-line prettier/prettier
+        validator: validator + " - " + this.$accessor.user.me.firstname + " " + this.$accessor.user.me.lastname,
       });
       if (state.mFT.validated.length === FT_VALIDATORS) {
         // validated by all validators
@@ -259,12 +255,8 @@ export const actions = actionTree(
         text: comment,
         time: new Date(),
         // @ts-ignore
-        validator:
-          validator +
-          " - " +
-          this.$accessor.user.me.firstname +
-          " " +
-          this.$accessor.user.me.lastname,
+        // eslint-disable-next-line prettier/prettier
+        validator: validator + " - " + this.$accessor.user.me.firstname + " " + this.$accessor.user.me.lastname,
       });
       commit("UPDATE_STATUS", FTStatus.refused);
       await dispatch("saveFT");
