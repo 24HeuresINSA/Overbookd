@@ -72,6 +72,7 @@ export interface User {
   balance?: number;
   charisma?: number;
   availabilities: string[];
+  hasDriverLicense: boolean;
 }
 
 export interface availability {
