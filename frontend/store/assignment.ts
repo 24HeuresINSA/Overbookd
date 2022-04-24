@@ -1,11 +1,11 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -35,6 +35,7 @@ export const state = () => ({
         isAscending: false,
         field: "charisma",
       },
+      driverLicense: undefined,
     },
     FT: {
       search: "",
@@ -511,6 +512,12 @@ export const getters = getterTree(state, {
         }
         return 0;
       });
+    }
+
+    if (user.driverLicense){
+        users = users.filter((user: User) => user.hasDriverLicense);
+    } else if (user.driverLicense === false){
+      users = users.filter((user: User) => !user.hasDriverLicense);
     }
     return users;
   },

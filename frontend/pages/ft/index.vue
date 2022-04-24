@@ -42,6 +42,7 @@
           </v-card>
         </v-col>
         <v-col md="9">
+          <v-btn color="green" width="100%" href="ft/ft_420">FT 420 🍃</v-btn>
           <v-data-table
             :headers="headers"
             :items="filteredFTs"
