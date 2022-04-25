@@ -25,7 +25,7 @@
 
 <script>
 import UserResume from "~/components/organisms/UserResume";
-import {Snack} from "~/utils/models/snack";
+import { Snack } from "~/utils/models/snack";
 
 export default {
   name: "UsersList",
