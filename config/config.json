@@ -862,7 +862,7 @@
   {
     "_id": "624be11990b5de0011816811",
     "key": "show_ft_in_planning",
-    "value": true,
+    "value": false,
     "__v": 0
   }
 ]

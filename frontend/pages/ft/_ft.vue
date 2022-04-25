@@ -323,6 +323,7 @@ export default Vue.extend({
     await this.$accessor.FT.getAndSetFT(this.FTID);
     await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
     document.title = "FT:" + this.FTID;
+    console.log(this.FT);
   },
 
   methods: {
@@ -335,6 +336,22 @@ export default Vue.extend({
         });
         return;
       }
+      // Check for slicing
+      this.$accessor.FT.timeframes.forEach((tf) => {
+        if (tf.toSlice && tf.sliceTime) {
+          if (
+            ((tf.end.getTime() - tf.start.getTime()) / (3600 * 1000)) %
+              tf.sliceTime !=
+            0
+          ) {
+            this.$accessor.notif.pushNotification({
+              type: "error",
+              message: "Attention le découpage ne fonctionne pas",
+            });
+            return;
+          }
+        }
+      });
       this.$accessor.FT.readyForAssignment(this.me.lastname);
     },
     getIconColor(validator: string): string | undefined {

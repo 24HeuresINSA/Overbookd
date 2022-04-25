@@ -45,15 +45,6 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="headline">Export</span>
-            </v-card-title>
-            <v-card-text>
-              <v-btn text @click="exportCSV">Exporter l'inventaire</v-btn>
-            </v-card-text>
-          </v-card>
-          <br />
-          <v-card>
-            <v-card-title>
               <span class="headline">Lieux</span>
             </v-card-title>
             <v-card-text>
