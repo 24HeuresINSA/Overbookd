@@ -1,18 +1,5 @@
 <template>
   <div>
-    <div class="front">
-      <div class="left">
-        <h1>Export de planning</h1>
-        <p class="sorry">Désolé pour cette nouvelle page les humains...</p>
-      </div>
-      <div class="right">
-        <h1>Ce qu'on fait ici</h1>
-        <p>
-          Export des plannings soit pour tous les orgas soit pour un orga
-          spécifique
-        </p>
-      </div>
-    </div>
     <div class="unique">
       <h2>Exporter un planning unique</h2>
       <p>
@@ -46,6 +33,11 @@
     </div>
     <div class="multiple">
       <h2>Exporter tous les plannings</h2>
+      <p>Vous pouvez exporter les plannings de TOUS les orgas.</p>
+      <p class="warn">
+        Attention : vous n'aurez pas de prévisualisations et près de 300 mails
+        vont partir donc soyez bien sûr de ce que vous faites.
+      </p>
     </div>
   </div>
 </template>
@@ -68,19 +60,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.front {
-  display: flex;
-  justify-content: space-between;
-  .right {
-    text-align: right;
-  }
-  .sorry {
-    font-style: italic;
-  }
-}
 .unique {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 1%;
   border: 1px solid #ccc;
+  margin-bottom: 1%;
   .selector {
     width: 25%;
   }
@@ -95,5 +82,13 @@ export default {
 .multiple {
   padding: 1%;
   border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .warn {
+    color: red;
+  }
 }
 </style>
