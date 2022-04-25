@@ -48,19 +48,30 @@ export async function createPlanning(
       },
     ],
   });
-  // Check if planning already exists
-  let planning = await PlanningModel.findOne({ user_id: userID });
-  if (planning) {
-    planning.plannning = doc;
-    planning.save();
-    res.status(StatusCodes.OK).json(planning);
-  }
-  //Create new planning
-  else {
-    planning = await PlanningModel.create({
-      user_id: userID,
-      plannning: doc,
+  let exportDoc = "";
+  Packer.toBase64String(doc).then((data) => {
+    exportDoc = data;
+  });
+  if (exportDoc == "" || exportDoc == null) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error while creating planning",
     });
-    res.status(StatusCodes.OK).json(planning);
+  } else {
+    // Check if planning already exist
+    const planning = await PlanningModel.findOne({ user_id: userID });
+    if (planning) {
+      //update planning
+      planning.plannning = exportDoc;
+      await planning.save();
+      return res.status(StatusCodes.OK).json(planning);
+    } else {
+      //Create new planning
+      const newPlanning = new PlanningModel({
+        user_id: userID,
+        planning: exportDoc,
+      });
+      await newPlanning.save();
+      return res.status(StatusCodes.OK).json(newPlanning);
+    }
   }
 }
