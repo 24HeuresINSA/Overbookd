@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
+import FTModel from "@entities/FT";
 import User, { IUser } from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
@@ -363,4 +364,50 @@ export async function getRolesByFT(req: Request, res: Response) {
     }
   }
   return res.json(ret);
+}
+
+
+export async function deleteTimespan(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+
+  //find ft linked to timespan
+  const ft = await FTModel.find({count: timespan.FTID});
+  if (!ft) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "FT not found",
+    });
+  }
+
+  console.log(ft[0], ft[0].timeframes)
+  ft[0].timeframes.forEach((tf) => {
+    if(tf._id === timespan.timeframeID) {
+      tf.required.forEach(required => {
+        if(required.amount && required.team === timespan.required) {
+          required.amount--;
+        }
+      })
+    }
+  });
+  console.log("after")
+  console.log(ft[0], ft[0].timeframes)
+  try{
+
+    await ft[0].save();
+  }
+  catch(e) {
+    console.log(e)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error while saving FT",
+    });
+  }
+
+  await timespan.remove();
+  return res.json({
+    message: "TimeSpan deleted",
+  });
 }

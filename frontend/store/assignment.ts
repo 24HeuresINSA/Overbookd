@@ -152,6 +152,12 @@ export const mutations = mutationTree(state, {
       return 0;
     });
   },
+  DELETE_TIMESPAN(state: any, data: TimeSpan) {
+    const timeSpanIndex = state.timespans.findIndex(
+      (ts: TimeSpan) => ts._id === data._id
+    );
+    state.timespans.splice(timeSpanIndex, 1);
+  }
 });
 
 export const actions = actionTree(
@@ -473,6 +479,17 @@ export const actions = actionTree(
       }
       return res;
     },
+
+    async deleteTimespan({ commit }: any, timeSpan: TimeSpan) {
+      const res = await safeCall(
+        this,
+        TimeSpanRepo.deleteTimespan(this, timeSpan._id)
+      );
+      if (res) {
+        commit("DELETE_TIMESPAN", timeSpan);
+      }
+      return res;
+    }
   }
 );
 

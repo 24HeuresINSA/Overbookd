@@ -40,4 +40,7 @@ export default {
   getRolesByFT(context: Context) {
     return context.$axios.get(`${resource}/rolesByFT`);
   },
+  deleteTimespan(context: Context, timespanId: string) {
+    return context.$axios.delete(`${resource}/${timespanId}`);
+  }
 };
