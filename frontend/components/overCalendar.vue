@@ -17,24 +17,24 @@
     </v-sheet>
 
     <v-calendar
-      ref="cal"
-      v-model="centralDay"
-      :events="assignedTimeSlots"
-      type="week"
-      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-      @mousedown:event="startDrag"
-      @mousedown:time="startTime"
-      @mousemove:time="mouseMove"
+        ref="cal"
+        v-model="centralDay"
+        :events="assignedTimeSlots"
+        type="week"
+        :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+        @mousedown:event="startDrag"
+        @mousedown:time="startTime"
+        @mousemove:time="mouseMove"
     >
       <template #event="{ event }">
-        <div class="text-wrap">
+        <div class="text-wrap" @click.right="popUp(event)" @contextmenu.prevent>
           <h3>{{ event.FTName }}</h3>
         </div>
       </template>
       <template #interval="{ date, time }">
         <div
-          v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
-          style="
+            v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
+            style="
             background-color: rgba(95, 219, 72, 0.45);
             height: 100%;
             width: 100%;
@@ -92,7 +92,8 @@ export default {
       return this.$accessor.assignment.FTs;
     },
     // eslint-disable-next-line vue/return-in-computed-property
-    calendarFormattedEvents() {},
+    calendarFormattedEvents() {
+    },
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
@@ -101,14 +102,17 @@ export default {
     },
   },
   methods: {
+    popUp(event) {
+      this.$accessor.assignment.getUserAssignedToSameTimespan(event);
+      this.$emit("open-unassign-dialog");
+    },
     // calendar drag and drop
-    startDrag({ event }) {
+    startDrag({event}) {
       const isModeOrgaToTache =
-        this.$accessor.assignment.filters.isModeOrgaToTache;
+          this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
       if (isModeOrgaToTache) {
-        this.$accessor.assignment.getUserAssignedToSameTimespan(event);
-        this.$emit("open-unassign-dialog");
+        this.popUp(event);
       } else {
         this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
       }
@@ -149,38 +153,31 @@ export default {
       const roundDownTime = roundTo * 60 * 1000;
 
       return down
-        ? time - (time % roundDownTime)
-        : time + (roundDownTime - (time % roundDownTime));
+          ? time - (time % roundDownTime)
+          : time + (roundDownTime - (time % roundDownTime));
     },
     toTime(tms) {
       return new Date(
-        tms.year,
-        tms.month - 1,
-        tms.day,
-        tms.hour,
-        tms.minute
+          tms.year,
+          tms.month - 1,
+          tms.day,
+          tms.hour,
+          tms.minute
       ).getTime();
-    },
-
-    getStupidAmericanTimeFormat(date) {
-      date = new Date(date);
-      return `${date.getFullYear()}-${
-        date.getMonth() + 1
-      }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     },
     isUserAvailableInTimeframe(timeframe) {
       if (!this.mode) {
         // timeframe date object
         const availabilities =
-          this.$accessor.assignment.selectedUserAvailabilities;
+            this.$accessor.assignment.selectedUserAvailabilities;
         let isUserAvailableInTimeframe = false;
         availabilities.forEach((availability) => {
           if (availability && availability.timeFrame) {
             let start = new Date(availability.timeFrame.start);
             let end = new Date(availability.timeFrame.end);
             if (
-              start.getTime() <= timeframe.getTime() + 5000 &&
-              end.getTime() >= timeframe.getTime() + 5000
+                start.getTime() <= timeframe.getTime() + 5000 &&
+                end.getTime() >= timeframe.getTime() + 5000
             ) {
               isUserAvailableInTimeframe = true;
             }
@@ -212,12 +209,12 @@ export default {
     customClass(mode) {
       if (mode == "ot") {
         return this.$accessor.assignment.filters.isModeOrgaToTache
-          ? "selected"
-          : "none";
+            ? "selected"
+            : "none";
       } else {
         return this.$accessor.assignment.filters.isModeOrgaToTache
-          ? "none"
-          : "selected";
+            ? "none"
+            : "selected";
       }
     },
   },
@@ -229,12 +226,14 @@ export default {
   display: flex;
   align-items: center;
   margin: auto;
+
   p {
     margin-right: 1vh;
     margin-top: 1.3vh;
     font-weight: 400;
     color: rgb(190, 190, 190);
   }
+
   .selected {
     color: rgb(0, 255, 0);
   }

@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import TimeSpan from "@entities/TimeSpan";
-import User, { IUser } from "@entities/User";
+import User, {IUser} from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
-import { Types, Document } from "mongoose";
-import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
+import {Types, Document} from "mongoose";
+import {dateRangeOverlaps, isTimespanCovered} from "../services/conflict";
 import logger from "@shared/Logger";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
@@ -24,7 +24,7 @@ export async function getTimeSpanById(req: Request, res: Response) {
 
 //get timespan where assigned is userid
 export async function getTimeSpanByAssigned(req: Request, res: Response) {
-  const timespan = await TimeSpan.find({ assigned: req.params.id });
+  const timespan = await TimeSpan.find({assigned: req.params.id});
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -136,7 +136,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   }
   //fetch user timeslot
   const userAvailabilities = await TimeslotModel.find({
-    _id: { $in: user.availabilities },
+    _id: {$in: user.availabilities},
   }).lean();
 
   let availableTimespans = timespans.filter(
@@ -235,12 +235,13 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   users = (await filter(users, async (user: IUser) => {
     //fetch user timeslot
     const userAvailabilities = await TimeslotModel.find({
-      _id: { $in: user.availabilities },
+      _id: {$in: user.availabilities},
     }).lean();
     return isTimespanCovered(timespan, userAvailabilities);
   })) as (IUser & Document<any, any, IUser>)[];
   return res.json(users);
 }
+
 //helper function for the one just above
 async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
   const fail = Symbol();
@@ -258,6 +259,7 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
+
   const twinTimespan = await TimeSpan.find({
     start: timespan.start,
     end: timespan.end,
@@ -280,6 +282,7 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       _id: user._id,
       firstname: user.firstname,
       lastname: user.lastname,
+      timespanId: twinTimespan.filter((element) => element.assigned == user._id)[0]._id
     }))
   );
 }
@@ -289,11 +292,11 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
   res: Response
 ) {
   logger.info(`count for ft id ${req.params.FTID}`);
-  const timespans = await TimeSpan.find({ FTID: parseInt(req.params.FTID) });
+  const timespans = await TimeSpan.find({FTID: parseInt(req.params.FTID)});
   const ret = {} as { [key: string]: { total: number; assigned: number } };
   for (const ts of timespans) {
     if (!ret[ts._id.toString()]) {
-      ret[ts._id.toString()] = { total: 0, assigned: 0 };
+      ret[ts._id.toString()] = {total: 0, assigned: 0};
     }
     ret[ts._id.toString()].total++;
     if (ts.assigned) ret[ts._id.toString()].assigned++;
