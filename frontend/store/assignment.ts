@@ -344,7 +344,7 @@ export const actions = actionTree(
       } else {
         commit("SET_SELECTED_USER", {});
       }
-    },
+    },  
     async setFTTeamFilter({ commit, state }: any, data: string) {
       if (state.filters.FT.team.includes(data)) {
         commit("REMOVE_TEAM_FROM_FT_FILTER", data);
@@ -566,8 +566,29 @@ export const getters = getterTree(state, {
   },
 
   availableTimeSpans: (state: any) => {
-    //TODO: filter with future timespans filter
-    return state.timespans;
+    const FTFilters = state.filters.FT;
+    let filteredTimespans: any = state.timespans;
+    if(FTFilters.team.length > 0){
+      filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
+        if(!FTFilters.team.includes(ts.required)){
+          return false;
+        }
+        return true;
+      });
+    }
+
+    if (FTFilters.search && FTFilters.search.length > 0) {
+      const options = { 
+        // Search in `author` and in `tags` array
+        keys: ["FTID", "FTName"],
+
+        threshold: 0.2,
+      };
+      const fuse = new Fuse(filteredTimespans, options);
+      filteredTimespans = fuse.search(FTFilters.search).map((e) => e.item);
+    }
+
+    return filteredTimespans;
   },
 });
 

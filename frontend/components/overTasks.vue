@@ -3,8 +3,14 @@
     <v-card v-if="selectedUser">
       <v-card-text>
         <div style="display: flex">
-          <v-text-field label="Recherche" style="padding: 2px"></v-text-field>
-          <v-text-field label="Team" style="padding: 2px"></v-text-field>
+          <v-text-field
+            label="Recherche"
+            style="padding: 2px"
+            @input="updateFilters('search', $event)"
+          ></v-text-field>
+          <TeamSearchField
+            @input="updateFilters('team', $event)"
+          ></TeamSearchField>
         </div>
         <div class="content">
           <ListTasks class="task" />
@@ -19,10 +25,13 @@
 // list tasks that are assigned to user and available tasks
 import ListTasks from "./listTasks";
 import CommentsDisplay from "./molecules/commentsDisplay.vue";
+import TeamSearchField from "./atoms/TeamSearchField.vue";
+
+
 
 export default {
   name: "OverTasks",
-  components: { ListTasks, CommentsDisplay },
+  components: { ListTasks, CommentsDisplay, TeamSearchField },
 
   data() {
     return {
@@ -36,7 +45,12 @@ export default {
     },
   },
 
-  methods: {},
+  methods: {
+    updateFilters(key, value) {
+      this.$accessor.assignment.setFTFilter({ key, value });
+    },
+
+  },
 };
 </script>
 
