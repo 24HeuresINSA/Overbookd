@@ -3,7 +3,6 @@
  */
 
 import { Schema, model, Types } from "mongoose";
-import { ITFRequired } from "@entities/FT";
 
 export interface ITimeSpan {
   start: Date;
