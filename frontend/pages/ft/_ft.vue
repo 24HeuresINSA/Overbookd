@@ -200,15 +200,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Snack } from "~/utils/models/snack";
-import { Header } from "~/utils/models/Data";
-import { User } from "~/utils/models/repo";
+import {Snack} from "~/utils/models/snack";
+import {Header} from "~/utils/models/Data";
+import {User} from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
 import FormCard from "~/components/organisms/form/FormCard.vue";
-import { FT, SmallTypes } from "~/utils/models/FT";
+import {FT, SmallTypes} from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 
 interface Data {
@@ -323,6 +323,7 @@ export default Vue.extend({
     await this.$accessor.FT.getAndSetFT(this.FTID);
     await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
     document.title = "FT:" + this.FTID;
+    console.log(this.FT);
   },
 
   methods: {
@@ -335,6 +336,23 @@ export default Vue.extend({
         });
         return;
       }
+      // Check for slicing
+      this.$accessor.FT.timeframes.forEach((tf) => {
+        if (tf.toSlice && tf.sliceTime) {
+
+          if (
+            (((new Date(tf.end)).getTime() - (new Date(tf.start)).getTime()) / (3600 * 1000)) %
+              tf.sliceTime !=
+            0
+          ) {
+            this.$accessor.notif.pushNotification({
+              type: "error",
+              message: "Attention le découpage ne fonctionne pas",
+            });
+            return;
+          }
+        }
+      });
       this.$accessor.FT.readyForAssignment(this.me.lastname);
     },
     getIconColor(validator: string): string | undefined {

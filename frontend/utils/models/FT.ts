@@ -21,6 +21,8 @@ export interface FT {
     required?: requirement[];
     _id: string;
     timed: boolean;
+    toSlice?: boolean;
+    sliceTime?: number;
   }[];
 
   comments: { time: Date; text: string; validator: string; topic?: string }[];

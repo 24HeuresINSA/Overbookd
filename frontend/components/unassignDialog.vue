@@ -47,7 +47,9 @@
               <v-chip
                 v-for="user in assignedUsersToSelectedTimeSpan"
                 small
+                close
                 :key="user._id"
+                @click:close="unassign(user)"
               >
                 {{ user.firstname }} {{ user.lastname }}
               </v-chip>
@@ -56,19 +58,6 @@
         </tbody>
       </v-simple-table>
     </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" text :href="`/ft/${selectedTimeSpan.FTID}`"
-        >FT</v-btn
-      >
-      <v-spacer></v-spacer>
-      <v-btn
-        color="warning"
-        text
-        @click="unassign"
-        :disabled="selectedTimeSpan.required.length === 24"
-        >DEAFFECTER</v-btn
-      >
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -93,9 +82,9 @@ export default {
     },
   },
   methods: {
-    async unassign() {
+    async unassign(user) {
       await this.$accessor.assignment.unassign(
-        this.$accessor.assignment.selectedTimeSpan._id
+        user.timespanId
       );
       this.$emit("close-dialog");
     },
