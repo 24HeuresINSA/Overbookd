@@ -156,6 +156,24 @@
                   ></v-switch> </v-col
               ></v-row>
             </v-container>
+            <v-container v-if="me.team.includes('humain') && mUser.friends">
+              <h3>Amis :</h3>
+              <v-chip
+                v-for="(friend, index) in mUser.friends"
+                :key="index"
+                class="p-2"
+                >{{ friend.username }}</v-chip
+              >
+              <v-card-actions class="d-flex align-start">
+                <v-autocomplete
+                  v-model="newFriend"
+                  label="prénom.nom"
+                  :items="usernames"
+                  class="mx-2"
+                ></v-autocomplete>
+                <v-btn text @click="addFriend">Ajouter</v-btn>
+              </v-card-actions>
+            </v-container>
           </v-card-text>
         </v-col>
         <v-col md="7">
@@ -220,6 +238,7 @@ import userRepo from "~/repositories/userRepo";
 import { isValidated } from "~/utils/roles/index.ts";
 import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
 import ModificationCard from "~/components/organisms/ModificationCard.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {
   name: "UserInformation",
@@ -241,10 +260,15 @@ export default {
       teams: [],
       hasEditingRole: false,
       isEditingAvailability: false,
+      usernames: undefined,
+      newFriend: undefined,
     };
   },
 
   computed: {
+    me() {
+      return this.$accessor.user.me;
+    },
     mUser: {
       get: function () {
         return this.user;
@@ -264,10 +288,25 @@ export default {
   },
 
   async mounted() {
+    console.log(this.me);
     this.teams = this.$accessor.config.data.data
       .find((e) => e.key === "teams")
       .value.map((e) => e.name);
     this.hasEditingRole = await this.hasRole(["admin", "humain"]);
+    const res = await safeCall(
+      this.$store,
+      RepoFactory.userRepo.getAllUsers(this)
+    );
+    if (res) {
+      this.usernames = res.data
+        .map((user) => {
+          if (!user.team.includes("hard")) {
+            const username = user.firstname + " " + user.lastname;
+            return { text: username, value: user };
+          }
+        })
+        .filter((item) => item);
+    }
   },
 
   methods: {
@@ -336,11 +375,22 @@ export default {
         this.saveUser();
       }
     },
-    getMonday(d) {
-      d = new Date(d);
-      var day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
+    async addFriend() {
+      if (this.newFriend && this.newFriend._id) {
+        //TODO: RepoFactory + safeCall
+        await this.$axios
+          .post(`/user/friends`, {
+            from: this.mUser._id,
+            to: {
+              id: this.newFriend._id,
+              username:
+                this.newFriend.firstname + " " + this.newFriend.lastname,
+            },
+          })
+          .then(() => {
+            alert("La relation a été ajoutée !");
+          });
+      }
     },
   },
 };
