@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
 import { IComment } from "@entities/FA";
-import User, { IUser } from "@entities/User";
+import User, {IUser} from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
-import {Types, Document} from "mongoose";
+import {Document, Types} from "mongoose";
 import {dateRangeOverlaps, isTimespanCovered} from "../services/conflict";
 import logger from "@shared/Logger";
 
@@ -75,6 +75,17 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
+    });
+  }
+  const user = await User.findById(req.params.userId);
+  if (!user) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "User not found",
+    });
+  }
+  if (!await canUserBeAssignedToTimespan(user, timespan)){
+    return res.status(StatusCodes.CONFLICT).json({
+      message: "User already assigned to timespan",
     });
   }
   let oneAssigned = false;
@@ -216,7 +227,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   const allUsers = await User.find({});
   //find all users who can be assigned to this timespan
 
-  let usersBool = await Promise.all(
+  const usersBool = await Promise.all(
     allUsers.map(async (user) => {
       if(!(await canUserBeAssignedToTimespan(user, timespan))) {
         return false;

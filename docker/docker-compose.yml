@@ -14,7 +14,7 @@ services:
       - overbookd_prod-net-api
       - traefik-public
     volumes:
-      - ./data/prod/images:/overbookd/backend/images
+      - ./data/prod/images:/app/images
     environment:
       DOMAIN: ${OVERBOOKD_DOMAIN}
       DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_prod_mongo:27017/

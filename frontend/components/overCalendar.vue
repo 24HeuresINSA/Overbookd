@@ -198,11 +198,11 @@ export default {
     },
     getDisplayColor(timespan) {
       if (timespan.required === "soft") {
-        return "rgba(0,255,0,0.75)";
+        return "rgb(42,157,143,0.5)";
       } else if (timespan.required === "hard") {
-        return "rgba(200,0,125,0.75)";
+        return "rgb(38,70,83,0.5)";
       } else if (timespan.required === "confiance") {
-        return "rgba(0,0,255,0.75)";
+        return "rgba(209,105,224,0.5)";
       }
     },
     customClass(mode) {
