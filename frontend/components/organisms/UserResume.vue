@@ -45,7 +45,7 @@ import Vue, { PropType } from "vue";
 import { User } from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
-import FriendInformation from "~/components/organisms/friendInformation.vue";
+import FriendInformation from "~/components/organisms/FriendInformation.vue";
 
 export default Vue.extend({
   name: "UserResume",
