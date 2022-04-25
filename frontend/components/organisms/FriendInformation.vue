@@ -12,6 +12,7 @@
           <h3 class="mr-8">Amis :</h3>
           <v-chip
             v-for="friend in user.availableFriend"
+            :key="friend._id"
             @click="$emit('assign-user', friend._id)"
           >
             {{ friend.firstname }} {{ friend.lastname }}
