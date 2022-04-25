@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
+import { IComment } from "@entities/FA";
 import User, { IUser } from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
@@ -383,20 +384,15 @@ export async function deleteTimespan(req: Request, res: Response) {
     });
   }
 
-  console.log(ft[0], ft[0].timeframes)
-  ft[0].timeframes.forEach((tf) => {
-    if(tf._id === timespan.timeframeID) {
-      tf.required.forEach(required => {
-        if(required.amount && required.team === timespan.required) {
-          required.amount--;
-        }
-      })
-    }
-  });
-  console.log("after")
-  console.log(ft[0], ft[0].timeframes)
-  try{
+  const comment: IComment = {
+    time: new Date(),
+    topic: "timespan",
+    validator: res.locals.auth_user.firstname,
+    text: `Suppression du creneau ${timespan.start.toLocaleDateString()} - ${timespan.end.toLocaleDateString()} - ${timespan.required}`,
+  }
+  ft[0].comments.push(comment);
 
+  try{
     await ft[0].save();
   }
   catch(e) {
