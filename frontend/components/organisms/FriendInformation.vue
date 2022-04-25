@@ -8,7 +8,7 @@
             {{ user.firstname }} {{ user.lastname }}
           </v-chip>
         </div>
-        <div class="d-flex w-full mt-8">
+        <div class="d-flex w-full mt-8 flex-wrap">
           <h3 class="mr-8">Amis :</h3>
           <v-chip
             v-for="friend in user.availableFriend"
