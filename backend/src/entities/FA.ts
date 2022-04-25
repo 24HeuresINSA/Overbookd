@@ -6,7 +6,7 @@ export interface ITimeframe {
   end: string;
 }
 
-type ICommentTopic = "refused" | "validated" | "commentaire" | "ready";
+type ICommentTopic = "refused" | "validated" | "commentaire" | "ready" | "timespan";
 
 export type IComment = {
   topic: ICommentTopic;

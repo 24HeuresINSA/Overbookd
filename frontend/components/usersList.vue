@@ -53,21 +53,18 @@ export default {
     list() {
       const isModeOrgaToTache =
         this.$accessor.assignment.filters.isModeOrgaToTache;
-      if (isModeOrgaToTache) {
-        return this.users;
-      }
-      this.users.forEach((element) => {
-        element.availableFriend = new Set();
-        element.friends.forEach((friend) => {
-          let findUser = this.users.filter((i) => i._id == friend.id);
-          if (findUser.length > 0) {
-            element.availableFriend.add(findUser[0]);
-          }
+      if (!isModeOrgaToTache) {
+        this.users.forEach((element) => {
+          element.availableFriend = new Set();
+          element.friends.forEach((friend) => {
+            let findUser = this.users.filter((i) => i._id === friend.id);
+            if (findUser.length > 0) {
+              element.availableFriend.add(findUser[0]);
+            }
+          });
         });
-      });
-      return this.users.sort((a, b) =>
-        a.availableFriend.size < b.availableFriend.size ? 1 : -1
-      );
+      }
+      return this.users;
     },
     selectedUserIndex: {
       get() {
@@ -89,7 +86,9 @@ export default {
       const multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
       if (isModeOrgaToTache) {
         this.$accessor.assignment.setSelectedUser(selectedUser);
-        await this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
+        await this.$accessor.assignment.getAvailableTimespansForUser(
+          selectedUser
+        );
         await this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
       } else {
         if (selectedUser && multipleSolidTask.length > 0) {

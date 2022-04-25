@@ -13,19 +13,29 @@
         {{ new Date(item.end).toLocaleString() }}
       </template>
       <template #[`item.required`]="{ item }">
-        <div v-for="user in item.required" :key="user">
-          {{ mapUser(user) }}
+        <div>
+          {{ mapUser(item.required) }}
           <br />
         </div>
       </template>
       <template #[`item.assigned`]="{ item }">
-        <div v-for="user in item.assigned" :key="user">
-          {{ mapUser(user) }}
+        <div>
+          {{ mapUser(item.assigned) }}
           <br />
         </div>
       </template>
       <template #[`item.FTID`]="{ item }">
         <a :href="`/ft/${item.FTID}`">{{ item.FTID }}</a>
+      </template>
+      <template #[`item.action`]="{ item }">
+        <v-btn
+          @click="deleteTimespan(item)"
+          color="red"
+          dark
+          icon
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -37,6 +47,7 @@ import { Header } from "~/utils/models/Data";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import UserRepo from "~/repositories/userRepo";
 import { safeCall } from "../utils/api/calls";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 
 interface Data {
   headers: Header[];
@@ -58,6 +69,7 @@ export default Vue.extend({
         { text: "Requis", value: "required" },
         { text: "Assigné", value: "assigned" },
         { text: "FT", value: "FTID", width: "5%" },
+        { text: "Action", value: "action", width: "5%", sortable: false }
       ],
       timeSpans: [],
       users: [],
@@ -105,7 +117,8 @@ export default Vue.extend({
           }
           return acc;
         }, []);
-        this.timeSpans = grouped;
+        console.log(res.data)
+        this.timeSpans = res.data;
       }
     },
     async getAllUsers() {
@@ -127,6 +140,10 @@ export default Vue.extend({
       const user = this.users.find((u) => u._id == userId);
       return user ? user.username : "";
     },
+    deleteTimespan(item: TimeSpan) {
+      this.$accessor.assignment.deleteTimespan(item);
+      this.timeSpans.splice(this.timeSpans.indexOf(item), 1);
+    }
   },
 });
 </script>

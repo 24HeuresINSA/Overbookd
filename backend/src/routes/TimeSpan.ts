@@ -1,9 +1,11 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
-import User, { IUser } from "@entities/User";
+import FTModel from "@entities/FT";
+import { IComment } from "@entities/FA";
+import User, {IUser} from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
-import {Types, Document} from "mongoose";
+import {Document, Types} from "mongoose";
 import {dateRangeOverlaps, isTimespanCovered} from "../services/conflict";
 import logger from "@shared/Logger";
 
@@ -73,6 +75,17 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
+    });
+  }
+  const user = await User.findById(req.params.userId);
+  if (!user) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "User not found",
+    });
+  }
+  if (!await canUserBeAssignedToTimespan(user, timespan)){
+    return res.status(StatusCodes.CONFLICT).json({
+      message: "User already assigned to timespan",
     });
   }
   let oneAssigned = false;
@@ -214,7 +227,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   const allUsers = await User.find({});
   //find all users who can be assigned to this timespan
 
-  let usersBool = await Promise.all(
+  const usersBool = await Promise.all(
     allUsers.map(async (user) => {
       if(!(await canUserBeAssignedToTimespan(user, timespan))) {
         return false;
@@ -363,4 +376,45 @@ export async function getRolesByFT(req: Request, res: Response) {
     }
   }
   return res.json(ret);
+}
+
+
+export async function deleteTimespan(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+
+  //find ft linked to timespan
+  const ft = await FTModel.find({count: timespan.FTID});
+  if (!ft) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "FT not found",
+    });
+  }
+
+  const comment: IComment = {
+    time: new Date(),
+    topic: "timespan",
+    validator: res.locals.auth_user.firstname + " " + res.locals.auth_user.lastname,
+    text: `Suppression du creneau ${timespan.start.toISOString()} - ${timespan.end.toISOString()} - ${timespan.required}`,
+  }
+  ft[0].comments.push(comment);
+
+  try{
+    await ft[0].save();
+  }
+  catch(e) {
+    console.log(e)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error while saving FT",
+    });
+  }
+
+  await timespan.remove();
+  return res.json({
+    message: "TimeSpan deleted",
+  });
 }
