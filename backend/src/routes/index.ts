@@ -47,6 +47,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
+import * as PlanningHandlers from "./Planning";
 import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -55,6 +56,14 @@ const multer = require("multer");
 function ping(req: Request, res: Response) {
   return res.send("pong");
 }
+
+//planning route
+const planningRouter = Router();
+planningRouter.post(
+  "/create/:userID",
+  authMiddleware.protect(),
+  PlanningHandlers.createPlanning
+);
 
 // User-route
 const userRouter = Router();
