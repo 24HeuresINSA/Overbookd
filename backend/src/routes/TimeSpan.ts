@@ -1,6 +1,6 @@
-import {Request, Response} from "express";
-import TimeSpan from "@entities/TimeSpan";
-import User, {IUser} from "@entities/User";
+import { Request, Response } from "express";
+import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
+import User, { IUser } from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
 import {Types, Document} from "mongoose";
@@ -213,12 +213,31 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   });
   const allUsers = await User.find({});
   //find all users who can be assigned to this timespan
-  let users = allUsers.filter((user) => {
+
+  let usersBool = await Promise.all(
+    allUsers.map(async (user) => {
+      if(!(await canUserBeAssignedToTimespan(user, timespan))) {
+        return false;
+      }
+      return true;
+    })
+  );
+
+
+  
+  let users = allUsers.filter((user, index) => {
+    if(!usersBool[index]) {
+      console.log(user.firstname, index, usersBool[index]);
+      return false;
+    }
+
     for (const ts of twinTimespan) {
       if (ts.assigned && ts.assigned.toString() === user._id.toString()) {
         return false;
       }
     }
+
+
     if (timespan.required && timespan.required === "soft") return true;
     if (
       timespan.required &&
@@ -250,6 +269,28 @@ async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
       arr.map(async (item) => ((await callback(item)) ? item : fail))
     )
   ).filter((i) => i !== fail);
+}
+
+async function canUserBeAssignedToTimespan(
+  user: IUser,
+  timespan: ITimeSpan
+): Promise<boolean> {
+  const userTimespans = await TimeSpan.find({
+    assigned: user._id,
+  });
+  for (const userTS of userTimespans) {
+    if (
+      dateRangeOverlaps(
+        userTS.start.getTime(),
+        userTS.end.getTime(),
+        timespan.start.getTime(),
+        timespan.end.getTime()
+      )
+    ) {
+      return false;
+    }
+  }
+  return  true;
 }
 
 export async function getUsersAffectedToTimespan(req: Request, res: Response) {
