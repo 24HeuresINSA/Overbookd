@@ -1,10 +1,9 @@
 /**
  * slice a timeframe into a time span
  */
-import { ITFRequired, ITimeFrame } from "@entities/FT";
-import { ITimeSpan } from "@entities/TimeSpan";
+import {ITFRequired, ITimeFrame} from "@entities/FT";
+import {ITimeSpan} from "@entities/TimeSpan";
 import logger from "@shared/Logger";
-import { Types } from "mongoose";
 
 export async function timeframeToTimeSpan(
   timeframe: ITimeFrame,
@@ -36,7 +35,6 @@ export async function timeframeToTimeSpan(
           required: null,
           FTID,
         } as ITimeSpan;
-        // timeSpans.push(mTimeSpan);
         timeframe.required.forEach((r: ITFRequired) => {
           switch (r.type) {
             case "user":
@@ -47,7 +45,7 @@ export async function timeframeToTimeSpan(
               });
               break;
             case "team":
-              for (let i = 0; i <= r.amount; i++) {
+              for (let i = 0; i < r.amount; i++) {
                 timeSpans.push({
                   ...mTimeSpan,
                   required: r.team,

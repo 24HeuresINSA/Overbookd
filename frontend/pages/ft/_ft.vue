@@ -200,15 +200,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Snack } from "~/utils/models/snack";
-import { Header } from "~/utils/models/Data";
-import { User } from "~/utils/models/repo";
+import {Snack} from "~/utils/models/snack";
+import {Header} from "~/utils/models/Data";
+import {User} from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
 import FormCard from "~/components/organisms/form/FormCard.vue";
-import { FT, SmallTypes } from "~/utils/models/FT";
+import {FT, SmallTypes} from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 
 interface Data {
@@ -339,8 +339,9 @@ export default Vue.extend({
       // Check for slicing
       this.$accessor.FT.timeframes.forEach((tf) => {
         if (tf.toSlice && tf.sliceTime) {
+
           if (
-            ((tf.end.getTime() - tf.start.getTime()) / (3600 * 1000)) %
+            (((new Date(tf.end)).getTime() - (new Date(tf.start)).getTime()) / (3600 * 1000)) %
               tf.sliceTime !=
             0
           ) {
