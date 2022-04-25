@@ -387,8 +387,8 @@ export async function deleteTimespan(req: Request, res: Response) {
   const comment: IComment = {
     time: new Date(),
     topic: "timespan",
-    validator: res.locals.auth_user.firstname,
-    text: `Suppression du creneau ${timespan.start.toLocaleDateString()} - ${timespan.end.toLocaleDateString()} - ${timespan.required}`,
+    validator: res.locals.auth_user.firstname + " " + res.locals.auth_user.lastname,
+    text: `Suppression du creneau ${timespan.start.toISOString()} - ${timespan.end.toISOString()} - ${timespan.required}`,
   }
   ft[0].comments.push(comment);
 
