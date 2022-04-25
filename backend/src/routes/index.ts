@@ -475,6 +475,7 @@ timespanRouter.post(
 
 // Export the base-router
 const baseRouter = Router();
+baseRouter.use("/planning", planningRouter);
 baseRouter.use("/user", userRouter);
 baseRouter.use("/config", configRouter);
 baseRouter.use("/FA", FArouter);
