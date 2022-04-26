@@ -23,7 +23,6 @@
     "@types/jwt-decode": "^3.1.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.8.3",
-    "docx": "^7.3.0",
     "file-saver": "^2.0.5",
     "fuse.js": "^6.4.6",
     "jwt-decode": "^3.1.2",

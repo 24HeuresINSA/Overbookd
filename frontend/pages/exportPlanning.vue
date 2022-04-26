@@ -49,7 +49,6 @@
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
-import { saveAs } from "file-saver";
 
 export default {
   data() {
@@ -67,16 +66,12 @@ export default {
       await planningRepo
         .createPlanning(this, this.selected_user._id)
         .then((res) => {
-          this.uniquePlanning = res.data.data;
+          this.uniquePlanning = res.data;
           this.planningLoaded = true;
         });
     },
     exportPlanning() {
       console.log(this.uniquePlanning);
-      const fileTest = new File([this.uniquePlanning], "planning.docx", {
-        type: "text/plain;charset=utf-8",
-      });
-      saveAs(fileTest);
     },
   },
 };
