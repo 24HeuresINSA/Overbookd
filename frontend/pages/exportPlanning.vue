@@ -49,6 +49,8 @@
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
+import jsPDF from "jspdf";
+import { saveAs } from "file-saver";
 
 export default {
   data() {
@@ -71,7 +73,8 @@ export default {
         });
     },
     exportPlanning() {
-      console.log(this.uniquePlanning);
+      const pdf = atob(this.uniquePlanning);
+      saveAs(new Blob([pdf], { type: "application/pdf" }), "planning.pdf");
     },
   },
 };
