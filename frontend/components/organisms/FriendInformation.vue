@@ -4,7 +4,10 @@
       <div style="padding: 4rem">
         <div class="d-flex w-full justify-between">
           <h3 class="mr-8">Compte :</h3>
-          <v-chip @click="$emit('assign-user', user._id)">
+          <v-chip
+            @click.left="$emit('assign-user', user._id)"
+            @click.right="calendar(user)"
+          >
             {{ user.firstname }} {{ user.lastname }}
           </v-chip>
         </div>
@@ -13,7 +16,8 @@
           <v-chip
             v-for="friend in user.availableFriend"
             :key="friend._id"
-            @click="$emit('assign-user', friend._id)"
+            @click.left="$emit('assign-user', friend._id)"
+            @click.right="calendar(friend)"
           >
             {{ friend.firstname }} {{ friend.lastname }}
           </v-chip>
@@ -44,6 +48,11 @@ export default {
       set: function (t) {
         this.$emit("update-toggle", t);
       },
+    },
+  },
+  methods: {
+    calendar(user) {
+      window.open(`/calendar/${user._id}`, "_blank");
     },
   },
 };

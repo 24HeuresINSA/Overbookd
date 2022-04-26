@@ -4,10 +4,13 @@
     <v-icon
       v-if="user.availableFriend && user.availableFriend.size > 0"
       small
-      class="icon pr-8"
+      class="icon pr-16"
       @click.stop="toggleFriendDialog"
     >
       mdi-account-group
+    </v-icon>
+    <v-icon small class="icon pr-8" @click.stop="calendar">
+      mdi-calendar
     </v-icon>
     <v-tooltip top>
       <template #activator="{ on, attrs }">
@@ -91,6 +94,9 @@ export default Vue.extend({
     },
     toggleFriendDialog(): any {
       this.isFriendDialogOpen = !this.isFriendDialogOpen;
+    },
+    calendar(): any {
+      window.open(`/calendar/${this.user._id}`, "_blank");
     },
   },
 });
