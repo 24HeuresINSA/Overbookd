@@ -47,31 +47,17 @@ export async function createPlanning(
         ],
       },
     ],
+    creator: "Overbookd",
+    description: "Planning_" + user?.firstname + "_" + user?.lastname,
+    title: "Planning_" + user?.firstname + "_" + user?.lastname,
   });
-  let exportDoc = "";
-  Packer.toBase64String(doc).then((data) => {
-    exportDoc = data;
-  });
-  if (exportDoc == "" || exportDoc == null) {
+  if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Error while creating planning",
+      message: "Error while creating doc",
     });
   } else {
-    // Check if planning already exist
-    const planning = await PlanningModel.findOne({ user_id: userID });
-    if (planning) {
-      //update planning
-      planning.plannning = exportDoc;
-      await planning.save();
-      return res.status(StatusCodes.OK).json(planning);
-    } else {
-      //Create new planning
-      const newPlanning = new PlanningModel({
-        user_id: userID,
-        planning: exportDoc,
-      });
-      await newPlanning.save();
-      return res.status(StatusCodes.OK).json(newPlanning);
-    }
+    Packer.toBuffer(doc).then((buffer) => {
+      return res.status(StatusCodes.OK).json(buffer);
+    });
   }
 }

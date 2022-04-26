@@ -23,8 +23,13 @@
         >
           Générer<v-icon right dark> mdi-cog </v-icon></v-btn
         >
-        <v-btn color="secondary" class="btn" :disabled="!planningLoaded"
-          >Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
+        <v-btn
+          color="secondary"
+          class="btn"
+          :disabled="!planningLoaded"
+          @click="exportPlanning"
+        >
+          Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
         >
         <v-btn color="primary" class="btn" :disabled="!planningLoaded"
           >Envoyer <v-icon right dark> mdi-email-fast </v-icon></v-btn
@@ -43,18 +48,36 @@
 </template>
 
 <script>
+import planningRepo from "~/repositories/planningRepo";
+import { saveAs } from "file-saver";
+
 export default {
   data() {
     return {
       selected_user: undefined,
       planningLoaded: false,
+      uniquePlanning: undefined,
     };
   },
   methods: {
     updateUser(value) {
       this.selected_user = value.value;
     },
-    generatePlanning() {},
+    async generatePlanning() {
+      await planningRepo
+        .createPlanning(this, this.selected_user._id)
+        .then((res) => {
+          this.uniquePlanning = res.data.data;
+          this.planningLoaded = true;
+        });
+    },
+    exportPlanning() {
+      console.log(this.uniquePlanning);
+      const fileTest = new File([this.uniquePlanning], "planning.docx", {
+        type: "text/plain;charset=utf-8",
+      });
+      saveAs(fileTest);
+    },
   },
 };
 </script>
