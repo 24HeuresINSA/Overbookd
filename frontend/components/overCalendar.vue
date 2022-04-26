@@ -42,10 +42,15 @@
         ></div>
       </template>
     </v-calendar>
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
+import { Snack } from "~/utils/models/snack";
+
 export default {
   name: "OverCalendar",
 
@@ -60,6 +65,8 @@ export default {
       extendOriginal: null,
       newEvent: undefined,
       centralDay: this.$accessor.config.getConfig("event_date"),
+      snack: new Snack(),
+
     };
   },
 
@@ -113,7 +120,10 @@ export default {
       if (isModeOrgaToTache) {
         this.popUp(event);
       } else {
-        this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
+        this.$accessor.assignment.filterAvailableUserForTimeSpan(event)
+        .then(() => {
+          this.snack.display("Utilisateur chargé ✅");
+        });
       }
     },
     startTime(tms) {

@@ -240,7 +240,6 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   
   let users = allUsers.filter((user, index) => {
     if(!usersBool[index]) {
-      console.log(user.firstname, index, usersBool[index]);
       return false;
     }
 
