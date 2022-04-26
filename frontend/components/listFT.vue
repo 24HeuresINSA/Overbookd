@@ -13,6 +13,7 @@
             v-for="(ft, index) in FTs"
             :key="index"
             @click="multipleSolidTask(ft)"
+            style="cursor: pointer"
           >
             <td>{{ ft.count + " - " + ft.general.name }}</td>
             <td>

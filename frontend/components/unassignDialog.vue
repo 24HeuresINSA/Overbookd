@@ -50,6 +50,8 @@
                 close
                 :key="user._id"
                 @click:close="unassign(user)"
+                @click.right="calendar(user)"
+                style="cursor: pointer"
               >
                 {{ user.firstname }} {{ user.lastname }}
               </v-chip>
@@ -90,6 +92,9 @@ export default {
     },
     closeDialog() {
       this.$emit("close-dialog");
+    },
+    calendar(user) {
+      window.open(`/calendar/${user._id}`, "_blank");
     },
   },
 };
