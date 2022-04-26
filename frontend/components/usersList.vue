@@ -18,7 +18,7 @@
       </template>
     </v-virtual-scroll>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-      <h3>{{ snack.feedbackMessage }}</h3>
+      <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
   </div>
 </template>
@@ -46,6 +46,7 @@ export default {
 
       height: window.innerHeight * 0.6,
       snack: new Snack(),
+      color: "transparent",
     };
   },
 
@@ -77,7 +78,8 @@ export default {
   },
 
   watch: {
-    async selectedUserIndex() {
+    selectedUserIndex() {
+      this.color = "transparent";
       const isModeOrgaToTache =
         this.$accessor.assignment.filters.isModeOrgaToTache;
       const selectedUser = this.users.find(
@@ -86,24 +88,32 @@ export default {
       const multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
       if (isModeOrgaToTache) {
         this.$accessor.assignment.setSelectedUser(selectedUser);
-        await this.$accessor.assignment.getAvailableTimespansForUser(
-          selectedUser
-        );
-        await this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
+        this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
+        this.$accessor.assignment
+          .getUserAssignedTimespans(selectedUser)
+          .then(() => {
+            this.snack.display("Planning chargé ✅");
+          });
       } else {
         if (selectedUser && multipleSolidTask.length > 0) {
           const ft = this.$accessor.assignment.FTs.find(
             (ft) => ft.count === this.$accessor.assignment.selectedTimeSpan.FTID
           );
           this.$accessor.assignment.setSelectedUser(selectedUser);
-          const res = await this.$accessor.assignment.assignUserToTimespan({
-            timespanID: selectedUser._id,
-            userID: this.$accessor.assignment.selectedTimeSpan._id,
-          });
-          if (res) {
-            this.snack.display("L'utilisateur a été assigné à la tâche");
-            await this.$accessor.assignment.setMultipleSolidTask(ft);
-          }
+          this.$accessor.assignment
+            .assignUserToTimespan({
+              timespanID: selectedUser._id,
+              userID: this.$accessor.assignment.selectedTimeSpan._id,
+            })
+            .then((res) => {
+              if (res) {
+                this.snack.display("L'utilisateur a été assigné à la tâche");
+                this.$accessor.assignment.setMultipleSolidTask(ft);
+              } else {
+                this.color = "red";
+                this.snack.display("Une erreur est survenue");
+              }
+            });
         }
       }
     },
