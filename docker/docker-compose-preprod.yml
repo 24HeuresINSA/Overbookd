@@ -22,10 +22,11 @@ services:
       GMAIL_PASS: ${PREPROD_OVERBOOKD_EMAIL_PASSWORD}
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.preprod-api.tls=true"
+      - "traefik.http.routers.preprod-api.tls.certresolver=le"
       - "traefik.http.routers.preprod-api.entrypoints=websecure"
       - "traefik.http.services.preprod-api.loadbalancer.server.port=2424"
       - "traefik.http.routers.preprod-api.rule=(Host(`preprod.overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
-      - "traefik.http.routers.preprod-api.tls=true"
       - "com.centurylinklabs.watchtower.enable=true"
 
   mongodb:
@@ -53,10 +54,11 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.preprod-front.tls=true"
+      - "traefik.http.routers.preprod-front.tls.certresolver=le"
       - "traefik.http.routers.preprod-front.entrypoints=websecure"
       - "traefik.http.services.preprod-front.loadbalancer.server.port=1234"
       - "traefik.http.routers.preprod-front.rule=Host(`preprod.overbookd.${DOMAIN}`)"
-      - "traefik.http.routers.preprod-front.tls=true"
       - "com.centurylinklabs.watchtower.enable=true"
 
   # doc:

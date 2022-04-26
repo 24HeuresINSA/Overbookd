@@ -22,10 +22,11 @@ services:
       GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=le"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.services.api.loadbalancer.server.port=2424"
       - "traefik.http.routers.api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
-      - "traefik.http.routers.api.tls=true"
       - "com.centurylinklabs.watchtower.enable=true"
 
   mongodb:
@@ -51,10 +52,11 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.front.tls=true"
+      - "traefik.http.routers.front.tls.certresolver=le"
       - "traefik.http.routers.front.entrypoints=websecure"
       - "traefik.http.services.front.loadbalancer.server.port=1234"
       - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
-      - "traefik.http.routers.front.tls=true"
       - "com.centurylinklabs.watchtower.enable=true"
 
   # doc:
