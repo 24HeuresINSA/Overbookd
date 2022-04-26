@@ -288,7 +288,6 @@ export default {
   },
 
   async mounted() {
-    console.log(this.me);
     this.teams = this.$accessor.config.data.data
       .find((e) => e.key === "teams")
       .value.map((e) => e.name);

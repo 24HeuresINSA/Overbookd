@@ -35,11 +35,11 @@
             </template>
           </v-combobox>
           <v-btn-toggle
-              @change="updateFilter('driverLicense', $event)"
-              tile
-              style="flex-direction: column"
-              color="deep-purple accent-3"
-              group
+            tile
+            style="flex-direction: column"
+            color="deep-purple accent-3"
+            group
+            @change="updateFilter('driverLicense', $event)"
           >
             <v-btn x-small :value="true">Permis</v-btn>
             <v-btn x-small :value="false">Pas de permis</v-btn>
@@ -57,7 +57,7 @@
 
 <script>
 import UsersList from "./usersList";
-import {getConfig} from "../common/role";
+import { getConfig } from "../common/role";
 import FriendsDisplay from "./molecules/friendsDisplay.vue";
 
 export default {
