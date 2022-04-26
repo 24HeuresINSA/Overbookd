@@ -78,7 +78,13 @@ export default {
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
         if (multipleSolidTask.length > 0) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.centralDay = multipleSolidTask[0].start;
+          if(new Date(this.centralDay) < multipleSolidTask[0].start) {
+            this.centralDay = multipleSolidTask[0].start;
+          }
+          if(new Date(this.centralDay) > multipleSolidTask[multipleSolidTask.length - 1].end) {
+            this.centralDay = multipleSolidTask[multipleSolidTask.length - 1].end;
+          }
+          
           multipleSolidTask.forEach((task) => {
             task["color"] = this.getDisplayColor(task);
             events.push(task);
@@ -113,17 +119,18 @@ export default {
       this.$emit("open-unassign-dialog");
     },
     // calendar drag and drop
-    startDrag({ event }) {
+    async startDrag({ event }) {
       const isModeOrgaToTache =
         this.$accessor.assignment.filters.isModeOrgaToTache;
-      this.$accessor.assignment.selectTimeSpan(event);
+      await this.$accessor.assignment.selectTimeSpan(event);
       if (isModeOrgaToTache) {
         this.popUp(event);
       } else {
+        this.centralDay = new Date(this.$accessor.assignment.selectedTimeSpan.start);
         this.$accessor.assignment.filterAvailableUserForTimeSpan(event)
-        .then(() => {
-          this.snack.display("Utilisateur chargé ✅");
-        });
+          .then(() => {
+            this.snack.display("Utilisateur chargé ✅");
+          });
       }
     },
     startTime(tms) {
