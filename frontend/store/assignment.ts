@@ -22,6 +22,7 @@ declare interface filter {
     team: string[];
   };
   isModeOrgaToTache: boolean;
+  bypass: boolean
 }
 
 export const state = () => ({
@@ -42,6 +43,7 @@ export const state = () => ({
       team: [] as string[],
     },
     isModeOrgaToTache: false,
+    bypass: false
   } as filter,
   selectedUser: {} as User, // selected User from the list
   selectedTimeSpan: {} as TimeSpan, // Selected TimeSpan from the calendar
@@ -157,6 +159,9 @@ export const mutations = mutationTree(state, {
       (ts: TimeSpan) => ts._id === data._id
     );
     state.timespans.splice(timeSpanIndex, 1);
+  },
+  TOGGLE_BYPASS(state: any) {
+    state.filters.bypass = !state.filters.bypass;
   }
 });
 
@@ -458,10 +463,10 @@ export const actions = actionTree(
       }
     },
 
-    async filterAvailableUserForTimeSpan({ commit }: any, timeSpan: TimeSpan) {
+    async filterAvailableUserForTimeSpan({ commit, state }: any, timeSpan: TimeSpan) {
       const usersData = await safeCall(
         this,
-        TimeSpanRepo.getAvailableUserForTimeSpan(this, timeSpan._id)
+        TimeSpanRepo.getAvailableUserForTimeSpan(this, timeSpan._id, state.filters.bypass)
       );
       if (usersData) {
         commit("SET_USERS", usersData.data);
@@ -489,6 +494,10 @@ export const actions = actionTree(
         commit("DELETE_TIMESPAN", timeSpan);
       }
       return res;
+    },
+
+    toggleBypass({ commit }: any) {
+      commit("TOGGLE_BYPASS");
     }
   }
 );

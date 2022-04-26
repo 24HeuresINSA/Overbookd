@@ -49,6 +49,10 @@
         <div class="content">
           <UsersList :users="filteredUsers" class="userList"></UsersList>
           <FriendsDisplay class="friendsDisplay" />
+          <v-switch
+            label="Bypass les roles (TACHE-ORGA ONLY)"
+            @change="toggleBypass()"
+          ></v-switch>
         </div>
       </v-card-text>
     </v-card>
@@ -96,6 +100,10 @@ export default {
 
     getConfig(key) {
       return getConfig(this, key);
+    },
+
+    toggleBypass() {
+      this.$accessor.assignment.toggleBypass();
     },
   },
 };

@@ -26,9 +26,9 @@ export default {
   getUserAssignedToSameTimespan(context: Context, timespanId: string) {
     return context.$axios.get(`${resource}/user/affected/${timespanId}`);
   },
-  getAvailableUserForTimeSpan(context: Context, timespanId: string) {
+  getAvailableUserForTimeSpan(context: Context, timespanId: string, bypass: boolean = false) {
     return context.$axios.get(
-      `${resource}/availableUserByTimespan/${timespanId}`
+      `${resource}/availableUserByTimespan/${timespanId}?bypass=${bypass}`
     );
   },
   getTotalNumberOfTimespansAndAssignedTimespansByFTID(
