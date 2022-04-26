@@ -1,9 +1,13 @@
 <template>
   <div>
-    <div class="w-full d-flex justify-center">
-      <h1 v-if="user !== undefined">
-        {{ user.firstname }} {{ user.lastname }}
-      </h1>
+    <div
+      v-if="user !== undefined"
+      class="w-full d-flex justify-center align-center"
+    >
+      <h1>{{ user.firstname }} {{ user.lastname }}</h1>
+      <div class="ml-2">
+        <OverChips :roles="user.team"></OverChips>
+      </div>
     </div>
     <v-sheet tile height="54" class="d-flex">
       <v-btn icon class="ma-2" @click="$refs.FormCalendar.prev()">
@@ -29,17 +33,17 @@
       </template>
       <template #interval="{ date, time }">
         <div
-            v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
-            style="
+          v-if="isUserAvailableInTimeframe(new Date(date + ' ' + time))"
+          style="
             background-color: rgba(95, 219, 72, 0.45);
             height: 100%;
             width: 100%;
           "
-        ></div> </template
-      ></v-calendar>
+        ></div>
+      </template>
     </v-calendar>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-    {{ snack.feedbackMessage }}
+      {{ snack.feedbackMessage }}
     </v-snackbar>
   </div>
 </template>
@@ -47,9 +51,13 @@
 <script>
 import { RepoFactory } from "~/repositories/repoFactory";
 import { Snack } from "~/utils/models/snack";
+import OverChips from "~/components/atoms/overChips";
 
 export default {
   name: "Calendar",
+  components: {
+    OverChips,
+  },
   data: function () {
     return {
       userId: this.$route.params.calendar,
@@ -80,7 +88,6 @@ export default {
       });
       this.snack.display("Planning chargé ✅");
     });
-
   },
   methods: {
     getFormattedDate(date) {
@@ -121,8 +128,8 @@ export default {
             let start = new Date(slot.timeFrame.start);
             let end = new Date(slot.timeFrame.end);
             if (
-                start.getTime() <= timeframe.getTime() + 5000 &&
-                end.getTime() >= timeframe.getTime() + 5000
+              start.getTime() <= timeframe.getTime() + 5000 &&
+              end.getTime() >= timeframe.getTime() + 5000
             ) {
               isUserAvailableInTimeframe = true;
             }
