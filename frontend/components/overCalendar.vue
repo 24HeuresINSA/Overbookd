@@ -27,7 +27,7 @@
       @mousemove:time="mouseMove"
     >
       <template #event="{ event }">
-        <div class="text-wrap">
+        <div class="text-wrap" @click.right="popUp(event)" @contextmenu.prevent>
           <h3>{{ event.FTName }}</h3>
         </div>
       </template>
@@ -101,14 +101,17 @@ export default {
     },
   },
   methods: {
+    popUp(event) {
+      this.$accessor.assignment.getUserAssignedToSameTimespan(event);
+      this.$emit("open-unassign-dialog");
+    },
     // calendar drag and drop
     startDrag({ event }) {
       const isModeOrgaToTache =
         this.$accessor.assignment.filters.isModeOrgaToTache;
       this.$accessor.assignment.selectTimeSpan(event);
       if (isModeOrgaToTache) {
-        this.$accessor.assignment.getUserAssignedToSameTimespan(event);
-        this.$emit("open-unassign-dialog");
+        this.popUp(event);
       } else {
         this.$accessor.assignment.filterAvailableUserForTimeSpan(event);
       }
@@ -161,13 +164,6 @@ export default {
         tms.minute
       ).getTime();
     },
-
-    getStupidAmericanTimeFormat(date) {
-      date = new Date(date);
-      return `${date.getFullYear()}-${
-        date.getMonth() + 1
-      }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
-    },
     isUserAvailableInTimeframe(timeframe) {
       if (!this.mode) {
         // timeframe date object
@@ -202,11 +198,11 @@ export default {
     },
     getDisplayColor(timespan) {
       if (timespan.required === "soft") {
-        return "rgba(0,255,0,0.75)";
+        return "rgb(42,157,143,0.5)";
       } else if (timespan.required === "hard") {
-        return "rgba(200,0,125,0.75)";
+        return "rgb(38,70,83,0.5)";
       } else if (timespan.required === "confiance") {
-        return "rgba(0,0,255,0.75)";
+        return "rgba(209,105,224,0.5)";
       }
     },
     customClass(mode) {
@@ -229,12 +225,14 @@ export default {
   display: flex;
   align-items: center;
   margin: auto;
+
   p {
     margin-right: 1vh;
     margin-top: 1.3vh;
     font-weight: 400;
     color: rgb(190, 190, 190);
   }
+
   .selected {
     color: rgb(0, 255, 0);
   }

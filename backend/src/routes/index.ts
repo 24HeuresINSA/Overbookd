@@ -472,7 +472,12 @@ timespanRouter.post(
   authMiddleware.protect(),
   TimeSpanHandlers.unassignUserFromTimeSpan
 );
-
+timespanRouter.delete(
+  "/:id",
+  authMiddleware.protect(),
+  authMiddleware.verifyRoles("humain"),
+  TimeSpanHandlers.deleteTimespan
+)
 // Export the base-router
 const baseRouter = Router();
 baseRouter.use("/planning", planningRouter);

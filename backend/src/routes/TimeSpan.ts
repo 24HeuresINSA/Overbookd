@@ -1,10 +1,12 @@
-import { Request, Response } from "express";
-import TimeSpan from "@entities/TimeSpan";
-import User, { IUser } from "@entities/User";
+import {Request, Response} from "express";
+import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
+import FTModel from "@entities/FT";
+import { IComment } from "@entities/FA";
+import User, {IUser} from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
-import { Types, Document } from "mongoose";
-import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
+import {Document, Types} from "mongoose";
+import {dateRangeOverlaps, isTimespanCovered} from "../services/conflict";
 import logger from "@shared/Logger";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
@@ -24,7 +26,7 @@ export async function getTimeSpanById(req: Request, res: Response) {
 
 //get timespan where assigned is userid
 export async function getTimeSpanByAssigned(req: Request, res: Response) {
-  const timespan = await TimeSpan.find({ assigned: req.params.id });
+  const timespan = await TimeSpan.find({assigned: req.params.id});
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -73,6 +75,17 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
+    });
+  }
+  const user = await User.findById(req.params.userId);
+  if (!user) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "User not found",
+    });
+  }
+  if (!await canUserBeAssignedToTimespan(user, timespan)){
+    return res.status(StatusCodes.CONFLICT).json({
+      message: "User already assigned to timespan",
     });
   }
   let oneAssigned = false;
@@ -136,7 +149,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   }
   //fetch user timeslot
   const userAvailabilities = await TimeslotModel.find({
-    _id: { $in: user.availabilities },
+    _id: {$in: user.availabilities},
   }).lean();
 
   let availableTimespans = timespans.filter(
@@ -213,12 +226,31 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   });
   const allUsers = await User.find({});
   //find all users who can be assigned to this timespan
-  let users = allUsers.filter((user) => {
+
+  const usersBool = await Promise.all(
+    allUsers.map(async (user) => {
+      if(!(await canUserBeAssignedToTimespan(user, timespan))) {
+        return false;
+      }
+      return true;
+    })
+  );
+
+
+  
+  let users = allUsers.filter((user, index) => {
+    if(!usersBool[index]) {
+      console.log(user.firstname, index, usersBool[index]);
+      return false;
+    }
+
     for (const ts of twinTimespan) {
       if (ts.assigned && ts.assigned.toString() === user._id.toString()) {
         return false;
       }
     }
+
+
     if (timespan.required && timespan.required === "soft") return true;
     if (
       timespan.required &&
@@ -235,12 +267,13 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   users = (await filter(users, async (user: IUser) => {
     //fetch user timeslot
     const userAvailabilities = await TimeslotModel.find({
-      _id: { $in: user.availabilities },
+      _id: {$in: user.availabilities},
     }).lean();
     return isTimespanCovered(timespan, userAvailabilities);
   })) as (IUser & Document<any, any, IUser>)[];
   return res.json(users);
 }
+
 //helper function for the one just above
 async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
   const fail = Symbol();
@@ -251,6 +284,28 @@ async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
   ).filter((i) => i !== fail);
 }
 
+async function canUserBeAssignedToTimespan(
+  user: IUser,
+  timespan: ITimeSpan
+): Promise<boolean> {
+  const userTimespans = await TimeSpan.find({
+    assigned: user._id,
+  });
+  for (const userTS of userTimespans) {
+    if (
+      dateRangeOverlaps(
+        userTS.start.getTime(),
+        userTS.end.getTime(),
+        timespan.start.getTime(),
+        timespan.end.getTime()
+      )
+    ) {
+      return false;
+    }
+  }
+  return  true;
+}
+
 export async function getUsersAffectedToTimespan(req: Request, res: Response) {
   const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
@@ -258,6 +313,7 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
+
   const twinTimespan = await TimeSpan.find({
     start: timespan.start,
     end: timespan.end,
@@ -280,6 +336,7 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       _id: user._id,
       firstname: user.firstname,
       lastname: user.lastname,
+      timespanId: twinTimespan.filter((element) => element.assigned == user._id)[0]._id
     }))
   );
 }
@@ -289,11 +346,11 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
   res: Response
 ) {
   logger.info(`count for ft id ${req.params.FTID}`);
-  const timespans = await TimeSpan.find({ FTID: parseInt(req.params.FTID) });
+  const timespans = await TimeSpan.find({FTID: parseInt(req.params.FTID)});
   const ret = {} as { [key: string]: { total: number; assigned: number } };
   for (const ts of timespans) {
     if (!ret[ts._id.toString()]) {
-      ret[ts._id.toString()] = { total: 0, assigned: 0 };
+      ret[ts._id.toString()] = {total: 0, assigned: 0};
     }
     ret[ts._id.toString()].total++;
     if (ts.assigned) ret[ts._id.toString()].assigned++;
@@ -319,4 +376,45 @@ export async function getRolesByFT(req: Request, res: Response) {
     }
   }
   return res.json(ret);
+}
+
+
+export async function deleteTimespan(req: Request, res: Response) {
+  const timespan = await TimeSpan.findById(req.params.id);
+  if (!timespan) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "TimeSpan not found",
+    });
+  }
+
+  //find ft linked to timespan
+  const ft = await FTModel.find({count: timespan.FTID});
+  if (!ft) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "FT not found",
+    });
+  }
+
+  const comment: IComment = {
+    time: new Date(),
+    topic: "timespan",
+    validator: res.locals.auth_user.firstname + " " + res.locals.auth_user.lastname,
+    text: `Suppression du creneau ${timespan.start.toISOString()} - ${timespan.end.toISOString()} - ${timespan.required}`,
+  }
+  ft[0].comments.push(comment);
+
+  try{
+    await ft[0].save();
+  }
+  catch(e) {
+    console.log(e)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error while saving FT",
+    });
+  }
+
+  await timespan.remove();
+  return res.json({
+    message: "TimeSpan deleted",
+  });
 }

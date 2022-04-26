@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- list of  filtered users -->
-    <v-virtual-scroll :items="users" :height="height" item-height="60">
+    <v-virtual-scroll :items="list" :height="height" item-height="60">
       <template #default="{ item }">
         <v-list-item-group v-model="selectedUserIndex">
           <v-list-item
@@ -9,7 +9,10 @@
             :value="item._id"
             @click="selectedUserIndex = item._id"
           >
-            <UserResume :user="item"></UserResume>
+            <UserResume
+              :user="item"
+              @assign-user="(friend) => (selectedUserIndex = friend)"
+            />
           </v-list-item>
         </v-list-item-group>
       </template>
@@ -47,6 +50,22 @@ export default {
   },
 
   computed: {
+    list() {
+      const isModeOrgaToTache =
+        this.$accessor.assignment.filters.isModeOrgaToTache;
+      if (!isModeOrgaToTache) {
+        this.users.forEach((element) => {
+          element.availableFriend = new Set();
+          element.friends.forEach((friend) => {
+            let findUser = this.users.filter((i) => i._id === friend.id);
+            if (findUser.length > 0) {
+              element.availableFriend.add(findUser[0]);
+            }
+          });
+        });
+      }
+      return this.users;
+    },
     selectedUserIndex: {
       get() {
         return this.$accessor.assignment.selectedUserIndex;
@@ -58,7 +77,7 @@ export default {
   },
 
   watch: {
-    selectedUserIndex() {
+    async selectedUserIndex() {
       const isModeOrgaToTache =
         this.$accessor.assignment.filters.isModeOrgaToTache;
       const selectedUser = this.users.find(
@@ -67,21 +86,23 @@ export default {
       const multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
       if (isModeOrgaToTache) {
         this.$accessor.assignment.setSelectedUser(selectedUser);
-        this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
-        this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
+        await this.$accessor.assignment.getAvailableTimespansForUser(
+          selectedUser
+        );
+        await this.$accessor.assignment.getUserAssignedTimespans(selectedUser);
       } else {
         if (selectedUser && multipleSolidTask.length > 0) {
           const ft = this.$accessor.assignment.FTs.find(
             (ft) => ft.count === this.$accessor.assignment.selectedTimeSpan.FTID
           );
           this.$accessor.assignment.setSelectedUser(selectedUser);
-          const res = this.$accessor.assignment.assignUserToTimespan({
+          const res = await this.$accessor.assignment.assignUserToTimespan({
             timespanID: selectedUser._id,
             userID: this.$accessor.assignment.selectedTimeSpan._id,
           });
           if (res) {
             this.snack.display("L'utilisateur a été assigné à la tâche");
-            this.$accessor.assignment.setMultipleSolidTask(ft);
+            await this.$accessor.assignment.setMultipleSolidTask(ft);
           }
         }
       }

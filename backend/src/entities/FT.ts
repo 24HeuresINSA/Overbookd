@@ -70,7 +70,7 @@ const TimeFrameSchema = new Schema<ITimeFrame>({
 
 const CommentSchema = new Schema<IComment>({
   topic: { type: String, required: true },
-  text: { type: String, required: true },
+  text: { type: String, default: "" },
   time: { type: Date, required: true },
   validator: { type: String, required: true },
 });

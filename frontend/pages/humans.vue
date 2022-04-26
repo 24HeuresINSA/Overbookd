@@ -384,7 +384,7 @@ export default {
     },
     getCP(item) {
       if (item.team) {
-        if (item.team.includes("hard")) {
+        if (item.team.includes("hard") || item.team.includes("vieux")) {
           return (item.balance || 0).toFixed(2) + " €";
         } else {
           return undefined;

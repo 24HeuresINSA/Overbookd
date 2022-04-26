@@ -1,6 +1,14 @@
 <template>
   <div class="card">
     {{ user.firstname }} {{ user.lastname }} | {{ user.charisma }}
+    <v-icon
+      v-if="user.availableFriend && user.availableFriend.size > 0"
+      small
+      class="icon pr-8"
+      @click.stop="toggleFriendDialog"
+    >
+      mdi-account-group
+    </v-icon>
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <v-icon
@@ -17,13 +25,18 @@
       <span>{{ user.comment }}</span>
     </v-tooltip>
     <br />
-    <MiniUserBadge v-for="team of getCleanTeam" :key="team" :team="team">
-    </MiniUserBadge>
+    <MiniUserBadge v-for="team of getCleanTeam" :key="team" :team="team" />
     <UserInformation
       :user="user"
       :toggle="isUserDialogOpen"
       @update-toggle="(t) => (isUserDialogOpen = t)"
-    ></UserInformation>
+    />
+    <FriendInformation
+      :user="user"
+      :toggle="isFriendDialogOpen"
+      @update-toggle="(t) => (isFriendDialogOpen = t)"
+      @assign-user="(friend) => $emit('assign-user', friend)"
+    />
   </div>
 </template>
 
@@ -32,10 +45,11 @@ import Vue, { PropType } from "vue";
 import { User } from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
+import FriendInformation from "~/components/organisms/FriendInformation.vue";
 
 export default Vue.extend({
   name: "UserResume",
-  components: { UserInformation, MiniUserBadge },
+  components: { UserInformation, MiniUserBadge, FriendInformation },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -45,6 +59,7 @@ export default Vue.extend({
   data() {
     return {
       isUserDialogOpen: false,
+      isFriendDialogOpen: false,
     };
   },
   computed: {
@@ -74,6 +89,9 @@ export default Vue.extend({
     toggleUserDialog(): any {
       this.isUserDialogOpen = !this.isUserDialogOpen;
     },
+    toggleFriendDialog(): any {
+      this.isFriendDialogOpen = !this.isFriendDialogOpen;
+    },
   },
 });
 </script>
@@ -85,6 +103,7 @@ export default Vue.extend({
   overflow: hidden;
   position: relative !important;
 }
+
 .role {
   display: inline-block;
   text-align: center;

@@ -1,11 +1,11 @@
-import {actionTree, getterTree, mutationTree} from "typed-vuex";
-import {safeCall} from "~/utils/api/calls";
-import {RepoFactory} from "~/repositories/repoFactory";
-import {User} from "~/utils/models/repo";
-import {FT} from "~/utils/models/FT";
-import {FA} from "~/utils/models/FA";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { User } from "~/utils/models/repo";
+import { FT } from "~/utils/models/FT";
+import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import {TimeSpan} from "~/utils/models/TimeSpan";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -58,6 +58,7 @@ export const state = () => ({
     _id: string;
     firstname: string;
     lastname: string;
+    timespanId: string;
   }[],
 });
 
@@ -151,6 +152,12 @@ export const mutations = mutationTree(state, {
       return 0;
     });
   },
+  DELETE_TIMESPAN(state: any, data: TimeSpan) {
+    const timeSpanIndex = state.timespans.findIndex(
+      (ts: TimeSpan) => ts._id === data._id
+    );
+    state.timespans.splice(timeSpanIndex, 1);
+  }
 });
 
 export const actions = actionTree(
@@ -343,7 +350,7 @@ export const actions = actionTree(
       } else {
         commit("SET_SELECTED_USER", {});
       }
-    },
+    },  
     async setFTTeamFilter({ commit, state }: any, data: string) {
       if (state.filters.FT.team.includes(data)) {
         commit("REMOVE_TEAM_FROM_FT_FILTER", data);
@@ -472,6 +479,17 @@ export const actions = actionTree(
       }
       return res;
     },
+
+    async deleteTimespan({ commit }: any, timeSpan: TimeSpan) {
+      const res = await safeCall(
+        this,
+        TimeSpanRepo.deleteTimespan(this, timeSpan._id)
+      );
+      if (res) {
+        commit("DELETE_TIMESPAN", timeSpan);
+      }
+      return res;
+    }
   }
 );
 
@@ -514,9 +532,9 @@ export const getters = getterTree(state, {
       });
     }
 
-    if (user.driverLicense){
-        users = users.filter((user: User) => user.hasDriverLicense);
-    } else if (user.driverLicense === false){
+    if (user.driverLicense) {
+      users = users.filter((user: User) => user.hasDriverLicense);
+    } else if (user.driverLicense === false) {
       users = users.filter((user: User) => !user.hasDriverLicense);
     }
     return users;
@@ -565,8 +583,29 @@ export const getters = getterTree(state, {
   },
 
   availableTimeSpans: (state: any) => {
-    //TODO: filter with future timespans filter
-    return state.timespans;
+    const FTFilters = state.filters.FT;
+    let filteredTimespans: any = state.timespans;
+    if(FTFilters.team.length > 0){
+      filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
+        if(!FTFilters.team.includes(ts.required)){
+          return false;
+        }
+        return true;
+      });
+    }
+
+    if (FTFilters.search && FTFilters.search.length > 0) {
+      const options = { 
+        // Search in `author` and in `tags` array
+        keys: ["FTID", "FTName"],
+
+        threshold: 0.2,
+      };
+      const fuse = new Fuse(filteredTimespans, options);
+      filteredTimespans = fuse.search(FTFilters.search).map((e) => e.item);
+    }
+
+    return filteredTimespans;
   },
 });
 
