@@ -341,9 +341,23 @@ export async function myPlanning(req: Request, res: Response) {
 export async function getOrgaRequis(req: Request, res: Response) {
   const showFt = await ConfigModel.findOne({ key: "show_ft_in_planning" });
 
-  let FTs: Array<{ _id: string; userName: string; slots: any[] }> = [];
+  const users = await UserModel.find({});
+  let FTs: Array<{ _id: string; userName: string; slots: any[] }> = users
+    .map((user) => {
+      return {
+        // @ts-ignore
+        _id: user._id.toString(),
+        userName: user.firstname + " " + user.lastname,
+        slots: [],
+      };
+    })
+    .sort(
+      (a, b) =>
+        0 - (a.userName.toLowerCase() > b.userName.toLowerCase() ? -1 : 1)
+    );
+
   if (showFt && showFt.value) {
-    FTs = await FTModel.aggregate()
+    let matchFts: Array<{ _id: string; userName: string; slots: any[] }> = await FTModel.aggregate()
       .match({
         $and: [{ isValid: { $ne: false } }, { status: { $ne: "ready" } }],
       })
@@ -392,7 +406,7 @@ export async function getOrgaRequis(req: Request, res: Response) {
       .sort("userName");
 
     // As all the _id don't have the same type, we need to do AGAIN the group by
-    const grouped = FTs.reduce((acc, cur) => {
+    const grouped = matchFts.reduce((acc, cur) => {
       // @ts-ignore
       if (!acc[cur._id.toString()]) {
         // @ts-ignore
@@ -406,22 +420,14 @@ export async function getOrgaRequis(req: Request, res: Response) {
       acc[cur._id.toString()].slots.push(...cur.slots);
       return acc;
     }, {});
-    FTs = Object.values(grouped);
-  } else {
-    const users = await UserModel.find({});
-    FTs = users
-      .map((user) => {
-        return {
-          // @ts-ignore
-          _id: user._id.toString(),
-          userName: user.firstname + " " + user.lastname,
-          slots: [],
-        };
-      })
-      .sort(
-        (a, b) =>
-          0 - (a.userName.toLowerCase() > b.userName.toLowerCase() ? -1 : 1)
-      );
+    matchFts = Object.values(grouped);
+
+    FTs.forEach((ft) => {
+      const match = matchFts.find((m) => m._id === ft._id);
+      if (match) {
+        ft.slots.push(...match.slots);
+      }
+    });
   }
 
   const timespans = await TimeSpanModel.aggregate()
