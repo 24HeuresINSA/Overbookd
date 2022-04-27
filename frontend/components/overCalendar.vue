@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { Snack } from "~/utils/models/snack";
+import {Snack} from "~/utils/models/snack";
 
 export default {
   name: "OverCalendar",
@@ -66,7 +66,6 @@ export default {
       newEvent: undefined,
       centralDay: this.$accessor.config.getConfig("event_date"),
       snack: new Snack(),
-
     };
   },
 
@@ -78,13 +77,17 @@ export default {
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
         if (multipleSolidTask.length > 0) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          if(new Date(this.centralDay) < multipleSolidTask[0].start) {
+          if (new Date(this.centralDay) < multipleSolidTask[0].start) {
             this.centralDay = multipleSolidTask[0].start;
           }
-          if(new Date(this.centralDay) > multipleSolidTask[multipleSolidTask.length - 1].end) {
-            this.centralDay = multipleSolidTask[multipleSolidTask.length - 1].end;
+          if (
+            new Date(this.centralDay) >
+            multipleSolidTask[multipleSolidTask.length - 1].end
+          ) {
+            this.centralDay =
+              multipleSolidTask[multipleSolidTask.length - 1].end;
           }
-          
+
           multipleSolidTask.forEach((task) => {
             task["color"] = this.getDisplayColor(task);
             events.push(task);
@@ -104,8 +107,6 @@ export default {
     FTs() {
       return this.$accessor.assignment.FTs;
     },
-    // eslint-disable-next-line vue/return-in-computed-property
-    calendarFormattedEvents() {},
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
@@ -126,8 +127,11 @@ export default {
       if (isModeOrgaToTache) {
         this.popUp(event);
       } else {
-        this.centralDay = new Date(this.$accessor.assignment.selectedTimeSpan.start);
-        this.$accessor.assignment.filterAvailableUserForTimeSpan(event)
+        this.centralDay = new Date(
+          this.$accessor.assignment.selectedTimeSpan.start
+        );
+        this.$accessor.assignment
+          .filterAvailableUserForTimeSpan(event)
           .then(() => {
             this.snack.display("Utilisateur chargé ✅");
           });
@@ -214,12 +218,13 @@ export default {
       this.$accessor.assignment.initStore();
     },
     getDisplayColor(timespan) {
+      let transparency = (0.2 + 0.8 * timespan.completion).toFixed(2);
       if (timespan.required === "soft") {
-        return "rgb(42,157,143,0.5)";
+        return "rgb(42,157,143," + transparency + ")";
       } else if (timespan.required === "hard") {
-        return "rgb(38,70,83,0.5)";
+        return "rgb(150,150,0," + transparency + ")";
       } else if (timespan.required === "confiance") {
-        return "rgba(209,105,224,0.5)";
+        return "rgba(209,105,224," + transparency + ")";
       }
     },
     customClass(mode) {

@@ -468,6 +468,12 @@ export const actions = actionTree(
               timespanCompletion.data,
               ft.general?.name || ""
             ),
+            completion: getFTCompletion(
+              [...state.timespans, ...state.assignedTimespans],
+              ts,
+              timespanCompletion.data,
+              ft.general?.name || ""
+            ),
           }));
           commit("SET_MULTIPLE_SOLID_TASK", tosend);
         }
@@ -664,4 +670,25 @@ function getFTName(
     ret.total += timespanCompletion[ts._id].total;
   });
   return "[" + ret.assigned + "/" + ret.total + "] " + name;
+}
+
+function getFTCompletion(
+  allTimeSpans: TimeSpan[],
+  timespan: TimeSpan,
+  timespanCompletion: { [key: string]: { total: number; assigned: number } },
+  name: string
+) {
+  const ret: any = { assigned: 0, total: 0 };
+  const filter = allTimeSpans.filter(
+    (ts: TimeSpan) =>
+      ts.FTID === timespan.FTID &&
+      ts.start.toString() === new Date(timespan.start).toString() &&
+      ts.end.toString() === new Date(timespan.end).toString() &&
+      ts.required === timespan.required
+  );
+  filter.forEach((ts: TimeSpan) => {
+    ret.assigned += timespanCompletion[ts._id].assigned;
+    ret.total += timespanCompletion[ts._id].total;
+  });
+  return ret.assigned / ret.total;
 }
