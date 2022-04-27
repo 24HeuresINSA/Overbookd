@@ -1,46 +1,49 @@
 <template>
-  <div style="width: 500px; height: 100%" @mouseleave="hoverTask({})">
-    <v-simple-table dense fixed-header height="70vh">
-      <template #default>
-        <thead>
-          <tr>
-            <td>FT</td>
-            <td>Debut</td>
-            <td>Fin</td>
-            <td>Requit</td>
-          </tr>
-        </thead>
+  <div
+    style="width: 500px; height: 70vh; overflow: auto"
+    @mouseleave="hoverTask({})"
+  >
+    <v-data-table
+      :headers="[
+        {
+          text: 'FT',
+          value: 'FTID',
+        },
+        {
+          text: 'Date',
+          value: 'start',
+        },
+        {
+          text: 'Requit',
+          value: 'required',
+        },
+      ]"
+      :items="availableTimeSpans"
+      class="elevation-1"
+      hide-default-footer
+      disable-pagination
+      dense
+    >
+      <template #body="{ items }">
         <tbody>
           <tr
-            v-for="(timeSpan, index) in availableTimeSpans"
+            v-for="(item, index) in items"
             :key="index"
-            @click="assignTask(timeSpan)"
-            @mouseover="hoverTask(timeSpan)"
+            style="cursor: pointer"
+            @click="assignTask(item)"
+            @mouseover="hoverTask(item)"
           >
-            <td>{{ timeSpan.FTID }} - {{ timeSpan.FTName }}</td>
+            <td>{{ item.FTID }} - {{ item.FTName }}</td>
             <td>
-              {{
-                timeSpan
-                  ? timeSpan.start.getHours() +
-                    ":" +
-                    timeSpan.start.getMinutes()
-                  : ""
-              }}
+              {{ item.start.toLocaleString() }}
             </td>
             <td>
-              {{
-                timeSpan
-                  ? timeSpan.end.getHours() + ":" + timeSpan.end.getMinutes()
-                  : ""
-              }}
-            </td>
-            <td>
-              {{ timeSpan ? timeSpan.required : "" }}
+              {{ item ? item.required : "" }}
             </td>
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-data-table>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       {{ snack.feedbackMessage }}
     </v-snackbar>

@@ -4,7 +4,7 @@
     <v-icon
       v-if="user.availableFriend && user.availableFriend.size > 0"
       small
-      class="icon pr-16"
+      class="icon pr-8"
       @click.stop="toggleFriendDialog"
     >
       mdi-account-group
