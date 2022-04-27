@@ -69,4 +69,10 @@ export default {
   ) {
     return context.$axios.post(`${resource}/removeAvailability`, data);
   },
+  addAvailabilityToUser(
+    context: Context,
+    data: { userID: string; timeslotID: string }
+  ) {
+    return context.$axios.post(`${resource}/addAvailabilityToUser`, data);
+  }
 };
