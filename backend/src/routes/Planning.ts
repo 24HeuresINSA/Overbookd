@@ -3,9 +3,8 @@ import User from "@entities/User";
 import TimeSpan from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
 import jsPDF from "jspdf";
-import fs from "fs";
 import logger from "@shared/Logger";
-import { sosNumbers } from "@src/temp/numbers";
+import ConfigModel from "@entities/Config";
 
 //PDF Helpers
 const LITTLE_SPACE = 5;
@@ -32,9 +31,21 @@ export async function createPlanning(
       message: "TimeSpan not found",
     });
   }
+  //Get config
+  const config = await ConfigModel.find({});
+  if (!config) {
+    return;
+  }
+  //Get sos numbers
+  const configNumbers = config.find((c) => c.key === "sos_numbers");
+  if (!configNumbers) {
+    return;
+  }
+  const sos_numbers = configNumbers.value;
+
   //Create planning
   const doc = new jsPDF();
-  fillPDF(doc, user, timespans);
+  fillPDF(doc, user, timespans, sos_numbers);
 
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -52,7 +63,7 @@ export async function createPlanning(
  * @param user
  * @param timespans
  */
-function fillPDF(doc: jsPDF, user: any, timespans: any) {
+function fillPDF(doc: jsPDF, user: any, timespans: any, sos_numbers: any) {
   let yCursor = BASE_SPACE;
   //Basic configuration
   doc.setFont("helvetica");
@@ -71,9 +82,7 @@ function fillPDF(doc: jsPDF, user: any, timespans: any) {
   centeredText(doc, title, yCursor);
   yCursor += BASE_SPACE;
   //SOS part with numbers
-  sosPart(doc, yCursor);
-  yCursor += BIG_SPACE;
-
+  sosPart(doc, yCursor, sos_numbers);
   //PS Map
   psMap(doc, yCursor);
 }
@@ -112,7 +121,7 @@ function sanitizeString(str: string | undefined) {
  * @param yCursor
  * @returns
  */
-function sosPart(doc: jsPDF, yCursor: number) {
+function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const startingCursor = yCursor;
   yCursor += LITTLE_SPACE;
@@ -121,7 +130,7 @@ function sosPart(doc: jsPDF, yCursor: number) {
   doc.text("SOS", 25, yCursor);
   doc.setFontSize(10);
   yCursor += LITTLE_SPACE;
-  sosNumbers.forEach((sos) => {
+  sos_numbers.forEach((sos: any) => {
     const text = `${sos.name} : ${sos.number}`;
     doc.text(text, 25, yCursor);
     yCursor += LITTLE_SPACE;
