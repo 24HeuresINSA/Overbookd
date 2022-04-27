@@ -14,6 +14,7 @@
             :key="index"
             style="cursor: pointer"
             @click="multipleSolidTask(ft)"
+            @contextmenu.prevent="openFtNewTab(ft)"
           >
             <td>{{ ft.count + " - " + ft.general.name }}</td>
             <td>
@@ -69,6 +70,9 @@ export default {
       } else {
         return [];
       }
+    },
+    openFtNewTab(ft) {
+      window.open(`/ft/${ft.count}`, "_blank");
     },
 
     async multipleSolidTask(ft) {
