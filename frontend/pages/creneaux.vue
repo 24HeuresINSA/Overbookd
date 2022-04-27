@@ -1,5 +1,13 @@
 <template>
   <div>
+    <v-progress-linear
+      style="width: 100%; height: 20px"
+      :value="assignmentPerCentage"
+    >
+      <template #default="{ value }">
+        <strong>{{ Math.ceil(value) }}% affecté</strong>
+      </template>
+    </v-progress-linear>
     <v-data-table
       :headers="headers"
       :items="timeSpans"
@@ -28,12 +36,7 @@
         <a :href="`/ft/${item.FTID}`">{{ item.FTID }}</a>
       </template>
       <template #[`item.action`]="{ item }">
-        <v-btn
-          @click="deleteTimespan(item)"
-          color="red"
-          dark
-          icon
-        >
+        <v-btn color="red" dark icon @click="deleteTimespan(item)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>
@@ -43,16 +46,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Header } from "~/utils/models/Data";
+import {Header} from "~/utils/models/Data";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import UserRepo from "~/repositories/userRepo";
-import { safeCall } from "../utils/api/calls";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {safeCall} from "../utils/api/calls";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 
 interface Data {
   headers: Header[];
   timeSpans: any[];
   users: any[];
+  assignmentPerCentage: number;
 }
 
 declare interface Mymap {
@@ -69,10 +73,11 @@ export default Vue.extend({
         { text: "Requis", value: "required" },
         { text: "Assigné", value: "assigned" },
         { text: "FT", value: "FTID", width: "5%" },
-        { text: "Action", value: "action", width: "5%", sortable: false }
+        { text: "Action", value: "action", width: "5%", sortable: false },
       ],
       timeSpans: [],
       users: [],
+      assignmentPerCentage: 0,
     };
   },
 
@@ -80,6 +85,10 @@ export default Vue.extend({
     if (this.$accessor.user.hasRole("hard")) {
       await this.getAllTimeSpans();
       await this.getAllUsers();
+      this.assignmentPerCentage =
+        (this.timeSpans.filter((ts) => ts.assigned).length /
+          this.timeSpans.length) *
+        100;
     } else {
       await this.$router.push({
         path: "/",
@@ -117,7 +126,6 @@ export default Vue.extend({
           }
           return acc;
         }, []);
-        console.log(res.data)
         this.timeSpans = res.data;
       }
     },
@@ -143,7 +151,7 @@ export default Vue.extend({
     deleteTimespan(item: TimeSpan) {
       this.$accessor.assignment.deleteTimespan(item);
       this.timeSpans.splice(this.timeSpans.indexOf(item), 1);
-    }
+    },
   },
 });
 </script>
