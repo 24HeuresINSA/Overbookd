@@ -53,10 +53,10 @@
             label="Bypass les roles (TACHE-ORGA ONLY)"
             @change="toggleBypass()"
           ></v-switch>
-          <v-switch
+          <!-- <v-switch
             label="Afficher users en cours de validation (ORGA-TACHE)"
             @change="toggleShowToValidate()"
-          ></v-switch>
+          ></v-switch> -->
         </div>
       </v-card-text>
     </v-card>
