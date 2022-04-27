@@ -11,6 +11,12 @@
           <TeamSearchField
             @input="updateFilters('team', $event)"
           ></TeamSearchField>
+          <v-switch
+            label="complètement affecté"
+            dense
+            :input-value="true"
+            @change="updateFilters('areAssignedFTsDisplayed', $event)"
+          />
         </div>
         <div class="content">
           <ListFT class="ft" />
@@ -25,6 +31,7 @@
 import ListFT from "./listFT.vue";
 import TeamSearchField from "./atoms/TeamSearchField.vue";
 import CommentsDisplay from "./molecules/commentsDisplay.vue";
+
 export default {
   name: "OverTasks",
   components: { ListFT, TeamSearchField, CommentsDisplay },

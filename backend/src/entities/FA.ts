@@ -1,12 +1,17 @@
-import { model, Schema, Types } from "mongoose";
-import { IFT } from "@entities/FT";
+import {model, Schema, Types} from "mongoose";
+import {IFT} from "@entities/FT";
 
 export interface ITimeframe {
   start: string;
   end: string;
 }
 
-type ICommentTopic = "refused" | "validated" | "commentaire" | "ready" | "timespan";
+type ICommentTopic =
+  | "refused"
+  | "validated"
+  | "commentaire"
+  | "ready"
+  | "timespan";
 
 export type IComment = {
   topic: ICommentTopic;

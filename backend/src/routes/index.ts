@@ -1,9 +1,8 @@
-import { Request, Response, Router } from "express";
-import { getConfig, setConfig } from "./Config";
+import {Request, Response, Router} from "express";
+import {getConfig, setConfig} from "./Config";
 import mCors from "../cors";
 import {
   addAvailabilities,
-  removeAvailability,
   addNotificationByFullName,
   addNotificationByID,
   broadcastNotification,
@@ -13,17 +12,11 @@ import {
   getUser,
   getUserByID,
   getUsers,
+  removeAvailability,
   updateUserByID,
   uploadPP,
 } from "./Users";
-import {
-  createFA,
-  deleteFA,
-  getFAByCount,
-  getFAs,
-  getFAsNumber,
-  setFA,
-} from "./FA";
+import {createFA, deleteFA, getFAByCount, getFAs, getFAsNumber, setFA,} from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from "./Timeslot";
 import {
@@ -32,9 +25,9 @@ import {
   getAllFTs,
   getFTByID,
   getFTsNumber,
-  myPlanning,
   getOrgaRequis,
   makeFTReady,
+  myPlanning,
   unassign,
   updateFT,
 } from "./FT";
@@ -47,7 +40,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
-import { getPassSecu } from "./PassSecu";
+import {getPassSecu} from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -468,7 +461,7 @@ timespanRouter.delete(
   authMiddleware.protect(),
   authMiddleware.verifyRoles("humain"),
   TimeSpanHandlers.deleteTimespan
-)
+);
 // Export the base-router
 const baseRouter = Router();
 baseRouter.use("/user", userRouter);

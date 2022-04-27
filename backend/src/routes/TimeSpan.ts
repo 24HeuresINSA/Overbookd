@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
-import { IComment } from "@entities/FA";
+import {IComment} from "@entities/FA";
 import User, {IUser} from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
@@ -26,7 +26,7 @@ export async function getTimeSpanById(req: Request, res: Response) {
 
 //get timespan where assigned is userid
 export async function getTimeSpanByAssigned(req: Request, res: Response) {
-  const timespan = await TimeSpan.find({assigned: req.params.id});
+  const timespan = await TimeSpan.find({ assigned: req.params.id });
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -83,7 +83,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "User not found",
     });
   }
-  if (!await canUserBeAssignedToTimespan(user, timespan)){
+  if (!(await canUserBeAssignedToTimespan(user, timespan))) {
     return res.status(StatusCodes.CONFLICT).json({
       message: "User already assigned to timespan",
     });
@@ -149,7 +149,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   }
   //fetch user timeslot
   const userAvailabilities = await TimeslotModel.find({
-    _id: {$in: user.availabilities},
+    _id: { $in: user.availabilities },
   }).lean();
 
   let availableTimespans = timespans.filter(
@@ -230,17 +230,15 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
 
   const usersBool = await Promise.all(
     allUsers.map(async (user) => {
-      if(!(await canUserBeAssignedToTimespan(user, timespan))) {
+      if (!(await canUserBeAssignedToTimespan(user, timespan))) {
         return false;
       }
       return true;
     })
   );
 
-
-  
   let users = allUsers.filter((user, index) => {
-    if(!usersBool[index]) {
+    if (!usersBool[index]) {
       return false;
     }
 
@@ -270,7 +268,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   users = (await filter(users, async (user: IUser) => {
     //fetch user timeslot
     const userAvailabilities = await TimeslotModel.find({
-      _id: {$in: user.availabilities},
+      _id: { $in: user.availabilities },
     }).lean();
     return isTimespanCovered(timespan, userAvailabilities);
   })) as (IUser & Document<any, any, IUser>)[];
@@ -306,7 +304,7 @@ async function canUserBeAssignedToTimespan(
       return false;
     }
   }
-  return  true;
+  return true;
 }
 
 export async function getUsersAffectedToTimespan(req: Request, res: Response) {
@@ -339,7 +337,9 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       _id: user._id,
       firstname: user.firstname,
       lastname: user.lastname,
-      timespanId: twinTimespan.filter((element) => element.assigned == user._id)[0]._id
+      timespanId: twinTimespan.filter(
+        (element) => element.assigned == user._id
+      )[0]._id,
     }))
   );
 }
@@ -349,11 +349,11 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
   res: Response
 ) {
   logger.info(`count for ft id ${req.params.FTID}`);
-  const timespans = await TimeSpan.find({FTID: parseInt(req.params.FTID)});
+  const timespans = await TimeSpan.find({ FTID: parseInt(req.params.FTID) });
   const ret = {} as { [key: string]: { total: number; assigned: number } };
   for (const ts of timespans) {
     if (!ret[ts._id.toString()]) {
-      ret[ts._id.toString()] = {total: 0, assigned: 0};
+      ret[ts._id.toString()] = { total: 0, assigned: 0 };
     }
     ret[ts._id.toString()].total++;
     if (ts.assigned) ret[ts._id.toString()].assigned++;
@@ -365,22 +365,30 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
 // /rolesByFT
 export async function getRolesByFT(req: Request, res: Response) {
   const timespans = await TimeSpan.find({});
-  const ret = {} as { [key: string]: string[] };
+  const ret = {} as {
+    [key: number]: { roles: string[]; isFullyAssigned: boolean };
+  };
   for (const ts of timespans) {
     if (!ret[ts.FTID]) {
-      ret[ts.FTID] = [];
+      ret[ts.FTID] = { roles: [], isFullyAssigned: false };
     }
     if (
       ts.required &&
-      ts.required.length !== 24 &&
-      !ret[ts.FTID].includes(ts.required)
+      ts.required.length !== 24 && // ts require a team and not a user
+      !ret[ts.FTID].roles.includes(ts.required) // ts.required not already in the list
     ) {
-      ret[ts.FTID].push(ts.required);
+      ret[ts.FTID].roles.push(ts.required);
+    }
+  }
+  for (const ftid in ret) {
+    // get the timespans of the FT
+    const unassignedTimeSpansLinkedToFT = timespans.filter((ts) => ts.FTID === +ftid && ts.assigned === null);
+    if (unassignedTimeSpansLinkedToFT.length === 0) { // all timespans are assigned
+      ret[ftid].isFullyAssigned = true;
     }
   }
   return res.json(ret);
 }
-
 
 export async function deleteTimespan(req: Request, res: Response) {
   const timespan = await TimeSpan.findById(req.params.id);
@@ -391,7 +399,7 @@ export async function deleteTimespan(req: Request, res: Response) {
   }
 
   //find ft linked to timespan
-  const ft = await FTModel.find({count: timespan.FTID});
+  const ft = await FTModel.find({ count: timespan.FTID });
   if (!ft) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "FT not found",
@@ -401,16 +409,18 @@ export async function deleteTimespan(req: Request, res: Response) {
   const comment: IComment = {
     time: new Date(),
     topic: "timespan",
-    validator: res.locals.auth_user.firstname + " " + res.locals.auth_user.lastname,
-    text: `Suppression du creneau ${timespan.start.toISOString()} - ${timespan.end.toISOString()} - ${timespan.required}`,
-  }
+    validator:
+      res.locals.auth_user.firstname + " " + res.locals.auth_user.lastname,
+    text: `Suppression du creneau ${timespan.start.toISOString()} - ${timespan.end.toISOString()} - ${
+      timespan.required
+    }`,
+  };
   ft[0].comments.push(comment);
 
-  try{
+  try {
     await ft[0].save();
-  }
-  catch(e) {
-    console.log(e)
+  } catch (e) {
+    console.log(e);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: "Error while saving FT",
     });

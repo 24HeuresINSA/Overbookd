@@ -41,7 +41,7 @@ export const state = () => ({
     FT: {
       search: "",
       team: [] as string[],
-      areAssignedFTsDisplayed: false,
+      areAssignedFTsDisplayed: true,
     },
     isModeOrgaToTache: false,
     bypass: false,
@@ -56,7 +56,7 @@ export const state = () => ({
   hoverTask: {} as TimeSpan,
   multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
-  roles: {} as { [key: string]: string[] },
+  roles: {} as { [key: number]: { roles: string[]; isFullyAssigned: boolean } },
   userAssignedToSameTimespan: [] as {
     _id: string;
     firstname: string;
@@ -593,6 +593,15 @@ export const getters = getterTree(state, {
       };
       const fuse = new Fuse(filtered, options);
       filtered = fuse.search(FTFilters.search).map((e) => e.item);
+    }
+    if (FTFilters.areAssignedFTsDisplayed) {
+      filtered = filtered.filter((ft: FT) => {
+        const info = state.roles[ft.count];
+        if (info && info.isFullyAssigned) {
+          return !info.isFullyAssigned;
+        }
+        return true;
+      });
     }
 
     return filtered;

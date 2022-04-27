@@ -1,12 +1,12 @@
 import StatusCodes from "http-status-codes";
-import { Request, Response } from "express";
-import FTModel, { IFT } from "@entities/FT";
+import {Request, Response} from "express";
+import FTModel, {IFT} from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
-import { updateConflictsByFTCount } from "@src/services/conflict";
-import { timeframeToTimeSpan } from "@src/services/slicing";
-import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
-import { Types } from "mongoose";
+import {updateConflictsByFTCount} from "@src/services/conflict";
+import {timeframeToTimeSpan} from "@src/services/slicing";
+import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
+import {Types} from "mongoose";
 import ConfigModel from "@entities/Config";
 import UserModel from "@entities/User";
 
@@ -298,7 +298,7 @@ export async function myPlanning(req: Request, res: Response) {
     }, {});
     FTs = Object.values(grouped);
   }
-  if(FTs.length === 0) {
+  if (FTs.length === 0) {
     const user = await UserModel.findOne({ _id: req.params.userID });
     FTs = [
       {
