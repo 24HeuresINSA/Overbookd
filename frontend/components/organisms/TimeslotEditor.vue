@@ -46,6 +46,12 @@
           @click="deleteAvailability(item)"
           >Supprimer</v-btn
         >
+        <v-btn
+          v-else
+          color="green"
+          @click="addAvailabilityToUser(item)"
+          >Ajouter</v-btn
+        >
       </template>
       <template #[`group.header`]="{ group, headers, toggle, isOpen }">
         <td :colspan="headers.length">
@@ -192,6 +198,16 @@ export default Vue.extend({
         }
       });
     },
+    async addAvailabilityToUser(item: any) {
+      const data = { userID: this.user._id, timeslotID: item.id };
+      this.$accessor.user.addAvailabilityToUser(data).then(() => {
+        if (!this.isSnackbarOpen) {
+          this.feedbackMessage =
+            "Changement effectué ! Recharge la page pour le voir ou continue d'ajouter des créneaux ils seront pris en compte !";
+          this.isSnackbarOpen = true;
+        }
+      });
+    }
   },
 });
 </script>

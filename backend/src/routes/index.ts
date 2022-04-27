@@ -15,6 +15,7 @@ import {
   getUsers,
   updateUserByID,
   uploadPP,
+  addAvailabilityToUser,
 } from "./Users";
 import {
   createFA,
@@ -81,6 +82,7 @@ userRouter.post(
   authMiddleware.protect(),
   removeAvailability
 );
+userRouter.post("/addAvailabilityToUser", authMiddleware.protect(), addAvailabilityToUser);
 const imageUpload = multer({
   dest: "images",
 });

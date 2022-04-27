@@ -116,6 +116,62 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
   }
 };
 
+export const addAvailabilityToUser: RequestHandler = async function (req, res) {
+  const id = req.body.userID;
+  const timeslotId = req.body.timeslotID;
+  const timeslotIds = [timeslotId];
+  try {
+    const user = await UserModel.findById(id);
+    let totalCharisma = 0;
+    if (user) {
+      if (user.availabilities) {
+        const toAdd = timeslotIds.filter((e) => {
+          return !user.availabilities!.includes(e);
+        });
+        const timeslot = await TimeslotModel.find()
+          .where("_id")
+          .in(toAdd)
+          .exec();
+        totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
+        user.availabilities.push(...toAdd);
+      } else {
+        const timeslot = await TimeslotModel.find()
+          .where("_id")
+          .in(timeslotIds)
+          .exec();
+        totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
+        user.availabilities = timeslotIds;
+      }
+      if (user.charisma) {
+        user.charisma += totalCharisma;
+      } else {
+        user.charisma = totalCharisma;
+      }
+      if (!user.notifications) {
+        user.notifications = [];
+      }
+      user.notifications.push({
+        type: "broadcast",
+        message: `Tu as reçu ${totalCharisma} points de charisme pour ta disponibilité.`,
+        date: new Date(),
+        team: "hard",
+        link: "",
+      });
+      await user.save();
+      res.status(StatusCodes.OK).json(new SafeUser(user));
+    } else {
+      res.sendStatus(StatusCodes.NOT_FOUND).json({
+        msg: "User not found",
+      });
+    }
+  } catch (e) {
+    logger.err(e);
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "Error, contact your admin",
+    });
+  }
+};
+
 export const removeAvailability: RequestHandler = async function (req, res) {
   const id = req.body.userID;
   const timeslotId = req.body.timeslotID;
