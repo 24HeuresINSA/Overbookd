@@ -43,7 +43,7 @@
       </template>
     </v-calendar>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-      <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
+      <h3>{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
   </div>
 </template>
