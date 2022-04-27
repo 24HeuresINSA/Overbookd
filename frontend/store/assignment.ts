@@ -16,6 +16,7 @@ declare interface filter {
       isAscending: boolean;
       field: string;
     };
+    showToValidate: boolean;
   };
   FT: {
     search: string;
@@ -36,6 +37,7 @@ export const state = () => ({
         isAscending: false,
         field: "charisma",
       },
+      showToValidate: false,
       driverLicense: undefined,
     },
     FT: {
@@ -164,6 +166,10 @@ export const mutations = mutationTree(state, {
   TOGGLE_BYPASS(state: any) {
     state.filters.bypass = !state.filters.bypass;
   },
+  TOGGLE_SHOW_TO_VALIDATE(state: any) {
+    state.filters.user.showToValidate = !state.filters.user.showToValidate;
+  }
+
 });
 
 export const actions = actionTree(
@@ -522,6 +528,9 @@ export const actions = actionTree(
 
     toggleBypass({ commit }: any) {
       commit("TOGGLE_BYPASS");
+    },
+    toggleShowToValidate({ commit }: any) {
+      commit("TOGGLE_SHOW_TO_VALIDATE");
     },
   }
 );
