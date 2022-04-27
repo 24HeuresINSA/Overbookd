@@ -7,10 +7,8 @@
             label="Recherche"
             style="padding: 2px"
             @input="updateFilters('search', $event)"
-          ></v-text-field>
-          <TeamSearchField
-            @input="updateFilters('team', $event)"
-          ></TeamSearchField>
+          />
+          <TeamSearchField @input="updateFilters('team', $event)" />
         </div>
         <div class="content">
           <ListTasks class="task" />

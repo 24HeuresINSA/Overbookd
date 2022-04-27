@@ -1,5 +1,5 @@
-import FAModel, { IFA } from "@entities/FA";
-import { Request, Response } from "express";
+import FAModel, {IFA} from "@entities/FA";
+import {Request, Response} from "express";
 import logger from "@shared/Logger";
 import StatusCodes from "http-status-codes";
 
@@ -84,10 +84,7 @@ export async function getFAsNumber(req: Request, res: Response) {
   logger.info("getting FAs count");
   const FAs = await FAModel.aggregate()
     .match({
-      $and: [
-        { isValid: { $ne: false } },
-        { 'general.team': { $ne: null } }
-      ]
+      $and: [{ isValid: { $ne: false } }, { "general.team": { $ne: null } }],
     })
     .group({
       _id: { team: "$general.team", status: "$status" },
