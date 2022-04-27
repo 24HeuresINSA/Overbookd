@@ -545,7 +545,7 @@ export const getters = getterTree(state, {
       });
     }
 
-    if (user.sortBy.field) {
+    if (user.sortBy.field && search.length == 0) {
       users = users.sort((a: User, b: User) => {
         // @ts-ignore
         if (a[user.sortBy.field] < b[user.sortBy.field]) {
