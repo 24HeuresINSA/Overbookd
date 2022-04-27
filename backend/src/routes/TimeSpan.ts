@@ -212,6 +212,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
 }
 
 export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
+  const bypass = (req.query.bypass === "true");
   const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
@@ -240,7 +241,6 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   
   let users = allUsers.filter((user, index) => {
     if(!usersBool[index]) {
-      console.log(user.firstname, index, usersBool[index]);
       return false;
     }
 
@@ -249,7 +249,10 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
         return false;
       }
     }
-
+    //Unsafe role checking
+    if(bypass) {
+      return true;
+    }
 
     if (timespan.required && timespan.required === "soft") return true;
     if (

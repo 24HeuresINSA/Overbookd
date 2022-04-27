@@ -22,6 +22,7 @@ declare interface filter {
     team: string[];
   };
   isModeOrgaToTache: boolean;
+  bypass: boolean;
 }
 
 export const state = () => ({
@@ -42,6 +43,7 @@ export const state = () => ({
       team: [] as string[],
     },
     isModeOrgaToTache: false,
+    bypass: false,
   } as filter,
   selectedUser: {} as User, // selected User from the list
   selectedTimeSpan: {} as TimeSpan, // Selected TimeSpan from the calendar
@@ -157,7 +159,10 @@ export const mutations = mutationTree(state, {
       (ts: TimeSpan) => ts._id === data._id
     );
     state.timespans.splice(timeSpanIndex, 1);
-  }
+  },
+  TOGGLE_BYPASS(state: any) {
+    state.filters.bypass = !state.filters.bypass;
+  },
 });
 
 export const actions = actionTree(
@@ -350,7 +355,17 @@ export const actions = actionTree(
       } else {
         commit("SET_SELECTED_USER", {});
       }
-    },  
+    },
+
+    setSelectedUserBasedOnId({ state, dispatch }: any, id: string) {
+      const selectedUser = state.users.find((u: User) => u._id === id);
+      if (!selectedUser) {
+        throw new Error(`User ${id} not found in local users`);
+      }
+      dispatch("setUserIndex", id);
+      dispatch("setSelectedUser", selectedUser);
+    },
+
     async setFTTeamFilter({ commit, state }: any, data: string) {
       if (state.filters.FT.team.includes(data)) {
         commit("REMOVE_TEAM_FROM_FT_FILTER", data);
@@ -458,10 +473,17 @@ export const actions = actionTree(
       }
     },
 
-    async filterAvailableUserForTimeSpan({ commit }: any, timeSpan: TimeSpan) {
+    async filterAvailableUserForTimeSpan(
+      { commit, state }: any,
+      timeSpan: TimeSpan
+    ) {
       const usersData = await safeCall(
         this,
-        TimeSpanRepo.getAvailableUserForTimeSpan(this, timeSpan._id)
+        TimeSpanRepo.getAvailableUserForTimeSpan(
+          this,
+          timeSpan._id,
+          state.filters.bypass
+        )
       );
       if (usersData) {
         commit("SET_USERS", usersData.data);
@@ -489,7 +511,11 @@ export const actions = actionTree(
         commit("DELETE_TIMESPAN", timeSpan);
       }
       return res;
-    }
+    },
+
+    toggleBypass({ commit }: any) {
+      commit("TOGGLE_BYPASS");
+    },
   }
 );
 
@@ -585,9 +611,9 @@ export const getters = getterTree(state, {
   availableTimeSpans: (state: any) => {
     const FTFilters = state.filters.FT;
     let filteredTimespans: any = state.timespans;
-    if(FTFilters.team.length > 0){
+    if (FTFilters.team.length > 0) {
       filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
-        if(!FTFilters.team.includes(ts.required)){
+        if (!FTFilters.team.includes(ts.required)) {
           return false;
         }
         return true;
@@ -595,7 +621,7 @@ export const getters = getterTree(state, {
     }
 
     if (FTFilters.search && FTFilters.search.length > 0) {
-      const options = { 
+      const options = {
         // Search in `author` and in `tags` array
         keys: ["FTID", "FTName"],
 

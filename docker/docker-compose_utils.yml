@@ -15,13 +15,21 @@ services:
       - "--entrypoints.websecure.address=:443"
       # HTTP -> HTTPS
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+       # SSL
+      - "--certificatesresolvers.le.acme.email=dsi@24heures.org"
+      - "--certificatesresolvers.le.acme.storage=/acme.json"
+      - "--certificatesResolvers.le.acme.tlsChallenge=true"
+      - "--certificatesResolvers.le.acme.httpChallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
       # Enable Dashboard
       - "--api.dashboard=true"
+#      - "--log.level=DEBUG"
     ports:
       - 80:80
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /certificats/acme.json:/acme.json
     #      - ./passwd:/passwd
     networks:
       - traefik-public
@@ -29,6 +37,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=le"
       - "traefik.http.services.traefik.loadbalancer.server.port=888"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -50,6 +59,7 @@ services:
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER}
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD}
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=${WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT}
+      - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL=${WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL}
 
 networks:
   traefik-public:

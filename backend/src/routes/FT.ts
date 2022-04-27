@@ -297,7 +297,8 @@ export async function myPlanning(req: Request, res: Response) {
       return acc;
     }, {});
     FTs = Object.values(grouped);
-  } else {
+  }
+  if(FTs.length === 0) {
     const user = await UserModel.findOne({ _id: req.params.userID });
     FTs = [
       {

@@ -1,6 +1,6 @@
 <template>
   <div style="width: 500px; height: 100%" @mouseleave="hoverTask({})">
-    <v-simple-table dense fixed-header height="575">
+    <v-simple-table dense fixed-header height="70vh">
       <template #default>
         <thead>
           <tr>

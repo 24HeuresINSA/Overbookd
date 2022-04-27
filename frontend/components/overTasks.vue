@@ -27,8 +27,6 @@ import ListTasks from "./listTasks";
 import CommentsDisplay from "./molecules/commentsDisplay.vue";
 import TeamSearchField from "./atoms/TeamSearchField.vue";
 
-
-
 export default {
   name: "OverTasks",
   components: { ListTasks, CommentsDisplay, TeamSearchField },
@@ -49,7 +47,6 @@ export default {
     updateFilters(key, value) {
       this.$accessor.assignment.setFTFilter({ key, value });
     },
-
   },
 };
 </script>

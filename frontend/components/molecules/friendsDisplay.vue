@@ -2,9 +2,17 @@
   <div class="content">
     <div v-if="isModeOrgaToTache">
       <h2>{{ "Amis de " + getSelectedUserName + " :" }}</h2>
-      <v-virtual-scroll :items="selectedUser" :height="height" item-height="30">
+      <v-virtual-scroll
+        :items="selectedUserFriends"
+        :height="height"
+        item-height="30"
+      >
         <template #default="{ item }">
-          <v-list-item :value="item">
+          <v-list-item
+            :value="item"
+            class="clickable"
+            @click="switchUser(item)"
+          >
             {{ item.username }}
           </v-list-item>
         </template>
@@ -20,9 +28,17 @@
 </template>
 
 <script>
+import { Snack } from "~/utils/models/snack";
+
 export default {
+  data() {
+    return {
+      snack: new Snack(),
+    };
+  },
+
   computed: {
-    selectedUser() {
+    selectedUserFriends() {
       const user = this.$accessor.assignment.selectedUser;
       if (user && user.friends) {
         let uniqueFriends = [];
@@ -53,6 +69,21 @@ export default {
     },
     isModeOrgaToTache() {
       return this.$accessor.assignment.filters.isModeOrgaToTache;
+    },
+  },
+  methods: {
+    switchUser({ id }) {
+      if (!this.isModeOrgaToTache) {
+        return;
+      }
+      this.$accessor.assignment.setSelectedUserBasedOnId(id);
+      const selectedUser = this.$accessor.assignment.selectedUser;
+      this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
+      this.$accessor.assignment
+        .getUserAssignedTimespans(selectedUser)
+        .then(() => {
+          this.snack.display("Planning chargé ✅");
+        });
     },
   },
 };
