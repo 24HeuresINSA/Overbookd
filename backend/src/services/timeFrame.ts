@@ -1,6 +1,8 @@
 import { IFT } from "@entities/FT";
+import { Types } from "mongoose";
 import FTModel from "../entities/FT";
 import { ITimeFrame } from "../entities/FT";
+import { queryFTWhereUserIsRequiredOnDateRange } from "./FT";
 
 export type getTimeFrameByIdOpts = {
   select: Array<keyof ITimeFrame>;
@@ -57,4 +59,23 @@ export async function getAllOrgaTFs(): Promise<ITimeFrame[]> {
     .unwind("$timeframes")
     .replaceRoot("$timeframes")
     .match({ "required.type": "user" });
+}
+
+export async function getTimeFramesWhereUserIsRequired(
+  userId: Types.ObjectId,
+  range: { start: number; end: number },
+  excludeFTs: number[] = []
+): Promise<ITimeFrame[]> {
+  const matchQuery = queryFTWhereUserIsRequiredOnDateRange(
+    range,
+    userId,
+    excludeFTs
+  );
+
+  const timeframes = await FTModel.aggregate()
+    .match(matchQuery)
+    .unwind("$timeframes")
+    .replaceRoot("$timeframes");
+
+  return timeframes;
 }
