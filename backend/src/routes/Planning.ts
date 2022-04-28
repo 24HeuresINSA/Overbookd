@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "@entities/User";
-import TimeSpan from "@entities/TimeSpan";
+import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import StatusCodes from "http-status-codes";
 import jsPDF from "jspdf";
 import logger from "@shared/Logger";
@@ -83,8 +83,13 @@ function fillPDF(doc: jsPDF, user: any, timespans: any, sos_numbers: any) {
   yCursor += BASE_SPACE;
   //SOS part with numbers
   sosPart(doc, yCursor, sos_numbers);
-  //PS Map
-  psMap(doc, yCursor);
+  yCursor += BIG_SPACE;
+
+  //Explain all the tasks
+  timespans.forEach((timespan: ITimeSpan) => {
+    singleTask(doc, yCursor, timespan);
+    yCursor += BIG_SPACE;
+  });
 }
 
 /**
@@ -126,7 +131,7 @@ function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
   const startingCursor = yCursor;
   yCursor += LITTLE_SPACE;
   doc.setFontSize(15);
-  yCursor += 5; // add a little space
+  yCursor += 5;
   doc.text("SOS", 25, yCursor);
   doc.setFontSize(10);
   yCursor += LITTLE_SPACE;
@@ -138,6 +143,6 @@ function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
   doc.rect(20, startingCursor, pageWidth - 40, yCursor - startingCursor);
 }
 
-function psMap(doc: jsPDF, yCursor: number) {
-  //TODO
+function singleTask(doc: jsPDF, yCursor: number, timespan: ITimeSpan) {
+  logger.info(timespan);
 }
