@@ -12,7 +12,7 @@
             @input="updateFilters('team', $event)"
           ></TeamSearchField>
           <v-switch
-            label="complètement affecté"
+            label="ft non-complète"
             dense
             :input-value="true"
             @change="updateFilters('areAssignedFTsDisplayed', $event)"

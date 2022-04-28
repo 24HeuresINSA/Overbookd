@@ -638,6 +638,7 @@ export const getters = getterTree(state, {
     let filteredTimespans: any = state.timespans;
     if (FTFilters.team.length > 0) {
       filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
+        if(ts === null) return false;
         if (!FTFilters.team.includes(ts.required)) {
           return false;
         }
