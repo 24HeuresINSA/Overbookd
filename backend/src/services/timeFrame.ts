@@ -50,17 +50,6 @@ export async function getTimeFrameById(
   return undefined;
 }
 
-/**
- * Get all Timeframes in DB with type user
- */
-export async function getAllOrgaTFs(): Promise<ITimeFrame[]> {
-  return await FTModel.aggregate()
-    .match({ isValid: true })
-    .unwind("$timeframes")
-    .replaceRoot("$timeframes")
-    .match({ "required.type": "user" });
-}
-
 export async function getTimeFramesWhereUserIsRequired(
   userId: Types.ObjectId,
   range: { start: number; end: number },
