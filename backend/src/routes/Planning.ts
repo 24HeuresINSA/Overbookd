@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "@entities/User";
 import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
+import FTModel, { IFT } from "@entities/FT";
 import StatusCodes from "http-status-codes";
 import jsPDF from "jspdf";
 import logger from "@shared/Logger";
@@ -31,6 +32,13 @@ export async function createPlanning(
       message: "TimeSpan not found",
     });
   }
+  //Get specific FT for where user is assigned
+  const userAssignedFT: any = [];
+  for (let index = 0; index < timespans.length; index++) {
+    const ft = await FTModel.findOne({ count: timespans[index].FTID });
+    userAssignedFT.push(ft);
+  }
+
   //Get config
   const config = await ConfigModel.find({});
   if (!config) {
@@ -45,7 +53,7 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
-  fillPDF(doc, user, timespans, sos_numbers);
+  fillPDF(doc, user, sos_numbers, userAssignedFT);
 
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -58,12 +66,18 @@ export async function createPlanning(
 }
 
 /**
- * fill the pdf with the data
+ * fill the pdf
  * @param doc
  * @param user
- * @param timespans
+ * @param sos_numbers
+ * @param userAssignedFT
  */
-function fillPDF(doc: jsPDF, user: any, timespans: any, sos_numbers: any) {
+function fillPDF(
+  doc: jsPDF,
+  user: any,
+  sos_numbers: any,
+  userAssignedFT: any[]
+) {
   let yCursor = BASE_SPACE;
   //Basic configuration
   doc.setFont("helvetica");
@@ -83,12 +97,14 @@ function fillPDF(doc: jsPDF, user: any, timespans: any, sos_numbers: any) {
   yCursor += BASE_SPACE;
   //SOS part with numbers
   sosPart(doc, yCursor, sos_numbers);
-  yCursor += BIG_SPACE;
+  yCursor += BIG_SPACE * 2;
 
-  //Explain all the tasks
-  timespans.forEach((timespan: ITimeSpan) => {
-    singleTask(doc, yCursor, timespan);
-    yCursor += BIG_SPACE;
+  let tasknumber = 1;
+  userAssignedFT.forEach((ft: IFT) => {
+    //FT part
+    singleTask(doc, yCursor, ft, tasknumber);
+    tasknumber++;
+    yCursor += BASE_SPACE;
   });
 }
 
@@ -112,7 +128,7 @@ function centeredText(doc: jsPDF, text: string, y: number) {
  * @param str
  * @returns
  */
-function sanitizeString(str: string | undefined) {
+function sanitizeString(str: any) {
   if (str) {
     return str.replace(/[^a-zA-Z0-9]/g, "");
   } else {
@@ -143,6 +159,8 @@ function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
   doc.rect(20, startingCursor, pageWidth - 40, yCursor - startingCursor);
 }
 
-function singleTask(doc: jsPDF, yCursor: number, timespan: ITimeSpan) {
-  logger.info(timespan);
+function singleTask(doc: jsPDF, yCursor: number, ft: IFT, tasknumber: number) {
+  doc.setFontSize(15);
+  const title = `Tache ${tasknumber} : ${sanitizeString(ft.general.name)}`;
+  doc.text(title, BASE_X, yCursor);
 }
