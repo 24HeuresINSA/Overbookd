@@ -12,6 +12,8 @@
         </div>
         <div class="content">
           <ListTasks class="task" />
+          <p>Nombre de tache possible : {{ $accessor.assignment.availableTimeSpans.length }}</p>
+
           <CommentsDisplay class="comment" />
         </div>
       </v-card-text>
