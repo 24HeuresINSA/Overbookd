@@ -32,6 +32,7 @@
             style="cursor: pointer"
             @click="assignTask(item)"
             @mouseover="hoverTask(item)"
+            @contextmenu.prevent="openFtNewTab(item.FTID)"
           >
             <td>{{ item.FTID }} - {{ item.FTName }}</td>
             <td>
@@ -108,12 +109,8 @@ export default {
         );
       }
     },
-    resolveFTName(FTID) {
-      const FT = this.FTs.find((FT) => FT.count === FTID);
-      if (FT) {
-        return FT.general.name;
-      }
-      return FTID;
+    openFtNewTab(FTID) {
+      window.open(`/ft/${FTID}`, "_blank");
     },
     hoverTask(timespan) {
       this.$accessor.assignment.setHoverTask(timespan);
