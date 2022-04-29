@@ -75,7 +75,4 @@ export default {
   ) {
     return context.$axios.post(`${resource}/addAvailabilityToUser`, data);
   },
-  getHours(context: Context) {
-    return context.$axios.get(`${resource}/hours`);
-  },
 };

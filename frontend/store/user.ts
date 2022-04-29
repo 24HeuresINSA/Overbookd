@@ -160,7 +160,7 @@ export const actions = actionTree(
         return true;
       }
       return false;
-    }
+    },
   }
 );
 

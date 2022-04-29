@@ -95,87 +95,95 @@
           </v-card>
         </v-col>
         <v-col md="10">
-          <v-data-table
-            style="max-height: 100%; overflow-y: auto"
-            :headers="headers"
-            :items="filteredUsers"
-            class="elevation-1"
-            dense
-            :items-per-page="20"
-          >
-            <template #[`item.action`]="{ item }" style="display: flex">
-              <v-btn
-                v-if="hasRole('hard')"
-                icon
-                small
-                @click="openInformationDialog(item)"
-              >
-                <v-icon small>mdi-information-outline</v-icon>
-              </v-btn>
-              <v-btn icon small :href="'tel:+33' + item.phone">
-                <v-icon small>mdi-phone</v-icon>
-              </v-btn>
-              <v-btn icon small :href="'mailto:' + item.email">
-                <v-icon small>mdi-email</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="isCpUseful(item)"
-                icon
-                small
-                @click="openTransactionDialog(item)"
-              >
-                <v-icon small>mdi-cash</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="hasRole(['admin', 'bureau'])"
-                icon
-                small
-                @click="openCharismaDialog(item)"
-              >
-                <v-icon small>mdi-emoticon-cool</v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                small
-                :href="
-                  'https://www.facebook.com/search/top?q=' +
-                  item.firstname +
-                  ' ' +
-                  item.lastname
-                "
-              >
-                <v-icon small>mdi-facebook</v-icon>
-              </v-btn>
-            </template>
-
-            <template #[`item.balance`]="{ item }">
-              {{ getCP(item) }}
-            </template>
-
-            <template #[`item.studies`]="{ item }">
-              {{ item.year }}{{ item.departement }}
-            </template>
-
-            <template #[`item.charisma`]="{ item }">
-              {{ item.charisma || 0 }}
-            </template>
-
-            <template #[`item.charge`]="{ item }">
-              {{ `La charge de ${item.firstname}` }}</template
+          <div v-if="!loading">
+            <v-data-table
+              style="max-height: 100%; overflow-y: auto"
+              :headers="headers"
+              :items="filteredUsers"
+              class="elevation-1"
+              dense
+              :items-per-page="20"
             >
-            <template #[`item.hours`]="{ item }">
-              {{ `Les heures de ${item.firstname}` }}</template
-            >
-            <template #[`item.statics`]="{ item }">
-              {{ `Les céneaux statiques de ${item.firstname}` }}</template
-            >
+              <template #[`item.action`]="{ item }" style="display: flex">
+                <v-btn
+                  v-if="hasRole('hard')"
+                  icon
+                  small
+                  @click="openInformationDialog(item)"
+                >
+                  <v-icon small>mdi-information-outline</v-icon>
+                </v-btn>
+                <v-btn icon small :href="'tel:+33' + item.phone">
+                  <v-icon small>mdi-phone</v-icon>
+                </v-btn>
+                <v-btn icon small :href="'mailto:' + item.email">
+                  <v-icon small>mdi-email</v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="isCpUseful(item)"
+                  icon
+                  small
+                  @click="openTransactionDialog(item)"
+                >
+                  <v-icon small>mdi-cash</v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="hasRole(['admin', 'bureau'])"
+                  icon
+                  small
+                  @click="openCharismaDialog(item)"
+                >
+                  <v-icon small>mdi-emoticon-cool</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  small
+                  :href="
+                    'https://www.facebook.com/search/top?q=' +
+                    item.firstname +
+                    ' ' +
+                    item.lastname
+                  "
+                >
+                  <v-icon small>mdi-facebook</v-icon>
+                </v-btn>
+              </template>
 
-            <template #[`item.team`]="{ item }">
-              <v-container style="max-width: 150px">
-                <OverChips :roles="item.team"></OverChips>
-              </v-container>
-            </template>
-          </v-data-table>
+              <template #[`item.balance`]="{ item }">
+                {{ getCP(item) }}
+              </template>
+
+              <template #[`item.studies`]="{ item }">
+                {{ item.year }}{{ item.departement }}
+              </template>
+
+              <template #[`item.charisma`]="{ item }">
+                {{ item.charisma || 0 }}
+              </template>
+
+              <template #[`item.charge`]="{ item }">
+                {{ `La charge de ${item.firstname}` }}</template
+              >
+              <template #[`item.hours`]="{ item }">
+                {{ item.availabilities.length * 2 || 0 }}</template
+              >
+              <template #[`item.statics`]="{ item }">
+                {{ `Les céneaux statiques de ${item.firstname}` }}</template
+              >
+
+              <template #[`item.team`]="{ item }">
+                <v-container style="max-width: 150px">
+                  <OverChips :roles="item.team"></OverChips>
+                </v-container>
+              </template>
+            </v-data-table>
+          </div>
+          <div v-else class="d-flex justify-center">
+            <v-progress-circular
+              indeterminate
+              color="grey"
+            ></v-progress-circular>
+          </div>
         </v-col>
       </v-row>
     </template>
@@ -301,7 +309,9 @@ export default {
       newRole: undefined,
 
       feedbackMessage: "Sauvegardé 🥳",
+
       isModeStatsActive: false,
+      hours: [],
     };
   },
 
@@ -373,15 +383,17 @@ export default {
       return selections;
     },
     isModeStatsActive() {
+      this.loading = true;
       if (this.isModeStatsActive) {
         this.headers = [
           { text: "Prénom", value: "firstname" },
           { text: "Nom", value: "lastname" },
           { text: "Surnom", value: "nickname" },
           { text: "Charge", value: "charge" },
-          { text: "Heures", value: "hours" },
+          { text: "Heures dispos", value: "hours" },
           { text: "Statiques", value: "statics" },
         ];
+        this.loading = false;
       } else {
         this.headers = [
           { text: "Prénom", value: "firstname" },
@@ -396,6 +408,7 @@ export default {
           { text: "Charisme", value: "charisma", align: "end" },
           { text: "Action", value: "action", sortable: false },
         ];
+        this.loading = false;
       }
     },
   },
