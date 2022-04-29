@@ -36,11 +36,22 @@
         <a :href="`/ft/${item.FTID}`">{{ item.FTID }}</a>
       </template>
       <template #[`item.action`]="{ item }">
-        <v-btn color="red" dark icon @click="deleteTimespan(item)">
+        <v-btn color="red" dark icon @click="confirmDelete(item)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>
     </v-data-table>
+    <v-dialog v-model="isDeleting" max-width="800">
+      <v-card>
+        <v-card-title>Supprimer ce créneau ?</v-card-title>
+        <div style="display: flex; justify-content: center; padding: 1%">
+          <v-btn color="green" style="margin: 2%" @click="deleteTimespan()"
+            >OUI</v-btn
+          >
+          <v-btn color="red" style="margin: 2%" @click="no()">NON</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -57,6 +68,8 @@ interface Data {
   timeSpans: any[];
   users: any[];
   assignmentPerCentage: number;
+  isDeleting: boolean;
+  selectedTimeSpan: any;
 }
 
 declare interface Mymap {
@@ -78,6 +91,8 @@ export default Vue.extend({
       timeSpans: [],
       users: [],
       assignmentPerCentage: 0,
+      isDeleting: false,
+      selectedTimeSpan: undefined,
     };
   },
 
@@ -148,9 +163,19 @@ export default Vue.extend({
       const user = this.users.find((u) => u._id == userId);
       return user ? user.username : "";
     },
-    deleteTimespan(item: TimeSpan) {
-      this.$accessor.assignment.deleteTimespan(item);
-      this.timeSpans.splice(this.timeSpans.indexOf(item), 1);
+    deleteTimespan() {
+      this.$accessor.assignment.deleteTimespan(this.selectedTimeSpan);
+      this.timeSpans.splice(this.timeSpans.indexOf(this.selectedTimeSpan), 1);
+      this.selectedTimeSpan = undefined;
+      this.isDeleting = false;
+    },
+    confirmDelete(item: TimeSpan) {
+      this.isDeleting = true;
+      this.selectedTimeSpan = item;
+    },
+    no() {
+      this.isDeleting = false;
+      this.selectedTimeSpan = undefined;
     },
   },
 });
