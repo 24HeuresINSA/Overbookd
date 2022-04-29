@@ -11,7 +11,7 @@ import ConfigModel from "@entities/Config";
 const LITTLE_SPACE = 5;
 const BASE_SPACE = 10;
 const BIG_SPACE = 20;
-const BASE_X = 20;
+const BASE_X = 25;
 
 export async function createPlanning(
   req: Request,
@@ -53,7 +53,7 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
-  fillPDF(doc, user, sos_numbers, userAssignedFT);
+  fillPDF(doc, user, sos_numbers, userAssignedFT, timespans);
 
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -76,7 +76,8 @@ function fillPDF(
   doc: jsPDF,
   user: any,
   sos_numbers: any,
-  userAssignedFT: any[]
+  userAssignedFT: any[],
+  timespans: ITimeSpan[]
 ) {
   let yCursor = BASE_SPACE;
   //Basic configuration
@@ -97,12 +98,13 @@ function fillPDF(
   yCursor += BASE_SPACE;
   //SOS part with numbers
   sosPart(doc, yCursor, sos_numbers);
-  yCursor += BIG_SPACE * 2;
+  yCursor += BIG_SPACE * 2.5;
 
   let tasknumber = 1;
   userAssignedFT.forEach((ft: IFT) => {
     //FT part
-    singleTask(doc, yCursor, ft, tasknumber);
+    const ts = timespans.filter((ts: ITimeSpan) => ts.FTID === ft.count);
+    singleTask(doc, yCursor, ft, ts, tasknumber);
     tasknumber++;
     yCursor += BASE_SPACE;
   });
@@ -130,7 +132,7 @@ function centeredText(doc: jsPDF, text: string, y: number) {
  */
 function sanitizeString(str: any) {
   if (str) {
-    return str.replace(/[^a-zA-Z0-9]/g, "");
+    return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
   } else {
     return "";
   }
@@ -148,19 +150,39 @@ function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
   yCursor += LITTLE_SPACE;
   doc.setFontSize(15);
   yCursor += 5;
-  doc.text("SOS", 25, yCursor);
+  doc.text("SOS", BASE_X, yCursor);
   doc.setFontSize(10);
   yCursor += LITTLE_SPACE;
   sos_numbers.forEach((sos: any) => {
     const text = `${sos.name} : ${sos.number}`;
-    doc.text(text, 25, yCursor);
+    doc.text(text, BASE_X, yCursor);
     yCursor += LITTLE_SPACE;
   });
   doc.rect(20, startingCursor, pageWidth - 40, yCursor - startingCursor);
 }
 
-function singleTask(doc: jsPDF, yCursor: number, ft: IFT, tasknumber: number) {
+/**
+ * build the part of each task
+ * @param doc
+ * @param yCursor
+ * @param ft
+ * @param timespan
+ * @param tasknumber
+ */
+function singleTask(
+  doc: jsPDF,
+  yCursor: number,
+  ft: IFT,
+  timespan: ITimeSpan[],
+  tasknumber: number
+) {
+  //Space for the rect
   doc.setFontSize(15);
   const title = `Tache ${tasknumber} : ${sanitizeString(ft.general.name)}`;
   doc.text(title, BASE_X, yCursor);
+  yCursor += LITTLE_SPACE;
+  doc.setFontSize(10);
+  doc.text("Quand ?", BASE_X, yCursor);
+  logger.info(timespan.length);
+  yCursor += LITTLE_SPACE;
 }
