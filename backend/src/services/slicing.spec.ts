@@ -78,6 +78,7 @@ describe("Services - slicing", () => {
       it("should generate a timespan for each user", () => {
         const res = timeframeToTimeSpan(timeframe, FTID);
         const expectdUser1TimeSpan: ITimeSpan = {
+          _id: new ObjectId(),
           start: startDate,
           end: endDate,
           timeframeID: "indivisible time frame",
@@ -87,6 +88,7 @@ describe("Services - slicing", () => {
         };
         expect(res).toContainEqual(expectdUser1TimeSpan);
         const expectdUser2TimeSpan: ITimeSpan = {
+          _id: new ObjectId(),
           start: startDate,
           end: endDate,
           timeframeID: "indivisible time frame",
