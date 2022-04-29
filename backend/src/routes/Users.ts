@@ -377,26 +377,3 @@ export const createFriendship: RequestHandler = async function (req, res) {
 
   return res.sendStatus(200);
 };
-
-export const getHours: RequestHandler = async function (req, res) {
-  //get all users
-  const users = await UserModel.find({});
-  if (users) {
-    const hours = users.map((user) => {
-      if (user.availabilities) {
-        return {
-          userID: user._id.str,
-          hours: user.availabilities.length * 2,
-        };
-      } else {
-        return {
-          userID: user._id.str,
-          hours: 0,
-        };
-      }
-    });
-    return res.status(StatusCodes.OK).json(hours);
-  } else {
-    return res.status(StatusCodes.NOT_FOUND).json({ msg: "no users" });
-  }
-};
