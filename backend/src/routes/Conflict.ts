@@ -1,20 +1,13 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
-import ConflictModel, { IConflict } from "@entities/Conflict";
-import FTModel, { ITimeFrame } from "@entities/FT";
-import {
-  computeAllTFConflicts,
-  computeFTConflicts,
-  computeAvailabilityConflicts,
-  getFTConflicts,
-  sortTFByUser,
-  computeFTAllConflicts,
-} from "@src/services/conflict";
-import { Types } from "mongoose";
-import { ITFConflict } from "../entities/Conflict";
-import { getTimeFrameById } from "@src/services/timeFrame";
-import { getTimeFrameByIdOpts } from "../services/timeFrame";
+import ConflictModel, {IConflict} from "@entities/Conflict";
+import FTModel, {ITimeFrame} from "@entities/FT";
+import {computeAllTFConflicts, computeFTAllConflicts, getFTConflicts, sortTFByUser,} from "@src/services/conflict";
+import {Types} from "mongoose";
+import {ITFConflict} from "../entities/Conflict";
+import {getTimeFrameById} from "@src/services/timeFrame";
+import {getTimeFrameByIdOpts} from "../services/timeFrame";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -53,7 +46,9 @@ export async function getConflicts(req: Request, res: Response) {
             "timeframes._id": conflict.tf2,
           }).lean();
           if (!ft1 || !ft2) {
-            logger.err(`Conflict with unknown timeframe ${conflict.tf1} or ${conflict.tf2}`);
+            logger.err(
+              `Conflict with unknown timeframe ${conflict.tf1} or ${conflict.tf2}`
+            );
             return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
           }
           ret.push({

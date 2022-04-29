@@ -1,16 +1,13 @@
 <template>
-  <div class="card">
+  <div class="card" @contextmenu.prevent="calendar">
     {{ user.firstname }} {{ user.lastname }} | {{ user.charisma }}
     <v-icon
       v-if="user.availableFriend && user.availableFriend.size > 0"
       small
-      class="icon pr-16"
+      class="icon pr-8"
       @click.stop="toggleFriendDialog"
     >
       mdi-account-group
-    </v-icon>
-    <v-icon small class="icon pr-8" @click.stop="calendar">
-      mdi-calendar
     </v-icon>
     <v-tooltip top>
       <template #activator="{ on, attrs }">
@@ -44,8 +41,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { User } from "~/utils/models/repo";
+import Vue, {PropType} from "vue";
+import {User} from "~/utils/models/repo";
 import UserInformation from "~/components/organisms/userInformation.vue";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 import FriendInformation from "~/components/organisms/FriendInformation.vue";

@@ -12,17 +12,20 @@
           <tr
             v-for="(ft, index) in FTs"
             :key="index"
-            @click="multipleSolidTask(ft)"
             style="cursor: pointer"
+            @click="multipleSolidTask(ft)"
+            @contextmenu.prevent="openFtNewTab(ft)"
           >
             <td>{{ ft.count + " - " + ft.general.name }}</td>
             <td>
-              <MiniUserBadge
-                v-for="team of rolesByFT[ft.count]"
-                :key="team"
-                :team="team"
-                @click.native.stop="clickBadge(ft, team)"
-              ></MiniUserBadge>
+              <template v-for="data of getFTExtraData(ft.count)">
+                <MiniUserBadge
+                  v-if="data"
+                  :key="data"
+                  :team="data"
+                  @click.native.stop="clickBadge(ft, data)"
+                ></MiniUserBadge>
+              </template>
             </td>
           </tr>
         </tbody>
@@ -31,11 +34,12 @@
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       {{ snack.feedbackMessage }}
     </v-snackbar>
+    <p>Nombres de FTs : {{ FTs.length }}</p>
   </div>
 </template>
 
 <script>
-import { Snack } from "~/utils/models/snack";
+import {Snack} from "~/utils/models/snack";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default {
@@ -60,6 +64,18 @@ export default {
   },
 
   methods: {
+    getFTExtraData(FTID) {
+      const data = this.rolesByFT[FTID];
+      if (data) {
+        return data.roles;
+      } else {
+        return [];
+      }
+    },
+    openFtNewTab(ft) {
+      window.open(`/ft/${ft.count}`, "_blank");
+    },
+
     async multipleSolidTask(ft) {
       if (ft) {
         this.$accessor.assignment.setMultipleSolidTask(ft);

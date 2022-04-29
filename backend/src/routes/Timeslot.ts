@@ -13,7 +13,7 @@ export async function getTimeslot(req: Request, res: Response) {
 }
 
 export async function getTimeslotById(req: Request, res: Response) {
-  const {id} = req.params;
+  const { id } = req.params;
   logger.info(id);
   const timeslot = await TimeslotModel.findById(id);
   if (!timeslot) {
@@ -30,7 +30,7 @@ export async function updateTimeslot(req: Request, res: Response) {
   if (mAvailabilities._id === undefined) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({error: "Availabilities must contain an ID"});
+      .json({ error: "Availabilities must contain an ID" });
   }
   // @ts-ignore
   await AvailabilitiesModel.findByIdAndUpdate(
@@ -46,7 +46,7 @@ export async function createManyTimeslots(req: Request, res: Response) {
   if (timeslots.length === 0) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({error: "Timeslots must contain at least one timeslot"});
+      .json({ error: "Timeslots must contain at least one timeslot" });
   }
   const newTimeslots = await TimeslotModel.insertMany(timeslots);
   res.status(StatusCodes.OK).json(newTimeslots);
@@ -62,7 +62,7 @@ export async function createTimeslot(req: Request, res: Response) {
 }
 
 export async function updateTimeslotCharisma(req: Request, res: Response) {
-  const {id, charisma} = req.params;
+  const { id, charisma } = req.params;
   const charismaN = parseInt(charisma);
   logger.info(`updating Timeslot ${id}`);
   const timeslot = await TimeslotModel.findById(id);
@@ -78,7 +78,7 @@ export async function updateTimeslotCharisma(req: Request, res: Response) {
 }
 
 export async function deleteTimeslot(req: Request, res: Response) {
-  const {id} = req.params;
+  const { id } = req.params;
   logger.info(`deleting Timeslot ${id}`);
   const timeslot = await TimeslotModel.findById(id);
   if (!timeslot) {
@@ -88,7 +88,7 @@ export async function deleteTimeslot(req: Request, res: Response) {
     });
   }
   const users = await UserModel.find({
-    availabilities: {$in: [Types.ObjectId(id)]},
+    availabilities: { $in: [Types.ObjectId(id)] },
   }).exec();
   users.forEach(async (user) => {
     user.availabilities = user.availabilities!.filter(
@@ -110,9 +110,9 @@ export async function deleteManyTimeslotsByGroupTitle(
   req: Request,
   res: Response
 ) {
-  const {groupTitle} = req.params;
+  const { groupTitle } = req.params;
   logger.info(`deleting Timeslots with groupTitle :  ${groupTitle}`);
-  const timeslots = await TimeslotModel.find({groupTitle});
+  const timeslots = await TimeslotModel.find({ groupTitle });
   if (!timeslots) {
     logger.info(`Timeslot with groupTitle ${groupTitle} not found`);
     return res.status(StatusCodes.NOT_FOUND).json({
@@ -121,7 +121,7 @@ export async function deleteManyTimeslotsByGroupTitle(
   }
   //Delete related entry in users as well as timeslot
   const users = await UserModel.find({
-    availabilities: {$in: timeslots.map((timeslot) => timeslot._id)},
+    availabilities: { $in: timeslots.map((timeslot) => timeslot._id) },
   }).exec();
   for (const timeslot of timeslots) {
     for (const user of users) {
@@ -137,20 +137,20 @@ export async function deleteManyTimeslotsByGroupTitle(
 
 // Return the number of users available and require for each 15 minutes timeslot of the given day (start of the day)
 export async function getOrgaNeeds(req: Request, res: Response) {
-  const timestamp: number = +(req.params['timestamp']);
+  const timestamp: number = +req.params["timestamp"];
   const start = new Date(timestamp);
   const end = new Date(timestamp + 86400000); // The end is the start + 1 day in seconds
   logger.info(`getting Timeslots for Timeslot ${timestamp}`);
 
   // Creating all the 15 minutes timeslots
-  let smallTimeslots: Array<{
-    id: number,
-    start: Date,
-    availableCount: number,
-    availableValidCount: number,
-    requireCount: number,
-    requireValidatedCount: number
-    affectedCount: number
+  const smallTimeslots: Array<{
+    id: number;
+    start: Date;
+    availableCount: number;
+    availableValidCount: number;
+    requireCount: number;
+    requireValidatedCount: number;
+    affectedCount: number;
   }> = [];
   for (let i = 0; i < 96; i++) {
     smallTimeslots.push({
@@ -160,42 +160,45 @@ export async function getOrgaNeeds(req: Request, res: Response) {
       availableValidCount: 0,
       requireCount: 0,
       requireValidatedCount: 0,
-      affectedCount: 0
+      affectedCount: 0,
     });
   }
 
   // Filling the users count
   const timeslots = await TimeslotModel.aggregate()
     .match({
-      'timeFrame.start': {$gte: start},
-      'timeFrame.end': {$lte: end},
+      "timeFrame.start": { $gte: start },
+      "timeFrame.end": { $lte: end },
     })
     .lookup({
-      from: 'users',
-      localField: '_id',
-      foreignField: 'availabilities',
-      as: 'users',
+      from: "users",
+      localField: "_id",
+      foreignField: "availabilities",
+      as: "users",
     })
     .project({
       _id: 1,
       timeFrame: 1,
       groupTitle: 1,
-      countUsers: {$size: '$users'},
+      countUsers: { $size: "$users" },
       countValidUsers: {
         $size: {
           $filter: {
-            input: '$users',
-            as: 'user',
-            cond: {$eq: ['$$user.isValid', true]},
+            input: "$users",
+            as: "user",
+            cond: { $eq: ["$$user.isValid", true] },
           },
         },
       },
     });
 
-  timeslots.forEach(elem => {
+  timeslots.forEach((elem) => {
     for (let i = 0; i < 8; i++) {
-      const index = smallTimeslots.findIndex(smallTimeslot => {
-        return smallTimeslot.start.getTime() === elem.timeFrame.start.getTime() + i * 900000;
+      const index = smallTimeslots.findIndex((smallTimeslot) => {
+        return (
+          smallTimeslot.start.getTime() ===
+          elem.timeFrame.start.getTime() + i * 900000
+        );
       });
       if (index !== -1) {
         smallTimeslots[index].availableCount = elem.countUsers;
@@ -207,32 +210,34 @@ export async function getOrgaNeeds(req: Request, res: Response) {
   // Filling the require count
   const required = await FTModel.aggregate()
     .match({
-      $and: [{isValid: {$ne: false}}],
+      $and: [{ isValid: { $ne: false } }],
     })
     .project({
       status: 1,
-      timeframes: 1
+      timeframes: 1,
     })
-    .unwind('$timeframes')
-    .unwind('$timeframes.required');
+    .unwind("$timeframes")
+    .unwind("$timeframes.required");
 
   smallTimeslots.forEach((timeslot) => {
     const requiredForTimeslot = required.filter(
       (ft) =>
         new Date(ft.timeframes.start) <= timeslot.start &&
-        new Date(ft.timeframes.end) >= new Date(timeslot.start.getTime() + 900000)
+        new Date(ft.timeframes.end) >=
+          new Date(timeslot.start.getTime() + 900000)
     );
     // requireCount is the number of users required for the timeslot
     timeslot.requireCount = requiredForTimeslot.reduce((acc, ft) => {
-      if (ft.timeframes.required.type === 'user') {
+      if (ft.timeframes.required.type === "user") {
         return acc + 1;
       } else {
         return acc + ft.timeframes.required.amount;
       }
     }, 0);
-    timeslot.requireValidatedCount = requiredForTimeslot.filter((ft) => ft.status === "validated" || ft.status === "ready")
+    timeslot.requireValidatedCount = requiredForTimeslot
+      .filter((ft) => ft.status === "validated" || ft.status === "ready")
       .reduce((acc, ft) => {
-        if (ft.timeframes.required.type === 'user') {
+        if (ft.timeframes.required.type === "user") {
           return acc + 1;
         } else {
           return acc + ft.timeframes.required.amount;
@@ -241,12 +246,11 @@ export async function getOrgaNeeds(req: Request, res: Response) {
   });
 
   // Filling the affected count
-  const affected = await TimeSpanModel.aggregate()
-    .match({
-      start: {$gte: start},
-      end: {$lte: end},
-      assigned: {$ne: null},
-    });
+  const affected = await TimeSpanModel.aggregate().match({
+    start: { $gte: start },
+    end: { $lte: end },
+    assigned: { $ne: null },
+  });
 
   smallTimeslots.forEach((timeslot) => {
     const affectedForTimeslot = affected.filter(

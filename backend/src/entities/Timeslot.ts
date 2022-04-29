@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import {model, Schema} from "mongoose";
 
 export interface ITimeslot {
   _id?: string;
@@ -20,7 +20,7 @@ const TimeslotSchema = new Schema<ITimeslot>({
     end: { type: Date, required: true },
   },
   charisma: { type: Number, required: true },
-  forHardOnly: { type: Boolean, required: false},
+  forHardOnly: { type: Boolean, required: false },
 });
 
 TimeslotSchema.index({

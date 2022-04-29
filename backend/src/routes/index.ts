@@ -3,7 +3,6 @@ import { getConfig, setConfig } from "./Config";
 import mCors from "../cors";
 import {
   addAvailabilities,
-  removeAvailability,
   addNotificationByFullName,
   addNotificationByID,
   broadcastNotification,
@@ -13,8 +12,10 @@ import {
   getUser,
   getUserByID,
   getUsers,
+  removeAvailability,
   updateUserByID,
   uploadPP,
+  addAvailabilityToUser,
 } from "./Users";
 import {
   createFA,
@@ -32,9 +33,9 @@ import {
   getAllFTs,
   getFTByID,
   getFTsNumber,
-  myPlanning,
   getOrgaRequis,
   makeFTReady,
+  myPlanning,
   unassign,
   updateFT,
 } from "./FT";
@@ -89,6 +90,11 @@ userRouter.post(
   "/removeAvailability",
   authMiddleware.protect(),
   removeAvailability
+);
+userRouter.post(
+  "/addAvailabilityToUser",
+  authMiddleware.protect(),
+  addAvailabilityToUser
 );
 const imageUpload = multer({
   dest: "images",
@@ -477,7 +483,7 @@ timespanRouter.delete(
   authMiddleware.protect(),
   authMiddleware.verifyRoles("humain"),
   TimeSpanHandlers.deleteTimespan
-)
+);
 // Export the base-router
 const baseRouter = Router();
 baseRouter.use("/planning", planningRouter);

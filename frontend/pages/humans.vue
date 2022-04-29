@@ -3,7 +3,7 @@
     <template style="width: 100%; display: grid">
       <v-row>
         <v-col md="2">
-          <v-card>
+          <v-card style="margin-bottom: 5%">
             <v-card-title>Filtres</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
               <v-text-field
@@ -76,79 +76,161 @@
               </template>
             </v-card-text>
           </v-card>
+          <v-card v-if="hasRole(['admin', 'bureau', 'humain'])">
+            <v-card-title>Mode stats humains</v-card-title>
+            <v-card-text style="display: flex; flex-direction: column">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+                <label>Mode stats</label>
+                <v-btn-toggle
+                  v-model="isModeStatsActive"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small> oui</v-btn>
+                  <v-btn :value="false" small> Non</v-btn>
+                </v-btn-toggle>
+              </template>
+            </v-card-text>
+          </v-card>
         </v-col>
         <v-col md="10">
-          <v-data-table
-            style="max-height: 100%; overflow-y: auto"
-            :headers="headers"
-            :items="filteredUsers"
-            class="elevation-1"
-            dense
-            :items-per-page="20"
-          >
-            <template #[`item.action`]="{ item }" style="display: flex">
-              <v-btn
-                v-if="hasRole('hard')"
-                icon
-                small
-                @click="openInformationDialog(item)"
-              >
-                <v-icon small>mdi-information-outline</v-icon>
-              </v-btn>
-              <v-btn icon small :href="'tel:+33' + item.phone">
-                <v-icon small>mdi-phone</v-icon>
-              </v-btn>
-              <v-btn icon small :href="'mailto:' + item.email">
-                <v-icon small>mdi-email</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="isCpUseful(item)"
-                icon
-                small
-                @click="openTransactionDialog(item)"
-              >
-                <v-icon small>mdi-cash</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="hasRole(['admin', 'bureau'])"
-                icon
-                small
-                @click="openCharismaDialog(item)"
-              >
-                <v-icon small>mdi-emoticon-cool</v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                small
-                :href="
-                  'https://www.facebook.com/search/top?q=' +
-                  item.firstname +
-                  ' ' +
-                  item.lastname
-                "
-              >
-                <v-icon small>mdi-facebook</v-icon>
-              </v-btn>
-            </template>
+          <div v-if="!loading">
+            <v-data-table
+              v-if="!isModeStatsActive"
+              style="max-height: 100%; overflow-y: auto"
+              :headers="headers"
+              :items="filteredUsers"
+              class="elevation-1"
+              dense
+              :items-per-page="20"
+            >
+              <template #[`item.action`]="{ item }" style="display: flex">
+                <v-btn
+                  v-if="hasRole('hard')"
+                  icon
+                  small
+                  @click="openInformationDialog(item)"
+                >
+                  <v-icon small>mdi-information-outline</v-icon>
+                </v-btn>
+                <v-btn icon small :href="'tel:+33' + item.phone">
+                  <v-icon small>mdi-phone</v-icon>
+                </v-btn>
+                <v-btn icon small :href="'mailto:' + item.email">
+                  <v-icon small>mdi-email</v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="isCpUseful(item)"
+                  icon
+                  small
+                  @click="openTransactionDialog(item)"
+                >
+                  <v-icon small>mdi-cash</v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="hasRole(['admin', 'bureau'])"
+                  icon
+                  small
+                  @click="openCharismaDialog(item)"
+                >
+                  <v-icon small>mdi-emoticon-cool</v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="hasRole(['admin', 'bureau', 'humain'])"
+                  icon
+                  small
+                  @click="openCalendar(item._id)"
+                >
+                  <v-icon small>mdi-calendar</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  small
+                  :href="
+                    'https://www.facebook.com/search/top?q=' +
+                    item.firstname +
+                    ' ' +
+                    item.lastname
+                  "
+                >
+                  <v-icon small>mdi-facebook</v-icon>
+                </v-btn>
+              </template>
 
-            <template #[`item.balance`]="{ item }">
-              {{ getCP(item) }}
-            </template>
+              <template #[`item.balance`]="{ item }">
+                {{ getCP(item) }}
+              </template>
 
-            <template #[`item.studies`]="{ item }">
-              {{ item.year }}{{ item.departement }}
-            </template>
+              <template #[`item.studies`]="{ item }">
+                {{ item.year }}{{ item.departement }}
+              </template>
 
-            <template #[`item.charisma`]="{ item }">
-              {{ item.charisma || 0 }}
-            </template>
+              <template #[`item.charisma`]="{ item }">
+                {{ item.charisma || 0 }}
+              </template>
 
-            <template #[`item.team`]="{ item }">
-              <v-container style="max-width: 150px">
-                <OverChips :roles="item.team"></OverChips>
-              </v-container>
-            </template>
-          </v-data-table>
+              <template #[`item.team`]="{ item }">
+                <v-container style="max-width: 150px">
+                  <OverChips :roles="item.team"></OverChips>
+                </v-container>
+              </template>
+            </v-data-table>
+            <v-data-table
+              v-else
+              style="max-height: 100%; overflow-y: auto"
+              :headers="statsHeaders"
+              :items="filteredUsers"
+              class="elevation-1"
+              dense
+              :items-per-page="20"
+            >
+              <template #[`item.action`]="{ item }" style="display: flex">
+                <v-btn
+                  v-if="hasRole('hard')"
+                  icon
+                  small
+                  @click="openInformationDialog(item)"
+                >
+                  <v-icon small>mdi-information-outline</v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="hasRole(['admin', 'bureau', 'humain'])"
+                  icon
+                  small
+                  @click="openCalendar(item._id)"
+                >
+                  <v-icon small>mdi-calendar</v-icon>
+                </v-btn>
+              </template>
+
+              <template #[`item.charisma`]="{ item }">
+                {{ item.charisma || 0 }}
+              </template>
+
+              <template #[`item.charge`]="{ item }">
+                {{ `${item.charge || 0} %` }}
+              </template>
+              <template #[`item.hours`]="{ item }">
+                {{ item.hours || 0 }}</template
+              >
+              <template #[`item.statics`]="{ item }">
+                {{ item.statics || 0 }}</template
+              >
+
+              <template #[`item.team`]="{ item }">
+                <v-container style="max-width: 150px">
+                  <OverChips :roles="item.team"></OverChips>
+                </v-container>
+              </template>
+            </v-data-table>
+          </div>
+          <div v-else class="d-flex justify-center">
+            <v-progress-circular
+              indeterminate
+              color="grey"
+            ></v-progress-circular>
+          </div>
         </v-col>
       </v-row>
     </template>
@@ -242,6 +324,16 @@ export default {
         { text: "Charisme", value: "charisma", align: "end" },
         { text: "Action", value: "action", sortable: false },
       ],
+      statsHeaders: [
+        { text: "Prénom", value: "firstname" },
+        { text: "Nom", value: "lastname" },
+        { text: "Surnom", value: "nickname" },
+        { text: "Charisme", value: "charisma", align: "end" },
+        { text: "Charge", value: "charge" },
+        { text: "Heures affectés", value: "hours" },
+        { text: "Statiques", value: "statics" },
+        { text: "Action", value: "action", sortable: false },
+      ],
 
       teams: getConfig(this, "teams"),
       loading: false,
@@ -274,6 +366,8 @@ export default {
       newRole: undefined,
 
       feedbackMessage: "Sauvegardé 🥳",
+
+      isModeStatsActive: false,
     };
   },
 
@@ -344,6 +438,11 @@ export default {
 
       return selections;
     },
+    isModeStatsActive() {
+      if (this.isModeStatsActive) {
+        this.initStats();
+      }
+    },
   },
 
   async mounted() {
@@ -374,6 +473,7 @@ export default {
     async initStore() {
       await this.$accessor.user.fetchUser();
       await this.$accessor.timeslot.fetchTimeslots();
+      await this.$accessor.FT.fetchAll();
     },
     isCpUseful(item) {
       if (item.team) {
@@ -612,6 +712,87 @@ export default {
       let parsedCSV = csv.replaceAll(regex, "");
       // Prompt the browser to start file download
       this.download("utilisateurs.csv", parsedCSV);
+    },
+    async initStats() {
+      this.loading = true;
+      await RepoFactory.ftRepo.getOrgaRequis(this).then((res) => {
+        const allPlanning = res.data;
+        let final = [];
+        let allStatic = [];
+        let allAffected = [];
+        allPlanning.forEach((plan) => {
+          const returnValue = {
+            _id: plan._id,
+            charge: this.getCharge(plan),
+          };
+          const staticValue = {
+            _id: plan._id,
+            statics: this.getStatic(plan),
+          };
+          const affectedHours = {
+            _id: plan._id,
+            affected: this.getAffected(plan),
+          };
+          final.push(returnValue);
+          allStatic.push(staticValue);
+          allAffected.push(affectedHours);
+        });
+        this.filteredUsers.forEach((user) => {
+          const userCharge = final.find((e) => e._id === user._id);
+          const userStatic = allStatic.find((e) => e._id === user._id);
+          const userAffected = allAffected.find((e) => e._id === user._id);
+          if (userCharge) {
+            user.charge = Math.round(userCharge.charge * 100) / 100;
+          }
+          if (userStatic) {
+            user.statics = Math.round(userStatic.statics * 100) / 100;
+          }
+          if (userAffected) {
+            user.hours = Math.round(userAffected.affected * 100) / 100;
+          }
+        });
+        this.loading = false;
+      });
+    },
+    getCharge(plan) {
+      let charge = 0;
+      plan.slots.forEach((slot) => {
+        const start = new Date(slot.start);
+        const end = new Date(slot.end);
+        const time = end.getTime() - start.getTime();
+        charge += time;
+      });
+      const user = this.users.find((e) => e._id === plan._id);
+      const hours = user.availabilities.length * 2 || 0;
+      if (charge === 0 || hours === 0) {
+        return 0;
+      } else {
+        return (charge / (hours * 3600000)) * 100;
+      }
+    },
+    getAffected(plan) {
+      let total = 0;
+      plan.slots.forEach((slot) => {
+        const start = new Date(slot.start);
+        const end = new Date(slot.end);
+        const time = end.getTime() - start.getTime();
+        total += time;
+      });
+      return Math.round(total / 3600000);
+    },
+    getStatic(plan) {
+      let statics = 0;
+      const Fts = this.$accessor.FT.Fts;
+      plan.slots.forEach((slot) => {
+        const ft = Fts.find((e) => e.count === slot.count);
+        if (ft.general.areTimeframesStatic) {
+          statics++;
+        }
+      });
+      return statics;
+    },
+    openCalendar(userID) {
+      window.open("/calendar/" + userID, "_blank");
     },
   },
 };

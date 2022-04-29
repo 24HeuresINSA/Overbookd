@@ -48,11 +48,16 @@
         <v-divider></v-divider>
         <div class="content">
           <UsersList :users="filteredUsers" class="userList"></UsersList>
+          <p>Nombre de personnes dans la liste : <b>{{ filteredUsers.length }}</b></p>
           <FriendsDisplay class="friendsDisplay" />
           <v-switch
             label="Bypass les roles (TACHE-ORGA ONLY)"
             @change="toggleBypass()"
           ></v-switch>
+          <!-- <v-switch
+            label="Afficher users en cours de validation (ORGA-TACHE)"
+            @change="toggleShowToValidate()"
+          ></v-switch> -->
         </div>
       </v-card-text>
     </v-card>
@@ -76,8 +81,10 @@ export default {
 
   computed: {
     filteredUsers() {
+      const showToValidate = this.$accessor.assignment.filters.user.showToValidate;
       return this.$accessor.assignment.filteredUsers.filter(
-        (user) => user.team.includes("hard") || user.team.includes("soft")
+        
+        (user) => (showToValidate) || (user.team.includes("hard") || user.team.includes("soft"))
       );
     },
   },
@@ -104,6 +111,9 @@ export default {
 
     toggleBypass() {
       this.$accessor.assignment.toggleBypass();
+    },
+    toggleShowToValidate() {
+      this.$accessor.assignment.toggleShowToValidate();
     },
   },
 };

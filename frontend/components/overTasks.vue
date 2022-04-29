@@ -7,13 +7,13 @@
             label="Recherche"
             style="padding: 2px"
             @input="updateFilters('search', $event)"
-          ></v-text-field>
-          <TeamSearchField
-            @input="updateFilters('team', $event)"
-          ></TeamSearchField>
+          />
+          <TeamSearchField @input="updateFilters('team', $event)" />
         </div>
         <div class="content">
           <ListTasks class="task" />
+          <p>Nombre de tache possible : {{ $accessor.assignment.availableTimeSpans.length }}</p>
+
           <CommentsDisplay class="comment" />
         </div>
       </v-card-text>

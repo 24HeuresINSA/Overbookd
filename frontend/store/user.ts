@@ -144,7 +144,19 @@ export const actions = actionTree(
         UserRepo.removeAvailability(this, payload)
       );
       if (res) {
-        commit("UPDATE_USER", res.data);
+        return true;
+      }
+      return false;
+    },
+    async addAvailabilityToUser(
+      { commit },
+      payload: { userID: string; timeslotID: string }
+    ) {
+      const res = await safeCall(
+        this,
+        UserRepo.addAvailabilityToUser(this, payload)
+      );
+      if (res) {
         return true;
       }
       return false;

@@ -1,11 +1,11 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
-import { FA } from "~/utils/models/FA";
+import {actionTree, getterTree, mutationTree} from "typed-vuex";
+import {safeCall} from "~/utils/api/calls";
+import {RepoFactory} from "~/repositories/repoFactory";
+import {User} from "~/utils/models/repo";
+import {FT} from "~/utils/models/FT";
+import {FA} from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import { TimeSpan } from "~/utils/models/TimeSpan";
+import {TimeSpan} from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -16,6 +16,7 @@ declare interface filter {
       isAscending: boolean;
       field: string;
     };
+    showToValidate: boolean;
   };
   FT: {
     search: string;
@@ -36,11 +37,13 @@ export const state = () => ({
         isAscending: false,
         field: "charisma",
       },
+      showToValidate: false,
       driverLicense: undefined,
     },
     FT: {
       search: "",
       team: [] as string[],
+      areAssignedFTsDisplayed: true,
     },
     isModeOrgaToTache: false,
     bypass: false,
@@ -55,7 +58,7 @@ export const state = () => ({
   hoverTask: {} as TimeSpan,
   multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
-  roles: {} as { [key: string]: string[] },
+  roles: {} as { [key: number]: { roles: string[]; isFullyAssigned: boolean } },
   userAssignedToSameTimespan: [] as {
     _id: string;
     firstname: string;
@@ -163,6 +166,10 @@ export const mutations = mutationTree(state, {
   TOGGLE_BYPASS(state: any) {
     state.filters.bypass = !state.filters.bypass;
   },
+  TOGGLE_SHOW_TO_VALIDATE(state: any) {
+    state.filters.user.showToValidate = !state.filters.user.showToValidate;
+  }
+
 });
 
 export const actions = actionTree(
@@ -467,6 +474,12 @@ export const actions = actionTree(
               timespanCompletion.data,
               ft.general?.name || ""
             ),
+            completion: getFTCompletion(
+              [...state.timespans, ...state.assignedTimespans],
+              ts,
+              timespanCompletion.data,
+              ft.general?.name || ""
+            ),
           }));
           commit("SET_MULTIPLE_SOLID_TASK", tosend);
         }
@@ -516,6 +529,9 @@ export const actions = actionTree(
     toggleBypass({ commit }: any) {
       commit("TOGGLE_BYPASS");
     },
+    toggleShowToValidate({ commit }: any) {
+      commit("TOGGLE_SHOW_TO_VALIDATE");
+    },
   }
 );
 
@@ -544,7 +560,7 @@ export const getters = getterTree(state, {
       });
     }
 
-    if (user.sortBy.field) {
+    if (user.sortBy.field && search.length == 0) {
       users = users.sort((a: User, b: User) => {
         // @ts-ignore
         if (a[user.sortBy.field] < b[user.sortBy.field]) {
@@ -593,6 +609,15 @@ export const getters = getterTree(state, {
       const fuse = new Fuse(filtered, options);
       filtered = fuse.search(FTFilters.search).map((e) => e.item);
     }
+    if (FTFilters.areAssignedFTsDisplayed) {
+      filtered = filtered.filter((ft: FT) => {
+        const info = state.roles[ft.count];
+        if (info && info.isFullyAssigned) {
+          return !info.isFullyAssigned;
+        }
+        return true;
+      });
+    }
 
     return filtered;
   },
@@ -613,6 +638,7 @@ export const getters = getterTree(state, {
     let filteredTimespans: any = state.timespans;
     if (FTFilters.team.length > 0) {
       filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
+        if(ts === null) return false;
         if (!FTFilters.team.includes(ts.required)) {
           return false;
         }
@@ -654,4 +680,25 @@ function getFTName(
     ret.total += timespanCompletion[ts._id].total;
   });
   return "[" + ret.assigned + "/" + ret.total + "] " + name;
+}
+
+function getFTCompletion(
+  allTimeSpans: TimeSpan[],
+  timespan: TimeSpan,
+  timespanCompletion: { [key: string]: { total: number; assigned: number } },
+  name: string
+) {
+  const ret: any = { assigned: 0, total: 0 };
+  const filter = allTimeSpans.filter(
+    (ts: TimeSpan) =>
+      ts.FTID === timespan.FTID &&
+      ts.start.toString() === new Date(timespan.start).toString() &&
+      ts.end.toString() === new Date(timespan.end).toString() &&
+      ts.required === timespan.required
+  );
+  filter.forEach((ts: TimeSpan) => {
+    ret.assigned += timespanCompletion[ts._id].assigned;
+    ret.total += timespanCompletion[ts._id].total;
+  });
+  return ret.assigned / ret.total;
 }

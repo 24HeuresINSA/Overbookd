@@ -2,6 +2,8 @@ import FAModel, { IFA } from "@entities/FA";
 import { Request, Response } from "express";
 import logger from "@shared/Logger";
 import StatusCodes from "http-status-codes";
+import FTModel, { IFT } from "@entities/FT";
+import { Document } from "mongoose";
 
 export async function getFAs(req: Request, res: Response) {
   const FAs = await FAModel.find({});
@@ -20,6 +22,8 @@ export async function getFAByCount(req: Request, res: Response) {
   const mFAQuery = await FAModel.findOne({ count: +req.params.id });
   if (mFAQuery) {
     const mFA = mFAQuery.toObject();
+    const linkedFTs = await FTModel.find({ FA: Number(req.params.id) }, {'count' : 1, 'general.name': 1});
+    mFA.FTs = linkedFTs;
     res.json(mFA);
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -84,10 +88,7 @@ export async function getFAsNumber(req: Request, res: Response) {
   logger.info("getting FAs count");
   const FAs = await FAModel.aggregate()
     .match({
-      $and: [
-        { isValid: { $ne: false } },
-        { 'general.team': { $ne: null } }
-      ]
+      $and: [{ isValid: { $ne: false } }, { "general.team": { $ne: null } }],
     })
     .group({
       _id: { team: "$general.team", status: "$status" },
