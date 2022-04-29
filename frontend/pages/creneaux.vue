@@ -46,11 +46,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {Header} from "~/utils/models/Data";
+import { Header } from "~/utils/models/Data";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 import UserRepo from "~/repositories/userRepo";
-import {safeCall} from "../utils/api/calls";
-import {TimeSpan} from "~/utils/models/TimeSpan";
+import { safeCall } from "../utils/api/calls";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 
 interface Data {
   headers: Header[];
@@ -82,7 +82,7 @@ export default Vue.extend({
   },
 
   async beforeMount() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.$accessor.user.hasRole(["humain", "bureau", "admin"])) {
       await this.getAllTimeSpans();
       await this.getAllUsers();
       this.assignmentPerCentage =
