@@ -137,6 +137,14 @@
                   <v-icon small>mdi-emoticon-cool</v-icon>
                 </v-btn>
                 <v-btn
+                  v-if="hasRole(['admin', 'bureau', 'humain'])"
+                  icon
+                  small
+                  @click="openCalendar(item._id)"
+                >
+                  <v-icon small>mdi-calendar</v-icon>
+                </v-btn>
+                <v-btn
                   icon
                   small
                   :href="
@@ -186,11 +194,13 @@
                 >
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
-                <v-btn icon small :href="'tel:+33' + item.phone">
-                  <v-icon small>mdi-phone</v-icon>
-                </v-btn>
-                <v-btn icon small :href="'mailto:' + item.email">
-                  <v-icon small>mdi-email</v-icon>
+                <v-btn
+                  v-if="hasRole(['admin', 'bureau', 'humain'])"
+                  icon
+                  small
+                  @click="openCalendar(item._id)"
+                >
+                  <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
               </template>
 
@@ -780,6 +790,9 @@ export default {
         }
       });
       return statics;
+    },
+    openCalendar(userID) {
+      window.open("/calendar/" + userID, "_blank");
     },
   },
 };
