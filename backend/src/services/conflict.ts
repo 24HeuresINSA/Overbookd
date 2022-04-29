@@ -1,4 +1,8 @@
-import ConflictModel, { IConflict, ITFConflict } from "@entities/Conflict";
+import ConflictModel, {
+  IConflict,
+  ITFConflict,
+  ITSConflict,
+} from "@entities/Conflict";
 import UserModel from "@entities/User";
 import FTModel from "@entities/FT";
 import { ITimeSpan } from "@entities/TimeSpan";
@@ -15,6 +19,7 @@ import { getTimeFramesWhereUserIsRequired } from "./timeFrame";
 import { Document } from "mongoose";
 
 import logger from "@shared/Logger";
+import { getTimespansWhereUserIsAssigned } from "./timeSpan";
 
 /* ################ Interfaces ################ */
 
@@ -70,9 +75,10 @@ export function sortTFByUser(tfs: ITimeFrame[]): TFsByOrga {
 
 export async function computeFTConflicts(ft: IFT): Promise<IConflict[]> {
   const timeframesConflicts = await Promise.all(
-    ft.timeframes.map((timeframe) =>
-      computeTimeframeConflicts(timeframe, ft.count)
-    )
+    ft.timeframes.flatMap((timeframe) => [
+      computeTimeframeConflicts(timeframe, ft.count),
+      computeTimespanConflicts(timeframe, ft.count),
+    ])
   );
   const ftConflicts = timeframesConflicts.flat();
   return ftConflicts;
@@ -92,6 +98,21 @@ async function computeTimeframeConflicts(
   return generateTFConflits(usersWithConflicts, timeframe);
 }
 
+async function computeTimespanConflicts(
+  timeframe: ITimeFrame,
+  FTID: number
+): Promise<ITSConflict[]> {
+  const { start, end } = timeframe;
+  const requiredUserIds = getRequiredUserIdsFromTimeframe(timeframe);
+  const usersWithConflicts = await getUsersWithConflictualTimespans(
+    requiredUserIds,
+    start,
+    end,
+    FTID
+  );
+  return generateTimeSpanConflicts(usersWithConflicts, timeframe);
+}
+
 function generateTFConflits(
   usersWithConflicts: {
     user: Types.ObjectId;
@@ -104,6 +125,23 @@ function generateTFConflits(
       tf1: conflictalTimeframe._id,
       tf2: timeframe._id,
       type: "TF",
+      user,
+    }))
+  );
+}
+
+function generateTimeSpanConflicts(
+  usersWithConflicts: {
+    user: Types.ObjectId;
+    conflictualTimespans: ITimeSpan[];
+  }[],
+  timeframe: ITimeFrame
+): ITSConflict[] {
+  return usersWithConflicts.flatMap(({ user, conflictualTimespans }) =>
+    conflictualTimespans.map((conflictualTimespan) => ({
+      tf1: timeframe._id,
+      ts1: conflictualTimespan._id,
+      type: "TS",
       user,
     }))
   );
@@ -133,7 +171,34 @@ async function getUsersWithConflictualTimeframes(
   return usersWithConflictsOnly;
 }
 
+async function getUsersWithConflictualTimespans(
+  userIds: Types.ObjectId[],
+  start: number,
+  end: number,
+  FTID: number
+): Promise<{ user: Types.ObjectId; conflictualTimespans: ITimeSpan[] }[]> {
+  const usersWithDedicatedConflicts = await Promise.all(
+    userIds.map(async (userId) => {
+      const conflictualTimespans = await getTimespansWhereUserIsAssigned(
+        userId,
+        {
+          start,
+          end,
+        },
+        [FTID]
+      );
+      return {
+        user: userId,
+        conflictualTimespans,
+      };
+    })
   );
+  const usersWithConflictsOnly = usersWithDedicatedConflicts.filter(
+    (userConflicts) => userConflicts.conflictualTimespans.length
+  );
+  return usersWithConflictsOnly;
+}
+
 function getRequiredUserIdsFromTimeframe(timeframe: ITimeFrame) {
   const requiredUsers = timeframe.required.filter((r) =>
     isTFRequiredUser(r)

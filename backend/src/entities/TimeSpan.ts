@@ -5,6 +5,7 @@
 import { Schema, model, Types } from "mongoose";
 
 export interface ITimeSpan {
+  _id: Types.ObjectId,
   start: Date;
   end: Date;
   timeframeID: string;
