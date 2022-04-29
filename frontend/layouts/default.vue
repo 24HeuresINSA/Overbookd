@@ -171,7 +171,7 @@ export default {
         {
           icon: "mdi-calendar-multiple-check",
           title: "Créneaux",
-          roles: "hard",
+          roles: "humain",
           to: "/creneaux",
         },
         {
