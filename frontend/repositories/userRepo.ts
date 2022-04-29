@@ -74,5 +74,8 @@ export default {
     data: { userID: string; timeslotID: string }
   ) {
     return context.$axios.post(`${resource}/addAvailabilityToUser`, data);
-  }
+  },
+  getHours(context: Context) {
+    return context.$axios.get(`${resource}/hours`);
+  },
 };

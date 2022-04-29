@@ -378,10 +378,7 @@ export const createFriendship: RequestHandler = async function (req, res) {
   return res.sendStatus(200);
 };
 
-export const getAvailabilitiesHoursForUser: RequestHandler = async function (
-  req,
-  res
-) {
+export const getHours: RequestHandler = async function (req, res) {
   const _id = req.params.userID;
   const user = await UserModel.findOne({ _id });
   if (user) {

@@ -16,7 +16,7 @@ import {
   updateUserByID,
   uploadPP,
   addAvailabilityToUser,
-  getAvailabilitiesHoursForUser,
+  getHours,
 } from "./Users";
 import {
   createFA,
@@ -65,11 +65,7 @@ userRouter.get("/me", authMiddleware.protect(), getUser);
 userRouter.get("/all", authMiddleware.protect(), getAllUsersName);
 userRouter.get("/:userID", authMiddleware.protect(), getUserByID);
 userRouter.put("/:userID", authMiddleware.protect(), updateUserByID);
-userRouter.get(
-  "/hours/:userID",
-  authMiddleware.protect(),
-  getAvailabilitiesHoursForUser
-);
+userRouter.get("/hours", authMiddleware.protect(), getHours);
 userRouter.put(
   "/notification/:lastname/:firstname",
   authMiddleware.protect(),
