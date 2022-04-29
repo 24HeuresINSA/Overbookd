@@ -448,10 +448,7 @@ export default {
     },
 
     hasRole(role) {
-      if (this.me.role) {
-        return this.me.team.includes(role);
-      }
-      return false;
+      return this.$accessor.user.hasRole(role);
     },
 
     getIconColor(validator) {

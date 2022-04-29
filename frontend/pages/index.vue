@@ -73,24 +73,11 @@ export default {
   },
   async mounted() {
     dispatch(this, "user", "fetchUser", getUserID(this));
-
-    this.notValidatedCount = this.getNotValidatedCount();
   },
   methods: {
-    async getNotValidatedCount() {
-      //TODO: change to repo
-      if (this.hasRole("admin")) {
-        let { data: users } = await this.$axios.get("/user");
-        return users.filter((user) => user.team.length === 0).length;
-      }
-      return 0;
-    },
 
     hasRole(team) {
-      if (this.me.team) {
-        return this.me.team.includes(team);
-      }
-      return false;
+      return this.$accessor.user.hasRole(team);
     },
 
     async logout() {

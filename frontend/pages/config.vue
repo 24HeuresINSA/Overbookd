@@ -111,7 +111,7 @@ export default {
   },
 
   async mounted() {
-    if (hasRole(this, ["admin", "bureau"])) {
+    if (this.$accessor.user.hasRole(this, ["admin", "bureau"])) {
       //TODO: Invert this to avoid empty if
     } else {
       await this.$router.push({
