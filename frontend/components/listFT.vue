@@ -34,6 +34,7 @@
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       {{ snack.feedbackMessage }}
     </v-snackbar>
+    <p>Nombres de FTs : {{ FTs.length }}</p>
   </div>
 </template>
 

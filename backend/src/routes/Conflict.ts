@@ -243,7 +243,7 @@ export async function computeAllConflicts(
         ) {
           return c.tf1 === conflict.tf1;
         } else if (c.type === "TS" && conflict.type === "TS") {
-          return c.ts1 === conflict.ts1 && c.ts2 === conflict.ts2;
+          return c.ts1 === conflict.ts1 && c.tf1 === conflict.tf1;
         }
         return false;
       }) === index

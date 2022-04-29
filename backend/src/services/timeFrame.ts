@@ -1,6 +1,8 @@
 import { IFT } from "@entities/FT";
+import { Types } from "mongoose";
 import FTModel from "../entities/FT";
 import { ITimeFrame } from "../entities/FT";
+import { queryFTWhereUserIsRequiredOnDateRange } from "./FT";
 
 export type getTimeFrameByIdOpts = {
   select: Array<keyof ITimeFrame>;
@@ -48,13 +50,40 @@ export async function getTimeFrameById(
   return undefined;
 }
 
-/**
- * Get all Timeframes in DB with type user
- */
-export async function getAllOrgaTFs(): Promise<ITimeFrame[]> {
-  return await FTModel.aggregate()
-    .match({ isValid: true })
+export async function getTimeFramesWhereUserIsRequired(
+  userId: Types.ObjectId,
+  range: { start: number; end: number },
+  excludeFTs: number[] = []
+): Promise<ITimeFrame[]> {
+  const matchFTQuery = queryFTWhereUserIsRequiredOnDateRange(
+    range,
+    userId,
+    excludeFTs
+  );
+
+  const matchTimeframeQuery = queryTimeframesWhereUserIsRequiredOnDateRange(range, userId);
+
+  const timeframes = await FTModel.aggregate()
+    .match(matchFTQuery)
     .unwind("$timeframes")
     .replaceRoot("$timeframes")
-    .match({ "required.type": "user" });
+    .match(matchTimeframeQuery);
+  return timeframes;
 }
+function queryTimeframesWhereUserIsRequiredOnDateRange(range: { start: number; end: number; }, userId: Types.ObjectId): any {
+  return {
+    start: {
+      $lt: range.end,
+    },
+    end: {
+      $gt: range.start,
+    },
+    required: {
+      $elemMatch: {
+        type: "user",
+        "user._id": Types.ObjectId(userId.toString()),
+      },
+    },
+  };
+}
+

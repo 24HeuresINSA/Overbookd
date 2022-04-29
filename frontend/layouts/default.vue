@@ -171,7 +171,7 @@ export default {
         {
           icon: "mdi-calendar-multiple-check",
           title: "Créneaux",
-          roles: "hard",
+          roles: "humain",
           to: "/creneaux",
         },
         {
@@ -329,11 +329,7 @@ export default {
       if (role === "everyone") {
         return true;
       }
-      if (this.me.team) {
-        //Permet de definir un cas de figure pour qu'une fenetre soit accessible par tout le monde
-        return this.me.team.includes(role);
-      }
-      return false;
+      return this.$accessor.user.hasRole(role);
     },
 
     getConfig(key) {

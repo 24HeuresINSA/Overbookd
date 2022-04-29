@@ -8,7 +8,7 @@ export interface ITFConflict<T = string> {
 }
 export interface ITSConflict {
   ts1: Types.ObjectId;
-  ts2: Types.ObjectId;
+  tf1: string;
   type: "TS";
   user: Types.ObjectId;
 }

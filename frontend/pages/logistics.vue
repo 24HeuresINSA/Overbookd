@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import { hasRole } from "../common/role";
 import Tab from "../components/atoms/tab.vue";
 import Tabs from "../components/molecules/tabs.vue";
 
@@ -162,7 +161,7 @@ export default {
   },
 
   async mounted() {
-    if (hasRole(this, "log")) {
+    if (this.hasRole("log")) {
       const { data: FAs } = await this.$axios.get("/fa");
       console.log(FAs);
       FAs.forEach((FA) => {
@@ -304,6 +303,9 @@ export default {
         }
       });
     },
+    hasRole(roles) {
+      return this.$accessor.user.hasRole(roles);
+    }
   },
 };
 </script>

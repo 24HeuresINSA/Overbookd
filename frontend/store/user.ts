@@ -144,7 +144,6 @@ export const actions = actionTree(
         UserRepo.removeAvailability(this, payload)
       );
       if (res) {
-        commit("UPDATE_USER", res.data);
         return true;
       }
       return false;
@@ -158,11 +157,10 @@ export const actions = actionTree(
         UserRepo.addAvailabilityToUser(this, payload)
       );
       if (res) {
-        commit("UPDATE_USER", res.data);
         return true;
       }
       return false;
-    }
+    },
   }
 );
 

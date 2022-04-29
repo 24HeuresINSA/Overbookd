@@ -79,13 +79,15 @@ export default {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           if (new Date(this.centralDay) < multipleSolidTask[0].start) {
             this.centralDay = multipleSolidTask[0].start;
-          }
-          if (
-            new Date(this.centralDay) >
-            multipleSolidTask[multipleSolidTask.length - 1].end
-          ) {
-            this.centralDay =
-              multipleSolidTask[multipleSolidTask.length - 1].end;
+          } else {
+            if (
+              new Date(this.centralDay) >
+              multipleSolidTask[multipleSolidTask.length - 1].end
+            ) {
+              this.centralDay =
+                multipleSolidTask[multipleSolidTask.length - 1].end;
+
+            }
           }
 
           multipleSolidTask.forEach((task) => {
@@ -95,6 +97,9 @@ export default {
         }
       } else {
         let hoverTask = this.$accessor.assignment.hoverTask;
+        for(const event of events) {
+          if(!event.color) event["color"] = this.getDisplayColor(event);
+        }
         if (hoverTask.FTID) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.centralDay = hoverTask.start;
@@ -219,6 +224,9 @@ export default {
     },
     getDisplayColor(timespan) {
       let transparency = (0.2 + 0.8 * timespan.completion).toFixed(2);
+      if(isNaN(transparency)) {
+        transparency = 1.0;
+      }
       if (timespan.required === "soft") {
         return "rgb(42,157,143," + transparency + ")";
       } else if (timespan.required === "hard") {
