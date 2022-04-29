@@ -3,7 +3,7 @@
     <template style="width: 100%; display: grid">
       <v-row>
         <v-col md="2">
-          <v-card>
+          <v-card style="margin-bottom: 5%">
             <v-card-title>Filtres</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
               <v-text-field
@@ -76,6 +76,23 @@
               </template>
             </v-card-text>
           </v-card>
+          <v-card v-if="hasRole(['admin', 'bureau', 'humain'])">
+            <v-card-title>Mode stats humains</v-card-title>
+            <v-card-text style="display: flex; flex-direction: column">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+                <label>Mode stats</label>
+                <v-btn-toggle
+                  v-model="isModeStatsActive"
+                  tile
+                  color="deep-purple accent-3"
+                  group
+                >
+                  <v-btn :value="true" small> oui</v-btn>
+                  <v-btn :value="false" small> Non</v-btn>
+                </v-btn-toggle>
+              </template>
+            </v-card-text>
+          </v-card>
         </v-col>
         <v-col md="10">
           <v-data-table
@@ -142,6 +159,16 @@
             <template #[`item.charisma`]="{ item }">
               {{ item.charisma || 0 }}
             </template>
+
+            <template #[`item.charge`]="{ item }">
+              {{ `La charge de ${item.firstname}` }}</template
+            >
+            <template #[`item.hours`]="{ item }">
+              {{ `Les heures de ${item.firstname}` }}</template
+            >
+            <template #[`item.statics`]="{ item }">
+              {{ `Les céneaux statiques de ${item.firstname}` }}</template
+            >
 
             <template #[`item.team`]="{ item }">
               <v-container style="max-width: 150px">
@@ -274,6 +301,7 @@ export default {
       newRole: undefined,
 
       feedbackMessage: "Sauvegardé 🥳",
+      isModeStatsActive: false,
     };
   },
 
@@ -343,6 +371,32 @@ export default {
       }
 
       return selections;
+    },
+    isModeStatsActive() {
+      if (this.isModeStatsActive) {
+        this.headers = [
+          { text: "Prénom", value: "firstname" },
+          { text: "Nom", value: "lastname" },
+          { text: "Surnom", value: "nickname" },
+          { text: "Charge", value: "charge" },
+          { text: "Heures", value: "hours" },
+          { text: "Statiques", value: "statics" },
+        ];
+      } else {
+        this.headers = [
+          { text: "Prénom", value: "firstname" },
+          { text: "Nom", value: "lastname" },
+          { text: "Surnom", value: "nickname" },
+          {
+            text: "Team",
+            value: "team",
+            cellClass: "width: 250px",
+            width: "1",
+          },
+          { text: "Charisme", value: "charisma", align: "end" },
+          { text: "Action", value: "action", sortable: false },
+        ];
+      }
     },
   },
 
