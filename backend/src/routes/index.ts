@@ -1,5 +1,5 @@
-import {Request, Response, Router} from "express";
-import {getConfig, setConfig} from "./Config";
+import { Request, Response, Router } from "express";
+import { getConfig, setConfig } from "./Config";
 import mCors from "../cors";
 import {
   addAvailabilities,
@@ -16,8 +16,16 @@ import {
   updateUserByID,
   uploadPP,
   addAvailabilityToUser,
+  getAvailabilitiesHoursForUser,
 } from "./Users";
-import {createFA, deleteFA, getFAByCount, getFAs, getFAsNumber, setFA,} from "./FA";
+import {
+  createFA,
+  deleteFA,
+  getFAByCount,
+  getFAs,
+  getFAsNumber,
+  setFA,
+} from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from "./Timeslot";
 import {
@@ -41,7 +49,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
-import {getPassSecu} from "./PassSecu";
+import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -57,6 +65,11 @@ userRouter.get("/me", authMiddleware.protect(), getUser);
 userRouter.get("/all", authMiddleware.protect(), getAllUsersName);
 userRouter.get("/:userID", authMiddleware.protect(), getUserByID);
 userRouter.put("/:userID", authMiddleware.protect(), updateUserByID);
+userRouter.get(
+  "/hours/:userID",
+  authMiddleware.protect(),
+  getAvailabilitiesHoursForUser
+);
 userRouter.put(
   "/notification/:lastname/:firstname",
   authMiddleware.protect(),
@@ -75,7 +88,11 @@ userRouter.post(
   authMiddleware.protect(),
   removeAvailability
 );
-userRouter.post("/addAvailabilityToUser", authMiddleware.protect(), addAvailabilityToUser);
+userRouter.post(
+  "/addAvailabilityToUser",
+  authMiddleware.protect(),
+  addAvailabilityToUser
+);
 const imageUpload = multer({
   dest: "images",
 });

@@ -377,3 +377,27 @@ export const createFriendship: RequestHandler = async function (req, res) {
 
   return res.sendStatus(200);
 };
+
+export const getAvailabilitiesHoursForUser: RequestHandler = async function (
+  req,
+  res
+) {
+  const _id = req.params.userID;
+  const user = await UserModel.findOne({ _id });
+  if (user) {
+    const availabilities = user.availabilities;
+    if (availabilities) {
+      //an availabilitiy is 2 hours long
+      const hours = availabilities.length * 2;
+      return res.status(StatusCodes.OK).json(hours);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: "User has no availabilities",
+      });
+    }
+  } else {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      error: "User not found",
+    });
+  }
+};
