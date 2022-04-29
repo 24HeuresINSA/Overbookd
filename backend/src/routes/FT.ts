@@ -1,81 +1,57 @@
 import StatusCodes from "http-status-codes";
-import {Request, Response} from "express";
-import FTModel, {IFT} from "@entities/FT";
+import { Request, Response } from "express";
+import FTModel, { IFT } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
-import {updateConflictsByFTCount} from "@src/services/conflict";
-import {timeframeToTimeSpan} from "@src/services/slicing";
-import TimeSpanModel, {ITimeSpan} from "@entities/TimeSpan";
-import {Types} from "mongoose";
+import { updateFTConflicts } from "@src/services/conflict";
+import { timeframeToTimeSpan } from "@src/services/slicing";
+import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
+import { Types } from "mongoose";
 import ConfigModel from "@entities/Config";
 import UserModel from "@entities/User";
 
-export async function getAllFTs(req: Request, res: Response) {
+export async function getAllFTs(req: Request, res: Response): Promise<void> {
   const mFTs = await FTModel.find({});
   res.json({ data: mFTs });
 }
 
-export async function getFTByID(req: Request, res: Response) {
+export async function getFTByID(req: Request, res: Response): Promise<void> {
   const mFT = await FTModel.findOne({ count: +req.params.FTID });
   res.json(mFT);
 }
 
-export async function createFT(req: Request, res: Response) {
+export async function createFT(req: Request, res: Response): Promise<void> {
   const mFT = <IFT>req.body;
   const count = await FTModel.countDocuments();
   mFT.count = count + 1;
   const FT = await FTModel.create(mFT);
-  await updateConflictsByFTCount(mFT.count);
+  await updateFTConflicts(FT);
   res.json(FT);
 }
 
-export async function updateFT(
-  req: Request<Record<string, never>, Record<string, never>, IFT>,
-  res: Response
-): Promise<void> {
-  const mFT = req.body;
-  if (mFT._id) {
-    try {
-      await FTModel.findByIdAndUpdate(mFT._id, mFT);
-      await updateConflictsByFTCount(mFT.count);
-      if (mFT.status === "refused") {
-        //delete all ²timespans of this FT
-        logger.info(`delete all timespans of this FT ${mFT.count}`);
-        await TimeSpanModel.deleteMany({ FTID: mFT.count });
-      }
-    } catch (e) {
-      logger.err(e);
+export async function updateFT(req: Request, res: Response): Promise<void> {
+  const mFT = <IFT>req.body;
+  if (!mFT._id) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
+
+  try {
+    await FTModel.findByIdAndUpdate(mFT._id, mFT);
+    await updateFTConflicts(mFT);
+    if (mFT.status === "refused") {
+      //delete all timespans of this FT
+      logger.info(`delete all timespans of this FT ${mFT.count}`);
+      await TimeSpanModel.deleteMany({ FTID: mFT.count });
     }
     res.sendStatus(StatusCodes.OK);
-  } else {
-    res.sendStatus(StatusCodes.BAD_REQUEST);
+  } catch (e) {
+    logger.err(e);
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
-/**
- * @deprecated
- */
-export async function unassign(req: Request, res: Response) {
-  // unassign a user from an FT
-  // const { FTID, _id } = req.body;
-  // const FT = await FTModel.findById(FTID);
-  // if (FT) {
-  //   const mFT = <IFT>FT.toObject();
-  //   mFT.schedules?.forEach((schedule) => {
-  //     if (schedule.assigned) {
-  //       schedule.assigned = schedule.assigned.filter(
-  //         (assign) => assign._id !== _id
-  //       );
-  //     }
-  //   });
-  //   logger.info(`unassigning ${FTID}`);
-  //   await FTModel.findByIdAndUpdate(FTID, {
-  //     schedules: mFT.schedules,
-  //   });
-  // }
-}
-
-export async function deleteFT(req: Request, res: Response) {
+export async function deleteFT(req: Request, res: Response): Promise<void> {
   const mFT = <IFT>req.body;
   logger.info(`deleting FT: ${mFT.count}...`);
   if (mFT.count) {
@@ -92,14 +68,14 @@ export async function deleteFT(req: Request, res: Response) {
         logger.info(`deleted FT`);
       }
     }
-    await updateConflictsByFTCount(mFT.count);
+    await updateFTConflicts(mFT);
     res.status(StatusCodes.OK).json({ mFT });
   } else {
     res.sendStatus(StatusCodes.BAD_REQUEST);
   }
 }
 
-export async function getFTsNumber(req: Request, res: Response) {
+export async function getFTsNumber(req: Request, res: Response): Promise<void> {
   const FTs: Array<{ _id: { count: number; status: string; FA: number } }> =
     await FTModel.aggregate()
       .match({
@@ -193,7 +169,7 @@ export async function getFTsNumber(req: Request, res: Response) {
   res.json(result);
 }
 
-export async function makeFTReady(req: Request, res: Response) {
+export async function makeFTReady(req: Request, res: Response): Promise<void> {
   const FTCount = req.params.count as string;
   const FT = await FTModel.findOne({ count: +FTCount });
   if (FT) {
@@ -227,7 +203,7 @@ export async function makeFTReady(req: Request, res: Response) {
   }
 }
 
-export async function myPlanning(req: Request, res: Response) {
+export async function myPlanning(req: Request, res: Response): Promise<void> {
   const showFt = await ConfigModel.findOne({ key: "show_ft_in_planning" });
 
   let FTs: Array<{ _id: string; userName: string; slots: any[] }> = [];
@@ -338,7 +314,10 @@ export async function myPlanning(req: Request, res: Response) {
   res.json(FTs);
 }
 
-export async function getOrgaRequis(req: Request, res: Response) {
+export async function getOrgaRequis(
+  req: Request,
+  res: Response
+): Promise<void> {
   const showFt = await ConfigModel.findOne({ key: "show_ft_in_planning" });
 
   const users = await UserModel.find({});
@@ -357,53 +336,54 @@ export async function getOrgaRequis(req: Request, res: Response) {
     );
 
   if (showFt && showFt.value) {
-    let matchFts: Array<{ _id: string; userName: string; slots: any[] }> = await FTModel.aggregate()
-      .match({
-        $and: [{ isValid: { $ne: false } }, { status: { $ne: "ready" } }],
-      })
-      .project({
-        _id: 0,
-        count: 1,
-        general: 1,
-        status: 1,
-        isValid: 1,
-        timeframes: 1,
-      })
-      .unwind({ path: "$timeframes" })
-      .unwind({ path: "$timeframes.required" })
-      .match({ "timeframes.required.type": "user" })
-      .lookup({
-        from: "conflicts",
-        localField: "timeframes.required.user._id",
-        foreignField: "user",
-        let: { id: "$timeframes._id" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $or: [{ $eq: ["$$id", "$tf1"] }, { $eq: ["$$id", "$tf2"] }],
+    let matchFts: Array<{ _id: string; userName: string; slots: any[] }> =
+      await FTModel.aggregate()
+        .match({
+          $and: [{ isValid: { $ne: false } }, { status: { $ne: "ready" } }],
+        })
+        .project({
+          _id: 0,
+          count: 1,
+          general: 1,
+          status: 1,
+          isValid: 1,
+          timeframes: 1,
+        })
+        .unwind({ path: "$timeframes" })
+        .unwind({ path: "$timeframes.required" })
+        .match({ "timeframes.required.type": "user" })
+        .lookup({
+          from: "conflicts",
+          localField: "timeframes.required.user._id",
+          foreignField: "user",
+          let: { id: "$timeframes._id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [{ $eq: ["$$id", "$tf1"] }, { $eq: ["$$id", "$tf2"] }],
+                },
               },
             },
+          ],
+          as: "conflicts",
+        })
+        .group({
+          _id: "$timeframes.required.user._id",
+          userName: { $first: "$timeframes.required.user.username" },
+          slots: {
+            $push: {
+              count: "$count",
+              name: "$general.name",
+              status: "$status",
+              start: "$timeframes.start",
+              end: "$timeframes.end",
+              conflits: "$conflicts",
+            },
           },
-        ],
-        as: "conflicts",
-      })
-      .group({
-        _id: "$timeframes.required.user._id",
-        userName: { $first: "$timeframes.required.user.username" },
-        slots: {
-          $push: {
-            count: "$count",
-            name: "$general.name",
-            status: "$status",
-            start: "$timeframes.start",
-            end: "$timeframes.end",
-            conflits: "$conflicts",
-          },
-        },
-      })
-      .match({ $and: [{ _id: { $ne: {} } }, { _id: { $ne: null } }] })
-      .sort("userName");
+        })
+        .match({ $and: [{ _id: { $ne: {} } }, { _id: { $ne: null } }] })
+        .sort("userName");
 
     // As all the _id don't have the same type, we need to do AGAIN the group by
     const grouped = matchFts.reduce((acc, cur) => {

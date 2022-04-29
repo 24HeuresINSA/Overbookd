@@ -11,13 +11,13 @@ export interface TFConflict<T = string> {
   user: User;
 }
 export interface TSConflict {
+  tf1: string;
   ts1: string;
-  ts2: string;
   type: "TS";
   user: User;
 }
 
-export interface availabilityConflict {
+export interface AvailabilityConflict {
   tf1: string;
   type: "availability";
   user: User;
@@ -26,4 +26,18 @@ export interface availabilityConflict {
 export type Conflict<T = string> =
   | TFConflict<T>
   | TSConflict
-  | availabilityConflict;
+  | AvailabilityConflict;
+
+export function isAvailabilityConflict(
+  conflict: Conflict
+): conflict is AvailabilityConflict {
+  return conflict.type === "availability";
+}
+
+export function isTFConflict(conflict: Conflict): conflict is TFConflict {
+  return conflict.type === "TF";
+}
+
+export function isTSConflict(conflict: Conflict): conflict is TSConflict {
+  return conflict.type === "TS";
+}

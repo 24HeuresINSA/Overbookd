@@ -1,15 +1,26 @@
-import ConflictModel, { IConflict, ITFConflict } from "@entities/Conflict";
+import ConflictModel, {
+  IConflict,
+  ITFConflict,
+  ITSConflict,
+} from "@entities/Conflict";
 import UserModel from "@entities/User";
 import FTModel from "@entities/FT";
 import { ITimeSpan } from "@entities/TimeSpan";
 import { ITimeslot } from "@entities/Timeslot";
-import { isTFRequiredUser, ITimeFrame, IFT } from "@entities/FT";
+import {
+  isTFRequiredUser,
+  ITimeFrame,
+  IFT,
+  ITFRequiredUser,
+} from "@entities/FT";
 import { Types } from "mongoose";
 import { newTFConflit, newAvailabilityConflit } from "../entities/Conflict";
-import { getAllOrgaTFs } from "./timeFrame";
+import { getTimeFramesWhereUserIsRequired } from "./timeFrame";
 import { Document } from "mongoose";
 
 import logger from "@shared/Logger";
+import { getTimespansWhereUserIsAssigned } from "./timeSpan";
+
 /* ################ Interfaces ################ */
 
 type TFsByOrga = Record<string, Array<ITimeFrame>>;
@@ -62,67 +73,140 @@ export function sortTFByUser(tfs: ITimeFrame[]): TFsByOrga {
   return TFsByOrga;
 }
 
-/**
- * Calculate timeFrame conflict from a timeFrames of an array of timeFrames
- * If tf is Present in others array, filter it
- *
- * @param tf TimeFrame to check
- * @param others All the TimeFrames to check against
- * @returns Conflicts found
- */
-export function computeTFConflictsWithArray(
-  tf: ITimeFrame,
-  others: ITimeFrame[]
-): IConflict[] {
-  const conflicts: IConflict[] = [];
-  // filter others to avoid timeFrame conflicting with itself
-  others = others.filter((t) => t._id !== tf._id);
-  const othersByUser = sortTFByUser(others);
-  const tfByUser = sortTFByUser([tf]);
-
-  // For each user compute potential conflicts
-  for (const [userId, userTfs] of Object.entries(tfByUser)) {
-    const othersTfUser = othersByUser[userId];
-    // If user is not required in an TF skip this loop
-    if (!othersTfUser) {
-      continue;
-    }
-
-    // Fetch all conflicts for the given user
-    userTfs.forEach((utfs) => {
-      othersTfUser.forEach((otfs) => {
-        if (isOverlappingTFs(utfs, otfs)) {
-          conflicts.push(
-            newTFConflit(utfs._id, otfs._id, Types.ObjectId(userId))
-          );
-        }
-      });
-    });
-  }
-  return conflicts;
+export async function computeFTConflicts(ft: IFT): Promise<IConflict[]> {
+  const timeframesConflicts = await Promise.all(
+    ft.timeframes.flatMap((timeframe) => [
+      computeTimeframeConflicts(timeframe, ft.count),
+      computeTimespanConflicts(timeframe, ft.count),
+    ])
+  );
+  const ftConflicts = timeframesConflicts.flat();
+  return ftConflicts;
 }
 
-/**
- * Compute conflicts for a given FT
- * @param ft The FT to update
- * @returns Array of conflicts for this FT
- */
-export async function computeFTConflicts(ft: IFT): Promise<IConflict[]> {
-  const allTimeFrames = await getAllOrgaTFs();
-  const FTTimeFrames = ft.timeframes;
-  let conflicts: IConflict[] = [];
-
-  // compute conflicts inside FT itself
-  conflicts = conflicts.concat(
-    computeAllTFConflicts(sortTFByUser(FTTimeFrames))
+async function computeTimeframeConflicts(
+  timeframe: ITimeFrame,
+  FTID: number
+): Promise<ITFConflict[]> {
+  const { start, end } = timeframe;
+  const requiredUserIds = getRequiredUserIdsFromTimeframe(timeframe);
+  const usersWithConflicts = await getUsersWithConflictualTimeframes(
+    requiredUserIds,
+    { start, end },
+    FTID
   );
+  return generateTFConflits(usersWithConflicts, timeframe);
+}
 
-  // compute conflicts with the other timeFrames
-  conflicts = conflicts.concat(
-    computeTFConflictsBetweenArray(FTTimeFrames, allTimeFrames)
+async function computeTimespanConflicts(
+  timeframe: ITimeFrame,
+  FTID: number
+): Promise<ITSConflict[]> {
+  const { start, end } = timeframe;
+  const requiredUserIds = getRequiredUserIdsFromTimeframe(timeframe);
+  const usersWithConflicts = await getUsersWithConflictualTimespans(
+    requiredUserIds,
+    start,
+    end,
+    FTID
   );
+  return generateTimeSpanConflicts(usersWithConflicts, timeframe);
+}
 
-  return conflicts;
+function generateTFConflits(
+  usersWithConflicts: {
+    user: Types.ObjectId;
+    conflictualTimeframes: ITimeFrame[];
+  }[],
+  timeframe: ITimeFrame
+): ITFConflict[] {
+  return usersWithConflicts.flatMap(({ user, conflictualTimeframes }) =>
+    conflictualTimeframes.map((conflictalTimeframe) => ({
+      tf1: conflictalTimeframe._id,
+      tf2: timeframe._id,
+      type: "TF",
+      user,
+    }))
+  );
+}
+
+function generateTimeSpanConflicts(
+  usersWithConflicts: {
+    user: Types.ObjectId;
+    conflictualTimespans: ITimeSpan[];
+  }[],
+  timeframe: ITimeFrame
+): ITSConflict[] {
+  return usersWithConflicts.flatMap(({ user, conflictualTimespans }) =>
+    conflictualTimespans.map((conflictualTimespan) => ({
+      tf1: timeframe._id,
+      ts1: conflictualTimespan._id,
+      type: "TS",
+      user,
+    }))
+  );
+}
+
+async function getUsersWithConflictualTimeframes(
+  userIds: Types.ObjectId[],
+  range: { start: number; end: number },
+  FTID: number
+): Promise<{ user: Types.ObjectId; conflictualTimeframes: ITimeFrame[] }[]> {
+  const usersWithDedicatedConflicts = await Promise.all(
+    userIds.map(async (userId) => {
+      const conflictualTimeframes = await getTimeFramesWhereUserIsRequired(
+        userId,
+        range,
+        [FTID]
+      );
+      return {
+        user: userId,
+        conflictualTimeframes,
+      };
+    })
+  );
+  const usersWithConflictsOnly = usersWithDedicatedConflicts.filter(
+    (userConflicts) => userConflicts.conflictualTimeframes.length
+  );
+  return usersWithConflictsOnly;
+}
+
+async function getUsersWithConflictualTimespans(
+  userIds: Types.ObjectId[],
+  start: number,
+  end: number,
+  FTID: number
+): Promise<{ user: Types.ObjectId; conflictualTimespans: ITimeSpan[] }[]> {
+  const usersWithDedicatedConflicts = await Promise.all(
+    userIds.map(async (userId) => {
+      const conflictualTimespans = await getTimespansWhereUserIsAssigned(
+        userId,
+        {
+          start,
+          end,
+        },
+        [FTID]
+      );
+      return {
+        user: userId,
+        conflictualTimespans,
+      };
+    })
+  );
+  const usersWithConflictsOnly = usersWithDedicatedConflicts.filter(
+    (userConflicts) => userConflicts.conflictualTimespans.length
+  );
+  return usersWithConflictsOnly;
+}
+
+function getRequiredUserIdsFromTimeframe(timeframe: ITimeFrame) {
+  const requiredUsers = timeframe.required.filter((r) =>
+    isTFRequiredUser(r)
+  ) as ITFRequiredUser[];
+  const requiredUserIds = requiredUsers.map(
+    (requiredUser) => requiredUser.user._id
+  );
+  return requiredUserIds;
 }
 
 /**
@@ -146,34 +230,6 @@ export function computeAllTFConflicts(TFsByOrga: TFsByOrga): IConflict[] {
         }
       }
     });
-  }
-
-  return conflicts;
-}
-
-/**
- * Compute all conflicts between an array of timeFrames and allTimeFrames
- * Does not compute conflicts INSIDE allTimeFrames array
- *
- * @param checkedTFs The FTs for which we want to find conflicts
- * @param allTimeFrames All the TFs possibly involved in conflicts
- * @returns Array of conflicts
- */
-export function computeTFConflictsBetweenArray(
-  checkedTFs: ITimeFrame[],
-  allTimeFrames: ITimeFrame[]
-): IConflict[] {
-  // remove checked TFs from the allTimeFrames array
-  allTimeFrames = allTimeFrames.filter((tf) => !checkedTFs.includes(tf));
-
-  // Compute between checkedTFS itself
-  let conflicts = computeAllTFConflicts(sortTFByUser(checkedTFs));
-
-  // Then compute with other TFs
-  for (const tf of checkedTFs) {
-    conflicts = conflicts.concat(
-      computeTFConflictsWithArray(tf, allTimeFrames)
-    );
   }
 
   return conflicts;
@@ -261,18 +317,17 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
   if (!ft) {
     throw new Error("Did not find the FT for conflicts");
   }
-  // Delete conflicts from both timeframes
+
+  return await updateFTConflicts(ft);
+}
+
+export async function updateFTConflicts(ft: IFT): Promise<void> {
   await Promise.all(
-    ft.timeframes.map(async (tf) => {
-      await ConflictModel.deleteMany({
-        // type: "FT",
-        tf1: tf._id,
-      });
-      await ConflictModel.deleteMany({
-        type: "TF",
-        tf2: tf._id,
-      });
-    })
+    ft.timeframes.map((timeframe) =>
+      ConflictModel.deleteMany({
+        $or: [{ tf1: timeframe._id }, { tf2: timeframe._id }],
+      })
+    )
   );
 
   // Stop after deleting if the current FT is deleted
@@ -281,8 +336,11 @@ export async function updateConflictsByFTCount(FTCount: number): Promise<void> {
   }
 
   // compute new conflicts
-  const newConflicts = await computeFTConflicts(ft);
-  const newAvailabiltyConflicts = await computeAvailabilityConflicts(ft);
+  const [newConflicts, newAvailabiltyConflicts] = await Promise.all([
+    computeFTConflicts(ft),
+    computeAvailabilityConflicts(ft),
+  ]);
+
   // save new conflicts
   if (newConflicts.length != 0) {
     ConflictModel.insertMany(newConflicts);
