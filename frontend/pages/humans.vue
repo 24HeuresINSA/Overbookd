@@ -162,8 +162,8 @@
               </template>
 
               <template #[`item.charge`]="{ item }">
-                {{ `La charge de ${item.firstname}` }}</template
-              >
+                {{ `${displayCharge(item._id)} %` }}
+              </template>
               <template #[`item.hours`]="{ item }">
                 {{ item.availabilities.length * 2 || 0 }}</template
               >
@@ -311,7 +311,7 @@ export default {
       feedbackMessage: "Sauvegardé 🥳",
 
       isModeStatsActive: false,
-      hours: [],
+      charge: [],
     };
   },
 
@@ -383,7 +383,6 @@ export default {
       return selections;
     },
     isModeStatsActive() {
-      this.loading = true;
       if (this.isModeStatsActive) {
         this.headers = [
           { text: "Prénom", value: "firstname" },
@@ -393,7 +392,7 @@ export default {
           { text: "Heures dispos", value: "hours" },
           { text: "Statiques", value: "statics" },
         ];
-        this.loading = false;
+        this.initStats();
       } else {
         this.headers = [
           { text: "Prénom", value: "firstname" },
@@ -408,7 +407,6 @@ export default {
           { text: "Charisme", value: "charisma", align: "end" },
           { text: "Action", value: "action", sortable: false },
         ];
-        this.loading = false;
       }
     },
   },
@@ -679,6 +677,47 @@ export default {
       let parsedCSV = csv.replaceAll(regex, "");
       // Prompt the browser to start file download
       this.download("utilisateurs.csv", parsedCSV);
+    },
+    async initStats() {
+      this.loading = true;
+      await RepoFactory.ftRepo.getOrgaRequis(this).then((res) => {
+        const allPlanning = res.data;
+        let final = [];
+        allPlanning.forEach((plan) => {
+          const returnValue = {
+            _id: plan._id,
+            charge: this.getCharge(plan),
+          };
+          final.push(returnValue);
+        });
+        this.charge = final;
+        this.loading = false;
+      });
+    },
+    getCharge(plan) {
+      let charge = 0;
+      plan.slots.forEach((slot) => {
+        const start = new Date(slot.start);
+        const end = new Date(slot.end);
+        const time = end.getTime() - start.getTime();
+        charge += time;
+      });
+      const user = this.users.find((e) => e._id === plan._id);
+      const hours = user.availabilities.length * 2 || 0;
+      if (charge === 0 || hours === 0) {
+        return 0;
+      } else {
+        return (charge / (hours * 3600000)) * 100;
+      }
+    },
+    displayCharge(id) {
+      const allCharge = this.charge;
+      const userCharge = allCharge.find((e) => e._id === id);
+      if (userCharge) {
+        return Math.round(userCharge.charge * 100) / 100;
+      } else {
+        return 0;
+      }
     },
   },
 };
