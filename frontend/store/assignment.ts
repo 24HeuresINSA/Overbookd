@@ -1,11 +1,11 @@
-import {actionTree, getterTree, mutationTree} from "typed-vuex";
-import {safeCall} from "~/utils/api/calls";
-import {RepoFactory} from "~/repositories/repoFactory";
-import {User} from "~/utils/models/repo";
-import {FT} from "~/utils/models/FT";
-import {FA} from "~/utils/models/FA";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { User } from "~/utils/models/repo";
+import { FT } from "~/utils/models/FT";
+import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import {TimeSpan} from "~/utils/models/TimeSpan";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -168,8 +168,7 @@ export const mutations = mutationTree(state, {
   },
   TOGGLE_SHOW_TO_VALIDATE(state: any) {
     state.filters.user.showToValidate = !state.filters.user.showToValidate;
-  }
-
+  },
 });
 
 export const actions = actionTree(
@@ -327,12 +326,14 @@ export const actions = actionTree(
     },
 
     async initStore({ dispatch }) {
-      await dispatch("getUsers");
-      await dispatch("getFTs");
-      await dispatch("getFAs");
-      await dispatch("getTimeslots");
-      await dispatch("getTimespans");
-      await dispatch("getRolesByFT");
+      await Promise.all([
+        dispatch("getUsers"),
+        dispatch("getFTs"),
+        dispatch("getFAs"),
+        dispatch("getTimeslots"),
+        dispatch("getTimespans"),
+        dispatch("getRolesByFT"),
+      ]);
     },
 
     /**
@@ -481,7 +482,7 @@ export const actions = actionTree(
               ft.general?.name || ""
             ),
           }));
-          //sort tosend by start date 
+          //sort tosend by start date
           tosend.sort((a: any, b: any) => {
             return a.start.getTime() - b.start.getTime();
           });
@@ -642,7 +643,7 @@ export const getters = getterTree(state, {
     let filteredTimespans: any = state.timespans;
     if (FTFilters.team.length > 0) {
       filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
-        if(ts === null) return false;
+        if (ts === null) return false;
         if (!FTFilters.team.includes(ts.required)) {
           return false;
         }
