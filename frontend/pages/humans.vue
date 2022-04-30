@@ -60,7 +60,7 @@
                   <v-btn :value="false" small>non</v-btn>
                 </v-btn-toggle>
               </div>
-              <template v-if="hasRole(['admin', 'bureau'])">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
                 <p>Cotisation</p>
                 <v-btn-toggle
                   v-model="filters.hasPayedContribution"
