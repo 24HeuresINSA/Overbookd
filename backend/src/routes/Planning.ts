@@ -14,11 +14,13 @@ const BIG_SPACE = 20;
 const BASE_X = 25;
 
 let yCursor = BASE_SPACE;
+let allUsers: any[] = [];
 
 interface Task {
   id: number;
   ft: IFT;
   timespan: ITimeSpan;
+  respPhone: number;
 }
 
 export async function createPlanning(
@@ -31,6 +33,14 @@ export async function createPlanning(
   if (!user) {
     res.status(StatusCodes.BAD_REQUEST).json({
       message: "User not found",
+    });
+  }
+  await User.find().then((users: any) => {
+    allUsers = users;
+  });
+  if (!allUsers) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      message: "No users found",
     });
   }
   //Get timespans where assigned is userid
@@ -78,11 +88,11 @@ export async function createPlanning(
 }
 
 /**
- * fill the pdf
+ * fill the pdf with the data
  * @param doc
  * @param user
  * @param sos_numbers
- * @param userAssignedFT
+ * @param tasks
  */
 function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Basic configuration
@@ -111,6 +121,12 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   });
 }
 
+/**
+ * build all tasks
+ * @param userAssignedFT
+ * @param timespans
+ * @returns
+ */
 function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
   const tasks: Task[] = [];
   const sortedTS = timespans.sort(
@@ -119,11 +135,18 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
   let index = 1;
   sortedTS.forEach((ts: ITimeSpan) => {
     const ft = userAssignedFT.find((ft: IFT) => ft.count === ts.FTID);
+    const respUser = allUsers.find(
+      //@ts-ignore
+      (u: any) => u._id.toString() === ft?.general.inCharge._id
+    );
+    const respPhone = respUser?.phone;
+    logger.info(respUser);
     if (ft) {
       tasks.push({
         id: index,
         ft: ft,
         timespan: ts,
+        respPhone: respPhone,
       });
       index++;
     }
@@ -162,8 +185,7 @@ function sanitizeString(str: any) {
 /**
  * build the sos part of the pdf
  * @param doc
- * @param yCursor
- * @returns
+ * @param sos_numbers
  */
 function sosPart(doc: jsPDF, sos_numbers: any) {
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -185,17 +207,15 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
 /**
  * build the part for 1 task
  * @param doc
- * @param yCursor
  * @param task
  */
 function singleTask(doc: jsPDF, task: Task) {
   //Space for the rect
-  doc.setFontSize(14);
+  doc.setFontSize(12);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
   doc.text(title, BASE_X - 5, yCursor);
   incrementY(doc, LITTLE_SPACE);
-  doc.setFontSize(12);
-  const startDate = new Date(task.timespan.start);
+  doc.setFontSize(10);
   //avoir la date et l'heure format francais
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -204,19 +224,32 @@ function singleTask(doc: jsPDF, task: Task) {
     hour: "numeric",
     minute: "numeric",
   };
+  const startDate = new Date(task.timespan.start);
   const startDateString = sanitizeString(
     startDate.toLocaleDateString("fr-FR", options)
   );
-  const dateText = `Quand ? : ${startDateString}`;
+  const endDate = new Date(task.timespan.end);
+  const endDateString = sanitizeString(
+    endDate.toLocaleDateString("fr-FR", options)
+  );
+  const dateText = sanitizeString(
+    `Quand ? : ${startDateString} - ${endDateString}`
+  );
   doc.text(dateText, BASE_X, yCursor);
   incrementY(doc, LITTLE_SPACE);
   const resp = `Responsable : ${sanitizeString(
     //@ts-ignore
     task.ft.general.inCharge.username
-  )}`;
+  )} (+33${task.respPhone})`;
   doc.text(resp, BASE_X, yCursor);
 }
 
+/**
+ * Allows to increment the y and take care of the page break
+ * @param doc
+ * @param increment
+ * @returns
+ */
 function incrementY(doc: jsPDF, increment: number) {
   const pageHeight = doc.internal.pageSize.height;
   const newY = yCursor + increment;
