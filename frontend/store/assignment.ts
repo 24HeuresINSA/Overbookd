@@ -329,15 +329,19 @@ export const actions = actionTree(
       commit("CHANGE_MODE", true);
     },
 
-    async initStore({ dispatch }) {
-      await Promise.all([
+    async initStore({ dispatch, state }) {
+      const actions = [
         dispatch("getUsers"),
         dispatch("getFTs"),
         dispatch("getFAs"),
         dispatch("getTimeslots"),
         dispatch("getTimespans"),
-        dispatch("getRolesByFT"),
-      ]);
+      ];
+      if (!state.filters.isModeOrgaToTache) {
+        return Promise.all([...actions, dispatch("getRolesByFT")]);
+      }
+
+      return Promise.all(actions);
     },
 
     /**
