@@ -121,7 +121,7 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="isCpUseful(item)"
+                  v-if="hasRole(['admin']) && isCpUseful(item)"
                   icon
                   small
                   @click="openTransactionDialog(item)"
@@ -477,7 +477,7 @@ export default {
     },
     isCpUseful(item) {
       if (item.team) {
-        return item.team.includes("hard");
+        return item.team.includes("hard") || item.team.includes("vieux");
       } else {
         return false;
       }
