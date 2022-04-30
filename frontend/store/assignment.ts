@@ -481,6 +481,10 @@ export const actions = actionTree(
               ft.general?.name || ""
             ),
           }));
+          //sort tosend by start date 
+          tosend.sort((a: any, b: any) => {
+            return a.start.getTime() - b.start.getTime();
+          });
           commit("SET_MULTIPLE_SOLID_TASK", tosend);
         }
       }

@@ -36,7 +36,6 @@ import {
   getOrgaRequis,
   makeFTReady,
   myPlanning,
-  unassign,
   updateFT,
 } from "./FT";
 import * as TransactionHandlers from "./transactions";
@@ -161,12 +160,6 @@ FTrouter.put(
   authMiddleware.protect(),
   authMiddleware.verifyRoles("hard"),
   updateFT
-);
-FTrouter.put(
-  "/unassign",
-  authMiddleware.protect(),
-  authMiddleware.verifyRoles("humain"),
-  unassign
 );
 FTrouter.post(
   "/:count/ready",

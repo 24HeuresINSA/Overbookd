@@ -79,13 +79,15 @@ export default {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           if (new Date(this.centralDay) < multipleSolidTask[0].start) {
             this.centralDay = multipleSolidTask[0].start;
-          }
-          if (
-            new Date(this.centralDay) >
-            multipleSolidTask[multipleSolidTask.length - 1].end
-          ) {
-            this.centralDay =
-              multipleSolidTask[multipleSolidTask.length - 1].end;
+          } else {
+            if (
+              new Date(this.centralDay) >
+              multipleSolidTask[multipleSolidTask.length - 1].end
+            ) {
+              this.centralDay =
+                multipleSolidTask[multipleSolidTask.length - 1].end;
+
+            }
           }
 
           multipleSolidTask.forEach((task) => {
@@ -97,7 +99,6 @@ export default {
         let hoverTask = this.$accessor.assignment.hoverTask;
         for(const event of events) {
           if(!event.color) event["color"] = this.getDisplayColor(event);
-          console.log(event);
         }
         if (hoverTask.FTID) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties

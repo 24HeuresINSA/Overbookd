@@ -60,7 +60,7 @@
                   <v-btn :value="false" small>non</v-btn>
                 </v-btn-toggle>
               </div>
-              <template v-if="hasRole(['admin', 'bureau'])">
+              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
                 <p>Cotisation</p>
                 <v-btn-toggle
                   v-model="filters.hasPayedContribution"
@@ -296,7 +296,7 @@
 </template>
 
 <script>
-import { getConfig, getUser, hasRole } from "../common/role";
+import { getConfig, hasRole } from "../common/role";
 import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
@@ -522,12 +522,8 @@ export default {
       return getConfig(this, key);
     },
 
-    getUser() {
-      return getUser(this);
-    },
-
     hasRole(role) {
-      return hasRole(this, role);
+      return this.$accessor.user.hasRole(role);
     },
 
     openTransactionDialog(user) {

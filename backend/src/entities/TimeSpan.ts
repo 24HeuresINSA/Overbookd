@@ -3,9 +3,9 @@
  */
 
 import { Schema, model, Types } from "mongoose";
-import { ITFRequired } from "@entities/FT";
 
 export interface ITimeSpan {
+  _id: Types.ObjectId,
   start: Date;
   end: Date;
   timeframeID: string;

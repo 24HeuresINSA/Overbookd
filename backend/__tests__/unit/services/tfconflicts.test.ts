@@ -1,7 +1,7 @@
 import { ITimeFrame } from "@entities/FT";
 import { sortTFByUser } from "@src/services/conflict";
 import * as fs from "fs";
-import { computeTFConflictsWithArray } from "../../../src/services/conflict";
+// import { computeTFConflictsWithArray } from "../../../src/services/conflict";
 
 let allTFs: ITimeFrame[];
 let res: any = {};
@@ -22,11 +22,11 @@ describe("Testing conflicts service", () => {
     });
   });
 
-  describe("Testing computeTFConflictsWithArray", () => {
-    it("should not fail", () => {
-      res = computeTFConflictsWithArray(allTFs[0], allTFs);
-      console.log(res);
-      expect(true).toBeTruthy();
-    });
-  });
+  // describe("Testing computeTFConflictsWithArray", () => {
+  //   it("should not fail", () => {
+  //     res = computeTFConflictsWithArray(allTFs[0], allTFs);
+  //     console.log(res);
+  //     expect(true).toBeTruthy();
+  //   });
+  // });
 });

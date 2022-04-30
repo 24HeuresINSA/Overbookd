@@ -4,6 +4,11 @@
       <v-card-title>FT associées</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="FTs">
+          <template #[`item.status`]="row">
+            <v-chip small :color="color[row.item.status]">
+              {{ row.item.status }}
+            </v-chip>
+          </template>
           <template #[`item.action`]="{ item }">
             <v-btn small icon :to="`/ft/${item.count}`">
               <v-icon small>mdi-link</v-icon>
@@ -42,11 +47,20 @@ export default {
   data: () => ({
     headers: [
       { text: "FT", value: "general.name" },
+      { text: "Status", value: "status" },
       { text: "Action", value: "action" },
     ],
 
     newFTDialog: false,
     newFTName: undefined,
+    color: {
+      undefined: "grey",
+      draft: "grey",
+      submitted: "orange",
+      validated: "green",
+      refused: "red",
+      ready: "#bf2bbd",
+    },
   }),
 
   computed: {
