@@ -13,6 +13,8 @@ const BASE_SPACE = 10;
 const BIG_SPACE = 20;
 const BASE_X = 25;
 
+let yCursor = BASE_SPACE;
+
 interface Task {
   id: number;
   ft: IFT;
@@ -61,8 +63,7 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
-  const yCursor = BASE_SPACE;
-  fillPDF(doc, yCursor, user, sos_numbers, userTasks);
+  fillPDF(doc, user, sos_numbers, userTasks);
 
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -81,13 +82,7 @@ export async function createPlanning(
  * @param sos_numbers
  * @param userAssignedFT
  */
-function fillPDF(
-  doc: jsPDF,
-  yCursor: number,
-  user: any,
-  sos_numbers: any,
-  tasks: Task[]
-) {
+function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Basic configuration
   doc.setFont("helvetica");
   doc.setFontSize(10);
@@ -101,16 +96,15 @@ function fillPDF(
   if (user?.nickname) {
     title += ` (${sanitizeString(user?.nickname)})`;
   }
-  yCursor = incrementY(doc, yCursor, BIG_SPACE);
+  incrementY(doc, BIG_SPACE);
   centeredText(doc, title, yCursor);
-  yCursor = incrementY(doc, yCursor, BASE_SPACE);
+  incrementY(doc, BASE_SPACE);
   //SOS part with numbers
-  sosPart(doc, yCursor, sos_numbers);
-  yCursor = incrementY(doc, yCursor, BIG_SPACE * 2.5);
+  sosPart(doc, sos_numbers);
+  incrementY(doc, BIG_SPACE * 2.5);
   //Tasks part
   tasks.forEach((task: Task) => {
-    singleTask(doc, yCursor, task);
-    yCursor = incrementY(doc, yCursor, BASE_SPACE);
+    singleTask(doc, task);
   });
 }
 
@@ -168,19 +162,19 @@ function sanitizeString(str: any) {
  * @param yCursor
  * @returns
  */
-function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
+function sosPart(doc: jsPDF, sos_numbers: any) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const startingCursor = yCursor;
-  yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
+  incrementY(doc, LITTLE_SPACE);
   doc.setFontSize(15);
-  yCursor += 5;
+  incrementY(doc, LITTLE_SPACE);
   doc.text("SOS", BASE_X, yCursor);
   doc.setFontSize(10);
-  yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
+  incrementY(doc, LITTLE_SPACE);
   sos_numbers.forEach((sos: any) => {
     const text = `${sos.name} : ${sos.number}`;
     doc.text(text, BASE_X, yCursor);
-    yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
+    incrementY(doc, LITTLE_SPACE);
   });
   doc.rect(20, startingCursor, pageWidth - 40, yCursor - startingCursor);
 }
@@ -191,12 +185,12 @@ function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
  * @param yCursor
  * @param task
  */
-function singleTask(doc: jsPDF, yCursor: number, task: Task) {
+function singleTask(doc: jsPDF, task: Task) {
   //Space for the rect
   doc.setFontSize(15);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
   doc.text(title, BASE_X, yCursor);
-  yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
+  incrementY(doc, LITTLE_SPACE);
   doc.setFontSize(10);
   doc.text("Quand ?", BASE_X, yCursor);
   const startDate = new Date(task.timespan.start);
@@ -207,15 +201,16 @@ function singleTask(doc: jsPDF, yCursor: number, task: Task) {
     }/${startDate.getFullYear()} à ${startDate.getHours()}:${startDate.getMinutes()}`
   );
   doc.text(startDateString, BASE_X + BASE_SPACE + 5, yCursor);
-  yCursor = incrementY(doc, yCursor, BASE_SPACE);
 }
 
-function incrementY(doc: jsPDF, yCursor: number, increment: number) {
+function incrementY(doc: jsPDF, increment: number) {
   const pageHeight = doc.internal.pageSize.height;
-  if (yCursor + increment > pageHeight) {
+  const newY = yCursor + increment;
+  if (newY > pageHeight) {
+    logger.info("New y is too high" + newY);
     doc.addPage();
-    return BASE_SPACE;
-  } else {
-    return yCursor + increment;
+    yCursor = BASE_SPACE;
+    return;
   }
+  yCursor = newY;
 }
