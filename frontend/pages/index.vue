@@ -44,9 +44,6 @@ import SnackNotificationContainer from "@/components/molecules/snackNotification
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
 import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
-import ClickerCard from "@/components/molecules/clickerCard.vue";
-import { getUserID } from "~/middleware/user";
-import { dispatch } from "~/utils/store";
 
 export default {
   components: {
@@ -72,7 +69,7 @@ export default {
     },
   },
   async mounted() {
-    dispatch(this, "user", "fetchUser", getUserID(this));
+    this.$accessor.user.fetchUser();
     this.$accessor.user.fetchUsernamesWithCP();
   },
   methods: {
