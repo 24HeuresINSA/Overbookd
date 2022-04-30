@@ -15,12 +15,14 @@ const BASE_X = 25;
 
 let yCursor = BASE_SPACE;
 let allUsers: any[] = [];
+let allTimeSPans: ITimeSpan[] = [];
 
 interface Task {
   id: number;
   ft: IFT;
   timespan: ITimeSpan;
   respPhone: number;
+  partners: (string | undefined)[];
 }
 
 export async function createPlanning(
@@ -43,6 +45,9 @@ export async function createPlanning(
       message: "No users found",
     });
   }
+  await TimeSpan.find().then((timespans: any) => {
+    allTimeSPans = timespans;
+  });
   //Get timespans where assigned is userid
   const timespans = await TimeSpan.find({ assigned: userID });
   if (!timespans) {
@@ -72,7 +77,7 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF();
+  const doc = new jsPDF({ filters: ["ASCIIHexEncode"] });
   //reset the cursor position
   yCursor = BASE_SPACE;
   fillPDF(doc, user, sos_numbers, userTasks);
@@ -139,14 +144,30 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
       //@ts-ignore
       (u: any) => u._id.toString() === ft?.general.inCharge._id
     );
+    const twinTimeSpan = allTimeSPans.filter(
+      (TS: ITimeSpan) =>
+        ts.FTID === TS.FTID &&
+        ts.start.getTime() === TS.start.getTime() &&
+        ts.end.getTime() === TS.end.getTime() &&
+        ts._id.toString() !== TS._id.toString()
+    );
+    const tsPartners = twinTimeSpan.map((tsp: ITimeSpan) => {
+      const part = allUsers.find(
+        (u: any) => u._id.toString() === tsp?.assigned
+      );
+      if (part) {
+        return part.firstname + " " + part.lastname;
+      }
+    });
+
     const respPhone = respUser?.phone;
-    logger.info(respUser);
     if (ft) {
       tasks.push({
         id: index,
         ft: ft,
         timespan: ts,
         respPhone: respPhone,
+        partners: tsPartners,
       });
       index++;
     }
@@ -176,7 +197,13 @@ function centeredText(doc: jsPDF, text: string, y: number) {
  */
 function sanitizeString(str: any) {
   if (str) {
-    return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+    return str
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(
+        /([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])/g,
+        ""
+      );
   } else {
     return "";
   }
@@ -210,6 +237,7 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
  * @param task
  */
 function singleTask(doc: jsPDF, task: Task) {
+  const pageWidth = doc.internal.pageSize.getWidth();
   //Space for the rect
   doc.setFontSize(12);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
@@ -242,6 +270,18 @@ function singleTask(doc: jsPDF, task: Task) {
     task.ft.general.inCharge.username
   )} (+33${task.respPhone})`;
   doc.text(resp, BASE_X, yCursor);
+  incrementY(doc, LITTLE_SPACE);
+  let partners = "Avec : ";
+  task.partners.forEach((part: any) => {
+    if (part !== undefined) {
+      partners += sanitizeString(part + ", ");
+    }
+  });
+  const longstr = doc.splitTextToSize(partners, pageWidth - BASE_X * 2);
+  const heightOfText =
+    doc.getStringUnitWidth(partners) / doc.internal.scaleFactor;
+  doc.text(longstr, BASE_X, yCursor);
+  incrementY(doc, heightOfText);
 }
 
 /**
