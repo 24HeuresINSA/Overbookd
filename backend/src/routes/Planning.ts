@@ -13,6 +13,12 @@ const BASE_SPACE = 10;
 const BIG_SPACE = 20;
 const BASE_X = 25;
 
+interface Task {
+  id: number;
+  ft: IFT;
+  timespan: ITimeSpan;
+}
+
 export async function createPlanning(
   req: Request,
   res: Response
@@ -51,9 +57,12 @@ export async function createPlanning(
   }
   const sos_numbers = configNumbers.value;
 
+  const userTasks = buildAllTasks(userAssignedFT, timespans);
+
   //Create planning
   const doc = new jsPDF();
-  fillPDF(doc, user, sos_numbers, userAssignedFT, timespans);
+  const yCursor = BASE_SPACE;
+  fillPDF(doc, yCursor, user, sos_numbers, userTasks);
 
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -74,12 +83,11 @@ export async function createPlanning(
  */
 function fillPDF(
   doc: jsPDF,
+  yCursor: number,
   user: any,
   sos_numbers: any,
-  userAssignedFT: any[],
-  timespans: ITimeSpan[]
+  tasks: Task[]
 ) {
-  let yCursor = BASE_SPACE;
   //Basic configuration
   doc.setFont("helvetica");
   doc.setFontSize(10);
@@ -93,21 +101,37 @@ function fillPDF(
   if (user?.nickname) {
     title += ` (${sanitizeString(user?.nickname)})`;
   }
-  yCursor += BIG_SPACE;
+  yCursor = incrementY(doc, yCursor, BIG_SPACE);
   centeredText(doc, title, yCursor);
-  yCursor += BASE_SPACE;
+  yCursor = incrementY(doc, yCursor, BASE_SPACE);
   //SOS part with numbers
   sosPart(doc, yCursor, sos_numbers);
-  yCursor += BIG_SPACE * 2.5;
-
-  let tasknumber = 1;
-  userAssignedFT.forEach((ft: IFT) => {
-    //FT part
-    const ts = timespans.filter((ts: ITimeSpan) => ts.FTID === ft.count);
-    singleTask(doc, yCursor, ft, ts, tasknumber);
-    tasknumber++;
-    yCursor += BASE_SPACE;
+  yCursor = incrementY(doc, yCursor, BIG_SPACE * 2.5);
+  //Tasks part
+  tasks.forEach((task: Task) => {
+    singleTask(doc, yCursor, task);
+    yCursor = incrementY(doc, yCursor, BASE_SPACE);
   });
+}
+
+function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
+  const tasks: Task[] = [];
+  const sortedTS = timespans.sort(
+    (tsa, tsb) => tsa.start.getTime() - tsb.start.getTime()
+  );
+  let index = 1;
+  sortedTS.forEach((ts: ITimeSpan) => {
+    const ft = userAssignedFT.find((ft: IFT) => ft.count === ts.FTID);
+    if (ft) {
+      tasks.push({
+        id: index,
+        ft: ft,
+        timespan: ts,
+      });
+      index++;
+    }
+  });
+  return tasks;
 }
 
 /**
@@ -147,42 +171,51 @@ function sanitizeString(str: any) {
 function sosPart(doc: jsPDF, yCursor: number, sos_numbers: any) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const startingCursor = yCursor;
-  yCursor += LITTLE_SPACE;
+  yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
   doc.setFontSize(15);
   yCursor += 5;
   doc.text("SOS", BASE_X, yCursor);
   doc.setFontSize(10);
-  yCursor += LITTLE_SPACE;
+  yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
   sos_numbers.forEach((sos: any) => {
     const text = `${sos.name} : ${sos.number}`;
     doc.text(text, BASE_X, yCursor);
-    yCursor += LITTLE_SPACE;
+    yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
   });
   doc.rect(20, startingCursor, pageWidth - 40, yCursor - startingCursor);
 }
 
 /**
- * build the part of each task
+ * build the part for 1 task
  * @param doc
  * @param yCursor
- * @param ft
- * @param timespan
- * @param tasknumber
+ * @param task
  */
-function singleTask(
-  doc: jsPDF,
-  yCursor: number,
-  ft: IFT,
-  timespan: ITimeSpan[],
-  tasknumber: number
-) {
+function singleTask(doc: jsPDF, yCursor: number, task: Task) {
   //Space for the rect
   doc.setFontSize(15);
-  const title = `Tache ${tasknumber} : ${sanitizeString(ft.general.name)}`;
+  const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
   doc.text(title, BASE_X, yCursor);
-  yCursor += LITTLE_SPACE;
+  yCursor = incrementY(doc, yCursor, LITTLE_SPACE);
   doc.setFontSize(10);
   doc.text("Quand ?", BASE_X, yCursor);
-  logger.info(timespan.length);
-  yCursor += LITTLE_SPACE;
+  const startDate = new Date(task.timespan.start);
+  //avoir la date en string au bon format fr
+  const startDateString = sanitizeString(
+    `${startDate.getDate()}/${
+      startDate.getMonth() + 1
+    }/${startDate.getFullYear()} à ${startDate.getHours()}:${startDate.getMinutes()}`
+  );
+  doc.text(startDateString, BASE_X + BASE_SPACE + 5, yCursor);
+  yCursor = incrementY(doc, yCursor, BASE_SPACE);
+}
+
+function incrementY(doc: jsPDF, yCursor: number, increment: number) {
+  const pageHeight = doc.internal.pageSize.height;
+  if (yCursor + increment > pageHeight) {
+    doc.addPage();
+    return BASE_SPACE;
+  } else {
+    return yCursor + increment;
+  }
 }
