@@ -399,7 +399,7 @@ export async function deleteTimespan(req: Request, res: Response) {
   }
 
   //find ft linked to timespan
-  const ft = await FTModel.find({ count: timespan.FTID });
+  const ft = await FTModel.findOne({ count: timespan.FTID });
   if (!ft) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "FT not found",
@@ -415,10 +415,10 @@ export async function deleteTimespan(req: Request, res: Response) {
       timespan.required
     }`,
   };
-  ft[0].comments.push(comment);
+  ft.comments.push(comment);
 
   try {
-    await ft[0].save();
+    await ft.save();
   } catch (e) {
     console.log(e);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
