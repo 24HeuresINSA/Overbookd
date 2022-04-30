@@ -28,11 +28,11 @@ merge_requests_containerize-backend:
   services:
   - name: docker:dind
     command: ["--experimental"]
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      changes:
-        - backend/**/*
-    - when: never
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - backend/**/*
   stage: docker
   script:
     - docker build ./backend

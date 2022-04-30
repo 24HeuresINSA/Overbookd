@@ -3,7 +3,6 @@ container_scanning:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - frontend/**/*
-    - when: never
   needs: ["merge_requests_containerize-frontend"]
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/frontend:pre-prod
@@ -16,7 +15,6 @@ backend_scan_preprod:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - backend/**/*
-    - when: never
   needs: ["merge_requests_containerize-backend"]
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/backend:pre-prod

@@ -8,25 +8,20 @@ license_scanning:
 bandit-sast:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - when: never
 
 eslint-sast:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - when: never
 
 nodejs-scan-sast:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - when: never
 
 semgrep-sast:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - when: never
 
   
 secret_detection:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - when: never
