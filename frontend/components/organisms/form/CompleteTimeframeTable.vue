@@ -44,7 +44,7 @@
               :key="req._id"
               close
               @click:close="removeRequirement(i, index)"
-              @click="openUserCalendar(req.user)"
+              @click="openUserCalendar(req)"
             >
               {{ formatText(req) }}
             </v-chip>
@@ -56,7 +56,7 @@
                   v-bind="attrs"
                   v-on="on"
                   @click:close="removeRequirement(i, index)"
-                  @click="openUserCalendar(req.user)"
+                  @click="openUserCalendar(req)"
                 >
                   {{ formatText(req) }}
                 </v-chip>
