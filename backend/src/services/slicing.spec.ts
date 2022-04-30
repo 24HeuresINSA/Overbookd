@@ -1,5 +1,5 @@
 import { ITFRequired, ITimeFrame } from "@entities/FT";
-import { ITimeSpan } from "@entities/TimeSpan";
+import { TimeSpanForm } from "@entities/TimeSpan";
 import { ObjectId } from "mongodb";
 import { timeframeToTimeSpan } from "./slicing";
 
@@ -77,8 +77,7 @@ describe("Services - slicing", () => {
       });
       it("should generate a timespan for each user", () => {
         const res = timeframeToTimeSpan(timeframe, FTID);
-        const expectdUser1TimeSpan: ITimeSpan = {
-          _id: new ObjectId(),
+        const expectdUser1TimeSpan: TimeSpanForm = {
           start: startDate,
           end: endDate,
           timeframeID: "indivisible time frame",
@@ -87,8 +86,7 @@ describe("Services - slicing", () => {
           FTID,
         };
         expect(res).toContainEqual(expectdUser1TimeSpan);
-        const expectdUser2TimeSpan: ITimeSpan = {
-          _id: new ObjectId(),
+        const expectdUser2TimeSpan: TimeSpanForm = {
           start: startDate,
           end: endDate,
           timeframeID: "indivisible time frame",
@@ -167,12 +165,12 @@ describe("Services - slicing", () => {
       });
       it("should generate first timeSpans with startDate matching timeframe startDate", () => {
         const res = timeframeToTimeSpan(timeframe, FTID);
-        const firstTimeSpans = res.at(1) as ITimeSpan;
+        const firstTimeSpans = res.at(1) as TimeSpanForm;
         expect(+firstTimeSpans.start).toBe(timeframe.start)
       })
       it("should generate last timeSpans with endDate matching timeframe endDate", () => {
         const res = timeframeToTimeSpan(timeframe, FTID);
-        const lastTimeSpans = res.at(-1) as ITimeSpan;
+        const lastTimeSpans = res.at(-1) as TimeSpanForm;
         expect(+lastTimeSpans.end).toBe(timeframe.end)
       })
       it("should generate all timespans with required team", () => {
@@ -211,12 +209,12 @@ describe("Services - slicing", () => {
       });
       it("should generate first timeSpans with startDate matching timeframe startDate", () => {
         const res = timeframeToTimeSpan(timeframe, FTID);
-        const firstTimeSpans = res.at(1) as ITimeSpan;
+        const firstTimeSpans = res.at(1) as TimeSpanForm;
         expect(+firstTimeSpans.start).toBe(timeframe.start)
       })
       it("should generate last timeSpans with endDate matching timeframe endDate", () => {
         const res = timeframeToTimeSpan(timeframe, FTID);
-        const lastTimeSpans = res.at(-1) as ITimeSpan;
+        const lastTimeSpans = res.at(-1) as TimeSpanForm;
         expect(+lastTimeSpans.end).toBe(timeframe.end)
       })
       it("should generate a timespans at each hour with each user required and assigned", () => {

@@ -2,7 +2,7 @@
  * slice a timeframe into a time span
  */
 import { ITFRequired, ITimeFrame, isTFRequiredTeam } from "@entities/FT";
-import { ITimeSpan } from "@entities/TimeSpan";
+import { TimeSpanForm } from "@entities/TimeSpan";
 import logger from "@shared/Logger";
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
@@ -10,7 +10,7 @@ const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 export function timeframeToTimeSpan(
   timeframe: ITimeFrame,
   FTID: number
-): ITimeSpan[] {
+): TimeSpanForm[] {
   const {
     toSlice,
     sliceTime: timeSpanDurationInHours,
@@ -52,7 +52,7 @@ export function timeframeToTimeSpan(
       timeframeID,
       required: null,
       FTID,
-    } as ITimeSpan;
+    } as TimeSpanForm;
 
     const timespans = generateTimeSpansAccordingToRequriedEntities(required, timeSpanTemplate);
     logger.info(
@@ -66,7 +66,7 @@ export function timeframeToTimeSpan(
   }
 }
 
-function generateTimeSpansAccordingToRequriedEntities(required: ITFRequired[], timeSpanTemplate: ITimeSpan) {
+function generateTimeSpansAccordingToRequriedEntities(required: ITFRequired[], timeSpanTemplate: TimeSpanForm) {
   return required.flatMap((r) => generateTimeSpansAccordingToRequiredEntity(timeSpanTemplate, r)
   );
 }
@@ -86,7 +86,7 @@ function sliceTimeFrameIntoTimeSpans(
     required: ITFRequired[];
   },
   FTID: number
-): ITimeSpan[] {
+): TimeSpanForm[] {
   logger.info(`timeframeToTimeSpan: starting slicing...`);
   const timeFrameDurationInMs = end.getTime() - start.getTime();
   const timeSpanDurationInMs = timeSpanDurationInHours * ONE_HOUR_IN_MS;
@@ -104,7 +104,7 @@ function sliceTimeFrameIntoTimeSpans(
       timeframeID,
       required: null,
       FTID,
-    } as ITimeSpan;
+    } as TimeSpanForm;
     const requiredTimeSpans = generateTimeSpansAccordingToRequriedEntities(required, timeSpanTemplate);
     logger.info(
       `timeframeToTimeSpan: added ${
@@ -124,9 +124,9 @@ function isSlicable(start: Date, end: Date, sliceTime: number) {
 }
 
 function generateTimeSpansAccordingToRequiredEntity(
-  timeSpanTemplate: ITimeSpan,
+  timeSpanTemplate: TimeSpanForm,
   required: ITFRequired
-): ITimeSpan[] {
+): TimeSpanForm[] {
   if (isTFRequiredTeam(required)) {
     return new Array(required.amount).fill({
       ...timeSpanTemplate,

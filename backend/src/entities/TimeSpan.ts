@@ -14,6 +14,8 @@ export interface ITimeSpan {
   FTID: number;
 }
 
+export type TimeSpanForm = Omit<ITimeSpan, "_id">
+
 const TimeSpanSchema = new Schema<ITimeSpan>({
   start: { type: Date, required: true },
   end: { type: Date, required: true },
