@@ -73,9 +73,9 @@ export default {
   },
   async mounted() {
     dispatch(this, "user", "fetchUser", getUserID(this));
+    this.$accessor.user.fetchUsernamesWithCP();
   },
   methods: {
-
     hasRole(team) {
       return this.$accessor.user.hasRole(team);
     },
