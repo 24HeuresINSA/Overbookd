@@ -17,7 +17,7 @@
           v-bind="attrs"
           class="icon"
           v-on="on"
-          @click.stop="toggleUserDialog"
+          @click.stop="askForUserDetails"
         >
           mdi-information
         </v-icon>
@@ -26,11 +26,6 @@
     </v-tooltip>
     <br />
     <MiniUserBadge v-for="team of getCleanTeam" :key="team" :team="team" />
-    <UserInformation
-      :user="user"
-      :toggle="isUserDialogOpen"
-      @update-toggle="(t) => (isUserDialogOpen = t)"
-    />
     <FriendInformation
       :user="user"
       :toggle="isFriendDialogOpen"
@@ -41,15 +36,14 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from "vue";
-import {User} from "~/utils/models/repo";
-import UserInformation from "~/components/organisms/userInformation.vue";
+import Vue, { PropType } from "vue";
+import { User } from "~/utils/models/repo";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 import FriendInformation from "~/components/organisms/FriendInformation.vue";
 
 export default Vue.extend({
   name: "UserResume",
-  components: { UserInformation, MiniUserBadge, FriendInformation },
+  components: { MiniUserBadge, FriendInformation },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -73,6 +67,9 @@ export default Vue.extend({
     getTeamMetadate(team: string): any {
       const teamsConfig = this.$accessor.config.getConfig("teams");
       return teamsConfig.find((item: { name: string }) => item.name === team);
+    },
+    askForUserDetails(): void {
+      this.$emit("click:user-details", this.user);
     },
     getClass(team: string): string {
       switch (team) {

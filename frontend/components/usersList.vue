@@ -12,6 +12,7 @@
             <UserResume
               :user="item"
               @assign-user="(friend) => (selectedUserIndex = friend)"
+              @click:user-details="openUserDetails($event)"
             />
           </v-list-item>
         </v-list-item-group>
@@ -20,16 +21,22 @@
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
+    <UserInformation
+      :user="selectedUserForDetails"
+      :toggle="isUserDetailsDialogOpen"
+      @update-toggle="(t) => (isUserDetailsDialogOpen = t)"
+    />
   </div>
 </template>
 
 <script>
 import UserResume from "~/components/organisms/UserResume";
+import UserInformation from "./organisms/userInformation";
 import { Snack } from "~/utils/models/snack";
 
 export default {
   name: "UsersList",
-  components: { UserResume },
+  components: { UserResume, UserInformation },
   props: {
     users: {
       type: Array,
@@ -47,6 +54,8 @@ export default {
       height: window.innerHeight * 0.6,
       snack: new Snack(),
       color: "transparent",
+      selectedUserForDetails: {},
+      isUserDetailsDialogOpen: false,
     };
   },
 
@@ -116,6 +125,13 @@ export default {
             });
         }
       }
+    },
+  },
+
+  methods: {
+    openUserDetails(user) {
+      this.selectedUserForDetails = user;
+      this.isUserDetailsDialogOpen = true;
     },
   },
 };
