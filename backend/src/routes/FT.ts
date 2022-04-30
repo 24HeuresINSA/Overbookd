@@ -5,7 +5,7 @@ import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
 import { updateFTConflicts } from "@src/services/conflict";
 import { timeframeToTimeSpan } from "@src/services/slicing";
-import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpanModel, { TimeSpanForm } from "@entities/TimeSpan";
 import { Types } from "mongoose";
 import ConfigModel from "@entities/Config";
 import UserModel from "@entities/User";
@@ -177,7 +177,7 @@ export async function makeFTReady(req: Request, res: Response): Promise<void> {
     logger.info(`making FT ${mFT.general.name} ready...`);
     mFT.isValid = true;
     mFT.status = "ready";
-    const r: ITimeSpan[][] = [];
+    const r: TimeSpanForm[][] = [];
 
     try {
       // slice timeframes
