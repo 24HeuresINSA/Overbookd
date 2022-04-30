@@ -63,6 +63,8 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
+  //reset the cursor position
+  yCursor = BASE_SPACE;
   fillPDF(doc, user, sos_numbers, userTasks);
 
   if (!doc) {
@@ -84,7 +86,7 @@ export async function createPlanning(
  */
 function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Basic configuration
-  doc.setFont("helvetica");
+  doc.setFont("Courier");
   doc.setFontSize(10);
 
   //Header
@@ -101,10 +103,11 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   incrementY(doc, BASE_SPACE);
   //SOS part with numbers
   sosPart(doc, sos_numbers);
-  incrementY(doc, BIG_SPACE * 2.5);
+  incrementY(doc, BASE_SPACE);
   //Tasks part
   tasks.forEach((task: Task) => {
     singleTask(doc, task);
+    incrementY(doc, BASE_SPACE);
   });
 }
 
@@ -187,27 +190,37 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
  */
 function singleTask(doc: jsPDF, task: Task) {
   //Space for the rect
-  doc.setFontSize(15);
+  doc.setFontSize(14);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
-  doc.text(title, BASE_X, yCursor);
+  doc.text(title, BASE_X - 5, yCursor);
   incrementY(doc, LITTLE_SPACE);
-  doc.setFontSize(10);
-  doc.text("Quand ?", BASE_X, yCursor);
+  doc.setFontSize(12);
   const startDate = new Date(task.timespan.start);
-  //avoir la date en string au bon format fr
+  //avoir la date et l'heure format francais
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  };
   const startDateString = sanitizeString(
-    `${startDate.getDate()}/${
-      startDate.getMonth() + 1
-    }/${startDate.getFullYear()} à ${startDate.getHours()}:${startDate.getMinutes()}`
+    startDate.toLocaleDateString("fr-FR", options)
   );
-  doc.text(startDateString, BASE_X + BASE_SPACE + 5, yCursor);
+  const dateText = `Quand ? : ${startDateString}`;
+  doc.text(dateText, BASE_X, yCursor);
+  incrementY(doc, LITTLE_SPACE);
+  const resp = `Responsable : ${sanitizeString(
+    //@ts-ignore
+    task.ft.general.inCharge.username
+  )}`;
+  doc.text(resp, BASE_X, yCursor);
 }
 
 function incrementY(doc: jsPDF, increment: number) {
   const pageHeight = doc.internal.pageSize.height;
   const newY = yCursor + increment;
   if (newY > pageHeight) {
-    logger.info("New y is too high" + newY);
     doc.addPage();
     yCursor = BASE_SPACE;
     return;
