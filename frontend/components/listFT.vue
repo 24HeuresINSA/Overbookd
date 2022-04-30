@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import {Snack} from "~/utils/models/snack";
+import { Snack } from "~/utils/models/snack";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default {
@@ -58,19 +58,14 @@ export default {
     FTs() {
       return this.$accessor.assignment.filteredFTs;
     },
-    rolesByFT() {
-      return this.$accessor.assignment.roles;
+    missingRolesOnFTs() {
+      return this.$accessor.assignment.missingRolesOnFTs;
     },
   },
 
   methods: {
     getFTExtraData(FTID) {
-      const data = this.rolesByFT[FTID];
-      if (data) {
-        return data.roles;
-      } else {
-        return [];
-      }
+      return this.missingRolesOnFTs[FTID] ?? [];
     },
     openFtNewTab(ft) {
       window.open(`/ft/${ft.count}`, "_blank");
