@@ -113,7 +113,7 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   if (user?.nickname) {
     title += ` (${sanitizeString(user?.nickname)})`;
   }
-  incrementY(doc, BIG_SPACE);
+  incrementY(doc, BASE_SPACE);
   centeredText(doc, title, yCursor);
   incrementY(doc, BASE_SPACE);
   //SOS part with numbers
@@ -122,7 +122,7 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Tasks part
   tasks.forEach((task: Task) => {
     singleTask(doc, task);
-    incrementY(doc, BASE_SPACE);
+    incrementY(doc, LITTLE_SPACE);
   });
 }
 
@@ -238,6 +238,7 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
  */
 function singleTask(doc: jsPDF, task: Task) {
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   //Space for the rect
   doc.setFontSize(12);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
@@ -278,10 +279,25 @@ function singleTask(doc: jsPDF, task: Task) {
     }
   });
   const longstr = doc.splitTextToSize(partners, pageWidth - BASE_X * 2);
-  const heightOfText =
-    doc.getStringUnitWidth(partners) / doc.internal.scaleFactor;
-  doc.text(longstr, BASE_X, yCursor);
-  incrementY(doc, heightOfText);
+  longstr.forEach((str: any) => {
+    doc.text(str, BASE_X, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  });
+  doc.setFontSize(11);
+  doc.text("Consignes :", BASE_X, yCursor);
+  doc.setFontSize(8);
+  incrementY(doc, LITTLE_SPACE);
+
+  const consignes = sanitizeString(task.ft.details.description).replace(
+    /<(.|\n)*?>/g,
+    ""
+  );
+  const longstr2 = doc.splitTextToSize(consignes, pageWidth - BASE_X * 2);
+  longstr2.forEach((str: any) => {
+    doc.text(str, BASE_X, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  });
+  incrementY(doc, LITTLE_SPACE);
 }
 
 /**
