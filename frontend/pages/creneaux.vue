@@ -12,8 +12,15 @@
       :headers="headers"
       :items="timeSpans"
       dense
-      :items-per-page="-1"
+      :items-per-page="25"
     >
+      <template #top>
+        <v-text-field
+          v-model="FTID"
+          type="number"
+          label="Search FT number"
+        ></v-text-field>
+      </template>
       <template #[`item.start`]="{ item }">
         {{ new Date(item.start).toLocaleString() }}
       </template>
@@ -42,8 +49,18 @@
       </template>
     </v-data-table>
     <v-dialog v-model="isDeleting" max-width="800">
-      <v-card>
+      <v-card v-if="selectedTimeSpan">
         <v-card-title>Supprimer ce créneau ?</v-card-title>
+        <v-card-text>
+          <p class="task">Créneau pour la tache #{{ selectedTimeSpan.FTID }}</p>
+          <p class="timing">
+            {{ new Date(selectedTimeSpan.start).toLocaleString() }} -
+            {{ new Date(selectedTimeSpan.end).toLocaleString() }}
+          </p>
+          <p v-show="selectedTimeSpan.assigned" class="assigned">
+            Ou {{ mapUser(selectedTimeSpan.assigned) }} a été affecté
+          </p>
+        </v-card-text>
         <div style="display: flex; justify-content: center; padding: 1%">
           <v-btn color="green" style="margin: 2%" @click="deleteTimespan()"
             >OUI</v-btn
@@ -64,6 +81,7 @@ import { safeCall } from "../utils/api/calls";
 import { TimeSpan } from "~/utils/models/TimeSpan";
 
 interface Data {
+  FTID: number | undefined;
   headers: Header[];
   timeSpans: any[];
   users: any[];
@@ -72,20 +90,26 @@ interface Data {
   selectedTimeSpan: any;
 }
 
-declare interface Mymap {
-  [key: string]: any;
+declare interface Mymap<T = any> {
+  [key: string]: T;
 }
 
 export default Vue.extend({
   name: "Creneaux",
   data(): Data {
     return {
+      FTID: undefined,
       headers: [
         { text: "Début", value: "start", width: "20%" },
         { text: "Fin", value: "end", width: "20%" },
         { text: "Requis", value: "required" },
         { text: "Assigné", value: "assigned" },
-        { text: "FT", value: "FTID", width: "5%" },
+        {
+          text: "FT",
+          value: "FTID",
+          width: "5%",
+          filter: (this as any).filterFT,
+        },
         { text: "Action", value: "action", width: "5%", sortable: false },
       ],
       timeSpans: [],
@@ -112,6 +136,11 @@ export default Vue.extend({
   },
 
   methods: {
+    filterFT(potentialFT: number) {
+      if (!this.FTID) return true;
+
+      return potentialFT === parseInt(this.FTID);
+    },
     async getAllTimeSpans() {
       const res = await safeCall(this.$store, TimeSpanRepo.getAll(this.$store));
       if (res) {
