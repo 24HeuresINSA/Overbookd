@@ -81,7 +81,7 @@ import { safeCall } from "../utils/api/calls";
 import { TimeSpan } from "~/utils/models/TimeSpan";
 
 interface Data {
-  FTID: number | undefined;
+  FTID: string;
   headers: Header[];
   timeSpans: any[];
   users: any[];
@@ -98,7 +98,7 @@ export default Vue.extend({
   name: "Creneaux",
   data(): Data {
     return {
-      FTID: undefined,
+      FTID: "",
       headers: [
         { text: "Début", value: "start", width: "20%" },
         { text: "Fin", value: "end", width: "20%" },
