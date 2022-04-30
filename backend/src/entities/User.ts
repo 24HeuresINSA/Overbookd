@@ -3,6 +3,7 @@ import * as Factory from "factory.ts";
 import faker from "faker";
 import { ITimeslot } from "./Timeslot";
 
+export type team = string;
 export interface IUser {
   password?: string;
   password2?: string;
@@ -17,7 +18,7 @@ export interface IUser {
   phone?: number;
   picture?: number;
   email: string;
-  team?: string[];
+  team?: team[];
   hasDriverLicense?: boolean;
   driverLicenseDate?: Date;
   hasPayedContribution?: boolean;
@@ -86,7 +87,7 @@ export class SafeUser {
   phone?: number;
   picture?: number;
   email: string;
-  team?: string[];
+  team?: team[];
   hasDriverLicense?: boolean;
   driverLicenseDate?: Date;
   birthdate?: Date;

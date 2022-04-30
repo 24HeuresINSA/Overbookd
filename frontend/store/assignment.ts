@@ -26,6 +26,10 @@ declare interface filter {
   bypass: boolean;
 }
 
+declare interface MissingRolesOnFts {
+  [FTID: string]: string[];
+}
+
 export const state = () => ({
   users: [] as User[],
   selectedUserIndex: Number,
@@ -58,7 +62,7 @@ export const state = () => ({
   hoverTask: {} as TimeSpan,
   multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
-  roles: {} as { [key: number]: { roles: string[]; isFullyAssigned: boolean } },
+  missingRolesOnFTs: {} as MissingRolesOnFts,
   userAssignedToSameTimespan: [] as {
     _id: string;
     firstname: string;
@@ -101,8 +105,8 @@ export const mutations = mutationTree(state, {
   SET_TIMESPANS(state: any, data: any) {
     state.timespans = data;
   },
-  SET_ROLES(state: any, data: any) {
-    state.roles = data;
+  SET_ROLES(state: any, data: MissingRolesOnFts) {
+    state.missingRolesOnFTs = data;
   },
   SET_ASSIGN_TIMESPANS(state: any, data: any) {
     state.assignedTimespans = data;
@@ -314,7 +318,7 @@ export const actions = actionTree(
     },
 
     async getRolesByFT({ commit }: any) {
-      const ret: any = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
+      const ret = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
       if (ret) {
         commit("SET_ROLES", ret.data);
       }
@@ -325,15 +329,19 @@ export const actions = actionTree(
       commit("CHANGE_MODE", true);
     },
 
-    async initStore({ dispatch }) {
-      await Promise.all([
+    async initStore({ dispatch, state }) {
+      const actions = [
         dispatch("getUsers"),
         dispatch("getFTs"),
         dispatch("getFAs"),
         dispatch("getTimeslots"),
         dispatch("getTimespans"),
-        dispatch("getRolesByFT"),
-      ]);
+      ];
+      if (!state.filters.isModeOrgaToTache) {
+        return Promise.all([...actions, dispatch("getRolesByFT")]);
+      }
+
+      return Promise.all(actions);
     },
 
     /**
@@ -596,13 +604,11 @@ export const getters = getterTree(state, {
     });
     const FTFilters = state.filters.FT;
     if (FTFilters.team.length > 0) {
-      filtered = filtered.filter((item: any) => {
-        for (const team of FTFilters.team) {
-          return (
-            state.roles[item.count] && state.roles[item.count].includes(team)
-          );
-        }
-      });
+      filtered = filtered.filter((ft: FT) =>
+        FTFilters.team.any((filteredTeam: string) =>
+          state.missingRolesOnFTs[ft.count]?.includes(filteredTeam)
+        )
+      );
     }
     if (FTFilters.search && FTFilters.search.length > 0) {
       const options = {
@@ -615,13 +621,7 @@ export const getters = getterTree(state, {
       filtered = fuse.search(FTFilters.search).map((e) => e.item);
     }
     if (FTFilters.areAssignedFTsDisplayed) {
-      filtered = filtered.filter((ft: FT) => {
-        const info = state.roles[ft.count];
-        if (info && info.isFullyAssigned) {
-          return !info.isFullyAssigned;
-        }
-        return true;
-      });
+      filtered = filtered.filter((ft: FT) => state.missingRolesOnFTs[ft.count]);
     }
 
     return filtered;
