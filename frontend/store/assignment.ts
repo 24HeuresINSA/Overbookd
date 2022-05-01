@@ -150,8 +150,16 @@ export const mutations = mutationTree(state, {
   SET_MULTIPLE_SOLID_TASK(state: any, data: TimeSpan[]) {
     state.multipleSolidTask = data;
   },
-  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
-    state.userAssignedToSameTimespan = data;
+  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(
+    state: any,
+    data: { _id: string; user: Pick<User, "lastname" | "firstname" | "_id"> }[]
+  ) {
+    state.userAssignedToSameTimespan = data.map((userWithTimespan) => ({
+      timespanId: userWithTimespan._id,
+      firstname: userWithTimespan.user.firstname,
+      lastname: userWithTimespan.user.lastname,
+      _id: userWithTimespan.user._id,
+    }));
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
       if (a.firstname < b.firstname) {
         return -1;
