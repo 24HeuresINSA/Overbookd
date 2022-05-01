@@ -106,13 +106,6 @@ function sliceTimeFrameIntoTimeSpans(
       FTID,
     } as TimeSpanForm;
     const requiredTimeSpans = generateTimeSpansAccordingToRequriedEntities(required, timeSpanTemplate);
-    logger.info(
-      `timeframeToTimeSpan: added ${
-        requiredTimeSpans.length
-      } timeSpan(s): ${new Date(
-        timeSpanTemplate.start
-      ).toLocaleString()} - ${new Date(timeSpanTemplate.end).toLocaleString()}`
-    );
     return requiredTimeSpans;
   });
   return timespans;
