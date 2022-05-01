@@ -94,6 +94,12 @@ export const actions = actionTree(
         commit("SET_USERNAMES", res.data);
       }
     },
+    async fetchUsernamesWithCP({ commit }) {
+      const res = await safeCall(this, UserRepo.getAllUsernamesWithCP(this));
+      if (res) {
+        commit("SET_USERNAMES", res.data);
+      }
+    },
     async getUsername({ dispatch, commit, state }, userID) {
       if (state.usernames.length === 0) {
         await dispatch("fetchUsernames");

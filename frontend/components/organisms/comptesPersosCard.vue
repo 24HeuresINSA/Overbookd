@@ -78,7 +78,10 @@ export default Vue.extend({
   },
   async mounted() {
     // let res = await RepoFactory.transactionRepo.getUserTransactions(this);
-    await this.$accessor.transaction.fetchMTransactions();
+    await Promise.all([
+      this.$accessor.transaction.fetchMTransactions(),
+      this.$accessor.user.fetchUsernamesWithCP(),
+    ]);
     this.areTransfersOpen =
       this.$accessor.config.getConfig("are_transfers_open");
   },

@@ -16,6 +16,7 @@ import {
   updateUserByID,
   uploadPP,
   addAvailabilityToUser,
+  getAllUsernamesWithCP,
 } from "./Users";
 import {
   createFA,
@@ -60,6 +61,7 @@ function ping(req: Request, res: Response) {
 const userRouter = Router();
 userRouter.get("/", authMiddleware.protect(), getUsers);
 userRouter.get("/me", authMiddleware.protect(), getUser);
+userRouter.get("/all/cp", authMiddleware.protect(), getAllUsernamesWithCP);
 userRouter.get("/all", authMiddleware.protect(), getAllUsersName);
 userRouter.get("/:userID", authMiddleware.protect(), getUserByID);
 userRouter.put("/:userID", authMiddleware.protect(), updateUserByID);
