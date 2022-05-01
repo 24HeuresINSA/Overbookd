@@ -70,7 +70,6 @@ export default {
   },
   async mounted() {
     this.$accessor.user.fetchUser();
-    this.$accessor.user.fetchUsernamesWithCP();
   },
   methods: {
     hasRole(team) {

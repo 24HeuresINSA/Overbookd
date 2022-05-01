@@ -64,10 +64,6 @@ export default Vue.extend({
     }),
     ...mapState<any, TMapState<UserState>>("user", {
       me: (state: UserState) => state.me,
-      usernames: (state: UserState) => {
-        console.log(state.usernames);
-        return state.usernames;
-      },
     }),
     toggled: {
       get: function (): boolean | unknown {
@@ -89,7 +85,6 @@ export default Vue.extend({
   methods: {
     onFormChange(form: any) {
       this.transfer = form;
-      console.log();
     },
     async transferMoney(): Promise<any> {
       this.toggled = false;
