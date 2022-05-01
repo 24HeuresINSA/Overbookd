@@ -22,6 +22,7 @@
       :events="assignedTimeSlots"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      @click:event="clickedEvent"
       @mousedown:event="startDrag"
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
@@ -122,6 +123,9 @@ export default {
     popUp(event) {
       this.$accessor.assignment.getUserAssignedToSameTimespan(event);
       this.$emit("open-unassign-dialog");
+    },
+    async clickedEvent({ event }) {
+      event.color = "rgba(209, 0, 0)";
     },
     // calendar drag and drop
     async startDrag({ event }) {
