@@ -4,8 +4,8 @@ import FTModel, { IFT } from "@entities/FT";
 import logger from "@shared/Logger";
 import FAModel from "@entities/FA";
 import { updateFTConflicts } from "@src/services/conflict";
-import { timeframeToTimeSpan } from "@src/services/slicing";
-import TimeSpanModel, { TimeSpanForm } from "@entities/TimeSpan";
+import { timeframeToTimeSpans } from "@src/services/slicing";
+import TimeSpanModel from "@entities/TimeSpan";
 import { Types } from "mongoose";
 import ConfigModel from "@entities/Config";
 import UserModel from "@entities/User";
@@ -172,33 +172,31 @@ export async function getFTsNumber(req: Request, res: Response): Promise<void> {
 export async function makeFTReady(req: Request, res: Response): Promise<void> {
   const FTCount = req.params.count as string;
   const FT = await FTModel.findOne({ count: +FTCount });
-  if (FT) {
-    const mFT = <IFT>FT.toObject();
-    logger.info(`making FT ${mFT.general.name} ready...`);
-    mFT.isValid = true;
-    mFT.status = "ready";
-    const r: TimeSpanForm[][] = [];
 
-    try {
-      // slice timeframes
-      for (const timeframe of mFT.timeframes) {
-        const timespan = await timeframeToTimeSpan(timeframe, mFT.count);
-        if (timespan) {
-          r.push(timespan);
-          await TimeSpanModel.insertMany(timespan);
-        }
-      }
-      // await FTModel.findOneAndUpdate({ count: mFT.count, }, mFT);
-      res.status(StatusCodes.OK).json(r);
-    } catch (e) {
-      logger.err(e);
-      res.status(StatusCodes.BAD_REQUEST).json({
-        message: "Error while making FT ready, timeframe can't be sliced",
-      });
-    }
-  } else {
+  if (!FT) {
     res.status(StatusCodes.BAD_REQUEST).json({
       message: "FT not found or not validated",
+    });
+    return;
+  }
+  logger.info(`making FT ${FT.general.name} ready...`);
+  FT.isValid = true;
+  FT.status = "ready";
+
+  try {
+    const timespans = FT.timeframes
+      .map((timeframe) => timeframeToTimeSpans(timeframe, FT.count))
+      .flat();
+
+    logger.info("timespans generated, start bulkinsertion");
+    await Promise.all([TimeSpanModel.insertMany(timespans), FT.save()]);
+    logger.info("insertions done");
+
+    res.status(StatusCodes.OK).json(timespans);
+  } catch (e) {
+    logger.err(e);
+    res.status(StatusCodes.BAD_REQUEST).json({
+      message: "Error while making FT ready, timeframe can't be sliced",
     });
   }
 }
