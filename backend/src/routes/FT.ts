@@ -179,9 +179,13 @@ export async function makeFTReady(req: Request, res: Response): Promise<void> {
     });
     return;
   }
+  const { comment } = req.body;
   logger.info(`making FT ${FT.general.name} ready...`);
   FT.isValid = true;
   FT.status = "ready";
+  FT.refused = [];
+  FT.validated = ["humain", "log"];
+  FT.comments.unshift(comment);
 
   try {
     const timespans = FT.timeframes
@@ -192,7 +196,7 @@ export async function makeFTReady(req: Request, res: Response): Promise<void> {
     await Promise.all([TimeSpanModel.insertMany(timespans), FT.save()]);
     logger.info("insertions done");
 
-    res.status(StatusCodes.OK).json(timespans);
+    res.status(StatusCodes.OK).json(FT);
   } catch (e) {
     logger.err(e);
     res.status(StatusCodes.BAD_REQUEST).json({
