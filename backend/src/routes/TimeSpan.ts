@@ -9,6 +9,7 @@ import { Document, Types } from "mongoose";
 import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
 import logger from "@shared/Logger";
 import { getTeamsToAssignOnEachFT } from "@src/services/FT";
+import { getUsersAssignedToTimespans } from "@src/services/timeSpan";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -315,34 +316,11 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
+  const {start, end, FTID, required} = timespan
+  
+  const usersAssignedToTimespans = await getUsersAssignedToTimespans({start, end}, required, FTID)
 
-  const twinTimespan = await TimeSpan.find({
-    start: timespan.start,
-    end: timespan.end,
-    FTID: timespan.FTID,
-    required: timespan.required,
-  });
-  const usersId = [] as string[];
-  for (const ts of twinTimespan) {
-    if (ts.assigned) {
-      usersId.push(ts.assigned.toString());
-    }
-  }
-  //find users
-  const users = await User.find({
-    _id: { $in: usersId },
-  });
-  //return user firstname, lastname and _id
-  return res.json(
-    users.map((user) => ({
-      _id: user._id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      timespanId: twinTimespan.filter(
-        (element) => element.assigned == user._id
-      )[0]._id,
-    }))
-  );
+  return res.json(usersAssignedToTimespans);
 }
 
 export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
