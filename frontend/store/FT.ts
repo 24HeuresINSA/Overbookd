@@ -19,6 +19,7 @@ export const state = () => ({
     comments: [] as any,
   } as FT,
   Fts: [] as FT[],
+  waitingForResponse: false,
 });
 
 export type FTState = ReturnType<typeof state>;
@@ -43,6 +44,7 @@ export const getters = getterTree(state, {
     });
     return equipmentMap;
   },
+  waitingForResponse: (state) => state.waitingForResponse,
 });
 
 /* ############################################ */
@@ -155,6 +157,9 @@ export const mutations = mutationTree(state, {
     mFT.status = "ready";
     mFT.refused = [];
     mFT.validated = ["humain", "log"]; // change with config later
+  },
+  SET_WAITING_FOR_RESPONSE: function (state, isWaiting) {
+    state.waitingForResponse = isWaiting;
   },
 });
 
@@ -275,6 +280,7 @@ export const actions = actionTree(
      */
     readyForAssignment: async function ({ commit, state }, by: string) {
       commit("MARK_READY_FOR_ASSIGNMENT", by);
+      commit("SET_WAITING_FOR_RESPONSE", true);
       const comment: FormComment = {
         topic: "ready",
         text: "FT prête à affectation",
@@ -288,6 +294,7 @@ export const actions = actionTree(
       if (res) {
         commit("SET_FT", res.data);
       }
+      commit("SET_WAITING_FOR_RESPONSE", false);
     },
     setParentFA: async function ({ dispatch, commit }, faCount) {
       commit("SET_PARENT_FA", faCount);
