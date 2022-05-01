@@ -190,7 +190,7 @@ export default {
       ).getTime();
     },
     isUserAvailableInTimeframe(timeframe) {
-      if (!this.mode) {
+      if (!this.isModeOrgaToTache) {
         // timeframe date object
         const availabilities =
           this.$accessor.assignment.selectedUserAvailabilities;
