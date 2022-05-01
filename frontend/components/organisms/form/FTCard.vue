@@ -5,7 +5,12 @@
       <v-card-text>
         <v-data-table :headers="headers" :items="FTs">
           <template #[`item.status`]="row">
-            <v-chip small :color="color[row.item.status]">
+            <v-chip
+              small
+              :color="
+                row.item.isValid ? color[row.item.status] : color['deleted']
+              "
+            >
               {{ row.item.status }}
             </v-chip>
           </template>
@@ -60,6 +65,7 @@ export default {
       validated: "green",
       refused: "red",
       ready: "#bf2bbd",
+      deleted: "#008080",
     },
   }),
 
