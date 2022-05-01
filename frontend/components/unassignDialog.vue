@@ -46,12 +46,12 @@
             <td>
               <v-chip
                 v-for="user in assignedUsersToSelectedTimeSpan"
+                :key="user._id"
                 small
                 close
-                :key="user._id"
+                style="cursor: pointer"
                 @click:close="unassign(user)"
                 @click.right="calendar(user)"
-                style="cursor: pointer"
               >
                 {{ user.firstname }} {{ user.lastname }}
               </v-chip>
@@ -60,12 +60,15 @@
         </tbody>
       </v-simple-table>
     </v-card-text>
+    <Loader :loading="isWaitingForResponse"></Loader>
   </v-card>
 </template>
 
 <script>
+import Loader from "./atoms/Loader.vue";
 export default {
   name: "UnassignDialog",
+  components: { Loader },
   computed: {
     selectedTimeSpan() {
       return this.$accessor.assignment.selectedTimeSpan;
@@ -82,12 +85,13 @@ export default {
     assignedUsersToSelectedTimeSpan() {
       return this.$accessor.assignment.userAssignedToSameTimespan;
     },
+    isWaitingForResponse() {
+      return this.$accessor.assignment.isWaitingForResponse;
+    },
   },
   methods: {
     async unassign(user) {
-      await this.$accessor.assignment.unassign(
-        user.timespanId
-      );
+      await this.$accessor.assignment.unassign(user.timespanId);
       this.$emit("close-dialog");
     },
     closeDialog() {

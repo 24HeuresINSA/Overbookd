@@ -69,6 +69,7 @@ export const state = () => ({
     lastname: string;
     timespanId: string;
   }[],
+  waitingForResponse: false,
 });
 
 export const mutations = mutationTree(state, {
@@ -149,8 +150,16 @@ export const mutations = mutationTree(state, {
   SET_MULTIPLE_SOLID_TASK(state: any, data: TimeSpan[]) {
     state.multipleSolidTask = data;
   },
-  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
-    state.userAssignedToSameTimespan = data;
+  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(
+    state: any,
+    data: { _id: string; user: Pick<User, "lastname" | "firstname" | "_id"> }[]
+  ) {
+    state.userAssignedToSameTimespan = data.map((userWithTimespan) => ({
+      timespanId: userWithTimespan._id,
+      firstname: userWithTimespan.user.firstname,
+      lastname: userWithTimespan.user.lastname,
+      _id: userWithTimespan.user._id,
+    }));
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
       if (a.firstname < b.firstname) {
         return -1;
@@ -172,6 +181,9 @@ export const mutations = mutationTree(state, {
   },
   TOGGLE_SHOW_TO_VALIDATE(state: any) {
     state.filters.user.showToValidate = !state.filters.user.showToValidate;
+  },
+  SET_WAITING_FOR_RESPONSE: function (state, isWaiting) {
+    state.waitingForResponse = isWaiting;
   },
 });
 
@@ -518,6 +530,7 @@ export const actions = actionTree(
 
     //get user assigned to same timespan
     async getUserAssignedToSameTimespan({ commit }: any, timeSpan: TimeSpan) {
+      commit("SET_WAITING_FOR_RESPONSE", true);
       const res = await safeCall(
         this,
         TimeSpanRepo.getUserAssignedToSameTimespan(this, timeSpan._id)
@@ -525,6 +538,7 @@ export const actions = actionTree(
       if (res) {
         commit("SET_USER_ASSIGNED_TO_SAME_TIMESPAN", res.data);
       }
+      commit("SET_WAITING_FOR_RESPONSE", false);
       return res;
     },
 
@@ -664,6 +678,8 @@ export const getters = getterTree(state, {
 
     return filteredTimespans;
   },
+
+  isWaitingForResponse: (state: any) => state.waitingForResponse,
 });
 
 function getFTName(

@@ -50,7 +50,7 @@ export function timeframeToTimeSpans(
       end,
       assigned: null,
       timeframeID,
-      required: null,
+      required: "",
       FTID,
     } as TimeSpanForm;
 
@@ -102,7 +102,7 @@ function sliceTimeFrameIntoTimeSpans(
       end: new Date(timeSpanStart.getTime() + timeSpanDurationInMs),
       assigned: null,
       timeframeID,
-      required: null,
+      required: "",
       FTID,
     } as TimeSpanForm;
     const requiredTimeSpans = generateTimeSpansAccordingToRequriedEntities(required, timeSpanTemplate);
