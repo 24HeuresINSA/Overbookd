@@ -1,7 +1,7 @@
 import { ITFRequired, ITimeFrame } from "@entities/FT";
 import { TimeSpanForm } from "@entities/TimeSpan";
 import { ObjectId } from "mongodb";
-import { timeframeToTimeSpan } from "./slicing";
+import { timeframeToTimeSpans } from "./slicing";
 
 describe("Services - slicing", () => {
   const startDate = new Date();
@@ -34,11 +34,11 @@ describe("Services - slicing", () => {
         timed: true,
       } as ITimeFrame;
       it("should generate 4 timespans", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res).toHaveLength(4);
       });
       it("should generate all timespans with same start and end dates", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const expectedStart = startDate;
         const expectedEnd = endDate;
         expect(
@@ -48,7 +48,7 @@ describe("Services - slicing", () => {
         ).toBe(true);
       });
       it("should generate all timespans with required team", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res.every((ts) => ts.required === team)).toBe(true);
       });
     });
@@ -72,11 +72,11 @@ describe("Services - slicing", () => {
         timed: true,
       } as ITimeFrame;
       it("should generate 2 timespans", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res).toHaveLength(2);
       });
       it("should generate a timespan for each user", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const expectdUser1TimeSpan: TimeSpanForm = {
           start: startDate,
           end: endDate,
@@ -128,7 +128,7 @@ describe("Services - slicing", () => {
         timed: true,
       } as ITimeFrame;
       it("should generate 13 timespans", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res).toHaveLength(13);
       });
     });
@@ -155,26 +155,26 @@ describe("Services - slicing", () => {
         timed: true,
       } as ITimeFrame;
       it("should generate 12 timeSpans (4 for each hours)", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res).toHaveLength(12);
       })
       it("should generate 4 timeSpans for a dedicated hour", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const midHourTimeSpans = res.filter(ts => ts.start.getHours() === startDate.getHours() + 1);
         expect(midHourTimeSpans).toHaveLength(4)
       });
       it("should generate first timeSpans with startDate matching timeframe startDate", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const firstTimeSpans = res.at(1) as TimeSpanForm;
         expect(+firstTimeSpans.start).toBe(timeframe.start)
       })
       it("should generate last timeSpans with endDate matching timeframe endDate", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const lastTimeSpans = res.at(-1) as TimeSpanForm;
         expect(+lastTimeSpans.end).toBe(timeframe.end)
       })
       it("should generate all timespans with required team", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res.every((ts) => ts.required === team)).toBe(true);
       });
     })
@@ -199,28 +199,28 @@ describe("Services - slicing", () => {
         timed: true,
       } as ITimeFrame;
       it("should generate 6 timeSpans (2 for each hours)", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res).toHaveLength(6);
       })
       it("should generate 2 timeSpans for a dedicated hour", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const midHourTimeSpans = res.filter(ts => ts.start.getHours() === startDate.getHours() + 1);
         expect(midHourTimeSpans).toHaveLength(2)
       });
       it("should generate first timeSpans with startDate matching timeframe startDate", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const firstTimeSpans = res.at(1) as TimeSpanForm;
         expect(+firstTimeSpans.start).toBe(timeframe.start)
       })
       it("should generate last timeSpans with endDate matching timeframe endDate", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         const lastTimeSpans = res.at(-1) as TimeSpanForm;
         expect(+lastTimeSpans.end).toBe(timeframe.end)
       })
       it("should generate a timespans at each hour with each user required and assigned", () => {
         const user1 = users[0];
         const user2 = users[1];
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         
         const user1TimeSpans = res.filter(ts => ts.required === user1._id.toString())
         expect(user1TimeSpans).toHaveLength(3);
@@ -263,7 +263,7 @@ describe("Services - slicing", () => {
         timed: true,
       } as ITimeFrame;
       it("should generate 39 timeSpans (13 for each hour)", () => {
-        const res = timeframeToTimeSpan(timeframe, FTID);
+        const res = timeframeToTimeSpans(timeframe, FTID);
         expect(res).toHaveLength(39);
       })
     })

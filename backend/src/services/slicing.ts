@@ -7,7 +7,7 @@ import logger from "@shared/Logger";
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
-export function timeframeToTimeSpan(
+export function timeframeToTimeSpans(
   timeframe: ITimeFrame,
   FTID: number
 ): TimeSpanForm[] {
@@ -106,13 +106,6 @@ function sliceTimeFrameIntoTimeSpans(
       FTID,
     } as TimeSpanForm;
     const requiredTimeSpans = generateTimeSpansAccordingToRequriedEntities(required, timeSpanTemplate);
-    logger.info(
-      `timeframeToTimeSpan: added ${
-        requiredTimeSpans.length
-      } timeSpan(s): ${new Date(
-        timeSpanTemplate.start
-      ).toLocaleString()} - ${new Date(timeSpanTemplate.end).toLocaleString()}`
-    );
     return requiredTimeSpans;
   });
   return timespans;

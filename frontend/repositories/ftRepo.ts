@@ -1,4 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { FormComment } from "~/utils/models/Comment";
 import { FT } from "~/utils/models/FT";
 
 const resource = "/ft";
@@ -20,8 +21,8 @@ export default {
   deleteFT(context: Context, FT: FT) {
     return context.$axios.delete(resource, { data: FT });
   },
-  markAsReady(context: Context, FTCount: number) {
-    return context.$axios.post(`${resource}/${FTCount}/ready`);
+  markAsReady(context: Context, FTCount: number, comment: FormComment) {
+    return context.$axios.post(`${resource}/${FTCount}/ready`, { comment });
   },
   getFTsNumber(context: Context) {
     return context.$axios.get(resource + "/count");

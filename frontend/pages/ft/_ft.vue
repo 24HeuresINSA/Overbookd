@@ -104,6 +104,8 @@
       </v-card>
     </v-dialog>
 
+    <Loader :loading="waitingForResponse"></Loader>
+
     <div style="height: 50px; width: 100%"></div>
 
     <!-- Buttons bar at the bottom of the page -->
@@ -200,16 +202,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {Snack} from "~/utils/models/snack";
-import {Header} from "~/utils/models/Data";
-import {User} from "~/utils/models/repo";
+import { Snack } from "~/utils/models/snack";
+import { Header } from "~/utils/models/Data";
+import { User } from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
 import FormCard from "~/components/organisms/form/FormCard.vue";
-import {FT, SmallTypes} from "~/utils/models/FT";
+import { FT, SmallTypes } from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import Loader from "~/components/atoms/Loader.vue";
 
 interface Data {
   FTID: number;
@@ -261,6 +264,7 @@ export default Vue.extend({
     CompleteTimeframeCard,
     FTInfoCard,
     LogisticsCard,
+    Loader,
   },
   data: function (): Data {
     return {
@@ -316,6 +320,9 @@ export default Vue.extend({
       }
       return [];
     },
+    waitingForResponse: function (): boolean {
+      return this.$accessor.FT.waitingForResponse;
+    },
   },
 
   async mounted() {
@@ -339,9 +346,9 @@ export default Vue.extend({
       // Check for slicing
       this.$accessor.FT.timeframes.forEach((tf) => {
         if (tf.toSlice && tf.sliceTime) {
-
           if (
-            (((new Date(tf.end)).getTime() - (new Date(tf.start)).getTime()) / (3600 * 1000)) %
+            ((new Date(tf.end).getTime() - new Date(tf.start).getTime()) /
+              (3600 * 1000)) %
               tf.sliceTime !=
             0
           ) {
