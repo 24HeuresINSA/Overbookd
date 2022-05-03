@@ -6,6 +6,7 @@ import StatusCodes from "http-status-codes";
 import jsPDF from "jspdf";
 import logger from "@shared/Logger";
 import ConfigModel from "@entities/Config";
+import { convert } from "html-to-text";
 
 //PDF Helpers
 const LITTLE_SPACE = 5;
@@ -77,11 +78,10 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF({ filters: ["ASCIIHexEncode"] });
+  const doc = new jsPDF();
   //reset the cursor position
   yCursor = BASE_SPACE;
   fillPDF(doc, user, sos_numbers, userTasks);
-
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: "Error creating pdf",
@@ -101,7 +101,6 @@ export async function createPlanning(
  */
 function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Basic configuration
-  doc.setFont("Courier");
   doc.setFontSize(10);
 
   //Header
@@ -197,13 +196,7 @@ function centeredText(doc: jsPDF, text: string, y: number) {
  */
 function sanitizeString(str: any) {
   if (str) {
-    return str
-      .normalize("NFD")
-      .replace(/\p{Diacritic}/gu, "")
-      .replace(
-        /([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])/g,
-        ""
-      );
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   } else {
     return "";
   }
@@ -285,17 +278,20 @@ function singleTask(doc: jsPDF, task: Task) {
   });
   doc.setFontSize(11);
   doc.text("Consignes :", BASE_X, yCursor);
-  doc.setFontSize(8);
+  doc.setFontSize(10);
   incrementY(doc, LITTLE_SPACE);
 
-  const consignes = sanitizeString(task.ft.details.description).replace(
-    /<(.|\n)*?>/g,
-    ""
-  );
-  const longstr2 = doc.splitTextToSize(consignes, pageWidth - BASE_X * 2);
-  longstr2.forEach((str: any) => {
-    doc.text(str, BASE_X, yCursor);
-    incrementY(doc, LITTLE_SPACE);
+  const consignes = sanitizeString(task.ft.details.description);
+  const firstSplit = convert(consignes);
+  const secondSplit = firstSplit.split("\n");
+  secondSplit.forEach((str: any) => {
+    if (str !== "") {
+      const logstr = sanitizeString(str);
+      doc.text(logstr, BASE_X, yCursor);
+      incrementY(doc, LITTLE_SPACE);
+    } else {
+      incrementY(doc, 1);
+    }
   });
   incrementY(doc, LITTLE_SPACE);
 }
