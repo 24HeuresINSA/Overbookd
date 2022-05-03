@@ -402,7 +402,9 @@ export async function unassignAllOfUser(req: Request, res: Response) {
       message: "User not found",
     });
   }
-
+  user.availabilities = [];
+  user.team = ["toValidate"];
+  await user.save();
   const timespans = await TimeSpan.find({ assigned: user._id });
   for (const ts of timespans) {
     ts.assigned = null;

@@ -387,13 +387,9 @@ export default {
     },
     async unvalidateUser() {
       if (this.mUser.team.includes("soft")) {
-        this.mUser.team = [];
-        this.mUser.team.push("toValidate");
+        this.mUser.team = ["toValidate"];
+        this.mUser.availabilities = [];
         await this.$axios.get('/timespan/user/unassignall/' + this.mUser._id);
-        await this.$axios.put(`/user/${this.mUser._id}`, {
-          team: this.mUser.team,
-        });
-        this.saveUser();
       }
     },
     async addFriend() {
