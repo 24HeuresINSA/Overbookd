@@ -10,9 +10,11 @@ export interface ITimeSpan {
   end: Date;
   timeframeID: string;
   assigned: Types.ObjectId | null; // assigned user
-  required: string | null; // required user or team
+  required: string; // required user or team
   FTID: number;
 }
+
+export type TimeSpanForm = Omit<ITimeSpan, "_id">
 
 const TimeSpanSchema = new Schema<ITimeSpan>({
   start: { type: Date, required: true },

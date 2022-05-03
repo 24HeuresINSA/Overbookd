@@ -7,7 +7,7 @@
       <v-spacer></v-spacer>
       <div class="switch">
         <p :class="customClass('ot')">Orga-Tâche</p>
-        <v-switch :value="mode" @change="changeMode"></v-switch>
+        <v-switch :value="isModeOrgaToTache" @change="changeMode"></v-switch>
         <p :class="customClass('to')">Tâche-Orga</p>
       </div>
       <v-spacer></v-spacer>
@@ -22,6 +22,7 @@
       :events="assignedTimeSlots"
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      @click:event="clickedEvent"
       @mousedown:event="startDrag"
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-import {Snack} from "~/utils/models/snack";
+import { Snack } from "~/utils/models/snack";
 
 export default {
   name: "OverCalendar",
@@ -72,7 +73,7 @@ export default {
   computed: {
     assignedTimeSlots() {
       let events = [...this.$accessor.assignment.assignedTimespans];
-      if (this.mode) {
+      if (this.isModeOrgaToTache) {
         events = [];
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
         if (multipleSolidTask.length > 0) {
@@ -86,7 +87,6 @@ export default {
             ) {
               this.centralDay =
                 multipleSolidTask[multipleSolidTask.length - 1].end;
-
             }
           }
 
@@ -97,8 +97,8 @@ export default {
         }
       } else {
         let hoverTask = this.$accessor.assignment.hoverTask;
-        for(const event of events) {
-          if(!event.color) event["color"] = this.getDisplayColor(event);
+        for (const event of events) {
+          if (!event.color) event["color"] = this.getDisplayColor(event);
         }
         if (hoverTask.FTID) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -115,7 +115,7 @@ export default {
     selectedUser: function () {
       return this.$accessor.user.mUser;
     },
-    mode() {
+    isModeOrgaToTache() {
       return !this.$accessor.assignment.filters.isModeOrgaToTache;
     },
   },
@@ -123,6 +123,9 @@ export default {
     popUp(event) {
       this.$accessor.assignment.getUserAssignedToSameTimespan(event);
       this.$emit("open-unassign-dialog");
+    },
+    async clickedEvent({ event }) {
+      event.color = "rgba(209, 0, 0)";
     },
     // calendar drag and drop
     async startDrag({ event }) {
@@ -191,7 +194,7 @@ export default {
       ).getTime();
     },
     isUserAvailableInTimeframe(timeframe) {
-      if (!this.mode) {
+      if (!this.isModeOrgaToTache) {
         // timeframe date object
         const availabilities =
           this.$accessor.assignment.selectedUserAvailabilities;
@@ -213,18 +216,18 @@ export default {
         return false;
       }
     },
-    changeMode(isMode) {
+    changeMode(isModeOrgaToTache) {
       //Security in case of locked hover
       this.$accessor.assignment.setHoverTask({});
       this.$accessor.assignment.setMultipleSolidTask();
       this.events = [];
 
-      this.$accessor.assignment.changeMode(!isMode);
+      this.$accessor.assignment.changeMode(!isModeOrgaToTache);
       this.$accessor.assignment.initStore();
     },
     getDisplayColor(timespan) {
       let transparency = (0.2 + 0.8 * timespan.completion).toFixed(2);
-      if(isNaN(transparency)) {
+      if (isNaN(transparency)) {
         transparency = 1.0;
       }
       if (timespan.required === "soft") {

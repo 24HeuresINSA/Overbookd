@@ -1,4 +1,6 @@
 import FTModel, { IFT } from "@entities/FT";
+import TimeSpanModel from "@entities/TimeSpan";
+import { team } from "@entities/User";
 import { Types } from "mongoose";
 
 export async function getFTsWhereUserIsRequired(
@@ -6,7 +8,7 @@ export async function getFTsWhereUserIsRequired(
   range: { start: number; end: number },
   excludeFTs: number[] = []
 ): Promise<IFT[]> {
-  return await FTModel.find(
+  return FTModel.find(
     queryFTWhereUserIsRequiredOnDateRange(range, userId, excludeFTs)
   );
 }
@@ -18,7 +20,7 @@ export function queryFTWhereUserIsRequiredOnDateRange(
 ): any {
   return {
     count: {
-      $nin: excludeFTs
+      $nin: excludeFTs,
     },
     timeframes: {
       $elemMatch: {
@@ -37,4 +39,18 @@ export function queryFTWhereUserIsRequiredOnDateRange(
       },
     },
   };
+}
+
+interface FTWithRequiredRoles {
+  teams: team[];
+  _id: number;
+}
+
+export async function getTeamsToAssignOnEachFT(): Promise<FTWithRequiredRoles[]> {
+  return TimeSpanModel.aggregate()
+    .match({ assigned: null })
+    .group({
+      _id: "$FTID",
+      teams: { $addToSet: "$required" },
+    });
 }

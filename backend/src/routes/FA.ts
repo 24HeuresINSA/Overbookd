@@ -22,7 +22,10 @@ export async function getFAByCount(req: Request, res: Response) {
   const mFAQuery = await FAModel.findOne({ count: +req.params.id });
   if (mFAQuery) {
     const mFA = mFAQuery.toObject();
-    const linkedFTs = await FTModel.find({ FA: Number(req.params.id) }, {'count' : 1, 'general.name': 1, 'status' : 1});
+    const linkedFTs = await FTModel.find(
+      { FA: Number(req.params.id) },
+      { count: 1, "general.name": 1, status: 1, isValid: 1 }
+    );
     mFA.FTs = linkedFTs;
     res.json(mFA);
   } else {

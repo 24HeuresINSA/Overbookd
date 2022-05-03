@@ -1,11 +1,11 @@
-import {actionTree, getterTree, mutationTree} from "typed-vuex";
-import {safeCall} from "~/utils/api/calls";
-import {RepoFactory} from "~/repositories/repoFactory";
-import {User} from "~/utils/models/repo";
-import {FT} from "~/utils/models/FT";
-import {FA} from "~/utils/models/FA";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { User } from "~/utils/models/repo";
+import { FT } from "~/utils/models/FT";
+import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
-import {TimeSpan} from "~/utils/models/TimeSpan";
+import { TimeSpan } from "~/utils/models/TimeSpan";
 import TimeSpanRepo from "~/repositories/timeSpanRepo";
 
 declare interface filter {
@@ -24,6 +24,10 @@ declare interface filter {
   };
   isModeOrgaToTache: boolean;
   bypass: boolean;
+}
+
+declare interface MissingRolesOnFts {
+  [FTID: string]: string[];
 }
 
 export const state = () => ({
@@ -58,13 +62,14 @@ export const state = () => ({
   hoverTask: {} as TimeSpan,
   multipleSolidTask: [] as TimeSpan[],
   timespanToFTName: {} as { [key: string]: string },
-  roles: {} as { [key: number]: { roles: string[]; isFullyAssigned: boolean } },
+  missingRolesOnFTs: {} as MissingRolesOnFts,
   userAssignedToSameTimespan: [] as {
     _id: string;
     firstname: string;
     lastname: string;
     timespanId: string;
   }[],
+  waitingForResponse: false,
 });
 
 export const mutations = mutationTree(state, {
@@ -101,8 +106,8 @@ export const mutations = mutationTree(state, {
   SET_TIMESPANS(state: any, data: any) {
     state.timespans = data;
   },
-  SET_ROLES(state: any, data: any) {
-    state.roles = data;
+  SET_ROLES(state: any, data: MissingRolesOnFts) {
+    state.missingRolesOnFTs = data;
   },
   SET_ASSIGN_TIMESPANS(state: any, data: any) {
     state.assignedTimespans = data;
@@ -145,8 +150,16 @@ export const mutations = mutationTree(state, {
   SET_MULTIPLE_SOLID_TASK(state: any, data: TimeSpan[]) {
     state.multipleSolidTask = data;
   },
-  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(state: any, data: any) {
-    state.userAssignedToSameTimespan = data;
+  SET_USER_ASSIGNED_TO_SAME_TIMESPAN(
+    state: any,
+    data: { _id: string; user: Pick<User, "lastname" | "firstname" | "_id"> }[]
+  ) {
+    state.userAssignedToSameTimespan = data.map((userWithTimespan) => ({
+      timespanId: userWithTimespan._id,
+      firstname: userWithTimespan.user.firstname,
+      lastname: userWithTimespan.user.lastname,
+      _id: userWithTimespan.user._id,
+    }));
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
       if (a.firstname < b.firstname) {
         return -1;
@@ -168,8 +181,10 @@ export const mutations = mutationTree(state, {
   },
   TOGGLE_SHOW_TO_VALIDATE(state: any) {
     state.filters.user.showToValidate = !state.filters.user.showToValidate;
-  }
-
+  },
+  SET_WAITING_FOR_RESPONSE: function (state, isWaiting) {
+    state.waitingForResponse = isWaiting;
+  },
 });
 
 export const actions = actionTree(
@@ -315,7 +330,7 @@ export const actions = actionTree(
     },
 
     async getRolesByFT({ commit }: any) {
-      const ret: any = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
+      const ret = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
       if (ret) {
         commit("SET_ROLES", ret.data);
       }
@@ -326,13 +341,19 @@ export const actions = actionTree(
       commit("CHANGE_MODE", true);
     },
 
-    async initStore({ dispatch }) {
-      await dispatch("getUsers");
-      await dispatch("getFTs");
-      await dispatch("getFAs");
-      await dispatch("getTimeslots");
-      await dispatch("getTimespans");
-      await dispatch("getRolesByFT");
+    async initStore({ dispatch, state }) {
+      const actions = [
+        dispatch("getUsers"),
+        dispatch("getFTs"),
+        dispatch("getFAs"),
+        dispatch("getTimeslots"),
+        dispatch("getTimespans"),
+      ];
+      if (!state.filters.isModeOrgaToTache) {
+        return Promise.all([...actions, dispatch("getRolesByFT")]);
+      }
+
+      return Promise.all(actions);
     },
 
     /**
@@ -481,7 +502,7 @@ export const actions = actionTree(
               ft.general?.name || ""
             ),
           }));
-          //sort tosend by start date 
+          //sort tosend by start date
           tosend.sort((a: any, b: any) => {
             return a.start.getTime() - b.start.getTime();
           });
@@ -509,6 +530,7 @@ export const actions = actionTree(
 
     //get user assigned to same timespan
     async getUserAssignedToSameTimespan({ commit }: any, timeSpan: TimeSpan) {
+      commit("SET_WAITING_FOR_RESPONSE", true);
       const res = await safeCall(
         this,
         TimeSpanRepo.getUserAssignedToSameTimespan(this, timeSpan._id)
@@ -516,6 +538,7 @@ export const actions = actionTree(
       if (res) {
         commit("SET_USER_ASSIGNED_TO_SAME_TIMESPAN", res.data);
       }
+      commit("SET_WAITING_FOR_RESPONSE", false);
       return res;
     },
 
@@ -595,13 +618,11 @@ export const getters = getterTree(state, {
     });
     const FTFilters = state.filters.FT;
     if (FTFilters.team.length > 0) {
-      filtered = filtered.filter((item: any) => {
-        for (const team of FTFilters.team) {
-          return (
-            state.roles[item.count] && state.roles[item.count].includes(team)
-          );
-        }
-      });
+      filtered = filtered.filter((ft: FT) =>
+        FTFilters.team.any((filteredTeam: string) =>
+          state.missingRolesOnFTs[ft.count]?.includes(filteredTeam)
+        )
+      );
     }
     if (FTFilters.search && FTFilters.search.length > 0) {
       const options = {
@@ -614,13 +635,7 @@ export const getters = getterTree(state, {
       filtered = fuse.search(FTFilters.search).map((e) => e.item);
     }
     if (FTFilters.areAssignedFTsDisplayed) {
-      filtered = filtered.filter((ft: FT) => {
-        const info = state.roles[ft.count];
-        if (info && info.isFullyAssigned) {
-          return !info.isFullyAssigned;
-        }
-        return true;
-      });
+      filtered = filtered.filter((ft: FT) => state.missingRolesOnFTs[ft.count]);
     }
 
     return filtered;
@@ -642,7 +657,7 @@ export const getters = getterTree(state, {
     let filteredTimespans: any = state.timespans;
     if (FTFilters.team.length > 0) {
       filteredTimespans = state.timespans.filter((ts: TimeSpan) => {
-        if(ts === null) return false;
+        if (ts === null) return false;
         if (!FTFilters.team.includes(ts.required)) {
           return false;
         }
@@ -663,6 +678,8 @@ export const getters = getterTree(state, {
 
     return filteredTimespans;
   },
+
+  isWaitingForResponse: (state: any) => state.waitingForResponse,
 });
 
 function getFTName(

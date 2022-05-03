@@ -1,13 +1,15 @@
-import {Request, Response} from "express";
-import TimeSpan, {ITimeSpan} from "@entities/TimeSpan";
+import { Request, Response } from "express";
+import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
-import {IComment} from "@entities/FA";
-import User, {IUser} from "@entities/User";
+import { IComment } from "@entities/FA";
+import User, { IUser, team } from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
-import {Document, Types} from "mongoose";
-import {dateRangeOverlaps, isTimespanCovered} from "../services/conflict";
+import { Document, Types } from "mongoose";
+import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
 import logger from "@shared/Logger";
+import { getTeamsToAssignOnEachFT } from "@src/services/FT";
+import { getUsersAssignedToTimespans } from "@src/services/timeSpan";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
   const timespan = await TimeSpan.find({});
@@ -212,7 +214,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
 }
 
 export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
-  const bypass = (req.query.bypass === "true");
+  const bypass = req.query.bypass === "true";
   const timespan = await TimeSpan.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
@@ -248,7 +250,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
       }
     }
     //Unsafe role checking
-    if(bypass) {
+    if (bypass) {
       return true;
     }
 
@@ -314,34 +316,11 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
+  const {start, end, FTID, required} = timespan
+  
+  const usersAssignedToTimespans = await getUsersAssignedToTimespans({start, end}, required, FTID)
 
-  const twinTimespan = await TimeSpan.find({
-    start: timespan.start,
-    end: timespan.end,
-    FTID: timespan.FTID,
-    required: timespan.required,
-  });
-  const usersId = [] as string[];
-  for (const ts of twinTimespan) {
-    if (ts.assigned) {
-      usersId.push(ts.assigned.toString());
-    }
-  }
-  //find users
-  const users = await User.find({
-    _id: { $in: usersId },
-  });
-  //return user firstname, lastname and _id
-  return res.json(
-    users.map((user) => ({
-      _id: user._id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      timespanId: twinTimespan.filter(
-        (element) => element.assigned == user._id
-      )[0]._id,
-    }))
-  );
+  return res.json(usersAssignedToTimespans);
 }
 
 export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
@@ -364,30 +343,14 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
 
 // /rolesByFT
 export async function getRolesByFT(req: Request, res: Response) {
-  const timespans = await TimeSpan.find({});
-  const ret = {} as {
-    [key: number]: { roles: string[]; isFullyAssigned: boolean };
-  };
-  for (const ts of timespans) {
-    if (!ret[ts.FTID]) {
-      ret[ts.FTID] = { roles: [], isFullyAssigned: false };
-    }
-    if (
-      ts.required &&
-      ts.required.length !== 24 && // ts require a team and not a user
-      !ret[ts.FTID].roles.includes(ts.required) // ts.required not already in the list
-    ) {
-      ret[ts.FTID].roles.push(ts.required);
-    }
-  }
-  for (const ftid in ret) {
-    // get the timespans of the FT
-    const unassignedTimeSpansLinkedToFT = timespans.filter((ts) => ts.FTID === +ftid && ts.assigned === null);
-    if (unassignedTimeSpansLinkedToFT.length === 0) { // all timespans are assigned
-      ret[ftid].isFullyAssigned = true;
-    }
-  }
-  return res.json(ret);
+  const ftsWithMissingRequiredTeams = await getTeamsToAssignOnEachFT();
+
+  const missingTeamsOnFTs = ftsWithMissingRequiredTeams.reduce(
+    (agg, { _id, teams }) => ({ ...agg, [_id.toString()]: teams }),
+    {} as { [FTID: string]: team[] }
+  );
+
+  return res.json(missingTeamsOnFTs);
 }
 
 export async function deleteTimespan(req: Request, res: Response) {
@@ -399,7 +362,7 @@ export async function deleteTimespan(req: Request, res: Response) {
   }
 
   //find ft linked to timespan
-  const ft = await FTModel.find({ count: timespan.FTID });
+  const ft = await FTModel.findOne({ count: timespan.FTID });
   if (!ft) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "FT not found",
@@ -415,10 +378,10 @@ export async function deleteTimespan(req: Request, res: Response) {
       timespan.required
     }`,
   };
-  ft[0].comments.push(comment);
+  ft.comments.push(comment);
 
   try {
-    await ft[0].save();
+    await ft.save();
   } catch (e) {
     console.log(e);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
