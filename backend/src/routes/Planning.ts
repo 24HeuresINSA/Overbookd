@@ -24,6 +24,7 @@ interface Task {
   timespan: ITimeSpan;
   respPhone: number;
   partners: (string | undefined)[];
+  role: string;
 }
 
 export async function createPlanning(
@@ -79,6 +80,7 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
+  doc.setFont("helvetica", "normal");
   //reset the cursor position
   yCursor = BASE_SPACE;
   fillPDF(doc, user, sos_numbers, userTasks);
@@ -140,8 +142,7 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
   sortedTS.forEach((ts: ITimeSpan) => {
     const ft = userAssignedFT.find((ft: IFT) => ft.count === ts.FTID);
     const respUser = allUsers.find(
-      //@ts-ignore
-      (u: any) => u._id.toString() === ft?.general.inCharge._id
+      (u: any) => u._id.toString() === (ft as any).general.inCharge._id
     );
     const twinTimeSpan = allTimeSPans.filter(
       (TS: ITimeSpan) =>
@@ -150,6 +151,13 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
         ts.end.getTime() === TS.end.getTime() &&
         ts._id.toString() !== TS._id.toString()
     );
+    //We precise the affected role
+    let affectedAs: string;
+    if (ts.required.length === 24) {
+      affectedAs = "hard";
+    } else {
+      affectedAs = ts.required;
+    }
     const tsPartners = twinTimeSpan.map((tsp: ITimeSpan) => {
       const part = allUsers.find(
         (u: any) => u._id.toString() === tsp?.assigned
@@ -167,6 +175,7 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
         timespan: ts,
         respPhone: respPhone,
         partners: tsPartners,
+        role: affectedAs,
       });
       index++;
     }
@@ -213,7 +222,9 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
   incrementY(doc, LITTLE_SPACE);
   doc.setFontSize(15);
   incrementY(doc, LITTLE_SPACE);
+  doc.setFont("helvetica", "bold");
   doc.text("SOS", BASE_X, yCursor);
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   incrementY(doc, LITTLE_SPACE);
   sos_numbers.forEach((sos: any) => {
@@ -232,13 +243,16 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
 function singleTask(doc: jsPDF, task: Task) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  //Space for the rect
-  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  //TITLE of the task
+  doc.setFontSize(14);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
   doc.text(title, BASE_X - 5, yCursor);
+  doc.setFont("helvetica", "normal");
   incrementY(doc, LITTLE_SPACE);
-  doc.setFontSize(10);
-  //avoir la date et l'heure format francais
+  //DATE of the task
+  doc.setFontSize(12);
+  //Get date, hours, minutes in FR format
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
@@ -254,43 +268,69 @@ function singleTask(doc: jsPDF, task: Task) {
   const endDateString = sanitizeString(
     endDate.toLocaleDateString("fr-FR", options)
   );
-  const dateText = sanitizeString(
-    `Quand ? : ${startDateString} - ${endDateString}`
-  );
-  doc.text(dateText, BASE_X, yCursor);
+  const date = "Date : ";
+  const dateWidth = makeTitle(doc, date);
+  doc.setFont("helvetica", "normal");
+  const dateText = sanitizeString(`${startDateString} - ${endDateString}`);
+  doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
-  const resp = `Responsable : ${sanitizeString(
-    //@ts-ignore
-    task.ft.general.inCharge.username
+  //LOCATION of the task
+  const location = "Lieu : ";
+  const locationWidth = makeTitle(doc, location);
+  const locationDetail = `${sanitizeString(
+    (task as any).ft.details.locations[0] || ""
+  )}`;
+  doc.text(locationDetail, BASE_X + locationWidth, yCursor);
+  incrementY(doc, LITTLE_SPACE);
+  //RESPONSIBLE of the task
+  const responsable = "Responsable : ";
+  const respWidth = makeTitle(doc, responsable);
+  const resp = `${sanitizeString(
+    (task as any).ft.general.inCharge.username
   )} (+33${task.respPhone})`;
-  doc.text(resp, BASE_X, yCursor);
+  doc.text(resp, BASE_X + respWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
-  let partners = "Avec : ";
+  //ROLE in the task if not soft
+  if (task.role !== "soft") {
+    const role = "Role : ";
+    const roleWidth = makeTitle(doc, role);
+    const roleDetail = `${task.role}`;
+    doc.text(roleDetail, BASE_X + roleWidth, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  }
+  //PARTNERS of the task
+  const partnersTitle = "Avec : ";
+  const partnersWidth = makeTitle(doc, partnersTitle);
+  let partners = "";
   task.partners.forEach((part: any) => {
     if (part !== undefined) {
       partners += sanitizeString(part + ", ");
     }
   });
+  partners = partners.replace(/,\s*$/, "");
   const longstr = doc.splitTextToSize(partners, pageWidth - BASE_X * 2);
-  longstr.forEach((str: any) => {
-    doc.text(str, BASE_X, yCursor);
+  for (let i = 0; i < longstr.length; i++) {
+    if (i === 0) {
+      doc.text(longstr[i], BASE_X + partnersWidth, yCursor);
+    } else {
+      doc.text(longstr[i], BASE_X, yCursor);
+    }
     incrementY(doc, LITTLE_SPACE);
-  });
-  doc.setFontSize(11);
-  doc.text("Consignes :", BASE_X, yCursor);
+  }
+  doc.setFontSize(12);
+  makeTitle(doc, "Consignes : ");
   doc.setFontSize(10);
   incrementY(doc, LITTLE_SPACE);
 
   const consignes = sanitizeString(task.ft.details.description);
-  const firstSplit = convert(consignes);
+  const firstSplit = convert(consignes, { wordwrap: 100 });
   const secondSplit = firstSplit.split("\n");
   secondSplit.forEach((str: any) => {
     if (str !== "") {
-      const logstr = sanitizeString(str);
-      doc.text(logstr, BASE_X, yCursor);
+      doc.text(str, BASE_X, yCursor);
       incrementY(doc, LITTLE_SPACE);
     } else {
-      incrementY(doc, 1);
+      incrementY(doc, 0.7);
     }
   });
   incrementY(doc, LITTLE_SPACE);
@@ -311,4 +351,19 @@ function incrementY(doc: jsPDF, increment: number) {
     return;
   }
   yCursor = newY;
+}
+
+/**
+ * Write a title and return the text widht
+ * @param doc
+ * @param title
+ * @returns
+ */
+function makeTitle(doc: jsPDF, title: string): number {
+  doc.setFont("helvetica", "bold");
+  doc.text(title, BASE_X, yCursor);
+  const textWidht =
+    doc.getStringUnitWidth(title) * doc.internal.scaleFactor * 1.5;
+  doc.setFont("helvetica", "normal");
+  return textWidht;
 }
