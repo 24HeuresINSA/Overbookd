@@ -116,11 +116,9 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Header
   centeredText(doc, "Planning 24 heures de l'INSA", yCursor);
   doc.setFontSize(20);
-  let title = `${sanitizeString(user?.firstname)} ${sanitizeString(
-    user?.lastname
-  )}`;
+  let title = `${user?.firstname} ${user?.lastname}`;
   if (user?.nickname) {
-    title += ` (${sanitizeString(user?.nickname)})`;
+    title += ` (${user?.nickname})`;
   }
   incrementY(doc, BASE_SPACE);
   centeredText(doc, title, yCursor);
@@ -207,20 +205,6 @@ function centeredText(doc: jsPDF, text: string, y: number) {
 }
 
 /**
- * remove all special characters
- * @param str
- * @returns
- */
-function sanitizeString(str: any) {
-  if (str) {
-    //return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return str;
-  } else {
-    return "";
-  }
-}
-
-/**
  * build the sos part of the pdf
  * @param doc
  * @param sos_numbers
@@ -264,7 +248,7 @@ function singleTask(doc: jsPDF, task: Task) {
   doc.setFont("Arial", "bold");
   //TITLE of the task
   doc.setFontSize(14);
-  const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
+  const title = `Tache ${task.id} : ${task.ft.general.name}`;
   doc.text(title, BASE_X - 5, yCursor);
   doc.setFont("Arial", "normal");
   incrementY(doc, LITTLE_SPACE);
@@ -279,33 +263,27 @@ function singleTask(doc: jsPDF, task: Task) {
     minute: "numeric",
   };
   const startDate = new Date(task.timespan.start);
-  const startDateString = sanitizeString(
-    startDate.toLocaleDateString("fr-FR", options)
-  );
+  const startDateString = startDate.toLocaleDateString("fr-FR", options);
   const endDate = new Date(task.timespan.end);
-  const endDateString = sanitizeString(
-    endDate.toLocaleDateString("fr-FR", options)
-  );
+  const endDateString = endDate.toLocaleDateString("fr-FR", options);
   const date = "Date : ";
   const dateWidth = makeTitle(doc, date);
   doc.setFont("Arial", "normal");
-  const dateText = sanitizeString(`${startDateString} - ${endDateString}`);
+  const dateText = `${startDateString} - ${endDateString}`;
   doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
   //LOCATION of the task
   const location = "Lieu : ";
   const locationWidth = makeTitle(doc, location);
-  const locationDetail = `${sanitizeString(
-    (task as any).ft.details.locations[0] || ""
-  )}`;
+  const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
   doc.text(locationDetail, BASE_X + locationWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
   //RESPONSIBLE of the task
   const responsable = "Responsable : ";
   const respWidth = makeTitle(doc, responsable);
-  const resp = `${sanitizeString(
-    (task as any).ft.general.inCharge.username
-  )} (+33${task.respPhone})`;
+  const resp = `${(task as any).ft.general.inCharge.username} (+33${
+    task.respPhone
+  })`;
   doc.text(resp, BASE_X + respWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
   //ROLE in the task if not soft
@@ -322,7 +300,7 @@ function singleTask(doc: jsPDF, task: Task) {
   let partners = "";
   task.partners.forEach((part: any) => {
     if (part !== undefined) {
-      partners += sanitizeString(part + ", ");
+      partners += part + ", ";
     }
   });
   partners = partners.replace(/,\s*$/, "");
@@ -340,8 +318,8 @@ function singleTask(doc: jsPDF, task: Task) {
   doc.setFontSize(10);
   incrementY(doc, LITTLE_SPACE);
 
-  const consignes = sanitizeString(task.ft.details.description);
-  const firstSplit = convert(consignes, { wordwrap: 100 });
+  const consignes = task.ft.details.description;
+  const firstSplit = convert(consignes as any, { wordwrap: 100 });
   const secondSplit = firstSplit.split("\n");
   secondSplit.forEach((str: any) => {
     if (yCursor === BASE_SPACE) {
@@ -406,7 +384,7 @@ function predictSingleTaskHeight(doc: jsPDF, task: Task): number {
   let totalHeight = LITTLE_SPACE;
   doc.setFontSize(14);
   doc.setFont("Arial", "bold");
-  const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
+  const title = `Tache ${task.id} : ${task.ft.general.name}`;
   totalHeight += doc.getStringUnitWidth(title);
   totalHeight += LITTLE_SPACE;
   doc.setFontSize(12);
@@ -418,7 +396,7 @@ function predictSingleTaskHeight(doc: jsPDF, task: Task): number {
   let partners = "";
   task.partners.forEach((part: any) => {
     if (part !== undefined) {
-      partners += sanitizeString(part + ", ");
+      partners += part + ", ";
     }
   });
   partners = partners.replace(/,\s*$/, "");
@@ -427,8 +405,8 @@ function predictSingleTaskHeight(doc: jsPDF, task: Task): number {
     totalHeight += doc.getStringUnitWidth(longstr[i]);
     totalHeight += LITTLE_SPACE;
   }
-  const consignes = sanitizeString(task.ft.details.description);
-  const firstSplit = convert(consignes, { wordwrap: 100 });
+  const consignes = task.ft.details.description;
+  const firstSplit = convert(consignes as any, { wordwrap: 100 });
   const secondSplit = firstSplit.split("\n");
   secondSplit.forEach((str: any) => {
     if (str !== "") {
