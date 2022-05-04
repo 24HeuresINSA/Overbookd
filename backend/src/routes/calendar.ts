@@ -33,8 +33,8 @@ export async function getCalendarById(req: Request, res: Response) {
     if(ft.details) {
       description = `${(ft as any).details.description}`;
       //fuck bad typings its annoying :(
-      if(ft.details.location) {
-        location = `${(ft as any).details.location.join(', ')}`;
+      if(ft.details.locations) {
+        location = `${(ft as any).details.locations.join(', ')}`;
       }
     }
     calendar.createEvent({
