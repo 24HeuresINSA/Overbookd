@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Planning 📆</h1>
+    <h2> Lien de souscription Ical (pour google agenda) : https://overbookd.24heures.org/api/calendar/{{ $accessor.user.me._id }} </h2>
     <v-row class="d-flex justify-space-around py-6">
       <h1 style="width: 25%; text-align: center">Mon planning</h1>
       <v-switch
