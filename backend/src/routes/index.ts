@@ -429,6 +429,12 @@ timespanRouter.get(
   TimeSpanHandlers.getTimeSpanByAssigned
 );
 timespanRouter.get(
+  "/user/unassignall/:id",
+  authMiddleware.protect(),
+  authMiddleware.verifyRoles("humain"),
+  TimeSpanHandlers.unassignAllOfUser
+);
+timespanRouter.get(
   "/user/FT/:id",
   authMiddleware.protect(),
   TimeSpanHandlers.getTimeSpanByFTID

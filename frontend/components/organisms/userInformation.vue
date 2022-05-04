@@ -206,13 +206,20 @@
             </v-col>
             <v-col md="3">
               <v-btn
-                v-if="hasEditingRole"
-                :disabled="isValidated()"
+                v-if="hasEditingRole && !isValidated()"
                 color="#48C52D"
                 @click="validateUser()"
                 >Valider (soft)</v-btn
-              ></v-col
-            >
+              >
+              <v-btn
+                v-if="hasEditingRole && isValidated() && isSoft()"
+                color="red"
+                @click="$refs.confirmUnassign.open()"
+                >Dévalider (soft)</v-btn>
+                <ConfirmDialog ref="confirmUnassign" @confirm="unvalidateUser">
+                  Ce soft sera desaffecter de <b>toutes</b> ses taches actuellement affectées !
+                </ConfirmDialog>
+              </v-col>
             <v-col md="3">
               <v-btn
                 v-if="hasEditingRole"
@@ -239,10 +246,11 @@ import { isValidated } from "~/utils/roles/index.ts";
 import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
 import ModificationCard from "~/components/organisms/ModificationCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
+import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
 
 export default {
   name: "UserInformation",
-  components: { OverChips, AvailabilitiesCalendar, ModificationCard },
+  components: { OverChips, AvailabilitiesCalendar, ModificationCard, ConfirmDialog },
   props: {
     user: {
       type: Object,
@@ -353,6 +361,9 @@ export default {
     isValidated() {
       return isValidated(this.mUser);
     },
+    isSoft() {
+      return this.mUser.team.includes("soft");
+    },
     hasUserRole(roles) {
       if (this.mUser.team === undefined) {
         return false;
@@ -372,6 +383,13 @@ export default {
           team: this.mUser.team,
         });
         this.saveUser();
+      }
+    },
+    async unvalidateUser() {
+      if (this.mUser.team.includes("soft")) {
+        this.mUser.team = ["toValidate"];
+        this.mUser.availabilities = [];
+        await this.$axios.get('/timespan/user/unassignall/' + this.mUser._id);
       }
     },
     async addFriend() {
