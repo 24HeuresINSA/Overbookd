@@ -48,6 +48,7 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
+import * as CalendarHandlers from "./calendar"
 import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -470,6 +471,13 @@ timespanRouter.delete(
   authMiddleware.verifyRoles("humain"),
   TimeSpanHandlers.deleteTimespan
 );
+
+const calendarRouter = Router();
+calendarRouter.get(
+  "/:id",
+  CalendarHandlers.getCalendarById
+);
+
 // Export the base-router
 const baseRouter = Router();
 baseRouter.use("/user", userRouter);
@@ -485,6 +493,7 @@ baseRouter.use("/location", locationRouter);
 baseRouter.use("/conflict", conflictRouter);
 baseRouter.use("/conflict/ft", TFConflictRouter);
 baseRouter.use("/timespan", timespanRouter);
+baseRouter.use("/calendar", calendarRouter);
 baseRouter.get(
   "/passsecu",
   authMiddleware.protect(),
