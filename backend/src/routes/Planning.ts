@@ -80,7 +80,15 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
-  doc.setFont("helvetica", "normal");
+  //load file as binary
+  const arial_normal = doc.loadFile("src/assets/arial.ttf");
+  const arial_bold = doc.loadFile("src/assets/arial_bold.ttf");
+  doc.addFileToVFS("Arial.ttf", arial_normal);
+  doc.addFileToVFS("Arial_Bold.ttf", arial_bold);
+
+  doc.addFont("Arial.ttf", "Arial", "normal");
+  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
+  doc.setFont("Arial", "normal");
   //reset the cursor position
   yCursor = BASE_SPACE;
   fillPDF(doc, user, sos_numbers, userTasks);
@@ -205,7 +213,8 @@ function centeredText(doc: jsPDF, text: string, y: number) {
  */
 function sanitizeString(str: any) {
   if (str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    //return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str;
   } else {
     return "";
   }
@@ -222,9 +231,9 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
   incrementY(doc, LITTLE_SPACE);
   doc.setFontSize(15);
   incrementY(doc, LITTLE_SPACE);
-  doc.setFont("helvetica", "bold");
+  doc.setFont("Arial", "bold");
   doc.text("SOS", BASE_X, yCursor);
-  doc.setFont("helvetica", "normal");
+  doc.setFont("Arial", "normal");
   doc.setFontSize(10);
   incrementY(doc, LITTLE_SPACE);
   sos_numbers.forEach((sos: any) => {
@@ -243,12 +252,21 @@ function sosPart(doc: jsPDF, sos_numbers: any) {
 function singleTask(doc: jsPDF, task: Task) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  doc.setFont("helvetica", "bold");
+  const taskSize = predictSingleTaskHeight(doc, task);
+  if (yCursor !== BASE_SPACE && yCursor + taskSize > pageHeight) {
+    newPage(doc);
+    if (taskSize > pageHeight) {
+      doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+    }
+  }
+  let startingCursor = yCursor;
+  incrementY(doc, LITTLE_SPACE);
+  doc.setFont("Arial", "bold");
   //TITLE of the task
   doc.setFontSize(14);
   const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
   doc.text(title, BASE_X - 5, yCursor);
-  doc.setFont("helvetica", "normal");
+  doc.setFont("Arial", "normal");
   incrementY(doc, LITTLE_SPACE);
   //DATE of the task
   doc.setFontSize(12);
@@ -270,7 +288,7 @@ function singleTask(doc: jsPDF, task: Task) {
   );
   const date = "Date : ";
   const dateWidth = makeTitle(doc, date);
-  doc.setFont("helvetica", "normal");
+  doc.setFont("Arial", "normal");
   const dateText = sanitizeString(`${startDateString} - ${endDateString}`);
   doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
@@ -326,6 +344,10 @@ function singleTask(doc: jsPDF, task: Task) {
   const firstSplit = convert(consignes, { wordwrap: 100 });
   const secondSplit = firstSplit.split("\n");
   secondSplit.forEach((str: any) => {
+    if (yCursor === BASE_SPACE) {
+      startingCursor = yCursor;
+      incrementY(doc, LITTLE_SPACE);
+    }
     if (str !== "") {
       doc.text(str, BASE_X, yCursor);
       incrementY(doc, LITTLE_SPACE);
@@ -333,7 +355,7 @@ function singleTask(doc: jsPDF, task: Task) {
       incrementY(doc, 0.7);
     }
   });
-  incrementY(doc, LITTLE_SPACE);
+  doc.rect(10, startingCursor, pageWidth - 20, yCursor - startingCursor);
 }
 
 /**
@@ -345,12 +367,17 @@ function singleTask(doc: jsPDF, task: Task) {
 function incrementY(doc: jsPDF, increment: number) {
   const pageHeight = doc.internal.pageSize.height;
   const newY = yCursor + increment;
-  if (newY > pageHeight) {
+  if (newY + BASE_SPACE > pageHeight) {
     doc.addPage();
     yCursor = BASE_SPACE;
     return;
   }
   yCursor = newY;
+}
+
+function newPage(doc: jsPDF) {
+  doc.addPage();
+  yCursor = BASE_SPACE;
 }
 
 /**
@@ -360,10 +387,56 @@ function incrementY(doc: jsPDF, increment: number) {
  * @returns
  */
 function makeTitle(doc: jsPDF, title: string): number {
-  doc.setFont("helvetica", "bold");
+  doc.setFont("Arial", "bold");
   doc.text(title, BASE_X, yCursor);
   const textWidht =
     doc.getStringUnitWidth(title) * doc.internal.scaleFactor * 1.5;
-  doc.setFont("helvetica", "normal");
+  doc.setFont("Arial", "normal");
   return textWidht;
+}
+
+/**
+ * predict the size of a task and return the height
+ * @param doc
+ * @param task
+ * @returns
+ */
+function predictSingleTaskHeight(doc: jsPDF, task: Task): number {
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let totalHeight = LITTLE_SPACE;
+  doc.setFontSize(14);
+  doc.setFont("Arial", "bold");
+  const title = sanitizeString(`Tache ${task.id} : ${task.ft.general.name}`);
+  totalHeight += doc.getStringUnitWidth(title);
+  totalHeight += LITTLE_SPACE;
+  doc.setFontSize(12);
+  const major = "Date : ";
+  for (let i = 0; i < 6; i++) {
+    totalHeight += doc.getStringUnitWidth(major);
+    totalHeight += LITTLE_SPACE;
+  }
+  let partners = "";
+  task.partners.forEach((part: any) => {
+    if (part !== undefined) {
+      partners += sanitizeString(part + ", ");
+    }
+  });
+  partners = partners.replace(/,\s*$/, "");
+  const longstr = doc.splitTextToSize(partners, pageWidth - BASE_X * 2);
+  for (let i = 0; i < longstr.length; i++) {
+    totalHeight += doc.getStringUnitWidth(longstr[i]);
+    totalHeight += LITTLE_SPACE;
+  }
+  const consignes = sanitizeString(task.ft.details.description);
+  const firstSplit = convert(consignes, { wordwrap: 100 });
+  const secondSplit = firstSplit.split("\n");
+  secondSplit.forEach((str: any) => {
+    if (str !== "") {
+      totalHeight += doc.getStringUnitWidth(str);
+      totalHeight += LITTLE_SPACE;
+    } else {
+      totalHeight += 0.7;
+    }
+  });
+  return totalHeight / (doc.internal.scaleFactor * 1.5);
 }
