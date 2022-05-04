@@ -1,11 +1,14 @@
-import ical from 'ical-generator'
+import ical, { ICalAlarmType } from 'ical-generator'
 import  TimeSpan, { ITimeSpan } from '../entities/TimeSpan'
 import FTModel, {IFT} from '../entities/FT'
 import { Request, Response } from "express";
+import logger from "@shared/Logger"
+
 
 export async function getCalendarById(req: Request, res: Response) {
   const { id } = req.params
   const fts = await FTModel.find({});
+  logger.info(`Generating calendar for user ${id}`)
 
   const ftMapByCount: {[key: number]: IFT} = {};
 
@@ -16,8 +19,8 @@ export async function getCalendarById(req: Request, res: Response) {
 
   const calendar = ical(({
     domain: `${process.env.DOMAIN}`,
-    name: 'Time-Spans Calendar',
-    prodId: { company: 'Time-Spans', product: 'Time-Spans Calendar' },
+    name: '24H 47eme - Calendrier',
+    prodId: { company: '24H de l\'insa', product: 'Overbookd Calendar' },
   } as any))
 
   const timeSpans = await TimeSpan.find({
@@ -25,13 +28,17 @@ export async function getCalendarById(req: Request, res: Response) {
   })
 
   timeSpans.forEach((timeSpan: ITimeSpan) => {
-    console.log(timeSpan.FTID);
     const ft = ftMapByCount[timeSpan.FTID];
     const summary = `${(ft as any).general.name}`;
     let description = "N/A"
     let location = "N/A"
+    let attendee = "N/A";
+    if(ft.general.inCharge) {
+      attendee = `${(ft as any).general.inCharge.username}`
+    }
+
     if(ft.details) {
-      description = `${(ft as any).details.description}`;
+      description = `Personne en charge : <b>${attendee}</b><br />${(ft as any).details.description}`;
       //fuck bad typings its annoying :(
       if(ft.details.locations) {
         location = `${(ft as any).details.locations.join(', ')}`;
@@ -43,6 +50,10 @@ export async function getCalendarById(req: Request, res: Response) {
       summary: summary,
       description: description,
       location: location,
+      alarms: [{
+        triggerBefore: 10 * 60,
+        type: ICalAlarmType.display
+      }]
     })
   })
 
