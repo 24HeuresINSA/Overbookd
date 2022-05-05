@@ -1,40 +1,30 @@
 [
   {
-    "_id": {
-      "$oid": "614c8b0eae8c2c0010a35bb7"
-    },
+    "_id": "614c8b0eae8c2c0010a35bb7",
     "key": "error",
     "value": "Zebi",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b0eae8c2c0010a35bba"
-    },
+    "_id": "614c8b0eae8c2c0010a35bba",
     "key": "error_basic",
     "value": "Something went wrong blame the bad devs 💩",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b0fae8c2c0010a35bbd"
-    },
+    "_id": "614c8b0fae8c2c0010a35bbd",
     "key": "isSignupOpen",
     "value": true,
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b0fae8c2c0010a35bc0"
-    },
+    "_id": "614c8b0fae8c2c0010a35bc0",
     "key": "fb_signup_closed",
     "value": "les inscriptions sont fermées 😱",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b0fae8c2c0010a35bc3"
-    },
+    "_id": "614c8b0fae8c2c0010a35bc3",
     "key": "signup_form",
     "value": [
       {
@@ -84,14 +74,14 @@
       },
       {
         "key": "phone",
-        "label": "ton 06 ?",
+        "label": "Ton 06 ?",
         "isRequired": true,
         "option": "tel",
         "regex": "0[6-7]{1}[0-9]{8}$"
       },
       {
         "key": "hasDriverLicense",
-        "label": "Est ce que tu as un permis de conduire ",
+        "label": "Est-ce que tu as un permis de conduire ?",
         "type": "switch"
       },
       {
@@ -122,7 +112,7 @@
         "key": "year",
         "label": "Année",
         "type": "select",
-        "options": [1, 2, 3, 4, 5, "cerise"]
+        "options": [1, 2, 3, 4, 5, "6 et +", "cerise"]
       },
       {
         "key": "comment",
@@ -132,124 +122,42 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b0fae8c2c0010a35bc6"
-    },
-    "key": "fa_form",
-    "value": [
-      {
-        "key": "name",
-        "label": "nom de la FA"
-      },
-      {
-        "key": "type",
-        "type": "select",
-        "options": ["Com", "Divertissement", "flemme de faire les aurte..."]
-      },
-      {
-        "key": "team",
-        "label": "equipe",
-        "type": "select",
-        "options": ["Sponso", "ComSI"]
-      },
-      {
-        "key": "inCharge",
-        "label": "Responsable",
-        "type": "user",
-        "filter": "hard"
-      },
-      {
-        "key": "isPublishable",
-        "label": "Publier sur le site / plaquette",
-        "type": "switch"
-      },
-      {
-        "key": "isMajorAnim",
-        "label": "Anime phare",
-        "type": "switch"
-      },
-      {
-        "key": "isForKids",
-        "label": "Anim pour les gosses",
-        "type": "switch"
-      },
-      {
-        "key": "description",
-        "label": "Description",
-        "type": "textarea"
-      },
-      {
-        "key": "isParticularSecurityMeasures",
-        "label": "Dispositif de sécurité particulier",
-        "type": "switch"
-      },
-      {
-        "key": "isRequiringPass",
-        "label": "Bessoin de pass",
-        "type": "switch"
-      },
-      {
-        "key": "isRequiringElectricity",
-        "label": "Besoin d'elec ",
-        "type": "switch"
-      },
-      {
-        "key": "isRequiringSignalisation",
-        "label": "Besoin de signalisation",
-        "type": "textarea"
-      }
-    ],
-    "__v": 0
-  },
-  {
-    "_id": {
-      "$oid": "614c8b0fae8c2c0010a35bc9"
-    },
+    "_id": "614c8b0fae8c2c0010a35bc9",
     "key": "fb_confirm_submit",
     "value": "T'es sûr de ta FA la ? les zumains 🧂 seront pas content si c'est de la 💩",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b0fae8c2c0010a35bcc"
-    },
+    "_id": "614c8b0fae8c2c0010a35bcc",
     "key": "fa_validators",
     "value": ["humain", "secu", "log", "barrieres", "elec", "signa"],
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b10ae8c2c0010a35bcf"
-    },
+    "_id": "614c8b10ae8c2c0010a35bcf",
     "key": "availabilities_description",
     "value": "Remplis tes disponibilités, plus tu as de points de charisme, plus tu as de chances de faire parti de l'aventure. Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à tous tes créneaux et te laisserons du temps pour te reposer et profiter du festival ! Les créneaux oranges ne sont plus modifiables une fois cochés.",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b10ae8c2c0010a35bd2"
-    },
+    "_id": "614c8b10ae8c2c0010a35bd2",
     "key": "max_charisma",
     "value": 1500,
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b10ae8c2c0010a35bd5"
-    },
+    "_id": "614c8b10ae8c2c0010a35bd5",
     "key": "ft_validators",
     "value": ["humain", "log"],
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b10ae8c2c0010a35bd8"
-    },
+    "_id": "614c8b10ae8c2c0010a35bd8",
     "key": "equipment_form",
     "value": [
       {
         "key": "name",
-        "label": "nom de l'objet"
+        "label": "Nom de l'objet"
       },
       {
         "key": "type",
@@ -308,9 +216,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b10ae8c2c0010a35bdb"
-    },
+    "_id": "614c8b10ae8c2c0010a35bdb",
     "key": "ft_form",
     "value": [
       {
@@ -351,14 +257,12 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b11ae8c2c0010a35bde"
-    },
+    "_id": "614c8b11ae8c2c0010a35bde",
     "key": "teams",
     "value": [
       {
         "name": "hard",
-        "color": "#264653",
+        "color": "#969600",
         "icon": "mdi-account-hard-hat"
       },
       {
@@ -525,30 +429,29 @@
         "name": "tendrestival",
         "color": "#FF9300",
         "icon": "mdi-balloon"
+      },
+      {
+        "name": "vieux",
+        "color": "#B5C2CB",
+        "icon": "mdi-human-cane"
       }
     ],
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b11ae8c2c0010a35be1"
-    },
+    "_id": "614c8b11ae8c2c0010a35be1",
     "key": "isInventoryOpen",
     "value": false,
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b11ae8c2c0010a35be4"
-    },
+    "_id": "614c8b11ae8c2c0010a35be4",
     "key": "add_availabilities_roles",
     "value": ["admin", "bureau", "humain"],
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614c8b11ae8c2c0010a35be7"
-    },
+    "_id": "614c8b11ae8c2c0010a35be7",
     "key": "timeframes",
     "value": [
       {
@@ -563,38 +466,30 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614ef72fae8c2c0010a35ff7"
-    },
+    "_id": "614ef72fae8c2c0010a35ff7",
     "key": "fa_required_role",
     "value": "hard",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "614ef744ae8c2c0010a35ffa"
-    },
+    "_id": "614ef744ae8c2c0010a35ffa",
     "key": "ft_required_role",
     "value": "hard",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "6161725764870e0010292db4"
-    },
+    "_id": "6161725764870e0010292db4",
     "key": "are_transfers_open",
     "value": true,
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61843542d2bbce00105aeff5"
-    },
+    "_id": "61843542d2bbce00105aeff5",
     "key": "fa_general_form",
     "value": [
       {
         "key": "name",
-        "label": "nom de la FA"
+        "label": "Nom de la FA"
       },
       {
         "key": "type",
@@ -614,7 +509,7 @@
       },
       {
         "key": "team",
-        "label": "equipe",
+        "label": "Equipe",
         "type": "teams"
       },
       {
@@ -627,9 +522,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61843542d2bbce00105aeff9"
-    },
+    "_id": "61843542d2bbce00105aeff9",
     "key": "fa_details_form",
     "value": [
       {
@@ -644,7 +537,7 @@
       },
       {
         "key": "isMajorAnim",
-        "label": "Anime phare",
+        "label": "Anim phare",
         "type": "switch"
       },
       {
@@ -656,9 +549,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61843542d2bbce00105aeffd"
-    },
+    "_id": "61843542d2bbce00105aeffd",
     "key": "fa_security_form",
     "value": [
       {
@@ -670,14 +561,12 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61843542d2bbce00105af004"
-    },
+    "_id": "61843542d2bbce00105af004",
     "key": "ft_general_form",
     "value": [
       {
         "key": "name",
-        "label": "nom de la FT"
+        "label": "Nom de la FT"
       },
       {
         "key": "inCharge",
@@ -694,9 +583,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61843542d2bbce00105af008"
-    },
+    "_id": "61843542d2bbce00105af008",
     "key": "ft_details_form",
     "value": [
       {
@@ -708,17 +595,13 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61843544d2bbce00105af02d"
-    },
+    "_id": "61843544d2bbce00105af02d",
     "key": "event_date",
     "value": "2022-05-21",
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61af655ff77ccb00103ed109"
-    },
+    "_id": "61af655ff77ccb00103ed109",
     "key": "fa_external_form",
     "value": [
       {
@@ -765,9 +648,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61af655ff77ccb00103ed12c"
-    },
+    "_id": "61af655ff77ccb00103ed12c",
     "key": "fa_security_pass_form",
     "value": [
       {
@@ -791,6 +672,14 @@
         "label": "Commentaire"
       },
       {
+        "key": "entity",
+        "label": "Entité"
+      },
+      {
+        "key": "reason",
+        "label": "Raison"
+      },
+      {
         "key": "timeslot",
         "label": "plage horaire",
         "type": "select",
@@ -808,9 +697,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61af655ff77ccb00103ed12f"
-    },
+    "_id": "61af655ff77ccb00103ed12f",
     "key": "fa_water_form",
     "value": [
       {
@@ -826,9 +713,7 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61af655ff77ccb00103ed134"
-    },
+    "_id": "61af655ff77ccb00103ed134",
     "key": "fa_signalisation_form",
     "value": [
       {
@@ -843,15 +728,13 @@
       },
       {
         "key": "comment",
-        "label": "commentaire"
+        "label": "Commentaire"
       }
     ],
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61af655ff77ccb00103ed137"
-    },
+    "_id": "61af655ff77ccb00103ed137",
     "key": "fa_elec_form",
     "value": [
       {
@@ -881,17 +764,13 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "61b0ca5877783200108bd4c2"
-    },
+    "_id": "61b0ca5877783200108bd4c2",
     "key": "is_ft_open",
     "value": true,
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "621d1f96eac5310012bbd9f7"
-    },
+    "_id": "620cb64424568626d7f9e2a7",
     "key": "signup_form_soft",
     "value": [
       {
@@ -981,11 +860,9 @@
     "__v": 0
   },
   {
-    "_id": {
-      "$oid": "624c7c327b7c8f02a91ea5a4"
-    },
+    "_id": "624be11990b5de0011816811",
     "key": "show_ft_in_planning",
-    "value": true,
+    "value": false,
     "__v": 0
   },
   {

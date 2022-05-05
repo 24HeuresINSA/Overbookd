@@ -81,10 +81,26 @@ export async function createPlanning(
   //Create planning
   const doc = new jsPDF();
   //load file as binary
-  const arial_normal = doc.loadFile("src/assets/arial.ttf");
-  const arial_bold = doc.loadFile("src/assets/arial_bold.ttf");
-  doc.addFileToVFS("Arial.ttf", arial_normal);
-  doc.addFileToVFS("Arial_Bold.ttf", arial_bold);
+  doc.loadFile("src/assets/arial.ttf", false, function (res: string): string {
+    logger.info("Arial loaded");
+    doc.addFileToVFS("Arial.ttf", res);
+    return res;
+  });
+  doc.loadFile(
+    "src/assets/arial_bold.ttf",
+    false,
+    function (res: string): string {
+      logger.info("Arial bold loaded");
+      doc.addFileToVFS("Arial_Bold.ttf", res);
+      return res;
+    }
+  );
+  while (
+    doc.existsFileInVFS("Arial.ttf") === false &&
+    doc.existsFileInVFS("Arial_Bold.ttf") === false
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   doc.addFont("Arial.ttf", "Arial", "normal");
   doc.addFont("Arial_Bold.ttf", "Arial", "bold");
@@ -125,6 +141,10 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   incrementY(doc, BASE_SPACE);
   //SOS part with numbers
   sosPart(doc, sos_numbers);
+  incrementY(doc, BASE_SPACE);
+
+  //plan part
+  planPart(doc);
   incrementY(doc, BASE_SPACE);
   //Tasks part
   tasks.forEach((task: Task) => {
@@ -237,12 +257,15 @@ function singleTask(doc: jsPDF, task: Task) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const taskSize = predictSingleTaskHeight(doc, task);
+  let dontRect = false;
   if (yCursor !== BASE_SPACE && yCursor + taskSize > pageHeight) {
     newPage(doc);
     if (taskSize > pageHeight) {
       doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+      dontRect = true;
     }
   }
+
   let startingCursor = yCursor;
   incrementY(doc, LITTLE_SPACE);
   doc.setFont("Arial", "bold");
@@ -252,6 +275,7 @@ function singleTask(doc: jsPDF, task: Task) {
   doc.text(title, BASE_X - 5, yCursor);
   doc.setFont("Arial", "normal");
   incrementY(doc, LITTLE_SPACE);
+
   //DATE of the task
   doc.setFontSize(12);
   //Get date, hours, minutes in FR format
@@ -272,12 +296,14 @@ function singleTask(doc: jsPDF, task: Task) {
   const dateText = `${startDateString} - ${endDateString}`;
   doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
+
   //LOCATION of the task
   const location = "Lieu : ";
   const locationWidth = makeTitle(doc, location);
   const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
   doc.text(locationDetail, BASE_X + locationWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
+
   //RESPONSIBLE of the task
   const responsable = "Responsable : ";
   const respWidth = makeTitle(doc, responsable);
@@ -286,6 +312,7 @@ function singleTask(doc: jsPDF, task: Task) {
   })`;
   doc.text(resp, BASE_X + respWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
+
   //ROLE in the task if not soft
   if (task.role !== "soft") {
     const role = "Role : ";
@@ -294,6 +321,7 @@ function singleTask(doc: jsPDF, task: Task) {
     doc.text(roleDetail, BASE_X + roleWidth, yCursor);
     incrementY(doc, LITTLE_SPACE);
   }
+
   //PARTNERS of the task
   const partnersTitle = "Avec : ";
   const partnersWidth = makeTitle(doc, partnersTitle);
@@ -318,22 +346,29 @@ function singleTask(doc: jsPDF, task: Task) {
   doc.setFontSize(10);
   incrementY(doc, LITTLE_SPACE);
 
+  //CONSIGNE of the task
   const consignes = task.ft.details.description;
-  const firstSplit = convert(consignes as any, { wordwrap: 100 });
+  const firstSplit = convert(consignes as any, { wordwrap: 100 }).replace(
+    /\n+$/,
+    ""
+  );
   const secondSplit = firstSplit.split("\n");
-  secondSplit.forEach((str: any) => {
+  for (let i = 0; i < secondSplit.length; i++) {
     if (yCursor === BASE_SPACE) {
       startingCursor = yCursor;
-      incrementY(doc, LITTLE_SPACE);
     }
-    if (str !== "") {
-      doc.text(str, BASE_X, yCursor);
+    if (secondSplit[i] !== "") {
+      doc.text(secondSplit[i], BASE_X, yCursor);
       incrementY(doc, LITTLE_SPACE);
     } else {
-      incrementY(doc, 0.7);
+      if (i !== secondSplit.length - 1) {
+        incrementY(doc, 0.7);
+      }
     }
-  });
-  doc.rect(10, startingCursor, pageWidth - 20, yCursor - startingCursor);
+  }
+  if (!dontRect) {
+    doc.rect(10, startingCursor, pageWidth - 20, yCursor - startingCursor);
+  }
 }
 
 /**
@@ -417,4 +452,8 @@ function predictSingleTaskHeight(doc: jsPDF, task: Task): number {
     }
   });
   return totalHeight / (doc.internal.scaleFactor * 1.5);
+}
+
+function planPart(doc: jsPDF) {
+  //TODO
 }
