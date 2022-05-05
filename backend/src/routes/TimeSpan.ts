@@ -394,3 +394,24 @@ export async function deleteTimespan(req: Request, res: Response) {
     message: "TimeSpan deleted",
   });
 }
+
+export async function unassignAllOfUser(req: Request, res: Response) {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "User not found",
+    });
+  }
+  user.availabilities = [];
+  user.team = ["toValidate"];
+  await user.save();
+  const timespans = await TimeSpan.find({ assigned: user._id });
+  for (const ts of timespans) {
+    ts.assigned = null;
+    await ts.save();
+  }
+
+  return res.json({
+    message: "User unassigned",
+  });
+}
