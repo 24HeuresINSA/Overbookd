@@ -112,7 +112,6 @@
 
 <script>
 const { version } = require("../package.json");
-const { getConfig } = require("../common/role");
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
@@ -167,6 +166,12 @@ export default {
           title: "Planning",
           roles: "hard",
           to: "/planning",
+        },
+        {
+          icon: "mdi-calendar-export",
+          title: "Export Planning",
+          roles: "humain",
+          to: "/exportPlanning",
         },
         {
           icon: "mdi-calendar-multiple-check",

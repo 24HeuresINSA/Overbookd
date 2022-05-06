@@ -112,7 +112,7 @@
         "key": "year",
         "label": "Année",
         "type": "select",
-        "options": [1, 2, 3, 4, 5,"6 et +","cerise"]
+        "options": [1, 2, 3, 4, 5, "6 et +", "cerise"]
       },
       {
         "key": "comment",
@@ -671,7 +671,7 @@
         "key": "comment",
         "label": "Commentaire"
       },
-      { 
+      {
         "key": "entity",
         "label": "Entité"
       },
@@ -770,7 +770,7 @@
     "__v": 0
   },
   {
-    "_id":  "620cb64424568626d7f9e2a7",
+    "_id": "620cb64424568626d7f9e2a7",
     "key": "signup_form_soft",
     "value": [
       {
@@ -863,6 +863,35 @@
     "_id": "624be11990b5de0011816811",
     "key": "show_ft_in_planning",
     "value": false,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6268f658ae21802ea84db2b6"
+    },
+    "key": "sos_numbers",
+    "value": [
+      {
+        "name": "PC securite (1)",
+        "number": "04 28 29 22 11"
+      },
+      {
+        "name": "PC securite (2)",
+        "number": "04 72 43 70 70"
+      },
+      {
+        "name": "Pauline K, Resp. Orga",
+        "number": "07 67 33 73 32"
+      },
+      {
+        "name": "Pauline R, Resp. Orga",
+        "number": "06 11 32 57 62"
+      },
+      {
+        "name": "Damien, Resp. Orga",
+        "number": "06 09 72 90 06"
+      }
+    ],
     "__v": 0
   }
 ]

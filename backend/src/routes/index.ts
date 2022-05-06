@@ -48,7 +48,8 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
-import * as CalendarHandlers from "./calendar"
+import * as PlanningHandlers from "./Planning";
+import * as CalendarHandlers from "./calendar";
 import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -57,6 +58,14 @@ const multer = require("multer");
 function ping(req: Request, res: Response) {
   return res.send("pong");
 }
+
+//planning route
+const planningRouter = Router();
+planningRouter.post(
+  "/create/:userID",
+  authMiddleware.protect(),
+  PlanningHandlers.createPlanning
+);
 
 // User-route
 const userRouter = Router();
@@ -479,13 +488,11 @@ timespanRouter.delete(
 );
 
 const calendarRouter = Router();
-calendarRouter.get(
-  "/:id",
-  CalendarHandlers.getCalendarById
-);
+calendarRouter.get("/:id", CalendarHandlers.getCalendarById);
 
 // Export the base-router
 const baseRouter = Router();
+baseRouter.use("/planning", planningRouter);
 baseRouter.use("/user", userRouter);
 baseRouter.use("/config", configRouter);
 baseRouter.use("/FA", FArouter);
