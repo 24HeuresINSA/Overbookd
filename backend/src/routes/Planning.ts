@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "@entities/User";
+import User, { IUser } from "@entities/User";
 import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import FTModel, { IFT } from "@entities/FT";
 import StatusCodes from "http-status-codes";
@@ -15,14 +15,14 @@ const BIG_SPACE = 20;
 const BASE_X = 25;
 
 let yCursor = BASE_SPACE;
-let allUsers: any[] = [];
+let allUsers: IUser[] = [];
 let allTimeSPans: ITimeSpan[] = [];
 
 interface Task {
   id: number;
   ft: IFT;
   timespan: ITimeSpan;
-  respPhone: number;
+  respPhone: number | undefined;
   partners: (string | undefined)[];
   role: string;
 }
@@ -64,7 +64,7 @@ export async function createPlanning(
     userAssignedFT.push(ft);
   }
 
-  //Get config
+  //Get sos numbers from config
   const config = await ConfigModel.find({});
   if (!config) {
     return;
@@ -292,7 +292,6 @@ function singleTask(doc: jsPDF, task: Task) {
   const endDateString = endDate.toLocaleDateString("fr-FR", options);
   const date = "Date : ";
   const dateWidth = makeTitle(doc, date);
-  doc.setFont("Arial", "normal");
   const dateText = `${startDateString} - ${endDateString}`;
   doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
