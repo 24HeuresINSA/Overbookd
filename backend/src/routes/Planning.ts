@@ -81,7 +81,6 @@ export async function createPlanning(
   const doc = new jsPDF();
   //load file as binary
   doc.loadFile("src/assets/arial.ttf", false, function (res: string): string {
-    logger.info("Arial loaded");
     doc.addFileToVFS("Arial.ttf", res);
     return res;
   });
@@ -89,7 +88,6 @@ export async function createPlanning(
     "src/assets/arial_bold.ttf",
     false,
     function (res: string): string {
-      logger.info("Arial bold loaded");
       doc.addFileToVFS("Arial_Bold.ttf", res);
       return res;
     }
@@ -106,6 +104,7 @@ export async function createPlanning(
   doc.setFont("Arial", "normal");
   //reset the cursor position
   yCursor = BASE_SPACE;
+  logger.info("Creating planning for user " + user?._id);
   fillPDF(doc, user, sos_numbers.value, userTasks);
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
