@@ -44,13 +44,16 @@
         vont partir donc soyez bien sûr de ce que vous faites.
       </p>
     </div>
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
-import jsPDF from "jspdf";
 import { saveAs } from "file-saver";
+import { Snack } from "~/utils/models/snack";
 
 export default {
   data() {
@@ -58,6 +61,7 @@ export default {
       selected_user: undefined,
       planningLoaded: false,
       uniquePlanning: undefined,
+      snack: new Snack(),
     };
   },
   methods: {
@@ -68,8 +72,15 @@ export default {
       await planningRepo
         .createPlanning(this, this.selected_user._id)
         .then((res) => {
-          this.uniquePlanning = res.data;
-          this.planningLoaded = true;
+          if (res) {
+            this.uniquePlanning = res.data;
+            this.planningLoaded = true;
+          } else {
+            this.snack.display("Une erreur est survenue");
+          }
+        })
+        .catch(() => {
+          this.snack.display("Une erreur est survenue");
         });
     },
     exportPlanning() {
