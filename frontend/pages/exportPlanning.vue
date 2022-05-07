@@ -49,7 +49,6 @@
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
-import jsPDF from "jspdf";
 import { saveAs } from "file-saver";
 
 export default {
