@@ -72,7 +72,6 @@ export default {
       await planningRepo
         .createPlanning(this, this.selected_user._id)
         .then((res) => {
-          console.log(res);
           if (res) {
             this.uniquePlanning = res.data;
             this.planningLoaded = true;
@@ -80,8 +79,7 @@ export default {
             this.snack.display("Une erreur est survenue");
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           this.snack.display("Une erreur est survenue");
         });
     },
