@@ -17,6 +17,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY --from=builder /overbookd/backend/dist ./dist
+COPY --from=builder /overbookd/backend/assets ./assets
 
 EXPOSE 2424
 
