@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import logger from "@shared/Logger";
 import ConfigModel, { IConfig } from "@entities/Config";
 import { convert } from "html-to-text";
+import { existsSync } from "fs";
 
 //PDF Helpers
 const LITTLE_SPACE = 5;
@@ -79,19 +80,36 @@ export async function createPlanning(
 
   //Create planning
   const doc = new jsPDF();
+
+  // check if files exists
+  const arrialPath = "assets/arial.ttf";
+  const arrialBoldPath = "assets/arial_bold.ttf";
+
+  if (!existsSync(arrialPath)) {
+    logger.err("Arial font not found");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Arial font not found",
+    });
+  }
+
+  if (!existsSync(arrialBoldPath)) {
+    logger.err("Arial bold font not found");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Arial bold font not found",
+    });
+  }
+
   //load file as binary
-  doc.loadFile("src/assets/arial.ttf", false, function (res: string): string {
+  doc.loadFile(arrialPath, false, function (res: string): string {
     doc.addFileToVFS("Arial.ttf", res);
     return res;
   });
-  doc.loadFile(
-    "src/assets/arial_bold.ttf",
-    false,
-    function (res: string): string {
-      doc.addFileToVFS("Arial_Bold.ttf", res);
-      return res;
-    }
-  );
+
+  doc.loadFile(arrialBoldPath, false, function (res: string): string {
+    doc.addFileToVFS("Arial_Bold.ttf", res);
+    return res;
+  });
+
   while (
     doc.existsFileInVFS("Arial.ttf") === false &&
     doc.existsFileInVFS("Arial_Bold.ttf") === false
