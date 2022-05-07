@@ -5,7 +5,7 @@ import FTModel, { IFT } from "@entities/FT";
 import StatusCodes from "http-status-codes";
 import jsPDF from "jspdf";
 import logger from "@shared/Logger";
-import ConfigModel from "@entities/Config";
+import ConfigModel, { IConfig } from "@entities/Config";
 import { convert } from "html-to-text";
 
 //PDF Helpers
@@ -65,16 +65,15 @@ export async function createPlanning(
   }
 
   //Get sos numbers from config
-  const config = await ConfigModel.find({});
-  if (!config) {
-    return;
+  const sos_numbers: IConfig = (await ConfigModel.findOne(
+    { key: "sos_numbers" },
+    { key: 1, value: 1, _id: 0 }
+  )) ?? { key: "", value: "" };
+  if (sos_numbers.key === "") {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "No sos numbers found in config",
+    });
   }
-  //Get sos numbers
-  const configNumbers = config.find((c) => c.key === "sos_numbers");
-  if (!configNumbers) {
-    return;
-  }
-  const sos_numbers = configNumbers.value;
 
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
@@ -107,7 +106,7 @@ export async function createPlanning(
   doc.setFont("Arial", "normal");
   //reset the cursor position
   yCursor = BASE_SPACE;
-  fillPDF(doc, user, sos_numbers, userTasks);
+  fillPDF(doc, user, sos_numbers.value, userTasks);
   if (!doc) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: "Error creating pdf",
