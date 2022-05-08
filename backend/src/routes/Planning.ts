@@ -144,7 +144,7 @@ export async function createPlanning(
 function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Basic configuration
   doc.setFontSize(10);
-
+  
   //Header
   centeredText(doc, "Planning 24 heures de l'INSA", yCursor);
   doc.setFontSize(20);
@@ -152,9 +152,21 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   if (user?.nickname) {
     title += ` (${user?.nickname})`;
   }
+
+  // Set pdf properties
+  doc.setProperties({
+    title: 'Planning de ' + title,
+    subject: 'Planning 24 heures de l"INSA',
+    author: '24heures de l"INSA',
+    keywords: '24heures, insa, planning',
+    creator: 'Overbookd'
+  });
+  
+  //Title
   incrementY(doc, BASE_SPACE);
   centeredText(doc, title, yCursor);
   incrementY(doc, BASE_SPACE);
+
   //SOS part with numbers
   sosPart(doc, sos_numbers);
   incrementY(doc, BASE_SPACE);
