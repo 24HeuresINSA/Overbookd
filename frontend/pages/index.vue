@@ -15,7 +15,10 @@
           <FriendsCard v-else />
         </v-col>
 
-        <v-col cols="12" sm="6" md="8"> <AvailabilitiesCard /> </v-col>
+        <v-col cols="12" sm="6" md="8">
+          <AvailabilitiesCard v-if="isAvailabilityMomennt()" />
+          <PlanningCard v-else />
+        </v-col>
       </v-row>
     </v-container>
 
@@ -44,6 +47,7 @@ import SnackNotificationContainer from "@/components/molecules/snackNotification
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
 import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
+import PlanningCard from "@/components/organisms/PlanningCard.vue";
 
 export default {
   components: {
@@ -53,6 +57,7 @@ export default {
     ComptesPersosCard,
     FriendsCard,
     AvailabilitiesCard,
+    PlanningCard,
   },
 
   computed: {
@@ -81,6 +86,9 @@ export default {
       await this.$router.push({
         path: "/login",
       });
+    },
+    isAvailabilityMomennt() {
+      return this.$accessor.config.getConfig("availabilityMoment");
     },
   },
 };
