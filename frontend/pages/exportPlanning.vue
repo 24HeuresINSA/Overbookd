@@ -52,7 +52,6 @@
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
-import { saveAs } from "file-saver";
 import { Snack } from "~/utils/models/snack";
 
 export default {
