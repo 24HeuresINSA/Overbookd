@@ -486,5 +486,9 @@ function planPart(doc: jsPDF) {
   const psmapBase64 = readFileSync(psmapPath, { encoding: "base64" });
   const imgData = "data:image/jpeg;base64," + psmapBase64;
 
+  const planPath = "assets/plan.jpg";
+  const planBase64 = readFileSync(planPath, { encoding: "base64" });
+  const planData = "data:image/jpeg;base64," + planBase64;
   doc.addImage(imgData, "JPEG", 15, yCursor, 180, 100);
+  doc.addImage(planData, "JPEG", 15, yCursor + 100, 180, 100);
 }
