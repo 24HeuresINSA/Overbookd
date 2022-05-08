@@ -45,7 +45,7 @@
       </p>
     </div>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-      <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
+      <h3>{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
   </div>
 </template>
@@ -84,8 +84,8 @@ export default {
         });
     },
     exportPlanning() {
-      const pdf = atob(this.uniquePlanning);
-      saveAs(new Blob([pdf], { type: "application/pdf" }), "planning.pdf");
+      const pdf = this.uniquePlanning;
+      window.open(pdf);
     },
   },
 };
