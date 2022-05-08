@@ -893,5 +893,11 @@
       }
     ],
     "__v": 0
+  },
+  {
+    "_id": { "$oid": "6277e8c24e01a5b4707c629d" },
+    "key": "availabilityMoment",
+    "value": false,
+    "__v": 0
   }
 ]

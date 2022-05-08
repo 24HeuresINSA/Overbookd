@@ -27,7 +27,13 @@
     <h3>Affectation</h3>
     <v-switch
       v-model="config.show_ft_in_planning"
-      label="Montrer les FTs dans les plannings"/>
+      label="Montrer les FTs dans les plannings"
+    />
+
+    <v-switch
+      v-model="config.availabilityMoment"
+      label="Montrer les les plannings dans le dashboard"
+    />
 
     <h2>Dispo</h2>
     <v-text-field
@@ -102,6 +108,7 @@ export default {
         max_charisma: getConfig(this, "max_charisma"),
         isInventoryOpen: getConfig(this, "isInventoryOpen"),
         show_ft_in_planning: getConfig(this, "show_ft_in_planning"),
+        availabilityMoment: getConfig(this, "availabilityMoment"),
       },
       dialog: false,
       load: false,
