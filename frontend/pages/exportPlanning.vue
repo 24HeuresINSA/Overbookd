@@ -27,7 +27,7 @@
           color="secondary"
           class="btn"
           :disabled="uniquePlanning === undefined"
-          @click="exportPlanning"
+          @click="exportPlanning('unique')"
         >
           Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
         >
@@ -40,11 +40,38 @@
         Attention : Ce que vous vous apprétez à faire est gourmand en temps et
         en puissance de calcul donc soyez bien sûr que c'est le bon moment.
       </p>
+      <div class="buttons">
+        <v-btn color="red" class="btn" @click="confirmation = true">
+          Générer<v-icon right dark> mdi-cog </v-icon></v-btn
+        >
+        <v-btn
+          color="secondary"
+          class="btn"
+          :disabled="multiplePlanning === undefined"
+          @click="exportPlanning('multiple')"
+        >
+          Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
+        >
+      </div>
     </div>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       <h3>{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
     <Loader :loading="isLoading"></Loader>
+    <v-dialog v-model="confirmation" max-width="800">
+      <v-card>
+        <v-card-title>Confirmation</v-card-title>
+        <v-card-text>T'es vraiment sûr de ce que tu veux faire ?</v-card-text>
+        <div style="display: flex; justify-content: center; padding: 1%">
+          <v-btn color="red" style="margin: 2%" @click="generateAllPlanning">
+            OUI</v-btn
+          >
+          <v-btn color="green" style="margin: 2%" @click="confirmation = false">
+            NON</v-btn
+          >
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -61,8 +88,10 @@ export default {
     return {
       selected_user: undefined,
       uniquePlanning: undefined,
+      multiplePlanning: undefined,
       isLoading: false,
       snack: new Snack(),
+      confirmation: false,
     };
   },
   methods: {
@@ -71,6 +100,8 @@ export default {
     },
     async generatePlanning() {
       this.isLoading = true;
+      this.uniquePlanning = undefined;
+      this.multiplePlanning = undefined;
       await planningRepo
         .createPlanning(this, this.selected_user._id)
         .then((res) => {
@@ -86,8 +117,29 @@ export default {
           this.isLoading = false;
         });
     },
-    exportPlanning() {
-      const pdf = this.uniquePlanning;
+    async generateAllPlanning() {
+      this.confirmation = false;
+      this.isLoading = true;
+      this.uniquePlanning = undefined;
+      this.multiplePlanning = undefined;
+      await planningRepo
+        .createAllPlanning(this)
+        .then((res) => {
+          if (res) {
+            this.multiplePlanning = res.data;
+          } else {
+            this.snack.display("Une erreur est survenue");
+          }
+          this.isLoading = false;
+        })
+        .catch(() => {
+          this.snack.display("Une erreur est survenue");
+          this.isLoading = false;
+        });
+    },
+    exportPlanning(mode) {
+      const pdf =
+        mode === "unique" ? this.uniquePlanning : this.multiplePlanning;
       window.open(pdf);
     },
   },
@@ -124,6 +176,14 @@ export default {
 
   .warn {
     color: red;
+  }
+
+  .buttons {
+    display: flex;
+
+    .btn {
+      margin-right: 1vw;
+    }
   }
 }
 </style>

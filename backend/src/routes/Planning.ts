@@ -12,12 +12,12 @@ import { existsSync, readFileSync } from "fs";
 //PDF Helpers
 const LITTLE_SPACE = 5;
 const BASE_SPACE = 10;
-const BIG_SPACE = 20;
 const BASE_X = 25;
 
 let yCursor = BASE_SPACE;
 let allUsers: IUser[] = [];
 let allTimeSPans: ITimeSpan[] = [];
+let allFT: IFT[] = [];
 
 interface Task {
   id: number;
@@ -26,6 +26,110 @@ interface Task {
   respPhone: number | undefined;
   partners: (string | undefined)[];
   role: string;
+}
+
+export async function createAllPlanning(
+  req: Request,
+  res: Response
+): Promise<any> {
+  //get basic things to build all plannings
+  yCursor = BASE_SPACE;
+  //Get all users
+  await User.find().then((users: any) => {
+    allUsers = users;
+  });
+  //Get all timespans
+  await TimeSpan.find().then((timespans: any) => {
+    allTimeSPans = timespans;
+  });
+  //Get all FT
+  await FTModel.find().then((fts: any) => {
+    allFT = fts;
+  });
+
+  //Get sos numbers from config
+  const sos_numbers: IConfig = (await ConfigModel.findOne(
+    { key: "sos_numbers" },
+    { key: 1, value: 1, _id: 0 }
+  )) ?? { key: "", value: "" };
+  if (sos_numbers.key === "") {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "No sos numbers found in config",
+    });
+  }
+
+  //Create the doc
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+  // check if files exists
+  const arrialPath = "assets/arial.ttf";
+  const arrialBoldPath = "assets/arial_bold.ttf";
+
+  if (!existsSync(arrialPath)) {
+    logger.err("Arial font not found");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Arial font not found",
+    });
+  }
+
+  if (!existsSync(arrialBoldPath)) {
+    logger.err("Arial bold font not found");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Arial bold font not found",
+    });
+  }
+
+  //load file as binary
+  doc.loadFile(arrialPath, false, function (res: string): string {
+    doc.addFileToVFS("Arial.ttf", res);
+    return res;
+  });
+
+  doc.loadFile(arrialBoldPath, false, function (res: string): string {
+    doc.addFileToVFS("Arial_Bold.ttf", res);
+    return res;
+  });
+
+  while (
+    doc.existsFileInVFS("Arial.ttf") === false &&
+    doc.existsFileInVFS("Arial_Bold.ttf") === false
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  doc.addFont("Arial.ttf", "Arial", "normal");
+  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
+  doc.setFont("Arial", "normal");
+
+  for (let i = 0; i < allUsers.length; i++) {
+    //get timespans for user
+    const timespans = allTimeSPans.filter(
+      (timespan: ITimeSpan) => timespan.assigned === allUsers[i]._id?.toString()
+    );
+    //check if user has timespans
+    if (timespans.length === 0) {
+      continue;
+    }
+    //get fts for timespans
+    const userAssignedFT: any = [];
+    for (let i = 0; i < timespans.length; i++) {
+      const ft = allFT.find((ft: IFT) => ft.count === timespans[i].FTID);
+      if (ft) {
+        userAssignedFT.push(ft);
+      }
+    }
+    const userTasks = buildAllTasks(userAssignedFT, timespans);
+    fillPDF(doc, allUsers[i], sos_numbers.value, userTasks);
+    newPage(doc);
+  }
+
+  if (!doc) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error creating pdf",
+    });
+  } else {
+    const output = doc.output("datauristring");
+    return res.status(StatusCodes.OK).json(output);
+  }
 }
 
 export async function createPlanning(
@@ -79,7 +183,7 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: false });
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
 
   // check if files exists
   const arrialPath = "assets/arial.ttf";
@@ -327,7 +431,10 @@ function singleTask(doc: jsPDF, task: Task) {
   //LOCATION of the task
   const location = "Lieu : ";
   const locationWidth = makeTitle(doc, location);
-  const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
+  const locationDetail =
+    (task as any).ft.details.locations === undefined
+      ? ""
+      : `${(task as any).ft.details.locations[0].name}`;
   doc.text(locationDetail, BASE_X + locationWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
 
