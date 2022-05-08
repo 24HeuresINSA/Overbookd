@@ -26,13 +26,10 @@
         <v-btn
           color="secondary"
           class="btn"
-          :disabled="!planningLoaded"
+          :disabled="uniquePlanning === undefined"
           @click="exportPlanning"
         >
           Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
-        >
-        <v-btn color="primary" class="btn" :disabled="!planningLoaded"
-          >Envoyer <v-icon right dark> mdi-email-fast </v-icon></v-btn
         >
       </div>
     </div>
@@ -40,26 +37,31 @@
       <h2>Exporter tous les plannings</h2>
       <p>Vous pouvez exporter les plannings de TOUS les orgas.</p>
       <p class="warn">
-        Attention : vous n'aurez pas de prévisualisations et près de 300 mails
-        vont partir donc soyez bien sûr de ce que vous faites.
+        Attention : Ce que vous vous apprétez à faire est gourmand en temps et
+        en puissance de calcul donc soyez bien sûr que c'est le bon moment.
       </p>
     </div>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       <h3>{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
+    <Loader :loading="isLoading"></Loader>
   </div>
 </template>
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
+import Loader from "~/components/atoms/Loader.vue";
 import { Snack } from "~/utils/models/snack";
 
 export default {
+  components: {
+    Loader,
+  },
   data() {
     return {
       selected_user: undefined,
-      planningLoaded: false,
       uniquePlanning: undefined,
+      isLoading: false,
       snack: new Snack(),
     };
   },
@@ -68,18 +70,20 @@ export default {
       this.selected_user = value.value;
     },
     async generatePlanning() {
+      this.isLoading = true;
       await planningRepo
         .createPlanning(this, this.selected_user._id)
         .then((res) => {
           if (res) {
             this.uniquePlanning = res.data;
-            this.planningLoaded = true;
           } else {
             this.snack.display("Une erreur est survenue");
           }
+          this.isLoading = false;
         })
         .catch(() => {
           this.snack.display("Une erreur est survenue");
+          this.isLoading = false;
         });
     },
     exportPlanning() {
