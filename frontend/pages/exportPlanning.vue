@@ -45,14 +45,13 @@
       </p>
     </div>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-      <h3 :style="`background-color: ${color}`">{{ snack.feedbackMessage }}</h3>
+      <h3>{{ snack.feedbackMessage }}</h3>
     </v-snackbar>
   </div>
 </template>
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
-import { saveAs } from "file-saver";
 import { Snack } from "~/utils/models/snack";
 
 export default {
@@ -84,8 +83,8 @@ export default {
         });
     },
     exportPlanning() {
-      const pdf = atob(this.uniquePlanning);
-      saveAs(new Blob([pdf], { type: "application/pdf" }), "planning.pdf");
+      const pdf = this.uniquePlanning;
+      window.open(pdf);
     },
   },
 };

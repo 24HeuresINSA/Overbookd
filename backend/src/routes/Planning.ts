@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 import logger from "@shared/Logger";
 import ConfigModel, { IConfig } from "@entities/Config";
 import { convert } from "html-to-text";
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 
 //PDF Helpers
 const LITTLE_SPACE = 5;
@@ -79,7 +79,7 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF();
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: false });
 
   // check if files exists
   const arrialPath = "assets/arial.ttf";
@@ -129,8 +129,8 @@ export async function createPlanning(
       message: "Error creating pdf",
     });
   } else {
-    const base64pdf = btoa(doc.output());
-    return res.status(StatusCodes.OK).json(base64pdf);
+    const output = doc.output("datauristring");
+    return res.status(StatusCodes.OK).json(output);
   }
 }
 
@@ -152,16 +152,28 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   if (user?.nickname) {
     title += ` (${user?.nickname})`;
   }
+
+  // Set pdf properties
+  doc.setProperties({
+    title: "Planning de " + title,
+    subject: 'Planning 24 heures de l"INSA',
+    author: '24heures de l"INSA',
+    keywords: "24heures, insa, planning",
+    creator: "Overbookd",
+  });
+
+  //Title
   incrementY(doc, BASE_SPACE);
   centeredText(doc, title, yCursor);
   incrementY(doc, BASE_SPACE);
+
   //SOS part with numbers
   sosPart(doc, sos_numbers);
   incrementY(doc, BASE_SPACE);
 
   //plan part
   planPart(doc);
-  incrementY(doc, BASE_SPACE);
+  newPage(doc);
   //Tasks part
   tasks.forEach((task: Task) => {
     singleTask(doc, task);
@@ -470,5 +482,9 @@ function predictSingleTaskHeight(doc: jsPDF, task: Task): number {
 }
 
 function planPart(doc: jsPDF) {
-  //TODO
+  const psmapPath = "assets/psmap.jpg";
+  const psmapBase64 = readFileSync(psmapPath, { encoding: "base64" });
+  const imgData = "data:image/jpeg;base64," + psmapBase64;
+
+  doc.addImage(imgData, "JPEG", 15, yCursor, 180, 100);
 }
