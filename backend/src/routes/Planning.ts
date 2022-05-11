@@ -530,8 +530,12 @@ function incrementY(doc: jsPDF, increment: number) {
 }
 
 function newPage(doc: jsPDF) {
-  pageNumber++;
+  const pageHeight = doc.internal.pageSize.height;
+  doc.setFont("Arial", "bold");
+  doc.setFontSize(10);
+  centeredText(doc, "- " + pageNumber.toString() + " -", pageHeight - 5);
   doc.addPage();
+  pageNumber++;
   yCursor = BASE_SPACE;
 }
 
