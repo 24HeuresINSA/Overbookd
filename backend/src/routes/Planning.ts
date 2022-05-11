@@ -19,6 +19,8 @@ let allUsers: IUser[] = [];
 let allTimeSPans: ITimeSpan[] = [];
 let allFT: IFT[] = [];
 
+let pageNumber = 1;
+
 interface Task {
   id: number;
   ft: IFT;
@@ -246,6 +248,7 @@ export async function createPlanning(
  * @param tasks
  */
 function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
+  pageNumber = 1;
   //Basic configuration
   doc.setFontSize(10);
 
@@ -283,6 +286,14 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
     singleTask(doc, task);
     incrementY(doc, LITTLE_SPACE);
   });
+
+  let newPageNeeded = pageNumber % 2;
+  if ((pageNumber + newPageNeeded) % 4 !== 0) {
+    newPageNeeded += 2;
+  }
+  for (let i = 0; i < newPageNeeded; i++) {
+    newPage(doc);
+  }
 }
 
 /**
@@ -431,10 +442,7 @@ function singleTask(doc: jsPDF, task: Task) {
   //LOCATION of the task
   const location = "Lieu : ";
   const locationWidth = makeTitle(doc, location);
-  const locationDetail =
-    (task as any).ft.details.locations === undefined
-      ? ""
-      : `${(task as any).ft.details.locations[0].name}`;
+  const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
   doc.text(locationDetail, BASE_X + locationWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
 
@@ -515,14 +523,14 @@ function incrementY(doc: jsPDF, increment: number) {
   const pageHeight = doc.internal.pageSize.height;
   const newY = yCursor + increment;
   if (newY + BASE_SPACE > pageHeight) {
-    doc.addPage();
-    yCursor = BASE_SPACE;
+    newPage(doc);
     return;
   }
   yCursor = newY;
 }
 
 function newPage(doc: jsPDF) {
+  pageNumber++;
   doc.addPage();
   yCursor = BASE_SPACE;
 }
