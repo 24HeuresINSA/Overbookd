@@ -32,7 +32,7 @@
 
     <v-switch
       v-model="config.availabilityMoment"
-      label="Montrer les les plannings dans le dashboard"
+      label="Télécharger les plannings | Demander les dispos"
     />
 
     <h2>Dispo</h2>
