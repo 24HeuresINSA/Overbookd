@@ -523,6 +523,8 @@ function incrementY(doc: jsPDF, increment: number) {
   const newY = yCursor + increment;
   if (newY + BASE_SPACE > pageHeight) {
     newPage(doc);
+    doc.setFont("Arial", "normal");
+    doc.setFontSize(10);
     return;
   }
   yCursor = newY;
