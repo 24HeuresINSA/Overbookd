@@ -434,6 +434,7 @@ function singleTask(doc: jsPDF, task: Task) {
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
+    timeZone: "Europe/Paris",
   };
   const startDate = new Date(task.timespan.start);
   const startDateString = startDate.toLocaleDateString("fr-FR", options);
