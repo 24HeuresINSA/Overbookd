@@ -442,7 +442,10 @@ function singleTask(doc: jsPDF, task: Task) {
   //LOCATION of the task
   const location = "Lieu : ";
   const locationWidth = makeTitle(doc, location);
-  const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
+  let locationDetail = "";
+  if ((task as any).ft.details.location !== undefined) {
+    locationDetail = (task as any).ft.details.location[0];
+  }
   doc.text(locationDetail, BASE_X + locationWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
 
