@@ -252,9 +252,13 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   //Basic configuration
   doc.setFontSize(10);
 
+  //logo
+  addLogo(doc);
+
   //Header
   centeredText(doc, "Planning 24 heures de l'INSA", yCursor);
   doc.setFontSize(20);
+  doc.setFont("Arial", "bold");
   let title = `${user?.firstname} ${user?.lastname}`;
   if (user?.nickname) {
     title += ` (${user?.nickname})`;
@@ -273,6 +277,7 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   incrementY(doc, BASE_SPACE);
   centeredText(doc, title, yCursor);
   incrementY(doc, BASE_SPACE);
+  doc.setFont("Arial", "normal");
 
   //SOS part with numbers
   sosPart(doc, sos_numbers);
@@ -611,4 +616,11 @@ function planPart(doc: jsPDF) {
   const planData = "data:image/jpeg;base64," + planBase64;
   doc.addImage(imgData, "JPEG", 15, yCursor, 180, 100);
   doc.addImage(planData, "JPEG", 15, yCursor + 100, 180, 100);
+}
+
+function addLogo(doc: jsPDF) {
+  const logoPath = "assets/logo_24.png";
+  const logoBase64 = readFileSync(logoPath, { encoding: "base64" });
+  const imgData = "data:image/png;base64," + logoBase64;
+  doc.addImage(imgData, "JPEG", 10, 5, 20, 20);
 }
