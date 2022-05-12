@@ -294,6 +294,13 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   for (let i = 0; i < newPageNeeded; i++) {
     newPage(doc);
   }
+  if (newPageNeeded === 0) {
+    //if no new page needed, add page number
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(10);
+    centeredText(doc, "- " + pageNumber.toString() + " -", pageHeight - 5);
+  }
 }
 
 /**
@@ -400,16 +407,10 @@ function singleTask(doc: jsPDF, task: Task) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const taskSize = predictSingleTaskHeight(doc, task);
-  let dontRect = false;
   if (yCursor !== BASE_SPACE && yCursor + taskSize > pageHeight) {
     newPage(doc);
-    if (taskSize > pageHeight) {
-      doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-      dontRect = true;
-    }
   }
-
-  let startingCursor = yCursor;
+  doc.line(0, yCursor, pageWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
   doc.setFont("Arial", "bold");
   //TITLE of the task
@@ -499,9 +500,6 @@ function singleTask(doc: jsPDF, task: Task) {
   );
   const secondSplit = firstSplit.split("\n");
   for (let i = 0; i < secondSplit.length; i++) {
-    if (yCursor === BASE_SPACE) {
-      startingCursor = yCursor;
-    }
     if (secondSplit[i] !== "") {
       doc.text(secondSplit[i], BASE_X, yCursor);
       incrementY(doc, LITTLE_SPACE);
@@ -511,9 +509,7 @@ function singleTask(doc: jsPDF, task: Task) {
       }
     }
   }
-  if (!dontRect) {
-    doc.rect(10, startingCursor, pageWidth - 20, yCursor - startingCursor);
-  }
+  doc.line(0, yCursor, pageWidth, yCursor);
 }
 
 /**
