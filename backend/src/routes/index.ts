@@ -66,6 +66,11 @@ planningRouter.post(
   authMiddleware.protect(),
   PlanningHandlers.createPlanning
 );
+planningRouter.get(
+  "/createall",
+  authMiddleware.protect(),
+  PlanningHandlers.createAllPlanning
+);
 
 // User-route
 const userRouter = Router();

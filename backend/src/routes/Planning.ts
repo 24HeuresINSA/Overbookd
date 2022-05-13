@@ -12,12 +12,14 @@ import { existsSync, readFileSync } from "fs";
 //PDF Helpers
 const LITTLE_SPACE = 5;
 const BASE_SPACE = 10;
-const BIG_SPACE = 20;
 const BASE_X = 25;
 
 let yCursor = BASE_SPACE;
 let allUsers: IUser[] = [];
 let allTimeSPans: ITimeSpan[] = [];
+let allFT: IFT[] = [];
+
+let pageNumber = 1;
 
 interface Task {
   id: number;
@@ -26,6 +28,112 @@ interface Task {
   respPhone: number | undefined;
   partners: (string | undefined)[];
   role: string;
+}
+
+export async function createAllPlanning(
+  req: Request,
+  res: Response
+): Promise<any> {
+  //get basic things to build all plannings
+  yCursor = BASE_SPACE;
+  //Get all users
+  await User.find().then((users: any) => {
+    allUsers = users.sort((a: any, b: any) =>
+      a.firstname.localeCompare(b.firstname)
+    );
+  });
+  //Get all timespans
+  await TimeSpan.find().then((timespans: any) => {
+    allTimeSPans = timespans;
+  });
+  //Get all FT
+  await FTModel.find().then((fts: any) => {
+    allFT = fts;
+  });
+
+  //Get sos numbers from config
+  const sos_numbers: IConfig = (await ConfigModel.findOne(
+    { key: "sos_numbers" },
+    { key: 1, value: 1, _id: 0 }
+  )) ?? { key: "", value: "" };
+  if (sos_numbers.key === "") {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "No sos numbers found in config",
+    });
+  }
+
+  //Create the doc
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+  // check if files exists
+  const arrialPath = "assets/arial.ttf";
+  const arrialBoldPath = "assets/arial_bold.ttf";
+
+  if (!existsSync(arrialPath)) {
+    logger.err("Arial font not found");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Arial font not found",
+    });
+  }
+
+  if (!existsSync(arrialBoldPath)) {
+    logger.err("Arial bold font not found");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Arial bold font not found",
+    });
+  }
+
+  //load file as binary
+  doc.loadFile(arrialPath, false, function (res: string): string {
+    doc.addFileToVFS("Arial.ttf", res);
+    return res;
+  });
+
+  doc.loadFile(arrialBoldPath, false, function (res: string): string {
+    doc.addFileToVFS("Arial_Bold.ttf", res);
+    return res;
+  });
+
+  while (
+    doc.existsFileInVFS("Arial.ttf") === false &&
+    doc.existsFileInVFS("Arial_Bold.ttf") === false
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  doc.addFont("Arial.ttf", "Arial", "normal");
+  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
+  doc.setFont("Arial", "normal");
+
+  for (let i = 0; i < allUsers.length; i++) {
+    //get timespans for user
+    const timespans = allTimeSPans.filter(
+      (timespan: ITimeSpan) => timespan.assigned === allUsers[i]._id?.toString()
+    );
+    //check if user has timespans
+    if (timespans.length === 0) {
+      continue;
+    }
+    //get fts for timespans
+    const userAssignedFT: any = [];
+    for (let i = 0; i < timespans.length; i++) {
+      const ft = allFT.find((ft: IFT) => ft.count === timespans[i].FTID);
+      if (ft) {
+        userAssignedFT.push(ft);
+      }
+    }
+    const userTasks = buildAllTasks(userAssignedFT, timespans);
+    fillPDF(doc, allUsers[i], sos_numbers.value, userTasks);
+    newPage(doc);
+  }
+
+  if (!doc) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error creating pdf",
+    });
+  } else {
+    const output = doc.output("datauristring");
+    return res.status(StatusCodes.OK).json(output);
+  }
 }
 
 export async function createPlanning(
@@ -79,7 +187,7 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: false });
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
 
   // check if files exists
   const arrialPath = "assets/arial.ttf";
@@ -142,12 +250,17 @@ export async function createPlanning(
  * @param tasks
  */
 function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
+  pageNumber = 1;
   //Basic configuration
   doc.setFontSize(10);
+
+  //logo
+  addLogo(doc);
 
   //Header
   centeredText(doc, "Planning 24 heures de l'INSA", yCursor);
   doc.setFontSize(20);
+  doc.setFont("Arial", "bold");
   let title = `${user?.firstname} ${user?.lastname}`;
   if (user?.nickname) {
     title += ` (${user?.nickname})`;
@@ -166,6 +279,7 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
   incrementY(doc, BASE_SPACE);
   centeredText(doc, title, yCursor);
   incrementY(doc, BASE_SPACE);
+  doc.setFont("Arial", "normal");
 
   //SOS part with numbers
   sosPart(doc, sos_numbers);
@@ -179,6 +293,21 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
     singleTask(doc, task);
     incrementY(doc, LITTLE_SPACE);
   });
+
+  let newPageNeeded = pageNumber % 2;
+  if ((pageNumber + newPageNeeded) % 4 !== 0) {
+    newPageNeeded += 2;
+  }
+  for (let i = 0; i < newPageNeeded; i++) {
+    newPage(doc);
+  }
+  if (newPageNeeded === 0) {
+    //if no new page needed, add page number
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(10);
+    centeredText(doc, "- " + pageNumber.toString() + " -", pageHeight - 5);
+  }
 }
 
 /**
@@ -285,16 +414,10 @@ function singleTask(doc: jsPDF, task: Task) {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const taskSize = predictSingleTaskHeight(doc, task);
-  let dontRect = false;
   if (yCursor !== BASE_SPACE && yCursor + taskSize > pageHeight) {
     newPage(doc);
-    if (taskSize > pageHeight) {
-      doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-      dontRect = true;
-    }
   }
-
-  let startingCursor = yCursor;
+  doc.line(0, yCursor, pageWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
   doc.setFont("Arial", "bold");
   //TITLE of the task
@@ -325,12 +448,18 @@ function singleTask(doc: jsPDF, task: Task) {
   doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
 
-  //LOCATION of the task
-  const location = "Lieu : ";
-  const locationWidth = makeTitle(doc, location);
-  const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
-  doc.text(locationDetail, BASE_X + locationWidth, yCursor);
-  incrementY(doc, LITTLE_SPACE);
+  try {
+    const location = "Lieu : ";
+    const locationWidth = makeTitle(doc, location);
+    const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
+    doc.text(locationDetail, BASE_X + locationWidth, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  } catch (error) {
+    logger.info(error);
+    const location = "Lieu : non défini";
+    makeTitle(doc, location);
+    incrementY(doc, LITTLE_SPACE);
+  }
 
   //RESPONSIBLE of the task
   const responsable = "Responsable : ";
@@ -382,9 +511,6 @@ function singleTask(doc: jsPDF, task: Task) {
   );
   const secondSplit = firstSplit.split("\n");
   for (let i = 0; i < secondSplit.length; i++) {
-    if (yCursor === BASE_SPACE) {
-      startingCursor = yCursor;
-    }
     if (secondSplit[i] !== "") {
       doc.text(secondSplit[i], BASE_X, yCursor);
       incrementY(doc, LITTLE_SPACE);
@@ -394,9 +520,7 @@ function singleTask(doc: jsPDF, task: Task) {
       }
     }
   }
-  if (!dontRect) {
-    doc.rect(10, startingCursor, pageWidth - 20, yCursor - startingCursor);
-  }
+  doc.line(0, yCursor, pageWidth, yCursor);
 }
 
 /**
@@ -409,15 +533,21 @@ function incrementY(doc: jsPDF, increment: number) {
   const pageHeight = doc.internal.pageSize.height;
   const newY = yCursor + increment;
   if (newY + BASE_SPACE > pageHeight) {
-    doc.addPage();
-    yCursor = BASE_SPACE;
+    newPage(doc);
+    doc.setFont("Arial", "normal");
+    doc.setFontSize(10);
     return;
   }
   yCursor = newY;
 }
 
 function newPage(doc: jsPDF) {
+  const pageHeight = doc.internal.pageSize.height;
+  doc.setFont("Arial", "bold");
+  doc.setFontSize(10);
+  centeredText(doc, "- " + pageNumber.toString() + " -", pageHeight - 5);
   doc.addPage();
+  pageNumber++;
   yCursor = BASE_SPACE;
 }
 
@@ -487,5 +617,16 @@ function planPart(doc: jsPDF) {
   const psmapBase64 = readFileSync(psmapPath, { encoding: "base64" });
   const imgData = "data:image/jpeg;base64," + psmapBase64;
 
+  const planPath = "assets/plan.jpg";
+  const planBase64 = readFileSync(planPath, { encoding: "base64" });
+  const planData = "data:image/jpeg;base64," + planBase64;
   doc.addImage(imgData, "JPEG", 15, yCursor, 180, 100);
+  doc.addImage(planData, "JPEG", 15, yCursor + 100, 180, 100);
+}
+
+function addLogo(doc: jsPDF) {
+  const logoPath = "assets/logo_24.png";
+  const logoBase64 = readFileSync(logoPath, { encoding: "base64" });
+  const imgData = "data:image/png;base64," + logoBase64;
+  doc.addImage(imgData, "JPEG", 10, 5, 20, 20);
 }
