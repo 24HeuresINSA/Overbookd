@@ -62,47 +62,14 @@ export async function createAllPlanning(
     });
   }
 
-  //Create the doc
-  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
-  // check if files exists
-  const arrialPath = "assets/arial.ttf";
-  const arrialBoldPath = "assets/arial_bold.ttf";
-
-  if (!existsSync(arrialPath)) {
-    logger.err("Arial font not found");
+  let doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+  try {
+    doc = createDocument();
+  } catch (err) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial font not found",
+      message: "Error creating pdf",
     });
   }
-
-  if (!existsSync(arrialBoldPath)) {
-    logger.err("Arial bold font not found");
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial bold font not found",
-    });
-  }
-
-  //load file as binary
-  doc.loadFile(arrialPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial.ttf", res);
-    return res;
-  });
-
-  doc.loadFile(arrialBoldPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial_Bold.ttf", res);
-    return res;
-  });
-
-  while (
-    doc.existsFileInVFS("Arial.ttf") === false &&
-    doc.existsFileInVFS("Arial_Bold.ttf") === false
-  ) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  doc.addFont("Arial.ttf", "Arial", "normal");
-  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
-  doc.setFont("Arial", "normal");
 
   for (let i = 0; i < allUsers.length; i++) {
     //get timespans for user
@@ -187,47 +154,14 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
-
-  // check if files exists
-  const arrialPath = "assets/arial.ttf";
-  const arrialBoldPath = "assets/arial_bold.ttf";
-
-  if (!existsSync(arrialPath)) {
-    logger.err("Arial font not found");
+  let doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+  try {
+    doc = createDocument();
+  } catch (err) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial font not found",
+      message: "Error creating pdf",
     });
   }
-
-  if (!existsSync(arrialBoldPath)) {
-    logger.err("Arial bold font not found");
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial bold font not found",
-    });
-  }
-
-  //load file as binary
-  doc.loadFile(arrialPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial.ttf", res);
-    return res;
-  });
-
-  doc.loadFile(arrialBoldPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial_Bold.ttf", res);
-    return res;
-  });
-
-  while (
-    doc.existsFileInVFS("Arial.ttf") === false &&
-    doc.existsFileInVFS("Arial_Bold.ttf") === false
-  ) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  doc.addFont("Arial.ttf", "Arial", "normal");
-  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
-  doc.setFont("Arial", "normal");
   //reset the cursor position
   yCursor = BASE_SPACE;
   logger.info("Creating planning for user " + user?._id);
@@ -639,4 +573,36 @@ function addLogo(doc: jsPDF) {
   const logoBase64 = readFileSync(logoPath, { encoding: "base64" });
   const imgData = "data:image/png;base64," + logoBase64;
   doc.addImage(imgData, "JPEG", 10, 5, 20, 20);
+}
+
+function createDocument(): jsPDF {
+  //Create planning
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+
+  // check if files exists
+  const arrialPath = "assets/arial.ttf";
+  const arrialBoldPath = "assets/arial_bold.ttf";
+
+  if (!existsSync(arrialPath)) {
+    logger.err("Arial font not found");
+    throw new Error("Arial font not found");
+  }
+
+  if (!existsSync(arrialBoldPath)) {
+    logger.err("Arial bold font not found");
+    throw new Error("Arial font not found");
+  }
+
+  //load file as binary
+  const arialData = doc.loadFile(arrialPath, true);
+  doc.addFileToVFS("Arial.ttf", arialData);
+
+  const boldData = doc.loadFile(arrialBoldPath, true);
+  doc.addFileToVFS("Arial_Bold.ttf", boldData);
+
+  doc.addFont("Arial.ttf", "Arial", "normal");
+  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
+  doc.setFont("Arial", "normal");
+
+  return doc;
 }
