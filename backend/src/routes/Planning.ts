@@ -39,7 +39,7 @@ export async function createAllPlanning(
   //Get all users
   await User.find().then((users: any) => {
     allUsers = users.sort((a: any, b: any) =>
-      a.lastname.localeCompare(b.lastname)
+      a.firstname.localeCompare(b.firstname)
     );
   });
   //Get all timespans
