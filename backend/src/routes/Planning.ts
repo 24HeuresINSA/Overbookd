@@ -20,6 +20,7 @@ let allTimeSPans: ITimeSpan[] = [];
 let allFT: IFT[] = [];
 
 let pageNumber = 1;
+let totalPage = 1;
 
 interface Task {
   id: number;
@@ -34,6 +35,7 @@ export async function createAllPlanning(
   req: Request,
   res: Response
 ): Promise<any> {
+  totalPage = 1;
   //get basic things to build all plannings
   yCursor = BASE_SPACE;
   //Get all users
@@ -62,6 +64,7 @@ export async function createAllPlanning(
     });
   }
 
+  const docs: string[] = [];
   let doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
   try {
     doc = createDocument();
@@ -70,7 +73,6 @@ export async function createAllPlanning(
       message: "Error creating pdf",
     });
   }
-
   for (let i = 0; i < allUsers.length; i++) {
     //get timespans for user
     const timespans = allTimeSPans.filter(
@@ -90,17 +92,23 @@ export async function createAllPlanning(
     }
     const userTasks = buildAllTasks(userAssignedFT, timespans);
     fillPDF(doc, allUsers[i], sos_numbers.value, userTasks);
-    newPage(doc);
+    if (totalPage > 2000) {
+      docs.push(doc.output("datauristring"));
+      doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+      try {
+        doc = createDocument();
+      } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: "Error creating pdf",
+        });
+      }
+      totalPage = 1;
+    } else {
+      newPage(doc);
+    }
   }
 
-  if (!doc) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Error creating pdf",
-    });
-  } else {
-    const output = doc.output("datauristring");
-    return res.status(StatusCodes.OK).json(output);
-  }
+  return res.status(StatusCodes.OK).json(docs);
 }
 
 export async function createPlanning(
@@ -492,6 +500,7 @@ function newPage(doc: jsPDF) {
   centeredText(doc, "- " + pageNumber.toString() + " -", pageHeight - 5);
   doc.addPage();
   pageNumber++;
+  totalPage++;
   yCursor = BASE_SPACE;
 }
 
