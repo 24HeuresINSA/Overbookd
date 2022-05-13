@@ -455,7 +455,6 @@ function singleTask(doc: jsPDF, task: Task) {
     doc.text(locationDetail, BASE_X + locationWidth, yCursor);
     incrementY(doc, LITTLE_SPACE);
   } catch (error) {
-    logger.info(error);
     const location = "Lieu : non défini";
     makeTitle(doc, location);
     incrementY(doc, LITTLE_SPACE);
