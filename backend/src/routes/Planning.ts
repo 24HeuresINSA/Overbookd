@@ -38,7 +38,9 @@ export async function createAllPlanning(
   yCursor = BASE_SPACE;
   //Get all users
   await User.find().then((users: any) => {
-    allUsers = users;
+    allUsers = users.sort((a: any, b: any) =>
+      a.lastname.localeCompare(b.lastname)
+    );
   });
   //Get all timespans
   await TimeSpan.find().then((timespans: any) => {
@@ -446,15 +448,18 @@ function singleTask(doc: jsPDF, task: Task) {
   doc.text(dateText, BASE_X + dateWidth, yCursor);
   incrementY(doc, LITTLE_SPACE);
 
-  //LOCATION of the task
-  const location = "Lieu : ";
-  const locationWidth = makeTitle(doc, location);
-  let locationDetail = "";
-  if ((task as any).ft.details.location !== undefined) {
-    locationDetail = (task as any).ft.details.location[0];
+  try {
+    const location = "Lieu : ";
+    const locationWidth = makeTitle(doc, location);
+    const locationDetail = `${(task as any).ft.details.locations[0] || ""}`;
+    doc.text(locationDetail, BASE_X + locationWidth, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  } catch (error) {
+    logger.info(error);
+    const location = "Lieu : non défini";
+    makeTitle(doc, location);
+    incrementY(doc, LITTLE_SPACE);
   }
-  doc.text(locationDetail, BASE_X + locationWidth, yCursor);
-  incrementY(doc, LITTLE_SPACE);
 
   //RESPONSIBLE of the task
   const responsable = "Responsable : ";
