@@ -324,9 +324,15 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
   let index = 1;
   sortedTS.forEach((ts: ITimeSpan) => {
     const ft = userAssignedFT.find((ft: IFT) => ft.count === ts.FTID);
-    const respUser = allUsers.find(
-      (u: any) => u._id.toString() === (ft as any).general.inCharge._id
-    );
+    let respPhone;
+    try {
+      const respUser = allUsers.find(
+        (u: any) => u._id.toString() === (ft as any).general.inCharge._id
+      );
+      respPhone = respUser?.phone;
+    } catch (e) {
+      respPhone = 0;
+    }
     const twinTimeSpan = allTimeSPans.filter(
       (TS: ITimeSpan) =>
         ts.FTID === TS.FTID &&
@@ -350,7 +356,6 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
       }
     });
 
-    const respPhone = respUser?.phone;
     if (ft) {
       tasks.push({
         id: index,
@@ -461,13 +466,19 @@ function singleTask(doc: jsPDF, task: Task) {
   }
 
   //RESPONSIBLE of the task
-  const responsable = "Responsable : ";
-  const respWidth = makeTitle(doc, responsable);
-  const resp = `${(task as any).ft.general.inCharge.username} (+33${
-    task.respPhone
-  })`;
-  doc.text(resp, BASE_X + respWidth, yCursor);
-  incrementY(doc, LITTLE_SPACE);
+  try {
+    const responsable = "Responsable : ";
+    const respWidth = makeTitle(doc, responsable);
+    const resp = `${(task as any).ft.general.inCharge.username} (+33${
+      task.respPhone
+    })`;
+    doc.text(resp, BASE_X + respWidth, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  } catch {
+    const responsable = "Responsable : non défini";
+    makeTitle(doc, responsable);
+    incrementY(doc, LITTLE_SPACE);
+  }
 
   //ROLE in the task if not soft
   if (task.role !== "soft") {
