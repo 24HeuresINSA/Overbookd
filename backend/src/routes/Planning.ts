@@ -107,7 +107,7 @@ export async function createAllPlanning(
       newPage(doc);
     }
   }
-
+  docs.push(doc.output("datauristring"));
   return res.status(StatusCodes.OK).json(docs);
 }
 
