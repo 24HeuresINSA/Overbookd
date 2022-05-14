@@ -27,7 +27,7 @@
           color="secondary"
           class="btn"
           :disabled="uniquePlanning === undefined"
-          @click="exportPlanning('unique')"
+          @click="exportPlanning()"
         >
           Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
         >
@@ -44,14 +44,16 @@
         <v-btn color="red" class="btn" @click="confirmation = true">
           Générer<v-icon right dark> mdi-cog </v-icon></v-btn
         >
-        <v-btn
-          color="secondary"
-          class="btn"
-          :disabled="multiplePlanning === undefined"
-          @click="exportPlanning('multiple')"
-        >
-          Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
-        >
+        <div v-for="(data, index) in multiplePlanning" :key="index">
+          <v-btn
+            color="secondary"
+            class="btn"
+            @click="exportSpecificPlanning(data)"
+          >
+            {{ "Partie " + (index + 1) }}
+            <v-icon right dark> mdi-download </v-icon></v-btn
+          >
+        </div>
       </div>
     </div>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
@@ -88,7 +90,7 @@ export default {
     return {
       selected_user: undefined,
       uniquePlanning: undefined,
-      multiplePlanning: undefined,
+      multiplePlanning: [],
       isLoading: false,
       snack: new Snack(),
       confirmation: false,
@@ -101,7 +103,7 @@ export default {
     async generatePlanning() {
       this.isLoading = true;
       this.uniquePlanning = undefined;
-      this.multiplePlanning = undefined;
+      this.multiplePlanning = [];
       await planningRepo
         .createPlanning(this, this.selected_user._id)
         .then((res) => {
@@ -121,12 +123,13 @@ export default {
       this.confirmation = false;
       this.isLoading = true;
       this.uniquePlanning = undefined;
-      this.multiplePlanning = undefined;
+      this.multiplePlanning = [];
       await planningRepo
         .createAllPlanning(this)
         .then((res) => {
           if (res) {
             this.multiplePlanning = res.data;
+            console.log(res.data);
           } else {
             this.snack.display("Une erreur est survenue");
           }
@@ -137,10 +140,11 @@ export default {
           this.isLoading = false;
         });
     },
-    exportPlanning(mode) {
-      const pdf =
-        mode === "unique" ? this.uniquePlanning : this.multiplePlanning;
-      this.downloadURI(pdf, "planning.pdf");
+    exportPlanning() {
+      this.downloadURI(this.uniquePlanning, "planning.pdf");
+    },
+    exportSpecificPlanning(data) {
+      this.downloadURI(data, "planning.pdf");
     },
     downloadURI(uri, name) {
       let link = document.createElement("a");

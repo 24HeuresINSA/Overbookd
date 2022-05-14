@@ -20,6 +20,7 @@ let allTimeSPans: ITimeSpan[] = [];
 let allFT: IFT[] = [];
 
 let pageNumber = 1;
+let totalPage = 1;
 
 interface Task {
   id: number;
@@ -34,6 +35,7 @@ export async function createAllPlanning(
   req: Request,
   res: Response
 ): Promise<any> {
+  totalPage = 1;
   //get basic things to build all plannings
   yCursor = BASE_SPACE;
   //Get all users
@@ -62,48 +64,15 @@ export async function createAllPlanning(
     });
   }
 
-  //Create the doc
-  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
-  // check if files exists
-  const arrialPath = "assets/arial.ttf";
-  const arrialBoldPath = "assets/arial_bold.ttf";
-
-  if (!existsSync(arrialPath)) {
-    logger.err("Arial font not found");
+  const docs: string[] = [];
+  let doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+  try {
+    doc = createDocument();
+  } catch (err) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial font not found",
+      message: "Error creating pdf",
     });
   }
-
-  if (!existsSync(arrialBoldPath)) {
-    logger.err("Arial bold font not found");
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial bold font not found",
-    });
-  }
-
-  //load file as binary
-  doc.loadFile(arrialPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial.ttf", res);
-    return res;
-  });
-
-  doc.loadFile(arrialBoldPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial_Bold.ttf", res);
-    return res;
-  });
-
-  while (
-    doc.existsFileInVFS("Arial.ttf") === false &&
-    doc.existsFileInVFS("Arial_Bold.ttf") === false
-  ) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  doc.addFont("Arial.ttf", "Arial", "normal");
-  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
-  doc.setFont("Arial", "normal");
-
   for (let i = 0; i < allUsers.length; i++) {
     //get timespans for user
     const timespans = allTimeSPans.filter(
@@ -123,17 +92,23 @@ export async function createAllPlanning(
     }
     const userTasks = buildAllTasks(userAssignedFT, timespans);
     fillPDF(doc, allUsers[i], sos_numbers.value, userTasks);
-    newPage(doc);
+    if (totalPage > 2000) {
+      docs.push(doc.output("datauristring"));
+      doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+      try {
+        doc = createDocument();
+      } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: "Error creating pdf",
+        });
+      }
+      totalPage = 1;
+    } else {
+      newPage(doc);
+    }
   }
 
-  if (!doc) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Error creating pdf",
-    });
-  } else {
-    const output = doc.output("datauristring");
-    return res.status(StatusCodes.OK).json(output);
-  }
+  return res.status(StatusCodes.OK).json(docs);
 }
 
 export async function createPlanning(
@@ -187,47 +162,14 @@ export async function createPlanning(
   const userTasks = buildAllTasks(userAssignedFT, timespans);
 
   //Create planning
-  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
-
-  // check if files exists
-  const arrialPath = "assets/arial.ttf";
-  const arrialBoldPath = "assets/arial_bold.ttf";
-
-  if (!existsSync(arrialPath)) {
-    logger.err("Arial font not found");
+  let doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+  try {
+    doc = createDocument();
+  } catch (err) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial font not found",
+      message: "Error creating pdf",
     });
   }
-
-  if (!existsSync(arrialBoldPath)) {
-    logger.err("Arial bold font not found");
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Arial bold font not found",
-    });
-  }
-
-  //load file as binary
-  doc.loadFile(arrialPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial.ttf", res);
-    return res;
-  });
-
-  doc.loadFile(arrialBoldPath, false, function (res: string): string {
-    doc.addFileToVFS("Arial_Bold.ttf", res);
-    return res;
-  });
-
-  while (
-    doc.existsFileInVFS("Arial.ttf") === false &&
-    doc.existsFileInVFS("Arial_Bold.ttf") === false
-  ) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  doc.addFont("Arial.ttf", "Arial", "normal");
-  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
-  doc.setFont("Arial", "normal");
   //reset the cursor position
   yCursor = BASE_SPACE;
   logger.info("Creating planning for user " + user?._id);
@@ -324,9 +266,15 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
   let index = 1;
   sortedTS.forEach((ts: ITimeSpan) => {
     const ft = userAssignedFT.find((ft: IFT) => ft.count === ts.FTID);
-    const respUser = allUsers.find(
-      (u: any) => u._id.toString() === (ft as any).general.inCharge._id
-    );
+    let respPhone;
+    try {
+      const respUser = allUsers.find(
+        (u: any) => u._id.toString() === (ft as any).general.inCharge._id
+      );
+      respPhone = respUser?.phone;
+    } catch (e) {
+      respPhone = 0;
+    }
     const twinTimeSpan = allTimeSPans.filter(
       (TS: ITimeSpan) =>
         ts.FTID === TS.FTID &&
@@ -350,7 +298,6 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
       }
     });
 
-    const respPhone = respUser?.phone;
     if (ft) {
       tasks.push({
         id: index,
@@ -455,20 +402,25 @@ function singleTask(doc: jsPDF, task: Task) {
     doc.text(locationDetail, BASE_X + locationWidth, yCursor);
     incrementY(doc, LITTLE_SPACE);
   } catch (error) {
-    logger.info(error);
     const location = "Lieu : non défini";
     makeTitle(doc, location);
     incrementY(doc, LITTLE_SPACE);
   }
 
   //RESPONSIBLE of the task
-  const responsable = "Responsable : ";
-  const respWidth = makeTitle(doc, responsable);
-  const resp = `${(task as any).ft.general.inCharge.username} (+33${
-    task.respPhone
-  })`;
-  doc.text(resp, BASE_X + respWidth, yCursor);
-  incrementY(doc, LITTLE_SPACE);
+  try {
+    const responsable = "Responsable : ";
+    const respWidth = makeTitle(doc, responsable);
+    const resp = `${(task as any).ft.general.inCharge.username} (+33${
+      task.respPhone
+    })`;
+    doc.text(resp, BASE_X + respWidth, yCursor);
+    incrementY(doc, LITTLE_SPACE);
+  } catch {
+    const responsable = "Responsable : non défini";
+    makeTitle(doc, responsable);
+    incrementY(doc, LITTLE_SPACE);
+  }
 
   //ROLE in the task if not soft
   if (task.role !== "soft") {
@@ -548,6 +500,7 @@ function newPage(doc: jsPDF) {
   centeredText(doc, "- " + pageNumber.toString() + " -", pageHeight - 5);
   doc.addPage();
   pageNumber++;
+  totalPage++;
   yCursor = BASE_SPACE;
 }
 
@@ -629,4 +582,36 @@ function addLogo(doc: jsPDF) {
   const logoBase64 = readFileSync(logoPath, { encoding: "base64" });
   const imgData = "data:image/png;base64," + logoBase64;
   doc.addImage(imgData, "JPEG", 10, 5, 20, 20);
+}
+
+function createDocument(): jsPDF {
+  //Create planning
+  const doc = new jsPDF({ putOnlyUsedFonts: true, compress: true });
+
+  // check if files exists
+  const arrialPath = "assets/arial.ttf";
+  const arrialBoldPath = "assets/arial_bold.ttf";
+
+  if (!existsSync(arrialPath)) {
+    logger.err("Arial font not found");
+    throw new Error("Arial font not found");
+  }
+
+  if (!existsSync(arrialBoldPath)) {
+    logger.err("Arial bold font not found");
+    throw new Error("Arial font not found");
+  }
+
+  //load file as binary
+  const arialData = doc.loadFile(arrialPath, true);
+  doc.addFileToVFS("Arial.ttf", arialData);
+
+  const boldData = doc.loadFile(arrialBoldPath, true);
+  doc.addFileToVFS("Arial_Bold.ttf", boldData);
+
+  doc.addFont("Arial.ttf", "Arial", "normal");
+  doc.addFont("Arial_Bold.ttf", "Arial", "bold");
+  doc.setFont("Arial", "normal");
+
+  return doc;
 }
