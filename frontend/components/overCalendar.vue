@@ -27,7 +27,7 @@
       @mousedown:time="startTime"
       @mousemove:time="mouseMove"
     >
-      <template #event="{ event }">
+      <template #event="{ event }" @click.right="popUp(event)">
         <div class="text-wrap" @click.right="popUp(event)" @contextmenu.prevent>
           <h3>{{ event.FTName }}</h3>
         </div>
@@ -254,6 +254,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.text-wrap {
+  height: 100%;
+}
 .switch {
   display: flex;
   align-items: center;
