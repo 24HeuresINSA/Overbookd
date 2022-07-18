@@ -1,9 +1,9 @@
-import {Request, Response} from "express";
-import TimeslotModel, {ITimeslot} from "@entities/Timeslot";
+import { Request, Response } from "express";
+import TimeslotModel, { ITimeslot } from "@entities/Timeslot";
 import UserModel from "@entities/User";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
-import {Types} from "mongoose";
+import { Types } from "mongoose";
 import FTModel from "@entities/FT";
 import TimeSpanModel from "@entities/TimeSpan";
 
@@ -88,7 +88,7 @@ export async function deleteTimeslot(req: Request, res: Response) {
     });
   }
   const users = await UserModel.find({
-    availabilities: { $in: [Types.ObjectId(id)] },
+    availabilities: { $in: [new Types.ObjectId(id)] },
   }).exec();
   users.forEach(async (user) => {
     user.availabilities = user.availabilities!.filter(

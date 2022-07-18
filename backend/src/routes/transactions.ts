@@ -165,12 +165,14 @@ export const deleteTransaction: RequestHandler = async function (req, res) {
   let data;
   try {
     data = await TransactionModel.findByIdAndUpdate(id);
-    data.amount = -data.amount;
-    await updateUsersBalance(data);
-    data.amount = -data.amount;
-    data.isValid = false;
-    data.save();
-    logger.info(`disabling transaction ${id}`);
+    if (data) {
+      data.amount = -data.amount;
+      await updateUsersBalance(data);
+      data.amount = -data.amount;
+      data.isValid = false;
+      data.save();
+      logger.info(`disabling transaction ${id}`);
+    }
   } catch (error) {
     logger.info(error);
     // handle the error

@@ -33,7 +33,7 @@ export function queryFTWhereUserIsRequiredOnDateRange(
         required: {
           $elemMatch: {
             type: "user",
-            "user._id": Types.ObjectId(userId.toString()),
+            "user._id": new Types.ObjectId(userId.toString()),
           },
         },
       },
@@ -46,7 +46,9 @@ interface FTWithRequiredRoles {
   _id: number;
 }
 
-export async function getTeamsToAssignOnEachFT(): Promise<FTWithRequiredRoles[]> {
+export async function getTeamsToAssignOnEachFT(): Promise<
+  FTWithRequiredRoles[]
+> {
   return TimeSpanModel.aggregate()
     .match({ assigned: null })
     .group({

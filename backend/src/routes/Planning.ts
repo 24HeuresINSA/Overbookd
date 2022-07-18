@@ -57,7 +57,7 @@ export async function createAllPlanning(
   const sos_numbers: IConfig = (await ConfigModel.findOne(
     { key: "sos_numbers" },
     { key: 1, value: 1, _id: 0 }
-  )) ?? { key: "", value: "" };
+  )) ?? { key: "", value: "", description: "" };
   if (sos_numbers.key === "") {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "No sos numbers found in config",
@@ -76,6 +76,7 @@ export async function createAllPlanning(
   for (let i = 0; i < allUsers.length; i++) {
     //get timespans for user
     const timespans = allTimeSPans.filter(
+      //@ts-ignore
       (timespan: ITimeSpan) => timespan.assigned === allUsers[i]._id?.toString()
     );
     //check if user has timespans
@@ -152,7 +153,7 @@ export async function createPlanning(
   const sos_numbers: IConfig = (await ConfigModel.findOne(
     { key: "sos_numbers" },
     { key: 1, value: 1, _id: 0 }
-  )) ?? { key: "", value: "" };
+  )) ?? { key: "", value: "", description: "" };
   if (sos_numbers.key === "") {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "No sos numbers found in config",

@@ -225,7 +225,7 @@ export async function myPlanning(req: Request, res: Response): Promise<void> {
       .unwind({ path: "$timeframes" })
       .unwind({ path: "$timeframes.required" })
       .match({
-        "timeframes.required.user._id": Types.ObjectId(req.params.userID),
+        "timeframes.required.user._id": new Types.ObjectId(req.params.userID),
       })
       .match({ "timeframes.required.type": "user" })
       .lookup({

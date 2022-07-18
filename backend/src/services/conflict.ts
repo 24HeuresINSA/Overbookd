@@ -225,7 +225,7 @@ export function computeAllTFConflicts(TFsByOrga: TFsByOrga): IConflict[] {
         if (isOverlappingTFs(v, value[j])) {
           // overlap detected
           conflicts.push(
-            newTFConflit(v._id, value[j]._id, Types.ObjectId(key))
+            newTFConflit(v._id, value[j]._id, new Types.ObjectId(key))
           );
         }
       }
@@ -264,7 +264,7 @@ export async function computeAvailabilityConflicts(
     }
     value.forEach((tf) => {
       if (!isTimeFrameCovered(tf, user.availabilities!)) {
-        conflicts.push(newAvailabilityConflit(tf._id, Types.ObjectId(key)));
+        conflicts.push(newAvailabilityConflit(tf._id, new Types.ObjectId(key)));
       }
     });
   }

@@ -1,5 +1,5 @@
-import {model, Schema, Types} from "mongoose";
-import {IFT} from "@entities/FT";
+import { model, Schema, Types } from "mongoose";
+import { IFT } from "@entities/FT";
 
 export interface ITimeframe {
   start: string;
@@ -64,7 +64,7 @@ export interface IFA extends IForm {
 const FASchema = new Schema<IFA>(
   {
     name: { type: String, required: false },
-    FTs: { type: Array, required: false },
+    FTs: { type: Schema.Types.Mixed, required: false },
     isValid: { type: Boolean, default: true },
   },
   { strict: false }

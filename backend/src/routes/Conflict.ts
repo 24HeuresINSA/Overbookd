@@ -1,13 +1,18 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
-import ConflictModel, {IConflict} from "@entities/Conflict";
-import FTModel, {ITimeFrame} from "@entities/FT";
-import {computeAllTFConflicts, computeFTAllConflicts, getFTConflicts, sortTFByUser,} from "@src/services/conflict";
-import {Types} from "mongoose";
-import {ITFConflict} from "../entities/Conflict";
-import {getTimeFrameById} from "@src/services/timeFrame";
-import {getTimeFrameByIdOpts} from "../services/timeFrame";
+import ConflictModel, { IConflict } from "@entities/Conflict";
+import FTModel, { ITimeFrame } from "@entities/FT";
+import {
+  computeAllTFConflicts,
+  computeFTAllConflicts,
+  getFTConflicts,
+  sortTFByUser,
+} from "@src/services/conflict";
+import { Types } from "mongoose";
+import { ITFConflict } from "../entities/Conflict";
+import { getTimeFrameById } from "@src/services/timeFrame";
+import { getTimeFrameByIdOpts } from "../services/timeFrame";
 
 /**
  * Should conflict only be created on backend side ? Then the
@@ -131,7 +136,7 @@ export async function oldGetTFConflictsByFTId(
 ): Promise<void> {
   try {
     // Parse objectId of the FT
-    const FTId = Types.ObjectId(req.params.FTId);
+    const FTId = new Types.ObjectId(req.params.FTId);
 
     const FT = await FTModel.findById(FTId).lean();
     if (!FT) {
@@ -154,7 +159,7 @@ export async function updateTFConflictsByFTId(
 ): Promise<void> {
   try {
     // Parse objectId of the FT
-    const FTId = Types.ObjectId(req.params.FTId);
+    const FTId = new Types.ObjectId(req.params.FTId);
 
     // Get FT
     const FT = await FTModel.findById(FTId).lean();

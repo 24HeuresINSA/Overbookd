@@ -52,10 +52,7 @@ const RequiredSchema = new Schema<ITFRequired>({
   type: { type: String, required: true },
   amount: Number,
   team: String,
-  user: new Schema<ITFRequiredUser>({
-    _id: { type: Types.ObjectId, ref: "User" },
-    username: String,
-  }),
+  user: Schema.Types.Mixed,
 });
 
 const TimeFrameSchema = new Schema<ITimeFrame>({

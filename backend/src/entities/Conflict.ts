@@ -22,12 +22,11 @@ export interface IAvailabilityConflict {
 export type IConflict = ITFConflict | ITSConflict | IAvailabilityConflict;
 
 export const ConflictSchema = new Schema<IConflict>({
-  ts1: Types.ObjectId,
-  ts2: Types.ObjectId,
+  ts1: Schema.Types.ObjectId,
   tf1: String,
   tf2: String,
   type: { type: String, required: true },
-  user: { type: Types.ObjectId, required: true, ref: "User" },
+  user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
 });
 
 const ConflictModel = model<IConflict>("Conflict", ConflictSchema);

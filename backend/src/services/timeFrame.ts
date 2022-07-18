@@ -61,7 +61,10 @@ export async function getTimeFramesWhereUserIsRequired(
     excludeFTs
   );
 
-  const matchTimeframeQuery = queryTimeframesWhereUserIsRequiredOnDateRange(range, userId);
+  const matchTimeframeQuery = queryTimeframesWhereUserIsRequiredOnDateRange(
+    range,
+    userId
+  );
 
   const timeframes = await FTModel.aggregate()
     .match(matchFTQuery)
@@ -70,7 +73,10 @@ export async function getTimeFramesWhereUserIsRequired(
     .match(matchTimeframeQuery);
   return timeframes;
 }
-function queryTimeframesWhereUserIsRequiredOnDateRange(range: { start: number; end: number; }, userId: Types.ObjectId): any {
+function queryTimeframesWhereUserIsRequiredOnDateRange(
+  range: { start: number; end: number },
+  userId: Types.ObjectId
+): any {
   return {
     start: {
       $lt: range.end,
@@ -81,9 +87,8 @@ function queryTimeframesWhereUserIsRequiredOnDateRange(range: { start: number; e
     required: {
       $elemMatch: {
         type: "user",
-        "user._id": Types.ObjectId(userId.toString()),
+        "user._id": new Types.ObjectId(userId.toString()),
       },
     },
   };
 }
-

@@ -92,7 +92,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   }
   let oneAssigned = false;
   if (!timespan.assigned) {
-    timespan.assigned = Types.ObjectId(req.params.userId);
+    timespan.assigned = new Types.ObjectId(req.params.userId);
     await timespan.save();
     oneAssigned = true;
   } else {
@@ -106,7 +106,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
     });
     for (const ts of timespans) {
       if (!ts.assigned) {
-        ts.assigned = Types.ObjectId(req.params.userId);
+        ts.assigned = new Types.ObjectId(req.params.userId);
         oneAssigned = true;
         await ts.save();
         return res.json(timespan);
@@ -239,7 +239,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
     })
   );
 
-  let users = allUsers.filter((user, index) => {
+  let users: any = allUsers.filter((user, index) => {
     if (!usersBool[index]) {
       return false;
     }
@@ -316,9 +316,13 @@ export async function getUsersAffectedToTimespan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  const {start, end, FTID, required} = timespan
-  
-  const usersAssignedToTimespans = await getUsersAssignedToTimespans({start, end}, required, FTID)
+  const { start, end, FTID, required } = timespan;
+
+  const usersAssignedToTimespans = await getUsersAssignedToTimespans(
+    { start, end },
+    required,
+    FTID
+  );
 
   return res.json(usersAssignedToTimespans);
 }
