@@ -5,6 +5,25 @@ import { ITimeslot, Timeslot } from "./Timeslot";
 import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { BaseEntity } from "@shared/BaseEntity";
 
+export class Notification {
+  from?: string;
+
+  @prop({ required: true })
+  message: string;
+
+  @prop({ required: true, default: () => new Date() })
+  date: Date;
+
+  @prop({ required: true })
+  link: string;
+
+  @prop({ required: true })
+  team: string;
+
+  @prop({ required: true })
+  type: string;
+}
+
 export class User extends BaseEntity {
   @prop({ required: true })
   firstname: string;
@@ -72,8 +91,8 @@ export class User extends BaseEntity {
   @prop()
   year?: string;
 
-  @prop()
-  notifications?: any;
+  @prop({ type: () => Notification })
+  notifications?: Notification[];
 }
 
 export const UserModel = getModelForClass(User);
