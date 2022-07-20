@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import EquipmentModel, { IEquipment } from "@entities/Equipment";
+import EquipmentModel, { Equipment, IEquipment } from "@entities/Equipment";
 import EquipmentProposalModel, {
+  EquipmentProposal,
   IEquipmentProposal,
 } from "@entities/EquipmentProposal";
 import StatusCodes from "http-status-codes";
@@ -12,7 +13,7 @@ export async function getEquipment(req: Request, res: Response) {
 }
 
 export async function createEquipment(req: Request, res: Response) {
-  const equipment: IEquipment = req.body;
+  const equipment: Equipment = req.body;
   try {
     const newEquipment = await EquipmentModel.create(equipment);
     res.status(StatusCodes.CREATED).json(newEquipment);
@@ -23,7 +24,7 @@ export async function createEquipment(req: Request, res: Response) {
 }
 
 export async function setEquipment(req: Request, res: Response) {
-  const mEquipment = <IEquipment>req.body;
+  const mEquipment = <Equipment>req.body;
   if (await EquipmentModel.exists({ _id: mEquipment._id })) {
     // this Equipment already exists so update it
     logger.info(`updating equipment ${mEquipment._id}`);
@@ -38,7 +39,7 @@ export async function setEquipment(req: Request, res: Response) {
 }
 
 export async function createEquipmentProposal(req: Request, res: Response) {
-  const equipmentProposal: IEquipmentProposal = req.body;
+  const equipmentProposal: EquipmentProposal = req.body;
   try {
     const newEquipmentProposal = await EquipmentProposalModel.create(
       equipmentProposal
@@ -115,24 +116,23 @@ export async function validateEquipmentProposal(req: Request, res: Response) {
   }
 }
 
-function proposalToEquipment(
-  equipmentProposal: IEquipmentProposal
-): IEquipment {
+function proposalToEquipment(equipmentProposal: EquipmentProposal): Equipment {
   // probably not the best way to do this
-  return {
-    _id: equipmentProposal.oldEquipment
-      ? equipmentProposal.oldEquipment.toString()
-      : undefined,
-    name: equipmentProposal.name,
-    comment: equipmentProposal.comment,
-    location: equipmentProposal.location,
-    preciseLocation: equipmentProposal.preciseLocation,
-    type: equipmentProposal.type,
-    referenceInvoice: equipmentProposal.referenceInvoice,
-    referencePicture: equipmentProposal.referencePicture,
-    fromPool: equipmentProposal.fromPool,
-    borrowed: equipmentProposal.borrowed,
-    isValid: true,
-    amount: equipmentProposal.amount,
-  };
+  const equipment = new Equipment();
+  equipment.name = equipmentProposal.name;
+  equipment.comment = equipmentProposal.comment;
+  equipment.location = equipmentProposal.location;
+  equipment.preciseLocation = equipmentProposal.preciseLocation;
+  equipment.type = equipmentProposal.type;
+  equipment.referenceInvoice = equipmentProposal.referenceInvoice;
+  equipment.referencePicture = equipmentProposal.referencePicture;
+  equipment.fromPool = equipmentProposal.fromPool;
+  equipment.borrowed = equipmentProposal.borrowed;
+  equipment.isValid = true;
+  equipment.amount = equipmentProposal.amount;
+  if (!equipmentProposal.isNewEquipment) {
+    equipment._id = equipmentProposal.oldEquipment!;
+  }
+
+  return equipment;
 }

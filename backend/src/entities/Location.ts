@@ -1,6 +1,7 @@
+import { BaseEntity } from "@shared/BaseEntity";
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
-export class Location {
+export class Location extends BaseEntity {
   @prop({ required: true, unique: true })
   name: string;
 

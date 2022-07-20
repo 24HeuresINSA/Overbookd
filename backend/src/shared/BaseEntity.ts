@@ -9,8 +9,10 @@ import { Types } from "mongoose";
   },
 })
 export class BaseEntity implements Base {
-  _id!: Types.ObjectId;
+  @prop()
+  _id: Types.ObjectId;
 
+  @prop()
   id: string;
 
   @prop()

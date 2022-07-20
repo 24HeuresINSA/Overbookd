@@ -1,5 +1,19 @@
+import { getModelForClass, prop } from "@typegoose/typegoose";
 import { model, Schema, Types } from "mongoose";
-import { IEquipment } from "./Equipment";
+import { Equipment, IEquipment } from "./Equipment";
+
+export class EquipmentProposal extends Equipment {
+  @prop({ required: true })
+  isNewEquipment: boolean;
+
+  @prop({ required: false })
+  oldEquipment?: Types.ObjectId;
+
+  @prop({ required: true })
+  byUser: Types.ObjectId;
+}
+
+const EquipmentProposalModel = getModelForClass(EquipmentProposal);
 
 export interface IEquipmentProposal extends IEquipment {
   isNewEquipment: boolean;
@@ -23,10 +37,5 @@ const EquipmentProposalSchema = new Schema({
   type: { type: String, required: true },
   fromPool: { type: Boolean, default: false },
 });
-
-const EquipmentProposalModel = model<IEquipmentProposal>(
-  "EquipmentProposal",
-  EquipmentProposalSchema
-);
 
 export default EquipmentProposalModel;
