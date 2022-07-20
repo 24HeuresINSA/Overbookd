@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
-import LocationModel, { ILocation } from "@entities/Location";
+import LocationModel, { Location } from "@entities/Location";
 
 export async function getLocations(req: Request, res: Response) {
   const locations = await LocationModel.find({});
@@ -9,7 +9,7 @@ export async function getLocations(req: Request, res: Response) {
 }
 
 export async function createLocation(req: Request, res: Response) {
-  const mLocation = <ILocation>req.body;
+  const mLocation = <Location>req.body;
   const newLoc = await LocationModel.create(mLocation);
   return res.status(StatusCodes.CREATED).json(newLoc);
 }
@@ -40,13 +40,13 @@ export async function getLocationById(req: Request, res: Response) {
 }
 
 export async function createManyLocations(req: Request, res: Response) {
-  const mLocations = <ILocation[]>req.body;
+  const mLocations = <Location[]>req.body;
   const newLocs = await LocationModel.insertMany(mLocations);
   return res.status(StatusCodes.CREATED).json(newLocs);
 }
 
 export async function setLocation(req: Request, res: Response) {
-  const mLocation = <ILocation>req.body;
+  const mLocation = <Location>req.body;
   if (await LocationModel.exists({ name: mLocation.name })) {
     // this Location already exists so update it
     logger.info(`updating location ${mLocation.name}`);

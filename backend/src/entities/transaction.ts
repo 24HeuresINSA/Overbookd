@@ -1,9 +1,40 @@
 import { Schema, model } from "mongoose";
 import * as Factory from "factory.ts";
 import faker from "faker";
+import { BaseEntity } from "@shared/BaseEntity";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
 // Model interfaces
 
+enum TransactionType {
+  DEPOSIT = "deposit",
+  TRANSFER = "transfer",
+  EXPENSE = "expense",
+}
+
+export class Transaction extends BaseEntity {
+  @prop({ required: true })
+  amount: number;
+
+  @prop({ required: true, enum: TransactionType })
+  type: string;
+
+  @prop({ required: true })
+  from: string;
+
+  @prop({ required: true })
+  to: string;
+
+  @prop({ required: true })
+  isValid: boolean;
+
+  @prop({ required: true })
+  context: string;
+}
+
+const TransactionModel = getModelForClass(Transaction);
+
+export default TransactionModel;
 interface IExpense {
   type: "expense";
   from: string;
@@ -33,10 +64,6 @@ interface ITransfer {
   createdAt: Date;
   isValid: boolean;
 }
-
-// MOdel type regroup interfaces
-
-export type ITransaction = IExpense | IDeposit | ITransfer;
 
 // Mock Interfaces for data generation
 
@@ -69,27 +96,3 @@ export const TransferMock = Factory.Sync.makeFactory<ITransfer>({
   isValid: true,
   createdAt: Factory.each(() => faker.datatype.datetime()),
 });
-
-// Mongoose
-
-const TransactionSchema = new Schema<ITransaction>(
-  {
-    type: {
-      type: String,
-      enum: ["deposit", "transfer", "expense"],
-      required: true,
-    },
-    from: { type: String },
-    to: { type: String },
-    amount: { type: Number, required: true },
-    context: { type: String },
-    isValid: { type: Boolean, default: true },
-  },
-  {
-    timestamps: true,
-    strict: true,
-  }
-);
-
-const TransactionModel = model("Transaction", TransactionSchema);
-export default TransactionModel;

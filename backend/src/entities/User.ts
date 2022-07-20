@@ -6,6 +6,7 @@ import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
 import { BaseEntity } from "@shared/BaseEntity";
 
 export class Notification {
+  @prop({ required: false })
   from?: string;
 
   @prop({ required: true })
@@ -22,6 +23,14 @@ export class Notification {
 
   @prop({ required: true })
   type: string;
+}
+
+export class Friends {
+  @prop({ required: true })
+  username: string;
+
+  @prop({ required: true })
+  id: string;
 }
 
 export class User extends BaseEntity {
@@ -61,8 +70,8 @@ export class User extends BaseEntity {
   @prop({ required: true })
   birthdate: Date;
 
-  @prop({ type: () => Types.ObjectId })
-  friends: Types.Array<Types.ObjectId>;
+  @prop({ type: () => Friends })
+  friends: Types.Array<Friends>;
 
   @prop()
   pp: string;

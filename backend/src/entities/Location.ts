@@ -1,18 +1,19 @@
-import { model, Schema } from "mongoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
-export interface ILocation {
+export class Location {
+  @prop({ required: true, unique: true })
   name: string;
-  latitude: number;
-  longitude: number;
+
+  @prop()
+  latitude?: number;
+
+  @prop()
+  longitude?: number;
+
+  @prop({ type: () => String, required: true })
   neededBy: string[];
 }
-const LocationSchema = new Schema<ILocation>({
-  name: { type: String, required: true, unique: true },
-  latitude: { type: Number, required: false },
-  longitude: { type: Number, required: false },
-  neededBy: { type: [String], required: true },
-});
 
-const LocationModel = model<ILocation>("Location", LocationSchema);
+const LocationModel = getModelForClass(Location);
 
 export default LocationModel;

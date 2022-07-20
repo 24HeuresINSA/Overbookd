@@ -1,6 +1,6 @@
 import logger from "@shared/Logger";
 import { RequestHandler } from "express";
-import TransactionModel, { ITransaction } from "../entities/transaction";
+import TransactionModel, { Transaction } from "../entities/transaction";
 import UserModel from "../entities/User";
 
 // GET
@@ -87,7 +87,7 @@ export const getUserTransactions: RequestHandler = async function (req, res) {
 // POST
 
 export const addSgTransactions: RequestHandler = async function (req, res) {
-  const newTransactions: ITransaction[] = req.body;
+  const newTransactions: Transaction[] = req.body;
   let data;
   try {
     data = await TransactionModel.create(newTransactions);
@@ -119,7 +119,7 @@ async function updateUserBalanceByID(
   }
 }
 
-async function updateUsersBalance(transfer: ITransaction): Promise<void> {
+async function updateUsersBalance(transfer: Transaction): Promise<void> {
   await updateUserBalanceByID(transfer.from, -transfer.amount);
   await updateUserBalanceByID(transfer.to, +transfer.amount);
 }
