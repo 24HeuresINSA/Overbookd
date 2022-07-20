@@ -70,7 +70,9 @@ export const signup: RequestHandler = async function (req, res) {
 export const login: RequestHandler = async function (req, res) {
   const userInput = req.body;
   try {
-    const user = await UserModel.findOne({ email: userInput.username });
+    const user = await UserModel.findOne({ email: userInput.username }).select(
+      "+password"
+    );
     if (!user) {
       return res.status(400).json({
         msg: "User does not exist dude",

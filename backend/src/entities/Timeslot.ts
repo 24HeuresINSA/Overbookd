@@ -1,4 +1,32 @@
-import {model, Schema} from "mongoose";
+import { BaseEntity } from "@shared/BaseEntity";
+import { getModelForClass, prop } from "@typegoose/typegoose";
+import { model, Schema } from "mongoose";
+
+class timeFrame {
+  @prop()
+  start: Date;
+  @prop()
+  end: Date;
+}
+
+export class Timeslot extends BaseEntity {
+  @prop({ required: true })
+  timeFrame: timeFrame;
+
+  @prop({ required: true, default: false })
+  forHardOnly: boolean;
+
+  @prop({ required: true, default: 10 })
+  charisma: number;
+
+  @prop({ required: true })
+  groupTitle: string;
+
+  @prop({ required: true })
+  groupDescription: string;
+}
+
+const TimeslotModel = getModelForClass(Timeslot);
 
 export interface ITimeslot {
   _id?: string;
@@ -29,6 +57,6 @@ TimeslotSchema.index({
   "timeFrame.end": 1,
 });
 
-const TimeslotModel = model<ITimeslot>("Timeslot", TimeslotSchema);
+//const TimeslotModel = model<ITimeslot>("Timeslot", TimeslotSchema);
 
 export default TimeslotModel;

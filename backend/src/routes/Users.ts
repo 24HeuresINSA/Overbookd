@@ -1,7 +1,7 @@
 import StatusCodes from "http-status-codes";
 import { RequestHandler } from "express";
 import logger from "@shared/Logger";
-import UserModel, { IUser, SafeUser } from "@entities/User";
+import UserModel from "@entities/User";
 import path from "path";
 import * as fs from "fs";
 import { Types } from "mongoose";
@@ -9,19 +9,18 @@ import TimeslotModel from "@entities/Timeslot";
 
 export const getUsers: RequestHandler = async function (req, res) {
   const users = await UserModel.find({});
-  const safeUsers = users.map((user) => new SafeUser(user));
-  return res.json(safeUsers);
+  return res.json(users);
 };
 
 export const getUser: RequestHandler = async function (req, res) {
-  return res.json(new SafeUser(res.locals.auth_user));
+  return res.json(res.locals.auth_user);
 };
 
 export const getUserByID: RequestHandler = async function (req, res) {
   const _id = req.params.userID;
   const user = await UserModel.findOne({ _id });
   if (user) {
-    res.json(new SafeUser(user));
+    res.json(user);
   } else {
     res.status(StatusCodes.NOT_FOUND).json({
       error: "User not found",
@@ -35,7 +34,7 @@ export const updateUserByID: RequestHandler = async function (req, res) {
     req.body
   );
   if (user) {
-    res.json(new SafeUser(user));
+    res.json(user);
   } else {
     res.status(StatusCodes.NOT_FOUND).json({
       error: "User not found",
@@ -121,7 +120,7 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         link: "",
       });
       await user.save();
-      res.status(StatusCodes.OK).json(new SafeUser(user));
+      res.status(StatusCodes.OK).json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
         msg: "User not found",
@@ -177,7 +176,7 @@ export const addAvailabilityToUser: RequestHandler = async function (req, res) {
         link: "",
       });
       await user.save();
-      res.status(StatusCodes.OK).json(new SafeUser(user));
+      res.status(StatusCodes.OK).json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
         msg: "User not found",
@@ -214,7 +213,7 @@ export const removeAvailability: RequestHandler = async function (req, res) {
         user.charisma -= charismaToRemove;
       }
       await user.save();
-      res.json(new SafeUser(user));
+      res.json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
         msg: "User not found",
@@ -346,6 +345,7 @@ interface friendRequest {
 }
 
 //todo
+/* To rework
 export const createFriendship: RequestHandler = async function (req, res) {
   // check if
   const friends = <friendRequest>req.body;
@@ -395,4 +395,4 @@ export const createFriendship: RequestHandler = async function (req, res) {
   }
 
   return res.sendStatus(200);
-};
+};*/

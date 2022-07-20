@@ -92,7 +92,7 @@ export async function deleteTimeslot(req: Request, res: Response) {
   }).exec();
   users.forEach(async (user) => {
     user.availabilities = user.availabilities!.filter(
-      (availability) => availability.toString() !== id
+      (availability) => availability!.toString() !== id
     );
     await user.save();
   });
@@ -126,7 +126,7 @@ export async function deleteManyTimeslotsByGroupTitle(
   for (const timeslot of timeslots) {
     for (const user of users) {
       user.availabilities = user.availabilities!.filter(
-        (availability) => availability.toString() !== timeslot._id.toString()
+        (availability) => availability!.toString() !== timeslot._id.toString()
       );
       await user.save();
     }

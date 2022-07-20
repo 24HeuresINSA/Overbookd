@@ -6,7 +6,7 @@ import {
   addNotificationByFullName,
   addNotificationByID,
   broadcastNotification,
-  createFriendship,
+  //createFriendship,
   getAllUsersName,
   getPP,
   getUser,
@@ -50,6 +50,7 @@ import * as ConflictHandlers from "./Conflict";
 import * as TimeSpanHandlers from "./TimeSpan";
 import * as PlanningHandlers from "./Planning";
 import * as CalendarHandlers from "./calendar";
+
 import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -91,7 +92,7 @@ userRouter.put(
   addNotificationByID
 );
 userRouter.post("/broadcast", authMiddleware.protect(), broadcastNotification);
-userRouter.post("/friends", authMiddleware.protect(), createFriendship);
+//userRouter.post("/friends", authMiddleware.protect(), createFriendship);
 userRouter.post("/availabilities", authMiddleware.protect(), addAvailabilities);
 userRouter.post(
   "/removeAvailability",

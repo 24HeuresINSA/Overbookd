@@ -6,7 +6,7 @@ import ConflictModel, {
 import UserModel from "@entities/User";
 import FTModel from "@entities/FT";
 import { ITimeSpan } from "@entities/TimeSpan";
-import { ITimeslot } from "@entities/Timeslot";
+import { Timeslot } from "@entities/Timeslot";
 import {
   isTFRequiredUser,
   ITimeFrame,
@@ -20,6 +20,7 @@ import { Document } from "mongoose";
 
 import logger from "@shared/Logger";
 import { getTimespansWhereUserIsAssigned } from "./timeSpan";
+import { isDocumentArray } from "@typegoose/typegoose";
 
 /* ################ Interfaces ################ */
 
@@ -263,7 +264,10 @@ export async function computeAvailabilityConflicts(
       continue;
     }
     value.forEach((tf) => {
-      if (!isTimeFrameCovered(tf, user.availabilities!)) {
+      if (
+        isDocumentArray(user.availabilities) &&
+        !isTimeFrameCovered(tf, user.availabilities!)
+      ) {
         conflicts.push(newAvailabilityConflit(tf._id, new Types.ObjectId(key)));
       }
     });
@@ -383,7 +387,7 @@ function dateRangeOverlapsAvailability(
 /**
  * Check if a given timeframe is covered by others timeslot
  */
-function isTimeFrameCovered(tf: ITimeFrame, timeslots: ITimeslot[]): boolean {
+function isTimeFrameCovered(tf: ITimeFrame, timeslots: Timeslot[]): boolean {
   //sort timeslots by start date
   timeslots.sort(
     (a, b) => a.timeFrame.start.getTime() - b.timeFrame.start.getTime()
@@ -422,7 +426,7 @@ export async function computeFTAllConflicts(
 
 export function isTimespanCovered(
   timespan: ITimeSpan,
-  timeslots: ITimeslot[]
+  timeslots: Timeslot[]
 ): boolean {
   timeslots.sort(
     (a, b) => a.timeFrame.start.getTime() - b.timeFrame.start.getTime()

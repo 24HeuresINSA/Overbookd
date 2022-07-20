@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
 import { IComment } from "@entities/FA";
-import User, { IUser, team } from "@entities/User";
+import UserModel, { IUser, team, User } from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
 import { Document, Types } from "mongoose";
@@ -79,7 +79,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  const user = await User.findById(req.params.userId);
+  const user = await UserModel.findById(req.params.userId);
   if (!user) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "User not found",
@@ -145,7 +145,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   const assignedTimespans = await TimeSpan.find({
     assigned: req.params.userId,
   });
-  const user = await User.findById(req.params.userId);
+  const user = await UserModel.findById(req.params.userId);
   if (!user || !user.availabilities) {
     return res.json([]);
   }
@@ -227,7 +227,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
     FTID: timespan.FTID,
     required: timespan.required,
   });
-  const allUsers = await User.find({});
+  const allUsers = await UserModel.find({});
   //find all users who can be assigned to this timespan
 
   const usersBool = await Promise.all(
@@ -288,7 +288,7 @@ async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
 }
 
 async function canUserBeAssignedToTimespan(
-  user: IUser,
+  user: User,
   timespan: ITimeSpan
 ): Promise<boolean> {
   const userTimespans = await TimeSpan.find({
@@ -400,7 +400,7 @@ export async function deleteTimespan(req: Request, res: Response) {
 }
 
 export async function unassignAllOfUser(req: Request, res: Response) {
-  const user = await User.findById(req.params.id);
+  const user = await UserModel.findById(req.params.id);
   if (!user) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "User not found",
