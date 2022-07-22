@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import UserModel from "@entities/User";
+import UserService from "@services/UserService";
 import logger from "@shared/Logger";
 import ConfigModel from "@entities/Config";
 import { StatusCodes } from "http-status-codes";
@@ -25,8 +25,8 @@ export const signup: RequestHandler = async function (req, res) {
 
   const userInput = req.body;
   try {
-    let user = await UserModel.findOne({ email: userInput.email });
-    if (user) {
+    const userExist = await UserService.userExistByEmail(userInput.email);
+    if (userExist) {
       return res.status(400).json({
         msg: "User already exists",
       });
@@ -42,8 +42,7 @@ export const signup: RequestHandler = async function (req, res) {
     const salt = await bcrypt.genSalt(10);
     userInput.password = await bcrypt.hash(userInput.password, salt);
     delete userInput.password2; // DO NOT SAVE INTO DB
-
-    user = await UserModel.create(userInput);
+    const user = await UserService.create(userInput);
 
     jwt.sign(
       { userID: user._id },
@@ -70,19 +69,12 @@ export const signup: RequestHandler = async function (req, res) {
 export const login: RequestHandler = async function (req, res) {
   const userInput = req.body;
   try {
-    const user = await UserModel.findOne({ email: userInput.username }).select(
-      "+password"
-    );
-    if (!user) {
-      return res.status(400).json({
-        msg: "User does not exist dude",
-      });
-    }
+    const user = await UserService.findUserForLogin(userInput.email);
 
     if (!user.password) {
       logger.info(`user not migrated ${user._id}`);
       return res.status(400).json({
-        msg: "User not migrated dude",
+        msg: "User not migrated",
       });
     }
 
@@ -118,19 +110,14 @@ export const login: RequestHandler = async function (req, res) {
 
 export const migrate: RequestHandler = async function (req, res) {
   try {
-    const user = await UserModel.findOne({ email: req.body.username });
-    if (!user) {
-      return res.status(400).json({
-        msg: `The email provided does not match any user. ${req.body.username}`,
-      });
-    }
+    const user = await UserService.findByEmail(req.body.username);
     if (user.password !== undefined) {
       return res.status(400).json({ msg: "user has already been migrated" });
     }
 
     // Hashing and salting password
     const salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
+    const password = await bcrypt.hash(req.body.password, salt);
 
     jwt.sign(
       { userID: user._id },
@@ -145,7 +132,7 @@ export const migrate: RequestHandler = async function (req, res) {
         });
       }
     );
-    await user.updateOne({ $set: { password: req.body.password } });
+    await UserService.update(user._id, { password: password });
     logger.info(`updated user ${user.email}`);
   } catch (error) {
     res.status(500).end();
@@ -156,7 +143,7 @@ export const migrate: RequestHandler = async function (req, res) {
 export const forgot: RequestHandler = async function (req, res) {
   const email: string = req.body.userEmail;
   try {
-    const user = await UserModel.findOne({ email });
+    const user = await UserService.findByEmail(email);
     if (user) {
       // We found a user that match the email
       const resetToken = randomBytes(20).toString("hex");
@@ -164,8 +151,7 @@ export const forgot: RequestHandler = async function (req, res) {
       const expirationDate = new Date(Date.now() + 1 * 3600 * 1000);
       user.resetPasswordToken = resetToken;
       user.resetTokenExpires = expirationDate;
-      user.save();
-
+      await UserService.save(user);
       // Even if this does not work we still return the same statusCode
       await sendResetMail(resetToken, user.email);
 
@@ -199,13 +185,13 @@ export const recoverPassword: RequestHandler = async function (req, res) {
   const hash = await bcrypt.hash(password, salt);
 
   try {
-    const user = await UserModel.findOne({ resetPasswordToken: token });
+    const user = await UserService.findByResetPasswordToken(token);
     if (user && user.resetTokenExpires) {
       // Check if token is expired
       if (user.resetTokenExpires < new Date(Date.now())) {
         user.resetTokenExpires = undefined;
         user.resetPasswordToken = undefined;
-        user.save();
+        UserService.save(user);
 
         return res.sendStatus(StatusCodes.FORBIDDEN).json({
           msg: "reset token of this user is expired",
@@ -217,7 +203,7 @@ export const recoverPassword: RequestHandler = async function (req, res) {
 
       user.resetTokenExpires = undefined;
       user.resetPasswordToken = undefined;
-      user.save();
+      UserService.save(user);
 
       res.sendStatus(StatusCodes.OK).json({
         msg: "Password has been updated.",

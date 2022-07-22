@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import UserModel, { User } from "@entities/User";
+import { User } from "@entities/User";
+import UserService from "@services/UserService";
 import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import FTModel, { IFT } from "@entities/FT";
 import StatusCodes from "http-status-codes";
@@ -39,7 +40,7 @@ export async function createAllPlanning(
   //get basic things to build all plannings
   yCursor = BASE_SPACE;
   //Get all users
-  await UserModel.find().then((users: any) => {
+  await UserService.findAll().then((users: any) => {
     allUsers = users.sort((a: any, b: any) =>
       a.firstname.localeCompare(b.firstname)
     );
@@ -118,15 +119,13 @@ export async function createPlanning(
 ): Promise<any> {
   //Get user from request
   const userID = req.params.userID;
-  const user = await UserModel.findById(userID);
+  const user = await UserService.findById(userID);
   if (!user) {
     res.status(StatusCodes.BAD_REQUEST).json({
       message: "User not found",
     });
   }
-  await UserModel.find().then((users: any) => {
-    allUsers = users;
-  });
+  allUsers = await UserService.findAll();
   if (!allUsers) {
     res.status(StatusCodes.BAD_REQUEST).json({
       message: "No users found",

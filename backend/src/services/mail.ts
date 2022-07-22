@@ -16,7 +16,7 @@ export const sendResetMail = async function (
   <table style="text-align: center;">
   <p>Alors comme ça tu as perdu ton mot de passe...</p>
   <p>
-    Fais gaffe quand meme, la prochine fois met en un tout simple genre ta date
+    Fais gaffe quand meme, la prochaine fois met en un tout simple genre ta date
     de naissance ou bien ecrit le sur un post it que tu colles sur ton pc
   </p>
   <a

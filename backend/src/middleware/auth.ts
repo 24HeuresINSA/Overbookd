@@ -1,4 +1,4 @@
-import UserModel from "@entities/User";
+import UserService from "@services/UserService";
 import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
@@ -32,7 +32,7 @@ export const protect: () => RequestHandler = () => {
           msg: "Invalid token content",
         });
       }
-      const user = await UserModel.findOne({ _id: decoded.userID });
+      const user = await UserService.findById(decoded.userID);
       if (!user) {
         return res.status(400).json({
           msg: "Could not retrieve token's user in database",

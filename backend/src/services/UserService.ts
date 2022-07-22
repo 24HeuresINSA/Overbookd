@@ -1,41 +1,55 @@
 import UserModel, { User } from "@entities/User";
-import { Types } from "mongoose";
+import { BaseEntityService } from "@shared/BaseEntity";
 
-export const findAll = async (): Promise<User[]> => {
-  return UserModel.find();
-};
+class UserService extends BaseEntityService<User> {
+  model = UserModel;
 
-export const findById = async (id: string): Promise<User> => {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new Error("User not found");
-  }
-  return user;
-};
+  findByEmail = async (email: string): Promise<User> => {
+    const user = await this.model.findOne({ email });
+    if (!user) {
+      throw new Error(`User not found for email: ${email}`);
+    }
+    return user;
+  };
 
-export const getAllUsersWithCP = async (): Promise<User[]> => {
-  const users = await UserModel.find(
-    {
-      team: { $in: ["hard", "vieux"] },
-    },
-    { firstname: 1, lastname: 1 }
-  );
-  return users;
-};
+  findUserForLogin = async (email: string): Promise<User> => {
+    const user = await UserModel.findOne({ email }).select("_id password");
+    if (!user) {
+      throw new Error(`User not found for email: ${email}`);
+    }
+    return user;
+  };
 
-export const save = async (user: User): Promise<User> => {
-  return UserModel.create(user);
-};
+  findByResetPasswordToken = async (
+    resetPasswordToken: string
+  ): Promise<User> => {
+    const user = await UserModel.findOne({ resetPasswordToken });
+    if (!user) {
+      throw new Error(
+        `User not found for resetPasswordToken: ${resetPasswordToken}`
+      );
+    }
+    return user;
+  };
 
-export const updateById = async (
-  id: string | Types.ObjectId,
-  user: Partial<User>
-): Promise<User> => {
-  const updatedUser = await UserModel.findByIdAndUpdate(id, user, {
-    new: true,
-  });
-  if (!updatedUser) {
-    throw new Error("User not found");
-  }
-  return updatedUser;
-};
+  userExistByEmail = async (email: string): Promise<boolean> => {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return false;
+    }
+    return true;
+  };
+
+  getAllUsersWithCP = async (): Promise<User[]> => {
+    const users = await UserModel.find(
+      {
+        team: { $in: ["hard", "vieux"] },
+      },
+      { firstname: 1, lastname: 1 }
+    );
+    return users;
+  };
+}
+
+const UserServiceInstance = new UserService();
+export default UserServiceInstance;

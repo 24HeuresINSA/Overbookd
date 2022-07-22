@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
 import { IComment } from "@entities/FA";
-import UserModel, { team, User } from "@entities/User";
+import { team, User } from "@entities/User";
+import UserService from "@services/UserService";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
 import { Types } from "mongoose";
@@ -79,12 +80,7 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
       message: "TimeSpan not found",
     });
   }
-  const user = await UserModel.findById(req.params.userId);
-  if (!user) {
-    return res.status(StatusCodes.NOT_FOUND).json({
-      message: "User not found",
-    });
-  }
+  const user = await UserService.findById(req.params.userId);
   if (!(await canUserBeAssignedToTimespan(user, timespan))) {
     return res.status(StatusCodes.CONFLICT).json({
       message: "User already assigned to timespan",
@@ -145,7 +141,7 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
   const assignedTimespans = await TimeSpan.find({
     assigned: req.params.userId,
   });
-  const user = await UserModel.findById(req.params.userId);
+  const user = await UserService.findById(req.params.userId);
   if (!user || !user.availabilities) {
     return res.json([]);
   }
@@ -227,7 +223,7 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
     FTID: timespan.FTID,
     required: timespan.required,
   });
-  const allUsers = await UserModel.find({});
+  const allUsers = await UserService.findAll();
   //find all users who can be assigned to this timespan
 
   const usersBool = await Promise.all(
@@ -400,15 +396,10 @@ export async function deleteTimespan(req: Request, res: Response) {
 }
 
 export async function unassignAllOfUser(req: Request, res: Response) {
-  const user = await UserModel.findById(req.params.id);
-  if (!user) {
-    return res.status(StatusCodes.NOT_FOUND).json({
-      message: "User not found",
-    });
-  }
+  const user = await UserService.findById(req.params.id);
   user.availabilities = [];
   user.team = ["toValidate"];
-  await user.save();
+  await UserService.save(user);
   const timespans = await TimeSpan.find({ assigned: user._id });
   for (const ts of timespans) {
     ts.assigned = null;

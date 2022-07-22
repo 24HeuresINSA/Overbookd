@@ -1,11 +1,10 @@
 import StatusCodes from "http-status-codes";
-import { RequestHandler } from "express";
+import { Request, RequestHandler } from "express";
 import logger from "@shared/Logger";
 import path from "path";
 import * as fs from "fs";
 import { Types } from "mongoose";
-import TimeslotModel from "@entities/Timeslot";
-import * as UserService from "@services/UserService";
+import UserService from "@services/UserService";
 import * as TimeslotService from "@services/TimeslotService";
 
 export const getUsers: RequestHandler = async function (req, res) {
@@ -30,7 +29,7 @@ export const getUserByID: RequestHandler = async function (req, res) {
 };
 
 export const updateUserByID: RequestHandler = async function (req, res) {
-  const user = await UserService.updateById(req.params.userID, req.body);
+  const user = await UserService.update(req.params.userID, req.body);
   if (user) {
     res.json(user);
   } else {
@@ -83,10 +82,7 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         const toAdd = timeslotIds.filter((e) => {
           return !user.availabilities!.includes(e);
         });
-        const timeslot = await TimeslotModel.find()
-          .where("_id")
-          .in(toAdd)
-          .exec();
+        const timeslot = await TimeslotService.findManyByIds(toAdd);
         totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities.push(...toAdd);
       } else {
@@ -110,7 +106,7 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         team: "hard",
         link: "",
       });
-      await UserService.updateById(user._id, user);
+      await UserService.save(user);
       res.status(StatusCodes.OK).json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
@@ -160,7 +156,7 @@ export const addAvailabilityToUser: RequestHandler = async function (req, res) {
         team: "hard",
         link: "",
       });
-      await UserService.updateById(user._id, user);
+      await UserService.save(user);
       res.status(StatusCodes.OK).json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
@@ -185,10 +181,7 @@ export const removeAvailability: RequestHandler = async function (req, res) {
       if (user.availabilities) {
         const index = user.availabilities.indexOf(timeslotId);
         user.availabilities.splice(index, 1);
-        const deletedTimeslot = await TimeslotModel.find()
-          .where("_id")
-          .in(timeslotId)
-          .exec();
+        const deletedTimeslot = [await TimeslotService.findById(timeslotId)];
         charismaToRemove = deletedTimeslot.reduce(
           (acc, cur) => acc + cur.charisma,
           0
@@ -197,7 +190,7 @@ export const removeAvailability: RequestHandler = async function (req, res) {
       if (user.charisma) {
         user.charisma -= charismaToRemove;
       }
-      await UserService.updateById(user._id, user);
+      await UserService.save(user);
       res.json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
@@ -227,7 +220,7 @@ export const addNotificationByID: RequestHandler = async function (req, res) {
       }
       mUser.notifications.push(req.body);
 
-      await UserService.updateById(user._id, {
+      await UserService.update(user._id, {
         notifications: mUser.notifications,
       });
       res.sendStatus(StatusCodes.OK);
@@ -248,7 +241,7 @@ export const broadcastNotification: RequestHandler = async function (req, res) {
         mUser.notifications = [];
       }
       mUser.notifications.push(req.body);
-      await UserService.updateById(mUser._id, {
+      await UserService.update(mUser._id, {
         notifications: mUser.notifications,
       });
     })
@@ -256,7 +249,7 @@ export const broadcastNotification: RequestHandler = async function (req, res) {
   res.sendStatus(StatusCodes.OK);
 };
 
-export const uploadPP: RequestHandler = async function (req, res) {
+export const uploadPP: RequestHandler = async function (req: Request, res) {
   const id = res.locals.auth_user._id;
   const user = await UserService.findById(id);
   if (user) {
@@ -269,9 +262,8 @@ export const uploadPP: RequestHandler = async function (req, res) {
         logger.info(`deleted ${filename} 🗑`);
       }
     }
-    await UserService.updateById(id, {
-      // @ts-ignore
-      pp: req.files[0].filename,
+    await UserService.update(id, {
+      pp: (req as any).files[0].filename,
     });
     logger.info("pp updated");
 

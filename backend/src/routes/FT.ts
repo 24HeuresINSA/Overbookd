@@ -8,7 +8,7 @@ import { timeframeToTimeSpans } from "@src/services/slicing";
 import TimeSpanModel from "@entities/TimeSpan";
 import { Types } from "mongoose";
 import ConfigModel from "@entities/Config";
-import UserModel from "@entities/User";
+import UserService from "@services/UserService";
 
 export async function getAllFTs(req: Request, res: Response): Promise<void> {
   const mFTs = await FTModel.find({});
@@ -277,7 +277,7 @@ export async function myPlanning(req: Request, res: Response): Promise<void> {
     FTs = Object.values(grouped);
   }
   if (FTs.length === 0) {
-    const user = await UserModel.findOne({ _id: req.params.userID });
+    const user = await UserService.findById(req.params.userID);
     FTs = [
       {
         // @ts-ignore
@@ -322,7 +322,7 @@ export async function getOrgaRequis(
 ): Promise<void> {
   const showFt = await ConfigModel.findOne({ key: "show_ft_in_planning" });
 
-  const users = await UserModel.find({});
+  const users = await UserService.findAll();
   let FTs: Array<{ _id: string; userName: string; slots: any[] }> = users
     .map((user) => {
       return {

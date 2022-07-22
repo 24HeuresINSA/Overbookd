@@ -2,7 +2,7 @@ import logger from "@shared/Logger";
 import { RequestHandler } from "express";
 import TransactionModel, { Transaction } from "../entities/transaction";
 import UserModel from "../entities/User";
-
+import UserService from "@services/UserService";
 // GET
 
 export const getAllTransactions: RequestHandler = async function (
@@ -65,7 +65,7 @@ export const getUserTransactions: RequestHandler = async function (req, res) {
   const _id = req.params.userID;
   let data;
   try {
-    const mUser = await UserModel.findOne({ _id });
+    const mUser = await UserService.findById(_id);
     if (mUser) {
       data = await TransactionModel.find({
         $or: [{ from: mUser._id }, { to: mUser._id }],
@@ -105,7 +105,7 @@ async function updateUserBalanceByID(
   amount: number
 ): Promise<void> {
   if (_id) {
-    const user = await UserModel.findOne({ _id });
+    const user = await UserService.findById( _id );
     if (user) {
       if (user.balance === undefined) {
         user.balance = 0;
@@ -114,7 +114,7 @@ async function updateUserBalanceByID(
         logger.err(`can't update balance ${user.balance} by ${amount}`);
       }
       user.balance = user.balance + amount;
-      user.save();
+      UserService.save(user);
     }
   }
 }
