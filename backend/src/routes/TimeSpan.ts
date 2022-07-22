@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
 import { IComment } from "@entities/FA";
-import UserModel, { IUser, team, User } from "@entities/User";
+import UserModel, { team, User } from "@entities/User";
 import TimeslotModel from "@entities/Timeslot";
 import StatusCodes from "http-status-codes";
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 import { dateRangeOverlaps, isTimespanCovered } from "../services/conflict";
 import logger from "@shared/Logger";
 import { getTeamsToAssignOnEachFT } from "@src/services/FT";
@@ -267,13 +267,13 @@ export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   });
 
   //verify if users is available for this timespan
-  users = (await filter(users, async (user: IUser) => {
+  users = (await filter(users, async (user: User) => {
     //fetch user timeslot
     const userAvailabilities = await TimeslotModel.find({
       _id: { $in: user.availabilities },
     }).lean();
     return isTimespanCovered(timespan, userAvailabilities);
-  })) as (IUser & Document<any, any, IUser>)[];
+  })) as User[];
   return res.json(users);
 }
 

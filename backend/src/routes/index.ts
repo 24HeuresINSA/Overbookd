@@ -3,7 +3,6 @@ import { getConfig, setConfig } from "./Config";
 import mCors from "../cors";
 import {
   addAvailabilities,
-  addNotificationByFullName,
   addNotificationByID,
   broadcastNotification,
   //createFriendship,
@@ -81,11 +80,6 @@ userRouter.get("/all/cp", authMiddleware.protect(), getAllUsernamesWithCP);
 userRouter.get("/all", authMiddleware.protect(), getAllUsersName);
 userRouter.get("/:userID", authMiddleware.protect(), getUserByID);
 userRouter.put("/:userID", authMiddleware.protect(), updateUserByID);
-userRouter.put(
-  "/notification/:lastname/:firstname",
-  authMiddleware.protect(),
-  addNotificationByFullName
-);
 userRouter.put(
   "/notificationKeycloakID/:id",
   authMiddleware.protect(),

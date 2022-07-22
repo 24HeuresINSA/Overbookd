@@ -15,6 +15,7 @@
     "paths": {
       "@entities/*": ["src/entities/*"],
       "@shared/*": ["src/shared/*"],
+      "@services/*": ["src/services/*"],
       "@server": ["src/server"],
       "@src/*": ["src/*"]
     }

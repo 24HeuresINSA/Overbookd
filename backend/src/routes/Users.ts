@@ -1,14 +1,15 @@
 import StatusCodes from "http-status-codes";
 import { RequestHandler } from "express";
 import logger from "@shared/Logger";
-import UserModel from "@entities/User";
 import path from "path";
 import * as fs from "fs";
 import { Types } from "mongoose";
 import TimeslotModel from "@entities/Timeslot";
+import * as UserService from "@services/UserService";
+import * as TimeslotService from "@services/TimeslotService";
 
 export const getUsers: RequestHandler = async function (req, res) {
-  const users = await UserModel.find({});
+  const users = await UserService.findAll();
   return res.json(users);
 };
 
@@ -18,7 +19,7 @@ export const getUser: RequestHandler = async function (req, res) {
 
 export const getUserByID: RequestHandler = async function (req, res) {
   const _id = req.params.userID;
-  const user = await UserModel.findOne({ _id });
+  const user = await UserService.findById(_id);
   if (user) {
     res.json(user);
   } else {
@@ -29,10 +30,7 @@ export const getUserByID: RequestHandler = async function (req, res) {
 };
 
 export const updateUserByID: RequestHandler = async function (req, res) {
-  const user = await UserModel.findOneAndUpdate(
-    { _id: req.params.userID },
-    req.body
-  );
+  const user = await UserService.updateById(req.params.userID, req.body);
   if (user) {
     res.json(user);
   } else {
@@ -47,7 +45,7 @@ function capitalizeFirstLetter(s: string) {
 }
 
 export const getAllUsersName: RequestHandler = async function (req, res) {
-  const users = await UserModel.find({});
+  const users = await UserService.findAll();
   res.json(
     users.map((user) => {
       return {
@@ -61,12 +59,7 @@ export const getAllUsersName: RequestHandler = async function (req, res) {
 };
 
 export const getAllUsernamesWithCP: RequestHandler = async function (req, res) {
-  const users = await UserModel.find(
-    {
-      team: { $in: ["hard", "vieux"] },
-    },
-    { firstname: 1, lastname: 1 }
-  );
+  const users = await UserService.getAllUsersWithCP();
   res.json(
     users.map((user) => {
       return {
@@ -83,7 +76,7 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
   const id = res.locals.auth_user._id;
   const timeslotIds: Types.ObjectId[] = req.body;
   try {
-    const user = await UserModel.findById(id);
+    const user = await UserService.findById(id);
     let totalCharisma = 0;
     if (user) {
       if (user.availabilities) {
@@ -97,14 +90,12 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities.push(...toAdd);
       } else {
-        const timeslot = await TimeslotModel.find()
-          .where("_id")
-          .in(timeslotIds)
-          .exec();
+        const timeslot = await TimeslotService.findManyByIds(timeslotIds);
         totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities = timeslotIds;
       }
       if (user.charisma) {
+        0;
         user.charisma += totalCharisma;
       } else {
         user.charisma = totalCharisma;
@@ -119,7 +110,7 @@ export const addAvailabilities: RequestHandler = async function (req, res) {
         team: "hard",
         link: "",
       });
-      await user.save();
+      await UserService.updateById(user._id, user);
       res.status(StatusCodes.OK).json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
@@ -139,24 +130,18 @@ export const addAvailabilityToUser: RequestHandler = async function (req, res) {
   const timeslotId = req.body.timeslotID;
   const timeslotIds = [timeslotId];
   try {
-    const user = await UserModel.findById(id);
+    const user = await UserService.findById(id);
     let totalCharisma = 0;
     if (user) {
       if (user.availabilities) {
         const toAdd = timeslotIds.filter((e) => {
           return !user.availabilities!.includes(e);
         });
-        const timeslot = await TimeslotModel.find()
-          .where("_id")
-          .in(toAdd)
-          .exec();
+        const timeslot = await TimeslotService.findManyByIds(timeslotIds);
         totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities.push(...toAdd);
       } else {
-        const timeslot = await TimeslotModel.find()
-          .where("_id")
-          .in(timeslotIds)
-          .exec();
+        const timeslot = await TimeslotService.findManyByIds(timeslotIds);
         totalCharisma = timeslot.reduce((acc, cur) => acc + cur.charisma, 0);
         user.availabilities = timeslotIds;
       }
@@ -175,7 +160,7 @@ export const addAvailabilityToUser: RequestHandler = async function (req, res) {
         team: "hard",
         link: "",
       });
-      await user.save();
+      await UserService.updateById(user._id, user);
       res.status(StatusCodes.OK).json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
@@ -194,7 +179,7 @@ export const removeAvailability: RequestHandler = async function (req, res) {
   const id = req.body.userID;
   const timeslotId = req.body.timeslotID;
   try {
-    const user = await UserModel.findById(id);
+    const user = await UserService.findById(id);
     let charismaToRemove = 0;
     if (user) {
       if (user.availabilities) {
@@ -212,7 +197,7 @@ export const removeAvailability: RequestHandler = async function (req, res) {
       if (user.charisma) {
         user.charisma -= charismaToRemove;
       }
-      await user.save();
+      await UserService.updateById(user._id, user);
       res.json(user);
     } else {
       res.sendStatus(StatusCodes.NOT_FOUND).json({
@@ -227,39 +212,6 @@ export const removeAvailability: RequestHandler = async function (req, res) {
   }
 };
 
-export const addNotificationByFullName: RequestHandler = async function (
-  req,
-  res
-) {
-  const query = req.params;
-  if (!query.firstname || !query.lastname) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Please provide firstname and lastname" });
-  } else {
-    const user = await UserModel.findOne({
-      firstname: query.firstname,
-      lastname: query.lastname,
-    });
-    if (user) {
-      const mUser = user.toObject();
-      if (mUser.notifications === undefined) {
-        mUser.notifications = [];
-      }
-      mUser.notifications.push(req.body);
-
-      await UserModel.findByIdAndUpdate(user._id, {
-        notifications: mUser.notifications,
-      });
-      res.sendStatus(StatusCodes.OK);
-    } else {
-      res
-        .sendStatus(StatusCodes.NOT_FOUND)
-        .json({ msg: "Did not find the user" });
-    }
-  }
-};
-
 export const addNotificationByID: RequestHandler = async function (req, res) {
   const query = req.params;
   if (!query.id) {
@@ -267,17 +219,15 @@ export const addNotificationByID: RequestHandler = async function (req, res) {
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "Please provide id" });
   } else {
-    const user = await UserModel.findOne({
-      _id: query.id,
-    });
+    const user = await UserService.findById(query.id);
     if (user) {
-      const mUser = user.toObject();
+      const mUser = user;
       if (mUser.notifications === undefined) {
         mUser.notifications = [];
       }
       mUser.notifications.push(req.body);
 
-      await UserModel.findByIdAndUpdate(user._id, {
+      await UserService.updateById(user._id, {
         notifications: mUser.notifications,
       });
       res.sendStatus(StatusCodes.OK);
@@ -290,15 +240,15 @@ export const addNotificationByID: RequestHandler = async function (req, res) {
 };
 
 export const broadcastNotification: RequestHandler = async function (req, res) {
-  const users = await UserModel.find({});
+  const users = await UserService.findAll();
   await Promise.all(
     users.map(async (user) => {
-      const mUser = user.toObject();
+      const mUser = user;
       if (mUser.notifications === undefined) {
         mUser.notifications = [];
       }
       mUser.notifications.push(req.body);
-      await UserModel.findByIdAndUpdate(mUser._id, {
+      await UserService.updateById(mUser._id, {
         notifications: mUser.notifications,
       });
     })
@@ -308,9 +258,9 @@ export const broadcastNotification: RequestHandler = async function (req, res) {
 
 export const uploadPP: RequestHandler = async function (req, res) {
   const id = res.locals.auth_user._id;
-  const user = await UserModel.findById(id);
+  const user = await UserService.findById(id);
   if (user) {
-    const oldUser = user.toObject();
+    const oldUser = user;
     if (oldUser.pp) {
       const filename = oldUser.pp;
       const dirname = path.resolve();
@@ -319,7 +269,7 @@ export const uploadPP: RequestHandler = async function (req, res) {
         logger.info(`deleted ${filename} 🗑`);
       }
     }
-    await UserModel.findByIdAndUpdate(id, {
+    await UserService.updateById(id, {
       // @ts-ignore
       pp: req.files[0].filename,
     });

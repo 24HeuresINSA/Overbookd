@@ -35,6 +35,7 @@
     "@entities": "dist/entities",
     "@shared": "dist/shared",
     "@server": "dist/server",
+    "@services": "dist/service",
     "@src": "dist/"
   },
   "dependencies": {

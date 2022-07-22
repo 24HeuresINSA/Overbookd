@@ -46,17 +46,6 @@ export default {
   isMigrated(context: Context) {
     return context.$axios.get(`${resource}/isMigrated`);
   },
-  // /**
-  //  * @deprecated
-  //  * @param context
-  //  * @param data
-  //  */
-  // sendFriendRequest(context: Context, data: FriendRequestData) {
-  //   return context.$axios.put(
-  //     `${resource}/notification/${data.to.lastname}/${data.to.firstname}`,
-  //     data.data
-  //   );
-  // },
   sendFriendRequestByKeycloakID(context: Context, data: FriendRequestData) {
     return context.$axios.put(
       `${resource}/notificationKeycloakID/${data.to}`, // TODO ask tom about new name
