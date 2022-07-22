@@ -1,8 +1,8 @@
 import logger from "@shared/Logger";
 import { RequestHandler } from "express";
-import TransactionModel, { Transaction } from "../entities/transaction";
-import UserModel from "../entities/User";
+import { Transaction } from "../entities/transaction";
 import UserService from "@services/UserService";
+import TransactionService from "@services/TransactionService";
 // GET
 
 export const getAllTransactions: RequestHandler = async function (
@@ -12,7 +12,7 @@ export const getAllTransactions: RequestHandler = async function (
 ) {
   let data;
   try {
-    data = await TransactionModel.find({}).sort({ createdAt: -1 }).lean();
+    data = await TransactionService.findAll();
   } catch (error) {
     logger.info(error);
     // handle the error
@@ -25,12 +25,7 @@ export const getAllTransactions: RequestHandler = async function (
 export const getSgTransactions: RequestHandler = async function (req, res) {
   let data;
   try {
-    data = await TransactionModel.find({
-      $or: [{ type: "deposit" }, { type: "expense" }],
-    })
-      .sort({ createdAt: -1 })
-      .sort({ createdAt: -1 })
-      .lean();
+    data = await TransactionService.findAllSg();
   } catch (error) {
     logger.info(error);
     // handle the error
@@ -47,11 +42,7 @@ export const getSelfTransactions: RequestHandler = async function (
   let data;
   try {
     const user = res.locals.auth_user;
-    data = await TransactionModel.find({
-      $or: [{ from: user._id }, { to: user._id }],
-    })
-      .sort({ createdAt: -1 })
-      .lean();
+    data = await TransactionService.findAllByUserId(user._id);
   } catch (error) {
     logger.info(error);
     // handle the error
@@ -67,12 +58,7 @@ export const getUserTransactions: RequestHandler = async function (req, res) {
   try {
     const mUser = await UserService.findById(_id);
     if (mUser) {
-      data = await TransactionModel.find({
-        $or: [{ from: mUser._id }, { to: mUser._id }],
-      })
-        .sort({ createdAt: -1 })
-        .sort({ createdAt: -1 })
-        .lean();
+      data = await TransactionService.findAllByUserId(mUser._id);
     } else {
       throw new Error();
     }
@@ -90,7 +76,7 @@ export const addSgTransactions: RequestHandler = async function (req, res) {
   const newTransactions: Transaction[] = req.body;
   let data;
   try {
-    data = await TransactionModel.create(newTransactions);
+    data = await TransactionService.create(newTransactions);
     await Promise.all(newTransactions.map(updateUsersBalance));
   } catch (error) {
     logger.info(error);
@@ -105,7 +91,7 @@ async function updateUserBalanceByID(
   amount: number
 ): Promise<void> {
   if (_id) {
-    const user = await UserService.findById( _id );
+    const user = await UserService.findById(_id);
     if (user) {
       if (user.balance === undefined) {
         user.balance = 0;
@@ -147,7 +133,7 @@ export const addTransfer: RequestHandler = async function (req, res) {
     logger.info(
       `new transaction requested from ${transfer.from} to ${transfer.to} of ${transfer.amount}`
     );
-    data = await TransactionModel.create(transfer);
+    data = await TransactionService.create(transfer);
     // update user balance
     await updateUsersBalance(transfer);
   } catch (error) {
@@ -164,13 +150,13 @@ export const deleteTransaction: RequestHandler = async function (req, res) {
   const id = req.params.id;
   let data;
   try {
-    data = await TransactionModel.findByIdAndUpdate(id);
+    data = await TransactionService.findById(id);
     if (data) {
       data.amount = -data.amount;
       await updateUsersBalance(data);
       data.amount = -data.amount;
       data.isValid = false;
-      data.save();
+      TransactionService.save(data);
       logger.info(`disabling transaction ${id}`);
     }
   } catch (error) {

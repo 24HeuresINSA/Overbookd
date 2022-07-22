@@ -61,7 +61,7 @@ export abstract class BaseEntityService<T extends BaseEntity> {
     }
   }
 
-  public async create(entity: T): Promise<T> {
+  public async create(entity: T | T[]): Promise<T> {
     return this.model.create(entity);
   }
 
