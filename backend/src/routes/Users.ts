@@ -5,7 +5,7 @@ import path from "path";
 import * as fs from "fs";
 import { Types } from "mongoose";
 import UserService from "@services/UserService";
-import * as TimeslotService from "@services/TimeslotService";
+import TimeslotService from "@services/TimeslotService";
 
 export const getUsers: RequestHandler = async function (req, res) {
   const users = await UserService.findAll();
