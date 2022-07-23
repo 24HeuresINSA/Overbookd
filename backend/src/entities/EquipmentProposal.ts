@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { Types } from "mongoose";
-import { Equipment, IEquipment } from "./Equipment";
+import { Equipment } from "./Equipment";
 
 export class EquipmentProposal extends Equipment {
   @prop({ required: true })
