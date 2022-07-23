@@ -69,7 +69,7 @@ export const signup: RequestHandler = async function (req, res) {
 export const login: RequestHandler = async function (req, res) {
   const userInput = req.body;
   try {
-    const user = await UserService.findUserForLogin(userInput.email);
+    const user = await UserService.findUserForLogin(userInput.username);
 
     if (!user.password) {
       logger.info(`user not migrated ${user._id}`);

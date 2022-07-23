@@ -2,6 +2,17 @@ import { BaseEntity } from "@shared/BaseEntity";
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { model, Schema } from "mongoose";
 
+class Borrowed {
+  @prop({ required: true })
+  amount: string;
+  @prop({ required: true })
+  start: string;
+  @prop({ required: true })
+  end: string;
+  @prop({ required: true })
+  from: string;
+}
+
 export class Equipment extends BaseEntity {
   @prop({ required: true })
   name: string;
@@ -22,7 +33,7 @@ export class Equipment extends BaseEntity {
   preciseLocation: string;
 
   @prop({ default: [] })
-  borrowed: any[];
+  borrowed: Borrowed[];
 
   @prop({ default: "" })
   referencePicture: string;
@@ -38,34 +49,5 @@ export class Equipment extends BaseEntity {
 }
 
 const EquipmentModel = getModelForClass(Equipment);
-
-export interface IEquipment {
-  _id?: string;
-  name: string;
-  isValid?: boolean;
-  amount: number;
-  comment?: string;
-  location: string;
-  preciseLocation?: string;
-  borrowed?: Array<any>;
-  referencePicture?: string;
-  referenceInvoice?: string;
-  type: string;
-  fromPool?: boolean;
-}
-
-export const EquipmentSchema = new Schema<IEquipment>({
-  name: { type: String, required: true },
-  isValid: { type: Boolean, default: true },
-  amount: { type: Number, required: true },
-  comment: { type: String, default: "" },
-  location: { type: String, required: true },
-  preciseLocation: { type: String, default: "" },
-  borrowed: { type: Array, default: [] },
-  referencePicture: { type: String, default: "" },
-  referenceInvoice: { type: String, default: "" },
-  type: { type: String, required: true },
-  fromPool: { type: Boolean, default: false },
-});
 
 export default EquipmentModel;

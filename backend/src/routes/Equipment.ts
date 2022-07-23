@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import EquipmentModel, { Equipment, IEquipment } from "@entities/Equipment";
+import EquipmentModel, { Equipment } from "@entities/Equipment";
 import EquipmentProposalModel, {
   EquipmentProposal,
-  IEquipmentProposal,
 } from "@entities/EquipmentProposal";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
