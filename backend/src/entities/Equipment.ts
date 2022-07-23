@@ -1,6 +1,5 @@
 import { BaseEntity } from "@shared/BaseEntity";
 import { getModelForClass, prop } from "@typegoose/typegoose";
-import { model, Schema } from "mongoose";
 
 class Borrowed {
   @prop({ required: true })
@@ -32,7 +31,7 @@ export class Equipment extends BaseEntity {
   @prop({ default: "" })
   preciseLocation: string;
 
-  @prop({ default: [] })
+  @prop({ default: [], type: () => Borrowed })
   borrowed: Borrowed[];
 
   @prop({ default: "" })
