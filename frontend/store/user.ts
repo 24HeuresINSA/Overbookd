@@ -94,6 +94,12 @@ export const actions = actionTree(
         commit("SET_USERNAMES", res.data);
       }
     },
+    async fetchUsernamesWithCP({ commit }) {
+      const res = await safeCall(this, UserRepo.getAllUsernamesWithCP(this));
+      if (res) {
+        commit("SET_USERNAMES", res.data);
+      }
+    },
     async getUsername({ dispatch, commit, state }, userID) {
       if (state.usernames.length === 0) {
         await dispatch("fetchUsernames");
@@ -144,7 +150,6 @@ export const actions = actionTree(
         UserRepo.removeAvailability(this, payload)
       );
       if (res) {
-        commit("UPDATE_USER", res.data);
         return true;
       }
       return false;
@@ -158,11 +163,10 @@ export const actions = actionTree(
         UserRepo.addAvailabilityToUser(this, payload)
       );
       if (res) {
-        commit("UPDATE_USER", res.data);
         return true;
       }
       return false;
-    }
+    },
   }
 );
 

@@ -21,7 +21,7 @@ export const sendResetMail = async function (
   </p>
   <a
     id="link-button"
-    href="overbookd.${process.env.DOMAIN}/reset/${token}"
+    href="${process.env.DOMAIN}/reset/${token}"
     style="
       background-color: green;
       padding: 1rem 1rem 1rem 1rem;
@@ -35,7 +35,7 @@ export const sendResetMail = async function (
   >
   <p>
     Si le lien ne marche pas, va a cette adresse :
-    overbookd.${process.env.DOMAIN}/reset/${token}
+    ${process.env.DOMAIN}/reset/${token}
   </p>
 
   <p>
@@ -76,7 +76,7 @@ export const sendValidationMail = async function (
   </h2>
   <a
     id="link-button"
-    href="overbookd.${process.env.DOMAIN}/login"
+    href="${process.env.DOMAIN}/login"
     style="
       background-color: green;
       padding: 1rem 1rem 1rem 1rem;
@@ -90,7 +90,7 @@ export const sendValidationMail = async function (
   >
   <p>
     Si le lien ne marche pas, va a cette adresse :
-    overbookd.${process.env.DOMAIN}/login
+    ${process.env.DOMAIN}/login
   </p>
 
   <p>

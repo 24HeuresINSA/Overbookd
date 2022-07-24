@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { hasRole, isValidated } from "~/utils/roles";
+import { isValidated } from "~/utils/roles";
 import NotificationCard from "~/components/molecules/notificationCard.vue";
 import NotificationBroadcastDialog from "~/components/molecules/notificationBroadcastDialog.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -72,7 +72,7 @@ export default Vue.extend({
   },
   methods: {
     IhaveRole(roles: string[] | string) {
-      return hasRole(this.me, roles);
+      return this.$accessor.user.hasRole(roles);
     },
     async getNotValidatedCount() {
       const res = await safeCall(

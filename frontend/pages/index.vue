@@ -1,6 +1,32 @@
 <template>
   <div>
-    <v-container class="align-stretch flex-wrap align-content-start">
+    <v-container
+      v-if="!isUserHardOrSoft"
+      class="align-stretch flex-wrap align-content-start"
+    >
+      <v-row>
+        <v-col cols="12" sm="6" md="4">
+          <UserCard />
+        </v-col>
+
+        <v-col cols="12" sm="6" md="8">
+          <v-card>
+            <v-card-title><h3>Tu n'as pas été validé</h3></v-card-title>
+            <v-card-text style="font-size: 1.1em">
+              <p>
+                Tu n'as pas été validé pour être bénévole sur le festival <br />
+                Nous te remercions cependant pour ton intérêt et ta volonté de
+                nous aider. <br />
+                Toute l'équipe du club des 24 heures de l'INSA éspère néanmoins
+                que tu pourras profiter pleinement du festival.
+              </p>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-container v-else class="align-stretch flex-wrap align-content-start">
       <v-row>
         <v-col cols="12" sm="6" md="4">
           <UserCard />
@@ -15,7 +41,10 @@
           <FriendsCard v-else />
         </v-col>
 
-        <v-col cols="12" sm="6" md="8"> <AvailabilitiesCard /> </v-col>
+        <v-col cols="12" sm="6" md="8">
+          <AvailabilitiesCard v-if="isAvailabilityMomennt()" />
+          <PlanningCard v-else />
+        </v-col>
       </v-row>
     </v-container>
 
@@ -44,9 +73,7 @@ import SnackNotificationContainer from "@/components/molecules/snackNotification
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "@/components/molecules/friendsCard.vue";
 import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
-import ClickerCard from "@/components/molecules/clickerCard.vue";
-import { getUserID } from "~/middleware/user";
-import { dispatch } from "~/utils/store";
+import PlanningCard from "@/components/organisms/PlanningCard.vue";
 
 export default {
   components: {
@@ -56,6 +83,7 @@ export default {
     ComptesPersosCard,
     FriendsCard,
     AvailabilitiesCard,
+    PlanningCard,
   },
 
   computed: {
@@ -70,27 +98,16 @@ export default {
       // user has no team
       return this.me.team === undefined || this.me.team.length === 0;
     },
+    isUserHardOrSoft() {
+      return this.me.team.includes("hard") || this.me.team.includes("soft");
+    },
   },
   async mounted() {
-    dispatch(this, "user", "fetchUser", getUserID(this));
-
-    this.notValidatedCount = this.getNotValidatedCount();
+    this.$accessor.user.fetchUser();
   },
   methods: {
-    async getNotValidatedCount() {
-      //TODO: change to repo
-      if (this.hasRole("admin")) {
-        let { data: users } = await this.$axios.get("/user");
-        return users.filter((user) => user.team.length === 0).length;
-      }
-      return 0;
-    },
-
     hasRole(team) {
-      if (this.me.team) {
-        return this.me.team.includes(team);
-      }
-      return false;
+      return this.$accessor.user.hasRole(team);
     },
 
     async logout() {
@@ -98,6 +115,9 @@ export default {
       await this.$router.push({
         path: "/login",
       });
+    },
+    isAvailabilityMomennt() {
+      return this.$accessor.config.getConfig("availabilityMoment");
     },
   },
 };

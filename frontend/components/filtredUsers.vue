@@ -48,6 +48,7 @@
         <v-divider></v-divider>
         <div class="content">
           <UsersList :users="filteredUsers" class="userList"></UsersList>
+          <p>Nombre de personnes dans la liste : <b>{{ filteredUsers.length }}</b></p>
           <FriendsDisplay class="friendsDisplay" />
           <v-switch
             label="Bypass les roles (TACHE-ORGA ONLY)"

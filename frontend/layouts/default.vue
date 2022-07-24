@@ -112,7 +112,6 @@
 
 <script>
 const { version } = require("../package.json");
-const { getConfig } = require("../common/role");
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
@@ -169,9 +168,15 @@ export default {
           to: "/planning",
         },
         {
+          icon: "mdi-calendar-export",
+          title: "Export Planning",
+          roles: "humain",
+          to: "/exportPlanning",
+        },
+        {
           icon: "mdi-calendar-multiple-check",
           title: "Créneaux",
-          roles: "hard",
+          roles: "humain",
           to: "/creneaux",
         },
         {
@@ -329,11 +334,7 @@ export default {
       if (role === "everyone") {
         return true;
       }
-      if (this.me.team) {
-        //Permet de definir un cas de figure pour qu'une fenetre soit accessible par tout le monde
-        return this.me.team.includes(role);
-      }
-      return false;
+      return this.$accessor.user.hasRole(role);
     },
 
     getConfig(key) {

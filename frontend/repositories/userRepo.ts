@@ -25,6 +25,9 @@ export default {
   getAllUsernames(context: Context) {
     return context.$axios.get(`${resource}/all`);
   },
+  getAllUsernamesWithCP(context: Context) {
+    return context.$axios.get(`${resource}/all/cp`);
+  },
   broadcast(context: Context, data: BroadcastNotif) {
     return context.$axios.post(`${resource}/broadcast`, data);
   },
@@ -74,5 +77,5 @@ export default {
     data: { userID: string; timeslotID: string }
   ) {
     return context.$axios.post(`${resource}/addAvailabilityToUser`, data);
-  }
+  },
 };

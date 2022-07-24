@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "0.23.1-beta",
+  "version": "0.24.0-beta",
   "private": true,
   "lint-staged": {
     "**/*.(js|ts|vue)": "eslint --fix"
@@ -23,6 +23,7 @@
     "@types/jwt-decode": "^3.1.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.8.3",
+    "file-saver": "^2.0.5",
     "fuse.js": "^6.4.6",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",

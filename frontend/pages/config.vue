@@ -27,7 +27,13 @@
     <h3>Affectation</h3>
     <v-switch
       v-model="config.show_ft_in_planning"
-      label="Montrer les FTs dans les plannings"/>
+      label="Montrer les FTs dans les plannings"
+    />
+
+    <v-switch
+      v-model="config.availabilityMoment"
+      label="Télécharger les plannings | Demander les dispos"
+    />
 
     <h2>Dispo</h2>
     <v-text-field
@@ -102,6 +108,7 @@ export default {
         max_charisma: getConfig(this, "max_charisma"),
         isInventoryOpen: getConfig(this, "isInventoryOpen"),
         show_ft_in_planning: getConfig(this, "show_ft_in_planning"),
+        availabilityMoment: getConfig(this, "availabilityMoment"),
       },
       dialog: false,
       load: false,
@@ -111,7 +118,7 @@ export default {
   },
 
   async mounted() {
-    if (hasRole(this, ["admin", "bureau"])) {
+    if (this.$accessor.user.hasRole(this, ["admin", "bureau"])) {
       //TODO: Invert this to avoid empty if
     } else {
       await this.$router.push({

@@ -31,5 +31,7 @@ export function isValidated(user: User) {
   if (teams === undefined) {
     return false;
   }
-  return teams.includes("hard") || teams.includes("soft");
+  return (
+    teams.includes("hard") || teams.includes("soft") || teams.includes("vieux")
+  );
 }

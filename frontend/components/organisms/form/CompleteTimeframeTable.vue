@@ -44,40 +44,24 @@
               :key="req._id"
               close
               @click:close="removeRequirement(i, index)"
+              @click="openUserCalendar(req)"
             >
               {{ formatText(req) }}
             </v-chip>
-            <v-tooltip
-              v-else-if="isRequiredAvailability(req, item)"
-              :key="req._id"
-              top
-            >
+            <v-tooltip v-else :key="`${req._id}_conflict`" top>
               <template #activator="{ on, attrs }">
                 <v-chip
                   close
-                  color="orange"
+                  :color="getConflictHelper(req, item).color"
                   v-bind="attrs"
                   v-on="on"
                   @click:close="removeRequirement(i, index)"
+                  @click="openUserCalendar(req)"
                 >
                   {{ formatText(req) }}
                 </v-chip>
               </template>
-              <span>Pas dispo sur ce créneau</span>
-            </v-tooltip>
-            <v-tooltip v-else :key="req._id" top>
-              <template #activator="{ on, attrs }">
-                <v-chip
-                  close
-                  color="red"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click:close="removeRequirement(i, index)"
-                >
-                  {{ formatText(req) }}
-                </v-chip>
-              </template>
-              <span>{{ formatConflictText(req, item) }}</span>
+              <span>{{ getConflictHelper(req, item).helperText }}</span>
             </v-tooltip>
           </template>
         </v-chip-group>
@@ -190,6 +174,11 @@
 
 <script>
 import OverField from "../../overField";
+import {
+  isTFConflict,
+  isTSConflict,
+  isAvailabilityConflict,
+} from "@/utils/models/conflicts";
 import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_SLICE_TIME = 2;
@@ -300,6 +289,54 @@ export default {
           c.user == req.user._id &&
           c.tf1 == item._id
       );
+    },
+
+    getConflictHelper(req, item) {
+      const timeframeUserConflicts = this.conflicts.filter(
+        (conflict) =>
+          conflict.user == req.user._id &&
+          (conflict.tf1 == item._id || conflict.tf2 == item._id)
+      );
+      const timeframeUserTfConflicts = timeframeUserConflicts.filter(
+        (conflict) => isTFConflict(conflict)
+      );
+      if (timeframeUserTfConflicts.length) {
+        const conflictualFT = timeframeUserTfConflicts
+          .map((conflict) => conflict.otherTf.ft.count)
+          .join(" ");
+        return {
+          color: "red",
+          helperText: `En conflit avec la/les FT ${conflictualFT}`,
+        };
+      }
+      const timeframeUserTimespanConflicts = timeframeUserConflicts.filter(
+        (conflict) => isTSConflict(conflict)
+      );
+      if (timeframeUserTimespanConflicts.length) {
+        return {
+          color: "purple",
+          helperText: "Deja affecte sur une autre tache",
+        };
+      }
+      const timeframeUserAvailabilityConflict = timeframeUserConflicts.filter(
+        (conflict) => isAvailabilityConflict(conflict)
+      );
+      if (timeframeUserAvailabilityConflict.length) {
+        return {
+          color: "orange",
+          helperText: "Pas dispo sur ce creneau",
+        };
+      }
+
+      return {
+        color: "grey",
+        helperText: "Conflit non identifie",
+      };
+    },
+
+    openUserCalendar({ type, user }) {
+      if (!user?._id || type !== "user") return;
+      window.open(`/calendar/${user._id}`, "_blank");
     },
 
     /**
@@ -459,7 +496,7 @@ export default {
         case "user":
           return requirements.user.username;
         case "team":
-          return requirements.amount + " " + requirements.team;
+          return `${requirements.amount} ${requirements.team}`;
         case "equipment":
           return requirements.equipment;
         default:

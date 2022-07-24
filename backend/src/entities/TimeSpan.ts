@@ -3,16 +3,18 @@
  */
 
 import { Schema, model, Types } from "mongoose";
-import { ITFRequired } from "@entities/FT";
 
 export interface ITimeSpan {
+  _id: Types.ObjectId,
   start: Date;
   end: Date;
   timeframeID: string;
   assigned: Types.ObjectId | null; // assigned user
-  required: string | null; // required user or team
+  required: string; // required user or team
   FTID: number;
 }
+
+export type TimeSpanForm = Omit<ITimeSpan, "_id">
 
 const TimeSpanSchema = new Schema<ITimeSpan>({
   start: { type: Date, required: true },

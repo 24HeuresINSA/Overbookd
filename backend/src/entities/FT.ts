@@ -1,5 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 import { IComment, IForm } from "@entities/FA";
+import { team } from "./User";
 
 /* ################ Interfaces ################ */
 
@@ -19,7 +20,7 @@ interface ITFRequiredUserField {
 export interface ITFRequiredUser {
   _id: string;
   type: "user";
-  team?: string;
+  team?: team;
   amount?: number;
   user: ITFRequiredUserField;
 }
@@ -27,7 +28,7 @@ export interface ITFRequiredUser {
 export interface ITFRequiredTeam {
   _id: string;
   type: "team";
-  team: string;
+  team: team;
   amount: number;
   user?: ITFRequiredUserField;
 }

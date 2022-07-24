@@ -1,12 +1,17 @@
 <template>
   <div>
     <h1>Planning 📆</h1>
+    <h2>
+      Lien de souscription Ical (pour google agenda) : {{ DOMAIN }}calendar/{{
+        $accessor.user.me._id
+      }}
+    </h2>
     <v-row class="d-flex justify-space-around py-6">
       <h1 style="width: 25%; text-align: center">Mon planning</h1>
       <v-switch
-          v-model="switchType"
-          class="switch-width"
-          @change="getOrgaRequis"
+        v-model="switchType"
+        class="switch-width"
+        @change="getOrgaRequis"
       ></v-switch>
       <h1 style="width: 25%; text-align: center">Tous</h1>
     </v-row>
@@ -14,9 +19,9 @@
       <v-list v-for="(plan, index) in orgaRequis" :key="index" class="my-4">
         <v-list-item>
           <v-list-item-content>
-            <ShowCalendar :title="plan.userName" :slots="plan.slots"/>
+            <ShowCalendar :title="plan.userName" :slots="plan.slots" />
             <v-data-table
-                :headers="[
+              :headers="[
                 { text: 'FT', value: 'name', width: '30%' },
                 { text: 'id', value: 'count', align: 'center', width: '10%' },
                 {
@@ -34,9 +39,9 @@
                 { text: 'fin', value: 'end', align: 'center', width: '10%' },
                 { text: 'conflits', value: 'conflits', width: '30%' },
               ]"
-                :items="plan.slots"
-                :hide-default-footer="true"
-                :items-per-page="-1"
+              :items="plan.slots"
+              :hide-default-footer="true"
+              :items-per-page="-1"
             >
               <template #item.status="{ item }">
                 <v-chip :color="getColor(item.status)">
@@ -54,10 +59,10 @@
               </template>
               <template #item.conflits="{ item }">
                 <v-chip
-                    v-for="conflit in item.conflits"
-                    :key="conflit._id"
-                    :color="getColor(conflit.type)"
-                    class="mx-2"
+                  v-for="conflit in item.conflits"
+                  :key="conflit._id"
+                  :color="getColor(conflit.type)"
+                  class="mx-2"
                 >
                   {{ getText(conflit.type) }}
                 </v-chip>
@@ -87,6 +92,7 @@ export default Vue.extend({
       orgaRequis: [],
       loading: false,
       selectedDate: "2022-05-22",
+      DOMAIN: process.env.BASE_URL,
     };
   },
   async mounted() {

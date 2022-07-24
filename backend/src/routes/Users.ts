@@ -61,6 +61,23 @@ export const getAllUsersName: RequestHandler = async function (req, res) {
   );
 };
 
+export const getAllUsernamesWithCP: RequestHandler = async function (req, res) {
+  const users = await UserModel.find({
+    team: { $in: ["hard", "vieux"] },
+  }
+    , { 'firstname': 1, 'lastname': 1 });
+    res.json(
+      users.map((user) => {
+        return {
+          _id: user._id,
+          username: `${capitalizeFirstLetter(
+            user.firstname
+          )} ${user.lastname.toUpperCase()}`,
+        };
+      })
+    );
+  };
+
 export const addAvailabilities: RequestHandler = async function (req, res) {
   const id = res.locals.auth_user._id;
   const timeslotIds: Types.ObjectId[] = req.body;

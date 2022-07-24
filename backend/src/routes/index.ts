@@ -1,5 +1,5 @@
-import {Request, Response, Router} from "express";
-import {getConfig, setConfig} from "./Config";
+import { Request, Response, Router } from "express";
+import { getConfig, setConfig } from "./Config";
 import mCors from "../cors";
 import {
   addAvailabilities,
@@ -16,8 +16,16 @@ import {
   updateUserByID,
   uploadPP,
   addAvailabilityToUser,
+  getAllUsernamesWithCP,
 } from "./Users";
-import {createFA, deleteFA, getFAByCount, getFAs, getFAsNumber, setFA,} from "./FA";
+import {
+  createFA,
+  deleteFA,
+  getFAByCount,
+  getFAs,
+  getFAsNumber,
+  setFA,
+} from "./FA";
 import * as EquipmentHandler from "./Equipment";
 import * as TimeslotHandler from "./Timeslot";
 import {
@@ -29,7 +37,6 @@ import {
   getOrgaRequis,
   makeFTReady,
   myPlanning,
-  unassign,
   updateFT,
 } from "./FT";
 import * as TransactionHandlers from "./transactions";
@@ -41,7 +48,9 @@ import * as LocationHandlers from "./Location";
 import * as ConflictHandlers from "./Conflict";
 // @ts-ignore
 import * as TimeSpanHandlers from "./TimeSpan";
-import {getPassSecu} from "./PassSecu";
+import * as PlanningHandlers from "./Planning";
+import * as CalendarHandlers from "./calendar";
+import { getPassSecu } from "./PassSecu";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const multer = require("multer");
@@ -50,10 +59,24 @@ function ping(req: Request, res: Response) {
   return res.send("pong");
 }
 
+//planning route
+const planningRouter = Router();
+planningRouter.post(
+  "/create/:userID",
+  authMiddleware.protect(),
+  PlanningHandlers.createPlanning
+);
+planningRouter.get(
+  "/createall",
+  authMiddleware.protect(),
+  PlanningHandlers.createAllPlanning
+);
+
 // User-route
 const userRouter = Router();
 userRouter.get("/", authMiddleware.protect(), getUsers);
 userRouter.get("/me", authMiddleware.protect(), getUser);
+userRouter.get("/all/cp", authMiddleware.protect(), getAllUsernamesWithCP);
 userRouter.get("/all", authMiddleware.protect(), getAllUsersName);
 userRouter.get("/:userID", authMiddleware.protect(), getUserByID);
 userRouter.put("/:userID", authMiddleware.protect(), updateUserByID);
@@ -75,7 +98,11 @@ userRouter.post(
   authMiddleware.protect(),
   removeAvailability
 );
-userRouter.post("/addAvailabilityToUser", authMiddleware.protect(), addAvailabilityToUser);
+userRouter.post(
+  "/addAvailabilityToUser",
+  authMiddleware.protect(),
+  addAvailabilityToUser
+);
 const imageUpload = multer({
   dest: "images",
 });
@@ -141,12 +168,6 @@ FTrouter.put(
   authMiddleware.protect(),
   authMiddleware.verifyRoles("hard"),
   updateFT
-);
-FTrouter.put(
-  "/unassign",
-  authMiddleware.protect(),
-  authMiddleware.verifyRoles("humain"),
-  unassign
 );
 FTrouter.post(
   "/:count/ready",
@@ -423,6 +444,12 @@ timespanRouter.get(
   TimeSpanHandlers.getTimeSpanByAssigned
 );
 timespanRouter.get(
+  "/user/unassignall/:id",
+  authMiddleware.protect(),
+  authMiddleware.verifyRoles("humain"),
+  TimeSpanHandlers.unassignAllOfUser
+);
+timespanRouter.get(
   "/user/FT/:id",
   authMiddleware.protect(),
   TimeSpanHandlers.getTimeSpanByFTID
@@ -464,8 +491,13 @@ timespanRouter.delete(
   authMiddleware.verifyRoles("humain"),
   TimeSpanHandlers.deleteTimespan
 );
+
+const calendarRouter = Router();
+calendarRouter.get("/:id", CalendarHandlers.getCalendarById);
+
 // Export the base-router
 const baseRouter = Router();
+baseRouter.use("/planning", planningRouter);
 baseRouter.use("/user", userRouter);
 baseRouter.use("/config", configRouter);
 baseRouter.use("/FA", FArouter);
@@ -479,6 +511,7 @@ baseRouter.use("/location", locationRouter);
 baseRouter.use("/conflict", conflictRouter);
 baseRouter.use("/conflict/ft", TFConflictRouter);
 baseRouter.use("/timespan", timespanRouter);
+baseRouter.use("/calendar", calendarRouter);
 baseRouter.get(
   "/passsecu",
   authMiddleware.protect(),
