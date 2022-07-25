@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
-import TimeslotModel, { ITimeslot, Timeslot } from "@entities/Timeslot";
+import { Timeslot } from "@entities/Timeslot";
 import TimeslotService from "@services/TimeslotService";
-import UserModel from "@entities/User";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
-import { Types } from "mongoose";
 import FTModel from "@entities/FT";
 import TimeSpanModel from "@entities/TimeSpan";
+import UserService from "@services/UserService";
 
 export async function getTimeslot(req: Request, res: Response) {
   const availabilities = await TimeslotService.findAll();
@@ -72,14 +71,12 @@ export async function deleteTimeslot(req: Request, res: Response) {
       message: `Timeslot with id ${id} not found`,
     });
   }
-  const users = await UserModel.find({
-    availabilities: { $in: [new Types.ObjectId(id)] },
-  }).exec();
+  const users = await UserService.findByAvailabilities(id);
   users.forEach(async (user) => {
     user.availabilities = user.availabilities!.filter(
       (availability) => availability!.toString() !== id
     );
-    await user.save();
+    await UserService.save(user);
   });
   // if (users.length>0) {
   //   logger.info(`Timeslot with id ${id} has users`);
@@ -105,15 +102,15 @@ export async function deleteManyTimeslotsByGroupTitle(
     });
   }
   //Delete related entry in users as well as timeslot
-  const users = await UserModel.find({
-    availabilities: { $in: timeslots.map((timeslot) => timeslot._id) },
-  }).exec();
+  const users = await UserService.findByAvailabilities(
+    timeslots.map((timeslot) => timeslot._id)
+  );
   for (const timeslot of timeslots) {
     for (const user of users) {
       user.availabilities = user.availabilities!.filter(
         (availability) => availability!.toString() !== timeslot._id.toString()
       );
-      await user.save();
+      await UserService.save(user);
     }
     await TimeslotService.delete(timeslot._id);
   }

@@ -1,5 +1,6 @@
 import UserModel, { User } from "@entities/User";
 import { BaseEntityService } from "@shared/BaseEntity";
+import { Types } from "mongoose";
 
 class UserService extends BaseEntityService<User> {
   model = UserModel;
@@ -38,6 +39,15 @@ class UserService extends BaseEntityService<User> {
       return false;
     }
     return true;
+  };
+
+  findByAvailabilities = async (
+    availability: string | Types.ObjectId | string[] | Types.ObjectId[]
+  ): Promise<User[]> => {
+    const users = await UserModel.find({
+      availabilities: { $in: availability },
+    });
+    return users;
   };
 
   getAllUsersWithCP = async (): Promise<User[]> => {
