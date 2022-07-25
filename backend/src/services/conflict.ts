@@ -5,7 +5,7 @@ import ConflictModel, {
 } from "@entities/Conflict";
 import UserModel from "@entities/User";
 import FTModel from "@entities/FT";
-import { ITimeSpan } from "@entities/TimeSpan";
+import { ITimeSpan, Timespan } from "@entities/TimeSpan";
 import { Timeslot } from "@entities/Timeslot";
 import {
   isTFRequiredUser,
@@ -134,7 +134,7 @@ function generateTFConflits(
 function generateTimeSpanConflicts(
   usersWithConflicts: {
     user: Types.ObjectId;
-    conflictualTimespans: ITimeSpan[];
+    conflictualTimespans: Timespan[];
   }[],
   timeframe: ITimeFrame
 ): ITSConflict[] {
@@ -177,7 +177,7 @@ async function getUsersWithConflictualTimespans(
   start: number,
   end: number,
   FTID: number
-): Promise<{ user: Types.ObjectId; conflictualTimespans: ITimeSpan[] }[]> {
+): Promise<{ user: Types.ObjectId; conflictualTimespans: Timespan[] }[]> {
   const usersWithDedicatedConflicts = await Promise.all(
     userIds.map(async (userId) => {
       const conflictualTimespans = await getTimespansWhereUserIsAssigned(
@@ -425,7 +425,7 @@ export async function computeFTAllConflicts(
 }
 
 export function isTimespanCovered(
-  timespan: ITimeSpan,
+  timespan: Timespan,
   timeslots: Timeslot[]
 ): boolean {
   timeslots.sort(

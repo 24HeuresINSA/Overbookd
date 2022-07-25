@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User } from "@entities/User";
 import UserService from "@services/UserService";
-import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpan, { Timespan } from "@entities/TimeSpan";
 import FTModel, { IFT } from "@entities/FT";
 import StatusCodes from "http-status-codes";
 import jsPDF from "jspdf";
@@ -17,7 +17,7 @@ const BASE_X = 25;
 
 let yCursor = BASE_SPACE;
 let allUsers: User[] = [];
-let allTimeSPans: ITimeSpan[] = [];
+let allTimeSPans: Timespan[] = [];
 let allFT: IFT[] = [];
 
 let pageNumber = 1;
@@ -26,7 +26,7 @@ let totalPage = 1;
 interface Task {
   id: number;
   ft: IFT;
-  timespan: ITimeSpan;
+  timespan: Timespan;
   respPhone: number | undefined;
   partners: (string | undefined)[];
   role: string;
@@ -78,7 +78,7 @@ export async function createAllPlanning(
     //get timespans for user
     const timespans = allTimeSPans.filter(
       //@ts-ignore
-      (timespan: ITimeSpan) => timespan.assigned === allUsers[i]._id?.toString()
+      (timespan: Timespan) => timespan.assigned === allUsers[i]._id?.toString()
     );
     //check if user has timespans
     if (timespans.length === 0) {
@@ -258,13 +258,13 @@ function fillPDF(doc: jsPDF, user: any, sos_numbers: any, tasks: Task[]) {
  * @param timespans
  * @returns
  */
-function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
+function buildAllTasks(userAssignedFT: IFT[], timespans: Timespan[]) {
   const tasks: Task[] = [];
   const sortedTS = timespans.sort(
     (tsa, tsb) => tsa.start.getTime() - tsb.start.getTime()
   );
   let index = 1;
-  sortedTS.forEach((ts: ITimeSpan) => {
+  sortedTS.forEach((ts: Timespan) => {
     const ft = userAssignedFT.find((ft: IFT) => ft.count === ts.FTID);
     let respPhone;
     try {
@@ -276,7 +276,7 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
       respPhone = 0;
     }
     const twinTimeSpan = allTimeSPans.filter(
-      (TS: ITimeSpan) =>
+      (TS: Timespan) =>
         ts.FTID === TS.FTID &&
         ts.start.getTime() === TS.start.getTime() &&
         ts.end.getTime() === TS.end.getTime() &&
@@ -289,7 +289,7 @@ function buildAllTasks(userAssignedFT: IFT[], timespans: ITimeSpan[]) {
     } else {
       affectedAs = ts.required;
     }
-    const tsPartners = twinTimeSpan.map((tsp: ITimeSpan) => {
+    const tsPartners = twinTimeSpan.map((tsp: Timespan) => {
       const part = allUsers.find(
         (u: any) => u._id.toString() === tsp?.assigned
       );

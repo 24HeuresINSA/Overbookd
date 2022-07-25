@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import TimeSpan, { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpan, { ITimeSpan, Timespan } from "@entities/TimeSpan";
 import FTModel from "@entities/FT";
 import { IComment } from "@entities/FA";
 import { team, User } from "@entities/User";
@@ -285,7 +285,7 @@ async function filter(arr: Array<unknown>, callback: any): Promise<unknown[]> {
 
 async function canUserBeAssignedToTimespan(
   user: User,
-  timespan: ITimeSpan
+  timespan: Timespan
 ): Promise<boolean> {
   const userTimespans = await TimeSpan.find({
     assigned: user._id,

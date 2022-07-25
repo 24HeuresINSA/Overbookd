@@ -1,4 +1,4 @@
-import TimeSpanModel, { ITimeSpan } from "@entities/TimeSpan";
+import TimeSpanModel, { Timespan } from "@entities/TimeSpan";
 import { team } from "@entities/User";
 import { Types } from "mongoose";
 
@@ -6,7 +6,7 @@ export async function getTimespansWhereUserIsAssigned(
   userId: Types.ObjectId,
   range: { start: number; end: number },
   excludeFTs: number[] = []
-): Promise<ITimeSpan[]> {
+): Promise<Timespan[]> {
   const matchQuery = {
     FTID: {
       $nin: excludeFTs,

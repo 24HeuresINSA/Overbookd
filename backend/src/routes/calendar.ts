@@ -1,5 +1,5 @@
 import ical, { ICalAlarmType } from 'ical-generator'
-import  TimeSpan, { ITimeSpan } from '../entities/TimeSpan'
+import  TimeSpan, { Timespan } from '../entities/TimeSpan'
 import FTModel, {IFT} from '../entities/FT'
 import { Request, Response } from "express";
 import logger from "@shared/Logger"
@@ -27,7 +27,7 @@ export async function getCalendarById(req: Request, res: Response) {
     assigned: id
   })
 
-  timeSpans.forEach((timeSpan: ITimeSpan) => {
+  timeSpans.forEach((timeSpan: Timespan) => {
     const ft = ftMapByCount[timeSpan.FTID];
     const summary = `${(ft as any).general.name}`;
     let description = "N/A"
