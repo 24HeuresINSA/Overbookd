@@ -230,11 +230,6 @@ timeslotRouter.post(
   authMiddleware.protect(),
   TimeslotHandler.createTimeslot
 );
-timeslotRouter.put(
-  "/",
-  authMiddleware.protect(),
-  TimeslotHandler.updateTimeslot
-);
 timeslotRouter.get(
   "/:id([a-f|0-9]+)",
   authMiddleware.protect(),

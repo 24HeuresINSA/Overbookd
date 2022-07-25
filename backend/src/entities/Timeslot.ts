@@ -1,6 +1,6 @@
 import { BaseEntity } from "@shared/BaseEntity";
 import { getModelForClass, prop } from "@typegoose/typegoose";
-import { model, Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 class timeFrame {
   @prop()

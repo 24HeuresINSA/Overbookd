@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import TimeslotModel, { ITimeslot } from "@entities/Timeslot";
+import TimeslotModel, { ITimeslot, Timeslot } from "@entities/Timeslot";
+import TimeslotService from "@services/TimeslotService";
 import UserModel from "@entities/User";
 import StatusCodes from "http-status-codes";
 import logger from "@shared/Logger";
@@ -8,14 +9,14 @@ import FTModel from "@entities/FT";
 import TimeSpanModel from "@entities/TimeSpan";
 
 export async function getTimeslot(req: Request, res: Response) {
-  const availabilities = await TimeslotModel.find({});
+  const availabilities = await TimeslotService.findAll();
   res.json(availabilities);
 }
 
 export async function getTimeslotById(req: Request, res: Response) {
   const { id } = req.params;
   logger.info(id);
-  const timeslot = await TimeslotModel.findById(id);
+  const timeslot = await TimeslotService.findById(id);
   if (!timeslot) {
     logger.info(`Timeslot with id ${id} not found`);
     res.status(StatusCodes.NOT_FOUND).json({
@@ -25,22 +26,6 @@ export async function getTimeslotById(req: Request, res: Response) {
   res.json(timeslot);
 }
 
-export async function updateTimeslot(req: Request, res: Response) {
-  const mAvailabilities = <ITimeslot>req.body;
-  if (mAvailabilities._id === undefined) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Availabilities must contain an ID" });
-  }
-  // @ts-ignore
-  await AvailabilitiesModel.findByIdAndUpdate(
-    mAvailabilities._id,
-    // @ts-ignore
-    mAvailabilities
-  );
-  res.sendStatus(StatusCodes.OK);
-}
-
 export async function createManyTimeslots(req: Request, res: Response) {
   const timeslots = req.body;
   if (timeslots.length === 0) {
@@ -48,16 +33,16 @@ export async function createManyTimeslots(req: Request, res: Response) {
       .status(StatusCodes.BAD_REQUEST)
       .json({ error: "Timeslots must contain at least one timeslot" });
   }
-  const newTimeslots = await TimeslotModel.insertMany(timeslots);
+  const newTimeslots = await TimeslotService.create(timeslots);
   res.status(StatusCodes.OK).json(newTimeslots);
 }
 
 export async function createTimeslot(req: Request, res: Response) {
   //Add validation on time
-  const mTimeslot = <ITimeslot>req.body;
+  const mTimeslot = <Timeslot>req.body;
   // creating Equipment
   logger.info(`creating Timeslot ${mTimeslot.groupTitle}`);
-  await TimeslotModel.create(mTimeslot);
+  await TimeslotService.create(mTimeslot);
   res.sendStatus(StatusCodes.CREATED);
 }
 
@@ -65,10 +50,10 @@ export async function updateTimeslotCharisma(req: Request, res: Response) {
   const { id, charisma } = req.params;
   const charismaN = parseInt(charisma);
   logger.info(`updating Timeslot ${id}`);
-  const timeslot = await TimeslotModel.findById(id);
+  const timeslot = await TimeslotService.findById(id);
   if (timeslot && !isNaN(charismaN)) {
     timeslot.charisma = charismaN;
-    timeslot.save();
+    TimeslotService.save(timeslot);
   } else {
     res.status(StatusCodes.BAD_REQUEST).json({
       message: `Timeslot with id ${id} not found or charisma NaN`,
@@ -80,7 +65,7 @@ export async function updateTimeslotCharisma(req: Request, res: Response) {
 export async function deleteTimeslot(req: Request, res: Response) {
   const { id } = req.params;
   logger.info(`deleting Timeslot ${id}`);
-  const timeslot = await TimeslotModel.findById(id);
+  const timeslot = await TimeslotService.findById(id);
   if (!timeslot) {
     logger.info(`Timeslot with id ${id} not found`);
     return res.status(StatusCodes.NOT_FOUND).json({
@@ -102,7 +87,7 @@ export async function deleteTimeslot(req: Request, res: Response) {
   //     message: `Timeslot with id ${id} has users`
   //   });
   // }
-  timeslot.remove();
+  TimeslotService.delete(timeslot._id);
   res.sendStatus(StatusCodes.OK);
 }
 
@@ -112,7 +97,7 @@ export async function deleteManyTimeslotsByGroupTitle(
 ) {
   const { groupTitle } = req.params;
   logger.info(`deleting Timeslots with groupTitle :  ${groupTitle}`);
-  const timeslots = await TimeslotModel.find({ groupTitle });
+  const timeslots = await TimeslotService.findByGrouptTitle(groupTitle);
   if (!timeslots) {
     logger.info(`Timeslot with groupTitle ${groupTitle} not found`);
     return res.status(StatusCodes.NOT_FOUND).json({
@@ -130,7 +115,7 @@ export async function deleteManyTimeslotsByGroupTitle(
       );
       await user.save();
     }
-    await timeslot.remove();
+    await TimeslotService.delete(timeslot._id);
   }
   res.sendStatus(StatusCodes.OK);
 }
@@ -165,34 +150,9 @@ export async function getOrgaNeeds(req: Request, res: Response) {
   }
 
   // Filling the users count
-  const timeslots = await TimeslotModel.aggregate()
-    .match({
-      "timeFrame.start": { $gte: start },
-      "timeFrame.end": { $lte: end },
-    })
-    .lookup({
-      from: "users",
-      localField: "_id",
-      foreignField: "availabilities",
-      as: "users",
-    })
-    .project({
-      _id: 1,
-      timeFrame: 1,
-      groupTitle: 1,
-      countUsers: { $size: "$users" },
-      countValidUsers: {
-        $size: {
-          $filter: {
-            input: "$users",
-            as: "user",
-            cond: { $eq: ["$$user.isValid", true] },
-          },
-        },
-      },
-    });
+  const timeslots = await TimeslotService.getOrgaNeedsUserCount(start, end);
 
-  timeslots.forEach((elem) => {
+  timeslots.forEach((elem: any) => {
     for (let i = 0; i < 8; i++) {
       const index = smallTimeslots.findIndex((smallTimeslot) => {
         return (
