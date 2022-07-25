@@ -1,12 +1,6 @@
-import {
-  isDocument,
-  ModelOptions,
-  prop,
-  ReturnModelType,
-} from "@typegoose/typegoose";
+import { isDocument, ModelOptions, prop } from "@typegoose/typegoose";
 import { Base } from "@typegoose/typegoose/lib/defaultClasses";
-import { BeAnObject } from "@typegoose/typegoose/lib/types";
-import { Model, Types } from "mongoose";
+import { Document, Model, Types } from "mongoose";
 
 @ModelOptions({
   schemaOptions: {
@@ -29,22 +23,42 @@ export class BaseEntity implements Base {
 }
 
 export abstract class BaseEntityService<T extends BaseEntity> {
-  protected abstract model: any;
+  protected abstract model: Model<any>;
+  protected options = { lean: false };
 
-  public async findAll(): Promise<T[]> {
+  public async findAll(options = this.options): Promise<T[]> {
+    if (options.lean) {
+      return this.model.find().lean();
+    }
     return this.model.find();
   }
 
-  public async findById(id: string | Types.ObjectId): Promise<T> {
-    const entity = await this.model.findById(id);
+  public async findById(
+    id: string | Types.ObjectId,
+    options = this.options
+  ): Promise<T> {
+    let entity;
+    if (options.lean) {
+      entity = this.model.findById(id).lean();
+    } else {
+      entity = await this.model.findById(id);
+    }
     if (!entity) {
       throw new Error(`Entity not found for id: ${id}`);
     }
     return entity;
   }
 
-  public async findManyByIds(ids: string[] | Types.ObjectId[]): Promise<T[]> {
-    const entities = await this.model.find({ _id: { $in: ids } });
+  public async findManyByIds(
+    ids: string[] | Types.ObjectId[],
+    options = this.options
+  ): Promise<T[]> {
+    let entities;
+    if (options.lean) {
+      entities = await this.model.find({ _id: { $in: ids } }).lean();
+    } else {
+      entities = await this.model.find({ _id: { $in: ids } });
+    }
     if (entities.length !== ids.length) {
       throw new Error("Entities not found");
     }
