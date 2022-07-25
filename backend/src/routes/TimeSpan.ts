@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import TimeSpan, { ITimeSpan, Timespan } from "@entities/TimeSpan";
+import { Timespan } from "@entities/TimeSpan";
+import TimespanService from "@services/TimespanService";
 import FTModel from "@entities/FT";
 import { IComment } from "@entities/FA";
 import { team, User } from "@entities/User";
@@ -13,12 +14,12 @@ import { getTeamsToAssignOnEachFT } from "@src/services/FT";
 import { getUsersAssignedToTimespans } from "@src/services/timeSpan";
 
 export async function getAllTimeSpan(req: Request, res: Response) {
-  const timespan = await TimeSpan.find({});
+  const timespan = await TimespanService.findAll();
   return res.json(timespan);
 }
 
 export async function getTimeSpanById(req: Request, res: Response) {
-  const timespan = await TimeSpan.findById(req.params.id);
+  const timespan = await TimespanService.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -29,25 +30,13 @@ export async function getTimeSpanById(req: Request, res: Response) {
 
 //get timespan where assigned is userid
 export async function getTimeSpanByAssigned(req: Request, res: Response) {
-  const timespan = await TimeSpan.find({ assigned: req.params.id });
-  if (!timespan) {
-    return res.status(StatusCodes.NOT_FOUND).json({
-      message: "TimeSpan not found",
-    });
-  }
+  const timespan = await TimespanService.findByAssigned(req.params.id);
   return res.json(timespan);
 }
 
 //get timespan by FTID
 export async function getTimeSpanByFTID(req: Request, res: Response) {
-  const timespans = await TimeSpan.find({
-    FTID: parseInt(req.params.id),
-  });
-  if (!timespans) {
-    return res.status(StatusCodes.NOT_FOUND).json({
-      message: "TimeSpan not found",
-    });
-  }
+  const timespans = await TimespanService.findByFTID(parseInt(req.params.id));
   //remove timespans where required.length === 24
   //removes timespan where a user is already assigned
   let filtered = timespans.filter((timespan) =>
@@ -74,7 +63,7 @@ export async function getTimeSpanByFTID(req: Request, res: Response) {
  /timespan/:id/user/:userId
  */
 export async function assignUserToTimeSpan(req: Request, res: Response) {
-  const timespan = await TimeSpan.findById(req.params.id);
+  const timespan = await TimespanService.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -89,23 +78,22 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
   let oneAssigned = false;
   if (!timespan.assigned) {
     timespan.assigned = new Types.ObjectId(req.params.userId);
-    await timespan.save();
+    await TimespanService.save(timespan);
     oneAssigned = true;
   } else {
     //find all identical timespans and assign user to one of them
-    const timespans = await TimeSpan.find({
-      start: timespan.start,
-      end: timespan.end,
-      assigned: null,
-      FTID: timespan.FTID,
-      required: timespan.required,
-    });
+    const timespans = await TimespanService.findNotAssignedIdenticalTimespan(
+      timespan.start,
+      timespan.end,
+      timespan.FTID,
+      timespan.required
+    );
     for (const ts of timespans) {
       if (!ts.assigned) {
         ts.assigned = new Types.ObjectId(req.params.userId);
         oneAssigned = true;
-        await ts.save();
-        return res.json(timespan);
+        await TimespanService.save(ts);
+        return res.json(ts);
       }
     }
   }
@@ -122,25 +110,24 @@ export async function assignUserToTimeSpan(req: Request, res: Response) {
  /timespan/:id/unassign
  */
 export async function unassignUserFromTimeSpan(req: Request, res: Response) {
-  const timespan = await TimeSpan.findById(req.params.id);
+  const timespan = await TimespanService.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
     });
   }
   timespan.assigned = null;
-  await timespan.save();
+  await TimespanService.save(timespan);
   return res.json(timespan);
 }
 
 // Find all timespan where user is not assigned and other timespan does not intersect with the timespans where user is assigned
+//probably to be done via mongoose aggregation for sped up time
 export async function getAvailableTimeSpan(req: Request, res: Response) {
-  const timespans = await TimeSpan.find({
-    assigned: null,
-  });
-  const assignedTimespans = await TimeSpan.find({
-    assigned: req.params.userId,
-  });
+  const timespans = await TimespanService.findByAssigned(null);
+  const assignedTimespans = await TimespanService.findByAssigned(
+    req.params.userId
+  );
   const user = await UserService.findById(req.params.userId);
   if (!user || !user.availabilities) {
     return res.json([]);
@@ -211,18 +198,18 @@ export async function getAvailableTimeSpan(req: Request, res: Response) {
 
 export async function getAvailableUserForTimeSpan(req: Request, res: Response) {
   const bypass = req.query.bypass === "true";
-  const timespan = await TimeSpan.findById(req.params.id);
+  const timespan = await TimespanService.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
     });
   }
-  const twinTimespan = await TimeSpan.find({
-    start: timespan.start,
-    end: timespan.end,
-    FTID: timespan.FTID,
-    required: timespan.required,
-  });
+  const twinTimespan = await TimespanService.findNotAssignedIdenticalTimespan(
+    timespan.start,
+    timespan.end,
+    timespan.FTID,
+    timespan.required
+  );
   const allUsers = await UserService.findAll();
   //find all users who can be assigned to this timespan
 
@@ -287,9 +274,7 @@ async function canUserBeAssignedToTimespan(
   user: User,
   timespan: Timespan
 ): Promise<boolean> {
-  const userTimespans = await TimeSpan.find({
-    assigned: user._id,
-  });
+  const userTimespans = await TimespanService.findByAssigned(user._id);
   for (const userTS of userTimespans) {
     if (
       dateRangeOverlaps(
@@ -306,7 +291,7 @@ async function canUserBeAssignedToTimespan(
 }
 
 export async function getUsersAffectedToTimespan(req: Request, res: Response) {
-  const timespan = await TimeSpan.findById(req.params.id);
+  const timespan = await TimespanService.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -328,7 +313,7 @@ export async function getTotalNumberOfTimespansAndAssignedTimespansByFTID(
   res: Response
 ) {
   logger.info(`count for ft id ${req.params.FTID}`);
-  const timespans = await TimeSpan.find({ FTID: parseInt(req.params.FTID) });
+  const timespans = await TimespanService.findByFTID(parseInt(req.params.FTID));
   const ret = {} as { [key: string]: { total: number; assigned: number } };
   for (const ts of timespans) {
     if (!ret[ts._id.toString()]) {
@@ -354,7 +339,7 @@ export async function getRolesByFT(req: Request, res: Response) {
 }
 
 export async function deleteTimespan(req: Request, res: Response) {
-  const timespan = await TimeSpan.findById(req.params.id);
+  const timespan = await TimespanService.findById(req.params.id);
   if (!timespan) {
     return res.status(StatusCodes.NOT_FOUND).json({
       message: "TimeSpan not found",
@@ -389,7 +374,7 @@ export async function deleteTimespan(req: Request, res: Response) {
     });
   }
 
-  await timespan.remove();
+  await TimespanService.delete(req.params.id);
   return res.json({
     message: "TimeSpan deleted",
   });
@@ -400,10 +385,10 @@ export async function unassignAllOfUser(req: Request, res: Response) {
   user.availabilities = [];
   user.team = ["toValidate"];
   await UserService.save(user);
-  const timespans = await TimeSpan.find({ assigned: user._id });
+  const timespans = await TimespanService.findByAssigned(user._id);
   for (const ts of timespans) {
     ts.assigned = null;
-    await ts.save();
+    await TimespanService.save(ts);
   }
 
   return res.json({
