@@ -76,6 +76,7 @@ export async function createAllPlanning(
   for (let i = 0; i < allUsers.length; i++) {
     //get timespans for user
     const timespans = allTimeSPans.filter(
+      //@ts-ignore
       (timespan: ITimeSpan) => timespan.assigned === allUsers[i]._id?.toString()
     );
     //check if user has timespans

@@ -1,5 +1,5 @@
 {
-  "name": "overbookd",
+  "name": "overbookd-backend",
   "version": "0.24.0-beta",
   "scripts": {
     "build": "./node_modules/.bin/ts-node build.ts",
@@ -38,6 +38,7 @@
     "@src": "dist/"
   },
   "dependencies": {
+    "interfaces": "workspace:./packages/interfaces",
     "@sentry/node": "^6.9.0",
     "@sentry/tracing": "^6.9.0",
     "@types/migrate-mongo": "^8.1.3",
