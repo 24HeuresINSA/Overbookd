@@ -524,7 +524,6 @@ baseRouter.post("/issue", issueHandler);
 //auth
 baseRouter.post("/signup", AuthHandlers.signup);
 baseRouter.post("/login", AuthHandlers.login);
-baseRouter.post("/migrate", AuthHandlers.migrate);
 baseRouter.post("/forgot", AuthHandlers.forgot);
 baseRouter.post("/reset", AuthHandlers.recoverPassword);
 

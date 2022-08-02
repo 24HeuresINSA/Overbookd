@@ -191,55 +191,14 @@ export default {
     login: async function () {
       try {
         await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
-        console.log("connected to API");
         await this.$router.push({
           path: "/",
         }); // redirect to homepage
         const audio = new Audio("audio/jaune.m4a");
         await audio.play();
-      } catch (e) {
-        console.error(e);
-        console.log("starting migration process...");
-        await this.migrate();
-      }
-    },
-
-    migrate: async function () {
-      const data = qs.stringify({
-        // keycloak accepts www-urlencoded-form and not JSON
-        username: this.credentials.username,
-        password: this.credentials.password,
-        client_id: "project_a_web",
-        grant_type: "password",
-      });
-      console.log("connection to keycloak...");
-      try {
-        const response = await this.$axios.post(
-          process.env.BASE_URL_KEYCLOAK +
-            "auth/realms/project_a/protocol/openid-connect/token/",
-          data
-        );
-        if (
-          response.status === 200 &&
-          response.data.access_token !== undefined
-        ) {
-          console.log("connected to keycloak with success 🥳");
-          // right credentials, start migration process
-          const reset = await this.$axios.$post("/migrate", this.credentials);
-          if (reset.token) {
-            console.log("user migrated");
-            // await this.$auth.loginWith("local", this.credentials); // try to log user in
-            this.feedbackMessage =
-              "Ton compte a été migrée, dit pas ca au Z 🥳";
-            this.snackbar = true;
-          }
-        } else {
-          this.feedbackMessage = "Password or username are incorrect 😞";
-          this.snackbar = true;
-        }
-      } catch (e) {
+      } catch (error) {
         this.feedbackMessage =
-          "Password or username are incorrect 😞,pense a mettre ton email";
+          "Password or username are incorrect 😞, pense a mettre ton email";
         this.snackbar = true;
       }
     },

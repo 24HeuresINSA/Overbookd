@@ -60,7 +60,6 @@
     "jet-logger": "^1.0.6",
     "jsonwebtoken": "^8.5.1",
     "jspdf": "^2.5.1",
-    "keycloak-connect": "^14.0.0",
     "migrate-mongo": "^8.2.3",
     "module-alias": "^2.2.2",
     "mongodb": "^4.4.0",

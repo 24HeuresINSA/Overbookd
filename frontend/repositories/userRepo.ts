@@ -43,9 +43,6 @@ export default {
   updateUser(context: Context, userId: string, data: Partial<User>) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
-  isMigrated(context: Context) {
-    return context.$axios.get(`${resource}/isMigrated`);
-  },
   // /**
   //  * @deprecated
   //  * @param context

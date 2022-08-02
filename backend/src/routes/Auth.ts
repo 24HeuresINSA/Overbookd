@@ -78,9 +78,9 @@ export const login: RequestHandler = async function (req, res) {
     }
 
     if (!user.password) {
-      logger.info(`user not migrated ${user._id}`);
+      logger.info(`no user password ${user._id}`);
       return res.status(400).json({
-        msg: "User not migrated dude",
+        msg: "User not found",
       });
     }
 
@@ -91,6 +91,7 @@ export const login: RequestHandler = async function (req, res) {
         msg: "Incorrect password !",
       });
     }
+
     logger.info(`user connected ${userInput.username}`);
 
     jwt.sign(
@@ -111,42 +112,6 @@ export const login: RequestHandler = async function (req, res) {
     res.status(500).json({
       msg: "Server error",
     });
-  }
-};
-
-export const migrate: RequestHandler = async function (req, res) {
-  try {
-    const user = await UserModel.findOne({ email: req.body.username });
-    if (!user) {
-      return res.status(400).json({
-        msg: `The email provided does not match any user. ${req.body.username}`,
-      });
-    }
-    if (user.password !== undefined) {
-      return res.status(400).json({ msg: "user has already been migrated" });
-    }
-
-    // Hashing and salting password
-    const salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
-
-    jwt.sign(
-      { userID: user._id },
-      "randomString",
-      {
-        expiresIn: 60 * 60 * 24,
-      },
-      (err, token) => {
-        if (err) throw err;
-        res.status(200).json({
-          token,
-        });
-      }
-    );
-    await user.updateOne({ $set: { password: req.body.password } });
-    logger.info(`updated user ${user.email}`);
-  } catch (error) {
-    res.status(500).end();
   }
 };
 
