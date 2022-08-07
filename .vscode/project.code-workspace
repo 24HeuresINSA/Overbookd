@@ -1,0 +1,30 @@
+{
+  "folders": [
+    {
+      "name": "ROOT",
+      "path": "../"
+    },
+    {
+      "name": "Backend",
+      "path": "../backend"
+    },
+    {
+      "name": "Frontend",
+      "path": "../frontend"
+    },
+    {
+      "name": "Interfaces",
+      "path": "../packages/interfaces"
+    }
+  ],
+  "settings": {
+    "conventionalCommits.scopes": [
+      "Docker",
+      "Front",
+      "Back",
+      "Config"
+    ],
+    "cSpell.enabled": false,
+    "colorize.languages": ["javascript", "json"]
+  }
+}
