@@ -64,6 +64,7 @@ services:
     volumes:
       - ./data/dev/images:/overbookd/backend/images
       - ../backend:/overbookd/backend
+      - ../node_modules:/overbookd/backend/node_modules
     restart: always
     networks:
       - overbookd_net-api
@@ -102,6 +103,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ../frontend:/overbookd/frontend
+      - ../node_modules:/overbookd/frontend/node_modules
     environment:
       - BASE_URL
     restart: always
@@ -115,22 +117,3 @@ services:
       - "traefik.http.services.front.loadbalancer.server.port=3000"
       - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
       - "traefik.http.routers.front.tls=true"
-
-  # doc:
-  #   image: registry.gitlab.com/24-heures-insa/overbookd/documentation
-  #   restart: always
-  #   networks:
-  #     - traefik-public
-  #   environment:
-  #     SITE: overbookd-doc
-  #     WEBSITE_NAME: Documentation
-  #     TEMPLATE: classic
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.doc.entrypoints=websecure"
-  #     - "traefik.http.services.doc.loadbalancer.server.port=3001"
-  #     - "traefik.http.routers.doc.rule=Host(`overbookd.${DOMAIN}`) && PathPrefix(`/docs`)"
-  #     - "traefik.http.routers.doc.tls=true"
-  #     - "traefik.http.routers.doc.middlewares=doc-redirect"
-  #     - "traefik.http.middlewares.doc-redirect.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$"
-  #     - "traefik.http.middlewares.doc-redirect.redirectregex.replacement=https://$$1/docs"

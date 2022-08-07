@@ -6,4 +6,4 @@ ENV HOST=0.0.0.0
 
 EXPOSE 1234
 
-CMD ["sh", "-c", "npm i && NUXT_TELEMETRY_DISABLED=1 npm run dev"]
+CMD ["sh", "-c", "NUXT_TELEMETRY_DISABLED=1 npm run dev"]
