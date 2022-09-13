@@ -59,7 +59,7 @@ services:
     container_name: overbookd_backend
     user: ${MY_UID}:${MY_GID}
     build:
-      context: ../backend
+      context: ../backend_old
       dockerfile: Dockerfile.dev
     volumes:
       - ./data/dev/images:/overbookd/backend/images
