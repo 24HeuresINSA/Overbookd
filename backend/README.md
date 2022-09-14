@@ -1,47 +1,75 @@
-# Overbookd - BACKEND
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-La refonte d'Assomaker est un projet qui depuis quelques années est dans les discussions.
-Le logiciel devient vieux et les technologies utilisées associé au manque de documentation
-rends la maintenance et l'exploitation assez difficile. L'objectif de ce projet est, en
-plus de reproduire les fonctions essentielles d'Assomaker, de mettre au goût du jour les
-technologies utilisées.
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 
-L'objectif principal s'accompagne d'un ajout d'une partie logistique permettant une gestion du matériel.
-Une nouvelle interface au _workflow_ plus intuitif permettra aux utilisateurs de pouvoir très rapidement
-créer, afficher ou affecter.
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-## Technologies
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-Les langages web actuels (en 2019) sont principalement Javascript, Python ou Java. Le choix de Javascript a été
-motivé par le fait d'avoir le _front-end_ et le _back-end_ dans le même langage, étant assez facilement compréhensible
-pour quiconque ait un minimum de compétence en programmation web.
-Les technologies utilisées sont pour l'API :
+## Description
 
-- _Express_ : ce framework web permet de structurer le serveur web, en permettant de créer des requêtes très facilement,
-  tout en étant très efficace.
-- _Mongoose_ : ce package permet de gérer les intéractions avec la base de données.
-- _MongoDB_ : Base de donnée NoSQL
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installer et lancer Oberbookd - Backend
+## Installation
 
-Les instructions pour lancer et faire tourner Overbookd sont maintenant centralisées dans le repository [Management](https://gitlab.com/24-heures-insa/overbookd/management/)
+```bash
+$ npm install
+```
 
-## Lancer les tests
+## Running the app
 
-`npm i`
-`npm run test` ou `npm run test:coverage`
+```bash
+# development
+$ npm run start
 
-## Git flow
+# watch mode
+$ npm run start:dev
 
-There is 3 main branches in this repo :
+# production mode
+$ npm run start:prod
+```
 
-- master: Hosting production deployment
-- pre-prod: Hosting pre-production deployment
+## Test
 
-**When contributing to the codebase you have to:**
+```bash
+# unit tests
+$ npm run test
 
-- Open an issue
-- Branch from develop with the issue ID in the name (ex: 24-fix-random-bugs)
-- Create a merge request from this branch to develop
+# e2e tests
+$ npm run test:e2e
 
-This leverage consistency and relaibility through the whole process.
+# test coverage
+$ npm run test:cov
+```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If
+you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
