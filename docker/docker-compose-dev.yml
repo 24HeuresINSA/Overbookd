@@ -57,21 +57,21 @@ services:
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
   backend:
     container_name: overbookd_backend
-    user: ${MY_UID}:${MY_GID}
     build:
-      context: ../backend_old
+      context: ../backend
       dockerfile: Dockerfile.dev
     volumes:
       - ./data/dev/images:/overbookd/backend/images
       - ../backend:/overbookd/backend
-    restart: always
+#    restart: always
     networks:
       - overbookd_net-api
       - traefik-public
     ports:
       - 2424:2424
     environment:
-      DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_mongo:27017/
+#      DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_mongo:27017/
+      DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgre:5432/${OVERBOOKD_DATABASE_NAME}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=websecure"
@@ -79,20 +79,35 @@ services:
       - "traefik.http.routers.api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
       - "traefik.http.routers.api.tls=true"
 
-  mongodb:
-    container_name: overbookd_mongo
-    image: mongo
-    restart: always
+  postgre:
+    container_name: overbookd_postgre
+    image: postgres:14.5-alpine3.16
+#    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${OVERBOOKD_DATABASE_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${OVERBOOKD_DATABASE_PASSWORD}
+      - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${OVERBOOKD_DATABASE_PASSWORD}
+      - POSTGRES_DB=${OVERBOOKD_DATABASE_NAME}
     networks:
       - overbookd_net-api
     ports:
-      - 27017:27017
+      - '5432:5432'
     volumes:
-      - ./data/dev/mongo/db:/data/db
-      - ./data/dev/mongo/configdb:/data/configdb
+      - ./data/dev/postgre/data:/var/lib/postgresql/data
+
+#  mongodb:
+#    container_name: overbookd_mongo
+#    image: mongo
+#    restart: always
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: ${OVERBOOKD_DATABASE_USERNAME}
+#      MONGO_INITDB_ROOT_PASSWORD: ${OVERBOOKD_DATABASE_PASSWORD}
+#    networks:
+#      - overbookd_net-api
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - ./data/dev/mongo/db:/data/db
+#      - ./data/dev/mongo/configdb:/data/configdb
 
   frontend:
     container_name: overbookd_frontend
@@ -104,7 +119,7 @@ services:
       - ../frontend:/overbookd/frontend
     environment:
       - BASE_URL
-    restart: always
+#    restart: always
     networks:
       - traefik-public
     ports:

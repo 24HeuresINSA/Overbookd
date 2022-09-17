@@ -1,0 +1,7 @@
+.gitlab
+.gitlab-ci.yml
+.idea
+.vscode
+npm-debug.log
+dist
+node_modules
