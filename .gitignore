@@ -34,7 +34,8 @@ npm-debug.log
 .env
 
 # IDE
-.vscode
+.vscode/*
+!.vscode/project.code-workspace
 .dist
 .idea
 
