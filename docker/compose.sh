@@ -39,6 +39,11 @@ case $1 in
                 echo "-----------------------"
                 MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d --build
                 ;;
+        "--prisma"|"-p")
+                echo "Prisma command dev containers"
+                echo "-----------------------------"
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env exec backend $3
+                ;;
         "-h"|"--help"|*)
                 echo "Usage: ./compose.sh [--dev|-d] [--start|-s] [--down|-d] [--restart|-r] [--logs|-l]"
                 echo "--dev|-d: start dev containers"
