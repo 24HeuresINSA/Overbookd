@@ -8,6 +8,7 @@ networks:
 volumes:
   certs:
 
+
 services:
   certs-downloader:
     image: alpine
@@ -55,15 +56,15 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
-  backend:
-    container_name: overbookd_backend
+  backend_old:
+    container_name: overbookd_backend_old
     user: ${MY_UID}:${MY_GID}
     build:
       context: ../backend_old
       dockerfile: Dockerfile.dev
     volumes:
       - ./data/dev/images:/overbookd/backend/images
-      - ../backend:/overbookd/backend
+      - ../backend_old:/overbookd/backend
     restart: always
     networks:
       - overbookd_net-api
@@ -115,7 +116,6 @@ services:
       - "traefik.http.services.front.loadbalancer.server.port=3000"
       - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
       - "traefik.http.routers.front.tls=true"
-
   # doc:
   #   image: registry.gitlab.com/24-heures-insa/overbookd/documentation
   #   restart: always
