@@ -1,0 +1,7 @@
+FROM node:16.14-alpine3.15
+
+WORKDIR /overbookd/backend
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "npm i npm run start:dev"]
