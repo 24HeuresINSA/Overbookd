@@ -4,25 +4,40 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 case $1 in
 
-"--dev"|"-d") echo "starting dev containers"
+"--dev"|"-d")
+        echo "===================="
+        echo "=Containers for dev="
+        echo "===================="
         case $2 in
         "--start"|"-s")
-                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d
+                echo "Starting dev containers"
+                echo "-----------------------"
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d
                 ;;
         "--stop")
-                docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env stop
+                echo "Stopping dev containers"
+                echo "-----------------------"
+                docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env stop
                 ;;
         "--down"|"-d")
-                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env down
+                echo "Stopping and removing dev containers"
+                echo "------------------------------------"
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env down
                 ;;
         "--restart"|"-r")
-                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env restart
+                echo "Restarting dev containers"
+                echo "-------------------------"
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env restart
                 ;;
         "--logs"|"-l")
-                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env logs -f
+                echo "Showing dev containers logs"
+                echo "---------------------------"
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env logs -f
                 ;;
         "--build"|"-b")
-                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker-compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d --build
+                echo "Building dev containers"
+                echo "-----------------------"
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose-dev.yml -p dev --env-file $SCRIPT_DIR/dev.env up -d --build
                 ;;
         "-h"|"--help"|*)
                 echo "Usage: ./compose.sh [--dev|-d] [--start|-s] [--down|-d] [--restart|-r] [--logs|-l]"
@@ -36,21 +51,21 @@ case $1 in
          ;;
 
 "--utils"|"-u") echo "starting utils containers"
-           docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
+           docker compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
            ;;
 
 "--prod"|"-p") echo "starting prod containers"
-          docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
+          docker compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
           ;;
 
 "--preprod"|"-t") echo "starting preprod containers"
-             docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
+             docker compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
              ;;
 
 "--all"|"-a") echo "starting utils, prod and prepord containers"
-         docker-compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
-         docker-compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
-         docker-compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
+         docker compose -f $SCRIPT_DIR/docker-compose_utils.yml -p utils --env-file $SCRIPT_DIR/.env up -d
+         docker compose -f $SCRIPT_DIR/docker-compose.yml -p prod --env-file $SCRIPT_DIR/.env up -d
+         docker compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
          ;;
 
 "-h"|"--help"|*) echo "USAGE"
