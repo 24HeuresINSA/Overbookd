@@ -85,6 +85,8 @@ services:
       context: ../backend
       dockerfile: Dockerfile.dev
     restart: always
+    ports:
+      - 2424:3000
     networks:
       - overbookd_net-api
       - traefik-public
