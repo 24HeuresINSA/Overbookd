@@ -20,7 +20,7 @@ export class TransactionService {
 
   async getUserTransactions(userId: number): Promise<Transaction[] | null> {
     return this.prisma.transaction.findMany({
-      where: { OR: [{ from: userId }, { to: userId }] },
+      where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },
     });
   }
 
