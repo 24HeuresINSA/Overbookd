@@ -73,6 +73,10 @@ case $1 in
          docker compose -f $SCRIPT_DIR/docker-compose-preprod.yml -p preprod --env-file $SCRIPT_DIR/.env up -d
          ;;
 
+"--traefik") echo "create traefik network"
+        docker network create traefik-public
+        ;;
+
 "-h"|"--help"|*) echo "USAGE"
 echo "./compose.sh [option]"
 echo "You should use one option :"
