@@ -3,12 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UserModificationDto {
   @ApiProperty({
     required: false,
-    description: 'The database id of the user',
-  })
-  id: number;
-
-  @ApiProperty({
-    required: false,
     description: 'The firstname of the user',
   })
   firstname: string;
