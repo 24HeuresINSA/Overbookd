@@ -1,17 +1,30 @@
 import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
-@Controller()
+@ApiBearerAuth()
+@ApiTags('user')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('user')
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get all users',
+    type: Array,
+  })
   getUsers(): Promise<User[]> {
     return this.userService.users({});
   }
 
-  @Put('user/:id')
+  @Put(':id')
   updateUserById(
     @Param('id') id: number,
     @Body() userData: Partial<User>,
