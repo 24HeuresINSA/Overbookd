@@ -30,6 +30,7 @@ export class TransactionCreationDto {
   @ApiProperty({
     required: true,
     description: 'The amount of the transaction',
+    default: 0,
   })
   amount: number;
 
@@ -42,12 +43,14 @@ export class TransactionCreationDto {
   @ApiProperty({
     required: false,
     description: 'The date of the transaction',
+    default: new Date(),
   })
   createdAt: Date;
 
   @ApiProperty({
     required: false,
     description: 'The validation status of the transaction',
+    default: true,
   })
   isValid: boolean;
 }
