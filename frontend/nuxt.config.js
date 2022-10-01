@@ -2,7 +2,6 @@ import colors from "vuetify/es5/util/colors";
 
 export default {
   env: {
-    BASE_URL_KEYCLOAK: process.env.BASE_URL_KEYCLOAK,
     BASE_URL: process.env.BASE_URL,
   },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode

@@ -1,11 +1,9 @@
 FROM node:16.14-alpine3.15 AS builder
 
 WORKDIR /overbookd/frontend
-ARG BASE_URL_KEYCLOAK
 ARG BASE_URL
 
 ENV BASE_URL=$BASE_URL
-ENV BASE_URL_KEYCLOAK=$BASE_URL_KEYCLOAK
 
 COPY package*.json ./
 
