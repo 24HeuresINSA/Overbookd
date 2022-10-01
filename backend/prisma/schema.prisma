@@ -47,5 +47,5 @@ model Transaction {
   amount    Float           @default(0)
   context   String          @db.VarChar(255)
   createdAt DateTime        @default(now())
-  isValide  Boolean         @default(false)
+  isValide  Boolean         @default(true)
 }
