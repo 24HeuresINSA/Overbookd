@@ -20,8 +20,10 @@ export class TransactionCreationDto {
   from: number;
 
   @ApiProperty({
-    required: true,
-    description: 'The ID of the user who receive the transaction',
+    required: false,
+    description:
+      'The ID of the user who receive the transaction, -1 if the transaction is an expense',
+    default: -1,
   })
   to: number;
 
@@ -47,5 +49,5 @@ export class TransactionCreationDto {
     required: false,
     description: 'The validation status of the transaction',
   })
-  isValide: boolean;
+  isValid: boolean;
 }

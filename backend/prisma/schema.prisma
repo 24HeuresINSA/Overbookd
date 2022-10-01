@@ -43,9 +43,9 @@ model Transaction {
   id        Int             @id @default(autoincrement())
   type      TransactionType
   from      Int
-  to        Int
+  to        Int             @default(-1)
   amount    Float           @default(0)
   context   String          @db.VarChar(255)
   createdAt DateTime        @default(now())
-  isValide  Boolean         @default(true)
+  isValid   Boolean         @default(true)
 }
