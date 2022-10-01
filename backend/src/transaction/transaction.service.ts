@@ -30,6 +30,10 @@ export class TransactionService {
   async createTransaction(
     data: Prisma.TransactionCreateInput,
   ): Promise<Transaction> {
+    //If the amount is negative, we throw an error
+    if (data.amount < 0) {
+      throw new HttpException('Amount must be positive', HttpStatus.FORBIDDEN);
+    }
     //We check the transaction type
     switch (data.type) {
       case 'TRANSFER':
@@ -37,13 +41,6 @@ export class TransactionService {
         if (data.from === data.to) {
           throw new HttpException(
             'Sender and receiver must be different',
-            HttpStatus.FORBIDDEN,
-          );
-        }
-        //If the amount is negative, we throw an error
-        if (data.amount < 0) {
-          throw new HttpException(
-            'Amount must be positive',
             HttpStatus.FORBIDDEN,
           );
         }
@@ -81,13 +78,6 @@ export class TransactionService {
             HttpStatus.FORBIDDEN,
           );
         }
-        //If the amount is negative, we throw an error
-        if (data.amount < 0) {
-          throw new HttpException(
-            'Amount must be positive',
-            HttpStatus.FORBIDDEN,
-          );
-        }
         //We check that the sender is a user
         const user = await this.prisma.user.findUnique({
           where: { id: Number(data.from) },
@@ -107,7 +97,27 @@ export class TransactionService {
         });
         break;
       case 'EXPENSE':
-        console.log('expense');
+        //If the transaction is an expense, we check that the sender is a user and the receiver is -1
+        if (data.to !== -1) {
+          throw new HttpException('Receiver must be -1', HttpStatus.FORBIDDEN);
+        }
+        //We check that the sender is a user
+        const user2 = await this.prisma.user.findUnique({
+          where: { id: Number(data.from) },
+        });
+        if (!user2) {
+          throw new HttpException(
+            'Sender must be a user',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+        //Compute the new balance of the user
+        const newBalance2 = user2.balance - data.amount;
+        //Update the balance of the user
+        await this.prisma.user.update({
+          where: { id: Number(data.from) },
+          data: { balance: newBalance2 },
+        });
         break;
       default:
         //If the transaction type is not valid, we throw an error
