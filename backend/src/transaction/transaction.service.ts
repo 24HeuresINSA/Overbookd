@@ -40,6 +40,38 @@ export class TransactionService {
             HttpStatus.FORBIDDEN,
           );
         }
+        //If the amount is negative, we throw an error
+        if (data.amount < 0) {
+          throw new HttpException(
+            'Amount must be positive',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+        //We check that sender and receiver exist
+        const sender = await this.prisma.user.findUnique({
+          where: { id: data.from },
+        });
+        const receiver = await this.prisma.user.findUnique({
+          where: { id: data.to },
+        });
+        if (!sender || !receiver) {
+          throw new HttpException(
+            'Sender or receiver does not exist',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+        //We compute the new balance of the sender and the receiver
+        const newSenderBalance = sender.balance - data.amount;
+        const newReceiverBalance = receiver.balance + data.amount;
+        //We update the balance of the sender and the receiver
+        await this.prisma.user.update({
+          where: { id: data.from },
+          data: { balance: newSenderBalance },
+        });
+        await this.prisma.user.update({
+          where: { id: data.to },
+          data: { balance: newReceiverBalance },
+        });
         break;
       case 'DEPOSIT':
         //If the transaction is a deposit, we check that the sender is the same as the receiver
