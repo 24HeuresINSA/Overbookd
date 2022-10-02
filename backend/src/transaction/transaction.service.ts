@@ -60,15 +60,17 @@ export class TransactionService {
         //We compute the new balance of the sender and the receiver
         const newSenderBalance = sender.balance - data.amount;
         const newReceiverBalance = receiver.balance + data.amount;
-        //We update the balance of the sender and the receiver
-        await this.prisma.user.update({
-          where: { id: data.from },
-          data: { balance: newSenderBalance },
-        });
-        await this.prisma.user.update({
-          where: { id: data.to },
-          data: { balance: newReceiverBalance },
-        });
+        //We update the balance of the sender and the receiver with a prisma transaction
+        await this.prisma.$transaction([
+          this.prisma.user.update({
+            where: { id: data.from },
+            data: { balance: newSenderBalance },
+          }),
+          this.prisma.user.update({
+            where: { id: data.to },
+            data: { balance: newReceiverBalance },
+          }),
+        ]);
         break;
       case 'DEPOSIT':
         //If the transaction is a deposit, we check that the sender is the same as the receiver
