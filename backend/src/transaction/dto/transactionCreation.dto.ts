@@ -49,8 +49,8 @@ export class TransactionCreationDto {
 
   @ApiProperty({
     required: false,
-    description: 'The validation status of the transaction',
+    description: 'If the transaction has been deleted',
     default: true,
   })
-  is_valid: boolean;
+  is_deleted: boolean;
 }
