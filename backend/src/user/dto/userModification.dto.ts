@@ -33,21 +33,9 @@ export class UserModificationDto {
 
   @ApiProperty({
     required: false,
-    description: 'The driver licence date of the user',
-  })
-  driverLicenseDate: Date;
-
-  @ApiProperty({
-    required: false,
     description: 'The phone number of the user',
   })
   phone: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'If the user is have a  driver licence',
-  })
-  has_driver_license: boolean;
 
   @ApiProperty({
     required: false,

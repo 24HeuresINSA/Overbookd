@@ -18,23 +18,21 @@ enum TransactionType {
 }
 
 model User {
-  id                  Int      @id @default(autoincrement())
-  firstname           String   @db.VarChar(30)
-  lastname            String   @db.VarChar(30)
-  nickname            String   @db.VarChar(30)
-  email               String   @unique
-  birthdate           DateTime
-  driver_license_date DateTime
-  phone               String   @db.VarChar(30)
-  has_driver_license  Boolean  @default(false)
-  department          String   @db.VarChar(3)
-  year                Int      @default(0)
-  pp                  String   @default("")
-  charisma            Float    @default(0)
-  balance             Float    @default(0)
-  password            String   @default("")
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  firstname  String   @db.VarChar(30)
+  lastname   String   @db.VarChar(30)
+  nickname   String   @db.VarChar(30)
+  email      String   @unique
+  birthdate  DateTime
+  phone      String   @db.VarChar(30)
+  department String   @db.VarChar(3)
+  year       Int      @default(0)
+  pp         String   @default("")
+  charisma   Float    @default(0)
+  balance    Float    @default(0)
+  password   String   @default("")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   is_deleted Boolean @default(false)
 }
