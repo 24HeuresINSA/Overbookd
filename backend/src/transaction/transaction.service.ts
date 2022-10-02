@@ -135,6 +135,10 @@ export class TransactionService {
   /** DELETE **/
   /**        **/
   async deleteTransaction(id: number): Promise<Transaction> {
-    return this.prisma.transaction.delete({ where: { id: Number(id) } });
+    //change parameter is_deleted to true
+    return this.prisma.transaction.update({
+      where: { id: Number(id) },
+      data: { is_deleted: true },
+    });
   }
 }

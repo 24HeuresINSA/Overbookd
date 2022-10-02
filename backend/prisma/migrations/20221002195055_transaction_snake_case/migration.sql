@@ -31,7 +31,7 @@ CREATE TABLE "Transaction" (
     "amount" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "context" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "is_valid" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Transaction_pkey" PRIMARY KEY ("id")
 );
