@@ -3,7 +3,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl"]
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -18,34 +18,34 @@ enum TransactionType {
 }
 
 model User {
-  id                Int      @id @default(autoincrement())
-  firstname         String   @db.VarChar(30)
-  lastname          String   @db.VarChar(30)
-  nickname          String   @db.VarChar(30)
-  email             String   @unique
-  birthdate         DateTime
-  driverLicenseDate DateTime
-  phone             String   @db.VarChar(30)
-  hasDriverLicense  Boolean  @default(false)
-  department        String   @db.VarChar(3)
-  year              Int      @default(0)
-  pp                String   @default("")
-  charisma          Float    @default(0)
-  balance           Float    @default(0)
-  password          String   @default("")
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                  Int      @id @default(autoincrement())
+  firstname           String   @db.VarChar(30)
+  lastname            String   @db.VarChar(30)
+  nickname            String   @db.VarChar(30)
+  email               String   @unique
+  birthdate           DateTime
+  driver_license_date DateTime
+  phone               String   @db.VarChar(30)
+  has_driver_license  Boolean  @default(false)
+  department          String   @db.VarChar(3)
+  year                Int      @default(0)
+  pp                  String   @default("")
+  charisma            Float    @default(0)
+  balance             Float    @default(0)
+  password            String   @default("")
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
-  isDeleted Boolean @default(false)
+  is_deleted Boolean @default(false)
 }
 
 model Transaction {
-  id        Int             @id @default(autoincrement())
-  type      TransactionType
-  from      Int
-  to        Int             @default(-1)
-  amount    Float           @default(0)
-  context   String          @db.VarChar(255)
-  createdAt DateTime        @default(now())
-  isValid   Boolean         @default(true)
+  id         Int             @id @default(autoincrement())
+  type       TransactionType
+  from       Int
+  to         Int             @default(-1)
+  amount     Float           @default(0)
+  context    String          @db.VarChar(255)
+  created_at DateTime        @default(now())
+  is_valid   Boolean         @default(true)
 }

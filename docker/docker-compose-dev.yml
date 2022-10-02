@@ -80,7 +80,7 @@ services:
 
   backend:
     container_name: overbookd_backend
-    user: ${MY_UID}:${MY_GID}
+    user: root
     build:
       context: ../backend
       dockerfile: Dockerfile.dev
