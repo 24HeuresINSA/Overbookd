@@ -47,7 +47,7 @@ export class UserModificationDto {
     required: false,
     description: 'If the user is have a  driver licence',
   })
-  hasDriverLicense: boolean;
+  has_driver_license: boolean;
 
   @ApiProperty({
     required: false,
@@ -89,17 +89,17 @@ export class UserModificationDto {
     required: false,
     description: 'The creation date of the user',
   })
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty({
     required: false,
     description: 'The update date of the user',
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @ApiProperty({
     required: false,
     description: 'If the user is deleted',
   })
-  isDeleted: boolean;
+  is_deleted: boolean;
 }

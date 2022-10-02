@@ -45,12 +45,12 @@ export class TransactionCreationDto {
     description: 'The date of the transaction',
     default: new Date(),
   })
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty({
     required: false,
     description: 'The validation status of the transaction',
     default: true,
   })
-  isValid: boolean;
+  is_valid: boolean;
 }
