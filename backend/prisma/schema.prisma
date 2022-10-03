@@ -11,23 +11,85 @@ datasource db {
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
-    firstname  String   @db.VarChar(30)
-    lastname  String   @db.VarChar(30)
-    nickname  String   @db.VarChar(30)
-    email     String   @unique
-    birthdate DateTime
-    driverLicenseDate  DateTime
-    phone     String  @db.VarChar(30)
-    hasDriverLicense Boolean @default(false)
-    department String @db.VarChar(3)
-    year       Int  @default(0)
-    pp         String  @default("")
-    charisma   Float  @default(0)
-    balance    Float @default(0)
-    password   String @default("")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id                      Int         @id @default(autoincrement())
+  firstname               String      @db.VarChar(30)
+  lastname                String      @db.VarChar(30)
+  nickname                String      @db.VarChar(30)
+  email                   String      @unique
+  birthdate               DateTime
+  phone                   String      @db.VarChar(30)
+  department              Department
+  comment                 String?
+  reset_password_token    String?
+  reset_password_expires  DateTime?
+  has_payed_contributions Boolean     @default(false)
+  year                    Year
+  pp                      String?
+  charisma                Float       @default(0)
+  balance                 Float       @default(0)
+  password                String      @default("")
+  created_at              DateTime    @default(now())
+  updated_at              DateTime    @updatedAt
 
-    isDeleted   Boolean @default(false)
+  teams                   User_Team[]
+  Availabilities Availabilities[]
+
+  deletedAt      DateTime?
+}
+
+model Team {
+  name       String      @id @default(uuid())
+  users      User_Team[]
+  deleted_at DateTime?
+}
+
+model User_Team {
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int
+  team    Team   @relation(fields: [team_id], references: [name])
+  team_id String
+
+  @@id([user_id, team_id])
+}
+
+model TimeSlot {
+  id             Int              @id @default(autoincrement())
+  group_name     String
+  start          DateTime
+  end            DateTime
+  charisma       Int
+  is_hard_only   Boolean          @default(false)
+  deleted_at     DateTime?
+  Availabilities Availabilities[]
+}
+
+model Availabilities {
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id])
+  timeslot_id Int
+  timeslot    TimeSlot @relation(fields: [timeslot_id], references: [id])
+
+  @@id([user_id, timeslot_id])
+}
+
+enum Year {
+  A1
+  A2
+  A3
+  A4
+  A5
+}
+
+enum Department {
+  TC
+  IF
+  GE
+  GM
+  GI
+  GCU
+  GEN
+  SGM
+  BS
+  FIMI
+  AUTRE
 }
