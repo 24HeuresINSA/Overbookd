@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { UserService, Username } from './user.service';
+import { UserService } from './user.service';
 import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
+import { Username } from './dto/userName.dto';
 
 @ApiBearerAuth()
 @ApiTags('user')
