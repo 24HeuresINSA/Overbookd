@@ -24,6 +24,7 @@ enum Year {
   A4
   A5
   VIEUX
+  AUTRE
 }
 
 enum Department {
@@ -64,20 +65,24 @@ model User {
   teams          User_Team[]
   Availabilities Availabilities[]
 
+  transactions_from Transaction[] @relation("from")
+  transactions_to   Transaction[] @relation("to")
+
   is_deleted Boolean @default(false)
 }
 
 model Team {
   name       String      @id @default(uuid())
   users      User_Team[]
-  deleted_at DateTime?
+  is_deleted Boolean     @default(false)
 }
 
 model User_Team {
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id Int
-  team    Team   @relation(fields: [team_id], references: [name])
-  team_id String
+  user       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  team       Team    @relation(fields: [team_id], references: [name])
+  team_id    String
+  is_deleted Boolean @default(false)
 
   @@id([user_id, team_id])
 }
@@ -89,8 +94,8 @@ model TimeSlot {
   end            DateTime
   charisma       Int
   is_hard_only   Boolean          @default(false)
-  deleted_at     DateTime?
   Availabilities Availabilities[]
+  is_deleted     Boolean          @default(false)
 }
 
 model Availabilities {
@@ -98,6 +103,7 @@ model Availabilities {
   user        User     @relation(fields: [user_id], references: [id])
   timeslot_id Int
   timeslot    TimeSlot @relation(fields: [timeslot_id], references: [id])
+  is_deleted  Boolean  @default(false)
 
   @@id([user_id, timeslot_id])
 }
@@ -106,7 +112,9 @@ model Transaction {
   id         Int             @id @default(autoincrement())
   type       TransactionType
   from       Int
+  user_from  User            @relation("from", fields: [from], references: [id])
   to         Int             @default(-1)
+  user_to    User            @relation("to", fields: [to], references: [id])
   amount     Float           @default(0)
   context    String          @db.VarChar(255)
   created_at DateTime        @default(now())

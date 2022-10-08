@@ -6,7 +6,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "Year" AS ENUM ('A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX');
+CREATE TYPE "Year" AS ENUM ('A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE');
 
 -- CreateEnum
 CREATE TYPE "Department" AS ENUM ('TC', 'IF', 'GE', 'GM', 'GI', 'GCU', 'GEN', 'SGM', 'BS', 'FIMI', 'AUTRE');
@@ -26,7 +26,7 @@ ALTER COLUMN "pp" DROP DEFAULT;
 -- CreateTable
 CREATE TABLE "Team" (
     "name" TEXT NOT NULL,
-    "deleted_at" TIMESTAMP(3),
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("name")
 );
@@ -35,6 +35,7 @@ CREATE TABLE "Team" (
 CREATE TABLE "User_Team" (
     "user_id" INTEGER NOT NULL,
     "team_id" TEXT NOT NULL,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_Team_pkey" PRIMARY KEY ("user_id","team_id")
 );
@@ -47,7 +48,7 @@ CREATE TABLE "TimeSlot" (
     "end" TIMESTAMP(3) NOT NULL,
     "charisma" INTEGER NOT NULL,
     "is_hard_only" BOOLEAN NOT NULL DEFAULT false,
-    "deleted_at" TIMESTAMP(3),
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "TimeSlot_pkey" PRIMARY KEY ("id")
 );
@@ -56,6 +57,7 @@ CREATE TABLE "TimeSlot" (
 CREATE TABLE "Availabilities" (
     "user_id" INTEGER NOT NULL,
     "timeslot_id" INTEGER NOT NULL,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Availabilities_pkey" PRIMARY KEY ("user_id","timeslot_id")
 );
@@ -71,3 +73,9 @@ ALTER TABLE "Availabilities" ADD CONSTRAINT "Availabilities_user_id_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "Availabilities" ADD CONSTRAINT "Availabilities_timeslot_id_fkey" FOREIGN KEY ("timeslot_id") REFERENCES "TimeSlot"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_from_fkey" FOREIGN KEY ("from") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_to_fkey" FOREIGN KEY ("to") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
