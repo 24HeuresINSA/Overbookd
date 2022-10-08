@@ -58,9 +58,6 @@ export class UserController {
     return users.map(this.userService.getUsername);
   }
 
-  // @Get('user/all')
-  // async getAllUsernames(): Promise<Username[]> {}
-
   @Get(':id')
   @ApiResponse({
     status: 200,
