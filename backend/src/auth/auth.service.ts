@@ -29,10 +29,10 @@ export class AuthService {
 
 
     async login(user: any) {
-        const payload = { username: user.email, userId: user.userId, role: user.role };
+        const payload = { username: user.email, userId: user.id, role: user.teams };
         this.logger.debug(payload);
         return {
-          access_token: this.jwtService.sign(payload),//create access token and assign it to a user profile
+          access_token: this.jwtService.sign(payload),
         };
     }
 }

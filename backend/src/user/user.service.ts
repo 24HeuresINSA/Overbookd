@@ -10,9 +10,14 @@ export class UserService {
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    let user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
+      include: {
+        teams: true,
+      }
     });
+    const res: User & { teams: String[] } = { ...user, teams: user.teams.map(team => team.team_id) };
+    return res;
   }
 
   async users(params: {
