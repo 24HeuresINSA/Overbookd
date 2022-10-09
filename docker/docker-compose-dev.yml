@@ -128,6 +128,8 @@ services:
     networks:
       - overbookd_net-api
       - traefik-public
+    environment:
+      ADMINER_DEFAULT_SERVER: overbookd_postgresql
     ports:
       - 8080:8080
     labels:

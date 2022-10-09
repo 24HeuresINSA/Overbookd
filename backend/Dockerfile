@@ -18,7 +18,9 @@ WORKDIR /app
 
 COPY --chown=node:node --from=builder /overbookd/backend/node_modules ./node_modules
 COPY --chown=node:node --from=builder /overbookd/backend/dist ./dist
+COPY --chown=node:node --from=builder /overbookd/backend/package*.json ./
+COPY --chown=node:node --from=builder /overbookd/backend/prisma ./prisma
 
 EXPOSE 3000
 
-CMD [ "node", "dist/main.js" ]
+CMD [  "npm", "run", "start:migrate:prod" ]
