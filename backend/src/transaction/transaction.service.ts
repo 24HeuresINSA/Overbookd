@@ -27,9 +27,7 @@ export class TransactionService {
   /**      **/
   /** POST **/
   /**      **/
-  async createTransaction(
-    data: Prisma.TransactionCreateInput,
-  ): Promise<Transaction> {
+  async createTransaction(data: Transaction): Promise<Transaction> {
     //If the amount is negative, we throw an error
     if (data.amount < 0) {
       throw new HttpException('Amount must be positive', HttpStatus.FORBIDDEN);

@@ -17,31 +17,104 @@ enum TransactionType {
   TRANSFER
 }
 
+enum Year {
+  A1
+  A2
+  A3
+  A4
+  A5
+  VIEUX
+  AUTRE
+}
+
+enum Department {
+  TC
+  IF
+  GE
+  GM
+  GI
+  GCU
+  GEN
+  SGM
+  BS
+  FIMI
+  AUTRE
+}
+
 model User {
-  id         Int      @id @default(autoincrement())
-  firstname  String   @db.VarChar(30)
-  lastname   String   @db.VarChar(30)
-  nickname   String   @db.VarChar(30)
-  email      String   @unique
-  birthdate  DateTime
-  phone      String   @db.VarChar(30)
-  department String   @db.VarChar(3)
-  year       Int      @default(0)
-  pp         String   @default("")
-  charisma   Float    @default(0)
-  balance    Float    @default(0)
-  password   String   @default("")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id                      Int        @id @default(autoincrement())
+  firstname               String     @db.VarChar(30)
+  lastname                String     @db.VarChar(30)
+  nickname                String     @db.VarChar(30)
+  email                   String     @unique
+  birthdate               DateTime
+  phone                   String     @db.VarChar(30)
+  department              Department
+  comment                 String?
+  reset_password_token    String?
+  reset_password_expires  DateTime?
+  has_payed_contributions Boolean    @default(false)
+  year                    Year
+  pp                      String?
+  charisma                Float      @default(0)
+  balance                 Float      @default(0)
+  password                String     @default("")
+  created_at              DateTime   @default(now())
+  updated_at              DateTime   @updatedAt
+
+  teams          User_Team[]
+  Availabilities Availabilities[]
+
+  transactions_from Transaction[] @relation("from")
+  transactions_to   Transaction[] @relation("to")
 
   is_deleted Boolean @default(false)
+}
+
+model Team {
+  name       String      @id @default(uuid())
+  users      User_Team[]
+  is_deleted Boolean     @default(false)
+}
+
+model User_Team {
+  user       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  team       Team    @relation(fields: [team_id], references: [name])
+  team_id    String
+  is_deleted Boolean @default(false)
+
+  @@id([user_id, team_id])
+}
+
+model TimeSlot {
+  id             Int              @id @default(autoincrement())
+  group_name     String
+  start          DateTime
+  end            DateTime
+  charisma       Int
+  is_hard_only   Boolean          @default(false)
+  Availabilities Availabilities[]
+  is_deleted     Boolean          @default(false)
+}
+
+model Availabilities {
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id])
+  timeslot_id Int
+  timeslot    TimeSlot @relation(fields: [timeslot_id], references: [id])
+  is_deleted  Boolean  @default(false)
+
+  @@id([user_id, timeslot_id])
 }
 
 model Transaction {
   id         Int             @id @default(autoincrement())
   type       TransactionType
   from       Int
+  user_from  User            @relation("from", fields: [from], references: [id])
   to         Int             @default(-1)
+  user_to    User            @relation("to", fields: [to], references: [id])
   amount     Float           @default(0)
   context    String          @db.VarChar(255)
   created_at DateTime        @default(now())
