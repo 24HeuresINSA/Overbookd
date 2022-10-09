@@ -16,7 +16,7 @@ export class UserService {
         teams: true,
       },
     });
-    const res: User & { teams: string[] } = {
+    const res: User & { teams: String[] } = {
       ...user,
       teams: user.teams.map((team) => team.team_id),
     };
