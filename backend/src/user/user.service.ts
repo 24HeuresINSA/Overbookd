@@ -10,13 +10,16 @@ export class UserService {
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
-    let user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       include: {
         teams: true,
-      }
+      },
     });
-    const res: User & { teams: String[] } = { ...user, teams: user.teams.map(team => team.team_id) };
+    const res: User & { teams: string[] } = {
+      ...user,
+      teams: user.teams.map((team) => team.team_id),
+    };
     return res;
   }
 
@@ -52,11 +55,23 @@ export class UserService {
     return null;
   }
 
-  async updateUser(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
-  }): Promise<User> {
+  async updateUser(
+    params: {
+      where: Prisma.UserWhereUniqueInput;
+      data: Prisma.UserUpdateInput;
+    },
+    currentUser: any,
+  ): Promise<User> {
+    if (!currentUser.role.includes('admin')) {
+      // Remove balance from data
+      delete params.data.balance;
+    }
+    if (!currentUser.role.filter((n: any) => ['human', 'admin'].includes(n))) {
+      // Remove teams from charisma
+      delete params.data.charisma;
+    }
     const { where, data } = params;
+    console.log(params);
     return this.prisma.user.update({
       data,
       where,

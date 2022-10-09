@@ -1,9 +1,21 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/team-auth.guard';
+import { Roles } from 'src/auth/team-auth.decorator';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -11,6 +23,8 @@ import { Username } from './dto/userName.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -21,6 +35,7 @@ export class UserController {
     return this.userService.users({});
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   @ApiResponse({
     status: 200,
@@ -30,6 +45,8 @@ export class UserController {
     return null;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Get('all/cp')
   @ApiResponse({
     status: 200,
@@ -58,6 +75,8 @@ export class UserController {
     return users.map(this.userService.getUsername);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -67,6 +86,8 @@ export class UserController {
     return this.userService.user({ id: Number(id) });
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Post('availabilities')
   @ApiBody({
     description: 'Add availabilities to current user',
@@ -78,6 +99,8 @@ export class UserController {
     return null;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Put(':id')
   @ApiBody({
     description: 'Update a user by id',
@@ -86,10 +109,14 @@ export class UserController {
   updateUserById(
     @Param('id') id: number,
     @Body() userData: Partial<User>,
+    @Request() req: Express.Request,
   ): Promise<User> {
-    return this.userService.updateUser({
-      where: { id: Number(id) },
-      data: userData,
-    });
+    return this.userService.updateUser(
+      {
+        where: { id: Number(id) },
+        data: userData,
+      },
+      req.user,
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Transaction, Prisma } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
@@ -27,7 +27,10 @@ export class TransactionService {
   /**      **/
   /** POST **/
   /**      **/
-  async createTransaction(data: Transaction): Promise<Transaction> {
+  async createTransaction(
+    data: Transaction,
+    currentUser: any,
+  ): Promise<Transaction> {
     //If the amount is negative, we throw an error
     if (data.amount < 0) {
       throw new HttpException('Amount must be positive', HttpStatus.FORBIDDEN);
@@ -39,6 +42,13 @@ export class TransactionService {
         if (data.from === data.to) {
           throw new HttpException(
             'Sender and receiver must be different',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+        //We check if the sender is the user who is logged in
+        if (data.from !== currentUser.id) {
+          throw new HttpException(
+            'You are not the sender',
             HttpStatus.FORBIDDEN,
           );
         }
@@ -71,6 +81,10 @@ export class TransactionService {
         ]);
         break;
       case 'DEPOSIT':
+        //If the transaction is a deposit, we check that the user is an admin
+        if (!currentUser.role.includes('admin')) {
+          throw new HttpException('You are not an admin', HttpStatus.FORBIDDEN);
+        }
         //If the transaction is a deposit, we check that the sender is the same as the receiver
         if (data.from !== data.to) {
           throw new HttpException(
@@ -97,6 +111,10 @@ export class TransactionService {
         });
         break;
       case 'EXPENSE':
+        //If the transaction is a deposit, we check that the user is an admin
+        if (!currentUser.role.includes('admin')) {
+          throw new HttpException('You are not an admin', HttpStatus.FORBIDDEN);
+        }
         //If the transaction is an expense, we check that the sender is a user and the receiver is -1
         if (data.to !== -1) {
           throw new HttpException('Receiver must be -1', HttpStatus.FORBIDDEN);
