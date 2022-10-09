@@ -10,14 +10,14 @@ import { Roles } from './auth/team-auth.decorator';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   @Get()
   getHello(): string {
     return this.appService.getHello();
   }
-  
+
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: Express.Request) {

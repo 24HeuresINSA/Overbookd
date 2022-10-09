@@ -14,9 +14,12 @@ export class UserService {
       where: userWhereUniqueInput,
       include: {
         teams: true,
-      }
+      },
     });
-    const res: User & { teams: String[] } = { ...user, teams: user.teams.map(team => team.team_id) };
+    const res: User & { teams: String[] } = {
+      ...user,
+      teams: user.teams.map((team) => team.team_id),
+    };
     return res;
   }
 

@@ -1,4 +1,3 @@
-
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
@@ -14,15 +13,22 @@ import { PrismaService } from 'src/prisma.service';
 
 @Module({
   imports: [
-    forwardRef(()=>UserModule),
+    forwardRef(() => UserModule),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '6000s' },//todo change this to a better time
+      signOptions: { expiresIn: '6000s' }, //todo change this to a better time
     }),
     HashingUtilsModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, HashingUtilsService, UserService, PrismaService],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    HashingUtilsService,
+    UserService,
+    PrismaService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
