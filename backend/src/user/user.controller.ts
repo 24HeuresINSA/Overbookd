@@ -16,12 +16,22 @@ import { Username } from './dto/userName.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
+import { UserCreationDto } from './dto/userCreation.dto';
 
 @ApiBearerAuth()
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post()
+  @ApiBody({
+    description: 'Add new user',
+    type: UserCreationDto,
+  })
+  createUser(@Body() userData: User): Promise<User> {
+    return this.userService.createUser(userData);
+  }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')

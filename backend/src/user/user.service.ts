@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -16,7 +17,7 @@ export class UserService {
         teams: true,
       },
     });
-    const res: User & { teams: String[] } = {
+    const res: User & { teams: string[] } = {
       ...user,
       teams: user.teams.map((team) => team.team_id),
     };
@@ -42,10 +43,22 @@ export class UserService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({
-      data,
-    });
+  async createUser(payload: Prisma.UserCreateInput): Promise<User> {
+    // take only the right fields
+    const data: Prisma.UserUncheckedCreateInput = {
+      firstname: payload.firstname,
+      lastname: payload.lastname,
+      email: payload.email,
+      password: await bcrypt.hash(payload.password, 10),
+      nickname: payload.nickname,
+      birthdate: payload.birthdate,
+      phone: payload.phone,
+      department: payload.department,
+      comment: payload.comment,
+      year: payload.year,
+    };
+
+    return this.prisma.user.create({ data: data });
   }
 
   async addAvailabilitiesToUser(
@@ -71,7 +84,6 @@ export class UserService {
       delete params.data.charisma;
     }
     const { where, data } = params;
-    console.log(params);
     return this.prisma.user.update({
       data,
       where,
