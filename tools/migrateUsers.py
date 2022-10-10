@@ -1,7 +1,22 @@
-from tokenize import String
 import requests
 import json
 import logging
+
+"""
+Ce script sert a migrer les utilisateurs 'hard' et 'vieux' de la base de donnees mongo vers la base de donnees postgresql
+il faut exporter les mots de passe des utilisateurs de la base de donnees mongo dans un fichier data.json avec le format suivant :
+[
+    {
+        "email": "email1",
+        "password": "password1"
+    },
+    {
+        "email": "email2",
+        "password": "password2"
+    },
+    ...
+]
+"""
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("Overbookd - Migrate Users from Mongo to Postgres")
@@ -75,22 +90,24 @@ def loginFromPosgresql(username, password):
     jsonResponse = json.loads(response.text)
     return jsonResponse["access_token"]
 
+
 def newYearFormat(user):
 
-        try:
-            oldYear = user["year"]
-        except KeyError:
-            oldYear = "AUTRE"
-    
-        try:
-            oldYear = int(oldYear)
-            if oldYear > 5:
-                newYear = "VIEUX"
-            else:
-                newYear = f"A{oldYear}"
-        except ValueError:
-            newYear = "AUTRE"
-        return newYear
+    try:
+        oldYear = user["year"]
+    except KeyError:
+        oldYear = "AUTRE"
+
+    try:
+        oldYear = int(oldYear)
+        if oldYear > 5:
+            newYear = "VIEUX"
+        else:
+            newYear = f"A{oldYear}"
+    except ValueError:
+        newYear = "AUTRE"
+    return newYear
+
 
 def newDepartFormat(user):
     try:
@@ -98,10 +115,11 @@ def newDepartFormat(user):
     except KeyError:
         oldDepart = "AUTRE"
 
-    if oldDepart == "pas a l'INSA" or oldDepart == "pas à l'INSA":
+    if oldDepart == "pas a l'INSA" or oldDepart == "pas à l'INSA" or oldDepart == "Pas à l'INSA":
         return "AUTRE"
     else:
         return oldDepart
+
 
 def nicknameCatch(user):
     try:
@@ -109,11 +127,13 @@ def nicknameCatch(user):
     except KeyError:
         return ""
 
+
 def birthdayCatch(user):
     try:
         return user["birthdate"]
     except KeyError:
-        return ""
+        return "2022-10-10T00:00:00.000Z"
+
 
 def phoneCatch(user):
     try:
@@ -121,13 +141,30 @@ def phoneCatch(user):
     except KeyError:
         return ""
 
+
 def balanceCatch(user):
     try:
         return user["balance"]
     except KeyError:
         return 0
 
+def getPassword(user, usersPassword):
+    try:
+        for userPassword in usersPassword:
+            if user["email"] == userPassword["email"]:
+                return userPassword["password"]
+    except KeyError:
+        return "ChangeMOI"
+    
+    return "ChangeMOI"
+
+
 def createUser(users, token):
+
+    with open("tools/data.json", "r") as f:
+        usersPassword = json.loads(f.read())
+
+    logger.info(f"Number of users in data.json : {len(usersPassword)}")
 
     url = f"{prod}/user"
     headers = {
@@ -145,22 +182,27 @@ def createUser(users, token):
             "phone": phoneCatch(user),
             "department": newDepartFormat(user),
             "year": newYearFormat(user),
-            "password": "string"
+            "password": "ChangeMOI",
         })
 
         response = requests.request(
             "POST", url, headers=headers, data=payload, verify=False)
-        logger.info(f"Create user {user['firstname']} {user['lastname']} reponse : {response.text}")
+        logger.info(
+            f"Create user {user['firstname']} {user['lastname']} reponse : {response.text}")
 
         userID = json.loads(response.text)
 
         urlWithID = f"{prod}/user/{userID['id']}"
         balance = json.dumps({
-             "balance": balanceCatch(user)
+            "balance": balanceCatch(user),
+            "password": getPassword(user, usersPassword),
         })
 
-        response = requests.request("PUT", urlWithID, headers=headers, data=balance, verify=False)
-        logger.info(f"Update user {user['firstname']} {user['lastname']} balance reponse : {response.text}")
+        response = requests.request(
+            "PUT", urlWithID, headers=headers, data=balance, verify=False)
+        logger.info(
+            f"Update user {user['firstname']} {user['lastname']} balance reponse : {response.text}")
+
 
 if __name__ == "__main__":
     mongoToken = loginFromMongo("user", "password")
