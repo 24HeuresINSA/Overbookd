@@ -17,6 +17,8 @@ export class UserService {
         teams: true,
       },
     });
+    //remove password
+    delete user.password;
     const res: User & { teams: string[] } = {
       ...user,
       teams: user.teams.map((team) => team.team_id),

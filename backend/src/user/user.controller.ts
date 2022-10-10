@@ -52,7 +52,8 @@ export class UserController {
     description: 'Get a current user',
   })
   getCurrentUser(@Request() req): Promise<User> {
-    return req.user;
+    const id = req.user.userId;
+    return this.userService.user({ id });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
