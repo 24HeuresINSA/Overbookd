@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
-import * as bcrypt from 'bcrypt';
+import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 
 @Injectable()
 export class UserService {
@@ -49,7 +49,7 @@ export class UserService {
       firstname: payload.firstname,
       lastname: payload.lastname,
       email: payload.email,
-      password: await bcrypt.hash(payload.password, 10),
+      password: await new HashingUtilsService().hash(payload.password),
       nickname: payload.nickname,
       birthdate: payload.birthdate,
       phone: payload.phone,
