@@ -100,6 +100,8 @@ services:
       GMAIL_USER: ${OVERBOOKD_EMAIL_USER}
       GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
       JWT_SECRET: ${OVERBOOKD_JWT_SECRET}
+      SWAGGER_USER: ${OVERBOOKD_SWAGGER_USER}
+      SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-back.tls=true"
