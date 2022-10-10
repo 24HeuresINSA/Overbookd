@@ -350,20 +350,20 @@ export default {
 
         switch (this.mode) {
           case "cask":
-            transaction.from = user._id;
+            transaction.from = user.id;
             transaction.amount = this.stickPrice * +user.newConsumption;
             transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
             break;
 
           case "closet":
-            transaction.from = user._id;
+            transaction.from = user.id;
             transaction.amount = +this.settledStickPrice * +user.newConsumption;
             transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
             break;
 
           case "deposit":
             transaction.type = "deposit";
-            transaction.to = user._id;
+            transaction.to = user.id;
             transaction.amount = (+user.newConsumption).toFixed(2);
             transaction.context = `Recharge de compte perso le ${new Date().toLocaleDateString()}`;
             break;
