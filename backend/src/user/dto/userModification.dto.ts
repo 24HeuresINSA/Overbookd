@@ -98,10 +98,4 @@ export class UserModificationDto {
     description: 'The update date of the user',
   })
   updated_at: Date;
-
-  @ApiProperty({
-    required: false,
-    description: 'If the user is deleted',
-  })
-  is_deleted: boolean;
 }

@@ -45,6 +45,7 @@ async function bootstrap() {
     .setDescription('The Overbookd API description')
     .setVersion('1.0')
     .addServer('/api')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
