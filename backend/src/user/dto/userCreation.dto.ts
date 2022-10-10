@@ -47,7 +47,7 @@ export class UserCreationDto {
     required: false,
     description: 'The study year of the user',
   })
-  year: number;
+  year: string;
 
   @ApiProperty({
     required: false,
