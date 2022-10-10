@@ -55,13 +55,19 @@ export default {
     strategies: {
       local: {
         token: {
-          property: "token",
+          property: "access_token",
           global: true,
-          // required: true,
-          // type: 'Bearer'
+          required: true,
+          type: "Bearer",
+        },
+        user: {
+          property: false,
         },
         endpoints: {
-          login: { url: "/login", method: "post" },
+          login: {
+            url: "/login",
+            method: "post",
+          },
           logout: { url: "/logout", method: "post" },
           // user: { url: "/user", method: "get" },
           user: false,
