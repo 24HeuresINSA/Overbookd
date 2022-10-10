@@ -99,6 +99,8 @@ services:
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
       GMAIL_USER: ${OVERBOOKD_EMAIL_USER}
       GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
+      SWAGGER_USER: ${OVERBOOKD_SWAGGER_USER}
+      SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-back.tls=true"
@@ -116,7 +118,6 @@ services:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${OVERBOOKD_DATABASE_PASSWORD}
       - POSTGRES_DB=${OVERBOOKD_DATABASE_NAME}
-      - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
       - overbookd_net-api
     volumes:
