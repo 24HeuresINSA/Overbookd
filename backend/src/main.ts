@@ -5,10 +5,10 @@ import * as basicAuth from 'express-basic-auth';
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://overbookd.24heures.org/',
-  'https://preprod.overbookd.24heures.org/',
-  'https://overbookd.traefik.me/',
-  'https://cetaitmieuxavant.24heures.org/',
+  'https://overbookd.24heures.org',
+  'https://preprod.overbookd.24heures.org',
+  'https://overbookd.traefik.me',
+  'https://cetaitmieuxavant.24heures.org',
 ];
 
 const SWAGGER_PROTECT_DOMAINS = [
