@@ -62,7 +62,7 @@ model User {
   created_at              DateTime   @default(now())
   updated_at              DateTime   @updatedAt
 
-  teams          User_Team[]
+  team           User_Team[]
   Availabilities Availabilities[]
 
   transactions_from Transaction[] @relation("from")

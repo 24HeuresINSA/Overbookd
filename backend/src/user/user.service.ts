@@ -14,14 +14,12 @@ export class UserService {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       include: {
-        teams: true,
+        team: true,
       },
     });
-    //remove password
-    delete user.password;
-    const res: User & { teams: string[] } = {
+    const res: User & { team: string[] } = {
       ...user,
-      teams: user.teams.map((team) => team.team_id),
+      team: user.team.map((team) => team.team_id),
     };
     return res;
   }

@@ -51,9 +51,12 @@ export class UserController {
     status: 200,
     description: 'Get a current user',
   })
-  getCurrentUser(@Request() req): Promise<User> {
+  async getCurrentUser(@Request() req): Promise<User> {
     const id = req.user.userId;
-    return this.userService.user({ id });
+    const user = this.userService.user({ id });
+    //remove password
+    delete (await user).password;
+    return user;
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -67,7 +70,7 @@ export class UserController {
   async getAllUsernamesWithCP(): Promise<Username[]> {
     const users = await this.userService.users({
       where: {
-        teams: {
+        team: {
           some: {
             team: {
               name: {
