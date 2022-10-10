@@ -32,15 +32,26 @@ export class UserService {
     orderBy?: Prisma.UserOrderByWithRelationInput;
     select?: Prisma.UserSelect;
   }): Promise<Partial<User>[]> {
-    const { skip, take, cursor, where, orderBy, select } = params;
-    return this.prisma.user.findMany({
+    const { skip, take, cursor, where, orderBy } = params;
+    //get all users with their teams
+    const users = await this.prisma.user.findMany({
       skip,
       take,
       cursor,
       where,
       orderBy,
-      select,
+      include: {
+        team: true,
+      },
     });
+    //transform the result to match the dto
+    const res: (User & { team: string[] })[] = users.map((user) => {
+      return {
+        ...user,
+        team: user.team.map((team) => team.team_id),
+      };
+    });
+    return res;
   }
 
   async createUser(payload: Prisma.UserCreateInput): Promise<User> {
