@@ -51,8 +51,8 @@ export class UserController {
     status: 200,
     description: 'Get a current user',
   })
-  getCurrentUser(): Promise<User> {
-    return null;
+  getCurrentUser(@Request() req): Promise<User> {
+    return req.user;
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
