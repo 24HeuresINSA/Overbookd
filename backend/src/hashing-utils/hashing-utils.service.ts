@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class HashingUtilsService {
   async hash(password: string): Promise<string> {
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 13);
     return hash;
   }
 
