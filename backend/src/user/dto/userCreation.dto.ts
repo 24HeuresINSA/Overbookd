@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserModificationDto {
+export class UserCreationDto {
   @ApiProperty({
     required: false,
     description: 'The firstname of the user',
@@ -61,47 +61,11 @@ export class UserModificationDto {
     description: 'The study year of the user',
     enum: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
   })
-  year: number;
-
-  @ApiProperty({
-    required: false,
-    description: 'The profile picture link of the user',
-  })
-  pp: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The charisma of the user',
-  })
-  charisma: number;
-
-  @ApiProperty({
-    required: false,
-    description: 'The compte perso balance of the user',
-  })
-  balance: number;
+  year: string;
 
   @ApiProperty({
     required: false,
     description: 'The password of the user',
   })
   password: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The creation date of the user',
-  })
-  created_at: Date;
-
-  @ApiProperty({
-    required: false,
-    description: 'The update date of the user',
-  })
-  updated_at: Date;
-
-  @ApiProperty({
-    required: false,
-    description: 'If the user is deleted',
-  })
-  is_deleted: boolean;
 }
