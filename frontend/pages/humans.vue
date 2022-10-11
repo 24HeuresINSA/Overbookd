@@ -452,7 +452,7 @@ export default {
     if (this.$accessor.user.hasRole("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
-      this.users.filter((user) => user.isValid);
+      this.users.filter((user) => !user.is_deleted);
       this.filteredUsers = this.users;
       this.filters.isValidated = true; // default set to true
 
