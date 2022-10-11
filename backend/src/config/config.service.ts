@@ -91,7 +91,7 @@ export class ConfigService {
           },
           {
             key: 'department',
-            label: 'Département',
+            label: 'Département (obligatoire même si non INSA)',
             type: 'select',
             options: [
               'TC',
@@ -106,12 +106,14 @@ export class ConfigService {
               'GE',
               'AUTRE',
             ],
+            isRequired: true,
           },
           {
             key: 'year',
-            label: 'Année',
+            label: 'Année (obligatoire même si non INSA)',
             type: 'select',
             options: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
+            isRequired: true,
           },
           {
             key: 'comment',
