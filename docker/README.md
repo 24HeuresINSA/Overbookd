@@ -7,26 +7,15 @@ Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev 
 Le script `compose.sh` permet de lancer les containers Docker pour le dev. Il se base sur des options que voici (elles sont toujours affichable avec `./compose.sh --help` ou `./compose.sh -h`):
 
 ```bash
-./compose.sh [option]
-You should use one option :
---dev, -d [docker-compose' options]
-    Start all needed for development. You need dev.env and ./assets/traefik/tls.yml files to work
-    for more info about this option see ./compose.sh --dev --help
---traefik
-    Create traefik network
---help, -h
-    Show this help
-
-====================
-=Containers for dev=
-====================
-Usage: ./compose.sh [--dev|-d] [--start|-s] [--down|-d] [--restart|-r] [--logs|-l]
---dev|-d: start dev containers
+Usage: ./compose.sh [option]
+--traefik|-t : Create traefik network
 --start|-s: start dev containers
---down|-d: stop dev containers
+--stop: stop dev containers
 --restart|-r: restart dev containers
+--down|-d: stop dev containers
 --logs|-l: show dev containers logs
---prisma|-p: run prisma command in backend container. Example: ./compose.sh --dev --prisma 'npx prisma migrate dev'
+--build|-b: build dev containers
+--prisma|-p: run prisma command in backend container. Example: ./compose.sh --prisma 'npx prisma migrate dev'
 --bash|-b: run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
 ```
 
