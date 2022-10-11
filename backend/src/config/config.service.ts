@@ -90,17 +90,7 @@ export class ConfigService {
             regex: '0[6-7]{1}[0-9]{8}$',
           },
           {
-            key: 'hasDriverLicense',
-            label: 'Est-ce que tu as un permis de conduire ?',
-            type: 'switch',
-          },
-          {
-            key: 'driverLicenseDate',
-            label: 'Date de permis',
-            type: 'date',
-          },
-          {
-            key: 'departement',
+            key: 'department',
             label: 'Département',
             type: 'select',
             options: [
@@ -112,17 +102,16 @@ export class ConfigService {
               'GI',
               'GM',
               'GEN',
-              'SGM',
               'FIMI',
               'GE',
-              "Pas à l'INSA",
+              'AUTRE',
             ],
           },
           {
             key: 'year',
             label: 'Année',
             type: 'select',
-            options: [1, 2, 3, 4, 5, '6 et +', 'cerise'],
+            options: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
           },
           {
             key: 'comment',
