@@ -190,7 +190,9 @@
               {{ mUser.charisma === undefined ? 0 : mUser.charisma }}
             </h2></v-sheet
           >
+          <!-- 
           <AvailabilitiesCalendar :m-user="mUser" class="myCal" />
+          -->
           <v-row>
             <v-col md="3">
               <v-btn text @click="saveUser()">sauvegarder</v-btn>
@@ -215,11 +217,14 @@
                 v-if="hasEditingRole && isValidated() && isSoft()"
                 color="red"
                 @click="$refs.confirmUnassign.open()"
-                >Dévalider (soft)</v-btn>
-                <ConfirmDialog ref="confirmUnassign" @confirm="unvalidateUser">
-                  Ce soft sera desaffecter de <b>toutes</b> ses taches actuellement affectées !
-                </ConfirmDialog>
-              </v-col>
+                >Dévalider (soft)</v-btn
+              >
+              <ConfirmDialog ref="confirmUnassign" @confirm="unvalidateUser">
+                Ce soft sera desaffecter de <b>toutes</b> ses taches
+                actuellement affectées !
+              </ConfirmDialog>
+            </v-col>
+            <!--
             <v-col md="3">
               <v-btn
                 v-if="hasEditingRole"
@@ -228,13 +233,16 @@
                 >Modifier dispos</v-btn
               ></v-col
             >
+            -->
           </v-row>
         </v-col>
       </v-row>
     </v-card>
+    <!--
     <v-dialog v-model="isEditingAvailability" width="80%"
       ><ModificationCard :user="user"
     /></v-dialog>
+    -->
   </v-dialog>
 </template>
 
@@ -243,14 +251,15 @@ import OverChips from "~/components/atoms/overChips";
 import { safeCall } from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
 import { isValidated } from "~/utils/roles/index.ts";
-import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
-import ModificationCard from "~/components/organisms/ModificationCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
 
 export default {
   name: "UserInformation",
-  components: { OverChips, AvailabilitiesCalendar, ModificationCard, ConfirmDialog },
+  components: {
+    OverChips,
+    ConfirmDialog,
+  },
   props: {
     user: {
       type: Object,
@@ -389,7 +398,7 @@ export default {
       if (this.mUser.team.includes("soft")) {
         this.mUser.team = ["toValidate"];
         this.mUser.availabilities = [];
-        await this.$axios.get('/timespan/user/unassignall/' + this.mUser._id);
+        await this.$axios.get("/timespan/user/unassignall/" + this.mUser._id);
       }
     },
     async addFriend() {
