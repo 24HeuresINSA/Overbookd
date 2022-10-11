@@ -2,7 +2,7 @@
   <v-dialog v-model="mToggle" width="100%">
     <v-card>
       <v-row>
-        <v-col md="5"
+        <v-col md="12"
           ><v-img
             v-if="mUser.pp"
             :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
@@ -110,17 +110,24 @@
                     type="number"
                   ></v-text-field>
                 </v-col>
-                <v-col md="6">
+                <v-col md="4">
                   <v-text-field
                     v-model="mUser.year"
                     label="Année"
                     :disabled="!hasEditingRole"
                   ></v-text-field>
                 </v-col>
-                <v-col md="6">
+                <v-col md="4">
                   <v-text-field
-                    v-model="mUser.departement"
+                    v-model="mUser.department"
                     label="Département"
+                    :disabled="!hasEditingRole"
+                  ></v-text-field>
+                </v-col>
+                <v-col md="4">
+                  <v-text-field
+                    v-model="mUser.charisma"
+                    label="Charisme"
                     :disabled="!hasEditingRole"
                   ></v-text-field>
                 </v-col>
@@ -150,7 +157,7 @@
                 </v-col>
                 <v-col md="4">
                   <v-switch
-                    v-model="mUser.hasPayedContribution"
+                    v-model="mUser.has_payed_contributions"
                     label="Cotisation"
                     :disabled="!hasEditingRole"
                   ></v-switch> </v-col
@@ -175,7 +182,24 @@
               </v-card-actions>
             </v-container>
           </v-card-text>
+          <v-row
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <v-col md="3">
+              <v-btn text @click="saveUser()">sauvegarder</v-btn>
+            </v-col>
+            <v-col md="3">
+              <v-btn
+                v-if="hasEditingRole"
+                text
+                color="red"
+                @click="deleteUser()"
+                >supprimer</v-btn
+              >
+            </v-col>
+          </v-row>
         </v-col>
+        <!--
         <v-col md="7">
           <v-sheet
             class="charismaContainer"
@@ -190,9 +214,7 @@
               {{ mUser.charisma === undefined ? 0 : mUser.charisma }}
             </h2></v-sheet
           >
-          <!-- 
           <AvailabilitiesCalendar :m-user="mUser" class="myCal" />
-          -->
           <v-row>
             <v-col md="3">
               <v-btn text @click="saveUser()">sauvegarder</v-btn>
@@ -206,6 +228,7 @@
                 >supprimer</v-btn
               >
             </v-col>
+            
             <v-col md="3">
               <v-btn
                 v-if="hasEditingRole && !isValidated()"
@@ -224,7 +247,6 @@
                 actuellement affectées !
               </ConfirmDialog>
             </v-col>
-            <!--
             <v-col md="3">
               <v-btn
                 v-if="hasEditingRole"
@@ -233,9 +255,10 @@
                 >Modifier dispos</v-btn
               ></v-col
             >
-            -->
-          </v-row>
+
+          </v-row>        
         </v-col>
+        -->
       </v-row>
     </v-card>
     <!--
@@ -252,13 +275,11 @@ import { safeCall } from "../../utils/api/calls";
 import userRepo from "~/repositories/userRepo";
 import { isValidated } from "~/utils/roles/index.ts";
 import { RepoFactory } from "~/repositories/repoFactory";
-import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
 
 export default {
   name: "UserInformation",
   components: {
     OverChips,
-    ConfirmDialog,
   },
   props: {
     user: {
@@ -350,7 +371,7 @@ export default {
     async saveUser() {
       await safeCall(
         this.$store,
-        userRepo.updateUser(this, this.mUser._id, this.mUser),
+        userRepo.updateUser(this, this.mUser.id, this.mUser),
         "🥳",
         "une erreur est survenue lors de la sauvegarde de l'utilisateur"
       );

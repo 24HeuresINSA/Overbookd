@@ -94,6 +94,11 @@ export class UserService {
       // Remove teams from charisma
       delete params.data.charisma;
     }
+    const team = params.data.team;
+    if (team) {
+      // Remove teams from data
+      delete params.data.team;
+    }
     const { where, data } = params;
     return this.prisma.user.update({
       data,
