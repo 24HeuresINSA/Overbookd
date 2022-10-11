@@ -11,10 +11,6 @@
     {
       "name": "Frontend",
       "path": "../frontend"
-    },
-    {
-      "name": "[OLD] Backend",
-      "path": "../backend_old"
     }
   ],
   "settings": {
