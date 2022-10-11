@@ -71,6 +71,15 @@ export class TransactionController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @Post('sg')
+  addSgTransaction(
+    @Body() transactionData: Transaction[],
+  ): Promise<Transaction> {
+    return this.transactionService.addSgTransaction(transactionData);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete(':id')
   @ApiResponse({
     status: 200,

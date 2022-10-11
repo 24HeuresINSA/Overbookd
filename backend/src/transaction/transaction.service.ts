@@ -6,7 +6,6 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 @Injectable()
 export class TransactionService {
   constructor(private prisma: PrismaService) {}
-
   /**     **/
   /** GET **/
   /**     **/
@@ -144,6 +143,11 @@ export class TransactionService {
           HttpStatus.FORBIDDEN,
         );
     }
+    return this.prisma.transaction.create({ data });
+  }
+
+  async addSgTransaction(transactions: Transaction[]): Promise<Transaction> {
+    const data = transactions[0];
     return this.prisma.transaction.create({ data });
   }
 

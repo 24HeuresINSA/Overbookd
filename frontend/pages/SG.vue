@@ -342,16 +342,16 @@ export default {
 
       let transactions = usersWithConsumptions.map((user) => {
         let transaction = {
-          type: "expense",
-          createdAt: new Date(),
+          type: "EXPENSE",
           from: null,
-          to: null,
+          to: -1,
         };
 
         switch (this.mode) {
           case "cask":
             transaction.from = user.id;
-            transaction.amount = this.stickPrice * +user.newConsumption;
+            //cast to float
+            transaction.amount = +this.stickPrice * +user.newConsumption;
             transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
             break;
 
@@ -362,9 +362,9 @@ export default {
             break;
 
           case "deposit":
-            transaction.type = "deposit";
+            transaction.type = "DEPOSIT";
             transaction.to = user.id;
-            transaction.amount = (+user.newConsumption).toFixed(2);
+            transaction.amount = +user.newConsumption;
             transaction.context = `Recharge de compte perso le ${new Date().toLocaleDateString()}`;
             break;
         }
