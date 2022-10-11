@@ -45,11 +45,7 @@ data\
 
 ## Les docker-compose de prod, preprod et cetaitmieuxavant
 
-<<<<<<< HEAD
 Tous les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo  `infra` du group](https://gitlab.com/24-heures-insa/infra). C'est le repo qui est utilisé pour gérer l'infrastucture des applications des 24h de l'INSA.
-=======
-Tout les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo  `infra` du group](https://gitlab.com/24-heures-insa/infra). C'est le repo qui est utilisé pour gérer l'infrastucture des applications des 24h de l'INSA.
->>>>>>> ff557da (feat(Docker): :memo: add links in readme)
 
 ## Les liens utiles
 
@@ -65,8 +61,4 @@ Tout les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo 
 - Le front : <http://localhost:3000>
 - Le back : <http://localhost:2424>
 - Swagger : <http://localhost:2424/swagger>
-<<<<<<< HEAD
 - Adminer : <http://localhost:8080>, petit lien magique pour autofill <http://localhost:8080/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
-=======
-- Adminer : <http://localhost:8080>, petit lien magique pour autofill <http://localhost:8080/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
->>>>>>> ff557da (feat(Docker): :memo: add links in readme)
