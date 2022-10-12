@@ -44,7 +44,7 @@ export default {
         path: "/login",
       });
     } else {
-      this.signupForm = this.getConfig("signup_form_soft");
+      this.signupForm = this.getConfig("signup_form");
     }
   },
 
@@ -63,22 +63,15 @@ export default {
       } else if (!this.compiledForm.isValid) {
         alert("Les champs avec * sont obligatoires");
       } else {
-        if (this.compiledForm.team !== undefined) {
-          this.compiledForm.team = this.compiledForm.team
-            .toLocaleString()
-            .toLowerCase()
-            .split(","); //Pour passer tout les labels en minuscule
-          this.compiledForm.team.push("toValidate");
-        } else {
-          this.compiledForm.team = ["toValidate"];
-        }
-        this.$axios.post("/signup", this.compiledForm);
+        delete this.compiledForm.password2;
+        delete this.compiledForm.isValid;
+        const oldDate = this.compiledForm.birthdate;
+        this.compiledForm.birthdate = new Date(oldDate).toISOString();
+        this.$axios.post("/user", this.compiledForm);
         this.$router.push({
           path: "/login",
         });
-        alert(
-          `Inscription terminée, veuillez maintenant vous connecter pour remplir IMMEDIATEMENT vos disponibilités. C'est absolument essentiel et va vous permettre d'être validé.`
-        );
+        alert(`🎉Inscription terminée Bienvenue au 24 !🎉`);
       }
     },
   },

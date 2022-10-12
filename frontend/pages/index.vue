@@ -14,11 +14,8 @@
             <v-card-title><h3>Tu n'as pas été validé</h3></v-card-title>
             <v-card-text style="font-size: 1.1em">
               <p>
-                Tu n'as pas été validé pour être bénévole sur le festival <br />
-                Nous te remercions cependant pour ton intérêt et ta volonté de
-                nous aider. <br />
-                Toute l'équipe du club des 24 heures de l'INSA éspère néanmoins
-                que tu pourras profiter pleinement du festival.
+                Tu n'as pas encore été validé par le magnifique Lucas <br />
+                Tu ferais bien de lui donner 1 euros apparement ça aide ...
               </p>
             </v-card-text>
           </v-card>
@@ -41,7 +38,7 @@
           <FriendsCard v-else />
         </v-col>
 
-        <v-col cols="12" sm="6" md="8">
+        <v-col v-if="isManif()" cols="12" sm="6" md="8">
           <AvailabilitiesCard v-if="isAvailabilityMomennt()" />
           <PlanningCard v-else />
         </v-col>
@@ -118,6 +115,10 @@ export default {
     },
     isAvailabilityMomennt() {
       return this.$accessor.config.getConfig("availabilityMoment");
+    },
+    isManif() {
+      //TODO: check if manif is active
+      return false;
     },
   },
 };

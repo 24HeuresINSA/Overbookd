@@ -2,7 +2,6 @@ import colors from "vuetify/es5/util/colors";
 
 export default {
   env: {
-    BASE_URL_KEYCLOAK: process.env.BASE_URL_KEYCLOAK,
     BASE_URL: process.env.BASE_URL,
   },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -56,13 +55,19 @@ export default {
     strategies: {
       local: {
         token: {
-          property: "token",
+          property: "access_token",
           global: true,
-          // required: true,
-          // type: 'Bearer'
+          required: true,
+          type: "Bearer",
+        },
+        user: {
+          property: false,
         },
         endpoints: {
-          login: { url: "/login", method: "post" },
+          login: {
+            url: "/login",
+            method: "post",
+          },
           logout: { url: "/logout", method: "post" },
           // user: { url: "/user", method: "get" },
           user: false,

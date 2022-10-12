@@ -34,7 +34,8 @@ npm-debug.log
 .env
 
 # IDE
-.vscode
+.vscode/*
+!.vscode/project.code-workspace
 .dist
 .idea
 
@@ -45,3 +46,5 @@ npm-debug.log
 dist
 
 .triage-policies.yml
+/backend/dist/
+/backend/node_modules/

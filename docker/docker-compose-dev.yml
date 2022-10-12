@@ -8,12 +8,11 @@ networks:
 volumes:
   certs:
 
+
 services:
   certs-downloader:
     image: alpine
-    command: sh -c "cd /etc/ssl/traefik
-      && wget https://traefik.me/cert.pem -O cert.pem
-      && wget https://traefik.me/privkey.pem -O privkey.pem"
+    command: sh -c "cd /etc/ssl/traefik && wget https://traefik.me/cert.pem -O cert.pem && wget https://traefik.me/privkey.pem -O privkey.pem"
     volumes:
       - certs:/etc/ssl/traefik
 
@@ -55,44 +54,71 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
+
   backend:
     container_name: overbookd_backend
     user: ${MY_UID}:${MY_GID}
     build:
       context: ../backend
       dockerfile: Dockerfile.dev
+    restart: always
+    platform: linux/x86_64
+    ports:
+      - 2424:3000
+    networks:
+      - overbookd_net-api
+      - traefik-public
     volumes:
-      - ./data/dev/images:/overbookd/backend/images
+      - ./data/dev/images:/app/images
       - ../backend:/overbookd/backend
+    environment:
+      DOMAIN: ${OVERBOOKD_DOMAIN}
+      DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
+      GMAIL_USER: ${OVERBOOKD_EMAIL_USER}
+      GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
+      JWT_SECRET: ${OVERBOOKD_JWT_SECRET}
+      SWAGGER_USER: ${OVERBOOKD_SWAGGER_USER}
+      SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dev-back.tls=true"
+      - "traefik.http.routers.dev-back.entrypoints=websecure"
+      - "traefik.http.services.dev-back.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.dev-back.middlewares=api-strip"
+      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+      - "com.centurylinklabs.watchtower.enable=true"
+  postgresql:
+    container_name: overbookd_postgresql
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${OVERBOOKD_DATABASE_PASSWORD}
+      - POSTGRES_DB=${OVERBOOKD_DATABASE_NAME}
+    networks:
+      - overbookd_net-api
+    volumes:
+      - ./data/dev/postgresql:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
     restart: always
     networks:
       - overbookd_net-api
       - traefik-public
-    ports:
-      - 2424:2424
     environment:
-      DATABASE_URL: mongodb://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_mongo:27017/
+      ADMINER_DEFAULT_SERVER: overbookd_postgresql
+    ports:
+      - 8080:8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.services.api.loadbalancer.server.port=2424"
-      - "traefik.http.routers.api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
-      - "traefik.http.routers.api.tls=true"
-
-  mongodb:
-    container_name: overbookd_mongo
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${OVERBOOKD_DATABASE_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${OVERBOOKD_DATABASE_PASSWORD}
-    networks:
-      - overbookd_net-api
-    ports:
-      - 27017:27017
-    volumes:
-      - ./data/dev/mongo/db:/data/db
-      - ./data/dev/mongo/configdb:/data/configdb
+      - "traefik.http.routers.dev-adminer.tls=true"
+      - "traefik.http.routers.dev-adminer.entrypoints=websecure"
+      - "traefik.http.services.dev-adminer.loadbalancer.server.port=8080"
+      - "traefik.http.routers.dev-adminer.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/adminer`))"
+      - "traefik.http.routers.dev-adminer.middlewares=adminer-strip"
+      - "traefik.http.middlewares.adminer-strip.stripprefix.prefixes=/adminer"
 
   frontend:
     container_name: overbookd_frontend
@@ -111,26 +137,7 @@ services:
       - 3000:3000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.front.entrypoints=websecure"
-      - "traefik.http.services.front.loadbalancer.server.port=3000"
-      - "traefik.http.routers.front.rule=Host(`overbookd.${DOMAIN}`)"
-      - "traefik.http.routers.front.tls=true"
-
-  # doc:
-  #   image: registry.gitlab.com/24-heures-insa/overbookd/documentation
-  #   restart: always
-  #   networks:
-  #     - traefik-public
-  #   environment:
-  #     SITE: overbookd-doc
-  #     WEBSITE_NAME: Documentation
-  #     TEMPLATE: classic
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.doc.entrypoints=websecure"
-  #     - "traefik.http.services.doc.loadbalancer.server.port=3001"
-  #     - "traefik.http.routers.doc.rule=Host(`overbookd.${DOMAIN}`) && PathPrefix(`/docs`)"
-  #     - "traefik.http.routers.doc.tls=true"
-  #     - "traefik.http.routers.doc.middlewares=doc-redirect"
-  #     - "traefik.http.middlewares.doc-redirect.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$"
-  #     - "traefik.http.middlewares.doc-redirect.redirectregex.replacement=https://$$1/docs"
+      - "traefik.http.routers.dev-front.entrypoints=websecure"
+      - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.routers.dev-front.tls=true"

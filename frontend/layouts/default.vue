@@ -11,7 +11,7 @@
         <v-list-item to="/">
           <v-img :src="'img/logo/' + logo" alt="overbookd" class="logo"></v-img>
         </v-list-item>
-        <template v-for="(item, i) in items">
+        <template v-for="(item, i) in working_items">
           <v-list-item
             v-if="hasRole(item.roles)"
             :key="i"
@@ -142,6 +142,39 @@ export default {
       AUTHORS,
       file: undefined,
       stepDetail: undefined,
+      //TODO: remove this when the new backend is over
+      working_items: [
+        {
+          icon: "mdi-apps",
+          title: "Accueil",
+          to: "/",
+          roles: "hard",
+        },
+        {
+          icon: "mdi-account",
+          title: "Liste des Orgas",
+          roles: "hard",
+          to: "/humans",
+        },
+        {
+          icon: "mdi-cog",
+          roles: "admin",
+          title: "Admin",
+          to: "/config",
+        },
+        {
+          icon: "mdi-format-list-bulleted",
+          roles: "admin",
+          title: "SG",
+          to: "/SG",
+        },
+        {
+          icon: "mdi-cash-multiple",
+          roles: "admin",
+          title: "Transactions",
+          to: "/transactions",
+        },
+      ],
       items: [
         {
           icon: "mdi-apps",

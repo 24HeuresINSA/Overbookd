@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "ROOT",
+      "path": "../"
+    },
+    {
+      "name": "Backend",
+      "path": "../backend"
+    },
+    {
+      "name": "Frontend",
+      "path": "../frontend"
+    }
+  ],
+  "settings": {
+    "conventionalCommits.scopes": [
+      "Docker",
+      "Front",
+      "Back",
+      "Config",
+      "Global"
+    ],
+    "cSpell.enabled": false,
+    "colorize.languages": ["javascript", "json"],
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/*/**": true
+    }
+  
+  }
+}

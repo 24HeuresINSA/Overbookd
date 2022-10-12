@@ -1,0 +1,64 @@
+# Docker pour Overbookd
+
+Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev avec Docker.
+
+## Le script `compose.sh`
+
+Le script `compose.sh` permet de lancer les containers Docker pour le dev. Il se base sur des options que voici (elles sont toujours affichable avec `./compose.sh --help` ou `./compose.sh -h`):
+
+```bash
+Usage: ./compose.sh [option]
+--traefik|-t : Create traefik network
+--start|-s: start dev containers
+--stop: stop dev containers
+--restart|-r: restart dev containers
+--down|-d: stop dev containers
+--logs|-l: show dev containers logs
+--build|-b: build dev containers
+--prisma|-p: run prisma command in backend container. Example: ./compose.sh --prisma 'npx prisma migrate dev'
+--bash|-b: run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
+```
+
+## Les fichiers nécessaires
+
+### Le fichier `dev.env`
+
+Contient toutes les variables d'environnement nécessaires pour le dev. Il est fourni dans se repo.  
+
+### Le fichier `assets/traefik/tls.yml`
+
+Contient les certificats TLS pour le dev. Il est fourni dans se repo.  
+Sans lui, le domaine `traefik.me` ne sera pas de confiance.  
+Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`.  
+
+### Le dossier `data`
+
+Contient les données de la base de données et les photos de profils. La structure est la suivantes :
+
+```txt
+data\
+    postgresql\
+        (all postgresql data)
+    images\
+        (all profile pictures)
+```
+
+## Les docker-compose de prod, preprod et cetaitmieuxavant
+
+Tous les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo  `infra` du group](https://gitlab.com/24-heures-insa/infra). C'est le repo qui est utilisé pour gérer l'infrastucture des applications des 24h de l'INSA.
+
+## Les liens utiles
+
+### Avec le domaine traefik.me
+
+- Le front : <https://overbookd.traefik.me>
+- Le back : <https://overbookd.traefik.me/api>
+- Swagger : <https://overbookd.traefik.me/api/swagger>
+- Adminer : <https://overbookd.traefik.me/adminer/>, petit lien magique pour autofill <https://overbookd.traefik.me/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
+
+#### Avec localhost
+
+- Le front : <http://localhost:3000>
+- Le back : <http://localhost:2424>
+- Swagger : <http://localhost:2424/swagger>
+- Adminer : <http://localhost:8080>, petit lien magique pour autofill <http://localhost:8080/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
