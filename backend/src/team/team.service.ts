@@ -71,4 +71,24 @@ export class TeamService {
     await this.prisma.$transaction([connect, disconnect]);
     return true;
   }
+
+  async createTeam(payload: { name: string }): Promise<boolean> {
+    const { name } = payload;
+    const team = await this.prisma.team.create({
+      data: {
+        name,
+      },
+    });
+    return !!team;
+  }
+
+  async deleteTeam(payload: { name: string }): Promise<boolean> {
+    const { name } = payload;
+    const team = await this.prisma.team.delete({
+      where: {
+        name,
+      },
+    });
+    return !!team;
+  }
 }
