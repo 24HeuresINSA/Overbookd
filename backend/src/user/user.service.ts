@@ -35,22 +35,33 @@ const SELECT_USER_TEAM = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
+export type UserWithTeam = UserWithoutPassword & { team: string[] };
+export type UserPasswordOnly = Pick<User, 'password'>;
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async user(
-    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<UserWithoutPassword | null> {
+    findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
+  ): Promise<UserWithTeam | null> {
     const user = await this.prisma.user.findUnique({
-      where: userWhereUniqueInput,
+      where: findCondition,
       select: {
         ...SELECT_USER,
         ...SELECT_USER_TEAM,
       },
     });
-    return user;
+    return { ...user, team: user?.team.map((team) => team.team_id) };
+  }
+
+  async getUserPassword(
+    findCondition: Prisma.UserWhereUniqueInput,
+  ): Promise<UserPasswordOnly | null> {
+    return this.prisma.user.findUnique({
+      where: findCondition,
+      select: { password: true },
+    });
   }
 
   async users(params: {
@@ -60,7 +71,7 @@ export class UserService {
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
     select?: Prisma.UserSelect;
-  }): Promise<Partial<User>[]> {
+  }): Promise<UserWithTeam[]> {
     const { skip, take, cursor, where, orderBy } = params;
     //get all users with their teams
     const users = await this.prisma.user.findMany({
@@ -74,7 +85,10 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return users;
+    return users.map((user) => ({
+      ...user,
+      team: user.team.map((team) => team.team_id),
+    }));
   }
 
   async createUser(
@@ -141,7 +155,7 @@ export class UserService {
     });
   }
 
-  getUsername(user: User): Username {
+  getUsername(user: UserWithoutPassword): Username {
     return {
       id: user.id,
       username: user.firstname + ' ' + user.lastname,
