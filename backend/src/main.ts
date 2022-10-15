@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
+import { ValidationPipe } from '@nestjs/common';
 
 const allowedOrigins = [
   'http://localhost:3000',
@@ -51,6 +52,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
 

@@ -60,7 +60,6 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
   @Get('all/cp')
   @ApiResponse({
     status: 200,
@@ -125,6 +124,9 @@ export class UserController {
     @Body() userData: Partial<User>,
     @Request() req: Express.Request,
   ): Promise<User> {
+    if (id === undefined) {
+      return null;
+    }
     return this.userService.updateUser(
       {
         where: { id: Number(id) },

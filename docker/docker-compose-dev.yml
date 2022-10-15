@@ -96,6 +96,8 @@ services:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${OVERBOOKD_DATABASE_PASSWORD}
       - POSTGRES_DB=${OVERBOOKD_DATABASE_NAME}
+    ports:
+      - 5432:5432
     networks:
       - overbookd_net-api
     volumes:

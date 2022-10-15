@@ -10,7 +10,7 @@ export class UserService {
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<User | null> {
+  ): Promise<(User & { team: string[] }) | null> {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       include: {
@@ -19,7 +19,7 @@ export class UserService {
     });
     const res: User & { team: string[] } = {
       ...user,
-      team: user.team.map((team) => team.team_id),
+      team: user?.team.map((team) => team.team_id),
     };
     return res;
   }
@@ -45,10 +45,10 @@ export class UserService {
       },
     });
     //transform the result to match the dto
-    const res: (User & { team: string[] })[] = users.map((user) => {
+    const res: (User & { team: string[] })[] = users?.map((user) => {
       return {
         ...user,
-        team: user.team.map((team) => team.team_id),
+        team: user?.team.map((team) => team.team_id),
       };
     });
     return res;
