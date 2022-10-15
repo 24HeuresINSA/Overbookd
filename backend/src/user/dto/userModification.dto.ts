@@ -61,7 +61,7 @@ export class UserModificationDto {
     description: 'The study year of the user',
     enum: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
   })
-  year: number;
+  year: string;
 
   @ApiProperty({
     required: false,
@@ -85,7 +85,7 @@ export class UserModificationDto {
     required: false,
     description: 'The password of the user',
   })
-  password: string;
+  password?: string;
 
   @ApiProperty({
     required: false,

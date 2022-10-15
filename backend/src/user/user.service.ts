@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
+import { UserReadDto } from './dto/userRead.dto';
 
 const SELECT_USER = {
   email: true,
@@ -42,7 +43,7 @@ export class UserService {
 
   async user_safe(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<User> {
+  ): Promise<UserReadDto> {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       select: {
@@ -51,12 +52,15 @@ export class UserService {
         password: true,
       },
     });
-    return user;
+    return {
+      ...user,
+      team: user?.team.map((t) => t.team_id),
+    };
   }
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<UserWithoutPassword | null> {
+  ): Promise<UserReadDto | null> {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       select: {
@@ -64,7 +68,13 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return user;
+    if (!user) {
+      return null;
+    }
+    return {
+      ...user,
+      team: user?.team.map((t) => t.team_id),
+    };
   }
 
   async users(params: {
@@ -88,7 +98,12 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return users;
+    return users.map((user) => {
+      return {
+        ...user,
+        team: user?.team.map((t) => t.team_id),
+      };
+    });
   }
 
   async createUser(

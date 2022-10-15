@@ -17,6 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
+import { UserReadDto } from './dto/userRead.dto';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -41,8 +42,10 @@ export class UserController {
     description: 'Get all users',
     type: Array,
   })
-  getUsers(): Promise<Partial<User>[]> {
-    return this.userService.users({});
+  async getUsers(): Promise<Partial<User>[]> {
+    console.log('getUsers');
+    console.log(await this.userService.users({}));
+    return await this.userService.users({});
   }
 
   @UseGuards(JwtAuthGuard)
@@ -51,7 +54,7 @@ export class UserController {
     status: 200,
     description: 'Get a current user',
   })
-  async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
+  async getCurrentUser(@Request() req): Promise<UserReadDto> {
     const id = req.user.userId;
     const user = this.userService.user({ id });
     return user;
@@ -94,7 +97,7 @@ export class UserController {
     status: 200,
     description: 'Get a user by id',
   })
-  getUserById(@Param('id') id: number): Promise<UserWithoutPassword> {
+  getUserById(@Param('id') id: number): Promise<UserReadDto> {
     return this.userService.user({ id: Number(id) });
   }
 
