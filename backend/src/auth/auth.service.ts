@@ -17,7 +17,7 @@ export class AuthService {
     const whereEmailIsUnique = Prisma.validator<Prisma.UserWhereUniqueInput>()({
       email: email,
     });
-    const user = await this.userService.user(whereEmailIsUnique);
+    const user = await this.userService.user_safe(whereEmailIsUnique);
     if (!user) {
       throw new NotFoundException("L'email n'est pas valide");
     } else if (await this.hashingUtilsService.compare(pass, user.password)) {

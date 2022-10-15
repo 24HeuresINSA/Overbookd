@@ -40,6 +40,20 @@ export type UserWithoutPassword = Omit<User, 'password'>;
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  async user_safe(
+    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+  ): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: userWhereUniqueInput,
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
+        password: true,
+      },
+    });
+    return user;
+  }
+
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<UserWithoutPassword | null> {
