@@ -8,7 +8,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService, UserWithoutPassword } from './user.service';
 import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
@@ -29,7 +29,7 @@ export class UserController {
     description: 'Add new user',
     type: UserCreationDto,
   })
-  createUser(@Body() userData: User): Promise<User> {
+  createUser(@Body() userData: User): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
   }
 
@@ -51,11 +51,9 @@ export class UserController {
     status: 200,
     description: 'Get a current user',
   })
-  async getCurrentUser(@Request() req): Promise<User> {
+  async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
     const id = req.user.userId;
     const user = this.userService.user({ id });
-    //remove password
-    delete (await user).password;
     return user;
   }
 
@@ -96,7 +94,7 @@ export class UserController {
     status: 200,
     description: 'Get a user by id',
   })
-  getUserById(@Param('id') id: number): Promise<User> {
+  getUserById(@Param('id') id: number): Promise<UserWithoutPassword> {
     return this.userService.user({ id: Number(id) });
   }
 
@@ -124,7 +122,7 @@ export class UserController {
     @Param('id') id: number,
     @Body() userData: Partial<User>,
     @Request() req: Express.Request,
-  ): Promise<User> {
+  ): Promise<UserWithoutPassword> {
     return this.userService.updateUser(
       {
         where: { id: Number(id) },

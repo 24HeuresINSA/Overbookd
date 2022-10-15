@@ -4,24 +4,53 @@ import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 
+const SELECT_USER = {
+  email: true,
+  firstname: true,
+  lastname: true,
+  nickname: true,
+  id: true,
+  birthdate: true,
+  phone: true,
+  department: true,
+  comment: true,
+  reset_password_token: true,
+  reset_password_expires: true,
+  has_payed_contributions: true,
+  year: true,
+  pp: true,
+  charisma: true,
+  balance: true,
+  created_at: true,
+  updated_at: true,
+  is_deleted: true,
+};
+
+const SELECT_USER_TEAM = {
+  team: {
+    select: {
+      team_id: true,
+    },
+  },
+};
+
+export type UserWithoutPassword = Omit<User, 'password'>;
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<User | null> {
+  ): Promise<UserWithoutPassword | null> {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
-      include: {
-        team: true,
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
       },
     });
-    const res: User & { team: string[] } = {
-      ...user,
-      team: user.team.map((team) => team.team_id),
-    };
-    return res;
+    return user;
   }
 
   async users(params: {
@@ -40,21 +69,17 @@ export class UserService {
       cursor,
       where,
       orderBy,
-      include: {
-        team: true,
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
       },
     });
-    //transform the result to match the dto
-    const res: (User & { team: string[] })[] = users.map((user) => {
-      return {
-        ...user,
-        team: user.team.map((team) => team.team_id),
-      };
-    });
-    return res;
+    return users;
   }
 
-  async createUser(payload: Prisma.UserCreateInput): Promise<User> {
+  async createUser(
+    payload: Prisma.UserCreateInput,
+  ): Promise<UserWithoutPassword> {
     // take only the right fields
     const data: Prisma.UserUncheckedCreateInput = {
       firstname: payload.firstname,
@@ -69,7 +94,7 @@ export class UserService {
       year: payload.year,
     };
 
-    return this.prisma.user.create({ data: data });
+    return this.prisma.user.create({ data: data, select: SELECT_USER });
   }
 
   async addAvailabilitiesToUser(
@@ -85,7 +110,7 @@ export class UserService {
       data: Prisma.UserUpdateInput;
     },
     currentUser: any,
-  ): Promise<User> {
+  ): Promise<UserWithoutPassword> {
     if (!currentUser.role.includes('admin')) {
       // Remove balance from data
       delete params.data.balance;
@@ -101,13 +126,17 @@ export class UserService {
     }
     const { where, data } = params;
     return this.prisma.user.update({
+      select: SELECT_USER,
       data,
       where,
     });
   }
 
-  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+  async deleteUser(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<UserWithoutPassword> {
     return this.prisma.user.delete({
+      select: SELECT_USER,
       where,
     });
   }
