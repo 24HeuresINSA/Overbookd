@@ -19,7 +19,12 @@
       "Front",
       "Back",
       "Config",
-      "Global"
+      "Log",
+      "Planning",
+      "QoL",
+      "Secu",
+      "Soft",
+      "User"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],
@@ -28,6 +33,5 @@
       "**/.git/subtree-cache/**": true,
       "**/node_modules/*/**": true
     }
-  
   }
 }
