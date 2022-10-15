@@ -5,3 +5,7 @@
 .nuxt
 node_modules
 dist
+
+**/node_modules
+# folder data/dev anywhere
+**/dev

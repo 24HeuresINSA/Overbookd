@@ -1,9 +1,20 @@
-FROM node:16.14-alpine3.15
-
-WORKDIR /overbookd/frontend
+FROM node:16.15-bullseye-slim
 
 ENV HOST=0.0.0.0
 
+RUN apt update
+RUN apt upgrade -y
+
+RUN apt install git -y
+
+WORKDIR /overbookd/frontend
+
+COPY ./frontend/package.json ./frontend/package-lock.json ./
+
+RUN npm install
+
+COPY . /overbookd
+
 EXPOSE 1234
 
-CMD ["sh", "-c", "npm i && NUXT_TELEMETRY_DISABLED=1 npm run dev"]
+CMD ["sh", "-c", "NUXT_TELEMETRY_DISABLED=1 npm run dev"]

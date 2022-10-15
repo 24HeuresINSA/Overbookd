@@ -8,7 +8,6 @@ networks:
 volumes:
   certs:
 
-
 services:
   certs-downloader:
     image: alpine
@@ -57,10 +56,10 @@ services:
 
   backend:
     container_name: overbookd_backend
-    user: ${MY_UID}:${MY_GID}
+    user: root:root
     build:
-      context: ../backend
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: backend/Dockerfile.dev
     restart: always
     platform: linux/x86_64
     ports:
@@ -70,7 +69,7 @@ services:
       - traefik-public
     volumes:
       - ./data/dev/images:/app/images
-      - ../backend:/overbookd/backend
+      # - ../backend:/overbookd/backend
     environment:
       DOMAIN: ${OVERBOOKD_DOMAIN}
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
@@ -122,12 +121,12 @@ services:
 
   frontend:
     container_name: overbookd_frontend
-    user: ${MY_UID}:${MY_GID}
+    user: root:root
     build:
-      context: ../frontend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ../frontend:/overbookd/frontend
+      context: ..
+      dockerfile: frontend/Dockerfile.dev
+    # volumes:
+    # - ../frontend:/overbookd/frontend
     environment:
       - BASE_URL
     restart: always
