@@ -24,7 +24,8 @@
       "QoL",
       "Secu",
       "Soft",
-      "User"
+      "User",
+      "Auth"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],
