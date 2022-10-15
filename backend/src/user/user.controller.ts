@@ -43,8 +43,6 @@ export class UserController {
     type: Array,
   })
   async getUsers(): Promise<Partial<User>[]> {
-    console.log('getUsers');
-    console.log(await this.userService.users({}));
     return await this.userService.users({});
   }
 
