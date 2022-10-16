@@ -10,7 +10,8 @@ workflow:
         BASE_URL: $BASE_URL_PREPROD
         USERNAME: $USERNAME_PREPROD
         PASSWORD: $PASSWORD_PREPROD
-
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      
 stages:
   - triage
   - clean-up-pipelines
@@ -21,7 +22,6 @@ stages:
   - unconfidentializer
 
 include:
-  - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
   - local: /.gitlab/ci/triage.gitlab-ci.yml
   - local: /.gitlab/ci/clean_up_pipelines.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml

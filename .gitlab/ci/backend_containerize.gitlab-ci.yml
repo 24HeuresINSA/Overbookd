@@ -29,7 +29,7 @@ merge_requests_containerize-backend:
   - name: docker:dind
     command: ["--experimental"]
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - backend/**/*
     - when: never
