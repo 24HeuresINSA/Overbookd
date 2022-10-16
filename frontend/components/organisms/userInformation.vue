@@ -369,6 +369,7 @@ export default {
       }
     },
     async saveUser() {
+      this.mUser.charisma = +this.mUser.charisma;
       await safeCall(
         this.$store,
         userRepo.updateUser(this, this.mUser.id, this.mUser),

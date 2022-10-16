@@ -543,31 +543,28 @@ export default {
         this.selectedUser.charisma = 0;
       }
 
-      if (!this.selectedUser.charismaHistory) {
-        this.selectedUser.charismaHistory = [];
-      }
+      // if (!this.selectedUser.charismaHistory) {
+      //   this.selectedUser.charismaHistory = [];
+      // }
       this.newCharisma.amount =
         (isExpense ? "-" : "+") + this.newCharisma.amount;
-      this.selectedUser.charismaHistory.unshift(this.newCharisma);
+      // this.selectedUser.charismaHistory.unshift(this.newCharisma);
 
       this.selectedUser.charisma =
         +this.selectedUser.charisma + +this.newCharisma.amount;
 
       // update notifications
-      if (!this.selectedUser.notifications) {
-        this.selectedUser.notifications = [];
-      }
-      this.selectedUser.notifications.unshift({
-        date: new Date(),
-        team: "bureau",
-        message: `tu as reçu ${this.newCharisma.amount} points de charisme pour ${this.newCharisma.reason}`,
-        type: "charisma",
-      });
+      // if (!this.selectedUser.notifications) {
+      //   this.selectedUser.notifications = [];
+      // }
+      // this.selectedUser.notifications.unshift({
+      //   date: new Date(),
+      //   team: "bureau",
+      //   message: `tu as reçu ${this.newCharisma.amount} points de charisme pour ${this.newCharisma.reason}`,
+      //   type: "charisma",
+      // });
 
-      await this.$axios.put(
-        "/user/" + this.selectedUser._id,
-        this.selectedUser
-      );
+      await this.$axios.put("/user/" + this.selectedUser.id, this.selectedUser);
       this.isSnackbarOpen = true;
       this.isCharismaDialogOpen = false;
     },
