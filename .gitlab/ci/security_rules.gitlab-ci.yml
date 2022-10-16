@@ -3,6 +3,11 @@ license_scanning:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - when: never
 
+eslint-sast:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - when: never
+
 nodejs-scan-sast:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
