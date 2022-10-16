@@ -200,7 +200,7 @@
                   v-if="hasRole(['admin', 'bureau', 'humain'])"
                   icon
                   small
-                  @click="openCalendar(item._id)"
+                  @click="openCalendar(item.id)"
                 >
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
