@@ -2,8 +2,6 @@ license_scanning:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - when: never
-  variables:
-    LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=frontend backend"
 
 nodejs-scan-sast:
   rules:
