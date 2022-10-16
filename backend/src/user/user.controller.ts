@@ -18,7 +18,6 @@ import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
 
-@ApiBearerAuth()
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -34,6 +33,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Get()
   @ApiResponse({
@@ -46,6 +46,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('me')
   @ApiResponse({
     status: 200,
@@ -58,6 +59,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('admin')
   @Get('all/cp')
   @ApiResponse({
@@ -88,6 +90,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Get(':id')
   @ApiResponse({
@@ -99,6 +102,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Post('availabilities')
   @ApiBody({
@@ -112,6 +116,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Put(':id')
   @ApiBody({

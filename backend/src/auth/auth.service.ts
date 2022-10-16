@@ -1,8 +1,12 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UserPasswordOnly, UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -14,17 +18,20 @@ export class AuthService {
 
   private readonly logger = new Logger(AuthService.name);
   async validateUser(email: string, pass: string): Promise<any> {
-    const whereEmailIsUnique = Prisma.validator<Prisma.UserWhereUniqueInput>()({
+    const findUserCondition = {
       email: email,
-    });
-    const user = await this.userService.user(whereEmailIsUnique);
-    if (!user) {
-      throw new NotFoundException("L'email n'est pas valide");
-    } else if (await this.hashingUtilsService.compare(pass, user.password)) {
-      const { password, ...result } = user;
-      return result;
+    };
+    const user = await this.userService.getUserPassword(findUserCondition);
+    if (await this.isInvalidUser(user, pass)) {
+      throw new UnauthorizedException('Email ou mot de passe invalid');
     }
-    return null;
+    return this.userService.user(findUserCondition);
+  }
+
+  private async isInvalidUser(user: UserPasswordOnly | null, pass: string) {
+    return (
+      !user || !(await this.hashingUtilsService.compare(pass, user.password))
+    );
   }
 
   async login(user: any) {
