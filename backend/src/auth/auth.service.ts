@@ -1,12 +1,14 @@
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { UserPasswordOnly, UserService } from '../user/user.service';
+  UserPasswordOnly,
+  UserService,
+  UserWithTeam,
+} from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
+import { User } from '@prisma/client';
+
+export type UserCredentials = Pick<User, 'email' | 'password'>;
 
 @Injectable()
 export class AuthService {
@@ -16,13 +18,12 @@ export class AuthService {
     private hashingUtilsService: HashingUtilsService,
   ) {}
 
-  private readonly logger = new Logger(AuthService.name);
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<UserWithTeam> {
     const findUserCondition = {
-      email: email,
+      email,
     };
     const user = await this.userService.getUserPassword(findUserCondition);
-    if (await this.isInvalidUser(user, pass)) {
+    if (await this.isInvalidUser(user, password)) {
       throw new UnauthorizedException('Email ou mot de passe invalid');
     }
     return this.userService.user(findUserCondition);
@@ -34,11 +35,14 @@ export class AuthService {
     );
   }
 
-  async login(user: any) {
-    const payload = { username: user.email, userId: user.id, role: user.team };
-    this.logger.debug(payload);
+  async login({
+    email,
+    password,
+  }: UserCredentials): Promise<{ access_token: string }> {
+    const { id, team: role } = await this.validateUser(email, password);
+    const jwtPayload = { id, email, role };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(jwtPayload),
     };
   }
 }

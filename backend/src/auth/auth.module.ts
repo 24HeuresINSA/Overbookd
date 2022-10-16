@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
@@ -17,13 +16,12 @@ import { PrismaService } from 'src/prisma.service';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '86400s' },
+      signOptions: { expiresIn: '24h' },
     }),
     HashingUtilsModule,
   ],
   providers: [
     AuthService,
-    LocalStrategy,
     JwtStrategy,
     HashingUtilsService,
     UserService,

@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { Transaction } from '@prisma/client';
@@ -40,7 +41,9 @@ export class TransactionController {
     status: 200,
     description: 'Get a transaction by id',
   })
-  getTransactionById(@Param('id') id: number): Promise<Transaction | null> {
+  getTransactionById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Transaction | null> {
     return this.transactionService.getTransactionById(id);
   }
 
@@ -51,7 +54,9 @@ export class TransactionController {
     description: 'Get all transactions of a user',
     type: Array,
   })
-  getUserTransactions(@Param('id') id: number): Promise<Transaction[] | null> {
+  getUserTransactions(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Transaction[] | null> {
     return this.transactionService.getUserTransactions(id);
   }
 
