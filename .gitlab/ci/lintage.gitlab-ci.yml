@@ -43,5 +43,5 @@ lintage-backend:
     - npm install
     - npm run lint
     - git add .
-    - "git commit -m 'style(Front): ✍ Linted backend files' || true"
+    - "git commit -m 'style(Back): ✍ Linted backend files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
