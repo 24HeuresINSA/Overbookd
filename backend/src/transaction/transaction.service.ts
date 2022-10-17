@@ -34,9 +34,7 @@ export class TransactionService {
     return null;
   }
 
-  async addSgTransaction(transactions: Transaction[]): Promise<boolean> {
-    console.log(transactions);
-
+  async addSgTransaction(transactions: Transaction[]): Promise<Transaction[]> {
     transactions.forEach(async (transaction) => {
       this.isTransactionOK(transaction);
       //Check if user exists
@@ -61,7 +59,7 @@ export class TransactionService {
         this.prisma.transaction.create({ data: transaction }),
       ]);
     });
-    return true;
+    return transactions;
   }
 
   isTransactionOK(transaction: Transaction): void {

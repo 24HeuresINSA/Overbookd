@@ -346,7 +346,6 @@ export default {
           from: -1,
           to: -1,
         };
-
         switch (this.mode) {
           case "cask":
             transaction.from = user.id;

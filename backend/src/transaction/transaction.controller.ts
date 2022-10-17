@@ -72,7 +72,9 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Post('sg')
-  addSgTransaction(@Body() transactionData: Transaction[]): Promise<boolean> {
+  addSgTransaction(
+    @Body() transactionData: Transaction[],
+  ): Promise<Transaction[]> {
     return this.transactionService.addSgTransaction(transactionData);
   }
 
