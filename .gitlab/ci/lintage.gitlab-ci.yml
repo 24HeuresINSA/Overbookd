@@ -1,4 +1,5 @@
 .lintage:
+  interruptible: true
   image: node
   stage: lintage
   before_script:

@@ -24,6 +24,7 @@ containerize-frontend:
     - docker push $CI_REGISTRY_IMAGE/frontend:$TAG
 
 merge_requests_containerize-frontend:
+  interruptible: true
   image: docker
   services:
     - name: docker:dind
