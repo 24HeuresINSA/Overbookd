@@ -16,6 +16,7 @@ stages:
   - triage
   - clean-up-pipelines
   - test
+  - lintage
   - docker
   - docker-scan
   - configurator
@@ -34,3 +35,4 @@ include:
   - template: Security/Container-Scanning.gitlab-ci.yml
   - local: /.gitlab/ci/container_scan.gitlab-ci.yml
   - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
+  - local: /.gitlab/ci/lintage.gitlab-ci.yml

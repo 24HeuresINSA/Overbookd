@@ -1,0 +1,48 @@
+.lintage:
+  image: node
+  stage: lintage
+  before_script:
+    - eval $(ssh-agent -s)
+    - mkdir ~/.ssh/
+    - echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo "Host gitlab.com" >> ~/.ssh/config
+    - echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+    - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+    - git config user.email "dsi@24heures.org"
+    - git config user.name "24-bot"
+    - git remote remove ssh_origin || true  # Local repo state may be cached
+    - git remote add ssh_origin "git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git"
+    - git fetch --all
+    - git checkout -b $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME ssh_origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+
+lintage-frontend:
+  extends: .lintage
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - when: never
+  script:
+    - cd frontend
+    - npm install
+    - npm run lint
+    - git add .
+    - "git commit -m 'style(Front): ✍ Linted frontend files' || true"
+    - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
+
+lintage-backend:
+  extends: .lintage
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - backend/**/*
+    - when: never
+  stage: lintage
+  script:
+    - cd backend
+    - npm install
+    - npm run lint
+    - git add .
+    - "git commit -m 'style(Front): ✍ Linted backend files' || true"
+    - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
