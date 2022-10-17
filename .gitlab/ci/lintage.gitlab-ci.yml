@@ -38,7 +38,6 @@ lintage-backend:
       changes:
         - backend/**/*
     - when: never
-  stage: lintage
   script:
     - cd backend
     - npm install
