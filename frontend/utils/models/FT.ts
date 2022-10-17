@@ -49,3 +49,10 @@ export interface requirementTeam {
   team: string;
   amount: number;
 }
+
+export enum SmallTypes {
+  QUINCAILLERIE = "QUINCAILLERIE",
+  OUTILLAGE = "OUTILLAGE",
+  CONSUMABLE = "CONSUMABLE",
+  PROPRETE = "PROPRETE",
+}

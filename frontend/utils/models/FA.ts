@@ -45,3 +45,34 @@ export interface SecurityPass {
   licensePlate: string;
   timeslots: string[];
 }
+
+export enum EquipmentTypes {
+  BARS = "BARS",
+  BUREAUTIQUE = "BUREAUTIQUE",
+  BOIS = "BOIS",
+  CANAP = "CANAPE/FAUTEUIL",
+  CONSUMABLE = "CONSUMABLE",
+  CUISINE = "CUISINE",
+  DECO = "DECO",
+  FRIGO = "FRIGO",
+  LITERIE = "LITERIE",
+  MOBILIER = "MOBILIER",
+  PROPRETE = "PROPRETE",
+  SCENE = "SCENE",
+  SECU = "SECU",
+  SIGNA = "SIGNA",
+  OUTILLAGE = "OUTILLAGE",
+  TENTE = "TENTE",
+  AUTRE = "AUTRES MATOS",
+}
+
+export enum BarrieresTypes {
+  BARRIERE = "BARRIERE",
+}
+
+export enum ElecTypes {
+  ALIM = "ALIMENTATION ELECTRIQUE",
+  EAU = "EAU",
+  ECLAIRAGE = "ECLAIRAGE",
+  AUTRE = "AUTRES ELEC",
+}
