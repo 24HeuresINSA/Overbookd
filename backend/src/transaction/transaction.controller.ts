@@ -76,7 +76,7 @@ export class TransactionController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
-  @Post()
+  @Post('transfer')
   @ApiBody({
     description: 'Create a transaction',
     type: TransactionCreationDto,

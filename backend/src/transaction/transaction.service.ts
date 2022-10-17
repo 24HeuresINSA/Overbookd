@@ -30,8 +30,39 @@ export class TransactionService {
     data: Transaction,
     currentUser: any,
   ): Promise<Transaction> {
-    //TODO : rework this
-    return null;
+    this.isTransactionOK(data);
+    if (currentUser.userId !== data.from) {
+      throw new HttpException(
+        'You can only create transactions from your own account',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    //Check if user exists
+    const sender = await this.prisma.user.findUnique({
+      where: { id: Number(data.from) },
+    });
+    const receiver = await this.prisma.user.findUnique({
+      where: { id: Number(data.to) },
+    });
+    if (!sender || !receiver) {
+      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+    }
+    const senderBalance = sender.balance - data.amount;
+    const receiverBalance = receiver.balance + data.amount;
+    this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: Number(data.from) },
+        data: { balance: senderBalance },
+      }),
+      this.prisma.user.update({
+        where: { id: Number(data.to) },
+        data: { balance: receiverBalance },
+      }),
+      this.prisma.transaction.create({
+        data: data,
+      }),
+    ]);
+    return data;
   }
 
   async addSgTransaction(transactions: Transaction[]): Promise<Transaction[]> {
