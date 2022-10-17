@@ -90,10 +90,6 @@ interface Data {
   selectedTimeSpan: any;
 }
 
-declare interface Mymap<T = any> {
-  [key: string]: T;
-}
-
 export default Vue.extend({
   name: "Creneaux",
   data(): Data {
@@ -144,32 +140,6 @@ export default Vue.extend({
     async getAllTimeSpans() {
       const res = await safeCall(this.$store, TimeSpanRepo.getAll(this.$store));
       if (res) {
-        const helper = {} as Mymap;
-        const grouped = [...res.data].reduce((acc, cur) => {
-          const key =
-            cur.start.toString() +
-            "-" +
-            cur.end.toString() +
-            "-" +
-            cur.FTID.toString();
-          if (!helper[key]) {
-            helper[key] = {
-              start: cur.start,
-              end: cur.end,
-              FTID: cur.FTID,
-              required: [],
-              assigned: [],
-            };
-            acc.push(helper[key]);
-          }
-          if (!helper[key].required.includes(cur.required)) {
-            helper[key].required.push(cur.required);
-          }
-          if (!helper[key].assigned.includes(cur.assigned)) {
-            helper[key].assigned.push(cur.assigned);
-          }
-          return acc;
-        }, []);
         this.timeSpans = res.data;
       }
     },

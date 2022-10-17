@@ -2,7 +2,6 @@ import jwt_decode from "jwt-decode";
 
 export default async function (context) {
   if (context.store.state?.user?.me?.email === undefined) {
-    const userID = getUserID(context);
     await context.store.$accessor.user.fetchUser();
   }
 }

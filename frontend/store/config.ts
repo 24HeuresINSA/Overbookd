@@ -95,7 +95,7 @@ export const actions = actionTree(
   { state },
   {
     async setConfig({ commit }, data: { key: string; value: any }) {
-      const resp = await safeCall(this, configRepo.setConfig(this, data));
+      await safeCall(this, configRepo.setConfig(this, data));
       commit("SET_ONE_CONFIG", data);
     },
   }

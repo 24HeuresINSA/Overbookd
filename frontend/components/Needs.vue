@@ -56,7 +56,10 @@ export default {
   components: {
     NeedsCard,
   },
-  props: ["name", "dataset"],
+  props: {
+    name: { type: String, required: true },
+    dataset: { type: Array, required: true },
+  },
   data() {
     return {
       historyFA: {},

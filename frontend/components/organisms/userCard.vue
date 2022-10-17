@@ -76,14 +76,16 @@ export default Vue.extend({
     };
   },
 
-  mounted() {
-    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
-  },
   computed: {
     ...mapState<any, TMapState<UserState>>("user", {
       me: (state: UserState) => state.me,
     }),
   },
+
+  mounted() {
+    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
+  },
+
   methods: {
     getPPUrl() {
       return process.env.NODE_ENV === "development"

@@ -26,7 +26,7 @@
     <div>
       <div class="d-flex">
         <div style="width: 5rem"></div>
-        <div v-for="day in days" style="width: 12rem">
+        <div v-for="day in days" :key="day.dayName" style="width: 12rem">
           {{ day.dayName }}
         </div>
       </div>
@@ -44,6 +44,7 @@
         </div>
         <div
           v-for="day in days"
+          :key="day.dayName"
           :style="`width: 12rem; white-space:nowrap; color: ${getColor(
             day.data[i]
           )};`"
@@ -65,7 +66,7 @@ import { safeCall } from "../utils/api/calls";
 import { RepoFactory } from "../repositories/repoFactory";
 
 export default {
-  name: "organeeds.vue",
+  name: "OrgaNeeds",
   data() {
     return {
       datepicker: [19, 20, 21, 22],

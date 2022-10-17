@@ -269,7 +269,7 @@ export default Vue.extend({
   computed: {
     filteredFTs(): FT[] {
       let res = this.FTs;
-      const { FTs, filters } = this;
+      const { filters } = this;
       const { search, teams, myFTs, isDeleted, status } = filters;
 
       if (isDeleted) {

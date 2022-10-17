@@ -487,7 +487,7 @@ export default {
             validStatuses,
             "Aucun équipement",
             dS,
-            dS
+            dE
           );
         });
       } else {

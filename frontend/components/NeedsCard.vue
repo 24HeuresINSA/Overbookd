@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  props: ["status", "count"],
+  props: { status: { type: String, required: true } },
   data() {
     return {
       possibleStatus: {
