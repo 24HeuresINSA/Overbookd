@@ -71,7 +71,6 @@ export class TransactionController {
     description: 'Get a transaction by id',
   })
   getTransactionById(@Param('id') id: number): Promise<Transaction | null> {
-    console.log('Hello');
     return this.transactionService.getTransactionById(id);
   }
 
