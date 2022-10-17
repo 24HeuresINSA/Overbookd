@@ -1,8 +1,14 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  UserPasswordOnly,
+  UserService,
+  UserWithTeam,
+} from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
-import { Prisma } from '@prisma/client';
+import { User } from '@prisma/client';
+
+export type UserCredentials = Pick<User, 'email' | 'password'>;
 
 @Injectable()
 export class AuthService {
@@ -12,26 +18,31 @@ export class AuthService {
     private hashingUtilsService: HashingUtilsService,
   ) {}
 
-  private readonly logger = new Logger(AuthService.name);
-  async validateUser(email: string, pass: string): Promise<any> {
-    const whereEmailIsUnique = Prisma.validator<Prisma.UserWhereUniqueInput>()({
-      email: email,
-    });
-    const user = await this.userService.user(whereEmailIsUnique);
-    if (!user) {
-      throw new NotFoundException("L'email n'est pas valide");
-    } else if (await this.hashingUtilsService.compare(pass, user.password)) {
-      const { password, ...result } = user;
-      return result;
+  async validateUser(email: string, password: string): Promise<UserWithTeam> {
+    const findUserCondition = {
+      email,
+    };
+    const user = await this.userService.getUserPassword(findUserCondition);
+    if (await this.isInvalidUser(user, password)) {
+      throw new UnauthorizedException('Email ou mot de passe invalid');
     }
-    return null;
+    return this.userService.user(findUserCondition);
   }
 
-  async login(user: any) {
-    const payload = { username: user.email, userId: user.id, role: user.team };
-    this.logger.debug(payload);
+  private async isInvalidUser(user: UserPasswordOnly | null, pass: string) {
+    return (
+      !user || !(await this.hashingUtilsService.compare(pass, user.password))
+    );
+  }
+
+  async login({
+    email,
+    password,
+  }: UserCredentials): Promise<{ access_token: string }> {
+    const { id, team: role } = await this.validateUser(email, password);
+    const jwtPayload = { id, email, role };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(jwtPayload),
     };
   }
 }

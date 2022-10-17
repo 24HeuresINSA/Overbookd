@@ -37,7 +37,7 @@
         </v-row>
         <v-row>
           <v-text-field
-            v-model="credentials.username"
+            v-model="credentials.email"
             label="email"
             type="text"
             required
@@ -100,7 +100,6 @@
 
 <script>
 import qs from "qs";
-import jwt_decode from "jwt-decode";
 
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
@@ -158,8 +157,8 @@ export default {
 
   data: () => ({
     credentials: {
-      username: undefined,
-      password: undefined,
+      email: "",
+      password: "",
     },
     snackbar: false,
     feedbackMessage: undefined,

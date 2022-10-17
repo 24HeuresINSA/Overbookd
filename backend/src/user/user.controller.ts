@@ -8,7 +8,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService, UserWithoutPassword } from './user.service';
 import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
@@ -18,7 +18,6 @@ import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
 
-@ApiBearerAuth()
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -29,11 +28,12 @@ export class UserController {
     description: 'Add new user',
     type: UserCreationDto,
   })
-  createUser(@Body() userData: User): Promise<User> {
+  createUser(@Body() userData: User): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Get()
   @ApiResponse({
@@ -46,20 +46,20 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('me')
   @ApiResponse({
     status: 200,
     description: 'Get a current user',
   })
-  async getCurrentUser(@Request() req): Promise<User> {
+  async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
     const id = req.user.userId;
     const user = this.userService.user({ id });
-    //remove password
-    delete (await user).password;
     return user;
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('admin')
   @Get('all/cp')
   @ApiResponse({
@@ -120,17 +120,19 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'Get a user by id',
   })
-  getUserById(@Param('id') id: number): Promise<User> {
+  getUserById(@Param('id') id: number): Promise<UserWithoutPassword> {
     return this.userService.user({ id: Number(id) });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Post('availabilities')
   @ApiBody({
@@ -144,6 +146,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles('hard')
   @Put(':id')
   @ApiBody({
@@ -154,7 +157,7 @@ export class UserController {
     @Param('id') id: number,
     @Body() userData: Partial<User>,
     @Request() req: Express.Request,
-  ): Promise<User> {
+  ): Promise<UserWithoutPassword> {
     return this.userService.updateUser(
       {
         where: { id: Number(id) },
