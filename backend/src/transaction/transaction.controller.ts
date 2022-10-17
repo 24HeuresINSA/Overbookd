@@ -35,24 +35,43 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  @ApiResponse({
-    status: 200,
-    description: 'Get a transaction by id',
-  })
-  getTransactionById(@Param('id') id: number): Promise<Transaction | null> {
-    return this.transactionService.getTransactionById(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
+  @Roles('hard')
   @Get('user/:id')
   @ApiResponse({
     status: 200,
     description: 'Get all transactions of a user',
     type: Array,
   })
-  getUserTransactions(@Param('id') id: number): Promise<Transaction[] | null> {
+  getUserTransactionsID(
+    @Param('id') id: number,
+  ): Promise<Transaction[] | null> {
     return this.transactionService.getUserTransactions(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles('hard')
+  @Get('user')
+  @ApiResponse({
+    status: 200,
+    description: 'Get all transactions of self',
+    type: Array,
+  })
+  getUserTransactions(
+    @Request() req: Express.Request,
+  ): Promise<Transaction[] | null> {
+    const id = (req.user as any).userId; //C'est moche mais c'est la faute de NestJS
+    return this.transactionService.getUserTransactions(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Get a transaction by id',
+  })
+  getTransactionById(@Param('id') id: number): Promise<Transaction | null> {
+    console.log('Hello');
+    return this.transactionService.getTransactionById(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
