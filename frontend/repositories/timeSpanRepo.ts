@@ -26,7 +26,11 @@ export default {
   getUserAssignedToSameTimespan(context: Context, timespanId: string) {
     return context.$axios.get(`${resource}/user/affected/${timespanId}`);
   },
-  getAvailableUserForTimeSpan(context: Context, timespanId: string, bypass: boolean = false) {
+  getAvailableUserForTimeSpan(
+    context: Context,
+    timespanId: string,
+    bypass: boolean = false
+  ) {
     return context.$axios.get(
       `${resource}/availableUserByTimespan/${timespanId}?bypass=${bypass}`
     );
@@ -42,5 +46,5 @@ export default {
   },
   deleteTimespan(context: Context, timespanId: string) {
     return context.$axios.delete(`${resource}/${timespanId}`);
-  }
+  },
 };

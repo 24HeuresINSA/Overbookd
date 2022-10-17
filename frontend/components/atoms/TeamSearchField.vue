@@ -37,6 +37,11 @@ export default Vue.extend({
       teams: (this as any).getConfig("teams"),
     };
   },
+  computed: {
+    selectedTeam() {
+      return this.$accessor.assignment.filters.FT.team;
+    },
+  },
 
   methods: {
     sendEvent(event: any): any {
@@ -49,11 +54,6 @@ export default Vue.extend({
 
     getConfig(key: string): any {
       return this.$accessor.config.getConfig(key);
-    },
-  },
-  computed: {
-    selectedTeam() {
-      return this.$accessor.assignment.filters.FT.team;
     },
   },
 });

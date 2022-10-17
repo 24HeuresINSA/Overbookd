@@ -3,25 +3,24 @@
     <div>
       <h1>Rapport des besoins en orgas</h1>
       <p>
-        Orgas disponibles | Orgas disponibles validés - Orgas nécessaires toute FT | Orgas nécessaires FT
-        validées (Orgas affectés)
+        Orgas disponibles | Orgas disponibles validés - Orgas nécessaires toute
+        FT | Orgas nécessaires FT validées (Orgas affectés)
       </p>
     </div>
     <div class="d-flex">
       <v-btn-toggle
-          v-model="datepicker"
-          class="justify-center"
-          multiple
-          dense
-          @change="loadDay"
+        v-model="datepicker"
+        class="justify-center"
+        multiple
+        dense
+        @change="loadDay"
       >
         <v-btn
-            v-for="i in Array.from(Array(31).keys())"
-            :key="i"
-            class="flex-grow-1"
-        >{{ i + 1 }}
-        </v-btn
-        >
+          v-for="i in Array.from(Array(31).keys())"
+          :key="i"
+          class="flex-grow-1"
+          >{{ i + 1 }}
+        </v-btn>
       </v-btn-toggle>
     </div>
     <div>
@@ -35,19 +34,23 @@
         <div style="width: 5rem">
           {{
             new Date(i * 15 * 60 * 1000 - 60 * 60 * 1000).toLocaleTimeString(
-                "fr-FR",
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }
+              "fr-FR",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
             )
           }}
         </div>
         <div
-            v-for="day in days"
-            :style="`width: 12rem; white-space:nowrap; color: ${getColor(day.data[i])};`"
+          v-for="day in days"
+          :style="`width: 12rem; white-space:nowrap; color: ${getColor(
+            day.data[i]
+          )};`"
         >
-          {{ day.data[i].availableCount }} | {{ day.data[i].availableValidCount }} - {{ day.data[i].requireCount }} |
+          {{ day.data[i].availableCount }} |
+          {{ day.data[i].availableValidCount }} -
+          {{ day.data[i].requireCount }} |
           {{ day.data[i].requireValidatedCount }} ({{
             day.data[i].affectedCount
           }})
@@ -58,8 +61,8 @@
 </template>
 
 <script>
-import {safeCall} from "../utils/api/calls";
-import {RepoFactory} from "../repositories/repoFactory";
+import { safeCall } from "../utils/api/calls";
+import { RepoFactory } from "../repositories/repoFactory";
 
 export default {
   name: "organeeds.vue",
@@ -78,19 +81,19 @@ export default {
     async loadDay() {
       for (let i = 0; i < this.datepicker.length; i++) {
         if (
-            !this.displayed.includes(this.datepicker[i]) &&
-            !this.loading.includes(this.datepicker[i])
+          !this.displayed.includes(this.datepicker[i]) &&
+          !this.loading.includes(this.datepicker[i])
         ) {
           // load the day
           this.loading.push(this.datepicker[i]);
           const timestamp = new Date(
-              new Date().getFullYear(),
-              4,
-              this.datepicker[i] + 1
+            new Date().getFullYear(),
+            4,
+            this.datepicker[i] + 1
           ).getTime();
           await safeCall(
-              this.$store,
-              RepoFactory.timeslotRepo.getOrgaNeeds(this, timestamp)
+            this.$store,
+            RepoFactory.timeslotRepo.getOrgaNeeds(this, timestamp)
           ).then((res) => {
             if (res.data.length > 0) {
               // add it to the displayed

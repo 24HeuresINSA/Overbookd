@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import {safeCall} from "../utils/api/calls";
-import {RepoFactory} from "../repositories/repoFactory";
+import { safeCall } from "../utils/api/calls";
+import { RepoFactory } from "../repositories/repoFactory";
 import Needs from "../components/Needs";
 
 export default {
