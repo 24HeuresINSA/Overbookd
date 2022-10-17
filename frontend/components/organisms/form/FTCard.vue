@@ -43,9 +43,6 @@
 </template>
 
 <script>
-import { RepoFactory } from "../../../repositories/repoFactory";
-import { safeCall } from "../../../utils/api/calls";
-
 export default {
   name: "FTCard",
 

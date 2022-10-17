@@ -476,7 +476,6 @@ export default {
       this.required._id = uuidv4();
       this.required.amount = +this.required.amount;
       this.required.type = "user";
-      let mTimeframe = { ...this.selectedTimeframe };
       this.$accessor.FT.addRequirement({
         timeframeIndex: this.selectedTimeframeIndex,
         requirement: this.required,

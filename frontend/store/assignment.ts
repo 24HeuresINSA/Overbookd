@@ -498,8 +498,7 @@ export const actions = actionTree(
             completion: getFTCompletion(
               [...state.timespans, ...state.assignedTimespans],
               ts,
-              timespanCompletion.data,
-              ft.general?.name || ""
+              timespanCompletion.data
             ),
           }));
           //sort tosend by start date
@@ -706,8 +705,7 @@ function getFTName(
 function getFTCompletion(
   allTimeSpans: TimeSpan[],
   timespan: TimeSpan,
-  timespanCompletion: { [key: string]: { total: number; assigned: number } },
-  name: string
+  timespanCompletion: { [key: string]: { total: number; assigned: number } }
 ) {
   const ret: any = { assigned: 0, total: 0 };
   const filter = allTimeSpans.filter(

@@ -327,7 +327,7 @@ export const actions = actionTree(
     addComment: function ({ commit }, comment: FormComment) {
       commit("ADD_COMMENT", comment);
     },
-    addNewFT: async function ({ commit, state, dispatch }, name) {
+    addNewFT: async function ({ commit, state }, name) {
       const repo = RepoFactory;
       const FT = {
         FA: state.mFA.count,

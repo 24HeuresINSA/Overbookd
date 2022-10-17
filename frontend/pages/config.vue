@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { getConfig, hasRole } from "../common/role";
+import { getConfig } from "../common/role";
 
 export default {
   name: "Config",

@@ -150,7 +150,7 @@
 import Vue from "vue";
 import TimeslotDialog from "~/components/atoms/TimeslotDialog.vue";
 import ConfirmDialog from "~/components/atoms/ConfirmDialog.vue";
-import {Timeslot} from "utils/models/repo";
+import { Timeslot } from "utils/models/repo";
 import OverDatePicker from "../atoms/OverDatePicker.vue";
 import OverTimePicker from "../atoms/OverTimePicker.vue";
 

@@ -174,8 +174,8 @@
 
 <script>
 import Fuse from "fuse.js";
-import {safeCall} from "../../utils/api/calls";
-import {RepoFactory} from "../../repositories/repoFactory";
+import { safeCall } from "../../utils/api/calls";
+import { RepoFactory } from "../../repositories/repoFactory";
 import ValidatorsIcons from "../../components/atoms/validators-icons";
 
 export default {
@@ -487,7 +487,7 @@ export default {
             validStatuses,
             "Aucun équipement",
             dS,
-            dS
+            dE
           );
         });
       } else {

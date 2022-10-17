@@ -13,29 +13,29 @@
     <template #[`item.icon`]="item">
       {{ item.item.type === "friendRequest" ? "👨‍👩‍👧" : "📣" }}
     </template>
-    <template #[`item.action`]="notification">
-      <div v-if="notification.item.type === 'friendRequest'">
-        <v-btn icon @click="acceptFriendRequest(notification.item)">
+    <template #[`item.action`]="notificationAction">
+      <div v-if="notificationAction.item.type === 'friendRequest'">
+        <v-btn icon @click="acceptFriendRequest(notificationAction.item)">
           <v-icon>mdi-account-check</v-icon>
         </v-btn>
-        <v-btn icon @click="refuseFriendRequest(notification.item)">
+        <v-btn icon @click="refuseFriendRequest(notificationAction.item)">
           <v-icon>mdi-account-cancel</v-icon>
         </v-btn>
       </div>
-      <div v-else-if="notification.item.type === 'broadcast'">
+      <div v-else-if="notificationAction.item.type === 'broadcast'">
         <v-btn
-          v-if="notification.item.link"
+          v-if="notificationAction.item.link"
           icon
-          @click="openLink(notification.item.link)"
+          @click="openLink(notificationAction.item.link)"
         >
           <v-icon>mdi-link</v-icon>
         </v-btn>
-        <v-btn icon @click="deleteNotification(notification.item.date)"
+        <v-btn icon @click="deleteNotification(notificationAction.item.date)"
           ><v-icon>mdi-close-thick</v-icon></v-btn
         >
       </div>
       <div v-else>
-        <v-btn icon @click="deleteNotification(notification.item.date)"
+        <v-btn icon @click="deleteNotification(notificationAction.item.date)"
           ><v-icon>mdi-close-thick</v-icon></v-btn
         >
       </div>

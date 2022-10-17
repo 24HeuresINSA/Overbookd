@@ -46,10 +46,7 @@
           @click="deleteAvailability(item)"
           >Supprimer</v-btn
         >
-        <v-btn
-          v-else
-          color="green"
-          @click="addAvailabilityToUser(item)"
+        <v-btn v-else color="green" @click="addAvailabilityToUser(item)"
           >Ajouter</v-btn
         >
       </template>
@@ -207,7 +204,7 @@ export default Vue.extend({
           this.isSnackbarOpen = true;
         }
       });
-    }
+    },
   },
 });
 </script>

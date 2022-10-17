@@ -53,7 +53,7 @@
 <script lang="ts">
 import LogisticsTable from "./LogisticsTable.vue";
 import LogisticsSelector from "./LogisticsSelector.vue";
-import Vue, { PropType } from "vue";
+import Vue from "vue";
 
 /**
  * @displayName Logistics Card
