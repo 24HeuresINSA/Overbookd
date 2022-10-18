@@ -129,14 +129,23 @@
 </template>
 
 <script>
-import { forEach } from "lodash";
 import RichEditor from "~/components/organisms/richEditor";
 import userRepo from "~/repositories/userRepo";
 
 export default {
   name: "OverField",
   components: { RichEditor },
-  props: ["field", "data", "disabled"],
+  props: {
+    field: {
+      type: Object,
+      default: () => undefined,
+    },
+    data: {
+      type: Object,
+      default: () => undefined,
+    },
+    disabled: Boolean,
+  },
   data() {
     return {
       activePicker: null,

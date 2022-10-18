@@ -1,6 +1,6 @@
 <template>
   <v-data-table :headers="headers" :items="equipments" dense>
-    <template #[`item.action`]="{ item, index }">
+    <template #[`item.action`]="{ item }">
       <div style="display: flex; align-items: center">
         <v-text-field
           style="max-width: 200px"

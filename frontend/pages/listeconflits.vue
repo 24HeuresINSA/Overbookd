@@ -19,10 +19,18 @@
         </thead>
         <tbody>
           <tr
-            v-for="conflit in conflictsbyUser"
-            :key="conflit.id"
-            v-html="computeConflictRow(conflit)"
-          ></tr>
+            v-for="conflict in conflictsbyUser"
+            :key="`${conflict.user.id}-${conflict.ft1}-${conflict.ft2}`"
+          >
+            <td>{{ conflict.user.firstname }} {{ conflict.user.lastname }}</td>
+            <td>{{ conflictTypeText(conflict.type) }}</td>
+            <td>
+              <a :href="`/ft/${conflict.ft1}`">{{ conflict.ft1 }}</a>
+            </td>
+            <td>
+              <a :href="`/ft/${conflict.ft2}`">{{ conflict.ft2 }}</a>
+            </td>
+          </tr>
         </tbody>
       </template>
     </v-simple-table>
@@ -31,7 +39,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {Conflict} from "~/utils/models/conflicts";
+import { Conflict } from "~/utils/models/conflicts";
 import sanitizeHtml from "sanitize-html";
 
 declare type ConflictFT = Conflict & {
@@ -41,8 +49,8 @@ declare type ConflictFT = Conflict & {
 
 export default Vue.extend({
   computed: {
-    conflictsbyUser(): Conflict[] {
-      return this.$accessor.conflict.sortedByUser();
+    conflictsbyUser(): ConflictFT[] {
+      return this.$accessor.conflict.sortedByUser() as unknown as ConflictFT[];
     },
     nbConflits(): number {
       return this.$accessor.conflict.conflicts.length;
@@ -60,22 +68,6 @@ export default Vue.extend({
   methods: {
     async initStore() {
       await this.$accessor.conflict.fetchAll();
-    },
-    computeConflictRow(conflit: ConflictFT): string {
-      return `
-        <td>${
-          sanitizeHtml(conflit.user.firstname) +
-          " " +
-          sanitizeHtml(conflit.user.lastname)
-        }</td>
-        <td>${this.conflictTypeText(conflit.type)}</td>
-        <td>
-          <a href="/ft/${conflit.ft1}">${conflit.ft1}</a>
-        </td>
-        <td>
-          <a href="/ft/${conflit.ft2}">${conflit.ft2}</a>
-        </td>
-      `;
     },
     conflictTypeText(type: string) {
       switch (type) {

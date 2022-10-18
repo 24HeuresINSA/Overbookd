@@ -77,14 +77,15 @@ export default {
         events = [];
         let multipleSolidTask = this.$accessor.assignment.multipleSolidTask;
         if (multipleSolidTask.length > 0) {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           if (new Date(this.centralDay) < multipleSolidTask[0].start) {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
             this.centralDay = multipleSolidTask[0].start;
           } else {
             if (
               new Date(this.centralDay) >
               multipleSolidTask[multipleSolidTask.length - 1].end
             ) {
+              // eslint-disable-next-line vue/no-side-effects-in-computed-properties
               this.centralDay =
                 multipleSolidTask[multipleSolidTask.length - 1].end;
             }

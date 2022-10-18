@@ -99,7 +99,10 @@ import { Snack } from "~/utils/models/snack";
 export default Vue.extend({
   name: "EquipmentProposalDialog",
   props: {
-    equipment: Object,
+    equipment: {
+      type: Object,
+      default: () => undefined,
+    },
     isNewEquipment: Boolean,
   },
   data(): any {

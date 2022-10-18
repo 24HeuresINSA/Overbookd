@@ -48,7 +48,10 @@
         <v-divider></v-divider>
         <div class="content">
           <UsersList :users="filteredUsers" class="userList"></UsersList>
-          <p>Nombre de personnes dans la liste : <b>{{ filteredUsers.length }}</b></p>
+          <p>
+            Nombre de personnes dans la liste :
+            <b>{{ filteredUsers.length }}</b>
+          </p>
           <FriendsDisplay class="friendsDisplay" />
           <v-switch
             label="Bypass les roles (TACHE-ORGA ONLY)"
@@ -81,10 +84,13 @@ export default {
 
   computed: {
     filteredUsers() {
-      const showToValidate = this.$accessor.assignment.filters.user.showToValidate;
+      const showToValidate =
+        this.$accessor.assignment.filters.user.showToValidate;
       return this.$accessor.assignment.filteredUsers.filter(
-        
-        (user) => (showToValidate) || (user.team.includes("hard") || user.team.includes("soft"))
+        (user) =>
+          showToValidate ||
+          user.team.includes("hard") ||
+          user.team.includes("soft")
       );
     },
   },

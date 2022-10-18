@@ -305,7 +305,7 @@ export default {
     },
     hasRole(roles) {
       return this.$accessor.user.hasRole(roles);
-    }
+    },
   },
 };
 </script>

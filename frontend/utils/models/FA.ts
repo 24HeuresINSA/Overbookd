@@ -1,4 +1,4 @@
-import {FT} from "~/utils/models/FT";
+import { FT } from "~/utils/models/FT";
 
 export interface FA {
   _id?: string;

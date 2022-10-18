@@ -18,7 +18,17 @@ import OverField from "./overField";
 export default {
   name: "OverForm",
   components: { OverField },
-  props: ["fields", "data", "disabled"],
+  props: {
+    fields: {
+      type: Array,
+      default: () => undefined,
+    },
+    data: {
+      type: Object,
+      default: () => undefined,
+    },
+    disabled: Boolean,
+  },
 
   data() {
     return {

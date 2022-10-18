@@ -100,7 +100,7 @@ export const actions = actionTree(
         commit("SET_USERNAMES", res.data);
       }
     },
-    async getUsername({ dispatch, commit, state }, userID) {
+    async getUsername({ dispatch, state }, userID) {
       if (state.usernames.length === 0) {
         await dispatch("fetchUsernames");
       }
@@ -142,7 +142,7 @@ export const actions = actionTree(
     },
 
     async removeAvailability(
-      { commit },
+      _,
       payload: { userID: string; timeslotID: string }
     ) {
       const res = await safeCall(
@@ -155,7 +155,7 @@ export const actions = actionTree(
       return false;
     },
     async addAvailabilityToUser(
-      { commit },
+      _,
       payload: { userID: string; timeslotID: string }
     ) {
       const res = await safeCall(

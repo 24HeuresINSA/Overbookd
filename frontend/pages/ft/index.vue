@@ -166,17 +166,17 @@
 </template>
 
 <script lang="ts">
-import {safeCall} from "~/utils/api/calls";
+import { safeCall } from "~/utils/api/calls";
 import ftRepo from "../../repositories/ftRepo";
-import {Header} from "~/utils/models/Data";
+import { Header } from "~/utils/models/Data";
 import Vue from "vue";
-import {FT} from "~/utils/models/FT";
+import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
 import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
 import userRepo from "~/repositories/userRepo";
 import faRepo from "~/repositories/faRepo";
-import {SnackNotif} from "~/utils/models/store";
+import { SnackNotif } from "~/utils/models/store";
 
 interface Data {
   color: { [key: string]: string };
@@ -259,7 +259,8 @@ export default Vue.extend({
         serverError: { type: "error", message: "erreur serveur" },
         deleteError: {
           type: "error",
-          message: "La FT ne peut pas etre suprimée si elle est validé ou soumise",
+          message:
+            "La FT ne peut pas etre suprimée si elle est validé ou soumise",
         },
       },
     };
@@ -268,7 +269,7 @@ export default Vue.extend({
   computed: {
     filteredFTs(): FT[] {
       let res = this.FTs;
-      const { FTs, filters } = this;
+      const { filters } = this;
       const { search, teams, myFTs, isDeleted, status } = filters;
 
       if (isDeleted) {
