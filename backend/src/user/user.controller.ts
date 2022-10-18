@@ -99,17 +99,6 @@ export class UserController {
   })
   async getAllUsernames(): Promise<Username[]> {
     const users = await this.userService.users({
-      where: {
-        team: {
-          some: {
-            team: {
-              name: {
-                in: ['hard', 'vieux'],
-              },
-            },
-          },
-        },
-      },
       select: {
         firstname: true,
         lastname: true,
