@@ -28,10 +28,10 @@ export class TransactionService {
   /**      **/
   async createTransaction(
     data: Transaction,
-    currentUser: any,
+    userId: number,
   ): Promise<Transaction> {
     this.isTransactionOK(data);
-    if (currentUser.userId !== data.from) {
+    if (userId !== data.from) {
       throw new HttpException(
         'You can only create transactions from your own account',
         HttpStatus.BAD_REQUEST,

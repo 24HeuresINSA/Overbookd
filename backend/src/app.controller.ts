@@ -10,6 +10,27 @@ import {
 import { LoginDto } from './auth/dto/login.dto';
 import { UserAccess } from './auth/entities/userAccess.entity';
 
+export type UserCredentials = {
+  email: string;
+  password: string;
+};
+
+export type Role = 'admin' | 'hard';
+
+export type JWTPayload = {
+  email: string;
+  userId: number;
+  role: Role[];
+};
+
+export type UserAcces = {
+  accessToken: string;
+};
+
+export type RequestWithUserPayload = Request & {
+  user: JWTPayload;
+};
+
 @Controller()
 export class AppController {
   constructor(
