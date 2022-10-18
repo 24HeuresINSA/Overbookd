@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Transaction } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -33,9 +33,8 @@ export class TransactionService {
   ): Promise<Transaction> {
     this.isTransactionOK(data);
     if (userId !== data.from) {
-      throw new HttpException(
-        'You can only create transactions from your own account',
-        HttpStatus.BAD_REQUEST,
+      throw new BadRequestException(
+        'You can only send money from your account',
       );
     }
     //Check if user exists
@@ -101,10 +100,7 @@ export class TransactionService {
   /**         **/
   isTransactionOK(transaction: Transaction): void {
     if (transaction.amount <= 0) {
-      throw new HttpException(
-        'Amount must be positive',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Amount must be greater than 0');
     }
   }
 
