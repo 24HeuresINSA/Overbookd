@@ -61,26 +61,28 @@ export class TransactionService {
   }
 
   async addSgTransaction(transactions: Transaction[]): Promise<Transaction[]> {
-    transactions.forEach(async (transaction) => {
-      this.isTransactionOK(transaction);
-      //Check if user exists
-      const userId =
-        transaction.from === -1 ? transaction.to : transaction.from; //We only deal with expense and deposit
-      const users = await this.userExists([userId]);
-      const user = users.find((user) => user.id === userId);
-      const newBalance =
-        transaction.type === 'DEPOSIT'
-          ? user.balance + transaction.amount
-          : user.balance - transaction.amount;
-      //Update the user and create the transaction
-      await this.prisma.$transaction([
-        this.prisma.user.update({
-          where: { id: Number(userId) },
-          data: { balance: newBalance },
-        }),
-        this.prisma.transaction.create({ data: transaction }),
-      ]);
-    });
+    await Promise.all(
+      transactions.map(async (transaction) => {
+        this.isTransactionOK(transaction);
+        //Check if user exists
+        const userId =
+          transaction.from === -1 ? transaction.to : transaction.from; //We only deal with expense and deposit
+        const users = await this.userExists([userId]);
+        const user = users.find((user) => user.id === userId);
+        const newBalance =
+          transaction.type === 'DEPOSIT'
+            ? user.balance + transaction.amount
+            : user.balance - transaction.amount;
+        //Update the user and create the transaction
+        await this.prisma.$transaction([
+          this.prisma.user.update({
+            where: { id: Number(userId) },
+            data: { balance: newBalance },
+          }),
+          this.prisma.transaction.create({ data: transaction }),
+        ]);
+      }),
+    );
     return transactions;
   }
 
