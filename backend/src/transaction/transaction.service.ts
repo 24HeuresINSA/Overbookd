@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Transaction } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -35,6 +39,11 @@ export class TransactionService {
     if (userId !== data.from) {
       throw new BadRequestException(
         'You can only send money from your account',
+      );
+    }
+    if (data.type !== 'TRANSFER') {
+      throw new UnauthorizedException(
+        'You can only create a transfer transaction',
       );
     }
     //Check if user exists
