@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="mToggle" width="100%" style="display: contents">
+  <v-dialog v-model="mToggle" width="100%">
     <v-card>
-      <v-row>
+      <v-row style="display: contents">
         <v-col md="12"
           ><v-img
             v-if="mUser.pp"
@@ -21,24 +21,16 @@
             }}
           </v-card-title>
           <v-card-text>
-            <OverChips :roles="roles" />
-            <div v-if="hasEditingRole">
+            <OverChips :roles="mUser.team" />
+            <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newRole"
                 label="Ajouter un role"
                 :items="teams"
               >
               </v-select>
-              <v-row>
-                <v-col md="3">
-                  <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
-                </v-col>
-                <v-col md="2"
-                  ><v-btn text @click="saveUserRoles()"
-                    >Sauvegarder les roles</v-btn
-                  ></v-col
-                >
-              </v-row>
+              <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
+              <v-btn text @click="saveUserRoles()">Sauvegarder les roles</v-btn>
             </div>
 
             <v-container>
@@ -277,7 +269,6 @@ export default {
   data: () => {
     return {
       newRole: undefined,
-      roles: [],
       teams: [],
       hasEditingRole: false,
       isEditingAvailability: false,
@@ -309,7 +300,6 @@ export default {
   },
 
   async mounted() {
-    this.roles = this.$accessor.user.team;
     this.teams = this.$accessor.config.data.data
       .find((e) => e.key === "teams")
       .value.map((e) => e.name);
@@ -340,19 +330,39 @@ export default {
       return this.$accessor.user.hasRole(roles);
     },
     addRemoveRole() {
+      if (!this.teams.includes(this.newRole)) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Veuillez choisir une option valide !",
+        });
+        return;
+      }
       // verify the user is not already in the team
-      if (this.roles.includes(this.newRole)) {
+      if (this.mUser.team.includes(this.newRole)) {
         // Remove it
-        this.roles = this.roles.filter((role) => role !== this.newRole);
+        this.mUser.team = this.mUser.team.filter(
+          (role) => role !== this.newRole
+        );
       } else {
-        this.roles.push(this.newRole);
+        this.mUser.team.push(this.newRole);
       }
     },
     async saveUserRoles() {
-      this.$axios.post("/api/team/link", {
-        userId: this.mUser._id,
-        roles: this.roles,
+      const res = await this.$axios.post("/team/link", {
+        userId: this.mUser.id,
+        teams: this.mUser.team,
       });
+      if (res.status === 201) {
+        this.$accessor.notif.pushNotification({
+          type: "success",
+          message: "Roles mis à jour",
+        });
+      } else {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Une erreur est survenue !",
+        });
+      }
     },
     async saveUser() {
       await safeCall(
