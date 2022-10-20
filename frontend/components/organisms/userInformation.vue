@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="mToggle" width="100%">
+  <v-dialog v-model="mToggle" width="100%" style="display: contents">
     <v-card>
       <v-row>
         <v-col md="12"
@@ -21,25 +21,22 @@
             }}
           </v-card-title>
           <v-card-text>
-            <OverChips :roles="mUser.team"></OverChips>
+            <OverChips :roles="roles" />
             <div v-if="hasEditingRole">
               <v-select
                 v-model="newRole"
-                label="ajouter un role"
+                label="Ajouter un role"
                 :items="teams"
               >
               </v-select>
               <v-row>
-                <v-col md="3"
-                  ><v-btn text @click="addRole()">Ajouter</v-btn></v-col
-                >
-                <v-col md="6"
-                  ><v-btn text @click="deleteAllTeams()"
-                    >Révoquer tous les rôles</v-btn
-                  ></v-col
-                >
+                <v-col md="3">
+                  <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
+                </v-col>
                 <v-col md="2"
-                  ><v-btn text @click="saveUser()">Sauvegarder</v-btn></v-col
+                  ><v-btn text @click="saveUserRoles()"
+                    >Sauvegarder les roles</v-btn
+                  ></v-col
                 >
               </v-row>
             </div>
@@ -133,21 +130,6 @@
                 </v-col>
               </v-row>
               <v-row v-if="hasUserRole('hard')">
-                <v-col md="3">
-                  <v-switch
-                    v-model="mUser.hasDriverLicense"
-                    label="Permis"
-                    :disabled="!(hasEditingRole || isMe())"
-                  ></v-switch>
-                </v-col>
-                <v-col md="6">
-                  <v-text-field
-                    v-model="mUser.driverLicenseDate"
-                    label="date d'obtention du permis"
-                    placeholder="AAAA-MM-JJ"
-                    :disabled="!hasEditingRole"
-                  ></v-text-field>
-                </v-col>
                 <v-col md="4">
                   <v-text-field
                     v-model="mUser.balance"
@@ -295,6 +277,7 @@ export default {
   data: () => {
     return {
       newRole: undefined,
+      roles: [],
       teams: [],
       hasEditingRole: false,
       isEditingAvailability: false,
@@ -326,6 +309,7 @@ export default {
   },
 
   async mounted() {
+    this.roles = this.$accessor.user.team;
     this.teams = this.$accessor.config.data.data
       .find((e) => e.key === "teams")
       .value.map((e) => e.name);
@@ -355,18 +339,20 @@ export default {
     async hasRole(roles) {
       return this.$accessor.user.hasRole(roles);
     },
-    async addRole() {
-      let user = this.mUser;
-      if (user.team === undefined) {
-        user.team = [];
-      }
-      if (user.team.find((role) => role === this.newRole)) {
-        // already has role
+    addRemoveRole() {
+      // verify the user is not already in the team
+      if (this.roles.includes(this.newRole)) {
+        // Remove it
+        this.roles = this.roles.filter((role) => role !== this.newRole);
       } else {
-        user.team.push(this.newRole);
-        this.$set(user, "team", user.team); // update rendering
-        await this.$axios.put(`/user/${user._id}`, { team: user.team });
+        this.roles.push(this.newRole);
       }
+    },
+    async saveUserRoles() {
+      this.$axios.post("/api/team/link", {
+        userId: this.mUser._id,
+        roles: this.roles,
+      });
     },
     async saveUser() {
       await safeCall(
@@ -380,10 +366,6 @@ export default {
     async deleteUser() {
       this.mUser.isValid = false;
       await this.saveUser();
-    },
-    async deleteAllTeams() {
-      this.mUser.team = ["toValidate"];
-      await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
     },
     isMe() {
       return this.$accessor.user.me._id === this.mUser._id;
