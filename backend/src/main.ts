@@ -53,7 +53,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
-  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
 
