@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Team } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
 import { RolesGuard } from 'src/auth/team-auth.guard';
@@ -12,6 +13,11 @@ import { TeamService } from './team.service';
 @Controller('team')
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
+
+  @Get()
+  async getTeams(): Promise<string[]> {
+    return this.teamService.team({});
+  }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('humain')

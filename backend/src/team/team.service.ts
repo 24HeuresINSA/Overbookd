@@ -18,10 +18,10 @@ export class TeamService {
     orderBy?: Prisma.TeamOrderByWithRelationInput;
     select?: Prisma.TeamSelect;
     include?: Prisma.TeamInclude;
-  }): Promise<Partial<Team>[]> {
+  }): Promise<string[]> {
     const { skip, take, cursor, where, orderBy, include } = params;
     //get all users with their teams
-    return this.prisma.team.findMany({
+    const teams = await this.prisma.team.findMany({
       skip,
       take,
       cursor,
@@ -29,6 +29,7 @@ export class TeamService {
       orderBy,
       include,
     });
+    return teams.map((team) => team.name);
   }
 
   async updateUserTeams(payload: {
