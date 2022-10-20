@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template style="width: 100%; display: grid">
+    <div style="width: 100%; display: grid">
       <v-row>
         <v-col md="2">
           <v-card style="margin-bottom: 5%">
@@ -235,7 +235,7 @@
           </div>
         </v-col>
       </v-row>
-    </template>
+    </div>
 
     <v-dialog v-model="isTransactionDialogOpen" max-width="600">
       <v-card>
@@ -298,7 +298,7 @@
 </template>
 
 <script>
-import { getConfig, hasRole } from "../common/role";
+import { getConfig } from "../common/role";
 import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";

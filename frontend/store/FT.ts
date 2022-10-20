@@ -203,7 +203,7 @@ export const actions = actionTree(
         commit("ADD_TIMEFRAME_FT", timeframe);
       }
     },
-    addTimeframes: function ({ commit, dispatch }, timeframes) {
+    addTimeframes: function ({ dispatch }, timeframes) {
       timeframes.forEach((t: any) => dispatch("addTimeframe", t));
     },
     setTimeframes: function ({ commit }, timeframes) {
@@ -215,7 +215,7 @@ export const actions = actionTree(
         commit("ADD_EQUIPMENT", equipment);
       }
     },
-    deleteTimeframe: function ({ commit, state }, index) {
+    deleteTimeframe: function ({ commit }, index) {
       commit("DELETE_TIMEFRAME_FT", index);
     },
     updateTimeframe: function ({ commit }, payload) {
@@ -251,10 +251,7 @@ export const actions = actionTree(
      * Refuse the FT from one of the validators
      * @param payload validator name and comment from him
      */
-    refuse: async function (
-      { dispatch, commit, state },
-      { validator, comment }
-    ) {
+    refuse: async function ({ dispatch, commit }, { validator, comment }) {
       commit("REFUSE", validator);
       await dispatch("addComment", {
         topic: "refused",
@@ -271,7 +268,7 @@ export const actions = actionTree(
      * Add a comment to the FT
      * @param comment Infos to push in history
      */
-    addComment: async function ({ dispatch, commit, state }, comment) {
+    addComment: async function ({ commit }, comment) {
       commit("ADD_COMMENT", comment);
     },
     /**
@@ -300,22 +297,19 @@ export const actions = actionTree(
       commit("SET_PARENT_FA", faCount);
       dispatch("saveFT");
     },
-    addRequirement: async function ({ dispatch, commit }, payload) {
+    addRequirement: async function ({ commit }, payload) {
       commit("ADD_REQUIREMENT", payload);
     },
-    deleteRequirement: async function ({ dispatch, commit }, payload) {
+    deleteRequirement: async function ({ commit }, payload) {
       commit("DELETE_REQUIREMENT", payload);
     },
-    deleteEquipment: async function ({ dispatch, commit }, payload) {
+    deleteEquipment: async function ({ commit }, payload) {
       commit("DELETE_EQUIPMENT", payload);
     },
-    deleteEquipmentById: async function ({ dispatch, commit }, payload) {
+    deleteEquipmentById: async function ({ commit }, payload) {
       commit("DELETE_EQUIPMENT_BY_ID", payload);
     },
-    updateEquipmentRequiredCount: async function (
-      { dispatch, commit },
-      payload
-    ) {
+    updateEquipmentRequiredCount: async function ({ commit }, payload) {
       commit("UPDATE_EQUIPMENT_REQUIRED_COUNT", payload);
     },
   }

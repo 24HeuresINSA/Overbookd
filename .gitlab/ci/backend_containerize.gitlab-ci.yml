@@ -24,12 +24,13 @@ containerize-backend:
     - docker push $CI_REGISTRY_IMAGE/backend:$TAG
 
 merge_requests_containerize-backend:
+  interruptible: true
   image: docker
   services:
   - name: docker:dind
     command: ["--experimental"]
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - backend/**/*
     - when: never

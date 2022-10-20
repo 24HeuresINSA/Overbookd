@@ -16,7 +16,7 @@
           <v-col class="flex-grow-1">
             <NeedsCard status="validated">validated</NeedsCard>
           </v-col>
-          <v-col class="flex-grow-1" v-if="name === 'FT'">
+          <v-col v-if="name === 'FT'" class="flex-grow-1">
             <NeedsCard status="ready">ready</NeedsCard>
           </v-col>
         </v-row>
@@ -56,7 +56,10 @@ export default {
   components: {
     NeedsCard,
   },
-  props: ["name", "dataset"],
+  props: {
+    name: { type: String, required: true },
+    dataset: { type: Array, required: true },
+  },
   data() {
     return {
       historyFA: {},

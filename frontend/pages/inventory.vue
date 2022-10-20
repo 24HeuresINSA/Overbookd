@@ -216,8 +216,6 @@
 
 <script lang="ts">
 import locationAdder from "../components/organisms/locationAdder.vue";
-import { safeCall } from "../utils/api/calls";
-import { RepoFactory } from "../repositories/repoFactory";
 import cloneDeep from "lodash/cloneDeep";
 import isEqual from "lodash/isEqual";
 import Vue from "vue";

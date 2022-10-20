@@ -57,7 +57,6 @@
 </template>
 
 <script lang="ts">
-import { values } from "lodash";
 import Vue from "vue";
 import { Header } from "~/utils/models/Data";
 

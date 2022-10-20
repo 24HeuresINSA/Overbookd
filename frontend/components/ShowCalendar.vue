@@ -41,7 +41,10 @@
 <script>
 export default {
   name: "ShowCalendar",
-  props: ["title", "slots"],
+  props: {
+    title: { type: String, default: () => "" },
+    slots: { type: Array, default: () => {} },
+  },
   data() {
     return {
       showCalendar: false,

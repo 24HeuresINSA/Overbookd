@@ -189,11 +189,7 @@
           </template>
 
           <v-list>
-            <v-list-item
-              v-for="(validator, i) of validators"
-              :key="validator"
-              link
-            >
+            <v-list-item v-for="validator of validators" :key="validator" link>
               <v-list-item-title
                 @click="
                   v = validator;
@@ -224,11 +220,7 @@
           </template>
 
           <v-list>
-            <v-list-item
-              v-for="(validator, i) of validators"
-              :key="validator"
-              link
-            >
+            <v-list-item v-for="validator of validators" :key="validator" link>
               <v-list-item-title
                 color="green"
                 @click="validate(validator)"

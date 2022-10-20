@@ -39,9 +39,6 @@ declare interface Data {
   newComment: string;
 }
 
-const reminderMessage = "N'oublie pas de sauvegarder ton commentaire!";
-const errorMessage = "Une erreur est survenue, veuillez réessayer plus tard.";
-
 export default Vue.extend({
   name: "CommentCard",
   props: {

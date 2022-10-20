@@ -24,12 +24,13 @@ containerize-frontend:
     - docker push $CI_REGISTRY_IMAGE/frontend:$TAG
 
 merge_requests_containerize-frontend:
+  interruptible: true
   image: docker
   services:
     - name: docker:dind
       command: ["--experimental"]
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - frontend/**/*
     - when: never

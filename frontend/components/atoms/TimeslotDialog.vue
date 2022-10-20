@@ -42,6 +42,7 @@ export default Vue.extend({
     timeslot: {
       type: Object,
       required: false,
+      default: () => {},
     },
   },
   data() {

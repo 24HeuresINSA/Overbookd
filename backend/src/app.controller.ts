@@ -1,9 +1,14 @@
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { LocalAuthGuard } from './auth/local-auth.guard';
-import { ApiBody } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { LoginDto } from './auth/dto/login.dto';
+import { UserAccess } from './auth/entities/userAccess.entity';
 
 @Controller()
 export class AppController {
@@ -17,13 +22,22 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiBody({
     description: 'Route de connection',
     type: LoginDto,
   })
-  async login(@Request() req: Express.Request) {
-    return this.authService.login(req.user);
+  @ApiCreatedResponse({
+    description: 'User access token',
+    type: UserAccess,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Wrong email or password',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  async login(@Body() userCredentials: LoginDto) {
+    return this.authService.login(userCredentials);
   }
 }
