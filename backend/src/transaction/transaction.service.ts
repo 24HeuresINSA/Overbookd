@@ -1,11 +1,11 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Transaction } from '@prisma/client';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class TransactionService {
     data: Transaction,
     userId: number,
   ): Promise<Transaction> {
-    this.isTransactionOK(data);
+    this.checkTransactionAmount(data);
     if (userId !== data.from) {
       throw new BadRequestException(
         'You can only send money from your account',
@@ -72,7 +72,7 @@ export class TransactionService {
   async addSgTransaction(transactions: Transaction[]): Promise<Transaction[]> {
     await Promise.all(
       transactions.map(async (transaction) => {
-        this.isTransactionOK(transaction);
+        this.checkTransactionAmount(transaction);
         //Check if user exists
         const userId =
           transaction.from === -1 ? transaction.to : transaction.from; //We only deal with expense and deposit
@@ -109,7 +109,7 @@ export class TransactionService {
   /**         **/
   /** HELPERS **/
   /**         **/
-  isTransactionOK(transaction: Transaction): void {
+  checkTransactionAmount(transaction: Transaction): void {
     if (transaction.amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0');
     }
@@ -120,7 +120,7 @@ export class TransactionService {
       where: { id: { in: userIds } },
     });
     if (users.length !== userIds.length) {
-      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('User does not exist');
     }
     return users;
   }
