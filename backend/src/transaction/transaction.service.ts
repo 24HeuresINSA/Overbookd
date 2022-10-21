@@ -32,15 +32,10 @@ export class TransactionService {
   /** POST **/
   /**      **/
   async createTransaction(
-    data: Transaction,
+    userTransaction: Omit<Transaction, 'from'>,
     userId: number,
   ): Promise<Transaction> {
-    this.checkTransactionAmount(data);
-    if (userId !== data.from) {
-      throw new BadRequestException(
-        'You can only send money from your account',
-      );
-    }
+    const data = { ...userTransaction, from: userId };
     if (data.type !== 'TRANSFER') {
       throw new UnauthorizedException(
         'You can only create a transfer transaction',
