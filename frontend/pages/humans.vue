@@ -107,6 +107,10 @@
               dense
               :items-per-page="20"
             >
+              <template #[`item.firstname`]="{ item }">
+                {{ item.firstname }} {{ item.lastname }}
+                {{ item.nickname ? `(${item.nickname})` : "" }}
+              </template>
               <template #[`item.action`]="{ item }" style="display: flex">
                 <v-btn
                   v-if="hasRole('hard')"
@@ -173,7 +177,7 @@
               </template>
 
               <template #[`item.team`]="{ item }">
-                <v-container style="max-width: 150px">
+                <v-container>
                   <OverChips :roles="item.team"></OverChips>
                 </v-container>
               </template>
@@ -319,10 +323,8 @@ export default {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "Prénom", value: "firstname" },
-        { text: "Nom", value: "lastname" },
-        { text: "Surnom", value: "nickname" },
-        { text: "Team", value: "team", cellClass: "width: 250px", width: "1" },
+        { text: "Prénom Nom (Surnom)", value: "firstname" },
+        { text: "Team", value: "team" },
         { text: "Charisme", value: "charisma", align: "end" },
         { text: "Action", value: "action", sortable: false },
       ],

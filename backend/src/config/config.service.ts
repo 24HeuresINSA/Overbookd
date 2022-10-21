@@ -289,6 +289,11 @@ export class ConfigService {
             icon: 'mdi-desk',
           },
           {
+            name: 'sg',
+            color: '#f4a261',
+            icon: 'mdi-account-hard-hat',
+          },
+          {
             name: 'bar',
             color: '#F9C80E',
             icon: 'mdi-beer',
@@ -309,7 +314,7 @@ export class ConfigService {
             icon: 'mdi-camera',
           },
           {
-            name: 'concert',
+            name: 'concerts',
             color: '#75d46c',
             icon: 'mdi-microphone',
           },
@@ -324,7 +329,7 @@ export class ConfigService {
             icon: 'mdi-theater',
           },
           {
-            name: 'DD',
+            name: 'dd',
             color: '#32a852',
             icon: 'mdi-tree',
           },
@@ -369,7 +374,7 @@ export class ConfigService {
             icon: 'mdi-ticket',
           },
           {
-            name: 'scène',
+            name: 'scene',
             color: '#EA3546',
             icon: 'mdi-soundbar',
           },
