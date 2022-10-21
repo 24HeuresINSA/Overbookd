@@ -10,7 +10,37 @@ import {
 import { LoginDto } from './auth/dto/login.dto';
 import { UserAccess } from './auth/entities/userAccess.entity';
 
-export type Role = 'admin' | 'hard';
+export type Role =
+  | 'admin'
+  | 'hard'
+  | 'soft'
+  | 'orga'
+  | 'confiance'
+  | 'vieux'
+  | 'bureau'
+  | 'sg'
+  | 'log'
+  | 'matos'
+  | 'elec'
+  | 'secu'
+  | 'payant'
+  | 'humain'
+  | 'bar'
+  | 'barrieres'
+  | 'catering'
+  | 'maman'
+  | 'scene'
+  | 'signa'
+  | 'communication'
+  | 'concerts'
+  | 'courses'
+  | 'culture'
+  | 'dd'
+  | 'deco'
+  | 'informatique'
+  | 'plaizir'
+  | 'sponso'
+  | 'sports';
 
 export type JWTPayload = {
   username: string;
