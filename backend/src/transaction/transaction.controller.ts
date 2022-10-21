@@ -44,7 +44,7 @@ export class TransactionController {
     description: 'Get all transactions of a user',
     type: Array,
   })
-  getUserTransactionsID(
+  getUserTransactions(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Transaction[] | null> {
     return this.transactionService.getUserTransactions(id);
