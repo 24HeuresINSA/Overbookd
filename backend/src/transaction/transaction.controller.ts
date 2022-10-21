@@ -58,7 +58,7 @@ export class TransactionController {
     description: 'Get all transactions of self',
     type: Array,
   })
-  getUserTransactions(
+  getMyTransactions(
     @Request() request: RequestWithUserPayload,
   ): Promise<Transaction[] | null> {
     const { userId } = request.user;
