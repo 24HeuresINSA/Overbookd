@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Transac sur TikTok 🤑</h1>
+    <h1>Transactions de {{ me.firstname + " " + me.lastname }}</h1>
     <h2>Solde compte perso {{ mBalance.toFixed(2) }} €</h2>
     <OverTransactions :transactions="mTransactions"></OverTransactions>
   </div>
@@ -24,6 +24,9 @@ export default {
   computed: {
     mBalance() {
       return this.$accessor.user.me.balance || 0;
+    },
+    me() {
+      return this.$accessor.user.me;
     },
   },
 
