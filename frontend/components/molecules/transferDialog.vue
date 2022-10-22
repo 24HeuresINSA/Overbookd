@@ -117,6 +117,7 @@ export default Vue.extend({
             from: this.me.id,
             to: this.transfer.user.id,
             type: "TRANSFER",
+            is_deleted: false,
           };
           const res = await this.$accessor.transaction.addTransaction(
             newTransfer
