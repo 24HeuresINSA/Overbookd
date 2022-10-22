@@ -110,7 +110,7 @@ export default Vue.extend({
 
       if (this.transfer.user.id) {
         try {
-          let newTransfer: Transfer = {
+          let newTransfer = {
             amount: +this.transfer.amount,
             context: this.transfer.reason,
             created_at: new Date(),
