@@ -15,21 +15,23 @@ export class BroadcastNotif {
 }
 
 export interface Expense {
-  type: "expense";
+  type: "EXPENSE";
   from: string;
   to: null;
   amount: number;
   context: string;
-  createdAt: Date;
+  created_at: Date;
+  is_deleted: boolean;
 }
 
 export interface Deposit {
-  type: "deposit";
+  type: "DEPOSIT";
   from: string;
   to: null;
   amount: number;
-  context: null;
-  createdAt: Date;
+  context: string;
+  created_at: Date;
+  is_deleted: boolean;
 }
 
 export interface Transfer {
