@@ -46,7 +46,8 @@ async function bootstrap() {
     .setTitle('Overbookd')
     .setDescription('The Overbookd API description')
     .setVersion('1.0')
-    .addServer('/api')
+    .addServer('/', 'Local')
+    .addServer('/api', 'Production')
     .addBearerAuth()
     .build();
 

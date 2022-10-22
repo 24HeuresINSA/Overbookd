@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Team } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
@@ -15,6 +15,11 @@ export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get all teams',
+    type: Array<string>,
+  })
   async getTeams(): Promise<string[]> {
     return this.teamService.team({});
   }
@@ -22,6 +27,11 @@ export class TeamController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('humain')
   @Post('link')
+  @ApiResponse({
+    status: 200,
+    description: 'Link a user with different teams',
+    type: LinkTeamToUserDto,
+  })
   async updateUserTeams(
     @Body() payload: LinkTeamToUserDto,
   ): Promise<LinkTeamToUserDto> {
@@ -30,12 +40,21 @@ export class TeamController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
+  @ApiResponse({
+    status: 200,
+    description: 'Create a team',
+    type: CreateTeamDto,
+  })
   async addTeam(@Body() payload: CreateTeamDto): Promise<Team> {
     return this.teamService.createTeam(payload);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete()
+  @ApiResponse({
+    status: 200,
+    description: 'Delete a team',
+  })
   async deleteTeam(@Body() payload: CreateTeamDto): Promise<void> {
     return this.teamService.deleteTeam(payload);
   }

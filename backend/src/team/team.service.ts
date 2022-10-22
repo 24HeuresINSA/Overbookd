@@ -62,7 +62,11 @@ export class TeamService {
       })),
     });
 
-    await this.prisma.$transaction([deleteAll, createNew]);
+    try {
+      await this.prisma.$transaction([deleteAll, createNew]);
+    } catch (e) {
+      throw new Error(e);
+    }
     payload.teams = teamsToLink.map((team) => team.name);
     return payload;
   }

@@ -36,11 +36,11 @@ export const actions = actionTree(
       }
       return res;
     },
-    async linkUserToTeams(userId: number, teams: team[]) {
-      return await safeCall(
-        this,
-        teamRepo.linkUserToTeams(this, userId, teams)
-      );
+    async linkUserToTeams(
+      constext,
+      { userId, teams }: { userId: number; teams: team[] }
+    ): Promise<any> {
+      return safeCall(this, teamRepo.linkUserToTeams(this, userId, teams));
     },
   }
 );
