@@ -38,7 +38,6 @@ export const actions = actionTree(
         transactionRepo.createTransfer(this, transfer)
       );
       if (res) {
-        transfer.isValid = true;
         commit("ADD_TRANSACTIONS", transfer);
         return true;
       }
