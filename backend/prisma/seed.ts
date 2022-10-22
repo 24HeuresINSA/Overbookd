@@ -39,17 +39,19 @@ async function main() {
     { name: 'sports' },
   ];
 
-  for (const team of teams) {
-    await prisma.team.upsert({
-      where: { name: team.name },
-      update: {},
-      create: team,
-    });
-  }
+  await Promise.all(
+    teams.map((team) =>
+      prisma.team.upsert({
+        where: { name: team.name },
+        update: {},
+        create: team,
+      }),
+    ),
+  );
 
   console.log('Creating users 👤');
 
-  const users: string[][] = [
+  const userTeamTuples: string[][] = [
     ['hard', 'hard'],
     ['soft', 'soft'],
     ['confiance', 'confiance'],
@@ -80,11 +82,12 @@ async function main() {
     ['sports', 'hard,sports'],
   ];
 
-  for (const user of users) {
+  for (const userTeam of userTeamTuples) {
+    const [user, teams] = userTeam;
     const data: Prisma.UserUncheckedCreateInput = {
-      email: `${user[0]}@24h.me`,
-      firstname: user[0],
-      lastname: user[0],
+      email: `${user}@24h.me`,
+      firstname: user,
+      lastname: user,
       nickname: '',
       birthdate: new Date(1990, 1, 1),
       phone: '0612345678',
@@ -94,16 +97,14 @@ async function main() {
     };
 
     const dbUser = await prisma.user.upsert({
-      where: { email: `${user[0]}@24h.me` },
+      where: { email: `${user}@24h.me` },
       update: data,
       create: data,
     });
 
-    console.log(
-      `User ${user[0]} created with id ${dbUser.id}, adding to teams`,
-    );
+    console.log(`User ${user} created with id ${dbUser.id}, adding to teams`);
 
-    const teamNames = user[1].split(',');
+    const teamNames = teams.split(',');
     for (const teamName of teamNames) {
       const team = await prisma.team.findUnique({
         where: { name: teamName },
