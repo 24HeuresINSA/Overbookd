@@ -188,7 +188,13 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      return this.round(+this.totalPrice / +this.totalConsumptions).toFixed(2);
+      const round = +(
+        Math.round((+this.totalPrice / +this.totalConsumptions) * 100) / 100
+      ).toFixed(2);
+      if (round * +this.totalConsumptions < +this.totalPrice) {
+        return round + 0.01;
+      }
+      return round;
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
@@ -386,12 +392,6 @@ export default {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
       this.isSwitchDialogOpen = false;
-    },
-
-    round(rawAmount) {
-      const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
-      let res = parseInt(round / 5) * 5;
-      return (res + 5) * 0.01;
     },
   },
 };
