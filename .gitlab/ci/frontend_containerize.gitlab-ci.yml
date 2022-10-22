@@ -34,6 +34,10 @@ merge_requests_containerize-frontend:
       changes:
         - frontend/**/*
     - when: never
+  needs: ["lintage-frontend"]
   stage: docker
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build ./frontend
+    - docker build --tag $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA ./frontend
+    - docker push $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA

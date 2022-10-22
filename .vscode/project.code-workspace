@@ -14,6 +14,7 @@
     }
   ],
   "settings": {
+    "conventionalCommits.autoCommit": false,
     "conventionalCommits.scopes": [
       "Docker",
       "Front",

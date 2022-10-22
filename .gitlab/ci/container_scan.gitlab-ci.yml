@@ -7,7 +7,7 @@ container_scanning:
     - when: never
   needs: ["merge_requests_containerize-frontend"]
   variables:
-    DOCKER_IMAGE: $CI_REGISTRY_IMAGE/frontend:pre-prod
+    DOCKER_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "frontend/Dockerfile"
   stage: docker-scan
 
@@ -20,5 +20,5 @@ backend_scan_preprod:
     - when: never
   needs: ["merge_requests_containerize-backend"]
   variables:
-    DOCKER_IMAGE: $CI_REGISTRY_IMAGE/backend:pre-prod
+    DOCKER_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "backend/Dockerfile"
