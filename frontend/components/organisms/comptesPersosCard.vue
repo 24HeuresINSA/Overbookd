@@ -29,7 +29,7 @@
               {{ item.amount.toFixed ? item.amount.toFixed(2) : item.amount }} €
             </template>
             <template #[`item.context`]="{ item }">
-              {{ !item.isValid ? "[SUPPRIME] " : "" }}{{ item.context }}
+              {{ item.is_deleted ? "[SUPPRIME] " : "" }}{{ item.context }}
             </template>
           </v-data-table>
         </v-card-text>
