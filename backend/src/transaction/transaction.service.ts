@@ -32,15 +32,14 @@ export class TransactionService {
   /** POST **/
   /**      **/
   async createTransaction(
-    userTransaction: Omit<Transaction, 'from'>,
+    userTransaction: Omit<Transaction, 'from' | 'type'>,
     userId: number,
   ): Promise<Transaction> {
-    const data = { ...userTransaction, from: userId };
-    if (data.type !== 'TRANSFER') {
-      throw new UnauthorizedException(
-        'You can only create a transfer transaction',
-      );
-    }
+    const data: Transaction = {
+      ...userTransaction,
+      from: userId,
+      type: 'TRANSFER',
+    };
     //Check if user exists
     const users = await this.userExists([data.from, data.to]);
     const sender = users.find((user) => user.id === data.from);
