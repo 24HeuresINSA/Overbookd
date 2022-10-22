@@ -22,19 +22,21 @@ export class TeamController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('humain')
   @Post('link')
-  async updateUserTeams(@Body() payload: LinkTeamToUserDto): Promise<boolean> {
+  async updateUserTeams(
+    @Body() payload: LinkTeamToUserDto,
+  ): Promise<LinkTeamToUserDto> {
     return this.teamService.updateUserTeams(payload);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  async addTeam(@Body() payload: CreateTeamDto): Promise<boolean> {
+  async addTeam(@Body() payload: CreateTeamDto): Promise<Team> {
     return this.teamService.createTeam(payload);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete()
-  async deleteTeam(@Body() payload: CreateTeamDto): Promise<boolean> {
+  async deleteTeam(@Body() payload: CreateTeamDto): Promise<void> {
     return this.teamService.deleteTeam(payload);
   }
 }

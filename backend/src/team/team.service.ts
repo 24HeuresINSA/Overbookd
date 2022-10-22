@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Team } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { UserService } from 'src/user/user.service';
+import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 
 @Injectable()
 export class TeamService {
@@ -20,7 +21,6 @@ export class TeamService {
     include?: Prisma.TeamInclude;
   }): Promise<string[]> {
     const { skip, take, cursor, where, orderBy, include } = params;
-    //get all users with their teams
     const teams = await this.prisma.team.findMany({
       skip,
       take,
@@ -32,64 +32,58 @@ export class TeamService {
     return teams.map((team) => team.name);
   }
 
-  async updateUserTeams(payload: {
-    userId: number;
-    teams: string[];
-  }): Promise<boolean> {
-    const { userId, teams } = payload;
-    // get user teams
-    const user = await this.userService.user({ id: userId });
+  async updateUserTeams(
+    payload: LinkTeamToUserDto,
+  ): Promise<LinkTeamToUserDto> {
+    // Verify user exists
+    const user = await this.userService.user({ id: payload.userId });
     if (!user.id) {
-      return false;
+      throw new NotFoundException('User not found');
     }
-    //get all teams
-    const allTeams = await this.prisma.team.findMany();
-    //get all teams that are in the payload
-    let teamsToLink = allTeams.filter((team) => teams.includes(team.name));
-    teamsToLink = teamsToLink.filter((team) => !user.team.includes(team.name));
-
-    const connect = this.prisma.user_Team.createMany({
-      data: teamsToLink.map((team) => {
-        return {
-          team_id: team.name,
-          user_id: userId,
-        };
-      }),
-    });
-
-    //get teams to unlink
-    const teamsToUnlink = user.team.filter((team) => !teams.includes(team));
-    //unlink teams
-    const disconnect = this.prisma.user_Team.deleteMany({
+    // Take only the teams that exist
+    const teamsToLink = await this.prisma.team.findMany({
       where: {
-        team_id: {
-          in: teamsToUnlink,
+        name: {
+          in: payload.teams,
         },
-        user_id: userId,
       },
     });
 
-    await this.prisma.$transaction([connect, disconnect]);
-    return true;
+    const deleteAll = this.prisma.user_Team.deleteMany({
+      where: {
+        user_id: payload.userId,
+      },
+    });
+
+    const createNew = this.prisma.user_Team.createMany({
+      data: teamsToLink.map((team) => ({
+        user_id: payload.userId,
+        team_id: team.name,
+      })),
+    });
+
+    await this.prisma.$transaction([deleteAll, createNew]);
+    payload.teams = teamsToLink.map((team) => team.name);
+    return payload;
   }
 
-  async createTeam(payload: { name: string }): Promise<boolean> {
+  async createTeam(payload: { name: string }): Promise<Team> {
     const { name } = payload;
     const team = await this.prisma.team.create({
       data: {
         name,
       },
     });
-    return !!team;
+    return team;
   }
 
-  async deleteTeam(payload: { name: string }): Promise<boolean> {
+  async deleteTeam(payload: { name: string }): Promise<void> {
     const { name } = payload;
-    const team = await this.prisma.team.delete({
+    await this.prisma.team.delete({
       where: {
         name,
       },
     });
-    return !!team;
+    return;
   }
 }

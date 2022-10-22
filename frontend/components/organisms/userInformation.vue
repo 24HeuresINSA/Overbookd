@@ -347,10 +347,10 @@ export default {
       }
     },
     async saveUserRoles() {
-      const res = await this.$axios.post("/team/link", {
-        userId: this.mUser.id,
-        teams: this.mUser.team,
-      });
+      const res = await this.$accessor.team.linkUserToTeams(
+        this.mUser.id,
+        this.mUser.team
+      );
       if (res.status === 201) {
         this.$accessor.notif.pushNotification({
           type: "success",
