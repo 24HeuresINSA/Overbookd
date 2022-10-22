@@ -33,7 +33,7 @@ export interface Deposit {
 }
 
 export interface Transfer {
-  type: "transfer";
+  type: "TRANSFER";
   from: string;
   to: string;
   amount: number;
