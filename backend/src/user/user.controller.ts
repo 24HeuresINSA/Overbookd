@@ -59,6 +59,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiBearerAuth()
   @Get('all/cp')
   @ApiResponse({
