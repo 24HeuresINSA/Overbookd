@@ -96,7 +96,7 @@ export default Vue.extend({
         //TODO: RepoFactory + safeCall
         await this.$axios
           .post(`/user/friends`, {
-            from: this.me._id,
+            from: this.me.id,
             to: notification.data,
           })
           .then(() => {
@@ -125,7 +125,7 @@ export default Vue.extend({
         (item) => item.date != date
       );
       this.$accessor.user.updateUser({
-        userID: this.me._id,
+        userID: this.me.id,
         userData: { notifications },
       });
     },

@@ -104,7 +104,7 @@ export const actions = actionTree(
       if (state.usernames.length === 0) {
         await dispatch("fetchUsernames");
       }
-      const u = state.usernames.find((u) => u._id === userID);
+      const u = state.usernames.find((u) => u.id === userID);
       if (u) {
         return u.username;
       }

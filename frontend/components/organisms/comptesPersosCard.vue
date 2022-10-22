@@ -91,7 +91,7 @@ export default Vue.extend({
     },
 
     isNegativeTransaction(transaction: Transaction) {
-      return transaction.from === this.me._id;
+      return transaction.from === this.me.id;
     },
   },
 });

@@ -300,7 +300,7 @@ export default Vue.extend({
       if (myFTs) {
         res = res.filter((ft) => {
           if (ft.general.inCharge) {
-            return ft.general.inCharge._id === this.$accessor.user.me._id;
+            return ft.general.inCharge.id === this.$accessor.user.me.id;
           }
         });
       }
@@ -384,7 +384,7 @@ export default Vue.extend({
           "server"
         );
         if (res) {
-          const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+          const index = this.FTs.findIndex((ft) => ft.id == this.mFT.id);
           this.FTs[index].isValid = false;
           this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
         }
@@ -407,7 +407,7 @@ export default Vue.extend({
       // if success
       if (res) {
         // update current version
-        const index = this.FTs.findIndex((ft) => ft._id == this.mFT._id);
+        const index = this.FTs.findIndex((ft) => ft.id == this.mFT.id);
         this.FTs[index].isValid = true;
         this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
       }
