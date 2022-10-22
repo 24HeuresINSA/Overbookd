@@ -168,10 +168,6 @@
                 {{ getCP(item) }}
               </template>
 
-              <template #[`item.studies`]="{ item }">
-                {{ item.year }}{{ item.departement }}
-              </template>
-
               <template #[`item.charisma`]="{ item }">
                 {{ item.charisma || 0 }}
               </template>
@@ -191,6 +187,11 @@
               dense
               :items-per-page="20"
             >
+              <template #[`item.firstname`]="{ item }">
+                {{ item.firstname }} {{ item.lastname }}
+                {{ item.nickname ? `(${item.nickname})` : "" }}
+              </template>
+
               <template #[`item.action`]="{ item }" style="display: flex">
                 <v-btn
                   v-if="hasRole('hard')"
@@ -329,9 +330,7 @@ export default {
         { text: "Action", value: "action", sortable: false },
       ],
       statsHeaders: [
-        { text: "Prénom", value: "firstname" },
-        { text: "Nom", value: "lastname" },
-        { text: "Surnom", value: "nickname" },
+        { text: "Prénom Nom (Surnom)", value: "firstname" },
         { text: "Charisme", value: "charisma", align: "end" },
         { text: "Charge", value: "charge" },
         { text: "Heures affectés", value: "hours" },
