@@ -52,7 +52,7 @@ export class TransactionController {
 
   @UseGuards(JwtAuthGuard)
   @Roles('hard')
-  @Get('user')
+  @Get('me')
   @ApiResponse({
     status: 200,
     description: 'Get all transactions of self',

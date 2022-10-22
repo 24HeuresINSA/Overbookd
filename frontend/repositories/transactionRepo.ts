@@ -14,7 +14,7 @@ export default {
   },
 
   getUserTransactions(context: Context) {
-    return context.$axios.get(`${resource}/user`);
+    return context.$axios.get(`${resource}/me`);
   },
 
   getTransactionsByUserID(context: Context, _id: string) {
