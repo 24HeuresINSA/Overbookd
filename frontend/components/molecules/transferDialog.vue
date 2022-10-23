@@ -113,11 +113,8 @@ export default Vue.extend({
           let newTransfer: Transfer = {
             amount: +this.transfer.amount,
             context: this.transfer.reason,
-            created_at: new Date(),
             from: this.me.id,
             to: this.transfer.user.id,
-            type: "TRANSFER",
-            is_deleted: false,
           };
           const res = await this.$accessor.transaction.addTransaction(
             newTransfer

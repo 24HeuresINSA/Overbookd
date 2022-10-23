@@ -32,7 +32,7 @@ export const actions = actionTree(
         commit("SET_TRANSACTIONS", res.data);
       }
     },
-    async addTransaction({ commit }, transfer: Transfer) {
+    async addTransaction({ commit }, transfer: Partial<Transfer>) {
       const res = await safeCall(
         this,
         transactionRepo.createTransfer(this, transfer)
