@@ -101,7 +101,6 @@ export default Vue.extend({
       }
 
       if (+this.transfer.amount <= 0) {
-        console.log(this.transfer);
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",
