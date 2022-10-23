@@ -26,10 +26,17 @@ const CATEGORIES: Category[] = [
   },
   {
     id: 3,
-    name: 'cable',
+    name: 'Cable',
     slug: 'electrique->cable',
     owner: { id: 3, name: 'elec' },
     parent: 2,
+  },
+  {
+    id: 4,
+    name: 'Grosse Tension',
+    slug: 'electrique->cable->grosse-tension',
+    owner: { id: 3, name: 'elec' },
+    parent: 3,
   },
 ];
 
@@ -153,5 +160,47 @@ describe('Catalog', () => {
         );
       });
     });
+  });
+  describe('delete a category', () => {
+    describe.each`
+      toDeleteCategory        | childrenCategory                                         | grandChildrenCategory
+      ${{ id: 1 }}            | ${undefined}                                             | ${undefined}
+      ${{ id: 4 }}            | ${undefined}                                             | ${undefined}
+      ${{ id: 5 }}            | ${undefined}                                             | ${undefined}
+      ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedSlug: 'electrique->grosse-tension' }} | ${undefined}
+      ${{ id: 2 }}            | ${{ id: 3, expectedSlug: 'cable' }}                      | ${{ id: 4, expectedSlug: 'cable->grosse-tension' }}
+    `(
+      `when deleting category $toDeleteCategory 
+        with child category $childrenCategory
+        with grandchild category $grandChildrenCategory`,
+      ({ toDeleteCategory, childrenCategory, grandChildrenCategory }) => {
+        it(`should not be possible to find #${toDeleteCategory.id} category after`, async () => {
+          await catalog.remove(toDeleteCategory.id);
+          await expect(async () => {
+            await catalog.find(toDeleteCategory.id);
+          }).rejects.toThrow(`Category #${toDeleteCategory.id} doesn't exist`);
+        });
+        if (childrenCategory) {
+          it(`should link #${childrenCategory.id} child category to #${toDeleteCategory.parent} category`, async () => {
+            await catalog.remove(toDeleteCategory.id);
+            const child = await catalog.find(childrenCategory.id);
+            expect(child.parent).not.toBe(toDeleteCategory.id);
+            expect(child.parent).toBe(toDeleteCategory.parent);
+          });
+          it(`should change #${childrenCategory.id} child category slug to ${childrenCategory.expectedSlug}`, async () => {
+            await catalog.remove(toDeleteCategory.id);
+            const child = await catalog.find(childrenCategory.id);
+            expect(child.slug).toBe(childrenCategory.expectedSlug);
+          });
+        }
+        if (grandChildrenCategory) {
+          it(`should change #${grandChildrenCategory.id} grandchild category slug to ${grandChildrenCategory.expectedSlug}`, async () => {
+            await catalog.remove(toDeleteCategory.id);
+            const grandChild = await catalog.find(grandChildrenCategory.id);
+            expect(grandChild.slug).toBe(grandChildrenCategory.expectedSlug);
+          });
+        }
+      },
+    );
   });
 });
