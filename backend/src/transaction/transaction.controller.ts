@@ -25,7 +25,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('sg')
   @Get()
   @ApiResponse({
     status: 200,
@@ -37,7 +37,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles('admin')
+  @Roles('sg')
   @Get('user/:id')
   @ApiResponse({
     status: 200,
@@ -94,7 +94,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('sg')
   @Post('sg')
   addSgTransaction(
     @Body() transactionData: Transaction[],
@@ -103,7 +103,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('sg')
   @Delete(':id')
   @ApiResponse({
     status: 200,

@@ -267,7 +267,7 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("admin")) {
+    if (this.$accessor.user.hasRole("sg")) {
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
           this.users = res.data.filter((user) => {
