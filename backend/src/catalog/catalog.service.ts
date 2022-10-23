@@ -13,30 +13,77 @@ export function slugify(name: string): string {
   return name.replace(spaces, SLUG_SEPARATOR).toLowerCase();
 }
 
+type CreateCategoryForm = {
+  name: string;
+  owner?: number;
+  parent?: number;
+};
+
+type updateCategoryForm = CreateCategoryForm & { id: number };
+
 export class CatalogService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
     private readonly teamRepository: TeamRepository,
   ) {}
 
-  async create({
-    name,
-    owner,
-    parent,
-  }: {
-    name: string;
-    owner?: number;
-    parent?: number;
-  }): Promise<Category> {
-    const parentCategory = await this.fetchParentCategory(parent);
-    const slug = this.generateSlug(name, parentCategory);
-    const ownerTeam = await this.findOwner(owner, parentCategory);
+  async create({ name, owner, parent }: CreateCategoryForm): Promise<Category> {
+    const { slug, ownerTeam } = await this.buildOwnerAndSlug({
+      parent,
+      name,
+      owner,
+    });
     return this.categoryRepository.addCategory({
       name,
       slug,
       parent,
       owner: ownerTeam,
     });
+  }
+
+  private async buildOwnerAndSlug({ parent, name, owner }: CreateCategoryForm) {
+    const parentCategory = await this.fetchParentCategory(parent);
+    const slug = this.generateSlug(name, parentCategory);
+    const ownerTeam = await this.findOwner(owner, parentCategory);
+    return { slug, ownerTeam };
+  }
+
+  async update({
+    name,
+    parent,
+    owner,
+    id,
+  }: updateCategoryForm): Promise<Category> {
+    const { slug, ownerTeam } = await this.buildOwnerAndSlug({
+      parent,
+      name,
+      owner,
+    });
+    const updatedCategory = await this.categoryRepository.updateCategory({
+      id,
+      name,
+      slug,
+      parent,
+      owner: ownerTeam,
+    });
+    await this.updateSubCategories(updatedCategory);
+    return updatedCategory;
+  }
+
+  private async updateSubCategories(updatedCategory: Category) {
+    const subCategories = await this.categoryRepository.getSubCategories(
+      updatedCategory.id,
+    );
+    const categoriesWithNewSlug = await this.slugComputeCascading(
+      updatedCategory,
+      subCategories,
+    );
+    const categoriesWithNewOwner = categoriesWithNewSlug.map((category) => {
+      const owner = updatedCategory.owner ?? category.owner;
+      return { ...category, owner };
+    });
+
+    await this.categoryRepository.updateCategories(categoriesWithNewOwner);
   }
 
   async find(id: number): Promise<Category> {
@@ -49,16 +96,16 @@ export class CatalogService {
   async remove(id: number): Promise<void> {
     const deletedCategory = await this.categoryRepository.removeCategory(id);
     if (!deletedCategory) return;
-    return await this.cascadingUpdateChildren(deletedCategory);
+    return await this.cascadingUpdateSubCategories(deletedCategory);
   }
 
-  private async cascadingUpdateChildren(deletedCategory: Category) {
+  private async cascadingUpdateSubCategories(currentCategory: Category) {
     const newParent = await this.categoryRepository.getCategory(
-      deletedCategory.parent,
+      currentCategory.parent,
     );
 
     const subCategories = await this.linkSubCategoriesToNewParent(
-      deletedCategory.id,
+      currentCategory.id,
       newParent,
     );
 

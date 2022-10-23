@@ -203,4 +203,140 @@ describe('Catalog', () => {
       },
     );
   });
+  describe('update a category', () => {
+    describe(`update category name
+      - Update category slug according to new name
+      - Cascade slug updates on sub categories
+    `, () => {
+      describe.each`
+        toUpdateCategory                                                                       | expectedSlug                                  | childCategory                                                     | grandChildCategory
+        ${{ id: 1, name: 'Bricolles', owner: { id: 1, name: 'matos' } }}                       | ${'bricolles'}                                | ${undefined}                                                      | ${undefined}
+        ${{ id: 4, name: 'Mega Grosses Tensions', owner: { id: 3, name: 'elec' }, parent: 3 }} | ${'electrique->cable->mega-grosses-tensions'} | ${undefined}                                                      | ${undefined}
+        ${{ id: 3, name: 'Cablage', owner: { id: 3, name: 'elec' }, parent: 2 }}               | ${'electrique->cablage'}                      | ${{ id: 4, expectedSlug: 'electrique->cablage->grosse-tension' }} | ${undefined}
+        ${{ id: 2, name: 'Electricite', owner: { id: 3, name: 'elec' } }}                      | ${'electricite'}                              | ${{ id: 3, expectedSlug: 'electricite->cable' }}                  | ${{ id: 4, expectedSlug: 'electricite->cable->grosse-tension' }}
+      `(
+        `when update category #$toUpdateCategory.id name to "$toUpdateCategory.name"`,
+        ({
+          toUpdateCategory,
+          expectedSlug,
+          childCategory,
+          grandChildCategory,
+        }) => {
+          it(`should update category slug to "${expectedSlug}"`, async () => {
+            const updatedCategory = await catalog.update(toUpdateCategory);
+            expect(updatedCategory.name).toBe(toUpdateCategory.name);
+            expect(updatedCategory.slug).toBe(expectedSlug);
+          });
+          if (childCategory) {
+            it(`should update #${childCategory.id} child category slug to ${childCategory.expectedSlug}`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(childCategory.id);
+              expect(child.slug).toBe(childCategory.expectedSlug);
+            });
+          }
+          if (grandChildCategory) {
+            it(`should update #${grandChildCategory.id} grandchild category slug to ${grandChildCategory.expectedSlug}`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(grandChildCategory.id);
+              expect(child.slug).toBe(grandChildCategory.expectedSlug);
+            });
+          }
+        },
+      );
+    });
+    describe(`update category team
+      - Update owner only for main categories
+      - Cascade owner updates on sub categories
+    `, () => {
+      describe.each`
+        toUpdateCategory                                 | expectedOwner               | childCategory | grandChildCategory
+        ${{ id: 1, name: 'Bricollage', owner: 2 }}       | ${{ id: 2, name: 'signa' }} | ${undefined}  | ${undefined}
+        ${{ id: 3, name: 'Cable', owner: 2, parent: 2 }} | ${{ id: 3, name: 'elec' }}  | ${{ id: 3 }}  | ${undefined}
+        ${{ id: 2, name: 'Electrique', owner: 2 }}       | ${{ id: 2, name: 'signa' }} | ${{ id: 3 }}  | ${{ id: 3 }}
+      `(
+        `when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team`,
+        ({
+          toUpdateCategory,
+          expectedOwner,
+          childCategory,
+          grandChildCategory,
+        }) => {
+          it(`should set category owner to "${expectedOwner.name}"`, async () => {
+            const updatedCategory = await catalog.update(toUpdateCategory);
+            expect(updatedCategory.owner).toMatchObject(expectedOwner);
+          });
+          if (childCategory) {
+            it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(childCategory.id);
+              expect(child.owner).toMatchObject(expectedOwner);
+            });
+          }
+          if (grandChildCategory) {
+            it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(grandChildCategory.id);
+              expect(child.owner).toMatchObject(expectedOwner);
+            });
+          }
+        },
+      );
+    });
+    describe(`update category parent
+      - Update category slug
+      - Update owner according to new parent category one
+      - Cascade slug updates on sub categories
+      - Cascade owner changes on sub categories
+    `, () => {
+      describe.each`
+        toUpdateCategory                                      | expectedOwner               | expectedSlug                | childCategory                                               | grandChildCategory
+        ${{ id: 1, name: 'Bricollage', owner: 1, parent: 2 }} | ${{ id: 3, name: 'elec' }}  | ${'electrique->bricollage'} | ${undefined}                                                | ${undefined}
+        ${{ id: 4, name: 'Grosse Tension', owner: 3 }}        | ${{ id: 3, name: 'elec' }}  | ${'grosse-tension'}         | ${undefined}                                                | ${undefined}
+        ${{ id: 2, name: 'Electrique', owner: 3, parent: 1 }} | ${{ id: 1, name: 'matos' }} | ${'bricollage->electrique'} | ${{ id: 3, expectedSlug: 'bricollage->electrique->cable' }} | ${{ id: 4, expectedSlug: 'bricollage->electrique->cable->grosse-tension' }}
+      `(
+        'when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category',
+        ({
+          toUpdateCategory,
+          expectedOwner,
+          expectedSlug,
+          childCategory,
+          grandChildCategory,
+        }) => {
+          it(`should set category owner to "${expectedOwner.name}" team`, async () => {
+            const updatedCategory = await catalog.update(toUpdateCategory);
+            expect(updatedCategory.owner).toMatchObject(expectedOwner);
+          });
+          it(`should update category slug to "${expectedSlug}"`, async () => {
+            const updatedCategory = await catalog.update(toUpdateCategory);
+            expect(updatedCategory.name).toBe(toUpdateCategory.name);
+            expect(updatedCategory.slug).toBe(expectedSlug);
+          });
+          if (childCategory) {
+            it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(childCategory.id);
+              expect(child.owner).toMatchObject(expectedOwner);
+            });
+            it(`should update #${childCategory.id} child category slug to ${childCategory.expectedSlug}`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(childCategory.id);
+              expect(child.slug).toBe(childCategory.expectedSlug);
+            });
+          }
+          if (grandChildCategory) {
+            it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(grandChildCategory.id);
+              expect(child.owner).toMatchObject(expectedOwner);
+            });
+            it(`should update #${grandChildCategory.id} grandchild category slug to ${grandChildCategory.expectedSlug}`, async () => {
+              await catalog.update(toUpdateCategory);
+              const child = await catalog.find(grandChildCategory.id);
+              expect(child.slug).toBe(grandChildCategory.expectedSlug);
+            });
+          }
+        },
+      );
+    });
+  });
 });
