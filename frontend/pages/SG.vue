@@ -99,13 +99,16 @@
         </template>
 
         <template #[`item.newConsumption`]="{ item }">
-          {{
-            (
-              (mode === "cask" ? stickPrice : settledStickPrice) *
-                item.newConsumption || 0
-            ).toFixed(2)
-          }}
-          €
+          <div v-if="isExpenseMode">
+            {{
+              (
+                (mode === "cask" ? stickPrice : settledStickPrice) *
+                  item.newConsumption || 0
+              ).toFixed(2)
+            }}
+            €
+          </div>
+          <div v-else>{{ (+item.newConsumption || 0).toFixed(2) }}€</div>
         </template>
       </v-data-table>
     </v-container>
