@@ -104,7 +104,16 @@ export default Vue.extend({
     },
 
     isNegativeTransaction(transaction: Transaction) {
-      return transaction.from === this.me.id;
+      switch (transaction.type) {
+        case "DEPOSIT":
+          return false;
+        case "TRANSFER":
+          return transaction.from === this.me.id;
+        case "EXPENSE":
+          return true;
+        default:
+          return false;
+      }
     },
   },
 });
