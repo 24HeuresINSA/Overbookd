@@ -15,31 +15,33 @@ export class BroadcastNotif {
 }
 
 export interface Expense {
-  type: "expense";
+  type: "EXPENSE";
   from: string;
   to: null;
   amount: number;
   context: string;
-  createdAt: Date;
+  created_at: Date;
+  is_deleted: boolean;
 }
 
 export interface Deposit {
-  type: "deposit";
+  type: "DEPOSIT";
   from: string;
   to: null;
   amount: number;
-  context: null;
-  createdAt: Date;
+  context: string;
+  created_at: Date;
+  is_deleted: boolean;
 }
 
 export interface Transfer {
-  type: "transfer";
+  type: "TRANSFER";
   from: string;
   to: string;
   amount: number;
   context: string;
-  createdAt: Date;
-  isValid: boolean;
+  created_at: Date;
+  is_deleted: boolean;
 }
 
 export type Transaction = Expense | Deposit | Transfer;
@@ -54,7 +56,7 @@ export interface Notification {
 }
 
 export interface User {
-  _id: string;
+  id: string;
   team: string[];
   friends: any[];
   nickname?: string;

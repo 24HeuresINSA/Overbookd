@@ -11,7 +11,7 @@
       </template>
 
       <template #[`item.type`]="{ item }">
-        <label :style="item.isValid ? '' : 'background-color: red'">
+        <label :style="item.is_deleted ? 'background-color: red' : ''">
           {{ item.type }}
         </label>
       </template>
@@ -28,8 +28,12 @@
         {{ getFullNameFromID(item.from) }}
       </template>
 
-      <template #[`item.createdAt`]="{ item }">
-        {{ new Date(item.createdAt).toLocaleString() }}
+      <template #[`item.created_at`]="{ item }">
+        {{
+          new Date(item.created_at).toLocaleString("fr", {
+            timezone: "Europe/Paris",
+          })
+        }}
       </template>
 
       <template #[`item.action`]="{ item }">
@@ -70,7 +74,7 @@ export default {
           value: "to",
         },
         { text: "Contexte", value: "context" },
-        { text: "Date", value: "createdAt" },
+        { text: "Date", value: "created_at" },
         {
           text: "Montant",
           value: "amount",
@@ -87,7 +91,7 @@ export default {
     );
     if (usersCall) {
       usersCall.data.forEach((user) => {
-        this.users[user._id] = user.username;
+        this.users[user.id] = user.username;
       });
       this.$forceUpdate();
     }
@@ -115,8 +119,8 @@ export default {
         });
       }
     },
-    getFullNameFromID(_id) {
-      return this.users[_id];
+    getFullNameFromID(id) {
+      return this.users[id];
     },
   },
 };

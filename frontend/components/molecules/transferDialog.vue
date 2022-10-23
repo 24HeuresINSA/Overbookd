@@ -50,7 +50,7 @@ export default Vue.extend({
         amount: "0",
         beneficiary: {
           username: undefined,
-          _id: "",
+          id: "",
         },
         isValid: false,
         user: {} as any,
@@ -91,7 +91,7 @@ export default Vue.extend({
       this.transfer.amount = this.transfer.amount.replace(",", ".");
       console.log(this.transfer);
       // transaction to self...
-      if (this.transfer.user._id == this.me._id) {
+      if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message:
@@ -108,16 +108,13 @@ export default Vue.extend({
         return;
       }
 
-      if (this.transfer.user._id) {
+      if (this.transfer.user.id) {
         try {
-          let newTransfer: Transfer = {
+          let newTransfer: Partial<Transfer> = {
             amount: +this.transfer.amount,
             context: this.transfer.reason,
-            createdAt: new Date(),
-            from: this.me._id,
-            to: this.transfer.user._id,
-            type: "transfer",
-            isValid: true,
+            from: this.me.id,
+            to: this.transfer.user.id,
           };
           const res = await this.$accessor.transaction.addTransaction(
             newTransfer

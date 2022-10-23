@@ -90,7 +90,7 @@ export default Vue.extend({
       this.isFriendDialogOpen = !this.isFriendDialogOpen;
     },
     calendar(): any {
-      window.open(`/calendar/${this.user._id}`, "_blank");
+      window.open(`/calendar/${this.user.id}`, "_blank");
     },
   },
 });

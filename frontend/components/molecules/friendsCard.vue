@@ -48,7 +48,7 @@ export default Vue.extend({
   data() {
     return {
       newFriend: {
-        _id: "",
+        id: "",
         username: "",
       },
       usernames: undefined,
@@ -77,14 +77,14 @@ export default Vue.extend({
   },
   methods: {
     async sendFriendRequest() {
-      if (this.me._id === this.newFriend._id) {
+      if (this.me.id === this.newFriend.id) {
         // asked himself to be friend
         window.open(
           "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690"
         );
         return;
       }
-      if (this.me.friends.find((friend) => friend.id === this.newFriend._id)) {
+      if (this.me.friends.find((friend) => friend.id === this.newFriend.id)) {
         const notif: SnackNotif = {
           type: "success",
           message: "Vous êtes déjà amis !",
@@ -100,14 +100,14 @@ export default Vue.extend({
         date: new Date(),
         data: {
           username: `${this.me.firstname} ${this.me.lastname.toUpperCase()}`,
-          id: this.me._id,
+          id: this.me.id,
         },
       };
       // Send it to the api
       await safeCall(
         this.$store,
         RepoFactory.userRepo.sendFriendRequestByKeycloakID(this, {
-          to: this.newFriend._id,
+          to: this.newFriend.id,
           data: req,
         }),
         "sent",

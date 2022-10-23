@@ -90,6 +90,25 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @Get('all')
+  @ApiResponse({
+    status: 200,
+    description: 'Get all usernames',
+    type: Array,
+  })
+  async getAllUsernames(): Promise<Username[]> {
+    const users = await this.userService.users({
+      select: {
+        firstname: true,
+        lastname: true,
+        id: true,
+      },
+    });
+    return users.map(this.userService.getUsername);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles('hard')
   @Get(':id')

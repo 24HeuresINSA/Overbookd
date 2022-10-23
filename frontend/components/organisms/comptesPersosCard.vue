@@ -29,7 +29,7 @@
               {{ item.amount.toFixed ? item.amount.toFixed(2) : item.amount }} €
             </template>
             <template #[`item.context`]="{ item }">
-              {{ !item.isValid ? "[SUPPRIME] " : "" }}{{ item.context }}
+              {{ item.is_deleted ? "[SUPPRIME] " : "" }}{{ item.context }}
             </template>
           </v-data-table>
         </v-card-text>
@@ -91,7 +91,7 @@ export default Vue.extend({
     },
 
     isNegativeTransaction(transaction: Transaction) {
-      return transaction.from === this.me._id;
+      return transaction.from === this.me.id;
     },
   },
 });
