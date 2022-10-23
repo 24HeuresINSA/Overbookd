@@ -37,7 +37,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles('hard')
+  @Roles('admin')
   @Get('user/:id')
   @ApiResponse({
     status: 200,
