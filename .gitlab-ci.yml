@@ -36,3 +36,4 @@ include:
   - local: /.gitlab/ci/container_scan.gitlab-ci.yml
   - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
   - local: /.gitlab/ci/lintage.gitlab-ci.yml
+  - local: /.gitlab/ci/backend_test.gitlab-ci.yml
