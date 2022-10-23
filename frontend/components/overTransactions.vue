@@ -29,7 +29,11 @@
       </template>
 
       <template #[`item.created_at`]="{ item }">
-        {{ new Date(item.created_at).toLocaleString() }}
+        {{
+          new Date(item.created_at).toLocaleString("fr", {
+            timezone: "Europe/Paris",
+          })
+        }}
       </template>
 
       <template #[`item.action`]="{ item }">

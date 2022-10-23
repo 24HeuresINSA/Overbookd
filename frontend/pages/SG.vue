@@ -373,7 +373,7 @@ export default {
             transaction.to = user.id;
             transaction.from = user.id;
             transaction.amount = +user.newConsumption;
-            transaction.context = `Recharge de compte perso le ${new Date().toLocaleDateString()}`;
+            transaction.context = `Recharge de compte perso`;
             break;
         }
 
