@@ -31,6 +31,15 @@
             <template #[`item.context`]="{ item }">
               {{ item.is_deleted ? "[SUPPRIME] " : "" }}{{ item.context }}
             </template>
+            <template #[`item.created_at`]="{ item }">
+              {{
+                new Date(item.created_at)
+                  .toLocaleString("fr", {
+                    timezone: "Europe/Paris",
+                  })
+                  .split(" ")[0]
+              }}
+            </template>
           </v-data-table>
         </v-card-text>
       </div>
@@ -57,6 +66,7 @@ export default Vue.extend({
       headers: [
         { text: "type", value: "type" },
         { text: "context", value: "context" },
+        { text: "date", value: "created_at" },
         { text: "montant", value: "amount", align: "end" },
       ],
       areTransfersOpen: false,
@@ -64,7 +74,10 @@ export default Vue.extend({
   },
   computed: {
     displayedTransactionHistory(): any {
-      return this.mTransactions.slice(0, 5);
+      const end = this.mTransactions.length - 1 || 5;
+      const start = end === 5 ? 0 : end - 5;
+
+      return this.mTransactions.slice(start, end).reverse();
     },
     mBalance() {
       return this.$accessor.user.me.balance || 0;
