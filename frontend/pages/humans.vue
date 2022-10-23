@@ -127,14 +127,6 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasRole(['admin']) && isCpUseful(item)"
-                  icon
-                  small
-                  @click="openTransactionDialog(item)"
-                >
-                  <v-icon small>mdi-cash</v-icon>
-                </v-btn>
-                <v-btn
                   v-if="hasRole(['admin', 'bureau'])"
                   icon
                   small
@@ -241,27 +233,6 @@
         </v-col>
       </v-row>
     </div>
-
-    <v-dialog v-model="isTransactionDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Ajouter de 💰</v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="newTransaction.reason"
-            label="reason"
-          ></v-text-field>
-          <v-text-field
-            v-model="newTransaction.amount"
-            label="montant (en euro)"
-            type="number"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="transaction()">+</v-btn>
-          <v-btn @click="transaction(true)">-</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <v-dialog v-model="isCharismaDialogOpen" max-width="600">
       <v-card>
