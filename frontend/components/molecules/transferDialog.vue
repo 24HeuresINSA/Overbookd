@@ -101,6 +101,7 @@ export default Vue.extend({
       }
 
       if (+this.transfer.amount <= 0) {
+        console.log(this.transfer);
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",
@@ -119,12 +120,7 @@ export default Vue.extend({
           const res = await this.$accessor.transaction.addTransaction(
             newTransfer
           );
-          if (res) {
-            // clear fields
-            this.transfer.amount = "";
-            this.transfer.reason = "";
-            this.transfer.user = {};
-          } else {
+          if (!res) {
             console.log("refused ...");
           }
         } catch (e) {
