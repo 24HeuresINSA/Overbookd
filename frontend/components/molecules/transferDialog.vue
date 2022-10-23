@@ -120,7 +120,6 @@ export default Vue.extend({
             newTransfer
           );
           if (!res) {
-            console.log("refused ...");
           }
         } catch (e) {
           console.error(e);
