@@ -116,11 +116,7 @@ export default Vue.extend({
             from: this.me.id,
             to: this.transfer.user.id,
           };
-          const res = await this.$accessor.transaction.addTransaction(
-            newTransfer
-          );
-          if (!res) {
-          }
+          await this.$accessor.transaction.addTransaction(newTransfer);
         } catch (e) {
           console.error(e);
         }
