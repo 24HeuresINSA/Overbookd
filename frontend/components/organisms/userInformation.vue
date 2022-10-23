@@ -352,6 +352,7 @@ export default {
         teams: this.mUser.team,
       });
       if (res.status === 201) {
+        this.mUser.team = res.data.team;
         this.$accessor.notif.pushNotification({
           type: "success",
           message: "Roles mis à jour",

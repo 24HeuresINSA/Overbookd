@@ -1,12 +1,11 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { UserModule } from 'src/user/user.module';
+import { Module } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from '../prisma.service';
 import { TeamController } from './team.controller';
 import { TeamService } from './team.service';
 
 @Module({
-  imports: [forwardRef(() => UserModule)],
+  imports: [],
   controllers: [TeamController],
   providers: [TeamService, PrismaService, UserService],
 })

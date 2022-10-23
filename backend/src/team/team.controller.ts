@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Team } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -8,7 +16,6 @@ import { CreateTeamDto } from './dto/createTeam.dto';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 import { TeamService } from './team.service';
 
-@ApiBearerAuth()
 @ApiTags('team')
 @Controller('team')
 export class TeamController {
@@ -27,6 +34,7 @@ export class TeamController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('humain')
   @Post('link')
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: 'Link a user with different teams',
@@ -40,8 +48,10 @@ export class TeamController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
+  @ApiBearerAuth()
+  @HttpCode(201)
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Create a team',
     type: CreateTeamDto,
   })
@@ -51,8 +61,10 @@ export class TeamController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete()
+  @ApiBearerAuth()
+  @HttpCode(204)
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Delete a team',
   })
   async deleteTeam(@Body() payload: CreateTeamDto): Promise<void> {
