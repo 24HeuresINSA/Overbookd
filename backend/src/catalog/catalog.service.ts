@@ -7,7 +7,7 @@ import {
   TeamRepository,
 } from './interfaces';
 
-function slugify(name: string): string {
+export function slugify(name: string): string {
   const SLUG_SEPARATOR = '-';
   const spaces = new RegExp(/[ ]+/gm);
   return name.replace(spaces, SLUG_SEPARATOR).toLowerCase();
@@ -29,7 +29,7 @@ export class CatalogService {
     parent?: number;
   }): Promise<Category> {
     const parentCategory = await this.fetchParentCategory(parent);
-    const slug = await this.generateSlug(name, parentCategory);
+    const slug = this.generateSlug(name, parentCategory);
     const ownerTeam = await this.findOwner(owner, parentCategory);
     return this.categoryRepository.addCategory({
       name,
@@ -46,15 +46,72 @@ export class CatalogService {
     return category;
   }
 
+  async remove(id: number): Promise<void> {
+    const deletedCategory = await this.categoryRepository.removeCategory(id);
+    if (!deletedCategory) return;
+    return await this.cascadingUpdateChildren(deletedCategory);
+  }
+
+  private async cascadingUpdateChildren(deletedCategory: Category) {
+    const newParent = await this.categoryRepository.getCategory(
+      deletedCategory.parent,
+    );
+
+    const subCategories = await this.linkSubCategoriesToNewParent(
+      deletedCategory.id,
+      newParent,
+    );
+
+    const toUpdateCategories = await this.slugComputeCascading(
+      newParent,
+      subCategories,
+    );
+    await this.categoryRepository.updateCategories(toUpdateCategories);
+    return;
+  }
+
+  private async slugComputeCascading(
+    currentCategory: Category,
+    subCategories: Category[],
+    toUpdateCategories: Category[] = [],
+  ): Promise<Category[]> {
+    if (!subCategories.length) return toUpdateCategories;
+
+    const updatedSubCategories = subCategories.map((subCategory) => ({
+      ...subCategory,
+      slug: this.generateSlug(subCategory.name, currentCategory),
+    }));
+
+    toUpdateCategories.push(...updatedSubCategories);
+
+    const toUpdateCategoriesListing = await Promise.all(
+      updatedSubCategories.map(async (subCategory) =>
+        this.slugComputeCascading(
+          subCategory,
+          await this.categoryRepository.getSubCategories(subCategory.id),
+          toUpdateCategories,
+        ),
+      ),
+    );
+    return toUpdateCategoriesListing.flat();
+  }
+
+  private async linkSubCategoriesToNewParent(id: number, newParent: Category) {
+    const categories = await this.categoryRepository.getSubCategories(id);
+
+    const updatedSubCategories = categories.map((subCategory) => ({
+      ...subCategory,
+      parent: newParent?.id,
+    }));
+    return this.categoryRepository.updateCategories(updatedSubCategories);
+  }
+
   private async fetchParentCategory(parent?: number) {
     if (!parent) return undefined;
     return this.find(parent);
   }
 
-  private async generateSlug(
-    name: string,
-    parentCategory?: Category,
-  ): Promise<string> {
+  private generateSlug(name: string, parentCategory?: Category): string {
     return parentCategory
       ? `${parentCategory.slug}->${slugify(name)}`
       : slugify(name);
