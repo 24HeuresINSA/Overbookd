@@ -47,7 +47,7 @@ export class TransactionService {
 
     const senderBalance = sender.balance - data.amount;
     const receiverBalance = receiver.balance + data.amount;
-    this.prisma.$transaction([
+    await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id: Number(data.from) },
         data: { balance: senderBalance },
@@ -69,7 +69,7 @@ export class TransactionService {
         this.checkTransactionAmount(transaction);
         //Check if user exists
         const userId =
-          transaction.from === -1 ? transaction.to : transaction.from; //We only deal with expense and deposit
+          transaction.type === 'DEPOSIT' ? transaction.to : transaction.from;
         const users = await this.userExists([userId]);
         const user = users.find((user) => user.id === userId);
         const newBalance =
