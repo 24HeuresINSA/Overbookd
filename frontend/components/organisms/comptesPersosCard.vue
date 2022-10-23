@@ -74,7 +74,7 @@ export default Vue.extend({
   },
   computed: {
     displayedTransactionHistory(): any {
-      const end = this.mTransactions.length - 1 || 5;
+      const end = this.mTransactions.length || 5;
       const start = end === 5 ? 0 : end - 5;
 
       return this.mTransactions.slice(start, end).reverse();
