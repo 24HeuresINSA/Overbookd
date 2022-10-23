@@ -5,7 +5,7 @@ import {
   UserWithTeam,
 } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
+import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { User } from '@prisma/client';
 
 export type UserCredentials = Pick<User, 'email' | 'password'>;
