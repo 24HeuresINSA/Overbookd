@@ -17,6 +17,7 @@ export interface CategoryRepository {
   addCategory(category: Omit<Category, 'id'>): Promise<Category>;
   removeCategory(id: number): Promise<Category | undefined>;
   updateCategories(categories: Category[]): Promise<Category[] | undefined>;
+  updateCategory(categories: Category): Promise<Category | undefined>;
 }
 
 export interface TeamRepository {

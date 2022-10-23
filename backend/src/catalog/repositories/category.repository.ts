@@ -44,7 +44,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     );
   }
 
-  private updateCategory(category: Category): Promise<Category> {
+  updateCategory(category: Category): Promise<Category> {
     const categoryIndex = this.categories.findIndex(
       (categ) => categ.id === category.id,
     );
