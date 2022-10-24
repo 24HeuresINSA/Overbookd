@@ -32,7 +32,7 @@
               {{ item.is_deleted ? "[SUPPRIME] " : "" }}{{ item.context }}
             </template>
             <template #[`item.created_at`]="{ item }">
-              {{ new Date(item.created_at).toLocaleDateString("fr-FR") }}
+              {{ new Date(item.created_at).toLocaleDateString("fr-FR", {timezone: "Europe/Paris"}) }}
             </template>
           </v-data-table>
         </v-card-text>
