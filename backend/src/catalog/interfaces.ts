@@ -11,6 +11,10 @@ export interface Team {
   name: string;
 }
 
+export interface CategoryTree extends Category {
+  subCategories?: CategoryTree[];
+}
+
 export interface CategoryRepository {
   getCategory(id: number): Promise<Category | undefined>;
   getSubCategories(parentId: number): Promise<Category[] | undefined>;
@@ -18,6 +22,7 @@ export interface CategoryRepository {
   removeCategory(id: number): Promise<Category | undefined>;
   updateCategories(categories: Category[]): Promise<Category[] | undefined>;
   updateCategory(categories: Category): Promise<Category | undefined>;
+  getCategoryTrees(): Promise<CategoryTree[] | undefined>;
 }
 
 export interface TeamRepository {

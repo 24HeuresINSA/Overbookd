@@ -339,4 +339,225 @@ describe('Catalog', () => {
       );
     });
   });
+  describe('get all categories', () => {
+    it(`should render categories as a parent tree
+    - Matos
+    - Electrique
+        - Cable
+          - Grosse Tension
+    `, async () => {
+      const categories = await catalog.getAll();
+      expect(categories).toHaveLength(2);
+      expect(categories).toContainEqual({
+        id: 1,
+        name: 'Bricollage',
+        slug: 'bricollage',
+        owner: { id: 1, name: 'matos' },
+        subCategories: [],
+      });
+      expect(categories).toContainEqual({
+        id: 2,
+        name: 'Electrique',
+        slug: 'electrique',
+        owner: { id: 3, name: 'elec' },
+        subCategories: [
+          {
+            id: 3,
+            name: 'Cable',
+            slug: 'electrique->cable',
+            owner: { id: 3, name: 'elec' },
+            parent: 2,
+            subCategories: [
+              {
+                id: 4,
+                name: 'Grosse Tension',
+                slug: 'electrique->cable->grosse-tension',
+                owner: { id: 3, name: 'elec' },
+                parent: 3,
+                subCategories: [],
+              },
+            ],
+          },
+        ],
+      });
+    });
+    describe('when there is more subcategories on a category', () => {
+      beforeEach(() => {
+        categoryRepository.categories = getSignaCategories();
+      });
+      it(`should render signaletique category tree
+        - Signaletique
+          - Lumineuse
+            - Projection
+            - Panneau
+          - Plan
+            - Grand Format
+            - Format flyer
+          - Panneau
+            - Bois
+            - Plastique
+            - Moquette
+      `, async () => {
+        const signa = { id: 2, name: 'signa' };
+        const categories = await catalog.getAll();
+        expect(categories).toHaveLength(1);
+        expect(categories).toContainEqual({
+          id: 1,
+          name: 'Signaletique',
+          slug: 'signaletique',
+          owner: signa,
+          subCategories: [
+            {
+              id: 2,
+              name: 'Lumineuse',
+              slug: 'signaletique->lumineuse',
+              owner: signa,
+              parent: 1,
+              subCategories: [
+                {
+                  id: 3,
+                  name: 'Projection',
+                  slug: 'signaletique->lumineuse->projection',
+                  owner: signa,
+                  parent: 2,
+                  subCategories: [],
+                },
+                {
+                  id: 10,
+                  name: 'Panneau',
+                  slug: 'signaletique->lumineuse->panneau',
+                  owner: signa,
+                  parent: 2,
+                  subCategories: [],
+                },
+              ],
+            },
+            {
+              id: 4,
+              name: 'Plan',
+              slug: 'signaletique->plan',
+              owner: signa,
+              parent: 1,
+              subCategories: [
+                {
+                  id: 5,
+                  name: 'Grand Format',
+                  slug: 'signaletique->plan->grand-format',
+                  owner: signa,
+                  parent: 4,
+                  subCategories: [],
+                },
+                {
+                  id: 6,
+                  name: 'Format Flyer',
+                  slug: 'signaletique->plan->format-flyer',
+                  owner: signa,
+                  parent: 4,
+                  subCategories: [],
+                },
+              ],
+            },
+            {
+              id: 7,
+              name: 'Panneau',
+              slug: 'signaletique->panneau',
+              owner: signa,
+              parent: 1,
+              subCategories: [
+                {
+                  id: 8,
+                  name: 'Bois',
+                  slug: 'signaletique->panneau->bois',
+                  owner: signa,
+                  parent: 7,
+                  subCategories: [],
+                },
+                {
+                  id: 8,
+                  name: 'Plastique',
+                  slug: 'signaletique->panneau->plastique',
+                  owner: signa,
+                  parent: 7,
+                  subCategories: [],
+                },
+                {
+                  id: 9,
+                  name: 'Moquette',
+                  slug: 'signaletique->panneau->moquette',
+                  owner: signa,
+                  parent: 7,
+                  subCategories: [],
+                },
+              ],
+            },
+          ],
+        });
+      });
+    });
+  });
 });
+
+function getSignaCategories(): Category[] {
+  const owner = { id: 2, name: 'signa' };
+  return [
+    { id: 1, name: 'Signaletique', slug: 'signaletique', owner },
+    {
+      id: 2,
+      name: 'Lumineuse',
+      slug: 'signaletique->lumineuse',
+      owner,
+      parent: 1,
+    },
+    {
+      id: 3,
+      name: 'Projection',
+      slug: 'signaletique->lumineuse->projection',
+      owner,
+      parent: 2,
+    },
+    {
+      id: 10,
+      name: 'Panneau',
+      slug: 'signaletique->lumineuse->panneau',
+      owner,
+      parent: 2,
+    },
+    { id: 4, name: 'Plan', slug: 'signaletique->plan', owner, parent: 1 },
+    {
+      id: 5,
+      name: 'Grand Format',
+      slug: 'signaletique->plan->grand-format',
+      owner,
+      parent: 4,
+    },
+    {
+      id: 6,
+      name: 'Format Flyer',
+      slug: 'signaletique->plan->format-flyer',
+      owner,
+      parent: 4,
+    },
+    { id: 7, name: 'Panneau', slug: 'signaletique->panneau', owner, parent: 1 },
+    {
+      id: 8,
+      name: 'Bois',
+      slug: 'signaletique->panneau->bois',
+      owner,
+      parent: 7,
+    },
+    {
+      id: 8,
+      name: 'Plastique',
+      slug: 'signaletique->panneau->plastique',
+      owner,
+      parent: 7,
+    },
+    {
+      id: 9,
+      name: 'Moquette',
+      slug: 'signaletique->panneau->moquette',
+      owner,
+      parent: 7,
+    },
+  ];
+}
