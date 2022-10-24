@@ -124,13 +124,10 @@ export class UserController {
     type: UserModificationDto,
   })
   updateUserById(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() userData: Partial<User>,
     @Request() req: Express.Request,
   ): Promise<UserWithoutPassword> {
-    if (id === undefined) {
-      return null;
-    }
     return this.userService.updateUser(
       {
         where: { id: Number(id) },
