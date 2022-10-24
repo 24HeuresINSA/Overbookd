@@ -65,7 +65,7 @@
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
           <v-btn
-            v-if="hasRole('admin')"
+            v-if="hasRole('sg')"
             :disabled="!areInputsValid.res"
             @click="saveTransactions"
             >Enregistrer</v-btn
@@ -191,13 +191,10 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      const round = +(
-        Math.round((+this.totalPrice / +this.totalConsumptions) * 100) / 100
-      ).toFixed(2);
-      if (round * +this.totalConsumptions < +this.totalPrice) {
-        return round + 0.01;
-      }
-      return round;
+      const rawAmount = +(+this.totalPrice / +this.totalConsumptions);
+      const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
+      let res = parseInt(round / 5) * 5;
+      return ((res + 5) * 0.01).toFixed(2);
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
