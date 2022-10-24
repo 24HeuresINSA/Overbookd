@@ -70,7 +70,7 @@
             @click="saveTransactions"
             >Enregistrer</v-btn
           >
-          <v-btn text>Envoyer un mail au négatif</v-btn>
+          <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
         </v-card-text>
@@ -267,7 +267,7 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("admin")) {
+    if (this.$accessor.user.hasRole("sg")) {
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
           this.users = res.data.filter((user) => {

@@ -90,7 +90,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('sg')
   @Get('all')
   @ApiResponse({
     status: 200,

@@ -164,13 +164,13 @@ export default {
         },
         {
           icon: "mdi-format-list-bulleted",
-          roles: "admin",
+          roles: "sg",
           title: "SG",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
-          roles: "admin",
+          roles: "sg",
           title: "Transactions",
           to: "/transactions",
         },

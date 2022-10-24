@@ -21,11 +21,19 @@
       </template>
 
       <template #[`item.to`]="{ item }">
-        {{ getFullNameFromID(item.to) }}
+        {{
+          item.type == "TRANSFER" || item.type == "DEPOSIT"
+            ? getFullNameFromID(item.to)
+            : ""
+        }}
       </template>
 
       <template #[`item.from`]="{ item }">
-        {{ getFullNameFromID(item.from) }}
+        {{
+          item.type == "TRANSFER" || item.type == "EXPENSE"
+            ? getFullNameFromID(item.from)
+            : ""
+        }}
       </template>
 
       <template #[`item.created_at`]="{ item }">
