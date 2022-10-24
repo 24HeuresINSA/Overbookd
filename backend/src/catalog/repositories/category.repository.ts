@@ -1,4 +1,4 @@
-import { Category, CategoryRepository } from '../interfaces';
+import { Category, CategoryRepository, CategoryTree } from '../interfaces';
 
 export class InMemoryCategoryRepository implements CategoryRepository {
   categories: Category[];
@@ -50,5 +50,24 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     );
     this.categories[categoryIndex] = category;
     return Promise.resolve(category);
+  }
+
+  getCategoryTrees(): Promise<CategoryTree[]> {
+    const mainCategories = this.categories.filter(
+      (category) => !category.parent,
+    );
+    return this.buildCategoriesTree(mainCategories);
+  }
+
+  private async buildCategoriesTree(
+    categories: Category[],
+  ): Promise<CategoryTree[]> {
+    return Promise.all(
+      categories.map(async (category) => {
+        const subCategories = await this.getSubCategories(category.id);
+        const subCategoriesTree = await this.buildCategoriesTree(subCategories);
+        return { ...category, subCategories: subCategoriesTree };
+      }),
+    );
   }
 }
