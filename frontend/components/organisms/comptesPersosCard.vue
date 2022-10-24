@@ -29,7 +29,14 @@
               {{ item.amount.toFixed ? item.amount.toFixed(2) : item.amount }} €
             </template>
             <template #[`item.context`]="{ item }">
-              {{ !item.isValid ? "[SUPPRIME] " : "" }}{{ item.context }}
+              {{ item.is_deleted ? "[SUPPRIME] " : "" }}{{ item.context }}
+            </template>
+            <template #[`item.created_at`]="{ item }">
+              {{
+                new Date(item.created_at).toLocaleDateString("fr-FR", {
+                  timezone: "Europe/Paris",
+                })
+              }}
             </template>
           </v-data-table>
         </v-card-text>
@@ -57,6 +64,7 @@ export default Vue.extend({
       headers: [
         { text: "type", value: "type" },
         { text: "context", value: "context" },
+        { text: "date", value: "created_at" },
         { text: "montant", value: "amount", align: "end" },
       ],
       areTransfersOpen: false,
@@ -91,7 +99,16 @@ export default Vue.extend({
     },
 
     isNegativeTransaction(transaction: Transaction) {
-      return transaction.from === this.me._id;
+      switch (transaction.type) {
+        case "DEPOSIT":
+          return false;
+        case "TRANSFER":
+          return transaction.from === this.me.id;
+        case "EXPENSE":
+          return true;
+        default:
+          return false;
+      }
     },
   },
 });

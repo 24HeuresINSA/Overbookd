@@ -107,6 +107,10 @@
               dense
               :items-per-page="20"
             >
+              <template #[`item.firstname`]="{ item }">
+                {{ item.firstname }} {{ item.lastname }}
+                {{ item.nickname ? `(${item.nickname})` : "" }}
+              </template>
               <template #[`item.action`]="{ item }" style="display: flex">
                 <v-btn
                   v-if="hasRole('hard')"
@@ -121,14 +125,6 @@
                 </v-btn>
                 <v-btn icon small :href="'mailto:' + item.email">
                   <v-icon small>mdi-email</v-icon>
-                </v-btn>
-                <v-btn
-                  v-if="hasRole(['admin']) && isCpUseful(item)"
-                  icon
-                  small
-                  @click="openTransactionDialog(item)"
-                >
-                  <v-icon small>mdi-cash</v-icon>
                 </v-btn>
                 <v-btn
                   v-if="hasRole(['admin', 'bureau'])"
@@ -164,16 +160,12 @@
                 {{ getCP(item) }}
               </template>
 
-              <template #[`item.studies`]="{ item }">
-                {{ item.year }}{{ item.departement }}
-              </template>
-
               <template #[`item.charisma`]="{ item }">
                 {{ item.charisma || 0 }}
               </template>
 
               <template #[`item.team`]="{ item }">
-                <v-container style="max-width: 150px">
+                <v-container>
                   <OverChips :roles="item.team"></OverChips>
                 </v-container>
               </template>
@@ -187,6 +179,11 @@
               dense
               :items-per-page="20"
             >
+              <template #[`item.firstname`]="{ item }">
+                {{ item.firstname }} {{ item.lastname }}
+                {{ item.nickname ? `(${item.nickname})` : "" }}
+              </template>
+
               <template #[`item.action`]="{ item }" style="display: flex">
                 <v-btn
                   v-if="hasRole('hard')"
@@ -236,27 +233,6 @@
         </v-col>
       </v-row>
     </div>
-
-    <v-dialog v-model="isTransactionDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Ajouter de 💰</v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="newTransaction.reason"
-            label="reason"
-          ></v-text-field>
-          <v-text-field
-            v-model="newTransaction.amount"
-            label="montant (en euro)"
-            type="number"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="transaction()">+</v-btn>
-          <v-btn @click="transaction(true)">-</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <v-dialog v-model="isCharismaDialogOpen" max-width="600">
       <v-card>
@@ -319,17 +295,13 @@ export default {
       users: [],
       filteredUsers: [],
       headers: [
-        { text: "Prénom", value: "firstname" },
-        { text: "Nom", value: "lastname" },
-        { text: "Surnom", value: "nickname" },
-        { text: "Team", value: "team", cellClass: "width: 250px", width: "1" },
+        { text: "Prénom Nom (Surnom)", value: "firstname" },
+        { text: "Team", value: "team" },
         { text: "Charisme", value: "charisma", align: "end" },
         { text: "Action", value: "action", sortable: false },
       ],
       statsHeaders: [
-        { text: "Prénom", value: "firstname" },
-        { text: "Nom", value: "lastname" },
-        { text: "Surnom", value: "nickname" },
+        { text: "Prénom Nom (Surnom)", value: "firstname" },
         { text: "Charisme", value: "charisma", align: "end" },
         { text: "Charge", value: "charge" },
         { text: "Heures affectés", value: "hours" },

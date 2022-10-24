@@ -152,13 +152,13 @@ export const mutations = mutationTree(state, {
   },
   SET_USER_ASSIGNED_TO_SAME_TIMESPAN(
     state: any,
-    data: { _id: string; user: Pick<User, "lastname" | "firstname" | "_id"> }[]
+    data: { _id: string; user: Pick<User, "lastname" | "firstname" | "id"> }[]
   ) {
     state.userAssignedToSameTimespan = data.map((userWithTimespan) => ({
       timespanId: userWithTimespan._id,
       firstname: userWithTimespan.user.firstname,
       lastname: userWithTimespan.user.lastname,
-      _id: userWithTimespan.user._id,
+      _id: userWithTimespan.user.id,
     }));
     state.userAssignedToSameTimespan.sort((a: any, b: any) => {
       if (a.firstname < b.firstname) {
@@ -269,7 +269,7 @@ export const actions = actionTree(
       if (user) {
         const ret: any = await safeCall(
           this,
-          TimeSpanRepo.getUserAssignedTimespans(this, user._id)
+          TimeSpanRepo.getUserAssignedTimespans(this, user.id)
         );
         if (ret) {
           commit(
@@ -294,7 +294,7 @@ export const actions = actionTree(
       if (user) {
         const ret: any = await safeCall(
           this,
-          TimeSpanRepo.getAvailableTimespansForUser(this, user._id)
+          TimeSpanRepo.getAvailableTimespansForUser(this, user.id)
         );
         if (ret) {
           commit(
@@ -386,7 +386,7 @@ export const actions = actionTree(
     },
 
     setSelectedUserBasedOnId({ state, dispatch }: any, id: string) {
-      const selectedUser = state.users.find((u: User) => u._id === id);
+      const selectedUser = state.users.find((u: User) => u.id === id);
       if (!selectedUser) {
         throw new Error(`User ${id} not found in local users`);
       }

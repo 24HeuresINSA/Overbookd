@@ -34,6 +34,10 @@ merge_requests_containerize-backend:
       changes:
         - backend/**/*
     - when: never
+  needs: ["lintage-backend"]
   stage: docker
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build ./backend
+    - docker build --tag $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA ./backend
+    - docker push $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA

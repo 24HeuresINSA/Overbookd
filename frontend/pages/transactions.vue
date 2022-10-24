@@ -10,11 +10,14 @@
           label="Nom"
           :items="usernames"
           item-text="username"
-          item-value="_id"
+          item-value="id"
           style="width: 300px"
         ></v-autocomplete>
         <v-btn icon @click="search(selectedUserID)">
           <v-icon>mdi-account-search</v-icon>
+        </v-btn>
+        <v-btn icon @click="clear()">
+          <v-icon>mdi-spray-bottle</v-icon>
         </v-btn>
       </v-card-text>
     </v-card>
@@ -55,7 +58,7 @@ export default {
   },
 
   async mounted() {
-    if (!(await this.$accessor.user.hasRole("admin"))) {
+    if (!(await this.$accessor.user.hasRole("sg"))) {
       await this.$router.push({
         path: "/",
       });
@@ -73,11 +76,13 @@ export default {
   },
 
   methods: {
-    search(_id) {
+    search(id) {
       this.filteredTransactions = this.transactions.filter((t) => {
-        return t.from === _id || t.to === _id;
+        return t.from === id || t.to === id;
       });
-      // this.$set(this, "filteredTransactions", filteredTransactions)
+    },
+    clear() {
+      this.filteredTransactions = this.transactions;
     },
   },
 };

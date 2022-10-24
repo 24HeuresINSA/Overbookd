@@ -70,7 +70,7 @@
             @click="saveTransactions"
             >Enregistrer</v-btn
           >
-          <v-btn text>Envoyer un mail au négatif</v-btn>
+          <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
         </v-card-text>
@@ -99,13 +99,16 @@
         </template>
 
         <template #[`item.newConsumption`]="{ item }">
-          {{
-            (
-              (mode === "cask" ? stickPrice : settledStickPrice) *
-                item.newConsumption || 0
-            ).toFixed(2)
-          }}
-          €
+          <div v-if="isExpenseMode">
+            {{
+              (
+                (mode === "cask" ? stickPrice : settledStickPrice) *
+                  item.newConsumption || 0
+              ).toFixed(2)
+            }}
+            €
+          </div>
+          <div v-else>{{ (+item.newConsumption || 0).toFixed(2) }}€</div>
         </template>
       </v-data-table>
     </v-container>
@@ -188,7 +191,13 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      return this.round(+this.totalPrice / +this.totalConsumptions).toFixed(2);
+      const round = +(
+        Math.round((+this.totalPrice / +this.totalConsumptions) * 100) / 100
+      ).toFixed(2);
+      if (round * +this.totalConsumptions < +this.totalPrice) {
+        return round + 0.01;
+      }
+      return round;
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
@@ -258,7 +267,7 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("admin")) {
+    if (this.$accessor.user.hasRole("sg")) {
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
           this.users = res.data.filter((user) => {
@@ -343,13 +352,13 @@ export default {
       let transactions = usersWithConsumptions.map((user) => {
         let transaction = {
           type: "EXPENSE",
-          from: null,
+          from: -1,
           to: -1,
         };
-
         switch (this.mode) {
           case "cask":
             transaction.from = user.id;
+            transaction.to = user.id;
             //cast to float
             transaction.amount = +this.stickPrice * +user.newConsumption;
             transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
@@ -357,6 +366,7 @@ export default {
 
           case "closet":
             transaction.from = user.id;
+            transaction.to = user.id;
             transaction.amount = +this.settledStickPrice * +user.newConsumption;
             transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
             break;
@@ -364,8 +374,9 @@ export default {
           case "deposit":
             transaction.type = "DEPOSIT";
             transaction.to = user.id;
+            transaction.from = user.id;
             transaction.amount = +user.newConsumption;
-            transaction.context = `Recharge de compte perso le ${new Date().toLocaleDateString()}`;
+            transaction.context = `Recharge de compte perso`;
             break;
         }
 
@@ -384,12 +395,6 @@ export default {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
       this.isSwitchDialogOpen = false;
-    },
-
-    round(rawAmount) {
-      const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
-      let res = parseInt(round / 5) * 5;
-      return (res + 5) * 0.01;
     },
   },
 };
