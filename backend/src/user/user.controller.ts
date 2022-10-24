@@ -7,6 +7,7 @@ import {
   Put,
   UseGuards,
   Request,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService, UserWithoutPassword } from './user.service';
 import { User } from '@prisma/client';
@@ -97,7 +98,9 @@ export class UserController {
     status: 200,
     description: 'Get a user by id',
   })
-  getUserById(@Param('id') id: number): Promise<UserWithoutPassword> {
+  getUserById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UserWithoutPassword> {
     return this.userService.user({ id: Number(id) });
   }
 
