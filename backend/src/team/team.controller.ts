@@ -35,8 +35,9 @@ export class TeamController {
   @Roles('humain')
   @Post('link')
   @ApiBearerAuth()
+  @HttpCode(201)
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Link a user with different teams',
     type: LinkTeamToUserDto,
   })
