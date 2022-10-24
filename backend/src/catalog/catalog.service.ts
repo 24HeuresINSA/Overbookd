@@ -3,6 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import {
   Category,
   CategoryRepository,
+  CategoryTree,
   Team,
   TeamRepository,
 } from './interfaces';
@@ -91,6 +92,10 @@ export class CatalogService {
     if (!category)
       throw new NotFoundException(`Category #${id} doesn\'t exist`);
     return category;
+  }
+
+  async getAll(): Promise<CategoryTree[]> {
+    return this.categoryRepository.getCategoryTrees();
   }
 
   async remove(id: number): Promise<void> {
