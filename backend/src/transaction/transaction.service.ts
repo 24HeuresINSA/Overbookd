@@ -25,6 +25,7 @@ export class TransactionService {
   async getUserTransactions(userId: number): Promise<Transaction[] | null> {
     return this.prisma.transaction.findMany({
       where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },
+      orderBy: { created_at: 'desc' },
     });
   }
 
