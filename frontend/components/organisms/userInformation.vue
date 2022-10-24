@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="mToggle" width="100%">
     <v-card>
-      <v-row>
+      <v-row style="display: contents">
         <v-col md="12"
           ><v-img
             v-if="mUser.pp"
@@ -21,27 +21,16 @@
             }}
           </v-card-title>
           <v-card-text>
-            <OverChips :roles="mUser.team"></OverChips>
-            <div v-if="hasEditingRole">
+            <OverChips :roles="mUser.team" />
+            <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newRole"
-                label="ajouter un role"
+                label="Ajouter un role"
                 :items="teams"
               >
               </v-select>
-              <v-row>
-                <v-col md="3"
-                  ><v-btn text @click="addRole()">Ajouter</v-btn></v-col
-                >
-                <v-col md="6"
-                  ><v-btn text @click="deleteAllTeams()"
-                    >Révoquer tous les rôles</v-btn
-                  ></v-col
-                >
-                <v-col md="2"
-                  ><v-btn text @click="saveUser()">Sauvegarder</v-btn></v-col
-                >
-              </v-row>
+              <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
+              <v-btn text @click="saveUserRoles()">Sauvegarder les roles</v-btn>
             </div>
 
             <v-container>
@@ -133,21 +122,6 @@
                 </v-col>
               </v-row>
               <v-row v-if="hasUserRole('hard')">
-                <v-col md="3">
-                  <v-switch
-                    v-model="mUser.hasDriverLicense"
-                    label="Permis"
-                    :disabled="!(hasEditingRole || isMe())"
-                  ></v-switch>
-                </v-col>
-                <v-col md="6">
-                  <v-text-field
-                    v-model="mUser.driverLicenseDate"
-                    label="date d'obtention du permis"
-                    placeholder="AAAA-MM-JJ"
-                    :disabled="!hasEditingRole"
-                  ></v-text-field>
-                </v-col>
                 <v-col md="4">
                   <v-text-field
                     v-model="mUser.balance"
@@ -326,9 +300,8 @@ export default {
   },
 
   async mounted() {
-    this.teams = this.$accessor.config.data.data
-      .find((e) => e.key === "teams")
-      .value.map((e) => e.name);
+    await this.$accessor.team.getTeams();
+    this.teams = this.$accessor.team.teams.data;
     this.hasEditingRole = await this.hasRole(["admin", "humain"]);
     const res = await safeCall(
       this.$store,
@@ -355,17 +328,40 @@ export default {
     async hasRole(roles) {
       return this.$accessor.user.hasRole(roles);
     },
-    async addRole() {
-      let user = this.mUser;
-      if (user.team === undefined) {
-        user.team = [];
+    addRemoveRole() {
+      if (!this.teams.includes(this.newRole)) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Veuillez choisir une option valide !",
+        });
+        return;
       }
-      if (user.team.find((role) => role === this.newRole)) {
-        // already has role
+      // verify the user is not already in the team
+      if (this.mUser.team.includes(this.newRole)) {
+        // Remove it
+        this.mUser.team = this.mUser.team.filter(
+          (role) => role !== this.newRole
+        );
       } else {
-        user.team.push(this.newRole);
-        this.$set(user, "team", user.team); // update rendering
-        await this.$axios.put(`/user/${user._id}`, { team: user.team });
+        this.mUser.team.push(this.newRole);
+      }
+    },
+    async saveUserRoles() {
+      const res = await this.$accessor.team.linkUserToTeams({
+        userId: this.mUser.id,
+        teams: this.mUser.team,
+      });
+      if (res.status === 201) {
+        this.mUser.team = res.data.team;
+        this.$accessor.notif.pushNotification({
+          type: "success",
+          message: "Roles mis à jour",
+        });
+      } else {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "Une erreur est survenue !",
+        });
       }
     },
     async saveUser() {
@@ -380,10 +376,6 @@ export default {
     async deleteUser() {
       this.mUser.isValid = false;
       await this.saveUser();
-    },
-    async deleteAllTeams() {
-      this.mUser.team = ["toValidate"];
-      await this.$axios.put(`/user/${this.mUser._id}`, this.mUser);
     },
     isMe() {
       return this.$accessor.user.me._id === this.mUser._id;

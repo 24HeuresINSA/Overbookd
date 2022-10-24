@@ -74,7 +74,6 @@ model User {
 model Team {
   name       String      @id @default(uuid())
   users      User_Team[]
-  is_deleted Boolean     @default(false)
 }
 
 model User_Team {
@@ -82,7 +81,6 @@ model User_Team {
   user_id    Int
   team       Team    @relation(fields: [team_id], references: [name])
   team_id    String
-  is_deleted Boolean @default(false)
 
   @@id([user_id, team_id])
 }

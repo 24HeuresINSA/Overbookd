@@ -1,5 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { JwtPayload } from './entities/JwtPayload.entity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -12,9 +13,7 @@ export class RolesGuard implements CanActivate {
     }
 
     const { user } = context.switchToHttp().getRequest();
-    if (user?.role?.includes('admin')) {
-      return true;
-    }
-    return roles.some((role) => user?.role?.includes(role));
+    const payload = new JwtPayload(user);
+    return payload.isAdmin() || payload.hasOneOfRequiredRoles(roles);
   }
 }

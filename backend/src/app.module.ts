@@ -8,12 +8,14 @@ import { PrismaService } from './prisma.service';
 import { TransactionModule } from './transaction/transaction.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
+import { TeamModule } from './team/team.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
     HashingUtilsModule,
+    TeamModule,
     TransactionModule,
     ConfigModule,
   ],
