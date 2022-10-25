@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import { SlugifyService } from 'src/common/services/slugify.service';
 
 import {
   Category,
@@ -8,12 +9,6 @@ import {
   TeamRepository,
 } from './interfaces';
 
-export function slugify(name: string): string {
-  const SLUG_SEPARATOR = '-';
-  const spaces = new RegExp(/[ ]+/gm);
-  return name.replace(spaces, SLUG_SEPARATOR).toLowerCase();
-}
-
 type CreateCategoryForm = {
   name: string;
   owner?: number;
@@ -22,10 +17,11 @@ type CreateCategoryForm = {
 
 type updateCategoryForm = CreateCategoryForm & { id: number };
 
-export class CatalogService {
+export class CategoryService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
     private readonly teamRepository: TeamRepository,
+    private readonly slugifyService: SlugifyService,
   ) {}
 
   async create({ name, owner, parent }: CreateCategoryForm): Promise<Category> {
@@ -165,8 +161,8 @@ export class CatalogService {
 
   private generateSlug(name: string, parentCategory?: Category): string {
     return parentCategory
-      ? `${parentCategory.slug}->${slugify(name)}`
-      : slugify(name);
+      ? `${parentCategory.slug}->${this.slugifyService.slugify(name)}`
+      : this.slugifyService.slugify(name);
   }
 
   private async findOwner(
