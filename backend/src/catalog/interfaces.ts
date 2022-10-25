@@ -6,6 +6,8 @@ export interface Category {
   parent?: number;
 }
 
+export type SimplifiedCategory = Omit<Category, 'parent' | 'owner'>;
+
 export interface Team {
   id: number;
   name: string;
@@ -13,6 +15,18 @@ export interface Team {
 
 export interface CategoryTree extends Category {
   subCategories?: CategoryTree[];
+}
+
+export interface Gear {
+  id: number;
+  name: string;
+  slug: string;
+  category?: SimplifiedCategory;
+}
+
+export interface GearRepository {
+  getGear(id: number): Promise<Gear | undefined>;
+  addGear(gear: Omit<Gear, 'id'>): Promise<Gear | undefined>;
 }
 
 export interface CategoryRepository {
