@@ -6,7 +6,7 @@ import {
   InMemoryGearRepository,
 } from './repositories';
 
-const teamMatos = { id: 1, name: 'matos' };
+const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
 
 const CATEGORIES: Category[] = [
   {

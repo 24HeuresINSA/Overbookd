@@ -9,7 +9,7 @@ export interface Category {
 export type SimplifiedCategory = Omit<Category, 'parent' | 'owner'>;
 
 export interface Team {
-  id: number;
+  slug: string;
   name: string;
 }
 
@@ -40,5 +40,5 @@ export interface CategoryRepository {
 }
 
 export interface TeamRepository {
-  getTeam(id: number): Promise<Team | undefined>;
+  getTeam(slug: string): Promise<Team | undefined>;
 }
