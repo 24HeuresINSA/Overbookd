@@ -11,7 +11,7 @@ import {
 
 type CreateCategoryForm = {
   name: string;
-  owner?: number;
+  owner?: string;
   parent?: number;
 };
 
@@ -166,7 +166,7 @@ export class CategoryService {
   }
 
   private async findOwner(
-    owner?: number,
+    owner?: string,
     parentCategory?: Category,
   ): Promise<Team | undefined> {
     if (parentCategory) {

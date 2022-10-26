@@ -6,37 +6,37 @@ import {
 import { CategoryService } from './category.service';
 import { SlugifyService } from '../common/services/slugify.service';
 
-const TEAMS: Team[] = [
-  { id: 1, name: 'matos' },
-  { id: 2, name: 'signa' },
-  { id: 3, name: 'elec' },
-];
+const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
+const teamSigna = { name: 'Orga Signaletique', slug: 'signa' };
+const teamElec = { name: 'Orga Logistique Electricite & Eau', slug: 'elec' };
+
+const TEAMS: Team[] = [teamMatos, teamSigna, teamElec];
 
 const CATEGORIES: Category[] = [
   {
     id: 1,
     name: 'Bricollage',
     slug: 'bricollage',
-    owner: { id: 1, name: 'matos' },
+    owner: teamMatos,
   },
   {
     id: 2,
     name: 'Electrique',
     slug: 'electrique',
-    owner: { id: 3, name: 'elec' },
+    owner: teamElec,
   },
   {
     id: 3,
     name: 'Cable',
     slug: 'electrique->cable',
-    owner: { id: 3, name: 'elec' },
+    owner: teamElec,
     parent: 2,
   },
   {
     id: 4,
     name: 'Grosse Tension',
     slug: 'electrique->cable->grosse-tension',
-    owner: { id: 3, name: 'elec' },
+    owner: teamElec,
     parent: 3,
   },
 ];
@@ -103,10 +103,10 @@ describe('Category', () => {
       },
     );
     describe.each`
-      name                   | owner | expectedOwner
-      ${'Outils'}            | ${1}  | ${{ name: 'matos', id: 1 }}
-      ${'Panneaux Lumineux'} | ${2}  | ${{ name: 'signa', id: 2 }}
-      ${'Cables'}            | ${3}  | ${{ name: 'elec', id: 3 }}
+      name                   | owner      | expectedOwner
+      ${'Outils'}            | ${'matos'} | ${teamMatos}
+      ${'Panneaux Lumineux'} | ${'signa'} | ${teamSigna}
+      ${'Cables'}            | ${'elec'}  | ${teamElec}
     `(
       '$name main category with #$owner owner team',
       ({ name, owner, expectedOwner }) => {
@@ -118,9 +118,9 @@ describe('Category', () => {
     );
     describe.each`
       name            | owner        | parentCategory | expectedSlug                | expectedOwner
-      ${'Outils'}     | ${1}         | ${1}           | ${'bricollage->outils'}     | ${{ name: 'matos', id: 1 }}
-      ${'Rangements'} | ${3}         | ${1}           | ${'bricollage->rangements'} | ${{ name: 'matos', id: 1 }}
-      ${'Rallonges'}  | ${undefined} | ${2}           | ${'electrique->rallonges'}  | ${{ name: 'elec', id: 3 }}
+      ${'Outils'}     | ${'matos'}   | ${1}           | ${'bricollage->outils'}     | ${teamMatos}
+      ${'Rangements'} | ${'elec'}    | ${1}           | ${'bricollage->rangements'} | ${teamMatos}
+      ${'Rallonges'}  | ${undefined} | ${2}           | ${'electrique->rallonges'}  | ${teamElec}
     `(
       '$name sub category of #$parentCategory category',
       ({ name, owner, parentCategory, expectedSlug, expectedOwner }) => {
@@ -256,10 +256,10 @@ describe('Category', () => {
       - Cascade owner updates on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                 | expectedOwner               | childCategory | grandChildCategory
-        ${{ id: 1, name: 'Bricollage', owner: 2 }}       | ${{ id: 2, name: 'signa' }} | ${undefined}  | ${undefined}
-        ${{ id: 3, name: 'Cable', owner: 2, parent: 2 }} | ${{ id: 3, name: 'elec' }}  | ${{ id: 3 }}  | ${undefined}
-        ${{ id: 2, name: 'Electrique', owner: 2 }}       | ${{ id: 2, name: 'signa' }} | ${{ id: 3 }}  | ${{ id: 3 }}
+        toUpdateCategory                                       | expectedOwner | childCategory | grandChildCategory
+        ${{ id: 1, name: 'Bricollage', owner: 'signa' }}       | ${teamSigna}  | ${undefined}  | ${undefined}
+        ${{ id: 3, name: 'Cable', owner: 'signa', parent: 2 }} | ${teamElec}   | ${{ id: 3 }}  | ${undefined}
+        ${{ id: 2, name: 'Electrique', owner: 'signa' }}       | ${teamSigna}  | ${{ id: 3 }}  | ${{ id: 3 }}
       `(
         `when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team`,
         ({
@@ -296,10 +296,10 @@ describe('Category', () => {
       - Cascade owner changes on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                      | expectedOwner               | expectedSlug                | childCategory                                               | grandChildCategory
-        ${{ id: 1, name: 'Bricollage', owner: 1, parent: 2 }} | ${{ id: 3, name: 'elec' }}  | ${'electrique->bricollage'} | ${undefined}                                                | ${undefined}
-        ${{ id: 4, name: 'Grosse Tension', owner: 3 }}        | ${{ id: 3, name: 'elec' }}  | ${'grosse-tension'}         | ${undefined}                                                | ${undefined}
-        ${{ id: 2, name: 'Electrique', owner: 3, parent: 1 }} | ${{ id: 1, name: 'matos' }} | ${'bricollage->electrique'} | ${{ id: 3, expectedSlug: 'bricollage->electrique->cable' }} | ${{ id: 4, expectedSlug: 'bricollage->electrique->cable->grosse-tension' }}
+        toUpdateCategory                                            | expectedOwner | expectedSlug                | childCategory                                               | grandChildCategory
+        ${{ id: 1, name: 'Bricollage', owner: 'matos', parent: 2 }} | ${teamElec}   | ${'electrique->bricollage'} | ${undefined}                                                | ${undefined}
+        ${{ id: 4, name: 'Grosse Tension', owner: 'elec' }}         | ${teamElec}   | ${'grosse-tension'}         | ${undefined}                                                | ${undefined}
+        ${{ id: 2, name: 'Electrique', owner: 'elec', parent: 1 }}  | ${teamMatos}  | ${'bricollage->electrique'} | ${{ id: 3, expectedSlug: 'bricollage->electrique->cable' }} | ${{ id: 4, expectedSlug: 'bricollage->electrique->cable->grosse-tension' }}
       `(
         'when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category',
         ({
@@ -359,27 +359,27 @@ describe('Category', () => {
         id: 1,
         name: 'Bricollage',
         slug: 'bricollage',
-        owner: { id: 1, name: 'matos' },
+        owner: teamMatos,
         subCategories: [],
       });
       expect(categories).toContainEqual({
         id: 2,
         name: 'Electrique',
         slug: 'electrique',
-        owner: { id: 3, name: 'elec' },
+        owner: teamElec,
         subCategories: [
           {
             id: 3,
             name: 'Cable',
             slug: 'electrique->cable',
-            owner: { id: 3, name: 'elec' },
+            owner: teamElec,
             parent: 2,
             subCategories: [
               {
                 id: 4,
                 name: 'Grosse Tension',
                 slug: 'electrique->cable->grosse-tension',
-                owner: { id: 3, name: 'elec' },
+                owner: teamElec,
                 parent: 3,
                 subCategories: [],
               },
@@ -405,27 +405,26 @@ describe('Category', () => {
             - Plastique
             - Moquette
       `, async () => {
-        const signa = { id: 2, name: 'signa' };
         const categories = await categService.getAll();
         expect(categories).toHaveLength(1);
         expect(categories).toContainEqual({
           id: 1,
           name: 'Signaletique',
           slug: 'signaletique',
-          owner: signa,
+          owner: teamSigna,
           subCategories: [
             {
               id: 2,
               name: 'Lumineuse',
               slug: 'signaletique->lumineuse',
-              owner: signa,
+              owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 3,
                   name: 'Projection',
                   slug: 'signaletique->lumineuse->projection',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 2,
                   subCategories: [],
                 },
@@ -433,7 +432,7 @@ describe('Category', () => {
                   id: 10,
                   name: 'Panneau',
                   slug: 'signaletique->lumineuse->panneau',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 2,
                   subCategories: [],
                 },
@@ -443,14 +442,14 @@ describe('Category', () => {
               id: 4,
               name: 'Plan',
               slug: 'signaletique->plan',
-              owner: signa,
+              owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 5,
                   name: 'Grand Format',
                   slug: 'signaletique->plan->grand-format',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 4,
                   subCategories: [],
                 },
@@ -458,7 +457,7 @@ describe('Category', () => {
                   id: 6,
                   name: 'Format Flyer',
                   slug: 'signaletique->plan->format-flyer',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 4,
                   subCategories: [],
                 },
@@ -468,14 +467,14 @@ describe('Category', () => {
               id: 7,
               name: 'Panneau',
               slug: 'signaletique->panneau',
-              owner: signa,
+              owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 8,
                   name: 'Bois',
                   slug: 'signaletique->panneau->bois',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 7,
                   subCategories: [],
                 },
@@ -483,7 +482,7 @@ describe('Category', () => {
                   id: 8,
                   name: 'Plastique',
                   slug: 'signaletique->panneau->plastique',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 7,
                   subCategories: [],
                 },
@@ -491,7 +490,7 @@ describe('Category', () => {
                   id: 9,
                   name: 'Moquette',
                   slug: 'signaletique->panneau->moquette',
-                  owner: signa,
+                  owner: teamSigna,
                   parent: 7,
                   subCategories: [],
                 },
@@ -505,7 +504,7 @@ describe('Category', () => {
 });
 
 function getSignaCategories(): Category[] {
-  const owner = { id: 2, name: 'signa' };
+  const owner = teamSigna;
   return [
     { id: 1, name: 'Signaletique', slug: 'signaletique', owner },
     {
