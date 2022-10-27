@@ -345,6 +345,19 @@ describe('Category', () => {
         },
       );
     });
+    describe("when category doesn't exist", () => {
+      it("should inform user category doesn't exist", async () => {
+        const toUpdateCategory = {
+          id: 123,
+          name: 'Bricollage',
+          owner: 'matos',
+          parent: 2,
+        };
+        await expect(
+          async () => await categService.update(toUpdateCategory),
+        ).rejects.toThrow(`Category #${toUpdateCategory.id} doesn\'t exist`);
+      });
+    });
   });
   describe('get all categories', () => {
     it(`should render categories as a parent tree

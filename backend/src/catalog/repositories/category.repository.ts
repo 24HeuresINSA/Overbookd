@@ -48,6 +48,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     const categoryIndex = this.categories.findIndex(
       (categ) => categ.id === category.id,
     );
+    if (categoryIndex === -1) return Promise.resolve(undefined);
     this.categories[categoryIndex] = category;
     return Promise.resolve(category);
   }
