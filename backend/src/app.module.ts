@@ -9,6 +9,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
+import { FaModule } from './fa/fa.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TeamModule } from './team/team.module';
     TeamModule,
     TransactionModule,
     ConfigModule,
+    FaModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService],
