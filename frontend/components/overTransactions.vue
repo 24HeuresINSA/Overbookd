@@ -45,7 +45,12 @@
       </template>
 
       <template #[`item.action`]="{ item }">
-        <v-btn icon small @click="deleteTransaction(item._id)">
+        <v-btn
+          v-if="!item.is_deleted"
+          icon
+          small
+          @click="deleteTransaction(item.id)"
+        >
           <v-icon small>mdi-trash-can</v-icon>
         </v-btn>
       </template>
@@ -115,12 +120,8 @@ export default {
         this.$store,
         RepoFactory.transactionRepo.deleteTransaction(this, transactionID)
       );
-      if (deleteCall) {
+      if (deleteCall && deleteCall.data.is_deleted) {
         // update on screen
-        let mTransaction = this.transactions.find(
-          (t) => t._id === transactionID
-        );
-        mTransaction.isValid = false;
         this.$accessor.notif.pushNotification({
           type: "success",
           message: "Tranasction supprimé",

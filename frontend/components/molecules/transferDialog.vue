@@ -89,7 +89,6 @@ export default Vue.extend({
     async transferMoney(): Promise<any> {
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
-      console.log(this.transfer);
       // transaction to self...
       if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({

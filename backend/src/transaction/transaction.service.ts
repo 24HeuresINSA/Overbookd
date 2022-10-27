@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Transaction } from '@prisma/client';
@@ -33,14 +32,20 @@ export class TransactionService {
   /** POST **/
   /**      **/
   async createTransaction(
-    userTransaction: Omit<Transaction, 'from' | 'type'>,
+    userTransaction: Omit<
+      Transaction,
+      'from' | 'type' | 'is_deleted' | 'created_at'
+    >,
     userId: number,
   ): Promise<Transaction> {
     const data: Transaction = {
       ...userTransaction,
       from: userId,
       type: 'TRANSFER',
+      is_deleted: false,
+      created_at: new Date(),
     };
+    this.checkTransactionAmount(data);
     //Check if user exists
     const users = await this.userExists([data.from, data.to]);
     const sender = users.find((user) => user.id === data.from);
@@ -94,11 +99,35 @@ export class TransactionService {
   /** DELETE **/
   /**        **/
   async deleteTransaction(id: number): Promise<Transaction> {
-    //change parameter is_deleted to true
-    return this.prisma.transaction.update({
-      where: { id: Number(id) },
-      data: { is_deleted: true },
-    });
+    const transaction = await this.transactionExists(id);
+    const operations: Array<any> = [
+      this.prisma.transaction.update({
+        where: { id: Number(id) },
+        data: { is_deleted: true },
+      }),
+    ];
+    if (['EXPENSE', 'TRANSFER'].includes(transaction.type)) {
+      const user = await this.userExists([transaction.from]);
+      const sender = user.find((user) => user.id === transaction.from);
+      operations.push(
+        this.prisma.user.update({
+          where: { id: Number(transaction.from) },
+          data: { balance: sender.balance + transaction.amount },
+        }),
+      );
+    }
+    if (['DEPOSIT', 'TRANSFER'].includes(transaction.type)) {
+      const user = await this.userExists([transaction.to]);
+      const receiver = user.find((user) => user.id === transaction.to);
+      operations.push(
+        this.prisma.user.update({
+          where: { id: Number(transaction.to) },
+          data: { balance: receiver.balance - transaction.amount },
+        }),
+      );
+    }
+    const response = await this.prisma.$transaction(operations);
+    return response[0];
   }
 
   /**         **/
@@ -118,5 +147,20 @@ export class TransactionService {
       throw new NotFoundException('User does not exist');
     }
     return users;
+  }
+
+  async transactionExists(transactionId: number): Promise<Transaction> {
+    const transaction = await this.getTransactionById(transactionId);
+    if (!transaction) {
+      throw new NotFoundException(
+        `Transaction with ID ${transactionId} not found`,
+      );
+    }
+    if (transaction.is_deleted) {
+      throw new BadRequestException(
+        `Transaction with ID ${transactionId} is already deleted`,
+      );
+    }
+    return transaction;
   }
 }

@@ -55,7 +55,7 @@
               :rules="[
                 (v) =>
                   new RegExp(regex.float).test(v) ||
-                  `il faut mettre un nombre (avec . comme virgule)`,
+                  `Il faut mettre un nombre (avec . comme virgule)`,
               ]"
             ></v-text-field>
             <label> Nombre de bâton total {{ totalConsumptions }} </label>
@@ -116,10 +116,10 @@
       <v-card>
         <v-card-title>Attention</v-card-title>
         <v-card-text
-          >Si tu change de mode les donnees non enregister seront effeace
+          >Si tu changes de mode, les données non enregistrées seront effacées.
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="cleanInputs">changer de mode</v-btn>
+          <v-btn text @click="cleanInputs">Changer de mode</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -157,8 +157,8 @@ export default {
       isSwitchDialogOpen: false,
 
       regex: {
-        int: "^[0-9]\\d*$",
-        float: "^[0-9]\\d*(\\.\\d+)?$",
+        int: "^\\d*$",
+        float: "^\\d*(\\.\\d+)?$",
       },
 
       feedbacks: {
@@ -198,7 +198,9 @@ export default {
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
-      return [(v) => new RegExp(regex).test(v) || `il faut mettre un entier `];
+      return [
+        (v) => new RegExp(regex).test(v) || `Il faut mettre un nombre valide`,
+      ];
     },
     isExpenseMode() {
       return this.mode === "cask" || this.mode === "closet";
@@ -341,7 +343,7 @@ export default {
       if (!isCorrect) {
         await this.$store.dispatch("notif/pushNotification", {
           type: "error",
-          message: "Il faut mettre des nombre",
+          message: "Il faut mettre des nombres",
         });
         return;
       }
@@ -387,7 +389,6 @@ export default {
 
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
     },
-
     cleanInputs() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
