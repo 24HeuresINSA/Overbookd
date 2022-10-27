@@ -25,8 +25,9 @@ export class CreateFaDto {
   name: string;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The creation date of the fa',
+    default: new Date(),
   })
   created_at: Date;
 
