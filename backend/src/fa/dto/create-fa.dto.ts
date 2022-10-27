@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
@@ -102,6 +103,14 @@ export class CreateFaDto {
   @IsString()
   @IsOptional()
   security_needs: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'All of the collaborators ids',
+  })
+  @IsArray()
+  @IsOptional()
+  collaborator_id: number[];
 
   @ApiProperty({
     required: false,
