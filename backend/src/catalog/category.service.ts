@@ -63,6 +63,8 @@ export class CategoryService {
       parent,
       owner: ownerTeam,
     });
+    if (!updatedCategory)
+      throw new NotFoundException(`Category #${id} doesn\'t exist`);
     await this.updateSubCategories(updatedCategory);
     return updatedCategory;
   }
