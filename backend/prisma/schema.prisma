@@ -72,12 +72,16 @@ model User {
   fa_in_charge  FA[]            @relation("in_charge")
   FA_validation FA_validation[]
   FA_refuse     FA_refuse[]
+  FA_Comment    FA_Comment[]
 }
 
 model Team {
-  name  String      @id @default(uuid())
-  users User_Team[]
-  FA    FA[]
+  name         String       @id @default(uuid())
+  fa_validator Boolean      @default(false)
+  ft_validator Boolean      @default(false)
+  users        User_Team[]
+  FA           FA[]
+  FA_Comment   FA_Comment[]
 }
 
 model User_Team {
@@ -131,28 +135,33 @@ enum Status {
 }
 
 model FA {
-  id                  Int                @id @default(autoincrement())
-  name                String             @db.VarChar(255)
-  is_deleted          Boolean            @default(false)
-  fa_type_name        FA_type            @relation(fields: [type], references: [name])
-  type                String             @db.VarChar(255)
-  Team                Team               @relation(fields: [team_id], references: [name])
-  team_id             String             @db.VarChar(255)
-  User_in_charge      User               @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge           Int
-  created_at          DateTime?          @default(now())
-  Location            Location?          @relation(fields: [location_id], references: [id])
-  location_id         Int?
-  status              Status             @default(DRAFT)
-  description         String             @db.Text
-  is_publishable      Boolean
-  is_major            Boolean
-  is_kids             Boolean
-  FA_validation       FA_validation[]
-  FA_refuse           FA_refuse[]
-  security_needs      String?            @db.Text
-  water_flow_required Int?
-  FA_Collaborators    FA_Collaborators[]
+  id                   Int                    @id @default(autoincrement())
+  name                 String                 @db.VarChar(255)
+  is_deleted           Boolean                @default(false)
+  fa_type_name         FA_type                @relation(fields: [type], references: [name])
+  type                 String                 @db.VarChar(255)
+  Team                 Team                   @relation(fields: [team_id], references: [name])
+  team_id              String                 @db.VarChar(255)
+  User_in_charge       User                   @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge            Int
+  created_at           DateTime?              @default(now())
+  Location             Location?              @relation(fields: [location_id], references: [id])
+  location_id          Int?
+  status               Status                 @default(DRAFT)
+  description          String                 @db.Text
+  is_publishable       Boolean
+  is_major             Boolean
+  is_kids              Boolean
+  FA_validation        FA_validation[]
+  FA_refuse            FA_refuse[]
+  security_needs       String?                @db.Text
+  water_flow_required  Int?
+  FA_Collaborators     FA_Collaborators[]
+  FA_Electricity_needs FA_Electricity_needs[]
+  FA_signa_needs       FA_signa_needs[]
+  Security_pass        Security_pass[]
+  FA_Comment           FA_Comment[]
+  TimeWindow           TimeWindow[]
 }
 
 model FA_type {
@@ -207,11 +216,91 @@ model Location {
 
 model Collaborator {
   id               Int                @id @default(autoincrement())
-  firstname        String             @db.VarChar(255)
-  lastname         String             @db.VarChar(255)
-  phone            String             @db.VarChar(255)
-  email            String?            @db.VarChar(255)
-  company          String?            @db.VarChar(255)
+  firstname        String             @db.VarChar(30)
+  lastname         String             @db.VarChar(30)
+  phone            String             @db.VarChar(30)
+  email            String?            @db.VarChar(30)
+  company          String?            @db.VarChar(30)
   comment          String?            @db.Text
   FA_Collaborators FA_Collaborators[]
+}
+
+//A définir correctement plus tard, placeholder pour le moment
+enum ElectricityType {
+  ELECTRICITY
+  WATER
+  GAS
+  OTHER
+}
+
+model FA_Electricity_needs {
+  id               Int             @id @default(autoincrement())
+  FA               FA              @relation(fields: [fa_id], references: [id])
+  fa_id            Int
+  electricity_type ElectricityType
+  power            Int
+  comment          String?         @db.Text
+}
+
+enum SignaType {
+  BANNIERE
+  PANCARTE
+  PANNEAU
+}
+
+model FA_signa_needs {
+  id         Int       @id @default(autoincrement())
+  FA         FA        @relation(fields: [fa_id], references: [id])
+  fa_id      Int
+  signa_type SignaType
+  text       String    @db.Text
+  count      Int       @default(1)
+}
+
+//A définir correctement plus tard, placeholder pour le moment
+enum Security_pass_schedules {
+  JOUR
+  NUIT
+  JOUR_NUIT
+}
+
+model Security_pass {
+  id            Int                     @id @default(autoincrement())
+  FA            FA                      @relation(fields: [fa_id], references: [id])
+  fa_id         Int
+  name          String                  @db.VarChar(30)
+  phone         String?                 @db.VarChar(30)
+  license_plate String?                 @db.VarChar(30)
+  email         String                  @db.VarChar(30)
+  comment       String?                 @db.Text
+  entity        String                  @db.VarChar(30)
+  reason        String                  @db.VarChar(30)
+  schedule      Security_pass_schedules
+}
+
+enum subject_type {
+  REFUSED
+  VALIDATED
+  COMMENT
+}
+
+model FA_Comment {
+  id          Int          @id @default(autoincrement())
+  FA          FA           @relation(fields: [fa_id], references: [id])
+  fa_id       Int
+  comment     String       @db.Text
+  subject     subject_type
+  User_author User         @relation(fields: [author], references: [id])
+  author      Int
+  created_at  DateTime     @default(now())
+  Team        Team         @relation(fields: [team_id], references: [name])
+  team_id     String       @db.VarChar(255)
+}
+
+model TimeWindow {
+  id    Int      @id @default(autoincrement())
+  FA    FA       @relation(fields: [fa_id], references: [id])
+  fa_id Int
+  start DateTime
+  end   DateTime
 }
