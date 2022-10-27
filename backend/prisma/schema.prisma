@@ -68,19 +68,23 @@ model User {
   transactions_from Transaction[] @relation("from")
   transactions_to   Transaction[] @relation("to")
 
-  is_deleted Boolean @default(false)
+  is_deleted    Boolean         @default(false)
+  fa_in_charge  FA[]            @relation("in_charge")
+  FA_validation FA_validation[]
+  FA_refuse     FA_refuse[]
 }
 
 model Team {
-  name       String      @id @default(uuid())
-  users      User_Team[]
+  name  String      @id @default(uuid())
+  users User_Team[]
+  FA    FA[]
 }
 
 model User_Team {
-  user       User    @relation(fields: [user_id], references: [id])
-  user_id    Int
-  team       Team    @relation(fields: [team_id], references: [name])
-  team_id    String
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int
+  team    Team   @relation(fields: [team_id], references: [name])
+  team_id String
 
   @@id([user_id, team_id])
 }
@@ -117,4 +121,97 @@ model Transaction {
   context    String          @db.VarChar(255)
   created_at DateTime        @default(now())
   is_deleted Boolean         @default(false)
+}
+
+enum Status {
+  DRAFT
+  SUBMITTED
+  VALIDATED
+  REFUSED
+}
+
+model FA {
+  id                  Int                @id @default(autoincrement())
+  name                String             @db.VarChar(255)
+  is_deleted          Boolean            @default(false)
+  fa_type_name        FA_type            @relation(fields: [type], references: [name])
+  type                String             @db.VarChar(255)
+  Team                Team               @relation(fields: [team_id], references: [name])
+  team_id             String             @db.VarChar(255)
+  User_in_charge      User               @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge           Int
+  created_at          DateTime?          @default(now())
+  Location            Location?          @relation(fields: [location_id], references: [id])
+  location_id         Int?
+  status              Status             @default(DRAFT)
+  description         String             @db.Text
+  is_publishable      Boolean
+  is_major            Boolean
+  is_kids             Boolean
+  FA_validation       FA_validation[]
+  FA_refuse           FA_refuse[]
+  security_needs      String?            @db.Text
+  water_flow_required Int?
+  FA_Collaborators    FA_Collaborators[]
+}
+
+model FA_type {
+  name String @id @db.VarChar(255)
+  FA   FA[]
+}
+
+model FA_validation {
+  FA         FA      @relation(fields: [fa_id], references: [id])
+  fa_id      Int
+  User       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  is_deleted Boolean @default(false)
+
+  @@id([fa_id, user_id])
+}
+
+model FA_Collaborators {
+  FA              FA           @relation(fields: [fa_id], references: [id])
+  fa_id           Int
+  Collaborator    Collaborator @relation(fields: [collaborator_id], references: [id])
+  collaborator_id Int
+  is_deleted      Boolean      @default(false)
+
+  @@id([fa_id, collaborator_id])
+}
+
+model FA_refuse {
+  FA         FA      @relation(fields: [fa_id], references: [id])
+  fa_id      Int
+  User       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  is_deleted Boolean @default(false)
+
+  @@id([fa_id, user_id])
+}
+
+enum LocationType {
+  DEPOT
+  STOCKAGE
+  MAGASIN
+  SIGNA
+  AUTRE
+}
+
+model Location {
+  id   Int          @id @default(autoincrement())
+  type LocationType
+  name String       @db.VarChar(255)
+  FA   FA[]
+}
+
+model Collaborator {
+  id               Int                @id @default(autoincrement())
+  firstname        String             @db.VarChar(255)
+  lastname         String             @db.VarChar(255)
+  phone            String             @db.VarChar(255)
+  email            String?            @db.VarChar(255)
+  company          String?            @db.VarChar(255)
+  comment          String?            @db.Text
+  FA_Collaborators FA_Collaborators[]
 }
