@@ -9,6 +9,12 @@ import {
   TeamRepository,
 } from './interfaces';
 
+export class CategoryNotFoundException extends NotFoundException {
+  constructor(id: number) {
+    super(`Category #${id} doesn\'t exist`);
+  }
+}
+
 type CreateCategoryForm = {
   name: string;
   owner?: string;
@@ -63,8 +69,7 @@ export class CategoryService {
       parent,
       owner: ownerTeam,
     });
-    if (!updatedCategory)
-      throw new NotFoundException(`Category #${id} doesn\'t exist`);
+    if (!updatedCategory) throw new CategoryNotFoundException(id);
     await this.updateSubCategories(updatedCategory);
     return updatedCategory;
   }
@@ -87,8 +92,7 @@ export class CategoryService {
 
   async find(id: number): Promise<Category> {
     const category = await this.categoryRepository.getCategory(id);
-    if (!category)
-      throw new NotFoundException(`Category #${id} doesn\'t exist`);
+    if (!category) throw new CategoryNotFoundException(id);
     return category;
   }
 
