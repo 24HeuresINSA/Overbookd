@@ -31,7 +31,26 @@ export class CatalogService {
   }
 
   async find(id: number): Promise<Gear> {
-    return this.gearRepository.getGear(id);
+    const gear = await this.gearRepository.getGear(id);
+    if (!gear) throw new NotFoundException(`Gear #${id} doesn't exist`);
+    return gear;
+  }
+
+  async update(gear: {
+    id: number;
+    name: string;
+    category?: number;
+  }): Promise<Gear> {
+    const slug = this.slugService.slugify(gear.name);
+    const category = await this.getCategory(gear.category);
+    const updatedGear = await this.gearRepository.updateGear({
+      ...gear,
+      slug,
+      category,
+    });
+    if (!updatedGear)
+      throw new NotFoundException(`Gear #${gear.id} doesn't exist`);
+    return updatedGear;
   }
 
   private async getCategory(
