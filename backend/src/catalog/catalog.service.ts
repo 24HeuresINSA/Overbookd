@@ -1,11 +1,27 @@
 import { NotFoundException } from '@nestjs/common';
 import { SlugifyService } from '../common/services/slugify.service';
+import { CategoryNotFoundException } from './category.service';
 import {
   CategoryRepository,
   Gear,
   GearRepository,
   SimplifiedCategory,
 } from './interfaces';
+
+type GearCreateForm = {
+  name: string;
+  category?: number;
+};
+
+type GearUpdateForm = GearCreateForm & {
+  id: number;
+};
+
+export class GearNotFoundException extends NotFoundException {
+  constructor(id: number) {
+    super(`Gear #${id} doesn't exist`);
+  }
+}
 
 export class CatalogService {
   constructor(
@@ -14,15 +30,11 @@ export class CatalogService {
     private readonly gearRepository: GearRepository,
   ) {}
 
-  async add({
-    name,
-    category: categoryId,
-  }: {
-    name: string;
-    category?: number;
-  }): Promise<Gear> {
-    const slug = this.slugService.slugify(name);
-    const category = await this.getCategory(categoryId);
+  async add({ name, category: categoryId }: GearCreateForm): Promise<Gear> {
+    const { category, slug } = await this.generateComputedProperties(
+      name,
+      categoryId,
+    );
     return this.gearRepository.addGear({
       name,
       category,
@@ -32,25 +44,28 @@ export class CatalogService {
 
   async find(id: number): Promise<Gear> {
     const gear = await this.gearRepository.getGear(id);
-    if (!gear) throw new NotFoundException(`Gear #${id} doesn't exist`);
+    if (!gear) throw new GearNotFoundException(id);
     return gear;
   }
 
-  async update(gear: {
-    id: number;
-    name: string;
-    category?: number;
-  }): Promise<Gear> {
-    const slug = this.slugService.slugify(gear.name);
-    const category = await this.getCategory(gear.category);
+  async update(gear: GearUpdateForm): Promise<Gear> {
+    const { category, slug } = await this.generateComputedProperties(
+      gear.name,
+      gear.category,
+    );
     const updatedGear = await this.gearRepository.updateGear({
       ...gear,
       slug,
       category,
     });
-    if (!updatedGear)
-      throw new NotFoundException(`Gear #${gear.id} doesn't exist`);
+    if (!updatedGear) throw new GearNotFoundException(gear.id);
     return updatedGear;
+  }
+
+  private async generateComputedProperties(name: string, categoryId: number) {
+    const slug = this.slugService.slugify(name);
+    const category = await this.getCategory(categoryId);
+    return { category, slug };
   }
 
   private async getCategory(
@@ -62,7 +77,7 @@ export class CatalogService {
 
     const isCategorySpecifiedButNotFound = categoryId && !storedCategory;
     if (isCategorySpecifiedButNotFound) {
-      throw new NotFoundException(`Category #${categoryId} doesn't exist`);
+      throw new CategoryNotFoundException(categoryId);
     }
 
     return storedCategory
