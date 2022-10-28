@@ -28,6 +28,7 @@ export interface GearRepository {
   getGear(id: number): Promise<Gear | undefined>;
   addGear(gear: Omit<Gear, 'id'>): Promise<Gear | undefined>;
   updateGear(gear: Gear): Promise<Gear | undefined>;
+  removeGear(id: number): Promise<void>;
 }
 
 export interface CategoryRepository {

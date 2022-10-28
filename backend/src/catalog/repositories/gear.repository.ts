@@ -20,4 +20,14 @@ export class InMemoryGearRepository implements GearRepository {
     this.gears[gearIndex] = gear;
     return Promise.resolve(gear);
   }
+
+  removeGear(id: number): Promise<void> {
+    const gearIndex = this.gears.findIndex((gear) => gear.id === id);
+    if (gearIndex === -1) return Promise.resolve();
+    this.gears = [
+      ...this.gears.slice(0, gearIndex),
+      ...this.gears.slice(gearIndex + 1),
+    ];
+    return Promise.resolve();
+  }
 }
