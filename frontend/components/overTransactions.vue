@@ -120,13 +120,17 @@ export default {
         this.$store,
         RepoFactory.transactionRepo.deleteTransaction(this, transactionID)
       );
-      if (deleteCall && deleteCall.data.is_deleted) {
+      if (deleteCall) {
         // update on screen
         this.$accessor.notif.pushNotification({
           type: "success",
-          message: "Tranasction supprimé",
+          message: "Transaction supprimée",
         });
       }
+      this.$accessor.notif.pushNotification({
+        type: "error",
+        message: "Une erreur est survenue",
+      });
     },
     getFullNameFromID(id) {
       return this.users[id];

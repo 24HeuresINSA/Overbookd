@@ -99,7 +99,10 @@ export default Vue.extend({
         return;
       }
 
-      if (+this.transfer.amount <= 0) {
+      if (
+        +this.transfer.amount <= 0 ||
+        +this.transfer.amount.toString().split(".")[1]?.length > 2
+      ) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",

@@ -7,6 +7,11 @@ import { PrismaService } from '../prisma.service';
 import { Transaction } from '@prisma/client';
 import { User } from '@prisma/client';
 
+export type CreateTransaction = Omit<
+  Transaction,
+  'from' | 'type' | 'is_deleted' | 'created_at'
+>;
+
 @Injectable()
 export class TransactionService {
   constructor(private prisma: PrismaService) {}
@@ -32,10 +37,7 @@ export class TransactionService {
   /** POST **/
   /**      **/
   async createTransaction(
-    userTransaction: Omit<
-      Transaction,
-      'from' | 'type' | 'is_deleted' | 'created_at'
-    >,
+    userTransaction: CreateTransaction,
     userId: number,
   ): Promise<Transaction> {
     const data: Transaction = {
@@ -98,47 +100,29 @@ export class TransactionService {
   /**        **/
   /** DELETE **/
   /**        **/
-  async deleteTransaction(id: number): Promise<Transaction> {
+  async deleteTransaction(id: number): Promise<void> {
     const transaction = await this.transactionExists(id);
-    const operations: Array<any> = [
-      this.prisma.transaction.update({
-        where: { id: Number(id) },
-        data: { is_deleted: true },
-      }),
-    ];
-    if (['EXPENSE', 'TRANSFER'].includes(transaction.type)) {
-      const user = await this.userExists([transaction.from]);
-      const sender = user.find((user) => user.id === transaction.from);
-      operations.push(
-        this.prisma.user.update({
-          where: { id: Number(transaction.from) },
-          data: { balance: sender.balance + transaction.amount },
-        }),
-      );
-    }
-    if (['DEPOSIT', 'TRANSFER'].includes(transaction.type)) {
-      const user = await this.userExists([transaction.to]);
-      const receiver = user.find((user) => user.id === transaction.to);
-      operations.push(
-        this.prisma.user.update({
-          where: { id: Number(transaction.to) },
-          data: { balance: receiver.balance - transaction.amount },
-        }),
-      );
-    }
-    const response = await this.prisma.$transaction(operations);
-    return response[0];
+
+    const updateTransactionOperation = this.prisma.transaction.update({
+      where: { id: Number(id) },
+      data: { is_deleted: true },
+    });
+
+    const balanceOperationParameters =
+      await this.getUserBalanceUpdateOperationParameters(transaction);
+
+    const balanceOperations = balanceOperationParameters
+      .filter((operation) => operation !== undefined)
+      .map((operation) => this.prisma.user.update(operation));
+
+    const operations = [updateTransactionOperation, ...balanceOperations];
+    await this.prisma.$transaction(operations);
+    return;
   }
 
   /**         **/
   /** HELPERS **/
   /**         **/
-  checkTransactionAmount(transaction: Transaction): void {
-    if (transaction.amount <= 0) {
-      throw new BadRequestException('Amount must be greater than 0');
-    }
-  }
-
   async userExists(userIds: number[]): Promise<User[]> {
     const users = await this.prisma.user.findMany({
       where: { id: { in: userIds } },
@@ -149,7 +133,17 @@ export class TransactionService {
     return users;
   }
 
-  async transactionExists(transactionId: number): Promise<Transaction> {
+  private checkTransactionAmount(transaction: Transaction): void {
+    if (transaction.amount <= 0) {
+      throw new BadRequestException('Amount must be greater than 0');
+    }
+    const decimal = transaction.amount.toString().split('.')[1];
+    if (decimal && decimal.length > 2) {
+      throw new BadRequestException('Amount must be a max of 2 decimal places');
+    }
+  }
+
+  private async transactionExists(transactionId: number): Promise<Transaction> {
     const transaction = await this.getTransactionById(transactionId);
     if (!transaction) {
       throw new NotFoundException(
@@ -162,5 +156,48 @@ export class TransactionService {
       );
     }
     return transaction;
+  }
+
+  private async getUserBalanceUpdateOperationParameters(
+    transaction: Transaction,
+  ) {
+    return Promise.all([
+      this.getReceiverBalanceUpdateOperationParameter(transaction),
+      this.getSenderBalanceUpdateOperationParameter(transaction),
+    ]);
+  }
+
+  private async getReceiverBalanceUpdateOperationParameter(
+    transaction: Transaction,
+  ) {
+    if (!this.shouldUpdateReceiverBalance(transaction.type)) {
+      return undefined;
+    }
+    const [receiver] = await this.userExists([transaction.to]);
+    return {
+      where: { id: Number(transaction.to) },
+      data: { balance: receiver.balance - transaction.amount },
+    };
+  }
+
+  private async getSenderBalanceUpdateOperationParameter(
+    transaction: Transaction,
+  ) {
+    if (!this.shouldUpdateSenderBalance(transaction.type)) {
+      return undefined;
+    }
+    const [sender] = await this.userExists([transaction.from]);
+    return {
+      where: { id: Number(transaction.from) },
+      data: { balance: sender.balance + transaction.amount },
+    };
+  }
+
+  private shouldUpdateReceiverBalance(transactionType: string): boolean {
+    return ['DEPOSIT', 'TRANSFER'].includes(transactionType);
+  }
+
+  private shouldUpdateSenderBalance(transactionType: string): boolean {
+    return ['EXPENSE', 'TRANSFER'].includes(transactionType);
   }
 }
