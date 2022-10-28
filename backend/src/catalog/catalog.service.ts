@@ -62,6 +62,10 @@ export class CatalogService {
     return updatedGear;
   }
 
+  async remove(id: number): Promise<void> {
+    return this.gearRepository.removeGear(id);
+  }
+
   private async generateComputedProperties(name: string, categoryId: number) {
     const slug = this.slugService.slugify(name);
     const category = await this.getCategory(categoryId);

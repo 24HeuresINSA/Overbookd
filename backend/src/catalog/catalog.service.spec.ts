@@ -178,4 +178,19 @@ describe('Catalog', () => {
       });
     });
   });
+  describe('Delete gear', () => {
+    describe.each`
+      toDeleteGearId
+      ${1}
+      ${3}
+      ${123}
+    `('Delete #$toDeleteGearId gear', ({ toDeleteGearId }) => {
+      it(`should remove #${toDeleteGearId} gear from persistance`, async () => {
+        await catalog.remove(toDeleteGearId);
+        await expect(
+          async () => await catalog.find(toDeleteGearId),
+        ).rejects.toThrow(`Gear #${toDeleteGearId} doesn\'t exist`);
+      });
+    });
+  });
 });
