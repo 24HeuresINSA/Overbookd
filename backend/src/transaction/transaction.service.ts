@@ -4,12 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Transaction } from '@prisma/client';
+import { Transaction, TransactionType } from '@prisma/client';
 import { User } from '@prisma/client';
 
 export type CreateTransaction = Omit<
   Transaction,
-  'from' | 'type' | 'is_deleted' | 'created_at'
+  'id' | 'from' | 'type' | 'is_deleted' | 'created_at'
 >;
 
 @Injectable()
@@ -40,22 +40,22 @@ export class TransactionService {
     userTransaction: CreateTransaction,
     userId: number,
   ): Promise<Transaction> {
-    const data: Transaction = {
+    const data = {
       ...userTransaction,
       from: userId,
-      type: 'TRANSFER',
-      is_deleted: false,
-      created_at: new Date(),
+      type: TransactionType.TRANSFER,
     };
-    this.checkTransactionAmount(data);
-    //Check if user exists
+    this.checkTransactionAmount(data.amount);
     const users = await this.userExists([data.from, data.to]);
     const sender = users.find((user) => user.id === data.from);
     const receiver = users.find((user) => user.id === data.to);
 
     const senderBalance = sender.balance - data.amount;
     const receiverBalance = receiver.balance + data.amount;
-    await this.prisma.$transaction([
+    const [transaction] = await this.prisma.$transaction([
+      this.prisma.transaction.create({
+        data: data,
+      }),
       this.prisma.user.update({
         where: { id: Number(data.from) },
         data: { balance: senderBalance },
@@ -64,17 +64,14 @@ export class TransactionService {
         where: { id: Number(data.to) },
         data: { balance: receiverBalance },
       }),
-      this.prisma.transaction.create({
-        data: data,
-      }),
     ]);
-    return data;
+    return transaction;
   }
 
   async addSgTransaction(transactions: Transaction[]): Promise<Transaction[]> {
     await Promise.all(
       transactions.map(async (transaction) => {
-        this.checkTransactionAmount(transaction);
+        this.checkTransactionAmount(transaction.amount);
         //Check if user exists
         const userId =
           transaction.type === 'DEPOSIT' ? transaction.to : transaction.from;
@@ -133,11 +130,11 @@ export class TransactionService {
     return users;
   }
 
-  private checkTransactionAmount(transaction: Transaction): void {
-    if (transaction.amount <= 0) {
+  private checkTransactionAmount(amount: number): void {
+    if (amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0');
     }
-    const decimal = transaction.amount.toString().split('.')[1];
+    const decimal = amount.toString().split('.')[1];
     if (decimal && decimal.length > 2) {
       throw new BadRequestException('Amount must be a max of 2 decimal places');
     }
