@@ -18,7 +18,8 @@ export class SlugifyService {
     ç: 'c',
   };
 
-  slugify(name: string): string {
+  slugify(name?: string): string | undefined {
+    if (!name) return undefined;
     const SLUG_SEPARATOR = '-';
     const spaces = new RegExp(/[ ]+/gm);
     const nonStandardChar = new RegExp(/[^A-Za-z0-9]/gm);
