@@ -44,3 +44,11 @@ export interface CategoryRepository {
 export interface TeamRepository {
   getTeam(slug: string): Promise<Team | undefined>;
 }
+
+export class GearAlreadyExists extends Error {
+  gear: Gear;
+  constructor(gear: Gear) {
+    super(`"${gear.name}" gear already exists`);
+    this.gear = gear;
+  }
+}

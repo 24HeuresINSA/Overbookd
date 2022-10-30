@@ -1,5 +1,4 @@
-import { Gear, GearRepository } from '../interfaces';
-
+import { Gear, GearAlreadyExists, GearRepository } from '../interfaces';
 export class InMemoryGearRepository implements GearRepository {
   gears: Gear[];
 
@@ -8,6 +7,8 @@ export class InMemoryGearRepository implements GearRepository {
   }
 
   addGear(gear: Omit<Gear, 'id'>): Promise<Gear> {
+    const existingGear = this.gears.find((g) => g.slug === gear.slug);
+    if (existingGear) throw new GearAlreadyExists(existingGear);
     const id = this.gears.length + 1;
     const createdGear = { ...gear, id };
     this.gears.push(createdGear);

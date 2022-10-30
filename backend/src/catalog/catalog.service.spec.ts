@@ -100,11 +100,14 @@ describe('Catalog', () => {
     `(
       'Add gear "$name" to catalog',
       ({ name, category, expectedSlug, expectedCategory }) => {
+        let gear: Gear;
         afterAll(() => {
           gearRepository.gears = GEARS;
         });
+        beforeAll(async () => {
+          gear = await catalog.add({ name, category });
+        });
         it(`should create gear ${name} with generated id and slug "${expectedSlug}"`, async () => {
-          const gear = await catalog.add({ name, category });
           expect(gear).toHaveProperty('id');
           expect(gear.id).toEqual(expect.any(Number));
           expect(gear.name).toBe(name);
@@ -112,16 +115,14 @@ describe('Catalog', () => {
         });
         if (expectedCategory) {
           it(`should link gear ${name} to category "${expectedCategory.name}"`, async () => {
-            const gear = await catalog.add({ name, category });
             expect(gear.category).toMatchObject(expectedCategory);
             expect(gear.category).not.toHaveProperty('parent');
             expect(gear.category).not.toHaveProperty('owner');
           });
         }
         it(`should be accessible after`, async () => {
-          const createdGear = await catalog.add({ name, category });
-          const fetchedGear = await catalog.find(createdGear.id);
-          expect(createdGear).toMatchObject(fetchedGear);
+          const fetchedGear = await catalog.find(gear.id);
+          expect(gear).toMatchObject(fetchedGear);
         });
       },
     );
@@ -134,6 +135,17 @@ describe('Catalog', () => {
               category: 123,
             }),
         ).rejects.toThrow(`Category #${123} doesn\'t exist`);
+      });
+    });
+    describe('When a similar gear already exist (i.e. slug are the same)', () => {
+      it('should inform user a similar gear already exists', async () => {
+        await expect(
+          async () =>
+            await catalog.add({
+              name: 'Perçeuse',
+              category: 2,
+            }),
+        ).rejects.toThrow(`"Perceuse" gear already exist`);
       });
     });
   });
