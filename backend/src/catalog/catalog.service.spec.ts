@@ -58,6 +58,35 @@ const GEARS: Gear[] = [
   },
 ];
 
+const SIMILAR_GEARS: Gear[] = [
+  ...GEARS,
+  {
+    id: 4,
+    name: 'Tablier',
+    slug: 'tablier',
+  },
+  {
+    id: 5,
+    name: 'Ponçeuse',
+    slug: 'ponceuse',
+    category: {
+      id: CATEGORIES[1].id,
+      slug: CATEGORIES[1].slug,
+      name: CATEGORIES[1].name,
+    },
+  },
+  {
+    id: 6,
+    name: 'Table',
+    slug: 'table',
+    category: {
+      id: CATEGORIES[2].id,
+      slug: CATEGORIES[2].slug,
+      name: CATEGORIES[2].name,
+    },
+  },
+];
+
 describe('Catalog', () => {
   const categoryRepository = new InMemoryCategoryRepository();
   const gearRepository = new InMemoryGearRepository();
@@ -204,5 +233,30 @@ describe('Catalog', () => {
         ).rejects.toThrow(`Gear #${toDeleteGearId} doesn\'t exist`);
       });
     });
+  });
+  describe('Search gear', () => {
+    beforeAll(() => {
+      gearRepository.gears = SIMILAR_GEARS;
+    });
+    describe.each`
+      searchName   | searchCategory  | expectedGears
+      ${'TAblIer'} | ${undefined}    | ${[SIMILAR_GEARS[3]]}
+      ${'TAblI'}   | ${undefined}    | ${[SIMILAR_GEARS[3]]}
+      ${'TAbl'}    | ${undefined}    | ${[SIMILAR_GEARS[3], SIMILAR_GEARS[5]]}
+      ${'TAblI'}   | ${'Mobilier'}   | ${[]}
+      ${'euse'}    | ${undefined}    | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[2], SIMILAR_GEARS[4]]}
+      ${'euse'}    | ${'BricolLage'} | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[4]]}
+    `(
+      'When looking for "$searchName" in #$searchCategory category',
+      ({ searchName, searchCategory, expectedGears }) => {
+        it(`should retrieve ${expectedGears.length} gears`, async () => {
+          const gears = await catalog.search({
+            name: searchName,
+            category: searchCategory,
+          });
+          expect(gears).toEqual(expectedGears);
+        });
+      },
+    );
   });
 });

@@ -1,4 +1,9 @@
-import { Gear, GearAlreadyExists, GearRepository } from '../interfaces';
+import {
+  Gear,
+  GearAlreadyExists,
+  GearRepository,
+  SearchGear,
+} from '../interfaces';
 export class InMemoryGearRepository implements GearRepository {
   gears: Gear[];
 
@@ -30,5 +35,16 @@ export class InMemoryGearRepository implements GearRepository {
       ...this.gears.slice(gearIndex + 1),
     ];
     return Promise.resolve();
+  }
+
+  searchGear({ slug, category }: SearchGear): Promise<Gear[]> {
+    return Promise.resolve(
+      this.gears.filter((gear) => {
+        const categorySearchCondition = category
+          ? gear?.category?.slug?.includes(category)
+          : true;
+        return gear.slug.includes(slug) && categorySearchCondition;
+      }),
+    );
   }
 }
