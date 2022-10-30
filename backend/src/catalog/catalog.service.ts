@@ -66,6 +66,18 @@ export class CatalogService {
     return this.gearRepository.removeGear(id);
   }
 
+  async search({
+    name,
+    category,
+  }: {
+    name: string;
+    category?: string;
+  }): Promise<Gear[]> {
+    const slug = this.slugService.slugify(name);
+    const categorySlug = this.slugService.slugify(category);
+    return this.gearRepository.searchGear({ slug, category: categorySlug });
+  }
+
   private async generateComputedProperties(name: string, categoryId: number) {
     const slug = this.slugService.slugify(name);
     const category = await this.getCategory(categoryId);
