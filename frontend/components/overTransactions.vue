@@ -45,7 +45,12 @@
       </template>
 
       <template #[`item.action`]="{ item }">
-        <v-btn icon small @click="deleteTransaction(item._id)">
+        <v-btn
+          v-if="!item.is_deleted"
+          icon
+          small
+          @click="deleteTransaction(item.id)"
+        >
           <v-icon small>mdi-trash-can</v-icon>
         </v-btn>
       </template>
@@ -117,15 +122,15 @@ export default {
       );
       if (deleteCall) {
         // update on screen
-        let mTransaction = this.transactions.find(
-          (t) => t._id === transactionID
-        );
-        mTransaction.isValid = false;
         this.$accessor.notif.pushNotification({
           type: "success",
-          message: "Tranasction supprimé",
+          message: "Transaction supprimée",
         });
       }
+      this.$accessor.notif.pushNotification({
+        type: "error",
+        message: "Une erreur est survenue",
+      });
     },
     getFullNameFromID(id) {
       return this.users[id];

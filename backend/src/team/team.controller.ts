@@ -32,7 +32,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('humain')
+  @Roles('humain', 'sg')
   @Post('link')
   @ApiBearerAuth()
   @HttpCode(201)
