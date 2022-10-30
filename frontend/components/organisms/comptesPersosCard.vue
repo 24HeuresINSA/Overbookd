@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <TransferDialog />
+    <TransferDialog @transaction="updateCP" />
     <v-card
       height="100%"
       class="d-flex flex-column justify-space-between"
@@ -109,6 +109,11 @@ export default Vue.extend({
         default:
           return false;
       }
+    },
+    updateCP(amount: number): any {
+      this.$store.commit("user/UPDATE_USER", {
+        balance: (this.$accessor.user.me.balance || 0) - amount,
+      });
     },
   },
 });

@@ -72,6 +72,7 @@
           >
           <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
           <br />
+          <bt />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
         </v-card-text>
       </v-card>
@@ -152,7 +153,7 @@ export default {
       totalCPBalance: 0,
       settledStickPrice: 0.5,
 
-      mode: "cask",
+      mode: "cask", //default mode
 
       isSwitchDialogOpen: false,
 
@@ -193,7 +194,7 @@ export default {
     stickPrice() {
       const rawAmount = +(+this.totalPrice / +this.totalConsumptions);
       const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
-      let res = parseInt(round / 5) * 5;
+      const res = parseInt(round / 5) * 5;
       return ((res + 5) * 0.01).toFixed(2);
     },
     rules() {
@@ -287,7 +288,6 @@ export default {
       });
     }
   },
-
   methods: {
     hasRole(role) {
       return this.$accessor.user.hasRole(role);
@@ -361,6 +361,8 @@ export default {
             //cast to float
             transaction.amount = +this.stickPrice * +user.newConsumption;
             transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
+            this.totalCPBalance -= transaction.amount;
+            user.balance -= transaction.amount;
             break;
 
           case "closet":
@@ -368,6 +370,8 @@ export default {
             transaction.to = user.id;
             transaction.amount = +this.settledStickPrice * +user.newConsumption;
             transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
+            this.totalCPBalance -= transaction.amount;
+            user.balance -= transaction.amount;
             break;
 
           case "deposit":
@@ -376,6 +380,8 @@ export default {
             transaction.from = user.id;
             transaction.amount = +user.newConsumption;
             transaction.context = `Recharge de compte perso`;
+            this.totalCPBalance += transaction.amount;
+            user.balance += transaction.amount;
             break;
         }
 
