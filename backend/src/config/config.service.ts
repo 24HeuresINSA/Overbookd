@@ -11,25 +11,21 @@ export class ConfigService {
         _id: '614c8b0eae8c2c0010a35bb7',
         key: 'error',
         value: 'Zebi',
-        __v: 0,
       },
       {
         _id: '614c8b0eae8c2c0010a35bba',
         key: 'error_basic',
         value: 'Something went wrong blame the bad devs 💩',
-        __v: 0,
       },
       {
         _id: '614c8b0fae8c2c0010a35bbd',
         key: 'isSignupOpen',
         value: true,
-        __v: 0,
       },
       {
         _id: '614c8b0fae8c2c0010a35bc0',
         key: 'fb_signup_closed',
         value: 'les inscriptions sont fermées 😱',
-        __v: 0,
       },
       {
         _id: '614c8b0fae8c2c0010a35bc3',
@@ -120,39 +116,33 @@ export class ConfigService {
             label: 'commentaire',
           },
         ],
-        __v: 0,
       },
       {
         _id: '614c8b0fae8c2c0010a35bc9',
         key: 'fb_confirm_submit',
         value:
           "T'es sûr de ta FA la ? les zumains 🧂 seront pas content si c'est de la 💩",
-        __v: 0,
       },
       {
         _id: '614c8b0fae8c2c0010a35bcc',
         key: 'fa_validators',
         value: ['humain', 'secu', 'log', 'barrieres', 'elec', 'signa'],
-        __v: 0,
       },
       {
         _id: '614c8b10ae8c2c0010a35bcf',
         key: 'availabilities_description',
         value:
           "Remplis tes disponibilités, plus tu as de points de charisme, plus tu as de chances de faire parti de l'aventure. Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à tous tes créneaux et te laisserons du temps pour te reposer et profiter du festival ! Les créneaux oranges ne sont plus modifiables une fois cochés.",
-        __v: 0,
       },
       {
         _id: '614c8b10ae8c2c0010a35bd2',
         key: 'max_charisma',
         value: 1500,
-        __v: 0,
       },
       {
         _id: '614c8b10ae8c2c0010a35bd5',
         key: 'ft_validators',
         value: ['humain', 'log'],
-        __v: 0,
       },
       {
         _id: '614c8b10ae8c2c0010a35bd8',
@@ -216,7 +206,6 @@ export class ConfigService {
             label: 'Commentaire',
           },
         ],
-        __v: 0,
       },
       {
         _id: '614c8b10ae8c2c0010a35bdb',
@@ -257,7 +246,6 @@ export class ConfigService {
             type: 'textarea',
           },
         ],
-        __v: 0,
       },
       {
         _id: '614c8b11ae8c2c0010a35bde',
@@ -444,19 +432,16 @@ export class ConfigService {
             icon: 'mdi-human-cane',
           },
         ],
-        __v: 0,
       },
       {
         _id: '614c8b11ae8c2c0010a35be1',
         key: 'isInventoryOpen',
         value: false,
-        __v: 0,
       },
       {
         _id: '614c8b11ae8c2c0010a35be4',
         key: 'add_availabilities_roles',
         value: ['admin', 'bureau', 'humain'],
-        __v: 0,
       },
       {
         _id: '614c8b11ae8c2c0010a35be7',
@@ -471,25 +456,21 @@ export class ConfigService {
             day: '2021-09-26',
           },
         ],
-        __v: 0,
       },
       {
         _id: '614ef72fae8c2c0010a35ff7',
         key: 'fa_required_role',
         value: 'hard',
-        __v: 0,
       },
       {
         _id: '614ef744ae8c2c0010a35ffa',
         key: 'ft_required_role',
         value: 'hard',
-        __v: 0,
       },
       {
         _id: '6161725764870e0010292db4',
         key: 'are_transfers_open',
         value: true,
-        __v: 0,
       },
       {
         _id: '61843542d2bbce00105aeff5',
@@ -527,7 +508,6 @@ export class ConfigService {
             filter: 'hard',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61843542d2bbce00105aeff9',
@@ -554,7 +534,6 @@ export class ConfigService {
             type: 'switch',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61843542d2bbce00105aeffd',
@@ -566,7 +545,6 @@ export class ConfigService {
             type: 'textarea',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61843542d2bbce00105af004',
@@ -588,7 +566,6 @@ export class ConfigService {
             type: 'switch',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61843542d2bbce00105af008',
@@ -600,13 +577,11 @@ export class ConfigService {
             type: 'rich-text',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61843544d2bbce00105af02d',
         key: 'event_date',
         value: '2022-05-21',
-        __v: 0,
       },
       {
         _id: '61af655ff77ccb00103ed109',
@@ -653,7 +628,6 @@ export class ConfigService {
             option: 'number',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61af655ff77ccb00103ed12c',
@@ -702,7 +676,6 @@ export class ConfigService {
             ],
           },
         ],
-        __v: 0,
       },
       {
         _id: '61af655ff77ccb00103ed12f',
@@ -718,7 +691,6 @@ export class ConfigService {
             label: 'Desctiption du besoin en eau',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61af655ff77ccb00103ed134',
@@ -739,7 +711,6 @@ export class ConfigService {
             label: 'Commentaire',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61af655ff77ccb00103ed137',
@@ -769,13 +740,11 @@ export class ConfigService {
             label: 'Commentaire',
           },
         ],
-        __v: 0,
       },
       {
         _id: '61b0ca5877783200108bd4c2',
         key: 'is_ft_open',
         value: true,
-        __v: 0,
       },
       {
         _id: '620cb64424568626d7f9e2a7',
@@ -876,13 +845,11 @@ export class ConfigService {
               'Commentaire (handicap éventuel, allergies, la liste de tes amis, un mot doux pour les orgas...)',
           },
         ],
-        __v: 0,
       },
       {
         _id: '624be11990b5de0011816811',
         key: 'show_ft_in_planning',
         value: false,
-        __v: 0,
       },
       {
         _id: {
@@ -911,13 +878,11 @@ export class ConfigService {
             number: '06 09 72 90 06',
           },
         ],
-        __v: 0,
       },
       {
         _id: { $oid: '6277e8c24e01a5b4707c629d' },
         key: 'availabilityMoment',
         value: false,
-        __v: 0,
       },
     ];
   }
