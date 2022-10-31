@@ -105,6 +105,17 @@
         required
       ></v-select>
 
+      <v-select
+        v-if="formSoft"
+        v-model="formData.team"
+        type="select"
+        label="Team affiliée (laisser vide si non concerné)"
+        :items="['BDE', 'Kfet', 'Karna', 'Woods', 'Teckos', 'Tendrestival',]"
+        dense
+        clearable
+        required
+      ></v-select>
+
       <v-text-field
         v-model="formData.comment"
         label="Commentaire"
@@ -136,6 +147,7 @@ export default {
         default: () => undefined,
       },
       activePicker: null,
+      formSoft: true,
     }
   },
 
@@ -159,6 +171,7 @@ export default {
       } else {
         delete this.formData.password2;
         delete this.formData.isValid;
+        if (!formSoft) delete this.formData.team;
         const oldDate = this.formData.birthdate;
         this.formData.birthdate = new Date(oldDate).toISOString();
         this.$axios.post("/user", this.formData);

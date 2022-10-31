@@ -52,7 +52,7 @@ export default Vue.extend({
         },
         amount: "0",
         reason: "",
-        isValid: false
+        isValid: false,
       },
       users: {},
     };
@@ -137,6 +137,13 @@ export default Vue.extend({
             to: this.formData.user.id,
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
+          this.$store.dispatch("dialog/closeDialog");
+
+          this.formData = { user: { username: undefined, id: "", },
+            amount: "0",
+            reason: "",
+            isValid: false,
+          };
         } catch (e) {
           console.error(e);
         }

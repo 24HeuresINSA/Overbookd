@@ -19,11 +19,11 @@ export class ConfigService {
         key: 'isSignupOpen',
         value: true,
       },
-      /*{
+      {
         key: 'fb_signup_closed',
         value: 'les inscriptions sont fermées 😱',
       },
-      {
+      /*{
         key: 'signup_form',
         value: [
           {
@@ -715,7 +715,7 @@ export class ConfigService {
         key: 'is_ft_open',
         value: true,
       },
-      {
+      /*{
         key: 'signup_form_soft',
         value: [
           {
@@ -813,7 +813,7 @@ export class ConfigService {
               'Commentaire (handicap éventuel, allergies, la liste de tes amis, un mot doux pour les orgas...)',
           },
         ],
-      },
+      },*/
       {
         key: 'show_ft_in_planning',
         value: false,
