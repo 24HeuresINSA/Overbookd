@@ -89,7 +89,6 @@ export default Vue.extend({
     async transferMoney(): Promise<any> {
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
-      console.log(this.transfer);
       // transaction to self...
       if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
@@ -100,7 +99,10 @@ export default Vue.extend({
         return;
       }
 
-      if (+this.transfer.amount <= 0) {
+      if (
+        +this.transfer.amount <= 0 ||
+        +this.transfer.amount.toString().split(".")[1]?.length > 2
+      ) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",
