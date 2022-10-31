@@ -18,11 +18,11 @@ containerize-frontend:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - if [ "$CI_COMMIT_REF_NAME" = "main" ]; then VERSION_TAG=$(cat ./frontend/package.json | grep version | tr -d '[[:space:]]' | sed 's/version//g' | sed 's/[\",:]//g'); else VERSION_TAG=${CI_COMMIT_REF_NAME}_$(cat ./frontend/package.json | grep version | tr -d '[[:space:]]' | sed 's/version//g' | sed 's/[\",:]//g'); fi
     - if [ "$CI_COMMIT_REF_NAME" = "main" ]; then TAG="latest"; else TAG=$CI_COMMIT_REF_NAME; fi
-    - docker pull $CI_REGISTRY_IMAGE/frontend:builder-$TAG || true
-    - docker build --target builder --cache-from $CI_REGISTRY_IMAGE/frontend:builder-$TAG --tag $CI_REGISTRY_IMAGE/frontend:builder-$TAG --build-arg BASE_URL=$BASE_URL ./frontend
-    - docker push $CI_REGISTRY_IMAGE/frontend:builder-$TAG
+    - docker pull $CI_REGISTRY_IMAGE/frontend:builder || true
+    - docker build --target builder --cache-from $CI_REGISTRY_IMAGE/frontend:builder --tag $CI_REGISTRY_IMAGE/frontend:builder ./frontend
+    - docker push $CI_REGISTRY_IMAGE/frontend:builder
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE/frontend:builder-$TAG --tag $CI_REGISTRY_IMAGE/frontend:$VERSION_TAG --tag $CI_REGISTRY_IMAGE/frontend:$TAG --build-arg BASE_URL=$BASE_URL ./frontend
+    - docker build --cache-from $CI_REGISTRY_IMAGE/frontend:builder --tag $CI_REGISTRY_IMAGE/frontend:$VERSION_TAG --tag $CI_REGISTRY_IMAGE/frontend:$TAG --build-arg BASE_URL=$BASE_URL ./frontend
     - docker push $CI_REGISTRY_IMAGE/frontend:$VERSION_TAG
     - docker push $CI_REGISTRY_IMAGE/frontend:$TAG
 
