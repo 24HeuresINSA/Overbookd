@@ -72,7 +72,7 @@
           >
           <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
           <br />
-          <bt />
+          <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
         </v-card-text>
       </v-card>
