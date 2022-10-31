@@ -106,14 +106,6 @@ export class CreateFaDto {
 
   @ApiProperty({
     required: false,
-    description: 'All of the collaborators ids',
-  })
-  @IsArray()
-  @IsOptional()
-  collaborator_id: number[];
-
-  @ApiProperty({
-    required: false,
     description: 'The waterflow needed',
   })
   @IsNumber()
