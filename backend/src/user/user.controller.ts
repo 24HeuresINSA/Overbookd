@@ -60,15 +60,15 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('hard')
   @ApiBearerAuth()
   @Get('all/cp')
   @ApiResponse({
     status: 200,
-    description: 'Get all users with their CP',
+    description: 'Get all usernames with valid CP',
     type: Array,
   })
-  async getAllUsernamesWithCP(): Promise<Username[]> {
+  async getUsernamesWithValidCP(): Promise<Username[]> {
     const users = await this.userService.users({
       where: {
         team: {
@@ -87,7 +87,9 @@ export class UserController {
         id: true,
       },
     });
-    return users.map(this.userService.getUsername);
+    return users
+      .map(this.userService.getUsername)
+      .sort((a, b) => (a.username < b.username ? 1 : -1));
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
