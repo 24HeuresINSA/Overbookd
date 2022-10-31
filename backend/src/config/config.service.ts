@@ -8,27 +8,22 @@ export class ConfigService {
   config() {
     return [
       {
-        _id: '614c8b0eae8c2c0010a35bb7',
         key: 'error',
         value: 'Zebi',
       },
       {
-        _id: '614c8b0eae8c2c0010a35bba',
         key: 'error_basic',
         value: 'Something went wrong blame the bad devs 💩',
       },
       {
-        _id: '614c8b0fae8c2c0010a35bbd',
         key: 'isSignupOpen',
         value: true,
       },
-      {
-        _id: '614c8b0fae8c2c0010a35bc0',
+      /*{
         key: 'fb_signup_closed',
         value: 'les inscriptions sont fermées 😱',
       },
       {
-        _id: '614c8b0fae8c2c0010a35bc3',
         key: 'signup_form',
         value: [
           {
@@ -116,36 +111,30 @@ export class ConfigService {
             label: 'commentaire',
           },
         ],
-      },
+      },*/
       {
-        _id: '614c8b0fae8c2c0010a35bc9',
         key: 'fb_confirm_submit',
         value:
           "T'es sûr de ta FA la ? les zumains 🧂 seront pas content si c'est de la 💩",
       },
       {
-        _id: '614c8b0fae8c2c0010a35bcc',
         key: 'fa_validators',
         value: ['humain', 'secu', 'log', 'barrieres', 'elec', 'signa'],
       },
       {
-        _id: '614c8b10ae8c2c0010a35bcf',
         key: 'availabilities_description',
         value:
           "Remplis tes disponibilités, plus tu as de points de charisme, plus tu as de chances de faire parti de l'aventure. Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à tous tes créneaux et te laisserons du temps pour te reposer et profiter du festival ! Les créneaux oranges ne sont plus modifiables une fois cochés.",
       },
       {
-        _id: '614c8b10ae8c2c0010a35bd2',
         key: 'max_charisma',
         value: 1500,
       },
       {
-        _id: '614c8b10ae8c2c0010a35bd5',
         key: 'ft_validators',
         value: ['humain', 'log'],
       },
       {
-        _id: '614c8b10ae8c2c0010a35bd8',
         key: 'equipment_form',
         value: [
           {
@@ -208,7 +197,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '614c8b10ae8c2c0010a35bdb',
         key: 'ft_form',
         value: [
           {
@@ -248,7 +236,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '614c8b11ae8c2c0010a35bde',
         key: 'teams',
         value: [
           {
@@ -434,17 +421,14 @@ export class ConfigService {
         ],
       },
       {
-        _id: '614c8b11ae8c2c0010a35be1',
         key: 'isInventoryOpen',
         value: false,
       },
       {
-        _id: '614c8b11ae8c2c0010a35be4',
         key: 'add_availabilities_roles',
         value: ['admin', 'bureau', 'humain'],
       },
       {
-        _id: '614c8b11ae8c2c0010a35be7',
         key: 'timeframes',
         value: [
           {
@@ -458,22 +442,18 @@ export class ConfigService {
         ],
       },
       {
-        _id: '614ef72fae8c2c0010a35ff7',
         key: 'fa_required_role',
         value: 'hard',
       },
       {
-        _id: '614ef744ae8c2c0010a35ffa',
         key: 'ft_required_role',
         value: 'hard',
       },
       {
-        _id: '6161725764870e0010292db4',
         key: 'are_transfers_open',
         value: true,
       },
       {
-        _id: '61843542d2bbce00105aeff5',
         key: 'fa_general_form',
         value: [
           {
@@ -510,7 +490,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61843542d2bbce00105aeff9',
         key: 'fa_details_form',
         value: [
           {
@@ -536,7 +515,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61843542d2bbce00105aeffd',
         key: 'fa_security_form',
         value: [
           {
@@ -547,7 +525,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61843542d2bbce00105af004',
         key: 'ft_general_form',
         value: [
           {
@@ -568,7 +545,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61843542d2bbce00105af008',
         key: 'ft_details_form',
         value: [
           {
@@ -579,12 +555,10 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61843544d2bbce00105af02d',
         key: 'event_date',
         value: '2022-05-21',
       },
       {
-        _id: '61af655ff77ccb00103ed109',
         key: 'fa_external_form',
         value: [
           {
@@ -630,7 +604,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61af655ff77ccb00103ed12c',
         key: 'fa_security_pass_form',
         value: [
           {
@@ -678,7 +651,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61af655ff77ccb00103ed12f',
         key: 'fa_water_form',
         value: [
           {
@@ -693,7 +665,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61af655ff77ccb00103ed134',
         key: 'fa_signalisation_form',
         value: [
           {
@@ -713,7 +684,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61af655ff77ccb00103ed137',
         key: 'fa_elec_form',
         value: [
           {
@@ -742,12 +712,10 @@ export class ConfigService {
         ],
       },
       {
-        _id: '61b0ca5877783200108bd4c2',
         key: 'is_ft_open',
         value: true,
       },
       {
-        _id: '620cb64424568626d7f9e2a7',
         key: 'signup_form_soft',
         value: [
           {
@@ -847,14 +815,10 @@ export class ConfigService {
         ],
       },
       {
-        _id: '624be11990b5de0011816811',
         key: 'show_ft_in_planning',
         value: false,
       },
       {
-        _id: {
-          $oid: '6268f658ae21802ea84db2b6',
-        },
         key: 'sos_numbers',
         value: [
           {
@@ -880,7 +844,6 @@ export class ConfigService {
         ],
       },
       {
-        _id: { $oid: '6277e8c24e01a5b4707c629d' },
         key: 'availabilityMoment',
         value: false,
       },
