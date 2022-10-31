@@ -1,23 +1,26 @@
 container_scanning:
   interruptible: true
+  stage: docker-scan
+  rules:
+    - when: never
+
+frontend_scan:
+  extends: container_scanning
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - frontend/**/*
-    - when: never
   needs: ["merge_requests_containerize-frontend"]
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "frontend/Dockerfile"
-  stage: docker-scan
 
-backend_scan_preprod:
+backend_scan:
   extends: container_scanning
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - backend/**/*
-    - when: never
   needs: ["merge_requests_containerize-backend"]
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
