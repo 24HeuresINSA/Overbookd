@@ -5,3 +5,6 @@
 .nuxt
 node_modules
 dist
+Dockerfile
+Dockerfile.dev
+.dockerignore

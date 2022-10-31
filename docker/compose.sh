@@ -46,7 +46,7 @@ case $1 in
         "--bash")
                 echo "Bash command dev containers"
                 echo "---------------------------"
-                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16.14-alpine3.15 sh
+                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16.17.1-alpine3.16 sh
                 ;;
 
         "--traefik"|"-t") 
