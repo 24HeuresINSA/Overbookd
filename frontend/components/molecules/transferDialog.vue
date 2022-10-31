@@ -3,8 +3,27 @@
     <v-card>
       <v-card-title>Effectuer un virement</v-card-title>
       <v-card-text>
-        <OverForm :fields="transferForm" @form-change="onFormChange">
-        </OverForm>
+        <v-form v-model="formData.isValid">
+          <v-autocomplete
+            v-model="formData.user"
+            :items="users"
+            label="Utilisateur"
+            required
+            dense
+          ></v-autocomplete>
+
+          <v-text-field
+            v-model="formData.amount"
+            type="number"
+            label="Montant"
+            required
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="formData.reason"
+            label="Raison"
+          ></v-text-field>
+        </v-form>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="transferMoney()">Enregistrer</v-btn>
@@ -19,43 +38,39 @@ import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
-import OverForm from "~/components/overForm.vue";
 import { Transfer } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "TransferDialog",
-  components: { OverForm },
-  data() {
+
+  data: () => {
     return {
-      transferForm: [
-        {
-          key: "user",
-          label: "Utilisateur",
-          type: "user",
-          isRequired: true,
-        },
-        {
-          key: "amount",
-          label: "Montant",
-          option: "number",
-          isRequired: true,
-        },
-        {
-          key: "reason",
-          label: "Raison",
-        },
-      ],
-      transfer: {
-        reason: "",
-        amount: "0",
-        beneficiary: {
+      formData: {
+        user: {
           username: undefined,
           id: "",
         },
-        isValid: false,
-        user: {} as any,
+        amount: "0",
+        reason: "",
+        isValid: false
       },
+      users: {},
     };
+  },
+  async mounted() {
+    let users = this.$accessor.user.usernames;
+    if (users.length === 0) {
+      // fetch usernames
+      await this.$accessor.user.getUsername("");
+      users = this.$accessor.user.usernames;
+    }
+    // sort alphabetically
+    this.users = users.map((user) => {
+      return {
+        text: user.username,
+        value: user,
+      };
+    });
   },
   computed: {
     ...mapState<any, TMapState<DialogState>>("dialog", {
@@ -83,15 +98,20 @@ export default Vue.extend({
     },
   },
   methods: {
-    onFormChange(form: any) {
-      this.transfer = form;
-    },
-    async transferMoney(): Promise<any> {
-      this.toggled = false;
-      this.transfer.amount = this.transfer.amount.replace(",", ".");
-      console.log(this.transfer);
+    async transferMoney() {
+      this.formData.amount = this.formData.amount.replace(",", ".");
+      console.log(this.formData);
+      if (!this.formData.user.id) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message:
+            "N'oublie pas de choisir le bénéficiaire !",
+        });
+        return;
+      }
+
       // transaction to self...
-      if (this.transfer.user.id == this.me.id) {
+      else if (this.formData.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message:
@@ -100,7 +120,7 @@ export default Vue.extend({
         return;
       }
 
-      if (+this.transfer.amount <= 0) {
+      else if (+this.formData.amount <= 0) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",
@@ -108,13 +128,13 @@ export default Vue.extend({
         return;
       }
 
-      if (this.transfer.user.id) {
+      else {
         try {
           let newTransfer: Partial<Transfer> = {
-            amount: +this.transfer.amount,
-            context: this.transfer.reason,
+            amount: +this.formData.amount,
+            context: this.formData.reason,
             from: this.me.id,
-            to: this.transfer.user.id,
+            to: this.formData.user.id,
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
         } catch (e) {
