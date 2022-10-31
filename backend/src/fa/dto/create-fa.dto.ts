@@ -44,7 +44,7 @@ export class CreateFaDto {
     description: 'The id of the team whos responsible of the fa',
   })
   @IsNumber()
-  team_id: number;
+  team_id: string;
 
   @ApiProperty({
     required: true,
