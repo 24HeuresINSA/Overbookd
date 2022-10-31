@@ -1,4 +1,4 @@
-FROM node:16.14-alpine3.15 AS builder
+FROM node:16.17.1-alpine3.16 AS builder
 
 WORKDIR /overbookd/backend
 
@@ -12,13 +12,19 @@ RUN npx prisma generate
 
 RUN npm run build
 
-FROM node:16.14-alpine3.15
+RUN npm prune --production
 
-WORKDIR /app
+FROM node:16.17.1-alpine3.16
+
+ENV NODE_ENV production
+
+USER node
+
+WORKDIR /app/dist
+
+COPY --chown=node:node --from=builder /overbookd/backend/dist /app/dist
 
 COPY --chown=node:node --from=builder /overbookd/backend/node_modules ./node_modules
-COPY --chown=node:node --from=builder /overbookd/backend/dist ./dist
-COPY --chown=node:node --from=builder /overbookd/backend/package*.json ./
 COPY --chown=node:node --from=builder /overbookd/backend/prisma ./prisma
 
 EXPOSE 3000
