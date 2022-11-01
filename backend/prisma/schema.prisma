@@ -3,7 +3,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native"]
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -72,15 +72,15 @@ model User {
 }
 
 model Team {
-  name       String      @id @default(uuid())
-  users      User_Team[]
+  name  String      @id @default(uuid())
+  users User_Team[]
 }
 
 model User_Team {
-  user       User    @relation(fields: [user_id], references: [id])
-  user_id    Int
-  team       Team    @relation(fields: [team_id], references: [name])
-  team_id    String
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int
+  team    Team   @relation(fields: [team_id], references: [name])
+  team_id String
 
   @@id([user_id, team_id])
 }
