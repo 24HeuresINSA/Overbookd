@@ -33,10 +33,14 @@ export class ConfigurationService {
 
   update(param: {
     where: Prisma.ConfigurationWhereUniqueInput;
-    data: Prisma.ConfigurationUpdateInput;
+    data: Prisma.ConfigurationCreateInput;
   }) {
     const { where, data } = param;
-    return this.prisma.configuration.update({ where, data });
+    return this.prisma.configuration.upsert({
+      where,
+      create: data,
+      update: data,
+    });
   }
 
   remove(key: string) {
