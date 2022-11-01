@@ -13,6 +13,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MailService } from './mail/mail.service';
 import { CatalogModule } from './catalog/catalog.module';
+import { ConfigurationModule } from './configuration/configuration.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CatalogModule } from './catalog/catalog.module';
       },
     }),
     CatalogModule,
+    ConfigurationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
