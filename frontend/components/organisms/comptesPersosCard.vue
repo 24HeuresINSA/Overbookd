@@ -85,16 +85,13 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    // let res = await RepoFactory.transactionRepo.getUserTransactions(this);
-    await Promise.all([
-      this.$accessor.transaction.fetchMTransactions(),
-      this.$accessor.user.fetchUsernamesWithCP(),
-    ]);
+    await this.$accessor.transaction.fetchMTransactions();
     this.areTransfersOpen =
       this.$accessor.config.getConfig("are_transfers_open");
   },
   methods: {
-    openDialog(): any {
+    async openDialog(): Promise<any> {
+      await this.$accessor.user.fetchUsernamesWithCP();
       this.$store.dispatch("dialog/openDialog", "transfer");
     },
 
