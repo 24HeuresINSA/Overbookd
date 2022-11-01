@@ -104,14 +104,13 @@ export default Vue.extend({
       if (!this.formData.user.id) {
         this.$accessor.notif.pushNotification({
           type: "error",
-          message:
-            "N'oublie pas de choisir le bénéficiaire !",
+          message: "N'oublie pas de choisir le bénéficiaire !",
         });
         return;
       }
 
       // transaction to self...
-      else if (this.formData.user.id == this.me.id) {
+      if (this.formData.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message:
@@ -120,7 +119,7 @@ export default Vue.extend({
         return;
       }
 
-      else if (+this.formData.amount <= 0) {
+      if (+this.formData.amount <= 0) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",
@@ -128,25 +127,23 @@ export default Vue.extend({
         return;
       }
 
-      else {
-        try {
-          let newTransfer: Partial<Transfer> = {
-            amount: +this.formData.amount,
-            context: this.formData.reason,
-            from: this.me.id,
-            to: this.formData.user.id,
-          };
-          await this.$accessor.transaction.addTransaction(newTransfer);
-          this.$store.dispatch("dialog/closeDialog");
+      try {
+        let newTransfer: Partial<Transfer> = {
+          amount: +this.formData.amount,
+          context: this.formData.reason,
+          from: this.me.id,
+          to: this.formData.user.id,
+        };
+        await this.$accessor.transaction.addTransaction(newTransfer);
+        this.$store.dispatch("dialog/closeDialog");
 
-          this.formData = { user: { username: undefined, id: "", },
-            amount: "0",
-            reason: "",
-            isValid: false,
-          };
-        } catch (e) {
-          console.error(e);
-        }
+        this.formData = { user: { username: undefined, id: "", },
+          amount: "0",
+          reason: "",
+          isValid: false,
+        };
+      } catch (e) {
+        console.error(e);
       }
     },
   },

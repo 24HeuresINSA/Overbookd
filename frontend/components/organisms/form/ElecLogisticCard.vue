@@ -26,7 +26,36 @@
         <v-img src="/img/log/plugs.jpeg"></v-img>
         <v-card-title>Ajouter un besoin d'électricité</v-card-title>
         <v-card-text>
-          <OverForm :fields="FORM" @form-change="onFormChange"></OverForm>
+          <v-form>
+            <v-select
+              v-model="newElectricityNeed.connectionType"
+              type="select"
+              label="Type de prise"
+              :items="[
+                'PC16',
+                'P17 16A mono',
+                'P17 16A tri',
+                'P17 16A tetra',
+                'P17 32A mono',
+                'P17 32A tri',
+                'P17 32A tetra',
+              ]"
+              dense
+              required
+            ></v-select>
+
+            <v-text-field
+              v-model="newElectricityNeed.power"
+              type="number"
+              label="Puissance"
+              required
+            ></v-text-field>
+          
+            <v-text-field
+              v-model="newElectricityNeed.comment"
+              label="Commentaire"
+            ></v-text-field>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -39,7 +68,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverForm from "~/components/overForm.vue";
 
 const headers = [
   { text: "Type de raccordement", value: "connectionType" },
@@ -53,9 +81,6 @@ const headers = [
 
 export default Vue.extend({
   name: "ElecLogisticCard",
-  components: {
-    OverForm,
-  },
   props: {
     isDisabled: {
       type: Boolean,
@@ -65,16 +90,16 @@ export default Vue.extend({
   data: () => ({
     headers,
     isElectricityNeedDialogOpen: false,
-    FORM: [],
-    newElectricityNeed: {},
+    newElectricityNeed: {
+      connectionType: "",
+      power: "0",
+      comment: "",
+    },
   }),
   computed: {
     electricityNeeds() {
       return this.$accessor.FA.mFA.electricityNeeds;
     },
-  },
-  mounted() {
-    this.FORM = this.$accessor.config.getConfig("fa_elec_form");
   },
   methods: {
     deleteElectricityNeed(index: number) {
@@ -84,8 +109,26 @@ export default Vue.extend({
       this.newElectricityNeed = form;
     },
     addElectricityNeed() {
+      if (!this.newElectricityNeed.connectionType) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "N'oublie pas de choisir le type de prise !",
+        });
+        return;
+      }
+
+      this.newElectricityNeed.power = this.newElectricityNeed.power.replace(",", ".");
+      if (+this.newElectricityNeed.power <= 0) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "La puissance n'est pas valide...",
+        });
+        return;
+      }
+
       this.$accessor.FA.addElectricityNeed(this.newElectricityNeed);
       this.isElectricityNeedDialogOpen = false;
+      this.newElectricityNeed = {connectionType: "", power: "0", comment: ""};
     },
   },
 });

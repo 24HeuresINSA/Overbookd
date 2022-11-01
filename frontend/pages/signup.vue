@@ -92,6 +92,7 @@
         type="select"
         label="Département (obligatoire même si non INSA)*"
         :items="['TC', 'IF', 'BS', 'GCU', 'SGM', 'GI', 'GM', 'GEN', 'FIMI', 'GE', 'AUTRE']"
+        class="margin-top"
         dense
         required
       ></v-select>
@@ -101,6 +102,7 @@
         type="select"
         label="Année (obligatoire même si non INSA)*"
         :items="['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE']"
+        class="margin-top"
         dense
         required
       ></v-select>
@@ -111,6 +113,7 @@
         type="select"
         label="Team affiliée (laisser vide si non concerné)"
         :items="['BDE', 'Kfet', 'Karna', 'Woods', 'Teckos', 'Tendrestival',]"
+        class="margin-top"
         dense
         clearable
         required
@@ -142,12 +145,9 @@ export default {
 
   data: () => {
     return {
-      formData: {
-        type: Object,
-        default: () => undefined,
-      },
+      formData: {},
       activePicker: null,
-      formSoft: true,
+      formSoft: false,
     }
   },
 
@@ -171,7 +171,7 @@ export default {
       } else {
         delete this.formData.password2;
         delete this.formData.isValid;
-        if (!formSoft) delete this.formData.team;
+        if (!this.formSoft) delete this.formData.team;
         const oldDate = this.formData.birthdate;
         this.formData.birthdate = new Date(oldDate).toISOString();
         this.$axios.post("/user", this.formData);
@@ -189,5 +189,9 @@ export default {
 .important {
   font-weight: bold;
   color: red;
+}
+
+.margin-top {
+  margin-top: 20px;
 }
 </style>

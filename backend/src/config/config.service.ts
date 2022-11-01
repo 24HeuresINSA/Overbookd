@@ -683,7 +683,7 @@ export class ConfigService {
           },
         ],
       },
-      {
+      /*{
         key: 'fa_elec_form',
         value: [
           {
@@ -710,7 +710,7 @@ export class ConfigService {
             label: 'Commentaire',
           },
         ],
-      },
+      },*/
       {
         key: 'is_ft_open',
         value: true,
