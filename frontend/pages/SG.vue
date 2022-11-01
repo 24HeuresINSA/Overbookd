@@ -74,6 +74,8 @@
           <br />
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
+
+          <v-btn @click="openSgConfigForm">Configuration des fûts</v-btn>
         </v-card-text>
       </v-card>
 
@@ -124,6 +126,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="isSgConfigDialogOpen" width="600px">
+      <SgConfigForm />
+    </v-dialog>
     <SnackNotificationContainer />
   </v-container>
 </template>
@@ -138,12 +143,12 @@
 import transactionRepo from "../repositories/transactionRepo";
 import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
 import { RepoFactory } from "~/repositories/repoFactory";
-
+import SgConfigForm from "../components/organisms/SgConfigForm";
 const { safeCall } = require("../utils/api/calls");
 
 export default {
   name: "SG",
-  components: { SnackNotificationContainer },
+  components: { SnackNotificationContainer, SgConfigForm },
 
   data: () => {
     return {
@@ -156,7 +161,7 @@ export default {
       mode: "cask", //default mode
 
       isSwitchDialogOpen: false,
-
+      isSgConfigDialogOpen: false,
       regex: {
         int: "^\\d*$",
         float: "^\\d*(\\.\\d+)?$",
@@ -409,6 +414,9 @@ export default {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
       this.isSwitchDialogOpen = false;
+    },
+    openSgConfigForm() {
+      this.isSgConfigDialogOpen = true;
     },
   },
 };

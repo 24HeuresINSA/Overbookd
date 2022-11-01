@@ -16,6 +16,7 @@ import * as assignment from "./assignment";
 import * as conflict from "./conflict";
 import * as team from "./team";
 import * as catalog from "./catalog";
+import * as configuration from "./configuration";
 
 export const state = () => ({});
 
@@ -48,5 +49,6 @@ export const accessorType = getAccessorType({
     assignment,
     conflict,
     catalog,
+    configuration,
   },
 });
