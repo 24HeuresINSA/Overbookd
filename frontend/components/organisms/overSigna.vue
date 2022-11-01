@@ -54,7 +54,27 @@
       <v-card>
         <v-card-title>Ajouter une signalisation</v-card-title>
         <v-card-text>
-          <OverForm :fields="fields" @form-change="onFormChange"></OverForm>
+          <v-form>
+            <v-select
+              v-model="newSignalisation.type"
+              type="select"
+              label="Type"
+              :items="['bannière', 'panneau', 'pancarte']"
+              dense
+              required
+            ></v-select>
+
+            <v-text-field
+              v-model="newSignalisation.text"
+              label="Texte signalétique"
+              required
+            ></v-text-field>
+          
+            <v-text-field
+              v-model="newSignalisation.comment"
+              label="Commentaire"
+            ></v-text-field>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -71,32 +91,20 @@
 </template>
 
 <script lang="ts">
-import OverForm from "@/components/overForm.vue";
 import Vue from "vue";
-import { Header } from "~/utils/models/Data";
-
-export interface Data {
-  isSignaRequired: boolean;
-  isSignaFormOpen: boolean;
-  headers: Header[];
-  fields: string[];
-  newSignalisation: any;
-}
 
 export default Vue.extend({
   name: "OverSigna",
-  components: { OverForm },
   props: {
     isDisabled: {
       type: Boolean,
       default: () => false,
     },
   },
-  data(): Data {
+  data() {
     return {
       isSignaRequired: false,
       isSignaFormOpen: false,
-
       headers: [
         { text: "nombre", value: "number" },
         { text: "type", value: "type" },
@@ -104,9 +112,11 @@ export default Vue.extend({
         { text: "commentaire", value: "comment" },
         { text: "", value: "action" },
       ],
-
-      fields: [],
-      newSignalisation: {},
+      newSignalisation: {
+        type: "",
+        text: "",
+        comment: "",
+      },
     };
   },
   computed: {
@@ -137,9 +147,6 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.fields =
-      this.$accessor.config.getConfig("fa_signalisation_form") || [];
-
     // get locations
     await this.$accessor.location.getAllLocations();
   },
@@ -147,12 +154,17 @@ export default Vue.extend({
     selectLocations(locations: string[]) {
       this.$accessor.FA.setLocations(locations);
     },
-    onFormChange(form: any) {
-      this.newSignalisation = form;
-    },
     onFormSubmit() {
+      if (!this.newSignalisation.type || !this.newSignalisation.text) {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: "N'oublie pas de compléter le Type et le Texte signalétique !",
+        });
+        return;
+      }
       this.$accessor.FA.addSignalisation(this.newSignalisation);
       this.isSignaFormOpen = false;
+      this.newSignalisation = { type: "", text: "", comment: "" };
     },
     deleteSignalisation(index: number) {
       this.$accessor.FA.deleteSignalisation(index);

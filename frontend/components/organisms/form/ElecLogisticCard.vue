@@ -105,9 +105,6 @@ export default Vue.extend({
     deleteElectricityNeed(index: number) {
       this.$accessor.FA.deleteElectricityNeed(index);
     },
-    onFormChange(form: any) {
-      this.newElectricityNeed = form;
-    },
     addElectricityNeed() {
       if (!this.newElectricityNeed.connectionType) {
         this.$accessor.notif.pushNotification({

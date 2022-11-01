@@ -664,7 +664,7 @@ export class ConfigService {
           },
         ],
       },
-      {
+      /*{
         key: 'fa_signalisation_form',
         value: [
           {
@@ -683,7 +683,7 @@ export class ConfigService {
           },
         ],
       },
-      /*{
+      {
         key: 'fa_elec_form',
         value: [
           {
