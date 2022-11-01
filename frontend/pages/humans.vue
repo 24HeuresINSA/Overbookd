@@ -17,7 +17,7 @@
                 clearable
                 dense
                 label="Team"
-                :items="getConfig('teams').map((e) => e.name)"
+                :items="teams.map((e) => e.name)"
               >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
@@ -274,7 +274,6 @@
 </template>
 
 <script>
-import { getConfig } from "../common/role";
 import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
@@ -309,7 +308,7 @@ export default {
         { text: "Action", value: "action", sortable: false },
       ],
 
-      teams: getConfig(this, "teams"),
+      teams: this.$accessor.team.getAllTeams,
       loading: false,
 
       filters: {
@@ -490,10 +489,6 @@ export default {
       return process.env.NODE_ENV === "development"
         ? "http://localhost:2424/"
         : "";
-    },
-
-    getConfig(key) {
-      return getConfig(this, key);
     },
 
     hasRole(role) {

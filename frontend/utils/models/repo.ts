@@ -132,5 +132,8 @@ export interface location {
 }
 
 export interface team {
+  id: number;
   name: string;
+  color: string;
+  icon: string;
 }

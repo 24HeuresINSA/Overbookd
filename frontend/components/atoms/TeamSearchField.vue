@@ -6,7 +6,7 @@
     clearable
     label="Team"
     style="padding: 2px"
-    :items="getConfig('teams').map((e) => e.name)"
+    :items="teams.map((item) => item.name)"
     :value="selectedTeam"
     @input="sendEvent($event)"
   >
@@ -33,8 +33,7 @@ export default Vue.extend({
   name: "TeamSearchField",
   data() {
     return {
-      //Not doing this causes bugs
-      teams: (this as any).getConfig("teams"),
+      teams: this.$accessor.team.getAllTeams,
     };
   },
   computed: {
@@ -50,10 +49,6 @@ export default Vue.extend({
 
     getRoleMetadata(roleName: string): any {
       return this.teams.find((e: any) => e.name === roleName);
-    },
-
-    getConfig(key: string): any {
-      return this.$accessor.config.getConfig(key);
     },
   },
 });

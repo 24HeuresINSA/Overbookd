@@ -15,24 +15,39 @@ export const state = (): State => ({
 });
 
 export const getters = getterTree(state, {
-  teams(state): team[] {
+  getAllTeams(state): team[] {
     return state.teams;
   },
+  getTeamNames(state, getters): string[] {
+    return getters.getAllTeams.map((team: team) => team.name);
+  },
+  getTeams:
+    (state, getters) =>
+    (teamNames: string[] | undefined): any | undefined => {
+      if (!teamNames) {
+        return undefined;
+      }
+      return getters.getAllTeams.filter((t: team) => {
+        return teamNames.includes(t.name);
+      });
+    },
 });
 
 export const mutations = mutationTree(state, {
   SET_TEAMS(state, teams: any) {
-    state.teams = teams;
+    state.teams = teams.sort((a: team, b: team) =>
+      a.name.localeCompare(b.name)
+    );
   },
 });
 
 export const actions = actionTree(
   { state, mutations },
   {
-    async getTeams(context): Promise<any> {
+    async setTeamsInStore(context): Promise<any> {
       const res = await safeCall(this, teamRepo.getTeams(this));
       if (res) {
-        context.commit("SET_TEAMS", res);
+        context.commit("SET_TEAMS", res.data);
       }
       return res;
     },

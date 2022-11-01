@@ -4,7 +4,10 @@ import {
   Delete,
   Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -14,6 +17,7 @@ import { Roles } from 'src/auth/team-auth.decorator';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { CreateTeamDto } from './dto/createTeam.dto';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
+import { UpdateTeamDto } from './dto/updateTeam.dto';
 import { TeamService } from './team.service';
 
 @ApiTags('team')
@@ -27,7 +31,7 @@ export class TeamController {
     description: 'Get all teams',
     type: Array<string>,
   })
-  async getTeams(): Promise<string[]> {
+  async getTeams(): Promise<Team[]> {
     return this.teamService.team({});
   }
 
@@ -61,14 +65,30 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Delete()
+  @Put(':id')
+  @ApiBearerAuth()
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Update a team',
+    type: UpdateTeamDto,
+  })
+  async updateTeam(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: Partial<Team>,
+  ): Promise<Team> {
+    return this.teamService.updateTeam(id, data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete a team',
   })
-  async deleteTeam(@Body() payload: CreateTeamDto): Promise<void> {
-    return this.teamService.deleteTeam(payload);
+  async deleteTeam(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.teamService.deleteTeam(id);
   }
 }

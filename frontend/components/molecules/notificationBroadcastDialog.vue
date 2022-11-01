@@ -42,11 +42,7 @@ export default Vue.extend({
       return this.$accessor.dialog.open;
     },
     teams() {
-      const t = this.$accessor.config.getAllConfigTeams;
-      if (t) {
-        return t.value.map((e: any) => e.name);
-      }
-      return [];
+      return this.$accessor.team.getTeamNames;
     },
     toggled: {
       get: function (): boolean | unknown {

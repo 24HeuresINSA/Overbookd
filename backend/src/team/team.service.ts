@@ -17,11 +17,10 @@ export class TeamService {
     cursor?: Prisma.TeamWhereUniqueInput;
     where?: Prisma.TeamWhereInput;
     orderBy?: Prisma.TeamOrderByWithRelationInput;
-    select?: Prisma.TeamSelect;
     include?: Prisma.TeamInclude;
-  }): Promise<string[]> {
+  }): Promise<Team[]> {
     const { skip, take, cursor, where, orderBy, include } = params;
-    const teams = await this.prisma.team.findMany({
+    return await this.prisma.team.findMany({
       skip,
       take,
       cursor,
@@ -29,7 +28,6 @@ export class TeamService {
       orderBy,
       include,
     });
-    return teams.map((team) => team.name);
   }
 
   async updateUserTeams({
@@ -44,6 +42,42 @@ export class TeamService {
     return { userId, teams: newLinkedTeams };
   }
 
+  async createTeam(payload: {
+    name: string;
+    color: string;
+    icon: string;
+  }): Promise<Team> {
+    const team = await this.prisma.team.create({
+      data: payload,
+    });
+    return team;
+  }
+
+  async updateTeam(
+    id: number,
+    payload: {
+      name?: string;
+      color?: string;
+      icon?: string;
+    },
+  ): Promise<Team> {
+    return await this.prisma.team.update({
+      where: {
+        id,
+      },
+      data: payload,
+    });
+  }
+
+  async deleteTeam(id: number): Promise<void> {
+    await this.prisma.team.delete({
+      where: {
+        id,
+      },
+    });
+    return;
+  }
+
   private async forceUserTeams(userId: number, teamsToLink: Team[]) {
     const deleteAll = this.prisma.user_Team.deleteMany({
       where: {
@@ -54,7 +88,7 @@ export class TeamService {
     const createNew = this.prisma.user_Team.createMany({
       data: teamsToLink.map((team) => ({
         user_id: userId,
-        team_id: team.name,
+        team_id: team.id,
       })),
     });
 
@@ -76,25 +110,5 @@ export class TeamService {
     if (!user.id) {
       throw new NotFoundException('User not found');
     }
-  }
-
-  async createTeam(payload: { name: string }): Promise<Team> {
-    const { name } = payload;
-    const team = await this.prisma.team.create({
-      data: {
-        name,
-      },
-    });
-    return team;
-  }
-
-  async deleteTeam(payload: { name: string }): Promise<void> {
-    const { name } = payload;
-    await this.prisma.team.delete({
-      where: {
-        name,
-      },
-    });
-    return;
   }
 }

@@ -72,15 +72,18 @@ model User {
 }
 
 model Team {
-  name       String      @id @default(uuid())
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(30) @unique
   users      User_Team[]
+  color      String?   @db.VarChar(30)
+  icon       String?   @db.VarChar(255)
 }
 
 model User_Team {
   user       User    @relation(fields: [user_id], references: [id])
   user_id    Int
-  team       Team    @relation(fields: [team_id], references: [name])
-  team_id    String
+  team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
 
   @@id([user_id, team_id])
 }

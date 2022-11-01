@@ -405,9 +405,7 @@ export default Vue.extend({
 
     getValidatorIcon(validator: string) {
       try {
-        return this.getConfig("teams").find(
-          (team: { name: string }) => team.name === validator
-        ).icon;
+        return this.$accessor.team.getTeams([validator])?.shift()?.icon;
       } catch (e) {
         console.log(`can't find icon of team ${validator}`);
       }
