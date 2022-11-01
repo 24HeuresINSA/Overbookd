@@ -24,6 +24,50 @@
     <v-container style="display: grid; width: 100%">
       <v-row>
         <v-col md="6">
+        <v-card :style="isValidated('humain') ? `border-left: 5px solid green` : ``">
+        <v-card-title>Général</v-card-title>
+        <v-card-subtitle>N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu peux aussi t'aider en allant voir les FA d'avant sur cetaitmieuxavant.24heures.org/ en te connectant avec jeuneetcon@24heures.org </v-card-subtitle>
+        <v-card-text>
+          <v-form>
+            <v-text-field
+              v-model="formData.name"
+              label="Nom de la FA"
+              required
+            ></v-text-field>
+            <v-select
+              v-model="formData.type"
+              type="select"
+              label="type"
+              :items="['Concert',
+              'Course',
+              'Divertissement',
+              'Initiation',
+              'Match de Gala',
+              'Tournoi',
+              'Vente',
+              'Prévention',
+              'Spectacle',
+              'Autre']"
+              dense
+              required
+            ></v-select>
+            <v-text-field
+              v-model="formData.team"
+              label="Equipe"
+              type="teams"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.inCharge"
+              label="Responsable"
+              type="user"
+              required
+            ></v-text-field>
+          </v-form>
+          </v-card-text>
+          </v-card>
+            <!-- <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
+          </v-form>
           <FormCard
             style="height: 100%; width: 100%"
             title="Général"
@@ -33,7 +77,7 @@
             :is-disabled="isValidated('humain')"
             :form="FA"
             @form-change="updateForm('general', $event)"
-          ></FormCard>
+          ></FormCard> -->
         </v-col>
         <v-col md="6">
           <OverSigna :is-disabled="isValidated('signa')"></OverSigna>
@@ -41,7 +85,32 @@
       </v-row>
       <v-row>
         <v-col>
-          <FormCard
+          <v-text-field
+            v-model="formData.description"
+            label="Description"
+            type="rich-text">
+          </v-text-field>
+          <v-switch
+            v-model="formData.isPublishable"
+            label="Publier sur le site / plaquette"
+            :disabled="disabled"
+            @change="onChange"
+          ></v-switch>
+          <v-switch
+            v-model="formData.isMajorAnim"
+            label="Anim phare"
+            :disabled="disabled"
+            @change="onChange"
+          ></v-switch>
+          <v-switch
+            v-model="formData.isForKids"
+            label="Anim pour les gosses"
+            :disabled="disabled"
+            @change="onChange"
+          ></v-switch>
+          
+
+          <!-- <FormCard
             title="Détail"
             form-key="fa_details_form"
             details="Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est ce texte qui sera publié sur le site 24heures.org"
@@ -49,7 +118,7 @@
             :is-disabled="isValidated('humain')"
             :form="FA"
             @form-change="updateForm('details', $event)"
-          ></FormCard>
+          ></FormCard> -->
         </v-col>
       </v-row>
       <v-row>
@@ -70,7 +139,20 @@
       </v-row>
       <v-row>
         <v-col md="6">
-          <FormCard
+          <v-card :style="isValidated('secu') ? `border-left: 5px solid green` : ``">
+            <v-card-title>Sécurité</v-card-title>
+            <v-card-subtitle>Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org</v-card-subtitle>
+            <v-card-text>
+              <v-form>
+                <v-textarea
+                  v-model="formData.securityDevice"
+                  label="Dispositif de sécurité particulier"
+                  required
+                ></v-textarea>
+                </v-form>
+                </v-card-text>
+            </v-card>
+          <!-- <FormCard
             title="Sécurité"
             form-key="fa_security_form"
             topic="security"
@@ -78,7 +160,7 @@
             :is-disabled="isValidated('secu')"
             :form="FA"
             @form-change="updateForm('security', $event)"
-          ></FormCard>
+          ></FormCard> -->
         </v-col>
         <v-col md="6">
           <FormCard
@@ -159,9 +241,7 @@
         position: sticky;
         bottom: 20px;
         z-index: 30;
-        align-items: baseline;
-      "
-    >
+        align-items: baseline;">
       <div>
         <v-btn v-if="FA.count > 1" small fab :href="`/fa/${FA.count - 1}`">
           <v-icon small>mdi-arrow-left</v-icon>

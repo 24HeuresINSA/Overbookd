@@ -453,67 +453,67 @@ export class ConfigService {
         key: 'are_transfers_open',
         value: true,
       },
-      {
-        key: 'fa_general_form',
-        value: [
-          {
-            key: 'name',
-            label: 'Nom de la FA',
-          },
-          {
-            key: 'type',
-            type: 'select',
-            options: [
-              'Concert',
-              'Course',
-              'Divertissement',
-              'Initiation',
-              'Match de Gala',
-              'Tournoi',
-              'Vente',
-              'Prévention',
-              'Spectacle',
-              'Autre',
-            ],
-          },
-          {
-            key: 'team',
-            label: 'Equipe',
-            type: 'teams',
-          },
-          {
-            key: 'inCharge',
-            label: 'Responsable',
-            type: 'user',
-            filter: 'hard',
-          },
-        ],
-      },
-      {
-        key: 'fa_details_form',
-        value: [
-          {
-            key: 'description',
-            label: 'Description',
-            type: 'rich-text',
-          },
-          {
-            key: 'isPublishable',
-            label: 'Publier sur le site / plaquette',
-            type: 'switch',
-          },
-          {
-            key: 'isMajorAnim',
-            label: 'Anim phare',
-            type: 'switch',
-          },
-          {
-            key: 'isForKids',
-            label: 'Anim pour les gosses',
-            type: 'switch',
-          },
-        ],
-      },
+      // {
+      //   key: 'fa_general_form',
+      //   value: [
+      //     {
+      //       key: 'name',
+      //       label: 'Nom de la FA',
+      //     },
+      //     {
+      //       key: 'type',
+      //       type: 'select',
+      //       options: [
+      //         'Concert',
+      //         'Course',
+      //         'Divertissement',
+      //         'Initiation',
+      //         'Match de Gala',
+      //         'Tournoi',
+      //         'Vente',
+      //         'Prévention',
+      //         'Spectacle',
+      //         'Autre',
+      //       ],
+      //     },
+      //     {
+      //       key: 'team',
+      //       label: 'Equipe',
+      //       type: 'teams',
+      //     },
+      //     {
+      //       key: 'inCharge',
+      //       label: 'Responsable',
+      //       type: 'user',
+      //       filter: 'hard',
+      //     },
+      //   ],
+      // },
+      // {
+      //   key: 'fa_details_form',
+      //   value: [
+      //     {
+      //       key: 'description',
+      //       label: 'Description',
+      //       type: 'rich-text',
+      //     },
+      //     {
+      //       key: 'isPublishable',
+      //       label: 'Publier sur le site / plaquette',
+      //       type: 'switch',
+      //     },
+      //     {
+      //       key: 'isMajorAnim',
+      //       label: 'Anim phare',
+      //       type: 'switch',
+      //     },
+      //     {
+      //       key: 'isForKids',
+      //       label: 'Anim pour les gosses',
+      //       type: 'switch',
+      //     },
+      //   ],
+      // },
       {
         key: 'fa_security_form',
         value: [
