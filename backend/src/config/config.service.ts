@@ -514,16 +514,16 @@ export class ConfigService {
       //     },
       //   ],
       // },
-      {
-        key: 'fa_security_form',
-        value: [
-          {
-            key: 'securityDevice',
-            label: 'Dispositif de sécurité particulier ',
-            type: 'textarea',
-          },
-        ],
-      },
+      // {
+      //   key: 'fa_security_form',
+      //   value: [
+      //     {
+      //       key: 'securityDevice',
+      //       label: 'Dispositif de sécurité particulier ',
+      //       type: 'textarea',
+      //     },
+      //   ],
+      // },
       {
         key: 'ft_general_form',
         value: [
@@ -558,51 +558,51 @@ export class ConfigService {
         key: 'event_date',
         value: '2022-05-21',
       },
-      {
-        key: 'fa_external_form',
-        value: [
-          {
-            key: 'fullname',
-            label: "Nom complet de l'intervenant",
-          },
-          {
-            key: 'company',
-            label: 'Société',
-          },
-          {
-            key: 'phone',
-            label: 'Téléphone',
-          },
-          {
-            key: 'email',
-            label: 'E-mail',
-          },
-          {
-            key: 'comment',
-            label: 'Commentaire',
-          },
-          {
-            key: 'needsHosting',
-            label: "Besoin d'hébergement",
-            type: 'switch',
-          },
-          {
-            key: 'requiredSandwichFriday',
-            label: 'Nombre de sandwichs vendredi',
-            option: 'number',
-          },
-          {
-            key: 'requiredSandwichSaterday',
-            label: 'Nombre de sandwichs samedi',
-            option: 'number',
-          },
-          {
-            key: 'requiredSandwichSunday',
-            label: 'Nombre de sandwichs dimanche',
-            option: 'number',
-          },
-        ],
-      },
+      // {
+      //   key: 'fa_external_form',
+      //   value: [
+      //     {
+      //       key: 'fullname',
+      //       label: "Nom complet de l'intervenant",
+      //     },
+      //     {
+      //       key: 'company',
+      //       label: 'Société',
+      //     },
+      //     {
+      //       key: 'phone',
+      //       label: 'Téléphone',
+      //     },
+      //     {
+      //       key: 'email',
+      //       label: 'E-mail',
+      //     },
+      //     {
+      //       key: 'comment',
+      //       label: 'Commentaire',
+      //     },
+      //     {
+      //       key: 'needsHosting',
+      //       label: "Besoin d'hébergement",
+      //       type: 'switch',
+      //     },
+      //     {
+      //       key: 'requiredSandwichFriday',
+      //       label: 'Nombre de sandwichs vendredi',
+      //       option: 'number',
+      //     },
+      //     {
+      //       key: 'requiredSandwichSaterday',
+      //       label: 'Nombre de sandwichs samedi',
+      //       option: 'number',
+      //     },
+      //     {
+      //       key: 'requiredSandwichSunday',
+      //       label: 'Nombre de sandwichs dimanche',
+      //       option: 'number',
+      //     },
+      //   ],
+      // },
       {
         key: 'fa_security_pass_form',
         value: [

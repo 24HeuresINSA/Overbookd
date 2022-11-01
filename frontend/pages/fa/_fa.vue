@@ -7,8 +7,7 @@
       <h2 v-if="isNewFA">Create new FA</h2>
       <h2
         v-if="FA.count"
-        :style="FA.isValid === false ? `text-decoration:line-through;` : ``"
-      >
+        :style="FA.isValid === false ? `text-decoration:line-through;` : ``">
         {{ FA.isValid === false ? "[SUPPRIME] " : "" }}FA: {{ FA.count }}
       </h2>
       <h3>{{ FA.status ? FA.status : "draft" }}</h3>
@@ -163,14 +162,57 @@
           ></FormCard> -->
         </v-col>
         <v-col md="6">
-          <FormCard
+          <v-card :style="isValidated('humain') ? `border-left: 5px solid green` : ``">
+            <v-card-title>Presta</v-card-title>
+            <v-card-text>
+              <v-form>
+                <v-text-field
+                  v-model="formData.fullname"
+                  label="Nom complet de l'intervenant">
+                </v-text-field>
+                <v-text-field
+                  v-model="formData.company"
+                  label="Société">
+                </v-text-field>
+                <v-text-field
+                  v-model="formData.phone"
+                  label="Téléphone">
+                </v-text-field>
+                <v-text-field
+                  v-model="formData.email"
+                  label="E-mail">
+                </v-text-field>
+                <v-text-field
+                  v-model="formData.comment"
+                  label="Commentaire">
+                </v-text-field>
+                <v-switch
+                  v-model="formData.needsHosting"
+                  label="Besoin d'hébergement">
+                </v-switch>
+                <v-text-field
+                  v-model="formData.requiredSandwichFriday"
+                  label="Nombre de sandwichs vendredi">
+                </v-text-field>
+                <v-text-field
+                  v-model="formData.requiredSandwichSaturday"
+                  label="Nombre de sandwichs samedi">
+                </v-text-field>
+                <v-text-field
+                  v-model="formData.requiredSandwichSunday"
+                  label="Nombre de sandwichs dimanche">
+                </v-text-field>
+              </v-form>
+            </v-card-text>
+          </v-card>
+          <!-- <FormCard
             title="Presta"
             form-key="fa_external_form"
             topic="external"
             :is-disabled="isValidated('humain')"
             :form="FA"
             @form-change="updateForm('external', $event)"
-          ></FormCard>
+          ></FormCard> -->
         </v-col>
       </v-row>
       <v-row>
