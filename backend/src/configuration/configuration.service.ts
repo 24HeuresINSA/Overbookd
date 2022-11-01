@@ -1,8 +1,6 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { CreateConfigurationDto } from './dto/createConfiguration.dto';
-import { UpdateConfigurationDto } from './dto/updateConfiguration.dto';
 import { PrismaService } from '../prisma.service';
-import { Prisma, Configuration } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ConfigurationService {
