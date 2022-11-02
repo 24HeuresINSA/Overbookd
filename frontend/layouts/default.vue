@@ -355,7 +355,7 @@ export default {
 
   mounted() {
     let theme = localStorage["theme"];
-    if (theme === "false") theme = false;   // localStorage can only be a string on Firefox
+    if (theme === "false") theme = false; // localStorage can only be a string on Firefox
     this.$vuetify.theme.dark = theme || false;
   },
 

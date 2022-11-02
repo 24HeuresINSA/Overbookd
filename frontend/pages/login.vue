@@ -188,7 +188,8 @@ export default {
           await audio.play();
         }
       } catch (e) {
-        this.feedbackMessage = "Password or username are incorrect 😞, pense a mettre ton email";
+        this.feedbackMessage =
+          "Password or username are incorrect 😞, pense a mettre ton email";
         this.snackbar = true;
       }
     },
@@ -217,7 +218,7 @@ export default {
 }
 
 .version {
-  right: -40%; 
+  right: -40%;
   position: relative;
   color: red;
   z-index: 20;
