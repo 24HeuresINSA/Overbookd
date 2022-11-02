@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, Matches } from 'class-validator';
 
 type NewType = string;
-const hexCode = new RegExp(/[^#\d{6}]+/gm);
-const mdiIcon = new RegExp(/[^mdi-]+/gm);
+const hexCode = new RegExp(/^#[0-9|a-f|A-F]{6}/);
+const mdiIcon = new RegExp(/^mdi-.*/);
 
 export class UpdateTeamDto {
   @ApiProperty({
