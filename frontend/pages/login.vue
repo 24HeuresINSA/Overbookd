@@ -1,23 +1,13 @@
 <template>
   <div>
-    <v-img
-      :src="randomURL"
-      style="
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 100%;
-        padding: 0;
-      "
-    ></v-img>
+    <v-img :src="randomURL" class="img-background"></v-img>
     <v-form>
       <v-container class="form-container">
         <v-row>
           <v-col>
             <v-img
-              style="transform: translate(100px, 0)"
               src="img/memes/home_meme.jpg"
+              class="img-center"
               max-height="350"
               max-width="350"
             ></v-img>
@@ -31,7 +21,7 @@
           ></v-img>
         </v-row>
         <v-row>
-          <h2 style="right: -40%; position: relative; color: red; z-index: 20">
+          <h2 class="version">
             {{ version }}
           </h2>
         </v-row>
@@ -57,7 +47,6 @@
             clearable
             solo
             filled
-            @keydown.enter="login()"
           ></v-text-field>
         </v-row>
         <v-row>
@@ -68,10 +57,10 @@
           >
         </v-row>
       </v-container>
-      <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn Btn"
+      <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn btn"
         >s'inscrire
       </v-btn>
-      <v-btn color="primary" elevation="2" class="loginBtn Btn" @click="login()"
+      <v-btn color="primary" elevation="2" class="loginBtn btn" @click="login()"
         >connexion
       </v-btn>
     </v-form>
@@ -189,56 +178,17 @@ export default {
   methods: {
     login: async function () {
       try {
-        await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
-        console.log("connected to API");
-        await this.$router.push({
-          path: "/",
-        }); // redirect to homepage
-        const audio = new Audio("audio/jaune.m4a");
-        await audio.play();
-      } catch (e) {
-        console.error(e);
-        console.log("starting migration process...");
-        await this.migrate();
-      }
-    },
-
-    migrate: async function () {
-      const data = qs.stringify({
-        // keycloak accepts www-urlencoded-form and not JSON
-        username: this.credentials.username,
-        password: this.credentials.password,
-        client_id: "project_a_web",
-        grant_type: "password",
-      });
-      console.log("connection to keycloak...");
-      try {
-        const response = await this.$axios.post(
-          process.env.BASE_URL_KEYCLOAK +
-            "auth/realms/project_a/protocol/openid-connect/token/",
-          data
-        );
-        if (
-          response.status === 200 &&
-          response.data.access_token !== undefined
-        ) {
-          console.log("connected to keycloak with success 🥳");
-          // right credentials, start migration process
-          const reset = await this.$axios.$post("/migrate", this.credentials);
-          if (reset.token) {
-            console.log("user migrated");
-            // await this.$auth.loginWith("local", this.credentials); // try to log user in
-            this.feedbackMessage =
-              "Ton compte a été migrée, dit pas ca au Z 🥳";
-            this.snackbar = true;
-          }
-        } else {
-          this.feedbackMessage = "Password or username are incorrect 😞";
-          this.snackbar = true;
+        if (this.credentials.email && this.credentials.password) {
+          await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
+          console.log("connected to API");
+          await this.$router.push({
+            path: "/",
+          }); // redirect to homepage
+          const audio = new Audio("audio/jaune.m4a");
+          await audio.play();
         }
       } catch (e) {
-        this.feedbackMessage =
-          "Password or username are incorrect 😞,pense a mettre ton email";
+        this.feedbackMessage = "Password or username are incorrect 😞, pense a mettre ton email";
         this.snackbar = true;
       }
     },
@@ -253,6 +203,26 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.img-background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+}
+
+.img-center {
+  transform: translate(100px, 0);
+}
+
+.version {
+  right: -40%; 
+  position: relative;
+  color: red;
+  z-index: 20;
+}
+
 .form-container {
   align-self: center;
   justify-self: center;
@@ -261,7 +231,7 @@ export default {
   max-width: 600px;
 }
 
-.Btn {
+.btn {
   position: fixed;
   bottom: 20px;
   z-index: 20;
@@ -270,9 +240,11 @@ export default {
 .loginBtn {
   right: 20px;
 }
+
 .signupBtn {
   left: 20px;
 }
+
 .forgot-a {
   z-index: 2;
   background-color: rgba(50, 50, 50, 0.7);
