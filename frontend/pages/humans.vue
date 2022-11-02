@@ -308,7 +308,7 @@ export default {
         { text: "Action", value: "action", sortable: false },
       ],
 
-      teams: this.$accessor.team.getAllTeams,
+      teams: this.$accessor.team.allTeams,
       loading: false,
 
       filters: {

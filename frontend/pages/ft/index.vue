@@ -15,7 +15,7 @@
               <v-select
                 v-model="filters.teams"
                 label="Équipe"
-                :items="$accessor.team.getTeamNames"
+                :items="$accessor.team.teamNames"
                 clearable
                 dense
               ></v-select>

@@ -32,7 +32,7 @@ export class TeamController {
     type: Array<string>,
   })
   async getTeams(): Promise<Team[]> {
-    return this.teamService.team({});
+    return this.teamService.team({ orderBy: { name: 'asc' } });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -75,7 +75,7 @@ export class TeamController {
   })
   async updateTeam(
     @Param('id', ParseIntPipe) id: number,
-    @Body() data: Partial<Team>,
+    @Body() data: UpdateTeamDto,
   ): Promise<Team> {
     return this.teamService.updateTeam(id, data);
   }

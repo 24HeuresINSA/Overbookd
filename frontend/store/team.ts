@@ -15,19 +15,16 @@ export const state = (): State => ({
 });
 
 export const getters = getterTree(state, {
-  getAllTeams(state): team[] {
+  allTeams(state): team[] {
     return state.teams;
   },
-  getTeamNames(state, getters): string[] {
-    return getters.getAllTeams.map((team: team) => team.name);
+  teamNames(state, getters): string[] {
+    return getters.allTeams.map((team: team) => team.name);
   },
   getTeams:
     (state, getters) =>
-    (teamNames: string[] | undefined): any | undefined => {
-      if (!teamNames) {
-        return undefined;
-      }
-      return getters.getAllTeams.filter((t: team) => {
+    (teamNames: string[]): team[] => {
+      return getters.allTeams.filter((t: team) => {
         return teamNames.includes(t.name);
       });
     },
@@ -35,9 +32,7 @@ export const getters = getterTree(state, {
 
 export const mutations = mutationTree(state, {
   SET_TEAMS(state, teams: any) {
-    state.teams = teams.sort((a: team, b: team) =>
-      a.name.localeCompare(b.name)
-    );
+    state.teams = teams;
   },
 });
 

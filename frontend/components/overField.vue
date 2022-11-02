@@ -190,7 +190,7 @@ export default {
       });
     }
     if (this.field.type === "teams") {
-      this.teams = this.$accessor.team.getTeamNames;
+      this.teams = this.$accessor.team.teamNames;
     }
   },
 

@@ -43,7 +43,7 @@ export default Vue.extend({
   },
   mounted() {
     this.validators = this.$accessor.config.getConfig(this.validatorsKey);
-    this.teams = this.$accessor.team.getAllTeams as Team[];
+    this.teams = this.$accessor.team.allTeams as Team[];
   },
   methods: {
     getValidatorIcon(validator: string) {

@@ -20,7 +20,7 @@ export class TeamService {
     include?: Prisma.TeamInclude;
   }): Promise<Team[]> {
     const { skip, take, cursor, where, orderBy, include } = params;
-    return await this.prisma.team.findMany({
+    return this.prisma.team.findMany({
       skip,
       take,
       cursor,
@@ -47,10 +47,9 @@ export class TeamService {
     color: string;
     icon: string;
   }): Promise<Team> {
-    const team = await this.prisma.team.create({
+    return this.prisma.team.create({
       data: payload,
     });
-    return team;
   }
 
   async updateTeam(
@@ -61,7 +60,7 @@ export class TeamService {
       icon?: string;
     },
   ): Promise<Team> {
-    return await this.prisma.team.update({
+    return this.prisma.team.update({
       where: {
         id,
       },

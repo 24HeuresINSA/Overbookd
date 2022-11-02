@@ -213,7 +213,7 @@ export default {
       isNewFADialogOpen: false,
       isDeleteFAOpen: false,
       faName: undefined,
-      teamNames: this.$accessor.team.getTeamNames,
+      teamNames: this.$accessor.team.teamNames,
     };
   },
 

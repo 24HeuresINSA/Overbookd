@@ -75,8 +75,8 @@ model Team {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(30) @unique
   users      User_Team[]
-  color      String?   @db.VarChar(30)
-  icon       String?   @db.VarChar(255)
+  color      String   @db.VarChar(30) @default("#000000")
+  icon       String   @db.VarChar(255) @default("mdi-circle")
 }
 
 model User_Team {

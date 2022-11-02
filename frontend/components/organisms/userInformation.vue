@@ -300,7 +300,7 @@ export default {
   },
 
   async mounted() {
-    this.teamNames = this.$accessor.team.getTeamNames;
+    this.teamNames = this.$accessor.team.teamNames;
     this.hasEditingRole = await this.hasRole(["admin", "humain", "sg"]);
     const res = await safeCall(
       this.$store,

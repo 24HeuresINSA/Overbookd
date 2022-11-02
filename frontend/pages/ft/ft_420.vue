@@ -233,7 +233,7 @@ export default {
   },
   computed: {
     teams: function () {
-      return this.$accessor.team.getAllTeams;
+      return this.$accessor.team.allTeams;
     },
   },
   async beforeCreate() {

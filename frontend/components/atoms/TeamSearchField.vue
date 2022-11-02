@@ -33,7 +33,7 @@ export default Vue.extend({
   name: "TeamSearchField",
   data() {
     return {
-      teams: this.$accessor.team.getAllTeams,
+      teams: this.$accessor.team.allTeams,
     };
   },
   computed: {

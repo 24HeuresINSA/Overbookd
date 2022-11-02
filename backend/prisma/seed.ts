@@ -10,7 +10,7 @@ async function main() {
     {
       name: 'sg',
       color: '#ab1f07',
-      icon: 'mdi-human-male-child ',
+      icon: 'mdi-human-male-child',
     },
     {
       name: 'hard',
@@ -270,7 +270,7 @@ async function main() {
         console.log(`Team ${teamName} not found`);
       }
     }
-    console.log(`User ${user[0]} added to teams ${user[1]}`);
+    console.log(`User ${user} added to teams ${teamNames}`);
     console.log('------------------------------------------------------------');
   }
 }
