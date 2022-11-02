@@ -16,7 +16,7 @@
             clearable
             label="Team"
             style="padding: 2px"
-            :items="teams.map((e) => e.name)"
+            :items="teams.map((team) => team.name)"
             @input="updateFilter('team', $event)"
           >
             <template #selection="{ attrs, item, selected }">
