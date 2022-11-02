@@ -6,7 +6,7 @@
     clearable
     label="Team"
     style="padding: 2px"
-    :items="teams.map((item) => item.name)"
+    :items="teams.map((team) => team.name)"
     :value="selectedTeam"
     @input="sendEvent($event)"
   >
