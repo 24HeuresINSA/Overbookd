@@ -17,7 +17,7 @@
                 clearable
                 dense
                 label="Team"
-                :items="teams.map((e) => e.name)"
+                :items="teams.map((team) => team.name)"
               >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
