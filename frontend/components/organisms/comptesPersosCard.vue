@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <TransferDialog />
+    <TransferDialog @transaction="updateCP" />
     <v-card
       height="100%"
       class="d-flex flex-column justify-space-between"
@@ -85,16 +85,13 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    // let res = await RepoFactory.transactionRepo.getUserTransactions(this);
-    await Promise.all([
-      this.$accessor.transaction.fetchMTransactions(),
-      this.$accessor.user.fetchUsernamesWithCP(),
-    ]);
+    await this.$accessor.transaction.fetchMTransactions();
     this.areTransfersOpen =
       this.$accessor.config.getConfig("are_transfers_open");
   },
   methods: {
-    openDialog(): any {
+    async openDialog(): Promise<any> {
+      await this.$accessor.user.fetchUsernamesWithCP();
       this.$store.dispatch("dialog/openDialog", "transfer");
     },
 
@@ -109,6 +106,11 @@ export default Vue.extend({
         default:
           return false;
       }
+    },
+    updateCP(amount: number): any {
+      this.$store.commit("user/UPDATE_USER", {
+        balance: (this.$accessor.user.me.balance || 0) - amount,
+      });
     },
   },
 });
