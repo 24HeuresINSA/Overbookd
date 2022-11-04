@@ -27,6 +27,7 @@ export class FaService {
 
   async create(createFaDto: CreateFaDto): Promise<FA | null> {
     //Check if all the foreign keys are valid (team, in_charge user, location, type)
+    /*
     await this.prisma.$transaction([
       this.prisma.team.findUnique({ where: { name: createFaDto.team_id } }),
       this.prisma.user.findUnique({ where: { id: createFaDto.in_charge } }),
@@ -34,9 +35,32 @@ export class FaService {
         where: { id: createFaDto.location_id },
       }),
       this.prisma.fA_type.findUnique({ where: { name: createFaDto.type } }),
-    ]);
-    //We can then create the FA
-    return this.prisma.fA.create({ data: createFaDto });
+    ]);*/
+    const fa = await this.prisma.fA.create({ data: createFaDto.FA });
+    if (!fa) throw new Error('Error while creating the FA');
+    const collaborator = await this.prisma.collaborator.create({
+      data: createFaDto.FA_Collaborators,
+    });
+    if (!collaborator) throw new Error('Error while creating the collaborator');
+    await this.prisma.fA.update({
+      where: { id: fa.id },
+      data: {
+        FA_Collaborators: {
+          connectOrCreate: {
+            where: {
+              fa_id_collaborator_id: {
+                fa_id: fa.id,
+                collaborator_id: collaborator.id,
+              },
+            },
+            create: {
+              collaborator_id: collaborator.id,
+            },
+          },
+        },
+      },
+    });
+    return fa;
   }
 
   async update(id: number, updateFaDto: UpdateFaDto): Promise<FA | null> {
