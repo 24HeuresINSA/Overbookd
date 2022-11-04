@@ -18,7 +18,7 @@ export enum Status {
   REFUSED = 'REFUSED',
 }
 
-export class CreateFaDto {
+class FA {
   @ApiProperty({
     required: true,
     description: 'The name of the fa',
@@ -46,7 +46,7 @@ export class CreateFaDto {
     required: true,
     description: 'The id of the team whos responsible of the fa',
   })
-  @IsNumber()
+  @IsString()
   team_id: string;
 
   @ApiProperty({
@@ -113,7 +113,17 @@ export class CreateFaDto {
   })
   @IsNumber()
   @IsOptional()
-  waterflow_required: number;
+  water_flow_required: number;
+}
+
+export class CreateFaDto {
+  @ApiProperty({
+    required: true,
+    description: 'The fa',
+  })
+  @ValidateNested()
+  @Type(() => FA)
+  FA: FA;
 
   @ApiProperty({
     required: false,
@@ -122,5 +132,5 @@ export class CreateFaDto {
   @IsOptional()
   @Type(() => CreateCollaboratorDto)
   @ValidateNested()
-  collaborator: CreateCollaboratorDto;
+  FA_Collaborators: CreateCollaboratorDto;
 }
