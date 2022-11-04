@@ -38,7 +38,7 @@ export const actions = actionTree(
         transactionRepo.createTransfer(this, transfer)
       );
       if (res) {
-        commit("ADD_TRANSACTIONS", transfer);
+        commit("ADD_TRANSACTIONS", res.data);
         return true;
       }
       return false;

@@ -55,7 +55,7 @@
               :rules="[
                 (v) =>
                   new RegExp(regex.float).test(v) ||
-                  `il faut mettre un nombre (avec . comme virgule)`,
+                  `Il faut mettre un nombre (avec . comme virgule)`,
               ]"
             ></v-text-field>
             <label> Nombre de bâton total {{ totalConsumptions }} </label>
@@ -71,6 +71,7 @@
             >Enregistrer</v-btn
           >
           <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
+          <br />
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
         </v-card-text>
@@ -116,10 +117,10 @@
       <v-card>
         <v-card-title>Attention</v-card-title>
         <v-card-text
-          >Si tu change de mode les donnees non enregister seront effeace
+          >Si tu changes de mode, les données non enregistrées seront effacées.
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="cleanInputs">changer de mode</v-btn>
+          <v-btn text @click="cleanInputs">Changer de mode</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -152,13 +153,13 @@ export default {
       totalCPBalance: 0,
       settledStickPrice: 0.5,
 
-      mode: "cask",
+      mode: "cask", //default mode
 
       isSwitchDialogOpen: false,
 
       regex: {
-        int: "^[0-9]\\d*$",
-        float: "^[0-9]\\d*(\\.\\d+)?$",
+        int: "^\\d*$",
+        float: "^\\d*(\\.\\d+)?$",
       },
 
       feedbacks: {
@@ -193,12 +194,14 @@ export default {
     stickPrice() {
       const rawAmount = +(+this.totalPrice / +this.totalConsumptions);
       const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
-      let res = parseInt(round / 5) * 5;
+      const res = parseInt(round / 5) * 5;
       return ((res + 5) * 0.01).toFixed(2);
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
-      return [(v) => new RegExp(regex).test(v) || `il faut mettre un entier `];
+      return [
+        (v) => new RegExp(regex).test(v) || `Il faut mettre un nombre valide`,
+      ];
     },
     isExpenseMode() {
       return this.mode === "cask" || this.mode === "closet";
@@ -285,7 +288,6 @@ export default {
       });
     }
   },
-
   methods: {
     hasRole(role) {
       return this.$accessor.user.hasRole(role);
@@ -341,7 +343,7 @@ export default {
       if (!isCorrect) {
         await this.$store.dispatch("notif/pushNotification", {
           type: "error",
-          message: "Il faut mettre des nombre",
+          message: "Il faut mettre des nombres",
         });
         return;
       }
@@ -359,6 +361,8 @@ export default {
             //cast to float
             transaction.amount = +this.stickPrice * +user.newConsumption;
             transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
+            this.totalCPBalance -= transaction.amount;
+            user.balance -= transaction.amount;
             break;
 
           case "closet":
@@ -366,6 +370,8 @@ export default {
             transaction.to = user.id;
             transaction.amount = +this.settledStickPrice * +user.newConsumption;
             transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
+            this.totalCPBalance -= transaction.amount;
+            user.balance -= transaction.amount;
             break;
 
           case "deposit":
@@ -374,6 +380,8 @@ export default {
             transaction.from = user.id;
             transaction.amount = +user.newConsumption;
             transaction.context = `Recharge de compte perso`;
+            this.totalCPBalance += transaction.amount;
+            user.balance += transaction.amount;
             break;
         }
 
@@ -387,7 +395,6 @@ export default {
 
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
     },
-
     cleanInputs() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));

@@ -3,9 +3,9 @@
     <v-card>
       <v-card-title>Effectuer un virement</v-card-title>
       <v-card-text>
-        <v-form v-model="formData.isValid">
+        <v-form v-model="transfer.isValid">
           <v-autocomplete
-            v-model="formData.user"
+            v-model="transfer.user"
             :items="users"
             label="Utilisateur"
             required
@@ -13,14 +13,14 @@
           ></v-autocomplete>
 
           <v-text-field
-            v-model="formData.amount"
+            v-model="transfer.amount"
             type="number"
             label="Montant"
             required
           ></v-text-field>
           
           <v-text-field
-            v-model="formData.reason"
+            v-model="transfer.reason"
             label="Raison"
           ></v-text-field>
         </v-form>
@@ -45,7 +45,7 @@ export default Vue.extend({
 
   data: () => {
     return {
-      formData: {
+      transfer: {
         user: {
           username: undefined,
           id: "",
@@ -98,19 +98,14 @@ export default Vue.extend({
     },
   },
   methods: {
-    async transferMoney() {
-      this.formData.amount = this.formData.amount.replace(",", ".");
-      console.log(this.formData);
-      if (!this.formData.user.id) {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "N'oublie pas de choisir le bénéficiaire !",
-        });
+    async transferMoney(): Promise<any> {
+      if (!this.transfer.isValid) {
         return;
       }
-
+      this.toggled = false;
+      this.transfer.amount = this.transfer.amount.replace(",", ".");
       // transaction to self...
-      if (this.formData.user.id == this.me.id) {
+      if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message:
@@ -119,7 +114,10 @@ export default Vue.extend({
         return;
       }
 
-      if (+this.formData.amount <= 0) {
+      if (
+        +this.transfer.amount <= 0 ||
+        +this.transfer.amount.toString().split(".")[1]?.length > 2
+      ) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "C'est plus assomaker...",
@@ -127,23 +125,25 @@ export default Vue.extend({
         return;
       }
 
-      try {
-        let newTransfer: Partial<Transfer> = {
-          amount: +this.formData.amount,
-          context: this.formData.reason,
-          from: this.me.id,
-          to: this.formData.user.id,
-        };
-        await this.$accessor.transaction.addTransaction(newTransfer);
-        this.$store.dispatch("dialog/closeDialog");
-
-        this.formData = { user: { username: undefined, id: "", },
-          amount: "0",
-          reason: "",
-          isValid: false,
-        };
-      } catch (e) {
-        console.error(e);
+      if (this.transfer.user.id) {
+        try {
+          let newTransfer: Partial<Transfer> = {
+            amount: +this.transfer.amount,
+            context: this.transfer.reason,
+            from: this.me.id,
+            to: this.transfer.user.id,
+          };
+          await this.$accessor.transaction.addTransaction(newTransfer);
+          this.$emit("transaction", newTransfer.amount);
+          //reset form data
+          this.transfer = { user: { username: undefined, id: "", },
+            amount: "0",
+            reason: "",
+            isValid: false,
+          };
+        } catch (e) {
+          console.error(e);
+        }
       }
     },
   },

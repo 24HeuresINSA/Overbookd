@@ -380,9 +380,9 @@ export default {
         // filter by payed contributions
         if (this.filters.hasPayedContribution !== undefined) {
           if (this.filters.hasPayedContribution) {
-            mUsers = mUsers.filter((user) => user.hasPayedContribution);
+            mUsers = mUsers.filter((user) => user.has_payed_contributions);
           } else {
-            mUsers = mUsers.filter((user) => !user.hasPayedContribution);
+            mUsers = mUsers.filter((user) => !user.has_payed_contributions);
           }
         }
 
@@ -636,7 +636,7 @@ export default {
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
       let csv =
-        "Prénom;Nom;Surnom;Charisme;Poles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;A Le Permis?;Date permis;Commentaire\n";
+        "Prénom;Nom;Surnom;Charisme;Poles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire\n";
 
       const users = this.users;
       for (let i = 0; i < users.length; i++) {
@@ -666,11 +666,7 @@ export default {
           ";" +
           users[i].balance +
           ";" +
-          users[i].hasPayedContribution +
-          ";" +
-          users[i].hasDriverLicense +
-          ";" +
-          users[i].driverLicenseDate +
+          users[i].has_payed_contributions +
           ";" +
           users[i].comment +
           ";" +
