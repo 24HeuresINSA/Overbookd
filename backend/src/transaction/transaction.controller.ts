@@ -8,6 +8,7 @@ import {
   UseGuards,
   Request,
   ParseIntPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { Transaction } from '@prisma/client';
@@ -104,14 +105,13 @@ export class TransactionController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('sg')
+  @HttpCode(204)
   @Delete(':id')
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Delete a transaction by id',
   })
-  deleteTransaction(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Transaction> {
+  deleteTransaction(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.transactionService.deleteTransaction(id);
   }
 }
