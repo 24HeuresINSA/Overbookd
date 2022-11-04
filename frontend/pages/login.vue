@@ -189,8 +189,7 @@ export default {
           await audio.play();
         }
       } catch (e) {
-        this.feedbackMessage =
-          "Ton email ou ton mot de passe est incorrect 😞";
+        this.feedbackMessage = "Ton email ou ton mot de passe est incorrect 😞";
         this.snackbar = true;
       }
     },
