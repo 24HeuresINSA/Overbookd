@@ -10,6 +10,7 @@ import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
 import { FaModule } from './fa/fa.module';
+import { CollaboratorModule } from './collaborator/collaborator.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FaModule } from './fa/fa.module';
     TransactionModule,
     ConfigModule,
     FaModule,
+    CollaboratorModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService],
