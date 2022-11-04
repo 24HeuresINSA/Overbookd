@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+
+import { CreateCollaboratorDto } from 'src/collaborator/dto/create-collaborator.dto';
 
 export enum Status {
   DRAFT = 'DRAFT',
@@ -111,4 +114,13 @@ export class CreateFaDto {
   @IsNumber()
   @IsOptional()
   waterflow_required: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'The any collaborator',
+  })
+  @IsOptional()
+  @Type(() => CreateCollaboratorDto)
+  @ValidateNested()
+  collaborator: CreateCollaboratorDto;
 }
