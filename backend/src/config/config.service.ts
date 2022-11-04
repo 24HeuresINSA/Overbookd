@@ -650,20 +650,20 @@ export class ConfigService {
           },
         ],
       },
-      {
-        key: 'fa_water_form',
-        value: [
-          {
-            key: 'isWaterNeeded',
-            label: "Besoin d'eau",
-            type: 'switch',
-          },
-          {
-            key: 'waterNeed',
-            label: 'Desctiption du besoin en eau',
-          },
-        ],
-      },
+      // {
+      //   key: 'fa_water_form',
+      //   value: [
+      //     {
+      //       key: 'isWaterNeeded',
+      //       label: "Besoin d'eau",
+      //       type: 'switch',
+      //     },
+      //     {
+      //       key: 'waterNeed',
+      //       label: 'Desctiption du besoin en eau',
+      //     },
+      //   ],
+      // },
       {
         key: 'fa_signalisation_form',
         value: [

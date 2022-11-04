@@ -255,7 +255,23 @@
           ></ElecLogisticCard>
         </v-col>
         <v-col md="6">
-          <FormCard
+          <v-card :style="isValidated('elec') ? `border-left: 5px solid green` : ``">
+            <v-card-title>Eau</v-card-title>
+            <v-card-subtitle>Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org</v-card-subtitle>
+            <v-card-text>
+              <v-form>
+                <v-switch
+                  v-model="formData.isWaterNeeded"
+                  label="Besoin d'eau">
+                </v-switch>
+                <v-text-field
+                  v-model="formData.waterNeed"
+                  label="Desctiption du besoin en eau">
+                </v-text-field>
+                </v-form>
+                </v-card-text>
+            </v-card>
+          <!-- <FormCard
             title="Eau"
             form-key="fa_water_form"
             topic="elec"
@@ -263,7 +279,7 @@
             :is-disabled="isValidated('elec')"
             :form="FA"
             @form-change="updateForm('elec', $event)"
-          ></FormCard>
+          ></FormCard> -->
         </v-col>
       </v-row>
 
