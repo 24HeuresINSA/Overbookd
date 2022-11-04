@@ -35,6 +35,7 @@
             outlined
             solo
             filled
+            @keydown.enter="login()"
           ></v-text-field>
         </v-row>
         <v-row>
@@ -47,6 +48,7 @@
             clearable
             solo
             filled
+            @keydown.enter="login()"
           ></v-text-field>
         </v-row>
         <v-row>
@@ -180,7 +182,6 @@ export default {
       try {
         if (this.credentials.email && this.credentials.password) {
           await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
-          console.log("connected to API");
           await this.$router.push({
             path: "/",
           }); // redirect to homepage
@@ -189,7 +190,7 @@ export default {
         }
       } catch (e) {
         this.feedbackMessage =
-          "Password or username are incorrect 😞, pense a mettre ton email";
+          "Ton email ou ton mot de passe est incorrect 😞";
         this.snackbar = true;
       }
     },
