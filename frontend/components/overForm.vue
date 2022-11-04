@@ -35,9 +35,6 @@ export default {
       compiledForm: {},
     };
   },
-
-  mounted() {},
-
   methods: {
     getData(key) {
       if (this.data) {

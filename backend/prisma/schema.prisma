@@ -3,7 +3,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native"]
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -122,7 +122,7 @@ model Transaction {
   to         Int             @default(-1)
   user_to    User            @relation("to", fields: [to], references: [id])
   amount     Float           @default(0)
-  context    String          @db.VarChar(255) @default("")
+  context    String          @default("") @db.VarChar(255)
   created_at DateTime        @default(now())
   is_deleted Boolean         @default(false)
 }

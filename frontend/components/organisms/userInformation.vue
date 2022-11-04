@@ -302,7 +302,7 @@ export default {
   async mounted() {
     await this.$accessor.team.getTeams();
     this.teams = this.$accessor.team.teams.data;
-    this.hasEditingRole = await this.hasRole(["admin", "humain"]);
+    this.hasEditingRole = await this.hasRole(["admin", "humain", "sg"]);
     const res = await safeCall(
       this.$store,
       RepoFactory.userRepo.getAllUsers(this)
@@ -368,8 +368,8 @@ export default {
       await safeCall(
         this.$store,
         userRepo.updateUser(this, this.mUser.id, this.mUser),
-        "🥳",
-        "une erreur est survenue lors de la sauvegarde de l'utilisateur"
+        "saved",
+        "server"
       );
       this.mToggle = false;
     },

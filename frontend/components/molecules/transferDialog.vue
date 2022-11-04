@@ -43,6 +43,7 @@ export default Vue.extend({
         {
           key: "reason",
           label: "Raison",
+          isRequired: true,
         },
       ],
       transfer: {
@@ -87,6 +88,9 @@ export default Vue.extend({
       this.transfer = form;
     },
     async transferMoney(): Promise<any> {
+      if (!this.transfer.isValid) {
+        return;
+      }
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
       // transaction to self...
@@ -119,6 +123,7 @@ export default Vue.extend({
             to: this.transfer.user.id,
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
+          this.$emit("transaction", newTransfer.amount);
         } catch (e) {
           console.error(e);
         }
