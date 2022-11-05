@@ -83,7 +83,7 @@ def loginFromPosgresql(username, password):
     }
 
     response = requests.request(
-        "POST", url, headers=headers, data=payload, verify=False)
+        "POST", url, headers=headers, data=payload) # add verify=False if you have a self signed certificate
 
     logger.info(f"Loggin reponse from posgresql backend: {response.text}")
 
@@ -186,7 +186,7 @@ def createUser(users, token):
         })
 
         response = requests.request(
-            "POST", url, headers=headers, data=payload, verify=False)
+            "POST", url, headers=headers, data=payload) # add verify=False if you have a self signed certificate
         logger.info(
             f"Create user {user['firstname']} {user['lastname']} reponse : {response.text}")
 
@@ -199,7 +199,7 @@ def createUser(users, token):
         })
 
         response = requests.request(
-            "PUT", urlWithID, headers=headers, data=balance, verify=False)
+            "PUT", urlWithID, headers=headers, data=balance) # add verify=False if you have a self signed certificate
         logger.info(
             f"Update user {user['firstname']} {user['lastname']} balance reponse : {response.text}")
 
