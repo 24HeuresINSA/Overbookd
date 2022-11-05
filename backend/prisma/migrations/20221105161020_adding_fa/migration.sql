@@ -158,6 +158,9 @@ CREATE TABLE "TimeWindow" (
     CONSTRAINT "TimeWindow_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Collaborator_firstname_lastname_key" ON "Collaborator"("firstname", "lastname");
+
 -- AddForeignKey
 ALTER TABLE "FA" ADD CONSTRAINT "FA_type_fkey" FOREIGN KEY ("type") REFERENCES "FA_type"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
 

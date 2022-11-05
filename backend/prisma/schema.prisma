@@ -223,6 +223,8 @@ model Collaborator {
   company          String?            @db.VarChar(30)
   comment          String?            @db.Text
   FA_Collaborators FA_Collaborators[]
+
+  @@unique([firstname, lastname])
 }
 
 //A définir correctement plus tard, placeholder pour le moment
