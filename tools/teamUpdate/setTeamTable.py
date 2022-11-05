@@ -1,5 +1,4 @@
-import json
-import requests
+import json, time, requests
 from requests.structures import CaseInsensitiveDict
 
 URL="http://127.0.0.1:2424"
@@ -17,3 +16,4 @@ for team in teamConfig:
     id = [t for t in teams.json() if t["name"] == team["name"]][0]["id"]
     response = requests.patch(URL + '/team/' + str(id), headers=headers, data=json.dumps(team))
     print(f"Update team {team['name']} reponse : {response.text}")
+    time.sleep(1)

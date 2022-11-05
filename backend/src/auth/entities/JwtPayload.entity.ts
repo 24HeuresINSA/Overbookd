@@ -31,6 +31,6 @@ export class JwtPayload {
   }
 
   hasOneOfRequiredRoles(requiredRoles: string[]): boolean {
-    return requiredRoles.some((role) => this.hasRole(role));
+    return requiredRoles?.some((role) => this.hasRole(role));
   }
 }

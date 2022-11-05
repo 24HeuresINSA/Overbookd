@@ -1,5 +1,4 @@
-import json
-import requests
+import json, time, requests
 from requests.structures import CaseInsensitiveDict
 
 URL="http://127.0.0.1:2424"
@@ -24,3 +23,4 @@ for user in users:
     
     response = requests.post(URL + '/team/link', headers=headers, data=payload)
     print(f"Create userTeam for user {user['lastname']} reponse : {response.text}")
+    time.sleep(1)
