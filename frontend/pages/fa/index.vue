@@ -272,7 +272,7 @@ export default {
     },
 
     getTeamIcon(team) {
-      return this.$accessor.team.getTeams([team])?.shift()?.icon;
+      return this.$accessor.team.getTeams([team])?.[0]?.icon;
     },
 
     filterBySelectedTeam(FAs, team) {

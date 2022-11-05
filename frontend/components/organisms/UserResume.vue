@@ -65,7 +65,7 @@ export default Vue.extend({
   },
   methods: {
     getTeamMetadate(team: string): any {
-      return this.$accessor.team.getTeams([team])?.shift();
+      return this.$accessor.team.getTeams([team])?.[0];
     },
     askForUserDetails(): void {
       this.$emit("click:user-details", this.user);

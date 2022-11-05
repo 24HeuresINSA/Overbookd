@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  Matches,
+  ValidationArguments,
+} from 'class-validator';
 
-type NewType = string;
-const hexCode = new RegExp(/^#[0-9|a-f|A-F]{6}/);
+const hexCode = new RegExp(/^#[0-9|a-f|A-F]{6}$/);
 const mdiIcon = new RegExp(/^mdi-.*/);
 
 export class UpdateTeamDto {
@@ -12,7 +16,7 @@ export class UpdateTeamDto {
   })
   @IsOptional()
   @IsString()
-  name: NewType;
+  name: string;
 
   @ApiProperty({
     required: false,
@@ -20,7 +24,10 @@ export class UpdateTeamDto {
   })
   @IsOptional()
   @IsString()
-  @Matches(hexCode)
+  @Matches(hexCode, {
+    message: (va: ValidationArguments) =>
+      `${va.property} should be hexadecimal code starting with '#'`,
+  })
   color: string;
 
   @ApiProperty({
@@ -29,6 +36,9 @@ export class UpdateTeamDto {
   })
   @IsOptional()
   @IsString()
-  @Matches(mdiIcon)
+  @Matches(mdiIcon, {
+    message: (va: ValidationArguments) =>
+      `${va.property} should be mdi icon code starting with 'mdi-'`,
+  })
   icon: string;
 }

@@ -404,11 +404,7 @@ export default Vue.extend({
     },
 
     getValidatorIcon(validator: string) {
-      try {
-        return this.$accessor.team.getTeams([validator])?.shift()?.icon;
-      } catch (e) {
-        console.log(`can't find icon of team ${validator}`);
-      }
+      return this.$accessor.team.getTeams([validator])?.[0]?.icon;
     },
 
     validate(validator: string) {

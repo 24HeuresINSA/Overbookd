@@ -6,8 +6,8 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -65,11 +65,11 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Put(':id')
+  @Patch(':id')
   @ApiBearerAuth()
-  @HttpCode(201)
+  @HttpCode(200)
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Update a team',
     type: UpdateTeamDto,
   })

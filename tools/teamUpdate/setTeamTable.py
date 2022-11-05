@@ -1,7 +1,5 @@
 import json
 import requests
-import numpy as np
-import pandas as pd
 from requests.structures import CaseInsensitiveDict
 
 URL="http://127.0.0.1:2424"
@@ -17,5 +15,5 @@ teams = requests.get(URL + '/team', headers=headers)
 
 for team in teamConfig:
     id = [t for t in teams.json() if t["name"] == team["name"]][0]["id"]
-    response = requests.put(URL + '/team/' + str(id), headers=headers, data=json.dumps(team))
+    response = requests.patch(URL + '/team/' + str(id), headers=headers, data=json.dumps(team))
     print(f"Update team {team['name']} reponse : {response.text}")

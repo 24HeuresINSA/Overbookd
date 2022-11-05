@@ -1,7 +1,5 @@
 import json
 import requests
-import numpy as np
-import pandas as pd
 from requests.structures import CaseInsensitiveDict
 
 URL="http://127.0.0.1:2424"
@@ -12,7 +10,7 @@ headers["Accept"] = "application/json"
 headers["Authorization"] = "Bearer " + BEARER
 headers["Content-Type"] = "application/json"
 
-# Load users from old version (json file)
+# Load users from old version (json file) JSON return with endpoin /user
 users = json.load(open("users.json"))
 
 print(f"Number of users in users.json : {len(users)}")

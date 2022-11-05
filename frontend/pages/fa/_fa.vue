@@ -427,7 +427,7 @@ export default {
     },
     getValidatorIcon(validator) {
       try {
-        return this.$accessor.team.getTeams([validator])?.shift()?.icon;
+        return this.$accessor.team.getTeams([validator])?.[0]?.icon;
       } catch (e) {
         console.log(`can't find icon of team ${validator}`);
       }
