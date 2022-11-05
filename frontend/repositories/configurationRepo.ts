@@ -18,6 +18,6 @@ export default {
   },
   // PATCH
   update(context: Context, config: Configuration) {
-    return context.$axios.patch(`${resource}`, config);
+    return context.$axios.put(`${resource}`, config);
   },
 };

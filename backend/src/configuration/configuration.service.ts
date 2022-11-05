@@ -1,12 +1,12 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Configuration } from '@prisma/client';
 
 @Injectable()
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Prisma.ConfigurationCreateInput) {
+  create(data: Prisma.ConfigurationCreateInput): Promise<Configuration> {
     return this.prisma.configuration.create({ data: data });
   }
 
@@ -17,13 +17,13 @@ export class ConfigurationService {
     where?: Prisma.ConfigurationWhereInput;
     orderBy?: Prisma.ConfigurationOrderByWithRelationInput;
     select?: Prisma.ConfigurationSelect;
-  }) {
+  }): Promise<Configuration[]> {
     return this.prisma.configuration.findMany({
       ...params,
     });
   }
 
-  findOne(key: string) {
+  findOne(key: string): Promise<Configuration> {
     return this.prisma.configuration.findUnique({
       where: {
         key,
@@ -34,7 +34,7 @@ export class ConfigurationService {
   update(param: {
     where: Prisma.ConfigurationWhereUniqueInput;
     data: Prisma.ConfigurationCreateInput;
-  }) {
+  }): Promise<Configuration> {
     const { where, data } = param;
     return this.prisma.configuration.upsert({
       where,
@@ -44,6 +44,6 @@ export class ConfigurationService {
   }
 
   remove(key: string) {
-    throw NotImplementedException;
+    throw new Error('Not implemented');
   }
 }

@@ -3,15 +3,21 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
 import { CreateConfigurationDto } from './dto/createConfiguration.dto';
 import { Configuration } from '@prisma/client';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
@@ -33,7 +39,7 @@ export class ConfigurationController {
     description: 'Create Configuration',
     type: CreateConfigurationDto,
   })
-  create(@Body() configurationData: Configuration) {
+  create(@Body() configurationData: Configuration): Promise<Configuration> {
     return this.configurationService.create(configurationData);
   }
 
@@ -43,7 +49,7 @@ export class ConfigurationController {
     description: 'Get all configurations',
     type: Array,
   })
-  findAll() {
+  findAll(): Promise<Configuration[]> {
     return this.configurationService.configurations({});
   }
 
@@ -52,14 +58,14 @@ export class ConfigurationController {
     status: 200,
     description: 'Get configuration by key',
   })
-  findOne(@Param('key') key: string) {
+  findOne(@Param('key') key: string): Promise<Configuration> {
     return this.configurationService.findOne(key);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
-  @Roles('hard')
-  @Patch()
+  @Roles('sg', 'humain')
+  @Put()
   @ApiResponse({
     status: 200,
     description: 'Patch configuration',
@@ -68,7 +74,7 @@ export class ConfigurationController {
     description: 'update Configuration',
     type: CreateConfigurationDto,
   })
-  update(@Body() configuration: Configuration) {
+  update(@Body() configuration: Configuration): Promise<Configuration> {
     const param = {
       where: { key: configuration.key },
       data: configuration,
@@ -79,6 +85,14 @@ export class ConfigurationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles('admin')
+  @ApiResponse({
+    status: 200,
+    description: 'Delete a configurations',
+  })
+  @ApiParam({
+    name: 'key',
+    description: 'Configuration key',
+  })
   @Delete(':key')
   remove(@Param('key') key: string) {
     return this.configurationService.remove(key);
