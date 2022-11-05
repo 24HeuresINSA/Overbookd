@@ -354,7 +354,9 @@ export default {
   },
 
   mounted() {
-    this.$vuetify.theme.dark = localStorage["theme"] || false;
+    let theme = localStorage["theme"];
+    if (theme === "false") theme = false;
+    this.$vuetify.theme.dark = theme || false;
   },
 
   methods: {
