@@ -9,11 +9,11 @@ export default {
     return context.$axios.get(`${resource}`);
   },
 
-  get(context: Context, key: string) {
+  fetch(context: Context, key: string) {
     return context.$axios.get(`${resource}/${key}`);
   },
   // PUT
-  set(context: Context, config: Configuration) {
+  save(context: Context, config: Configuration) {
     return context.$axios.post(`${resource}`, config);
   },
   // PATCH

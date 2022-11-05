@@ -23,33 +23,38 @@ export const actions = actionTree(
   {
     fetchAll: async function ({ commit }) {
       const res = await safeCall(this, configurationRepo.getAll(this));
-      if (res) {
-        res.data.forEach((config: Configuration) => {
-          commit("SET_CONFIG", config);
-        });
-        return res;
+      if (!res) {
+        return null;
       }
+      res.data.forEach((config: Configuration) => {
+        commit("SET_CONFIG", config);
+      });
+      return res;
     },
     fetch: async function ({ commit }, key: string) {
-      const res = await safeCall(this, configurationRepo.get(this, key));
-      if (res) {
-        commit("SET_CONFIG", res.data);
-        return res;
+      const res = await safeCall(this, configurationRepo.fetch(this, key));
+      if (!res) {
+        return null;
       }
+      commit("SET_CONFIG", res.data);
+      return res;
     },
-    set: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.set(this, config));
-      if (res) {
-        commit("SET_CONFIG", res.data);
-        return res;
+    save: async function ({ commit }, config: Configuration) {
+      const res = await safeCall(this, configurationRepo.save(this, config));
+      if (!res) {
+        return null;
       }
+
+      commit("SET_CONFIG", res.data);
+      return res;
     },
     update: async function ({ commit }, config: Configuration) {
       const res = await safeCall(this, configurationRepo.update(this, config));
-      if (res) {
-        commit("SET_CONFIG", res.data);
-        return res;
+      if (!res) {
+        return null;
       }
+      commit("SET_CONFIG", res.data);
+      return res;
     },
   }
 );
