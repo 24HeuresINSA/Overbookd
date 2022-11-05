@@ -27,39 +27,38 @@ export class FaService {
 
   async create(createFaDto: CreateFaDto): Promise<FA | null> {
     //Check if all the foreign keys are valid (team, in_charge user, location, type)
-    /*
     await this.prisma.$transaction([
-      this.prisma.team.findUnique({ where: { name: createFaDto.team_id } }),
-      this.prisma.user.findUnique({ where: { id: createFaDto.in_charge } }),
+      this.prisma.team.findUnique({ where: { name: createFaDto.FA.team_id } }),
+      this.prisma.user.findUnique({ where: { id: createFaDto.FA.in_charge } }),
       this.prisma.location.findUnique({
-        where: { id: createFaDto.location_id },
+        where: { id: createFaDto.FA.location_id },
       }),
-      this.prisma.fA_type.findUnique({ where: { name: createFaDto.type } }),
-    ]);*/
-    const fa = await this.prisma.fA.create({ data: createFaDto.FA });
-    if (!fa) throw new Error('Error while creating the FA');
-    const collaborator = await this.prisma.collaborator.create({
-      data: createFaDto.FA_Collaborators,
+      this.prisma.fA_type.findUnique({ where: { name: createFaDto.FA.type } }),
+    ]);
+    //First of all we create or get the collaborator
+    const collaborator = await this.prisma.collaborator.upsert({
+      where: {
+        firstname_lastname: {
+          firstname: createFaDto.FA_Collaborators.firstname,
+          lastname: createFaDto.FA_Collaborators.lastname,
+        },
+      },
+      update: {},
+      create: createFaDto.FA_Collaborators,
     });
-    if (!collaborator) throw new Error('Error while creating the collaborator');
-    await this.prisma.fA.update({
-      where: { id: fa.id },
+    if (!collaborator)
+      throw new Error('Error while getting/creating the collaborator');
+    const fa = await this.prisma.fA.create({
       data: {
+        ...createFaDto.FA,
         FA_Collaborators: {
-          connectOrCreate: {
-            where: {
-              fa_id_collaborator_id: {
-                fa_id: fa.id,
-                collaborator_id: collaborator.id,
-              },
-            },
-            create: {
-              collaborator_id: collaborator.id,
-            },
+          create: {
+            collaborator_id: collaborator.id,
           },
         },
       },
     });
+    if (!fa) throw new Error('Error while creating the FA');
     return fa;
   }
 
