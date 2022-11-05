@@ -26,7 +26,8 @@
       "Secu",
       "Soft",
       "User",
-      "Auth"
+      "Auth",
+      "triage"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],
