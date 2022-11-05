@@ -132,5 +132,5 @@ export class CreateFaDto {
   @IsOptional()
   @Type(() => CreateCollaboratorDto)
   @ValidateNested()
-  FA_Collaborators: CreateCollaboratorDto;
+  FA_Collaborators: CreateCollaboratorDto[];
 }

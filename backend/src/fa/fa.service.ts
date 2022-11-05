@@ -35,25 +35,40 @@ export class FaService {
       }),
       this.prisma.fA_type.findUnique({ where: { name: createFaDto.FA.type } }),
     ]);
-    //First of all we create or get the collaborator
-    const collaborator = await this.prisma.collaborator.upsert({
+    //First of all we create or get the collaborator and skip existing collaborators
+    await this.prisma.collaborator.createMany({
+      data: createFaDto.FA_Collaborators,
+      skipDuplicates: true,
+    });
+    //Then get all the collaborators
+    const collaborators = await this.prisma.collaborator.findMany({
       where: {
-        firstname_lastname: {
-          firstname: createFaDto.FA_Collaborators.firstname,
-          lastname: createFaDto.FA_Collaborators.lastname,
+        firstname: {
+          in: createFaDto.FA_Collaborators.map((collaborator) => {
+            return collaborator.firstname;
+          }),
+        },
+        lastname: {
+          in: createFaDto.FA_Collaborators.map((collaborator) => {
+            return collaborator.lastname;
+          }),
         },
       },
-      update: {},
-      create: createFaDto.FA_Collaborators,
     });
-    if (!collaborator)
-      throw new Error('Error while getting/creating the collaborator');
+    if (collaborators.length !== createFaDto.FA_Collaborators.length) {
+      console.log(collaborators);
+      throw new Error('Some collaborators were not created');
+    }
     const fa = await this.prisma.fA.create({
       data: {
         ...createFaDto.FA,
         FA_Collaborators: {
-          create: {
-            collaborator_id: collaborator.id,
+          createMany: {
+            data: collaborators.map((collaborator) => {
+              return {
+                collaborator_id: collaborator.id,
+              };
+            }),
           },
         },
       },
