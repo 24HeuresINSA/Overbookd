@@ -11,6 +11,7 @@ import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
 import { FaModule } from './fa/fa.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
+import { SecurityPassModule } from './security_pass/security_pass.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CollaboratorModule } from './collaborator/collaborator.module';
     ConfigModule,
     FaModule,
     CollaboratorModule,
+    SecurityPassModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService],
