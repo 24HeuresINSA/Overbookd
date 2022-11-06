@@ -23,7 +23,7 @@
       <template #[`item.to`]="{ item }">
         {{
           item.type == "TRANSFER" || item.type == "DEPOSIT"
-            ? getFullNameFromID(item.to)
+            ? getFullName(item.user_to)
             : ""
         }}
       </template>
@@ -31,7 +31,7 @@
       <template #[`item.from`]="{ item }">
         {{
           item.type == "TRANSFER" || item.type == "EXPENSE"
-            ? getFullNameFromID(item.from)
+            ? getFullName(item.user_from)
             : ""
         }}
       </template>
@@ -97,18 +97,6 @@ export default {
       users: {},
     };
   },
-  async beforeMount() {
-    const usersCall = await safeCall(
-      this.$store,
-      RepoFactory.userRepo.getAllUsernames(this)
-    );
-    if (usersCall) {
-      usersCall.data.forEach((user) => {
-        this.users[user.id] = user.username;
-      });
-      this.$forceUpdate();
-    }
-  },
   async mounted() {
     if (this.action) {
       this.headers.push({ text: "Action", value: "action" });
@@ -132,8 +120,8 @@ export default {
         message: "Une erreur est survenue",
       });
     },
-    getFullNameFromID(id) {
-      return this.users[id];
+    getFullName({ lastname, firstname }) {
+      return `${firstname} ${lastname}`;
     },
   },
 };

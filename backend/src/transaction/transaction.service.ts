@@ -12,24 +12,64 @@ export type CreateTransaction = Omit<
   'id' | 'from' | 'type' | 'is_deleted' | 'created_at'
 >;
 
+const SELECT_TRANSACTION_USER = {
+  id: true,
+  firstname: true,
+  lastname: true,
+};
+
+const SELECT_TRANSACTION = {
+  id: true,
+  type: true,
+  user_from: {
+    select: SELECT_TRANSACTION_USER,
+  },
+  user_to: {
+    select: SELECT_TRANSACTION_USER,
+  },
+  amount: true,
+  context: true,
+  created_at: true,
+  is_deleted: true,
+};
+
+type TransactionUser = Pick<User, 'id' | 'lastname' | 'firstname'>;
+
+export type TransactionWithSenderAndReceiver = Omit<
+  Transaction,
+  'to' | 'from'
+> & {
+  user_from: TransactionUser;
+  user_to: TransactionUser;
+};
+
 @Injectable()
 export class TransactionService {
   constructor(private prisma: PrismaService) {}
   /**     **/
   /** GET **/
   /**     **/
-  async getAllTransactions(): Promise<Transaction[]> {
+  async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
+      select: SELECT_TRANSACTION,
       orderBy: { created_at: 'desc' },
     });
   }
 
-  async getTransactionById(id: number): Promise<Transaction | null> {
-    return this.prisma.transaction.findUnique({ where: { id: Number(id) } });
+  async getTransactionById(
+    id: number,
+  ): Promise<TransactionWithSenderAndReceiver | null> {
+    return this.prisma.transaction.findUnique({
+      select: SELECT_TRANSACTION,
+      where: { id: Number(id) },
+    });
   }
 
-  async getUserTransactions(userId: number): Promise<Transaction[] | null> {
+  async getUserTransactions(
+    userId: number,
+  ): Promise<TransactionWithSenderAndReceiver[] | null> {
     return this.prisma.transaction.findMany({
+      select: SELECT_TRANSACTION,
       where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },
       orderBy: { created_at: 'desc' },
     });
@@ -41,7 +81,7 @@ export class TransactionService {
   async createTransaction(
     userTransaction: CreateTransaction,
     userId: number,
-  ): Promise<Transaction> {
+  ): Promise<TransactionWithSenderAndReceiver> {
     const data = {
       ...userTransaction,
       from: userId,
@@ -56,6 +96,7 @@ export class TransactionService {
     const receiverBalance = receiver.balance + data.amount;
     const [transaction] = await this.prisma.$transaction([
       this.prisma.transaction.create({
+        select: SELECT_TRANSACTION,
         data: data,
       }),
       this.prisma.user.update({
@@ -70,8 +111,10 @@ export class TransactionService {
     return transaction;
   }
 
-  async addSgTransaction(transactions: Transaction[]): Promise<Transaction[]> {
-    await Promise.all(
+  async addSgTransaction(
+    transactions: Transaction[],
+  ): Promise<TransactionWithSenderAndReceiver[]> {
+    return Promise.all(
       transactions.map(async (transaction) => {
         this.checkTransactionAmount(transaction.amount);
         //Check if user exists
@@ -84,16 +127,19 @@ export class TransactionService {
             ? user.balance + transaction.amount
             : user.balance - transaction.amount;
         //Update the user and create the transaction
-        await this.prisma.$transaction([
+        const [savedTransaction] = await this.prisma.$transaction([
+          this.prisma.transaction.create({
+            select: SELECT_TRANSACTION,
+            data: transaction,
+          }),
           this.prisma.user.update({
             where: { id: Number(userId) },
             data: { balance: newBalance },
           }),
-          this.prisma.transaction.create({ data: transaction }),
         ]);
+        return savedTransaction;
       }),
     );
-    return transactions;
   }
 
   /**        **/
@@ -142,7 +188,9 @@ export class TransactionService {
     }
   }
 
-  private async transactionExists(transactionId: number): Promise<Transaction> {
+  private async transactionExists(
+    transactionId: number,
+  ): Promise<TransactionWithSenderAndReceiver> {
     const transaction = await this.getTransactionById(transactionId);
     if (!transaction) {
       throw new NotFoundException(
@@ -158,7 +206,7 @@ export class TransactionService {
   }
 
   private async getUserBalanceUpdateOperationParameters(
-    transaction: Transaction,
+    transaction: TransactionWithSenderAndReceiver,
   ) {
     return Promise.all([
       this.getReceiverBalanceUpdateOperationParameter(transaction),
@@ -167,27 +215,27 @@ export class TransactionService {
   }
 
   private async getReceiverBalanceUpdateOperationParameter(
-    transaction: Transaction,
+    transaction: TransactionWithSenderAndReceiver,
   ) {
     if (!this.shouldUpdateReceiverBalance(transaction.type)) {
       return undefined;
     }
-    const [receiver] = await this.userExists([transaction.to]);
+    const [receiver] = await this.userExists([transaction.user_to.id]);
     return {
-      where: { id: Number(transaction.to) },
+      where: { id: receiver.id },
       data: { balance: receiver.balance - transaction.amount },
     };
   }
 
   private async getSenderBalanceUpdateOperationParameter(
-    transaction: Transaction,
+    transaction: TransactionWithSenderAndReceiver,
   ) {
     if (!this.shouldUpdateSenderBalance(transaction.type)) {
       return undefined;
     }
-    const [sender] = await this.userExists([transaction.from]);
+    const [sender] = await this.userExists([transaction.user_from.id]);
     return {
-      where: { id: Number(transaction.from) },
+      where: { id: sender.id },
       data: { balance: sender.balance + transaction.amount },
     };
   }
