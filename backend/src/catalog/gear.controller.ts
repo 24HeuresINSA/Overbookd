@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -24,7 +25,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { CatalogService } from './catalog.service';
-import { GearCreationRequestDto } from './dto/gearCreationRequest.dto';
+import { GearCreationRequestDto } from './dto/gearFormRequest.dto';
 import { GearResponseDto } from './dto/gearResponse.dto';
 import { GearSearchRequestDto } from './dto/gearSearchRequest.dto';
 import { Gear } from './interfaces';
@@ -91,7 +92,7 @@ export class GearController {
     description: 'Gear id',
     required: true,
   })
-  get(@Param('id') id: number): Promise<Gear> {
+  get(@Param('id', ParseIntPipe) id: number): Promise<Gear> {
     return this.catalogService.find(id);
   }
 
@@ -134,7 +135,7 @@ export class GearController {
     required: true,
   })
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() gearForm: GearCreationRequestDto,
   ): Promise<Gear> {
     return this.catalogService.update({ id, ...gearForm });
@@ -158,7 +159,7 @@ export class GearController {
     description: 'Gear id',
     required: true,
   })
-  remove(@Param('id') id: number): Promise<void> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.catalogService.remove(id);
   }
 }

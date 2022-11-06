@@ -8,6 +8,7 @@ import {
   UseGuards,
   HttpCode,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {
@@ -22,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
-import { CategoryFormRequestDto } from './dto/categoryCreationRequest.dto';
+import { CategoryFormRequestDto } from './dto/categoryFormRequest.dto';
 import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
@@ -66,7 +67,7 @@ export class CategoryController {
     description: 'Category id',
     required: true,
   })
-  find(@Param('id') id: number): Promise<Category> {
+  find(@Param('id', ParseIntPipe) id: number): Promise<Category> {
     return this.categoryService.find(id);
   }
 
@@ -88,7 +89,7 @@ export class CategoryController {
     description: 'Category id',
     required: true,
   })
-  remove(@Param('id') id: number): Promise<void> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.categoryService.remove(id);
   }
 
@@ -132,7 +133,7 @@ export class CategoryController {
     required: true,
   })
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() categoryForm: CategoryFormRequestDto,
   ): Promise<Category> {
     return this.categoryService.update({ id, ...categoryForm });
