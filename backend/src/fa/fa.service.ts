@@ -82,7 +82,6 @@ export class FaService {
     });
     await this.prisma.security_pass.createMany({
       data: security_pass,
-      skipDuplicates: true,
     });
     const created_pass = await this.prisma.security_pass.findMany({
       where: {
