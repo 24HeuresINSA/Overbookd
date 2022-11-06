@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsInt } from 'class-validator';
+import { IsDefined, IsInt, Min } from 'class-validator';
 
 export class CategoryDeleteRequestDto {
   @ApiProperty({
@@ -8,5 +8,6 @@ export class CategoryDeleteRequestDto {
   })
   @IsInt()
   @IsDefined()
+  @Min(1)
   id: number;
 }
