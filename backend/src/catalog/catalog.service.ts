@@ -45,6 +45,10 @@ export class CatalogService {
     });
   }
 
+  async getAll(): Promise<Gear[]> {
+    return this.gearRepository.getAllGears();
+  }
+
   async find(id: number): Promise<Gear> {
     const gear = await this.gearRepository.getGear(id);
     if (!gear) throw new GearNotFoundException(id);

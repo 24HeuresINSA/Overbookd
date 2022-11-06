@@ -1,3 +1,5 @@
+import { BadRequestException } from '@nestjs/common';
+
 export interface Category {
   id: number;
   name: string;
@@ -35,6 +37,7 @@ export interface GearRepository {
   updateGear(gear: Gear): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: SearchGear): Promise<Gear[]>;
+  getAllGears(): Promise<Gear[]>;
 }
 
 export interface CategoryRepository {
@@ -51,7 +54,7 @@ export interface TeamRepository {
   getTeam(slug: string): Promise<Team | undefined>;
 }
 
-export class GearAlreadyExists extends Error {
+export class GearAlreadyExists extends BadRequestException {
   gear: Gear;
   constructor(gear: Gear) {
     super(`"${gear.name}" gear already exists`);

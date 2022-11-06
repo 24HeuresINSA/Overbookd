@@ -50,4 +50,8 @@ export class InMemoryGearRepository implements GearRepository {
       }),
     );
   }
+
+  getAllGears(): Promise<Gear[]> {
+    return Promise.resolve(this.gears);
+  }
 }

@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsInt, IsString, MinLength } from 'class-validator';
+import {
+  IsDefined,
+  IsInt,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class GearCreationRequestDto {
   @ApiProperty({
@@ -15,6 +21,7 @@ export class GearCreationRequestDto {
     required: false,
     description: 'Category id to link gear to',
   })
+  @IsOptional()
   @IsInt()
   category?: number;
 }
