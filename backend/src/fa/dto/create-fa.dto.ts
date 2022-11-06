@@ -122,7 +122,6 @@ export class CreateFaDto {
     description: 'The fa',
   })
   @ValidateNested()
-  @Type(() => FA)
   FA: FA;
 
   @ApiProperty({
@@ -130,7 +129,6 @@ export class CreateFaDto {
     description: 'The any collaborator',
   })
   @IsOptional()
-  @Type(() => CreateCollaboratorDto)
   @ValidateNested()
   FA_Collaborators: CreateCollaboratorDto[];
 
@@ -139,7 +137,6 @@ export class CreateFaDto {
     description: 'all security pass needed',
   })
   @IsOptional()
-  @Type(() => CreateSecurityPassDto)
   @ValidateNested()
   Security_pass: CreateSecurityPassDto[];
 }
