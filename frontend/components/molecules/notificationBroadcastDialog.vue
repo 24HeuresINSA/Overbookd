@@ -7,7 +7,7 @@
         <v-autocomplete
           v-model="notification.team"
           label="Team"
-          :items="teams"
+          :items="teamNames"
         ></v-autocomplete>
         <v-text-field
           v-model="notification.message"
@@ -41,7 +41,7 @@ export default Vue.extend({
     open() {
       return this.$accessor.dialog.open;
     },
-    teams() {
+    teamNames() {
       return this.$accessor.team.teamNames;
     },
     toggled: {
