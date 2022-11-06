@@ -8,7 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-
+import { CreateSecurityPassDto } from '../../security_pass/dto/create-security_pass.dto';
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
 
 export enum Status {
@@ -133,4 +133,12 @@ export class CreateFaDto {
   @Type(() => CreateCollaboratorDto)
   @ValidateNested()
   FA_Collaborators: CreateCollaboratorDto[];
+
+  @ApiProperty({
+    required: false,
+    description: 'all security pass needed',
+  })
+  @IsOptional()
+  @Type(() => CreateSecurityPassDto)
+  Security_pass: CreateSecurityPassDto[];
 }

@@ -20,6 +20,7 @@ const testFA: CreateFaDto = {
     water_flow_required: 0,
   },
   FA_Collaborators: [],
+  Security_pass: [],
 };
 
 describe('FaService', () => {
@@ -38,7 +39,7 @@ describe('FaService', () => {
   });
 
   describe('FA creation', () => {
-    test('should create an FA without any collaborator', async () => {
+    test('should create an FA without any links', async () => {
       const result = await faservice.create(testFA);
       expect(result).toBeDefined();
     });
