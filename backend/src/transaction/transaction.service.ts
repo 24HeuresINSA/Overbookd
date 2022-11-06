@@ -19,7 +19,9 @@ export class TransactionService {
   /** GET **/
   /**     **/
   async getAllTransactions(): Promise<Transaction[]> {
-    return this.prisma.transaction.findMany();
+    return this.prisma.transaction.findMany({
+      orderBy: { created_at: 'desc' },
+    });
   }
 
   async getTransactionById(id: number): Promise<Transaction | null> {
