@@ -3,7 +3,7 @@ import { Category, CategoryRepository, CategoryTree } from '../interfaces';
 
 @Injectable()
 export class InMemoryCategoryRepository implements CategoryRepository {
-  categories: Category[];
+  categories: Category[] = [];
 
   getCategory(id: number): Promise<Category | undefined> {
     return Promise.resolve(

@@ -8,7 +8,7 @@ import {
 
 @Injectable()
 export class InMemoryGearRepository implements GearRepository {
-  gears: Gear[];
+  gears: Gear[] = [];
 
   getGear(id: number): Promise<Gear | undefined> {
     return Promise.resolve(this.gears.find((gear) => gear.id === id));

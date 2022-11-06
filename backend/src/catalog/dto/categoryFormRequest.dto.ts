@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsInt, IsString, MinLength } from 'class-validator';
+import {
+  IsDefined,
+  IsInt,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
-export class CategoryCreationRequestDto {
+export class CategoryFormRequestDto {
   @ApiProperty({
     required: true,
     description: 'Category name',
@@ -15,6 +21,7 @@ export class CategoryCreationRequestDto {
     required: false,
     description: 'Category owner slug',
   })
+  @IsOptional()
   @IsString()
   owner?: string;
 
@@ -22,6 +29,7 @@ export class CategoryCreationRequestDto {
     required: false,
     description: 'Parent ctaegory id',
   })
+  @IsOptional()
   @IsInt()
   parent?: number;
 }
