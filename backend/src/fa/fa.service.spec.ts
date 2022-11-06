@@ -7,6 +7,11 @@ import { FA } from '@prisma/client';
 let faservice: FaService;
 let prisma: PrismaService;
 
+/**
+ * a executer dans /Users/antoinepiron/Desktop/24H_INSA/overbookd-mono/backend/src/fa
+ * npx jest fa.service.spec.ts --coverage --collectCoverageFrom="./fa/**"
+ */
+
 beforeAll(async () => {
   const module: TestingModule = await Test.createTestingModule({
     providers: [FaService, PrismaService],
@@ -53,6 +58,15 @@ describe('FaService', () => {
           },
         });
         expect(security_pass.length).toBe(0);
+      });
+
+      afterAll(async () => {
+        //delete the FA
+        await prisma.fA.delete({
+          where: {
+            id: result.id,
+          },
+        });
       });
     });
   });
