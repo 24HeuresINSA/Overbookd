@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -15,14 +15,6 @@ export enum Security_pass_schedule {
   JOUR_NUIT = 'JOUR_NUIT',
 }
 export class CreateSecurityPassDto {
-  @ApiProperty({
-    required: true,
-    description: 'The id of the corresponding FA',
-    type: Number,
-  })
-  @IsNumber()
-  fa_id: number;
-
   @ApiProperty({
     required: true,
     description: 'The name of the person who needs the security pass',
@@ -61,6 +53,10 @@ export class CreateSecurityPassDto {
   })
   @IsString()
   @IsNotEmpty()
+  //regex for email for @Match
+  @Matches(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, {
+    message: 'email is not valid',
+  })
   @MaxLength(30)
   email: string;
 
