@@ -1,9 +1,12 @@
+import { Injectable } from '@nestjs/common';
 import {
   Gear,
   GearAlreadyExists,
   GearRepository,
   SearchGear,
 } from '../interfaces';
+
+@Injectable()
 export class InMemoryGearRepository implements GearRepository {
   gears: Gear[];
 

@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SlugifyService } from '../common/services/slugify.service';
 import { CategoryNotFoundException } from './category.service';
 import {
@@ -23,6 +23,7 @@ export class GearNotFoundException extends NotFoundException {
   }
 }
 
+@Injectable()
 export class CatalogService {
   constructor(
     private readonly slugService: SlugifyService,

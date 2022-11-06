@@ -1,5 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { Category, CategoryRepository, CategoryTree } from '../interfaces';
 
+@Injectable()
 export class InMemoryCategoryRepository implements CategoryRepository {
   categories: Category[];
 
