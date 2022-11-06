@@ -14,8 +14,8 @@ const testFA: CreateFaDto = {
     status: Status.DRAFT,
     description: 'string',
     is_publishable: true,
-    is_major: true,
-    is_kids: true,
+    is_major: false,
+    is_kids: false,
     security_needs: 'string',
     water_flow_required: 0,
   },
@@ -33,12 +33,14 @@ describe('FaService', () => {
     faservice = module.get<FaService>(FaService);
   });
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(faservice).toBeDefined();
   });
 
-  it('should create an FA without any collaborator', async () => {
-    const result = await faservice.create(testFA);
-    expect(result).toBeDefined();
+  describe('FA creation', () => {
+    test('should create an FA without any collaborator', async () => {
+      const result = await faservice.create(testFA);
+      expect(result).toBeDefined();
+    });
   });
 });
