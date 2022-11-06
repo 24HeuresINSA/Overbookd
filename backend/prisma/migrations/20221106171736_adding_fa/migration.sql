@@ -115,6 +115,7 @@ CREATE TABLE "FA_signa_needs" (
     "signa_type" "SignaType" NOT NULL,
     "text" TEXT NOT NULL,
     "count" INTEGER NOT NULL DEFAULT 1,
+    "comment" TEXT NOT NULL,
 
     CONSTRAINT "FA_signa_needs_pkey" PRIMARY KEY ("id")
 );
