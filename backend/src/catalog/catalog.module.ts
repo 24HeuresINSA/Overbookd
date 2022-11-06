@@ -5,10 +5,10 @@ import {
   InMemoryGearRepository,
   InMemoryTeamRepository,
 } from './repositories';
-import { SlugifyService } from 'src/common/services/slugify.service';
+import { SlugifyService } from '../common/services/slugify.service';
 import { CategoryService } from './category.service';
-import { CommonModule } from 'src/common/common.module';
-import { CategoryController } from './catalog.controller';
+import { CommonModule } from '../common/common.module';
+import { CategoryController } from './category.controller';
 import { Team } from './interfaces';
 
 const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
@@ -24,14 +24,21 @@ const FAKE_EXISTING_TEAMS: Team[] = [
 ];
 
 @Module({
+  imports: [CommonModule],
   providers: [
     SlugifyService,
     CatalogService,
     CategoryService,
-    InMemoryGearRepository,
-    InMemoryCategoryRepository,
     {
-      provide: InMemoryTeamRepository,
+      provide: 'GEAR_REPOSITORY',
+      useClass: InMemoryGearRepository,
+    },
+    {
+      provide: 'CATEGORY_REPOSITORY',
+      useClass: InMemoryCategoryRepository,
+    },
+    {
+      provide: 'TEAM_REPOSITORY',
       useFactory: (existingTeams: Team[] = FAKE_EXISTING_TEAMS) => {
         const teamRepository = new InMemoryTeamRepository();
         teamRepository.teams = existingTeams;
@@ -40,7 +47,6 @@ const FAKE_EXISTING_TEAMS: Team[] = [
     },
   ],
   controllers: [CategoryController],
-  imports: [CommonModule],
   exports: [CatalogService, CategoryService],
 })
 export class CatalogModule {}
