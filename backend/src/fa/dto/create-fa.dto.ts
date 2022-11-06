@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { CreateCollaboratorDto } from 'src/collaborator/dto/create-collaborator.dto';
+import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
 
 export enum Status {
   DRAFT = 'DRAFT',
