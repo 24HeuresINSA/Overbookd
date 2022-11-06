@@ -238,6 +238,9 @@ describe('Catalog', () => {
     beforeAll(() => {
       gearRepository.gears = SIMILAR_GEARS;
     });
+    afterAll(() => {
+      gearRepository.gears = GEARS;
+    });
     describe.each`
       searchName   | searchCategory  | expectedGears
       ${'TAblIer'} | ${undefined}    | ${[SIMILAR_GEARS[3]]}
@@ -258,5 +261,11 @@ describe('Catalog', () => {
         });
       },
     );
+  });
+  describe('Get all gears', () => {
+    it('should retriece all gears', async () => {
+      const gears = await catalog.getAll();
+      expect(gears).toEqual(GEARS);
+    });
   });
 });

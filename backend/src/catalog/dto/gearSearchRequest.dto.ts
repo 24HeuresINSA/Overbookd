@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsString, MinLength } from 'class-validator';
+import { IsDefined, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class GearSearchRequestDto {
   @ApiProperty({
@@ -15,6 +15,7 @@ export class GearSearchRequestDto {
     required: false,
     description: 'Category name',
   })
+  @IsOptional()
   @IsString()
   @MinLength(3)
   category?: string;
