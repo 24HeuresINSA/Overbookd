@@ -140,5 +140,6 @@ export class CreateFaDto {
   })
   @IsOptional()
   @Type(() => CreateSecurityPassDto)
+  @ValidateNested()
   Security_pass: CreateSecurityPassDto[];
 }
