@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SlugifyService } from 'src/common/services/slugify.service';
 
 import {
@@ -23,6 +23,7 @@ type CreateCategoryForm = {
 
 type updateCategoryForm = CreateCategoryForm & { id: number };
 
+@Injectable()
 export class CategoryService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
