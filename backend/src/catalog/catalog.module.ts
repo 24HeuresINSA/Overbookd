@@ -10,6 +10,7 @@ import { CategoryService } from './category.service';
 import { CommonModule } from '../common/common.module';
 import { CategoryController } from './category.controller';
 import { Team } from './interfaces';
+import { GearController } from './gear.controller';
 
 const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
 const teamSigna = { name: 'Orga Signaletique', slug: 'signa' };
@@ -46,7 +47,7 @@ const FAKE_EXISTING_TEAMS: Team[] = [
       },
     },
   ],
-  controllers: [CategoryController],
+  controllers: [CategoryController, GearController],
   exports: [CatalogService, CategoryService],
 })
 export class CatalogModule {}
