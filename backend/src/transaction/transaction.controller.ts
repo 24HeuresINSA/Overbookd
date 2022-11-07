@@ -10,7 +10,10 @@ import {
   ParseIntPipe,
   HttpCode,
 } from '@nestjs/common';
-import { TransactionService } from './transaction.service';
+import {
+  TransactionService,
+  TransactionWithSenderAndReceiver,
+} from './transaction.service';
 import { Transaction } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionCreationDto } from './dto/transactionCreation.dto';
@@ -33,7 +36,7 @@ export class TransactionController {
     description: 'Get all transactions',
     type: Array,
   })
-  getAllTransactions(): Promise<Transaction[]> {
+  getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.transactionService.getAllTransactions();
   }
 
@@ -47,7 +50,7 @@ export class TransactionController {
   })
   getUserTransactions(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Transaction[] | null> {
+  ): Promise<TransactionWithSenderAndReceiver[] | null> {
     return this.transactionService.getUserTransactions(id);
   }
 
@@ -61,7 +64,7 @@ export class TransactionController {
   })
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
-  ): Promise<Transaction[] | null> {
+  ): Promise<TransactionWithSenderAndReceiver[] | null> {
     const { userId } = request.user;
     return this.transactionService.getUserTransactions(userId);
   }
@@ -75,7 +78,7 @@ export class TransactionController {
   })
   getTransactionById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Transaction | null> {
+  ): Promise<TransactionWithSenderAndReceiver | null> {
     return this.transactionService.getTransactionById(id);
   }
 
@@ -89,7 +92,7 @@ export class TransactionController {
   createTransaction(
     @Body() transactionData: Transaction,
     @Request() request: RequestWithUserPayload,
-  ): Promise<Transaction> {
+  ): Promise<TransactionWithSenderAndReceiver> {
     const { userId } = request.user;
     return this.transactionService.createTransaction(transactionData, userId);
   }
@@ -99,7 +102,7 @@ export class TransactionController {
   @Post('sg')
   addSgTransaction(
     @Body() transactionData: Transaction[],
-  ): Promise<Transaction[]> {
+  ): Promise<TransactionWithSenderAndReceiver[]> {
     return this.transactionService.addSgTransaction(transactionData);
   }
 
