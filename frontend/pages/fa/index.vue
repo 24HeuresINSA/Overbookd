@@ -2,10 +2,10 @@
   <div>
     <h1>Fiches Activités</h1>
 
-    <v-container style="display: grid; width: 100%; margin: 0">
+    <v-container class="container">
       <v-row>
         <v-col md="3">
-          <v-container style="padding: 0">
+          <v-container class="in-container">
             <v-card>
               <v-card-title>Filtres</v-card-title>
               <v-card-text>
@@ -58,19 +58,19 @@
                     <v-btn
                       x-small
                       :value="true"
-                      style="padding-right: 2px; padding-left: 2px"
+                      class="btn-check"
                       >validée
                     </v-btn>
                     <v-btn
                       x-small
                       :value="false"
-                      style="padding-right: 2px; padding-left: 2px"
+                      class="btn-check"
                       >refusée
                     </v-btn>
                     <v-btn
                       x-small
                       :value="2"
-                      style="padding-right: 2px; padding-left: 2px"
+                      class="btn-check"
                       >à valider
                     </v-btn>
                   </v-btn-toggle>
@@ -162,7 +162,7 @@
     <v-btn
       elevation="2"
       fab
-      style="right: 20px; bottom: 45px; position: fixed"
+      class="btn-plus"
       color="primary"
       small
       @click="isNewFADialogOpen = true"
@@ -583,5 +583,26 @@ export default {
 .small {
   font-size: small;
   margin-left: 0;
+}
+
+.container{
+  display: grid; 
+  width: 100%; 
+  margin: 0
+}
+
+.in-container{
+  padding: 0;
+}
+
+.btn-check{
+  padding-right: 2px; 
+  padding-left: 2px;
+}
+
+.btn-plus{
+  right: 20px; 
+  bottom: 45px; 
+  position: fixed
 }
 </style>
