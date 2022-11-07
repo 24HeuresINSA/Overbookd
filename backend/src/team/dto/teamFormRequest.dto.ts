@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
@@ -9,13 +10,13 @@ import {
 const hexCode = new RegExp(/^#[0-9|a-f|A-F]{6}$/);
 const mdiIcon = new RegExp(/^mdi-.*/);
 
-export class UpdateTeamDto {
+export class TeamFormDto {
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The name of the team',
   })
-  @IsOptional()
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({
@@ -28,7 +29,7 @@ export class UpdateTeamDto {
     message: (va: ValidationArguments) =>
       `${va.property} should be hexadecimal code starting with '#'`,
   })
-  color: string;
+  color?: string;
 
   @ApiProperty({
     required: false,
@@ -40,5 +41,5 @@ export class UpdateTeamDto {
     message: (va: ValidationArguments) =>
       `${va.property} should be mdi icon code starting with 'mdi-'`,
   })
-  icon: string;
+  icon?: string;
 }

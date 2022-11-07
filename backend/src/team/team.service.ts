@@ -44,8 +44,8 @@ export class TeamService {
 
   async createTeam(payload: {
     name: string;
-    color: string;
-    icon: string;
+    color?: string;
+    icon?: string;
   }): Promise<Team> {
     return this.prisma.team.create({
       data: payload,
