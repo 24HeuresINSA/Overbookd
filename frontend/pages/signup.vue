@@ -15,11 +15,17 @@
       >
     </p>
     <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      {{ snack.feedbackMessage }}
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import { getConfig } from "~/common/role";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
+import { Snack } from "~/utils/models/snack";
 import OverForm from "../components/overForm";
 
 export default {
@@ -32,6 +38,7 @@ export default {
     return {
       signupForm: undefined,
       compiledForm: undefined,
+      snack: new Snack(),
     };
   },
 
@@ -57,7 +64,7 @@ export default {
       this.compiledForm = form;
     },
 
-    submitForm() {
+    async submitForm() {
       if (this.compiledForm.password !== this.compiledForm.password2) {
         alert("Les deux mots de passes ne sont pas les mêmes");
       } else if (!this.compiledForm.isValid) {
@@ -67,11 +74,20 @@ export default {
         delete this.compiledForm.isValid;
         const oldDate = this.compiledForm.birthdate;
         this.compiledForm.birthdate = new Date(oldDate).toISOString();
-        this.$axios.post("/user", this.compiledForm);
-        this.$router.push({
-          path: "/login",
-        });
-        alert(`🎉Inscription terminée Bienvenue au 24 !🎉`);
+        const res = await safeCall(
+          this.$store,
+          RepoFactory.userRepo.setUser(this, this.compiledForm)
+        );
+        if (res) {
+          this.snack.display("Inscription réussie !🎉 Redirection au login...");
+          setTimeout(() => {
+            this.$router.push({
+              path: "/login",
+            });
+          }, 1000);
+        } else {
+          this.snack.display("☠ Une erreur est survenue, vérifie les champs");
+        }
       }
     },
   },
