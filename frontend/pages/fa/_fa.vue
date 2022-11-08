@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div
-      style="display: flex; justify-content: space-between; align-items: center"
-    >
+    <div class="main">
       <h1>Fiche Activité</h1>
       <h2 v-if="isNewFA">Create new FA</h2>
       <h2
@@ -20,13 +18,13 @@
       </v-icon>
     </div>
     <br />
-    <v-container style="display: grid; width: 100%">
+    <v-container class="container">
       <v-row>
         <v-col md="6">
-        <v-card :style="isValidated('humain') ? `border-left: 5px solid green` : ``">
+        <v-card :class="isValidated('humain') ? 'isvalidated' : ''">
         <v-card-title>Général</v-card-title>
         <v-card-subtitle>N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu peux aussi t'aider en allant voir les FA d'avant sur cetaitmieuxavant.24heures.org/ en te connectant avec jeuneetcon@24heures.org </v-card-subtitle>
-        <v-card-text>
+        <v-card-text class="whitespace">
           <v-form>
             <v-text-field
               v-model="formData.name"
@@ -138,7 +136,7 @@
       </v-row>
       <v-row>
         <v-col md="6">
-          <v-card :style="isValidated('secu') ? `border-left: 5px solid green` : ``">
+          <v-card :class="isValidated('secu') ? 'isvalidated' : ''">
             <v-card-title>Sécurité</v-card-title>
             <v-card-subtitle>Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org</v-card-subtitle>
             <v-card-text>
@@ -162,7 +160,7 @@
           ></FormCard> -->
         </v-col>
         <v-col md="6">
-          <v-card :style="isValidated('humain') ? `border-left: 5px solid green` : ``">
+          <v-card :class="isValidated('humain') ? 'isvalidated' : ''">
             <v-card-title>Presta</v-card-title>
             <v-card-text>
               <v-form>
@@ -255,7 +253,7 @@
           ></ElecLogisticCard>
         </v-col>
         <v-col md="6">
-          <v-card :style="isValidated('elec') ? `border-left: 5px solid green` : ``">
+          <v-card :class="isValidated('elec') ? 'isvalidated' : ''">
             <v-card-title>Eau</v-card-title>
             <v-card-subtitle>Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org</v-card-subtitle>
             <v-card-text>
@@ -290,16 +288,9 @@
       <FTCard v-if="isFTOpen"></FTCard>
     </v-container>
 
-    <div style="height: 100px"></div>
+    <div class="whitespace"></div>
 
-    <div
-      style="
-        display: flex;
-        justify-content: space-evenly;
-        position: sticky;
-        bottom: 20px;
-        z-index: 30;
-        align-items: baseline;">
+    <div class="actionbtn">
       <div>
         <v-btn v-if="FA.count > 1" small fab :href="`/fa/${FA.count - 1}`">
           <v-icon small>mdi-arrow-left</v-icon>
@@ -645,4 +636,33 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.main{
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.container{
+  display: grid; 
+  width: 100%;
+}
+
+.whitespace{
+  height: 100px;
+  width: 100%;
+}
+
+.actionbtn{
+  display: flex;
+  justify-content: space-evenly;
+  position: sticky;
+  bottom: 20px;
+  z-index: 30;
+  align-items: baseline;
+}
+
+.isvalidated{
+  border-left: 5px solid green;
+}
+</style>
