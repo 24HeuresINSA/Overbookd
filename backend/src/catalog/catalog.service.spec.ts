@@ -40,6 +40,7 @@ const GEARS: Gear[] = [
       slug: CATEGORIES[1].slug,
       name: CATEGORIES[1].name,
     },
+    owner: teamMatos,
   },
   {
     id: 2,
@@ -50,6 +51,7 @@ const GEARS: Gear[] = [
       slug: CATEGORIES[2].slug,
       name: CATEGORIES[2].name,
     },
+    owner: teamMatos,
   },
   {
     id: 3,
@@ -267,5 +269,26 @@ describe('Catalog', () => {
       const gears = await catalog.getAll();
       expect(gears).toEqual(GEARS);
     });
+  });
+  describe('Search gear by owner', () => {
+    beforeAll(() => {
+      gearRepository.gears = SIMILAR_GEARS;
+    });
+    describe.each`
+      searchName     | expectedGears
+      ${'teamMatos'} | ${[GEARS[0], GEARS[1]]}
+      ${'Matos'}     | ${[GEARS[0], GEARS[1]]}
+      ${'matos'}     | ${[GEARS[0], GEARS[1]]}
+    `(
+      'When looking for "$searchName" as an owner name in #$searchCategory category',
+      ({ searchOwner, expectedGears }) => {
+        it(`should retrieve ${expectedGears.length} gears`, async () => {
+          const gears = await catalog.searchByOwner({
+            owner: searchOwner,
+          });
+          expect(gears).toEqual(expectedGears);
+        });
+      },
+    );
   });
 });

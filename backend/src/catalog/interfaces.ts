@@ -24,11 +24,13 @@ export interface Gear {
   name: string;
   slug: string;
   category?: SimplifiedCategory;
+  owner?: Team;
 }
 
 export interface SearchGear {
-  slug: string;
+  slug?: string;
   category?: string;
+  owner?: string;
 }
 
 export interface GearRepository {
@@ -38,6 +40,7 @@ export interface GearRepository {
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: SearchGear): Promise<Gear[]>;
   getAllGears(): Promise<Gear[]>;
+  searchGearByOwner(searchedGear: SearchGear): Promise<Gear[]>;
 }
 
 export interface CategoryRepository {

@@ -6,11 +6,13 @@ import {
   Gear,
   GearRepository,
   SimplifiedCategory,
+  Team,
 } from './interfaces';
 
 type GearCreateForm = {
   name: string;
   category?: number;
+  owner?: Team;
 };
 
 type GearUpdateForm = GearCreateForm & {
@@ -33,7 +35,11 @@ export class CatalogService {
     private readonly gearRepository: GearRepository,
   ) {}
 
-  async add({ name, category: categoryId }: GearCreateForm): Promise<Gear> {
+  async add({
+    name,
+    owner,
+    category: categoryId,
+  }: GearCreateForm): Promise<Gear> {
     const { category, slug } = await this.generateComputedProperties(
       name,
       categoryId,
@@ -41,6 +47,7 @@ export class CatalogService {
     return this.gearRepository.addGear({
       name,
       category,
+      owner,
       slug,
     });
   }
@@ -83,6 +90,10 @@ export class CatalogService {
     const slug = this.slugService.slugify(name);
     const categorySlug = this.slugService.slugify(category);
     return this.gearRepository.searchGear({ slug, category: categorySlug });
+  }
+
+  async searchByOwner({ owner }): Promise<Gear[]> {
+    return this.gearRepository.searchGearByOwner({ owner });
   }
 
   private async generateComputedProperties(name: string, categoryId: number) {

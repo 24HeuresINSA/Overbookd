@@ -54,4 +54,16 @@ export class InMemoryGearRepository implements GearRepository {
   getAllGears(): Promise<Gear[]> {
     return Promise.resolve(this.gears);
   }
+
+  searchGearByOwner({ owner }: SearchGear): Promise<Gear[]> {
+    return Promise.resolve(
+      this.gears.filter((gear) => {
+        const categorySearchCondition = owner;
+        if (gear.owner.toString() == owner)
+          return (
+            gear.owner.toString().includes(owner) && categorySearchCondition
+          );
+      }),
+    );
+  }
 }
