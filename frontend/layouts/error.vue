@@ -59,7 +59,7 @@ h1 {
 }
 
 .lost-gif,
-.quatre-gif {
+.error-gif {
   width: 35%;
   height: 25%;
 }
