@@ -16,7 +16,7 @@
             clearable
             label="Team"
             style="padding: 2px"
-            :items="getConfig('teams').map((e) => e.name)"
+            :items="teams.map((team) => team.name)"
             @input="updateFilter('team', $event)"
           >
             <template #selection="{ attrs, item, selected }">
@@ -69,7 +69,6 @@
 
 <script>
 import UsersList from "./usersList";
-import { getConfig } from "../common/role";
 import FriendsDisplay from "./molecules/friendsDisplay.vue";
 
 export default {
@@ -78,7 +77,7 @@ export default {
 
   data() {
     return {
-      teams: this.getConfig("teams"),
+      teams: this.$accessor.team.allTeams,
     };
   },
 
@@ -109,10 +108,6 @@ export default {
 
     getRoleMetadata(roleName) {
       return this.teams.find((e) => e.name === roleName);
-    },
-
-    getConfig(key) {
-      return getConfig(this, key);
     },
 
     toggleBypass() {

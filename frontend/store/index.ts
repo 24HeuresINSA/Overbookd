@@ -14,6 +14,7 @@ import * as equipment from "./equipment";
 import * as equipmentProposal from "./equipmentProposal";
 import * as assignment from "./assignment";
 import * as conflict from "./conflict";
+import * as team from "./team";
 
 export const state = () => ({});
 
@@ -38,6 +39,7 @@ export const accessorType = getAccessorType({
     transaction,
     FA,
     FT,
+    team,
     timeslot,
     location,
     equipment,

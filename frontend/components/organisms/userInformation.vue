@@ -26,7 +26,7 @@
               <v-select
                 v-model="newRole"
                 label="Ajouter un role"
-                :items="teams"
+                :items="teamNames"
               >
               </v-select>
               <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
@@ -269,7 +269,7 @@ export default {
   data: () => {
     return {
       newRole: undefined,
-      teams: [],
+      teamNames: [],
       hasEditingRole: false,
       isEditingAvailability: false,
       usernames: undefined,
@@ -300,8 +300,7 @@ export default {
   },
 
   async mounted() {
-    await this.$accessor.team.getTeams();
-    this.teams = this.$accessor.team.teams.data;
+    this.teamNames = this.$accessor.team.teamNames;
     this.hasEditingRole = await this.hasRole(["admin", "humain", "sg"]);
     const res = await safeCall(
       this.$store,
@@ -329,7 +328,7 @@ export default {
       return this.$accessor.user.hasRole(roles);
     },
     addRemoveRole() {
-      if (!this.teams.includes(this.newRole)) {
+      if (!this.teamNames.includes(this.newRole)) {
         this.$accessor.notif.pushNotification({
           type: "error",
           message: "Veuillez choisir une option valide !",

@@ -72,15 +72,18 @@ model User {
 }
 
 model Team {
-  name  String      @id @default(uuid())
-  users User_Team[]
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(30) @unique
+  users      User_Team[]
+  color      String   @db.VarChar(30) @default("#000000")
+  icon       String   @db.VarChar(255) @default("mdi-circle")
 }
 
 model User_Team {
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id Int
-  team    Team   @relation(fields: [team_id], references: [name])
-  team_id String
+  user       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
 
   @@id([user_id, team_id])
 }

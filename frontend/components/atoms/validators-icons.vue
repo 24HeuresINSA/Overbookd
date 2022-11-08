@@ -17,6 +17,7 @@
 import Vue from "vue";
 
 interface Team {
+  id: number;
   name: string;
   color: string;
   icon: string;
@@ -42,7 +43,7 @@ export default Vue.extend({
   },
   mounted() {
     this.validators = this.$accessor.config.getConfig(this.validatorsKey);
-    this.teams = this.$accessor.config.getConfig("teams") as Team[];
+    this.teams = this.$accessor.team.allTeams as Team[];
   },
   methods: {
     getValidatorIcon(validator: string) {

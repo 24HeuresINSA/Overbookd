@@ -15,7 +15,7 @@
                 <v-select
                   v-model="selectedTeam"
                   label="Équipe"
-                  :items="getConfig('teams').map((e) => e.name)"
+                  :items="teamNames"
                   clearable
                   dense
                 ></v-select>
@@ -213,6 +213,7 @@ export default {
       isNewFADialogOpen: false,
       isDeleteFAOpen: false,
       faName: undefined,
+      teamNames: this.$accessor.team.teamNames,
     };
   },
 
@@ -271,7 +272,7 @@ export default {
     },
 
     getTeamIcon(team) {
-      return this.$accessor.config.getTeamIcon(team);
+      return this.$accessor.team.getTeams([team])?.[0]?.icon;
     },
 
     filterBySelectedTeam(FAs, team) {

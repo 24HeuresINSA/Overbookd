@@ -190,7 +190,7 @@ export default {
       });
     }
     if (this.field.type === "teams") {
-      this.teams = this.$accessor.config.getConfig("teams").map((t) => t.name);
+      this.teams = this.$accessor.team.teamNames;
     }
   },
 

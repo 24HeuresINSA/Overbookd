@@ -15,9 +15,19 @@ export const state = (): State => ({
 });
 
 export const getters = getterTree(state, {
-  teams(state): team[] {
+  allTeams(state): team[] {
     return state.teams;
   },
+  teamNames(state, getters): string[] {
+    return getters.allTeams.map((team: team) => team.name);
+  },
+  getTeams:
+    (state, getters) =>
+    (teamNames: string[]): team[] => {
+      return getters.allTeams.filter((t: team) => {
+        return teamNames.includes(t.name);
+      });
+    },
 });
 
 export const mutations = mutationTree(state, {
@@ -29,10 +39,10 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async getTeams(context): Promise<any> {
+    async setTeamsInStore(context): Promise<any> {
       const res = await safeCall(this, teamRepo.getTeams(this));
       if (res) {
-        context.commit("SET_TEAMS", res);
+        context.commit("SET_TEAMS", res.data);
       }
       return res;
     },
