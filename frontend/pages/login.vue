@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import qs from "qs";
-
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",

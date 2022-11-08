@@ -1,16 +1,36 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsMobilePhone,
+  IsString,
+  Matches,
+  MinLength,
+  ValidationArguments,
+} from 'class-validator';
+import {
+  upperCaseCharacter,
+  number,
+  yearEnum,
+  departementEnum,
+} from './common';
 
 export class UserCreationDto {
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The firstname of the user',
   })
+  @IsString()
+  @IsNotEmpty()
   firstname: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The lastname of the user',
   })
+  @IsString()
+  @IsNotEmpty()
   lastname: string;
 
   @ApiProperty({
@@ -20,52 +40,72 @@ export class UserCreationDto {
   nickname: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The email of the user',
   })
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The birthdate of the user',
   })
+  @IsNotEmpty()
   birthdate: Date;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The phone number of the user',
   })
+  @IsNotEmpty()
+  @IsMobilePhone()
   phone: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The departement of the user',
-    enum: [
-      'TC',
-      'IF',
-      'GE',
-      'GM',
-      'GI',
-      'GCU',
-      'GEN',
-      'SGM',
-      'BS',
-      'FIMI',
-      'AUTRE',
-    ],
+    enum: departementEnum,
+  })
+  @IsEnum(departementEnum, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${departementEnum}`,
   })
   department: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The study year of the user',
-    enum: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
+    enum: yearEnum,
+  })
+  @IsEnum(yearEnum, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of the following values: ${yearEnum}`,
   })
   year: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The password of the user',
   })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8)
+  @Matches(upperCaseCharacter, {
+    message: (va: ValidationArguments) =>
+      `${va.property} should have at least 1 upper case char`,
+  })
+  @Matches(number, {
+    message: (va: ValidationArguments) =>
+      `${va.property} should have at least 1 number char`,
+  })
   password: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'A coment about the user',
+  })
+  @IsString()
+  @IsNotEmpty()
+  comment: string;
 }

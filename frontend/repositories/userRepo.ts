@@ -13,6 +13,9 @@ const resource = "/user";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
+  setUser(context: Context, user: User): Promise<AxiosResponse> {
+    return context.$axios.$post(`${resource}`, user);
+  },
   getUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/${userId}`);
   },
