@@ -10,9 +10,6 @@ container_scanning:
   before_script:
     - sudo apt update
     - sudo apt install curl -y
-    - sudo touch /.variables
-    - sudo chmod 777 /.variables
-    - echo $GITLAB_API_TOKEN > /.variables
 
 frontend_scan:
   extends: container_scanning
@@ -25,7 +22,7 @@ frontend_scan:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "frontend/Dockerfile"
   after_script:
-    - 'curl --header "PRIVATE-TOKEN: $(cat /.variables)" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2705384/tags/$CI_COMMIT_SHORT_SHA"'
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2705384/tags/$CI_COMMIT_SHORT_SHA"'
 
 backend_scan:
   extends: container_scanning
@@ -38,4 +35,4 @@ backend_scan:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "backend/Dockerfile"
   after_script:
-    - 'curl --header "PRIVATE-TOKEN: $(cat /.variables)" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2705257/tags/$CI_COMMIT_SHORT_SHA"'
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2705257/tags/$CI_COMMIT_SHORT_SHA"'
