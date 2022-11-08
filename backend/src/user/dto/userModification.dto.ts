@@ -1,16 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsMobilePhone,
+  IsString,
+  ValidationArguments,
+  IsBoolean,
+  IsNumber,
+} from 'class-validator';
+import { yearEnum, departementEnum } from './common';
 
 export class UserModificationDto {
   @ApiProperty({
     required: false,
     description: 'The firstname of the user',
   })
+  @IsString()
+  @IsNotEmpty()
   firstname: string;
 
   @ApiProperty({
     required: false,
     description: 'The lastname of the user',
   })
+  @IsString()
+  @IsNotEmpty()
   lastname: string;
 
   @ApiProperty({
@@ -23,79 +38,76 @@ export class UserModificationDto {
     required: false,
     description: 'The email of the user',
   })
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @ApiProperty({
     required: false,
     description: 'The birthdate of the user',
   })
+  @IsNotEmpty()
   birthdate: Date;
 
   @ApiProperty({
     required: false,
     description: 'The phone number of the user',
   })
+  @IsNotEmpty()
+  @IsMobilePhone()
   phone: string;
 
   @ApiProperty({
     required: false,
     description: 'The departement of the user',
-    enum: [
-      'TC',
-      'IF',
-      'GE',
-      'GM',
-      'GI',
-      'GCU',
-      'GEN',
-      'SGM',
-      'BS',
-      'FIMI',
-      'AUTRE',
-    ],
+    enum: departementEnum,
+  })
+  @IsEnum(departementEnum, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${departementEnum}`,
   })
   department: string;
 
   @ApiProperty({
     required: false,
     description: 'The study year of the user',
-    enum: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
+    enum: yearEnum,
   })
-  year: number;
+  @IsEnum(yearEnum, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of the following values: ${yearEnum}`,
+  })
+  year: string;
 
   @ApiProperty({
     required: false,
-    description: 'The profile picture link of the user',
+    description: 'A coment about the user',
   })
+  @IsString()
+  @IsNotEmpty()
+  comment: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'The user has payed his contribution',
+  })
+  @IsNotEmpty()
+  @IsBoolean()
+  has_payed_contributions: boolean;
+
+  @ApiProperty({
+    required: false,
+    description: 'The user profile picture',
+  })
+  @IsString()
+  @IsNotEmpty()
   pp: string;
 
   @ApiProperty({
     required: false,
-    description: 'The charisma of the user',
+    description: 'The user charisma points',
   })
+  @IsNotEmpty()
+  @IsNumber()
   charisma: number;
-
-  @ApiProperty({
-    required: false,
-    description: 'The compte perso balance of the user',
-  })
-  balance: number;
-
-  @ApiProperty({
-    required: false,
-    description: 'The password of the user',
-  })
-  password: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The creation date of the user',
-  })
-  created_at: Date;
-
-  @ApiProperty({
-    required: false,
-    description: 'The update date of the user',
-  })
-  updated_at: Date;
 }
