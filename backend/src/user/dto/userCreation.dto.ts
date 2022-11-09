@@ -9,12 +9,7 @@ import {
   MinLength,
   ValidationArguments,
 } from 'class-validator';
-import {
-  upperCaseCharacter,
-  number,
-  yearEnum,
-  departementEnum,
-} from './common';
+import { upperCaseCharacter, number, Years, Departements } from './common';
 
 export class UserCreationDto {
   @ApiProperty({
@@ -65,22 +60,22 @@ export class UserCreationDto {
   @ApiProperty({
     required: true,
     description: 'The departement of the user',
-    enum: Departments,
+    enum: Departements,
   })
-  @IsEnum(Departments, {
+  @IsEnum(Departements, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Departments)}`,
+      `${va.property} must be one of ${Object.values(Departements)}`,
   })
-  department: Departments;
+  department: Departements;
 
   @ApiProperty({
     required: true,
     description: 'The study year of the user',
-    enum: yearEnum,
+    enum: Years,
   })
-  @IsEnum(yearEnum, {
+  @IsEnum(Years, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of the following values: ${yearEnum}`,
+      `${va.property} must be one of ${Object.values(Years)}`,
   })
   year: string;
 
@@ -105,7 +100,5 @@ export class UserCreationDto {
     required: false,
     description: 'A coment about the user',
   })
-  @IsString()
-  @IsNotEmpty()
   comment: string;
 }

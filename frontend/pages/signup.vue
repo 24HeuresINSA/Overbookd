@@ -83,6 +83,7 @@ export default {
           RepoFactory.userRepo.setUser(this, this.compiledForm)
         );
         if (!res) {
+          this.compiledForm.password2 = "";
           return this.snack.display(
             "☠ Une erreur est survenue, vérifie les champs"
           );

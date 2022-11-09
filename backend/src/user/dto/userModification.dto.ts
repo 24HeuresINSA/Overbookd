@@ -9,7 +9,7 @@ import {
   IsBoolean,
   IsNumber,
 } from 'class-validator';
-import { yearEnum, departementEnum } from './common';
+import { Years, Departements } from './common';
 
 export class UserModificationDto {
   @ApiProperty({
@@ -60,22 +60,22 @@ export class UserModificationDto {
   @ApiProperty({
     required: false,
     description: 'The departement of the user',
-    enum: departementEnum,
+    enum: Departements,
   })
-  @IsEnum(departementEnum, {
+  @IsEnum(Departements, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${departementEnum}`,
+      `${va.property} must be one of ${Departements}`,
   })
   department: string;
 
   @ApiProperty({
     required: false,
     description: 'The study year of the user',
-    enum: yearEnum,
+    enum: Years,
   })
-  @IsEnum(yearEnum, {
+  @IsEnum(Years, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of the following values: ${yearEnum}`,
+      `${va.property} must be one of the following values: ${Years}`,
   })
   year: string;
 
