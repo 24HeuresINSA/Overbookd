@@ -21,60 +21,10 @@
     <v-container class="container">
       <v-row>
         <v-col md="6">
-        <v-card :class="isValidated('humain') ? 'isvalidated' : ''">
-        <v-card-title>Général</v-card-title>
-        <v-card-subtitle>N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu peux aussi t'aider en allant voir les FA d'avant sur cetaitmieuxavant.24heures.org/ en te connectant avec jeuneetcon@24heures.org </v-card-subtitle>
-        <v-card-text class="whitespace">
-          <v-form>
-            <v-text-field
-              v-model="formData.name"
-              label="Nom de la FA"
-              required
-            ></v-text-field>
-            <v-select
-              v-model="formData.type"
-              type="select"
-              label="type"
-              :items="['Concert',
-              'Course',
-              'Divertissement',
-              'Initiation',
-              'Match de Gala',
-              'Tournoi',
-              'Vente',
-              'Prévention',
-              'Spectacle',
-              'Autre']"
-              dense
-              required
-            ></v-select>
-            <v-text-field
-              v-model="formData.team"
-              label="Equipe"
-              type="teams"
-              required
-            ></v-text-field>
-            <v-text-field
-              v-model="formData.inCharge"
-              label="Responsable"
-              type="user"
-              required
-            ></v-text-field>
-          </v-form>
-          </v-card-text>
-          </v-card>
-            <!-- <v-btn color="primary" @click="submitForm">Envoyer</v-btn>
-          </v-form>
-          <FormCard
-            style="height: 100%; width: 100%"
-            title="Général"
-            details="N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu peux aussi t'aider en allant voir les FA d'avant sur cetaitmieuxavant.24heures.org/ en te connectant avec jeuneetcon@24heures.org "
-            form-key="fa_general_form"
-            topic="general"
-            :is-disabled="isValidated('humain')"
-            :form="FA"
-            @form-change="updateForm('general', $event)"
-          ></FormCard> -->
+          <FAGeneralCard
+            :class="isValidated('humain') ? 'isvalidated' : ''"
+            v-model="formData"
+          ></FAGeneralCard>
         </v-col>
         <v-col md="6">
           <OverSigna :is-disabled="isValidated('signa')"></OverSigna>
@@ -82,40 +32,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field
-            v-model="formData.description"
-            label="Description"
-            type="rich-text">
-          </v-text-field>
-          <v-switch
-            v-model="formData.isPublishable"
-            label="Publier sur le site / plaquette"
-            :disabled="disabled"
-            @change="onChange"
-          ></v-switch>
-          <v-switch
-            v-model="formData.isMajorAnim"
-            label="Anim phare"
-            :disabled="disabled"
-            @change="onChange"
-          ></v-switch>
-          <v-switch
-            v-model="formData.isForKids"
-            label="Anim pour les gosses"
-            :disabled="disabled"
-            @change="onChange"
-          ></v-switch>
-          
-
-          <!-- <FormCard
-            title="Détail"
-            form-key="fa_details_form"
-            details="Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est ce texte qui sera publié sur le site 24heures.org"
-            topic="details"
-            :is-disabled="isValidated('humain')"
-            :form="FA"
-            @form-change="updateForm('details', $event)"
-          ></FormCard> -->
+          <FADetailCard v-model="detailCard"></FADetailCard>
         </v-col>
       </v-row>
       <v-row>
@@ -149,68 +66,13 @@
                 </v-form>
                 </v-card-text>
             </v-card>
-          <!-- <FormCard
-            title="Sécurité"
-            form-key="fa_security_form"
-            topic="security"
-            details="Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org"
-            :is-disabled="isValidated('secu')"
-            :form="FA"
-            @form-change="updateForm('security', $event)"
-          ></FormCard> -->
         </v-col>
         <v-col md="6">
-          <v-card :class="isValidated('humain') ? 'isvalidated' : ''">
-            <v-card-title>Presta</v-card-title>
-            <v-card-text>
-              <v-form>
-                <v-text-field
-                  v-model="formData.fullname"
-                  label="Nom complet de l'intervenant">
-                </v-text-field>
-                <v-text-field
-                  v-model="formData.company"
-                  label="Société">
-                </v-text-field>
-                <v-text-field
-                  v-model="formData.phone"
-                  label="Téléphone">
-                </v-text-field>
-                <v-text-field
-                  v-model="formData.email"
-                  label="E-mail">
-                </v-text-field>
-                <v-text-field
-                  v-model="formData.comment"
-                  label="Commentaire">
-                </v-text-field>
-                <v-switch
-                  v-model="formData.needsHosting"
-                  label="Besoin d'hébergement">
-                </v-switch>
-                <v-text-field
-                  v-model="formData.requiredSandwichFriday"
-                  label="Nombre de sandwichs vendredi">
-                </v-text-field>
-                <v-text-field
-                  v-model="formData.requiredSandwichSaturday"
-                  label="Nombre de sandwichs samedi">
-                </v-text-field>
-                <v-text-field
-                  v-model="formData.requiredSandwichSunday"
-                  label="Nombre de sandwichs dimanche">
-                </v-text-field>
-              </v-form>
-            </v-card-text>
-          </v-card>
-          <!-- <FormCard
-            title="Presta"
-            form-key="fa_external_form"
-            topic="external"
+          <PrestaCard 
+            :class="isValidated('humain') ? 'isvalidated' : ''"
+            v-model="prestaData"
             :is-disabled="isValidated('humain')"
-            :form="FA"
-            @form-change="updateForm('external', $event)"
-          ></FormCard> -->
+          ></PrestaCard>
         </v-col>
       </v-row>
       <v-row>
@@ -245,51 +107,23 @@
         :disabled="isValidated('elec')"
       ></LogisticsCard>
       <br />
-
       <v-row>
         <v-col md="6">
-          <ElecLogisticCard
-            :is-disabled="isValidated('elec')"
-          ></ElecLogisticCard>
+          <ElecLogisticCard :is-disabled="isValidated('elec')"></ElecLogisticCard>
         </v-col>
         <v-col md="6">
-          <v-card :class="isValidated('elec') ? 'isvalidated' : ''">
-            <v-card-title>Eau</v-card-title>
-            <v-card-subtitle>Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org</v-card-subtitle>
-            <v-card-text>
-              <v-form>
-                <v-switch
-                  v-model="formData.isWaterNeeded"
-                  label="Besoin d'eau">
-                </v-switch>
-                <v-text-field
-                  v-model="formData.waterNeed"
-                  label="Desctiption du besoin en eau">
-                </v-text-field>
-                </v-form>
-                </v-card-text>
-            </v-card>
-          <!-- <FormCard
-            title="Eau"
-            form-key="fa_water_form"
-            topic="elec"
-            details="Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org"
-            :is-disabled="isValidated('elec')"
-            :form="FA"
-            @form-change="updateForm('elec', $event)"
-          ></FormCard> -->
+          <WaterLogisticCard
+            :class="isValidated('elec') ? 'isvalidated' : ''"
+            v-model="waterLogisticData"
+          ></WaterLogisticCard>
         </v-col>
       </v-row>
-
       <br />
       <CommentCard :comments="FA.comments" form="FA"></CommentCard>
-
       <br />
       <FTCard v-if="isFTOpen"></FTCard>
     </v-container>
-
     <div class="whitespace"></div>
-
     <div class="actionbtn">
       <div>
         <v-btn v-if="FA.count > 1" small fab :href="`/fa/${FA.count - 1}`">
@@ -427,7 +261,7 @@
 </template>
 
 <script>
-import FormCard from "../../components/organisms/form/FormCard";
+//import FormCard from "../../components/organisms/form/FormCard";
 import TimeframeTable from "../../components/organisms/timeframeTable";
 import { RepoFactory } from "../../repositories/repoFactory";
 import LogisticsCard from "../../components/organisms/form/LogisticsCard";
@@ -437,6 +271,10 @@ import { safeCall } from "../../utils/api/calls";
 import PassSecuCard from "../../components/organisms/form/fa/PassSecuCard";
 import OverSigna from "../../components/organisms/form/fa/OverSigna";
 import ElecLogisticCard from "../../components/organisms/form/fa/ElecLogisticCard";
+import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
+import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
+import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
+import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import {
   EquipmentTypes,
   ElecTypes,
@@ -453,7 +291,11 @@ export default {
     CommentCard,
     LogisticsCard,
     TimeframeTable,
-    FormCard,
+    //FormCard,
+    PrestaCard,
+    WaterLogisticCard,
+    FAGeneralCard,
+    FADetailCard,
   },
   middleware: "user",
 
@@ -499,6 +341,11 @@ export default {
       teams: undefined,
       v: undefined,
       VALIDATORS: [],
+
+      generalData: {},
+      detailData: {},
+      prestaData: {},
+      waterLogisticData: {},
     };
   },
 
