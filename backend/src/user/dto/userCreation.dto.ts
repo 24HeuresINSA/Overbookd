@@ -65,13 +65,13 @@ export class UserCreationDto {
   @ApiProperty({
     required: true,
     description: 'The departement of the user',
-    enum: departementEnum,
+    enum: Departments,
   })
-  @IsEnum(departementEnum, {
+  @IsEnum(Departments, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${departementEnum}`,
+      `${va.property} must be one of ${Object.values(Departments)}`,
   })
-  department: string;
+  department: Departments;
 
   @ApiProperty({
     required: true,
