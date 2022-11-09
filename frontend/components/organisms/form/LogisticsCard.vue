@@ -51,8 +51,8 @@
 </template>
 
 <script lang="ts">
-import LogisticsTable from "./LogisticsTable.vue";
-import LogisticsSelector from "./LogisticsSelector.vue";
+import LogisticsTable from "../../molecules/logistics/LogisticsTable.vue";
+import LogisticsSelector from "../../molecules/logistics/LogisticsSelector.vue";
 import Vue from "vue";
 
 /**

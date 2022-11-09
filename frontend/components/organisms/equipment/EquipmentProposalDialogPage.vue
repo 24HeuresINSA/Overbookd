@@ -27,8 +27,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Snack } from "../../utils/models/snack";
-import EquipmentProposalTable from "~/components/organisms/EquipmentProposalTable.vue";
+import { Snack } from "../../../utils/models/snack";
+import EquipmentProposalTable from "~/components/organisms/equipment/EquipmentProposalTable.vue";
 // All Data ts types definitions
 declare interface Data {
   dialog: boolean;

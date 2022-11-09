@@ -70,7 +70,7 @@
 <script>
 import UsersList from "./usersList";
 import { getConfig } from "../common/role";
-import FriendsDisplay from "./molecules/friendsDisplay.vue";
+import FriendsDisplay from "./molecules/friends/FriendsDisplay.vue";
 
 export default {
   name: "FilteredUsers",

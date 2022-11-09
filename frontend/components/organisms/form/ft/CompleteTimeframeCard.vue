@@ -20,8 +20,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Timeframe } from "~/utils/models/timeframe";
-import CompleteTimeframeTable from "~/components/organisms/form/CompleteTimeframeTable.vue";
-import TimeframeSelector from "~/components/organisms/form/timeframeSelector.vue";
+import CompleteTimeframeTable from "~/components/molecules/timeframe/CompleteTimeframeTable.vue";
+import TimeframeSelector from "~/components/molecules/timeframe/TimeframeSelector.vue";
 
 export default Vue.extend({
   name: "CompleteTimeframeCard",

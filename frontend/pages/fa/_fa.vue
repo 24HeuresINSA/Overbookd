@@ -432,11 +432,11 @@ import TimeframeTable from "../../components/organisms/timeframeTable";
 import { RepoFactory } from "../../repositories/repoFactory";
 import LogisticsCard from "../../components/organisms/form/LogisticsCard";
 import CommentCard from "../../components/organisms/form/CommentCard";
-import FTCard from "../../components/organisms/form/FTCard";
+import FTCard from "../../components/organisms/form/fa/FTCard";
 import { safeCall } from "../../utils/api/calls";
-import PassSecuCard from "../../components/organisms/form/PassSecuCard";
-import OverSigna from "../../components/organisms/overSigna";
-import ElecLogisticCard from "../../components/organisms/form/ElecLogisticCard";
+import PassSecuCard from "../../components/organisms/form/fa/PassSecuCard";
+import OverSigna from "../../components/organisms/form/fa/OverSigna";
+import ElecLogisticCard from "../../components/organisms/form/fa/ElecLogisticCard";
 import {
   EquipmentTypes,
   ElecTypes,

@@ -45,8 +45,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { isValidated } from "~/utils/roles";
-import NotificationCard from "~/components/molecules/notificationCard.vue";
-import NotificationBroadcastDialog from "~/components/molecules/notificationBroadcastDialog.vue";
+import NotificationCard from "~/components/molecules/notifications/NotificationCard.vue";
+import NotificationBroadcastDialog from "~/components/molecules/notifications/NotificationBroadcastDialog.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { mapState } from "vuex";
