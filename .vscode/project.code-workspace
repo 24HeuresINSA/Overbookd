@@ -27,7 +27,8 @@
       "Soft",
       "User",
       "Auth",
-      "triage"
+      "triage",
+      "CP"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],

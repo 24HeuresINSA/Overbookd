@@ -359,7 +359,9 @@ export default {
             transaction.from = user.id;
             transaction.to = user.id;
             //cast to float
-            transaction.amount = +this.stickPrice * +user.newConsumption;
+            transaction.amount = +(
+              +this.stickPrice * +user.newConsumption
+            ).toFixed(2);
             transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
             this.totalCPBalance -= transaction.amount;
             user.balance -= transaction.amount;
@@ -368,7 +370,9 @@ export default {
           case "closet":
             transaction.from = user.id;
             transaction.to = user.id;
-            transaction.amount = +this.settledStickPrice * +user.newConsumption;
+            transaction.amount = +(
+              +this.settledStickPrice * +user.newConsumption
+            ).toFixed(2);
             transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
             this.totalCPBalance -= transaction.amount;
             user.balance -= transaction.amount;
