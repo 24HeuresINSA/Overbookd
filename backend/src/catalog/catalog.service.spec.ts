@@ -7,6 +7,7 @@ import {
 } from './repositories';
 
 const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
+const teamBarriere = { name: 'Orga Logistique et Securite', slug: 'barrieres' };
 
 const CATEGORIES: Category[] = [
   {
@@ -27,6 +28,17 @@ const CATEGORIES: Category[] = [
     name: 'Mobilier',
     slug: 'mobilier',
     owner: teamMatos,
+  },
+  {
+    id: 4,
+    name: 'Divers',
+    slug: 'divers',
+  },
+  {
+    id: 5,
+    name: 'Barrieres',
+    slug: 'barrieres',
+    owner: teamBarriere,
   },
 ];
 
@@ -76,6 +88,7 @@ const SIMILAR_GEARS: Gear[] = [
       slug: CATEGORIES[1].slug,
       name: CATEGORIES[1].name,
     },
+    owner: teamMatos,
   },
   {
     id: 6,
@@ -86,6 +99,7 @@ const SIMILAR_GEARS: Gear[] = [
       slug: CATEGORIES[2].slug,
       name: CATEGORIES[2].name,
     },
+    owner: teamMatos,
   },
 ];
 
@@ -123,14 +137,16 @@ describe('Catalog', () => {
   });
   describe('Add gear', () => {
     describe.each`
-      name               | category     | expectedSlug       | expectedCategory
-      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }}
-      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }}
-      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', slug: 'mobilier' }}
-      ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}
+      name               | category     | expectedSlug       | expectedCategory                                         | expectedOwner
+      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, slug: teamMatos.slug }}
+      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, slug: teamMatos.slug }}
+      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', slug: 'mobilier' }}         | ${{ name: teamMatos.name, slug: teamMatos.slug }}
+      ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}                                             | ${undefined}
+      ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', slug: 'divers' }}             | ${undefined}
+      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', slug: 'barrieres' }}       | ${{ name: teamBarriere.name, slug: teamBarriere.slug }}
     `(
-      'Add gear "$name" to catalog',
-      ({ name, category, expectedSlug, expectedCategory }) => {
+      'Add gear "$name" with #$category category to catalog',
+      ({ name, category, expectedSlug, expectedCategory, expectedOwner }) => {
         let gear: Gear;
         afterAll(() => {
           gearRepository.gears = GEARS;
@@ -146,9 +162,12 @@ describe('Catalog', () => {
         });
         if (expectedCategory) {
           it(`should link gear ${name} to category "${expectedCategory.name}"`, async () => {
-            expect(gear.category).toMatchObject(expectedCategory);
-            expect(gear.category).not.toHaveProperty('parent');
-            expect(gear.category).not.toHaveProperty('owner');
+            expect(gear.category).toEqual(expectedCategory);
+          });
+        }
+        if (expectedOwner) {
+          it(`should link gear ${name} to team "${expectedOwner.name}"`, async () => {
+            expect(gear.owner).toEqual(expectedOwner);
           });
         }
         it(`should be accessible after`, async () => {
@@ -244,20 +263,25 @@ describe('Catalog', () => {
       gearRepository.gears = GEARS;
     });
     describe.each`
-      searchName   | searchCategory  | expectedGears
-      ${'TAblIer'} | ${undefined}    | ${[SIMILAR_GEARS[3]]}
-      ${'TAblI'}   | ${undefined}    | ${[SIMILAR_GEARS[3]]}
-      ${'TAbl'}    | ${undefined}    | ${[SIMILAR_GEARS[3], SIMILAR_GEARS[5]]}
-      ${'TAblI'}   | ${'Mobilier'}   | ${[]}
-      ${'euse'}    | ${undefined}    | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[2], SIMILAR_GEARS[4]]}
-      ${'euse'}    | ${'BricolLage'} | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[4]]}
+      searchName   | searchCategory  | searchOwner  | expectedGears
+      ${'TAblIer'} | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[3]]}
+      ${'TAblI'}   | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[3]]}
+      ${'TAbl'}    | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[3], SIMILAR_GEARS[5]]}
+      ${'TAblI'}   | ${'Mobilier'}   | ${undefined} | ${[]}
+      ${'euse'}    | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[2], SIMILAR_GEARS[4]]}
+      ${'euse'}    | ${'BricolLage'} | ${undefined} | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[4]]}
+      ${undefined} | ${undefined}    | ${'Matos'}   | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[1], SIMILAR_GEARS[4], SIMILAR_GEARS[5]]}
+      ${undefined} | ${undefined}    | ${'maT'}     | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[1], SIMILAR_GEARS[4], SIMILAR_GEARS[5]]}
+      ${'tab'}     | ${undefined}    | ${'maT'}     | ${[SIMILAR_GEARS[5]]}
+      ${'tab'}     | ${'Brico'}      | ${'maT'}     | ${[]}
     `(
-      'When looking for "$searchName" in #$searchCategory category',
-      ({ searchName, searchCategory, expectedGears }) => {
+      'When looking for "$searchName" in $searchCategory category with $searchOwner owner',
+      ({ searchName, searchCategory, searchOwner, expectedGears }) => {
         it(`should retrieve ${expectedGears.length} gears`, async () => {
           const gears = await catalog.search({
             name: searchName,
             category: searchCategory,
+            owner: searchOwner,
           });
           expect(gears).toEqual(expectedGears);
         });
@@ -269,26 +293,5 @@ describe('Catalog', () => {
       const gears = await catalog.getAll();
       expect(gears).toEqual(GEARS);
     });
-  });
-  describe('Search gear by owner', () => {
-    beforeAll(() => {
-      gearRepository.gears = SIMILAR_GEARS;
-    });
-    describe.each`
-      searchName     | expectedGears
-      ${'teamMatos'} | ${[GEARS[0], GEARS[1]]}
-      ${'Matos'}     | ${[GEARS[0], GEARS[1]]}
-      ${'matos'}     | ${[GEARS[0], GEARS[1]]}
-    `(
-      'When looking for "$searchName" as an owner name in #$searchCategory category',
-      ({ searchOwner, expectedGears }) => {
-        it(`should retrieve ${expectedGears.length} gears`, async () => {
-          const gears = await catalog.searchByOwner({
-            owner: searchOwner,
-          });
-          expect(gears).toEqual(expectedGears);
-        });
-      },
-    );
   });
 });

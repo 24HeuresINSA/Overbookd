@@ -40,7 +40,6 @@ export interface GearRepository {
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: SearchGear): Promise<Gear[]>;
   getAllGears(): Promise<Gear[]>;
-  searchGearByOwner(searchedGear: SearchGear): Promise<Gear[]>;
 }
 
 export interface CategoryRepository {

@@ -2,17 +2,16 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { SlugifyService } from '../common/services/slugify.service';
 import { CategoryNotFoundException } from './category.service';
 import {
+  Category,
   CategoryRepository,
   Gear,
   GearRepository,
   SimplifiedCategory,
-  Team,
 } from './interfaces';
 
 type GearCreateForm = {
   name: string;
   category?: number;
-  owner?: Team;
 };
 
 type GearUpdateForm = GearCreateForm & {
@@ -35,12 +34,8 @@ export class CatalogService {
     private readonly gearRepository: GearRepository,
   ) {}
 
-  async add({
-    name,
-    owner,
-    category: categoryId,
-  }: GearCreateForm): Promise<Gear> {
-    const { category, slug } = await this.generateComputedProperties(
+  async add({ name, category: categoryId }: GearCreateForm): Promise<Gear> {
+    const { category, slug, owner } = await this.generateComputedProperties(
       name,
       categoryId,
     );
@@ -83,28 +78,35 @@ export class CatalogService {
   async search({
     name,
     category,
+    owner,
   }: {
-    name: string;
+    name?: string;
     category?: string;
+    owner?: string;
   }): Promise<Gear[]> {
     const slug = this.slugService.slugify(name);
     const categorySlug = this.slugService.slugify(category);
-    return this.gearRepository.searchGear({ slug, category: categorySlug });
-  }
-
-  async searchByOwner({ owner }): Promise<Gear[]> {
-    return this.gearRepository.searchGearByOwner({ owner });
+    const ownerSlug = this.slugService.slugify(owner);
+    return this.gearRepository.searchGear({
+      slug,
+      category: categorySlug,
+      owner: ownerSlug,
+    });
   }
 
   private async generateComputedProperties(name: string, categoryId: number) {
     const slug = this.slugService.slugify(name);
     const category = await this.getCategory(categoryId);
-    return { category, slug };
+    const simplifiedCategory = category
+      ? { name: category.name, slug: category.slug, id: category.id }
+      : undefined;
+    const owner = category?.owner;
+    return { category: simplifiedCategory, slug, owner };
   }
 
   private async getCategory(
     categoryId?: number,
-  ): Promise<SimplifiedCategory | undefined> {
+  ): Promise<Category | undefined> {
     const storedCategory = await this.categoryRepository.getCategory(
       categoryId,
     );
@@ -114,12 +116,6 @@ export class CatalogService {
       throw new CategoryNotFoundException(categoryId);
     }
 
-    return storedCategory
-      ? {
-          id: storedCategory.id,
-          name: storedCategory.name,
-          slug: storedCategory.slug,
-        }
-      : undefined;
+    return storedCategory;
   }
 }
