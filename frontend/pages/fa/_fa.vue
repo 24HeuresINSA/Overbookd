@@ -262,10 +262,10 @@
 
 <script>
 //import FormCard from "../../components/organisms/form/FormCard";
-import TimeframeTable from "../../components/organisms/timeframeTable";
+import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
 import { RepoFactory } from "../../repositories/repoFactory";
-import LogisticsCard from "../../components/organisms/form/LogisticsCard";
-import CommentCard from "../../components/organisms/form/CommentCard";
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
+import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTCard from "../../components/organisms/form/fa/FTCard";
 import { safeCall } from "../../utils/api/calls";
 import PassSecuCard from "../../components/organisms/form/fa/PassSecuCard";

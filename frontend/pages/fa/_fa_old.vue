@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <div>
     <div
       style="display: flex; justify-content: space-between; align-items: center"
@@ -508,3 +508,4 @@ export default {
 </script>
 
 <style scoped></style>
+-->

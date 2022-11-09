@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import OverForm from "../../overForm";
+import OverForm from '~/components/overForm.vue';
 
 export default {
   name: "PassSecuCard",
