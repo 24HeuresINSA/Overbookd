@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, Configuration } from '@prisma/client';
 import { CreateConfigurationDto } from './dto/createConfiguration.dto';
