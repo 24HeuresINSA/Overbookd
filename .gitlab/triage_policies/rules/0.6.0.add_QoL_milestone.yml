@@ -4,6 +4,11 @@ resource_rules:
       - name: find all issues with QoL labels
         conditions:
           state: opened
+          date:
+              attribute: updated_at
+              condition: older_than
+              interval_type: days
+              interval: 1
           labels:
             - OB::QoL
           milestone: none

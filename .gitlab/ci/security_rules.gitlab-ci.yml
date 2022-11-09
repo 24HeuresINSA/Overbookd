@@ -1,7 +1,8 @@
 license_scanning:
   interruptible: true
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($LICENSE_SCANNING  == "1")'
+      when: always
     - when: never
   variables:
     LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=frontend backend"

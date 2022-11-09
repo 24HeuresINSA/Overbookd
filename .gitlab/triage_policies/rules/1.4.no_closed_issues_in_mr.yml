@@ -1,0 +1,23 @@
+resource_rules:
+  merge_requests:
+    rules:
+      - name: find all opened MR and no closed issues
+        conditions:
+          state: opened
+          ruby: |
+            auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+            MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
+            notes = JSON.parse(MR_notes.body).each do |note|
+              if note["body"].include?("Closes #")
+                return false
+              end
+              if note["body"].include?("The MR does not close any issue.")
+                return false
+              end
+            end
+        actions:
+          comment_type: thread
+          comment: |
+            Hi {{author}},  
+            The MR does not close any issue.  
+            Are you sure this MR is not related to any issue?
