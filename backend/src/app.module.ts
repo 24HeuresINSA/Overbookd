@@ -12,6 +12,7 @@ import { TeamModule } from './team/team.module';
 import { FaModule } from './fa/fa.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
 import { SecurityPassModule } from './security_pass/security_pass.module';
+import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SecurityPassModule } from './security_pass/security_pass.module';
     FaModule,
     CollaboratorModule,
     SecurityPassModule,
+    FaSignaNeedsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService],
