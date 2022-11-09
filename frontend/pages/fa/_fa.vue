@@ -23,7 +23,7 @@
         <v-col md="6">
           <FAGeneralCard
             :class="isValidated('humain') ? 'isvalidated' : ''"
-            v-model="formData"
+            v-model="generalData"
           ></FAGeneralCard>
         </v-col>
         <v-col md="6">
@@ -32,7 +32,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <FADetailCard v-model="detailCard"></FADetailCard>
+          <FADetailCard v-model="detailData"></FADetailCard>
         </v-col>
       </v-row>
       <v-row>
@@ -342,6 +342,7 @@ export default {
       v: undefined,
       VALIDATORS: [],
 
+      formData: {},
       generalData: {},
       detailData: {},
       prestaData: {},

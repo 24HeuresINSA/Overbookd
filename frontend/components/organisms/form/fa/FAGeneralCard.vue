@@ -8,6 +8,7 @@
                     v-model="formData.name"
                     label="Nom de la FA"
                     required
+                    @change="onChange"
                 ></v-text-field>
                 <v-select
                     v-model="formData.type"
@@ -25,6 +26,7 @@
                         'Autre']"
                     dense
                     required
+                    @change="onChange"
                 ></v-select>
                 <v-text-field
                     v-model="formData.team"
@@ -32,6 +34,7 @@
                     type="teams"
                     :items="teams"
                     required
+                    @change="onChange"
                 ></v-text-field>
                 <v-text-field
                     v-model="formData.inCharge"
@@ -39,6 +42,7 @@
                     type="user"
                     :items="users"
                     required
+                    @change="onChange"
                 ></v-text-field>
             </v-form>
         </v-card-text>
@@ -49,11 +53,14 @@
 export default {
     name: "FAGeneralCard",
     props: {
-        formData: {
+        compiledFormData: {
             type: Object,
             default: () => {},
         },
     },
+    data: () => ({
+        formData: {}
+    }),
     computed: {
         teams: function () {
             return [];  //Get all teams
@@ -61,6 +68,11 @@ export default {
         users: function () {
             return [];  //Get all users
         },
+    },
+    methods: {
+        onChange() {
+            this.compiledFormData = this.formData;
+        }
     },
 };
 </script>
