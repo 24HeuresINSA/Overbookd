@@ -30,7 +30,7 @@ export class UserController {
     type: UserCreationDto,
   })
   createUser(@Body() userData: UserCreationDto): Promise<UserWithoutPassword> {
-    return this.userService.createUser(userData as User);
+    return this.userService.createUser(userData);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

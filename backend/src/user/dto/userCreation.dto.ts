@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Department, Year } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
@@ -8,8 +9,9 @@ import {
   Matches,
   MinLength,
   ValidationArguments,
+  IsOptional,
 } from 'class-validator';
-import { upperCaseCharacter, number, Years, Departements } from './common';
+import { upperCaseCharacter, number } from './common';
 
 export class UserCreationDto {
   @ApiProperty({
@@ -60,24 +62,24 @@ export class UserCreationDto {
   @ApiProperty({
     required: true,
     description: 'The departement of the user',
-    enum: Departements,
+    enum: Department,
   })
-  @IsEnum(Departements, {
+  @IsEnum(Department, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Departements)}`,
+      `${va.property} must be one of ${Object.values(Department)}`,
   })
-  department: Departements;
+  department: Department;
 
   @ApiProperty({
     required: true,
     description: 'The study year of the user',
-    enum: Years,
+    enum: Year,
   })
-  @IsEnum(Years, {
+  @IsEnum(Year, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Years)}`,
+      `${va.property} must be one of ${Object.values(Year)}`,
   })
-  year: string;
+  year: Year;
 
   @ApiProperty({
     required: true,
@@ -100,5 +102,7 @@ export class UserCreationDto {
     required: false,
     description: 'A coment about the user',
   })
-  comment: string;
+  @IsString()
+  @IsOptional()
+  comment?: string;
 }
