@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Department, Year } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
@@ -9,7 +10,6 @@ import {
   IsBoolean,
   IsNumber,
 } from 'class-validator';
-import { Years, Departements } from './common';
 
 export class UserModificationDto {
   @ApiProperty({
@@ -60,24 +60,24 @@ export class UserModificationDto {
   @ApiProperty({
     required: false,
     description: 'The departement of the user',
-    enum: Departements,
+    enum: Department,
   })
-  @IsEnum(Departements, {
+  @IsEnum(Department, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Departements}`,
+      `${va.property} must be one of ${Department}`,
   })
   department: string;
 
   @ApiProperty({
     required: false,
     description: 'The study year of the user',
-    enum: Years,
+    enum: Year,
   })
-  @IsEnum(Years, {
+  @IsEnum(Year, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of the following values: ${Years}`,
+      `${va.property} must be one of the following values: ${Year}`,
   })
-  year: string;
+  year: Year;
 
   @ApiProperty({
     required: false,
