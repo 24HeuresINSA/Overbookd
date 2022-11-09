@@ -15,8 +15,8 @@ ALTER TABLE "User_Team" DROP CONSTRAINT "User_Team_team_id_fkey";
 
 -- AlterTable
 ALTER TABLE "Team" DROP CONSTRAINT "Team_pkey",
-ADD COLUMN     "color" VARCHAR(30),
-ADD COLUMN     "icon" VARCHAR(255),
+ADD COLUMN     "color" VARCHAR(30) NOT NULL DEFAULT '#000000',
+ADD COLUMN     "icon" VARCHAR(255) NOT NULL DEFAULT 'mdi-circle',
 ADD COLUMN     "id" SERIAL NOT NULL,
 ALTER COLUMN "name" SET DATA TYPE VARCHAR(30),
 ADD CONSTRAINT "Team_pkey" PRIMARY KEY ("id");
@@ -41,9 +41,3 @@ CREATE UNIQUE INDEX "Team_name_key" ON "Team"("name");
 
 -- AddForeignKey
 ALTER TABLE "User_Team" ADD CONSTRAINT "User_Team_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AlterTable
-ALTER TABLE "Team" ALTER COLUMN "color" SET NOT NULL,
-ALTER COLUMN "color" SET DEFAULT '#000000',
-ALTER COLUMN "icon" SET NOT NULL,
-ALTER COLUMN "icon" SET DEFAULT 'mdi-circle';
