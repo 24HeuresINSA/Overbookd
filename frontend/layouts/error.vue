@@ -3,7 +3,7 @@
     <div class="container">
       <v-container v-if="error.statusCode === 404">
         <v-img
-          class="quatre-gif"
+          class="lost-gif"
           src="https://media.giphy.com/media/1EmBoG0IL50VIJLWTs/giphy.gif"
         ></v-img>
         <h1>T'es perdu ?</h1>
@@ -58,7 +58,7 @@ h1 {
   justify-content: center;
 }
 
-.error-gif,
+.lost-gif,
 .quatre-gif {
   width: 35%;
   height: 25%;
