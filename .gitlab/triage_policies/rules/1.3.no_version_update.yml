@@ -47,6 +47,6 @@ resource_rules:
         actions:
           comment_type: thread
           comment: |
-            Hi {{author}},
+            Hi {{author}},  
             The version of frontend's package.json has not been updated.  
             Are you sure you want to merge this MR?
