@@ -65,10 +65,14 @@ export default {
     },
 
     async submitForm() {
+      if (!this.compiledForm) {
+        this.snack.display("Veuillez remplir le formulaire !");
+        return;
+      }
       if (this.compiledForm.password !== this.compiledForm.password2) {
-        alert("Les deux mots de passes ne sont pas les mêmes");
+        this.snack.display("Les deux mots de passes ne sont pas les mêmes");
       } else if (!this.compiledForm.isValid) {
-        alert("Les champs avec * sont obligatoires");
+        this.snack.display("Les champs avec * sont obligatoires");
       } else {
         delete this.compiledForm.password2;
         delete this.compiledForm.isValid;
