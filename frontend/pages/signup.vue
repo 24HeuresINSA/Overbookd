@@ -82,8 +82,10 @@ export default {
           this.$store,
           RepoFactory.userRepo.setUser(this, this.compiledForm)
         );
-        if(!res) {
-          return this.snack.display("☠ Une erreur est survenue, vérifie les champs");
+        if (!res) {
+          return this.snack.display(
+            "☠ Une erreur est survenue, vérifie les champs"
+          );
         }
 
         this.snack.display("Inscription réussie !🎉 Redirection au login...");
