@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
 import { CreateConfigurationDto } from './dto/createConfiguration.dto';
@@ -21,6 +22,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
+import { UpdateConfigurationDto } from './dto/updateConfigurationDto';
 
 @ApiTags('Configuration')
 @Controller('configuration')
@@ -39,7 +41,10 @@ export class ConfigurationController {
     description: 'Create Configuration',
     type: CreateConfigurationDto,
   })
-  create(@Body() configurationData: Configuration): Promise<Configuration> {
+  create(
+    @Body() configurationData: CreateConfigurationDto,
+  ): Promise<Configuration> {
+    console.log('create', configurationData.key);
     return this.configurationService.create(configurationData);
   }
 
@@ -65,7 +70,7 @@ export class ConfigurationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles('sg', 'humain')
-  @Put()
+  @Put(':key')
   @ApiResponse({
     status: 200,
     description: 'Patch configuration',
@@ -74,10 +79,16 @@ export class ConfigurationController {
     description: 'update Configuration',
     type: CreateConfigurationDto,
   })
-  update(@Body() configuration: Configuration): Promise<Configuration> {
+  update(
+    @Body() configuration: UpdateConfigurationDto,
+    @Param('key') key: string,
+  ): Promise<Configuration> {
     const param = {
-      where: { key: configuration.key },
-      data: configuration,
+      where: { key: key },
+      data: {
+        key: key,
+        value: configuration.value,
+      },
     };
     return this.configurationService.update(param);
   }
@@ -85,8 +96,9 @@ export class ConfigurationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles('admin')
+  @HttpCode(204)
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Delete a configurations',
   })
   @ApiParam({

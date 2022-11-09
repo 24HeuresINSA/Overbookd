@@ -1,13 +1,19 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, Configuration } from '@prisma/client';
+import { CreateConfigurationDto } from './dto/createConfiguration.dto';
 
 @Injectable()
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Prisma.ConfigurationCreateInput): Promise<Configuration> {
-    return this.prisma.configuration.create({ data: data });
+  create(data: CreateConfigurationDto): Promise<Configuration> {
+    return this.prisma.configuration.create({
+      data: {
+        key: data.key,
+        value: data.value,
+      },
+    });
   }
 
   configurations(params: {

@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
+import { IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 export class CreateConfigurationDto {
   @ApiProperty({
@@ -6,10 +8,15 @@ export class CreateConfigurationDto {
     description:
       'Configuration key, most of the time, correspond to page in the view',
   })
-  key: string;
+  @IsString()
+  @IsNotEmpty()
+  readonly key: string;
+
   @ApiProperty({
     required: true,
     description: 'Contains Json config object, with arbitrary value',
   })
-  value: Record<string, unknown>;
+  @IsObject()
+  @IsNotEmpty()
+  readonly value: Prisma.InputJsonObject;
 }
