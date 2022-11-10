@@ -4,12 +4,11 @@
         <v-card-subtitle>Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est ce texte qui sera publié sur le site 24heures.org</v-card-subtitle>
         <v-card-text>
             <v-form>
-                <v-text-field
+                <RichEditor
                     v-model="detailData.description"
                     label="Description"
-                    type="rich-text"
                     @change="onChange"
-                ></v-text-field>
+                ></RichEditor>
                 <v-switch
                     v-model="detailData.isPublishable"
                     label="Publier sur le site / plaquette"
@@ -31,8 +30,11 @@
 </template>
 
 <script>
+import RichEditor from '~/components/atoms/RichEditor.vue';
+
 export default {
     name: "FADetailCard",
+    components: { RichEditor },
     props: {
         data: {
             type: Object,
