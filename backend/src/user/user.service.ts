@@ -104,7 +104,7 @@ export class UserService {
       lastname: payload.lastname,
       email: payload.email,
       password: await new HashingUtilsService().hash(payload.password),
-      nickname: payload.nickname || '',
+      nickname: payload.nickname,
       birthdate: payload.birthdate,
       phone: payload.phone,
       department: payload.department,
