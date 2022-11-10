@@ -1,23 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Department, Year } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsMobilePhone,
   IsString,
   Matches,
   MinLength,
   ValidationArguments,
   IsOptional,
+  IsDefined,
+  IsDateString,
+  IsPhoneNumber,
 } from 'class-validator';
-import { upperCaseCharacter, number } from './common';
+import { Years, Departements, upperCaseCharacter, number } from './common';
 
 export class UserCreationDto {
   @ApiProperty({
     required: true,
     description: 'The firstname of the user',
   })
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   firstname: string;
@@ -26,6 +28,7 @@ export class UserCreationDto {
     required: true,
     description: 'The lastname of the user',
   })
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   lastname: string;
@@ -34,12 +37,16 @@ export class UserCreationDto {
     required: false,
     description: 'The nickname of the user',
   })
-  nickname: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  nickname?: string;
 
   @ApiProperty({
     required: true,
     description: 'The email of the user',
   })
+  @IsDefined()
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -48,43 +55,49 @@ export class UserCreationDto {
     required: true,
     description: 'The birthdate of the user',
   })
+  @IsDefined()
   @IsNotEmpty()
+  @IsDateString()
   birthdate: Date;
 
   @ApiProperty({
     required: true,
     description: 'The phone number of the user',
   })
+  @IsDefined()
   @IsNotEmpty()
-  @IsMobilePhone()
+  @IsPhoneNumber('FR')
   phone: string;
 
   @ApiProperty({
     required: true,
     description: 'The departement of the user',
-    enum: Department,
+    enum: Departements,
   })
-  @IsEnum(Department, {
+  @IsDefined()
+  @IsEnum(Departements, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Department)}`,
+      `${va.property} must be one of ${Object.values(Departements)}`,
   })
-  department: Department;
+  department: Departements;
 
   @ApiProperty({
     required: true,
     description: 'The study year of the user',
-    enum: Year,
+    enum: Years,
   })
-  @IsEnum(Year, {
+  @IsDefined()
+  @IsEnum(Years, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Year)}`,
+      `${va.property} must be one of ${Object.values(Years)}`,
   })
-  year: Year;
+  year: Years;
 
   @ApiProperty({
     required: true,
     description: 'The password of the user',
   })
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
@@ -100,9 +113,9 @@ export class UserCreationDto {
 
   @ApiProperty({
     required: false,
-    description: 'A coment about the user',
+    description: 'A comment about the user',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   comment?: string;
 }
