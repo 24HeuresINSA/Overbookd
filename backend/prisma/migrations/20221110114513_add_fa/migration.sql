@@ -16,17 +16,13 @@ CREATE TYPE "Security_pass_schedules" AS ENUM ('JOUR', 'NUIT', 'JOUR_NUIT');
 -- CreateEnum
 CREATE TYPE "subject_type" AS ENUM ('REFUSED', 'VALIDATED', 'COMMENT');
 
--- AlterTable
-ALTER TABLE "Team" ADD COLUMN     "fa_validator" BOOLEAN NOT NULL DEFAULT false,
-ADD COLUMN     "ft_validator" BOOLEAN NOT NULL DEFAULT false;
-
 -- CreateTable
 CREATE TABLE "FA" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "type" VARCHAR(255) NOT NULL,
-    "team_id" VARCHAR(255) NOT NULL,
+    "team_id" INTEGER NOT NULL,
     "in_charge" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "location_id" INTEGER,
@@ -144,7 +140,7 @@ CREATE TABLE "FA_Comment" (
     "subject" "subject_type" NOT NULL,
     "author" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "team_id" VARCHAR(255) NOT NULL,
+    "team_id" INTEGER NOT NULL,
 
     CONSTRAINT "FA_Comment_pkey" PRIMARY KEY ("id")
 );
@@ -166,7 +162,7 @@ CREATE UNIQUE INDEX "Collaborator_firstname_lastname_key" ON "Collaborator"("fir
 ALTER TABLE "FA" ADD CONSTRAINT "FA_type_fkey" FOREIGN KEY ("type") REFERENCES "FA_type"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA" ADD CONSTRAINT "FA_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA" ADD CONSTRAINT "FA_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA" ADD CONSTRAINT "FA_in_charge_fkey" FOREIGN KEY ("in_charge") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -208,7 +204,7 @@ ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_fa_id_fkey" FOREIGN KEY ("fa
 ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_author_fkey" FOREIGN KEY ("author") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TimeWindow" ADD CONSTRAINT "TimeWindow_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

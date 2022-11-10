@@ -28,7 +28,7 @@ export class FaService {
   async create(createFaDto: CreateFaDto): Promise<FA | null> {
     //Check if all the foreign keys are valid (team, in_charge user, location, type)
     await this.prisma.$transaction([
-      this.prisma.team.findUnique({ where: { name: createFaDto.FA.team_id } }),
+      this.prisma.team.findUnique({ where: { id: createFaDto.FA.team_id } }),
       this.prisma.user.findUnique({ where: { id: createFaDto.FA.in_charge } }),
       this.prisma.location.findUnique({
         where: { id: createFaDto.FA.location_id },

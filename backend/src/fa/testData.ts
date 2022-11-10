@@ -5,7 +5,7 @@ export const nakedFA: CreateFaDto = {
   FA: {
     name: 'Naked FA',
     type: 'test',
-    team_id: 'hard',
+    team_id: 1,
     created_at: new Date(),
     in_charge: 1,
     location_id: 1,
@@ -25,7 +25,7 @@ export const secuFA: CreateFaDto = {
   FA: {
     name: 'test',
     type: 'test',
-    team_id: 'hard',
+    team_id: 1,
     created_at: new Date(),
     in_charge: 1,
     location_id: 1,
