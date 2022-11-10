@@ -3,21 +3,37 @@
     <div class="main">
       <h1>Fiche Activité</h1>
     </div>
+    <div>
+      <p @click="autoScroll('general')">Général</p>
+      <p @click="autoScroll('signa')">Signa</p>
+      <p @click="autoScroll('detail')">Détail</p>
+      <p @click="autoScroll('timeframe')">Créneaux</p>
+      <p @click="autoScroll('security')">Sécurité</p>
+      <p @click="autoScroll('presta')">Presta</p>
+      <p @click="autoScroll('elec')">Besoin Elec</p>
+      <p @click="autoScroll('water')">Besoin Eau</p>
+      <p @click="autoScroll('comment')">Commentaires</p>
+      <p @click="autoScroll('ft')">FT</p>
+    </div>
     <v-container class="container">
       <v-row>
         <v-col md="6">
           <FAGeneralCard
+            id="general"
             :data="generalData"
             @update-data="updateGeneralData"
           ></FAGeneralCard>
         </v-col>
         <v-col md="6">
-          <SignaCard></SignaCard>
+          <SignaCard
+            id="signa"
+          ></SignaCard>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <FADetailCard 
+          <FADetailCard
+            id="detail"
             :data="detailData"
             @update-data="updateDetailData"
           ></FADetailCard>
@@ -25,18 +41,23 @@
       </v-row>
       <v-row>
         <v-col>
-          <TimeframeTable :store="store"></TimeframeTable>
+          <TimeframeTable
+            id="timeframe"
+            :store="store"
+          ></TimeframeTable>
         </v-col>
       </v-row>
       <v-row>
         <v-col md="6">
           <SecurityCard
+            id="security"
             :data="securityData"
             @update-data="updateSecurityData"
           ></SecurityCard>
         </v-col>
-        <v-col md="6">
+        <v-col md="6" id="presta">
           <PrestaCard
+            id="presta"
             :data="prestaData"
             @update-data="updatePrestaData"
           ></PrestaCard>
@@ -67,17 +88,25 @@
       ></LogisticsCard>-->
       <v-row>
         <v-col md="6">
-          <ElecLogisticCard></ElecLogisticCard>
+          <ElecLogisticCard
+            id="elec"
+          ></ElecLogisticCard>
         </v-col>
         <v-col md="6">
           <WaterLogisticCard
+            id="water"
             :data="waterLogisticData"
             @update-data="updateWaterLogisticData"
           ></WaterLogisticCard>
         </v-col>
       </v-row>
-      <CommentCard :comments="commentArray"></CommentCard>
-      <FTCard></FTCard>
+      <CommentCard
+        id="comment"
+        :comments="commentArray"
+      ></CommentCard>
+      <FTCard
+        id="ft"
+      ></FTCard>
       <v-btn @click="saveFA">Sauvegarder</v-btn>
     </v-container>
     </div>
@@ -158,11 +187,17 @@ export default {
       console.log(this.securityData);
       console.log(this.prestaData);
       console.log(this.waterLogisticData);
+    },
+
+    autoScroll(id) {
+      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
     }
   },
 };
 </script>
 
 <style scoped>
-
+  * {
+    scroll-margin-top: 80px;
+  }
 </style>
