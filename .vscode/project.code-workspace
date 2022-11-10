@@ -28,7 +28,8 @@
       "User",
       "Auth",
       "triage",
-      "CP"
+      "CP",
+      "FA"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],

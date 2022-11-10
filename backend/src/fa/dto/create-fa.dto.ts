@@ -45,8 +45,8 @@ class FA {
     required: true,
     description: 'The id of the team whos responsible of the fa',
   })
-  @IsString()
-  team_id: string;
+  @IsNumber()
+  team_id: number;
 
   @ApiProperty({
     required: true,

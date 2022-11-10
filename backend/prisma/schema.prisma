@@ -141,8 +141,8 @@ model FA {
   is_deleted           Boolean                @default(false)
   fa_type_name         FA_type                @relation(fields: [type], references: [name])
   type                 String                 @db.VarChar(255)
-  Team                 Team                   @relation(fields: [team_id], references: [name])
-  team_id              String                 @db.VarChar(255)
+  Team                 Team                   @relation(fields: [team_id], references: [id])
+  team_id              Int
   User_in_charge       User                   @relation(fields: [in_charge], references: [id], name: "in_charge")
   in_charge            Int
   created_at           DateTime?              @default(now())
@@ -297,8 +297,8 @@ model FA_Comment {
   User_author User         @relation(fields: [author], references: [id])
   author      Int
   created_at  DateTime     @default(now())
-  Team        Team         @relation(fields: [team_id], references: [name])
-  team_id     String       @db.VarChar(255)
+  Team        Team         @relation(fields: [team_id], references: [id])
+  team_id     Int
 }
 
 model TimeWindow {
