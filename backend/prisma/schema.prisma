@@ -269,17 +269,11 @@ enum Security_pass_schedules {
 }
 
 model Security_pass {
-  id            Int                     @id @default(autoincrement())
-  FA            FA                      @relation(fields: [fa_id], references: [id])
-  fa_id         Int
-  name          String                  @db.VarChar(30)
-  phone         String?                 @db.VarChar(30)
-  license_plate String?                 @db.VarChar(30)
-  email         String                  @db.VarChar(30)
-  comment       String?                 @db.Text
-  entity        String                  @db.VarChar(30)
-  reason        String                  @db.VarChar(30)
-  schedule      Security_pass_schedules
+  id        Int     @id @default(autoincrement())
+  FA        FA      @relation(fields: [fa_id], references: [id])
+  fa_id     Int
+  is_needed Boolean @db.Boolean
+  number    Int?
 }
 
 enum subject_type {

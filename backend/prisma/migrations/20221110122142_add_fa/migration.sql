@@ -120,14 +120,8 @@ CREATE TABLE "FA_signa_needs" (
 CREATE TABLE "Security_pass" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
-    "name" VARCHAR(30) NOT NULL,
-    "phone" VARCHAR(30),
-    "license_plate" VARCHAR(30),
-    "email" VARCHAR(30) NOT NULL,
-    "comment" TEXT,
-    "entity" VARCHAR(30) NOT NULL,
-    "reason" VARCHAR(30) NOT NULL,
-    "schedule" "Security_pass_schedules" NOT NULL,
+    "is_needed" BOOLEAN NOT NULL,
+    "number" INTEGER,
 
     CONSTRAINT "Security_pass_pkey" PRIMARY KEY ("id")
 );
