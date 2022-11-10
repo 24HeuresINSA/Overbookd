@@ -4,27 +4,27 @@
         <v-card-text>
             <v-form>
                 <v-text-field
-                    v-model="formData.fullname"
+                    v-model="prestaData.fullname"
                     label="Nom complet de l'intervenant"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
-                    v-model="formData.company"
+                    v-model="prestaData.company"
                     label="Société"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
-                    v-model="formData.phone"
+                    v-model="prestaData.phone"
                     label="Téléphone"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
-                    v-model="formData.email"
+                    v-model="prestaData.email"
                     label="E-mail"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
-                    v-model="formData.comment"
+                    v-model="prestaData.comment"
                     label="Commentaire"
                     @change="onChange">
                 </v-text-field>
@@ -37,20 +37,22 @@
 export default {
     name: "PrestaCard",
     props: {
-        compiledFormData: {
+        data: {
             type: Object,
             default: () => {},
         },
     },
-    data: () => ({
-        formData: {}
-    }),
+    computed: {
+        prestaData() {
+            return this.data;
+        },
+    },
     methods: {
         onChange() {
-            this.compiledFormData = this.formData;
+            this.$emit("update-data", this.prestaData);
         }
     },
-};
+}
 </script>
 
 <style scoped></style>

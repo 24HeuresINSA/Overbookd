@@ -94,7 +94,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "OverSigna",
+  name: "SignaCard",
   props: {
     isDisabled: {
       type: Boolean,

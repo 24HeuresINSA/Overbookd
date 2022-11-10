@@ -5,13 +5,13 @@
         <v-card-text>
             <v-form>
                 <v-switch
-                    v-model="formData.isWaterNeeded"
+                    v-model="waterLogisticData.isWaterNeeded"
                     label="Besoin d'eau"
                     @change="onChange"
                 ></v-switch>
                 <v-text-field
-                    v-if="formData.isWaterNeeded"
-                    v-model="formData.waterNeed"
+                    v-if="waterLogisticData.isWaterNeeded"
+                    v-model="waterLogisticData.waterNeed"
                     label="Desctiption du besoin en eau"
                     @change="onChange"
                 ></v-text-field>
@@ -24,17 +24,19 @@
 export default {
     name: "WaterLogisticCard",
     props: {
-        compiledFormData: {
+        data: {
             type: Object,
             default: () => {},
         },
     },
-    data: () => ({
-        formData: {}
-    }),
+    computed: {
+        waterLogisticData() {
+            return this.data;
+        },
+    },
     methods: {
         onChange() {
-            this.compiledFormData = this.formData;
+            this.$emit("update-data", this.waterLogisticData);
         }
     },
 };

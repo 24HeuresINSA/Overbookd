@@ -3,21 +3,24 @@
     <div class="main">
       <h1>Fiche Activité</h1>
     </div>
-    <br />
     <v-container class="container">
       <v-row>
         <v-col md="6">
           <FAGeneralCard
-            v-model="generalData"
+            :data="generalData"
+            @update-data="updateGeneralData"
           ></FAGeneralCard>
         </v-col>
         <v-col md="6">
-          <OverSigna></OverSigna>
+          <SignaCard></SignaCard>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <FADetailCard v-model="detailData"></FADetailCard>
+          <FADetailCard 
+            :data="detailData"
+            @update-data="updateDetailData"
+          ></FADetailCard>
         </v-col>
       </v-row>
       <v-row>
@@ -27,23 +30,15 @@
       </v-row>
       <v-row>
         <v-col md="6">
-          <v-card>
-            <v-card-title>Sécurité</v-card-title>
-            <v-card-subtitle>Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org</v-card-subtitle>
-            <v-card-text>
-              <v-form>
-                <v-textarea
-                  v-model="formData.securityDevice"
-                  label="Dispositif de sécurité particulier"
-                  required
-                ></v-textarea>
-              </v-form>
-            </v-card-text>
-          </v-card>
+          <SecurityCard
+            :data="securityData"
+            @update-data="updateSecurityData"
+          ></SecurityCard>
         </v-col>
         <v-col md="6">
-          <PrestaCard 
-            v-model="prestaData"
+          <PrestaCard
+            :data="prestaData"
+            @update-data="updatePrestaData"
           ></PrestaCard>
         </v-col>
       </v-row>
@@ -62,30 +57,26 @@
         </v-col>
       </v-row>
       <v-row />
-      <br />
       <LogisticsCard
         title="Barrières"
         :store="store"
       ></LogisticsCard>
-      <br />
       <LogisticsCard
         title="Matos Elec / Eau"
         :store="store"
-      ></LogisticsCard>
-      <br />-->
+      ></LogisticsCard>-->
       <v-row>
         <v-col md="6">
           <ElecLogisticCard></ElecLogisticCard>
         </v-col>
         <v-col md="6">
           <WaterLogisticCard
-            v-model="waterLogisticData"
+            :data="waterLogisticData"
+            @update-data="updateWaterLogisticData"
           ></WaterLogisticCard>
         </v-col>
       </v-row>
-      <br />
-      <!--<CommentCard :comments="commentData"></CommentCard>
-      <br />-->
+      <CommentCard :comments="commentArray"></CommentCard>
       <FTCard></FTCard>
       <v-btn @click="saveFA">Sauvegarder</v-btn>
     </v-container>
@@ -99,13 +90,13 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTCard from "../../components/organisms/form/fa/FTCard";
 import { safeCall } from "../../utils/api/calls";
-import PassSecuCard from "../../components/organisms/form/fa/PassSecuCard";
-import OverSigna from "../../components/organisms/form/fa/OverSigna";
+import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import ElecLogisticCard from "../../components/organisms/form/fa/ElecLogisticCard";
 import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
+import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import {
   EquipmentTypes,
   ElecTypes,
@@ -116,8 +107,7 @@ export default {
   name: "Fa",
   components: {
     ElecLogisticCard,
-    OverSigna,
-    PassSecuCard,
+    SignaCard,
     FTCard,
     CommentCard,
     LogisticsCard,
@@ -126,17 +116,18 @@ export default {
     WaterLogisticCard,
     FAGeneralCard,
     FADetailCard,
+    SecurityCard,
   },
   middleware: "user",
 
   data() {
     return {
-      formData: {},
       generalData: {},
       detailData: {},
+      securityData: {},
       prestaData: {},
       waterLogisticData: {},
-      commentData: {},
+      commentArray: [],
     };
   },
   computed: {
@@ -145,8 +136,28 @@ export default {
     },
   },
   methods: {
+    updateGeneralData(generalData) {
+      this.generalData = generalData;
+    },
+    updateDetailData(detailData) {
+      this.detailData = detailData;
+    },
+    updateSecurityData(securityData) {
+      this.securityData = securityData;
+    },
+    updatePrestaData(prestaData) {
+      this.prestaData = prestaData;
+    },
+    updateWaterLogisticData(waterLogisticData) {
+      this.waterLogisticData = waterLogisticData;
+    },
+    
     saveFA() {
-      console.log("test");
+      console.log(this.generalData);
+      console.log(this.detailData);
+      console.log(this.securityData);
+      console.log(this.prestaData);
+      console.log(this.waterLogisticData);
     }
   },
 };

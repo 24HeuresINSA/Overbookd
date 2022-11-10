@@ -5,15 +5,14 @@
         <v-card-text>
             <v-form>
                 <v-text-field
-                    v-model="formData.name"
+                    v-model="generalData.name"
                     label="Nom de la FA"
                     required
                     @change="onChange"
                 ></v-text-field>
                 <v-select
-                    v-model="formData.type"
-                    type="select"
-                    label="type"
+                    v-model="generalData.type"
+                    label="Type"
                     :items="['Concert',
                         'Course',
                         'Divertissement',
@@ -28,22 +27,20 @@
                     required
                     @change="onChange"
                 ></v-select>
-                <v-text-field
-                    v-model="formData.team"
+                <v-select
+                    v-model="generalData.team"
                     label="Equipe"
-                    type="teams"
                     :items="teams"
                     required
                     @change="onChange"
-                ></v-text-field>
-                <v-text-field
-                    v-model="formData.inCharge"
+                ></v-select>
+                <v-select
+                    v-model="generalData.inCharge"
                     label="Responsable"
-                    type="user"
                     :items="users"
                     required
                     @change="onChange"
-                ></v-text-field>
+                ></v-select>
             </v-form>
         </v-card-text>
     </v-card>
@@ -53,25 +50,25 @@
 export default {
     name: "FAGeneralCard",
     props: {
-        compiledFormData: {
+        data: {
             type: Object,
             default: () => {},
         },
     },
-    data: () => ({
-        formData: {}
-    }),
     computed: {
-        teams: function () {
+        generalData() {
+            return this.data;
+        },
+        teams() {
             return [];  //Get all teams
         },
-        users: function () {
+        users() {
             return [];  //Get all users
         },
     },
     methods: {
         onChange() {
-            this.compiledFormData = this.formData;
+            this.$emit("update-data", this.generalData);
         }
     },
 };

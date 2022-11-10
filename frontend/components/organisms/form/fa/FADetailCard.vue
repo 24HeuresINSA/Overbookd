@@ -5,23 +5,23 @@
         <v-card-text>
             <v-form>
                 <v-text-field
-                    v-model="formData.description"
+                    v-model="detailData.description"
                     label="Description"
                     type="rich-text"
                     @change="onChange"
                 ></v-text-field>
                 <v-switch
-                    v-model="formData.isPublishable"
+                    v-model="detailData.isPublishable"
                     label="Publier sur le site / plaquette"
                     @change="onChange"
                 ></v-switch>
                 <v-switch
-                    v-model="formData.isMajorAnim"
+                    v-model="detailData.isMajorAnim"
                     label="Anim phare"
                     @change="onChange"
                 ></v-switch>
                 <v-switch
-                    v-model="formData.isForKids"
+                    v-model="detailData.isForKids"
                     label="Anim pour les gosses"
                     @change="onChange"
                 ></v-switch>
@@ -34,17 +34,19 @@
 export default {
     name: "FADetailCard",
     props: {
-        compiledFormData: {
+        data: {
             type: Object,
             default: () => {},
         },
     },
-    data: () => ({
-        formData: {}
-    }),
+    computed: {
+        detailData() {
+            return this.data;
+        },
+    },
     methods: {
         onChange() {
-            this.compiledFormData = this.formData;
+            this.$emit("update-data", this.detailData);
         }
     },
 };
