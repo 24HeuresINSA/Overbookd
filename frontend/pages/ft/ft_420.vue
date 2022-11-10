@@ -233,8 +233,7 @@ export default {
   },
   computed: {
     teams: function () {
-      console.log(this.$accessor.config.getConfig("teams"));
-      return this.$accessor.config.getConfig("teams");
+      return this.$accessor.team.allTeams;
     },
   },
   async beforeCreate() {

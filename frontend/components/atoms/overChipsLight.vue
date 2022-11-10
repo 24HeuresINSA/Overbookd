@@ -26,7 +26,7 @@ export default Vue.extend({
 
   computed: {
     mRoles() {
-      return this.$accessor.config.getConfigTeams(this.roles);
+      return this.$accessor.team.getTeams(this.roles);
     },
   },
 });

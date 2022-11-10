@@ -76,19 +76,20 @@ model User {
 }
 
 model Team {
-  name         String       @id @default(uuid())
-  fa_validator Boolean      @default(false)
-  ft_validator Boolean      @default(false)
-  users        User_Team[]
-  FA           FA[]
-  FA_Comment   FA_Comment[]
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(30)
+  users      User_Team[]
+  color      String       @default("#000000") @db.VarChar(30)
+  icon       String       @default("mdi-circle") @db.VarChar(255)
+  FA         FA[]
+  FA_Comment FA_Comment[]
 }
 
 model User_Team {
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User @relation(fields: [user_id], references: [id])
   user_id Int
-  team    Team   @relation(fields: [team_id], references: [name])
-  team_id String
+  team    Team @relation(fields: [team_id], references: [id])
+  team_id Int
 
   @@id([user_id, team_id])
 }

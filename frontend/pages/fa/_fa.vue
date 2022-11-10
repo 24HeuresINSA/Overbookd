@@ -367,7 +367,6 @@ export default {
         { text: "action", value: "action" },
       ],
 
-      teams: undefined,
       v: undefined,
       VALIDATORS: [],
     };
@@ -404,7 +403,6 @@ export default {
 
   async mounted() {
     this.FAStore = this.$accessor.FA;
-    this.teams = this.$accessor.config.getConfig("teams");
     this.VALIDATORS = this.$accessor.config.getConfig("fa_validators");
     this.isFTOpen = this.$accessor.config.getConfig("is_ft_open");
 
@@ -429,7 +427,7 @@ export default {
     },
     getValidatorIcon(validator) {
       try {
-        return this.teams.find((team) => team.name === validator).icon;
+        return this.$accessor.team.getTeams([validator])?.[0]?.icon;
       } catch (e) {
         console.log(`can't find icon of team ${validator}`);
       }

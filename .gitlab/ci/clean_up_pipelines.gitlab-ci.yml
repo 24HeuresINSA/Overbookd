@@ -17,11 +17,6 @@ clean-up-pipelines:
           curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/pipelines/$PIPELINE";
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($PIPELINE_CLEANUP == "1")'
       when: always
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "pre-prod"'
-      when: never
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: never
+    - when: never

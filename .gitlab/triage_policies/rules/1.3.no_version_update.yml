@@ -1,0 +1,52 @@
+resource_rules:
+  merge_requests:
+    rules:
+      - name: find all opened MR and no version update in backend
+        conditions:
+          state: opened
+          ruby: |
+            target_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:target_branch]}/backend/package.json")
+            target_branch_version = JSON.parse(target_branch_response.body)["version"]
+            source_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:source_branch]}/backend/package.json")
+            source_branch_version = JSON.parse(source_branch_response.body)["version"]
+
+            auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+            MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
+            notes = JSON.parse(MR_notes.body).each do |note|
+              if note["body"].include?("The version of backend's package.json has not been updated.")
+                return false
+              end
+            end
+
+            target_branch_version == source_branch_version
+        actions:
+          comment_type: thread
+          comment: |
+            Hi {{author}},  
+            The version of backend's package.json has not been updated.  
+            Are you sure you want to merge this MR?
+
+      - name: find all opened MR and no version update in frontend
+        conditions:
+          state: opened
+          ruby: |
+            target_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:target_branch]}/frontend/package.json")
+            target_branch_version = JSON.parse(target_branch_response.body)["version"]
+            source_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:source_branch]}/frontend/package.json")
+            source_branch_version = JSON.parse(source_branch_response.body)["version"]
+
+            auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+            MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
+            notes = JSON.parse(MR_notes.body).each do |note|
+              if note["body"].include?("The version of frontend's package.json has not been updated.")
+                return false
+              end
+            end
+
+            target_branch_version == source_branch_version
+        actions:
+          comment_type: thread
+          comment: |
+            Hi {{author}},
+            The version of frontend's package.json has not been updated.  
+            Are you sure you want to merge this MR?
