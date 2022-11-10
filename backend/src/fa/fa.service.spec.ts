@@ -19,6 +19,19 @@ beforeAll(async () => {
 
   faservice = module.get<FaService>(FaService);
   prisma = module.get<PrismaService>(PrismaService);
+
+  await prisma.fA_type.create({
+    data: {
+      name: 'test',
+    },
+  });
+  await prisma.location.create({
+    data: {
+      id: 1,
+      type: 'DEPOT',
+      name: 'test',
+    },
+  });
 });
 
 describe('FaService', () => {
@@ -69,5 +82,18 @@ describe('FaService', () => {
         });
       });
     });
+  });
+});
+
+afterAll(async () => {
+  await prisma.fA_type.delete({
+    where: {
+      name: 'test',
+    },
+  });
+  await prisma.location.delete({
+    where: {
+      id: 1,
+    },
   });
 });

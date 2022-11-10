@@ -1,5 +1,4 @@
 import { CreateFaDto, Status } from './dto/create-fa.dto';
-import { Security_pass_schedule } from '../security_pass/dto/create-security_pass.dto';
 
 export const nakedFA: CreateFaDto = {
   FA: {
@@ -40,14 +39,8 @@ export const secuFA: CreateFaDto = {
   FA_Collaborators: [],
   Security_pass: [
     {
-      name: 'Premier test',
-      phone: '0707070707',
-      license_plate: 'GC515EV',
-      email: 'a@gmail.com',
-      comment: 'no',
-      entity: '24h',
-      reason: 'fun',
-      schedule: Security_pass_schedule.JOUR,
+      is_needed: true,
+      number_of_pass: 1,
     },
   ],
 };
