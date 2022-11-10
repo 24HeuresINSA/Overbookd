@@ -80,7 +80,7 @@ export default {
         this.compiledForm.birthdate = new Date(oldDate).toISOString();
         const res = await safeCall(
           this.$store,
-          RepoFactory.userRepo.setUser(this, this.compiledForm)
+          RepoFactory.userRepo.createUser(this, this.compiledForm)
         );
         if (!res) {
           this.compiledForm.password2 = "";
