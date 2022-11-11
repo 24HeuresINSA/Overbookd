@@ -1,10 +1,20 @@
 {
   "name": "backend",
   "version": "1.0.2",
-  "description": "",
-  "author": "",
+  "description": "Backend pour le logiciel de gestion du festivale des 24 heures de l'INSA",
+  "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
+  "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
+  "license": "Apache-2.0",
   "private": true,
-  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
+    "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
+    "directory": "backend"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
