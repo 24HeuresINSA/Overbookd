@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <div class="main">
-      <h1>Fiche Activité</h1>
-    </div>
-    <div>
+  <div class="main">
+    <div class="summary">
       <p @click="autoScroll('general')">Général</p>
       <p @click="autoScroll('signa')">Signa</p>
       <p @click="autoScroll('detail')">Détail</p>
@@ -15,69 +12,47 @@
       <p @click="autoScroll('comment')">Commentaires</p>
       <p @click="autoScroll('ft')">FT</p>
     </div>
+    <!-- Pour créer une div summary prise en compte dans le flex (car summary est fixed) -> à modifier -->
+    <div class="summary-space"></div>
     <v-container class="container">
-      <v-row>
-        <v-col md="6">
-          <FAGeneralCard
-            id="general"
-            :data="generalData"
-            @update-data="updateGeneralData"
-          ></FAGeneralCard>
-        </v-col>
-        <v-col md="6">
-          <SignaCard
-            id="signa"
-          ></SignaCard>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <FADetailCard
-            id="detail"
-            :data="detailData"
-            @update-data="updateDetailData"
-          ></FADetailCard>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <TimeframeTable
-            id="timeframe"
-            :store="store"
-          ></TimeframeTable>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col md="6">
-          <SecurityCard
-            id="security"
-            :data="securityData"
-            @update-data="updateSecurityData"
-          ></SecurityCard>
-        </v-col>
-        <v-col md="6" id="presta">
-          <PrestaCard
-            id="presta"
-            :data="prestaData"
-            @update-data="updatePrestaData"
-          ></PrestaCard>
-        </v-col>
-      </v-row>
-      <!--<v-row>
-        <v-col>
-          <h2>Logistique 🚚</h2>
-          <h4>
-            S'il manque des informations, ou du matos veuillez contacter le
-            responsable de la logistique sur
-            <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
-          </h4>
-          <LogisticsCard
-            title="Matos"
-            :store="store"
-          ></LogisticsCard>
-        </v-col>
-      </v-row>
-      <v-row />
+      <h1>Fiche Activité</h1>
+      <FAGeneralCard
+        id="general"
+        :data="generalData"
+        @update-data="updateGeneralData"
+      ></FAGeneralCard>
+      <SignaCard
+        id="signa"
+      ></SignaCard>
+      <FADetailCard
+        id="detail"
+        :data="detailData"
+        @update-data="updateDetailData"
+      ></FADetailCard>
+      <TimeframeTable
+        id="timeframe"
+        :store="store"
+      ></TimeframeTable>
+      <SecurityCard
+        id="security"
+        :data="securityData"
+        @update-data="updateSecurityData"
+      ></SecurityCard>
+      <PrestaCard
+        id="presta"
+        :data="prestaData"
+        @update-data="updatePrestaData"
+      ></PrestaCard>
+      <!--<h2>Logistique 🚚</h2>
+      <h4>
+        S'il manque des informations, ou du matos veuillez contacter le
+        responsable de la logistique sur
+        <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
+      </h4>
+      <LogisticsCard
+        title="Matos"
+        :store="store"
+      ></LogisticsCard>
       <LogisticsCard
         title="Barrières"
         :store="store"
@@ -86,20 +61,14 @@
         title="Matos Elec / Eau"
         :store="store"
       ></LogisticsCard>-->
-      <v-row>
-        <v-col md="6">
-          <ElecLogisticCard
-            id="elec"
-          ></ElecLogisticCard>
-        </v-col>
-        <v-col md="6">
-          <WaterLogisticCard
-            id="water"
-            :data="waterLogisticData"
-            @update-data="updateWaterLogisticData"
-          ></WaterLogisticCard>
-        </v-col>
-      </v-row>
+      <ElecLogisticCard
+        id="elec"
+      ></ElecLogisticCard>
+      <WaterLogisticCard
+        id="water"
+        :data="waterLogisticData"
+        @update-data="updateWaterLogisticData"
+      ></WaterLogisticCard>
       <CommentCard
         id="comment"
         :comments="commentArray"
@@ -199,5 +168,27 @@ export default {
 <style scoped>
   * {
     scroll-margin-top: 80px;
+  }
+
+  .main {
+    display: flex;
+  }
+
+  .summary {
+    position: fixed;
+    top: 30%;
+  }
+
+  .summary-space {
+    width: 120px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container > * {
+    margin-bottom: 30px;
   }
 </style>
