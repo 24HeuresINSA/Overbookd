@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FA } from '@prisma/client';
+import { Collaborator, FA } from '@prisma/client';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
@@ -36,27 +36,30 @@ export class FaService {
       this.prisma.fA_type.findUnique({ where: { name: createFaDto.FA.type } }),
     ]);
     //First of all we create or get the collaborator and skip existing collaborators
-    await this.prisma.collaborator.createMany({
-      data: createFaDto.FA_Collaborators,
-      skipDuplicates: true,
-    });
-    //Then get all the collaborators
-    const collaborators = await this.prisma.collaborator.findMany({
-      where: {
-        firstname: {
-          in: createFaDto.FA_Collaborators.map((collaborator) => {
-            return collaborator.firstname;
-          }),
+    let collaborators: Collaborator[] = [];
+    if (createFaDto.FA_Collaborators) {
+      await this.prisma.collaborator.createMany({
+        data: createFaDto.FA_Collaborators,
+        skipDuplicates: true,
+      });
+      //Then get all the collaborators
+      collaborators = await this.prisma.collaborator.findMany({
+        where: {
+          firstname: {
+            in: createFaDto.FA_Collaborators.map((collaborator) => {
+              return collaborator.firstname;
+            }),
+          },
+          lastname: {
+            in: createFaDto.FA_Collaborators.map((collaborator) => {
+              return collaborator.lastname;
+            }),
+          },
         },
-        lastname: {
-          in: createFaDto.FA_Collaborators.map((collaborator) => {
-            return collaborator.lastname;
-          }),
-        },
-      },
-    });
-    if (collaborators.length !== createFaDto.FA_Collaborators.length) {
-      throw new Error('Some collaborators were not created');
+      });
+      if (collaborators.length !== createFaDto.FA_Collaborators.length) {
+        throw new Error('Some collaborators were not created');
+      }
     }
     const fa = await this.prisma.fA.create({
       data: {
@@ -74,22 +77,24 @@ export class FaService {
     });
     if (!fa) throw new Error('Error while creating the FA');
     //we then add security passes with the ID of the FA
-    const security_pass = createFaDto.Security_pass.map((pass) => {
-      return {
-        ...pass,
-        fa_id: fa.id,
-      };
-    });
-    await this.prisma.security_pass.createMany({
-      data: security_pass,
-    });
-    const created_pass = await this.prisma.security_pass.findMany({
-      where: {
-        fa_id: fa.id,
-      },
-    });
-    if (created_pass.length !== createFaDto.Security_pass.length) {
-      throw new Error('some passes were not created');
+    if (createFaDto.Security_pass) {
+      const security_pass = createFaDto.Security_pass.map((pass) => {
+        return {
+          ...pass,
+          fa_id: fa.id,
+        };
+      });
+      await this.prisma.security_pass.createMany({
+        data: security_pass,
+      });
+      const created_pass = await this.prisma.security_pass.findMany({
+        where: {
+          fa_id: fa.id,
+        },
+      });
+      if (created_pass.length !== createFaDto.Security_pass.length) {
+        throw new Error('some passes were not created');
+      }
     }
     return fa;
   }
