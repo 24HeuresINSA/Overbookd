@@ -61,7 +61,7 @@ export class FaService {
     return fa;
   }
 
-  async create_collaborators(
+  private async create_collaborators(
     fa_collab: CreateCollaboratorDto[],
   ): Promise<Collaborator[] | null> {
     if (!fa_collab) return [];
@@ -91,7 +91,7 @@ export class FaService {
     return collaborators;
   }
 
-  async createSecurityPasses(
+  private async createSecurityPasses(
     fa_security_pass: CreateSecurityPassDto[],
     fa_id: number,
   ): Promise<void> {
