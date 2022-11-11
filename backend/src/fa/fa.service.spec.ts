@@ -2,10 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
 import { nakedFA } from './testData';
-import { FA } from '@prisma/client';
+import { FA, FA_type, Location } from '@prisma/client';
 
 let faservice: FaService;
 let prisma: PrismaService;
+
+let fa_type: FA_type;
+let location: Location;
 
 /**
  * a executer dans /Users/antoinepiron/Desktop/24H_INSA/overbookd-mono/backend/src/fa
@@ -20,26 +23,29 @@ beforeAll(async () => {
   faservice = module.get<FaService>(FaService);
   prisma = module.get<PrismaService>(PrismaService);
 
-  await prisma.fA_type.create({
+  fa_type = await prisma.fA_type.create({
     data: {
       name: 'test',
     },
   });
-  await prisma.location.create({
+  location = await prisma.location.create({
     data: {
-      id: 1,
       type: 'DEPOT',
       name: 'test',
     },
   });
 });
 
-describe('FaService', () => {
+describe('check if every variable is defined', () => {
   test('should be defined', () => {
     expect(faservice).toBeDefined();
     expect(prisma).toBeDefined();
+    expect(fa_type).toBeDefined();
+    expect(location).toBeDefined();
   });
+});
 
+describe('FaService', () => {
   describe('FA creation', () => {
     describe('Create an FA without any links', () => {
       let result: FA | null;
@@ -86,14 +92,10 @@ describe('FaService', () => {
 });
 
 afterAll(async () => {
-  await prisma.fA_type.delete({
-    where: {
-      name: 'test',
-    },
-  });
+  await prisma.fA_type.delete({ where: { name: fa_type.name } });
   await prisma.location.delete({
     where: {
-      id: 1,
+      id: location.id,
     },
   });
 });
