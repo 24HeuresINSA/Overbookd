@@ -126,16 +126,18 @@ export class CreateFaDto {
   @ApiProperty({
     required: false,
     description: 'The any collaborator',
+    default: [],
   })
   @IsOptional()
   @ValidateNested()
-  FA_Collaborators: CreateCollaboratorDto[];
+  FA_Collaborators?: CreateCollaboratorDto[];
 
   @ApiProperty({
     required: false,
     description: 'all security pass needed',
+    default: [],
   })
   @IsOptional()
   @ValidateNested()
-  Security_pass: CreateSecurityPassDto[];
+  Security_pass?: CreateSecurityPassDto[];
 }

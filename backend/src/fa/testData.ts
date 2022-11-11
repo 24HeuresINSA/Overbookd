@@ -16,8 +16,6 @@ export const nakedFA: CreateFaDto = {
     security_needs: 'string',
     water_flow_required: 0,
   },
-  FA_Collaborators: [],
-  Security_pass: [],
 };
 
 export const secuFA: CreateFaDto = {
