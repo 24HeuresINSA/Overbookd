@@ -1,17 +1,6 @@
 <template>
   <div class="main">
-    <div class="summary">
-      <p @click="autoScroll('general')">Général</p>
-      <p @click="autoScroll('signa')">Signa</p>
-      <p @click="autoScroll('detail')">Détail</p>
-      <p @click="autoScroll('timeframe')">Créneaux</p>
-      <p @click="autoScroll('security')">Sécurité</p>
-      <p @click="autoScroll('presta')">Presta</p>
-      <p @click="autoScroll('elec')">Besoin Elec</p>
-      <p @click="autoScroll('water')">Besoin Eau</p>
-      <p @click="autoScroll('comment')">Commentaires</p>
-      <p @click="autoScroll('ft')">FT</p>
-    </div>
+    <FormSidebar class="summary"></FormSidebar>
     <!-- Pour créer une div summary prise en compte dans le flex (car summary est fixed) -> à modifier -->
     <div class="summary-space"></div>
     <v-container class="container">
@@ -95,6 +84,7 @@ import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
+import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
 import {
   EquipmentTypes,
   ElecTypes,
@@ -115,6 +105,7 @@ export default {
     FAGeneralCard,
     FADetailCard,
     SecurityCard,
+    FormSidebar,
   },
   middleware: "user",
 
@@ -157,10 +148,6 @@ export default {
       console.log(this.prestaData);
       console.log(this.waterLogisticData);
     },
-
-    autoScroll(id) {
-      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
-    }
   },
 };
 </script>
@@ -176,7 +163,7 @@ export default {
 
   .summary {
     position: fixed;
-    top: 30%;
+    top: 20%;
   }
 
   .summary-space {
