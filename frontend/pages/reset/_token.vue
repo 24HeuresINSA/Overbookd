@@ -14,6 +14,7 @@
             clearable
             solo
             filled
+            :rules="passwordVerif"
           ></v-text-field>
         </v-row>
         <v-row>
@@ -26,14 +27,15 @@
             clearable
             solo
             filled
+            :rules="passwordVerif"
             @keydown.enter="sendResetRequest()"
           ></v-text-field>
         </v-row>
         <v-btn @click="sendResetRequest()">Valider</v-btn>
       </v-container>
     </v-form>
-    <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ feedbackMessage }}
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      {{ snack.feedbackMessage }}
     </v-snackbar>
   </div>
 </template>
@@ -42,6 +44,7 @@
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { Snack } from "~/utils/models/snack";
 export default Vue.extend({
   name: "ForgotPassword",
   //@ts-ignore
@@ -50,9 +53,12 @@ export default Vue.extend({
   data: () => ({
     password: "",
     password2: "",
-    snackbar: false,
-    feedbackMessage: "",
-    timeout: 5000,
+    snack: new Snack(3000),
+    passwordVerif: [
+      (v: string) =>
+        new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$`).test(v) ||
+        `au moins une MAJUSCULE, minuscule et un chiffre et au moins 8 caractères`,
+    ],
   }),
   methods: {
     sendResetRequest: async function () {
@@ -64,19 +70,18 @@ export default Vue.extend({
           password2: this.password2,
         })
       );
-      if (res) {
-        this.feedbackMessage = "Password changé, redirection au login...";
-        this.snackbar = true;
-        setTimeout(async () => {
-          await this.$router.push({
-            path: "/",
-          });
-        }, 2000);
-      } else {
-        this.feedbackMessage =
-          "Ca n'a pas marché, peut-etre que le lien est expiré...";
-        this.snackbar = true;
+      if (!res) {
+        return this.snack.display(
+          "Ca n'a pas marché, peut-etre que le lien est expiré..."
+        );
       }
+
+      this.snack.display("Password changé, redirection au login...");
+      setTimeout(async () => {
+        await this.$router.push({
+          path: "/",
+        });
+      }, 2000);
     },
   },
 });

@@ -56,7 +56,9 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return { ...user, team: user?.team.map((team) => team.team.name) };
+    return user
+      ? { ...user, team: user?.team.map((team) => team.team.name) }
+      : undefined;
   }
 
   async getUserPassword(

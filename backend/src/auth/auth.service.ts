@@ -1,14 +1,23 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   UserPasswordOnly,
   UserService,
   UserWithTeam,
 } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
+import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { User } from '@prisma/client';
+import { randomBytes } from 'crypto';
+import { MailService } from '../mail/mail.service';
+import { PrismaService } from '../prisma.service';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 export type UserCredentials = Pick<User, 'email' | 'password'>;
+export type UserEmail = Pick<User, 'email'>;
 
 @Injectable()
 export class AuthService {
@@ -16,6 +25,8 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private hashingUtilsService: HashingUtilsService,
+    private mailService: MailService,
+    private prisma: PrismaService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<UserWithTeam> {
@@ -44,5 +55,62 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(jwtPayload),
     };
+  }
+
+  async forgot({ email }: UserEmail): Promise<void> {
+    const user = await this.userService.user({ email });
+
+    if (!user) {
+      throw new UnauthorizedException('Email invalid');
+    }
+
+    const reset_token = randomBytes(20).toString('hex');
+    const expirationDate = new Date(Date.now() + 1 * 3600 * 1000);
+
+    await this.prisma.user.update({
+      where: { email },
+      data: {
+        reset_password_token: reset_token,
+        reset_password_expires: expirationDate,
+      },
+    });
+
+    this.mailService.mailResetPassword({
+      to: email,
+      firstname: user.firstname,
+      token: reset_token,
+    });
+  }
+
+  async recoverPassword({
+    token,
+    password,
+    password2,
+  }: ResetPasswordDto): Promise<void> {
+    if (!password || !password2 || password != password2) {
+      throw new BadRequestException('The passwords are not the same');
+    }
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        reset_password_token: token,
+        reset_password_expires: {
+          gte: new Date(),
+        },
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Token invalide or expired');
+    }
+
+    await this.prisma.user.update({
+      where: { email: user.email },
+      data: {
+        password: await this.hashingUtilsService.hash(password),
+        reset_password_token: null,
+        reset_password_expires: null,
+      },
+    });
   }
 }

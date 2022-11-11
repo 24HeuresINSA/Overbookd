@@ -15,6 +15,8 @@ import { emailTestDto } from './mail/dto/mailTest.dto';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/team-auth.guard';
 import { Roles } from './auth/team-auth.decorator';
+import { userEmailDto } from './user/dto/userEmail.dto';
+import { ResetPasswordDto } from './auth/dto/resetPassword.dto';
 
 export type Role =
   | 'admin'
@@ -99,5 +101,15 @@ export class AppController {
   @Post('mailtest')
   async mailtest(@Body() to: emailTestDto) {
     return this.mailService.mailTest(to);
+  }
+
+  @Post('forgot')
+  async forgot(@Body() user: userEmailDto) {
+    return this.authService.forgot(user);
+  }
+
+  @Post('reset')
+  async reset(@Body() userTokenAndPassword: ResetPasswordDto) {
+    return this.authService.recoverPassword(userTokenAndPassword);
   }
 }
