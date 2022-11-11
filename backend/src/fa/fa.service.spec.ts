@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
-import { nakedFA, collaboratorFA } from './testData';
+import { nakedFA, collaboratorFA, secuFA } from './testData';
 import { Collaborator, FA, FA_type, Location } from '@prisma/client';
 
 let faservice: FaService;
@@ -32,6 +32,15 @@ beforeAll(async () => {
     data: {
       type: 'DEPOT',
       name: 'test',
+    },
+  });
+});
+
+afterAll(async () => {
+  await prisma.fA_type.delete({ where: { name: fa_type.name } });
+  await prisma.location.delete({
+    where: {
+      id: location.id,
     },
   });
 });
@@ -140,14 +149,44 @@ describe('FaService', () => {
         });
       });
     });
-  });
-});
 
-afterAll(async () => {
-  await prisma.fA_type.delete({ where: { name: fa_type.name } });
-  await prisma.location.delete({
-    where: {
-      id: location.id,
-    },
+    describe('Create an FA with a security pass', () => {
+      let secu_result: FA | null;
+      let security_pass: any;
+
+      test('should create an FA with a security pass', async () => {
+        expect(faservice.create).toBeDefined();
+        const FA = secuFA;
+        FA.FA.type = fa_type.name;
+        FA.FA.location_id = location.id;
+        secu_result = await faservice.create(FA);
+        expect(secu_result).toBeDefined();
+      });
+
+      test('Should get one security pass', async () => {
+        //find all security passes linked to result
+        security_pass = await prisma.security_pass.findMany({
+          where: {
+            fa_id: secu_result.id,
+          },
+        });
+        expect(security_pass.length).toBe(1);
+      });
+
+      afterAll(async () => {
+        //delete the security pass
+        await prisma.security_pass.delete({
+          where: {
+            id: security_pass[0].id,
+          },
+        });
+        //delete the FA
+        await prisma.fA.delete({
+          where: {
+            id: secu_result.id,
+          },
+        });
+      });
+    });
   });
 });
