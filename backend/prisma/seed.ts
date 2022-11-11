@@ -8,34 +8,9 @@ async function main() {
 
   const teams: Prisma.TeamUncheckedCreateInput[] = [
     {
-      name: 'sg',
-      color: '#ab1f07',
-      icon: 'mdi-human-male-child',
-    },
-    {
-      name: 'hard',
-      color: '#969600',
-      icon: 'mdi-account-hard-hat',
-    },
-    {
-      name: 'soft',
-      color: '#2a9d8f',
-      icon: 'mdi-account-heart',
-    },
-    {
-      name: 'confiance',
-      color: '#d169e0',
-      icon: 'mdi-account-check',
-    },
-    {
-      name: 'orga',
-      color: '#e62727',
-      icon: 'mdi-account-hard-hat',
-    },
-    {
-      name: 'bureau',
-      color: '#e9c46a',
-      icon: 'mdi-desk',
+      name: 'admin',
+      color: '#000000',
+      icon: 'mdi-eye-circle',
     },
     {
       name: 'bar',
@@ -48,9 +23,24 @@ async function main() {
       icon: 'mdi-boom-gate',
     },
     {
+      name: 'bde',
+      color: '#FF4343',
+      icon: 'mdi-bootstrap',
+    },
+    {
+      name: 'bureau',
+      color: '#e9c46a',
+      icon: 'mdi-desk',
+    },
+    {
       name: 'catering',
       color: '#662E9B',
       icon: 'mdi-food',
+    },
+    {
+      name: 'camion',
+      color: '#737F49',
+      icon: 'mdi-truck-outline',
     },
     {
       name: 'communication',
@@ -61,6 +51,21 @@ async function main() {
       name: 'concert',
       color: '#75d46c',
       icon: 'mdi-microphone',
+    },
+    {
+      name: 'conducteur',
+      color: '#9B2E2E',
+      icon: 'mdi-car-key',
+    },
+    {
+      name: 'conducteur FEN',
+      color: '#9B2E2E',
+      icon: 'mdi-key-variant',
+    },
+    {
+      name: 'confiance',
+      color: '#d169e0',
+      icon: 'mdi-account-check',
     },
     {
       name: 'courses',
@@ -88,6 +93,16 @@ async function main() {
       icon: 'mdi-flash',
     },
     {
+      name: 'fen',
+      color: '#737F49',
+      icon: 'mdi-forklift',
+    },
+    {
+      name: 'hard',
+      color: '#969600',
+      icon: 'mdi-account-hard-hat',
+    },
+    {
       name: 'humain',
       color: '#f4a261',
       icon: 'mdi-human',
@@ -98,14 +113,29 @@ async function main() {
       icon: 'mdi-monitor-screenshot',
     },
     {
+      name: 'karna',
+      color: '#E4B613',
+      icon: 'mdi-party-popper',
+    },
+    {
+      name: 'kfet',
+      color: '#438EFF',
+      icon: 'mdi-beer',
+    },
+    {
       name: 'maman',
       color: '#ff66e8',
       icon: 'mdi-human-female-boy',
     },
     {
-      name: 'secu',
-      color: '#e76f51',
-      icon: 'mdi-security',
+      name: 'matos',
+      color: '#d4411e',
+      icon: 'mdi-truck',
+    },
+    {
+      name: 'orga',
+      color: '#e62727',
+      icon: 'mdi-account-hard-hat',
     },
     {
       name: 'payant',
@@ -113,9 +143,24 @@ async function main() {
       icon: 'mdi-ticket',
     },
     {
+      name: 'plaizir',
+      color: '#c9406a',
+      icon: 'mdi-ferris-wheel',
+    },
+    {
       name: 'scene',
       color: '#EA3546',
       icon: 'mdi-soundbar',
+    },
+    {
+      name: 'secu',
+      color: '#e76f51',
+      icon: 'mdi-security',
+    },
+    {
+      name: 'sg',
+      color: '#ab1f07',
+      icon: 'mdi-human-male-child',
     },
     {
       name: 'signa',
@@ -123,9 +168,9 @@ async function main() {
       icon: 'mdi-sign-direction',
     },
     {
-      name: 'plaizir',
-      color: '#c9406a',
-      icon: 'mdi-ferris-wheel',
+      name: 'soft',
+      color: '#2a9d8f',
+      icon: 'mdi-account-heart',
     },
     {
       name: 'sponso',
@@ -136,36 +181,6 @@ async function main() {
       name: 'sports',
       color: '#a632b3',
       icon: 'mdi-football',
-    },
-    {
-      name: 'admin',
-      color: '#000000',
-      icon: 'mdi-eye-circle',
-    },
-    {
-      name: 'matos',
-      color: '#d4411e',
-      icon: 'mdi-truck',
-    },
-    {
-      name: 'bde',
-      color: '#FF4343',
-      icon: 'mdi-bootstrap',
-    },
-    {
-      name: 'kfet',
-      color: '#438EFF',
-      icon: 'mdi-beer',
-    },
-    {
-      name: 'karna',
-      color: '#E4B613',
-      icon: 'mdi-party-popper',
-    },
-    {
-      name: 'woods',
-      color: '#02AC18',
-      icon: 'mdi-forest',
     },
     {
       name: 'teckos',
@@ -181,6 +196,16 @@ async function main() {
       name: 'vieux',
       color: '#B5C2CB',
       icon: 'mdi-human-cane',
+    },
+    {
+      name: 'voiture',
+      color: '#737F49',
+      icon: 'mdi-car-side',
+    },
+    {
+      name: 'woods',
+      color: '#02AC18',
+      icon: 'mdi-forest',
     },
   ];
 
@@ -225,6 +250,9 @@ async function main() {
     ['plaizir', 'hard,plaizir'],
     ['sponso', 'hard,sponso'],
     ['sports', 'hard,sports'],
+    ['fen', 'hard,fen'],
+    ['voiture', 'hard,voiture'],
+    ['camion', 'hard,camion'],
   ];
 
   for (const userTeam of userTeamTuples) {
