@@ -121,7 +121,7 @@ CREATE TABLE "Security_pass" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
     "is_needed" BOOLEAN NOT NULL,
-    "number" INTEGER,
+    "number_of_pass" INTEGER,
 
     CONSTRAINT "Security_pass_pkey" PRIMARY KEY ("id")
 );

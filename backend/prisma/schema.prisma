@@ -269,11 +269,11 @@ enum Security_pass_schedules {
 }
 
 model Security_pass {
-  id        Int     @id @default(autoincrement())
-  FA        FA      @relation(fields: [fa_id], references: [id])
-  fa_id     Int
-  is_needed Boolean @db.Boolean
-  number    Int?
+  id             Int     @id @default(autoincrement())
+  FA             FA      @relation(fields: [fa_id], references: [id])
+  fa_id          Int
+  is_needed      Boolean @db.Boolean
+  number_of_pass Int?
 }
 
 enum subject_type {
