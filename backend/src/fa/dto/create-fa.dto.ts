@@ -31,7 +31,7 @@ class FA {
     description: 'The creation date of the fa',
     default: new Date(),
   })
-  created_at: Date;
+  created_at?: Date;
 
   @ApiProperty({
     required: true,
@@ -104,7 +104,7 @@ class FA {
   })
   @IsString()
   @IsOptional()
-  security_needs: string;
+  security_needs?: string;
 
   @ApiProperty({
     required: false,
@@ -112,7 +112,7 @@ class FA {
   })
   @IsNumber()
   @IsOptional()
-  water_flow_required: number;
+  water_flow_required?: number;
 }
 
 export class CreateFaDto {

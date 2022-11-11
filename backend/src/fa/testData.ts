@@ -5,7 +5,6 @@ export const nakedFA: CreateFaDto = {
     name: 'Naked FA',
     type: 'test',
     team_id: 1,
-    created_at: new Date(),
     in_charge: 1,
     location_id: 1,
     status: Status.DRAFT,
@@ -13,8 +12,6 @@ export const nakedFA: CreateFaDto = {
     is_publishable: true,
     is_major: false,
     is_kids: false,
-    security_needs: 'string',
-    water_flow_required: 0,
   },
 };
 export const collaboratorFA: CreateFaDto = {
@@ -22,7 +19,6 @@ export const collaboratorFA: CreateFaDto = {
     name: 'Collaborator FA',
     type: 'test',
     team_id: 1,
-    created_at: new Date(),
     in_charge: 1,
     location_id: 1,
     status: Status.DRAFT,
@@ -30,8 +26,6 @@ export const collaboratorFA: CreateFaDto = {
     is_publishable: true,
     is_major: false,
     is_kids: false,
-    security_needs: 'string',
-    water_flow_required: 0,
   },
   FA_Collaborators: [
     {
@@ -44,7 +38,7 @@ export const collaboratorFA: CreateFaDto = {
 
 export const secuFA: CreateFaDto = {
   FA: {
-    name: 'test',
+    name: 'Secu FA',
     type: 'test',
     team_id: 1,
     created_at: new Date(),
@@ -55,8 +49,8 @@ export const secuFA: CreateFaDto = {
     is_publishable: true,
     is_major: false,
     is_kids: false,
-    security_needs: 'string',
-    water_flow_required: 0,
+    security_needs: 'A lot of security',
+    water_flow_required: 12,
   },
   Security_pass: [
     {
