@@ -4,6 +4,8 @@ import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
+import { CreateCollaboratorDto } from 'src/collaborator/dto/create-collaborator.dto';
+import { CreateSecurityPassDto } from 'src/security_pass/dto/create-security_pass.dto';
 
 @Injectable()
 export class FaService {
@@ -36,31 +38,9 @@ export class FaService {
       this.prisma.fA_type.findUnique({ where: { name: createFaDto.FA.type } }),
     ]);
     //First of all we create or get the collaborator and skip existing collaborators
-    let collaborators: Collaborator[] = [];
-    if (createFaDto.FA_Collaborators) {
-      await this.prisma.collaborator.createMany({
-        data: createFaDto.FA_Collaborators,
-        skipDuplicates: true,
-      });
-      //Then get all the collaborators
-      collaborators = await this.prisma.collaborator.findMany({
-        where: {
-          firstname: {
-            in: createFaDto.FA_Collaborators.map((collaborator) => {
-              return collaborator.firstname;
-            }),
-          },
-          lastname: {
-            in: createFaDto.FA_Collaborators.map((collaborator) => {
-              return collaborator.lastname;
-            }),
-          },
-        },
-      });
-      if (collaborators.length !== createFaDto.FA_Collaborators.length) {
-        throw new Error('Some collaborators were not created');
-      }
-    }
+    const collaborators = await this.create_collaborators(
+      createFaDto.FA_Collaborators,
+    );
     const fa = await this.prisma.fA.create({
       data: {
         ...createFaDto.FA,
@@ -77,26 +57,62 @@ export class FaService {
     });
     if (!fa) throw new Error('Error while creating the FA');
     //we then add security passes with the ID of the FA
-    if (createFaDto.Security_pass) {
-      const security_pass = createFaDto.Security_pass.map((pass) => {
-        return {
-          ...pass,
-          fa_id: fa.id,
-        };
-      });
-      await this.prisma.security_pass.createMany({
-        data: security_pass,
-      });
-      const created_pass = await this.prisma.security_pass.findMany({
-        where: {
-          fa_id: fa.id,
-        },
-      });
-      if (created_pass.length !== createFaDto.Security_pass.length) {
-        throw new Error('some passes were not created');
-      }
-    }
+    await this.createSecurityPasses(createFaDto.Security_pass, fa.id);
     return fa;
+  }
+
+  async create_collaborators(
+    fa_collab: CreateCollaboratorDto[],
+  ): Promise<Collaborator[] | null> {
+    if (!fa_collab) return [];
+    if (fa_collab.length === 0) return [];
+    await this.prisma.collaborator.createMany({
+      data: fa_collab,
+      skipDuplicates: true,
+    });
+    //Then get all the collaborators
+    const collaborators = await this.prisma.collaborator.findMany({
+      where: {
+        firstname: {
+          in: fa_collab.map((collaborator) => {
+            return collaborator.firstname;
+          }),
+        },
+        lastname: {
+          in: fa_collab.map((collaborator) => {
+            return collaborator.lastname;
+          }),
+        },
+      },
+    });
+    if (collaborators.length !== fa_collab.length) {
+      throw new Error('Some collaborators were not created');
+    }
+    return collaborators;
+  }
+
+  async createSecurityPasses(
+    fa_security_pass: CreateSecurityPassDto[],
+    fa_id: number,
+  ): Promise<void> {
+    if (!fa_security_pass) return;
+    const security_pass = fa_security_pass.map((pass) => {
+      return {
+        ...pass,
+        fa_id: fa_id,
+      };
+    });
+    await this.prisma.security_pass.createMany({
+      data: security_pass,
+    });
+    const created_pass = await this.prisma.security_pass.findMany({
+      where: {
+        fa_id: fa_id,
+      },
+    });
+    if (created_pass.length !== fa_security_pass.length) {
+      throw new Error('some passes were not created');
+    }
   }
 
   async update(id: number, updateFaDto: UpdateFaDto): Promise<FA | null> {
