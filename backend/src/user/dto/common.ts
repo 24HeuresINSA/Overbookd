@@ -1,5 +1,5 @@
-export const upperCaseCharacter = new RegExp('/[A-Z]+/');
-export const number = new RegExp('/[d]+/');
+export const upperCaseCharacter = new RegExp('[A-Z]+');
+export const number = new RegExp('[\\d]+');
 
 export enum Years {
   A1 = 'A1',
