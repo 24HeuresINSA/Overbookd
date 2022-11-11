@@ -9,6 +9,7 @@ import { HashingUtilsModule } from 'src/hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PrismaService } from 'src/prisma.service';
     HashingUtilsService,
     UserService,
     PrismaService,
+    MailService,
   ],
   exports: [AuthService],
 })
