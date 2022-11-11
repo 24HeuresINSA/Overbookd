@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
-import { nakedFA } from './testData';
-import { FA, FA_type, Location } from '@prisma/client';
+import { nakedFA, collaboratorFA } from './testData';
+import { Collaborator, FA, FA_type, Location } from '@prisma/client';
 
 let faservice: FaService;
 let prisma: PrismaService;
@@ -52,6 +52,9 @@ describe('FaService', () => {
 
       test('should create an FA without any links', async () => {
         expect(faservice.create).toBeDefined();
+        const FA = nakedFA;
+        FA.FA.type = fa_type.name;
+        FA.FA.location_id = location.id;
         result = await faservice.create(nakedFA);
         expect(result).toBeDefined();
       });
@@ -84,6 +87,55 @@ describe('FaService', () => {
         await prisma.fA.delete({
           where: {
             id: result.id,
+          },
+        });
+      });
+    });
+
+    describe('Create an FA with a collaborator', () => {
+      let collab_result: FA | null;
+      let collaborators: Collaborator[];
+
+      test('should create an FA with a collaborator', async () => {
+        expect(faservice.create).toBeDefined();
+        const FA = collaboratorFA;
+        FA.FA.type = fa_type.name;
+        FA.FA.location_id = location.id;
+        collab_result = await faservice.create(FA);
+        expect(collab_result).toBeDefined();
+      });
+
+      test('Should get one collaborator', async () => {
+        //find all collaborators linked to result
+        collaborators = await prisma.collaborator.findMany({
+          where: {
+            FA_Collaborators: {
+              some: {
+                fa_id: collab_result.id,
+              },
+            },
+          },
+        });
+        expect(collaborators.length).toBe(1);
+      });
+
+      afterAll(async () => {
+        //remove FA foreign key from collaborator
+        await prisma.fA_Collaborators.deleteMany({
+          where: {
+            fa_id: collab_result.id,
+          },
+        });
+        //delete the FA
+        await prisma.fA.delete({
+          where: {
+            id: collab_result.id,
+          },
+        });
+        //delete the collaborator
+        await prisma.collaborator.delete({
+          where: {
+            id: collaborators[0].id,
           },
         });
       });

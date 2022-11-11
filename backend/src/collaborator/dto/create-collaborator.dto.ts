@@ -47,7 +47,7 @@ export class CreateCollaboratorDto {
   @Matches(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, {
     message: 'email is not valid',
   })
-  email: string;
+  email?: string;
 
   @ApiProperty({
     required: false,
@@ -56,7 +56,7 @@ export class CreateCollaboratorDto {
   @IsString()
   @IsOptional()
   @MaxLength(30)
-  company: string;
+  company?: string;
 
   @ApiProperty({
     required: false,
@@ -64,5 +64,5 @@ export class CreateCollaboratorDto {
   })
   @IsString()
   @IsOptional()
-  comment: string;
+  comment?: string;
 }
