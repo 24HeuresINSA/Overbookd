@@ -14,5 +14,5 @@ export class CreateSecurityPassDto {
     description: 'the security pass description',
   })
   @IsOptional()
-  number_of_pass: number;
+  number_of_pass?: number;
 }
