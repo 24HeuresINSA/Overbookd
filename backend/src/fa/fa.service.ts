@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Collaborator, FA, User_Team } from '@prisma/client';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
@@ -162,12 +166,21 @@ export class FaService {
       throw new UnauthorizedException(
         `User with id ${user_id} is not a validator`,
       );
-    /*
     const fa = await this.prisma.fA.findUnique({
       where: { id: fa_id },
     });
-    if (!fa) throw new NotFoundError(`FA with id ${fa_id} not found`);
-    */
-    return null;
+    if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
+    //add the user validation
+    return this.prisma.fA.update({
+      where: { id: fa_id },
+      data: {
+        FA_validation: {
+          create: {
+            user_id: user_id,
+            team_id: user_teams[is_validator_teams.indexOf(true)].team_id,
+          },
+        },
+      },
+    });
   }
 }
