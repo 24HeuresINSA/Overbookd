@@ -7,7 +7,7 @@ import {
   Matches,
   ValidationArguments,
 } from 'class-validator';
-import { number, upperCaseCharacter } from 'src/user/dto/common';
+import { OneNumber, upperCaseCharacter } from 'src/user/dto/common';
 
 export class ResetPasswordDto {
   @ApiProperty({
@@ -31,7 +31,7 @@ export class ResetPasswordDto {
     message: (va: ValidationArguments) =>
       `${va.property} should have at least 1 upper case char`,
   })
-  @Matches(number, {
+  @Matches(OneNumber, {
     message: (va: ValidationArguments) =>
       `${va.property} should have at least 1 number char`,
   })
@@ -49,7 +49,7 @@ export class ResetPasswordDto {
     message: (va: ValidationArguments) =>
       `${va.property} should have at least 1 upper case char`,
   })
-  @Matches(number, {
+  @Matches(OneNumber, {
     message: (va: ValidationArguments) =>
       `${va.property} should have at least 1 number char`,
   })

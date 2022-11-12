@@ -12,7 +12,7 @@ import {
   IsDateString,
   IsPhoneNumber,
 } from 'class-validator';
-import { Years, Departements, upperCaseCharacter, number } from './common';
+import { Years, Departements, upperCaseCharacter, OneNumber } from './common';
 
 export class UserCreationDto {
   @ApiProperty({
@@ -105,7 +105,7 @@ export class UserCreationDto {
     message: (va: ValidationArguments) =>
       `${va.property} should have at least 1 upper case char`,
   })
-  @Matches(number, {
+  @Matches(OneNumber, {
     message: (va: ValidationArguments) =>
       `${va.property} should have at least 1 number char`,
   })

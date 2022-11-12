@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import {
@@ -18,6 +19,7 @@ import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 export type UserCredentials = Pick<User, 'email' | 'password'>;
 export type UserEmail = Pick<User, 'email'>;
+export const ONE_HOUR = 3600000;
 
 @Injectable()
 export class AuthService {
@@ -61,11 +63,11 @@ export class AuthService {
     const user = await this.userService.user({ email });
 
     if (!user) {
-      throw new UnauthorizedException('Email invalid');
+      throw new NotFoundException('Email invalid');
     }
 
     const reset_token = randomBytes(20).toString('hex');
-    const expirationDate = new Date(Date.now() + 1 * 3600 * 1000);
+    const expirationDate = new Date(Date.now() + ONE_HOUR);
 
     await this.prisma.user.update({
       where: { email },
@@ -87,7 +89,7 @@ export class AuthService {
     password,
     password2,
   }: ResetPasswordDto): Promise<void> {
-    if (!password || !password2 || password != password2) {
+    if (password !== password2) {
       throw new BadRequestException('The passwords are not the same');
     }
 
