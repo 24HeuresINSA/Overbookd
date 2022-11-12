@@ -11,7 +11,7 @@ let fa_type: FA_type;
 let location: Location;
 
 /**
- * a executer dans /Users/antoinepiron/Desktop/24H_INSA/overbookd-mono/backend/src/fa
+ * a executer dans /overbookd-mono/backend/src/fa
  * npx jest fa.service.spec.ts --coverage --collectCoverageFrom="./fa/**"
  */
 

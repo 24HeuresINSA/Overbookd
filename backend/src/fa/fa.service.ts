@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Collaborator, FA } from '@prisma/client';
+import { Collaborator, FA, User_Team } from '@prisma/client';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
 import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
 import { CreateSecurityPassDto } from '../security_pass/dto/create-security_pass.dto';
-import { UserWithoutPassword } from '../user/user.service';
 
 @Injectable()
 export class FaService {
@@ -129,6 +128,22 @@ export class FaService {
   }
 
   async validateFa(fa_id: number, user_id: number): Promise<FA | null> {
+    //get user with team
+    const user = await this.prisma.user.findUnique({
+      where: { id: user_id },
+      include: { team: true },
+    });
+    if (!user) throw new NotFoundError(`User with id ${user_id} not found`);
+    //check if team is fa_validator
+    const user_teams: User_Team[] = user.team;
+    if (!user_teams)
+      throw new Error(`User with id ${user_id} is not in a team`);
+    if (user_teams.length === 0)
+      throw new Error(`User with id ${user_id} is not in a team`);
+    const fa = await this.prisma.fA.findUnique({
+      where: { id: fa_id },
+    });
+    if (!fa) throw new NotFoundError(`FA with id ${fa_id} not found`);
     return null;
   }
 }
