@@ -52,6 +52,7 @@ CREATE TABLE "FA_type" (
 CREATE TABLE "FA_validation" (
     "fa_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
+    "team_id" INTEGER NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "FA_validation_pkey" PRIMARY KEY ("fa_id","user_id")
@@ -70,6 +71,7 @@ CREATE TABLE "FA_Collaborators" (
 CREATE TABLE "FA_refuse" (
     "fa_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
+    "team_id" INTEGER NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "FA_refuse_pkey" PRIMARY KEY ("fa_id","user_id")
@@ -175,6 +177,9 @@ ALTER TABLE "FA_validation" ADD CONSTRAINT "FA_validation_fa_id_fkey" FOREIGN KE
 ALTER TABLE "FA_validation" ADD CONSTRAINT "FA_validation_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "FA_validation" ADD CONSTRAINT "FA_validation_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "FA_Collaborators" ADD CONSTRAINT "FA_Collaborators_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -185,6 +190,9 @@ ALTER TABLE "FA_refuse" ADD CONSTRAINT "FA_refuse_fa_id_fkey" FOREIGN KEY ("fa_i
 
 -- AddForeignKey
 ALTER TABLE "FA_refuse" ADD CONSTRAINT "FA_refuse_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FA_refuse" ADD CONSTRAINT "FA_refuse_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA_Electricity_needs" ADD CONSTRAINT "FA_Electricity_needs_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -76,15 +76,17 @@ model User {
 }
 
 model Team {
-  id           Int          @id @default(autoincrement())
-  name         String       @unique @db.VarChar(30)
-  users        User_Team[]
-  color        String       @default("#000000") @db.VarChar(30)
-  icon         String       @default("mdi-circle") @db.VarChar(255)
-  fa_validator Boolean      @default(false)
-  ft_validator Boolean      @default(false)
-  FA           FA[]
-  FA_Comment   FA_Comment[]
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(30)
+  users         User_Team[]
+  color         String          @default("#000000") @db.VarChar(30)
+  icon          String          @default("mdi-circle") @db.VarChar(255)
+  fa_validator  Boolean         @default(false)
+  ft_validator  Boolean         @default(false)
+  FA            FA[]
+  FA_Comment    FA_Comment[]
+  FA_validation FA_validation[]
+  FA_refuse     FA_refuse[]
 }
 
 model User_Team {
@@ -177,6 +179,8 @@ model FA_validation {
   fa_id      Int
   User       User    @relation(fields: [user_id], references: [id])
   user_id    Int
+  Team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
   is_deleted Boolean @default(false)
 
   @@id([fa_id, user_id])
@@ -197,6 +201,8 @@ model FA_refuse {
   fa_id      Int
   User       User    @relation(fields: [user_id], references: [id])
   user_id    Int
+  Team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
   is_deleted Boolean @default(false)
 
   @@id([fa_id, user_id])
