@@ -24,11 +24,13 @@ export interface Gear {
   name: string;
   slug: string;
   category?: SimplifiedCategory;
+  owner?: Team;
 }
 
 export interface SearchGear {
-  slug: string;
+  slug?: string;
   category?: string;
+  owner?: string;
 }
 
 export interface GearRepository {

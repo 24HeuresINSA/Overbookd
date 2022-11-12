@@ -6,6 +6,42 @@ import {
   SearchGear,
 } from '../interfaces';
 
+class GearSearchBuilder {
+  private onwnerCondition = true;
+  private slugCondition = true;
+  private categoryContion = true;
+  private gear: Gear;
+
+  constructor(gear: Gear) {
+    this.gear = gear;
+  }
+
+  addOwnerCondition(ownerSearch?: string) {
+    this.onwnerCondition = ownerSearch
+      ? this.gear.owner?.slug?.includes(ownerSearch)
+      : true;
+    return this;
+  }
+
+  addSlugCondition(slugSearch?: string) {
+    this.slugCondition = slugSearch
+      ? this.gear.slug.includes(slugSearch)
+      : true;
+    return this;
+  }
+
+  addCategoryCondition(categorySearch?: string) {
+    this.categoryContion = categorySearch
+      ? this.gear.category?.slug?.includes(categorySearch)
+      : true;
+    return this;
+  }
+
+  get match(): boolean {
+    return this.onwnerCondition && this.slugCondition && this.categoryContion;
+  }
+}
+
 @Injectable()
 export class InMemoryGearRepository implements GearRepository {
   gears: Gear[] = [];
@@ -40,15 +76,21 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve();
   }
 
-  searchGear({ slug, category }: SearchGear): Promise<Gear[]> {
+  searchGear(search: SearchGear): Promise<Gear[]> {
     return Promise.resolve(
-      this.gears.filter((gear) => {
-        const categorySearchCondition = category
-          ? gear?.category?.slug?.includes(category)
-          : true;
-        return gear.slug.includes(slug) && categorySearchCondition;
-      }),
+      this.gears.filter((gear) => this.isMatchingSearch(search, gear)),
     );
+  }
+
+  private isMatchingSearch(
+    { category, slug, owner }: SearchGear,
+    gear: Gear,
+  ): boolean {
+    const search = new GearSearchBuilder(gear)
+      .addCategoryCondition(category)
+      .addSlugCondition(slug)
+      .addOwnerCondition(owner);
+    return search.match;
   }
 
   getAllGears(): Promise<Gear[]> {

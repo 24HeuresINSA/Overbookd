@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class GearSearchRequestDto {
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'Gear name',
   })
+  @IsOptional()
   @IsString()
-  @IsDefined()
   @MinLength(3)
-  name: string;
+  name?: string;
 
   @ApiProperty({
     required: false,
@@ -19,4 +19,13 @@ export class GearSearchRequestDto {
   @IsString()
   @MinLength(3)
   category?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Owner name',
+  })
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  owner?: string;
 }
