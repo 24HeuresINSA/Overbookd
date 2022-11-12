@@ -7,6 +7,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { LoginDto } from './auth/dto/login.dto';
@@ -96,6 +97,13 @@ export class AppController {
   }
 
   @ApiBearerAuth()
+  @ApiBody({
+    description: 'Route de test pour le service mail',
+    type: emailTestDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User dont have the right to access this route',
+  })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Post('mailtest')
@@ -103,11 +111,30 @@ export class AppController {
     return this.mailService.mailTest(to);
   }
 
+  @ApiBody({
+    description:
+      "Route pour la premeire partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
+    type: userEmailDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found',
+  })
   @Post('forgot')
   async forgot(@Body() user: userEmailDto) {
     return this.authService.forgot(user);
   }
 
+  @ApiBody({
+    description:
+      'Route pour la seconde partie procedure de reset de mot de passe, enregistre le nouveau mot de passe',
+    type: ResetPasswordDto,
+  })
+  @ApiBadRequestResponse({
+    description: "Password don't match or don't respect the rules",
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Token expired',
+  })
   @Post('reset')
   async reset(@Body() userTokenAndPassword: ResetPasswordDto) {
     return this.authService.recoverPassword(userTokenAndPassword);
