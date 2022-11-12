@@ -167,10 +167,9 @@ export default {
 
   async mounted() {
     this.randomURL = this.getRandomBackgroundURL();
-    console.log(this.$auth);
     if (this.$auth.loggedIn) {
       await this.$router.push({
-        path: "/",
+        path: REDIRECT_URL,
       }); // redirect to homepage
     }
   },
@@ -181,7 +180,7 @@ export default {
         if (this.credentials.email && this.credentials.password) {
           await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
           await this.$router.push({
-            path: "/",
+            path: REDIRECT_URL,
           }); // redirect to homepage
           const audio = new Audio("audio/jaune.m4a");
           await audio.play();

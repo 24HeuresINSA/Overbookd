@@ -1,7 +1,12 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { emailTestDto } from './dto/mailTest.dto';
-import { emailResetPasswordDto } from './dto/mailResetPassword.dto';
+
+export type emailResetPassword = {
+  to: string;
+  firstname: string;
+  token: string;
+};
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
@@ -11,7 +16,7 @@ export class MailService {
     this.mailerService
       .sendMail({
         to: to,
-        subject: "Mail de tes de l'API overbookd",
+        subject: "Mail de test de l'API overbookd",
         template: 'mailTest',
         context: {
           username: username,
@@ -22,11 +27,7 @@ export class MailService {
       });
   }
 
-  public mailResetPassword({
-    to,
-    firstname,
-    token,
-  }: emailResetPasswordDto): void {
+  public mailResetPassword({ to, firstname, token }: emailResetPassword): void {
     this.mailerService
       .sendMail({
         to: to,

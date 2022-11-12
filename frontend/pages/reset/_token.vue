@@ -45,9 +45,9 @@ import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { Snack } from "~/utils/models/snack";
+
 export default Vue.extend({
   name: "ForgotPassword",
-  //@ts-ignore
   auth: false,
   layout: "none",
   data: () => ({
