@@ -78,7 +78,7 @@ export class AuthService {
     });
 
     this.mailService.mailResetPassword({
-      to: email,
+      email: email,
       firstname: user.firstname,
       token: reset_token,
     });

@@ -8,7 +8,7 @@ export class emailTestDto {
   })
   @IsDefined()
   @IsEmail()
-  to: string;
+  email: string;
 
   @ApiProperty({
     required: true,

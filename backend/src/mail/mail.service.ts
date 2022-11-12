@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { emailTestDto } from './dto/mailTest.dto';
 
 export type emailResetPassword = {
-  to: string;
+  email: string;
   firstname: string;
   token: string;
 };
@@ -12,34 +12,38 @@ export class MailService {
   constructor(private readonly mailerService: MailerService) {}
   private logger = new Logger('MailService');
 
-  public mailTest({ to, username }: emailTestDto): void {
-    this.mailerService
-      .sendMail({
-        to: to,
-        subject: "Mail de test de l'API overbookd",
-        template: 'mailTest',
-        context: {
-          username: username,
-        },
-      })
-      .then(() => {
-        this.logger.log(`Testing mail sent to ${to}`);
-      });
+  async mailTest({ email, username }: emailTestDto): Promise<void> {
+    const mail = await this.mailerService.sendMail({
+      to: email,
+      subject: "Mail de test de l'API overbookd",
+      template: 'mailTest',
+      context: {
+        username: username,
+      },
+    });
+
+    if (mail) {
+      this.logger.log(`Testing mail sent to ${email}`);
+    }
   }
 
-  public mailResetPassword({ to, firstname, token }: emailResetPassword): void {
-    this.mailerService
-      .sendMail({
-        to: to,
-        subject: 'Réinitialisation de ton mot de passe overbookd',
-        template: 'resetPassword',
-        context: {
-          firstname: firstname,
-          resetLink: `${process.env.DOMAIN}/reset/${token}`,
-        },
-      })
-      .then(() => {
-        this.logger.log(`Reset password mail sent to ${to}`);
-      });
+  async mailResetPassword({
+    email,
+    firstname,
+    token,
+  }: emailResetPassword): Promise<void> {
+    const mail = await this.mailerService.sendMail({
+      to: email,
+      subject: 'Réinitialisation de ton mot de passe overbookd',
+      template: 'resetPassword',
+      context: {
+        firstname: firstname,
+        resetLink: `${process.env.DOMAIN}/reset/${token}`,
+      },
+    });
+
+    if (mail) {
+      this.logger.log(`Reset password mail sent to ${email}`);
+    }
   }
 }
