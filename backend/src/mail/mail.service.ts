@@ -38,7 +38,7 @@ export class MailService {
       template: 'resetPassword',
       context: {
         firstname: firstname,
-        resetLink: `${process.env.DOMAIN}/reset/${token}`,
+        resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
       },
     });
 
