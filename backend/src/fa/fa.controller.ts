@@ -13,9 +13,9 @@ import {
 import { FaService } from './fa.service';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/team-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { Roles } from '../auth/team-auth.decorator';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FA } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
@@ -98,7 +98,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @Roles('orga')
   @Post('validate/:id')
   @ApiResponse({
     status: 201,
