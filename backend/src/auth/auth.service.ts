@@ -101,7 +101,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Token invalide or expired');
+      throw new UnauthorizedException('Token is invalid or expired');
     }
 
     await this.prisma.user.update({

@@ -57,7 +57,7 @@ export default Vue.extend({
     passwordVerif: [
       (v: string) =>
         new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$`).test(v) ||
-        `au moins une MAJUSCULE, minuscule et un chiffre et au moins 8 caractères`,
+        `au moins 8 caractères avec une MAJUSCULE, une minuscule et un chiffre minimum`,
     ],
   }),
   methods: {

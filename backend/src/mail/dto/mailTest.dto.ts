@@ -4,7 +4,7 @@ import { IsEmail, IsDefined, IsString } from 'class-validator';
 export class emailTestDto {
   @ApiProperty({
     required: true,
-    description: 'The email of the user',
+    description: 'The email of the receiver',
   })
   @IsDefined()
   @IsEmail()
