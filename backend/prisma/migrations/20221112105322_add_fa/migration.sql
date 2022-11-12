@@ -16,6 +16,10 @@ CREATE TYPE "Security_pass_schedules" AS ENUM ('JOUR', 'NUIT', 'JOUR_NUIT');
 -- CreateEnum
 CREATE TYPE "subject_type" AS ENUM ('REFUSED', 'VALIDATED', 'COMMENT');
 
+-- AlterTable
+ALTER TABLE "Team" ADD COLUMN     "fa_validator" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "ft_validator" BOOLEAN NOT NULL DEFAULT false;
+
 -- CreateTable
 CREATE TABLE "FA" (
     "id" SERIAL NOT NULL,

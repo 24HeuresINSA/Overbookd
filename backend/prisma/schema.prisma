@@ -76,13 +76,15 @@ model User {
 }
 
 model Team {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique @db.VarChar(30)
-  users      User_Team[]
-  color      String       @default("#000000") @db.VarChar(30)
-  icon       String       @default("mdi-circle") @db.VarChar(255)
-  FA         FA[]
-  FA_Comment FA_Comment[]
+  id           Int          @id @default(autoincrement())
+  name         String       @unique @db.VarChar(30)
+  users        User_Team[]
+  color        String       @default("#000000") @db.VarChar(30)
+  icon         String       @default("mdi-circle") @db.VarChar(255)
+  fa_validator Boolean      @default(false)
+  ft_validator Boolean      @default(false)
+  FA           FA[]
+  FA_Comment   FA_Comment[]
 }
 
 model User_Team {
