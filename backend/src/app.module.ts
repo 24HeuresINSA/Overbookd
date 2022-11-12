@@ -30,7 +30,7 @@ import { MailService } from './mail/mail.service';
         },
       },
       defaults: {
-        from: '"Overbookd" <overbookd@24heures.org>',
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
       },
       template: {
         dir: __dirname + '/mail/templates',

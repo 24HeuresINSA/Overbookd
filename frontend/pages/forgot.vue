@@ -34,13 +34,14 @@ import { Snack } from "~/utils/models/snack";
 
 export default Vue.extend({
   name: "ForgotPassword",
-  //@ts-ignore
   auth: false,
   layout: "none",
+
   data: () => ({
     email: "",
     snack: new Snack(3000),
   }),
+
   methods: {
     sendResetRequest: async function () {
       const res = await safeCall(
@@ -59,11 +60,12 @@ export default Vue.extend({
       this.snack.display(
         "OK ! Regarde ta boite mail ! Redirection au login..."
       );
+
       setTimeout(async () => {
         await this.$router.push({
           path: "/",
-        }); // redirect to login page
-      }, 2000);
+        });
+      }, 3000);
     },
   },
 });
