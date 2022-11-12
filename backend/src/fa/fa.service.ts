@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Collaborator, FA, User_Team } from '@prisma/client';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
@@ -137,13 +137,37 @@ export class FaService {
     //check if team is fa_validator
     const user_teams: User_Team[] = user.team;
     if (!user_teams)
-      throw new Error(`User with id ${user_id} is not in a team`);
+      throw new UnauthorizedException(
+        `User with id ${user_id} is not in a team`,
+      );
     if (user_teams.length === 0)
-      throw new Error(`User with id ${user_id} is not in a team`);
+      throw new UnauthorizedException(
+        `User with id ${user_id} is not in a team`,
+      );
+    //check if user got a validator team
+    const is_validator_teams: boolean[] = await Promise.all(
+      user_teams.map(async (user_team) => {
+        const team = await this.prisma.team.findUnique({
+          where: { id: user_team.team_id },
+        });
+        if (!team)
+          throw new NotFoundError(
+            `Team with id ${user_team.team_id} not found`,
+          );
+        return team.fa_validator;
+      }),
+    );
+    //check if true in is_validator_teams
+    if (!is_validator_teams.includes(true))
+      throw new UnauthorizedException(
+        `User with id ${user_id} is not a validator`,
+      );
+    /*
     const fa = await this.prisma.fA.findUnique({
       where: { id: fa_id },
     });
     if (!fa) throw new NotFoundError(`FA with id ${fa_id} not found`);
+    */
     return null;
   }
 }
