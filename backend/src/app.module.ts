@@ -22,6 +22,7 @@ import { CatalogModule } from './catalog/catalog.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { SignaLocationModule } from './signa_location/signa_location.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_sit
     ConfigurationModule,
     SignaLocationModule,
     FaSitePublishAnimationModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

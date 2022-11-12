@@ -52,6 +52,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -65,6 +66,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
@@ -81,6 +83,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)

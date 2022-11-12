@@ -88,6 +88,7 @@ model Team {
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
   owned_categories Catalog_Category[] @relation("owner")
+  permissions      Team_Permission[]
 }
 
 model User_Team {
@@ -97,6 +98,21 @@ model User_Team {
   team_id Int
 
   @@id([user_id, team_id])
+}
+
+model Permission {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(30) @unique
+  teams      Team_Permission[]
+}
+
+model Team_Permission {
+  team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
+  permission Permission @relation(fields: [permission_id], references: [id])
+  permission_id Int
+
+  @@id([team_id, permission_id])
 }
 
 model TimeSlot {
