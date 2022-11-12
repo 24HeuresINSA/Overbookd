@@ -54,7 +54,7 @@ export class UserController {
     description: 'Get a current user',
   })
   async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
-    const id = req.user.userId;
+    const id = req.user.id;
     const user = this.userService.user({ id });
     return user;
   }

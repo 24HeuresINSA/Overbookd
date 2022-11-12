@@ -43,8 +43,8 @@ export type Role =
   | 'sports';
 
 export type JWTPayload = {
-  username: string;
-  userId: number;
+  email: string;
+  id: number;
   role: Role[];
 };
 

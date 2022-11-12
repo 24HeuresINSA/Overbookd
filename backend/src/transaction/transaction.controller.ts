@@ -65,8 +65,8 @@ export class TransactionController {
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
   ): Promise<TransactionWithSenderAndReceiver[] | null> {
-    const { userId } = request.user;
-    return this.transactionService.getUserTransactions(userId);
+    const { id } = request.user;
+    return this.transactionService.getUserTransactions(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -93,8 +93,8 @@ export class TransactionController {
     @Body() transactionData: Transaction,
     @Request() request: RequestWithUserPayload,
   ): Promise<TransactionWithSenderAndReceiver> {
-    const { userId } = request.user;
-    return this.transactionService.createTransaction(transactionData, userId);
+    const { id } = request.user;
+    return this.transactionService.createTransaction(transactionData, id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -4,8 +4,9 @@ import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
-import { CreateCollaboratorDto } from 'src/collaborator/dto/create-collaborator.dto';
-import { CreateSecurityPassDto } from 'src/security_pass/dto/create-security_pass.dto';
+import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
+import { CreateSecurityPassDto } from '../security_pass/dto/create-security_pass.dto';
+import { UserWithoutPassword } from '../user/user.service';
 
 @Injectable()
 export class FaService {
@@ -124,6 +125,10 @@ export class FaService {
   }
 
   async remove(id: number): Promise<FA | null> {
+    return null;
+  }
+
+  async validateFa(fa_id: number, user_id: number): Promise<FA | null> {
     return null;
   }
 }

@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   ParseIntPipe,
+  Request,
 } from '@nestjs/common';
 import { FaService } from './fa.service';
 import { CreateFaDto } from './dto/create-fa.dto';
@@ -17,6 +18,7 @@ import { RolesGuard } from 'src/auth/team-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FA } from '@prisma/client';
+import { RequestWithUserPayload } from '../app.controller';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -93,5 +95,22 @@ export class FaController {
   })
   remove(@Param('id', ParseIntPipe) id: string): Promise<FA | null> {
     return this.faService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Post('validate/:id')
+  @ApiResponse({
+    status: 201,
+    description: 'Validate a fa',
+    type: Promise<FA | null>,
+  })
+  //get id and user id from token
+  validate(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() request: RequestWithUserPayload,
+  ): Promise<FA | null> {
+    const user_id = request.user.id;
+    return this.faService.validateFa(id, user_id);
   }
 }
