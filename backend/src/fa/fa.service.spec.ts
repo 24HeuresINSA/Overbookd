@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
 import { nakedFA, collaboratorFA, secuFA } from './testData';
-import { Collaborator, FA, FA_type, Location } from '@prisma/client';
+import { Collaborator, FA, FA_type, Location, User } from '@prisma/client';
 
 let faservice: FaService;
 let prisma: PrismaService;
@@ -186,6 +186,98 @@ describe('FaService', () => {
             id: secu_result.id,
           },
         });
+      });
+    });
+  });
+  describe('FA validation system', () => {
+    let sampleFA: FA | null;
+    let validatorUser: User | null;
+    let notValidatorUser: User | null;
+
+    beforeAll(async () => {
+      validatorUser = await prisma.user.findFirst({
+        where: {
+          team: {
+            some: {
+              team: {
+                fa_validator: true,
+              },
+            },
+          },
+        },
+      });
+      notValidatorUser = await prisma.user.findFirst({
+        where: {
+          team: {
+            some: {
+              team: {
+                fa_validator: false,
+              },
+            },
+          },
+        },
+      });
+      expect(validatorUser).toBeDefined();
+      expect(notValidatorUser).toBeDefined();
+      const FA = nakedFA;
+      FA.FA.type = fa_type.name;
+      FA.FA.location_id = location.id;
+      sampleFA = await faservice.create(FA);
+      expect(sampleFA).toBeDefined();
+    });
+
+    test("Should not validate an FA with a user who's not a validator", async () => {
+      //try to validate the FA and expect an error
+      await expect(
+        faservice.validateFa(sampleFA.id, notValidatorUser.id),
+      ).rejects.toThrowError();
+    });
+
+    test('Should accept the validation', async () => {
+      await expect(
+        faservice.validateFa(sampleFA.id, validatorUser.id),
+      ).resolves.not.toThrowError();
+    });
+
+    test('Should not validate an FA that does not exist', async () => {
+      await expect(
+        faservice.validateFa(-1, validatorUser.id),
+      ).rejects.toThrowError();
+    });
+
+    test('Should not validate an FA with a user that does not exist', async () => {
+      //try to validate the FA and expect no error
+      await expect(
+        faservice.validateFa(sampleFA.id, -1),
+      ).rejects.toThrowError();
+    });
+
+    test('Should unvalidate the FA', async () => {
+      await expect(
+        faservice.unvalidateFa(sampleFA.id, validatorUser.id),
+      ).resolves.not.toThrowError();
+      const validation = await prisma.fA_validation.findUnique({
+        where: {
+          fa_id_user_id: {
+            fa_id: sampleFA.id,
+            user_id: validatorUser.id,
+          },
+        },
+      });
+      expect(validation.is_deleted).toBe(true);
+    });
+
+    afterAll(async () => {
+      //delete the validation
+      await prisma.fA_validation.deleteMany({
+        where: {
+          fa_id: sampleFA.id,
+        },
+      });
+      await prisma.fA.delete({
+        where: {
+          id: sampleFA.id,
+        },
       });
     });
   });
