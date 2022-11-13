@@ -1,5 +1,11 @@
 import { CreateFaDto, Status } from './dto/create-fa.dto';
 
+export const emptyFA: CreateFaDto = {
+  FA: {
+    name: 'empty',
+  },
+};
+
 export const nakedFA: CreateFaDto = {
   FA: {
     name: 'Naked FA',

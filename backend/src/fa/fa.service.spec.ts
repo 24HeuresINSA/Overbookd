@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
-import { nakedFA, collaboratorFA, secuFA } from './testData';
+import { nakedFA, collaboratorFA, secuFA, emptyFA } from './testData';
 import { Collaborator, FA, FA_type, Location, User } from '@prisma/client';
 import { CreateFaDto } from './dto/create-fa.dto';
 
@@ -59,7 +59,7 @@ describe('FA getters', () => {
   let FAs: CreateFaDto[];
   let all_fa: FA[];
   beforeAll(async () => {
-    FAs = [nakedFA, collaboratorFA, secuFA];
+    FAs = [nakedFA, collaboratorFA, secuFA, emptyFA];
     FAs.map(async (FA) => {
       FA.FA.type = fa_type.name;
       FA.FA.location_id = location.id;
@@ -74,7 +74,7 @@ describe('FA getters', () => {
 
   test('should return all FAs', async () => {
     all_fa = await faservice.findAll();
-    expect(all_fa.length).toBe(3);
+    expect(all_fa.length).toBe(FAs.length);
   });
 
   test('should return a FA', async () => {
