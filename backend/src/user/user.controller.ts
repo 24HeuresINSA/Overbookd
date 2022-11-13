@@ -14,9 +14,9 @@ import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/team-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { PermissionsGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/team-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
 
 @ApiTags('user')
@@ -33,9 +33,9 @@ export class UserController {
     return this.userService.createUser(userData);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('hard')
+  @Permissions('validated-user')
   @Get()
   @ApiResponse({
     status: 200,
@@ -59,8 +59,8 @@ export class UserController {
     return user;
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('cp')
   @ApiBearerAuth()
   @Get('all/cp')
   @ApiResponse({
@@ -71,27 +71,10 @@ export class UserController {
   async getUsernamesWithValidCP(): Promise<Username[]> {
     const users = await this.userService.users({
       where: {
-        AND: [
-          {
-            team: {
-              some: {
-                team: {
-                  name: {
-                    in: ['hard', 'vieux'],
-                  },
-                },
-              },
-            },
-          },
-        ],
-        NOT: {
-          team: {
-            some: {
-              team: {
-                name: {
-                  in: ['voiture', 'fen', 'camion'],
-                },
-              },
+        permissions: {
+          some: {
+            permission: {
+              name: 'cp',
             },
           },
         },
@@ -104,12 +87,12 @@ export class UserController {
     });
     return users
       .map(this.userService.getUsername)
-      .sort((a, b) => (a.username < b.username ? 1 : -1));
+      .sort((a, b) => (a.username > b.username ? 1 : -1));
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('sg')
   @Get('all')
   @ApiResponse({
     status: 200,
@@ -127,9 +110,9 @@ export class UserController {
     return users.map(this.userService.getUsername);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('hard')
+  @Permissions('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -141,9 +124,9 @@ export class UserController {
     return this.userService.user({ id: Number(id) });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('hard')
+  @Permissions('hard')
   @Post('availabilities')
   @ApiBody({
     description: 'Add availabilities to current user',
@@ -155,9 +138,9 @@ export class UserController {
     return null;
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('hard')
+  @Permissions('hard')
   @Put(':id')
   @ApiBody({
     description: 'Update a user by id',

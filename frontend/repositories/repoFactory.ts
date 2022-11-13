@@ -12,6 +12,7 @@ import signaLocationRepo from "./signaLocationRepo";
 import teamRepo from "./teamRepo";
 import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
+import permissionRepo from "./permissionRepo";
 
 const repositories = {
   user: userRepo,
@@ -29,6 +30,7 @@ const repositories = {
   category: CategoryRepository,
   configuration: configurationRepo,
   signaLocation: signaLocationRepo,
+  permission: permissionRepo,
 };
 
 type repoKey = keyof typeof repositories;
@@ -50,4 +52,5 @@ export const RepoFactory = {
   CategoryRepository,
   configurationRepo,
   signaLocationRepo,
+  permissionRepo,
 };

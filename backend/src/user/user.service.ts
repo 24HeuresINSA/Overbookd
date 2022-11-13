@@ -31,7 +31,7 @@ const SELECT_USER_TEAM = {
     select: {
       team: {
         select: {
-          name: true,
+          id: true,
         },
       },
     },
@@ -39,7 +39,7 @@ const SELECT_USER_TEAM = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
-export type UserWithTeam = UserWithoutPassword & { team: string[] };
+export type UserWithTeam = UserWithoutPassword & { team: number[] };
 export type UserPasswordOnly = Pick<User, 'password'>;
 
 @Injectable()
@@ -56,9 +56,7 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return user
-      ? { ...user, team: user?.team.map((team) => team.team.name) }
-      : undefined;
+    return { ...user, team: user?.team.map((team) => team.team.id) };
   }
 
   async getUserPassword(
@@ -93,7 +91,7 @@ export class UserService {
     });
     return users.map((user) => ({
       ...user,
-      team: user.team.map((team) => team.team.name),
+      team: user.team.map((team) => team.team.id),
     }));
   }
 

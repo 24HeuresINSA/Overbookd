@@ -52,8 +52,8 @@ export class AuthService {
     email,
     password,
   }: UserCredentials): Promise<{ access_token: string }> {
-    const { id, team: role } = await this.validateUser(email, password);
-    const jwtPayload = { id, email, role };
+    const { id, team: teams } = await this.validateUser(email, password);
+    const jwtPayload = { id, teams };
     return {
       access_token: this.jwtService.sign(jwtPayload),
     };

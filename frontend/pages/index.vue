@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container
-      v-if="!isUserHardOrSoft"
+      v-if="!hasPermission('validated-user')"
       class="align-stretch flex-wrap align-content-start"
     >
       <v-row>
@@ -34,7 +34,7 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="4">
-          <ComptesPersosCard v-if="hasRole('hard')" />
+          <ComptesPersosCard v-if="hasPermission('cp')" />
           <FriendsCard v-else />
         </v-col>
 
@@ -95,16 +95,13 @@ export default {
       // user has no team
       return this.me.team === undefined || this.me.team.length === 0;
     },
-    isUserHardOrSoft() {
-      return this.me.team.includes("hard") || this.me.team.includes("soft");
-    },
   },
   async mounted() {
     this.$accessor.user.fetchUser();
   },
   methods: {
-    hasRole(team) {
-      return this.$accessor.user.hasRole(team);
+    hasPermission(permission) {
+      return this.$accessor.permission.isAllowed(permission, this.me.team);
     },
 
     async logout() {

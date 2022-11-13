@@ -1,16 +1,24 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtPayload } from './entities/JwtPayload.entity';
+import { PermissionService } from 'src/permission/permission.service';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+export class PermissionsGuard implements CanActivate {
+  constructor(
+    private reflector: Reflector,
+    private permissionService: PermissionService,
+  ) {}
 
-  canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const permissions = this.reflector.get<string[]>(
+      'permissions',
+      context.getHandler(),
+    );
 
     const { user } = context.switchToHttp().getRequest();
-    const payload = new JwtPayload(user);
-    return payload.isAdmin() || payload.hasOneOfRequiredRoles(roles);
+    return this.permissionService.isAllowed(
+      ['admin', ...permissions],
+      user.teams,
+    );
   }
 }

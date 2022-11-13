@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
-import { RolesGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/team-auth.decorator';
+import { PermissionsGuard } from 'src/auth/team-auth.guard';
 import { PermissionFormDto } from './dto/permissionForm.dto';
 import { PermissionLinkDto } from './dto/permissionLink.dto';
 import { PermissionResponseDto } from './dto/permissionResponse.dto';
@@ -34,8 +34,8 @@ export class PermissionController {
     return this.permissionService.permission({ orderBy: { name: 'asc' } });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -50,8 +50,8 @@ export class PermissionController {
     return this.permissionService.createPermission(payload);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
@@ -67,8 +67,8 @@ export class PermissionController {
     return this.permissionService.updatePermission(id, payload);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
@@ -81,8 +81,8 @@ export class PermissionController {
     return this.permissionService.deletePermission(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Post('link/:id')
   @ApiBearerAuth()
   @HttpCode(201)

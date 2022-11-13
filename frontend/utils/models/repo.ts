@@ -138,3 +138,8 @@ export interface team {
   icon: string;
   code: string;
 }
+
+export interface permission {
+  id: number;
+  name: string;
+}

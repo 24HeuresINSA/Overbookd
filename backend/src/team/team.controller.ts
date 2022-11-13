@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
-import { RolesGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/team-auth.decorator';
+import { PermissionsGuard } from 'src/auth/team-auth.guard';
 import { TeamFormDto } from './dto/teamFormRequest.dto';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 import { TeamResponseDto } from './dto/teamResponse';
@@ -35,8 +35,8 @@ export class TeamController {
     return this.teamService.team({ orderBy: { name: 'asc' } });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('humain', 'sg')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('humain', 'sg')
   @Post('link')
   @ApiBearerAuth()
   @HttpCode(201)
@@ -51,8 +51,8 @@ export class TeamController {
     return this.teamService.updateUserTeams(payload);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -65,8 +65,8 @@ export class TeamController {
     return this.teamService.createTeam(payload);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
@@ -82,8 +82,8 @@ export class TeamController {
     return this.teamService.updateTeam(id, data);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)

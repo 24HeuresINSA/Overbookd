@@ -113,7 +113,12 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole(this, ["admin", "bureau"])) {
+    if (
+      this.$accessor.permission.isAllowed(
+        "config-write",
+        this.$accessor.user.me.team
+      )
+    ) {
       this.config.isSignupOpen =
         this.$accessor.config.getConfig("isSignupOpen");
       this.config.fb_signup_closed =

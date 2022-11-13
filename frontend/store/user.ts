@@ -25,12 +25,7 @@ export const mutations = mutationTree(state, {
     data.sort(
       ({ username: username1 }: User, { username: username2 }: User) => {
         if (username1 && username2) {
-          if (username1 < username2) {
-            return -1;
-          }
-          if (username1 > username2) {
-            return -1;
-          }
+          return username1 > username2 ? 1 : -1;
         }
         return 0;
       }

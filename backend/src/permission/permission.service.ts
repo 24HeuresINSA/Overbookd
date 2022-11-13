@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { TeamService } from 'src/team/team.service';
+import { TeamService } from '../team/team.service';
 import { PrismaService } from '../prisma.service';
 import { PermissionFormDto } from './dto/permissionForm.dto';
 import { PermissionResponseDto } from './dto/permissionResponse.dto';
@@ -96,6 +96,24 @@ export class PermissionService {
     await this.forcePermissionTeams(permissionId, teamIds);
 
     return { ...permission, teams: teamIds };
+  }
+
+  async isAllowed(permissionNames: string[], teamIds: number[]) {
+    const permissions = await this.permission({
+      where: {
+        name: {
+          in: permissionNames,
+        },
+        teams: {
+          some: {
+            team_id: {
+              in: teamIds,
+            },
+          },
+        },
+      },
+    });
+    return permissions.length > 0;
   }
 
   private async permissionExists(

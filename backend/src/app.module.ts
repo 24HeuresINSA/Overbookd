@@ -23,6 +23,9 @@ import { ConfigurationModule } from './configuration/configuration.module';
 import { SignaLocationModule } from './signa_location/signa_location.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
 import { PermissionModule } from './permission/permission.module';
+import { PermissionService } from './permission/permission.service';
+import { TeamService } from './team/team.service';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -65,7 +68,15 @@ import { PermissionModule } from './permission/permission.module';
     PermissionModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, HashingUtilsService, MailService],
+  providers: [
+    AppService,
+    PrismaService,
+    HashingUtilsService,
+    UserService,
+    TeamService,
+    PermissionService,
+    MailService,
+  ],
   exports: [PrismaService],
 })
 export class AppModule {}

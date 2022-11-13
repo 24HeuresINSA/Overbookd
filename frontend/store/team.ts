@@ -33,9 +33,9 @@ export const getters = getterTree(state, {
   },
   getTeams:
     (state, getters) =>
-    (teamNames: string[]): team[] => {
+    (teamIds: number[]): team[] => {
       return getters.allTeams.filter((t: team) => {
-        return teamNames.includes(t.name);
+        return teamIds.includes(t.id);
       });
     },
   getTeamByCode:

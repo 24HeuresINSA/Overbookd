@@ -26,7 +26,7 @@
         </v-list-item>
         <template v-for="(item, i) in working_items">
           <v-list-item
-            v-if="hasRole(item.roles)"
+            v-if="hasPermission(item.roles)"
             :key="i"
             :to="item.to"
             router
@@ -58,7 +58,7 @@
       />
       <v-spacer />
       <div v-if="isPreProd" class="watermark">PREPROD</div>
-      <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
+      <v-btn v-if="hasPermission('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
       </v-btn>
@@ -85,7 +85,7 @@
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
-      <v-card v-if="hasRole('hard')">
+      <v-card v-if="hasPermission('hard')">
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
@@ -440,11 +440,8 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
       return items[Math.floor(Math.random() * items.length)];
     },
 
-    hasRole(role) {
-      if (role === "everyone") {
-        return true;
-      }
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission) {
+      return this.$accessor.permission.isAllowed(permission, this.me.team);
     },
 
     getConfig(key) {
