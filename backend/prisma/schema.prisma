@@ -270,13 +270,6 @@ model FA_signa_needs {
   comment    String    @db.Text
 }
 
-//A définir correctement plus tard, placeholder pour le moment
-enum Security_pass_schedules {
-  JOUR
-  NUIT
-  JOUR_NUIT
-}
-
 model Security_pass {
   id             Int     @id @default(autoincrement())
   FA             FA      @relation(fields: [fa_id], references: [id])

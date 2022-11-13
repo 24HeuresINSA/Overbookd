@@ -11,9 +11,6 @@ CREATE TYPE "ElectricityType" AS ENUM ('ELECTRICITY', 'WATER', 'GAS', 'OTHER');
 CREATE TYPE "SignaType" AS ENUM ('BANNIERE', 'PANCARTE', 'PANNEAU');
 
 -- CreateEnum
-CREATE TYPE "Security_pass_schedules" AS ENUM ('JOUR', 'NUIT', 'JOUR_NUIT');
-
--- CreateEnum
 CREATE TYPE "subject_type" AS ENUM ('REFUSED', 'VALIDATED', 'COMMENT');
 
 -- AlterTable
