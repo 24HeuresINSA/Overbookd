@@ -3,6 +3,7 @@ import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
 import { nakedFA, collaboratorFA, secuFA } from './testData';
 import { Collaborator, FA, FA_type, Location, User } from '@prisma/client';
+import { CreateFaDto } from './dto/create-fa.dto';
 
 let faservice: FaService;
 let prisma: PrismaService;
@@ -54,231 +55,298 @@ describe('check if every variable is defined', () => {
   });
 });
 
-describe('FaService', () => {
-  describe('FA creation', () => {
-    describe('Create an FA without any links', () => {
-      let result: FA | null;
+describe('FA getters', () => {
+  let FAs: CreateFaDto[];
+  let all_fa: FA[];
+  beforeAll(async () => {
+    FAs = [nakedFA, collaboratorFA, secuFA];
+    FAs.map(async (FA) => {
+      FA.FA.type = fa_type.name;
+      FA.FA.location_id = location.id;
+    });
+    expect(faservice.create).toBeDefined();
+    await Promise.all(
+      FAs.map(async (FA) => {
+        return await faservice.create(FA);
+      }),
+    );
+  });
 
-      test('should create an FA without any links', async () => {
-        expect(faservice.create).toBeDefined();
-        const FA = nakedFA;
-        FA.FA.type = fa_type.name;
-        FA.FA.location_id = location.id;
-        result = await faservice.create(nakedFA);
-        expect(result).toBeDefined();
-      });
+  test('should return all FAs', async () => {
+    all_fa = await faservice.findAll();
+    expect(all_fa.length).toBe(3);
+  });
 
-      test('Should not get any collaborator', async () => {
-        const collaborators = await prisma.collaborator.findMany({
-          where: {
-            FA_Collaborators: {
-              some: {
-                fa_id: result.id,
-              },
+  test('should return a FA', async () => {
+    const FA = await faservice.findOne(all_fa[0].id);
+    expect(FA).toBeDefined();
+  });
+
+  afterAll(async () => {
+    //remove fas and all related data
+    await prisma.security_pass.deleteMany({
+      where: {
+        fa_id: {
+          in: all_fa.map((fa) => fa.id),
+        },
+      },
+    });
+    const collaborators = await prisma.collaborator.findMany({
+      where: {
+        FA_Collaborators: {
+          some: {
+            fa_id: {
+              in: all_fa.map((fa) => fa.id),
             },
           },
-        });
-        expect(collaborators.length).toBe(0);
-      });
-
-      test('Should not get any security pass', async () => {
-        //find all security passes linked to result
-        const security_pass = await prisma.security_pass.findMany({
-          where: {
-            fa_id: result.id,
-          },
-        });
-        expect(security_pass.length).toBe(0);
-      });
-
-      afterAll(async () => {
-        //delete the FA
-        await prisma.fA.delete({
-          where: {
-            id: result.id,
-          },
-        });
-      });
+        },
+      },
     });
-
-    describe('Create an FA with a collaborator', () => {
-      let collab_result: FA | null;
-      let collaborators: Collaborator[];
-
-      test('should create an FA with a collaborator', async () => {
-        expect(faservice.create).toBeDefined();
-        const FA = collaboratorFA;
-        FA.FA.type = fa_type.name;
-        FA.FA.location_id = location.id;
-        collab_result = await faservice.create(FA);
-        expect(collab_result).toBeDefined();
-      });
-
-      test('Should get one collaborator', async () => {
-        //find all collaborators linked to result
-        collaborators = await prisma.collaborator.findMany({
-          where: {
-            FA_Collaborators: {
-              some: {
-                fa_id: collab_result.id,
-              },
-            },
-          },
-        });
-        expect(collaborators.length).toBe(1);
-      });
-
-      afterAll(async () => {
-        //remove FA foreign key from collaborator
-        await prisma.fA_Collaborators.deleteMany({
-          where: {
-            fa_id: collab_result.id,
-          },
-        });
-        //delete the FA
-        await prisma.fA.delete({
-          where: {
-            id: collab_result.id,
-          },
-        });
-        //delete the collaborator
-        await prisma.collaborator.delete({
-          where: {
-            id: collaborators[0].id,
-          },
-        });
-      });
+    await prisma.fA_Collaborators.deleteMany({
+      where: {
+        fa_id: {
+          in: all_fa.map((fa) => fa.id),
+        },
+      },
     });
-
-    describe('Create an FA with a security pass', () => {
-      let secu_result: FA | null;
-      let security_pass: any;
-
-      test('should create an FA with a security pass', async () => {
-        expect(faservice.create).toBeDefined();
-        const FA = secuFA;
-        FA.FA.type = fa_type.name;
-        FA.FA.location_id = location.id;
-        secu_result = await faservice.create(FA);
-        expect(secu_result).toBeDefined();
-      });
-
-      test('Should get one security pass', async () => {
-        //find all security passes linked to result
-        security_pass = await prisma.security_pass.findMany({
-          where: {
-            fa_id: secu_result.id,
-          },
-        });
-        expect(security_pass.length).toBe(1);
-      });
-
-      afterAll(async () => {
-        //delete the security pass
-        await prisma.security_pass.delete({
-          where: {
-            id: security_pass[0].id,
-          },
-        });
-        //delete the FA
-        await prisma.fA.delete({
-          where: {
-            id: secu_result.id,
-          },
-        });
-      });
+    await prisma.collaborator.deleteMany({
+      where: {
+        id: {
+          in: collaborators.map((collaborator) => collaborator.id),
+        },
+      },
+    });
+    await prisma.fA.deleteMany({
+      where: {
+        id: {
+          in: all_fa.map((fa) => fa.id),
+        },
+      },
     });
   });
-  describe('FA validation system', () => {
-    let sampleFA: FA | null;
-    let validatorUser: User | null;
-    let notValidatorUser: User | null;
+});
 
-    beforeAll(async () => {
-      validatorUser = await prisma.user.findFirst({
-        where: {
-          team: {
-            some: {
-              team: {
-                fa_validator: true,
-              },
-            },
-          },
-        },
-      });
-      notValidatorUser = await prisma.user.findFirst({
-        where: {
-          team: {
-            some: {
-              team: {
-                fa_validator: false,
-              },
-            },
-          },
-        },
-      });
-      expect(validatorUser).toBeDefined();
-      expect(notValidatorUser).toBeDefined();
+describe('FA creation', () => {
+  describe('Create an FA without any links', () => {
+    let result: FA | null;
+
+    test('should create an FA without any links', async () => {
+      expect(faservice.create).toBeDefined();
       const FA = nakedFA;
       FA.FA.type = fa_type.name;
       FA.FA.location_id = location.id;
-      sampleFA = await faservice.create(FA);
-      expect(sampleFA).toBeDefined();
+      result = await faservice.create(nakedFA);
+      expect(result).toBeDefined();
     });
 
-    test("Should not validate an FA with a user who's not a validator", async () => {
-      //try to validate the FA and expect an error
-      await expect(
-        faservice.validateFa(sampleFA.id, notValidatorUser.id),
-      ).rejects.toThrowError();
-    });
-
-    test('Should accept the validation', async () => {
-      await expect(
-        faservice.validateFa(sampleFA.id, validatorUser.id),
-      ).resolves.not.toThrowError();
-    });
-
-    test('Should not validate an FA that does not exist', async () => {
-      await expect(
-        faservice.validateFa(-1, validatorUser.id),
-      ).rejects.toThrowError();
-    });
-
-    test('Should not validate an FA with a user that does not exist', async () => {
-      //try to validate the FA and expect no error
-      await expect(
-        faservice.validateFa(sampleFA.id, -1),
-      ).rejects.toThrowError();
-    });
-
-    test('Should unvalidate the FA', async () => {
-      await expect(
-        faservice.unvalidateFa(sampleFA.id, validatorUser.id),
-      ).resolves.not.toThrowError();
-      const validation = await prisma.fA_validation.findUnique({
+    test('Should not get any collaborator', async () => {
+      const collaborators = await prisma.collaborator.findMany({
         where: {
-          fa_id_user_id: {
-            fa_id: sampleFA.id,
-            user_id: validatorUser.id,
+          FA_Collaborators: {
+            some: {
+              fa_id: result.id,
+            },
           },
         },
       });
-      expect(validation.is_deleted).toBe(true);
+      expect(collaborators.length).toBe(0);
+    });
+
+    test('Should not get any security pass', async () => {
+      //find all security passes linked to result
+      const security_pass = await prisma.security_pass.findMany({
+        where: {
+          fa_id: result.id,
+        },
+      });
+      expect(security_pass.length).toBe(0);
     });
 
     afterAll(async () => {
-      //delete the validation
-      await prisma.fA_validation.deleteMany({
-        where: {
-          fa_id: sampleFA.id,
-        },
-      });
+      //delete the FA
       await prisma.fA.delete({
         where: {
-          id: sampleFA.id,
+          id: result.id,
         },
       });
+    });
+  });
+
+  describe('Create an FA with a collaborator', () => {
+    let collab_result: FA | null;
+    let collaborators: Collaborator[];
+
+    test('should create an FA with a collaborator', async () => {
+      expect(faservice.create).toBeDefined();
+      const FA = collaboratorFA;
+      FA.FA.type = fa_type.name;
+      FA.FA.location_id = location.id;
+      collab_result = await faservice.create(FA);
+      expect(collab_result).toBeDefined();
+    });
+
+    test('Should get one collaborator', async () => {
+      //find all collaborators linked to result
+      collaborators = await prisma.collaborator.findMany({
+        where: {
+          FA_Collaborators: {
+            some: {
+              fa_id: collab_result.id,
+            },
+          },
+        },
+      });
+      expect(collaborators.length).toBe(1);
+    });
+
+    afterAll(async () => {
+      //remove FA foreign key from collaborator
+      await prisma.fA_Collaborators.deleteMany({
+        where: {
+          fa_id: collab_result.id,
+        },
+      });
+      //delete the FA
+      await prisma.fA.delete({
+        where: {
+          id: collab_result.id,
+        },
+      });
+      //delete the collaborator
+      await prisma.collaborator.delete({
+        where: {
+          id: collaborators[0].id,
+        },
+      });
+    });
+  });
+
+  describe('Create an FA with a security pass', () => {
+    let secu_result: FA | null;
+    let security_pass: any;
+
+    test('should create an FA with a security pass', async () => {
+      expect(faservice.create).toBeDefined();
+      const FA = secuFA;
+      FA.FA.type = fa_type.name;
+      FA.FA.location_id = location.id;
+      secu_result = await faservice.create(FA);
+      expect(secu_result).toBeDefined();
+    });
+
+    test('Should get one security pass', async () => {
+      //find all security passes linked to result
+      security_pass = await prisma.security_pass.findMany({
+        where: {
+          fa_id: secu_result.id,
+        },
+      });
+      expect(security_pass.length).toBe(1);
+    });
+
+    afterAll(async () => {
+      //delete the security pass
+      await prisma.security_pass.delete({
+        where: {
+          id: security_pass[0].id,
+        },
+      });
+      //delete the FA
+      await prisma.fA.delete({
+        where: {
+          id: secu_result.id,
+        },
+      });
+    });
+  });
+});
+describe('FA validation system', () => {
+  let sampleFA: FA | null;
+  let validatorUser: User | null;
+  let notValidatorUser: User | null;
+
+  beforeAll(async () => {
+    validatorUser = await prisma.user.findFirst({
+      where: {
+        team: {
+          some: {
+            team: {
+              fa_validator: true,
+            },
+          },
+        },
+      },
+    });
+    notValidatorUser = await prisma.user.findFirst({
+      where: {
+        team: {
+          some: {
+            team: {
+              fa_validator: false,
+            },
+          },
+        },
+      },
+    });
+    expect(validatorUser).toBeDefined();
+    expect(notValidatorUser).toBeDefined();
+    const FA = nakedFA;
+    FA.FA.type = fa_type.name;
+    FA.FA.location_id = location.id;
+    sampleFA = await faservice.create(FA);
+    expect(sampleFA).toBeDefined();
+  });
+
+  test("Should not validate an FA with a user who's not a validator", async () => {
+    //try to validate the FA and expect an error
+    await expect(
+      faservice.validateFa(sampleFA.id, notValidatorUser.id),
+    ).rejects.toThrowError();
+  });
+
+  test('Should accept the validation', async () => {
+    await expect(
+      faservice.validateFa(sampleFA.id, validatorUser.id),
+    ).resolves.not.toThrowError();
+  });
+
+  test('Should not validate an FA that does not exist', async () => {
+    await expect(
+      faservice.validateFa(-1, validatorUser.id),
+    ).rejects.toThrowError();
+  });
+
+  test('Should not validate an FA with a user that does not exist', async () => {
+    //try to validate the FA and expect no error
+    await expect(faservice.validateFa(sampleFA.id, -1)).rejects.toThrowError();
+  });
+
+  test('Should unvalidate the FA', async () => {
+    await expect(
+      faservice.unvalidateFa(sampleFA.id, validatorUser.id),
+    ).resolves.not.toThrowError();
+    const validation = await prisma.fA_validation.findUnique({
+      where: {
+        fa_id_user_id: {
+          fa_id: sampleFA.id,
+          user_id: validatorUser.id,
+        },
+      },
+    });
+    expect(validation.is_deleted).toBe(true);
+  });
+
+  afterAll(async () => {
+    //delete the validation
+    await prisma.fA_validation.deleteMany({
+      where: {
+        fa_id: sampleFA.id,
+      },
+    });
+    await prisma.fA.delete({
+      where: {
+        id: sampleFA.id,
+      },
     });
   });
 });
