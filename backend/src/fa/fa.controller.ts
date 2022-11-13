@@ -29,16 +29,12 @@ export class FaController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post()
-  @ApiBody({
-    description: 'Create a new fa',
-    type: CreateFaDto,
-  })
   @ApiResponse({
     status: 201,
     description: 'Create a new fa',
     type: Promise<FA | null>,
   })
-  create(@Body() fa: any): Promise<FA | null> {
+  create(@Body() fa: CreateFaDto): Promise<FA | null> {
     return this.faService.create(fa);
   }
 

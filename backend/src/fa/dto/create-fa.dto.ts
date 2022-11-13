@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { CreateSecurityPassDto } from '../../security_pass/dto/create-security_pass.dto';
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
+import { Type } from 'class-transformer';
 
 export enum Status {
   DRAFT = 'DRAFT',
@@ -127,6 +128,7 @@ export class CreateFaDto {
     description: 'The fa',
   })
   @ValidateNested()
+  @Type(() => FA)
   FA: FA;
 
   @ApiProperty({
@@ -136,6 +138,7 @@ export class CreateFaDto {
   })
   @IsOptional()
   @ValidateNested()
+  @Type(() => CreateCollaboratorDto)
   FA_Collaborators?: CreateCollaboratorDto[];
 
   @ApiProperty({
@@ -145,5 +148,6 @@ export class CreateFaDto {
   })
   @IsOptional()
   @ValidateNested()
+  @Type(() => CreateSecurityPassDto)
   Security_pass?: CreateSecurityPassDto[];
 }
