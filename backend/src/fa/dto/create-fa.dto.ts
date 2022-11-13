@@ -34,69 +34,75 @@ class FA {
   created_at?: Date;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The type of the fa',
   })
   @IsString()
-  @IsNotEmpty()
-  type: string;
+  @IsOptional()
+  type?: string;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The id of the team whos responsible of the fa',
   })
   @IsNumber()
-  team_id: number;
+  @IsOptional()
+  team_id?: number;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The id of the user who is responsible of the fa',
   })
   @IsNumber()
-  in_charge: number;
+  @IsOptional()
+  in_charge?: number;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The id of the location of the fa',
   })
   @IsNumber()
-  location_id: number;
+  @IsOptional()
+  location_id?: number;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The status of the fa',
     enum: [Status.DRAFT, Status.SUBMITTED, Status.VALIDATED, Status.REFUSED],
   })
-  status: Status;
+  status?: Status;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The description of the fa',
   })
   @IsString()
-  @IsNotEmpty()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'Is the activity publishable on the website',
   })
   @IsBoolean()
-  is_publishable: boolean;
+  @IsOptional()
+  is_publishable?: boolean;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'Is the activty a major activity',
   })
   @IsBoolean()
-  is_major: boolean;
+  @IsOptional()
+  is_major?: boolean;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'Is the activity for kids',
   })
   @IsBoolean()
-  is_kids: boolean;
+  @IsOptional()
+  is_kids?: boolean;
 
   @ApiProperty({
     required: false,

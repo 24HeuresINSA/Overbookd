@@ -24,19 +24,19 @@ ADD COLUMN     "ft_validator" BOOLEAN NOT NULL DEFAULT false;
 CREATE TABLE "FA" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
-    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
-    "type" VARCHAR(255) NOT NULL,
-    "team_id" INTEGER NOT NULL,
-    "in_charge" INTEGER NOT NULL,
+    "type" VARCHAR(255),
+    "team_id" INTEGER,
+    "in_charge" INTEGER,
     "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "location_id" INTEGER,
-    "status" "Status" NOT NULL DEFAULT 'DRAFT',
-    "description" TEXT NOT NULL,
-    "is_publishable" BOOLEAN NOT NULL,
-    "is_major" BOOLEAN NOT NULL,
-    "is_kids" BOOLEAN NOT NULL,
+    "status" "Status" DEFAULT 'DRAFT',
+    "description" TEXT,
+    "is_publishable" BOOLEAN DEFAULT false,
+    "is_major" BOOLEAN DEFAULT false,
+    "is_kids" BOOLEAN DEFAULT false,
     "security_needs" TEXT,
     "water_flow_required" INTEGER,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "FA_pkey" PRIMARY KEY ("id")
 );
@@ -159,13 +159,13 @@ CREATE TABLE "TimeWindow" (
 CREATE UNIQUE INDEX "Collaborator_firstname_lastname_key" ON "Collaborator"("firstname", "lastname");
 
 -- AddForeignKey
-ALTER TABLE "FA" ADD CONSTRAINT "FA_type_fkey" FOREIGN KEY ("type") REFERENCES "FA_type"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA" ADD CONSTRAINT "FA_type_fkey" FOREIGN KEY ("type") REFERENCES "FA_type"("name") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA" ADD CONSTRAINT "FA_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA" ADD CONSTRAINT "FA_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA" ADD CONSTRAINT "FA_in_charge_fkey" FOREIGN KEY ("in_charge") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA" ADD CONSTRAINT "FA_in_charge_fkey" FOREIGN KEY ("in_charge") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA" ADD CONSTRAINT "FA_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;

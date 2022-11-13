@@ -140,27 +140,28 @@ enum Status {
 }
 
 model FA {
-  id                   Int                    @id @default(autoincrement())
-  name                 String                 @db.VarChar(255)
-  is_deleted           Boolean                @default(false)
-  fa_type_name         FA_type                @relation(fields: [type], references: [name])
-  type                 String                 @db.VarChar(255)
-  Team                 Team                   @relation(fields: [team_id], references: [id])
-  team_id              Int
-  User_in_charge       User                   @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge            Int
-  created_at           DateTime?              @default(now())
-  Location             Location?              @relation(fields: [location_id], references: [id])
-  location_id          Int?
-  status               Status                 @default(DRAFT)
-  description          String                 @db.Text
-  is_publishable       Boolean
-  is_major             Boolean
-  is_kids              Boolean
+  id                  Int       @id @default(autoincrement())
+  name                String    @db.VarChar(255)
+  fa_type_name        FA_type?  @relation(fields: [type], references: [name])
+  type                String?   @db.VarChar(255)
+  Team                Team?     @relation(fields: [team_id], references: [id])
+  team_id             Int?
+  User_in_charge      User?     @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge           Int?
+  created_at          DateTime? @default(now())
+  Location            Location? @relation(fields: [location_id], references: [id])
+  location_id         Int?
+  status              Status?   @default(DRAFT)
+  description         String?   @db.Text
+  is_publishable      Boolean?  @default(false)
+  is_major            Boolean?  @default(false)
+  is_kids             Boolean?  @default(false)
+  security_needs      String?   @db.Text
+  water_flow_required Int?
+  is_deleted          Boolean   @default(false)
+
   FA_validation        FA_validation[]
   FA_refuse            FA_refuse[]
-  security_needs       String?                @db.Text
-  water_flow_required  Int?
   FA_Collaborators     FA_Collaborators[]
   FA_Electricity_needs FA_Electricity_needs[]
   FA_signa_needs       FA_signa_needs[]
