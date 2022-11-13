@@ -89,7 +89,7 @@ export class FaController {
   @Roles('hard')
   @Delete(':id')
   @ApiResponse({
-    status: 201,
+    status: 204,
     description: 'Delete a fa',
     type: Promise<FA | null>,
   })
@@ -112,5 +112,21 @@ export class FaController {
   ): Promise<FA | null> {
     const user_id = request.user.id;
     return this.faService.validateFa(id, user_id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('orga')
+  @Delete('validate/:id')
+  @ApiResponse({
+    status: 204,
+    description: 'Unvalidate a fa',
+    type: Promise<FA | null>,
+  })
+  unvalidate(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() request: RequestWithUserPayload,
+  ): Promise<FA | null> {
+    const user_id = request.user.id;
+    return this.faService.unvalidateFa(id, user_id);
   }
 }
