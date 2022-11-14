@@ -35,24 +35,24 @@ export class CategoryService {
   ) {}
 
   async create({ name, owner, parent }: CategoryForm): Promise<Category> {
-    const { slug, ownerTeam } = await this.buildOwnerAndSlug({
+    const { path, ownerTeam } = await this.buildOwnerAndPath({
       parent,
       name,
       owner,
     });
     return this.categoryRepository.addCategory({
       name,
-      slug,
+      path,
       parent,
       owner: ownerTeam,
     });
   }
 
-  private async buildOwnerAndSlug({ parent, name, owner }: CategoryForm) {
+  private async buildOwnerAndPath({ parent, name, owner }: CategoryForm) {
     const parentCategory = await this.fetchParentCategory(parent);
-    const slug = this.generateSlug(name, parentCategory);
+    const path = this.generatePath(name, parentCategory);
     const ownerTeam = await this.findOwner(owner, parentCategory);
-    return { slug, ownerTeam };
+    return { path, ownerTeam };
   }
 
   async update({
@@ -61,7 +61,7 @@ export class CategoryService {
     owner,
     id,
   }: updateCategoryForm): Promise<Category> {
-    const { slug, ownerTeam } = await this.buildOwnerAndSlug({
+    const { path, ownerTeam } = await this.buildOwnerAndPath({
       parent,
       name,
       owner,
@@ -69,7 +69,7 @@ export class CategoryService {
     const updatedCategory = await this.categoryRepository.updateCategory({
       id,
       name,
-      slug,
+      path,
       parent,
       owner: ownerTeam,
     });
@@ -82,11 +82,11 @@ export class CategoryService {
     const subCategories = await this.categoryRepository.getSubCategories(
       updatedCategory.id,
     );
-    const categoriesWithNewSlug = await this.slugComputeCascading(
+    const categoriesWithNewPath = await this.pathComputeCascading(
       updatedCategory,
       subCategories,
     );
-    const categoriesWithNewOwner = categoriesWithNewSlug.map((category) => {
+    const categoriesWithNewOwner = categoriesWithNewPath.map((category) => {
       const owner = updatedCategory.owner ?? category.owner;
       return { ...category, owner };
     });
@@ -129,7 +129,7 @@ export class CategoryService {
       newParent,
     );
 
-    const toUpdateCategories = await this.slugComputeCascading(
+    const toUpdateCategories = await this.pathComputeCascading(
       newParent,
       subCategories,
     );
@@ -137,7 +137,7 @@ export class CategoryService {
     return;
   }
 
-  private async slugComputeCascading(
+  private async pathComputeCascading(
     currentCategory: Category,
     subCategories: Category[],
     toUpdateCategories: Category[] = [],
@@ -146,14 +146,14 @@ export class CategoryService {
 
     const updatedSubCategories = subCategories.map((subCategory) => ({
       ...subCategory,
-      slug: this.generateSlug(subCategory.name, currentCategory),
+      path: this.generatePath(subCategory.name, currentCategory),
     }));
 
     toUpdateCategories.push(...updatedSubCategories);
 
     const toUpdateCategoriesListing = await Promise.all(
       updatedSubCategories.map(async (subCategory) =>
-        this.slugComputeCascading(
+        this.pathComputeCascading(
           subCategory,
           await this.categoryRepository.getSubCategories(subCategory.id),
           toUpdateCategories,
@@ -178,9 +178,9 @@ export class CategoryService {
     return this.find(parent);
   }
 
-  private generateSlug(name: string, parentCategory?: Category): string {
+  private generatePath(name: string, parentCategory?: Category): string {
     return parentCategory
-      ? `${parentCategory.slug}->${this.slugifyService.slugify(name)}`
+      ? `${parentCategory.path}->${this.slugifyService.slugify(name)}`
       : this.slugifyService.slugify(name);
   }
 

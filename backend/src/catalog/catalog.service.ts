@@ -93,7 +93,7 @@ export class CatalogService {
     const slug = this.slugService.slugify(name);
     const category = await this.getCategory(categoryId);
     const simplifiedCategory = category
-      ? { name: category.name, slug: category.slug, id: category.id }
+      ? { name: category.name, path: category.path, id: category.id }
       : undefined;
     const owner = category?.owner;
     return { category: simplifiedCategory, slug, owner };

@@ -16,26 +16,26 @@ const CATEGORIES: Category[] = [
   {
     id: 1,
     name: 'Bricollage',
-    slug: 'bricollage',
+    path: 'bricollage',
     owner: teamMatos,
   },
   {
     id: 2,
     name: 'Electrique',
-    slug: 'electrique',
+    path: 'electrique',
     owner: teamElec,
   },
   {
     id: 3,
     name: 'Cable',
-    slug: 'electrique->cable',
+    path: 'electrique->cable',
     owner: teamElec,
     parent: 2,
   },
   {
     id: 4,
     name: 'Grosse Tension',
-    slug: 'electrique->cable->grosse-tension',
+    path: 'electrique->cable->grosse-tension',
     owner: teamElec,
     parent: 3,
   },
@@ -79,21 +79,21 @@ describe('Category', () => {
   });
   describe('create a category', () => {
     describe.each`
-      name                    | expectedSlug
+      name                    | expectedPath
       ${'mobilier'}           | ${'mobilier'}
       ${'Mobilier'}           | ${'mobilier'}
       ${'prise secteur 400V'} | ${'prise-secteur-400v'}
     `(
       '$name main category without responsible team',
-      ({ name, expectedSlug }) => {
-        it(`should be created with generated id and "${expectedSlug}" as slug`, async () => {
+      ({ name, expectedPath }) => {
+        it(`should be created with generated id and "${expectedPath}" as path`, async () => {
           const createdCategory = await categService.create({ name });
           expect(createdCategory).toHaveProperty('id');
           expect(createdCategory.id).toEqual(expect.any(Number));
           expect(createdCategory).toHaveProperty('name');
           expect(createdCategory.name).toBe(name);
-          expect(createdCategory).toHaveProperty('slug');
-          expect(createdCategory.slug).toBe(expectedSlug);
+          expect(createdCategory).toHaveProperty('path');
+          expect(createdCategory.path).toBe(expectedPath);
         });
         it(`should be accessible after`, async () => {
           const createdCategory = await categService.create({ name });
@@ -117,20 +117,20 @@ describe('Category', () => {
       },
     );
     describe.each`
-      name            | owner        | parentCategory | expectedSlug                | expectedOwner
+      name            | owner        | parentCategory | expectedPath                | expectedOwner
       ${'Outils'}     | ${'matos'}   | ${1}           | ${'bricollage->outils'}     | ${teamMatos}
       ${'Rangements'} | ${'elec'}    | ${1}           | ${'bricollage->rangements'} | ${teamMatos}
       ${'Rallonges'}  | ${undefined} | ${2}           | ${'electrique->rallonges'}  | ${teamElec}
     `(
       '$name sub category of #$parentCategory category',
-      ({ name, owner, parentCategory, expectedSlug, expectedOwner }) => {
-        it(`should generate composed ${expectedSlug} slug`, async () => {
+      ({ name, owner, parentCategory, expectedPath, expectedOwner }) => {
+        it(`should generate composed ${expectedPath} path`, async () => {
           const createdCategory = await categService.create({
             name,
             parent: parentCategory,
             owner,
           });
-          expect(createdCategory.slug).toBe(expectedSlug);
+          expect(createdCategory.path).toBe(expectedPath);
         });
         it(`should be associated to #${parentCategory} category `, async () => {
           const createdCategory = await categService.create({
@@ -172,8 +172,8 @@ describe('Category', () => {
       ${{ id: 1 }}            | ${undefined}                                             | ${undefined}
       ${{ id: 4 }}            | ${undefined}                                             | ${undefined}
       ${{ id: 5 }}            | ${undefined}                                             | ${undefined}
-      ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedSlug: 'electrique->grosse-tension' }} | ${undefined}
-      ${{ id: 2 }}            | ${{ id: 3, expectedSlug: 'cable' }}                      | ${{ id: 4, expectedSlug: 'cable->grosse-tension' }}
+      ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedPath: 'electrique->grosse-tension' }} | ${undefined}
+      ${{ id: 2 }}            | ${{ id: 3, expectedPath: 'cable' }}                      | ${{ id: 4, expectedPath: 'cable->grosse-tension' }}
     `(
       `when deleting category $toDeleteCategory 
         with child category $childrenCategory
@@ -192,19 +192,19 @@ describe('Category', () => {
             expect(child.parent).not.toBe(toDeleteCategory.id);
             expect(child.parent).toBe(toDeleteCategory.parent);
           });
-          it(`should change #${childrenCategory.id} child category slug to ${childrenCategory.expectedSlug}`, async () => {
+          it(`should change #${childrenCategory.id} child category path to ${childrenCategory.expectedPath}`, async () => {
             await categService.remove(toDeleteCategory.id);
             const child = await categService.find(childrenCategory.id);
-            expect(child.slug).toBe(childrenCategory.expectedSlug);
+            expect(child.path).toBe(childrenCategory.expectedPath);
           });
         }
         if (grandChildrenCategory) {
-          it(`should change #${grandChildrenCategory.id} grandchild category slug to ${grandChildrenCategory.expectedSlug}`, async () => {
+          it(`should change #${grandChildrenCategory.id} grandchild category path to ${grandChildrenCategory.expectedPath}`, async () => {
             await categService.remove(toDeleteCategory.id);
             const grandChild = await categService.find(
               grandChildrenCategory.id,
             );
-            expect(grandChild.slug).toBe(grandChildrenCategory.expectedSlug);
+            expect(grandChild.path).toBe(grandChildrenCategory.expectedPath);
           });
         }
       },
@@ -216,36 +216,36 @@ describe('Category', () => {
       - Cascade slug updates on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                                                       | expectedSlug                                  | childCategory                                                     | grandChildCategory
+        toUpdateCategory                                                                       | expectedPath                                  | childCategory                                                     | grandChildCategory
         ${{ id: 1, name: 'Bricolles', owner: { id: 1, name: 'matos' } }}                       | ${'bricolles'}                                | ${undefined}                                                      | ${undefined}
         ${{ id: 4, name: 'Mega Grosses Tensions', owner: { id: 3, name: 'elec' }, parent: 3 }} | ${'electrique->cable->mega-grosses-tensions'} | ${undefined}                                                      | ${undefined}
-        ${{ id: 3, name: 'Cablage', owner: { id: 3, name: 'elec' }, parent: 2 }}               | ${'electrique->cablage'}                      | ${{ id: 4, expectedSlug: 'electrique->cablage->grosse-tension' }} | ${undefined}
-        ${{ id: 2, name: 'Electricite', owner: { id: 3, name: 'elec' } }}                      | ${'electricite'}                              | ${{ id: 3, expectedSlug: 'electricite->cable' }}                  | ${{ id: 4, expectedSlug: 'electricite->cable->grosse-tension' }}
+        ${{ id: 3, name: 'Cablage', owner: { id: 3, name: 'elec' }, parent: 2 }}               | ${'electrique->cablage'}                      | ${{ id: 4, expectedPath: 'electrique->cablage->grosse-tension' }} | ${undefined}
+        ${{ id: 2, name: 'Electricite', owner: { id: 3, name: 'elec' } }}                      | ${'electricite'}                              | ${{ id: 3, expectedPath: 'electricite->cable' }}                  | ${{ id: 4, expectedPath: 'electricite->cable->grosse-tension' }}
       `(
         `when update category #$toUpdateCategory.id name to "$toUpdateCategory.name"`,
         ({
           toUpdateCategory,
-          expectedSlug,
+          expectedPath,
           childCategory,
           grandChildCategory,
         }) => {
-          it(`should update category slug to "${expectedSlug}"`, async () => {
+          it(`should update category path to "${expectedPath}"`, async () => {
             const updatedCategory = await categService.update(toUpdateCategory);
             expect(updatedCategory.name).toBe(toUpdateCategory.name);
-            expect(updatedCategory.slug).toBe(expectedSlug);
+            expect(updatedCategory.path).toBe(expectedPath);
           });
           if (childCategory) {
-            it(`should update #${childCategory.id} child category slug to ${childCategory.expectedSlug}`, async () => {
+            it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
               await categService.update(toUpdateCategory);
               const child = await categService.find(childCategory.id);
-              expect(child.slug).toBe(childCategory.expectedSlug);
+              expect(child.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
-            it(`should update #${grandChildCategory.id} grandchild category slug to ${grandChildCategory.expectedSlug}`, async () => {
+            it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
               await categService.update(toUpdateCategory);
               const child = await categService.find(grandChildCategory.id);
-              expect(child.slug).toBe(grandChildCategory.expectedSlug);
+              expect(child.path).toBe(grandChildCategory.expectedPath);
             });
           }
         },
@@ -296,16 +296,16 @@ describe('Category', () => {
       - Cascade owner changes on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                            | expectedOwner | expectedSlug                | childCategory                                               | grandChildCategory
+        toUpdateCategory                                            | expectedOwner | expectedPath                | childCategory                                               | grandChildCategory
         ${{ id: 1, name: 'Bricollage', owner: 'matos', parent: 2 }} | ${teamElec}   | ${'electrique->bricollage'} | ${undefined}                                                | ${undefined}
         ${{ id: 4, name: 'Grosse Tension', owner: 'elec' }}         | ${teamElec}   | ${'grosse-tension'}         | ${undefined}                                                | ${undefined}
-        ${{ id: 2, name: 'Electrique', owner: 'elec', parent: 1 }}  | ${teamMatos}  | ${'bricollage->electrique'} | ${{ id: 3, expectedSlug: 'bricollage->electrique->cable' }} | ${{ id: 4, expectedSlug: 'bricollage->electrique->cable->grosse-tension' }}
+        ${{ id: 2, name: 'Electrique', owner: 'elec', parent: 1 }}  | ${teamMatos}  | ${'bricollage->electrique'} | ${{ id: 3, expectedPath: 'bricollage->electrique->cable' }} | ${{ id: 4, expectedPath: 'bricollage->electrique->cable->grosse-tension' }}
       `(
         'when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category',
         ({
           toUpdateCategory,
           expectedOwner,
-          expectedSlug,
+          expectedPath,
           childCategory,
           grandChildCategory,
         }) => {
@@ -313,10 +313,10 @@ describe('Category', () => {
             const updatedCategory = await categService.update(toUpdateCategory);
             expect(updatedCategory.owner).toMatchObject(expectedOwner);
           });
-          it(`should update category slug to "${expectedSlug}"`, async () => {
+          it(`should update category path to "${expectedPath}"`, async () => {
             const updatedCategory = await categService.update(toUpdateCategory);
             expect(updatedCategory.name).toBe(toUpdateCategory.name);
-            expect(updatedCategory.slug).toBe(expectedSlug);
+            expect(updatedCategory.path).toBe(expectedPath);
           });
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
@@ -324,10 +324,10 @@ describe('Category', () => {
               const child = await categService.find(childCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
-            it(`should update #${childCategory.id} child category slug to ${childCategory.expectedSlug}`, async () => {
+            it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
               await categService.update(toUpdateCategory);
               const child = await categService.find(childCategory.id);
-              expect(child.slug).toBe(childCategory.expectedSlug);
+              expect(child.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
@@ -336,10 +336,10 @@ describe('Category', () => {
               const child = await categService.find(grandChildCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
-            it(`should update #${grandChildCategory.id} grandchild category slug to ${grandChildCategory.expectedSlug}`, async () => {
+            it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
               await categService.update(toUpdateCategory);
               const child = await categService.find(grandChildCategory.id);
-              expect(child.slug).toBe(grandChildCategory.expectedSlug);
+              expect(child.path).toBe(grandChildCategory.expectedPath);
             });
           }
         },
@@ -371,27 +371,27 @@ describe('Category', () => {
       expect(categories).toContainEqual({
         id: 1,
         name: 'Bricollage',
-        slug: 'bricollage',
+        path: 'bricollage',
         owner: teamMatos,
         subCategories: [],
       });
       expect(categories).toContainEqual({
         id: 2,
         name: 'Electrique',
-        slug: 'electrique',
+        path: 'electrique',
         owner: teamElec,
         subCategories: [
           {
             id: 3,
             name: 'Cable',
-            slug: 'electrique->cable',
+            path: 'electrique->cable',
             owner: teamElec,
             parent: 2,
             subCategories: [
               {
                 id: 4,
                 name: 'Grosse Tension',
-                slug: 'electrique->cable->grosse-tension',
+                path: 'electrique->cable->grosse-tension',
                 owner: teamElec,
                 parent: 3,
                 subCategories: [],
@@ -423,20 +423,20 @@ describe('Category', () => {
         expect(categories).toContainEqual({
           id: 1,
           name: 'Signaletique',
-          slug: 'signaletique',
+          path: 'signaletique',
           owner: teamSigna,
           subCategories: [
             {
               id: 2,
               name: 'Lumineuse',
-              slug: 'signaletique->lumineuse',
+              path: 'signaletique->lumineuse',
               owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 3,
                   name: 'Projection',
-                  slug: 'signaletique->lumineuse->projection',
+                  path: 'signaletique->lumineuse->projection',
                   owner: teamSigna,
                   parent: 2,
                   subCategories: [],
@@ -444,7 +444,7 @@ describe('Category', () => {
                 {
                   id: 10,
                   name: 'Panneau',
-                  slug: 'signaletique->lumineuse->panneau',
+                  path: 'signaletique->lumineuse->panneau',
                   owner: teamSigna,
                   parent: 2,
                   subCategories: [],
@@ -454,14 +454,14 @@ describe('Category', () => {
             {
               id: 4,
               name: 'Plan',
-              slug: 'signaletique->plan',
+              path: 'signaletique->plan',
               owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 5,
                   name: 'Grand Format',
-                  slug: 'signaletique->plan->grand-format',
+                  path: 'signaletique->plan->grand-format',
                   owner: teamSigna,
                   parent: 4,
                   subCategories: [],
@@ -469,7 +469,7 @@ describe('Category', () => {
                 {
                   id: 6,
                   name: 'Format Flyer',
-                  slug: 'signaletique->plan->format-flyer',
+                  path: 'signaletique->plan->format-flyer',
                   owner: teamSigna,
                   parent: 4,
                   subCategories: [],
@@ -479,14 +479,14 @@ describe('Category', () => {
             {
               id: 7,
               name: 'Panneau',
-              slug: 'signaletique->panneau',
+              path: 'signaletique->panneau',
               owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 8,
                   name: 'Bois',
-                  slug: 'signaletique->panneau->bois',
+                  path: 'signaletique->panneau->bois',
                   owner: teamSigna,
                   parent: 7,
                   subCategories: [],
@@ -494,7 +494,7 @@ describe('Category', () => {
                 {
                   id: 8,
                   name: 'Plastique',
-                  slug: 'signaletique->panneau->plastique',
+                  path: 'signaletique->panneau->plastique',
                   owner: teamSigna,
                   parent: 7,
                   subCategories: [],
@@ -502,7 +502,7 @@ describe('Category', () => {
                 {
                   id: 9,
                   name: 'Moquette',
-                  slug: 'signaletique->panneau->moquette',
+                  path: 'signaletique->panneau->moquette',
                   owner: teamSigna,
                   parent: 7,
                   subCategories: [],
@@ -540,62 +540,62 @@ describe('Category', () => {
 function getSignaCategories(): Category[] {
   const owner = teamSigna;
   return [
-    { id: 1, name: 'Signaletique', slug: 'signaletique', owner },
+    { id: 1, name: 'Signaletique', path: 'signaletique', owner },
     {
       id: 2,
       name: 'Lumineuse',
-      slug: 'signaletique->lumineuse',
+      path: 'signaletique->lumineuse',
       owner,
       parent: 1,
     },
     {
       id: 3,
       name: 'Projection',
-      slug: 'signaletique->lumineuse->projection',
+      path: 'signaletique->lumineuse->projection',
       owner,
       parent: 2,
     },
     {
       id: 10,
       name: 'Panneau',
-      slug: 'signaletique->lumineuse->panneau',
+      path: 'signaletique->lumineuse->panneau',
       owner,
       parent: 2,
     },
-    { id: 4, name: 'Plan', slug: 'signaletique->plan', owner, parent: 1 },
+    { id: 4, name: 'Plan', path: 'signaletique->plan', owner, parent: 1 },
     {
       id: 5,
       name: 'Grand Format',
-      slug: 'signaletique->plan->grand-format',
+      path: 'signaletique->plan->grand-format',
       owner,
       parent: 4,
     },
     {
       id: 6,
       name: 'Format Flyer',
-      slug: 'signaletique->plan->format-flyer',
+      path: 'signaletique->plan->format-flyer',
       owner,
       parent: 4,
     },
-    { id: 7, name: 'Panneau', slug: 'signaletique->panneau', owner, parent: 1 },
+    { id: 7, name: 'Panneau', path: 'signaletique->panneau', owner, parent: 1 },
     {
       id: 8,
       name: 'Bois',
-      slug: 'signaletique->panneau->bois',
+      path: 'signaletique->panneau->bois',
       owner,
       parent: 7,
     },
     {
       id: 8,
       name: 'Plastique',
-      slug: 'signaletique->panneau->plastique',
+      path: 'signaletique->panneau->plastique',
       owner,
       parent: 7,
     },
     {
       id: 9,
       name: 'Moquette',
-      slug: 'signaletique->panneau->moquette',
+      path: 'signaletique->panneau->moquette',
       owner,
       parent: 7,
     },

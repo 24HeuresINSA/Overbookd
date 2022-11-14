@@ -12,10 +12,10 @@ import { CategoryController } from './category.controller';
 import { Team } from './interfaces';
 import { GearController } from './gear.controller';
 
-const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
-const teamSigna = { name: 'Orga Signaletique', slug: 'signa' };
-const teamElec = { name: 'Orga Logistique Electricite & Eau', slug: 'elec' };
-const teamBarriere = { name: 'Orga Logistique & Securite', slug: 'barrieres' };
+const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
+const teamSigna = { name: 'Orga Signaletique', code: 'signa' };
+const teamElec = { name: 'Orga Logistique Electricite & Eau', code: 'elec' };
+const teamBarriere = { name: 'Orga Logistique & Securite', code: 'barrieres' };
 
 const FAKE_EXISTING_TEAMS: Team[] = [
   teamMatos,
@@ -27,7 +27,6 @@ const FAKE_EXISTING_TEAMS: Team[] = [
 @Module({
   imports: [CommonModule],
   providers: [
-    SlugifyService,
     CatalogService,
     CategoryService,
     {

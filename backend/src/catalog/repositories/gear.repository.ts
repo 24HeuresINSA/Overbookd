@@ -32,7 +32,7 @@ class GearSearchBuilder {
 
   addCategoryCondition(categorySearch?: string) {
     this.categoryContion = categorySearch
-      ? this.gear.category?.slug?.includes(categorySearch)
+      ? this.gear.category?.path?.includes(categorySearch)
       : true;
     return this;
   }

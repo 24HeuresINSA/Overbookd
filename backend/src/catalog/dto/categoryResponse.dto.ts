@@ -23,10 +23,10 @@ export class CategoryResponseDto implements Category {
 
   @ApiProperty({
     required: true,
-    description: 'Category slug',
+    description: 'Category path',
     type: String,
   })
-  slug: string;
+  path: string;
 
   @ApiProperty({
     required: false,

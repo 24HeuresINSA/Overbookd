@@ -3,7 +3,7 @@ import { BadRequestException } from '@nestjs/common';
 export interface Category {
   id: number;
   name: string;
-  slug: string;
+  path: string;
   owner?: Team;
   parent?: number;
 }

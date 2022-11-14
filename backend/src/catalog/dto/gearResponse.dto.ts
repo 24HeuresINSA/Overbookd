@@ -4,7 +4,7 @@ import { Gear, SimplifiedCategory, Team } from '../interfaces';
 class SimplifiedCategoryRepresentation implements SimplifiedCategory {
   id: number;
   name: string;
-  slug: string;
+  path: string;
 }
 
 class TeamRepresentation implements Team {
