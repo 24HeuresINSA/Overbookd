@@ -39,7 +39,7 @@
     "vuex-module-decorators": "^1.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
+    "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@nuxt/types": "^2.14.12",
     "@nuxt/typescript-build": "^2.0.4",
