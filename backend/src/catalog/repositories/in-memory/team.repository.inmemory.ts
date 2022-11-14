@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Team, TeamRepository } from '../interfaces';
+import { Team, TeamRepository } from '../../interfaces';
 
 @Injectable()
 export class InMemoryTeamRepository implements TeamRepository {

@@ -4,7 +4,7 @@ import { Category, Gear } from './interfaces';
 import {
   InMemoryCategoryRepository,
   InMemoryGearRepository,
-} from './repositories';
+} from './repositories/in-memory';
 
 const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
 const teamBarriere = { name: 'Orga Logistique et Securite', code: 'barrieres' };

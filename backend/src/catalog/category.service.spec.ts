@@ -2,7 +2,7 @@ import { Category, Team } from './interfaces';
 import {
   InMemoryCategoryRepository,
   InMemoryTeamRepository,
-} from './repositories';
+} from './repositories/in-memory';
 import { CategoryService } from './category.service';
 import { SlugifyService } from '../common/services/slugify.service';
 
@@ -163,6 +163,17 @@ describe('Category', () => {
         ).rejects.toThrow(
           `Category #${inexistantParentCategory} doesn\'t exist`,
         );
+      });
+    });
+    describe('when a category already exists', () => {
+      it('should inform the user category already exists', async () => {
+        const name = CATEGORIES[0].name.toUpperCase();
+        await expect(
+          async () =>
+            await categService.create({
+              name,
+            }),
+        ).rejects.toThrow(`"${CATEGORIES[0].name}" category already exist`);
       });
     });
   });
