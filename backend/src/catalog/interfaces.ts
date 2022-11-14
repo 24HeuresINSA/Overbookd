@@ -33,6 +33,11 @@ export interface SearchGear {
   owner?: string;
 }
 
+export interface SearchCategory {
+  name?: string;
+  owner?: string;
+}
+
 export interface GearRepository {
   getGear(id: number): Promise<Gear | undefined>;
   addGear(gear: Omit<Gear, 'id'>): Promise<Gear | undefined>;
@@ -50,6 +55,7 @@ export interface CategoryRepository {
   updateCategories(categories: Category[]): Promise<Category[] | undefined>;
   updateCategory(categories: Category): Promise<Category | undefined>;
   getCategoryTrees(): Promise<CategoryTree[] | undefined>;
+  searchCategory(searchedCategory: SearchCategory): Promise<Category[]>;
 }
 
 export interface TeamRepository {

@@ -6,8 +6,9 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
+import { CategoryForm } from '../category.service';
 
-export class CategoryFormRequestDto {
+export class CategoryFormRequestDto implements CategoryForm {
   @ApiProperty({
     required: true,
     description: 'Category name',

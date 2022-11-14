@@ -514,6 +514,27 @@ describe('Category', () => {
       });
     });
   });
+  describe('search a category', () => {
+    describe.each`
+      searchName   | searchOwner  | expectedCategories
+      ${undefined} | ${undefined} | ${CATEGORIES}
+      ${'bric'}    | ${undefined} | ${[CATEGORIES[0]]}
+      ${'elec'}    | ${undefined} | ${[CATEGORIES[1]]}
+      ${'elec'}    | ${'matos'}   | ${[]}
+      ${undefined} | ${'elec'}    | ${[CATEGORIES[1], CATEGORIES[2], CATEGORIES[3]]}
+    `(
+      'When looking for "$searchName" with "$searchOwner" owner',
+      ({ searchName, searchOwner, expectedCategories }) => {
+        it(`should retrieve ${expectedCategories.length} categories`, async () => {
+          const categories = await categService.search({
+            name: searchName,
+            owner: searchOwner,
+          });
+          expect(categories).toEqual(expectedCategories);
+        });
+      },
+    );
+  });
 });
 
 function getSignaCategories(): Category[] {
