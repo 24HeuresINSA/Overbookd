@@ -16,11 +16,25 @@
                 <v-text-field
                     v-model="prestaData.phone"
                     label="Téléphone"
+                    :rules="
+                        [
+                            (v) =>
+                            new RegExp(`0[6-7]{1}[0-9]{8}$`).test(v) ||
+                            (`ce numéro de téléphone n'est pas valide`),
+                        ]
+                    "
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
                     v-model="prestaData.email"
                     label="E-mail"
+                    :rules="
+                        [
+                            (v) =>
+                            new RegExp(`^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
+                            (`cet email n'est pas valide`),
+                        ]
+                    "
                     @change="onChange">
                 </v-text-field>
                 <v-text-field

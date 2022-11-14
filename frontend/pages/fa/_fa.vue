@@ -10,14 +10,14 @@
         :data="generalData"
         @update-data="updateGeneralData"
       ></FAGeneralCard>
-      <SignaCard
-        id="signa"
-      ></SignaCard>
       <FADetailCard
         id="detail"
         :data="detailData"
         @update-data="updateDetailData"
       ></FADetailCard>
+      <SignaCard
+        id="signa"
+      ></SignaCard>
       <TimeframeTable
         id="timeframe"
         :store="store"

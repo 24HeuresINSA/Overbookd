@@ -2,19 +2,19 @@
     <div class="content">
         <div v-if="form === 'FA'" class="sidebar">
             <div @click="autoScroll('general')">
-                <v-icon large>mdi-message-text</v-icon>
-                <p>Général</p>
-            </div>
-            <div @click="autoScroll('signa')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-card-text</v-icon>
                 <p>Général</p>
             </div>
             <div @click="autoScroll('detail')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-text-box</v-icon>
                 <p>Détail</p>
             </div>
+            <div @click="autoScroll('signa')">
+                <v-icon large>mdi-routes</v-icon>
+                <p>Signa</p>
+            </div>
             <div @click="autoScroll('timeframe')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-calendar-clock</v-icon>
                 <p>Créneaux</p>
             </div>
             <div @click="autoScroll('security')">
@@ -22,23 +22,23 @@
                 <p>Sécurité</p>
             </div>
             <div @click="autoScroll('presta')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-account</v-icon>
                 <p>Presta</p>
             </div>
             <div @click="autoScroll('elec')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-flash</v-icon>
                 <p>Besoin Elec</p>
             </div>
             <div @click="autoScroll('water')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-water</v-icon>
                 <p>Besoin Eau</p>
             </div>
             <div @click="autoScroll('comment')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-comment-text</v-icon>
                 <p>Commentaires</p>
             </div>
             <div @click="autoScroll('ft')">
-                <v-icon large>mdi-message-text</v-icon>
+                <v-icon large>mdi-format-color-highlight</v-icon>
                 <p>FT</p>
             </div>
         </div>

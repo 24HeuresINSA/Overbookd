@@ -15,7 +15,7 @@
       </v-data-table>
       <v-textarea
         v-model="newComment"
-        label="Commentaire?"
+        label="Commentaire"
         dense
         rows="3"
       ></v-textarea>
