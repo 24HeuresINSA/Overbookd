@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SimplifiedCategory, Team } from '../interfaces';
+import { Gear, SimplifiedCategory, Team } from '../interfaces';
 
 class SimplifiedCategoryRepresentation implements SimplifiedCategory {
   id: number;
@@ -12,7 +12,7 @@ class TeamRepresentation implements Team {
   slug: string;
 }
 
-export class GearResponseDto {
+export class GearResponseDto implements Gear {
   @ApiProperty({
     required: true,
     description: 'Gear id',

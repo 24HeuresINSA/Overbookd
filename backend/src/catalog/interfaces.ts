@@ -44,7 +44,6 @@ export interface GearRepository {
   updateGear(gear: Gear): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: SearchGear): Promise<Gear[]>;
-  getAllGears(): Promise<Gear[]>;
 }
 
 export interface CategoryRepository {

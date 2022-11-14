@@ -6,15 +6,14 @@ import {
   CategoryRepository,
   Gear,
   GearRepository,
-  SimplifiedCategory,
 } from './interfaces';
 
-type GearCreateForm = {
+export type GearForm = {
   name: string;
   category?: number;
 };
 
-type GearUpdateForm = GearCreateForm & {
+type GearUpdateForm = GearForm & {
   id: number;
 };
 
@@ -34,7 +33,7 @@ export class CatalogService {
     private readonly gearRepository: GearRepository,
   ) {}
 
-  async add({ name, category: categoryId }: GearCreateForm): Promise<Gear> {
+  async add({ name, category: categoryId }: GearForm): Promise<Gear> {
     const { category, slug, owner } = await this.generateComputedProperties(
       name,
       categoryId,
@@ -45,10 +44,6 @@ export class CatalogService {
       owner,
       slug,
     });
-  }
-
-  async getAll(): Promise<Gear[]> {
-    return this.gearRepository.getAllGears();
   }
 
   async find(id: number): Promise<Gear> {

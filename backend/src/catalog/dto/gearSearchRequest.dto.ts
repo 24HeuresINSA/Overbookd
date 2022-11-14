@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, MinLength } from 'class-validator';
+import { SearchGear } from '../interfaces';
 
-export class GearSearchRequestDto {
+export class GearSearchRequestDto implements SearchGear {
   @ApiProperty({
     required: false,
     description: 'Gear name',
