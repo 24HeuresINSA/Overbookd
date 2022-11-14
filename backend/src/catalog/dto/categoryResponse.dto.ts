@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Category, Team } from '../interfaces';
 
 class TeamRepresentation implements Team {
-  slug: string;
+  code: string;
   name: string;
 }
 

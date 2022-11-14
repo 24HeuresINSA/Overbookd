@@ -18,7 +18,7 @@ class GearSearchBuilder {
 
   addOwnerCondition(ownerSearch?: string) {
     this.ownerCondition = ownerSearch
-      ? this.gear.owner?.slug?.includes(ownerSearch)
+      ? this.gear.owner?.code?.includes(ownerSearch)
       : true;
     return this;
   }

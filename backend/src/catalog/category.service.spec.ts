@@ -6,9 +6,9 @@ import {
 import { CategoryService } from './category.service';
 import { SlugifyService } from '../common/services/slugify.service';
 
-const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
-const teamSigna = { name: 'Orga Signaletique', slug: 'signa' };
-const teamElec = { name: 'Orga Logistique Electricite & Eau', slug: 'elec' };
+const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
+const teamSigna = { name: 'Orga Signaletique', code: 'signa' };
+const teamElec = { name: 'Orga Logistique Electricite & Eau', code: 'elec' };
 
 const TEAMS: Team[] = [teamMatos, teamSigna, teamElec];
 

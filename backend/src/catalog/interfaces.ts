@@ -11,7 +11,7 @@ export interface Category {
 export type SimplifiedCategory = Omit<Category, 'parent' | 'owner'>;
 
 export interface Team {
-  slug: string;
+  code: string;
   name: string;
 }
 
@@ -58,7 +58,7 @@ export interface CategoryRepository {
 }
 
 export interface TeamRepository {
-  getTeam(slug: string): Promise<Team | undefined>;
+  getTeam(code: string): Promise<Team | undefined>;
 }
 
 export class GearAlreadyExists extends BadRequestException {

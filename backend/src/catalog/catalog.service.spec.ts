@@ -6,8 +6,8 @@ import {
   InMemoryGearRepository,
 } from './repositories';
 
-const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
-const teamBarriere = { name: 'Orga Logistique et Securite', slug: 'barrieres' };
+const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
+const teamBarriere = { name: 'Orga Logistique et Securite', code: 'barrieres' };
 
 const CATEGORIES: Category[] = [
   {
@@ -138,12 +138,12 @@ describe('Catalog', () => {
   describe('Add gear', () => {
     describe.each`
       name               | category     | expectedSlug       | expectedCategory                                         | expectedOwner
-      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, slug: teamMatos.slug }}
-      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, slug: teamMatos.slug }}
-      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', slug: 'mobilier' }}         | ${{ name: teamMatos.name, slug: teamMatos.slug }}
+      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', slug: 'mobilier' }}         | ${{ name: teamMatos.name, code: teamMatos.code }}
       ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}                                             | ${undefined}
       ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', slug: 'divers' }}             | ${undefined}
-      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', slug: 'barrieres' }}       | ${{ name: teamBarriere.name, slug: teamBarriere.slug }}
+      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', slug: 'barrieres' }}       | ${{ name: teamBarriere.name, code: teamBarriere.code }}
     `(
       'Add gear "$name" with #$category category to catalog',
       ({ name, category, expectedSlug, expectedCategory, expectedOwner }) => {

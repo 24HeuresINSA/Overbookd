@@ -17,7 +17,7 @@ class CategorySearchBuilder {
 
   addOwnerCondition(ownerSearch?: string) {
     this.ownerCondition = ownerSearch
-      ? this.category.owner?.slug?.includes(ownerSearch)
+      ? this.category.owner?.code?.includes(ownerSearch)
       : true;
     return this;
   }

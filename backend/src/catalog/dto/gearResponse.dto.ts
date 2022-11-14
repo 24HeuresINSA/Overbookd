@@ -9,7 +9,7 @@ class SimplifiedCategoryRepresentation implements SimplifiedCategory {
 
 class TeamRepresentation implements Team {
   name: string;
-  slug: string;
+  code: string;
 }
 
 export class GearResponseDto implements Gear {
