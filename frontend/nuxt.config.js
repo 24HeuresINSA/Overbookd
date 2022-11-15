@@ -68,8 +68,6 @@ export default {
             url: "/login",
             method: "post",
           },
-          logout: { url: "/logout", method: "post" },
-          // user: { url: "/user", method: "get" },
           user: false,
         },
       },
@@ -77,7 +75,7 @@ export default {
   },
 
   router: {
-    middleware: ["auth", "config", "user"],
+    middleware: ["auth", "config", "user", "team"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

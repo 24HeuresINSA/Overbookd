@@ -9,6 +9,9 @@ import { TransactionModule } from './transaction/transaction.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
+import { FaModule } from './fa/fa.module';
+import { CollaboratorModule } from './collaborator/collaborator.module';
+import { SecurityPassModule } from './security_pass/security_pass.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { TeamModule } from './team/team.module';
     TeamModule,
     TransactionModule,
     ConfigModule,
+    FaModule,
+    CollaboratorModule,
+    SecurityPassModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService],

@@ -29,7 +29,11 @@ const SELECT_USER = {
 const SELECT_USER_TEAM = {
   team: {
     select: {
-      team_id: true,
+      team: {
+        select: {
+          name: true,
+        },
+      },
     },
   },
 };
@@ -52,7 +56,7 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return { ...user, team: user?.team.map((team) => team.team_id) };
+    return { ...user, team: user?.team.map((team) => team.team.name) };
   }
 
   async getUserPassword(
@@ -87,7 +91,7 @@ export class UserService {
     });
     return users.map((user) => ({
       ...user,
-      team: user.team.map((team) => team.team_id),
+      team: user.team.map((team) => team.team.name),
     }));
   }
 

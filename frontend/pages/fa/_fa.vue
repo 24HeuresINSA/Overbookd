@@ -147,6 +147,13 @@ export default {
     updateDetailData(detailData) {
       this.detailData = detailData;
     },
+    getValidatorIcon(validator) {
+      try {
+        return this.$accessor.team.getTeams([validator])?.[0]?.icon;
+      } catch (e) {
+        console.log(`can't find icon of team ${validator}`);
+      }
+    },
     updateSecurityData(securityData) {
       this.securityData = securityData;
     },

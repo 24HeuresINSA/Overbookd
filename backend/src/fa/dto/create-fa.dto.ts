@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-
-export class CreateTeamDto {
+export class CreateFaDto {
   @ApiProperty({
     required: true,
-    description: 'The name of the team',
+    description: 'The name of the fa',
   })
   @IsString()
   @IsNotEmpty()

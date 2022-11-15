@@ -20,59 +20,6 @@ export const getters = getterTree(state, {
       }
     }
   },
-
-  getTeamIcon: (state) => (teamName: string) => {
-    if (state.data && state.data.data) {
-      const config = state.data.data.find((o: any) => o.key === "teams");
-      if (config) {
-        const team = config.value.find((o: any) => o.name === teamName);
-        if (team) {
-          return team.icon;
-        } else {
-          return;
-        }
-      }
-    }
-  },
-
-  /**
-   * GET teams with matching name from config
-   * @param state The config state
-   * @returns Array of team stored in config that match team names
-   */
-  getConfigTeams:
-    (state) =>
-    (teamNames: string[] | undefined): any | undefined => {
-      if (!teamNames) {
-        return undefined;
-      }
-      if (state.data && state.data.data) {
-        const allConfigTeams = state.data.data.find(
-          (o: any) => o.key == "teams"
-        );
-        if (!allConfigTeams) {
-          return undefined;
-        }
-        return allConfigTeams.value.filter((t: any) => {
-          return teamNames.includes(t.name);
-        });
-      }
-      return undefined;
-    },
-  /**
-   * GET teams from config
-   * @param state The config state
-   * @returns All teams stored in config
-   */
-  getAllConfigTeams: (state) => {
-    if (state.data && state.data.data) {
-      const teams = state.data.data.find((o: any) => o.key == "teams");
-      if (teams) {
-        return teams;
-      }
-    }
-    return undefined;
-  },
 });
 
 export type ConfigState = ReturnType<typeof state>;

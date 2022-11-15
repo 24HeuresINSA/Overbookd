@@ -4,16 +4,19 @@ import {
   Delete,
   Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Team } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/team-auth.decorator';
 import { RolesGuard } from 'src/auth/team-auth.guard';
-import { CreateTeamDto } from './dto/createTeam.dto';
+import { TeamFormDto } from './dto/teamFormRequest.dto';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
+import { TeamResponseDto } from './dto/teamResponse';
 import { TeamService } from './team.service';
 
 @ApiTags('team')
@@ -25,10 +28,11 @@ export class TeamController {
   @ApiResponse({
     status: 200,
     description: 'Get all teams',
-    type: Array<string>,
+    type: TeamResponseDto,
+    isArray: true,
   })
-  async getTeams(): Promise<string[]> {
-    return this.teamService.team({});
+  async getTeams(): Promise<TeamResponseDto[]> {
+    return this.teamService.team({ orderBy: { name: 'asc' } });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -54,21 +58,37 @@ export class TeamController {
   @ApiResponse({
     status: 201,
     description: 'Create a team',
-    type: CreateTeamDto,
+    type: TeamResponseDto,
   })
-  async addTeam(@Body() payload: CreateTeamDto): Promise<Team> {
+  async addTeam(@Body() payload: TeamFormDto): Promise<TeamResponseDto> {
     return this.teamService.createTeam(payload);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Delete()
+  @Patch(':id')
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Update a team',
+    type: TeamResponseDto,
+  })
+  async updateTeam(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: TeamFormDto,
+  ): Promise<TeamResponseDto> {
+    return this.teamService.updateTeam(id, data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete a team',
   })
-  async deleteTeam(@Body() payload: CreateTeamDto): Promise<void> {
-    return this.teamService.deleteTeam(payload);
+  async deleteTeam(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.teamService.deleteTeam(id);
   }
 }

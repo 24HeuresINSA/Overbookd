@@ -1,4 +1,4 @@
-FROM node:16.14-alpine3.15 AS builder
+FROM node:16.17.1-alpine3.16 AS builder
 
 WORKDIR /overbookd/frontend
 ARG BASE_URL
@@ -13,13 +13,19 @@ COPY . .
 
 RUN npm run build
 
-FROM node:16.14-alpine3.15
+FROM node:16.17.1-alpine3.16
+
+ENV NODE_ENV production
 
 WORKDIR /app
 
+RUN chown -R node:node /app
+
+USER node
+
 RUN npm install serve
 
-COPY --from=builder /overbookd/frontend/dist ./dist
+COPY --chown=node:node --from=builder /overbookd/frontend/dist ./dist
 
 EXPOSE 1234
 

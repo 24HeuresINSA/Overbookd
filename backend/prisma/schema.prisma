@@ -3,7 +3,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl"]
+  binaryTargets = ["native", "linux-musl", "darwin-arm64"]
 }
 
 datasource db {
@@ -68,19 +68,32 @@ model User {
   transactions_from Transaction[] @relation("from")
   transactions_to   Transaction[] @relation("to")
 
-  is_deleted Boolean @default(false)
+  is_deleted    Boolean         @default(false)
+  fa_in_charge  FA[]            @relation("in_charge")
+  FA_validation FA_validation[]
+  FA_refuse     FA_refuse[]
+  FA_Comment    FA_Comment[]
 }
 
 model Team {
-  name  String      @id @default(uuid())
-  users User_Team[]
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(30)
+  users         User_Team[]
+  color         String          @default("#000000") @db.VarChar(30)
+  icon          String          @default("mdi-circle") @db.VarChar(255)
+  fa_validator  Boolean         @default(false)
+  ft_validator  Boolean         @default(false)
+  FA            FA[]
+  FA_Comment    FA_Comment[]
+  FA_validation FA_validation[]
+  FA_refuse     FA_refuse[]
 }
 
 model User_Team {
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User @relation(fields: [user_id], references: [id])
   user_id Int
-  team    Team   @relation(fields: [team_id], references: [name])
-  team_id String
+  team    Team @relation(fields: [team_id], references: [id])
+  team_id Int
 
   @@id([user_id, team_id])
 }
@@ -114,7 +127,182 @@ model Transaction {
   to         Int             @default(-1)
   user_to    User            @relation("to", fields: [to], references: [id])
   amount     Float           @default(0)
-  context    String          @db.VarChar(255) @default("")
+  context    String          @default("") @db.VarChar(255)
   created_at DateTime        @default(now())
   is_deleted Boolean         @default(false)
+}
+
+enum Status {
+  DRAFT
+  SUBMITTED
+  VALIDATED
+  REFUSED
+}
+
+model FA {
+  id                  Int       @id @default(autoincrement())
+  name                String    @db.VarChar(255)
+  fa_type_name        FA_type?  @relation(fields: [type], references: [name])
+  type                String?   @db.VarChar(255)
+  Team                Team?     @relation(fields: [team_id], references: [id])
+  team_id             Int?
+  User_in_charge      User?     @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge           Int?
+  created_at          DateTime? @default(now())
+  Location            Location? @relation(fields: [location_id], references: [id])
+  location_id         Int?
+  status              Status?   @default(DRAFT)
+  description         String?   @db.Text
+  is_publishable      Boolean?  @default(false)
+  is_major            Boolean?  @default(false)
+  is_kids             Boolean?  @default(false)
+  security_needs      String?   @db.Text
+  water_flow_required Int?
+  is_deleted          Boolean   @default(false)
+
+  FA_validation        FA_validation[]
+  FA_refuse            FA_refuse[]
+  FA_Collaborators     FA_Collaborators[]
+  FA_Electricity_needs FA_Electricity_needs[]
+  FA_signa_needs       FA_signa_needs[]
+  Security_pass        Security_pass[]
+  FA_Comment           FA_Comment[]
+  TimeWindow           TimeWindow[]
+}
+
+model FA_type {
+  name String @id @db.VarChar(255)
+  FA   FA[]
+}
+
+model FA_validation {
+  FA         FA      @relation(fields: [fa_id], references: [id])
+  fa_id      Int
+  User       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  Team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
+  created_at DateTime @default(now())
+  is_deleted Boolean @default(false)
+
+  @@id([fa_id, user_id])
+}
+
+model FA_Collaborators {
+  FA              FA           @relation(fields: [fa_id], references: [id])
+  fa_id           Int
+  Collaborator    Collaborator @relation(fields: [collaborator_id], references: [id])
+  collaborator_id Int
+  is_deleted      Boolean      @default(false)
+
+  @@id([fa_id, collaborator_id])
+}
+
+model FA_refuse {
+  FA         FA      @relation(fields: [fa_id], references: [id])
+  fa_id      Int
+  User       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  Team       Team    @relation(fields: [team_id], references: [id])
+  team_id    Int
+  created_at DateTime @default(now())
+  is_deleted Boolean @default(false)
+
+  @@id([fa_id, user_id])
+}
+
+enum LocationType {
+  DEPOT
+  STOCKAGE
+  MAGASIN
+  SIGNA
+  AUTRE
+}
+
+model Location {
+  id   Int          @id @default(autoincrement())
+  type LocationType
+  name String       @db.VarChar(255)
+  FA   FA[]
+}
+
+model Collaborator {
+  id               Int                @id @default(autoincrement())
+  firstname        String             @db.VarChar(30)
+  lastname         String             @db.VarChar(30)
+  phone            String             @db.VarChar(30)
+  email            String?            @db.VarChar(30)
+  company          String?            @db.VarChar(30)
+  comment          String?            @db.Text
+  FA_Collaborators FA_Collaborators[]
+
+  @@unique([firstname, lastname])
+}
+
+//A définir correctement plus tard, placeholder pour le moment
+enum ElectricityType {
+  ELECTRICITY
+  WATER
+  GAS
+  OTHER
+}
+
+model FA_Electricity_needs {
+  id               Int             @id @default(autoincrement())
+  FA               FA              @relation(fields: [fa_id], references: [id])
+  fa_id            Int
+  electricity_type ElectricityType
+  power            Int
+  comment          String?         @db.Text
+}
+
+enum SignaType {
+  BANNIERE
+  PANCARTE
+  PANNEAU
+}
+
+model FA_signa_needs {
+  id         Int       @id @default(autoincrement())
+  FA         FA        @relation(fields: [fa_id], references: [id])
+  fa_id      Int
+  signa_type SignaType
+  text       String    @db.Text
+  count      Int       @default(1)
+  comment    String    @db.Text
+}
+
+model Security_pass {
+  id             Int     @id @default(autoincrement())
+  FA             FA      @relation(fields: [fa_id], references: [id])
+  fa_id          Int
+  is_needed      Boolean @db.Boolean
+  number_of_pass Int?
+}
+
+enum subject_type {
+  REFUSED
+  VALIDATED
+  COMMENT
+}
+
+model FA_Comment {
+  id          Int          @id @default(autoincrement())
+  FA          FA           @relation(fields: [fa_id], references: [id])
+  fa_id       Int
+  comment     String       @db.Text
+  subject     subject_type
+  User_author User         @relation(fields: [author], references: [id])
+  author      Int
+  created_at  DateTime     @default(now())
+  Team        Team         @relation(fields: [team_id], references: [id])
+  team_id     Int
+}
+
+model TimeWindow {
+  id    Int      @id @default(autoincrement())
+  FA    FA       @relation(fields: [fa_id], references: [id])
+  fa_id Int
+  start DateTime
+  end   DateTime
 }

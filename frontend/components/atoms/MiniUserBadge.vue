@@ -31,8 +31,7 @@ export default Vue.extend({
   },
   methods: {
     getTeamMetadate(team: string): any {
-      const teamsConfig = this.$accessor.config.getConfig("teams");
-      return teamsConfig.find((item: { name: string }) => item.name === team);
+      return this.$accessor.team.getTeams([team])?.[0];
     },
     sendEvent() {
       this.$emit("click", this.team);
