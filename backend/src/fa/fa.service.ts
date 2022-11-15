@@ -28,19 +28,19 @@ export class FaService {
       where: {
         id: Number(id),
       },
-        include: {
-            FA_Collaborators: true,
-            FA_validation: true,
-            FA_refuse: true,
-            Security_pass: true,
-            FA_Electricity_needs: true,
-            FA_signa_needs: true,
-            FA_Comment: true,
-            TimeWindow: true,
-            Location: true,
-            Team: true,
-            fa_type_name: true,
-        }
+      include: {
+        FA_Collaborators: true,
+        FA_validation: true,
+        FA_refuse: true,
+        Security_pass: true,
+        FA_Electricity_needs: true,
+        FA_signa_needs: true,
+        FA_Comment: true,
+        TimeWindow: true,
+        Location: true,
+        Team: true,
+        fa_type_name: true,
+      },
     });
   }
 
