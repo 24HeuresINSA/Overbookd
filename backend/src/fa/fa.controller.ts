@@ -118,7 +118,7 @@ export class FaController {
     description: 'Unvalidate a fa',
     type: Promise<FA | null>,
   })
-  unvalidate(
+  invalidate(
     @Param('id', ParseIntPipe) id: number,
     @Request() request: RequestWithUserPayload,
   ): Promise<FA | null> {
