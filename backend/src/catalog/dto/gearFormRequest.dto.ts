@@ -6,8 +6,9 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
+import { GearForm } from '../catalog.service';
 
-export class GearCreationRequestDto {
+export class GearFormRequestDto implements GearForm {
   @ApiProperty({
     required: true,
     description: 'Gear name',

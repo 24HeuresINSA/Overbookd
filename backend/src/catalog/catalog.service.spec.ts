@@ -274,6 +274,7 @@ describe('Catalog', () => {
       ${undefined} | ${undefined}    | ${'maT'}     | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[1], SIMILAR_GEARS[4], SIMILAR_GEARS[5]]}
       ${'tab'}     | ${undefined}    | ${'maT'}     | ${[SIMILAR_GEARS[5]]}
       ${'tab'}     | ${'Brico'}      | ${'maT'}     | ${[]}
+      ${undefined} | ${undefined}    | ${undefined} | ${SIMILAR_GEARS}
     `(
       'When looking for "$searchName" in $searchCategory category with $searchOwner owner',
       ({ searchName, searchCategory, searchOwner, expectedGears }) => {
@@ -287,11 +288,5 @@ describe('Catalog', () => {
         });
       },
     );
-  });
-  describe('Get all gears', () => {
-    it('should retriece all gears', async () => {
-      const gears = await catalog.getAll();
-      expect(gears).toEqual(GEARS);
-    });
   });
 });

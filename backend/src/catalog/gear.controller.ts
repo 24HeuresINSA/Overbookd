@@ -25,7 +25,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/team-auth.guard';
 import { CatalogService } from './catalog.service';
-import { GearCreationRequestDto } from './dto/gearFormRequest.dto';
+import { GearFormRequestDto } from './dto/gearFormRequest.dto';
 import { GearResponseDto } from './dto/gearResponse.dto';
 import { GearSearchRequestDto } from './dto/gearSearchRequest.dto';
 import { Gear } from './interfaces';
@@ -40,18 +40,7 @@ import { Gear } from './interfaces';
 export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Get all gears',
-    isArray: true,
-    type: GearResponseDto,
-  })
-  getAll(): Promise<Gear[]> {
-    return this.catalogService.getAll();
-  }
-
-  @Get('search')
+  @Get('')
   @ApiResponse({
     status: 200,
     description: 'Get gears that match search',
@@ -76,8 +65,10 @@ export class GearController {
     type: String,
     description: 'Get gears that are owned by team that match name',
   })
-  search(@Query() { name, category }: GearSearchRequestDto): Promise<Gear[]> {
-    return this.catalogService.search({ name, category });
+  search(
+    @Query() { name, category, owner }: GearSearchRequestDto,
+  ): Promise<Gear[]> {
+    return this.catalogService.search({ name, category, owner });
   }
 
   @Get(':id')
@@ -115,7 +106,7 @@ export class GearController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() gearForm: GearCreationRequestDto): Promise<Gear> {
+  create(@Body() gearForm: GearFormRequestDto): Promise<Gear> {
     return this.catalogService.add(gearForm);
   }
 
@@ -142,7 +133,7 @@ export class GearController {
   })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() gearForm: GearCreationRequestDto,
+    @Body() gearForm: GearFormRequestDto,
   ): Promise<Gear> {
     return this.catalogService.update({ id, ...gearForm });
   }

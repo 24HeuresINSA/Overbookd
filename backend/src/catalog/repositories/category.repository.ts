@@ -1,5 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { Category, CategoryRepository, CategoryTree } from '../interfaces';
+import {
+  Category,
+  CategoryRepository,
+  CategoryTree,
+  SearchCategory,
+} from '../interfaces';
+
+class CategorySearchBuilder {
+  private ownerCondition = true;
+  private nameCondition = true;
+  private category: Category;
+
+  constructor(category: Category) {
+    this.category = category;
+  }
+
+  addOwnerCondition(ownerSearch?: string) {
+    this.ownerCondition = ownerSearch
+      ? this.category.owner?.slug?.includes(ownerSearch)
+      : true;
+    return this;
+  }
+
+  addNameCondition(nameSearch?: string) {
+    this.nameCondition = nameSearch
+      ? this.category.name.toLocaleLowerCase().includes(nameSearch)
+      : true;
+    return this;
+  }
+
+  get match(): boolean {
+    return this.ownerCondition && this.nameCondition;
+  }
+}
 
 @Injectable()
 export class InMemoryCategoryRepository implements CategoryRepository {
@@ -70,6 +103,17 @@ export class InMemoryCategoryRepository implements CategoryRepository {
         const subCategories = await this.getSubCategories(category.id);
         const subCategoriesTree = await this.buildCategoriesTree(subCategories);
         return { ...category, subCategories: subCategoriesTree };
+      }),
+    );
+  }
+
+  searchCategory({ name, owner }: SearchCategory): Promise<Category[]> {
+    return Promise.resolve(
+      this.categories.filter((category) => {
+        const search = new CategorySearchBuilder(category)
+          .addNameCondition(name)
+          .addOwnerCondition(owner);
+        return search.match;
       }),
     );
   }

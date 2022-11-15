@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Team } from '../interfaces';
+import { Category, Team } from '../interfaces';
 
 class TeamRepresentation implements Team {
   slug: string;
   name: string;
 }
 
-export class CategoryResponseDto {
+export class CategoryResponseDto implements Category {
   @ApiProperty({
     required: true,
     description: 'Category id',
