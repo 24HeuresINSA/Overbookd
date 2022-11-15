@@ -145,10 +145,10 @@ export class FaService {
 
   async remove(id: number): Promise<FA | null> {
     return this.prisma.fA.update({
-        where: { id: Number(id) },
-        data: {
-          is_deleted: true,
-        }
+      where: { id: Number(id) },
+      data: {
+        is_deleted: true,
+      },
     });
   }
 
