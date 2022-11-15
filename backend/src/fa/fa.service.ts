@@ -26,7 +26,7 @@ export class FaService {
   async findOne(id: number): Promise<FA | null> {
     return this.prisma.fA.findUnique({
       where: {
-        id: Number(id)
+        id: Number(id),
       },
         include: {
             FA_Collaborators: true,
