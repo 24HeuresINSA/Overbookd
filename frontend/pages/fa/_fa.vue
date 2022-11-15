@@ -52,6 +52,8 @@
       ></LogisticsCard>-->
       <ElecLogisticCard
         id="elec"
+        :data="elecLogisticArray"
+        @update-data="updateElecLogisticArray"
       ></ElecLogisticCard>
       <WaterLogisticCard
         id="water"
@@ -75,10 +77,10 @@ import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
 import { RepoFactory } from "../../repositories/repoFactory";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import FTCard from "../../components/organisms/form/fa/FTCard";
+import FTCard from "~/components/organisms/form/fa/FTCard.vue";
 import { safeCall } from "../../utils/api/calls";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
-import ElecLogisticCard from "../../components/organisms/form/fa/ElecLogisticCard";
+import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
 import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
@@ -115,6 +117,7 @@ export default {
       detailData: {},
       securityData: {},
       prestaData: {},
+      elecLogisticArray: [],
       waterLogisticData: {},
       commentArray: [],
     };
@@ -137,6 +140,9 @@ export default {
     updatePrestaData(prestaData) {
       this.prestaData = prestaData;
     },
+    updateElecLogisticArray(elecLogisticArray) {
+      this.elecLogisticArray = elecLogisticArray;
+    },
     updateWaterLogisticData(waterLogisticData) {
       this.waterLogisticData = waterLogisticData;
     },
@@ -146,6 +152,7 @@ export default {
       console.log(this.detailData);
       console.log(this.securityData);
       console.log(this.prestaData);
+      console.log(this.elecLogisticArray);
       console.log(this.waterLogisticData);
     },
   },

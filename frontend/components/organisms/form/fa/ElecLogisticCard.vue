@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+    <v-card :style="isDisabled ? 'card-border' : ''">
       <v-card-title>Besoin d'élec</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
@@ -66,9 +66,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-
+<script>
 const headers = [
   { text: "Type de raccordement", value: "connectionType" },
   {
@@ -79,9 +77,13 @@ const headers = [
   { text: "Action", value: "action" },
 ];
 
-export default Vue.extend({
+export default {
   name: "ElecLogisticCard",
   props: {
+    data: {
+      type: Array,
+      default: () => [],
+    },
     isDisabled: {
       type: Boolean,
       default: () => false,
@@ -90,20 +92,16 @@ export default Vue.extend({
   data: () => ({
     headers,
     isElectricityNeedDialogOpen: false,
-    newElectricityNeed: {
-      connectionType: "",
-      power: "0",
-      comment: "",
-    },
+    newElectricityNeed: {},
   }),
   computed: {
     electricityNeeds() {
-      return this.$accessor.FA.mFA.electricityNeeds;
+      return this.data;
     },
   },
   methods: {
-    deleteElectricityNeed(index: number) {
-      this.$accessor.FA.deleteElectricityNeed(index);
+    deleteElectricityNeed(index) {
+      this.electricityNeeds.splice(index, 1);
     },
     addElectricityNeed() {
       if (!this.newElectricityNeed.connectionType) {
@@ -123,12 +121,17 @@ export default Vue.extend({
         return;
       }
 
-      this.$accessor.FA.addElectricityNeed(this.newElectricityNeed);
+      this.electricityNeeds.push(this.newElectricityNeed);
+      this.$emit("update-data", this.electricityNeeds);
       this.isElectricityNeedDialogOpen = false;
-      this.newElectricityNeed = {connectionType: "", power: "0", comment: ""};
+      this.newElectricityNeed = {};
     },
   },
-});
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+  .card-border {
+    border-left: 5px solid green;
+  }
+</style>
