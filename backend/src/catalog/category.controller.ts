@@ -9,6 +9,7 @@ import {
   HttpCode,
   Put,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {
@@ -17,6 +18,7 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -27,6 +29,7 @@ import { CategoryFormRequestDto } from './dto/categoryFormRequest.dto';
 import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
+import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('catalog')
@@ -38,7 +41,32 @@ import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get()
+  @Get('')
+  @ApiResponse({
+    status: 200,
+    description: 'Get categories that match search',
+    isArray: true,
+    type: CategoryResponseDto,
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    description: 'Get categories that match the name',
+  })
+  @ApiQuery({
+    name: 'owner',
+    required: false,
+    type: String,
+    description: 'Get categories that are owned by team that match name',
+  })
+  search(
+    @Query() { name, owner }: CategorySearchRequestDto,
+  ): Promise<Category[]> {
+    return this.categoryService.search({ name, owner });
+  }
+
+  @Get('/tree')
   @ApiResponse({
     status: 200,
     description: 'Get categories tree',

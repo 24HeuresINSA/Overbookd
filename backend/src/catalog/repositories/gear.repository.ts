@@ -7,7 +7,7 @@ import {
 } from '../interfaces';
 
 class GearSearchBuilder {
-  private onwnerCondition = true;
+  private ownerCondition = true;
   private slugCondition = true;
   private categoryContion = true;
   private gear: Gear;
@@ -17,7 +17,7 @@ class GearSearchBuilder {
   }
 
   addOwnerCondition(ownerSearch?: string) {
-    this.onwnerCondition = ownerSearch
+    this.ownerCondition = ownerSearch
       ? this.gear.owner?.slug?.includes(ownerSearch)
       : true;
     return this;
@@ -38,7 +38,7 @@ class GearSearchBuilder {
   }
 
   get match(): boolean {
-    return this.onwnerCondition && this.slugCondition && this.categoryContion;
+    return this.ownerCondition && this.slugCondition && this.categoryContion;
   }
 }
 
@@ -91,9 +91,5 @@ export class InMemoryGearRepository implements GearRepository {
       .addSlugCondition(slug)
       .addOwnerCondition(owner);
     return search.match;
-  }
-
-  getAllGears(): Promise<Gear[]> {
-    return Promise.resolve(this.gears);
   }
 }

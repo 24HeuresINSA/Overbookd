@@ -5,6 +5,7 @@ import {
   Category,
   CategoryRepository,
   CategoryTree,
+  SearchCategory,
   Team,
   TeamRepository,
 } from './interfaces';
@@ -15,13 +16,13 @@ export class CategoryNotFoundException extends NotFoundException {
   }
 }
 
-type CreateCategoryForm = {
+export type CategoryForm = {
   name: string;
   owner?: string;
   parent?: number;
 };
 
-type updateCategoryForm = CreateCategoryForm & { id: number };
+type updateCategoryForm = CategoryForm & { id: number };
 
 @Injectable()
 export class CategoryService {
@@ -33,7 +34,7 @@ export class CategoryService {
     private readonly slugifyService: SlugifyService,
   ) {}
 
-  async create({ name, owner, parent }: CreateCategoryForm): Promise<Category> {
+  async create({ name, owner, parent }: CategoryForm): Promise<Category> {
     const { slug, ownerTeam } = await this.buildOwnerAndSlug({
       parent,
       name,
@@ -47,7 +48,7 @@ export class CategoryService {
     });
   }
 
-  private async buildOwnerAndSlug({ parent, name, owner }: CreateCategoryForm) {
+  private async buildOwnerAndSlug({ parent, name, owner }: CategoryForm) {
     const parentCategory = await this.fetchParentCategory(parent);
     const slug = this.generateSlug(name, parentCategory);
     const ownerTeam = await this.findOwner(owner, parentCategory);
@@ -107,6 +108,15 @@ export class CategoryService {
     const deletedCategory = await this.categoryRepository.removeCategory(id);
     if (!deletedCategory) return;
     return await this.cascadingUpdateSubCategories(deletedCategory);
+  }
+
+  search({ name, owner }: SearchCategory): Promise<Category[]> {
+    const nameSlug = this.slugifyService.slugify(name);
+    const ownerSlug = this.slugifyService.slugify(owner);
+    return this.categoryRepository.searchCategory({
+      name: nameSlug,
+      owner: ownerSlug,
+    });
   }
 
   private async cascadingUpdateSubCategories(currentCategory: Category) {
