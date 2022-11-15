@@ -314,7 +314,7 @@ describe('FA validation system', () => {
 
   test('Should unvalidate the FA', async () => {
     await expect(
-      faservice.unvalidateFa(sampleFA.id, validatorUser.id),
+      faservice.invalidateFa(sampleFA.id, validatorUser.id),
     ).resolves.not.toThrowError();
     const validation = await prisma.fA_validation.findUnique({
       where: {

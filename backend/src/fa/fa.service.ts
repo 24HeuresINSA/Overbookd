@@ -155,7 +155,7 @@ export class FaService {
     });
   }
 
-  async unvalidateFa(fa_id: number, user_id: number): Promise<FA | null> {
+  async invalidateFa(fa_id: number, user_id: number): Promise<FA | null> {
     await this.isUserValidator(user_id);
     const fa = await this.prisma.fA.findUnique({
       where: { id: fa_id },

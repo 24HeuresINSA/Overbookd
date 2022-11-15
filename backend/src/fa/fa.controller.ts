@@ -123,6 +123,6 @@ export class FaController {
     @Request() request: RequestWithUserPayload,
   ): Promise<FA | null> {
     const user_id = request.user.id;
-    return this.faService.unvalidateFa(id, user_id);
+    return this.faService.invalidateFa(id, user_id);
   }
 }
