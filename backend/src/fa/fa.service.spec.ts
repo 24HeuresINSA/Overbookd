@@ -81,6 +81,7 @@ describe('FA getters', () => {
     const FA = await faservice.findOne(all_fa[0].id);
     expect(FA).toBeDefined();
     expect(FA.name).toBe(all_fa[0].name);
+    console.log(FA);
   });
 
   afterAll(async () => {
