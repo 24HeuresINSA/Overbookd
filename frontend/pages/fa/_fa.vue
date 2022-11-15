@@ -141,18 +141,19 @@ export default {
     },
   },
   methods: {
-    updateGeneralData(generalData) {
-      this.generalData = generalData;
-    },
-    updateDetailData(detailData) {
-      this.detailData = detailData;
-    },
     getValidatorIcon(validator) {
       try {
         return this.$accessor.team.getTeams([validator])?.[0]?.icon;
       } catch (e) {
         console.log(`can't find icon of team ${validator}`);
       }
+    },
+
+    updateGeneralData(generalData) {
+      this.generalData = generalData;
+    },
+    updateDetailData(detailData) {
+      this.detailData = detailData;
     },
     updateSecurityData(securityData) {
       this.securityData = securityData;
