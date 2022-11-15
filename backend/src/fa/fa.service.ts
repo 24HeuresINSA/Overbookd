@@ -26,20 +26,18 @@ export class FaService {
   async findOne(id: number): Promise<FA | null> {
     return this.prisma.fA.findUnique({
       where: {
-        id: Number(id)
+        id: Number(id),
       },
-        include: {
-            FA_Collaborators: true,
-            FA_validation: true,
-            FA_refuse: true,
-            Security_pass: true,
-            FA_Electricity_needs: true,
-            FA_signa_needs: true,
-            FA_Comment: true,
-            TimeWindow: true,
-
-
-        }
+      include: {
+        FA_Collaborators: true,
+        FA_validation: true,
+        FA_refuse: true,
+        Security_pass: true,
+        FA_Electricity_needs: true,
+        FA_signa_needs: true,
+        FA_Comment: true,
+        TimeWindow: true,
+      },
     });
   }
 
