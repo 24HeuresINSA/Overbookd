@@ -10,7 +10,10 @@ import {
 import { CollaboratorService } from './collaborator.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('collaborator')
 @Controller('collaborator')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}

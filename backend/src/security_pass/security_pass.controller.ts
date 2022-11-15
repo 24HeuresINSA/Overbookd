@@ -10,7 +10,10 @@ import {
 import { SecurityPassService } from './security_pass.service';
 import { CreateSecurityPassDto } from './dto/create-security_pass.dto';
 import { UpdateSecurityPassDto } from './dto/update-security_pass.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('security_pass')
 @Controller('security-pass')
 export class SecurityPassController {
   constructor(private readonly securityPassService: SecurityPassService) {}
