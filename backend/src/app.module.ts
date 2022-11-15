@@ -12,6 +12,7 @@ import { TeamModule } from './team/team.module';
 import { FaModule } from './fa/fa.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
 import { SecurityPassModule } from './security_pass/security_pass.module';
+import { FA_commentModule } from './fa/fa_comment/fa_comment.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SecurityPassModule } from './security_pass/security_pass.module';
     TransactionModule,
     ConfigModule,
     FaModule,
+    FA_commentModule,
     CollaboratorModule,
     SecurityPassModule,
   ],
