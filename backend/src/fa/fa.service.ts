@@ -144,7 +144,12 @@ export class FaService {
   }
 
   async remove(id: number): Promise<FA | null> {
-    return null;
+    return this.prisma.fA.update({
+        where: { id: Number(id) },
+        data: {
+          is_deleted: true,
+        }
+    });
   }
 
   async validateFa(fa_id: number, user_id: number): Promise<FA | null> {
