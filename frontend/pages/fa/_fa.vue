@@ -41,17 +41,21 @@
       <LogisticsCard
         title="Matos"
         :types="Object.values(EquipmentTypes)"
-        :data="matosLogisticArray"
-        @update-data="updateMatosLogisticArray"
+        :data="equipmentLogisticArray"
+        @update-data="updateEquipmentLogisticArray"
       ></LogisticsCard>
-      <!--<LogisticsCard
+      <LogisticsCard
         title="Barrières"
-        :store="store"
+        :types="Object.values(BarrieresTypes)"
+        :data="barrieresLogisticArray"
+        @update-data="updateBarrieresLogisticArray"
       ></LogisticsCard>
       <LogisticsCard
         title="Matos Elec / Eau"
-        :store="store"
-      ></LogisticsCard>-->
+        :types="Object.values(ElecTypes)"
+        :data="equipmentElecWaterLogisticArray"
+        @update-data="updateEquipmentElecWaterLogisticArray"
+      ></LogisticsCard>
       <ElecLogisticCard
         id="elec"
         :data="elecLogisticArray"
@@ -119,7 +123,9 @@ export default {
       detailData: {},
       securityData: {},
       prestaData: {},
-      matosLogisticArray: [],
+      equipmentLogisticArray: [],
+      barrieresLogisticArray: [],
+      equipmentElecWaterLogisticArray: [],
       elecLogisticArray: [],
       waterLogisticData: {},
       commentArray: [],
@@ -147,8 +153,14 @@ export default {
     updatePrestaData(prestaData) {
       this.prestaData = prestaData;
     },
-    updateMatosLogisticArray(matosLogisticArray) {
-      this.matosLogisticArray = matosLogisticArray;
+    updateEquipmentLogisticArray(equipmentLogisticArray) {
+      this.equipmentLogisticArray = equipmentLogisticArray;
+    },
+    updateBarrieresLogisticArray(barrieresLogisticArray) {
+      this.barrieresLogisticArray = barrieresLogisticArray;
+    },
+    updateEquipmentElecWaterLogisticArray(equipmentElecWaterLogisticArray) {
+      this.equipmentElecWaterLogisticArray = equipmentElecWaterLogisticArray;
     },
     updateElecLogisticArray(elecLogisticArray) {
       this.elecLogisticArray = elecLogisticArray;
@@ -162,6 +174,9 @@ export default {
       console.log(this.detailData);
       console.log(this.securityData);
       console.log(this.prestaData);
+      console.log(this.equipmentLogisticArray);
+      console.log(this.barrieresLogisticArray);
+      console.log(this.equipmentElecWaterLogisticArray);
       console.log(this.elecLogisticArray);
       console.log(this.waterLogisticData);
     },

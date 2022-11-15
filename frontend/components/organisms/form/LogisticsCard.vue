@@ -83,7 +83,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    equipment: function (): Array<any> {
+    equipment(): Array<any> {
       return this.data;
     },
     /**
@@ -99,14 +99,9 @@ export default Vue.extend({
       return this.validEquipments.filter((e) => this.types.includes(e.type));
     },
   },
-  async mounted() {
-    // fetchAll calls api to fetch all available equipment
-    await this.$accessor.equipment.fetchAll();
-  },
   methods: {
-    
     async addItem() {
-
+      this.$emit("update-data", this.equipment);
     },
   },
 });
