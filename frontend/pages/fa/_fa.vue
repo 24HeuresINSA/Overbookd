@@ -32,7 +32,7 @@
         :data="prestaData"
         @update-data="updatePrestaData"
       ></PrestaCard>
-      <!--<h2>Logistique 🚚</h2>
+      <h2>Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
@@ -40,9 +40,11 @@
       </h4>
       <LogisticsCard
         title="Matos"
-        :store="store"
+        :types="Object.values(EquipmentTypes)"
+        :data="matosLogisticArray"
+        @update-data="updateMatosLogisticArray"
       ></LogisticsCard>
-      <LogisticsCard
+      <!--<LogisticsCard
         title="Barrières"
         :store="store"
       ></LogisticsCard>
@@ -117,13 +119,18 @@ export default {
       detailData: {},
       securityData: {},
       prestaData: {},
+      matosLogisticArray: [],
       elecLogisticArray: [],
       waterLogisticData: {},
       commentArray: [],
+
+      EquipmentTypes,
+      ElecTypes,
+      BarrieresTypes,
     };
   },
   computed: {
-    store: function () {
+    store() {
       return this.$accessor.FA;
     },
   },
@@ -139,6 +146,9 @@ export default {
     },
     updatePrestaData(prestaData) {
       this.prestaData = prestaData;
+    },
+    updateMatosLogisticArray(matosLogisticArray) {
+      this.matosLogisticArray = matosLogisticArray;
     },
     updateElecLogisticArray(elecLogisticArray) {
       this.elecLogisticArray = elecLogisticArray;
