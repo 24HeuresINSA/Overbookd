@@ -34,8 +34,8 @@ export class FaController {
     description: 'Create a new fa',
     type: Promise<FA | null>,
   })
-  create(@Body() fa: CreateFaDto): Promise<FA | null> {
-    return this.faService.create(fa);
+  create(@Body() FA: CreateFaDto): Promise<FA | null> {
+    return this.faService.create(FA);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -3,13 +3,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Collaborator, FA, User_Team } from '@prisma/client';
-import { CreateFaDto } from './dto/create-fa.dto';
+import { Collaborator, FA, Security_pass, User_Team } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
 import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
 import { CreateSecurityPassDto } from '../security_pass/dto/create-security_pass.dto';
+import { CreateFaDto } from './dto/create-fa.dto';
 
 @Injectable()
 export class FaService {
@@ -31,14 +31,20 @@ export class FaService {
   /** POST **/
   /**      **/
 
-  async create(createFaDto: CreateFaDto): Promise<FA | null> {
-    //First of all we create or get the collaborator and skip existing collaborators
+  async update(id: number, updateFaDto: UpdateFaDto): Promise<FA | null> {
+    //find the FA
+    const fa = await this.prisma.fA.findUnique({ where: { id: Number(id) } });
+    if (!fa) throw new NotFoundError(`FA with id ${id} not found`);
+    //update every aspect of the FA
     const collaborators = await this.create_collaborators(
-      createFaDto.FA_Collaborators,
+      updateFaDto.FA_Collaborators,
     );
-    const fa = await this.prisma.fA.create({
+    await this.createSecurityPasses(updateFaDto.Security_pass, fa.id);
+
+    return this.prisma.fA.update({
+      where: { id: Number(id) },
       data: {
-        ...createFaDto.FA,
+        ...updateFaDto.FA,
         FA_Collaborators: {
           createMany: {
             data: collaborators.map((collaborator) => {
@@ -46,14 +52,15 @@ export class FaService {
                 collaborator_id: collaborator.id,
               };
             }),
+            skipDuplicates: true,
           },
         },
       },
     });
-    if (!fa) throw new Error('Error while creating the FA');
-    //we then add security passes with the ID of the FA
-    await this.createSecurityPasses(createFaDto.Security_pass, fa.id);
-    return fa;
+  }
+
+  async create(FA: CreateFaDto): Promise<FA | null> {
+    return this.prisma.fA.create({ data: FA });
   }
 
   private async create_collaborators(
@@ -89,7 +96,7 @@ export class FaService {
   private async createSecurityPasses(
     fa_security_pass: CreateSecurityPassDto[],
     fa_id: number,
-  ): Promise<void> {
+  ): Promise<Security_pass[]> {
     if (!fa_security_pass) return;
     const security_pass = fa_security_pass.map((pass) => {
       return {
@@ -108,14 +115,7 @@ export class FaService {
     if (created_pass.length !== fa_security_pass.length) {
       throw new Error('some passes were not created');
     }
-  }
-
-  async update(id: number, updateFaDto: UpdateFaDto): Promise<FA | null> {
-    //find the FA
-    const fa = await this.prisma.fA.findUnique({ where: { id: Number(id) } });
-    if (!fa) throw new NotFoundError(`FA with id ${id} not found`);
-
-    return null;
+    return created_pass;
   }
 
   async remove(id: number): Promise<FA | null> {

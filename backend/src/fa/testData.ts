@@ -1,12 +1,12 @@
-import { CreateFaDto, Status } from './dto/create-fa.dto';
+import { UpdateFaDto, Status } from './dto/update-fa.dto';
 
-export const emptyFA: CreateFaDto = {
+export const emptyFA: UpdateFaDto = {
   FA: {
     name: 'empty',
   },
 };
 
-export const nakedFA: CreateFaDto = {
+export const nakedFA: UpdateFaDto = {
   FA: {
     name: 'Naked FA',
     type: 'test',
@@ -20,7 +20,7 @@ export const nakedFA: CreateFaDto = {
     is_kids: false,
   },
 };
-export const collaboratorFA: CreateFaDto = {
+export const collaboratorFA: UpdateFaDto = {
   FA: {
     name: 'Collaborator FA',
     type: 'test',
@@ -42,7 +42,7 @@ export const collaboratorFA: CreateFaDto = {
   ],
 };
 
-export const secuFA: CreateFaDto = {
+export const secuFA: UpdateFaDto = {
   FA: {
     name: 'Secu FA',
     type: 'test',
