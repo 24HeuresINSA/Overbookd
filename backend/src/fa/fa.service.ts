@@ -95,7 +95,7 @@ export class FaService {
         ...collab,
         firstname: collab.firstname.trim(), // trust me it's not useless
         lastname: collab.lastname.trim(),
-      }
+      };
     });
     //Then get all the collaborators
     const collaborators = await this.prisma.collaborator.findMany({
