@@ -37,8 +37,9 @@ export class FaService {
             FA_signa_needs: true,
             FA_Comment: true,
             TimeWindow: true,
-
-
+            Location: true,
+            Team: true,
+            fa_type_name: true,
         }
     });
   }
