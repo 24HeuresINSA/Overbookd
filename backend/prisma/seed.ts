@@ -1,7 +1,10 @@
 import { Prisma, PrismaClient } from '@prisma/client';
+import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
+import { gears } from './gears';
 
 const prisma = new PrismaClient();
+const slugify = new SlugifyService();
 
 async function main() {
   console.log('Creating teams 👥');
@@ -341,6 +344,23 @@ async function main() {
     console.log(`User ${user} added to teams ${teamNames}`);
     console.log('------------------------------------------------------------');
   }
+
+  const savedGears = await Promise.all(
+    gears.map((gear) => {
+      const slug = slugify.slugify(gear);
+      const name = gear;
+      console.log(`----------------------------------------------------------`);
+      console.log(`Inserting ${name} as gear`);
+      const data = { slug, name };
+      return prisma.catalog_Gear.upsert({
+        where: { slug },
+        create: data,
+        update: data,
+      });
+    }),
+  );
+
+  console.log(`\n${savedGears.length} gears 🔨 inserted`);
 }
 main()
   .then(async () => {
