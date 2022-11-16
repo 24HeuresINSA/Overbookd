@@ -8,8 +8,8 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-const hexCode = new RegExp(/^#[0-9|a-f|A-F]{6}$/);
-const mdiIcon = new RegExp(/^mdi-.*/);
+const hexCode = new RegExp('^#[0-9|a-f|A-F]{6}$');
+const mdiIcon = new RegExp('^mdi-.+');
 
 export class TeamFormDto {
   @ApiProperty({
