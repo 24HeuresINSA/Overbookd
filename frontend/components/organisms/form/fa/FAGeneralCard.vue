@@ -27,15 +27,17 @@
                     required
                     @change="onChange"
                 ></v-select>
+                <!-- GET ID NOT TEXT -->
                 <v-select
-                    v-model="generalData.team"
+                    v-model="generalData.team_id"
                     label="Equipe"
                     :items="teams"
                     required
                     @change="onChange"
                 ></v-select>
+                <!-- GET ID NOT TEXT -->
                 <v-select
-                    v-model="generalData.inCharge"
+                    v-model="generalData.in_charge"
                     label="Responsable"
                     :items="users"
                     required

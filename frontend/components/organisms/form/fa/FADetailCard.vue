@@ -10,17 +10,17 @@
                     @change="onChange"
                 ></RichEditor>
                 <v-switch
-                    v-model="detailData.isPublishable"
+                    v-model="detailData.is_publishable"
                     label="Publier sur le site / plaquette"
                     @change="onChange"
                 ></v-switch>
                 <v-switch
-                    v-model="detailData.isMajorAnim"
+                    v-model="detailData.is_major"
                     label="Anim phare"
                     @change="onChange"
                 ></v-switch>
                 <v-switch
-                    v-model="detailData.isForKids"
+                    v-model="detailData.is_kids"
                     label="Anim pour les gosses"
                     @change="onChange"
                 ></v-switch>

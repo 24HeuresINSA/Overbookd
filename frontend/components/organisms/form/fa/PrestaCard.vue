@@ -4,13 +4,13 @@
         <v-card-text>
             <v-form>
                 <v-text-field
-                    v-model="prestaData.fullname"
-                    label="Nom complet de l'intervenant"
+                    v-model="prestaData.firstname"
+                    label="Prénom de l'intervenant"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
-                    v-model="prestaData.company"
-                    label="Société"
+                    v-model="prestaData.lastname"
+                    label="Nom de l'intervenant"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field
@@ -35,6 +35,11 @@
                             (`cet email n'est pas valide`),
                         ]
                     "
+                    @change="onChange">
+                </v-text-field>
+                <v-text-field
+                    v-model="prestaData.company"
+                    label="Société"
                     @change="onChange">
                 </v-text-field>
                 <v-text-field

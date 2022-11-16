@@ -4,9 +4,15 @@
         <v-card-subtitle>Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org</v-card-subtitle>
         <v-card-text>
             <v-form>
+                <v-switch
+                    v-model="securityData.is_needed"
+                    label="Besoin de Pass Sécu"
+                    @change="onChange"
+                ></v-switch>
                 <v-textarea
-                    v-model="securityData.securityDevice"
-                    label="Dispositif de sécurité particulier"
+                    v-if="securityData.is_needed"
+                    v-model="securityData.number_of_pass"
+                    label="Nombre de Pass Sécu"
                 ></v-textarea>
             </v-form>
         </v-card-text>
