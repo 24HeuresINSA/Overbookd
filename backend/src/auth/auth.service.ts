@@ -69,7 +69,7 @@ export class AuthService {
     const reset_token = randomBytes(20).toString('hex');
     const expirationDate = new Date(Date.now() + ONE_HOUR);
 
-    await this.prisma.user.update({
+    const userDatabaseUpdate = this.prisma.user.update({
       where: { email },
       data: {
         reset_password_token: reset_token,
@@ -77,11 +77,13 @@ export class AuthService {
       },
     });
 
-    this.mailService.mailResetPassword({
+    const sendMailToUSer = this.mailService.mailResetPassword({
       email: email,
       firstname: user.firstname,
       token: reset_token,
     });
+
+    Promise.all([userDatabaseUpdate, sendMailToUSer]);
   }
 
   async recoverPassword({
