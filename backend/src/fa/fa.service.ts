@@ -155,61 +155,97 @@ export class FaService {
   async validateFa(fa_id: number, user_id: number): Promise<FA | null> {
     const validator_team_id = await this.isUserValidator(user_id);
     const fa = await this.prisma.fA.findUnique({
-      where: { id: fa_id },
+      where: { id: Number(fa_id) },
     });
     if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
     //add the user validation
-    return this.prisma.fA.update({
-      where: { id: fa_id },
-      data: {
-        FA_validation: {
-          upsert: {
-            where: {
-              fa_id_user_id: {
-                fa_id: fa_id,
-                user_id: user_id,
-              },
-            },
-            create: {
-              user_id: user_id,
-              team_id: validator_team_id,
-            },
-            update: {
-              user_id: user_id,
-              team_id: validator_team_id,
-              is_deleted: false,
-            },
+    await this.prisma.$transaction([
+      this.prisma.fA_validation.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
           },
         },
-      },
-    });
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+        },
+        update: {
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: false,
+        },
+      }),
+      this.prisma.fA_refuse.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
+          },
+        },
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: true,
+        },
+        update: {
+          is_deleted: true,
+        },
+      }),
+    ]);
+    return fa;
   }
 
   async invalidateFa(fa_id: number, user_id: number): Promise<FA | null> {
-    await this.isUserValidator(user_id);
+    const validator_team_id = await this.isUserValidator(user_id);
     const fa = await this.prisma.fA.findUnique({
       where: { id: fa_id },
     });
     if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
     //remove the user validation by switching is_deleted to true
-    return this.prisma.fA.update({
-      where: { id: fa_id },
-      data: {
-        FA_validation: {
-          update: {
-            where: {
-              fa_id_user_id: {
-                fa_id: fa_id,
-                user_id: user_id,
-              },
-            },
-            data: {
-              is_deleted: true,
-            },
+    await this.prisma.$transaction([
+      this.prisma.fA_refuse.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
           },
         },
-      },
-    });
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+        },
+        update: {
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: false,
+        },
+      }),
+      //if fa_validation exist then change is_deleted to true
+      this.prisma.fA_validation.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
+          },
+        },
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: true,
+        },
+        update: {
+          is_deleted: true,
+        },
+      }),
+    ]);
+
+    return fa;
   }
 
   private async isUserValidator(user_id: number): Promise<number> {

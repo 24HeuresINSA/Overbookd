@@ -81,7 +81,6 @@ describe('FA getters', () => {
     const FA = await faservice.findOne(all_fa[0].id);
     expect(FA).toBeDefined();
     expect(FA.name).toBe(all_fa[0].name);
-    console.log(FA);
   });
 
   afterAll(async () => {
@@ -335,6 +334,13 @@ describe('FA validation system', () => {
         fa_id: sampleFA.id,
       },
     });
+
+    await prisma.fA_refuse.deleteMany({
+      where: {
+        fa_id: sampleFA.id,
+      },
+    });
+
     await prisma.fA.delete({
       where: {
         id: sampleFA.id,
