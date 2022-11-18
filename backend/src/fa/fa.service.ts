@@ -28,7 +28,11 @@ export class FaService {
         id: Number(id),
       },
       include: {
-        FA_Collaborators: true,
+        FA_Collaborators: {
+          include: {
+            Collaborator: true,
+          },
+        },
         FA_validation: true,
         FA_refuse: true,
         FA_Electricity_needs: true,
@@ -37,7 +41,6 @@ export class FaService {
         TimeWindow: true,
         Location: true,
         Team: true,
-        fa_type_name: true,
       },
     });
   }
