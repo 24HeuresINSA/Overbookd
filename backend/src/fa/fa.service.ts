@@ -3,12 +3,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Collaborator, FA, Security_pass, User_Team } from '@prisma/client';
+import { Collaborator, FA, User_Team } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
 import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
-import { CreateSecurityPassDto } from '../security_pass/dto/create-security_pass.dto';
 import { CreateFaDto } from './dto/create-fa.dto';
 
 @Injectable()
@@ -32,7 +31,6 @@ export class FaService {
         FA_Collaborators: true,
         FA_validation: true,
         FA_refuse: true,
-        Security_pass: true,
         FA_Electricity_needs: true,
         FA_signa_needs: true,
         FA_Comment: true,
@@ -56,7 +54,6 @@ export class FaService {
     const collaborators = await this.create_collaborators(
       updateFaDto.FA_Collaborators,
     );
-    await this.createSecurityPasses(updateFaDto.Security_pass, fa.id);
 
     return this.prisma.fA.update({
       where: { id: Number(id) },
@@ -116,31 +113,6 @@ export class FaService {
       throw new Error('Some collaborators were not created');
     }
     return collaborators;
-  }
-
-  private async createSecurityPasses(
-    fa_security_pass: CreateSecurityPassDto[],
-    fa_id: number,
-  ): Promise<Security_pass[]> {
-    if (!fa_security_pass) return;
-    const security_pass = fa_security_pass.map((pass) => {
-      return {
-        ...pass,
-        fa_id: fa_id,
-      };
-    });
-    await this.prisma.security_pass.createMany({
-      data: security_pass,
-    });
-    const created_pass = await this.prisma.security_pass.findMany({
-      where: {
-        fa_id: fa_id,
-      },
-    });
-    if (created_pass.length !== fa_security_pass.length) {
-      throw new Error('some passes were not created');
-    }
-    return created_pass;
   }
 
   async remove(id: number): Promise<FA | null> {
