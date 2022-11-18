@@ -32,6 +32,9 @@ CREATE TABLE "FA" (
     "is_major" BOOLEAN DEFAULT false,
     "is_kids" BOOLEAN DEFAULT false,
     "security_needs" TEXT,
+    "is_pass_required" BOOLEAN,
+    "number_of_pass" INTEGER,
+    "water_needs" TEXT,
     "water_flow_required" INTEGER,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -50,6 +53,7 @@ CREATE TABLE "FA_validation" (
     "fa_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "team_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "FA_validation_pkey" PRIMARY KEY ("fa_id","user_id")
@@ -69,6 +73,7 @@ CREATE TABLE "FA_refuse" (
     "fa_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "team_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "FA_refuse_pkey" PRIMARY KEY ("fa_id","user_id")
@@ -117,16 +122,6 @@ CREATE TABLE "FA_signa_needs" (
     "comment" TEXT NOT NULL,
 
     CONSTRAINT "FA_signa_needs_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Security_pass" (
-    "id" SERIAL NOT NULL,
-    "fa_id" INTEGER NOT NULL,
-    "is_needed" BOOLEAN NOT NULL,
-    "number_of_pass" INTEGER,
-
-    CONSTRAINT "Security_pass_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -196,9 +191,6 @@ ALTER TABLE "FA_Electricity_needs" ADD CONSTRAINT "FA_Electricity_needs_fa_id_fk
 
 -- AddForeignKey
 ALTER TABLE "FA_signa_needs" ADD CONSTRAINT "FA_signa_needs_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Security_pass" ADD CONSTRAINT "Security_pass_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
