@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import {
   Category,
+  CategoryAlreadyExists,
   CategoryRepository,
   CategoryTree,
   SearchCategory,
-} from '../interfaces';
+} from '../../interfaces';
 
 class CategorySearchBuilder {
   private ownerCondition = true;
@@ -17,7 +18,7 @@ class CategorySearchBuilder {
 
   addOwnerCondition(ownerSearch?: string) {
     this.ownerCondition = ownerSearch
-      ? this.category.owner?.slug?.includes(ownerSearch)
+      ? this.category.owner?.code?.includes(ownerSearch)
       : true;
     return this;
   }
@@ -50,7 +51,11 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     );
   }
 
-  addCategory(category: Omit<Category, 'id'>): Promise<Category> {
+  async addCategory(category: Omit<Category, 'id'>): Promise<Category> {
+    const existingCategory = this.categories.find(
+      (categ) => categ.path === category.path,
+    );
+    if (existingCategory) throw new CategoryAlreadyExists(existingCategory);
     const id = this.categories.length + 1;
     const createdCategory = {
       ...category,

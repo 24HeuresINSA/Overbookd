@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Category, Team } from '../interfaces';
 
 class TeamRepresentation implements Team {
-  slug: string;
+  code: string;
   name: string;
 }
 
@@ -23,10 +23,10 @@ export class CategoryResponseDto implements Category {
 
   @ApiProperty({
     required: true,
-    description: 'Category slug',
+    description: 'Category path',
     type: String,
   })
-  slug: string;
+  path: string;
 
   @ApiProperty({
     required: false,

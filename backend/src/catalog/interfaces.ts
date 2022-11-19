@@ -3,7 +3,7 @@ import { BadRequestException } from '@nestjs/common';
 export interface Category {
   id: number;
   name: string;
-  slug: string;
+  path: string;
   owner?: Team;
   parent?: number;
 }
@@ -11,7 +11,7 @@ export interface Category {
 export type SimplifiedCategory = Omit<Category, 'parent' | 'owner'>;
 
 export interface Team {
-  slug: string;
+  code: string;
   name: string;
 }
 
@@ -41,7 +41,7 @@ export interface SearchCategory {
 export interface GearRepository {
   getGear(id: number): Promise<Gear | undefined>;
   addGear(gear: Omit<Gear, 'id'>): Promise<Gear | undefined>;
-  updateGear(gear: Gear): Promise<Gear | undefined>;
+  updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: SearchGear): Promise<Gear[]>;
 }
@@ -52,19 +52,27 @@ export interface CategoryRepository {
   addCategory(category: Omit<Category, 'id'>): Promise<Category>;
   removeCategory(id: number): Promise<Category | undefined>;
   updateCategories(categories: Category[]): Promise<Category[] | undefined>;
-  updateCategory(categories: Category): Promise<Category | undefined>;
+  updateCategory(category: Category): Promise<Category | undefined>;
   getCategoryTrees(): Promise<CategoryTree[] | undefined>;
   searchCategory(searchedCategory: SearchCategory): Promise<Category[]>;
 }
 
 export interface TeamRepository {
-  getTeam(slug: string): Promise<Team | undefined>;
+  getTeam(code: string): Promise<Team | undefined>;
 }
 
 export class GearAlreadyExists extends BadRequestException {
-  gear: Gear;
-  constructor(gear: Gear) {
+  gear: Pick<Gear, 'name'>;
+  constructor(gear: Pick<Gear, 'name'>) {
     super(`"${gear.name}" gear already exists`);
     this.gear = gear;
+  }
+}
+
+export class CategoryAlreadyExists extends BadRequestException {
+  category: Pick<Category, 'name'>;
+  constructor(category: Pick<Category, 'name'>) {
+    super(`"${category.name}" category already exists`);
+    this.category = category;
   }
 }

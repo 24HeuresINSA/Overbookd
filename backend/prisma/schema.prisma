@@ -72,18 +72,20 @@ model User {
 }
 
 model Team {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(30) @unique
-  users      User_Team[]
-  color      String   @db.VarChar(30) @default("#000000")
-  icon       String   @db.VarChar(255) @default("mdi-circle")
+  id               Int                @id @default(autoincrement())
+  name             String             @unique @db.VarChar(30)
+  code             String?            @unique @db.VarChar(20)
+  users            User_Team[]
+  color            String             @default("#000000") @db.VarChar(30)
+  icon             String             @default("mdi-circle") @db.VarChar(255)
+  owned_categories Catalog_Category[] @relation("owner")
 }
 
 model User_Team {
-  user       User    @relation(fields: [user_id], references: [id])
-  user_id    Int
-  team       Team    @relation(fields: [team_id], references: [id])
-  team_id    Int
+  user    User @relation(fields: [user_id], references: [id])
+  user_id Int
+  team    Team @relation(fields: [team_id], references: [id])
+  team_id Int
 
   @@id([user_id, team_id])
 }
@@ -117,7 +119,27 @@ model Transaction {
   to         Int             @default(-1)
   user_to    User            @relation("to", fields: [to], references: [id])
   amount     Float           @default(0)
-  context    String          @db.VarChar(255) @default("")
+  context    String          @default("") @db.VarChar(255)
   created_at DateTime        @default(now())
   is_deleted Boolean         @default(false)
+}
+
+model Catalog_Category {
+  id            Int                @id @default(autoincrement())
+  name          String
+  path          String             @unique
+  parent_id     Int?
+  parent        Catalog_Category?  @relation("parent", fields: [parent_id], references: [id])
+  subCategories Catalog_Category[] @relation("parent")
+  owner_id      Int?
+  owner         Team?              @relation("owner", fields: [owner_id], references: [id])
+  gears         Catalog_Gear[]     @relation("category")
+}
+
+model Catalog_Gear {
+  id          Int               @id @default(autoincrement())
+  name        String
+  slug        String            @unique
+  category_id Int?
+  category    Catalog_Category? @relation("category", fields: [category_id], references: [id])
 }

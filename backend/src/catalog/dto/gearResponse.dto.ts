@@ -4,12 +4,12 @@ import { Gear, SimplifiedCategory, Team } from '../interfaces';
 class SimplifiedCategoryRepresentation implements SimplifiedCategory {
   id: number;
   name: string;
-  slug: string;
+  path: string;
 }
 
 class TeamRepresentation implements Team {
   name: string;
-  slug: string;
+  code: string;
 }
 
 export class GearResponseDto implements Gear {
