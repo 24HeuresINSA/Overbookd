@@ -29,4 +29,11 @@ export class TeamResponseDto implements Team {
     type: String,
   })
   icon: string;
+
+  @ApiProperty({
+    name: 'code',
+    description: 'The code of the team',
+    type: String,
+  })
+  code: string;
 }

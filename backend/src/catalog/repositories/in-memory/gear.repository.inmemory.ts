@@ -4,7 +4,7 @@ import {
   GearAlreadyExists,
   GearRepository,
   SearchGear,
-} from '../interfaces';
+} from '../../interfaces';
 
 class GearSearchBuilder {
   private ownerCondition = true;
@@ -18,7 +18,7 @@ class GearSearchBuilder {
 
   addOwnerCondition(ownerSearch?: string) {
     this.ownerCondition = ownerSearch
-      ? this.gear.owner?.slug?.includes(ownerSearch)
+      ? this.gear.owner?.code?.includes(ownerSearch)
       : true;
     return this;
   }
@@ -32,7 +32,7 @@ class GearSearchBuilder {
 
   addCategoryCondition(categorySearch?: string) {
     this.categoryContion = categorySearch
-      ? this.gear.category?.slug?.includes(categorySearch)
+      ? this.gear.category?.path?.includes(categorySearch)
       : true;
     return this;
   }
@@ -59,7 +59,7 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve(createdGear);
   }
 
-  updateGear(gear: Gear): Promise<Gear | undefined> {
+  updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear | undefined> {
     const gearIndex = this.gears.findIndex((g) => g.id === gear.id);
     if (gearIndex === -1) return Promise.resolve(undefined);
     this.gears[gearIndex] = gear;

@@ -1,8 +1,19 @@
-import { InMemoryCategoryRepository } from './category.repository';
-import { InMemoryTeamRepository } from './team.repository';
-import { InMemoryGearRepository } from './gear.repository';
+import {
+  InMemoryCategoryRepository,
+  InMemoryGearRepository,
+  InMemoryTeamRepository,
+} from './in-memory';
+import {
+  PrismaCategoryRepository,
+  PrismaGearRepository,
+  PrismaTeamRepository,
+} from './prisma';
+
 export {
   InMemoryCategoryRepository,
   InMemoryTeamRepository,
   InMemoryGearRepository,
+  PrismaCategoryRepository,
+  PrismaGearRepository,
+  PrismaTeamRepository,
 };

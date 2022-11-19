@@ -4,40 +4,40 @@ import { Category, Gear } from './interfaces';
 import {
   InMemoryCategoryRepository,
   InMemoryGearRepository,
-} from './repositories';
+} from './repositories/in-memory';
 
-const teamMatos = { name: 'Orga Logistique Matos', slug: 'matos' };
-const teamBarriere = { name: 'Orga Logistique et Securite', slug: 'barrieres' };
+const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
+const teamBarriere = { name: 'Orga Logistique et Securite', code: 'barrieres' };
 
 const CATEGORIES: Category[] = [
   {
     id: 1,
     name: 'Bricollage',
-    slug: 'bricollage',
+    path: 'bricollage',
     owner: teamMatos,
   },
   {
     id: 2,
     name: 'Outils',
-    slug: 'bricollage->outils',
+    path: 'bricollage->outils',
     owner: teamMatos,
     parent: 1,
   },
   {
     id: 3,
     name: 'Mobilier',
-    slug: 'mobilier',
+    path: 'mobilier',
     owner: teamMatos,
   },
   {
     id: 4,
     name: 'Divers',
-    slug: 'divers',
+    path: 'divers',
   },
   {
     id: 5,
     name: 'Barrieres',
-    slug: 'barrieres',
+    path: 'barrieres',
     owner: teamBarriere,
   },
 ];
@@ -49,7 +49,7 @@ const GEARS: Gear[] = [
     slug: 'perceuse',
     category: {
       id: CATEGORIES[1].id,
-      slug: CATEGORIES[1].slug,
+      path: CATEGORIES[1].path,
       name: CATEGORIES[1].name,
     },
     owner: teamMatos,
@@ -60,7 +60,7 @@ const GEARS: Gear[] = [
     slug: 'chaise',
     category: {
       id: CATEGORIES[2].id,
-      slug: CATEGORIES[2].slug,
+      path: CATEGORIES[2].path,
       name: CATEGORIES[2].name,
     },
     owner: teamMatos,
@@ -85,7 +85,7 @@ const SIMILAR_GEARS: Gear[] = [
     slug: 'ponceuse',
     category: {
       id: CATEGORIES[1].id,
-      slug: CATEGORIES[1].slug,
+      path: CATEGORIES[1].path,
       name: CATEGORIES[1].name,
     },
     owner: teamMatos,
@@ -96,7 +96,7 @@ const SIMILAR_GEARS: Gear[] = [
     slug: 'table',
     category: {
       id: CATEGORIES[2].id,
-      slug: CATEGORIES[2].slug,
+      path: CATEGORIES[2].path,
       name: CATEGORIES[2].name,
     },
     owner: teamMatos,
@@ -138,12 +138,12 @@ describe('Catalog', () => {
   describe('Add gear', () => {
     describe.each`
       name               | category     | expectedSlug       | expectedCategory                                         | expectedOwner
-      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, slug: teamMatos.slug }}
-      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }} | ${{ name: teamMatos.name, slug: teamMatos.slug }}
-      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', slug: 'mobilier' }}         | ${{ name: teamMatos.name, slug: teamMatos.slug }}
+      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${{ name: teamMatos.name, code: teamMatos.code }}
       ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}                                             | ${undefined}
-      ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', slug: 'divers' }}             | ${undefined}
-      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', slug: 'barrieres' }}       | ${{ name: teamBarriere.name, slug: teamBarriere.slug }}
+      ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${undefined}
+      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${{ name: teamBarriere.name, code: teamBarriere.code }}
     `(
       'Add gear "$name" with #$category category to catalog',
       ({ name, category, expectedSlug, expectedCategory, expectedOwner }) => {
@@ -202,8 +202,8 @@ describe('Catalog', () => {
   describe('Update gear', () => {
     describe.each`
       toUpdateGear                                      | expectedSlug        | expectedCategory
-      ${{ id: 1, name: 'Perceuse à vis', category: 2 }} | ${'perceuse-a-vis'} | ${{ id: 2, name: 'Outils', slug: 'bricollage->outils' }}
-      ${{ id: 3, name: 'Tireuse', category: 3 }}        | ${'tireuse'}        | ${{ id: 3, name: 'Mobilier', slug: 'mobilier' }}
+      ${{ id: 1, name: 'Perceuse à vis', category: 2 }} | ${'perceuse-a-vis'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }}
+      ${{ id: 3, name: 'Tireuse', category: 3 }}        | ${'tireuse'}        | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}
       ${{ id: 2, name: 'Transat' }}                     | ${'transat'}        | ${undefined}
     `(
       `When update #$toUpdateGear.id existing gear
