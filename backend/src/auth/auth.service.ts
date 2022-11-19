@@ -84,13 +84,7 @@ export class AuthService {
       token: reset_token,
     });
 
-    const result = await Promise.all([userDatabaseUpdate, sendMailToUSer]);
-    result.filter((res) => {
-      res instanceof Error;
-    });
-    if (result.length > 0) {
-      throw new InternalServerErrorException();
-    }
+    await Promise.all([userDatabaseUpdate, sendMailToUSer]);
   }
 
   async recoverPassword({
