@@ -43,7 +43,7 @@ export class AuthController {
 
   @ApiBody({
     description:
-      "Route pour la premeire partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
+      "Route pour la premiere partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
     type: userEmailDto,
   })
   @ApiNotFoundResponse({

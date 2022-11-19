@@ -47,7 +47,7 @@ export class MailService {
         subject: 'Réinitialisation de ton mot de passe overbookd',
         template: 'resetPassword',
         context: {
-          firstname: firstname,
+          firstname
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
         },
       });
