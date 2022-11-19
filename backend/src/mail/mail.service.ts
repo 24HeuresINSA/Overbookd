@@ -1,4 +1,8 @@
-import { Logger, Injectable } from '@nestjs/common';
+import {
+  Logger,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { emailTestDto } from './dto/mailTest.dto';
 
@@ -13,17 +17,22 @@ export class MailService {
   private logger = new Logger('MailService');
 
   async mailTest({ email, username }: emailTestDto): Promise<void> {
-    const mail = await this.mailerService.sendMail({
-      to: email,
-      subject: "Mail de test de l'API overbookd",
-      template: 'mailTest',
-      context: {
-        username: username,
-      },
-    });
+    try {
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: "Mail de test de l'API overbookd",
+        template: 'mailTest',
+        context: {
+          username: username,
+        },
+      });
 
-    if (mail) {
-      this.logger.log(`Testing mail sent to ${email}`);
+      if (mail) {
+        this.logger.log(`Testing mail sent to ${email}`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException("Can't send testing mail");
     }
   }
 
@@ -32,18 +41,23 @@ export class MailService {
     firstname,
     token,
   }: emailResetPassword): Promise<void> {
-    const mail = await this.mailerService.sendMail({
-      to: email,
-      subject: 'Réinitialisation de ton mot de passe overbookd',
-      template: 'resetPassword',
-      context: {
-        firstname: firstname,
-        resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
-      },
-    });
+    try {
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: 'Réinitialisation de ton mot de passe overbookd',
+        template: 'resetPassword',
+        context: {
+          firstname: firstname,
+          resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
+        },
+      });
 
-    if (mail) {
-      this.logger.log(`Reset password mail sent to ${email}`);
+      if (mail) {
+        this.logger.log(`Reset password mail sent to ${email}`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException("Can't send reset password mail");
     }
   }
 }

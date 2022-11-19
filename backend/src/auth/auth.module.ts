@@ -10,6 +10,7 @@ import { HashingUtilsService } from 'src/hashing-utils/hashing-utils.service';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma.service';
 import { MailService } from 'src/mail/mail.service';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -30,5 +31,6 @@ import { MailService } from 'src/mail/mail.service';
     MailService,
   ],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

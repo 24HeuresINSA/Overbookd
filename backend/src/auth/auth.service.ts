@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -83,7 +84,13 @@ export class AuthService {
       token: reset_token,
     });
 
-    Promise.all([userDatabaseUpdate, sendMailToUSer]);
+    const result = await Promise.all([userDatabaseUpdate, sendMailToUSer]);
+    result.filter((res) => {
+      res instanceof Error;
+    });
+    if (result.length > 0) {
+      throw new InternalServerErrorException();
+    }
   }
 
   async recoverPassword({
