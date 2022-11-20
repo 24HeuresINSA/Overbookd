@@ -45,13 +45,13 @@ model User {
   id                      Int        @id @default(autoincrement())
   firstname               String     @db.VarChar(30)
   lastname                String     @db.VarChar(30)
-  nickname                String     @db.VarChar(30)
+  nickname                String?     @db.VarChar(30)
   email                   String     @unique
   birthdate               DateTime
   phone                   String     @db.VarChar(30)
   department              Department
   comment                 String?
-  reset_password_token    String?
+  reset_password_token    String?     @unique
   reset_password_expires  DateTime?
   has_payed_contributions Boolean    @default(false)
   year                    Year

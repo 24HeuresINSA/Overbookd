@@ -29,7 +29,7 @@ export class UserController {
     description: 'Add new user',
     type: UserCreationDto,
   })
-  createUser(@Body() userData: User): Promise<UserWithoutPassword> {
+  createUser(@Body() userData: UserCreationDto): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
   }
 

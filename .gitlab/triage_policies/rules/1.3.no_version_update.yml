@@ -11,14 +11,24 @@ resource_rules:
             source_branch_version = JSON.parse(source_branch_response.body)["version"]
 
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+
+            MR_diffs = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/changes", :headers => { "Authorization" => auth})
             MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
-            notes = JSON.parse(MR_notes.body).each do |note|
+            
+            JSON.parse(MR_notes.body).each do |note|
               if note["body"].include?("The version of backend's package.json has not been updated.")
                 return false
               end
             end
 
-            target_branch_version == source_branch_version
+            JSON.parse(MR_diffs.body)["changes"].each do |change|
+              if change["new_path"].include?("backend")
+                return target_branch_version == source_branch_version
+              end
+            end
+
+            return false
+
         actions:
           comment_type: thread
           comment: |
@@ -36,17 +46,26 @@ resource_rules:
             source_branch_version = JSON.parse(source_branch_response.body)["version"]
 
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+
+            MR_diffs = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/changes", :headers => { "Authorization" => auth})
             MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
-            notes = JSON.parse(MR_notes.body).each do |note|
+            
+            JSON.parse(MR_notes.body).each do |note|
               if note["body"].include?("The version of frontend's package.json has not been updated.")
                 return false
               end
             end
 
-            target_branch_version == source_branch_version
+            JSON.parse(MR_diffs.body)["changes"].each do |change|
+              if change["new_path"].include?("frontend")
+                return target_branch_version == source_branch_version
+              end
+            end
+
+            return false
         actions:
           comment_type: thread
           comment: |
-            Hi {{author}},
+            Hi {{author}},  
             The version of frontend's package.json has not been updated.  
             Are you sure you want to merge this MR?

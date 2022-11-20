@@ -1,7 +1,20 @@
 {
   "name": "overbookd",
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "description": "Frontend pour le logiciel de gestion du festivale des 24 heures de l'INSA",
+  "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
+  "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
+  "license": "Apache-2.0",
   "private": true,
+  "bugs": {
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
+    "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
+    "directory": "frontend"
+  },
   "lint-staged": {
     "**/*.(js|ts|vue)": "eslint --fix"
   },

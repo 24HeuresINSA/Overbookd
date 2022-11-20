@@ -13,6 +13,19 @@
       "path": "../frontend"
     }
   ],
+  "extensions": {
+    "recommendations": [
+      "vivaxy.vscode-conventional-commits",
+      "ms-azuretools.vscode-docker",
+      "EditorConfig.EditorConfig",
+      "usernamehw.errorlens",
+      "mhutchie.git-graph",
+      "eamodio.gitlens",
+      "Prisma.prisma",
+      "dbaeumer.vscode-eslint",
+      "kamikillerto.vscode-colorize"
+    ]
+  },
   "settings": {
     "conventionalCommits.autoCommit": false,
     "conventionalCommits.scopes": [
@@ -35,7 +48,12 @@
     "files.watcherExclude": {
       "**/.git/objects/**": true,
       "**/.git/subtree-cache/**": true,
-      "**/node_modules/*/**": true
+      "**/node_modules/**": true,
+      "**/docker/data/**": true,
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/docker/data/**": true,
     }
   }
 }
