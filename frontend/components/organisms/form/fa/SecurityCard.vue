@@ -9,11 +9,15 @@
                     label="Besoin de Pass Sécu"
                     @change="onChange"
                 ></v-switch>
-                <v-textarea
+                <v-text-field
                     v-if="securityData.is_needed"
                     v-model="securityData.number_of_pass"
                     label="Nombre de Pass Sécu"
-                ></v-textarea>
+                    type="number"
+                    min="1"
+                    step="1"
+                    @change="onChange"
+              ></v-text-field>
             </v-form>
         </v-card-text>
     </v-card>

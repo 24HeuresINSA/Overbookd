@@ -96,9 +96,9 @@
             <template #[`item.validation`]="{ item }">
               <ValidatorsIcons :form="item"></ValidatorsIcons>
             </template>
-            <template #item.general.name="{ item }">
+            <template #item.name="{ item }">
               <a
-                :href="`/fa/${item.count}`"
+                :href="`/fa/${item.id}`"
                 :style="
                   item.isValid === false
                     ? `text-decoration:line-through;`
@@ -114,7 +114,7 @@
                     class="mx-2"
                     icon
                     small
-                    :href="`/fa/${row.item.count}`"
+                    :href="`/fa/${row.item.id}`"
                   >
                     <v-icon small>mdi-circle-edit-outline</v-icon>
                   </v-btn>
@@ -127,7 +127,7 @@
 
             <template #[`item.status`]="row">
               <v-chip v-if="row.item" :color="color[row.item.status]" small
-                >{{ row.item.count }}
+                >{{ row.item.id }}
               </v-chip>
             </template>
           </v-data-table>
@@ -193,20 +193,20 @@ export default {
       itemsPerPage: 4,
       selectedStatus: 0,
       selectedTeam: undefined,
-      validators: [],
+      //validators: [],
       headers: [
         { text: "Statut", value: "status" },
-        { text: "Validation", value: "validation" },
-        { text: "Nom", value: "general.name" },
-        { text: "Equipe", value: "general.team" },
-        { text: "Resp", value: "general.inCharge.username" },
+        { text: "Validation", value: "validator" },
+        { text: "Nom", value: "name" },
+        { text: "Equipe", value: "team" },  // .username ?
+        { text: "Resp", value: "in_charge" },  // .username ?
         { text: "Action", value: "action" },
       ],
       color: {
-        submitted: "warning",
-        validated: "green",
-        refused: "red",
-        draft: "grey",
+        envoyé: "warning",
+        validé: "green",
+        refusé: "red",
+        brouillon: "grey",
         undefined: "grey",
       },
 
@@ -232,7 +232,7 @@ export default {
       mFAs = this.filterByValidatorStatus(mFAs);
       const options = {
         // Search in `author` and in `tags` array
-        keys: ["general.name", "details.description"],
+        keys: ["name", "description"],
       };
       const fuse = new Fuse(mFAs, options);
       if (this.search === undefined || this.search === "") {
@@ -243,7 +243,7 @@ export default {
   },
   async mounted() {
     if (this.$accessor.user.hasRole("hard")) {
-      this.validators = this.$accessor.config.getConfig("fa_validators");
+      //this.validators = this.$accessor.config.getConfig("fa_validators");
       // get FAs
       const res = await safeCall(
         this.$store,
@@ -305,7 +305,7 @@ export default {
             return FA.refused.includes(validator);
           } else if (value === 2) {
             return (
-              !FA.validated.includes(validator) && FA.status === "submitted"
+              !FA.validated.includes(validator) && FA.status === "SUBMITTED"
             );
           }
           return true;
@@ -318,11 +318,11 @@ export default {
       if (status === 0) {
         return FAs;
       }
-      const s = ["", "draft", "submitted", "refused", "validated"];
+      const s = ["", "DRAFT", "SUBMITTED", "REFUSED", "VALIDATED"];
       FAs = FAs.map((FA) => {
         if (FA) {
           if (FA.status === undefined) {
-            FA.status = "draft";
+            FA.status = "DRAFT";
           }
         }
         return FA;
@@ -335,28 +335,27 @@ export default {
         return;
       }
       const FA = {
-        general: {
-          name: this.faName,
-        },
+        name: this.faName,
       };
       const res = await safeCall(
         this.$store,
         RepoFactory.faRepo.createNewFA(this, FA),
-        "FA created 🥳"
+        "FA créée 🥳"
       );
+
       if (res) {
-        await this.$router.push({ path: "fa/" + res.count });
+        await this.$router.push({ path: "fa/" + res.id });
       }
     },
     async deleteFA() {
       const res = await safeCall(
         this.$store,
         RepoFactory.faRepo.deleteFA(this, this.mFA),
-        "FA deleted 🥳",
-        "FA not deleted 😢"
+        "FA supprimée 🥳",
+        "FA non supprimée 😢"
       );
       if (res) {
-        this.FAs = this.FAs.filter((e) => e.count !== this.mFA.count);
+        this.FAs = this.FAs.filter((e) => e.id !== this.mFA.id);
         this.isDeleteFAOpen = false;
         this.mFA = undefined;
       }
@@ -372,7 +371,8 @@ export default {
       this.itemsPerPage = number;
     },
 
-    download(filename, text) {
+
+    /*download(filename, text) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
       const element = document.createElement("a");
@@ -569,7 +569,7 @@ export default {
       let parsedCSV = csv.replaceAll(regex, "@");
       // Prompt the browser to start file download
       this.download("choucroute.csv", parsedCSV);
-    },
+    },*/
   },
 };
 </script>

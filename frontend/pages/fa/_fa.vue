@@ -80,7 +80,7 @@
 
 <script>
 import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
-import { RepoFactory } from "../../repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repoFactory"
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTCard from "~/components/organisms/form/fa/FTCard.vue";
@@ -115,7 +115,6 @@ export default {
     SecurityCard,
     FormSidebar,
   },
-  middleware: "user",
 
   data() {
     return {
@@ -139,16 +138,12 @@ export default {
     store() {
       return this.$accessor.FA;
     },
+    FA() {
+      console.log(this.$accessor.FA.mFA);
+      return this.$accessor.FA.mFA;
+    },
   },
   methods: {
-    getValidatorIcon(validator) {
-      try {
-        return this.$accessor.team.getTeams([validator])?.[0]?.icon;
-      } catch (e) {
-        console.log(`can't find icon of team ${validator}`);
-      }
-    },
-
     updateGeneralData(generalData) {
       this.generalData = generalData;
     },
@@ -177,45 +172,38 @@ export default {
       this.waterLogisticData = waterLogisticData;
     },
     
-    saveFA() {
-      console.log(this.generalData);
-      console.log(this.detailData);
-      console.log(this.securityData);
-      console.log(this.prestaData);
-      console.log(this.equipmentLogisticArray);
-      console.log(this.barrieresLogisticArray);
-      console.log(this.equipmentElecWaterLogisticArray);
-      console.log(this.elecLogisticArray);
-      console.log(this.waterLogisticData);
+    async saveFA() {
+      console.log(this.FA);
+      await RepoFactory.faRepo.updateFA(this, this.FA);
     },
   },
 };
 </script>
 
 <style scoped>
-  * {
-    scroll-margin-top: 80px;
-  }
+* {
+  scroll-margin-top: 80px;
+}
 
-  .main {
-    display: flex;
-  }
+.main {
+  display: flex;
+}
 
-  .summary {
-    position: fixed;
-    top: 20%;
-  }
+.summary {
+  position: fixed;
+  top: 20%;
+}
 
-  .summary-space {
-    width: 120px;
-  }
+.summary-space {
+  width: 120px;
+}
 
-  .container {
-    display: flex;
-    flex-direction: column;
-  }
+.container {
+  display: flex;
+  flex-direction: column;
+}
 
-  .container > * {
-    margin-bottom: 30px;
-  }
+.container > * {
+  margin-bottom: 30px;
+}
 </style>
