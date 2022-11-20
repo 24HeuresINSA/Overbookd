@@ -3,12 +3,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Collaborator, FA, Security_pass, User_Team } from '@prisma/client';
+import { Collaborator, FA, User_Team } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
 import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
-import { CreateSecurityPassDto } from '../security_pass/dto/create-security_pass.dto';
 import { CreateFaDto } from './dto/create-fa.dto';
 
 @Injectable()
@@ -20,7 +19,11 @@ export class FaService {
   /**     **/
 
   async findAll(): Promise<FA[] | null> {
-    return this.prisma.fA.findMany();
+    return this.prisma.fA.findMany({
+      where: {
+        is_deleted: false,
+      },
+    });
   }
 
   async findOne(id: number): Promise<FA | null> {
@@ -29,17 +32,20 @@ export class FaService {
         id: Number(id),
       },
       include: {
-        FA_Collaborators: true,
+        FA_Collaborators: {
+          include: {
+            Collaborator: true,
+          },
+        },
         FA_validation: true,
         FA_refuse: true,
-        Security_pass: true,
         FA_Electricity_needs: true,
         FA_signa_needs: true,
         FA_Comment: true,
         TimeWindow: true,
         Location: true,
         Team: true,
-        fa_type_name: true,
+        User_in_charge: true,
       },
     });
   }
@@ -56,7 +62,6 @@ export class FaService {
     const collaborators = await this.create_collaborators(
       updateFaDto.FA_Collaborators,
     );
-    await this.createSecurityPasses(updateFaDto.Security_pass, fa.id);
 
     return this.prisma.fA.update({
       where: { id: Number(id) },
@@ -118,31 +123,6 @@ export class FaService {
     return collaborators;
   }
 
-  private async createSecurityPasses(
-    fa_security_pass: CreateSecurityPassDto[],
-    fa_id: number,
-  ): Promise<Security_pass[]> {
-    if (!fa_security_pass) return;
-    const security_pass = fa_security_pass.map((pass) => {
-      return {
-        ...pass,
-        fa_id: fa_id,
-      };
-    });
-    await this.prisma.security_pass.createMany({
-      data: security_pass,
-    });
-    const created_pass = await this.prisma.security_pass.findMany({
-      where: {
-        fa_id: fa_id,
-      },
-    });
-    if (created_pass.length !== fa_security_pass.length) {
-      throw new Error('some passes were not created');
-    }
-    return created_pass;
-  }
-
   async remove(id: number): Promise<FA | null> {
     return this.prisma.fA.update({
       where: { id: Number(id) },
@@ -155,61 +135,97 @@ export class FaService {
   async validateFa(fa_id: number, user_id: number): Promise<FA | null> {
     const validator_team_id = await this.isUserValidator(user_id);
     const fa = await this.prisma.fA.findUnique({
-      where: { id: fa_id },
+      where: { id: Number(fa_id) },
     });
     if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
     //add the user validation
-    return this.prisma.fA.update({
-      where: { id: fa_id },
-      data: {
-        FA_validation: {
-          upsert: {
-            where: {
-              fa_id_user_id: {
-                fa_id: fa_id,
-                user_id: user_id,
-              },
-            },
-            create: {
-              user_id: user_id,
-              team_id: validator_team_id,
-            },
-            update: {
-              user_id: user_id,
-              team_id: validator_team_id,
-              is_deleted: false,
-            },
+    await this.prisma.$transaction([
+      this.prisma.fA_validation.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
           },
         },
-      },
-    });
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+        },
+        update: {
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: false,
+        },
+      }),
+      this.prisma.fA_refuse.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
+          },
+        },
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: true,
+        },
+        update: {
+          is_deleted: true,
+        },
+      }),
+    ]);
+    return fa;
   }
 
   async invalidateFa(fa_id: number, user_id: number): Promise<FA | null> {
-    await this.isUserValidator(user_id);
+    const validator_team_id = await this.isUserValidator(user_id);
     const fa = await this.prisma.fA.findUnique({
       where: { id: fa_id },
     });
     if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
     //remove the user validation by switching is_deleted to true
-    return this.prisma.fA.update({
-      where: { id: fa_id },
-      data: {
-        FA_validation: {
-          update: {
-            where: {
-              fa_id_user_id: {
-                fa_id: fa_id,
-                user_id: user_id,
-              },
-            },
-            data: {
-              is_deleted: true,
-            },
+    await this.prisma.$transaction([
+      this.prisma.fA_refuse.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
           },
         },
-      },
-    });
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+        },
+        update: {
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: false,
+        },
+      }),
+      //if fa_validation exist then change is_deleted to true
+      this.prisma.fA_validation.upsert({
+        where: {
+          fa_id_user_id: {
+            fa_id: fa_id,
+            user_id: user_id,
+          },
+        },
+        create: {
+          fa_id: fa_id,
+          team_id: validator_team_id,
+          user_id: user_id,
+          is_deleted: true,
+        },
+        update: {
+          is_deleted: true,
+        },
+      }),
+    ]);
+
+    return fa;
   }
 
   private async isUserValidator(user_id: number): Promise<number> {

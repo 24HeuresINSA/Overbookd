@@ -7,7 +7,6 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateSecurityPassDto } from '../../security_pass/dto/create-security_pass.dto';
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
 import { Type } from 'class-transformer';
 
@@ -115,6 +114,30 @@ class FA {
 
   @ApiProperty({
     required: false,
+    description: 'Is security pass required',
+  })
+  @IsBoolean()
+  @IsOptional()
+  is_pass_required?: boolean;
+
+  @ApiProperty({
+    required: false,
+    description: 'Number of security pass if required',
+  })
+  @IsNumber()
+  @IsOptional()
+  number_of_pass?: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Text description about water',
+  })
+  @IsString()
+  @IsOptional()
+  water_needs?: string;
+
+  @ApiProperty({
+    required: false,
     description: 'The waterflow needed',
   })
   @IsNumber()
@@ -140,14 +163,4 @@ export class UpdateFaDto {
   @ValidateNested()
   @Type(() => CreateCollaboratorDto)
   FA_Collaborators?: CreateCollaboratorDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'all security pass needed',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateSecurityPassDto)
-  Security_pass?: CreateSecurityPassDto[];
 }

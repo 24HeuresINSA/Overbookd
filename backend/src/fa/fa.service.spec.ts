@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
-import { nakedFA, collaboratorFA, secuFA, emptyFA } from './testData';
+import { nakedFA, collaboratorFA, emptyFA } from './testData';
 import { Collaborator, FA, FA_type, Location, User } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 
@@ -59,7 +59,7 @@ describe('FA getters', () => {
   let FAs: UpdateFaDto[];
   let all_fa: FA[];
   beforeAll(async () => {
-    FAs = [nakedFA, collaboratorFA, secuFA, emptyFA];
+    FAs = [nakedFA, collaboratorFA, emptyFA];
     FAs.map(async (FA) => {
       FA.FA.type = fa_type.name;
       FA.FA.location_id = location.id;
@@ -81,7 +81,6 @@ describe('FA getters', () => {
     const FA = await faservice.findOne(all_fa[0].id);
     expect(FA).toBeDefined();
     expect(FA.name).toBe(all_fa[0].name);
-    console.log(FA);
   });
 
   afterAll(async () => {
@@ -134,16 +133,6 @@ describe('FA creation', () => {
       expect(collaborators.length).toBe(0);
     });
 
-    test('Should not get any security pass', async () => {
-      //find all security passes linked to result
-      const security_pass = await prisma.security_pass.findMany({
-        where: {
-          fa_id: result.id,
-        },
-      });
-      expect(security_pass.length).toBe(0);
-    });
-
     afterAll(async () => {
       //delete the FA
       await prisma.fA.delete({
@@ -169,6 +158,9 @@ describe('FA creation', () => {
         expect(collab_result).toHaveProperty(key);
         expect(collab_result[key]).toStrictEqual(FA.FA[key]);
       });
+      const getfa = await faservice.findOne(collab_result.id);
+      expect(getfa).toBeDefined();
+      console.log(JSON.stringify(getfa, null, 2));
     });
 
     test('Should get one collaborator', async () => {
@@ -202,49 +194,6 @@ describe('FA creation', () => {
       await prisma.collaborator.delete({
         where: {
           id: collaborators[0].id,
-        },
-      });
-    });
-  });
-  describe('Create an FA with a security pass', () => {
-    let secu_result: FA | null;
-    let security_pass: any;
-
-    test('should create an FA with a security pass', async () => {
-      expect(faservice.create).toBeDefined();
-      const FA = secuFA;
-      FA.FA.type = fa_type.name;
-      FA.FA.location_id = location.id;
-      secu_result = await faservice.create({ name: FA.FA.name });
-      expect(secu_result).toBeDefined();
-      secu_result = await faservice.update(secu_result.id, FA);
-      Object.keys(FA.FA).map((key) => {
-        expect(secu_result).toHaveProperty(key);
-        expect(secu_result[key]).toStrictEqual(FA.FA[key]);
-      });
-    });
-
-    test('Should get one security pass', async () => {
-      //find all security passes linked to result
-      security_pass = await prisma.security_pass.findMany({
-        where: {
-          fa_id: secu_result.id,
-        },
-      });
-      expect(security_pass.length).toBe(1);
-    });
-
-    afterAll(async () => {
-      //delete the security pass
-      await prisma.security_pass.delete({
-        where: {
-          id: security_pass[0].id,
-        },
-      });
-      //delete the FA
-      await prisma.fA.delete({
-        where: {
-          id: secu_result.id,
         },
       });
     });
@@ -335,6 +284,13 @@ describe('FA validation system', () => {
         fa_id: sampleFA.id,
       },
     });
+
+    await prisma.fA_refuse.deleteMany({
+      where: {
+        fa_id: sampleFA.id,
+      },
+    });
+
     await prisma.fA.delete({
       where: {
         id: sampleFA.id,

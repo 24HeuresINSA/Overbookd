@@ -157,6 +157,9 @@ model FA {
   is_major            Boolean?  @default(false)
   is_kids             Boolean?  @default(false)
   security_needs      String?   @db.Text
+  is_pass_required    Boolean?  @db.Boolean
+  number_of_pass      Int?
+  water_needs         String?   @db.Text
   water_flow_required Int?
   is_deleted          Boolean   @default(false)
 
@@ -165,7 +168,6 @@ model FA {
   FA_Collaborators     FA_Collaborators[]
   FA_Electricity_needs FA_Electricity_needs[]
   FA_signa_needs       FA_signa_needs[]
-  Security_pass        Security_pass[]
   FA_Comment           FA_Comment[]
   TimeWindow           TimeWindow[]
 }
@@ -176,14 +178,14 @@ model FA_type {
 }
 
 model FA_validation {
-  FA         FA      @relation(fields: [fa_id], references: [id])
+  FA         FA       @relation(fields: [fa_id], references: [id])
   fa_id      Int
-  User       User    @relation(fields: [user_id], references: [id])
+  User       User     @relation(fields: [user_id], references: [id])
   user_id    Int
-  Team       Team    @relation(fields: [team_id], references: [id])
+  Team       Team     @relation(fields: [team_id], references: [id])
   team_id    Int
   created_at DateTime @default(now())
-  is_deleted Boolean @default(false)
+  is_deleted Boolean  @default(false)
 
   @@id([fa_id, user_id])
 }
@@ -199,14 +201,14 @@ model FA_Collaborators {
 }
 
 model FA_refuse {
-  FA         FA      @relation(fields: [fa_id], references: [id])
+  FA         FA       @relation(fields: [fa_id], references: [id])
   fa_id      Int
-  User       User    @relation(fields: [user_id], references: [id])
+  User       User     @relation(fields: [user_id], references: [id])
   user_id    Int
-  Team       Team    @relation(fields: [team_id], references: [id])
+  Team       Team     @relation(fields: [team_id], references: [id])
   team_id    Int
   created_at DateTime @default(now())
-  is_deleted Boolean @default(false)
+  is_deleted Boolean  @default(false)
 
   @@id([fa_id, user_id])
 }
@@ -270,14 +272,6 @@ model FA_signa_needs {
   text       String    @db.Text
   count      Int       @default(1)
   comment    String    @db.Text
-}
-
-model Security_pass {
-  id             Int     @id @default(autoincrement())
-  FA             FA      @relation(fields: [fa_id], references: [id])
-  fa_id          Int
-  is_needed      Boolean @db.Boolean
-  number_of_pass Int?
 }
 
 enum subject_type {
