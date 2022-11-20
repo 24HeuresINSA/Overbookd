@@ -19,7 +19,11 @@ export class FaService {
   /**     **/
 
   async findAll(): Promise<FA[] | null> {
-    return this.prisma.fA.findMany();
+    return this.prisma.fA.findMany({
+      where: {
+        is_deleted: false,
+      },
+    });
   }
 
   async findOne(id: number): Promise<FA | null> {
@@ -41,6 +45,7 @@ export class FaService {
         TimeWindow: true,
         Location: true,
         Team: true,
+        User_in_charge: true,
       },
     });
   }
