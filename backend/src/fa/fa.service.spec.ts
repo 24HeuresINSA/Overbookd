@@ -158,6 +158,9 @@ describe('FA creation', () => {
         expect(collab_result).toHaveProperty(key);
         expect(collab_result[key]).toStrictEqual(FA.FA[key]);
       });
+      const getfa = await faservice.findOne(collab_result.id);
+      expect(getfa).toBeDefined();
+      console.log(JSON.stringify(getfa, null, 2));
     });
 
     test('Should get one collaborator', async () => {
