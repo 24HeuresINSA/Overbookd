@@ -7,15 +7,11 @@
       <h1>Fiche Activité</h1>
       <FAGeneralCard
         id="general"
-        :data="generalData"
-        @update-data="updateGeneralData"
       ></FAGeneralCard>
       <FADetailCard
         id="detail"
-        :data="detailData"
-        @update-data="updateDetailData"
       ></FADetailCard>
-      <SignaCard
+      <!--<SignaCard
         id="signa"
       ></SignaCard>
       <TimeframeTable
@@ -24,13 +20,9 @@
       ></TimeframeTable>
       <SecurityCard
         id="security"
-        :data="securityData"
-        @update-data="updateSecurityData"
       ></SecurityCard>
       <PrestaCard
         id="presta"
-        :data="prestaData"
-        @update-data="updatePrestaData"
       ></PrestaCard>
       <h2>Logistique 🚚</h2>
       <h4>
@@ -73,7 +65,7 @@
       <FTCard
         id="ft"
       ></FTCard>
-      <v-btn @click="saveFA">Sauvegarder</v-btn>
+      <v-btn @click="saveFA">Sauvegarder</v-btn>-->
     </v-container>
     </div>
 </template>
@@ -118,17 +110,6 @@ export default {
 
   data() {
     return {
-      generalData: {},
-      detailData: {},
-      securityData: {},
-      prestaData: {},
-      equipmentLogisticArray: [],
-      barrieresLogisticArray: [],
-      equipmentElecWaterLogisticArray: [],
-      elecLogisticArray: [],
-      waterLogisticData: {},
-      commentArray: [],
-
       EquipmentTypes,
       ElecTypes,
       BarrieresTypes,
@@ -144,34 +125,6 @@ export default {
     },
   },
   methods: {
-    updateGeneralData(generalData) {
-      this.generalData = generalData;
-    },
-    updateDetailData(detailData) {
-      this.detailData = detailData;
-    },
-    updateSecurityData(securityData) {
-      this.securityData = securityData;
-    },
-    updatePrestaData(prestaData) {
-      this.prestaData = prestaData;
-    },
-    updateEquipmentLogisticArray(equipmentLogisticArray) {
-      this.equipmentLogisticArray = equipmentLogisticArray;
-    },
-    updateBarrieresLogisticArray(barrieresLogisticArray) {
-      this.barrieresLogisticArray = barrieresLogisticArray;
-    },
-    updateEquipmentElecWaterLogisticArray(equipmentElecWaterLogisticArray) {
-      this.equipmentElecWaterLogisticArray = equipmentElecWaterLogisticArray;
-    },
-    updateElecLogisticArray(elecLogisticArray) {
-      this.elecLogisticArray = elecLogisticArray;
-    },
-    updateWaterLogisticData(waterLogisticData) {
-      this.waterLogisticData = waterLogisticData;
-    },
-    
     async saveFA() {
       console.log(this.FA);
       await RepoFactory.faRepo.updateFA(this, this.FA);

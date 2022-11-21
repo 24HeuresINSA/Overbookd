@@ -5,13 +5,12 @@
         <v-card-text>
             <v-form>
                 <v-text-field
-                    v-model="generalData.name"
+                    :value="generalData.name"
                     label="Nom de la FA"
-                    required
-                    @change="onChange"
+                    @change="onChange('name', $event)"
                 ></v-text-field>
                 <v-select
-                    v-model="generalData.type"
+                    :value="generalData.type"
                     label="Type"
                     :items="['Concert',
                         'Course',
@@ -23,57 +22,55 @@
                         'Prévention',
                         'Spectacle',
                         'Autre']"
-                    dense
-                    required
-                    @change="onChange"
+                    @change="onChange('type', $event)"
                 ></v-select>
                 <!-- GET ID NOT TEXT -->
                 <v-select
-                    v-model="generalData.team_id"
+                    :value="generalData.team_id"
                     label="Equipe"
                     :items="teams"
-                    required
-                    @change="onChange"
+                    item-value="id"
+                    item-text="name"
+                    @change="onChange('team_id', $event)"
                 ></v-select>
                 <!-- GET ID NOT TEXT -->
                 <v-select
-                    v-model="generalData.in_charge"
+                    :value="generalData.in_charge"
                     label="Responsable"
                     :items="users"
-                    required
-                    @change="onChange"
+                    item-value="id"
+                    item-text="name"
+                    @change="onChange('in_charge', $event)"
                 ></v-select>
             </v-form>
         </v-card-text>
     </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     name: "FAGeneralCard",
-    props: {
-        data: {
-            type: Object,
-            default: () => {},
-        },
-    },
     computed: {
-        generalData() {
-            return this.data;
+        generalData(): any {
+            return this.$accessor.FA.mFA.general;
         },
-        teams() {
-            return [];  //Get all teams
+        teams(): Array<any> {
+            return this.$accessor.team.allTeams;
         },
-        users() {
-            return [];  //Get all users
+        users(): Array<any> {
+            return this.$accessor.user.usernames;
         },
     },
     methods: {
-        onChange() {
-            this.$emit("update-data", this.generalData);
+        onChange(name: string, value: any) {
+            if (typeof value === "string") value = value.trim();
+            console.log(name + " : " + value);
+            // Mettre à jour le store
         }
     },
-};
+});
 </script>
 
 <style scoped></style>

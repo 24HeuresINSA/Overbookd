@@ -66,7 +66,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 const headers = [
   { text: "Type de raccordement", value: "connectionType" },
   {
@@ -77,13 +79,9 @@ const headers = [
   { text: "Action", value: "action" },
 ];
 
-export default {
+export default Vue.extend({
   name: "ElecLogisticCard",
   props: {
-    data: {
-      type: Array,
-      default: () => [],
-    },
     isDisabled: {
       type: Boolean,
       default: () => false,
@@ -92,16 +90,20 @@ export default {
   data: () => ({
     headers,
     isElectricityNeedDialogOpen: false,
-    newElectricityNeed: {},
+    newElectricityNeed: {
+      connectionType: "",
+      power: "0",
+      comment: "",
+    },
   }),
   computed: {
     electricityNeeds() {
-      return this.data;
+      return this.$accessor.FA.mFA.electricityNeeds;
     },
   },
   methods: {
-    deleteElectricityNeed(index) {
-      this.electricityNeeds.splice(index, 1);
+    deleteElectricityNeed(index: number) {
+      this.$accessor.FA.deleteElectricityNeed(index);
     },
     addElectricityNeed() {
       if (!this.newElectricityNeed.connectionType) {
@@ -121,13 +123,12 @@ export default {
         return;
       }
 
-      this.electricityNeeds.push(this.newElectricityNeed);
-      this.$emit("update-data", this.electricityNeeds);
+      this.$accessor.FA.addElectricityNeed(this.newElectricityNeed);
       this.isElectricityNeedDialogOpen = false;
-      this.newElectricityNeed = {};
+      this.newElectricityNeed = {connectionType: "", power: "0", comment: ""};
     },
   },
-}
+});
 </script>
 
 <style scoped>

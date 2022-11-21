@@ -5,53 +5,50 @@
         <v-card-text>
             <v-form>
                 <RichEditor
-                    v-model="detailData.description"
+                    :data="detailData.description"
                     label="Description"
-                    @change="onChange"
+                    @change="onChange('description', $event)"
                 ></RichEditor>
                 <v-switch
-                    v-model="detailData.is_publishable"
+                    :value="detailData.is_publishable"
                     label="Publier sur le site / plaquette"
-                    @change="onChange"
+                    @change="onChange('is_publishable', $event)"
                 ></v-switch>
                 <v-switch
-                    v-model="detailData.is_major"
+                    :value="detailData.is_major"
                     label="Anim phare"
-                    @change="onChange"
+                    @change="onChange('is_major', $event)"
                 ></v-switch>
                 <v-switch
-                    v-model="detailData.is_kids"
+                    :value="detailData.is_kids"
                     label="Anim pour les gosses"
-                    @change="onChange"
+                    @change="onChange('is_kids', $event)"
                 ></v-switch>
             </v-form>
         </v-card-text>
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import RichEditor from '~/components/atoms/RichEditor.vue';
 
-export default {
+export default Vue.extend({
     name: "FADetailCard",
     components: { RichEditor },
-    props: {
-        data: {
-            type: Object,
-            default: () => {},
-        },
-    },
     computed: {
-        detailData() {
-            return this.data;
-        },
-    },
-    methods: {
-        onChange() {
-            this.$emit("update-data", this.detailData);
+        detailData(): any {
+            return this.$accessor.FA.mFA.details;
         }
     },
-};
+    methods: {
+        onChange(name: string, value: any) {
+            if (typeof value === "string") value = value.trim();
+            console.log(name + " : " + value);
+            // Mettre à jour le store
+        }
+    },
+});
 </script>
 
 <style scoped></style>
