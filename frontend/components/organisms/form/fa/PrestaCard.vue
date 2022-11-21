@@ -4,17 +4,17 @@
         <v-card-text>
             <v-form>
                 <v-text-field
-                    v-model="prestaData.firstname"
+                    :value="prestaData.firstname"
                     label="Prénom de l'intervenant"
-                    @change="onChange">
-                </v-text-field>
+                    @change="onChange('firstname', $event)"
+                ></v-text-field>
                 <v-text-field
-                    v-model="prestaData.lastname"
+                    :valuel="prestaData.lastname"
                     label="Nom de l'intervenant"
-                    @change="onChange">
-                </v-text-field>
+                    @change="onChange('lastname', $event)"
+                ></v-text-field>
                 <v-text-field
-                    v-model="prestaData.phone"
+                    :value="prestaData.phone"
                     label="Téléphone"
                     :rules="
                         [
@@ -23,10 +23,10 @@
                             (`ce numéro de téléphone n'est pas valide`),
                         ]
                     "
-                    @change="onChange">
-                </v-text-field>
+                    @change="onChange('phone', $event)"
+                ></v-text-field>
                 <v-text-field
-                    v-model="prestaData.email"
+                    :value="prestaData.email"
                     label="E-mail"
                     :rules="
                         [
@@ -35,43 +35,42 @@
                             (`cet email n'est pas valide`),
                         ]
                     "
-                    @change="onChange">
-                </v-text-field>
+                    @change="onChange('email', $event)"
+                ></v-text-field>
                 <v-text-field
-                    v-model="prestaData.company"
+                    :value="prestaData.company"
                     label="Société"
-                    @change="onChange">
-                </v-text-field>
+                    @change="onChange('company', $event)"
+                ></v-text-field>
                 <v-text-field
-                    v-model="prestaData.comment"
+                    :value="prestaData.comment"
                     label="Commentaire"
-                    @change="onChange">
-                </v-text-field>
+                    @change="onChange('comment', $event)"
+                ></v-text-field>
             </v-form>
         </v-card-text>
     </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     name: "PrestaCard",
-    props: {
-        data: {
-            type: Object,
-            default: () => {},
-        },
-    },
     computed: {
-        prestaData() {
-            return this.data;
+        prestaData(): any {
+            return {};
+            // return this.$accessor.FA.mFA.collaborator;
         },
     },
     methods: {
-        onChange() {
-            this.$emit("update-data", this.prestaData);
+        onChange(name: string, value: any) {
+            if (typeof value === "string") value = value.trim();
+            console.log(name + " : " + value);
+            // Mettre à jour le store
         }
     },
-}
+});
 </script>
 
 <style scoped></style>

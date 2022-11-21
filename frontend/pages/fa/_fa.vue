@@ -5,26 +5,16 @@
     <div class="summary-space"></div>
     <v-container class="container">
       <h1>Fiche Activité</h1>
-      <FAGeneralCard
-        id="general"
-      ></FAGeneralCard>
-      <FADetailCard
-        id="detail"
-      ></FADetailCard>
-      <!--<SignaCard
-        id="signa"
-      ></SignaCard>
+      <FAGeneralCard id="general"></FAGeneralCard>
+      <FADetailCard id="detail"></FADetailCard>
+      <!-- <SignaCard id="signa"></SignaCard> -->
       <TimeframeTable
         id="timeframe"
         :store="store"
       ></TimeframeTable>
-      <SecurityCard
-        id="security"
-      ></SecurityCard>
-      <PrestaCard
-        id="presta"
-      ></PrestaCard>
-      <h2>Logistique 🚚</h2>
+      <SecurityCard id="security"></SecurityCard>
+      <PrestaCard id="presta"></PrestaCard>
+      <!--<h2>Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
@@ -33,38 +23,22 @@
       <LogisticsCard
         title="Matos"
         :types="Object.values(EquipmentTypes)"
-        :data="equipmentLogisticArray"
-        @update-data="updateEquipmentLogisticArray"
       ></LogisticsCard>
       <LogisticsCard
         title="Barrières"
         :types="Object.values(BarrieresTypes)"
-        :data="barrieresLogisticArray"
-        @update-data="updateBarrieresLogisticArray"
       ></LogisticsCard>
       <LogisticsCard
         title="Matos Elec / Eau"
         :types="Object.values(ElecTypes)"
-        :data="equipmentElecWaterLogisticArray"
-        @update-data="updateEquipmentElecWaterLogisticArray"
       ></LogisticsCard>
-      <ElecLogisticCard
-        id="elec"
-        :data="elecLogisticArray"
-        @update-data="updateElecLogisticArray"
-      ></ElecLogisticCard>
-      <WaterLogisticCard
-        id="water"
-        :data="waterLogisticData"
-        @update-data="updateWaterLogisticData"
-      ></WaterLogisticCard>
+      <ElecLogisticCard id="elec"></ElecLogisticCard>
+      <WaterLogisticCard id="water"></WaterLogisticCard>
       <CommentCard
         id="comment"
         :comments="commentArray"
       ></CommentCard>
-      <FTCard
-        id="ft"
-      ></FTCard>
+      <FTCard id="ft"></FTCard>
       <v-btn @click="saveFA">Sauvegarder</v-btn>-->
     </v-container>
     </div>
