@@ -10,10 +10,10 @@ unconfidentializer:
     - echo "Get confidential issues"
     - |
       ISSUES=$(curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/issues?confidential=true" | jq '.[] | {iid, labels}' | jq -s '.')
-      for ISSUE in $(echo "${ISSUES}" | jq -c '.[]');
+      for ISSUE in $(echo "${ISSUES}" | jq -c '.[] | @base64');
       do
         _jq() {
-          echo ${ISSUE} | jq -r "${1}"
+          echo ${ISSUE} | sed 's/"//g' | base64 --decode | jq -r "${1}"
         }
 
         IID=$(_jq '.iid')
