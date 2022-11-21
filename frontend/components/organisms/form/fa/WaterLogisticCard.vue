@@ -5,41 +5,38 @@
         <v-card-text>
             <v-form>
                 <v-switch
-                    v-model="waterLogisticData.isWaterNeeded"
+                    :value="waterNeed.isWaterNeeded"
                     label="Besoin d'eau"
-                    @change="onChange"
+                    @change="onChange('isWaterNeeded', $event)"
                 ></v-switch>
                 <v-text-field
-                    v-if="waterLogisticData.isWaterNeeded"
-                    v-model="waterLogisticData.waterNeed"
+                    :value="waterNeed.waterNeed"
                     label="Desctiption du besoin en eau"
-                    @change="onChange"
+                    @change="onChange('waterNeed', $event)"
                 ></v-text-field>
             </v-form>
         </v-card-text>
     </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     name: "WaterLogisticCard",
-    props: {
-        data: {
-            type: Object,
-            default: () => {},
-        },
-    },
     computed: {
-        waterLogisticData() {
-            return this.data;
+        waterNeed(): any {
+            return this.$accessor.FA.mFA.general;
         },
     },
     methods: {
-        onChange() {
-            this.$emit("update-data", this.waterLogisticData);
+        onChange(name: string, value: any) {
+            if (typeof value === "string") value = value.trim();
+            console.log(name + " : " + value);
+            // Mettre à jour le store
         }
     },
-};
+});
 </script>
 
 <style scoped></style>

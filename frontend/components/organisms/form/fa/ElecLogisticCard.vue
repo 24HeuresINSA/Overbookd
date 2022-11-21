@@ -30,7 +30,7 @@
             <v-select
               v-model="newElectricityNeed.connectionType"
               type="select"
-              label="Type de prise"
+              label="Type de prise*"
               :items="[
                 'PC16',
                 'P17 16A mono',
@@ -41,14 +41,12 @@
                 'P17 32A tetra',
               ]"
               dense
-              required
             ></v-select>
 
             <v-text-field
               v-model="newElectricityNeed.power"
               type="number"
-              label="Puissance"
-              required
+              label="Puissance*"
             ></v-text-field>
           
             <v-text-field
@@ -92,7 +90,7 @@ export default Vue.extend({
     isElectricityNeedDialogOpen: false,
     newElectricityNeed: {
       connectionType: "",
-      power: "0",
+      power: "",
       comment: "",
     },
   }),
@@ -107,25 +105,19 @@ export default Vue.extend({
     },
     addElectricityNeed() {
       if (!this.newElectricityNeed.connectionType) {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "N'oublie pas de choisir le type de prise !",
-        });
+        alert("N'oublie pas de choisir le type de prise !");
         return;
       }
 
       this.newElectricityNeed.power = this.newElectricityNeed.power.replace(",", ".");
       if (+this.newElectricityNeed.power <= 0) {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "La puissance n'est pas valide...",
-        });
+        alert("La puissance n'est pas valide...");
         return;
       }
 
       this.$accessor.FA.addElectricityNeed(this.newElectricityNeed);
       this.isElectricityNeedDialogOpen = false;
-      this.newElectricityNeed = {connectionType: "", power: "0", comment: ""};
+      this.newElectricityNeed = { connectionType: "", power: "", comment: "" };
     },
   },
 });

@@ -31,20 +31,20 @@
       <LogisticsCard
         title="Matos Elec / Eau"
         :types="Object.values(ElecTypes)"
-      ></LogisticsCard>
+      ></LogisticsCard>-->
       <ElecLogisticCard id="elec"></ElecLogisticCard>
       <WaterLogisticCard id="water"></WaterLogisticCard>
       <CommentCard
         id="comment"
-        :comments="commentArray"
       ></CommentCard>
       <FTCard id="ft"></FTCard>
-      <v-btn @click="saveFA">Sauvegarder</v-btn>-->
+      <v-btn @click="saveFA">Sauvegarder</v-btn>
     </v-container>
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
 import { RepoFactory } from "~/repositories/repoFactory"
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
@@ -65,7 +65,7 @@ import {
   BarrieresTypes,
 } from "../../utils/models/FA";
 
-export default {
+export default Vue.extend({
   name: "Fa",
   components: {
     ElecLogisticCard,
@@ -89,22 +89,24 @@ export default {
       BarrieresTypes,
     };
   },
+
   computed: {
-    store() {
+    store(): any {
       return this.$accessor.FA;
     },
-    FA() {
+    FA(): any {
       console.log(this.$accessor.FA.mFA);
       return this.$accessor.FA.mFA;
     },
   },
+  
   methods: {
     async saveFA() {
       console.log(this.FA);
       await RepoFactory.faRepo.updateFA(this, this.FA);
     },
   },
-};
+});
 </script>
 
 <style scoped>
