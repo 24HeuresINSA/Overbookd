@@ -63,6 +63,7 @@ export const mutations = mutationTree(state, {
     if (!mFT[key]) {
       mFT[key] = data[key] as never;
     } else {
+      // @ts-ignore
       Object.assign(mFT[key], data[key]);
     }
   },

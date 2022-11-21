@@ -24,5 +24,5 @@ export function dispatch<K extends keyof Stores, T extends keyof Stores[K]>(
   action: T,
   data: Stores[K][T]
 ) {
-  return context.$store.dispatch(`${scope}/${action}`, data);
+  return context.$store.dispatch(`${scope}/${String(action)}`, data);
 }
