@@ -271,7 +271,14 @@ export default {
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
           this.users = res.data.filter((user) => {
-            if (user.team.includes("hard") && !user.team.includes("matos")) {
+            if (
+              user.team.includes("hard") &&
+              !(
+                user.team.includes("fen") ||
+                user.team.includes("voiture") ||
+                user.team.includes("camion")
+              )
+            ) {
               return user;
             }
           });
