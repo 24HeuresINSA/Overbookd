@@ -25,6 +25,7 @@
                     :input-value="selected"
                     close
                     :color="getRoleMetadata(item).color"
+                    @click:close="removeTeamInFilter(item)"
                   >
                     <v-icon left color="white">
                       {{ getRoleMetadata(item).icon }}
@@ -587,6 +588,10 @@ export default {
 
     getRoleMetadata(roleName) {
       return this.teams.find((e) => e.name === roleName);
+    },
+
+    removeTeamInFilter(item) {
+      this.filters.teams.splice(this.filters.teams.indexOf(item), 1);
     },
 
     async saveUser() {
