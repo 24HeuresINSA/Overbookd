@@ -49,7 +49,8 @@ export default {
       return this.$accessor.FA.mFA;
     },
     equipments: function () {
-      return this.mForm.equipments.filter((e) => this.types.includes(e.type));
+      //return this.mForm.equipments.filter((e) => this.types.includes(e.type));
+      return [];
     },
   },
   methods: {
@@ -64,7 +65,7 @@ export default {
 </script>
 
 <style scoped>
-  .text-width {
-    max-width: 200px;
-  }
+.text-width {
+  max-width: 200px;
+}
 </style>
