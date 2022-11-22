@@ -140,29 +140,28 @@ enum Status {
 }
 
 model fa {
-  id                  Int       @id @default(autoincrement())
-  name                String    @db.VarChar(255)
-  fa_type_name        fa_type?  @relation(fields: [type], references: [name])
-  type                String?   @db.VarChar(255)
-  Team                Team?     @relation(fields: [team_id], references: [id])
-  team_id             Int?
-  user_in_charge      User?     @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge           Int?
-  created_at          DateTime? @default(now())
-  location            location? @relation(fields: [location_id], references: [id])
-  location_id         Int?
-  status              Status?   @default(DRAFT)
-  description         String?   @db.Text
-  is_publishable      Boolean?  @default(false)
-  is_major            Boolean?  @default(false)
-  is_kids             Boolean?  @default(false)
-  security_needs      String?   @db.Text
-  is_pass_required    Boolean?  @db.Boolean
-  number_of_pass      Int?
-  water_needs         String?   @db.Text
-  water_flow_required Int?
-  is_deleted          Boolean   @default(false)
-
+  id                   Int                    @id @default(autoincrement())
+  name                 String                 @db.VarChar(255)
+  fa_type_name         fa_type?               @relation(fields: [type], references: [name])
+  type                 String?                @db.VarChar(255)
+  Team                 Team?                  @relation(fields: [team_id], references: [id])
+  team_id              Int?
+  user_in_charge       User?                  @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge            Int?
+  created_at           DateTime?              @default(now())
+  location             location?              @relation(fields: [location_id], references: [id])
+  location_id          Int?
+  status               Status?                @default(DRAFT)
+  description          String?                @db.Text
+  is_publishable       Boolean?               @default(false)
+  is_major             Boolean?               @default(false)
+  is_kids              Boolean?               @default(false)
+  security_needs       String?                @db.Text
+  is_pass_required     Boolean?               @db.Boolean
+  number_of_pass       Int?
+  water_needs          String?                @db.Text
+  water_flow_required  Int?
+  is_deleted           Boolean                @default(false)
   fa_validation        fa_validation[]
   fa_refuse            fa_refuse[]
   fa_collaborator      fa_collaborator[]
