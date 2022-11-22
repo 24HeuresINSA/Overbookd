@@ -451,13 +451,13 @@ export default {
     },
     isCpUseful(item) {
       return (
-        (item.team.includes("hard") &&
+        (item.team?.includes("hard") &&
           !(
-            item.team.includes("fen") ||
-            item.team.includes("voiture") ||
-            item.team.includes("camion")
+            item.team?.includes("fen") ||
+            item.team?.includes("voiture") ||
+            item.team?.includes("camion")
           )) ||
-        item.team.includes("vieux")
+        item.team?.includes("vieux")
       );
     },
     getCP(item) {
