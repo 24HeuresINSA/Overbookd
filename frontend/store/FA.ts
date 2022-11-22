@@ -69,6 +69,7 @@ export const mutations = mutationTree(state, {
       if (mFA[key].length !== undefined) {
         // array
       }
+      // @ts-ignore
       Object.assign(mFA[key], data[key]);
     }
   },
