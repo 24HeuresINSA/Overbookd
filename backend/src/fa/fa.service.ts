@@ -140,7 +140,7 @@ export class FaService {
     if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
     //add the user validation
     await this.prisma.$transaction([
-      this.prisma.fA_validation.upsert({
+      this.prisma.fA_Validation.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,
@@ -158,7 +158,7 @@ export class FaService {
           is_deleted: false,
         },
       }),
-      this.prisma.fA_refuse.upsert({
+      this.prisma.fA_Refuse.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,
@@ -187,7 +187,7 @@ export class FaService {
     if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
     //remove the user validation by switching is_deleted to true
     await this.prisma.$transaction([
-      this.prisma.fA_refuse.upsert({
+      this.prisma.fA_Refuse.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,
@@ -206,7 +206,7 @@ export class FaService {
         },
       }),
       //if fa_validation exist then change is_deleted to true
-      this.prisma.fA_validation.upsert({
+      this.prisma.fA_Validation.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,

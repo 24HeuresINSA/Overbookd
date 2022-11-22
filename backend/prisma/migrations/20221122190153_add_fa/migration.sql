@@ -42,21 +42,21 @@ CREATE TABLE "FA" (
 );
 
 -- CreateTable
-CREATE TABLE "FA_type" (
+CREATE TABLE "FA_Type" (
     "name" VARCHAR(255) NOT NULL,
 
-    CONSTRAINT "FA_type_pkey" PRIMARY KEY ("name")
+    CONSTRAINT "FA_Type_pkey" PRIMARY KEY ("name")
 );
 
 -- CreateTable
-CREATE TABLE "FA_validation" (
+CREATE TABLE "FA_Validation" (
     "fa_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "team_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "FA_validation_pkey" PRIMARY KEY ("fa_id","user_id")
+    CONSTRAINT "FA_Validation_pkey" PRIMARY KEY ("fa_id","user_id")
 );
 
 -- CreateTable
@@ -69,14 +69,14 @@ CREATE TABLE "FA_Collaborators" (
 );
 
 -- CreateTable
-CREATE TABLE "FA_refuse" (
+CREATE TABLE "FA_Refuse" (
     "fa_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "team_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "FA_refuse_pkey" PRIMARY KEY ("fa_id","user_id")
+    CONSTRAINT "FA_Refuse_pkey" PRIMARY KEY ("fa_id","user_id")
 );
 
 -- CreateTable
@@ -113,7 +113,7 @@ CREATE TABLE "FA_Electricity_needs" (
 );
 
 -- CreateTable
-CREATE TABLE "FA_signa_needs" (
+CREATE TABLE "FA_Signa_needs" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
     "signa_type" "SignaType" NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE "FA_signa_needs" (
     "count" INTEGER NOT NULL DEFAULT 1,
     "comment" TEXT NOT NULL,
 
-    CONSTRAINT "FA_signa_needs_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "FA_Signa_needs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -138,20 +138,20 @@ CREATE TABLE "FA_Comment" (
 );
 
 -- CreateTable
-CREATE TABLE "TimeWindow" (
+CREATE TABLE "Time_window" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "TimeWindow_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Time_window_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Collaborator_firstname_lastname_key" ON "Collaborator"("firstname", "lastname");
 
 -- AddForeignKey
-ALTER TABLE "FA" ADD CONSTRAINT "FA_type_fkey" FOREIGN KEY ("type") REFERENCES "FA_type"("name") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "FA" ADD CONSTRAINT "FA_type_fkey" FOREIGN KEY ("type") REFERENCES "FA_Type"("name") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA" ADD CONSTRAINT "FA_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -163,13 +163,13 @@ ALTER TABLE "FA" ADD CONSTRAINT "FA_in_charge_fkey" FOREIGN KEY ("in_charge") RE
 ALTER TABLE "FA" ADD CONSTRAINT "FA_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_validation" ADD CONSTRAINT "FA_validation_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Validation" ADD CONSTRAINT "FA_Validation_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_validation" ADD CONSTRAINT "FA_validation_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Validation" ADD CONSTRAINT "FA_Validation_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_validation" ADD CONSTRAINT "FA_validation_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Validation" ADD CONSTRAINT "FA_Validation_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA_Collaborators" ADD CONSTRAINT "FA_Collaborators_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -178,19 +178,19 @@ ALTER TABLE "FA_Collaborators" ADD CONSTRAINT "FA_Collaborators_fa_id_fkey" FORE
 ALTER TABLE "FA_Collaborators" ADD CONSTRAINT "FA_Collaborators_collaborator_id_fkey" FOREIGN KEY ("collaborator_id") REFERENCES "Collaborator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_refuse" ADD CONSTRAINT "FA_refuse_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Refuse" ADD CONSTRAINT "FA_Refuse_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_refuse" ADD CONSTRAINT "FA_refuse_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Refuse" ADD CONSTRAINT "FA_Refuse_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_refuse" ADD CONSTRAINT "FA_refuse_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Refuse" ADD CONSTRAINT "FA_Refuse_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA_Electricity_needs" ADD CONSTRAINT "FA_Electricity_needs_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FA_signa_needs" ADD CONSTRAINT "FA_signa_needs_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FA_Signa_needs" ADD CONSTRAINT "FA_Signa_needs_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -202,4 +202,4 @@ ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_author_fkey" FOREIGN KEY ("a
 ALTER TABLE "FA_Comment" ADD CONSTRAINT "FA_Comment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TimeWindow" ADD CONSTRAINT "TimeWindow_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Time_window" ADD CONSTRAINT "Time_window_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FA"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
