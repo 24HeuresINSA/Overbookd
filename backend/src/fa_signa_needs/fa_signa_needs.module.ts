@@ -4,6 +4,6 @@ import { FaSignaNeedsController } from './fa_signa_needs.controller';
 
 @Module({
   controllers: [FaSignaNeedsController],
-  providers: [FaSignaNeedsService]
+  providers: [FaSignaNeedsService],
 })
 export class FaSignaNeedsModule {}

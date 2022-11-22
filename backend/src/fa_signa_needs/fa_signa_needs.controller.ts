@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FaSignaNeedsService } from './fa_signa_needs.service';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
 import { UpdateFaSignaNeedDto } from './dto/update-fa_signa_need.dto';
@@ -23,7 +31,10 @@ export class FaSignaNeedsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFaSignaNeedDto: UpdateFaSignaNeedDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateFaSignaNeedDto: UpdateFaSignaNeedDto,
+  ) {
     return this.faSignaNeedsService.update(+id, updateFaSignaNeedDto);
   }
 
