@@ -128,12 +128,12 @@ export const mutations = mutationTree(state, {
     mFT.FA = faCount;
   },
   ADD_REQUIREMENT: function ({ mFT }, { requirement, timeframeIndex }) {
-    const mTimeframe = mFT.timeframes[timeframeIndex];
-    if (mTimeframe.required === undefined) {
+    const mTimeframe = mFT.timeframes.at(timeframeIndex);
+    if (mTimeframe?.required) {
       mTimeframe.required = [];
+      mTimeframe.required.push({ ...requirement });
+      mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
     }
-    mTimeframe.required.push({ ...requirement });
-    mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
   },
   DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
     const mTimeframe = mFT.timeframes.at(timeframeIndex);
