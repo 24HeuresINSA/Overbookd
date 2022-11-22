@@ -12,14 +12,16 @@
       </div>
 
       <div class="icons">
-        <v-icon
+        <div
           v-for="(validator, i) of validators"
-          :key="i"
           :color="getIconColor(validator)"
-          size="26"
+          class="icon"
         >
-        {{ getValidatorIcon(validator) }}
-      </v-icon>
+          <v-icon :key="i" size="26">
+            {{ getValidatorIcon(validator) }}
+          </v-icon>
+          <span class="icon-detail">{{ validator }}</span>
+        </div>
       </div>
       <FormSidebar></FormSidebar>
     </div>
@@ -163,10 +165,8 @@
       </v-card>
     </v-dialog>
   </div>
-
-  
-  
 </template>
+
 
 <script lang="ts">
 import Vue from "vue";
@@ -325,6 +325,7 @@ export default Vue.extend({
 });
 </script>
 
+
 <style scoped>
 .main {
   display: flex;
@@ -362,7 +363,32 @@ h1 {
 .icons {
   display: flex;
   justify-content: space-between;
-  margin: 20px 5px 10px 16px;
+  margin: 20px 5px 15px 16px;
+}
+
+.icons .icon {
+  position: relative;
+  display: inline-block;
+}
+
+.icons .icon .icon-detail {
+  visibility: hidden;
+  width: 60px;
+  color: #666666;
+  font-size: 15px;
+  text-align: center;
+  border-radius: 6px;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -30px;
+}
+
+.icon:hover .icon-detail {
+  visibility: visible;
 }
 
 .container {
