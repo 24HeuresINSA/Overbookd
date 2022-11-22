@@ -11,6 +11,9 @@ import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
 import { FaModule } from './fa/fa.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
+import { MailService } from './mail/mail.service';
 
 @Module({
   imports: [
@@ -22,9 +25,28 @@ import { CollaboratorModule } from './collaborator/collaborator.module';
     ConfigModule,
     FaModule,
     CollaboratorModule,
+    MailerModule.forRoot({
+      transport: {
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      },
+      defaults: {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
+      },
+      template: {
+        dir: __dirname + '/mail/templates',
+        adapter: new EjsAdapter(),
+        options: {
+          strict: false,
+        },
+      },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, HashingUtilsService],
+  providers: [AppService, PrismaService, HashingUtilsService, MailService],
   exports: [PrismaService],
 })
 export class AppModule {}

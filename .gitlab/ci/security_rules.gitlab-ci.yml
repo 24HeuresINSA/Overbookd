@@ -11,12 +11,18 @@ nodejs-scan-sast:
   interruptible: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($SECURITY_SCAN  == "1")'
+      when: always
     - when: never
 
 semgrep-sast:
   interruptible: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($SECURITY_SCAN  == "1")'
+      when: always
     - when: never
 
   
@@ -24,4 +30,7 @@ secret_detection:
   interruptible: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($SECURITY_SCAN  == "1")'
+      when: always
     - when: never

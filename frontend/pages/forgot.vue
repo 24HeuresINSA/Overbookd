@@ -5,7 +5,7 @@
         <v-row><p>Entre l'email de ton compte.</p></v-row>
         <v-row>
           <v-text-field
-            v-model="userEmail"
+            v-model="email"
             label="email"
             type="text"
             required
@@ -20,8 +20,8 @@
         <v-btn @click="sendResetRequest()">Envoyer</v-btn>
       </v-container>
     </v-form>
-    <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ feedbackMessage }}
+    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
+      {{ snack.feedbackMessage }}
     </v-snackbar>
   </div>
 </template>
@@ -30,39 +30,42 @@
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { Snack } from "~/utils/models/snack";
+
 export default Vue.extend({
   name: "ForgotPassword",
-  //@ts-ignore
   auth: false,
   layout: "none",
+
   data: () => ({
-    userEmail: "",
-    snackbar: false,
-    feedbackMessage: "",
-    timeout: 5000,
+    email: "",
+    snack: new Snack(3000),
   }),
+
   methods: {
     sendResetRequest: async function () {
       const res = await safeCall(
         this.$store,
         RepoFactory.authRepo.requestResetPassword(this, {
-          userEmail: this.userEmail,
+          email: this.email,
         })
       );
-      if (res) {
-        this.feedbackMessage =
-          "OK ! Regarde ta boite mail ! Redirection au login...";
-        this.snackbar = true;
-        setTimeout(async () => {
-          await this.$router.push({
-            path: "/",
-          }); // redirect to login page
-        }, 2000);
-      } else {
-        this.feedbackMessage = "Il y a eu une erreur, recommence plus tard.";
-        this.snackbar = true;
+
+      if (!res) {
+        return this.snack.display(
+          "Il y a eu une erreur, recommence plus tard."
+        );
       }
-      return;
+
+      this.snack.display(
+        "OK ! Regarde ta boite mail ! Redirection au login..."
+      );
+
+      setTimeout(async () => {
+        await this.$router.push({
+          path: "/",
+        });
+      }, 3000);
     },
   },
 });
