@@ -34,7 +34,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col cols="12" lg="2" md="1">
-                <v-btn :isDisabled="!validInput" rounded @click="addItem">
+                <v-btn :is-disabled="!validInput" rounded @click="addItem">
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-col>

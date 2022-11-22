@@ -18,11 +18,8 @@
             label="Montant"
             required
           ></v-text-field>
-          
-          <v-text-field
-            v-model="transfer.reason"
-            label="Raison"
-          ></v-text-field>
+
+          <v-text-field v-model="transfer.reason" label="Raison"></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -136,7 +133,8 @@ export default Vue.extend({
           await this.$accessor.transaction.addTransaction(newTransfer);
           this.$emit("transaction", newTransfer.amount);
           //reset form data
-          this.transfer = { user: { username: undefined, id: "", },
+          this.transfer = {
+            user: { username: undefined, id: "" },
             amount: "0",
             reason: "",
             isValid: false,

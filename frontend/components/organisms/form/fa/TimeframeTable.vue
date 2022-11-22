@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import TimeframeSelector from '~/components/molecules/timeframe/TimeframeSelector.vue';
+import TimeframeSelector from "~/components/molecules/timeframe/TimeframeSelector.vue";
 
 export default {
   name: "TimeframeTable",

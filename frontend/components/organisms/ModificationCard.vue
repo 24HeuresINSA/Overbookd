@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import TimeslotEditor from '../molecules/timeslot/TimeslotEditor.vue';
+import TimeslotEditor from "../molecules/timeslot/TimeslotEditor.vue";
 
 export default {
   components: {

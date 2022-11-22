@@ -55,22 +55,13 @@
                     group
                   >
                     <v-icon small>{{ getTeamIcon(validator) }}</v-icon>
-                    <v-btn
-                      x-small
-                      :value="true"
-                      class="btn-check"
+                    <v-btn x-small :value="true" class="btn-check"
                       >validée
                     </v-btn>
-                    <v-btn
-                      x-small
-                      :value="false"
-                      class="btn-check"
+                    <v-btn x-small :value="false" class="btn-check"
                       >refusée
                     </v-btn>
-                    <v-btn
-                      x-small
-                      :value="2"
-                      class="btn-check"
+                    <v-btn x-small :value="2" class="btn-check"
                       >à valider
                     </v-btn>
                   </v-btn-toggle>
@@ -110,12 +101,7 @@
             <template #[`item.action`]="row">
               <tr>
                 <td>
-                  <v-btn
-                    class="mx-2"
-                    icon
-                    small
-                    :href="`/fa/${row.item.id}`"
-                  >
+                  <v-btn class="mx-2" icon small :href="`/fa/${row.item.id}`">
                     <v-icon small>mdi-circle-edit-outline</v-icon>
                   </v-btn>
                   <v-btn class="mx-2" icon small @click="preDelete(row.item)">
@@ -198,8 +184,8 @@ export default {
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validator" },
         { text: "Nom", value: "name" },
-        { text: "Equipe", value: "team" },  // .username ?
-        { text: "Resp", value: "in_charge" },  // .username ?
+        { text: "Equipe", value: "team" }, // .username ?
+        { text: "Resp", value: "in_charge" }, // .username ?
         { text: "Action", value: "action" },
       ],
       color: {
@@ -370,7 +356,6 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
     },
-
 
     /*download(filename, text) {
       // We use the 'a' HTML element to incorporate file generation into
@@ -586,24 +571,24 @@ export default {
   margin-left: 0;
 }
 
-.container{
-  display: grid; 
-  width: 100%; 
-  margin: 0
+.container {
+  display: grid;
+  width: 100%;
+  margin: 0;
 }
 
-.in-container{
+.in-container {
   padding: 0;
 }
 
-.btn-check{
-  padding-right: 2px; 
+.btn-check {
+  padding-right: 2px;
   padding-left: 2px;
 }
 
-.btn-plus{
-  right: 20px; 
-  bottom: 45px; 
-  position: fixed
+.btn-plus {
+  right: 20px;
+  bottom: 45px;
+  position: fixed;
 }
 </style>
