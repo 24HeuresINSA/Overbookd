@@ -45,13 +45,13 @@ model User {
   id                      Int        @id @default(autoincrement())
   firstname               String     @db.VarChar(30)
   lastname                String     @db.VarChar(30)
-  nickname                String?     @db.VarChar(30)
+  nickname                String?    @db.VarChar(30)
   email                   String     @unique
   birthdate               DateTime
   phone                   String     @db.VarChar(30)
   department              Department
   comment                 String?
-  reset_password_token    String?     @unique
+  reset_password_token    String?    @unique
   reset_password_expires  DateTime?
   has_payed_contributions Boolean    @default(false)
   year                    Year
@@ -70,8 +70,8 @@ model User {
 
   is_deleted    Boolean         @default(false)
   fa_in_charge  FA[]            @relation("in_charge")
-  FA_validation FA_validation[]
-  FA_refuse     FA_refuse[]
+  FA_validation FA_Validation[]
+  FA_refuse     FA_Refuse[]
   FA_Comment    FA_Comment[]
 }
 
@@ -85,8 +85,8 @@ model Team {
   ft_validator  Boolean         @default(false)
   FA            FA[]
   FA_Comment    FA_Comment[]
-  FA_validation FA_validation[]
-  FA_refuse     FA_refuse[]
+  FA_validation FA_Validation[]
+  FA_refuse     FA_Refuse[]
 }
 
 model User_Team {
@@ -142,7 +142,7 @@ enum Status {
 model FA {
   id                  Int       @id @default(autoincrement())
   name                String    @db.VarChar(255)
-  fa_type_name        FA_type?  @relation(fields: [type], references: [name])
+  fa_type_name        FA_Type?  @relation(fields: [type], references: [name])
   type                String?   @db.VarChar(255)
   Team                Team?     @relation(fields: [team_id], references: [id])
   team_id             Int?
@@ -163,21 +163,21 @@ model FA {
   water_flow_required Int?
   is_deleted          Boolean   @default(false)
 
-  FA_validation        FA_validation[]
-  FA_refuse            FA_refuse[]
+  FA_validation        FA_Validation[]
+  FA_refuse            FA_Refuse[]
   FA_Collaborators     FA_Collaborators[]
   FA_Electricity_needs FA_Electricity_needs[]
-  FA_signa_needs       FA_signa_needs[]
+  FA_signa_needs       FA_Signa_needs[]
   FA_Comment           FA_Comment[]
-  TimeWindow           TimeWindow[]
+  TimeWindow           Time_window[]
 }
 
-model FA_type {
+model FA_Type {
   name String @id @db.VarChar(255)
   FA   FA[]
 }
 
-model FA_validation {
+model FA_Validation {
   FA         FA       @relation(fields: [fa_id], references: [id])
   fa_id      Int
   User       User     @relation(fields: [user_id], references: [id])
@@ -200,7 +200,7 @@ model FA_Collaborators {
   @@id([fa_id, collaborator_id])
 }
 
-model FA_refuse {
+model FA_Refuse {
   FA         FA       @relation(fields: [fa_id], references: [id])
   fa_id      Int
   User       User     @relation(fields: [user_id], references: [id])
@@ -264,7 +264,7 @@ enum SignaType {
   PANNEAU
 }
 
-model FA_signa_needs {
+model FA_Signa_needs {
   id         Int       @id @default(autoincrement())
   FA         FA        @relation(fields: [fa_id], references: [id])
   fa_id      Int
@@ -293,7 +293,7 @@ model FA_Comment {
   team_id     Int
 }
 
-model TimeWindow {
+model Time_window {
   id    Int      @id @default(autoincrement())
   FA    FA       @relation(fields: [fa_id], references: [id])
   fa_id Int
