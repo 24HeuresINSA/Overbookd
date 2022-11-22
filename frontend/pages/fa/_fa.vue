@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <FormSidebar></FormSidebar>  
+    <FormSidebar class="summary"></FormSidebar>  
     <v-container class="container">
       <h1>Fiche Activité</h1>
       <FAGeneralCard id="general"></FAGeneralCard>
@@ -114,9 +114,17 @@ export default Vue.extend({
 
 .main {
   display: flex;
+  height: 100vh;
+}
+
+.summary {
+  flex: 0 0 auto;
+  overflow: auto;
 }
 
 .container {
+  flex: 1 1 auto;
+  overflow: auto;
   display: flex;
   flex-direction: column;
 }
