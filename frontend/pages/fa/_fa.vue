@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="sidebar">
-      <h1>Fiche Activité n°{{ mFA.id }}</h1>
+      <h1>Fiche Activité n°{{ faId }}</h1>
 
       <div class="status">
         <span 
@@ -32,7 +32,7 @@
       </div> -->
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
-      <!-- <SignaCard id="signa"></SignaCard> -->
+      <SignaCard id="signa"></SignaCard>
       <TimeframeTable id="timeframe" :store="FA" ></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
       <PrestaCard id="presta"></PrestaCard>
@@ -72,9 +72,7 @@
         <v-btn
           v-if="mValidators.length === 1"
           color="red"
-          @click="
-            refuseDialog = true;
-          "
+          @click="refuseDialog = true"
           >refusé par {{ mValidators[0] }}
         </v-btn>
         <v-menu v-if="mValidators.length > 1" offset-y>
@@ -213,11 +211,12 @@ export default Vue.extend({
       refuseDialog: false,
 
       faRepo: RepoFactory.faRepo,
+      faId: this.$route.params.fa,
 
       statusTrad: new Map<string, string>([
         ["draft", "Brouillon"],
         ["submitted", "Soumise"],
-        ["refused", "Réfusée"],
+        ["refused", "Refusée"],
         ["validated", "Validée"],
       ]),
       color: {
@@ -225,7 +224,6 @@ export default Vue.extend({
         validated: "green",
         refused: "red",
       },
-
 
       EquipmentTypes,
       ElecTypes,
@@ -247,7 +245,7 @@ export default Vue.extend({
       return this.$accessor.config.getConfig("teams"); // à modifier
     },
     validators(): Array<string> {
-      return this.$accessor.config.getConfig("fa_validators");
+      return this.$accessor.config.getConfig("fa_validators"); // à modifier
     },
     mValidators(): Array<string> {
       let mValidator: Array<string> = [];
@@ -265,6 +263,12 @@ export default Vue.extend({
       }
       return [];
     },
+  },
+
+  async mounted() {
+    let title = "FA " + this.faId;
+    if (this.mFA.name) title += " : " + this.mFA.name;
+    document.title = title;
   },
   
   methods: {

@@ -46,7 +46,7 @@
             <v-text-field
               v-model="newElectricityNeed.power"
               type="number"
-              label="Puissance*"
+              label="Puissance (en Watt)*"
             ></v-text-field>
           
             <v-text-field

@@ -16,25 +16,13 @@
                 <v-text-field
                     :value="prestaData.phone"
                     label="Téléphone"
-                    :rules="
-                        [
-                            (v) =>
-                            new RegExp(`0[6-7]{1}[0-9]{8}$`).test(v) ||
-                            (`ce numéro de téléphone n'est pas valide`),
-                        ]
-                    "
+                    :rules="regexPhone"
                     @change="onChange('phone', $event)"
                 ></v-text-field>
                 <v-text-field
                     :value="prestaData.email"
                     label="E-mail"
-                    :rules="
-                        [
-                            (v) =>
-                            new RegExp(`^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
-                            (`cet email n'est pas valide`),
-                        ]
-                    "
+                    :rules="regexEmail"
                     @change="onChange('email', $event)"
                 ></v-text-field>
                 <v-text-field
@@ -61,6 +49,20 @@ export default Vue.extend({
         prestaData(): any {
             return {};
             // return this.$accessor.FA.mFA.collaborator;
+        },
+        regexPhone(): any {
+            return [
+                (v: any) =>
+                new RegExp(`0[6-7]{1}[0-9]{8}$`).test(v) ||
+                (`ce numéro de téléphone n'est pas valide`),
+            ]
+        },
+        regexEmail(): any {
+            return [
+                (v: any) =>
+                new RegExp(`^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
+                (`cet email n'est pas valide`),
+            ]
         },
     },
     methods: {

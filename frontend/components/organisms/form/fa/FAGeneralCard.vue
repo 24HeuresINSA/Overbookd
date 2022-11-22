@@ -24,7 +24,6 @@
                         'Autre']"
                     @change="onChange('type', $event)"
                 ></v-select>
-                <!-- GET ID NOT TEXT -->
                 <v-select
                     :value="generalData.team_id"
                     label="Equipe"
