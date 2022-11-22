@@ -180,12 +180,6 @@ export default {
           title: "Transactions",
           to: "/transactions",
         },
-        {
-          icon: "mdi-chart-bubble",
-          roles: "hard",
-          title: "Fiches Activités",
-          to: "/fa",
-        },
       ],
       items: [
         {
