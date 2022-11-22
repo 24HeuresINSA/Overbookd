@@ -10,7 +10,9 @@ import {
 import { FaSignaNeedsService } from './fa_signa_needs.service';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
 import { UpdateFaSignaNeedDto } from './dto/update-fa_signa_need.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('fa-signa-needs')
 @Controller('fa-signa-needs')
 export class FaSignaNeedsController {
   constructor(private readonly faSignaNeedsService: FaSignaNeedsService) {}
