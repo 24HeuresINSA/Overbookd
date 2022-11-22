@@ -4,7 +4,7 @@
     <v-card-text>
       <v-container fluid>
         <v-row dense>
-          <!--<v-col v-if="isDisabled" cols="12">
+          <v-col v-if="isDisabled" cols="12">
             <LogisticsTable
               :types="types"
               :store="store"
@@ -17,7 +17,7 @@
               :store="store"
               :disabled="isDisabled"
             ></LogisticsTable>
-          </v-col>-->
+          </v-col>
           <v-col v-if="!isDisabled" cols="12" lg="4">
             <v-row dense justify="space-between">
               <v-col cols="12" lg="10" md="11">
@@ -39,10 +39,10 @@
                 </v-btn>
               </v-col>
             </v-row>
-            <!--<LogisticsSelector
+            <LogisticsSelector
               :types="types"
               :store="store"
-            ></LogisticsSelector>-->
+            ></LogisticsSelector>
           </v-col>
         </v-row>
       </v-container>
@@ -51,27 +51,39 @@
 </template>
 
 <script lang="ts">
-import LogisticsTable from "../../molecules/logistics/LogisticsTable.vue";
-import LogisticsSelector from "../../molecules/logistics/LogisticsSelector.vue";
-import Vue from "vue";
+import Vue from 'vue';
+import LogisticsTable from '~/components/molecules/logistics/LogisticsTable.vue';
+import LogisticsSelector from '~/components/molecules/logistics/LogisticsSelector.vue';
 
 export default Vue.extend({
   name: "LogisticsCard",
   components: { LogisticsSelector, LogisticsTable },
   props: {
+    /**
+     * The title to be displayed
+     */
     title: {
       type: String,
       default: () => "",
     },
+    /**
+     * Array of categories allowed for this component
+     */
     types: {
       type: Array,
       default: () => [],
     },
-    data: {
-      type: Array,
-      default: () => [],
+    /**
+     * The store to use when adding new equipment
+     */
+    store: {
+      type: Object,
+      required: true,
     },
-    isDisabled: {
+    /**
+     * If the element is editable or not
+     */
+     isDisabled: {
       type: Boolean,
       default: () => false,
     },
@@ -83,8 +95,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    equipment(): Array<any> {
-      return this.data;
+    equipment: function (): Array<any> {
+      return this.$accessor.equipment.items;
     },
     /**
      * @returns validEquipments are filtered by isValid !== false (ie: does not exist or true)
@@ -99,12 +111,29 @@ export default Vue.extend({
       return this.validEquipments.filter((e) => this.types.includes(e.type));
     },
   },
+  async mounted() {
+    // fetchAll calls api to fetch all available equipment
+    await this.$accessor.equipment.fetchAll();
+  },
   methods: {
+    /**
+     * Add item to FA store
+     */
     async addItem() {
-      this.$emit("update-data", this.equipment);
+      if (this.item) {
+        if (this.store.addEquipment) {
+          await this.store.addEquipment({
+            _id: this.item._id,
+            name: this.item.name,
+            type: this.item.type,
+          });
+          this.item = undefined;
+        }
+      }
     },
   },
 });
+
 </script>
 
 <style scoped>
