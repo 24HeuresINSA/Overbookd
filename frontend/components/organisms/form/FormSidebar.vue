@@ -3,6 +3,8 @@
         <v-subheader>SOMMAIRE</v-subheader>
         <v-list-item 
             v-for="item in faItems"
+            v-bind:data="item"
+            v-bind:key="item.id"
             @click="autoScroll(item.id)"
         >
             <v-list-item-icon v-if="!item.isDisabled">
@@ -18,6 +20,8 @@
         <v-subheader>SOMMAIRE</v-subheader>
         <v-list-item 
             v-for="item in ftItems"
+            v-bind:data="item"
+            v-bind:key="item.id"
             @click="autoScroll(item.id)"
         >
             <v-list-item-icon v-if="!item.isDisabled">
