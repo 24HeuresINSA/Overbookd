@@ -337,7 +337,8 @@ export default Vue.extend({
   flex-direction: column;
   flex: 0 0 auto;
   overflow: auto;
-  padding-right: 10px;
+  padding-right: 20px;
+  width: 300px;
 }
 
 h1 {
@@ -378,6 +379,7 @@ h1 {
   font-size: 15px;
   text-align: center;
   border-radius: 6px;
+  user-select: none;
   
   /* Position the tooltip */
   position: absolute;
