@@ -1,56 +1,39 @@
 <template>
-    <div class="content">
-        <div v-if="form === 'FA'" class="sidebar">
-            <div @click="autoScroll('general')">
-                <v-icon large>mdi-card-text</v-icon>
-                <p>Général</p>
-            </div>
-            <div @click="autoScroll('detail')">
-                <v-icon large>mdi-text-box</v-icon>
-                <p>Détail</p>
-            </div>
-            <div @click="autoScroll('signa')">
-                <v-icon large>mdi-routes</v-icon>
-                <p>Signa</p>
-            </div>
-            <div @click="autoScroll('timeframe')">
-                <v-icon large>mdi-calendar-clock</v-icon>
-                <p>Créneaux</p>
-            </div>
-            <div @click="autoScroll('security')">
-                <v-icon large>mdi-message-text</v-icon>
-                <p>Sécurité</p>
-            </div>
-            <div @click="autoScroll('presta')">
-                <v-icon large>mdi-account</v-icon>
-                <p>Presta</p>
-            </div>
-            <div @click="autoScroll('elec')">
-                <v-icon large>mdi-flash</v-icon>
-                <p>Besoin Elec</p>
-            </div>
-            <div @click="autoScroll('water')">
-                <v-icon large>mdi-water</v-icon>
-                <p>Besoin Eau</p>
-            </div>
-            <div @click="autoScroll('comment')">
-                <v-icon large>mdi-comment-text</v-icon>
-                <p>Commentaires</p>
-            </div>
-            <div @click="autoScroll('ft')">
-                <v-icon large>mdi-format-color-highlight</v-icon>
-                <p>FT</p>
-            </div>
-        </div>
+    <v-list v-if="form === 'FA'">
+        <v-subheader>SOMMAIRE</v-subheader>
+        <v-list-item 
+            v-for="item in faItems"
+            @click="autoScroll(item.id)"
+        >
+            <v-list-item-icon v-if="!item.isDisabled">
+                <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content v-if="!item.isDisabled">
+                <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+    </v-list>
 
-        <div v-else-if="form === 'FT'" class="sidebar">
-            <p>FT</p>
-        </div>
-    </div>
+    <v-list v-else-if="form === 'FT'">
+        <v-subheader>SOMMAIRE</v-subheader>
+        <v-list-item 
+            v-for="item in ftItems"
+            @click="autoScroll(item.id)"
+        >
+            <v-list-item-icon v-if="!item.isDisabled">
+                <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content v-if="!item.isDisabled">
+                <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+    </v-list>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     name: "FormSidebar",
     props: {
         form: {
@@ -58,18 +41,31 @@ export default {
             default: () => "FA",
         },
     },
+    data: () => ({
+        faItems : [
+            { id: "general", text: "Général", icon: "mdi-card-text" },
+            { id: "detail", text: "Détail", icon: "mdi-text-box" },
+            { id: "signa", text: "Signa", icon: "mdi-routes" },
+            { id: "timeframe", text: "Créneaux", icon: "mdi-calendar-clock" },
+            { id: "security", text: "Sécurité", icon: "mdi-shield" },
+            { id: "presta", text: "Presta", icon: "mdi-account" },
+            { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
+            { id: "water", text: "Besoin Eau", icon: "mdi-water" },
+            { id: "comment", text: "Commentaires", icon: "mdi-comment" },
+            { id: "ft", text: "FT", icon: "mdi-format-color-highlight", isDisabled: true },
+        ],
+        ftItems : [
+            { id: "ft", text: "FT", icon: "mdi-format-color-highlight", isDisabled: false },
+        ],
+    }),
     methods: {
-        autoScroll(id) {
-            document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+        autoScroll(id: string) {
+            const element = document.getElementById(id);
+            if (element) element.scrollIntoView({ behavior: "smooth" });
         }
     },
-};
+});
 </script>
     
-<style scoped>
-.sidebar > * {
-    text-align: center;
-    cursor: pointer;
-}
-</style>
+<style scoped></style>
   

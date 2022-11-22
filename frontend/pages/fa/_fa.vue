@@ -1,8 +1,6 @@
 <template>
   <div class="main">
-    <FormSidebar class="summary"></FormSidebar>
-    <!-- Pour créer une div summary prise en compte dans le flex (car summary est fixed) -> à modifier -->
-    <div class="summary-space"></div>
+    <FormSidebar></FormSidebar>  
     <v-container class="container">
       <h1>Fiche Activité</h1>
       <FAGeneralCard id="general"></FAGeneralCard>
@@ -116,15 +114,6 @@ export default Vue.extend({
 
 .main {
   display: flex;
-}
-
-.summary {
-  position: fixed;
-  top: 20%;
-}
-
-.summary-space {
-  width: 120px;
 }
 
 .container {
