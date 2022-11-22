@@ -270,11 +270,7 @@ export default {
     if (this.$accessor.user.hasRole("sg")) {
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
-          this.users = res.data.filter((user) => {
-            if (user.team.includes("hard") && !user.team.includes("matos")) {
-              return user;
-            }
-          });
+          this.users = res.data.filter((user) => this.isUserWithCP(user));
         }
       );
       this.users.forEach((user) => {
@@ -291,6 +287,16 @@ export default {
   methods: {
     hasRole(role) {
       return this.$accessor.user.hasRole(role);
+    },
+    isUserWithCP(user) {
+      return (
+        user.team.includes("hard") &&
+        !(
+          user.team.includes("fen") ||
+          user.team.includes("voiture") ||
+          user.team.includes("camion")
+        )
+      );
     },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);
