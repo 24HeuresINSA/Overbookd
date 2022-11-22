@@ -58,9 +58,11 @@ export default {
     const res = await safeCall(
       this,
       this.repo.getAllEquipments(this),
-      null,
+      //null,
       "Erreur lors de la récupération des équipements"
     );
+    // res = undefined
+    console.log(res);
     if (res) {
       this.fullInventory = res.data.filter((item) => item.isValid !== false);
     }

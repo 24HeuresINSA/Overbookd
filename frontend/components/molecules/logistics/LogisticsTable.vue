@@ -3,7 +3,7 @@
     <template #[`item.action`]="{ item }">
       <div style="display: flex; align-items: center">
         <v-text-field
-          style="max-width: 200px"
+          class="text-width"
           type="number"
           label="# requis"
           :value="item.required"
@@ -17,6 +17,7 @@
     </template>
   </v-data-table>
 </template>
+
 <script>
 export default {
   name: "LogisticsTable",
@@ -62,4 +63,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  .text-width {
+    max-width: 200px;
+  }
+</style>

@@ -173,7 +173,7 @@ import Vue from "vue";
 import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
 import ValidatorsIcons from "~/components/atoms/validators-icons.vue";
-import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import userRepo from "~/repositories/userRepo";
 import faRepo from "~/repositories/faRepo";
 import { SnackNotif } from "~/utils/models/store";

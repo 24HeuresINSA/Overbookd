@@ -47,7 +47,7 @@
 import Vue, { PropType } from "vue";
 import OverChips from "@/components/atoms/overChips.vue";
 import { Notification, User } from "~/utils/models/repo";
-import { SnackNotif } from "../../utils/models/store";
+import { SnackNotif } from "../../../utils/models/store";
 
 export default Vue.extend({
   name: "NotificationCard",

@@ -66,9 +66,9 @@
 <script>
 import UserCard from "@/components/organisms/userCard.vue";
 import UserNotifications from "@/components/organisms/userNotifications.vue";
-import SnackNotificationContainer from "@/components/molecules/snackNotificationContainer.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
-import FriendsCard from "@/components/molecules/friendsCard.vue";
+import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
 import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
 import PlanningCard from "@/components/organisms/PlanningCard.vue";
 

@@ -278,7 +278,7 @@
 import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
-import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import UserInformation from "../components/organisms/userInformation";
 
 const { RepoFactory } = require("../repositories/repoFactory");

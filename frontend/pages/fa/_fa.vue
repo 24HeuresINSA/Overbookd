@@ -1,182 +1,83 @@
 <template>
-  <div>
-    <div
-      style="display: flex; justify-content: space-between; align-items: center"
-    >
-      <h1>Fiche Activité</h1>
-      <h2 v-if="isNewFA">Create new FA</h2>
-      <h2
-        v-if="FA.count"
-        :style="FA.isValid === false ? `text-decoration:line-through;` : ``"
-      >
-        {{ FA.isValid === false ? "[SUPPRIME] " : "" }}FA: {{ FA.count }}
-      </h2>
-      <h3>{{ FA.status ? FA.status : "draft" }}</h3>
-      <v-icon
-        v-for="(validator, i) of VALIDATORS"
-        :key="i"
-        :color="getIconColor(validator)"
-      >
-        {{ getValidatorIcon(validator) }}
-      </v-icon>
+  <div class="main">
+    <div class="sidebar">
+      <h1>Fiche Activité n°{{ mFA.id }}</h1>
+
+      <div class="status">
+        <span 
+          class="dot"
+          :class="mFA.status=='submitted'?'purple':mFA.status=='refused'?'red':mFA.status=='validated'?'green':'orange'"
+        ></span>
+        <h3>{{ mFA.status ? statusTrad.get(mFA.status) : "Brouillon" }}</h3>
+      </div>
+
+      <div class="icons">
+        <div
+          v-for="(validator, i) of validators"
+          :color="getIconColor(validator)"
+          class="icon"
+        >
+          <v-icon :key="i" size="26">
+            {{ getValidatorIcon(validator) }}
+          </v-icon>
+          <span class="icon-detail">{{ validator }}</span>
+        </div>
+      </div>
+      <FormSidebar></FormSidebar>
     </div>
-    <br />
-    <v-container style="display: grid; width: 100%">
-      <v-row>
-        <v-col md="6">
-          <FormCard
-            style="height: 100%; width: 100%"
-            title="Général"
-            details="N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu peux aussi t'aider en allant voir les FA d'avant sur cetaitmieuxavant.24heures.org/ en te connectant avec jeuneetcon@24heures.org "
-            form-key="fa_general_form"
-            topic="general"
-            :is-disabled="isValidated('humain')"
-            :form="FA"
-            @form-change="updateForm('general', $event)"
-          ></FormCard>
-        </v-col>
-        <v-col md="6">
-          <OverSigna :is-disabled="isValidated('signa')"></OverSigna>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <FormCard
-            title="Détail"
-            form-key="fa_details_form"
-            details="Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est ce texte qui sera publié sur le site 24heures.org"
-            topic="details"
-            :is-disabled="isValidated('humain')"
-            :form="FA"
-            @form-change="updateForm('details', $event)"
-          ></FormCard>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <TimeframeTable
-            :init-timeframes="FA.timeframes"
-            :disabled="!isValidated('human')"
-            :is-disabled="isValidated('humain')"
-            :form="FA"
-            :store="store"
-          ></TimeframeTable>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col md="12">
-          <PassSecuCard></PassSecuCard>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col md="6">
-          <FormCard
-            title="Sécurité"
-            form-key="fa_security_form"
-            topic="security"
-            details="Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu de ton activité, contacte securite@24heures.org"
-            :is-disabled="isValidated('secu')"
-            :form="FA"
-            @form-change="updateForm('security', $event)"
-          ></FormCard>
-        </v-col>
-        <v-col md="6">
-          <FormCard
-            title="Presta"
-            form-key="fa_external_form"
-            topic="external"
-            :is-disabled="isValidated('humain')"
-            :form="FA"
-            @form-change="updateForm('external', $event)"
-          ></FormCard>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <h2>Logistique 🚚</h2>
-          <h4>
-            S'il manque des informations, ou du matos veuillez contacter le
-            responsable de la logistique sur
-            <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
-          </h4>
-          <LogisticsCard
-            title="Matos"
-            :types="Object.values(EquipmentTypes)"
-            :store="store"
-            :disabled="isValidated('log')"
-          ></LogisticsCard>
-        </v-col>
-      </v-row>
-      <v-row />
-      <br />
+    <v-container class="container">
+      <!-- <div class="top-bar">
+        <h1>Fiche Activité n°{{ mFA.id }}</h1>
+        <h2>{{ mFA.status ? statusTrad.get(mFA.status) : "Brouillon" }}</h2>
+      </div> -->
+      <FAGeneralCard id="general"></FAGeneralCard>
+      <FADetailCard id="detail"></FADetailCard>
+      <!-- <SignaCard id="signa"></SignaCard> -->
+      <TimeframeTable id="timeframe" :store="FA" ></TimeframeTable>
+      <SecurityCard id="security"></SecurityCard>
+      <PrestaCard id="presta"></PrestaCard>
+      <h2>Logistique 🚚</h2>
+      <h4>
+        S'il manque des informations, ou du matos veuillez contacter le
+        responsable de la logistique sur
+        <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
+      </h4>
+      <LogisticsCard
+        title="Matos"
+        :types="Object.values(EquipmentTypes)"
+        :store="FA"
+      ></LogisticsCard>
       <LogisticsCard
         title="Barrières"
         :types="Object.values(BarrieresTypes)"
-        :store="store"
-        :disabled="isValidated('barrieres')"
+        :store="FA"
       ></LogisticsCard>
-      <br />
       <LogisticsCard
         title="Matos Elec / Eau"
         :types="Object.values(ElecTypes)"
-        :store="store"
-        :disabled="isValidated('elec')"
+        :store="FA"
       ></LogisticsCard>
-      <br />
-
-      <v-row>
-        <v-col md="6">
-          <ElecLogisticCard
-            :is-disabled="isValidated('elec')"
-          ></ElecLogisticCard>
-        </v-col>
-        <v-col md="6">
-          <FormCard
-            title="Eau"
-            form-key="fa_water_form"
-            topic="elec"
-            details="Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu as besoin et comment on l'évacue. pour plus de renseignement voit avec la Log Elec via logistique@24heures.org"
-            :is-disabled="isValidated('elec')"
-            :form="FA"
-            @form-change="updateForm('elec', $event)"
-          ></FormCard>
-        </v-col>
-      </v-row>
-
-      <br />
-      <CommentCard :comments="FA.comments" form="FA"></CommentCard>
-
-      <br />
-      <FTCard v-if="isFTOpen"></FTCard>
+      <ElecLogisticCard id="elec"></ElecLogisticCard>
+      <WaterLogisticCard id="water"></WaterLogisticCard>
+      <CommentCard id="comment"></CommentCard>
+      <!-- <FTCard id="ft"></FTCard> --> 
     </v-container>
 
-    <div style="height: 100px"></div>
-
-    <div
-      style="
-        display: flex;
-        justify-content: space-evenly;
-        position: sticky;
-        bottom: 20px;
-        z-index: 30;
-        align-items: baseline;
-      "
-    >
+    <div class="bottom-bar">
       <div>
-        <v-btn v-if="FA.count > 1" small fab :href="`/fa/${FA.count - 1}`">
+        <v-btn v-if="mFA.id > 1" small fab :href="`/fa/${mFA.id - 1}`">
           <v-icon small>mdi-arrow-left</v-icon>
         </v-btn>
 
         <v-btn
-          v-if="validators.length === 1"
+          v-if="mValidators.length === 1"
           color="red"
           @click="
-            v = validators[0];
             refuseDialog = true;
           "
-          >refusé par {{ validators[0] }}
+          >refusé par {{ mValidators[0] }}
         </v-btn>
-        <v-menu v-if="validators.length > 1" offset-y>
+        <v-menu v-if="mValidators.length > 1" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn
               class="white--text ma-5"
@@ -189,12 +90,9 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="validator of validators" :key="validator" link>
+            <v-list-item v-for="validator of mValidators" :key="validator" link>
               <v-list-item-title
-                @click="
-                  v = validator;
-                  refuseDialog = true;
-                "
+                @click="refuseDialog = true"
                 v-text="validator"
               ></v-list-item-title>
             </v-list-item>
@@ -202,12 +100,12 @@
         </v-menu>
       </div>
       <div>
-        <template v-if="validators.length === 1">
-          <v-btn color="green" @click="validate(validators[0])"
-            >validé par {{ validators[0] }}
+        <template v-if="mValidators.length === 1">
+          <v-btn color="green" @click="validate(mValidators[0])"
+            >validé par {{ mValidators[0] }}
           </v-btn>
         </template>
-        <v-menu v-if="validators.length > 1" offset-y>
+        <v-menu v-if="mValidators.length > 1" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn
               class="white--text ma-5"
@@ -220,7 +118,7 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="validator of validators" :key="validator" link>
+            <v-list-item v-for="validator of mValidators" :key="validator" link>
               <v-list-item-title
                 color="green"
                 @click="validate(validator)"
@@ -232,19 +130,19 @@
       </div>
 
       <v-btn
-        v-if="FA.status !== 'submitted'"
+        v-if="mFA.status && mFA.status !== 'submitted'"
         color="warning"
         @click="validationDialog = true"
         >soumettre à validation
       </v-btn>
       <v-btn @click="saveFA">sauvegarder</v-btn>
       <v-btn
-        v-if="validators.length >= 1 && FA.isValid === false"
+        v-if="mValidators.length >= 1 && mFA.isValid === false"
         color="red"
         @click="undelete"
         >récupérer
       </v-btn>
-      <v-btn small fab :href="`/fa/${FA.count + 1}`">
+      <v-btn small fab :href="`/fa/${mFA.id + 1}`">
         <v-icon small>mdi-arrow-right</v-icon>
       </v-btn>
     </div>
@@ -255,13 +153,9 @@
           height="620"
           src="https://media.discordapp.net/attachments/726537148119122023/806793684598128640/WhatsApp_Image_2021-02-03_at_23.36.35.jpeg"
         ></v-img>
-
         <v-card-title> ⚠️ Warning ⚠️ </v-card-title>
-
         <v-card-text> T'es sur de ta merde la ? </v-card-text>
-
         <v-divider></v-divider>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="submitForReview">
@@ -270,127 +164,99 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog v-model="refuseDialog" max-width="600px">
-      <v-card>
-        <v-card-title> Refuser </v-card-title>
-        <v-card-text>
-          <h4>pourquoi c'est de la 💩</h4>
-          <p>sans trop de 🧂</p>
-          <v-textarea v-model="refuseComment" required></v-textarea>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="refuse"> enregistrer</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-snackbar v-model="isSnackbar" :timeout="5000">
-      {{ snackbarMessage }}
-
-      <template #action="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="isSnackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
-<script>
-import FormCard from "../../components/organisms/form/FormCard";
-import TimeframeTable from "../../components/organisms/timeframeTable";
-import { RepoFactory } from "../../repositories/repoFactory";
-import LogisticsCard from "../../components/organisms/form/LogisticsCard";
-import CommentCard from "../../components/organisms/form/CommentCard";
-import FTCard from "../../components/organisms/form/FTCard";
+
+<script lang="ts">
+import Vue from "vue";
+import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
+import { RepoFactory } from "~/repositories/repoFactory"
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
+import CommentCard from "~/components/organisms/form/CommentCard.vue";
+import FTCard from "~/components/organisms/form/fa/FTCard.vue";
 import { safeCall } from "../../utils/api/calls";
-import PassSecuCard from "../../components/organisms/form/PassSecuCard";
-import OverSigna from "../../components/organisms/overSigna";
-import ElecLogisticCard from "../../components/organisms/form/ElecLogisticCard";
+import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
+import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
+import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
+import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
+import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
+import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
+import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
+import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
 import {
   EquipmentTypes,
   ElecTypes,
   BarrieresTypes,
 } from "../../utils/models/FA";
 
-export default {
+export default Vue.extend({
   name: "Fa",
   components: {
     ElecLogisticCard,
-    OverSigna,
-    PassSecuCard,
+    SignaCard,
     FTCard,
     CommentCard,
     LogisticsCard,
     TimeframeTable,
-    FormCard,
+    PrestaCard,
+    WaterLogisticCard,
+    FAGeneralCard,
+    FADetailCard,
+    SecurityCard,
+    FormSidebar,
   },
-  middleware: "user",
 
   data() {
     return {
-      // Imports of enums for equipment types
-      EquipmentTypes,
-      ElecTypes,
-      BarrieresTypes,
-
-      FAID: this.$route.params.fa,
-      isNewFA: this.$route.params.fa === "newFA",
-
-      FTname: undefined,
-
-      FARepo: RepoFactory.faRepo,
-      FAStore: undefined,
-
       validationDialog: false,
       refuseDialog: false,
 
-      isFTOpen: true,
+      faRepo: RepoFactory.faRepo,
 
-      refuseComment: "",
-      isSnackbar: false,
-      snackbarMessage: "la FA à bien été sauvegardée 😅",
-      schedule: {
-        date: undefined,
-        start: undefined,
-        end: undefined,
-      },
+      statusTrad: new Map<string, string>([
+        ["draft", "Brouillon"],
+        ["submitted", "Soumise"],
+        ["refused", "Réfusée"],
+        ["validated", "Validée"],
+      ]),
       color: {
         submitted: "grey",
         validated: "green",
         refused: "red",
       },
 
-      FTHeader: [
-        { text: "nom", value: "name" },
-        { text: "action", value: "action" },
-      ],
 
-      v: undefined,
-      VALIDATORS: [],
+      EquipmentTypes,
+      ElecTypes,
+      BarrieresTypes,
     };
   },
 
   computed: {
-    store: function () {
+    FA(): any {
       return this.$accessor.FA;
     },
-    FA: function () {
+    mFA(): any {
       return this.$accessor.FA.mFA;
     },
-    me: function () {
+    me(): any {
       return this.$accessor.user.me;
     },
-    validators: function () {
-      let mValidator = [];
-      const validators = this.$accessor.config.getConfig("fa_validators");
+    teams(): any {
+      return this.$accessor.config.getConfig("teams"); // à modifier
+    },
+    validators(): Array<string> {
+      return this.$accessor.config.getConfig("fa_validators");
+    },
+    mValidators(): Array<string> {
+      let mValidator: Array<string> = [];
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
-        return validators;
+        return this.validators;
       }
-      if (validators) {
-        validators.forEach((validator) => {
+      if (this.validators) {
+        this.validators.forEach((validator: string) => {
           if (this.me.team && this.me.team.includes(validator)) {
             mValidator.push(validator);
           }
@@ -400,55 +266,46 @@ export default {
       return [];
     },
   },
-
-  async mounted() {
-    this.FAStore = this.$accessor.FA;
-    this.VALIDATORS = this.$accessor.config.getConfig("fa_validators");
-    this.isFTOpen = this.$accessor.config.getConfig("is_ft_open");
-
-    // get FA if not new FA
-    if (!this.isNewFA) {
-      let FA = (await this.FARepo.getFAByCount(this, this.FAID)).data;
-      this.FAStore.setFA(FA);
-    } else {
-      this.FAStore.resetFA();
-    }
-    document.title = "FA:" + this.FAID;
-  },
-
+  
   methods: {
+    async saveFA() {
+      await RepoFactory.faRepo.updateFA(this, this.mFA);
+    },
+
     async undelete() {
-      await this.FAStore.undelete();
+      await this.mFA.undelete();
+      let context: any = this; 
       await safeCall(
-        this,
-        this.FARepo.updateFA(this, this.FAStore.mFA),
-        "undelete"
+        context,
+        this.faRepo.updateFA(this, this.mFA),
+        // "undelete"
       );
     },
-    getValidatorIcon(validator) {
-      try {
-        return this.$accessor.team.getTeams([validator])?.[0]?.icon;
-      } catch (e) {
-        console.log(`can't find icon of team ${validator}`);
+
+    validate(validator: any) {
+      if (validator) {
+        this.mFA.validate(validator);
+        this.saveFA();
       }
     },
 
-    isValidated(validator) {
-      return this.FA.validated.find((v) => v === validator) !== undefined;
+    submitForReview() {
+      this.mFA.setStatus({
+        status: "submitted",
+        by: this.me.lastname,
+      });
+      this.validationDialog = false;
+      this.saveFA();
     },
 
-    hasRole(role) {
-      return this.$accessor.user.hasRole(role);
-    },
-
-    getIconColor(validator) {
+    getIconColor(validator: any) {
       if (this.FA.validated) {
-        if (this.FA.validated.find((v) => v === validator)) {
+        if (this.FA.validated.find((v: any) => v === validator)) {
           return this.color.validated;
         }
       }
       if (this.FA.refused) {
-        if (this.FA.refused.find((v) => v === validator)) {
+        if (this.FA.refused.find((v: any) => v === validator)) {
           return this.color.refused;
         }
       }
@@ -457,52 +314,125 @@ export default {
       }
     },
 
-    async saveFA() {
-      // save the FA in the DB
-      // this.FA.equipments = this.selectedEquipments;
-      if (this.isNewFA) {
-        await this.FARepo.createNewFA(this, this.FA);
-      } else {
-        await this.FARepo.updateFA(this, this.FA);
+    getValidatorIcon(validator: any) {
+      try {
+        return this.teams.find((team: any) => team.name === validator).icon;
+      } catch (e) {
+        console.log(`can't find icon of team ${validator}`);
       }
-      this.isSnackbar = true;
-    },
-
-    submitForReview() {
-      // change status to submitted for review and save in DB
-      this.FAStore.setStatus({
-        status: "submitted",
-        by: this.me.lastname,
-      });
-      this.validationDialog = false;
-      this.saveFA();
-    },
-
-    validate(validator) {
-      if (validator) {
-        this.FAStore.validate(validator);
-        this.saveFA();
-      }
-    },
-
-    refuse() {
-      const validator = this.v;
-      // refuse FA
-      this.FAStore.refuse({
-        validator,
-        comment: this.refuseComment,
-      });
-      this.refuseDialog = false;
-      this.saveFA();
-    },
-
-    updateForm(section, form) {
-      let newForm = {};
-      newForm[section] = form;
-      this.FAStore.assignFA(newForm);
     },
   },
-};
+});
 </script>
 
-<style scoped></style>
+
+<style scoped>
+.main {
+  display: flex;
+  height: calc(100vh - 155px);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  overflow: auto;
+  padding-right: 20px;
+  width: 300px;
+}
+
+h1 {
+  font-size: 30px;
+  margin: 16px;
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 16px;
+  margin-right: 10px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+}
+
+.icons {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 5px 15px 16px;
+}
+
+.icons .icon {
+  position: relative;
+  display: inline-block;
+}
+
+.icons .icon .icon-detail {
+  visibility: hidden;
+  width: 60px;
+  color: #666666;
+  font-size: 15px;
+  text-align: center;
+  border-radius: 6px;
+  user-select: none;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -30px;
+}
+
+.icon:hover .icon-detail {
+  visibility: visible;
+}
+
+.container {
+  flex: 1 1 auto;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.container > * {
+  margin-bottom: 30px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: baseline;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 20px;
+  width: 80vw;
+  margin: 0 10vw 2px 10vw;
+  display: flex;
+  justify-content: space-between;
+  z-index: 30;
+  align-items: baseline;
+  background-color: transparent;
+}
+
+.purple {
+  background-color: purple;
+}
+.orange {
+  background-color: orange;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: greenyellow;
+}
+</style>

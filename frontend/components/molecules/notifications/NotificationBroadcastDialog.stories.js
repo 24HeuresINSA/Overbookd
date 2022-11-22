@@ -1,4 +1,4 @@
-import NotificationBroadcastDialog from "./notificationBroadcastDialog.vue";
+import NotificationBroadcastDialog from "./NotificationBroadcastDialog.vue";
 
 export default {
   title: "Molecules/NotificationBroadcastDialog",

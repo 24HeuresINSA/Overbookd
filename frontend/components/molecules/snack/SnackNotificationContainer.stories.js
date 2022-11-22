@@ -1,4 +1,4 @@
-import SnackNotificationContainer from "./snackNotificationContainer.vue";
+import SnackNotificationContainer from "./SnackNotificationContainer.vue";
 
 export default {
   title: "Molecules/SnackNotificationContainer",

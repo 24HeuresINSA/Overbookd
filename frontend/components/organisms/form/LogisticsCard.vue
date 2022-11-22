@@ -1,24 +1,24 @@
 <template>
-  <v-card :style="disabled ? `border-left: 5px solid green` : ``">
+  <v-card :class="isDisabled ? 'card-border' : ''">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
       <v-container fluid>
         <v-row dense>
-          <v-col v-if="disabled" cols="12">
+          <v-col v-if="isDisabled" cols="12">
             <LogisticsTable
               :types="types"
               :store="store"
-              :disabled="disabled"
+              :disabled="isDisabled"
             ></LogisticsTable>
           </v-col>
           <v-col v-else cols="12" lg="8">
             <LogisticsTable
               :types="types"
               :store="store"
-              :disabled="disabled"
+              :disabled="isDisabled"
             ></LogisticsTable>
           </v-col>
-          <v-col v-if="!disabled" cols="12" lg="4">
+          <v-col v-if="!isDisabled" cols="12" lg="4">
             <v-row dense justify="space-between">
               <v-col cols="12" lg="10" md="11">
                 <v-autocomplete
@@ -34,7 +34,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col cols="12" lg="2" md="1">
-                <v-btn :disabled="!validInput" rounded @click="addItem">
+                <v-btn :isDisabled="!validInput" rounded @click="addItem">
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-col>
@@ -51,14 +51,10 @@
 </template>
 
 <script lang="ts">
-import LogisticsTable from "./LogisticsTable.vue";
-import LogisticsSelector from "./LogisticsSelector.vue";
-import Vue from "vue";
+import Vue from 'vue';
+import LogisticsTable from '~/components/molecules/logistics/LogisticsTable.vue';
+import LogisticsSelector from '~/components/molecules/logistics/LogisticsSelector.vue';
 
-/**
- * @displayName Logistics Card
- * Card to manage equipments in FAs
- */
 export default Vue.extend({
   name: "LogisticsCard",
   components: { LogisticsSelector, LogisticsTable },
@@ -87,7 +83,7 @@ export default Vue.extend({
     /**
      * If the element is editable or not
      */
-    disabled: {
+     isDisabled: {
       type: Boolean,
       default: () => false,
     },
@@ -137,6 +133,11 @@ export default Vue.extend({
     },
   },
 });
+
 </script>
 
-<style scoped></style>
+<style scoped>
+  .card-border {
+    border-left: 5px solid green;
+  }
+</style>

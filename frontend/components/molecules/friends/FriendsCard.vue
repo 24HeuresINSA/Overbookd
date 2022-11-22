@@ -41,7 +41,7 @@ import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { FriendRequest } from "~/utils/models/repo";
-import { SnackNotif } from "../../utils/models/store";
+import { SnackNotif } from "../../../utils/models/store";
 
 export default Vue.extend({
   name: "FriendsCard",

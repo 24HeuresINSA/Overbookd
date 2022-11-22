@@ -1,4 +1,4 @@
-import NotificationCard from "./notificationCard.vue";
+import NotificationCard from "./NotificationCard.vuecationCard.vue";
 
 export default {
   title: "Molecules/NotificationCard",

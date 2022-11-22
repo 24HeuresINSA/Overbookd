@@ -208,10 +208,10 @@ import { User } from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
-import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
+import CompleteTimeframeCard from "~/components/organisms/form/ft/CompleteTimeframeCard.vue";
 import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
-import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import Loader from "~/components/atoms/Loader.vue";
 
 interface Data {
