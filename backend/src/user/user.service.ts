@@ -56,7 +56,9 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return { ...user, team: user?.team.map((team) => team.team.name) };
+    return user
+      ? { ...user, team: user?.team.map((team) => team.team.name) }
+      : undefined;
   }
 
   async getUserPassword(
@@ -104,7 +106,7 @@ export class UserService {
       lastname: payload.lastname,
       email: payload.email,
       password: await new HashingUtilsService().hash(payload.password),
-      nickname: payload.nickname || '',
+      nickname: payload.nickname,
       birthdate: payload.birthdate,
       phone: payload.phone,
       department: payload.department,

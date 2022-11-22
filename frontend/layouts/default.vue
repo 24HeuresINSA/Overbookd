@@ -151,6 +151,12 @@ export default {
           roles: "hard",
         },
         {
+          icon: "mdi-chart-bubble",
+          title: "Fiches Activités",
+          roles: "hard",
+          to: "/fa",
+        },
+        {
           icon: "mdi-account",
           title: "Liste des Orgas",
           roles: "hard",
@@ -173,12 +179,6 @@ export default {
           roles: "sg",
           title: "Transactions",
           to: "/transactions",
-        },
-        {
-          icon: "mdi-chart-bubble",
-          roles: "hard",
-          title: "Fiches Activités",
-          to: "/fa",
         },
       ],
       items: [

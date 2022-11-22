@@ -34,7 +34,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col cols="12" lg="2" md="1">
-                <v-btn :isDisabled="!validInput" rounded @click="addItem">
+                <v-btn :is-disabled="!validInput" rounded @click="addItem">
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-col>
@@ -51,9 +51,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import LogisticsTable from '~/components/molecules/logistics/LogisticsTable.vue';
-import LogisticsSelector from '~/components/molecules/logistics/LogisticsSelector.vue';
+import Vue from "vue";
+import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
+import LogisticsSelector from "~/components/molecules/logistics/LogisticsSelector.vue";
 
 export default Vue.extend({
   name: "LogisticsCard",
@@ -83,7 +83,7 @@ export default Vue.extend({
     /**
      * If the element is editable or not
      */
-     isDisabled: {
+    isDisabled: {
       type: Boolean,
       default: () => false,
     },
@@ -133,11 +133,10 @@ export default Vue.extend({
     },
   },
 });
-
 </script>
 
 <style scoped>
-  .card-border {
-    border-left: 5px solid green;
-  }
+.card-border {
+  border-left: 5px solid green;
+}
 </style>

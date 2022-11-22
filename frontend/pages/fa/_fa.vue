@@ -4,16 +4,25 @@
       <h1>Fiche Activité n°{{ faId }}</h1>
 
       <div class="status">
-        <span 
+        <span
           class="dot"
-          :class="mFA.status=='submitted'?'purple':mFA.status=='refused'?'red':mFA.status=='validated'?'green':'orange'"
+          :class="
+            mFA.status == 'SUBMITTED'
+              ? 'purple'
+              : mFA.status == 'REFUSED'
+              ? 'red'
+              : mFA.status == 'VALIDATED'
+              ? 'green'
+              : 'orange'
+          "
         ></span>
-        <h3>{{ mFA.status ? statusTrad.get(mFA.status) : "Brouillon" }}</h3>
+        <h3>{{ mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon" }}</h3>
       </div>
 
       <div class="icons">
         <div
           v-for="(validator, i) of validators"
+          :key="i"
           :color="getIconColor(validator)"
           class="icon"
         >
@@ -26,10 +35,6 @@
       <FormSidebar></FormSidebar>
     </div>
     <v-container class="container">
-      <!-- <div class="top-bar">
-        <h1>Fiche Activité n°{{ mFA.id }}</h1>
-        <h2>{{ mFA.status ? statusTrad.get(mFA.status) : "Brouillon" }}</h2>
-      </div> -->
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
       <SignaCard id="signa"></SignaCard>
@@ -44,23 +49,24 @@
       </h4>
       <LogisticsCard
         title="Matos"
-        :types="Object.values(EquipmentTypes)"
+        :types="Object.values({})"
         :store="FA"
       ></LogisticsCard>
+
       <LogisticsCard
         title="Barrières"
-        :types="Object.values(BarrieresTypes)"
+        :types="Object.values({})"
         :store="FA"
       ></LogisticsCard>
       <LogisticsCard
         title="Matos Elec / Eau"
-        :types="Object.values(ElecTypes)"
+        :types="Object.values({})"
         :store="FA"
       ></LogisticsCard>
       <ElecLogisticCard id="elec"></ElecLogisticCard>
       <WaterLogisticCard id="water"></WaterLogisticCard>
       <CommentCard id="comment"></CommentCard>
-      <!-- <FTCard id="ft"></FTCard> --> 
+      <!-- <FTCard id="ft"></FTCard> -->
     </v-container>
 
     <div class="bottom-bar">
@@ -165,16 +171,13 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import Vue from "vue";
 import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
-import { RepoFactory } from "~/repositories/repoFactory"
+import { RepoFactory } from "~/repositories/repoFactory";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import FTCard from "~/components/organisms/form/fa/FTCard.vue";
 import { safeCall } from "../../utils/api/calls";
-import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
 import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
@@ -182,19 +185,15 @@ import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
-import {
-  EquipmentTypes,
-  ElecTypes,
-  BarrieresTypes,
-} from "../../utils/models/FA";
+import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
+import { EquipmentTypes, BarrieresTypes, ElecTypes } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "Fa",
   components: {
     ElecLogisticCard,
-    SignaCard,
-    FTCard,
     CommentCard,
+    SignaCard,
     LogisticsCard,
     TimeframeTable,
     PrestaCard,
@@ -214,10 +213,10 @@ export default Vue.extend({
       faId: this.$route.params.fa,
 
       statusTrad: new Map<string, string>([
-        ["draft", "Brouillon"],
-        ["submitted", "Soumise"],
-        ["refused", "Refusée"],
-        ["validated", "Validée"],
+        ["DRAFT", "Brouillon"],
+        ["SUBMITTED", "Soumise"],
+        ["REFUSED", "Réfusée"],
+        ["VALIDATED", "Validée"],
       ]),
       color: {
         submitted: "grey",
@@ -266,6 +265,7 @@ export default Vue.extend({
   },
 
   async mounted() {
+    console.log(this.mFA.status)
     let title = "FA " + this.faId;
     if (this.mFA.name) title += " : " + this.mFA.name;
     document.title = title;
@@ -278,10 +278,10 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
-      let context: any = this; 
+      let context: any = this;
       await safeCall(
         context,
-        this.faRepo.updateFA(this, this.mFA),
+        this.faRepo.updateFA(this, this.mFA)
         // "undelete"
       );
     },
@@ -328,7 +328,6 @@ export default Vue.extend({
   },
 });
 </script>
-
 
 <style scoped>
 .main {
@@ -384,7 +383,7 @@ h1 {
   text-align: center;
   border-radius: 6px;
   user-select: none;
-  
+
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
@@ -406,11 +405,6 @@ h1 {
 
 .container > * {
   margin-bottom: 30px;
-}
-
-.top-bar {
-  display: flex;
-  align-items: baseline;
 }
 
 .bottom-bar {

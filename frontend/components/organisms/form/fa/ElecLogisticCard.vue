@@ -48,7 +48,7 @@
               type="number"
               label="Puissance (en Watt)*"
             ></v-text-field>
-          
+
             <v-text-field
               v-model="newElectricityNeed.comment"
               label="Commentaire"
@@ -109,7 +109,10 @@ export default Vue.extend({
         return;
       }
 
-      this.newElectricityNeed.power = this.newElectricityNeed.power.replace(",", ".");
+      this.newElectricityNeed.power = this.newElectricityNeed.power.replace(
+        ",",
+        "."
+      );
       if (+this.newElectricityNeed.power <= 0) {
         alert("La puissance n'est pas valide...");
         return;
@@ -124,7 +127,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-  .card-border {
-    border-left: 5px solid green;
-  }
+.card-border {
+  border-left: 5px solid green;
+}
 </style>

@@ -3,7 +3,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
-  requestResetPassword(context: Context, data: { userEmail: string }) {
+  requestResetPassword(context: Context, data: { email: string }) {
     return context.$axios.post("/forgot", data);
   },
   resetPassword(

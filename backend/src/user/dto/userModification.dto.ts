@@ -1,101 +1,127 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Departements, Years } from './common';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsMobilePhone,
+  IsString,
+  ValidationArguments,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class UserModificationDto {
   @ApiProperty({
     required: false,
     description: 'The firstname of the user',
   })
-  firstname: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  firstname?: string;
 
   @ApiProperty({
     required: false,
     description: 'The lastname of the user',
   })
-  lastname: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  lastname?: string;
 
   @ApiProperty({
     required: false,
     description: 'The nickname of the user',
   })
-  nickname: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  nickname?: string;
 
   @ApiProperty({
     required: false,
     description: 'The email of the user',
   })
-  email: string;
+  @IsOptional()
+  @IsEmail()
+  @IsNotEmpty()
+  email?: string;
 
   @ApiProperty({
     required: false,
     description: 'The birthdate of the user',
   })
-  birthdate: Date;
+  @IsOptional()
+  @IsNotEmpty()
+  birthdate?: Date;
 
   @ApiProperty({
     required: false,
     description: 'The phone number of the user',
   })
-  phone: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsMobilePhone()
+  phone?: string;
 
   @ApiProperty({
     required: false,
     description: 'The departement of the user',
-    enum: [
-      'TC',
-      'IF',
-      'GE',
-      'GM',
-      'GI',
-      'GCU',
-      'GEN',
-      'SGM',
-      'BS',
-      'FIMI',
-      'AUTRE',
-    ],
+    enum: Departements,
   })
-  department: string;
+  @IsOptional()
+  @IsEnum(Departements, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Departements}`,
+  })
+  department?: Departements;
 
   @ApiProperty({
     required: false,
     description: 'The study year of the user',
-    enum: ['A1', 'A2', 'A3', 'A4', 'A5', 'VIEUX', 'AUTRE'],
+    enum: Years,
   })
-  year: number;
+  @IsOptional()
+  @IsEnum(Years, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of the following values: ${Years}`,
+  })
+  year?: Years;
 
   @ApiProperty({
     required: false,
-    description: 'The profile picture link of the user',
+    description: 'A comment about the user',
   })
-  pp: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  comment?: string;
 
   @ApiProperty({
     required: false,
-    description: 'The charisma of the user',
+    description: 'The user has payed his contribution',
   })
-  charisma: number;
+  @IsOptional()
+  @IsBoolean()
+  has_payed_contributions?: boolean;
 
   @ApiProperty({
     required: false,
-    description: 'The compte perso balance of the user',
+    description: 'The user profile picture path',
   })
-  balance: number;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  pp?: string;
 
   @ApiProperty({
     required: false,
-    description: 'The password of the user',
+    description: 'The user charisma points',
   })
-  password: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The creation date of the user',
-  })
-  created_at: Date;
-
-  @ApiProperty({
-    required: false,
-    description: 'The update date of the user',
-  })
-  updated_at: Date;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsNumber()
+  charisma?: number;
 }

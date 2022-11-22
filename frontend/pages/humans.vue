@@ -25,6 +25,7 @@
                     :input-value="selected"
                     close
                     :color="getRoleMetadata(item).color"
+                    @click:close="removeTeamInFilter(item)"
                   >
                     <v-icon left color="white">
                       {{ getRoleMetadata(item).icon }}
@@ -427,8 +428,8 @@ export default {
       this.filteredUsers = this.users;
       this.filters.isValidated = true; // default set to true
 
-      // add CP if admin
-      if (this.hasRole("admin")) {
+      // add CP if admin or sg
+      if (this.hasRole(["admin", "sg"])) {
         this.headers.splice(this.headers.length - 1, 0, {
           text: "CP",
           value: "balance",
@@ -449,22 +450,20 @@ export default {
       await this.$accessor.FT.fetchAll();
     },
     isCpUseful(item) {
-      if (item.team) {
-        return item.team.includes("hard") || item.team.includes("vieux");
-      } else {
-        return false;
-      }
+      return (
+        (item.team?.includes("hard") &&
+          !(
+            item.team?.includes("fen") ||
+            item.team?.includes("voiture") ||
+            item.team?.includes("camion")
+          )) ||
+        item.team?.includes("vieux")
+      );
     },
     getCP(item) {
-      if (item.team) {
-        if (item.team.includes("hard") || item.team.includes("vieux")) {
-          return (item.balance || 0).toFixed(2) + " €";
-        } else {
-          return undefined;
-        }
-      } else {
-        return undefined;
-      }
+      return this.isCpUseful(item)
+        ? (item.balance || 0).toFixed(2) + " €"
+        : undefined;
     },
     openCharismaDialog(user) {
       this.selectedUser = user;
@@ -589,6 +588,10 @@ export default {
 
     getRoleMetadata(roleName) {
       return this.teams.find((e) => e.name === roleName);
+    },
+
+    removeTeamInFilter(item) {
+      this.filters.teams.splice(this.filters.teams.indexOf(item), 1);
     },
 
     async saveUser() {

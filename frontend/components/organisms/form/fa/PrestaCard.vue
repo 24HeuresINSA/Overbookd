@@ -67,13 +67,12 @@ export default Vue.extend({
     },
     methods: {
         onChange(name: string, value: any) {
-            if (typeof value === "string") value = value.trim();
-            console.log(name + " : " + value);
-            // Mettre à jour le store
-        }
+        if (typeof value === "string") value = value.trim();
+        console.log(name + " : " + value);
+        // Mettre à jour le store
+        },
     },
 });
 </script>
 
 <style scoped></style>
-  

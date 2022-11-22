@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import qs from "qs";
-
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
@@ -169,10 +167,9 @@ export default {
 
   async mounted() {
     this.randomURL = this.getRandomBackgroundURL();
-    console.log(this.$auth);
     if (this.$auth.loggedIn) {
       await this.$router.push({
-        path: "/",
+        path: REDIRECT_URL,
       }); // redirect to homepage
     }
   },
@@ -183,7 +180,7 @@ export default {
         if (this.credentials.email && this.credentials.password) {
           await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
           await this.$router.push({
-            path: "/",
+            path: REDIRECT_URL,
           }); // redirect to homepage
           const audio = new Audio("audio/jaune.m4a");
           await audio.play();

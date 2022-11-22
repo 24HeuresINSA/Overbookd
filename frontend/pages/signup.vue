@@ -16,22 +16,17 @@
         required
       ></v-text-field>
 
-      <v-text-field
-        v-model="formData.nickname"
-        label="Surnom"
-      ></v-text-field>
+      <v-text-field v-model="formData.nickname" label="Surnom"></v-text-field>
 
       <v-text-field
         v-model="formData.password"
         type="password"
         label="Mot de passe*"
-        :rules="
-          [
-            (v) =>
-              new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$`).test(v) ||
-              (`au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères`),
-          ]
-        "
+        :rules="[
+          (v) =>
+            new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$`).test(v) ||
+            `au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères`,
+        ]"
         required
       ></v-text-field>
 
@@ -39,13 +34,11 @@
         v-model="formData.password2"
         type="password"
         label="Confirme ton mot de passe*"
-        :rules="
-          [
-            (v) =>
-              new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$`).test(v) ||
-              (`au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères`),
-          ]
-        "
+        :rules="[
+          (v) =>
+            new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$`).test(v) ||
+            `au moins une MAJUSCULE, minuscule et un chiffre et au moins 6 caractères`,
+        ]"
         required
       ></v-text-field>
 
@@ -63,13 +56,11 @@
         v-model="formData.email"
         type="email"
         label="Gmail (important que ca soit une adresse gmail)*"
-        :rules="
-          [
-            (v) =>
-              new RegExp(`^.+@(gmail.com|24heures.org)$`).test(v) ||
-              (`il y a un problème avec ce champ`),
-          ]
-        "
+        :rules="[
+          (v) =>
+            new RegExp(`^.+@(gmail.com|24heures.org)$`).test(v) ||
+            `il y a un problème avec ce champ`,
+        ]"
         required
       ></v-text-field>
 
@@ -77,13 +68,11 @@
         v-model="formData.phone"
         type="tel"
         label="Ton 06 ?*"
-        :rules="
-          [
-            (v) =>
-              new RegExp(`0[6-7]{1}[0-9]{8}$`).test(v) ||
-              (`il y a un problème avec ce champ`),
-          ]
-        "
+        :rules="[
+          (v) =>
+            new RegExp(`0[6-7]{1}[0-9]{8}$`).test(v) ||
+            `il y a un problème avec ce champ`,
+        ]"
         required
       ></v-text-field>
 
@@ -91,7 +80,19 @@
         v-model="formData.department"
         type="select"
         label="Département (obligatoire même si non INSA)*"
-        :items="['TC', 'IF', 'BS', 'GCU', 'SGM', 'GI', 'GM', 'GEN', 'FIMI', 'GE', 'AUTRE']"
+        :items="[
+          'TC',
+          'IF',
+          'BS',
+          'GCU',
+          'SGM',
+          'GI',
+          'GM',
+          'GEN',
+          'FIMI',
+          'GE',
+          'AUTRE',
+        ]"
         class="margin-top"
         dense
         required
@@ -112,7 +113,7 @@
         v-model="formData.team"
         type="select"
         label="Team affiliée (laisser vide si non concerné)"
-        :items="['BDE', 'Kfet', 'Karna', 'Woods', 'Teckos', 'Tendrestival',]"
+        :items="['BDE', 'Kfet', 'Karna', 'Woods', 'Teckos', 'Tendrestival']"
         class="margin-top"
         dense
         clearable
@@ -148,11 +149,11 @@ export default {
       formData: {},
       activePicker: null,
       formSoft: false,
-    }
+    };
   },
 
   async mounted() {
-    const isSignupOpen = true;  //Close or open signup
+    const isSignupOpen = true; //Close or open signup
     if (!isSignupOpen) {
       alert("les inscriptions sont fermées 😱");
       await this.$router.push({
