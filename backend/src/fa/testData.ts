@@ -1,13 +1,13 @@
 import { UpdateFaDto, Status } from './dto/update-fa.dto';
 
 export const emptyFA: UpdateFaDto = {
-  FA: {
+  fa: {
     name: 'empty',
   },
 };
 
 export const nakedFA: UpdateFaDto = {
-  FA: {
+  fa: {
     name: 'Naked FA',
     type: 'test',
     team_id: 1,
@@ -21,7 +21,7 @@ export const nakedFA: UpdateFaDto = {
   },
 };
 export const collaboratorFA: UpdateFaDto = {
-  FA: {
+  fa: {
     name: 'Collaborator FA',
     type: 'test',
     team_id: 1,
@@ -33,7 +33,7 @@ export const collaboratorFA: UpdateFaDto = {
     is_major: false,
     is_kids: false,
   },
-  FA_Collaborators: [
+  fa_collaborator: [
     {
       firstname: 'Collaborator A',
       lastname: 'Collaborator A',

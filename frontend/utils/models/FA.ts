@@ -37,18 +37,18 @@ export interface FA {
   water_needs?: string;
   water_flow_required?: string;
   is_deleted?: boolean;
-  FA_Collaborators?: FA_Collaborators[];
-  FA_Electricity_needs?: FA_Electricity_needs[];
+  fa_collaborator?: fa_collaborator[];
+  fa_electricity_needs?: fa_electricity_needs[];
 }
 
-export interface FA_Collaborators {
+export interface fa_collaborator {
   fa_id: number;
   collaborator_id: number;
   is_deleted: boolean;
-  Collaborator: Collaborator;
+  collaborator: collaborator;
 }
 
-export interface Collaborator {
+export interface collaborator {
   id: number;
   firstname: string;
   lastname: string;
@@ -58,7 +58,7 @@ export interface Collaborator {
   comment?: string;
 }
 
-export interface FA_Electricity_needs {
+export interface fa_electricity_needs {
   id: number;
   fa_id: number;
   electricity_type: ElectricityType;

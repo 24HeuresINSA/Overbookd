@@ -2,14 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
 import { nakedFA, collaboratorFA, emptyFA } from './testData';
-import { Collaborator, FA, FA_type, Location, User } from '@prisma/client';
+import { collaborator, fa, fa_type, location, User } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 
 let faservice: FaService;
 let prisma: PrismaService;
 
-let fa_type: FA_type;
-let location: Location;
+let fa_type: fa_type;
+let location: location;
 
 /**
  * a executer dans /overbookd-mono/backend/src/fa
@@ -24,7 +24,7 @@ beforeAll(async () => {
   faservice = module.get<FaService>(FaService);
   prisma = module.get<PrismaService>(PrismaService);
 
-  fa_type = await prisma.fA_type.create({
+  fa_type = await prisma.fa_type.create({
     data: {
       name: 'test',
     },
@@ -38,7 +38,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await prisma.fA_type.delete({ where: { name: fa_type.name } });
+  await prisma.fa_type.delete({ where: { name: fa_type.name } });
   await prisma.location.delete({
     where: {
       id: location.id,
@@ -57,17 +57,17 @@ describe('check if every variable is defined', () => {
 
 describe('FA getters', () => {
   let FAs: UpdateFaDto[];
-  let all_fa: FA[];
+  let all_fa: fa[];
   beforeAll(async () => {
     FAs = [nakedFA, collaboratorFA, emptyFA];
     FAs.map(async (FA) => {
-      FA.FA.type = fa_type.name;
-      FA.FA.location_id = location.id;
+      FA.fa.type = fa_type.name;
+      FA.fa.location_id = location.id;
     });
     expect(faservice.create).toBeDefined();
     await Promise.all(
       FAs.map(async (FA) => {
-        return await faservice.create({ name: FA.FA.name });
+        return await faservice.create({ name: FA.fa.name });
       }),
     );
   });
@@ -84,7 +84,7 @@ describe('FA getters', () => {
   });
 
   afterAll(async () => {
-    await prisma.fA.deleteMany({
+    await prisma.fa.deleteMany({
       where: {
         id: {
           in: all_fa.map((fa) => fa.id),
@@ -96,34 +96,34 @@ describe('FA getters', () => {
 
 describe('FA creation', () => {
   describe('Create an FA without any links', () => {
-    let result: FA | null;
+    let result: fa | null;
 
     test('should create an FA without any links', async () => {
       expect(faservice.create).toBeDefined();
       const FA = nakedFA;
-      FA.FA.type = fa_type.name;
-      FA.FA.location_id = location.id;
-      result = await faservice.create({ name: nakedFA.FA.name });
+      FA.fa.type = fa_type.name;
+      FA.fa.location_id = location.id;
+      result = await faservice.create({ name: nakedFA.fa.name });
       expect(result).toBeDefined();
     });
 
     test('Should update the fa with the correct data', async () => {
       expect(faservice.update).toBeDefined();
       const FA = nakedFA;
-      FA.FA.type = fa_type.name;
-      FA.FA.location_id = location.id;
+      FA.fa.type = fa_type.name;
+      FA.fa.location_id = location.id;
       const updatedFA = await faservice.update(result.id, FA);
       expect(updatedFA).toBeDefined();
-      Object.keys(FA.FA).map((key) => {
+      Object.keys(FA.fa).map((key) => {
         expect(updatedFA).toHaveProperty(key);
-        expect(updatedFA[key]).toStrictEqual(FA.FA[key]);
+        expect(updatedFA[key]).toStrictEqual(FA.fa[key]);
       });
     });
 
     test('Should not get any collaborator', async () => {
       const collaborators = await prisma.collaborator.findMany({
         where: {
-          FA_Collaborators: {
+          fa_collaborator: {
             some: {
               fa_id: result.id,
             },
@@ -135,7 +135,7 @@ describe('FA creation', () => {
 
     afterAll(async () => {
       //delete the FA
-      await prisma.fA.delete({
+      await prisma.fa.delete({
         where: {
           id: result.id,
         },
@@ -143,20 +143,20 @@ describe('FA creation', () => {
     });
   });
   describe('Create an FA with a collaborator', () => {
-    let collab_result: FA | null;
-    let collaborators: Collaborator[];
+    let collab_result: fa | null;
+    let collaborators: collaborator[];
 
     test('should create an FA with a collaborator', async () => {
       expect(faservice.create).toBeDefined();
       const FA = collaboratorFA;
-      FA.FA.type = fa_type.name;
-      FA.FA.location_id = location.id;
-      collab_result = await faservice.create({ name: FA.FA.name });
+      FA.fa.type = fa_type.name;
+      FA.fa.location_id = location.id;
+      collab_result = await faservice.create({ name: FA.fa.name });
       expect(collab_result).toBeDefined();
       collab_result = await faservice.update(collab_result.id, FA);
-      Object.keys(FA.FA).map((key) => {
+      Object.keys(FA.fa).map((key) => {
         expect(collab_result).toHaveProperty(key);
-        expect(collab_result[key]).toStrictEqual(FA.FA[key]);
+        expect(collab_result[key]).toStrictEqual(FA.fa[key]);
       });
       const getfa = await faservice.findOne(collab_result.id);
       expect(getfa).toBeDefined();
@@ -167,7 +167,7 @@ describe('FA creation', () => {
       //find all collaborators linked to result
       collaborators = await prisma.collaborator.findMany({
         where: {
-          FA_Collaborators: {
+          fa_collaborator: {
             some: {
               fa_id: collab_result.id,
             },
@@ -179,13 +179,13 @@ describe('FA creation', () => {
 
     afterAll(async () => {
       //remove FA foreign key from collaborator
-      await prisma.fA_Collaborators.deleteMany({
+      await prisma.fa_collaborator.deleteMany({
         where: {
           fa_id: collab_result.id,
         },
       });
       //delete the FA
-      await prisma.fA.delete({
+      await prisma.fa.delete({
         where: {
           id: collab_result.id,
         },
@@ -201,7 +201,7 @@ describe('FA creation', () => {
 });
 
 describe('FA validation system', () => {
-  let sampleFA: FA | null;
+  let sampleFA: fa | null;
   let validatorUser: User | null;
   let notValidatorUser: User | null;
 
@@ -231,9 +231,9 @@ describe('FA validation system', () => {
     expect(validatorUser).toBeDefined();
     expect(notValidatorUser).toBeDefined();
     const FA = nakedFA;
-    FA.FA.type = fa_type.name;
-    FA.FA.location_id = location.id;
-    sampleFA = await faservice.create({ name: FA.FA.name });
+    FA.fa.type = fa_type.name;
+    FA.fa.location_id = location.id;
+    sampleFA = await faservice.create({ name: FA.fa.name });
     expect(sampleFA).toBeDefined();
     sampleFA = await faservice.update(sampleFA.id, FA);
   });
@@ -241,32 +241,32 @@ describe('FA validation system', () => {
   test("Should not validate an FA with a user who's not a validator", async () => {
     //try to validate the FA and expect an error
     await expect(
-      faservice.validateFa(sampleFA.id, notValidatorUser.id),
+      faservice.validatefa(sampleFA.id, notValidatorUser.id),
     ).rejects.toThrowError();
   });
 
   test('Should accept the validation', async () => {
     await expect(
-      faservice.validateFa(sampleFA.id, validatorUser.id),
+      faservice.validatefa(sampleFA.id, validatorUser.id),
     ).resolves.not.toThrowError();
   });
 
   test('Should not validate an FA that does not exist', async () => {
     await expect(
-      faservice.validateFa(-1, validatorUser.id),
+      faservice.validatefa(-1, validatorUser.id),
     ).rejects.toThrowError();
   });
 
   test('Should not validate an FA with a user that does not exist', async () => {
     //try to validate the FA and expect no error
-    await expect(faservice.validateFa(sampleFA.id, -1)).rejects.toThrowError();
+    await expect(faservice.validatefa(sampleFA.id, -1)).rejects.toThrowError();
   });
 
   test('Should unvalidate the FA', async () => {
     await expect(
-      faservice.invalidateFa(sampleFA.id, validatorUser.id),
+      faservice.invalidatefa(sampleFA.id, validatorUser.id),
     ).resolves.not.toThrowError();
-    const validation = await prisma.fA_validation.findUnique({
+    const validation = await prisma.fa_validation.findUnique({
       where: {
         fa_id_user_id: {
           fa_id: sampleFA.id,
@@ -279,19 +279,19 @@ describe('FA validation system', () => {
 
   afterAll(async () => {
     //delete the validation
-    await prisma.fA_validation.deleteMany({
+    await prisma.fa_validation.deleteMany({
       where: {
         fa_id: sampleFA.id,
       },
     });
 
-    await prisma.fA_refuse.deleteMany({
+    await prisma.fa_refuse.deleteMany({
       where: {
         fa_id: sampleFA.id,
       },
     });
 
-    await prisma.fA.delete({
+    await prisma.fa.delete({
       where: {
         id: sampleFA.id,
       },
