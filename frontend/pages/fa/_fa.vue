@@ -2,14 +2,11 @@
   <div class="main">
     <FormSidebar class="summary"></FormSidebar>  
     <v-container class="container">
-      <h1>Fiche Activité</h1>
+      <h1>Fiche Activité n° {{ FA.id }}</h1>
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
       <!-- <SignaCard id="signa"></SignaCard> -->
-      <TimeframeTable
-        id="timeframe"
-        :store="store"
-      ></TimeframeTable>
+      <TimeframeTable id="timeframe" :store="store" ></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
       <PrestaCard id="presta"></PrestaCard>
       <!--<h2>Logistique 🚚</h2>
@@ -32,13 +29,115 @@
       ></LogisticsCard>-->
       <ElecLogisticCard id="elec"></ElecLogisticCard>
       <WaterLogisticCard id="water"></WaterLogisticCard>
-      <CommentCard
-        id="comment"
-      ></CommentCard>
-      <FTCard id="ft"></FTCard>
-      <v-btn @click="saveFA">Sauvegarder</v-btn>
+      <CommentCard id="comment"></CommentCard>
+      <FTCard id="ft"></FTCard>  
     </v-container>
+
+    <div class="bottom-bar">
+      <div>
+        <v-btn v-if="FA.id > 1" small fab :href="`/fa/${FA.id - 1}`">
+          <v-icon small>mdi-arrow-left</v-icon>
+        </v-btn>
+
+        <v-btn
+          v-if="validators.length === 1"
+          color="red"
+          @click="
+            refuseDialog = true;
+          "
+          >refusé par {{ validators[0] }}
+        </v-btn>
+        <v-menu v-if="validators.length > 1" offset-y>
+          <template #activator="{ attrs, on }">
+            <v-btn
+              class="white--text ma-5"
+              v-bind="attrs"
+              color="red"
+              v-on="on"
+            >
+              Refuser
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item v-for="validator of validators" :key="validator" link>
+              <v-list-item-title
+                @click="refuseDialog = true"
+                v-text="validator"
+              ></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+      <div>
+        <template v-if="validators.length === 1">
+          <v-btn color="green" @click="validate(validators[0])"
+            >validé par {{ validators[0] }}
+          </v-btn>
+        </template>
+        <v-menu v-if="validators.length > 1" offset-y>
+          <template #activator="{ attrs, on }">
+            <v-btn
+              class="white--text ma-5"
+              v-bind="attrs"
+              color="green"
+              v-on="on"
+            >
+              valider
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item v-for="validator of validators" :key="validator" link>
+              <v-list-item-title
+                color="green"
+                @click="validate(validator)"
+                v-text="validator"
+              ></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+
+      <v-btn
+        v-if="FA.status && FA.status !== 'submitted'"
+        color="warning"
+        @click="validationDialog = true"
+        >soumettre à validation
+      </v-btn>
+      <v-btn @click="saveFA">sauvegarder</v-btn>
+      <v-btn
+        v-if="validators.length >= 1 && FA.isValid === false"
+        color="red"
+        @click="undelete"
+        >récupérer
+      </v-btn>
+      <v-btn small fab :href="`/fa/${FA.id + 1}`">
+        <v-icon small>mdi-arrow-right</v-icon>
+      </v-btn>
     </div>
+
+    <v-dialog v-model="validationDialog" width="500">
+      <v-card>
+        <v-img
+          height="620"
+          src="https://media.discordapp.net/attachments/726537148119122023/806793684598128640/WhatsApp_Image_2021-02-03_at_23.36.35.jpeg"
+        ></v-img>
+        <v-card-title> ⚠️ Warning ⚠️ </v-card-title>
+        <v-card-text> T'es sur de ta merde la ? </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="submitForReview">
+            soumettre
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+
+  
+  
 </template>
 
 <script lang="ts">
@@ -82,6 +181,11 @@ export default Vue.extend({
 
   data() {
     return {
+      validationDialog: false,
+      refuseDialog: false,
+
+      faRepo: RepoFactory.faRepo,
+
       EquipmentTypes,
       ElecTypes,
       BarrieresTypes,
@@ -93,8 +197,27 @@ export default Vue.extend({
       return this.$accessor.FA;
     },
     FA(): any {
-      console.log(this.$accessor.FA.mFA);
       return this.$accessor.FA.mFA;
+    },
+    me(): any {
+      return this.$accessor.user.me;
+    },
+    validators(): Array<string> {
+      let mValidator: Array<string> = [];
+      const validators = this.$accessor.config.getConfig("fa_validators");
+      if (this.me.team.includes("admin")) {
+        // admin has all the validators powers
+        return validators;
+      }
+      if (validators) {
+        validators.forEach((validator: string) => {
+          if (this.me.team && this.me.team.includes(validator)) {
+            mValidator.push(validator);
+          }
+        });
+        return mValidator;
+      }
+      return [];
     },
   },
   
@@ -102,6 +225,32 @@ export default Vue.extend({
     async saveFA() {
       console.log(this.FA);
       await RepoFactory.faRepo.updateFA(this, this.FA);
+    },
+
+    async undelete() {
+      await this.FA.undelete();
+      let context: any = this; 
+      await safeCall(
+        context,
+        this.faRepo.updateFA(this, this.FA.mFA),
+        // "undelete"
+      );
+    },
+
+    validate(validator: any) {
+      if (validator) {
+        this.FA.validate(validator);
+        this.saveFA();
+      }
+    },
+
+    submitForReview() {
+      this.FA.setStatus({
+        status: "submitted",
+        by: this.me.lastname,
+      });
+      this.validationDialog = false;
+      this.saveFA();
     },
   },
 });
@@ -114,12 +263,13 @@ export default Vue.extend({
 
 .main {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 155px);
 }
 
 .summary {
   flex: 0 0 auto;
   overflow: auto;
+  
 }
 
 .container {
@@ -131,5 +281,17 @@ export default Vue.extend({
 
 .container > * {
   margin-bottom: 30px;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 20px;
+  width: 80vw;
+  margin: 0 10vw;
+  display: flex;
+  justify-content: space-between;
+  z-index: 30;
+  align-items: baseline;
+  background-color: transparent;
 }
 </style>
