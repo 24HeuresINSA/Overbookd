@@ -8,13 +8,15 @@
     >
     <v-card-text>
       <v-form>
+        <!--
         <v-switch
           :value="waterNeed.isWaterNeeded"
           label="Besoin d'eau"
           @change="onChange('isWaterNeeded', $event)"
         ></v-switch>
+        -->
         <v-text-field
-          :value="waterNeed.waterNeed"
+          :value="waterNeed.water_needs"
           label="Desctiption du besoin en eau"
           @change="onChange('waterNeed', $event)"
         ></v-text-field>
@@ -25,12 +27,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "WaterLogisticCard",
   computed: {
-    waterNeed(): any {
-      return this.$accessor.FA.mFA.general;
+    waterNeed(): FA {
+      return this.$accessor.FA.mFA;
     },
   },
   methods: {

@@ -87,15 +87,15 @@
             <template #[`item.validation`]="{ item }">
               <ValidatorsIcons :form="item"></ValidatorsIcons>
             </template>
-            <template #item.name="{ item }">
+            <template #[`item.name`]="{ item }">
               <a
                 :href="`/fa/${item.id}`"
                 :style="
-                  item.isValid === false
+                  item.is_deleted === true
                     ? `text-decoration:line-through;`
                     : `text-decoration:none;`
                 "
-                >{{ item.general ? item.general.name : "" }}</a
+                >{{ item.name ? item.name : "" }}</a
               >
             </template>
             <template #[`item.action`]="row">
