@@ -270,7 +270,7 @@ model fa_signa_needs {
   signa_type SignaType
   text       String    @db.Text
   count      Int       @default(1)
-  comment    String    @db.Text
+  comment    String?   @db.Text
 }
 
 enum subject_type {
