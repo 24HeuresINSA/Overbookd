@@ -16,7 +16,11 @@
               : 'orange'
           "
         ></span>
-        <h3>{{ mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon" }}</h3>
+        <h3>
+          {{
+            mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
+          }}
+        </h3>
       </div>
 
       <div class="icons">
@@ -38,7 +42,7 @@
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
       <SignaCard id="signa"></SignaCard>
-      <TimeframeTable id="timeframe" :store="FA" ></TimeframeTable>
+      <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
       <PrestaCard id="presta"></PrestaCard>
       <h2>Logistique 🚚</h2>
@@ -162,9 +166,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="submit">
-            soumettre
-          </v-btn>
+          <v-btn color="primary" text @click="submit">soumettre</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -264,7 +266,6 @@ export default Vue.extend({
     if (this.mFA.name) title += " : " + this.mFA.name;
     document.title = title;
   },
-  
   methods: {
     async saveFA() {
       await RepoFactory.faRepo.updateFA(this, this.mFA);

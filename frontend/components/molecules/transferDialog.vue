@@ -54,21 +54,6 @@ export default Vue.extend({
       users: {},
     };
   },
-  async mounted() {
-    let users = this.$accessor.user.usernames;
-    if (users.length === 0) {
-      // fetch usernames
-      await this.$accessor.user.getUsername("");
-      users = this.$accessor.user.usernames;
-    }
-    // sort alphabetically
-    this.users = users.map((user) => {
-      return {
-        text: user.username,
-        value: user,
-      };
-    });
-  },
   computed: {
     ...mapState<any, TMapState<DialogState>>("dialog", {
       type: (state: DialogState) => state.type,
@@ -93,6 +78,21 @@ export default Vue.extend({
         }
       },
     },
+  },
+  async mounted() {
+    let users = this.$accessor.user.usernames;
+    if (users.length === 0) {
+      // fetch usernames
+      await this.$accessor.user.getUsername("");
+      users = this.$accessor.user.usernames;
+    }
+    // sort alphabetically
+    this.users = users.map((user) => {
+      return {
+        text: user.username,
+        value: user,
+      };
+    });
   },
   methods: {
     async transferMoney(): Promise<any> {

@@ -69,8 +69,12 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.user.getUsername("");
     this.users = this.$accessor.user.usernames;
+    if (this.users.length === 0) {
+      // fetch usernames
+      await this.$accessor.user.getUsername("");
+      this.users = this.$accessor.user.usernames;
+    }
   },
   methods: {
     onChange(name: string, value: any) {
