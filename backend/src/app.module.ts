@@ -15,6 +15,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MailService } from './mail/mail.service';
 import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
+import { FaCommentModule } from './fa_comment/fa_comment.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
       },
     }),
     FaSignaNeedsModule,
+    FaCommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
