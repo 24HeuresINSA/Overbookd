@@ -1,12 +1,15 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { FA, Status } from "~/utils/models/FA";
+import { FA, Status, FA_Comment } from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+
+const repo = RepoFactory.faRepo;
 
 export const state = () => ({
   mFA: {
     status: Status.DRAFT,
     name: "",
+    comments: [] as FA_Comment[],
   } as FA,
   FAs: [] as FA[],
   validated_by: [] as string[],
@@ -14,8 +17,10 @@ export const state = () => ({
 });
 
 export const getters = getterTree(state, {
-  getFa: (state) => state.mFA,
+  getFA: (state) => state.mFA,
   getFAs: (state) => state.FAs,
+  getValidatedBy: (state) => state.validated_by,
+  getRefusedBy: (state) => state.refused_by,
 });
 
 export const mutations = mutationTree(state, {
@@ -26,10 +31,44 @@ export const mutations = mutationTree(state, {
     state.mFA = {
       status: Status.DRAFT,
       name: "",
+      
     } as FA;
   },
   SET_ALL_FA: function (state, allFA: FA[]) {
     state.FAs = allFA.filter((fa) => fa.is_deleted === false);
+  },
+  //////////////// by id ?
+  UPDATE_STATUS: function ({ mFA }, status: Status, by?: string) {
+    mFA.status = status;
+  },
+  ////////////////////  Validated_by plutôt dans mFA ?
+  VALIDATE: function ({ validated_by, refused_by }, validator: string) {
+    if (validated_by === undefined) {
+      validated_by = [] as string[];
+    }
+    // avoid duplicate
+    if (validated_by.find((v) => v == validator)) {
+      validated_by.push(validator);
+
+      // remove from refuse
+      if (refused_by) {
+        refused_by = refused_by.filter((v) => v !== validator);
+      }
+    }
+  },
+  REFUSE: function ({ refused_by, validated_by }, validator: string) {
+    if (refused_by === undefined) {
+      refused_by = [] as string[];
+    }
+    // avoid duplicate
+    if (refused_by.find((v) => v == validator)) {
+      refused_by.push(validator);
+
+      // remove from refuse
+      if (validated_by) {
+        validated_by = validated_by.filter((v) => v !== validator);
+      }
+    }
   },
 });
 
@@ -43,13 +82,31 @@ export const actions = actionTree(
       commit("RESET_FA", payload);
     },
     fetchAll: async function ({ commit }) {
-      const repo = RepoFactory;
-      const res = await safeCall(this, repo.faRepo.getAllFAs(this));
+      const res = await safeCall(this, repo.getAllFAs(this));
       if (res && res.data) {
         commit("SET_ALL_FA", res.data);
         return res;
       }
       return null;
+    },
+    submitForReview: async function ({ dispatch, commit }, by) {
+      commit("UPDATE_STATUS", Status.SUBMITTED, by);
+      await dispatch("saveFA");
+    },
+    validate: async function ({ dispatch, commit, state }, validator: string) {
+      commit("VALIDATE", validator);
+      // @ts-ignore
+      const MAX_VALIDATORS = this.$accessor.config.getConfig("ft_validators").length;
+      if (state.validated_by.length === MAX_VALIDATORS) {
+        // validated by all validators
+        commit("UPDATE_STATUS", Status.VALIDATED);
+      }
+      await dispatch("saveFA");
+    },
+    refuse: async function ({ dispatch, commit }, validator: string) {
+      commit("REFUSE", validator);
+      commit("UPDATE_STATUS", Status.REFUSED);
+      await dispatch("saveFA");
     },
   }
 );

@@ -18,6 +18,13 @@ export enum SignaType {
   PANCARTE = "PANCARTE",
 }
 
+export enum CommentType {
+  COMMENT = "COMMENT",
+  SUBMIT = "SUBMIT",
+  VALIDATION = "VALIDATION",
+  REFUSAL = "REFUSAL"
+}
+
 export interface FA {
   id?: number;
   name: string;
@@ -64,4 +71,14 @@ export interface FA_Electricity_needs {
   electricity_type: ElectricityType;
   power: number;
   comment?: string;
+}
+
+export interface FA_Comment {
+  id: number;
+  fa_id: number;
+  subject: CommentType;
+  comment: string;
+  author: number;
+  created_at: Date;
+  team_id?: number;
 }

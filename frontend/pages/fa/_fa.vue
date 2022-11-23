@@ -134,7 +134,7 @@
       </div>
 
       <v-btn
-        v-if="mFA.status && mFA.status !== 'submitted'"
+        v-if="mFA.status && mFA.status !== 'SUBMITTED'"
         color="warning"
         @click="validationDialog = true"
         >soumettre à validation
@@ -162,7 +162,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="submitForReview">
+          <v-btn color="primary" text @click="submit">
             soumettre
           </v-btn>
         </v-card-actions>
@@ -186,7 +186,6 @@ import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
-import { EquipmentTypes, BarrieresTypes, ElecTypes } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "Fa",
@@ -223,10 +222,6 @@ export default Vue.extend({
         validated: "green",
         refused: "red",
       },
-
-      EquipmentTypes,
-      ElecTypes,
-      BarrieresTypes,
     };
   },
 
@@ -293,11 +288,8 @@ export default Vue.extend({
       }
     },
 
-    submitForReview() {
-      this.mFA.setStatus({
-        status: "submitted",
-        by: this.me.lastname,
-      });
+    submit() {
+      this.mFA.submitForReview(this.me.lastname);
       this.validationDialog = false;
       this.saveFA();
     },

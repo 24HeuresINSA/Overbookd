@@ -71,7 +71,7 @@
                   v-model="isDeletedFilter"
                   label="Afficher les FA supprimées"
                 ></v-switch>
-                <v-btn text @click="exportCSV">Télécharger ces FA</v-btn>
+                <!--<v-btn text @click="exportCSV">Télécharger ces FA</v-btn>-->
               </v-card-text>
             </v-card>
           </v-container>
@@ -179,7 +179,7 @@ export default {
       itemsPerPage: 4,
       selectedStatus: 0,
       selectedTeam: undefined,
-      //validators: [],
+      validators: [],
       headers: [
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validator" },
@@ -229,7 +229,7 @@ export default {
   },
   async mounted() {
     if (this.$accessor.user.hasRole("hard")) {
-      //this.validators = this.$accessor.config.getConfig("fa_validators");
+      this.validators = this.$accessor.config.getConfig("fa_validators");
       // get FAs
       const res = await safeCall(
         this.$store,
