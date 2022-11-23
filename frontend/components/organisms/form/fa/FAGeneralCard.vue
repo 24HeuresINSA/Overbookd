@@ -1,8 +1,8 @@
 <template>
   <v-card>
     <v-card-title>Général</v-card-title>
-    <v-card-subtitle
-    >N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
+    <v-card-subtitle>
+      N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
       peux aussi t'aider en allant voir les FA d'avant sur
       cetaitmieuxavant.24heures.org/ en te connectant avec
       jeuneetcon@24heures.org
@@ -44,7 +44,7 @@
           label="Responsable"
           :items="users"
           item-value="id"
-          item-text="name"
+          item-text="username"
           @change="onChange('in_charge', $event)"
         ></v-autocomplete>
       </v-form>
@@ -69,13 +69,8 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    const USERS = (await this.$axios.get("/user")).data;
-    for (const user of USERS) {
-      this.users.push({
-        id: user.id,
-        name: user.firstname + " " + user.lastname,
-      });
-    }
+    await this.$accessor.user.getUsername("");
+    this.users = this.$accessor.user.usernames;
   },
   methods: {
     onChange(name: string, value: any) {
