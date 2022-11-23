@@ -10,6 +10,7 @@ import {
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
 import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
 import { CreateFaCommentDto } from '../../fa_comment/dto/create-fa_comment.dto';
+import { CreateTimeWindowDto } from '../../time_windows/dto/create-time_window.dto';
 import { Type } from 'class-transformer';
 
 export enum Status {
@@ -185,4 +186,14 @@ export class UpdateFaDto {
   @ValidateNested()
   @Type(() => CreateFaCommentDto)
   fa_comment?: CreateFaCommentDto[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The time windows',
+    default: [],
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateTimeWindowDto)
+  time_windows?: CreateTimeWindowDto[];
 }

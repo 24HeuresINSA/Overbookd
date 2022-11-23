@@ -94,6 +94,12 @@ export class FaService {
             skipDuplicates: true,
           },
         },
+        time_window: {
+          createMany: {
+            data: updatefaDto.time_windows || [],
+            skipDuplicates: true,
+          },
+        },
       },
     });
   }
