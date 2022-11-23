@@ -257,20 +257,20 @@ model fa_electricity_needs {
   comment          String?         @db.Text
 }
 
-enum SignaType {
+enum signa_type {
   BANNIERE
   PANCARTE
   PANNEAU
 }
 
 model fa_signa_needs {
-  id         Int       @id @default(autoincrement())
-  fa         fa        @relation(fields: [fa_id], references: [id])
+  id         Int        @id @default(autoincrement())
+  fa         fa         @relation(fields: [fa_id], references: [id])
   fa_id      Int
-  signa_type SignaType
-  text       String    @db.Text
-  count      Int       @default(1)
-  comment    String?   @db.Text
+  signa_type signa_type
+  text       String     @db.Text
+  count      Int        @default(1)
+  comment    String?    @db.Text
 }
 
 enum subject_type {
