@@ -30,13 +30,54 @@
         </template>
       </v-data-table>
 
-      <TimeframeSelector
+      <!--<TimeframeSelector
         :disabled="isDisabled"
         :store="store"
         @add-timeframe="addTimeframe"
         @set-timeframes="setTimeframes"
-      ></TimeframeSelector>
+      ></TimeframeSelector>-->
+      <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="openAddTimeframe">Ajouter un créneau</v-btn>
+        </v-card-actions>
     </v-card>
+
+    <v-dialog v-model="isAddDialogOpen" max-width="600">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Ajouter un créneau</span>
+        </v-card-title>
+        <v-card-text>
+
+          <v-date-picker v-model="date" mode="dateTime" is24hr>
+            <template v-slot="{ inputValue, inputEvents }">
+              <input
+                class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
+                :value="inputValue"
+                v-on="inputEvents"
+              />
+            </template>
+          </v-date-picker>
+
+
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="isAddDialogOpen = false">
+            Annuler
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :disabled="isDisabled"
+            @click="addTimeframe"
+          >
+            Valider
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <v-card>
         <v-card-title>
@@ -94,6 +135,7 @@ export default {
   },
   data: function () {
     return {
+      date: "",
       headers: [
         { text: "Date", value: "date" },
         { text: "Début", value: "start" },
@@ -108,6 +150,7 @@ export default {
         { text: "Action", value: "action" },
       ],
       store: this.$accessor.FA,
+      isAddDialogOpen: false,
       isEditDialogOpen: false,
       mTimeframe: {},
     };
@@ -177,8 +220,12 @@ export default {
       this.isEditDialogOpen = false;
     },
 
-    addTimeframe(timeframe) {
-      this.$accessor.FA.addTimeframe(timeframe);
+    openAddTimeframe() {
+      this.isAddDialogOpen = true;
+    },
+    addTimeframe() {
+      this.isAddDialogOpen = false;
+      //this.$accessor.FA.addTimeframe(timeframe);
     },
     deleteTimeframe(index) {
       this.$accessor.FA.deleteTimeframe(index);
