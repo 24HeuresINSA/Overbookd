@@ -152,15 +152,15 @@ export class UpdateFaDto {
   })
   @ValidateNested()
   @Type(() => FA)
-  FA: FA;
+  fa: FA;
 
   @ApiProperty({
     required: false,
-    description: 'The any collaborator',
+    description: 'The collaborators',
     default: [],
   })
   @IsOptional()
   @ValidateNested()
   @Type(() => CreateCollaboratorDto)
-  FA_Collaborators?: CreateCollaboratorDto[];
+  fa_collaborator?: CreateCollaboratorDto[];
 }

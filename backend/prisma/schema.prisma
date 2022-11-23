@@ -69,10 +69,10 @@ model User {
   transactions_to   Transaction[] @relation("to")
 
   is_deleted    Boolean         @default(false)
-  fa_in_charge  FA[]            @relation("in_charge")
-  FA_validation FA_Validation[]
-  FA_refuse     FA_Refuse[]
-  FA_Comment    FA_Comment[]
+  fa_in_charge  fa[]            @relation("in_charge")
+  fa_validation fa_validation[]
+  fa_refuse     fa_refuse[]
+  fa_comment    fa_comment[]
 }
 
 model Team {
@@ -83,10 +83,10 @@ model Team {
   icon          String          @default("mdi-circle") @db.VarChar(255)
   fa_validator  Boolean         @default(false)
   ft_validator  Boolean         @default(false)
-  FA            FA[]
-  FA_Comment    FA_Comment[]
-  FA_validation FA_Validation[]
-  FA_refuse     FA_Refuse[]
+  fa            fa[]
+  fa_comment    fa_comment[]
+  fa_validation fa_validation[]
+  fa_refuse     fa_refuse[]
 }
 
 model User_Team {
@@ -139,46 +139,45 @@ enum Status {
   REFUSED
 }
 
-model FA {
-  id                  Int       @id @default(autoincrement())
-  name                String    @db.VarChar(255)
-  fa_type_name        FA_Type?  @relation(fields: [type], references: [name])
-  type                String?   @db.VarChar(255)
-  Team                Team?     @relation(fields: [team_id], references: [id])
-  team_id             Int?
-  User_in_charge      User?     @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge           Int?
-  created_at          DateTime? @default(now())
-  Location            Location? @relation(fields: [location_id], references: [id])
-  location_id         Int?
-  status              Status?   @default(DRAFT)
-  description         String?   @db.Text
-  is_publishable      Boolean?  @default(false)
-  is_major            Boolean?  @default(false)
-  is_kids             Boolean?  @default(false)
-  security_needs      String?   @db.Text
-  is_pass_required    Boolean?  @db.Boolean
-  number_of_pass      Int?
-  water_needs         String?   @db.Text
-  water_flow_required Int?
-  is_deleted          Boolean   @default(false)
-
-  FA_validation        FA_Validation[]
-  FA_refuse            FA_Refuse[]
-  FA_Collaborators     FA_Collaborators[]
-  FA_Electricity_needs FA_Electricity_needs[]
-  FA_signa_needs       FA_Signa_needs[]
-  FA_Comment           FA_Comment[]
-  TimeWindow           Time_window[]
+model fa {
+  id                   Int                    @id @default(autoincrement())
+  name                 String                 @db.VarChar(255)
+  fa_type_name         fa_type?               @relation(fields: [type], references: [name])
+  type                 String?                @db.VarChar(255)
+  Team                 Team?                  @relation(fields: [team_id], references: [id])
+  team_id              Int?
+  user_in_charge       User?                  @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge            Int?
+  created_at           DateTime?              @default(now())
+  location             location?              @relation(fields: [location_id], references: [id])
+  location_id          Int?
+  status               Status?                @default(DRAFT)
+  description          String?                @db.Text
+  is_publishable       Boolean?               @default(false)
+  is_major             Boolean?               @default(false)
+  is_kids              Boolean?               @default(false)
+  security_needs       String?                @db.Text
+  is_pass_required     Boolean?               @db.Boolean
+  number_of_pass       Int?
+  water_needs          String?                @db.Text
+  water_flow_required  Int?
+  is_deleted           Boolean                @default(false)
+  fa_validation        fa_validation[]
+  fa_refuse            fa_refuse[]
+  fa_collaborator      fa_collaborator[]
+  fa_electricity_needs fa_electricity_needs[]
+  fa_signa_needs       fa_signa_needs[]
+  fa_comment           fa_comment[]
+  time_window          time_window[]
 }
 
-model FA_Type {
+model fa_type {
   name String @id @db.VarChar(255)
-  FA   FA[]
+  fa   fa[]
 }
 
-model FA_Validation {
-  FA         FA       @relation(fields: [fa_id], references: [id])
+model fa_validation {
+  fa         fa       @relation(fields: [fa_id], references: [id])
   fa_id      Int
   User       User     @relation(fields: [user_id], references: [id])
   user_id    Int
@@ -190,18 +189,18 @@ model FA_Validation {
   @@id([fa_id, user_id])
 }
 
-model FA_Collaborators {
-  FA              FA           @relation(fields: [fa_id], references: [id])
+model fa_collaborator {
+  fa              fa           @relation(fields: [fa_id], references: [id])
   fa_id           Int
-  Collaborator    Collaborator @relation(fields: [collaborator_id], references: [id])
+  collaborator    collaborator @relation(fields: [collaborator_id], references: [id])
   collaborator_id Int
   is_deleted      Boolean      @default(false)
 
   @@id([fa_id, collaborator_id])
 }
 
-model FA_Refuse {
-  FA         FA       @relation(fields: [fa_id], references: [id])
+model fa_refuse {
+  fa         fa       @relation(fields: [fa_id], references: [id])
   fa_id      Int
   User       User     @relation(fields: [user_id], references: [id])
   user_id    Int
@@ -213,7 +212,7 @@ model FA_Refuse {
   @@id([fa_id, user_id])
 }
 
-enum LocationType {
+enum locationType {
   DEPOT
   STOCKAGE
   MAGASIN
@@ -221,22 +220,22 @@ enum LocationType {
   AUTRE
 }
 
-model Location {
+model location {
   id   Int          @id @default(autoincrement())
-  type LocationType
+  type locationType
   name String       @db.VarChar(255)
-  FA   FA[]
+  fa   fa[]
 }
 
-model Collaborator {
-  id               Int                @id @default(autoincrement())
-  firstname        String             @db.VarChar(30)
-  lastname         String             @db.VarChar(30)
-  phone            String             @db.VarChar(30)
-  email            String?            @db.VarChar(30)
-  company          String?            @db.VarChar(30)
-  comment          String?            @db.Text
-  FA_Collaborators FA_Collaborators[]
+model collaborator {
+  id              Int               @id @default(autoincrement())
+  firstname       String            @db.VarChar(30)
+  lastname        String            @db.VarChar(30)
+  phone           String            @db.VarChar(30)
+  email           String?           @db.VarChar(30)
+  company         String?           @db.VarChar(30)
+  comment         String?           @db.Text
+  fa_collaborator fa_collaborator[]
 
   @@unique([firstname, lastname])
 }
@@ -249,9 +248,9 @@ enum ElectricityType {
   OTHER
 }
 
-model FA_Electricity_needs {
+model fa_electricity_needs {
   id               Int             @id @default(autoincrement())
-  FA               FA              @relation(fields: [fa_id], references: [id])
+  fa               fa              @relation(fields: [fa_id], references: [id])
   fa_id            Int
   electricity_type ElectricityType
   power            Int
@@ -264,14 +263,14 @@ enum SignaType {
   PANNEAU
 }
 
-model FA_Signa_needs {
+model fa_signa_needs {
   id         Int       @id @default(autoincrement())
-  FA         FA        @relation(fields: [fa_id], references: [id])
+  fa         fa        @relation(fields: [fa_id], references: [id])
   fa_id      Int
   signa_type SignaType
   text       String    @db.Text
   count      Int       @default(1)
-  comment    String    @db.Text
+  comment    String?   @db.Text
 }
 
 enum subject_type {
@@ -280,9 +279,9 @@ enum subject_type {
   COMMENT
 }
 
-model FA_Comment {
+model fa_comment {
   id          Int          @id @default(autoincrement())
-  FA          FA           @relation(fields: [fa_id], references: [id])
+  fa          fa           @relation(fields: [fa_id], references: [id])
   fa_id       Int
   comment     String       @db.Text
   subject     subject_type
@@ -293,9 +292,9 @@ model FA_Comment {
   team_id     Int
 }
 
-model Time_window {
+model time_window {
   id    Int      @id @default(autoincrement())
-  FA    FA       @relation(fields: [fa_id], references: [id])
+  fa    fa       @relation(fields: [fa_id], references: [id])
   fa_id Int
   start DateTime
   end   DateTime

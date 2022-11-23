@@ -3,7 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Collaborator, FA, User_Team } from '@prisma/client';
+import { collaborator, fa, User_Team } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
@@ -18,34 +18,39 @@ export class FaService {
   /** GET **/
   /**     **/
 
-  async findAll(): Promise<FA[] | null> {
-    return this.prisma.fA.findMany({
+  async findAll(): Promise<fa[] | null> {
+    return this.prisma.fa.findMany({
       where: {
         is_deleted: false,
       },
     });
   }
 
-  async findOne(id: number): Promise<FA | null> {
-    return this.prisma.fA.findUnique({
+  async findOne(id: number): Promise<fa | null> {
+    return this.prisma.fa.findUnique({
       where: {
         id: Number(id),
       },
       include: {
-        FA_Collaborators: {
+        fa_collaborator: {
           include: {
-            Collaborator: true,
+            collaborator: true,
           },
         },
-        FA_validation: true,
-        FA_refuse: true,
-        FA_Electricity_needs: true,
-        FA_signa_needs: true,
-        FA_Comment: true,
-        TimeWindow: true,
-        Location: true,
+        fa_validation: true,
+        fa_refuse: true,
+        fa_electricity_needs: true,
+        fa_signa_needs: true,
+        fa_comment: true,
+        location: true,
         Team: true,
-        User_in_charge: true,
+        user_in_charge: {
+          select: {
+            firstname: true,
+            lastname: true,
+          },
+        },
+        time_window: true,
       },
     });
   }
@@ -54,20 +59,20 @@ export class FaService {
   /** POST **/
   /**      **/
 
-  async update(id: number, updateFaDto: UpdateFaDto): Promise<FA | null> {
-    //find the FA
-    const fa = await this.prisma.fA.findUnique({ where: { id: Number(id) } });
-    if (!fa) throw new NotFoundError(`FA with id ${id} not found`);
-    //update every aspect of the FA
+  async update(id: number, updatefaDto: UpdateFaDto): Promise<fa | null> {
+    //find the fa
+    const fa = await this.prisma.fa.findUnique({ where: { id: Number(id) } });
+    if (!fa) throw new NotFoundError(`fa with id ${id} not found`);
+    //update every aspect of the fa
     const collaborators = await this.create_collaborators(
-      updateFaDto.FA_Collaborators,
+      updatefaDto.fa_collaborator,
     );
 
-    return this.prisma.fA.update({
+    return this.prisma.fa.update({
       where: { id: Number(id) },
       data: {
-        ...updateFaDto.FA,
-        FA_Collaborators: {
+        ...updatefaDto.fa,
+        fa_collaborator: {
           createMany: {
             data: collaborators.map((collaborator) => {
               return {
@@ -81,13 +86,13 @@ export class FaService {
     });
   }
 
-  async create(FA: CreateFaDto): Promise<FA | null> {
-    return this.prisma.fA.create({ data: FA });
+  async create(fa: CreateFaDto): Promise<fa | null> {
+    return this.prisma.fa.create({ data: fa });
   }
 
   private async create_collaborators(
     fa_collab: CreateCollaboratorDto[],
-  ): Promise<Collaborator[] | null> {
+  ): Promise<collaborator[] | null> {
     if (!fa_collab) return [];
     if (fa_collab.length === 0) return [];
     await this.prisma.collaborator.createMany({
@@ -123,8 +128,8 @@ export class FaService {
     return collaborators;
   }
 
-  async remove(id: number): Promise<FA | null> {
-    return this.prisma.fA.update({
+  async remove(id: number): Promise<fa | null> {
+    return this.prisma.fa.update({
       where: { id: Number(id) },
       data: {
         is_deleted: true,
@@ -132,15 +137,15 @@ export class FaService {
     });
   }
 
-  async validateFa(fa_id: number, user_id: number): Promise<FA | null> {
+  async validatefa(fa_id: number, user_id: number): Promise<fa | null> {
     const validator_team_id = await this.isUserValidator(user_id);
-    const fa = await this.prisma.fA.findUnique({
+    const fa = await this.prisma.fa.findUnique({
       where: { id: Number(fa_id) },
     });
-    if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
+    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
     //add the user validation
     await this.prisma.$transaction([
-      this.prisma.fA_Validation.upsert({
+      this.prisma.fa_validation.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,
@@ -158,7 +163,7 @@ export class FaService {
           is_deleted: false,
         },
       }),
-      this.prisma.fA_Refuse.upsert({
+      this.prisma.fa_refuse.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,
@@ -179,15 +184,15 @@ export class FaService {
     return fa;
   }
 
-  async invalidateFa(fa_id: number, user_id: number): Promise<FA | null> {
+  async invalidatefa(fa_id: number, user_id: number): Promise<fa | null> {
     const validator_team_id = await this.isUserValidator(user_id);
-    const fa = await this.prisma.fA.findUnique({
+    const fa = await this.prisma.fa.findUnique({
       where: { id: fa_id },
     });
-    if (!fa) throw new NotFoundException(`FA with id ${fa_id} not found`);
+    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
     //remove the user validation by switching is_deleted to true
     await this.prisma.$transaction([
-      this.prisma.fA_Refuse.upsert({
+      this.prisma.fa_refuse.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,
@@ -206,7 +211,7 @@ export class FaService {
         },
       }),
       //if fa_validation exist then change is_deleted to true
-      this.prisma.fA_Validation.upsert({
+      this.prisma.fa_validation.upsert({
         where: {
           fa_id_user_id: {
             fa_id: fa_id,

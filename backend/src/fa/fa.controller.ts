@@ -17,7 +17,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FA } from '@prisma/client';
+import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
 
 @ApiBearerAuth()
@@ -32,9 +32,9 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Create a new fa',
-    type: Promise<FA | null>,
+    type: Promise<fa | null>,
   })
-  create(@Body() FA: CreateFaDto): Promise<FA | null> {
+  create(@Body() FA: CreateFaDto): Promise<fa | null> {
     return this.faService.create(FA);
   }
 
@@ -46,7 +46,7 @@ export class FaController {
     description: 'Get all fa',
     type: Array,
   })
-  findAll(): Promise<FA[] | null> {
+  findAll(): Promise<fa[] | null> {
     return this.faService.findAll();
   }
 
@@ -56,9 +56,9 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get a fa',
-    type: Promise<FA | null>,
+    type: Promise<fa | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<FA | null> {
+  findOne(@Param('id', ParseIntPipe) id: string): Promise<fa | null> {
     return this.faService.findOne(+id);
   }
 
@@ -68,7 +68,7 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
-    type: Promise<FA | null>,
+    type: Promise<fa | null>,
   })
   @ApiBody({
     description: 'Update a fa',
@@ -77,7 +77,7 @@ export class FaController {
   update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateFaDto: UpdateFaDto,
-  ): Promise<FA | null> {
+  ): Promise<fa | null> {
     return this.faService.update(+id, updateFaDto);
   }
 
@@ -87,9 +87,9 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Delete a fa',
-    type: Promise<FA | null>,
+    type: Promise<fa | null>,
   })
-  remove(@Param('id', ParseIntPipe) id: string): Promise<FA | null> {
+  remove(@Param('id', ParseIntPipe) id: string): Promise<fa | null> {
     return this.faService.remove(+id);
   }
 
@@ -99,15 +99,15 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Validate a fa',
-    type: Promise<FA | null>,
+    type: Promise<fa | null>,
   })
   //get id and user id from token
   validate(
     @Param('id', ParseIntPipe) id: number,
     @Request() request: RequestWithUserPayload,
-  ): Promise<FA | null> {
+  ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.validateFa(id, user_id);
+    return this.faService.validatefa(id, user_id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -116,13 +116,13 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Unvalidate a fa',
-    type: Promise<FA | null>,
+    type: Promise<fa | null>,
   })
   invalidate(
     @Param('id', ParseIntPipe) id: number,
     @Request() request: RequestWithUserPayload,
-  ): Promise<FA | null> {
+  ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.invalidateFa(id, user_id);
+    return this.faService.invalidatefa(id, user_id);
   }
 }
