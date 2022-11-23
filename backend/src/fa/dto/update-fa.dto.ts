@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
 import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
+import { CreateFaCommentDto } from '../../fa_comment/dto/create-fa_comment.dto';
 import { Type } from 'class-transformer';
 
 export enum Status {
@@ -174,4 +175,14 @@ export class UpdateFaDto {
   @ValidateNested()
   @Type(() => CreateFaSignaNeedDto)
   fa_signa_needs?: CreateFaSignaNeedDto[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The comments',
+    default: [],
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateFaCommentDto)
+  fa_comment?: CreateFaCommentDto[];
 }

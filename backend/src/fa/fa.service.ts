@@ -88,6 +88,12 @@ export class FaService {
             skipDuplicates: true,
           },
         },
+        fa_comment: {
+          createMany: {
+            data: updatefaDto.fa_comment || [],
+            skipDuplicates: true,
+          },
+        },
       },
     });
   }
