@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
+import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
 import { Type } from 'class-transformer';
 
 export enum Status {
@@ -163,4 +164,14 @@ export class UpdateFaDto {
   @ValidateNested()
   @Type(() => CreateCollaboratorDto)
   fa_collaborator?: CreateCollaboratorDto[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The signalisation needs',
+    default: [],
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateFaSignaNeedDto)
+  fa_signa_needs?: CreateFaSignaNeedDto[];
 }

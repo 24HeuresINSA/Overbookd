@@ -82,6 +82,12 @@ export class FaService {
             skipDuplicates: true,
           },
         },
+        fa_signa_needs: {
+          createMany: {
+            data: updatefaDto.fa_signa_needs || [],
+            skipDuplicates: true,
+          },
+        },
       },
     });
   }
