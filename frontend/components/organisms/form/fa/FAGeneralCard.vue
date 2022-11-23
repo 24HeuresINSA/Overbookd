@@ -31,7 +31,6 @@
           ]"
           @change="onChange('type', $event)"
         ></v-select>
-        <!-- GET ID NOT TEXT -->
         <v-select
           :value="generalData.team_id"
           label="Equipe"
@@ -40,15 +39,14 @@
           item-text="name"
           @change="onChange('team_id', $event)"
         ></v-select>
-        <!-- GET ID NOT TEXT -->
-        <v-select
+        <v-autocomplete
           :value="generalData.in_charge"
           label="Responsable"
           :items="users"
           item-value="id"
           item-text="name"
           @change="onChange('in_charge', $event)"
-        ></v-select>
+        ></v-autocomplete>
       </v-form>
     </v-card-text>
   </v-card>
@@ -59,6 +57,9 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "FAGeneralCard",
+  data: () => ({
+    users: [] as Array<any>,
+  }),
   computed: {
     generalData(): any {
       return this.$accessor.FA.mFA;
@@ -66,9 +67,15 @@ export default Vue.extend({
     teams(): Array<any> {
       return this.$accessor.team.allTeams;
     },
-    users(): Array<any> {
-      return this.$accessor.user.usernames;
-    },
+  },
+  async mounted() {
+    const USERS = (await this.$axios.get("/user")).data;
+    for (const user of USERS) {
+      this.users.push({
+        id: user.id,
+        name: user.firstname + " " + user.lastname,
+      });
+    }
   },
   methods: {
     onChange(name: string, value: any) {

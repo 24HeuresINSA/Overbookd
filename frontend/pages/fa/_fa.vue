@@ -260,7 +260,6 @@ export default Vue.extend({
   },
 
   async mounted() {
-    console.log(this.mFA.status)
     let title = "FA " + this.faId;
     if (this.mFA.name) title += " : " + this.mFA.name;
     document.title = title;

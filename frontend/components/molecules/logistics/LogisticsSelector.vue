@@ -62,7 +62,6 @@ export default {
       "Erreur lors de la récupération des équipements"
     );
     // res = undefined
-    console.log(res);
     if (res) {
       this.fullInventory = res.data.filter((item) => item.isValid !== false);
     }
