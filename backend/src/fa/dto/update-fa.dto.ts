@@ -11,6 +11,7 @@ import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborato
 import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
 import { CreateFaCommentDto } from '../../fa_comment/dto/create-fa_comment.dto';
 import { CreateTimeWindowDto } from '../../time_windows/dto/create-time_window.dto';
+import { CreateFaElectricityNeedDto } from '../../fa_electricity_needs/dto/create-fa_electricity_need.dto';
 import { Type } from 'class-transformer';
 
 export enum Status {
@@ -196,4 +197,14 @@ export class UpdateFaDto {
   @ValidateNested()
   @Type(() => CreateTimeWindowDto)
   time_windows?: CreateTimeWindowDto[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The electricity needs',
+    default: [],
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateFaElectricityNeedDto)
+  fa_electricity_needs?: CreateFaElectricityNeedDto[];
 }

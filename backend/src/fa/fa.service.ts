@@ -100,6 +100,12 @@ export class FaService {
             skipDuplicates: true,
           },
         },
+        fa_electricity_needs: {
+          createMany: {
+            data: updatefaDto.fa_electricity_needs || [],
+            skipDuplicates: true,
+          },
+        },
       },
     });
   }
