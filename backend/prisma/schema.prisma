@@ -241,20 +241,22 @@ model collaborator {
 }
 
 //A définir correctement plus tard, placeholder pour le moment
-enum ElectricityType {
-  ELECTRICITY
-  WATER
-  GAS
-  OTHER
+enum electricity_type {
+  PC16
+  P17_16A_MONO
+  P17_16A_TRI
+  P17_32A_MONO
+  P17_32A_TRI
+  P17_32A_TETRA
 }
 
 model fa_electricity_needs {
-  id               Int             @id @default(autoincrement())
-  fa               fa              @relation(fields: [fa_id], references: [id])
+  id               Int              @id @default(autoincrement())
+  fa               fa               @relation(fields: [fa_id], references: [id])
   fa_id            Int
-  electricity_type ElectricityType
+  electricity_type electricity_type
   power            Int
-  comment          String?         @db.Text
+  comment          String?          @db.Text
 }
 
 enum signa_type {

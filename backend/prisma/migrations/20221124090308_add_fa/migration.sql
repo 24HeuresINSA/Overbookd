@@ -5,7 +5,7 @@ CREATE TYPE "Status" AS ENUM ('DRAFT', 'SUBMITTED', 'VALIDATED', 'REFUSED');
 CREATE TYPE "locationType" AS ENUM ('DEPOT', 'STOCKAGE', 'MAGASIN', 'SIGNA', 'AUTRE');
 
 -- CreateEnum
-CREATE TYPE "ElectricityType" AS ENUM ('ELECTRICITY', 'WATER', 'GAS', 'OTHER');
+CREATE TYPE "electricity_type" AS ENUM ('PC16', 'P17_16A_MONO', 'P17_16A_TRI', 'P17_32A_MONO', 'P17_32A_TRI', 'P17_32A_TETRA');
 
 -- CreateEnum
 CREATE TYPE "signa_type" AS ENUM ('BANNIERE', 'PANCARTE', 'PANNEAU');
@@ -105,7 +105,7 @@ CREATE TABLE "collaborator" (
 CREATE TABLE "fa_electricity_needs" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
-    "electricity_type" "ElectricityType" NOT NULL,
+    "electricity_type" "electricity_type" NOT NULL,
     "power" INTEGER NOT NULL,
     "comment" TEXT,
 
