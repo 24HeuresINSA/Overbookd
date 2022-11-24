@@ -237,13 +237,8 @@ export default Vue.extend({
     me(): any {
       return this.$accessor.user.me;
     },
-    teams(): any {
-      return this.$accessor.team.allTeams;
-    },
     validators(): Array<any> {
-      return this.teams.filter(
-        (t: any) => t.fa_validator == 1 && t.name !== "admin"
-      );
+      return this.$accessor.team.faValidators;
     },
     mValidators(): Array<any> {
       let mValidator: Array<any> = [];

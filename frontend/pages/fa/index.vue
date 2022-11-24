@@ -47,14 +47,14 @@
                     </v-list-item>
                   </v-list-item-group>
                 </v-list>
-                <div v-for="validator of validators" :key="validator">
+                <div v-for="validator of validators" :key="validator.id">
                   <v-btn-toggle
                     v-model="filter[validator]"
                     tile
                     color="deep-purple accent-3"
                     group
                   >
-                    <v-icon small>{{ getTeamIcon(validator) }}</v-icon>
+                    <v-icon small>{{ validator.icon }}</v-icon>
                     <v-btn x-small :value="true" class="btn-check"
                       >validée
                     </v-btn>
@@ -162,7 +162,7 @@
 import Fuse from "fuse.js";
 import { safeCall } from "../../utils/api/calls";
 import { RepoFactory } from "../../repositories/repoFactory";
-import ValidatorsIcons from "../../components/atoms/validators-icons";
+import ValidatorsIcons from "~/components/atoms/ValidatorsIcons.vue";
 
 export default {
   name: "Fa",
@@ -179,7 +179,6 @@ export default {
       itemsPerPage: 4,
       selectedStatus: 0,
       selectedTeam: undefined,
-      validators: [],
       headers: [
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validator" },
@@ -207,7 +206,9 @@ export default {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
-
+    validators() {
+      return this.$accessor.team.faValidators;
+    },
     isAdmin() {
       return this.$accessor.user.hasRole("admin");
     },
@@ -229,7 +230,6 @@ export default {
   },
   async mounted() {
     if (this.$accessor.user.hasRole("hard")) {
-      this.validators = this.$accessor.config.getConfig("fa_validators");
       // get FAs
       const res = await safeCall(
         this.$store,
@@ -255,10 +255,6 @@ export default {
 
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
-    },
-
-    getTeamIcon(team) {
-      return this.$accessor.team.getTeams([team])?.[0]?.icon;
     },
 
     filterBySelectedTeam(FAs, team) {
