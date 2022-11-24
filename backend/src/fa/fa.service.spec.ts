@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
-import { nakedFA, collaboratorFA, emptyFA } from './testData';
+import { nakedFA, collaboratorFA, emptyFA, signaFA } from './testData';
 import { collaborator, fa, fa_type, location, User } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 
@@ -59,7 +59,7 @@ describe('FA getters', () => {
   let FAs: UpdateFaDto[];
   let all_fa: fa[];
   beforeAll(async () => {
-    FAs = [nakedFA, collaboratorFA, emptyFA];
+    FAs = [nakedFA, collaboratorFA, emptyFA, signaFA];
     FAs.map(async (FA) => {
       FA.fa.type = fa_type.name;
       FA.fa.location_id = location.id;
@@ -142,6 +142,7 @@ describe('FA creation', () => {
       });
     });
   });
+
   describe('Create an FA with a collaborator', () => {
     let collab_result: fa | null;
     let collaborators: collaborator[];
@@ -196,6 +197,46 @@ describe('FA creation', () => {
           id: collaborators[0].id,
         },
       });
+    });
+  });
+});
+
+describe('Create FA with some signa_needs', () => {
+  let signa_result: fa | null;
+
+  test('should create an FA with some signa_needs', async () => {
+    const FA = signaFA;
+    FA.fa.type = fa_type.name;
+    FA.fa.location_id = location.id;
+    signa_result = await faservice.create({ name: FA.fa.name });
+    expect(signa_result).toBeDefined();
+    signa_result = await faservice.update(signa_result.id, FA);
+    expect(signa_result).toBeDefined();
+    Object.keys(FA.fa).map((key) => {
+      expect(signa_result).toHaveProperty(key);
+      expect(signa_result[key]).toStrictEqual(FA.fa[key]);
+    });
+  });
+
+  test('Should get some signa_needs', async () => {
+    const signa_needs = await prisma.fa_signa_needs.findMany({
+      where: {
+        fa_id: signa_result.id,
+      },
+    });
+    expect(signa_needs.length).toBe(signaFA.fa_signa_needs.length);
+  });
+
+  afterAll(async () => {
+    await prisma.fa_signa_needs.deleteMany({
+      where: {
+        fa_id: signa_result.id,
+      },
+    });
+    await prisma.fa.delete({
+      where: {
+        id: signa_result.id,
+      },
     });
   });
 });

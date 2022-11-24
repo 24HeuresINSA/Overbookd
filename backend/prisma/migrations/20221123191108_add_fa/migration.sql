@@ -8,7 +8,7 @@ CREATE TYPE "locationType" AS ENUM ('DEPOT', 'STOCKAGE', 'MAGASIN', 'SIGNA', 'AU
 CREATE TYPE "ElectricityType" AS ENUM ('ELECTRICITY', 'WATER', 'GAS', 'OTHER');
 
 -- CreateEnum
-CREATE TYPE "SignaType" AS ENUM ('BANNIERE', 'PANCARTE', 'PANNEAU');
+CREATE TYPE "signa_type" AS ENUM ('BANNIERE', 'PANCARTE', 'PANNEAU');
 
 -- CreateEnum
 CREATE TYPE "subject_type" AS ENUM ('REFUSED', 'VALIDATED', 'COMMENT');
@@ -116,7 +116,7 @@ CREATE TABLE "fa_electricity_needs" (
 CREATE TABLE "fa_signa_needs" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
-    "signa_type" "SignaType" NOT NULL,
+    "signa_type" "signa_type" NOT NULL,
     "text" TEXT NOT NULL,
     "count" INTEGER NOT NULL DEFAULT 1,
     "comment" TEXT,
