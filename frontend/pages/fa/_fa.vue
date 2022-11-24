@@ -211,7 +211,7 @@ export default Vue.extend({
       refuseDialog: false,
 
       faRepo: RepoFactory.faRepo,
-      faId: this.$route.params.fa,
+      faId: +this.$route.params.fa,
 
       statusTrad: new Map<string, string>([
         ["DRAFT", "Brouillon"],
@@ -262,6 +262,18 @@ export default Vue.extend({
   },
 
   async mounted() {
+    const res = await safeCall(
+      this.$store,
+      RepoFactory.faRepo.getFAByCount(this, this.faId)
+    );
+    console.log(res);
+    if (!res || !res.data) {
+      alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
+      await this.$router.push({
+        path: "/fa",
+      });
+    }
+
     let title = "FA " + this.faId;
     if (this.mFA.name) title += " : " + this.mFA.name;
     document.title = title;
