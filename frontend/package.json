@@ -15,9 +15,6 @@
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
     "directory": "frontend"
   },
-  "lint-staged": {
-    "**/*.(js|ts|vue)": "eslint --fix"
-  },
   "scripts": {
     "dev": "nuxt",
     "dev:host": "nuxt --hostname '0'",
@@ -41,8 +38,6 @@
     "lodash": "^4.17.21",
     "nuxt": "^2.14.12",
     "nuxt-typed-vuex": "^0.2.0",
-    "qs": "^6.9.6",
-    "sanitize-html": "^2.7.0",
     "tiptap-vuetify": "^2.24.0",
     "uuid": "^8.3.2",
     "vue-chartjs": "^3.5.1",
@@ -52,8 +47,6 @@
     "vuex-module-decorators": "^1.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
     "@nuxt/types": "^2.14.12",
     "@nuxt/typescript-build": "^2.0.4",
     "@nuxtjs/color-mode": "^2.0.10",
@@ -62,7 +55,6 @@
     "@nuxtjs/storybook": "^4.1.1",
     "@nuxtjs/vuetify": "^1.11.3",
     "@types/lodash": "^4.14.175",
-    "@types/sanitize-html": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vue/cli-plugin-babel": "^4.5.13",
@@ -75,7 +67,6 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.5.0",
-    "lint-staged": "^11.1.2",
     "prettier": "^2.2.1",
     "ts-node": "^10.2.1",
     "typescript": "^4.9.3"
