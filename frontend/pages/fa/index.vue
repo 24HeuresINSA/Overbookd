@@ -291,7 +291,7 @@ export default {
             return FA.refused.includes(validator);
           } else if (value === 2) {
             return (
-              !FA.validated.includes(validator) && FA.status === "submitted"
+              !FA.validated.includes(validator) && FA.status === "SUBMITTED"
             );
           }
           return true;
@@ -304,7 +304,7 @@ export default {
       if (status === 0) {
         return FAs;
       }
-      const s = ["", "draft", "submitted", "refused", "validated"];
+      const s = ["", "DRAFT", "SUBMITTED", "REFUSED", "VALIDATED"];
       FAs = FAs.map((FA) => {
         if (FA) {
           if (FA.status === undefined) {

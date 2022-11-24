@@ -31,9 +31,9 @@
           class="icon"
         >
           <v-icon :key="i" size="26">
-            {{ getValidatorIcon(validator) }}
+            {{ validator.icon }}
           </v-icon>
-          <span class="icon-detail">{{ validator }}</span>
+          <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
       <FormSidebar></FormSidebar>
@@ -83,7 +83,7 @@
           v-if="mValidators.length === 1"
           color="red"
           @click="refuseDialog = true"
-          >refusé par {{ mValidators[0] }}
+          >refusé par {{ mValidators[0].name }}
         </v-btn>
         <v-menu v-if="mValidators.length > 1" offset-y>
           <template #activator="{ attrs, on }">
@@ -110,7 +110,7 @@
       <div>
         <template v-if="mValidators.length === 1">
           <v-btn color="green" @click="validate(mValidators[0])"
-            >validé par {{ mValidators[0] }}
+            >validé par {{ mValidators[0].name }}
           </v-btn>
         </template>
         <v-menu v-if="mValidators.length > 1" offset-y>
@@ -130,7 +130,7 @@
               <v-list-item-title
                 color="green"
                 @click="validate(validator)"
-                v-text="validator"
+                v-text="validator.name"
               ></v-list-item-title>
             </v-list-item>
           </v-list>
@@ -238,20 +238,22 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     teams(): any {
-      return this.$accessor.config.getConfig("teams"); // à modifier
+      return this.$accessor.team.allTeams;
     },
-    validators(): Array<string> {
-      return this.$accessor.config.getConfig("fa_validators"); // à modifier
+    validators(): Array<any> {
+      return this.teams.filter(
+        (t: any) => t.fa_validator == 1 && t.name !== "admin"
+      );
     },
-    mValidators(): Array<string> {
-      let mValidator: Array<string> = [];
+    mValidators(): Array<any> {
+      let mValidator: Array<any> = [];
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
         return this.validators;
       }
       if (this.validators) {
-        this.validators.forEach((validator: string) => {
-          if (this.me.team && this.me.team.includes(validator)) {
+        this.validators.forEach((validator: any) => {
+          if (this.me.team && this.me.team.includes(validator.name)) {
             mValidator.push(validator);
           }
         });
@@ -266,7 +268,6 @@ export default Vue.extend({
       this.$store,
       RepoFactory.faRepo.getFAByCount(this, this.faId)
     );
-    console.log(res);
     if (!res || !res.data) {
       alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
       await this.$router.push({
@@ -295,7 +296,7 @@ export default Vue.extend({
 
     validate(validator: any) {
       if (validator) {
-        this.mFA.validate(validator);
+        this.mFA.validate(validator.name);
         this.saveFA();
       }
     },
@@ -319,14 +320,6 @@ export default Vue.extend({
       }
       if (this.FA.status === "submitted") {
         return this.color.submitted;
-      }
-    },
-
-    getValidatorIcon(validator: any) {
-      try {
-        return this.teams.find((team: any) => team.name === validator).icon;
-      } catch (e) {
-        console.log(`can't find icon of team ${validator}`);
       }
     },
   },
