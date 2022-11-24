@@ -38,6 +38,9 @@ export const mutations = mutationTree(state, {
   SET_PERMISSIONS(state, permissions: any) {
     state.permissions = permissions;
   },
+  ADD_PERMISSION(state, permission: any) {
+    state.permissions.push(permission);
+  },
 });
 
 export const actions = actionTree(
@@ -49,6 +52,9 @@ export const actions = actionTree(
         context.commit("SET_PERMISSIONS", res.data);
       }
       return res;
+    },
+    createPermission(context, payload: any): Promise<any> {
+      return permissionRepo.createPermission(this, payload);
     },
     async linkPermissionToTeams(
       constext,

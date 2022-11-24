@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Permission } from '@prisma/client';
 
-export class PermissionResponseDto implements Permission {
+export class PermissionResponseDto {
   @ApiProperty({
     name: 'id',
     description: 'The id of the permission',
@@ -15,6 +14,13 @@ export class PermissionResponseDto implements Permission {
     type: String,
   })
   name: string;
+
+  @ApiProperty({
+    name: 'description',
+    description: 'The description of the permission',
+    type: String,
+  })
+  description: string;
 
   @ApiProperty({
     name: 'teams',

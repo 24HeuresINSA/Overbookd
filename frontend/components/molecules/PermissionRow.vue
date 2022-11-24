@@ -81,7 +81,6 @@ export default {
       let response = await this.$accessor.permission.removePermission({
         permissionId: this.permission.id,
       });
-      console.log(response);
       if (response.status === 204) {
         this.$accessor.permission.setPermissionsInStore();
       } else {

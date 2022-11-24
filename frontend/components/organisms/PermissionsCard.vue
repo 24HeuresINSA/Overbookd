@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-4">
     <h2>Permissions</h2>
     <v-data-table
       :headers="headers"
@@ -23,6 +23,28 @@
             :permission="item"
           />
         </tbody>
+      </template>
+      <template #footer.prepend>
+        <v-text-field
+          v-model="newPermissionName"
+          type="text"
+          placeholder="Nom"
+          class="w-1/3 px-4"
+        />
+        <v-text-field
+          v-model="newPermissionDescription"
+          type="text"
+          placeholder="Description"
+          class="w-1/3 px-4"
+        />
+        <v-btn
+          color="primary"
+          dark
+          class="ma-2 w-1/3 px-4"
+          @click="addPermission"
+        >
+          Ajouter une permission
+        </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -61,11 +83,29 @@ export default {
           width: "25%",
         },
       ],
+      newPermissionName: "",
+      newPermissionDescription: "",
     };
   },
   methods: {
     permissions() {
       return this.$accessor.permission.allPermissions;
+    },
+    async addPermission() {
+      let response = await this.$accessor.permission.createPermission({
+        name: this.newPermissionName,
+        description: this.newPermissionDescription,
+      });
+      if (response.status === 201) {
+        this.newPermissionName = "";
+        this.newPermissionDescription = "";
+        this.$accessor.permission.setPermissionsInStore();
+      } else {
+        this.$accessor.notif.pushNotification({
+          type: "error",
+          message: response,
+        });
+      }
     },
   },
 };

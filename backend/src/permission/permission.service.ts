@@ -12,6 +12,7 @@ import { PermissionResponseDto } from './dto/permissionResponse.dto';
 const SELECT_PERMISSION = {
   id: true,
   name: true,
+  description: true,
 };
 
 const SELECT_PERMISSION_TEAM = {

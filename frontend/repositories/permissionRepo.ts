@@ -7,6 +7,11 @@ export default {
   getPermissions(context: Context) {
     return context.$axios.get(resource);
   },
+  createPermission(context: Context, payload: any) {
+    return context.$axios.post(resource, payload).catch((err) => {
+      return err.response.data.message;
+    });
+  },
   linkPermissionToTeams(
     context: Context,
     permissionId: number,
