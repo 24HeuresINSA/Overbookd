@@ -41,7 +41,7 @@
     <v-container class="container">
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
-      <SignaCard id="signa"></SignaCard>
+      <!--<SignaCard id="signa"></SignaCard>-->
       <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
       <PrestaCard id="presta"></PrestaCard>
@@ -259,11 +259,8 @@ export default Vue.extend({
   },
 
   async mounted() {
-    const res = await safeCall(
-      this.$store,
-      RepoFactory.faRepo.getFAByCount(this, this.faId)
-    );
-    if (!res || !res.data) {
+    const res = await this.$accessor.FA.getAndSet(this.faId);
+    if (!res) {
       alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
       await this.$router.push({
         path: "/fa",

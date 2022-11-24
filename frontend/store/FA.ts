@@ -35,9 +35,15 @@ export const mutations = mutationTree(state, {
   SET_ALL_FA: function (state, allFA: FA[]) {
     state.FAs = allFA.filter((fa) => fa.is_deleted === false);
   },
-  //////////////// by id ?
+  //////////////// id de by ?
   UPDATE_STATUS: function ({ mFA }, status: Status, by?: string) {
     mFA.status = status;
+  },
+  UPDATE_FA: function ({ mFA }, fa: FA) {
+    mFA = fa;
+  },
+  UPDATE_NAME: function ({ mFA }, name: string) {
+    mFA.name = name;
   },
   ////////////////////  Validated_by plutôt dans mFA ?
   VALIDATE: function ({ validated_by, refused_by }, validator: string) {
@@ -79,6 +85,14 @@ export const actions = actionTree(
     resetFA: function ({ commit }, payload) {
       commit("RESET_FA", payload);
     },
+    getAndSet: async function ({ commit }, id: number) {
+      const res = await safeCall(this, repo.getFAByCount(this, id));
+      if (res && res.data) {
+        commit("SET_FA", res.data);
+        return res.data;
+      }
+      return null;
+    },
     fetchAll: async function ({ commit }) {
       const res = await safeCall(this, repo.getAllFAs(this));
       if (res && res.data) {
@@ -87,20 +101,33 @@ export const actions = actionTree(
       }
       return null;
     },
-    submitForReview: async function ({ dispatch, commit }, by) {
+
+    submitForReview: async function ({ commit }, by) {
       commit("UPDATE_STATUS", Status.SUBMITTED, by);
+    },
+
+    updateFA: async function ({ commit }, fa) {
+      //// Plein de modifs
+      commit("UPDATE_FA", fa);
+    },
+
+    updateName: async function ({ dispatch, commit }, name) {
+      commit("UPDATE_NAME", name);
       await dispatch("saveFA");
     },
+
     validate: async function ({ dispatch, commit, state }, validator: string) {
       commit("VALIDATE", validator);
-      // @ts-ignore
-      const MAX_VALIDATORS = this.$accessor.config.getConfig("ft_validators").length;
+      const MAX_VALIDATORS =
+        // @ts-ignore
+        this.$accessor.config.getConfig("ft_validators").length;
       if (state.validated_by.length === MAX_VALIDATORS) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
       }
       await dispatch("saveFA");
     },
+
     refuse: async function ({ dispatch, commit }, validator: string) {
       commit("REFUSE", validator);
       commit("UPDATE_STATUS", Status.REFUSED);

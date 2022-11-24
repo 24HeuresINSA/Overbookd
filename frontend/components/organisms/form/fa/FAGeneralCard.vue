@@ -80,7 +80,9 @@ export default Vue.extend({
     onChange(name: string, value: any) {
       if (typeof value === "string") value = value.trim();
       console.log(name + " : " + value);
-      // Mettre à jour le store
+      if (name === "name") {
+        this.$accessor.FA.updateName(value);
+      }
     },
   },
 });
