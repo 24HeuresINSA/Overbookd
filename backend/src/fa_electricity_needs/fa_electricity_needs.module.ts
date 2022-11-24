@@ -4,6 +4,6 @@ import { FaElectricityNeedsController } from './fa_electricity_needs.controller'
 
 @Module({
   controllers: [FaElectricityNeedsController],
-  providers: [FaElectricityNeedsService]
+  providers: [FaElectricityNeedsService],
 })
 export class FaElectricityNeedsModule {}
