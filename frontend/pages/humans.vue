@@ -448,9 +448,9 @@ export default {
         });
       }
     } else {
-      await this.$router.push({
-        path: "/",
-      });
+      // await this.$router.push({
+      //   path: "/",
+      // });
     }
   },
 

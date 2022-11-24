@@ -2,6 +2,7 @@
 CREATE TABLE "Permission" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(30) NOT NULL,
+    "description" VARCHAR(255),
 
     CONSTRAINT "Permission_pkey" PRIMARY KEY ("id")
 );

@@ -1,6 +1,6 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { permission, team } from "~/utils/models/repo";
+import { permission } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
 
 const permissionRepo = RepoFactory.permissionRepo;
@@ -52,11 +52,20 @@ export const actions = actionTree(
     },
     async linkPermissionToTeams(
       constext,
-      { permissionId, teams }: { permissionId: number; teams: team[] }
+      { permissionId, teamIds }: { permissionId: number; teamIds: number[] }
     ): Promise<any> {
       return safeCall(
         this,
-        permissionRepo.linkPermissionToTeams(this, permissionId, teams)
+        permissionRepo.linkPermissionToTeams(this, permissionId, teamIds)
+      );
+    },
+    async removePermission(
+      constext,
+      { permissionId }: { permissionId: number }
+    ): Promise<any> {
+      return safeCall(
+        this,
+        permissionRepo.removePermission(this, permissionId)
       );
     },
   }

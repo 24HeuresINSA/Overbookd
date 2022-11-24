@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Matches, ValidationArguments } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  Matches,
+  ValidationArguments,
+} from 'class-validator';
 
 export class PermissionFormDto {
   @ApiProperty({
@@ -13,4 +18,14 @@ export class PermissionFormDto {
     message: (va: ValidationArguments) => `${va.property} should be kebab-case`,
   })
   name: string;
+
+  @ApiProperty({
+    name: 'description',
+    required: false,
+    description: 'The description of the permission',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  description: string;
 }

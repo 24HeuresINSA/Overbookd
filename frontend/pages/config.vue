@@ -78,6 +78,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <PermissionsCard />
+    <SnackNotificationContainer />
+
     <v-snackbar
       v-model="snackbar"
       color="primary"
@@ -90,8 +94,16 @@
 </template>
 
 <script>
+import { getConfig } from "../common/role";
+import PermissionsCard from "../components/organisms/PermissionsCard.vue";
+import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
+
 export default {
   name: "Config",
+  components: {
+    PermissionsCard,
+    SnackNotificationContainer,
+  },
 
   data() {
     return {

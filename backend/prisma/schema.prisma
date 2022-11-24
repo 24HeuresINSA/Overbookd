@@ -103,13 +103,14 @@ model User_Team {
 model Permission {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(30) @unique
+  description String?   @db.VarChar(255)
   teams      Team_Permission[]
 }
 
 model Team_Permission {
   team       Team    @relation(fields: [team_id], references: [id])
   team_id    Int
-  permission Permission @relation(fields: [permission_id], references: [id])
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
   permission_id Int
 
   @@id([team_id, permission_id])
