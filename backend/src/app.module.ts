@@ -17,6 +17,7 @@ import { MailService } from './mail/mail.service';
 import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
 import { FaCommentModule } from './fa_comment/fa_comment.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
+import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { TimeWindowsModule } from './time_windows/time_windows.module';
     FaSignaNeedsModule,
     FaCommentModule,
     TimeWindowsModule,
+    FaElectricityNeedsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
