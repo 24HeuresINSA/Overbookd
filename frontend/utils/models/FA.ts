@@ -22,7 +22,7 @@ export enum CommentType {
   COMMENT = "COMMENT",
   SUBMIT = "SUBMIT",
   VALIDATION = "VALIDATION",
-  REFUSAL = "REFUSAL"
+  REFUSAL = "REFUSAL",
 }
 
 export interface FA {

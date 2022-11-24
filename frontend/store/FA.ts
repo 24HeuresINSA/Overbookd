@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { FA, Status, FA_Comment } from "~/utils/models/FA";
+import { FA, Status } from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 
@@ -9,7 +9,6 @@ export const state = () => ({
   mFA: {
     status: Status.DRAFT,
     name: "",
-    comments: [] as FA_Comment[],
   } as FA,
   FAs: [] as FA[],
   validated_by: [] as string[],
@@ -31,7 +30,6 @@ export const mutations = mutationTree(state, {
     state.mFA = {
       status: Status.DRAFT,
       name: "",
-      
     } as FA;
   },
   SET_ALL_FA: function (state, allFA: FA[]) {
