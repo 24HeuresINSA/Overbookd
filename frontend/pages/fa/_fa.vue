@@ -393,6 +393,7 @@ h1 {
   overflow: auto;
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth;
 }
 
 .container > * {

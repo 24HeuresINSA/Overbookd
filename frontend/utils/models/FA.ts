@@ -73,7 +73,7 @@ export interface fa_electricity_needs {
   comment?: string;
 }
 
-export interface FA_Comment {
+export interface fa_comment {
   id: number;
   fa_id: number;
   subject: CommentType;

@@ -5,7 +5,7 @@
       v-for="item in faItems"
       :key="item.id"
       :data="item"
-      @click="autoScroll(item.id)"
+      :href="'#' + item.id"
     >
       <v-list-item-icon v-if="!item.isDisabled">
         <v-icon v-text="item.icon"></v-icon>
@@ -22,7 +22,7 @@
       v-for="item in ftItems"
       :key="item.id"
       :data="item"
-      @click="autoScroll(item.id)"
+      :href="'#' + item.id"
     >
       <v-list-item-icon v-if="!item.isDisabled">
         <v-icon v-text="item.icon"></v-icon>
@@ -72,12 +72,6 @@ export default Vue.extend({
       },
     ],
   }),
-  methods: {
-    autoScroll(id: string) {
-      const element = document.getElementById(id);
-      if (element) element.scrollIntoView({ behavior: "smooth" });
-    },
-  },
 });
 </script>
 
