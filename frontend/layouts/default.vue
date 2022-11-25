@@ -179,6 +179,12 @@ export default {
           title: "Transactions",
           to: "/transactions",
         },
+        {
+          icon: "mdi-bookshelf",
+          roles: "admin",
+          title: "Catalogue",
+          to: "/catalog",
+        },
       ],
       items: [
         {
