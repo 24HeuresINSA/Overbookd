@@ -10,12 +10,12 @@
     <v-card-text>
       <v-form>
         <v-text-field
-          :value="generalData.name"
+          :value="mFA.name"
           label="Nom de la FA"
           @change="onChange('name', $event)"
         ></v-text-field>
         <v-select
-          :value="generalData.type"
+          :value="mFA.type"
           label="Type"
           :items="[
             'Concert',
@@ -32,7 +32,7 @@
           @change="onChange('type', $event)"
         ></v-select>
         <v-select
-          :value="generalData.team_id"
+          :value="mFA.team_id"
           label="Equipe"
           :items="teams"
           item-value="id"
@@ -40,7 +40,7 @@
           @change="onChange('team_id', $event)"
         ></v-select>
         <v-autocomplete
-          :value="generalData.in_charge"
+          :value="mFA.in_charge"
           label="Responsable"
           :items="users"
           item-value="id"
@@ -54,6 +54,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FAGeneralCard",
@@ -61,7 +62,7 @@ export default Vue.extend({
     users: [] as Array<any>,
   }),
   computed: {
-    generalData(): any {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     teams(): Array<any> {
@@ -77,12 +78,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    onChange(name: string, value: any) {
+    onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      console.log(name + " : " + value);
-      if (name === "name") {
-        this.$accessor.FA.updateName(value);
-      }
+      this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
 });
