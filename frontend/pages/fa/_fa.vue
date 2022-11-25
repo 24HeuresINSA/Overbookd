@@ -36,7 +36,7 @@
           <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
-      <FormSidebar></FormSidebar>
+      <FormSummary class="summary"></FormSummary>
     </div>
     <v-container class="container">
       <FAGeneralCard id="general"></FAGeneralCard>
@@ -186,7 +186,7 @@ import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
-import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
+import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 
 export default Vue.extend({
@@ -202,7 +202,7 @@ export default Vue.extend({
     FAGeneralCard,
     FADetailCard,
     SecurityCard,
-    FormSidebar,
+    FormSummary,
   },
 
   data() {
@@ -268,7 +268,7 @@ export default Vue.extend({
     }
 
     let title = "FA " + this.faId;
-    if (this.mFA.name) title += " : " + this.mFA.name;
+    if (this.mFA.name) title += " - " + this.mFA.name;
     document.title = title;
   },
   methods: {
@@ -373,7 +373,6 @@ h1 {
   border-radius: 6px;
   user-select: none;
 
-  /* Position the tooltip */
   position: absolute;
   z-index: 1;
   top: 100%;
@@ -386,10 +385,10 @@ h1 {
 }
 
 .container {
-  flex: 1 1 auto;
-  overflow: auto;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  overflow: auto;
   scroll-behavior: smooth;
 }
 
@@ -422,5 +421,35 @@ h1 {
 
 .green {
   background-color: greenyellow;
+}
+
+@media only screen and (max-width: 750px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .summary {
+    visibility: collapse;
+  }
+
+  .bottom-bar {
+    width: calc(100% - 20px);
+    position: relative;
+    margin: 10px;
+    bottom: 40px;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  .bottom-bar > * {
+    margin: 10px;
+  }
 }
 </style>
