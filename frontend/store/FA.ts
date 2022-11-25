@@ -39,11 +39,12 @@ export const mutations = mutationTree(state, {
   UPDATE_STATUS: function ({ mFA }, status: Status, by?: string) {
     mFA.status = status;
   },
-  UPDATE_FA: function ({ mFA }, fa: FA) {
-    mFA = fa;
-  },
-  UPDATE_NAME: function ({ mFA }, name: string) {
-    mFA.name = name;
+  UPDATE_FA: function ({ mFA }, data) {
+    if (data && data.key && typeof mFA[data.key as keyof FA] !== "undefined") {
+      // @ts-ignore
+      mFA[data.key] = data.value;
+      console.log(mFA);
+    }
   },
   ////////////////////  Validated_by plutôt dans mFA ?
   VALIDATE: function ({ validated_by, refused_by }, validator: string) {
@@ -106,14 +107,8 @@ export const actions = actionTree(
       commit("UPDATE_STATUS", Status.SUBMITTED, by);
     },
 
-    updateFA: async function ({ commit }, fa) {
-      //// Plein de modifs
-      commit("UPDATE_FA", fa);
-    },
-
-    updateName: async function ({ dispatch, commit }, name) {
-      commit("UPDATE_NAME", name);
-      await dispatch("saveFA");
+    updateFA: async function ({ commit }, payload) {
+      commit("UPDATE_FA", payload);
     },
 
     validate: async function ({ dispatch, commit, state }, validator: string) {
