@@ -47,26 +47,26 @@
   "devDependencies": {
     "@nuxt/types": "^2.14.12",
     "@nuxt/typescript-build": "^2.0.4",
-    "@nuxtjs/color-mode": "^3.1.8",
+    "@nuxtjs/color-mode": "^2.1.1",
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/storybook": "^4.3.0",
+    "@nuxtjs/vuetify": "^1.12.3",
     "@types/lodash": "^4.14.189",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vue/cli-plugin-babel": "^5.0.8",
-    "@nuxtjs/vuetify": "^1.12.3",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "cypress": "^11.1.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^7.5.0",
-    "typescript": "^4.9.3",
+    "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
-    "prettier": "^2.7.1"
+    "typescript": "^4.9.3"
   }
 }
