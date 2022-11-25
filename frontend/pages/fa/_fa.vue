@@ -438,6 +438,10 @@ h1 {
     visibility: collapse;
   }
 
+  .container {
+    overflow: visible;
+  }
+
   .bottom-bar {
     width: calc(100% - 20px);
     position: relative;
