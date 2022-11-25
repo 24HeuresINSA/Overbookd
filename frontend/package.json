@@ -37,7 +37,7 @@
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "nuxt": "^2.14.12",
-    "nuxt-typed-vuex": "^0.2.0",
+    "nuxt-typed-vuex": "^0.3.1",
     "tiptap-vuetify": "^2.24.0",
     "uuid": "^9.0.0",
     "vue-chartjs": "^3.5.1",
