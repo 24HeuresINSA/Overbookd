@@ -205,27 +205,24 @@ export default Vue.extend({
     FormSummary,
   },
 
-  data() {
-    return {
-      validationDialog: false,
-      refuseDialog: false,
+  data: () => ({
+    validationDialog: false,
+    refuseDialog: false,
 
-      faRepo: RepoFactory.faRepo,
-      faId: +this.$route.params.fa,
+    faRepo: RepoFactory.faRepo,
 
-      statusTrad: new Map<string, string>([
-        ["DRAFT", "Brouillon"],
-        ["SUBMITTED", "Soumise"],
-        ["REFUSED", "Réfusée"],
-        ["VALIDATED", "Validée"],
-      ]),
-      color: {
-        submitted: "grey",
-        validated: "green",
-        refused: "red",
-      },
-    };
-  },
+    statusTrad: new Map<string, string>([
+      ["DRAFT", "Brouillon"],
+      ["SUBMITTED", "Soumise"],
+      ["REFUSED", "Réfusée"],
+      ["VALIDATED", "Validée"],
+    ]),
+    color: {
+      submitted: "grey",
+      validated: "green",
+      refused: "red",
+    },
+  }),
 
   computed: {
     FA(): any {
@@ -236,6 +233,9 @@ export default Vue.extend({
     },
     me(): any {
       return this.$accessor.user.me;
+    },
+    faId(): number {
+      return +this.$route.params.fa;
     },
     validators(): Array<any> {
       return this.$accessor.team.faValidators;
@@ -288,15 +288,15 @@ export default Vue.extend({
 
     validate(validator: any) {
       if (validator) {
-        this.mFA.validate(validator.name);
+        this.$accessor.FA.validate(validator.name);
         this.saveFA();
       }
     },
 
     submit() {
-      this.mFA.submitForReview(this.me.lastname);
+      this.$accessor.FA.submitForReview(this.me);
       this.validationDialog = false;
-      this.saveFA();
+      // this.saveFA();
     },
 
     getIconColor(validator: any) {

@@ -19,10 +19,10 @@ export enum SignaType {
 }
 
 export enum CommentType {
-  COMMENT = "COMMENT",
-  SUBMIT = "SUBMIT",
-  VALIDATION = "VALIDATION",
-  REFUSAL = "REFUSAL",
+  COMMENT = "Commentaire",
+  SUBMIT = "Soumission",
+  VALIDATION = "Validation",
+  REFUSAL = "Refus",
 }
 
 export interface FA {
@@ -46,6 +46,7 @@ export interface FA {
   is_deleted?: boolean;
   fa_collaborator?: fa_collaborator[];
   fa_electricity_needs?: fa_electricity_needs[];
+  fa_comment?: fa_comment[];
 }
 
 export interface fa_collaborator {
@@ -74,7 +75,7 @@ export interface fa_electricity_needs {
 }
 
 export interface fa_comment {
-  id: number;
+  id?: number;
   fa_id: number;
   subject: CommentType;
   comment: string;

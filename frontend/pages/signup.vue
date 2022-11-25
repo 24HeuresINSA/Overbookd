@@ -144,13 +144,11 @@ export default {
   auth: false,
   layout: "none",
 
-  data: () => {
-    return {
-      formData: {},
-      activePicker: null,
-      formSoft: false,
-    };
-  },
+  data: () => ({
+    formData: {},
+    activePicker: null,
+    formSoft: false,
+  }),
 
   async mounted() {
     const isSignupOpen = true; //Close or open signup

@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { FA, Status } from "~/utils/models/FA";
+import { CommentType, FA, fa_comment, Status } from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 
@@ -26,19 +26,22 @@ export const mutations = mutationTree(state, {
   SET_FA: function (state, fa: Partial<FA>) {
     state.mFA = { ...state.mFA, ...fa };
   },
+
   RESET_FA: function (state) {
     state.mFA = {
       status: Status.DRAFT,
       name: "",
     } as FA;
   },
+
   SET_ALL_FA: function (state, allFA: FA[]) {
     state.FAs = allFA.filter((fa) => fa.is_deleted === false);
   },
-  //////////////// id de by ?
-  UPDATE_STATUS: function ({ mFA }, status: Status, by?: string) {
+
+  UPDATE_STATUS: function ({ mFA }, status: Status) {
     mFA.status = status;
   },
+
   UPDATE_FA: function ({ mFA }, data) {
     if (data && data.key && typeof mFA[data.key as keyof FA] !== "undefined") {
       // @ts-ignore
@@ -46,7 +49,12 @@ export const mutations = mutationTree(state, {
       console.log(mFA);
     }
   },
-  ////////////////////  Validated_by plutôt dans mFA ?
+
+  ADD_COMMENT: function ({ mFA }, comment: fa_comment) {
+    if (!mFA.fa_comment) mFA.fa_comment = [];
+    mFA.fa_comment?.push(comment);
+  },
+
   VALIDATE: function ({ validated_by, refused_by }, validator: string) {
     if (validated_by === undefined) {
       validated_by = [] as string[];
@@ -61,6 +69,7 @@ export const mutations = mutationTree(state, {
       }
     }
   },
+
   REFUSE: function ({ refused_by, validated_by }, validator: string) {
     if (refused_by === undefined) {
       refused_by = [] as string[];
@@ -83,9 +92,11 @@ export const actions = actionTree(
     setFA: function ({ commit }, FA: FA) {
       commit("SET_FA", FA);
     },
+
     resetFA: function ({ commit }, payload) {
       commit("RESET_FA", payload);
     },
+
     getAndSet: async function ({ commit }, id: number) {
       const res = await safeCall(this, repo.getFAByCount(this, id));
       if (res && res.data) {
@@ -94,6 +105,7 @@ export const actions = actionTree(
       }
       return null;
     },
+
     fetchAll: async function ({ commit }) {
       const res = await safeCall(this, repo.getAllFAs(this));
       if (res && res.data) {
@@ -103,19 +115,31 @@ export const actions = actionTree(
       return null;
     },
 
-    submitForReview: async function ({ commit }, by) {
-      commit("UPDATE_STATUS", Status.SUBMITTED, by);
+    submitForReview: async function ({ commit }, author: any) {
+      // Un peu overkill de passer this.me en params
+      const comment: fa_comment = {
+        fa_id: 1,
+        subject: CommentType.SUBMIT,
+        comment: `La FA a été soumise par ${author.firstname} ${author.lastname}.`,
+        author: author.id,
+        created_at: new Date(),
+      };
+      commit("ADD_COMMENT", comment);
+      commit("UPDATE_STATUS", Status.SUBMITTED);
     },
 
     updateFA: async function ({ commit }, payload) {
       commit("UPDATE_FA", payload);
     },
 
+    addComment: async function ({ commit }, comment: fa_comment) {
+      commit("ADD_COMMENT", comment);
+    },
+
     validate: async function ({ dispatch, commit, state }, validator: string) {
       commit("VALIDATE", validator);
-      const MAX_VALIDATORS =
-        // @ts-ignore
-        this.$accessor.config.getConfig("ft_validators").length;
+      // @ts-ignore
+      const MAX_VALIDATORS = this.$accessor.team.faValidators;
       if (state.validated_by.length === MAX_VALIDATORS) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
