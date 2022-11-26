@@ -92,6 +92,7 @@ export class UserController {
       .sort((a, b) => (a.username < b.username ? 1 : -1));
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('sg')
   @Get('all')
