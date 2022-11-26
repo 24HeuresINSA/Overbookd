@@ -1,8 +1,6 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { MailService } from './mail/mail.service';
 
 describe('AppController', () => {
@@ -14,9 +12,7 @@ describe('AppController', () => {
       providers: [
         AppService,
         { provide: MailService, useValue: { mailTest: jest.fn() } },
-        { provide: MailerService, useValue: { sendMail: jest.fn() } },
       ],
-      imports: [AuthModule],
     }).compile();
 
     appController = app.get<AppController>(AppController);
