@@ -28,7 +28,7 @@ export class CategoryFormRequestDto implements CategoryForm {
 
   @ApiProperty({
     required: false,
-    description: 'Parent ctaegory id',
+    description: 'Parent category id',
   })
   @IsOptional()
   @IsInt()
