@@ -310,24 +310,28 @@ async function main() {
       });
     });
 
-    await prisma.user.create({
-      data: {
-        email: `${user}@24h.me`,
-        firstname: user,
-        lastname: user,
-        nickname: '',
-        birthdate: new Date(1990, 1, 1),
-        phone: '0612345678',
-        department: 'TC',
-        year: 'A1',
-        password: hashPassword,
-        team: {
-          create: userTeams,
-        },
+    const data: Prisma.UserUncheckedCreateInput = {
+      email: `${user}@24h.me`,
+      firstname: user,
+      lastname: user,
+      nickname: '',
+      birthdate: new Date(1990, 1, 1),
+      phone: '0612345678',
+      department: 'TC',
+      year: 'A1',
+      password: hashPassword,
+      team: {
+        create: userTeams,
       },
+    };
+
+    await prisma.user.upsert({
+      where: { email: `${user}@24h.me` },
+      update: data,
+      create: data,
     });
 
-    console.log(`User ${user} added to teams ${teams.split(',')}`);
+    console.log(`User ${user} added with teams ${teams.split(',')}`);
     console.log('------------------------------------------------------------');
   }
 
