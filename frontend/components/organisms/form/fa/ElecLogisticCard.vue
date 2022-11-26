@@ -28,18 +28,10 @@
         <v-card-text>
           <v-form>
             <v-select
-              v-model="newElectricityNeed.connectionType"
+              v-model="newElectricityNeed.electricity_type"
               type="select"
               label="Type de prise*"
-              :items="[
-                'PC16',
-                'P17 16A mono',
-                'P17 16A tri',
-                'P17 16A tetra',
-                'P17 32A mono',
-                'P17 32A tri',
-                'P17 32A tetra',
-              ]"
+              :items="electricityType"
               dense
             ></v-select>
 
@@ -66,9 +58,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { ElectricityType, fa_electricity_needs } from "~/utils/models/FA";
 
 const headers = [
-  { text: "Type de raccordement", value: "connectionType" },
+  { text: "Type de raccordement", value: "electricity_type" },
   {
     text: "Puissance",
     value: "power",
@@ -89,22 +82,22 @@ export default Vue.extend({
     headers,
     isElectricityNeedDialogOpen: false,
     newElectricityNeed: {
-      connectionType: "",
+      electricity_type: "",
       power: "",
       comment: "",
     },
   }),
   computed: {
-    electricityNeeds() {
-      return this.$accessor.FA.mFA.electricityNeeds;
+    electricityNeeds(): any {
+      return this.$accessor.FA.mFA.fa_electricity_needs;
+    },
+    electricityType(): Array<string> {
+      return Object.values(ElectricityType);
     },
   },
   methods: {
-    deleteElectricityNeed(index: number) {
-      this.$accessor.FA.deleteElectricityNeed(index);
-    },
     addElectricityNeed() {
-      if (!this.newElectricityNeed.connectionType) {
+      if (!this.newElectricityNeed.electricity_type) {
         alert("N'oublie pas de choisir le type de prise !");
         return;
       }
@@ -118,9 +111,26 @@ export default Vue.extend({
         return;
       }
 
-      this.$accessor.FA.addElectricityNeed(this.newElectricityNeed);
+      const newElecNeed: fa_electricity_needs = {
+        fa_id: +this.$route.params.fa,
+        electricity_type: this.newElectricityNeed
+          .electricity_type as ElectricityType,
+        power: +this.newElectricityNeed.power,
+        comment: this.newElectricityNeed.comment,
+      };
+
+      console.log(newElecNeed);
+      this.$accessor.FA.addElectricityNeed(newElecNeed);
       this.isElectricityNeedDialogOpen = false;
-      this.newElectricityNeed = { connectionType: "", power: "", comment: "" };
+      this.newElectricityNeed = {
+        electricity_type: "",
+        power: "",
+        comment: "",
+      };
+    },
+
+    deleteElectricityNeed(index: number) {
+      this.$accessor.FA.deleteElectricityNeed(index);
     },
   },
 });

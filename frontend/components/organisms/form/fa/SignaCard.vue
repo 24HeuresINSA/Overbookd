@@ -156,11 +156,12 @@ export default Vue.extend({
     },*/
     addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
-        this.$accessor.notif.pushNotification({
+        alert("N'oublie pas de compléter le Type et le Texte signalétique !");
+        /*this.$accessor.notif.pushNotification({
           type: "error",
           message:
             "N'oublie pas de compléter le Type et le Texte signalétique !",
-        });
+        });*/
         return;
       }
 
@@ -169,17 +170,18 @@ export default Vue.extend({
         type: this.newSignalisation.type as SignaType,
         text: this.newSignalisation.text,
         count: 1,
+        comment: this.newSignalisation.comment,
       };
 
-      this.$accessor.FA.addSignaNeeds(newSigna);
+      this.$accessor.FA.addSignaNeed(newSigna);
       this.isSignaFormOpen = false;
       this.newSignalisation = { type: "", text: "", comment: "" };
     },
     updateSignalisationCount(index: number, count: number) {
-      this.$accessor.FA.updateSignaNeedsCount({ index, count });
+      this.$accessor.FA.updateSignaNeedCount({ index, count });
     },
     deleteSignalisation(index: number) {
-      this.$accessor.FA.deleteSignaNeeds(index);
+      this.$accessor.FA.deleteSignaNeed(index);
     },
   },
 });

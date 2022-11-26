@@ -3,6 +3,7 @@ import {
   CommentType,
   FA,
   fa_comment,
+  fa_electricity_needs,
   fa_signa_needs,
   Status,
 } from "~/utils/models/FA";
@@ -90,20 +91,31 @@ export const mutations = mutationTree(state, {
     mFA.fa_comment?.push(comment);
   },
 
-  ADD_SIGNA_NEEDS: function ({ mFA }, signaNeeds: fa_signa_needs) {
+  ADD_SIGNA_NEED: function ({ mFA }, signaNeed: fa_signa_needs) {
     if (!mFA.fa_signa_needs) mFA.fa_signa_needs = [];
-    mFA.fa_signa_needs?.push(signaNeeds);
+    mFA.fa_signa_needs?.push(signaNeed);
   },
 
-  UPDATE_SIGNA_NEEDS_COUNT: function ({ mFA }, { index, count }) {
+  UPDATE_SIGNA_NEED_COUNT: function ({ mFA }, { index, count }) {
     if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
       mFA.fa_signa_needs[index].count = count;
     }
   },
 
-  DELETE_SIGNA_NEEDS: function ({ mFA }, index) {
+  DELETE_SIGNA_NEED: function ({ mFA }, index) {
     if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
       mFA.fa_signa_needs.splice(index, 1);
+    }
+  },
+
+  ADD_ELECTRICITY_NEED: function ({ mFA }, elecNeed: fa_electricity_needs) {
+    if (!mFA.fa_electricity_needs) mFA.fa_electricity_needs = [];
+    mFA.fa_electricity_needs?.push(elecNeed);
+  },
+
+  DELETE_ELECTRICITY_NEED: function ({ mFA }, index) {
+    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
+      mFA.fa_electricity_needs.splice(index, 1);
     }
   },
 });
@@ -175,15 +187,27 @@ export const actions = actionTree(
       commit("ADD_COMMENT", comment);
     },
 
-    addSignaNeeds: async function ({ commit }, signaNeeds: fa_signa_needs) {
-      commit("ADD_SIGNA_NEEDS", signaNeeds);
+    addSignaNeed: async function ({ commit }, signaNeed: fa_signa_needs) {
+      commit("ADD_SIGNA_NEED", signaNeed);
     },
 
-    updateSignaNeedsCount({ commit }, { index, count }) {
-      commit("UPDATE_SIGNA_NEEDS_COUNT", { index, count });
+    updateSignaNeedCount({ commit }, { index, count }) {
+      commit("UPDATE_SIGNA_NEED_COUNT", { index, count });
     },
-    deleteSignaNeeds: ({ commit }, index: number) => {
-      commit("DELETE_SIGNA_NEEDS", index);
+
+    deleteSignaNeed: ({ commit }, index: number) => {
+      commit("DELETE_SIGNA_NEED", index);
+    },
+
+    addElectricityNeed: async function (
+      { commit },
+      elecNeed: fa_electricity_needs
+    ) {
+      commit("ADD_ELECTRICITY_NEED", elecNeed);
+    },
+
+    deleteElectricityNeed: ({ commit }, index: number) => {
+      commit("DELETE_ELECTRICITY_NEED", index);
     },
   }
 );

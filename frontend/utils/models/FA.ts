@@ -6,10 +6,13 @@ export enum Status {
 }
 
 export enum ElectricityType {
-  ELECTRICITY = "ELECTRICITY",
-  GAS = "GAS",
-  WATER = "WATER",
-  OTHER = "OTHER",
+  PC16 = "PC16",
+  P17_16A_MONO = "P17 16A MONO",
+  P17_16A_TRI = "P17 16A TRI",
+  P17_16A_TETRA = "P17 16A TETRA",
+  P17_32A_MONO = "P17 32A MONO",
+  P17_32A_TRI = "P17 32A TRI",
+  P17_32A_TETRA = "P17 32A TETRA",
 }
 
 export enum SignaType {
@@ -91,4 +94,5 @@ export interface fa_signa_needs {
   type: SignaType;
   text: string;
   count: number;
+  comment?: string;
 }
