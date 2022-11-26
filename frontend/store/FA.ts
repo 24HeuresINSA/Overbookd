@@ -167,13 +167,16 @@ export const actions = actionTree(
       return null;
     },
 
-    submitForReview: async function ({ commit }, { id, name }) {
-      // Un peu overkill de passer this.me en params
+    submitForReview: async function (
+      { commit },
+      { faId, authorId, authorName }
+    ) {
+      if (!faId || !authorId || !authorName) return;
       const comment: fa_comment = {
-        fa_id: 1,
+        fa_id: faId,
         subject: CommentType.SUBMIT,
-        comment: `La FA a été soumise par ${name}.`,
-        author: id,
+        comment: `La FA a été soumise par ${authorName}.`,
+        author: authorId,
         created_at: new Date(),
       };
       commit("ADD_COMMENT", comment);

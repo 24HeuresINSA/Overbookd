@@ -294,11 +294,11 @@ export default Vue.extend({
     },
 
     submit() {
-      const author = {
-        id: this.me.id,
-        name: this.me.firstname + " " + this.me.lastname,
-      };
-      this.$accessor.FA.submitForReview(author);
+      this.$accessor.FA.submitForReview({
+        faId: this.faId,
+        authorId: this.me.id,
+        authorName: this.me.firstname + " " + this.me.lastname,
+      });
       this.validationDialog = false;
       // this.saveFA();
     },
