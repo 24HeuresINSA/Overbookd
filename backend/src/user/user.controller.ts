@@ -71,11 +71,26 @@ export class UserController {
   async getUsernamesWithValidCP(): Promise<Username[]> {
     const users = await this.userService.users({
       where: {
-        team: {
-          some: {
+        AND: [
+          {
             team: {
-              name: {
-                in: ['hard', 'vieux'],
+              some: {
+                team: {
+                  name: {
+                    in: ['hard', 'vieux'],
+                  },
+                },
+              },
+            },
+          },
+        ],
+        NOT: {
+          team: {
+            some: {
+              team: {
+                name: {
+                  in: ['voiture', 'fen', 'camion'],
+                },
               },
             },
           },
