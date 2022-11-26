@@ -1,8 +1,10 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MailService } from '../mail/mail.service';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { PrismaService } from '../prisma.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -28,6 +30,21 @@ describe('AuthService', () => {
           provide: HashingUtilsService,
           useValue: {
             compare: jest.fn(),
+          },
+        },
+        {
+          provide: MailService,
+          useValue: {
+            mailResetPassword: jest.fn(),
+          },
+        },
+        {
+          provide: PrismaService,
+          useValue: {
+            user: {
+              update: jest.fn(),
+              findFirst: jest.fn(),
+            },
           },
         },
       ],
