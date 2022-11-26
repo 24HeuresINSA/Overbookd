@@ -71,11 +71,26 @@ export class UserController {
   async getUsernamesWithValidCP(): Promise<Username[]> {
     const users = await this.userService.users({
       where: {
-        team: {
-          some: {
+        AND: [
+          {
             team: {
-              name: {
-                in: ['hard', 'vieux'],
+              some: {
+                team: {
+                  name: {
+                    in: ['hard', 'vieux'],
+                  },
+                },
+              },
+            },
+          },
+        ],
+        NOT: {
+          team: {
+            some: {
+              team: {
+                name: {
+                  in: ['voiture', 'fen', 'camion'],
+                },
               },
             },
           },
@@ -92,6 +107,7 @@ export class UserController {
       .sort((a, b) => (a.username < b.username ? 1 : -1));
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('sg')
   @Get('all')
