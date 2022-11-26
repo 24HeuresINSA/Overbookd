@@ -15,9 +15,9 @@ const errorMessages = {
 type SuccessMessageKey = keyof typeof successMessages;
 type ErrorMessageKey = keyof typeof errorMessages;
 
-export async function safeCall(
+export async function safeCall<T = any>(
   store: Vue["$store"],
-  repoFunction: Promise<AxiosResponse<any>>,
+  repoFunction: Promise<AxiosResponse<T>>,
   successMessage?: SuccessMessageKey,
   errorMessage?: ErrorMessageKey
 ): Promise<AxiosResponse | undefined> {

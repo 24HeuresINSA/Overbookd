@@ -1,12 +1,15 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Gear } from "~/utils/models/catalog.model";
+import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
 
-const repository = RepoFactory.GearsRepository;
+const gearRepository = RepoFactory.GearsRepository;
+const categoryRepository = RepoFactory.CategoryRepository;
 
 interface State {
   gears: Gear[];
+  categories: Category[];
+  categoryTree: CategoryTree[];
 }
 
 export interface GearSearchOptions {
@@ -15,8 +18,15 @@ export interface GearSearchOptions {
   owner?: string;
 }
 
+export interface CategorySearchOptions {
+  name?: string;
+  owner?: string;
+}
+
 export const state = (): State => ({
   gears: [],
+  categories: [],
+  categoryTree: [],
 });
 
 export const mutations = mutationTree(state, {
@@ -34,6 +44,12 @@ export const mutations = mutationTree(state, {
     if (index < 0) return;
     state.gears[index] = gear;
   },
+  SET_CATEGORIES(state, categories: Category[]) {
+    state.categories = categories;
+  },
+  SET_CATEGORY_TREE(state, categoryTree: CategoryTree[]) {
+    state.categoryTree = categoryTree;
+  },
 });
 
 export const actions = actionTree(
@@ -43,12 +59,33 @@ export const actions = actionTree(
       context,
       gearSerchOptions: GearSearchOptions
     ): Promise<void> {
-      const call = await safeCall(
+      const call = await safeCall<Gear[]>(
         this,
-        repository.searchGears(this, gearSerchOptions)
+        gearRepository.searchGears(this, gearSerchOptions)
       );
       if (!call) return;
       context.commit("SET_GEARS", call.data);
+    },
+
+    async fetchCategories(
+      context,
+      categorySerchOptions: CategorySearchOptions
+    ): Promise<void> {
+      const call = await safeCall<Category[]>(
+        this,
+        categoryRepository.searchCategories(this, categorySerchOptions)
+      );
+      if (!call) return;
+      context.commit("SET_CATEGORIES", call.data);
+    },
+
+    async fetchCategoryTree(context): Promise<void> {
+      const call = await safeCall<Category[]>(
+        this,
+        categoryRepository.getCategoryTree(this)
+      );
+      if (!call) return;
+      context.commit("SET_CATEGORY_TREE", call.data);
     },
   }
 );
