@@ -44,7 +44,7 @@
       <SignaCard id="signa"></SignaCard>
       <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
-      <PrestaCard id="presta"></PrestaCard>
+      <CollaboratorCard id="presta"></CollaboratorCard>
       <h2>Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
@@ -181,7 +181,7 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import { safeCall } from "../../utils/api/calls";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
+import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
@@ -197,7 +197,7 @@ export default Vue.extend({
     SignaCard,
     LogisticsCard,
     TimeframeTable,
-    PrestaCard,
+    CollaboratorCard,
     WaterLogisticCard,
     FAGeneralCard,
     FADetailCard,
@@ -294,7 +294,11 @@ export default Vue.extend({
     },
 
     submit() {
-      this.$accessor.FA.submitForReview(this.me);
+      const author = {
+        id: this.me.id,
+        name: this.me.firstname + " " + this.me.lastname,
+      };
+      this.$accessor.FA.submitForReview(author);
       this.validationDialog = false;
       // this.saveFA();
     },

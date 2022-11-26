@@ -55,16 +55,16 @@ export interface FA {
 
 export interface fa_collaborator {
   fa_id: number;
-  collaborator_id: number;
-  is_deleted: boolean;
+  collaborator_id?: number;
+  is_deleted?: boolean;
   collaborator: collaborator;
 }
 
 export interface collaborator {
   id?: number;
-  firstname: string;
-  lastname: string;
-  phone: string;
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
   email?: string;
   company?: string;
   comment?: string;

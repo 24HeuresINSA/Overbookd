@@ -1,7 +1,9 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import {
+  collaborator,
   CommentType,
   FA,
+  fa_collaborator,
   fa_comment,
   fa_electricity_needs,
   fa_signa_needs,
@@ -30,33 +32,32 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_FA: function (state, fa: Partial<FA>) {
+  SET_FA(state, fa: Partial<FA>) {
     state.mFA = { ...state.mFA, ...fa };
   },
 
-  RESET_FA: function (state) {
+  RESET_FA(state) {
     state.mFA = {
       status: Status.DRAFT,
       name: "",
     } as FA;
   },
 
-  SET_ALL_FA: function (state, allFA: FA[]) {
+  SET_ALL_FA(state, allFA: FA[]) {
     state.FAs = allFA.filter((fa) => fa.is_deleted === false);
   },
 
-  UPDATE_STATUS: function ({ mFA }, status: Status) {
+  UPDATE_STATUS({ mFA }, status: Status) {
     mFA.status = status;
   },
 
-  UPDATE_FA: function ({ mFA }, data) {
-    if (data && data.key && typeof mFA[data.key as keyof FA] !== "undefined") {
-      mFA[data.key as keyof FA] = data.value as never;
-      console.log(mFA);
+  UPDATE_FA({ mFA }, { key, value }) {
+    if (typeof mFA[key as keyof FA] !== "undefined") {
+      mFA[key as keyof FA] = value as never;
     }
   },
 
-  VALIDATE: function ({ validated_by, refused_by }, validator: string) {
+  VALIDATE({ validated_by, refused_by }, validator: string) {
     if (validated_by === undefined) {
       validated_by = [] as string[];
     }
@@ -71,7 +72,7 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  REFUSE: function ({ refused_by, validated_by }, validator: string) {
+  REFUSE({ refused_by, validated_by }, validator: string) {
     if (refused_by === undefined) {
       refused_by = [] as string[];
     }
@@ -86,34 +87,51 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_COMMENT: function ({ mFA }, comment: fa_comment) {
+  ADD_COMMENT({ mFA }, comment: fa_comment) {
     if (!mFA.fa_comment) mFA.fa_comment = [];
     mFA.fa_comment?.push(comment);
   },
 
-  ADD_SIGNA_NEED: function ({ mFA }, signaNeed: fa_signa_needs) {
+  ADD_SIGNA_NEED({ mFA }, signaNeed: fa_signa_needs) {
     if (!mFA.fa_signa_needs) mFA.fa_signa_needs = [];
     mFA.fa_signa_needs?.push(signaNeed);
   },
 
-  UPDATE_SIGNA_NEED_COUNT: function ({ mFA }, { index, count }) {
+  UPDATE_SIGNA_NEED_COUNT({ mFA }, { index, count }) {
     if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
       mFA.fa_signa_needs[index].count = count;
     }
   },
 
-  DELETE_SIGNA_NEED: function ({ mFA }, index) {
+  DELETE_SIGNA_NEED({ mFA }, index: number) {
     if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
       mFA.fa_signa_needs.splice(index, 1);
     }
   },
 
-  ADD_ELECTRICITY_NEED: function ({ mFA }, elecNeed: fa_electricity_needs) {
+  ADD_COLLABORATOR({ mFA }, collaborator: fa_collaborator) {
+    if (!mFA.fa_collaborator) mFA.fa_collaborator = [];
+    mFA.fa_collaborator?.push(collaborator);
+  },
+
+  UPDATE_COLLABORATOR({ mFA }, { index, key, value }) {
+    if (!mFA.fa_collaborator || !mFA.fa_collaborator[index]) return;
+    mFA.fa_collaborator[index].collaborator[key as keyof collaborator] =
+      value as never;
+  },
+
+  DELETE_COLLABORATOR({ mFA }, index: number) {
+    if (mFA.fa_collaborator && mFA.fa_collaborator[index]) {
+      mFA.fa_collaborator.splice(index, 1);
+    }
+  },
+
+  ADD_ELECTRICITY_NEED({ mFA }, elecNeed: fa_electricity_needs) {
     if (!mFA.fa_electricity_needs) mFA.fa_electricity_needs = [];
     mFA.fa_electricity_needs?.push(elecNeed);
   },
 
-  DELETE_ELECTRICITY_NEED: function ({ mFA }, index) {
+  DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
     if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
       mFA.fa_electricity_needs.splice(index, 1);
     }
@@ -123,11 +141,11 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setFA: function ({ commit }, FA: FA) {
+    setFA({ commit }, FA: FA) {
       commit("SET_FA", FA);
     },
 
-    resetFA: function ({ commit }, payload) {
+    resetFA({ commit }, payload) {
       commit("RESET_FA", payload);
     },
 
@@ -141,7 +159,7 @@ export const actions = actionTree(
     },
 
     fetchAll: async function ({ commit }) {
-      const res = await safeCall(this, repo.getAllFAs(this));
+      const res: any = await safeCall(this, repo.getAllFAs(this));
       if (res && res.data) {
         commit("SET_ALL_FA", res.data);
         return res;
@@ -149,21 +167,21 @@ export const actions = actionTree(
       return null;
     },
 
-    submitForReview: async function ({ commit }, author: any) {
+    submitForReview: async function ({ commit }, { id, name }) {
       // Un peu overkill de passer this.me en params
       const comment: fa_comment = {
         fa_id: 1,
         subject: CommentType.SUBMIT,
-        comment: `La FA a été soumise par ${author.firstname} ${author.lastname}.`,
-        author: author.id,
+        comment: `La FA a été soumise par ${name}.`,
+        author: id,
         created_at: new Date(),
       };
       commit("ADD_COMMENT", comment);
       commit("UPDATE_STATUS", Status.SUBMITTED);
     },
 
-    updateFA: async function ({ commit }, payload) {
-      commit("UPDATE_FA", payload);
+    updateFA({ commit }, { key, value }) {
+      commit("UPDATE_FA", { key, value });
     },
 
     validate: async function ({ dispatch, commit, state }, validator: string) {
@@ -183,11 +201,11 @@ export const actions = actionTree(
       await dispatch("saveFA");
     },
 
-    addComment: async function ({ commit }, comment: fa_comment) {
+    addComment({ commit }, comment: fa_comment) {
       commit("ADD_COMMENT", comment);
     },
 
-    addSignaNeed: async function ({ commit }, signaNeed: fa_signa_needs) {
+    addSignaNeed({ commit }, signaNeed: fa_signa_needs) {
       commit("ADD_SIGNA_NEED", signaNeed);
     },
 
@@ -195,18 +213,27 @@ export const actions = actionTree(
       commit("UPDATE_SIGNA_NEED_COUNT", { index, count });
     },
 
-    deleteSignaNeed: ({ commit }, index: number) => {
+    deleteSignaNeed({ commit }, index: number) {
       commit("DELETE_SIGNA_NEED", index);
     },
 
-    addElectricityNeed: async function (
-      { commit },
-      elecNeed: fa_electricity_needs
-    ) {
+    addCollaborator({ commit }, collaborator: fa_collaborator) {
+      commit("ADD_COLLABORATOR", collaborator);
+    },
+
+    updateCollaborator({ commit }, { index, key, value }) {
+      commit("UPDATE_COLLABORATOR", { index, key, value });
+    },
+
+    deleteCollaborator({ commit }, index: number) {
+      commit("DELETE_COLLABORATOR", index);
+    },
+
+    addElectricityNeed({ commit }, elecNeed: fa_electricity_needs) {
       commit("ADD_ELECTRICITY_NEED", elecNeed);
     },
 
-    deleteElectricityNeed: ({ commit }, index: number) => {
+    deleteElectricityNeed({ commit }, index: number) {
       commit("DELETE_ELECTRICITY_NEED", index);
     },
   }
