@@ -14,9 +14,9 @@ import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/team-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { Roles } from '../auth/team-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
 
 @ApiTags('user')

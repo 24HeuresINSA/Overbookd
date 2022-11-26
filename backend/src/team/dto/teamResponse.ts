@@ -31,6 +31,13 @@ export class TeamResponseDto implements Team {
   icon: string;
 
   @ApiProperty({
+    name: 'code',
+    description: 'The code of the team',
+    type: String,
+  })
+  code: string;
+
+  @ApiProperty({
     name: 'fa_validator',
     description: 'Is the team a fa validator',
     type: Boolean,

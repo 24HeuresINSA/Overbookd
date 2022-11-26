@@ -1,0 +1,20 @@
+backend-test:
+  stage: test
+  interruptible: true
+  image: node
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - backend/**/*
+    - when: never
+  script:
+    - 'cd backend'
+    - 'npm install'
+    - 'npm run test:ci'
+  artifacts:
+    when: always
+    reports:
+      junit: backend/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage/cobertura-coverage.xml

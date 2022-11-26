@@ -7,7 +7,7 @@ import {
   Matches,
   ValidationArguments,
 } from 'class-validator';
-import { OneNumber, upperCaseCharacter } from 'src/user/dto/common';
+import { OneNumber, upperCaseCharacter } from '../../user/dto/common';
 
 export class ResetPasswordDto {
   @ApiProperty({
