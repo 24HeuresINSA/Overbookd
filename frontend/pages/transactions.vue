@@ -50,7 +50,7 @@ export default {
   async beforeMount() {
     const usersCall = await safeCall(
       this.$store,
-      RepoFactory.userRepo.getAllUsernames(this)
+      RepoFactory.userRepo.getAllUsernamesWithCP(this)
     );
     if (usersCall) {
       this.usernames = usersCall.data;
