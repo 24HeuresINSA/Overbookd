@@ -524,36 +524,36 @@ export class ConfigService {
       //     },
       //   ],
       // },
-      {
-        key: 'ft_general_form',
-        value: [
-          {
-            key: 'name',
-            label: 'Nom de la FT',
-          },
-          {
-            key: 'inCharge',
-            label: 'Responsable',
-            type: 'user',
-            filter: 'hard',
-          },
-          {
-            key: 'areTimeframesStatic',
-            label: 'Créneaux statiques',
-            type: 'switch',
-          },
-        ],
-      },
-      {
-        key: 'ft_details_form',
-        value: [
-          {
-            key: 'description',
-            label: 'Description',
-            type: 'rich-text',
-          },
-        ],
-      },
+      // {
+      //   key: 'ft_general_form',
+      //   value: [
+      //     {
+      //       key: 'name',
+      //       label: 'Nom de la FT',
+      //     },
+      //     {
+      //       key: 'inCharge',
+      //       label: 'Responsable',
+      //       type: 'user',
+      //       filter: 'hard',
+      //     },
+      //     {
+      //       key: 'areTimeframesStatic',
+      //       label: 'Créneaux statiques',
+      //       type: 'switch',
+      //     },
+      //   ],
+      // },
+      // {
+      //   key: 'ft_details_form',
+      //   value: [
+      //     {
+      //       key: 'description',
+      //       label: 'Description',
+      //       type: 'rich-text',
+      //     },
+      //   ],
+      // },
       {
         key: 'event_date',
         value: '2022-05-21',
