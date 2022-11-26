@@ -10,28 +10,30 @@ import { NotFoundError } from '@prisma/client/runtime';
 import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
 import { CreateFaDto } from './dto/create-fa.dto';
 
-type FaResponse = Prisma.faGetPayload<{
-  include: {
-    fa_collaborator: {
-      include: {
-        collaborator: true;
-      };
-    };
-    fa_validation: true;
-    fa_refuse: true;
-    fa_electricity_needs: true;
-    fa_signa_needs: true;
-    fa_comment: true;
-    location: true;
-    Team: true;
-    user_in_charge: {
-      select: {
-        firstname: true;
-        lastname: true;
-      };
-    };
-    time_window: true;
-  };
+const COMPLETE_FA_INCLUDES = {
+  fa_collaborator: {
+    include: {
+      collaborator: true,
+    },
+  },
+  fa_validation: true,
+  fa_refuse: true,
+  fa_electricity_needs: true,
+  fa_signa_needs: true,
+  fa_comment: true,
+  location: true,
+  Team: true,
+  user_in_charge: {
+    select: {
+      firstname: true,
+      lastname: true,
+    },
+  },
+  time_window: true,
+};
+
+export type FaResponse = Prisma.faGetPayload<{
+  include: typeof COMPLETE_FA_INCLUDES;
 }>;
 
 @Injectable()
@@ -55,27 +57,7 @@ export class FaService {
       where: {
         id: Number(id),
       },
-      include: {
-        fa_collaborator: {
-          include: {
-            collaborator: true,
-          },
-        },
-        fa_validation: true,
-        fa_refuse: true,
-        fa_electricity_needs: true,
-        fa_signa_needs: true,
-        fa_comment: true,
-        location: true,
-        Team: true,
-        user_in_charge: {
-          select: {
-            firstname: true,
-            lastname: true,
-          },
-        },
-        time_window: true,
-      },
+      include: COMPLETE_FA_INCLUDES,
     });
   }
 
@@ -138,8 +120,8 @@ export class FaService {
     return await this.findOne(id);
   }
 
-  async create(fa: CreateFaDto): Promise<fa | null> {
-    return this.prisma.fa.create({ data: fa });
+  async create(fa: CreateFaDto): Promise<FaResponse | null> {
+    return this.prisma.fa.create({ data: fa, include: COMPLETE_FA_INCLUDES });
   }
 
   private async create_collaborators(

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FaService } from './fa.service';
+import { FaService, FaResponse } from './fa.service';
 import { PrismaService } from '../prisma.service';
 import { nakedFA, collaboratorFA, emptyFA, signaFA } from './testData';
 import { collaborator, fa, fa_type, location, User } from '@prisma/client';
@@ -96,7 +96,7 @@ describe('FA getters', () => {
 
 describe('FA creation', () => {
   describe('Create an FA without any links', () => {
-    let result: fa | null;
+    let result: FaResponse | null;
 
     test('should create an FA without any links', async () => {
       expect(faservice.create).toBeDefined();
@@ -144,7 +144,7 @@ describe('FA creation', () => {
   });
 
   describe('Create an FA with a collaborator', () => {
-    let collab_result: fa | null;
+    let collab_result: FaResponse | null;
     let collaborators: collaborator[];
 
     test('should create an FA with a collaborator', async () => {
@@ -155,7 +155,6 @@ describe('FA creation', () => {
       collab_result = await faservice.create({ name: FA.name });
       expect(collab_result).toBeDefined();
       collab_result = await faservice.update(collab_result.id, FA);
-      console.log(JSON.stringify(collab_result, null, 2));
       //check if every defined value of FA is in the result
       Object.keys(FA).map((key) => {
         expect(collab_result).toHaveProperty(key);
@@ -203,7 +202,7 @@ describe('FA creation', () => {
 });
 
 describe('Create FA with some signa_needs', () => {
-  let signa_result: fa | null;
+  let signa_result: FaResponse | null;
 
   test('should create an FA with some signa_needs', async () => {
     const FA = signaFA;
@@ -245,7 +244,7 @@ describe('Create FA with some signa_needs', () => {
 });
 
 describe('FA validation system', () => {
-  let sampleFA: fa | null;
+  let sampleFA: FaResponse | null;
   let validatorUser: User | null;
   let notValidatorUser: User | null;
 
@@ -344,7 +343,7 @@ describe('FA validation system', () => {
 });
 
 describe('FA update system', () => {
-  let sampleFA: fa | null;
+  let sampleFA: FaResponse | null;
   beforeAll(async () => {
     const FA = signaFA;
     FA.type = fa_type.name;
@@ -356,6 +355,9 @@ describe('FA update system', () => {
   test('Should update the FA', async () => {
     console.log('*** BEFORE UPDATE ***');
     console.log(JSON.stringify(sampleFA, null, 2));
+    console.log('*** AFTER UPDATE ***');
+    sampleFA.fa_signa_needs[0].text = 'test';
+    //sampleFA = await faservice.update(sampleFA.id, sampleFA);
   });
   afterAll(async () => {
     await prisma.fa_signa_needs.deleteMany({
