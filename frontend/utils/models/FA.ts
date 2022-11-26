@@ -47,6 +47,7 @@ export interface FA {
   fa_collaborator?: fa_collaborator[];
   fa_electricity_needs?: fa_electricity_needs[];
   fa_comment?: fa_comment[];
+  fa_signa_needs?: fa_signa_needs[];
 }
 
 export interface fa_collaborator {
@@ -57,7 +58,7 @@ export interface fa_collaborator {
 }
 
 export interface collaborator {
-  id: number;
+  id?: number;
   firstname: string;
   lastname: string;
   phone: string;
@@ -67,7 +68,7 @@ export interface collaborator {
 }
 
 export interface fa_electricity_needs {
-  id: number;
+  id?: number;
   fa_id: number;
   electricity_type: ElectricityType;
   power: number;
@@ -82,4 +83,12 @@ export interface fa_comment {
   author: number;
   created_at: Date;
   team_id?: number;
+}
+
+export interface fa_signa_needs {
+  id?: number;
+  fa_id: number;
+  type: SignaType;
+  text: string;
+  count: number;
 }

@@ -41,7 +41,7 @@
     <v-container class="container">
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
-      <!--<SignaCard id="signa"></SignaCard>-->
+      <SignaCard id="signa"></SignaCard>
       <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
       <PrestaCard id="presta"></PrestaCard>

@@ -1,5 +1,11 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { CommentType, FA, fa_comment, Status } from "~/utils/models/FA";
+import {
+  CommentType,
+  FA,
+  fa_comment,
+  fa_signa_needs,
+  Status,
+} from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 
@@ -44,15 +50,9 @@ export const mutations = mutationTree(state, {
 
   UPDATE_FA: function ({ mFA }, data) {
     if (data && data.key && typeof mFA[data.key as keyof FA] !== "undefined") {
-      // @ts-ignore
-      mFA[data.key] = data.value;
+      mFA[data.key as keyof FA] = data.value as never;
       console.log(mFA);
     }
-  },
-
-  ADD_COMMENT: function ({ mFA }, comment: fa_comment) {
-    if (!mFA.fa_comment) mFA.fa_comment = [];
-    mFA.fa_comment?.push(comment);
   },
 
   VALIDATE: function ({ validated_by, refused_by }, validator: string) {
@@ -82,6 +82,28 @@ export const mutations = mutationTree(state, {
       if (validated_by) {
         validated_by = validated_by.filter((v) => v !== validator);
       }
+    }
+  },
+
+  ADD_COMMENT: function ({ mFA }, comment: fa_comment) {
+    if (!mFA.fa_comment) mFA.fa_comment = [];
+    mFA.fa_comment?.push(comment);
+  },
+
+  ADD_SIGNA_NEEDS: function ({ mFA }, signaNeeds: fa_signa_needs) {
+    if (!mFA.fa_signa_needs) mFA.fa_signa_needs = [];
+    mFA.fa_signa_needs?.push(signaNeeds);
+  },
+
+  UPDATE_SIGNA_NEEDS_COUNT: function ({ mFA }, { index, count }) {
+    if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
+      mFA.fa_signa_needs[index].count = count;
+    }
+  },
+
+  DELETE_SIGNA_NEEDS: function ({ mFA }, index) {
+    if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
+      mFA.fa_signa_needs.splice(index, 1);
     }
   },
 });
@@ -132,10 +154,6 @@ export const actions = actionTree(
       commit("UPDATE_FA", payload);
     },
 
-    addComment: async function ({ commit }, comment: fa_comment) {
-      commit("ADD_COMMENT", comment);
-    },
-
     validate: async function ({ dispatch, commit, state }, validator: string) {
       commit("VALIDATE", validator);
       // @ts-ignore
@@ -151,6 +169,21 @@ export const actions = actionTree(
       commit("REFUSE", validator);
       commit("UPDATE_STATUS", Status.REFUSED);
       await dispatch("saveFA");
+    },
+
+    addComment: async function ({ commit }, comment: fa_comment) {
+      commit("ADD_COMMENT", comment);
+    },
+
+    addSignaNeeds: async function ({ commit }, signaNeeds: fa_signa_needs) {
+      commit("ADD_SIGNA_NEEDS", signaNeeds);
+    },
+
+    updateSignaNeedsCount({ commit }, { index, count }) {
+      commit("UPDATE_SIGNA_NEEDS_COUNT", { index, count });
+    },
+    deleteSignaNeeds: ({ commit }, index: number) => {
+      commit("DELETE_SIGNA_NEEDS", index);
     },
   }
 );

@@ -1,23 +1,23 @@
 <template>
   <div>
-    <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+    <v-card :class="isDisabled ? 'disabled' : ''">
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
         >Contacter la signa à signaletique@24heures.org pour ajouter des lieux
         non existant dans la liste déroulante
       </v-card-subtitle>
       <v-card-text>
-        <v-autocomplete
+        <!--<v-autocomplete
           label="Lieux"
           multiple
           :value="currentLocations"
           :items="locations"
           :disabled="isDisabled"
           @change="selectLocations"
-        ></v-autocomplete>
+        ></v-autocomplete>-->
         <v-switch v-model="isSignaRequired" label="Besoin signa"></v-switch>
         <div v-if="isSignaRequired">
-          <v-data-table :headers="headers" :items="signalisation">
+          <v-data-table :headers="headers" :items="signalisations">
             <template #[`item.action`]="{ index }">
               <v-btn
                 v-if="!isDisabled"
@@ -27,15 +27,15 @@
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </template>
-            <template #[`item.number`]="{ index, item }">
+            <template #[`item.count`]="{ index, item }">
               <v-text-field
-                :value="item.number"
+                :value="item.count ? item.count : '1'"
                 label="Nombre"
                 type="number"
                 min="0"
                 step="1"
                 :disabled="isDisabled"
-                @change="onItemChange($event, index)"
+                @change="updateSignalisationCount(index, $event)"
               ></v-text-field>
             </template>
           </v-data-table>
@@ -50,7 +50,6 @@
     </v-card>
 
     <v-dialog v-model="isSignaFormOpen" max-width="600">
-      <v-img src="img/signa.png"></v-img>
       <v-card>
         <v-card-title>Ajouter une signalisation</v-card-title>
         <v-card-text>
@@ -59,7 +58,7 @@
               v-model="newSignalisation.type"
               type="select"
               label="Type"
-              :items="['bannière', 'panneau', 'pancarte']"
+              :items="signaType"
               dense
               required
             ></v-select>
@@ -81,7 +80,7 @@
           <v-btn color="blue darken-1" text @click="isSignaFormOpen = false"
             >Annuler</v-btn
           >
-          <v-btn color="blue darken-1" text @click="onFormSubmit"
+          <v-btn color="blue darken-1" text @click="addSignalisation"
             >Valider</v-btn
           >
         </v-card-actions>
@@ -92,6 +91,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { fa_signa_needs, SignaType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SignaCard",
@@ -101,29 +101,30 @@ export default Vue.extend({
       default: () => false,
     },
   },
-  data() {
-    return {
-      isSignaRequired: false,
-      isSignaFormOpen: false,
-      headers: [
-        { text: "nombre", value: "number" },
-        { text: "type", value: "type" },
-        { text: "texte à afficher", value: "text" },
-        { text: "commentaire", value: "comment" },
-        { text: "", value: "action" },
-      ],
-      newSignalisation: {
-        type: "",
-        text: "",
-        comment: "",
-      },
-    };
-  },
-  computed: {
-    signalisation(): any[] {
-      return this.$accessor.FA.mFA.signalisation;
+  data: () => ({
+    isSignaRequired: false,
+    isSignaFormOpen: false,
+    headers: [
+      { text: "Nombre", value: "count" },
+      { text: "Type", value: "type" },
+      { text: "Texte signalétique", value: "text" },
+      { text: "Commentaire", value: "comment" },
+      { text: "", value: "action" },
+    ],
+    newSignalisation: {
+      type: "",
+      text: "",
+      comment: "",
     },
-    currentLocations(): string[] {
+  }),
+  computed: {
+    signalisations(): any {
+      return this.$accessor.FA.mFA.fa_signa_needs;
+    },
+    signaType(): Array<string> {
+      return Object.values(SignaType);
+    },
+    /*currentLocations(): string[] {
       if (
         this.$accessor.FA.mFA.general &&
         this.$accessor.FA.mFA.general.locations
@@ -131,15 +132,15 @@ export default Vue.extend({
         return this.$accessor.FA.mFA.general.locations;
       }
       return [];
-    },
+    },addSignalisation
     locations(): any[] {
       return this.$accessor.location.signa.map((l) => l.name);
-    },
+    },*/
   },
   watch: {
-    signalisation: {
+    signalisations: {
       handler() {
-        if (this.signalisation.length > 0) {
+        if (this.signalisations.length > 0) {
           this.isSignaRequired = true;
         }
       },
@@ -147,14 +148,13 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    // get locations
-    await this.$accessor.location.getAllLocations();
+    // await this.$accessor.location.getAllLocations();
   },
   methods: {
-    selectLocations(locations: string[]) {
+    /*selectLocations(locations: string[]) {
       this.$accessor.FA.setLocations(locations);
-    },
-    onFormSubmit() {
+    },*/
+    addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
         this.$accessor.notif.pushNotification({
           type: "error",
@@ -163,18 +163,30 @@ export default Vue.extend({
         });
         return;
       }
-      this.$accessor.FA.addSignalisation(this.newSignalisation);
+
+      const newSigna: fa_signa_needs = {
+        fa_id: +this.$route.params.fa,
+        type: this.newSignalisation.type as SignaType,
+        text: this.newSignalisation.text,
+        count: 1,
+      };
+
+      this.$accessor.FA.addSignaNeeds(newSigna);
       this.isSignaFormOpen = false;
       this.newSignalisation = { type: "", text: "", comment: "" };
     },
-    deleteSignalisation(index: number) {
-      this.$accessor.FA.deleteSignalisation(index);
+    updateSignalisationCount(index: number, count: number) {
+      this.$accessor.FA.updateSignaNeedsCount({ index, count });
     },
-    onItemChange(number: number, index: number) {
-      this.$accessor.FA.updateSignalisationNumber({ index, number });
+    deleteSignalisation(index: number) {
+      this.$accessor.FA.deleteSignaNeeds(index);
     },
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  border-left: 5px solid green;
+}
+</style>
