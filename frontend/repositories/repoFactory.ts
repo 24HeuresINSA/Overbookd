@@ -9,6 +9,7 @@ import authRepo from "~/repositories/authRepo";
 import equipmentProposalRepo from "./equipmentProposalRepo";
 import conflictsRepo from "./conflictsRepo";
 import teamRepo from "./teamRepo";
+import { GearsRepository } from "./catalog.repository";
 
 const repositories = {
   user: userRepo,
@@ -22,6 +23,7 @@ const repositories = {
   equipmentProposal: equipmentProposalRepo,
   Conflict: conflictsRepo,
   team: teamRepo,
+  gear: GearsRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -39,4 +41,5 @@ export const RepoFactory = {
   equipmentProposalRepo,
   conflictsRepo,
   teamRepo,
+  GearsRepository,
 };
