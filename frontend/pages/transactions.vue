@@ -50,7 +50,7 @@ export default {
   async beforeMount() {
     const usersCall = await safeCall(
       this.$store,
-      RepoFactory.userRepo.getAllUsernames(this)
+      RepoFactory.userRepo.getAllUsernamesWithCP(this)
     );
     if (usersCall) {
       this.usernames = usersCall.data;
@@ -78,7 +78,7 @@ export default {
   methods: {
     search(id) {
       this.filteredTransactions = this.transactions.filter((t) => {
-        return t.from === id || t.to === id;
+        return t.user_from.id === id || t.user_to.id === id;
       });
     },
     clear() {
