@@ -10,15 +10,15 @@
       <v-form>
         <!--
         <v-switch
-          :value="waterNeed.isWaterNeeded"
+          :value="waterNeed.water_flow_required"
           label="Besoin d'eau"
-          @change="onChange('isWaterNeeded', $event)"
+          @change="onChange('water_flow_required', $event)"
         ></v-switch>
         -->
         <v-text-field
           :value="waterNeed.water_needs"
           label="Desctiption du besoin en eau"
-          @change="onChange('waterNeed', $event)"
+          @change="onChange('water_needs', $event)"
         ></v-text-field>
       </v-form>
     </v-card-text>
@@ -37,10 +37,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(name: string, value: any) {
+    onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      console.log(name + " : " + value);
-      // Mettre à jour le store
+      this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
 });

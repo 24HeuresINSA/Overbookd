@@ -8,12 +8,13 @@
     <v-card-text>
       <v-form>
         <v-switch
-          :value="securityData.is_needed"
+          :value="mFA.is_pass_required"
           label="Besoin de Pass Sécu"
-          @change="onChange('is_needed', $event)"
+          @change="onChange('is_pass_required', $event)"
         ></v-switch>
         <v-text-field
-          :value="securityData.number_of_pass"
+          v-if="mFA.is_pass_required"
+          :value="mFA.number_of_pass"
           label="Nombre de Pass Sécu"
           type="number"
           min="1"
@@ -27,20 +28,19 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SecurityCard",
   computed: {
-    securityData(): any {
-      return {};
-      // return this.$accessor.FA.mFA.securityNeeds;
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
     },
   },
   methods: {
-    onChange(name: string, value: any) {
+    onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      console.log(name + " : " + value);
-      // Mettre à jour le store
+      this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
 });

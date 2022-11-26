@@ -38,7 +38,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "FormSidebar",
+  name: "FormSummary",
   props: {
     form: {
       type: String,

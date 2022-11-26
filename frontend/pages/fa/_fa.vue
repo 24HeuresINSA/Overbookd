@@ -8,12 +8,12 @@
           class="dot"
           :class="
             mFA.status == 'SUBMITTED'
-              ? 'purple'
+              ? 'orange'
               : mFA.status == 'REFUSED'
               ? 'red'
               : mFA.status == 'VALIDATED'
               ? 'green'
-              : 'orange'
+              : 'grey'
           "
         ></span>
         <h3>
@@ -36,15 +36,15 @@
           <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
-      <FormSidebar></FormSidebar>
+      <FormSummary class="summary"></FormSummary>
     </div>
     <v-container class="container">
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
-      <!--<SignaCard id="signa"></SignaCard>-->
+      <SignaCard id="signa"></SignaCard>
       <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
-      <PrestaCard id="presta"></PrestaCard>
+      <CollaboratorCard id="presta"></CollaboratorCard>
       <h2>Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
@@ -181,12 +181,12 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import { safeCall } from "../../utils/api/calls";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
+import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
-import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
+import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 
 export default Vue.extend({
@@ -197,35 +197,32 @@ export default Vue.extend({
     SignaCard,
     LogisticsCard,
     TimeframeTable,
-    PrestaCard,
+    CollaboratorCard,
     WaterLogisticCard,
     FAGeneralCard,
     FADetailCard,
     SecurityCard,
-    FormSidebar,
+    FormSummary,
   },
 
-  data() {
-    return {
-      validationDialog: false,
-      refuseDialog: false,
+  data: () => ({
+    validationDialog: false,
+    refuseDialog: false,
 
-      faRepo: RepoFactory.faRepo,
-      faId: +this.$route.params.fa,
+    faRepo: RepoFactory.faRepo,
 
-      statusTrad: new Map<string, string>([
-        ["DRAFT", "Brouillon"],
-        ["SUBMITTED", "Soumise"],
-        ["REFUSED", "Réfusée"],
-        ["VALIDATED", "Validée"],
-      ]),
-      color: {
-        submitted: "grey",
-        validated: "green",
-        refused: "red",
-      },
-    };
-  },
+    statusTrad: new Map<string, string>([
+      ["DRAFT", "Brouillon"],
+      ["SUBMITTED", "Soumise à validation"],
+      ["REFUSED", "Réfusée"],
+      ["VALIDATED", "Validée"],
+    ]),
+    color: {
+      submitted: "grey",
+      validated: "green",
+      refused: "red",
+    },
+  }),
 
   computed: {
     FA(): any {
@@ -236,6 +233,9 @@ export default Vue.extend({
     },
     me(): any {
       return this.$accessor.user.me;
+    },
+    faId(): number {
+      return +this.$route.params.fa;
     },
     validators(): Array<any> {
       return this.$accessor.team.faValidators;
@@ -268,7 +268,7 @@ export default Vue.extend({
     }
 
     let title = "FA " + this.faId;
-    if (this.mFA.name) title += " : " + this.mFA.name;
+    if (this.mFA.name) title += " - " + this.mFA.name;
     document.title = title;
   },
   methods: {
@@ -278,25 +278,28 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
-      let context: any = this;
       await safeCall(
-        context,
-        this.faRepo.updateFA(this, this.mFA)
-        // "undelete"
+        this.$store,
+        this.faRepo.updateFA(this, this.mFA),
+        "undelete"
       );
     },
 
     validate(validator: any) {
       if (validator) {
-        this.mFA.validate(validator.name);
+        this.$accessor.FA.validate(validator.name);
         this.saveFA();
       }
     },
 
     submit() {
-      this.mFA.submitForReview(this.me.lastname);
+      this.$accessor.FA.submitForReview({
+        faId: this.faId,
+        authorId: this.me.id,
+        authorName: this.me.firstname + " " + this.me.lastname,
+      });
       this.validationDialog = false;
-      this.saveFA();
+      // this.saveFA();
     },
 
     getIconColor(validator: any) {
@@ -310,7 +313,7 @@ export default Vue.extend({
           return this.color.refused;
         }
       }
-      if (this.FA.status === "submitted") {
+      if (this.FA.status === "SUBMITTED") {
         return this.color.submitted;
       }
     },
@@ -373,7 +376,6 @@ h1 {
   border-radius: 6px;
   user-select: none;
 
-  /* Position the tooltip */
   position: absolute;
   z-index: 1;
   top: 100%;
@@ -386,10 +388,10 @@ h1 {
 }
 
 .container {
-  flex: 1 1 auto;
-  overflow: auto;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  overflow: auto;
   scroll-behavior: smooth;
 }
 
@@ -409,8 +411,8 @@ h1 {
   background-color: transparent;
 }
 
-.purple {
-  background-color: purple;
+.grey {
+  background-color: grey;
 }
 .orange {
   background-color: orange;
@@ -422,5 +424,39 @@ h1 {
 
 .green {
   background-color: greenyellow;
+}
+
+@media only screen and (max-width: 750px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .summary {
+    visibility: collapse;
+  }
+
+  .container {
+    overflow: visible;
+  }
+
+  .bottom-bar {
+    width: calc(100% - 20px);
+    position: relative;
+    margin: 10px;
+    bottom: 40px;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  .bottom-bar > * {
+    margin: 10px;
+  }
 }
 </style>

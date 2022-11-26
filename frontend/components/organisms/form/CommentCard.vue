@@ -7,10 +7,10 @@
         :items="comments"
         hide-default-footer
         :items-per-page="-1"
-        sort-by="time"
+        sort-by="created_at"
       >
-        <template #[`item.time`]="{ item }">
-          {{ new Date(item.time).toLocaleString() }}
+        <template #[`item.created_at`]="{ item }">
+          {{ new Date(item.created_at).toLocaleString() }}
         </template>
       </v-data-table>
       <v-textarea
@@ -18,6 +18,7 @@
         label="Commentaire"
         dense
         rows="3"
+        class="margin-top"
       ></v-textarea>
     </v-card-text>
     <v-card-actions>
@@ -29,42 +30,27 @@
 
 <script lang="ts">
 import { RepoFactory } from "~/repositories/repoFactory";
-import { Header } from "~/utils/models/Data";
 import Vue from "vue";
-import { FormComment } from "~/utils/models/Comment";
 import { safeCall } from "~/utils/api/calls";
-
-declare interface Data {
-  headers: Header[];
-  newComment: string;
-}
+import { CommentType, fa_comment } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CommentCard",
   props: {
-    comments: {
-      type: Array,
-      default: () => [],
-    },
     form: {
       type: String,
       default: () => "FA",
     },
   },
-  data(): Data {
-    return {
-      headers: [
-        { text: "Validateur", value: "validator" },
-        { text: "Sujet", value: "topic" },
-        {
-          text: "Commentaire",
-          value: "text",
-        },
-        { text: "Date", value: "time" },
-      ],
-      newComment: "",
-    };
-  },
+  data: () => ({
+    headers: [
+      { text: "Auteur", value: "author" },
+      { text: "Sujet", value: "subject" },
+      { text: "Commentaire", value: "comment" },
+      { text: "Date", value: "created_at" },
+    ],
+    newComment: "",
+  }),
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
     store(): any {
@@ -74,19 +60,29 @@ export default Vue.extend({
         return this.$accessor.FT;
       }
     },
+    // eslint-disable-next-line vue/return-in-computed-property
+    comments(): any {
+      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comment;
+      // else if (this.form === "FT") return this.$accessor.FT.mFT.ft_comment;
+    },
+    me(): any {
+      return this.$accessor.user.me;
+    },
   },
   methods: {
     async addComment() {
-      const comment: FormComment = {
-        topic: "commentaire",
-        text: this.newComment,
-        time: new Date(),
-        validator: `${this.$accessor.user.me.firstname} ${this.$accessor.user.me.lastname}`,
-      };
-      this.store.addComment(comment);
-      // clean the input
-      this.newComment = "";
-      if (this.form === "FA") {
+      if (this.form == "FA") {
+        const comment: fa_comment = {
+          fa_id: +this.$route.params.fa,
+          subject: CommentType.COMMENT,
+          comment: this.newComment,
+          author: this.me.id,
+          created_at: new Date(),
+        };
+
+        this.store.addComment(comment);
+        this.newComment = "";
+
         await safeCall(
           this.$store,
           RepoFactory.faRepo.updateFA(this, this.$accessor.FA.mFA),
@@ -94,16 +90,31 @@ export default Vue.extend({
           "server"
         );
       } else if (this.form === "FT") {
+        /*const comment: ft_comment = {
+          ft_id: +this.$route.params.fa,
+          subject: CommentType.COMMENT,
+          comment: this.newComment,
+          author: this.me.id,
+          created_at: new Date(),
+        };
+
+        this.store.addComment(comment);
+        this.newComment = "";
+
         await safeCall(
           this.$store,
           RepoFactory.ftRepo.updateFT(this, this.$accessor.FT.mFT),
           "sent",
           "server"
-        );
+        );*/
       }
     },
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.margin-top {
+  margin-top: 20px;
+}
+</style>
