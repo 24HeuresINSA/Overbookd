@@ -23,7 +23,7 @@ export enum SignaType {
 
 export enum CommentType {
   COMMENT = "Commentaire",
-  SUBMIT = "Soumission",
+  SUBMIT = "Soumise à validation",
   VALIDATION = "Validation",
   REFUSAL = "Refus",
 }

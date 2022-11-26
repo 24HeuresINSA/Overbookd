@@ -8,12 +8,12 @@
           class="dot"
           :class="
             mFA.status == 'SUBMITTED'
-              ? 'purple'
+              ? 'orange'
               : mFA.status == 'REFUSED'
               ? 'red'
               : mFA.status == 'VALIDATED'
               ? 'green'
-              : 'orange'
+              : 'grey'
           "
         ></span>
         <h3>
@@ -213,7 +213,7 @@ export default Vue.extend({
 
     statusTrad: new Map<string, string>([
       ["DRAFT", "Brouillon"],
-      ["SUBMITTED", "Soumise"],
+      ["SUBMITTED", "Soumise à validation"],
       ["REFUSED", "Réfusée"],
       ["VALIDATED", "Validée"],
     ]),
@@ -278,11 +278,10 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
-      let context: any = this;
       await safeCall(
-        context,
-        this.faRepo.updateFA(this, this.mFA)
-        // "undelete"
+        this.$store,
+        this.faRepo.updateFA(this, this.mFA),
+        "undelete"
       );
     },
 
@@ -314,7 +313,7 @@ export default Vue.extend({
           return this.color.refused;
         }
       }
-      if (this.FA.status === "submitted") {
+      if (this.FA.status === "SUBMITTED") {
         return this.color.submitted;
       }
     },
@@ -412,8 +411,8 @@ h1 {
   background-color: transparent;
 }
 
-.purple {
-  background-color: purple;
+.grey {
+  background-color: grey;
 }
 .orange {
   background-color: orange;
