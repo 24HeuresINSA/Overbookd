@@ -20,8 +20,7 @@ export enum Status {
   VALIDATED = 'VALIDATED',
   REFUSED = 'REFUSED',
 }
-
-class FA {
+export class UpdateFaDto {
   @ApiProperty({
     required: true,
     description: 'The name of the fa',
@@ -147,17 +146,6 @@ class FA {
   @IsNumber()
   @IsOptional()
   water_flow_required?: number;
-}
-
-export class UpdateFaDto {
-  @ApiProperty({
-    required: true,
-    description: 'The fa',
-  })
-  @ValidateNested()
-  @Type(() => FA)
-  fa: FA;
-
   @ApiProperty({
     required: false,
     description: 'The collaborators',
@@ -196,7 +184,7 @@ export class UpdateFaDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => CreateTimeWindowDto)
-  time_windows?: CreateTimeWindowDto[];
+  time_window?: CreateTimeWindowDto[];
 
   @ApiProperty({
     required: false,

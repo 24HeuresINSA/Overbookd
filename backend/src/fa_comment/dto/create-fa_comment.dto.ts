@@ -8,6 +8,14 @@ export enum subject_type {
 }
 export class CreateFaCommentDto {
   @ApiProperty({
+    required: false,
+    description: 'The id of the need',
+  })
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
     required: true,
     description: 'The text of the comment',
   })

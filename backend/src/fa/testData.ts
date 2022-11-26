@@ -3,38 +3,32 @@ import { signa_type } from '../fa_signa_needs/dto/create-fa_signa_need.dto';
 import { subject_type } from '../fa_comment/dto/create-fa_comment.dto';
 
 export const emptyFA: UpdateFaDto = {
-  fa: {
-    name: 'empty',
-  },
+  name: 'empty',
 };
 
 export const nakedFA: UpdateFaDto = {
-  fa: {
-    name: 'Naked FA',
-    type: 'test',
-    team_id: 1,
-    in_charge: 1,
-    location_id: 1,
-    status: Status.DRAFT,
-    description: 'An FA wiht no links',
-    is_publishable: true,
-    is_major: false,
-    is_kids: false,
-  },
+  name: 'Naked FA',
+  type: 'test',
+  team_id: 1,
+  in_charge: 1,
+  location_id: 1,
+  status: Status.DRAFT,
+  description: 'An FA wiht no links',
+  is_publishable: true,
+  is_major: false,
+  is_kids: false,
 };
 export const collaboratorFA: UpdateFaDto = {
-  fa: {
-    name: 'Collaborator FA',
-    type: 'test',
-    team_id: 1,
-    in_charge: 1,
-    location_id: 1,
-    status: Status.DRAFT,
-    description: 'A FA with a Collaborator',
-    is_publishable: true,
-    is_major: false,
-    is_kids: false,
-  },
+  name: 'Collaborator FA',
+  type: 'test',
+  team_id: 1,
+  in_charge: 1,
+  location_id: 1,
+  status: Status.DRAFT,
+  description: 'A FA with a Collaborator',
+  is_publishable: true,
+  is_major: false,
+  is_kids: false,
   fa_collaborator: [
     {
       firstname: 'Collaborator A',
@@ -44,18 +38,16 @@ export const collaboratorFA: UpdateFaDto = {
   ],
 };
 export const signaFA: UpdateFaDto = {
-  fa: {
-    name: 'Signa FA',
-    type: 'test',
-    team_id: 1,
-    in_charge: 1,
-    location_id: 1,
-    status: Status.DRAFT,
-    description: 'A FA with some signa',
-    is_publishable: true,
-    is_major: false,
-    is_kids: false,
-  },
+  name: 'Signa FA',
+  type: 'test',
+  team_id: 1,
+  in_charge: 1,
+  location_id: 1,
+  status: Status.DRAFT,
+  description: 'A FA with some signa',
+  is_publishable: true,
+  is_major: false,
+  is_kids: false,
   fa_signa_needs: [
     {
       signa_type: signa_type.BANNIERE,
@@ -65,18 +57,16 @@ export const signaFA: UpdateFaDto = {
   ],
 };
 export const commentFA: UpdateFaDto = {
-  fa: {
-    name: 'Signa FA',
-    type: 'test',
-    team_id: 1,
-    in_charge: 1,
-    location_id: 1,
-    status: Status.DRAFT,
-    description: 'A FA with some signa',
-    is_publishable: true,
-    is_major: false,
-    is_kids: false,
-  },
+  name: 'Signa FA',
+  type: 'test',
+  team_id: 1,
+  in_charge: 1,
+  location_id: 1,
+  status: Status.DRAFT,
+  description: 'A FA with some signa',
+  is_publishable: true,
+  is_major: false,
+  is_kids: false,
   fa_comment: [
     {
       subject: subject_type.COMMENT,

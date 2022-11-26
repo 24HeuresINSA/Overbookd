@@ -61,13 +61,13 @@ describe('FA getters', () => {
   beforeAll(async () => {
     FAs = [nakedFA, collaboratorFA, emptyFA, signaFA];
     FAs.map(async (FA) => {
-      FA.fa.type = fa_type.name;
-      FA.fa.location_id = location.id;
+      FA.type = fa_type.name;
+      FA.location_id = location.id;
     });
     expect(faservice.create).toBeDefined();
     await Promise.all(
       FAs.map(async (FA) => {
-        return await faservice.create({ name: FA.fa.name });
+        return await faservice.create({ name: FA.name });
       }),
     );
   });
@@ -101,22 +101,22 @@ describe('FA creation', () => {
     test('should create an FA without any links', async () => {
       expect(faservice.create).toBeDefined();
       const FA = nakedFA;
-      FA.fa.type = fa_type.name;
-      FA.fa.location_id = location.id;
-      result = await faservice.create({ name: nakedFA.fa.name });
+      FA.type = fa_type.name;
+      FA.location_id = location.id;
+      result = await faservice.create({ name: nakedFA.name });
       expect(result).toBeDefined();
     });
 
     test('Should update the fa with the correct data', async () => {
       expect(faservice.update).toBeDefined();
       const FA = nakedFA;
-      FA.fa.type = fa_type.name;
-      FA.fa.location_id = location.id;
+      FA.type = fa_type.name;
+      FA.location_id = location.id;
       const updatedFA = await faservice.update(result.id, FA);
       expect(updatedFA).toBeDefined();
-      Object.keys(FA.fa).map((key) => {
+      Object.keys(FA).map((key) => {
         expect(updatedFA).toHaveProperty(key);
-        expect(updatedFA[key]).toStrictEqual(FA.fa[key]);
+        expect(updatedFA[key]).toBe(FA[key]);
       });
     });
 
@@ -150,18 +150,19 @@ describe('FA creation', () => {
     test('should create an FA with a collaborator', async () => {
       expect(faservice.create).toBeDefined();
       const FA = collaboratorFA;
-      FA.fa.type = fa_type.name;
-      FA.fa.location_id = location.id;
-      collab_result = await faservice.create({ name: FA.fa.name });
+      FA.type = fa_type.name;
+      FA.location_id = location.id;
+      collab_result = await faservice.create({ name: FA.name });
       expect(collab_result).toBeDefined();
       collab_result = await faservice.update(collab_result.id, FA);
-      Object.keys(FA.fa).map((key) => {
+      console.log(JSON.stringify(collab_result, null, 2));
+      //check if every defined value of FA is in the result
+      Object.keys(FA).map((key) => {
         expect(collab_result).toHaveProperty(key);
-        expect(collab_result[key]).toStrictEqual(FA.fa[key]);
+        if (typeof FA[key] !== 'object') {
+          expect(collab_result[key]).toBe(FA[key]);
+        }
       });
-      const getfa = await faservice.findOne(collab_result.id);
-      expect(getfa).toBeDefined();
-      console.log(JSON.stringify(getfa, null, 2));
     });
 
     test('Should get one collaborator', async () => {
@@ -206,15 +207,17 @@ describe('Create FA with some signa_needs', () => {
 
   test('should create an FA with some signa_needs', async () => {
     const FA = signaFA;
-    FA.fa.type = fa_type.name;
-    FA.fa.location_id = location.id;
-    signa_result = await faservice.create({ name: FA.fa.name });
+    FA.type = fa_type.name;
+    FA.location_id = location.id;
+    signa_result = await faservice.create({ name: FA.name });
     expect(signa_result).toBeDefined();
     signa_result = await faservice.update(signa_result.id, FA);
     expect(signa_result).toBeDefined();
-    Object.keys(FA.fa).map((key) => {
+    Object.keys(FA).map((key) => {
       expect(signa_result).toHaveProperty(key);
-      expect(signa_result[key]).toStrictEqual(FA.fa[key]);
+      if (typeof FA[key] !== 'object') {
+        expect(signa_result[key]).toBe(FA[key]);
+      }
     });
   });
 
@@ -272,9 +275,9 @@ describe('FA validation system', () => {
     expect(validatorUser).toBeDefined();
     expect(notValidatorUser).toBeDefined();
     const FA = nakedFA;
-    FA.fa.type = fa_type.name;
-    FA.fa.location_id = location.id;
-    sampleFA = await faservice.create({ name: FA.fa.name });
+    FA.type = fa_type.name;
+    FA.location_id = location.id;
+    sampleFA = await faservice.create({ name: FA.name });
     expect(sampleFA).toBeDefined();
     sampleFA = await faservice.update(sampleFA.id, FA);
   });
@@ -332,6 +335,34 @@ describe('FA validation system', () => {
       },
     });
 
+    await prisma.fa.delete({
+      where: {
+        id: sampleFA.id,
+      },
+    });
+  });
+});
+
+describe('FA update system', () => {
+  let sampleFA: fa | null;
+  beforeAll(async () => {
+    const FA = signaFA;
+    FA.type = fa_type.name;
+    FA.location_id = location.id;
+    sampleFA = await faservice.create({ name: FA.name });
+    expect(sampleFA).toBeDefined();
+    sampleFA = await faservice.update(sampleFA.id, FA);
+  });
+  test('Should update the FA', async () => {
+    console.log('*** BEFORE UPDATE ***');
+    console.log(JSON.stringify(sampleFA, null, 2));
+  });
+  afterAll(async () => {
+    await prisma.fa_signa_needs.deleteMany({
+      where: {
+        fa_id: sampleFA.id,
+      },
+    });
     await prisma.fa.delete({
       where: {
         id: sampleFA.id,

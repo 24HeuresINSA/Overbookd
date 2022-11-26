@@ -11,6 +11,14 @@ export enum electricity_type {
 }
 export class CreateFaElectricityNeedDto {
   @ApiProperty({
+    required: false,
+    description: 'The id of the need',
+  })
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
     required: true,
     description: 'The type of electricity',
   })
