@@ -94,7 +94,6 @@
 </template>
 
 <script>
-import { getConfig } from "../common/role";
 import PermissionsCard from "../components/organisms/PermissionsCard.vue";
 import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
 

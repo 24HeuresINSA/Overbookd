@@ -26,6 +26,7 @@ import { PermissionModule } from './permission/permission.module';
 import { PermissionService } from './permission/permission.service';
 import { TeamService } from './team/team.service';
 import { UserService } from './user/user.service';
+import { SlugifyService } from './common/services/slugify.service';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { UserService } from './user/user.service';
     TeamService,
     PermissionService,
     MailService,
+    SlugifyService,
   ],
   exports: [PrismaService],
 })

@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma.service';
 import { TeamService } from '../team/team.service';
 import { PermissionService } from '../permission/permission.service';
 import { UserService } from '../user/user.service';
+import { SlugifyService } from 'src/common/services/slugify.service';
 
 @Module({
   imports: [],
@@ -15,6 +16,7 @@ import { UserService } from '../user/user.service';
     UserService,
     TeamService,
     PermissionService,
+    SlugifyService,
   ],
 })
 export class TransactionModule {}

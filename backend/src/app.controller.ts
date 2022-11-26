@@ -6,10 +6,10 @@ import {
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { Roles } from './auth/team-auth.decorator';
-import { RolesGuard } from './auth/team-auth.guard';
 import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
+import { Permissions } from 'src/auth/team-auth.decorator';
+import { PermissionsGuard } from 'src/auth/team-auth.guard';
 
 type Role =
   | 'admin'
@@ -76,8 +76,8 @@ export class AppController {
   @ApiUnauthorizedResponse({
     description: 'User dont have the right to access this route',
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('admin')
   @Post('mailtest')
   async mailtest(@Body() to: emailTestDto) {
     return this.mailService.mailTest(to);

@@ -21,10 +21,10 @@ export const getters = getterTree(state, {
   isAllowed:
     (state, getters) =>
     (permissionName: string, userTeams: number[]): boolean => {
+      if (userTeams.includes(8)) return true; // TODO change this to admin code
       const permission = getters.allPermissions
         .filter((t: permission) => t.name === permissionName)
         .shift();
-      // console.log(permissionName, permission, userTeams);
       if (permission && userTeams && Array(userTeams).length > 0) {
         return permission.teams.some((teamId: number) =>
           userTeams.includes(teamId)
