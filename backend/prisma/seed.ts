@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
+import { Departements, Years } from '../src/user/dto/common';
 import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
 import { gears } from './gears';
@@ -300,40 +301,43 @@ async function main() {
   ];
 
   const hashPassword = await new HashingUtilsService().hash('password');
-  for (const userTeam of userTeamTuples) {
-    const [user, teams] = userTeam;
+  await Promise.all(
+    userTeamTuples.map(async (userTeam) => {
+      const [user, teamNames] = userTeam;
 
-    const userTeams: Array<{ team_id: number }> = [];
-    teams.split(',').forEach((teamName) => {
-      userTeams.push({
-        team_id: databaseTeams.find((team) => team.name === teamName).id,
+      const teams = databaseTeams
+        .filter((team) => teamNames.split(',').includes(team.code))
+        .map((team) => ({ team_id: team.id }));
+
+      const email = `${user}@24h.me`;
+
+      const userData = {
+        email,
+        firstname: user,
+        lastname: user,
+        nickname: '',
+        birthdate: new Date(1990, 1, 1),
+        phone: '0612345678',
+        department: Departements.TC,
+        year: Years.A1,
+        password: hashPassword,
+        team: {
+          create: teams,
+        },
+      };
+
+      await prisma.user.upsert({
+        where: { email },
+        update: userData,
+        create: userData,
       });
-    });
 
-    const data: Prisma.UserUncheckedCreateInput = {
-      email: `${user}@24h.me`,
-      firstname: user,
-      lastname: user,
-      nickname: '',
-      birthdate: new Date(1990, 1, 1),
-      phone: '0612345678',
-      department: 'TC',
-      year: 'A1',
-      password: hashPassword,
-      team: {
-        create: userTeams,
-      },
-    };
-
-    await prisma.user.upsert({
-      where: { email: `${user}@24h.me` },
-      update: data,
-      create: data,
-    });
-
-    console.log(`User ${user} added with teams ${teams.split(',')}`);
-    console.log('------------------------------------------------------------');
-  }
+      console.log(`User ${user} added with teams ${teamNames.split(',')}`);
+      console.log(
+        '------------------------------------------------------------',
+      );
+    }),
+  );
 
   const savedGears = await Promise.all(
     gears.map((gear) => {
