@@ -47,10 +47,15 @@
         {{ item.category && item.category.name }}
       </template>
       <template #item.actions="{ item }">
-        <v-icon small class="mr-2"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="openUpdateGearDialog(item)">
+          mdi-pencil
+        </v-icon>
         <v-icon small> mdi-delete </v-icon>
       </template>
     </v-data-table>
+    <v-dialog v-model="isUpdateGearDialogOpen" width="600px">
+      <GearForm :gear="selectedGear"></GearForm>
+    </v-dialog>
   </div>
 </template>
 
@@ -59,6 +64,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
+import GearForm from "./form/GearForm.vue";
 
 interface GearListingData {
   headers: Header[];
@@ -70,12 +76,15 @@ interface GearListingData {
   };
   loading: boolean;
   searchDelay?: any;
+  selectedGear?: Gear;
+  isUpdateGearDialogOpen: boolean;
 }
 
 const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
+  components: { GearForm },
   data(): GearListingData {
     return {
       headers: [
@@ -94,6 +103,8 @@ export default Vue.extend({
       },
       loading: false,
       searchDelay: undefined,
+      selectedGear: undefined,
+      isUpdateGearDialogOpen: false,
     };
   },
   computed: {
@@ -124,6 +135,10 @@ export default Vue.extend({
       this.loading = true;
       await this.$accessor.catalog.fetchGears(searchOptions);
       this.loading = false;
+    },
+    openUpdateGearDialog(gear: Gear) {
+      this.selectedGear = gear;
+      this.isUpdateGearDialogOpen = true;
     },
     isValidSearchOption(searchOption: string | null): boolean {
       return Boolean(searchOption && searchOption.length >= searchMinLength);

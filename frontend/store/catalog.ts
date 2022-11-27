@@ -23,6 +23,10 @@ export interface GearForm {
   category?: number;
 }
 
+export interface GearUpdateForm extends GearForm {
+  id: number;
+}
+
 export interface CategorySearchOptions {
   name?: string;
   owner?: string;
@@ -129,6 +133,18 @@ export const actions = actionTree(
       );
       if (!call) return;
       context.commit("ADD_GEAR", call.data);
+    },
+
+    async updateGear(context, form: GearUpdateForm): Promise<void> {
+      const { id, ...gearForm } = form;
+      const call = await safeCall<Gear>(
+        this,
+        gearRepository.updateGear(this, id, gearForm),
+        "saved",
+        "server"
+      );
+      if (!call) return;
+      context.commit("UPDATE_GEAR", call.data);
     },
   }
 );

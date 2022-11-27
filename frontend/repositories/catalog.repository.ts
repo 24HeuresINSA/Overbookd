@@ -19,6 +19,10 @@ export class GearsRepository {
   static createGear(context: Context, gearForm: GearForm) {
     return context.$axios.post<Gear>(this.basePath, gearForm);
   }
+
+  static updateGear(context: Context, gearId: number, gearForm: GearForm) {
+    return context.$axios.put<Gear>(`${this.basePath}/${gearId}`, gearForm);
+  }
 }
 
 export class CategoryRepository {

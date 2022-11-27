@@ -18,8 +18,9 @@
           label="Choisisez une categorie associee"
         ></SearchCategoryVue>
       </div>
-      <v-btn color="success" dark large @click="createGear">
-        <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Creer le matos
+      <v-btn color="success" dark large @click="createOrUpdateGear">
+        <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Sauvegarder le
+        matos
       </v-btn>
     </form>
   </v-card>
@@ -28,7 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { GearForm } from "~/store/catalog";
-import { Category } from "~/utils/models/catalog.model";
+import { Category, Gear } from "~/utils/models/catalog.model";
 import SearchCategoryVue from "../../atoms/SearchCategory.vue";
 
 interface GearFormData {
@@ -46,10 +47,16 @@ const nameMinLength = 3;
 export default Vue.extend({
   name: "GearForm",
   components: { SearchCategoryVue },
+  props: {
+    gear: {
+      type: Object,
+      default: () => ({ name: "", category: undefined }),
+    },
+  },
   data(): GearFormData {
     return {
-      name: "",
-      category: undefined,
+      name: this.gear.name,
+      category: this.gear.category,
       rules: {
         name: {
           minLength: (value) =>
@@ -59,14 +66,23 @@ export default Vue.extend({
       },
     };
   },
+  watch: {
+    gear: function (g: Gear) {
+      this.name = g.name;
+      this.category = g.category;
+    },
+  },
   methods: {
-    async createGear() {
+    async createOrUpdateGear() {
       let gear: GearForm = { name: this.name };
       if (this.category) {
         gear = { ...gear, category: this.category.id };
       }
+      const action = this.gear.id
+        ? this.$accessor.catalog.updateGear({ ...gear, id: this.gear.id })
+        : this.$accessor.catalog.createGear(gear);
 
-      await this.$accessor.catalog.createGear(gear);
+      await action;
       this.name = "";
       this.category = undefined;
     },
