@@ -2,18 +2,18 @@
   <div>
     <h1>Catalogue</h1>
     <div class="catalog">
-      <sectionclass class="gears">
+      <section class="gears">
         <GearListing></GearListing>
         <v-btn large color="success" rounded @click="openGearCreationDialog">
           <v-icon dark> mdi-plus </v-icon>Ajouter du matos</v-btn
         >
-      </sectionclass>
+      </section>
       <CategoriesTreeView class="categories"></CategoriesTreeView>
-      <snackNotificationContainerVue></snackNotificationContainerVue>
     </div>
     <v-dialog v-model="gearCreationDialogOpened" width="600px">
       <GearForm></GearForm
     ></v-dialog>
+    <snackNotificationContainerVue></snackNotificationContainerVue>
   </div>
 </template>
 
