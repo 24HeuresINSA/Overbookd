@@ -17,6 +17,14 @@ export class CreateFaSignaNeedDto {
   id?: number;
 
   @ApiProperty({
+    required: false,
+    description: 'The id of the FA',
+  })
+  @IsNumber()
+  @IsOptional()
+  fa_id?: number;
+
+  @ApiProperty({
     required: true,
     description: 'The type of signalisation',
   })

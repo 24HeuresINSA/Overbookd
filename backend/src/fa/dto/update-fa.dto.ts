@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
 import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
 import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
@@ -71,7 +73,11 @@ export class UpdateFaDto {
   @ApiProperty({
     required: false,
     description: 'The status of the fa',
-    enum: [Status.DRAFT, Status.SUBMITTED, Status.VALIDATED, Status.REFUSED],
+    enum: Status,
+  })
+  @IsEnum(Status, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(Status)}`,
   })
   status?: Status;
 

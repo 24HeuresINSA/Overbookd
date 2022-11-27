@@ -1,7 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService, FaResponse } from './fa.service';
 import { PrismaService } from '../prisma.service';
-import { nakedFA, collaboratorFA, emptyFA, signaFA } from './testData';
+import {
+  nakedFA,
+  collaboratorFA,
+  emptyFA,
+  signaFA,
+  completeFA,
+} from './testData';
 import { collaborator, fa, fa_type, location, User } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 
@@ -345,7 +351,7 @@ describe('FA validation system', () => {
 describe('FA update system', () => {
   let sampleFA: FaResponse | null;
   beforeAll(async () => {
-    const FA = signaFA;
+    const FA = completeFA;
     FA.type = fa_type.name;
     FA.location_id = location.id;
     sampleFA = await faservice.create({ name: FA.name });
@@ -355,20 +361,5 @@ describe('FA update system', () => {
   test('Should update the FA', async () => {
     console.log('*** BEFORE UPDATE ***');
     console.log(JSON.stringify(sampleFA, null, 2));
-    console.log('*** AFTER UPDATE ***');
-    sampleFA.fa_signa_needs[0].text = 'test';
-    //sampleFA = await faservice.update(sampleFA.id, sampleFA);
-  });
-  afterAll(async () => {
-    await prisma.fa_signa_needs.deleteMany({
-      where: {
-        fa_id: sampleFA.id,
-      },
-    });
-    await prisma.fa.delete({
-      where: {
-        id: sampleFA.id,
-      },
-    });
   });
 });

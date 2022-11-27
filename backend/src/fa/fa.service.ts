@@ -10,30 +10,122 @@ import { NotFoundError } from '@prisma/client/runtime';
 import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
 import { CreateFaDto } from './dto/create-fa.dto';
 
-const COMPLETE_FA_INCLUDES = {
+const COMPLETE_FA_SELECT = {
+  id: true,
+  name: true,
+  type: true,
+  team_id: true,
+  in_charge: true,
+  created_at: true,
+  location_id: true,
+  status: true,
+  description: true,
+  is_publishable: true,
+  is_major: true,
+  is_kids: true,
+  security_needs: true,
+  is_pass_required: true,
+  number_of_pass: true,
+  water_needs: true,
+  water_flow_required: true,
   fa_collaborator: {
-    include: {
-      collaborator: true,
-    },
-  },
-  fa_validation: true,
-  fa_refuse: true,
-  fa_electricity_needs: true,
-  fa_signa_needs: true,
-  fa_comment: true,
-  location: true,
-  Team: true,
-  user_in_charge: {
     select: {
-      firstname: true,
-      lastname: true,
+      collaborator: {
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          phone: true,
+          email: true,
+          company: true,
+          comment: true,
+        },
+      },
     },
   },
-  time_window: true,
+  fa_validation: {
+    select: {
+      User: {
+        select: {
+          firstname: true,
+          lastname: true,
+        },
+      },
+      Team: {
+        select: {
+          name: true,
+          color: true,
+          icon: true,
+        },
+      },
+      created_at: true,
+    },
+  },
+  fa_refuse: {
+    select: {
+      User: {
+        select: {
+          firstname: true,
+          lastname: true,
+        },
+      },
+      Team: {
+        select: {
+          name: true,
+          color: true,
+          icon: true,
+        },
+      },
+      created_at: true,
+    },
+  },
+  fa_electricity_needs: {
+    select: {
+      id: true,
+      electricity_type: true,
+      power: true,
+      comment: true,
+    },
+  },
+  fa_signa_needs: {
+    select: {
+      id: true,
+      signa_type: true,
+      text: true,
+      count: true,
+      comment: true,
+    },
+  },
+  fa_comment: {
+    select: {
+      id: true,
+      comment: true,
+      subject: true,
+      created_at: true,
+      User_author: {
+        select: {
+          firstname: true,
+          lastname: true,
+        },
+      },
+      Team: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  },
+  time_window: {
+    select: {
+      id: true,
+      start: true,
+      end: true,
+    },
+  },
 };
 
 export type FaResponse = Prisma.faGetPayload<{
-  include: typeof COMPLETE_FA_INCLUDES;
+  select: typeof COMPLETE_FA_SELECT;
 }>;
 
 @Injectable()
@@ -57,7 +149,7 @@ export class FaService {
       where: {
         id: Number(id),
       },
-      include: COMPLETE_FA_INCLUDES,
+      select: COMPLETE_FA_SELECT,
     });
   }
 
@@ -121,7 +213,7 @@ export class FaService {
   }
 
   async create(fa: CreateFaDto): Promise<FaResponse | null> {
-    return this.prisma.fa.create({ data: fa, include: COMPLETE_FA_INCLUDES });
+    return this.prisma.fa.create({ data: fa, select: COMPLETE_FA_SELECT });
   }
 
   private async create_collaborators(
@@ -129,12 +221,15 @@ export class FaService {
   ): Promise<collaborator[] | null> {
     if (!fa_collab) return [];
     if (fa_collab.length === 0) return [];
+    let all_collab = fa_collab.map((c) => {
+      return c.collaborator;
+    });
     await this.prisma.collaborator.createMany({
-      data: fa_collab,
+      data: all_collab,
       skipDuplicates: true,
     });
     // trimimg the collaborator to get only the name
-    fa_collab = fa_collab.map((collab) => {
+    all_collab = all_collab.map((collab) => {
       return {
         ...collab,
         firstname: collab.firstname.trim(), // trust me it's not useless
@@ -145,12 +240,12 @@ export class FaService {
     const collaborators = await this.prisma.collaborator.findMany({
       where: {
         firstname: {
-          in: fa_collab.map((collaborator) => {
+          in: all_collab.map((collaborator) => {
             return collaborator.firstname;
           }),
         },
         lastname: {
-          in: fa_collab.map((collaborator) => {
+          in: all_collab.map((collaborator) => {
             return collaborator.lastname;
           }),
         },

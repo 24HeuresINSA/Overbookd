@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
@@ -6,9 +7,11 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsNumber,
+  ValidateNested,
 } from 'class-validator';
 
-export class CreateCollaboratorDto {
+class Collaborator {
   @ApiProperty({
     required: true,
     description: 'The firstname of the collaborator',
@@ -65,4 +68,15 @@ export class CreateCollaboratorDto {
   @IsString()
   @IsOptional()
   comment?: string;
+}
+
+export class CreateCollaboratorDto {
+  @ApiProperty({
+    required: true,
+    description: 'The collaborator',
+  })
+  @IsNotEmpty()
+  @Type(() => Collaborator)
+  @ValidateNested()
+  collaborator: Collaborator;
 }

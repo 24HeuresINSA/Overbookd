@@ -1,6 +1,7 @@
 import { UpdateFaDto, Status } from './dto/update-fa.dto';
 import { signa_type } from '../fa_signa_needs/dto/create-fa_signa_need.dto';
 import { subject_type } from '../fa_comment/dto/create-fa_comment.dto';
+import { electricity_type } from '../fa_electricity_needs/dto/create-fa_electricity_need.dto';
 
 export const emptyFA: UpdateFaDto = {
   name: 'empty',
@@ -31,9 +32,11 @@ export const collaboratorFA: UpdateFaDto = {
   is_kids: false,
   fa_collaborator: [
     {
-      firstname: 'Collaborator A',
-      lastname: 'Collaborator A',
-      phone: '0000000000',
+      collaborator: {
+        firstname: 'Collaborator A',
+        lastname: 'Collaborator A',
+        phone: '0000000000',
+      },
     },
   ],
 };
@@ -73,6 +76,55 @@ export const commentFA: UpdateFaDto = {
       comment: 'Bonjour',
       author: 1,
       team_id: 1,
+    },
+  ],
+};
+
+export const completeFA: UpdateFaDto = {
+  name: 'complete FA',
+  type: 'test',
+  team_id: 1,
+  in_charge: 1,
+  location_id: 1,
+  status: Status.DRAFT,
+  description: 'A complete FA',
+  is_publishable: true,
+  is_major: false,
+  is_kids: false,
+  fa_comment: [
+    {
+      subject: subject_type.COMMENT,
+      comment: 'Bonjour',
+      author: 1,
+      team_id: 1,
+    },
+  ],
+  fa_signa_needs: [
+    {
+      signa_type: signa_type.BANNIERE,
+      text: 'Bonjour',
+      count: 1,
+    },
+  ],
+  fa_collaborator: [
+    {
+      collaborator: {
+        firstname: 'Collaborator A',
+        lastname: 'Collaborator A',
+        phone: '0000000000',
+      },
+    },
+  ],
+  fa_electricity_needs: [
+    {
+      electricity_type: electricity_type.P17_16A_MONO,
+      power: 1,
+    },
+  ],
+  time_window: [
+    {
+      start: new Date(),
+      end: new Date(),
     },
   ],
 };
