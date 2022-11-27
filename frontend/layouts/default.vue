@@ -125,7 +125,7 @@ const AUTHORS = [
   "Thibaut - Moule 🍑",
   "Antoine - Gyneco 🩺",
   "Damien - Hublot 🖐",
-  "Léo - Shagasse 💃",
+  "Léo - Shagasse 😼",
   "Léon - 🦁",
   "Mathieu - Mussex 🐁",
   "Lucas - Conforama 🏪",
