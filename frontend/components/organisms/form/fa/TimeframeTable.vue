@@ -1,31 +1,16 @@
 <template>
   <div>
-    <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+    <v-card :class="isDisabled ? 'disabled' : ''">
       <v-card-title>Créneaux</v-card-title>
       <v-card-subtitle
         >Pour créer un créneau clique et étire le créneau, une fois créé tu peux
         le déplacer
       </v-card-subtitle>
 
-      <v-data-table :headers="headers" :items="timeframes" dense>
-        <template #[`item.date`]="{ item }">
-          {{ new Date(item.start).toLocaleDateString() }}
-        </template>
-        <template #[`item.start`]="{ item }">
-          {{ new Date(item.start).toLocaleTimeString() }}
-        </template>
-        <template #[`item.dateEnd`]="{ item }">
-          {{ new Date(item.end).toLocaleDateString() }}
-        </template>
-        <template #[`item.end`]="{ item }">
-          {{ new Date(item.end).toLocaleTimeString() }}
-        </template>
-        <template #[`item.action`]="{ index, item }">
-          <v-btn v-if="!isDisabled" icon>
-            <v-icon @click="editTimeframe(item, index)">mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn v-if="!isDisabled" icon>
-            <v-icon @click="deleteTimeframe(index)">mdi-delete</v-icon>
+      <v-data-table :headers="headers" :items="timeframes">
+        <template #[`item.action`]="{ index }">
+          <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
+            <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -43,11 +28,136 @@
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <v-card>
+      <v-card class="dialog-card">
         <v-card-title>
           <span class="headline">Ajouter un créneau</span>
         </v-card-title>
-        <v-card-text> </v-card-text>
+
+        <h3 class="subtitle">Début de l'activité</h3>
+        <div class="time-row">
+          <v-menu
+            v-model="menuDateStart"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateStart"
+                label="Date de début"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                class="text-date"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="dateStart"
+              :max="dateEnd"
+              @input="menuDateStart = false"
+            ></v-date-picker>
+          </v-menu>
+
+          <v-menu
+            ref="menuTimeStart"
+            v-model="menuTimeStart"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            :return-value.sync="timeStart"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="timeStart"
+                label="Heure de début"
+                prepend-icon="mdi-clock-time-four-outline"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="menuTimeStart"
+              v-model="timeStart"
+              :allowed-minutes="allowedStep"
+              format="24hr"
+              scrollable
+              full-width
+              :max="dateStart == dateEnd ? timeEnd : ''"
+              @click:minute="$refs.menuTimeStart.save(timeStart)"
+            ></v-time-picker>
+          </v-menu>
+        </div>
+
+        <h3 class="subtitle">Fin de l'activité</h3>
+        <div class="time-row">
+          <v-menu
+            v-model="menuDateEnd"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateEnd"
+                label="Date de fin"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                class="text-date"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="dateEnd"
+              :min="dateStart"
+              @input="menuDateEnd = false"
+            ></v-date-picker>
+          </v-menu>
+
+          <v-menu
+            ref="menuTimeEnd"
+            v-model="menuTimeEnd"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            :return-value.sync="timeEnd"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="timeEnd"
+                label="Heure de fin"
+                prepend-icon="mdi-clock-time-four-outline"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="menuTimeEnd"
+              v-model="timeEnd"
+              :allowed-minutes="allowedStep"
+              format="24hr"
+              scrollable
+              full-width
+              :min="dateStart == dateEnd ? timeStart : ''"
+              @click:minute="$refs.menuTimeEnd.save(timeEnd)"
+            ></v-time-picker>
+          </v-menu>
+        </div>
+        <v-card-text>Minuit = 00:00 du jour d'après</v-card-text>
+
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="isAddDialogOpen = false">
@@ -64,107 +174,72 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog v-model="isEditDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Editer un créneau</span>
-        </v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="mTimeframe.start"
-            label="Début"
-            type="time"
-            :disabled="isDisabled"
-          ></v-text-field>
-          <v-text-field
-            v-model="mTimeframe.end"
-            label="Fin"
-            type="time"
-            :disabled="isDisabled"
-          ></v-text-field>
-          <v-btn text @click="selectMidnight">Minuit</v-btn>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="isEditDialogOpen = false">
-            Annuler
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :disabled="isDisabled"
-            @click="updateTimeframe"
-          >
-            Valider
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import TimeframeSelector from "~/components/molecules/timeframe/TimeframeSelector.vue";
 
-export default {
+export default Vue.extend({
   name: "TimeframeTable",
   components: { TimeframeSelector },
   props: {
-    initTimeframes: {
-      type: Array,
-      default: () => [],
-    },
     isDisabled: {
       type: Boolean,
       default: () => false,
     },
   },
-  data: function () {
-    return {
-      date: "",
-      headers: [
-        { text: "Date", value: "date" },
-        { text: "Début", value: "start" },
-        {
-          text: "Date de fin",
-          value: "dateEnd",
-        },
-        {
-          text: "Fin",
-          value: "end",
-        },
-        { text: "Action", value: "action" },
-      ],
-      store: this.$accessor.FA,
-      isAddDialogOpen: false,
-      isEditDialogOpen: false,
-      mTimeframe: {},
-    };
-  },
+  data: () => ({
+    date: "",
+    headers: [
+      { text: "Date de début", value: "start" },
+      { text: "Heure de début", value: "timeStart" },
+      { text: "Date de fin", value: "end" },
+      { text: "Heure de fin", value: "timeEnd" },
+      { text: "Action", value: "action" },
+    ],
+    isAddDialogOpen: false,
+    isEditDialogOpen: false,
+    mTimeframe: {},
+
+    dateStart: null,
+    dateEnd: null,
+    timeStart: null,
+    timeEnd: null,
+    menuDateStart: false,
+    menuTimeStart: false,
+    menuDateEnd: false,
+    menuTimeEnd: false,
+  }),
   computed: {
-    mFA: function () {
+    mFA(): any {
       return this.$accessor.FA.mFA;
     },
-    timeframes: function () {
-      return this.$accessor.FA.mFA.timeframes;
+    timeframes(): any {
+      return this.$accessor.FA.mFA.time_windows;
     },
   },
   methods: {
-    selectMidnight() {
-      this.mTimeframe.end = "23:59";
+    allowedStep: (m: number) => m % 15 === 0,
+    addTimeframe() {
+      const timeframe = {
+        start: new Date(this.dateStart + " " + this.timeStart),
+        end: new Date(this.dateEnd + " " + this.timeEnd),
+      };
+      this.$accessor.FA.addTimeWindow(timeframe);
+      this.isAddDialogOpen = false;
+      console.log(this.mFA.time_windows);
+      // clear v-model
+      this.dateStart = this.dateEnd = this.timeStart = this.timeEnd = null;
     },
-    setTimeframes(timeframes) {
-      const store = this.$accessor.FA;
-      store.addTimeframes(timeframes);
-    },
-    editTimeframe(timeframe, index) {
-      this.isEditDialogOpen = true;
+    editTimeframe(timeframe: any, index: number) {
+      /*this.isEditDialogOpen = true;
       this.mTimeframe = { ...timeframe };
-      this.mIndex = index;
+      this.mIndex = index;*/
     },
     updateTimeframe() {
-      let start = new Date(this.timeframes[this.mIndex].start);
+      /*let start = new Date(this.timeframes[this.mIndex].start);
       let end = new Date(this.timeframes[this.mIndex].end);
 
       start.setHours(
@@ -197,28 +272,40 @@ export default {
       }
 
       this.deleteTimeframe(this.mIndex);
-      this.addTimeframe({
-        name: this.mTimeframe.name,
-        start,
-        end,
-        timed: true,
-      });
 
-      this.isEditDialogOpen = false;
+      this.isEditDialogOpen = false;*/
     },
-
     openAddTimeframe() {
       this.isAddDialogOpen = true;
     },
-    addTimeframe() {
-      this.isAddDialogOpen = false;
-      //this.$accessor.FA.addTimeframe(timeframe);
-    },
-    deleteTimeframe(index) {
-      this.$accessor.FA.deleteTimeframe(index);
+    deleteTimeframe(index: number) {
+      this.$accessor.FA.deleteTimeWindow(index);
+      console.log(this.mFA.time_windows);
     },
   },
-};
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  border-left: 5px solid green;
+}
+
+.dialog-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-card .time-row {
+  display: flex;
+  margin: 0 24px;
+}
+
+.dialog-card .subtitle {
+  margin: 10px 24px 0 24px;
+}
+
+.dialog-card .time-row .text-date {
+  margin-right: 30px;
+}
+</style>

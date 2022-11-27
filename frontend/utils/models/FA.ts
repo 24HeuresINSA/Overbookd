@@ -51,6 +51,7 @@ export interface FA {
   fa_electricity_needs?: fa_electricity_needs[];
   fa_comment?: fa_comment[];
   fa_signa_needs?: fa_signa_needs[];
+  time_windows?: time_window[];
 }
 
 export interface fa_collaborator {
@@ -95,4 +96,10 @@ export interface fa_signa_needs {
   text: string;
   count: number;
   comment?: string;
+}
+
+export interface time_window {
+  id?: number;
+  start: Date;
+  end: Date;
 }

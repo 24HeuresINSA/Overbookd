@@ -109,7 +109,7 @@ export default Vue.extend({
       { text: "Type", value: "type" },
       { text: "Texte signalétique", value: "text" },
       { text: "Commentaire", value: "comment" },
-      { text: "", value: "action" },
+      { text: "Action", value: "action" },
     ],
     newSignalisation: {
       type: "",

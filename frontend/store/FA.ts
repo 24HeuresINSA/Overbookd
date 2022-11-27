@@ -8,6 +8,7 @@ import {
   fa_electricity_needs,
   fa_signa_needs,
   Status,
+  time_window,
 } from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -106,6 +107,24 @@ export const mutations = mutationTree(state, {
   DELETE_SIGNA_NEED({ mFA }, index: number) {
     if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
       mFA.fa_signa_needs.splice(index, 1);
+    }
+  },
+
+  ADD_TIME_WINDOW({ mFA }, timeWindow: time_window) {
+    if (!mFA.time_windows) mFA.time_windows = [];
+    mFA.time_windows?.push(timeWindow);
+  },
+
+  UPDATE_TIME_WINDOW({ mFA }, { index, timeWindow }) {
+    if (mFA.time_windows && mFA.time_windows[index]) {
+      mFA.time_windows[index].start = timeWindow.start;
+      mFA.time_windows[index].end = timeWindow.end;
+    }
+  },
+
+  DELETE_TIME_WINDOW({ mFA }, index: number) {
+    if (mFA.time_windows && mFA.time_windows[index]) {
+      mFA.time_windows.splice(index, 1);
     }
   },
 
@@ -218,6 +237,18 @@ export const actions = actionTree(
 
     deleteSignaNeed({ commit }, index: number) {
       commit("DELETE_SIGNA_NEED", index);
+    },
+
+    addTimeWindow({ commit }, timeWindow: time_window) {
+      commit("ADD_TIME_WINDOW", timeWindow);
+    },
+
+    updateTimeWindow({ commit }, { index, timeWindow }) {
+      commit("UPDATE_TIME_WINDOW", { index, timeWindow });
+    },
+
+    deleteTimeWindow({ commit }, index: number) {
+      commit("DELETE_TIME_WINDOW", index);
     },
 
     addCollaborator({ commit }, collaborator: fa_collaborator) {
