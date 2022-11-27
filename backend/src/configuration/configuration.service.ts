@@ -11,6 +11,9 @@ export class ConfigurationService {
     return this.prisma.configuration.create({
       data: {
         key: data.key,
+        //Value is of the right type but not regonized by prisma and typescript
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         value: data.value,
       },
     });
