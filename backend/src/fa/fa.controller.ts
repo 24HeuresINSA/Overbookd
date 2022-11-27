@@ -19,7 +19,7 @@ import { Roles } from '../auth/team-auth.decorator';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
-import { FaResponse } from './fa.service';
+import { FaResponse } from './fa_types';
 
 @ApiBearerAuth()
 @ApiTags('fa')

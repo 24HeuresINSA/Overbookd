@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FaService, FaResponse } from './fa.service';
+import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
 import {
   nakedFA,
@@ -10,6 +10,7 @@ import {
 } from './testData';
 import { collaborator, fa, fa_type, location, User } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
+import { FaResponse } from './fa_types';
 
 let faservice: FaService;
 let prisma: PrismaService;
