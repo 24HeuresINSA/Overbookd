@@ -7,24 +7,31 @@
           <v-text-field
             v-model="tempSgConfig.prixFutBlonde"
             label="Prix fût blonde"
+            prefix="€"
+            type="number"
             required
           >
           </v-text-field>
           <v-text-field
             v-model="tempSgConfig.prixFutBlanche"
             label="Prix fût blanche"
+            prefix="€"
+            type="number"
             required
           >
           </v-text-field>
           <v-text-field
             v-model="tempSgConfig.prixFutTriple"
             label="Prix fût Triple"
-            required
+            prefix="€"
+            type="number"
           >
           </v-text-field>
           <v-text-field
             v-model="tempSgConfig.prixFutFlower"
             label="Prix fût Flower"
+            prefix="€"
+            type="number"
             required
           >
           </v-text-field>

@@ -144,6 +144,7 @@ model Catalog_Gear {
   category    Catalog_Category? @relation("category", fields: [category_id], references: [id])
 } 
   model Configuration {
-  key   String @id @unique
-  value Json
+  key        String  @id @unique
+  value      Json
+  is_deleted Boolean @default(false)
 }

@@ -37,7 +37,7 @@ export class ConfigurationService {
     });
   }
 
-  update(param: {
+  upsert(param: {
     where: Prisma.ConfigurationWhereUniqueInput;
     data: Prisma.ConfigurationCreateInput;
   }): Promise<Configuration> {
@@ -50,6 +50,13 @@ export class ConfigurationService {
   }
 
   remove(key: string) {
-    throw new Error('Not implemented');
+    this.prisma.configuration.update({
+      where: {
+        key,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

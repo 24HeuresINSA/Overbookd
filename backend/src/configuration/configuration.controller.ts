@@ -73,7 +73,7 @@ export class ConfigurationController {
   @Put(':key')
   @ApiResponse({
     status: 200,
-    description: 'Patch configuration',
+    description: 'Upsert configuration',
   })
   @ApiBody({
     description: 'update Configuration',
@@ -90,7 +90,7 @@ export class ConfigurationController {
         value: configuration.value,
       },
     };
-    return this.configurationService.update(param);
+    return this.configurationService.upsert(param);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
