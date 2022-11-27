@@ -20,7 +20,7 @@ const SELECT_PERMISSION_TEAM = {
     select: {
       team: {
         select: {
-          id: true,
+          code: true,
         },
       },
     },
@@ -56,7 +56,7 @@ export class PermissionService {
     });
     return permissions.map((permission) => ({
       ...permission,
-      teams: permission.teams.map((team) => team.team.id),
+      teams: permission.teams.map((team) => team.team.code),
     }));
   }
 
@@ -90,16 +90,16 @@ export class PermissionService {
 
   async linkPermissionToTeam(
     permissionId: number,
-    teamIds: number[],
+    teamCodes: string[],
   ): Promise<PermissionResponseDto> {
     const permission = await this.permissionExists(permissionId);
-    await this.assertTeamIdsExist(teamIds);
-    await this.forcePermissionTeams(permissionId, teamIds);
+    await this.assertTeamCodesExist(teamCodes);
+    await this.forcePermissionTeams(permissionId, teamCodes);
 
-    return { ...permission, teams: teamIds };
+    return { ...permission, teams: teamCodes };
   }
 
-  async isAllowed(permissionNames: string[], teamIds: number[]) {
+  async isAllowed(permissionNames: string[], teamCodes: string[]) {
     const permissions = await this.permission({
       where: {
         name: {
@@ -107,8 +107,8 @@ export class PermissionService {
         },
         teams: {
           some: {
-            team_id: {
-              in: teamIds,
+            team_code: {
+              in: teamCodes,
             },
           },
         },
@@ -138,16 +138,19 @@ export class PermissionService {
     }
   }
 
-  private async assertTeamIdsExist(teamIds: number[]) {
+  private async assertTeamCodesExist(teamCodes: string[]) {
     const teams = await this.teamService.team({
-      where: { id: { in: teamIds } },
+      where: { code: { in: teamCodes } },
     });
-    if (teams.length !== teamIds.length) {
+    if (teams.length !== teamCodes.length) {
       throw new NotFoundException('All the provided Teams does not exist');
     }
   }
 
-  private async forcePermissionTeams(permissionId: number, teamIds: number[]) {
+  private async forcePermissionTeams(
+    permissionId: number,
+    teamCodes: string[],
+  ) {
     const deleteAll = this.prisma.team_Permission.deleteMany({
       where: {
         permission_id: permissionId,
@@ -155,9 +158,9 @@ export class PermissionService {
     });
 
     const createNew = this.prisma.team_Permission.createMany({
-      data: teamIds.map((teamId) => ({
+      data: teamCodes.map((teamCode) => ({
         permission_id: permissionId,
-        team_id: teamId,
+        team_code: teamCode,
       })),
     });
 

@@ -28,5 +28,5 @@ export class PermissionResponseDto {
     isArray: true,
     type: Number,
   })
-  teams: number[];
+  teams: string[];
 }

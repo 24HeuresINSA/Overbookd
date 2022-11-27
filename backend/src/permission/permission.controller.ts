@@ -95,6 +95,6 @@ export class PermissionController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: PermissionLinkDto,
   ): Promise<PermissionResponseDto> {
-    return this.permissionService.linkPermissionToTeam(id, payload.teamIds);
+    return this.permissionService.linkPermissionToTeam(id, payload.teamCodes);
   }
 }

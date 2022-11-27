@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class PermissionLinkDto {
   @ApiProperty({
     name: 'teamIds',
     required: true,
-    description: 'An array of team ids to link to the permission',
+    description: 'An array of team code to link to the permission',
     isArray: true,
     type: Number,
   })
-  @IsNumber({}, { each: true })
+  @IsString({ each: true })
   @IsNotEmpty()
-  teamIds: number[];
+  teamCodes: string[];
 }
