@@ -28,14 +28,15 @@
 
     <v-row>
       <v-col md="6">
-        <FormCard
+        <FTGeneralCard></FTGeneralCard>
+        <!-- <FormCard
           title="Général"
           topic="general"
           form-key="ft_general_form"
           :form="FT"
           :is-disabled="isValidated('humain')"
           @form-change="updateForm('general', $event)"
-        ></FormCard>
+        ></FormCard> -->
       </v-col>
 
       <v-col md="6">
@@ -44,14 +45,15 @@
     </v-row>
     <v-row>
       <v-col md="12">
-        <FormCard
+        <FTDetailCard></FTDetailCard>
+        <!-- <FormCard
           title="Détail"
           topic="details"
           form-key="ft_details_form"
           :form="FT"
           :is-disabled="isValidated('humain')"
           @form-change="updateForm('details', $event)"
-        ></FormCard>
+        ></FormCard> -->
       </v-col>
     </v-row>
     <v-row>
@@ -213,6 +215,8 @@ import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import Loader from "~/components/atoms/Loader.vue";
+import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
+import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 
 interface Data {
   FTID: number;
@@ -265,7 +269,9 @@ export default Vue.extend({
     FTInfoCard,
     LogisticsCard,
     Loader,
-  },
+    FTDetailCard,
+    FTGeneralCard
+},
   data: function (): Data {
     return {
       FTID: +this.$route.params.ft, // count
