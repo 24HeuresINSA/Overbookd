@@ -181,7 +181,15 @@ export default {
         },
         {
           icon: "mdi-bookshelf",
-          roles: "admin",
+          roles: [
+            "admin",
+            "matos",
+            "elec",
+            "barrieres",
+            "signa",
+            "bar",
+            "catering",
+          ],
           title: "Catalogue",
           to: "/catalog",
         },
