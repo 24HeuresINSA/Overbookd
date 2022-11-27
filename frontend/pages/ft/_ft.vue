@@ -29,14 +29,6 @@
     <v-row>
       <v-col md="6">
         <FTGeneralCard></FTGeneralCard>
-        <!-- <FormCard
-          title="Général"
-          topic="general"
-          form-key="ft_general_form"
-          :form="FT"
-          :is-disabled="isValidated('humain')"
-          @form-change="updateForm('general', $event)"
-        ></FormCard> -->
       </v-col>
 
       <v-col md="6">
@@ -46,14 +38,6 @@
     <v-row>
       <v-col md="12">
         <FTDetailCard></FTDetailCard>
-        <!-- <FormCard
-          title="Détail"
-          topic="details"
-          form-key="ft_details_form"
-          :form="FT"
-          :is-disabled="isValidated('humain')"
-          @form-change="updateForm('details', $event)"
-        ></FormCard> -->
       </v-col>
     </v-row>
     <v-row>
@@ -211,7 +195,6 @@ import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/ft/CompleteTimeframeCard.vue";
-import FormCard from "~/components/organisms/form/FormCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import Loader from "~/components/atoms/Loader.vue";
@@ -263,7 +246,6 @@ export default Vue.extend({
   name: "Ft",
   components: {
     SnackNotificationContainer,
-    FormCard,
     CommentCard,
     CompleteTimeframeCard,
     FTInfoCard,
