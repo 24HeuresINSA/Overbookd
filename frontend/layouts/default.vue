@@ -125,6 +125,11 @@ const AUTHORS = [
   "Thibaut - Moule 🍑",
   "Antoine - Gyneco 🩺",
   "Damien - Hublot 🖐",
+  "Léo - Shagasse 😼",
+  "Léon - 🦁",
+  "Mathieu - Mussex 🐁",
+  "Lucas - Conforama 🏪",
+  "Adèle - Franck 🍷",
 ];
 
 export default {

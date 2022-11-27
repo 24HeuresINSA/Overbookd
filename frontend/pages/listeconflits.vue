@@ -40,7 +40,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Conflict } from "~/utils/models/conflicts";
-import sanitizeHtml from "sanitize-html";
 
 declare type ConflictFT = Conflict & {
   ft1: number;
