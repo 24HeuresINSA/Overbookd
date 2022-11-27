@@ -28,7 +28,7 @@ const COMPLETE_FA_SELECT = {
   number_of_pass: true,
   water_needs: true,
   water_flow_required: true,
-  fa_collaborator: {
+  fa_collaborators: {
     select: {
       collaborator: {
         select: {
@@ -96,7 +96,7 @@ const COMPLETE_FA_SELECT = {
       comment: true,
     },
   },
-  fa_comment: {
+  fa_comments: {
     select: {
       id: true,
       comment: true,
@@ -115,7 +115,7 @@ const COMPLETE_FA_SELECT = {
       },
     },
   },
-  time_window: {
+  time_windows: {
     select: {
       id: true,
       start: true,
@@ -166,14 +166,14 @@ export class FaService {
     if (!fa) throw new NotFoundError(`fa with id ${id} not found`);
     //update every aspect of the fa
     const collaborators = await this.create_collaborators(
-      updatefaDto.fa_collaborator,
+      updatefaDto.fa_collaborators,
     );
 
     await this.prisma.fa.update({
       where: { id: Number(id) },
       data: {
         ...updatefaDto,
-        fa_collaborator: {
+        fa_collaborators: {
           createMany: {
             data: collaborators.map((collaborator) => {
               return {
@@ -189,15 +189,15 @@ export class FaService {
             skipDuplicates: true,
           },
         },
-        fa_comment: {
+        fa_comments: {
           createMany: {
-            data: updatefaDto.fa_comment || [],
+            data: updatefaDto.fa_comments || [],
             skipDuplicates: true,
           },
         },
-        time_window: {
+        time_windows: {
           createMany: {
-            data: updatefaDto.time_window || [],
+            data: updatefaDto.time_windows || [],
             skipDuplicates: true,
           },
         },

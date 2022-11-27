@@ -72,7 +72,7 @@ model User {
   fa_in_charge  fa[]            @relation("in_charge")
   fa_validation fa_validation[]
   fa_refuse     fa_refuse[]
-  fa_comment    fa_comment[]
+  fa_comments   fa_comments[]
 }
 
 model Team {
@@ -84,7 +84,7 @@ model Team {
   fa_validator     Boolean            @default(false)
   ft_validator     Boolean            @default(false)
   fa               fa[]
-  fa_comment       fa_comment[]
+  fa_comments      fa_comments[]
   fa_validation    fa_validation[]
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
@@ -166,11 +166,11 @@ model fa {
   is_deleted           Boolean                @default(false)
   fa_validation        fa_validation[]
   fa_refuse            fa_refuse[]
-  fa_collaborator      fa_collaborator[]
+  fa_collaborators     fa_collaborators[]
   fa_electricity_needs fa_electricity_needs[]
   fa_signa_needs       fa_signa_needs[]
-  fa_comment           fa_comment[]
-  time_window          time_window[]
+  fa_comments          fa_comments[]
+  time_windows         time_windows[]
 }
 
 model fa_type {
@@ -191,7 +191,7 @@ model fa_validation {
   @@id([fa_id, user_id])
 }
 
-model fa_collaborator {
+model fa_collaborators {
   fa              fa           @relation(fields: [fa_id], references: [id])
   fa_id           Int
   collaborator    collaborator @relation(fields: [collaborator_id], references: [id])
@@ -230,14 +230,14 @@ model location {
 }
 
 model collaborator {
-  id              Int               @id @default(autoincrement())
-  firstname       String            @db.VarChar(30)
-  lastname        String            @db.VarChar(30)
-  phone           String            @db.VarChar(30)
-  email           String?           @db.VarChar(30)
-  company         String?           @db.VarChar(30)
-  comment         String?           @db.Text
-  fa_collaborator fa_collaborator[]
+  id               Int                @id @default(autoincrement())
+  firstname        String             @db.VarChar(30)
+  lastname         String             @db.VarChar(30)
+  phone            String             @db.VarChar(30)
+  email            String?            @db.VarChar(30)
+  company          String?            @db.VarChar(30)
+  comment          String?            @db.Text
+  fa_collaborators fa_collaborators[]
 
   @@unique([firstname, lastname])
 }
@@ -283,7 +283,7 @@ enum subject_type {
   COMMENT
 }
 
-model fa_comment {
+model fa_comments {
   id          Int          @id @default(autoincrement())
   fa          fa           @relation(fields: [fa_id], references: [id])
   fa_id       Int
@@ -296,7 +296,7 @@ model fa_comment {
   team_id     Int
 }
 
-model time_window {
+model time_windows {
   id    Int      @id @default(autoincrement())
   fa    fa       @relation(fields: [fa_id], references: [id])
   fa_id Int

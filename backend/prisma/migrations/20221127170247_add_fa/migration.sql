@@ -60,12 +60,12 @@ CREATE TABLE "fa_validation" (
 );
 
 -- CreateTable
-CREATE TABLE "fa_collaborator" (
+CREATE TABLE "fa_collaborators" (
     "fa_id" INTEGER NOT NULL,
     "collaborator_id" INTEGER NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "fa_collaborator_pkey" PRIMARY KEY ("fa_id","collaborator_id")
+    CONSTRAINT "fa_collaborators_pkey" PRIMARY KEY ("fa_id","collaborator_id")
 );
 
 -- CreateTable
@@ -125,7 +125,7 @@ CREATE TABLE "fa_signa_needs" (
 );
 
 -- CreateTable
-CREATE TABLE "fa_comment" (
+CREATE TABLE "fa_comments" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
@@ -134,17 +134,17 @@ CREATE TABLE "fa_comment" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "team_id" INTEGER NOT NULL,
 
-    CONSTRAINT "fa_comment_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "fa_comments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "time_window" (
+CREATE TABLE "time_windows" (
     "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "time_window_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "time_windows_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -172,10 +172,10 @@ ALTER TABLE "fa_validation" ADD CONSTRAINT "fa_validation_user_id_fkey" FOREIGN 
 ALTER TABLE "fa_validation" ADD CONSTRAINT "fa_validation_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "fa_collaborator" ADD CONSTRAINT "fa_collaborator_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "fa_collaborators" ADD CONSTRAINT "fa_collaborators_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "fa_collaborator" ADD CONSTRAINT "fa_collaborator_collaborator_id_fkey" FOREIGN KEY ("collaborator_id") REFERENCES "collaborator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "fa_collaborators" ADD CONSTRAINT "fa_collaborators_collaborator_id_fkey" FOREIGN KEY ("collaborator_id") REFERENCES "collaborator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "fa_refuse" ADD CONSTRAINT "fa_refuse_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -193,13 +193,13 @@ ALTER TABLE "fa_electricity_needs" ADD CONSTRAINT "fa_electricity_needs_fa_id_fk
 ALTER TABLE "fa_signa_needs" ADD CONSTRAINT "fa_signa_needs_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "fa_comment" ADD CONSTRAINT "fa_comment_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "fa_comments" ADD CONSTRAINT "fa_comments_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "fa_comment" ADD CONSTRAINT "fa_comment_author_fkey" FOREIGN KEY ("author") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "fa_comments" ADD CONSTRAINT "fa_comments_author_fkey" FOREIGN KEY ("author") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "fa_comment" ADD CONSTRAINT "fa_comment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "fa_comments" ADD CONSTRAINT "fa_comments_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "time_window" ADD CONSTRAINT "time_window_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "time_windows" ADD CONSTRAINT "time_windows_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

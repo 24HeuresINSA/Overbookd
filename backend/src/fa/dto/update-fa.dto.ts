@@ -160,7 +160,7 @@ export class UpdateFaDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => CreateCollaboratorDto)
-  fa_collaborator?: CreateCollaboratorDto[];
+  fa_collaborators?: CreateCollaboratorDto[];
 
   @ApiProperty({
     required: false,
@@ -180,7 +180,7 @@ export class UpdateFaDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => CreateFaCommentDto)
-  fa_comment?: CreateFaCommentDto[];
+  fa_comments?: CreateFaCommentDto[];
 
   @ApiProperty({
     required: false,
@@ -190,7 +190,7 @@ export class UpdateFaDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => CreateTimeWindowDto)
-  time_window?: CreateTimeWindowDto[];
+  time_windows?: CreateTimeWindowDto[];
 
   @ApiProperty({
     required: false,

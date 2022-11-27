@@ -129,7 +129,7 @@ describe('FA creation', () => {
     test('Should not get any collaborator', async () => {
       const collaborators = await prisma.collaborator.findMany({
         where: {
-          fa_collaborator: {
+          fa_collaborators: {
             some: {
               fa_id: result.id,
             },
@@ -174,7 +174,7 @@ describe('FA creation', () => {
       //find all collaborators linked to result
       collaborators = await prisma.collaborator.findMany({
         where: {
-          fa_collaborator: {
+          fa_collaborators: {
             some: {
               fa_id: collab_result.id,
             },
@@ -186,7 +186,7 @@ describe('FA creation', () => {
 
     afterAll(async () => {
       //remove FA foreign key from collaborator
-      await prisma.fa_collaborator.deleteMany({
+      await prisma.fa_collaborators.deleteMany({
         where: {
           fa_id: collab_result.id,
         },

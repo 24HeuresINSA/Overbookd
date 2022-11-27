@@ -30,7 +30,7 @@ export const collaboratorFA: UpdateFaDto = {
   is_publishable: true,
   is_major: false,
   is_kids: false,
-  fa_collaborator: [
+  fa_collaborators: [
     {
       collaborator: {
         firstname: 'Collaborator A',
@@ -70,7 +70,7 @@ export const commentFA: UpdateFaDto = {
   is_publishable: true,
   is_major: false,
   is_kids: false,
-  fa_comment: [
+  fa_comments: [
     {
       subject: subject_type.COMMENT,
       comment: 'Bonjour',
@@ -91,7 +91,7 @@ export const completeFA: UpdateFaDto = {
   is_publishable: true,
   is_major: false,
   is_kids: false,
-  fa_comment: [
+  fa_comments: [
     {
       subject: subject_type.COMMENT,
       comment: 'Bonjour',
@@ -106,7 +106,7 @@ export const completeFA: UpdateFaDto = {
       count: 1,
     },
   ],
-  fa_collaborator: [
+  fa_collaborators: [
     {
       collaborator: {
         firstname: 'Collaborator A',
@@ -121,7 +121,7 @@ export const completeFA: UpdateFaDto = {
       power: 1,
     },
   ],
-  time_window: [
+  time_windows: [
     {
       start: new Date(),
       end: new Date(),
