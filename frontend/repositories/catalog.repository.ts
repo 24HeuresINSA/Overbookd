@@ -1,14 +1,12 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { CategorySearchOptions, GearSearchOptions } from "~/store/catalog";
+import {
+  CategoryForm,
+  CategorySearchOptions,
+  GearSearchOptions,
+} from "~/store/catalog";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
 
 export type Context = { $axios: NuxtAxiosInstance };
-
-interface CategoryForm {
-  name: string;
-  owner?: string;
-  parent?: number;
-}
 
 export class GearsRepository {
   private static readonly basePath = "gears";
@@ -31,7 +29,7 @@ export class CategoryRepository {
   }
 
   static getCategoryTree(context: Context) {
-    return context.$axios.get<CategoryTree[]>(this.basePath);
+    return context.$axios.get<CategoryTree[]>(`${this.basePath}/tree`);
   }
 
   static createCategory(context: Context, categoryForm: CategoryForm) {

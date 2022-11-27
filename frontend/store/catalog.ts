@@ -23,6 +23,12 @@ export interface CategorySearchOptions {
   owner?: string;
 }
 
+export interface CategoryForm {
+  name: string;
+  owner?: string;
+  parent?: number;
+}
+
 export const state = (): State => ({
   gears: [],
   categories: [],
@@ -49,6 +55,9 @@ export const mutations = mutationTree(state, {
   },
   SET_CATEGORY_TREE(state, categoryTree: CategoryTree[]) {
     state.categoryTree = categoryTree;
+  },
+  ADD_CATEGORY(state, category: Category) {
+    state.categories.push(category);
   },
 });
 
@@ -80,12 +89,31 @@ export const actions = actionTree(
     },
 
     async fetchCategoryTree(context): Promise<void> {
-      const call = await safeCall<Category[]>(
+      const call = await safeCall<CategoryTree[]>(
         this,
         categoryRepository.getCategoryTree(this)
       );
       if (!call) return;
       context.commit("SET_CATEGORY_TREE", call.data);
+    },
+
+    async createCategory(context, categoryForm: CategoryForm): Promise<void> {
+      const call = await safeCall<Category>(
+        this,
+        categoryRepository.createCategory(this, categoryForm),
+        "saved",
+        "server"
+      );
+      if (!call) return;
+      context.commit("ADD_CATEGORY", call.data);
+      this.dispatch("fetchCategoryTree");
+
+      const categoryTreeCall = await safeCall<CategoryTree[]>(
+        this,
+        categoryRepository.getCategoryTree(this)
+      );
+      if (!categoryTreeCall) return;
+      context.commit("SET_CATEGORY_TREE", categoryTreeCall.data);
     },
   }
 );

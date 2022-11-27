@@ -4,18 +4,24 @@
     <div class="catalog">
       <GearListing class="gears"></GearListing>
       <CategoriesTreeView class="categories"></CategoriesTreeView>
+      <snackNotificationContainerVue></snackNotificationContainerVue>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import snackNotificationContainerVue from "~/components/molecules/snackNotificationContainer.vue";
 import CategoriesTreeView from "~/components/organisms/CategoriesTreeView.vue";
 import GearListing from "~/components/organisms/GearListing.vue";
 
 export default Vue.extend({
   name: "Catalog",
-  components: { GearListing, CategoriesTreeView },
+  components: {
+    GearListing,
+    CategoriesTreeView,
+    snackNotificationContainerVue,
+  },
 });
 </script>
 

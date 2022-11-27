@@ -6,7 +6,6 @@
         v-model="name"
         append-icon="mdi-hammer-screwdriver"
         label="Nom du matos"
-        single-line
         clearable
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
@@ -18,7 +17,6 @@
         v-model="category"
         append-icon="mdi-label"
         label="Nom de la categorie"
-        single-line
         clearable
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
@@ -30,7 +28,6 @@
         v-model="team"
         append-icon="mdi-account-multiple"
         label="Nom de l'equipe responsable"
-        single-line
         clearable
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"

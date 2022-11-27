@@ -20,7 +20,7 @@ export async function safeCall<T = any>(
   repoFunction: Promise<AxiosResponse<T>>,
   successMessage?: SuccessMessageKey,
   errorMessage?: ErrorMessageKey
-): Promise<AxiosResponse | undefined> {
+): Promise<AxiosResponse<T> | undefined> {
   try {
     const res = await repoFunction;
     if (res.status >= 400) {
