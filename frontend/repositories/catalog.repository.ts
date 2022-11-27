@@ -2,6 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CategoryForm,
   CategorySearchOptions,
+  GearForm,
   GearSearchOptions,
 } from "~/store/catalog";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
@@ -13,6 +14,10 @@ export class GearsRepository {
 
   static searchGears(context: Context, searchOptions?: GearSearchOptions) {
     return context.$axios.get<Gear[]>(this.basePath, { params: searchOptions });
+  }
+
+  static createGear(context: Context, gearForm: GearForm) {
+    return context.$axios.post<Gear>(this.basePath, gearForm);
   }
 }
 

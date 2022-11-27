@@ -7,10 +7,11 @@
       :items="categories"
       item-children="subCategories"
     ></v-treeview>
-    <v-btn fab dark color="amber" :fixed="true" @click="openCreationDialog">
+    <v-btn dark large rounded color="amber" @click="openCreationDialog">
       <v-icon dark> mdi-plus </v-icon>
+      Ajouter une categorie
     </v-btn>
-    <v-dialog v-model="isCreateDialogOpen" width="600px" overlay-oppacity="1">
+    <v-dialog v-model="isCreateDialogOpen" width="600px">
       <CategoryFormVue></CategoryFormVue>
     </v-dialog>
   </div>

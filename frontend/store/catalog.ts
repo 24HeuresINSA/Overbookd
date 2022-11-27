@@ -18,6 +18,11 @@ export interface GearSearchOptions {
   owner?: string;
 }
 
+export interface GearForm {
+  name: string;
+  category?: number;
+}
+
 export interface CategorySearchOptions {
   name?: string;
   owner?: string;
@@ -106,7 +111,6 @@ export const actions = actionTree(
       );
       if (!call) return;
       context.commit("ADD_CATEGORY", call.data);
-      this.dispatch("fetchCategoryTree");
 
       const categoryTreeCall = await safeCall<CategoryTree[]>(
         this,
@@ -114,6 +118,17 @@ export const actions = actionTree(
       );
       if (!categoryTreeCall) return;
       context.commit("SET_CATEGORY_TREE", categoryTreeCall.data);
+    },
+
+    async createGear(context, gearForm: GearForm): Promise<void> {
+      const call = await safeCall<Gear>(
+        this,
+        gearRepository.createGear(this, gearForm),
+        "saved",
+        "server"
+      );
+      if (!call) return;
+      context.commit("ADD_GEAR", call.data);
     },
   }
 );

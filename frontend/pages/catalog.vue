@@ -2,10 +2,18 @@
   <div>
     <h1>Catalogue</h1>
     <div class="catalog">
-      <GearListing class="gears"></GearListing>
+      <sectionclass class="gears">
+        <GearListing></GearListing>
+        <v-btn large color="success" rounded @click="openGearCreationDialog">
+          <v-icon dark> mdi-plus </v-icon>Ajouter du matos</v-btn
+        >
+      </sectionclass>
       <CategoriesTreeView class="categories"></CategoriesTreeView>
       <snackNotificationContainerVue></snackNotificationContainerVue>
     </div>
+    <v-dialog v-model="gearCreationDialogOpened" width="600px">
+      <GearForm></GearForm
+    ></v-dialog>
   </div>
 </template>
 
@@ -13,6 +21,7 @@
 import Vue from "vue";
 import snackNotificationContainerVue from "~/components/molecules/snackNotificationContainer.vue";
 import CategoriesTreeView from "~/components/organisms/CategoriesTreeView.vue";
+import GearForm from "~/components/organisms/form/GearForm.vue";
 import GearListing from "~/components/organisms/GearListing.vue";
 
 export default Vue.extend({
@@ -21,6 +30,17 @@ export default Vue.extend({
     GearListing,
     CategoriesTreeView,
     snackNotificationContainerVue,
+    GearForm,
+  },
+  data() {
+    return {
+      gearCreationDialogOpened: false,
+    };
+  },
+  methods: {
+    openGearCreationDialog() {
+      this.gearCreationDialogOpened = true;
+    },
   },
 });
 </script>
