@@ -12,7 +12,7 @@ import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @ApiTags('fa-signa-needs')
@@ -23,9 +23,10 @@ export class FaSignaNeedsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post(':faID')
+  @ApiBody({ type: [CreateFaSignaNeedDto] })
   upsert(
     @Param('faID', ParseIntPipe) faID: string,
-    @Body() createFaSignaNeedDto: CreateFaSignaNeedDto,
+    @Body() createFaSignaNeedDto: CreateFaSignaNeedDto[],
   ) {
     return this.faSignaNeedsService.upsert(+faID, createFaSignaNeedDto);
   }
