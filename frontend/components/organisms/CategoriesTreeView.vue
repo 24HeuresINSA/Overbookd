@@ -12,7 +12,7 @@
       Ajouter une categorie
     </v-btn>
     <v-dialog v-model="isCreateDialogOpen" width="600px">
-      <CategoryFormVue></CategoryFormVue>
+      <CategoryFormVue @close-dialog="closeCreationDialog"></CategoryFormVue>
     </v-dialog>
   </div>
 </template>
@@ -40,6 +40,9 @@ export default Vue.extend({
   methods: {
     openCreationDialog() {
       this.isCreateDialogOpen = true;
+    },
+    closeCreationDialog() {
+      this.isCreateDialogOpen = false;
     },
   },
 });

@@ -54,7 +54,8 @@
       </template>
     </v-data-table>
     <v-dialog v-model="isUpdateGearDialogOpen" width="600px">
-      <GearForm :gear="selectedGear"></GearForm>
+      <GearForm :gear="selectedGear" @close-dialog="closeUpdateGearDialog">
+      </GearForm>
     </v-dialog>
   </div>
 </template>
@@ -139,6 +140,9 @@ export default Vue.extend({
     openUpdateGearDialog(gear: Gear) {
       this.selectedGear = gear;
       this.isUpdateGearDialogOpen = true;
+    },
+    closeUpdateGearDialog(gear: Gear) {
+      this.isUpdateGearDialogOpen = false;
     },
     isValidSearchOption(searchOption: string | null): boolean {
       return Boolean(searchOption && searchOption.length >= searchMinLength);

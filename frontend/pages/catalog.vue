@@ -11,7 +11,7 @@
       <CategoriesTreeView class="categories"></CategoriesTreeView>
     </div>
     <v-dialog v-model="gearCreationDialogOpened" width="600px">
-      <GearForm></GearForm
+      <GearForm @close-dialog="closeGearCreationDialog"></GearForm
     ></v-dialog>
     <snackNotificationContainerVue></snackNotificationContainerVue>
   </div>
@@ -40,6 +40,9 @@ export default Vue.extend({
   methods: {
     openGearCreationDialog() {
       this.gearCreationDialogOpened = true;
+    },
+    closeGearCreationDialog() {
+      this.gearCreationDialogOpened = false;
     },
   },
 });

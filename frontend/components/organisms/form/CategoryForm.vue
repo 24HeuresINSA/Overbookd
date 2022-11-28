@@ -1,8 +1,14 @@
 <template>
   <v-card class="category">
-    <h2 class="category__title">Categorie</h2>
-    <form>
-      <div class="fields">
+    <v-card-title class="category__title">
+      <h2>Categorie</h2>
+      <v-btn icon dark @click="closeDialog">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-card-title>
+    <v-card-text>
+      <form>
+        <div class="fields">
         <v-text-field
           v-model="name"
           append-icon="mdi-label"
@@ -22,11 +28,12 @@
           label="Choisisez un parent"
         ></SearchCategoryVue>
       </div>
-      <v-btn color="success" dark large @click="createCategory">
-        <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Creer la
-        categorie
-      </v-btn>
-    </form>
+        <v-btn color="success" dark large @click="createCategory">
+          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Creer la
+          categorie
+        </v-btn>
+      </form>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -82,6 +89,10 @@ export default Vue.extend({
       this.name = "";
       this.owner = undefined;
       this.parent = undefined;
+      this.closeDialog();
+    },
+    closeDialog() {
+      this.$emit("close-dialog");
     },
   },
 });
@@ -89,20 +100,20 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .category {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   &__title {
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
+    display: flex;
+    justify-content: center;
+    h2 {
+      flex: 1;
+      text-align: center;
+    }
   }
   form {
-    width: 80%;
     display: flex;
     flex-direction: column;
-    .fields {
-      flex-direction: column;
-      display: flex;
+    align-items: center;
+    .fields{
+      width: 80%;
     }
   }
 }
