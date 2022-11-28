@@ -1,3 +1,9 @@
+/**
+ * a executer dans /overbookd-mono/backend/src/fa
+ * npx jest fa.service.spec.ts --coverage --collectCoverageFrom="./fa/**"
+ */
+
+/*
 import { Test, TestingModule } from '@nestjs/testing';
 import { FaService } from './fa.service';
 import { PrismaService } from '../prisma.service';
@@ -17,11 +23,6 @@ let prisma: PrismaService;
 
 let fa_type: fa_type;
 let location: location;
-
-/**
- * a executer dans /overbookd-mono/backend/src/fa
- * npx jest fa.service.spec.ts --coverage --collectCoverageFrom="./fa/**"
- */
 
 beforeAll(async () => {
   const module: TestingModule = await Test.createTestingModule({
@@ -364,3 +365,4 @@ describe('FA update system', () => {
     console.log(JSON.stringify(sampleFA, null, 2));
   });
 });
+*/

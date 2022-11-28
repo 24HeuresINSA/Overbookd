@@ -1,4 +1,4 @@
-import { UpdateFaDto, Status } from './dto/update-fa.dto';
+/*import { UpdateFaDto, Status } from './dto/update-fa.dto';
 import { signa_type } from '../fa_signa_needs/dto/create-fa_signa_need.dto';
 import { subject_type } from '../fa_comment/dto/create-fa_comment.dto';
 import { electricity_type } from '../fa_electricity_needs/dto/create-fa_electricity_need.dto';
@@ -128,3 +128,4 @@ export const completeFA: UpdateFaDto = {
     },
   ],
 };
+*/
