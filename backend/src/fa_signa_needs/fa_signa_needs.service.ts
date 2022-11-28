@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
-import { UpdateFaSignaNeedDto } from './dto/update-fa_signa_need.dto';
+import { PrismaService } from '../prisma.service';
+import { fa_signa_needs } from '@prisma/client';
 
 @Injectable()
 export class FaSignaNeedsService {
-  create(createFaSignaNeedDto: CreateFaSignaNeedDto) {
-    return 'This action adds a new faSignaNeed';
+  constructor(private prisma: PrismaService) {}
+  async upsert(
+    faID: number,
+    createFaSignaNeedDto: CreateFaSignaNeedDto,
+  ): Promise<fa_signa_needs | null> {
+    if (createFaSignaNeedDto.id) {
+      return await this.prisma.fa_signa_needs.update({
+        where: {
+          id: createFaSignaNeedDto.id,
+        },
+        data: {
+          ...CreateFaSignaNeedDto,
+          fa_id: faID,
+        },
+      });
+    } else {
+      return await this.prisma.fa_signa_needs.create({
+        data: {
+          fa_id: faID,
+          ...createFaSignaNeedDto,
+        },
+      });
+    }
   }
 
-  findAll() {
-    return `This action returns all faSignaNeeds`;
+  async findAll(): Promise<fa_signa_needs[] | null> {
+    return await this.prisma.fa_signa_needs.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} faSignaNeed`;
-  }
-
-  update(id: number, updateFaSignaNeedDto: UpdateFaSignaNeedDto) {
-    return `This action updates a #${id} faSignaNeed`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} faSignaNeed`;
+  async findOne(id: number): Promise<fa_signa_needs | null> {
+    return await this.prisma.fa_signa_needs.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
   }
 }
