@@ -3,11 +3,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { collaborator, fa, Prisma, User_Team } from '@prisma/client';
+import { fa, User_Team } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
-import { CreateCollaboratorDto } from '../collaborator/dto/create-collaborator.dto';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { FaResponse, COMPLETE_FA_SELECT } from './fa_types';
 
@@ -47,97 +46,15 @@ export class FaService {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id: Number(id) } });
     if (!fa) throw new NotFoundError(`fa with id ${id} not found`);
-    //update every aspect of the fa
-    const collaborators = await this.create_collaborators(
-      updatefaDto.fa_collaborators,
-    );
-
     await this.prisma.fa.update({
       where: { id: Number(id) },
-      data: {
-        ...updatefaDto,
-        fa_collaborators: {
-          createMany: {
-            data: collaborators.map((collaborator) => {
-              return {
-                collaborator_id: collaborator.id,
-              };
-            }),
-            skipDuplicates: true,
-          },
-        },
-        fa_signa_needs: {
-          createMany: {
-            data: updatefaDto.fa_signa_needs || [],
-            skipDuplicates: true,
-          },
-        },
-        fa_comments: {
-          createMany: {
-            data: updatefaDto.fa_comments || [],
-            skipDuplicates: true,
-          },
-        },
-        time_windows: {
-          createMany: {
-            data: updatefaDto.time_windows || [],
-            skipDuplicates: true,
-          },
-        },
-        fa_electricity_needs: {
-          createMany: {
-            data: updatefaDto.fa_electricity_needs || [],
-            skipDuplicates: true,
-          },
-        },
-      },
+      data: updatefaDto,
     });
     return await this.findOne(id);
   }
 
   async create(fa: CreateFaDto): Promise<FaResponse | null> {
     return this.prisma.fa.create({ data: fa, select: COMPLETE_FA_SELECT });
-  }
-
-  private async create_collaborators(
-    fa_collab: CreateCollaboratorDto[],
-  ): Promise<collaborator[] | null> {
-    if (!fa_collab) return [];
-    if (fa_collab.length === 0) return [];
-    let all_collab = fa_collab.map((c) => {
-      return c.collaborator;
-    });
-    await this.prisma.collaborator.createMany({
-      data: all_collab,
-      skipDuplicates: true,
-    });
-    // trimimg the collaborator to get only the name
-    all_collab = all_collab.map((collab) => {
-      return {
-        ...collab,
-        firstname: collab.firstname.trim(), // trust me it's not useless
-        lastname: collab.lastname.trim(),
-      };
-    });
-    //Then get all the collaborators
-    const collaborators = await this.prisma.collaborator.findMany({
-      where: {
-        firstname: {
-          in: all_collab.map((collaborator) => {
-            return collaborator.firstname;
-          }),
-        },
-        lastname: {
-          in: all_collab.map((collaborator) => {
-            return collaborator.lastname;
-          }),
-        },
-      },
-    });
-    if (collaborators.length !== fa_collab.length) {
-      throw new Error('Some collaborators were not created');
-    }
-    return collaborators;
   }
 
   async remove(id: number): Promise<fa | null> {

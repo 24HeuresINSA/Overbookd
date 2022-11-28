@@ -6,15 +6,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidateNested,
   ValidationArguments,
 } from 'class-validator';
-import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
-import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
-import { CreateFaCommentDto } from '../../fa_comment/dto/create-fa_comment.dto';
-import { CreateTimeWindowDto } from '../../time_windows/dto/create-time_window.dto';
-import { CreateFaElectricityNeedDto } from '../../fa_electricity_needs/dto/create-fa_electricity_need.dto';
-import { Type } from 'class-transformer';
 
 export enum Status {
   DRAFT = 'DRAFT',
@@ -152,53 +145,4 @@ export class UpdateFaDto {
   @IsNumber()
   @IsOptional()
   water_flow_required?: number;
-  @ApiProperty({
-    required: false,
-    description: 'The collaborators',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateCollaboratorDto)
-  fa_collaborators?: CreateCollaboratorDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The signalisation needs',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateFaSignaNeedDto)
-  fa_signa_needs?: CreateFaSignaNeedDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The comments',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateFaCommentDto)
-  fa_comments?: CreateFaCommentDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The time windows',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateTimeWindowDto)
-  time_windows?: CreateTimeWindowDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The electricity needs',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateFaElectricityNeedDto)
-  fa_electricity_needs?: CreateFaElectricityNeedDto[];
 }
