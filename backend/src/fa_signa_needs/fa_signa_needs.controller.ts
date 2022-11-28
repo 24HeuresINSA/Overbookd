@@ -3,45 +3,44 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { FaSignaNeedsService } from './fa_signa_needs.service';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
-import { UpdateFaSignaNeedDto } from './dto/update-fa_signa_need.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { Roles } from '../auth/team-auth.decorator';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @ApiTags('fa-signa-needs')
 @Controller('fa-signa-needs')
 export class FaSignaNeedsController {
   constructor(private readonly faSignaNeedsService: FaSignaNeedsService) {}
 
-  @Post()
-  create(@Body() createFaSignaNeedDto: CreateFaSignaNeedDto) {
-    return this.faSignaNeedsService.create(createFaSignaNeedDto);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Post(':faID')
+  upsert(
+    @Param('faID', ParseIntPipe) faID: string,
+    @Body() createFaSignaNeedDto: CreateFaSignaNeedDto,
+  ) {
+    return this.faSignaNeedsService.upsert(+faID, createFaSignaNeedDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Get()
   findAll() {
     return this.faSignaNeedsService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.faSignaNeedsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateFaSignaNeedDto: UpdateFaSignaNeedDto,
-  ) {
-    return this.faSignaNeedsService.update(+id, updateFaSignaNeedDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.faSignaNeedsService.remove(+id);
   }
 }

@@ -26,7 +26,7 @@ export class FaElectricityNeedsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post(':faID')
-  create(
+  upsert(
     @Param('faID', ParseIntPipe) faID: string,
     @Body() createFaElectricityNeedDto: CreateFaElectricityNeedDto,
   ): Promise<fa_electricity_needs | null> {
