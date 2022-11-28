@@ -7,7 +7,25 @@
         le déplacer
       </v-card-subtitle>
 
-      <v-data-table :headers="headers" :items="timeframes" sort-by="dateStart">
+      <v-data-table
+        :headers="headers"
+        :items="timeframes"
+        dense
+        :items-per-page="-1"
+        sort-by="dateStart"
+      >
+        <template #[`item.dateStart`]="{ item }">
+          {{ formatDate(item.start) }}
+        </template>
+        <template #[`item.timeStart`]="{ item }">
+          {{ formatTime(item.start) }}
+        </template>
+        <template #[`item.dateEnd`]="{ item }">
+          {{ formatDate(item.end) }}
+        </template>
+        <template #[`item.timeEnd`]="{ item }">
+          {{ formatTime(item.end) }}
+        </template>
         <template #[`item.action`]="{ index }">
           <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
             <v-icon>mdi-delete</v-icon>
@@ -17,7 +35,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="openAddTimeframe">Ajouter un créneau</v-btn>
+        <v-btn text @click="isAddDialogOpen = true">Ajouter un créneau</v-btn>
       </v-card-actions>
 
       <TimeframeCalendar
@@ -190,11 +208,10 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    date: "",
     headers: [
       { text: "Date de début", value: "dateStart" },
       { text: "Heure de début", value: "timeStart" },
-      { text: "Date de fin", value: "end" },
+      { text: "Date de fin", value: "dateEnd" },
       { text: "Heure de fin", value: "timeEnd" },
       { text: "Action", value: "action" },
     ],
@@ -211,23 +228,35 @@ export default Vue.extend({
     menuTimeEnd: false,
   }),
   computed: {
-    mFA(): any {
-      return this.$accessor.FA.mFA;
-    },
     timeframes(): any {
-      return this.$accessor.FA.mFA.time_window;
+      return this.$accessor.FA.mFA.time_windows;
     },
   },
   methods: {
     allowedStep: (m: number) => m % 15 === 0,
+    formatDate(date: string): string {
+      return new Date(date).toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      });
+    },
+    formatTime(date: string): string {
+      return new Date(date).toLocaleTimeString("fr-FR", {
+        hour: "numeric",
+        minute: "numeric",
+      });
+    },
     addTimeframe() {
+      if (!this.dateStart || !this.timeStart || !this.dateEnd || !this.timeEnd)
+        return;
       const timeframe = {
         start: new Date(this.dateStart + " " + this.timeStart),
         end: new Date(this.dateEnd + " " + this.timeEnd),
       };
       this.$accessor.FA.addTimeWindow(timeframe);
       this.isAddDialogOpen = false;
-      console.log(this.mFA.time_window);
+
       // clear v-model
       this.dateStart = this.dateEnd = this.timeStart = this.timeEnd = null;
     },
@@ -236,7 +265,11 @@ export default Vue.extend({
       this.mTimeframe = { ...timeframe };
       this.mIndex = index;*/
     },
-    updateTimeframe() {
+    updateTimeframe(index: number, timeframe: any) {
+      this.$accessor.FA.updateTimeWindow({
+        index: index,
+        timeWindow: timeframe,
+      });
       /*let start = new Date(this.timeframes[this.mIndex].start);
       let end = new Date(this.timeframes[this.mIndex].end);
 
@@ -272,9 +305,6 @@ export default Vue.extend({
       this.deleteTimeframe(this.mIndex);
 
       this.isEditDialogOpen = false;*/
-    },
-    openAddTimeframe() {
-      this.isAddDialogOpen = true;
     },
     deleteTimeframe(index: number) {
       this.$accessor.FA.deleteTimeWindow(index);

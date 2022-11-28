@@ -28,17 +28,17 @@ export default Vue.extend({
   name: "TimeframeCalendar",
   computed: {
     timeframes(): any {
-      return this.$accessor.FA.mFA.time_window;
+      return this.$accessor.FA.mFA.time_windows;
     },
     events(): Array<any> {
-      const time_window = this.$accessor.FA.mFA.time_window;
+      const time_window = this.$accessor.FA.mFA.time_windows;
       //if (time_window !== null)  return [...time_window];
       return [];
     },
   },
   methods: {
     showTimeframes() {
-      console.log(this.$accessor.FA.mFA.time_window);
+      console.log(this.$accessor.FA.mFA.time_windows);
     },
   },
 });
