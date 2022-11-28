@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { fa_electricity_needs } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto';
-import { UpdateFaElectricityNeedDto } from './dto/update-fa_electricity_need.dto';
 
 @Injectable()
 export class FaElectricityNeedsService {
-  create(createFaElectricityNeedDto: CreateFaElectricityNeedDto) {
-    return 'This action adds a new faElectricityNeed';
+  constructor(private prisma: PrismaService) {}
+
+  async findAll(): Promise<fa_electricity_needs[] | null> {
+    return await this.prisma.fa_electricity_needs.findMany();
   }
 
-  findAll() {
-    return `This action returns all faElectricityNeeds`;
+  async findOne(id: number): Promise<fa_electricity_needs | null> {
+    return await this.prisma.fa_electricity_needs.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} faElectricityNeed`;
-  }
-
-  update(id: number, updateFaElectricityNeedDto: UpdateFaElectricityNeedDto) {
-    return `This action updates a #${id} faElectricityNeed`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} faElectricityNeed`;
+  async upsert(
+    faID: number,
+    createFaElectricityNeedDto: CreateFaElectricityNeedDto,
+  ): Promise<fa_electricity_needs | null> {
+    if (createFaElectricityNeedDto.id) {
+      return await this.prisma.fa_electricity_needs.update({
+        where: {
+          id: createFaElectricityNeedDto.id,
+        },
+        data: {
+          ...createFaElectricityNeedDto,
+          fa_id: faID,
+        },
+      });
+    } else {
+      return await this.prisma.fa_electricity_needs.create({
+        data: {
+          fa_id: faID,
+          ...createFaElectricityNeedDto,
+        },
+      });
+    }
   }
 }
