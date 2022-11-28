@@ -9,25 +9,25 @@
     <v-card-text>
       <form>
         <div class="fields">
-        <v-text-field
-          v-model="name"
-          append-icon="mdi-label"
-          label="Nom de la categorie"
-          clearable
-          outlined
-          clear-icon="mdi-close-circle-outline"
-          counter
-          :rules="[rules.name.minLength]"
-        ></v-text-field>
-        <SearchTeamVue
-          v-model="owner"
-          label="Choissisez l'equipe responsable"
-        ></SearchTeamVue>
-        <SearchCategoryVue
-          v-model="parent"
-          label="Choisisez un parent"
-        ></SearchCategoryVue>
-      </div>
+          <v-text-field
+            v-model="name"
+            append-icon="mdi-label"
+            label="Nom de la categorie"
+            clearable
+            outlined
+            clear-icon="mdi-close-circle-outline"
+            counter
+            :rules="[rules.name.minLength]"
+          ></v-text-field>
+          <SearchTeamVue
+            v-model="owner"
+            label="Choissisez l'equipe responsable"
+          ></SearchTeamVue>
+          <SearchCategoryVue
+            v-model="parent"
+            label="Choisisez un parent"
+          ></SearchCategoryVue>
+        </div>
         <v-btn color="success" dark large @click="createCategory">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Creer la
           categorie
@@ -112,7 +112,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     align-items: center;
-    .fields{
+    .fields {
       width: 80%;
     }
   }
