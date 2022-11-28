@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
+import { Departements, Years } from '../src/user/dto/common';
 import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
 import { gears } from './gears';
@@ -261,6 +262,7 @@ async function main() {
       }),
     ),
   );
+  const databaseTeams = await prisma.team.findMany();
 
   console.log('Creating users 👤');
 
@@ -284,10 +286,10 @@ async function main() {
     ['scene', 'hard,orga,scene'],
     ['signa', 'hard,orga,signa'],
     ['communication', 'hard,communication'],
-    ['concerts', 'hard,concerts'],
+    ['concert', 'hard,concert'],
     ['courses', 'hard,courses'],
     ['culture', 'hard,culture'],
-    ['dd', 'hard,dd'],
+    ['DD', 'hard,DD'],
     ['deco', 'hard,deco'],
     ['comsa', 'hard,informatique'],
     ['plaizir', 'hard,plaizir'],
@@ -298,52 +300,44 @@ async function main() {
     ['camion', 'hard,camion'],
   ];
 
-  for (const userTeam of userTeamTuples) {
-    const [user, teams] = userTeam;
-    const data: Prisma.UserUncheckedCreateInput = {
-      email: `${user}@24h.me`,
-      firstname: user,
-      lastname: user,
-      nickname: '',
-      birthdate: new Date(1990, 1, 1),
-      phone: '0612345678',
-      department: 'TC',
-      year: 'A1',
-      password: await new HashingUtilsService().hash('password'),
-    };
+  const hashPassword = await new HashingUtilsService().hash('password');
+  await Promise.all(
+    userTeamTuples.map(async (userTeam) => {
+      const [user, teamNames] = userTeam;
 
-    const dbUser = await prisma.user.upsert({
-      where: { email: `${user}@24h.me` },
-      update: data,
-      create: data,
-    });
+      const teams = databaseTeams
+        .filter((team) => teamNames.split(',').includes(team.code))
+        .map((team) => ({ team_id: team.id }));
 
-    console.log(`User ${user} created with id ${dbUser.id}, adding to teams`);
+      const email = `${user}@24h.me`;
 
-    const teamNames = teams.split(',');
-    for (const teamName of teamNames) {
-      const team = await prisma.team.findUnique({
-        where: { name: teamName },
+      const userData = {
+        email,
+        firstname: user,
+        lastname: user,
+        nickname: '',
+        birthdate: new Date(1990, 1, 1),
+        phone: '0612345678',
+        department: Departements.TC,
+        year: Years.A1,
+        password: hashPassword,
+        team: {
+          create: teams,
+        },
+      };
+
+      await prisma.user.upsert({
+        where: { email },
+        update: userData,
+        create: userData,
       });
 
-      if (team) {
-        await prisma.user_Team.upsert({
-          where: {
-            user_id_team_id: { user_id: dbUser.id, team_id: team.id },
-          },
-          update: {},
-          create: {
-            team_id: team.id,
-            user_id: dbUser.id,
-          },
-        });
-      } else {
-        console.log(`Team ${teamName} not found`);
-      }
-    }
-    console.log(`User ${user} added to teams ${teamNames}`);
-    console.log('------------------------------------------------------------');
-  }
+      console.log(`User ${user} added with teams ${teamNames.split(',')}`);
+      console.log(
+        '------------------------------------------------------------',
+      );
+    }),
+  );
 
   const savedGears = await Promise.all(
     gears.map((gear) => {
