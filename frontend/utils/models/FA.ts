@@ -47,11 +47,11 @@ export interface FA {
   water_needs?: string;
   water_flow_required?: string;
   is_deleted?: boolean;
-  fa_collaborator?: fa_collaborator[];
+  fa_collaborators?: fa_collaborator[];
   fa_electricity_needs?: fa_electricity_needs[];
-  fa_comment?: fa_comment[];
+  fa_comments?: fa_comment[];
   fa_signa_needs?: fa_signa_needs[];
-  time_window?: time_window[];
+  time_windows?: time_window[];
 }
 
 export interface fa_collaborator {

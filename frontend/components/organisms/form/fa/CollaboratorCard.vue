@@ -59,10 +59,10 @@ export default Vue.extend({
   }),
   computed: {
     collaborators(): any {
-      return this.$accessor.FA.mFA.fa_collaborator;
+      return this.$accessor.FA.mFA.fa_collaborators;
     },
     collaborator(): collaborator {
-      const collaborators = this.$accessor.FA.mFA.fa_collaborator;
+      const collaborators = this.$accessor.FA.mFA.fa_collaborators;
       if (collaborators && collaborators.length > 0)
         return collaborators[0].collaborator;
       return {};

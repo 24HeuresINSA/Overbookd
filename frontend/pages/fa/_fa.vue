@@ -98,7 +98,11 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="validator of mValidators" :key="validator" link>
+            <v-list-item
+              v-for="validator of mValidators"
+              :key="validator.id"
+              link
+            >
               <v-list-item-title
                 @click="refuseDialog = true"
                 v-text="validator"
@@ -126,7 +130,11 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="validator of mValidators" :key="validator" link>
+            <v-list-item
+              v-for="validator of mValidators"
+              :key="validator.id"
+              link
+            >
               <v-list-item-title
                 color="green"
                 @click="validate(validator)"

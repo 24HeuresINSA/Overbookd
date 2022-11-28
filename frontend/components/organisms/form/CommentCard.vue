@@ -62,7 +62,7 @@ export default Vue.extend({
     },
     // eslint-disable-next-line vue/return-in-computed-property
     comments(): any {
-      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comment;
+      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments;
       // else if (this.form === "FT") return this.$accessor.FT.mFT.ft_comment;
     },
     me(): any {

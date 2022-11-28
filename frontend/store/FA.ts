@@ -89,8 +89,8 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_COMMENT({ mFA }, comment: fa_comment) {
-    if (!mFA.fa_comment) mFA.fa_comment = [];
-    mFA.fa_comment?.push(comment);
+    if (!mFA.fa_comments) mFA.fa_comments = [];
+    mFA.fa_comments?.push(comment);
   },
 
   ADD_SIGNA_NEED({ mFA }, signaNeed: fa_signa_needs) {
@@ -111,37 +111,37 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: time_window) {
-    if (!mFA.time_window) mFA.time_window = [];
-    mFA.time_window?.push(timeWindow);
+    if (!mFA.time_windows) mFA.time_windows = [];
+    mFA.time_windows?.push(timeWindow);
   },
 
   UPDATE_TIME_WINDOW({ mFA }, { index, timeWindow }) {
-    if (mFA.time_window && mFA.time_window[index]) {
-      mFA.time_window[index].start = timeWindow.start;
-      mFA.time_window[index].end = timeWindow.end;
+    if (mFA.time_windows && mFA.time_windows[index]) {
+      mFA.time_windows[index].start = timeWindow.start;
+      mFA.time_windows[index].end = timeWindow.end;
     }
   },
 
   DELETE_TIME_WINDOW({ mFA }, index: number) {
-    if (mFA.time_window && mFA.time_window[index]) {
-      mFA.time_window.splice(index, 1);
+    if (mFA.time_windows && mFA.time_windows[index]) {
+      mFA.time_windows.splice(index, 1);
     }
   },
 
   ADD_COLLABORATOR({ mFA }, collaborator: fa_collaborator) {
-    if (!mFA.fa_collaborator) mFA.fa_collaborator = [];
-    mFA.fa_collaborator?.push(collaborator);
+    if (!mFA.fa_collaborators) mFA.fa_collaborators = [];
+    mFA.fa_collaborators?.push(collaborator);
   },
 
   UPDATE_COLLABORATOR({ mFA }, { index, key, value }) {
-    if (!mFA.fa_collaborator || !mFA.fa_collaborator[index]) return;
-    mFA.fa_collaborator[index].collaborator[key as keyof collaborator] =
+    if (!mFA.fa_collaborators || !mFA.fa_collaborators[index]) return;
+    mFA.fa_collaborators[index].collaborator[key as keyof collaborator] =
       value as never;
   },
 
   DELETE_COLLABORATOR({ mFA }, index: number) {
-    if (mFA.fa_collaborator && mFA.fa_collaborator[index]) {
-      mFA.fa_collaborator.splice(index, 1);
+    if (mFA.fa_collaborators && mFA.fa_collaborators[index]) {
+      mFA.fa_collaborators.splice(index, 1);
     }
   },
 
