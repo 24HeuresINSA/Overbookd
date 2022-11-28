@@ -2,6 +2,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
+import { SnackNotif } from "~/utils/models/store";
 
 const gearRepository = RepoFactory.GearsRepository;
 const categoryRepository = RepoFactory.CategoryRepository;
@@ -70,6 +71,7 @@ export const mutations = mutationTree(state, {
   },
 });
 
+const DEFAULT_ERROR = "Quelque chose s'est mal passe";
 export const actions = actionTree(
   { state, mutations },
   {
@@ -115,13 +117,7 @@ export const actions = actionTree(
       );
       if (!call) return;
       context.commit("ADD_CATEGORY", call.data);
-
-      const categoryTreeCall = await safeCall<CategoryTree[]>(
-        this,
-        categoryRepository.getCategoryTree(this)
-      );
-      if (!categoryTreeCall) return;
-      context.commit("SET_CATEGORY_TREE", categoryTreeCall.data);
+      this.dispatch("catalog/fetchCategoryTree");
     },
 
     async createGear(context, gearForm: GearForm): Promise<void> {
@@ -146,5 +142,27 @@ export const actions = actionTree(
       if (!call) return;
       context.commit("UPDATE_GEAR", call.data);
     },
+
+    async deleteGear(context, gear: Gear): Promise<void> {
+      try {
+        await gearRepository.deleteGear(this, gear.id);
+        sendNotification(this, `${gear.name} supprime`);
+        context.commit("DELETE_GEAR", gear);
+      } catch (error: any) {
+        sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
+      }
+    },
   }
 );
+
+function sendNotification(
+  store: Vue["$store"],
+  message: string,
+  type: "success" | "error" = "success"
+) {
+  const notif: SnackNotif = {
+    type,
+    message,
+  };
+  store.dispatch("notif/pushNotification", notif);
+}

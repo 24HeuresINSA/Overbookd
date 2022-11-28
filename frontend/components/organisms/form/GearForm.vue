@@ -1,7 +1,7 @@
 <template>
   <v-card class="gear">
     <v-card-title class="gear__title">
-      <h2>Gear</h2>
+      <h2>Matos</h2>
       <v-btn icon dark @click="closeDialog">
         <v-icon>mdi-close</v-icon>
       </v-btn>
