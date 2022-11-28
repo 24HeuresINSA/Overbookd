@@ -23,6 +23,10 @@ export class GearsRepository {
   static updateGear(context: Context, gearId: number, gearForm: GearForm) {
     return context.$axios.put<Gear>(`${this.basePath}/${gearId}`, gearForm);
   }
+
+  static deleteGear(context: Context, gearId: number) {
+    return context.$axios.$delete(`${this.basePath}/${gearId}`);
+  }
 }
 
 export class CategoryRepository {

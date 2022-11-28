@@ -14,6 +14,16 @@
     @update:search-input="searchCategory"
     @change="propagateEvent"
   >
+    <template #item="listedCategory">
+      <v-list-item-content>
+        <v-list-item-title
+          v-text="listedCategory.item.name"
+        ></v-list-item-title>
+        <v-list-item-subtitle
+          v-text="listedCategory.item.path"
+        ></v-list-item-subtitle>
+      </v-list-item-content>
+    </template>
     <template #no-data>
       <v-list-item> Aucune categorie correspondante </v-list-item>
     </template>

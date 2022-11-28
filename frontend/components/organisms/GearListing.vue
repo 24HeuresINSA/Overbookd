@@ -50,12 +50,18 @@
         <v-icon small class="mr-2" @click="openUpdateGearDialog(item)">
           mdi-pencil
         </v-icon>
-        <v-icon small> mdi-delete </v-icon>
+        <v-icon small @click="openDeleteGearDialog(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
     <v-dialog v-model="isUpdateGearDialogOpen" width="600px">
       <GearForm :gear="selectedGear" @close-dialog="closeUpdateGearDialog">
       </GearForm>
+    </v-dialog>
+    <v-dialog v-model="isDeleteGearDialogOpen" width="600px">
+      <ConfirmationGearDeletion
+        :gear="selectedGear"
+        @close-dialog="closeDeleteGearDialog"
+      ></ConfirmationGearDeletion>
     </v-dialog>
   </div>
 </template>
@@ -65,6 +71,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
+import ConfirmationGearDeletion from "./form/ConfirmationGearDeletion.vue";
 import GearForm from "./form/GearForm.vue";
 
 interface GearListingData {
@@ -79,13 +86,14 @@ interface GearListingData {
   searchDelay?: any;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
+  isDeleteGearDialogOpen: boolean;
 }
 
 const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
-  components: { GearForm },
+  components: { GearForm, ConfirmationGearDeletion },
   data(): GearListingData {
     return {
       headers: [
@@ -106,6 +114,7 @@ export default Vue.extend({
       searchDelay: undefined,
       selectedGear: undefined,
       isUpdateGearDialogOpen: false,
+      isDeleteGearDialogOpen: false,
     };
   },
   computed: {
@@ -141,8 +150,15 @@ export default Vue.extend({
       this.selectedGear = gear;
       this.isUpdateGearDialogOpen = true;
     },
-    closeUpdateGearDialog(gear: Gear) {
+    openDeleteGearDialog(gear: Gear) {
+      this.selectedGear = gear;
+      this.isDeleteGearDialogOpen = true;
+    },
+    closeUpdateGearDialog() {
       this.isUpdateGearDialogOpen = false;
+    },
+    closeDeleteGearDialog() {
+      this.isDeleteGearDialogOpen = false;
     },
     isValidSearchOption(searchOption: string | null): boolean {
       return Boolean(searchOption && searchOption.length >= searchMinLength);
