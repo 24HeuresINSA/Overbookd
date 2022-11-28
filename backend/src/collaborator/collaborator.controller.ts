@@ -38,6 +38,10 @@ export class CollaboratorController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get all collaborators',
+  })
   findAll(): Promise<collaborator[] | null> {
     return this.collaboratorService.findAll();
   }
@@ -45,6 +49,10 @@ export class CollaboratorController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Get a collaborator',
+  })
   findOne(@Param('id', ParseIntPipe) id: string): Promise<collaborator | null> {
     return this.collaboratorService.findOne(+id);
   }
