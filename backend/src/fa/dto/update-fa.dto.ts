@@ -1,17 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  ValidateNested,
+  ValidationArguments,
 } from 'class-validator';
-import { CreateCollaboratorDto } from '../../collaborator/dto/create-collaborator.dto';
-import { CreateFaSignaNeedDto } from '../../fa_signa_needs/dto/create-fa_signa_need.dto';
-import { CreateFaCommentDto } from '../../fa_comment/dto/create-fa_comment.dto';
-import { CreateTimeWindowDto } from '../../time_windows/dto/create-time_window.dto';
-import { Type } from 'class-transformer';
 
 export enum Status {
   DRAFT = 'DRAFT',
@@ -19,8 +15,7 @@ export enum Status {
   VALIDATED = 'VALIDATED',
   REFUSED = 'REFUSED',
 }
-
-class FA {
+export class UpdateFaDto {
   @ApiProperty({
     required: true,
     description: 'The name of the fa',
@@ -71,7 +66,11 @@ class FA {
   @ApiProperty({
     required: false,
     description: 'The status of the fa',
-    enum: [Status.DRAFT, Status.SUBMITTED, Status.VALIDATED, Status.REFUSED],
+    enum: Status,
+  })
+  @IsEnum(Status, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(Status)}`,
   })
   status?: Status;
 
@@ -146,54 +145,4 @@ class FA {
   @IsNumber()
   @IsOptional()
   water_flow_required?: number;
-}
-
-export class UpdateFaDto {
-  @ApiProperty({
-    required: true,
-    description: 'The fa',
-  })
-  @ValidateNested()
-  @Type(() => FA)
-  fa: FA;
-
-  @ApiProperty({
-    required: false,
-    description: 'The collaborators',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateCollaboratorDto)
-  fa_collaborator?: CreateCollaboratorDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The signalisation needs',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateFaSignaNeedDto)
-  fa_signa_needs?: CreateFaSignaNeedDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The comments',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateFaCommentDto)
-  fa_comment?: CreateFaCommentDto[];
-
-  @ApiProperty({
-    required: false,
-    description: 'The time windows',
-    default: [],
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateTimeWindowDto)
-  time_windows?: CreateTimeWindowDto[];
 }

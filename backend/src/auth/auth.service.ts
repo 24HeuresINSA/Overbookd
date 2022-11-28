@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -13,7 +12,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { User } from '@prisma/client';
-import { randomBytes } from 'crypto';
+import { randomBytes, timingSafeEqual } from 'crypto';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
@@ -92,7 +91,7 @@ export class AuthService {
     password,
     password2,
   }: ResetPasswordDto): Promise<void> {
-    if (password !== password2) {
+    if (!timingSafeEqual(Buffer.from(password), Buffer.from(password2))) {
       throw new BadRequestException('The passwords are not the same');
     }
 

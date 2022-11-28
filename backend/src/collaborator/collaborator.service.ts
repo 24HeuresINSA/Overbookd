@@ -1,28 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
-import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
 import { PrismaService } from '../prisma.service';
+import { collaborator } from '@prisma/client';
 
 @Injectable()
 export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
-  create(createCollaboratorDto: CreateCollaboratorDto) {
-    return 'This action adds a new collaborator';
+
+  async findAll(): Promise<collaborator[] | null> {
+    return await this.prisma.collaborator.findMany();
   }
 
-  findAll() {
-    return `This action returns all collaborator`;
+  async findOne(id: number): Promise<collaborator | null> {
+    return await this.prisma.collaborator.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} collaborator`;
-  }
-
-  update(id: number, updateCollaboratorDto: UpdateCollaboratorDto) {
-    return `This action updates a #${id} collaborator`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} collaborator`;
+  async upsert(
+    faId: number,
+    collab: CreateCollaboratorDto,
+  ): Promise<collaborator | null> {
+    let collaborator: collaborator;
+    if (collab.id) {
+      collaborator = await this.prisma.collaborator.update({
+        where: { id: collab.id },
+        data: {
+          ...collab,
+          fa_collaborators: {
+            connect: {
+              fa_id_collaborator_id: {
+                fa_id: faId,
+                collaborator_id: collab.id,
+              },
+            },
+          },
+        },
+      });
+    } else {
+      collaborator = await this.prisma.collaborator.create({
+        data: {
+          ...collab,
+          fa_collaborators: {
+            create: {
+              fa_id: faId,
+            },
+          },
+        },
+      });
+    }
+    return collaborator;
   }
 }

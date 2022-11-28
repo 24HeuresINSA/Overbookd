@@ -9,6 +9,22 @@ export enum signa_type {
 
 export class CreateFaSignaNeedDto {
   @ApiProperty({
+    required: false,
+    description: 'The id of the need',
+  })
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'The id of the FA',
+  })
+  @IsNumber()
+  @IsOptional()
+  fa_id?: number;
+
+  @ApiProperty({
     required: true,
     description: 'The type of signalisation',
   })

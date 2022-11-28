@@ -19,6 +19,7 @@ import { Roles } from '../auth/team-auth.decorator';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
+import { FaResponse } from './fa_types';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -34,7 +35,7 @@ export class FaController {
     description: 'Create a new fa',
     type: Promise<fa | null>,
   })
-  create(@Body() FA: CreateFaDto): Promise<fa | null> {
+  create(@Body() FA: CreateFaDto): Promise<FaResponse | null> {
     return this.faService.create(FA);
   }
 
@@ -58,7 +59,7 @@ export class FaController {
     description: 'Get a fa',
     type: Promise<fa | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<fa | null> {
+  findOne(@Param('id', ParseIntPipe) id: string): Promise<FaResponse | null> {
     return this.faService.findOne(+id);
   }
 
@@ -77,7 +78,7 @@ export class FaController {
   update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateFaDto: UpdateFaDto,
-  ): Promise<fa | null> {
+  ): Promise<FaResponse | null> {
     return this.faService.update(+id, updateFaDto);
   }
 

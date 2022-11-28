@@ -76,6 +76,6 @@ class Issue:
 
 
 if __name__ == "__main__":
-    i = Issue("24-heures-insa/overbookd/documentation", "glpat-n2uZMLWxtzVmtPBz9Ngg")
+    i = Issue("24-heures-insa/overbookd/documentation", "<gitlab_token>")
     i.moveIssue()
     # i.getProjects()

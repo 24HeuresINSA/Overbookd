@@ -5,11 +5,12 @@ import {
   IsOptional,
   IsString,
   Matches,
+  MinLength,
   ValidationArguments,
 } from 'class-validator';
 
-const hexCode = new RegExp(/^#[0-9|a-f|A-F]{6}$/);
-const mdiIcon = new RegExp(/^mdi-.*/);
+const hexCode = new RegExp('^#[0-9|a-f|A-F]{6}$');
+const mdiIcon = new RegExp('^mdi-.+');
 
 export class TeamFormDto {
   @ApiProperty({
@@ -19,6 +20,15 @@ export class TeamFormDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'The code of the team',
+  })
+  @IsOptional()
+  @IsString()
+  @MinLength(4)
+  code?: string;
 
   @ApiProperty({
     required: false,

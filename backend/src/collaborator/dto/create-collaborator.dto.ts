@@ -6,9 +6,18 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsNumber,
 } from 'class-validator';
 
 export class CreateCollaboratorDto {
+  @ApiProperty({
+    required: false,
+    description: 'The id of the collaborator',
+  })
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
   @ApiProperty({
     required: true,
     description: 'The firstname of the collaborator',
