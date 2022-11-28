@@ -1,16 +1,19 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  Get,
+  UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
-import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { Roles } from '../auth/team-auth.decorator';
+import { collaborator } from '@prisma/client';
 
 @ApiBearerAuth()
 @ApiTags('collaborator')
@@ -18,31 +21,31 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
-  @Post()
-  create(@Body() createCollaboratorDto: CreateCollaboratorDto) {
-    return this.collaboratorService.create(createCollaboratorDto);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Post(':faId')
+  @ApiResponse({
+    status: 201,
+    description: 'Upsert a collaborator',
+  })
+  upsert(
+    @Param('faId', ParseIntPipe) faId: string,
+    @Body() createCollaboratorDto: CreateCollaboratorDto,
+  ): Promise<collaborator | null> {
+    return this.collaboratorService.upsert(+faId, createCollaboratorDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Get()
-  findAll() {
+  findAll(): Promise<collaborator[] | null> {
     return this.collaboratorService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string): Promise<collaborator | null> {
     return this.collaboratorService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCollaboratorDto: UpdateCollaboratorDto,
-  ) {
-    return this.collaboratorService.update(+id, updateCollaboratorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.collaboratorService.remove(+id);
   }
 }
