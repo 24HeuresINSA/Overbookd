@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
@@ -24,14 +24,11 @@ export class CollaboratorController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post(':faId')
-  @ApiResponse({
-    status: 201,
-    description: 'Upsert a collaborator',
-  })
+  @ApiBody({ type: [CreateCollaboratorDto] })
   upsert(
     @Param('faId', ParseIntPipe) faId: string,
-    @Body() createCollaboratorDto: CreateCollaboratorDto,
-  ): Promise<collaborator | null> {
+    @Body() createCollaboratorDto: CreateCollaboratorDto[],
+  ): Promise<collaborator[] | null> {
     return this.collaboratorService.upsert(+faId, createCollaboratorDto);
   }
 

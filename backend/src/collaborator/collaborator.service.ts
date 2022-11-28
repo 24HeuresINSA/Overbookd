@@ -21,36 +21,38 @@ export class CollaboratorService {
 
   async upsert(
     faId: number,
-    collab: CreateCollaboratorDto,
-  ): Promise<collaborator | null> {
-    let collaborator: collaborator;
-    if (collab.id) {
-      collaborator = await this.prisma.collaborator.update({
-        where: { id: collab.id },
-        data: {
-          ...collab,
-          fa_collaborators: {
-            connect: {
-              fa_id_collaborator_id: {
-                fa_id: faId,
-                collaborator_id: collab.id,
+    collab: CreateCollaboratorDto[],
+  ): Promise<collaborator[] | null> {
+    return Promise.all(
+      collab.map(async (col) => {
+        if (col.id) {
+          return await this.prisma.collaborator.update({
+            where: { id: col.id },
+            data: {
+              ...col,
+              fa_collaborators: {
+                connect: {
+                  fa_id_collaborator_id: {
+                    fa_id: faId,
+                    collaborator_id: col.id,
+                  },
+                },
               },
             },
-          },
-        },
-      });
-    } else {
-      collaborator = await this.prisma.collaborator.create({
-        data: {
-          ...collab,
-          fa_collaborators: {
-            create: {
-              fa_id: faId,
+          });
+        } else {
+          return await this.prisma.collaborator.create({
+            data: {
+              ...col,
+              fa_collaborators: {
+                create: {
+                  fa_id: faId,
+                },
+              },
             },
-          },
-        },
-      });
-    }
-    return collaborator;
+          });
+        }
+      }),
+    );
   }
 }
