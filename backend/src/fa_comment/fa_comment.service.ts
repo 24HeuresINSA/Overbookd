@@ -19,27 +19,31 @@ export class FaCommentService {
     });
   }
 
-  upsert(
+  async upsert(
     faID: number,
-    createFaCommentDto: CreateFaCommentDto,
-  ): Promise<fa_comments | null> {
-    if (createFaCommentDto.id) {
-      return this.prisma.fa_comments.update({
-        where: {
-          id: createFaCommentDto.id,
-        },
-        data: {
-          ...createFaCommentDto,
-          fa_id: faID,
-        },
-      });
-    } else {
-      return this.prisma.fa_comments.create({
-        data: {
-          ...createFaCommentDto,
-          fa_id: faID,
-        },
-      });
-    }
+    createFaCommentDto: CreateFaCommentDto[],
+  ): Promise<fa_comments[] | null> {
+    return Promise.all(
+      createFaCommentDto.map(async (faComment) => {
+        if (faComment.id) {
+          return await this.prisma.fa_comments.update({
+            where: {
+              id: faComment.id,
+            },
+            data: {
+              ...faComment,
+              fa_id: faID,
+            },
+          });
+        } else {
+          return await this.prisma.fa_comments.create({
+            data: {
+              ...faComment,
+              fa_id: faID,
+            },
+          });
+        }
+      }),
+    );
   }
 }
