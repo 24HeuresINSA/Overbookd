@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { time_windows } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 import { CreateTimeWindowDto } from './dto/create-time_window.dto';
-import { UpdateTimeWindowDto } from './dto/update-time_window.dto';
 
 @Injectable()
 export class TimeWindowsService {
-  create(createTimeWindowDto: CreateTimeWindowDto) {
-    return 'This action adds a new timeWindow';
+  constructor(private prisma: PrismaService) {}
+  async upsert(
+    faID: number,
+    tWindows: CreateTimeWindowDto[],
+  ): Promise<time_windows[] | null> {
+    return Promise.all(
+      tWindows.map(async (tWindow) => {
+        if (tWindow.id) {
+          return await this.prisma.time_windows.update({
+            where: { id: tWindow.id },
+            data: {
+              ...tWindow,
+              fa_id: faID,
+            },
+          });
+        } else {
+          return await this.prisma.time_windows.create({
+            data: {
+              ...tWindow,
+              fa_id: faID,
+            },
+          });
+        }
+      }),
+    );
   }
 
-  findAll() {
-    return `This action returns all timeWindows`;
+  async findAll(): Promise<time_windows[] | null> {
+    return await this.prisma.time_windows.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} timeWindow`;
-  }
-
-  update(id: number, updateTimeWindowDto: UpdateTimeWindowDto) {
-    return `This action updates a #${id} timeWindow`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} timeWindow`;
+  async findOne(id: number): Promise<time_windows | null> {
+    return await this.prisma.time_windows.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 }
