@@ -13,14 +13,10 @@
           counter
           :rules="[rules.name.minLength]"
         ></v-text-field>
-        <v-text-field
+        <SearchTeamVue
           v-model="owner"
-          append-icon="mdi-account-multiple"
-          label="Nom de l'equipe responsable"
-          clearable
-          outlined
-          clear-icon="mdi-close-circle-outline"
-        ></v-text-field>
+          label="Choissisez l'equipe responsable"
+        ></SearchTeamVue>
         <SearchCategoryVue
           v-model="parent"
           label="Choisisez un parent"
@@ -36,13 +32,15 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SearchTeamVue from "~/components/atoms/SearchTeam.vue";
 import { CategoryForm } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
+import { team } from "~/utils/models/repo";
 import SearchCategoryVue from "../../atoms/SearchCategory.vue";
 
 interface CategoryFormData {
   name: string;
-  owner?: string;
+  owner?: team;
   parent?: Category;
   rules: {
     name: {
@@ -55,7 +53,7 @@ const nameMinLength = 3;
 
 export default Vue.extend({
   name: "CategoryForm",
-  components: { SearchCategoryVue },
+  components: { SearchCategoryVue, SearchTeamVue },
   data(): CategoryFormData {
     return {
       name: "",
@@ -77,7 +75,7 @@ export default Vue.extend({
         category = { ...category, parent: this.parent.id };
       }
       if (this.owner) {
-        category = { ...category, owner: this.owner };
+        category = { ...category, owner: this.owner.code };
       }
 
       await this.$accessor.catalog.createCategory(category);
