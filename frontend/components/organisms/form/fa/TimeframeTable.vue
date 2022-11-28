@@ -7,7 +7,7 @@
         le déplacer
       </v-card-subtitle>
 
-      <v-data-table :headers="headers" :items="timeframes">
+      <v-data-table :headers="headers" :items="timeframes" sort-by="dateStart">
         <template #[`item.action`]="{ index }">
           <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
             <v-icon>mdi-delete</v-icon>
@@ -15,16 +15,15 @@
         </template>
       </v-data-table>
 
-      <!--<TimeframeSelector
-        :disabled="isDisabled"
-        :store="store"
-        @add-timeframe="addTimeframe"
-        @set-timeframes="setTimeframes"
-      ></TimeframeSelector>-->
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="openAddTimeframe">Ajouter un créneau</v-btn>
       </v-card-actions>
+
+      <TimeframeCalendar
+        :disabled="isDisabled"
+        :data="timeframes"
+      ></TimeframeCalendar>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
@@ -179,11 +178,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TimeframeSelector from "~/components/molecules/timeframe/TimeframeSelector.vue";
+import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 
 export default Vue.extend({
   name: "TimeframeTable",
-  components: { TimeframeSelector },
+  components: { TimeframeCalendar },
   props: {
     isDisabled: {
       type: Boolean,
@@ -193,7 +192,7 @@ export default Vue.extend({
   data: () => ({
     date: "",
     headers: [
-      { text: "Date de début", value: "start" },
+      { text: "Date de début", value: "dateStart" },
       { text: "Heure de début", value: "timeStart" },
       { text: "Date de fin", value: "end" },
       { text: "Heure de fin", value: "timeEnd" },
@@ -201,7 +200,6 @@ export default Vue.extend({
     ],
     isAddDialogOpen: false,
     isEditDialogOpen: false,
-    mTimeframe: {},
 
     dateStart: null,
     dateEnd: null,
@@ -217,7 +215,7 @@ export default Vue.extend({
       return this.$accessor.FA.mFA;
     },
     timeframes(): any {
-      return this.$accessor.FA.mFA.time_windows;
+      return this.$accessor.FA.mFA.time_window;
     },
   },
   methods: {
@@ -229,7 +227,7 @@ export default Vue.extend({
       };
       this.$accessor.FA.addTimeWindow(timeframe);
       this.isAddDialogOpen = false;
-      console.log(this.mFA.time_windows);
+      console.log(this.mFA.time_window);
       // clear v-model
       this.dateStart = this.dateEnd = this.timeStart = this.timeEnd = null;
     },
@@ -280,7 +278,7 @@ export default Vue.extend({
     },
     deleteTimeframe(index: number) {
       this.$accessor.FA.deleteTimeWindow(index);
-      console.log(this.mFA.time_windows);
+      console.log(this.timeframes);
     },
   },
 });

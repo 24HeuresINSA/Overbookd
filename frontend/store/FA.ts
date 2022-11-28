@@ -111,20 +111,20 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: time_window) {
-    if (!mFA.time_windows) mFA.time_windows = [];
-    mFA.time_windows?.push(timeWindow);
+    if (!mFA.time_window) mFA.time_window = [];
+    mFA.time_window?.push(timeWindow);
   },
 
   UPDATE_TIME_WINDOW({ mFA }, { index, timeWindow }) {
-    if (mFA.time_windows && mFA.time_windows[index]) {
-      mFA.time_windows[index].start = timeWindow.start;
-      mFA.time_windows[index].end = timeWindow.end;
+    if (mFA.time_window && mFA.time_window[index]) {
+      mFA.time_window[index].start = timeWindow.start;
+      mFA.time_window[index].end = timeWindow.end;
     }
   },
 
   DELETE_TIME_WINDOW({ mFA }, index: number) {
-    if (mFA.time_windows && mFA.time_windows[index]) {
-      mFA.time_windows.splice(index, 1);
+    if (mFA.time_window && mFA.time_window[index]) {
+      mFA.time_window.splice(index, 1);
     }
   },
 

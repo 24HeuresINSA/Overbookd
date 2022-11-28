@@ -51,7 +51,7 @@ export interface FA {
   fa_electricity_needs?: fa_electricity_needs[];
   fa_comment?: fa_comment[];
   fa_signa_needs?: fa_signa_needs[];
-  time_windows?: time_window[];
+  time_window?: time_window[];
 }
 
 export interface fa_collaborator {
