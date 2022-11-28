@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
+import { Status } from '@prisma/client';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsEnum,
+  ValidationArguments,
+} from 'class-validator';
 
 export enum subject_type {
   REFUSED = 'REFUSED',
@@ -26,6 +34,10 @@ export class CreateFaCommentDto {
   @ApiProperty({
     required: true,
     description: 'The subject of the comment',
+  })
+  @IsEnum(subject_type, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(subject_type)}`,
   })
   subject: subject_type;
 
