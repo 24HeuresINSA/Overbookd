@@ -7,11 +7,11 @@ import { collaborator } from '@prisma/client';
 export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<collaborator[] | null> {
     return await this.prisma.collaborator.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<collaborator | null> {
     return await this.prisma.collaborator.findUnique({
       where: {
         id: Number(id),
@@ -19,7 +19,10 @@ export class CollaboratorService {
     });
   }
 
-  async upsert(faId: number, collab: CreateCollaboratorDto) {
+  async upsert(
+    faId: number,
+    collab: CreateCollaboratorDto,
+  ): Promise<collaborator | null> {
     let collaborator: collaborator;
     if (collab.id) {
       collaborator = await this.prisma.collaborator.update({
