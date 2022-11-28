@@ -179,6 +179,20 @@ export default {
           title: "Transactions",
           to: "/transactions",
         },
+        {
+          icon: "mdi-bookshelf",
+          roles: [
+            "admin",
+            "matos",
+            "elec",
+            "barrieres",
+            "signa",
+            "bar",
+            "catering",
+          ],
+          title: "Catalogue",
+          to: "/catalog",
+        },
       ],
       items: [
         {

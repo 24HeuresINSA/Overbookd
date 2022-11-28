@@ -136,4 +136,5 @@ export interface team {
   name: string;
   color: string;
   icon: string;
+  code: string;
 }
