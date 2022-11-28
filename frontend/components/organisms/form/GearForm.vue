@@ -1,28 +1,35 @@
 <template>
   <v-card class="gear">
-    <h2 class="gear__title">Gear</h2>
-    <form>
-      <div class="fields">
-        <v-text-field
-          v-model="name"
-          append-icon="mdi-hammer-screwdriver"
-          label="Nom du matos"
-          clearable
-          outlined
-          clear-icon="mdi-close-circle-outline"
-          counter
-          :rules="[rules.name.minLength]"
-        ></v-text-field>
-        <SearchCategoryVue
-          v-model="category"
-          label="Choisisez une categorie associee"
-        ></SearchCategoryVue>
-      </div>
-      <v-btn color="success" dark large @click="createOrUpdateGear">
-        <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Sauvegarder le
-        matos
+    <v-card-title class="gear__title">
+      <h2>Gear</h2>
+      <v-btn icon dark @click="closeDialog">
+        <v-icon>mdi-close</v-icon>
       </v-btn>
-    </form>
+    </v-card-title>
+    <v-card-text>
+      <form>
+        <div class="fields">
+          <v-text-field
+            v-model="name"
+            append-icon="mdi-hammer-screwdriver"
+            label="Nom du matos"
+            clearable
+            outlined
+            clear-icon="mdi-close-circle-outline"
+            counter
+            :rules="[rules.name.minLength]"
+          ></v-text-field>
+          <SearchCategoryVue
+            v-model="category"
+            label="Choisisez une categorie associee"
+          ></SearchCategoryVue>
+        </div>
+        <v-btn color="success" dark large @click="createOrUpdateGear">
+          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Sauvegarder
+          le matos
+        </v-btn>
+      </form>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -83,8 +90,12 @@ export default Vue.extend({
         : this.$accessor.catalog.createGear(gear);
 
       await action;
+      this.closeDialog();
       this.name = "";
       this.category = undefined;
+    },
+    closeDialog() {
+      this.$emit("close-dialog");
     },
   },
 });
@@ -92,20 +103,20 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .gear {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   &__title {
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
+    display: flex;
+    justify-content: center;
+    h2 {
+      flex: 1;
+      text-align: center;
+    }
   }
   form {
-    width: 80%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     .fields {
-      flex-direction: column;
-      display: flex;
+      width: 80%;
     }
   }
 }
