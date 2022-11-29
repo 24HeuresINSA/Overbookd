@@ -80,6 +80,18 @@
               >{{ item.name ? item.name : "" }}</a
             >
           </template>
+          <template #[`item.Team`]="{ item }">
+            {{ item.Team ? item.Team.name : "" }}
+          </template>
+          <template #[`item.user_in_charge`]="{ item }">
+            {{
+              item.user_in_charge
+                ? item.user_in_charge.firstname +
+                  " " +
+                  item.user_in_charge.lastname
+                : ""
+            }}
+          </template>
           <template #[`item.action`]="row">
             <tr>
               <td>
@@ -164,8 +176,8 @@ export default {
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validator" },
         { text: "Nom", value: "name" },
-        { text: "Equipe", value: "team" }, // .username ?
-        { text: "Resp", value: "in_charge" }, // .username ?
+        { text: "Equipe", value: "Team" }, // .username ?
+        { text: "Resp", value: "user_in_charge" }, // .username ?
         { text: "Action", value: "action" },
       ],
       color: {
@@ -218,6 +230,7 @@ export default {
       );
       if (res) {
         this.FAs = res.data;
+        console.log(this.FAs);
       } else {
         alert("error");
       }

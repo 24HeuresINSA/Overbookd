@@ -119,3 +119,35 @@ export const COMPLETE_FA_SELECT = {
     },
   },
 };
+
+export const ALL_FA_SELECT = {
+  id: true,
+  name: true,
+  type: true,
+  team_id: true,
+  in_charge: true,
+  created_at: true,
+  location_id: true,
+  status: true,
+  description: true,
+  is_publishable: true,
+  is_major: true,
+  is_kids: true,
+  security_needs: true,
+  is_pass_required: true,
+  number_of_pass: true,
+  water_needs: true,
+  water_flow_required: true,
+  is_deleted: true,
+  user_in_charge: {
+    select: {
+      firstname: true,
+      lastname: true,
+    },
+  },
+  Team: {
+    select: {
+      name: true,
+    },
+  },
+};

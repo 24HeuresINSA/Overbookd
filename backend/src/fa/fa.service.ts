@@ -8,7 +8,7 @@ import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
 import { CreateFaDto } from './dto/create-fa.dto';
-import { FaResponse, COMPLETE_FA_SELECT } from './fa_types';
+import { FaResponse, COMPLETE_FA_SELECT, ALL_FA_SELECT } from './fa_types';
 
 @Injectable()
 export class FaService {
@@ -23,6 +23,7 @@ export class FaService {
       where: {
         is_deleted: false,
       },
+      select: ALL_FA_SELECT,
     });
   }
 
