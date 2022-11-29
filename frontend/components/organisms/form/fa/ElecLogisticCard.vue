@@ -4,7 +4,7 @@
       <v-card-title>Besoin d'élec</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
-          <template #item.action="{ index }">
+          <template #[`item.action`]="{ index }">
             <v-btn
               v-if="!isDisabled"
               icon
@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ElectricityType, fa_electricity_needs } from "~/utils/models/FA";
+import { electricity_type, fa_electricity_needs } from "~/utils/models/FA";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },
@@ -89,7 +89,7 @@ export default Vue.extend({
       return this.$accessor.FA.mFA.fa_electricity_needs;
     },
     electricityType(): Array<string> {
-      return Object.values(ElectricityType);
+      return Object.values(electricity_type);
     },
   },
   methods: {
@@ -111,7 +111,7 @@ export default Vue.extend({
       const newElecNeed: fa_electricity_needs = {
         fa_id: +this.$route.params.fa,
         electricity_type: this.newElectricityNeed
-          .electricity_type as ElectricityType,
+          .electricity_type as electricity_type,
         power: +this.newElectricityNeed.power,
         comment: this.newElectricityNeed.comment,
       };
