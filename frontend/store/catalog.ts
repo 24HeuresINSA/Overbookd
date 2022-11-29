@@ -62,7 +62,7 @@ export const mutations = mutationTree(state, {
   UPDATE_GEAR(state, gear: Gear) {
     const index = state.gears.findIndex((g) => g.id === gear.id);
     if (index < 0) return;
-    state.gears[index] = gear;
+    state.gears.splice(index, 1, gear);
   },
   SET_CATEGORIES(state, categories: Category[]) {
     state.categories = categories;
@@ -79,7 +79,7 @@ export const mutations = mutationTree(state, {
   UPDATE_CATEGORY(state, category: Category) {
     const index = state.categories.findIndex((c) => c.id === category.id);
     if (index < 0) return;
-    state.categories[index] = category;
+    state.categories.splice(index, 1, category);
   },
 });
 
