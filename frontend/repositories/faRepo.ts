@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { FA } from "~/utils/models/FA";
+import { FA, fa_general_update } from "~/utils/models/FA";
 
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
@@ -14,8 +14,8 @@ export default {
   createNewFA(context: Context, FA: FA) {
     return context.$axios.$post(resource, FA);
   },
-  updateFA(context: Context, FA: FA) {
-    return context.$axios.put(resource, FA);
+  updateFA(context: Context, id: number, FA: fa_general_update) {
+    return context.$axios.post(resource + `/${id}`, FA);
   },
   deleteFA(context: Context, FA: FA) {
     return context.$axios.delete(resource, { data: FA });

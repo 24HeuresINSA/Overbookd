@@ -72,6 +72,7 @@
       <CommentCard id="comment"></CommentCard>
       <!-- <FTCard id="ft"></FTCard> -->
     </v-container>
+    <SnackNotificationContainer />
 
     <div class="bottom-bar">
       <div>
@@ -196,6 +197,7 @@ import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
   name: "Fa",
@@ -211,6 +213,7 @@ export default Vue.extend({
     FADetailCard,
     SecurityCard,
     FormSummary,
+    SnackNotificationContainer,
   },
 
   data: () => ({
@@ -281,14 +284,18 @@ export default Vue.extend({
   },
   methods: {
     async saveFA() {
-      await RepoFactory.faRepo.updateFA(this, this.mFA);
+      await RepoFactory.faRepo.updateFA(this, this.mFA.id, this.mFA);
+      await this.$store.dispatch("notif/pushNotification", {
+        type: "success",
+        message: "FA sauvegardée !",
+      });
     },
 
     async undelete() {
       await this.mFA.undelete();
       await safeCall(
         this.$store,
-        this.faRepo.updateFA(this, this.mFA),
+        this.faRepo.updateFA(this, this.mFA.id, this.mFA),
         "undelete"
       );
     },

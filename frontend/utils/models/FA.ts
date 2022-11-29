@@ -108,3 +108,23 @@ export interface time_windows {
   start: Date;
   end: Date;
 }
+
+export interface fa_general_update {
+  name: string;
+  type?: string;
+  team_id?: number;
+  in_charge?: number;
+  created_at?: Date;
+  location_id?: number;
+  status: Status;
+  description?: string;
+  is_publishable?: boolean;
+  is_major?: boolean;
+  is_kids?: boolean;
+  security_needs?: boolean;
+  is_pass_required?: boolean;
+  number_of_pass?: number;
+  water_needs?: string;
+  water_flow_required?: string;
+  is_deleted?: boolean;
+}
