@@ -10,6 +10,7 @@ import equipmentProposalRepo from "./equipmentProposalRepo";
 import conflictsRepo from "./conflictsRepo";
 import teamRepo from "./teamRepo";
 import { CategoryRepository, GearsRepository } from "./catalog.repository";
+import configurationRepo from "./configurationRepo";
 
 const repositories = {
   user: userRepo,
@@ -25,6 +26,7 @@ const repositories = {
   team: teamRepo,
   gear: GearsRepository,
   category: CategoryRepository,
+  configuration: configurationRepo,
 };
 
 type repoKey = keyof typeof repositories;
@@ -44,4 +46,5 @@ export const RepoFactory = {
   teamRepo,
   GearsRepository,
   CategoryRepository,
+  configurationRepo,
 };
