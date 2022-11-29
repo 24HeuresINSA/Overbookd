@@ -2,7 +2,7 @@
   <v-card class="category">
     <v-card-title class="category__title">
       <h2>Categorie</h2>
-      <v-btn icon dark @click="closeDialog">
+      <v-btn icon @click="closeDialog">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-card-title>
@@ -28,9 +28,9 @@
             label="Choisisez un parent"
           ></SearchCategoryVue>
         </div>
-        <v-btn color="success" dark large @click="createCategory">
-          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Creer la
-          categorie
+        <v-btn color="success" dark large @click="createOrUpdateCategory">
+          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Sauvegarder
+          la categorie
         </v-btn>
       </form>
     </v-card-text>
@@ -47,7 +47,7 @@ import SearchCategoryVue from "../../atoms/SearchCategory.vue";
 
 interface CategoryFormData {
   name: string;
-  owner?: team;
+  owner?: Pick<team, "code" | "name">;
   parent?: Category;
   rules: {
     name: {
@@ -61,6 +61,12 @@ const nameMinLength = 3;
 export default Vue.extend({
   name: "CategoryForm",
   components: { SearchCategoryVue, SearchTeamVue },
+  props: {
+    category: {
+      type: Object,
+      default: () => ({ name: "", owner: undefined, parent: undefined }),
+    },
+  },
   data(): CategoryFormData {
     return {
       name: "",
@@ -75,21 +81,56 @@ export default Vue.extend({
       },
     };
   },
+  computed: {
+    shouldUpdateParent() {
+      return this.parent || this.category.parent;
+    },
+    shouldUpdateOwner() {
+      return this.owner || this.category.owner;
+    },
+  },
+  watch: {
+    category: async function (c: Category) {
+      this.spreadCategory(c);
+    },
+  },
+  async mounted() {
+    await this.spreadCategory(this.category);
+  },
   methods: {
-    async createCategory() {
-      let category: CategoryForm = { name: this.name };
-      if (this.parent) {
-        category = { ...category, parent: this.parent.id };
-      }
-      if (this.owner) {
-        category = { ...category, owner: this.owner.code };
-      }
+    async spreadCategory({ name, owner, parent }: Category) {
+      this.name = name;
+      this.owner = owner;
+      this.parent = parent
+        ? await this.$accessor.catalog.fetchCategory(parent)
+        : undefined;
+    },
+    async createOrUpdateCategory() {
+      const category = this.buildCategoryForm();
 
-      await this.$accessor.catalog.createCategory(category);
+      const action = this.category.id
+        ? this.$accessor.catalog.updateCategory({
+            ...category,
+            id: this.category.id,
+          })
+        : this.$accessor.catalog.createCategory(category);
+
+      await action;
       this.name = "";
       this.owner = undefined;
       this.parent = undefined;
+      this.$emit("save");
       this.closeDialog();
+    },
+    buildCategoryForm(): CategoryForm {
+      const name = { name: this.name };
+      const parent = this.shouldUpdateParent ? { parent: this.parent?.id } : {};
+      const owner = this.shouldUpdateOwner ? { owner: this.owner?.code } : {};
+
+      return { ...name, ...parent, ...owner };
+    },
+    async getCategory(categoryId: number): Promise<Category | undefined> {
+      return this.$accessor.catalog.fetchCategory(categoryId);
     },
     closeDialog() {
       this.$emit("close-dialog");

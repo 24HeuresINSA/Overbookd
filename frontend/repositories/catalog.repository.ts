@@ -49,7 +49,22 @@ export class CategoryRepository {
     return context.$axios.post<Category>(this.basePath, categoryForm);
   }
 
+  static updateCategory(
+    context: Context,
+    categoryId: number,
+    categoryForm: CategoryForm
+  ) {
+    return context.$axios.put<Category>(
+      `${this.basePath}/${categoryId}`,
+      categoryForm
+    );
+  }
+
   static deleteCategory(context: Context, categoryId: number) {
     return context.$axios.$delete(`${this.basePath}/${categoryId}`);
+  }
+
+  static getCategory(context: Context, categoryId: number) {
+    return context.$axios.get<Category>(`${this.basePath}/${categoryId}`);
   }
 }

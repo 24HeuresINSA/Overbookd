@@ -45,34 +45,48 @@
         </template>
       </ConfirmationMessage>
     </v-dialog>
+    <v-dialog v-model="isUpdateDialogOpen" width="600px">
+      <CategoryForm
+        :category="category"
+        @close-dialog="closeCategoryUpdateDialog"
+        @save="closeDialog"
+      ></CategoryForm>
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
+import CategoryForm from "./form/CategoryForm.vue";
 
 export default Vue.extend({
   name: "CategoryDetails",
-  components: { ConfirmationMessage },
+  components: { ConfirmationMessage, CategoryForm },
   props: {
     category: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   },
-  data() {
+  data(): { isDeleteDialogOpen: boolean; isUpdateDialogOpen: boolean } {
     return {
       isDeleteDialogOpen: false,
+      isUpdateDialogOpen: false,
     };
   },
   methods: {
-    openCategoryUpdateDialog() {},
+    openCategoryUpdateDialog() {
+      this.isUpdateDialogOpen = true;
+    },
     openCategoryDeleteDialog() {
       this.isDeleteDialogOpen = true;
     },
     closeCategoryDeleteDialog() {
       this.isDeleteDialogOpen = false;
+    },
+    closeCategoryUpdateDialog() {
+      this.isUpdateDialogOpen = false;
     },
     closeDialog() {
       this.$emit("close-dialog");

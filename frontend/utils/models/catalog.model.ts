@@ -9,7 +9,7 @@ export interface Gear {
   };
 }
 
-export interface Category {
+interface BaseCategory {
   id: number;
   name: string;
   path: string;
@@ -19,6 +19,10 @@ export interface Category {
   };
 }
 
-export interface CategoryTree extends Category {
+export interface CategoryTree extends BaseCategory {
   subCategories?: CategoryTree[];
+}
+
+export interface Category extends BaseCategory {
+  parent?: number;
 }

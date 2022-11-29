@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Category } from "~/utils/models/catalog.model";
+import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import CategoryDetails from "./CategoryDetails.vue";
 import CategoryFormVue from "./form/CategoryForm.vue";
 
@@ -67,8 +67,10 @@ export default Vue.extend({
     closeCreationDialog() {
       this.isCreateDialogOpen = false;
     },
-    openInformationDialog(category: Category) {
-      this.selectedCategory = category;
+    async openInformationDialog(category: CategoryTree) {
+      this.selectedCategory = await this.$accessor.catalog.fetchCategory(
+        category.id
+      );
       this.isInformationDialogOpen = true;
     },
     closeInformationDialog() {

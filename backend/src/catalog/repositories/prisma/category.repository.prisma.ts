@@ -15,6 +15,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     id: true,
     name: true,
     path: true,
+    parent: true,
     owner: {
       select: {
         name: true,
@@ -36,7 +37,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     return this.prismaService.catalog_Category.findMany({
       select: this.SELECT_CATEGORY,
       where: {
-        parent_id: parentId,
+        parent: parentId,
       },
     });
   }
@@ -96,7 +97,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
           },
         },
       },
-      where: { parent_id: null },
+      where: { parent: null },
     });
   }
 
@@ -126,7 +127,9 @@ export class PrismaCategoryRepository implements CategoryRepository {
   private buildUpsertData(category: Omit<Category, 'id'>) {
     const { owner, parent, ...baseCategory } = category;
     const ownerLink = owner ? { owner: { connect: { code: owner.code } } } : {};
-    const parentLink = parent ? { parent: { connect: { id: parent } } } : {};
+    const parentLink = parent
+      ? { parentCategory: { connect: { id: parent } } }
+      : {};
 
     return { ...baseCategory, ...ownerLink, ...parentLink };
   }
