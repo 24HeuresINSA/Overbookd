@@ -85,7 +85,11 @@ export default Vue.extend({
 
         await safeCall(
           this.$store,
-          RepoFactory.faRepo.updateFA(this, this.$accessor.FA.mFA),
+          RepoFactory.faRepo.updateFA(
+            this,
+            this.$accessor.FA.mFA.id || 0,
+            this.$accessor.FA.mFA
+          ),
           "sent",
           "server"
         );
