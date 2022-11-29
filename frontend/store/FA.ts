@@ -1,14 +1,14 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import {
   collaborator,
-  CommentType,
+  subject_type,
   FA,
-  fa_collaborator,
-  fa_comment,
+  fa_collaborators,
+  fa_comments,
   fa_electricity_needs,
   fa_signa_needs,
   Status,
-  time_window,
+  time_windows,
 } from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -88,7 +88,7 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_COMMENT({ mFA }, comment: fa_comment) {
+  ADD_COMMENT({ mFA }, comment: fa_comments) {
     if (!mFA.fa_comments) mFA.fa_comments = [];
     mFA.fa_comments?.push(comment);
   },
@@ -110,7 +110,7 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_TIME_WINDOW({ mFA }, timeWindow: time_window) {
+  ADD_TIME_WINDOW({ mFA }, timeWindow: time_windows) {
     if (!mFA.time_windows) mFA.time_windows = [];
     mFA.time_windows?.push(timeWindow);
   },
@@ -128,7 +128,7 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_COLLABORATOR({ mFA }, collaborator: fa_collaborator) {
+  ADD_COLLABORATOR({ mFA }, collaborator: fa_collaborators) {
     if (!mFA.fa_collaborators) mFA.fa_collaborators = [];
     mFA.fa_collaborators?.push(collaborator);
   },
@@ -191,11 +191,11 @@ export const actions = actionTree(
       { faId, authorId, authorName }
     ) {
       if (!faId || !authorId || !authorName) return;
-      const comment: fa_comment = {
-        fa_id: faId,
-        subject: CommentType.SUBMIT,
+      const comment: fa_comments = {
+        subject: subject_type.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
+        team_id: 0, //TODO Change this
         created_at: new Date(),
       };
       commit("ADD_COMMENT", comment);
@@ -223,7 +223,7 @@ export const actions = actionTree(
       await dispatch("saveFA");
     },
 
-    addComment({ commit }, comment: fa_comment) {
+    addComment({ commit }, comment: fa_comments) {
       commit("ADD_COMMENT", comment);
     },
 
@@ -239,7 +239,7 @@ export const actions = actionTree(
       commit("DELETE_SIGNA_NEED", index);
     },
 
-    addTimeWindow({ commit }, timeWindow: time_window) {
+    addTimeWindow({ commit }, timeWindow: time_windows) {
       commit("ADD_TIME_WINDOW", timeWindow);
     },
 
@@ -251,7 +251,7 @@ export const actions = actionTree(
       commit("DELETE_TIME_WINDOW", index);
     },
 
-    addCollaborator({ commit }, collaborator: fa_collaborator) {
+    addCollaborator({ commit }, collaborator: fa_collaborators) {
       commit("ADD_COLLABORATOR", collaborator);
     },
 

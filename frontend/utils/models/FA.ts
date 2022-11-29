@@ -22,13 +22,7 @@ export enum subject_type {
   REFUSED = "REFUSED",
   VALIDATED = "VALIDATED",
   COMMENT = "COMMENT",
-}
-
-export enum CommentType {
-  COMMENT = "Commentaire",
-  SUBMIT = "Soumise à validation",
-  VALIDATION = "Validation",
-  REFUSAL = "Refus",
+  SUBMIT = "SUBMIT",
 }
 
 export interface FA {
@@ -55,7 +49,7 @@ export interface FA {
   fa_refuse?: fa_refuse[];
   fa_electricity_needs?: fa_electricity_needs[];
   fa_signa_needs?: fa_signa_needs[];
-  fa_comment?: fa_comments[];
+  fa_comments?: fa_comments[];
   time_windows?: time_windows[];
 }
 
@@ -100,11 +94,11 @@ export interface fa_comments {
   created_at?: Date;
   author: number;
   team_id: number;
-  User_author: {
+  User_author?: {
     firstname: string;
     lastname: string;
   };
-  Team: {
+  Team?: {
     name: string;
   };
 }
