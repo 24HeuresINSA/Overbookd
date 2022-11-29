@@ -69,6 +69,9 @@ export const mutations = mutationTree(state, {
   ADD_CATEGORY(state, category: Category) {
     state.categories.push(category);
   },
+  DELETE_CATEGORY(state, category: Category) {
+    state.categories = state.categories.filter((c) => c.id !== category.id);
+  },
 });
 
 const DEFAULT_ERROR = "Quelque chose s'est mal passe";
@@ -148,6 +151,17 @@ export const actions = actionTree(
         await gearRepository.deleteGear(this, gear.id);
         sendNotification(this, `${gear.name} supprime`);
         context.commit("DELETE_GEAR", gear);
+      } catch (error: any) {
+        sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
+      }
+    },
+
+    async deleteCategory(context, category: Category): Promise<void> {
+      try {
+        await categoryRepository.deleteCategory(this, category.id);
+        sendNotification(this, `${category.name} supprime`);
+        context.commit("DELETE_CATEGORY", category);
+        this.dispatch("catalog/fetchCategoryTree");
       } catch (error: any) {
         sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
       }

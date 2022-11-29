@@ -12,6 +12,7 @@ export interface Gear {
 export interface Category {
   id: number;
   name: string;
+  path: string;
   owner?: {
     code: string;
     name: string;

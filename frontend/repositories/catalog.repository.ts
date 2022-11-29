@@ -48,4 +48,8 @@ export class CategoryRepository {
   static createCategory(context: Context, categoryForm: CategoryForm) {
     return context.$axios.post<Category>(this.basePath, categoryForm);
   }
+
+  static deleteCategory(context: Context, categoryId: number) {
+    return context.$axios.$delete(`${this.basePath}/${categoryId}`);
+  }
 }
