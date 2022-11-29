@@ -4,10 +4,10 @@
       v-for="(validator, i) of validators"
       :key="i"
       small
-      :color="getValidatorColor(validator)"
+      :color="getValidatorColor(validator.name)"
     >
       <v-icon small>
-        {{ getValidatorIcon(validator) }}
+        {{ validator.icon }}
       </v-icon>
     </v-chip>
   </v-chip-group>
@@ -16,39 +16,23 @@
 <script lang="ts">
 import Vue from "vue";
 
-interface Team {
-  id: number;
-  name: string;
-  color: string;
-  icon: string;
-}
-
 export default Vue.extend({
   name: "ValidatorsIcons",
   props: {
-    validatorsKey: {
-      type: String,
-      default: "fa_validators",
-    },
     form: {
       type: Object,
       required: true,
     },
   },
-  data: () => {
-    return {
-      validators: [],
-      teams: [] as Team[],
-    };
+  computed: {
+    validators(): Array<any> {
+      return this.$accessor.team.faValidators;
+    },
   },
-  mounted() {
-    this.validators = this.$accessor.config.getConfig(this.validatorsKey);
-    this.teams = this.$accessor.team.allTeams as Team[];
+  async mounted() {
+    console.log("test");
   },
   methods: {
-    getValidatorIcon(validator: string) {
-      return this.teams.find((team) => team.name === validator)?.icon;
-    },
     getValidatorColor(validator: string) {
       if (this.form.validated.includes(validator)) {
         // validated

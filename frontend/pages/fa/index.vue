@@ -3,122 +3,103 @@
     <h1>Fiches Activités</h1>
 
     <v-container class="container">
-      <v-row>
-        <v-col md="3">
-          <v-container class="in-container">
-            <v-card>
-              <v-card-title>Filtres</v-card-title>
-              <v-card-text>
-                <v-text-field v-model="search" label="Recherche" dense>
-                </v-text-field>
+      <v-container class="sidebar">
+        <v-card>
+          <v-card-title>Filtres</v-card-title>
+          <v-card-text>
+            <v-text-field v-model="search" label="Recherche" dense>
+            </v-text-field>
 
-                <v-select
-                  v-model="selectedTeam"
-                  label="Équipe"
-                  :items="teamNames"
-                  clearable
-                  dense
-                ></v-select>
+            <v-select
+              v-model="selectedTeam"
+              label="Équipe"
+              :items="teamNames"
+              clearable
+              dense
+            ></v-select>
 
-                <v-list dense shaped>
-                  <v-list-item-group v-model="selectedStatus">
-                    <v-list-item>
-                      <v-list-item-title class="small">Tous</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title class="small"
-                        >Brouillon</v-list-item-title
-                      >
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title class="small"
-                        >Soumise
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title class="small"
-                        >Refusée
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title class="small"
-                        >Validée
-                      </v-list-item-title>
-                    </v-list-item>
-                  </v-list-item-group>
-                </v-list>
-                <div v-for="validator of validators" :key="validator">
-                  <v-btn-toggle
-                    v-model="filter[validator]"
-                    tile
-                    color="deep-purple accent-3"
-                    group
-                  >
-                    <v-icon small>{{ getTeamIcon(validator) }}</v-icon>
-                    <v-btn x-small :value="true" class="btn-check"
-                      >validée
-                    </v-btn>
-                    <v-btn x-small :value="false" class="btn-check"
-                      >refusée
-                    </v-btn>
-                    <v-btn x-small :value="2" class="btn-check"
-                      >à valider
-                    </v-btn>
-                  </v-btn-toggle>
-                </div>
-                <v-switch
-                  v-if="isAdmin"
-                  v-model="isDeletedFilter"
-                  label="Afficher les FA supprimées"
-                ></v-switch>
-                <v-btn text @click="exportCSV">Télécharger ces FA</v-btn>
-              </v-card-text>
-            </v-card>
-          </v-container>
-        </v-col>
-
-        <v-col md="9">
-          <v-data-table
-            :headers="headers"
-            :items="selectedFAs"
-            :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
-            class="elevation-1"
-          >
-            <template #[`item.validation`]="{ item }">
-              <ValidatorsIcons :form="item"></ValidatorsIcons>
-            </template>
-            <template #[`item.name`]="{ item }">
-              <a
-                :href="`/fa/${item.id}`"
-                :style="
-                  item.is_deleted === true
-                    ? `text-decoration:line-through;`
-                    : `text-decoration:none;`
-                "
-                >{{ item.name ? item.name : "" }}</a
+            <v-list dense shaped>
+              <v-list-item-group v-model="selectedStatus">
+                <v-list-item>
+                  <v-list-item-title class="small">Tous</v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title class="small">Brouillon</v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title class="small">Soumise </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title class="small">Refusée </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title class="small">Validée </v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            <div v-for="validator of validators" :key="validator.id">
+              <v-btn-toggle
+                v-model="filter[validator]"
+                tile
+                color="deep-purple accent-3"
+                group
               >
-            </template>
-            <template #[`item.action`]="row">
-              <tr>
-                <td>
-                  <v-btn class="mx-2" icon small :href="`/fa/${row.item.id}`">
-                    <v-icon small>mdi-circle-edit-outline</v-icon>
-                  </v-btn>
-                  <v-btn class="mx-2" icon small @click="preDelete(row.item)">
-                    <v-icon small>mdi-delete</v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </template>
+                <v-icon small>{{ validator.icon }}</v-icon>
+                <v-btn x-small :value="true" class="btn-check">validée </v-btn>
+                <v-btn x-small :value="false" class="btn-check">refusée </v-btn>
+                <v-btn x-small :value="2" class="btn-check">à valider </v-btn>
+              </v-btn-toggle>
+            </div>
+            <v-switch
+              v-if="isAdmin"
+              v-model="isDeletedFilter"
+              label="Afficher les FA supprimées"
+            ></v-switch>
+            <!--<v-btn text @click="exportCSV">Télécharger ces FA</v-btn>-->
+          </v-card-text>
+        </v-card>
+      </v-container>
 
-            <template #[`item.status`]="row">
-              <v-chip v-if="row.item" :color="color[row.item.status]" small
-                >{{ row.item.id }}
-              </v-chip>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
+      <v-card class="data-table">
+        <v-data-table
+          :headers="headers"
+          :items="selectedFAs"
+          :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
+        >
+          <template #[`item.validation`]="{ item }">
+            <ValidatorsIcons :form="item"></ValidatorsIcons>
+          </template>
+          <template #[`item.name`]="{ item }">
+            <a
+              :href="`/fa/${item.id}`"
+              :style="
+                item.is_deleted === true
+                  ? `text-decoration:line-through;`
+                  : `text-decoration:none;`
+              "
+              >{{ item.name ? item.name : "" }}</a
+            >
+          </template>
+          <template #[`item.action`]="row">
+            <tr>
+              <td>
+                <v-btn class="mx-2" icon small :href="`/fa/${row.item.id}`">
+                  <v-icon small>mdi-circle-edit-outline</v-icon>
+                </v-btn>
+                <v-btn class="mx-2" icon small @click="preDelete(row.item)">
+                  <v-icon small>mdi-delete</v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </template>
+
+          <template #[`item.status`]="row">
+            <v-chip v-if="row.item" :color="color[row.item.status]" small
+              >{{ row.item.id }}
+            </v-chip>
+          </template>
+        </v-data-table>
+      </v-card>
     </v-container>
 
     <v-dialog v-model="isNewFADialogOpen" max-width="600">
@@ -162,7 +143,7 @@
 import Fuse from "fuse.js";
 import { safeCall } from "../../utils/api/calls";
 import { RepoFactory } from "../../repositories/repoFactory";
-import ValidatorsIcons from "../../components/atoms/validators-icons";
+import ValidatorsIcons from "~/components/atoms/ValidatorsIcons.vue";
 
 export default {
   name: "Fa",
@@ -179,7 +160,6 @@ export default {
       itemsPerPage: 4,
       selectedStatus: 0,
       selectedTeam: undefined,
-      //validators: [],
       headers: [
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validator" },
@@ -207,7 +187,9 @@ export default {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
-
+    validators() {
+      return this.$accessor.team.faValidators;
+    },
     isAdmin() {
       return this.$accessor.user.hasRole("admin");
     },
@@ -229,7 +211,6 @@ export default {
   },
   async mounted() {
     if (this.$accessor.user.hasRole("hard")) {
-      //this.validators = this.$accessor.config.getConfig("fa_validators");
       // get FAs
       const res = await safeCall(
         this.$store,
@@ -255,10 +236,6 @@ export default {
 
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
-    },
-
-    getTeamIcon(team) {
-      return this.$accessor.team.getTeams([team])?.[0]?.icon;
     },
 
     filterBySelectedTeam(FAs, team) {
@@ -291,7 +268,7 @@ export default {
             return FA.refused.includes(validator);
           } else if (value === 2) {
             return (
-              !FA.validated.includes(validator) && FA.status === "submitted"
+              !FA.validated.includes(validator) && FA.status === "SUBMITTED"
             );
           }
           return true;
@@ -304,7 +281,7 @@ export default {
       if (status === 0) {
         return FAs;
       }
-      const s = ["", "draft", "submitted", "refused", "validated"];
+      const s = ["", "DRAFT", "SUBMITTED", "REFUSED", "VALIDATED"];
       FAs = FAs.map((FA) => {
         if (FA) {
           if (FA.status === undefined) {
@@ -560,6 +537,10 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  margin-left: 12px;
+}
+
 .fab-right {
   position: sticky;
   right: 10px;
@@ -572,13 +553,19 @@ export default {
 }
 
 .container {
-  display: grid;
+  display: flex;
   width: 100%;
   margin: 0;
 }
 
-.in-container {
+.sidebar {
   padding: 0;
+  width: fit-content;
+}
+
+.data-table {
+  margin-left: 20px;
+  height: fit-content;
 }
 
 .btn-check {
@@ -590,5 +577,20 @@ export default {
   right: 20px;
   bottom: 45px;
   position: fixed;
+}
+
+@media only screen and (max-width: 800px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .data-table {
+    margin: 0;
+    width: 100%;
+  }
 }
 </style>

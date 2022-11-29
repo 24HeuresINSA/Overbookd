@@ -433,7 +433,7 @@ export class ConfigService {
         value: [
           {
             name: 'Manif',
-            day: '2021-09-15',
+            day: '2023-05-12',
           },
           {
             name: 'postManif',
@@ -524,39 +524,39 @@ export class ConfigService {
       //     },
       //   ],
       // },
-      {
-        key: 'ft_general_form',
-        value: [
-          {
-            key: 'name',
-            label: 'Nom de la FT',
-          },
-          {
-            key: 'inCharge',
-            label: 'Responsable',
-            type: 'user',
-            filter: 'hard',
-          },
-          {
-            key: 'areTimeframesStatic',
-            label: 'Créneaux statiques',
-            type: 'switch',
-          },
-        ],
-      },
-      {
-        key: 'ft_details_form',
-        value: [
-          {
-            key: 'description',
-            label: 'Description',
-            type: 'rich-text',
-          },
-        ],
-      },
+      // {
+      //   key: 'ft_general_form',
+      //   value: [
+      //     {
+      //       key: 'name',
+      //       label: 'Nom de la FT',
+      //     },
+      //     {
+      //       key: 'inCharge',
+      //       label: 'Responsable',
+      //       type: 'user',
+      //       filter: 'hard',
+      //     },
+      //     {
+      //       key: 'areTimeframesStatic',
+      //       label: 'Créneaux statiques',
+      //       type: 'switch',
+      //     },
+      //   ],
+      // },
+      // {
+      //   key: 'ft_details_form',
+      //   value: [
+      //     {
+      //       key: 'description',
+      //       label: 'Description',
+      //       type: 'rich-text',
+      //     },
+      //   ],
+      // },
       {
         key: 'event_date',
-        value: '2022-05-21',
+        value: '2023-05-19',
       },
       // {
       //   key: 'fa_external_form',

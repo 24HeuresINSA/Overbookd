@@ -24,6 +24,13 @@ export enum subject_type {
   COMMENT = "COMMENT",
 }
 
+export enum CommentType {
+  COMMENT = "Commentaire",
+  SUBMIT = "Soumise à validation",
+  VALIDATION = "Validation",
+  REFUSAL = "Refus",
+}
+
 export interface FA {
   id?: number;
   name: string;
@@ -57,10 +64,10 @@ export interface fa_collaborators {
 }
 
 export interface collaborator {
-  id: number;
-  firstname: string;
-  lastname: string;
-  phone: string;
+  id?: number;
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
   email?: string;
   company?: string;
   comment?: string;
@@ -71,7 +78,8 @@ export interface fa_validation {}
 export interface fa_refuse {}
 
 export interface fa_electricity_needs {
-  id: number;
+  id?: number;
+  fa_id: number;
   electricity_type: electricity_type;
   power: number;
   comment?: string;

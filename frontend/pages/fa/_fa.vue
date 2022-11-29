@@ -1,22 +1,26 @@
 <template>
   <div class="main">
     <div class="sidebar">
-      <h1>Fiche Activité n°{{ mFA.id }}</h1>
+      <h1>Fiche Activité n°{{ faId }}</h1>
 
       <div class="status">
         <span
           class="dot"
           :class="
             mFA.status == 'SUBMITTED'
-              ? 'purple'
+              ? 'orange'
               : mFA.status == 'REFUSED'
               ? 'red'
               : mFA.status == 'VALIDATED'
               ? 'green'
-              : 'orange'
+              : 'grey'
           "
         ></span>
-        <h3>{{ mFA.status ? statusTrad.get(mFA.status) : "Brouillon" }}</h3>
+        <h3>
+          {{
+            mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
+          }}
+        </h3>
       </div>
 
       <div class="icons">
@@ -27,24 +31,20 @@
           class="icon"
         >
           <v-icon :key="i" size="26">
-            {{ getValidatorIcon(validator) }}
+            {{ validator.icon }}
           </v-icon>
-          <span class="icon-detail">{{ validator }}</span>
+          <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
-      <FormSidebar></FormSidebar>
+      <FormSummary class="summary"></FormSummary>
     </div>
     <v-container class="container">
-      <!-- <div class="top-bar">
-        <h1>Fiche Activité n°{{ mFA.id }}</h1>
-        <h2>{{ mFA.status ? statusTrad.get(mFA.status) : "Brouillon" }}</h2>
-      </div> -->
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
-      <!-- <SignaCard id="signa"></SignaCard> -->
+      <SignaCard id="signa"></SignaCard>
       <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
-      <PrestaCard id="presta"></PrestaCard>
+      <CollaboratorCard id="presta"></CollaboratorCard>
       <h2>Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
@@ -83,7 +83,7 @@
           v-if="mValidators.length === 1"
           color="red"
           @click="refuseDialog = true"
-          >refusé par {{ mValidators[0] }}
+          >refusé par {{ mValidators[0].name }}
         </v-btn>
         <v-menu v-if="mValidators.length > 1" offset-y>
           <template #activator="{ attrs, on }">
@@ -98,7 +98,11 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="validator of mValidators" :key="validator" link>
+            <v-list-item
+              v-for="validator of mValidators"
+              :key="validator.id"
+              link
+            >
               <v-list-item-title
                 @click="refuseDialog = true"
                 v-text="validator"
@@ -110,7 +114,7 @@
       <div>
         <template v-if="mValidators.length === 1">
           <v-btn color="green" @click="validate(mValidators[0])"
-            >validé par {{ mValidators[0] }}
+            >validé par {{ mValidators[0].name }}
           </v-btn>
         </template>
         <v-menu v-if="mValidators.length > 1" offset-y>
@@ -126,11 +130,15 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="validator of mValidators" :key="validator" link>
+            <v-list-item
+              v-for="validator of mValidators"
+              :key="validator.id"
+              link
+            >
               <v-list-item-title
                 color="green"
                 @click="validate(validator)"
-                v-text="validator"
+                v-text="validator.name"
               ></v-list-item-title>
             </v-list-item>
           </v-list>
@@ -138,7 +146,7 @@
       </div>
 
       <v-btn
-        v-if="mFA.status && mFA.status !== 'submitted'"
+        v-if="mFA.status && mFA.status !== 'SUBMITTED'"
         color="warning"
         @click="validationDialog = true"
         >soumettre à validation
@@ -166,9 +174,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="submitForReview">
-            soumettre
-          </v-btn>
+          <v-btn color="primary" text @click="submit">soumettre</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -183,48 +189,48 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import { safeCall } from "../../utils/api/calls";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import PrestaCard from "~/components/organisms/form/fa/PrestaCard.vue";
+import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
-import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
+import FormSummary from "~/components/organisms/form/FormSummary.vue";
+import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 
 export default Vue.extend({
   name: "Fa",
   components: {
     ElecLogisticCard,
     CommentCard,
+    SignaCard,
     LogisticsCard,
     TimeframeTable,
-    PrestaCard,
+    CollaboratorCard,
     WaterLogisticCard,
     FAGeneralCard,
     FADetailCard,
     SecurityCard,
-    FormSidebar,
+    FormSummary,
   },
 
-  data() {
-    return {
-      validationDialog: false,
-      refuseDialog: false,
+  data: () => ({
+    validationDialog: false,
+    refuseDialog: false,
 
-      faRepo: RepoFactory.faRepo,
+    faRepo: RepoFactory.faRepo,
 
-      statusTrad: new Map<string, string>([
-        ["DRAFT", "Brouillon"],
-        ["SUBMITTED", "Soumise"],
-        ["REFUSED", "Réfusée"],
-        ["VALIDATED", "Validée"],
-      ]),
-      color: {
-        submitted: "grey",
-        validated: "green",
-        refused: "red",
-      },
-    };
-  },
+    statusTrad: new Map<string, string>([
+      ["DRAFT", "Brouillon"],
+      ["SUBMITTED", "Soumise à validation"],
+      ["REFUSED", "Réfusée"],
+      ["VALIDATED", "Validée"],
+    ]),
+    color: {
+      submitted: "grey",
+      validated: "green",
+      refused: "red",
+    },
+  }),
 
   computed: {
     FA(): any {
@@ -236,21 +242,21 @@ export default Vue.extend({
     me(): any {
       return this.$accessor.user.me;
     },
-    teams(): any {
-      return this.$accessor.config.getConfig("teams"); // à modifier
+    faId(): number {
+      return +this.$route.params.fa;
     },
-    validators(): Array<string> {
-      return this.$accessor.config.getConfig("fa_validators");
+    validators(): Array<any> {
+      return this.$accessor.team.faValidators;
     },
-    mValidators(): Array<string> {
-      let mValidator: Array<string> = [];
+    mValidators(): Array<any> {
+      let mValidator: Array<any> = [];
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
         return this.validators;
       }
       if (this.validators) {
-        this.validators.forEach((validator: string) => {
-          if (this.me.team && this.me.team.includes(validator)) {
+        this.validators.forEach((validator: any) => {
+          if (this.me.team && this.me.team.includes(validator.name)) {
             mValidator.push(validator);
           }
         });
@@ -260,6 +266,19 @@ export default Vue.extend({
     },
   },
 
+  async mounted() {
+    const res = await this.$accessor.FA.getAndSet(this.faId);
+    if (!res) {
+      alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
+      await this.$router.push({
+        path: "/fa",
+      });
+    }
+
+    let title = "FA " + this.faId;
+    if (this.mFA.name) title += " - " + this.mFA.name;
+    document.title = title;
+  },
   methods: {
     async saveFA() {
       await RepoFactory.faRepo.updateFA(this, this.mFA);
@@ -267,28 +286,28 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
-      let context: any = this;
       await safeCall(
-        context,
-        this.faRepo.updateFA(this, this.mFA)
-        // "undelete"
+        this.$store,
+        this.faRepo.updateFA(this, this.mFA),
+        "undelete"
       );
     },
 
     validate(validator: any) {
       if (validator) {
-        this.mFA.validate(validator);
+        this.$accessor.FA.validate(validator.name);
         this.saveFA();
       }
     },
 
-    submitForReview() {
-      this.mFA.setStatus({
-        status: "submitted",
-        by: this.me.lastname,
+    submit() {
+      this.$accessor.FA.submitForReview({
+        faId: this.faId,
+        authorId: this.me.id,
+        authorName: this.me.firstname + " " + this.me.lastname,
       });
       this.validationDialog = false;
-      this.saveFA();
+      // this.saveFA();
     },
 
     getIconColor(validator: any) {
@@ -302,16 +321,8 @@ export default Vue.extend({
           return this.color.refused;
         }
       }
-      if (this.FA.status === "submitted") {
+      if (this.FA.status === "SUBMITTED") {
         return this.color.submitted;
-      }
-    },
-
-    getValidatorIcon(validator: any) {
-      try {
-        return this.teams.find((team: any) => team.name === validator).icon;
-      } catch (e) {
-        console.log(`can't find icon of team ${validator}`);
       }
     },
   },
@@ -373,7 +384,6 @@ h1 {
   border-radius: 6px;
   user-select: none;
 
-  /* Position the tooltip */
   position: absolute;
   z-index: 1;
   top: 100%;
@@ -386,19 +396,15 @@ h1 {
 }
 
 .container {
-  flex: 1 1 auto;
-  overflow: auto;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  overflow: auto;
+  scroll-behavior: smooth;
 }
 
 .container > * {
   margin-bottom: 30px;
-}
-
-.top-bar {
-  display: flex;
-  align-items: baseline;
 }
 
 .bottom-bar {
@@ -413,8 +419,8 @@ h1 {
   background-color: transparent;
 }
 
-.purple {
-  background-color: purple;
+.grey {
+  background-color: grey;
 }
 .orange {
   background-color: orange;
@@ -426,5 +432,39 @@ h1 {
 
 .green {
   background-color: greenyellow;
+}
+
+@media only screen and (max-width: 750px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .summary {
+    visibility: collapse;
+  }
+
+  .container {
+    overflow: visible;
+  }
+
+  .bottom-bar {
+    width: calc(100% - 20px);
+    position: relative;
+    margin: 10px;
+    bottom: 40px;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  .bottom-bar > * {
+    margin: 10px;
+  }
 }
 </style>

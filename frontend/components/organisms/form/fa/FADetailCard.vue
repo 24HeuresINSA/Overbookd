@@ -8,22 +8,22 @@
     <v-card-text>
       <v-form>
         <RichEditor
-          :data="detailData.description"
+          :data="mFA.description"
           label="Description"
           @change="onChange('description', $event)"
         ></RichEditor>
         <v-switch
-          :value="detailData.is_publishable"
+          :value="mFA.is_publishable"
           label="Publier sur le site / plaquette"
           @change="onChange('is_publishable', $event)"
         ></v-switch>
         <v-switch
-          :value="detailData.is_major"
+          :value="mFA.is_major"
           label="Anim phare"
           @change="onChange('is_major', $event)"
         ></v-switch>
         <v-switch
-          :value="detailData.is_kids"
+          :value="mFA.is_kids"
           label="Anim pour les gosses"
           @change="onChange('is_kids', $event)"
         ></v-switch>
@@ -40,15 +40,14 @@ export default Vue.extend({
   name: "FADetailCard",
   components: { RichEditor },
   computed: {
-    detailData(): any {
+    mFA(): any {
       return this.$accessor.FA.mFA;
     },
   },
   methods: {
-    onChange(name: string, value: any) {
+    onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      console.log(name + " : " + value);
-      // Mettre à jour le store
+      this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
 });

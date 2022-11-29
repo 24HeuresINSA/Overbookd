@@ -1,8 +1,8 @@
 <template>
   <v-card>
     <v-card-title>Général</v-card-title>
-    <v-card-subtitle
-      >N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
+    <v-card-subtitle>
+      N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
       peux aussi t'aider en allant voir les FA d'avant sur
       cetaitmieuxavant.24heures.org/ en te connectant avec
       jeuneetcon@24heures.org
@@ -10,12 +10,12 @@
     <v-card-text>
       <v-form>
         <v-text-field
-          :value="generalData.name"
+          :value="mFA.name"
           label="Nom de la FA"
           @change="onChange('name', $event)"
         ></v-text-field>
         <v-select
-          :value="generalData.type"
+          :value="mFA.type"
           label="Type"
           :items="[
             'Concert',
@@ -31,24 +31,22 @@
           ]"
           @change="onChange('type', $event)"
         ></v-select>
-        <!-- GET ID NOT TEXT -->
         <v-select
-          :value="generalData.team_id"
+          :value="mFA.team_id"
           label="Equipe"
           :items="teams"
           item-value="id"
           item-text="name"
           @change="onChange('team_id', $event)"
         ></v-select>
-        <!-- GET ID NOT TEXT -->
-        <v-select
-          :value="generalData.in_charge"
+        <v-autocomplete
+          :value="mFA.in_charge"
           label="Responsable"
           :items="users"
           item-value="id"
-          item-text="name"
+          item-text="username"
           @change="onChange('in_charge', $event)"
-        ></v-select>
+        ></v-autocomplete>
       </v-form>
     </v-card-text>
   </v-card>
@@ -56,25 +54,33 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FAGeneralCard",
+  data: () => ({
+    users: [] as Array<any>,
+  }),
   computed: {
-    generalData(): any {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     teams(): Array<any> {
       return this.$accessor.team.allTeams;
     },
-    users(): Array<any> {
-      return this.$accessor.user.usernames;
-    },
+  },
+  async mounted() {
+    this.users = this.$accessor.user.usernames;
+    if (this.users.length === 0) {
+      // fetch usernames
+      await this.$accessor.user.getUsername("");
+      this.users = this.$accessor.user.usernames;
+    }
   },
   methods: {
-    onChange(name: string, value: any) {
+    onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      console.log(name + " : " + value);
-      // Mettre à jour le store
+      this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
 });
