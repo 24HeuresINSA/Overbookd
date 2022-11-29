@@ -359,9 +359,9 @@ export default Vue.extend({
       return this.$accessor.equipmentProposal.count;
     },
     equipmentMap(): Map<String, number> {
-      const faEquipmentMap = this.$accessor.FA.equipmentMap;
+      //const faEquipmentMap = this.$accessor.FA.equipmentMap;
       const ftEquipmentMap = this.$accessor.FT.equipmentMap;
-      return new Map([...faEquipmentMap, ...ftEquipmentMap]);
+      return new Map([...ftEquipmentMap]);
     },
   },
 

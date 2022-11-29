@@ -32,7 +32,7 @@
 import { RepoFactory } from "~/repositories/repoFactory";
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
-import { CommentType, fa_comment } from "~/utils/models/FA";
+import { subject_type, fa_comments } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CommentCard",
@@ -72,11 +72,11 @@ export default Vue.extend({
   methods: {
     async addComment() {
       if (this.form == "FA") {
-        const comment: fa_comment = {
-          fa_id: +this.$route.params.fa,
-          subject: CommentType.COMMENT,
+        const comment: fa_comments = {
+          subject: subject_type.COMMENT,
           comment: this.newComment,
           author: this.me.id,
+          team_id: this.store.mFA.team_id, //TODO Change
           created_at: new Date(),
         };
 

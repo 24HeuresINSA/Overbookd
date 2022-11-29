@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { collaborator, fa_collaborator } from "~/utils/models/FA";
+import { collaborator, fa_collaborators } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CollaboratorCard",
@@ -96,8 +96,7 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (this.collaborators.length === 0) {
-        const newCollaborator: fa_collaborator = {
-          fa_id: +this.$route.params.fa,
+        const newCollaborator: fa_collaborators = {
           collaborator: {},
         };
         this.$accessor.FA.addCollaborator(newCollaborator);

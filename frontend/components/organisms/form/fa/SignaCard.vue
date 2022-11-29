@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { fa_signa_needs, SignaType } from "~/utils/models/FA";
+import { fa_signa_needs, signa_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SignaCard",
@@ -122,7 +122,7 @@ export default Vue.extend({
       return this.$accessor.FA.mFA.fa_signa_needs;
     },
     signaType(): Array<string> {
-      return Object.values(SignaType);
+      return Object.values(signa_type);
     },
     /*currentLocations(): string[] {
       if (
@@ -166,8 +166,7 @@ export default Vue.extend({
       }
 
       const newSigna: fa_signa_needs = {
-        fa_id: +this.$route.params.fa,
-        type: this.newSignalisation.type as SignaType,
+        signa_type: this.newSignalisation.type as signa_type,
         text: this.newSignalisation.text,
         count: 1,
         comment: this.newSignalisation.comment,
