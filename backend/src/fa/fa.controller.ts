@@ -65,7 +65,7 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
-  @Patch(':id')
+  @Post(':id')
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
