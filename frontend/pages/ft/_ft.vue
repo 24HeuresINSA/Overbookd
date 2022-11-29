@@ -252,8 +252,8 @@ export default Vue.extend({
     LogisticsCard,
     Loader,
     FTDetailCard,
-    FTGeneralCard
-},
+    FTGeneralCard,
+  },
   data: function (): Data {
     return {
       FTID: +this.$route.params.ft, // count
