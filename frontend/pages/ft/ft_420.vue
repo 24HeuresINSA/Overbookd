@@ -18,13 +18,15 @@
 
     <v-row>
       <v-col md="6">
-        <FormCard
-          title="Général"
+        <FTGeneralCardVue
+          :is-disabled="true">
+        </FTGeneralCardVue>
+        <!-- <FormCard
           topic="general"
           form-key="ft_general_form"
           :form="FT"
           :is-disabled="true"
-        ></FormCard>
+        ></FormCard> -->
       </v-col>
 
       <v-col md="6">
@@ -214,11 +216,9 @@
 </template>
 
 <script>
-import FormCard from "~/components/organisms/form/FormCard";
-
 export default {
   name: "Ft420",
-  components: { FormCard },
+  components: { },
   data() {
     return {
       FT: {
