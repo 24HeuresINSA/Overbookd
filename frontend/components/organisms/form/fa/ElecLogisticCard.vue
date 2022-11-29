@@ -62,7 +62,7 @@ import { ElectricityType, fa_electricity_needs } from "~/utils/models/FA";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },
-  { text: "Puissance", value: "power" },
+  { text: "Puissance (en W)", value: "power" },
   { text: "Commentaire", value: "comment" },
   { text: "Action", value: "action" },
 ];

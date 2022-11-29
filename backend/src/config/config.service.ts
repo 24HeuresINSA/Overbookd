@@ -433,7 +433,7 @@ export class ConfigService {
         value: [
           {
             name: 'Manif',
-            day: '2021-09-15',
+            day: '2023-05-12',
           },
           {
             name: 'postManif',
@@ -556,7 +556,7 @@ export class ConfigService {
       // },
       {
         key: 'event_date',
-        value: '2022-05-21',
+        value: '2023-05-19',
       },
       // {
       //   key: 'fa_external_form',
