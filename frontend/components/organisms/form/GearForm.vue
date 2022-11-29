@@ -80,7 +80,6 @@ export default Vue.extend({
   },
   watch: {
     gear: function (g: Gear) {
-      console.log(g);
       this.name = g.name;
       this.category = g.category;
     },
