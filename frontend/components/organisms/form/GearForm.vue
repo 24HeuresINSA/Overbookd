@@ -87,7 +87,7 @@ export default Vue.extend({
   methods: {
     async createOrUpdateGear() {
       let gear: GearForm = { name: this.name };
-      if (this.shouldUpdateCategory()) {
+      if (this.shouldUpdateCategory) {
         gear = { ...gear, category: this.category?.id };
       }
       const action = this.gear.id
