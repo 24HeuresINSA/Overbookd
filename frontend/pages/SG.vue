@@ -144,7 +144,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="isSgConfigDialogOpen" width="600px">
-      <SgConfigForm @close-dialog="closeConfigDialog"/>
+      <SgConfigForm @close-dialog="closeConfigDialog" />
     </v-dialog>
     <SnackNotificationContainer />
   </v-container>
