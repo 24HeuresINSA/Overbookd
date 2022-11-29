@@ -62,6 +62,7 @@ export default Vue.extend({
   },
   methods: {
     formatDateForCalendar(date: Date): string {
+      date = new Date(date);
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
