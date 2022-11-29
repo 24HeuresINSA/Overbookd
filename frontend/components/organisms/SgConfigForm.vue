@@ -1,7 +1,12 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title> Configuration SG </v-card-title>
+    <v-card class="Fut_Config">
+      <v-card-title class="Fut_Config__title">
+        <h2>Configuration SG</h2>
+        <v-btn icon dark @click="closeDialog">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
@@ -10,6 +15,7 @@
             prefix="€"
             type="number"
             required
+            @keydown.enter="save"
           >
           </v-text-field>
           <v-text-field
@@ -18,6 +24,7 @@
             prefix="€"
             type="number"
             required
+            @keydown.enter="save"
           >
           </v-text-field>
           <v-text-field
@@ -25,6 +32,7 @@
             label="Prix fût Triple"
             prefix="€"
             type="number"
+            @keydown.enter="save"
           >
           </v-text-field>
           <v-text-field
@@ -33,11 +41,12 @@
             prefix="€"
             type="number"
             required
+            @keydown.enter="save"
           >
           </v-text-field>
         </v-form>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions class="Fut_Config__actions">
         <v-btn color="primary" @click="save">Enregistrer</v-btn>
       </v-card-actions>
     </v-card>
@@ -85,9 +94,28 @@ export default Vue.extend({
         value: this.tempSgConfig,
       };
       this.$accessor.configuration.update(configuraion);
+      this.closeDialog();
+    },
+    closeDialog() {
+      this.$emit("close-dialog");
     },
   },
 });
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.Fut_Config {
+  &__title {
+    display: flex;
+    justify-content: center;
+    h2 {
+      flex: 1;
+      text-align: center;
+    }
+  }
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>

@@ -7,14 +7,14 @@ const configurationRepo = RepoFactory.configurationRepo;
 
 // The state types definitions
 interface State {
-  [key: string]: unknown;
+  [key: string]: Object;
 }
 
 const state = (): State => ({});
 
 export const mutations = mutationTree(state, {
   SET_CONFIG: function (state, config: Configuration) {
-    state[config.key] = config.value;
+    Object.assign(state[config.key], config.value);
   },
 });
 
@@ -40,7 +40,12 @@ export const actions = actionTree(
       return res;
     },
     save: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.save(this, config));
+      const res = await safeCall(
+        this,
+        configurationRepo.save(this, config),
+        "saved",
+        "server"
+      );
       if (!res) {
         return null;
       }
@@ -49,7 +54,12 @@ export const actions = actionTree(
       return res;
     },
     update: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.update(this, config));
+      const res = await safeCall(
+        this,
+        configurationRepo.update(this, config),
+        "saved",
+        "server"
+      );
       if (!res) {
         return null;
       }
