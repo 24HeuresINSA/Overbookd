@@ -230,7 +230,6 @@ export default {
       );
       if (res) {
         this.FAs = res.data;
-        console.log(this.FAs);
       } else {
         alert("error");
       }
