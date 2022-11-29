@@ -12,6 +12,9 @@
         <template #[`item.created_at`]="{ item }">
           {{ new Date(item.created_at).toLocaleString() }}
         </template>
+        <template #[`item.User_author`]="{ item }">
+          {{ item.User_author.firstname + " " + item.User_author.lastname }}
+        </template>
       </v-data-table>
       <v-textarea
         v-model="newComment"
@@ -44,7 +47,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Auteur", value: "author" },
+      { text: "Auteur", value: "User_author" },
       { text: "Sujet", value: "subject" },
       { text: "Commentaire", value: "comment" },
       { text: "Date", value: "created_at" },

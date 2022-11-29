@@ -287,7 +287,7 @@ export default Vue.extend({
       await RepoFactory.faRepo.updateFA(this, this.mFA.id, this.mFA);
       await this.$store.dispatch("notif/pushNotification", {
         type: "success",
-        message: "FA sauvegardée !",
+        message: "✅ FA sauvegardée !",
       });
     },
 
