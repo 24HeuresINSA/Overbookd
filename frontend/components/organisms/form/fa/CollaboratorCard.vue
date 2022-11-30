@@ -64,7 +64,6 @@ export default Vue.extend({
     collaborator(): collaborator {
       const collaborators = this.$accessor.FA.mFA.fa_collaborators;
       if (collaborators && collaborators.length > 0) {
-        console.log(collaborators[0].collaborator.lastname);
         return collaborators[0].collaborator;
       }
       return {};
