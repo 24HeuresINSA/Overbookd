@@ -206,6 +206,10 @@ export const actions = actionTree(
       commit("UPDATE_FA", { key, value });
     },
 
+    save: async function ({ state }) {
+      await RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA);
+    },
+
     validate: async function ({ dispatch, commit, state }, validator: string) {
       commit("VALIDATE", validator);
       // @ts-ignore

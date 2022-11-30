@@ -26,7 +26,7 @@ export enum subject_type {
 }
 
 export interface FA {
-  id?: number;
+  id: number;
   name: string;
   type?: string;
   team_id?: number;
