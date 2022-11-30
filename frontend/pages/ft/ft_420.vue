@@ -18,15 +18,7 @@
 
     <v-row>
       <v-col md="6">
-        <FTGeneralCardVue
-          :is-disabled="true">
-        </FTGeneralCardVue>
-        <!-- <FormCard
-          topic="general"
-          form-key="ft_general_form"
-          :form="FT"
-          :is-disabled="true"
-        ></FormCard> -->
+        <FTGeneralCard :is-disabled="true"> </FTGeneralCard>
       </v-col>
 
       <v-col md="6">
@@ -215,10 +207,13 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
+
+export default Vue.extend({
   name: "Ft420",
-  components: { },
+  components: { FTGeneralCard },
   data() {
     return {
       FT: {
@@ -232,7 +227,7 @@ export default {
     };
   },
   computed: {
-    teams: function () {
+    teams(): any {
       return this.$accessor.team.allTeams;
     },
   },
@@ -244,7 +239,7 @@ export default {
       });
     }
   },
-};
+});
 </script>
 
 <style scoped></style>
