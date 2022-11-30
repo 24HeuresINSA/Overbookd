@@ -55,6 +55,8 @@
     "search.exclude": {
       "**/node_modules": true,
       "**/docker/data/**": true,
-    }
+    },
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
   }
 }

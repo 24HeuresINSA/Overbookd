@@ -1,12 +1,26 @@
 import { AxiosResponse } from "axios";
 import { SnackNotif } from "../models/store";
 
-export async function safeCall(
+// Define all success messages possible
+const successMessages = {
+  sent: "Bien envoyé !",
+  saved: "Sauvegardé !",
+};
+
+// Define all error messages possible
+const errorMessages = {
+  server: "Erreur Serveur",
+};
+
+type SuccessMessageKey = keyof typeof successMessages;
+type ErrorMessageKey = keyof typeof errorMessages;
+
+export async function safeCall<T = any>(
   store: Vue["$store"],
-  repoFunction: Promise<AxiosResponse<any>>,
-  successMessage?: string,
-  errorMessage?: string
-): Promise<AxiosResponse | undefined> {
+  repoFunction: Promise<AxiosResponse<T>>,
+  successMessage?: SuccessMessageKey,
+  errorMessage?: ErrorMessageKey
+): Promise<AxiosResponse<T> | undefined> {
   try {
     const res = await repoFunction;
     if (res.status >= 400) {

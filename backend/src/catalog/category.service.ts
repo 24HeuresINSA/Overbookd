@@ -105,9 +105,10 @@ export class CategoryService {
   }
 
   async remove(id: number): Promise<void> {
-    const deletedCategory = await this.categoryRepository.removeCategory(id);
-    if (!deletedCategory) return;
-    return await this.cascadingUpdateSubCategories(deletedCategory);
+    const toDeleteCategory = await this.categoryRepository.getCategory(id);
+    if (!toDeleteCategory) return;
+    await this.cascadingUpdateSubCategories(toDeleteCategory);
+    await this.categoryRepository.removeCategory(id);
   }
 
   search({ name, owner }: SearchCategory): Promise<Category[]> {
@@ -120,9 +121,9 @@ export class CategoryService {
   }
 
   private async cascadingUpdateSubCategories(currentCategory: Category) {
-    const newParent = await this.categoryRepository.getCategory(
-      currentCategory.parent,
-    );
+    const newParent = currentCategory.parent
+      ? await this.categoryRepository.getCategory(currentCategory.parent)
+      : undefined;
 
     const subCategories = await this.linkSubCategoriesToNewParent(
       currentCategory.id,
