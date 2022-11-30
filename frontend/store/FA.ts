@@ -207,7 +207,15 @@ export const actions = actionTree(
     },
 
     save: async function ({ state }) {
+      console.log(state.mFA);
       await RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA);
+      if (state.mFA.fa_collaborators) {
+        await RepoFactory.faRepo.updateFACollaborators(
+          this,
+          state.mFA.id,
+          state.mFA.fa_collaborators
+        );
+      }
     },
 
     validate: async function ({ dispatch, commit, state }, validator: string) {

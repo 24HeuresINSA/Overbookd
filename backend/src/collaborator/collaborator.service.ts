@@ -24,7 +24,8 @@ export class CollaboratorService {
     collab: CreateCollaboratorDto[],
   ): Promise<collaborator[] | null> {
     return Promise.all(
-      collab.map(async (col) => {
+      collab.map(async (coll) => {
+        const col = coll.collaborator;
         if (col.id) {
           return await this.prisma.collaborator.update({
             where: { id: col.id },
