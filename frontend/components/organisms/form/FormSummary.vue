@@ -53,6 +53,7 @@ export default Vue.extend({
       { id: "timeframe", text: "Créneaux", icon: "mdi-calendar-clock" },
       { id: "security", text: "Sécurité", icon: "mdi-shield" },
       { id: "presta", text: "Presta", icon: "mdi-account" },
+      { id: "log", text: "Logistique", icon: "mdi-truck" },
       { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
       { id: "water", text: "Besoin Eau", icon: "mdi-water" },
       { id: "comment", text: "Commentaires", icon: "mdi-comment" },
