@@ -36,9 +36,7 @@
 </template>
 
 <script lang="ts">
-import { RepoFactory } from "~/repositories/repoFactory";
 import Vue from "vue";
-import { safeCall } from "~/utils/api/calls";
 import { subject_type, fa_comments } from "~/utils/models/FA";
 
 export default Vue.extend({
@@ -83,7 +81,6 @@ export default Vue.extend({
           subject: subject_type.COMMENT,
           comment: this.newComment,
           author: this.me.id,
-          team_id: 1, //TODO Change
           created_at: new Date(),
         };
 
@@ -91,22 +88,14 @@ export default Vue.extend({
         this.newComment = "";
       } else if (this.form === "FT") {
         /*const comment: ft_comment = {
-          ft_id: +this.$route.params.fa,
-          subject: CommentType.COMMENT,
+          subject: subject_type.COMMENT,
           comment: this.newComment,
           author: this.me.id,
           created_at: new Date(),
         };
 
         this.store.addComment(comment);
-        this.newComment = "";
-
-        await safeCall(
-          this.$store,
-          RepoFactory.ftRepo.updateFT(this, this.$accessor.FT.mFT),
-          "sent",
-          "server"
-        );*/
+        this.newComment = "";*/
       }
     },
   },

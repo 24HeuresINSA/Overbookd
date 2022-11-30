@@ -195,7 +195,6 @@ export const actions = actionTree(
         subject: subject_type.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
-        team_id: 0, //TODO Change this
         created_at: new Date(),
       };
       commit("ADD_COMMENT", comment);

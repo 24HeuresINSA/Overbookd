@@ -93,7 +93,6 @@ export interface fa_comments {
   subject: subject_type;
   created_at?: Date;
   author: number;
-  team_id: number;
   User_author?: {
     firstname: string;
     lastname: string;
