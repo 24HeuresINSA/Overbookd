@@ -118,11 +118,15 @@
       <v-card>
         <v-card-title>Ajouter une nouvelle FA</v-card-title>
         <v-card-text>
-          <v-text-field v-model="faName" label="Nom de la FA"></v-text-field>
+          <v-text-field
+            v-model="faName"
+            label="Nom de la FA"
+            @keydown.enter="createNewFA"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="createNewFA">crée la FA</v-btn>
+          <v-btn text @click="createNewFA">créer la FA</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
