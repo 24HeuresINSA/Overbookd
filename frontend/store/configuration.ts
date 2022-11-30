@@ -14,6 +14,9 @@ const state = (): State => ({});
 
 export const mutations = mutationTree(state, {
   SET_CONFIG: function (state, config: Configuration) {
+    if (state[config.key] === undefined) {
+      state[config.key] = config.value;
+    }
     Object.assign(state[config.key], config.value);
   },
 });
