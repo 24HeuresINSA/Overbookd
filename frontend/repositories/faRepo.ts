@@ -4,6 +4,8 @@ import {
   fa_general_update,
   fa_collaborators,
   fa_signa_needs,
+  time_windows,
+  fa_electricity_needs,
 } from "~/utils/models/FA";
 
 const resource = "/fa";
@@ -42,5 +44,22 @@ export default {
     fa_signa_needs: fa_signa_needs[]
   ) {
     return context.$axios.post(`/fa-signa-needs/${id}`, fa_signa_needs);
+  },
+  updateFATimeWindows(
+    context: Context,
+    id: number,
+    time_windows: time_windows[]
+  ) {
+    return context.$axios.post(`/time-windows/${id}`, time_windows);
+  },
+  updateFAElectricityNeeds(
+    context: Context,
+    id: number,
+    electricity_needs: fa_electricity_needs[]
+  ) {
+    return context.$axios.post(
+      `/fa-electricity-needs/${id}`,
+      electricity_needs
+    );
   },
 };

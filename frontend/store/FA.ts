@@ -229,6 +229,24 @@ export const actions = actionTree(
           )
         );
       }
+      if (state.mFA.time_windows) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFATimeWindows(
+            this,
+            state.mFA.id,
+            state.mFA.time_windows
+          )
+        );
+      }
+      if (state.mFA.fa_electricity_needs) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFAElectricityNeeds(
+            this,
+            state.mFA.id,
+            state.mFA.fa_electricity_needs
+          )
+        );
+      }
       await Promise.all(allPromise);
     },
 
