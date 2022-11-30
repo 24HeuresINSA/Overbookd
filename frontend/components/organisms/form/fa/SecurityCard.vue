@@ -40,6 +40,7 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
+      if (key === "number_of_pass") value = parseInt(value);
       this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
