@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card :style="isDisabled ? 'card-border' : ''">
-      <v-card-title>Besoin d'élec</v-card-title>
+      <v-card-title>Besoin d'électricité</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
           <template #[`item.action`]="{ index }">

@@ -7,10 +7,10 @@
       :data="item"
       :href="'#' + item.id"
     >
-      <v-list-item-icon v-if="!item.isDisabled">
+      <v-list-item-icon>
         <v-icon v-text="item.icon"></v-icon>
       </v-list-item-icon>
-      <v-list-item-content v-if="!item.isDisabled">
+      <v-list-item-content>
         <v-list-item-title v-text="item.text"></v-list-item-title>
       </v-list-item-content>
     </v-list-item>
@@ -24,10 +24,10 @@
       :data="item"
       :href="'#' + item.id"
     >
-      <v-list-item-icon v-if="!item.isDisabled">
+      <v-list-item-icon>
         <v-icon v-text="item.icon"></v-icon>
       </v-list-item-icon>
-      <v-list-item-content v-if="!item.isDisabled">
+      <v-list-item-content>
         <v-list-item-title v-text="item.text"></v-list-item-title>
       </v-list-item-content>
     </v-list-item>
@@ -53,24 +53,13 @@ export default Vue.extend({
       { id: "timeframe", text: "Créneaux", icon: "mdi-calendar-clock" },
       { id: "security", text: "Sécurité", icon: "mdi-shield" },
       { id: "presta", text: "Presta", icon: "mdi-account" },
-      { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
-      { id: "water", text: "Besoin Eau", icon: "mdi-water" },
+      { id: "log", text: "Logistique", icon: "mdi-truck" },
+      // { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
+      // { id: "water", text: "Besoin Eau", icon: "mdi-water" },
       { id: "comment", text: "Commentaires", icon: "mdi-comment" },
-      {
-        id: "ft",
-        text: "FT",
-        icon: "mdi-format-color-highlight",
-        isDisabled: true,
-      },
+      // { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
     ],
-    ftItems: [
-      {
-        id: "ft",
-        text: "FT",
-        icon: "mdi-format-color-highlight",
-        isDisabled: false,
-      },
-    ],
+    ftItems: [{ id: "general", text: "Général", icon: "mdi-card-text" }],
   }),
 });
 </script>

@@ -45,7 +45,7 @@
       <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
       <SecurityCard id="security"></SecurityCard>
       <CollaboratorCard id="presta"></CollaboratorCard>
-      <h2>Logistique 🚚</h2>
+      <h2 id="log">Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
