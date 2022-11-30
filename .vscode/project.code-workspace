@@ -41,7 +41,8 @@
       "User",
       "Auth",
       "triage",
-      "CP"
+      "CP",
+      "release"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],
