@@ -39,6 +39,10 @@ export interface CategoryForm {
   parent?: number;
 }
 
+export interface CategoryUpdateForm extends CategoryForm {
+  id: number;
+}
+
 export const state = (): State => ({
   gears: [],
   categories: [],
@@ -58,7 +62,7 @@ export const mutations = mutationTree(state, {
   UPDATE_GEAR(state, gear: Gear) {
     const index = state.gears.findIndex((g) => g.id === gear.id);
     if (index < 0) return;
-    state.gears[index] = gear;
+    state.gears.splice(index, 1, gear);
   },
   SET_CATEGORIES(state, categories: Category[]) {
     state.categories = categories;
@@ -68,6 +72,14 @@ export const mutations = mutationTree(state, {
   },
   ADD_CATEGORY(state, category: Category) {
     state.categories.push(category);
+  },
+  DELETE_CATEGORY(state, category: Category) {
+    state.categories = state.categories.filter((c) => c.id !== category.id);
+  },
+  UPDATE_CATEGORY(state, category: Category) {
+    const index = state.categories.findIndex((c) => c.id === category.id);
+    if (index < 0) return;
+    state.categories.splice(index, 1, category);
   },
 });
 
@@ -151,6 +163,47 @@ export const actions = actionTree(
       } catch (error: any) {
         sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
       }
+    },
+
+    async deleteCategory(context, category: Category): Promise<void> {
+      try {
+        await categoryRepository.deleteCategory(this, category.id);
+        sendNotification(this, `${category.name} supprime`);
+        context.commit("DELETE_CATEGORY", category);
+        this.dispatch("catalog/fetchCategoryTree");
+      } catch (error: any) {
+        sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
+      }
+    },
+
+    async updateCategory(context, form: CategoryUpdateForm): Promise<void> {
+      const { id, ...categoryForm } = form;
+      const call = await safeCall<Category>(
+        this,
+        categoryRepository.updateCategory(this, id, categoryForm),
+        "saved",
+        "server"
+      );
+      if (!call) return;
+      context.commit("UPDATE_CATEGORY", call.data);
+      this.dispatch("catalog/fetchCategoryTree");
+    },
+
+    async fetchCategory(
+      context,
+      categoryId: number
+    ): Promise<Category | undefined> {
+      const storedCategory = context.state.categories.find(
+        (category) => category.id === categoryId
+      );
+      if (storedCategory) return storedCategory;
+      const call = await safeCall<Category>(
+        this,
+        categoryRepository.getCategory(this, categoryId)
+      );
+      if (!call) return undefined;
+      context.commit("ADD_CATEGORY", call.data);
+      return call.data;
     },
   }
 );

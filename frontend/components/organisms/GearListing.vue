@@ -58,10 +58,20 @@
       </GearForm>
     </v-dialog>
     <v-dialog v-model="isDeleteGearDialogOpen" width="600px">
-      <ConfirmationGearDeletion
-        :gear="selectedGear"
+      <ConfirmationMessage
+        confirm-color="error"
         @close-dialog="closeDeleteGearDialog"
-      ></ConfirmationGearDeletion>
+        @confirm="deleteGear"
+      >
+        <template #title>Suppression du matos</template>
+        <template #statement
+          >Vous etes sur le point de supprimer
+          <strong>{{ selectedGear?.name }}</strong></template
+        >
+        <template #confirm-btn-content>
+          <v-icon left> mdi-delete </v-icon>Supprimer
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
   </div>
 </template>
@@ -71,7 +81,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
-import ConfirmationGearDeletion from "./form/ConfirmationGearDeletion.vue";
+import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
 import GearForm from "./form/GearForm.vue";
 
 interface GearListingData {
@@ -93,7 +103,7 @@ const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
-  components: { GearForm, ConfirmationGearDeletion },
+  components: { GearForm, ConfirmationMessage },
   data(): GearListingData {
     return {
       headers: [
@@ -180,6 +190,10 @@ export default Vue.extend({
       if (this.searchDelay) clearTimeout(this.searchDelay);
 
       this.searchDelay = setTimeout(action, 300);
+    },
+    async deleteGear() {
+      if (!this.selectedGear) return;
+      await this.$accessor.catalog.deleteGear(this.selectedGear);
     },
   },
 });

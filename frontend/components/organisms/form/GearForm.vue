@@ -73,6 +73,11 @@ export default Vue.extend({
       },
     };
   },
+  computed: {
+    shouldUpdateCategory() {
+      return this.category || this.gear.category;
+    },
+  },
   watch: {
     gear: function (g: Gear) {
       this.name = g.name;
@@ -82,8 +87,8 @@ export default Vue.extend({
   methods: {
     async createOrUpdateGear() {
       let gear: GearForm = { name: this.name };
-      if (this.category) {
-        gear = { ...gear, category: this.category.id };
+      if (this.shouldUpdateCategory) {
+        gear = { ...gear, category: this.category?.id };
       }
       const action = this.gear.id
         ? this.$accessor.catalog.updateGear({ ...gear, id: this.gear.id })
