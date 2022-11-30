@@ -220,6 +220,15 @@ export const actions = actionTree(
           )
         );
       }
+      if (state.mFA.fa_signa_needs) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFASignaNeeds(
+            this,
+            state.mFA.id,
+            state.mFA.fa_signa_needs
+          )
+        );
+      }
       await Promise.all(allPromise);
     },
 

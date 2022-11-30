@@ -1,5 +1,10 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { FA, fa_general_update, fa_collaborators } from "~/utils/models/FA";
+import {
+  FA,
+  fa_general_update,
+  fa_collaborators,
+  fa_signa_needs,
+} from "~/utils/models/FA";
 
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
@@ -30,5 +35,12 @@ export default {
     collaborators: fa_collaborators[]
   ) {
     return context.$axios.post(`/collaborator/${id}`, collaborators);
+  },
+  updateFASignaNeeds(
+    context: Context,
+    id: number,
+    fa_signa_needs: fa_signa_needs[]
+  ) {
+    return context.$axios.post(`/fa-signa-needs/${id}`, fa_signa_needs);
   },
 };

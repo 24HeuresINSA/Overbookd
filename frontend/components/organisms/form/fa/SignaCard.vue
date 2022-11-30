@@ -106,7 +106,7 @@ export default Vue.extend({
     isSignaFormOpen: false,
     headers: [
       { text: "Nombre", value: "count" },
-      { text: "Type", value: "type" },
+      { text: "Type", value: "signa_type" },
       { text: "Texte signalétique", value: "text" },
       { text: "Commentaire", value: "comment" },
       { text: "Action", value: "action" },
