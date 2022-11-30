@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Eau</v-card-title>
+    <v-card-title>Besoin d'eau</v-card-title>
     <v-card-subtitle
       >Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu
       as besoin et comment on l'évacue. pour plus de renseignement voit avec la
