@@ -13,7 +13,11 @@
           {{ new Date(item.created_at).toLocaleString() }}
         </template>
         <template #[`item.User_author`]="{ item }">
-          {{ item.User_author.firstname + " " + item.User_author.lastname }}
+          {{
+            item.User_author
+              ? item.User_author.firstname + " " + item.User_author.lastname
+              : " "
+          }}
         </template>
       </v-data-table>
       <v-textarea
@@ -83,19 +87,8 @@ export default Vue.extend({
           created_at: new Date(),
         };
 
-        this.store.addComment(comment);
+        await this.store.addComment(comment);
         this.newComment = "";
-
-        await safeCall(
-          this.$store,
-          RepoFactory.faRepo.updateFA(
-            this,
-            this.$accessor.FA.mFA.id || 0,
-            this.$accessor.FA.mFA
-          ),
-          "sent",
-          "server"
-        );
       } else if (this.form === "FT") {
         /*const comment: ft_comment = {
           ft_id: +this.$route.params.fa,

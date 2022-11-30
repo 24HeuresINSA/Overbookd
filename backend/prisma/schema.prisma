@@ -305,15 +305,15 @@ model time_windows {
 }
 
 model Catalog_Category {
-  id            Int                @id @default(autoincrement())
-  name          String
-  path          String             @unique
-  parent_id     Int?
-  parent        Catalog_Category?  @relation("parent", fields: [parent_id], references: [id])
-  subCategories Catalog_Category[] @relation("parent")
-  owner_id      Int?
-  owner         Team?              @relation("owner", fields: [owner_id], references: [id])
-  gears         Catalog_Gear[]     @relation("category")
+  id             Int                @id @default(autoincrement())
+  name           String
+  path           String             @unique
+  parent         Int?
+  parentCategory Catalog_Category?  @relation("parent", fields: [parent], references: [id])
+  subCategories  Catalog_Category[] @relation("parent")
+  owner_id       Int?
+  owner          Team?              @relation("owner", fields: [owner_id], references: [id])
+  gears          Catalog_Gear[]     @relation("category")
 }
 
 model Catalog_Gear {
@@ -322,4 +322,10 @@ model Catalog_Gear {
   slug        String            @unique
   category_id Int?
   category    Catalog_Category? @relation("category", fields: [category_id], references: [id])
+}
+
+model Configuration {
+  key        String  @id @unique
+  value      Json
+  is_deleted Boolean @default(false)
 }

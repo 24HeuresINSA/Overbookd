@@ -125,6 +125,11 @@ const AUTHORS = [
   "Thibaut - Moule 🍑",
   "Antoine - Gyneco 🩺",
   "Damien - Hublot 🖐",
+  "Léo - Shagasse 😼",
+  "Léon - 🦁",
+  "Mathieu - Mussex 🐁",
+  "Lucas - Conforama 🏪",
+  "Adèle - Franck 🍷",
 ];
 
 export default {
@@ -179,6 +184,20 @@ export default {
           roles: "sg",
           title: "Transactions",
           to: "/transactions",
+        },
+        {
+          icon: "mdi-bookshelf",
+          roles: [
+            "admin",
+            "matos",
+            "elec",
+            "barrieres",
+            "signa",
+            "bar",
+            "catering",
+          ],
+          title: "Catalogue",
+          to: "/catalog",
         },
       ],
       items: [

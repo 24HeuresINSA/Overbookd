@@ -206,6 +206,50 @@ export const actions = actionTree(
       commit("UPDATE_FA", { key, value });
     },
 
+    save: async function ({ state }) {
+      const allPromise = [];
+      allPromise.push(
+        RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA)
+      );
+      if (state.mFA.fa_collaborators) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFACollaborators(
+            this,
+            state.mFA.id,
+            state.mFA.fa_collaborators
+          )
+        );
+      }
+      if (state.mFA.fa_signa_needs) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFASignaNeeds(
+            this,
+            state.mFA.id,
+            state.mFA.fa_signa_needs
+          )
+        );
+      }
+      if (state.mFA.time_windows) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFATimeWindows(
+            this,
+            state.mFA.id,
+            state.mFA.time_windows
+          )
+        );
+      }
+      if (state.mFA.fa_electricity_needs) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFAElectricityNeeds(
+            this,
+            state.mFA.id,
+            state.mFA.fa_electricity_needs
+          )
+        );
+      }
+      await Promise.all(allPromise);
+    },
+
     validate: async function ({ dispatch, commit, state }, validator: string) {
       commit("VALIDATE", validator);
       // @ts-ignore
@@ -223,8 +267,15 @@ export const actions = actionTree(
       await dispatch("saveFA");
     },
 
-    addComment({ commit }, comment: fa_comments) {
+    async addComment({ commit, state }, comment: fa_comments) {
       commit("ADD_COMMENT", comment);
+      if (state.mFA.fa_comments) {
+        await RepoFactory.faRepo.updateFAComments(
+          this,
+          state.mFA.id,
+          state.mFA.fa_comments
+        );
+      }
     },
 
     addSignaNeed({ commit }, signaNeed: fa_signa_needs) {

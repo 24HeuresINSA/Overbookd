@@ -43,15 +43,23 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { FriendRequest } from "~/utils/models/repo";
 import { SnackNotif } from "../../../utils/models/store";
 
+interface FriendsCardData {
+  newFriend: {
+    id: string;
+    username: string;
+  };
+  usernames: { text: string; value: any }[];
+}
+
 export default Vue.extend({
   name: "FriendsCard",
-  data() {
+  data(): FriendsCardData {
     return {
       newFriend: {
         id: "",
         username: "",
       },
-      usernames: undefined,
+      usernames: [],
     };
   },
   computed: {
@@ -66,13 +74,11 @@ export default Vue.extend({
     );
     if (res) {
       this.usernames = res.data
+        .filter((user) => !user.team.includes("hard"))
         .map((user: any) => {
-          if (!user.team.includes("hard")) {
-            const username = user.firstname + " " + user.lastname;
-            return { text: username, value: user };
-          }
-        })
-        .filter((item: any) => item);
+          const username = `${user.firstname}  ${user.lastname}`;
+          return { text: username, value: user };
+        });
     }
   },
   methods: {

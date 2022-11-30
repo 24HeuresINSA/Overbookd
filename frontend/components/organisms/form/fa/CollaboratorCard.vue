@@ -10,7 +10,7 @@
           @change="onChange('firstname', $event)"
         ></v-text-field>
         <v-text-field
-          :valuel="collaborator.lastname"
+          :value="collaborator.lastname"
           label="Nom de l'intervenant*"
           :rules="ruleRequired"
           @change="onChange('lastname', $event)"
@@ -63,8 +63,9 @@ export default Vue.extend({
     },
     collaborator(): collaborator {
       const collaborators = this.$accessor.FA.mFA.fa_collaborators;
-      if (collaborators && collaborators.length > 0)
+      if (collaborators && collaborators.length > 0) {
         return collaborators[0].collaborator;
+      }
       return {};
     },
     isEmpty(): boolean {

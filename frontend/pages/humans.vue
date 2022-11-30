@@ -104,6 +104,7 @@
               style="max-height: 100%; overflow-y: auto"
               :headers="headers"
               :items="filteredUsers"
+              :options.sync="options"
               class="elevation-1"
               dense
               :items-per-page="20"
@@ -176,6 +177,7 @@
               style="max-height: 100%; overflow-y: auto"
               :headers="statsHeaders"
               :items="filteredUsers"
+              :options.sync="options"
               class="elevation-1"
               dense
               :items-per-page="20"
@@ -342,6 +344,10 @@ export default {
       feedbackMessage: "Sauvegardé 🥳",
 
       isModeStatsActive: false,
+
+      options: {
+        page: 1,
+      },
     };
   },
 
@@ -359,6 +365,7 @@ export default {
           const fuse = new Fuse(mUsers, options);
 
           mUsers = fuse.search(this.filters.search).map((e) => e.item);
+          this.options.page = 1; // reset page
         }
 
         // filter by driver licence
@@ -366,6 +373,7 @@ export default {
           mUsers = mUsers.filter(
             (user) => user.hasDriverLicense === this.filters.hasDriverLicense
           );
+          this.options.page = 1; // reset page
         }
 
         // filter by not validated
@@ -375,6 +383,7 @@ export default {
           } else {
             mUsers = mUsers.filter((user) => !isValidated(user));
           }
+          this.options.page = 1; // reset page
         }
 
         // filter by payed contributions
@@ -384,6 +393,7 @@ export default {
           } else {
             mUsers = mUsers.filter((user) => !user.has_payed_contributions);
           }
+          this.options.page = 1; // reset page
         }
 
         // filter by team
@@ -398,6 +408,7 @@ export default {
               return false;
             }
           });
+          this.options.page = 1; // reset page
         }
       },
       deep: true,

@@ -28,7 +28,7 @@
             </v-list-item>
           </v-list>
 
-          <template v-if="mode === 'cask'">
+          <template v-if="isCask">
             <v-text-field
               v-model="totalPrice"
               label="Prix total"
@@ -74,6 +74,25 @@
           <br />
           <br />
           <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
+
+          <v-radio-group
+            v-if="ready && isCask"
+            v-model="totalPrice"
+            column
+            style="display: flex; flex-direction: column"
+          >
+            <v-radio label="Fut blonde" :value="sgConfig.prixFutBlonde">
+            </v-radio>
+            <v-radio label="Fut Blanche" :value="sgConfig.prixFutBlanche">
+            </v-radio>
+            <v-radio label="Fut Triple" :value="sgConfig.prixFutTriple">
+            </v-radio>
+            <v-radio label="Fut Flower Wager" :value="sgConfig.prixFutFlower">
+            </v-radio>
+          </v-radio-group>
+          <v-btn v-if="isCask" @click="openSgConfigForm">
+            Configuration des fûts
+          </v-btn>
         </v-card-text>
       </v-card>
 
@@ -103,7 +122,7 @@
           <div v-if="isExpenseMode">
             {{
               (
-                (mode === "cask" ? stickPrice : settledStickPrice) *
+                (isCask ? stickPrice : settledStickPrice) *
                   item.newConsumption || 0
               ).toFixed(2)
             }}
@@ -124,6 +143,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="isSgConfigDialogOpen" width="600px">
+      <SgConfigForm @close-dialog="closeConfigDialog" />
+    </v-dialog>
     <SnackNotificationContainer />
   </v-container>
 </template>
@@ -138,15 +160,16 @@
 import transactionRepo from "../repositories/transactionRepo";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
-
+import SgConfigForm from "@/components/organisms/SgConfigForm";
 const { safeCall } = require("../utils/api/calls");
 
 export default {
   name: "SG",
-  components: { SnackNotificationContainer },
+  components: { SnackNotificationContainer, SgConfigForm },
 
   data: () => {
     return {
+      ready: false,
       users: [],
       totalConsumption: undefined, // total coast of the barrel
       totalPrice: undefined,
@@ -154,16 +177,15 @@ export default {
       settledStickPrice: 0.5,
 
       mode: "cask", //default mode
-
       isSwitchDialogOpen: false,
-
+      isSgConfigDialogOpen: false,
       regex: {
         int: "^\\d*$",
         float: "^\\d*(\\.\\d+)?$",
       },
 
       feedbacks: {
-        totalPrice: "Prix total n' est pas un nombre",
+        totalPrice: "Prix total n'est pas un nombre",
         settledStickPrice: "Prix du baton n'est pas un nombre",
         noNewConsumption: "pas de nouvelle consomation ou de dépot",
         wrongNewConsumption: `champs non valide pour l'utilisateur: `,
@@ -192,10 +214,9 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      const rawAmount = +(+this.totalPrice / +this.totalConsumptions);
-      const round = +(Math.round(+rawAmount * 100) / 100).toFixed(2) * 100;
-      const res = parseInt(round / 5) * 5;
-      return ((res + 5) * 0.01).toFixed(2);
+      const unitPrice = +(+this.totalPrice / +this.totalConsumptions); //Prix total / nombre de bâton -> prix d'un bâton
+      const round = Math.round(unitPrice * 100); //arrondi au centime
+      return ((round + 5) * 0.01).toFixed(2); // rajout d'une marge de sécurité de 5 centimes
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
@@ -205,6 +226,9 @@ export default {
     },
     isExpenseMode() {
       return this.mode === "cask" || this.mode === "closet";
+    },
+    isCask() {
+      return this.mode === "cask";
     },
     areInputsValid() {
       let res = true;
@@ -258,6 +282,9 @@ export default {
         reason,
       };
     },
+    sgConfig() {
+      return this.$accessor.configuration.get("sg");
+    },
   },
 
   watch: {
@@ -268,6 +295,8 @@ export default {
 
   async mounted() {
     if (this.$accessor.user.hasRole("sg")) {
+      await this.$accessor.configuration.fetch("sg");
+      this.ready = true;
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
           this.users = res.data.filter((user) => this.isUserWithCP(user));
@@ -284,6 +313,7 @@ export default {
       });
     }
   },
+
   methods: {
     hasRole(role) {
       return this.$accessor.user.hasRole(role);
@@ -409,6 +439,12 @@ export default {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
       usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
       this.isSwitchDialogOpen = false;
+    },
+    openSgConfigForm() {
+      this.isSgConfigDialogOpen = true;
+    },
+    closeConfigDialog() {
+      this.isSgConfigDialogOpen = false;
     },
   },
 };

@@ -19,6 +19,7 @@ import { FaCommentModule } from './fa_comment/fa_comment.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 import { CatalogModule } from './catalog/catalog.module';
+import { ConfigurationModule } from './configuration/configuration.module';
 
 @Module({
   imports: [
@@ -54,6 +55,8 @@ import { CatalogModule } from './catalog/catalog.module';
     TimeWindowsModule,
     FaElectricityNeedsModule,
     CatalogModule,
+    CatalogModule,
+    ConfigurationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

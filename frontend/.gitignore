@@ -45,3 +45,5 @@ npm-debug.log
 dist
 .nuxt/
 sw.js
+
+test.vue

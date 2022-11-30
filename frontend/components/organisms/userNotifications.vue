@@ -17,12 +17,7 @@
       </div>
 
       <v-card-actions
-        class="
-          d-flex
-          justify-space-between
-          align-start align-sm-end
-          flex-column flex-sm-row
-        "
+        class="d-flex justify-space-between align-start align-sm-end flex-column flex-sm-row"
       >
         <v-btn
           v-if="IhaveRole(['admin', 'bureau', 'orga'])"
