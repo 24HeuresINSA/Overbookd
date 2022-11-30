@@ -1,0 +1,36 @@
+.ts-prune:
+  interruptible: true
+  image: node
+  stage: ts-prune
+
+ts-prune-frontend:
+  extends: .ts-prune
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - when: never
+  cache:
+    key: frontend-node-modules
+    paths:
+      - frontend/node_modules/
+  script:
+    - cd frontend
+    - npm install
+    - npm run find-deadcode
+
+ts-prune-backend:
+  extends: .ts-prune
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - backend/**/*
+    - when: never
+  cache:
+    key: backend-node-modules
+    paths:
+      - backend/node_modules/
+  script:
+    - cd backend
+    - npm install
+    - npm run find-deadcode

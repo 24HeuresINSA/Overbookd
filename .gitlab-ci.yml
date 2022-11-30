@@ -17,6 +17,7 @@ stages:
   - clean-up-pipelines
   - test
   - lintage
+  - ts-prune
   - docker
   - docker-scan
   - unconfidentializer
@@ -35,3 +36,4 @@ include:
   - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
   - local: /.gitlab/ci/lintage.gitlab-ci.yml
   - local: /.gitlab/ci/backend_test.gitlab-ci.yml
+  - local: /.gitlab/ci/ts-prune.gitlab-ci.yml

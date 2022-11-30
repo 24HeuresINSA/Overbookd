@@ -24,6 +24,10 @@ lintage-frontend:
       changes:
         - frontend/**/*
     - when: never
+  cache:
+    key: frontend-node-modules
+    paths:
+      - frontend/node_modules/
   script:
     - cd frontend
     - npm install
