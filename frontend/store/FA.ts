@@ -267,8 +267,15 @@ export const actions = actionTree(
       await dispatch("saveFA");
     },
 
-    addComment({ commit }, comment: fa_comments) {
+    async addComment({ commit, state }, comment: fa_comments) {
       commit("ADD_COMMENT", comment);
+      if (state.mFA.fa_comments) {
+        await RepoFactory.faRepo.updateFAComments(
+          this,
+          state.mFA.id,
+          state.mFA.fa_comments
+        );
+      }
     },
 
     addSignaNeed({ commit }, signaNeed: fa_signa_needs) {

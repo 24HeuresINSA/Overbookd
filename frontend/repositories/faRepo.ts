@@ -6,6 +6,7 @@ import {
   fa_signa_needs,
   time_windows,
   fa_electricity_needs,
+  fa_comments,
 } from "~/utils/models/FA";
 
 const resource = "/fa";
@@ -61,5 +62,8 @@ export default {
       `/fa-electricity-needs/${id}`,
       electricity_needs
     );
+  },
+  updateFAComments(context: Context, id: number, comments: fa_comments[]) {
+    return context.$axios.post(`/fa-comment/${id}`, comments);
   },
 };
