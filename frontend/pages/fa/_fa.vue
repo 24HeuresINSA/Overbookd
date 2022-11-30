@@ -293,11 +293,12 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
+      /*
       await safeCall(
         this.$store,
         this.faRepo.updateFA(this, this.mFA.id, this.mFA),
         "undelete"
-      );
+      );*/
     },
 
     validate(validator: any) {

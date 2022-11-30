@@ -83,7 +83,7 @@ export default Vue.extend({
           subject: subject_type.COMMENT,
           comment: this.newComment,
           author: this.me.id,
-          team_id: this.store.mFA.team_id, //TODO Change
+          team_id: 1, //TODO Change
           created_at: new Date(),
         };
 
