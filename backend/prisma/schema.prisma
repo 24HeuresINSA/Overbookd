@@ -84,7 +84,6 @@ model Team {
   fa_validator     Boolean            @default(false)
   ft_validator     Boolean            @default(false)
   fa               fa[]
-  fa_comments      fa_comments[]
   fa_validation    fa_validation[]
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
@@ -292,8 +291,6 @@ model fa_comments {
   User_author User         @relation(fields: [author], references: [id])
   author      Int
   created_at  DateTime     @default(now())
-  Team        Team         @relation(fields: [team_id], references: [id])
-  team_id     Int
 }
 
 model time_windows {

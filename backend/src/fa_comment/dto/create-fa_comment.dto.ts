@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '@prisma/client';
 import {
   IsNotEmpty,
   IsOptional,
@@ -55,11 +54,4 @@ export class CreateFaCommentDto {
   })
   @IsOptional()
   created_at?: Date;
-
-  @ApiProperty({
-    required: true,
-    description: 'The id of the author team',
-  })
-  @IsNumber()
-  team_id: number;
 }

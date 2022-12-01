@@ -97,16 +97,10 @@ export const COMPLETE_FA_SELECT = {
       subject: true,
       created_at: true,
       author: true,
-      team_id: true,
       User_author: {
         select: {
           firstname: true,
           lastname: true,
-        },
-      },
-      Team: {
-        select: {
-          name: true,
         },
       },
     },

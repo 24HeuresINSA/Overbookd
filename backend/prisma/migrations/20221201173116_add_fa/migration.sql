@@ -132,7 +132,6 @@ CREATE TABLE "fa_comments" (
     "subject" "subject_type" NOT NULL,
     "author" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "team_id" INTEGER NOT NULL,
 
     CONSTRAINT "fa_comments_pkey" PRIMARY KEY ("id")
 );
@@ -197,9 +196,6 @@ ALTER TABLE "fa_comments" ADD CONSTRAINT "fa_comments_fa_id_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "fa_comments" ADD CONSTRAINT "fa_comments_author_fkey" FOREIGN KEY ("author") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "fa_comments" ADD CONSTRAINT "fa_comments_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "time_windows" ADD CONSTRAINT "time_windows_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

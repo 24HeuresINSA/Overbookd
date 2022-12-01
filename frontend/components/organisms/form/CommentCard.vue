@@ -36,9 +36,7 @@
 </template>
 
 <script lang="ts">
-import { RepoFactory } from "~/repositories/repoFactory";
 import Vue from "vue";
-import { safeCall } from "~/utils/api/calls";
 import { subject_type, fa_comments } from "~/utils/models/FA";
 
 export default Vue.extend({
@@ -83,7 +81,6 @@ export default Vue.extend({
           subject: subject_type.COMMENT,
           comment: this.newComment,
           author: this.me.id,
-          team_id: 1, //TODO Change
           created_at: new Date(),
         };
 
