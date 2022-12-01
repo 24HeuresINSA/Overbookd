@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-sheet tile height="54" class="d-flex">
-      <v-btn icon class="ma-2" @click="$refs.formCalendar.prev()">
+      <v-btn icon class="ma-2" @click="previousPage()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer class="calendar-title">
@@ -13,7 +13,7 @@
           }}
         </div>
       </v-spacer>
-      <v-btn icon class="ma-2" @click="$refs.formCalendar.next()">
+      <v-btn icon class="ma-2" @click="nextPage()">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-sheet>
@@ -78,6 +78,16 @@ export default Vue.extend({
     },
     getEventColor(event: any): string {
       return event.color;
+    },
+    previousPage() {
+      const calendar = this.$refs.formCalendar;
+      // @ts-ignore
+      if (calendar) calendar.prev();
+    },
+    nextPage() {
+      const calendar = this.$refs.formCalendar;
+      // @ts-ignore
+      if (calendar) calendar.next();
     },
   },
 });

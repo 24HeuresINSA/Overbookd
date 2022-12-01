@@ -73,7 +73,9 @@
               ? mTimeWindow.timeEnd
               : ''
           "
-          @click:minute="$refs.menuTimeStart.save(mTimeWindow.timeStart)"
+          @click:minute="
+            saveMenuTime($refs.menuTimeStart, mTimeWindow.timeStart)
+          "
         ></v-time-picker>
       </v-menu>
     </div>
@@ -139,7 +141,7 @@
               ? mTimeWindow.timeStart
               : ''
           "
-          @click:minute="$refs.menuTimeEnd.save(mTimeWindow.timeEnd)"
+          @click:minute="saveMenuTime($refs.menuTimeEnd, mTimeWindow.timeEnd)"
         ></v-time-picker>
       </v-menu>
     </div>
@@ -289,6 +291,9 @@ export default Vue.extend({
           this.mTimeWindow.dateEnd + " " + this.mTimeWindow.timeEnd
         ),
       };
+    },
+    saveMenuTime(menu: any, time: string) {
+      menu.save(time);
     },
   },
 });
