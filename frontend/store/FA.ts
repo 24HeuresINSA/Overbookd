@@ -119,6 +119,7 @@ export const mutations = mutationTree(state, {
     if (mFA.time_windows && mFA.time_windows[index]) {
       mFA.time_windows[index].start = timeWindow.start;
       mFA.time_windows[index].end = timeWindow.end;
+      mFA.time_windows[index].type = timeWindow.type;
     }
   },
 

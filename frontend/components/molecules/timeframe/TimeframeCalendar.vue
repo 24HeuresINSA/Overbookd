@@ -21,10 +21,10 @@
       ref="formCalendar"
       v-model="value"
       type="week"
-      color="primary"
       :events="events"
-      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      :event-color="getEventColor"
       :event-ripple="false"
+      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       event-name="plage"
     ></v-calendar>
   </div>
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { time_windows_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "TimeframeCalendar",
@@ -51,6 +52,10 @@ export default Vue.extend({
         const timeframe = {
           start: this.formatDateForCalendar(timeframes[i].start),
           end: this.formatDateForCalendar(timeframes[i].end),
+          color:
+            timeframes[i].type == time_windows_type.MATOS
+              ? "secondary"
+              : "primary",
         };
         events.push(timeframe);
       }
@@ -70,6 +75,9 @@ export default Vue.extend({
       const minutes = date.getMinutes();
       const seconds = date.getSeconds();
       return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    },
+    getEventColor(event: any): string {
+      return event.color;
     },
   },
 });

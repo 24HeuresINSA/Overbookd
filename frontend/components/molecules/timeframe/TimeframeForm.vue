@@ -143,7 +143,9 @@
         ></v-time-picker>
       </v-menu>
     </div>
-    <v-card-text>Minuit = 00:00 du jour d'après</v-card-text>
+    <v-card-text
+      >Les activités en journée se passent entre 11h et 18h.</v-card-text
+    >
 
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -241,19 +243,23 @@ export default Vue.extend({
         }`;
 
         this.mTimeWindow.type = timeframe.type;
-      } else {
-        this.mTimeWindow.type = "";
-        this.mTimeWindow.dateStart = "";
-        this.mTimeWindow.dateEnd = "";
-        this.mTimeWindow.timeStart = "";
-        this.mTimeWindow.timeEnd = "";
-      }
+      } else this.clearLocalVariable();
+    },
+    clearLocalVariable() {
+      this.mTimeWindow = {
+        dateStart: "",
+        dateEnd: "",
+        timeStart: "",
+        timeEnd: "",
+        type: "",
+      };
     },
     addTimeframe() {
       if (this.formIsInvalid()) return;
 
       this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
       this.$emit("close-dialog");
+      this.clearLocalVariable();
     },
     editTimeframe() {
       if (this.formIsInvalid()) return;
