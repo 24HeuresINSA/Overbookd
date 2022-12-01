@@ -6,6 +6,7 @@
         v-model="name"
         append-icon="mdi-hammer-screwdriver"
         label="Nom du matos"
+        autofocus
         clearable
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
@@ -18,6 +19,7 @@
         append-icon="mdi-label"
         label="Nom de la categorie"
         clearable
+        autofocus
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
         counter
@@ -29,6 +31,7 @@
         append-icon="mdi-account-multiple"
         label="Nom de l'equipe responsable"
         clearable
+        autofocus
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
         counter
