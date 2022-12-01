@@ -6,10 +6,10 @@
     item-text="name"
     chips
     clearable
-    filled
     item-value="code"
     :label="label"
-    solo
+    :solo="boxed"
+    :filled="boxed"
     return-object
     @change="propagateEvent"
   >
@@ -24,7 +24,6 @@ import Vue from "vue";
 import { team } from "~/utils/models/repo";
 
 interface SearchTeamData {
-  team?: team;
   loading: boolean;
 }
 
@@ -41,7 +40,11 @@ export default Vue.extend({
     },
     team: {
       type: Object,
-      default: undefined,
+      default: null,
+    },
+    boxed: {
+      type: Boolean,
+      default: true,
     },
   },
   data(): SearchTeamData {
@@ -59,7 +62,7 @@ export default Vue.extend({
     this.$accessor.team.setTeamsInStore();
   },
   methods: {
-    propagateEvent(team: team) {
+    propagateEvent(team: team | null) {
       this.$emit("change", team);
     },
   },
