@@ -1,10 +1,10 @@
 <template>
   <v-card class="gear">
+    <v-btn class="close-btn" icon @click="closeDialog">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
     <v-card-title class="gear__title">
       <h2>Matos</h2>
-      <v-btn icon dark @click="closeDialog">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
     </v-card-title>
     <v-card-text>
       <form>
@@ -116,6 +116,7 @@ export default Vue.extend({
       text-align: center;
     }
   }
+
   form {
     display: flex;
     flex-direction: column;
@@ -123,6 +124,12 @@ export default Vue.extend({
     .fields {
       width: 80%;
     }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 3px;
+    right: 3px;
   }
 }
 </style>
