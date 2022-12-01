@@ -25,6 +25,11 @@ export enum subject_type {
   SUBMIT = "SUBMIT",
 }
 
+export enum time_windows_type {
+  ANIM = "ANIM",
+  MATOS = "MATOS",
+}
+
 export interface FA {
   id: number;
   name: string;
@@ -104,6 +109,7 @@ export interface fa_comments {
 
 export interface time_windows {
   id?: number;
+  type: time_windows_type;
   start: Date;
   end: Date;
 }
