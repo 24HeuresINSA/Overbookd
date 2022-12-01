@@ -1,4 +1,4 @@
-FROM node:16.17.1-alpine3.16 AS builder
+FROM node:19.2.0-alpine3.16 AS builder
 
 WORKDIR /overbookd/backend
 
@@ -14,7 +14,7 @@ RUN npm run build
 
 RUN npm prune --production
 
-FROM node:16.17.1-alpine3.16
+FROM node:19.2.0-alpine3.16
 
 ENV NODE_ENV production
 
