@@ -12,7 +12,7 @@
         :disabled="loading"
         counter
         :rules="[searchRules.minLength]"
-        @input="searchGears"
+        @keydown="searchOnEnter"
       ></v-text-field>
       <v-text-field
         v-model="category"
@@ -24,7 +24,7 @@
         :disabled="loading"
         counter
         :rules="[searchRules.minLength]"
-        @input="searchGears"
+        @keydown="searchOnEnter"
       ></v-text-field>
       <SearchTeam
         v-model="team"
@@ -92,7 +92,6 @@ interface GearListingData {
     minLength: (value: string | null) => boolean | string;
   };
   loading: boolean;
-  searchDelay?: any;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
@@ -120,7 +119,6 @@ export default Vue.extend({
           `Taper au moins ${searchMinLength} caracteres`,
       },
       loading: false,
-      searchDelay: undefined,
       selectedGear: undefined,
       isUpdateGearDialogOpen: false,
       isDeleteGearDialogOpen: false,
@@ -145,10 +143,14 @@ export default Vue.extend({
     this.fetchGears({});
   },
   methods: {
-    searchGears() {
+    async searchGears() {
       if (!this.canSearch) return;
       const searchOptions = this.buildSearchOptions();
-      this.waitForUserTypingBerforeAction(() => this.fetchGears(searchOptions));
+      await this.fetchGears(searchOptions);
+    },
+    searchOnEnter(keyEvent: KeyboardEvent) {
+      if (keyEvent.key !== "Enter") return;
+      return this.searchGears();
     },
     async fetchGears(searchOptions: GearSearchOptions) {
       this.loading = true;
@@ -184,11 +186,6 @@ export default Vue.extend({
         searchOptions = { ...searchOptions, owner: this.team?.code };
       }
       return searchOptions;
-    },
-    waitForUserTypingBerforeAction(action: () => Promise<any>) {
-      if (this.searchDelay) clearTimeout(this.searchDelay);
-
-      this.searchDelay = setTimeout(action, 300);
     },
     async deleteGear() {
       if (!this.selectedGear) return;
