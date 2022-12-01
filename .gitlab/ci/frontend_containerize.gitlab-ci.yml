@@ -37,7 +37,7 @@ merge_requests_containerize-frontend:
       changes:
         - frontend/**/*
     - when: never
-  needs: ["lintage-frontend"]
+  needs: ["lintage-frontend", "ts-prune-frontend"]
   stage: docker
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY

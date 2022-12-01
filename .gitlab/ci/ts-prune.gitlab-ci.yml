@@ -1,7 +1,7 @@
 .ts-prune:
   interruptible: true
   image: node
-  stage: ts-prune
+  stage: lintage
 
 ts-prune-frontend:
   extends: .ts-prune
