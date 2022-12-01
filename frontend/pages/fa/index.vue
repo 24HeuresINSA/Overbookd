@@ -2,7 +2,7 @@
   <div>
     <h1>Fiches Activités</h1>
 
-    <v-container class="container">
+    <div class="custom_container">
       <v-container class="sidebar">
         <v-card>
           <v-card-title>Filtres</v-card-title>
@@ -112,7 +112,7 @@
           </template>
         </v-data-table>
       </v-card>
-    </v-container>
+    </div>
 
     <v-dialog v-model="isNewFADialogOpen" max-width="600">
       <v-card>
@@ -564,10 +564,9 @@ h1 {
   margin-left: 0;
 }
 
-.container {
+.custom_container {
   display: flex;
-  width: 100%;
-  margin: 0;
+  margin: 1%;
 }
 
 .sidebar {
@@ -578,6 +577,7 @@ h1 {
 .data-table {
   margin-left: 20px;
   height: fit-content;
+  width: 100vw;
 }
 
 .btn-check {
@@ -592,7 +592,7 @@ h1 {
 }
 
 @media only screen and (max-width: 800px) {
-  .container {
+  .custom_container {
     flex-direction: column;
   }
 
