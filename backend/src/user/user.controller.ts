@@ -109,7 +109,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('sg')
+  @Roles('hard')
   @Get('all')
   @ApiResponse({
     status: 200,
