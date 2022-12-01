@@ -100,7 +100,7 @@ export const mutations = mutationTree(state, {
 
   UPDATE_SIGNA_NEED_COUNT({ mFA }, { index, count }) {
     if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
-      mFA.fa_signa_needs[index].count = count;
+      mFA.fa_signa_needs[index].count = Number(count);
     }
   },
 
