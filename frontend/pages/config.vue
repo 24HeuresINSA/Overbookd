@@ -90,7 +90,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Config",
 
@@ -115,14 +114,24 @@ export default {
 
   async mounted() {
     if (this.$accessor.user.hasRole(this, ["admin", "bureau"])) {
-      this.config.isSignupOpen = this.$accessor.config.getConfig("isSignupOpen");
-      this.config.fb_signup_closed = this.$accessor.config.getConfig("fb_signup_closed");
-      this.config.fb_confirm_submit = this.$accessor.config.getConfig("fb_confirm_submit");
-      this.config.availabilities_description = this.$accessor.config.getConfig("availabilities_description");
-      this.config.max_charisma = this.$accessor.config.getConfig("max_charisma");
-      this.config.isInventoryOpen = this.$accessor.config.getConfig("isInventoryOpen");
-      this.config.show_ft_in_planning = this.$accessor.config.getConfig("show_ft_in_planning");
-      this.config.availabilityMoment = this.$accessor.config.getConfig("availabilityMoment");
+      this.config.isSignupOpen =
+        this.$accessor.config.getConfig("isSignupOpen");
+      this.config.fb_signup_closed =
+        this.$accessor.config.getConfig("fb_signup_closed");
+      this.config.fb_confirm_submit =
+        this.$accessor.config.getConfig("fb_confirm_submit");
+      this.config.availabilities_description = this.$accessor.config.getConfig(
+        "availabilities_description"
+      );
+      this.config.max_charisma =
+        this.$accessor.config.getConfig("max_charisma");
+      this.config.isInventoryOpen =
+        this.$accessor.config.getConfig("isInventoryOpen");
+      this.config.show_ft_in_planning = this.$accessor.config.getConfig(
+        "show_ft_in_planning"
+      );
+      this.config.availabilityMoment =
+        this.$accessor.config.getConfig("availabilityMoment");
     } else {
       await this.$router.push({
         path: "/",
