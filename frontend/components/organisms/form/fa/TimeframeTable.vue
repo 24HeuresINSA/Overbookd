@@ -76,6 +76,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
+      { text: "Type", value: "type" },
       { text: "Date de début", value: "dateStart" },
       { text: "Heure de début", value: "timeStart" },
       { text: "Date de fin", value: "dateEnd" },

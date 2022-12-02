@@ -88,22 +88,14 @@ export default Vue.extend({
         this.newComment = "";
       } else if (this.form === "FT") {
         /*const comment: ft_comment = {
-          ft_id: +this.$route.params.fa,
-          subject: CommentType.COMMENT,
+          subject: subject_type.COMMENT,
           comment: this.newComment,
           author: this.me.id,
           created_at: new Date(),
         };
 
         this.store.addComment(comment);
-        this.newComment = "";
-
-        await safeCall(
-          this.$store,
-          RepoFactory.ftRepo.updateFT(this, this.$accessor.FT.mFT),
-          "sent",
-          "server"
-        );*/
+        this.newComment = "";*/
       }
     },
   },

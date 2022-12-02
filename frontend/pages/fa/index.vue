@@ -27,7 +27,7 @@
                   <v-list-item-title class="small">Brouillon</v-list-item-title>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-title class="small">Soumise </v-list-item-title>
+                  <v-list-item-title class="small">Soumise</v-list-item-title>
                 </v-list-item>
                 <v-list-item>
                   <v-list-item-title class="small">Refusée </v-list-item-title>
@@ -55,7 +55,6 @@
               v-model="isDeletedFilter"
               label="Afficher les FA supprimées"
             ></v-switch>
-            <!--<v-btn text @click="exportCSV">Télécharger ces FA</v-btn>-->
           </v-card-text>
         </v-card>
       </v-container>
@@ -65,6 +64,7 @@
           :headers="headers"
           :items="selectedFAs"
           :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
+          class="elevation-1"
         >
           <template #[`item.validation`]="{ item }">
             <ValidatorsIcons :form="item"></ValidatorsIcons>
@@ -118,11 +118,15 @@
       <v-card>
         <v-card-title>Ajouter une nouvelle FA</v-card-title>
         <v-card-text>
-          <v-text-field v-model="faName" label="Nom de la FA"></v-text-field>
+          <v-text-field
+            v-model="faName"
+            label="Nom de la FA"
+            @keydown.enter="createNewFA"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="createNewFA">crée la FA</v-btn>
+          <v-btn text @click="createNewFA">créer la FA</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -146,7 +150,7 @@
       small
       @click="isNewFADialogOpen = true"
     >
-      <v-icon small> mdi-plus-thick</v-icon>
+      <v-icon small>mdi-plus-thick</v-icon>
     </v-btn>
   </div>
 </template>
@@ -176,8 +180,8 @@ export default {
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validator" },
         { text: "Nom", value: "name" },
-        { text: "Equipe", value: "Team" }, // .username ?
-        { text: "Resp", value: "user_in_charge" }, // .username ?
+        { text: "Equipe", value: "Team" },
+        { text: "Resp", value: "user_in_charge" },
         { text: "Action", value: "action" },
       ],
       color: {
@@ -345,205 +349,6 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
     },
-
-    /*download(filename, text) {
-      // We use the 'a' HTML element to incorporate file generation into
-      // the browser rather than server-side
-      const element = document.createElement("a");
-      element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-      );
-      element.setAttribute("download", filename);
-
-      element.style.display = "none";
-      element.click();
-    },
-
-    parseHeaders(rawHeaders, prefix) {
-      let header = rawHeaders.next();
-      let str = "";
-
-      while (!header.done) {
-        if (typeof header.value == "string") {
-          str += prefix + header.value + "|";
-        } else {
-          str += prefix + header.value.key + "|";
-        }
-        header = rawHeaders.next();
-      }
-      return str;
-    },
-
-    // Turns a unique (FA, equipment, timeframe) tuple into a CSV line
-    chunkToLine(FA, headers, valid, equipment, start, end) {
-      let csv = [];
-
-      headers.forEach((header, index) => {
-        header = header.split(".");
-        //console.log(header);
-        try {
-          if (header.length == 2) {
-            if (Array.isArray(FA[header[0]])) {
-              let length = FA[header[0]].length;
-              for (let i = 0; i < length; i++) {
-                csv[i + index] = FA[header[0]][i][header[1]];
-              }
-            } else {
-              csv[index] = FA[header[0]][header[1]];
-            }
-          } else if (header.length == 3) {
-            csv[index] = FA[header[0]][header[1]][header[2]];
-          } else {
-            csv[index] = FA[header];
-          }
-        } catch (TypeError) {
-          csv[index] = undefined;
-        }
-      });
-
-      if (typeof equipment != "string") {
-        csv[headers.length - 1] = equipment.name;
-        csv[headers.length] = start;
-        csv[headers.length + 1] = end;
-        csv[headers.length + 2] = equipment.required;
-      } else {
-        csv[headers.length - 1] = equipment;
-        csv[headers.length] = start;
-        csv[headers.length + 1] = end;
-        csv[headers.length + 2] = 0;
-      }
-
-      for (let i = 0; i < 6; i++) csv[i + 3 + headers.length] = valid[i];
-
-      return csv.join("|") + "\n";
-    },
-
-    // Splits a FA into a CSV line for every timeframe and every equipment
-    faToCSV(FA, headers, validStatuses) {
-      let csv = "";
-
-      if (FA.timeframes.length == 0 && FA.equipments.length == 0) {
-        csv += this.chunkToLine(
-          FA,
-          headers,
-          validStatuses,
-          "Aucun équipement",
-          "N/A",
-          "N/A"
-        );
-      } else if (FA.timeframes.length == 0) {
-        FA.equipments.forEach((equipment) => {
-          csv += this.chunkToLine(
-            FA,
-            headers,
-            validStatuses,
-            equipment,
-            "N/A",
-            "N/A"
-          );
-        });
-      } else if (FA.equipments.length == 0) {
-        FA.timeframes.forEach((timeframe) => {
-          let dS = new Date(timeframe.start);
-          let dE = new Date(timeframe.end);
-          dS =
-            [dS.getMonth() + 1, dS.getDate(), dS.getFullYear()].join("/") +
-            " " +
-            [dS.getHours(), dS.getMinutes(), dS.getSeconds()].join(":");
-          dE =
-            [dE.getMonth() + 1, dE.getDate(), dE.getFullYear()].join("/") +
-            " " +
-            [dE.getHours(), dE.getMinutes(), dE.getSeconds()].join(":");
-
-          csv += this.chunkToLine(
-            FA,
-            headers,
-            validStatuses,
-            "Aucun équipement",
-            dS,
-            dE
-          );
-        });
-      } else {
-        FA.timeframes.forEach((timeframe) => {
-          FA.equipments.forEach((equipment) => {
-            let dS = new Date(timeframe.start);
-            let dE = new Date(timeframe.end);
-            dS =
-              [dS.getMonth() + 1, dS.getDate(), dS.getFullYear()].join("/") +
-              " " +
-              [dS.getHours(), dS.getMinutes(), dS.getSeconds()].join(":");
-            dE =
-              [dE.getMonth() + 1, dE.getDate(), dE.getFullYear()].join("/") +
-              " " +
-              [dE.getHours(), dE.getMinutes(), dE.getSeconds()].join(":");
-
-            csv += this.chunkToLine(
-              FA,
-              headers,
-              validStatuses,
-              equipment,
-              dS,
-              dE
-            );
-          });
-        });
-      }
-      return csv;
-    },
-
-    // Gets config, generates headers, builds CSV and sends it off to download.
-    async exportCSV() {
-      let csv = "";
-      let headers = "";
-
-      let forms = [
-        [this.$accessor.config.getConfig("fa_general_form"), "general."],
-        [this.$accessor.config.getConfig("fa_external_form"), "external."],
-        [this.$accessor.config.getConfig("fa_details_form"), "details."],
-        [this.$accessor.config.getConfig("fa_security_form"), "security."],
-        [this.$accessor.config.getConfig("fa_water_form"), "elec."],
-        [
-          this.$accessor.config.getConfig("fa_signalisation_form"),
-          "signalisation.",
-        ],
-      ];
-
-      forms.forEach((form) => {
-        headers += this.parseHeaders(form[0].values(), form[1]);
-      });
-
-      headers = headers.replaceAll(
-        "general.inCharge",
-        "general.inCharge.username"
-      );
-
-      const FAs = this.selectedFAs;
-      let validators = this.$accessor.config.getConfig("fa_validators");
-      csv += headers + "equipment|début|fin|qté|" + validators.join("|") + "\n";
-
-      FAs.forEach((FA) => {
-        let validStatuses = [];
-        validators.forEach((validator, index) => {
-          if (FA.validated.includes(validator)) {
-            validStatuses[index] = "oui";
-          } else if (validator in FA.refused) {
-            validStatuses[index] = "non";
-          } else {
-            validStatuses[index] = "n/a";
-          }
-        });
-
-        csv += this.faToCSV(FA, headers.split("|"), validStatuses);
-      });
-
-      const regex = new RegExp(/undefined/i, "g");
-
-      let parsedCSV = csv.replaceAll(regex, "@");
-      // Prompt the browser to start file download
-      this.download("choucroute.csv", parsedCSV);
-    },*/
   },
 };
 </script>

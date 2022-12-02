@@ -36,6 +36,10 @@ export enum fa_type {
   Spectacle = "Spectacle",
   Autre = "Autre",
 }
+export enum time_windows_type {
+  ANIM = "ANIM",
+  MATOS = "MATOS",
+}
 
 export interface FA {
   id: number;
@@ -113,6 +117,7 @@ export interface fa_comments {
 
 export interface time_windows {
   id?: number;
+  type: time_windows_type;
   start: Date;
   end: Date;
 }
