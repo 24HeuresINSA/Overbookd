@@ -143,7 +143,7 @@ enum Status {
 model fa {
   id                   Int                    @id @default(autoincrement())
   name                 String                 @db.VarChar(255)
-  fa_type_name         fa_type?               @relation(fields: [type], references: [name])
+  fa_type_name         fa_type?
   type                 String?                @db.VarChar(255)
   Team                 Team?                  @relation(fields: [team_id], references: [id])
   team_id              Int?
@@ -172,9 +172,16 @@ model fa {
   time_windows         time_windows[]
 }
 
-model fa_type {
-  name String @id @db.VarChar(255)
-  fa   fa[]
+enum fa_type {
+  Concert
+  Course
+  Divertissement
+  Initiation
+  Tournoi
+  Vente
+  Prevention
+  Spectacle
+  Autre
 }
 
 model fa_validation {

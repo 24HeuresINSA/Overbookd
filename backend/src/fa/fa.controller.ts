@@ -19,7 +19,7 @@ import { Roles } from '../auth/team-auth.decorator';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
-import { FaResponse } from './fa_types';
+import { FaResponse, AllFaResponse } from './fa_types';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -47,7 +47,7 @@ export class FaController {
     description: 'Get all fa',
     type: Array,
   })
-  findAll(): Promise<fa[] | null> {
+  findAll(): Promise<AllFaResponse[] | null> {
     return this.faService.findAll();
   }
 

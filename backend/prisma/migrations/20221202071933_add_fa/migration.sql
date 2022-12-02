@@ -2,6 +2,9 @@
 CREATE TYPE "Status" AS ENUM ('DRAFT', 'SUBMITTED', 'VALIDATED', 'REFUSED');
 
 -- CreateEnum
+CREATE TYPE "fa_type" AS ENUM ('Concert', 'Course', 'Divertissement', 'Initiation', 'Tournoi', 'Vente', 'Prevention', 'Spectacle', 'Autre');
+
+-- CreateEnum
 CREATE TYPE "locationType" AS ENUM ('DEPOT', 'STOCKAGE', 'MAGASIN', 'SIGNA', 'AUTRE');
 
 -- CreateEnum
@@ -21,6 +24,7 @@ ADD COLUMN     "ft_validator" BOOLEAN NOT NULL DEFAULT false;
 CREATE TABLE "fa" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
+    "fa_type_name" "fa_type",
     "type" VARCHAR(255),
     "team_id" INTEGER,
     "in_charge" INTEGER,
@@ -39,13 +43,6 @@ CREATE TABLE "fa" (
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "fa_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "fa_type" (
-    "name" VARCHAR(255) NOT NULL,
-
-    CONSTRAINT "fa_type_pkey" PRIMARY KEY ("name")
 );
 
 -- CreateTable
@@ -148,9 +145,6 @@ CREATE TABLE "time_windows" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "collaborator_firstname_lastname_key" ON "collaborator"("firstname", "lastname");
-
--- AddForeignKey
-ALTER TABLE "fa" ADD CONSTRAINT "fa_type_fkey" FOREIGN KEY ("type") REFERENCES "fa_type"("name") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "fa" ADD CONSTRAINT "fa_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;

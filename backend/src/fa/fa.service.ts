@@ -8,7 +8,12 @@ import { UpdateFaDto } from './dto/update-fa.dto';
 import { PrismaService } from '../prisma.service';
 import { NotFoundError } from '@prisma/client/runtime';
 import { CreateFaDto } from './dto/create-fa.dto';
-import { FaResponse, COMPLETE_FA_SELECT, ALL_FA_SELECT } from './fa_types';
+import {
+  FaResponse,
+  AllFaResponse,
+  COMPLETE_FA_SELECT,
+  ALL_FA_SELECT,
+} from './fa_types';
 
 @Injectable()
 export class FaService {
@@ -18,7 +23,7 @@ export class FaService {
   /** GET **/
   /**     **/
 
-  async findAll(): Promise<fa[] | null> {
+  async findAll(): Promise<AllFaResponse[] | null> {
     return this.prisma.fa.findMany({
       where: {
         is_deleted: false,

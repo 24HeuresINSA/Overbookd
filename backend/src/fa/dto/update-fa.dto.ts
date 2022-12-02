@@ -15,6 +15,19 @@ export enum Status {
   VALIDATED = 'VALIDATED',
   REFUSED = 'REFUSED',
 }
+
+enum fa_type {
+  Concert = 'Concert',
+  Course = 'Course',
+  Divertissement = 'Divertissement',
+  Initiation = 'Initiation',
+  Tournoi = 'Tournoi',
+  Vente = 'Vente',
+  Prevention = 'Prevention',
+  Spectacle = 'Spectacle',
+  Autre = 'Autre',
+}
+
 export class UpdateFaDto {
   @ApiProperty({
     required: true,
@@ -35,9 +48,12 @@ export class UpdateFaDto {
     required: false,
     description: 'The type of the fa',
   })
-  @IsString()
+  @IsEnum(fa_type, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(Status)}`,
+  })
   @IsOptional()
-  type?: string;
+  type?: fa_type;
 
   @ApiProperty({
     required: false,

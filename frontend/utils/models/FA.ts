@@ -25,10 +25,22 @@ export enum subject_type {
   SUBMIT = "SUBMIT",
 }
 
+export enum fa_type {
+  Concert = "Concert",
+  Course = "Course",
+  Divertissement = "Divertissement",
+  Initiation = "Initiation",
+  Tournoi = "Tournoi",
+  Vente = "Vente",
+  Prevention = "Prevention",
+  Spectacle = "Spectacle",
+  Autre = "Autre",
+}
+
 export interface FA {
   id: number;
   name: string;
-  type?: string;
+  type?: fa_type;
   team_id?: number;
   in_charge?: number;
   created_at?: Date;

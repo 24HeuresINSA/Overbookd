@@ -17,18 +17,7 @@
         <v-select
           :value="mFA.type"
           label="Type"
-          :items="[
-            'Concert',
-            'Course',
-            'Divertissement',
-            'Initiation',
-            'Match de Gala',
-            'Tournoi',
-            'Vente',
-            'Prévention',
-            'Spectacle',
-            'Autre',
-          ]"
+          :items="all_types"
           @change="onChange('type', $event)"
         ></v-select>
         <v-select
@@ -54,7 +43,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA } from "~/utils/models/FA";
+import { FA, fa_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FAGeneralCard",
@@ -67,6 +56,10 @@ export default Vue.extend({
     },
     teams(): Array<any> {
       return this.$accessor.team.allTeams;
+    },
+    all_types(): Array<string> {
+      //return fa_type as an array
+      return Object.values(fa_type);
     },
   },
   async mounted() {
