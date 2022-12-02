@@ -1,9 +1,4 @@
 import {
-  InMemoryCategoryRepository,
-  InMemoryGearRepository,
-  InMemoryTeamRepository,
-} from './in-memory';
-import {
   PrismaCategoryRepository,
   PrismaGearRepository,
   PrismaTeamRepository,
