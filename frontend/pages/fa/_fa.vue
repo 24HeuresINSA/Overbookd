@@ -188,7 +188,6 @@ import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import { safeCall } from "../../utils/api/calls";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
@@ -303,7 +302,7 @@ export default Vue.extend({
 
     validate(validator: any) {
       if (validator) {
-        this.$accessor.FA.validate(validator.name);
+        this.$accessor.FA.validate(validator.id);
         this.saveFA();
       }
     },

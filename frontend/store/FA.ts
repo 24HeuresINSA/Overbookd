@@ -9,6 +9,7 @@ import {
   fa_signa_needs,
   Status,
   time_windows,
+  fa_validation_body,
 } from "~/utils/models/FA";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -250,15 +251,20 @@ export const actions = actionTree(
       await Promise.all(allPromise);
     },
 
-    validate: async function ({ dispatch, commit, state }, validator: string) {
-      commit("VALIDATE", validator);
+    validate: async function (
+      { dispatch, commit, state },
+      validator_id: number
+    ) {
       // @ts-ignore
       const MAX_VALIDATORS = this.$accessor.team.faValidators;
       if (state.validated_by.length === MAX_VALIDATORS) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
       }
-      await dispatch("saveFA");
+      const body: fa_validation_body = {
+        team_id: validator_id,
+      };
+      await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
     },
 
     refuse: async function ({ dispatch, commit }, validator: string) {

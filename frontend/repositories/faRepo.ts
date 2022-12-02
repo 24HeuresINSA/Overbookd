@@ -7,6 +7,7 @@ import {
   time_windows,
   fa_electricity_needs,
   fa_comments,
+  fa_validation_body,
 } from "~/utils/models/FA";
 
 const resource = "/fa";
@@ -65,5 +66,8 @@ export default {
   },
   updateFAComments(context: Context, id: number, comments: fa_comments[]) {
     return context.$axios.post(`/fa-comment/${id}`, comments);
+  },
+  validateFA(context: Context, id: number, body: fa_validation_body) {
+    return context.$axios.post(resource + `/validate/${id}`, body);
   },
 };

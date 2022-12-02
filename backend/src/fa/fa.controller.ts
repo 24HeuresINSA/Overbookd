@@ -96,7 +96,7 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('validate')
+  @Post('validate/:id')
   @ApiResponse({
     status: 201,
     description: 'Validate a fa',
@@ -105,15 +105,16 @@ export class FaController {
   //get id and user id from token
   validate(
     @Request() request: RequestWithUserPayload,
-    @Body() validationdto: validationDto,
+    @Body() team_id: validationDto,
+    @Param('id', ParseIntPipe) faid: number,
   ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.validatefa(user_id, validationdto);
+    return this.faService.validatefa(user_id, faid, team_id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('invalidate')
+  @Post('invalidate/:id')
   @ApiResponse({
     status: 204,
     description: 'Unvalidate a fa',
@@ -121,9 +122,10 @@ export class FaController {
   })
   invalidate(
     @Request() request: RequestWithUserPayload,
-    @Body() validationdto: validationDto,
+    @Body() team_id: validationDto,
+    @Param('id', ParseIntPipe) faid: number,
   ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.invalidatefa(user_id, validationdto);
+    return this.faService.invalidatefa(user_id, faid, team_id);
   }
 }

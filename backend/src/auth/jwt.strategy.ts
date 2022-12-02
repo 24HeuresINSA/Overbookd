@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
       id: id,
       email: email,
-      role,
+      role: role, //IMPORTANT BUG SINON
     };
   }
 }

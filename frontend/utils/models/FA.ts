@@ -141,3 +141,7 @@ export interface fa_general_update {
   water_flow_required?: string;
   is_deleted?: boolean;
 }
+
+export interface fa_validation_body {
+  team_id: number;
+}
