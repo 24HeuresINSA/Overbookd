@@ -90,7 +90,6 @@
 </template>
 
 <script>
-import { getConfig } from "../common/role";
 
 export default {
   name: "Config",
@@ -98,17 +97,14 @@ export default {
   data() {
     return {
       config: {
-        isSignupOpen: getConfig(this, "isSignupOpen"),
-        fb_signup_closed: getConfig(this, "fb_signup_closed"),
-        fb_confirm_submit: getConfig(this, "fb_confirm_submit"),
-        availabilities_description: getConfig(
-          this,
-          "availabilities_description"
-        ),
-        max_charisma: getConfig(this, "max_charisma"),
-        isInventoryOpen: getConfig(this, "isInventoryOpen"),
-        show_ft_in_planning: getConfig(this, "show_ft_in_planning"),
-        availabilityMoment: getConfig(this, "availabilityMoment"),
+        isSignupOpen: undefined,
+        fb_signup_closed: undefined,
+        fb_confirm_submit: undefined,
+        availabilities_description: undefined,
+        max_charisma: undefined,
+        isInventoryOpen: undefined,
+        show_ft_in_planning: undefined,
+        availabilityMoment: undefined,
       },
       dialog: false,
       load: false,
@@ -119,7 +115,14 @@ export default {
 
   async mounted() {
     if (this.$accessor.user.hasRole(this, ["admin", "bureau"])) {
-      //TODO: Invert this to avoid empty if
+      this.config.isSignupOpen = this.$accessor.config.getConfig("isSignupOpen");
+      this.config.fb_signup_closed = this.$accessor.config.getConfig("fb_signup_closed");
+      this.config.fb_confirm_submit = this.$accessor.config.getConfig("fb_confirm_submit");
+      this.config.availabilities_description = this.$accessor.config.getConfig("availabilities_description");
+      this.config.max_charisma = this.$accessor.config.getConfig("max_charisma");
+      this.config.isInventoryOpen = this.$accessor.config.getConfig("isInventoryOpen");
+      this.config.show_ft_in_planning = this.$accessor.config.getConfig("show_ft_in_planning");
+      this.config.availabilityMoment = this.$accessor.config.getConfig("availabilityMoment");
     } else {
       await this.$router.push({
         path: "/",
