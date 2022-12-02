@@ -12,6 +12,7 @@ import {
 import { FaService } from './fa.service';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
+import { validationDto } from './dto/validation.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
@@ -95,7 +96,7 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('validate/:id')
+  @Post('validate')
   @ApiResponse({
     status: 201,
     description: 'Validate a fa',
@@ -103,26 +104,26 @@ export class FaController {
   })
   //get id and user id from token
   validate(
-    @Param('id', ParseIntPipe) id: number,
     @Request() request: RequestWithUserPayload,
+    @Body() validationdto: validationDto,
   ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.validatefa(id, user_id);
+    return this.faService.validatefa(user_id, validationdto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Delete('validate/:id')
+  @Post('invalidate')
   @ApiResponse({
     status: 204,
     description: 'Unvalidate a fa',
     type: Promise<fa | null>,
   })
   invalidate(
-    @Param('id', ParseIntPipe) id: number,
     @Request() request: RequestWithUserPayload,
+    @Body() validationdto: validationDto,
   ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.invalidatefa(id, user_id);
+    return this.faService.invalidatefa(user_id, validationdto);
   }
 }
