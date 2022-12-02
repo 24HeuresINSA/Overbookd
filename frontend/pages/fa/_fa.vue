@@ -76,7 +76,7 @@
 
     <div class="bottom-bar">
       <div>
-        <v-btn v-if="mFA.id > 1" small fab :href="`/fa/${mFA.id - 1}`">
+        <v-btn v-if="mFA.id > 1" small fab :to="`/fa/${mFA.id - 1}`">
           <v-icon small>mdi-arrow-left</v-icon>
         </v-btn>
 
@@ -159,7 +159,7 @@
         @click="undelete"
         >récupérer
       </v-btn>
-      <v-btn small fab :href="`/fa/${mFA.id + 1}`">
+      <v-btn small fab :to="`/fa/${mFA.id + 1}`">
         <v-icon small>mdi-arrow-right</v-icon>
       </v-btn>
     </div>
