@@ -16,6 +16,9 @@ CREATE TYPE "signa_type" AS ENUM ('BANNIERE', 'PANCARTE', 'PANNEAU');
 -- CreateEnum
 CREATE TYPE "subject_type" AS ENUM ('REFUSED', 'VALIDATED', 'COMMENT');
 
+-- CreateEnum
+CREATE TYPE "time_windows_type" AS ENUM ('ANIM', 'MATOS');
+
 -- AlterTable
 ALTER TABLE "Team" ADD COLUMN     "fa_validator" BOOLEAN NOT NULL DEFAULT false,
 ADD COLUMN     "ft_validator" BOOLEAN NOT NULL DEFAULT false;
@@ -139,6 +142,7 @@ CREATE TABLE "time_windows" (
     "fa_id" INTEGER NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
+    "type" "time_windows_type" NOT NULL,
 
     CONSTRAINT "time_windows_pkey" PRIMARY KEY ("id")
 );

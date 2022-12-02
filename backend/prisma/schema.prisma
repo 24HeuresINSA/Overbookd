@@ -300,12 +300,18 @@ model fa_comments {
   created_at  DateTime     @default(now())
 }
 
+enum time_windows_type {
+  ANIM
+  MATOS
+}
+
 model time_windows {
-  id    Int      @id @default(autoincrement())
-  fa    fa       @relation(fields: [fa_id], references: [id])
+  id    Int               @id @default(autoincrement())
+  fa    fa                @relation(fields: [fa_id], references: [id])
   fa_id Int
   start DateTime
   end   DateTime
+  type  time_windows_type
 }
 
 model Catalog_Category {

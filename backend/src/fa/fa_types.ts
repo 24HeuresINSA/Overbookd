@@ -114,6 +114,7 @@ export const COMPLETE_FA_SELECT = {
       id: true,
       start: true,
       end: true,
+      type: true,
     },
   },
 };

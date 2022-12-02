@@ -1,5 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsDate, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsEnum,
+  ValidationArguments,
+} from 'class-validator';
+
+enum time_windows_type {
+  ANIM = 'ANIM',
+  MATOS = 'MATOS',
+}
 
 export class CreateTimeWindowDto {
   @ApiProperty({
@@ -25,4 +37,15 @@ export class CreateTimeWindowDto {
   @IsDate()
   @IsNotEmpty()
   end: Date;
+
+  @ApiProperty({
+    required: true,
+    description: 'The type of the time window',
+  })
+  @IsNotEmpty()
+  @IsEnum(time_windows_type, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(time_windows_type)}`,
+  })
+  type: time_windows_type;
 }
