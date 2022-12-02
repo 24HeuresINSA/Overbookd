@@ -10,9 +10,10 @@ import {
 } from './prisma';
 
 export {
-  InMemoryCategoryRepository,
-  InMemoryTeamRepository,
-  InMemoryGearRepository,
+  // Use this for development
+  // InMemoryCategoryRepository,
+  // InMemoryTeamRepository,
+  // InMemoryGearRepository,
   PrismaCategoryRepository,
   PrismaGearRepository,
   PrismaTeamRepository,

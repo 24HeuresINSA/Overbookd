@@ -17,7 +17,7 @@ type GearUpdateForm = GearForm & {
   id: number;
 };
 
-export class GearNotFoundException extends NotFoundException {
+ class GearNotFoundException extends NotFoundException {
   constructor(id: number) {
     super(`Gear #${id} doesn't exist`);
   }

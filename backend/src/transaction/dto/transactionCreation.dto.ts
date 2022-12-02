@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export enum TransactionType {
+enum TransactionType {
   DEPOSIT = 'DEPOSIT',
   EXPENSE = 'EXPENSE',
   TRANSFER = 'TRANSFER',
