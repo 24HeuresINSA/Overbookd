@@ -271,8 +271,9 @@ export const actions = actionTree(
         }
       }
       // @ts-ignore
-      const MAX_VALIDATORS = this.$accessor.team.faValidators;
-      if (state.mFA.fa_validation?.length === MAX_VALIDATORS) {
+      const MAX_VALIDATORS = this.$accessor.team.faValidators.length;
+      // -1 car la validation est faite avant l'ajout du validateur
+      if (state.mFA.fa_validation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
       }
