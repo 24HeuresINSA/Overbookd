@@ -230,6 +230,7 @@ export default Vue.extend({
   data: () => ({
     validationDialog: false,
     refuseDialog: false,
+    refuseComment: "",
 
     faRepo: RepoFactory.faRepo,
 
@@ -314,12 +315,22 @@ export default Vue.extend({
 
     validate(validator: any) {
       if (validator) {
-        this.$accessor.FA.validate(validator.id);
+        const payload = {
+          validator_id: validator.id,
+          user_id: this.$accessor.user.me.id,
+          team_name: validator.name,
+        };
+        this.$accessor.FA.validate(payload);
       }
     },
 
     refuse(validator: any) {
-      this.$accessor.FA.refuse(validator.id);
+      const payload = {
+        validator_id: validator.id,
+        user_id: this.$accessor.user.me.id,
+        message: this.refuseComment,
+      };
+      this.$accessor.FA.refuse(payload);
       this.refuseDialog = false;
     },
 

@@ -137,6 +137,14 @@ export interface fa_comments {
   };
 }
 
+export interface fa_comments_update {
+  id?: number;
+  comment: string;
+  subject: subject_type;
+  created_at?: Date;
+  author: number;
+}
+
 export interface time_windows {
   id?: number;
   type: time_windows_type;
