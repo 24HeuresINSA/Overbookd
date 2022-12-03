@@ -70,15 +70,15 @@
             <ValidatorsIcons :form="item"></ValidatorsIcons>
           </template>
           <template #[`item.name`]="{ item }">
-            <a
-              :href="`/fa/${item.id}`"
+            <nuxt-link
+              :to="`/fa/${item.id}`"
               :style="
                 item.is_deleted === true
                   ? `text-decoration:line-through;`
                   : `text-decoration:none;`
               "
-              >{{ item.name ? item.name : "" }}</a
-            >
+              >{{ item.name ? item.name : "" }}
+            </nuxt-link>
           </template>
           <template #[`item.Team`]="{ item }">
             {{ item.Team ? item.Team.name : "" }}
@@ -95,7 +95,7 @@
           <template #[`item.action`]="row">
             <tr>
               <td>
-                <v-btn class="mx-2" icon small :href="`/fa/${row.item.id}`">
+                <v-btn class="mx-2" icon small :to="`/fa/${row.item.id}`">
                   <v-icon small>mdi-circle-edit-outline</v-icon>
                 </v-btn>
                 <v-btn class="mx-2" icon small @click="preDelete(row.item)">
