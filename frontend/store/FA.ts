@@ -265,6 +265,9 @@ export const actions = actionTree(
       { dispatch, commit, state },
       { validator_id, user_id, team_name }
     ) {
+      //check if the team is already in the list
+      if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
+        return;
       if (state.mFA.fa_refuse?.length === 1) {
         if (state.mFA.fa_refuse[0].Team.id === validator_id) {
           commit("UPDATE_STATUS", Status.SUBMITTED);
@@ -295,6 +298,7 @@ export const actions = actionTree(
       { dispatch, commit, state },
       { validator_id, user_id, message }
     ) {
+      if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
       commit("UPDATE_STATUS", Status.REFUSED);
       const body: fa_validation_body = {
         team_id: validator_id,
