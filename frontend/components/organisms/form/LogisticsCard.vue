@@ -2,49 +2,18 @@
   <v-card :class="isDisabled ? 'card-border' : ''">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
-      <v-container fluid>
-        <v-row dense>
-          <v-col v-if="isDisabled" cols="12">
-            <LogisticsTable
-              :types="types"
-              :store="store"
-              :disabled="isDisabled"
-            ></LogisticsTable>
-          </v-col>
-          <v-col v-else cols="12" lg="8">
-            <LogisticsTable
-              :types="types"
-              :store="store"
-              :disabled="isDisabled"
-            ></LogisticsTable>
-          </v-col>
-          <v-col v-if="!isDisabled" cols="12" lg="4">
-            <v-row dense justify="space-between">
-              <v-col cols="12" lg="10" md="11">
-                <v-autocomplete
-                  v-model="item"
-                  dense
-                  filled
-                  :items="typeFilteredEquipment"
-                  item-text="name"
-                  return-object
-                  chips
-                  allow-overflow
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="12" lg="2" md="1">
-                <v-btn :is-disabled="!validInput" rounded @click="addItem">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-            <LogisticsSelector
-              :types="types"
-              :store="store"
-            ></LogisticsSelector>
-          </v-col>
-        </v-row>
+      <v-container>
+        <div v-if="!isDisabled" class="flex-row">
+          <SearchGear gear="matos"></SearchGear>
+          <v-btn rounded class="margin-btn" @click="addItem">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <LogisticsTable
+          :types="types"
+          :store="store"
+          :disabled="isDisabled"
+        ></LogisticsTable>
       </v-container>
     </v-card-text>
   </v-card>
@@ -53,11 +22,11 @@
 <script lang="ts">
 import Vue from "vue";
 import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
-import LogisticsSelector from "~/components/molecules/logistics/LogisticsSelector.vue";
+import SearchGear from "~/components/atoms/SearchGear.vue";
 
 export default Vue.extend({
   name: "LogisticsCard",
-  components: { LogisticsSelector, LogisticsTable },
+  components: { LogisticsTable, SearchGear },
   props: {
     /**
      * The title to be displayed
@@ -138,5 +107,15 @@ export default Vue.extend({
 <style scoped>
 .card-border {
   border-left: 5px solid green;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.flex-row .margin-btn {
+  margin-left: 20px;
+  margin-bottom: 30px;
 }
 </style>
