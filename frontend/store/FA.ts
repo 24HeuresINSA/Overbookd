@@ -1,4 +1,4 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import {
   collaborator,
   subject_type,
@@ -23,10 +23,6 @@ export const state = () => ({
     status: Status.DRAFT,
     name: "",
   } as FA,
-});
-
-export const getters = getterTree(state, {
-  getFA: (state) => state.mFA,
 });
 
 export const mutations = mutationTree(state, {

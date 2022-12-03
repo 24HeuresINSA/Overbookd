@@ -319,9 +319,7 @@ export default {
     },
 
     async createNewFA() {
-      if (!this.faName) {
-        return;
-      }
+      if (!this.faName) return;
       const FA = {
         name: this.faName,
       };

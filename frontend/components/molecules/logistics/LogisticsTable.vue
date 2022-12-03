@@ -1,8 +1,12 @@
 <template>
-  <v-data-table :headers="headers" :items="gears" dense>
+  <v-data-table :headers="headers" :items="gears">
+    <template #[`item.name`]="{ item }">
+      {{ item.gear.name }}
+    </template>
+
     <template #[`item.quantity`]="{ index, item }">
       <v-text-field
-        :value="item.count ? item.count : '1'"
+        :value="item.quantity"
         type="number"
         min="0"
         step="1"
@@ -11,8 +15,9 @@
         @change="updateGearQuantity(index, $event)"
       ></v-text-field>
     </template>
-    <template #[`item.action`]="{ item }">
-      <v-btn v-if="!isDisabled" icon @click="deleteGear(item.id)">
+
+    <template #[`item.action`]="{ index }">
+      <v-btn v-if="!isDisabled" icon @click="deleteGear(index)">
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
     </template>
@@ -50,8 +55,8 @@ export default Vue.extend({
     updateGearQuantity(gear: any, quantity: number) {
       this.store.updateGearQuantity({ gear: gear, quantity: +quantity });
     },
-    deleteGear(id: number) {
-      this.store.deleteGear(id);
+    deleteGear(index: number) {
+      this.store.deleteGear(index);
     },
   },
 });

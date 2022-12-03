@@ -1,3 +1,5 @@
+import { Gear } from "./catalog.model";
+
 export enum Status {
   DRAFT = "DRAFT",
   SUBMITTED = "SUBMITTED",
@@ -179,7 +181,7 @@ export interface fa_validation_body {
 }
 
 export interface fa_gears {
-  gearId: number;
+  gear: Gear;
   quantity: number;
   start?: Date;
   end?: Date;

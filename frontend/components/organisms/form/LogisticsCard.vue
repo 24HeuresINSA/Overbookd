@@ -66,10 +66,9 @@ export default Vue.extend({
       this.gear = gear;
     },
     async addGear() {
-      console.log("add", this.gear);
       if (this.gear) {
         const faGear: fa_gears = {
-          gearId: this.gear.id,
+          gear: this.gear,
           quantity: 1,
         };
         await this.store.addGear(faGear);
