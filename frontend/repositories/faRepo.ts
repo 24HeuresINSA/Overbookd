@@ -67,15 +67,15 @@ export default {
   },
   updateFAComments(context: Context, id: number, comments: fa_comments[]) {
     //Omit all User_Author
-    const comments_update: fa_comments_update[] = comments.map((comment) => {
-      return {
-        id: comment.id,
-        comment: comment.comment,
-        author: comment.author,
-        subject: comment.subject,
-        created_at: comment.created_at,
-      };
-    });
+    const comments_update: fa_comments_update[] = comments.map(
+      ({ id, comment, author, subject, created_at }) => ({
+        id,
+        comment,
+        author,
+        subject,
+        created_at,
+      })
+    );
     return context.$axios.post(`/fa-comment/${id}`, comments_update);
   },
   validateFA(context: Context, id: number, body: fa_validation_body) {
