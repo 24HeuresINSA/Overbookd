@@ -207,7 +207,7 @@ export const actions = actionTree(
       commit("UPDATE_FA", { key, value });
     },
 
-    save: async function ({ state }) {
+    save: async function ({ dispatch, state }) {
       const allPromise = [];
       allPromise.push(
         RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA)
@@ -249,15 +249,21 @@ export const actions = actionTree(
         );
       }
       await Promise.all(allPromise);
+      dispatch("getAndSet", state.mFA.id);
     },
 
     validate: async function (
       { dispatch, commit, state },
       validator_id: number
     ) {
+      if (state.mFA.fa_refuse?.length === 1) {
+        if (state.mFA.fa_refuse[0].Team.id === validator_id) {
+          commit("UPDATE_STATUS", Status.SUBMITTED);
+        }
+      }
       // @ts-ignore
       const MAX_VALIDATORS = this.$accessor.team.faValidators;
-      if (state.validated_by.length === MAX_VALIDATORS) {
+      if (state.mFA.fa_validation?.length === MAX_VALIDATORS) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
       }
@@ -265,12 +271,16 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
+      dispatch("save");
     },
 
-    refuse: async function ({ dispatch, commit }, validator: string) {
-      commit("REFUSE", validator);
+    refuse: async function ({ dispatch, commit, state }, validator_id: number) {
       commit("UPDATE_STATUS", Status.REFUSED);
-      await dispatch("saveFA");
+      const body: fa_validation_body = {
+        team_id: validator_id,
+      };
+      await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
+      dispatch("save");
     },
 
     async addComment({ commit, state }, comment: fa_comments) {

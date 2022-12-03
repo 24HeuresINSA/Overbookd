@@ -24,13 +24,8 @@
       </div>
 
       <div class="icons">
-        <div
-          v-for="(validator, i) of validators"
-          :key="i"
-          :color="getIconColor(validator)"
-          class="icon"
-        >
-          <v-icon :key="i" size="26">
+        <div v-for="(validator, i) of validators" :key="i" class="icon">
+          <v-icon :key="i" :color="getIconColor(validator)" size="26">
             {{ validator.icon }}
           </v-icon>
           <span class="icon-detail">{{ validator.name }}</span>
@@ -179,6 +174,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="refuseDialog" max-width="600px">
+      <v-card>
+        <v-card-title> Refuser </v-card-title>
+        <v-card-text>
+          <h4>pourquoi c'est de la 💩</h4>
+          <p>sans trop de 🧂</p>
+          <v-textarea v-model="refuseComment" required></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="refuse(mValidators[0])">
+            enregistrer</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -224,7 +236,7 @@ export default Vue.extend({
     statusTrad: new Map<string, string>([
       ["DRAFT", "Brouillon"],
       ["SUBMITTED", "Soumise à validation"],
-      ["REFUSED", "Réfusée"],
+      ["REFUSED", "Refusée"],
       ["VALIDATED", "Validée"],
     ]),
     color: {
@@ -303,8 +315,12 @@ export default Vue.extend({
     validate(validator: any) {
       if (validator) {
         this.$accessor.FA.validate(validator.id);
-        this.saveFA();
       }
+    },
+
+    refuse(validator: any) {
+      this.$accessor.FA.refuse(validator.id);
+      this.refuseDialog = false;
     },
 
     submit() {
@@ -318,19 +334,22 @@ export default Vue.extend({
     },
 
     getIconColor(validator: any) {
-      if (this.FA.validated) {
-        if (this.FA.validated.find((v: any) => v === validator)) {
-          return this.color.validated;
-        }
+      let color = "grey";
+      if (this.FA.mFA.fa_validation) {
+        this.FA.mFA.fa_validation.forEach((validation: any) => {
+          if (Number(validation.Team.id) === Number(validator.id)) {
+            color = "green";
+          }
+        });
       }
-      if (this.FA.refused) {
-        if (this.FA.refused.find((v: any) => v === validator)) {
-          return this.color.refused;
-        }
+      if (this.FA.mFA.fa_refuse) {
+        this.FA.mFA.fa_refuse.forEach((validation: any) => {
+          if (Number(validation.Team.id) === Number(validator.id)) {
+            color = "red";
+          }
+        });
       }
-      if (this.FA.status === "SUBMITTED") {
-        return this.color.submitted;
-      }
+      return color;
     },
   },
 });
@@ -385,7 +404,6 @@ h1 {
 .icons .icon .icon-detail {
   visibility: hidden;
   width: 60px;
-  color: #666666;
   font-size: 15px;
   text-align: center;
   border-radius: 6px;

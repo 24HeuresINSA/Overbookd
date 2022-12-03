@@ -70,4 +70,7 @@ export default {
   validateFA(context: Context, id: number, body: fa_validation_body) {
     return context.$axios.post(resource + `/validate/${id}`, body);
   },
+  refuseFA(context: Context, id: number, body: fa_validation_body) {
+    return context.$axios.post(resource + `/invalidate/${id}`, body);
+  },
 };
