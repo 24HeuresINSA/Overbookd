@@ -48,7 +48,6 @@ export class CatalogService {
 
   async find(id: number): Promise<Gear> {
     const gear = await this.gearRepository.getGear(id);
-    if (!gear) throw new GearNotFoundException(id);
     return gear;
   }
 

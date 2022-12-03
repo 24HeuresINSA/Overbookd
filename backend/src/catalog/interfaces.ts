@@ -39,7 +39,7 @@ export interface SearchCategory {
 }
 
 export interface GearRepository {
-  getGear(id: number): Promise<Gear | undefined>;
+  getGear(id: number): Promise<Gear>;
   addGear(gear: Omit<Gear, 'id'>): Promise<Gear | undefined>;
   updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
