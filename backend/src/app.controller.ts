@@ -11,7 +11,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/team-auth.guard';
 import { Roles } from './auth/team-auth.decorator';
 
-export type Role =
+type Role =
   | 'admin'
   | 'hard'
   | 'soft'
@@ -43,7 +43,7 @@ export type Role =
   | 'sponso'
   | 'sports';
 
-export type JWTPayload = {
+type JWTPayload = {
   username: string;
   userId: number;
   role: Role[];

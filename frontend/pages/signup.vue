@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { getConfig } from "~/common/role";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Snack } from "~/utils/models/snack";
@@ -57,7 +56,7 @@ export default {
 
   methods: {
     getConfig(key) {
-      return getConfig(this, key);
+      return this.$accessor.config.getConfig(key);
     },
 
     onFormChange(form) {

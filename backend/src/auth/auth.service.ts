@@ -17,9 +17,9 @@ import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 
-export type UserCredentials = Pick<User, 'email' | 'password'>;
-export type UserEmail = Pick<User, 'email'>;
-export const ONE_HOUR = 3600000;
+type UserCredentials = Pick<User, 'email' | 'password'>;
+type UserEmail = Pick<User, 'email'>;
+const ONE_HOUR = 3600000;
 
 @Injectable()
 export class AuthService {

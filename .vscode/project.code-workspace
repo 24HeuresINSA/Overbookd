@@ -41,7 +41,8 @@
       "User",
       "Auth",
       "triage",
-      "CP"
+      "CP",
+      "release"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],
@@ -49,13 +50,14 @@
       "**/.git/objects/**": true,
       "**/.git/subtree-cache/**": true,
       "**/node_modules/**": true,
-      "**/docker/data/**": true,
+      "**/docker/data/**": true
     },
     "search.exclude": {
       "**/node_modules": true,
-      "**/docker/data/**": true,
+      "**/docker/data/**": true
     },
     "editor.insertSpaces": true,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": ["source.organizeImports"]
   }
 }

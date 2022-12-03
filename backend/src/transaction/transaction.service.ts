@@ -7,7 +7,7 @@ import { PrismaService } from '../prisma.service';
 import { Transaction, TransactionType } from '@prisma/client';
 import { User } from '@prisma/client';
 
-export type CreateTransaction = Omit<
+type CreateTransaction = Omit<
   Transaction,
   'id' | 'from' | 'type' | 'is_deleted' | 'created_at'
 >;
