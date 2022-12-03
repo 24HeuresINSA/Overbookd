@@ -7,9 +7,20 @@ import {
   PENDING,
 } from './gearRequests.service';
 import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
+import { Status } from '../dto/update-fa.dto';
+import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';
 
-const CHATEAU_GONFLABLE = { id: 1, name: 'Chateau Gonflable' };
-const KRAVMAGA = { id: 2, name: 'Kravmaga' };
+const CHATEAU_GONFLABLE = {
+  id: 1,
+  name: 'Chateau Gonflable',
+  status: Status.DRAFT,
+};
+const KRAVMAGA = { id: 2, name: 'Kravmaga', status: Status.DRAFT };
+const BAR_DECOUVERTE = {
+  id: 3,
+  name: 'Bar Decouverte',
+  status: Status.VALIDATED,
+};
 
 const TABLE: Gear = { id: 1, name: 'Table', slug: 'table' };
 const CHAISE: Gear = { id: 2, name: 'Chaise', slug: 'chaise' };
@@ -39,10 +50,16 @@ const GR_10_CHAISE_CHATEAU_GONFLABLE: GearRequest = {
 describe('Gear requests', () => {
   const gearRequestRepository = new InMemoryGearRequestRepository([]);
   const gearRepository = new InMemoryGearRepository();
+  const animationRepository = new InMemoryAnimationRepository([
+    CHATEAU_GONFLABLE,
+    KRAVMAGA,
+    BAR_DECOUVERTE,
+  ]);
   gearRepository.gears = GEARS;
   const gearRequestService = new GearRequestsService(
     gearRequestRepository,
     gearRepository,
+    animationRepository,
   );
   describe('Create gear requests', () => {
     describe.each`
@@ -119,6 +136,22 @@ describe('Gear requests', () => {
               end: new Date(),
             }),
         ).rejects.toThrow(`Gear #${inexistantGear} doesn\'t exist`);
+      });
+    });
+    describe('When asking gear from a validated animation', () => {
+      it('should inform user animation is already validated', async () => {
+        await expect(
+          async () =>
+            await gearRequestService.addAnimationRequest({
+              seekerId: BAR_DECOUVERTE.id,
+              quantity: 10,
+              gearId: CHAISE.id,
+              start: new Date(),
+              end: new Date(),
+            }),
+        ).rejects.toThrow(
+          `Animation #${BAR_DECOUVERTE.id} already validated, you can't add gear request`,
+        );
       });
     });
   });

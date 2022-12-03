@@ -1,4 +1,6 @@
+import { BadRequestException } from '@nestjs/common';
 import { Gear, GearRepository } from '../../catalog/interfaces';
+import { Status } from '../dto/update-fa.dto';
 
 export const PENDING = 'PENDING';
 
@@ -64,10 +66,28 @@ export interface GearRequestRepository {
   getGearRequests(gearRequestSearch: SearchGearRequest): Promise<GearRequest[]>;
 }
 
+export interface Animation {
+  id: number;
+  name: string;
+  status: Status;
+}
+
+export interface AnimationRepository {
+  getAnimation(animationId: number): Promise<Animation>;
+}
+
+class AnimationAlreadyValidatedError extends BadRequestException {
+  constructor(animationId: number) {
+    const message = `Animation #${animationId} already validated, you can't add gear request`;
+    super(message);
+  }
+}
+
 export class GearRequestsService {
   constructor(
     private readonly gearRequestRepository: GearRequestRepository,
     private readonly gearRepository: GearRepository,
+    private readonly animationRepository: AnimationRepository,
   ) {}
 
   async findGearRequest(gearRequestId: GearRequestIdentifier) {
@@ -81,7 +101,12 @@ export class GearRequestsService {
     start,
     end,
   }: CreateGearRequestForm): Promise<GearRequest> {
-    const existingGear = await this.gearRepository.getGear(gearId);
+    const [existingAnimation, existingGear] = await Promise.all([
+      this.animationRepository.getAnimation(seekerId),
+      this.gearRepository.getGear(gearId),
+    ]);
+    if (existingAnimation.status === Status.VALIDATED)
+      throw new AnimationAlreadyValidatedError(seekerId);
     const gearRequest = {
       seeker: { type: GearSeekerType.Animation, id: seekerId },
       status: PENDING,
