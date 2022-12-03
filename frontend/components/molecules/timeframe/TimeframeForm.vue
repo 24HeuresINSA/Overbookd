@@ -24,7 +24,7 @@
       >
         <template #activator="{ on, attrs }">
           <v-text-field
-            v-model="mTimeWindow.dateStart"
+            v-model="formatDateStart"
             label="Date de début"
             prepend-icon="mdi-calendar"
             readonly
@@ -35,8 +35,12 @@
         </template>
         <v-date-picker
           v-model="mTimeWindow.dateStart"
-          :max="mTimeWindow.dateEnd"
-          @input="menuDateStart = false"
+          :max="formatDateEnd ? mTimeWindow.dateEnd : ''"
+          first-day-of-week="1"
+          @input="
+            menuDateStart = false;
+            formatDateStart = formatDate(mTimeWindow.dateStart);
+          "
         ></v-date-picker>
       </v-menu>
 
@@ -92,7 +96,7 @@
       >
         <template #activator="{ on, attrs }">
           <v-text-field
-            v-model="mTimeWindow.dateEnd"
+            v-model="formatDateEnd"
             label="Date de fin"
             prepend-icon="mdi-calendar"
             readonly
@@ -103,8 +107,12 @@
         </template>
         <v-date-picker
           v-model="mTimeWindow.dateEnd"
-          :min="mTimeWindow.dateStart"
-          @input="menuDateEnd = false"
+          :min="formatDateStart ? mTimeWindow.dateStart : ''"
+          first-day-of-week="1"
+          @input="
+            menuDateEnd = false;
+            formatDateEnd = formatDate(mTimeWindow.dateEnd);
+          "
         ></v-date-picker>
       </v-menu>
 
@@ -188,6 +196,9 @@ export default Vue.extend({
       type: "",
     },
 
+    formatDateStart: "",
+    formatDateEnd: "",
+
     menuDateStart: false,
     menuTimeStart: false,
     menuDateEnd: false,
@@ -199,6 +210,9 @@ export default Vue.extend({
     },
     timeWindowsType(): Array<string> {
       return Object.values(time_windows_type);
+    },
+    manifDate(): string {
+      return this.$accessor.config.getConfig("event_date");
     },
   },
   watch: {
@@ -226,6 +240,7 @@ export default Vue.extend({
         this.mTimeWindow.dateStart = `${year}-${
           month < 10 ? "0" + month : month
         }-${day < 10 ? "0" + day : day}`;
+        this.formatDateStart = this.formatDate(this.mTimeWindow.dateStart);
 
         this.mTimeWindow.timeStart = `${hour < 10 ? "0" + hour : hour}:${
           minute < 10 ? "0" + minute : minute
@@ -240,6 +255,8 @@ export default Vue.extend({
         this.mTimeWindow.dateEnd = `${year}-${
           month < 10 ? "0" + month : month
         }-${day < 10 ? "0" + day : day}`;
+        this.formatDateEnd = this.formatDate(this.mTimeWindow.dateEnd);
+
         this.mTimeWindow.timeEnd = `${hour < 10 ? "0" + hour : hour}:${
           minute < 10 ? "0" + minute : minute
         }`;
@@ -249,12 +266,19 @@ export default Vue.extend({
     },
     clearLocalVariable() {
       this.mTimeWindow = {
-        dateStart: "",
-        dateEnd: "",
+        dateStart: this.manifDate,
+        dateEnd: this.manifDate,
         timeStart: "",
         timeEnd: "",
         type: "",
       };
+    },
+    formatDate(date: string): string {
+      return new Date(date).toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      });
     },
     addTimeframe() {
       if (this.formIsInvalid()) return;
@@ -276,6 +300,8 @@ export default Vue.extend({
       return (
         !this.mTimeWindow.type ||
         !this.mTimeWindow.dateStart ||
+        !this.formatDateStart ||
+        !this.formatDateEnd ||
         !this.mTimeWindow.timeStart ||
         !this.mTimeWindow.dateEnd ||
         !this.mTimeWindow.timeEnd

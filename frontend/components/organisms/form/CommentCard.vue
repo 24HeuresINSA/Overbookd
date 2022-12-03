@@ -76,6 +76,8 @@ export default Vue.extend({
   },
   methods: {
     async addComment() {
+      if (!this.newComment) return;
+
       if (this.form == "FA") {
         const comment: fa_comments = {
           subject: subject_type.COMMENT,
