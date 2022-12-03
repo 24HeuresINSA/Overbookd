@@ -265,14 +265,18 @@ export const actions = actionTree(
       { dispatch, commit, state },
       { validator_id, user_id, team_name }
     ) {
+      //check if the team is already in the list
+      if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
+        return;
       if (state.mFA.fa_refuse?.length === 1) {
         if (state.mFA.fa_refuse[0].Team.id === validator_id) {
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }
       // @ts-ignore
-      const MAX_VALIDATORS = this.$accessor.team.faValidators;
-      if (state.mFA.fa_validation?.length === MAX_VALIDATORS) {
+      const MAX_VALIDATORS = this.$accessor.team.faValidators.length;
+      // -1 car la validation est faite avant l'ajout du validateur
+      if (state.mFA.fa_validation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
       }
@@ -294,6 +298,7 @@ export const actions = actionTree(
       { dispatch, commit, state },
       { validator_id, user_id, message }
     ) {
+      if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
       commit("UPDATE_STATUS", Status.REFUSED);
       const body: fa_validation_body = {
         team_id: validator_id,
@@ -328,7 +333,13 @@ export const actions = actionTree(
       commit("UPDATE_SIGNA_NEED_COUNT", { index, count });
     },
 
-    deleteSignaNeed({ commit }, index: number) {
+    async deleteSignaNeed({ commit, state }, index: number) {
+      if (state.mFA.fa_signa_needs && state.mFA.fa_signa_needs[index]) {
+        const id = state.mFA.fa_signa_needs[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFASignaNeeds(this, id);
+        }
+      }
       commit("DELETE_SIGNA_NEED", index);
     },
 
@@ -340,7 +351,13 @@ export const actions = actionTree(
       commit("UPDATE_TIME_WINDOW", { index, timeWindow });
     },
 
-    deleteTimeWindow({ commit }, index: number) {
+    async deleteTimeWindow({ commit, state }, index: number) {
+      if (state.mFA.time_windows && state.mFA.time_windows[index]) {
+        const id = state.mFA.time_windows[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFATimeWindows(this, id);
+        }
+      }
       commit("DELETE_TIME_WINDOW", index);
     },
 
@@ -360,7 +377,16 @@ export const actions = actionTree(
       commit("ADD_ELECTRICITY_NEED", elecNeed);
     },
 
-    deleteElectricityNeed({ commit }, index: number) {
+    async deleteElectricityNeed({ commit, state }, index: number) {
+      if (
+        state.mFA.fa_electricity_needs &&
+        state.mFA.fa_electricity_needs[index]
+      ) {
+        const id = state.mFA.fa_electricity_needs[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFAElectricityNeeds(this, id);
+        }
+      }
       commit("DELETE_ELECTRICITY_NEED", index);
     },
   }

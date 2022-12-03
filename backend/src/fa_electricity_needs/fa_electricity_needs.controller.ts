@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { FaElectricityNeedsService } from './fa_electricity_needs.service';
 import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto';
@@ -49,5 +50,12 @@ export class FaElectricityNeedsController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<fa_electricity_needs | null> {
     return this.faElectricityNeedsService.findOne(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<fa_electricity_needs> {
+    return this.faElectricityNeedsService.remove(+id);
   }
 }

@@ -106,8 +106,8 @@ export default Vue.extend({
         minute: "numeric",
       });
     },
-    deleteTimeframe(index: number) {
-      this.$accessor.FA.deleteTimeWindow(index);
+    async deleteTimeframe(index: number) {
+      await this.$accessor.FA.deleteTimeWindow(index);
     },
   },
 });

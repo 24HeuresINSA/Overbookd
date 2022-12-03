@@ -48,12 +48,18 @@ export default {
   ) {
     return context.$axios.post(`/fa-signa-needs/${id}`, fa_signa_needs);
   },
+  deleteFASignaNeeds(context: Context, id: number) {
+    return context.$axios.delete(`/fa-signa-needs/${id}`);
+  },
   updateFATimeWindows(
     context: Context,
     id: number,
     time_windows: time_windows[]
   ) {
     return context.$axios.post(`/time-windows/${id}`, time_windows);
+  },
+  deleteFATimeWindows(context: Context, id: number) {
+    return context.$axios.delete(`/time-windows/${id}`);
   },
   updateFAElectricityNeeds(
     context: Context,
@@ -64,6 +70,9 @@ export default {
       `/fa-electricity-needs/${id}`,
       electricity_needs
     );
+  },
+  deleteFAElectricityNeeds(context: Context, id: number) {
+    return context.$axios.delete(`/fa-electricity-needs/${id}`);
   },
   updateFAComments(context: Context, id: number, comments: fa_comments[]) {
     //Omit all User_Author

@@ -46,4 +46,12 @@ export class FaElectricityNeedsService {
       }),
     );
   }
+
+  async remove(id: number): Promise<fa_electricity_needs> {
+    return await this.prisma.fa_electricity_needs.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+  }
 }
