@@ -346,7 +346,7 @@ export default Vue.extend({
       // this.saveFA();
     },
 
-    getIconColor(validator: any) {
+    getIconColor(validator: team) {
       let color = "grey";
       if (this.FA.mFA.fa_validation) {
         this.FA.mFA.fa_validation.forEach((validation: any) => {
