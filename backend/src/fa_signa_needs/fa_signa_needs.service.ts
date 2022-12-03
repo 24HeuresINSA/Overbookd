@@ -45,4 +45,12 @@ export class FaSignaNeedsService {
       },
     });
   }
+
+  async remove(id: number): Promise<fa_signa_needs | null> {
+    return await this.prisma.fa_signa_needs.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+  }
 }

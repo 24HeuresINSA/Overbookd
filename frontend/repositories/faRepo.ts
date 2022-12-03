@@ -48,6 +48,9 @@ export default {
   ) {
     return context.$axios.post(`/fa-signa-needs/${id}`, fa_signa_needs);
   },
+  deleteFASignaNeeds(context: Context, id: number) {
+    return context.$axios.delete(`/fa-signa-needs/${id}`);
+  },
   updateFATimeWindows(
     context: Context,
     id: number,

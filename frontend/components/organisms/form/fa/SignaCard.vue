@@ -179,8 +179,8 @@ export default Vue.extend({
     updateSignalisationCount(index: number, count: number) {
       this.$accessor.FA.updateSignaNeedCount({ index, count });
     },
-    deleteSignalisation(index: number) {
-      this.$accessor.FA.deleteSignaNeed(index);
+    async deleteSignalisation(index: number) {
+      await this.$accessor.FA.deleteSignaNeed(index);
     },
   },
 });

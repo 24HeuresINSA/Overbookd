@@ -333,7 +333,13 @@ export const actions = actionTree(
       commit("UPDATE_SIGNA_NEED_COUNT", { index, count });
     },
 
-    deleteSignaNeed({ commit }, index: number) {
+    async deleteSignaNeed({ commit, state }, index: number) {
+      if (state.mFA.fa_signa_needs && state.mFA.fa_signa_needs[index]) {
+        const id = state.mFA.fa_signa_needs[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFASignaNeeds(this, id);
+        }
+      }
       commit("DELETE_SIGNA_NEED", index);
     },
 

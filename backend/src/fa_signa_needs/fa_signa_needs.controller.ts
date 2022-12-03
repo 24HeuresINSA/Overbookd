@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { FaSignaNeedsService } from './fa_signa_needs.service';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
@@ -43,5 +44,12 @@ export class FaSignaNeedsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.faSignaNeedsService.findOne(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.faSignaNeedsService.remove(+id);
   }
 }
