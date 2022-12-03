@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { TimeWindowsService } from './time_windows.service';
 import { CreateTimeWindowDto } from './dto/create-time_window.dto';
@@ -44,5 +45,12 @@ export class TimeWindowsController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<time_windows | null> {
     return this.timeWindowsService.findOne(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<time_windows | null> {
+    return this.timeWindowsService.remove(+id);
   }
 }

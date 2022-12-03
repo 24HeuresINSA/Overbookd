@@ -58,6 +58,9 @@ export default {
   ) {
     return context.$axios.post(`/time-windows/${id}`, time_windows);
   },
+  deleteFATimeWindows(context: Context, id: number) {
+    return context.$axios.delete(`/time-windows/${id}`);
+  },
   updateFAElectricityNeeds(
     context: Context,
     id: number,

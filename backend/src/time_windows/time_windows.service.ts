@@ -43,4 +43,12 @@ export class TimeWindowsService {
       },
     });
   }
+
+  async remove(id: number): Promise<time_windows | null> {
+    return await this.prisma.time_windows.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
 }

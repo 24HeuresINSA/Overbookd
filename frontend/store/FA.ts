@@ -351,7 +351,13 @@ export const actions = actionTree(
       commit("UPDATE_TIME_WINDOW", { index, timeWindow });
     },
 
-    deleteTimeWindow({ commit }, index: number) {
+    async deleteTimeWindow({ commit, state }, index: number) {
+      if (state.mFA.time_windows && state.mFA.time_windows[index]) {
+        const id = state.mFA.time_windows[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFATimeWindows(this, id);
+        }
+      }
       commit("DELETE_TIME_WINDOW", index);
     },
 
