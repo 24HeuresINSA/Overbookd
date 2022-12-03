@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>Sécurité</v-card-title>
     <v-card-subtitle
       >Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
@@ -10,6 +10,7 @@
         <v-switch
           :value="mFA.is_pass_required"
           label="Besoin de Pass Sécu"
+          :disabled="isDisabled"
           @change="onChange('is_pass_required', $event)"
         ></v-switch>
         <v-text-field
@@ -19,6 +20,7 @@
           type="number"
           min="1"
           step="1"
+          :disabled="isDisabled"
           @change="onChange('number_of_pass', $event)"
         ></v-text-field>
       </v-form>
@@ -32,6 +34,12 @@ import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SecurityCard",
+  props: {
+    isDisabled: {
+      type: Boolean,
+      default: () => false,
+    },
+  },
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;
@@ -47,4 +55,8 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  border-left: 5px solid green;
+}
+</style>

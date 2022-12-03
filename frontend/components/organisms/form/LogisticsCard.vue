@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="isDisabled ? 'card-border' : ''">
+  <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
       <v-container>
@@ -105,7 +105,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.card-border {
+.disabled {
   border-left: 5px solid green;
 }
 

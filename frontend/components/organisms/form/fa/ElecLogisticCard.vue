@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :style="isDisabled ? 'card-border' : ''">
+    <v-card :class="isDisabled ? 'disabled' : ''">
       <v-card-title>Besoin d'électricité</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
@@ -133,7 +133,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.card-border {
+.disabled {
   border-left: 5px solid green;
 }
 </style>

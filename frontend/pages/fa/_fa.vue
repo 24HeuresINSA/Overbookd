@@ -7,11 +7,11 @@
         <span
           class="dot"
           :class="
-            mFA.status == 'SUBMITTED'
+            mFA.status === 'SUBMITTED'
               ? 'orange'
-              : mFA.status == 'REFUSED'
+              : mFA.status === 'REFUSED'
               ? 'red'
-              : mFA.status == 'VALIDATED'
+              : mFA.status === 'VALIDATED'
               ? 'green'
               : 'grey'
           "
@@ -34,12 +34,19 @@
       <FormSummary class="summary"></FormSummary>
     </div>
     <v-container class="container">
-      <FAGeneralCard id="general"></FAGeneralCard>
-      <FADetailCard id="detail"></FADetailCard>
-      <SignaCard id="signa"></SignaCard>
-      <TimeframeTable id="timeframe" :store="FA"></TimeframeTable>
-      <SecurityCard id="security"></SecurityCard>
-      <CollaboratorCard id="presta"></CollaboratorCard>
+      <FAGeneralCard id="general" :is-disabled="isDisabled"></FAGeneralCard>
+      <FADetailCard id="detail" :is-disabled="isDisabled"></FADetailCard>
+      <SignaCard id="signa" :is-disabled="isDisabled"></SignaCard>
+      <TimeframeTable
+        id="timeframe"
+        :store="FA"
+        :is-disabled="isDisabled"
+      ></TimeframeTable>
+      <SecurityCard id="security" :is-disabled="isDisabled"></SecurityCard>
+      <CollaboratorCard
+        id="presta"
+        :is-disabled="isDisabled"
+      ></CollaboratorCard>
       <h2 id="log">Logistique 🚚</h2>
       <h4>
         S'il manque des informations, ou du matos veuillez contacter le
@@ -50,20 +57,26 @@
         title="Matos"
         :types="Object.values({})"
         :store="FA"
+        :is-disabled="isDisabled"
       ></LogisticsCard>
 
       <LogisticsCard
         title="Barrières"
         :types="Object.values({})"
         :store="FA"
+        :is-disabled="isDisabled"
       ></LogisticsCard>
       <LogisticsCard
         title="Matos Elec / Eau"
         :types="Object.values({})"
         :store="FA"
+        :is-disabled="isDisabled"
       ></LogisticsCard>
-      <ElecLogisticCard id="elec"></ElecLogisticCard>
-      <WaterLogisticCard id="water"></WaterLogisticCard>
+      <ElecLogisticCard id="elec" :is-disabled="isDisabled"></ElecLogisticCard>
+      <WaterLogisticCard
+        id="water"
+        :is-disabled="isDisabled"
+      ></WaterLogisticCard>
       <CommentCard id="comment"></CommentCard>
       <!-- <FTCard id="ft"></FTCard> -->
     </v-container>
@@ -279,6 +292,9 @@ export default Vue.extend({
         return mValidator;
       }
       return [];
+    },
+    isDisabled(): boolean {
+      return this.mFA.status === "SUBMITTED" || this.mFA.status === "VALIDATED";
     },
   },
 

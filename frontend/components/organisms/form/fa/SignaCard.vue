@@ -15,7 +15,11 @@
           :disabled="isDisabled"
           @change="selectLocations"
         ></v-autocomplete>-->
-        <v-switch v-model="isSignaRequired" label="Besoin signa"></v-switch>
+        <v-switch
+          v-model="isSignaRequired"
+          label="Besoin signa"
+          :disabled="isDisabled"
+        ></v-switch>
         <div v-if="isSignaRequired">
           <v-data-table :headers="headers" :items="signalisations">
             <template #[`item.action`]="{ index }">

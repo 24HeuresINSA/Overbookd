@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>Presta</v-card-title>
     <v-card-text>
       <v-form v-model="isComplete">
@@ -7,35 +7,41 @@
           :value="collaborator.firstname"
           label="Prénom de l'intervenant*"
           :rules="ruleRequired"
+          :disabled="isDisabled"
           @change="onChange('firstname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.lastname"
           label="Nom de l'intervenant*"
           :rules="ruleRequired"
+          :disabled="isDisabled"
           @change="onChange('lastname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.phone"
           label="Téléphone*"
           :rules="rulePhone"
+          :disabled="isDisabled"
           @change="onChange('phone', $event)"
         >
         </v-text-field>
         <v-text-field
           :value="collaborator.email"
           label="E-mail"
+          :disabled="isDisabled"
           @change="onChange('email', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.company"
           label="Société"
+          :disabled="isDisabled"
           @change="onChange('company', $event)"
         >
         </v-text-field>
         <v-text-field
           :value="collaborator.comment"
           label="Commentaire"
+          :disabled="isDisabled"
           @change="onChange('comment', $event)"
         >
         </v-text-field>
@@ -54,6 +60,12 @@ import { collaborator, fa_collaborators } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CollaboratorCard",
+  props: {
+    isDisabled: {
+      type: Boolean,
+      default: () => false,
+    },
+  },
   data: () => ({
     isComplete: false,
   }),
@@ -124,5 +136,9 @@ export default Vue.extend({
 <style scoped>
 .red-text {
   color: red;
+}
+
+.disabled {
+  border-left: 5px solid green;
 }
 </style>

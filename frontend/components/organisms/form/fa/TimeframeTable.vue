@@ -41,7 +41,9 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="isAddDialogOpen = true">Ajouter un créneau</v-btn>
+        <v-btn v-if="!isDisabled" text @click="isAddDialogOpen = true"
+          >Ajouter un créneau</v-btn
+        >
       </v-card-actions>
 
       <TimeframeCalendar :data="timeframes"></TimeframeCalendar>

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>Besoin d'eau</v-card-title>
     <v-card-subtitle
       >Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu
@@ -18,6 +18,7 @@
         <v-text-field
           :value="waterNeed.water_needs"
           label="Desctiption du besoin en eau"
+          :disabled="isDisabled"
           @change="onChange('water_needs', $event)"
         ></v-text-field>
       </v-form>
@@ -31,6 +32,12 @@ import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "WaterLogisticCard",
+  props: {
+    isDisabled: {
+      type: Boolean,
+      default: () => false,
+    },
+  },
   computed: {
     waterNeed(): FA {
       return this.$accessor.FA.mFA;
@@ -45,4 +52,8 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  border-left: 5px solid green;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
@@ -12,12 +12,14 @@
         <v-text-field
           :value="mFA.name"
           label="Nom de la FA"
+          :disabled="isDisabled"
           @change="onChange('name', $event)"
         ></v-text-field>
         <v-select
           :value="mFA.type"
           label="Type"
           :items="all_types"
+          :disabled="isDisabled"
           @change="onChange('type', $event)"
         ></v-select>
         <v-select
@@ -26,6 +28,7 @@
           :items="teams"
           item-value="id"
           item-text="name"
+          :disabled="isDisabled"
           @change="onChange('team_id', $event)"
         ></v-select>
         <v-autocomplete
@@ -34,6 +37,7 @@
           :items="users"
           item-value="id"
           item-text="username"
+          :disabled="isDisabled"
           @change="onChange('in_charge', $event)"
         ></v-autocomplete>
       </v-form>
@@ -47,6 +51,12 @@ import { FA, fa_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FAGeneralCard",
+  props: {
+    isDisabled: {
+      type: Boolean,
+      default: () => false,
+    },
+  },
   data: () => ({
     users: [] as Array<any>,
   }),
@@ -79,4 +89,8 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  border-left: 5px solid green;
+}
+</style>
