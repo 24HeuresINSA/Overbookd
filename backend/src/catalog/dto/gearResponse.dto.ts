@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gear, SimplifiedCategory, Team } from '../interfaces';
 
-class SimplifiedCategoryRepresentation implements SimplifiedCategory {
+export class SimplifiedCategoryRepresentation implements SimplifiedCategory {
   id: number;
   name: string;
   path: string;

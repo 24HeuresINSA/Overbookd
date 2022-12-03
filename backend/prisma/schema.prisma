@@ -170,6 +170,8 @@ model fa {
   fa_signa_needs       fa_signa_needs[]
   fa_comments          fa_comments[]
   time_windows         time_windows[]
+  gearRequests Animation_Gear_Request[] @relation("gear-request-animation")
+
 }
 
 enum fa_type {
@@ -332,10 +334,35 @@ model Catalog_Gear {
   slug        String            @unique
   category_id Int?
   category    Catalog_Category? @relation("category", fields: [category_id], references: [id])
+  requests    Animation_Gear_Request[] @relation("gear-request-gear")
 }
 
 model Configuration {
   key        String  @id @unique
   value      Json
   is_deleted Boolean @default(false)
+}
+
+model Period {
+  id Int @id @default(autoincrement())
+  start DateTime
+  end DateTime
+  gearRequest Animation_Gear_Request? @relation("gear-request-rental-period")
+
+
+  @@index([start, end])
+}
+
+model Animation_Gear_Request {
+  animationId Int
+  animation fa @relation("gear-request-animation", fields: [animationId], references: [id])
+  rentalPeriodId Int @unique
+  rentalPeriod Period @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id]) 
+  gearId Int
+  gear Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id])
+  quantity Int
+  status String
+
+  @@unique([animationId, gearId])
+  @@index([status])
 }
