@@ -292,4 +292,31 @@ describe('Gear requests', () => {
       });
     });
   });
+  describe('List gear requests', () => {
+    afterAll(() => {
+      gearRequestRepository.gearRequests = [];
+    });
+    beforeAll(() => {
+      gearRequestRepository.gearRequests = [
+        GR_10_CHAISE_CHATEAU_GONFLABLE,
+        GR_5_TABLE_CHATEAU_GONFLABLE,
+      ];
+    });
+    describe.each`
+      fa                   | expectedRequests
+      ${CHATEAU_GONFLABLE} | ${[GR_10_CHAISE_CHATEAU_GONFLABLE, GR_5_TABLE_CHATEAU_GONFLABLE]}
+      ${KRAVMAGA}          | ${[]}
+    `(
+      'When looking for all gear requests for $fa.name',
+      ({ fa, expectedRequests }) => {
+        it(`should find ${expectedRequests.length} requests`, async () => {
+          const gearRequests = await gearRequestService.getAnimationRequests(
+            fa.id,
+          );
+          expect(gearRequests).toHaveLength(expectedRequests.length);
+          expect(gearRequests).toMatchObject(expectedRequests);
+        });
+      },
+    );
+  });
 });
