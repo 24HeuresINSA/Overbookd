@@ -4,8 +4,4 @@ import {
   PrismaTeamRepository,
 } from './prisma';
 
-export {
-  PrismaCategoryRepository,
-  PrismaGearRepository,
-  PrismaTeamRepository,
-};
+export { PrismaCategoryRepository, PrismaGearRepository, PrismaTeamRepository };
