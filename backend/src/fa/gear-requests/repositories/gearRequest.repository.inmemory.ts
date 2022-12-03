@@ -3,6 +3,7 @@ import {
   GearRequest,
   GearRequestIdentifier,
   GearRequestRepository,
+  SearchGearRequest,
 } from '../gearRequests.service';
 
 export class InMemoryGearRequestRepository implements GearRequestRepository {
@@ -22,7 +23,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       (gearRequest) =>
         gearRequest.seeker.type === gearRequestId.seeker.type &&
         gearRequest.seeker.id === gearRequestId.seeker.id &&
-        gearRequest.gearId === gearRequestId.gearId,
+        gearRequest.gear.id === gearRequestId.gearId,
     );
     if (!gearRequest)
       return Promise.reject(
@@ -31,5 +32,26 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
         ),
       );
     return Promise.resolve(gearRequest);
+  }
+
+  getGearRequests(
+    gearRequestSearch: SearchGearRequest,
+  ): Promise<GearRequest[]> {
+    return Promise.resolve(
+      this.gearRequests.filter((gearRequest) =>
+        this.isMatchingSearch(gearRequestSearch, gearRequest),
+      ),
+    );
+  }
+
+  private isMatchingSearch(
+    gearRequestSearch: SearchGearRequest,
+    gearRequest: GearRequest,
+  ): boolean {
+    return (
+      !gearRequestSearch.seeker ||
+      (gearRequestSearch.seeker.id === gearRequest.seeker.id &&
+        gearRequestSearch.seeker.type === gearRequest.seeker.type)
+    );
   }
 }

@@ -1,15 +1,27 @@
-import { GearNotFoundException } from '../../catalog/catalog.service';
-import { GearRepository } from '../../catalog/interfaces';
+import { Gear, GearRepository } from '../../catalog/interfaces';
 
 export const PENDING = 'PENDING';
 
-export type GearRequest = {
+export interface GearRequest {
   seeker: GearSeeker;
   status: string;
   quantity: number;
-  gearId: number;
+  gear: Gear;
   rentalPeriod: Period;
-};
+}
+
+export interface AnimationGearRequest extends GearRequest {
+  seeker: {
+    id: number;
+    type: GearSeekerType.Animation;
+  };
+}
+
+export function isAnimationGearRequest(
+  gearRequest: GearRequest,
+): gearRequest is AnimationGearRequest {
+  return gearRequest.seeker.type === GearSeekerType.Animation;
+}
 
 type Period = {
   start: Date;
@@ -42,9 +54,14 @@ export type GearRequestIdentifier = {
   gearId: number;
 };
 
+export type SearchGearRequest = {
+  seeker?: GearSeeker;
+};
+
 export interface GearRequestRepository {
   addGearRequest(gearRequest: GearRequest): Promise<GearRequest>;
   getGearRequest(gearRequestId: GearRequestIdentifier): Promise<GearRequest>;
+  getGearRequests(gearRequestSearch: SearchGearRequest): Promise<GearRequest[]>;
 }
 
 export class GearRequestsService {
@@ -69,9 +86,15 @@ export class GearRequestsService {
       seeker: { type: GearSeekerType.Animation, id: seekerId },
       status: PENDING,
       quantity,
-      gearId: existingGear.id,
+      gear: existingGear,
       rentalPeriod: { start, end },
     };
     return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  async getAnimationRequests(animationId: number): Promise<GearRequest[]> {
+    return this.gearRequestRepository.getGearRequests({
+      seeker: { type: GearSeekerType.Animation, id: animationId },
+    });
   }
 }
