@@ -6,35 +6,32 @@
         v-model="name"
         append-icon="mdi-hammer-screwdriver"
         label="Nom du matos"
+        autofocus
         clearable
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
         counter
         :rules="[searchRules.minLength]"
-        @input="searchGears"
+        @keydown="searchOnEnter"
       ></v-text-field>
       <v-text-field
         v-model="category"
         append-icon="mdi-label"
         label="Nom de la categorie"
         clearable
+        autofocus
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
         counter
         :rules="[searchRules.minLength]"
-        @input="searchGears"
+        @keydown="searchOnEnter"
       ></v-text-field>
-      <v-text-field
+      <SearchTeam
         v-model="team"
-        append-icon="mdi-account-multiple"
-        label="Nom de l'equipe responsable"
-        clearable
-        clear-icon="mdi-close-circle-outline"
-        :disabled="loading"
-        counter
-        :rules="[searchRules.minLength]"
-        @input="searchGears"
-      ></v-text-field>
+        label="Choissisez l'equipe responsable"
+        :boxed="false"
+        @change="searchGears"
+      ></SearchTeam>
     </form>
     <v-data-table
       :headers="headers"
@@ -81,19 +78,20 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
+import { team } from "~/utils/models/repo";
 import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
+import SearchTeam from "../atoms/SearchTeam.vue";
 import GearForm from "./form/GearForm.vue";
 
 interface GearListingData {
   headers: Header[];
   name: string;
   category: string;
-  team: string;
+  team: Pick<team, "name" | "code"> | null;
   searchRules: {
     minLength: (value: string | null) => boolean | string;
   };
   loading: boolean;
-  searchDelay?: any;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
@@ -103,7 +101,7 @@ const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
-  components: { GearForm, ConfirmationMessage },
+  components: { GearForm, ConfirmationMessage, SearchTeam },
   data(): GearListingData {
     return {
       headers: [
@@ -113,7 +111,7 @@ export default Vue.extend({
       ],
       name: "",
       category: "",
-      team: "",
+      team: null,
       searchRules: {
         minLength: (value) =>
           !value ||
@@ -121,7 +119,6 @@ export default Vue.extend({
           `Taper au moins ${searchMinLength} caracteres`,
       },
       loading: false,
-      searchDelay: undefined,
       selectedGear: undefined,
       isUpdateGearDialogOpen: false,
       isDeleteGearDialogOpen: false,
@@ -133,7 +130,7 @@ export default Vue.extend({
     },
     canSearch(): Boolean {
       return (
-        [this.name, this.category, this.team].some((searchOption) =>
+        [this.name, this.category, this.team?.code].some((searchOption) =>
           this.isValidSearchOption(searchOption)
         ) ||
         [this.name, this.category, this.team].every(
@@ -146,10 +143,14 @@ export default Vue.extend({
     this.fetchGears({});
   },
   methods: {
-    searchGears() {
+    async searchGears() {
       if (!this.canSearch) return;
       const searchOptions = this.buildSearchOptions();
-      this.waitForUserTypingBerforeAction(() => this.fetchGears(searchOptions));
+      await this.fetchGears(searchOptions);
+    },
+    searchOnEnter(keyEvent: KeyboardEvent) {
+      if (keyEvent.key !== "Enter") return;
+      return this.searchGears();
     },
     async fetchGears(searchOptions: GearSearchOptions) {
       this.loading = true;
@@ -170,7 +171,7 @@ export default Vue.extend({
     closeDeleteGearDialog() {
       this.isDeleteGearDialogOpen = false;
     },
-    isValidSearchOption(searchOption: string | null): boolean {
+    isValidSearchOption(searchOption: string | null | undefined): boolean {
       return Boolean(searchOption && searchOption.length >= searchMinLength);
     },
     buildSearchOptions(): GearSearchOptions {
@@ -181,15 +182,10 @@ export default Vue.extend({
       if (this.isValidSearchOption(this.category)) {
         searchOptions = { ...searchOptions, category: this.category };
       }
-      if (this.isValidSearchOption(this.team)) {
-        searchOptions = { ...searchOptions, owner: this.team };
+      if (this.isValidSearchOption(this.team?.code)) {
+        searchOptions = { ...searchOptions, owner: this.team?.code };
       }
       return searchOptions;
-    },
-    waitForUserTypingBerforeAction(action: () => Promise<any>) {
-      if (this.searchDelay) clearTimeout(this.searchDelay);
-
-      this.searchDelay = setTimeout(action, 300);
     },
     async deleteGear() {
       if (!this.selectedGear) return;
