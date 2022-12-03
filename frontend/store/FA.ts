@@ -361,7 +361,16 @@ export const actions = actionTree(
       commit("ADD_ELECTRICITY_NEED", elecNeed);
     },
 
-    deleteElectricityNeed({ commit }, index: number) {
+    async deleteElectricityNeed({ commit, state }, index: number) {
+      if (
+        state.mFA.fa_electricity_needs &&
+        state.mFA.fa_electricity_needs[index]
+      ) {
+        const id = state.mFA.fa_electricity_needs[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFAElectricityNeeds(this, id);
+        }
+      }
       commit("DELETE_ELECTRICITY_NEED", index);
     },
   }

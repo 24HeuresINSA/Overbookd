@@ -65,6 +65,9 @@ export default {
       electricity_needs
     );
   },
+  deleteFAElectricityNeeds(context: Context, id: number) {
+    return context.$axios.delete(`/fa-electricity-needs/${id}`);
+  },
   updateFAComments(context: Context, id: number, comments: fa_comments[]) {
     //Omit all User_Author
     const comments_update: fa_comments_update[] = comments.map(

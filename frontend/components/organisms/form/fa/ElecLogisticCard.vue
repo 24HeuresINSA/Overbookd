@@ -116,7 +116,6 @@ export default Vue.extend({
         comment: this.newElectricityNeed.comment,
       };
 
-      console.log(newElecNeed);
       this.$accessor.FA.addElectricityNeed(newElecNeed);
       this.isElectricityNeedDialogOpen = false;
       this.newElectricityNeed = {
@@ -126,8 +125,8 @@ export default Vue.extend({
       };
     },
 
-    deleteElectricityNeed(index: number) {
-      this.$accessor.FA.deleteElectricityNeed(index);
+    async deleteElectricityNeed(index: number) {
+      await this.$accessor.FA.deleteElectricityNeed(index);
     },
   },
 });
