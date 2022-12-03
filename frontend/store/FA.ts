@@ -21,14 +21,10 @@ export const state = () => ({
     status: Status.DRAFT,
     name: "",
   } as FA,
-  validated_by: [] as string[],
-  refused_by: [] as string[],
 });
 
 export const getters = getterTree(state, {
   getFA: (state) => state.mFA,
-  getValidatedBy: (state) => state.validated_by,
-  getRefusedBy: (state) => state.refused_by,
 });
 
 export const mutations = mutationTree(state, {
@@ -50,36 +46,6 @@ export const mutations = mutationTree(state, {
   UPDATE_FA({ mFA }, { key, value }) {
     if (typeof mFA[key as keyof FA] !== "undefined") {
       mFA[key as keyof FA] = value as never;
-    }
-  },
-
-  VALIDATE({ validated_by, refused_by }, validator: string) {
-    if (validated_by === undefined) {
-      validated_by = [] as string[];
-    }
-    // avoid duplicate
-    if (validated_by.find((v) => v == validator)) {
-      validated_by.push(validator);
-
-      // remove from refuse
-      if (refused_by) {
-        refused_by = refused_by.filter((v) => v !== validator);
-      }
-    }
-  },
-
-  REFUSE({ refused_by, validated_by }, validator: string) {
-    if (refused_by === undefined) {
-      refused_by = [] as string[];
-    }
-    // avoid duplicate
-    if (refused_by.find((v) => v == validator)) {
-      refused_by.push(validator);
-
-      // remove from refuse
-      if (validated_by) {
-        validated_by = validated_by.filter((v) => v !== validator);
-      }
     }
   },
 
