@@ -46,9 +46,8 @@ export class CatalogService {
     });
   }
 
-  async find(id: number): Promise<Gear> {
-    const gear = await this.gearRepository.getGear(id);
-    return gear;
+  async find(id: number): Promise<Gear | undefined> {
+    return this.gearRepository.getGear(id);
   }
 
   async update(gear: GearUpdateForm): Promise<Gear> {
