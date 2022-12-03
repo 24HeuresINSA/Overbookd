@@ -24,8 +24,8 @@
       </div>
 
       <div class="icons">
-        <div v-for="(validator, i) of validators" :key="i" class="icon">
-          <v-icon :key="i" :color="getIconColor(validator)" size="26">
+        <div v-for="validator of validators" :key="validator.code" class="icon">
+          <v-icon :color="getIconColor(validator)" size="26">
             {{ validator.icon }}
           </v-icon>
           <span class="icon-detail">{{ validator.name }}</span>
@@ -209,6 +209,7 @@ import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { team } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "Fa",
@@ -313,7 +314,7 @@ export default Vue.extend({
       );*/
     },
 
-    validate(validator: any) {
+    validate(validator: team) {
       if (validator) {
         const payload = {
           validator_id: validator.id,
@@ -324,7 +325,7 @@ export default Vue.extend({
       }
     },
 
-    refuse(validator: any) {
+    refuse(validator: team) {
       const payload = {
         validator_id: validator.id,
         user_id: this.$accessor.user.me.id,
