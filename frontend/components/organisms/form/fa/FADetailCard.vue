@@ -11,8 +11,15 @@
           :data="mFA.description"
           label="Description"
           :disabled="isDisabled"
+          class="mb-4"
           @change="onChange('description', $event)"
         ></RichEditor>
+        <v-text-field
+          :value="mFA.photo_link"
+          label=" Lien de la photo de l'activité sur le drive"
+          :disabled="isDisabled"
+          @change="onChange('photo_link', $event)"
+        ></v-text-field>
         <v-switch
           :value="mFA.is_publishable"
           label="Publier sur le site / plaquette"

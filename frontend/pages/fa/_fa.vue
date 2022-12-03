@@ -449,6 +449,10 @@ h1 {
   visibility: visible;
 }
 
+h2 {
+  margin-bottom: 10px;
+}
+
 .container {
   display: flex;
   flex-direction: column;

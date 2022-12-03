@@ -154,6 +154,7 @@ model fa {
   location_id          Int?
   status               Status?                @default(DRAFT)
   description          String?                @db.Text
+  photo_link           String?                @db.Text
   is_publishable       Boolean?               @default(false)
   is_major             Boolean?               @default(false)
   is_kids              Boolean?               @default(false)

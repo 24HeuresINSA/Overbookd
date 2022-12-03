@@ -108,6 +108,14 @@ export class UpdateFaDto {
 
   @ApiProperty({
     required: false,
+    description: 'Link of the photo',
+  })
+  @IsString()
+  @IsOptional()
+  photo_link?: string;
+
+  @ApiProperty({
+    required: false,
     description: 'Is the activty a major activity',
   })
   @IsBoolean()

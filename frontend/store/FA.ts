@@ -21,14 +21,12 @@ export const state = () => ({
     status: Status.DRAFT,
     name: "",
   } as FA,
-  FAs: [] as FA[],
   validated_by: [] as string[],
   refused_by: [] as string[],
 });
 
 export const getters = getterTree(state, {
   getFA: (state) => state.mFA,
-  getFAs: (state) => state.FAs,
   getValidatedBy: (state) => state.validated_by,
   getRefusedBy: (state) => state.refused_by,
 });
@@ -43,10 +41,6 @@ export const mutations = mutationTree(state, {
       status: Status.DRAFT,
       name: "",
     } as FA;
-  },
-
-  SET_ALL_FA(state, allFA: FA[]) {
-    state.FAs = allFA.filter((fa) => fa.is_deleted === false);
   },
 
   UPDATE_STATUS({ mFA }, status: Status) {

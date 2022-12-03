@@ -51,6 +51,7 @@ export interface FA {
   location_id?: number;
   status: Status;
   description?: string;
+  photo_link?: string;
   is_publishable?: boolean;
   is_major?: boolean;
   is_kids?: boolean;
