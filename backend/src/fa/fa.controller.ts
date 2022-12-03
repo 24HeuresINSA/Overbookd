@@ -16,16 +16,30 @@ import { validationDto } from './dto/validation.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiNotFoundResponse,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
 import { FaResponse, AllFaResponse } from './fa_types';
+import { GearRequestResponseDto } from './gear-requests/dto/gearRequestResponse.dto';
+import { GearRequestFormRequestDto } from './gear-requests/dto/gearRequestFormRequest.dto';
+import { GearRequestsService } from './gear-requests/gearRequests.service';
 
 @ApiBearerAuth()
 @ApiTags('fa')
 @Controller('fa')
 export class FaController {
-  constructor(private readonly faService: FaService) {}
+  constructor(
+    private readonly faService: FaService,
+    private readonly gearRequestService: GearRequestsService,
+  ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
@@ -127,5 +141,62 @@ export class FaController {
   ): Promise<fa | null> {
     const user_id = request.user.id;
     return this.faService.invalidatefa(user_id, faid, team_id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Post(':id/gear-requests')
+  @ApiResponse({
+    status: 201,
+    description: 'Creating a new gear request',
+    type: GearRequestResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Animation id',
+    required: true,
+  })
+  addGearRequest(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() gearRequestForm: GearRequestFormRequestDto,
+  ): Promise<GearRequestResponseDto> {
+    return this.gearRequestService.addAnimationRequest({
+      ...gearRequestForm,
+      seekerId: id,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Get(':id/gear-requests')
+  @ApiResponse({
+    status: 200,
+    description: 'Get animation gear requests',
+    isArray: true,
+    type: GearRequestResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Animation id',
+    required: true,
+  })
+  getGearRequests(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<GearRequestResponseDto[]> {
+    return this.gearRequestService.getAnimationRequests(id);
   }
 }

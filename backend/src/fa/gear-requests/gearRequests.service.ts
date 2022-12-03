@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Gear, GearRepository } from '../../catalog/interfaces';
 import { Status } from '../dto/update-fa.dto';
 
@@ -25,12 +25,12 @@ export function isAnimationGearRequest(
   return gearRequest.seeker.type === GearSeekerType.Animation;
 }
 
-type Period = {
+export type Period = {
   start: Date;
   end: Date;
 };
 
-type GearSeeker = {
+export type GearSeeker = {
   type: GearSeekerType;
   id: number;
 };
@@ -83,10 +83,14 @@ class AnimationAlreadyValidatedError extends BadRequestException {
   }
 }
 
+@Injectable()
 export class GearRequestsService {
   constructor(
+    @Inject('GEAR_REQUEST_REPOSITORY')
     private readonly gearRequestRepository: GearRequestRepository,
+    @Inject('GEAR_REPOSITORY')
     private readonly gearRepository: GearRepository,
+    @Inject('ANIMATION_REPOSITORY')
     private readonly animationRepository: AnimationRepository,
   ) {}
 
@@ -101,6 +105,7 @@ export class GearRequestsService {
     start,
     end,
   }: CreateGearRequestForm): Promise<GearRequest> {
+    console.log('looking for gear', gearId);
     const [existingAnimation, existingGear] = await Promise.all([
       this.animationRepository.getAnimation(seekerId),
       this.gearRepository.getGear(gearId),
