@@ -314,24 +314,25 @@ export default Vue.extend({
       );*/
     },
 
-    validate(validator: team) {
+    async validate(validator: team) {
       if (validator) {
         const payload = {
           validator_id: validator.id,
           user_id: this.$accessor.user.me.id,
           team_name: validator.name,
         };
-        this.$accessor.FA.validate(payload);
+        await this.$accessor.FA.validate(payload);
       }
     },
 
-    refuse(validator: team) {
+    async refuse(validator: team) {
       const payload = {
         validator_id: validator.id,
         user_id: this.$accessor.user.me.id,
         message: this.refuseComment,
       };
-      this.$accessor.FA.refuse(payload);
+      await this.$accessor.FA.refuse(payload);
+      this.refuseComment = "";
       this.refuseDialog = false;
     },
 
