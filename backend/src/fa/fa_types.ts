@@ -149,4 +149,22 @@ export const ALL_FA_SELECT = {
       name: true,
     },
   },
+  fa_validation: {
+    select: {
+      Team: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+  fa_refuse: {
+    select: {
+      Team: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
 };

@@ -67,7 +67,18 @@
           class="elevation-1"
         >
           <template #[`item.validation`]="{ item }">
-            <ValidatorsIcons :form="item"></ValidatorsIcons>
+            <v-chip-group>
+              <v-chip
+                v-for="(validator, i) of validators"
+                :key="i"
+                small
+                :color="getValidatorColor(item, validator)"
+              >
+                <v-icon small>
+                  {{ validator.icon }}
+                </v-icon>
+              </v-chip>
+            </v-chip-group>
           </template>
           <template #[`item.name`]="{ item }">
             <nuxt-link
@@ -159,11 +170,9 @@
 import Fuse from "fuse.js";
 import { safeCall } from "../../utils/api/calls";
 import { RepoFactory } from "../../repositories/repoFactory";
-import ValidatorsIcons from "~/components/atoms/ValidatorsIcons.vue";
 
 export default {
   name: "Fa",
-  components: { ValidatorsIcons },
   data() {
     return {
       FAs: [],
@@ -178,17 +187,17 @@ export default {
       selectedTeam: undefined,
       headers: [
         { text: "Statut", value: "status" },
-        { text: "Validation", value: "validator" },
+        { text: "Validation", value: "validation" },
         { text: "Nom", value: "name" },
         { text: "Equipe", value: "Team" },
         { text: "Resp", value: "user_in_charge" },
         { text: "Action", value: "action" },
       ],
       color: {
-        envoyé: "warning",
-        validé: "green",
-        refusé: "red",
-        brouillon: "grey",
+        SUBMITTED: "warning",
+        VALIDATED: "green",
+        REFUSED: "red",
+        DRAFT: "grey",
         undefined: "grey",
       },
 
@@ -348,6 +357,24 @@ export default {
     },
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
+    },
+    getValidatorColor(fa, validator) {
+      let color = "grey";
+      if (fa.fa_validation) {
+        fa.fa_validation.forEach((validation) => {
+          if (Number(validation.Team.id) === Number(validator.id)) {
+            color = "green";
+          }
+        });
+      }
+      if (fa.fa_refuse) {
+        fa.fa_refuse.forEach((validation) => {
+          if (Number(validation.Team.id) === Number(validator.id)) {
+            color = "red";
+          }
+        });
+      }
+      return color;
     },
   },
 };
