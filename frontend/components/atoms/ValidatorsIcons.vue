@@ -4,7 +4,7 @@
       v-for="(validator, i) of validators"
       :key="i"
       small
-      :color="getValidatorColor(validator.name)"
+      :color="getValidatorColor(validator)"
     >
       <v-icon small>
         {{ validator.icon }}
@@ -33,7 +33,8 @@ export default Vue.extend({
     console.log("test");
   },
   methods: {
-    getValidatorColor(validator: string) {
+    getValidatorColor(validator: any) {
+      console.log(validator);
       if (this.form.validated.includes(validator)) {
         // validated
         return "green";

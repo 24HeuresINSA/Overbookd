@@ -207,7 +207,7 @@ export const actions = actionTree(
       commit("UPDATE_FA", { key, value });
     },
 
-    save: async function ({ state }) {
+    save: async function ({ dispatch, state }) {
       const allPromise = [];
       allPromise.push(
         RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA)
@@ -248,16 +248,31 @@ export const actions = actionTree(
           )
         );
       }
+      if (state.mFA.fa_comments) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFAComments(
+            this,
+            state.mFA.id,
+            state.mFA.fa_comments
+          )
+        );
+      }
       await Promise.all(allPromise);
+      dispatch("getAndSet", state.mFA.id);
     },
 
     validate: async function (
       { dispatch, commit, state },
-      validator_id: number
+      { validator_id, user_id, team_name }
     ) {
+      if (state.mFA.fa_refuse?.length === 1) {
+        if (state.mFA.fa_refuse[0].Team.id === validator_id) {
+          commit("UPDATE_STATUS", Status.SUBMITTED);
+        }
+      }
       // @ts-ignore
       const MAX_VALIDATORS = this.$accessor.team.faValidators;
-      if (state.validated_by.length === MAX_VALIDATORS) {
+      if (state.mFA.fa_validation?.length === MAX_VALIDATORS) {
         // validated by all validators
         commit("UPDATE_STATUS", Status.VALIDATED);
       }
@@ -265,12 +280,33 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
+      const comment: fa_comments = {
+        subject: subject_type.VALIDATED,
+        comment: `La FA a été validée par ${team_name}.`,
+        author: user_id,
+        created_at: new Date(),
+      };
+      commit("ADD_COMMENT", comment);
+      dispatch("save");
     },
 
-    refuse: async function ({ dispatch, commit }, validator: string) {
-      commit("REFUSE", validator);
+    refuse: async function (
+      { dispatch, commit, state },
+      { validator_id, user_id, message }
+    ) {
       commit("UPDATE_STATUS", Status.REFUSED);
-      await dispatch("saveFA");
+      const body: fa_validation_body = {
+        team_id: validator_id,
+      };
+      await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
+      const comment: fa_comments = {
+        subject: subject_type.REFUSED,
+        comment: `La FA a été refusée : ${message}.`,
+        author: user_id,
+        created_at: new Date(),
+      };
+      commit("ADD_COMMENT", comment);
+      dispatch("save");
     },
 
     async addComment({ commit, state }, comment: fa_comments) {

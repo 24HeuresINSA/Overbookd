@@ -51,12 +51,12 @@ export const COMPLETE_FA_SELECT = {
       },
       Team: {
         select: {
+          id: true,
           name: true,
           color: true,
           icon: true,
         },
       },
-      created_at: true,
     },
   },
   fa_refuse: {
@@ -69,12 +69,12 @@ export const COMPLETE_FA_SELECT = {
       },
       Team: {
         select: {
+          id: true,
           name: true,
           color: true,
           icon: true,
         },
       },
-      created_at: true,
     },
   },
   fa_electricity_needs: {
@@ -147,6 +147,24 @@ export const ALL_FA_SELECT = {
   Team: {
     select: {
       name: true,
+    },
+  },
+  fa_validation: {
+    select: {
+      Team: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+  fa_refuse: {
+    select: {
+      Team: {
+        select: {
+          id: true,
+        },
+      },
     },
   },
 };

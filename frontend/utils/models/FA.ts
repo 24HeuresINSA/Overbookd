@@ -83,9 +83,31 @@ export interface collaborator {
   comment?: string;
 }
 
-export interface fa_validation {}
+export interface fa_validation {
+  User: {
+    firstname: string;
+    lastname: string;
+  };
+  Team: {
+    id: number;
+    name: string;
+    color: string;
+    icon: string;
+  };
+}
 
-export interface fa_refuse {}
+export interface fa_refuse {
+  User: {
+    firstname: string;
+    lastname: string;
+  };
+  Team: {
+    id: number;
+    name: string;
+    color: string;
+    icon: string;
+  };
+}
 
 export interface fa_electricity_needs {
   id?: number;
@@ -113,6 +135,14 @@ export interface fa_comments {
     firstname: string;
     lastname: string;
   };
+}
+
+export interface fa_comments_update {
+  id?: number;
+  comment: string;
+  subject: subject_type;
+  created_at?: Date;
+  author: number;
 }
 
 export interface time_windows {
