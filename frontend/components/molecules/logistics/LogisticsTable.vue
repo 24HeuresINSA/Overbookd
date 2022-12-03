@@ -1,36 +1,35 @@
 <template>
-  <v-data-table :headers="headers" :items="equipments" dense>
+  <v-data-table :headers="headers" :items="gears" dense>
+    <template #[`item.quantity`]="{ index, item }">
+      <v-text-field
+        :value="item.count ? item.count : '1'"
+        type="number"
+        min="0"
+        step="1"
+        :disabled="isDisabled"
+        class="text-width"
+        @change="updateGearQuantity(index, $event)"
+      ></v-text-field>
+    </template>
     <template #[`item.action`]="{ item }">
-      <div style="display: flex; align-items: center">
-        <v-text-field
-          class="text-width"
-          type="number"
-          label="# requis"
-          :value="item.required"
-          :disabled="disabled"
-          @change="updateItems(item, $event)"
-        ></v-text-field>
-        <v-btn v-if="!disabled" icon @click="deleteEquipment(item._id)">
-          <v-icon>mdi-trash-can</v-icon>
-        </v-btn>
-      </div>
+      <v-btn v-if="!isDisabled" icon @click="deleteGear(item.id)">
+        <v-icon>mdi-trash-can</v-icon>
+      </v-btn>
     </template>
   </v-data-table>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "LogisticsTable",
   props: {
-    types: {
-      type: Array,
-      default: () => [],
-    },
     store: {
       type: Object,
       default: () => {},
     },
-    disabled: {
+    isDisabled: {
       type: Boolean,
       default: () => false,
     },
@@ -38,30 +37,24 @@ export default {
   data: () => ({
     headers: [
       { text: "Nom", value: "name" },
+      { text: "Quantité", value: "quantity" },
       { text: "Action", value: "action" },
     ],
   }),
   computed: {
-    mForm: function () {
-      if (this.store.mFT) {
-        return this.store.mFT;
-      }
-      return this.$accessor.FA.mFA;
-    },
-    equipments: function () {
-      //return this.mForm.equipments.filter((e) => this.types.includes(e.type));
-      return [];
+    gears(): any {
+      return this.store.mFA.fa_gears;
     },
   },
   methods: {
-    updateItems(item, e) {
-      this.store.updateEquipmentRequiredCount({ _id: item._id, count: +e });
+    updateGearQuantity(gear: any, quantity: number) {
+      this.store.updateGearQuantity({ gear: gear, quantity: +quantity });
     },
-    deleteEquipment(id) {
-      this.store.deleteEquipmentById(id);
+    deleteGear(id: number) {
+      this.store.deleteGear(id);
     },
   },
-};
+});
 </script>
 
 <style scoped>

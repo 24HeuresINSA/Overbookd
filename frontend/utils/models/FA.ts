@@ -68,6 +68,7 @@ export interface FA {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
+  fa_gears?: fa_gears[];
 }
 
 export interface fa_collaborators {
@@ -175,4 +176,11 @@ export interface fa_general_update {
 
 export interface fa_validation_body {
   team_id: number;
+}
+
+export interface fa_gears {
+  gearId: number;
+  quantity: number;
+  start?: Date;
+  end?: Date;
 }

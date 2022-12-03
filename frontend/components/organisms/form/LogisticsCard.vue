@@ -4,15 +4,14 @@
     <v-card-text>
       <v-container>
         <div v-if="!isDisabled" class="flex-row">
-          <SearchGear gear="matos"></SearchGear>
-          <v-btn rounded class="margin-btn" @click="addItem">
+          <SearchGear :gear="gear" @change="updateCurrentGear"></SearchGear>
+          <v-btn rounded class="margin-btn" @click="addGear">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
         <LogisticsTable
-          :types="types"
           :store="store"
-          :disabled="isDisabled"
+          :is-disabled="isDisabled"
         ></LogisticsTable>
       </v-container>
     </v-card-text>
@@ -23,6 +22,8 @@
 import Vue from "vue";
 import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
+import { Gear } from "~/utils/models/catalog.model";
+import { fa_gears } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticsCard",
@@ -57,47 +58,21 @@ export default Vue.extend({
       default: () => false,
     },
   },
-  data() {
-    return {
-      // Item linked to v-autocomplete component
-      item: undefined as undefined | any,
-    };
-  },
-  computed: {
-    equipment: function (): Array<any> {
-      return this.$accessor.equipment.items;
-    },
-    /**
-     * @returns validEquipments are filtered by isValid !== false (ie: does not exist or true)
-     */
-    validEquipments: function (): Array<any> {
-      return this.equipment.filter((e) => e.isValid !== false);
-    },
-    validInput: function (): boolean {
-      return !(this.item == undefined);
-    },
-    typeFilteredEquipment: function (): Array<any> {
-      return this.validEquipments.filter((e) => this.types.includes(e.type));
-    },
-  },
-  async mounted() {
-    // fetchAll calls api to fetch all available equipment
-    await this.$accessor.equipment.fetchAll();
-  },
+  data: () => ({
+    gear: undefined as Gear | undefined,
+  }),
   methods: {
-    /**
-     * Add item to FA store
-     */
-    async addItem() {
-      if (this.item) {
-        if (this.store.addEquipment) {
-          await this.store.addEquipment({
-            _id: this.item._id,
-            name: this.item.name,
-            type: this.item.type,
-          });
-          this.item = undefined;
-        }
+    updateCurrentGear(gear: Gear | undefined) {
+      this.gear = gear;
+    },
+    async addGear() {
+      console.log("add", this.gear);
+      if (this.gear) {
+        const faGear: fa_gears = {
+          gearId: this.gear.id,
+          quantity: 1,
+        };
+        await this.store.addGear(faGear);
       }
     },
   },
