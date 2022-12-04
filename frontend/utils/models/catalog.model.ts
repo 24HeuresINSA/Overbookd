@@ -1,7 +1,10 @@
+import { team } from "./repo";
+
 export interface Gear {
   id: number;
   name: string;
   slug: string;
+  owner?: Pick<team, "code" | "name">;
   category?: {
     id: number;
     name: string;

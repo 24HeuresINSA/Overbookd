@@ -1,23 +1,15 @@
 <template>
-  <v-data-table :headers="headers" :items="gears">
+  <v-data-table :headers="headers" :items="gearRequest">
     <template #[`item.name`]="{ item }">
       {{ item.gear.name }}
     </template>
 
-    <template #[`item.quantity`]="{ index, item }">
-      <v-text-field
-        :value="item.quantity"
-        type="number"
-        min="0"
-        step="1"
-        :disabled="isDisabled"
-        class="text-width"
-        @change="updateGearQuantity(index, $event)"
-      ></v-text-field>
+    <template #[`item.quantity`]="{ item }">
+      {{ item.quantity }}
     </template>
 
-    <template #[`item.action`]="{ index }">
-      <v-btn v-if="!isDisabled" icon @click="deleteGear(index)">
+    <template #[`item.action`]="{ item }">
+      <v-btn v-if="!isDisabled" icon @click="deleteGear(item)">
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
     </template>
@@ -26,17 +18,18 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { GearRequest } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticsTable",
   props: {
-    store: {
-      type: Object,
-      default: () => {},
-    },
     isDisabled: {
       type: Boolean,
       default: () => false,
+    },
+    owner: {
+      type: String,
+      default: () => "",
     },
   },
   data: () => ({
@@ -47,16 +40,25 @@ export default Vue.extend({
     ],
   }),
   computed: {
-    gears(): any {
-      return this.store.mFA.fa_gears;
+    gearRequest(): GearRequest[] {
+      switch (this.owner) {
+        case "matos":
+          return this.$accessor.FA.matosGearRequests;
+        case "elec":
+          return this.$accessor.FA.elecGearRequests;
+        case "barrieres":
+          return this.$accessor.FA.barrieresGearRequests;
+        default:
+          return [];
+      }
     },
   },
   methods: {
     updateGearQuantity(gear: any, quantity: number) {
-      this.store.updateGearQuantity({ gear: gear, quantity: +quantity });
+      //this.$accessor.FA.updateGearQuantity({ gear: gear, quantity: +quantity });
     },
     deleteGear(index: number) {
-      this.store.deleteGear(index);
+      //this.$accessor.FA.deleteGear(index);
     },
   },
 });

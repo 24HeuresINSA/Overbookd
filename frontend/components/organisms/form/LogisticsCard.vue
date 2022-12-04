@@ -25,7 +25,7 @@
           </v-btn>
         </v-form>
         <LogisticsTable
-          :store="store"
+          :owner="owner"
           :is-disabled="isDisabled"
         ></LogisticsTable>
       </v-container>
@@ -38,7 +38,7 @@ import Vue from "vue";
 import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
 import { Gear } from "~/utils/models/catalog.model";
-import { time_windows_type } from "~/utils/models/FA";
+import { GearRequestCreation, time_windows_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticsCard",
@@ -57,13 +57,6 @@ export default Vue.extend({
     types: {
       type: Array,
       default: () => [],
-    },
-    /**
-     * The store to use when adding new equipment
-     */
-    store: {
-      type: Object,
-      required: true,
     },
     /**
      * If the element is editable or not
@@ -94,7 +87,13 @@ export default Vue.extend({
         this.quantity >= 1 &&
         this.$accessor.FA.mFA.time_windows?.find(
           (tw) => tw.type === time_windows_type.MATOS
-        )
+        ) &&
+        !this.isDisabled
+      );
+    },
+    timeWindow() {
+      return this.$accessor.FA.mFA.time_windows?.find(
+        (tw) => tw.type === time_windows_type.MATOS
       );
     },
   },
@@ -102,14 +101,19 @@ export default Vue.extend({
     updateCurrentGear(gear: Gear | undefined) {
       this.gear = gear;
     },
-    async addGear() {
-      if (this.gear) {
-        const faGear: any = {
-          gear: this.gear,
-          quantity: 1,
-        };
-        await this.store.addGear(faGear);
-      }
+    addGear() {
+      if (!this.gear) return;
+      const timeWindow = this.$accessor.FA.mFA.time_windows?.find(
+        (tw) => tw.type === time_windows_type.MATOS
+      );
+      if (!timeWindow) return;
+      const gearRequestCreationForm: GearRequestCreation = {
+        gearId: this.gear.id,
+        quantity: this.quantity,
+        start: timeWindow.start,
+        end: timeWindow.end,
+      };
+      this.$accessor.FA.addGearRequest(gearRequestCreationForm);
     },
   },
 });

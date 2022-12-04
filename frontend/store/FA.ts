@@ -1,4 +1,4 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
@@ -9,6 +9,8 @@ import {
   fa_electricity_needs,
   fa_signa_needs,
   fa_validation_body,
+  GearRequest,
+  GearRequestCreation,
   Status,
   subject_type,
   time_windows,
@@ -21,6 +23,21 @@ export const state = () => ({
     status: Status.DRAFT,
     name: "",
   } as FA,
+  gearRequests: [] as GearRequest[],
+});
+
+export const getters = getterTree(state, {
+  matosGearRequests(state) {
+    return state.gearRequests.filter((gr) => gr.gear.owner?.code === "matos");
+  },
+  elecGearRequests(state) {
+    return state.gearRequests.filter((gr) => gr.gear.owner?.code === "elec");
+  },
+  barrieresGearRequests(state) {
+    return state.gearRequests.filter(
+      (gr) => gr.gear.owner?.code === "barrieres"
+    );
+  },
 });
 
 export const mutations = mutationTree(state, {
@@ -112,6 +129,9 @@ export const mutations = mutationTree(state, {
     if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
       mFA.fa_electricity_needs.splice(index, 1);
     }
+  },
+  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
+    gearRequests.push(gearRequest);
   },
 });
 
@@ -344,6 +364,14 @@ export const actions = actionTree(
         }
       }
       commit("DELETE_ELECTRICITY_NEED", index);
+    },
+    async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
+      const res = await RepoFactory.faRepo.createGearRequest(
+        this,
+        state.mFA.id,
+        gearRequest
+      );
+      commit("ADD_GEAR_REQUEST", res.data);
     },
   }
 );

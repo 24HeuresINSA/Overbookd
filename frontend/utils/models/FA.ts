@@ -179,14 +179,14 @@ export interface fa_validation_body {
   team_id: number;
 }
 
-export interface gearRequestCreation {
+export interface GearRequestCreation {
   gearId: number;
   quantity: number;
   start: Date;
   end: Date;
 }
 
-export interface gearRequest {
+export interface GearRequest {
   rentalPeriod: {
     start: Date;
     end: Date;

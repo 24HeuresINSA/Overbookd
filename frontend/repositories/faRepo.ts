@@ -1,14 +1,16 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   FA,
-  fa_general_update,
   fa_collaborators,
-  fa_signa_needs,
-  time_windows,
-  fa_electricity_needs,
   fa_comments,
-  fa_validation_body,
   fa_comments_update,
+  fa_electricity_needs,
+  fa_general_update,
+  fa_signa_needs,
+  fa_validation_body,
+  GearRequest,
+  GearRequestCreation,
+  time_windows,
 } from "~/utils/models/FA";
 
 const resource = "/fa";
@@ -92,5 +94,15 @@ export default {
   },
   refuseFA(context: Context, id: number, body: fa_validation_body) {
     return context.$axios.post(resource + `/invalidate/${id}`, body);
+  },
+  createGearRequest(
+    context: Context,
+    animationId: number,
+    gearRequestCreationForm: GearRequestCreation
+  ) {
+    return context.$axios.post<GearRequest>(
+      resource + `/${animationId}/gear-requests`,
+      gearRequestCreationForm
+    );
   },
 };
