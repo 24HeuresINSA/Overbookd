@@ -8,7 +8,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-export enum signa_type {
+enum signa_type {
   BANNIERE = 'BANNIERE',
   PANCARTE = 'PANCARTE',
   PANNEAU = 'PANNEAU',

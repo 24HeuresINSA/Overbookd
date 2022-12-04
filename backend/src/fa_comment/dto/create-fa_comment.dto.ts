@@ -8,7 +8,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-export enum subject_type {
+enum subject_type {
   REFUSED = 'REFUSED',
   VALIDATED = 'VALIDATED',
   COMMENT = 'COMMENT',

@@ -43,7 +43,7 @@ type Role =
   | 'sponso'
   | 'sports';
 
-export type JWTPayload = {
+type JWTPayload = {
   email: string;
   id: number;
   role: Role[];

@@ -8,7 +8,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-export enum electricity_type {
+enum electricity_type {
   PC16 = 'PC16',
   P17_16A_MONO = 'P17_16A_MONO',
   P17_16A_TRI = 'P17_16A_TRI',

@@ -42,19 +42,6 @@ export interface GearRequest {
   rentalPeriod: Period;
 }
 
-export interface AnimationGearRequest extends GearRequest {
-  seeker: {
-    id: number;
-    type: GearSeekerType.Animation;
-  };
-}
-
-export function isAnimationGearRequest(
-  gearRequest: GearRequest,
-): gearRequest is AnimationGearRequest {
-  return gearRequest.seeker.type === GearSeekerType.Animation;
-}
-
 export type Period = {
   start: Date;
   end: Date;
