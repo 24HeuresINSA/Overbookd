@@ -62,7 +62,7 @@ export default Vue.extend({
   },
   computed: {
     FAs(): FA[] {
-      return this.$accessor.FA.FAs;
+      return [];
     },
   },
   watch: {
