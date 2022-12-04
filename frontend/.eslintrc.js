@@ -4,6 +4,7 @@ module.exports = {
     node: true,
     browser: true,
   },
+  plugins: ["unused-imports"],
   extends: [
     "plugin:vue/recommended",
     "eslint:recommended",
@@ -23,6 +24,8 @@ module.exports = {
     "vue/no-mutating-prop": "off",
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "unused-imports/no-unused-imports": "error",
+    "vue/no-unused-components": "error",
   },
   globals: {
     $nuxt: true,

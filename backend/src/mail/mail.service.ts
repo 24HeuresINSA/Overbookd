@@ -6,7 +6,7 @@ import {
 import { MailerService } from '@nestjs-modules/mailer';
 import { emailTestDto } from './dto/mailTest.dto';
 
-export type emailResetPassword = {
+type emailResetPassword = {
   email: string;
   firstname: string;
   token: string;

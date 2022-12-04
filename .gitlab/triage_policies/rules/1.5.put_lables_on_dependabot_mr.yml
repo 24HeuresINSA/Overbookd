@@ -1,0 +1,23 @@
+resource_rules:
+  merge_requests:
+    rules:
+      - name: find all merged dependabot MR and forbidden Scope::Frontend label
+        conditions:
+          state: opened
+          forbidden_labels:
+            - Scope::Frontend
+          ruby: resource[:source_branch].match(/dependabot\/(npm_and_yarn|docker)\/frontend.*/)
+        actions:
+          labels:
+            - Scope::Frontend
+    
+    
+      - name: find all merged dependabot MR and forbidden Scope::Backend label
+        conditions:
+          state: opened
+          forbidden_labels:
+            - Scope::Backend
+          ruby: resource[:source_branch].match(/dependabot\/(npm_and_yarn|docker)\/backend.*/)
+        actions:
+          labels:
+            - Scope::Backend

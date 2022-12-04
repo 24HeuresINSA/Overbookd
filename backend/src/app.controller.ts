@@ -1,17 +1,17 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { AppService } from './app.service';
-import { MailService } from './mail/mail.service';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { emailTestDto } from './mail/dto/mailTest.dto';
+import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { RolesGuard } from './auth/team-auth.guard';
 import { Roles } from './auth/team-auth.decorator';
+import { RolesGuard } from './auth/team-auth.guard';
+import { emailTestDto } from './mail/dto/mailTest.dto';
+import { MailService } from './mail/mail.service';
 
-export type Role =
+type Role =
   | 'admin'
   | 'hard'
   | 'soft'

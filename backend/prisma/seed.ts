@@ -1,11 +1,39 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, Team } from '@prisma/client';
 import { Departements, Years } from '../src/user/dto/common';
 import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
-import { gears } from './gears';
+import { categoriesAndGears } from './gears';
 
 const prisma = new PrismaClient();
 const slugify = new SlugifyService();
+
+async function insertOrUpdateCategory(
+  name: string,
+  teams: Team[],
+  parent?: { id: number; path: string },
+) {
+  const parentId = parent?.id;
+  const path = parent
+    ? `${parent.path}->${slugify.slugify(name)}`
+    : slugify.slugify(name);
+  const owner = teams.find((team) => team.code === name.toLocaleLowerCase());
+  const category = { name, path, parent: parentId, owner_id: owner?.id };
+  return prisma.catalog_Category.upsert({
+    create: category,
+    update: category,
+    where: { path },
+  });
+}
+
+function insertOrUpdateGear(name: string, categoryId: number) {
+  const slug = slugify.slugify(name);
+  const gear = { name, slug, category_id: categoryId };
+  return prisma.catalog_Gear.upsert({
+    create: gear,
+    update: gear,
+    where: { slug },
+  });
+}
 
 async function main() {
   console.log('Creating teams 👥');
@@ -419,22 +447,40 @@ async function main() {
     }),
   );
 
-  const savedGears = await Promise.all(
-    gears.map((gear) => {
-      const slug = slugify.slugify(gear);
-      const name = gear;
-      console.log(`----------------------------------------------------------`);
-      console.log(`Inserting ${name} as gear`);
-      const data = { slug, name };
-      return prisma.catalog_Gear.upsert({
-        where: { slug },
-        create: data,
-        update: data,
-      });
+  await Promise.all(
+    categoriesAndGears.map(async ({ name, gears, categories }) => {
+      console.log(`🏷️ Inserting ${name}`);
+      const { id: categoryId, path: categoryPath } =
+        await insertOrUpdateCategory(name, databaseTeams);
+      const gearsInsert = gears
+        ? gears?.map((name) => {
+            console.log(`🔨 Inserting ${name} with category ${categoryPath}`);
+            return insertOrUpdateGear(name, categoryId);
+          })
+        : [];
+      const categoriesInsert = categories
+        ? categories.map(async (subCategory) => {
+            console.log(
+              `🏷️ Inserting ${subCategory.name} with category #${categoryId} as parent`,
+            );
+            const { id: subCategoryId, path: subCategoryPath } =
+              await insertOrUpdateCategory(subCategory.name, databaseTeams, {
+                id: categoryId,
+                path: categoryPath,
+              });
+            return Promise.all(
+              subCategory.gears.map((gear) => {
+                console.log(
+                  `🔨 Inserting ${gear} with category ${subCategoryPath}`,
+                );
+                return insertOrUpdateGear(gear, subCategoryId);
+              }),
+            );
+          })
+        : [];
+      await Promise.all([...gearsInsert, ...categoriesInsert]);
     }),
   );
-
-  console.log(`\n${savedGears.length} gears 🔨 inserted`);
 
   const sgConfig: Prisma.ConfigurationUncheckedCreateInput = {
     key: 'sg',

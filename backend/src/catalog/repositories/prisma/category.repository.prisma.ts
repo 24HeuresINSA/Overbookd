@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaPromise } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../../prisma.service';
 import {
   Category,
   CategoryAlreadyExists,
