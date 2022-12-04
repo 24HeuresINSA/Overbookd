@@ -4,11 +4,12 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  MinLength,
   MaxLength,
-  Matches,
   IsNumber,
   ValidateNested,
+  IsDefined,
+  IsPhoneNumber,
+  IsEmail,
 } from 'class-validator';
 
 class Collaborator {
