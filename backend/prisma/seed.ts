@@ -10,14 +10,15 @@ const slugify = new SlugifyService();
 async function insertOrUpdateCategory(
   name: string,
   teams: Team[],
-  parent?: { id: number; path: string },
+  parent?: { id: number; path: string, owner_id: number },
 ) {
   const parentId = parent?.id;
   const path = parent
     ? `${parent.path}->${slugify.slugify(name)}`
     : slugify.slugify(name);
-  const owner = teams.find((team) => team.code === name.toLocaleLowerCase());
-  const category = { name, path, parent: parentId, owner_id: owner?.id };
+  const owner = parent ? {id: parent.owner_id} : teams.find((team) => team.code === name.toLocaleLowerCase());
+  const ownerPart = owner ? {owner_id: owner.id} : {}
+  const category = { name, path, parent: parentId, ...ownerPart };
   return prisma.catalog_Category.upsert({
     create: category,
     update: category,
@@ -450,7 +451,7 @@ async function main() {
   await Promise.all(
     categoriesAndGears.map(async ({ name, gears, categories }) => {
       console.log(`🏷️ Inserting ${name}`);
-      const { id: categoryId, path: categoryPath } =
+      const { id: categoryId, path: categoryPath, owner_id } =
         await insertOrUpdateCategory(name, databaseTeams);
       const gearsInsert = gears
         ? gears?.map((name) => {
@@ -467,6 +468,7 @@ async function main() {
               await insertOrUpdateCategory(subCategory.name, databaseTeams, {
                 id: categoryId,
                 path: categoryPath,
+                owner_id
               });
             return Promise.all(
               subCategory.gears.map((gear) => {
