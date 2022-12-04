@@ -25,9 +25,9 @@
 
 <script>
 import Vue from "vue";
-import TimeslotTable from "../components/organisms/TimeslotTable";
-import TimeslotAdder from "../components/organisms/TimeslotAdder";
-import TimeslotSnackBar from "../components/atoms/TimeslotSnackBar.vue";
+import TimeslotTable from "~/components/molecules/timeslot/TimeslotTable.vue";
+import TimeslotAdder from "~/components/molecules/timeslot/TimeslotAdder.vue";
+import TimeslotSnackBar from "~/components/atoms/TimeslotSnackBar.vue";
 
 export default Vue.extend({
   name: "Availabilities",

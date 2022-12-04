@@ -17,7 +17,7 @@ type GearUpdateForm = GearForm & {
   id: number;
 };
 
-class GearNotFoundException extends NotFoundException {
+export class GearNotFoundException extends NotFoundException {
   constructor(id: number) {
     super(`Gear #${id} doesn't exist`);
   }
@@ -46,10 +46,8 @@ export class CatalogService {
     });
   }
 
-  async find(id: number): Promise<Gear> {
-    const gear = await this.gearRepository.getGear(id);
-    if (!gear) throw new GearNotFoundException(id);
-    return gear;
+  async find(id: number): Promise<Gear | undefined> {
+    return this.gearRepository.getGear(id);
   }
 
   async update(gear: GearUpdateForm): Promise<Gear> {

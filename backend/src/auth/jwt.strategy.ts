@@ -15,9 +15,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate({ id, email, role }: any) {
     return {
-      userId: id,
-      username: email,
-      role,
+      id,
+      email,
+      role: role, //IMPORTANT BUG SINON
     };
   }
 }

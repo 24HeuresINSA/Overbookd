@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GearNotFoundException } from '../../catalog.service';
 import {
   Gear,
   GearAlreadyExists,
@@ -47,7 +48,9 @@ export class InMemoryGearRepository implements GearRepository {
   gears: Gear[] = [];
 
   getGear(id: number): Promise<Gear | undefined> {
-    return Promise.resolve(this.gears.find((gear) => gear.id === id));
+    const gear = this.gears.find((gear) => gear.id === id);
+    if (!gear) return Promise.reject(new GearNotFoundException(id));
+    return Promise.resolve(gear);
   }
 
   addGear(gear: Omit<Gear, 'id'>): Promise<Gear> {

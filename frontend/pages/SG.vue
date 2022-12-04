@@ -158,7 +158,7 @@
  * and every user that consumed get charged accordingly
  */
 import transactionRepo from "../repositories/transactionRepo";
-import SnackNotificationContainer from "../components/molecules/snackNotificationContainer";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import SgConfigForm from "@/components/organisms/SgConfigForm";
 const { safeCall } = require("../utils/api/calls");

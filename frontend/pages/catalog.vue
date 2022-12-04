@@ -13,13 +13,13 @@
     <v-dialog v-model="gearCreationDialogOpened" width="600px">
       <GearForm @close-dialog="closeGearCreationDialog"></GearForm
     ></v-dialog>
-    <snackNotificationContainerVue></snackNotificationContainerVue>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import snackNotificationContainerVue from "~/components/molecules/snackNotificationContainer.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import CategoriesTreeView from "~/components/organisms/CategoriesTreeView.vue";
 import GearForm from "~/components/organisms/form/GearForm.vue";
 import GearListing from "~/components/organisms/GearListing.vue";
@@ -29,7 +29,7 @@ export default Vue.extend({
   components: {
     GearListing,
     CategoriesTreeView,
-    snackNotificationContainerVue,
+    SnackNotificationContainer,
     GearForm,
   },
   data() {

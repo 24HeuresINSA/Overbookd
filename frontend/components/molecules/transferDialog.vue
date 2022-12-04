@@ -3,8 +3,24 @@
     <v-card>
       <v-card-title>Effectuer un virement</v-card-title>
       <v-card-text>
-        <OverForm :fields="transferForm" @form-change="onFormChange">
-        </OverForm>
+        <v-form v-model="transfer.isValid">
+          <v-autocomplete
+            v-model="transfer.user"
+            :items="users"
+            label="Utilisateur"
+            required
+            dense
+          ></v-autocomplete>
+
+          <v-text-field
+            v-model="transfer.amount"
+            type="number"
+            label="Montant"
+            required
+          ></v-text-field>
+
+          <v-text-field v-model="transfer.reason" label="Raison"></v-text-field>
+        </v-form>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="transferMoney()">Enregistrer</v-btn>
@@ -19,43 +35,23 @@ import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
-import OverForm from "~/components/overForm.vue";
 import { Transfer } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "TransferDialog",
-  components: { OverForm },
-  data() {
+
+  data: () => {
     return {
-      transferForm: [
-        {
-          key: "user",
-          label: "Utilisateur",
-          type: "user",
-          isRequired: true,
-        },
-        {
-          key: "amount",
-          label: "Montant",
-          option: "number",
-          isRequired: true,
-        },
-        {
-          key: "reason",
-          label: "Raison",
-          isRequired: true,
-        },
-      ],
       transfer: {
-        reason: "",
-        amount: "0",
-        beneficiary: {
+        user: {
           username: undefined,
           id: "",
         },
+        amount: "0",
+        reason: "",
         isValid: false,
-        user: {} as any,
       },
+      users: {},
     };
   },
   computed: {
@@ -83,10 +79,22 @@ export default Vue.extend({
       },
     },
   },
+  async mounted() {
+    let users = this.$accessor.user.usernames;
+    if (users.length === 0) {
+      // fetch usernames
+      await this.$accessor.user.getUsername("");
+      users = this.$accessor.user.usernames;
+    }
+    // sort alphabetically
+    this.users = users.map((user) => {
+      return {
+        text: user.username,
+        value: user,
+      };
+    });
+  },
   methods: {
-    onFormChange(form: any) {
-      this.transfer = form;
-    },
     async transferMoney(): Promise<any> {
       if (!this.transfer.isValid) {
         return;
@@ -124,6 +132,13 @@ export default Vue.extend({
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
           this.$emit("transaction", newTransfer.amount);
+          //reset form data
+          this.transfer = {
+            user: { username: undefined, id: "" },
+            amount: "0",
+            reason: "",
+            isValid: false,
+          };
         } catch (e) {
           console.error(e);
         }

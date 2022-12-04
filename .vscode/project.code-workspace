@@ -42,6 +42,7 @@
       "Auth",
       "triage",
       "CP",
+      "FA",
       "release"
     ],
     "cSpell.enabled": false,

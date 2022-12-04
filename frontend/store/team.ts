@@ -21,6 +21,16 @@ export const getters = getterTree(state, {
   teamNames(state, getters): string[] {
     return getters.allTeams.map((team: team) => team.name);
   },
+  faValidators(state): team[] {
+    return state.teams.filter(
+      (t: any) => t.fa_validator == 1 && t.name !== "admin"
+    );
+  },
+  ftValidators(state): team[] {
+    return state.teams.filter(
+      (t: any) => t.ft_validator == 1 && t.name !== "admin"
+    );
+  },
   getTeams:
     (state, getters) =>
     (teamNames: string[]): team[] => {

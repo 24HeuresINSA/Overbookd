@@ -7,17 +7,25 @@
         :items="comments"
         hide-default-footer
         :items-per-page="-1"
-        sort-by="time"
+        sort-by="created_at"
       >
-        <template #[`item.time`]="{ item }">
-          {{ new Date(item.time).toLocaleString() }}
+        <template #[`item.created_at`]="{ item }">
+          {{ new Date(item.created_at).toLocaleString() }}
+        </template>
+        <template #[`item.User_author`]="{ item }">
+          {{
+            item.User_author
+              ? item.User_author.firstname + " " + item.User_author.lastname
+              : " "
+          }}
         </template>
       </v-data-table>
       <v-textarea
         v-model="newComment"
-        label="Commentaire?"
+        label="Commentaire"
         dense
         rows="3"
+        class="margin-top"
       ></v-textarea>
     </v-card-text>
     <v-card-actions>
@@ -28,43 +36,26 @@
 </template>
 
 <script lang="ts">
-import { RepoFactory } from "~/repositories/repoFactory";
-import { Header } from "~/utils/models/Data";
 import Vue from "vue";
-import { FormComment } from "~/utils/models/Comment";
-import { safeCall } from "~/utils/api/calls";
-
-declare interface Data {
-  headers: Header[];
-  newComment: string;
-}
+import { subject_type, fa_comments } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CommentCard",
   props: {
-    comments: {
-      type: Array,
-      default: () => [],
-    },
     form: {
       type: String,
       default: () => "FA",
     },
   },
-  data(): Data {
-    return {
-      headers: [
-        { text: "Validateur", value: "validator" },
-        { text: "Sujet", value: "topic" },
-        {
-          text: "Commentaire",
-          value: "text",
-        },
-        { text: "Date", value: "time" },
-      ],
-      newComment: "",
-    };
-  },
+  data: () => ({
+    headers: [
+      { text: "Auteur", value: "User_author" },
+      { text: "Sujet", value: "subject" },
+      { text: "Commentaire", value: "comment" },
+      { text: "Date", value: "created_at" },
+    ],
+    newComment: "",
+  }),
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
     store(): any {
@@ -74,36 +65,47 @@ export default Vue.extend({
         return this.$accessor.FT;
       }
     },
+    // eslint-disable-next-line vue/return-in-computed-property
+    comments(): any {
+      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments;
+      // else if (this.form === "FT") return this.$accessor.FT.mFT.ft_comment;
+    },
+    me(): any {
+      return this.$accessor.user.me;
+    },
   },
   methods: {
     async addComment() {
-      const comment: FormComment = {
-        topic: "commentaire",
-        text: this.newComment,
-        time: new Date(),
-        validator: `${this.$accessor.user.me.firstname} ${this.$accessor.user.me.lastname}`,
-      };
-      this.store.addComment(comment);
-      // clean the input
-      this.newComment = "";
-      if (this.form === "FA") {
-        await safeCall(
-          this.$store,
-          RepoFactory.faRepo.updateFA(this, this.$accessor.FA.mFA),
-          "sent",
-          "server"
-        );
+      if (!this.newComment) return;
+
+      if (this.form == "FA") {
+        const comment: fa_comments = {
+          subject: subject_type.COMMENT,
+          comment: this.newComment,
+          author: this.me.id,
+          created_at: new Date(),
+        };
+
+        await this.store.addComment(comment);
+        this.newComment = "";
       } else if (this.form === "FT") {
-        await safeCall(
-          this.$store,
-          RepoFactory.ftRepo.updateFT(this, this.$accessor.FT.mFT),
-          "sent",
-          "server"
-        );
+        /*const comment: ft_comment = {
+          subject: subject_type.COMMENT,
+          comment: this.newComment,
+          author: this.me.id,
+          created_at: new Date(),
+        };
+
+        this.store.addComment(comment);
+        this.newComment = "";*/
       }
     },
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.margin-top {
+  margin-top: 20px;
+}
+</style>

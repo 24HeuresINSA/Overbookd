@@ -28,14 +28,7 @@
 
     <v-row>
       <v-col md="6">
-        <FormCard
-          title="Général"
-          topic="general"
-          form-key="ft_general_form"
-          :form="FT"
-          :is-disabled="isValidated('humain')"
-          @form-change="updateForm('general', $event)"
-        ></FormCard>
+        <FTGeneralCard></FTGeneralCard>
       </v-col>
 
       <v-col md="6">
@@ -44,14 +37,7 @@
     </v-row>
     <v-row>
       <v-col md="12">
-        <FormCard
-          title="Détail"
-          topic="details"
-          form-key="ft_details_form"
-          :form="FT"
-          :is-disabled="isValidated('humain')"
-          @form-change="updateForm('details', $event)"
-        ></FormCard>
+        <FTDetailCard></FTDetailCard>
       </v-col>
     </v-row>
     <v-row>
@@ -208,11 +194,12 @@ import { User } from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FTInfoCard from "~/components/FTInfoCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
-import CompleteTimeframeCard from "~/components/organisms/form/CompleteTimeframeCard.vue";
-import FormCard from "~/components/organisms/form/FormCard.vue";
+import CompleteTimeframeCard from "~/components/organisms/form/ft/CompleteTimeframeCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";
-import SnackNotificationContainer from "~/components/molecules/snackNotificationContainer.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import Loader from "~/components/atoms/Loader.vue";
+import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
+import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 
 interface Data {
   FTID: number;
@@ -259,12 +246,13 @@ export default Vue.extend({
   name: "Ft",
   components: {
     SnackNotificationContainer,
-    FormCard,
     CommentCard,
     CompleteTimeframeCard,
     FTInfoCard,
     LogisticsCard,
     Loader,
+    FTDetailCard,
+    FTGeneralCard,
   },
   data: function (): Data {
     return {

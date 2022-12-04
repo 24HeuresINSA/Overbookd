@@ -219,10 +219,10 @@ import locationAdder from "../components/organisms/locationAdder.vue";
 import cloneDeep from "lodash/cloneDeep";
 import isEqual from "lodash/isEqual";
 import Vue from "vue";
-import EquipmentInformations from "~/components/organisms/EquipmentInformations.vue";
-import EquipmentProposalDialog from "~/components/organisms/EquipmentProposalDialog.vue";
-import EquipmentProposalDialogPage from "~/components/organisms/EquipmentProposalDialogPage.vue";
-import EquipmentDialog from "~/components/organisms/EquipmentDialog.vue";
+import EquipmentInformations from "~/components/organisms/equipment/EquipmentInformations.vue";
+import EquipmentProposalDialog from "~/components/organisms/equipment/EquipmentProposalDialog.vue";
+import EquipmentProposalDialogPage from "~/components/organisms/equipment/EquipmentProposalDialogPage.vue";
+import EquipmentDialog from "~/components/organisms/equipment/EquipmentDialog.vue";
 import Fuse from "fuse.js";
 import { location, User } from "~/utils/models/repo";
 import { Equipment } from "~/utils/models/Equipment";
@@ -359,9 +359,9 @@ export default Vue.extend({
       return this.$accessor.equipmentProposal.count;
     },
     equipmentMap(): Map<String, number> {
-      const faEquipmentMap = this.$accessor.FA.equipmentMap;
+      //const faEquipmentMap = this.$accessor.FA.equipmentMap;
       const ftEquipmentMap = this.$accessor.FT.equipmentMap;
-      return new Map([...faEquipmentMap, ...ftEquipmentMap]);
+      return new Map([...ftEquipmentMap]);
     },
   },
 

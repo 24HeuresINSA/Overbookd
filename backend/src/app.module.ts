@@ -9,9 +9,15 @@ import { TransactionModule } from './transaction/transaction.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
+import { FaModule } from './fa/fa.module';
+import { CollaboratorModule } from './collaborator/collaborator.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MailService } from './mail/mail.service';
+import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
+import { FaCommentModule } from './fa_comment/fa_comment.module';
+import { TimeWindowsModule } from './time_windows/time_windows.module';
+import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 
@@ -23,6 +29,8 @@ import { ConfigurationModule } from './configuration/configuration.module';
     TeamModule,
     TransactionModule,
     ConfigModule,
+    FaModule,
+    CollaboratorModule,
     MailerModule.forRoot({
       transport: {
         service: 'gmail',
@@ -42,6 +50,11 @@ import { ConfigurationModule } from './configuration/configuration.module';
         },
       },
     }),
+    FaSignaNeedsModule,
+    FaCommentModule,
+    TimeWindowsModule,
+    FaElectricityNeedsModule,
+    CatalogModule,
     CatalogModule,
     ConfigurationModule,
   ],

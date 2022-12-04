@@ -1,67 +1,48 @@
 <template>
-  <v-card :style="disabled ? `border-left: 5px solid green` : ``">
+  <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
-      <v-container fluid>
-        <v-row dense>
-          <v-col v-if="disabled" cols="12">
-            <LogisticsTable
-              :types="types"
-              :store="store"
-              :disabled="disabled"
-            ></LogisticsTable>
-          </v-col>
-          <v-col v-else cols="12" lg="8">
-            <LogisticsTable
-              :types="types"
-              :store="store"
-              :disabled="disabled"
-            ></LogisticsTable>
-          </v-col>
-          <v-col v-if="!disabled" cols="12" lg="4">
-            <v-row dense justify="space-between">
-              <v-col cols="12" lg="10" md="11">
-                <v-autocomplete
-                  v-model="item"
-                  dense
-                  filled
-                  :items="typeFilteredEquipment"
-                  item-text="name"
-                  return-object
-                  chips
-                  allow-overflow
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="12" lg="2" md="1">
-                <v-btn :disabled="!validInput" rounded @click="addItem">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-            <LogisticsSelector
-              :types="types"
-              :store="store"
-            ></LogisticsSelector>
-          </v-col>
-        </v-row>
+      <v-container>
+        <v-form v-if="!isDisabled" class="flex-row">
+          <v-text-field
+            v-model="quantity"
+            type="number"
+            label="Quantité"
+            :rules="[rules.number, rules.min]"
+          />
+          <SearchGear
+            :gear="gear"
+            :owner="owner"
+            @change="updateCurrentGear"
+          ></SearchGear>
+          <v-btn
+            rounded
+            class="margin-btn"
+            :disabled="!isValid"
+            @click="addGear"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-form>
+        <LogisticsTable
+          :owner="owner"
+          :is-disabled="isDisabled"
+        ></LogisticsTable>
       </v-container>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
-import LogisticsTable from "./LogisticsTable.vue";
-import LogisticsSelector from "./LogisticsSelector.vue";
 import Vue from "vue";
+import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
+import SearchGear from "~/components/atoms/SearchGear.vue";
+import { Gear } from "~/utils/models/catalog.model";
+import { GearRequestCreation, time_windows_type } from "~/utils/models/FA";
 
-/**
- * @displayName Logistics Card
- * Card to manage equipments in FAs
- */
 export default Vue.extend({
   name: "LogisticsCard",
-  components: { LogisticsSelector, LogisticsTable },
+  components: { LogisticsTable, SearchGear },
   props: {
     /**
      * The title to be displayed
@@ -78,65 +59,79 @@ export default Vue.extend({
       default: () => [],
     },
     /**
-     * The store to use when adding new equipment
-     */
-    store: {
-      type: Object,
-      required: true,
-    },
-    /**
      * If the element is editable or not
      */
-    disabled: {
+    isDisabled: {
       type: Boolean,
       default: () => false,
     },
+    owner: {
+      type: String,
+      default: () => "",
+    },
   },
-  data() {
-    return {
-      // Item linked to v-autocomplete component
-      item: undefined as undefined | any,
-    };
-  },
+  data: () => ({
+    gear: undefined as Gear | undefined,
+    quantity: 1,
+    rules: {
+      number: (value: string) =>
+        !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
+      min: (value: string) =>
+        parseInt(value, 10) >= 1 || "La valeur doit être supérieure à 0",
+    },
+  }),
   computed: {
-    equipment: function (): Array<any> {
-      return this.$accessor.equipment.items;
+    isValid() {
+      return (
+        this.gear &&
+        this.quantity >= 1 &&
+        this.$accessor.FA.mFA.time_windows?.find(
+          (tw) => tw.type === time_windows_type.MATOS
+        ) &&
+        !this.isDisabled
+      );
     },
-    /**
-     * @returns validEquipments are filtered by isValid !== false (ie: does not exist or true)
-     */
-    validEquipments: function (): Array<any> {
-      return this.equipment.filter((e) => e.isValid !== false);
+    timeWindow() {
+      return this.$accessor.FA.mFA.time_windows?.find(
+        (tw) => tw.type === time_windows_type.MATOS
+      );
     },
-    validInput: function (): boolean {
-      return !(this.item == undefined);
-    },
-    typeFilteredEquipment: function (): Array<any> {
-      return this.validEquipments.filter((e) => this.types.includes(e.type));
-    },
-  },
-  async mounted() {
-    // fetchAll calls api to fetch all available equipment
-    await this.$accessor.equipment.fetchAll();
   },
   methods: {
-    /**
-     * Add item to FA store
-     */
-    async addItem() {
-      if (this.item) {
-        if (this.store.addEquipment) {
-          await this.store.addEquipment({
-            _id: this.item._id,
-            name: this.item.name,
-            type: this.item.type,
-          });
-          this.item = undefined;
-        }
-      }
+    updateCurrentGear(gear: Gear | undefined) {
+      this.gear = gear;
+    },
+    addGear() {
+      if (!this.gear) return;
+      const timeWindow = this.$accessor.FA.mFA.time_windows?.find(
+        (tw) => tw.type === time_windows_type.MATOS
+      );
+      if (!timeWindow) return;
+      const gearRequestCreationForm: GearRequestCreation = {
+        gearId: this.gear.id,
+        quantity: this.quantity,
+        start: timeWindow.start,
+        end: timeWindow.end,
+      };
+      this.$accessor.FA.addGearRequest(gearRequestCreationForm);
     },
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  border-left: 5px solid green;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.flex-row .margin-btn {
+  margin-left: 20px;
+  margin-bottom: 30px;
+}
+</style>

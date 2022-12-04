@@ -7,7 +7,7 @@ import {
   SearchGear,
 } from '../../interfaces';
 
-type DatabaseGear = {
+export type DatabaseGear = {
   id: number;
   name: string;
   slug: string;
@@ -21,6 +21,21 @@ type DatabaseGear = {
     path: string;
   };
 };
+
+export function convertGearToApiContract(gear: DatabaseGear) {
+  const baseGear = { name: gear.name, slug: gear.slug, id: gear.id };
+  const category = gear.category
+    ? {
+        name: gear.category.name,
+        path: gear.category.path,
+        id: gear.category.id,
+      }
+    : undefined;
+  const owner = gear.category?.owner
+    ? { name: gear.category.owner.name, code: gear.category.owner.code }
+    : undefined;
+  return { ...baseGear, category, owner };
+}
 
 @Injectable()
 export class PrismaGearRepository implements GearRepository {
@@ -53,22 +68,7 @@ export class PrismaGearRepository implements GearRepository {
     if (!gear) {
       return undefined;
     }
-    return this.convertToApiContract(gear);
-  }
-
-  private convertToApiContract(gear: DatabaseGear) {
-    const baseGear = { name: gear.name, slug: gear.slug, id: gear.id };
-    const category = gear.category
-      ? {
-          name: gear.category.name,
-          path: gear.category.path,
-          id: gear.category.id,
-        }
-      : undefined;
-    const owner = gear.category?.owner
-      ? { name: gear.category.owner.name, code: gear.category.owner.code }
-      : undefined;
-    return { ...baseGear, category, owner };
+    return convertGearToApiContract(gear);
   }
 
   async addGear(gear: Omit<Gear, 'id'>): Promise<Gear> {
@@ -78,7 +78,7 @@ export class PrismaGearRepository implements GearRepository {
         data,
         select: this.SELECT_GEAR,
       });
-      return this.convertToApiContract(newGear);
+      return convertGearToApiContract(newGear);
     } catch (e) {
       if (this.prismaService.isUniqueConstraintViolation(e)) {
         throw new GearAlreadyExists(gear);
@@ -103,7 +103,7 @@ export class PrismaGearRepository implements GearRepository {
       select: this.SELECT_GEAR,
       where: { id },
     });
-    return this.convertToApiContract(updatedGear);
+    return convertGearToApiContract(updatedGear);
   }
 
   async removeGear(id: number): Promise<void> {

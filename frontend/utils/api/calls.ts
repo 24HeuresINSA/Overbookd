@@ -29,7 +29,7 @@ export async function safeCall<T = any>(
     if (successMessage) {
       const notif: SnackNotif = {
         type: "success",
-        message: successMessages[successMessage],
+        message: successMessage,
       };
       store.dispatch("notif/pushNotification", notif);
     }
@@ -38,7 +38,7 @@ export async function safeCall<T = any>(
     if (errorMessage) {
       const notif: SnackNotif = {
         type: "error",
-        message: errorMessages[errorMessage],
+        message: errorMessage,
       };
       store.dispatch("notif/pushNotification", notif);
     }

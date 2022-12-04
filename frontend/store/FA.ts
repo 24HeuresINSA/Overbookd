@@ -1,367 +1,402 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import {
-  ElectricityNeed,
-  FA,
-  SecurityPass,
-  Signalisation,
-} from "~/utils/models/FA";
-import { FT } from "~/utils/models/FT";
-import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { FormComment } from "~/utils/models/Comment";
+import { safeCall } from "~/utils/api/calls";
+import {
+  collaborator,
+  FA,
+  fa_collaborators,
+  fa_comments,
+  fa_electricity_needs,
+  fa_signa_needs,
+  fa_validation_body,
+  GearRequest,
+  GearRequestCreation,
+  Status,
+  subject_type,
+  time_windows,
+} from "~/utils/models/FA";
+import { sendNotification } from "./catalog";
+
+const repo = RepoFactory.faRepo;
 
 export const state = () => ({
   mFA: {
-    status: "draft",
-
-    general: {},
-    details: {},
-    security: {},
-
-    equipments: [] as any,
-    timeframes: [] as any,
-    validated: [] as any,
-    refused: [] as any,
-    securityPasses: [] as SecurityPass[],
-    signalisation: [] as Signalisation[],
-    electricityNeeds: [] as ElectricityNeed[],
-    comments: [] as FormComment[],
-    FTs: [] as FT[],
+    status: Status.DRAFT,
+    name: "",
   } as FA,
-  FAs: [] as FA[],
+  gearRequests: [] as GearRequest[],
 });
 
 export const getters = getterTree(state, {
-  getEquipments: function (state) {
-    return state.mFA.equipments;
+  matosGearRequests(state) {
+    return state.gearRequests.filter((gr) => gr.gear.owner?.code === "matos");
   },
-  timeframes: function (state) {
-    return state.mFA.timeframes;
+  elecGearRequests(state) {
+    return state.gearRequests.filter((gr) => gr.gear.owner?.code === "elec");
   },
-  equipmentMap: function (state): Map<String, number> {
-    const equipmentMap = new Map<string, number>();
-    state.FAs.forEach((fa) => {
-      if (fa.equipments) {
-        fa.equipments.forEach((equipment) => {
-          if (equipmentMap.has(equipment._id)) {
-            equipmentMap.set(
-              equipment._id,
-              equipmentMap.get(equipment._id)! + equipment.required
-            );
-          } else {
-            equipmentMap.set(equipment._id, equipment.required);
-          }
-        });
-      }
-    });
-    return equipmentMap;
+  barrieresGearRequests(state) {
+    return state.gearRequests.filter(
+      (gr) => gr.gear.owner?.code === "barrieres"
+    );
   },
 });
 
 export const mutations = mutationTree(state, {
-  ASSIGN_FA: function ({ mFA }, data) {
-    const key = Object.keys(data)[0] as keyof FA;
-    if (!mFA[key]) {
-      // @ts-ignore
-      mFA[key] = data[key];
-    } else {
-      // @ts-ignore
-      if (mFA[key].length !== undefined) {
-        // array
-      }
-      // @ts-ignore
-      Object.assign(mFA[key], data[key]);
-    }
+  SET_FA(state, fa: Partial<FA>) {
+    state.mFA = { ...state.mFA, ...fa };
   },
-  SET_FA: function (state, mFA: FA) {
-    mFA.timeframes = mFA.timeframes.map((tf) => {
-      return {
-        ...tf,
-        start: new Date(tf.start),
-        end: new Date(tf.end),
-      };
-    });
-    state.mFA = mFA;
-  },
-  RESET_FA: function (state) {
+
+  RESET_FA(state) {
     state.mFA = {
-      status: "draft",
-      general: {},
-      details: {},
-      security: {},
-      equipments: [],
-      timeframes: [],
-      validated: [],
-      refused: [],
-      comments: [],
-      FTs: [],
-      isValid: true,
-      securityPasses: [],
-      signalisation: [],
-      electricityNeeds: [],
-    };
+      status: Status.DRAFT,
+      name: "",
+    } as FA;
   },
-  ADD_TIMEFRAME: function (state, timeframe) {
-    if (
-      state.mFA.timeframes.find((e) => e.name === timeframe.name) === undefined
-    ) {
-      state.mFA.timeframes.push(timeframe);
+
+  UPDATE_STATUS({ mFA }, status: Status) {
+    mFA.status = status;
+  },
+
+  UPDATE_FA({ mFA }, { key, value }) {
+    if (typeof mFA[key as keyof FA] !== "undefined") {
+      mFA[key as keyof FA] = value as never;
     }
   },
-  ADD_EQUIPMENT: function (state, equipment) {
-    state.mFA.equipments.push(equipment);
+
+  ADD_COMMENT({ mFA }, comment: fa_comments) {
+    if (!mFA.fa_comments) mFA.fa_comments = [];
+    mFA.fa_comments?.push(comment);
   },
-  DELETE_TIMEFRAME: function (state, index) {
-    state.mFA.timeframes.splice(index, 1);
+
+  ADD_SIGNA_NEED({ mFA }, signaNeed: fa_signa_needs) {
+    if (!mFA.fa_signa_needs) mFA.fa_signa_needs = [];
+    mFA.fa_signa_needs?.push(signaNeed);
   },
-  UPDATE_REQUIRED_EQUIPMENT: function (state, { _id, count }) {
-    const equipment = state.mFA.equipments.find((e: any) => e._id === _id);
-    if (equipment) {
-      equipment.required = count;
+
+  UPDATE_SIGNA_NEED_COUNT({ mFA }, { index, count }) {
+    if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
+      mFA.fa_signa_needs[index].count = Number(count);
     }
   },
-  DELETE_EQUIPMENT: function (state, _id) {
-    // @ts-ignore
-    state.mFA.equipments = state.mFA.equipments.filter(
-      (e: any) => e._id !== _id
+
+  DELETE_SIGNA_NEED({ mFA }, index: number) {
+    if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
+      mFA.fa_signa_needs.splice(index, 1);
+    }
+  },
+
+  ADD_TIME_WINDOW({ mFA }, timeWindow: time_windows) {
+    if (!mFA.time_windows) mFA.time_windows = [];
+    mFA.time_windows?.push(timeWindow);
+  },
+
+  UPDATE_TIME_WINDOW({ mFA }, { index, timeWindow }) {
+    if (mFA.time_windows && mFA.time_windows[index]) {
+      mFA.time_windows[index].start = timeWindow.start;
+      mFA.time_windows[index].end = timeWindow.end;
+      mFA.time_windows[index].type = timeWindow.type;
+    }
+  },
+
+  DELETE_TIME_WINDOW({ mFA }, index: number) {
+    if (mFA.time_windows && mFA.time_windows[index]) {
+      mFA.time_windows.splice(index, 1);
+    }
+  },
+
+  ADD_COLLABORATOR({ mFA }, collaborator: fa_collaborators) {
+    if (!mFA.fa_collaborators) mFA.fa_collaborators = [];
+    mFA.fa_collaborators?.push(collaborator);
+  },
+
+  UPDATE_COLLABORATOR({ mFA }, { index, key, value }) {
+    if (!mFA.fa_collaborators || !mFA.fa_collaborators[index]) return;
+    mFA.fa_collaborators[index].collaborator[key as keyof collaborator] =
+      value as never;
+  },
+
+  DELETE_COLLABORATOR({ mFA }, index: number) {
+    if (mFA.fa_collaborators && mFA.fa_collaborators[index]) {
+      mFA.fa_collaborators.splice(index, 1);
+    }
+  },
+
+  ADD_ELECTRICITY_NEED({ mFA }, elecNeed: fa_electricity_needs) {
+    if (!mFA.fa_electricity_needs) mFA.fa_electricity_needs = [];
+    mFA.fa_electricity_needs?.push(elecNeed);
+  },
+
+  DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
+    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
+      mFA.fa_electricity_needs.splice(index, 1);
+    }
+  },
+  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
+    gearRequests.push(gearRequest);
+  },
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: GearRequest[]) {
+    state.gearRequests = gearRequestsResponse;
+  },
+  REMOVE_GEAR_REQUEST(state, gearId: number) {
+    state.gearRequests = state.gearRequests.filter(
+      (gr) => gr.gear.id !== gearId
     );
-  },
-  VALIDATE_FA: function (state, validator) {
-    if (state.mFA.validated === undefined) {
-      // init if not existing
-      state.mFA.validated = [];
-    }
-    if (!state.mFA.validated.find((v) => v === validator)) {
-      // avoid duplicates
-      state.mFA.validated.push(validator);
-      if (state.mFA.refused) {
-        // remove validated validator from refused
-        state.mFA.refused = state.mFA.refused.filter((v) => v !== validator);
-      }
-      const FA_VALIDATORS =
-        // @ts-ignore
-        this.$accessor.config.getConfig("fa_validators").length;
-      if (state.mFA.validated.length === FA_VALIDATORS) {
-        state.mFA.status = "validated";
-      }
-
-      // add comment
-      if (!state.mFA.comments) {
-        state.mFA.comments = [];
-      }
-      state.mFA.comments.push({
-        time: new Date(),
-        text: `valide par ${validator}`,
-        validator,
-        topic: "valider",
-      });
-    }
-  },
-  REFUSE_FA: function (state, { validator, comment }) {
-    state.mFA.status = "refused";
-    if (!state.mFA.refused) {
-      state.mFA.refused = [];
-    }
-    state.mFA.refused.push(validator);
-    if (!state.mFA.comments) {
-      state.mFA.comments = [];
-    }
-
-    // remove from validated
-    if (state.mFA.validated) {
-      state.mFA.validated = state.mFA.validated.filter((v) => v !== validator);
-    }
-
-    // ad comment
-    state.mFA.comments.push({
-      time: new Date(),
-      text: comment,
-      topic: "refuser",
-      validator,
-    });
-  },
-  SET_STATUS_FA: function (state, { by, status }) {
-    state.mFA.status = status;
-    if (!state.mFA.comments) {
-      state.mFA.comments = [];
-    }
-    state.mFA.comments.push({
-      time: new Date(),
-      text: `changement de status a ${status} par ${by}`,
-      validator: "",
-      topic: status,
-    });
-  },
-  ADD_FT: function (state, FT: FT) {
-    if (state.mFA.FTs === undefined) {
-      state.mFA.FTs = [];
-    }
-    state.mFA.FTs.push(FT);
-  },
-  ADD_COMMENT: function (state, comment) {
-    if (!state.mFA.comments) {
-      state.mFA.comments = [];
-    }
-    state.mFA.comments.push(comment);
-  },
-  UNDELETE: function (state) {
-    state.mFA.isValid = true;
-  },
-  ADD_SECURITY_PASS: function (state, securityPass) {
-    if (state.mFA.securityPasses === undefined) {
-      state.mFA.securityPasses = [];
-    }
-    state.mFA.securityPasses.push(securityPass);
-  },
-  UPDATE_SECURITY_PASS: function (state, { index, securityPass }) {
-    state.mFA.securityPasses.splice(index, 1, securityPass);
-  },
-  DELETE_SECURITY_PASS: function (state, index) {
-    state.mFA.securityPasses.splice(index, 1);
-  },
-  ADD_SIGNALISATION: function (state, signalisation) {
-    if (state.mFA.signalisation === undefined) {
-      state.mFA.signalisation = [];
-    }
-    state.mFA.signalisation.push(signalisation);
-  },
-  DELETE_SIGNALISATION: function (state, index) {
-    state.mFA.signalisation.splice(index, 1);
-  },
-  UPDATE_SIGNALISATION_NUMBER: function (state, { index, number }) {
-    state.mFA.signalisation[index].number = number;
-  },
-  DELETE_ELECTRICITY_NEED: function (state, index) {
-    state.mFA.electricityNeeds.splice(index, 1);
-  },
-  ADD_ELECTRICITY_NEED: function (state, electricityNeed) {
-    if (state.mFA.electricityNeeds === undefined) {
-      state.mFA.electricityNeeds = [];
-    }
-    state.mFA.electricityNeeds.push({ ...electricityNeed });
-  },
-  SET_LOCATIONS: function (state, locations) {
-    if (state.mFA.general === undefined) {
-      state.mFA.general = {};
-    }
-    state.mFA.general!.locations = locations;
-  },
-  SET_ALL_FA: function (state, allFA: FA[]) {
-    state.FAs = allFA.filter((fa) => !(fa.isValid === false));
   },
 });
 
 export const actions = actionTree(
   { state },
   {
-    setLocations: async ({ commit }, locations: string[]) => {
-      commit("SET_LOCATIONS", locations);
-    },
-    addElectricityNeed({ commit }, electricityNeed) {
-      commit("ADD_ELECTRICITY_NEED", electricityNeed);
-    },
-    deleteElectricityNeed({ commit }, index) {
-      commit("DELETE_ELECTRICITY_NEED", index);
-    },
-    updateSignalisationNumber(context, signalisationNumber) {
-      context.commit("UPDATE_SIGNALISATION_NUMBER", signalisationNumber);
-    },
-    deleteSignalisation: ({ commit }, index) => {
-      commit("DELETE_SIGNALISATION", index);
-    },
-    addSignalisation: async ({ commit }, signalisation) => {
-      commit("ADD_SIGNALISATION", { ...signalisation });
-    },
-    addSecurityPass: async function ({ commit }, securityPass) {
-      commit("ADD_SECURITY_PASS", { ...securityPass });
-    },
-    updateSecurityPass: async function ({ commit }, securityPass) {
-      commit("UPDATE_SECURITY_PASS", securityPass);
-    },
-    deleteSecurityPass: async function ({ commit }, index) {
-      commit("DELETE_SECURITY_PASS", index);
-    },
-    assignFA: function ({ commit }, payload) {
-      commit("ASSIGN_FA", payload);
-    },
-    addTimeframe: function ({ commit }, payload) {
-      commit("ADD_TIMEFRAME", payload);
-    },
-    addTimeframes: function ({ commit }, payload) {
-      payload.forEach((t: any) => {
-        commit("ADD_TIMEFRAME", t);
-      });
-    },
-    addEquipment: function ({ commit, state }, payload) {
-      if (!state.mFA.equipments.find((e: any) => payload._id === e._id)) {
-        payload.required = 1;
-        commit("ADD_EQUIPMENT", payload);
-      }
-    },
-    deleteTimeframe: function ({ commit }, payload) {
-      commit("DELETE_TIMEFRAME", payload);
-    },
-    updateEquipmentRequiredCount: function ({ commit }, payload) {
-      commit("UPDATE_REQUIRED_EQUIPMENT", payload);
-    },
-    deleteEquipmentById: function ({ commit }, payload) {
-      commit("DELETE_EQUIPMENT", payload);
-    },
-    setFA: function ({ commit }, FA: FA) {
+    setFA({ commit }, FA: FA) {
       commit("SET_FA", FA);
     },
-    undelete: function ({ commit }) {
-      commit("UNDELETE");
-    },
-    validate: function ({ commit }, payload) {
-      commit("VALIDATE_FA", payload);
-    },
-    setStatus: function ({ commit }, payload) {
-      commit("SET_STATUS_FA", payload);
-    },
-    refuse: function ({ commit }, payload) {
-      commit("REFUSE_FA", payload);
-    },
-    resetFA: function ({ commit }, payload) {
+
+    resetFA({ commit }, payload) {
       commit("RESET_FA", payload);
     },
-    addComment: function ({ commit }, comment: FormComment) {
-      commit("ADD_COMMENT", comment);
+
+    getAndSet: async function ({ commit }, id: number) {
+      const [resFA, resGearRequests] = await Promise.all([
+        safeCall(this, repo.getFAByCount(this, id)),
+        safeCall(this, repo.getGearRequests(this, id)),
+      ]);
+      if (!resGearRequests || !resFA) return null;
+      commit("SET_GEAR_REQUESTS", resGearRequests.data);
+      commit("SET_FA", resFA.data);
+      return resFA.data;
     },
-    addNewFT: async function ({ commit, state }, name) {
-      const repo = RepoFactory;
-      const FT = {
-        FA: state.mFA.count,
-        general: {
-          name: name,
-        },
-        status: "draft",
-        validated: [] as String[],
-        refused: [] as String[],
-        equipments: [] as any[],
-        timeframes: [] as any[],
-      } as FT;
-      const resFT = await safeCall(this, repo.ftRepo.createFT(this, FT));
-      if (resFT) {
-        const resFA = await safeCall(
-          this,
-          // @ts-ignore
-          repo.faRepo.updateFA(this, this.$accessor.FA.mFA)
-        );
-        if (resFA) {
-          commit("ADD_FT", resFT.data);
-          await safeCall(this, repo.faRepo.updateFA(this, state.mFA));
-        }
-      }
-    },
+
     fetchAll: async function ({ commit }) {
-      const repo = RepoFactory;
-      const res = await safeCall(this, repo.faRepo.getAllFAs(this));
+      const res: any = await safeCall(this, repo.getAllFAs(this));
       if (res && res.data) {
         commit("SET_ALL_FA", res.data);
         return res;
       }
       return null;
+    },
+
+    submitForReview: async function (
+      { commit },
+      { faId, authorId, authorName }
+    ) {
+      if (!faId || !authorId || !authorName) return;
+      const comment: fa_comments = {
+        subject: subject_type.SUBMIT,
+        comment: `La FA a été soumise par ${authorName}.`,
+        author: authorId,
+        created_at: new Date(),
+      };
+      commit("ADD_COMMENT", comment);
+      commit("UPDATE_STATUS", Status.SUBMITTED);
+    },
+
+    updateFA({ commit }, { key, value }) {
+      commit("UPDATE_FA", { key, value });
+    },
+
+    save: async function ({ dispatch, state }) {
+      const allPromise = [];
+      allPromise.push(
+        RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA)
+      );
+      if (state.mFA.fa_collaborators) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFACollaborators(
+            this,
+            state.mFA.id,
+            state.mFA.fa_collaborators
+          )
+        );
+      }
+      if (state.mFA.fa_signa_needs) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFASignaNeeds(
+            this,
+            state.mFA.id,
+            state.mFA.fa_signa_needs
+          )
+        );
+      }
+      if (state.mFA.time_windows) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFATimeWindows(
+            this,
+            state.mFA.id,
+            state.mFA.time_windows
+          )
+        );
+      }
+      if (state.mFA.fa_electricity_needs) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFAElectricityNeeds(
+            this,
+            state.mFA.id,
+            state.mFA.fa_electricity_needs
+          )
+        );
+      }
+      if (state.mFA.fa_comments) {
+        allPromise.push(
+          RepoFactory.faRepo.updateFAComments(
+            this,
+            state.mFA.id,
+            state.mFA.fa_comments
+          )
+        );
+      }
+      await Promise.all(allPromise);
+      dispatch("getAndSet", state.mFA.id);
+    },
+
+    validate: async function (
+      { dispatch, commit, state },
+      { validator_id, user_id, team_name }
+    ) {
+      //check if the team is already in the list
+      if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
+        return;
+      if (state.mFA.fa_refuse?.length === 1) {
+        if (state.mFA.fa_refuse[0].Team.id === validator_id) {
+          commit("UPDATE_STATUS", Status.SUBMITTED);
+        }
+      }
+      // @ts-ignore
+      const MAX_VALIDATORS = this.$accessor.team.faValidators.length;
+      // -1 car la validation est faite avant l'ajout du validateur
+      if (state.mFA.fa_validation?.length === MAX_VALIDATORS - 1) {
+        // validated by all validators
+        commit("UPDATE_STATUS", Status.VALIDATED);
+      }
+      const body: fa_validation_body = {
+        team_id: validator_id,
+      };
+      await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
+      const comment: fa_comments = {
+        subject: subject_type.VALIDATED,
+        comment: `La FA a été validée par ${team_name}.`,
+        author: user_id,
+        created_at: new Date(),
+      };
+      commit("ADD_COMMENT", comment);
+      dispatch("save");
+    },
+
+    refuse: async function (
+      { dispatch, commit, state },
+      { validator_id, user_id, message }
+    ) {
+      if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
+      commit("UPDATE_STATUS", Status.REFUSED);
+      const body: fa_validation_body = {
+        team_id: validator_id,
+      };
+      await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
+      const comment: fa_comments = {
+        subject: subject_type.REFUSED,
+        comment: `La FA a été refusée : ${message}.`,
+        author: user_id,
+        created_at: new Date(),
+      };
+      commit("ADD_COMMENT", comment);
+      dispatch("save");
+    },
+
+    async addComment({ commit, state }, comment: fa_comments) {
+      commit("ADD_COMMENT", comment);
+      if (state.mFA.fa_comments) {
+        await RepoFactory.faRepo.updateFAComments(
+          this,
+          state.mFA.id,
+          state.mFA.fa_comments
+        );
+      }
+    },
+
+    addSignaNeed({ commit }, signaNeed: fa_signa_needs) {
+      commit("ADD_SIGNA_NEED", signaNeed);
+    },
+
+    updateSignaNeedCount({ commit }, { index, count }) {
+      commit("UPDATE_SIGNA_NEED_COUNT", { index, count });
+    },
+
+    async deleteSignaNeed({ commit, state }, index: number) {
+      if (state.mFA.fa_signa_needs && state.mFA.fa_signa_needs[index]) {
+        const id = state.mFA.fa_signa_needs[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFASignaNeeds(this, id);
+        }
+      }
+      commit("DELETE_SIGNA_NEED", index);
+    },
+
+    addTimeWindow({ commit }, timeWindow: time_windows) {
+      commit("ADD_TIME_WINDOW", timeWindow);
+    },
+
+    updateTimeWindow({ commit }, { index, timeWindow }) {
+      commit("UPDATE_TIME_WINDOW", { index, timeWindow });
+    },
+
+    async deleteTimeWindow({ commit, state }, index: number) {
+      if (state.mFA.time_windows && state.mFA.time_windows[index]) {
+        const id = state.mFA.time_windows[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFATimeWindows(this, id);
+        }
+      }
+      commit("DELETE_TIME_WINDOW", index);
+    },
+
+    addCollaborator({ commit }, collaborator: fa_collaborators) {
+      commit("ADD_COLLABORATOR", collaborator);
+    },
+
+    updateCollaborator({ commit }, { index, key, value }) {
+      commit("UPDATE_COLLABORATOR", { index, key, value });
+    },
+
+    deleteCollaborator({ commit }, index: number) {
+      commit("DELETE_COLLABORATOR", index);
+    },
+
+    addElectricityNeed({ commit }, elecNeed: fa_electricity_needs) {
+      commit("ADD_ELECTRICITY_NEED", elecNeed);
+    },
+
+    async deleteElectricityNeed({ commit, state }, index: number) {
+      if (
+        state.mFA.fa_electricity_needs &&
+        state.mFA.fa_electricity_needs[index]
+      ) {
+        const id = state.mFA.fa_electricity_needs[index].id;
+        if (id) {
+          await RepoFactory.faRepo.deleteFAElectricityNeeds(this, id);
+        }
+      }
+      commit("DELETE_ELECTRICITY_NEED", index);
+    },
+    async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
+      const res = await RepoFactory.faRepo.createGearRequest(
+        this,
+        state.mFA.id,
+        gearRequest
+      );
+      sendNotification(
+        this,
+        "La demande de matériel a été ajoutée avec succès ✅",
+        "success"
+      );
+      commit("ADD_GEAR_REQUEST", res.data);
+    },
+    async removeGearRequest({ commit, state }, gearId: number) {
+      await RepoFactory.faRepo.deleteGearRequest(this, state.mFA.id, gearId);
+      sendNotification(
+        this,
+        "La demande de matériel a été supprimée 🗑️",
+        "success"
+      );
+      commit("REMOVE_GEAR_REQUEST", gearId);
     },
   }
 );

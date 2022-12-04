@@ -36,4 +36,18 @@ export class TeamResponseDto implements Team {
     type: String,
   })
   code: string;
+
+  @ApiProperty({
+    name: 'fa_validator',
+    description: 'Is the team a fa validator',
+    type: Boolean,
+  })
+  fa_validator: boolean;
+
+  @ApiProperty({
+    name: 'ft_validator',
+    description: 'Is the team a ft validator',
+    type: Boolean,
+  })
+  ft_validator: boolean;
 }
