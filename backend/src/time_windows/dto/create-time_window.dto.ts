@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
-  IsDate,
   IsNumber,
   IsOptional,
   IsEnum,
   ValidationArguments,
+  IsDateString,
+  IsDefined,
 } from 'class-validator';
 
 enum time_windows_type {
@@ -18,15 +19,16 @@ export class CreateTimeWindowDto {
     required: false,
     description: 'The id of the need',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   id?: number;
 
   @ApiProperty({
     required: true,
     description: 'The start of the time window',
   })
-  @IsDate()
+  @IsDefined()
+  @IsDateString()
   @IsNotEmpty()
   start: Date;
 
@@ -34,7 +36,8 @@ export class CreateTimeWindowDto {
     required: true,
     description: 'The end of the time window',
   })
-  @IsDate()
+  @IsDefined()
+  @IsDateString()
   @IsNotEmpty()
   end: Date;
 
@@ -42,6 +45,7 @@ export class CreateTimeWindowDto {
     required: true,
     description: 'The type of the time window',
   })
+  @IsDefined()
   @IsNotEmpty()
   @IsEnum(time_windows_type, {
     message: (va: ValidationArguments) =>
