@@ -28,7 +28,7 @@ export class CreateFaSignaNeedDto {
   @ApiProperty({
     required: true,
     description: 'The type of signalisation',
-    enum: signa_type
+    enum: signa_type,
   })
   @IsDefined()
   @IsEnum(signa_type, {
