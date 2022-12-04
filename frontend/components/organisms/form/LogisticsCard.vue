@@ -5,9 +5,9 @@
       <v-container>
         <v-form v-if="!isDisabled" class="flex-row">
           <v-text-field
+            v-model="quantity"
             type="number"
             label="Quantité"
-            v-model="quantity"
             :rules="[rules.number, rules.min]"
           />
           <SearchGear
@@ -18,8 +18,8 @@
           <v-btn
             rounded
             class="margin-btn"
-            @click="addGear"
             :disabled="!isValid"
+            @click="addGear"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
