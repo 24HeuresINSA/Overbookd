@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   convertGearToApiContract,
   DatabaseGear,
@@ -9,6 +9,7 @@ import {
   GearRequest,
   GearRequestAlreadyExists,
   GearRequestIdentifier,
+  GearRequestNotFound,
   GearRequestRepository,
   GearSeekerType,
   Period,
@@ -119,9 +120,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       });
 
     if (!gearRequest) {
-      throw new NotFoundException(
-        `Request for gear #${gearRequestId.gearId} from ${gearRequestId.seeker.type} #${gearRequestId.seeker.id} not found`,
-      );
+      throw new GearRequestNotFound(gearRequestId);
     }
 
     return convertAnimationGearRequestToApiContract(gearRequest);
@@ -165,14 +164,15 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   async removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
-    try {
-      await this.prismaService.animation_Gear_Request.delete({ where });
-    } catch (e) {
-      if (this.prismaService.isNotFoundError(e)) {
-        return;
-      }
-      throw e;
-    }
+    const existingGearRequest =
+      await this.prismaService.animation_Gear_Request.findUnique({
+        where,
+        select: { rentalPeriodId: true },
+      });
+    if (!existingGearRequest) return;
+    await this.prismaService.period.delete({
+      where: { id: existingGearRequest.rentalPeriodId },
+    });
   }
 
   private buildUpdateGearRequestData(

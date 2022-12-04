@@ -144,7 +144,6 @@ export class GearRequestsService {
     start,
     end,
   }: CreateGearRequestForm): Promise<GearRequest> {
-    console.log('looking for gear', gearId);
     const [existingAnimation, existingGear] = await Promise.all([
       this.animationRepository.getAnimation(seekerId),
       this.gearRepository.getGear(gearId),

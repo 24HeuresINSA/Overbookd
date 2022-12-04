@@ -356,7 +356,7 @@ model Animation_Gear_Request {
   animationId Int
   animation fa @relation("gear-request-animation", fields: [animationId], references: [id])
   rentalPeriodId Int @unique
-  rentalPeriod Period @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id]) 
+  rentalPeriod Period @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade) 
   gearId Int
   gear Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id])
   quantity Int

@@ -17,9 +17,4 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
     );
   }
-  isNotFoundError(e: Error) {
-    return (
-      e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'
-    );
-  }
 }
