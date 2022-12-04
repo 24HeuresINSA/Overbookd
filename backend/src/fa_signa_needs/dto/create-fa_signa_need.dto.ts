@@ -6,6 +6,8 @@ import {
   IsNumber,
   IsEnum,
   ValidationArguments,
+  IsDefined,
+  Min,
 } from 'class-validator';
 
 enum signa_type {
@@ -19,14 +21,16 @@ export class CreateFaSignaNeedDto {
     required: false,
     description: 'The id of the need',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   id?: number;
 
   @ApiProperty({
     required: true,
     description: 'The type of signalisation',
+    enum: signa_type
   })
+  @IsDefined()
   @IsEnum(signa_type, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(signa_type)}`,
@@ -37,6 +41,7 @@ export class CreateFaSignaNeedDto {
     required: true,
     description: 'The text to display',
   })
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   text: string;
@@ -45,14 +50,16 @@ export class CreateFaSignaNeedDto {
     required: true,
     description: 'The number of signa',
   })
+  @IsDefined()
   @IsNumber()
+  @Min(1)
   count: number;
 
   @ApiProperty({
     required: false,
     description: 'Amy comment abput signa',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   comment?: string;
 }
