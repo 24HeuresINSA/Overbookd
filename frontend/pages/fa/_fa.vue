@@ -55,6 +55,7 @@
       </h4>
       <LogisticsCard
         title="Matos"
+        owner="matos"
         :types="Object.values({})"
         :store="FA"
         :is-disabled="isDisabled"
@@ -62,12 +63,14 @@
 
       <LogisticsCard
         title="Barrières"
+        owner="barrieres"
         :types="Object.values({})"
         :store="FA"
         :is-disabled="isDisabled"
       ></LogisticsCard>
       <LogisticsCard
         title="Matos Elec / Eau"
+        owner="elec"
         :types="Object.values({})"
         :store="FA"
         :is-disabled="isDisabled"

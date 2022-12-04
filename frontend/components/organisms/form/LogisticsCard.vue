@@ -4,7 +4,11 @@
     <v-card-text>
       <v-container>
         <div v-if="!isDisabled" class="flex-row">
-          <SearchGear :gear="gear" @change="updateCurrentGear"></SearchGear>
+          <SearchGear
+            :gear="gear"
+            :owner="owner"
+            @change="updateCurrentGear"
+          ></SearchGear>
           <v-btn rounded class="margin-btn" @click="addGear">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
@@ -23,7 +27,6 @@ import Vue from "vue";
 import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
 import { Gear } from "~/utils/models/catalog.model";
-import { fa_gears } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticsCard",
@@ -57,6 +60,10 @@ export default Vue.extend({
       type: Boolean,
       default: () => false,
     },
+    owner: {
+      type: String,
+      default: () => "",
+    },
   },
   data: () => ({
     gear: undefined as Gear | undefined,
@@ -67,7 +74,7 @@ export default Vue.extend({
     },
     async addGear() {
       if (this.gear) {
-        const faGear: fa_gears = {
+        const faGear: any = {
           gear: this.gear,
           quantity: 1,
         };
