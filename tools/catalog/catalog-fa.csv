@@ -1,0 +1,318 @@
+Main,Sub,Description
+BARRIERES,,Heras 3.5m
+BARRIERES,,Rouleau attache-canisses
+BARRIERES,,Vauban 2m
+ELEC,ALIMENTATION,Biblette
+ELEC,ALIMENTATION,Câble électrique 3g0.75mm² (en m)
+ELEC,ALIMENTATION,Coffret 32 AT
+ELEC,ALIMENTATION,Enrouleur 3g1.5 40m
+ELEC,ALIMENTATION,Fouet 32 AT -> 3x 32 mono
+ELEC,ALIMENTATION,Multiprise 3 prises
+ELEC,ALIMENTATION,Multiprise 4 prises
+ELEC,ALIMENTATION,Multiprise 5 prises
+ELEC,ALIMENTATION,Multiprise 6 prises
+ELEC,ALIMENTATION,Multiprise 8 prises onduleur
+ELEC,ALIMENTATION,Multiprises 18 prises 2m
+ELEC,ALIMENTATION,Prise mâle 32 AT
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 16A 10m
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 16A 13.5m
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 16A 15m
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 16A 20m
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 16A 3m
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 16A 5m
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 3G2.5 H07 16A 10m pool
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 3G2.5 H07 16A 20m pool
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 3G2.5 H07 16A 3m pool
+ELEC,ALIMENTATION,Prolongateur (P+N+T) 3G2.5 H07 16A 5m pool
+ELEC,ALIMENTATION,Prolongateur 20m (3P+N+T) 5G6 H07 32A
+ELEC,ALIMENTATION,Prolongateur 30m (3P+N+T) 5G6 H07 32A
+ELEC,AUTRES,Boîte à chargeur
+ELEC,AUTRES,Boîte plexo carrée
+ELEC,AUTRES,Boîte plexo ronde
+ELEC,AUTRES,Boîtier de dérivation (gros modèle)
+ELEC,AUTRES,Boîtier de dérivation (petit format)
+ELEC,AUTRES,Câbles de démarrage
+ELEC,AUTRES,Domino (gros)
+ELEC,AUTRES,Domino (moyen)
+ELEC,AUTRES,Domino (petits)
+ELEC,AUTRES,Domino (très gros)
+ELEC,AUTRES,Elingue
+ELEC,AUTRES,Elingue (sans maillon)
+ELEC,AUTRES,Fil de cuivre (en mètres)
+ELEC,AUTRES,Flycase
+ELEC,AUTRES,Gaine thermo rétractable
+ELEC,AUTRES,Interrupteur (qui tourne)
+ELEC,AUTRES,Interrupteur poussoir
+ELEC,AUTRES,Passe câbles 1m
+ELEC,AUTRES,PC 16A F étanche
+ELEC,AUTRES,PC 16A F non étanche
+ELEC,AUTRES,PC 16A M non étanche
+ELEC,AUTRES,Prise connexion 32 tetra terre
+ELEC,AUTRES,Trépied jaune 120cm
+ELEC,AUTRES,Trépied télescopique
+ELEC,EAU,Lave-main 4 robinets
+ELEC,EAU,Melangeur 15/21
+ELEC,EAU,Raccord rapide Gardena
+ELEC,EAU,Raccord tuyau arrossage
+ELEC,EAU,Tube flexible F20-27 vers M15-21 de 1m
+ELEC,EAU,Tube flexible M20-27 vers F20-27 de 2m
+ELEC,EAU,Tuyau alim lave vaisselle / lave linge
+ELEC,EAU,Tuyau d'arrosage (en mètre)
+ELEC,EAU,Tuyau flexible douche + douchette
+ELEC,ECLAIRAGE,Ampoule basse consommation (34W-43W-LED)
+ELEC,ECLAIRAGE,Ampoule halogène 42W
+ELEC,ECLAIRAGE,Ampoule HIT400
+ELEC,ECLAIRAGE,Ampoule LED
+ELEC,ECLAIRAGE,Ampoule LED 1W
+ELEC,ECLAIRAGE,Ampoule PAR64 MFL
+ELEC,ECLAIRAGE,Ampoule quartz 100 W
+ELEC,ECLAIRAGE,Ampoule quartz 1000W
+ELEC,ECLAIRAGE,Ampoule quartz 300W
+ELEC,ECLAIRAGE,Ampoule quartz 500W
+ELEC,ECLAIRAGE,Ampoule sécu (1000W)
+ELEC,ECLAIRAGE,Crochet projecteur
+ELEC,ECLAIRAGE,Guirlande 11.5m
+ELEC,ECLAIRAGE,Guirlande 13m
+ELEC,ECLAIRAGE,Guirlande 17m
+ELEC,ECLAIRAGE,Guirlande 19 m
+ELEC,ECLAIRAGE,Guirlande 24 m
+ELEC,ECLAIRAGE,Guirlande 29m
+ELEC,ECLAIRAGE,Guirlande 50m
+ELEC,ECLAIRAGE,Guirlande 6m
+ELEC,ECLAIRAGE,Kit câblage+ controleur LED
+ELEC,ECLAIRAGE,Lampe de bureau (sans ampoule)
+ELEC,ECLAIRAGE,PAR 56 à reviser
+ELEC,ECLAIRAGE,PAR 64
+ELEC,ECLAIRAGE,Projecteur 1000W
+ELEC,ECLAIRAGE,Projecteur 120W
+ELEC,ECLAIRAGE,Projecteur 150W
+ELEC,ECLAIRAGE,Projecteur 300W
+ELEC,ECLAIRAGE,Projecteur 400W
+ELEC,ECLAIRAGE,Projecteur 50W LED
+ELEC,ECLAIRAGE,Réglette éclairage LED autonome 1m
+ELEC,ECLAIRAGE,Reglette néon 1200mm
+ELEC,ECLAIRAGE,Reglette néon 650mm
+ELEC,ECLAIRAGE,Tube halogene
+ELEC,ECLAIRAGE,Tube led RGB 1M
+MATOS,AUTRES,"Bache sponso ninka 6x0,65"
+MATOS,AUTRES,Badge avec pince-épingle
+MATOS,AUTRES,Ballon foot
+MATOS,AUTRES,Banderole sponso KFC
+MATOS,AUTRES,Banderole sponso Ninka
+MATOS,AUTRES,Banderole sponso Radio Scoop rouge
+MATOS,AUTRES,Bonnet de bain
+MATOS,AUTRES,Cartons avec photos (Expo 46 bis)
+MATOS,AUTRES,Cintre
+MATOS,AUTRES,Clicker
+MATOS,AUTRES,Cône de sport
+MATOS,AUTRES,Corde escalade 15m
+MATOS,AUTRES,Coupe course (grande)
+MATOS,AUTRES,Coupe course (moyenne)
+MATOS,AUTRES,Coupe course (petite)
+MATOS,AUTRES,Drinking roulette
+MATOS,AUTRES,Etagère
+MATOS,AUTRES,Etagère en kit DOC INSA
+MATOS,AUTRES,Fer à repasser
+MATOS,AUTRES,Guinde statique
+MATOS,AUTRES,Haltère 8kg
+MATOS,AUTRES,Home trainer
+MATOS,AUTRES,Jeu boules de pétanque
+MATOS,AUTRES,Jeu de Mölkky
+MATOS,AUTRES,Jeux de cartes
+MATOS,AUTRES,Leste pour parasols à remplir
+MATOS,AUTRES,Médailles courses (office des sports)
+MATOS,AUTRES,Panneau à clés
+MATOS,AUTRES,Parasol
+MATOS,AUTRES,Parcours aveugle
+MATOS,AUTRES,Peau de caisse claire
+MATOS,AUTRES,Peau de tom
+MATOS,AUTRES,Pied pour portique alu
+MATOS,AUTRES,Planche à repasser
+MATOS,AUTRES,Plot de sport
+MATOS,AUTRES,Portique alu 2.40m h1.60m
+MATOS,AUTRES,Préservatif (masculin + féminin)
+MATOS,AUTRES,Roue carte Dino
+MATOS,AUTRES,Ruban (courses)
+MATOS,AUTRES,Sac à patate
+MATOS,AUTRES,Serviette de bain
+MATOS,AUTRES,Support drapeau pliable
+MATOS,AUTRES,Tote-bag logo 24
+MATOS,AUTRES,Valise
+MATOS,BARS,Caisse de monnaie
+MATOS,BARS,Caisse gobelets bleue
+MATOS,BARS,Compteuse à gobelets
+MATOS,BARS,Demis générique 33cl
+MATOS,BARS,Ethylomètre électronique (sans embout)
+MATOS,BARS,Pastilles Spülboy
+MATOS,BARS,Pintes
+MATOS,BARS,Spülboy
+MATOS,BARS,Tireuse FS40
+MATOS,BARS,Triplette Écocups
+MATOS,BUREAUTIQUE,Antivol ordinateur
+MATOS,BUREAUTIQUE,Câble éthernet (20m)
+MATOS,BUREAUTIQUE,Câble éthernet ~100m
+MATOS,BUREAUTIQUE,Câble HDMI 20m
+MATOS,BUREAUTIQUE,Cartouche ink cartridge black
+MATOS,BUREAUTIQUE,Cartouche ink cartridge cyan
+MATOS,BUREAUTIQUE,Cartouche ink cartridge jaune
+MATOS,BUREAUTIQUE,Cartouche ink cartridge magenta
+MATOS,BUREAUTIQUE,Compteuse à pièces
+MATOS,BUREAUTIQUE,Corbeille à papier noire
+MATOS,BUREAUTIQUE,Ecran ordinateur
+MATOS,BUREAUTIQUE,Imprimante couleur
+MATOS,BUREAUTIQUE,Imprimante laser N&B
+MATOS,BUREAUTIQUE,Lot tampon encre UV
+MATOS,BUREAUTIQUE,Massicot
+MATOS,BUREAUTIQUE,Ordinateur gigabyte
+MATOS,BUREAUTIQUE,Papier A3
+MATOS,BUREAUTIQUE,Papier borne photo 1 boîte 400 images
+MATOS,BUREAUTIQUE,Papier brouillon
+MATOS,BUREAUTIQUE,Papier plan bleu
+MATOS,BUREAUTIQUE,Plastifieuse
+MATOS,BUREAUTIQUE,Post-it
+MATOS,BUREAUTIQUE,Rouleau papier
+MATOS,BUREAUTIQUE,Téléphone fixe
+MATOS,BUREAUTIQUE,Toner black
+MATOS,CANAPE/FAUTEUIL,Canapé 2 places
+MATOS,CANAPE/FAUTEUIL,Canapé 3 places
+MATOS,CANAPE/FAUTEUIL,Canapé 4 places
+MATOS,CANAPE/FAUTEUIL,Fauteuil
+MATOS,CONSOMMABLE,Bouchons d'oreilles
+MATOS,CUISINE,Assiette céramique
+MATOS,CUISINE,Assiettes en carton (x100)
+MATOS,CUISINE,Bac gastro 1/1 150mm
+MATOS,CUISINE,Bac gastro 1/1 65mm
+MATOS,CUISINE,Bidon alimentaire 25L
+MATOS,CUISINE,Bol en carton
+MATOS,CUISINE,Bol en plastique
+MATOS,CUISINE,Boule à thé inox
+MATOS,CUISINE,Carafe à vin
+MATOS,CUISINE,Couteau à pain
+MATOS,CUISINE,Couteau inox
+MATOS,CUISINE,Couteaux plastique (x100)
+MATOS,CUISINE,Couvercle gastro 1/1
+MATOS,CUISINE,Couvercle marmite
+MATOS,CUISINE,Cuillère en bois
+MATOS,CUISINE,Cuillère inox
+MATOS,CUISINE,Cuillères plastique (x100)
+MATOS,CUISINE,Econome
+MATOS,CUISINE,Ecumoir (grand)
+MATOS,CUISINE,Ecumoir (petit)
+MATOS,CUISINE,Essoreuse à salade
+MATOS,CUISINE,Flûtes à champagne
+MATOS,CUISINE,Fouet en métal
+MATOS,CUISINE,Fourchette inox
+MATOS,CUISINE,Fourchettes plastique (x100)
+MATOS,CUISINE,Gobelets en carton (x100)
+MATOS,CUISINE,Grand couteau cuisine
+MATOS,CUISINE,Grand saladier
+MATOS,CUISINE,Grand Thermos
+MATOS,CUISINE,Grande Poêle
+MATOS,CUISINE,Grands cure-dent (x100)
+MATOS,CUISINE,Grosse casserole
+MATOS,CUISINE,Louche
+MATOS,CUISINE,Marmite
+MATOS,CUISINE,Minuteur
+MATOS,CUISINE,Ouvre-boîte
+MATOS,CUISINE,Passoires
+MATOS,CUISINE,Petit couteau de cuisine
+MATOS,CUISINE,Petite casserole
+MATOS,CUISINE,Petite Poêle
+MATOS,CUISINE,Pichet
+MATOS,CUISINE,Planche à découper
+MATOS,CUISINE,Plateau Beurk
+MATOS,CUISINE,Plateau de présentation
+MATOS,CUISINE,Presse-ail
+MATOS,CUISINE,Rape de cuisine
+MATOS,CUISINE,Rouleau aluminium
+MATOS,CUISINE,Rouleau film plastique
+MATOS,CUISINE,Rouleau papier cuisson
+MATOS,CUISINE,Sac congelation
+MATOS,CUISINE,Saladier métal
+MATOS,CUISINE,Saladier verre
+MATOS,CUISINE,Seau alimentaire
+MATOS,CUISINE,Spatule
+MATOS,CUISINE,Sucrette
+MATOS,CUISINE,Tasse à café
+MATOS,CUISINE,Thermos 2L
+MATOS,CUISINE,Touillettes (x100)
+MATOS,CUISINE,Très grosse casserole
+MATOS,CUISINE,Verre à pied
+MATOS,CUISINE,Verre en plastique
+MATOS,ELECTROMENAGER,Bain-marie
+MATOS,ELECTROMENAGER,Bouilloire 2L
+MATOS,ELECTROMENAGER,Cafetière 12 Tasses
+MATOS,ELECTROMENAGER,Congélateur seul
+MATOS,ELECTROMENAGER,Cuisinière
+MATOS,ELECTROMENAGER,Frigo + congélateur
+MATOS,ELECTROMENAGER,Frigo + congélateur format familial
+MATOS,ELECTROMENAGER,Frigo de façade
+MATOS,ELECTROMENAGER,Frigo seul
+MATOS,ELECTROMENAGER,Machine à café luxelle
+MATOS,ELECTROMENAGER,Micro-onde
+MATOS,ELECTROMENAGER,Percolateur 15L
+MATOS,ELECTROMENAGER,"Percolateur 6,8L"
+MATOS,ELECTROMENAGER,Plaque à induction
+MATOS,ELECTROMENAGER,Robot mixeur
+MATOS,LITERIE,Alèse
+MATOS,LITERIE,Alèse jetable
+MATOS,LITERIE,Drap housse
+MATOS,LITERIE,Matelas
+MATOS,MOBILIER,Chaise
+MATOS,MOBILIER,Chaise de bureau
+MATOS,MOBILIER,Coussin
+MATOS,MOBILIER,Etagère en bois
+MATOS,MOBILIER,Grande table du local
+MATOS,MOBILIER,Planche à clous
+MATOS,MOBILIER,Support lave-main
+MATOS,MOBILIER,Table basse
+MATOS,MOBILIER,Table bois cuisine
+MATOS,MOBILIER,Table bois pliante 1m80
+MATOS,MOBILIER,Table de cours 2 personnes
+MATOS,PROPRETE,Poubelle ronde 100L
+MATOS,PROPRETE,Sac poubelle jaune transparent 100L
+MATOS,PROPRETE,Sac poubelle transparent 100L
+MATOS,SCENE,Cotton à gratter (m²)
+MATOS,SCENE,Jerricane gazoil
+MATOS,SCENE,Podium roulant orange
+MATOS,SCENE,Vidéoprojecteur
+MATOS,SECU,Bâche Issue de secours
+MATOS,SECU,Bâche Toute sortie est définitive
+MATOS,SECU,BAES
+MATOS,SECU,Cadenas
+MATOS,SECU,Cadenas pompier
+MATOS,SECU,Chaine (grande longeur)
+MATOS,SECU,Chaine (petite longueur)
+MATOS,SECU,Panneau rassemblement
+MATOS,SECU,Plastique stationnement Interdit
+MATOS,TENTE,Bâche noire 2x3 mètres noire
+MATOS,TENTE,Gouttière souple 3m
+MATOS,TENTE,Gouttière souple 4m
+MATOS,TENTE,Gouttière souple 6m
+MATOS,TENTE,Leste
+MATOS,TENTE,"Mur (3x2,5 m)"
+MATOS,TENTE,Mur 3x3 (3x2 m)
+MATOS,TENTE,Mur 4x4 (4x2 m)
+MATOS,TENTE,Mur 5x8 (2x5 m)
+MATOS,TENTE,Mur 5x8 fenêtre (2x2 m)
+MATOS,TENTE,Mur 6x14 (2x6 m)
+MATOS,TENTE,Mur 6x14 fenêtre (2x2 m)
+MATOS,TENTE,Mur fenêtre (2x2 m)
+MATOS,TENTE,Mur fenêtre (8x2 m)
+MATOS,TENTE,Mur scène roots (10x2 m)
+MATOS,TENTE,Mur tente 3x3m blanc
+MATOS,TENTE,Mur tente 3x3m noir
+MATOS,TENTE,"Mur tente 4,5x3m noir"
+MATOS,TENTE,Mur tente 4x4m Blanc
+MATOS,TENTE,Porte tente 3x3 noire
+MATOS,TENTE,Porte tente 3x3m noir
+MATOS,TENTE,"Porte tente 4,5x3 noire"
+MATOS,TENTE,Porte tente 4x4 blanche
+MATOS,TENTE,Tente ALU45 3x3m blanche
+MATOS,TENTE,Tente ALU45 3x3m noire
+MATOS,TENTE,"Tente ALU45 4,5x3m noire"
+MATOS,TENTE,Tente ALU45 4x4m blanche
+MATOS,TENTE,Tente ALU45 6x3m blanche
+MATOS,TENTE,Tente ALU45 6x4m blanche
+MATOS,TENTE,Tente tubulaire 5x8m (tubes + toit)
+MATOS,TENTE,Tente tubulaire 6x14m (tubes +toit)
