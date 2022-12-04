@@ -58,7 +58,7 @@ export default Vue.extend({
     boxed: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   data(): SearchCategoryData {
     return {

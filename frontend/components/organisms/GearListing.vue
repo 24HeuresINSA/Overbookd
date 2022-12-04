@@ -16,8 +16,8 @@
       ></v-text-field>
       <SearchCategory
         v-model="category"
-        @change="searchGears"
         :boxed="false"
+        @change="searchGears"
       ></SearchCategory>
       <SearchTeam
         v-model="team"
@@ -77,7 +77,6 @@ import SearchCategory from "../atoms/SearchCategory.vue";
 import SearchTeam from "../atoms/SearchTeam.vue";
 import GearForm from "./form/GearForm.vue";
 
-
 interface GearListingData {
   headers: Header[];
   name: string;
@@ -87,7 +86,7 @@ interface GearListingData {
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
-  delay: any
+  delay: any;
 }
 
 export default Vue.extend({
@@ -107,7 +106,7 @@ export default Vue.extend({
       selectedGear: undefined,
       isUpdateGearDialogOpen: false,
       isDeleteGearDialogOpen: false,
-      delay: undefined
+      delay: undefined,
     };
   },
   computed: {
@@ -178,9 +177,9 @@ export default Vue.extend({
       await this.$accessor.catalog.deleteGear(this.selectedGear);
     },
     defectSearchGears() {
-      if(this.delay) clearInterval(this.delay)
-      this.delay = setTimeout(this.searchGears, 500)
-    }
+      if (this.delay) clearInterval(this.delay);
+      this.delay = setTimeout(this.searchGears, 500);
+    },
   },
 });
 </script>
