@@ -42,10 +42,9 @@ class Collaborator {
     required: true,
     description: 'The phone number of the collaborator',
   })
-  @IsString()
+  @IsDefined()
   @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(10)
+  @IsPhoneNumber('FR')
   phone: string;
 
   @ApiProperty({
