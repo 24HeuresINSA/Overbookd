@@ -11,21 +11,14 @@
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
         counter
-        :rules="[searchRules.minLength]"
+        @input="defectSearchGears"
         @keydown="searchOnEnter"
       ></v-text-field>
-      <v-text-field
+      <SearchCategory
         v-model="category"
-        append-icon="mdi-label"
-        label="Nom de la categorie"
-        clearable
-        autofocus
-        clear-icon="mdi-close-circle-outline"
-        :disabled="loading"
-        counter
-        :rules="[searchRules.minLength]"
-        @keydown="searchOnEnter"
-      ></v-text-field>
+        :boxed="false"
+        @change="searchGears"
+      ></SearchCategory>
       <SearchTeam
         v-model="team"
         label="Choissisez l'equipe responsable"
@@ -76,32 +69,29 @@
 <script lang="ts">
 import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
-import { Gear } from "~/utils/models/catalog.model";
+import { Category, Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
 import { team } from "~/utils/models/repo";
 import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
+import SearchCategory from "../atoms/SearchCategory.vue";
 import SearchTeam from "../atoms/SearchTeam.vue";
 import GearForm from "./form/GearForm.vue";
 
 interface GearListingData {
   headers: Header[];
   name: string;
-  category: string;
+  category: Category | null;
   team: Pick<team, "name" | "code"> | null;
-  searchRules: {
-    minLength: (value: string | null) => boolean | string;
-  };
   loading: boolean;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
+  delay: any;
 }
-
-const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
-  components: { GearForm, ConfirmationMessage, SearchTeam },
+  components: { GearForm, ConfirmationMessage, SearchTeam, SearchCategory },
   data(): GearListingData {
     return {
       headers: [
@@ -110,18 +100,13 @@ export default Vue.extend({
         { text: "Actions", value: "actions" },
       ],
       name: "",
-      category: "",
+      category: null,
       team: null,
-      searchRules: {
-        minLength: (value) =>
-          !value ||
-          value.length >= searchMinLength ||
-          `Taper au moins ${searchMinLength} caracteres`,
-      },
       loading: false,
       selectedGear: undefined,
       isUpdateGearDialogOpen: false,
       isDeleteGearDialogOpen: false,
+      delay: undefined,
     };
   },
   computed: {
@@ -130,7 +115,7 @@ export default Vue.extend({
     },
     canSearch(): Boolean {
       return (
-        [this.name, this.category, this.team?.code].some((searchOption) =>
+        [this.name, this.category?.path, this.team?.code].some((searchOption) =>
           this.isValidSearchOption(searchOption)
         ) ||
         [this.name, this.category, this.team].every(
@@ -172,15 +157,15 @@ export default Vue.extend({
       this.isDeleteGearDialogOpen = false;
     },
     isValidSearchOption(searchOption: string | null | undefined): boolean {
-      return Boolean(searchOption && searchOption.length >= searchMinLength);
+      return Boolean(searchOption);
     },
     buildSearchOptions(): GearSearchOptions {
       let searchOptions = {};
       if (this.isValidSearchOption(this.name)) {
         searchOptions = { ...searchOptions, name: this.name };
       }
-      if (this.isValidSearchOption(this.category)) {
-        searchOptions = { ...searchOptions, category: this.category };
+      if (this.isValidSearchOption(this.category?.path)) {
+        searchOptions = { ...searchOptions, category: this.category?.path };
       }
       if (this.isValidSearchOption(this.team?.code)) {
         searchOptions = { ...searchOptions, owner: this.team?.code };
@@ -190,6 +175,10 @@ export default Vue.extend({
     async deleteGear() {
       if (!this.selectedGear) return;
       await this.$accessor.catalog.deleteGear(this.selectedGear);
+    },
+    defectSearchGears() {
+      if (this.delay) clearInterval(this.delay);
+      this.delay = setTimeout(this.searchGears, 500);
     },
   },
 });

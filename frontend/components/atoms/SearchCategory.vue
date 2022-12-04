@@ -6,10 +6,10 @@
     item-text="name"
     chips
     clearable
-    filled
     item-value="id"
     :label="label"
-    solo
+    :solo="boxed"
+    :filled="boxed"
     return-object
     @update:search-input="searchCategory"
     @change="propagateEvent"
@@ -54,6 +54,10 @@ export default Vue.extend({
     category: {
       type: Object,
       default: undefined,
+    },
+    boxed: {
+      type: Boolean,
+      default: true,
     },
   },
   data(): SearchCategoryData {

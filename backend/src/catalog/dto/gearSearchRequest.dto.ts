@@ -9,7 +9,6 @@ export class GearSearchRequestDto implements SearchGear {
   })
   @IsOptional()
   @IsString()
-  @MinLength(3)
   name?: string;
 
   @ApiProperty({
