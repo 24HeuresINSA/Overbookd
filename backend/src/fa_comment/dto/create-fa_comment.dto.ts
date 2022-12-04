@@ -6,6 +6,9 @@ import {
   IsNumber,
   IsEnum,
   ValidationArguments,
+  IsDefined,
+  Min,
+  IsDateString,
 } from 'class-validator';
 
 enum subject_type {
@@ -18,8 +21,8 @@ export class CreateFaCommentDto {
     required: false,
     description: 'The id of the need',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   id?: number;
 
   @ApiProperty({
@@ -34,7 +37,9 @@ export class CreateFaCommentDto {
   @ApiProperty({
     required: true,
     description: 'The subject of the comment',
+    enum: subject_type
   })
+  @IsDefined()
   @IsEnum(subject_type, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(subject_type)}`,
@@ -45,7 +50,9 @@ export class CreateFaCommentDto {
     required: true,
     description: 'The author of the comment',
   })
+  @IsDefined()
   @IsNumber()
+  @Min(1)
   author: number;
 
   @ApiProperty({
