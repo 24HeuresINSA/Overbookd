@@ -26,6 +26,7 @@ export class CreateFaCommentDto {
     required: true,
     description: 'The text of the comment',
   })
+  @IsDefined()  
   @IsString()
   @IsNotEmpty()
   comment: string;
