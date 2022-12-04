@@ -355,7 +355,7 @@ export default Vue.extend({
         authorName: this.me.firstname + " " + this.me.lastname,
       });
       this.validationDialog = false;
-      // this.saveFA();
+      this.saveFA();
     },
 
     getIconColor(validator: team) {
