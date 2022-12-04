@@ -13,7 +13,7 @@
           v-model="newElement"
           :items="teams()"
           item-text="name"
-          item-value="id"
+          item-value="code"
           label="Team"
         />
         <v-btn fab dark small class="mx-2" @click="addTeam">
@@ -58,15 +58,17 @@ export default {
         });
         return;
       }
-      let teamIds = [...this.permission.teams];
-      if (teamIds.find((teamId) => teamId === this.newElement)) {
-        teamIds = teamIds.filter((teamId) => teamId !== this.newElement);
+      let teamCodes = [...this.permission.teams];
+      if (teamCodes.find((teamCode) => teamCode === this.newElement)) {
+        teamCodes = teamCodes.filter(
+          (teamCode) => teamCode !== this.newElement
+        );
       } else {
-        teamIds.push(this.newElement);
+        teamCodes.push(this.newElement);
       }
       let response = await this.$accessor.permission.linkPermissionToTeams({
         permissionId: this.permission.id,
-        teamIds: teamIds,
+        teamCodes: teamCodes,
       });
       if (response.status === 201) {
         this.$accessor.permission.setPermissionsInStore();

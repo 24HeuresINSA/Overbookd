@@ -36,7 +36,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('humain', 'sg')
+  @Permissions('affect-team')
   @Post('link')
   @ApiBearerAuth()
   @HttpCode(201)

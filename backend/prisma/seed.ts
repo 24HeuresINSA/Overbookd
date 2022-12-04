@@ -498,21 +498,101 @@ async function main() {
     }),
   );
 
-  const sgConfig: Prisma.ConfigurationUncheckedCreateInput = {
-    key: 'sg',
-    value: {
-      prixFutBlonde: 0,
-      prixFutBlanche: 0,
-      prixFutTriple: 0,
-      prixFutFlower: 0,
+  console.log(`\n${savedGears.length} gears 🔨 inserted`);
+
+  const permissions = [
+    {
+      name: 'admin',
+      description: 'Admin',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'admin' }],
+        },
+      },
     },
-  };
-  console.log('Creating of sg config');
-  await prisma.configuration.upsert({
-    where: { key: 'sg' },
-    update: sgConfig,
-    create: sgConfig,
-  });
+    {
+      name: 'hard',
+      description: 'Uniquement les hards',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'hard' }],
+        },
+      },
+    },
+    {
+      name: 'cp',
+      description: 'Utilisateurs qui ont des CP',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'hard' }, { team_code: 'vieux' }],
+        },
+      },
+    },
+    {
+      name: 'affect-team',
+      description:
+        'Utilisateurs qui peuvent affecter des utilisateurs à des équipes',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'humain' }, { team_code: 'sg' }],
+        },
+      },
+    },
+    {
+      name: 'validated-user',
+      description: 'Utilisateurs validés',
+      teams: {
+        createMany: {
+          data: [
+            { team_code: 'hard' },
+            { team_code: 'vieux' },
+            { team_code: 'soft' },
+            { team_code: 'camion' },
+            { team_code: 'voiture' },
+            { team_code: 'fen' },
+          ],
+        },
+      },
+    },
+    {
+      name: 'catalog-write',
+      description: 'Peut éditer le catalogue',
+      teams: {
+        createMany: {
+          data: [
+            { team_code: 'matos' },
+            { team_code: 'elec' },
+            { team_code: 'barrieres' },
+            { team_code: 'signa' },
+          ],
+        },
+      },
+    },
+    {
+      name: 'manage-cp',
+      description: 'Utilisateurs qui peuvent gérer les CP',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'sg' }],
+        },
+      },
+    },
+  ];
+
+  const savedPermissions = await Promise.all(
+    permissions.map(async (permission) => {
+      const name = permission.name;
+      console.log(`----------------------------------------------------------`);
+      console.log(`Inserting ${name} as permission`);
+      return prisma.permission.upsert({
+        where: { name },
+        update: permission,
+        create: permission,
+      });
+    }),
+  );
+
+  console.log(`\n${savedPermissions.length} permissions inserted`);
 }
 main()
   .then(async () => {

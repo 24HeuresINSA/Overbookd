@@ -23,7 +23,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { logTeams } from 'src/team/teams.constant';
 import { CatalogService } from './catalog.service';
 import { GearFormRequestDto } from './dto/gearFormRequest.dto';
 import { GearResponseDto } from './dto/gearResponse.dto';
@@ -98,7 +97,7 @@ export class GearController {
   }
 
   @Post()
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -116,7 +115,7 @@ export class GearController {
   }
 
   @Put(':id')
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @ApiResponse({
     status: 200,
     description: 'Updating a gear',
@@ -145,7 +144,7 @@ export class GearController {
   }
 
   @Delete(':id')
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @HttpCode(204)
   @ApiResponse({
     status: 204,

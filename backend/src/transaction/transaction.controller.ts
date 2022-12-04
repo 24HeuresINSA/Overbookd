@@ -29,7 +29,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('sg')
+  @Permissions('manage-cp')
   @Get()
   @ApiResponse({
     status: 200,
@@ -41,7 +41,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permissions('sg')
+  @Permissions('manage-cp')
   @Get('user/:id')
   @ApiResponse({
     status: 200,
@@ -55,7 +55,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permissions('hard')
+  @Permissions('cp')
   @Get('me')
   @ApiResponse({
     status: 200,
@@ -70,7 +70,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permissions('hard')
+  @Permissions('cp')
   @Get('/:id')
   @ApiResponse({
     status: 200,
@@ -83,7 +83,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permissions('cp')
   @Post('transfer')
   @ApiBody({
     description: 'Create a transaction',
@@ -98,7 +98,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('sg')
+  @Permissions('manage-cp')
   @Post('sg')
   addSgTransaction(
     @Body() transactionData: Transaction[],
@@ -107,7 +107,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('sg')
+  @Permissions('manage-cp')
   @HttpCode(204)
   @Delete(':id')
   @ApiResponse({

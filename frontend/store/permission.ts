@@ -20,14 +20,14 @@ export const getters = getterTree(state, {
   },
   isAllowed:
     (state, getters) =>
-    (permissionName: string, userTeams: number[]): boolean => {
-      if (userTeams.includes(8)) return true; // TODO change this to admin code
+    (permissionName: string, userTeams: string[]): boolean => {
+      if (userTeams.includes("admin")) return true;
       const permission = getters.allPermissions
         .filter((t: permission) => t.name === permissionName)
         .shift();
       if (permission && userTeams && Array(userTeams).length > 0) {
-        return permission.teams.some((teamId: number) =>
-          userTeams.includes(teamId)
+        return permission.teams.some((teamCode: string) =>
+          userTeams.includes(teamCode)
         );
       }
       return false;
@@ -58,11 +58,11 @@ export const actions = actionTree(
     },
     async linkPermissionToTeams(
       constext,
-      { permissionId, teamIds }: { permissionId: number; teamIds: number[] }
+      { permissionId, teamCodes }: { permissionId: number; teamCodes: string[] }
     ): Promise<any> {
       return safeCall(
         this,
-        permissionRepo.linkPermissionToTeams(this, permissionId, teamIds)
+        permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes)
       );
     },
     async removePermission(

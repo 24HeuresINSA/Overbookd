@@ -133,6 +133,7 @@ export interface location {
 
 export interface team {
   id: number;
+  code: string;
   name: string;
   color: string;
   icon: string;
@@ -142,4 +143,5 @@ export interface team {
 export interface permission {
   id: number;
   name: string;
+  description: string;
 }

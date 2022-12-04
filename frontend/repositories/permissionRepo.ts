@@ -15,10 +15,10 @@ export default {
   linkPermissionToTeams(
     context: Context,
     permissionId: number,
-    teamIds: number[]
+    teamCodes: string[]
   ) {
     return context.$axios.post(`${resource}/link/${permissionId}`, {
-      teamIds,
+      teamCodes,
     });
   },
   removePermission(context: Context, permissionId: number) {

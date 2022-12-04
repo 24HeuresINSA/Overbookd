@@ -29,7 +29,6 @@ import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
 import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
-import { logTeams } from 'src/team/teams.constant';
 import { Permissions } from 'src/auth/team-auth.decorator';
 import { PermissionsGuard } from 'src/auth/team-auth.guard';
 
@@ -82,7 +81,7 @@ export class CategoryController {
   }
 
   @Get(':id')
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @ApiResponse({
     status: 200,
     description: 'Get a specific category',
@@ -105,7 +104,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -128,7 +127,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -146,7 +145,7 @@ export class CategoryController {
   }
 
   @Put(':id')
-  @Permissions(...logTeams)
+  @Permissions('catalog-write')
   @HttpCode(200)
   @ApiResponse({
     status: 200,

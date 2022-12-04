@@ -18,7 +18,7 @@ export default Vue.extend({
   name: "OverChips",
   props: {
     roles: {
-      type: Array as PropType<number[]>,
+      type: Array as PropType<string[]>,
       required: false,
       default: () => [],
     },
