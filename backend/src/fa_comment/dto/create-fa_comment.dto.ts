@@ -29,7 +29,7 @@ export class CreateFaCommentDto {
     required: true,
     description: 'The text of the comment',
   })
-  @IsDefined()  
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   comment: string;
@@ -37,7 +37,7 @@ export class CreateFaCommentDto {
   @ApiProperty({
     required: true,
     description: 'The subject of the comment',
-    enum: subject_type
+    enum: subject_type,
   })
   @IsDefined()
   @IsEnum(subject_type, {

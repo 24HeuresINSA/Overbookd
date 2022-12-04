@@ -53,7 +53,7 @@ export class UpdateFaDto {
   @ApiProperty({
     required: false,
     description: 'The type of the fa',
-    enum: fa_type
+    enum: fa_type,
   })
   @IsOptional()
   @IsEnum(fa_type, {
