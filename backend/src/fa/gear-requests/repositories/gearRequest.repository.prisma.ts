@@ -1,17 +1,13 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  NotImplementedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   convertGearToApiContract,
   DatabaseGear,
 } from '../../../catalog/repositories/prisma/gear.repository.prisma';
 import { PrismaService } from '../../../prisma.service';
 import {
-  CreateGearRequestForm,
+  AnimationOnlyError,
   GearRequest,
+  GearRequestAlreadyExists,
   GearRequestIdentifier,
   GearRequestRepository,
   GearSeekerType,
@@ -19,22 +15,6 @@ import {
   SearchGearRequest,
   UpdateGearRequestForm,
 } from '../gearRequests.service';
-
-class AnimationOnlyError extends NotImplementedException {
-  constructor() {
-    super(`Only handle gear requests for ${GearSeekerType.Animation}`);
-  }
-}
-
-class GearRequestAlreadyExists extends BadRequestException {
-  gearRequest: GearRequest;
-  constructor(gearRequest: GearRequest) {
-    super(
-      `"Request for ${gearRequest.gear.name}" in ${gearRequest.seeker.type} #${gearRequest.seeker.id} already exists`,
-    );
-    this.gearRequest = gearRequest;
-  }
-}
 
 type DatabaseGearRequest = {
   animationId: number;
@@ -181,6 +161,18 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
         where,
       });
     return convertAnimationGearRequestToApiContract(updatedGearRequest);
+  }
+
+  async removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+    try {
+      await this.prismaService.animation_Gear_Request.delete({ where });
+    } catch (e) {
+      if (this.prismaService.isNotFoundError(e)) {
+        return;
+      }
+      throw e;
+    }
   }
 
   private buildUpdateGearRequestData(

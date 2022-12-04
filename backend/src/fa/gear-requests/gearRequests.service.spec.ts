@@ -259,4 +259,37 @@ describe('Gear requests', () => {
       },
     );
   });
+  describe('Remove gear request', () => {
+    afterAll(() => {
+      gearRequestRepository.gearRequests = [];
+    });
+    beforeAll(() => {
+      gearRequestRepository.gearRequests = [
+        GR_10_CHAISE_CHATEAU_GONFLABLE,
+        GR_5_TABLE_CHATEAU_GONFLABLE,
+      ];
+    });
+    describe('When deleting an existing gear request', () => {
+      it('should remove gear request from persistance', async () => {
+        await gearRequestService.removeAnimationRequest(
+          GR_10_CHAISE_CHATEAU_GONFLABLE.seeker.id,
+          GR_10_CHAISE_CHATEAU_GONFLABLE.gear.id,
+        );
+        await expect(
+          async () =>
+            await gearRequestService.findGearRequest({
+              seeker: GR_10_CHAISE_CHATEAU_GONFLABLE.seeker,
+              gearId: GR_10_CHAISE_CHATEAU_GONFLABLE.gear.id,
+            }),
+        ).rejects.toThrow(
+          `Request for gear #${GR_10_CHAISE_CHATEAU_GONFLABLE.gear.id} from ${GR_10_CHAISE_CHATEAU_GONFLABLE.seeker.type} #${GR_10_CHAISE_CHATEAU_GONFLABLE.seeker.id} not found`,
+        );
+      });
+    });
+    describe('When deleting an inexisting gear request', () => {
+      it('should go smoothly', async () => {
+        await gearRequestService.removeAnimationRequest(45, 67);
+      });
+    });
+  });
 });

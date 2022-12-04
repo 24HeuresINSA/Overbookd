@@ -349,7 +349,6 @@ model Period {
   end DateTime
   gearRequest Animation_Gear_Request? @relation("gear-request-rental-period")
 
-
   @@index([start, end])
 }
 

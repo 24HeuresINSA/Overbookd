@@ -1,9 +1,38 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { type } from 'os';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from '@nestjs/common';
 import { Gear, GearRepository } from '../../catalog/interfaces';
 import { Status } from '../dto/update-fa.dto';
 
 export const PENDING = 'PENDING';
+
+export class AnimationOnlyError extends NotImplementedException {
+  constructor() {
+    super(`Only handle gear requests for ${GearSeekerType.Animation}`);
+  }
+}
+
+export class GearRequestAlreadyExists extends BadRequestException {
+  gearRequest: GearRequest;
+  constructor(gearRequest: GearRequest) {
+    super(
+      `"Request for ${gearRequest.gear.name}" in ${gearRequest.seeker.type} #${gearRequest.seeker.id} already exists`,
+    );
+    this.gearRequest = gearRequest;
+  }
+}
+
+export class GearRequestNotFound extends NotFoundException {
+  constructor(gearRequestId: GearRequestIdentifier) {
+    super(
+      `Request for gear #${gearRequestId.gearId} from ${gearRequestId.seeker.type} #${gearRequestId.seeker.id} not found`,
+    );
+  }
+}
 
 export interface GearRequest {
   seeker: GearSeeker;
@@ -73,6 +102,7 @@ export interface GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
     updateGearRequestForm: UpdateGearRequestForm,
   ): Promise<GearRequest>;
+  removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void>;
 }
 
 export interface Animation {
@@ -146,5 +176,12 @@ export class GearRequestsService {
       { seeker: { type: GearSeekerType.Animation, id: animationId }, gearId },
       updateForm,
     );
+  }
+
+  removeAnimationRequest(animationId: number, gearId: number): Promise<void> {
+    return this.gearRequestRepository.removeGearRequest({
+      seeker: { type: GearSeekerType.Animation, id: animationId },
+      gearId,
+    });
   }
 }

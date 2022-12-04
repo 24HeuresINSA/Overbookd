@@ -1,8 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
 import {
-  CreateGearRequestForm,
   GearRequest,
   GearRequestIdentifier,
+  GearRequestNotFound,
   GearRequestRepository,
   SearchGearRequest,
   UpdateGearRequestForm,
@@ -25,11 +24,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       this.isSameGearRequest(gearRequestId),
     );
     if (!gearRequest)
-      return Promise.reject(
-        new NotFoundException(
-          `Request for gear #${gearRequestId.gearId} from ${gearRequestId.seeker.type} #${gearRequest.seeker.id} not found`,
-        ),
-      );
+      return Promise.reject(new GearRequestNotFound(gearRequestId));
     return Promise.resolve(gearRequest);
   }
 
@@ -66,7 +61,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
     );
   }
 
-  async updateGearRequest(
+  updateGearRequest(
     gearRequestId: GearRequestIdentifier,
     updateGearRequestForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
@@ -74,18 +69,26 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       this.isSameGearRequest(gearRequestId),
     );
     if (gearRequestIndex === -1) {
-      return Promise.reject(
-        new NotFoundException(
-          `Request for gear #${gearRequestId.gearId} from ${gearRequestId.seeker.type} #${gearRequestId.seeker.id} not found`,
-        ),
-      );
+      return Promise.reject(new GearRequestNotFound(gearRequestId));
     }
     const newGearRequest = this.mergePreviousAndNewGearRequest(
       gearRequestIndex,
       updateGearRequestForm,
     );
     this.gearRequests[gearRequestIndex] = newGearRequest;
-    return newGearRequest;
+    return Promise.resolve(newGearRequest);
+  }
+
+  removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
+    const gearRequestIndex = this.gearRequests.findIndex(
+      this.isSameGearRequest(gearRequestId),
+    );
+    if (gearRequestIndex === -1) return Promise.resolve();
+    this.gearRequests = [
+      ...this.gearRequests.slice(0, gearRequestIndex),
+      ...this.gearRequests.slice(gearRequestIndex + 1),
+    ];
+    return Promise.resolve();
   }
 
   private mergePreviousAndNewGearRequest(
