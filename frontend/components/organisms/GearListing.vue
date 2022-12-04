@@ -14,18 +14,11 @@
         :rules="[searchRules.minLength]"
         @keydown="searchOnEnter"
       ></v-text-field>
-      <v-text-field
+      <SearchCategory
         v-model="category"
-        append-icon="mdi-label"
-        label="Nom de la categorie"
-        clearable
-        autofocus
-        clear-icon="mdi-close-circle-outline"
-        :disabled="loading"
-        counter
-        :rules="[searchRules.minLength]"
-        @keydown="searchOnEnter"
-      ></v-text-field>
+        @change="searchGears"
+        :boxed="false"
+      ></SearchCategory>
       <SearchTeam
         v-model="team"
         label="Choissisez l'equipe responsable"
@@ -76,17 +69,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
-import { Gear } from "~/utils/models/catalog.model";
+import { Category, Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
 import { team } from "~/utils/models/repo";
 import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
+import SearchCategory from "../atoms/SearchCategory.vue";
 import SearchTeam from "../atoms/SearchTeam.vue";
 import GearForm from "./form/GearForm.vue";
+
 
 interface GearListingData {
   headers: Header[];
   name: string;
-  category: string;
+  category: Category | null;
   team: Pick<team, "name" | "code"> | null;
   searchRules: {
     minLength: (value: string | null) => boolean | string;
@@ -101,7 +96,7 @@ const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
-  components: { GearForm, ConfirmationMessage, SearchTeam },
+  components: { GearForm, ConfirmationMessage, SearchTeam, SearchCategory },
   data(): GearListingData {
     return {
       headers: [
@@ -110,7 +105,7 @@ export default Vue.extend({
         { text: "Actions", value: "actions" },
       ],
       name: "",
-      category: "",
+      category: null,
       team: null,
       searchRules: {
         minLength: (value) =>
@@ -130,7 +125,7 @@ export default Vue.extend({
     },
     canSearch(): Boolean {
       return (
-        [this.name, this.category, this.team?.code].some((searchOption) =>
+        [this.name, this.category?.path, this.team?.code].some((searchOption) =>
           this.isValidSearchOption(searchOption)
         ) ||
         [this.name, this.category, this.team].every(
@@ -179,8 +174,8 @@ export default Vue.extend({
       if (this.isValidSearchOption(this.name)) {
         searchOptions = { ...searchOptions, name: this.name };
       }
-      if (this.isValidSearchOption(this.category)) {
-        searchOptions = { ...searchOptions, category: this.category };
+      if (this.isValidSearchOption(this.category?.path)) {
+        searchOptions = { ...searchOptions, category: this.category?.path };
       }
       if (this.isValidSearchOption(this.team?.code)) {
         searchOptions = { ...searchOptions, owner: this.team?.code };
