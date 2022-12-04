@@ -1,20 +1,18 @@
 import { actionTree, mutationTree } from "typed-vuex";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
 import {
   collaborator,
-  subject_type,
   FA,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
   fa_signa_needs,
-  Status,
-  time_windows,
   fa_validation_body,
-  fa_gears,
-  time_windows_type,
+  Status,
+  subject_type,
+  time_windows,
 } from "~/utils/models/FA";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
 
 const repo = RepoFactory.faRepo;
 
@@ -113,16 +111,6 @@ export const mutations = mutationTree(state, {
   DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
     if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
       mFA.fa_electricity_needs.splice(index, 1);
-    }
-  },
-  ADD_GEAR({ mFA }, gear: fa_gears) {
-    if (!mFA.fa_gears) mFA.fa_gears = [];
-    mFA.fa_gears?.push(gear);
-  },
-
-  DELETE_GEAR({ mFA }, index: number) {
-    if (mFA.fa_gears && mFA.fa_gears[index]) {
-      mFA.fa_gears.splice(index, 1);
     }
   },
 });
@@ -356,21 +344,6 @@ export const actions = actionTree(
         }
       }
       commit("DELETE_ELECTRICITY_NEED", index);
-    },
-
-    addGear({ commit, state }, gear: fa_gears) {
-      const timeWindow = state.mFA.time_windows?.find(
-        (tw) => tw.type === time_windows_type.MATOS
-      );
-      if (timeWindow) {
-        gear.start = timeWindow.start;
-        gear.end = timeWindow.end;
-      }
-      commit("ADD_GEAR", gear);
-    },
-
-    deleteGear({ commit }, index: number) {
-      commit("DELETE_GEAR", index);
     },
   }
 );

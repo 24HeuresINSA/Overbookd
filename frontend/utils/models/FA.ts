@@ -70,7 +70,6 @@ export interface FA {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
-  fa_gears?: fa_gears[];
 }
 
 export interface fa_collaborators {
@@ -180,9 +179,18 @@ export interface fa_validation_body {
   team_id: number;
 }
 
-export interface fa_gears {
-  gear: Gear;
+export interface gearRequestCreation {
+  gearId: number;
   quantity: number;
-  start?: Date;
-  end?: Date;
+  start: Date;
+  end: Date;
+}
+
+export interface gearRequest {
+  rentalPeriod: {
+    start: Date;
+    end: Date;
+  };
+  quantity: number;
+  gear: Gear;
 }
