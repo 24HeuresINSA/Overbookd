@@ -18,8 +18,8 @@ import { Transaction } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionCreationDto } from './dto/transactionCreation.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { PermissionsGuard } from 'src/auth/team-auth.guard';
-import { Permissions } from 'src/auth/team-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
 import { RequestWithUserPayload } from 'src/app.controller';
 
 @ApiBearerAuth()

@@ -8,8 +8,9 @@ import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
-import { Permissions } from 'src/auth/team-auth.decorator';
-import { PermissionsGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { JwtPayload } from './auth/auth.service';
 
 type Role =
   | 'admin'
@@ -43,17 +44,11 @@ type Role =
   | 'sponso'
   | 'sports';
 
-type JWTPayload = {
-  email: string;
-  id: number;
-  role: Role[];
-};
-
 /**
- * IMPORTANT: used in ohters controller like transactions
+ * IMPORTANT: used in others controller like transactions
  */
 export type RequestWithUserPayload = Request & {
-  user: JWTPayload;
+  user: JwtPayload;
 };
 
 @Controller()

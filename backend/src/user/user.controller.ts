@@ -15,8 +15,8 @@ import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { PermissionsGuard } from 'src/auth/team-auth.guard';
-import { Permissions } from 'src/auth/team-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
 
 @ApiTags('user')
@@ -54,9 +54,8 @@ export class UserController {
     description: 'Get a current user',
   })
   async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
-    const id = req.user.id;
-    const user = this.userService.user({ id });
-    return user;
+    const id = req.user.userId;
+    return this.userService.user({ id });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

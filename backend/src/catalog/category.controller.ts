@@ -29,8 +29,8 @@ import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
 import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
-import { Permissions } from 'src/auth/team-auth.decorator';
-import { PermissionsGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('catalog')

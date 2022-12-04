@@ -28,8 +28,8 @@ import { GearFormRequestDto } from './dto/gearFormRequest.dto';
 import { GearResponseDto } from './dto/gearResponse.dto';
 import { GearSearchRequestDto } from './dto/gearSearchRequest.dto';
 import { Gear } from './interfaces';
-import { Permissions } from 'src/auth/team-auth.decorator';
-import { PermissionsGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @Controller('gears')
 @ApiTags('catalog')

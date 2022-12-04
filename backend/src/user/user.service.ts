@@ -78,7 +78,7 @@ export class UserService {
     orderBy?: Prisma.UserOrderByWithRelationInput;
     select?: Prisma.UserSelect;
   }): Promise<UserWithTeam[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { skip, take, cursor, where, orderBy, select } = params;
     //get all users with their teams
     const users = await this.prisma.user.findMany({
       skip,
@@ -87,6 +87,7 @@ export class UserService {
       where,
       orderBy,
       select: {
+        ...select,
         ...SELECT_USER,
         ...SELECT_USER_TEAM,
       },

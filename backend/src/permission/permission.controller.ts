@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/team-auth.decorator';
-import { PermissionsGuard } from 'src/auth/team-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { PermissionFormDto } from './dto/permissionForm.dto';
 import { PermissionLinkDto } from './dto/permissionLink.dto';
 import { PermissionResponseDto } from './dto/permissionResponse.dto';
