@@ -94,7 +94,7 @@ CREATE TABLE "collaborator" (
     "firstname" VARCHAR(30) NOT NULL,
     "lastname" VARCHAR(30) NOT NULL,
     "phone" VARCHAR(30) NOT NULL,
-    "email" VARCHAR(30),
+    "email" VARCHAR(60),
     "company" VARCHAR(30),
     "comment" TEXT,
 
