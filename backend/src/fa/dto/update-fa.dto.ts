@@ -42,6 +42,8 @@ export class UpdateFaDto {
     description: 'The creation date of the fa',
     default: new Date(),
   })
+  @IsOptional()
+  @IsDateString()
   created_at?: Date;
 
   @ApiProperty({
