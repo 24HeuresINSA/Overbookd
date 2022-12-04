@@ -8,6 +8,8 @@ import {
   UseGuards,
   ParseIntPipe,
   Request,
+  Patch,
+  HttpCode,
 } from '@nestjs/common';
 import { FaService } from './fa.service';
 import { CreateFaDto } from './dto/create-fa.dto';
@@ -31,6 +33,7 @@ import { FaResponse, AllFaResponse } from './fa_types';
 import { GearRequestResponseDto } from './gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestFormRequestDto } from './gear-requests/dto/gearRequestFormRequest.dto';
 import { GearRequestsService } from './gear-requests/gearRequests.service';
+import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -198,5 +201,76 @@ export class FaController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<GearRequestResponseDto[]> {
     return this.gearRequestService.getAnimationRequests(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Patch(':animationId/gear-requests/:gearId')
+  @ApiResponse({
+    status: 200,
+    description: 'Update an existing gear request',
+    type: GearRequestResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'animationId',
+    type: Number,
+    description: 'Animation id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  updateGearRequest(
+    @Param('animationId', ParseIntPipe) animationId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+    @Body() gearRequestForm: GearRequestUpdateFormRequestDto,
+  ): Promise<GearRequestResponseDto> {
+    return this.gearRequestService.updateAnimationRequest(
+      animationId,
+      gearId,
+      gearRequestForm,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Delete(':animationId/gear-requests/:gearId')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Gear request deleted',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'animationId',
+    type: Number,
+    description: 'Animation id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  deleteGearRequest(
+    @Param('animationId', ParseIntPipe) animationId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+  ): Promise<void> {
+    return this.gearRequestService.removeAnimationRequest(animationId, gearId);
   }
 }

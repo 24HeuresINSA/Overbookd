@@ -182,4 +182,114 @@ describe('Gear requests', () => {
       },
     );
   });
+  describe('Udpate gear request', () => {
+    afterAll(() => {
+      gearRequestRepository.gearRequests = [];
+    });
+    beforeAll(() => {
+      gearRequestRepository.gearRequests = [
+        GR_10_CHAISE_CHATEAU_GONFLABLE,
+        GR_5_TABLE_CHATEAU_GONFLABLE,
+      ];
+    });
+    describe.each`
+      quantity     | start                              | end                                | gearRequest
+      ${16}        | ${undefined}                       | ${undefined}                       | ${GR_10_CHAISE_CHATEAU_GONFLABLE}
+      ${undefined} | ${new Date('2022-05-22T20:15:00')} | ${undefined}                       | ${GR_10_CHAISE_CHATEAU_GONFLABLE}
+      ${undefined} | ${undefined}                       | ${new Date('2022-05-24T09:15:00')} | ${GR_10_CHAISE_CHATEAU_GONFLABLE}
+      ${2}         | ${new Date('2022-05-23T11:30:00')} | ${new Date('2022-05-23T21:30:00')} | ${GR_5_TABLE_CHATEAU_GONFLABLE}
+    `(
+      `When changing $gearRequest.seeker.type #$gearRequest.seeker.id request for $gearRequest.gear.name
+      with $quantity as quantity, $start as rental start date and $end as rental end date`,
+      ({ quantity, start, end, gearRequest }) => {
+        let updatedGearRequest: GearRequest;
+
+        beforeAll(async () => {
+          updatedGearRequest = await gearRequestService.updateAnimationRequest(
+            gearRequest.seeker.id,
+            gearRequest.gear.id,
+            { quantity, start, end },
+          );
+        });
+
+        afterAll(() => {
+          gearRequestRepository.gearRequests = [
+            GR_10_CHAISE_CHATEAU_GONFLABLE,
+            GR_5_TABLE_CHATEAU_GONFLABLE,
+          ];
+        });
+
+        if (quantity) {
+          it(`should set quantity to ${quantity}`, () => {
+            expect(updatedGearRequest.quantity).toBe(quantity);
+          });
+        } else {
+          it('should not impact quantity', () => {
+            expect(updatedGearRequest.quantity).toBe(gearRequest.quantity);
+          });
+        }
+
+        if (start) {
+          it(`should set rental start date to ${start}`, () => {
+            expect(updatedGearRequest.rentalPeriod.start).toBe(start);
+          });
+        } else {
+          it('should not impact rental start date', () => {
+            expect(updatedGearRequest.rentalPeriod.start).toBe(
+              gearRequest.rentalPeriod.start,
+            );
+          });
+        }
+
+        if (end) {
+          it(`should set rental end date to ${end}`, () => {
+            expect(updatedGearRequest.rentalPeriod.end).toBe(end);
+          });
+        } else {
+          it('should not impact rental end date', () => {
+            expect(updatedGearRequest.rentalPeriod.end).toBe(
+              gearRequest.rentalPeriod.end,
+            );
+          });
+        }
+
+        it('should not impact status', () => {
+          expect(updatedGearRequest.status).toBe(PENDING);
+        });
+      },
+    );
+  });
+  describe('Remove gear request', () => {
+    afterAll(() => {
+      gearRequestRepository.gearRequests = [];
+    });
+    beforeAll(() => {
+      gearRequestRepository.gearRequests = [
+        GR_10_CHAISE_CHATEAU_GONFLABLE,
+        GR_5_TABLE_CHATEAU_GONFLABLE,
+      ];
+    });
+    describe('When deleting an existing gear request', () => {
+      it('should remove gear request from persistance', async () => {
+        await gearRequestService.removeAnimationRequest(
+          GR_10_CHAISE_CHATEAU_GONFLABLE.seeker.id,
+          GR_10_CHAISE_CHATEAU_GONFLABLE.gear.id,
+        );
+        await expect(
+          async () =>
+            await gearRequestService.findGearRequest({
+              seeker: GR_10_CHAISE_CHATEAU_GONFLABLE.seeker,
+              gearId: GR_10_CHAISE_CHATEAU_GONFLABLE.gear.id,
+            }),
+        ).rejects.toThrow(
+          `Request for gear #${GR_10_CHAISE_CHATEAU_GONFLABLE.gear.id} from ${GR_10_CHAISE_CHATEAU_GONFLABLE.seeker.type} #${GR_10_CHAISE_CHATEAU_GONFLABLE.seeker.id} not found`,
+        );
+      });
+    });
+    describe('When deleting an inexisting gear request', () => {
+      it('should go smoothly', async () => {
+        await gearRequestService.removeAnimationRequest(45, 67);
+      });
+    });
+  });
 });

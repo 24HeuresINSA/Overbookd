@@ -1,38 +1,21 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  NotImplementedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   convertGearToApiContract,
   DatabaseGear,
 } from '../../../catalog/repositories/prisma/gear.repository.prisma';
 import { PrismaService } from '../../../prisma.service';
 import {
+  AnimationOnlyError,
   GearRequest,
+  GearRequestAlreadyExists,
   GearRequestIdentifier,
+  GearRequestNotFound,
   GearRequestRepository,
   GearSeekerType,
   Period,
   SearchGearRequest,
+  UpdateGearRequestForm,
 } from '../gearRequests.service';
-
-class AnimationOnlyError extends NotImplementedException {
-  constructor() {
-    super(`Only handle gear requests for ${GearSeekerType.Animation}`);
-  }
-}
-
-class GearRequestAlreadyExists extends BadRequestException {
-  gearRequest: GearRequest;
-  constructor(gearRequest: GearRequest) {
-    super(
-      `"Request for ${gearRequest.gear.name}" in ${gearRequest.seeker.type} #${gearRequest.seeker.id} already exists`,
-    );
-    this.gearRequest = gearRequest;
-  }
-}
 
 type DatabaseGearRequest = {
   animationId: number;
@@ -128,21 +111,16 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       throw new AnimationOnlyError();
     }
 
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+
     const gearRequest =
       await this.prismaService.animation_Gear_Request.findUnique({
-        where: {
-          animationId_gearId: {
-            animationId: gearRequestId.seeker.id,
-            gearId: gearRequestId.gearId,
-          },
-        },
+        where,
         select: this.SELECT_GEAR_REQUEST,
       });
 
     if (!gearRequest) {
-      throw new NotFoundException(
-        `Request for gear #${gearRequestId.gearId} from ${gearRequestId.seeker.type} #${gearRequestId.seeker.id} not found`,
-      );
+      throw new GearRequestNotFound(gearRequestId);
     }
 
     return convertAnimationGearRequestToApiContract(gearRequest);
@@ -155,13 +133,71 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       throw new AnimationOnlyError();
     }
 
-    const where = this.buildSearchConditions(gearRequestSearch);
+    const where = this.buildGearRequestSearchConditions(gearRequestSearch);
     const gearRequests =
       await this.prismaService.animation_Gear_Request.findMany({
         select: this.SELECT_GEAR_REQUEST,
         where,
       });
     return gearRequests.map(convertAnimationGearRequestToApiContract);
+  }
+
+  async updateGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    updateGearRequestForm: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
+    if (!this.isAnimationRequest(gearRequestId)) {
+      throw new AnimationOnlyError();
+    }
+
+    const data = this.buildUpdateGearRequestData(updateGearRequestForm);
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+
+    const updatedGearRequest =
+      await this.prismaService.animation_Gear_Request.update({
+        select: this.SELECT_GEAR_REQUEST,
+        data,
+        where,
+      });
+    return convertAnimationGearRequestToApiContract(updatedGearRequest);
+  }
+
+  async removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+    const existingGearRequest =
+      await this.prismaService.animation_Gear_Request.findUnique({
+        where,
+        select: { rentalPeriodId: true },
+      });
+    if (!existingGearRequest) return;
+    await this.prismaService.period.delete({
+      where: { id: existingGearRequest.rentalPeriodId },
+    });
+  }
+
+  private buildUpdateGearRequestData(
+    updateGearRequestForm: UpdateGearRequestForm,
+  ) {
+    return {
+      quantity: updateGearRequestForm.quantity,
+      rentalPeriod: {
+        update: {
+          start: updateGearRequestForm.start,
+          end: updateGearRequestForm.end,
+        },
+      },
+    };
+  }
+
+  private buildGearRequestUniqueCondition(
+    gearRequestId: GearRequestIdentifier,
+  ) {
+    return {
+      animationId_gearId: {
+        animationId: gearRequestId.seeker.id,
+        gearId: gearRequestId.gearId,
+      },
+    };
   }
 
   private isAnimationRequest(gearRequestSearch: SearchGearRequest) {
@@ -171,7 +207,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     );
   }
 
-  private buildSearchConditions({ seeker }: SearchGearRequest) {
+  private buildGearRequestSearchConditions({ seeker }: SearchGearRequest) {
     const seekerCondition = seeker?.id ? { animationId: seeker.id } : {};
 
     return { ...seekerCondition };
