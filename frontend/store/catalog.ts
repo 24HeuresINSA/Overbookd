@@ -208,7 +208,7 @@ export const actions = actionTree(
   }
 );
 
-function sendNotification(
+export function sendNotification(
   store: Vue["$store"],
   message: string,
   type: "success" | "error" = "success"

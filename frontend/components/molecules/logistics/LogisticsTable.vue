@@ -9,7 +9,7 @@
     </template>
 
     <template #[`item.action`]="{ item }">
-      <v-btn v-if="!isDisabled" icon @click="deleteGear(item)">
+      <v-btn v-if="!isDisabled" icon @click="deleteGear(item.gear)">
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
     </template>
@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Gear } from "~/utils/models/catalog.model";
 import { GearRequest } from "~/utils/models/FA";
 
 export default Vue.extend({
@@ -54,11 +55,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateGearQuantity(gear: any, quantity: number) {
-      //this.$accessor.FA.updateGearQuantity({ gear: gear, quantity: +quantity });
-    },
-    deleteGear(index: number) {
-      //this.$accessor.FA.deleteGear(index);
+    deleteGear(gear: Gear) {
+      this.$accessor.FA.removeGearRequest(gear.id);
     },
   },
 });

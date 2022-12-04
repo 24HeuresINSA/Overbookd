@@ -15,6 +15,7 @@ import {
   subject_type,
   time_windows,
 } from "~/utils/models/FA";
+import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
 
@@ -133,8 +134,13 @@ export const mutations = mutationTree(state, {
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
     gearRequests.push(gearRequest);
   },
-  SET_GEAR_REQUESTS({ gearRequests }, gearRequestsResponse: GearRequest[]) {
-    gearRequests = gearRequestsResponse;
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: GearRequest[]) {
+    state.gearRequests = gearRequestsResponse;
+  },
+  REMOVE_GEAR_REQUEST(state, gearId: number) {
+    state.gearRequests = state.gearRequests.filter(
+      (gr) => gr.gear.id !== gearId
+    );
   },
 });
 
@@ -376,7 +382,21 @@ export const actions = actionTree(
         state.mFA.id,
         gearRequest
       );
+      sendNotification(
+        this,
+        "La demande de matériel a été ajoutée avec succès ✅",
+        "success"
+      );
       commit("ADD_GEAR_REQUEST", res.data);
+    },
+    async removeGearRequest({ commit, state }, gearId: number) {
+      await RepoFactory.faRepo.deleteGearRequest(this, state.mFA.id, gearId);
+      sendNotification(
+        this,
+        "La demande de matériel a été supprimée 🗑️",
+        "success"
+      );
+      commit("REMOVE_GEAR_REQUEST", gearId);
     },
   }
 );

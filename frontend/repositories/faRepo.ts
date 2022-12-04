@@ -110,4 +110,9 @@ export default {
       resource + `/${animationId}/gear-requests`
     );
   },
+  deleteGearRequest(context: Context, animationId: number, gearId: number) {
+    return context.$axios.delete(
+      resource + `/${animationId}/gear-requests/${gearId}`
+    );
+  },
 };
