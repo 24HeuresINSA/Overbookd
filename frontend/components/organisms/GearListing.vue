@@ -11,7 +11,7 @@
         clear-icon="mdi-close-circle-outline"
         :disabled="loading"
         counter
-        :rules="[searchRules.minLength]"
+        @input="defectSearchGears"
         @keydown="searchOnEnter"
       ></v-text-field>
       <SearchCategory
@@ -83,16 +83,12 @@ interface GearListingData {
   name: string;
   category: Category | null;
   team: Pick<team, "name" | "code"> | null;
-  searchRules: {
-    minLength: (value: string | null) => boolean | string;
-  };
   loading: boolean;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
+  delay: any
 }
-
-const searchMinLength = 3;
 
 export default Vue.extend({
   name: "GearListing",
@@ -107,16 +103,11 @@ export default Vue.extend({
       name: "",
       category: null,
       team: null,
-      searchRules: {
-        minLength: (value) =>
-          !value ||
-          value.length >= searchMinLength ||
-          `Taper au moins ${searchMinLength} caracteres`,
-      },
       loading: false,
       selectedGear: undefined,
       isUpdateGearDialogOpen: false,
       isDeleteGearDialogOpen: false,
+      delay: undefined
     };
   },
   computed: {
@@ -167,7 +158,7 @@ export default Vue.extend({
       this.isDeleteGearDialogOpen = false;
     },
     isValidSearchOption(searchOption: string | null | undefined): boolean {
-      return Boolean(searchOption && searchOption.length >= searchMinLength);
+      return Boolean(searchOption);
     },
     buildSearchOptions(): GearSearchOptions {
       let searchOptions = {};
@@ -186,6 +177,10 @@ export default Vue.extend({
       if (!this.selectedGear) return;
       await this.$accessor.catalog.deleteGear(this.selectedGear);
     },
+    defectSearchGears() {
+      if(this.delay) clearInterval(this.delay)
+      this.delay = setTimeout(this.searchGears, 500)
+    }
   },
 });
 </script>
