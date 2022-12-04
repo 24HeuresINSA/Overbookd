@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDateString,
+  IsDefined,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  Min,
   ValidationArguments,
 } from 'class-validator';
 
@@ -33,6 +36,7 @@ export class UpdateFaDto {
     required: true,
     description: 'The name of the fa',
   })
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -49,36 +53,40 @@ export class UpdateFaDto {
   @ApiProperty({
     required: false,
     description: 'The type of the fa',
+    enum: fa_type
   })
+  @IsOptional()
   @IsEnum(fa_type, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(Status)}`,
   })
-  @IsOptional()
   type?: fa_type;
 
   @ApiProperty({
     required: false,
     description: 'The id of the team whos responsible of the fa',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
+  @Min(1)
   team_id?: number;
 
   @ApiProperty({
     required: false,
     description: 'The id of the user who is responsible of the fa',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
+  @Min(1)
   in_charge?: number;
 
   @ApiProperty({
     required: false,
     description: 'The id of the location of the fa',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
+  @Min(1)
   location_id?: number;
 
   @ApiProperty({
@@ -86,6 +94,7 @@ export class UpdateFaDto {
     description: 'The status of the fa',
     enum: Status,
   })
+  @IsOptional()
   @IsEnum(Status, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(Status)}`,
@@ -96,79 +105,81 @@ export class UpdateFaDto {
     required: false,
     description: 'The description of the fa',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   description?: string;
 
   @ApiProperty({
     required: false,
     description: 'Is the activity publishable on the website',
   })
-  @IsBoolean()
   @IsOptional()
+  @IsBoolean()
   is_publishable?: boolean;
 
   @ApiProperty({
     required: false,
     description: 'Link of the photo',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   photo_link?: string;
 
   @ApiProperty({
     required: false,
     description: 'Is the activty a major activity',
   })
-  @IsBoolean()
   @IsOptional()
+  @IsBoolean()
   is_major?: boolean;
 
   @ApiProperty({
     required: false,
     description: 'Is the activity for kids',
   })
-  @IsBoolean()
   @IsOptional()
+  @IsBoolean()
   is_kids?: boolean;
 
   @ApiProperty({
     required: false,
     description: 'The security needs',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   security_needs?: string;
 
   @ApiProperty({
     required: false,
     description: 'Is security pass required',
   })
-  @IsBoolean()
   @IsOptional()
+  @IsBoolean()
   is_pass_required?: boolean;
 
   @ApiProperty({
     required: false,
     description: 'Number of security pass if required',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
+  @Min(1)
   number_of_pass?: number;
 
   @ApiProperty({
     required: false,
     description: 'Text description about water',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   water_needs?: string;
 
   @ApiProperty({
     required: false,
     description: 'The waterflow needed',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
+  @Min(1)
   water_flow_required?: number;
 }
