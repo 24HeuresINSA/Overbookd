@@ -53,5 +53,7 @@ export class CreateFaCommentDto {
     default: new Date(),
   })
   @IsOptional()
+  @IsNotEmpty()
+  @IsDateString()
   created_at?: Date;
 }
