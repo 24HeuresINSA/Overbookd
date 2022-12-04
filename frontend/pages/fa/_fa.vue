@@ -488,6 +488,21 @@ h2 {
   background-color: greenyellow;
 }
 
+@media only screen and (max-width: 965px) {
+  .bottom-bar {
+    position: fixed;
+    bottom: 40px;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
+  }
+
+  .container {
+    padding-bottom: 300px;
+  }
+}
+
 @media only screen and (max-width: 750px) {
   .main {
     flex-direction: column;
@@ -505,20 +520,6 @@ h2 {
 
   .container {
     overflow: visible;
-  }
-
-  .bottom-bar {
-    width: calc(100% - 20px);
-    position: relative;
-    margin: 10px;
-    bottom: 40px;
-    align-items: center;
-    flex-direction: column;
-    z-index: 1;
-  }
-
-  .bottom-bar > * {
-    margin: 10px;
   }
 }
 </style>
