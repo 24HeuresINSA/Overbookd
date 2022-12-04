@@ -72,7 +72,7 @@ export default Vue.extend({
   },
   data: () => ({
     gear: undefined as Gear | undefined,
-    quantity: 1,
+    quantity: "1",
     rules: {
       number: (value: string) =>
         !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
@@ -84,7 +84,7 @@ export default Vue.extend({
     isValid() {
       return (
         this.gear &&
-        this.quantity >= 1 &&
+        parseInt(this.quantity) >= 1 &&
         this.$accessor.FA.mFA.time_windows?.find(
           (tw) => tw.type === time_windows_type.MATOS
         ) &&
@@ -109,7 +109,7 @@ export default Vue.extend({
       if (!timeWindow) return;
       const gearRequestCreationForm: GearRequestCreation = {
         gearId: this.gear.id,
-        quantity: this.quantity,
+        quantity: parseInt(this.quantity),
         start: timeWindow.start,
         end: timeWindow.end,
       };
