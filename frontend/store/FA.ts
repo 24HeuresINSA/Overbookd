@@ -133,6 +133,9 @@ export const mutations = mutationTree(state, {
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
     gearRequests.push(gearRequest);
   },
+  SET_GEAR_REQUESTS({ gearRequests }, gearRequestsResponse: GearRequest[]) {
+    gearRequests = gearRequestsResponse;
+  },
 });
 
 export const actions = actionTree(
@@ -147,12 +150,14 @@ export const actions = actionTree(
     },
 
     getAndSet: async function ({ commit }, id: number) {
-      const res = await safeCall(this, repo.getFAByCount(this, id));
-      if (res && res.data) {
-        commit("SET_FA", res.data);
-        return res.data;
-      }
-      return null;
+      const [resFA, resGearRequests] = await Promise.all([
+        safeCall(this, repo.getFAByCount(this, id)),
+        safeCall(this, repo.getGearRequests(this, id)),
+      ]);
+      if (!resGearRequests || !resFA) return null;
+      commit("SET_GEAR_REQUESTS", resGearRequests.data);
+      commit("SET_FA", resFA.data);
+      return resFA.data;
     },
 
     fetchAll: async function ({ commit }) {

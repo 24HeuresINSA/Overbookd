@@ -105,4 +105,9 @@ export default {
       gearRequestCreationForm
     );
   },
+  getGearRequests(context: Context, animationId: number) {
+    return context.$axios.get<GearRequest[]>(
+      resource + `/${animationId}/gear-requests`
+    );
+  },
 };
