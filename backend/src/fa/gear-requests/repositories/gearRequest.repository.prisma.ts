@@ -10,12 +10,14 @@ import {
 } from '../../../catalog/repositories/prisma/gear.repository.prisma';
 import { PrismaService } from '../../../prisma.service';
 import {
+  CreateGearRequestForm,
   GearRequest,
   GearRequestIdentifier,
   GearRequestRepository,
   GearSeekerType,
   Period,
   SearchGearRequest,
+  UpdateGearRequestForm,
 } from '../gearRequests.service';
 
 class AnimationOnlyError extends NotImplementedException {
@@ -128,14 +130,11 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       throw new AnimationOnlyError();
     }
 
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+
     const gearRequest =
       await this.prismaService.animation_Gear_Request.findUnique({
-        where: {
-          animationId_gearId: {
-            animationId: gearRequestId.seeker.id,
-            gearId: gearRequestId.gearId,
-          },
-        },
+        where,
         select: this.SELECT_GEAR_REQUEST,
       });
 
@@ -155,13 +154,58 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       throw new AnimationOnlyError();
     }
 
-    const where = this.buildSearchConditions(gearRequestSearch);
+    const where = this.buildGearRequestSearchConditions(gearRequestSearch);
     const gearRequests =
       await this.prismaService.animation_Gear_Request.findMany({
         select: this.SELECT_GEAR_REQUEST,
         where,
       });
     return gearRequests.map(convertAnimationGearRequestToApiContract);
+  }
+
+  async updateGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    updateGearRequestForm: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
+    if (!this.isAnimationRequest(gearRequestId)) {
+      throw new AnimationOnlyError();
+    }
+
+    const data = this.buildUpdateGearRequestData(updateGearRequestForm);
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+
+    const updatedGearRequest =
+      await this.prismaService.animation_Gear_Request.update({
+        select: this.SELECT_GEAR_REQUEST,
+        data,
+        where,
+      });
+    return convertAnimationGearRequestToApiContract(updatedGearRequest);
+  }
+
+  private buildUpdateGearRequestData(
+    updateGearRequestForm: UpdateGearRequestForm,
+  ) {
+    return {
+      quantity: updateGearRequestForm.quantity,
+      rentalPeriod: {
+        update: {
+          start: updateGearRequestForm.start,
+          end: updateGearRequestForm.end,
+        },
+      },
+    };
+  }
+
+  private buildGearRequestUniqueCondition(
+    gearRequestId: GearRequestIdentifier,
+  ) {
+    return {
+      animationId_gearId: {
+        animationId: gearRequestId.seeker.id,
+        gearId: gearRequestId.gearId,
+      },
+    };
   }
 
   private isAnimationRequest(gearRequestSearch: SearchGearRequest) {
@@ -171,7 +215,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     );
   }
 
-  private buildSearchConditions({ seeker }: SearchGearRequest) {
+  private buildGearRequestSearchConditions({ seeker }: SearchGearRequest) {
     const seekerCondition = seeker?.id ? { animationId: seeker.id } : {};
 
     return { ...seekerCondition };

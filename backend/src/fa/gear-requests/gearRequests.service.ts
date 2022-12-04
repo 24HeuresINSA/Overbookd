@@ -1,4 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { type } from 'os';
 import { Gear, GearRepository } from '../../catalog/interfaces';
 import { Status } from '../dto/update-fa.dto';
 
@@ -48,6 +49,10 @@ export type CreateGearRequestForm = {
   end: Date;
 };
 
+export type UpdateGearRequestForm = Partial<
+  Pick<CreateGearRequestForm, 'start' | 'end' | 'quantity'>
+>;
+
 export type GearRequestIdentifier = {
   seeker: {
     type: GearSeekerType;
@@ -64,6 +69,10 @@ export interface GearRequestRepository {
   addGearRequest(gearRequest: GearRequest): Promise<GearRequest>;
   getGearRequest(gearRequestId: GearRequestIdentifier): Promise<GearRequest>;
   getGearRequests(gearRequestSearch: SearchGearRequest): Promise<GearRequest[]>;
+  updateGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    updateGearRequestForm: UpdateGearRequestForm,
+  ): Promise<GearRequest>;
 }
 
 export interface Animation {
@@ -126,5 +135,16 @@ export class GearRequestsService {
     return this.gearRequestRepository.getGearRequests({
       seeker: { type: GearSeekerType.Animation, id: animationId },
     });
+  }
+
+  updateAnimationRequest(
+    animationId: number,
+    gearId: number,
+    updateForm: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
+    return this.gearRequestRepository.updateGearRequest(
+      { seeker: { type: GearSeekerType.Animation, id: animationId }, gearId },
+      updateForm,
+    );
   }
 }

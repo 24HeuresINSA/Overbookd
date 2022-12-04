@@ -1,9 +1,11 @@
 import { NotFoundException } from '@nestjs/common';
 import {
+  CreateGearRequestForm,
   GearRequest,
   GearRequestIdentifier,
   GearRequestRepository,
   SearchGearRequest,
+  UpdateGearRequestForm,
 } from '../gearRequests.service';
 
 export class InMemoryGearRequestRepository implements GearRequestRepository {
@@ -20,10 +22,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
 
   getGearRequest(gearRequestId: GearRequestIdentifier): Promise<GearRequest> {
     const gearRequest = this.gearRequests.find(
-      (gearRequest) =>
-        gearRequest.seeker.type === gearRequestId.seeker.type &&
-        gearRequest.seeker.id === gearRequestId.seeker.id &&
-        gearRequest.gear.id === gearRequestId.gearId,
+      this.isSameGearRequest(gearRequestId),
     );
     if (!gearRequest)
       return Promise.reject(
@@ -32,6 +31,18 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
         ),
       );
     return Promise.resolve(gearRequest);
+  }
+
+  private isSameGearRequest(
+    gearRequestId: GearRequestIdentifier,
+  ): (value: GearRequest, index: number, obj: GearRequest[]) => unknown {
+    return function (gearRequest) {
+      return (
+        gearRequest.seeker.type === gearRequestId.seeker.type &&
+        gearRequest.seeker.id === gearRequestId.seeker.id &&
+        gearRequest.gear.id === gearRequestId.gearId
+      );
+    };
   }
 
   getGearRequests(
@@ -53,5 +64,52 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       (gearRequestSearch.seeker.id === gearRequest.seeker.id &&
         gearRequestSearch.seeker.type === gearRequest.seeker.type)
     );
+  }
+
+  async updateGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    updateGearRequestForm: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
+    const gearRequestIndex = this.gearRequests.findIndex(
+      this.isSameGearRequest(gearRequestId),
+    );
+    if (gearRequestIndex === -1) {
+      return Promise.reject(
+        new NotFoundException(
+          `Request for gear #${gearRequestId.gearId} from ${gearRequestId.seeker.type} #${gearRequestId.seeker.id} not found`,
+        ),
+      );
+    }
+    const newGearRequest = this.mergePreviousAndNewGearRequest(
+      gearRequestIndex,
+      updateGearRequestForm,
+    );
+    this.gearRequests[gearRequestIndex] = newGearRequest;
+    return newGearRequest;
+  }
+
+  private mergePreviousAndNewGearRequest(
+    gearRequestIndex: number,
+    updateGearRequestForm: UpdateGearRequestForm,
+  ) {
+    const previousGearRequest = this.gearRequests[gearRequestIndex];
+    const quantity = updateGearRequestForm.quantity
+      ? { quantity: updateGearRequestForm.quantity }
+      : { quantity: previousGearRequest.quantity };
+    const startRentalPeriod = updateGearRequestForm.start
+      ? { start: updateGearRequestForm.start }
+      : { start: previousGearRequest.rentalPeriod.start };
+    const endRentalPeriod = updateGearRequestForm.end
+      ? { end: updateGearRequestForm.end }
+      : { end: previousGearRequest.rentalPeriod.end };
+    const rentalPeriod = {
+      rentalPeriod: { ...startRentalPeriod, ...endRentalPeriod },
+    };
+    const newGearRequest = {
+      ...previousGearRequest,
+      ...quantity,
+      ...rentalPeriod,
+    };
+    return newGearRequest;
   }
 }
