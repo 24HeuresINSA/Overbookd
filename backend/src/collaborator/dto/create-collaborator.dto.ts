@@ -51,12 +51,9 @@ class Collaborator {
     required: false,
     description: 'The email of the collaborator',
   })
-  @IsString()
-  @IsOptional()
-  //regex for email for @Match
-  @Matches(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, {
-    message: 'email is not valid',
-  })
+  @IsDefined()
+  @IsEmail()
+  @IsNotEmpty()
   email?: string;
 
   @ApiProperty({
