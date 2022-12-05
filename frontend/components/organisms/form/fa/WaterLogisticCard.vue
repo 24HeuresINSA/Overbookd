@@ -7,7 +7,7 @@
       Log Elec via logistique@24heures.org</v-card-subtitle
     >
     <v-card-text>
-      <v-form>
+      <v-form @submit.prevent="">
         <!--
         <v-switch
           :value="waterNeed.water_flow_required"
@@ -47,6 +47,9 @@ export default Vue.extend({
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
       this.$accessor.FA.updateFA({ key: key, value: value });
+    },
+    doNothing() {
+      console.log("do nothing");
     },
   },
 });

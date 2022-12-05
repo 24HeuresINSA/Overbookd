@@ -6,7 +6,7 @@
       ce texte qui sera publié sur le site 24heures.org</v-card-subtitle
     >
     <v-card-text>
-      <v-form>
+      <v-form @submit.prevent="">
         <RichEditor
           :data="mFA.description"
           label="Description"
