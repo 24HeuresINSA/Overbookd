@@ -351,7 +351,7 @@ interface my_time_windows {
   dateEnd: string;
   timeStart: string;
   timeEnd: string;
-  type: string;
+  type: time_windows_type | string;
 }
 </script>
 
