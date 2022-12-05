@@ -154,7 +154,9 @@
       </div>
 
       <v-btn
-        v-if="mFA.status && mFA.status !== 'SUBMITTED'"
+        v-if="
+          mFA.status && (mFA.status === 'DRAFT' || mFA.status === 'REFUSED')
+        "
         color="warning"
         @click="validationDialog = true"
         >soumettre à validation
