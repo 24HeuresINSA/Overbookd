@@ -116,15 +116,18 @@
         </div>
       </v-form>
     </v-card-text>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
   name: "Signup",
   auth: false,
+  components: { SnackNotificationContainer },
   layout: "none",
 
   data: () => ({
@@ -173,12 +176,18 @@ export default Vue.extend({
   methods: {
     async submitForm() {
       if (this.signupData.password !== this.signupData.password2) {
-        alert("Les deux mots de passes ne sont pas identiques...");
+        await this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "❌ Les deux mots de passes ne sont pas identiques...",
+        });
         return;
       }
 
       if (!this.signupData.isValid || !this.birthdate) {
-        alert("Les champs avec * sont obligatoires !");
+        await this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "❌ Les champs avec * sont obligatoires !",
+        });
         return;
       }
 
@@ -188,11 +197,17 @@ export default Vue.extend({
 
       const res = await this.$axios.post("/user", this.signupData);
       if (res.status !== 201) {
-        alert("Une erreur est survenue 😱");
+        await this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "Une erreur est survenue 😱",
+        });
         return;
       }
 
-      alert(`🎉 Inscription terminée Bienvenue au 24 ! 🎉`);
+      await this.$store.dispatch("notif/pushNotification", {
+        type: "success",
+        message: "🎉 Inscription terminée Bienvenue au 24 ! 🎉",
+      });
       this.$router.push({ path: "/login" });
     },
   },
