@@ -18,7 +18,7 @@ type Context = { $axios: NuxtAxiosInstance };
 
 export default {
   getAllFAs(context: Context) {
-    return context.$axios.get(resource);
+    return context.$axios.get<FA>(resource);
   },
   getFAByCount(context: Context, count: number) {
     return context.$axios.get(resource + `/${count}`);
