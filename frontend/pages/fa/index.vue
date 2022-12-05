@@ -10,13 +10,11 @@
             <v-text-field v-model="search" label="Recherche" dense>
             </v-text-field>
 
-            <v-select
+            <SearchTeam
               v-model="selectedTeam"
               label="Équipe"
-              :items="teamNames"
-              clearable
-              dense
-            ></v-select>
+              :boxed="false"
+            ></SearchTeam>
 
             <v-list dense shaped>
               <v-list-item-group v-model="selectedStatus">
@@ -170,16 +168,18 @@
 import Fuse from "fuse.js";
 import { safeCall } from "../../utils/api/calls";
 import { RepoFactory } from "../../repositories/repoFactory";
+import SearchTeam from "~/components/atoms/SearchTeam.vue";
 
 export default {
   name: "Fa",
+  components: { SearchTeam },
   data() {
     return {
       FAs: [],
       mFA: null,
       search: undefined,
       filter: {},
-      isDeletedFilter: false, // true if deleted FAs are displayed
+      isDeletedFilter: false,
       sortDesc: false,
       page: 1,
       itemsPerPage: 4,
@@ -200,14 +200,12 @@ export default {
         DRAFT: "grey",
         undefined: "grey",
       },
-
       isNewFADialogOpen: false,
       isDeleteFAOpen: false,
       faName: undefined,
       teamNames: this.$accessor.team.teamNames,
     };
   },
-
   computed: {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
@@ -252,37 +250,26 @@ export default {
       });
     }
   },
-
   methods: {
     preDelete(fa) {
       this.mFA = fa;
       this.isDeleteFAOpen = true;
     },
-
     getConfig(key) {
       return this.$accessor.config.getConfig(key);
     },
-
     filterBySelectedTeam(FAs, team) {
       if (!team) {
         return FAs;
       }
-      return FAs.filter((FA) => {
-        if (FA.general && FA.general.team) {
-          return FA.general.team === team;
-        } else {
-          return false;
-        }
-      });
+      return FAs.filter((FA) => FA.team_id === team.id);
     },
-
     filterByDeletedStatus(FAs) {
       if (this.isDeletedFilter === false) {
         return FAs.filter((FA) => FA.isValid !== false);
       }
       return FAs.filter((FA) => FA.isValid === false);
     },
-
     filterByValidatorStatus(FAs) {
       const filter = this.filter;
       Object.entries(filter).forEach(([validator, value]) => {
@@ -301,7 +288,6 @@ export default {
       });
       return FAs;
     },
-
     filterByStatus(FAs, status) {
       if (status === 0) {
         return FAs;
@@ -317,7 +303,6 @@ export default {
       });
       return FAs.filter((FA) => FA?.status === s[status]);
     },
-
     async createNewFA() {
       if (!this.faName) return;
       const FA = {
@@ -328,7 +313,6 @@ export default {
         RepoFactory.faRepo.createNewFA(this, FA),
         "FA créée 🥳"
       );
-
       if (res) {
         await this.$router.push({ path: "fa/" + res.id });
       }
@@ -346,7 +330,6 @@ export default {
         this.mFA = undefined;
       }
     },
-
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
