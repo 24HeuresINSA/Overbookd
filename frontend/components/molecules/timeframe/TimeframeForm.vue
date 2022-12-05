@@ -300,7 +300,7 @@ export default Vue.extend({
       this.$emit("close-dialog");
     },
     formIsInvalid(): boolean {
-      return (
+      if (
         !this.mTimeWindow.type ||
         !this.mTimeWindow.dateStart ||
         !this.formatDateStart ||
@@ -308,7 +308,17 @@ export default Vue.extend({
         !this.mTimeWindow.timeStart ||
         !this.mTimeWindow.dateEnd ||
         !this.mTimeWindow.timeEnd
-      );
+      ) {
+        this.showErrorMessage();
+        return true;
+      }
+      return false;
+    },
+    showErrorMessage() {
+      return this.$store.dispatch("notif/pushNotification", {
+        type: "error",
+        message: "❌ Tu dois compléter tous les champs !",
+      });
     },
     getValidTimeWindow(): time_windows {
       return {

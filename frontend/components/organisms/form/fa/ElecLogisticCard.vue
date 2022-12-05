@@ -95,8 +95,10 @@ export default Vue.extend({
   methods: {
     addElectricityNeed() {
       if (!this.newElectricityNeed.electricity_type) {
-        alert("N'oublie pas de choisir le type de prise !");
-        return;
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "❌ N'oublie pas de choisir le type de prise !",
+        });
       }
 
       this.newElectricityNeed.power = this.newElectricityNeed.power.replace(
@@ -104,8 +106,10 @@ export default Vue.extend({
         "."
       );
       if (+this.newElectricityNeed.power <= 0) {
-        alert("La puissance n'est pas valide...");
-        return;
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "❌ La puissance n'est pas valide...",
+        });
       }
 
       const newElecNeed: fa_electricity_needs = {
