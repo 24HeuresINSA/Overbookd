@@ -5,7 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments
+  ValidationArguments,
 } from 'class-validator';
 
 enum electricity_type {
