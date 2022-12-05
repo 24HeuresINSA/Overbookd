@@ -176,7 +176,7 @@ export const actions = actionTree(
     },
 
     submitForReview: async function (
-      { commit },
+      { commit, dispatch },
       { faId, authorId, authorName }
     ) {
       if (!faId || !authorId || !authorName) return;
@@ -186,7 +186,7 @@ export const actions = actionTree(
         author: authorId,
         created_at: new Date(),
       };
-      commit("ADD_COMMENT", comment);
+      dispatch("addComment", comment);
       commit("UPDATE_STATUS", Status.SUBMITTED);
     },
 
@@ -235,15 +235,6 @@ export const actions = actionTree(
           )
         );
       }
-      if (state.mFA.fa_comments) {
-        allPromise.push(
-          RepoFactory.faRepo.updateFAComments(
-            this,
-            state.mFA.id,
-            state.mFA.fa_comments
-          )
-        );
-      }
       await Promise.all(allPromise);
       dispatch("getAndSet", state.mFA.id);
     },
@@ -277,7 +268,7 @@ export const actions = actionTree(
         author: user_id,
         created_at: new Date(),
       };
-      commit("ADD_COMMENT", comment);
+      dispatch("addComment", comment);
       dispatch("save");
     },
 
@@ -297,7 +288,7 @@ export const actions = actionTree(
         author: user_id,
         created_at: new Date(),
       };
-      commit("ADD_COMMENT", comment);
+      dispatch("addComment", comment);
       dispatch("save");
     },
 
