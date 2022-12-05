@@ -189,13 +189,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    mTimeWindow: {
-      dateStart: "",
-      dateEnd: "",
-      timeStart: "",
-      timeEnd: "",
-      type: "",
-    },
+    mTimeWindow: {} as my_time_windows,
 
     formatDateStart: "",
     formatDateEnd: "",
@@ -219,9 +213,9 @@ export default Vue.extend({
       return this.$accessor.config.getConfig("event_date");
     },
     shouldCreateBothTimeWindows(): boolean {
-      return (<any>Object)
-        .values(time_windows_type as any)
-        .includes(this.mTimeWindow.type);
+      return !Object.values(time_windows_type).includes(
+        this.mTimeWindow.type as any
+      );
     },
   },
   watch: {
@@ -274,13 +268,9 @@ export default Vue.extend({
       } else this.clearLocalVariable();
     },
     clearLocalVariable() {
-      this.mTimeWindow = {
-        dateStart: this.manifDate,
-        dateEnd: this.manifDate,
-        timeStart: "",
-        timeEnd: "",
-        type: "",
-      };
+      this.mTimeWindow = {} as my_time_windows;
+      this.mTimeWindow.dateStart = this.manifDate;
+      this.mTimeWindow.dateEnd = this.manifDate;
 
       this.formatDateStart = "";
       this.formatDateEnd = "";
@@ -355,6 +345,14 @@ export default Vue.extend({
     },
   },
 });
+
+interface my_time_windows {
+  dateStart: string;
+  dateEnd: string;
+  timeStart: string;
+  timeEnd: string;
+  type: string;
+}
 </script>
 
 <style scoped>
