@@ -176,19 +176,17 @@ export default Vue.extend({
   methods: {
     async submitForm() {
       if (this.signupData.password !== this.signupData.password2) {
-        await this.$store.dispatch("notif/pushNotification", {
+        return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message: "❌ Les deux mots de passes ne sont pas identiques...",
         });
-        return;
       }
 
       if (!this.signupData.isValid || !this.birthdate) {
-        await this.$store.dispatch("notif/pushNotification", {
+        return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message: "❌ Les champs avec * sont obligatoires !",
         });
-        return;
       }
 
       delete this.signupData.password2;
@@ -197,7 +195,7 @@ export default Vue.extend({
 
       const res = await this.$axios.post("/user", this.signupData);
       if (res.status !== 201) {
-        await this.$store.dispatch("notif/pushNotification", {
+        return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message: "Une erreur est survenue 😱",
         });
