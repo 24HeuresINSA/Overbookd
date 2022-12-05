@@ -82,11 +82,16 @@
     <SnackNotificationContainer />
 
     <div class="bottom-bar">
-      <div>
-        <v-btn v-if="mFA.id > 1" small fab :to="`/fa/${mFA.id - 1}`">
-          <v-icon small>mdi-arrow-left</v-icon>
-        </v-btn>
-
+      <v-btn
+        v-if="mFA.id > 1"
+        class="bottom-bar__navigation"
+        small
+        fab
+        :to="`/fa/${mFA.id - 1}`"
+      >
+        <v-icon small>mdi-arrow-left</v-icon>
+      </v-btn>
+      <div class="bottom-bar__actions">
         <v-btn
           v-if="mValidators.length === 1"
           color="red"
@@ -95,12 +100,7 @@
         </v-btn>
         <v-menu v-if="mValidators.length > 1" offset-y>
           <template #activator="{ attrs, on }">
-            <v-btn
-              class="white--text ma-5"
-              v-bind="attrs"
-              color="red"
-              v-on="on"
-            >
+            <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
             </v-btn>
           </template>
@@ -118,25 +118,18 @@
             </v-list-item>
           </v-list>
         </v-menu>
-      </div>
-      <div>
-        <template v-if="mValidators.length === 1">
-          <v-btn color="green" @click="validate(mValidators[0])"
-            >validé par {{ mValidators[0].name }}
-          </v-btn>
-        </template>
+        <v-btn
+          v-if="mValidators.length === 1"
+          color="green"
+          @click="validate(mValidators[0])"
+          >validé par {{ mValidators[0].name }}
+        </v-btn>
         <v-menu v-if="mValidators.length > 1" offset-y>
           <template #activator="{ attrs, on }">
-            <v-btn
-              class="white--text ma-5"
-              v-bind="attrs"
-              color="green"
-              v-on="on"
-            >
+            <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
               valider
             </v-btn>
           </template>
-
           <v-list>
             <v-list-item
               v-for="validator of mValidators"
@@ -151,22 +144,23 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <v-btn
+          v-if="
+            mFA.status && (mFA.status === 'DRAFT' || mFA.status === 'REFUSED')
+          "
+          color="warning"
+          @click="validationDialog = true"
+          >soumettre à validation
+        </v-btn>
+        <v-btn @click="saveFA">sauvegarder</v-btn>
+        <v-btn
+          v-if="mValidators.length >= 1 && mFA.isValid === false"
+          color="red"
+          @click="undelete"
+          >récupérer
+        </v-btn>
       </div>
-
-      <v-btn
-        v-if="mFA.status && mFA.status !== 'SUBMITTED'"
-        color="warning"
-        @click="validationDialog = true"
-        >soumettre à validation
-      </v-btn>
-      <v-btn @click="saveFA">sauvegarder</v-btn>
-      <v-btn
-        v-if="mValidators.length >= 1 && mFA.isValid === false"
-        color="red"
-        @click="undelete"
-        >récupérer
-      </v-btn>
-      <v-btn small fab :to="`/fa/${mFA.id + 1}`">
+      <v-btn class="bottom-bar__navigation" small fab :to="`/fa/${mFA.id + 1}`">
         <v-icon small>mdi-arrow-right</v-icon>
       </v-btn>
     </div>
@@ -388,10 +382,10 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .main {
   display: flex;
-  height: calc(100vh - 155px);
+  height: calc(100vh - 42px);
 }
 
 .sidebar {
@@ -459,11 +453,13 @@ h1 {
   flex: 1 1 auto;
   overflow: auto;
   scroll-behavior: smooth;
-  padding-bottom: 300px;
-}
-
-.container > * {
-  margin-bottom: 30px;
+  padding-bottom: 50px;
+  > * {
+    margin-bottom: 30px;
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
 }
 
 .log-text {
@@ -472,13 +468,20 @@ h1 {
 
 .bottom-bar {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
-  width: 75vw;
+  right: 5%;
+  bottom: 42px;
+  z-index: 3;
   display: flex;
+  gap: 30px;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   background-color: transparent;
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+  }
 }
 
 .grey {
@@ -499,10 +502,13 @@ h1 {
 @media only screen and (max-width: 965px) {
   .bottom-bar {
     position: fixed;
-    bottom: 40px;
-    align-items: center;
-    flex-direction: column;
-    gap: 10px;
+    bottom: 42px;
+    &__actions {
+      flex-direction: column;
+    }
+  }
+  .container {
+    padding-bottom: 200px;
   }
 }
 
