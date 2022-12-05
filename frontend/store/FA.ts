@@ -14,6 +14,7 @@ import {
   Status,
   subject_type,
   time_windows,
+  time_windows_type,
 } from "~/utils/models/FA";
 import { sendNotification } from "./catalog";
 
@@ -37,6 +38,18 @@ export const getters = getterTree(state, {
   barrieresGearRequests(state) {
     return state.gearRequests.filter(
       (gr) => gr.gear.owner?.code === "barrieres"
+    );
+  },
+  animationTimeWindows(state): time_windows[] {
+    return (
+      state.mFA.time_windows?.filter(
+        (timeWindow: time_windows) => timeWindow.type === time_windows_type.ANIM
+      ) ?? []
+    );
+  },
+  gearTimeWindow(state): time_windows | undefined {
+    return state.mFA.time_windows?.find(
+      (timeWindow: time_windows) => timeWindow.type === time_windows_type.MATOS
     );
   },
 });

@@ -5,7 +5,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="timeframes"
+        :items="animTimewindows"
         dense
         :items-per-page="-1"
         sort-by="dateStart"
@@ -22,15 +22,8 @@
         <template #[`item.timeEnd`]="{ item }">
           {{ formatTime(item.end) }}
         </template>
-        <template #[`item.action`]="{ index }">
-          <v-btn
-            v-if="!isDisabled"
-            icon
-            @click="
-              isEditDialogOpen = true;
-              editIndex = index;
-            "
-          >
+        <template #[`item.action`]="{ index, item }">
+          <v-btn v-if="!isDisabled" icon @click="openUpdateModal(index, item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
@@ -46,16 +39,21 @@
         >
       </v-card-actions>
 
-      <TimeframeCalendar :data="timeframes"></TimeframeCalendar>
+      <TimeframeCalendar :data="animTimewindows"></TimeframeCalendar>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <TimeframeForm @close-dialog="isAddDialogOpen = false"></TimeframeForm>
+      <TimeframeForm
+        :type="type"
+        @change="addTimeWindow"
+        @close-dialog="isAddDialogOpen = false"
+      ></TimeframeForm>
     </v-dialog>
 
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <TimeframeForm
-        :edit-index="editIndex"
+        v-model="selectedTimeWindow"
+        @change="updateTimeWindow"
         @close-dialog="isEditDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
@@ -66,6 +64,7 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
+import { time_windows, time_windows_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "TimeframeTable",
@@ -78,7 +77,6 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Type", value: "type" },
       { text: "Date de début", value: "dateStart" },
       { text: "Heure de début", value: "timeStart" },
       { text: "Date de fin", value: "dateEnd" },
@@ -87,11 +85,15 @@ export default Vue.extend({
     ],
     isAddDialogOpen: false,
     isEditDialogOpen: false,
-    editIndex: null,
+    editIndex: null as number | null,
+    selectedTimeWindow: null as time_windows | null,
   }),
   computed: {
-    timeframes(): any {
-      return this.$accessor.FA.mFA.time_windows;
+    animTimewindows(): time_windows[] {
+      return this.$accessor.FA.animationTimeWindows;
+    },
+    type() {
+      return time_windows_type.ANIM;
     },
   },
   methods: {
@@ -110,6 +112,20 @@ export default Vue.extend({
     },
     async deleteTimeframe(index: number) {
       await this.$accessor.FA.deleteTimeWindow(index);
+    },
+    addTimeWindow(timeWindow: time_windows) {
+      this.$accessor.FA.addTimeWindow(timeWindow);
+    },
+    updateTimeWindow(timeWindow: time_windows) {
+      this.$accessor.FA.updateTimeWindow({
+        index: this.editIndex,
+        timeWindow,
+      });
+    },
+    openUpdateModal(index: number, timeWindow: time_windows) {
+      this.editIndex = index;
+      this.selectedTimeWindow = timeWindow;
+      this.isEditDialogOpen = true;
     },
   },
 });
