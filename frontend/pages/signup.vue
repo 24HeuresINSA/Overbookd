@@ -201,7 +201,6 @@ export default Vue.extend({
           type: "error",
           message: "Une erreur est survenue 😱",
         });
-        return;
       }
 
       await this.$store.dispatch("notif/pushNotification", {
