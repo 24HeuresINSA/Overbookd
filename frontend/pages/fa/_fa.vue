@@ -52,6 +52,7 @@
         responsable de la logistique sur
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
       </h4>
+      <LogisticTimeWindow :is-disabled="isDisabled"></LogisticTimeWindow>
       <LogisticsCard
         title="Matos"
         owner="matos"
@@ -216,6 +217,7 @@ import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { team } from "~/utils/models/repo";
+import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
 
 export default Vue.extend({
   name: "Fa",
@@ -232,6 +234,7 @@ export default Vue.extend({
     SecurityCard,
     FormSummary,
     SnackNotificationContainer,
+    LogisticTimeWindow,
   },
 
   data: () => ({
