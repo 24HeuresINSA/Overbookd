@@ -41,7 +41,7 @@
         <div class="date-picker">
           <p>Date de naissance*</p>
           <v-date-picker
-            v-model="signupData.birthdate"
+            v-model="birthdate"
             label="Date de naissance*"
             elevation="1"
           ></v-date-picker>
@@ -129,6 +129,7 @@ export default Vue.extend({
 
   data: () => ({
     signupData: {} as SignupFormData,
+    birthdate: "",
     formSoft: false,
     isSignupOpen: true,
   }),
@@ -173,19 +174,18 @@ export default Vue.extend({
     async submitForm() {
       if (this.signupData.password !== this.signupData.password2)
         alert("Les deux mots de passes ne sont pas identiques...");
-      else if (!this.signupData.isValid || !this.signupData.birthdate)
+      else if (!this.signupData.isValid || !this.birthdate)
         alert("Les champs avec * sont obligatoires !");
       else {
         delete this.signupData.password2;
         delete this.signupData.isValid;
-        const oldDate = this.signupData.birthdate;
-        this.signupData.birthdate = new Date(oldDate).toISOString();
+        this.signupData.birthdate = new Date(this.birthdate).toISOString();
 
-        this.$router.push({ path: "/login" });
         const res = await this.$axios.post("/user", this.signupData);
         if (res.status === 201)
           alert(`🎉 Inscription terminée Bienvenue au 24 ! 🎉`);
         else alert("Une erreur est survenue 😱");
+        this.$router.push({ path: "/login" });
       }
     },
   },
