@@ -30,6 +30,9 @@ export class FaService {
         is_deleted: false,
       },
       select: ALL_FA_SELECT,
+      orderBy: {
+        id: 'asc',
+      },
     });
   }
 
