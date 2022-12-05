@@ -218,6 +218,11 @@ export default Vue.extend({
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
     },
+    shouldCreateBothTimeWindows(): boolean {
+      return (<any>Object)
+        .values(time_windows_type as any)
+        .includes(this.mTimeWindow.type);
+    },
   },
   watch: {
     editIndex() {
@@ -290,15 +295,12 @@ export default Vue.extend({
     addTimeframe() {
       if (this.formIsInvalid()) return;
 
-      const isValidType = (<any>Object)
-        .values(time_windows_type)
-        .includes(this.mTimeWindow.type);
-      if (isValidType) {
-        this.addTimeWindowInStore();
-      } else {
-        this.addTimeWindowInStore(time_windows_type.ANIM);
-        this.addTimeWindowInStore(time_windows_type.MATOS);
-      }
+      const timewindowTypes = this.shouldCreateBothTimeWindows
+        ? [time_windows_type.ANIM, time_windows_type.MATOS]
+        : [this.mTimeWindow.type as time_windows_type];
+      timewindowTypes.map((timewindowType: time_windows_type) =>
+        this.addTimeWindowInStore(timewindowType)
+      );
 
       this.$emit("close-dialog");
       this.clearLocalVariable();
