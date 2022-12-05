@@ -1,6 +1,6 @@
 import json
 import logging
-
+import urllib.parse
 import requests
 
 """
@@ -16,7 +16,7 @@ URL = "https://overbookd.traefik.me/api"
 def loginFromctmv(username, password):
 
     url = f"{ctmv}/login"
-    payload = f"username={username.replace('@', '%40')}&password={password}"
+    payload = f"username={username.replace('@', '%40')}&password={urllib.parse.quote(password)}"
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
@@ -72,7 +72,7 @@ def setNewLocations(token, locationName):
     'Authorization': f'Bearer {token}',
   }
 
-  response = requests.request("POST", url, headers=headers, data=payload)
+  response = requests.request("POST", url, headers=headers, data=payload) # add verify=False if you have a self signed certificate
 
   logger.info(f"Set new location reponse : {response.text}")
 
