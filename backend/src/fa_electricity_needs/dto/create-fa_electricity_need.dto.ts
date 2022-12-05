@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
-  IsNumber,
-  IsEnum,
-  ValidationArguments,
+  ValidationArguments
 } from 'class-validator';
 
 enum electricity_type {
-  PC16 = 'PC16',
+  PC16 = 'PC16_Prise_classique',
   P17_16A_MONO = 'P17_16A_MONO',
   P17_16A_TRI = 'P17_16A_TRI',
   P17_32A_MONO = 'P17_32A_MONO',

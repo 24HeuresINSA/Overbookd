@@ -253,7 +253,7 @@ model collaborator {
 
 //A définir correctement plus tard, placeholder pour le moment
 enum electricity_type {
-  PC16
+  PC16_Prise_classique
   P17_16A_MONO
   P17_16A_TRI
   P17_32A_MONO
