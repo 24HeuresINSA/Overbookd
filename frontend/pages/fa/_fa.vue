@@ -35,7 +35,10 @@
     </div>
     <v-container class="container">
       <FAGeneralCard id="general" :is-disabled="isDisabled"></FAGeneralCard>
-      <FADetailCard id="detail" :is-disabled="isDisabled"></FADetailCard>
+      <FADetailCard
+        id="detail"
+        :is-disabled="isDisabled && !me.team.includes('humain')"
+      ></FADetailCard>
       <SignaCard id="signa" :is-disabled="isDisabled"></SignaCard>
       <TimeframeTable id="timeframe" :is-disabled="isDisabled"></TimeframeTable>
       <SecurityCard id="security" :is-disabled="isDisabled"></SecurityCard>
@@ -290,7 +293,10 @@ export default Vue.extend({
       return [];
     },
     isDisabled(): boolean {
-      return this.mFA.status === "SUBMITTED" || this.mFA.status === "VALIDATED";
+      return (
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "VALIDATED") &&
+        !this.me.team.includes("admin")
+      );
     },
   },
 
