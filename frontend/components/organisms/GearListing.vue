@@ -34,7 +34,10 @@
       :loading="loading"
     >
       <template #item.category="{ item }">
-        {{ item.category && item.category.name }}
+        <div v-show="item.category" class="category-details">
+          <span class="category-details__name">{{ item.category?.name }}</span>
+          <span class="category-details__path"> {{ item.category?.path }}</span>
+        </div>
       </template>
       <template #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateGearDialog(item)">
@@ -194,6 +197,16 @@ form {
   justify-content: space-evenly;
   .v-input {
     flex-grow: 1;
+  }
+}
+.category-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0;
+  &__path {
+    font-size: 0.8rem;
+    color: gray;
   }
 }
 </style>
