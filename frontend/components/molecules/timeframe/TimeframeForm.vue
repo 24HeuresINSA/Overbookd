@@ -1,14 +1,15 @@
 <template>
   <v-card class="form-card">
     <v-card-title>
-      <span class="headline">Ajouter un créneau</span>
+      <span v-if="editIndex === -1" class="headline">Ajouter un créneau</span>
+      <span v-else class="headline">Modifier un créneau</span>
     </v-card-title>
 
     <v-select
       v-model="mTimeWindow.type"
       type="select"
       label="Type"
-      :items="timeWindowsType"
+      :items="editIndex === -1 ? addTimeWindowsType : editTimeWindowsType"
       class="row"
     ></v-select>
 
@@ -160,7 +161,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        v-if="editIndex == -1"
+        v-if="editIndex === -1"
         color="blue darken-1"
         text
         @click="addTimeframe"
@@ -208,8 +209,13 @@ export default Vue.extend({
     timeframes(): any {
       return this.$accessor.FA.mFA.time_windows;
     },
-    timeWindowsType(): Array<string> {
-      return Object.values(time_windows_type);
+    addTimeWindowsType(): Array<string> {
+      const types = Object.values(time_windows_type) as Array<string>;
+      types.push("Les deux");
+      return types;
+    },
+    editTimeWindowsType(): Array<string> {
+      return Object.values(time_windows_type) as Array<string>;
     },
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
@@ -286,7 +292,18 @@ export default Vue.extend({
     addTimeframe() {
       if (this.formIsInvalid()) return;
 
-      this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
+      if (
+        !(<any>Object).values(time_windows_type).includes(this.mTimeWindow.type)
+      ) {
+        this.mTimeWindow.type = time_windows_type.ANIM;
+        this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
+
+        this.mTimeWindow.type = time_windows_type.MATOS;
+        this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
+      } else {
+        this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
+      }
+
       this.$emit("close-dialog");
       this.clearLocalVariable();
     },
