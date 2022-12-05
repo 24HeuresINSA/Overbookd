@@ -100,6 +100,7 @@ export class CatalogService {
   private async getCategory(
     categoryId?: number,
   ): Promise<Category | undefined> {
+    if (!categoryId) return undefined;
     const storedCategory = await this.categoryRepository.getCategory(
       categoryId,
     );
