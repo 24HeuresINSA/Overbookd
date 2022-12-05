@@ -470,12 +470,11 @@ h1 {
 
 .bottom-bar {
   position: fixed;
+  right: 20px;
   bottom: 20px;
-  width: 80vw;
-  margin: 0 10vw 2px 10vw;
+  width: 75vw;
   display: flex;
   justify-content: space-between;
-  z-index: 30;
   align-items: baseline;
   background-color: transparent;
 }
@@ -502,7 +501,6 @@ h1 {
     align-items: center;
     flex-direction: column;
     gap: 10px;
-    z-index: 1;
   }
 }
 
