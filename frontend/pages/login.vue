@@ -185,7 +185,7 @@ export default {
           await audio.play();
         }
       } catch (e) {
-        await this.$store.dispatch("notif/pushNotification", {
+        return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message: "Ton email ou ton mot de passe est incorrect 😞",
         });
