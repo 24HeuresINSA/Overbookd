@@ -144,20 +144,6 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn
-          v-if="mFA.status && mFA.status !== 'SUBMITTED'"
-          color="warning"
-          @click="validationDialog = true"
-          >soumettre à validation
-        </v-btn>
-        <v-btn @click="saveFA">sauvegarder</v-btn>
-        <v-btn
-          v-if="mValidators.length >= 1 && mFA.isValid === false"
-          color="red"
-          @click="undelete"
-          >récupérer
-        </v-btn>
-      </div>
       <v-btn
         v-if="
           mFA.status && (mFA.status === 'DRAFT' || mFA.status === 'REFUSED')
@@ -173,6 +159,7 @@
         @click="undelete"
         >récupérer
       </v-btn>
+    </div>
       <v-btn class="bottom-bar__navigation" small fab :to="`/fa/${mFA.id + 1}`">
         <v-icon small>mdi-arrow-right</v-icon>
       </v-btn>
