@@ -8,7 +8,6 @@ import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
 import { PrismaService } from '../prisma.service';
-import { NotFoundError } from '@prisma/client/runtime';
 import { CreateFaDto } from './dto/create-fa.dto';
 import {
   FaResponse,
@@ -53,7 +52,7 @@ export class FaService {
   ): Promise<FaResponse | null> {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id: Number(id) } });
-    if (!fa) throw new NotFoundError(`fa with id ${id} not found`);
+    if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
     await this.prisma.fa.update({
       where: { id: Number(id) },
       data: updatefaDto,
@@ -144,11 +143,11 @@ export class FaService {
     const user = await this.prisma.user.findUnique({
       where: { id: user_id },
     });
-    if (!user) throw new NotFoundError(`User with id ${user_id} not found`);
+    if (!user) throw new NotFoundException(`User with id ${user_id} not found`);
     const team = await this.prisma.team.findUnique({
       where: { id: team_id },
     });
-    if (!team) throw new NotFoundError(`Team with id ${team_id} not found`);
+    if (!team) throw new NotFoundException(`Team with id ${team_id} not found`);
     //check if user is in team
     const user_team = await this.prisma.user_Team.findUnique({
       where: {
@@ -159,7 +158,7 @@ export class FaService {
       },
     });
     if (!user_team)
-      throw new NotFoundError(
+      throw new NotFoundException(
         `User with id ${user_id} is not in team with id ${team_id}`,
       );
     //Check if the team is a validator
