@@ -36,8 +36,7 @@
                 :value="item.count ? item.count : '1'"
                 label="Nombre"
                 type="number"
-                min="0"
-                step="1"
+                :rules="[rules.number, rules.min]"
                 :disabled="isDisabled"
                 @change="updateSignalisationCount(index, $event)"
               ></v-text-field>
@@ -119,6 +118,12 @@ export default Vue.extend({
       type: "",
       text: "",
       comment: "",
+    },
+    rules: {
+      number: (value: string) =>
+        !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
+      min: (value: string) =>
+        parseInt(value, 10) >= 1 || "La valeur doit être supérieure à 0",
     },
   }),
   computed: {
