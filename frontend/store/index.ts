@@ -1,22 +1,23 @@
 import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 
 // Import all submodules
-import * as dialog from "./dialog";
-import * as notif from "./notif";
+import * as assignment from "./assignment";
+import * as catalog from "./catalog";
 import * as config from "./config";
-import * as user from "./user";
-import * as transaction from "./transaction";
-import * as FA from "./FA";
-import * as FT from "./FT";
-import * as timeslot from "./timeslot";
-import * as location from "./location";
+import * as configuration from "./configuration";
+import * as conflict from "./conflict";
+import * as dialog from "./dialog";
 import * as equipment from "./equipment";
 import * as equipmentProposal from "./equipmentProposal";
-import * as assignment from "./assignment";
-import * as conflict from "./conflict";
+import * as FA from "./FA";
+import * as FT from "./FT";
+import * as location from "./location";
+import * as notif from "./notif";
+import * as signaLocation from "./signaLocation";
 import * as team from "./team";
-import * as catalog from "./catalog";
-import * as configuration from "./configuration";
+import * as timeslot from "./timeslot";
+import * as transaction from "./transaction";
+import * as user from "./user";
 
 export const state = () => ({});
 
@@ -50,5 +51,6 @@ export const accessorType = getAccessorType({
     conflict,
     catalog,
     configuration,
+    signaLocation,
   },
 });
