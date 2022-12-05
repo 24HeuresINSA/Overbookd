@@ -57,7 +57,7 @@ export interface FA {
   is_publishable?: boolean;
   is_major?: boolean;
   is_kids?: boolean;
-  security_needs?: boolean;
+  security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
   water_needs?: string;
@@ -167,7 +167,7 @@ export interface fa_general_update {
   is_publishable?: boolean;
   is_major?: boolean;
   is_kids?: boolean;
-  security_needs?: boolean;
+  security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
   water_needs?: string;
