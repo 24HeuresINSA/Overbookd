@@ -163,14 +163,13 @@ export default Vue.extend({
     /*selectLocations(locations: string[]) {
       this.$accessor.FA.setLocations(locations);
     },*/
-    async addSignalisation() {
+    addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
-        await this.$store.dispatch("notif/pushNotification", {
+        return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message:
             "❌ N'oublie pas de compléter le Type et le Texte signalétique !",
         });
-        return;
       }
 
       const newSigna: fa_signa_needs = {

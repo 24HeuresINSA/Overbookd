@@ -314,8 +314,8 @@ export default Vue.extend({
       }
       return false;
     },
-    async showErrorMessage() {
-      await this.$store.dispatch("notif/pushNotification", {
+    showErrorMessage() {
+      return this.$store.dispatch("notif/pushNotification", {
         type: "error",
         message: "❌ Tu dois compléter tous les champs !",
       });
