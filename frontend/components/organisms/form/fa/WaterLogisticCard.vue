@@ -48,9 +48,6 @@ export default Vue.extend({
       if (typeof value === "string") value = value.trim();
       this.$accessor.FA.updateFA({ key: key, value: value });
     },
-    doNothing() {
-      console.log("do nothing");
-    },
   },
 });
 </script>
