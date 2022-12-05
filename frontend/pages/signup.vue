@@ -1,6 +1,8 @@
 <template>
   <v-card class="signup-card elevation-3">
-    <v-card-title class="card-title justify-center">👋 Inscription 👋</v-card-title>
+    <v-card-title class="card-title justify-center"
+      >👋 Inscription 👋</v-card-title
+    >
     <v-card-text>
       <v-form v-model="signupData.isValid">
         <v-text-field
@@ -15,7 +17,10 @@
           required
         ></v-text-field>
 
-        <v-text-field v-model="signupData.nickname" label="Surnom"></v-text-field>
+        <v-text-field
+          v-model="signupData.nickname"
+          label="Surnom"
+        ></v-text-field>
 
         <v-text-field
           v-model="signupData.password"
@@ -99,8 +104,8 @@
         ></v-text-field>
 
         <p>
-          Une fois le formulaire remplit veuillez vous connecter à Overbookd pour
-          remplir vos dispos ! <br />
+          Une fois le formulaire remplit veuillez vous connecter à Overbookd
+          pour remplir vos dispos ! <br />
           <span class="important"
             >Pensez à immédiatement les remplir pour être accepté au plus vite
             !</span
@@ -165,7 +170,7 @@ export default Vue.extend({
   },
 
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.signupData.password !== this.signupData.password2)
         alert("Les deux mots de passes ne sont pas identiques...");
       else if (!this.signupData.isValid || !this.signupData.birthdate)
@@ -176,9 +181,11 @@ export default Vue.extend({
         const oldDate = this.signupData.birthdate;
         this.signupData.birthdate = new Date(oldDate).toISOString();
 
-        this.$axios.post("/user", this.signupData);
         this.$router.push({ path: "/login" });
-        alert(`🎉 Inscription terminée Bienvenue au 24 ! 🎉`);
+        const res = await this.$axios.post("/user", this.signupData);
+        if (res.status === 201)
+          alert(`🎉 Inscription terminée Bienvenue au 24 ! 🎉`);
+        else alert("Une erreur est survenue 😱");
       }
     },
   },
@@ -208,7 +215,6 @@ interface SignupFormData {
 
 .card-title {
   font-size: 28px;
-  
 }
 
 .date-picker {
@@ -216,7 +222,7 @@ interface SignupFormData {
 }
 
 .date-picker p {
-  margin-bottom: 5px ;
+  margin-bottom: 5px;
 }
 
 .important {
