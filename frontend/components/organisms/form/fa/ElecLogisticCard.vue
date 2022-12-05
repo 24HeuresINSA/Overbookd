@@ -93,7 +93,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    async addElectricityNeed() {
+    addElectricityNeed() {
       if (!this.newElectricityNeed.electricity_type) {
         return this.$store.dispatch("notif/pushNotification", {
           type: "error",
