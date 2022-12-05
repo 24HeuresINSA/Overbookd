@@ -43,7 +43,8 @@
       "triage",
       "CP",
       "FA",
-      "release"
+      "release",
+      "Location"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],
