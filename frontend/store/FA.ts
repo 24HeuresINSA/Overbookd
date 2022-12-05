@@ -165,6 +165,9 @@ export const mutations = mutationTree(state, {
       (gr) => gr.gear.id !== gearId
     );
   },
+  SET_COMMENTS({ mFA }, comments: fa_comments[]) {
+    mFA.fa_comments = comments;
+  },
 });
 
 export const actions = actionTree(
@@ -317,13 +320,12 @@ export const actions = actionTree(
 
     async addComment({ commit, state }, comment: fa_comments) {
       commit("ADD_COMMENT", comment);
-      if (state.mFA.fa_comments) {
-        await RepoFactory.faRepo.updateFAComments(
-          this,
-          state.mFA.id,
-          state.mFA.fa_comments
-        );
-      }
+      const res = await RepoFactory.faRepo.updateFAComments(
+        this,
+        state.mFA.id,
+        state.mFA.fa_comments ?? []
+      );
+      commit("SET_COMMENTS", res.data);
     },
 
     addSignaNeed({ commit }, signaNeed: fa_signa_needs) {
