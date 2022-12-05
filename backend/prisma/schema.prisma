@@ -288,6 +288,7 @@ model fa_signa_needs {
 
 enum subject_type {
   REFUSED
+  SUBMIT
   VALIDATED
   COMMENT
 }
