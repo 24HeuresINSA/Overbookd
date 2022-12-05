@@ -1,5 +1,6 @@
 import json
 import logging
+
 import requests
 
 """
@@ -63,7 +64,7 @@ def getOldLocations(token):
 
 def setNewLocations(token, locationName):
 
-  url = f"{URL}/location"
+  url = f"{URL}/signa-location"
   payload = json.dumps({
     "name": locationName,
   })
