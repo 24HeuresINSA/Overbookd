@@ -209,13 +209,11 @@ export default Vue.extend({
     timeframes(): any {
       return this.$accessor.FA.mFA.time_windows;
     },
-    addTimeWindowsType(): Array<string> {
-      const types = Object.values(time_windows_type) as Array<string>;
-      types.push("Les deux");
-      return types;
+    addTimeWindowsType(): string[] {
+      return [...Object.values(time_windows_type), "Les deux"];
     },
-    editTimeWindowsType(): Array<string> {
-      return Object.values(time_windows_type) as Array<string>;
+    editTimeWindowsType(): string[] {
+      return Object.values(time_windows_type);
     },
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
@@ -292,20 +290,22 @@ export default Vue.extend({
     addTimeframe() {
       if (this.formIsInvalid()) return;
 
-      if (
-        !(<any>Object).values(time_windows_type).includes(this.mTimeWindow.type)
-      ) {
-        this.mTimeWindow.type = time_windows_type.ANIM;
-        this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
-
-        this.mTimeWindow.type = time_windows_type.MATOS;
-        this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
+      const isValidType = (<any>Object)
+        .values(time_windows_type)
+        .includes(this.mTimeWindow.type);
+      if (isValidType) {
+        this.addTimeWindowInStore();
       } else {
-        this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
+        this.addTimeWindowInStore(time_windows_type.ANIM);
+        this.addTimeWindowInStore(time_windows_type.MATOS);
       }
 
       this.$emit("close-dialog");
       this.clearLocalVariable();
+    },
+    addTimeWindowInStore(type?: time_windows_type) {
+      if (type) this.mTimeWindow.type = type;
+      this.$accessor.FA.addTimeWindow(this.getValidTimeWindow());
     },
     editTimeframe() {
       if (this.formIsInvalid()) return;
