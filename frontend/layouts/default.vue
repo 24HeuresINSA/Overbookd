@@ -73,20 +73,35 @@
 
     <v-dialog v-model="isDialogOpen" max-width="800">
       <v-card v-if="hasRole('hard')">
-        <v-img
-          src="img/memes/comsi_working.png"
-          width="300px"
-          style="left: 250px"
-        ></v-img>
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
-            Pour signaler un bug veuillez envoyer un mail à
-            contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
+            Pour signaler un bug veuillez envoie un mail à <br />
+            <code>
+              contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com
+            </code>
+            <br />
+            en précisant le problème rencontré et en joignant une capture
+            d'écran. Tu peux cliquer sur le bouton "Envoyer le mail" pour ouvrir
+            ton client mail. Si rien ne se passe, tu peux utiliser les deux
+            autres bontons pour copier l'adresse mail et le template. <br />
+            ⚠ Utilise bien le template pour ton mail, cela nous aide vraiment
+            pour notre travail. Merci🙏
           </h4>
         </v-card-text>
         <v-card-actions>
-          <v-btn :href="mailUrl"> envoyer le mail </v-btn>
+          <v-btn :href="mailUrl"> Envoyer le mail </v-btn>
+          <v-btn
+            @click="
+              copyToClipboard(
+                'contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com'
+              )
+            "
+            >Copier l'adresse mail</v-btn
+          >
+          <v-btn @click="copyToClipboard(generateIssueTemplate)"
+            >Copier le template</v-btn
+          >
         </v-card-actions>
       </v-card>
       <v-card v-else>
@@ -358,19 +373,34 @@ export default {
         : "overbookd_logo_noir.png";
     },
 
+    generateIssueTemplate() {
+      return `# URL or page
+${window.location.href}
+
+# Expected behavior
+<!---What did you expected--->
+
+
+# Actual behavior
+<!---What is happening--->
+
+# Steps to reproduce
+
+ - Step 1
+ - Step 2
+ ...
+
+# Additional info
+version: ${version}
+user agent: ${navigator.userAgent}
+vendor: ${navigator.vendor}
+date: ${Date().toLocaleString()}
+resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
+    },
+
     mailUrl() {
-      return `mailto:contact-project%2B24-heures-insa-overbookd-mono-31598236-issue-%40incoming.gitlab.com?body=%23%20URL%20or%20page%0A${encodeURIComponent(
-        window.location.href
-      )}%0A%0A%23%20Expected%20behavior%0A%3C%21---What%20did%20you%20expected---%3E%0A%0A%0A%23%20Actual%20behavior%0A%3C%21---What%20is%20happening---%3E%0A%0A%23%20Steps%20to%20reproduce%0A%0A%20-%20Step%201%0A%20-%20Step%202%0A%20...%0A%0A%23%20Additional%20info%0Aversion%3A%20${encodeURI(
-        version
-      )}%0Auser%20agent%3A%20${encodeURI(
-        navigator.userAgent
-      )}%0Avendor%3A%20${encodeURI(
-        navigator.vendor
-      )}%20%0Adate%3A%20${encodeURI(
-        new Date().toLocaleString()
-      )}%20%0Aresolution%3A%20${encodeURI(
-        window.screen.availWidth + "x" + window.screen.availHeight
+      return `mailto:contact-project%2B24-heures-insa-overbookd-mono-31598236-issue-%40incoming.gitlab.com?body=${encodeURIComponent(
+        this.generateIssueTemplate
       )}`;
     },
     isPreProd() {
@@ -421,6 +451,9 @@ export default {
       await this.$router.push({
         path: "/login",
       });
+    },
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
     },
   },
 };
