@@ -272,6 +272,9 @@ export default Vue.extend({
         timeEnd: "",
         type: "",
       };
+
+      this.formatDateStart = "";
+      this.formatDateEnd = "";
     },
     formatDate(date: string): string {
       return new Date(date).toLocaleDateString("fr-FR", {
