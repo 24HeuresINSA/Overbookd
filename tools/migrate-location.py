@@ -40,7 +40,7 @@ def login(username, password):
     }
 
     response = requests.request(
-        "POST", url, headers=headers, data=payload, verify=False) # add verify=False if you have a self signed certificate
+        "POST", url, headers=headers, data=payload) # add verify=False if you have a self signed certificate
 
     logger.info(f"Loggin reponse from posgresql backend: {response.text}")
 
