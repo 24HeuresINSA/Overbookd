@@ -163,14 +163,13 @@ export default Vue.extend({
     /*selectLocations(locations: string[]) {
       this.$accessor.FA.setLocations(locations);
     },*/
-    addSignalisation() {
+    async addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
-        alert("N'oublie pas de compléter le Type et le Texte signalétique !");
-        /*this.$accessor.notif.pushNotification({
+        await this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message:
-            "N'oublie pas de compléter le Type et le Texte signalétique !",
-        });*/
+            "❌ N'oublie pas de compléter le Type et le Texte signalétique !",
+        });
         return;
       }
 
