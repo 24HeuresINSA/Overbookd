@@ -7,7 +7,7 @@ export enum Status {
   REFUSED = "REFUSED",
 }
 export enum electricity_type {
-  PC16 = "PC16",
+  PC16 = "PC16_Prise_classique",
   P17_16A_MONO = "P17_16A_MONO",
   P17_16A_TRI = "P17_16A_TRI",
   P17_32A_MONO = "P17_32A_MONO",
