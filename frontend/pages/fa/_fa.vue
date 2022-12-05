@@ -43,8 +43,8 @@
         id="presta"
         :is-disabled="isDisabled"
       ></CollaboratorCard>
-      <h2 id="log">Logistique 🚚</h2>
-      <h4>
+      <h2 id="log" class="log-text">Logistique 🚚</h2>
+      <h4 class="log-text">
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
@@ -110,7 +110,7 @@
             >
               <v-list-item-title
                 @click="refuseDialog = true"
-                v-text="validator"
+                v-text="validator.name"
               ></v-list-item-title>
             </v-list-item>
           </v-list>
@@ -445,20 +445,21 @@ h1 {
   visibility: visible;
 }
 
-h2 {
-  margin-bottom: 10px;
-}
-
 .container {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   overflow: auto;
   scroll-behavior: smooth;
+  padding-bottom: 300px;
 }
 
 .container > * {
   margin-bottom: 30px;
+}
+
+.log-text {
+  margin-bottom: 8px;
 }
 
 .bottom-bar {
@@ -496,10 +497,6 @@ h2 {
     flex-direction: column;
     gap: 10px;
     z-index: 1;
-  }
-
-  .container {
-    padding-bottom: 300px;
   }
 }
 
