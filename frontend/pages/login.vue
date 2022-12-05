@@ -82,14 +82,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-snackbar v-model="snackbar" :timeout="timeout">
-      {{ feedbackMessage }}
-    </v-snackbar>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
 
 <script>
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
@@ -142,6 +141,7 @@ const { version } = require("../package.json");
 export default {
   name: "Login",
   auth: false,
+  components: { SnackNotificationContainer },
   layout: "none",
 
   data: () => ({
@@ -149,7 +149,6 @@ export default {
       email: "",
       password: "",
     },
-    snackbar: false,
     feedbackMessage: undefined,
     timeout: 5000,
     version,
@@ -186,8 +185,10 @@ export default {
           await audio.play();
         }
       } catch (e) {
-        this.feedbackMessage = "Ton email ou ton mot de passe est incorrect 😞";
-        this.snackbar = true;
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "Ton email ou ton mot de passe est incorrect 😞",
+        });
       }
     },
 
