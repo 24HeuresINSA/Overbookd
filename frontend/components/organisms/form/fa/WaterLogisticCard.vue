@@ -7,7 +7,7 @@
       Log Elec via logistique@24heures.org</v-card-subtitle
     >
     <v-card-text>
-      <v-form>
+      <v-form @submit.prevent="">
         <!--
         <v-switch
           :value="waterNeed.water_flow_required"
