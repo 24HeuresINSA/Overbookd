@@ -49,7 +49,7 @@
 
         <v-text-field
           v-model="signupData.email"
-          label="Gmail (important que ca soit une adresse gmail)*"
+          label="Gmail (gmail.com ou 24heures.org uniquement)*"
           :rules="regexEmail"
           required
         ></v-text-field>
@@ -172,21 +172,28 @@ export default Vue.extend({
 
   methods: {
     async submitForm() {
-      if (this.signupData.password !== this.signupData.password2)
+      if (this.signupData.password !== this.signupData.password2) {
         alert("Les deux mots de passes ne sont pas identiques...");
-      else if (!this.signupData.isValid || !this.birthdate)
-        alert("Les champs avec * sont obligatoires !");
-      else {
-        delete this.signupData.password2;
-        delete this.signupData.isValid;
-        this.signupData.birthdate = new Date(this.birthdate).toISOString();
-
-        const res = await this.$axios.post("/user", this.signupData);
-        if (res.status === 201)
-          alert(`🎉 Inscription terminée Bienvenue au 24 ! 🎉`);
-        else alert("Une erreur est survenue 😱");
-        this.$router.push({ path: "/login" });
+        return;
       }
+
+      if (!this.signupData.isValid || !this.birthdate) {
+        alert("Les champs avec * sont obligatoires !");
+        return;
+      }
+
+      delete this.signupData.password2;
+      delete this.signupData.isValid;
+      this.signupData.birthdate = new Date(this.birthdate).toISOString();
+
+      const res = await this.$axios.post("/user", this.signupData);
+      if (res.status !== 201) {
+        alert("Une erreur est survenue 😱");
+        return;
+      }
+
+      alert(`🎉 Inscription terminée Bienvenue au 24 ! 🎉`);
+      this.$router.push({ path: "/login" });
     },
   },
 });
