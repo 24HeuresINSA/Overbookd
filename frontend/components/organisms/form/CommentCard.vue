@@ -86,7 +86,7 @@ export default Vue.extend({
           created_at: new Date(),
         };
 
-        await this.store.addComment(comment);
+        await this.store.addComment({ comment, defaultAuthor: this.me });
         this.newComment = "";
       } else if (this.form === "FT") {
         /*const comment: ft_comment = {

@@ -203,16 +203,17 @@ export const actions = actionTree(
 
     submitForReview: async function (
       { commit, dispatch },
-      { faId, authorId, authorName }
+      { faId, authorId, author }
     ) {
-      if (!faId || !authorId || !authorName) return;
+      const authorName = `${author.firstname} ${author.lastname}`;
+      if (!faId || !authorId || !author) return;
       const comment: fa_comments = {
         subject: subject_type.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
         created_at: new Date(),
       };
-      dispatch("addComment", comment);
+      dispatch("addComment", { comment, defaultAuthor: author });
       commit("UPDATE_STATUS", Status.SUBMITTED);
     },
 
@@ -267,7 +268,7 @@ export const actions = actionTree(
 
     validate: async function (
       { dispatch, commit, state },
-      { validator_id, user_id, team_name }
+      { validator_id, user_id, team_name, author }
     ) {
       //check if the team is already in the list
       if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
@@ -294,13 +295,13 @@ export const actions = actionTree(
         author: user_id,
         created_at: new Date(),
       };
-      dispatch("addComment", comment);
+      dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
     },
 
     refuse: async function (
       { dispatch, commit, state },
-      { validator_id, user_id, message }
+      { validator_id, user_id, message, author }
     ) {
       if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
       commit("UPDATE_STATUS", Status.REFUSED);
@@ -314,12 +315,21 @@ export const actions = actionTree(
         author: user_id,
         created_at: new Date(),
       };
-      dispatch("addComment", comment);
+      dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
     },
 
-    async addComment({ commit, state }, comment: fa_comments) {
-      commit("ADD_COMMENT", comment);
+    async addComment(
+      { commit, state },
+      {
+        comment,
+        defaultAuthor,
+      }: {
+        comment: fa_comments;
+        defaultAuthor: { firstname: string; lastname: string };
+      }
+    ) {
+      commit("ADD_COMMENT", { ...comment, User_author: defaultAuthor });
       const res = await RepoFactory.faRepo.updateFAComments(
         this,
         state.mFA.id,
