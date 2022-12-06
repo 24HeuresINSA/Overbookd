@@ -281,8 +281,13 @@ export default Vue.extend({
   },
   methods: {
     isCollaboratorEssentialDataIncomplete(collaborator: collaborator): boolean {
-      return (
-        !collaborator.firstname || !collaborator.lastname || !collaborator.phone
+      return !(
+        (!!collaborator.firstname &&
+          !!collaborator.lastname &&
+          !!collaborator.phone) ||
+        (!collaborator.firstname &&
+          !collaborator.lastname &&
+          !collaborator.phone)
       );
     },
     isCollaboratorOptionalDataIncomplete(collaborator: collaborator): boolean {
@@ -294,8 +299,10 @@ export default Vue.extend({
       );
     },
     isCollaboratorEmpty(collaborator: collaborator): boolean {
-      return Object.keys(collaborator).every((key) => {
-        return !collaborator[key as keyof collaborator];
+      // eslint-disable-next-line no-unused-vars
+      const { id, ...rest } = collaborator;
+      return Object.keys(rest).every((key) => {
+        return !rest[key as keyof typeof rest];
       });
     },
   },
