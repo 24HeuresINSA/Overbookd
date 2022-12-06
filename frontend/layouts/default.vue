@@ -90,8 +90,9 @@
           </h4>
         </v-card-text>
         <v-card-actions>
-          <v-btn :href="mailUrl"> Envoyer le mail </v-btn>
+          <v-btn :href="mailUrl" color="primary"> Envoyer le mail </v-btn>
           <v-btn
+            color="blue-grey"
             @click="
               copyToClipboard(
                 'contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com'
@@ -99,7 +100,7 @@
             "
             >Copier l'adresse mail</v-btn
           >
-          <v-btn @click="copyToClipboard(generateIssueTemplate)"
+          <v-btn color="purple" @click="copyToClipboard(generateIssueTemplate)"
             >Copier le template</v-btn
           >
         </v-card-actions>
