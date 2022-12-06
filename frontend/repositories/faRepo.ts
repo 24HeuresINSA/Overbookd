@@ -88,7 +88,10 @@ export default {
         created_at,
       })
     );
-    return context.$axios.post(`/fa-comment/${id}`, comments_update);
+    return context.$axios.post<fa_comments[]>(
+      `/fa-comment/${id}`,
+      comments_update
+    );
   },
   validateFA(context: Context, id: number, body: fa_validation_body) {
     return context.$axios.post(resource + `/validate/${id}`, body);

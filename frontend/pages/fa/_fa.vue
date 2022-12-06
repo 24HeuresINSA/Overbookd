@@ -337,6 +337,7 @@ export default Vue.extend({
           validator_id: validator.id,
           user_id: this.$accessor.user.me.id,
           team_name: validator.name,
+          author: this.me,
         };
         await this.$accessor.FA.validate(payload);
       }
@@ -347,6 +348,7 @@ export default Vue.extend({
         validator_id: validator.id,
         user_id: this.$accessor.user.me.id,
         message: this.refuseComment,
+        author: this.me,
       };
       await this.$accessor.FA.refuse(payload);
       this.refuseComment = "";
@@ -357,7 +359,7 @@ export default Vue.extend({
       this.$accessor.FA.submitForReview({
         faId: this.faId,
         authorId: this.me.id,
-        authorName: this.me.firstname + " " + this.me.lastname,
+        author: this.me,
       });
       this.validationDialog = false;
       this.saveFA();
