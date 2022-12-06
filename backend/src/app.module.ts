@@ -20,6 +20,7 @@ import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { SignaLocationModule } from './signa_location/signa_location.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { ConfigurationModule } from './configuration/configuration.module';
     CatalogModule,
     CatalogModule,
     ConfigurationModule,
+    SignaLocationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

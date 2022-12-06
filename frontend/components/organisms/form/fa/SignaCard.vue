@@ -7,14 +7,15 @@
         non existant dans la liste déroulante
       </v-card-subtitle>
       <v-card-text>
-        <!--<v-autocomplete
+        <v-autocomplete
           label="Lieux"
-          multiple
           :value="currentLocations"
           :items="locations"
           :disabled="isDisabled"
-          @change="selectLocations"
-        ></v-autocomplete>-->
+          item-text="name"
+          item-value="id"
+          @change="onChange('location_id', $event)"
+        ></v-autocomplete>
         <v-switch
           v-model="isSignaRequired"
           label="Besoin signa"
@@ -95,6 +96,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { fa_signa_needs, signa_type } from "~/utils/models/FA";
+import { SignaLocation } from "~/utils/models/signaLocation";
 
 export default Vue.extend({
   name: "SignaCard",
@@ -133,18 +135,14 @@ export default Vue.extend({
     signaType(): Array<string> {
       return Object.values(signa_type);
     },
-    /*currentLocations(): string[] {
-      if (
-        this.$accessor.FA.mFA.general &&
-        this.$accessor.FA.mFA.general.locations
-      ) {
-        return this.$accessor.FA.mFA.general.locations;
-      }
-      return [];
-    },addSignalisation
-    locations(): any[] {
-      return this.$accessor.location.signa.map((l) => l.name);
-    },*/
+    currentLocations(): SignaLocation | undefined {
+      const locationId = this.$accessor.FA.mFA.location_id;
+      if (!locationId) return undefined;
+      return this.$accessor.signaLocation.getLocationById(locationId);
+    },
+    locations(): SignaLocation[] {
+      return this.$accessor.signaLocation.signaLocations;
+    },
   },
   watch: {
     signalisations: {
@@ -188,6 +186,10 @@ export default Vue.extend({
     },
     async deleteSignalisation(index: number) {
       await this.$accessor.FA.deleteSignaNeed(index);
+    },
+    onChange(key: string, value: any) {
+      if (typeof value === "string") value = value.trim();
+      this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },
 });

@@ -1,7 +1,6 @@
 import json
 import logging
 import requests
-import time
 
 """
 Ce script sert a setter les validateurs pour les FA et les FT
@@ -74,7 +73,7 @@ if __name__ == '__main__':
         if team["name"] in ["humain", "matos"]:
             setValidatorForTeam(token, team, True, True)
             logger.warn(f"Set validator for team {team['name']}")
-        elif team["name"] in ["signa", "secu", "barrieres"]:
+        elif team["name"] in ["signa", "secu", "barrieres", "elec"]:
             setValidatorForTeam(token, team, True, False)
             logger.warn(f"Set validator for team {team['name']}")
         else:

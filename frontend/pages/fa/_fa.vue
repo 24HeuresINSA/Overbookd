@@ -306,6 +306,8 @@ export default Vue.extend({
     let title = "FA " + this.faId;
     if (this.mFA.name) title += " - " + this.mFA.name;
     document.title = title;
+
+    this.$accessor.signaLocation.getAllSignaLocations();
   },
   methods: {
     async saveFA() {

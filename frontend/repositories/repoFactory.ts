@@ -1,16 +1,17 @@
-import userRepo from "./userRepo";
-import faRepo from "./faRepo";
-import ftRepo from "./ftRepo";
-import transactionRepo from "~/repositories/transactionRepo";
-import equipmentRepo from "~/repositories/equipementRepo";
-import timeslotRepo from "./timeslotRepo";
-import locationRepo from "./locationRepo";
 import authRepo from "~/repositories/authRepo";
-import equipmentProposalRepo from "./equipmentProposalRepo";
-import conflictsRepo from "./conflictsRepo";
-import teamRepo from "./teamRepo";
+import equipmentRepo from "~/repositories/equipementRepo";
+import transactionRepo from "~/repositories/transactionRepo";
 import { CategoryRepository, GearsRepository } from "./catalog.repository";
 import configurationRepo from "./configurationRepo";
+import conflictsRepo from "./conflictsRepo";
+import equipmentProposalRepo from "./equipmentProposalRepo";
+import faRepo from "./faRepo";
+import ftRepo from "./ftRepo";
+import locationRepo from "./locationRepo";
+import signaLocationRepo from "./signaLocationRepo";
+import teamRepo from "./teamRepo";
+import timeslotRepo from "./timeslotRepo";
+import userRepo from "./userRepo";
 
 const repositories = {
   user: userRepo,
@@ -27,6 +28,7 @@ const repositories = {
   gear: GearsRepository,
   category: CategoryRepository,
   configuration: configurationRepo,
+  signaLocation: signaLocationRepo,
 };
 
 type repoKey = keyof typeof repositories;
@@ -47,4 +49,5 @@ export const RepoFactory = {
   GearsRepository,
   CategoryRepository,
   configurationRepo,
+  signaLocationRepo,
 };
