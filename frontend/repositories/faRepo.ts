@@ -10,6 +10,7 @@ import {
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
+  GearRequestUpdate,
   time_windows,
 } from "~/utils/models/FA";
 
@@ -113,6 +114,17 @@ export default {
   deleteGearRequest(context: Context, animationId: number, gearId: number) {
     return context.$axios.delete(
       resource + `/${animationId}/gear-requests/${gearId}`
+    );
+  },
+  updateGearRequest(
+    context: Context,
+    animationId: number,
+    gearId: number,
+    gearRequestUpdateForm: GearRequestUpdate
+  ) {
+    return context.$axios.patch<GearRequest>(
+      resource + `/${animationId}/gear-requests/${gearId}`,
+      gearRequestUpdateForm
     );
   },
 };
