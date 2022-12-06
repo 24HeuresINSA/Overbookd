@@ -3,9 +3,9 @@
     <v-card-title>⚠️ Vérification de la FA ⚠️</v-card-title>
     <!--<v-card-subtitle>T'es sur de ta merde là ?</v-card-subtitle>-->
 
-    <v-container v-if="!noError">
+    <v-container v-show="hasError">
       <h3>⚠️ Erreurs ⚠️</h3>
-      <div v-if="generalErrors.length > 0">
+      <div v-show="generalErrors.length > 0">
         <h4>Général</h4>
         <ul>
           <li v-for="label in generalErrors" :key="label">
@@ -14,7 +14,7 @@
         </ul>
       </div>
 
-      <div v-if="detailErrors.length > 0">
+      <div v-show="detailErrors.length > 0">
         <h4>Détail</h4>
         <ul>
           <li v-for="label in detailErrors" :key="label">
@@ -24,12 +24,48 @@
       </div>
     </v-container>
 
-    <v-container v-if="!noWarning">
+    <v-container v-show="hasWarning">
       <h3>⚠️ Avertissements ⚠️</h3>
-      <div v-if="detailWarning.length > 0">
+      <div v-show="detailWarning.length > 0">
         <h4>Détail</h4>
         <ul>
           <li v-for="label in detailWarning" :key="label">
+            {{ label }}
+          </li>
+        </ul>
+      </div>
+
+      <div v-show="securityWarning.length > 0">
+        <h4>Détail</h4>
+        <ul>
+          <li v-for="label in securityWarning" :key="label">
+            {{ label }}
+          </li>
+        </ul>
+      </div>
+
+      <div v-show="prestaWarning.length > 0">
+        <h4>Détail</h4>
+        <ul>
+          <li v-for="label in prestaWarning" :key="label">
+            {{ label }}
+          </li>
+        </ul>
+      </div>
+
+      <div v-show="elecWarning.length > 0">
+        <h4>Besoin d'électricité</h4>
+        <ul>
+          <li v-for="label in elecWarning" :key="label">
+            {{ label }}
+          </li>
+        </ul>
+      </div>
+
+      <div v-show="waterWarning.length > 0">
+        <h4>Besoin d'eau</h4>
+        <ul>
+          <li v-for="label in waterWarning" :key="label">
             {{ label }}
           </li>
         </ul>
@@ -40,7 +76,7 @@
     <v-card-actions>
       <v-btn color="blue darken-1" text @click="cancel"> Annuler </v-btn>
       <v-spacer></v-spacer>
-      <v-btn :disabled="!noError" color="blue darken-1" text @click="submit">
+      <v-btn :disabled="hasError" color="blue darken-1" text @click="submit">
         Soumettre
       </v-btn>
     </v-card-actions>
@@ -66,11 +102,11 @@ export default Vue.extend({
       return this.$accessor.FT;
     },
 
-    noError(): boolean {
-      return this.generalErrors.length === 0 && this.detailErrors.length === 0;
+    hasError(): boolean {
+      return this.generalErrors.length > 0 || this.detailErrors.length > 0;
     },
-    noWarning(): boolean {
-      return this.detailWarning.length === 0;
+    hasWarning(): boolean {
+      return this.detailWarning.length > 0;
     },
 
     generalErrors(): string[] {
@@ -81,13 +117,9 @@ export default Vue.extend({
         { key: "in_charge", label: "Responsable" },
       ];
 
-      let messages: string[] = [];
-      fields.forEach((field) => {
-        if (!this.store.mFA[field.key]) {
-          messages.push(`Le champ ${field.label} est vide.`);
-        }
-      });
-      return messages;
+      return fields
+        .filter((field) => !this.store.mFA[field.key])
+        .map((field) => field.label);
     },
 
     detailErrors(): string[] {
@@ -102,20 +134,42 @@ export default Vue.extend({
         },
       ];
 
-      let messages: string[] = [];
-      if (this.store.mFA.is_publishable) {
-        fields.forEach((field) => {
-          if (!this.store.mFA[field.key]) {
-            messages.push(field.label);
-          }
-        });
-      }
-      return messages;
+      if (!this.store.mFA.is_publishable) return [];
+      return fields
+        .filter((field) => !this.store.mFA[field.key])
+        .map((field) => field.label);
     },
-
     detailWarning(): string[] {
       if (!this.store.mFA.is_publishable) {
         return ["Cette activité ne sera pas publié sur le site."];
+      }
+      return [];
+    },
+
+    securityError(): string[] {
+      return [];
+    },
+    securityWarning(): string[] {
+      return [];
+    },
+
+    prestaError(): string[] {
+      return [];
+    },
+    prestaWarning(): string[] {
+      return [];
+    },
+
+    elecWarning(): string[] {
+      if (this.store.mFA.fa_electricity_needs.length === 0) {
+        return ["Cette activité n'a pas besoin d'électricité."];
+      }
+      return [];
+    },
+
+    waterWarning(): string[] {
+      if (!this.store.mFA.water_needs) {
+        return ["Cette activité n'a pas besoin d'eau."];
       }
       return [];
     },
