@@ -150,7 +150,6 @@ export default Vue.extend({
         });
         start = new Date(newEnd);
       }
-      console.log(timeslots);
       this.$store.dispatch("timeslot/addTimeslots", timeslots);
       this.dialog = false;
     },

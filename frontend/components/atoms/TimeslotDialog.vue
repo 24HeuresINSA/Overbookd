@@ -53,7 +53,6 @@ export default Vue.extend({
   },
   methods: {
     open() {
-      console.log(this.timeslot);
       this.dialog = true;
     },
     async close() {
