@@ -23,7 +23,7 @@ export class SignaLocationController {
   constructor(private readonly signaLocationService: SignaLocationService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('orga')
+  @Roles('signa')
   @Post()
   create(@Body() createSignaLocationDto: CreateSignaLocationDto) {
     return this.signaLocationService.create(createSignaLocationDto);
@@ -54,7 +54,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('orga')
+  @Roles('signa')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.signaLocationService.remove(+id);
