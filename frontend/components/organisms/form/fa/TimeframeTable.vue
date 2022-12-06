@@ -39,7 +39,7 @@
         >
       </v-card-actions>
 
-      <TimeframeCalendar :data="animTimewindows"></TimeframeCalendar>
+      <TimeframeCalendar></TimeframeCalendar>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">

@@ -25,7 +25,6 @@
       :event-color="getEventColor"
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-      event-name="plage"
     ></v-calendar>
   </div>
 </template>
@@ -44,22 +43,19 @@ export default Vue.extend({
       return this.$accessor.FA.mFA.time_windows;
     },
     events(): Array<any> {
-      let events: Array<any> = [];
-      const timeframes = this.$accessor.FA.mFA.time_windows;
+      const timeWindows = this.$accessor.FA.mFA.time_windows;
 
-      if (!timeframes) return [];
-      for (let i = 0; i < timeframes.length; i++) {
-        const timeframe = {
-          start: this.formatDateForCalendar(timeframes[i].start),
-          end: this.formatDateForCalendar(timeframes[i].end),
-          color:
-            timeframes[i].type == time_windows_type.MATOS
-              ? "secondary"
-              : "primary",
-        };
-        events.push(timeframe);
-      }
-      return events;
+      if (!timeWindows) return [];
+      return timeWindows.map((timeWindow) => ({
+        start: this.formatDateForCalendar(timeWindow.start),
+        end: this.formatDateForCalendar(timeWindow.end),
+        color:
+          timeWindow.type === time_windows_type.MATOS ? "secondary" : "primary",
+        name:
+          timeWindow.type === time_windows_type.MATOS
+            ? "Utilisation du matos"
+            : "Tenue de l'animation",
+      }));
     },
   },
   mounted() {
