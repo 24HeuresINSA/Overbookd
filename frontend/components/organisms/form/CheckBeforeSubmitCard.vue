@@ -124,22 +124,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows } from "~/utils/models/FA";
+import { collaborator } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CheckBeforeSubmitCard",
-  props: {
-    form: {
-      type: String,
-      default: () => "FA",
-    },
-  },
   computed: {
     store(): any {
-      if (this.form === "FA") {
-        return this.$accessor.FA;
-      }
-      return this.$accessor.FT;
+      return this.$accessor.FA;
     },
 
     hasError(): boolean {
@@ -215,14 +206,7 @@ export default Vue.extend({
     },
 
     timeWindowErrors(): string[] {
-      if (
-        this.store.mFA.time_windows.filter(
-          (tw: time_windows) => tw.type === "ANIM"
-        )?.length === 0
-      ) {
-        return ["Cette activité n'a pas de créneaux."];
-      }
-      if (this.store.mFA.time_windows.fil?.length === 0) {
+      if (this.store.animationTimeWindows?.length === 0) {
         return ["Cette activité n'a pas de créneaux."];
       }
       return [];
@@ -247,9 +231,7 @@ export default Vue.extend({
       const collaborator = this.store.mFA.fa_collaborators[0]?.collaborator;
       if (
         collaborator &&
-        (!collaborator.firstname ||
-          !collaborator.lastname ||
-          !collaborator.phone)
+        this.isCollaboratorEssentialDataIncomplete(collaborator)
       ) {
         return [
           "Les informations indispensables du prestataire sont incomplètes.",
@@ -259,21 +241,13 @@ export default Vue.extend({
     },
     collaboratorWarnings(): string[] {
       const collaborator = this.store.mFA.fa_collaborators[0]?.collaborator;
-      if (
-        !collaborator ||
-        Object.keys(collaborator).every((key) => {
-          return !collaborator[key];
-        })
-      ) {
+      if (!collaborator || this.isCollaboratorEmpty(collaborator)) {
         return ["Cette activité n'a pas de prestataire."];
       }
 
       if (
         collaborator &&
-        collaborator.firstname &&
-        collaborator.lastname &&
-        collaborator.phone &&
-        (!collaborator.email || !collaborator.company || !collaborator.comment)
+        this.isCollaboratorOptionalDataIncomplete(collaborator)
       ) {
         return ["Les informations du prestataire sont incomplètes."];
       }
@@ -303,6 +277,26 @@ export default Vue.extend({
         return ["Cette activité n'a pas besoin d'eau."];
       }
       return [];
+    },
+  },
+  methods: {
+    isCollaboratorEssentialDataIncomplete(collaborator: collaborator): boolean {
+      return (
+        !collaborator.firstname || !collaborator.lastname || !collaborator.phone
+      );
+    },
+    isCollaboratorOptionalDataIncomplete(collaborator: collaborator): boolean {
+      return (
+        !!collaborator.firstname &&
+        !!collaborator.lastname &&
+        !!collaborator.phone &&
+        (!collaborator.email || !collaborator.company || !collaborator.comment)
+      );
+    },
+    isCollaboratorEmpty(collaborator: collaborator): boolean {
+      return Object.keys(collaborator).every((key) => {
+        return !collaborator[key as keyof collaborator];
+      });
     },
   },
 });
