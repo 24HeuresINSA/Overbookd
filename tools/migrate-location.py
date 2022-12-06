@@ -91,4 +91,5 @@ if __name__ == "__main__":
     locations = getOldLocations(ctmv_token)
 
     for location in locations:
-        setNewLocations(token, location["name"])
+        if "SIGNA" in location["neededBy"]:
+          setNewLocations(token, location["name"])
