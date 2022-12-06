@@ -94,12 +94,12 @@
       </v-btn>
       <div class="bottom-bar__actions">
         <v-btn
-          v-if="mValidators.length === 1"
+          v-if="shouldShowValidationOrRefuseButton()"
           color="red"
           @click="refuseDialog = true"
           >refusé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="mValidators.length > 1" offset-y>
+        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
@@ -120,12 +120,12 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="mValidators.length === 1"
+          v-if="shouldShowValidationOrRefuseButton()"
           color="green"
           @click="validate(mValidators[0])"
           >validé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="mValidators.length > 1" offset-y>
+        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
               valider
@@ -203,21 +203,21 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
-import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
-import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
-import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
-import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
-import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
-import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
-import FormSummary from "~/components/organisms/form/FormSummary.vue";
-import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { team } from "~/utils/models/repo";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import CommentCard from "~/components/organisms/form/CommentCard.vue";
+import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
+import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
+import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
+import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
+import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
+import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
+import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
+import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
+import FormSummary from "~/components/organisms/form/FormSummary.vue";
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { team } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "Fa",
@@ -382,6 +382,18 @@ export default Vue.extend({
         });
       }
       return color;
+    },
+    shouldShowValidationOrRefuseButton() {
+      return (
+        this.mValidators.length === 1 &&
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
+      );
+    },
+    shouldShowValidationOrRefuseMenu() {
+      return (
+        this.mValidators.length > 1 &&
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
+      );
     },
   },
 });
