@@ -360,11 +360,9 @@ export default Vue.extend({
         refused: [],
         comments: [],
       };
-      let res = await safeCall(
-        this.$store,
-        ftRepo.createFT(this, blankFT),
-        "La FT a été créée"
-      );
+      let res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
+        successMessage: "La FT a été créée",
+      });
       if (res) {
         await this.$router.push({
           path: "/ft/" + res.data.count,
@@ -379,8 +377,10 @@ export default Vue.extend({
         const res = await safeCall(
           this.$store,
           ftRepo.deleteFT(this, this.mFT),
-          "La FT a été supprimée",
-          "Erreur lors de la suppression de la FT"
+          {
+            successMessage: "La FT a été supprimée",
+            errorMessage: "Erreur lors de la suppression de la FT",
+          }
         );
         if (res) {
           const index = this.FTs.findIndex((ft) => ft.id == this.mFT.id);
@@ -397,12 +397,10 @@ export default Vue.extend({
       // switch FT to valid
       this.mFT.isValid = true;
       // call update on backend
-      const res = await safeCall(
-        this.$store,
-        ftRepo.updateFT(this, this.mFT),
-        "La FT a été restaurée",
-        "Erreur lors de la restauration de la FT"
-      );
+      const res = await safeCall(this.$store, ftRepo.updateFT(this, this.mFT), {
+        successMessage: "La FT a été restaurée",
+        errorMessage: "Erreur lors de la restauration de la FT",
+      });
       // if success
       if (res) {
         // update current version

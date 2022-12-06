@@ -189,12 +189,10 @@ export const actions = actionTree(
       return null;
     },
     saveFT: async function ({ state }) {
-      return safeCall(
-        this,
-        repo.updateFT(this, state.mFT),
-        "La FT a bien été sauvegardée",
-        "Erreur lors de la sauvegarde de la FT"
-      );
+      return safeCall(this, repo.updateFT(this, state.mFT), {
+        successMessage: "La FT a bien été sauvegardée",
+        errorMessage: "Erreur lors de la sauvegarde de la FT",
+      });
     },
     unlinkFA: async function ({ commit }) {
       commit("SET_PARENT_FA", 0);

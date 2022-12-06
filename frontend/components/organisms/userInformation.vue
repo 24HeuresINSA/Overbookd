@@ -245,10 +245,10 @@
 
 <script>
 import OverChips from "~/components/atoms/overChips";
-import { safeCall } from "../../utils/api/calls";
+import { RepoFactory } from "~/repositories/repoFactory";
 import userRepo from "~/repositories/userRepo";
 import { isValidated } from "~/utils/roles/index.ts";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "UserInformation",
@@ -367,8 +367,10 @@ export default {
       await safeCall(
         this.$store,
         userRepo.updateUser(this, this.mUser.id, this.mUser),
-        "Utilisateur mis à jour !",
-        "Erreur lors de la mise à jour de l'utilisateur !"
+        {
+          successMessage: "Utilisateur mis à jour !",
+          errorMessage: "Erreur lors de la mise à jour de l'utilisateur !",
+        }
       );
       this.mToggle = false;
     },

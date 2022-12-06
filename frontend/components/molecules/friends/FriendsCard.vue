@@ -38,8 +38,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
 import { FriendRequest } from "~/utils/models/repo";
 import { SnackNotif } from "../../../utils/models/store";
 
@@ -115,8 +115,10 @@ export default Vue.extend({
           to: this.newFriend.id,
           data: req,
         }),
-        "Requête d'ami envoyée !",
-        "Erreur lors de l'envoi de la requête d'ami"
+        {
+          successMessage: "Requête d'ami envoyée !",
+          errorMessage: "Erreur lors de l'envoi de la requête d'ami",
+        }
       );
     },
   },

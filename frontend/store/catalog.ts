@@ -124,8 +124,10 @@ export const actions = actionTree(
       const call = await safeCall<Category>(
         this,
         categoryRepository.createCategory(this, categoryForm),
-        "La categorie a ete cree avec succes",
-        "Erreur lors de la creation de la categorie"
+        {
+          successMessage: "La categorie a ete cree avec succes",
+          errorMessage: "Erreur lors de la creation de la categorie",
+        }
       );
       if (!call) return;
       context.commit("ADD_CATEGORY", call.data);
@@ -136,8 +138,10 @@ export const actions = actionTree(
       const call = await safeCall<Gear>(
         this,
         gearRepository.createGear(this, gearForm),
-        "Le materiel a ete cree avec succes",
-        "Erreur lors de la creation du materiel"
+        {
+          successMessage: "Le materiel a ete cree avec succes",
+          errorMessage: "Erreur lors de la creation du materiel",
+        }
       );
       if (!call) return;
       context.commit("ADD_GEAR", call.data);
@@ -148,8 +152,10 @@ export const actions = actionTree(
       const call = await safeCall<Gear>(
         this,
         gearRepository.updateGear(this, id, gearForm),
-        "Le materiel a ete mis a jour avec succes",
-        "Erreur lors de la mise a jour du materiel"
+        {
+          successMessage: "Le materiel a ete mis a jour avec succes",
+          errorMessage: "Erreur lors de la mise a jour du materiel",
+        }
       );
       if (!call) return;
       context.commit("UPDATE_GEAR", call.data);
@@ -181,8 +187,10 @@ export const actions = actionTree(
       const call = await safeCall<Category>(
         this,
         categoryRepository.updateCategory(this, id, categoryForm),
-        "La categorie a ete mise a jour avec succes",
-        "Erreur lors de la mise a jour de la categorie"
+        {
+          successMessage: "La categorie a ete mise a jour avec succes",
+          errorMessage: "Erreur lors de la mise a jour de la categorie",
+        }
       );
       if (!call) return;
       context.commit("UPDATE_CATEGORY", call.data);

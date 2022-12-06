@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { Configuration } from "~/utils/models/Configuration";
 import { safeCall } from "~/utils/api/calls";
+import { Configuration } from "~/utils/models/Configuration";
 
 const configurationRepo = RepoFactory.configurationRepo;
 
@@ -43,12 +43,10 @@ export const actions = actionTree(
       return res;
     },
     save: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(
-        this,
-        configurationRepo.save(this, config),
-        "La configuration a été sauvegardée avec succès.",
-        "Erreur lors de la sauvegarde de la configuration."
-      );
+      const res = await safeCall(this, configurationRepo.save(this, config), {
+        successMessage: "La configuration a été sauvegardée avec succès.",
+        errorMessage: "Erreur lors de la sauvegarde de la configuration.",
+      });
       if (!res) {
         return null;
       }
@@ -57,12 +55,10 @@ export const actions = actionTree(
       return res;
     },
     update: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(
-        this,
-        configurationRepo.update(this, config),
-        "La configuration a été mise à jour avec succès.",
-        "Erreur lors de la mise à jour de la configuration."
-      );
+      const res = await safeCall(this, configurationRepo.update(this, config), {
+        successMessage: "La configuration a été mise à jour avec succès.",
+        errorMessage: "Erreur lors de la mise à jour de la configuration.",
+      });
       if (!res) {
         return null;
       }
