@@ -2,6 +2,7 @@
   <div class="main">
     <div class="sidebar">
       <h1>Fiche Activité n°{{ faId }}</h1>
+      <h2>{{ faName }}</h2>
 
       <div class="status">
         <span
@@ -270,6 +271,9 @@ export default Vue.extend({
     faId(): number {
       return +this.$route.params.fa;
     },
+    faName(): string {
+      return this.$accessor.FA.mFA.name;
+    },
     validators(): Array<any> {
       return this.$accessor.team.faValidators;
     },
@@ -414,9 +418,22 @@ export default Vue.extend({
   width: 300px;
 }
 
-h1 {
-  font-size: 30px;
+.sidebar h1 {
+  font-size: 26px;
   margin: 16px;
+  margin-bottom: 4px;
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  font-weight: normal;
+  margin: 16px;
+  margin-top: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: auto;
+  display: block;
+  overflow: hidden;
 }
 
 .dot {
