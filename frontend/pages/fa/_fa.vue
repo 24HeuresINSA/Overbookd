@@ -167,7 +167,8 @@
     </div>
 
     <v-dialog v-model="validationDialog" width="500">
-      <v-card>
+      <CheckBeforeSubmitCard></CheckBeforeSubmitCard>
+      <!--<v-card>
         <v-img
           height="620"
           src="https://media.discordapp.net/attachments/726537148119122023/806793684598128640/WhatsApp_Image_2021-02-03_at_23.36.35.jpeg"
@@ -179,7 +180,7 @@
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="submit">soumettre</v-btn>
         </v-card-actions>
-      </v-card>
+      </v-card>-->
     </v-dialog>
 
     <v-dialog v-model="refuseDialog" max-width="600px">
@@ -218,6 +219,7 @@ import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { team } from "~/utils/models/repo";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
+import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 
 export default Vue.extend({
   name: "Fa",
@@ -235,6 +237,7 @@ export default Vue.extend({
     FormSummary,
     SnackNotificationContainer,
     LogisticTimeWindow,
+    CheckBeforeSubmitCard,
   },
 
   data: () => ({
