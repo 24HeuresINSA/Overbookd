@@ -27,8 +27,7 @@
           :value="mFA.number_of_pass"
           label="Nombre de Pass Sécu"
           type="number"
-          min="1"
-          step="1"
+          :rules="[rules.number, rules.min]"
           :disabled="isDisabled"
           @change="onChange('number_of_pass', $event)"
         ></v-text-field>
@@ -49,6 +48,14 @@ export default Vue.extend({
       default: () => false,
     },
   },
+  data: () => ({
+    rules: {
+      number: (value: string) =>
+        !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
+      min: (value: string) =>
+        parseInt(value, 10) >= 1 || "La valeur doit être supérieure à 0",
+    },
+  }),
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;
