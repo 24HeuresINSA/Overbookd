@@ -59,8 +59,8 @@ export default Vue.extend({
       if (this.form === "FA") return this.$accessor.FA;
       return this.$accessor.FT;
     },
-    comments(): fa_comments[] | undefined {
-      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments;
+    comments(): fa_comments[] {
+      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments ?? [];
       return [];
     },
     me(): any {
