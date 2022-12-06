@@ -406,7 +406,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .main {
   display: flex;
-  height: calc(100vh - 42px);
+  height: calc(100vh - 124px);
+  overflow-y: hidden;
 }
 
 .sidebar {
@@ -427,6 +428,7 @@ export default Vue.extend({
 .sidebar h2 {
   font-size: 18px;
   font-weight: normal;
+  color: rgb(89, 89, 89);
   margin: 16px;
   margin-top: 0;
   text-overflow: ellipsis;
