@@ -142,7 +142,7 @@ const AUTHORS = [
   "Antoine - Gyneco 🩺",
   "Damien - Hublot 🖐",
   "Léo - Shagasse 😼",
-  "Léon - 🦁",
+  "Léon - Trotski 🦁",
   "Mathieu - Mussex 🐁",
   "Lucas - Conforama 🏪",
   "Adèle - Franck 🍷",

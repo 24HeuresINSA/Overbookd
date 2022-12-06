@@ -79,7 +79,7 @@ export default Vue.extend({
     rulePhone(): any {
       return [
         (v: any) =>
-          new RegExp(`^$|0[6-7]{1}[0-9]{8}$`).test(v) ||
+          new RegExp(`^$|0[1-7]{1}[0-9]{8}$`).test(v) ||
           `ce numéro de téléphone n'est pas valide`,
       ];
     },
