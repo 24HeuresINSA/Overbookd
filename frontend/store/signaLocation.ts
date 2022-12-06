@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
 import { SignaLocation } from "~/utils/models/signaLocation";
-import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.signaLocationRepo;
 
@@ -29,15 +29,14 @@ export const actions = actionTree(
   { state },
   {
     async getAllSignaLocations({ commit }) {
-      const signaLocations = await repo.getAllSignaLocations(this);
-      if (signaLocations && signaLocations.data) {
-        commit("SET_SIGNA_LOCATIONS", signaLocations.data);
-      }
-      sendNotification(
+      const signaLocations = await safeCall(
         this,
-        "Erreur lors de la récupération des lieux signa",
-        "error"
+        repo.getAllSignaLocations(this),
+        undefined,
+        "server"
       );
+      if (!signaLocations) return;
+      commit("SET_SIGNA_LOCATIONS", signaLocations.data);
     },
   }
 );
