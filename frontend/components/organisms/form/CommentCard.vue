@@ -59,10 +59,9 @@ export default Vue.extend({
       if (this.form === "FA") return this.$accessor.FA;
       return this.$accessor.FT;
     },
-    comments(): any {
+    comments(): fa_comments[] | undefined {
       if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments;
-      // return this.$accessor.FT.mFT.ft_comment;
-      return null; // à retirer
+      return [];
     },
     me(): any {
       return this.$accessor.user.me;
@@ -81,16 +80,6 @@ export default Vue.extend({
 
         await this.store.addComment({ comment, defaultAuthor: this.me });
         this.newComment = "";
-      } else if (this.form === "FT") {
-        /*const comment: ft_comment = {
-          subject: subject_type.COMMENT,
-          comment: this.newComment,
-          author: this.me.id,
-          created_at: new Date(),
-        };
-
-        this.store.addComment(comment);
-        this.newComment = "";*/
       }
     },
   },
