@@ -137,12 +137,8 @@ export default Vue.extend({
     },
     currentLocations(): SignaLocation | undefined {
       const locationId = this.$accessor.FA.mFA.location_id;
-      if (locationId) {
-        const location: SignaLocation | undefined =
-          this.$accessor.signaLocation.getLocationById(locationId);
-        return location;
-      }
-      return undefined;
+      if (!locationId) return undefined;
+      return this.$accessor.signaLocation.getLocationById(locationId);
     },
     locations(): SignaLocation[] {
       return this.$accessor.signaLocation.signaLocations;
