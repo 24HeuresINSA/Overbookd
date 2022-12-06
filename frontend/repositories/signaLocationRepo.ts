@@ -15,12 +15,15 @@ export default {
     return context.$axios.get<SignaLocation>(resource + `/${id}`);
   },
   deleteSignaLocation(context: Context, id: number) {
-    return context.$axios.delete(resource + `/${id}`);
+    return context.$axios.delete<SignaLocation>(resource + `/${id}`);
   },
   createNewSignaLocation(context: Context, signaLocation: SignaLocationCreate) {
-    return context.$axios.post(resource, signaLocation);
+    return context.$axios.post<SignaLocation>(resource, signaLocation);
   },
   updateSignaLocation(context: Context, signaLocation: SignaLocation) {
-    return context.$axios.put(resource + `${signaLocation.id}`, signaLocation);
+    return context.$axios.put<SignaLocation>(
+      resource + `${signaLocation.id}`,
+      signaLocation
+    );
   },
 };
