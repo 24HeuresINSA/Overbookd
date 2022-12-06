@@ -341,7 +341,6 @@ export default Vue.extend({
             0
           ) {
             this.$accessor.notif.pushNotification({
-              type: "error",
               message: "Attention le découpage ne fonctionne pas",
             });
             return;
