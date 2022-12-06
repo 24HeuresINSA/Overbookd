@@ -46,8 +46,8 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         configurationRepo.save(this, config),
-        "saved",
-        "server"
+        "La configuration a été sauvegardée avec succès.",
+        "Erreur lors de la sauvegarde de la configuration."
       );
       if (!res) {
         return null;
@@ -60,8 +60,8 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         configurationRepo.update(this, config),
-        "saved",
-        "server"
+        "La configuration a été mise à jour avec succès.",
+        "Erreur lors de la mise à jour de la configuration."
       );
       if (!res) {
         return null;

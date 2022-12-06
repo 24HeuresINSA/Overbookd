@@ -92,7 +92,6 @@ export default Vue.extend({
       }
       if (this.me.friends.find((friend) => friend.id === this.newFriend.id)) {
         const notif: SnackNotif = {
-          type: "success",
           message: "Vous êtes déjà amis !",
         };
         this.$store.dispatch("notif/pushNotification", notif);
@@ -116,8 +115,8 @@ export default Vue.extend({
           to: this.newFriend.id,
           data: req,
         }),
-        "sent",
-        "server"
+        "Requête d'ami envoyée !",
+        "Erreur lors de l'envoi de la requête d'ami"
       );
     },
   },

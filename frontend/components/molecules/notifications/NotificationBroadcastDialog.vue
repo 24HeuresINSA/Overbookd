@@ -70,8 +70,8 @@ export default Vue.extend({
       await safeCall(
         this.$store,
         RepoFactory.userRepo.broadcast(this, this.notification),
-        "sent",
-        "server"
+        "Notification envoyée",
+        "Erreur lors de l'envoi de la notification"
       );
     },
   },

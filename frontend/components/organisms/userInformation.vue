@@ -367,8 +367,8 @@ export default {
       await safeCall(
         this.$store,
         userRepo.updateUser(this, this.mUser.id, this.mUser),
-        "saved",
-        "server"
+        "Utilisateur mis à jour !",
+        "Erreur lors de la mise à jour de l'utilisateur !"
       );
       this.mToggle = false;
     },

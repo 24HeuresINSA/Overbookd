@@ -33,7 +33,7 @@ export const actions = actionTree(
         this,
         repo.getAllSignaLocations(this),
         undefined,
-        "server"
+        "Erreur lors de la récupération des lieux de la signa."
       );
       if (!signaLocations) return;
       commit("SET_SIGNA_LOCATIONS", signaLocations.data);

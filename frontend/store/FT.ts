@@ -1,10 +1,10 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { FT } from "~/utils/models/FT";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { FTStatus } from "~/utils/FT";
 import FtRepo from "~/repositories/ftRepo";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
+import { FTStatus } from "~/utils/FT";
 import { FormComment } from "~/utils/models/Comment";
+import { FT } from "~/utils/models/FT";
 
 const repo = RepoFactory.ftRepo;
 
@@ -189,7 +189,12 @@ export const actions = actionTree(
       return null;
     },
     saveFT: async function ({ state }) {
-      return safeCall(this, repo.updateFT(this, state.mFT), "saved", "server");
+      return safeCall(
+        this,
+        repo.updateFT(this, state.mFT),
+        "La FT a bien été sauvegardée",
+        "Erreur lors de la sauvegarde de la FT"
+      );
     },
     unlinkFA: async function ({ commit }) {
       commit("SET_PARENT_FA", 0);

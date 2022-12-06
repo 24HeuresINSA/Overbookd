@@ -124,8 +124,8 @@ export const actions = actionTree(
       const call = await safeCall<Category>(
         this,
         categoryRepository.createCategory(this, categoryForm),
-        "saved",
-        "server"
+        "La categorie a ete cree avec succes",
+        "Erreur lors de la creation de la categorie"
       );
       if (!call) return;
       context.commit("ADD_CATEGORY", call.data);
@@ -136,8 +136,8 @@ export const actions = actionTree(
       const call = await safeCall<Gear>(
         this,
         gearRepository.createGear(this, gearForm),
-        "saved",
-        "server"
+        "Le materiel a ete cree avec succes",
+        "Erreur lors de la creation du materiel"
       );
       if (!call) return;
       context.commit("ADD_GEAR", call.data);
@@ -148,8 +148,8 @@ export const actions = actionTree(
       const call = await safeCall<Gear>(
         this,
         gearRepository.updateGear(this, id, gearForm),
-        "saved",
-        "server"
+        "Le materiel a ete mis a jour avec succes",
+        "Erreur lors de la mise a jour du materiel"
       );
       if (!call) return;
       context.commit("UPDATE_GEAR", call.data);
@@ -161,7 +161,7 @@ export const actions = actionTree(
         sendNotification(this, `${gear.name} supprime`);
         context.commit("DELETE_GEAR", gear);
       } catch (error: any) {
-        sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
+        sendNotification(this, error.message ?? DEFAULT_ERROR);
       }
     },
 
@@ -172,7 +172,7 @@ export const actions = actionTree(
         context.commit("DELETE_CATEGORY", category);
         this.dispatch("catalog/fetchCategoryTree");
       } catch (error: any) {
-        sendNotification(this, error.message ?? DEFAULT_ERROR, "error");
+        sendNotification(this, error.message ?? DEFAULT_ERROR);
       }
     },
 
@@ -181,8 +181,8 @@ export const actions = actionTree(
       const call = await safeCall<Category>(
         this,
         categoryRepository.updateCategory(this, id, categoryForm),
-        "saved",
-        "server"
+        "La categorie a ete mise a jour avec succes",
+        "Erreur lors de la mise a jour de la categorie"
       );
       if (!call) return;
       context.commit("UPDATE_CATEGORY", call.data);
@@ -208,13 +208,8 @@ export const actions = actionTree(
   }
 );
 
-export function sendNotification(
-  store: Vue["$store"],
-  message: string,
-  type: "success" | "error" = "success"
-) {
+export function sendNotification(store: Vue["$store"], message: string) {
   const notif: SnackNotif = {
-    type,
     message,
   };
   store.dispatch("notif/pushNotification", notif);
