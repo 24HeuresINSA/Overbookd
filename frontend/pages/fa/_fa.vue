@@ -420,13 +420,13 @@ export default Vue.extend({
 }
 
 .sidebar h1 {
-  font-size: 26px;
+  font-size: 1.7rem;
   margin: 16px;
   margin-bottom: 4px;
 }
 
 .sidebar h2 {
-  font-size: 18px;
+  font-size: 1.2rem;
   font-weight: normal;
   color: rgb(89, 89, 89);
   margin: 16px;
@@ -467,7 +467,7 @@ export default Vue.extend({
 .icons .icon .icon-detail {
   visibility: hidden;
   width: 60px;
-  font-size: 15px;
+  font-size: 0.9rem;
   text-align: center;
   border-radius: 6px;
   user-select: none;
