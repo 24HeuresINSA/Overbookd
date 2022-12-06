@@ -16,16 +16,14 @@
           {{
             item.User_author
               ? item.User_author.firstname + " " + item.User_author.lastname
-              : " "
+              : me.firstname + " " + me.lastname
           }}
         </template>
       </v-data-table>
       <v-textarea
         v-model="newComment"
         label="Commentaire"
-        dense
         rows="3"
-        class="margin-top"
       ></v-textarea>
     </v-card-text>
     <v-card-actions>
@@ -57,18 +55,13 @@ export default Vue.extend({
     newComment: "",
   }),
   computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
     store(): any {
-      if (this.form === "FA") {
-        return this.$accessor.FA;
-      } else if (this.form === "FT") {
-        return this.$accessor.FT;
-      }
+      if (this.form === "FA") return this.$accessor.FA;
+      return this.$accessor.FT;
     },
-    // eslint-disable-next-line vue/return-in-computed-property
-    comments(): any {
-      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments;
-      // else if (this.form === "FT") return this.$accessor.FT.mFT.ft_comment;
+    comments(): fa_comments[] {
+      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments ?? [];
+      return [];
     },
     me(): any {
       return this.$accessor.user.me;
@@ -77,7 +70,6 @@ export default Vue.extend({
   methods: {
     async addComment() {
       if (!this.newComment) return;
-
       if (this.form == "FA") {
         const comment: fa_comments = {
           subject: subject_type.COMMENT,
@@ -88,24 +80,10 @@ export default Vue.extend({
 
         await this.store.addComment({ comment, defaultAuthor: this.me });
         this.newComment = "";
-      } else if (this.form === "FT") {
-        /*const comment: ft_comment = {
-          subject: subject_type.COMMENT,
-          comment: this.newComment,
-          author: this.me.id,
-          created_at: new Date(),
-        };
-
-        this.store.addComment(comment);
-        this.newComment = "";*/
       }
     },
   },
 });
 </script>
 
-<style scoped>
-.margin-top {
-  margin-top: 20px;
-}
-</style>
+<style scoped></style>
