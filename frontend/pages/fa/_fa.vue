@@ -94,15 +94,12 @@
       </v-btn>
       <div class="bottom-bar__actions">
         <v-btn
-          v-if="mValidators.length === 1 && mFA.status === 'SUBMITTED'"
+          v-if="shouldShowValidationOrRefuseButton()"
           color="red"
           @click="refuseDialog = true"
           >refusé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu
-          v-if="mValidators.length > 1 && mFA.status === 'SUBMITTED'"
-          offset-y
-        >
+        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
@@ -123,15 +120,12 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="mValidators.length === 1 && mFA.status === 'SUBMITTED'"
+          v-if="shouldShowValidationOrRefuseButton()"
           color="green"
           @click="validate(mValidators[0])"
           >validé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu
-          v-if="mValidators.length > 1 && mFA.status === 'SUBMITTED'"
-          offset-y
-        >
+        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
               valider
@@ -388,6 +382,18 @@ export default Vue.extend({
         });
       }
       return color;
+    },
+    shouldShowValidationOrRefuseButton() {
+      return (
+        this.mValidators.length === 1 &&
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
+      );
+    },
+    shouldShowValidationOrRefuseMenu() {
+      return (
+        this.mValidators.length > 1 &&
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
+      );
     },
   },
 });
