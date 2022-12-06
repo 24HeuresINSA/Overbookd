@@ -2,6 +2,7 @@
   <div class="main">
     <div class="sidebar">
       <h1>Fiche Activité n°{{ faId }}</h1>
+      <h2>{{ faName }}</h2>
 
       <div class="status">
         <span
@@ -94,12 +95,12 @@
       </v-btn>
       <div class="bottom-bar__actions">
         <v-btn
-          v-if="mValidators.length === 1"
+          v-if="shouldShowValidationOrRefuseButton()"
           color="red"
           @click="refuseDialog = true"
           >refusé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="mValidators.length > 1" offset-y>
+        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
@@ -120,12 +121,12 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="mValidators.length === 1"
+          v-if="shouldShowValidationOrRefuseButton()"
           color="green"
           @click="validate(mValidators[0])"
           >validé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="mValidators.length > 1" offset-y>
+        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
               valider
@@ -194,21 +195,21 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
-import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
-import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
-import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
-import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
-import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
-import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
-import FormSummary from "~/components/organisms/form/FormSummary.vue";
-import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { team } from "~/utils/models/repo";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import CommentCard from "~/components/organisms/form/CommentCard.vue";
+import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
+import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
+import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
+import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
+import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
+import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
+import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
+import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
+import FormSummary from "~/components/organisms/form/FormSummary.vue";
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
+import { team } from "~/utils/models/repo";
 import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 
 export default Vue.extend({
@@ -262,6 +263,9 @@ export default Vue.extend({
     },
     faId(): number {
       return +this.$route.params.fa;
+    },
+    faName(): string {
+      return this.$accessor.FA.mFA.name;
     },
     validators(): Array<any> {
       return this.$accessor.team.faValidators;
@@ -330,6 +334,7 @@ export default Vue.extend({
           validator_id: validator.id,
           user_id: this.$accessor.user.me.id,
           team_name: validator.name,
+          author: this.me,
         };
         await this.$accessor.FA.validate(payload);
       }
@@ -340,6 +345,7 @@ export default Vue.extend({
         validator_id: validator.id,
         user_id: this.$accessor.user.me.id,
         message: this.refuseComment,
+        author: this.me,
       };
       await this.$accessor.FA.refuse(payload);
       this.refuseComment = "";
@@ -350,7 +356,7 @@ export default Vue.extend({
       this.$accessor.FA.submitForReview({
         faId: this.faId,
         authorId: this.me.id,
-        authorName: this.me.firstname + " " + this.me.lastname,
+        author: this.me,
       });
       this.validationDialog = false;
       this.saveFA();
@@ -374,6 +380,18 @@ export default Vue.extend({
       }
       return color;
     },
+    shouldShowValidationOrRefuseButton() {
+      return (
+        this.mValidators.length === 1 &&
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
+      );
+    },
+    shouldShowValidationOrRefuseMenu() {
+      return (
+        this.mValidators.length > 1 &&
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
+      );
+    },
   },
 });
 </script>
@@ -381,7 +399,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .main {
   display: flex;
-  height: calc(100vh - 42px);
+  height: calc(100vh - 124px);
+  overflow-y: hidden;
 }
 
 .sidebar {
@@ -393,9 +412,23 @@ export default Vue.extend({
   width: 300px;
 }
 
-h1 {
-  font-size: 30px;
+.sidebar h1 {
+  font-size: 1.7rem;
   margin: 16px;
+  margin-bottom: 4px;
+}
+
+.sidebar h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: rgb(89, 89, 89);
+  margin: 16px;
+  margin-top: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: auto;
+  display: block;
+  overflow: hidden;
 }
 
 .dot {
@@ -427,7 +460,7 @@ h1 {
 .icons .icon .icon-detail {
   visibility: hidden;
   width: 60px;
-  font-size: 15px;
+  font-size: 0.9rem;
   text-align: center;
   border-radius: 6px;
   user-select: none;

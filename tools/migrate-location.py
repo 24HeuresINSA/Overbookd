@@ -1,6 +1,7 @@
 import json
 import logging
 import urllib.parse
+
 import requests
 
 """
@@ -11,7 +12,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("Overbookd - migrate locations from ctmv")
 
 ctmv = "https://cetaitmieuxavant.24heures.org/api"
-URL = "https://overbookd.traefik.me/api"
+URL = "https://preprod.overbookd.24heures.org/api"
+
 
 def loginFromctmv(username, password):
 
@@ -28,6 +30,7 @@ def loginFromctmv(username, password):
     jsonResponse = json.loads(response.text)
     return jsonResponse["token"]
 
+
 def login(username, password):
 
     url = f"{URL}/login"
@@ -40,19 +43,20 @@ def login(username, password):
     }
 
     response = requests.request(
-        "POST", url, headers=headers, data=payload) # add verify=False if you have a self signed certificate
+        "POST", url, headers=headers, data=payload)  # add verify=False if you have a self signed certificate
 
     logger.info(f"Loggin reponse from posgresql backend: {response.text}")
 
     jsonResponse = json.loads(response.text)
     return jsonResponse["access_token"]
 
+
 def getOldLocations(token):
 
     url = f"{ctmv}/location"
     payload = {}
     headers = {
-      'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {token}'
     }
 
     response = requests.request("GET", url, headers=headers, data=payload)
@@ -64,17 +68,19 @@ def getOldLocations(token):
 
 def setNewLocations(token, locationName):
 
-  url = f"{URL}/signa-location"
-  payload = json.dumps({
-    "name": locationName,
-  })
-  headers = {
-    'Authorization': f'Bearer {token}',
-  }
+    url = f"{URL}/signa-location"
+    payload = json.dumps({
+        "name": locationName,
+    })
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
 
-  response = requests.request("POST", url, headers=headers, data=payload) # add verify=False if you have a self signed certificate
+    # add verify=False if you have a self signed certificate
+    response = requests.request("POST", url, headers=headers, data=payload)
 
-  logger.info(f"Set new location reponse : {response.text}")
+    logger.info(f"Set new location reponse : {response.text}")
 
 
 if __name__ == "__main__":
@@ -85,4 +91,5 @@ if __name__ == "__main__":
     locations = getOldLocations(ctmv_token)
 
     for location in locations:
-        setNewLocations(token, location["name"])
+        if "SIGNA" in location["neededBy"]:
+          setNewLocations(token, location["name"])
