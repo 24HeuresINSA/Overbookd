@@ -40,24 +40,26 @@ export const getters = getterTree(state, {
       (gr) => gr.gear.owner?.code === "barrieres"
     );
   },
+  timeWindows(state): time_windows[] {
+    return state.mFA.time_windows ?? [];
+  },
   animationTimeWindows(state): time_windows[] {
     return (
       state.mFA.time_windows?.filter(
-        (timeWindow: time_windows) => timeWindow.type === time_windows_type.ANIM
+        (timeWindow) => timeWindow.type === time_windows_type.ANIM
       ) ?? []
     );
   },
   gearTimeWindowIndex(state): number {
     return (
       state.mFA.time_windows?.findIndex(
-        (timeWindow: time_windows) =>
-          timeWindow.type === time_windows_type.MATOS
+        (timeWindow) => timeWindow.type === time_windows_type.MATOS
       ) ?? -1
     );
   },
   gearTimeWindow(state): time_windows | undefined {
     return state.mFA.time_windows?.find(
-      (timeWindow: time_windows) => timeWindow.type === time_windows_type.MATOS
+      (timeWindow) => timeWindow.type === time_windows_type.MATOS
     );
   },
 });

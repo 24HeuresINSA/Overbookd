@@ -5,7 +5,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="animTimewindows"
+        :items="timeWindowsList"
         dense
         :items-per-page="-1"
         sort-by="dateStart"
@@ -23,12 +23,18 @@
           {{ formatTime(item.end) }}
         </template>
         <template #[`item.action`]="{ index, item }">
-          <v-btn v-if="!isDisabled" icon @click="openUpdateModal(index, item)">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+          <div v-if="isAnimationTimeWindow(item)">
+            <v-btn
+              v-if="!isDisabled"
+              icon
+              @click="openUpdateModal(index, item)"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
 
@@ -77,6 +83,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
+      { text: "Type", value: "type" },
       { text: "Date de début", value: "dateStart" },
       { text: "Heure de début", value: "timeStart" },
       { text: "Date de fin", value: "dateEnd" },
@@ -89,8 +96,8 @@ export default Vue.extend({
     selectedTimeWindow: null as time_windows | null,
   }),
   computed: {
-    animTimewindows(): time_windows[] {
-      return this.$accessor.FA.animationTimeWindows;
+    timeWindowsList(): time_windows[] {
+      return this.$accessor.FA.timeWindows;
     },
     type() {
       return time_windows_type.ANIM;
@@ -126,6 +133,9 @@ export default Vue.extend({
       this.editIndex = index;
       this.selectedTimeWindow = timeWindow;
       this.isEditDialogOpen = true;
+    },
+    isAnimationTimeWindow(timeWindow: time_windows): boolean {
+      return timeWindow.type === time_windows_type.ANIM;
     },
   },
 });
