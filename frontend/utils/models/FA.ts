@@ -186,6 +186,8 @@ export interface GearRequestCreation {
   end: Date;
 }
 
+export type GearRequestUpdate = Partial<Omit<GearRequestCreation, "gearId">>;
+
 export interface GearRequest {
   rentalPeriod: {
     start: Date;

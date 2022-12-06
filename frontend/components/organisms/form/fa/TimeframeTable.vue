@@ -5,7 +5,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="timeframes"
+        :items="timeWindowsList"
         dense
         :items-per-page="-1"
         sort-by="dateStart"
@@ -22,20 +22,19 @@
         <template #[`item.timeEnd`]="{ item }">
           {{ formatTime(item.end) }}
         </template>
-        <template #[`item.action`]="{ index }">
-          <v-btn
-            v-if="!isDisabled"
-            icon
-            @click="
-              isEditDialogOpen = true;
-              editIndex = index;
-            "
-          >
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+        <template #[`item.action`]="{ index, item }">
+          <div v-if="isAnimationTimeWindow(item)">
+            <v-btn
+              v-if="!isDisabled"
+              icon
+              @click="openUpdateModal(index, item)"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
 
@@ -46,16 +45,21 @@
         >
       </v-card-actions>
 
-      <TimeframeCalendar :data="timeframes"></TimeframeCalendar>
+      <TimeframeCalendar></TimeframeCalendar>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <TimeframeForm @close-dialog="isAddDialogOpen = false"></TimeframeForm>
+      <TimeframeForm
+        :type="type"
+        @change="addTimeWindow"
+        @close-dialog="isAddDialogOpen = false"
+      ></TimeframeForm>
     </v-dialog>
 
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <TimeframeForm
-        :edit-index="editIndex"
+        v-model="selectedTimeWindow"
+        @change="updateTimeWindow"
         @close-dialog="isEditDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
@@ -66,6 +70,7 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
+import { time_windows, time_windows_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "TimeframeTable",
@@ -87,11 +92,15 @@ export default Vue.extend({
     ],
     isAddDialogOpen: false,
     isEditDialogOpen: false,
-    editIndex: null,
+    editIndex: null as number | null,
+    selectedTimeWindow: null as time_windows | null,
   }),
   computed: {
-    timeframes(): any {
-      return this.$accessor.FA.mFA.time_windows;
+    timeWindowsList(): time_windows[] {
+      return this.$accessor.FA.timeWindows;
+    },
+    type() {
+      return time_windows_type.ANIM;
     },
   },
   methods: {
@@ -110,6 +119,23 @@ export default Vue.extend({
     },
     async deleteTimeframe(index: number) {
       await this.$accessor.FA.deleteTimeWindow(index);
+    },
+    addTimeWindow(timeWindow: time_windows) {
+      this.$accessor.FA.addTimeWindow(timeWindow);
+    },
+    updateTimeWindow(timeWindow: time_windows) {
+      this.$accessor.FA.updateTimeWindow({
+        index: this.editIndex,
+        timeWindow,
+      });
+    },
+    openUpdateModal(index: number, timeWindow: time_windows) {
+      this.editIndex = index;
+      this.selectedTimeWindow = timeWindow;
+      this.isEditDialogOpen = true;
+    },
+    isAnimationTimeWindow(timeWindow: time_windows): boolean {
+      return timeWindow.type === time_windows_type.ANIM;
     },
   },
 });

@@ -14,6 +14,7 @@ import {
   Status,
   subject_type,
   time_windows,
+  time_windows_type,
 } from "~/utils/models/FA";
 import { sendNotification } from "./catalog";
 
@@ -37,6 +38,28 @@ export const getters = getterTree(state, {
   barrieresGearRequests(state) {
     return state.gearRequests.filter(
       (gr) => gr.gear.owner?.code === "barrieres"
+    );
+  },
+  timeWindows(state): time_windows[] {
+    return state.mFA.time_windows ?? [];
+  },
+  animationTimeWindows(state): time_windows[] {
+    return (
+      state.mFA.time_windows?.filter(
+        (timeWindow) => timeWindow.type === time_windows_type.ANIM
+      ) ?? []
+    );
+  },
+  gearTimeWindowIndex(state): number {
+    return (
+      state.mFA.time_windows?.findIndex(
+        (timeWindow) => timeWindow.type === time_windows_type.MATOS
+      ) ?? -1
+    );
+  },
+  gearTimeWindow(state): time_windows | undefined {
+    return state.mFA.time_windows?.find(
+      (timeWindow) => timeWindow.type === time_windows_type.MATOS
     );
   },
 });
@@ -388,6 +411,34 @@ export const actions = actionTree(
         "success"
       );
       commit("REMOVE_GEAR_REQUEST", gearId);
+    },
+    async updateGearTimeWindow({ commit, state }, time_windows: time_windows) {
+      try {
+        const gearRequests = await Promise.all(
+          state.gearRequests.map(async (gearRequest) => {
+            const res = await RepoFactory.faRepo.updateGearRequest(
+              this,
+              state.mFA.id,
+              gearRequest.gear.id,
+              { start: time_windows.start, end: time_windows.end }
+            );
+            return res.data;
+          })
+        );
+        commit("SET_GEAR_REQUESTS", gearRequests);
+        if (!gearRequests.length) return;
+        sendNotification(
+          this,
+          "Demandes de matériel misent a jour ✅",
+          "success"
+        );
+      } catch (e) {
+        sendNotification(
+          this,
+          "La mise a jour des demandes de matos a echouee ❌",
+          "error"
+        );
+      }
     },
   }
 );
