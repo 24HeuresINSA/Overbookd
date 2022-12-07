@@ -28,11 +28,3 @@ export const actions = actionTree(
     },
   }
 );
-
-/**
- * @deprecated
- */
-export interface DialogActions {
-  openDialog: string;
-  closeDialog: void;
-}

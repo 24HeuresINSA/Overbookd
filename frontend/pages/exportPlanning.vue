@@ -129,7 +129,6 @@ export default {
         .then((res) => {
           if (res) {
             this.multiplePlanning = res.data;
-            console.log(res.data);
           } else {
             this.snack.display("Une erreur est survenue");
           }

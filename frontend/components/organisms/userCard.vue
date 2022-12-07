@@ -56,7 +56,6 @@ import { mapState } from "vuex";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
 import PPDialog from "@/components/molecules/ppDialog.vue";
-import { dispatch } from "~/utils/store";
 
 export default Vue.extend({
   name: "UserCard",
@@ -93,7 +92,7 @@ export default Vue.extend({
         : "";
     },
     openPPDialog() {
-      dispatch(this, "dialog", "openDialog", "pp");
+      this.$store.dispatch("dialog/openDialog", "pp");
     },
   },
 });

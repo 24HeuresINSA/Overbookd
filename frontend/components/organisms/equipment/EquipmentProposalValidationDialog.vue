@@ -323,7 +323,6 @@ export default Vue.extend({
           this.mEquipmentProposal
         );
       if (res) {
-        console.log("res");
         this.snack.display("L'équipement a bien été refusé");
       } else {
         this.snack.display("Une erreur est survenue");

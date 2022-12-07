@@ -127,7 +127,6 @@ export default Vue.extend({
       if (Object.values(rest).every((value) => value == "")) {
         this.$accessor.FA.deleteCollaborator(0);
       }
-      console.log("isComplete: " + this.isComplete);
     },
   },
 });

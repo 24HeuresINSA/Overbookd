@@ -36,11 +36,3 @@ export const actions = actionTree(
     },
   }
 );
-
-/**
- * @deprecated
- */
-export interface NotificationsActions {
-  pushNotification: SnackNotif;
-  popNotification: number;
-}

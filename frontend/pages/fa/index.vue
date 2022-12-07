@@ -166,9 +166,9 @@
 
 <script>
 import Fuse from "fuse.js";
-import { safeCall } from "../../utils/api/calls";
-import { RepoFactory } from "../../repositories/repoFactory";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import { RepoFactory } from "../../repositories/repoFactory";
+import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "Fa",
@@ -311,7 +311,7 @@ export default {
       const res = await safeCall(
         this.$store,
         RepoFactory.faRepo.createNewFA(this, FA),
-        "FA créée 🥳"
+        { successMessage: "FA créée 🥳" }
       );
       if (res) {
         await this.$router.push({ path: "fa/" + res.id });
@@ -321,8 +321,10 @@ export default {
       const res = await safeCall(
         this.$store,
         RepoFactory.faRepo.deleteFA(this, this.mFA),
-        "FA supprimée 🥳",
-        "FA non supprimée 😢"
+        {
+          successMessage: "FA supprimée 🥳",
+          errorMessage: "FA non supprimée 😢",
+        }
       );
       if (res) {
         this.FAs = this.FAs.filter((e) => e.id !== this.mFA.id);

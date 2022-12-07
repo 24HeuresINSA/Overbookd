@@ -32,8 +32,9 @@ export const actions = actionTree(
       const signaLocations = await safeCall(
         this,
         repo.getAllSignaLocations(this),
-        undefined,
-        "server"
+        {
+          errorMessage: "Erreur lors de la récupération des lieux de la signa.",
+        }
       );
       if (!signaLocations) return;
       commit("SET_SIGNA_LOCATIONS", signaLocations.data);

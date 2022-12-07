@@ -52,7 +52,6 @@ export default Vue.extend({
     },
     toggle: function (val) {
       if (!val) {
-        console.log("Delete notif with id : " + this.setId);
         this.$store.dispatch("notif/popNotification", this.setId);
         this.$accessor.notif.popNotification(this.setId);
       }

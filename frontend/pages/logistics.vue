@@ -141,7 +141,6 @@ export default {
   computed: {
     me: () => this.$store.state.user.me,
     filteredInventory() {
-      console.log(this.search.location);
       return this.inventory.filter((item) => {
         return (
           item.name.toLowerCase().includes(this.search.name.toLowerCase()) &&
@@ -163,7 +162,6 @@ export default {
   async mounted() {
     if (this.hasRole("log")) {
       const { data: FAs } = await this.$axios.get("/fa");
-      console.log(FAs);
       FAs.forEach((FA) => {
         if (FA.equipments) {
           FA.equipments.forEach((FAequipment) => {
@@ -208,7 +206,6 @@ export default {
           });
         }
       });
-      console.log(this.equipmentNames);
       this.computeAllConflicts();
     } else {
       await this.$router.push({
@@ -233,7 +230,6 @@ export default {
     },
 
     colorize(status) {
-      console.log(status);
       if (status == "submitted") {
         return this.color.submitted;
       } else if (status == "validated") {
@@ -286,7 +282,6 @@ export default {
       this.inventory = (await this.$axios.$get("/equipment")).filter(
         (e) => e.isValid !== false
       );
-      console.log("inv:", this.inventory);
 
       this.equipmentNames.forEach((name) => {
         let invIndex = this.inventory.findIndex((item) => item.name == name);
