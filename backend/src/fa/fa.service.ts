@@ -3,7 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { fa } from '@prisma/client';
+import { fa, Status } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
@@ -16,6 +16,10 @@ import {
   ALL_FA_SELECT,
 } from './fa_types';
 
+export interface SearchFa {
+  isDeleted: boolean;
+  status?: Status;
+}
 @Injectable()
 export class FaService {
   constructor(private prisma: PrismaService) {}
@@ -24,16 +28,20 @@ export class FaService {
   /** GET **/
   /**     **/
 
-  async findAll(): Promise<AllFaResponse[] | null> {
+  async findAll(search: SearchFa): Promise<AllFaResponse[] | null> {
+    const where = this.buildFindCondition(search);
     return this.prisma.fa.findMany({
-      where: {
-        is_deleted: false,
-      },
+      where,
       select: ALL_FA_SELECT,
       orderBy: {
         id: 'asc',
       },
     });
+  }
+
+  private buildFindCondition({ isDeleted: is_deleted, status }: SearchFa) {
+    const statusCondition = status ? { status } : {};
+    return { is_deleted, ...statusCondition };
   }
 
   async findOne(id: number): Promise<FaResponse | null> {
