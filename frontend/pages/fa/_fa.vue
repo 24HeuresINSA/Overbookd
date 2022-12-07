@@ -363,19 +363,23 @@ export default Vue.extend({
       this.saveFA();
     },
 
+    isAnimatonValidatedBy(validator: team) {
+      return this.FA.mFA.fa_validation?.some(
+        (validation: fa_validation) => validation.Team.id === validator.id
+      );
+    },
+
+    isAnimationRejectedBy(validator: team) {
+      return this.FA.mFA.fa_refuse?.some(
+        (refuse: fa_refuse) => refuse.Team.id === validator.id
+      );
+    },
+
     getIconColor(validator: team) {
-      if (
-        this.FA.mFA.fa_validation?.some(
-          (validation: fa_validation) => validation.Team.id === validator.id
-        )
-      ) {
+      if (this.isAnimatonValidatedBy(validator)) {
         return "green";
       }
-      if (
-        this.FA.mFA.fa_refuse?.some(
-          (validation: fa_refuse) => validation.Team.id === validator.id
-        )
-      ) {
+      if (this.isAnimationRejectedBy(validator)) {
         return "red";
       }
       return "grey";
