@@ -1,6 +1,10 @@
 <template>
   <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>Presta</v-card-title>
+    <v-card-subtitle
+      >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
+      vides.</v-card-subtitle
+    >
     <v-card-text>
       <v-form v-model="isComplete">
         <v-text-field

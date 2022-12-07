@@ -6,15 +6,6 @@
       de ton activité, contacte securite@24heures.org</v-card-subtitle
     >
     <v-card-text>
-      <v-textarea
-        :value="mFA.security_needs"
-        label="Dispositif de sécurité particulier"
-        auto-grow
-        rows="2"
-        :disabled="isDisabled"
-        prepend-icon="mdi-security"
-        @change="onChange('security_needs', $event)"
-      ></v-textarea>
       <v-form>
         <v-switch
           :value="mFA.is_pass_required"
@@ -32,6 +23,15 @@
           @change="onChange('number_of_pass', $event)"
         ></v-text-field>
       </v-form>
+      <v-textarea
+        :value="mFA.security_needs"
+        label="Dispositif de sécurité particulier"
+        auto-grow
+        rows="2"
+        :disabled="isDisabled"
+        prepend-icon="mdi-security"
+        @change="onChange('security_needs', $event)"
+      ></v-textarea>
     </v-card-text>
   </v-card>
 </template>
