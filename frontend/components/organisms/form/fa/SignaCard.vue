@@ -97,7 +97,7 @@
 import Vue from "vue";
 import { fa_signa_needs, signa_type } from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
-import { isNumber, min } from "~/utils/rules/inputRules"
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "SignaCard",

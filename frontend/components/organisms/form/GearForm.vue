@@ -38,7 +38,7 @@ import Vue from "vue";
 import { GearForm } from "~/store/catalog";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import SearchCategoryVue from "../../atoms/SearchCategory.vue";
-import { InputRulesData, minLength } from "~/utils/rules/inputRules"
+import { InputRulesData, minLength } from "~/utils/rules/inputRules";
 
 interface GearFormData extends InputRulesData {
   name: string;

@@ -39,7 +39,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { FA } from "~/utils/models/FA";
-import { isNumber, min } from "~/utils/rules/inputRules"
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "SecurityCard",
