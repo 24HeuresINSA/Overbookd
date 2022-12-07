@@ -6,15 +6,6 @@
       de ton activité, contacte securite@24heures.org</v-card-subtitle
     >
     <v-card-text>
-      <v-textarea
-        :value="mFA.security_needs"
-        label="Dispositif de sécurité particulier"
-        auto-grow
-        rows="2"
-        :disabled="isDisabled"
-        prepend-icon="mdi-security"
-        @change="onChange('security_needs', $event)"
-      ></v-textarea>
       <v-form>
         <v-switch
           :value="mFA.is_pass_required"
@@ -27,12 +18,20 @@
           :value="mFA.number_of_pass"
           label="Nombre de Pass Sécu"
           type="number"
-          min="1"
-          step="1"
+          :rules="[rules.number, rules.min]"
           :disabled="isDisabled"
           @change="onChange('number_of_pass', $event)"
         ></v-text-field>
       </v-form>
+      <v-textarea
+        :value="mFA.security_needs"
+        label="Dispositif de sécurité particulier"
+        auto-grow
+        rows="2"
+        :disabled="isDisabled"
+        prepend-icon="mdi-security"
+        @change="onChange('security_needs', $event)"
+      ></v-textarea>
     </v-card-text>
   </v-card>
 </template>
@@ -40,6 +39,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { FA } from "~/utils/models/FA";
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "SecurityCard",
@@ -49,6 +49,12 @@ export default Vue.extend({
       default: () => false,
     },
   },
+  data: () => ({
+    rules: {
+      number: isNumber,
+      min: min(1),
+    },
+  }),
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;

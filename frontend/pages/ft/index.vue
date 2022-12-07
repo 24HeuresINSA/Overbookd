@@ -166,17 +166,17 @@
 </template>
 
 <script lang="ts">
-import { safeCall } from "~/utils/api/calls";
-import ftRepo from "../../repositories/ftRepo";
-import { Header } from "~/utils/models/Data";
-import Vue from "vue";
-import { FT } from "~/utils/models/FT";
 import Fuse from "fuse.js";
+import Vue from "vue";
 import ValidatorsIcons from "~/components/atoms/ValidatorsIcons.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import userRepo from "~/repositories/userRepo";
 import faRepo from "~/repositories/faRepo";
+import userRepo from "~/repositories/userRepo";
+import { safeCall } from "~/utils/api/calls";
+import { Header } from "~/utils/models/Data";
+import { FT } from "~/utils/models/FT";
 import { SnackNotif } from "~/utils/models/store";
+import ftRepo from "../../repositories/ftRepo";
 
 interface Data {
   color: { [key: string]: string };
@@ -256,9 +256,8 @@ export default Vue.extend({
       FAs: undefined,
       loading: true,
       notifs: {
-        serverError: { type: "error", message: "erreur serveur" },
+        serverError: { message: "Erreur serveur" },
         deleteError: {
-          type: "error",
           message:
             "La FT ne peut pas etre suprimée si elle est validé ou soumise",
         },
@@ -361,11 +360,9 @@ export default Vue.extend({
         refused: [],
         comments: [],
       };
-      let res = await safeCall(
-        this.$store,
-        ftRepo.createFT(this, blankFT),
-        "sent"
-      );
+      const res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
+        successMessage: "La FT a été créée",
+      });
       if (res) {
         await this.$router.push({
           path: "/ft/" + res.data.count,
@@ -380,8 +377,10 @@ export default Vue.extend({
         const res = await safeCall(
           this.$store,
           ftRepo.deleteFT(this, this.mFT),
-          "sent",
-          "server"
+          {
+            successMessage: "La FT a été supprimée",
+            errorMessage: "Erreur lors de la suppression de la FT",
+          }
         );
         if (res) {
           const index = this.FTs.findIndex((ft) => ft.id == this.mFT.id);
@@ -398,12 +397,10 @@ export default Vue.extend({
       // switch FT to valid
       this.mFT.isValid = true;
       // call update on backend
-      const res = await safeCall(
-        this.$store,
-        ftRepo.updateFT(this, this.mFT),
-        "sent",
-        "server"
-      );
+      const res = await safeCall(this.$store, ftRepo.updateFT(this, this.mFT), {
+        successMessage: "La FT a été restaurée",
+        errorMessage: "Erreur lors de la restauration de la FT",
+      });
       // if success
       if (res) {
         // update current version

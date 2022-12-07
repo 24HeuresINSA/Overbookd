@@ -17,7 +17,7 @@
             outlined
             clear-icon="mdi-close-circle-outline"
             counter
-            :rules="[rules.name.minLength]"
+            :rules="[rules.nameMinLength]"
           ></v-text-field>
           <SearchTeamVue
             v-model="owner"
@@ -44,16 +44,12 @@ import { CategoryForm } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
 import { team } from "~/utils/models/repo";
 import SearchCategoryVue from "../../atoms/SearchCategory.vue";
+import { InputRulesData, minLength } from "~/utils/rules/inputRules";
 
-interface CategoryFormData {
+interface CategoryFormData extends InputRulesData {
   name: string;
   owner?: Pick<team, "code" | "name">;
   parent?: Category;
-  rules: {
-    name: {
-      minLength: (value: string | null) => boolean | string;
-    };
-  };
 }
 
 const nameMinLength = 3;
@@ -73,11 +69,7 @@ export default Vue.extend({
       owner: undefined,
       parent: undefined,
       rules: {
-        name: {
-          minLength: (value) =>
-            (value && value.length >= nameMinLength) ||
-            `Taper au moins ${nameMinLength} caracteres`,
-        },
+        nameMinLength: minLength(nameMinLength),
       },
     };
   },

@@ -318,7 +318,6 @@ export default Vue.extend({
     await this.$accessor.FT.getAndSetFT(this.FTID);
     await this.$accessor.conflict.fetchConflictsByFTCount(this.FTID);
     document.title = "FT:" + this.FTID;
-    console.log(this.FT);
   },
 
   methods: {
@@ -326,7 +325,6 @@ export default Vue.extend({
       // Check for conflicts
       if (this.$accessor.conflict.conflicts.length != 0) {
         this.$accessor.notif.pushNotification({
-          type: "error",
           message: "Attention il reste des conflits pour cette FT",
         });
         return;
@@ -341,7 +339,6 @@ export default Vue.extend({
             0
           ) {
             this.$accessor.notif.pushNotification({
-              type: "error",
               message: "Attention le découpage ne fonctionne pas",
             });
             return;

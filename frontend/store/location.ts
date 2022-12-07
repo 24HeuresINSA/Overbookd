@@ -30,7 +30,6 @@ export const getters = getterTree(state, {
 export const mutations = mutationTree(state, {
   SET_LOCATIONS(state, locations: location[]) {
     state.locations = locations;
-    // console.log("locations in state :", state.locations);
   },
   SET_LOCATION(state, location: location) {
     state.locations.push(location);

@@ -101,13 +101,13 @@
                 : ""
             }}
           </template>
-          <template #[`item.action`]="row">
+          <template #[`item.action`]="{ item }">
             <tr>
               <td>
-                <v-btn class="mx-2" icon small :to="`/fa/${row.item.id}`">
+                <v-btn class="mx-2" icon small :to="`/fa/${item.id}`">
                   <v-icon small>mdi-circle-edit-outline</v-icon>
                 </v-btn>
-                <v-btn class="mx-2" icon small @click="preDelete(row.item)">
+                <v-btn class="mx-2" icon small @click="preDelete(item)">
                   <v-icon small>mdi-delete</v-icon>
                 </v-btn>
               </td>
@@ -166,9 +166,9 @@
 
 <script>
 import Fuse from "fuse.js";
-import { safeCall } from "../../utils/api/calls";
-import { RepoFactory } from "../../repositories/repoFactory";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import { RepoFactory } from "../../repositories/repoFactory";
+import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "Fa",
@@ -311,7 +311,7 @@ export default {
       const res = await safeCall(
         this.$store,
         RepoFactory.faRepo.createNewFA(this, FA),
-        "FA créée 🥳"
+        { successMessage: "FA créée 🥳" }
       );
       if (res) {
         await this.$router.push({ path: "fa/" + res.id });
@@ -320,9 +320,11 @@ export default {
     async deleteFA() {
       const res = await safeCall(
         this.$store,
-        RepoFactory.faRepo.deleteFA(this, this.mFA),
-        "FA supprimée 🥳",
-        "FA non supprimée 😢"
+        RepoFactory.faRepo.deleteFA(this, this.mFA.id),
+        {
+          successMessage: "FA supprimée 🥳",
+          errorMessage: "FA non supprimée 😢",
+        }
       );
       if (res) {
         this.FAs = this.FAs.filter((e) => e.id !== this.mFA.id);

@@ -27,8 +27,8 @@ export default {
   createNewFA(context: Context, FA: FA) {
     return context.$axios.$post(resource, FA);
   },
-  deleteFA(context: Context, FA: FA) {
-    return context.$axios.delete(resource, { data: FA });
+  deleteFA(context: Context, id: number) {
+    return context.$axios.delete(`${resource}/${id}`);
   },
   getFAsNumber(context: Context) {
     return context.$axios.get(resource + "/count");

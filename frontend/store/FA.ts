@@ -410,18 +410,13 @@ export const actions = actionTree(
       );
       sendNotification(
         this,
-        "La demande de matériel a été ajoutée avec succès ✅",
-        "success"
+        "La demande de matériel a été ajoutée avec succès ✅"
       );
       commit("ADD_GEAR_REQUEST", res.data);
     },
     async removeGearRequest({ commit, state }, gearId: number) {
       await RepoFactory.faRepo.deleteGearRequest(this, state.mFA.id, gearId);
-      sendNotification(
-        this,
-        "La demande de matériel a été supprimée 🗑️",
-        "success"
-      );
+      sendNotification(this, "La demande de matériel a été supprimée 🗑️");
       commit("REMOVE_GEAR_REQUEST", gearId);
     },
     async updateGearTimeWindow({ commit, state }, time_windows: time_windows) {
@@ -439,16 +434,11 @@ export const actions = actionTree(
         );
         commit("SET_GEAR_REQUESTS", gearRequests);
         if (!gearRequests.length) return;
-        sendNotification(
-          this,
-          "Demandes de matériel misent a jour ✅",
-          "success"
-        );
+        sendNotification(this, "Demandes de matériel misent a jour ✅");
       } catch (e) {
         sendNotification(
           this,
-          "La mise a jour des demandes de matos a echouee ❌",
-          "error"
+          "La mise a jour des demandes de matos a echouee ❌"
         );
       }
     },

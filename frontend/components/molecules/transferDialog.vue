@@ -104,7 +104,6 @@ export default Vue.extend({
       // transaction to self...
       if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
-          type: "error",
           message:
             "Trouve toi des amis plutôt que de faire des virements a toi même...",
         });
@@ -116,7 +115,6 @@ export default Vue.extend({
         +this.transfer.amount.toString().split(".")[1]?.length > 2
       ) {
         this.$accessor.notif.pushNotification({
-          type: "error",
           message: "C'est plus assomaker...",
         });
         return;

@@ -38,8 +38,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
 import { FriendRequest } from "~/utils/models/repo";
 import { SnackNotif } from "../../../utils/models/store";
 
@@ -92,7 +92,6 @@ export default Vue.extend({
       }
       if (this.me.friends.find((friend) => friend.id === this.newFriend.id)) {
         const notif: SnackNotif = {
-          type: "success",
           message: "Vous êtes déjà amis !",
         };
         this.$store.dispatch("notif/pushNotification", notif);
@@ -116,8 +115,10 @@ export default Vue.extend({
           to: this.newFriend.id,
           data: req,
         }),
-        "sent",
-        "server"
+        {
+          successMessage: "Requête d'ami envoyée !",
+          errorMessage: "Erreur lors de l'envoi de la requête d'ami",
+        }
       );
     },
   },

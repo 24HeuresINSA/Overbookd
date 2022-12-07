@@ -169,11 +169,3 @@ export const actions = actionTree(
     },
   }
 );
-
-/**
- * @deprecated
- */
-export interface UserActions {
-  fetchUser: number;
-  updateUser: { userID: string; userData: Partial<User> };
-}

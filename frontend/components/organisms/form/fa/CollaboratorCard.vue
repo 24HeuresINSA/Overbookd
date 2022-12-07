@@ -1,19 +1,21 @@
 <template>
   <v-card :class="isDisabled ? 'disabled' : ''">
     <v-card-title>Presta</v-card-title>
+    <v-card-subtitle
+      >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
+      vides.</v-card-subtitle
+    >
     <v-card-text>
-      <v-form v-model="isComplete">
+      <v-form>
         <v-text-field
           :value="collaborator.firstname"
           label="Prénom de l'intervenant*"
-          :rules="ruleRequired"
           :disabled="isDisabled"
           @change="onChange('firstname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.lastname"
           label="Nom de l'intervenant*"
-          :rules="ruleRequired"
           :disabled="isDisabled"
           @change="onChange('lastname', $event)"
         ></v-text-field>
@@ -28,6 +30,7 @@
         <v-text-field
           :value="collaborator.email"
           label="E-mail"
+          :rules="ruleEmail"
           :disabled="isDisabled"
           @change="onChange('email', $event)"
         ></v-text-field>
@@ -46,10 +49,6 @@
         >
         </v-text-field>
       </v-form>
-      <p v-if="!isEmpty && !isComplete" class="red-text">
-        ⚠️ N'oublie pas de compléter les champs avec un * avant de soumettre ta
-        FA !
-      </p>
     </v-card-text>
   </v-card>
 </template>
@@ -66,9 +65,6 @@ export default Vue.extend({
       default: () => false,
     },
   },
-  data: () => ({
-    isComplete: false,
-  }),
   computed: {
     collaborators(): any {
       return this.$accessor.FA.mFA.fa_collaborators;
@@ -80,29 +76,18 @@ export default Vue.extend({
       }
       return {};
     },
-    isEmpty(): boolean {
-      // eslint-disable-next-line no-unused-vars
-      const { id, ...rest } = this.collaborator;
-      return Object.keys(rest).length === 0;
-    },
     rulePhone(): any {
       return [
         (v: any) =>
-          new RegExp(`^$|0[6-7]{1}[0-9]{8}$`).test(v) ||
+          new RegExp(`^$|0[1-7]{1}[0-9]{8}$`).test(v) ||
           `ce numéro de téléphone n'est pas valide`,
-        (v: any) => !!v || "ce champs est requis si tu veux ajouter un presta",
       ];
     },
     ruleEmail(): any {
       return [
         (v: any) =>
-          new RegExp(`^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
+          new RegExp(`^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
           `cet email n'est pas valide`,
-      ];
-    },
-    ruleRequired(): any {
-      return [
-        (v: any) => !!v || "ce champs est requis si tu veux ajouter un presta",
       ];
     },
   },
@@ -127,7 +112,6 @@ export default Vue.extend({
       if (Object.values(rest).every((value) => value == "")) {
         this.$accessor.FA.deleteCollaborator(0);
       }
-      console.log("isComplete: " + this.isComplete);
     },
   },
 });

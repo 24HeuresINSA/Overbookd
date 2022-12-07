@@ -2,6 +2,7 @@
   <div class="main">
     <div class="sidebar">
       <h1>Fiche Activité n°{{ faId }}</h1>
+      <h2>{{ faName }}</h2>
 
       <div class="status">
         <span
@@ -166,20 +167,11 @@
       </v-btn>
     </div>
 
-    <v-dialog v-model="validationDialog" width="500">
-      <v-card>
-        <v-img
-          height="620"
-          src="https://media.discordapp.net/attachments/726537148119122023/806793684598128640/WhatsApp_Image_2021-02-03_at_23.36.35.jpeg"
-        ></v-img>
-        <v-card-title> ⚠️ Warning ⚠️ </v-card-title>
-        <v-card-text> T'es sur de ta merde la ? </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="submit">soumettre</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="validationDialog" width="600">
+      <CheckBeforeSubmitCard
+        @close-dialog="validationDialog = false"
+        @submit="submit"
+      ></CheckBeforeSubmitCard>
     </v-dialog>
 
     <v-dialog v-model="refuseDialog" max-width="600px">
@@ -205,6 +197,7 @@
 import Vue from "vue";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
@@ -217,6 +210,7 @@ import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { fa_refuse, fa_validation } from "~/utils/models/FA";
 import { team } from "~/utils/models/repo";
 
 export default Vue.extend({
@@ -235,6 +229,7 @@ export default Vue.extend({
     FormSummary,
     SnackNotificationContainer,
     LogisticTimeWindow,
+    CheckBeforeSubmitCard,
   },
 
   data: () => ({
@@ -269,6 +264,9 @@ export default Vue.extend({
     },
     faId(): number {
       return +this.$route.params.fa;
+    },
+    faName(): string {
+      return this.$accessor.FA.mFA.name;
     },
     validators(): Array<any> {
       return this.$accessor.team.faValidators;
@@ -365,23 +363,26 @@ export default Vue.extend({
       this.saveFA();
     },
 
+    isAnimatonValidatedBy(validator: team) {
+      return this.FA.mFA.fa_validation?.some(
+        (validation: fa_validation) => validation.Team.id === validator.id
+      );
+    },
+
+    isAnimationRejectedBy(validator: team) {
+      return this.FA.mFA.fa_refuse?.some(
+        (refuse: fa_refuse) => refuse.Team.id === validator.id
+      );
+    },
+
     getIconColor(validator: team) {
-      let color = "grey";
-      if (this.FA.mFA.fa_validation) {
-        this.FA.mFA.fa_validation.forEach((validation: any) => {
-          if (Number(validation.Team.id) === Number(validator.id)) {
-            color = "green";
-          }
-        });
+      if (this.isAnimatonValidatedBy(validator)) {
+        return "green";
       }
-      if (this.FA.mFA.fa_refuse) {
-        this.FA.mFA.fa_refuse.forEach((validation: any) => {
-          if (Number(validation.Team.id) === Number(validator.id)) {
-            color = "red";
-          }
-        });
+      if (this.isAnimationRejectedBy(validator)) {
+        return "red";
       }
-      return color;
+      return "grey";
     },
     shouldShowValidationOrRefuseButton() {
       return (
@@ -402,7 +403,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .main {
   display: flex;
-  height: calc(100vh - 42px);
+  height: calc(100vh - 124px);
+  overflow-y: hidden;
 }
 
 .sidebar {
@@ -414,9 +416,23 @@ export default Vue.extend({
   width: 300px;
 }
 
-h1 {
-  font-size: 30px;
+.sidebar h1 {
+  font-size: 1.7rem;
   margin: 16px;
+  margin-bottom: 4px;
+}
+
+.sidebar h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: rgb(89, 89, 89);
+  margin: 16px;
+  margin-top: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: auto;
+  display: block;
+  overflow: hidden;
 }
 
 .dot {
@@ -448,7 +464,7 @@ h1 {
 .icons .icon .icon-detail {
   visibility: hidden;
   width: 60px;
-  font-size: 15px;
+  font-size: 0.9rem;
   text-align: center;
   border-radius: 6px;
   user-select: none;

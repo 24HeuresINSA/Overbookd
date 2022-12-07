@@ -101,7 +101,6 @@ export default Vue.extend({
           })
           .then(() => {
             const notif: SnackNotif = {
-              type: "success",
               message: "Ami ajouté !",
             };
             this.$store.dispatch("notif/pushNotification", notif);
@@ -114,7 +113,6 @@ export default Vue.extend({
       if (notification.data) {
         this.deleteNotification(notification.date);
         const notif: SnackNotif = {
-          type: "success",
           message: "Demande refusée !",
         };
         this.$store.dispatch("notif/pushNotification", notif);
