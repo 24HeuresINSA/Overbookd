@@ -17,7 +17,7 @@
             outlined
             clear-icon="mdi-close-circle-outline"
             counter
-            :rules="[rules.name.minLength]"
+            :rules="[rules.nameMinLength]"
           ></v-text-field>
           <SearchCategoryVue
             v-model="category"
@@ -38,15 +38,11 @@ import Vue from "vue";
 import { GearForm } from "~/store/catalog";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import SearchCategoryVue from "../../atoms/SearchCategory.vue";
+import { InputRulesData, minLength } from "~/utils/rules/inputRules"
 
-interface GearFormData {
+interface GearFormData extends InputRulesData {
   name: string;
   category?: Category;
-  rules: {
-    name: {
-      minLength: (value: string | null) => boolean | string;
-    };
-  };
 }
 
 const nameMinLength = 3;
@@ -65,11 +61,7 @@ export default Vue.extend({
       name: this.gear.name,
       category: this.gear.category,
       rules: {
-        name: {
-          minLength: (value) =>
-            (value && value.length >= nameMinLength) ||
-            `Taper au moins ${nameMinLength} caracteres`,
-        },
+        nameMinLength: minLength(nameMinLength),
       },
     };
   },

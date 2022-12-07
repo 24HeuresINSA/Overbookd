@@ -39,6 +39,7 @@ import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue"
 import SearchGear from "~/components/atoms/SearchGear.vue";
 import { Gear } from "~/utils/models/catalog.model";
 import { GearRequestCreation, time_windows_type } from "~/utils/models/FA";
+import { isNumber, min } from "~/utils/rules/inputRules"
 
 export default Vue.extend({
   name: "LogisticsCard",
@@ -74,10 +75,8 @@ export default Vue.extend({
     gear: undefined as Gear | undefined,
     quantity: "1",
     rules: {
-      number: (value: string) =>
-        !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
-      min: (value: string) =>
-        parseInt(value, 10) >= 1 || "La valeur doit être supérieure à 0",
+      number: isNumber,
+      min: min(1),
     },
   }),
   computed: {
