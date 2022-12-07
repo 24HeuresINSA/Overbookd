@@ -197,6 +197,7 @@
 import Vue from "vue";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
@@ -209,8 +210,8 @@ import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { fa_refuse, fa_validation } from "~/utils/models/FA";
 import { team } from "~/utils/models/repo";
-import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 
 export default Vue.extend({
   name: "Fa",
@@ -362,23 +363,26 @@ export default Vue.extend({
       this.saveFA();
     },
 
+    isAnimatonValidatedBy(validator: team) {
+      return this.FA.mFA.fa_validation?.some(
+        (validation: fa_validation) => validation.Team.id === validator.id
+      );
+    },
+
+    isAnimationRejectedBy(validator: team) {
+      return this.FA.mFA.fa_refuse?.some(
+        (refuse: fa_refuse) => refuse.Team.id === validator.id
+      );
+    },
+
     getIconColor(validator: team) {
-      let color = "grey";
-      if (this.FA.mFA.fa_validation) {
-        this.FA.mFA.fa_validation.forEach((validation: any) => {
-          if (Number(validation.Team.id) === Number(validator.id)) {
-            color = "green";
-          }
-        });
+      if (this.isAnimatonValidatedBy(validator)) {
+        return "green";
       }
-      if (this.FA.mFA.fa_refuse) {
-        this.FA.mFA.fa_refuse.forEach((validation: any) => {
-          if (Number(validation.Team.id) === Number(validator.id)) {
-            color = "red";
-          }
-        });
+      if (this.isAnimationRejectedBy(validator)) {
+        return "red";
       }
-      return color;
+      return "grey";
     },
     shouldShowValidationOrRefuseButton() {
       return (
