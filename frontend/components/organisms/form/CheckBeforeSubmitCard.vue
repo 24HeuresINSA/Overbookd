@@ -280,27 +280,24 @@ export default Vue.extend({
     },
   },
   methods: {
-    isCollaboratorEssentialDataIncomplete(collaborator: collaborator): boolean {
-      return !(
-        (!!collaborator.firstname &&
-          !!collaborator.lastname &&
-          !!collaborator.phone) ||
-        (!collaborator.firstname &&
-          !collaborator.lastname &&
-          !collaborator.phone)
-      );
+    isCollaboratorEssentialDataIncomplete(collab: collaborator): boolean {
+      const isTotallyFilled =
+        !!collab.firstname && !!collab.lastname && !!collab.phone;
+      const hasAtLeastOneFieldFilled =
+        !!collab.firstname || !!collab.lastname || !!collab.phone;
+      return !isTotallyFilled && hasAtLeastOneFieldFilled;
     },
-    isCollaboratorOptionalDataIncomplete(collaborator: collaborator): boolean {
+    isCollaboratorOptionalDataIncomplete(collab: collaborator): boolean {
       return (
-        !!collaborator.firstname &&
-        !!collaborator.lastname &&
-        !!collaborator.phone &&
-        (!collaborator.email || !collaborator.company || !collaborator.comment)
+        !!collab.firstname &&
+        !!collab.lastname &&
+        !!collab.phone &&
+        (!collab.email || !collab.company || !collab.comment)
       );
     },
-    isCollaboratorEmpty(collaborator: collaborator): boolean {
+    isCollaboratorEmpty(collab: collaborator): boolean {
       // eslint-disable-next-line no-unused-vars
-      const { id, ...rest } = collaborator;
+      const { id, ...rest } = collab;
       return Object.keys(rest).every((key) => {
         return !rest[key as keyof typeof rest];
       });
