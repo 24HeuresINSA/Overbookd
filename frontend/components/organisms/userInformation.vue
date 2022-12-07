@@ -247,6 +247,7 @@
 import OverChips from "~/components/atoms/overChips";
 import { RepoFactory } from "~/repositories/repoFactory";
 import userRepo from "~/repositories/userRepo";
+import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "UserInformation",
