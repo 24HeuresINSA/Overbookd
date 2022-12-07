@@ -39,6 +39,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { FA } from "~/utils/models/FA";
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "SecurityCard",
@@ -50,10 +51,8 @@ export default Vue.extend({
   },
   data: () => ({
     rules: {
-      number: (value: string) =>
-        !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
-      min: (value: string) =>
-        parseInt(value, 10) >= 1 || "La valeur doit être supérieure à 0",
+      number: isNumber,
+      min: min(1),
     },
   }),
   computed: {

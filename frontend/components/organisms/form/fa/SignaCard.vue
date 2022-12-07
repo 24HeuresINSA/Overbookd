@@ -97,6 +97,7 @@
 import Vue from "vue";
 import { fa_signa_needs, signa_type } from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "SignaCard",
@@ -122,10 +123,8 @@ export default Vue.extend({
       comment: "",
     },
     rules: {
-      number: (value: string) =>
-        !isNaN(parseInt(value, 10)) || "La valeur doit être un nombre",
-      min: (value: string) =>
-        parseInt(value, 10) >= 1 || "La valeur doit être supérieure à 0",
+      number: isNumber,
+      min: min(1),
     },
   }),
   computed: {
