@@ -107,8 +107,8 @@ export class FaController {
     description: 'Delete a fa',
     type: Promise<fa | null>,
   })
-  remove(@Param('id', ParseIntPipe) id: string): Promise<fa | null> {
-    return this.faService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<fa | null> {
+    return this.faService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

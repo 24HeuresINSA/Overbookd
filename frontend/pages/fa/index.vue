@@ -101,13 +101,13 @@
                 : ""
             }}
           </template>
-          <template #[`item.action`]="row">
+          <template #[`item.action`]="{ item }">
             <tr>
               <td>
-                <v-btn class="mx-2" icon small :to="`/fa/${row.item.id}`">
+                <v-btn class="mx-2" icon small :to="`/fa/${item.id}`">
                   <v-icon small>mdi-circle-edit-outline</v-icon>
                 </v-btn>
-                <v-btn class="mx-2" icon small @click="preDelete(row.item)">
+                <v-btn class="mx-2" icon small @click="preDelete(item)">
                   <v-icon small>mdi-delete</v-icon>
                 </v-btn>
               </td>
@@ -320,7 +320,7 @@ export default {
     async deleteFA() {
       const res = await safeCall(
         this.$store,
-        RepoFactory.faRepo.deleteFA(this, this.mFA),
+        RepoFactory.faRepo.deleteFA(this, this.mFA.id),
         {
           successMessage: "FA supprimée 🥳",
           errorMessage: "FA non supprimée 😢",
