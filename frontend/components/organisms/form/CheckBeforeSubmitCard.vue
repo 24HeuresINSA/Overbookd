@@ -227,12 +227,12 @@ export default Vue.extend({
       return [];
     },
 
+    collaborator(): collaborator {
+      return this.store.mFA.fa_collaborators[0]?.collaborator;
+    },
+
     collaboratorErrors(): string[] {
-      const collaborator = this.store.mFA.fa_collaborators[0]?.collaborator;
-      if (
-        collaborator &&
-        this.isCollaboratorEssentialDataIncomplete(collaborator)
-      ) {
+      if (this.isCollaboratorEssentialDataIncomplete) {
         return [
           "Les informations indispensables du prestataire sont incomplètes.",
         ];
@@ -240,18 +240,39 @@ export default Vue.extend({
       return [];
     },
     collaboratorWarnings(): string[] {
-      const collaborator = this.store.mFA.fa_collaborators[0]?.collaborator;
-      if (!collaborator || this.isCollaboratorEmpty(collaborator)) {
+      if (this.isCollaboratorEmpty) {
         return ["Cette activité n'a pas de prestataire."];
       }
 
-      if (
-        collaborator &&
-        this.isCollaboratorOptionalDataIncomplete(collaborator)
-      ) {
+      if (this.isCollaboratorOptionalDataIncomplete) {
         return ["Les informations du prestataire sont incomplètes."];
       }
       return [];
+    },
+    areCollaboratorMandatoryFieldsFilled(): boolean {
+      const { firstname, lastname, phone } = this.collaborator;
+      return Boolean(firstname && lastname && phone);
+    },
+    isCollaboratorEssentialDataIncomplete(): boolean {
+      if (!this.collaborator) return false;
+      const { firstname, lastname, phone } = this.collaborator;
+      const hasAtLeastOneFieldFilled = Boolean(firstname || lastname || phone);
+      return (
+        !this.areCollaboratorMandatoryFieldsFilled && hasAtLeastOneFieldFilled
+      );
+    },
+    isCollaboratorOptionalDataIncomplete(): boolean {
+      if (!this.collaborator) return false;
+      const { email, company, comment } = this.collaborator;
+      const hasAtLeastOneFieldEmpty = Boolean(!(email && company && comment));
+      return (
+        this.areCollaboratorMandatoryFieldsFilled && hasAtLeastOneFieldEmpty
+      );
+    },
+    isCollaboratorEmpty(): boolean {
+      if (!this.collaborator) return true;
+      const { id, ...rest } = this.collaborator;
+      return Object.keys(rest).every((key) => !rest[key as keyof typeof rest]);
     },
 
     logisticsWarnings(): string[] {
@@ -277,26 +298,6 @@ export default Vue.extend({
         return ["Cette activité n'a pas besoin d'eau."];
       }
       return [];
-    },
-  },
-  methods: {
-    isCollaboratorEssentialDataIncomplete(collaborator: collaborator): boolean {
-      return (
-        !collaborator.firstname || !collaborator.lastname || !collaborator.phone
-      );
-    },
-    isCollaboratorOptionalDataIncomplete(collaborator: collaborator): boolean {
-      return (
-        !!collaborator.firstname &&
-        !!collaborator.lastname &&
-        !!collaborator.phone &&
-        (!collaborator.email || !collaborator.company || !collaborator.comment)
-      );
-    },
-    isCollaboratorEmpty(collaborator: collaborator): boolean {
-      return Object.keys(collaborator).every((key) => {
-        return !collaborator[key as keyof collaborator];
-      });
     },
   },
 });
