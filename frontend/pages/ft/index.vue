@@ -360,7 +360,7 @@ export default Vue.extend({
         refused: [],
         comments: [],
       };
-      let res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
+      const res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
         successMessage: "La FT a été créée",
       });
       if (res) {

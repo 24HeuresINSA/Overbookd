@@ -29,7 +29,6 @@ export default Vue.extend({
       return this.$accessor.team.faValidators;
     },
   },
-  async mounted() {},
   methods: {
     getValidatorColor(validator: any) {
       if (this.form.validated.includes(validator)) {
