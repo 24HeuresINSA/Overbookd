@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-card>
-      <v-card-title :disabled="isDisabled">Creneau de matos</v-card-title>
+      <v-card-title :disabled="isDisabled">Créneau de matos</v-card-title>
       <v-card-subtitle
-        >Vous ne pouvez pas ajouter du matos sans ce creneau</v-card-subtitle
+        >Vous ne pouvez pas ajouter du matos sans ce créneau</v-card-subtitle
       >
       <v-card-text>
         <div v-show="gearTimeWindow" class="time-window">
@@ -18,10 +18,16 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn v-if="gearTimeWindow" text @click="openUpdateDialog"
+        <v-btn
+          v-if="gearTimeWindow"
+          text
+          :disabled="isDisabled"
+          @click="openUpdateDialog"
           >Modifier le creneau</v-btn
         >
-        <v-btn v-else text @click="openAddDialog">Ajouter un creneau</v-btn>
+        <v-btn v-else text :disabled="isDisabled" @click="openAddDialog"
+          >Ajouter un creneau</v-btn
+        >
       </v-card-actions>
     </v-card>
 
