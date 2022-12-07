@@ -11,15 +11,20 @@ import {
   GearRequest,
   GearRequestCreation,
   GearRequestUpdate,
+  Status,
   time_windows,
 } from "~/utils/models/FA";
 
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
+interface SearchFA {
+  isDeleted?: boolean;
+  status?: Status;
+}
 
 export default {
-  getAllFAs(context: Context) {
-    return context.$axios.get<FA>(resource);
+  getAllFAs(context: Context, search?: SearchFA) {
+    return context.$axios.get<FA>(resource, { params: search });
   },
   getFAByCount(context: Context, count: number) {
     return context.$axios.get(resource + `/${count}`);
