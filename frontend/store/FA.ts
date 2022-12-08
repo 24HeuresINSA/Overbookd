@@ -18,6 +18,7 @@ import {
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
+import { isAnimationValidatedBy } from "~/utils/rules/faValidationRules";
 import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
@@ -274,7 +275,7 @@ export const actions = actionTree(
 
     validate: async function (
       { dispatch, commit, state },
-      { validator_id, user_id, team_name, author }
+      { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
       if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
@@ -298,7 +299,7 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: subject_type.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
-        author: user_id,
+        author: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -307,7 +308,7 @@ export const actions = actionTree(
 
     refuse: async function (
       { dispatch, commit, state },
-      { validator_id, user_id, message, author }
+      { validator_id, message, author }
     ) {
       if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
       commit("UPDATE_STATUS", Status.REFUSED);
@@ -318,7 +319,40 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: subject_type.REFUSED,
         comment: `La FA a été refusée : ${message}.`,
-        author: user_id,
+        author: author.id,
+        created_at: new Date(),
+      };
+      dispatch("addComment", { comment, defaultAuthor: author });
+      dispatch("save");
+    },
+
+    resetLogValidations: async function ({ dispatch, state }, { author }) {
+      const matosValidated = isAnimationValidatedBy(state.mFA, "matos");
+      const barrieresValidated = isAnimationValidatedBy(state.mFA, "barrieres");
+      const elecValidated = isAnimationValidatedBy(state.mFA, "elec");
+
+      // RESET VALIDATION
+
+      let validTeams = "";
+      if (matosValidated) {
+        // @ts-ignore
+        validTeams += this.$accessor.team.getTeamByCode("matos").name;
+      }
+      if (barrieresValidated) {
+        if (validTeams !== "") validTeams += ", ";
+        // @ts-ignore
+        validTeams += this.$accessor.team.getTeamByCode("elec").name;
+      }
+      if (elecValidated) {
+        if (validTeams !== "") validTeams += " et ";
+        // @ts-ignore
+        validTeams += this.$accessor.team.getTeamByCode("barrieres").name;
+      }
+
+      const comment: fa_comments = {
+        subject: subject_type.SUBMIT,
+        comment: `Le créneau MATOS a été modifié ce qui a réinitialisé la validation de ${validTeams}.`,
+        author: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });

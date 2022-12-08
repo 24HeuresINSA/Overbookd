@@ -145,7 +145,7 @@
         v-if="timeWindow"
         color="blue darken-1"
         text
-        @click="editTimeframe"
+        @click="confirmToEditTimeframe"
       >
         Modifier
       </v-btn>
@@ -158,7 +158,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
+import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
+import { getFAValidationStatus } from "~/utils/rules/faValidationRules";
 
 interface BrakeDownDate {
   year: number;
@@ -199,6 +200,9 @@ export default Vue.extend({
     menuTimeEnd: false,
   }),
   computed: {
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
     mTimeWindow(): time_windows {
       return {
         start: new Date(this.dateStart + " " + this.timeStart),
@@ -207,13 +211,16 @@ export default Vue.extend({
       };
     },
     timeframes(): any {
-      return this.$accessor.FA.mFA.time_windows;
+      return this.mFA.time_windows;
     },
     timeWindowsType(): Array<string> {
       return Object.values(time_windows_type);
     },
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
+    },
+    me(): any {
+      return this.$accessor.user.me;
     },
   },
   watch: {
@@ -308,6 +315,39 @@ export default Vue.extend({
       this.$emit("change", this.mTimeWindow);
       this.$emit("close-dialog");
       this.clearLocalVariable();
+    },
+    confirmToEditTimeframe() {
+      if (
+        this.type === time_windows_type.MATOS &&
+        this.mFA.status !== Status.DRAFT
+      ) {
+        const matosStatus = getFAValidationStatus(this.mFA, "matos");
+        const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
+        const elecStatus = getFAValidationStatus(this.mFA, "elec");
+
+        const hasAtLeastOneSubmitted =
+          matosStatus === Status.SUBMITTED ||
+          barrieresStatus === Status.SUBMITTED ||
+          elecStatus === Status.SUBMITTED;
+
+        const hasAtLeastOneRefused =
+          matosStatus === Status.REFUSED ||
+          barrieresStatus === Status.REFUSED ||
+          elecStatus === Status.REFUSED;
+
+        if (hasAtLeastOneSubmitted || hasAtLeastOneRefused) {
+          return confirm(
+            "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
+          )
+            ? this.resetLogValidations()
+            : this.$emit("close-dialog");
+        }
+        return this.editTimeframe();
+      }
+    },
+    resetLogValidations() {
+      this.$accessor.FA.resetLogValidations(this.me);
+      this.editTimeframe();
     },
     editTimeframe() {
       if (this.formIsInvalid()) return;

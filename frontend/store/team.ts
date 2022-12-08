@@ -38,6 +38,11 @@ export const getters = getterTree(state, {
         return teamNames.includes(t.name);
       });
     },
+  getTeamByCode:
+    (state, getters) =>
+    (code: string): team => {
+      return getters.allTeams.find((t: team) => t.code === code);
+    },
 });
 
 export const mutations = mutationTree(state, {

@@ -296,7 +296,6 @@ export default Vue.extend({
       if (validator) {
         const payload = {
           validator_id: validator.id,
-          user_id: this.$accessor.user.me.id,
           team_name: validator.name,
           author: this.me,
         };
@@ -307,7 +306,6 @@ export default Vue.extend({
     async refuse(validator: team) {
       const payload = {
         validator_id: validator.id,
-        user_id: this.$accessor.user.me.id,
         message: this.refuseComment,
         author: this.me,
       };

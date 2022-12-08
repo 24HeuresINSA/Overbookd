@@ -120,11 +120,11 @@ export default Vue.extend({
         elecStatus === Status.REFUSED;
       if (areAllRefused) return Status.REFUSED.toLowerCase();
 
-      const areAtLeastOneSubmitted =
+      const hasAtLeastOneSubmitted =
         matosStatus === Status.SUBMITTED ||
         barrieresStatus === Status.SUBMITTED ||
         elecStatus === Status.SUBMITTED;
-      if (areAtLeastOneSubmitted) return Status.SUBMITTED.toLowerCase();
+      if (hasAtLeastOneSubmitted) return Status.SUBMITTED.toLowerCase();
 
       return Status.DRAFT.toLowerCase();
     },
