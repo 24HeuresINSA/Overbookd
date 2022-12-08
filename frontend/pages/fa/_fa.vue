@@ -517,21 +517,6 @@ export default Vue.extend({
   }
 }
 
-.grey {
-  background-color: grey;
-}
-.orange {
-  background-color: orange;
-}
-
-.red {
-  background-color: red;
-}
-
-.green {
-  background-color: greenyellow;
-}
-
 @media only screen and (max-width: 965px) {
   .bottom-bar {
     position: fixed;

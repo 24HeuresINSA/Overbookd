@@ -9,7 +9,11 @@
     >
       <v-list>
         <v-list-item to="/">
-          <v-img :src="'img/logo/' + logo" alt="overbookd" class="logo"></v-img>
+          <v-img
+            :src="'/img/logo/' + logo"
+            alt="overbookd"
+            class="logo"
+          ></v-img>
         </v-list-item>
         <template v-for="(item, i) in working_items">
           <v-list-item

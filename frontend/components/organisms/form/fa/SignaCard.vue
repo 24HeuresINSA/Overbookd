@@ -194,8 +194,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
-.disabled {
-  border-left: 5px solid green;
-}
-</style>
+<style lang="scss" scoped src="@/assets/style.scss"></style>
