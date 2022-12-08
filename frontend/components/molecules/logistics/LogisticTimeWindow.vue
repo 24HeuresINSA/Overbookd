@@ -1,9 +1,11 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title :disabled="isDisabled">Creneau de matos</v-card-title>
+    <v-card :class="validationStatus">
+      <v-card-title :disabled="isValidatedByOwners"
+        >Créneau de matos</v-card-title
+      >
       <v-card-subtitle
-        >Vous ne pouvez pas ajouter du matos sans ce creneau</v-card-subtitle
+        >Vous ne pouvez pas ajouter du matos sans ce créneau</v-card-subtitle
       >
       <v-card-text>
         <div v-show="gearTimeWindow" class="time-window">
@@ -18,10 +20,20 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn v-if="gearTimeWindow" text @click="openUpdateDialog"
-          >Modifier le creneau</v-btn
+        <v-btn
+          v-if="gearTimeWindow"
+          text
+          :disabled="isValidatedByOwners"
+          @click="openUpdateDialog"
+          >Modifier le créneau</v-btn
         >
-        <v-btn v-else text @click="openAddDialog">Ajouter un creneau</v-btn>
+        <v-btn
+          v-else
+          text
+          :disabled="isValidatedByOwners"
+          @click="openAddDialog"
+          >Ajouter un créneau</v-btn
+        >
       </v-card-actions>
     </v-card>
 
@@ -46,18 +58,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
+import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
 import TimeframeForm from "../timeframe/TimeframeForm.vue";
+import {
+  isAnimationValidatedBy,
+  getFAValidationStatus,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",
   components: { TimeframeForm },
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
@@ -81,6 +91,42 @@ export default Vue.extend({
       return this.gearTimeWindow?.end
         ? this.displayDate(this.gearTimeWindow.end)
         : "";
+    },
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    isValidatedByOwners(): boolean {
+      const byMatos = isAnimationValidatedBy(this.mFA, "matos");
+      const byBarrieres = isAnimationValidatedBy(this.mFA, "barrieres");
+      const byElec = isAnimationValidatedBy(this.mFA, "elec");
+
+      if (byMatos && byBarrieres && byElec) return true;
+      return false;
+    },
+    validationStatus(): string {
+      const matosStatus = getFAValidationStatus(this.mFA, "matos");
+      const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
+      const elecStatus = getFAValidationStatus(this.mFA, "elec");
+
+      const areAllValidated =
+        matosStatus === Status.VALIDATED &&
+        barrieresStatus === Status.VALIDATED &&
+        elecStatus === Status.VALIDATED;
+      if (areAllValidated) return Status.VALIDATED.toLowerCase();
+
+      const areAllRefused =
+        matosStatus === Status.REFUSED &&
+        barrieresStatus === Status.REFUSED &&
+        elecStatus === Status.REFUSED;
+      if (areAllRefused) return Status.REFUSED.toLowerCase();
+
+      const areAtLeastOneSubmitted =
+        matosStatus === Status.SUBMITTED ||
+        barrieresStatus === Status.SUBMITTED ||
+        elecStatus === Status.SUBMITTED;
+      if (areAtLeastOneSubmitted) return Status.SUBMITTED.toLowerCase();
+
+      return Status.DRAFT.toLowerCase();
     },
   },
   methods: {

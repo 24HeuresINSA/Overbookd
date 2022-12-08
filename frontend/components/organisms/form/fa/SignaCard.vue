@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_signa_needs, signa_type, Status } from "~/utils/models/FA";
+import { FA, fa_signa_needs, signa_type } from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import {
@@ -146,8 +146,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    validationStatus(): Status {
-      return getFAValidationStatus(this.mFA, this.owner);
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   watch: {

@@ -46,7 +46,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
-import { FA, Status } from "~/utils/models/FA";
+import { FA } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -65,8 +65,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    validationStatus(): Status {
-      return getFAValidationStatus(this.mFA, this.owner);
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {

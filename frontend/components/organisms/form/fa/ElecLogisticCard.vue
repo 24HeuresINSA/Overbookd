@@ -58,12 +58,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  electricity_type,
-  FA,
-  fa_electricity_needs,
-  Status,
-} from "~/utils/models/FA";
+import { electricity_type, FA, fa_electricity_needs } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -101,8 +96,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    validationStatus(): Status {
-      return getFAValidationStatus(this.mFA, this.owner);
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {

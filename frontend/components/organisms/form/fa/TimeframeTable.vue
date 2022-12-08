@@ -74,7 +74,7 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
-import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
+import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -111,8 +111,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    validationStatus(): Status {
-      return getFAValidationStatus(this.mFA, this.owner);
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {

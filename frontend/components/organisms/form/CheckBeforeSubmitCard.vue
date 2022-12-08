@@ -172,7 +172,7 @@ export default Vue.extend({
       const fields: Field[] = [
         {
           key: "description",
-          label: "La desciription à publier sur le site est vide.",
+          label: "La description à publier sur le site est vide.",
         },
         {
           key: "photo_link",

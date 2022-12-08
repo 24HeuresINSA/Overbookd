@@ -22,16 +22,16 @@
 */
 
 .v-card {
-  &.VALIDATED {
+  &.validated {
     border-left: 5px solid green;
   }
-  &.SUBMITTED {
+  &.submitted {
     border-left: 5px solid orange;
   }
-  &.REFUSED {
+  &.refused {
     border-left: 5px solid red;
   }
-  &.DRAFT { 
+  &.draft { 
     border-left: 5px solid grey;
   }
 }

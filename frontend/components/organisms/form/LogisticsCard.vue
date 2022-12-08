@@ -41,7 +41,6 @@ import { Gear } from "~/utils/models/catalog.model";
 import {
   FA,
   GearRequestCreation,
-  Status,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
@@ -92,8 +91,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    validationStatus(): Status {
-      return getFAValidationStatus(this.mFA, this.owner);
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {

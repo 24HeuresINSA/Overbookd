@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, Status } from "~/utils/models/FA";
+import { FA } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import {
   isAnimationValidatedBy,
@@ -61,8 +61,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    validationStatus(): Status {
-      return getFAValidationStatus(this.mFA, this.owner);
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {
