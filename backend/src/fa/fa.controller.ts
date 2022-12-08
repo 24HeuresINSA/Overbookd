@@ -10,6 +10,7 @@ import {
   Request,
   Patch,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { FaService } from './fa.service';
 import { CreateFaDto } from './dto/create-fa.dto';
@@ -24,6 +25,7 @@ import {
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -34,6 +36,7 @@ import { GearRequestResponseDto } from './gear-requests/dto/gearRequestResponse.
 import { GearRequestFormRequestDto } from './gear-requests/dto/gearRequestFormRequest.dto';
 import { GearRequestsService } from './gear-requests/gearRequests.service';
 import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
+import { FASearchRequestDto } from './dto/faSearchRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -64,8 +67,16 @@ export class FaController {
     description: 'Get all fa',
     type: Array,
   })
-  findAll(): Promise<AllFaResponse[] | null> {
-    return this.faService.findAll();
+  @ApiQuery({
+    name: 'isDeleted',
+    required: false,
+    type: Boolean,
+    description: 'Get FAs that are deleted',
+  })
+  findAll(
+    @Query() searchRequest: FASearchRequestDto,
+  ): Promise<AllFaResponse[] | null> {
+    return this.faService.findAll(searchRequest);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

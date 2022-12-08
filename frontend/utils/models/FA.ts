@@ -72,6 +72,8 @@ export interface FA {
   time_windows?: time_windows[];
 }
 
+export type CreateFA = Pick<FA, "name">;
+
 export interface fa_collaborators {
   collaborator: collaborator;
 }
@@ -195,4 +197,9 @@ export interface GearRequest {
   };
   quantity: number;
   gear: Gear;
+}
+
+export interface SearchFA {
+  isDeleted?: boolean;
+  status?: Status;
 }
