@@ -35,11 +35,8 @@
       <FormSummary class="summary"></FormSummary>
     </div>
     <v-container class="container fa">
-      <FAGeneralCard id="general" :is-disabled="isDisabled"></FAGeneralCard>
-      <FADetailCard
-        id="detail"
-        :is-disabled="isDisabled && !me.team.includes('humain')"
-      ></FADetailCard>
+      <FAGeneralCard id="general"></FAGeneralCard>
+      <FADetailCard id="detail" :is-disabled="isDisabled"></FADetailCard>
       <SignaCard id="signa" :is-disabled="isDisabled"></SignaCard>
       <TimeframeTable id="timeframe" :is-disabled="isDisabled"></TimeframeTable>
       <SecurityCard id="security" :is-disabled="isDisabled"></SecurityCard>
@@ -57,20 +54,17 @@
       <LogisticsCard
         title="Matos"
         owner="matos"
-        :types="Object.values({})"
         :is-disabled="isDisabled"
       ></LogisticsCard>
 
       <LogisticsCard
         title="Barrières"
         owner="barrieres"
-        :types="Object.values({})"
         :is-disabled="isDisabled"
       ></LogisticsCard>
       <LogisticsCard
         title="Matos Elec / Eau"
         owner="elec"
-        :types="Object.values({})"
         :is-disabled="isDisabled"
       ></LogisticsCard>
       <ElecLogisticCard id="elec" :is-disabled="isDisabled"></ElecLogisticCard>
@@ -321,12 +315,6 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
-      /*
-      await safeCall(
-        this.$store,
-        this.faRepo.updateFA(this, this.mFA.id, this.mFA),
-        "undelete"
-      );*/
     },
 
     async validate(validator: team) {
@@ -363,7 +351,7 @@ export default Vue.extend({
       this.saveFA();
     },
 
-    isAnimatonValidatedBy(validator: team) {
+    isAnimationValidatedBy(validator: team) {
       return this.FA.mFA.fa_validation?.some(
         (validation: fa_validation) => validation.Team.id === validator.id
       );
@@ -376,7 +364,7 @@ export default Vue.extend({
     },
 
     getIconColor(validator: team) {
-      if (this.isAnimatonValidatedBy(validator)) {
+      if (this.isAnimationValidatedBy(validator)) {
         return "green";
       }
       if (this.isAnimationRejectedBy(validator)) {

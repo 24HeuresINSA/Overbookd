@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="cardColor">
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
@@ -12,14 +12,14 @@
         <v-text-field
           :value="mFA.name"
           label="Nom de la FA"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('name', $event)"
         ></v-text-field>
         <v-select
           :value="mFA.type"
           label="Type"
-          :items="all_types"
-          :disabled="isDisabled"
+          :items="allTypes"
+          :disabled="isValidatedByOwner"
           @change="onChange('type', $event)"
         ></v-select>
         <v-select
@@ -28,7 +28,7 @@
           :items="teams"
           item-value="id"
           item-text="name"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('team_id', $event)"
         ></v-select>
         <v-autocomplete
@@ -37,7 +37,7 @@
           :items="users"
           item-value="id"
           item-text="username"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('in_charge', $event)"
         ></v-autocomplete>
       </v-form>
@@ -48,17 +48,16 @@
 <script lang="ts">
 import Vue from "vue";
 import { FA, fa_type } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "FAGeneralCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
     users: [] as Array<any>,
+    owner: "signa",
   }),
   computed: {
     mFA(): FA {
@@ -67,9 +66,15 @@ export default Vue.extend({
     teams(): Array<any> {
       return this.$accessor.team.allTeams;
     },
-    all_types(): Array<string> {
+    allTypes(): Array<string> {
       //return fa_type as an array
       return Object.values(fa_type);
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   async mounted() {
