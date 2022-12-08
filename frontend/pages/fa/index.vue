@@ -167,15 +167,12 @@
 <script>
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
-import { RepoFactory } from "../../repositories/repoFactory";
-import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "Fa",
   components: { SearchTeam },
   data() {
     return {
-      FAs: [],
       mFA: null,
       search: undefined,
       filter: {},
@@ -207,6 +204,9 @@ export default {
     };
   },
   computed: {
+    FAs() {
+      return this.$accessor.FA.FAs;
+    },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
@@ -252,15 +252,7 @@ export default {
       const status =
         this.selectedStatus === "" ? undefined : this.selectedStatus;
       const search = { isDeleted: this.isDeletedFilter, status };
-      const res = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.getAllFAs(this, search)
-      );
-      if (res) {
-        this.FAs = res.data;
-      } else {
-        alert("error");
-      }
+      await this.$accessor.FA.fetchFAs(search);
     },
     preDelete(fa) {
       this.mFA = fa;
@@ -319,29 +311,16 @@ export default {
       const FA = {
         name: this.faName,
       };
-      const res = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.createNewFA(this, FA),
-        { successMessage: "FA créée 🥳" }
-      );
-      if (res) {
-        await this.$router.push({ path: "fa/" + res.id });
+      await this.$accessor.FA.createFa(FA);
+      const savedFA = this.$accessor.FA.mFA;
+      if (savedFA.id) {
+        await this.$router.push({ path: "fa/" + savedFA.id });
       }
     },
     async deleteFA() {
-      const res = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.deleteFA(this, this.mFA.id),
-        {
-          successMessage: "FA supprimée 🥳",
-          errorMessage: "FA non supprimée 😢",
-        }
-      );
-      if (res) {
-        this.FAs = this.FAs.filter((e) => e.id !== this.mFA.id);
-        this.isDeleteFAOpen = false;
-        this.mFA = undefined;
-      }
+      await this.$accessor.FA.deleteFA(this.mFA.id);
+      this.isDeleteFAOpen = false;
+      this.mFA = undefined;
     },
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
