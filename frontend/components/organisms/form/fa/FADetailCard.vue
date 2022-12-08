@@ -46,6 +46,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
+import { FA } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getCardColor,
@@ -58,11 +59,8 @@ export default Vue.extend({
     owner: "humain",
   }),
   computed: {
-    mFA(): any {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
-    },
-    isInCharge(): boolean {
-      return this.$accessor.user.me.team.includes("humain");
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);

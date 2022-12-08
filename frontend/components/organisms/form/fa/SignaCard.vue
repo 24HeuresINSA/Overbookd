@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :class="isDisabled ? 'disabled' : ''">
+    <v-card :class="cardColor">
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
         >Contactez la signa à signaletique@24heures.org pour ajouter des lieux
@@ -11,7 +11,7 @@
           label="Lieux"
           :value="currentLocations"
           :items="locations"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           item-text="name"
           item-value="id"
           @change="onChange('location_id', $event)"
@@ -19,13 +19,13 @@
         <v-switch
           v-model="isSignaRequired"
           label="Besoin signa"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
         ></v-switch>
         <div v-if="isSignaRequired">
           <v-data-table :headers="headers" :items="signalisations">
             <template #[`item.action`]="{ index }">
               <v-btn
-                v-if="!isDisabled"
+                v-if="!isValidatedByOwner"
                 icon
                 @click="deleteSignalisation(index)"
               >
@@ -38,14 +38,14 @@
                 label="Nombre"
                 type="number"
                 :rules="[rules.number, rules.min]"
-                :disabled="isDisabled"
+                :disabled="isValidatedByOwner"
                 @change="updateSignalisationCount(index, $event)"
               ></v-text-field>
             </template>
           </v-data-table>
         </div>
       </v-card-text>
-      <v-card-actions v-if="isSignaRequired && !isDisabled">
+      <v-card-actions v-if="!isValidatedByOwner">
         <v-spacer></v-spacer>
         <v-btn text @click="isSignaFormOpen = true"
           >Ajouter une signalisation
@@ -63,7 +63,6 @@
               type="select"
               label="Type"
               :items="signaType"
-              dense
               required
             ></v-select>
 
@@ -95,19 +94,18 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { fa_signa_needs, signa_type } from "~/utils/models/FA";
+import { FA, fa_signa_needs, signa_type } from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "SignaCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
+    owner: "signa",
     isSignaRequired: false,
     isSignaFormOpen: false,
     headers: [
@@ -128,8 +126,11 @@ export default Vue.extend({
     },
   }),
   computed: {
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
     signalisations(): any {
-      return this.$accessor.FA.mFA.fa_signa_needs;
+      return this.mFA.fa_signa_needs;
     },
     signaType(): Array<string> {
       return Object.values(signa_type);
@@ -142,6 +143,12 @@ export default Vue.extend({
     locations(): SignaLocation[] {
       return this.$accessor.signaLocation.signaLocations;
     },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
+    },
   },
   watch: {
     signalisations: {
@@ -153,13 +160,7 @@ export default Vue.extend({
       deep: true,
     },
   },
-  async mounted() {
-    // await this.$accessor.location.getAllLocations();
-  },
   methods: {
-    /*selectLocations(locations: string[]) {
-      this.$accessor.FA.setLocations(locations);
-    },*/
     addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
         return this.$store.dispatch("notif/pushNotification", {

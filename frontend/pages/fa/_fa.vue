@@ -36,8 +36,8 @@
     </div>
     <v-container class="container fa">
       <FAGeneralCard id="general"></FAGeneralCard>
-      <FADetailCard id="detail" :is-disabled="isDisabled"></FADetailCard>
-      <SignaCard id="signa" :is-disabled="isDisabled"></SignaCard>
+      <FADetailCard id="detail"></FADetailCard>
+      <SignaCard id="signa"></SignaCard>
       <TimeframeTable id="timeframe" :is-disabled="isDisabled"></TimeframeTable>
       <SecurityCard id="security" :is-disabled="isDisabled"></SecurityCard>
       <CollaboratorCard
