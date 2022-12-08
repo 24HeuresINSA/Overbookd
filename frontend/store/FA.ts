@@ -3,6 +3,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
   collaborator,
+  CreateFA,
   FA,
   fa_collaborators,
   fa_comments,
@@ -11,6 +12,7 @@ import {
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
+  SearchFA,
   Status,
   subject_type,
   time_windows,
@@ -21,6 +23,7 @@ import { sendNotification } from "./catalog";
 const repo = RepoFactory.faRepo;
 
 export const state = () => ({
+  FAs: [] as FA[],
   mFA: {
     status: Status.DRAFT,
     name: "",
@@ -168,6 +171,18 @@ export const mutations = mutationTree(state, {
   SET_COMMENTS({ mFA }, comments: fa_comments[]) {
     mFA.fa_comments = comments;
   },
+
+  SET_FAS(state, fas: FA[]) {
+    state.FAs = fas;
+  },
+
+  ADD_FA({ FAs }, fa: FA) {
+    FAs.push(fa);
+  },
+
+  DELETE_FA(state, faId: number) {
+    state.FAs = state.FAs.filter((fa) => fa.id !== faId);
+  },
 });
 
 export const actions = actionTree(
@@ -190,15 +205,6 @@ export const actions = actionTree(
       commit("SET_GEAR_REQUESTS", resGearRequests.data);
       commit("SET_FA", resFA.data);
       return resFA.data;
-    },
-
-    fetchAll: async function ({ commit }) {
-      const res: any = await safeCall(this, repo.getAllFAs(this));
-      if (res && res.data) {
-        commit("SET_ALL_FA", res.data);
-        return res;
-      }
-      return null;
     },
 
     submitForReview: async function (
@@ -402,6 +408,7 @@ export const actions = actionTree(
       }
       commit("DELETE_ELECTRICITY_NEED", index);
     },
+
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
       const res = await RepoFactory.faRepo.createGearRequest(
         this,
@@ -414,11 +421,13 @@ export const actions = actionTree(
       );
       commit("ADD_GEAR_REQUEST", res.data);
     },
+
     async removeGearRequest({ commit, state }, gearId: number) {
       await RepoFactory.faRepo.deleteGearRequest(this, state.mFA.id, gearId);
       sendNotification(this, "La demande de matériel a été supprimée 🗑️");
       commit("REMOVE_GEAR_REQUEST", gearId);
     },
+
     async updateGearTimeWindow({ commit, state }, time_windows: time_windows) {
       try {
         const gearRequests = await Promise.all(
@@ -441,6 +450,45 @@ export const actions = actionTree(
           "La mise a jour des demandes de matos a echouee ❌"
         );
       }
+    },
+
+    async fetchFAs({ commit }, search?: SearchFA) {
+      const res = await safeCall<FA[]>(
+        this,
+        RepoFactory.faRepo.getAllFAs(this, search),
+        {
+          errorMessage: "Impossible de charger les FAs",
+        }
+      );
+      if (!res) return;
+      commit("SET_FAS", res.data);
+    },
+
+    async createFa({ commit, dispatch }, fa: CreateFA) {
+      const res = await safeCall<FA>(
+        this,
+        RepoFactory.faRepo.createNewFA(this, fa),
+        {
+          successMessage: "FA créée 🥳",
+          errorMessage: "FA non créée 😢",
+        }
+      );
+      if (!res) return;
+      commit("ADD_FA", res.data);
+      dispatch("setFA", res.data);
+    },
+
+    async deleteFA({ commit }, faId: number) {
+      const res = await safeCall(
+        this,
+        RepoFactory.faRepo.deleteFA(this, faId),
+        {
+          successMessage: "FA supprimée 🥳",
+          errorMessage: "FA non supprimée 😢",
+        }
+      );
+      if (!res) return;
+      commit("DELETE_FA", faId);
     },
   }
 );

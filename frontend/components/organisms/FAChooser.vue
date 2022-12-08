@@ -77,7 +77,7 @@ export default Vue.extend({
   },
   async mounted() {
     // Update list of FAs
-    await this.$accessor.FA.fetchAll();
+    await this.$accessor.FA.fetchFAs();
   },
   methods: {
     openDialog() {

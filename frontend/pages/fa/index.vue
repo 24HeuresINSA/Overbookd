@@ -18,19 +18,19 @@
 
             <v-list dense shaped>
               <v-list-item-group v-model="selectedStatus">
-                <v-list-item>
+                <v-list-item :value="''">
                   <v-list-item-title class="small">Tous</v-list-item-title>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item :value="'DRAFT'">
                   <v-list-item-title class="small">Brouillon</v-list-item-title>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item :value="'SUBMITTED'">
                   <v-list-item-title class="small">Soumise</v-list-item-title>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item :value="'REFUSED'">
                   <v-list-item-title class="small">Refusée </v-list-item-title>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item :value="'VALIDATED'">
                   <v-list-item-title class="small">Validée </v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
@@ -167,15 +167,12 @@
 <script>
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
-import { RepoFactory } from "../../repositories/repoFactory";
-import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "Fa",
   components: { SearchTeam },
   data() {
     return {
-      FAs: [],
       mFA: null,
       search: undefined,
       filter: {},
@@ -183,7 +180,7 @@ export default {
       sortDesc: false,
       page: 1,
       itemsPerPage: 4,
-      selectedStatus: 0,
+      selectedStatus: "",
       selectedTeam: undefined,
       headers: [
         { text: "Statut", value: "status" },
@@ -207,6 +204,9 @@ export default {
     };
   },
   computed: {
+    FAs() {
+      return this.$accessor.FA.FAs;
+    },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
@@ -217,9 +217,7 @@ export default {
       return this.$accessor.user.hasRole("admin");
     },
     selectedFAs() {
-      let mFAs = this.filterByStatus(this.FAs, this.selectedStatus);
-      mFAs = this.filterByDeletedStatus(mFAs);
-      mFAs = this.filterBySelectedTeam(mFAs, this.selectedTeam);
+      let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
       mFAs = this.filterByValidatorStatus(mFAs);
       const options = {
         // Search in `author` and in `tags` array
@@ -232,18 +230,17 @@ export default {
       return fuse.search(this.search).map((e) => e.item);
     },
   },
+  watch: {
+    async selectedStatus() {
+      await this.fetchFas();
+    },
+    async isDeletedFilter() {
+      await this.fetchFas();
+    },
+  },
   async mounted() {
     if (this.$accessor.user.hasRole("hard")) {
-      // get FAs
-      const res = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.getAllFAs(this)
-      );
-      if (res) {
-        this.FAs = res.data;
-      } else {
-        alert("error");
-      }
+      return this.fetchFas();
     } else {
       await this.$router.push({
         path: "/",
@@ -251,6 +248,12 @@ export default {
     }
   },
   methods: {
+    async fetchFas() {
+      const status =
+        this.selectedStatus === "" ? undefined : this.selectedStatus;
+      const search = { isDeleted: this.isDeletedFilter, status };
+      await this.$accessor.FA.fetchFAs(search);
+    },
     preDelete(fa) {
       this.mFA = fa;
       this.isDeleteFAOpen = true;
@@ -308,29 +311,16 @@ export default {
       const FA = {
         name: this.faName,
       };
-      const res = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.createNewFA(this, FA),
-        { successMessage: "FA créée 🥳" }
-      );
-      if (res) {
-        await this.$router.push({ path: "fa/" + res.id });
+      await this.$accessor.FA.createFa(FA);
+      const savedFA = this.$accessor.FA.mFA;
+      if (savedFA.id) {
+        await this.$router.push({ path: "fa/" + savedFA.id });
       }
     },
     async deleteFA() {
-      const res = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.deleteFA(this, this.mFA.id),
-        {
-          successMessage: "FA supprimée 🥳",
-          errorMessage: "FA non supprimée 😢",
-        }
-      );
-      if (res) {
-        this.FAs = this.FAs.filter((e) => e.id !== this.mFA.id);
-        this.isDeleteFAOpen = false;
-        this.mFA = undefined;
-      }
+      await this.$accessor.FA.deleteFA(this.mFA.id);
+      this.isDeleteFAOpen = false;
+      this.mFA = undefined;
     },
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
