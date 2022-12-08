@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="cardColor">
     <v-card-title>Détail</v-card-title>
     <v-card-subtitle
       >Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est
@@ -10,32 +10,32 @@
         <RichEditor
           :data="mFA.description"
           label="Description"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           class="mb-4"
           @change="onChange('description', $event)"
         ></RichEditor>
         <v-text-field
           :value="mFA.photo_link"
           label=" Lien de la photo de l'activité sur le drive"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('photo_link', $event)"
         ></v-text-field>
         <v-switch
           :value="mFA.is_publishable"
           label="Publier sur le site / plaquette"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_publishable', $event)"
         ></v-switch>
         <v-switch
           :value="mFA.is_major"
           label="Anim phare"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_major', $event)"
         ></v-switch>
         <v-switch
           :value="mFA.is_kids"
           label="Anim pour les gosses"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_kids', $event)"
         ></v-switch>
       </v-form>
@@ -46,19 +46,29 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "FADetailCard",
   components: { RichEditor },
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  data: () => ({
+    owner: "humain",
+  }),
   computed: {
     mFA(): any {
       return this.$accessor.FA.mFA;
+    },
+    isInCharge(): boolean {
+      return this.$accessor.user.me.team.includes("humain");
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   methods: {

@@ -57,7 +57,7 @@ export default Vue.extend({
   name: "FAGeneralCard",
   data: () => ({
     users: [] as Array<any>,
-    owner: "signa",
+    owner: "humain",
   }),
   computed: {
     mFA(): FA {
