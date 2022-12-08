@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :class="cardColor">
+    <v-card :class="validationStatus">
       <v-card-title>Besoin d'électricité</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
@@ -58,10 +58,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { electricity_type, FA, fa_electricity_needs } from "~/utils/models/FA";
+import {
+  electricity_type,
+  FA,
+  fa_electricity_needs,
+  Status,
+} from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 const headers = [
@@ -96,8 +101,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   methods: {

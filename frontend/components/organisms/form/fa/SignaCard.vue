@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :class="cardColor">
+    <v-card :class="validationStatus">
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
         >Contactez la signa à signaletique@24heures.org pour ajouter des lieux
@@ -94,12 +94,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_signa_needs, signa_type } from "~/utils/models/FA";
+import { FA, fa_signa_needs, signa_type, Status } from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -146,8 +146,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   watch: {

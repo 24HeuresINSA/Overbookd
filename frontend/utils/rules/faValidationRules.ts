@@ -1,27 +1,24 @@
-import { fa_refuse, fa_validation, Status } from "../models/FA";
+import { FA, fa_refuse, fa_validation, Status } from "../models/FA";
 
-export type ValidationFAColor = "red" | "green" | "orange" | "grey";
-
-export function isAnimationValidatedBy(
-  mFA: any,
-  value: string | null
-): boolean {
-  return mFA.fa_validation?.some(
-    (validation: fa_validation) => validation.Team.code === value
+export function isAnimationValidatedBy(fa: any, teamCode: string): boolean {
+  return fa.fa_validation?.some(
+    (validation: fa_validation) => validation.Team.code === teamCode
   );
 }
 
-export function isAnimationRefusedBy(mFA: any, value: string | null): boolean {
-  return mFA.fa_refuse?.some((refuse: fa_refuse) => refuse.Team.code === value);
+export function isAnimationRefusedBy(fa: any, teamCode: string): boolean {
+  return fa.fa_refuse?.some(
+    (refuse: fa_refuse) => refuse.Team.code === teamCode
+  );
 }
 
-export function getCardColor(mFA: any, value: string | null): string {
-  if (isAnimationValidatedBy(mFA, value)) return "green-border";
-  if (isAnimationRefusedBy(mFA, value)) return "red-border";
-  if (mFA.status === Status.SUBMITTED) return "orange-border";
-  return "";
+export function getFAValidationStatus(fa: FA, teamCode: string): Status {
+  if (isAnimationValidatedBy(fa, teamCode)) return Status.VALIDATED;
+  if (isAnimationRefusedBy(fa, teamCode)) return Status.REFUSED;
+  if (fa.status === Status.SUBMITTED) return Status.SUBMITTED;
+  return Status.DRAFT;
 }
 
 export interface faValidationRulesData {
-  rules: Record<string, (mFA: any, value: string | null) => string | boolean>;
+  rules: Record<string, (fa: any, teamCode: string | null) => string | boolean>;
 }

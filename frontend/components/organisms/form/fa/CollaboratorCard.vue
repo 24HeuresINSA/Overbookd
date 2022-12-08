@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="cardColor">
+  <v-card :class="validationStatus">
     <v-card-title>Presta</v-card-title>
     <v-card-subtitle
       >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
@@ -55,10 +55,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { collaborator, FA, fa_collaborators } from "~/utils/models/FA";
+import { collaborator, FA, fa_collaborators, Status } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -83,8 +83,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
     rulePhone(): any {
       return [

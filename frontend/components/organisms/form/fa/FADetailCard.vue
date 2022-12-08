@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="cardColor">
+  <v-card :class="validationStatus">
     <v-card-title>Détail</v-card-title>
     <v-card-subtitle
       >Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est
@@ -46,10 +46,10 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
-import { FA } from "~/utils/models/FA";
+import { FA, Status } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -65,8 +65,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   methods: {

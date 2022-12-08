@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :class="cardColor">
+    <v-card :class="validationStatus">
       <v-card-title>Créneaux</v-card-title>
 
       <v-data-table
@@ -74,10 +74,10 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
-import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
+import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -111,8 +111,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   methods: {

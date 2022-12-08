@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="cardColor">
+  <v-card :class="validationStatus">
     <v-card-title>Besoin d'eau</v-card-title>
     <v-card-subtitle
       >Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu
@@ -28,10 +28,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA } from "~/utils/models/FA";
+import { FA, Status } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -46,8 +46,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="cardColor">
+  <v-card :class="validationStatus">
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
@@ -47,10 +47,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_type } from "~/utils/models/FA";
+import { FA, fa_type, Status } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -73,8 +73,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   async mounted() {

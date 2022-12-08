@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="cardColor">
+  <v-card :class="validationStatus">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
       <v-container>
@@ -41,13 +41,14 @@ import { Gear } from "~/utils/models/catalog.model";
 import {
   FA,
   GearRequestCreation,
+  Status,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import {
   isAnimationValidatedBy,
-  getCardColor,
+  getFAValidationStatus,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -91,8 +92,8 @@ export default Vue.extend({
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
-    cardColor(): string {
-      return getCardColor(this.mFA, this.owner);
+    validationStatus(): Status {
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   methods: {
