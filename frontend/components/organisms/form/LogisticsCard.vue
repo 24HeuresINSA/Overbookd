@@ -1,9 +1,9 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="cardColor">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
       <v-container>
-        <v-form v-if="!isDisabled" class="flex-row">
+        <v-form v-if="!isValidatedByOwner" class="flex-row">
           <v-text-field
             v-model="quantity"
             type="number"
@@ -26,7 +26,7 @@
         </v-form>
         <LogisticsTable
           :owner="owner"
-          :is-disabled="isDisabled"
+          :is-disabled="isValidatedByOwner"
         ></LogisticsTable>
       </v-container>
     </v-card-text>
@@ -38,33 +38,25 @@ import Vue from "vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
 import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import { Gear } from "~/utils/models/catalog.model";
-import { GearRequestCreation, time_windows_type } from "~/utils/models/FA";
+import {
+  FA,
+  GearRequestCreation,
+  time_windows,
+  time_windows_type,
+} from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "LogisticsCard",
   components: { LogisticsTable, SearchGear },
   props: {
-    /**
-     * The title to be displayed
-     */
     title: {
       type: String,
       default: () => "",
-    },
-    /**
-     * Array of categories allowed for this component
-     */
-    types: {
-      type: Array,
-      default: () => [],
-    },
-    /**
-     * If the element is editable or not
-     */
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
     },
     owner: {
       type: String,
@@ -80,20 +72,27 @@ export default Vue.extend({
     },
   }),
   computed: {
-    isValid() {
-      return (
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    isValid(): boolean {
+      return Boolean(
         this.gear &&
-        parseInt(this.quantity) >= 1 &&
-        this.$accessor.FA.mFA.time_windows?.find(
-          (tw) => tw.type === time_windows_type.MATOS
-        ) &&
-        !this.isDisabled
+          parseInt(this.quantity) >= 1 &&
+          this.timeWindow &&
+          !this.isValidatedByOwner
       );
     },
-    timeWindow() {
+    timeWindow(): time_windows | undefined {
       return this.$accessor.FA.mFA.time_windows?.find(
         (tw) => tw.type === time_windows_type.MATOS
       );
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   methods: {

@@ -1,5 +1,7 @@
 import { fa_refuse, fa_validation, Status } from "../models/FA";
 
+export type ValidationFAColor = "red" | "green" | "orange" | "grey";
+
 export function isAnimationValidatedBy(
   mFA: any,
   value: string | null
