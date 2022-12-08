@@ -381,9 +381,9 @@ export default Vue.extend({
       if (!equipRes) {
         this.snack.display("Erreur lors du chargement des équipements");
       }
-      const resFA = await this.$accessor.FA.fetchAll();
+      await this.$accessor.FA.fetchFAs();
       const resFT = await this.$accessor.FT.fetchAll();
-      if (!resFA || !resFT) {
+      if (!resFT) {
         this.snack.display("Erreur lors du chargement des équipements");
       }
 

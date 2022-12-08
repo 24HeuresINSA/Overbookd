@@ -452,7 +452,7 @@ export const actions = actionTree(
       }
     },
 
-    async fetchFAs({ commit }, search: SearchFA) {
+    async fetchFAs({ commit }, search?: SearchFA) {
       const res = await safeCall<FA[]>(
         this,
         RepoFactory.faRepo.getAllFAs(this, search),
