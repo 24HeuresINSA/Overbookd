@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-card :class="isDisabled ? 'disabled' : ''">
+    <v-card :class="cardColor">
       <v-card-title>Besoin d'électricité</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
           <template #[`item.action`]="{ index }">
             <v-btn
-              v-if="!isDisabled"
+              v-if="!isValidatedByOwner"
               icon
               @click="deleteElectricityNeed(index)"
             >
@@ -15,7 +15,7 @@
           </template>
         </v-data-table>
       </v-card-text>
-      <v-card-actions v-if="!isDisabled">
+      <v-card-actions v-if="!isValidatedByOwner">
         <v-spacer></v-spacer>
         <v-btn text @click="isElectricityNeedDialogOpen = true">Ajouter</v-btn>
       </v-card-actions>
@@ -58,7 +58,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { electricity_type, fa_electricity_needs } from "~/utils/models/FA";
+import { electricity_type, FA, fa_electricity_needs } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },
@@ -69,13 +73,8 @@ const headers = [
 
 export default Vue.extend({
   name: "ElecLogisticCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
+    owner: "elec",
     headers,
     isElectricityNeedDialogOpen: false,
     newElectricityNeed: {
@@ -85,11 +84,20 @@ export default Vue.extend({
     },
   }),
   computed: {
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
     electricityNeeds(): any {
-      return this.$accessor.FA.mFA.fa_electricity_needs;
+      return this.mFA.fa_electricity_needs;
     },
     electricityType(): Array<string> {
       return Object.values(electricity_type);
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="cardColor">
     <v-card-title>Sécurité</v-card-title>
     <v-card-subtitle
       >Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
@@ -10,7 +10,7 @@
         <v-switch
           :value="mFA.is_pass_required"
           label="Besoin de Pass Sécu"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_pass_required', $event)"
         ></v-switch>
         <v-text-field
@@ -19,7 +19,7 @@
           label="Nombre de Pass Sécu"
           type="number"
           :rules="[rules.number, rules.min]"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('number_of_pass', $event)"
         ></v-text-field>
       </v-form>
@@ -28,7 +28,7 @@
         label="Dispositif de sécurité particulier"
         auto-grow
         rows="2"
-        :disabled="isDisabled"
+        :disabled="isValidatedByOwner"
         prepend-icon="mdi-security"
         @change="onChange('security_needs', $event)"
       ></v-textarea>
@@ -40,16 +40,15 @@
 import Vue from "vue";
 import { FA } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "SecurityCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
+    owner: "secu",
     rules: {
       number: isNumber,
       min: min(1),
@@ -58,6 +57,12 @@ export default Vue.extend({
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   methods: {

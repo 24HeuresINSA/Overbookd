@@ -38,40 +38,21 @@
       <FAGeneralCard id="general"></FAGeneralCard>
       <FADetailCard id="detail"></FADetailCard>
       <SignaCard id="signa"></SignaCard>
-      <TimeframeTable id="timeframe" :is-disabled="isDisabled"></TimeframeTable>
-      <SecurityCard id="security" :is-disabled="isDisabled"></SecurityCard>
-      <CollaboratorCard
-        id="presta"
-        :is-disabled="isDisabled"
-      ></CollaboratorCard>
+      <TimeframeTable id="timeframe"></TimeframeTable>
+      <SecurityCard id="security"></SecurityCard>
+      <CollaboratorCard id="presta"></CollaboratorCard>
       <h2 id="log" class="log-text">Logistique 🚚</h2>
       <h4 class="log-text">
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
       </h4>
-      <LogisticTimeWindow :is-disabled="isDisabled"></LogisticTimeWindow>
-      <LogisticsCard
-        title="Matos"
-        owner="matos"
-        :is-disabled="isDisabled"
-      ></LogisticsCard>
-
-      <LogisticsCard
-        title="Barrières"
-        owner="barrieres"
-        :is-disabled="isDisabled"
-      ></LogisticsCard>
-      <LogisticsCard
-        title="Matos Elec / Eau"
-        owner="elec"
-        :is-disabled="isDisabled"
-      ></LogisticsCard>
-      <ElecLogisticCard id="elec" :is-disabled="isDisabled"></ElecLogisticCard>
-      <WaterLogisticCard
-        id="water"
-        :is-disabled="isDisabled"
-      ></WaterLogisticCard>
+      <LogisticTimeWindow></LogisticTimeWindow>
+      <LogisticsCard title="Matos" owner="matos"></LogisticsCard>
+      <LogisticsCard title="Barrières" owner="barrieres"></LogisticsCard>
+      <LogisticsCard title="Matos Elec / Eau" owner="elec"></LogisticsCard>
+      <ElecLogisticCard id="elec"></ElecLogisticCard>
+      <WaterLogisticCard id="water"></WaterLogisticCard>
       <CommentCard id="comment"></CommentCard>
       <!-- <FTCard id="ft"></FTCard> -->
     </v-container>
@@ -280,12 +261,6 @@ export default Vue.extend({
         return mValidator;
       }
       return [];
-    },
-    isDisabled(): boolean {
-      return (
-        (this.mFA.status === "SUBMITTED" || this.mFA.status === "VALIDATED") &&
-        !this.me.team.includes("admin")
-      );
     },
   },
 

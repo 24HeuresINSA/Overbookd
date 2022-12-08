@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="cardColor">
     <v-card-title>Presta</v-card-title>
     <v-card-subtitle
       >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
@@ -10,20 +10,20 @@
         <v-text-field
           :value="collaborator.firstname"
           label="Prénom de l'intervenant*"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('firstname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.lastname"
           label="Nom de l'intervenant*"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('lastname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.phone"
           label="Téléphone*"
           :rules="rulePhone"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('phone', $event)"
         >
         </v-text-field>
@@ -31,20 +31,20 @@
           :value="collaborator.email"
           label="E-mail"
           :rules="ruleEmail"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('email', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.company"
           label="Société"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('company', $event)"
         >
         </v-text-field>
         <v-text-field
           :value="collaborator.comment"
           label="Commentaire"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('comment', $event)"
         >
         </v-text-field>
@@ -55,26 +55,36 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { collaborator, fa_collaborators } from "~/utils/models/FA";
+import { collaborator, FA, fa_collaborators } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "CollaboratorCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  data: () => ({
+    owner: "humain",
+  }),
   computed: {
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
     collaborators(): any {
-      return this.$accessor.FA.mFA.fa_collaborators;
+      return this.mFA.fa_collaborators;
     },
     collaborator(): collaborator {
-      const collaborators = this.$accessor.FA.mFA.fa_collaborators;
+      const collaborators = this.mFA.fa_collaborators;
       if (collaborators && collaborators.length > 0) {
         return collaborators[0].collaborator;
       }
       return {};
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
     rulePhone(): any {
       return [

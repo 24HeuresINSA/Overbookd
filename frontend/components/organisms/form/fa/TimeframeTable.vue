@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :class="isDisabled ? 'disabled' : ''">
+    <v-card :class="cardColor">
       <v-card-title>Créneaux</v-card-title>
 
       <v-data-table
@@ -25,13 +25,17 @@
         <template #[`item.action`]="{ index, item }">
           <div v-if="isAnimationTimeWindow(item)">
             <v-btn
-              v-if="!isDisabled"
+              v-if="!isValidatedByOwner"
               icon
               @click="openUpdateModal(index, item)"
             >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
+            <v-btn
+              v-if="!isValidatedByOwner"
+              icon
+              @click="deleteTimeframe(index)"
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </div>
@@ -40,7 +44,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="!isDisabled" text @click="isAddDialogOpen = true"
+        <v-btn v-if="!isValidatedByOwner" text @click="isAddDialogOpen = true"
           >Ajouter un créneau</v-btn
         >
       </v-card-actions>
@@ -70,18 +74,17 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
+import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "TimeframeTable",
   components: { TimeframeCalendar, TimeframeForm },
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
+    owner: "humain",
     headers: [
       { text: "Type", value: "type" },
       { text: "Date de début", value: "dateStart" },
@@ -101,6 +104,15 @@ export default Vue.extend({
     },
     type() {
       return time_windows_type.ANIM;
+    },
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   methods: {

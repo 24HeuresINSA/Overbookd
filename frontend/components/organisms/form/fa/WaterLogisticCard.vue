@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="cardColor">
     <v-card-title>Besoin d'eau</v-card-title>
     <v-card-subtitle
       >Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu
@@ -16,9 +16,9 @@
         ></v-switch>
         -->
         <v-text-field
-          :value="waterNeed.water_needs"
+          :value="mFA.water_needs"
           label="Desctiption du besoin en eau"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('water_needs', $event)"
         ></v-text-field>
       </v-form>
@@ -29,18 +29,25 @@
 <script lang="ts">
 import Vue from "vue";
 import { FA } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getCardColor,
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "WaterLogisticCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  data: () => ({
+    owner: "elec",
+  }),
   computed: {
-    waterNeed(): FA {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    cardColor(): string {
+      return getCardColor(this.mFA, this.owner);
     },
   },
   methods: {
