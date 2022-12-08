@@ -325,12 +325,12 @@ export default Vue.extend({
         const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
         const elecStatus = getFAValidationStatus(this.mFA, "elec");
 
-        const areAllValidated =
-          matosStatus === Status.VALIDATED &&
-          barrieresStatus === Status.VALIDATED &&
+        const hasAtLeastOneLogValidation =
+          matosStatus === Status.VALIDATED ||
+          barrieresStatus === Status.VALIDATED ||
           elecStatus === Status.VALIDATED;
 
-        if (!areAllValidated) {
+        if (hasAtLeastOneLogValidation) {
           return confirm(
             "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
           )
