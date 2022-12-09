@@ -34,7 +34,7 @@
       </div>
       <FormSummary class="summary"></FormSummary>
     </div>
-    <v-container class="container">
+    <v-container class="container fa">
       <FAGeneralCard id="general" :is-disabled="isDisabled"></FAGeneralCard>
       <FADetailCard
         id="detail"
@@ -515,21 +515,6 @@ export default Vue.extend({
     justify-content: space-around;
     gap: 10px;
   }
-}
-
-.grey {
-  background-color: grey;
-}
-.orange {
-  background-color: orange;
-}
-
-.red {
-  background-color: red;
-}
-
-.green {
-  background-color: greenyellow;
 }
 
 @media only screen and (max-width: 965px) {
