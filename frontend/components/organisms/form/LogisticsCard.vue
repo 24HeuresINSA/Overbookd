@@ -118,7 +118,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped src="@/assets/style.scss">
+<style lang="scss" scoped>
 .flex-row {
   display: flex;
   align-items: center;

@@ -70,4 +70,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped src="@/assets/style.scss"></style>
+

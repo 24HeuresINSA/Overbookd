@@ -34,7 +34,7 @@
       </div>
       <FormSummary class="summary"></FormSummary>
     </div>
-    <v-container class="container">
+    <v-container class="container fa">
       <FAGeneralCard id="general" :is-disabled="isDisabled"></FAGeneralCard>
       <FADetailCard
         id="detail"
