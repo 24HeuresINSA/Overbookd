@@ -113,11 +113,4 @@ export default {
   build: {
     transpile: ["vuetify/lib", "tiptap-vuetify"],
   },
-
-  storybook: {
-    decorators: [
-      // VApp decorator for Vuetify
-      "<v-app><story/></v-app>",
-    ],
-  },
 };
