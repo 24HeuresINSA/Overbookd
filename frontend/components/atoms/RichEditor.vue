@@ -67,7 +67,6 @@ export default {
         },
       ],
       Bold,
-      Link,
       Code,
       HorizontalRule,
       Paragraph,
