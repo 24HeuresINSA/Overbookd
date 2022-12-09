@@ -16,7 +16,6 @@ enum subject_type {
   VALIDATED = 'VALIDATED',
   COMMENT = 'COMMENT',
   SUBMIT = 'SUBMIT',
-  RESET = 'RESET',
 }
 export class CreateFaCommentDto {
   @ApiProperty({

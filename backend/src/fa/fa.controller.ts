@@ -145,16 +145,32 @@ export class FaController {
   @Post('invalidate/:id')
   @ApiResponse({
     status: 204,
-    description: 'Unvalidate a fa',
+    description: 'Invalidate a fa',
     type: Promise<fa | null>,
   })
+  //get id and user id from token
   invalidate(
+    @Body() team_id: validationDto,
+    @Param('id', ParseIntPipe) faid: number,
+  ): Promise<fa | null> {
+    return this.faService.invalidatefa(faid, team_id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('orga')
+  @Post('refuse/:id')
+  @ApiResponse({
+    status: 204,
+    description: 'Refuse a fa',
+    type: Promise<fa | null>,
+  })
+  refuse(
     @Request() request: RequestWithUserPayload,
     @Body() team_id: validationDto,
     @Param('id', ParseIntPipe) faid: number,
   ): Promise<fa | null> {
     const user_id = request.user.id;
-    return this.faService.invalidatefa(user_id, faid, team_id);
+    return this.faService.refusefa(user_id, faid, team_id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

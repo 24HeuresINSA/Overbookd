@@ -115,7 +115,24 @@ export class FaService {
     return fa;
   }
 
-  async invalidatefa(
+  async invalidatefa(fa_id: number, body: validationDto): Promise<fa | null> {
+    const team_id = body.team_id;
+    const fa = await this.prisma.fa.findUnique({
+      where: { id: Number(fa_id) },
+    });
+    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    await this.prisma.$transaction([
+      this.prisma.fa_validation.deleteMany({
+        where: {
+          fa_id: fa_id,
+          team_id: team_id,
+        },
+      }),
+    ]);
+    return fa;
+  }
+
+  async refusefa(
     user_id: number,
     fa_id: number,
     body: validationDto,

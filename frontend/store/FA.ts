@@ -331,26 +331,44 @@ export const actions = actionTree(
       const barrieresValidated = isAnimationValidatedBy(state.mFA, "barrieres");
       const elecValidated = isAnimationValidatedBy(state.mFA, "elec");
 
-      // RESET VALIDATION
-
+      if (!matosValidated && !barrieresValidated && !elecValidated) return;
       let validTeams = "";
+
       if (matosValidated) {
         // @ts-ignore
-        validTeams += this.$accessor.team.getTeamByCode("matos").name;
+        const matosTeam = this.$accessor.team.getTeamByCode("matos");
+        const body: fa_validation_body = {
+          team_id: matosTeam.id,
+        };
+        await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
+        validTeams += matosTeam.name;
       }
+
       if (barrieresValidated) {
-        if (validTeams !== "") validTeams += ", ";
         // @ts-ignore
-        validTeams += this.$accessor.team.getTeamByCode("elec").name;
+        const barrieresTeam = this.$accessor.team.getTeamByCode("barrieres");
+        const body: fa_validation_body = {
+          team_id: barrieresTeam.id,
+        };
+        await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
+        if (validTeams !== "" && !elecValidated) validTeams += " et ";
+        else if (validTeams !== "") validTeams += ", ";
+        validTeams += barrieresTeam.name;
       }
+
       if (elecValidated) {
-        if (validTeams !== "") validTeams += " et ";
         // @ts-ignore
-        validTeams += this.$accessor.team.getTeamByCode("barrieres").name;
+        const elecTeam = this.$accessor.team.getTeamByCode("elec");
+        const body: fa_validation_body = {
+          team_id: elecTeam.id,
+        };
+        await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
+        if (validTeams !== "") validTeams += " et ";
+        validTeams += elecTeam.name;
       }
 
       const comment: fa_comments = {
-        subject: subject_type.RESET,
+        subject: subject_type.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
         author: author.id,
         created_at: new Date(),
