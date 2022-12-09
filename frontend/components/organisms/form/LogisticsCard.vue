@@ -35,8 +35,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
+import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import { Gear } from "~/utils/models/catalog.model";
 import { GearRequestCreation, time_windows_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
@@ -118,11 +118,7 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
-.disabled {
-  border-left: 5px solid green;
-}
-
+<style lang="scss" scoped>
 .flex-row {
   display: flex;
   align-items: center;

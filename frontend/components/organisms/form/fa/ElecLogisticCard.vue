@@ -135,9 +135,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped>
-.disabled {
-  border-left: 5px solid green;
-}
-</style>
