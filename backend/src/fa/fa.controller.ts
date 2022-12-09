@@ -216,7 +216,7 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
-  @Patch(':animationId/gear-requests/:gearId')
+  @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @ApiResponse({
     status: 200,
     description: 'Update an existing gear request',
@@ -240,21 +240,29 @@ export class FaController {
     description: 'Gear id',
     required: true,
   })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
   updateGearRequest(
     @Param('animationId', ParseIntPipe) animationId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
     @Body() gearRequestForm: GearRequestUpdateFormRequestDto,
   ): Promise<GearRequestResponseDto> {
     return this.gearRequestService.updateAnimationRequest(
       animationId,
       gearId,
+      rentalPeriodId,
       gearRequestForm,
     );
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
-  @Delete(':animationId/gear-requests/:gearId')
+  @Delete(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -278,10 +286,21 @@ export class FaController {
     description: 'Gear id',
     required: true,
   })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
   deleteGearRequest(
     @Param('animationId', ParseIntPipe) animationId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
   ): Promise<void> {
-    return this.gearRequestService.removeAnimationRequest(animationId, gearId);
+    return this.gearRequestService.removeAnimationRequest(
+      animationId,
+      gearId,
+      rentalPeriodId,
+    );
   }
 }
