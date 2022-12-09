@@ -1,3 +1,7 @@
-.disabled {
-    border-left: 5px solid green;
+.fa, .ft {
+  &.v-card: {
+    &.disabled {
+      border-left: 5px solid green;
+    }
   }
+}
