@@ -325,17 +325,12 @@ export default Vue.extend({
         const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
         const elecStatus = getFAValidationStatus(this.mFA, "elec");
 
-        const hasAtLeastOneSubmitted =
-          matosStatus === Status.SUBMITTED ||
-          barrieresStatus === Status.SUBMITTED ||
-          elecStatus === Status.SUBMITTED;
+        const areAllValidated =
+          matosStatus === Status.VALIDATED &&
+          barrieresStatus === Status.VALIDATED &&
+          elecStatus === Status.VALIDATED;
 
-        const hasAtLeastOneRefused =
-          matosStatus === Status.REFUSED ||
-          barrieresStatus === Status.REFUSED ||
-          elecStatus === Status.REFUSED;
-
-        if (hasAtLeastOneSubmitted || hasAtLeastOneRefused) {
+        if (!areAllValidated) {
           return confirm(
             "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
           )
@@ -346,7 +341,7 @@ export default Vue.extend({
       }
     },
     resetLogValidations() {
-      this.$accessor.FA.resetLogValidations(this.me);
+      this.$accessor.FA.resetLogValidations({ author: this.me });
       this.editTimeframe();
     },
     editTimeframe() {

@@ -350,8 +350,8 @@ export const actions = actionTree(
       }
 
       const comment: fa_comments = {
-        subject: subject_type.SUBMIT,
-        comment: `Le créneau MATOS a été modifié ce qui a réinitialisé la validation de ${validTeams}.`,
+        subject: subject_type.RESET,
+        comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
         author: author.id,
         created_at: new Date(),
       };

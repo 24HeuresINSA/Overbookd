@@ -25,6 +25,7 @@ export enum subject_type {
   VALIDATED = "VALIDATED",
   COMMENT = "COMMENT",
   SUBMIT = "SUBMIT",
+  RESET = "RESET",
 }
 
 export enum fa_type {
