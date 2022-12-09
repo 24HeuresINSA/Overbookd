@@ -19,6 +19,7 @@
     "dev": "nuxt",
     "dev:host": "nuxt --hostname '0'",
     "build": "./node_modules/.bin/nuxt build",
+    "build:ci": "CI=1 npm run build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
