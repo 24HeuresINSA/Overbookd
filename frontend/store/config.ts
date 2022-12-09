@@ -1,17 +1,16 @@
-const configsData = require("../config/configs.json");
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import configRepo from "../repositories/configRepo";
 import { safeCall } from "~/utils/api/calls";
 
 export const state = () => ({
   data: {
-    data: configsData,
+    data: {} as any,
   },
 });
 
 export const getters = getterTree(state, {
   getConfig: (state) => (key: string) => {
-    if (state.data && state.data.data) {
+    if (state?.data?.data) {
       const config = state.data.data.find((o: any) => o.key === key);
       if (config) {
         return config.value;
