@@ -34,6 +34,12 @@ export class GearRequestNotFound extends NotFoundException {
   }
 }
 
+export class PeriodNotFound extends NotFoundException {
+  constructor(periodId: number) {
+    super(`Period #${periodId} not found`);
+  }
+}
+
 export interface GearRequest {
   seeker: GearSeeker;
   status: string;
@@ -43,9 +49,12 @@ export interface GearRequest {
 }
 
 export type Period = {
+  id: number;
   start: Date;
   end: Date;
 };
+
+export type PeriodForm = Omit<Period, 'id'>;
 
 export type GearSeeker = {
   type: GearSeekerType;
@@ -57,16 +66,33 @@ export enum GearSeekerType {
   Task = 'FT',
 }
 
-export type CreateGearRequestForm = {
+type BaseCreateGearRequestForm = {
   seekerId: number;
   quantity: number;
   gearId: number;
+};
+
+type NewPeriodCreateGearRquestForm = BaseCreateGearRequestForm & {
   start: Date;
   end: Date;
 };
 
+type ExistingPeriodGearRequestForm = BaseCreateGearRequestForm & {
+  periodId: number;
+};
+
+export type CreateGearRequestForm =
+  | NewPeriodCreateGearRquestForm
+  | ExistingPeriodGearRequestForm;
+
+function isExistingPeriodForm(
+  value: CreateGearRequestForm,
+): value is ExistingPeriodGearRequestForm {
+  return Boolean((value as ExistingPeriodGearRequestForm).periodId);
+}
+
 export type UpdateGearRequestForm = Partial<
-  Pick<CreateGearRequestForm, 'start' | 'end' | 'quantity'>
+  Pick<NewPeriodCreateGearRquestForm, 'start' | 'end' | 'quantity'>
 >;
 
 export type GearRequestIdentifier = {
@@ -75,6 +101,7 @@ export type GearRequestIdentifier = {
     id: number;
   };
   gearId: number;
+  rentalPeriodId: number;
 };
 
 export type SearchGearRequest = {
@@ -102,6 +129,11 @@ export interface AnimationRepository {
   getAnimation(animationId: number): Promise<Animation>;
 }
 
+export interface PeriodRepository {
+  addPeriod(period: PeriodForm): Promise<Period>;
+  getPeriod(id: number): Promise<Period>;
+}
+
 class AnimationAlreadyValidatedError extends BadRequestException {
   constructor(animationId: number) {
     const message = `Animation #${animationId} already validated, you can't add gear request`;
@@ -118,33 +150,42 @@ export class GearRequestsService {
     private readonly gearRepository: GearRepository,
     @Inject('ANIMATION_REPOSITORY')
     private readonly animationRepository: AnimationRepository,
+    @Inject('PERIOD_REPOSITORY')
+    private readonly periodRepository: PeriodRepository,
   ) {}
 
   async findGearRequest(gearRequestId: GearRequestIdentifier) {
     return this.gearRequestRepository.getGearRequest(gearRequestId);
   }
 
-  async addAnimationRequest({
-    seekerId,
-    quantity,
-    gearId,
-    start,
-    end,
-  }: CreateGearRequestForm): Promise<GearRequest> {
+  async addAnimationRequest(
+    createForm: CreateGearRequestForm,
+  ): Promise<GearRequest> {
+    const { seekerId, quantity, gearId } = createForm;
     const [existingAnimation, existingGear] = await Promise.all([
       this.animationRepository.getAnimation(seekerId),
       this.gearRepository.getGear(gearId),
     ]);
+
     if (existingAnimation.status === Status.VALIDATED)
       throw new AnimationAlreadyValidatedError(seekerId);
+
     const gearRequest = {
       seeker: { type: GearSeekerType.Animation, id: seekerId },
       status: PENDING,
       quantity,
       gear: existingGear,
-      rentalPeriod: { start, end },
+      rentalPeriod: await this.retrieveRentalPeriod(createForm),
     };
     return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  private retrieveRentalPeriod(form: CreateGearRequestForm) {
+    if (isExistingPeriodForm(form))
+      return this.periodRepository.getPeriod(form.periodId);
+
+    const { start, end } = form;
+    return this.periodRepository.addPeriod({ start, end });
   }
 
   async getAnimationRequests(animationId: number): Promise<GearRequest[]> {
@@ -156,18 +197,28 @@ export class GearRequestsService {
   updateAnimationRequest(
     animationId: number,
     gearId: number,
+    periodId: number,
     updateForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
     return this.gearRequestRepository.updateGearRequest(
-      { seeker: { type: GearSeekerType.Animation, id: animationId }, gearId },
+      {
+        seeker: { type: GearSeekerType.Animation, id: animationId },
+        gearId,
+        rentalPeriodId: periodId,
+      },
       updateForm,
     );
   }
 
-  removeAnimationRequest(animationId: number, gearId: number): Promise<void> {
+  removeAnimationRequest(
+    animationId: number,
+    gearId: number,
+    periodId: number,
+  ): Promise<void> {
     return this.gearRequestRepository.removeGearRequest({
       seeker: { type: GearSeekerType.Animation, id: animationId },
       gearId,
+      rentalPeriodId: periodId,
     });
   }
 }
