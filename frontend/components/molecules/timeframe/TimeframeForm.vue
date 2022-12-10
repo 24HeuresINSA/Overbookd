@@ -222,6 +222,17 @@ export default Vue.extend({
     me(): any {
       return this.$accessor.user.me;
     },
+    hasAtLeastOneLogValidation(): boolean {
+      const matosStatus = getFAValidationStatus(this.mFA, "matos");
+      const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
+      const elecStatus = getFAValidationStatus(this.mFA, "elec");
+
+      return (
+        matosStatus === Status.VALIDATED ||
+        barrieresStatus === Status.VALIDATED ||
+        elecStatus === Status.VALIDATED
+      );
+    },
   },
   watch: {
     timeWindow() {
@@ -317,28 +328,17 @@ export default Vue.extend({
       this.clearLocalVariable();
     },
     confirmToEditTimeframe() {
-      if (
-        this.type === time_windows_type.MATOS &&
-        this.mFA.status !== Status.DRAFT
-      ) {
-        const matosStatus = getFAValidationStatus(this.mFA, "matos");
-        const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
-        const elecStatus = getFAValidationStatus(this.mFA, "elec");
+      const isMatosTimeframe = this.type === time_windows_type.MATOS;
+      const shouldAskConfirmation =
+        isMatosTimeframe && this.hasAtLeastOneLogValidation;
 
-        const hasAtLeastOneLogValidation =
-          matosStatus === Status.VALIDATED ||
-          barrieresStatus === Status.VALIDATED ||
-          elecStatus === Status.VALIDATED;
+      if (!shouldAskConfirmation) return this.editTimeframe();
 
-        if (hasAtLeastOneLogValidation) {
-          return confirm(
-            "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
-          )
-            ? this.resetLogValidations()
-            : this.$emit("close-dialog");
-        }
-        return this.editTimeframe();
-      }
+      return confirm(
+        "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
+      )
+        ? this.resetLogValidations()
+        : this.$emit("close-dialog");
     },
     resetLogValidations() {
       this.$accessor.FA.resetLogValidations({ author: this.me });

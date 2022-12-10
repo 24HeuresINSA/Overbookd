@@ -281,7 +281,6 @@ enum subject_type {
   SUBMIT
   VALIDATED
   COMMENT
-  RESET
 }
 
 model fa_comments {

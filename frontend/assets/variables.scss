@@ -8,30 +8,3 @@
   right: 10px;
   bottom: 10px;
 }
-
-/*
-.green-border {
-  border-left: 5px solid green;
-}
-.orange-border {
-  border-left: 5px solid orange;
-}
-.red-border {
-  border-left: 5px solid red;
-}
-*/
-
-.v-card {
-  &.validated {
-    border-left: 5px solid green;
-  }
-  &.submitted {
-    border-left: 5px solid orange;
-  }
-  &.refused {
-    border-left: 5px solid red;
-  }
-  &.draft { 
-    border-left: 5px solid grey;
-  }
-}
