@@ -46,25 +46,6 @@ export const getters = getterTree(state, {
       return state.timeslots.find((_timeslot) => _timeslot === _id);
     });
   },
-  hasRole(state: UserState) {
-    return (roles: string | string[]): boolean => {
-      if (roles === undefined) {
-        return false;
-      }
-      const teams = state.me.team;
-      if (teams === undefined) {
-        return false;
-      }
-      if (typeof roles == "string") {
-        roles = [roles];
-      }
-      //admin has access to everything
-      if (teams.includes("admin")) {
-        return true;
-      }
-      return roles.some((r) => teams.includes(r));
-    };
-  },
 });
 
 export const actions = actionTree(

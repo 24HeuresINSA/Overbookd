@@ -247,8 +247,6 @@
 import OverChips from "~/components/atoms/overChips";
 import { RepoFactory } from "~/repositories/repoFactory";
 import userRepo from "~/repositories/userRepo";
-import { isValidated } from "~/utils/roles/index.ts";
-import { safeCall } from "../../utils/api/calls";
 
 export default {
   name: "UserInformation",
@@ -301,7 +299,7 @@ export default {
 
   async mounted() {
     this.teamNames = this.$accessor.team.teamNames;
-    this.hasEditingRole = await this.hasRole(["admin", "humain", "sg"]);
+    this.hasEditingRole = this.hasPermission("manage-users");
     const res = await safeCall(
       this.$store,
       RepoFactory.userRepo.getAllUsers(this)
@@ -324,8 +322,11 @@ export default {
         ? "http://localhost:2424/"
         : "";
     },
-    async hasRole(roles) {
-      return this.$accessor.user.hasRole(roles);
+    hasPermission(permission) {
+      return this.$accessor.permission.isAllowed(
+        permission,
+        this.$accessor.user.me.team
+      );
     },
     addRemoveRole() {
       if (!this.teamNames.includes(this.newRole)) {
@@ -382,7 +383,7 @@ export default {
       return this.$accessor.user.me._id === this.mUser._id;
     },
     isValidated() {
-      return isValidated(this.mUser);
+      return this.$accessor.permission.isValidated(this.mUser);
     },
     isSoft() {
       return this.mUser.team.includes("soft");

@@ -1,6 +1,6 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { permission } from "~/utils/models/repo";
+import { permission, User } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
 
 const permissionRepo = RepoFactory.permissionRepo;
@@ -31,6 +31,11 @@ export const getters = getterTree(state, {
         );
       }
       return false;
+    },
+  isValidated:
+    (state, getters) =>
+    (user: User): boolean => {
+      return getters.isAllowed("validated-user", user.team);
     },
 });
 

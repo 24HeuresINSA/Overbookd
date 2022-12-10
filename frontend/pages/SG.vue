@@ -65,7 +65,7 @@
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
           <v-btn
-            v-if="hasRole('sg')"
+            v-if="hasPermission('sg')"
             :disabled="!areInputsValid.res"
             @click="saveTransactions"
             >Enregistrer</v-btn
@@ -294,8 +294,7 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("sg")) {
-      await this.$accessor.configuration.fetch("sg");
+    if (this.hasPermission("sg")) {
       this.ready = true;
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
@@ -315,18 +314,14 @@ export default {
   },
 
   methods: {
-    hasRole(role) {
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission) {
+      return this.$accessor.permission.isAllowed(
+        permission,
+        this.$accessor.user.me.team
+      );
     },
     isUserWithCP(user) {
-      return (
-        user.team.includes("hard") &&
-        !(
-          user.team.includes("fen") ||
-          user.team.includes("voiture") ||
-          user.team.includes("camion")
-        )
-      );
+      return this.$accessor.permission.isAllowed("cp", user.team);
     },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);

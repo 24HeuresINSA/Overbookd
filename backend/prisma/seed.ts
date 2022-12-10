@@ -577,6 +577,33 @@ async function main() {
         },
       },
     },
+    {
+      name: 'send-broadcast',
+      description: 'Utilisateurs qui peuvent envoyer des notifications',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'bureau' }, { team_code: 'orga' }],
+        },
+      },
+    },
+    {
+      name: 'manage-users',
+      description: 'Utilisateurs qui peuvent gérer les utilisateurs',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'bureau' }, { team_code: 'humain' }],
+        },
+      },
+    },
+    {
+      name: 'bureau',
+      description: 'Le bureau',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'bureau' }],
+        },
+      },
+    },
   ];
 
   const savedPermissions = await Promise.all(
