@@ -10,9 +10,6 @@ import {
   PrismaGearRepository,
   PrismaTeamRepository,
 } from './repositories';
-import { UserService } from 'src/user/user.service';
-import { TeamService } from 'src/team/team.service';
-import { PermissionService } from 'src/permission/permission.service';
 
 @Module({
   imports: [CommonModule],
@@ -32,9 +29,6 @@ import { PermissionService } from 'src/permission/permission.service';
       provide: 'TEAM_REPOSITORY',
       useClass: PrismaTeamRepository,
     },
-    UserService,
-    TeamService,
-    PermissionService,
   ],
   controllers: [CategoryController, GearController],
   exports: [CatalogService, CategoryService],
