@@ -134,9 +134,15 @@ export default {
     );
   },
 
-  deleteGearRequest(context: Context, animationId: number, gearId: number) {
+  deleteGearRequest(
+    context: Context,
+    animationId: number,
+    gearId: number,
+    rentalPeriodId: number
+  ) {
     return context.$axios.delete(
-      resource + `/${animationId}/gear-requests/${gearId}`
+      resource +
+        `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
     );
   },
 
@@ -144,10 +150,12 @@ export default {
     context: Context,
     animationId: number,
     gearId: number,
+    rentalPeriodId: number,
     gearRequestUpdateForm: GearRequestUpdate
   ) {
     return context.$axios.patch<GearRequest>(
-      resource + `/${animationId}/gear-requests/${gearId}`,
+      resource +
+        `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
     );
   },
