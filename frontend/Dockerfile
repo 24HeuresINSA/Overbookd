@@ -7,7 +7,7 @@ ENV BASE_URL=$BASE_URL
 
 COPY package*.json ./
 
-RUN npm ci 
+RUN npm ci --silent
 
 COPY . .
 
@@ -23,7 +23,7 @@ RUN chown -R node:node /app
 
 USER node
 
-RUN npm install serve
+RUN npm install serve --silent
 
 COPY --chown=node:node --from=builder /overbookd/frontend/dist ./dist
 
