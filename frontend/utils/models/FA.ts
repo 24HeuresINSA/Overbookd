@@ -188,7 +188,7 @@ export interface BaseGearRequestCreation {
 
 export interface ExistingPeriodGearRequestCreation
   extends BaseGearRequestCreation {
-  rentalPeriodId: number;
+  periodId: number;
 }
 
 export interface NewPeriodGearRequestCreation extends BaseGearRequestCreation {

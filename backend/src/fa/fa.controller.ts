@@ -33,7 +33,11 @@ import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
 import { FaResponse, AllFaResponse } from './fa_types';
 import { GearRequestResponseDto } from './gear-requests/dto/gearRequestResponse.dto';
-import { GearRequestFormRequestDto } from './gear-requests/dto/gearRequestFormRequest.dto';
+import {
+  ExistingPeriodGearRequestFormRequestDto,
+  NewPeriodGearRequestFormRequestDto,
+  GearRequestFormRequestDto,
+} from './gear-requests/dto/gearRequestFormRequest.dto';
 import { GearRequestsService } from './gear-requests/gearRequests.service';
 import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { FASearchRequestDto } from './dto/faSearchRequest.dto';
@@ -177,9 +181,13 @@ export class FaController {
     description: 'Animation id',
     required: true,
   })
+  @ApiBody({ type: GearRequestFormRequestDto })
   addGearRequest(
     @Param('id', ParseIntPipe) id: number,
-    @Body() gearRequestForm: GearRequestFormRequestDto,
+    @Body()
+    gearRequestForm:
+      | NewPeriodGearRequestFormRequestDto
+      | ExistingPeriodGearRequestFormRequestDto,
   ): Promise<GearRequestResponseDto> {
     return this.gearRequestService.addAnimationRequest({
       ...gearRequestForm,

@@ -7,31 +7,22 @@
         :headers="headers"
         :items="timeWindowsList"
         dense
+        item-key="key"
         :items-per-page="-1"
         sort-by="dateStart"
       >
-        <template #[`item.dateStart`]="{ item }">
+        <template #[`item.startDate`]="{ item }">
           {{ formatDate(item.start) }}
         </template>
-        <template #[`item.timeStart`]="{ item }">
-          {{ formatTime(item.start) }}
-        </template>
-        <template #[`item.dateEnd`]="{ item }">
+        <template #[`item.endDate`]="{ item }">
           {{ formatDate(item.end) }}
         </template>
-        <template #[`item.timeEnd`]="{ item }">
-          {{ formatTime(item.end) }}
-        </template>
-        <template #[`item.action`]="{ index, item }">
-          <div v-if="isAnimationTimeWindow(item)">
-            <v-btn
-              v-if="!isDisabled"
-              icon
-              @click="openUpdateModal(index, item)"
-            >
+        <template #[`item.action`]="{ item }">
+          <div>
+            <v-btn v-if="!isDisabled" icon @click="openUpdateModal(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(index)">
+            <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </div>
@@ -45,12 +36,11 @@
         >
       </v-card-actions>
 
-      <TimeframeCalendar></TimeframeCalendar>
+      <TimeframeCalendar :timeframes="timeWindowsList"></TimeframeCalendar>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
       <TimeframeForm
-        :type="type"
         @change="addTimeWindow"
         @close-dialog="isAddDialogOpen = false"
       ></TimeframeForm>
@@ -70,7 +60,11 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
+import { Period, time_windows, time_windows_type } from "~/utils/models/FA";
+
+interface IdentifiableTimeWindow extends time_windows {
+  key: string;
+}
 
 export default Vue.extend({
   name: "TimeframeTable",
@@ -84,58 +78,112 @@ export default Vue.extend({
   data: () => ({
     headers: [
       { text: "Type", value: "type" },
-      { text: "Date de début", value: "dateStart" },
-      { text: "Heure de début", value: "timeStart" },
-      { text: "Date de fin", value: "dateEnd" },
-      { text: "Heure de fin", value: "timeEnd" },
+      { text: "Date de début", value: "startDate" },
+      { text: "Date de fin", value: "endDate" },
       { text: "Action", value: "action" },
     ],
     isAddDialogOpen: false,
     isEditDialogOpen: false,
     editIndex: null as number | null,
-    selectedTimeWindow: null as time_windows | null,
+    selectedTimeWindow: null as IdentifiableTimeWindow | null,
   }),
   computed: {
-    timeWindowsList(): time_windows[] {
-      return this.$accessor.FA.timeWindows;
-    },
-    type() {
-      return time_windows_type.ANIM;
+    timeWindowsList(): IdentifiableTimeWindow[] {
+      const animationTimeWindows =
+        this.$accessor.FA.mFA.time_windows
+          ?.map(this.convertToIdentifiableTimeWindow)
+          ?.filter((tw) => tw.type === time_windows_type.ANIM) ?? [];
+
+      const gearTimeWindows = this.$accessor.FA.gearRequestRentalPeriods.map(
+        (period, index) => {
+          return this.convertToIdentifiableTimeWindow(
+            { ...period, type: time_windows_type.MATOS },
+            index
+          );
+        }
+      );
+
+      return [...animationTimeWindows, ...gearTimeWindows];
     },
   },
   methods: {
     formatDate(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", {
-        day: "numeric",
-        month: "numeric",
+      const displayOptions: Intl.DateTimeFormatOptions = {
         year: "numeric",
-      });
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Intl.DateTimeFormat("fr", displayOptions).format(
+        new Date(date)
+      );
     },
-    formatTime(date: string): string {
-      return new Date(date).toLocaleTimeString("fr-FR", {
-        hour: "numeric",
-        minute: "numeric",
-      });
-    },
-    async deleteTimeframe(index: number) {
-      await this.$accessor.FA.deleteTimeWindow(index);
+    deleteTimeframe(timeWindow: IdentifiableTimeWindow) {
+      if (timeWindow.type === time_windows_type.ANIM) {
+        const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
+        return this.$accessor.FA.deleteTimeWindow(index);
+      }
+      return this.$accessor.FA.removeGearRequestRentalPeriod(
+        timeWindow as Period
+      );
     },
     addTimeWindow(timeWindow: time_windows) {
-      this.$accessor.FA.addTimeWindow(timeWindow);
+      if (timeWindow.type === time_windows_type.ANIM) {
+        return this.$accessor.FA.addTimeWindow(timeWindow);
+      }
+      this.$accessor.FA.addGearRequestRentalPeriod(timeWindow);
     },
     updateTimeWindow(timeWindow: time_windows) {
+      if (timeWindow.type === time_windows_type.ANIM) {
+        return this.updateAnimationTimeWindow(timeWindow);
+      }
+      if (!timeWindow.id) return;
+      this.$accessor.FA.updateGearPeriod(timeWindow as Period);
+    },
+    retrieveAnimationTimeWindowIndex(timeWindow: IdentifiableTimeWindow) {
+      return timeWindow.id
+        ? this.findTimeWindowIndexByIdAndType(timeWindow.id, timeWindow.type)
+        : this.desctructTimeWindowKeyToFindIndex(timeWindow!);
+    },
+    updateAnimationTimeWindow(timeWindow: time_windows) {
+      if (!this.selectedTimeWindow) return;
+      const index = this.retrieveAnimationTimeWindowIndex(
+        this.selectedTimeWindow
+      );
       this.$accessor.FA.updateTimeWindow({
-        index: this.editIndex,
+        index,
         timeWindow,
       });
     },
-    openUpdateModal(index: number, timeWindow: time_windows) {
-      this.editIndex = index;
+    findTimeWindowIndexByIdAndType(
+      timeWindowId: number,
+      timeWindowType: time_windows_type
+    ): number {
+      return this.$accessor.FA.mFA.time_windows!.findIndex(
+        (tw) => tw.id === timeWindowId && tw.type === timeWindowType
+      );
+    },
+    desctructTimeWindowKeyToFindIndex(
+      timeWindow: IdentifiableTimeWindow
+    ): number {
+      return parseInt(timeWindow.key.split("_")[1]);
+    },
+    openUpdateModal(timeWindow: IdentifiableTimeWindow) {
       this.selectedTimeWindow = timeWindow;
       this.isEditDialogOpen = true;
     },
     isAnimationTimeWindow(timeWindow: time_windows): boolean {
       return timeWindow.type === time_windows_type.ANIM;
+    },
+    convertToIdentifiableTimeWindow(
+      timeWindow: time_windows,
+      defaultId: number
+    ): IdentifiableTimeWindow {
+      return {
+        ...timeWindow,
+        key: `${timeWindow.type}_${timeWindow.id ?? defaultId}`,
+      };
     },
   },
 });

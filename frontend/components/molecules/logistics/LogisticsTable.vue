@@ -44,11 +44,20 @@ export default Vue.extend({
     gearRequest(): GearRequest[] {
       switch (this.owner) {
         case "matos":
-          return this.$accessor.FA.matosGearRequests;
+          return this.$accessor.FA.matosGearRequests.reduce(
+            this.uniqueGearReducer,
+            [] as GearRequest[]
+          );
         case "elec":
-          return this.$accessor.FA.elecGearRequests;
+          return this.$accessor.FA.elecGearRequests.reduce(
+            this.uniqueGearReducer,
+            [] as GearRequest[]
+          );
         case "barrieres":
-          return this.$accessor.FA.barrieresGearRequests;
+          return this.$accessor.FA.barrieresGearRequests.reduce(
+            this.uniqueGearReducer,
+            [] as GearRequest[]
+          );
         default:
           return [];
       }
@@ -57,6 +66,13 @@ export default Vue.extend({
   methods: {
     deleteGear(gear: Gear) {
       this.$accessor.FA.removeGearRequest(gear.id);
+    },
+    uniqueGearReducer(gearRequests: GearRequest[], gearRequest: GearRequest) {
+      const existingGearRequest = gearRequests.find(
+        (gr) => gr.gear.id === gearRequest.gear.id
+      );
+      if (existingGearRequest) return gearRequests;
+      return [...gearRequests, gearRequest];
     },
   },
 });

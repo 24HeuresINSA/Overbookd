@@ -6,6 +6,7 @@
 */
 -- DropIndex
 DROP INDEX "Animation_Gear_Request_animationId_gearId_key";
+DROP INDEX "Animation_Gear_Request_rentalPeriodId_key";
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Animation_Gear_Request_animationId_gearId_rentalPeriodId_key" ON "Animation_Gear_Request"("animationId", "gearId", "rentalPeriodId");
