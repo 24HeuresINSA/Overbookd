@@ -498,8 +498,6 @@ async function main() {
     }),
   );
 
-  console.log(`\n${savedGears.length} gears 🔨 inserted`);
-
   const permissions = [
     {
       name: 'admin',
@@ -610,6 +608,33 @@ async function main() {
       teams: {
         createMany: {
           data: [{ team_code: 'humain' }],
+        },
+      },
+    },
+    {
+      name: 'manage-config',
+      description: 'Peut gérer la configuration',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'humain' }, { team_code: 'sg' }],
+        },
+      },
+    },
+    {
+      name: 'manage-location',
+      description: 'Peut gérer les lieux',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'signa' }],
+        },
+      },
+    },
+    {
+      name: 'orga',
+      description: "L'équipe d'organisation",
+      teams: {
+        createMany: {
+          data: [{ team_code: 'orga' }],
         },
       },
     },

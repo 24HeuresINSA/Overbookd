@@ -20,8 +20,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/team-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { UpdateConfigurationDto } from './dto/updateConfigurationDto';
 
 @ApiTags('Configuration')
@@ -29,9 +29,9 @@ import { UpdateConfigurationDto } from './dto/updateConfigurationDto';
 export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('admin')
+  @Permissions('admin')
   @Post()
   @ApiResponse({
     status: 201,
@@ -67,9 +67,9 @@ export class ConfigurationController {
     return this.configurationService.findOne(key);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('sg', 'humain')
+  @Permissions('manage-config')
   @Put(':key')
   @ApiResponse({
     status: 200,
@@ -93,9 +93,9 @@ export class ConfigurationController {
     return this.configurationService.upsert(param);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Roles('admin')
+  @Permissions('admin')
   @HttpCode(204)
   @ApiResponse({
     status: 204,

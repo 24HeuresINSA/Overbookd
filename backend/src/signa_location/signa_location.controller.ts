@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
-import { RolesGuard } from '../auth/team-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CreateSignaLocationDto } from './dto/create-signa_location.dto';
 import { UpdateSignaLocationDto } from './dto/update-signa_location.dto';
 import { SignaLocationService } from './signa_location.service';
@@ -22,29 +22,29 @@ import { SignaLocationService } from './signa_location.service';
 export class SignaLocationController {
   constructor(private readonly signaLocationService: SignaLocationService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('signa')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('manage-location')
   @Post()
   create(@Body() createSignaLocationDto: CreateSignaLocationDto) {
     return this.signaLocationService.create(createSignaLocationDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Get()
   findAll() {
     return this.signaLocationService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.signaLocationService.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('orga')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('orga')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -53,8 +53,8 @@ export class SignaLocationController {
     return this.signaLocationService.update(+id, updateSignaLocationDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('signa')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('manage-location')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.signaLocationService.remove(+id);
