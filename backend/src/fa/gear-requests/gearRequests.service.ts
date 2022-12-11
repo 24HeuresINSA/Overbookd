@@ -20,7 +20,7 @@ export class GearRequestAlreadyExists extends BadRequestException {
   gearRequest: GearRequest;
   constructor(gearRequest: GearRequest) {
     super(
-      `"Request for ${gearRequest.gear.name}" in ${gearRequest.seeker.type} #${gearRequest.seeker.id} already exists`,
+      `"Request for ${gearRequest.gear.name}" in ${gearRequest.seeker.type} #${gearRequest.seeker.id} already exists for #${gearRequest.rentalPeriod.id} rental period`,
     );
     this.gearRequest = gearRequest;
   }
@@ -72,17 +72,17 @@ type BaseCreateGearRequestForm = {
   gearId: number;
 };
 
-type NewPeriodCreateGearRquestForm = BaseCreateGearRequestForm & {
+export type NewPeriodCreateGearRequestForm = BaseCreateGearRequestForm & {
   start: Date;
   end: Date;
 };
 
-type ExistingPeriodGearRequestForm = BaseCreateGearRequestForm & {
+export type ExistingPeriodGearRequestForm = BaseCreateGearRequestForm & {
   periodId: number;
 };
 
 export type CreateGearRequestForm =
-  | NewPeriodCreateGearRquestForm
+  | NewPeriodCreateGearRequestForm
   | ExistingPeriodGearRequestForm;
 
 function isExistingPeriodForm(
@@ -92,7 +92,7 @@ function isExistingPeriodForm(
 }
 
 export type UpdateGearRequestForm = Partial<
-  Pick<NewPeriodCreateGearRquestForm, 'start' | 'end' | 'quantity'>
+  Pick<NewPeriodCreateGearRequestForm, 'start' | 'end' | 'quantity'>
 >;
 
 export type GearRequestIdentifier = {
