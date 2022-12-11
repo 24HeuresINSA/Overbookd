@@ -50,7 +50,12 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("humain")) {
+    if (
+      this.$accessor.permission.isAllowed(
+        "can-affect",
+        this.$accessor.user.me.team
+      )
+    ) {
       await this.$store.dispatch("timeslot/fetchTimeslots");
     } else {
       await this.$router.push({

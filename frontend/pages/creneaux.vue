@@ -117,7 +117,12 @@ export default Vue.extend({
   },
 
   async beforeMount() {
-    if (this.$accessor.user.hasRole(["humain", "bureau", "admin"])) {
+    if (
+      this.$accessor.permission.isAllowed(
+        "can-affect",
+        this.$accessor.user.me.team
+      )
+    ) {
       await this.getAllTimeSpans();
       await this.getAllUsers();
       this.assignmentPerCentage =

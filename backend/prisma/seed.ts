@@ -604,6 +604,15 @@ async function main() {
         },
       },
     },
+    {
+      name: 'can-affect',
+      description: 'Peut affecter',
+      teams: {
+        createMany: {
+          data: [{ team_code: 'humain' }],
+        },
+      },
+    },
   ];
 
   const savedPermissions = await Promise.all(

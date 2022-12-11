@@ -366,7 +366,9 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (
+      this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)
+    ) {
       // setup config
       this.loading = true;
       let res = await this.$accessor.location.getAllLocations();
