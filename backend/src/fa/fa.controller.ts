@@ -136,7 +136,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('orga') // A check is done later to see if the user is a fa_validator. Maybe it can be greate to remove the boolean fa_validator at the team level to privilige a permission
+  @Permissions('fa-validator')
   @Post(':id/validation')
   @HttpCode(204)
   @ApiResponse({
@@ -165,7 +165,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('orga') // A check is done later to see if the user is a fa_validator. Maybe it can be greate to remove the boolean fa_validator at the team level to privilige a permission
+  @Permissions('fa-validator')
   @Delete(':faId/validation/:teamId')
   @HttpCode(204)
   @ApiResponse({

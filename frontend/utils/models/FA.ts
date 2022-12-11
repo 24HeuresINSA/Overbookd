@@ -132,6 +132,7 @@ export interface fa_validation {
   };
   Team: {
     id: number;
+    code: string;
     name: string;
     color: string;
     icon: string;
@@ -146,6 +147,7 @@ export interface fa_refuse {
   };
   Team: {
     id: number;
+    code: string;
     name: string;
     color: string;
     icon: string;

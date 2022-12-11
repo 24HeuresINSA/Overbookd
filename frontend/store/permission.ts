@@ -37,6 +37,20 @@ export const getters = getterTree(state, {
     (user: User): boolean => {
       return getters.isAllowed("validated-user", user.team);
     },
+  faValidators(state): string[] {
+    return (
+      state.permissions
+        .filter((permission: permission) => permission.name === "fa-validator")
+        .shift()?.teams || []
+    );
+  },
+  ftValidators(state): string[] {
+    return (
+      state.permissions
+        .filter((permission: permission) => permission.name === "ft-validator")
+        .shift()?.teams || []
+    );
+  },
 });
 
 export const mutations = mutationTree(state, {

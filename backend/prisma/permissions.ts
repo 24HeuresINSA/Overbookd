@@ -147,4 +147,29 @@ export const permissions = [
       },
     },
   },
+  {
+    name: 'fa-validator',
+    description: 'Peut valider les FA',
+    teams: {
+      createMany: {
+        data: [
+          { team_code: 'barrieres' },
+          { team_code: 'elec' },
+          { team_code: 'humain' },
+          { team_code: 'matos' },
+          { team_code: 'secu' },
+          { team_code: 'signa' },
+        ],
+      },
+    },
+  },
+  {
+    name: 'ft-validator',
+    description: 'Peut valider les FT',
+    teams: {
+      createMany: {
+        data: [{ team_code: 'humain' }, { team_code: 'matos' }],
+      },
+    },
+  },
 ];

@@ -81,8 +81,6 @@ model Team {
   users            User_Team[]
   color            String             @default("#000000") @db.VarChar(30)
   icon             String             @default("mdi-circle") @db.VarChar(255)
-  fa_validator     Boolean            @default(false)
-  ft_validator     Boolean            @default(false)
   fa               fa[]
   fa_validation    fa_validation[]
   fa_refuse        fa_refuse[]

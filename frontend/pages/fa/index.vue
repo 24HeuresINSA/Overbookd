@@ -212,10 +212,15 @@ export default {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
     validators() {
-      return this.$accessor.team.faValidators;
+      return this.$accessor.team.getTeams(
+        this.$accessor.permission.faValidators
+      );
     },
     isAdmin() {
-      return this.$accessor.user.hasRole("admin");
+      return this.$accessor.permission.isAllowed(
+        "admin",
+        this.$accessor.user.me.team
+      );
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
@@ -240,7 +245,9 @@ export default {
     },
   },
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (
+      this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)
+    ) {
       return this.fetchFas();
     } else {
       await this.$router.push({
