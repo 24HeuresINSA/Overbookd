@@ -12,6 +12,7 @@ import {
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
+  Period,
   SearchFA,
   Status,
   subject_type,
@@ -53,17 +54,26 @@ export const getters = getterTree(state, {
       ) ?? []
     );
   },
-  gearTimeWindowIndex(state): number {
-    return (
-      state.mFA.time_windows?.findIndex(
-        (timeWindow) => timeWindow.type === time_windows_type.MATOS
-      ) ?? -1
-    );
+  gearRequestRentalPeriods(state): Period[] {
+    return state.gearRequests.reduce((periods, gearRequest) => {
+      const period = periods.find(
+        (period) =>
+          period.id === gearRequest.rentalPeriod.id ||
+          (period.start === gearRequest.rentalPeriod.start &&
+            period.end === gearRequest.rentalPeriod.end)
+      );
+      if (period) return periods;
+      return [...periods, gearRequest.rentalPeriod];
+    }, [] as Period[]);
   },
-  gearTimeWindow(state): time_windows | undefined {
-    return state.mFA.time_windows?.find(
-      (timeWindow) => timeWindow.type === time_windows_type.MATOS
-    );
+  uniqueByGearGearRequests(state): GearRequest[] {
+    return state.gearRequests.reduce((gearRequests, gearRequest) => {
+      const savedGearRequest = gearRequests.find(
+        (gr) => gr.gear.id === gearRequest.gear.id
+      );
+      if (savedGearRequest) return gearRequests;
+      return [...gearRequests, gearRequest];
+    }, [] as GearRequest[]);
   },
 });
 
@@ -157,17 +167,21 @@ export const mutations = mutationTree(state, {
       mFA.fa_electricity_needs.splice(index, 1);
     }
   },
+
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
     gearRequests.push(gearRequest);
   },
+
   SET_GEAR_REQUESTS(state, gearRequestsResponse: GearRequest[]) {
     state.gearRequests = gearRequestsResponse;
   },
+
   REMOVE_GEAR_REQUEST(state, gearId: number) {
     state.gearRequests = state.gearRequests.filter(
       (gr) => gr.gear.id !== gearId
     );
   },
+
   SET_COMMENTS({ mFA }, comments: fa_comments[]) {
     mFA.fa_comments = comments;
   },
@@ -409,6 +423,16 @@ export const actions = actionTree(
       commit("DELETE_ELECTRICITY_NEED", index);
     },
 
+    addGearRequestRentalPeriod(
+      { dispatch, getters },
+      rentalPeriod: Omit<Period, "id">
+    ) {
+      const gearRequests = getters.uniqueByGearGearRequests as GearRequest[];
+      gearRequests.map((gearRequest) =>
+        dispatch("addGearRequest", { ...gearRequest, rentalPeriod })
+      );
+    },
+
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
       const res = await RepoFactory.faRepo.createGearRequest(
         this,
@@ -423,23 +447,49 @@ export const actions = actionTree(
     },
 
     async removeGearRequest({ commit, state }, gearId: number) {
-      await RepoFactory.faRepo.deleteGearRequest(this, state.mFA.id, gearId);
-      sendNotification(this, "La demande de matériel a été supprimée 🗑️");
+      await Promise.all(
+        state.gearRequests
+          .filter((gearRequest) => gearRequest.gear.id === gearId)
+          .map((gearRequest) =>
+            safeCall(
+              this,
+              RepoFactory.faRepo.deleteGearRequest(
+                this,
+                state.mFA.id,
+                gearId,
+                gearRequest.rentalPeriod.id
+              ),
+              {
+                successMessage: "La demande de matériel a été supprimée 🗑️",
+                errorMessage:
+                  "La demande de matériel na pas a été supprimée ❌",
+              }
+            )
+          )
+      );
       commit("REMOVE_GEAR_REQUEST", gearId);
     },
 
-    async updateGearTimeWindow({ commit, state }, time_windows: time_windows) {
+    async updateGearPeriod(
+      { commit, state },
+      { id: rentalPeriodId, start, end }: Period
+    ) {
       try {
         const gearRequests = await Promise.all(
-          state.gearRequests.map(async (gearRequest) => {
-            const res = await RepoFactory.faRepo.updateGearRequest(
-              this,
-              state.mFA.id,
-              gearRequest.gear.id,
-              { start: time_windows.start, end: time_windows.end }
-            );
-            return res.data;
-          })
+          state.gearRequests
+            .filter(
+              (gearRequest) => gearRequest.rentalPeriod.id === rentalPeriodId
+            )
+            .map(async (gearRequest) => {
+              const res = await RepoFactory.faRepo.updateGearRequest(
+                this,
+                state.mFA.id,
+                gearRequest.gear.id,
+                rentalPeriodId,
+                { start, end }
+              );
+              return res.data;
+            })
         );
         commit("SET_GEAR_REQUESTS", gearRequests);
         if (!gearRequests.length) return;

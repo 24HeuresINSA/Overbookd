@@ -181,20 +181,37 @@ export interface fa_validation_body {
   team_id: number;
 }
 
-export interface GearRequestCreation {
+export interface BaseGearRequestCreation {
   gearId: number;
   quantity: number;
+}
+
+export interface ExistingPeriodGearRequestCreation
+  extends BaseGearRequestCreation {
+  rentalPeriodId: number;
+}
+
+export interface NewPeriodGearRequestCreation extends BaseGearRequestCreation {
   start: Date;
   end: Date;
 }
 
-export type GearRequestUpdate = Partial<Omit<GearRequestCreation, "gearId">>;
+export type GearRequestCreation =
+  | NewPeriodGearRequestCreation
+  | ExistingPeriodGearRequestCreation;
+
+export type GearRequestUpdate = Partial<
+  Omit<NewPeriodGearRequestCreation, "gearId">
+>;
+
+export interface Period {
+  id: number;
+  start: Date;
+  end: Date;
+}
 
 export interface GearRequest {
-  rentalPeriod: {
-    start: Date;
-    end: Date;
-  };
+  rentalPeriod: Period;
   quantity: number;
   gear: Gear;
 }
