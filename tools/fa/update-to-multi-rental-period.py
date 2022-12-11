@@ -4,14 +4,14 @@ TOKEN = "YOUR_TOKEN"
 DOMAIN = "overbookd.traefik.me"
 
 def getAllfa():
-    return requests.get(f"https://{DOMAIN}/api/fa", headers={"Authorization": f"Bearer {TOKEN}"}, verify=False).json()
+    return requests.get(f"https://{DOMAIN}/api/fa", headers={"Authorization": f"Bearer {TOKEN}"}).json()
 
 def findGearRequests(fas):
     return [buildFaGearRequest(fa) for fa in fas]
 
 def buildFaGearRequest(fa):
     faId = fa["id"]
-    gearRequests = requests.get(f"https://{DOMAIN}/api/fa/{faId}/gear-requests", verify=False, headers={"Authorization": f"Bearer {TOKEN}"}).json()
+    gearRequests = requests.get(f"https://{DOMAIN}/api/fa/{faId}/gear-requests", headers={"Authorization": f"Bearer {TOKEN}"}).json()
     return {"fa": faId, "requests": gearRequests}
 
 def updateFaGearRequest(faGearRequests):
@@ -29,11 +29,11 @@ def updateFaGearRequest(faGearRequests):
             existingPeriod = {"periodId": periodId}
             gearRequestData.update(existingPeriod)
         
-        savedGearRequest = requests.post(f"https://{DOMAIN}/api/fa/{faId}/gear-requests", json=gearRequestData, headers={"Authorization": f"Bearer {TOKEN}"}, verify=False).json()
+        savedGearRequest = requests.post(f"https://{DOMAIN}/api/fa/{faId}/gear-requests", json=gearRequestData, headers={"Authorization": f"Bearer {TOKEN}"}).json()
         periodId = savedGearRequest["rentalPeriod"]["id"]
         
         previousRentaPeriodId = gearRequest["rentalPeriod"]["id"]
-        requests.delete(f"https://{DOMAIN}/api/fa/{faId}/gear-requests/{gearId}/rental-period/{previousRentaPeriodId}", headers={"Authorization": f"Bearer {TOKEN}"}, verify=False)
+        requests.delete(f"https://{DOMAIN}/api/fa/{faId}/gear-requests/{gearId}/rental-period/{previousRentaPeriodId}", headers={"Authorization": f"Bearer {TOKEN}"})
 
 def main():
     fas = getAllfa()
