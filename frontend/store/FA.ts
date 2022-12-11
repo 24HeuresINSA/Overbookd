@@ -486,14 +486,15 @@ export const actions = actionTree(
           gearId: gr.gear.id,
           quantity: gr.quantity,
         }));
-      const savedRentalPeriod = await dispatch(
+      const { rentalPeriod: savedRentalPeriod } = await dispatch(
         "addGearRequest",
         firstGearRequest
       );
-      otherGearRequests.map((gearRequest) =>
+      otherGearRequests.map(({ gearId, quantity }) =>
         dispatch("addGearRequest", {
-          ...gearRequest,
-          rentalPeriodId: savedRentalPeriod.id,
+          gearId,
+          quantity,
+          periodId: savedRentalPeriod.id,
         })
       );
     },
@@ -532,7 +533,10 @@ export const actions = actionTree(
       return res.data;
     },
 
-    removeGearRequestRentalPeriod({ state, commit }, rentalPeriod: Period) {
+    async removeGearRequestRentalPeriod(
+      { state, commit, dispatch },
+      rentalPeriod: Period
+    ) {
       if (rentalPeriod.id > 1000) {
         return commit("REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
       }
@@ -542,22 +546,24 @@ export const actions = actionTree(
           (gr.rentalPeriod.start === rentalPeriod.start &&
             gr.rentalPeriod.end === rentalPeriod.end)
       );
-      impactedGearRequest.map(async (gr) => {
-        await safeCall(
-          this,
-          RepoFactory.faRepo.deleteGearRequest(
+      await Promise.all(
+        impactedGearRequest.map((gr) =>
+          safeCall(
             this,
-            state.mFA.id,
-            gr.gear.id,
-            gr.rentalPeriod.id
-          ),
-          {
-            successMessage: "La demande de matériel a été supprimée 🗑️",
-            errorMessage: "La demande de matériel na pas a été supprimée ❌",
-          }
-        );
-        commit("REMOVE_GEAR_REQUEST", gr);
-      });
+            RepoFactory.faRepo.deleteGearRequest(
+              this,
+              state.mFA.id,
+              gr.gear.id,
+              gr.rentalPeriod.id
+            ),
+            {
+              successMessage: "La demande de matériel a été supprimée 🗑️",
+              errorMessage: "La demande de matériel na pas a été supprimée ❌",
+            }
+          )
+        )
+      );
+      dispatch("fetchGearRequests");
     },
 
     async removeGearRequest({ commit, state }, gearId: number) {
@@ -593,7 +599,10 @@ export const actions = actionTree(
         const gearRequests = await Promise.all(
           state.gearRequests
             .filter(
-              (gearRequest) => gearRequest.rentalPeriod.id === rentalPeriodId
+              (gearRequest) =>
+                gearRequest.rentalPeriod.id === rentalPeriodId ||
+                (gearRequest.rentalPeriod.start === start &&
+                  gearRequest.rentalPeriod.end === end)
             )
             .map(async (gearRequest) => {
               const res = await RepoFactory.faRepo.updateGearRequest(
