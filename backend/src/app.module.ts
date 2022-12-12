@@ -21,6 +21,7 @@ import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_
 import { CatalogModule } from './catalog/catalog.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { SignaLocationModule } from './signa_location/signa_location.module';
+import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { SignaLocationModule } from './signa_location/signa_location.module';
     CatalogModule,
     ConfigurationModule,
     SignaLocationModule,
+    FaSitePublishAnimationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
