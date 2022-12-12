@@ -250,7 +250,6 @@ export const mutations = mutationTree(state, {
     { mFA },
     publishAnimation: fa_site_publish_animation
   ) {
-    console.log(publishAnimation);
     mFA.fa_site_publish_animation = {
       ...mFA.fa_site_publish_animation,
       fa_id: mFA.id,

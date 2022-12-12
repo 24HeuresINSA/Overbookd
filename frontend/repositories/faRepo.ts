@@ -176,4 +176,10 @@ export default {
       `fa-site-publish-animation/${id}`
     );
   },
+
+  getAllPublishAnimation(context: Context) {
+    return context.$axios.get<fa_site_publish_animation[]>(
+      `fa-site-publish-animation`
+    );
+  },
 };
