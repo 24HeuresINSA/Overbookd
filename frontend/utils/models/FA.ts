@@ -43,6 +43,13 @@ export enum time_windows_type {
   MATOS = "MATOS",
 }
 
+export enum site_publish_animation_category_type {
+  Divertissement = "Divertissement",
+  Culture = "Culture",
+  Sport = "Sport",
+  Enfant = "Enfant",
+}
+
 export interface FA {
   id: number;
   name: string;
@@ -53,8 +60,6 @@ export interface FA {
   location_id?: number;
   status: Status;
   description?: string;
-  photo_link?: string;
-  is_publishable?: boolean;
   is_major?: boolean;
   is_kids?: boolean;
   security_needs?: string;
@@ -70,6 +75,7 @@ export interface FA {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
+  fa_site_publish_animation?: fa_site_publish_animation;
 }
 
 export type CreateFA = Pick<FA, "name">;
@@ -219,4 +225,12 @@ export interface GearRequest {
 export interface SearchFA {
   isDeleted?: boolean;
   status?: Status;
+}
+
+export interface fa_site_publish_animation {
+  id?: number;
+  fa_id: number;
+  photo_link?: string;
+  description?: string;
+  categories?: site_publish_animation_category_type[];
 }

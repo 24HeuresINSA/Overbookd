@@ -8,6 +8,7 @@ import {
   fa_electricity_needs,
   fa_general_update,
   fa_signa_needs,
+  fa_site_publish_animation,
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
@@ -157,6 +158,22 @@ export default {
       resource +
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
+    );
+  },
+
+  addPublishAnimation(
+    context: Context,
+    publishAnimation: fa_site_publish_animation
+  ) {
+    return context.$axios.post<fa_site_publish_animation>(
+      `fa-site-publish-animation`,
+      publishAnimation
+    );
+  },
+
+  deletePublishAnimation(context: Context, id: number) {
+    return context.$axios.delete<fa_site_publish_animation>(
+      `fa-site-publish-animation/${id}`
     );
   },
 };
