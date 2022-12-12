@@ -47,7 +47,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   private readonly SELECT_GEAR_REQUEST = {
     animationId: true,
-    rentalPeriod: { select: { start: true, end: true } },
+    rentalPeriod: { select: { start: true, end: true, id: true } },
     quantity: true,
     status: true,
     gear: {
@@ -74,14 +74,10 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   async addGearRequest(gearRequest: GearRequest): Promise<GearRequest> {
     const { seeker, rentalPeriod, gear, quantity, status } = gearRequest;
-    const savedPeriod = await this.prismaService.period.create({
-      select: { id: true },
-      data: rentalPeriod,
-    });
 
     const data = {
       animationId: seeker.id,
-      rentalPeriodId: savedPeriod.id,
+      rentalPeriodId: rentalPeriod.id,
       gearId: gear.id,
       quantity,
       status,
@@ -96,7 +92,6 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
       return convertAnimationGearRequestToApiContract(savedGearRequest);
     } catch (e) {
-      await this.prismaService.period.delete({ where: { id: savedPeriod.id } });
       if (this.prismaService.isUniqueConstraintViolation(e)) {
         throw new GearRequestAlreadyExists(gearRequest);
       }
@@ -193,9 +188,10 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
   ) {
     return {
-      animationId_gearId: {
+      animationId_gearId_rentalPeriodId: {
         animationId: gearRequestId.seeker.id,
         gearId: gearRequestId.gearId,
+        rentalPeriodId: gearRequestId.rentalPeriodId,
       },
     };
   }

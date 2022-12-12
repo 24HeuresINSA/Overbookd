@@ -1,57 +1,53 @@
 <template>
   <div>
-    <v-card>
+    <v-card v-if="noGearPeriod" class="message warning-message">
       <v-card-title :disabled="isDisabled">Creneau de matos</v-card-title>
       <v-card-subtitle
-        >Vous ne pouvez pas ajouter du matos sans ce creneau</v-card-subtitle
+        >Vous ne pouvez pas ajouter du matos sans un creaneau de type
+        "MATOS"</v-card-subtitle
       >
-      <v-card-text>
-        <div v-show="gearTimeWindow" class="time-window">
-          <v-chip color="primary">
-            <span class="temporal">De</span>
-            <span class="date">{{ startDate }}</span>
-          </v-chip>
-          <v-chip color="primary">
-            <span class="temporal">A</span>
-            <span class="date">{{ endDate }}</span>
-          </v-chip>
-        </div>
-      </v-card-text>
       <v-card-actions>
-        <v-btn v-if="gearTimeWindow" text @click="openUpdateDialog"
-          >Modifier le creneau</v-btn
-        >
-        <v-btn v-else text @click="openAddDialog">Ajouter un creneau</v-btn>
+        <v-btn href="#timeframe" text> Aller a la partie creneau </v-btn>
       </v-card-actions>
     </v-card>
+    <v-card v-else class="message info-message">
+      <v-card-title :disabled="isDisabled">Creneau de matos</v-card-title>
+      <v-card-subtitle
+        >Toutes les demandes de matos seront identiques pour tous les creneaux
+        matos</v-card-subtitle
+      >
+      <v-card-text>
+        <div class="periods">
+          <div
+            v-for="period in gearRequestRentalPeriods"
+            :key="period.id"
+            class="period"
+          >
+            <v-chip color="primary">
+              <span class="temporal">De</span>
+              <span class="date">{{ displayDate(period.start) }}</span>
+            </v-chip>
+            <v-chip color="primary">
+              <span class="temporal">A</span>
+              <span class="date">{{ displayDate(period.end) }}</span>
+            </v-chip>
+          </div>
+        </div>
+      </v-card-text>
 
-    <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <TimeframeForm
-        :type="type"
-        @change="addTimeWindow"
-        @close-dialog="isAddDialogOpen = false"
-      ></TimeframeForm>
-    </v-dialog>
-
-    <v-dialog v-model="isUpdateDialogOpen" max-width="600">
-      <TimeframeForm
-        :type="type"
-        :time-window="gearTimeWindow"
-        @change="updateTimeWindow"
-        @close-dialog="isUpdateDialogOpen = false"
-      ></TimeframeForm>
-    </v-dialog>
+      <v-card-actions>
+        <v-btn href="#timeframe" text> Aller a la partie creneau </v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
-import TimeframeForm from "../timeframe/TimeframeForm.vue";
+import { Period } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",
-  components: { TimeframeForm },
   props: {
     isDisabled: {
       type: Boolean,
@@ -63,45 +59,14 @@ export default Vue.extend({
     isUpdateDialogOpen: false,
   }),
   computed: {
-    gearTimeWindow(): time_windows | undefined {
-      return this.$accessor.FA.gearTimeWindow;
+    gearRequestRentalPeriods(): Period[] {
+      return this.$accessor.FA.gearRequestRentalPeriods;
     },
-    gearTimeWindowIndex(): number {
-      return this.$accessor.FA.gearTimeWindowIndex;
-    },
-    type(): time_windows_type {
-      return time_windows_type.MATOS;
-    },
-    startDate(): string {
-      return this.gearTimeWindow?.start
-        ? this.displayDate(this.gearTimeWindow.start)
-        : "";
-    },
-    endDate(): string {
-      return this.gearTimeWindow?.end
-        ? this.displayDate(this.gearTimeWindow.end)
-        : "";
+    noGearPeriod(): boolean {
+      return this.gearRequestRentalPeriods.length === 0;
     },
   },
   methods: {
-    openAddDialog() {
-      this.isAddDialogOpen = true;
-    },
-    openUpdateDialog() {
-      this.isUpdateDialogOpen = true;
-    },
-    addTimeWindow(timeWindow: time_windows) {
-      this.$accessor.FA.addTimeWindow(timeWindow);
-    },
-    updateTimeWindow(timeWindow: time_windows) {
-      if (this.gearTimeWindowIndex === -1) return;
-
-      this.$accessor.FA.updateGearTimeWindow(timeWindow);
-      this.$accessor.FA.updateTimeWindow({
-        index: this.gearTimeWindowIndex,
-        timeWindow,
-      });
-    },
     displayDate(date: Date): string {
       const displayOptions: Intl.DateTimeFormatOptions = {
         dateStyle: "long",
@@ -116,14 +81,34 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.time-window {
+.periods {
   display: flex;
-  gap: 30px;
-  .temporal {
-    font-weight: 600;
+  flex-direction: column;
+  gap: 10px;
+  .period {
+    display: flex;
+    gap: 30px;
+    .temporal {
+      font-weight: 600;
+    }
+    .date {
+      margin-left: 5px;
+    }
   }
-  .date {
-    margin-left: 5px;
+}
+
+.v-card {
+  &.message {
+    border-width: 2px;
+    border-style: solid;
+  }
+  &.warning-message {
+    border-color: $warning-primary;
+    background-color: $warning-secondary;
+  }
+  &.info-message {
+    border-color: $info-primary;
+    background-color: $info-secondary;
   }
 }
 </style>
