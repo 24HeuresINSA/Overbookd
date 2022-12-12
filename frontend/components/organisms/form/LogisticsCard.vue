@@ -84,9 +84,7 @@ export default Vue.extend({
       return (
         this.gear &&
         parseInt(this.quantity) >= 1 &&
-        this.$accessor.FA.mFA.time_windows?.find(
-          (tw) => tw.type === time_windows_type.MATOS
-        ) &&
+        this.$accessor.FA.gearRequestRentalPeriods.length > 0 &&
         !this.isDisabled
       );
     },
