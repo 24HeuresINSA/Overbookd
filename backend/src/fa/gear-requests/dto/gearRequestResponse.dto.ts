@@ -27,6 +27,7 @@ class GearSeekerRepresentation implements GearSeeker {
 }
 
 class PeriodRepresentation implements Period {
+  id: number;
   start: Date;
   end: Date;
 }

@@ -12,6 +12,7 @@ import {
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
+  Period,
   SearchFA,
   Status,
   subject_type,
@@ -29,6 +30,8 @@ export const state = () => ({
     name: "",
   } as FA,
   gearRequests: [] as GearRequest[],
+  localGearRequestRentalPeriods: [] as Period[],
+  localGearRequestRentalPeriodId: 1001,
 });
 
 export const getters = getterTree(state, {
@@ -43,9 +46,6 @@ export const getters = getterTree(state, {
       (gr) => gr.gear.owner?.code === "barrieres"
     );
   },
-  timeWindows(state): time_windows[] {
-    return state.mFA.time_windows ?? [];
-  },
   animationTimeWindows(state): time_windows[] {
     return (
       state.mFA.time_windows?.filter(
@@ -53,17 +53,27 @@ export const getters = getterTree(state, {
       ) ?? []
     );
   },
-  gearTimeWindowIndex(state): number {
-    return (
-      state.mFA.time_windows?.findIndex(
-        (timeWindow) => timeWindow.type === time_windows_type.MATOS
-      ) ?? -1
-    );
+  gearRequestRentalPeriods(state): Period[] {
+    const savedPeriods = state.gearRequests.reduce((periods, gearRequest) => {
+      const period = periods.find(
+        (period) =>
+          period.id === gearRequest.rentalPeriod.id ||
+          (period.start === gearRequest.rentalPeriod.start &&
+            period.end === gearRequest.rentalPeriod.end)
+      );
+      if (period) return periods;
+      return [...periods, gearRequest.rentalPeriod];
+    }, [] as Period[]);
+    return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
-  gearTimeWindow(state): time_windows | undefined {
-    return state.mFA.time_windows?.find(
-      (timeWindow) => timeWindow.type === time_windows_type.MATOS
-    );
+  uniqueByGearGearRequests(state): GearRequest[] {
+    return state.gearRequests.reduce((gearRequests, gearRequest) => {
+      const savedGearRequest = gearRequests.find(
+        (gr) => gr.gear.id === gearRequest.gear.id
+      );
+      if (savedGearRequest) return gearRequests;
+      return [...gearRequests, gearRequest];
+    }, [] as GearRequest[]);
   },
 });
 
@@ -157,17 +167,68 @@ export const mutations = mutationTree(state, {
       mFA.fa_electricity_needs.splice(index, 1);
     }
   },
+
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
     gearRequests.push(gearRequest);
   },
+
   SET_GEAR_REQUESTS(state, gearRequestsResponse: GearRequest[]) {
     state.gearRequests = gearRequestsResponse;
   },
-  REMOVE_GEAR_REQUEST(state, gearId: number) {
+
+  REMOVE_GEAR_RELATED_GEAR_REQUESTS(state, gearId: number) {
     state.gearRequests = state.gearRequests.filter(
       (gr) => gr.gear.id !== gearId
     );
   },
+
+  REMOVE_GEAR_REQUEST(state, gearRequest: GearRequest) {
+    state.gearRequests = state.gearRequests.filter(
+      (gr) =>
+        gr.gear.id !== gearRequest.gear.id &&
+        gr.rentalPeriod.id !== gr.rentalPeriod.id
+    );
+  },
+
+  ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(
+    state,
+    rentalPeriod: Omit<Period, "id">
+  ) {
+    const id = state.localGearRequestRentalPeriodId;
+    state.localGearRequestRentalPeriodId =
+      state.localGearRequestRentalPeriodId + 1;
+    state.localGearRequestRentalPeriods = [
+      ...state.localGearRequestRentalPeriods,
+      {
+        ...rentalPeriod,
+        id,
+      },
+    ];
+  },
+
+  REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(state, rentalPeriod: Period) {
+    state.localGearRequestRentalPeriods =
+      state.localGearRequestRentalPeriods.filter(
+        (period) => period.id !== rentalPeriod.id
+      );
+  },
+
+  RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS(state) {
+    state.localGearRequestRentalPeriods = [];
+  },
+
+  UPDATE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(state, rentalPeriod: Period) {
+    const rentalPeriodIndex = state.localGearRequestRentalPeriods.findIndex(
+      (period) => period.id === rentalPeriod.id
+    );
+    if (rentalPeriodIndex === -1) return;
+    state.localGearRequestRentalPeriods.splice(
+      rentalPeriodIndex,
+      1,
+      rentalPeriod
+    );
+  },
+
   SET_COMMENTS({ mFA }, comments: fa_comments[]) {
     mFA.fa_comments = comments;
   },
@@ -409,6 +470,55 @@ export const actions = actionTree(
       commit("DELETE_ELECTRICITY_NEED", index);
     },
 
+    async addGearRequestRentalPeriod(
+      { dispatch, getters, commit },
+      rentalPeriod: Omit<Period, "id">
+    ) {
+      const gearRequests = getters.uniqueByGearGearRequests as GearRequest[];
+      if (gearRequests.length === 0) {
+        return commit("ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
+      }
+      const { start, end } = rentalPeriod;
+      const [firstGearRequest, ...otherGearRequests]: GearRequestCreation[] =
+        gearRequests.map((gr) => ({
+          start,
+          end,
+          gearId: gr.gear.id,
+          quantity: gr.quantity,
+        }));
+      const { rentalPeriod: savedRentalPeriod } = await dispatch(
+        "addGearRequest",
+        firstGearRequest
+      );
+      otherGearRequests.map(({ gearId, quantity }) =>
+        dispatch("addGearRequest", {
+          gearId,
+          quantity,
+          periodId: savedRentalPeriod.id,
+        })
+      );
+    },
+
+    async addGearRequestForAllRentalPeriods(
+      { commit, getters, dispatch },
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+    ) {
+      const gearRequestCreationForms: GearRequestCreation[] = (
+        getters.gearRequestRentalPeriods as Period[]
+      ).map(({ start, end, id: periodId }) => {
+        const periodPart = periodId > 1000 ? { start, end } : { periodId };
+        return {
+          ...periodPart,
+          gearId,
+          quantity,
+        };
+      });
+      await Promise.all(
+        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
+      );
+      commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
+    },
+
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
       const res = await RepoFactory.faRepo.createGearRequest(
         this,
@@ -420,28 +530,92 @@ export const actions = actionTree(
         "La demande de matériel a été ajoutée avec succès ✅"
       );
       commit("ADD_GEAR_REQUEST", res.data);
+      return res.data;
+    },
+
+    async removeGearRequestRentalPeriod(
+      { state, commit, dispatch },
+      rentalPeriod: Period
+    ) {
+      if (rentalPeriod.id > 1000) {
+        return commit("REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
+      }
+      const impactedGearRequest = state.gearRequests.filter(
+        (gr) =>
+          gr.rentalPeriod.id === rentalPeriod.id ||
+          (gr.rentalPeriod.start === rentalPeriod.start &&
+            gr.rentalPeriod.end === rentalPeriod.end)
+      );
+      await Promise.all(
+        impactedGearRequest.map((gr) =>
+          safeCall(
+            this,
+            RepoFactory.faRepo.deleteGearRequest(
+              this,
+              state.mFA.id,
+              gr.gear.id,
+              gr.rentalPeriod.id
+            ),
+            {
+              successMessage: "La demande de matériel a été supprimée 🗑️",
+              errorMessage: "La demande de matériel na pas a été supprimée ❌",
+            }
+          )
+        )
+      );
+      dispatch("fetchGearRequests");
     },
 
     async removeGearRequest({ commit, state }, gearId: number) {
-      await RepoFactory.faRepo.deleteGearRequest(this, state.mFA.id, gearId);
-      sendNotification(this, "La demande de matériel a été supprimée 🗑️");
-      commit("REMOVE_GEAR_REQUEST", gearId);
+      await Promise.all(
+        state.gearRequests
+          .filter((gearRequest) => gearRequest.gear.id === gearId)
+          .map((gearRequest) =>
+            safeCall(
+              this,
+              RepoFactory.faRepo.deleteGearRequest(
+                this,
+                state.mFA.id,
+                gearId,
+                gearRequest.rentalPeriod.id
+              ),
+              {
+                successMessage: "La demande de matériel a été supprimée 🗑️",
+                errorMessage:
+                  "La demande de matériel na pas a été supprimée ❌",
+              }
+            )
+          )
+      );
+      commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
 
-    async updateGearTimeWindow({ commit, state }, time_windows: time_windows) {
+    async updateGearPeriod({ commit, state, dispatch }, rentalPeriod: Period) {
+      const { id: rentalPeriodId, start, end } = rentalPeriod;
+      if (rentalPeriodId > 1000) {
+        return commit("UPDATE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
+      }
       try {
         const gearRequests = await Promise.all(
-          state.gearRequests.map(async (gearRequest) => {
-            const res = await RepoFactory.faRepo.updateGearRequest(
-              this,
-              state.mFA.id,
-              gearRequest.gear.id,
-              { start: time_windows.start, end: time_windows.end }
-            );
-            return res.data;
-          })
+          state.gearRequests
+            .filter(
+              (gearRequest) =>
+                gearRequest.rentalPeriod.id === rentalPeriodId ||
+                (gearRequest.rentalPeriod.start === start &&
+                  gearRequest.rentalPeriod.end === end)
+            )
+            .map(async (gearRequest) => {
+              const res = await RepoFactory.faRepo.updateGearRequest(
+                this,
+                state.mFA.id,
+                gearRequest.gear.id,
+                rentalPeriodId,
+                { start, end }
+              );
+              return res.data;
+            })
         );
-        commit("SET_GEAR_REQUESTS", gearRequests);
+        dispatch("fetchGearRequests");
         if (!gearRequests.length) return;
         sendNotification(this, "Demandes de matériel misent a jour ✅");
       } catch (e) {
@@ -450,6 +624,15 @@ export const actions = actionTree(
           "La mise a jour des demandes de matos a echouee ❌"
         );
       }
+    },
+
+    async fetchGearRequests({ state, commit }) {
+      const resGearRequests = await safeCall(
+        this,
+        repo.getGearRequests(this, state.mFA.id)
+      );
+      if (!resGearRequests) return null;
+      commit("SET_GEAR_REQUESTS", resGearRequests.data);
     },
 
     async fetchFAs({ commit }, search?: SearchFA) {

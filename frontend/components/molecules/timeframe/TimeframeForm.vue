@@ -4,6 +4,14 @@
       <span class="headline">Ajouter un créneau</span>
     </v-card-title>
 
+    <v-select
+      v-model="timeWindowType"
+      type="select"
+      label="Type"
+      :items="timeWindowsType"
+      class="row"
+    ></v-select>
+
     <h3 class="subtitle">Début du créneau</h3>
     <div class="row">
       <v-menu
@@ -179,16 +187,13 @@ export default Vue.extend({
       type: Object,
       default: () => null,
     },
-    type: {
-      type: String,
-      default: () => time_windows_type.ANIM,
-    },
   },
   data: () => ({
     dateStart: "",
     dateEnd: "",
     timeStart: "",
     timeEnd: "",
+    timeWindowType: time_windows_type.ANIM,
 
     formatDateStart: "",
     formatDateEnd: "",
@@ -199,11 +204,15 @@ export default Vue.extend({
     menuTimeEnd: false,
   }),
   computed: {
+    type(): time_windows_type {
+      return this.timeWindow?.type ?? this.timeWindowType;
+    },
     mTimeWindow(): time_windows {
       return {
+        type: this.type,
+        ...this.timeWindow,
         start: new Date(this.dateStart + " " + this.timeStart),
         end: new Date(this.dateEnd + " " + this.timeEnd),
-        type: this.type as time_windows_type,
       };
     },
     timeframes(): any {

@@ -6,6 +6,7 @@ import { GearRequestsService } from './gear-requests/gearRequests.service';
 import { PrismaGearRepository } from 'src/catalog/repositories';
 import { PrismaAnimationRepository } from './gear-requests/repositories/animation.repository.prisma';
 import { PrismaGearRequestRepository } from './gear-requests/repositories/gearRequest.repository.prisma';
+import { PrismaPeriodRepository } from './gear-requests/repositories/period.repository.prisma';
 
 @Module({
   controllers: [FaController],
@@ -21,6 +22,10 @@ import { PrismaGearRequestRepository } from './gear-requests/repositories/gearRe
     {
       provide: 'ANIMATION_REPOSITORY',
       useClass: PrismaAnimationRepository,
+    },
+    {
+      provide: 'PERIOD_REPOSITORY',
+      useClass: PrismaPeriodRepository,
     },
   ],
 })

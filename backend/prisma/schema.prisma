@@ -336,10 +336,10 @@ model Configuration {
 }
 
 model Period {
-  id          Int                     @id @default(autoincrement())
+  id          Int                      @id @default(autoincrement())
   start       DateTime
   end         DateTime
-  gearRequest Animation_Gear_Request? @relation("gear-request-rental-period")
+  gearRequest Animation_Gear_Request[] @relation("gear-request-rental-period")
 
   @@index([start, end])
 }
@@ -347,13 +347,13 @@ model Period {
 model Animation_Gear_Request {
   animationId    Int
   animation      fa           @relation("gear-request-animation", fields: [animationId], references: [id])
-  rentalPeriodId Int          @unique
+  rentalPeriodId Int
   rentalPeriod   Period       @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
   gearId         Int
   gear           Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id])
   quantity       Int
   status         String
 
-  @@unique([animationId, gearId])
+  @@unique([animationId, gearId, rentalPeriodId])
   @@index([status])
 }
