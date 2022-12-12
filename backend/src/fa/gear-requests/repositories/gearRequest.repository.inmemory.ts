@@ -1,4 +1,6 @@
 import {
+  APPROVED,
+  ApprovedGearRequest,
   GearRequest,
   GearRequestIdentifier,
   GearRequestNotFound,
@@ -49,6 +51,25 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
         this.isMatchingSearch(gearRequestSearch, gearRequest),
       ),
     );
+  }
+
+  approveGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    drive: string,
+  ): Promise<ApprovedGearRequest> {
+    const gearRequestIndex = this.gearRequests.findIndex(
+      this.isSameGearRequest(gearRequestId),
+    );
+    if (gearRequestIndex === -1) {
+      return Promise.reject(new GearRequestNotFound(gearRequestId));
+    }
+    const approvedGearRequest: ApprovedGearRequest = {
+      ...this.gearRequests[gearRequestIndex],
+      status: APPROVED,
+      drive,
+    };
+    this.gearRequests[gearRequestIndex] = approvedGearRequest;
+    return Promise.resolve(approvedGearRequest);
   }
 
   private isMatchingSearch(

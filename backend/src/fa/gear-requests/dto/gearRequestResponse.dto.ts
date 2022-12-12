@@ -3,9 +3,11 @@ import { SimplifiedCategoryRepresentation } from '../../../catalog/dto/gearRespo
 import { Gear, Team } from '../../../catalog/interfaces';
 import {
   GearRequest,
+  ApprovedGearRequest,
   GearSeeker,
   GearSeekerType,
   Period,
+  APPROVED,
 } from '../gearRequests.service';
 
 class TeamRepresentation implements Team {
@@ -67,4 +69,23 @@ export class GearRequestResponseDto implements GearRequest {
     type: PeriodRepresentation,
   })
   rentalPeriod: Period;
+}
+
+export class ApprovedGearRequestResponseDto
+  extends GearRequestResponseDto
+  implements ApprovedGearRequest
+{
+  @ApiProperty({
+    required: true,
+    description: 'Gear Request status',
+    type: String,
+  })
+  status: typeof APPROVED;
+
+  @ApiProperty({
+    required: true,
+    description: 'Gear Request drive',
+    type: String,
+  })
+  drive: string;
 }

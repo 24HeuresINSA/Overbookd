@@ -1,6 +1,7 @@
 import { InMemoryGearRepository } from '../../catalog/repositories/in-memory';
 import { Gear } from '../../catalog/interfaces';
 import {
+  APPROVED,
   GearRequest,
   GearRequestsService,
   GearSeekerType,
@@ -10,6 +11,8 @@ import { InMemoryGearRequestRepository } from './repositories/gearRequest.reposi
 import { Status } from '../dto/update-fa.dto';
 import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
+
+const MAGASIN = 'Magasin';
 
 const MAY_24_1 = {
   id: 1,
@@ -393,5 +396,50 @@ describe('Gear requests', () => {
         });
       },
     );
+  });
+  describe('Approve gear requests', () => {
+    beforeAll(() => {
+      gearRequestRepository.gearRequests = [...GEAR_REQUESTS];
+    });
+    describe('when logistical team approve a gear request', () => {
+      const {
+        gear: { id: gearId },
+        seeker,
+        rentalPeriod: { id: rentalPeriodId },
+      } = GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE;
+      const gearRequestId = {
+        gearId,
+        seeker,
+        rentalPeriodId,
+      };
+      it('should update gear requests status to approved', async () => {
+        const approvedGearReques =
+          await gearRequestService.approveAnimationGearRequest(
+            gearRequestId,
+            MAGASIN,
+          );
+        expect(approvedGearReques.status).toBe(APPROVED);
+        const searchedGearRequest = await gearRequestService.findGearRequest({
+          gearId,
+          seeker,
+          rentalPeriodId,
+        });
+        expect(searchedGearRequest.status).toBe(APPROVED);
+      });
+      it('should update gear requests with a drive', async () => {
+        const approvedGearRequest =
+          await gearRequestService.approveAnimationGearRequest(
+            gearRequestId,
+            MAGASIN,
+          );
+        expect(approvedGearRequest.drive).toBe(MAGASIN);
+        const searchedGearRequest = await gearRequestService.findGearRequest({
+          gearId,
+          seeker,
+          rentalPeriodId,
+        });
+        expect(searchedGearRequest.drive).toBe(MAGASIN);
+      });
+    });
   });
 });
