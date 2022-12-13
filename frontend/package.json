@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "1.2.15-rc.2",
+  "version": "1.2.15-rc.3",
   "description": "Frontend pour le logiciel de gestion du festivale des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -51,13 +51,13 @@
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/vuetify": "^1.12.3",
-    "@types/lodash": "^4.14.189",
+    "@types/lodash": "^4.14.191",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vue/cli-plugin-babel": "^5.0.8",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
-    "cypress": "^11.1.0",
+    "cypress": "^12.0.2",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-cypress": "^2.12.1",
@@ -65,10 +65,10 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^1.1.5",
     "eslint-plugin-vue": "^7.5.0",
-    "prettier": "^2.8.0",
+    "prettier": "^2.8.1",
     "sass": "^1.56.1",
     "sass-loader": "^10.4.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   }
 }
