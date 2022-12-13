@@ -4,7 +4,7 @@ WORKDIR /overbookd/backend
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm ci --silent
 
 COPY . .
 

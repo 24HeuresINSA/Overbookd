@@ -400,6 +400,12 @@ export default Vue.extend({
 });
 </script>
 
+<style>
+html {
+  overflow: hidden;
+}
+</style>
+
 <style lang="scss" scoped>
 .main {
   display: flex;
