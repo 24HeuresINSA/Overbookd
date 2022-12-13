@@ -3,7 +3,7 @@
     <h1>🤔 T'es sûr que t'as rien oublié ? 🤔</h1>
     <div v-show="hasError" class="my-container my-3">
       <h3>❌ Erreurs ❌</h3>
-      <p class="important">
+      <p class="important text-center">
         Tu dois corriger toutes les erreurs pour soumettre ta FA à validation !
       </p>
       <div v-show="generalErrors.length > 0">
@@ -27,10 +27,10 @@
         </ul>
       </div>
 
-      <div v-show="timeWindowErrors.length > 0">
+      <div v-show="timeWindowsErrors.length > 0">
         <h4>Créneaux</h4>
         <ul>
-          <li v-for="label in timeWindowErrors" :key="label">{{ label }}</li>
+          <li v-for="label in timeWindowsErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
@@ -45,6 +45,13 @@
         <h4>Presta</h4>
         <ul>
           <li v-for="label in collaboratorErrors" :key="label">{{ label }}</li>
+        </ul>
+      </div>
+
+      <div v-show="gearRequestErrors.length > 0">
+        <h4>Logistique</h4>
+        <ul>
+          <li v-for="label in gearRequestErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
     </div>
@@ -82,10 +89,10 @@
         </ul>
       </div>
 
-      <div v-show="logisticsWarnings.length > 0">
+      <div v-show="gearRequestWarnings.length > 0">
         <h4>Logistique</h4>
         <ul>
-          <li v-for="label in logisticsWarnings" :key="label">{{ label }}</li>
+          <li v-for="label in gearRequestWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
@@ -124,6 +131,32 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {
+  hasAtLeastOneAnimationTimeWindow,
+  hasAtLeastOneBarrieresGearRequest,
+  hasAtLeastOneElecGearRequest,
+  hasAtLeastOneMatosGearRequest,
+  hasBarrieresGearRequestWithQuantityHigherThanZero,
+  hasCollaboratorMandatoryFieldsFilled,
+  hasCollaboratorOptionalFieldsFilled,
+  hasDescriptionToPublish,
+  hasElecGearRequestWithQuantityHigherThanZero,
+  hasElecNeeds,
+  hasInCharge,
+  hasLocation,
+  hasMatosGearRequestWithQuantityHigherThanZero,
+  hasName,
+  hasPassNumberHigherThanZero,
+  hasPhotoLinkToPublish,
+  hasSecurityNeeds,
+  hasSignaNeeds,
+  hasSignaNeedsWithQuantityHigherThanZero,
+  hasTeam,
+  hasType,
+  hasWaterNeeds,
+  isCollaboratorNotEmpty,
+  isPublishable,
+} from "~/utils/rules/faValidationRules";
 import { collaborator } from "~/utils/models/FA";
 
 export default Vue.extend({
@@ -134,13 +167,14 @@ export default Vue.extend({
     },
 
     hasError(): boolean {
-      return (
+      return Boolean(
         this.generalErrors.length > 0 ||
-        this.detailErrors.length > 0 ||
-        this.signaErrors.length > 0 ||
-        this.timeWindowErrors.length > 0 ||
-        this.securityErrors.length > 0 ||
-        this.collaboratorErrors.length > 0
+          this.detailErrors.length > 0 ||
+          this.signaErrors.length > 0 ||
+          this.timeWindowsErrors.length > 0 ||
+          this.securityErrors.length > 0 ||
+          this.collaboratorErrors.length > 0 ||
+          this.gearRequestErrors.length > 0
       );
     },
     hasWarning(): boolean {
@@ -149,166 +183,123 @@ export default Vue.extend({
         this.signaWarnings.length > 0 ||
         this.securityWarnings.length > 0 ||
         this.collaboratorWarnings.length > 0 ||
-        this.logisticsWarnings.length > 0 ||
+        this.gearRequestWarnings.length > 0 ||
         this.elecWarnings.length > 0 ||
         this.waterWarnings.length > 0
       );
     },
 
+    // General
     generalErrors(): string[] {
-      const fields: Field[] = [
-        { key: "name", label: "Nom" },
-        { key: "type", label: "Type" },
-        { key: "team_id", label: "Team" },
-        { key: "in_charge", label: "Responsable" },
-      ];
-
-      return fields
-        .filter((field) => !this.store.mFA[field.key])
-        .map((field) => `Le champ ${field.label} est vide.`);
+      return [
+        hasName(this.store.mFA.name),
+        hasType(this.store.mFA.type),
+        hasTeam(this.store.mFA.team_id),
+        hasInCharge(this.store.mFA.in_charge),
+      ].filter((error): error is string => error !== true);
     },
 
+    // Detail
     detailErrors(): string[] {
-      const fields: Field[] = [
-        {
-          key: "description",
-          label: "La description à publier sur le site est vide.",
-        },
-        {
-          key: "photo_link",
-          label: "Le lien de la photo à publier sur le site est vide.",
-        },
-      ];
-
-      if (!this.store.mFA.is_publishable) return [];
-      return fields
-        .filter((field) => !this.store.mFA[field.key])
-        .map((field) => field.label);
+      return [
+        hasDescriptionToPublish(this.store.mFA),
+        hasPhotoLinkToPublish(this.store.mFA),
+      ].filter((error): error is string => error !== true);
     },
     detailWarnings(): string[] {
-      if (!this.store.mFA.is_publishable) {
-        return ["Cette activité ne sera pas publié sur le site."];
-      }
-      return [];
+      return [isPublishable(this.store.mFA.is_publishable)].filter(
+        (warning): warning is string => warning !== true
+      );
     },
 
+    // Signa
     signaErrors(): string[] {
-      if (!this.store.mFA.location_id) {
-        return ["Cette activité n'a pas de lieu."];
-      }
-      return [];
+      return [
+        hasLocation(this.store.mFA.location_id),
+        hasSignaNeedsWithQuantityHigherThanZero(this.store.mFA.fa_signa_needs),
+      ].filter((error): error is string => error !== true);
     },
     signaWarnings(): string[] {
-      if (this.store.mFA.fa_signa_needs?.length === 0) {
-        return ["Cette activité n'a pas de signalisation."];
-      }
-      return [];
+      return [hasSignaNeeds(this.store.mFA.fa_signa_needs)].filter(
+        (warning): warning is string => warning !== true
+      );
     },
 
-    timeWindowErrors(): string[] {
-      if (this.store.animationTimeWindows?.length === 0) {
-        return ["Cette activité n'a pas de créneaux."];
-      }
-      return [];
+    // Time windows
+    timeWindowsErrors(): string[] {
+      return [
+        hasAtLeastOneAnimationTimeWindow(this.store.mFA.time_windows),
+      ].filter((error): error is string => error !== true);
     },
 
+    // Security
     securityErrors(): string[] {
-      if (this.store.mFA.is_pass_required && !this.store.mFA.number_of_pass) {
-        return ["Le nombre de Pass Sécu nécessaire n'est pas précisé."];
-      }
-      return [];
+      return [hasPassNumberHigherThanZero(this.store.mFA)].filter(
+        (error): error is string => error !== true
+      );
     },
     securityWarnings(): string[] {
-      if (!this.store.mFA.security_needs) {
-        return [
-          "Cette activité n'a pas de dispositif de sécurité particulier.",
-        ];
-      }
-      return [];
+      return [hasSecurityNeeds(this.store.mFA.security_needs)].filter(
+        (error): error is string => error !== true
+      );
     },
 
+    // Collaborator
     collaborator(): collaborator {
       return this.store.mFA.fa_collaborators[0]?.collaborator;
     },
-
     collaboratorErrors(): string[] {
-      if (this.isCollaboratorEssentialDataIncomplete) {
-        return [
-          "Les informations indispensables du prestataire sont incomplètes.",
-        ];
-      }
-      return [];
+      return [hasCollaboratorMandatoryFieldsFilled(this.collaborator)].filter(
+        (error): error is string => error !== true
+      );
     },
     collaboratorWarnings(): string[] {
-      if (this.isCollaboratorEmpty) {
-        return ["Cette activité n'a pas de prestataire."];
-      }
-
-      if (this.isCollaboratorOptionalDataIncomplete) {
-        return ["Les informations du prestataire sont incomplètes."];
-      }
-      return [];
-    },
-    areCollaboratorMandatoryFieldsFilled(): boolean {
-      const { firstname, lastname, phone } = this.collaborator;
-      return Boolean(firstname && lastname && phone);
-    },
-    isCollaboratorEssentialDataIncomplete(): boolean {
-      if (!this.collaborator) return false;
-      const { firstname, lastname, phone } = this.collaborator;
-      const hasAtLeastOneFieldFilled = Boolean(firstname || lastname || phone);
-      return (
-        !this.areCollaboratorMandatoryFieldsFilled && hasAtLeastOneFieldFilled
-      );
-    },
-    isCollaboratorOptionalDataIncomplete(): boolean {
-      if (!this.collaborator) return false;
-      const { email, company, comment } = this.collaborator;
-      const hasAtLeastOneFieldEmpty = Boolean(!(email && company && comment));
-      return (
-        this.areCollaboratorMandatoryFieldsFilled && hasAtLeastOneFieldEmpty
-      );
-    },
-    isCollaboratorEmpty(): boolean {
-      if (!this.collaborator) return true;
-      const { id, ...rest } = this.collaborator;
-      return Object.keys(rest).every((key) => !rest[key as keyof typeof rest]);
+      return [
+        isCollaboratorNotEmpty(this.collaborator),
+        hasCollaboratorOptionalFieldsFilled(this.collaborator),
+      ].filter((warning): warning is string => warning !== true);
     },
 
-    logisticsWarnings(): string[] {
-      const fields: Field[] = [
-        { key: "matosGearRequests", label: "Matos" },
-        { key: "barrieresGearRequests", label: "Barrières" },
-        { key: "elecGearRequests", label: "Matos Elec / Eau" },
-      ];
-      return fields
-        .filter((field) => this.store[field.key]?.length === 0)
-        .map((field) => `Ton activité n'a pas de ${field.label}.`);
+    // Gear Request
+    gearRequestWarnings(): string[] {
+      return [
+        hasAtLeastOneMatosGearRequest(this.store.matosGearRequests),
+        hasAtLeastOneBarrieresGearRequest(this.store.barrieresGearRequests),
+        hasAtLeastOneElecGearRequest(this.store.elecGearRequests),
+      ].filter((warning): warning is string => warning !== true);
+    },
+    gearRequestErrors(): string[] {
+      return [
+        hasMatosGearRequestWithQuantityHigherThanZero(
+          this.store.matosGearRequests
+        ),
+        hasBarrieresGearRequestWithQuantityHigherThanZero(
+          this.store.barrieresGearRequests
+        ),
+        hasElecGearRequestWithQuantityHigherThanZero(
+          this.store.elecGearRequests
+        ),
+      ].filter((error): error is string => error !== true);
     },
 
+    // Elec
     elecWarnings(): string[] {
-      if (this.store.mFA.fa_electricity_needs.length === 0) {
-        return ["Cette activité n'a pas besoin d'électricité."];
-      }
-      return [];
+      return [hasElecNeeds(this.store.mFA.fa_electricity_needs)].filter(
+        (warning): warning is string => warning !== true
+      );
     },
 
+    // Water
     waterWarnings(): string[] {
-      if (!this.store.mFA.water_needs) {
-        return ["Cette activité n'a pas besoin d'eau."];
-      }
-      return [];
+      return [hasWaterNeeds(this.store.mFA.water_needs)].filter(
+        (warning): warning is string => warning !== true
+      );
     },
   },
 });
-
-interface Field {
-  key: string;
-  label: string;
-}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
   text-align: center;
   font-size: 1.8rem;
@@ -317,24 +308,22 @@ h1 {
 
 .my-container {
   margin: 0 1.2rem;
-}
 
-.my-container h3 {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin: 0.5rem 0 0 0;
-  text-align: center;
-}
+  h3 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+    text-align: center;
+  }
 
-.my-container h4 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 0.5rem 0 0 0;
-}
+  h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+  }
 
-.important {
-  color: red;
-  font-weight: bold;
-  text-align: center;
+  .text-center {
+    text-align: center;
+  }
 }
 </style>

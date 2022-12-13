@@ -55,11 +55,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { collaborator, FA, fa_collaborators } from "~/utils/models/FA";
 import {
-  isAnimationValidatedBy,
   getFAValidationStatus,
-} from "~/utils/rules/faValidationRules";
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import { collaborator, FA, fa_collaborators } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CollaboratorCard",

@@ -51,7 +51,7 @@ import { FA, fa_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
-} from "~/utils/rules/faValidationRules";
+} from "~/utils/fa/faUtils";
 
 export default Vue.extend({
   name: "FAGeneralCard",
@@ -74,7 +74,7 @@ export default Vue.extend({
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
     validationStatus(): string {
-      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
+      return getFAValidationStatus(this.mFA, this.owner);
     },
   },
   async mounted() {

@@ -38,12 +38,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
 import { FA } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import {
-  isAnimationValidatedBy,
-  getFAValidationStatus,
-} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "SecurityCard",

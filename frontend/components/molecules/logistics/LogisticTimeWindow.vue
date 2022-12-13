@@ -58,12 +58,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {
+getFAValidationStatus, isAnimationValidatedBy
+} from "~/utils/fa/faUtils";
 import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
 import TimeframeForm from "../timeframe/TimeframeForm.vue";
-import {
-  isAnimationValidatedBy,
-  getFAValidationStatus,
-} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",

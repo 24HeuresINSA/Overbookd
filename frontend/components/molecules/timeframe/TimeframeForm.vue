@@ -158,8 +158,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { getFAValidationStatus } from "~/utils/fa/faUtils";
 import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
-import { getFAValidationStatus } from "~/utils/rules/faValidationRules";
 
 interface BrakeDownDate {
   year: number;

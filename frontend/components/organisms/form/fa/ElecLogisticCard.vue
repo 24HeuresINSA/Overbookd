@@ -58,11 +58,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { electricity_type, FA, fa_electricity_needs } from "~/utils/models/FA";
 import {
-  isAnimationValidatedBy,
   getFAValidationStatus,
-} from "~/utils/rules/faValidationRules";
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import { electricity_type, FA, fa_electricity_needs } from "~/utils/models/FA";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },

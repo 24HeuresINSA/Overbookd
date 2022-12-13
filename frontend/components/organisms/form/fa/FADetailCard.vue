@@ -50,7 +50,7 @@ import { FA } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
-} from "~/utils/rules/faValidationRules";
+} from "~/utils/fa/faUtils";
 
 export default Vue.extend({
   name: "FADetailCard",
