@@ -415,4 +415,10 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.fab-right {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+</style>

@@ -1,24 +1,24 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
 import {
-  collaborator,
-  CreateFA,
-  FA,
-  fa_collaborators,
-  fa_comments,
-  fa_electricity_needs,
-  fa_signa_needs,
-  fa_validation_body,
-  GearRequest,
-  GearRequestCreation,
-  SearchFA,
-  Status,
-  subject_type,
-  time_windows,
-  time_windows_type,
+    collaborator,
+    CreateFA,
+    FA,
+    fa_collaborators,
+    fa_comments,
+    fa_electricity_needs,
+    fa_signa_needs,
+    fa_validation_body,
+    GearRequest,
+    GearRequestCreation,
+    SearchFA,
+    Status,
+    subject_type,
+    time_windows,
+    time_windows_type
 } from "~/utils/models/FA";
-import { isAnimationValidatedBy } from "~/utils/rules/faValidationRules";
 import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
