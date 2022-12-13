@@ -4,13 +4,30 @@
     <v-card-text>
       <v-container>
         <v-form v-if="!isValidatedByOwner" class="flex-row">
-          <v-text-field v-model="quantity" type="number" label="Quantité" :rules="[rules.number, rules.min]" />
-          <SearchGear :gear="gear" :owner="owner" @change="updateCurrentGear"></SearchGear>
-          <v-btn rounded class="margin-btn" :disabled="!isValid" @click="addGear">
+          <v-text-field
+            v-model="quantity"
+            type="number"
+            label="Quantité"
+            :rules="[rules.number, rules.min]"
+          />
+          <SearchGear
+            :gear="gear"
+            :owner="owner"
+            @change="updateCurrentGear"
+          ></SearchGear>
+          <v-btn
+            rounded
+            class="margin-btn"
+            :disabled="!isValid"
+            @click="addGear"
+          >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-        <LogisticsTable :owner="owner" :is-disabled="isValidatedByOwner"></LogisticsTable>
+        <LogisticsTable
+          :owner="owner"
+          :is-disabled="isValidatedByOwner"
+        ></LogisticsTable>
       </v-container>
     </v-card-text>
   </v-card>
@@ -21,14 +38,15 @@ import Vue from "vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
 import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
 import {
-  getFAValidationStatus, isAnimationValidatedBy
+  getFAValidationStatus,
+  isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
 import { Gear } from "~/utils/models/catalog.model";
 import {
   FA,
   GearRequestCreation,
   time_windows,
-  time_windows_type
+  time_windows_type,
 } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
@@ -60,9 +78,9 @@ export default Vue.extend({
     isValid(): boolean {
       return Boolean(
         this.gear &&
-        parseInt(this.quantity) >= 1 &&
-        this.timeWindow &&
-        !this.isValidatedByOwner
+          parseInt(this.quantity) >= 1 &&
+          this.timeWindow &&
+          !this.isValidatedByOwner
       );
     },
     timeWindow(): time_windows | undefined {
