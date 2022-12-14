@@ -8,41 +8,9 @@ import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permissions } from './auth/permissions-auth.decorator';
+import { PermissionsGuard } from './auth/permissions-auth.guard';
 import { JwtPayload } from './auth/auth.service';
-
-type Role =
-  | 'admin'
-  | 'hard'
-  | 'soft'
-  | 'orga'
-  | 'confiance'
-  | 'vieux'
-  | 'bureau'
-  | 'sg'
-  | 'log'
-  | 'matos'
-  | 'elec'
-  | 'secu'
-  | 'payant'
-  | 'humain'
-  | 'bar'
-  | 'barrieres'
-  | 'catering'
-  | 'maman'
-  | 'scene'
-  | 'signa'
-  | 'communication'
-  | 'concerts'
-  | 'courses'
-  | 'culture'
-  | 'dd'
-  | 'deco'
-  | 'informatique'
-  | 'plaizir'
-  | 'sponso'
-  | 'sports';
 
 /**
  * IMPORTANT: used in others controller like transactions
