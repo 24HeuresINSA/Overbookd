@@ -22,10 +22,10 @@
         ></v-switch>
         <v-form v-if="isPublishable">
           <v-text-field
-            :value="mFA.fa_site_publish_animation?.photo_link"
+            :value="mFA.fa_site_publish_animation?.photLink"
             label="Lien de la photo de l'activité sur le drive"
             :disabled="isDisabled"
-            @change="onChangePublishAnimation('photo_link', $event)"
+            @change="onChangePublishAnimation('photoLink', $event)"
           ></v-text-field>
           <v-text-field
             :value="mFA.fa_site_publish_animation?.description"
@@ -65,7 +65,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
-import { site_publish_animation_category_type } from "~/utils/models/FA";
+import { SitePublishAnimationCategoryType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FADetailCard",
@@ -78,7 +78,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      categories: Object.values(site_publish_animation_category_type),
+      categories: Object.values(SitePublishAnimationCategoryType),
       isPublishable: false,
     };
   },
@@ -90,7 +90,7 @@ export default Vue.extend({
   watch: {
     mFA: {
       handler() {
-        if (this.mFA.fa_site_publish_animation?.id) {
+        if (this.mFA.fa_site_publish_animation?.faId) {
           this.isPublishable = true;
         }
       },

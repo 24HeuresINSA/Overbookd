@@ -1,43 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsNumber, IsOptional, IsString } from 'class-validator';
+import { site_publish_animation_category_type } from '@prisma/client';
 import {
   FaSitePublishAnimation,
   SitePublishAnimationCategoryType,
 } from '../interfaces';
 
-export class CreateFaSitePublishAnimationServiceDto
+export class FaSitePublishAnimationResponseDto
   implements FaSitePublishAnimation
 {
   @ApiProperty({
     required: true,
-    description: 'The id of the linked fa',
+    description: 'Related FA is of the publish animation',
+    type: Number,
   })
-  @IsDefined()
-  @IsNumber()
   faId: number;
 
   @ApiProperty({
     required: true,
     description: 'The link to the photo',
+    type: String,
   })
-  @IsOptional()
-  @IsString()
-  photoLink?: string;
+  photoLink: string;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The description of the animation',
+    type: String,
   })
-  @IsOptional()
-  @IsString()
-  description?: string;
+  description: string;
 
   @ApiProperty({
     required: true,
     description: 'The categories of the animation',
     enum: SitePublishAnimationCategoryType,
-    isArray: true,
   })
-  @IsOptional()
-  categories?: SitePublishAnimationCategoryType[];
+  categories: site_publish_animation_category_type[];
 }

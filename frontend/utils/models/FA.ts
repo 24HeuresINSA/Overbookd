@@ -43,7 +43,7 @@ export enum time_windows_type {
   MATOS = "MATOS",
 }
 
-export enum site_publish_animation_category_type {
+export enum SitePublishAnimationCategoryType {
   Divertissement = "Divertissement",
   Culture = "Culture",
   Sport = "Sport",
@@ -228,9 +228,8 @@ export interface SearchFA {
 }
 
 export interface FaSitePublishAnimation {
-  id?: number;
-  fa_id: number;
-  photo_link?: string;
+  faId: number;
+  photoLink?: string;
   description?: string;
-  categories?: site_publish_animation_category_type[];
+  categories?: SitePublishAnimationCategoryType[];
 }

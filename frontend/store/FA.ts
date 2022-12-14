@@ -250,8 +250,8 @@ export const mutations = mutationTree(state, {
   UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: FaSitePublishAnimation) {
     mFA.fa_site_publish_animation = {
       ...mFA.fa_site_publish_animation,
-      fa_id: mFA.id,
-      photo_link: publishAnimation.photo_link || "",
+      faId: mFA.id,
+      photoLink: publishAnimation.photoLink || "",
       description: publishAnimation.description || "",
       categories: publishAnimation.categories || [],
     };
@@ -352,12 +352,12 @@ export const actions = actionTree(
       if (state.mFA.fa_site_publish_animation) {
         const publishAnimation = {
           ...state.mFA.fa_site_publish_animation,
-          fa_id: state.mFA.fa_site_publish_animation.fa_id,
+          fa_id: state.mFA.fa_site_publish_animation.faId,
         };
         allPromise.push(
           RepoFactory.faRepo.updatePubishAnimation(
             this,
-            publishAnimation.id,
+            publishAnimation.faId,
             publishAnimation
           )
         );
@@ -709,7 +709,7 @@ export const actions = actionTree(
 
     async createPublishAnimation({ commit, state }) {
       const publishAnimation: FaSitePublishAnimation = {
-        fa_id: state.mFA.id,
+        faId: state.mFA.id,
       };
       const res = await safeCall(
         this,
@@ -731,10 +731,10 @@ export const actions = actionTree(
       { commit },
       publishAnimation: FaSitePublishAnimation
     ) {
-      if (publishAnimation?.id) {
+      if (publishAnimation?.faId) {
         await safeCall(
           this,
-          RepoFactory.faRepo.deletePublishAnimation(this, publishAnimation.id)
+          RepoFactory.faRepo.deletePublishAnimation(this, publishAnimation.faId)
         );
       }
       commit("DELETE_PUBLISH_ANIMATION");

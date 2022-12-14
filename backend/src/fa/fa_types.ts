@@ -110,8 +110,8 @@ export const COMPLETE_FA_SELECT = {
   },
   fa_site_publish_animation: {
     select: {
-      id: true,
-      photo_link: true,
+      faId: true,
+      photoLink: true,
       description: true,
       categories: true,
     },

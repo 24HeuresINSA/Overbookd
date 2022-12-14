@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { fa_site_publish_animation } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateFaSitePublishAnimationServiceDto } from './dto/fa_site_publish_animation.dto';
+import { FaSitePublishAnimationResponseDto } from './dto/faSitePublishAnimationResponse.dto';
 
 @Injectable()
 export class FaSitePublishAnimationService {
@@ -9,8 +9,8 @@ export class FaSitePublishAnimationService {
 
   async create(
     createFaSitePublishAnimation: CreateFaSitePublishAnimationServiceDto,
-  ): Promise<fa_site_publish_animation | null> {
-    return await this.prisma.fa_site_publish_animation.create({
+  ): Promise<FaSitePublishAnimationResponseDto | null> {
+    return await this.prisma.faSitePublishAnimation.create({
       data: {
         ...createFaSitePublishAnimation,
       },
@@ -20,10 +20,10 @@ export class FaSitePublishAnimationService {
   async update(
     id: number,
     updateFaSitePublishAnimation: CreateFaSitePublishAnimationServiceDto,
-  ): Promise<fa_site_publish_animation | null> {
-    return await this.prisma.fa_site_publish_animation.update({
+  ): Promise<FaSitePublishAnimationResponseDto | null> {
+    return await this.prisma.faSitePublishAnimation.update({
       where: {
-        id: id,
+        faId: id,
       },
       data: {
         ...updateFaSitePublishAnimation,
@@ -31,22 +31,22 @@ export class FaSitePublishAnimationService {
     });
   }
 
-  async findAll(): Promise<fa_site_publish_animation[] | null> {
-    return await this.prisma.fa_site_publish_animation.findMany();
+  async findAll(): Promise<FaSitePublishAnimationResponseDto[] | null> {
+    return await this.prisma.faSitePublishAnimation.findMany();
   }
 
-  async findOne(id: number): Promise<fa_site_publish_animation | null> {
-    return await this.prisma.fa_site_publish_animation.findUnique({
+  async findOne(id: number): Promise<FaSitePublishAnimationResponseDto | null> {
+    return await this.prisma.faSitePublishAnimation.findUnique({
       where: {
-        id: Number(id),
+        faId: id,
       },
     });
   }
 
-  async remove(id: number): Promise<fa_site_publish_animation | null> {
-    return await this.prisma.fa_site_publish_animation.delete({
+  async remove(id: number): Promise<FaSitePublishAnimationResponseDto | null> {
+    return await this.prisma.faSitePublishAnimation.delete({
       where: {
-        id: Number(id),
+        faId: id,
       },
     });
   }
