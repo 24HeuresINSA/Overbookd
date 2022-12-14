@@ -9,19 +9,16 @@
 </template>
 
 <script lang="ts">
-import { RepoFactory } from "~/repositories/repoFactory";
-import { safeCall } from "~/utils/api/calls";
 import { Header } from "~/utils/models/Data";
-import { fa_site_publish_animation } from "~/utils/models/FA";
+import { FaSitePublishAnimation } from "~/utils/models/FA";
 
-interface comcom {
+interface Comcom {
   headers: Header[];
-  publishAnimations: fa_site_publish_animation[];
 }
 
 export default {
   name: "Comcom",
-  data(): comcom {
+  data(): Comcom {
     return {
       headers: [
         { text: "FA", value: "fa_id" },
@@ -29,25 +26,15 @@ export default {
         { text: "Description", value: "description" },
         { text: "Categories", value: "categories" },
       ],
-      publishAnimations: [],
     };
   },
-  async beforeMount() {
-    this.getAllPublishAnimations();
-  },
-  methods: {
-    async getAllPublishAnimations() {
-      const publishAnimations = await safeCall(
-        this.$store,
-        RepoFactory.faRepo.getAllPublishAnimation(this),
-        {
-          errorMessage: "Probleme lors de la récuperation des animations",
-        }
-      );
-      if (publishAnimations) {
-        this.publishAnimations = publishAnimations.data;
-      }
+  computed: {
+    publishAnimations(): FaSitePublishAnimation[] {
+      return this.$accessor.FA.publishAnimations;
     },
+  },
+  async beforeMount() {
+    this.$accessor.FA.fetchAllPublishAnimations();
   },
 };
 </script>

@@ -23,7 +23,7 @@ export class CreateFaSitePublishAnimationServiceDto {
   })
   @IsDefined()
   @IsNumber()
-  fa_id: number;
+  faId: number;
 
   @ApiProperty({
     required: true,
@@ -31,7 +31,7 @@ export class CreateFaSitePublishAnimationServiceDto {
   })
   @IsOptional()
   @IsString()
-  photo_link?: string;
+  photoLink?: string;
 
   @ApiProperty({
     required: false,

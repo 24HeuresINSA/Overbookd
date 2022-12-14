@@ -170,7 +170,7 @@ model fa {
   fa_comments               fa_comments[]
   time_windows              time_windows[]
   gearRequests              Animation_Gear_Request[]   @relation("gear-request-animation")
-  fa_site_publish_animation fa_site_publish_animation?
+  fa_site_publish_animation FaSitePublishAnimation?
 }
 
 enum fa_type {
@@ -293,13 +293,14 @@ model fa_comments {
   created_at  DateTime     @default(now())
 }
 
-model fa_site_publish_animation {
-  id          Int                                    @id @default(autoincrement())
-  fa          fa                                     @relation(fields: [fa_id], references: [id])
-  fa_id       Int                                    @unique
-  photo_link  String?                                @db.Text
+model FaSitePublishAnimation {
+  fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId       Int                                    @id @map("fa_id")
+  photoLink  String?                                @db.Text @map("photo_link ")
   description String?                                @db.Text
   categories  site_publish_animation_category_type[]
+
+  @@map("fa_site_publish_animation")
 }
 
 enum site_publish_animation_category_type {

@@ -7,22 +7,26 @@ import { CreateFaSitePublishAnimationServiceDto } from './dto/fa_site_publish_an
 export class FaSitePublishAnimationService {
   constructor(private prisma: PrismaService) {}
 
-  async upsert(
+  async create(
     createFaSitePublishAnimation: CreateFaSitePublishAnimationServiceDto,
   ): Promise<fa_site_publish_animation | null> {
-    if (createFaSitePublishAnimation.id) {
-      return await this.prisma.fa_site_publish_animation.update({
-        where: {
-          id: createFaSitePublishAnimation.id,
-        },
-        data: {
-          ...createFaSitePublishAnimation,
-        },
-      });
-    }
     return await this.prisma.fa_site_publish_animation.create({
       data: {
         ...createFaSitePublishAnimation,
+      },
+    });
+  }
+
+  async update(
+    id: number,
+    updateFaSitePublishAnimation: CreateFaSitePublishAnimationServiceDto,
+  ): Promise<fa_site_publish_animation | null> {
+    return await this.prisma.fa_site_publish_animation.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...updateFaSitePublishAnimation,
       },
     });
   }

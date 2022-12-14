@@ -2,13 +2,13 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CreateFA,
   FA,
+  FaSitePublishAnimation,
   fa_collaborators,
   fa_comments,
   fa_comments_update,
   fa_electricity_needs,
   fa_general_update,
   fa_signa_needs,
-  fa_site_publish_animation,
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
@@ -163,22 +163,33 @@ export default {
 
   addPublishAnimation(
     context: Context,
-    publishAnimation: fa_site_publish_animation
+    publishAnimation: FaSitePublishAnimation
   ) {
-    return context.$axios.post<fa_site_publish_animation>(
+    return context.$axios.post<FaSitePublishAnimation>(
       `fa-site-publish-animation`,
       publishAnimation
     );
   },
 
+  updatePubishAnimation(
+    context: Context,
+    id: number,
+    publishAnimation: FaSitePublishAnimation
+  ) {
+    return context.$axios.put<FaSitePublishAnimation>(
+      `fa-site-publish-animation/${id}`,
+      publishAnimation
+    );
+  },
+
   deletePublishAnimation(context: Context, id: number) {
-    return context.$axios.delete<fa_site_publish_animation>(
+    return context.$axios.delete<FaSitePublishAnimation>(
       `fa-site-publish-animation/${id}`
     );
   },
 
   getAllPublishAnimation(context: Context) {
-    return context.$axios.get<fa_site_publish_animation[]>(
+    return context.$axios.get<FaSitePublishAnimation[]>(
       `fa-site-publish-animation`
     );
   },

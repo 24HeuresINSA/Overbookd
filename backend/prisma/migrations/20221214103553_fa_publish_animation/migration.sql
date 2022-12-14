@@ -14,17 +14,13 @@ DROP COLUMN "photo_link";
 
 -- CreateTable
 CREATE TABLE "fa_site_publish_animation" (
-    "id" SERIAL NOT NULL,
     "fa_id" INTEGER NOT NULL,
-    "photo_link" TEXT,
+    "photo_link " TEXT,
     "description" TEXT,
     "categories" "site_publish_animation_category_type"[],
 
-    CONSTRAINT "fa_site_publish_animation_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "fa_site_publish_animation_pkey" PRIMARY KEY ("fa_id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "fa_site_publish_animation_fa_id_key" ON "fa_site_publish_animation"("fa_id");
-
 -- AddForeignKey
-ALTER TABLE "fa_site_publish_animation" ADD CONSTRAINT "fa_site_publish_animation_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "fa_site_publish_animation" ADD CONSTRAINT "fa_site_publish_animation_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "fa"("id") ON DELETE CASCADE ON UPDATE CASCADE;

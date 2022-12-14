@@ -4,7 +4,9 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
@@ -26,11 +28,26 @@ export class FaSitePublishAnimationController {
   @Roles('hard')
   @Post()
   @ApiBody({ type: CreateFaSitePublishAnimationServiceDto })
-  upsert(
+  create(
     @Body()
     ceateFaSitePublishAnimationServiceDto: CreateFaSitePublishAnimationServiceDto,
   ) {
-    return this.faSitePublishAnimationService.upsert(
+    return this.faSitePublishAnimationService.create(
+      ceateFaSitePublishAnimationServiceDto,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Put(':id')
+  @ApiBody({ type: CreateFaSitePublishAnimationServiceDto })
+  update(
+    @Body()
+    ceateFaSitePublishAnimationServiceDto: CreateFaSitePublishAnimationServiceDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.faSitePublishAnimationService.update(
+      id,
       ceateFaSitePublishAnimationServiceDto,
     );
   }
