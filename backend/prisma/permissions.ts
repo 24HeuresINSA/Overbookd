@@ -9,6 +9,15 @@ export const permissions = [
     },
   },
   {
+    name: 'config-write',
+    description: 'Utilisateurs qui peuvent écrire dans la config',
+    teams: {
+      createMany: {
+        data: [{ team_code: 'admin' }],
+      },
+    },
+  },
+  {
     name: 'hard',
     description: 'Uniquement les hards',
     teams: {
@@ -63,6 +72,15 @@ export const permissions = [
           { team_code: 'barrieres' },
           { team_code: 'signa' },
         ],
+      },
+    },
+  },
+  {
+    name: 'inventory-write',
+    description: "Peut éditer l'inventaire",
+    teams: {
+      createMany: {
+        data: [{ team_code: 'matos' }, { team_code: 'elec' }],
       },
     },
   },

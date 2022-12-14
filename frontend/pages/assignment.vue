@@ -60,7 +60,7 @@ export default {
   watch: {},
 
   async mounted() {
-    if (!(await this.hasRole("hard"))) {
+    if (!this.hasPermission("hard")) {
       alert("vous avez pas le role 'hard' pour acceder a cette page");
       await this.$router.push({
         path: "/",
@@ -74,8 +74,11 @@ export default {
     openUnassignDialog() {
       this.isUnassignDialogOpen = true;
     },
-    async hasRole(role) {
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission) {
+      return this.$accessor.permission.isAllowed(
+        permission,
+        this.$accessor.user.me.team
+      );
     },
 
     getConfig(key) {

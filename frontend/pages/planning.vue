@@ -96,7 +96,7 @@ export default Vue.extend({
     };
   },
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)) {
       await this.getOrgaRequis();
     } else {
       await this.$router.push({

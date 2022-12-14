@@ -54,8 +54,7 @@ export class UserController {
     description: 'Get a current user',
   })
   async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
-    const id = req.user.userId;
-    return this.userService.user({ id });
+    return this.userService.user({ id: req.user.userId });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
