@@ -39,7 +39,7 @@ const SELECT_USER_TEAM = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
-export type UserWithTeam = UserWithoutPassword & { team: string[] };
+type UserWithTeam = UserWithoutPassword & { team: string[] };
 export type UserPasswordOnly = Pick<User, 'password'>;
 
 @Injectable()
