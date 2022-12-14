@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class PermissionLinkDto {
   @ApiProperty({
-    name: 'teamIds',
+    name: 'teamCodes',
     required: true,
     description: 'An array of team code to link to the permission',
     isArray: true,
