@@ -41,13 +41,11 @@ export default Vue.extend({
   },
   computed: {
     publishAnimations(): FaSitePublishAnimation[] {
-      return this.$accessor.FA.publishAnimations;
+      return this.$accessor.publishAnimation.publishAnimations;
     },
   },
   async beforeMount() {
-    this.$accessor.FA.fetchAllPublishAnimations();
+    this.$accessor.publishAnimation.fetchAllPublishAnimations();
   },
 });
 </script>
-
-<style scoped></style>

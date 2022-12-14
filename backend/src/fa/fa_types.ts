@@ -108,7 +108,7 @@ export const COMPLETE_FA_SELECT = {
       },
     },
   },
-  fa_site_publish_animation: {
+  faSitePublishAnimation: {
     select: {
       faId: true,
       photoLink: true,

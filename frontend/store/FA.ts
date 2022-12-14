@@ -33,7 +33,6 @@ export const state = () => ({
   gearRequests: [] as GearRequest[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: 1001,
-  publishAnimations: [] as FaSitePublishAnimation[],
 });
 
 export const getters = getterTree(state, {
@@ -248,8 +247,8 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: FaSitePublishAnimation) {
-    mFA.fa_site_publish_animation = {
-      ...mFA.fa_site_publish_animation,
+    mFA.faSitePublishAnimation = {
+      ...mFA.faSitePublishAnimation,
       faId: mFA.id,
       photoLink: publishAnimation.photoLink ?? "",
       description: publishAnimation.description ?? "",
@@ -258,11 +257,7 @@ export const mutations = mutationTree(state, {
   },
 
   DELETE_PUBLISH_ANIMATION({ mFA }) {
-    mFA.fa_site_publish_animation = undefined;
-  },
-
-  SET_PUBLISH_ANIMATIONS(state, publishAnimations: FaSitePublishAnimation[]) {
-    state.publishAnimations = publishAnimations;
+    mFA.faSitePublishAnimation = undefined;
   },
 });
 
@@ -349,10 +344,10 @@ export const actions = actionTree(
           )
         );
       }
-      if (state.mFA.fa_site_publish_animation) {
+      if (state.mFA.faSitePublishAnimation) {
         const publishAnimation = {
-          ...state.mFA.fa_site_publish_animation,
-          faId: state.mFA.fa_site_publish_animation.faId,
+          ...state.mFA.faSitePublishAnimation,
+          faId: state.mFA.faSitePublishAnimation.faId,
         };
         allPromise.push(
           RepoFactory.faRepo.updatePubishAnimation(
@@ -707,9 +702,9 @@ export const actions = actionTree(
       commit("DELETE_FA", faId);
     },
 
-    async createPublishAnimation({ commit, state }) {
+    async createPublishAnimation({ commit }, faId: number) {
       const publishAnimation: FaSitePublishAnimation = {
-        faId: state.mFA.id,
+        faId,
       };
       const res = await safeCall(
         this,
@@ -721,7 +716,7 @@ export const actions = actionTree(
 
     async updatePublishAnimation({ commit, state }, { key, value }) {
       const publishAnimation = {
-        ...state.mFA.fa_site_publish_animation,
+        ...state.mFA.faSitePublishAnimation,
         [key]: value,
       };
       commit("UPDATE_PUBLISH_ANIMATION", publishAnimation);
@@ -738,18 +733,6 @@ export const actions = actionTree(
         );
       }
       commit("DELETE_PUBLISH_ANIMATION");
-    },
-
-    async fetchAllPublishAnimations({ commit }) {
-      const publishAnimations = await safeCall(
-        this,
-        RepoFactory.faRepo.getAllPublishAnimation(this),
-        {
-          errorMessage: "Probleme lors de la récuperation des animations",
-        }
-      );
-      if (!publishAnimations) return;
-      commit("SET_PUBLISH_ANIMATIONS", publishAnimations.data);
     },
   }
 );

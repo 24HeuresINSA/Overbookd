@@ -22,19 +22,19 @@
         ></v-switch>
         <v-form v-if="isPublishable">
           <v-text-field
-            :value="mFA.fa_site_publish_animation?.photLink"
+            :value="mFA.faSitePublishAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
             :disabled="isDisabled"
             @change="onChangePublishAnimation('photoLink', $event)"
           ></v-text-field>
           <v-text-field
-            :value="mFA.fa_site_publish_animation?.description"
+            :value="mFA.faSitePublishAnimation?.description"
             label="Description pour le site"
             :disabled="isDisabled"
             @change="onChangePublishAnimation('description', $event)"
           ></v-text-field>
           <v-combobox
-            :value="mFA.fa_site_publish_animation?.categories"
+            :value="mFA.faSitePublishAnimation?.categories"
             chips
             multiple
             clearable
@@ -90,7 +90,7 @@ export default Vue.extend({
   watch: {
     mFA: {
       handler() {
-        if (this.mFA.fa_site_publish_animation?.faId) {
+        if (this.mFA.faSitePublishAnimation?.faId) {
           this.isPublishable = true;
         }
       },
@@ -108,11 +108,11 @@ export default Vue.extend({
     },
     switchPublishAnimation(value: boolean) {
       if (value) {
-        return this.$accessor.FA.createPublishAnimation();
+        return this.$accessor.FA.createPublishAnimation(this.mFA.id);
       }
 
       return this.$accessor.FA.deletePublishAnimation(
-        this.mFA.fa_site_publish_animation
+        this.mFA.faSitePublishAnimation
       );
     },
   },

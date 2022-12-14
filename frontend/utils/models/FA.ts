@@ -75,7 +75,7 @@ export interface FA {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
-  fa_site_publish_animation?: FaSitePublishAnimation;
+  faSitePublishAnimation?: FaSitePublishAnimation;
 }
 
 export type CreateFA = Pick<FA, "name">;

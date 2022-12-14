@@ -170,7 +170,7 @@ model fa {
   fa_comments               fa_comments[]
   time_windows              time_windows[]
   gearRequests              Animation_Gear_Request[]   @relation("gear-request-animation")
-  fa_site_publish_animation FaSitePublishAnimation?
+  faSitePublishAnimation FaSitePublishAnimation?
 }
 
 enum fa_type {
