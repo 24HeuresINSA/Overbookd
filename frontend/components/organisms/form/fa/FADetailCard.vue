@@ -24,15 +24,13 @@
           <v-text-field
             :value="mFA.faSitePublishAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
-            :disabled="isDisabled"
             @change="onChangePublishAnimation('photoLink', $event)"
           ></v-text-field>
-          <v-text-field
+          <v-textarea
             :value="mFA.faSitePublishAnimation?.description"
             label="Description pour le site"
-            :disabled="isDisabled"
             @change="onChangePublishAnimation('description', $event)"
-          ></v-text-field>
+          ></v-textarea>
           <v-combobox
             :value="mFA.faSitePublishAnimation?.categories"
             chips
