@@ -108,13 +108,12 @@ export default Vue.extend({
     },
     switchPublishAnimation(value: boolean) {
       if (value) {
-        this.$accessor.FA.createPublishAnimation();
+        return this.$accessor.FA.createPublishAnimation();
       }
-      if (!value) {
-        this.$accessor.FA.deletePublishAnimation(
-          this.mFA.fa_site_publish_animation
-        );
-      }
+
+      return this.$accessor.FA.deletePublishAnimation(
+        this.mFA.fa_site_publish_animation
+      );
     },
   },
 });

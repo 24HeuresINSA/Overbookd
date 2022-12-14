@@ -183,9 +183,7 @@ export default {
   },
 
   deletePublishAnimation(context: Context, id: number) {
-    return context.$axios.delete<FaSitePublishAnimation>(
-      `fa-site-publish-animation/${id}`
-    );
+    return context.$axios.delete<void>(`fa-site-publish-animation/${id}`);
   },
 
   getAllPublishAnimation(context: Context) {

@@ -5,7 +5,7 @@ import {
   SitePublishAnimationCategoryType,
 } from '../interfaces';
 
-export class CreateFaSitePublishAnimationServiceDto
+export class FaSitePublishAnimationFormRequestDto
   implements FaSitePublishAnimation
 {
   @ApiProperty({

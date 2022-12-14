@@ -251,9 +251,9 @@ export const mutations = mutationTree(state, {
     mFA.fa_site_publish_animation = {
       ...mFA.fa_site_publish_animation,
       faId: mFA.id,
-      photoLink: publishAnimation.photoLink || "",
-      description: publishAnimation.description || "",
-      categories: publishAnimation.categories || [],
+      photoLink: publishAnimation.photoLink ?? "",
+      description: publishAnimation.description ?? "",
+      categories: publishAnimation.categories ?? [],
     };
   },
 
@@ -352,7 +352,7 @@ export const actions = actionTree(
       if (state.mFA.fa_site_publish_animation) {
         const publishAnimation = {
           ...state.mFA.fa_site_publish_animation,
-          fa_id: state.mFA.fa_site_publish_animation.faId,
+          faId: state.mFA.fa_site_publish_animation.faId,
         };
         allPromise.push(
           RepoFactory.faRepo.updatePubishAnimation(

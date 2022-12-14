@@ -21,8 +21,8 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
 import { RolesGuard } from '../auth/team-auth.guard';
+import { FaSitePublishAnimationFormRequestDto } from './dto/faSitePublishAnimationFormRequest.dto';
 import { FaSitePublishAnimationResponseDto } from './dto/faSitePublishAnimationResponse.dto';
-import { CreateFaSitePublishAnimationServiceDto } from './dto/fa_site_publish_animation.dto';
 import { FaSitePublishAnimationService } from './fa_site_publish_animation.service';
 
 @ApiBearerAuth()
@@ -36,7 +36,7 @@ export class FaSitePublishAnimationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post()
-  @ApiBody({ type: CreateFaSitePublishAnimationServiceDto })
+  @ApiBody({ type: FaSitePublishAnimationFormRequestDto })
   @ApiResponse({
     status: 201,
     description: 'Create a new fa site publish animation',
@@ -50,10 +50,10 @@ export class FaSitePublishAnimationController {
   })
   create(
     @Body()
-    ceateFaSitePublishAnimationServiceDto: CreateFaSitePublishAnimationServiceDto,
+    creataFaSitePublishAnimation: FaSitePublishAnimationFormRequestDto,
   ) {
     return this.faSitePublishAnimationService.create(
-      ceateFaSitePublishAnimationServiceDto,
+      creataFaSitePublishAnimation,
     );
   }
 
@@ -74,10 +74,10 @@ export class FaSitePublishAnimationController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  @ApiBody({ type: CreateFaSitePublishAnimationServiceDto })
+  @ApiBody({ type: FaSitePublishAnimationFormRequestDto })
   update(
     @Body()
-    ceateFaSitePublishAnimationServiceDto: CreateFaSitePublishAnimationServiceDto,
+    ceateFaSitePublishAnimationServiceDto: FaSitePublishAnimationFormRequestDto,
     @Param('faId', ParseIntPipe) id: number,
   ) {
     return this.faSitePublishAnimationService.update(
@@ -109,7 +109,7 @@ export class FaSitePublishAnimationController {
     type: FaSitePublishAnimationResponseDto,
   })
   findOne(@Param('faId', ParseIntPipe) id: number) {
-    return this.faSitePublishAnimationService.findOne(+id);
+    return this.faSitePublishAnimationService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -126,6 +126,6 @@ export class FaSitePublishAnimationController {
     description: "User can't access this resource",
   })
   remove(@Param('faId', ParseIntPipe) id: number) {
-    return this.faSitePublishAnimationService.remove(+id);
+    return this.faSitePublishAnimationService.remove(id);
   }
 }
