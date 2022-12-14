@@ -4,6 +4,16 @@
       <template #[`item.faId`]="{ item }">
         <nuxt-link :to="`/fa/${item.faId}`"> {{ item.faId }}</nuxt-link>
       </template>
+      <template #[`item.photoLink`]="{ item }">
+        <a :href="item.photoLink" target="_blank"> {{ item.photoLink }}</a>
+      </template>
+      <template #[`item.categories`]="{ item }">
+        <v-chip-group column>
+          <v-chip v-for="category in item.categories" :key="category">
+            {{ category }}
+          </v-chip>
+        </v-chip-group>
+      </template>
     </v-data-table>
   </div>
 </template>
