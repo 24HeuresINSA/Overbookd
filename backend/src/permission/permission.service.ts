@@ -94,7 +94,7 @@ export class PermissionService {
   ): Promise<PermissionResponseDto> {
     const permission = await this.permissionExists(permissionId);
     await this.assertTeamCodesExist(teamCodes);
-    await this.forcePermissionTeams(permissionId, teamCodes);
+    await this.forcePermissionTeams(permission.name, teamCodes);
 
     return { ...permission, teams: teamCodes };
   }
@@ -148,18 +148,18 @@ export class PermissionService {
   }
 
   private async forcePermissionTeams(
-    permissionId: number,
+    permissionName: string,
     teamCodes: string[],
   ) {
     const deleteAll = this.prisma.team_Permission.deleteMany({
       where: {
-        permission_id: permissionId,
+        permission_name: permissionName,
       },
     });
 
     const createNew = this.prisma.team_Permission.createMany({
       data: teamCodes.map((teamCode) => ({
-        permission_id: permissionId,
+        permission_name: permissionName,
         team_code: teamCode,
       })),
     });
