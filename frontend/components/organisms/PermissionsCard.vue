@@ -18,8 +18,8 @@
       <template #body="{ items }">
         <tbody>
           <PermissionRow
-            v-for="(item, index) in items"
-            :key="index"
+            v-for="item in items"
+            :key="item.id"
             :permission="item"
           />
         </tbody>
@@ -96,15 +96,10 @@ export default {
         name: this.newPermissionName,
         description: this.newPermissionDescription,
       });
-      if (response.status === 201) {
+      if (response) {
         this.newPermissionName = "";
         this.newPermissionDescription = "";
         this.$accessor.permission.setPermissionsInStore();
-      } else {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: response,
-        });
       }
     },
   },

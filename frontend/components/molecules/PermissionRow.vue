@@ -27,7 +27,7 @@
   </tr>
 </template>
 
-<script>
+<script lang="ts">
 import OverChips from "~/components/atoms/overChips";
 
 export default {
@@ -70,26 +70,16 @@ export default {
         permissionId: this.permission.id,
         teamCodes: teamCodes,
       });
-      if (response.status === 201) {
+      if (response) {
         this.$accessor.permission.setPermissionsInStore();
-      } else {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "Une erreur est survenue !",
-        });
       }
     },
     async removePermission() {
       let response = await this.$accessor.permission.removePermission({
         permissionId: this.permission.id,
       });
-      if (response.status === 204) {
+      if (response) {
         this.$accessor.permission.setPermissionsInStore();
-      } else {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "Une erreur est survenue !",
-        });
       }
     },
   },

@@ -7,7 +7,7 @@ export class PermissionLinkDto {
     required: true,
     description: 'An array of team code to link to the permission',
     isArray: true,
-    type: Number,
+    type: String,
   })
   @IsString({ each: true })
   @IsNotEmpty()

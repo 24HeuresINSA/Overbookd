@@ -10,7 +10,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
@@ -19,7 +26,14 @@ import { PermissionLinkDto } from './dto/permissionLink.dto';
 import { PermissionResponseDto } from './dto/permissionResponse.dto';
 import { PermissionService } from './permission.service';
 
+@ApiTags('permission')
 @Controller('permission')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
@@ -55,6 +69,9 @@ export class PermissionController {
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
+  @ApiNotFoundResponse({
+    description: "Can't find a site publish animation resource",
+  })
   @ApiResponse({
     status: 200,
     description: 'Update a permission',
@@ -72,6 +89,9 @@ export class PermissionController {
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
+  @ApiNotFoundResponse({
+    description: "Can't find a site publish animation resource",
+  })
   @ApiResponse({
     status: 204,
     description: 'Delete a permission',
@@ -86,6 +106,9 @@ export class PermissionController {
   @Post('link/:id')
   @ApiBearerAuth()
   @HttpCode(201)
+  @ApiNotFoundResponse({
+    description: "Can't find a site publish animation resource",
+  })
   @ApiResponse({
     status: 201,
     description: 'Link a permission with different teams',
