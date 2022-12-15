@@ -19,8 +19,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
-import { RolesGuard } from '../auth/team-auth.guard';
+import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { FaSitePublishAnimationFormRequestDto } from './dto/faSitePublishAnimationFormRequest.dto';
 import { FaSitePublishAnimationResponseDto } from './dto/faSitePublishAnimationResponse.dto';
 import { FaSitePublishAnimationService } from './fa_site_publish_animation.service';
@@ -33,8 +33,8 @@ export class FaSitePublishAnimationController {
     private readonly faSitePublishAnimationService: FaSitePublishAnimationService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Post()
   @ApiBody({ type: FaSitePublishAnimationFormRequestDto })
   @ApiResponse({
@@ -55,8 +55,8 @@ export class FaSitePublishAnimationController {
     return this.faSitePublishAnimationService.create(publishAnimationForm);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Put(':faId')
   @ApiResponse({
     status: 200,
@@ -81,8 +81,8 @@ export class FaSitePublishAnimationController {
     return this.faSitePublishAnimationService.update(id, publishAnimationForm);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -97,8 +97,8 @@ export class FaSitePublishAnimationController {
     return this.faSitePublishAnimationService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Get(':faId')
   @ApiResponse({
     status: 200,
@@ -116,8 +116,8 @@ export class FaSitePublishAnimationController {
     return this.faSitePublishAnimationService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('hard')
   @Delete(':faId')
   @ApiResponse({
     status: 204,

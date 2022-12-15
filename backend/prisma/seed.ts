@@ -433,6 +433,22 @@ async function main() {
   );
 
   console.log(`\n${savedPermissions.length} permissions inserted`);
+
+  const sgConfig: Prisma.ConfigurationUncheckedCreateInput = {
+    key: 'sg',
+    value: {
+      prixFutBlonde: 0,
+      prixFutBlanche: 0,
+      prixFutTriple: 0,
+      prixFutFlower: 0,
+    },
+  };
+  console.log('Creating of sg config');
+  await prisma.configuration.upsert({
+    where: { key: 'sg' },
+    update: sgConfig,
+    create: sgConfig,
+  });
 }
 main()
   .then(async () => {
