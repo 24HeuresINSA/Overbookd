@@ -72,7 +72,7 @@
                 >
               </v-chip-group>
             </v-card-text>
-            <v-card-actions v-if="hasPermission('catalog-write')">
+            <v-card-actions v-if="hasPermission('inventory-write')">
               <v-btn
                 color="primary"
                 text
@@ -85,7 +85,7 @@
             </v-card-actions>
           </v-card>
           <br />
-          <v-card v-if="hasPermission('catalog-write')">
+          <v-card v-if="hasPermission('inventory-write')">
             <v-card-title> Propososition d'équipement </v-card-title>
             <v-card-subtitle
               >Nombre de propositions :
@@ -124,7 +124,7 @@
                 Propose des changements sur l'objet (et voit ses infos)
               </v-tooltip>
               <v-btn
-                v-if="hasPermission('catalog-write')"
+                v-if="hasPermission('inventory-write')"
                 icon
                 small
                 @click="edit(item)"
@@ -132,7 +132,7 @@
                 <v-icon small>mdi-circle-edit-outline</v-icon>
               </v-btn>
               <v-btn
-                v-if="hasPermission('catalog-write')"
+                v-if="hasPermission('inventory-write')"
                 icon
                 small
                 @click="deleteItem(item)"
@@ -177,7 +177,7 @@
       </v-row>
     </v-container>
     <v-btn
-      v-if="hasPermission('catalog-write')"
+      v-if="hasPermission('inventory-write')"
       fab
       style="right: 20px; bottom: 45px; position: fixed"
       @click="newEquip"
