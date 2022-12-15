@@ -18,7 +18,7 @@ import {
   Status,
   subject_type,
   time_windows,
-  time_windows_type
+  time_windows_type,
 } from "~/utils/models/FA";
 import { sendNotification } from "./catalog";
 
