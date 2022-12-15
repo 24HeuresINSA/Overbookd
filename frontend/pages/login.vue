@@ -193,12 +193,6 @@ export default {
 };
 </script>
 
-<style>
-html {
-  overflow: hidden;
-}
-</style>
-
 <style scoped lang="scss">
 .img-background {
   position: absolute;
