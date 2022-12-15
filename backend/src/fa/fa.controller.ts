@@ -12,7 +12,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import {
   ApiBadRequestResponse,
@@ -61,7 +61,7 @@ export class FaController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post()
   @ApiResponse({
     status: 201,
@@ -73,7 +73,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -93,7 +93,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -105,7 +105,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post(':id')
   @ApiResponse({
     status: 201,
@@ -124,7 +124,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Delete(':id')
   @ApiResponse({
     status: 204,
@@ -136,7 +136,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('fa-validator')
+  @Permission('fa-validator')
   @Post(':id/validation')
   @HttpCode(204)
   @ApiResponse({
@@ -165,7 +165,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('fa-validator')
+  @Permission('fa-validator')
   @Delete(':faId/validation/:teamId')
   @HttpCode(204)
   @ApiResponse({
@@ -227,7 +227,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post(':id/gear-requests')
   @ApiResponse({
     status: 201,
@@ -261,7 +261,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id/gear-requests')
   @ApiResponse({
     status: 200,
@@ -288,7 +288,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Patch(
     ':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve',
   )
@@ -341,7 +341,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @ApiResponse({
     status: 200,
@@ -387,7 +387,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Delete(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @HttpCode(204)
   @ApiResponse({

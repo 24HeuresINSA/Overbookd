@@ -29,7 +29,7 @@ import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
 import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @ApiBearerAuth()
@@ -43,7 +43,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get('')
-  @Permissions('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get categories that match search',
@@ -69,7 +69,7 @@ export class CategoryController {
   }
 
   @Get('/tree')
-  @Permissions('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get categories tree',
@@ -81,7 +81,7 @@ export class CategoryController {
   }
 
   @Get(':id')
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @ApiResponse({
     status: 200,
     description: 'Get a specific category',
@@ -104,7 +104,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -127,7 +127,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -145,7 +145,7 @@ export class CategoryController {
   }
 
   @Put(':id')
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @HttpCode(200)
   @ApiResponse({
     status: 200,

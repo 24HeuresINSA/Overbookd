@@ -16,7 +16,7 @@ import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
 
 @ApiTags('user')
@@ -35,7 +35,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('validated-user')
+  @Permission('validated-user')
   @Get()
   @ApiResponse({
     status: 200,
@@ -58,7 +58,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('cp')
+  @Permission('cp')
   @ApiBearerAuth()
   @Get('all/cp')
   @ApiResponse({
@@ -96,7 +96,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('sg')
+  @Permission('sg')
   @Get('all')
   @ApiResponse({
     status: 200,
@@ -116,7 +116,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -130,7 +130,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('hard')
+  @Permission('hard')
   @Post('availabilities')
   @ApiBody({
     description: 'Add availabilities to current user',
@@ -144,7 +144,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('hard')
+  @Permission('hard')
   @Put(':id')
   @ApiBody({
     description: 'Update a user by id',

@@ -8,7 +8,7 @@ import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
-import { Permissions } from './auth/permissions-auth.decorator';
+import { Permission } from './auth/permissions-auth.decorator';
 import { PermissionsGuard } from './auth/permissions-auth.guard';
 import { JwtPayload } from './auth/auth.service';
 
@@ -40,7 +40,7 @@ export class AppController {
     description: 'User dont have the right to access this route',
   })
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Post('mailtest')
   async mailtest(@Body() to: emailTestDto) {
     return this.mailService.mailTest(to);

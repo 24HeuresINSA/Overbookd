@@ -11,7 +11,7 @@ import { EnrichedFAComments, FaCommentService } from './fa_comment.service';
 import { CreateFaCommentDto } from './dto/create-fa_comment.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @ApiBearerAuth()
@@ -21,7 +21,7 @@ export class FaCommentController {
   constructor(private readonly faCommentService: FaCommentService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post(':faid')
   @ApiBody({ type: [CreateFaCommentDto] })
   upsert(
@@ -32,14 +32,14 @@ export class FaCommentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   findAll(): Promise<EnrichedFAComments[] | null> {
     return this.faCommentService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   findOne(@Param('id') id: string): Promise<EnrichedFAComments | null> {
     return this.faCommentService.findOne(+id);

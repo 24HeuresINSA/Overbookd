@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CreateSignaLocationDto } from './dto/create-signa_location.dto';
 import { UpdateSignaLocationDto } from './dto/update-signa_location.dto';
@@ -23,28 +23,28 @@ export class SignaLocationController {
   constructor(private readonly signaLocationService: SignaLocationService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('manage-location')
+  @Permission('manage-location')
   @Post()
   create(@Body() createSignaLocationDto: CreateSignaLocationDto) {
     return this.signaLocationService.create(createSignaLocationDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   findAll() {
     return this.signaLocationService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.signaLocationService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('orga')
+  @Permission('orga')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -54,7 +54,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('manage-location')
+  @Permission('manage-location')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.signaLocationService.remove(+id);

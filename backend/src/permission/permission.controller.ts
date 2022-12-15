@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { PermissionFormDto } from './dto/permissionForm.dto';
 import { PermissionLinkDto } from './dto/permissionLink.dto';
@@ -35,7 +35,7 @@ export class PermissionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -51,7 +51,7 @@ export class PermissionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
@@ -68,7 +68,7 @@ export class PermissionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
@@ -82,7 +82,7 @@ export class PermissionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Post('link/:id')
   @ApiBearerAuth()
   @HttpCode(201)

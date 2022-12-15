@@ -19,7 +19,7 @@ import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionCreationDto } from './dto/transactionCreation.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { RequestWithUserPayload } from 'src/app.controller';
 
 @ApiBearerAuth()
@@ -29,7 +29,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('manage-cp')
+  @Permission('manage-cp')
   @Get()
   @ApiResponse({
     status: 200,
@@ -41,7 +41,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permissions('manage-cp')
+  @Permission('manage-cp')
   @Get('user/:id')
   @ApiResponse({
     status: 200,
@@ -55,7 +55,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permissions('cp')
+  @Permission('cp')
   @Get('me')
   @ApiResponse({
     status: 200,
@@ -70,7 +70,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permissions('cp')
+  @Permission('cp')
   @Get('/:id')
   @ApiResponse({
     status: 200,
@@ -83,7 +83,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('cp')
+  @Permission('cp')
   @Post('transfer')
   @ApiBody({
     description: 'Create a transaction',
@@ -98,7 +98,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('manage-cp')
+  @Permission('manage-cp')
   @Post('sg')
   addSgTransaction(
     @Body() transactionData: Transaction[],
@@ -107,7 +107,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('manage-cp')
+  @Permission('manage-cp')
   @HttpCode(204)
   @Delete(':id')
   @ApiResponse({

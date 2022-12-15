@@ -28,7 +28,7 @@ import { GearFormRequestDto } from './dto/gearFormRequest.dto';
 import { GearResponseDto } from './dto/gearResponse.dto';
 import { GearSearchRequestDto } from './dto/gearSearchRequest.dto';
 import { Gear } from './interfaces';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @Controller('gears')
@@ -42,7 +42,7 @@ export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get('')
-  @Permissions('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get gears that match search',
@@ -74,7 +74,7 @@ export class GearController {
   }
 
   @Get(':id')
-  @Permissions('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get a specific gear',
@@ -97,7 +97,7 @@ export class GearController {
   }
 
   @Post()
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -115,7 +115,7 @@ export class GearController {
   }
 
   @Put(':id')
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @ApiResponse({
     status: 200,
     description: 'Updating a gear',
@@ -144,7 +144,7 @@ export class GearController {
   }
 
   @Delete(':id')
-  @Permissions('catalog-write')
+  @Permission('catalog-write')
   @HttpCode(204)
   @ApiResponse({
     status: 204,

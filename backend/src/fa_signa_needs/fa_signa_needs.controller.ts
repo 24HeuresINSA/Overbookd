@@ -12,7 +12,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
 import { FaSignaNeedsService } from './fa_signa_needs.service';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @ApiBearerAuth()
@@ -22,7 +22,7 @@ export class FaSignaNeedsController {
   constructor(private readonly faSignaNeedsService: FaSignaNeedsService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post(':faID')
   @ApiBody({ type: [CreateFaSignaNeedDto] })
   upsert(
@@ -33,21 +33,21 @@ export class FaSignaNeedsController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   findAll() {
     return this.faSignaNeedsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.faSignaNeedsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.faSignaNeedsService.remove(+id);

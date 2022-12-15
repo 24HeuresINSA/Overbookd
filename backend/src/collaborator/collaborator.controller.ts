@@ -21,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { collaborator } from '@prisma/client';
 
@@ -32,7 +32,7 @@ export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post(':faId')
   @HttpCode(200)
   @ApiResponse({
@@ -84,7 +84,7 @@ export class CollaboratorController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -95,7 +95,7 @@ export class CollaboratorController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,

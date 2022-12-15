@@ -19,7 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { FaSitePublishAnimationFormRequestDto } from './dto/faSitePublishAnimationFormRequest.dto';
 import { FaSitePublishAnimationResponseDto } from './dto/faSitePublishAnimationResponse.dto';
@@ -34,7 +34,7 @@ export class FaSitePublishAnimationController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post()
   @ApiBody({ type: FaSitePublishAnimationFormRequestDto })
   @ApiResponse({
@@ -56,7 +56,7 @@ export class FaSitePublishAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Put(':faId')
   @ApiResponse({
     status: 200,
@@ -82,7 +82,7 @@ export class FaSitePublishAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -98,7 +98,7 @@ export class FaSitePublishAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':faId')
   @ApiResponse({
     status: 200,
@@ -117,7 +117,7 @@ export class FaSitePublishAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Delete(':faId')
   @ApiResponse({
     status: 204,

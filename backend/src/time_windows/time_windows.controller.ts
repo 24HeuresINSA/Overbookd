@@ -11,7 +11,7 @@ import {
 import { TimeWindowsService } from './time_windows.service';
 import { CreateTimeWindowDto } from './dto/create-time_window.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { time_windows } from '@prisma/client';
@@ -23,7 +23,7 @@ export class TimeWindowsController {
   constructor(private readonly timeWindowsService: TimeWindowsService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Post(':faID')
   @ApiBody({ type: [CreateTimeWindowDto] })
   upsert(
@@ -34,21 +34,21 @@ export class TimeWindowsController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get()
   findAll(): Promise<time_windows[] | null> {
     return this.timeWindowsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Get(':id')
   findOne(@Param('id') id: string): Promise<time_windows | null> {
     return this.timeWindowsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('hard')
+  @Permission('hard')
   @Delete(':id')
   remove(@Param('id') id: string): Promise<time_windows | null> {
     return this.timeWindowsService.remove(+id);

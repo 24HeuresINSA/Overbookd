@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { UpdateConfigurationDto } from './dto/updateConfigurationDto';
 
@@ -31,7 +31,7 @@ export class ConfigurationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('admin')
+  @Permission('admin')
   @Post()
   @ApiResponse({
     status: 201,
@@ -69,7 +69,7 @@ export class ConfigurationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('manage-config')
+  @Permission('manage-config')
   @Put(':key')
   @ApiResponse({
     status: 200,
@@ -95,7 +95,7 @@ export class ConfigurationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permissions('admin')
+  @Permission('admin')
   @HttpCode(204)
   @ApiResponse({
     status: 204,

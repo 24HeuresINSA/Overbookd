@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permissions } from 'src/auth/permissions-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { TeamFormDto } from './dto/teamFormRequest.dto';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
@@ -36,7 +36,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('affect-team')
+  @Permission('affect-team')
   @Post('link')
   @ApiBearerAuth()
   @HttpCode(201)
@@ -52,7 +52,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -66,7 +66,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
@@ -83,7 +83,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permissions('admin')
+  @Permission('admin')
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
