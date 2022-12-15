@@ -228,6 +228,12 @@ export default {
           title: "Catalogue",
           to: "/catalog",
         },
+        {
+          icon: "mdi-web-sync",
+          roles: "communication",
+          title: "Animations a publier",
+          to: "/comcom",
+        },
       ],
       items: [
         {

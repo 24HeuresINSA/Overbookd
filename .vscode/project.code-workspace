@@ -44,7 +44,8 @@
       "CP",
       "FA",
       "release",
-      "Location"
+      "Location",
+      "animation"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],

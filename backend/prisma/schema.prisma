@@ -141,37 +141,36 @@ enum Status {
 }
 
 model fa {
-  id                   Int                      @id @default(autoincrement())
-  name                 String                   @db.VarChar(255)
-  fa_type_name         fa_type?
-  type                 String?                  @db.VarChar(255)
-  Team                 Team?                    @relation(fields: [team_id], references: [id])
-  team_id              Int?
-  user_in_charge       User?                    @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge            Int?
-  created_at           DateTime?                @default(now())
-  location             Signa_Location?          @relation(fields: [location_id], references: [id])
-  location_id          Int?
-  status               Status?                  @default(DRAFT)
-  description          String?                  @db.Text
-  photo_link           String?                  @db.Text
-  is_publishable       Boolean?                 @default(false)
-  is_major             Boolean?                 @default(false)
-  is_kids              Boolean?                 @default(false)
-  security_needs       String?                  @db.Text
-  is_pass_required     Boolean?                 @db.Boolean
-  number_of_pass       Int?
-  water_needs          String?                  @db.Text
-  water_flow_required  Int?
-  is_deleted           Boolean                  @default(false)
-  fa_validation        fa_validation[]
-  fa_refuse            fa_refuse[]
-  fa_collaborators     fa_collaborators[]
-  fa_electricity_needs fa_electricity_needs[]
-  fa_signa_needs       fa_signa_needs[]
-  fa_comments          fa_comments[]
-  time_windows         time_windows[]
-  gearRequests         Animation_Gear_Request[] @relation("gear-request-animation")
+  id                        Int                        @id @default(autoincrement())
+  name                      String                     @db.VarChar(255)
+  fa_type_name              fa_type?
+  type                      String?                    @db.VarChar(255)
+  Team                      Team?                      @relation(fields: [team_id], references: [id])
+  team_id                   Int?
+  user_in_charge            User?                      @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge                 Int?
+  created_at                DateTime?                  @default(now())
+  location                  Signa_Location?            @relation(fields: [location_id], references: [id])
+  location_id               Int?
+  status                    Status?                    @default(DRAFT)
+  description               String?                    @db.Text
+  is_major                  Boolean?                   @default(false)
+  is_kids                   Boolean?                   @default(false)
+  security_needs            String?                    @db.Text
+  is_pass_required          Boolean?                   @db.Boolean
+  number_of_pass            Int?
+  water_needs               String?                    @db.Text
+  water_flow_required       Int?
+  is_deleted                Boolean                    @default(false)
+  fa_validation             fa_validation[]
+  fa_refuse                 fa_refuse[]
+  fa_collaborators          fa_collaborators[]
+  fa_electricity_needs      fa_electricity_needs[]
+  fa_signa_needs            fa_signa_needs[]
+  fa_comments               fa_comments[]
+  time_windows              time_windows[]
+  gearRequests              Animation_Gear_Request[]   @relation("gear-request-animation")
+  faSitePublishAnimation FaSitePublishAnimation?
 }
 
 enum fa_type {
@@ -292,6 +291,23 @@ model fa_comments {
   User_author User         @relation(fields: [author], references: [id])
   author      Int
   created_at  DateTime     @default(now())
+}
+
+model FaSitePublishAnimation {
+  fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId       Int                                    @id @map("fa_id")
+  photoLink  String?                                @db.Text @map("photo_link ")
+  description String?                                @db.Text
+  categories  site_publish_animation_category_type[]
+
+  @@map("fa_site_publish_animation")
+}
+
+enum site_publish_animation_category_type {
+  Divertissement
+  Culture
+  Sport
+  Enfant
 }
 
 enum time_windows_type {

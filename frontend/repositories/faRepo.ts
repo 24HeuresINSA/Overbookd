@@ -2,6 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CreateFA,
   FA,
+  FaSitePublishAnimation,
   fa_collaborators,
   fa_comments,
   fa_comments_update,
@@ -157,6 +158,37 @@ export default {
       resource +
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
+    );
+  },
+
+  addPublishAnimation(
+    context: Context,
+    publishAnimation: FaSitePublishAnimation
+  ) {
+    return context.$axios.post<FaSitePublishAnimation>(
+      `fa-site-publish-animation`,
+      publishAnimation
+    );
+  },
+
+  updatePubishAnimation(
+    context: Context,
+    id: number,
+    publishAnimation: FaSitePublishAnimation
+  ) {
+    return context.$axios.put<FaSitePublishAnimation>(
+      `fa-site-publish-animation/${id}`,
+      publishAnimation
+    );
+  },
+
+  deletePublishAnimation(context: Context, id: number) {
+    return context.$axios.delete<void>(`fa-site-publish-animation/${id}`);
+  },
+
+  getAllPublishAnimation(context: Context) {
+    return context.$axios.get<FaSitePublishAnimation[]>(
+      `fa-site-publish-animation`
     );
   },
 };

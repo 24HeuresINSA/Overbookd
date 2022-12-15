@@ -14,18 +14,35 @@
           class="mb-4"
           @change="onChange('description', $event)"
         ></RichEditor>
-        <v-text-field
-          :value="mFA.photo_link"
-          label=" Lien de la photo de l'activité sur le drive"
-          :disabled="isDisabled"
-          @change="onChange('photo_link', $event)"
-        ></v-text-field>
         <v-switch
-          :value="mFA.is_publishable"
+          v-model="isPublishable"
           label="Publier sur le site / plaquette"
           :disabled="isDisabled"
-          @change="onChange('is_publishable', $event)"
+          @change="switchPublishAnimation($event)"
         ></v-switch>
+        <v-form v-if="isPublishable">
+          <v-text-field
+            :value="mFA.faSitePublishAnimation?.photoLink"
+            label="Lien de la photo de l'activité sur le drive"
+            @change="onChangePublishAnimation('photoLink', $event)"
+          ></v-text-field>
+          <v-textarea
+            :value="mFA.faSitePublishAnimation?.description"
+            label="Description pour le site"
+            @change="onChangePublishAnimation('description', $event)"
+          ></v-textarea>
+          <v-combobox
+            :value="mFA.faSitePublishAnimation?.categories"
+            chips
+            multiple
+            clearable
+            dense
+            label="Categories de l'animations"
+            :items="categories"
+            @change="onChangePublishAnimation('categories', $event)"
+          >
+          </v-combobox>
+        </v-form>
         <v-switch
           :value="mFA.is_major"
           label="Anim phare"
@@ -46,6 +63,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
+import { SitePublishAnimationCategoryType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FADetailCard",
@@ -56,15 +74,44 @@ export default Vue.extend({
       default: () => false,
     },
   },
+  data() {
+    return {
+      categories: Object.values(SitePublishAnimationCategoryType),
+      isPublishable: false,
+    };
+  },
   computed: {
     mFA(): any {
       return this.$accessor.FA.mFA;
+    },
+  },
+  watch: {
+    mFA: {
+      handler() {
+        if (this.mFA.faSitePublishAnimation?.faId) {
+          this.isPublishable = true;
+        }
+      },
+      deep: true,
     },
   },
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
       this.$accessor.FA.updateFA({ key: key, value: value });
+    },
+    onChangePublishAnimation(key: string, value: any) {
+      if (key !== "categories") value = value.trim();
+      this.$accessor.FA.updatePublishAnimation({ key, value });
+    },
+    switchPublishAnimation(value: boolean) {
+      if (value) {
+        return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      }
+
+      return this.$accessor.FA.deletePublishAnimation(
+        this.mFA.faSitePublishAnimation
+      );
     },
   },
 });

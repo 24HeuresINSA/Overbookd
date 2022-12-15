@@ -5,6 +5,7 @@ import {
   collaborator,
   CreateFA,
   FA,
+  FaSitePublishAnimation,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
@@ -244,6 +245,20 @@ export const mutations = mutationTree(state, {
   DELETE_FA(state, faId: number) {
     state.FAs = state.FAs.filter((fa) => fa.id !== faId);
   },
+
+  UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: FaSitePublishAnimation) {
+    mFA.faSitePublishAnimation = {
+      ...mFA.faSitePublishAnimation,
+      faId: mFA.id,
+      photoLink: publishAnimation.photoLink ?? "",
+      description: publishAnimation.description ?? "",
+      categories: publishAnimation.categories ?? [],
+    };
+  },
+
+  DELETE_PUBLISH_ANIMATION({ mFA }) {
+    mFA.faSitePublishAnimation = undefined;
+  },
 });
 
 export const actions = actionTree(
@@ -326,6 +341,19 @@ export const actions = actionTree(
             this,
             state.mFA.id,
             state.mFA.fa_electricity_needs
+          )
+        );
+      }
+      if (state.mFA.faSitePublishAnimation) {
+        const publishAnimation = {
+          ...state.mFA.faSitePublishAnimation,
+          faId: state.mFA.id,
+        };
+        allPromise.push(
+          RepoFactory.faRepo.updatePubishAnimation(
+            this,
+            publishAnimation.faId,
+            publishAnimation
           )
         );
       }
@@ -672,6 +700,39 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("DELETE_FA", faId);
+    },
+
+    async createPublishAnimation({ commit }, faId: number) {
+      const publishAnimation: FaSitePublishAnimation = {
+        faId,
+      };
+      const res = await safeCall(
+        this,
+        RepoFactory.faRepo.addPublishAnimation(this, publishAnimation)
+      );
+      if (!res) return;
+      commit("UPDATE_PUBLISH_ANIMATION", res.data);
+    },
+
+    async updatePublishAnimation({ commit, state }, { key, value }) {
+      const publishAnimation = {
+        ...state.mFA.faSitePublishAnimation,
+        [key]: value,
+      };
+      commit("UPDATE_PUBLISH_ANIMATION", publishAnimation);
+    },
+
+    async deletePublishAnimation(
+      { commit },
+      publishAnimation: FaSitePublishAnimation
+    ) {
+      if (publishAnimation?.faId) {
+        await safeCall(
+          this,
+          RepoFactory.faRepo.deletePublishAnimation(this, publishAnimation.faId)
+        );
+      }
+      commit("DELETE_PUBLISH_ANIMATION");
     },
   }
 );
