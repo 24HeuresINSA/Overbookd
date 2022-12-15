@@ -17,7 +17,7 @@ import { Roles } from '../auth/team-auth.decorator';
 import { fa_electricity_needs } from '@prisma/client';
 
 @ApiBearerAuth()
-@ApiTags('fa_electricity_needs')
+@ApiTags('fa')
 @Controller('fa-electricity-needs')
 export class FaElectricityNeedsController {
   constructor(

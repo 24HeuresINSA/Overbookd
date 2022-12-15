@@ -31,7 +31,7 @@ export class FaSitePublishAnimationService {
     });
   }
 
-  async findAll(): Promise<FaSitePublishAnimation[] | null> {
+  async findAll(): Promise<FaSitePublishAnimation[]> {
     return this.prisma.faSitePublishAnimation.findMany({
       orderBy: {
         faId: 'asc',
@@ -47,8 +47,8 @@ export class FaSitePublishAnimationService {
     });
   }
 
-  async remove(faId: number): Promise<FaSitePublishAnimation | null> {
-    return this.prisma.faSitePublishAnimation.delete({
+  async remove(faId: number): Promise<void> {
+    await this.prisma.faSitePublishAnimation.delete({
       where: {
         faId,
       },

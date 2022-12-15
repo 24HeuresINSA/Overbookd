@@ -15,7 +15,7 @@ import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
 
 @ApiBearerAuth()
-@ApiTags('fa-comment')
+@ApiTags('fa')
 @Controller('fa-comment')
 export class FaCommentController {
   constructor(private readonly faCommentService: FaCommentService) {}

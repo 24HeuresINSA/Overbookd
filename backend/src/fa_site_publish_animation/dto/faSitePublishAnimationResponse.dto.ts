@@ -10,7 +10,7 @@ export class FaSitePublishAnimationResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'Related FA is of the publish animation',
+    description: 'Related FA id of the publish animation',
     type: Number,
   })
   faId: number;
@@ -33,6 +33,7 @@ export class FaSitePublishAnimationResponseDto
     required: true,
     description: 'The categories of the animation',
     enum: SitePublishAnimationCategoryType,
+    isArray: true,
   })
   categories: site_publish_animation_category_type[];
 }

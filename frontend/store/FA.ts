@@ -347,7 +347,7 @@ export const actions = actionTree(
       if (state.mFA.faSitePublishAnimation) {
         const publishAnimation = {
           ...state.mFA.faSitePublishAnimation,
-          faId: state.mFA.faSitePublishAnimation.faId,
+          faId: state.mFA.id,
         };
         allPromise.push(
           RepoFactory.faRepo.updatePubishAnimation(

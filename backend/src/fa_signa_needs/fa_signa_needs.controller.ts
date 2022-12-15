@@ -1,22 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
+  Controller,
+  Delete,
+  Get,
   Param,
   ParseIntPipe,
+  Post,
   UseGuards,
-  Delete,
 } from '@nestjs/common';
-import { FaSignaNeedsService } from './fa_signa_needs.service';
-import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
-import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
+import { FaSignaNeedsService } from './fa_signa_needs.service';
 
 @ApiBearerAuth()
-@ApiTags('fa-signa-needs')
+@ApiTags('fa')
 @Controller('fa-signa-needs')
 export class FaSignaNeedsController {
   constructor(private readonly faSignaNeedsService: FaSignaNeedsService) {}

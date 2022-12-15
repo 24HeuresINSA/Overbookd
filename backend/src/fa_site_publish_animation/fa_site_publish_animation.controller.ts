@@ -26,7 +26,7 @@ import { FaSitePublishAnimationResponseDto } from './dto/faSitePublishAnimationR
 import { FaSitePublishAnimationService } from './fa_site_publish_animation.service';
 
 @ApiBearerAuth()
-@ApiTags('fa-site-publish-animation')
+@ApiTags('fa')
 @Controller('fa-site-publish-animation')
 export class FaSitePublishAnimationController {
   constructor(
@@ -50,11 +50,9 @@ export class FaSitePublishAnimationController {
   })
   create(
     @Body()
-    creataFaSitePublishAnimation: FaSitePublishAnimationFormRequestDto,
+    publishAnimationForm: FaSitePublishAnimationFormRequestDto,
   ) {
-    return this.faSitePublishAnimationService.create(
-      creataFaSitePublishAnimation,
-    );
+    return this.faSitePublishAnimationService.create(publishAnimationForm);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -77,13 +75,10 @@ export class FaSitePublishAnimationController {
   @ApiBody({ type: FaSitePublishAnimationFormRequestDto })
   update(
     @Body()
-    ceateFaSitePublishAnimationServiceDto: FaSitePublishAnimationFormRequestDto,
+    publishAnimationForm: FaSitePublishAnimationFormRequestDto,
     @Param('faId', ParseIntPipe) id: number,
   ) {
-    return this.faSitePublishAnimationService.update(
-      id,
-      ceateFaSitePublishAnimationServiceDto,
-    );
+    return this.faSitePublishAnimationService.update(id, publishAnimationForm);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -94,6 +89,9 @@ export class FaSitePublishAnimationController {
     description: 'Get all fa site publish animations',
     isArray: true,
     type: FaSitePublishAnimationResponseDto,
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
   })
   findAll() {
     return this.faSitePublishAnimationService.findAll();
@@ -107,6 +105,12 @@ export class FaSitePublishAnimationController {
     description: 'Get a fa site publish animation',
     isArray: false,
     type: FaSitePublishAnimationResponseDto,
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find this site publish animation resource",
   })
   findOne(@Param('faId', ParseIntPipe) id: number) {
     return this.faSitePublishAnimationService.findOne(id);
