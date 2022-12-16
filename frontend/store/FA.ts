@@ -588,8 +588,8 @@ export const actions = actionTree(
             this,
             RepoFactory.faRepo.validateGearRequest(this, state.mFA.id, gr),
             {
-              successMessage: "validation effectuee",
-              errorMessage: "la tentative de validation n'a pas abouti",
+              successMessage: "Validation effectuee",
+              errorMessage: "La tentative de validation n'a pas abouti",
             }
           )
         )
