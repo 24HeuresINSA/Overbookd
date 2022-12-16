@@ -13,7 +13,9 @@ import {
   GearRequest,
   GearRequestCreation,
   GearRequestUpdate,
+  GearRequestWithDrive,
   SearchFA,
+  StoredGearRequest,
   time_windows,
 } from "~/utils/models/FA";
 
@@ -123,14 +125,14 @@ export default {
     animationId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
-    return context.$axios.post<GearRequest>(
+    return context.$axios.post<StoredGearRequest>(
       resource + `/${animationId}/gear-requests`,
       gearRequestCreationForm
     );
   },
 
   getGearRequests(context: Context, animationId: number) {
-    return context.$axios.get<GearRequest[]>(
+    return context.$axios.get<StoredGearRequest[]>(
       resource + `/${animationId}/gear-requests`
     );
   },
@@ -189,6 +191,22 @@ export default {
   getAllPublishAnimation(context: Context) {
     return context.$axios.get<FaSitePublishAnimation[]>(
       `fa-site-publish-animation`
+    );
+  },
+
+  validateGearRequest(
+    context: Context,
+    animationId: number,
+    gearRequest: GearRequestWithDrive
+  ) {
+    const {
+      gear: { id: gearId },
+      rentalPeriod: { id: rentalPeriodId },
+    } = gearRequest;
+    return context.$axios.patch<GearRequestWithDrive>(
+      resource +
+        `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
+      gearRequest
     );
   },
 };

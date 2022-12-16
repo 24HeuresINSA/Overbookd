@@ -13,9 +13,11 @@ import {
   fa_validation_body,
   GearRequest,
   GearRequestCreation,
+  GearRequestWithDrive,
   Period,
   SearchFA,
   Status,
+  StoredGearRequest,
   subject_type,
   time_windows,
   time_windows_type,
@@ -30,7 +32,7 @@ export const state = () => ({
     status: Status.DRAFT,
     name: "",
   } as FA,
-  gearRequests: [] as GearRequest[],
+  gearRequests: [] as StoredGearRequest[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: 1001,
 });
@@ -67,14 +69,14 @@ export const getters = getterTree(state, {
     }, [] as Period[]);
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
-  uniqueByGearGearRequests(state): GearRequest[] {
+  uniqueByGearGearRequests(state): StoredGearRequest[] {
     return state.gearRequests.reduce((gearRequests, gearRequest) => {
       const savedGearRequest = gearRequests.find(
         (gr) => gr.gear.id === gearRequest.gear.id
       );
       if (savedGearRequest) return gearRequests;
       return [...gearRequests, gearRequest];
-    }, [] as GearRequest[]);
+    }, [] as StoredGearRequest[]);
   },
 });
 
@@ -169,12 +171,22 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: GearRequest) {
+  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest) {
     gearRequests.push(gearRequest);
   },
 
-  SET_GEAR_REQUESTS(state, gearRequestsResponse: GearRequest[]) {
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest[]) {
     state.gearRequests = gearRequestsResponse;
+  },
+
+  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive) {
+    const gearRequestIndex = state.gearRequests.findIndex(
+      (gr) =>
+        gr.gear.id === updatedGearRequest.gear.id &&
+        gr.rentalPeriod.id === updatedGearRequest.rentalPeriod.id
+    );
+    if (gearRequestIndex === -1) return;
+    state.gearRequests.splice(gearRequestIndex, 1, updatedGearRequest);
   },
 
   REMOVE_GEAR_RELATED_GEAR_REQUESTS(state, gearId: number) {
@@ -534,7 +546,8 @@ export const actions = actionTree(
       const gearRequestCreationForms: GearRequestCreation[] = (
         getters.gearRequestRentalPeriods as Period[]
       ).map(({ start, end, id: periodId }) => {
-        const periodPart = periodId > 1000 ? { start, end } : { periodId };
+        const periodPart: { start: Date; end: Date } | { periodId: number } =
+          periodId > 1000 ? { start, end } : { periodId };
         return {
           ...periodPart,
           gearId,
@@ -559,6 +572,29 @@ export const actions = actionTree(
       );
       commit("ADD_GEAR_REQUEST", res.data);
       return res.data;
+    },
+
+    async setDriveToGearRequest({ commit }, gearRequest: GearRequestWithDrive) {
+      commit("UDPATE_GEAR_REQUEST", gearRequest);
+    },
+
+    async validateGearRequests(
+      { state, dispatch },
+      gearRequests: GearRequestWithDrive[]
+    ) {
+      await Promise.all(
+        gearRequests.map((gr) =>
+          safeCall<GearRequestWithDrive>(
+            this,
+            RepoFactory.faRepo.validateGearRequest(this, state.mFA.id, gr),
+            {
+              successMessage: "validation effectuee",
+              errorMessage: "la tentative de validation n'a pas abouti",
+            }
+          )
+        )
+      );
+      dispatch("fetchGearRequests");
     },
 
     async removeGearRequestRentalPeriod(

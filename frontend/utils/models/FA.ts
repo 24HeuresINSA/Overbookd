@@ -222,6 +222,14 @@ export interface GearRequest {
   gear: Gear;
 }
 
+export interface StoredGearRequest extends GearRequest {
+  drive?: string;
+}
+
+export interface GearRequestWithDrive extends GearRequest {
+  drive: string;
+}
+
 export interface SearchFA {
   isDeleted?: boolean;
   status?: Status;

@@ -190,6 +190,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="gearRequestApprovalDialog" max-width="1000px">
+      <GearRequestsValidation
+        :validator="validatorTeam"
+        @close-dialog="validateGearRequests(validatorTeam)"
+      ></GearRequestsValidation>
+    </v-dialog>
   </div>
 </template>
 
@@ -201,6 +208,7 @@ import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmit
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
+import GearRequestsValidation from "~/components/organisms/form/fa/GearRequestsValidation.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
@@ -230,12 +238,15 @@ export default Vue.extend({
     SnackNotificationContainer,
     LogisticTimeWindow,
     CheckBeforeSubmitCard,
+    GearRequestsValidation,
   },
 
   data: () => ({
     validationDialog: false,
     refuseDialog: false,
     refuseComment: "",
+    gearRequestApprovalDialog: false,
+    validatorTeam: { name: "", code: "", id: 0, color: "", icon: "" } as team,
 
     faRepo: RepoFactory.faRepo,
 
@@ -321,24 +332,41 @@ export default Vue.extend({
 
     async undelete() {
       await this.mFA.undelete();
-      /*
-      await safeCall(
-        this.$store,
-        this.faRepo.updateFA(this, this.mFA.id, this.mFA),
-        "undelete"
-      );*/
     },
 
     async validate(validator: team) {
-      if (validator) {
-        const payload = {
-          validator_id: validator.id,
-          user_id: this.$accessor.user.me.id,
-          team_name: validator.name,
-          author: this.me,
-        };
-        await this.$accessor.FA.validate(payload);
+      if (!validator) return;
+
+      if (!this.shoudlValidateGearRequests(validator)) {
+        return this.sendValidation(validator);
       }
+
+      this.validatorTeam = validator;
+      this.gearRequestApprovalDialog = true;
+    },
+
+    shoudlValidateGearRequests(validator: team) {
+      return (
+        this.$accessor.FA.gearRequests.filter(
+          (gr) => gr.gear.owner?.code === validator.code
+        ).length > 0
+      );
+    },
+
+    async validateGearRequests(validator: team) {
+      this.gearRequestApprovalDialog = false;
+      this.sendValidation(validator);
+    },
+
+    sendValidation(validator: team) {
+      if (!validator) return;
+      const payload = {
+        validator_id: validator.id,
+        user_id: this.$accessor.user.me.id,
+        team_name: validator.name,
+        author: this.me,
+      };
+      return this.$accessor.FA.validate(payload);
     },
 
     async refuse(validator: team) {
