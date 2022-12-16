@@ -43,12 +43,12 @@ import {
 } from './gear-requests/dto/gearRequestFormRequest.dto';
 import {
   ApprovedGearRequest,
-  ApproveGearRequestForm,
   GearRequestsService,
   GearSeekerType,
 } from './gear-requests/gearRequests.service';
 import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { FASearchRequestDto } from './dto/faSearchRequest.dto';
+import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -359,16 +359,17 @@ export class FaController {
     @Param('animationId', ParseIntPipe) animationId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
     @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
-    @Body() approveForm: ApproveGearRequestForm,
+    @Body() approveForm: GearRequestsApproveFormRequestDto,
   ): Promise<ApprovedGearRequest> {
     const gearRequestId = {
       seeker: { type: GearSeekerType.Animation, id: animationId },
       gearId,
       rentalPeriodId,
     };
+    const { drive } = approveForm;
     return this.gearRequestService.approveAnimationGearRequest(
       gearRequestId,
-      approveForm,
+      drive,
     );
   }
 }

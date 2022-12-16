@@ -241,7 +241,7 @@ export class GearRequestsService {
 
   approveAnimationGearRequest(
     gearRequestIdentifier: GearRequestIdentifier,
-    { drive }: ApproveGearRequestForm,
+    drive: string,
   ): Promise<ApprovedGearRequest> {
     return this.gearRequestRepository.approveGearRequest(
       gearRequestIdentifier,
