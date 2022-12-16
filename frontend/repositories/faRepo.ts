@@ -202,11 +202,12 @@ export default {
     const {
       gear: { id: gearId },
       rentalPeriod: { id: rentalPeriodId },
+      drive,
     } = gearRequest;
     return context.$axios.patch<GearRequestWithDrive>(
       resource +
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
-      gearRequest
+      { drive }
     );
   },
 };

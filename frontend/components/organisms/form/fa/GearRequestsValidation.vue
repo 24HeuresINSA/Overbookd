@@ -82,6 +82,10 @@ export default Vue.extend({
         "Salle TP Béton",
         "Loges",
         "Creux GCU",
+        "Parking Eiffel",
+        "Parking K-fet",
+        "Parking Collete Besson",
+        "Parking BMC",
       ],
     };
   },
