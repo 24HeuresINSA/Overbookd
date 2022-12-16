@@ -1,16 +1,20 @@
-backend-test:
+.test:
   stage: test
   interruptible: true
   image: node
+  script:
+    - npm run test:ci
+
+backend_test:
+  extends: .test
+  needs: [backend_install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - backend/**/*
     - when: never
-  script:
+  before_script:
     - 'cd backend'
-    - 'npm install'
-    - 'npm run test:ci'
   artifacts:
     when: always
     reports:

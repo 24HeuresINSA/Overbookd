@@ -1,7 +1,36 @@
-.lintage:
+.check:
+  stage: check
   interruptible: true
+
+.security: &security
+  stage: check
+  needs: []
+  interruptible: true
+  rules:
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($LICENSE_SCANNING  == "1")'
+      when: always
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - when: never
+
+license_scanning:
+  <<: *security
+  variables:
+    LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=frontend backend"
+
+nodejs-scan-sast:
+  <<: *security
+
+semgrep-sast:
+  <<: *security
+  
+secret_detection:
+  <<: *security
+
+
+.lint:
+  extends: .check
   image: node
-  stage: lintage
   before_script:
     - eval $(ssh-agent -s)
     - mkdir ~/.ssh/
@@ -17,27 +46,23 @@
     - git fetch --all
     - git checkout -b $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME ssh_origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
-lintage-frontend:
-  extends: .lintage
+frontend_lint:
+  extends: .lint
+  needs: [frontend_install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - frontend/**/*
     - when: never
-  cache:
-    key: frontend-node-modules
-    paths:
-      - frontend/node_modules/
   script:
     - cd frontend
-    - npm install
     - npm run lint
-    - git add .
-    - "git commit -m 'style(Front): ✍ Linted frontend files' || true"
+    - "git commit -am 'style(Front): ✍ Linted frontend files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
-lintage-backend:
-  extends: .lintage
+backend_lint:
+  extends: .lint
+  needs: [backend_install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -45,8 +70,23 @@ lintage-backend:
     - when: never
   script:
     - cd backend
-    - npm install
     - npm run lint
-    - git add .
-    - "git commit -m 'style(Back): ✍ Linted backend files' || true"
+    - "git commit -am 'style(Back): ✍ Linted backend files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
+
+
+.ts-prune:
+  extends: .check
+  image: node
+
+backend_ts-prune:
+  extends: .ts-prune
+  needs: [backend_install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - backend/**/*
+    - when: never
+  script:
+    - cd backend
+    - npm run find-deadcode
