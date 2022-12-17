@@ -18,6 +18,7 @@ stages:
   - docker-build
   - docker-publish
   - docker-scan
+  - deploy
 
 include:
   - local: /.gitlab/ci/triage.gitlab-ci.yml
@@ -33,3 +34,4 @@ include:
   - local: /.gitlab/ci/docker-build.gitlab-ci.yml
   - local: /.gitlab/ci/docker-scan.gitlab-ci.yml
   - local: /.gitlab/ci/docker-publish.gitlab-ci.yml
+  - local: /.gitlab/ci/deploy.gitlab-ci.yml
