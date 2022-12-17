@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 import { ApproveGearRequestForm } from '../gearRequests.service';
 
 export class GearRequestsApproveFormRequestDto
@@ -9,5 +10,6 @@ export class GearRequestsApproveFormRequestDto
     description: 'Gear Request drive',
     type: String,
   })
+  @IsString()
   drive: string;
 }
