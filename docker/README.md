@@ -17,6 +17,7 @@ Usage: ./compose.sh [option]
 --build|-b: build dev containers
 --prisma|-p: run prisma command in backend container. Example: ./compose.sh --prisma 'npx prisma migrate dev'
 --bash|-b: run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
+--updateVersion|-uv: update version as realese-candidate (rc) of backend and frontend
 ```
 
 ## Les fichiers nécessaires
