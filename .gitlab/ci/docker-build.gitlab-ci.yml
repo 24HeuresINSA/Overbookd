@@ -1,0 +1,47 @@
+.docker-build:
+  stage: docker-build
+  interruptible: true
+  image: docker
+  services:
+    - name: docker:dind
+      command: ["--experimental"]
+  needs: []
+  before_script:
+    - apk update
+    - apk add jq
+    - VERSION=$(jq -r '.version' ./${SCOPE}/package.json)
+  script:
+    - docker build --tag $CI_REGISTRY_IMAGE/$SCOPE:latest --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE/$SCOPE:mr_$VERSION --build-arg BASE_URL=$BASE_URL ./$SCOPE
+    - docker save $CI_REGISTRY_IMAGE/$SCOPE:latest $CI_REGISTRY_IMAGE/$SCOPE:pre-prod $CI_REGISTRY_IMAGE/$SCOPE:$VERSION $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE/$SCOPE:mr_$VERSION > ${SCOPE}.tar
+  artifacts:
+    paths:
+      - ${SCOPE}.tar
+    expire_in: 1 hour 
+ 
+
+backend_docker_build:
+  extends: .docker-build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - backend/**/*
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - backend/**/*
+    - when: never
+  variables:
+    SCOPE: backend
+
+frontend_docker_build:
+  extends: .docker-build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - frontend/**/*
+    - when: never
+  variables:
+    SCOPE: frontend
+
