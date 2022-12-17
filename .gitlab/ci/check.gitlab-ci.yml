@@ -75,12 +75,9 @@ backend_lint:
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
 
-.ts-prune:
-  extends: .check
-  image: node
-
 backend_ts-prune:
-  extends: .ts-prune
+  extends: .check
+  image: node:16.17.1-alpine3.16
   needs: [backend_install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
