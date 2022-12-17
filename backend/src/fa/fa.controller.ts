@@ -32,15 +32,23 @@ import {
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
 import { FaResponse, AllFaResponse } from './fa_types';
-import { GearRequestResponseDto } from './gear-requests/dto/gearRequestResponse.dto';
+import {
+  ApprovedGearRequestResponseDto,
+  GearRequestResponseDto,
+} from './gear-requests/dto/gearRequestResponse.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
   NewPeriodGearRequestFormRequestDto,
   GearRequestFormRequestDto,
 } from './gear-requests/dto/gearRequestFormRequest.dto';
-import { GearRequestsService } from './gear-requests/gearRequests.service';
+import {
+  ApprovedGearRequest,
+  GearRequestsService,
+  GearSeekerType,
+} from './gear-requests/gearRequests.service';
 import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { FASearchRequestDto } from './dto/faSearchRequest.dto';
+import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -309,6 +317,59 @@ export class FaController {
       animationId,
       gearId,
       rentalPeriodId,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Patch(
+    ':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve',
+  )
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Gear request approved',
+    type: ApprovedGearRequestResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'animationId',
+    type: Number,
+    description: 'Animation id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
+  approveGearRequest(
+    @Param('animationId', ParseIntPipe) animationId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Body() approveForm: GearRequestsApproveFormRequestDto,
+  ): Promise<ApprovedGearRequest> {
+    const gearRequestId = {
+      seeker: { type: GearSeekerType.Animation, id: animationId },
+      gearId,
+      rentalPeriodId,
+    };
+    const { drive } = approveForm;
+    return this.gearRequestService.approveAnimationGearRequest(
+      gearRequestId,
+      drive,
     );
   }
 }

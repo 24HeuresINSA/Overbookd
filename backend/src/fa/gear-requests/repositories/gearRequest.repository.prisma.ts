@@ -6,6 +6,8 @@ import {
 import { PrismaService } from '../../../prisma.service';
 import {
   AnimationOnlyError,
+  APPROVED,
+  ApprovedGearRequest,
   GearRequest,
   GearRequestAlreadyExists,
   GearRequestIdentifier,
@@ -24,6 +26,17 @@ type DatabaseGearRequest = {
   status: string;
   gear: DatabaseGear;
 };
+
+function convertApprovedAnimationGearRequestToApiContract(
+  gearRequest: DatabaseGearRequest & { drive: string; status: typeof APPROVED },
+): ApprovedGearRequest {
+  const { drive, status } = gearRequest;
+  return {
+    ...convertAnimationGearRequestToApiContract(gearRequest),
+    drive,
+    status,
+  };
+}
 
 function convertAnimationGearRequestToApiContract(
   gearRequest: DatabaseGearRequest,
@@ -50,6 +63,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     rentalPeriod: { select: { start: true, end: true, id: true } },
     quantity: true,
     status: true,
+    drive: true,
     gear: {
       select: {
         id: true,
@@ -167,6 +181,25 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     if (!existingGearRequest) return;
     await this.prismaService.period.delete({
       where: { id: existingGearRequest.rentalPeriodId },
+    });
+  }
+
+  async approveGearRequest(
+    gearRequestIdentifier: GearRequestIdentifier,
+    drive: string,
+  ): Promise<ApprovedGearRequest> {
+    const data = { status: APPROVED, drive };
+    const where = this.buildGearRequestUniqueCondition(gearRequestIdentifier);
+
+    const approvedGearRequest =
+      await this.prismaService.animation_Gear_Request.update({
+        where,
+        data,
+        select: this.SELECT_GEAR_REQUEST,
+      });
+    return convertApprovedAnimationGearRequestToApiContract({
+      ...approvedGearRequest,
+      status: APPROVED,
     });
   }
 

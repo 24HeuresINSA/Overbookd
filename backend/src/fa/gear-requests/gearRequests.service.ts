@@ -9,6 +9,9 @@ import { Gear, GearRepository } from '../../catalog/interfaces';
 import { Status } from '../dto/update-fa.dto';
 
 export const PENDING = 'PENDING';
+export const APPROVED = 'APPROVED';
+
+type GearRequestStatus = typeof PENDING | typeof APPROVED;
 
 export class AnimationOnlyError extends NotImplementedException {
   constructor() {
@@ -46,6 +49,12 @@ export interface GearRequest {
   quantity: number;
   gear: Gear;
   rentalPeriod: Period;
+  drive?: string;
+}
+
+export interface ApprovedGearRequest extends GearRequest {
+  status: typeof APPROVED;
+  drive: string;
 }
 
 export type Period = {
@@ -95,6 +104,10 @@ export type UpdateGearRequestForm = Partial<
   Pick<NewPeriodCreateGearRequestForm, 'start' | 'end' | 'quantity'>
 >;
 
+export interface ApproveGearRequestForm {
+  drive: string;
+}
+
 export type GearRequestIdentifier = {
   seeker: {
     type: GearSeekerType;
@@ -117,6 +130,10 @@ export interface GearRequestRepository {
     updateGearRequestForm: UpdateGearRequestForm,
   ): Promise<GearRequest>;
   removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void>;
+  approveGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    drive: string,
+  ): Promise<ApprovedGearRequest>;
 }
 
 export interface Animation {
@@ -220,5 +237,15 @@ export class GearRequestsService {
       gearId,
       rentalPeriodId: periodId,
     });
+  }
+
+  approveAnimationGearRequest(
+    gearRequestIdentifier: GearRequestIdentifier,
+    drive: string,
+  ): Promise<ApprovedGearRequest> {
+    return this.gearRequestRepository.approveGearRequest(
+      gearRequestIdentifier,
+      drive,
+    );
   }
 }

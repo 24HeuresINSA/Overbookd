@@ -369,6 +369,7 @@ model Animation_Gear_Request {
   gear           Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id])
   quantity       Int
   status         String
+  drive          String?
 
   @@unique([animationId, gearId, rentalPeriodId])
   @@index([status])
