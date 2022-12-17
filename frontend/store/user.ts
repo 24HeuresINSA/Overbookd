@@ -46,6 +46,13 @@ export const getters = getterTree(state, {
       return state.timeslots.find((_timeslot) => _timeslot === _id);
     });
   },
+  hasPermission: (state: UserState) => (permission: string) => {
+    return (
+      state.me.permissions?.includes("admin") ||
+      state.me.permissions?.includes(permission) ||
+      false
+    );
+  },
 });
 
 export const actions = actionTree(

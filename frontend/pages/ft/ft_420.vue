@@ -232,9 +232,7 @@ export default Vue.extend({
     },
   },
   async beforeCreate() {
-    if (
-      !this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)
-    ) {
+    if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });

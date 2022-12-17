@@ -84,11 +84,8 @@ export default Vue.extend({
       await this.$accessor.conflict.computeAll();
       await this.$accessor.conflict.fetchAll();
     },
-    hasPermission(permission: string): boolean {
-      return this.$accessor.permission.isAllowed(
-        permission,
-        this.$accessor.user.me.team
-      );
+    hasPermission(permission: string) {
+      return this.$accessor.user.hasPermission(permission);
     },
   },
 });

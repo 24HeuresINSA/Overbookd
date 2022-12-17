@@ -458,10 +458,7 @@ export default {
     },
 
     hasPermission(permission) {
-      return this.$accessor.permission.isAllowed(
-        permission,
-        this.$accessor.user.me.team
-      );
+      return this.$accessor.user.hasPermission(permission);
     },
 
     async addRole() {

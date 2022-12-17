@@ -315,13 +315,10 @@ export default {
 
   methods: {
     hasPermission(permission) {
-      return this.$accessor.permission.isAllowed(
-        permission,
-        this.$accessor.user.me.team
-      );
+      return this.$accessor.user.hasPermission(permission);
     },
     isUserWithCP(user) {
-      return this.$accessor.permission.isAllowed("cp", user.team);
+      return user.permissions.includes("cp") || false;
     },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);

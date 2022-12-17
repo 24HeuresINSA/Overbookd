@@ -341,10 +341,7 @@ export default Vue.extend({
 
   methods: {
     hasPermission(permission: string) {
-      return this.$accessor.permission.isAllowed(
-        permission,
-        this.$accessor.user.me.team
-      );
+      return this.$accessor.user.hasPermission(permission);
     },
     getConfig(key: string) {
       return this.$accessor.config.getConfig(key);

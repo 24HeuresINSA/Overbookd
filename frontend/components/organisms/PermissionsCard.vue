@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import PermissionRow from "~/components/molecules/PermissionRow";
 
 export default {

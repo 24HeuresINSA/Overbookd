@@ -32,9 +32,7 @@ export default {
     };
   },
   async mounted() {
-    if (
-      this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)
-    ) {
+    if (this.$accessor.user.hasPermission("hard")) {
       await this.update();
     } else {
       await this.$router.push({

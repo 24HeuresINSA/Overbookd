@@ -217,10 +217,7 @@ export default {
       );
     },
     isAdmin() {
-      return this.$accessor.permission.isAllowed(
-        "admin",
-        this.$accessor.user.me.team
-      );
+      return this.$accessor.user.hasPermission("admin");
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
@@ -245,9 +242,7 @@ export default {
     },
   },
   async mounted() {
-    if (
-      this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)
-    ) {
+    if (this.$accessor.user.hasPermission("hard")) {
       return this.fetchFas();
     } else {
       await this.$router.push({

@@ -376,9 +376,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (
-      this.$accessor.permission.isAllowed("hard", this.$accessor.user.me.team)
-    ) {
+    if (this.$accessor.user.hasPermission("hard")) {
       // setup config
       this.loading = true;
       let res = await this.$accessor.location.getAllLocations();
@@ -433,10 +431,7 @@ export default Vue.extend({
     },
 
     hasPermission(permission: string) {
-      return this.$accessor.permission.isAllowed(
-        permission,
-        this.$accessor.user.me.team
-      );
+      return this.$accessor.user.hasPermission(permission);
     },
 
     getConfig(key: string): any {

@@ -58,9 +58,7 @@ export default {
   },
 
   async mounted() {
-    if (
-      !this.$accessor.permission.isAllowed("sg", this.$accessor.user.me.team)
-    ) {
+    if (!this.$accessor.user.hasPermission("sg")) {
       await this.$router.push({
         path: "/",
       });

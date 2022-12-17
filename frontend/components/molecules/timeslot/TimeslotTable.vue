@@ -327,10 +327,7 @@ export default Vue.extend({
         charismaMessage = "Tu n'as pas de charismes ?...";
       }
       //dont need complex message if the user is a hard
-      charismaMessage = this.$accessor.permission.isAllowed(
-        "hard",
-        this.$accessor.user.me.team
-      )
+      charismaMessage = this.$accessor.user.hasPermission("hard")
         ? "Créneaux selectionnés validés"
         : charismaMessage;
       this.$store.dispatch("timeslot/setCreateStatus", charismaMessage);

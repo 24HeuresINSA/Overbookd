@@ -295,7 +295,7 @@ export default Vue.extend({
       let mValidators: string[] = [];
       const allValidators: string[] =
         this.$accessor.config.getConfig("ft_validators");
-      if (this.me.team.includes("admin")) {
+      if (this.hasPermission("admin")) {
         return allValidators;
       }
       if (allValidators) {
@@ -372,10 +372,7 @@ export default Vue.extend({
     },
 
     hasPermission(permission: string) {
-      return this.$accessor.permission.isAllowed(
-        permission,
-        this.$accessor.user.me.team
-      );
+      return this.$accessor.user.hasPermission(permission);
     },
 
     async saveFT() {

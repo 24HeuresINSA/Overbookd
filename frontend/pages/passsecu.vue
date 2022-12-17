@@ -95,12 +95,7 @@ export default Vue.extend({
   },
 
   async beforeMount() {
-    if (
-      this.$accessor.permission.isAllowed(
-        "manage-pass-secu",
-        this.$accessor.user.me.team
-      )
-    ) {
+    if (this.$accessor.user.hasPermission("manage-pass-secu")) {
       await this.getAllPassSecu();
     } else {
       await this.$router.push({

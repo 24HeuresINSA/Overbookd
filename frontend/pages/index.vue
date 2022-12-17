@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     hasPermission(permission) {
-      return this.$accessor.permission.isAllowed(permission, this.me.team);
+      return this.$accessor.user.hasPermission(permission);
     },
 
     async logout() {

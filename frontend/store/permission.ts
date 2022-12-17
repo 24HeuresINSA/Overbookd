@@ -18,24 +18,10 @@ export const getters = getterTree(state, {
   allPermissions(state): permission[] {
     return state.permissions;
   },
-  isAllowed:
-    (state, getters) =>
-    (permissionName: string, userTeams: string[]): boolean => {
-      if (userTeams.includes("admin")) return true;
-      const permission = getters.allPermissions
-        .filter((t: permission) => t.name === permissionName)
-        .shift();
-      if (permission && userTeams && Array(userTeams).length > 0) {
-        return permission.teams.some((teamCode: string) =>
-          userTeams.includes(teamCode)
-        );
-      }
-      return false;
-    },
   isValidated:
-    (state, getters) =>
+    (state) =>
     (user: User): boolean => {
-      return getters.isAllowed("validated-user", user.team);
+      return user.permissions?.includes("validated-user") || false;
     },
   faValidators(state): string[] {
     return (
