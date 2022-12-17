@@ -9,14 +9,14 @@
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE/$SCOPE:builder || true
-    - docker build --target builder --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:builder ./$SCOPE
+    - docker build --target builder --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:builder --build-arg BASE_URL=$BASE_URL ./$SCOPE
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:builder
 
 
 .mr-container:
   extends: .docker
   script:
-    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA ./$SCOPE
+    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL ./$SCOPE
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA
 
 m-r_backend_container:
@@ -44,7 +44,7 @@ m-r_frontend_container:
   extends: .docker
   script:
     - VERSION_TAG=${VERSION_TAG_PREFIX}$(cat ./${SCOPE}/package.json | grep version | head -1  | head -1  | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
-    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG ./$SCOPE
+    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --build-arg BASE_URL=$BASE_URL ./$SCOPE
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$TAG
 
