@@ -7,7 +7,7 @@
   needs: []
   interruptible: true
   rules:
-    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($LICENSE_SCANNING  == "1")'
+    - if: '($CI_PIPELINE_SOURCE == "schedule") && ($SECURITY_SCAN  == "1")'
       when: always
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: always
@@ -30,7 +30,7 @@ secret_detection:
 
 .lint:
   extends: .check
-  image: node
+  image: node:16.17.1-alpine3.16
   before_script:
     - eval $(ssh-agent -s)
     - mkdir ~/.ssh/

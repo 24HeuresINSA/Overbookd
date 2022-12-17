@@ -1,6 +1,6 @@
 .install:
   stage: install
-  image: node
+  image: node:16.17.1-alpine3.16
   interruptible: true
   script:
     - npm ci --silent

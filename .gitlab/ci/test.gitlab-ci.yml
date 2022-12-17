@@ -1,7 +1,7 @@
 .test:
   stage: test
   interruptible: true
-  image: node
+  image: node:16.17.1-alpine3.16
   script:
     - npm run test:ci
 
