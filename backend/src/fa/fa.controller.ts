@@ -232,6 +232,59 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
+  @Patch(
+    ':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve',
+  )
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Gear request approved',
+    type: ApprovedGearRequestResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'animationId',
+    type: Number,
+    description: 'Animation id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
+  approveGearRequest(
+    @Param('animationId', ParseIntPipe) animationId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Body() approveForm: GearRequestsApproveFormRequestDto,
+  ): Promise<ApprovedGearRequest> {
+    const gearRequestId = {
+      seeker: { type: GearSeekerType.Animation, id: animationId },
+      gearId,
+      rentalPeriodId,
+    };
+    const { drive } = approveForm;
+    return this.gearRequestService.approveAnimationGearRequest(
+      gearRequestId,
+      drive,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
   @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @ApiResponse({
     status: 200,
@@ -317,59 +370,6 @@ export class FaController {
       animationId,
       gearId,
       rentalPeriodId,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
-  @Patch(
-    ':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve',
-  )
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: 'Gear request approved',
-    type: ApprovedGearRequestResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
-  @ApiParam({
-    name: 'animationId',
-    type: Number,
-    description: 'Animation id',
-    required: true,
-  })
-  @ApiParam({
-    name: 'gearId',
-    type: Number,
-    description: 'Gear id',
-    required: true,
-  })
-  @ApiParam({
-    name: 'rentalPeriodId',
-    type: Number,
-    description: 'Rental period id',
-    required: true,
-  })
-  approveGearRequest(
-    @Param('animationId', ParseIntPipe) animationId: number,
-    @Param('gearId', ParseIntPipe) gearId: number,
-    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
-    @Body() approveForm: GearRequestsApproveFormRequestDto,
-  ): Promise<ApprovedGearRequest> {
-    const gearRequestId = {
-      seeker: { type: GearSeekerType.Animation, id: animationId },
-      gearId,
-      rentalPeriodId,
-    };
-    const { drive } = approveForm;
-    return this.gearRequestService.approveAnimationGearRequest(
-      gearRequestId,
-      drive,
     );
   }
 }
