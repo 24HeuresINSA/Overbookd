@@ -43,7 +43,9 @@ m-r_frontend_container:
 .release-container:
   extends: .docker
   script:
-    - VERSION_TAG=${VERSION_TAG_PREFIX}$(cat ./${SCOPE}/package.json | grep version | head -1  | head -1  | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+    - apk update
+    - apk add jq
+    - VERSION_TAG=${VERSION_TAG_PREFIX}$(jq '.version' ./frontend/package.json')
     - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:builder --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --build-arg BASE_URL=$BASE_URL ./$SCOPE
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$TAG
