@@ -10,6 +10,12 @@ container_scanning:
     - if: '$CI_COMMIT_BRANCH == "pre-prod"'
       when: never
     - when: never
+  before_script:
+    - sudo apt update
+    - sudo apt install curl jq -y
+    - VERSION=$(jq -r '.version' ./${SCOPE}/package.json)
+
+
 
 frontend_scan:
   extends: container_scanning
@@ -21,6 +27,10 @@ frontend_scan:
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "frontend/Dockerfile"
+  after_script:
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685416/tags/$CI_COMMIT_SHORT_SHA"'
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685416/tags/mr_$VERSION"'
+
 
 backend_scan:
   extends: container_scanning
@@ -32,3 +42,6 @@ backend_scan:
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
     DOCKERFILE_PATH: "backend/Dockerfile"
+  after_script:
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685488/tags/$CI_COMMIT_SHORT_SHA"'
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685488/tags/mr_$VERSION"'
