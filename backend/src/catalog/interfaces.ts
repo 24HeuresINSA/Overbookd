@@ -25,6 +25,7 @@ export interface Gear {
   slug: string;
   category?: SimplifiedCategory;
   owner?: Team;
+  code?: string;
 }
 
 export interface SearchGear {

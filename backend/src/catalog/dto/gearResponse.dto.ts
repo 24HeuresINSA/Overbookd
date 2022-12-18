@@ -47,4 +47,11 @@ export class GearResponseDto implements Gear {
     type: TeamRepresentation,
   })
   owner?: Team;
+
+  @ApiProperty({
+    required: false,
+    description: 'Gear reference code',
+    type: String,
+  })
+  code?: string;
 }

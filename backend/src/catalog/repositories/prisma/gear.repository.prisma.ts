@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GearReferenceCodeService } from 'src/catalog/gearReferenceCode.service';
 import { PrismaService } from '../../../prisma.service';
 import {
   Gear,
@@ -34,7 +35,10 @@ export function convertGearToApiContract(gear: DatabaseGear) {
   const owner = gear.category?.owner
     ? { name: gear.category.owner.name, code: gear.category.owner.code }
     : undefined;
-  return { ...baseGear, category, owner };
+  const code = category
+    ? GearReferenceCodeService.computeGearCode(category, gear.id)
+    : undefined;
+  return { ...baseGear, category, owner, code };
 }
 
 @Injectable()
@@ -112,10 +116,12 @@ export class PrismaGearRepository implements GearRepository {
 
   async searchGear(search: SearchGear): Promise<Gear[]> {
     const where = this.buildSearchConditions(search);
-    return this.prismaService.catalog_Gear.findMany({
-      select: this.SELECT_GEAR,
-      where,
-    });
+    return (
+      await this.prismaService.catalog_Gear.findMany({
+        select: this.SELECT_GEAR,
+        where,
+      })
+    ).map(convertGearToApiContract);
   }
 
   private buildSearchConditions({ slug, category, owner }: SearchGear) {
