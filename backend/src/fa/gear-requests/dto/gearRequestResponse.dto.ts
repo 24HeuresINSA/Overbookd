@@ -69,6 +69,13 @@ export class GearRequestResponseDto implements GearRequest {
     type: PeriodRepresentation,
   })
   rentalPeriod: Period;
+
+  @ApiProperty({
+    required: false,
+    description: 'Gear request drive location',
+    type: String,
+  })
+  drive?: string;
 }
 
 export class ApprovedGearRequestResponseDto

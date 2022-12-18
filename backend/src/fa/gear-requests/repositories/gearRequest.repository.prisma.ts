@@ -25,6 +25,7 @@ type DatabaseGearRequest = {
   quantity: number;
   status: string;
   gear: DatabaseGear;
+  drive?: string;
 };
 
 function convertApprovedAnimationGearRequestToApiContract(
@@ -41,7 +42,8 @@ function convertApprovedAnimationGearRequestToApiContract(
 function convertAnimationGearRequestToApiContract(
   gearRequest: DatabaseGearRequest,
 ): GearRequest {
-  const { animationId, rentalPeriod, quantity, status, gear } = gearRequest;
+  const { animationId, rentalPeriod, quantity, status, gear, drive } =
+    gearRequest;
   return {
     seeker: {
       type: GearSeekerType.Animation,
@@ -50,6 +52,7 @@ function convertAnimationGearRequestToApiContract(
     rentalPeriod,
     quantity,
     status,
+    drive,
     gear: convertGearToApiContract(gear),
   };
 }
