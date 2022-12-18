@@ -74,9 +74,10 @@ const GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {
 const GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE: GearRequest = {
   seeker: { type: GearSeekerType.Animation, id: CHATEAU_GONFLABLE.id },
   quantity: 2,
-  status: PENDING,
+  status: APPROVED,
   gear: CHAISE,
   rentalPeriod: MAY_24_2,
+  drive: MAGASIN,
 };
 
 const GEAR_REQUESTS = [
@@ -173,7 +174,7 @@ describe('Gear requests', () => {
       );
     });
 
-    describe('When asing a gear for an exiting period', () => {
+    describe('When asking a gear for an exiting period', () => {
       it('should link gear request to the existing period', async () => {
         const createdGearRequest = await gearRequestService.addAnimationRequest(
           {
@@ -219,31 +220,7 @@ describe('Gear requests', () => {
       });
     });
   });
-  describe('List gear requests', () => {
-    afterAll(() => {
-      gearRequestRepository.gearRequests = [];
-    });
-    beforeAll(() => {
-      gearRequestRepository.gearRequests = [...GEAR_REQUESTS];
-    });
-    describe.each`
-      fa                   | expectedRequests
-      ${CHATEAU_GONFLABLE} | ${[GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE, GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE, GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE, GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE]}
-      ${KRAVMAGA}          | ${[]}
-    `(
-      'When looking for all gear requests for $fa.name',
-      ({ fa, expectedRequests }) => {
-        it(`should find ${expectedRequests.length} requests`, async () => {
-          const gearRequests = await gearRequestService.getAnimationRequests(
-            fa.id,
-          );
-          expect(gearRequests).toHaveLength(expectedRequests.length);
-          expect(gearRequests).toMatchObject(expectedRequests);
-        });
-      },
-    );
-  });
-  describe('Udpate gear request', () => {
+  describe('Update gear request', () => {
     afterAll(() => {
       gearRequestRepository.gearRequests = [];
     });
@@ -310,7 +287,7 @@ describe('Gear requests', () => {
           });
         }
 
-        it('should not impact status', () => {
+        it('should set status to PENDING', () => {
           expect(updatedGearRequest.status).toBe(PENDING);
         });
 

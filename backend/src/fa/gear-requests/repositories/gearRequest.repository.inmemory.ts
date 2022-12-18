@@ -5,6 +5,7 @@ import {
   GearRequestIdentifier,
   GearRequestNotFound,
   GearRequestRepository,
+  PENDING,
   SearchGearRequest,
   UpdateGearRequestForm,
 } from '../gearRequests.service';
@@ -139,6 +140,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       ...previousGearRequest,
       ...quantity,
       ...rentalPeriod,
+      status: PENDING,
     };
     return newGearRequest;
   }

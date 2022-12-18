@@ -89,7 +89,7 @@ services:
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
   postgresql:
     container_name: overbookd_postgresql
-    image: postgres
+    image: postgres:14
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}

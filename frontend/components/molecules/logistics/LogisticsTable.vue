@@ -8,6 +8,10 @@
       {{ item.quantity }}
     </template>
 
+    <template #[`item.drive`]="{ item }">
+      {{ item.drive ?? "Non défini" }}
+    </template>
+
     <template #[`item.action`]="{ item }">
       <v-btn v-if="!isDisabled" icon @click="deleteGear(item.gear)">
         <v-icon>mdi-trash-can</v-icon>
@@ -19,6 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Gear } from "~/utils/models/catalog.model";
+import { Header } from "~/utils/models/Data";
 import { GearRequest } from "~/utils/models/FA";
 
 export default Vue.extend({
@@ -33,14 +38,18 @@ export default Vue.extend({
       default: () => "",
     },
   },
-  data: () => ({
-    headers: [
-      { text: "Nom", value: "name" },
-      { text: "Quantité", value: "quantity" },
-      { text: "Action", value: "action" },
-    ],
-  }),
   computed: {
+    headers(): Header[] {
+      const actionHeader = { text: "Action", value: "action" };
+      const driveHeader = { text: "Lieu de retrait", value: "drive" };
+      const commonHeaders = [
+        { text: "Nom", value: "name" },
+        { text: "Quantité", value: "quantity" },
+      ];
+      return this.isDisabled
+        ? [...commonHeaders, driveHeader]
+        : [...commonHeaders, actionHeader];
+    },
     gearRequest(): GearRequest[] {
       switch (this.owner) {
         case "matos":
