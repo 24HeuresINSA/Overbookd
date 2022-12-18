@@ -53,6 +53,7 @@ const GEARS: Gear[] = [
       name: CATEGORIES[1].name,
     },
     owner: teamMatos,
+    code: 'BR_OU_001',
   },
   {
     id: 2,
@@ -64,6 +65,7 @@ const GEARS: Gear[] = [
       name: CATEGORIES[2].name,
     },
     owner: teamMatos,
+    code: 'MO_002',
   },
   {
     id: 3,
@@ -89,6 +91,7 @@ const SIMILAR_GEARS: Gear[] = [
       name: CATEGORIES[1].name,
     },
     owner: teamMatos,
+    code: 'BR_OU_005',
   },
   {
     id: 6,
@@ -100,6 +103,7 @@ const SIMILAR_GEARS: Gear[] = [
       name: CATEGORIES[2].name,
     },
     owner: teamMatos,
+    code: 'MO_006',
   },
 ];
 
@@ -137,16 +141,23 @@ describe('Catalog', () => {
   });
   describe('Add gear', () => {
     describe.each`
-      name               | category     | expectedSlug       | expectedCategory                                         | expectedOwner
-      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}                                             | ${undefined}
-      ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${undefined}
-      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${{ name: teamBarriere.name, code: teamBarriere.code }}
+      name               | category     | expectedSlug       | expectedCategory                                         | expectedCodeStart | expectedOwner
+      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${'MO_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}                                             | ${undefined}      | ${undefined}
+      ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${'DI_'}          | ${undefined}
+      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${'BA_'}          | ${{ name: teamBarriere.name, code: teamBarriere.code }}
     `(
       'Add gear "$name" with #$category category to catalog',
-      ({ name, category, expectedSlug, expectedCategory, expectedOwner }) => {
+      ({
+        name,
+        category,
+        expectedSlug,
+        expectedCategory,
+        expectedCodeStart,
+        expectedOwner,
+      }) => {
         let gear: Gear;
         afterAll(() => {
           gearRepository.gears = GEARS;
@@ -154,19 +165,22 @@ describe('Catalog', () => {
         beforeAll(async () => {
           gear = await catalog.add({ name, category });
         });
-        it(`should create gear ${name} with generated id and slug "${expectedSlug}"`, async () => {
+        it(`should create gear ${name} with generated id and slug "${expectedSlug}"`, () => {
           expect(gear).toHaveProperty('id');
           expect(gear.id).toEqual(expect.any(Number));
           expect(gear.name).toBe(name);
           expect(gear.slug).toBe(expectedSlug);
         });
         if (expectedCategory) {
-          it(`should link gear ${name} to category "${expectedCategory.name}"`, async () => {
+          it(`should link gear ${name} to category "${expectedCategory.name}"`, () => {
             expect(gear.category).toEqual(expectedCategory);
+          });
+          it('should generate a reference code', () => {
+            expect(gear.code.startsWith(expectedCodeStart)).toBe(true);
           });
         }
         if (expectedOwner) {
-          it(`should link gear ${name} to team "${expectedOwner.name}"`, async () => {
+          it(`should link gear ${name} to team "${expectedOwner.name}"`, () => {
             expect(gear.owner).toEqual(expectedOwner);
           });
         }

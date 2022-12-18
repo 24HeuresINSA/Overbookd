@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GearReferenceCodeService } from '../../gearReferenceCode.service';
 import { GearNotFoundException } from '../../catalog.service';
 import {
   Gear,
@@ -57,7 +58,10 @@ export class InMemoryGearRepository implements GearRepository {
     const existingGear = this.gears.find((g) => g.slug === gear.slug);
     if (existingGear) throw new GearAlreadyExists(existingGear);
     const id = this.gears.length + 1;
-    const createdGear = { ...gear, id };
+    const code = gear.category
+      ? GearReferenceCodeService.computeGearCode(gear.category, id)
+      : undefined;
+    const createdGear = { ...gear, id, code };
     this.gears.push(createdGear);
     return Promise.resolve(createdGear);
   }
