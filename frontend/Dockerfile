@@ -1,4 +1,4 @@
-FROM node:16.17.1-alpine3.16 AS builder
+FROM node:19.3.0-alpine3.16 AS builder
 
 WORKDIR /overbookd/frontend
 ARG BASE_URL
@@ -13,7 +13,7 @@ COPY . .
 
 RUN npm run build:ci
 
-FROM node:16.17.1-alpine3.16
+FROM node:19.3.0-alpine3.16
 
 ENV NODE_ENV production
 
