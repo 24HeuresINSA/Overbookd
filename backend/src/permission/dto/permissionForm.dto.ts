@@ -14,7 +14,7 @@ export class PermissionFormDto {
     type: String,
   })
   @IsString()
-  @Matches(new RegExp('/^[a-z|-]+$/'), {
+  @Matches(new RegExp('^[a-z-]+$'), {
     message: (va: ValidationArguments) => `${va.property} should be kebab-case`,
   })
   name: string;

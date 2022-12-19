@@ -76,6 +76,22 @@ export const permissions = [
     },
   },
   {
+    name: 'catalog-read',
+    description: 'Peut voir le catalogue',
+    teams: {
+      createMany: {
+        data: [
+          { team_code: 'matos' },
+          { team_code: 'elec' },
+          { team_code: 'barrieres' },
+          { team_code: 'signa' },
+          { team_code: 'bar' },
+          { team_code: 'catering' },
+        ],
+      },
+    },
+  },
+  {
     name: 'inventory-write',
     description: "Peut éditer l'inventaire",
     teams: {
@@ -187,6 +203,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ team_code: 'humain' }, { team_code: 'matos' }],
+      },
+    },
+  },
+  {
+    name: 'communication-read',
+    description: 'Peut accéder à la page communication',
+    teams: {
+      createMany: {
+        data: [{ team_code: 'communication' }],
       },
     },
   },

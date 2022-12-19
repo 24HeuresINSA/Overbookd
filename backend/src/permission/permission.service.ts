@@ -74,11 +74,12 @@ export class PermissionService {
     id: number,
     params: PermissionFormDto,
   ): Promise<PermissionResponseDto> {
-    await this.assertUniquePermissionName(params.name);
     const permission = await this.permissionExists(id);
     const newPermission = await this.prisma.permission.update({
       where: { id },
-      data: params,
+      data: {
+        description: params.description, // Only update description
+      },
     });
     return { ...newPermission, teams: permission.teams };
   }

@@ -26,7 +26,7 @@
         </v-list-item>
         <template v-for="(item, i) in working_items">
           <v-list-item
-            v-if="hasPermission(item.roles)"
+            v-if="hasPermission(item.permission)"
             :key="i"
             :to="item.to"
             router
@@ -182,55 +182,47 @@ export default {
           icon: "mdi-apps",
           title: "Accueil",
           to: "/",
-          roles: "hard",
+          permission: "validated-user",
         },
         {
           icon: "mdi-chart-bubble",
           title: "Fiches Activités",
-          roles: "hard",
+          permission: "hard",
           to: "/fa",
         },
         {
           icon: "mdi-account",
           title: "Liste des Orgas",
-          roles: "hard",
+          permission: "hard",
           to: "/humans",
         },
         {
           icon: "mdi-cog",
-          roles: "admin",
+          permission: "admin",
           title: "Admin",
           to: "/config",
         },
         {
           icon: "mdi-format-list-bulleted",
-          roles: "sg",
+          permission: "sg",
           title: "SG",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
-          roles: "sg",
+          permission: "sg",
           title: "Transactions",
           to: "/transactions",
         },
         {
           icon: "mdi-bookshelf",
-          roles: [
-            "admin",
-            "matos",
-            "elec",
-            "barrieres",
-            "signa",
-            "bar",
-            "catering",
-          ],
+          permission: "catalog-read",
           title: "Catalogue",
           to: "/catalog",
         },
         {
           icon: "mdi-web-sync",
-          roles: "communication",
+          permission: "communication-read",
           title: "Animations a publier",
           to: "/comcom",
         },
@@ -441,7 +433,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     },
 
     hasPermission(permission) {
-      return this.$accessor.permission.isAllowed(permission, this.me.team);
+      return this.$accessor.user.hasPermission(permission);
     },
 
     getConfig(key) {

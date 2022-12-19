@@ -12,6 +12,12 @@ export default {
       return err.response.data.message;
     });
   },
+  updatePermission(context: Context, payload: any) {
+    return context.$axios.patch(`${resource}/${payload.id}`, payload);
+  },
+  removePermission(context: Context, permissionId: number) {
+    return context.$axios.delete(`${resource}/${permissionId}`);
+  },
   linkPermissionToTeams(
     context: Context,
     permissionId: number,
@@ -20,8 +26,5 @@ export default {
     return context.$axios.post(`${resource}/link/${permissionId}`, {
       teamCodes,
     });
-  },
-  removePermission(context: Context, permissionId: number) {
-    return context.$axios.delete(`${resource}/${permissionId}`);
   },
 };

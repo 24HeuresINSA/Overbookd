@@ -2,7 +2,19 @@
   <tr>
     <td>{{ permission.name }}</td>
     <td>
-      {{ permission.description }}
+      <div
+        v-if="!displayDescriptionUpdate"
+        class="row-pointer"
+        @click="displayDescriptionUpdate = true"
+      >
+        {{ permission.description }} <v-icon dark small> mdi-pencil </v-icon>
+      </div>
+      <div v-else class="d-flex" style="min-width: 400px">
+        <v-text-field v-model="newDescription" label="Description" />
+        <v-icon dark small class="row-pointer" @click="updateDescription">
+          mdi-pencil
+        </v-icon>
+      </div>
     </td>
     <td>
       <OverChips :roles="permission.teams" />
@@ -28,9 +40,11 @@
 </template>
 
 <script lang="ts">
-import OverChips from "~/components/atoms/overChips";
+import Vue from "vue";
+import { team } from "~/utils/models/repo";
+import OverChips from "~/components/atoms/overChips.vue";
 
-export default {
+export default Vue.extend({
   name: "PermissionRow",
   components: {
     OverChips,
@@ -44,16 +58,17 @@ export default {
   data() {
     return {
       newElement: null,
+      newDescription: this.permission.description,
+      displayDescriptionUpdate: false,
     };
   },
   methods: {
-    teams() {
+    teams(): team[] {
       return this.$accessor.team.allTeams;
     },
     async addTeam() {
       if (!this.newElement) {
         this.$accessor.notif.pushNotification({
-          type: "error",
           message: "Il faut préciser une team !",
         });
         return;
@@ -74,6 +89,17 @@ export default {
         this.$accessor.permission.setPermissionsInStore();
       }
     },
+    async updateDescription() {
+      let response = await this.$accessor.permission.updatePermission({
+        id: this.permission.id,
+        name: this.permission.name,
+        description: this.newDescription,
+      });
+      if (response) {
+        this.$accessor.permission.setPermissionsInStore();
+        this.displayDescriptionUpdate = false;
+      }
+    },
     async removePermission() {
       let response = await this.$accessor.permission.removePermission({
         permissionId: this.permission.id,
@@ -83,5 +109,5 @@ export default {
       }
     },
   },
-};
+});
 </script>

@@ -51,9 +51,10 @@
 </template>
 
 <script lang="ts">
-import PermissionRow from "~/components/molecules/PermissionRow";
+import Vue from "vue";
+import PermissionRow from "~/components/molecules/PermissionRow.vue";
 
-export default {
+export default Vue.extend({
   name: "PermissionCard",
   components: {
     PermissionRow,
@@ -103,5 +104,5 @@ export default {
       }
     },
   },
-};
+});
 </script>
