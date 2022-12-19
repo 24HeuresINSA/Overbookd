@@ -1,13 +1,8 @@
 workflow:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "main"'
-      variables:
-        BASE_URL: $BASE_URL_PROD
-    - if: '$CI_COMMIT_REF_NAME == "pre-prod"'
-      variables:
-        BASE_URL: $BASE_URL_PREPROD
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      
+
 stages:
   - triage
   - clean-up-pipelines

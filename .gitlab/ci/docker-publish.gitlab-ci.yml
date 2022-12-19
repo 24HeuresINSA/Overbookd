@@ -15,32 +15,6 @@
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$TAG
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG
 
-mr_backend_publish:
-  extends: .docker-publish
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      changes:
-        - backend/**/*
-    - when: never
-  needs: ["backend_docker_build"]
-  variables:
-    SCOPE: backend
-    VERSION_TAG_PREFIX: "mr_"
-    TAG: $CI_COMMIT_SHORT_SHA
-
-mr_frontend_publish:
-  extends: .docker-publish
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      changes:
-        - frontend/**/*
-    - when: never
-  needs: ["frontend_docker_build"]
-  variables:
-    SCOPE: frontend
-    VERSION_TAG_PREFIX: "mr_"
-    TAG: $CI_COMMIT_SHORT_SHA
-
 preprod_backend_publish:
   extends: .docker-publish
   rules:
@@ -65,7 +39,7 @@ preprod_frontend_publish:
       changes:
         - frontend/**/*
     - when: never
-  needs: ["frontend_docker_build"]
+  needs: ["preprod_frontend_docker_build"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: "pre-prod_"
@@ -87,7 +61,7 @@ prod_backend_publish:
     VERSION_TAG_PREFIX: ""
     TAG: "latest"
 
-prod_frontent_publish:
+prod_frontend_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -97,7 +71,7 @@ prod_frontent_publish:
         - frontend/**/*
       when: manual
     - when: never
-  needs: ["frontend_docker_build"]
+  needs: ["prod_frontend_docker_build"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: ""

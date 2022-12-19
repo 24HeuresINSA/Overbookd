@@ -1,4 +1,4 @@
-.docker-build:
+.docker:
   stage: docker-build
   interruptible: true
   image: docker
@@ -6,42 +6,110 @@
     - name: docker:dind
       command: ["--experimental"]
   needs: []
+
+.pre-build:
+  extends: .docker
+  script:
+    - docker build --target installer --tag $CI_REGISTRY_IMAGE/$SCOPE:installer ./$SCOPE
+    - docker save $CI_REGISTRY_IMAGE/$SCOPE:installer > ${SCOPE}_installer.tar
+
+frontend_docker_pre_build:
+  extends: .pre-build
+  variables:
+    SCOPE: frontend
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - frontend/**/*
+    - when: never
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ${SCOPE}_installer.tar
+    policy: push
+
+.docker-build:
+  extends: .docker
   before_script:
     - apk update
     - apk add jq
     - VERSION=$(jq -r '.version' ./${SCOPE}/package.json)
-  script:
-    - docker build --tag $CI_REGISTRY_IMAGE/$SCOPE:latest --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE/$SCOPE:mr_$VERSION --build-arg BASE_URL=$BASE_URL ./$SCOPE
-    - docker save $CI_REGISTRY_IMAGE/$SCOPE:latest $CI_REGISTRY_IMAGE/$SCOPE:pre-prod $CI_REGISTRY_IMAGE/$SCOPE:$VERSION $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE/$SCOPE:mr_$VERSION > ${SCOPE}.tar
+  after_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA
+    - docker save $CI_REGISTRY_IMAGE/$SCOPE:$TAG $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG_PREFIX$VERSION > ${SCOPE}.tar
   artifacts:
     paths:
       - ${SCOPE}.tar
-    expire_in: 1 hour 
- 
+    expire_in: 1 hour
+
+preprod_frontend_docker_build:
+  extends: .docker-build
+  needs: ["frontend_docker_pre_build"]
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ${SCOPE}_installer.tar
+    policy: pull
+  variables:
+    SCOPE: frontend
+    VERSION_TAG_PREFIX: "pre-prod_"
+    TAG: pre-prod
+    BASE_URL: $BASE_URL_PREPROD
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - frontend/**/*
+    - when: never
+  script:
+    - docker load -i ${SCOPE}_installer.tar
+    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:installer --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL ./$SCOPE
+
+prod_frontend_docker_build:
+  extends: .docker-build
+  needs: ["frontend_docker_pre_build"]
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ${SCOPE}_installer.tar
+    policy: pull
+  variables:
+    SCOPE: frontend
+    VERSION_TAG_PREFIX: "pre-prod_"
+    TAG: pre-prod
+    BASE_URL: $BASE_URL_PROD
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - frontend/**/*
+      when: manual
+    - when: never
+  script:
+    - docker load -i ${SCOPE}_installer.tar
+    - docker build --from-cache $CI_REGISTRY_IMAGE/$SCOPE:installer --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL ./$SCOPE
 
 backend_docker_build:
   extends: .docker-build
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - backend/**/*
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      changes:
-        - backend/**/*
-    - when: never
   variables:
     SCOPE: backend
-
-frontend_docker_build:
-  extends: .docker-build
+    BASE_URL: $BASE_URL_PROD
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - frontend/**/*
+        - backend/**/*
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - backend/**/*
     - when: never
-  variables:
-    SCOPE: frontend
-
+  script:
+    - docker build --tag $CI_REGISTRY_IMAGE/$SCOPE:latest --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL ./$SCOPE
+  after_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA
+    - docker save $CI_REGISTRY_IMAGE/$SCOPE:$latest $CI_REGISTRY_IMAGE/$SCOPE:$VERSION $CI_REGISTRY_IMAGE/$SCOPE:pre-prod $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION > ${SCOPE}.tar
