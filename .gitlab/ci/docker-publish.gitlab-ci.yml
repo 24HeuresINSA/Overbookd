@@ -11,7 +11,7 @@
     - VERSION_TAG=${VERSION_TAG_PREFIX}$(jq -r '.version' ./${SCOPE}/package.json)
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker load -i ${SCOPE}.tar
+    - docker load -i ${BASE_IMAGE}.tar
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$TAG
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG
 
@@ -29,6 +29,7 @@ preprod_backend_publish:
     SCOPE: backend
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: "pre-prod"
+    BASE_IMAGE: "backend"
 
 preprod_frontend_publish:
   extends: .docker-publish
@@ -44,6 +45,7 @@ preprod_frontend_publish:
     SCOPE: frontend
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: "pre-prod"
+    BASE_IMAGE: "frontend_pre-prod"
 
 prod_backend_publish:
   extends: .docker-publish
@@ -54,12 +56,14 @@ prod_backend_publish:
       changes:
         - backend/**/*
       when: manual
+      allow_failure: true
     - when: never
-  needs: ["backend_docker_build", backend_scan]
+  needs: ["backend_docker_build", "backend_scan"]
   variables:
     SCOPE: backend
     VERSION_TAG_PREFIX: ""
     TAG: "latest"
+    BASE_IMAGE: backend
 
 prod_frontend_publish:
   extends: .docker-publish
@@ -70,9 +74,11 @@ prod_frontend_publish:
       changes:
         - frontend/**/*
       when: manual
+      allow_failure: true
     - when: never
   needs: ["prod_frontend_docker_build", "frontend_scan"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: ""
     TAG: "latest"
+    BASE_IMAGE: "frontend_prod"
