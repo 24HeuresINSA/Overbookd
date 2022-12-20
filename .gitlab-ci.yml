@@ -11,8 +11,8 @@ stages:
   - check
   - test
   - docker-build
-  - docker-publish
   - docker-scan
+  - docker-publish
   - deploy
 
 include:

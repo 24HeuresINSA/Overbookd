@@ -24,7 +24,7 @@ preprod_backend_publish:
       changes:
         - backend/**/*
     - when: never
-  needs: ["backend_docker_build"]
+  needs: ["backend_docker_build", "backend_scan"]
   variables:
     SCOPE: backend
     VERSION_TAG_PREFIX: "pre-prod_"
@@ -39,7 +39,7 @@ preprod_frontend_publish:
       changes:
         - frontend/**/*
     - when: never
-  needs: ["preprod_frontend_docker_build"]
+  needs: ["preprod_frontend_docker_build", "frontend_scan"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: "pre-prod_"
@@ -55,7 +55,7 @@ prod_backend_publish:
         - backend/**/*
       when: manual
     - when: never
-  needs: ["backend_docker_build"]
+  needs: ["backend_docker_build", backend_scan]
   variables:
     SCOPE: backend
     VERSION_TAG_PREFIX: ""
@@ -71,7 +71,7 @@ prod_frontend_publish:
         - frontend/**/*
       when: manual
     - when: never
-  needs: ["prod_frontend_docker_build"]
+  needs: ["prod_frontend_docker_build", "frontend_scan"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: ""

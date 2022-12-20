@@ -21,6 +21,7 @@ frontend_docker_pre_build:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - frontend/**/*
+      when: manual
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - frontend/**/*
@@ -88,7 +89,6 @@ prod_frontend_docker_build:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - frontend/**/*
-      when: manual
     - when: never
   script:
     - docker load -i ${SCOPE}_installer.tar
@@ -103,6 +103,7 @@ backend_docker_build:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - backend/**/*
+      when: manual
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - backend/**/*
