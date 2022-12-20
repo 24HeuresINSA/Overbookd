@@ -10,6 +10,7 @@ stages:
   - install
   - check
   - test
+  - build
   - docker-build
   - docker-scan
   - docker-publish
@@ -26,6 +27,7 @@ include:
   - local: /.gitlab/ci/install.gitlab-ci.yml
   - local: /.gitlab/ci/check.gitlab-ci.yml
   - local: /.gitlab/ci/test.gitlab-ci.yml
+  - local: /.gitlab/ci/build.gitlab-ci.yml
   - local: /.gitlab/ci/docker-build.gitlab-ci.yml
   - local: /.gitlab/ci/docker-scan.gitlab-ci.yml
   - local: /.gitlab/ci/docker-publish.gitlab-ci.yml

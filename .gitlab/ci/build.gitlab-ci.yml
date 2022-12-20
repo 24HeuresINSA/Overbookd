@@ -1,0 +1,30 @@
+.build:
+  stage: build
+  interruptible: true
+  image: node:16.17.1-alpine3.16
+
+backend_build:
+  extends: .build
+  needs: [backend_install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - backend/**/*
+    - when: never
+  before_script:
+    - cd backend
+  script:
+    - npm run build
+
+frontend_build:
+  extends: .build
+  needs: [frontend_install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - when: never
+  before_script:
+    - cd frontend
+  script:
+    - npm run build:ci
