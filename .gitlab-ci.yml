@@ -5,7 +5,6 @@ workflow:
 
 stages:
   - triage
-  - clean-up-pipelines
   - unconfidentializer
   - install
   - check
@@ -18,7 +17,6 @@ stages:
 
 include:
   - local: /.gitlab/ci/triage.gitlab-ci.yml
-  - local: /.gitlab/ci/clean_up_pipelines.gitlab-ci.yml
   - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml

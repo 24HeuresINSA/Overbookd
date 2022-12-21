@@ -1,9 +1,6 @@
 container_scanning:
   interruptible: true
   stage: docker-scan
-  services:
-    - name: docker:dind
-      command: ["--experimental"]
   rules:
     - when: never
   before_script:
