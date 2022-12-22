@@ -1,13 +1,16 @@
-FROM node:16.17.1-alpine3.16 AS builder
+FROM node:16.17.1-alpine3.16 AS installer
 
 WORKDIR /overbookd/frontend
-ARG BASE_URL
-
-ENV BASE_URL=$BASE_URL
 
 COPY package*.json ./
 
 RUN npm ci --silent
+
+FROM installer AS builder
+
+ARG BASE_URL
+
+ENV BASE_URL=$BASE_URL
 
 COPY . .
 

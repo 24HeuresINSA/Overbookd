@@ -1,39 +1,32 @@
 workflow:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "main"'
-      variables:
-        BASE_URL: $BASE_URL_PROD
-        USERNAME: $USERNAME_PROD
-        PASSWORD: $PASSWORD_PROD
-    - if: '$CI_COMMIT_REF_NAME == "pre-prod"'
-      variables:
-        BASE_URL: $BASE_URL_PREPROD
-        USERNAME: $USERNAME_PREPROD
-        PASSWORD: $PASSWORD_PREPROD
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      
+
 stages:
   - triage
-  - clean-up-pipelines
-  - test
-  - lintage
-  - ts-prune
-  - docker
-  - docker-scan
   - unconfidentializer
+  - install
+  - check
+  - test
+  - build
+  - docker-build
+  - docker-scan
+  - docker-publish
+  - deploy
 
 include:
   - local: /.gitlab/ci/triage.gitlab-ci.yml
-  - local: /.gitlab/ci/clean_up_pipelines.gitlab-ci.yml
+  - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/License-Scanning.gitlab-ci.yml
-  - local: /.gitlab/ci/security_rules.gitlab-ci.yml
-  - local: /.gitlab/ci/frontend_containerize.gitlab-ci.yml
-  - local: /.gitlab/ci/backend_containerize.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
-  - local: /.gitlab/ci/container_scan.gitlab-ci.yml
-  - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
-  - local: /.gitlab/ci/lintage.gitlab-ci.yml
-  - local: /.gitlab/ci/backend_test.gitlab-ci.yml
-  - local: /.gitlab/ci/ts-prune.gitlab-ci.yml
+  - local: /.gitlab/ci/install.gitlab-ci.yml
+  - local: /.gitlab/ci/check.gitlab-ci.yml
+  - local: /.gitlab/ci/test.gitlab-ci.yml
+  - local: /.gitlab/ci/build.gitlab-ci.yml
+  - local: /.gitlab/ci/docker-build.gitlab-ci.yml
+  - local: /.gitlab/ci/docker-scan.gitlab-ci.yml
+  - local: /.gitlab/ci/docker-publish.gitlab-ci.yml
+  - local: /.gitlab/ci/deploy.gitlab-ci.yml
