@@ -10,6 +10,8 @@ container_scanning:
 frontend_scan:
   extends: container_scanning
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - frontend/**/*
@@ -27,6 +29,8 @@ frontend_scan:
 backend_scan:
   extends: container_scanning
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - backend/**/*

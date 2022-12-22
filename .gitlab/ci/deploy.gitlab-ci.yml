@@ -2,9 +2,9 @@ deploy:
   image: curlimages/curl
   stage: deploy
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
     - when: never
   script:
-    - |
-      curl -H 'Authorization: Bearer ${WATCHTOWER_API_KEY}' ${WATCHTOWER_BASE_URL}/v1/update
-
+    - 'curl -H "Authorization: Bearer ${WATCHTOWER_API_KEY}" "${WATCHTOWER_BASE_URL}/v1/update"'
