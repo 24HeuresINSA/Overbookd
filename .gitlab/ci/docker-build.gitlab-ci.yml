@@ -18,6 +18,8 @@ frontend_docker_pre_build:
   variables:
     SCOPE: frontend
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - frontend/**/*
@@ -67,6 +69,8 @@ preprod_frontend_docker_build:
     BASE_URL: $BASE_URL_PREPROD
     BASE_IMAGE: frontend_pre-prod
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - frontend/**/*
@@ -90,6 +94,8 @@ prod_frontend_docker_build:
     BASE_URL: $BASE_URL_PROD
     BASE_IMAGE: frontend_prod
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - frontend/**/*
@@ -102,6 +108,8 @@ backend_docker_build:
     BASE_URL: $BASE_URL_PROD
     BASE_IMAGE: backend
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - backend/**/*
