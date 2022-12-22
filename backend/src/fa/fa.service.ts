@@ -108,7 +108,6 @@ export class FaService {
         where: {
           fa_id: fa_id,
           team_id: team_id,
-          user_id: user_id,
         },
       }),
     ]);
@@ -138,7 +137,6 @@ export class FaService {
         where: {
           fa_id: fa_id,
           team_id: team_id,
-          user_id: user_id,
         },
       }),
     ]);
