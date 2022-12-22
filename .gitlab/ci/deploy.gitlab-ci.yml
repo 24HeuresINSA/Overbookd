@@ -7,5 +7,4 @@ deploy:
     - if: '$CI_COMMIT_BRANCH == "main"'
     - when: never
   script:
-    - |
-      curl -i -H 'Authorization: Bearer ${WATCHTOWER_API_KEY}' ${WATCHTOWER_BASE_URL}/v1/update
+    - 'curl -H "Authorization: Bearer ${WATCHTOWER_API_KEY}" "${WATCHTOWER_BASE_URL}/v1/update"'
