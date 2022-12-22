@@ -8,4 +8,4 @@ deploy:
     - when: never
   script:
     - |
-      curl -H 'Authorization: Bearer ${WATCHTOWER_API_KEY}' ${WATCHTOWER_BASE_URL}/v1/update
+      curl -i -H 'Authorization: Bearer ${WATCHTOWER_API_KEY}' ${WATCHTOWER_BASE_URL}/v1/update
