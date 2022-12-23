@@ -274,7 +274,7 @@ export default Vue.extend({
       return [];
     },
     hasAtLeastOneError(): boolean {
-      return hasAtLeastOneError(this.mFA);
+      return hasAtLeastOneError(this.FA);
     },
   },
 
