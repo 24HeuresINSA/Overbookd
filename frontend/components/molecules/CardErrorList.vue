@@ -1,0 +1,66 @@
+<template>
+  <div v-show="errors.length > 0" class="my-container">
+    <v-icon color="red" large>mdi-alert</v-icon>
+    <ul>
+      <li v-for="error in errors" :key="error" class="important" dense>
+        {{ error }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import { FA, fa_card_type } from "~/utils/models/FA";
+import {
+  hasGeneralErrors,
+  hasDetailErrors,
+  hasSignaErrors,
+  hasTimeWindowsErrors,
+} from "~/utils/rules/faValidationRules";
+
+export default Vue.extend({
+  name: "CardErrorList",
+  props: {
+    type: {
+      type: String,
+      required: true,
+    },
+  },
+  computed: {
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    errors(): string[] {
+      switch (this.type) {
+        case fa_card_type.GENERAL:
+          return hasGeneralErrors(this.mFA);
+        case fa_card_type.DETAIL:
+          return hasDetailErrors(this.mFA);
+        case fa_card_type.SIGNA:
+          return hasSignaErrors(this.mFA);
+        case fa_card_type.TIME_WINDOW:
+          return hasTimeWindowsErrors(this.mFA);
+        default:
+          return [];
+      }
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.my-container {
+  display: flex;
+  align-items: center;
+
+  .v-icon {
+    margin-left: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 1rem;
+  }
+}
+</style>

@@ -1,5 +1,6 @@
 <template>
   <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
@@ -47,17 +48,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_type } from "~/utils/models/FA";
+import { FA, fa_card_type, fa_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
 } from "~/utils/fa/faUtils";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "FAGeneralCard",
+  components: { CardErrorList },
   data: () => ({
     users: [] as Array<any>,
     owner: "humain",
+    cardType: fa_card_type.GENERAL,
   }),
   computed: {
     mFA(): FA {

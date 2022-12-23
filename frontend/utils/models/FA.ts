@@ -43,6 +43,18 @@ export enum time_windows_type {
   MATOS = "MATOS",
 }
 
+export enum fa_card_type {
+  GENERAL = "GENERAL",
+  DETAIL = "DETAIL",
+  SIGNA = "SIGNA",
+  TIME_WINDOW = "TIME_WINDOW",
+  SECURITY = "SECURITY",
+  COLLABORATOR = "COLLABORATOR",
+  LOGISTICS = "LOGISTICS",
+  ELEC = "ELEC",
+  WATER = "WATER",
+}
+
 export interface FA {
   id: number;
   name: string;

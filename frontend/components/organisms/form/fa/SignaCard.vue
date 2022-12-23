@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-card :class="validationStatus">
+      <CardErrorList :type="cardType" />
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
         >Contactez la signa à signaletique@24heures.org pour ajouter des lieux
@@ -98,14 +99,22 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
-import { FA, fa_signa_needs, signa_type } from "~/utils/models/FA";
+import {
+  FA,
+  fa_card_type,
+  fa_signa_needs,
+  signa_type,
+} from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "SignaCard",
+  components: { CardErrorList },
   data: () => ({
     owner: "signa",
+    cardType: fa_card_type.SIGNA,
     isSignaRequired: false,
     isSignaFormOpen: false,
     headers: [

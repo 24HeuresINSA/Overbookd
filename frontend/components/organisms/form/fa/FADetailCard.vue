@@ -1,5 +1,6 @@
 <template>
   <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Détail</v-card-title>
     <v-card-subtitle
       >Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est
@@ -46,17 +47,19 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
-import { FA } from "~/utils/models/FA";
+import { FA, fa_card_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
 } from "~/utils/fa/faUtils";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "FADetailCard",
-  components: { RichEditor },
+  components: { RichEditor, CardErrorList },
   data: () => ({
     owner: "humain",
+    cardType: fa_card_type.DETAIL,
   }),
   computed: {
     mFA(): FA {

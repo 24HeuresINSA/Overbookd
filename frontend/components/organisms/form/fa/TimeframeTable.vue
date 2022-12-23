@@ -1,11 +1,7 @@
 <template>
   <div>
     <v-card :class="validationStatus">
-      <v-container v-show="timeWindowsErrors.length > 0">
-        <ul>
-          <li v-for="error in timeWindowsErrors" :key="error">{{ error }}</li>
-        </ul>
-      </v-container>
+      <CardErrorList :type="cardType" />
       <v-card-title>Créneaux</v-card-title>
 
       <v-data-table
@@ -83,14 +79,21 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
-import { hasAtLeastOneAnimationTimeWindow } from "~/utils/rules/faValidationRules";
-import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
+import { hasTimeWindowsErrors } from "~/utils/rules/faValidationRules";
+import {
+  FA,
+  fa_card_type,
+  time_windows,
+  time_windows_type,
+} from "~/utils/models/FA";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "TimeframeTable",
-  components: { TimeframeCalendar, TimeframeForm },
+  components: { TimeframeCalendar, TimeframeForm, CardErrorList },
   data: () => ({
     owner: "humain",
+    cardType: fa_card_type.TIME_WINDOW,
     headers: [
       { text: "Type", value: "type" },
       { text: "Date de début", value: "dateStart" },
@@ -121,15 +124,7 @@ export default Vue.extend({
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
     timeWindowsErrors(): string[] {
-      let errors: string[] = [];
-      const hasAtLeastOneAnimationTimeWindow_ =
-        hasAtLeastOneAnimationTimeWindow(this.mFA.time_windows ?? []);
-      if (!hasAtLeastOneAnimationTimeWindow_) {
-        errors.map(() =>
-          hasAtLeastOneAnimationTimeWindow(this.mFA.time_windows ?? [])
-        );
-      }
-      return errors;
+      return hasTimeWindowsErrors(this.mFA);
     },
   },
   methods: {

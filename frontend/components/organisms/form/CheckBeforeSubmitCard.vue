@@ -132,30 +132,25 @@
 <script lang="ts">
 import Vue from "vue";
 import {
-  hasAtLeastOneAnimationTimeWindow,
+  hasGeneralErrors,
+  hasDetailErrors,
+  hasDetailsWarnings,
+  hasSignaErrors,
+  hasSignaWarnings,
+  hasTimeWindowsErrors,
   hasAtLeastOneBarrieresGearRequest,
   hasAtLeastOneElecGearRequest,
   hasAtLeastOneMatosGearRequest,
   hasBarrieresGearRequestWithQuantityHigherThanZero,
   hasCollaboratorMandatoryFieldsFilled,
   hasCollaboratorOptionalFieldsFilled,
-  hasDescriptionToPublish,
   hasElecGearRequestWithQuantityHigherThanZero,
   hasElecNeeds,
-  hasInCharge,
-  hasLocation,
   hasMatosGearRequestWithQuantityHigherThanZero,
-  hasName,
   hasPassNumberHigherThanZero,
-  hasPhotoLinkToPublish,
   hasSecurityNeeds,
-  hasSignaNeeds,
-  hasSignaNeedsWithQuantityHigherThanZero,
-  hasTeam,
-  hasType,
   hasWaterNeeds,
   isCollaboratorNotEmpty,
-  isPublishable,
 } from "~/utils/rules/faValidationRules";
 import { collaborator } from "~/utils/models/FA";
 
@@ -191,45 +186,28 @@ export default Vue.extend({
 
     // General
     generalErrors(): string[] {
-      return [
-        hasName(this.store.mFA.name),
-        hasType(this.store.mFA.type),
-        hasTeam(this.store.mFA.team_id),
-        hasInCharge(this.store.mFA.in_charge),
-      ].filter((error): error is string => error !== true);
+      return hasGeneralErrors(this.store.mFA);
     },
 
     // Detail
     detailErrors(): string[] {
-      return [
-        hasDescriptionToPublish(this.store.mFA),
-        hasPhotoLinkToPublish(this.store.mFA),
-      ].filter((error): error is string => error !== true);
+      return hasDetailErrors(this.store.mFA);
     },
     detailWarnings(): string[] {
-      return [isPublishable(this.store.mFA.is_publishable)].filter(
-        (warning): warning is string => warning !== true
-      );
+      return hasDetailsWarnings(this.store.mFA);
     },
 
     // Signa
     signaErrors(): string[] {
-      return [
-        hasLocation(this.store.mFA.location_id),
-        hasSignaNeedsWithQuantityHigherThanZero(this.store.mFA.fa_signa_needs),
-      ].filter((error): error is string => error !== true);
+      return hasSignaErrors(this.store.mFA);
     },
     signaWarnings(): string[] {
-      return [hasSignaNeeds(this.store.mFA.fa_signa_needs)].filter(
-        (warning): warning is string => warning !== true
-      );
+      return hasSignaWarnings(this.store.mFA);
     },
 
     // Time windows
     timeWindowsErrors(): string[] {
-      return [
-        hasAtLeastOneAnimationTimeWindow(this.store.mFA.time_windows),
-      ].filter((error): error is string => error !== true);
+      return hasTimeWindowsErrors(this.store.mFA);
     },
 
     // Security

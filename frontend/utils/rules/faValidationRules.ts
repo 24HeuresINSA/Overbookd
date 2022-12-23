@@ -10,17 +10,25 @@ import {
 } from "../models/FA";
 
 // General
-export function hasName(value: string): string | boolean {
+export function hasName(value: string | undefined): string | boolean {
   return !!value || "L'animation doit avoir un nom.";
 }
-export function hasType(value: fa_type): string | boolean {
+export function hasType(value: fa_type | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un type.";
 }
-export function hasTeam(value: number): string | boolean {
+export function hasTeam(value: number | undefined): string | boolean {
   return value !== null || "L'animation doit avoir une team.";
 }
-export function hasInCharge(value: number): string | boolean {
+export function hasInCharge(value: number | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un responsable.";
+}
+export function hasGeneralErrors(fa: FA): string[] {
+  return [
+    hasName(fa.name),
+    hasType(fa.type),
+    hasTeam(fa.team_id),
+    hasInCharge(fa.in_charge),
+  ].filter((error): error is string => error !== true);
 }
 
 // Detail
@@ -37,34 +45,66 @@ export function hasPhotoLinkToPublish(fa: FA): string | boolean {
     !!fa.photo_link || "L'animation n'a pas de photo a publié sur le site."
   );
 }
-export function isPublishable(value: boolean): string | boolean {
+export function isPublishable(value: boolean | undefined): string | boolean {
   return value || "L'animation ne sera pas publié sur le site.";
+}
+export function hasDetailErrors(fa: FA): string[] {
+  return [hasDescriptionToPublish(fa), hasPhotoLinkToPublish(fa)].filter(
+    (error): error is string => error !== true
+  );
+}
+export function hasDetailsWarnings(fa: FA): string[] {
+  return [isPublishable(fa.is_publishable)].filter(
+    (warning): warning is string => warning !== true
+  );
 }
 
 // Signa
-export function hasLocation(value: number): string | boolean {
+export function hasLocation(value: number | undefined): string | boolean {
   return Boolean(value) || "L'animation n'a pas de location.";
 }
-export function hasSignaNeeds(value: fa_signa_needs[]): string | boolean {
-  return value.length > 0 || "L'animation n'a pas besoin de signalétique.";
-}
-export function hasSignaNeedsWithQuantityHigherThanZero(
-  signaNeeds: fa_signa_needs[]
+export function hasSignaNeeds(
+  value: fa_signa_needs[] | undefined
 ): string | boolean {
   return (
-    signaNeeds.some((signaNeed) => signaNeed.count > 0) ||
+    (value && value.length > 0) || "L'animation n'a pas besoin de signalétique."
+  );
+}
+export function hasSignaNeedsWithQuantityHigherThanZero(
+  signaNeeds: fa_signa_needs[] | undefined
+): string | boolean {
+  return (
+    (signaNeeds && signaNeeds.some((signaNeed) => signaNeed.count > 0)) ||
     "Chaque demande de signa doit avoir une quantité."
+  );
+}
+export function hasSignaErrors(fa: FA): string[] {
+  return [
+    hasLocation(fa.location_id),
+    hasSignaNeedsWithQuantityHigherThanZero(fa.fa_signa_needs),
+  ].filter((error): error is string => error !== true);
+}
+export function hasSignaWarnings(fa: FA): string[] {
+  return [hasSignaNeeds(fa.fa_signa_needs)].filter(
+    (warning): warning is string => warning !== true
   );
 }
 
 // Time Windows
 export function hasAtLeastOneAnimationTimeWindow(
-  timeWindows: time_windows[]
+  timeWindows: time_windows[] | undefined
 ): string | boolean {
   return (
-    timeWindows.filter(
-      (timeWindow) => timeWindow.type === time_windows_type.ANIM
-    ).length > 0 || "L'animation doit avoir au moins une plage horaire."
+    (timeWindows &&
+      timeWindows.filter(
+        (timeWindow) => timeWindow.type === time_windows_type.ANIM
+      ).length > 0) ||
+    "L'animation doit avoir au moins une plage horaire."
+  );
+}
+export function hasTimeWindowsErrors(fa: FA): string[] {
+  return [hasAtLeastOneAnimationTimeWindow(fa.time_windows)].filter(
+    (error): error is string => error !== true
   );
 }
 

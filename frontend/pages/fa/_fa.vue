@@ -32,29 +32,29 @@
           <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
-      <FormSummary class="summary"></FormSummary>
+      <FormSummary class="summary" />
     </div>
     <v-container class="container fa">
-      <FAGeneralCard id="general"></FAGeneralCard>
-      <FADetailCard id="detail"></FADetailCard>
-      <SignaCard id="signa"></SignaCard>
-      <TimeframeTable id="timeframe"></TimeframeTable>
-      <SecurityCard id="security"></SecurityCard>
-      <CollaboratorCard id="presta"></CollaboratorCard>
+      <FAGeneralCard id="general" />
+      <FADetailCard id="detail" />
+      <SignaCard id="signa" />
+      <TimeframeTable id="timeframe" />
+      <SecurityCard id="security" />
+      <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
       <h4 class="log-text">
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
       </h4>
-      <LogisticTimeWindow></LogisticTimeWindow>
-      <LogisticsCard title="Matos" owner="matos"></LogisticsCard>
-      <LogisticsCard title="Barrières" owner="barrieres"></LogisticsCard>
-      <LogisticsCard title="Matos Elec / Eau" owner="elec"></LogisticsCard>
-      <ElecLogisticCard id="elec"></ElecLogisticCard>
-      <WaterLogisticCard id="water"></WaterLogisticCard>
-      <CommentCard id="comment"></CommentCard>
-      <!-- <FTCard id="ft"></FTCard> -->
+      <LogisticTimeWindow />
+      <LogisticsCard title="Matos" owner="matos" />
+      <LogisticsCard title="Barrières" owner="barrieres" />
+      <LogisticsCard title="Matos Elec / Eau" owner="elec" />
+      <ElecLogisticCard id="elec" />
+      <WaterLogisticCard id="water" />
+      <CommentCard id="comment" />
+      <!-- <FTCard id="ft" /> -->
     </v-container>
     <SnackNotificationContainer />
 
