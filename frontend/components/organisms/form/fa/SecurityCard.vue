@@ -1,5 +1,6 @@
 <template>
   <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Sécurité</v-card-title>
     <v-card-subtitle
       >Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
@@ -42,13 +43,16 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
-import { FA } from "~/utils/models/FA";
+import { FA, fa_card_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "SecurityCard",
+  components: { CardErrorList },
   data: () => ({
     owner: "secu",
+    cardType: fa_card_type.SECURITY,
     rules: {
       number: isNumber,
       min: min(1),

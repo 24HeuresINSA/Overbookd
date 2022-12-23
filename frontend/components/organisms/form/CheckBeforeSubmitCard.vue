@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <h1>🤔 T'es sûr que t'as rien oublié ? 🤔</h1>
-    <div v-show="hasError" class="my-container my-3">
+    <div v-show="hasAtLeatOneError" class="my-container my-3">
       <h3>❌ Erreurs ❌</h3>
       <p class="important text-center">
         Tu dois corriger toutes les erreurs pour soumettre ta FA à validation !
@@ -57,7 +57,7 @@
     </div>
 
     <v-divider></v-divider>
-    <div v-show="hasWarning" class="my-container my-3">
+    <div v-show="hasAtLeastOneWarning" class="my-container my-3">
       <h3>⚠️ Avertissements ⚠️</h3>
       <div v-show="detailWarnings.length > 0">
         <h4>Détail</h4>
@@ -118,7 +118,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn
-        :disabled="hasError"
+        :disabled="hasAtLeatOneError"
         color="blue darken-1"
         text
         @click="$emit('submit')"
@@ -132,27 +132,23 @@
 <script lang="ts">
 import Vue from "vue";
 import {
+  hasAtLeastOneError,
+  hasAtLeastOneWarning,
   hasGeneralErrors,
   hasDetailErrors,
-  hasDetailsWarnings,
+  hasDetailWarnings,
   hasSignaErrors,
   hasSignaWarnings,
   hasTimeWindowsErrors,
-  hasAtLeastOneBarrieresGearRequest,
-  hasAtLeastOneElecGearRequest,
-  hasAtLeastOneMatosGearRequest,
-  hasBarrieresGearRequestWithQuantityHigherThanZero,
-  hasCollaboratorMandatoryFieldsFilled,
-  hasCollaboratorOptionalFieldsFilled,
-  hasElecGearRequestWithQuantityHigherThanZero,
-  hasElecNeeds,
-  hasMatosGearRequestWithQuantityHigherThanZero,
-  hasPassNumberHigherThanZero,
-  hasSecurityNeeds,
-  hasWaterNeeds,
-  isCollaboratorNotEmpty,
+  hasSecurityErrors,
+  hasSecurityWarnings,
+  hasCollaboratorErrors,
+  hasCollaboratorWarnings,
+  hasGearRequestErrors,
+  hasGearRequestWarnings,
+  hasElecWarnings,
+  hasWaterWarnings,
 } from "~/utils/rules/faValidationRules";
-import { collaborator } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CheckBeforeSubmitCard",
@@ -161,27 +157,11 @@ export default Vue.extend({
       return this.$accessor.FA;
     },
 
-    hasError(): boolean {
-      return Boolean(
-        this.generalErrors.length > 0 ||
-          this.detailErrors.length > 0 ||
-          this.signaErrors.length > 0 ||
-          this.timeWindowsErrors.length > 0 ||
-          this.securityErrors.length > 0 ||
-          this.collaboratorErrors.length > 0 ||
-          this.gearRequestErrors.length > 0
-      );
+    hasAtLeatOneError(): boolean {
+      return hasAtLeastOneError(this.store);
     },
-    hasWarning(): boolean {
-      return (
-        this.detailWarnings.length > 0 ||
-        this.signaWarnings.length > 0 ||
-        this.securityWarnings.length > 0 ||
-        this.collaboratorWarnings.length > 0 ||
-        this.gearRequestWarnings.length > 0 ||
-        this.elecWarnings.length > 0 ||
-        this.waterWarnings.length > 0
-      );
+    hasAtLeastOneWarning(): boolean {
+      return hasAtLeastOneWarning(this.store);
     },
 
     // General
@@ -194,7 +174,7 @@ export default Vue.extend({
       return hasDetailErrors(this.store.mFA);
     },
     detailWarnings(): string[] {
-      return hasDetailsWarnings(this.store.mFA);
+      return hasDetailWarnings(this.store.mFA);
     },
 
     // Signa
@@ -212,66 +192,36 @@ export default Vue.extend({
 
     // Security
     securityErrors(): string[] {
-      return [hasPassNumberHigherThanZero(this.store.mFA)].filter(
-        (error): error is string => error !== true
-      );
+      return hasSecurityErrors(this.store.mFA);
     },
     securityWarnings(): string[] {
-      return [hasSecurityNeeds(this.store.mFA.security_needs)].filter(
-        (error): error is string => error !== true
-      );
+      return hasSecurityWarnings(this.store.mFA);
     },
 
     // Collaborator
-    collaborator(): collaborator {
-      return this.store.mFA.fa_collaborators[0]?.collaborator;
-    },
     collaboratorErrors(): string[] {
-      return [hasCollaboratorMandatoryFieldsFilled(this.collaborator)].filter(
-        (error): error is string => error !== true
-      );
+      return hasCollaboratorErrors(this.store.mFA);
     },
     collaboratorWarnings(): string[] {
-      return [
-        isCollaboratorNotEmpty(this.collaborator),
-        hasCollaboratorOptionalFieldsFilled(this.collaborator),
-      ].filter((warning): warning is string => warning !== true);
+      return hasCollaboratorWarnings(this.store.mFA);
     },
 
     // Gear Request
-    gearRequestWarnings(): string[] {
-      return [
-        hasAtLeastOneMatosGearRequest(this.store.matosGearRequests),
-        hasAtLeastOneBarrieresGearRequest(this.store.barrieresGearRequests),
-        hasAtLeastOneElecGearRequest(this.store.elecGearRequests),
-      ].filter((warning): warning is string => warning !== true);
-    },
     gearRequestErrors(): string[] {
-      return [
-        hasMatosGearRequestWithQuantityHigherThanZero(
-          this.store.matosGearRequests
-        ),
-        hasBarrieresGearRequestWithQuantityHigherThanZero(
-          this.store.barrieresGearRequests
-        ),
-        hasElecGearRequestWithQuantityHigherThanZero(
-          this.store.elecGearRequests
-        ),
-      ].filter((error): error is string => error !== true);
+      return hasGearRequestErrors(this.store);
+    },
+    gearRequestWarnings(): string[] {
+      return hasGearRequestWarnings(this.store);
     },
 
     // Elec
     elecWarnings(): string[] {
-      return [hasElecNeeds(this.store.mFA.fa_electricity_needs)].filter(
-        (warning): warning is string => warning !== true
-      );
+      return hasElecWarnings(this.store.mFA);
     },
 
     // Water
     waterWarnings(): string[] {
-      return [hasWaterNeeds(this.store.mFA.water_needs)].filter(
-        (warning): warning is string => warning !== true
-      );
+      return hasWaterWarnings(this.store.mFA);
     },
   },
 });

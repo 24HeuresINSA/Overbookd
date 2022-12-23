@@ -1,5 +1,11 @@
 <template>
-  <div v-show="errors.length > 0" class="my-container">
+  <div
+    v-if="
+      (mFA.status === 'SUBMITTED' || mFA.status === 'REFUSED') &&
+      errors.length > 0
+    "
+    class="my-container"
+  >
     <v-icon color="red" large>mdi-alert</v-icon>
     <ul>
       <li v-for="error in errors" :key="error" class="important" dense>
@@ -17,6 +23,8 @@ import {
   hasDetailErrors,
   hasSignaErrors,
   hasTimeWindowsErrors,
+  hasSecurityErrors,
+  hasCollaboratorErrors,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -41,6 +49,10 @@ export default Vue.extend({
           return hasSignaErrors(this.mFA);
         case fa_card_type.TIME_WINDOW:
           return hasTimeWindowsErrors(this.mFA);
+        case fa_card_type.SECURITY:
+          return hasSecurityErrors(this.mFA);
+        case fa_card_type.COLLABORATOR:
+          return hasCollaboratorErrors(this.mFA);
         default:
           return [];
       }

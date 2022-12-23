@@ -122,14 +122,13 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="
-            mFA.status && (mFA.status === 'DRAFT' || mFA.status === 'REFUSED')
-          "
+          v-if="mFA.status !== 'VALIDATED'"
           color="warning"
-          @click="validationDialog = true"
+          :disabled="mFA.status !== 'DRAFT' && hasAtLeastOneError"
+          @click="mFA.status === 'DRAFT' ? (validationDialog = true) : submit()"
           >soumettre à validation
         </v-btn>
-        <v-btn @click="saveFA">sauvegarder</v-btn>
+        <v-btn v-if="mFA.status === 'DRAFT'" @click="saveFA">sauvegarder</v-btn>
         <v-btn
           v-if="mValidators.length >= 1 && mFA.isValid === false"
           color="red"
@@ -145,7 +144,7 @@
     <v-dialog v-model="validationDialog" width="600">
       <CheckBeforeSubmitCard
         @close-dialog="validationDialog = false"
-        @submit="submit"
+        @submit="submit()"
       ></CheckBeforeSubmitCard>
     </v-dialog>
 
@@ -195,6 +194,7 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { fa_refuse, fa_validation } from "~/utils/models/FA";
 import { team } from "~/utils/models/repo";
+import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "Fa",
@@ -273,6 +273,9 @@ export default Vue.extend({
       }
       return [];
     },
+    hasAtLeastOneError(): boolean {
+      return hasAtLeastOneError(this.mFA);
+    },
   },
 
   async mounted() {
@@ -350,6 +353,7 @@ export default Vue.extend({
     },
 
     submit() {
+      console.log("submit");
       this.$accessor.FA.submitForReview({
         faId: this.faId,
         authorId: this.me.id,
@@ -410,70 +414,70 @@ export default Vue.extend({
   overflow: auto;
   padding-right: 20px;
   width: 300px;
-}
 
-.sidebar h1 {
-  font-size: 1.7rem;
-  margin: 16px;
-  margin-bottom: 4px;
-}
+  h1 {
+    font-size: 1.7rem;
+    margin: 16px;
+    margin-bottom: 4px;
+  }
 
-.sidebar h2 {
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: rgb(89, 89, 89);
-  margin: 16px;
-  margin-top: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: auto;
-  display: block;
-  overflow: hidden;
-}
+  h2 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: rgb(89, 89, 89);
+    margin: 16px;
+    margin-top: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: auto;
+    display: block;
+    overflow: hidden;
+  }
 
-.dot {
-  height: 25px;
-  width: 25px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 16px;
-  margin-right: 10px;
-}
+  .status {
+    display: flex;
+    align-items: center;
 
-.status {
-  display: flex;
-  align-items: center;
+    .dot {
+      height: 25px;
+      width: 25px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 16px;
+      margin-right: 10px;
+    }
+  }
 }
 
 .icons {
   display: flex;
   justify-content: space-between;
   margin: 20px 5px 15px 16px;
-}
 
-.icons .icon {
-  position: relative;
-  display: inline-block;
-}
+  .icon {
+    position: relative;
+    display: inline-block;
 
-.icons .icon .icon-detail {
-  visibility: hidden;
-  width: 60px;
-  font-size: 0.9rem;
-  text-align: center;
-  border-radius: 6px;
-  user-select: none;
+    .icon-detail {
+      visibility: hidden;
+      width: 60px;
+      font-size: 0.9rem;
+      text-align: center;
+      border-radius: 6px;
+      user-select: none;
 
-  position: absolute;
-  z-index: 1;
-  top: 100%;
-  left: 50%;
-  margin-left: -30px;
-}
+      position: absolute;
+      z-index: 1;
+      top: 100%;
+      left: 50%;
+      margin-left: -30px;
+    }
+  }
 
-.icon:hover .icon-detail {
-  visibility: visible;
+  .icon:hover .icon-detail {
+    visibility: visible;
+  }
 }
 
 .container {

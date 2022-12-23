@@ -2,6 +2,7 @@ import {
   collaborator,
   FA,
   FaSitePublishAnimation,
+  fa_collaborators,
   fa_electricity_needs,
   fa_signa_needs,
   fa_type,
@@ -10,8 +11,33 @@ import {
   time_windows_type,
 } from "../models/FA";
 
+export function hasAtLeastOneError(store: any) {
+  const errors = [
+    ...hasGeneralErrors(store.mFA),
+    ...hasDetailErrors(store.mFA),
+    ...hasSignaErrors(store.mFA),
+    ...hasTimeWindowsErrors(store.mFA),
+    ...hasSecurityErrors(store.mFA),
+    ...hasCollaboratorErrors(store.mFA),
+    ...hasGearRequestErrors(store),
+  ];
+  return errors.length > 0;
+}
+export function hasAtLeastOneWarning(store: any) {
+  const warnings = [
+    ...hasDetailWarnings(store.mFA),
+    ...hasSignaWarnings(store.mFA),
+    ...hasSecurityWarnings(store.mFA),
+    ...hasCollaboratorWarnings(store.mFA),
+    ...hasGearRequestWarnings(store),
+    ...hasElecWarnings(store.mFA),
+    ...hasWaterWarnings(store.mFA),
+  ];
+  return warnings.length > 0;
+}
+
 // General
-export function hasName(value: string | undefined): string | boolean {
+function hasName(value: string | undefined): string | boolean {
   return !!value || "L'animation doit avoir un nom.";
 }
 export function hasType(value: fa_type | undefined): string | boolean {
@@ -33,34 +59,50 @@ export function hasGeneralErrors(fa: FA): string[] {
 }
 
 // Detail
-export function hasDescriptionToPublish(fa: FA): string | boolean {
-  if (!fa.faSitePublishAnimation?.faId) return true;
+export function hasDescription(value: string | undefined): string | boolean {
   return (
-    (!!fa.description && fa.description !== "<p></p>") ||
+    (!!value && value !== "<p></p>") || "L'animation n'a pas de description."
+  );
+}
+export function hasDescriptionToPublish(fa: FA): string | boolean {
+  if (!fa.faSitePublishAnimation) return true;
+  return (
+    !!fa.faSitePublishAnimation?.description ||
     "L'animation n'a pas de description a publié sur le site."
   );
 }
 export function hasPhotoLinkToPublish(fa: FA): string | boolean {
-  if (!fa.faSitePublishAnimation?.faId) return true;
+  if (!fa.faSitePublishAnimation) return true;
   return (
-    !!fa.faSitePublishAnimation.photoLink ||
+    !!fa.faSitePublishAnimation?.photoLink ||
     "L'animation n'a pas de photo a publié sur le site."
+  );
+}
+export function hasCategoriesToPublish(fa: FA): string | boolean {
+  if (!fa.faSitePublishAnimation) return true;
+  return (
+    (fa.faSitePublishAnimation?.categories &&
+      fa.faSitePublishAnimation.categories.length > 0) ||
+    "L'animation n'a pas de catégorie a publié sur le site."
   );
 }
 export function isPublishable(
   value: FaSitePublishAnimation | undefined
 ): string | boolean {
-  return value?.faId !== null || "L'animation ne sera pas publié sur le site.";
+  return !!value || "L'animation ne sera pas publié sur le site.";
 }
 export function hasDetailErrors(fa: FA): string[] {
-  return [hasDescriptionToPublish(fa), hasPhotoLinkToPublish(fa)].filter(
-    (error): error is string => error !== true
-  );
+  return [
+    hasDescriptionToPublish(fa),
+    hasPhotoLinkToPublish(fa),
+    hasCategoriesToPublish(fa),
+  ].filter((error): error is string => error !== true);
 }
-export function hasDetailsWarnings(fa: FA): string[] {
-  return [isPublishable(fa.faSitePublishAnimation)].filter(
-    (warning): warning is string => warning !== true
-  );
+export function hasDetailWarnings(fa: FA): string[] {
+  return [
+    hasDescription(fa.description),
+    isPublishable(fa.faSitePublishAnimation),
+  ].filter((warning): warning is string => warning !== true);
 }
 
 // Signa
@@ -77,8 +119,9 @@ export function hasSignaNeeds(
 export function hasSignaNeedsWithQuantityHigherThanZero(
   signaNeeds: fa_signa_needs[] | undefined
 ): string | boolean {
+  if (!signaNeeds || signaNeeds.length === 0) return true;
   return (
-    (signaNeeds && signaNeeds.some((signaNeed) => signaNeed.count > 0)) ||
+    signaNeeds.some((signaNeed) => signaNeed.count > 0) ||
     "Chaque demande de signa doit avoir une quantité."
   );
 }
@@ -113,6 +156,11 @@ export function hasTimeWindowsErrors(fa: FA): string[] {
 }
 
 // Security
+export function hasSecurityPassNeeds(
+  value: boolean | undefined
+): string | boolean {
+  return value || "Cette activité n'a pas besoin de Pass Sécu.";
+}
 export function hasPassNumberHigherThanZero(fa: FA): string | boolean {
   return (
     !fa.is_pass_required ||
@@ -120,17 +168,29 @@ export function hasPassNumberHigherThanZero(fa: FA): string | boolean {
     "Le nombre de Pass Sécu nécessaire doit être supérieur à 0."
   );
 }
-export function hasSecurityNeeds(value: string): string | boolean {
+export function hasSecurityNeeds(value: string | undefined): string | boolean {
   return (
     !!value ||
     "Cette activité n'a pas besoin de dispositif de sécurité particulier."
   );
 }
+export function hasSecurityErrors(fa: FA): string[] {
+  return [hasPassNumberHigherThanZero(fa)].filter(
+    (error): error is string => error !== true
+  );
+}
+export function hasSecurityWarnings(fa: FA): string[] {
+  return [
+    hasSecurityPassNeeds(fa.is_pass_required),
+    hasSecurityNeeds(fa.security_needs),
+  ].filter((error): error is string => error !== true);
+}
 
 // Collaborator
 export function isCollaboratorNotEmpty(
-  collaborator: collaborator
+  collaborator: collaborator | undefined
 ): string | boolean {
+  if (!collaborator) return "Cette animation n'a pas de prestataire.";
   const { id, ...rest } = collaborator;
   return (
     !Object.keys(rest).every((key) => !rest[key as keyof typeof rest]) ||
@@ -138,7 +198,7 @@ export function isCollaboratorNotEmpty(
   );
 }
 export function hasCollaboratorMandatoryFieldsFilled(
-  collaborator: collaborator
+  collaborator: collaborator | undefined
 ): string | boolean {
   if (!collaborator || isCollaboratorNotEmpty(collaborator) !== true) {
     return true;
@@ -151,7 +211,7 @@ export function hasCollaboratorMandatoryFieldsFilled(
   );
 }
 export function hasCollaboratorOptionalFieldsFilled(
-  collaborator: collaborator
+  collaborator: collaborator | undefined
 ): string | boolean {
   if (
     !collaborator ||
@@ -167,32 +227,57 @@ export function hasCollaboratorOptionalFieldsFilled(
     "Les informations du prestataire sont incomplètes."
   );
 }
+function getCollaborator(
+  collaborators: fa_collaborators[] | undefined
+): collaborator | undefined {
+  if (!collaborators || collaborators.length === 0) return undefined;
+  return collaborators[0]?.collaborator;
+}
+export function hasCollaboratorErrors(fa: FA): string[] {
+  const collaborator = getCollaborator(fa.fa_collaborators);
+  return [hasCollaboratorMandatoryFieldsFilled(collaborator)].filter(
+    (error): error is string => error !== true
+  );
+}
+export function hasCollaboratorWarnings(fa: FA): string[] {
+  const collaborator = getCollaborator(fa.fa_collaborators);
+  return [
+    isCollaboratorNotEmpty(collaborator),
+    hasCollaboratorOptionalFieldsFilled(collaborator),
+  ].filter((warning): warning is string => warning !== true);
+}
 
 // Gear Requests
 export function hasAtLeastOneMatosGearRequest(
-  gearRequests: GearRequest[]
-): string | boolean {
-  return gearRequests.length > 0 || "L'animation n'a pas besoin de Matos.";
-}
-export function hasAtLeastOneBarrieresGearRequest(
-  gearRequests: GearRequest[]
-): string | boolean {
-  return gearRequests.length > 0 || "L'animation n'a pas besoin de Barrières.";
-}
-export function hasAtLeastOneElecGearRequest(
-  gearRequests: GearRequest[]
+  gearRequests: GearRequest[] | undefined
 ): string | boolean {
   return (
-    gearRequests.length > 0 ||
+    (gearRequests && gearRequests.length > 0) ||
+    "L'animation n'a pas besoin de Matos."
+  );
+}
+export function hasAtLeastOneBarrieresGearRequest(
+  gearRequests: GearRequest[] | undefined
+): string | boolean {
+  return (
+    (gearRequests && gearRequests.length > 0) ||
+    "L'animation n'a pas besoin de Barrières."
+  );
+}
+export function hasAtLeastOneElecGearRequest(
+  gearRequests: GearRequest[] | undefined
+): string | boolean {
+  return (
+    (gearRequests && gearRequests.length > 0) ||
     "L'animation n'a pas besoin de Matos Elec et Eau."
   );
 }
 export function hasMatosGearRequestWithQuantityHigherThanZero(
-  matosGearRequests: GearRequest[]
+  matosGearRequests: GearRequest[] | undefined
 ): string | boolean {
   return (
-    matosGearRequests.length === 0 ||
-    matosGearRequests.some((gearRequest) => gearRequest.quantity > 0) ||
+    matosGearRequests?.length === 0 ||
+    matosGearRequests?.some((gearRequest) => gearRequest.quantity > 0) ||
     "Chaque matériel Matos doit avoir une quantité."
   );
 }
@@ -200,8 +285,8 @@ export function hasBarrieresGearRequestWithQuantityHigherThanZero(
   barrieresGearRequests: GearRequest[]
 ): string | boolean {
   return (
-    barrieresGearRequests.length === 0 ||
-    barrieresGearRequests.some((gearRequest) => gearRequest.quantity > 0) ||
+    barrieresGearRequests?.length === 0 ||
+    barrieresGearRequests?.some((gearRequest) => gearRequest.quantity > 0) ||
     "Chaque matériel Barrières doit avoir une quantité."
   );
 }
@@ -209,20 +294,49 @@ export function hasElecGearRequestWithQuantityHigherThanZero(
   elecGearRequests: GearRequest[]
 ): string | boolean {
   return (
-    elecGearRequests.length === 0 ||
-    elecGearRequests.some((gearRequest) => gearRequest.quantity > 0) ||
+    elecGearRequests?.length === 0 ||
+    elecGearRequests?.some((gearRequest) => gearRequest.quantity > 0) ||
     "Chaque matériel Elec doit avoir une quantité."
   );
+}
+export function hasGearRequestErrors(store: any): string[] {
+  return [
+    hasMatosGearRequestWithQuantityHigherThanZero(store.matosGearRequests),
+    hasBarrieresGearRequestWithQuantityHigherThanZero(
+      store.barrieresGearRequests
+    ),
+    hasElecGearRequestWithQuantityHigherThanZero(store.elecGearRequests),
+  ].filter((error): error is string => error !== true);
+}
+export function hasGearRequestWarnings(store: any): string[] {
+  return [
+    hasAtLeastOneMatosGearRequest(store.matosGearRequests),
+    hasAtLeastOneBarrieresGearRequest(store.barrieresGearRequests),
+    hasAtLeastOneElecGearRequest(store.elecGearRequests),
+  ].filter((warning): warning is string => warning !== true);
 }
 
 // Elec
 export function hasElecNeeds(
-  elecNeeds: fa_electricity_needs[]
+  elecNeeds: fa_electricity_needs[] | undefined
 ): string | boolean {
-  return elecNeeds.length > 0 || "L'animation n'a pas besoin d'électricité.";
+  return (
+    (elecNeeds && elecNeeds.length > 0) ||
+    "L'animation n'a pas besoin d'électricité."
+  );
+}
+export function hasElecWarnings(fa: FA): string[] {
+  return [hasElecNeeds(fa.fa_electricity_needs)].filter(
+    (warning): warning is string => warning !== true
+  );
 }
 
 // Water
-export function hasWaterNeeds(value: string): string | boolean {
+export function hasWaterNeeds(value: string | undefined): string | boolean {
   return !!value || "L'animation n'a pas besoin d'eau.";
+}
+export function hasWaterWarnings(fa: FA): string[] {
+  return [hasWaterNeeds(fa.water_needs)].filter(
+    (warning): warning is string => warning !== true
+  );
 }

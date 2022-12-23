@@ -1,5 +1,6 @@
 <template>
   <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Presta</v-card-title>
     <v-card-subtitle
       >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
@@ -59,12 +60,20 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
-import { collaborator, FA, fa_collaborators } from "~/utils/models/FA";
+import {
+  collaborator,
+  FA,
+  fa_card_type,
+  fa_collaborators,
+} from "~/utils/models/FA";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "CollaboratorCard",
+  components: { CardErrorList },
   data: () => ({
     owner: "humain",
+    cardType: fa_card_type.COLLABORATOR,
   }),
   computed: {
     mFA(): FA {
