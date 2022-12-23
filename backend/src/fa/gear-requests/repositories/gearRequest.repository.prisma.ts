@@ -176,14 +176,9 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   async removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
-    const existingGearRequest =
-      await this.prismaService.animation_Gear_Request.findUnique({
-        where,
-        select: { rentalPeriodId: true },
-      });
-    if (!existingGearRequest) return;
-    await this.prismaService.period.delete({
-      where: { id: existingGearRequest.rentalPeriodId },
+    await this.prismaService.animation_Gear_Request.delete({
+      where,
+      select: { rentalPeriodId: true, gearId: true, animationId: true },
     });
   }
 
