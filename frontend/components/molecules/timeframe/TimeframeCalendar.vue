@@ -31,22 +31,22 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows_type } from "~/utils/models/FA";
+import { time_windows, time_windows_type } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "TimeframeCalendar",
+  props: {
+    timeframes: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data: () => ({
     value: "",
   }),
   computed: {
-    timeframes(): any {
-      return this.$accessor.FA.mFA.time_windows;
-    },
     events(): Array<any> {
-      const timeWindows = this.$accessor.FA.mFA.time_windows;
-
-      if (!timeWindows) return [];
-      return timeWindows.map((timeWindow) => ({
+      return (this.timeframes as time_windows[]).map((timeWindow) => ({
         start: this.formatDateForCalendar(timeWindow.start),
         end: this.formatDateForCalendar(timeWindow.end),
         color:

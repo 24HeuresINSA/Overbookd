@@ -6,6 +6,8 @@ import {
 import { PrismaService } from '../../../prisma.service';
 import {
   AnimationOnlyError,
+  APPROVED,
+  ApprovedGearRequest,
   GearRequest,
   GearRequestAlreadyExists,
   GearRequestIdentifier,
@@ -23,12 +25,25 @@ type DatabaseGearRequest = {
   quantity: number;
   status: string;
   gear: DatabaseGear;
+  drive?: string;
 };
+
+function convertApprovedAnimationGearRequestToApiContract(
+  gearRequest: DatabaseGearRequest & { drive: string; status: typeof APPROVED },
+): ApprovedGearRequest {
+  const { drive, status } = gearRequest;
+  return {
+    ...convertAnimationGearRequestToApiContract(gearRequest),
+    drive,
+    status,
+  };
+}
 
 function convertAnimationGearRequestToApiContract(
   gearRequest: DatabaseGearRequest,
 ): GearRequest {
-  const { animationId, rentalPeriod, quantity, status, gear } = gearRequest;
+  const { animationId, rentalPeriod, quantity, status, gear, drive } =
+    gearRequest;
   return {
     seeker: {
       type: GearSeekerType.Animation,
@@ -37,6 +52,7 @@ function convertAnimationGearRequestToApiContract(
     rentalPeriod,
     quantity,
     status,
+    drive,
     gear: convertGearToApiContract(gear),
   };
 }
@@ -47,9 +63,10 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   private readonly SELECT_GEAR_REQUEST = {
     animationId: true,
-    rentalPeriod: { select: { start: true, end: true } },
+    rentalPeriod: { select: { start: true, end: true, id: true } },
     quantity: true,
     status: true,
+    drive: true,
     gear: {
       select: {
         id: true,
@@ -74,14 +91,10 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   async addGearRequest(gearRequest: GearRequest): Promise<GearRequest> {
     const { seeker, rentalPeriod, gear, quantity, status } = gearRequest;
-    const savedPeriod = await this.prismaService.period.create({
-      select: { id: true },
-      data: rentalPeriod,
-    });
 
     const data = {
       animationId: seeker.id,
-      rentalPeriodId: savedPeriod.id,
+      rentalPeriodId: rentalPeriod.id,
       gearId: gear.id,
       quantity,
       status,
@@ -96,7 +109,6 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
       return convertAnimationGearRequestToApiContract(savedGearRequest);
     } catch (e) {
-      await this.prismaService.period.delete({ where: { id: savedPeriod.id } });
       if (this.prismaService.isUniqueConstraintViolation(e)) {
         throw new GearRequestAlreadyExists(gearRequest);
       }
@@ -175,6 +187,25 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     });
   }
 
+  async approveGearRequest(
+    gearRequestIdentifier: GearRequestIdentifier,
+    drive: string,
+  ): Promise<ApprovedGearRequest> {
+    const data = { status: APPROVED, drive };
+    const where = this.buildGearRequestUniqueCondition(gearRequestIdentifier);
+
+    const approvedGearRequest =
+      await this.prismaService.animation_Gear_Request.update({
+        where,
+        data,
+        select: this.SELECT_GEAR_REQUEST,
+      });
+    return convertApprovedAnimationGearRequestToApiContract({
+      ...approvedGearRequest,
+      status: APPROVED,
+    });
+  }
+
   private buildUpdateGearRequestData(
     updateGearRequestForm: UpdateGearRequestForm,
   ) {
@@ -193,9 +224,10 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
   ) {
     return {
-      animationId_gearId: {
+      animationId_gearId_rentalPeriodId: {
         animationId: gearRequestId.seeker.id,
         gearId: gearRequestId.gearId,
+        rentalPeriodId: gearRequestId.rentalPeriodId,
       },
     };
   }

@@ -20,7 +20,6 @@ export default {
         content: "Overbookd - Event Planning Application",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -112,5 +111,42 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: ["vuetify/lib", "tiptap-vuetify"],
+    babel: {
+      compact: true,
+    },
+    splitChunks: {
+      layouts: false,
+      pages: true,
+      commons: true,
+    },
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+        automaticNameDelimiter: ".",
+        name: true,
+        maxSize: 250_000,
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendors",
+            chunks: "all",
+            maxSize: 250_000,
+          },
+        },
+      },
+    },
+    html: {
+      minify: {
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true,
+      },
+    },
   },
 };

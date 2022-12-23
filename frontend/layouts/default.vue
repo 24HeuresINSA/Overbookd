@@ -8,12 +8,21 @@
       :style="isJauneActive ? jauneStyle : ''"
     >
       <v-list>
-        <v-list-item to="/">
-          <v-img
-            :src="'/img/logo/' + logo"
-            alt="overbookd"
-            class="logo"
-          ></v-img>
+        <v-list-item>
+          <v-list-item-action @click="miniVariant = !miniVariant">
+            <v-icon v-if="miniVariant">mdi-chevron-double-right</v-icon>
+            <v-icon v-else>mdi-chevron-double-left</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-btn icon to="/">
+              <v-img
+                :src="'/img/logo/' + logo"
+                alt="overbookd"
+                aspect-ratio="1"
+                contain
+              ></v-img>
+            </v-btn>
+          </v-list-item-content>
         </v-list-item>
         <template v-for="(item, i) in working_items">
           <v-list-item
@@ -34,7 +43,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar fixed app :style="isJauneActive ? jauneStyle : ''">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-toolbar-title
         v-if="!isMobile"
         class="ml-2"
@@ -218,6 +227,12 @@ export default {
           ],
           title: "Catalogue",
           to: "/catalog",
+        },
+        {
+          icon: "mdi-web-sync",
+          roles: "communication",
+          title: "Animations a publier",
+          to: "/comcom",
         },
       ],
       items: [

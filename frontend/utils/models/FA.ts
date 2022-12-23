@@ -55,6 +55,13 @@ export enum fa_card_type {
   WATER = "WATER",
 }
 
+export enum SitePublishAnimationCategoryType {
+  Divertissement = "Divertissement",
+  Culture = "Culture",
+  Sport = "Sport",
+  Enfant = "Enfant",
+}
+
 export interface FA {
   id: number;
   name: string;
@@ -65,8 +72,6 @@ export interface FA {
   location_id?: number;
   status: Status;
   description?: string;
-  photo_link?: string;
-  is_publishable?: boolean;
   is_major?: boolean;
   is_kids?: boolean;
   security_needs?: string;
@@ -82,6 +87,7 @@ export interface FA {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
+  faSitePublishAnimation?: FaSitePublishAnimation;
 }
 
 export type CreateFA = Pick<FA, "name">;
@@ -195,25 +201,57 @@ export interface fa_validation_body {
   team_id: number;
 }
 
-export interface GearRequestCreation {
+export interface BaseGearRequestCreation {
   gearId: number;
   quantity: number;
+}
+
+export interface ExistingPeriodGearRequestCreation
+  extends BaseGearRequestCreation {
+  periodId: number;
+}
+
+export interface NewPeriodGearRequestCreation extends BaseGearRequestCreation {
   start: Date;
   end: Date;
 }
 
-export type GearRequestUpdate = Partial<Omit<GearRequestCreation, "gearId">>;
+export type GearRequestCreation =
+  | NewPeriodGearRequestCreation
+  | ExistingPeriodGearRequestCreation;
+
+export type GearRequestUpdate = Partial<
+  Omit<NewPeriodGearRequestCreation, "gearId">
+>;
+
+export interface Period {
+  id: number;
+  start: Date;
+  end: Date;
+}
 
 export interface GearRequest {
-  rentalPeriod: {
-    start: Date;
-    end: Date;
-  };
+  rentalPeriod: Period;
   quantity: number;
   gear: Gear;
+}
+
+export interface StoredGearRequest extends GearRequest {
+  drive?: string;
+}
+
+export interface GearRequestWithDrive extends GearRequest {
+  drive: string;
 }
 
 export interface SearchFA {
   isDeleted?: boolean;
   status?: Status;
+}
+
+export interface FaSitePublishAnimation {
+  faId: number;
+  photoLink?: string;
+  description?: string;
+  categories?: SitePublishAnimationCategoryType[];
 }

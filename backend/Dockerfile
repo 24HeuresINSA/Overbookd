@@ -1,10 +1,12 @@
-FROM node:16.17.1-alpine3.16 AS builder
+FROM node:16.17.1-alpine3.16 AS installer
 
 WORKDIR /overbookd/backend
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm ci --silent
+
+FROM installer AS builder
 
 COPY . .
 
@@ -23,7 +25,6 @@ USER node
 WORKDIR /app/dist
 
 COPY --chown=node:node --from=builder /overbookd/backend/dist /app/dist
-
 COPY --chown=node:node --from=builder /overbookd/backend/node_modules ./node_modules
 COPY --chown=node:node --from=builder /overbookd/backend/prisma ./prisma
 

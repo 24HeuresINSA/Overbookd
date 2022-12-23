@@ -1,6 +1,7 @@
 import {
   collaborator,
   FA,
+  FaSitePublishAnimation,
   fa_electricity_needs,
   fa_signa_needs,
   fa_type,
@@ -33,20 +34,23 @@ export function hasGeneralErrors(fa: FA): string[] {
 
 // Detail
 export function hasDescriptionToPublish(fa: FA): string | boolean {
-  if (!fa.is_publishable) return true;
+  if (!fa.faSitePublishAnimation?.faId) return true;
   return (
     (!!fa.description && fa.description !== "<p></p>") ||
     "L'animation n'a pas de description a publié sur le site."
   );
 }
 export function hasPhotoLinkToPublish(fa: FA): string | boolean {
-  if (!fa.is_publishable) return true;
+  if (!fa.faSitePublishAnimation?.faId) return true;
   return (
-    !!fa.photo_link || "L'animation n'a pas de photo a publié sur le site."
+    !!fa.faSitePublishAnimation.photoLink ||
+    "L'animation n'a pas de photo a publié sur le site."
   );
 }
-export function isPublishable(value: boolean | undefined): string | boolean {
-  return value || "L'animation ne sera pas publié sur le site.";
+export function isPublishable(
+  value: FaSitePublishAnimation | undefined
+): string | boolean {
+  return value?.faId !== null || "L'animation ne sera pas publié sur le site.";
 }
 export function hasDetailErrors(fa: FA): string[] {
   return [hasDescriptionToPublish(fa), hasPhotoLinkToPublish(fa)].filter(
@@ -54,7 +58,7 @@ export function hasDetailErrors(fa: FA): string[] {
   );
 }
 export function hasDetailsWarnings(fa: FA): string[] {
-  return [isPublishable(fa.is_publishable)].filter(
+  return [isPublishable(fa.faSitePublishAnimation)].filter(
     (warning): warning is string => warning !== true
   );
 }

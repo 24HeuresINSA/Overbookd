@@ -1,8 +1,11 @@
 import {
+  APPROVED,
+  ApprovedGearRequest,
   GearRequest,
   GearRequestIdentifier,
   GearRequestNotFound,
   GearRequestRepository,
+  PENDING,
   SearchGearRequest,
   UpdateGearRequestForm,
 } from '../gearRequests.service';
@@ -35,7 +38,8 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       return (
         gearRequest.seeker.type === gearRequestId.seeker.type &&
         gearRequest.seeker.id === gearRequestId.seeker.id &&
-        gearRequest.gear.id === gearRequestId.gearId
+        gearRequest.gear.id === gearRequestId.gearId &&
+        gearRequest.rentalPeriod.id === gearRequestId.rentalPeriodId
       );
     };
   }
@@ -48,6 +52,25 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
         this.isMatchingSearch(gearRequestSearch, gearRequest),
       ),
     );
+  }
+
+  approveGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    drive: string,
+  ): Promise<ApprovedGearRequest> {
+    const gearRequestIndex = this.gearRequests.findIndex(
+      this.isSameGearRequest(gearRequestId),
+    );
+    if (gearRequestIndex === -1) {
+      return Promise.reject(new GearRequestNotFound(gearRequestId));
+    }
+    const approvedGearRequest: ApprovedGearRequest = {
+      ...this.gearRequests[gearRequestIndex],
+      status: APPROVED,
+      drive,
+    };
+    this.gearRequests[gearRequestIndex] = approvedGearRequest;
+    return Promise.resolve(approvedGearRequest);
   }
 
   private isMatchingSearch(
@@ -88,13 +111,14 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       ...this.gearRequests.slice(0, gearRequestIndex),
       ...this.gearRequests.slice(gearRequestIndex + 1),
     ];
+
     return Promise.resolve();
   }
 
   private mergePreviousAndNewGearRequest(
     gearRequestIndex: number,
     updateGearRequestForm: UpdateGearRequestForm,
-  ) {
+  ): GearRequest {
     const previousGearRequest = this.gearRequests[gearRequestIndex];
     const quantity = updateGearRequestForm.quantity
       ? { quantity: updateGearRequestForm.quantity }
@@ -106,12 +130,17 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       ? { end: updateGearRequestForm.end }
       : { end: previousGearRequest.rentalPeriod.end };
     const rentalPeriod = {
-      rentalPeriod: { ...startRentalPeriod, ...endRentalPeriod },
+      rentalPeriod: {
+        ...previousGearRequest.rentalPeriod,
+        ...startRentalPeriod,
+        ...endRentalPeriod,
+      },
     };
     const newGearRequest = {
       ...previousGearRequest,
       ...quantity,
       ...rentalPeriod,
+      status: PENDING,
     };
     return newGearRequest;
   }

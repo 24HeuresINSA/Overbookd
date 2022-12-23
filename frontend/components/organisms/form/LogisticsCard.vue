@@ -42,12 +42,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
 import { Gear } from "~/utils/models/catalog.model";
-import {
-  FA,
-  GearRequestCreation,
-  time_windows,
-  time_windows_type,
-} from "~/utils/models/FA";
+import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
@@ -79,7 +74,7 @@ export default Vue.extend({
       return Boolean(
         this.gear &&
           parseInt(this.quantity) >= 1 &&
-          this.timeWindow &&
+          this.$accessor.FA.gearRequestRentalPeriods.length > 0 &&
           !this.isValidatedByOwner
       );
     },
@@ -101,17 +96,10 @@ export default Vue.extend({
     },
     addGear() {
       if (!this.gear) return;
-      const timeWindow = this.$accessor.FA.mFA.time_windows?.find(
-        (tw) => tw.type === time_windows_type.MATOS
-      );
-      if (!timeWindow) return;
-      const gearRequestCreationForm: GearRequestCreation = {
+      return this.$accessor.FA.addGearRequestForAllRentalPeriods({
         gearId: this.gear.id,
-        quantity: parseInt(this.quantity),
-        start: timeWindow.start,
-        end: timeWindow.end,
-      };
-      this.$accessor.FA.addGearRequest(gearRequestCreationForm);
+        quantity: parseInt(this.quantity, 10),
+      });
     },
   },
 });

@@ -99,6 +99,7 @@ export default Vue.extend({
     return {
       headers: [
         { text: "Matos", value: "name" },
+        { text: "Code de reference", value: "code" },
         { text: "Category", value: "category" },
         { text: "Actions", value: "actions" },
       ],

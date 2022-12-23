@@ -18,8 +18,6 @@ export const COMPLETE_FA_SELECT = {
   location_id: true,
   status: true,
   description: true,
-  photo_link: true,
-  is_publishable: true,
   is_major: true,
   is_kids: true,
   security_needs: true,
@@ -112,6 +110,14 @@ export const COMPLETE_FA_SELECT = {
       },
     },
   },
+  faSitePublishAnimation: {
+    select: {
+      faId: true,
+      photoLink: true,
+      description: true,
+      categories: true,
+    },
+  },
   time_windows: {
     select: {
       id: true,
@@ -132,8 +138,6 @@ export const ALL_FA_SELECT = {
   location_id: true,
   status: true,
   description: true,
-  photo_link: true,
-  is_publishable: true,
   is_major: true,
   is_kids: true,
   security_needs: true,

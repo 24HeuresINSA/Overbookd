@@ -2,6 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CreateFA,
   FA,
+  FaSitePublishAnimation,
   fa_collaborators,
   fa_comments,
   fa_comments_update,
@@ -12,7 +13,9 @@ import {
   GearRequest,
   GearRequestCreation,
   GearRequestUpdate,
+  GearRequestWithDrive,
   SearchFA,
+  StoredGearRequest,
   time_windows,
 } from "~/utils/models/FA";
 
@@ -126,21 +129,27 @@ export default {
     animationId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
-    return context.$axios.post<GearRequest>(
+    return context.$axios.post<StoredGearRequest>(
       resource + `/${animationId}/gear-requests`,
       gearRequestCreationForm
     );
   },
 
   getGearRequests(context: Context, animationId: number) {
-    return context.$axios.get<GearRequest[]>(
+    return context.$axios.get<StoredGearRequest[]>(
       resource + `/${animationId}/gear-requests`
     );
   },
 
-  deleteGearRequest(context: Context, animationId: number, gearId: number) {
+  deleteGearRequest(
+    context: Context,
+    animationId: number,
+    gearId: number,
+    rentalPeriodId: number
+  ) {
     return context.$axios.delete(
-      resource + `/${animationId}/gear-requests/${gearId}`
+      resource +
+        `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
     );
   },
 
@@ -148,11 +157,61 @@ export default {
     context: Context,
     animationId: number,
     gearId: number,
+    rentalPeriodId: number,
     gearRequestUpdateForm: GearRequestUpdate
   ) {
     return context.$axios.patch<GearRequest>(
-      resource + `/${animationId}/gear-requests/${gearId}`,
+      resource +
+        `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
+    );
+  },
+
+  addPublishAnimation(
+    context: Context,
+    publishAnimation: FaSitePublishAnimation
+  ) {
+    return context.$axios.post<FaSitePublishAnimation>(
+      `fa-site-publish-animation`,
+      publishAnimation
+    );
+  },
+
+  updatePubishAnimation(
+    context: Context,
+    id: number,
+    publishAnimation: FaSitePublishAnimation
+  ) {
+    return context.$axios.put<FaSitePublishAnimation>(
+      `fa-site-publish-animation/${id}`,
+      publishAnimation
+    );
+  },
+
+  deletePublishAnimation(context: Context, id: number) {
+    return context.$axios.delete<void>(`fa-site-publish-animation/${id}`);
+  },
+
+  getAllPublishAnimation(context: Context) {
+    return context.$axios.get<FaSitePublishAnimation[]>(
+      `fa-site-publish-animation`
+    );
+  },
+
+  validateGearRequest(
+    context: Context,
+    animationId: number,
+    gearRequest: GearRequestWithDrive
+  ) {
+    const {
+      gear: { id: gearId },
+      rentalPeriod: { id: rentalPeriodId },
+      drive,
+    } = gearRequest;
+    return context.$axios.patch<GearRequestWithDrive>(
+      resource +
+        `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
+      { drive }
     );
   },
 };

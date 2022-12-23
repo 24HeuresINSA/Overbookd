@@ -13,6 +13,7 @@ import * as FA from "./FA";
 import * as FT from "./FT";
 import * as location from "./location";
 import * as notif from "./notif";
+import * as publishAnimation from "./publishAnimation";
 import * as signaLocation from "./signaLocation";
 import * as team from "./team";
 import * as timeslot from "./timeslot";
@@ -52,5 +53,6 @@ export const accessorType = getAccessorType({
     catalog,
     configuration,
     signaLocation,
+    publishAnimation,
   },
 });

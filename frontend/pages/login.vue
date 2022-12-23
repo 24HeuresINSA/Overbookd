@@ -4,16 +4,6 @@
     <v-form>
       <v-container class="form-container">
         <v-row>
-          <v-col>
-            <v-img
-              src="img/memes/home_meme.jpg"
-              class="img-center"
-              max-height="350"
-              max-width="350"
-            ></v-img>
-          </v-col>
-        </v-row>
-        <v-row>
           <v-img
             src="img/logo/overbookd_logo_blanc.png"
             alt="overbookd"
@@ -52,10 +42,12 @@
           ></v-text-field>
         </v-row>
         <v-row>
-          <a class="forgot-a" href="/forgot">Mot de passe oublié ?</a>
+          <nuxt-link class="forgot-a" to="/forgot"
+            >Mot de passe oublié ?</nuxt-link
+          >
           <v-spacer />
-          <a class="forgot-a" @click="isDialogOpen = true"
-            >Un problème lors de l'inscription ?</a
+          <btn class="forgot-a" @click="isDialogOpen = true"
+            >Un problème lors de l'inscription ?</btn
           >
         </v-row>
       </v-container>
