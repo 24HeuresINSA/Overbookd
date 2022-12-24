@@ -4,18 +4,23 @@
 # .gitlab
 
 /.gitlab/* @titouan-joseph @LeoMouyna
+/.gitlab/triage_policies @titouan-joseph
 /.gitlab/triage_policies/rules/ @titouan-joseph
 
 
 # tools
 
 backups-files @titouan-joseph
+backups-files/ @titouan-joseph
 
 tools @titouan-joseph @LeoMouyna @DamienCarreau
+tools/ @titouan-joseph @LeoMouyna @DamienCarreau
 tools/moveIssues.py @titouan-joseph
 tools/migrateUsers.py @titouan-joseph
 tools/adding-fa_ft-validators.py @titouan-joseph
+tools/catalog @LeoMouyna
 tools/catalog/ @LeoMouyna
+tools/teamUpdate @DamienCarreau
 tools/teamUpdate/ @DamienCarreau
 
 
@@ -25,21 +30,32 @@ backend/Dockerfile.dev @titouan-joseph @wo0lien @LeoMouyna
 backend/Dockerfile @titouan-joseph @wo0lien @LeoMouyna
 frontend/Dockerfile.dev @titouan-joseph @wo0lien @LeoMouyna
 frontend/Dockerfile @titouan-joseph @wo0lien @LeoMouyna
+docker @titouan-joseph
 docker/ @titouan-joseph
 
 
 # backend
 
+backend/src/catalog @aprouvost @LeoMouyna
 backend/src/catalog/ @aprouvost @LeoMouyna
 backend/src/configuration/ @Spycro
+backend/src/configuration @Spycro
 backend/src/fa_site_publish_animation/ @titouan-joseph
+backend/src/fa_site_publish_animation @titouan-joseph
 backend/src/mail/ @titouan-joseph
+backend/src/mail @titouan-joseph
 backend/src/collaborator/ @AntoinePRN
+backend/src/collaborator @AntoinePRN
 backend/src/fa/ @AntoinePRN
+backend/src/fa @AntoinePRN
 backend/src/fa_comment/ @AntoinePRN
+backend/src/fa_comment @AntoinePRN
 backend/src/fa_electricity_needs/ @AntoinePRN
+backend/src/fa_electricity_needs @AntoinePRN
 backend/src/fa_signa_needs/ @AntoinePRN
+backend/src/fa_signa_needs @AntoinePRN
 backend/src/team/ @DamienCarreau
+backend/src/team @DamienCarreau
 
 # frontend
 
