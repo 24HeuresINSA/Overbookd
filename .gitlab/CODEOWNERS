@@ -3,8 +3,8 @@
 
 # .gitlab
 
-.gitlab/** @titouan-joseph @LeoMouyna
-.gitlab/triage_policies/rules/** @titouan-joseph
+/.gitlab/** @titouan-joseph @LeoMouyna
+/.gitlab/triage_policies/rules/** @titouan-joseph
 
 
 # tools
