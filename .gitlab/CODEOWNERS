@@ -4,14 +4,14 @@
 # .gitlab
 
 /.gitlab/* @titouan-joseph @LeoMouyna
-/.gitlab/triage_policies/rules/* @titouan-joseph
+/.gitlab/triage_policies/rules/ @titouan-joseph
 
 
 # tools
 
-backups-files/ @titouan-joseph
+backups-files @titouan-joseph
 
-tools/ @titouan-joseph @LeoMouyna @DamienCarreau
+tools @titouan-joseph @LeoMouyna @DamienCarreau
 tools/moveIssues.py @titouan-joseph
 tools/migrateUsers.py @titouan-joseph
 tools/adding-fa_ft-validators.py @titouan-joseph
