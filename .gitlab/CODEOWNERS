@@ -5,6 +5,7 @@
 
 /.gitlab/* @titouan-joseph @LeoMouyna
 /.gitlab/triage_policies @titouan-joseph
+/.gitlab/triage_policies/rules @titouan-joseph
 /.gitlab/triage_policies/rules/ @titouan-joseph
 
 
