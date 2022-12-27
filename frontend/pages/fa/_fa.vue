@@ -353,7 +353,6 @@ export default Vue.extend({
     },
 
     submit() {
-      console.log("submit");
       this.$accessor.FA.submitForReview({
         faId: this.faId,
         authorId: this.me.id,

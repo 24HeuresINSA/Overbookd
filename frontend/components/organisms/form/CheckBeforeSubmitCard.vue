@@ -164,12 +164,10 @@ export default Vue.extend({
       return hasAtLeastOneWarning(this.store);
     },
 
-    // General
     generalErrors(): string[] {
       return hasGeneralErrors(this.store.mFA);
     },
 
-    // Detail
     detailErrors(): string[] {
       return hasDetailErrors(this.store.mFA);
     },
@@ -177,7 +175,6 @@ export default Vue.extend({
       return hasDetailWarnings(this.store.mFA);
     },
 
-    // Signa
     signaErrors(): string[] {
       return hasSignaErrors(this.store.mFA);
     },
@@ -185,12 +182,10 @@ export default Vue.extend({
       return hasSignaWarnings(this.store.mFA);
     },
 
-    // Time windows
     timeWindowsErrors(): string[] {
       return hasTimeWindowsErrors(this.store.mFA);
     },
 
-    // Security
     securityErrors(): string[] {
       return hasSecurityErrors(this.store.mFA);
     },
@@ -198,7 +193,6 @@ export default Vue.extend({
       return hasSecurityWarnings(this.store.mFA);
     },
 
-    // Collaborator
     collaboratorErrors(): string[] {
       return hasCollaboratorErrors(this.store.mFA);
     },
@@ -206,7 +200,6 @@ export default Vue.extend({
       return hasCollaboratorWarnings(this.store.mFA);
     },
 
-    // Gear Request
     gearRequestErrors(): string[] {
       return hasGearRequestErrors(this.store);
     },
@@ -214,12 +207,10 @@ export default Vue.extend({
       return hasGearRequestWarnings(this.store);
     },
 
-    // Elec
     elecWarnings(): string[] {
       return hasElecWarnings(this.store.mFA);
     },
 
-    // Water
     waterWarnings(): string[] {
       return hasWaterWarnings(this.store.mFA);
     },

@@ -68,14 +68,14 @@ export function hasDescriptionToPublish(fa: FA): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     !!fa.faSitePublishAnimation?.description ||
-    "L'animation n'a pas de description a publié sur le site."
+    "L'animation n'a pas de description à publier sur le site."
   );
 }
 export function hasPhotoLinkToPublish(fa: FA): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     !!fa.faSitePublishAnimation?.photoLink ||
-    "L'animation n'a pas de photo a publié sur le site."
+    "L'animation n'a pas de photo à publier sur le site."
   );
 }
 export function hasCategoriesToPublish(fa: FA): string | boolean {
@@ -83,13 +83,13 @@ export function hasCategoriesToPublish(fa: FA): string | boolean {
   return (
     (fa.faSitePublishAnimation?.categories &&
       fa.faSitePublishAnimation.categories.length > 0) ||
-    "L'animation n'a pas de catégorie a publié sur le site."
+    "L'animation n'a pas de catégorie à publier sur le site."
   );
 }
 export function isPublishable(
   value: FaSitePublishAnimation | undefined
 ): string | boolean {
-  return !!value || "L'animation ne sera pas publié sur le site.";
+  return !!value || "L'animation ne sera pas publiée sur le site.";
 }
 export function hasDetailErrors(fa: FA): string[] {
   return [
@@ -107,7 +107,7 @@ export function hasDetailWarnings(fa: FA): string[] {
 
 // Signa
 export function hasLocation(value: number | undefined): string | boolean {
-  return Boolean(value) || "L'animation n'a pas de location.";
+  return Boolean(value) || "L'animation n'a pas de localisation.";
 }
 export function hasSignaNeeds(
   value: fa_signa_needs[] | undefined
@@ -121,7 +121,7 @@ export function hasSignaNeedsWithQuantityHigherThanZero(
 ): string | boolean {
   if (!signaNeeds || signaNeeds.length === 0) return true;
   return (
-    signaNeeds.some((signaNeed) => signaNeed.count > 0) ||
+    signaNeeds.every((signaNeed) => signaNeed.count > 0) ||
     "Chaque demande de signa doit avoir une quantité."
   );
 }
@@ -220,8 +220,8 @@ export function hasCollaboratorOptionalFieldsFilled(
   ) {
     return true;
   }
-  const { email, company, comment } = collaborator;
-  const hasOptionalFieldsFilled = Boolean(email && company && comment);
+  const { email, company } = collaborator;
+  const hasOptionalFieldsFilled = email && company;
   return (
     hasOptionalFieldsFilled ||
     "Les informations du prestataire sont incomplètes."
@@ -276,8 +276,7 @@ export function hasMatosGearRequestWithQuantityHigherThanZero(
   matosGearRequests: GearRequest[] | undefined
 ): string | boolean {
   return (
-    matosGearRequests?.length === 0 ||
-    matosGearRequests?.some((gearRequest) => gearRequest.quantity > 0) ||
+    matosGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
     "Chaque matériel Matos doit avoir une quantité."
   );
 }
@@ -285,8 +284,7 @@ export function hasBarrieresGearRequestWithQuantityHigherThanZero(
   barrieresGearRequests: GearRequest[]
 ): string | boolean {
   return (
-    barrieresGearRequests?.length === 0 ||
-    barrieresGearRequests?.some((gearRequest) => gearRequest.quantity > 0) ||
+    barrieresGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
     "Chaque matériel Barrières doit avoir une quantité."
   );
 }
@@ -294,8 +292,7 @@ export function hasElecGearRequestWithQuantityHigherThanZero(
   elecGearRequests: GearRequest[]
 ): string | boolean {
   return (
-    elecGearRequests?.length === 0 ||
-    elecGearRequests?.some((gearRequest) => gearRequest.quantity > 0) ||
+    elecGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
     "Chaque matériel Elec doit avoir une quantité."
   );
 }

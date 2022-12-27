@@ -232,15 +232,13 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     hasAtLeastOneLogValidation(): boolean {
-      const matosStatus = getFAValidationStatus(this.mFA, "matos");
-      const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
-      const elecStatus = getFAValidationStatus(this.mFA, "elec");
+      const logStatus = [
+        getFAValidationStatus(this.mFA, "matos"),
+        getFAValidationStatus(this.mFA, "barrieres"),
+        getFAValidationStatus(this.mFA, "elec"),
+      ];
 
-      return (
-        matosStatus === Status.VALIDATED ||
-        barrieresStatus === Status.VALIDATED ||
-        elecStatus === Status.VALIDATED
-      );
+      return logStatus.some((status) => status === Status.VALIDATED);
     },
   },
   watch: {

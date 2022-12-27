@@ -1,11 +1,5 @@
 <template>
-  <div
-    v-if="
-      (mFA.status === 'SUBMITTED' || mFA.status === 'REFUSED') &&
-      errors.length > 0
-    "
-    class="my-container"
-  >
+  <div v-if="shouldShowError" class="my-container">
     <v-icon color="red" large>mdi-alert</v-icon>
     <ul>
       <li v-for="error in errors" :key="error" class="important" dense>
@@ -56,6 +50,12 @@ export default Vue.extend({
         default:
           return [];
       }
+    },
+    shouldShowError(): boolean {
+      return (
+        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED") &&
+        this.errors.length > 0
+      );
     },
   },
 });

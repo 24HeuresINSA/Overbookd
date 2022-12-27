@@ -81,30 +81,28 @@ export default Vue.extend({
       const byBarrieres = isAnimationValidatedBy(this.mFA, "barrieres");
       const byElec = isAnimationValidatedBy(this.mFA, "elec");
 
-      if (byMatos && byBarrieres && byElec) return true;
-      return false;
+      return byMatos && byBarrieres && byElec;
     },
     validationStatus(): string {
-      const matosStatus = getFAValidationStatus(this.mFA, "matos");
-      const barrieresStatus = getFAValidationStatus(this.mFA, "barrieres");
-      const elecStatus = getFAValidationStatus(this.mFA, "elec");
+      const logStatus = [
+        getFAValidationStatus(this.mFA, "matos"),
+        getFAValidationStatus(this.mFA, "barrieres"),
+        getFAValidationStatus(this.mFA, "elec"),
+      ];
 
-      const areAllValidated =
-        matosStatus === Status.VALIDATED &&
-        barrieresStatus === Status.VALIDATED &&
-        elecStatus === Status.VALIDATED;
+      const areAllValidated = logStatus.every(
+        (status) => status === Status.VALIDATED
+      );
       if (areAllValidated) return Status.VALIDATED.toLowerCase();
 
-      const areAllRefused =
-        matosStatus === Status.REFUSED &&
-        barrieresStatus === Status.REFUSED &&
-        elecStatus === Status.REFUSED;
+      const areAllRefused = logStatus.every(
+        (status) => status === Status.REFUSED
+      );
       if (areAllRefused) return Status.REFUSED.toLowerCase();
 
-      const hasAtLeastOneSubmitted =
-        matosStatus === Status.SUBMITTED ||
-        barrieresStatus === Status.SUBMITTED ||
-        elecStatus === Status.SUBMITTED;
+      const hasAtLeastOneSubmitted = logStatus.some(
+        (status) => status === Status.SUBMITTED
+      );
       if (hasAtLeastOneSubmitted) return Status.SUBMITTED.toLowerCase();
 
       return Status.DRAFT.toLowerCase();

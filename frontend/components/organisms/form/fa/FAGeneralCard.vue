@@ -59,7 +59,7 @@ export default Vue.extend({
   name: "FAGeneralCard",
   components: { CardErrorList },
   data: () => ({
-    users: [] as Array<any>,
+    users: [] as any[],
     owner: "humain",
     cardType: fa_card_type.GENERAL,
   }),
@@ -67,10 +67,10 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    teams(): Array<any> {
+    teams(): any[] {
       return this.$accessor.team.allTeams;
     },
-    allTypes(): Array<string> {
+    allTypes(): string[] {
       //return fa_type as an array
       return Object.values(fa_type);
     },

@@ -1,14 +1,16 @@
 import { FA, fa_refuse, fa_validation, Status } from "../models/FA";
 
-export function isAnimationValidatedBy(fa: any, teamCode: string): boolean {
-  return fa.fa_validation?.some(
-    (validation: fa_validation) => validation.Team.code === teamCode
+export function isAnimationValidatedBy(fa: FA, teamCode: string): boolean {
+  return Boolean(
+    fa.fa_validation?.some(
+      (validation: fa_validation) => validation.Team.code === teamCode
+    )
   );
 }
 
-export function isAnimationRefusedBy(fa: any, teamCode: string): boolean {
-  return fa.fa_refuse?.some(
-    (refuse: fa_refuse) => refuse.Team.code === teamCode
+export function isAnimationRefusedBy(fa: FA, teamCode: string): boolean {
+  return Boolean(
+    fa.fa_refuse?.some((refuse: fa_refuse) => refuse.Team.code === teamCode)
   );
 }
 
