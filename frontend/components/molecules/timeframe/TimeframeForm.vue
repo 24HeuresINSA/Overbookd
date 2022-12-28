@@ -166,8 +166,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { getFAValidationStatus } from "~/utils/fa/faUtils";
-import { FA, Status, time_windows, time_windows_type } from "~/utils/models/FA";
+import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
+import { hasAtLeastOneValidation } from "~/utils/fa/faUtils";
 
 interface BrakeDownDate {
   year: number;
@@ -230,15 +230,6 @@ export default Vue.extend({
     },
     me(): any {
       return this.$accessor.user.me;
-    },
-    hasAtLeastOneLogValidation(): boolean {
-      const logStatus = [
-        getFAValidationStatus(this.mFA, "matos"),
-        getFAValidationStatus(this.mFA, "barrieres"),
-        getFAValidationStatus(this.mFA, "elec"),
-      ];
-
-      return logStatus.some((status) => status === Status.VALIDATED);
     },
   },
   watch: {
@@ -331,21 +322,21 @@ export default Vue.extend({
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
-      this.$emit("close-dialog");
+      this.$emit("close");
       this.clearLocalVariable();
     },
     confirmToEditTimeframe() {
+      const logTeamCodes = ["matos", "barrieres", "elec"];
       const isMatosTimeframe = this.type === time_windows_type.MATOS;
       const shouldAskConfirmation =
-        isMatosTimeframe && this.hasAtLeastOneLogValidation;
+        isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
 
       if (!shouldAskConfirmation) return this.editTimeframe();
-
       return confirm(
         "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
       )
         ? this.resetLogValidations()
-        : this.$emit("close-dialog");
+        : this.$emit("close");
     },
     resetLogValidations() {
       this.$accessor.FA.resetLogValidations({ author: this.me });
@@ -355,7 +346,7 @@ export default Vue.extend({
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
-      this.$emit("close-dialog");
+      this.$emit("close");
     },
     formIsInvalid(): boolean {
       if (

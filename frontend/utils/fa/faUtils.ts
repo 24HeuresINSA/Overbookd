@@ -14,9 +14,27 @@ export function isAnimationRefusedBy(fa: FA, teamCode: string): boolean {
   );
 }
 
-export function getFAValidationStatus(fa: FA, teamCode: string): Status {
-  if (isAnimationValidatedBy(fa, teamCode)) return Status.VALIDATED;
-  if (isAnimationRefusedBy(fa, teamCode)) return Status.REFUSED;
-  if (fa.status === Status.SUBMITTED) return Status.SUBMITTED;
-  return Status.DRAFT;
+export function getFAValidationStatus(
+  fa: FA,
+  teamCode: string | string[]
+): Status {
+  if (fa.status === Status.DRAFT) return Status.DRAFT;
+
+  if (Array.isArray(teamCode)) {
+    if (teamCode.every((code) => isAnimationValidatedBy(fa, code))) {
+      return Status.VALIDATED;
+    }
+    if (teamCode.some((code) => isAnimationRefusedBy(fa, code))) {
+      return Status.REFUSED;
+    }
+  } else {
+    if (isAnimationValidatedBy(fa, teamCode)) return Status.VALIDATED;
+    if (isAnimationRefusedBy(fa, teamCode)) return Status.REFUSED;
+  }
+
+  return Status.SUBMITTED;
+}
+
+export function hasAtLeastOneValidation(fa: FA, teamCodes: string[]): boolean {
+  return teamCodes.some((code) => isAnimationValidatedBy(fa, code));
 }

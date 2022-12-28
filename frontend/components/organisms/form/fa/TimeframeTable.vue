@@ -20,17 +20,13 @@
         </template>
         <template #[`item.action`]="{ item }">
           <div>
-            <v-btn
-              v-if="!isValidatedByOwner"
-              icon
-              @click="openUpdateModal(item)"
-            >
+            <v-btn v-if="isEditable(item)" icon @click="openUpdateModal(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
-              v-if="!isValidatedByOwner"
+              v-if="isEditable(item)"
               icon
-              @click="deleteTimeframe(item)"
+              @click="confirmToDeleteTimeframe(item)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -40,7 +36,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="!isValidatedByOwner" text @click="isAddDialogOpen = true"
+        <v-btn v-if="!isValidatedByOwners" text @click="isAddDialogOpen = true"
           >Ajouter un créneau</v-btn
         >
       </v-card-actions>
@@ -51,7 +47,7 @@
     <v-dialog v-model="isAddDialogOpen" max-width="600">
       <TimeframeForm
         @change="addTimeWindow"
-        @close-dialog="isAddDialogOpen = false"
+        @close="isAddDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
 
@@ -59,7 +55,7 @@
       <TimeframeForm
         v-model="selectedTimeWindow"
         @change="updateTimeWindow"
-        @close-dialog="isEditDialogOpen = false"
+        @close="isEditDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
   </div>
@@ -72,6 +68,7 @@ import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
+  hasAtLeastOneValidation,
 } from "~/utils/fa/faUtils";
 import { hasTimeWindowsErrors } from "~/utils/rules/faValidationRules";
 import {
@@ -91,7 +88,8 @@ export default Vue.extend({
   name: "TimeframeTable",
   components: { TimeframeCalendar, TimeframeForm, CardErrorList },
   data: () => ({
-    owner: "humain",
+    animOwner: "humain",
+    matosOwners: ["matos", "barrieres", "elec"],
     cardType: fa_card_type.TIME_WINDOW,
     headers: [
       { text: "Type", value: "type" },
@@ -125,14 +123,28 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    isValidatedByOwner(): boolean {
-      return isAnimationValidatedBy(this.mFA, this.owner);
+    isValidatedByAnimOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.animOwner);
+    },
+    isValidatedByMatosOwners(): boolean {
+      const logTeamCodes = ["matos", "barrieres", "elec"];
+      const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
+        isAnimationValidatedBy(this.mFA, teamCode)
+      );
+      return teamCodesThatValidatedFA.length === logTeamCodes.length;
+    },
+    isValidatedByOwners(): boolean {
+      return this.isValidatedByAnimOwner && this.isValidatedByMatosOwners;
     },
     validationStatus(): string {
-      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
+      const owners = [...this.matosOwners, this.animOwner];
+      return getFAValidationStatus(this.mFA, owners).toLowerCase();
     },
     timeWindowsErrors(): string[] {
       return hasTimeWindowsErrors(this.mFA);
+    },
+    me(): any {
+      return this.$accessor.user.me;
     },
   },
   methods: {
@@ -147,6 +159,23 @@ export default Vue.extend({
       return new Intl.DateTimeFormat("fr", displayOptions).format(
         new Date(date)
       );
+    },
+    confirmToDeleteTimeframe(timeWindow: IdentifiableTimeWindow) {
+      const logTeamCodes = ["matos", "barrieres", "elec"];
+      const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
+      const shouldAskConfirmation =
+        isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
+
+      if (!shouldAskConfirmation) return this.deleteTimeframe(timeWindow);
+      return confirm(
+        "Es-tu sûr de supprimer ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
+      )
+        ? this.resetLogValidations(timeWindow)
+        : this.$emit("close-dialog");
+    },
+    resetLogValidations(timeWindow: IdentifiableTimeWindow) {
+      this.$accessor.FA.resetLogValidations({ author: this.me });
+      this.deleteTimeframe(timeWindow);
     },
     deleteTimeframe(timeWindow: IdentifiableTimeWindow) {
       if (timeWindow.type === time_windows_type.ANIM) {
@@ -213,6 +242,15 @@ export default Vue.extend({
         ...timeWindow,
         key: `${timeWindow.type}_${timeWindow.id ?? defaultId}`,
       };
+    },
+    isEditable(timeWindow: IdentifiableTimeWindow) {
+      if (timeWindow.type === time_windows_type.ANIM) {
+        return !this.isValidatedByAnimOwner;
+      }
+      if (timeWindow.type === time_windows_type.MATOS) {
+        return !this.isValidatedByMatosOwners;
+      }
+      return !this.isValidatedByMatosOwners;
     },
   },
 });
