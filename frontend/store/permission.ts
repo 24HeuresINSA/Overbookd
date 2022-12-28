@@ -23,20 +23,6 @@ export const getters = getterTree(state, {
     (user: User): boolean => {
       return user.permissions?.includes("validated-user") || false;
     },
-  faValidators(state): string[] {
-    return (
-      state.permissions.find(
-        (permission: permission) => permission.name === "fa-validator"
-      )?.teams || []
-    );
-  },
-  ftValidators(state): string[] {
-    return (
-      state.permissions.find(
-        (permission: permission) => permission.name === "ft-validator"
-      )?.teams || []
-    );
-  },
 });
 
 export const mutations = mutationTree(state, {
@@ -62,7 +48,7 @@ export const actions = actionTree(
       return safeCall(this, permissionRepo.updatePermission(this, payload));
     },
     async removePermission(
-      constext,
+      context,
       { permissionId }: { permissionId: number }
     ): Promise<any> {
       return safeCall(
@@ -71,12 +57,32 @@ export const actions = actionTree(
       );
     },
     async linkPermissionToTeams(
-      constext,
+      context,
       { permissionId, teamCodes }: { permissionId: number; teamCodes: string[] }
     ): Promise<any> {
       return safeCall(
         this,
         permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes)
+      );
+    },
+    async faValidators(context): Promise<string[]> {
+      if (context.state.permissions.length === 0) {
+        await context.dispatch("setPermissionsInStore");
+      }
+      return (
+        context.state.permissions.find(
+          (permission: permission) => permission.name === "fa-validator"
+        )?.teams || []
+      );
+    },
+    async ftValidators(context): Promise<string[]> {
+      if (context.state.permissions.length === 0) {
+        await context.dispatch("setPermissionsInStore");
+      }
+      return (
+        context.state.permissions.find(
+          (permission: permission) => permission.name === "ft-validator"
+        )?.teams || []
       );
     },
   }

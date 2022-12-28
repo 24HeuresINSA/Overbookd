@@ -34,9 +34,12 @@ import { PermissionService } from './permission.service';
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiBearerAuth()
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
+  @Permission('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -48,10 +51,8 @@ export class PermissionController {
     return this.permissionService.permission({ orderBy: { name: 'asc' } });
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('admin')
   @Post()
-  @ApiBearerAuth()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -64,10 +65,8 @@ export class PermissionController {
     return this.permissionService.createPermission(payload);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('admin')
   @Patch(':id')
-  @ApiBearerAuth()
   @HttpCode(200)
   @ApiNotFoundResponse({
     description: "Can't find a site publish animation resource",
@@ -84,10 +83,8 @@ export class PermissionController {
     return this.permissionService.updatePermission(id, payload);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('admin')
   @Delete(':id')
-  @ApiBearerAuth()
   @HttpCode(204)
   @ApiNotFoundResponse({
     description: "Can't find a site publish animation resource",
@@ -101,10 +98,8 @@ export class PermissionController {
     return this.permissionService.deletePermission(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('admin')
   @Post('link/:id')
-  @ApiBearerAuth()
   @HttpCode(201)
   @ApiNotFoundResponse({
     description: "Can't find a site publish animation resource",

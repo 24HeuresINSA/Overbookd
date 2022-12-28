@@ -73,10 +73,7 @@
               </v-chip>
             </template>
             <template #item.validation="{ item }">
-              <ValidatorsIcons
-                :form="item"
-                validators-key="ft_validators"
-              ></ValidatorsIcons>
+              <!-- TODO implement the validator icons -->
             </template>
             <template #[`item.action`]="row">
               <v-btn
@@ -168,7 +165,6 @@
 <script lang="ts">
 import Fuse from "fuse.js";
 import Vue from "vue";
-import ValidatorsIcons from "~/components/atoms/ValidatorsIcons.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import faRepo from "~/repositories/faRepo";
 import userRepo from "~/repositories/userRepo";
@@ -212,7 +208,7 @@ const color = {
 
 export default Vue.extend({
   name: "Index",
-  components: { ValidatorsIcons, SnackNotificationContainer },
+  components: { SnackNotificationContainer },
   data(): Data {
     return {
       color,

@@ -100,24 +100,6 @@ export class PermissionService {
     return { ...permission, teams: teamCodes };
   }
 
-  async isAllowed(permissionNames: string[], teamCodes: string[]) {
-    const permissions = await this.permission({
-      where: {
-        name: {
-          in: permissionNames,
-        },
-        teams: {
-          some: {
-            team_code: {
-              in: teamCodes,
-            },
-          },
-        },
-      },
-    });
-    return permissions.length > 0;
-  }
-
   private async permissionExists(
     permissionId: number,
   ): Promise<PermissionResponseDto> {

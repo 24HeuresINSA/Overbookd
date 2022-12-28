@@ -202,6 +202,7 @@ export default {
       isDeleteFAOpen: false,
       faName: undefined,
       teamNames: this.$accessor.team.teamNames,
+      validators: [],
     };
   },
   computed: {
@@ -210,11 +211,6 @@ export default {
     },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
-    },
-    validators() {
-      return this.$accessor.team.getTeams(
-        this.$accessor.permission.faValidators
-      );
     },
     isAdmin() {
       return this.$accessor.user.hasPermission("admin");
@@ -242,13 +238,16 @@ export default {
     },
   },
   async mounted() {
-    if (this.$accessor.user.hasPermission("hard")) {
-      return this.fetchFas();
-    } else {
+    if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });
     }
+
+    this.fetchFas();
+    this.validators = await this.$accessor.permission
+      .faValidators()
+      .then((validators) => this.$accessor.team.getTeams(validators));
   },
   methods: {
     async fetchFas() {

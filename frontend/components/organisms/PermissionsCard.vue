@@ -52,6 +52,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { permission } from "~/utils/models/repo";
 import PermissionRow from "~/components/molecules/PermissionRow.vue";
 
 export default Vue.extend({
@@ -88,8 +89,13 @@ export default Vue.extend({
       newPermissionDescription: "",
     };
   },
+  async mounted() {
+    if (this.$accessor.permission.allPermissions.length === 0) {
+      await this.$accessor.permission.setPermissionsInStore();
+    }
+  },
   methods: {
-    permissions() {
+    permissions(): permission[] {
       return this.$accessor.permission.allPermissions;
     },
     async addPermission() {
