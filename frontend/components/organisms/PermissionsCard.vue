@@ -103,11 +103,11 @@ export default Vue.extend({
         name: this.newPermissionName,
         description: this.newPermissionDescription,
       });
-      if (response) {
-        this.newPermissionName = "";
-        this.newPermissionDescription = "";
-        this.$accessor.permission.setPermissionsInStore();
-      }
+      this.newPermissionName = "";
+      this.newPermissionDescription = "";
+      this.$accessor.notif.pushNotification({
+        message: response,
+      });
     },
   },
 });

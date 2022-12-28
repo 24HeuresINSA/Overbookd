@@ -70,7 +70,6 @@ export const permissions = [
           { team_code: 'matos' },
           { team_code: 'elec' },
           { team_code: 'barrieres' },
-          { team_code: 'signa' },
         ],
       },
     },

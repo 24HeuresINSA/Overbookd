@@ -139,10 +139,3 @@ export interface team {
   color: string;
   icon: string;
 }
-
-export interface permission {
-  id: number;
-  name: string;
-  description: string;
-  teams: string[];
-}

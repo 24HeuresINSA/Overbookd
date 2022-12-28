@@ -81,13 +81,10 @@ export default Vue.extend({
       } else {
         teamCodes.push(this.newElement);
       }
-      let response = await this.$accessor.permission.linkPermissionToTeams({
+      await this.$accessor.permission.linkPermissionToTeams({
         permissionId: this.permission.id,
         teamCodes: teamCodes,
       });
-      if (response) {
-        this.$accessor.permission.setPermissionsInStore();
-      }
     },
     async updateDescription() {
       let response = await this.$accessor.permission.updatePermission({
@@ -95,18 +92,12 @@ export default Vue.extend({
         name: this.permission.name,
         description: this.newDescription,
       });
-      if (response) {
-        this.$accessor.permission.setPermissionsInStore();
-        this.displayDescriptionUpdate = false;
-      }
+      this.displayDescriptionUpdate = false;
     },
     async removePermission() {
-      let response = await this.$accessor.permission.removePermission({
+      await this.$accessor.permission.removePermission({
         permissionId: this.permission.id,
       });
-      if (response) {
-        this.$accessor.permission.setPermissionsInStore();
-      }
     },
   },
 });

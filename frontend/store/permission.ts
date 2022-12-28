@@ -1,13 +1,14 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { permission, User } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
+import { Permission } from "~/utils/models/Permission";
+import { User } from "~/utils/models/repo";
 
 const permissionRepo = RepoFactory.permissionRepo;
 
 // The state types definitions
 interface State {
-  permissions: permission[];
+  permissions: Permission[];
 }
 
 export const state = (): State => ({
@@ -15,7 +16,7 @@ export const state = (): State => ({
 });
 
 export const getters = getterTree(state, {
-  allPermissions(state): permission[] {
+  allPermissions(state): Permission[] {
     return state.permissions;
   },
   isValidated:
@@ -42,10 +43,19 @@ export const actions = actionTree(
       return res;
     },
     createPermission(context, payload: any): Promise<any> {
-      return permissionRepo.createPermission(this, payload);
+      return permissionRepo.createPermission(this, payload).then((res) => {
+        context.dispatch("setPermissionsInStore");
+        return res;
+      });
     },
     async updatePermission(context, payload: any): Promise<any> {
-      return safeCall(this, permissionRepo.updatePermission(this, payload));
+      return safeCall(
+        this,
+        permissionRepo.updatePermission(this, payload)
+      ).then((res) => {
+        context.dispatch("setPermissionsInStore");
+        return res;
+      });
     },
     async removePermission(
       context,
@@ -54,7 +64,10 @@ export const actions = actionTree(
       return safeCall(
         this,
         permissionRepo.removePermission(this, permissionId)
-      );
+      ).then((res) => {
+        context.dispatch("setPermissionsInStore");
+        return res;
+      });
     },
     async linkPermissionToTeams(
       context,
@@ -63,7 +76,10 @@ export const actions = actionTree(
       return safeCall(
         this,
         permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes)
-      );
+      ).then((res) => {
+        context.dispatch("setPermissionsInStore");
+        return res;
+      });
     },
     async faValidators(context): Promise<string[]> {
       if (context.state.permissions.length === 0) {
@@ -71,7 +87,7 @@ export const actions = actionTree(
       }
       return (
         context.state.permissions.find(
-          (permission: permission) => permission.name === "fa-validator"
+          (permission: Permission) => permission.name === "fa-validator"
         )?.teams || []
       );
     },
@@ -81,7 +97,7 @@ export const actions = actionTree(
       }
       return (
         context.state.permissions.find(
-          (permission: permission) => permission.name === "ft-validator"
+          (permission: Permission) => permission.name === "ft-validator"
         )?.teams || []
       );
     },

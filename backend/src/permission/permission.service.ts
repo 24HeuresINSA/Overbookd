@@ -56,18 +56,28 @@ export class PermissionService {
     });
     return permissions.map((permission) => ({
       ...permission,
-      teams: permission.teams.map((team) => team.team.code),
+      teams: permission.teams.map(({ team }) => team.code),
     }));
   }
 
   async createPermission(
     payload: PermissionFormDto,
   ): Promise<PermissionResponseDto> {
-    await this.assertUniquePermissionName(payload.name);
-    const permission = await this.prisma.permission.create({
-      data: payload,
-    });
-    return { ...permission, teams: [] };
+    try {
+      const permission = await this.prisma.permission.create({
+        data: payload,
+      });
+      return { ...permission, teams: [] };
+    } catch (e) {
+      // Integrity constraint violation
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2002'
+      ) {
+        throw new ConflictException('Permission name already exists');
+      }
+      throw e;
+    }
   }
 
   async updatePermission(
@@ -94,7 +104,7 @@ export class PermissionService {
     teamCodes: string[],
   ): Promise<PermissionResponseDto> {
     const permission = await this.permissionExists(permissionId);
-    await this.assertTeamCodesExist(teamCodes);
+    await this.assertAllTeamCodesExist(teamCodes);
     await this.forcePermissionTeams(permission.name, teamCodes);
 
     return { ...permission, teams: teamCodes };
@@ -110,18 +120,7 @@ export class PermissionService {
     return permissions[0];
   }
 
-  private async assertUniquePermissionName(
-    permissionName: string,
-  ): Promise<void> {
-    const permissions = await this.permission({
-      where: { name: permissionName },
-    });
-    if (permissions.length > 0) {
-      throw new ConflictException('Permission name already exists');
-    }
-  }
-
-  private async assertTeamCodesExist(teamCodes: string[]) {
+  private async assertAllTeamCodesExist(teamCodes: string[]) {
     const teams = await this.teamService.team({
       where: { code: { in: teamCodes } },
     });
