@@ -10,10 +10,10 @@ import { validationDto } from './dto/validation.dto';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/create-fa.dto';
 import {
-  FaResponse,
   AllFaResponse,
-  COMPLETE_FA_SELECT,
   ALL_FA_SELECT,
+  COMPLETE_FA_SELECT,
+  FaResponse,
 } from './fa_types';
 
 export interface SearchFa {
@@ -114,21 +114,18 @@ export class FaService {
     return fa;
   }
 
-  async invalidatefa(fa_id: number, body: validationDto): Promise<fa | null> {
+  async removeFaValidation(fa_id: number, body: validationDto): Promise<void> {
     const team_id = body.team_id;
     const fa = await this.prisma.fa.findUnique({
       where: { id: Number(fa_id) },
     });
     if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
-    await this.prisma.$transaction([
-      this.prisma.fa_validation.deleteMany({
-        where: {
-          fa_id: fa_id,
-          team_id: team_id,
-        },
-      }),
-    ]);
-    return fa;
+    await this.prisma.fa_validation.deleteMany({
+      where: {
+        fa_id: fa_id,
+        team_id: team_id,
+      },
+    });
   }
 
   async refusefa(

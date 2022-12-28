@@ -213,15 +213,9 @@ export function hasCollaboratorMandatoryFieldsFilled(
 export function hasCollaboratorOptionalFieldsFilled(
   collaborator: collaborator | undefined
 ): string | boolean {
-  if (
-    !collaborator ||
-    isCollaboratorNotEmpty(collaborator) !== true ||
-    hasCollaboratorMandatoryFieldsFilled(collaborator) !== true
-  ) {
-    return true;
-  }
+  if (!collaborator) return true;
   const { email, company } = collaborator;
-  const hasOptionalFieldsFilled = email && company;
+  const hasOptionalFieldsFilled = Boolean(email && company);
   return (
     hasOptionalFieldsFilled ||
     "Les informations du prestataire sont incomplètes."

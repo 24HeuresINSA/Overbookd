@@ -1,24 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
-  ParseIntPipe,
-  Request,
-  Patch,
+  Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { FaService } from './fa.service';
-import { CreateFaDto } from './dto/create-fa.dto';
-import { UpdateFaDto } from './dto/update-fa.dto';
-import { validationDto } from './dto/validation.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/team-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -31,24 +24,31 @@ import {
 } from '@nestjs/swagger';
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
-import { FaResponse, AllFaResponse } from './fa_types';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/team-auth.decorator';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { CreateFaDto } from './dto/create-fa.dto';
+import { FASearchRequestDto } from './dto/faSearchRequest.dto';
+import { UpdateFaDto } from './dto/update-fa.dto';
+import { validationDto } from './dto/validation.dto';
+import { FaService } from './fa.service';
+import { AllFaResponse, FaResponse } from './fa_types';
+import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
+import {
+  ExistingPeriodGearRequestFormRequestDto,
+  GearRequestFormRequestDto,
+  NewPeriodGearRequestFormRequestDto,
+} from './gear-requests/dto/gearRequestFormRequest.dto';
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
 } from './gear-requests/dto/gearRequestResponse.dto';
-import {
-  ExistingPeriodGearRequestFormRequestDto,
-  NewPeriodGearRequestFormRequestDto,
-  GearRequestFormRequestDto,
-} from './gear-requests/dto/gearRequestFormRequest.dto';
+import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import {
   ApprovedGearRequest,
   GearRequestsService,
   GearSeekerType,
 } from './gear-requests/gearRequests.service';
-import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
-import { FASearchRequestDto } from './dto/faSearchRequest.dto';
-import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -158,31 +158,30 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Invalidate a fa',
-    type: Promise<fa | null>,
   })
   //get id and user id from token
   invalidate(
-    @Body() team_id: validationDto,
+    @Body() teamId: validationDto,
     @Param('id', ParseIntPipe) faid: number,
-  ): Promise<fa | null> {
-    return this.faService.invalidatefa(faid, team_id);
+  ): Promise<void> {
+    return this.faService.removeFaValidation(faid, teamId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
   @Post('refuse/:id')
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: 'Refuse a fa',
-    type: Promise<fa | null>,
+    type: Promise<fa>,
   })
   refuse(
     @Request() request: RequestWithUserPayload,
-    @Body() team_id: validationDto,
+    @Body() validationForm: validationDto,
     @Param('id', ParseIntPipe) faid: number,
-  ): Promise<fa | null> {
-    const user_id = request.user.id;
-    return this.faService.refusefa(user_id, faid, team_id);
+  ): Promise<fa> {
+    const userId = request.user.id;
+    return this.faService.refusefa(userId, faid, validationForm);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
