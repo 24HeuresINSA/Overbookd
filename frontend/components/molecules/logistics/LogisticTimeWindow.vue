@@ -77,11 +77,11 @@ export default Vue.extend({
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwners(): boolean {
-      const byMatos = isAnimationValidatedBy(this.mFA, "matos");
-      const byBarrieres = isAnimationValidatedBy(this.mFA, "barrieres");
-      const byElec = isAnimationValidatedBy(this.mFA, "elec");
-
-      return byMatos && byBarrieres && byElec;
+      const logTeamCodes = ["matos", "barrieres", "elec"];
+      const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
+        isAnimationValidatedBy(this.mFA, teamCode)
+      );
+      return teamCodesThatValidatedFA.length === logTeamCodes.length;
     },
     validationStatus(): string {
       const logStatus = [

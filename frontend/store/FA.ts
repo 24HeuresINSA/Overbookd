@@ -428,45 +428,23 @@ export const actions = actionTree(
     },
 
     resetLogValidations: async function ({ dispatch, state }, { author }) {
-      const matosValidated = isAnimationValidatedBy(state.mFA, "matos");
-      const barrieresValidated = isAnimationValidatedBy(state.mFA, "barrieres");
-      const elecValidated = isAnimationValidatedBy(state.mFA, "elec");
+      const logTeamCodes = ["matos", "barrieres", "elec"];
+      const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
+        isAnimationValidatedBy(state.mFA, teamCode)
+      );
+      if (teamCodesThatValidatedFA.length === 0) return;
 
-      if (!matosValidated && !barrieresValidated && !elecValidated) return;
-      let validTeams = "";
+      const teamNamesThatValidatedFA = await Promise.all(
+        teamCodesThatValidatedFA.map(async (teamCode) => {
+          // @ts-ignore
+          const team = this.$accessor.team.getTeamByCode(teamCode);
+          const body: fa_validation_body = { team_id: team.id };
+          await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
+          return team.name;
+        })
+      );
 
-      if (matosValidated) {
-        // @ts-ignore
-        const matosTeam = this.$accessor.team.getTeamByCode("matos");
-        const body: fa_validation_body = {
-          team_id: matosTeam.id,
-        };
-        await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
-        validTeams += matosTeam.name;
-      }
-
-      if (barrieresValidated) {
-        // @ts-ignore
-        const barrieresTeam = this.$accessor.team.getTeamByCode("barrieres");
-        const body: fa_validation_body = {
-          team_id: barrieresTeam.id,
-        };
-        await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
-        if (validTeams !== "" && !elecValidated) validTeams += " et ";
-        else if (validTeams !== "") validTeams += ", ";
-        validTeams += barrieresTeam.name;
-      }
-
-      if (elecValidated) {
-        // @ts-ignore
-        const elecTeam = this.$accessor.team.getTeamByCode("elec");
-        const body: fa_validation_body = {
-          team_id: elecTeam.id,
-        };
-        await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
-        if (validTeams !== "") validTeams += " et ";
-        validTeams += elecTeam.name;
-      }
+      const validTeams = teamNamesThatValidatedFA.join(" et ");
 
       const comment: fa_comments = {
         subject: subject_type.SUBMIT,

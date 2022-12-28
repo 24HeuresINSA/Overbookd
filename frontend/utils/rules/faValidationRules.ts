@@ -230,8 +230,7 @@ export function hasCollaboratorOptionalFieldsFilled(
 function getCollaborator(
   collaborators: fa_collaborators[] | undefined
 ): collaborator | undefined {
-  if (!collaborators || collaborators.length === 0) return undefined;
-  return collaborators[0]?.collaborator;
+  return collaborators?.[0]?.collaborator;
 }
 export function hasCollaboratorErrors(fa: FA): string[] {
   const collaborator = getCollaborator(fa.fa_collaborators);

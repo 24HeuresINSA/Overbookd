@@ -125,7 +125,7 @@
           v-if="mFA.status !== 'VALIDATED'"
           color="warning"
           :disabled="mFA.status !== 'DRAFT' && hasAtLeastOneError"
-          @click="mFA.status === 'DRAFT' ? (validationDialog = true) : submit()"
+          @click="checkBeforeSubmit()"
           >soumettre à validation
         </v-btn>
         <v-btn v-if="mFA.status === 'DRAFT'" @click="saveFA">sauvegarder</v-btn>
@@ -350,6 +350,11 @@ export default Vue.extend({
       await this.$accessor.FA.refuse(payload);
       this.refuseComment = "";
       this.refuseDialog = false;
+    },
+
+    checkBeforeSubmit() {
+      if (this.mFA.status === "DRAFT") return (this.validationDialog = true);
+      this.submit();
     },
 
     submit() {
