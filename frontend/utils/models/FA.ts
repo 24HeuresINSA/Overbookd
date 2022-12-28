@@ -129,7 +129,9 @@ export interface fa_electricity_needs {
   id?: number;
   fa_id: number;
   electricity_type: electricity_type;
+  gear: string;
   power: number;
+  count: number;
   comment?: string;
 }
 

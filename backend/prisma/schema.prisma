@@ -261,7 +261,9 @@ model fa_electricity_needs {
   fa               fa               @relation(fields: [fa_id], references: [id])
   fa_id            Int
   electricity_type electricity_type
+  gear             String           @db.Text
   power            Int
+  count            Int
   comment          String?          @db.Text
 }
 

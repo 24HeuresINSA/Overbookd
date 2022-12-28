@@ -165,6 +165,12 @@ export const mutations = mutationTree(state, {
     mFA.fa_electricity_needs?.push(elecNeed);
   },
 
+  UPDATE_ELECTRICITY_NEED_COUNT({ mFA }, { index, count }) {
+    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
+      mFA.fa_electricity_needs[index].count = Number(count);
+    }
+  },
+
   DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
     if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
       mFA.fa_electricity_needs.splice(index, 1);
@@ -495,6 +501,10 @@ export const actions = actionTree(
 
     addElectricityNeed({ commit }, elecNeed: fa_electricity_needs) {
       commit("ADD_ELECTRICITY_NEED", elecNeed);
+    },
+
+    updateElectricityNeedCount({ commit }, { index, count }) {
+      commit("UPDATE_ELECTRICITY_NEED_COUNT", { index, count });
     },
 
     async deleteElectricityNeed({ commit, state }, index: number) {
