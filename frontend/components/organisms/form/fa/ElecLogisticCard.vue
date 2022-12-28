@@ -9,6 +9,9 @@
       >
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
+          <template #[`item.electricity_type`]="{ item }">
+            {{ getElectricityTypeLabel(item.electricity_type) }}
+          </template>
           <template #[`item.count`]="{ index, item }">
             <v-text-field
               :value="item.count ? item.count : '1'"
@@ -48,7 +51,9 @@
               v-model="newElectricityNeed.electricity_type"
               type="select"
               label="Type de prise*"
-              :items="electricityType"
+              :items="elecTypeLabels"
+              item-value="type"
+              item-text="label"
               dense
               required
             ></v-select>
@@ -96,6 +101,28 @@ const headers = [
   { text: "Action", value: "action" },
 ];
 
+const elecTypeLabels: typeLabel[] = [
+  { type: electricity_type.PC16, label: "Prise classique (PC16)" },
+  { type: electricity_type.P17_16A_MONO, label: "16A Mono (P17_16A_MONO)" },
+  { type: electricity_type.P17_16A_TRI, label: "16A Tri (P17_16A_TRI)" },
+  { type: electricity_type.P17_16A_TETRA, label: "16A Tetra (P17_16A_TETRA)" },
+  { type: electricity_type.P17_32A_MONO, label: "32A Mono (P17_32A_MONO)" },
+  { type: electricity_type.P17_32A_TRI, label: "32A Tri (P17_32A_TRI)" },
+  { type: electricity_type.P17_32A_TETRA, label: "32A Tetra (P17_32A_TETRA)" },
+  { type: electricity_type.P17_63A_MONO, label: "63A Mono (P17_63A_MONO)" },
+  { type: electricity_type.P17_63A_TRI, label: "63A Tri (P17_63A_TRI)" },
+  { type: electricity_type.P17_63A_TETRA, label: "63A Tetra (P17_63A_TETRA)" },
+  {
+    type: electricity_type.P17_125A_TETRA,
+    label: "125A Tetra (P17_125A_TETRA)",
+  },
+];
+
+interface typeLabel {
+  type: electricity_type;
+  label: string;
+}
+
 export default Vue.extend({
   name: "ElecLogisticCard",
   props: {
@@ -106,6 +133,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers,
+    elecTypeLabels,
     isElectricityNeedDialogOpen: false,
     newElectricityNeed: {
       electricity_type: "",
@@ -127,6 +155,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    getElectricityTypeLabel(type: electricity_type): string {
+      return elecTypeLabels.find((label) => label.type === type)?.label || "";
+    },
     addElectricityNeed() {
       const { comment, ...rest } = this.newElectricityNeed;
       const isFormValid = Object.values(rest).every((value) => value !== "");
