@@ -23,28 +23,20 @@ export class FaElectricityNeedsService {
     faID: number,
     createFaElectricityNeedDto: CreateFaElectricityNeedDto[],
   ): Promise<fa_electricity_needs[] | null> {
-    return Promise.all(
-      createFaElectricityNeedDto.map(async (elecneeds) => {
-        if (elecneeds.id) {
-          return await this.prisma.fa_electricity_needs.update({
-            where: {
-              id: elecneeds.id,
-            },
-            data: {
-              ...elecneeds,
-              fa_id: faID,
-            },
-          });
-        } else {
-          return await this.prisma.fa_electricity_needs.create({
-            data: {
-              fa_id: faID,
-              ...elecneeds,
-            },
-          });
-        }
-      }),
-    );
+    const operations = createFaElectricityNeedDto.map((elecneeds) => {
+      const data = {
+        ...elecneeds,
+        fa_id: faID,
+      };
+      return this.prisma.fa_electricity_needs.upsert({
+        where: {
+          id: elecneeds.id,
+        },
+        update: data,
+        create: data,
+      });
+    });
+    return this.prisma.$transaction(operations);
   }
 
   async remove(id: number): Promise<fa_electricity_needs> {

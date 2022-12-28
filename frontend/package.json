@@ -1,7 +1,7 @@
 {
   "name": "overbookd",
-  "version": "1.3.1-rc.0",
-  "description": "Frontend pour le logiciel de gestion du festival des 24 heures de l'INSA",
+  "version": "1.3.1-rc.2",
+  "description": "Frontend pour le logiciel de gestion du festivale des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",

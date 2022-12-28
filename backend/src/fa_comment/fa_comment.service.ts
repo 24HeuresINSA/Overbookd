@@ -38,29 +38,20 @@ export class FaCommentService {
     faID: number,
     createFaCommentDto: CreateFaCommentDto[],
   ): Promise<EnrichedFAComments[] | null> {
-    return Promise.all(
-      createFaCommentDto.map(async (faComment) => {
-        if (faComment.id) {
-          return await this.prisma.fa_comments.update({
-            where: {
-              id: faComment.id,
-            },
-            data: {
-              ...faComment,
-              fa_id: faID,
-            },
-            select: this.SELECT_COMMENT,
-          });
-        } else {
-          return await this.prisma.fa_comments.create({
-            data: {
-              ...faComment,
-              fa_id: faID,
-            },
-            select: this.SELECT_COMMENT,
-          });
-        }
-      }),
-    );
+    const operations = createFaCommentDto.map((faComment) => {
+      const data = {
+        ...faComment,
+        fa_id: faID,
+      };
+      return this.prisma.fa_comments.upsert({
+        where: {
+          id: faComment.id || 0,
+        },
+        update: data,
+        create: data,
+        select: this.SELECT_COMMENT,
+      });
+    });
+    return this.prisma.$transaction(operations);
   }
 }
