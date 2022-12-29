@@ -78,10 +78,11 @@ export default Vue.extend({
     h2 {
       flex: 1;
       text-align: center;
+      font-size: 1.5rem;
     }
   }
   &__statement {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   .close-btn {
     position: absolute;

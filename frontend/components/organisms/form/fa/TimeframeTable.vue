@@ -63,7 +63,7 @@
         title="Es-tu sûr de supprimer ce créneau MATOS ?"
         message="Confirmer cette modification annulera les validations des orgas Matos, Barrieres et Elec 😠"
         @close-dialog="isConfirmationDialogOpen = false"
-        @confirm="deleteTimeframe"
+        @confirm="resetLogValidations"
       />
     </v-dialog>
   </div>
@@ -87,6 +87,7 @@ import {
   time_windows_type,
 } from "~/utils/models/FA";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 
 interface IdentifiableTimeWindow extends time_windows {
   key: string;
@@ -94,7 +95,12 @@ interface IdentifiableTimeWindow extends time_windows {
 
 export default Vue.extend({
   name: "TimeframeTable",
-  components: { TimeframeCalendar, TimeframeForm, CardErrorList },
+  components: {
+    TimeframeCalendar,
+    TimeframeForm,
+    CardErrorList,
+    ConfirmationMessage,
+  },
   data: () => ({
     animOwner: "humain",
     matosOwners: ["matos", "barrieres", "elec"],
@@ -178,7 +184,11 @@ export default Vue.extend({
       this.selectedTimeWindow = timeWindow;
 
       if (!shouldAskConfirmation) return this.deleteTimeframe();
+      this.isConfirmationDialogOpen = true;
+    },
+    resetLogValidations() {
       this.$accessor.FA.resetLogValidations({ author: this.me });
+      this.deleteTimeframe();
     },
     deleteTimeframe() {
       if (this.selectedTimeWindow?.type === time_windows_type.ANIM) {

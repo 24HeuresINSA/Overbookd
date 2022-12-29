@@ -163,12 +163,12 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="showConfirmationMessage" max-width="600px">
+    <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
       <ConfirmationMessage
         title="Es-tu sûr de modifier ce créneau MATOS ?"
         message="Confirmer cette modification annulera les validations des orgas Matos, Barrieres et Elec 😠"
-        @close-dialog="showConfirmationMessage = false"
-        @confirm="editTimeframe"
+        @close-dialog="isConfirmationDialogOpen = false"
+        @confirm="resetLogValidations"
       />
     </v-dialog>
   </div>
@@ -216,7 +216,7 @@ export default Vue.extend({
     menuDateEnd: false,
     menuTimeEnd: false,
 
-    showConfirmationMessage: false,
+    isConfirmationDialogOpen: false,
   }),
   computed: {
     mFA(): FA {
@@ -346,12 +346,7 @@ export default Vue.extend({
         isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
 
       if (!shouldAskConfirmation) return this.editTimeframe();
-      this.showConfirmationMessage = true;
-      /*return confirm(
-        "Es-tu sûr de modifier ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
-      )
-        ? this.resetLogValidations()
-        : this.$emit("close");*/
+      this.isConfirmationDialogOpen = true;
     },
     resetLogValidations() {
       this.$accessor.FA.resetLogValidations({ author: this.me });
