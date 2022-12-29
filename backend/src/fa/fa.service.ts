@@ -120,12 +120,7 @@ export class FaService {
     await this.isUserValidator(user_id, team_id);
     await this.isFaExist(fa_id);
 
-    await this.prisma.fa_validation.deleteMany({
-      where: {
-        fa_id: fa_id,
-        team_id: team_id,
-      },
-    });
+    await this.deleteManyFaValidation(fa_id, team_id);
   }
 
   async refusefa(
@@ -137,21 +132,14 @@ export class FaService {
     await this.isUserValidator(user_id, team_id);
     await this.isFaExist(fa_id);
 
-    await this.prisma.$transaction([
-      this.prisma.fa_refuse.create({
-        data: {
-          fa_id: fa_id,
-          team_id: team_id,
-          user_id: user_id,
-        },
-      }),
-      this.prisma.fa_validation.deleteMany({
-        where: {
-          fa_id: fa_id,
-          team_id: team_id,
-        },
-      }),
-    ]);
+    await this.prisma.fa_refuse.create({
+      data: {
+        fa_id: fa_id,
+        team_id: team_id,
+        user_id: user_id,
+      },
+    });
+    await this.deleteManyFaValidation(fa_id, team_id);
   }
 
   private async isFaExist(fa_id: number): Promise<void> {
@@ -192,5 +180,17 @@ export class FaService {
       throw new UnauthorizedException(
         `Team with id ${team_id} is not a validator`,
       );
+  }
+
+  private async deleteManyFaValidation(
+    fa_id: number,
+    team_id: number,
+  ): Promise<void> {
+    await this.prisma.fa_validation.deleteMany({
+      where: {
+        fa_id: fa_id,
+        team_id: team_id,
+      },
+    });
   }
 }
