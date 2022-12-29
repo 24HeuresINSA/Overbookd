@@ -138,48 +138,48 @@ export class FaController {
   @Roles('orga')
   @Post('validate/:id')
   @ApiResponse({
-    status: 201,
+    status: 204,
     description: 'Validate a fa',
-    type: Promise<fa | null>,
   })
   //get id and user id from token
   validate(
     @Request() request: RequestWithUserPayload,
     @Body() team_id: validationDto,
     @Param('id', ParseIntPipe) faid: number,
-  ): Promise<fa | null> {
+  ): Promise<void> {
     const user_id = request.user.id;
     return this.faService.validatefa(user_id, faid, team_id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('invalidate/:id')
+  @Post('remove-validation/:id')
   @ApiResponse({
     status: 204,
-    description: 'Invalidate a fa',
+    description: 'Remove a validation of fa',
   })
   //get id and user id from token
-  invalidate(
+  removeValidation(
+    @Request() request: RequestWithUserPayload,
     @Body() teamId: validationDto,
     @Param('id', ParseIntPipe) faid: number,
   ): Promise<void> {
-    return this.faService.removeFaValidation(faid, teamId);
+    const userId = request.user.id;
+    return this.faService.removeFaValidation(userId, faid, teamId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
   @Post('refuse/:id')
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Refuse a fa',
-    type: Promise<fa>,
   })
   refuse(
     @Request() request: RequestWithUserPayload,
     @Body() validationForm: validationDto,
     @Param('id', ParseIntPipe) faid: number,
-  ): Promise<fa> {
+  ): Promise<void> {
     const userId = request.user.id;
     return this.faService.refusefa(userId, faid, validationForm);
   }

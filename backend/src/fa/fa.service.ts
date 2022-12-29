@@ -88,13 +88,11 @@ export class FaService {
     user_id: number,
     fa_id: number,
     body: validationDto,
-  ): Promise<fa | null> {
+  ): Promise<void> {
     const team_id = body.team_id;
     await this.isUserValidator(user_id, team_id);
-    const fa = await this.prisma.fa.findUnique({
-      where: { id: Number(fa_id) },
-    });
-    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    await this.isFaExist(fa_id);
+
     //add the user validation
     await this.prisma.$transaction([
       this.prisma.fa_validation.create({
@@ -111,15 +109,17 @@ export class FaService {
         },
       }),
     ]);
-    return fa;
   }
 
-  async removeFaValidation(fa_id: number, body: validationDto): Promise<void> {
+  async removeFaValidation(
+    user_id: number,
+    fa_id: number,
+    body: validationDto,
+  ): Promise<void> {
     const team_id = body.team_id;
-    const fa = await this.prisma.fa.findUnique({
-      where: { id: Number(fa_id) },
-    });
-    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    await this.isUserValidator(user_id, team_id);
+    await this.isFaExist(fa_id);
+
     await this.prisma.fa_validation.deleteMany({
       where: {
         fa_id: fa_id,
@@ -132,13 +132,11 @@ export class FaService {
     user_id: number,
     fa_id: number,
     body: validationDto,
-  ): Promise<fa | null> {
+  ): Promise<void> {
     const team_id = body.team_id;
     await this.isUserValidator(user_id, team_id);
-    const fa = await this.prisma.fa.findUnique({
-      where: { id: fa_id },
-    });
-    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    await this.isFaExist(fa_id);
+
     await this.prisma.$transaction([
       this.prisma.fa_refuse.create({
         data: {
@@ -154,8 +152,13 @@ export class FaService {
         },
       }),
     ]);
+  }
 
-    return fa;
+  private async isFaExist(fa_id: number): Promise<void> {
+    const fa = await this.prisma.fa.findUnique({
+      where: { id: fa_id },
+    });
+    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
   }
 
   private async isUserValidator(

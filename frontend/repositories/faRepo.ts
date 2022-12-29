@@ -116,8 +116,8 @@ export default {
     return context.$axios.post(resource + `/validate/${id}`, body);
   },
 
-  invalidateFA(context: Context, id: number, body: fa_validation_body) {
-    return context.$axios.post(resource + `/invalidate/${id}`, body);
+  removeFaValidation(context: Context, id: number, body: fa_validation_body) {
+    return context.$axios.post(resource + `/remove-validation/${id}`, body);
   },
 
   refuseFA(context: Context, id: number, body: fa_validation_body) {

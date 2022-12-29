@@ -439,13 +439,12 @@ export const actions = actionTree(
           // @ts-ignore
           const team = this.$accessor.team.getTeamByCode(teamCode);
           const body: fa_validation_body = { team_id: team.id };
-          await RepoFactory.faRepo.invalidateFA(this, state.mFA.id, body);
+          await RepoFactory.faRepo.removeFaValidation(this, state.mFA.id, body);
           return team.name;
         })
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
-
       const comment: fa_comments = {
         subject: subject_type.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,

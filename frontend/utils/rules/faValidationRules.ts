@@ -218,7 +218,7 @@ export function hasCollaboratorOptionalFieldsFilled(
   const hasOptionalFieldsFilled = Boolean(email && company);
   return (
     hasOptionalFieldsFilled ||
-    "Les informations du prestataire sont incomplètes."
+    "Les informations optionnelles du prestataire sont incomplètes."
   );
 }
 function getCollaborator(
