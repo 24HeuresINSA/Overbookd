@@ -58,6 +58,14 @@
         @close="isEditDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
+    <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
+      <ConfirmationMessage
+        title="Es-tu sûr de supprimer ce créneau MATOS ?"
+        message="Confirmer cette modification annulera les validations des orgas Matos, Barrieres et Elec 😠"
+        @close-dialog="isConfirmationDialogOpen = false"
+        @confirm="deleteTimeframe"
+      />
+    </v-dialog>
   </div>
 </template>
 
@@ -99,6 +107,8 @@ export default Vue.extend({
     ],
     isAddDialogOpen: false,
     isEditDialogOpen: false,
+    isConfirmationDialogOpen: false,
+
     editIndex: null as number | null,
     selectedTimeWindow: null as IdentifiableTimeWindow | null,
   }),
@@ -165,25 +175,20 @@ export default Vue.extend({
       const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
       const shouldAskConfirmation =
         isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
+      this.selectedTimeWindow = timeWindow;
 
-      if (!shouldAskConfirmation) return this.deleteTimeframe(timeWindow);
-      return confirm(
-        "Es-tu sûr de supprimer ce créneau matos ? Cela annulera les validations des orgas Matos, Barrieres et Elec."
-      )
-        ? this.resetLogValidations(timeWindow)
-        : this.$emit("close-dialog");
-    },
-    resetLogValidations(timeWindow: IdentifiableTimeWindow) {
+      if (!shouldAskConfirmation) return this.deleteTimeframe();
       this.$accessor.FA.resetLogValidations({ author: this.me });
-      this.deleteTimeframe(timeWindow);
     },
-    deleteTimeframe(timeWindow: IdentifiableTimeWindow) {
-      if (timeWindow.type === time_windows_type.ANIM) {
-        const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
+    deleteTimeframe() {
+      if (this.selectedTimeWindow?.type === time_windows_type.ANIM) {
+        const index = this.retrieveAnimationTimeWindowIndex(
+          this.selectedTimeWindow
+        );
         return this.$accessor.FA.deleteTimeWindow(index);
       }
       return this.$accessor.FA.removeGearRequestRentalPeriod(
-        timeWindow as Period
+        this.selectedTimeWindow as Period
       );
     },
     addTimeWindow(timeWindow: time_windows) {

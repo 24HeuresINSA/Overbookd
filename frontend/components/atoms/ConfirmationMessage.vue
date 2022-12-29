@@ -4,22 +4,24 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
     <v-card-title class="confirmation__title">
-      <h2><slot name="title">Confirmation</slot></h2>
+      <h2>
+        <slot name="title">{{ title }}</slot>
+      </h2>
     </v-card-title>
     <v-card-text>
       <p class="confirmation__statement">
-        <slot name="statement"> Vous etes sur le point de confirmer </slot>
+        <slot name="statement">{{ message }}</slot>
       </p>
       <div class="btn-group">
+        <v-btn :color="abortColor" dark large @click="closeDialog">
+          <slot name="abort-btn-content"
+            ><v-icon left> mdi-close-circle-outline </v-icon>Annuler</slot
+          >
+        </v-btn>
         <v-btn :color="confirmColor" dark large @click="confirm">
           <slot name="confirm-btn-content">
             <v-icon left> mdi-checkbox-marked-circle-outline </v-icon
             >Confirmer</slot
-          >
-        </v-btn>
-        <v-btn :color="abortColor" dark large @click="closeDialog">
-          <slot name="abort-btn-content"
-            ><v-icon left> mdi-close-circle-outline </v-icon>Annuler</slot
           >
         </v-btn>
       </div>
@@ -33,6 +35,14 @@ import Vue from "vue";
 export default Vue.extend({
   name: "ConfirmamtionMessage",
   props: {
+    title: {
+      type: String,
+      default: () => "Confirmation",
+    },
+    message: {
+      type: String,
+      default: () => "Vous êtes sur le point de confirmer",
+    },
     confirmColor: {
       type: String,
       default: () => "success",
