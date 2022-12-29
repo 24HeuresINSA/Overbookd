@@ -12,25 +12,10 @@
           <template #[`item.electricity_type`]="{ item }">
             {{ getElectricityTypeLabel(item.electricity_type) }}
           </template>
-          <template #[`item.device`]="{ index, item }">
-            <v-text-field
-              :value="item.device"
-              label="Appareil"
-              :disabled="isDisabled"
-              @change="updateElectricityNeedCount(index, $event)"
-            ></v-text-field>
-          </template>
-          <template #[`item.count`]="{ index, item }">
-            <v-text-field
-              :value="item.count ? item.count : '1'"
-              label="Nombre"
-              type="number"
-              :rules="[rules.number, rules.min]"
-              :disabled="isDisabled"
-              @change="updateElectricityNeedCount(index, $event)"
-            ></v-text-field>
-          </template>
-          <template #[`item.action`]="{ index }">
+          <template #[`item.action`]="{ index, item }">
+            <v-btn v-if="!isDisabled" icon @click="openUpdateModal(item)">
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
             <v-btn
               v-if="!isDisabled"
               icon
@@ -43,58 +28,36 @@
       </v-card-text>
       <v-card-actions v-if="!isDisabled">
         <v-spacer></v-spacer>
-        <v-btn text @click="isElectricityNeedDialogOpen = true"
+        <v-btn text @click="isAddDialogOpen = true"
           >Ajouter un besoin élec</v-btn
         >
       </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="isElectricityNeedDialogOpen" max-width="600">
-      <v-card class="pt-3">
-        <v-img src="/img/log/plugs.png"></v-img>
-        <v-card-title>Ajouter un besoin d'électricité</v-card-title>
-        <v-card-text>
-          <v-form>
-            <v-select
-              v-model="newElectricityNeed.electricity_type"
-              type="select"
-              label="Type de prise*"
-              :items="elecTypeLabels"
-              item-value="type"
-              item-text="label"
-            ></v-select>
-
-            <v-text-field
-              v-model="newElectricityNeed.device"
-              label="Appareil*"
-            ></v-text-field>
-
-            <v-text-field
-              v-model="newElectricityNeed.power"
-              type="number"
-              label="Puissance/appareil*"
-              :rules="[rules.number, rules.min]"
-            ></v-text-field>
-
-            <v-text-field
-              v-model="newElectricityNeed.comment"
-              label="Commentaire"
-            ></v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="addElectricityNeed">Ajouter</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="isAddDialogOpen" max-width="600">
+      <ElecLogisticForm
+        @change="addElectricityNeed"
+        @close-dialog="isAddDialogOpen = false"
+      ></ElecLogisticForm>
+    </v-dialog>
+    <v-dialog v-model="isEditDialogOpen" max-width="600">
+      <ElecLogisticForm
+        v-model="selectedElectricityNeed"
+        @change="updateElectricityNeed"
+        @close-dialog="isEditDialogOpen = false"
+      ></ElecLogisticForm>
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { electricity_type, fa_electricity_needs } from "~/utils/models/FA";
-import { isNumber, min } from "~/utils/rules/inputRules";
+import {
+  electricity_type,
+  electricity_type_label,
+  fa_electricity_needs,
+} from "~/utils/models/FA";
+import ElecLogisticForm from "~/components/molecules/logistics/ElecLogisticForm.vue";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },
@@ -105,30 +68,13 @@ const headers = [
   { text: "Action", value: "action" },
 ];
 
-const elecTypeLabels: typeLabel[] = [
-  { type: electricity_type.PC16, label: "Prise classique (PC16)" },
-  { type: electricity_type.P17_16A_MONO, label: "16A Mono (P17_16A_MONO)" },
-  { type: electricity_type.P17_16A_TRI, label: "16A Tri (P17_16A_TRI)" },
-  { type: electricity_type.P17_16A_TETRA, label: "16A Tetra (P17_16A_TETRA)" },
-  { type: electricity_type.P17_32A_MONO, label: "32A Mono (P17_32A_MONO)" },
-  { type: electricity_type.P17_32A_TRI, label: "32A Tri (P17_32A_TRI)" },
-  { type: electricity_type.P17_32A_TETRA, label: "32A Tetra (P17_32A_TETRA)" },
-  { type: electricity_type.P17_63A_MONO, label: "63A Mono (P17_63A_MONO)" },
-  { type: electricity_type.P17_63A_TRI, label: "63A Tri (P17_63A_TRI)" },
-  { type: electricity_type.P17_63A_TETRA, label: "63A Tetra (P17_63A_TETRA)" },
-  {
-    type: electricity_type.P17_125A_TETRA,
-    label: "125A Tetra (P17_125A_TETRA)",
-  },
-];
-
-interface typeLabel {
-  type: electricity_type;
-  label: string;
+interface IdentifiableElectricityNeed extends fa_electricity_needs {
+  key: string;
 }
 
 export default Vue.extend({
   name: "ElecLogisticCard",
+  components: { ElecLogisticForm },
   props: {
     isDisabled: {
       type: Boolean,
@@ -137,76 +83,67 @@ export default Vue.extend({
   },
   data: () => ({
     headers,
-    elecTypeLabels,
-    isElectricityNeedDialogOpen: false,
-    newElectricityNeed: {
-      electricity_type: "",
-      device: "",
-      power: "",
-      comment: "",
-    },
-    rules: {
-      number: isNumber,
-      min: min(1),
-    },
+    isAddDialogOpen: false,
+    isEditDialogOpen: false,
+
+    selectedElectricityNeed: null as IdentifiableElectricityNeed | null,
   }),
   computed: {
     electricityNeeds(): any {
       return this.$accessor.FA.mFA.fa_electricity_needs;
     },
-    electricityType(): Array<string> {
-      return Object.values(electricity_type);
+    electricityTypeLabels(): any[] {
+      const elecTypeLabels = Object.keys(electricity_type_label).map((type) => {
+        return {
+          type,
+          label:
+            electricity_type_label[type as keyof typeof electricity_type_label],
+        };
+      });
+      return elecTypeLabels;
     },
   },
   methods: {
     getElectricityTypeLabel(type: electricity_type): string {
-      return elecTypeLabels.find((label) => label.type === type)?.label || "";
-    },
-    addElectricityNeed() {
-      const { comment, ...rest } = this.newElectricityNeed;
-      const isFormValid = Object.values(rest).every((value) => value !== "");
-      if (!isFormValid) {
-        return this.$store.dispatch("notif/pushNotification", {
-          type: "error",
-          message: "❌ Les champs avec * sont obligatoires !",
-        });
-      }
-
-      this.newElectricityNeed.power = this.newElectricityNeed.power.replace(
-        ",",
-        "."
+      return (
+        this.electricityTypeLabels.find((label) => label.type === type)
+          ?.label || ""
       );
-
-      const newElecNeed: fa_electricity_needs = {
-        fa_id: +this.$route.params.fa,
-        electricity_type: this.newElectricityNeed
-          .electricity_type as electricity_type,
-        device: this.newElectricityNeed.device,
-        power: +this.newElectricityNeed.power,
-        count: 1,
-        comment: this.newElectricityNeed.comment,
-      };
-
-      this.$accessor.FA.addElectricityNeed(newElecNeed);
-      this.isElectricityNeedDialogOpen = false;
-      this.newElectricityNeed = {
-        electricity_type: "",
-        device: "",
-        power: "",
-        comment: "",
-      };
+    },
+    openUpdateModal(elecNeed: IdentifiableElectricityNeed) {
+      this.selectedElectricityNeed = elecNeed;
+      this.isEditDialogOpen = true;
+    },
+    addElectricityNeed(elecNeed: fa_electricity_needs) {
+      elecNeed.fa_id = +this.$route.params.fa;
+      this.$accessor.FA.addElectricityNeed(elecNeed);
+    },
+    updateElectricityNeed(elecNeed: fa_electricity_needs) {
+      if (!this.selectedElectricityNeed) return;
+      const index = this.retrieveElectricityNeedIndex(
+        this.selectedElectricityNeed
+      );
+      console.log(elecNeed);
+      this.$accessor.FA.updateElectricityNeed({ index, elecNeed });
+    },
+    retrieveElectricityNeedIndex(elecNeed: IdentifiableElectricityNeed) {
+      return elecNeed.id
+        ? this.findElectricityNeedIndexById(elecNeed.id)
+        : this.destructElectricityNeedKeyToFindIndex(elecNeed!);
+    },
+    findElectricityNeedIndexById(eleNeedId: number): number {
+      return this.$accessor.FA.mFA.fa_electricity_needs!.findIndex(
+        (en) => en.id === eleNeedId
+      );
+    },
+    destructElectricityNeedKeyToFindIndex(
+      elecNeed: IdentifiableElectricityNeed
+    ): number {
+      return parseInt(elecNeed.key.split("_")[1]);
     },
 
-    updateElectricityNeedDevice(index: number, device: string) {
-      this.$accessor.FA.updateElectricityNeedDevice({ index, device });
-    },
-
-    updateElectricityNeedCount(index: number, count: number) {
-      this.$accessor.FA.updateElectricityNeedCount({ index, count });
-    },
-
-    async deleteElectricityNeed(index: number) {
-      await this.$accessor.FA.deleteElectricityNeed(index);
+    deleteElectricityNeed(index: number) {
+      this.$accessor.FA.deleteElectricityNeed(index);
     },
   },
 });

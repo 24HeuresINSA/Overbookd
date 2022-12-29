@@ -165,15 +165,14 @@ export const mutations = mutationTree(state, {
     mFA.fa_electricity_needs?.push(elecNeed);
   },
 
-  UPDATE_ELECTRICITY_NEED_DEVICE({ mFA }, { index, count }) {
+  UPDATE_ELECTRICITY_NEED({ mFA }, { index, elecNeed }) {
     if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
-      mFA.fa_electricity_needs[index].count = Number(count);
-    }
-  },
-
-  UPDATE_ELECTRICITY_NEED_COUNT({ mFA }, { index, count }) {
-    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
-      mFA.fa_electricity_needs[index].count = Number(count);
+      mFA.fa_electricity_needs[index].electricity_type =
+        elecNeed.electricity_type;
+      mFA.fa_electricity_needs[index].device = elecNeed.device;
+      mFA.fa_electricity_needs[index].power = elecNeed.power;
+      mFA.fa_electricity_needs[index].count = elecNeed.count;
+      mFA.fa_electricity_needs[index].comment = elecNeed.comment;
     }
   },
 
@@ -509,12 +508,8 @@ export const actions = actionTree(
       commit("ADD_ELECTRICITY_NEED", elecNeed);
     },
 
-    updateElectricityNeedDevice({ commit }, { index, count }) {
-      commit("UPDATE_ELECTRICITY_NEED_DEVICE", { index, count });
-    },
-
-    updateElectricityNeedCount({ commit }, { index, count }) {
-      commit("UPDATE_ELECTRICITY_NEED_COUNT", { index, count });
+    updateElectricityNeed({ commit }, { index, elecNeed }) {
+      commit("UPDATE_ELECTRICITY_NEED", { index, elecNeed });
     },
 
     async deleteElectricityNeed({ commit, state }, index: number) {
