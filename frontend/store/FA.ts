@@ -165,6 +165,12 @@ export const mutations = mutationTree(state, {
     mFA.fa_electricity_needs?.push(elecNeed);
   },
 
+  UPDATE_ELECTRICITY_NEED_DEVICE({ mFA }, { index, count }) {
+    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
+      mFA.fa_electricity_needs[index].count = Number(count);
+    }
+  },
+
   UPDATE_ELECTRICITY_NEED_COUNT({ mFA }, { index, count }) {
     if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
       mFA.fa_electricity_needs[index].count = Number(count);
@@ -368,7 +374,7 @@ export const actions = actionTree(
           faId: state.mFA.id,
         };
         allPromise.push(
-          RepoFactory.faRepo.updatePubishAnimation(
+          RepoFactory.faRepo.updatePublishAnimation(
             this,
             publishAnimation.faId,
             publishAnimation
@@ -501,6 +507,10 @@ export const actions = actionTree(
 
     addElectricityNeed({ commit }, elecNeed: fa_electricity_needs) {
       commit("ADD_ELECTRICITY_NEED", elecNeed);
+    },
+
+    updateElectricityNeedDevice({ commit }, { index, count }) {
+      commit("UPDATE_ELECTRICITY_NEED_DEVICE", { index, count });
     },
 
     updateElectricityNeedCount({ commit }, { index, count }) {

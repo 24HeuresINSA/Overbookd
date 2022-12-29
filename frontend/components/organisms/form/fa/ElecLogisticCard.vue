@@ -12,6 +12,14 @@
           <template #[`item.electricity_type`]="{ item }">
             {{ getElectricityTypeLabel(item.electricity_type) }}
           </template>
+          <template #[`item.device`]="{ index, item }">
+            <v-text-field
+              :value="item.device"
+              label="Appareil"
+              :disabled="isDisabled"
+              @change="updateElectricityNeedCount(index, $event)"
+            ></v-text-field>
+          </template>
           <template #[`item.count`]="{ index, item }">
             <v-text-field
               :value="item.count ? item.count : '1'"
@@ -36,14 +44,14 @@
       <v-card-actions v-if="!isDisabled">
         <v-spacer></v-spacer>
         <v-btn text @click="isElectricityNeedDialogOpen = true"
-          >Ajouter un besoin</v-btn
+          >Ajouter un besoin élec</v-btn
         >
       </v-card-actions>
     </v-card>
 
     <v-dialog v-model="isElectricityNeedDialogOpen" max-width="600">
-      <v-card>
-        <v-img src="/img/log/plugs.jpeg"></v-img>
+      <v-card class="pt-3">
+        <v-img src="/img/log/plugs.png"></v-img>
         <v-card-title>Ajouter un besoin d'électricité</v-card-title>
         <v-card-text>
           <v-form>
@@ -54,14 +62,11 @@
               :items="elecTypeLabels"
               item-value="type"
               item-text="label"
-              dense
-              required
             ></v-select>
 
             <v-text-field
-              v-model="newElectricityNeed.gear"
+              v-model="newElectricityNeed.device"
               label="Appareil*"
-              required
             ></v-text-field>
 
             <v-text-field
@@ -69,7 +74,6 @@
               type="number"
               label="Puissance/appareil*"
               :rules="[rules.number, rules.min]"
-              required
             ></v-text-field>
 
             <v-text-field
@@ -94,7 +98,7 @@ import { isNumber, min } from "~/utils/rules/inputRules";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },
-  { text: "Appareil", value: "gear" },
+  { text: "Appareil", value: "device" },
   { text: "Puissance/appareil", value: "power" },
   { text: "Nombre", value: "count" },
   { text: "Commentaire", value: "comment" },
@@ -137,7 +141,7 @@ export default Vue.extend({
     isElectricityNeedDialogOpen: false,
     newElectricityNeed: {
       electricity_type: "",
-      gear: "",
+      device: "",
       power: "",
       comment: "",
     },
@@ -177,7 +181,7 @@ export default Vue.extend({
         fa_id: +this.$route.params.fa,
         electricity_type: this.newElectricityNeed
           .electricity_type as electricity_type,
-        gear: this.newElectricityNeed.gear,
+        device: this.newElectricityNeed.device,
         power: +this.newElectricityNeed.power,
         count: 1,
         comment: this.newElectricityNeed.comment,
@@ -187,14 +191,18 @@ export default Vue.extend({
       this.isElectricityNeedDialogOpen = false;
       this.newElectricityNeed = {
         electricity_type: "",
-        gear: "",
+        device: "",
         power: "",
         comment: "",
       };
     },
 
+    updateElectricityNeedDevice(index: number, device: string) {
+      this.$accessor.FA.updateElectricityNeedDevice({ index, device });
+    },
+
     updateElectricityNeedCount(index: number, count: number) {
-      this.$accessor.FA.updateSignaNeedCount({ index, count });
+      this.$accessor.FA.updateElectricityNeedCount({ index, count });
     },
 
     async deleteElectricityNeed(index: number) {

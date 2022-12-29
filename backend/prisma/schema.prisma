@@ -242,8 +242,7 @@ model collaborator {
 
 //A définir correctement plus tard, placeholder pour le moment
 enum electricity_type {
-  PC16_Prise_classique  //A renommer PC16
-  PC16
+  PC16_Prise_classique
   P17_16A_MONO
   P17_16A_TRI
   P17_16A_TETRA
@@ -261,9 +260,9 @@ model fa_electricity_needs {
   fa               fa               @relation(fields: [fa_id], references: [id])
   fa_id            Int
   electricity_type electricity_type
-  gear             String           @db.Text
+  device           String?          @db.Text
   power            Int
-  count            Int
+  count            Int?
   comment          String?          @db.Text
 }
 
