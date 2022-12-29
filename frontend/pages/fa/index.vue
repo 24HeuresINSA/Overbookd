@@ -37,7 +37,7 @@
             </v-list>
             <div v-for="validator of validators" :key="validator.id">
               <v-btn-toggle
-                v-model="filter[validator]"
+                v-model="filter[validator.id]"
                 tile
                 color="deep-purple accent-3"
                 group
@@ -167,6 +167,7 @@
 <script>
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import { Status } from "~/utils/models/FA";
 
 export default {
   name: "Fa",
@@ -275,15 +276,18 @@ export default {
     },
     filterByValidatorStatus(FAs) {
       const filter = this.filter;
-      Object.entries(filter).forEach(([validator, value]) => {
+      Object.entries(filter).forEach(([validatorId, value]) => {
         FAs = FAs.filter((FA) => {
           if (value === true) {
-            return FA.validated.includes(validator);
-          } else if (value === false) {
-            return FA.refused.includes(validator);
-          } else if (value === 2) {
+            return this.isAnimationValidatedBy(FA, validatorId);
+          }
+          if (value === false) {
+            return this.isAnimationRefusedBy(FA, validatorId);
+          }
+          if (value === 2) {
             return (
-              !FA.validated.includes(validator) && FA.status === "SUBMITTED"
+              !this.isAnimationValidatedBy(FA, validatorId) &&
+              FA.status === Status.SUBMITTED
             );
           }
           return true;
@@ -305,6 +309,16 @@ export default {
         return FA;
       });
       return FAs.filter((FA) => FA?.status === s[status]);
+    },
+    isAnimationValidatedBy(FA, validatorId) {
+      return FA.fa_validation.some(
+        (validation) => validation.Team.id === parseInt(validatorId)
+      );
+    },
+    isAnimationRefusedBy(FA, validatorId) {
+      return FA.fa_refuse?.some(
+        (refuse) => refuse.Team.id === parseInt(validatorId)
+      );
     },
     async createNewFA() {
       if (!this.faName) return;
