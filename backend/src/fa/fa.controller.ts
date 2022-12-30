@@ -158,14 +158,13 @@ export class FaController {
     status: 204,
     description: 'Remove a validation of fa',
   })
-  //get id and user id from token
   removeValidation(
     @Request() request: RequestWithUserPayload,
-    @Body() teamId: validationDto,
+    @Body() validationForm: validationDto,
     @Param('id', ParseIntPipe) faid: number,
   ): Promise<void> {
     const userId = request.user.id;
-    return this.faService.removeFaValidation(userId, faid, teamId);
+    return this.faService.removeFaValidation(userId, faid, validationForm);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
