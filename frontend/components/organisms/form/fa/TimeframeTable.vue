@@ -47,7 +47,7 @@
     <v-dialog v-model="isAddDialogOpen" max-width="600">
       <TimeframeForm
         @change="addTimeWindow"
-        @close="isAddDialogOpen = false"
+        @close-dialog="isAddDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
 
@@ -55,16 +55,20 @@
       <TimeframeForm
         v-model="selectedTimeWindow"
         @change="updateTimeWindow"
-        @close="isEditDialogOpen = false"
+        @close-dialog="isEditDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
       <ConfirmationMessage
-        title="Es-tu sûr de supprimer ce créneau MATOS ?"
-        message="Confirmer cette modification annulera les validations des orgas Matos, Barrieres et Elec 😠"
         @close-dialog="isConfirmationDialogOpen = false"
         @confirm="resetLogValidations"
-      />
+      >
+        <template #title> Suppression ce créneau MATOS </template>
+        <template #statement>
+          Confirmer cette suppression annulera les validations des orgas Matos,
+          Barrieres et Elec 😠
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
   </div>
 </template>
@@ -77,8 +81,8 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
   hasAtLeastOneValidation,
+  hasAllValidations,
 } from "~/utils/fa/faUtils";
-import { hasTimeWindowsErrors } from "~/utils/rules/faValidationRules";
 import {
   FA,
   Period,
@@ -143,11 +147,7 @@ export default Vue.extend({
       return isAnimationValidatedBy(this.mFA, this.animOwner);
     },
     isValidatedByMatosOwners(): boolean {
-      const logTeamCodes = ["matos", "barrieres", "elec"];
-      const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
-        isAnimationValidatedBy(this.mFA, teamCode)
-      );
-      return teamCodesThatValidatedFA.length === logTeamCodes.length;
+      return hasAllValidations(this.mFA, this.matosOwners);
     },
     isValidatedByOwners(): boolean {
       return this.isValidatedByAnimOwner && this.isValidatedByMatosOwners;
@@ -155,9 +155,6 @@ export default Vue.extend({
     validationStatus(): string {
       const owners = [...this.matosOwners, this.animOwner];
       return getFAValidationStatus(this.mFA, owners).toLowerCase();
-    },
-    timeWindowsErrors(): string[] {
-      return hasTimeWindowsErrors(this.mFA);
     },
     me(): any {
       return this.$accessor.user.me;
@@ -177,10 +174,9 @@ export default Vue.extend({
       );
     },
     confirmToDeleteTimeframe(timeWindow: IdentifiableTimeWindow) {
-      const logTeamCodes = ["matos", "barrieres", "elec"];
       const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
       const shouldAskConfirmation =
-        isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
+        isMatosTimeframe && hasAtLeastOneValidation(this.mFA, this.matosOwners);
       this.selectedTimeWindow = timeWindow;
 
       if (!shouldAskConfirmation) return this.deleteTimeframe();
@@ -261,9 +257,6 @@ export default Vue.extend({
     isEditable(timeWindow: IdentifiableTimeWindow) {
       if (timeWindow.type === time_windows_type.ANIM) {
         return !this.isValidatedByAnimOwner;
-      }
-      if (timeWindow.type === time_windows_type.MATOS) {
-        return !this.isValidatedByMatosOwners;
       }
       return !this.isValidatedByMatosOwners;
     },

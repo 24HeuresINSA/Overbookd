@@ -165,11 +165,15 @@
     </v-card>
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
       <ConfirmationMessage
-        title="Es-tu sûr de modifier ce créneau MATOS ?"
-        message="Confirmer cette modification annulera les validations des orgas Matos, Barrieres et Elec 😠"
-        @close-dialog="isConfirmationDialogOpen = false"
+        @close-dialog="closeAllDialogs"
         @confirm="resetLogValidations"
-      />
+      >
+        <template #title> Modification du créneau MATOS </template>
+        <template #statement>
+          Confirmer cette modification annulera les validations des orgas Matos,
+          Barrieres et Elec 😠
+        </template></ConfirmationMessage
+      >
     </v-dialog>
   </div>
 </template>
@@ -336,7 +340,7 @@ export default Vue.extend({
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
-      this.$emit("close");
+      this.$emit("close-dialog");
       this.clearLocalVariable();
     },
     confirmToEditTimeframe() {
@@ -356,7 +360,11 @@ export default Vue.extend({
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
-      this.$emit("close");
+      this.$emit("close-dialog");
+    },
+    closeAllDialogs() {
+      this.isConfirmationDialogOpen = false;
+      this.$emit("close-dialog");
     },
     formIsInvalid(): boolean {
       if (

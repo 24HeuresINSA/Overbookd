@@ -5,12 +5,12 @@
     </v-btn>
     <v-card-title class="confirmation__title">
       <h2>
-        <slot name="title">{{ title }}</slot>
+        <slot name="title">Confirmation</slot>
       </h2>
     </v-card-title>
     <v-card-text>
       <p class="confirmation__statement">
-        <slot name="statement">{{ message }}</slot>
+        <slot name="statement">Vous êtes sur le point de confirmer</slot>
       </p>
       <div class="btn-group">
         <v-btn :color="abortColor" dark large @click="closeDialog">
@@ -35,14 +35,6 @@ import Vue from "vue";
 export default Vue.extend({
   name: "ConfirmamtionMessage",
   props: {
-    title: {
-      type: String,
-      default: () => "Confirmation",
-    },
-    message: {
-      type: String,
-      default: () => "Vous êtes sur le point de confirmer",
-    },
     confirmColor: {
       type: String,
       default: () => "success",
@@ -78,7 +70,6 @@ export default Vue.extend({
     h2 {
       flex: 1;
       text-align: center;
-      font-size: 1.5rem;
     }
   }
   &__statement {
