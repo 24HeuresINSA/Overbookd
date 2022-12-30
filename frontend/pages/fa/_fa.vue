@@ -54,7 +54,6 @@
       <ElecLogisticCard id="elec" />
       <WaterLogisticCard id="water" />
       <CommentCard id="comment" />
-      <!-- <FTCard id="ft" /> -->
     </v-container>
     <SnackNotificationContainer />
 
@@ -144,7 +143,7 @@
     <v-dialog v-model="validationDialog" width="600">
       <CheckBeforeSubmitCard
         @close-dialog="validationDialog = false"
-        @submit="submit()"
+        @submit="submit"
       ></CheckBeforeSubmitCard>
     </v-dialog>
 

@@ -52,7 +52,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
-import { FA, Period, Status } from "~/utils/models/FA";
+import { FA, Period } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",
@@ -63,6 +63,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
+    owners: ["matos", "barrieres", "elec"],
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
   }),
@@ -84,28 +85,7 @@ export default Vue.extend({
       return teamCodesThatValidatedFA.length === logTeamCodes.length;
     },
     validationStatus(): string {
-      const logStatus = [
-        getFAValidationStatus(this.mFA, "matos"),
-        getFAValidationStatus(this.mFA, "barrieres"),
-        getFAValidationStatus(this.mFA, "elec"),
-      ];
-
-      const areAllValidated = logStatus.every(
-        (status) => status === Status.VALIDATED
-      );
-      if (areAllValidated) return Status.VALIDATED.toLowerCase();
-
-      const areAllRefused = logStatus.every(
-        (status) => status === Status.REFUSED
-      );
-      if (areAllRefused) return Status.REFUSED.toLowerCase();
-
-      const hasAtLeastOneSubmitted = logStatus.some(
-        (status) => status === Status.SUBMITTED
-      );
-      if (hasAtLeastOneSubmitted) return Status.SUBMITTED.toLowerCase();
-
-      return Status.DRAFT.toLowerCase();
+      return getFAValidationStatus(this.mFA, this.owners).toLowerCase();
     },
   },
   methods: {
