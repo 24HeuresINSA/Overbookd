@@ -150,16 +150,8 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          v-if="timeWindow"
-          color="blue darken-1"
-          text
-          @click="confirmToEditTimeframe"
-        >
-          Modifier
-        </v-btn>
-        <v-btn v-else color="blue darken-1" text @click="addTimeframe">
-          Valider
+        <v-btn color="blue darken-1" text @click="confirmTimeframe">
+          {{ timeWindow ? "Modifier" : "Ajouter" }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -168,10 +160,13 @@
         @close-dialog="closeAllDialogs"
         @confirm="resetLogValidations"
       >
-        <template #title> Modification du créneau MATOS </template>
+        <template #title>
+          {{ timeWindow ? "Modification" : "Ajout" }} du créneau MATOS
+        </template>
         <template #statement>
-          Confirmer cette modification annulera les validations des orgas Matos,
-          Barrieres et Elec 😠
+          Confirmer
+          {{ timeWindow ? "cette modification" : "cet ajout" }} annulera les
+          validations des orgas Matos, Barrieres et Elec 😠
         </template></ConfirmationMessage
       >
     </v-dialog>
@@ -343,7 +338,7 @@ export default Vue.extend({
       this.$emit("close-dialog");
       this.clearLocalVariable();
     },
-    confirmToEditTimeframe() {
+    confirmTimeframe() {
       const logTeamCodes = ["matos", "barrieres", "elec"];
       const isMatosTimeframe = this.type === time_windows_type.MATOS;
       const shouldAskConfirmation =
@@ -354,6 +349,8 @@ export default Vue.extend({
     },
     resetLogValidations() {
       this.$accessor.FA.resetLogValidations({ author: this.me });
+
+      if (this.timeWindow) this.addTimeframe();
       this.editTimeframe();
     },
     editTimeframe() {
