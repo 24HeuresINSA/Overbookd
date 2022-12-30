@@ -132,14 +132,16 @@ export class FaService {
     await this.isUserValidator(user_id, team_id);
     await this.checkFaExistence(fa_id);
 
-    await this.prisma.fa_refuse.create({
-      data: {
-        fa_id: fa_id,
-        team_id: team_id,
-        user_id: user_id,
-      },
-    });
-    await this.removeValidationFromTeam(fa_id, team_id);
+    await this.prisma.$transaction([
+      this.prisma.fa_refuse.create({
+        data: {
+          fa_id: fa_id,
+          team_id: team_id,
+          user_id: user_id,
+        },
+      }),
+      this.removeValidationFromTeam(fa_id, team_id),
+    ]);
   }
 
   private async checkFaExistence(fa_id: number): Promise<void> {
@@ -182,7 +184,7 @@ export class FaService {
       );
   }
 
-  private async removeValidationFromTeam(fa_id: number, team_id: number) {
+  private removeValidationFromTeam(fa_id: number, team_id: number) {
     return this.prisma.fa_validation.deleteMany({
       where: {
         fa_id: fa_id,
