@@ -6,49 +6,49 @@
       <p class="important text-center">
         Tu dois corriger toutes les erreurs pour soumettre ta FA à validation !
       </p>
-      <div v-show="generalErrors.length > 0">
+      <div v-show="hasGeneralErrors">
         <h4>Général</h4>
         <ul>
           <li v-for="label in generalErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="detailErrors.length > 0">
+      <div v-show="hasDetailErrors">
         <h4>Détail</h4>
         <ul>
           <li v-for="label in detailErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="signaErrors.length > 0">
+      <div v-show="hasSignaErrors">
         <h4>Signa</h4>
         <ul>
           <li v-for="label in signaErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="timeWindowsErrors.length > 0">
+      <div v-show="hasTimeWindowsErrors">
         <h4>Créneaux</h4>
         <ul>
           <li v-for="label in timeWindowsErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="securityErrors.length > 0">
+      <div v-show="hasSecurityErrors">
         <h4>Securité</h4>
         <ul>
           <li v-for="label in securityErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="collaboratorErrors.length > 0">
+      <div v-show="hasCollaboratorErrors">
         <h4>Presta</h4>
         <ul>
           <li v-for="label in collaboratorErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="gearRequestErrors.length > 0">
+      <div v-show="hasGearRequestErrors">
         <h4>Logistique</h4>
         <ul>
           <li v-for="label in gearRequestErrors" :key="label">{{ label }}</li>
@@ -66,21 +66,21 @@
         </ul>
       </div>
 
-      <div v-show="signaWarnings.length > 0">
+      <div v-show="hasSignaWarnings">
         <h4>Signa</h4>
         <ul>
           <li v-for="label in signaWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="securityWarnings.length > 0">
+      <div v-show="hasSecurityWarnings">
         <h4>Securité</h4>
         <ul>
           <li v-for="label in securityWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="collaboratorWarnings.length > 0">
+      <div v-show="hasCollaboratorWarnings">
         <h4>Presta</h4>
         <ul>
           <li v-for="label in collaboratorWarnings" :key="label">
@@ -89,21 +89,21 @@
         </ul>
       </div>
 
-      <div v-show="gearRequestWarnings.length > 0">
+      <div v-show="hasGearRequestWarnings">
         <h4>Logistique</h4>
         <ul>
           <li v-for="label in gearRequestWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="elecWarnings.length > 0">
+      <div v-show="hasElecWarnings">
         <h4>Besoin d'électricité</h4>
         <ul>
           <li v-for="label in elecWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="waterWarnings.length > 0">
+      <div v-show="hasWaterWarnings">
         <h4>Besoin d'eau</h4>
         <ul>
           <li v-for="label in waterWarnings" :key="label">{{ label }}</li>
@@ -134,20 +134,20 @@ import Vue from "vue";
 import {
   hasAtLeastOneError,
   hasAtLeastOneWarning,
-  hasGeneralErrors,
-  hasDetailErrors,
-  hasDetailWarnings,
-  hasSignaErrors,
-  hasSignaWarnings,
-  hasTimeWindowsErrors,
-  hasSecurityErrors,
-  hasSecurityWarnings,
-  hasCollaboratorErrors,
-  hasCollaboratorWarnings,
-  hasGearRequestErrors,
-  hasGearRequestWarnings,
-  hasElecWarnings,
-  hasWaterWarnings,
+  generalErrors,
+  detailErrors,
+  detailWarnings,
+  signaErrors,
+  signaWarnings,
+  timeWindowsErrors,
+  securityErrors,
+  securityWarnings,
+  collaboratorErrors,
+  collaboratorWarnings,
+  gearRequestErrors,
+  gearRequestWarnings,
+  elecWarnings,
+  waterWarnings,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -165,54 +165,96 @@ export default Vue.extend({
     },
 
     generalErrors(): string[] {
-      return hasGeneralErrors(this.store.mFA);
+      return generalErrors(this.store.mFA);
+    },
+    hasGeneralErrors(): boolean {
+      return this.generalErrors.length > 0;
     },
 
     detailErrors(): string[] {
-      return hasDetailErrors(this.store.mFA);
+      return detailErrors(this.store.mFA);
+    },
+    hasDetailErrors(): boolean {
+      return this.detailErrors.length > 0;
     },
     detailWarnings(): string[] {
-      return hasDetailWarnings(this.store.mFA);
+      return detailWarnings(this.store.mFA);
+    },
+    hasDetailWarnings(): boolean {
+      return this.detailWarnings.length > 0;
     },
 
     signaErrors(): string[] {
-      return hasSignaErrors(this.store.mFA);
+      return signaErrors(this.store.mFA);
+    },
+    hasSignaErrors(): boolean {
+      return this.signaErrors.length > 0;
     },
     signaWarnings(): string[] {
-      return hasSignaWarnings(this.store.mFA);
+      return signaWarnings(this.store.mFA);
+    },
+    hasSignaWarnings(): boolean {
+      return this.signaWarnings.length > 0;
     },
 
     timeWindowsErrors(): string[] {
-      return hasTimeWindowsErrors(this.store.mFA);
+      return timeWindowsErrors(this.store.mFA);
+    },
+    hasTimeWindowsErrors(): boolean {
+      return this.timeWindowsErrors.length > 0;
     },
 
     securityErrors(): string[] {
-      return hasSecurityErrors(this.store.mFA);
+      return securityErrors(this.store.mFA);
+    },
+    hasSecurityErrors(): boolean {
+      return this.securityErrors.length > 0;
     },
     securityWarnings(): string[] {
-      return hasSecurityWarnings(this.store.mFA);
+      return securityWarnings(this.store.mFA);
+    },
+    hasSecurityWarnings(): boolean {
+      return this.securityWarnings.length > 0;
     },
 
     collaboratorErrors(): string[] {
-      return hasCollaboratorErrors(this.store.mFA);
+      return collaboratorErrors(this.store.mFA);
+    },
+    hasCollaboratorErrors(): boolean {
+      return this.collaboratorErrors.length > 0;
     },
     collaboratorWarnings(): string[] {
-      return hasCollaboratorWarnings(this.store.mFA);
+      return collaboratorWarnings(this.store.mFA);
+    },
+    hasCollaboratorWarnings(): boolean {
+      return this.collaboratorWarnings.length > 0;
     },
 
     gearRequestErrors(): string[] {
-      return hasGearRequestErrors(this.store);
+      return gearRequestErrors(this.store);
+    },
+    hasGearRequestErrors(): boolean {
+      return this.gearRequestErrors.length > 0;
     },
     gearRequestWarnings(): string[] {
-      return hasGearRequestWarnings(this.store);
+      return gearRequestWarnings(this.store);
+    },
+    hasGearRequestWarnings(): boolean {
+      return this.gearRequestWarnings.length > 0;
     },
 
     elecWarnings(): string[] {
-      return hasElecWarnings(this.store.mFA);
+      return elecWarnings(this.store.mFA);
+    },
+    hasElecWarnings(): boolean {
+      return this.elecWarnings.length > 0;
     },
 
     waterWarnings(): string[] {
-      return hasWaterWarnings(this.store.mFA);
+      return waterWarnings(this.store.mFA);
+    },
+    hasWaterWarnings(): boolean {
+      return this.waterWarnings.length > 0;
     },
   },
 });

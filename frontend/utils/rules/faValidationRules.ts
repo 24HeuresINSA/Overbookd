@@ -13,25 +13,25 @@ import {
 
 export function hasAtLeastOneError(store: any) {
   const errors = [
-    ...hasGeneralErrors(store.mFA),
-    ...hasDetailErrors(store.mFA),
-    ...hasSignaErrors(store.mFA),
-    ...hasTimeWindowsErrors(store.mFA),
-    ...hasSecurityErrors(store.mFA),
-    ...hasCollaboratorErrors(store.mFA),
-    ...hasGearRequestErrors(store),
+    ...generalErrors(store.mFA),
+    ...detailErrors(store.mFA),
+    ...signaErrors(store.mFA),
+    ...timeWindowsErrors(store.mFA),
+    ...securityErrors(store.mFA),
+    ...collaboratorErrors(store.mFA),
+    ...gearRequestErrors(store),
   ];
   return errors.length > 0;
 }
 export function hasAtLeastOneWarning(store: any) {
   const warnings = [
-    ...hasDetailWarnings(store.mFA),
-    ...hasSignaWarnings(store.mFA),
-    ...hasSecurityWarnings(store.mFA),
-    ...hasCollaboratorWarnings(store.mFA),
-    ...hasGearRequestWarnings(store),
-    ...hasElecWarnings(store.mFA),
-    ...hasWaterWarnings(store.mFA),
+    ...detailWarnings(store.mFA),
+    ...signaWarnings(store.mFA),
+    ...securityWarnings(store.mFA),
+    ...collaboratorWarnings(store.mFA),
+    ...gearRequestWarnings(store),
+    ...elecWarnings(store.mFA),
+    ...waterWarnings(store.mFA),
   ];
   return warnings.length > 0;
 }
@@ -49,7 +49,7 @@ export function hasTeam(value: number | undefined): string | boolean {
 export function hasInCharge(value: number | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un responsable.";
 }
-export function hasGeneralErrors(fa: FA): string[] {
+export function generalErrors(fa: FA): string[] {
   return [
     hasName(fa.name),
     hasType(fa.type),
@@ -91,14 +91,14 @@ export function isPublishable(
 ): string | boolean {
   return !!value || "L'animation ne sera pas publiée sur le site.";
 }
-export function hasDetailErrors(fa: FA): string[] {
+export function detailErrors(fa: FA): string[] {
   return [
     hasDescriptionToPublish(fa),
     hasPhotoLinkToPublish(fa),
     hasCategoriesToPublish(fa),
   ].filter((error): error is string => error !== true);
 }
-export function hasDetailWarnings(fa: FA): string[] {
+export function detailWarnings(fa: FA): string[] {
   return [
     hasDescription(fa.description),
     isPublishable(fa.faSitePublishAnimation),
@@ -125,13 +125,13 @@ export function hasSignaNeedsWithQuantityHigherThanZero(
     "Chaque demande de signa doit avoir une quantité."
   );
 }
-export function hasSignaErrors(fa: FA): string[] {
+export function signaErrors(fa: FA): string[] {
   return [
     hasLocation(fa.location_id),
     hasSignaNeedsWithQuantityHigherThanZero(fa.fa_signa_needs),
   ].filter((error): error is string => error !== true);
 }
-export function hasSignaWarnings(fa: FA): string[] {
+export function signaWarnings(fa: FA): string[] {
   return [hasSignaNeeds(fa.fa_signa_needs)].filter(
     (warning): warning is string => warning !== true
   );
@@ -149,7 +149,7 @@ export function hasAtLeastOneAnimationTimeWindow(
     "L'animation doit avoir au moins une plage horaire."
   );
 }
-export function hasTimeWindowsErrors(fa: FA): string[] {
+export function timeWindowsErrors(fa: FA): string[] {
   return [hasAtLeastOneAnimationTimeWindow(fa.time_windows)].filter(
     (error): error is string => error !== true
   );
@@ -174,12 +174,12 @@ export function hasSecurityNeeds(value: string | undefined): string | boolean {
     "Cette activité n'a pas besoin de dispositif de sécurité particulier."
   );
 }
-export function hasSecurityErrors(fa: FA): string[] {
+export function securityErrors(fa: FA): string[] {
   return [hasPassNumberHigherThanZero(fa)].filter(
     (error): error is string => error !== true
   );
 }
-export function hasSecurityWarnings(fa: FA): string[] {
+export function securityWarnings(fa: FA): string[] {
   return [
     hasSecurityPassNeeds(fa.is_pass_required),
     hasSecurityNeeds(fa.security_needs),
@@ -226,13 +226,13 @@ function getCollaborator(
 ): collaborator | undefined {
   return collaborators?.[0]?.collaborator;
 }
-export function hasCollaboratorErrors(fa: FA): string[] {
+export function collaboratorErrors(fa: FA): string[] {
   const collaborator = getCollaborator(fa.fa_collaborators);
   return [hasCollaboratorMandatoryFieldsFilled(collaborator)].filter(
     (error): error is string => error !== true
   );
 }
-export function hasCollaboratorWarnings(fa: FA): string[] {
+export function collaboratorWarnings(fa: FA): string[] {
   const collaborator = getCollaborator(fa.fa_collaborators);
   return [
     isCollaboratorNotEmpty(collaborator),
@@ -289,7 +289,7 @@ export function hasElecGearRequestWithQuantityHigherThanZero(
     "Chaque matériel Elec doit avoir une quantité."
   );
 }
-export function hasGearRequestErrors(store: any): string[] {
+export function gearRequestErrors(store: any): string[] {
   return [
     hasMatosGearRequestWithQuantityHigherThanZero(store.matosGearRequests),
     hasBarrieresGearRequestWithQuantityHigherThanZero(
@@ -298,7 +298,7 @@ export function hasGearRequestErrors(store: any): string[] {
     hasElecGearRequestWithQuantityHigherThanZero(store.elecGearRequests),
   ].filter((error): error is string => error !== true);
 }
-export function hasGearRequestWarnings(store: any): string[] {
+export function gearRequestWarnings(store: any): string[] {
   return [
     hasAtLeastOneMatosGearRequest(store.matosGearRequests),
     hasAtLeastOneBarrieresGearRequest(store.barrieresGearRequests),
@@ -315,7 +315,7 @@ export function hasElecNeeds(
     "L'animation n'a pas besoin d'électricité."
   );
 }
-export function hasElecWarnings(fa: FA): string[] {
+export function elecWarnings(fa: FA): string[] {
   return [hasElecNeeds(fa.fa_electricity_needs)].filter(
     (warning): warning is string => warning !== true
   );
@@ -325,7 +325,7 @@ export function hasElecWarnings(fa: FA): string[] {
 export function hasWaterNeeds(value: string | undefined): string | boolean {
   return !!value || "L'animation n'a pas besoin d'eau.";
 }
-export function hasWaterWarnings(fa: FA): string[] {
+export function waterWarnings(fa: FA): string[] {
   return [hasWaterNeeds(fa.water_needs)].filter(
     (warning): warning is string => warning !== true
   );

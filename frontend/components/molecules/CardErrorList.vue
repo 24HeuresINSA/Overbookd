@@ -13,12 +13,12 @@
 import Vue from "vue";
 import { FA, fa_card_type } from "~/utils/models/FA";
 import {
-  hasGeneralErrors,
-  hasDetailErrors,
-  hasSignaErrors,
-  hasTimeWindowsErrors,
-  hasSecurityErrors,
-  hasCollaboratorErrors,
+  generalErrors,
+  detailErrors,
+  signaErrors,
+  timeWindowsErrors,
+  securityErrors,
+  collaboratorErrors,
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
@@ -36,17 +36,17 @@ export default Vue.extend({
     errors(): string[] {
       switch (this.type) {
         case fa_card_type.GENERAL:
-          return hasGeneralErrors(this.mFA);
+          return generalErrors(this.mFA);
         case fa_card_type.DETAIL:
-          return hasDetailErrors(this.mFA);
+          return detailErrors(this.mFA);
         case fa_card_type.SIGNA:
-          return hasSignaErrors(this.mFA);
+          return signaErrors(this.mFA);
         case fa_card_type.TIME_WINDOW:
-          return hasTimeWindowsErrors(this.mFA);
+          return timeWindowsErrors(this.mFA);
         case fa_card_type.SECURITY:
-          return hasSecurityErrors(this.mFA);
+          return securityErrors(this.mFA);
         case fa_card_type.COLLABORATOR:
-          return hasCollaboratorErrors(this.mFA);
+          return collaboratorErrors(this.mFA);
         default:
           return [];
       }
