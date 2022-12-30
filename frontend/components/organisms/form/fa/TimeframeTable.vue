@@ -144,7 +144,7 @@ export default Vue.extend({
     retrieveAnimationTimeWindowIndex(timeWindow: IdentifiableTimeWindow) {
       return timeWindow.id
         ? this.findTimeWindowIndexByIdAndType(timeWindow.id, timeWindow.type)
-        : this.desctructTimeWindowKeyToFindIndex(timeWindow!);
+        : this.destructTimeWindowKeyToFindIndex(timeWindow!);
     },
     updateAnimationTimeWindow(timeWindow: time_windows) {
       if (!this.selectedTimeWindow) return;
@@ -164,7 +164,7 @@ export default Vue.extend({
         (tw) => tw.id === timeWindowId && tw.type === timeWindowType
       );
     },
-    desctructTimeWindowKeyToFindIndex(
+    destructTimeWindowKeyToFindIndex(
       timeWindow: IdentifiableTimeWindow
     ): number {
       return parseInt(timeWindow.key.split("_")[1]);
