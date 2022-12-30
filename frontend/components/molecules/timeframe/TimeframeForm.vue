@@ -167,8 +167,8 @@
           Confirmer
           {{ timeWindow ? "cette modification" : "cet ajout" }} annulera les
           validations des orgas Matos, Barrieres et Elec 😠
-        </template></ConfirmationMessage
-      >
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
   </div>
 </template>
@@ -314,6 +314,7 @@ export default Vue.extend({
 
       this.setStart(start);
       this.setEnd(end);
+      this.timeWindowType = this.timeWindow.type;
     },
     clearLocalVariable() {
       this.dateStart = this.manifDate;
@@ -323,6 +324,7 @@ export default Vue.extend({
 
       this.formatDateStart = "";
       this.formatDateEnd = "";
+      this.timeWindowType = time_windows_type.ANIM;
     },
     formatDate(date: string): string {
       return new Date(date).toLocaleDateString("fr-FR", {
@@ -366,9 +368,9 @@ export default Vue.extend({
     formIsInvalid(): boolean {
       if (
         !this.mTimeWindow.type ||
-        !this.dateStart ||
         !this.formatDateStart ||
         !this.formatDateEnd ||
+        !this.dateStart ||
         !this.timeStart ||
         !this.dateEnd ||
         !this.timeEnd
