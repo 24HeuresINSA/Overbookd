@@ -24,17 +24,24 @@ export class FaElectricityNeedsService {
     createFaElectricityNeedDto: CreateFaElectricityNeedDto[],
   ): Promise<fa_electricity_needs[] | null> {
     const operations = createFaElectricityNeedDto.map((elecneeds) => {
-      const data = {
-        ...elecneeds,
-        fa_id: faID,
-      };
-      return this.prisma.fa_electricity_needs.upsert({
-        where: {
-          id: elecneeds.id,
-        },
-        update: data,
-        create: data,
-      });
+      if (elecneeds.id) {
+        return this.prisma.fa_electricity_needs.update({
+          where: {
+            id: elecneeds.id,
+          },
+          data: {
+            ...elecneeds,
+            fa_id: faID,
+          },
+        });
+      } else {
+        return this.prisma.fa_electricity_needs.create({
+          data: {
+            fa_id: faID,
+            ...elecneeds,
+          },
+        });
+      }
     });
     return this.prisma.$transaction(operations);
   }

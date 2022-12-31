@@ -21,7 +21,7 @@ export enum electricity_type {
 }
 
 export enum electricity_type_label {
-  PC16 = "Prise classique (PC16)",
+  PC16_Prise_classique = "Prise classique (PC16)",
   P17_16A_MONO = "16A Mono (P17_16A_MONO)",
   P17_16A_TRI = "16A Tri (P17_16A_TRI)",
   P17_16A_TETRA = "16A Tetra (P17_16A_TETRA)",

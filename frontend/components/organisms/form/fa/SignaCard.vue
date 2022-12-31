@@ -153,13 +153,7 @@ export default Vue.extend({
       deep: true,
     },
   },
-  async mounted() {
-    // await this.$accessor.location.getAllLocations();
-  },
   methods: {
-    /*selectLocations(locations: string[]) {
-      this.$accessor.FA.setLocations(locations);
-    },*/
     addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
         return this.$store.dispatch("notif/pushNotification", {
@@ -179,6 +173,7 @@ export default Vue.extend({
       this.$accessor.FA.addSignaNeed(newSigna);
       this.isSignaFormOpen = false;
       this.newSignalisation = { type: "", text: "", comment: "" };
+      console.log("signa", this.$accessor.FA.mFA.fa_signa_needs);
     },
     updateSignalisationCount(index: number, count: number) {
       this.$accessor.FA.updateSignaNeedCount({ index, count });
