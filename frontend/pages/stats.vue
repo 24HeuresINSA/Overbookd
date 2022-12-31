@@ -10,13 +10,12 @@
       ></v-switch>
       <h1>FT</h1>
     </v-row>
-    <Needs :dataset="dataset" :name="name"></Needs>
+    <Needs :dataset="dataset" :name="name" />
+    <h1 v-if="switchType">Les stats FT ne sont pas encore disponibles</h1>
   </v-container>
 </template>
 
 <script>
-import { safeCall } from "../utils/api/calls";
-import { RepoFactory } from "../repositories/repoFactory";
 import Needs from "../components/Needs";
 
 export default {
@@ -32,26 +31,24 @@ export default {
     };
   },
   async mounted() {
-    if (this.$accessor.user.hasPermission("hard")) {
-      await this.update();
-    } else {
+    if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });
     }
+    await this.update();
   },
   methods: {
     async update() {
       if (this.switchType) {
-        this.FT = (
-          await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this))
-        )["data"];
+        // this.FT = (
+        //   await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this))
+        // )["data"];
+        this.FT = [];
         this.name = "FT";
         this.dataset = this.FT;
       } else {
-        this.FA = (
-          await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this))
-        )["data"];
+        this.FA = (await this.$accessor.FA.getFaStats()).data;
         this.name = "FA";
         this.dataset = this.FA;
       }

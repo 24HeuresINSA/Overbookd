@@ -11,6 +11,7 @@ import {
   COMPLETE_FA_SELECT,
   FaResponse,
 } from './fa_types';
+import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -18,7 +19,10 @@ export interface SearchFa {
 }
 @Injectable()
 export class FaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly statsService: StatsService,
+  ) {}
 
   /**     **/
   /** GET **/
@@ -47,6 +51,37 @@ export class FaService {
       },
       select: COMPLETE_FA_SELECT,
     });
+  }
+
+  async getFaStats(): Promise<StatsPayload> {
+    const fa = await this.prisma.fa.findMany({
+      select: {
+        status: true,
+        Team: {
+          select: {
+            name: true,
+            code: true,
+          },
+        },
+      },
+      where: {
+        is_deleted: false,
+      },
+      orderBy: {
+        Team: {
+          name: 'asc',
+        },
+      },
+    });
+    const formattedFa = fa.map((f) => {
+      return {
+        status: f.status,
+        teamName: f.Team?.name,
+        teamCode: f.Team?.code,
+      };
+    });
+
+    return this.statsService.stats(formattedFa);
   }
 
   /**      **/

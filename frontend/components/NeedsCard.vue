@@ -10,11 +10,11 @@ export default {
   data() {
     return {
       possibleStatus: {
-        draft: "grey",
-        validated: "green",
-        submitted: "yellow",
-        refused: "red",
-        ready: "deep-purple",
+        DRAFT: "grey",
+        VALIDATED: "green",
+        SUBMITTED: "yellow",
+        REFUSED: "red",
+        READY: "deep-purple",
       },
     };
   },
