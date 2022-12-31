@@ -3,9 +3,9 @@
     <v-card :class="isDisabled ? 'disabled' : ''">
       <v-card-title>Besoin d'électricité</v-card-title>
       <v-card-subtitle
-        >Si ton animation a besoin d'électricité, il faut renseigner les
-        informations demandées pour chaque besoin. Pour plus de renseignement,
-        vois avec la Log Elec via logistique@24heures.org</v-card-subtitle
+        >Précise tes besoins en électricité : 1 ligne par type d'appareil. Pour
+        plus de renseignement, vois avec la Log Elec via
+        logistique@24heures.org</v-card-subtitle
       >
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
