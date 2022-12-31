@@ -90,7 +90,7 @@ export default Vue.extend({
     electricityNeeds(): any {
       return this.mFA.fa_electricity_needs;
     },
-    electricityType(): Array<string> {
+    electricityType(): string[] {
       return Object.values(electricity_type);
     },
     isValidatedByOwner(): boolean {

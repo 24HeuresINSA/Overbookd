@@ -141,7 +141,7 @@ export default Vue.extend({
     signalisations(): any {
       return this.mFA.fa_signa_needs;
     },
-    signaType(): Array<string> {
+    signaType(): string[] {
       return Object.values(signa_type);
     },
     currentLocations(): SignaLocation | undefined {

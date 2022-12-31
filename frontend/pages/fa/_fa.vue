@@ -267,11 +267,11 @@ export default Vue.extend({
     faName(): string {
       return this.$accessor.FA.mFA.name;
     },
-    validators(): Array<team> {
+    validators(): team[] {
       return this.$accessor.team.faValidators;
     },
-    mValidators(): Array<team> {
-      let mValidator: Array<team> = [];
+    mValidators(): team[] {
+      let mValidator: team[] = [];
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
         return this.validators;
@@ -286,12 +286,12 @@ export default Vue.extend({
       }
       return [];
     },
-    mValidatorsValidated(): Array<team> {
+    mValidatorsValidated(): team[] {
       return this.mValidators.filter((validator: team) => {
         return this.isAnimationValidatedBy(validator);
       });
     },
-    mValidatorsNotValidated(): Array<team> {
+    mValidatorsNotValidated(): team[] {
       return this.mValidators.filter((validator: team) => {
         return !this.isAnimationValidatedBy(validator);
       });

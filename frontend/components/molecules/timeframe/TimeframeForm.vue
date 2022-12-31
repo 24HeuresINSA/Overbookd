@@ -235,7 +235,7 @@ export default Vue.extend({
     timeframes(): any {
       return this.mFA.time_windows;
     },
-    timeWindowsType(): Array<string> {
+    timeWindowsType(): string[] {
       return Object.values(time_windows_type);
     },
     manifDate(): string {
