@@ -48,20 +48,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  getFAValidationStatus,
-  isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+import { hasAllValidations } from "~/utils/fa/faUtils";
 import { FA, Period } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
     owners: ["matos", "barrieres", "elec"],
     isAddDialogOpen: false,
@@ -78,14 +69,7 @@ export default Vue.extend({
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwners(): boolean {
-      const logTeamCodes = ["matos", "barrieres", "elec"];
-      const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
-        isAnimationValidatedBy(this.mFA, teamCode)
-      );
-      return teamCodesThatValidatedFA.length === logTeamCodes.length;
-    },
-    validationStatus(): string {
-      return getFAValidationStatus(this.mFA, this.owners).toLowerCase();
+      return hasAllValidations(this.mFA, this.owners);
     },
   },
   methods: {

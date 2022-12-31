@@ -64,7 +64,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
-import { FA, FaSitePublishAnimation, fa_card_type } from "~/utils/models/FA";
+import { FA, fa_card_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -112,13 +112,12 @@ export default Vue.extend({
       this.$accessor.FA.updatePublishAnimation({ key, value });
     },
     switchPublishAnimation(value: boolean) {
-      if (value) {
-        return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      if (value) return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      if (this.mFA.faSitePublishAnimation) {
+        return this.$accessor.FA.deletePublishAnimation(
+          this.mFA.faSitePublishAnimation
+        );
       }
-
-      return this.$accessor.FA.deletePublishAnimation(
-        this.mFA.faSitePublishAnimation as FaSitePublishAnimation
-      );
     },
   },
 });

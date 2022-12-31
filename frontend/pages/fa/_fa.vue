@@ -428,41 +428,30 @@ export default Vue.extend({
       return isAnimationRefusedBy(this.mFA, validator.code);
     },
 
-    shouldShowValidationButtonOrMenu() {
+    isSubmittedOrRefused() {
       return (
-        this.mValidatorsNotValidated.length > 0 &&
-        (this.mFA.status === Status.SUBMITTED ||
-          this.mFA.status === Status.REFUSED)
+        this.mFA.status === Status.SUBMITTED ||
+        this.mFA.status === Status.REFUSED
       );
     },
-    shouldShowRefuseButtonOrMenu() {
-      return (
-        this.mValidatorsValidated.length > 0 && this.mFA.status !== Status.DRAFT
-      );
+    isNotDraft() {
+      return this.mFA.status !== Status.DRAFT;
     },
     shouldShowValidationButton() {
       return (
-        this.mValidatorsNotValidated.length === 1 &&
-        this.shouldShowValidationButtonOrMenu()
+        this.mValidatorsNotValidated.length === 1 && this.isSubmittedOrRefused()
       );
     },
     shouldShowRefuseButton() {
-      return (
-        this.mValidatorsValidated.length === 1 &&
-        this.shouldShowRefuseButtonOrMenu()
-      );
+      return this.mValidatorsValidated.length === 1 && this.isNotDraft();
     },
     shouldShowValidationMenu() {
       return (
-        this.mValidatorsNotValidated.length > 1 &&
-        this.shouldShowValidationButtonOrMenu()
+        this.mValidatorsNotValidated.length > 1 && this.isSubmittedOrRefused()
       );
     },
     shouldShowRefuseMenu() {
-      return (
-        this.mValidatorsValidated.length > 1 &&
-        this.shouldShowRefuseButtonOrMenu()
-      );
+      return this.mValidatorsValidated.length > 1 && this.isNotDraft();
     },
   },
 });

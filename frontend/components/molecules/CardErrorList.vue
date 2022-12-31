@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_card_type } from "~/utils/models/FA";
+import { FA, fa_card_type, Status } from "~/utils/models/FA";
 import {
   generalErrors,
   detailErrors,
@@ -53,7 +53,8 @@ export default Vue.extend({
     },
     shouldShowError(): boolean {
       return (
-        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED") &&
+        (this.mFA.status === Status.SUBMITTED ||
+          this.mFA.status === Status.REFUSED) &&
         this.errors.length > 0
       );
     },
