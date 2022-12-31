@@ -173,7 +173,6 @@ export default Vue.extend({
       this.$accessor.FA.addSignaNeed(newSigna);
       this.isSignaFormOpen = false;
       this.newSignalisation = { type: "", text: "", comment: "" };
-      console.log("signa", this.$accessor.FA.mFA.fa_signa_needs);
     },
     updateSignalisationCount(index: number, count: number) {
       this.$accessor.FA.updateSignaNeedCount({ index, count });
