@@ -115,7 +115,6 @@ export default Vue.extend({
       this.isEditDialogOpen = true;
     },
     addElectricityNeed(elecNeed: fa_electricity_needs) {
-      console.log("elec", this.$accessor.FA.mFA.fa_electricity_needs);
       this.$accessor.FA.addElectricityNeed(elecNeed);
     },
     updateElectricityNeed(elecNeed: fa_electricity_needs) {
@@ -123,7 +122,6 @@ export default Vue.extend({
       const index = this.retrieveElectricityNeedIndex(
         this.selectedElectricityNeed
       );
-      console.log("elec", this.$accessor.FA.mFA.fa_electricity_needs);
       this.$accessor.FA.updateElectricityNeed({ index, elecNeed });
     },
     retrieveElectricityNeedIndex(elecNeed: IdentifiableElectricityNeed) {
