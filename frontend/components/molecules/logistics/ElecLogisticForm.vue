@@ -43,19 +43,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { electricity_type_label } from "~/utils/models/FA";
+import {
+  electricity_type,
+  electricity_type_label,
+  fa_electricity_needs,
+} from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "ElecLogisticForm",
-  model: {
-    prop: "elecNeed",
-    event: "change",
-  },
   props: {
-    elecNeed: {
-      type: Object,
-      default: () => null,
+    index: {
+      type: Number,
+      default: () => -1,
     },
   },
   data: () => ({
@@ -70,10 +70,13 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mElecNeed(): any {
+    elecNeed(): fa_electricity_needs | undefined {
+      if (this.index === -1) return undefined;
+      return this.$accessor.FA.mFA?.fa_electricity_needs?.[this.index];
+    },
+    mElecNeed(): fa_electricity_needs {
       return {
-        ...this.elecNeed,
-        electricity_type: this.electricity_type,
+        electricity_type: this.electricity_type as electricity_type,
         device: this.device,
         power: +this.power,
         count: +this.count,
@@ -92,7 +95,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    elecNeed() {
+    index() {
       this.updateLocalVariable();
     },
   },
@@ -103,10 +106,10 @@ export default Vue.extend({
     updateLocalVariable() {
       if (!this.elecNeed) return this.clearLocalVariable();
       this.electricity_type = this.elecNeed.electricity_type;
-      this.device = this.elecNeed.device;
-      this.power = this.elecNeed.power;
-      this.count = this.elecNeed.count;
-      this.comment = this.elecNeed.comment;
+      this.device = this.elecNeed.device ?? "";
+      this.power = this.elecNeed.power.toString() ?? "";
+      this.count = (this.elecNeed.count ?? "").toString();
+      this.comment = this.elecNeed.comment ?? "";
     },
     clearLocalVariable() {
       this.electricity_type = "";

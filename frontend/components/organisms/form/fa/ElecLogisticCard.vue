@@ -12,8 +12,8 @@
           <template #[`item.electricity_type`]="{ item }">
             {{ getElectricityTypeLabel(item.electricity_type) }}
           </template>
-          <template #[`item.action`]="{ index, item }">
-            <v-btn v-if="!isDisabled" icon @click="openUpdateModal(item)">
+          <template #[`item.action`]="{ index }">
+            <v-btn v-if="!isDisabled" icon @click="openUpdateModal(index)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
@@ -42,7 +42,7 @@
     </v-dialog>
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <ElecLogisticForm
-        v-model="selectedElectricityNeed"
+        :index="selectedIndex"
         @change="updateElectricityNeed"
         @close-dialog="isEditDialogOpen = false"
       ></ElecLogisticForm>
@@ -68,10 +68,6 @@ const headers = [
   { text: "Action", value: "action" },
 ];
 
-interface IdentifiableElectricityNeed extends fa_electricity_needs {
-  key: string;
-}
-
 export default Vue.extend({
   name: "ElecLogisticCard",
   components: { ElecLogisticForm },
@@ -86,21 +82,20 @@ export default Vue.extend({
     isAddDialogOpen: false,
     isEditDialogOpen: false,
 
-    selectedElectricityNeed: null as IdentifiableElectricityNeed | null,
+    selectedIndex: null as number | null,
   }),
   computed: {
-    electricityNeeds(): any {
+    electricityNeeds(): fa_electricity_needs[] | undefined {
       return this.$accessor.FA.mFA.fa_electricity_needs;
     },
     electricityTypeLabels(): any[] {
-      const elecTypeLabels = Object.keys(electricity_type_label).map((type) => {
+      return Object.keys(electricity_type_label).map((type) => {
         return {
           type,
           label:
             electricity_type_label[type as keyof typeof electricity_type_label],
         };
       });
-      return elecTypeLabels;
     },
   },
   methods: {
@@ -110,36 +105,20 @@ export default Vue.extend({
           ?.label || ""
       );
     },
-    openUpdateModal(elecNeed: IdentifiableElectricityNeed) {
-      this.selectedElectricityNeed = elecNeed;
+    openUpdateModal(index: number) {
+      this.selectedIndex = index;
       this.isEditDialogOpen = true;
     },
     addElectricityNeed(elecNeed: fa_electricity_needs) {
       this.$accessor.FA.addElectricityNeed(elecNeed);
     },
     updateElectricityNeed(elecNeed: fa_electricity_needs) {
-      if (!this.selectedElectricityNeed) return;
-      const index = this.retrieveElectricityNeedIndex(
-        this.selectedElectricityNeed
-      );
-      this.$accessor.FA.updateElectricityNeed({ index, elecNeed });
+      if (!this.selectedIndex) return;
+      this.$accessor.FA.updateElectricityNeed({
+        index: this.selectedIndex,
+        elecNeed,
+      });
     },
-    retrieveElectricityNeedIndex(elecNeed: IdentifiableElectricityNeed) {
-      return elecNeed.id
-        ? this.findElectricityNeedIndexById(elecNeed.id)
-        : this.destructElectricityNeedKeyToFindIndex(elecNeed!);
-    },
-    findElectricityNeedIndexById(eleNeedId: number): number {
-      return this.$accessor.FA.mFA.fa_electricity_needs!.findIndex(
-        (en) => en.id === eleNeedId
-      );
-    },
-    destructElectricityNeedKeyToFindIndex(
-      elecNeed: IdentifiableElectricityNeed
-    ): number {
-      return parseInt(elecNeed.key.split("_")[1]);
-    },
-
     deleteElectricityNeed(index: number) {
       this.$accessor.FA.deleteElectricityNeed(index);
     },

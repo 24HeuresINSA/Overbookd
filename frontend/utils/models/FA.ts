@@ -141,7 +141,7 @@ export interface fa_refuse {
 
 export interface fa_electricity_needs {
   id?: number;
-  fa_id: number;
+  fa_id?: number;
   electricity_type: electricity_type;
   device?: string;
   power: number;
