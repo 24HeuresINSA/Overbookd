@@ -305,11 +305,14 @@ export default Vue.extend({
       this.formatDateEnd = "";
     },
     formatDate(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", {
-        day: "numeric",
-        month: "numeric",
+      const displayOptions: Intl.DateTimeFormatOptions = {
         year: "numeric",
-      });
+        month: "2-digit",
+        day: "2-digit",
+      };
+      let dateToFormat = new Date(date);
+      dateToFormat.setDate(dateToFormat.getDate() + 1);
+      return new Intl.DateTimeFormat("fr", displayOptions).format(dateToFormat);
     },
     addTimeframe() {
       if (this.formIsInvalid()) return;
@@ -352,22 +355,22 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .form-card {
   display: flex;
   flex-direction: column;
-}
 
-.form-card .subtitle {
-  margin: 10px 24px 0 24px;
-}
+  .subtitle {
+    margin: 10px 24px 0 24px;
+  }
 
-.form-card .row {
-  display: flex;
-  margin: 0 24px;
-}
+  .row {
+    display: flex;
+    margin: 0 24px;
+  }
 
-.form-card .time-row .text-date {
-  margin-right: 30px;
+  .time-row .text-date {
+    margin-right: 30px;
+  }
 }
 </style>
