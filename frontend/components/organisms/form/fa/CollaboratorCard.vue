@@ -9,8 +9,9 @@
     <v-card-text>
       <v-switch
         v-model="isCollaboratorRequired"
-        label="Besoin signa"
+        label="Besoin presta"
         :disabled="isValidatedByOwner"
+        @change="onSwitch()"
       ></v-switch>
       <v-form v-if="isCollaboratorRequired">
         <v-text-field
@@ -85,8 +86,8 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    collaborators(): any {
-      return this.mFA.fa_collaborators;
+    collaborators(): fa_collaborators[] {
+      return this.mFA.fa_collaborators ?? [];
     },
     collaborator(): collaborator {
       const collaborators = this.mFA.fa_collaborators;
@@ -117,9 +118,9 @@ export default Vue.extend({
     },
   },
   watch: {
-    signalisations: {
+    collaborators: {
       handler() {
-        if (this.collaborators.length === 0) {
+        if (this.collaborators.length > 0) {
           this.isCollaboratorRequired = true;
         }
       },
@@ -127,33 +128,35 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(key: string, value: any) {
-      if (this.collaborators.length === 0) {
-        const newCollaborator: fa_collaborators = {
-          collaborator: {},
-        };
-        this.$accessor.FA.addCollaborator(newCollaborator);
+    onSwitch() {
+      if (!this.isCollaboratorRequired) {
+        this.deleteCollaborator();
+      } else {
+        this.addCollaborator();
       }
-
-      if (typeof value === "string") value = value.trim();
+    },
+    onChange(key: string, value: any) {
+      this.updateCollaborator(key, value);
+    },
+    addCollaborator() {
+      const newCollaborator: fa_collaborators = {
+        collaborator: {
+          firstname: "",
+          lastname: "",
+          phone: "",
+        },
+      };
+      this.$accessor.FA.addCollaborator(newCollaborator);
+    },
+    updateCollaborator(key: string, value: any) {
       this.$accessor.FA.updateCollaborator({
         index: 0,
         key: key,
         value: value,
       });
-
-      // eslint-disable-next-line no-unused-vars
-      const { id, ...rest } = this.collaborator;
-      const isCollaboratorEmpty = Object.values(rest).every(
-        (value) => value == ""
-      );
-      const shouldDeleteCollaborator =
-        this.collaborators.length > 0 && !this.isCollaboratorRequired;
-      console.log(isCollaboratorEmpty, shouldDeleteCollaborator);
-      if (isCollaboratorEmpty && shouldDeleteCollaborator) {
-        this.$accessor.FA.deleteCollaborator(0);
-      }
-      console.log(this.collaborators);
+    },
+    deleteCollaborator() {
+      this.$accessor.FA.deleteCollaborator(0);
     },
   },
 });
