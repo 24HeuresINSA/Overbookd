@@ -7,7 +7,12 @@
       vides.</v-card-subtitle
     >
     <v-card-text>
-      <v-form>
+      <v-switch
+        v-model="isCollaboratorRequired"
+        label="Besoin signa"
+        :disabled="isValidatedByOwner"
+      ></v-switch>
+      <v-form v-if="isCollaboratorRequired">
         <v-text-field
           :value="collaborator.firstname"
           label="Prénom de l'intervenant*"
@@ -74,6 +79,7 @@ export default Vue.extend({
   data: () => ({
     owner: "humain",
     cardType: fa_card_type.COLLABORATOR,
+    isCollaboratorRequired: false,
   }),
   computed: {
     mFA(): FA {
@@ -110,6 +116,16 @@ export default Vue.extend({
       ];
     },
   },
+  watch: {
+    signalisations: {
+      handler() {
+        if (this.collaborators.length === 0) {
+          this.isCollaboratorRequired = true;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     onChange(key: string, value: any) {
       if (this.collaborators.length === 0) {
@@ -128,9 +144,16 @@ export default Vue.extend({
 
       // eslint-disable-next-line no-unused-vars
       const { id, ...rest } = this.collaborator;
-      if (Object.values(rest).every((value) => value == "")) {
+      const isCollaboratorEmpty = Object.values(rest).every(
+        (value) => value == ""
+      );
+      const shouldDeleteCollaborator =
+        this.collaborators.length > 0 && !this.isCollaboratorRequired;
+      console.log(isCollaboratorEmpty, shouldDeleteCollaborator);
+      if (isCollaboratorEmpty && shouldDeleteCollaborator) {
         this.$accessor.FA.deleteCollaborator(0);
       }
+      console.log(this.collaborators);
     },
   },
 });

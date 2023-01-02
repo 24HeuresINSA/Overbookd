@@ -188,22 +188,16 @@ export function securityWarnings(fa: FA): string[] {
 
 // Collaborator
 export function isCollaboratorNotEmpty(
-  collaborator: collaborator | undefined
+  collaborators: fa_collaborators[] | undefined
 ): string | boolean {
-  if (!collaborator) return "Cette animation n'a pas de prestataire.";
-  const { id, ...rest } = collaborator;
   return (
-    !Object.keys(rest).every((key) => !rest[key as keyof typeof rest]) ||
+    (collaborators && collaborators?.length > 0) ||
     "Cette animation n'a pas de prestataire."
   );
 }
-export function hasCollaboratorMandatoryFieldsFilled(
-  collaborator: collaborator | undefined
-): string | boolean {
-  if (!collaborator || isCollaboratorNotEmpty(collaborator) !== true) {
-    return true;
-  }
-  const { firstname, lastname, phone } = collaborator;
+export function hasCollaboratorMandatoryFieldsFilled(fa: FA): string | boolean {
+  if (isCollaboratorNotEmpty(fa.fa_collaborators) !== true) return true;
+  const { firstname, lastname, phone } = getCollaborator(fa.fa_collaborators)!;
   const hasMandatoryFieldsFilled = Boolean(firstname && lastname && phone);
   return (
     hasMandatoryFieldsFilled ||
@@ -227,16 +221,14 @@ function getCollaborator(
   return collaborators?.[0]?.collaborator;
 }
 export function collaboratorErrors(fa: FA): string[] {
-  const collaborator = getCollaborator(fa.fa_collaborators);
-  return [hasCollaboratorMandatoryFieldsFilled(collaborator)].filter(
+  return [hasCollaboratorMandatoryFieldsFilled(fa)].filter(
     (error): error is string => error !== true
   );
 }
 export function collaboratorWarnings(fa: FA): string[] {
-  const collaborator = getCollaborator(fa.fa_collaborators);
   return [
-    isCollaboratorNotEmpty(collaborator),
-    hasCollaboratorOptionalFieldsFilled(collaborator),
+    isCollaboratorNotEmpty(fa.fa_collaborators),
+    hasCollaboratorOptionalFieldsFilled(getCollaborator(fa.fa_collaborators)),
   ].filter((warning): warning is string => warning !== true);
 }
 
