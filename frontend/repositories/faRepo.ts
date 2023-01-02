@@ -65,6 +65,14 @@ export default {
     return context.$axios.post(`/collaborator/${id}`, collaborators);
   },
 
+  deleteFACollaborators(
+    context: Context,
+    faId: number,
+    collaboratorId: number
+  ) {
+    return context.$axios.delete(`/collaborator/${faId}/${collaboratorId}`);
+  },
+
   updateFASignaNeeds(
     context: Context,
     id: number,

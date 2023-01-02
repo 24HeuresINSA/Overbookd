@@ -518,7 +518,18 @@ export const actions = actionTree(
       commit("UPDATE_COLLABORATOR", { index, key, value });
     },
 
-    deleteCollaborator({ commit }, index: number) {
+    async deleteCollaborator({ commit, state }, index: number) {
+      if (state.mFA.fa_collaborators && state.mFA.fa_collaborators[index]) {
+        const collaboratorId =
+          state.mFA.fa_collaborators[index].collaborator.id;
+        if (collaboratorId) {
+          await RepoFactory.faRepo.deleteFACollaborators(
+            this,
+            state.mFA.id,
+            collaboratorId
+          );
+        }
+      }
       commit("DELETE_COLLABORATOR", index);
     },
 

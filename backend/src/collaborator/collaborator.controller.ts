@@ -6,6 +6,7 @@ import {
   Get,
   UseGuards,
   ParseIntPipe,
+  Delete,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
@@ -30,6 +31,16 @@ export class CollaboratorController {
     @Body() createCollaboratorDto: CreateCollaboratorDto[],
   ): Promise<collaborator[] | null> {
     return this.collaboratorService.upsert(+faId, createCollaboratorDto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('hard')
+  @Delete(':faId/:collaboratorId')
+  remove(
+    @Param('faId', ParseIntPipe) faId: string,
+    @Param('collaboratorId', ParseIntPipe) collaboratorId: string,
+  ): Promise<void> {
+    return this.collaboratorService.remove(+faId, +collaboratorId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
