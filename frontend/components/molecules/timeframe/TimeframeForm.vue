@@ -149,8 +149,16 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="confirmTimeframe">
-        {{ timeWindow ? "Modifier" : "Ajouter" }}
+      <v-btn
+        v-if="timeWindow"
+        color="blue darken-1"
+        text
+        @click="editTimeframe"
+      >
+        Modifier
+      </v-btn>
+      <v-btn v-else color="blue darken-1" text @click="addTimeframe">
+        Valider
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -303,12 +311,18 @@ export default Vue.extend({
         year: "numeric",
       });
     },
-    confirmTimeframe() {
+    addTimeframe() {
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
       this.$emit("close-dialog");
       this.clearLocalVariable();
+    },
+    editTimeframe() {
+      if (this.formIsInvalid()) return;
+
+      this.$emit("change", this.mTimeWindow);
+      this.$emit("close-dialog");
     },
     formIsInvalid(): boolean {
       if (
