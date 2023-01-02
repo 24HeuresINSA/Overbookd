@@ -438,8 +438,11 @@ export const actions = actionTree(
         teamCodesThatValidatedFA.map(async (teamCode) => {
           // @ts-ignore
           const team = this.$accessor.team.getTeamByCode(teamCode);
-          const body: fa_validation_body = { team_id: team.id };
-          await RepoFactory.faRepo.removeFaValidation(this, state.mFA.id, body);
+          await RepoFactory.faRepo.removeFaValidation(
+            this,
+            state.mFA.id,
+            team.id
+          );
           return team.name;
         })
       );

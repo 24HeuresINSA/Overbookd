@@ -153,18 +153,17 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('remove-validation/:id')
+  @Delete('remove-validation/:faId/:teamId')
   @ApiResponse({
     status: 204,
     description: 'Remove a validation of fa',
   })
   removeValidation(
     @Request() request: RequestWithUserPayload,
-    @Body() validationForm: validationDto,
-    @Param('id', ParseIntPipe) faid: number,
+    @Param('faId', ParseIntPipe) faId: string,
+    @Param('teamId', ParseIntPipe) teamId: string,
   ): Promise<void> {
-    const userId = request.user.id;
-    return this.faService.removeFaValidation(userId, faid, validationForm);
+    return this.faService.removeFaValidation(+faId, +teamId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

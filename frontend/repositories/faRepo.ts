@@ -124,8 +124,10 @@ export default {
     return context.$axios.post(resource + `/validate/${id}`, body);
   },
 
-  removeFaValidation(context: Context, id: number, body: fa_validation_body) {
-    return context.$axios.post(resource + `/remove-validation/${id}`, body);
+  removeFaValidation(context: Context, faId: number, teamId: number) {
+    return context.$axios.delete(
+      resource + `/remove-validation/${faId}/${teamId}`
+    );
   },
 
   refuseFA(context: Context, id: number, body: fa_validation_body) {

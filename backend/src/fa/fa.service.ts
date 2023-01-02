@@ -111,15 +111,8 @@ export class FaService {
     ]);
   }
 
-  async removeFaValidation(
-    user_id: number,
-    fa_id: number,
-    body: validationDto,
-  ): Promise<void> {
-    const team_id = body.team_id;
-    await this.isUserValidator(user_id, team_id);
+  async removeFaValidation(fa_id: number, team_id: number): Promise<void> {
     await this.checkFaExistence(fa_id);
-
     await this.removeValidationFromTeam(fa_id, team_id);
   }
 
