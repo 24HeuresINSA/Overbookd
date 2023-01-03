@@ -156,7 +156,7 @@ export default Vue.extend({
       return isAnimationValidatedBy(this.mFA, this.owner);
     },
     validationStatus(): string {
-      return getFAValidationStatus(this.mFA, [this.owner]).toLowerCase();
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   watch: {

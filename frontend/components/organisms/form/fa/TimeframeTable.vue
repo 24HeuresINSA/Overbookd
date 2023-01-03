@@ -78,7 +78,7 @@ import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
 import {
-  getFAValidationStatus,
+  getFAValidationStatusWithMultipleTeams,
   isAnimationValidatedBy,
   hasAtLeastOneValidation,
   hasAllValidations,
@@ -154,7 +154,10 @@ export default Vue.extend({
     },
     validationStatus(): string {
       const owners = [...this.matosOwners, this.animOwner];
-      return getFAValidationStatus(this.mFA, owners).toLowerCase();
+      return getFAValidationStatusWithMultipleTeams(
+        this.mFA,
+        owners
+      ).toLowerCase();
     },
     me(): any {
       return this.$accessor.user.me;
