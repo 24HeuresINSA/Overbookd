@@ -29,6 +29,14 @@ export function getFAValidationStatusWithMultipleTeams(
   return Status.SUBMITTED;
 }
 
+export function hasAtLeastOneValidation(fa: FA, teamCodes: string[]): boolean {
+  return teamCodes.some((code) => isAnimationValidatedBy(fa, code));
+}
+
+export function hasAtLeastOneRefusal(fa: FA, teamCodes: string[]): boolean {
+  return teamCodes.some((code) => isAnimationRefusedBy(fa, code));
+}
+
 export function hasAllValidations(fa: FA, teamCodes: string[]): boolean {
   return teamCodes.every((code) => isAnimationValidatedBy(fa, code));
 }
