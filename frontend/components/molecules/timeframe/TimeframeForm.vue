@@ -150,7 +150,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="confirmTimeframe">
+        <v-btn color="blue darken-1" text @click="checkIfConfirmTimeWindow">
           {{ timeWindow ? "Modifier" : "Ajouter" }}
         </v-btn>
       </v-card-actions>
@@ -327,39 +327,34 @@ export default Vue.extend({
       this.timeWindowType = time_windows_type.ANIM;
     },
     formatDate(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", {
-        day: "numeric",
-        month: "numeric",
+      const displayOptions: Intl.DateTimeFormatOptions = {
         year: "numeric",
-      });
+        month: "2-digit",
+        day: "2-digit",
+      };
+      return new Intl.DateTimeFormat("fr", displayOptions).format(
+        new Date(date)
+      );
     },
-    addTimeframe() {
+    confirmTimeWindow() {
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
       this.$emit("close-dialog");
       this.clearLocalVariable();
     },
-    confirmTimeframe() {
+    checkIfConfirmTimeWindow() {
       const logTeamCodes = ["matos", "barrieres", "elec"];
       const isMatosTimeframe = this.type === time_windows_type.MATOS;
       const shouldAskConfirmation =
         isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
 
-      if (!shouldAskConfirmation) return this.editTimeframe();
+      if (!shouldAskConfirmation) return this.confirmTimeWindow();
       this.isConfirmationDialogOpen = true;
     },
     resetLogValidations() {
       this.$accessor.FA.resetLogValidations({ author: this.me });
-
-      if (this.timeWindow) this.addTimeframe();
-      this.editTimeframe();
-    },
-    editTimeframe() {
-      if (this.formIsInvalid()) return;
-
-      this.$emit("change", this.mTimeWindow);
-      this.$emit("close-dialog");
+      this.confirmTimeWindow();
     },
     closeAllDialogs() {
       this.isConfirmationDialogOpen = false;
@@ -393,22 +388,22 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .form-card {
   display: flex;
   flex-direction: column;
-}
 
-.form-card .subtitle {
-  margin: 10px 24px 0 24px;
-}
+  .subtitle {
+    margin: 10px 24px 0 24px;
+  }
 
-.form-card .row {
-  display: flex;
-  margin: 0 24px;
-}
+  .row {
+    display: flex;
+    margin: 0 24px;
+  }
 
-.form-card .time-row .text-date {
-  margin-right: 30px;
+  .time-row .text-date {
+    margin-right: 30px;
+  }
 }
 </style>

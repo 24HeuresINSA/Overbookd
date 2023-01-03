@@ -213,6 +213,15 @@ export default Vue.extend({
       if (!timeWindow.id) return;
       this.$accessor.FA.updateGearPeriod(timeWindow as Period);
     },
+    deleteTimeWindow(timeWindow: IdentifiableTimeWindow) {
+      if (timeWindow.type === time_windows_type.ANIM) {
+        const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
+        return this.$accessor.FA.deleteTimeWindow(index);
+      }
+      return this.$accessor.FA.removeGearRequestRentalPeriod(
+        timeWindow as Period
+      );
+    },
     retrieveAnimationTimeWindowIndex(timeWindow: IdentifiableTimeWindow) {
       return timeWindow.id
         ? this.findTimeWindowIndexByIdAndType(timeWindow.id, timeWindow.type)
