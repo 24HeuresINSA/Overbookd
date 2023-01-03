@@ -3,6 +3,15 @@
     <v-card-title>
       <span class="headline">Ajouter un créneau</span>
     </v-card-title>
+    <v-select
+      v-if="!timeWindow"
+      v-model="timeWindowType"
+      type="select"
+      label="Type"
+      :items="timeWindowsType"
+      class="row"
+    ></v-select>
+
     <h3 class="subtitle">Début du créneau</h3>
     <div class="row">
       <v-menu
@@ -140,16 +149,8 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn
-        v-if="timeWindow"
-        color="blue darken-1"
-        text
-        @click="editTimeframe"
-      >
-        Modifier
-      </v-btn>
-      <v-btn v-else color="blue darken-1" text @click="addTimeframe">
-        Valider
+      <v-btn color="blue darken-1" text @click="confirmTimeWindow">
+        {{ timeWindow ? "Modifier" : "Ajouter" }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -184,6 +185,7 @@ export default Vue.extend({
     dateEnd: "",
     timeStart: "",
     timeEnd: "",
+    timeWindowType: time_windows_type.ANIM,
 
     formatDateStart: "",
     formatDateEnd: "",
@@ -194,9 +196,12 @@ export default Vue.extend({
     menuTimeEnd: false,
   }),
   computed: {
+    type(): time_windows_type {
+      return this.timeWindow?.type ?? this.timeWindowType;
+    },
     mTimeWindow(): time_windows {
       return {
-        type: this.timeWindow.type,
+        type: this.type,
         ...this.timeWindow,
         start: new Date(this.dateStart + " " + this.timeStart),
         end: new Date(this.dateEnd + " " + this.timeEnd),
@@ -290,6 +295,8 @@ export default Vue.extend({
 
       this.formatDateStart = "";
       this.formatDateEnd = "";
+
+      this.timeWindowType = time_windows_type.ANIM;
     },
     formatDate(date: string): string {
       const displayOptions: Intl.DateTimeFormatOptions = {
@@ -301,18 +308,12 @@ export default Vue.extend({
         new Date(date)
       );
     },
-    addTimeframe() {
+    confirmTimeWindow() {
       if (this.formIsInvalid()) return;
 
       this.$emit("change", this.mTimeWindow);
       this.$emit("close-dialog");
       this.clearLocalVariable();
-    },
-    editTimeframe() {
-      if (this.formIsInvalid()) return;
-
-      this.$emit("change", this.mTimeWindow);
-      this.$emit("close-dialog");
     },
     formIsInvalid(): boolean {
       if (
