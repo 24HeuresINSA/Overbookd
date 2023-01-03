@@ -297,9 +297,9 @@ export default Vue.extend({
         month: "2-digit",
         day: "2-digit",
       };
-      let dateToFormat = new Date(date);
-      dateToFormat.setDate(dateToFormat.getDate() + 1);
-      return new Intl.DateTimeFormat("fr", displayOptions).format(dateToFormat);
+      return new Intl.DateTimeFormat("fr", displayOptions).format(
+        new Date(date)
+      );
     },
     addTimeframe() {
       if (this.formIsInvalid()) return;
