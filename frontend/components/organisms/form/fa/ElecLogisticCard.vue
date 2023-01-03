@@ -113,7 +113,7 @@ export default Vue.extend({
       this.$accessor.FA.addElectricityNeed(elecNeed);
     },
     updateElectricityNeed(elecNeed: fa_electricity_needs) {
-      if (!this.selectedIndex) return;
+      if (this.selectedIndex === null) return;
       this.$accessor.FA.updateElectricityNeed({
         index: this.selectedIndex,
         elecNeed,

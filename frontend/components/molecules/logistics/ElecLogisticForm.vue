@@ -95,7 +95,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    index() {
+    elecNeed() {
       this.updateLocalVariable();
     },
   },

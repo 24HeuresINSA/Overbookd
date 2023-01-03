@@ -166,14 +166,13 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_ELECTRICITY_NEED({ mFA }, { index, elecNeed }) {
-    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
-      mFA.fa_electricity_needs[index].electricity_type =
-        elecNeed.electricity_type;
-      mFA.fa_electricity_needs[index].device = elecNeed.device;
-      mFA.fa_electricity_needs[index].power = elecNeed.power;
-      mFA.fa_electricity_needs[index].count = elecNeed.count;
-      mFA.fa_electricity_needs[index].comment = elecNeed.comment;
-    }
+    if (!mFA.fa_electricity_needs || !mFA.fa_electricity_needs[index]) return;
+    mFA.fa_electricity_needs[index].electricity_type =
+      elecNeed.electricity_type;
+    mFA.fa_electricity_needs[index].device = elecNeed.device;
+    mFA.fa_electricity_needs[index].power = elecNeed.power;
+    mFA.fa_electricity_needs[index].count = elecNeed.count;
+    mFA.fa_electricity_needs[index].comment = elecNeed.comment;
   },
 
   DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
