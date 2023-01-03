@@ -17,8 +17,8 @@
 
         <v-text-field
           v-model="power"
-          type="number"
           label="Puissance/appareil*"
+          suffix="Watts"
           :rules="[rules.number, rules.min]"
         ></v-text-field>
 
@@ -49,6 +49,11 @@ import {
   fa_electricity_needs,
 } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
+
+interface TypeLabel {
+  type: electricity_type;
+  label: electricity_type_label;
+}
 
 export default Vue.extend({
   name: "ElecLogisticForm",
@@ -83,10 +88,12 @@ export default Vue.extend({
         comment: this.comment,
       };
     },
-    electricityTypeLabels(): any[] {
-      const elecTypeLabels = Object.keys(electricity_type_label).map((type) => {
+    electricityTypeLabels(): TypeLabel[] {
+      const elecTypeLabels: TypeLabel[] = Object.keys(
+        electricity_type_label
+      ).map((type) => {
         return {
-          type,
+          type: type as electricity_type,
           label:
             electricity_type_label[type as keyof typeof electricity_type_label],
         };

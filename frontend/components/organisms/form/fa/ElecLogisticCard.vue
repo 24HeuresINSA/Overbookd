@@ -12,6 +12,7 @@
           <template #[`item.electricity_type`]="{ item }">
             {{ getElectricityTypeLabel(item.electricity_type) }}
           </template>
+          <template #[`item.power`]="{ item }"> {{ item.power }} W </template>
           <template #[`item.action`]="{ index }">
             <v-btn v-if="!isDisabled" icon @click="openUpdateModal(index)">
               <v-icon>mdi-pencil</v-icon>
