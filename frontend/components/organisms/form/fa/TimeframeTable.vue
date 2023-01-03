@@ -22,7 +22,7 @@
             <v-btn v-if="!isDisabled" icon @click="openUpdateModal(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn v-if="!isDisabled" icon @click="deleteTimeframe(item)">
+            <v-btn v-if="!isDisabled" icon @click="deleteTimeWindow(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </div>
@@ -119,15 +119,6 @@ export default Vue.extend({
         new Date(date)
       );
     },
-    deleteTimeframe(timeWindow: IdentifiableTimeWindow) {
-      if (timeWindow.type === time_windows_type.ANIM) {
-        const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
-        return this.$accessor.FA.deleteTimeWindow(index);
-      }
-      return this.$accessor.FA.removeGearRequestRentalPeriod(
-        timeWindow as Period
-      );
-    },
     addTimeWindow(timeWindow: time_windows) {
       if (timeWindow.type === time_windows_type.ANIM) {
         return this.$accessor.FA.addTimeWindow(timeWindow);
@@ -140,6 +131,15 @@ export default Vue.extend({
       }
       if (!timeWindow.id) return;
       this.$accessor.FA.updateGearPeriod(timeWindow as Period);
+    },
+    deleteTimeWindow(timeWindow: IdentifiableTimeWindow) {
+      if (timeWindow.type === time_windows_type.ANIM) {
+        const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
+        return this.$accessor.FA.deleteTimeWindow(index);
+      }
+      return this.$accessor.FA.removeGearRequestRentalPeriod(
+        timeWindow as Period
+      );
     },
     retrieveAnimationTimeWindowIndex(timeWindow: IdentifiableTimeWindow) {
       return timeWindow.id
