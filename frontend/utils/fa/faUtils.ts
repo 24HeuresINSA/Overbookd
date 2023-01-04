@@ -42,5 +42,5 @@ export function hasAllValidations(fa: FA, teamCodes: string[]): boolean {
 }
 
 export function hasAllRefusals(fa: FA, teamCodes: string[]): boolean {
-  return teamCodes.some((code) => isAnimationRefusedBy(fa, code));
+  return teamCodes.every((code) => isAnimationRefusedBy(fa, code));
 }

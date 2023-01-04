@@ -25,11 +25,13 @@
           <v-text-field
             :value="mFA.faSitePublishAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
+            :disabled="isValidatedByOwner"
             @change="onChangePublishAnimation('photoLink', $event)"
           ></v-text-field>
           <v-textarea
             :value="mFA.faSitePublishAnimation?.description"
             label="Description pour le site"
+            :disabled="isValidatedByOwner"
             @change="onChangePublishAnimation('description', $event)"
           ></v-textarea>
           <v-combobox
@@ -40,6 +42,7 @@
             dense
             label="Categories de l'animations"
             :items="categories"
+            :disabled="isValidatedByOwner"
             @change="onChangePublishAnimation('categories', $event)"
           >
           </v-combobox>
