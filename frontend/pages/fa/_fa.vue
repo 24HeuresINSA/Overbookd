@@ -51,7 +51,7 @@
       <h4 class="log-text">
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
-        <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>
+        <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
       </h4>
       <LogisticTimeWindow :is-disabled="isDisabled"></LogisticTimeWindow>
       <LogisticsCard

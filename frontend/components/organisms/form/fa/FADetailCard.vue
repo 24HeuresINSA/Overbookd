@@ -3,7 +3,8 @@
     <v-card-title>Détail</v-card-title>
     <v-card-subtitle
       >Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est
-      ce texte qui sera publié sur le site 24heures.org</v-card-subtitle
+      ce texte qui sera publié sur le site
+      <a href="https://24heures.org">24heures.org</a>.</v-card-subtitle
     >
     <v-card-text>
       <v-form @submit.prevent="">

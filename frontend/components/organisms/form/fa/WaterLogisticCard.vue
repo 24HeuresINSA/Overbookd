@@ -4,7 +4,9 @@
     <v-card-subtitle
       >Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu
       as besoin et comment on l'évacue. Pour plus de renseignement, vois avec la
-      Log Elec via logistique@24heures.org</v-card-subtitle
+      Log Elec via
+      <a href="mailto:logistique@24heures.org">logistique@24heures.org</a
+      >.</v-card-subtitle
     >
     <v-card-text>
       <v-form @submit.prevent="">
