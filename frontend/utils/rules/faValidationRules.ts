@@ -36,7 +36,6 @@ export function hasAtLeastOneWarning(store: any) {
   return warnings.length > 0;
 }
 
-// General
 function hasName(value: string | undefined): string | boolean {
   return !!value || "L'animation doit avoir un nom.";
 }
@@ -58,7 +57,6 @@ export function generalErrors(fa: FA): string[] {
   ].filter((error): error is string => error !== true);
 }
 
-// Detail
 export function hasDescription(value: string | undefined): string | boolean {
   return (
     (!!value && value !== "<p></p>") || "L'animation n'a pas de description."
@@ -105,7 +103,6 @@ export function detailWarnings(fa: FA): string[] {
   ].filter((warning): warning is string => warning !== true);
 }
 
-// Signa
 export function hasLocation(value: number | undefined): string | boolean {
   return Boolean(value) || "L'animation n'a pas de localisation.";
 }
@@ -137,7 +134,6 @@ export function signaWarnings(fa: FA): string[] {
   );
 }
 
-// Time Windows
 export function hasAtLeastOneAnimationTimeWindow(
   timeWindows: time_windows[] | undefined
 ): string | boolean {
@@ -155,7 +151,6 @@ export function timeWindowsErrors(fa: FA): string[] {
   );
 }
 
-// Security
 export function hasSecurityPassNeeds(
   value: boolean | undefined
 ): string | boolean {
@@ -186,7 +181,6 @@ export function securityWarnings(fa: FA): string[] {
   ].filter((error): error is string => error !== true);
 }
 
-// Collaborator
 export function isCollaboratorNotEmpty(
   collaborators: fa_collaborators[] | undefined
 ): string | boolean {
@@ -232,7 +226,6 @@ export function collaboratorWarnings(fa: FA): string[] {
   ].filter((warning): warning is string => warning !== true);
 }
 
-// Gear Requests
 export function hasAtLeastOneMatosGearRequest(
   gearRequests: GearRequest[] | undefined
 ): string | boolean {
@@ -298,7 +291,6 @@ export function gearRequestWarnings(store: any): string[] {
   ].filter((warning): warning is string => warning !== true);
 }
 
-// Elec
 export function hasElecNeeds(
   elecNeeds: fa_electricity_needs[] | undefined
 ): string | boolean {
@@ -313,7 +305,6 @@ export function elecWarnings(fa: FA): string[] {
   );
 }
 
-// Water
 export function hasWaterNeeds(value: string | undefined): string | boolean {
   return !!value || "L'animation n'a pas besoin d'eau.";
 }
