@@ -24,16 +24,17 @@ export class FaElectricityNeedsService {
     createFaElectricityNeedDto: CreateFaElectricityNeedDto[],
   ): Promise<fa_electricity_needs[] | null> {
     const operations = createFaElectricityNeedDto.map((elecneeds) => {
+      const { id, ...rest } = elecneeds;
       const data = {
-        ...elecneeds,
+        ...rest,
         fa_id: faID,
       };
       return this.prisma.fa_electricity_needs.upsert({
         where: {
-          id: elecneeds.id,
+          id: id ?? -1,
         },
-        update: data,
         create: data,
+        update: data,
       });
     });
     return this.prisma.$transaction(operations);

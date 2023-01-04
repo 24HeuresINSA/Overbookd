@@ -245,9 +245,14 @@ enum electricity_type {
   PC16_Prise_classique
   P17_16A_MONO
   P17_16A_TRI
+  P17_16A_TETRA
   P17_32A_MONO
   P17_32A_TRI
   P17_32A_TETRA
+  P17_63A_MONO
+  P17_63A_TRI
+  P17_63A_TETRA
+  P17_125A_TETRA
 }
 
 model fa_electricity_needs {
@@ -255,7 +260,9 @@ model fa_electricity_needs {
   fa               fa               @relation(fields: [fa_id], references: [id])
   fa_id            Int
   electricity_type electricity_type
+  device           String?          @db.Text
   power            Int
+  count            Int?
   comment          String?          @db.Text
 }
 

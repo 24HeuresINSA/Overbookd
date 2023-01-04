@@ -10,9 +10,28 @@ export enum electricity_type {
   PC16 = "PC16_Prise_classique",
   P17_16A_MONO = "P17_16A_MONO",
   P17_16A_TRI = "P17_16A_TRI",
+  P17_16A_TETRA = "P17_16A_TETRA",
   P17_32A_MONO = "P17_32A_MONO",
   P17_32A_TRI = "P17_32A_TRI",
   P17_32A_TETRA = "P17_32A_TETRA",
+  P17_63A_MONO = "P17_63A_MONO",
+  P17_63A_TRI = "P17_63A_TRI",
+  P17_63A_TETRA = "P17_63A_TETRA",
+  P17_125A_TETRA = "P17_125A_TETRA",
+}
+
+export enum electricity_type_label {
+  PC16_Prise_classique = "Prise classique (PC16)",
+  P17_16A_MONO = "16A Mono (P17_16A_MONO)",
+  P17_16A_TRI = "16A Tri (P17_16A_TRI)",
+  P17_16A_TETRA = "16A Tetra (P17_16A_TETRA)",
+  P17_32A_MONO = "32A Mono (P17_32A_MONO)",
+  P17_32A_TRI = "32A Tri (P17_32A_TRI)",
+  P17_32A_TETRA = "32A Tetra (P17_32A_TETRA)",
+  P17_63A_MONO = "63A Mono (P17_63A_MONO)",
+  P17_63A_TRI = "63A Tri (P17_63A_TRI)",
+  P17_63A_TETRA = "63A Tetra (P17_63A_TETRA)",
+  P17_125A_TETRA = "125A Tetra (P17_125A_TETRA)",
 }
 
 export enum signa_type {
@@ -136,9 +155,11 @@ export interface fa_refuse {
 
 export interface fa_electricity_needs {
   id?: number;
-  fa_id: number;
+  fa_id?: number;
   electricity_type: electricity_type;
+  device?: string;
   power: number;
+  count?: number;
   comment?: string;
 }
 
@@ -254,4 +275,9 @@ export interface FaSitePublishAnimation {
   photoLink?: string;
   description?: string;
   categories?: SitePublishAnimationCategoryType[];
+}
+
+export interface ElectricityTypeLabel {
+  type: electricity_type;
+  label: electricity_type_label;
 }

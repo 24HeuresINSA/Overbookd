@@ -82,7 +82,9 @@ export const COMPLETE_FA_SELECT = {
     select: {
       id: true,
       electricity_type: true,
+      device: true,
       power: true,
+      count: true,
       comment: true,
     },
   },
