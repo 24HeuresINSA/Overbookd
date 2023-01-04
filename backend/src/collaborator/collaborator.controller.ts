@@ -27,20 +27,20 @@ export class CollaboratorController {
   @Post(':faId')
   @ApiBody({ type: [CreateCollaboratorDto] })
   upsert(
-    @Param('faId', ParseIntPipe) faId: string,
+    @Param('faId', ParseIntPipe) faId: number,
     @Body() createCollaboratorDto: CreateCollaboratorDto[],
   ): Promise<collaborator[] | null> {
-    return this.collaboratorService.upsert(+faId, createCollaboratorDto);
+    return this.collaboratorService.upsert(faId, createCollaboratorDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Delete(':faId/:collaboratorId')
   remove(
-    @Param('faId', ParseIntPipe) faId: string,
-    @Param('collaboratorId', ParseIntPipe) collaboratorId: string,
+    @Param('faId', ParseIntPipe) faId: number,
+    @Param('collaboratorId', ParseIntPipe) collaboratorId: number,
   ): Promise<void> {
-    return this.collaboratorService.remove(+faId, +collaboratorId);
+    return this.collaboratorService.remove(faId, collaboratorId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -61,7 +61,7 @@ export class CollaboratorController {
     status: 200,
     description: 'Get a collaborator',
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<collaborator | null> {
-    return this.collaboratorService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<collaborator | null> {
+    return this.collaboratorService.findOne(id);
   }
 }

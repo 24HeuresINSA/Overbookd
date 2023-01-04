@@ -47,7 +47,7 @@ export class FaService {
   async findOne(id: number): Promise<FaResponse | null> {
     return this.prisma.fa.findUnique({
       where: {
-        id: Number(id),
+        id,
       },
       select: COMPLETE_FA_SELECT,
     });
@@ -97,15 +97,15 @@ export class FaService {
     await this.prisma.$transaction([
       this.prisma.fa_validation.create({
         data: {
-          fa_id: fa_id,
-          team_id: team_id,
-          user_id: user_id,
+          fa_id,
+          team_id,
+          user_id,
         },
       }),
       this.prisma.fa_refuse.deleteMany({
         where: {
-          fa_id: fa_id,
-          team_id: team_id,
+          fa_id,
+          team_id,
         },
       }),
     ]);
@@ -128,20 +128,20 @@ export class FaService {
     await this.prisma.$transaction([
       this.prisma.fa_refuse.create({
         data: {
-          fa_id: fa_id,
-          team_id: team_id,
-          user_id: user_id,
+          fa_id,
+          team_id,
+          user_id,
         },
       }),
       this.removeValidationFromTeam(fa_id, team_id),
     ]);
   }
 
-  private async checkFaExistence(fa_id: number): Promise<void> {
+  private async checkFaExistence(id: number): Promise<void> {
     const fa = await this.prisma.fa.findUnique({
-      where: { id: fa_id },
+      where: { id },
     });
-    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
   }
 
   private async isUserValidator(
@@ -161,8 +161,8 @@ export class FaService {
     const user_team = await this.prisma.user_Team.findUnique({
       where: {
         user_id_team_id: {
-          user_id: user_id,
-          team_id: team_id,
+          user_id,
+          team_id,
         },
       },
     });
@@ -180,8 +180,8 @@ export class FaService {
   private removeValidationFromTeam(fa_id: number, team_id: number) {
     return this.prisma.fa_validation.deleteMany({
       where: {
-        fa_id: fa_id,
-        team_id: team_id,
+        fa_id,
+        team_id,
       },
     });
   }

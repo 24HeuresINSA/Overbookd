@@ -99,8 +99,8 @@ export class FaController {
     description: 'Get a fa',
     type: Promise<fa | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<FaResponse | null> {
-    return this.faService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<FaResponse | null> {
+    return this.faService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -116,10 +116,10 @@ export class FaController {
     type: UpdateFaDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaDto,
   ): Promise<FaResponse | null> {
-    return this.faService.update(+id, updateFaDto);
+    return this.faService.update(id, updateFaDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -160,10 +160,10 @@ export class FaController {
   })
   removeValidation(
     @Request() request: RequestWithUserPayload,
-    @Param('faId', ParseIntPipe) faId: string,
-    @Param('teamId', ParseIntPipe) teamId: string,
+    @Param('faId', ParseIntPipe) faId: number,
+    @Param('teamId', ParseIntPipe) teamId: number,
   ): Promise<void> {
-    return this.faService.removeFaValidation(+faId, +teamId);
+    return this.faService.removeFaValidation(faId, teamId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
