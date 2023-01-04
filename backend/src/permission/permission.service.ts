@@ -113,11 +113,20 @@ export class PermissionService {
   private async permissionExists(
     permissionId: number,
   ): Promise<PermissionResponseDto> {
-    const permissions = await this.permission({ where: { id: permissionId } });
-    if (permissions.length !== 1) {
+    const permission = await this.prisma.permission.findUnique({
+      where: { id: permissionId },
+      select: {
+        ...SELECT_PERMISSION,
+        ...SELECT_PERMISSION_TEAM,
+      },
+    });
+    if (!permission) {
       throw new NotFoundException('Permission does not exist');
     }
-    return permissions[0];
+    return {
+      ...permission,
+      teams: permission.teams.map(({ team }) => team.code),
+    };
   }
 
   private async assertAllTeamCodesExist(teamCodes: string[]) {
