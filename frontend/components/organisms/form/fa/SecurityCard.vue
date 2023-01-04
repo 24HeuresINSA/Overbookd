@@ -3,7 +3,9 @@
     <v-card-title>Sécurité</v-card-title>
     <v-card-subtitle
       >Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
-      de ton activité, contacte securite@24heures.org</v-card-subtitle
+      de ton activité, contacte
+      <a href="mailto:securite@24heures.org">securite@24heures.org</a
+      >.</v-card-subtitle
     >
     <v-card-text>
       <v-form>
