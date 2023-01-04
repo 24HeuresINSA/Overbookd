@@ -1,5 +1,5 @@
 <template>
-  <div v-if="shouldShowError" class="my-container">
+  <div v-if="shouldShowError" class="error-container">
     <v-icon color="red" large>mdi-alert</v-icon>
     <ul>
       <li v-for="error in errors" :key="error" class="important" dense>
@@ -51,19 +51,24 @@ export default Vue.extend({
           return [];
       }
     },
-    shouldShowError(): boolean {
+    isDisplayErrorMode(): boolean {
       return (
-        (this.mFA.status === Status.SUBMITTED ||
-          this.mFA.status === Status.REFUSED) &&
-        this.errors.length > 0
+        this.mFA.status === Status.SUBMITTED ||
+        this.mFA.status === Status.REFUSED
       );
+    },
+    hasError(): boolean {
+      return this.errors.length > 0;
+    },
+    shouldShowError(): boolean {
+      return this.isDisplayErrorMode && this.hasError;
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.my-container {
+.error-container {
   display: flex;
   align-items: center;
 

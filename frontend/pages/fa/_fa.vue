@@ -1,11 +1,11 @@
 <template>
-  <div class="main">
+  <div class="main fa">
     <div class="sidebar">
       <h1>Fiche Activité n°{{ faId }}</h1>
       <h2>{{ faName }}</h2>
 
       <div class="status">
-        <span class="dot" :class="statusColor"></span>
+        <span class="dot" :class="faValidationStatus"></span>
         <h3>
           {{
             mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
@@ -15,7 +15,7 @@
 
       <div class="icons">
         <div v-for="validator of validators" :key="validator.code" class="icon">
-          <v-icon :color="getIconColor(validator)" size="26">
+          <v-icon :class="validatorValidationStatus(validator)" size="26">
             {{ validator.icon }}
           </v-icon>
           <span class="icon-detail">{{ validator.name }}</span>
@@ -58,13 +58,13 @@
       </v-btn>
       <div class="bottom-bar__actions">
         <v-btn
-          v-if="shouldShowRefuseButton()"
+          v-if="shouldShowRefuseButton"
           color="red"
           class="white--text"
           @click="isRefuseDialogOpen = true"
           >refusé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="shouldShowRefuseMenu()" offset-y>
+        <v-menu v-if="shouldShowRefuseMenu" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
@@ -85,13 +85,13 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="shouldShowValidationButton()"
+          v-if="shouldShowValidationButton"
           color="green"
           class="white--text"
           @click="validate(mValidators[0])"
           >validé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="shouldShowValidationMenu()" offset-y>
+        <v-menu v-if="shouldShowValidationMenu" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
               valider
@@ -112,19 +112,16 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="mFA.status === 'DRAFT' || mFA.status === 'REFUSED'"
+          v-if="isDraftOrRefused"
           color="warning"
           :disabled="mFA.status === 'SUBMITTED' && hasAtLeastOneError"
-          @click="checkBeforeSubmit()"
+          @click="checkBeforeAskForValidation()"
           >soumettre à validation
         </v-btn>
         <v-btn v-if="mFA.status !== 'VALIDATED'" @click="saveFA"
           >sauvegarder</v-btn
         >
-        <v-btn
-          v-if="mValidators.length >= 1 && mFA.isValid === false"
-          color="red"
-          @click="undelete"
+        <v-btn v-if="isRecoverable" color="red" @click="undelete"
           >récupérer
         </v-btn>
       </div>
@@ -201,6 +198,7 @@ import { Status } from "~/utils/models/FA";
 import { team } from "~/utils/models/repo";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import {
+  getFAValidationStatus,
   isAnimationRefusedBy,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
@@ -299,17 +297,41 @@ export default Vue.extend({
     hasAtLeastOneError(): boolean {
       return hasAtLeastOneError(this.FA);
     },
-    statusColor(): string {
-      if (this.mFA.status === Status.SUBMITTED) {
-        return "orange";
-      }
-      if (this.mFA.status === Status.VALIDATED) {
-        return "green";
-      }
-      if (this.mFA.status === Status.REFUSED) {
-        return "red";
-      }
-      return "grey";
+    faValidationStatus(): string {
+      return this.mFA.status.toLowerCase();
+    },
+    isRecoverable(): boolean {
+      return this.mValidators.length >= 1 && this.mFA.isValid === false;
+    },
+    isDraftOrRefused(): boolean {
+      return (
+        this.mFA.status === Status.DRAFT || this.mFA.status === Status.REFUSED
+      );
+    },
+    isSubmittedOrRefused(): boolean {
+      return (
+        this.mFA.status === Status.SUBMITTED ||
+        this.mFA.status === Status.REFUSED
+      );
+    },
+    isNotDraft(): boolean {
+      return this.mFA.status !== Status.DRAFT;
+    },
+    shouldShowValidationButton(): boolean {
+      return (
+        this.mValidatorsNotValidated.length === 1 && this.isSubmittedOrRefused
+      );
+    },
+    shouldShowRefuseButton(): boolean {
+      return this.mValidatorsValidated.length === 1 && this.isNotDraft;
+    },
+    shouldShowValidationMenu(): boolean {
+      return (
+        this.mValidatorsNotValidated.length > 1 && this.isSubmittedOrRefused
+      );
+    },
+    shouldShowRefuseMenu(): boolean {
+      return this.mValidatorsValidated.length > 1 && this.isNotDraft;
     },
   },
 
@@ -394,7 +416,7 @@ export default Vue.extend({
       this.isRefuseDialogOpen = false;
     },
 
-    checkBeforeSubmit() {
+    checkBeforeAskForValidation() {
       if (this.mFA.status === "DRAFT")
         return (this.isValidationDialogOpen = true);
       this.submit();
@@ -410,14 +432,8 @@ export default Vue.extend({
       this.saveFA();
     },
 
-    getIconColor(validator: team) {
-      if (this.isAnimationValidatedBy(validator)) {
-        return "green";
-      }
-      if (this.isAnimationRefusedBy(validator)) {
-        return "red";
-      }
-      return "grey";
+    validatorValidationStatus(validator: team) {
+      return getFAValidationStatus(this.mFA, validator.code).toLowerCase();
     },
 
     isAnimationValidatedBy(validator: team) {
@@ -426,32 +442,6 @@ export default Vue.extend({
 
     isAnimationRefusedBy(validator: team) {
       return isAnimationRefusedBy(this.mFA, validator.code);
-    },
-
-    isSubmittedOrRefused() {
-      return (
-        this.mFA.status === Status.SUBMITTED ||
-        this.mFA.status === Status.REFUSED
-      );
-    },
-    isNotDraft() {
-      return this.mFA.status !== Status.DRAFT;
-    },
-    shouldShowValidationButton() {
-      return (
-        this.mValidatorsNotValidated.length === 1 && this.isSubmittedOrRefused()
-      );
-    },
-    shouldShowRefuseButton() {
-      return this.mValidatorsValidated.length === 1 && this.isNotDraft();
-    },
-    shouldShowValidationMenu() {
-      return (
-        this.mValidatorsNotValidated.length > 1 && this.isSubmittedOrRefused()
-      );
-    },
-    shouldShowRefuseMenu() {
-      return this.mValidatorsValidated.length > 1 && this.isNotDraft();
     },
   },
 });
@@ -498,7 +488,6 @@ export default Vue.extend({
     .dot {
       height: 25px;
       width: 25px;
-      background-color: #bbb;
       border-radius: 50%;
       display: inline-block;
       margin-left: 16px;

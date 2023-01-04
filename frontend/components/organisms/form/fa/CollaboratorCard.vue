@@ -86,9 +86,8 @@ export default Vue.extend({
       return this.mFA.fa_collaborators ?? [];
     },
     collaborator(): collaborator {
-      const collaborators = this.mFA.fa_collaborators;
-      if (collaborators && collaborators.length > 0) {
-        return collaborators[0].collaborator;
+      if (this.collaborators.length > 0) {
+        return this.collaborators[0].collaborator;
       }
       return {};
     },

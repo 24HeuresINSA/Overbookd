@@ -38,10 +38,7 @@
             v-model="dateStart"
             :max="formatDateEnd ? dateEnd : ''"
             first-day-of-week="1"
-            @input="
-              menuDateStart = false;
-              formatDateStart = formatDate(dateStart);
-            "
+            @input="closeStartDatePicker"
           ></v-date-picker>
         </v-menu>
 
@@ -104,10 +101,7 @@
             v-model="dateEnd"
             :min="formatDateStart ? dateStart : ''"
             first-day-of-week="1"
-            @input="
-              menuDateEnd = false;
-              formatDateEnd = formatDate(dateEnd);
-            "
+            @input="closeEndDatePicker"
           ></v-date-picker>
         </v-menu>
 
@@ -383,6 +377,14 @@ export default Vue.extend({
     },
     saveMenuTime(menu: any, time: string) {
       menu.save(time);
+    },
+    closeStartDatePicker() {
+      this.menuDateStart = false;
+      this.formatDateStart = this.formatDate(this.dateStart);
+    },
+    closeEndDatePicker() {
+      this.menuDateEnd = false;
+      this.formatDateEnd = this.formatDate(this.dateEnd);
     },
   },
 });

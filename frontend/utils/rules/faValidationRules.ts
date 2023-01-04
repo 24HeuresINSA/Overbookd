@@ -227,7 +227,7 @@ export function collaboratorWarnings(fa: FA): string[] {
 }
 
 export function hasAtLeastOneMatosGearRequest(
-  gearRequests: GearRequest[] | undefined
+  gearRequests: GearRequest[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -235,7 +235,7 @@ export function hasAtLeastOneMatosGearRequest(
   );
 }
 export function hasAtLeastOneBarrieresGearRequest(
-  gearRequests: GearRequest[] | undefined
+  gearRequests: GearRequest[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -243,7 +243,7 @@ export function hasAtLeastOneBarrieresGearRequest(
   );
 }
 export function hasAtLeastOneElecGearRequest(
-  gearRequests: GearRequest[] | undefined
+  gearRequests: GearRequest[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -251,7 +251,7 @@ export function hasAtLeastOneElecGearRequest(
   );
 }
 export function hasMatosGearRequestWithQuantityHigherThanZero(
-  matosGearRequests: GearRequest[] | undefined
+  matosGearRequests: GearRequest[]
 ): string | boolean {
   return (
     matosGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
