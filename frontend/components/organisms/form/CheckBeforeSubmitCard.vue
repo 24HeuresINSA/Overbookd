@@ -149,109 +149,116 @@ import {
   elecWarnings,
   waterWarnings,
 } from "~/utils/rules/faValidationRules";
+import { FA, SortedStoredGearRequests } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CheckBeforeSubmitCard",
   computed: {
-    store(): any {
+    FA(): any {
       return this.$accessor.FA;
+    },
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    allSortedGearRequests(): SortedStoredGearRequests {
+      return this.$accessor.FA.allSortedGearRequests;
     },
 
     hasAtLeatOneError(): boolean {
-      return hasAtLeastOneError(this.store);
+      return hasAtLeastOneError(this.mFA, this.allSortedGearRequests);
     },
     hasAtLeastOneWarning(): boolean {
-      return hasAtLeastOneWarning(this.store);
+      return hasAtLeastOneWarning(this.mFA, this.allSortedGearRequests);
     },
 
     generalErrors(): string[] {
-      return generalErrors(this.store.mFA);
+      return generalErrors(this.mFA);
     },
     hasGeneralErrors(): boolean {
       return this.generalErrors.length > 0;
     },
 
     detailErrors(): string[] {
-      return detailErrors(this.store.mFA);
+      return detailErrors(this.mFA);
     },
     hasDetailErrors(): boolean {
       return this.detailErrors.length > 0;
     },
     detailWarnings(): string[] {
-      return detailWarnings(this.store.mFA);
+      return detailWarnings(this.mFA);
     },
     hasDetailWarnings(): boolean {
       return this.detailWarnings.length > 0;
     },
 
     signaErrors(): string[] {
-      return signaErrors(this.store.mFA);
+      return signaErrors(this.mFA);
     },
     hasSignaErrors(): boolean {
       return this.signaErrors.length > 0;
     },
     signaWarnings(): string[] {
-      return signaWarnings(this.store.mFA);
+      return signaWarnings(this.mFA);
     },
     hasSignaWarnings(): boolean {
       return this.signaWarnings.length > 0;
     },
 
     timeWindowsErrors(): string[] {
-      return timeWindowsErrors(this.store.mFA);
+      return timeWindowsErrors(this.mFA);
     },
     hasTimeWindowsErrors(): boolean {
       return this.timeWindowsErrors.length > 0;
     },
 
     securityErrors(): string[] {
-      return securityErrors(this.store.mFA);
+      return securityErrors(this.mFA);
     },
     hasSecurityErrors(): boolean {
       return this.securityErrors.length > 0;
     },
     securityWarnings(): string[] {
-      return securityWarnings(this.store.mFA);
+      return securityWarnings(this.mFA);
     },
     hasSecurityWarnings(): boolean {
       return this.securityWarnings.length > 0;
     },
 
     collaboratorErrors(): string[] {
-      return collaboratorErrors(this.store.mFA);
+      return collaboratorErrors(this.mFA);
     },
     hasCollaboratorErrors(): boolean {
       return this.collaboratorErrors.length > 0;
     },
     collaboratorWarnings(): string[] {
-      return collaboratorWarnings(this.store.mFA);
+      return collaboratorWarnings(this.mFA);
     },
     hasCollaboratorWarnings(): boolean {
       return this.collaboratorWarnings.length > 0;
     },
 
     gearRequestErrors(): string[] {
-      return gearRequestErrors(this.store);
+      return gearRequestErrors(this.allSortedGearRequests);
     },
     hasGearRequestErrors(): boolean {
       return this.gearRequestErrors.length > 0;
     },
     gearRequestWarnings(): string[] {
-      return gearRequestWarnings(this.store);
+      return gearRequestWarnings(this.allSortedGearRequests);
     },
     hasGearRequestWarnings(): boolean {
       return this.gearRequestWarnings.length > 0;
     },
 
     elecWarnings(): string[] {
-      return elecWarnings(this.store.mFA);
+      return elecWarnings(this.mFA);
     },
     hasElecWarnings(): boolean {
       return this.elecWarnings.length > 0;
     },
 
     waterWarnings(): string[] {
-      return waterWarnings(this.store.mFA);
+      return waterWarnings(this.mFA);
     },
     hasWaterWarnings(): boolean {
       return this.waterWarnings.length > 0;

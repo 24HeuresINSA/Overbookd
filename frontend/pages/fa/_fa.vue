@@ -295,7 +295,7 @@ export default Vue.extend({
       });
     },
     hasAtLeastOneError(): boolean {
-      return hasAtLeastOneError(this.FA);
+      return hasAtLeastOneError(this.mFA, this.FA.allSortedGearRequests);
     },
     faValidationStatus(): string {
       return this.mFA.status.toLowerCase();
