@@ -178,9 +178,9 @@
       <v-card>
         <v-card-title> Refuser </v-card-title>
         <v-card-text>
-          <h4>pourquoi c'est de la 💩</h4>
+          <h3>Pourquoi c'est de la 💩 ?</h3>
           <p>sans trop de 🧂</p>
-          <v-textarea v-model="refuseComment" required></v-textarea>
+          <v-textarea v-model="refuseComment" required dense></v-textarea>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
