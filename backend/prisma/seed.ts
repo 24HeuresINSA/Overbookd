@@ -10,14 +10,16 @@ const slugify = new SlugifyService();
 async function insertOrUpdateCategory(
   name: string,
   teams: Team[],
-  parent?: { id: number; path: string, owner_id: number },
+  parent?: { id: number; path: string; owner_id: number },
 ) {
   const parentId = parent?.id;
   const path = parent
     ? `${parent.path}->${slugify.slugify(name)}`
     : slugify.slugify(name);
-  const owner = parent ? {id: parent.owner_id} : teams.find((team) => team.code === name.toLocaleLowerCase());
-  const ownerPart = owner ? {owner_id: owner.id} : {}
+  const owner = parent
+    ? { id: parent.owner_id }
+    : teams.find((team) => team.code === name.toLocaleLowerCase());
+  const ownerPart = owner ? { owner_id: owner.id } : {};
   const category = { name, path, parent: parentId, ...ownerPart };
   return prisma.catalog_Category.upsert({
     create: category,
@@ -47,6 +49,14 @@ async function main() {
       icon: 'mdi-eye-circle',
       fa_validator: true,
       ft_validator: true,
+    },
+    {
+      name: 'Accueil artiste',
+      code: 'accueil-artiste',
+      color: '#A166F2',
+      icon: 'mdi-plane-train',
+      fa_validator: false,
+      ft_validator: false,
     },
     {
       name: 'bar',
@@ -407,6 +417,7 @@ async function main() {
     ['fen', 'hard,fen'],
     ['voiture', 'hard,voiture'],
     ['camion', 'hard,camion'],
+    ['accueil-artiste', 'hard,orga,accueil-artiste'],
   ];
 
   const hashPassword = await new HashingUtilsService().hash('password');
@@ -451,8 +462,11 @@ async function main() {
   await Promise.all(
     categoriesAndGears.map(async ({ name, gears, categories }) => {
       console.log(`🏷️ Inserting ${name}`);
-      const { id: categoryId, path: categoryPath, owner_id } =
-        await insertOrUpdateCategory(name, databaseTeams);
+      const {
+        id: categoryId,
+        path: categoryPath,
+        owner_id,
+      } = await insertOrUpdateCategory(name, databaseTeams);
       const gearsInsert = gears
         ? gears?.map((name) => {
             console.log(`🔨 Inserting ${name} with category ${categoryPath}`);
@@ -468,7 +482,7 @@ async function main() {
               await insertOrUpdateCategory(subCategory.name, databaseTeams, {
                 id: categoryId,
                 path: categoryPath,
-                owner_id
+                owner_id,
               });
             return Promise.all(
               subCategory.gears.map((gear) => {
