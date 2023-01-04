@@ -9,15 +9,15 @@
         :items-per-page="-1"
         sort-by="created_at"
       >
-        <template #[`item.created_at`]="{ item }">
-          {{ new Date(item.created_at).toLocaleString() }}
-        </template>
         <template #[`item.User_author`]="{ item }">
           {{
             item.User_author
               ? item.User_author.firstname + " " + item.User_author.lastname
               : me.firstname + " " + me.lastname
           }}
+        </template>
+        <template #[`item.created_at`]="{ item }">
+          {{ formatDateString(item.created_at) }}
         </template>
       </v-data-table>
       <v-textarea
@@ -81,6 +81,18 @@ export default Vue.extend({
         await this.store.addComment({ comment, defaultAuthor: this.me });
         this.newComment = "";
       }
+    },
+    formatDateString(date: string) {
+      const displayOptions: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Intl.DateTimeFormat("fr", displayOptions).format(
+        new Date(date)
+      );
     },
   },
 });

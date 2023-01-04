@@ -428,7 +428,7 @@ export const actions = actionTree(
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
       const comment: fa_comments = {
         subject: subject_type.REFUSED,
-        comment: `La FA a été refusée : ${message}.`,
+        comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author: user_id,
         created_at: new Date(),
       };
