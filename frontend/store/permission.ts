@@ -22,7 +22,7 @@ export const getters = getterTree(state, {
   isValidated:
     (state) =>
     (user: User): boolean => {
-      return user.permissions?.includes("validated-user") || false;
+      return user.permissions.includes("validated-user");
     },
 });
 
@@ -80,26 +80,6 @@ export const actions = actionTree(
         context.dispatch("setPermissionsInStore");
         return res;
       });
-    },
-    async faValidators(context): Promise<string[]> {
-      if (context.state.permissions.length === 0) {
-        await context.dispatch("setPermissionsInStore");
-      }
-      return (
-        context.state.permissions.find(
-          (permission: Permission) => permission.name === "fa-validator"
-        )?.teams || []
-      );
-    },
-    async ftValidators(context): Promise<string[]> {
-      if (context.state.permissions.length === 0) {
-        await context.dispatch("setPermissionsInStore");
-      }
-      return (
-        context.state.permissions.find(
-          (permission: Permission) => permission.name === "ft-validator"
-        )?.teams || []
-      );
     },
   }
 );

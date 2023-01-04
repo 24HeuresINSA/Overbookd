@@ -3,7 +3,7 @@
     <h2>Permissions</h2>
     <v-data-table
       :headers="headers"
-      :items="permissions()"
+      :items="permissions"
       :items-per-page="5"
       :search="search"
       dense
@@ -52,8 +52,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { permission } from "~/utils/models/repo";
 import PermissionRow from "~/components/molecules/PermissionRow.vue";
+import { Permission } from "~/utils/models/Permission";
 
 export default Vue.extend({
   name: "PermissionCard",
@@ -89,15 +89,17 @@ export default Vue.extend({
       newPermissionDescription: "",
     };
   },
+  computed: {
+    permissions(): Permission[] {
+      return this.$accessor.permission.allPermissions;
+    },
+  },
   async mounted() {
     if (this.$accessor.permission.allPermissions.length === 0) {
       await this.$accessor.permission.setPermissionsInStore();
     }
   },
   methods: {
-    permissions(): permission[] {
-      return this.$accessor.permission.allPermissions;
-    },
     async addPermission() {
       let response = await this.$accessor.permission.createPermission({
         name: this.newPermissionName,

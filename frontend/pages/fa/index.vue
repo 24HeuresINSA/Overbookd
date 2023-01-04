@@ -202,7 +202,6 @@ export default {
       isDeleteFAOpen: false,
       faName: undefined,
       teamNames: this.$accessor.team.teamNames,
-      validators: [],
     };
   },
   computed: {
@@ -228,6 +227,9 @@ export default {
       }
       return fuse.search(this.search).map((e) => e.item);
     },
+    validators() {
+      return this.$accessor.team.faValidators;
+    },
   },
   watch: {
     async selectedStatus() {
@@ -245,9 +247,9 @@ export default {
     }
 
     this.fetchFas();
-    this.validators = await this.$accessor.permission
-      .faValidators()
-      .then((validators) => this.$accessor.team.getTeams(validators));
+    if (this.validators.length === 0) {
+      await this.$accessor.team.fetchFaValidators();
+    }
   },
   methods: {
     async fetchFas() {

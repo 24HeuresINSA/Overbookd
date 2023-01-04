@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -31,8 +32,11 @@ export class TeamController {
     type: TeamResponseDto,
     isArray: true,
   })
-  async getTeams(): Promise<TeamResponseDto[]> {
-    return this.teamService.team({ orderBy: { name: 'asc' } });
+  async getTeams(
+    @Query('permission') permission?: string,
+  ): Promise<TeamResponseDto[]> {
+    const where = buildQueryParamsCondition(permission);
+    return this.teamService.team({ orderBy: { name: 'asc' }, where });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -94,4 +98,16 @@ export class TeamController {
   async deleteTeam(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.teamService.deleteTeam(id);
   }
+}
+
+function buildQueryParamsCondition(permission: string) {
+  return permission
+    ? {
+        permissions: {
+          some: {
+            permission_name: permission,
+          },
+        },
+      }
+    : {};
 }

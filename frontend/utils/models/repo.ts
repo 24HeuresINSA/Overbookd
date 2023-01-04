@@ -58,7 +58,7 @@ export interface Notification {
 export interface User {
   id: string;
   team: string[];
-  permissions?: string[];
+  permissions: string[];
   friends: any[];
   nickname?: string;
   firstname: string;

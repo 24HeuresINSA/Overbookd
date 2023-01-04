@@ -48,8 +48,8 @@ export const getters = getterTree(state, {
   },
   hasPermission: (state: UserState) => (permission: string) => {
     return (
-      state.me.permissions?.includes("admin") ||
-      state.me.permissions?.includes(permission) ||
+      state.me.permissions.includes("admin") ||
+      state.me.permissions.includes(permission) ||
       false
     );
   },

@@ -8,10 +8,12 @@ const teamRepo = RepoFactory.teamRepo;
 // The state types definitions
 interface State {
   teams: team[];
+  faValidators: team[];
 }
 
 export const state = (): State => ({
   teams: [],
+  faValidators: [] as team[],
 });
 
 export const getters = getterTree(state, {
@@ -36,8 +38,11 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_TEAMS(state, teams: any) {
+  SET_TEAMS(state, teams: team[]) {
     state.teams = teams;
+  },
+  SET_FA_VALIDATORS(state, teams: team[]) {
+    state.faValidators = teams;
   },
 });
 
@@ -56,6 +61,13 @@ export const actions = actionTree(
       { userId, teams }: { userId: number; teams: team[] }
     ): Promise<any> {
       return safeCall(this, teamRepo.linkUserToTeams(this, userId, teams));
+    },
+    async fetchFaValidators(context): Promise<void> {
+      const res = await safeCall(this, teamRepo.getFaValidators(this));
+      if (!res) {
+        return;
+      }
+      context.commit("SET_FA_VALIDATORS", res.data);
     },
   }
 );

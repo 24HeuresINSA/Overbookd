@@ -28,7 +28,7 @@
           item-value="code"
           label="Team"
         />
-        <v-btn fab dark small class="mx-2" @click="addTeam">
+        <v-btn fab dark small class="mx-2" @click="addOrRemoveTeam">
           <v-icon dark> mdi-plus </v-icon>
         </v-btn>
         <v-btn fab dark small class="mx-2" @click="removePermission">
@@ -66,7 +66,7 @@ export default Vue.extend({
     teams(): team[] {
       return this.$accessor.team.allTeams;
     },
-    async addTeam() {
+    async addOrRemoveTeam() {
       if (!this.newElement) {
         this.$accessor.notif.pushNotification({
           message: "Il faut préciser une team !",
@@ -87,7 +87,7 @@ export default Vue.extend({
       });
     },
     async updateDescription() {
-      let response = await this.$accessor.permission.updatePermission({
+      await this.$accessor.permission.updatePermission({
         id: this.permission.id,
         name: this.permission.name,
         description: this.newDescription,

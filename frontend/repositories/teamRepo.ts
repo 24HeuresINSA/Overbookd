@@ -14,4 +14,11 @@ export default {
       teams,
     });
   },
+  getFaValidators(context: Context) {
+    return context.$axios.get(`${resource}`, {
+      params: {
+        permission: "fa-validator",
+      },
+    });
+  },
 };

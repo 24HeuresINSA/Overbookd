@@ -318,7 +318,7 @@ export default {
       return this.$accessor.user.hasPermission(permission);
     },
     isUserWithCP(user) {
-      return user.permissions.includes("cp") || false;
+      return user.permissions.includes("cp");
     },
     isFloat(number) {
       const floatRegex = new RegExp(this.regex.float);

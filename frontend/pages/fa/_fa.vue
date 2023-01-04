@@ -349,6 +349,9 @@ export default Vue.extend({
     this.$accessor.signaLocation.getAllSignaLocations();
 
     this.selectedValidator = this.mValidators[0];
+    if (this.validators.length === 0) {
+      await this.$accessor.team.fetchFaValidators();
+    }
   },
   methods: {
     async saveFA() {
