@@ -3,6 +3,10 @@ import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
+import {
+  retrievePermissions,
+  TeamWithNestedPermissions,
+} from 'src/team/utils/permissions';
 
 const SELECT_USER = {
   email: true,
@@ -171,22 +175,18 @@ export class UserService {
     };
   }
 
-  private getUserWithTeamAndPermission(user: any): UserWithTeamAndPermission {
-    const teams = [];
-    const permissions = [];
-    if (user) {
-      user.team.forEach((team) => {
-        teams.push(team.team.code);
-        team.team.permissions.forEach((permission) => {
-          permissions.push(permission.permission_name);
-        });
-      });
-    }
+  private getUserWithTeamAndPermission(
+    user: UserWithoutPassword & {
+      team: TeamWithNestedPermissions[];
+    },
+  ): UserWithTeamAndPermission {
+    const teams = user.team.map((t) => t.team.code);
+    const permissions = retrievePermissions(user.team);
     return user
       ? {
           ...user,
           team: teams,
-          permissions,
+          permissions: [...permissions],
         }
       : undefined;
   }

@@ -12,6 +12,7 @@ import { randomBytes, timingSafeEqual } from 'crypto';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { retrievePermissions } from 'src/team/utils/permissions';
 
 type UserCredentials = Pick<User, 'email' | 'password'>;
 type UserEmail = Pick<User, 'email'>;
@@ -51,11 +52,7 @@ export class AuthService {
                 code: true,
                 permissions: {
                   select: {
-                    permission: {
-                      select: {
-                        name: true,
-                      },
-                    },
+                    permission_name: true,
                   },
                 },
               },
@@ -65,12 +62,7 @@ export class AuthService {
       },
     });
     const teams = userWithPayload.team.map((t) => t.team.code);
-    const permissions = new Set<string>();
-    userWithPayload.team.forEach((t) => {
-      t.team.permissions.forEach((p) => {
-        permissions.add(p.permission.name);
-      });
-    });
+    const permissions = retrievePermissions(userWithPayload.team);
     return {
       userId: userWithPayload.id,
       teams: teams,
