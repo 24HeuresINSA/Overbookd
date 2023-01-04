@@ -426,13 +426,9 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
-      let commentMessage = "La FA a été refusée";
-      if (message) commentMessage += ` : ${message}`;
-      else commentMessage += ".";
-
       const comment: fa_comments = {
         subject: subject_type.REFUSED,
-        comment: commentMessage,
+        comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author: user_id,
         created_at: new Date(),
       };
