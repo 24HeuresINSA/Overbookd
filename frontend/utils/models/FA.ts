@@ -281,3 +281,9 @@ export interface ElectricityTypeLabel {
   type: electricity_type;
   label: electricity_type_label;
 }
+
+export interface SortedStoredGearRequests {
+  matos: StoredGearRequest[];
+  barrieres: StoredGearRequest[];
+  elec: StoredGearRequest[];
+}

@@ -17,6 +17,7 @@ import {
   GearRequestWithDrive,
   Period,
   SearchFA,
+  SortedStoredGearRequests,
   Status,
   StoredGearRequest,
   subject_type,
@@ -78,6 +79,13 @@ export const getters = getterTree(state, {
       if (savedGearRequest) return gearRequests;
       return [...gearRequests, gearRequest];
     }, [] as StoredGearRequest[]);
+  },
+  allSortedGearRequests(state, getters): SortedStoredGearRequests {
+    return {
+      matos: getters.matosGearRequests,
+      barrieres: getters.barrieresGearRequests,
+      elec: getters.elecGearRequests,
+    };
   },
 });
 

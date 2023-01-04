@@ -7,31 +7,38 @@ import {
   fa_signa_needs,
   fa_type,
   GearRequest,
+  SortedStoredGearRequests,
   time_windows,
   time_windows_type,
 } from "../models/FA";
 
-export function hasAtLeastOneError(store: any) {
+export function hasAtLeastOneError(
+  mFA: FA,
+  gearRequests: SortedStoredGearRequests
+): boolean {
   const errors = [
-    ...generalErrors(store.mFA),
-    ...detailErrors(store.mFA),
-    ...signaErrors(store.mFA),
-    ...timeWindowsErrors(store.mFA),
-    ...securityErrors(store.mFA),
-    ...collaboratorErrors(store.mFA),
-    ...gearRequestErrors(store),
+    ...generalErrors(mFA),
+    ...detailErrors(mFA),
+    ...signaErrors(mFA),
+    ...timeWindowsErrors(mFA),
+    ...securityErrors(mFA),
+    ...collaboratorErrors(mFA),
+    ...gearRequestErrors(gearRequests),
   ];
   return errors.length > 0;
 }
-export function hasAtLeastOneWarning(store: any) {
+export function hasAtLeastOneWarning(
+  mFA: FA,
+  gearRequests: SortedStoredGearRequests
+): boolean {
   const warnings = [
-    ...detailWarnings(store.mFA),
-    ...signaWarnings(store.mFA),
-    ...securityWarnings(store.mFA),
-    ...collaboratorWarnings(store.mFA),
-    ...gearRequestWarnings(store),
-    ...elecWarnings(store.mFA),
-    ...waterWarnings(store.mFA),
+    ...detailWarnings(mFA),
+    ...signaWarnings(mFA),
+    ...securityWarnings(mFA),
+    ...collaboratorWarnings(mFA),
+    ...gearRequestWarnings(gearRequests),
+    ...elecWarnings(mFA),
+    ...waterWarnings(mFA),
   ];
   return warnings.length > 0;
 }
@@ -274,20 +281,22 @@ export function hasElecGearRequestWithQuantityHigherThanZero(
     "Chaque matériel Elec doit avoir une quantité."
   );
 }
-export function gearRequestErrors(store: any): string[] {
+export function gearRequestErrors(
+  gearRequests: SortedStoredGearRequests
+): string[] {
   return [
-    hasMatosGearRequestWithQuantityHigherThanZero(store.matosGearRequests),
-    hasBarrieresGearRequestWithQuantityHigherThanZero(
-      store.barrieresGearRequests
-    ),
-    hasElecGearRequestWithQuantityHigherThanZero(store.elecGearRequests),
+    hasMatosGearRequestWithQuantityHigherThanZero(gearRequests.matos),
+    hasBarrieresGearRequestWithQuantityHigherThanZero(gearRequests.barrieres),
+    hasElecGearRequestWithQuantityHigherThanZero(gearRequests.elec),
   ].filter((error): error is string => error !== true);
 }
-export function gearRequestWarnings(store: any): string[] {
+export function gearRequestWarnings(
+  gearRequests: SortedStoredGearRequests
+): string[] {
   return [
-    hasAtLeastOneMatosGearRequest(store.matosGearRequests),
-    hasAtLeastOneBarrieresGearRequest(store.barrieresGearRequests),
-    hasAtLeastOneElecGearRequest(store.elecGearRequests),
+    hasAtLeastOneMatosGearRequest(gearRequests.matos),
+    hasAtLeastOneBarrieresGearRequest(gearRequests.barrieres),
+    hasAtLeastOneElecGearRequest(gearRequests.elec),
   ].filter((warning): warning is string => warning !== true);
 }
 
