@@ -153,13 +153,7 @@ export default Vue.extend({
       deep: true,
     },
   },
-  async mounted() {
-    // await this.$accessor.location.getAllLocations();
-  },
   methods: {
-    /*selectLocations(locations: string[]) {
-      this.$accessor.FA.setLocations(locations);
-    },*/
     addSignalisation() {
       if (!this.newSignalisation.type || !this.newSignalisation.text) {
         return this.$store.dispatch("notif/pushNotification", {

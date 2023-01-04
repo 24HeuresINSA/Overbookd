@@ -3,7 +3,7 @@
     <v-card-title>Besoin d'eau</v-card-title>
     <v-card-subtitle
       >Si ton animation a besoin d'eau, il faut savoir quel est le débit dont tu
-      as besoin et comment on l'évacue. pour plus de renseignement voit avec la
+      as besoin et comment on l'évacue. Pour plus de renseignement, vois avec la
       Log Elec via logistique@24heures.org</v-card-subtitle
     >
     <v-card-text>

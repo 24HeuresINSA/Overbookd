@@ -28,13 +28,18 @@ export class FaElectricityNeedsService {
         ...elecneeds,
         fa_id: faID,
       };
-      return this.prisma.fa_electricity_needs.upsert({
-        where: {
-          id: elecneeds.id,
-        },
-        update: data,
-        create: data,
-      });
+      if (elecneeds.id) {
+        return this.prisma.fa_electricity_needs.update({
+          where: {
+            id: elecneeds.id ?? -1,
+          },
+          data: data,
+        });
+      } else {
+        return this.prisma.fa_electricity_needs.create({
+          data: data,
+        });
+      }
     });
     return this.prisma.$transaction(operations);
   }

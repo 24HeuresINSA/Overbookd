@@ -173,7 +173,7 @@ export default {
     );
   },
 
-  updatePubishAnimation(
+  updatePublishAnimation(
     context: Context,
     id: number,
     publishAnimation: FaSitePublishAnimation
