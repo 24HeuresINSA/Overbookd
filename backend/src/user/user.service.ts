@@ -6,7 +6,7 @@ import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import {
   retrievePermissions,
   TeamWithNestedPermissions,
-} from 'src/team/utils/permissions';
+} from '../team/utils/permissions';
 
 const SELECT_USER = {
   email: true,
