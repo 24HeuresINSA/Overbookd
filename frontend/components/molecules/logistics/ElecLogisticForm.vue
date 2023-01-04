@@ -17,7 +17,7 @@
 
         <v-text-field
           v-model="power"
-          label="Puissance/appareil*"
+          label="Puissance par appareil*"
           suffix="Watts"
           :rules="[rules.number, rules.min]"
         ></v-text-field>

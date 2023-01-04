@@ -63,7 +63,7 @@ import ElecLogisticForm from "~/components/molecules/logistics/ElecLogisticForm.
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },
   { text: "Appareil", value: "device" },
-  { text: "Puissance/appareil", value: "power" },
+  { text: "Puissance par appareil", value: "power" },
   { text: "Nombre", value: "count" },
   { text: "Commentaire", value: "comment" },
   { text: "Action", value: "action" },
