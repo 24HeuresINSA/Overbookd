@@ -2,10 +2,6 @@
   <v-card :class="validationStatus">
     <CardErrorList :type="cardType" />
     <v-card-title>Presta</v-card-title>
-    <v-card-subtitle
-      >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
-      vides.</v-card-subtitle
-    >
     <v-card-text>
       <v-switch
         v-model="isCollaboratorRequired"
