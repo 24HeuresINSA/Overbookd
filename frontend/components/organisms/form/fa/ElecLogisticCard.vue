@@ -54,6 +54,7 @@
 <script lang="ts">
 import Vue from "vue";
 import {
+  ElectricityTypeLabel,
   electricity_type,
   electricity_type_label,
   fa_electricity_needs,
@@ -89,14 +90,17 @@ export default Vue.extend({
     electricityNeeds(): fa_electricity_needs[] | undefined {
       return this.$accessor.FA.mFA.fa_electricity_needs;
     },
-    electricityTypeLabels(): any[] {
-      return Object.keys(electricity_type_label).map((type) => {
+    electricityTypeLabels(): ElectricityTypeLabel[] {
+      const elecTypeLabels: ElectricityTypeLabel[] = Object.keys(
+        electricity_type_label
+      ).map((type) => {
         return {
-          type,
+          type: type as electricity_type,
           label:
             electricity_type_label[type as keyof typeof electricity_type_label],
         };
       });
+      return elecTypeLabels;
     },
   },
   methods: {

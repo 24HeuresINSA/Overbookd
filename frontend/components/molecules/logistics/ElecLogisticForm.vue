@@ -44,16 +44,12 @@
 <script lang="ts">
 import Vue from "vue";
 import {
+  ElectricityTypeLabel,
   electricity_type,
   electricity_type_label,
   fa_electricity_needs,
 } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
-
-interface TypeLabel {
-  type: electricity_type;
-  label: electricity_type_label;
-}
 
 export default Vue.extend({
   name: "ElecLogisticForm",
@@ -88,8 +84,8 @@ export default Vue.extend({
         comment: this.comment,
       };
     },
-    electricityTypeLabels(): TypeLabel[] {
-      const elecTypeLabels: TypeLabel[] = Object.keys(
+    electricityTypeLabels(): ElectricityTypeLabel[] {
+      const elecTypeLabels: ElectricityTypeLabel[] = Object.keys(
         electricity_type_label
       ).map((type) => {
         return {

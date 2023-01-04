@@ -31,7 +31,7 @@ export class FaElectricityNeedsService {
       if (elecneeds.id) {
         return this.prisma.fa_electricity_needs.update({
           where: {
-            id: elecneeds.id,
+            id: elecneeds.id ?? -1,
           },
           data: data,
         });

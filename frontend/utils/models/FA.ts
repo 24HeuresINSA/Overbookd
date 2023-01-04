@@ -262,3 +262,8 @@ export interface FaSitePublishAnimation {
   description?: string;
   categories?: SitePublishAnimationCategoryType[];
 }
+
+export interface ElectricityTypeLabel {
+  type: electricity_type;
+  label: electricity_type_label;
+}
