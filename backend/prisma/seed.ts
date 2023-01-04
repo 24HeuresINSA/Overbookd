@@ -54,8 +54,6 @@ async function main() {
       code: 'accueil-artiste',
       color: '#A166F2',
       icon: 'mdi-plane-train',
-      fa_validator: false,
-      ft_validator: false,
     },
     {
       name: 'bar',
