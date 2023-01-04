@@ -375,7 +375,7 @@ export const actions = actionTree(
     },
 
     validate: async function (
-      { dispatch, commit, state },
+      { dispatch, commit, state, rootGetters },
       { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
@@ -386,8 +386,7 @@ export const actions = actionTree(
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }
-      // @ts-ignore
-      const MAX_VALIDATORS = this.$accessor.team.faValidators.length;
+      const MAX_VALIDATORS = rootGetters["team/faValidators"].length;
       // -1 car la validation est faite avant l'ajout du validateur
       if (state.mFA.fa_validation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators
@@ -427,17 +426,18 @@ export const actions = actionTree(
       dispatch("save");
     },
 
-    resetLogValidations: async function ({ dispatch, state }, { author }) {
+    resetLogValidations: async function (
+      { dispatch, state, rootGetters },
+      { author }
+    ) {
       const logTeamCodes = ["matos", "barrieres", "elec"];
       const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
         isAnimationValidatedBy(state.mFA, teamCode)
       );
       if (teamCodesThatValidatedFA.length === 0) return;
-
       const teamNamesThatValidatedFA = await Promise.all(
         teamCodesThatValidatedFA.map(async (teamCode) => {
-          // @ts-ignore
-          const team = this.$accessor.team.getTeamByCode(teamCode);
+          const team = rootGetters["team/getTeamByCode"](teamCode);
           await RepoFactory.faRepo.removeFaValidation(
             this,
             state.mFA.id,
