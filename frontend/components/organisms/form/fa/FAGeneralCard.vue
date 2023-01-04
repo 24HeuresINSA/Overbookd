@@ -3,10 +3,11 @@
     <CardErrorList :type="cardType" />
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
-      N'hésite pas si tu as des questions à contacter humain@24heures.org. Tu
-      peux aussi t'aider en allant voir les FA d'avant sur
-      cetaitmieuxavant.24heures.org/ en te connectant avec
-      jeuneetcon@24heures.org
+      N'hésite pas si tu as des questions à contacter
+      <a href="mailto:humain@24heures.org">humain@24heures.org</a>. Tu peux
+      aussi t'aider en allant voir les FA d'avant sur
+      <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a> en te
+      connectant avec jeuneetcon@24heures.org.
     </v-card-subtitle>
     <v-card-text>
       <v-form>

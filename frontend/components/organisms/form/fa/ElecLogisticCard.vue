@@ -5,7 +5,8 @@
       <v-card-subtitle
         >Précise tes besoins en électricité : 1 ligne par type d'appareil. Pour
         plus de renseignement, vois avec la Log Elec via
-        logistique@24heures.org</v-card-subtitle
+        <a href="mailto:logistique@24heures.org">logistique@24heures.org</a
+        >.</v-card-subtitle
       >
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
