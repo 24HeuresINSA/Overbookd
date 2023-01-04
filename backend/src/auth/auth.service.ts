@@ -12,7 +12,7 @@ import { randomBytes, timingSafeEqual } from 'crypto';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
-import { retrievePermissions } from 'src/team/utils/permissions';
+import { retrievePermissions } from '../team/utils/permissions';
 
 type UserCredentials = Pick<User, 'email' | 'password'>;
 type UserEmail = Pick<User, 'email'>;
