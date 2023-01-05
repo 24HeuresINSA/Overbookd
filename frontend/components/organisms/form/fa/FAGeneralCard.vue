@@ -55,13 +55,13 @@ import {
   getFAValidationStatus,
 } from "~/utils/fa/faUtils";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import { team } from "~/utils/models/repo";
+import { team, User } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "FAGeneralCard",
   components: { CardErrorList },
   data: () => ({
-    users: [] as any[],
+    users: [] as Partial<User>[],
     owner: "humain",
     cardType: fa_card_type.GENERAL,
   }),
@@ -73,7 +73,6 @@ export default Vue.extend({
       return this.$accessor.team.allTeams;
     },
     allTypes(): string[] {
-      //return fa_type as an array
       return Object.values(fa_type);
     },
     isValidatedByOwner(): boolean {
