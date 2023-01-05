@@ -201,7 +201,7 @@ model fa_validation {
 model fa_collaborators {
   fa              fa           @relation(fields: [fa_id], references: [id])
   fa_id           Int
-  collaborator    collaborator @relation(fields: [collaborator_id], references: [id])
+  collaborator    collaborator @relation(fields: [collaborator_id], references: [id], onDelete: Cascade)
   collaborator_id Int
   is_deleted      Boolean      @default(false)
 
