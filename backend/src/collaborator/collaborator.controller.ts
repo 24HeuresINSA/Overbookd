@@ -35,7 +35,7 @@ export class CollaboratorController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
-  @Delete(':faId/:collaboratorId')
+  @Delete(':faId/collaborator/:collaboratorId')
   remove(
     @Param('faId', ParseIntPipe) faId: number,
     @Param('collaboratorId', ParseIntPipe) collaboratorId: number,

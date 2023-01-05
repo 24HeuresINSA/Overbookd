@@ -136,7 +136,7 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('validate/:id')
+  @Post(':id/validation')
   @ApiResponse({
     status: 204,
     description: 'Validate a fa',
@@ -153,13 +153,12 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Delete('remove-validation/:faId/:teamId')
+  @Delete(':faId/validation/:teamId')
   @ApiResponse({
     status: 204,
     description: 'Remove a validation of fa',
   })
   removeValidation(
-    @Request() request: RequestWithUserPayload,
     @Param('faId', ParseIntPipe) faId: number,
     @Param('teamId', ParseIntPipe) teamId: number,
   ): Promise<void> {
@@ -168,7 +167,7 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('refuse/:id')
+  @Post(':id/refusal')
   @ApiResponse({
     status: 204,
     description: 'Refuse a fa',

@@ -70,7 +70,9 @@ export default {
     faId: number,
     collaboratorId: number
   ) {
-    return context.$axios.delete(`/collaborator/${faId}/${collaboratorId}`);
+    return context.$axios.delete(
+      `/collaborator/${faId}/collaborator/${collaboratorId}`
+    );
   },
 
   updateFASignaNeeds(
@@ -121,17 +123,15 @@ export default {
   },
 
   validateFA(context: Context, id: number, body: fa_validation_body) {
-    return context.$axios.post(resource + `/validate/${id}`, body);
+    return context.$axios.post(resource + `/${id}/validation`, body);
   },
 
   removeFaValidation(context: Context, faId: number, teamId: number) {
-    return context.$axios.delete(
-      resource + `/remove-validation/${faId}/${teamId}`
-    );
+    return context.$axios.delete(resource + `/${faId}/validation/${teamId}`);
   },
 
   refuseFA(context: Context, id: number, body: fa_validation_body) {
-    return context.$axios.post(resource + `/refuse/${id}`, body);
+    return context.$axios.post(resource + `/${id}/refusal`, body);
   },
 
   createGearRequest(
