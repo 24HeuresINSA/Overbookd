@@ -1,14 +1,15 @@
-export enum Status {
+export enum FTStatus {
   DRAFT = "DRAFT",
   SUBMITTED = "SUBMITTED",
   VALIDATED = "VALIDATED",
   REFUSED = "REFUSED",
+  READY = "READY",
 }
 
 export interface FT {
   id: number;
   name: string;
-  status: Status;
+  status: FTStatus;
   in_charge?: number;
   are_static_time_windows: boolean;
   locations?: number[];
@@ -16,15 +17,16 @@ export interface FT {
   matos_count?: number;
   description?: string;
 
-  validated: String[];
-  refused: String[];
+  //////////////////////////////////////////
+  validated?: String[];
+  refused?: String[];
 
-  details: {
+  details?: {
     locations?: string[];
   };
 
-  equipments: { _id: string; name: string; required: number }[];
-  timeframes: {
+  equipments?: { _id: string; name: string; required: number }[];
+  timeframes?: {
     start: Date;
     end: Date; //no maximum duration, no check on consistency of data
     required?: requirement[];
@@ -34,7 +36,7 @@ export interface FT {
     sliceTime?: number;
   }[];
 
-  comments: { time: Date; text: string; validator: string; topic?: string }[];
+  comments?: { time: Date; text: string; validator: string; topic?: string }[];
 }
 
 export type requirement = requirementUser | requirementTeam;

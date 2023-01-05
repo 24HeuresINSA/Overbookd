@@ -23,7 +23,7 @@
             </thead>
             <tbody>
               <tr>
-                <td><a v-if="mFT.fa" :href="`/fa/${mFT.fa}`">Nom FA</a></td>
+                <td>FA</td>
                 <td>
                   <a v-if="mFT.fa" :href="`/fa/${mFT.fa}`">{{ mFT.fa }}</a>
                   <v-btn :href="`/fa/${mFT.fa}`" icon small>
@@ -39,16 +39,17 @@
                   >
                 </td>
               </tr>
-              <tr>
-                <td>Nombre de matos</td>
-                <td>{{ mFT.equipments.length }}</td>
-              </tr>
             </tbody>
           </template>
         </v-simple-table>
       </v-card-text>
     </v-card>
-    <FAChooser ref="FAChooser"></FAChooser>
+    <v-dialog v-model="isFASelectDialogOpen" max-width="500px">
+      <FAChooser
+        @close-dialog="closeFAChooser"
+        @change="setParentFA"
+      ></FAChooser>
+    </v-dialog>
   </div>
 </template>
 
@@ -62,9 +63,15 @@ export default Vue.extend({
   components: {
     FAChooser,
   },
+  data: () => ({
+    isFASelectDialogOpen: false,
+  }),
   computed: {
     mFT() {
       return this.$accessor.FT.mFT;
+    },
+    locations(): SignaLocation[] {
+      return this.$accessor.signaLocation.signaLocations;
     },
     currentLocations(): SignaLocation[] {
       const locationsId = this.$accessor.FT.mFT.locations ?? [];
@@ -74,23 +81,27 @@ export default Vue.extend({
         })
         .filter((location) => location !== undefined) as SignaLocation[];
     },
-    locations(): SignaLocation[] {
-      return this.$accessor.signaLocation.signaLocations;
-    },
   },
   methods: {
-    selectLocations(locations: string[]): void {
+    selectLocations(locations: string[]) {
       this.$accessor.FT.assignFT({
         details: {
           locations,
         },
       });
     },
-    unlinkFA(): void {
+    setParentFA(faId: number) {
+      this.$accessor.FT.setParentFA(faId);
+      this.isFASelectDialogOpen = false;
+    },
+    unlinkFA() {
       this.$accessor.FT.unlinkFA();
     },
-    openFAChooser(): void {
-      (this.$refs.FAChooser as any).openDialog();
+    openFAChooser() {
+      this.isFASelectDialogOpen = true;
+    },
+    closeFAChooser() {
+      this.isFASelectDialogOpen = false;
     },
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
