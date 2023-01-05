@@ -1,64 +1,37 @@
 <template>
-  <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+  <v-card>
     <v-card-title>Détail</v-card-title>
     <v-card-text>
-      <RichEditor
-        :value="data"
-        :disabled="isDisabled"
-        :data="data"
-        @change="onFormChange"
-      ></RichEditor>
+      <v-form @submit.prevent="">
+        <RichEditor
+          :value="mFT.description"
+          class="mb-4"
+          @change="onChange('descritpion', $event)"
+        ></RichEditor>
+      </v-form>
     </v-card-text>
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
 
-export default {
+export default Vue.extend({
   name: "FTDetailCard",
   components: { RichEditor },
-  props: {
-    topic: {
-      type: String,
-      default: () => "",
-    },
-    formKey: {
-      type: String,
-      default: () => {
-        null;
-      },
-    },
-    isDisabled: {
-      type: Boolean,
-      default: () => {
-        false;
-      },
-    },
-    form: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  data: () => {
-    return {
-      FORM: undefined,
-    };
-  },
   computed: {
-    data: function () {
-      return this.form[this.topic];
+    mFT() {
+      return this.$accessor.FT.mFT;
     },
-  },
-  mounted() {
-    this.FORM = Array.from(this.$accessor.config.getConfig(this.formKey));
   },
   methods: {
-    onFormChange(form) {
-      this.$emit("form-change", form);
+    onChange(key: string, value: any) {
+      if (typeof value === "string") value = value.trim();
+      //this.$accessor.FT.updateFT({ key: key, value: value });
     },
   },
-};
+});
 </script>
 
 <style scoped></style>

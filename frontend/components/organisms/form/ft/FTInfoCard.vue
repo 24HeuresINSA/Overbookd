@@ -1,17 +1,16 @@
 <template>
   <div>
-    <v-card v-if="FT">
+    <v-card>
       <v-card-title>Info</v-card-title>
       <v-card-text>
         <v-autocomplete
-          v-if="locations"
-          label="Lieux de rendez-vous"
-          multiple
+          label="Lieux"
+          :value="currentLocations"
           :items="locations"
-          :value="mLocations"
           item-text="name"
-          :disabled="isDisabled"
-          @change="selectLocations"
+          item-value="id"
+          multiple
+          @change="onChange('locations', $event)"
         ></v-autocomplete>
         <v-simple-table>
           <template #default>
@@ -24,10 +23,10 @@
             </thead>
             <tbody>
               <tr>
-                <td>FA</td>
+                <td><a v-if="mFT.fa" :href="`/fa/${mFT.fa}`">Nom FA</a></td>
                 <td>
-                  <a v-if="FT.FA && FT.FA > 0">{{ FT.FA }}</a>
-                  <v-btn :href="`/fa/${FT.FA}`" icon small>
+                  <a v-if="mFT.fa" :href="`/fa/${mFT.fa}`">{{ mFT.fa }}</a>
+                  <v-btn :href="`/fa/${mFT.fa}`" icon small>
                     <v-icon small>mdi-link</v-icon>
                   </v-btn>
                 </td>
@@ -35,14 +34,14 @@
                   <v-btn small text @click="openFAChooser"
                     >Choisir une FA parente</v-btn
                   >
-                  <v-btn small text :disabled="FT.FA == 0" @click="unlinkFA"
+                  <v-btn small text :disabled="!mFT.fa" @click="unlinkFA"
                     >Détacher la FA</v-btn
                   >
                 </td>
               </tr>
               <tr>
                 <td>Nombre de matos</td>
-                <td>{{ FT.equipments.length }}</td>
+                <td>{{ mFT.equipments.length }}</td>
               </tr>
             </tbody>
           </template>
@@ -55,43 +54,29 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FAChooser from "~/components/organisms/FAChooser.vue";
+import FAChooser from "~/components/molecules/FAChooser.vue";
+import { SignaLocation } from "~/utils/models/signaLocation";
 
 export default Vue.extend({
   name: "FTInfoCard",
   components: {
     FAChooser,
   },
-  data() {
-    return {
-      isDisabled: false, // TODO :: should be a props
-    };
-  },
-  // props: {
-  //   isDisabled: {
-  //     type: Boolean,
-  //     default: false,
-  //   },
-  // },
   computed: {
-    FT() {
+    mFT() {
       return this.$accessor.FT.mFT;
     },
-    locations(): string[] {
-      return this.$accessor.location.signa.map((l) => l.name);
+    currentLocations(): SignaLocation[] {
+      const locationsId = this.$accessor.FT.mFT.locations ?? [];
+      return locationsId
+        .map((locationId) => {
+          return this.$accessor.signaLocation.getLocationById(locationId);
+        })
+        .filter((location) => location !== undefined) as SignaLocation[];
     },
-    mLocations(): string[] | null {
-      if (
-        this.$accessor.FT.mFT.details &&
-        this.$accessor.FT.mFT.details.locations
-      ) {
-        return this.$accessor.FT.mFT.details.locations;
-      }
-      return null;
+    locations(): SignaLocation[] {
+      return this.$accessor.signaLocation.signaLocations;
     },
-  },
-  async mounted() {
-    await this.$accessor.location.getAllLocations();
   },
   methods: {
     selectLocations(locations: string[]): void {
@@ -107,8 +92,10 @@ export default Vue.extend({
     openFAChooser(): void {
       (this.$refs.FAChooser as any).openDialog();
     },
+    onChange(key: string, value: any) {
+      if (typeof value === "string") value = value.trim();
+      this.$accessor.FA.updateFA({ key: key, value: value });
+    },
   },
 });
 </script>
-
-<style scoped></style>

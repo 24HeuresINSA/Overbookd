@@ -1,15 +1,24 @@
-export interface FT {
-  _id: string;
-  FA: number;
-  count: number;
+export enum Status {
+  DRAFT = "DRAFT",
+  SUBMITTED = "SUBMITTED",
+  VALIDATED = "VALIDATED",
+  REFUSED = "REFUSED",
+}
 
-  status: string;
+export interface FT {
+  id: number;
+  name: string;
+  status: Status;
+  in_charge?: number;
+  are_static_time_windows: boolean;
+  locations?: number[];
+  fa?: number;
+  matos_count?: number;
+  description?: string;
+
   validated: String[];
   refused: String[];
 
-  general?: {
-    name?: string;
-  };
   details: {
     locations?: string[];
   };

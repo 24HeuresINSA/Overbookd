@@ -1,25 +1,8 @@
 <template>
-  <v-list v-if="form === 'FA'">
+  <v-list>
     <v-subheader>SOMMAIRE</v-subheader>
     <v-list-item
-      v-for="item in faItems"
-      :key="item.id"
-      :data="item"
-      :href="'#' + item.id"
-    >
-      <v-list-item-icon>
-        <v-icon v-text="item.icon"></v-icon>
-      </v-list-item-icon>
-      <v-list-item-content>
-        <v-list-item-title v-text="item.text"></v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-  </v-list>
-
-  <v-list v-else-if="form === 'FT'">
-    <v-subheader>SOMMAIRE</v-subheader>
-    <v-list-item
-      v-for="item in ftItems"
+      v-for="item in form === 'FA' ? faItems : ftItems"
       :key="item.id"
       :data="item"
       :href="'#' + item.id"
@@ -59,7 +42,14 @@ export default Vue.extend({
       { id: "comment", text: "Commentaires", icon: "mdi-comment" },
       // { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
     ],
-    ftItems: [{ id: "general", text: "Général", icon: "mdi-card-text" }],
+    ftItems: [
+      { id: "general", text: "Général", icon: "mdi-card-text" },
+      { id: "info", text: "Info", icon: "mdi-information" },
+      { id: "detail", text: "Détail", icon: "mdi-text-box" },
+      { id: "timeframe", text: "Créneaux", icon: "mdi-calendar-clock" },
+      { id: "matos", text: "Matos", icon: "mdi-truck" },
+      { id: "comment", text: "Commentaires", icon: "mdi-comment" },
+    ],
   }),
 });
 </script>

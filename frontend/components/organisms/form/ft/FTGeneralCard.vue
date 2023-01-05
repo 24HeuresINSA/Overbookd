@@ -1,78 +1,57 @@
 <template>
-  <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+  <v-card>
     <v-card-title>Général</v-card-title>
     <v-card-text>
       <v-text-field
-        :v-model="name"
-        :value="data"
+        :value="mFT.name"
         label="Nom de la FT"
-        :disabled="disabled"
-        @change="onFormChange"
+        @change="onChange('name', $event)"
       ></v-text-field>
       <v-autocomplete
-        :v-model="inCharge"
-        :value="data"
-        :label="Responsable"
+        :value="mFT.in_charge"
+        label="Responsable"
         :items="users"
-        :disabled="disabled"
-        dense
-        @change="onFormChange"
+        @change="onChange('in_charge', $event)"
       ></v-autocomplete>
       <v-switch
-        :v-model="areTimeframesStatic"
-        :value="data"
+        :value="mFT.are_static_time_windows"
         label="Créneaux statiques"
-        :disabled="disabled"
-        @change="onFormChange"
+        @change="onChange('are_static_time_windows', $event)"
       ></v-switch>
     </v-card-text>
   </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import { FT } from "~/utils/models/FT";
+import { User } from "~/utils/models/repo";
+
+export default Vue.extend({
   name: "FTGeneralCard",
-  props: {
-    topic: {
-      type: String,
-      default: () => "",
-    },
-    formKey: {
-      type: String,
-      default: () => {
-        null;
-      },
-    },
-    isDisabled: {
-      type: Boolean,
-      default: () => {
-        false;
-      },
-    },
-    form: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  data: () => {
-    return {
-      FORM: undefined,
-    };
-  },
+  data: () => ({
+    users: [] as Partial<User>[],
+  }),
   computed: {
-    data: function () {
-      return this.form[this.topic];
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
     },
   },
-  mounted() {
-    this.FORM = Array.from(this.$accessor.config.getConfig(this.formKey));
+  async mounted() {
+    this.users = this.$accessor.user.usernames;
+    if (this.users.length === 0) {
+      // fetch usernames
+      await this.$accessor.user.getUsername("");
+      this.users = this.$accessor.user.usernames;
+    }
   },
   methods: {
-    onFormChange(form) {
-      this.$emit("form-change", form);
+    onChange(key: string, value: any) {
+      if (typeof value === "string") value = value.trim();
+      //this.$accessor.FT.updateFT({ key: key, value: value });
     },
   },
-};
+});
 </script>
 
 <style scoped></style>
