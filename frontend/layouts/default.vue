@@ -191,6 +191,12 @@ export default {
           to: "/fa",
         },
         {
+          icon: "mdi-format-color-highlight",
+          title: "Fiches Tâches",
+          roles: "hard",
+          to: "/ft",
+        },
+        {
           icon: "mdi-account",
           title: "Liste des Orgas",
           roles: "hard",
