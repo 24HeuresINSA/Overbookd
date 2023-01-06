@@ -540,7 +540,8 @@ export const actions = actionTree(
     },
 
     async deleteCollaborator({ commit, state }, index: number) {
-      const collaboratorId =state.mFA.fa_collaborators?.[index]?.collaborator?.id;
+      const collaboratorId =
+        state.mFA.fa_collaborators?.[index]?.collaborator?.id;
       if (collaboratorId) {
         await RepoFactory.faRepo.deleteFACollaborators(this, collaboratorId);
       }
