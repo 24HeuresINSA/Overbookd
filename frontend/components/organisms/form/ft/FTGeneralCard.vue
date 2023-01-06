@@ -11,6 +11,8 @@
         :value="mFT.in_charge"
         label="Responsable"
         :items="users"
+        item-value="id"
+        item-text="username"
         @change="onChange('in_charge', $event)"
       ></v-autocomplete>
       <v-switch
@@ -69,7 +71,7 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      //this.$accessor.FT.updateFT({ key: key, value: value });
+      this.$accessor.FT.updateFT({ key: key, value: value });
     },
   },
 });

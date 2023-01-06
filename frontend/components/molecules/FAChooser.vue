@@ -21,6 +21,7 @@
           <v-btn text @click="closeDialog"> Annuler </v-btn>
           <v-btn
             color="blue darken-1"
+            class="white--text"
             :disabled="isInvalidSelectedFA"
             @click="setParentFA"
           >
@@ -42,9 +43,9 @@ export default Vue.extend({
   }),
   computed: {
     validatedFAs(): FA[] {
-      return this.$accessor.FA.FAs.filter(
+      return this.$accessor.FA.FAs /*.filter(
         (fa) => fa.status === Status.VALIDATED
-      );
+      )*/;
     },
     isInvalidSelectedFA(): boolean {
       return this.selectedFAId === -1;

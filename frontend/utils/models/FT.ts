@@ -1,3 +1,6 @@
+import { FormComment } from "./Comment";
+import { FormValidation } from "./Validation";
+
 export enum FTStatus {
   DRAFT = "DRAFT",
   SUBMITTED = "SUBMITTED",
@@ -11,33 +14,25 @@ export interface FT {
   name: string;
   status: FTStatus;
   in_charge?: number;
-  are_static_time_windows: boolean;
+  are_static_time_windows?: boolean;
   locations?: number[];
   fa?: number;
   matos_count?: number;
   description?: string;
-
-  //////////////////////////////////////////
-  validated?: String[];
-  refused?: String[];
-
-  details?: {
-    locations?: string[];
-  };
-
-  equipments?: { _id: string; name: string; required: number }[];
-  timeframes?: {
-    start: Date;
-    end: Date; //no maximum duration, no check on consistency of data
-    required?: requirement[];
-    _id: string;
-    timed: boolean;
-    toSlice?: boolean;
-    sliceTime?: number;
-  }[];
-
-  comments?: { time: Date; text: string; validator: string; topic?: string }[];
+  is_deleted?: boolean;
+  ft_validation?: FormValidation[];
+  ft_refuse?: FormValidation[];
+  ft_comments?: FormComment[];
 }
+
+export type CreateFT = Pick<FT, "name">;
+
+export interface SearchFT {
+  isDeleted?: boolean;
+  status?: FTStatus;
+}
+
+//////////////////////////////////////////
 
 export type requirement = requirementUser | requirementTeam;
 
