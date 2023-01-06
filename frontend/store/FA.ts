@@ -544,11 +544,7 @@ export const actions = actionTree(
         const collaboratorId =
           state.mFA.fa_collaborators[index].collaborator.id;
         if (collaboratorId) {
-          await RepoFactory.faRepo.deleteFACollaborators(
-            this,
-            state.mFA.id,
-            collaboratorId
-          );
+          await RepoFactory.faRepo.deleteFACollaborators(this, collaboratorId);
         }
       }
       commit("DELETE_COLLABORATOR", index);

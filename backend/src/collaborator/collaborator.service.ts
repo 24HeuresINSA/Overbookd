@@ -56,13 +56,10 @@ export class CollaboratorService {
     return this.prisma.$transaction(operations);
   }
 
-  async remove(fa_id: number, collaborator_id: number): Promise<void> {
-    await this.prisma.fa_collaborators.delete({
+  async remove(id: number): Promise<void> {
+    await this.prisma.collaborator.delete({
       where: {
-        fa_id_collaborator_id: {
-          fa_id,
-          collaborator_id,
-        },
+        id,
       },
     });
   }

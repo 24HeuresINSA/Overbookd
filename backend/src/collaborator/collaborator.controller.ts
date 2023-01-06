@@ -35,12 +35,9 @@ export class CollaboratorController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
-  @Delete(':faId/collaborator/:collaboratorId')
-  remove(
-    @Param('faId', ParseIntPipe) faId: number,
-    @Param('collaboratorId', ParseIntPipe) collaboratorId: number,
-  ): Promise<void> {
-    return this.collaboratorService.remove(faId, collaboratorId);
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.collaboratorService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
