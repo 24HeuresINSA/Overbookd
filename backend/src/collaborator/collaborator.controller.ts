@@ -34,19 +34,24 @@ export class CollaboratorController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post(':faId')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Upsert a collaborator by id',
+  })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
   })
   @ApiForbiddenResponse({
-    description: "User can't access this resource",
+    description: "Can't find a requested resource",
   })
-  @ApiBody({ type: [CreateCollaboratorDto] })
   @ApiParam({
     name: 'faId',
     type: Number,
     description: 'FA id',
     required: true,
   })
+  @ApiBody({ type: [CreateCollaboratorDto] })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
     @Body() createCollaborator: CreateCollaboratorDto[],
@@ -60,13 +65,13 @@ export class CollaboratorController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a category by id',
+    description: 'Delete a collaborator by id',
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
   })
   @ApiForbiddenResponse({
-    description: "User can't access this resource",
+    description: "Can't find a requested resource",
   })
   @ApiParam({
     name: 'id',
