@@ -73,7 +73,7 @@
 
           <v-list>
             <v-list-item
-              v-for="validator of mValidatorsValidated"
+              v-for="validator of mValidators"
               :key="validator.id"
               link
             >
@@ -99,7 +99,7 @@
           </template>
           <v-list>
             <v-list-item
-              v-for="validator of mValidatorsNotValidated"
+              v-for="validator of teamsThatNotYetValidatedFA"
               :key="validator.id"
               link
             >
@@ -284,12 +284,7 @@ export default Vue.extend({
       }
       return [];
     },
-    mValidatorsValidated(): team[] {
-      return this.mValidators.filter((validator: team) => {
-        return this.isAnimationValidatedBy(validator);
-      });
-    },
-    mValidatorsNotValidated(): team[] {
+    teamsThatNotYetValidatedFA(): team[] {
       return this.mValidators.filter((validator: team) => {
         return !this.isAnimationValidatedBy(validator);
       });
@@ -319,19 +314,20 @@ export default Vue.extend({
     },
     shouldShowValidationButton(): boolean {
       return (
-        this.mValidatorsNotValidated.length === 1 && this.isSubmittedOrRefused
+        this.teamsThatNotYetValidatedFA.length === 1 &&
+        this.isSubmittedOrRefused
       );
     },
     shouldShowRefuseButton(): boolean {
-      return this.mValidatorsValidated.length === 1 && this.isNotDraft;
+      return this.mValidators.length === 1 && this.isNotDraft;
     },
     shouldShowValidationMenu(): boolean {
       return (
-        this.mValidatorsNotValidated.length > 1 && this.isSubmittedOrRefused
+        this.teamsThatNotYetValidatedFA.length > 1 && this.isSubmittedOrRefused
       );
     },
     shouldShowRefuseMenu(): boolean {
-      return this.mValidatorsValidated.length > 1 && this.isNotDraft;
+      return this.mValidators.length > 1 && this.isNotDraft;
     },
   },
 
