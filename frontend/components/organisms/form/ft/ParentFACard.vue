@@ -65,11 +65,11 @@ export default Vue.extend({
       this.parentFA = await this.$accessor.FA.getFAbyId(id);
     },
     setParentFA(faId: number) {
-      this.$accessor.FT.setParentFA(faId);
+      this.$accessor.FT.updateFT({ key: "fa", value: faId });
       this.isFASelectDialogOpen = false;
     },
     unlinkFA() {
-      this.$accessor.FT.unlinkFA();
+      this.$accessor.FT.updateFT({ key: "fa", value: undefined });
     },
     openFAChooser() {
       this.isFASelectDialogOpen = true;
