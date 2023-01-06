@@ -7,10 +7,19 @@ import {
   UseGuards,
   ParseIntPipe,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/team-auth.guard';
 import { Roles } from '../auth/team-auth.decorator';
@@ -28,14 +37,31 @@ export class CollaboratorController {
   @ApiBody({ type: [CreateCollaboratorDto] })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body() createCollaboratorDto: CreateCollaboratorDto[],
+    @Body() createCollaborator: CreateCollaboratorDto[],
   ): Promise<collaborator[] | null> {
-    return this.collaboratorService.upsert(faId, createCollaboratorDto);
+    return this.collaboratorService.upsert(faId, createCollaborator);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Delete(':id')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Delete a category by id',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Collaborator id',
+    required: true,
+  })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.collaboratorService.remove(id);
   }
