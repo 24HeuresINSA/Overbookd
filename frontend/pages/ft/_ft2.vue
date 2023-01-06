@@ -192,7 +192,7 @@ import { Snack } from "~/utils/models/snack";
 import { Header } from "~/utils/models/Data";
 import { User } from "~/utils/models/repo";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import FTInfoCard from "~/components/organisms/form/ft/FTInfoCard.vue";
+import FTInfoCard from "~/components/organisms/form/ft/ParentFACard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import CompleteTimeframeCard from "~/components/organisms/form/ft/CompleteTimeframeCard.vue";
 import { FT, SmallTypes } from "~/utils/models/FT";

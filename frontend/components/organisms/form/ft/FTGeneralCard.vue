@@ -18,6 +18,15 @@
         label="Créneaux statiques"
         @change="onChange('are_static_time_windows', $event)"
       ></v-switch>
+      <v-autocomplete
+        label="Lieux"
+        :value="currentLocations"
+        :items="locations"
+        item-text="name"
+        item-value="id"
+        multiple
+        @change="onChange('locations', $event)"
+      ></v-autocomplete>
     </v-card-text>
   </v-card>
 </template>
@@ -26,6 +35,7 @@
 import Vue from "vue";
 import { FT } from "~/utils/models/FT";
 import { User } from "~/utils/models/repo";
+import { SignaLocation } from "~/utils/models/signaLocation";
 
 export default Vue.extend({
   name: "FTGeneralCard",
@@ -35,6 +45,17 @@ export default Vue.extend({
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    locations(): SignaLocation[] {
+      return this.$accessor.signaLocation.signaLocations;
+    },
+    currentLocations(): SignaLocation[] {
+      const locationsId = this.$accessor.FT.mFT.locations ?? [];
+      return locationsId
+        .map((locationId) => {
+          return this.$accessor.signaLocation.getLocationById(locationId);
+        })
+        .filter((location) => location !== undefined) as SignaLocation[];
     },
   },
   async mounted() {

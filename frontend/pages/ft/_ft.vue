@@ -17,7 +17,7 @@
     </div>
     <v-container class="container ft">
       <FTGeneralCard id="general" />
-      <FTInfoCard id="info" />
+      <ParentFACard id="info" />
       <FTDetailCard id="detail" />
       <LogisticsCard id="matos" title="Matos" owner="matos" />
       <CommentCard id="comment" form="FT" />
@@ -31,7 +31,7 @@ import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
-import FTInfoCard from "~/components/organisms/form/ft/FTInfoCard.vue";
+import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 
 export default Vue.extend({
@@ -39,7 +39,7 @@ export default Vue.extend({
   components: {
     FormSummary,
     FTGeneralCard,
-    FTInfoCard,
+    ParentFACard,
     FTDetailCard,
     LogisticsCard,
     CommentCard,

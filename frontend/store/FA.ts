@@ -295,6 +295,11 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
+    getFAbyId: async function ({ commit }, id: number) {
+      const res = await safeCall(this, repo.getFAById(this, id));
+      if (!res) return null;
+      return res.data;
+    },
     setFA({ commit }, FA: FA) {
       commit("SET_FA", FA);
     },
@@ -305,7 +310,7 @@ export const actions = actionTree(
 
     getAndSet: async function ({ commit }, id: number) {
       const [resFA, resGearRequests] = await Promise.all([
-        safeCall(this, repo.getFAByCount(this, id)),
+        safeCall(this, repo.getFAById(this, id)),
         safeCall(this, repo.getGearRequests(this, id)),
       ]);
       if (!resGearRequests || !resFA) return null;

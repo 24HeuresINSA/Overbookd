@@ -37,7 +37,7 @@ export default {
     return context.$axios.get<FA[]>(resource, { params: search });
   },
 
-  getFAByCount(context: Context, count: number) {
+  getFAById(context: Context, count: number) {
     return context.$axios.get<FA>(resource + `/${count}`);
   },
 
