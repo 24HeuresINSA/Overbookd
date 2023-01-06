@@ -372,12 +372,6 @@ h1 {
   margin-left: 12px;
 }
 
-.fab-right {
-  position: sticky;
-  right: 10px;
-  bottom: 35px;
-}
-
 .small {
   font-size: small;
   margin-left: 0;

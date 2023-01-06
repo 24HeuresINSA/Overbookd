@@ -1,28 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
-  ParseIntPipe,
-  Request,
-  Patch,
+  Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { FaService } from './fa.service';
-import { CreateFaDto } from './dto/create-fa.dto';
-import { UpdateFaDto } from './dto/update-fa.dto';
-import { validationDto } from './dto/validation.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/team-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiParam,
   ApiQuery,
@@ -31,24 +25,31 @@ import {
 } from '@nestjs/swagger';
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
-import { FaResponse, AllFaResponse } from './fa_types';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/team-auth.decorator';
+import { RolesGuard } from '../auth/team-auth.guard';
+import { CreateFaDto } from './dto/create-fa.dto';
+import { FASearchRequestDto } from './dto/faSearchRequest.dto';
+import { UpdateFaDto } from './dto/update-fa.dto';
+import { validationDto } from './dto/validation.dto';
+import { FaService } from './fa.service';
+import { AllFaResponse, FaResponse } from './fa_types';
+import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
+import {
+  ExistingPeriodGearRequestFormRequestDto,
+  GearRequestFormRequestDto,
+  NewPeriodGearRequestFormRequestDto,
+} from './gear-requests/dto/gearRequestFormRequest.dto';
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
 } from './gear-requests/dto/gearRequestResponse.dto';
-import {
-  ExistingPeriodGearRequestFormRequestDto,
-  NewPeriodGearRequestFormRequestDto,
-  GearRequestFormRequestDto,
-} from './gear-requests/dto/gearRequestFormRequest.dto';
+import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import {
   ApprovedGearRequest,
   GearRequestsService,
   GearSeekerType,
 } from './gear-requests/gearRequests.service';
-import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
-import { FASearchRequestDto } from './dto/faSearchRequest.dto';
-import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -99,8 +100,8 @@ export class FaController {
     description: 'Get a fa',
     type: Promise<fa | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<FaResponse | null> {
-    return this.faService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<FaResponse | null> {
+    return this.faService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -116,10 +117,10 @@ export class FaController {
     type: UpdateFaDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaDto,
   ): Promise<FaResponse | null> {
-    return this.faService.update(+id, updateFaDto);
+    return this.faService.update(id, updateFaDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -136,37 +137,93 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('validate/:id')
+  @Post(':id/validation')
+  @HttpCode(204)
   @ApiResponse({
-    status: 201,
+    status: 204,
     description: 'Validate a fa',
-    type: Promise<fa | null>,
   })
-  //get id and user id from token
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
   validate(
     @Request() request: RequestWithUserPayload,
     @Body() team_id: validationDto,
     @Param('id', ParseIntPipe) faid: number,
-  ): Promise<fa | null> {
+  ): Promise<void> {
     const user_id = request.user.id;
     return this.faService.validatefa(user_id, faid, team_id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
-  @Post('invalidate/:id')
+  @Delete(':faId/validation/:teamId')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Unvalidate a fa',
-    type: Promise<fa | null>,
+    description: 'Remove a validation of fa',
   })
-  invalidate(
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'teamId',
+    type: Number,
+    description: 'Team id',
+    required: true,
+  })
+  removeValidation(
+    @Param('faId', ParseIntPipe) faId: number,
+    @Param('teamId', ParseIntPipe) teamId: number,
+  ): Promise<void> {
+    return this.faService.removeFaValidation(faId, teamId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('orga')
+  @Post(':id/refusal')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Refuse a fa',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  refuse(
     @Request() request: RequestWithUserPayload,
-    @Body() team_id: validationDto,
+    @Body() validationForm: validationDto,
     @Param('id', ParseIntPipe) faid: number,
-  ): Promise<fa | null> {
-    const user_id = request.user.id;
-    return this.faService.invalidatefa(user_id, faid, team_id);
+  ): Promise<void> {
+    const userId = request.user.id;
+    return this.faService.refusefa(userId, faid, validationForm);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

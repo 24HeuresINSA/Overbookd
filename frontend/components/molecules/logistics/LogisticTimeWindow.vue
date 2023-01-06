@@ -1,20 +1,22 @@
 <template>
   <div>
-    <v-card v-if="noGearPeriod" class="message warning-message">
-      <v-card-title :disabled="isDisabled">Creneau de matos</v-card-title>
+    <v-card v-if="noGearPeriod" :class="validationStatus">
+      <v-card-title>Créneau de matos</v-card-title>
       <v-card-subtitle
-        >Vous ne pouvez pas ajouter du matos sans un creaneau de type
+        >Vous ne pouvez pas ajouter du matos sans un créneau de type
         "MATOS"</v-card-subtitle
       >
       <v-card-actions>
-        <v-btn href="#timeframe" text> Aller a la partie creneau </v-btn>
+        <v-btn v-show="!isValidatedByOwners" href="#timeframe" text>
+          Aller à la partie créneau
+        </v-btn>
       </v-card-actions>
     </v-card>
-    <v-card v-else class="message info-message">
-      <v-card-title :disabled="isDisabled">Creneau de matos</v-card-title>
+    <v-card v-else :class="validationStatus">
+      <v-card-title>Créneau de matos</v-card-title>
       <v-card-subtitle
-        >Toutes les demandes de matos seront identiques pour tous les creneaux
-        matos</v-card-subtitle
+        >Toutes les demandes de matos seront identiques pour tous les créneaux
+        matos.</v-card-subtitle
       >
       <v-card-text>
         <div class="periods">
@@ -36,7 +38,9 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn href="#timeframe" text> Aller a la partie creneau </v-btn>
+        <v-btn v-show="!isValidatedByOwners" href="#timeframe" text>
+          Aller à la partie créneau
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -44,26 +48,37 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "~/utils/models/FA";
+import {
+  getFAValidationStatusWithMultipleTeams,
+  hasAllValidations,
+} from "~/utils/fa/faUtils";
+import { FA, Period } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
+    owners: ["matos", "barrieres", "elec"],
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
   }),
   computed: {
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
     gearRequestRentalPeriods(): Period[] {
       return this.$accessor.FA.gearRequestRentalPeriods;
     },
     noGearPeriod(): boolean {
       return this.gearRequestRentalPeriods.length === 0;
+    },
+    isValidatedByOwners(): boolean {
+      return hasAllValidations(this.mFA, this.owners);
+    },
+    validationStatus(): string {
+      return getFAValidationStatusWithMultipleTeams(
+        this.mFA,
+        this.owners
+      ).toLowerCase();
     },
   },
   methods: {
@@ -94,21 +109,6 @@ export default Vue.extend({
     .date {
       margin-left: 5px;
     }
-  }
-}
-
-.v-card {
-  &.message {
-    border-width: 2px;
-    border-style: solid;
-  }
-  &.warning-message {
-    border-color: $warning-primary;
-    background-color: $warning-secondary;
-  }
-  &.info-message {
-    border-color: $info-primary;
-    background-color: $info-secondary;
   }
 }
 </style>

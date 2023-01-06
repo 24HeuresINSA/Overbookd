@@ -10,10 +10,10 @@ import { validationDto } from './dto/validation.dto';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/create-fa.dto';
 import {
-  FaResponse,
   AllFaResponse,
-  COMPLETE_FA_SELECT,
   ALL_FA_SELECT,
+  COMPLETE_FA_SELECT,
+  FaResponse,
 } from './fa_types';
 
 export interface SearchFa {
@@ -47,7 +47,7 @@ export class FaService {
   async findOne(id: number): Promise<FaResponse | null> {
     return this.prisma.fa.findUnique({
       where: {
-        id: Number(id),
+        id,
       },
       select: COMPLETE_FA_SELECT,
     });
@@ -88,60 +88,60 @@ export class FaService {
     user_id: number,
     fa_id: number,
     body: validationDto,
-  ): Promise<fa | null> {
+  ): Promise<void> {
     const team_id = body.team_id;
     await this.isUserValidator(user_id, team_id);
-    const fa = await this.prisma.fa.findUnique({
-      where: { id: Number(fa_id) },
-    });
-    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    await this.checkFaExistence(fa_id);
+
     //add the user validation
     await this.prisma.$transaction([
       this.prisma.fa_validation.create({
         data: {
-          fa_id: fa_id,
-          team_id: team_id,
-          user_id: user_id,
+          fa_id,
+          team_id,
+          user_id,
         },
       }),
       this.prisma.fa_refuse.deleteMany({
         where: {
-          fa_id: fa_id,
-          team_id: team_id,
+          fa_id,
+          team_id,
         },
       }),
     ]);
-    return fa;
   }
 
-  async invalidatefa(
+  async removeFaValidation(fa_id: number, team_id: number): Promise<void> {
+    await this.checkFaExistence(fa_id);
+    await this.removeValidationFromTeam(fa_id, team_id);
+  }
+
+  async refusefa(
     user_id: number,
     fa_id: number,
     body: validationDto,
-  ): Promise<fa | null> {
+  ): Promise<void> {
     const team_id = body.team_id;
     await this.isUserValidator(user_id, team_id);
-    const fa = await this.prisma.fa.findUnique({
-      where: { id: fa_id },
-    });
-    if (!fa) throw new NotFoundException(`fa with id ${fa_id} not found`);
+    await this.checkFaExistence(fa_id);
+
     await this.prisma.$transaction([
       this.prisma.fa_refuse.create({
         data: {
-          fa_id: fa_id,
-          team_id: team_id,
-          user_id: user_id,
+          fa_id,
+          team_id,
+          user_id,
         },
       }),
-      this.prisma.fa_validation.deleteMany({
-        where: {
-          fa_id: fa_id,
-          team_id: team_id,
-        },
-      }),
+      this.removeValidationFromTeam(fa_id, team_id),
     ]);
+  }
 
-    return fa;
+  private async checkFaExistence(id: number): Promise<void> {
+    const fa = await this.prisma.fa.findUnique({
+      where: { id },
+    });
+    if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
   }
 
   private async isUserValidator(
@@ -161,8 +161,8 @@ export class FaService {
     const user_team = await this.prisma.user_Team.findUnique({
       where: {
         user_id_team_id: {
-          user_id: user_id,
-          team_id: team_id,
+          user_id,
+          team_id,
         },
       },
     });
@@ -175,5 +175,14 @@ export class FaService {
       throw new UnauthorizedException(
         `Team with id ${team_id} is not a validator`,
       );
+  }
+
+  private removeValidationFromTeam(fa_id: number, team_id: number) {
+    return this.prisma.fa_validation.deleteMany({
+      where: {
+        fa_id,
+        team_id,
+      },
+    });
   }
 }

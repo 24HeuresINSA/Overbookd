@@ -1,7 +1,51 @@
 .fa, .ft {
   .v-card {
-   &.disabled {
+    &.validated {
       border-left: 5px solid green;
-   }
+    }
+    &.submitted {
+      border-left: 5px solid orange;
+    }
+    &.refused {
+      border-left: 5px solid red;
+    }
+    &.draft { 
+      border-left: 5px solid grey;
+    }
   }
+
+  .v-icon {
+    &.validated {
+      color: green;
+    }
+    &.refused {
+      color: red;
+    }
+    &.draft, &.submitted {
+      color: grey;
+    }
+  }
+
+  .dot {
+    &.validated {
+      background-color: green;
+    }
+    &.submitted {
+      background-color: orange;
+    }
+    &.refused {
+      background-color: red;
+    }
+    &.draft { 
+      background-color: grey;
+    }
+  }
+}
+
+
+  
+
+.important {
+  color: red !important;
+  font-weight: bold;
 }

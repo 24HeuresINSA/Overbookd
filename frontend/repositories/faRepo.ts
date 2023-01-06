@@ -65,6 +65,10 @@ export default {
     return context.$axios.post(`/collaborator/${id}`, collaborators);
   },
 
+  deleteFACollaborators(context: Context, id: number) {
+    return context.$axios.delete(`/collaborator/${id}`);
+  },
+
   updateFASignaNeeds(
     context: Context,
     id: number,
@@ -113,11 +117,15 @@ export default {
   },
 
   validateFA(context: Context, id: number, body: fa_validation_body) {
-    return context.$axios.post(resource + `/validate/${id}`, body);
+    return context.$axios.post(resource + `/${id}/validation`, body);
+  },
+
+  removeFaValidation(context: Context, faId: number, teamId: number) {
+    return context.$axios.delete(resource + `/${faId}/validation/${teamId}`);
   },
 
   refuseFA(context: Context, id: number, body: fa_validation_body) {
-    return context.$axios.post(resource + `/invalidate/${id}`, body);
+    return context.$axios.post(resource + `/${id}/refusal`, body);
   },
 
   createGearRequest(

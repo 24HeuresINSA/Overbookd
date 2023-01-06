@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { team } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "ValidatorsIcons",
@@ -25,7 +26,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    validators(): Array<any> {
+    validators(): team[] {
       return this.$accessor.team.faValidators;
     },
   },

@@ -1,5 +1,6 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter
@@ -13,14 +14,14 @@
         <v-text-field
           :value="mFA.name"
           label="Nom de la FA"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('name', $event)"
         ></v-text-field>
         <v-select
           :value="mFA.type"
           label="Type"
-          :items="all_types"
-          :disabled="isDisabled"
+          :items="allTypes"
+          :disabled="isValidatedByOwner"
           @change="onChange('type', $event)"
         ></v-select>
         <v-select
@@ -29,7 +30,7 @@
           :items="teams"
           item-value="id"
           item-text="name"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('team_id', $event)"
         ></v-select>
         <v-autocomplete
@@ -38,7 +39,7 @@
           :items="users"
           item-value="id"
           item-text="username"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('in_charge', $event)"
         ></v-autocomplete>
       </v-form>
@@ -48,29 +49,37 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_type } from "~/utils/models/FA";
+import { FA, fa_card_type, fa_type } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getFAValidationStatus,
+} from "~/utils/fa/faUtils";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import { team, User } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "FAGeneralCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  components: { CardErrorList },
   data: () => ({
-    users: [] as Array<any>,
+    users: [] as Partial<User>[],
+    owner: "humain",
+    cardType: fa_card_type.GENERAL,
   }),
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    teams(): Array<any> {
+    teams(): team[] {
       return this.$accessor.team.allTeams;
     },
-    all_types(): Array<string> {
-      //return fa_type as an array
+    allTypes(): string[] {
       return Object.values(fa_type);
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   async mounted() {

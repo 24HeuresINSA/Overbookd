@@ -55,4 +55,12 @@ export class CollaboratorService {
     });
     return this.prisma.$transaction(operations);
   }
+
+  async remove(id: number): Promise<void> {
+    await this.prisma.collaborator.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
