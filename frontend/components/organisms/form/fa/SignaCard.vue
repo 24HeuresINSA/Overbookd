@@ -139,8 +139,8 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    signalisations(): any {
-      return this.mFA.fa_signa_needs;
+    signalisations(): fa_signa_needs[] {
+      return this.mFA.fa_signa_needs ?? [];
     },
     signaType(): string[] {
       return Object.values(signa_type);
