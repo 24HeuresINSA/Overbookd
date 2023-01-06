@@ -16,6 +16,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiParam,
   ApiQuery,
@@ -137,11 +138,23 @@ export class FaController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
   @Post(':id/validation')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Validate a fa',
   })
-  //get id and user id from token
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
   validate(
     @Request() request: RequestWithUserPayload,
     @Body() team_id: validationDto,
@@ -154,9 +167,28 @@ export class FaController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
   @Delete(':faId/validation/:teamId')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Remove a validation of fa',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'teamId',
+    type: Number,
+    description: 'Team id',
+    required: true,
   })
   removeValidation(
     @Param('faId', ParseIntPipe) faId: number,
@@ -168,9 +200,22 @@ export class FaController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('orga')
   @Post(':id/refusal')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Refuse a fa',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA id',
+    required: true,
   })
   refuse(
     @Request() request: RequestWithUserPayload,
