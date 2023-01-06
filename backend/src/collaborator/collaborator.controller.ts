@@ -34,7 +34,19 @@ export class CollaboratorController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('hard')
   @Post(':faId')
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
   @ApiBody({ type: [CreateCollaboratorDto] })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
     @Body() createCollaborator: CreateCollaboratorDto[],
