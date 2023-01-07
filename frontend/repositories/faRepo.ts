@@ -1,11 +1,10 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { FormComment, FormCommentUpdate } from "~/utils/models/Comment";
 import {
   CreateFA,
   FA,
   FaSitePublishAnimation,
   fa_collaborators,
-  fa_comments,
-  fa_comments_update,
   fa_electricity_needs,
   fa_general_update,
   fa_signa_needs,
@@ -22,7 +21,7 @@ import {
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
 
-function omitAuthors(comments: fa_comments[]): fa_comments_update[] {
+function omitAuthors(comments: FormComment[]): FormCommentUpdate[] {
   return comments.map(({ id, comment, author, subject, created_at }) => ({
     id,
     comment,
@@ -108,9 +107,9 @@ export default {
     return context.$axios.delete(`/fa-electricity-needs/${id}`);
   },
 
-  updateFAComments(context: Context, id: number, comments: fa_comments[]) {
-    const comments_update: fa_comments_update[] = omitAuthors(comments);
-    return context.$axios.post<fa_comments[]>(
+  updateFAComments(context: Context, id: number, comments: FormComment[]) {
+    const comments_update: FormCommentUpdate[] = omitAuthors(comments);
+    return context.$axios.post<FormComment[]>(
       `/fa-comment/${id}`,
       comments_update
     );

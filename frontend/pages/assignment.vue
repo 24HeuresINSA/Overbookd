@@ -11,12 +11,11 @@
       width: 100%;
     "
   >
-    <FilteredUsers
+    <!--<FilteredUsers
       style="max-width: 350px; height: 100%"
       class="filteredUser"
     />
 
-    <!-- calendar --->
     <OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
     <OverTasks
@@ -27,19 +26,19 @@
 
     <v-dialog v-model="isUnassignDialogOpen" width="500px">
       <unassign-dialog @close-dialog="closeUnassignDialog" />
-    </v-dialog>
+    </v-dialog>-->
   </v-container>
 </template>
 
 <script>
-import FilteredUsers from "../components/filtredUsers";
+/*import FilteredUsers from "../components/filtredUsers";
 import OverTasks from "../components/overTasks";
 import OverCalendar from "../components/overCalendar";
-import OverFT from "../components/overFT.vue";
+import OverFT from "../components/overFT.vue";*/
 
 export default {
   name: "Assignment",
-  components: {
+  /*components: {
     OverCalendar,
     OverTasks,
     FilteredUsers,
@@ -84,7 +83,7 @@ export default {
     closeUnassignDialog() {
       this.isUnassignDialogOpen = false;
     },
-  },
+  },*/
 };
 </script>
 

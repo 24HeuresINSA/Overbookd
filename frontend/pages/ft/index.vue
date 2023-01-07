@@ -344,17 +344,8 @@ export default Vue.extend({
     },
 
     async createNewFT() {
-      const blankFT: Partial<FT> = {
-        status: "draft",
-        general: {
-          name: this.FTName,
-        },
-        details: {},
-        equipments: [],
-        timeframes: [],
-        validated: [],
-        refused: [],
-        comments: [],
+      const blankFT = {
+        name: this.FTName,
       };
       const res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
         successMessage: "La FT a été créée",
