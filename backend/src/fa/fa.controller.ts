@@ -157,11 +157,11 @@ export class FaController {
   })
   validate(
     @Request() request: RequestWithUserPayload,
-    @Body() team_id: validationDto,
-    @Param('id', ParseIntPipe) faid: number,
+    @Body() teamId: validationDto,
+    @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
-    const user_id = request.user.userId;
-    return this.faService.validatefa(user_id, faid, team_id);
+    const userId = request.user.userId ?? request.user.id;
+    return this.faService.validatefa(userId, faId, teamId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -222,7 +222,7 @@ export class FaController {
     @Body() validationForm: validationDto,
     @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
-    const userId = request.user.userId;
+    const userId = request.user.userId ?? request.user.id;
     return this.faService.refusefa(userId, faId, validationForm);
   }
 

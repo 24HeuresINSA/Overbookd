@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { UserCreationDto } from './dto/userCreation.dto';
+import { RequestWithUserPayload } from 'src/app.controller';
 
 @ApiTags('user')
 @Controller('user')
@@ -53,8 +54,10 @@ export class UserController {
     status: 200,
     description: 'Get a current user',
   })
-  async getCurrentUser(@Request() req): Promise<UserWithoutPassword> {
-    return this.userService.user({ id: req.user.userId });
+  async getCurrentUser(
+    @Request() req: RequestWithUserPayload,
+  ): Promise<UserWithoutPassword> {
+    return this.userService.user({ id: req.user.userId ?? req.user.id });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

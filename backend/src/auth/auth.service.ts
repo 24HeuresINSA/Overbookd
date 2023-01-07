@@ -13,15 +13,11 @@ import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { retrievePermissions } from '../team/utils/permissions';
+import { JwtPayload } from './entities/JwtUtil.entity';
 
 type UserCredentials = Pick<User, 'email' | 'password'>;
 type UserEmail = Pick<User, 'email'>;
 const ONE_HOUR = 3600000;
-export type JwtPayload = {
-  userId: number;
-  teams: string[];
-  permissions: string[];
-};
 
 @Injectable()
 export class AuthService {
@@ -64,6 +60,7 @@ export class AuthService {
     const teams = userWithPayload.team.map((t) => t.team.code);
     const permissions = retrievePermissions(userWithPayload.team);
     return {
+      id: userWithPayload.id,
       userId: userWithPayload.id,
       teams: teams,
       permissions: [...permissions],

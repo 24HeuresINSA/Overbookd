@@ -10,7 +10,7 @@ import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
 import { Permission } from './auth/permissions-auth.decorator';
 import { PermissionsGuard } from './auth/permissions-auth.guard';
-import { JwtPayload } from './auth/auth.service';
+import { JwtPayload } from './auth/entities/JwtUtil.entity';
 
 /**
  * IMPORTANT: used in others controller like transactions

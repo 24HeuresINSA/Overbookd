@@ -44,7 +44,6 @@ export class ConfigurationController {
   create(
     @Body() configurationData: CreateConfigurationDto,
   ): Promise<Configuration> {
-    console.log('create', configurationData.key);
     return this.configurationService.create(configurationData);
   }
 
