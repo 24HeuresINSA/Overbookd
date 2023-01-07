@@ -204,13 +204,13 @@ export default {
         },
         {
           icon: "mdi-format-list-bulleted",
-          permission: "sg",
+          permission: "manage-cp",
           title: "SG",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
-          permission: "sg",
+          permission: "manage-cp",
           title: "Transactions",
           to: "/transactions",
         },

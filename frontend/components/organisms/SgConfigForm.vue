@@ -54,9 +54,9 @@
 </template>
 
 <script lang="ts">
+import cloneDeep from "lodash/cloneDeep";
 import Vue from "vue";
 import { Configuration } from "~/utils/models/Configuration";
-import cloneDeep from "lodash/cloneDeep";
 
 type SgConfig = {
   prixFutBlonde: number;
@@ -84,7 +84,6 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch("sg");
     this.tempSgConfig = cloneDeep(this.sgConfig);
   },
   methods: {

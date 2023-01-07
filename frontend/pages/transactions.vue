@@ -30,9 +30,9 @@
 </template>
 
 <script>
+import { RepoFactory } from "~/repositories/repoFactory";
 import OverTransactions from "../components/overTransactions";
 const { safeCall } = require("../utils/api/calls");
-import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {
   name: "Transactions",
@@ -58,7 +58,7 @@ export default {
   },
 
   async mounted() {
-    if (!this.$accessor.user.hasPermission("sg")) {
+    if (!this.$accessor.user.hasPermission("manage-cp")) {
       await this.$router.push({
         path: "/",
       });

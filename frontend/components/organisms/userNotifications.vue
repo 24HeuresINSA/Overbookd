@@ -33,14 +33,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import NotificationCard from "~/components/molecules/notifications/NotificationCard.vue";
-import NotificationBroadcastDialog from "~/components/molecules/notifications/NotificationBroadcastDialog.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { safeCall } from "~/utils/api/calls";
 import { mapState } from "vuex";
-import { TMapState } from "~/utils/types/store";
+import NotificationBroadcastDialog from "~/components/molecules/notifications/NotificationBroadcastDialog.vue";
+import NotificationCard from "~/components/molecules/notifications/NotificationCard.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
 import { UserState } from "~/store/user";
+import { safeCall } from "~/utils/api/calls";
 import { User } from "~/utils/models/repo";
+import { TMapState } from "~/utils/types/store";
 
 export default Vue.extend({
   name: "UserNotifications",
@@ -56,6 +56,7 @@ export default Vue.extend({
     }),
   },
   async mounted() {
+    if (!this.hasPermission("affect-team")) return;
     this.notValidatedCount = await this.getNotValidatedCount();
   },
   methods: {

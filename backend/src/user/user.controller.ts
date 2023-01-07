@@ -3,22 +3,22 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
-  UseGuards,
   Request,
-  ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { UserService, UserWithoutPassword } from './user.service';
-import { User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { RequestWithUserPayload } from 'src/app.controller';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { UserCreationDto } from './dto/userCreation.dto';
-import { RequestWithUserPayload } from 'src/app.controller';
+import { UserService, UserWithoutPassword } from './user.service';
 
 @ApiTags('user')
 @Controller('user')
@@ -99,7 +99,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('sg')
+  @Permission('manage-cp')
   @Get('all')
   @ApiResponse({
     status: 200,

@@ -65,7 +65,7 @@
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
           <v-btn
-            v-if="hasPermission('sg')"
+            v-if="hasPermission('manage-cp')"
             :disabled="!areInputsValid.res"
             @click="saveTransactions"
             >Enregistrer</v-btn
@@ -157,10 +157,10 @@
  * then enter how much each user has a stick next to his name in the paper. after that the SG press a save button
  * and every user that consumed get charged accordingly
  */
-import transactionRepo from "../repositories/transactionRepo";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import SgConfigForm from "~/components/organisms/SgConfigForm.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
-import SgConfigForm from "@/components/organisms/SgConfigForm";
+import transactionRepo from "../repositories/transactionRepo";
 const { safeCall } = require("../utils/api/calls");
 
 export default {
@@ -294,7 +294,8 @@ export default {
   },
 
   async mounted() {
-    if (this.hasPermission("sg")) {
+    if (this.hasPermission("manage-cp")) {
+      await this.$accessor.configuration.fetch("sg");
       this.ready = true;
       await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
         (res) => {
