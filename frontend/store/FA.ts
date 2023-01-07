@@ -428,7 +428,6 @@ export const actions = actionTree(
       { dispatch, commit, state },
       { validator_id, message, author }
     ) {
-      if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
       commit("UPDATE_STATUS", Status.REFUSED);
       const body: fa_validation_body = {
         team_id: validator_id,
