@@ -73,21 +73,26 @@ model User {
   fa_validation fa_validation[]
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
+
+  ft_in_charge       Ft[]                 @relation("in_charge")
+  Ft_Comments        Ft_Comments[]
+  Ft_User_Assignment Ft_User_Assignment[]
 }
 
 model Team {
-  id               Int                @id @default(autoincrement())
-  name             String             @unique @db.VarChar(30)
-  users            User_Team[]
-  color            String             @default("#000000") @db.VarChar(30)
-  icon             String             @default("mdi-circle") @db.VarChar(255)
-  fa_validator     Boolean            @default(false)
-  ft_validator     Boolean            @default(false)
-  fa               fa[]
-  fa_validation    fa_validation[]
-  fa_refuse        fa_refuse[]
-  code             String?            @unique @db.VarChar(20)
-  owned_categories Catalog_Category[] @relation("owner")
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique @db.VarChar(30)
+  users                 User_Team[]
+  color                 String                  @default("#000000") @db.VarChar(30)
+  icon                  String                  @default("mdi-circle") @db.VarChar(255)
+  fa_validator          Boolean                 @default(false)
+  ft_validator          Boolean                 @default(false)
+  fa                    fa[]
+  fa_validation         fa_validation[]
+  fa_refuse             fa_refuse[]
+  code                  String?                 @unique @db.VarChar(20)
+  owned_categories      Catalog_Category[]      @relation("owner")
+  Ft_Generic_Assignment Ft_Generic_Assignment[]
 }
 
 model User_Team {
@@ -141,35 +146,35 @@ enum Status {
 }
 
 model fa {
-  id                        Int                        @id @default(autoincrement())
-  name                      String                     @db.VarChar(255)
-  fa_type_name              fa_type?
-  type                      String?                    @db.VarChar(255)
-  Team                      Team?                      @relation(fields: [team_id], references: [id])
-  team_id                   Int?
-  user_in_charge            User?                      @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge                 Int?
-  created_at                DateTime?                  @default(now())
-  location                  Signa_Location?            @relation(fields: [location_id], references: [id])
-  location_id               Int?
-  status                    Status?                    @default(DRAFT)
-  description               String?                    @db.Text
-  is_major                  Boolean?                   @default(false)
-  is_kids                   Boolean?                   @default(false)
-  security_needs            String?                    @db.Text
-  is_pass_required          Boolean?                   @db.Boolean
-  number_of_pass            Int?
-  water_needs               String?                    @db.Text
-  water_flow_required       Int?
-  is_deleted                Boolean                    @default(false)
-  fa_validation             fa_validation[]
-  fa_refuse                 fa_refuse[]
-  fa_collaborators          fa_collaborators[]
-  fa_electricity_needs      fa_electricity_needs[]
-  fa_signa_needs            fa_signa_needs[]
-  fa_comments               fa_comments[]
-  time_windows              time_windows[]
-  gearRequests              Animation_Gear_Request[]   @relation("gear-request-animation")
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @db.VarChar(255)
+  fa_type_name           fa_type?
+  type                   String?                  @db.VarChar(255)
+  Team                   Team?                    @relation(fields: [team_id], references: [id])
+  team_id                Int?
+  user_in_charge         User?                    @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge              Int?
+  created_at             DateTime?                @default(now())
+  location               Signa_Location?          @relation(fields: [location_id], references: [id])
+  location_id            Int?
+  status                 Status?                  @default(DRAFT)
+  description            String?                  @db.Text
+  is_major               Boolean?                 @default(false)
+  is_kids                Boolean?                 @default(false)
+  security_needs         String?                  @db.Text
+  is_pass_required       Boolean?                 @db.Boolean
+  number_of_pass         Int?
+  water_needs            String?                  @db.Text
+  water_flow_required    Int?
+  is_deleted             Boolean                  @default(false)
+  fa_validation          fa_validation[]
+  fa_refuse              fa_refuse[]
+  fa_collaborators       fa_collaborators[]
+  fa_electricity_needs   fa_electricity_needs[]
+  fa_signa_needs         fa_signa_needs[]
+  fa_comments            fa_comments[]
+  time_windows           time_windows[]
+  gearRequests           Animation_Gear_Request[] @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
 }
 
@@ -225,6 +230,7 @@ model Signa_Location {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
   fa   fa[]
+  Ft   Ft[]
 }
 
 model collaborator {
@@ -302,8 +308,8 @@ model fa_comments {
 
 model FaSitePublishAnimation {
   fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
-  faId       Int                                    @id @map("fa_id")
-  photoLink  String?                                @db.Text @map("photo_link ")
+  faId        Int                                    @id @map("fa_id")
+  photoLink   String?                                @map("photo_link ") @db.Text
   description String?                                @db.Text
   categories  site_publish_animation_category_type[]
 
@@ -380,4 +386,67 @@ model Animation_Gear_Request {
 
   @@unique([animationId, gearId, rentalPeriodId])
   @@index([status])
+}
+
+enum Ft_Status {
+  DRAFT
+  SUBMITTED
+  VALIDATED
+  REFUSED
+  READY
+}
+
+model Ft {
+  id             Int             @id @default(autoincrement())
+  name           String
+  status         Ft_Status
+  is_static      Boolean         @default(false)
+  description    String?         @db.Text
+  user_in_charge User?           @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge      Int?
+  location       Signa_Location? @relation(fields: [location_id], references: [id])
+  location_id    Int?
+
+  Ft_Comments     Ft_Comments[]
+  Ft_Time_Windows Ft_Time_Windows[]
+}
+
+model Ft_Comments {
+  id          Int          @id @default(autoincrement())
+  Ft          Ft           @relation(fields: [Ft_id], references: [id])
+  Ft_id       Int
+  comment     String       @db.Text
+  subject     subject_type
+  User_author User         @relation(fields: [author], references: [id])
+  author      Int
+  created_at  DateTime     @default(now())
+}
+
+model Ft_Time_Windows {
+  id                    Int                     @id @default(autoincrement())
+  Ft                    Ft                      @relation(fields: [Ft_id], references: [id])
+  Ft_id                 Int
+  start                 DateTime
+  end                   DateTime
+  Ft_User_Assignment    Ft_User_Assignment[]
+  Ft_Generic_Assignment Ft_Generic_Assignment[]
+}
+
+model Ft_User_Assignment {
+  Ft_Time_Windows    Ft_Time_Windows @relation(fields: [Ft_Time_Windows_id], references: [id])
+  Ft_Time_Windows_id Int
+  User               User            @relation(fields: [User_id], references: [id])
+  User_id            Int
+
+  @@unique([Ft_Time_Windows_id, User_id])
+}
+
+model Ft_Generic_Assignment {
+  Ft_Time_Windows    Ft_Time_Windows @relation(fields: [Ft_Time_Windows_id], references: [id])
+  Ft_Time_Windows_id Int
+  Team               Team            @relation(fields: [Team_id], references: [id])
+  Team_id            Int
+  number             Int
+
+  @@unique([Ft_Time_Windows_id, Team_id])
 }
