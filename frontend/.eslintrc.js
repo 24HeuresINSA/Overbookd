@@ -19,6 +19,7 @@ module.exports = {
     "vue/component-name-in-template-casing": ["error", "PascalCase"],
     "@typescript-eslint/no-unused-vars": "warn",
     "vue/no-unused-vars": "warn",
+    "no-unused-vars": "warn",
     "vue/require-v-for-key": "warn",
     "vue/valid-v-slot": ["error", { allowModifiers: true }],
     "cypress/no-unnecessary-waiting": "off",
