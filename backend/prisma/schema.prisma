@@ -93,6 +93,7 @@ model Team {
   code                  String?                 @unique @db.VarChar(20)
   owned_categories      Catalog_Category[]      @relation("owner")
   Ft_Generic_Assignment Ft_Generic_Assignment[]
+  Ft_Valdation_Refuse   Ft_Valdation_Refuse[]
 }
 
 model User_Team {
@@ -407,8 +408,9 @@ model Ft {
   location       Signa_Location? @relation(fields: [location_id], references: [id])
   location_id    Int?
 
-  Ft_Comments     Ft_Comments[]
-  Ft_Time_Windows Ft_Time_Windows[]
+  Ft_Comments         Ft_Comments[]
+  Ft_Time_Windows     Ft_Time_Windows[]
+  Ft_Valdation_Refuse Ft_Valdation_Refuse[]
 }
 
 model Ft_Comments {
@@ -449,4 +451,20 @@ model Ft_Generic_Assignment {
   number             Int
 
   @@unique([Ft_Time_Windows_id, Team_id])
+}
+
+enum Validation_Status {
+  VALIDATED
+  REFUSED
+}
+
+model Ft_Valdation_Refuse {
+  Ft         Ft                @relation(fields: [Ft_id], references: [id])
+  Ft_id      Int
+  Team       Team              @relation(fields: [team_id], references: [id])
+  team_id    Int
+  created_at DateTime          @default(now())
+  status     Validation_Status
+
+  @@unique([Ft_id, team_id])
 }
