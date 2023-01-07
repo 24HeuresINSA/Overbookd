@@ -393,7 +393,7 @@ export const actions = actionTree(
     },
 
     validate: async function (
-      { dispatch, commit, state, rootGetters },
+      { dispatch, commit, state, rootState },
       { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
@@ -404,7 +404,7 @@ export const actions = actionTree(
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }
-      const MAX_VALIDATORS = rootGetters["team/faValidators"].length;
+      const MAX_VALIDATORS = rootState.team.faValidators.length as number;
       // -1 car la validation est faite avant l'ajout du validateur
       if (state.mFA.fa_validation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators

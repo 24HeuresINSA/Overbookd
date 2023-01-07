@@ -136,7 +136,6 @@ export interface fa_validation {
     name: string;
     color: string;
     icon: string;
-    code: string;
   };
 }
 
@@ -151,7 +150,6 @@ export interface fa_refuse {
     name: string;
     color: string;
     icon: string;
-    code: string;
   };
 }
 

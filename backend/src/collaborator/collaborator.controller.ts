@@ -59,8 +59,8 @@ export class CollaboratorController {
     return this.collaboratorService.upsert(faId, createCollaborator);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Delete(':id')
   @HttpCode(204)
   @ApiResponse({
