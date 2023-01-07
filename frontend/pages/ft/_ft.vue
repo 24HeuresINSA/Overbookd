@@ -32,7 +32,6 @@ import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
-import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 
 export default Vue.extend({
   name: "FT",
@@ -41,7 +40,6 @@ export default Vue.extend({
     FTGeneralCard,
     ParentFACard,
     FTDetailCard,
-    LogisticsCard,
     CommentCard,
   },
   async mounted() {
