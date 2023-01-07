@@ -195,7 +195,7 @@ model fa_validation {
   created_at DateTime @default(now())
   is_deleted Boolean  @default(false)
 
-  @@id([fa_id, user_id])
+  @@id([fa_id, team_id])
 }
 
 model fa_collaborators {
@@ -218,7 +218,7 @@ model fa_refuse {
   created_at DateTime @default(now())
   is_deleted Boolean  @default(false)
 
-  @@id([fa_id, user_id])
+  @@id([fa_id, team_id])
 }
 
 model Signa_Location {

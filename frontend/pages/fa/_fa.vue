@@ -61,7 +61,7 @@
           v-if="shouldShowRefuseButton"
           color="red"
           class="white--text"
-          @click="isRefuseDialogOpen = true"
+          @click="openRefuseDialog(mValidators[0])"
           >refusé par {{ mValidators[0].name }}
         </v-btn>
         <v-menu v-if="shouldShowRefuseMenu" offset-y>
@@ -78,7 +78,7 @@
               link
             >
               <v-list-item-title
-                @click="isRefuseDialogOpen = true"
+                @click="openRefuseDialog(validator)"
                 v-text="validator.name"
               ></v-list-item-title>
             </v-list-item>
@@ -147,7 +147,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="refuse(mValidators[0])">
+          <v-btn color="primary" text @click="refuse(selectedValidator)">
             enregistrer</v-btn
           >
         </v-card-actions>
@@ -229,6 +229,8 @@ export default Vue.extend({
     isValidationDialogOpen: false,
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
+
+    selectedValidator: undefined as team | undefined,
 
     refuseComment: "",
     gearRequestApprovalDialog: false,
@@ -345,6 +347,8 @@ export default Vue.extend({
     document.title = title;
 
     this.$accessor.signaLocation.getAllSignaLocations();
+
+    this.selectedValidator = this.mValidators[0];
   },
   methods: {
     async saveFA() {
@@ -394,7 +398,8 @@ export default Vue.extend({
       return this.$accessor.FA.validate(payload);
     },
 
-    async refuse(validator: team) {
+    async refuse(validator?: team) {
+      if (!validator) return;
       if (
         this.mFA.status === Status.VALIDATED &&
         !this.isConfirmationDialogOpen
@@ -438,6 +443,11 @@ export default Vue.extend({
 
     isAnimationRefusedBy(validator: team) {
       return isAnimationRefusedBy(this.mFA, validator.code);
+    },
+
+    openRefuseDialog(validator: team) {
+      this.isRefuseDialogOpen = true;
+      this.selectedValidator = validator;
     },
   },
 });
