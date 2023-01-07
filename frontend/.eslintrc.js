@@ -3,8 +3,9 @@ module.exports = {
   env: {
     node: true,
     browser: true,
+    jest: true,
   },
-  plugins: ["unused-imports"],
+  plugins: ["unused-imports", "@typescript-eslint"],
   extends: [
     "plugin:vue/recommended",
     "eslint:recommended",
@@ -16,8 +17,9 @@ module.exports = {
   ],
   rules: {
     "vue/component-name-in-template-casing": ["error", "PascalCase"],
-    "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
     "vue/no-unused-vars": "warn",
+    "no-unused-vars": "warn",
     "vue/require-v-for-key": "warn",
     "vue/valid-v-slot": ["error", { allowModifiers: true }],
     "cypress/no-unnecessary-waiting": "off",
