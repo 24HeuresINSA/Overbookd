@@ -19,7 +19,7 @@
       <FTGeneralCard id="general" />
       <ParentFACard id="info" />
       <FTDetailCard id="detail" />
-      <LogisticsCard id="matos" title="Matos" owner="matos" />
+      <!--<LogisticsCard id="matos" title="Matos" owner="matos" />-->
       <CommentCard id="comment" form="FT" />
     </v-container>
   </div>

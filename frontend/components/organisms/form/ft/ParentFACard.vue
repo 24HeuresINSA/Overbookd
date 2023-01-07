@@ -1,13 +1,12 @@
 <template>
   <div>
     <v-card>
-      <v-card-title>Info</v-card-title>
+      <v-card-title>FA associée</v-card-title>
       <v-card-text>
         <v-data-table
           :headers="headers"
-          :items="[parentFA]"
+          :items="parentFAs"
           :hide-default-footer="true"
-          class="elevation-1"
         >
         </v-data-table>
       </v-card-text>
@@ -22,7 +21,7 @@
     <v-dialog v-model="isFASelectDialogOpen" max-width="500px">
       <FAChooser
         @close-dialog="closeFAChooser"
-        @change="setParentFA"
+        @change="updateParentFA"
       ></FAChooser>
     </v-dialog>
   </div>
@@ -47,7 +46,7 @@ export default Vue.extend({
       { text: "Resp", value: "user_in_charge" },
     ],
 
-    parentFA: {} as FA | null,
+    parentFAs: [] as FA[],
     isFASelectDialogOpen: false,
   }),
   computed: {
@@ -56,15 +55,14 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    if (this.mFT.fa) {
-      await this.findFAbyId(this.mFT.fa);
-    }
+    if (this.mFT.fa) await this.initParentFas(this.mFT.fa);
   },
   methods: {
-    async findFAbyId(id: number) {
-      this.parentFA = await this.$accessor.FA.getFAbyId(id);
+    async initParentFas(id: number) {
+      const fa = await this.$accessor.FA.getFAbyId(id);
+      this.parentFAs = fa ? [fa] : [];
     },
-    setParentFA(faId: number) {
+    updateParentFA(faId: number) {
       this.$accessor.FT.updateFT({ key: "fa", value: faId });
       this.isFASelectDialogOpen = false;
     },
