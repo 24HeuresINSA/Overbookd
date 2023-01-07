@@ -12,6 +12,8 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -26,8 +28,6 @@ import {
 import { fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
-import { RolesGuard } from '../auth/team-auth.guard';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { FASearchRequestDto } from './dto/faSearchRequest.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
@@ -60,8 +60,8 @@ export class FaController {
     private readonly gearRequestService: GearRequestsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Post()
   @ApiResponse({
     status: 201,
@@ -72,8 +72,8 @@ export class FaController {
     return this.faService.create(FA);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Get()
   @ApiResponse({
     status: 200,
@@ -92,8 +92,8 @@ export class FaController {
     return this.faService.findAll(searchRequest);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -104,8 +104,8 @@ export class FaController {
     return this.faService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Post(':id')
   @ApiResponse({
     status: 201,
@@ -123,8 +123,8 @@ export class FaController {
     return this.faService.update(id, updateFaDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Delete(':id')
   @ApiResponse({
     status: 204,
@@ -135,8 +135,8 @@ export class FaController {
     return this.faService.remove(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('orga')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('fa-validator')
   @Post(':id/validation')
   @HttpCode(204)
   @ApiResponse({
@@ -157,15 +157,15 @@ export class FaController {
   })
   validate(
     @Request() request: RequestWithUserPayload,
-    @Body() team_id: validationDto,
-    @Param('id', ParseIntPipe) faid: number,
+    @Body() teamId: validationDto,
+    @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
-    const user_id = request.user.id;
-    return this.faService.validatefa(user_id, faid, team_id);
+    const userId = request.user.userId ?? request.user.id;
+    return this.faService.validatefa(userId, faId, teamId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('orga')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('fa-validator')
   @Delete(':faId/validation/:teamId')
   @HttpCode(204)
   @ApiResponse({
@@ -197,8 +197,8 @@ export class FaController {
     return this.faService.removeFaValidation(faId, teamId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('orga')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('fa-validator')
   @Post(':id/refusal')
   @HttpCode(204)
   @ApiResponse({
@@ -220,14 +220,14 @@ export class FaController {
   refuse(
     @Request() request: RequestWithUserPayload,
     @Body() validationForm: validationDto,
-    @Param('id', ParseIntPipe) faid: number,
+    @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
-    const userId = request.user.id;
-    return this.faService.refusefa(userId, faid, validationForm);
+    const userId = request.user.userId ?? request.user.id;
+    return this.faService.refusefa(userId, faId, validationForm);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Post(':id/gear-requests')
   @ApiResponse({
     status: 201,
@@ -260,8 +260,8 @@ export class FaController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Get(':id/gear-requests')
   @ApiResponse({
     status: 200,
@@ -287,8 +287,8 @@ export class FaController {
     return this.gearRequestService.getAnimationRequests(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Patch(
     ':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve',
   )
@@ -340,8 +340,8 @@ export class FaController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @ApiResponse({
     status: 200,
@@ -386,8 +386,8 @@ export class FaController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Delete(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
   @HttpCode(204)
   @ApiResponse({

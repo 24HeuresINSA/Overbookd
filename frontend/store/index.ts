@@ -19,6 +19,7 @@ import * as team from "./team";
 import * as timeslot from "./timeslot";
 import * as transaction from "./transaction";
 import * as user from "./user";
+import * as permission from "./permission";
 
 export const state = () => ({});
 
@@ -54,5 +55,6 @@ export const accessorType = getAccessorType({
     configuration,
     signaLocation,
     publishAnimation,
+    permission,
   },
 });

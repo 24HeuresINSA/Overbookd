@@ -66,7 +66,7 @@ export default {
   }),
 
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.$accessor.user.hasPermission("hard")) {
       this.users = (await this.$axios.get("/user")).data;
       this.userBornToday = this.users.find((user) => {
         if (user.birthdate) {

@@ -34,8 +34,8 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
-import { TMapState } from "~/utils/types/store";
 import { Transfer } from "~/utils/models/repo";
+import { TMapState } from "~/utils/types/store";
 
 export default Vue.extend({
   name: "TransferDialog",
@@ -83,7 +83,7 @@ export default Vue.extend({
     let users = this.$accessor.user.usernames;
     if (users.length === 0) {
       // fetch usernames
-      await this.$accessor.user.getUsername("");
+      await this.$accessor.user.fetchUsernamesWithCP();
       users = this.$accessor.user.usernames;
     }
     // sort alphabetically

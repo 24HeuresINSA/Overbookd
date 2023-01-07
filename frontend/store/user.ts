@@ -25,12 +25,7 @@ export const mutations = mutationTree(state, {
     data.sort(
       ({ username: username1 }: User, { username: username2 }: User) => {
         if (username1 && username2) {
-          if (username1 < username2) {
-            return -1;
-          }
-          if (username1 > username2) {
-            return -1;
-          }
+          return username1 > username2 ? 1 : -1;
         }
         return 0;
       }
@@ -51,24 +46,12 @@ export const getters = getterTree(state, {
       return state.timeslots.find((_timeslot) => _timeslot === _id);
     });
   },
-  hasRole(state: UserState) {
-    return (roles: string | string[]): boolean => {
-      if (roles === undefined) {
-        return false;
-      }
-      const teams = state.me.team;
-      if (teams === undefined) {
-        return false;
-      }
-      if (typeof roles == "string") {
-        roles = [roles];
-      }
-      //admin has access to everything
-      if (teams.includes("admin")) {
-        return true;
-      }
-      return roles.some((r) => teams.includes(r));
-    };
+  hasPermission: (state: UserState) => (permission: string) => {
+    return (
+      state.me.permissions.includes("admin") ||
+      state.me.permissions.includes(permission) ||
+      false
+    );
   },
 });
 

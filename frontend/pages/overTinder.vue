@@ -58,7 +58,7 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.$accessor.user.hasPermission("hard")) {
       this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
       this.users = (await this.$axios("/user")).data;
       this.users = this.users.filter(({ pp }) => pp !== undefined);

@@ -32,7 +32,7 @@
             </v-card-actions>
           </v-card>
           <br />
-          <template v-if="hasRole(['log', 'admin'])">
+          <template v-if="hasPermission('inventory-write')">
             <v-card>
               <v-card-title>
                 <span class="headline">Export</span>
@@ -72,7 +72,7 @@
                 >
               </v-chip-group>
             </v-card-text>
-            <v-card-actions v-if="hasRole(['log'])">
+            <v-card-actions v-if="hasPermission('inventory-write')">
               <v-btn
                 color="primary"
                 text
@@ -85,7 +85,7 @@
             </v-card-actions>
           </v-card>
           <br />
-          <v-card v-if="hasRole('log')">
+          <v-card v-if="hasPermission('inventory-write')">
             <v-card-title> Propososition d'équipement </v-card-title>
             <v-card-subtitle
               >Nombre de propositions :
@@ -123,10 +123,20 @@
                 </template>
                 Propose des changements sur l'objet (et voit ses infos)
               </v-tooltip>
-              <v-btn v-if="hasRole('log')" icon small @click="edit(item)">
+              <v-btn
+                v-if="hasPermission('inventory-write')"
+                icon
+                small
+                @click="edit(item)"
+              >
                 <v-icon small>mdi-circle-edit-outline</v-icon>
               </v-btn>
-              <v-btn v-if="hasRole('log')" icon small @click="deleteItem(item)">
+              <v-btn
+                v-if="hasPermission('inventory-write')"
+                icon
+                small
+                @click="deleteItem(item)"
+              >
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -167,7 +177,7 @@
       </v-row>
     </v-container>
     <v-btn
-      v-if="hasRole(allowedTeams)"
+      v-if="hasPermission('inventory-write')"
       fab
       style="right: 20px; bottom: 45px; position: fixed"
       @click="newEquip"
@@ -366,7 +376,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.$accessor.user.hasPermission("hard")) {
       // setup config
       this.loading = true;
       let res = await this.$accessor.location.getAllLocations();
@@ -420,8 +430,8 @@ export default Vue.extend({
       }
     },
 
-    hasRole(role: string | string[]): boolean {
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission: string) {
+      return this.$accessor.user.hasPermission(permission);
     },
 
     getConfig(key: string): any {

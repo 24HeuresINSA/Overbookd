@@ -4,11 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  UserPasswordOnly,
-  UserService,
-  UserWithTeam,
-} from '../user/user.service';
+import { UserPasswordOnly, UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { User } from '@prisma/client';
@@ -16,6 +12,8 @@ import { randomBytes, timingSafeEqual } from 'crypto';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { retrievePermissions } from '../team/utils/permissions';
+import { JwtPayload } from './entities/JwtUtil.entity';
 
 type UserCredentials = Pick<User, 'email' | 'password'>;
 type UserEmail = Pick<User, 'email'>;
@@ -31,7 +29,7 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<UserWithTeam> {
+  async validateUser(email: string, password: string): Promise<JwtPayload> {
     const findUserCondition = {
       email,
     };
@@ -39,7 +37,34 @@ export class AuthService {
     if (await this.isInvalidUser(user, password)) {
       throw new UnauthorizedException('Email ou mot de passe invalid');
     }
-    return this.userService.user(findUserCondition);
+    const userWithPayload = await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        team: {
+          select: {
+            team: {
+              select: {
+                code: true,
+                permissions: {
+                  select: {
+                    permission_name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    const teams = userWithPayload.team.map((t) => t.team.code);
+    const permissions = retrievePermissions(userWithPayload.team);
+    return {
+      id: userWithPayload.id,
+      userId: userWithPayload.id,
+      teams: teams,
+      permissions: [...permissions],
+    };
   }
 
   private async isInvalidUser(user: UserPasswordOnly | null, pass: string) {
@@ -52,8 +77,7 @@ export class AuthService {
     email,
     password,
   }: UserCredentials): Promise<{ access_token: string }> {
-    const { id, team: role } = await this.validateUser(email, password);
-    const jwtPayload = { id, email, role };
+    const jwtPayload = await this.validateUser(email, password);
     return {
       access_token: this.jwtService.sign(jwtPayload),
     };

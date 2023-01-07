@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn v-if="hasRole('humain')" @click="recomputeAllConflicts">
+    <v-btn v-if="hasPermission('can-affect')" @click="recomputeAllConflicts">
       Recalculer tous les conflits [humain]
     </v-btn>
     <br />
@@ -56,7 +56,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.hasPermission("hard")) {
       await this.initStore();
     } else {
       await this.$router.push({
@@ -84,8 +84,8 @@ export default Vue.extend({
       await this.$accessor.conflict.computeAll();
       await this.$accessor.conflict.fetchAll();
     },
-    hasRole(role: string): boolean {
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission: string) {
+      return this.$accessor.user.hasPermission(permission);
     },
   },
 });

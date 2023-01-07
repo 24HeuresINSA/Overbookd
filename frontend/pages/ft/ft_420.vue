@@ -232,8 +232,7 @@ export default Vue.extend({
     },
   },
   async beforeCreate() {
-    if (!this.$accessor.user.hasRole("hard")) {
-      alert("vous avez pas le role 'hard' pour acceder a cette page");
+    if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });

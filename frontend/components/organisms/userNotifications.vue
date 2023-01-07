@@ -11,7 +11,7 @@
         <v-card-text v-if="me.notifications">
           <NotificationCard :notif="{ ...me.notifications }" />
         </v-card-text>
-        <template v-if="IhaveRole(['admin', 'bureau'])">
+        <template v-if="hasPermission('affect-team')">
           <v-card-text>{{ notValidatedCount }} orgas non validés </v-card-text>
         </template>
       </div>
@@ -20,18 +20,12 @@
         class="d-flex justify-space-between align-start align-sm-end flex-column flex-sm-row"
       >
         <v-btn
-          v-if="IhaveRole(['admin', 'bureau', 'orga'])"
+          v-if="hasPermission('send-broadcast')"
           text
           @click="openBroadcastDialog()"
           >broadcast
         </v-btn>
-        <v-btn
-          v-if="IhaveRole(['admin', 'bureau'])"
-          text
-          to="/humans"
-          class="ml-0"
-          >Liste des Orgas
-        </v-btn>
+        <v-btn text to="/humans" class="ml-0">Liste des Orgas </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -39,15 +33,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { isValidated } from "~/utils/roles";
-import NotificationCard from "~/components/molecules/notifications/NotificationCard.vue";
-import NotificationBroadcastDialog from "~/components/molecules/notifications/NotificationBroadcastDialog.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { safeCall } from "~/utils/api/calls";
 import { mapState } from "vuex";
-import { TMapState } from "~/utils/types/store";
+import NotificationBroadcastDialog from "~/components/molecules/notifications/NotificationBroadcastDialog.vue";
+import NotificationCard from "~/components/molecules/notifications/NotificationCard.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
 import { UserState } from "~/store/user";
+import { safeCall } from "~/utils/api/calls";
 import { User } from "~/utils/models/repo";
+import { TMapState } from "~/utils/types/store";
 
 export default Vue.extend({
   name: "UserNotifications",
@@ -63,11 +56,12 @@ export default Vue.extend({
     }),
   },
   async mounted() {
+    if (!this.hasPermission("affect-team")) return;
     this.notValidatedCount = await this.getNotValidatedCount();
   },
   methods: {
-    IhaveRole(roles: string[] | string) {
-      return this.$accessor.user.hasRole(roles);
+    hasPermission(permission: string) {
+      return this.$accessor.user.hasPermission(permission);
     },
     async getNotValidatedCount() {
       const res = await safeCall(
@@ -76,7 +70,9 @@ export default Vue.extend({
       );
       if (res) {
         const users: User[] = res.data;
-        return users.filter((user: User) => !isValidated(user)).length;
+        return users.filter(
+          (user: User) => !this.$accessor.permission.isValidated(user)
+        ).length;
       }
       return 0;
     },

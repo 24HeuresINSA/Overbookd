@@ -12,8 +12,8 @@ import { FaElectricityNeedsService } from './fa_electricity_needs.service';
 import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto';
 import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/team-auth.guard';
-import { Roles } from '../auth/team-auth.decorator';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { fa_electricity_needs } from '@prisma/client';
 
 @ApiBearerAuth()
@@ -24,8 +24,8 @@ export class FaElectricityNeedsController {
     private readonly faElectricityNeedsService: FaElectricityNeedsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Post(':faID')
   @ApiBody({ type: [CreateFaElectricityNeedDto] })
   upsert(
@@ -38,22 +38,22 @@ export class FaElectricityNeedsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Get()
   findAll(): Promise<fa_electricity_needs[] | null> {
     return this.faElectricityNeedsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Get(':id')
   findOne(@Param('id') id: string): Promise<fa_electricity_needs | null> {
     return this.faElectricityNeedsService.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Delete(':id')
   remove(@Param('id') id: string): Promise<fa_electricity_needs> {
     return this.faElectricityNeedsService.remove(+id);

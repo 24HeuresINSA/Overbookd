@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { fa, Status } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
@@ -90,7 +86,6 @@ export class FaService {
     body: validationDto,
   ): Promise<void> {
     const team_id = body.team_id;
-    await this.isUserValidator(user_id, team_id);
     await this.checkFaExistence(fa_id);
 
     const data = {
@@ -130,7 +125,6 @@ export class FaService {
     body: validationDto,
   ): Promise<void> {
     const team_id = body.team_id;
-    await this.isUserValidator(user_id, team_id);
     await this.checkFaExistence(fa_id);
 
     const data = {
@@ -158,39 +152,6 @@ export class FaService {
       where: { id },
     });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-  }
-
-  private async isUserValidator(
-    user_id: number,
-    team_id: number,
-  ): Promise<void> {
-    //get user with team
-    const user = await this.prisma.user.findUnique({
-      where: { id: user_id },
-    });
-    if (!user) throw new NotFoundException(`User with id ${user_id} not found`);
-    const team = await this.prisma.team.findUnique({
-      where: { id: team_id },
-    });
-    if (!team) throw new NotFoundException(`Team with id ${team_id} not found`);
-    //check if user is in team
-    const user_team = await this.prisma.user_Team.findUnique({
-      where: {
-        user_id_team_id: {
-          user_id,
-          team_id,
-        },
-      },
-    });
-    if (!user_team)
-      throw new NotFoundException(
-        `User with id ${user_id} is not in team with id ${team_id}`,
-      );
-    //Check if the team is a validator
-    if (!team.fa_validator)
-      throw new UnauthorizedException(
-        `Team with id ${team_id} is not a validator`,
-      );
   }
 
   private removeValidationFromTeam(fa_id: number, team_id: number) {

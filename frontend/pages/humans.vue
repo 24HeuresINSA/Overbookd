@@ -35,9 +35,7 @@
                 </template>
               </v-combobox>
 
-              <template
-                v-if="hasRole(['admin', 'bureau', 'humain', 'bar', 'scène'])"
-              >
+              <template v-if="hasPermission('manage-users')">
                 <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -46,24 +44,10 @@
                   group
                 >
                   <v-btn :value="true" small> oui</v-btn>
-
                   <v-btn :value="false" small> Non</v-btn>
                 </v-btn-toggle>
               </template>
-              <label>Permis</label>
-              <div>
-                <v-btn-toggle
-                  v-model="filters.hasDriverLicense"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                >
-                  <v-btn :value="true" small>oui</v-btn>
-
-                  <v-btn :value="false" small>non</v-btn>
-                </v-btn-toggle>
-              </div>
-              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
+              <template v-if="hasPermission('bureau')">
                 <p>Cotisation</p>
                 <v-btn-toggle
                   v-model="filters.hasPayedContribution"
@@ -79,21 +63,19 @@
               </template>
             </v-card-text>
           </v-card>
-          <v-card v-if="hasRole(['admin', 'bureau', 'humain'])">
+          <v-card v-if="hasPermission('manage-users')">
             <v-card-title>Mode stats humains</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
-              <template v-if="hasRole(['admin', 'bureau', 'humain'])">
-                <label>Mode stats</label>
-                <v-btn-toggle
-                  v-model="isModeStatsActive"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                >
-                  <v-btn :value="true" small> oui</v-btn>
-                  <v-btn :value="false" small> Non</v-btn>
-                </v-btn-toggle>
-              </template>
+              <label>Mode stats</label>
+              <v-btn-toggle
+                v-model="isModeStatsActive"
+                tile
+                color="deep-purple accent-3"
+                group
+              >
+                <v-btn :value="true" small> oui</v-btn>
+                <v-btn :value="false" small> Non</v-btn>
+              </v-btn-toggle>
             </v-card-text>
           </v-card>
         </v-col>
@@ -115,7 +97,7 @@
               </template>
               <template #[`item.action`]="{ item }" style="display: flex">
                 <v-btn
-                  v-if="hasRole('hard')"
+                  v-if="hasPermission('hard')"
                   icon
                   small
                   @click="openInformationDialog(item)"
@@ -129,7 +111,7 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasRole(['admin', 'bureau'])"
+                  v-if="hasPermission('bureau')"
                   icon
                   small
                   @click="openCharismaDialog(item)"
@@ -137,7 +119,7 @@
                   <v-icon small>mdi-emoticon-cool</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasRole(['admin', 'bureau', 'humain'])"
+                  v-if="hasPermission('manage-users')"
                   icon
                   small
                   @click="openCalendar(item._id)"
@@ -189,7 +171,7 @@
 
               <template #[`item.action`]="{ item }" style="display: flex">
                 <v-btn
-                  v-if="hasRole('hard')"
+                  v-if="hasPermission('hard')"
                   icon
                   small
                   @click="openInformationDialog(item)"
@@ -197,7 +179,7 @@
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasRole(['admin', 'bureau', 'humain'])"
+                  v-if="hasPermission('manage-users')"
                   icon
                   small
                   @click="openCalendar(item._id)"
@@ -277,7 +259,6 @@
 </template>
 
 <script>
-import { isValidated } from "../utils/roles/index.ts";
 import OverChips from "../components/atoms/overChips";
 import Fuse from "fuse.js";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
@@ -316,7 +297,6 @@ export default {
 
       filters: {
         search: undefined,
-        hasDriverLicense: undefined,
         teams: [],
         isValidated: undefined,
         hasPayedContribution: undefined,
@@ -368,20 +348,16 @@ export default {
           this.options.page = 1; // reset page
         }
 
-        // filter by driver licence
-        if (this.filters.hasDriverLicense !== undefined) {
-          mUsers = mUsers.filter(
-            (user) => user.hasDriverLicense === this.filters.hasDriverLicense
-          );
-          this.options.page = 1; // reset page
-        }
-
         // filter by not validated
         if (this.filters.isValidated !== undefined) {
           if (this.filters.isValidated) {
-            mUsers = mUsers.filter((user) => isValidated(user));
+            mUsers = mUsers.filter((user) =>
+              this.$accessor.permission.isValidated(user)
+            );
           } else {
-            mUsers = mUsers.filter((user) => !isValidated(user));
+            mUsers = mUsers.filter(
+              (user) => !this.$accessor.permission.isValidated(user)
+            );
           }
           this.options.page = 1; // reset page
         }
@@ -432,7 +408,7 @@ export default {
 
   async mounted() {
     //await this.initStore();
-    if (this.$accessor.user.hasRole("hard")) {
+    if (this.hasPermission("hard")) {
       // user has the HARD role
       this.users = (await this.$axios.get("/user")).data;
       this.users.filter((user) => !user.is_deleted);
@@ -440,7 +416,7 @@ export default {
       this.filters.isValidated = true; // default set to true
 
       // add CP if admin or sg
-      if (this.hasRole(["admin", "sg"])) {
+      if (this.hasPermission("sg")) {
         this.headers.splice(this.headers.length - 1, 0, {
           text: "CP",
           value: "balance",
@@ -481,6 +457,10 @@ export default {
       this.isCharismaDialogOpen = true;
     },
 
+    hasPermission(permission) {
+      return this.$accessor.user.hasPermission(permission);
+    },
+
     async addRole() {
       let user = this.selectedUser;
       if (user.team === undefined) {
@@ -499,10 +479,6 @@ export default {
       return process.env.NODE_ENV === "development"
         ? "http://localhost:2424/"
         : "";
-    },
-
-    hasRole(role) {
-      return this.$accessor.user.hasRole(role);
     },
 
     openTransactionDialog(user) {
