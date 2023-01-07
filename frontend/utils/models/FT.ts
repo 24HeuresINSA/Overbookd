@@ -1,5 +1,4 @@
 import { FormComment } from "./Comment";
-import { FormValidation } from "./Validation";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -20,8 +19,8 @@ export interface FT {
   matos_count?: number;
   description?: string;
   is_deleted?: boolean;
-  ft_validation?: FormValidation[];
-  ft_refuse?: FormValidation[];
+  ft_validation?: FTValidation[];
+  ft_refuse?: FTValidation[];
   ft_comments?: FormComment[];
 }
 
@@ -32,33 +31,15 @@ export interface SearchFT {
   status?: FTStatus;
 }
 
-//////////////////////////////////////////
-
-export type requirement = requirementUser | requirementTeam;
-
-export interface requirementUser {
-  type: "user";
-  user: {
-    _id: string;
-    username: string;
+export interface FTValidation {
+  User: {
+    firstname: string;
+    lastname: string;
   };
-}
-
-export interface requirementTeam {
-  type: "team";
-  team: string;
-  amount: number;
-}
-
-export interface requirementTeam {
-  type: "team";
-  team: string;
-  amount: number;
-}
-
-export enum SmallTypes {
-  QUINCAILLERIE = "QUINCAILLERIE",
-  OUTILLAGE = "OUTILLAGE",
-  CONSUMABLE = "CONSUMABLE",
-  PROPRETE = "PROPRETE",
+  Team: {
+    id: number;
+    name: string;
+    color: string;
+    icon: string;
+  };
 }

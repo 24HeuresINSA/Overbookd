@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { subject_type, fa_comments } from "~/utils/models/FA";
+import { FormComment, SubjectType } from "~/utils/models/Comment";
 
 export default Vue.extend({
   name: "CommentCard",
@@ -59,7 +59,7 @@ export default Vue.extend({
       if (this.form === "FA") return this.$accessor.FA;
       return this.$accessor.FT;
     },
-    comments(): fa_comments[] {
+    comments(): FormComment[] {
       if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments ?? [];
       return [];
     },
@@ -71,8 +71,8 @@ export default Vue.extend({
     async addComment() {
       if (!this.newComment) return;
       if (this.form == "FA") {
-        const comment: fa_comments = {
-          subject: subject_type.COMMENT,
+        const comment: FormComment = {
+          subject: SubjectType.COMMENT,
           comment: this.newComment,
           author: this.me.id,
           created_at: new Date(),

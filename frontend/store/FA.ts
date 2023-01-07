@@ -2,13 +2,13 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
+import { FormComment, SubjectType } from "~/utils/models/Comment";
 import {
   collaborator,
   CreateFA,
   FA,
   FaSitePublishAnimation,
   fa_collaborators,
-  fa_comments,
   fa_electricity_needs,
   fa_signa_needs,
   fa_validation_body,
@@ -20,7 +20,6 @@ import {
   SortedStoredGearRequests,
   Status,
   StoredGearRequest,
-  subject_type,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
@@ -111,7 +110,7 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_COMMENT({ mFA }, comment: fa_comments) {
+  ADD_COMMENT({ mFA }, comment: FormComment) {
     if (!mFA.fa_comments) mFA.fa_comments = [];
     mFA.fa_comments?.push(comment);
   },
@@ -261,7 +260,7 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  SET_COMMENTS({ mFA }, comments: fa_comments[]) {
+  SET_COMMENTS({ mFA }, comments: FormComment[]) {
     mFA.fa_comments = comments;
   },
 
@@ -326,8 +325,8 @@ export const actions = actionTree(
     ) {
       const authorName = `${author.firstname} ${author.lastname}`;
       if (!faId || !authorId || !author) return;
-      const comment: fa_comments = {
-        subject: subject_type.SUBMIT,
+      const comment: FormComment = {
+        subject: SubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
         created_at: new Date(),
@@ -420,8 +419,8 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
-      const comment: fa_comments = {
-        subject: subject_type.VALIDATED,
+      const comment: FormComment = {
+        subject: SubjectType.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
         author: author.id,
         created_at: new Date(),
@@ -439,8 +438,8 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
-      const comment: fa_comments = {
-        subject: subject_type.REFUSED,
+      const comment: FormComment = {
+        subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author: author.id,
         created_at: new Date(),
@@ -471,8 +470,8 @@ export const actions = actionTree(
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
-      const comment: fa_comments = {
-        subject: subject_type.SUBMIT,
+      const comment: FormComment = {
+        subject: SubjectType.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
         author: author.id,
         created_at: new Date(),
@@ -487,7 +486,7 @@ export const actions = actionTree(
         comment,
         defaultAuthor,
       }: {
-        comment: fa_comments;
+        comment: FormComment;
         defaultAuthor: { firstname: string; lastname: string };
       }
     ) {

@@ -1,4 +1,5 @@
 import { Gear } from "./catalog.model";
+import { FormComment } from "./Comment";
 
 export enum Status {
   DRAFT = "DRAFT",
@@ -38,12 +39,6 @@ export enum signa_type {
   BANNIERE = "BANNIERE",
   PANNEAU = "PANNEAU",
   PANCARTE = "PANCARTE",
-}
-export enum subject_type {
-  REFUSED = "REFUSED",
-  VALIDATED = "VALIDATED",
-  COMMENT = "COMMENT",
-  SUBMIT = "SUBMIT",
 }
 
 export enum fa_type {
@@ -104,7 +99,7 @@ export interface FA {
   fa_refuse?: fa_refuse[];
   fa_electricity_needs?: fa_electricity_needs[];
   fa_signa_needs?: fa_signa_needs[];
-  fa_comments?: fa_comments[];
+  fa_comments?: FormComment[];
   time_windows?: time_windows[];
   faSitePublishAnimation?: FaSitePublishAnimation;
 }
@@ -169,26 +164,6 @@ export interface fa_signa_needs {
   text: string;
   count: number;
   comment?: string;
-}
-
-export interface fa_comments {
-  id?: number;
-  comment: string;
-  subject: subject_type;
-  created_at?: Date;
-  author: number;
-  User_author?: {
-    firstname: string;
-    lastname: string;
-  };
-}
-
-export interface fa_comments_update {
-  id?: number;
-  comment: string;
-  subject: subject_type;
-  created_at?: Date;
-  author: number;
 }
 
 export interface time_windows {
