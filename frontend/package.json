@@ -99,7 +99,7 @@
       "text-summary",
       "cobertura"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
     "testEnvironment": "jsdom"
   }
 }
