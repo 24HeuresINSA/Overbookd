@@ -121,6 +121,16 @@ export default {
         (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
       );
     },
+    getAllStatus() {
+      let status = FAStatus;
+      // if (this.name === "FT") {
+      //   status = FTStatus;
+      // }
+      // Change status for PascalCase
+      return Object.keys(status).map(
+        (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
+      );
+    },
     history(team) {
       if (this.name === "FT") {
         if (this.historyFT[team] === undefined) {
