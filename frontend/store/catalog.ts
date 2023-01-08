@@ -1,4 +1,6 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree, getterTree } from "typed-vuex";
+import { GearRepository as InventoryGearRepository } from "~/domain/inventory/gear.repository";
+import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.repository";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
@@ -48,6 +50,12 @@ export const state = (): State => ({
   gears: [],
   categories: [],
   categoryTree: [],
+});
+
+export const getters = getterTree(state, {
+  gearRepository(state): InventoryGearRepository {
+    return new InMemoryGearRepository(state.gears);
+  },
 });
 
 export const mutations = mutationTree(state, {

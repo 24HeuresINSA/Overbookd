@@ -11,6 +11,8 @@
     :label="label"
     solo
     return-object
+    :dense="dense"
+    :hide-details="dense"
     @update:search-input="searchGear"
     @change="propagateEvent"
     @focus="initList"
@@ -61,6 +63,10 @@ export default Vue.extend({
     ponctualUsage: {
       type: Boolean,
       default: () => undefined,
+    },
+    dense: {
+      type: Boolean,
+      default: () => false,
     },
   },
   data(): SearchGearData {

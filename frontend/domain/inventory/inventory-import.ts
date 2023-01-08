@@ -5,9 +5,23 @@ import {
   ManualInventoryRecordError,
 } from "./manual-inventory-record";
 
+export type InventoryImportRaw = {
+  gear: string;
+  quantity: number;
+  storage: string;
+};
+
 export abstract class InventoryImportContainer {
   constructor(protected readonly gearRepository: GearRepository) {}
   abstract extractManualRecords(): Promise<ManualInventoryRecord[]>;
+  protected convertImportRawsToManualRecords(
+    raws: InventoryImportRaw[]
+  ): ManualInventoryRecord[] {
+    return raws.map(
+      ({ gear, quantity, storage }) =>
+        new ManualInventoryRecord(gear, quantity, storage, this.gearRepository)
+    );
+  }
 }
 
 export class InventoryImport {
