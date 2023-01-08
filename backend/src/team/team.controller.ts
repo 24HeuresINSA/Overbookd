@@ -8,12 +8,13 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
-import { RolesGuard } from 'src/auth/team-auth.guard';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { TeamFormDto } from './dto/teamFormRequest.dto';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 import { TeamResponseDto } from './dto/teamResponse';
@@ -31,12 +32,15 @@ export class TeamController {
     type: TeamResponseDto,
     isArray: true,
   })
-  async getTeams(): Promise<TeamResponseDto[]> {
-    return this.teamService.team({ orderBy: { name: 'asc' } });
+  async getTeams(
+    @Query('permission') permission?: string,
+  ): Promise<TeamResponseDto[]> {
+    const where = buildQueryParamsCondition(permission);
+    return this.teamService.team({ orderBy: { name: 'asc' }, where });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('humain', 'sg')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('affect-team')
   @Post('link')
   @ApiBearerAuth()
   @HttpCode(201)
@@ -51,7 +55,8 @@ export class TeamController {
     return this.teamService.updateUserTeams(payload);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('admin')
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -64,7 +69,8 @@ export class TeamController {
     return this.teamService.createTeam(payload);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('admin')
   @Patch(':id')
   @ApiBearerAuth()
   @HttpCode(200)
@@ -80,7 +86,8 @@ export class TeamController {
     return this.teamService.updateTeam(id, data);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('admin')
   @Delete(':id')
   @ApiBearerAuth()
   @HttpCode(204)
@@ -91,4 +98,16 @@ export class TeamController {
   async deleteTeam(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.teamService.deleteTeam(id);
   }
+}
+
+function buildQueryParamsCondition(permission: string) {
+  return permission
+    ? {
+        permissions: {
+          some: {
+            permission_name: permission,
+          },
+        },
+      }
+    : {};
 }

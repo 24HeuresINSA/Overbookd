@@ -1,6 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
 import {
   collaborator,
   CreateFA,
@@ -16,6 +17,7 @@ import {
   GearRequestWithDrive,
   Period,
   SearchFA,
+  SortedStoredGearRequests,
   Status,
   StoredGearRequest,
   subject_type,
@@ -77,6 +79,13 @@ export const getters = getterTree(state, {
       if (savedGearRequest) return gearRequests;
       return [...gearRequests, gearRequest];
     }, [] as StoredGearRequest[]);
+  },
+  allSortedGearRequests(state, getters): SortedStoredGearRequests {
+    return {
+      matos: getters.matosGearRequests,
+      barrieres: getters.barrieresGearRequests,
+      elec: getters.elecGearRequests,
+    };
   },
 });
 
@@ -384,8 +393,8 @@ export const actions = actionTree(
     },
 
     validate: async function (
-      { dispatch, commit, state },
-      { validator_id, user_id, team_name, author }
+      { dispatch, commit, state, rootState },
+      { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
       if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
@@ -395,8 +404,7 @@ export const actions = actionTree(
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }
-      // @ts-ignore
-      const MAX_VALIDATORS = this.$accessor.team.faValidators.length;
+      const MAX_VALIDATORS = rootState.team.faValidators.length as number;
       // -1 car la validation est faite avant l'ajout du validateur
       if (state.mFA.fa_validation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators
@@ -409,7 +417,7 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: subject_type.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
-        author: user_id,
+        author: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -418,9 +426,8 @@ export const actions = actionTree(
 
     refuse: async function (
       { dispatch, commit, state },
-      { validator_id, user_id, message, author }
+      { validator_id, message, author }
     ) {
-      if (state.mFA.fa_refuse?.find((v) => v.Team.id === validator_id)) return;
       commit("UPDATE_STATUS", Status.REFUSED);
       const body: fa_validation_body = {
         team_id: validator_id,
@@ -429,7 +436,39 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: subject_type.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
-        author: user_id,
+        author: author.id,
+        created_at: new Date(),
+      };
+      dispatch("addComment", { comment, defaultAuthor: author });
+      dispatch("save");
+    },
+
+    resetLogValidations: async function (
+      { dispatch, state, rootGetters },
+      { author }
+    ) {
+      const logTeamCodes = ["matos", "barrieres", "elec"];
+      const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
+        isAnimationValidatedBy(state.mFA, teamCode)
+      );
+      if (teamCodesThatValidatedFA.length === 0) return;
+      const teamNamesThatValidatedFA = await Promise.all(
+        teamCodesThatValidatedFA.map(async (teamCode) => {
+          const team = rootGetters["team/getTeamByCode"](teamCode);
+          await RepoFactory.faRepo.removeFaValidation(
+            this,
+            state.mFA.id,
+            team.id
+          );
+          return team.name;
+        })
+      );
+
+      const validTeams = teamNamesThatValidatedFA.join(" et ");
+      const comment: fa_comments = {
+        subject: subject_type.SUBMIT,
+        comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
+        author: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -499,7 +538,12 @@ export const actions = actionTree(
       commit("UPDATE_COLLABORATOR", { index, key, value });
     },
 
-    deleteCollaborator({ commit }, index: number) {
+    async deleteCollaborator({ commit, state }, index: number) {
+      const collaboratorId =
+        state.mFA.fa_collaborators?.[index]?.collaborator?.id;
+      if (collaboratorId) {
+        await RepoFactory.faRepo.deleteFACollaborators(this, collaboratorId);
+      }
       commit("DELETE_COLLABORATOR", index);
     },
 
@@ -602,7 +646,7 @@ export const actions = actionTree(
             this,
             RepoFactory.faRepo.validateGearRequest(this, state.mFA.id, gr),
             {
-              successMessage: "Validation effectuee",
+              successMessage: "Validation effectuée ✅",
               errorMessage: "La tentative de validation n'a pas abouti",
             }
           )

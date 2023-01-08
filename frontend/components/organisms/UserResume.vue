@@ -70,18 +70,6 @@ export default Vue.extend({
     askForUserDetails(): void {
       this.$emit("click:user-details", this.user);
     },
-    getClass(team: string): string {
-      switch (team) {
-        case "hard":
-          return "hard";
-        case "soft":
-          return "soft";
-        case "confiance":
-          return "confiance";
-        default:
-          return "normal";
-      }
-    },
     toggleUserDialog(): any {
       this.isUserDialogOpen = !this.isUserDialogOpen;
     },

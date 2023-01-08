@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :class="isDisabled ? 'disabled' : ''">
+    <v-card :class="validationStatus">
       <v-card-title>Besoin d'électricité</v-card-title>
       <v-card-subtitle
         >Précise tes besoins en électricité : 1 ligne par type d'appareil. Pour
@@ -15,11 +15,15 @@
           </template>
           <template #[`item.power`]="{ item }"> {{ item.power }} W </template>
           <template #[`item.action`]="{ index }">
-            <v-btn v-if="!isDisabled" icon @click="openUpdateModal(index)">
+            <v-btn
+              v-if="!isValidatedByOwner"
+              icon
+              @click="openUpdateModal(index)"
+            >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
-              v-if="!isDisabled"
+              v-if="!isValidatedByOwner"
               icon
               @click="deleteElectricityNeed(index)"
             >
@@ -28,7 +32,7 @@
           </template>
         </v-data-table>
       </v-card-text>
-      <v-card-actions v-if="!isDisabled">
+      <v-card-actions v-if="!isValidatedByOwner">
         <v-spacer></v-spacer>
         <v-btn text @click="isAddDialogOpen = true"
           >Ajouter un besoin élec</v-btn
@@ -55,9 +59,14 @@
 <script lang="ts">
 import Vue from "vue";
 import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import {
   ElectricityTypeLabel,
   electricity_type,
   electricity_type_label,
+  FA,
   fa_electricity_needs,
 } from "~/utils/models/FA";
 import ElecLogisticForm from "~/components/molecules/logistics/ElecLogisticForm.vue";
@@ -74,13 +83,8 @@ const headers = [
 export default Vue.extend({
   name: "ElecLogisticCard",
   components: { ElecLogisticForm },
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
   data: () => ({
+    owner: "elec",
     headers,
     isAddDialogOpen: false,
     isEditDialogOpen: false,
@@ -88,8 +92,14 @@ export default Vue.extend({
     selectedIndex: null as number | null,
   }),
   computed: {
-    electricityNeeds(): fa_electricity_needs[] | undefined {
-      return this.$accessor.FA.mFA.fa_electricity_needs;
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    electricityNeeds(): any {
+      return this.mFA.fa_electricity_needs;
+    },
+    electricityType(): string[] {
+      return Object.values(electricity_type);
     },
     electricityTypeLabels(): ElectricityTypeLabel[] {
       const elecTypeLabels: ElectricityTypeLabel[] = Object.keys(
@@ -102,6 +112,12 @@ export default Vue.extend({
         };
       });
       return elecTypeLabels;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {

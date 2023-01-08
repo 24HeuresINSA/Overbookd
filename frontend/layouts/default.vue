@@ -26,7 +26,7 @@
         </v-list-item>
         <template v-for="(item, i) in working_items">
           <v-list-item
-            v-if="hasRole(item.roles)"
+            v-if="hasPermission(item.permission)"
             :key="i"
             :to="item.to"
             router
@@ -58,7 +58,7 @@
       />
       <v-spacer />
       <div v-if="isPreProd" class="watermark">PREPROD</div>
-      <v-btn v-if="hasRole('hard')" text @click="isDialogOpen = true">
+      <v-btn v-if="hasPermission('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
       </v-btn>
@@ -85,7 +85,7 @@
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
-      <v-card v-if="hasRole('hard')">
+      <v-card v-if="hasPermission('hard')">
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
@@ -182,12 +182,12 @@ export default {
           icon: "mdi-apps",
           title: "Accueil",
           to: "/",
-          roles: "hard",
+          permission: "validated-user",
         },
         {
           icon: "mdi-chart-bubble",
           title: "Fiches Activités",
-          roles: "hard",
+          permission: "hard",
           to: "/fa",
         },
         {
@@ -199,44 +199,36 @@ export default {
         {
           icon: "mdi-account",
           title: "Liste des Orgas",
-          roles: "hard",
+          permission: "hard",
           to: "/humans",
         },
         {
           icon: "mdi-cog",
-          roles: "admin",
+          permission: "admin",
           title: "Admin",
           to: "/config",
         },
         {
           icon: "mdi-format-list-bulleted",
-          roles: "sg",
+          permission: "manage-cp",
           title: "SG",
           to: "/SG",
         },
         {
           icon: "mdi-cash-multiple",
-          roles: "sg",
+          permission: "manage-cp",
           title: "Transactions",
           to: "/transactions",
         },
         {
           icon: "mdi-bookshelf",
-          roles: [
-            "admin",
-            "matos",
-            "elec",
-            "barrieres",
-            "signa",
-            "bar",
-            "catering",
-          ],
+          permission: "catalog-write",
           title: "Catalogue",
           to: "/catalog",
         },
         {
           icon: "mdi-web-sync",
-          roles: "communication",
+          permission: "communication-read",
           title: "Animations a publier",
           to: "/comcom",
         },
@@ -446,11 +438,8 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
       return items[Math.floor(Math.random() * items.length)];
     },
 
-    hasRole(role) {
-      if (role === "everyone") {
-        return true;
-      }
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission) {
+      return this.$accessor.user.hasPermission(permission);
     },
 
     getConfig(key) {

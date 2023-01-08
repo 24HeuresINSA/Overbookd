@@ -1,29 +1,32 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Presta</v-card-title>
-    <v-card-subtitle
-      >Si ton activité n'a pas de prestataire, tu dois laisser tous les champs
-      vides.</v-card-subtitle
-    >
     <v-card-text>
-      <v-form>
+      <v-switch
+        v-model="isCollaboratorRequired"
+        label="Besoin presta"
+        :disabled="isValidatedByOwner"
+        @change="onSwitch()"
+      ></v-switch>
+      <v-form v-if="isCollaboratorRequired">
         <v-text-field
           :value="collaborator.firstname"
           label="Prénom de l'intervenant*"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('firstname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.lastname"
           label="Nom de l'intervenant*"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('lastname', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.phone"
           label="Téléphone*"
           :rules="rulePhone"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('phone', $event)"
         >
         </v-text-field>
@@ -31,20 +34,20 @@
           :value="collaborator.email"
           label="E-mail"
           :rules="ruleEmail"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('email', $event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.company"
           label="Société"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('company', $event)"
         >
         </v-text-field>
         <v-text-field
           :value="collaborator.comment"
           label="Commentaire"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('comment', $event)"
         >
         </v-text-field>
@@ -55,26 +58,44 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { collaborator, fa_collaborators } from "~/utils/models/FA";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import {
+  collaborator,
+  FA,
+  fa_card_type,
+  fa_collaborators,
+} from "~/utils/models/FA";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "CollaboratorCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  components: { CardErrorList },
+  data: () => ({
+    owner: "humain",
+    cardType: fa_card_type.COLLABORATOR,
+    isCollaboratorRequired: false,
+  }),
   computed: {
-    collaborators(): any {
-      return this.$accessor.FA.mFA.fa_collaborators;
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    collaborators(): fa_collaborators[] {
+      return this.mFA.fa_collaborators ?? [];
     },
     collaborator(): collaborator {
-      const collaborators = this.$accessor.FA.mFA.fa_collaborators;
-      if (collaborators && collaborators.length > 0) {
-        return collaborators[0].collaborator;
+      if (this.collaborators.length > 0) {
+        return this.collaborators[0].collaborator;
       }
       return {};
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
     rulePhone(): any {
       return [
@@ -91,27 +112,46 @@ export default Vue.extend({
       ];
     },
   },
+  watch: {
+    collaborators: {
+      handler() {
+        if (this.collaborators.length > 0) {
+          this.isCollaboratorRequired = true;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
-    onChange(key: string, value: any) {
-      if (this.collaborators.length === 0) {
-        const newCollaborator: fa_collaborators = {
-          collaborator: {},
-        };
-        this.$accessor.FA.addCollaborator(newCollaborator);
+    onSwitch() {
+      if (!this.isCollaboratorRequired) {
+        this.deleteCollaborator();
+      } else {
+        this.addCollaborator();
       }
-
-      if (typeof value === "string") value = value.trim();
+    },
+    onChange(key: string, value: any) {
+      this.updateCollaborator(key, value);
+    },
+    addCollaborator() {
+      const newCollaborator: fa_collaborators = {
+        collaborator: {
+          firstname: "",
+          lastname: "",
+          phone: "",
+        },
+      };
+      this.$accessor.FA.addCollaborator(newCollaborator);
+    },
+    updateCollaborator(key: string, value: any) {
       this.$accessor.FA.updateCollaborator({
         index: 0,
         key: key,
         value: value,
       });
-
-      // eslint-disable-next-line no-unused-vars
-      const { id, ...rest } = this.collaborator;
-      if (Object.values(rest).every((value) => value == "")) {
-        this.$accessor.FA.deleteCollaborator(0);
-      }
+    },
+    deleteCollaborator() {
+      this.$accessor.FA.deleteCollaborator(0);
     },
   },
 });

@@ -22,3 +22,21 @@ backend_test:
       coverage_report:
         coverage_format: cobertura
         path: backend/coverage/cobertura-coverage.xml
+
+frontend_test:
+  extends: .test
+  needs: [frontend_install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - frontend/**/*
+    - when: never
+  before_script:
+    - 'cd frontend'
+  artifacts:
+    when: always
+    reports:
+      junit: frontend/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: frontend/coverage/cobertura-coverage.xml

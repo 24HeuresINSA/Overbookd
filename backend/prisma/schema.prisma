@@ -81,13 +81,12 @@ model Team {
   users            User_Team[]
   color            String             @default("#000000") @db.VarChar(30)
   icon             String             @default("mdi-circle") @db.VarChar(255)
-  fa_validator     Boolean            @default(false)
-  ft_validator     Boolean            @default(false)
   fa               fa[]
   fa_validation    fa_validation[]
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
   owned_categories Catalog_Category[] @relation("owner")
+  permissions      Team_Permission[]
 }
 
 model User_Team {
@@ -97,6 +96,22 @@ model User_Team {
   team_id Int
 
   @@id([user_id, team_id])
+}
+
+model Permission {
+  id          Int               @id @default(autoincrement())
+  name        String            @db.VarChar(30) @unique
+  description String?           @db.VarChar(255)
+  teams       Team_Permission[]
+}
+
+model Team_Permission {
+  team            Team        @relation(fields: [team_code], references: [code])
+  team_code       String
+  permission      Permission  @relation(fields: [permission_name], references: [name], onDelete: Cascade)
+  permission_name String      @map("permission_name")
+
+  @@id([team_code, permission_name])
 }
 
 model TimeSlot {
@@ -195,13 +210,13 @@ model fa_validation {
   created_at DateTime @default(now())
   is_deleted Boolean  @default(false)
 
-  @@id([fa_id, user_id])
+  @@id([fa_id, team_id])
 }
 
 model fa_collaborators {
   fa              fa           @relation(fields: [fa_id], references: [id])
   fa_id           Int
-  collaborator    collaborator @relation(fields: [collaborator_id], references: [id])
+  collaborator    collaborator @relation(fields: [collaborator_id], references: [id], onDelete: Cascade)
   collaborator_id Int
   is_deleted      Boolean      @default(false)
 
@@ -218,7 +233,7 @@ model fa_refuse {
   created_at DateTime @default(now())
   is_deleted Boolean  @default(false)
 
-  @@id([fa_id, user_id])
+  @@id([fa_id, team_id])
 }
 
 model Signa_Location {

@@ -160,7 +160,7 @@ export default {
   },
 
   async mounted() {
-    if (this.hasRole("log")) {
+    if (this.hasPermission("catalog-write")) {
       const { data: FAs } = await this.$axios.get("/fa");
       FAs.forEach((FA) => {
         if (FA.equipments) {
@@ -298,8 +298,8 @@ export default {
         }
       });
     },
-    hasRole(roles) {
-      return this.$accessor.user.hasRole(roles);
+    hasPermission(permission) {
+      return this.$accessor.user.hasPermission(permission);
     },
   },
 };

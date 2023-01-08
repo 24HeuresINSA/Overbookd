@@ -1,22 +1,11 @@
 <template>
-  <div class="main">
+  <div class="main fa">
     <div class="sidebar">
       <h1>Fiche Activité n°{{ faId }}</h1>
       <h2>{{ faName }}</h2>
 
       <div class="status">
-        <span
-          class="dot"
-          :class="
-            mFA.status === 'SUBMITTED'
-              ? 'orange'
-              : mFA.status === 'REFUSED'
-              ? 'red'
-              : mFA.status === 'VALIDATED'
-              ? 'green'
-              : 'grey'
-          "
-        ></span>
+        <span class="dot" :class="faValidationStatus"></span>
         <h3>
           {{
             mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
@@ -26,60 +15,34 @@
 
       <div class="icons">
         <div v-for="validator of validators" :key="validator.code" class="icon">
-          <v-icon :color="getIconColor(validator)" size="26">
+          <v-icon :class="validatorValidationStatus(validator)" size="26">
             {{ validator.icon }}
           </v-icon>
           <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
-      <FormSummary class="summary"></FormSummary>
+      <FormSummary class="summary" />
     </div>
     <v-container class="container fa">
-      <FAGeneralCard id="general" :is-disabled="isDisabled"></FAGeneralCard>
-      <FADetailCard
-        id="detail"
-        :is-disabled="isDisabled && !me.team.includes('humain')"
-      ></FADetailCard>
-      <SignaCard id="signa" :is-disabled="isDisabled"></SignaCard>
-      <TimeframeTable id="timeframe" :is-disabled="isDisabled"></TimeframeTable>
-      <SecurityCard id="security" :is-disabled="isDisabled"></SecurityCard>
-      <CollaboratorCard
-        id="presta"
-        :is-disabled="isDisabled"
-      ></CollaboratorCard>
+      <FAGeneralCard id="general" />
+      <FADetailCard id="detail" />
+      <SignaCard id="signa" />
+      <TimeframeTable id="timeframe" />
+      <SecurityCard id="security" />
+      <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
       <h4 class="log-text">
         S'il manque des informations, ou du matos veuillez contacter le
         responsable de la logistique sur
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
       </h4>
-      <LogisticTimeWindow :is-disabled="isDisabled"></LogisticTimeWindow>
-      <LogisticsCard
-        title="Matos"
-        owner="matos"
-        :types="Object.values({})"
-        :is-disabled="isDisabled"
-      ></LogisticsCard>
-
-      <LogisticsCard
-        title="Barrières"
-        owner="barrieres"
-        :types="Object.values({})"
-        :is-disabled="isDisabled"
-      ></LogisticsCard>
-      <LogisticsCard
-        title="Matos Elec / Eau"
-        owner="elec"
-        :types="Object.values({})"
-        :is-disabled="isDisabled"
-      ></LogisticsCard>
-      <ElecLogisticCard id="elec" :is-disabled="isDisabled"></ElecLogisticCard>
-      <WaterLogisticCard
-        id="water"
-        :is-disabled="isDisabled"
-      ></WaterLogisticCard>
-      <CommentCard id="comment"></CommentCard>
-      <!-- <FTCard id="ft"></FTCard> -->
+      <LogisticTimeWindow />
+      <LogisticsCard title="Matos" owner="matos" />
+      <LogisticsCard title="Barrières" owner="barrieres" />
+      <LogisticsCard title="Matos Elec / Eau" owner="elec" />
+      <ElecLogisticCard id="elec" />
+      <WaterLogisticCard id="water" />
+      <CommentCard id="comment" />
     </v-container>
     <SnackNotificationContainer />
 
@@ -95,12 +58,13 @@
       </v-btn>
       <div class="bottom-bar__actions">
         <v-btn
-          v-if="shouldShowValidationOrRefuseButton()"
+          v-if="shouldShowRefuseButton"
           color="red"
-          @click="refuseDialog = true"
+          class="white--text"
+          @click="openRefuseDialog(mValidators[0])"
           >refusé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
+        <v-menu v-if="shouldShowRefuseMenu" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
@@ -114,19 +78,20 @@
               link
             >
               <v-list-item-title
-                @click="refuseDialog = true"
+                @click="openRefuseDialog(validator)"
                 v-text="validator.name"
               ></v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
         <v-btn
-          v-if="shouldShowValidationOrRefuseButton()"
+          v-if="shouldShowValidationButton"
           color="green"
+          class="white--text"
           @click="validate(mValidators[0])"
           >validé par {{ mValidators[0].name }}
         </v-btn>
-        <v-menu v-if="shouldShowValidationOrRefuseMenu()" offset-y>
+        <v-menu v-if="shouldShowValidationMenu" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
               valider
@@ -134,7 +99,7 @@
           </template>
           <v-list>
             <v-list-item
-              v-for="validator of mValidators"
+              v-for="validator of teamsThatNotYetValidatedFA"
               :key="validator.id"
               link
             >
@@ -147,18 +112,16 @@
           </v-list>
         </v-menu>
         <v-btn
-          v-if="
-            mFA.status && (mFA.status === 'DRAFT' || mFA.status === 'REFUSED')
-          "
+          v-if="isDraftOrRefused"
           color="warning"
-          @click="validationDialog = true"
+          :disabled="mFA.status === 'SUBMITTED' && hasAtLeastOneError"
+          @click="checkBeforeAskForValidation()"
           >soumettre à validation
         </v-btn>
-        <v-btn @click="saveFA">sauvegarder</v-btn>
-        <v-btn
-          v-if="mValidators.length >= 1 && mFA.isValid === false"
-          color="red"
-          @click="undelete"
+        <v-btn v-if="mFA.status !== 'VALIDATED'" @click="saveFA"
+          >sauvegarder</v-btn
+        >
+        <v-btn v-if="isRecoverable" color="red" @click="undelete"
           >récupérer
         </v-btn>
       </div>
@@ -167,14 +130,14 @@
       </v-btn>
     </div>
 
-    <v-dialog v-model="validationDialog" width="600">
+    <v-dialog v-model="isValidationDialogOpen" width="600">
       <CheckBeforeSubmitCard
-        @close-dialog="validationDialog = false"
+        @close-dialog="isValidationDialogOpen = false"
         @submit="submit"
       ></CheckBeforeSubmitCard>
     </v-dialog>
 
-    <v-dialog v-model="refuseDialog" max-width="600px">
+    <v-dialog v-model="isRefuseDialogOpen" max-width="600px">
       <v-card>
         <v-card-title> Refuser </v-card-title>
         <v-card-text>
@@ -184,7 +147,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="refuse(mValidators[0])">
+          <v-btn color="primary" text @click="refuse(selectedValidator)">
             enregistrer</v-btn
           >
         </v-card-actions>
@@ -196,6 +159,19 @@
         :validator="validatorTeam"
         @close-dialog="validateGearRequests(validatorTeam)"
       ></GearRequestsValidation>
+    </v-dialog>
+
+    <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
+      <ConfirmationMessage
+        @close-dialog="isConfirmationDialogOpen = false"
+        @confirm="refuse(mValidators[0])"
+      >
+        <template #title> Refuser la FA </template>
+        <template #statement>
+          Cette FA était pourtant validée par tous les orgas... Tu es sûr de
+          vouloir la refuser ?
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
   </div>
 </template>
@@ -218,8 +194,15 @@ import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { fa_refuse, fa_validation } from "~/utils/models/FA";
+import { Status } from "~/utils/models/FA";
 import { team } from "~/utils/models/repo";
+import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
+import {
+  getFAValidationStatus,
+  isAnimationRefusedBy,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 
 export default Vue.extend({
   name: "Fa",
@@ -239,11 +222,16 @@ export default Vue.extend({
     LogisticTimeWindow,
     CheckBeforeSubmitCard,
     GearRequestsValidation,
+    ConfirmationMessage,
   },
 
   data: () => ({
-    validationDialog: false,
-    refuseDialog: false,
+    isValidationDialogOpen: false,
+    isConfirmationDialogOpen: false,
+    isRefuseDialogOpen: false,
+
+    selectedValidator: undefined as team | undefined,
+
     refuseComment: "",
     gearRequestApprovalDialog: false,
     validatorTeam: { name: "", code: "", id: 0, color: "", icon: "" } as team,
@@ -279,17 +267,17 @@ export default Vue.extend({
     faName(): string {
       return this.$accessor.FA.mFA.name;
     },
-    validators(): Array<any> {
+    validators(): team[] {
       return this.$accessor.team.faValidators;
     },
-    mValidators(): Array<any> {
-      let mValidator: Array<any> = [];
+    mValidators(): team[] {
+      let mValidator: team[] = [];
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
         return this.validators;
       }
       if (this.validators) {
-        this.validators.forEach((validator: any) => {
+        this.validators.forEach((validator: team) => {
           if (this.me.team && this.me.team.includes(validator.name)) {
             mValidator.push(validator);
           }
@@ -298,11 +286,50 @@ export default Vue.extend({
       }
       return [];
     },
-    isDisabled(): boolean {
+    teamsThatNotYetValidatedFA(): team[] {
+      return this.mValidators.filter((validator: team) => {
+        return !this.isAnimationValidatedBy(validator);
+      });
+    },
+    hasAtLeastOneError(): boolean {
+      return hasAtLeastOneError(this.mFA, this.FA.allSortedGearRequests);
+    },
+    faValidationStatus(): string {
+      return this.mFA.status.toLowerCase();
+    },
+    isRecoverable(): boolean {
+      return this.mValidators.length >= 1 && this.mFA.isValid === false;
+    },
+    isDraftOrRefused(): boolean {
       return (
-        (this.mFA.status === "SUBMITTED" || this.mFA.status === "VALIDATED") &&
-        !this.me.team.includes("admin")
+        this.mFA.status === Status.DRAFT || this.mFA.status === Status.REFUSED
       );
+    },
+    isSubmittedOrRefused(): boolean {
+      return (
+        this.mFA.status === Status.SUBMITTED ||
+        this.mFA.status === Status.REFUSED
+      );
+    },
+    isNotDraft(): boolean {
+      return this.mFA.status !== Status.DRAFT;
+    },
+    shouldShowValidationButton(): boolean {
+      return (
+        this.teamsThatNotYetValidatedFA.length === 1 &&
+        this.isSubmittedOrRefused
+      );
+    },
+    shouldShowRefuseButton(): boolean {
+      return this.mValidators.length === 1 && this.isNotDraft;
+    },
+    shouldShowValidationMenu(): boolean {
+      return (
+        this.teamsThatNotYetValidatedFA.length > 1 && this.isSubmittedOrRefused
+      );
+    },
+    shouldShowRefuseMenu(): boolean {
+      return this.mValidators.length > 1 && this.isNotDraft;
     },
   },
 
@@ -320,6 +347,11 @@ export default Vue.extend({
     document.title = title;
 
     this.$accessor.signaLocation.getAllSignaLocations();
+
+    this.selectedValidator = this.mValidators[0];
+    if (this.validators.length === 0) {
+      await this.$accessor.team.fetchFaValidators();
+    }
   },
   methods: {
     async saveFA() {
@@ -369,16 +401,29 @@ export default Vue.extend({
       return this.$accessor.FA.validate(payload);
     },
 
-    async refuse(validator: team) {
+    async refuse(validator?: team) {
+      if (!validator) return;
+      if (
+        this.mFA.status === Status.VALIDATED &&
+        !this.isConfirmationDialogOpen
+      ) {
+        return (this.isConfirmationDialogOpen = true);
+      }
+
       const payload = {
         validator_id: validator.id,
-        user_id: this.$accessor.user.me.id,
         message: this.refuseComment,
         author: this.me,
       };
       await this.$accessor.FA.refuse(payload);
       this.refuseComment = "";
-      this.refuseDialog = false;
+      this.isRefuseDialogOpen = false;
+    },
+
+    checkBeforeAskForValidation() {
+      if (this.mFA.status === "DRAFT")
+        return (this.isValidationDialogOpen = true);
+      this.submit();
     },
 
     submit() {
@@ -387,42 +432,25 @@ export default Vue.extend({
         authorId: this.me.id,
         author: this.me,
       });
-      this.validationDialog = false;
+      this.isValidationDialogOpen = false;
       this.saveFA();
     },
 
-    isAnimatonValidatedBy(validator: team) {
-      return this.FA.mFA.fa_validation?.some(
-        (validation: fa_validation) => validation.Team.id === validator.id
-      );
+    validatorValidationStatus(validator: team) {
+      return getFAValidationStatus(this.mFA, validator.code).toLowerCase();
     },
 
-    isAnimationRejectedBy(validator: team) {
-      return this.FA.mFA.fa_refuse?.some(
-        (refuse: fa_refuse) => refuse.Team.id === validator.id
-      );
+    isAnimationValidatedBy(validator: team) {
+      return isAnimationValidatedBy(this.mFA, validator.code);
     },
 
-    getIconColor(validator: team) {
-      if (this.isAnimatonValidatedBy(validator)) {
-        return "green";
-      }
-      if (this.isAnimationRejectedBy(validator)) {
-        return "red";
-      }
-      return "grey";
+    isAnimationRefusedBy(validator: team) {
+      return isAnimationRefusedBy(this.mFA, validator.code);
     },
-    shouldShowValidationOrRefuseButton() {
-      return (
-        this.mValidators.length === 1 &&
-        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
-      );
-    },
-    shouldShowValidationOrRefuseMenu() {
-      return (
-        this.mValidators.length > 1 &&
-        (this.mFA.status === "SUBMITTED" || this.mFA.status === "REFUSED")
-      );
+
+    openRefuseDialog(validator: team) {
+      this.isRefuseDialogOpen = true;
+      this.selectedValidator = validator;
     },
   },
 });
@@ -442,70 +470,69 @@ export default Vue.extend({
   overflow: auto;
   padding-right: 20px;
   width: 300px;
-}
 
-.sidebar h1 {
-  font-size: 1.7rem;
-  margin: 16px;
-  margin-bottom: 4px;
-}
+  h1 {
+    font-size: 1.7rem;
+    margin: 16px;
+    margin-bottom: 4px;
+  }
 
-.sidebar h2 {
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: rgb(89, 89, 89);
-  margin: 16px;
-  margin-top: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: auto;
-  display: block;
-  overflow: hidden;
-}
+  h2 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: rgb(89, 89, 89);
+    margin: 16px;
+    margin-top: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: auto;
+    display: block;
+    overflow: hidden;
+  }
 
-.dot {
-  height: 25px;
-  width: 25px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 16px;
-  margin-right: 10px;
-}
+  .status {
+    display: flex;
+    align-items: center;
 
-.status {
-  display: flex;
-  align-items: center;
+    .dot {
+      height: 25px;
+      width: 25px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 16px;
+      margin-right: 10px;
+    }
+  }
 }
 
 .icons {
   display: flex;
   justify-content: space-between;
   margin: 20px 5px 15px 16px;
-}
 
-.icons .icon {
-  position: relative;
-  display: inline-block;
-}
+  .icon {
+    position: relative;
+    display: inline-block;
 
-.icons .icon .icon-detail {
-  visibility: hidden;
-  width: 60px;
-  font-size: 0.9rem;
-  text-align: center;
-  border-radius: 6px;
-  user-select: none;
+    .icon-detail {
+      visibility: hidden;
+      width: 60px;
+      font-size: 0.9rem;
+      text-align: center;
+      border-radius: 6px;
+      user-select: none;
 
-  position: absolute;
-  z-index: 1;
-  top: 100%;
-  left: 50%;
-  margin-left: -30px;
-}
+      position: absolute;
+      z-index: 1;
+      top: 100%;
+      left: 50%;
+      margin-left: -30px;
+    }
+  }
 
-.icon:hover .icon-detail {
-  visibility: visible;
+  .icon:hover .icon-detail {
+    visibility: visible;
+  }
 }
 
 .container {

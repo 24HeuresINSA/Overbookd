@@ -73,10 +73,7 @@
               </v-chip>
             </template>
             <template #item.validation="{ item }">
-              <ValidatorsIcons
-                :form="item"
-                validators-key="ft_validators"
-              ></ValidatorsIcons>
+              <!-- TODO implement the validator icons -->
             </template>
             <template #[`item.action`]="row">
               <v-btn
@@ -168,7 +165,6 @@
 <script lang="ts">
 import Fuse from "fuse.js";
 import Vue from "vue";
-import ValidatorsIcons from "~/components/atoms/ValidatorsIcons.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import faRepo from "~/repositories/faRepo";
 import userRepo from "~/repositories/userRepo";
@@ -212,7 +208,7 @@ const color = {
 
 export default Vue.extend({
   name: "Index",
-  components: { ValidatorsIcons, SnackNotificationContainer },
+  components: { SnackNotificationContainer },
   data(): Data {
     return {
       color,
@@ -318,7 +314,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (this.hasRole("hard")) {
+    if (this.hasPermission("hard")) {
       let res = await safeCall(this.$store, ftRepo.getAllFTs(this));
       if (res) {
         this.FTs = res.data.data; // includes deleted FTs
@@ -340,8 +336,8 @@ export default Vue.extend({
   },
 
   methods: {
-    hasRole(role: string) {
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission: string) {
+      return this.$accessor.user.hasPermission(permission);
     },
     getConfig(key: string) {
       return this.$accessor.config.getConfig(key);
@@ -415,4 +411,10 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.fab-right {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+</style>

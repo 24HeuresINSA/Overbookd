@@ -1,5 +1,6 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Sécurité</v-card-title>
     <v-card-subtitle
       >Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
@@ -12,7 +13,7 @@
         <v-switch
           :value="mFA.is_pass_required"
           label="Besoin de Pass Sécu"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_pass_required', $event)"
         ></v-switch>
         <v-text-field
@@ -21,7 +22,7 @@
           label="Nombre de Pass Sécu"
           type="number"
           :rules="[rules.number, rules.min]"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('number_of_pass', $event)"
         ></v-text-field>
       </v-form>
@@ -30,7 +31,7 @@
         label="Dispositif de sécurité particulier"
         auto-grow
         rows="2"
-        :disabled="isDisabled"
+        :disabled="isValidatedByOwner"
         prepend-icon="mdi-security"
         @change="onChange('security_needs', $event)"
       ></v-textarea>
@@ -40,18 +41,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA } from "~/utils/models/FA";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import { FA, fa_card_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "SecurityCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  components: { CardErrorList },
   data: () => ({
+    owner: "secu",
+    cardType: fa_card_type.SECURITY,
     rules: {
       number: isNumber,
       min: min(1),
@@ -60,6 +63,12 @@ export default Vue.extend({
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {

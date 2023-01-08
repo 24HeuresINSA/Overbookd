@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card :class="isDisabled ? 'disabled' : ''">
+    <v-card :class="validationStatus">
+      <CardErrorList :type="cardType" />
       <v-card-title>Signa</v-card-title>
       <v-card-subtitle
         >Contacte la signa à
@@ -12,7 +13,7 @@
           label="Lieux"
           :value="currentLocations"
           :items="locations"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           item-text="name"
           item-value="id"
           @change="onChange('location_id', $event)"
@@ -20,13 +21,13 @@
         <v-switch
           v-model="isSignaRequired"
           label="Besoin signa"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
         ></v-switch>
         <div v-if="isSignaRequired">
           <v-data-table :headers="headers" :items="signalisations">
             <template #[`item.action`]="{ index }">
               <v-btn
-                v-if="!isDisabled"
+                v-if="!isValidatedByOwner"
                 icon
                 @click="deleteSignalisation(index)"
               >
@@ -39,14 +40,14 @@
                 label="Nombre"
                 type="number"
                 :rules="[rules.number, rules.min]"
-                :disabled="isDisabled"
+                :disabled="isValidatedByOwner"
                 @change="updateSignalisationCount(index, $event)"
               ></v-text-field>
             </template>
           </v-data-table>
         </div>
       </v-card-text>
-      <v-card-actions v-if="isSignaRequired && !isDisabled">
+      <v-card-actions v-if="!isValidatedByOwner">
         <v-spacer></v-spacer>
         <v-btn text @click="isSignaFormOpen = true"
           >Ajouter une signalisation
@@ -64,7 +65,6 @@
               type="select"
               label="Type"
               :items="signaType"
-              dense
               required
             ></v-select>
 
@@ -96,19 +96,26 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { fa_signa_needs, signa_type } from "~/utils/models/FA";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import {
+  FA,
+  fa_card_type,
+  fa_signa_needs,
+  signa_type,
+} from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "SignaCard",
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  components: { CardErrorList },
   data: () => ({
+    owner: "signa",
+    cardType: fa_card_type.SIGNA,
     isSignaRequired: false,
     isSignaFormOpen: false,
     headers: [
@@ -129,10 +136,13 @@ export default Vue.extend({
     },
   }),
   computed: {
-    signalisations(): any {
-      return this.$accessor.FA.mFA.fa_signa_needs;
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
     },
-    signaType(): Array<string> {
+    signalisations(): fa_signa_needs[] {
+      return this.mFA.fa_signa_needs ?? [];
+    },
+    signaType(): string[] {
       return Object.values(signa_type);
     },
     currentLocations(): SignaLocation | undefined {
@@ -142,6 +152,12 @@ export default Vue.extend({
     },
     locations(): SignaLocation[] {
       return this.$accessor.signaLocation.signaLocations;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   watch: {

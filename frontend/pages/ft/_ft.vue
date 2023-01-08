@@ -110,7 +110,7 @@
         <v-icon small>mdi-arrow-left</v-icon>
       </v-btn>
       <v-btn
-        v-if="hasRole('humain') && FT.status !== 'ready'"
+        v-if="hasPermission('humain') && FT.status !== 'ready'"
         color="red"
         @click="readyForAssignment"
         >prêt pour affectation
@@ -295,7 +295,7 @@ export default Vue.extend({
       let mValidators: string[] = [];
       const allValidators: string[] =
         this.$accessor.config.getConfig("ft_validators");
-      if (this.me.team.includes("admin")) {
+      if (this.hasPermission("admin")) {
         return allValidators;
       }
       if (allValidators) {
@@ -371,8 +371,8 @@ export default Vue.extend({
       return this.FT.validated.find((v) => v === validator) !== undefined;
     },
 
-    hasRole(role: string) {
-      return this.$accessor.user.hasRole(role);
+    hasPermission(permission: string) {
+      return this.$accessor.user.hasPermission(permission);
     },
 
     async saveFT() {

@@ -58,6 +58,7 @@ export interface Notification {
 export interface User {
   id: string;
   team: string[];
+  permissions: string[];
   friends: any[];
   nickname?: string;
   firstname: string;
@@ -133,8 +134,8 @@ export interface location {
 
 export interface team {
   id: number;
+  code: string;
   name: string;
   color: string;
   icon: string;
-  code: string;
 }

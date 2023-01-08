@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -53,20 +52,4 @@ export class TeamFormDto {
       `${va.property} should be mdi icon code starting with 'mdi-'`,
   })
   icon?: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'Is the team a fa validator',
-  })
-  @IsOptional()
-  @IsBoolean()
-  fa_validator?: boolean;
-
-  @ApiProperty({
-    required: false,
-    description: 'Is the team a ft validator',
-  })
-  @IsOptional()
-  @IsBoolean()
-  ft_validator?: boolean;
 }

@@ -32,8 +32,10 @@
       </v-data-table>
     </v-card-text>
     <v-card-actions>
+      <v-spacer></v-spacer>
       <v-btn
         color="green"
+        class="white--text px-4"
         :disabled="!canValidateGearRequest"
         @click="validateGearRequests"
       >
