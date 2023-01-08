@@ -311,6 +311,7 @@ export const actions = actionTree(
       if (!resGearRequests || !resFA) return null;
       commit("SET_GEAR_REQUESTS", resGearRequests.data);
       commit("SET_FA", resFA.data);
+      commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
       return resFA.data;
     },
 
