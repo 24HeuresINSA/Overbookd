@@ -16,9 +16,9 @@
         @change="onChange('in_charge', $event)"
       ></v-autocomplete>
       <v-switch
-        :value="mFT.are_static_time_windows"
+        :value="mFT.are_static"
         label="Créneaux statiques"
-        @change="onChange('are_static_time_windows', $event)"
+        @change="onChange('are_static', $event)"
       ></v-switch>
       <v-autocomplete
         label="Lieux"
@@ -52,12 +52,14 @@ export default Vue.extend({
       return this.$accessor.signaLocation.signaLocations;
     },
     currentLocations(): SignaLocation[] {
-      const locationsId = this.$accessor.FT.mFT.locations ?? [];
-      return locationsId
+      const locationIds = this.$accessor.FT.mFT.locations ?? [];
+      return locationIds
         .map((locationId) => {
           return this.$accessor.signaLocation.getLocationById(locationId);
         })
-        .filter((location): location is SignaLocation => location !== undefined);
+        .filter(
+          (location): location is SignaLocation => location !== undefined
+        );
     },
   },
   async mounted() {

@@ -75,10 +75,6 @@ export default Vue.extend({
     closeFAChooser() {
       this.isFASelectDialogOpen = false;
     },
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      this.$accessor.FA.updateFA({ key: key, value: value });
-    },
   },
 });
 </script>

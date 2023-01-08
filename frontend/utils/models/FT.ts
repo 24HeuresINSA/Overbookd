@@ -13,14 +13,14 @@ export interface FT {
   name: string;
   status: FTStatus;
   in_charge?: number;
-  are_static_time_windows?: boolean;
+  are_static?: boolean;
   locations?: number[];
   fa?: number;
   matos_count?: number;
   description?: string;
   is_deleted?: boolean;
-  ft_validation?: FTValidation[];
-  ft_refuse?: FTValidation[];
+  ft_validation?: FTReview[];
+  ft_refuse?: FTReview[];
   ft_comments?: FormComment[];
 }
 
@@ -31,7 +31,7 @@ export interface SearchFT {
   status?: FTStatus;
 }
 
-export interface FTValidation {
+export interface FTReview {
   User: {
     firstname: string;
     lastname: string;

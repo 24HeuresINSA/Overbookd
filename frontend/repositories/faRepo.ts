@@ -36,8 +36,8 @@ export default {
     return context.$axios.get<FA[]>(resource, { params: search });
   },
 
-  getFAById(context: Context, count: number) {
-    return context.$axios.get<FA>(resource + `/${count}`);
+  getFAById(context: Context, id: number) {
+    return context.$axios.get<FA>(resource + `/${id}`);
   },
 
   createNewFA(context: Context, FA: CreateFA) {
