@@ -80,20 +80,20 @@ model User {
 }
 
 model Team {
-  id                Int                 @id @default(autoincrement())
-  name              String              @unique @db.VarChar(30)
-  users             User_Team[]
-  color             String              @default("#000000") @db.VarChar(30)
-  icon              String              @default("mdi-circle") @db.VarChar(255)
-  fa_validator      Boolean             @default(false)
-  ft_validator      Boolean             @default(false)
-  fa                fa[]
-  fa_validation     fa_validation[]
-  fa_refuse         fa_refuse[]
-  code              String?             @unique @db.VarChar(20)
-  owned_categories  Catalog_Category[]  @relation("owner")
-  FtTeamAssignment  FtTeamAssignment[]
-  FtValdationRefuse FtValdationRefuse[]
+  id               Int                @id @default(autoincrement())
+  name             String             @unique @db.VarChar(30)
+  users            User_Team[]
+  color            String             @default("#000000") @db.VarChar(30)
+  icon             String             @default("mdi-circle") @db.VarChar(255)
+  fa_validator     Boolean            @default(false)
+  ft_validator     Boolean            @default(false)
+  fa               fa[]
+  fa_validation    fa_validation[]
+  fa_refuse        fa_refuse[]
+  code             String?            @unique @db.VarChar(20)
+  owned_categories Catalog_Category[] @relation("owner")
+  ftAssignements   FtTeamAssignment[]
+  ftReviews        FtReview[]
 }
 
 model User_Team {
@@ -177,7 +177,7 @@ model fa {
   time_windows           time_windows[]
   gearRequests           Animation_Gear_Request[] @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
-  Ft                     Ft[]
+  fts                    Ft[]
 }
 
 enum fa_type {
@@ -232,7 +232,7 @@ model Signa_Location {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
   fa   fa[]
-  Ft   Ft[]
+  fts  Ft[]
 }
 
 model collaborator {
@@ -411,9 +411,9 @@ model Ft {
   location     Signa_Location? @relation(fields: [locationId], references: [id])
   locationId   Int?            @map("location_id")
 
-  comments          FtComments[]
-  timeWindows       FtTimeWindows[]
-  FtValdationRefuse FtValdationRefuse[]
+  comments    FtComments[]
+  timeWindows FtTimeWindows[]
+  ftReviews   FtReview[]
 }
 
 enum ft_subject_type {
@@ -470,18 +470,18 @@ model FtTeamAssignment {
   @@map("ft_team_assignment")
 }
 
-enum Validation_Status {
+enum Review_Status {
   VALIDATED
   REFUSED
 }
 
-model FtValdationRefuse {
-  ft     Ft                @relation(fields: [ftId], references: [id])
-  ftId   Int               @map("ft_id")
-  team   Team              @relation(fields: [teamId], references: [id])
-  teamId Int               @map("team_id")
-  status Validation_Status
+model FtReview {
+  ft       Ft            @relation(fields: [ftId], references: [id])
+  ftId     Int           @map("ft_id")
+  team     Team          @relation(fields: [teamCode], references: [code])
+  teamCode String        @map("team_code")
+  status   Review_Status
 
-  @@unique([ftId, teamId])
-  @@map("ft_valdation_refuse")
+  @@unique([ftId, teamCode])
+  @@map("ft_review")
 }
