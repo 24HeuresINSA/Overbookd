@@ -2,8 +2,9 @@ import { Prisma, PrismaClient, Team } from '@prisma/client';
 import { Departements, Years } from '../src/user/dto/common';
 import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
-import { categoriesAndGears } from './gears';
-import { permissions } from './permissions';
+import { categoriesAndGears } from './seeders/gears';
+import { permissions } from './seeders/permissions';
+import { signaLocations } from './seeders/signa-locations';
 
 const prisma = new PrismaClient();
 const slugify = new SlugifyService();
@@ -447,6 +448,14 @@ async function main() {
     update: sgConfig,
     create: sgConfig,
   });
+
+  const locations = await Promise.all(
+    signaLocations.map(({ name }) =>
+      prisma.signa_Location.create({ data: { name } }),
+    ),
+  );
+
+  console.log(`\n${locations.length} Signa Locations inserted ⛳\n`);
 }
 main()
   .then(async () => {
