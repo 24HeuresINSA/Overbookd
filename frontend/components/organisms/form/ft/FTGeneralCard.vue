@@ -57,7 +57,7 @@ export default Vue.extend({
         .map((locationId) => {
           return this.$accessor.signaLocation.getLocationById(locationId);
         })
-        .filter((location) => location !== undefined) as SignaLocation[];
+        .filter((location): location is SignaLocation => location !== undefined);
     },
   },
   async mounted() {
