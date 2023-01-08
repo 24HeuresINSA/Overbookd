@@ -17,6 +17,7 @@ CREATE TABLE "Ft" (
     "description" TEXT,
     "in_charge" INTEGER,
     "location_id" INTEGER,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Ft_pkey" PRIMARY KEY ("id")
 );
@@ -82,7 +83,7 @@ ALTER TABLE "Ft" ADD CONSTRAINT "Ft_in_charge_fkey" FOREIGN KEY ("in_charge") RE
 ALTER TABLE "Ft" ADD CONSTRAINT "Ft_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Signa_Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -103,7 +104,7 @@ ALTER TABLE "ft_team_assignment" ADD CONSTRAINT "ft_team_assignment_time_windows
 ALTER TABLE "ft_team_assignment" ADD CONSTRAINT "ft_team_assignment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "Team"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
