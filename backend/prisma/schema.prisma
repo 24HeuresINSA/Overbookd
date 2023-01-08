@@ -74,26 +74,26 @@ model User {
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
 
-  ft_in_charge       Ft[]                 @relation("in_charge")
-  Ft_Comments        Ft_Comments[]
-  Ft_User_Assignment Ft_User_Assignment[]
+  ft_in_charge     Ft[]               @relation("inCharge")
+  FtComments       FtComments[]
+  FtUserAssignment FtUserAssignment[]
 }
 
 model Team {
-  id                    Int                     @id @default(autoincrement())
-  name                  String                  @unique @db.VarChar(30)
-  users                 User_Team[]
-  color                 String                  @default("#000000") @db.VarChar(30)
-  icon                  String                  @default("mdi-circle") @db.VarChar(255)
-  fa_validator          Boolean                 @default(false)
-  ft_validator          Boolean                 @default(false)
-  fa                    fa[]
-  fa_validation         fa_validation[]
-  fa_refuse             fa_refuse[]
-  code                  String?                 @unique @db.VarChar(20)
-  owned_categories      Catalog_Category[]      @relation("owner")
-  Ft_Generic_Assignment Ft_Generic_Assignment[]
-  Ft_Valdation_Refuse   Ft_Valdation_Refuse[]
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique @db.VarChar(30)
+  users               User_Team[]
+  color               String                @default("#000000") @db.VarChar(30)
+  icon                String                @default("mdi-circle") @db.VarChar(255)
+  fa_validator        Boolean               @default(false)
+  ft_validator        Boolean               @default(false)
+  fa                  fa[]
+  fa_validation       fa_validation[]
+  fa_refuse           fa_refuse[]
+  code                String?               @unique @db.VarChar(20)
+  owned_categories    Catalog_Category[]    @relation("owner")
+  FtGenericAssignment FtGenericAssignment[]
+  FtValdationRefuse   FtValdationRefuse[]
 }
 
 model User_Team {
@@ -177,6 +177,7 @@ model fa {
   time_windows           time_windows[]
   gearRequests           Animation_Gear_Request[] @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
+  Ft                     Ft[]
 }
 
 enum fa_type {
@@ -398,59 +399,75 @@ enum Ft_Status {
 }
 
 model Ft {
-  id             Int             @id @default(autoincrement())
-  name           String
-  status         Ft_Status
-  is_static      Boolean         @default(false)
-  description    String?         @db.Text
-  user_in_charge User?           @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge      Int?
-  location       Signa_Location? @relation(fields: [location_id], references: [id])
-  location_id    Int?
+  id           Int             @id @default(autoincrement())
+  name         String
+  status       Ft_Status
+  fa           fa?             @relation(fields: [parentFaID], references: [id])
+  parentFaID   Int?            @map("parent_fa_id")
+  isStatic     Boolean         @default(false) @map("is_static")
+  description  String?         @db.Text
+  userInCharge User?           @relation(fields: [inCharge], references: [id], name: "inCharge")
+  inCharge     Int?            @map("in_charge")
+  location     Signa_Location? @relation(fields: [locationID], references: [id])
+  locationID   Int?            @map("location_id")
 
-  Ft_Comments         Ft_Comments[]
-  Ft_Time_Windows     Ft_Time_Windows[]
-  Ft_Valdation_Refuse Ft_Valdation_Refuse[]
+  FtComments        FtComments[]
+  FtTimeWindows     FtTimeWindows[]
+  FtValdationRefuse FtValdationRefuse[]
 }
 
-model Ft_Comments {
-  id          Int          @id @default(autoincrement())
-  Ft          Ft           @relation(fields: [Ft_id], references: [id])
-  Ft_id       Int
-  comment     String       @db.Text
-  subject     subject_type
-  User_author User         @relation(fields: [author], references: [id])
-  author      Int
-  created_at  DateTime     @default(now())
+enum ft_subject_type {
+  REFUSED
+  SUBMIT
+  VALIDATED
+  COMMENT
+  READY
 }
 
-model Ft_Time_Windows {
-  id                    Int                     @id @default(autoincrement())
-  Ft                    Ft                      @relation(fields: [Ft_id], references: [id])
-  Ft_id                 Int
-  start                 DateTime
-  end                   DateTime
-  Ft_User_Assignment    Ft_User_Assignment[]
-  Ft_Generic_Assignment Ft_Generic_Assignment[]
+model FtComments {
+  id         Int             @id @default(autoincrement())
+  Ft         Ft              @relation(fields: [ftId], references: [id])
+  ftId       Int             @map("ft_id")
+  comment    String          @db.Text
+  subject    ft_subject_type
+  UserAuthor User            @relation(fields: [author], references: [id])
+  author     Int
+  createdAt  DateTime        @default(now()) @map("created_at")
+
+  @@map("ft_comments")
 }
 
-model Ft_User_Assignment {
-  Ft_Time_Windows    Ft_Time_Windows @relation(fields: [Ft_Time_Windows_id], references: [id])
-  Ft_Time_Windows_id Int
-  User               User            @relation(fields: [User_id], references: [id])
-  User_id            Int
+model FtTimeWindows {
+  id                  Int                   @id @default(autoincrement())
+  Ft                  Ft                    @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId                Int                   @map("ft_id")
+  start               DateTime
+  end                 DateTime
+  FtUserAssignment    FtUserAssignment[]
+  FtGenericAssignment FtGenericAssignment[]
 
-  @@unique([Ft_Time_Windows_id, User_id])
+  @@map("ft_time_windows")
 }
 
-model Ft_Generic_Assignment {
-  Ft_Time_Windows    Ft_Time_Windows @relation(fields: [Ft_Time_Windows_id], references: [id])
-  Ft_Time_Windows_id Int
-  Team               Team            @relation(fields: [Team_id], references: [id])
-  Team_id            Int
-  number             Int
+model FtUserAssignment {
+  FtTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsid], references: [id], onDelete: Cascade)
+  ftTimeWindowsid Int           @map("ft_time_windows_id")
+  User            User          @relation(fields: [userId], references: [id])
+  userId          Int           @map("user_id")
 
-  @@unique([Ft_Time_Windows_id, Team_id])
+  @@unique([ftTimeWindowsid, userId])
+  @@map("ft_user_assignment")
+}
+
+model FtGenericAssignment {
+  FtTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsid], references: [id], onDelete: Cascade)
+  ftTimeWindowsid Int           @map("ft_time_windows_id")
+  Team            Team          @relation(fields: [teamId], references: [id])
+  teamId          Int           @map("team_id")
+  number          Int
+
+  @@unique([ftTimeWindowsid, teamId])
+  @@map("ft_generic_assignment")
 }
 
 enum Validation_Status {
@@ -458,13 +475,13 @@ enum Validation_Status {
   REFUSED
 }
 
-model Ft_Valdation_Refuse {
-  Ft         Ft                @relation(fields: [Ft_id], references: [id])
-  Ft_id      Int
-  Team       Team              @relation(fields: [team_id], references: [id])
-  team_id    Int
-  created_at DateTime          @default(now())
-  status     Validation_Status
+model FtValdationRefuse {
+  Ft     Ft                @relation(fields: [ftId], references: [id])
+  ftId   Int               @map("ft_id")
+  Team   Team              @relation(fields: [teamId], references: [id])
+  teamId Int               @map("team_id")
+  status Validation_Status
 
-  @@unique([Ft_id, team_id])
+  @@unique([ftId, teamId])
+  @@map("ft_valdation_refuse")
 }
