@@ -229,7 +229,7 @@ export default {
         {
           icon: "mdi-chart-areaspline-variant",
           title: "Stats",
-          roles: "hard",
+          permission: "hard",
           to: "/stats",
         },
       ],

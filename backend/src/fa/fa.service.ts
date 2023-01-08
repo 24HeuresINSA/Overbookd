@@ -11,7 +11,11 @@ import {
   COMPLETE_FA_SELECT,
   FaResponse,
 } from './fa_types';
-import { StatsPayload, StatsService } from 'src/common/services/stats.service';
+import {
+  StatsPayload,
+  StatsQueryResult,
+  StatsService,
+} from 'src/common/services/stats.service';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -53,35 +57,17 @@ export class FaService {
     });
   }
 
-  async getFaStats(): Promise<StatsPayload> {
-    const fa = await this.prisma.fa.findMany({
-      select: {
-        status: true,
-        Team: {
-          select: {
-            name: true,
-            code: true,
-          },
-        },
-      },
-      where: {
-        is_deleted: false,
-      },
-      orderBy: {
-        Team: {
-          name: 'asc',
-        },
-      },
-    });
-    const formattedFa = fa.map((f) => {
-      return {
-        status: f.status,
-        teamName: f.Team?.name,
-        teamCode: f.Team?.code,
-      };
-    });
-
-    return this.statsService.stats(formattedFa);
+  async getFaStats(): Promise<StatsPayload[]> {
+    // Raw SQL query
+    const fa = (await this.prisma.$queryRaw`
+      SELECT "Team".code as team_code, fa.status as fa_status, CAST(count(*) AS INT)
+      FROM fa
+      JOIN "Team" ON "Team".id = fa.team_id
+      WHERE fa.is_deleted = false
+      GROUP BY "Team".code, fa.status
+      ORDER BY "Team".code, fa.status
+    `) as StatsQueryResult;
+    return this.statsService.stats(fa);
   }
 
   /**      **/

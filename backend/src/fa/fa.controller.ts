@@ -99,9 +99,9 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get FA stats',
-    type: Promise<StatsPayload>,
+    type: Promise<StatsPayload[]>,
   })
-  getFaStats(): Promise<StatsPayload> {
+  getFaStats(): Promise<StatsPayload[]> {
     return this.faService.getFaStats();
   }
 

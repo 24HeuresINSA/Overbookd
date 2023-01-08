@@ -26,16 +26,16 @@
       <v-col sm="1" class="text-center">%</v-col>
     </v-row>
     <v-row v-for="com in dataset" :key="com.teamCode">
-      <v-col sm="2">{{ com.teamName || com.teamCode }}</v-col>
+      <v-col sm="2">{{ teamName(com.teamCode) }}</v-col>
       <v-col sm="7">
         <div class="d-flex">
           <div
-            v-for="(count, status) in com.status"
-            :key="status"
-            :style="`flex-grow: ${count}`"
+            v-for="(element, i) in com.status"
+            :key="i"
+            :style="`flex-grow: ${element.count}`"
           >
-            <NeedsCard :status="status">
-              {{ count }}
+            <NeedsCard :status="element.status">
+              {{ element.count }}
             </NeedsCard>
           </div>
         </div>
@@ -115,6 +115,9 @@ export default {
     };
   },
   methods: {
+    teamName(teamCode) {
+      return this.$accessor.team.getTeamByCode(teamCode).name;
+    },
     history(team) {
       if (this.name === "FT") {
         if (this.historyFT[team] === undefined) {
