@@ -24,19 +24,18 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/team-auth.guard';
 import { CategoryFormRequestDto } from './dto/categoryFormRequest.dto';
 import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
 import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
-import { Roles } from 'src/auth/team-auth.decorator';
-import { logTeams } from 'src/team/teams.constant';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('catalog')
 @Controller('categories')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiUnauthorizedResponse({
   description: 'User must be authenticated',
 })
@@ -44,7 +43,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get('')
-  @Roles('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get categories that match search',
@@ -70,7 +69,7 @@ export class CategoryController {
   }
 
   @Get('/tree')
-  @Roles('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get categories tree',
@@ -82,7 +81,7 @@ export class CategoryController {
   }
 
   @Get(':id')
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @ApiResponse({
     status: 200,
     description: 'Get a specific category',
@@ -105,7 +104,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -128,7 +127,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -146,7 +145,7 @@ export class CategoryController {
   }
 
   @Put(':id')
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @HttpCode(200)
   @ApiResponse({
     status: 200,

@@ -1,5 +1,6 @@
 <template>
-  <v-card :class="isDisabled ? 'disabled' : ''">
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Détail</v-card-title>
     <v-card-subtitle
       >Décris ici ton activité, soit assez exhaustif, si tu le demandes, c'est
@@ -11,25 +12,27 @@
         <RichEditor
           :data="mFA.description"
           label="Description"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           class="mb-4"
           @change="onChange('description', $event)"
         ></RichEditor>
         <v-switch
           v-model="isPublishable"
           label="Publier sur le site / plaquette"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="switchPublishAnimation($event)"
         ></v-switch>
         <v-form v-if="isPublishable">
           <v-text-field
             :value="mFA.faSitePublishAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
+            :disabled="isValidatedByOwner"
             @change="onChangePublishAnimation('photoLink', $event)"
           ></v-text-field>
           <v-textarea
             :value="mFA.faSitePublishAnimation?.description"
             label="Description pour le site"
+            :disabled="isValidatedByOwner"
             @change="onChangePublishAnimation('description', $event)"
           ></v-textarea>
           <v-combobox
@@ -40,6 +43,7 @@
             dense
             label="Categories de l'animations"
             :items="categories"
+            :disabled="isValidatedByOwner"
             @change="onChangePublishAnimation('categories', $event)"
           >
           </v-combobox>
@@ -47,13 +51,13 @@
         <v-switch
           :value="mFA.is_major"
           label="Anim phare"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_major', $event)"
         ></v-switch>
         <v-switch
           :value="mFA.is_kids"
           label="Anim pour les gosses"
-          :disabled="isDisabled"
+          :disabled="isValidatedByOwner"
           @change="onChange('is_kids', $event)"
         ></v-switch>
       </v-form>
@@ -64,26 +68,32 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
+import { FA, fa_card_type } from "~/utils/models/FA";
+import {
+  isAnimationValidatedBy,
+  getFAValidationStatus,
+} from "~/utils/fa/faUtils";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import { SitePublishAnimationCategoryType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FADetailCard",
-  components: { RichEditor },
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
-  data() {
-    return {
-      categories: Object.values(SitePublishAnimationCategoryType),
-      isPublishable: false,
-    };
-  },
+  components: { RichEditor, CardErrorList },
+  data: () => ({
+    owner: "humain",
+    cardType: fa_card_type.DETAIL,
+    categories: Object.values(SitePublishAnimationCategoryType),
+    isPublishable: false,
+  }),
   computed: {
-    mFA(): any {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
+    },
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
+    },
+    validationStatus(): string {
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   watch: {
@@ -106,13 +116,12 @@ export default Vue.extend({
       this.$accessor.FA.updatePublishAnimation({ key, value });
     },
     switchPublishAnimation(value: boolean) {
-      if (value) {
-        return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      if (value) return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      if (this.mFA.faSitePublishAnimation) {
+        return this.$accessor.FA.deletePublishAnimation(
+          this.mFA.faSitePublishAnimation
+        );
       }
-
-      return this.$accessor.FA.deletePublishAnimation(
-        this.mFA.faSitePublishAnimation
-      );
     },
   },
 });

@@ -9,8 +9,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { TeamModule } from './team/team.module';
-import { FaModule } from './fa/fa.module';
-import { CollaboratorModule } from './collaborator/collaborator.module';
+import { PermissionModule } from './permission/permission.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MailService } from './mail/mail.service';
@@ -19,6 +18,8 @@ import { FaCommentModule } from './fa_comment/fa_comment.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 import { CatalogModule } from './catalog/catalog.module';
+import { FaModule } from './fa/fa.module';
+import { CollaboratorModule } from './collaborator/collaborator.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { SignaLocationModule } from './signa_location/signa_location.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
@@ -61,6 +62,7 @@ import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_sit
     ConfigurationModule,
     SignaLocationModule,
     FaSitePublishAnimationModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

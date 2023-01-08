@@ -62,6 +62,18 @@ export enum time_windows_type {
   MATOS = "MATOS",
 }
 
+export enum fa_card_type {
+  GENERAL = "GENERAL",
+  DETAIL = "DETAIL",
+  SIGNA = "SIGNA",
+  TIME_WINDOW = "TIME_WINDOW",
+  SECURITY = "SECURITY",
+  COLLABORATOR = "COLLABORATOR",
+  LOGISTICS = "LOGISTICS",
+  ELEC = "ELEC",
+  WATER = "WATER",
+}
+
 export enum SitePublishAnimationCategoryType {
   Divertissement = "Divertissement",
   Culture = "Culture",
@@ -120,6 +132,7 @@ export interface fa_validation {
   };
   Team: {
     id: number;
+    code: string;
     name: string;
     color: string;
     icon: string;
@@ -133,6 +146,7 @@ export interface fa_refuse {
   };
   Team: {
     id: number;
+    code: string;
     name: string;
     color: string;
     icon: string;
@@ -266,4 +280,10 @@ export interface FaSitePublishAnimation {
 export interface ElectricityTypeLabel {
   type: electricity_type;
   label: electricity_type_label;
+}
+
+export interface SortedStoredGearRequests {
+  matos: StoredGearRequest[];
+  barrieres: StoredGearRequest[];
+  elec: StoredGearRequest[];
 }

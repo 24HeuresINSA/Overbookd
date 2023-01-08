@@ -211,11 +211,8 @@ export default {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
-    validators() {
-      return this.$accessor.team.faValidators;
-    },
     isAdmin() {
-      return this.$accessor.user.hasRole("admin");
+      return this.$accessor.user.hasPermission("admin");
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
@@ -230,6 +227,9 @@ export default {
       }
       return fuse.search(this.search).map((e) => e.item);
     },
+    validators() {
+      return this.$accessor.team.faValidators;
+    },
   },
   watch: {
     async selectedStatus() {
@@ -240,12 +240,15 @@ export default {
     },
   },
   async mounted() {
-    if (this.$accessor.user.hasRole("hard")) {
-      return this.fetchFas();
-    } else {
+    if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });
+    }
+
+    this.fetchFas();
+    if (this.validators.length === 0) {
+      await this.$accessor.team.fetchFaValidators();
     }
   },
   methods: {
@@ -370,12 +373,6 @@ export default {
 <style scoped>
 h1 {
   margin-left: 12px;
-}
-
-.fab-right {
-  position: sticky;
-  right: 10px;
-  bottom: 35px;
 }
 
 .small {

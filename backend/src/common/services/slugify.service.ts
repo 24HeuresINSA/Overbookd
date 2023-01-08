@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SlugifyService {
-  private convert = {
+  private static convert = {
     à: 'a',
     â: 'a',
     ä: 'a',
@@ -23,6 +23,10 @@ export class SlugifyService {
 
   slugify(name?: string): string | undefined {
     if (!name) return undefined;
+    return SlugifyService.apply(name);
+  }
+
+  static apply(name: string): string {
     const SLUG_SEPARATOR = '-';
     const spaces = new RegExp('[ ]+', 'gm');
     const nonStandardChar = new RegExp('[^A-Za-z0-9]', 'gm');

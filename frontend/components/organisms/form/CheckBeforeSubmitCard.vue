@@ -1,56 +1,63 @@
 <template>
   <v-card>
     <h1>🤔 T'es sûr que t'as rien oublié ? 🤔</h1>
-    <div v-show="hasError" class="my-container my-3">
+    <div v-show="hasAtLeatOneError" class="my-container my-3">
       <h3>❌ Erreurs ❌</h3>
-      <p class="important">
+      <p class="important text-center">
         Tu dois corriger toutes les erreurs pour soumettre ta FA à validation !
       </p>
-      <div v-show="generalErrors.length > 0">
+      <div v-show="hasGeneralErrors">
         <h4>Général</h4>
         <ul>
           <li v-for="label in generalErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="detailErrors.length > 0">
+      <div v-show="hasDetailErrors">
         <h4>Détail</h4>
         <ul>
           <li v-for="label in detailErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="signaErrors.length > 0">
+      <div v-show="hasSignaErrors">
         <h4>Signa</h4>
         <ul>
           <li v-for="label in signaErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="timeWindowErrors.length > 0">
+      <div v-show="hasTimeWindowsErrors">
         <h4>Créneaux</h4>
         <ul>
-          <li v-for="label in timeWindowErrors" :key="label">{{ label }}</li>
+          <li v-for="label in timeWindowsErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="securityErrors.length > 0">
+      <div v-show="hasSecurityErrors">
         <h4>Securité</h4>
         <ul>
           <li v-for="label in securityErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="collaboratorErrors.length > 0">
+      <div v-show="hasCollaboratorErrors">
         <h4>Presta</h4>
         <ul>
           <li v-for="label in collaboratorErrors" :key="label">{{ label }}</li>
         </ul>
       </div>
+
+      <div v-show="hasGearRequestErrors">
+        <h4>Logistique</h4>
+        <ul>
+          <li v-for="label in gearRequestErrors" :key="label">{{ label }}</li>
+        </ul>
+      </div>
     </div>
 
     <v-divider></v-divider>
-    <div v-show="hasWarning" class="my-container my-3">
+    <div v-show="hasAtLeastOneWarning" class="my-container my-3">
       <h3>⚠️ Avertissements ⚠️</h3>
       <div v-show="detailWarnings.length > 0">
         <h4>Détail</h4>
@@ -59,21 +66,21 @@
         </ul>
       </div>
 
-      <div v-show="signaWarnings.length > 0">
+      <div v-show="hasSignaWarnings">
         <h4>Signa</h4>
         <ul>
           <li v-for="label in signaWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="securityWarnings.length > 0">
+      <div v-show="hasSecurityWarnings">
         <h4>Securité</h4>
         <ul>
           <li v-for="label in securityWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="collaboratorWarnings.length > 0">
+      <div v-show="hasCollaboratorWarnings">
         <h4>Presta</h4>
         <ul>
           <li v-for="label in collaboratorWarnings" :key="label">
@@ -82,21 +89,21 @@
         </ul>
       </div>
 
-      <div v-show="logisticsWarnings.length > 0">
+      <div v-show="hasGearRequestWarnings">
         <h4>Logistique</h4>
         <ul>
-          <li v-for="label in logisticsWarnings" :key="label">{{ label }}</li>
+          <li v-for="label in gearRequestWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="elecWarnings.length > 0">
+      <div v-show="hasElecWarnings">
         <h4>Besoin d'électricité</h4>
         <ul>
           <li v-for="label in elecWarnings" :key="label">{{ label }}</li>
         </ul>
       </div>
 
-      <div v-show="waterWarnings.length > 0">
+      <div v-show="hasWaterWarnings">
         <h4>Besoin d'eau</h4>
         <ul>
           <li v-for="label in waterWarnings" :key="label">{{ label }}</li>
@@ -111,7 +118,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn
-        :disabled="hasError"
+        :disabled="hasAtLeatOneError"
         color="blue darken-1"
         text
         @click="$emit('submit')"
@@ -124,191 +131,143 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { collaborator } from "~/utils/models/FA";
+import {
+  hasAtLeastOneError,
+  hasAtLeastOneWarning,
+  generalErrors,
+  detailErrors,
+  detailWarnings,
+  signaErrors,
+  signaWarnings,
+  timeWindowsErrors,
+  securityErrors,
+  securityWarnings,
+  collaboratorErrors,
+  collaboratorWarnings,
+  gearRequestErrors,
+  gearRequestWarnings,
+  elecWarnings,
+  waterWarnings,
+} from "~/utils/rules/faValidationRules";
+import { FA, SortedStoredGearRequests } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CheckBeforeSubmitCard",
   computed: {
-    store(): any {
+    FA(): any {
       return this.$accessor.FA;
     },
-
-    hasError(): boolean {
-      return (
-        this.generalErrors.length > 0 ||
-        this.detailErrors.length > 0 ||
-        this.signaErrors.length > 0 ||
-        this.timeWindowErrors.length > 0 ||
-        this.securityErrors.length > 0 ||
-        this.collaboratorErrors.length > 0
-      );
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
     },
-    hasWarning(): boolean {
-      return (
-        this.detailWarnings.length > 0 ||
-        this.signaWarnings.length > 0 ||
-        this.securityWarnings.length > 0 ||
-        this.collaboratorWarnings.length > 0 ||
-        this.logisticsWarnings.length > 0 ||
-        this.elecWarnings.length > 0 ||
-        this.waterWarnings.length > 0
-      );
+    allSortedGearRequests(): SortedStoredGearRequests {
+      return this.$accessor.FA.allSortedGearRequests;
+    },
+
+    hasAtLeatOneError(): boolean {
+      return hasAtLeastOneError(this.mFA, this.allSortedGearRequests);
+    },
+    hasAtLeastOneWarning(): boolean {
+      return hasAtLeastOneWarning(this.mFA, this.allSortedGearRequests);
     },
 
     generalErrors(): string[] {
-      const fields: Field[] = [
-        { key: "name", label: "Nom" },
-        { key: "type", label: "Type" },
-        { key: "team_id", label: "Team" },
-        { key: "in_charge", label: "Responsable" },
-      ];
-
-      return fields
-        .filter((field) => !this.store.mFA[field.key])
-        .map((field) => `Le champ ${field.label} est vide.`);
+      return generalErrors(this.mFA);
+    },
+    hasGeneralErrors(): boolean {
+      return this.generalErrors.length > 0;
     },
 
     detailErrors(): string[] {
-      const fields: Field[] = [
-        {
-          key: "description",
-          label: "La desciription à publier sur le site est vide.",
-        },
-        {
-          key: "photo_link",
-          label: "Le lien de la photo à publier sur le site est vide.",
-        },
-      ];
-
-      if (!this.store.mFA.is_publishable) return [];
-      return fields
-        .filter((field) => !this.store.mFA[field.key])
-        .map((field) => field.label);
+      return detailErrors(this.mFA);
+    },
+    hasDetailErrors(): boolean {
+      return this.detailErrors.length > 0;
     },
     detailWarnings(): string[] {
-      if (!this.store.mFA.is_publishable) {
-        return ["Cette activité ne sera pas publié sur le site."];
-      }
-      return [];
+      return detailWarnings(this.mFA);
+    },
+    hasDetailWarnings(): boolean {
+      return this.detailWarnings.length > 0;
     },
 
     signaErrors(): string[] {
-      if (!this.store.mFA.location_id) {
-        return ["Cette activité n'a pas de lieu."];
-      }
-      return [];
+      return signaErrors(this.mFA);
+    },
+    hasSignaErrors(): boolean {
+      return this.signaErrors.length > 0;
     },
     signaWarnings(): string[] {
-      if (this.store.mFA.fa_signa_needs?.length === 0) {
-        return ["Cette activité n'a pas de signalisation."];
-      }
-      return [];
+      return signaWarnings(this.mFA);
+    },
+    hasSignaWarnings(): boolean {
+      return this.signaWarnings.length > 0;
     },
 
-    timeWindowErrors(): string[] {
-      if (this.store.animationTimeWindows?.length === 0) {
-        return ["Cette activité n'a pas de créneaux."];
-      }
-      return [];
+    timeWindowsErrors(): string[] {
+      return timeWindowsErrors(this.mFA);
+    },
+    hasTimeWindowsErrors(): boolean {
+      return this.timeWindowsErrors.length > 0;
     },
 
     securityErrors(): string[] {
-      if (this.store.mFA.is_pass_required && !this.store.mFA.number_of_pass) {
-        return ["Le nombre de Pass Sécu nécessaire n'est pas précisé."];
-      }
-      return [];
+      return securityErrors(this.mFA);
+    },
+    hasSecurityErrors(): boolean {
+      return this.securityErrors.length > 0;
     },
     securityWarnings(): string[] {
-      if (!this.store.mFA.security_needs) {
-        return [
-          "Cette activité n'a pas de dispositif de sécurité particulier.",
-        ];
-      }
-      return [];
+      return securityWarnings(this.mFA);
     },
-
-    collaborator(): collaborator {
-      return this.store.mFA.fa_collaborators[0]?.collaborator;
+    hasSecurityWarnings(): boolean {
+      return this.securityWarnings.length > 0;
     },
 
     collaboratorErrors(): string[] {
-      if (this.isCollaboratorEssentialDataIncomplete) {
-        return [
-          "Les informations indispensables du prestataire sont incomplètes.",
-        ];
-      }
-      return [];
+      return collaboratorErrors(this.mFA);
+    },
+    hasCollaboratorErrors(): boolean {
+      return this.collaboratorErrors.length > 0;
     },
     collaboratorWarnings(): string[] {
-      if (this.isCollaboratorEmpty) {
-        return ["Cette activité n'a pas de prestataire."];
-      }
-
-      if (this.isCollaboratorOptionalDataIncomplete) {
-        return ["Les informations du prestataire sont incomplètes."];
-      }
-      return [];
+      return collaboratorWarnings(this.mFA);
     },
-    areCollaboratorMandatoryFieldsFilled(): boolean {
-      const { firstname, lastname, phone } = this.collaborator;
-      return Boolean(firstname && lastname && phone);
-    },
-    isCollaboratorEssentialDataIncomplete(): boolean {
-      if (!this.collaborator) return false;
-      const { firstname, lastname, phone } = this.collaborator;
-      const hasAtLeastOneFieldFilled = Boolean(firstname || lastname || phone);
-      return (
-        !this.areCollaboratorMandatoryFieldsFilled && hasAtLeastOneFieldFilled
-      );
-    },
-    isCollaboratorOptionalDataIncomplete(): boolean {
-      if (!this.collaborator) return false;
-      const { email, company, comment } = this.collaborator;
-      const hasAtLeastOneFieldEmpty = Boolean(!(email && company && comment));
-      return (
-        this.areCollaboratorMandatoryFieldsFilled && hasAtLeastOneFieldEmpty
-      );
-    },
-    isCollaboratorEmpty(): boolean {
-      if (!this.collaborator) return true;
-      const { id, ...rest } = this.collaborator;
-      return Object.keys(rest).every((key) => !rest[key as keyof typeof rest]);
+    hasCollaboratorWarnings(): boolean {
+      return this.collaboratorWarnings.length > 0;
     },
 
-    logisticsWarnings(): string[] {
-      const fields: Field[] = [
-        { key: "matosGearRequests", label: "Matos" },
-        { key: "barrieresGearRequests", label: "Barrières" },
-        { key: "elecGearRequests", label: "Matos Elec / Eau" },
-      ];
-      return fields
-        .filter((field) => this.store[field.key]?.length === 0)
-        .map((field) => `Ton activité n'a pas de ${field.label}.`);
+    gearRequestErrors(): string[] {
+      return gearRequestErrors(this.allSortedGearRequests);
+    },
+    hasGearRequestErrors(): boolean {
+      return this.gearRequestErrors.length > 0;
+    },
+    gearRequestWarnings(): string[] {
+      return gearRequestWarnings(this.allSortedGearRequests);
+    },
+    hasGearRequestWarnings(): boolean {
+      return this.gearRequestWarnings.length > 0;
     },
 
     elecWarnings(): string[] {
-      if (this.store.mFA.fa_electricity_needs.length === 0) {
-        return ["Cette activité n'a pas besoin d'électricité."];
-      }
-      return [];
+      return elecWarnings(this.mFA);
+    },
+    hasElecWarnings(): boolean {
+      return this.elecWarnings.length > 0;
     },
 
     waterWarnings(): string[] {
-      if (!this.store.mFA.water_needs) {
-        return ["Cette activité n'a pas besoin d'eau."];
-      }
-      return [];
+      return waterWarnings(this.mFA);
+    },
+    hasWaterWarnings(): boolean {
+      return this.waterWarnings.length > 0;
     },
   },
 });
-
-interface Field {
-  key: string;
-  label: string;
-}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
   text-align: center;
   font-size: 1.8rem;
@@ -317,24 +276,22 @@ h1 {
 
 .my-container {
   margin: 0 1.2rem;
-}
 
-.my-container h3 {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin: 0.5rem 0 0 0;
-  text-align: center;
-}
+  h3 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+    text-align: center;
+  }
 
-.my-container h4 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 0.5rem 0 0 0;
-}
+  h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+  }
 
-.important {
-  color: red;
-  font-weight: bold;
-  text-align: center;
+  .text-center {
+    text-align: center;
+  }
 }
 </style>

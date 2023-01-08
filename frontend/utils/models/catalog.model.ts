@@ -10,6 +10,7 @@ export interface Gear {
     name: string;
     path: string;
   };
+  code: string;
 }
 
 interface BaseCategory {

@@ -23,19 +23,18 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
-import { RolesGuard } from 'src/auth/team-auth.guard';
-import { logTeams } from 'src/team/teams.constant';
 import { CatalogService } from './catalog.service';
 import { GearFormRequestDto } from './dto/gearFormRequest.dto';
 import { GearResponseDto } from './dto/gearResponse.dto';
 import { GearSearchRequestDto } from './dto/gearSearchRequest.dto';
 import { Gear } from './interfaces';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 
 @Controller('gears')
 @ApiTags('catalog')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiUnauthorizedResponse({
   description: 'User must be authenticated',
 })
@@ -43,7 +42,7 @@ export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get('')
-  @Roles('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get gears that match search',
@@ -75,7 +74,7 @@ export class GearController {
   }
 
   @Get(':id')
-  @Roles('hard')
+  @Permission('hard')
   @ApiResponse({
     status: 200,
     description: 'Get a specific gear',
@@ -98,7 +97,7 @@ export class GearController {
   }
 
   @Post()
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -116,7 +115,7 @@ export class GearController {
   }
 
   @Put(':id')
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @ApiResponse({
     status: 200,
     description: 'Updating a gear',
@@ -145,7 +144,7 @@ export class GearController {
   }
 
   @Delete(':id')
-  @Roles(...logTeams)
+  @Permission('catalog-write')
   @HttpCode(204)
   @ApiResponse({
     status: 204,

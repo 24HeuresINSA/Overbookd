@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card :class="isDisabled ? 'disabled' : ''">
+    <v-card :class="validationStatus">
+      <CardErrorList :type="cardType" />
       <v-card-title>Créneaux</v-card-title>
 
       <v-data-table
@@ -19,10 +20,14 @@
         </template>
         <template #[`item.action`]="{ item }">
           <div>
-            <v-btn v-if="!isDisabled" icon @click="openUpdateModal(item)">
+            <v-btn v-if="isEditable(item)" icon @click="openUpdateModal(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn v-if="!isDisabled" icon @click="deleteTimeWindow(item)">
+            <v-btn
+              v-if="isEditable(item)"
+              icon
+              @click="confirmToDeleteTimeframe(item)"
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </div>
@@ -31,7 +36,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="!isDisabled" text @click="isAddDialogOpen = true"
+        <v-btn v-if="!isValidatedByOwners" text @click="isAddDialogOpen = true"
           >Ajouter un créneau</v-btn
         >
       </v-card-actions>
@@ -53,6 +58,18 @@
         @close-dialog="isEditDialogOpen = false"
       ></TimeframeForm>
     </v-dialog>
+    <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
+      <ConfirmationMessage
+        @close-dialog="isConfirmationDialogOpen = false"
+        @confirm="resetLogValidations"
+      >
+        <template #title> Suppression ce créneau MATOS </template>
+        <template #statement>
+          Confirmer cette suppression annulera les validations des orgas Matos,
+          Barrieres et Elec 😠
+        </template>
+      </ConfirmationMessage>
+    </v-dialog>
   </div>
 </template>
 
@@ -60,7 +77,21 @@
 import Vue from "vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
-import { Period, time_windows, time_windows_type } from "~/utils/models/FA";
+import {
+  getFAValidationStatusWithMultipleTeams,
+  isAnimationValidatedBy,
+  hasAtLeastOneValidation,
+  hasAllValidations,
+} from "~/utils/fa/faUtils";
+import {
+  FA,
+  Period,
+  fa_card_type,
+  time_windows,
+  time_windows_type,
+} from "~/utils/models/FA";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 
 interface IdentifiableTimeWindow extends time_windows {
   key: string;
@@ -68,14 +99,16 @@ interface IdentifiableTimeWindow extends time_windows {
 
 export default Vue.extend({
   name: "TimeframeTable",
-  components: { TimeframeCalendar, TimeframeForm },
-  props: {
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
+  components: {
+    TimeframeCalendar,
+    TimeframeForm,
+    CardErrorList,
+    ConfirmationMessage,
   },
   data: () => ({
+    animOwner: "humain",
+    matosOwners: ["matos", "barrieres", "elec"],
+    cardType: fa_card_type.TIME_WINDOW,
     headers: [
       { text: "Type", value: "type" },
       { text: "Date de début", value: "startDate" },
@@ -84,6 +117,8 @@ export default Vue.extend({
     ],
     isAddDialogOpen: false,
     isEditDialogOpen: false,
+    isConfirmationDialogOpen: false,
+
     editIndex: null as number | null,
     selectedTimeWindow: null as IdentifiableTimeWindow | null,
   }),
@@ -105,6 +140,28 @@ export default Vue.extend({
 
       return [...animationTimeWindows, ...gearTimeWindows];
     },
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
+    isValidatedByAnimOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.animOwner);
+    },
+    isValidatedByMatosOwners(): boolean {
+      return hasAllValidations(this.mFA, this.matosOwners);
+    },
+    isValidatedByOwners(): boolean {
+      return this.isValidatedByAnimOwner && this.isValidatedByMatosOwners;
+    },
+    validationStatus(): string {
+      const owners = [...this.matosOwners, this.animOwner];
+      return getFAValidationStatusWithMultipleTeams(
+        this.mFA,
+        owners
+      ).toLowerCase();
+    },
+    me(): any {
+      return this.$accessor.user.me;
+    },
   },
   methods: {
     formatDate(date: string): string {
@@ -117,6 +174,30 @@ export default Vue.extend({
       };
       return new Intl.DateTimeFormat("fr", displayOptions).format(
         new Date(date)
+      );
+    },
+    confirmToDeleteTimeframe(timeWindow: IdentifiableTimeWindow) {
+      const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
+      const shouldAskConfirmation =
+        isMatosTimeframe && hasAtLeastOneValidation(this.mFA, this.matosOwners);
+      this.selectedTimeWindow = timeWindow;
+
+      if (!shouldAskConfirmation) return this.deleteTimeframe();
+      this.isConfirmationDialogOpen = true;
+    },
+    resetLogValidations() {
+      this.$accessor.FA.resetLogValidations({ author: this.me });
+      this.deleteTimeframe();
+    },
+    deleteTimeframe() {
+      if (this.selectedTimeWindow?.type === time_windows_type.ANIM) {
+        const index = this.retrieveAnimationTimeWindowIndex(
+          this.selectedTimeWindow
+        );
+        return this.$accessor.FA.deleteTimeWindow(index);
+      }
+      return this.$accessor.FA.removeGearRequestRentalPeriod(
+        this.selectedTimeWindow as Period
       );
     },
     addTimeWindow(timeWindow: time_windows) {
@@ -184,6 +265,12 @@ export default Vue.extend({
         ...timeWindow,
         key: `${timeWindow.type}_${timeWindow.id ?? defaultId}`,
       };
+    },
+    isEditable(timeWindow: IdentifiableTimeWindow) {
+      if (timeWindow.type === time_windows_type.ANIM) {
+        return !this.isValidatedByAnimOwner;
+      }
+      return !this.isValidatedByMatosOwners;
     },
   },
 });

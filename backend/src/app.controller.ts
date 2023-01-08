@@ -6,54 +6,17 @@ import {
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { Roles } from './auth/team-auth.decorator';
-import { RolesGuard } from './auth/team-auth.guard';
 import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
-
-type Role =
-  | 'admin'
-  | 'hard'
-  | 'soft'
-  | 'orga'
-  | 'confiance'
-  | 'vieux'
-  | 'bureau'
-  | 'sg'
-  | 'log'
-  | 'matos'
-  | 'elec'
-  | 'secu'
-  | 'payant'
-  | 'humain'
-  | 'bar'
-  | 'barrieres'
-  | 'catering'
-  | 'maman'
-  | 'scene'
-  | 'signa'
-  | 'communication'
-  | 'concerts'
-  | 'courses'
-  | 'culture'
-  | 'dd'
-  | 'deco'
-  | 'informatique'
-  | 'plaizir'
-  | 'sponso'
-  | 'sports';
-
-type JWTPayload = {
-  email: string;
-  id: number;
-  role: Role[];
-};
+import { Permission } from './auth/permissions-auth.decorator';
+import { PermissionsGuard } from './auth/permissions-auth.guard';
+import { JwtPayload } from './auth/entities/JwtUtil.entity';
 
 /**
- * IMPORTANT: used in ohters controller like transactions
+ * IMPORTANT: used in others controller like transactions
  */
 export type RequestWithUserPayload = Request & {
-  user: JWTPayload;
+  user: JwtPayload;
 };
 
 @Controller()
@@ -76,8 +39,8 @@ export class AppController {
   @ApiUnauthorizedResponse({
     description: 'User dont have the right to access this route',
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('admin')
   @Post('mailtest')
   async mailtest(@Body() to: emailTestDto) {
     return this.mailService.mailTest(to);

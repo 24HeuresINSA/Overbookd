@@ -78,6 +78,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <PermissionsCard />
+    <SnackNotificationContainer />
+
     <v-snackbar
       v-model="snackbar"
       color="primary"
@@ -90,8 +94,15 @@
 </template>
 
 <script>
+import PermissionsCard from "~/components/organisms/PermissionsCard.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+
 export default {
   name: "Config",
+  components: {
+    PermissionsCard,
+    SnackNotificationContainer,
+  },
 
   data() {
     return {
@@ -113,7 +124,7 @@ export default {
   },
 
   async mounted() {
-    if (this.$accessor.user.hasRole(this, ["admin", "bureau"])) {
+    if (this.$accessor.user.hasPermission("config-write")) {
       this.config.isSignupOpen =
         this.$accessor.config.getConfig("isSignupOpen");
       this.config.fb_signup_closed =

@@ -3,6 +3,10 @@ import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
+import {
+  retrievePermissions,
+  TeamWithNestedPermissions,
+} from '../team/utils/permissions';
 
 const SELECT_USER = {
   email: true,
@@ -31,7 +35,12 @@ const SELECT_USER_TEAM = {
     select: {
       team: {
         select: {
-          name: true,
+          code: true,
+          permissions: {
+            select: {
+              permission_name: true,
+            },
+          },
         },
       },
     },
@@ -39,7 +48,10 @@ const SELECT_USER_TEAM = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
-export type UserWithTeam = UserWithoutPassword & { team: string[] };
+type UserWithTeamAndPermission = UserWithoutPassword & {
+  team: string[];
+  permissions: string[];
+};
 export type UserPasswordOnly = Pick<User, 'password'>;
 
 @Injectable()
@@ -48,7 +60,7 @@ export class UserService {
 
   async user(
     findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
-  ): Promise<UserWithTeam | null> {
+  ): Promise<UserWithTeamAndPermission | null> {
     const user = await this.prisma.user.findUnique({
       where: findCondition,
       select: {
@@ -56,9 +68,7 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return user
-      ? { ...user, team: user?.team.map((team) => team.team.name) }
-      : undefined;
+    return this.getUserWithTeamAndPermission(user);
   }
 
   async getUserPassword(
@@ -77,7 +87,7 @@ export class UserService {
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
     select?: Prisma.UserSelect;
-  }): Promise<UserWithTeam[]> {
+  }): Promise<UserWithTeamAndPermission[]> {
     const { skip, take, cursor, where, orderBy } = params;
     //get all users with their teams
     const users = await this.prisma.user.findMany({
@@ -91,10 +101,7 @@ export class UserService {
         ...SELECT_USER_TEAM,
       },
     });
-    return users.map((user) => ({
-      ...user,
-      team: user.team.map((team) => team.team.name),
-    }));
+    return users.map((user) => this.getUserWithTeamAndPermission(user));
   }
 
   async createUser(
@@ -166,5 +173,21 @@ export class UserService {
       id: user.id,
       username: user.firstname + ' ' + user.lastname,
     };
+  }
+
+  private getUserWithTeamAndPermission(
+    user: UserWithoutPassword & {
+      team: TeamWithNestedPermissions[];
+    },
+  ): UserWithTeamAndPermission {
+    const teams = user.team.map((t) => t.team.code);
+    const permissions = retrievePermissions(user.team);
+    return user
+      ? {
+          ...user,
+          team: teams,
+          permissions: [...permissions],
+        }
+      : undefined;
   }
 }

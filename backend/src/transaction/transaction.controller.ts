@@ -18,8 +18,8 @@ import { Transaction } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionCreationDto } from './dto/transactionCreation.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/team-auth.guard';
-import { Roles } from 'src/auth/team-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permission } from 'src/auth/permissions-auth.decorator';
 import { RequestWithUserPayload } from 'src/app.controller';
 
 @ApiBearerAuth()
@@ -28,8 +28,8 @@ import { RequestWithUserPayload } from 'src/app.controller';
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('sg')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('manage-cp')
   @Get()
   @ApiResponse({
     status: 200,
@@ -41,7 +41,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles('sg')
+  @Permission('manage-cp')
   @Get('user/:id')
   @ApiResponse({
     status: 200,
@@ -55,7 +55,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles('hard')
+  @Permission('cp')
   @Get('me')
   @ApiResponse({
     status: 200,
@@ -65,12 +65,12 @@ export class TransactionController {
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
   ): Promise<TransactionWithSenderAndReceiver[] | null> {
-    const { id } = request.user;
-    return this.transactionService.getUserTransactions(id);
+    const { userId } = request.user;
+    return this.transactionService.getUserTransactions(userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles('hard')
+  @Permission('cp')
   @Get('/:id')
   @ApiResponse({
     status: 200,
@@ -82,8 +82,8 @@ export class TransactionController {
     return this.transactionService.getTransactionById(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('hard')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('cp')
   @Post('transfer')
   @ApiBody({
     description: 'Create a transaction',
@@ -93,12 +93,12 @@ export class TransactionController {
     @Body() transactionData: Transaction,
     @Request() request: RequestWithUserPayload,
   ): Promise<TransactionWithSenderAndReceiver> {
-    const { id } = request.user;
-    return this.transactionService.createTransaction(transactionData, id);
+    const { userId } = request.user;
+    return this.transactionService.createTransaction(transactionData, userId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('sg')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('manage-cp')
   @Post('sg')
   addSgTransaction(
     @Body() transactionData: Transaction[],
@@ -106,8 +106,8 @@ export class TransactionController {
     return this.transactionService.addSgTransaction(transactionData);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('sg')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('manage-cp')
   @HttpCode(204)
   @Delete(':id')
   @ApiResponse({
