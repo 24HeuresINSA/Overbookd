@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GroupByService } from './group-by.service';
+import { groupBy } from '../util/group-by';
 
 export type StatsPayload = {
   teamCode: string;
@@ -18,10 +18,8 @@ export type StatsQueryResult = {
 
 @Injectable()
 export class StatsService {
-  constructor(private readonly groupByService: GroupByService) {}
-
   stats(arr: StatsQueryResult): StatsPayload[] {
-    const groupedByTeam = this.groupByService.groupBy(arr, (i) => i.team_code);
+    const groupedByTeam = groupBy(arr, (i) => i.team_code);
     const stats = [] as StatsPayload[];
     Object.entries(groupedByTeam).forEach(([teamCode, f]) => {
       const total = f.reduce((acc, curr) => acc + curr.count, 0);

@@ -78,7 +78,7 @@ export default {
         signa: 2,
         sponso: 9,
         sports: 20,
-        undefined: 0,
+        null: 0,
       },
       historyFT: {
         bar: 84,
@@ -103,13 +103,13 @@ export default {
         signa: 28,
         sponso: 35,
         sports: 61,
-        undefined: 46,
+        null: 46,
       },
     };
   },
   methods: {
     teamName(teamCode) {
-      return this.$accessor.team.getTeamByCode(teamCode).name;
+      return this.$accessor.team.getTeamByCode(teamCode)?.name || "undefined";
     },
     getAllStatus() {
       let status = FAStatus;
