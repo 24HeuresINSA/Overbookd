@@ -4,20 +4,12 @@
       <v-col sm="2">Equipe</v-col>
       <v-col sm="7">
         <v-row>
-          <v-col class="flex-grow-1">
-            <NeedsCard status="DRAFT">DRAFT</NeedsCard>
-          </v-col>
-          <v-col class="flex-grow-1">
-            <NeedsCard status="REFUSED">REFUSED</NeedsCard>
-          </v-col>
-          <v-col class="flex-grow-1">
-            <NeedsCard status="SUBMITTED">SUBMITTED</NeedsCard>
-          </v-col>
-          <v-col class="flex-grow-1">
-            <NeedsCard status="VALIDATED">VALIDATED</NeedsCard>
-          </v-col>
-          <v-col v-if="name === 'FT'" class="flex-grow-1">
-            <NeedsCard status="READY">READY</NeedsCard>
+          <v-col
+            v-for="(status, key) in getAllStatus()"
+            :key="key"
+            class="flex-grow-1"
+          >
+            <StatsCard :status="status">{{ status }}</StatsCard>
           </v-col>
         </v-row>
       </v-col>
@@ -34,9 +26,9 @@
             :key="i"
             :style="`flex-grow: ${element.count}`"
           >
-            <NeedsCard :status="element.status">
+            <StatsCard :status="element.status">
               {{ element.count }}
-            </NeedsCard>
+            </StatsCard>
           </div>
         </div>
       </v-col>
@@ -50,11 +42,12 @@
 </template>
 
 <script>
-import NeedsCard from "./NeedsCard";
+import StatsCard from "~/components/atoms/StatsCard";
+import { Status as FAStatus } from "~/utils/models/FA";
 
 export default {
   components: {
-    NeedsCard,
+    StatsCard,
   },
   props: {
     name: { type: String, required: true },
@@ -117,6 +110,16 @@ export default {
   methods: {
     teamName(teamCode) {
       return this.$accessor.team.getTeamByCode(teamCode).name;
+    },
+    getAllStatus() {
+      let status = FAStatus;
+      // if (this.name === "FT") {
+      //   status = FTStatus;
+      // }
+      // Change status for PascalCase
+      return Object.keys(status).map(
+        (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
+      );
     },
     history(team) {
       if (this.name === "FT") {

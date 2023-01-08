@@ -10,17 +10,17 @@
       ></v-switch>
       <h1>FT</h1>
     </v-row>
-    <Needs :dataset="dataset" :name="name" />
+    <StatsRow :dataset="dataset" :name="name" />
     <h1 v-if="switchType">Les stats FT ne sont pas encore disponibles</h1>
   </v-container>
 </template>
 
 <script>
-import Needs from "../components/Needs";
+import StatsRow from "~/components/molecules/StatsRow";
 
 export default {
   name: "Stats",
-  components: { Needs },
+  components: { StatsRow },
   data() {
     return {
       switchType: false,

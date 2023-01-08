@@ -5,7 +5,7 @@
       <h2>{{ faName }}</h2>
 
       <div class="status">
-        <span class="dot" :class="faValidationStatus"></span>
+        <span class="dot" :class="backgroundColor"></span>
         <h3>
           {{
             mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
@@ -302,8 +302,8 @@ export default Vue.extend({
     hasAtLeastOneError(): boolean {
       return hasAtLeastOneError(this.mFA, this.FA.allSortedGearRequests);
     },
-    faValidationStatus(): string {
-      return this.mFA.status.toLowerCase();
+    backgroundColor(): string {
+      return "bg-" + this.mFA.status.toLowerCase();
     },
     isRecoverable(): boolean {
       return this.mValidators.length >= 1 && this.mFA.isValid === false;
