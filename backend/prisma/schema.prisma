@@ -74,7 +74,7 @@ model User {
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
 
-  ft_in_charge     Ft[]               @relation("inCharge")
+  ftInCharge       Ft[]               @relation("inCharge")
   FtComments       FtComments[]
   FtUserAssignment FtUserAssignment[]
 }
@@ -425,6 +425,7 @@ model Ft {
   inCharge     Int?            @map("in_charge")
   location     Signa_Location? @relation(fields: [locationId], references: [id])
   locationId   Int?            @map("location_id")
+  isDeleted    Boolean         @default(false) @map("is_deleted")
 
   comments    FtComments[]
   timeWindows FtTimeWindows[]
@@ -441,7 +442,7 @@ enum ft_subject_type {
 
 model FtComments {
   id        Int             @id @default(autoincrement())
-  Ft        Ft              @relation(fields: [ftId], references: [id])
+  Ft        Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId      Int             @map("ft_id")
   comment   String          @db.Text
   subject   ft_subject_type
@@ -491,7 +492,7 @@ enum Review_Status {
 }
 
 model FtReview {
-  ft       Ft            @relation(fields: [ftId], references: [id])
+  ft       Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId     Int           @map("ft_id")
   team     Team          @relation(fields: [teamCode], references: [code])
   teamCode String        @map("team_code")
