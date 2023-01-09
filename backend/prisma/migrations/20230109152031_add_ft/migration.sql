@@ -1,17 +1,17 @@
 -- CreateEnum
-CREATE TYPE "Ft_Status" AS ENUM ('DRAFT', 'SUBMITTED', 'VALIDATED', 'REFUSED', 'READY');
+CREATE TYPE "ft_status" AS ENUM ('DRAFT', 'SUBMITTED', 'VALIDATED', 'REFUSED', 'READY');
 
 -- CreateEnum
-CREATE TYPE "ftSubjectType" AS ENUM ('REFUSED', 'SUBMIT', 'VALIDATED', 'COMMENT', 'READY');
+CREATE TYPE "ft_subject_type" AS ENUM ('REFUSED', 'SUBMIT', 'VALIDATED', 'COMMENT', 'READY');
 
 -- CreateEnum
-CREATE TYPE "Review_Status" AS ENUM ('VALIDATED', 'REFUSED');
+CREATE TYPE "review_status" AS ENUM ('VALIDATED', 'REFUSED');
 
 -- CreateTable
 CREATE TABLE "ft" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "status" "Ft_Status" NOT NULL,
+    "status" "ft_status" NOT NULL,
     "parent_fa_id" INTEGER,
     "is_static" BOOLEAN NOT NULL DEFAULT false,
     "description" TEXT,
@@ -27,7 +27,7 @@ CREATE TABLE "ft_comments" (
     "id" SERIAL NOT NULL,
     "ft_id" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
-    "subject" "ftSubjectType" NOT NULL,
+    "subject" "ft_subject_type" NOT NULL,
     "author_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -61,7 +61,7 @@ CREATE TABLE "ft_team_request" (
 CREATE TABLE "ft_review" (
     "ft_id" INTEGER NOT NULL,
     "team_code" TEXT NOT NULL,
-    "status" "Review_Status" NOT NULL
+    "status" "review_status" NOT NULL
 );
 
 -- CreateIndex

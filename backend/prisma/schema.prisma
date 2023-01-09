@@ -405,18 +405,20 @@ model Animation_Gear_Request {
   @@index([status])
 }
 
-enum Ft_Status {
+enum ftStatus {
   DRAFT
   SUBMITTED
   VALIDATED
   REFUSED
   READY
+
+  @@map("ft_status")
 }
 
 model Ft {
   id           Int             @id @default(autoincrement())
   name         String
-  status       Ft_Status
+  status       ftStatus
   fa           fa?             @relation(fields: [parentFaId], references: [id])
   parentFaId   Int?            @map("parent_fa_id")
   isStatic     Boolean         @default(false) @map("is_static")
@@ -440,6 +442,8 @@ enum ftSubjectType {
   VALIDATED
   COMMENT
   READY
+
+  @@map("ft_subject_type")
 }
 
 model FtComments {
@@ -488,17 +492,19 @@ model FtTeamRequest {
   @@map("ft_team_request")
 }
 
-enum Review_Status {
+enum reviewStatus {
   VALIDATED
   REFUSED
+
+  @@map("review_status")
 }
 
 model FtReview {
-  ft       Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId     Int           @map("ft_id")
-  team     Team          @relation(fields: [teamCode], references: [code])
-  teamCode String        @map("team_code")
-  status   Review_Status
+  ft       Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId     Int          @map("ft_id")
+  team     Team         @relation(fields: [teamCode], references: [code])
+  teamCode String       @map("team_code")
+  status   reviewStatus
 
   @@unique([ftId, teamCode])
   @@map("ft_review")
