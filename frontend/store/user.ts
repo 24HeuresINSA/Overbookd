@@ -1,12 +1,14 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
+import { User as UserV2 } from "~/utils/models/user";
 import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
   me: {} as User,
+  users: [] as UserV2[],
   usernames: [] as Partial<User>[],
   mUser: {} as User,
   timeslots: [],
@@ -20,6 +22,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER(state: UserState, data: User) {
     state.mUser = data;
+  },
+  SET_USERS(state: UserState, data: UserV2[]) {
+    state.users = data;
   },
   SET_USERNAMES(state: UserState, data: User[]) {
     data.sort(
@@ -69,6 +74,12 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepo.getMyUser(this));
       if (res) {
         commit("SET_USER", res.data);
+      }
+    },
+    async fetchUsers({ commit }) {
+      const res = await safeCall(this, UserRepo.getAllUsers(this));
+      if (res) {
+        commit("SET_USERS", res.data);
       }
     },
     async fetchUsernames({ commit }) {

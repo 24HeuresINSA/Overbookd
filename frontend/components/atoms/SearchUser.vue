@@ -1,12 +1,12 @@
 <template>
   <v-autocomplete
-    :value="team"
-    :items="teams"
+    :value="user"
+    :items="users"
     :loading="loading"
-    item-text="name"
     chips
     clearable
-    item-value="code"
+    item-value="id"
+    :item-text="displayUsername"
     :label="label"
     :solo="boxed"
     :filled="boxed"
@@ -21,24 +21,24 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
 
-interface SearchTeamData {
+interface SearchUserData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: "SearchTeam",
+  name: "SearchUser",
   model: {
-    prop: "team",
+    prop: "user",
     event: "change",
   },
   props: {
     label: {
       type: String,
-      default: "Chercher une equipe",
+      default: "Chercher un utilisateur",
     },
-    team: {
+    user: {
       type: Object,
       default: null,
     },
@@ -47,23 +47,26 @@ export default Vue.extend({
       default: true,
     },
   },
-  data(): SearchTeamData {
+  data(): SearchUserData {
     return {
       loading: false,
     };
   },
   computed: {
-    teams() {
-      return this.$accessor.team.teams;
+    users() {
+      return this.$accessor.user.users;
     },
   },
   mounted() {
-    if (this.teams.length) return;
-    this.$accessor.team.setTeamsInStore();
+    if (this.users.length) return;
+    this.$accessor.user.fetchUsers();
   },
   methods: {
-    propagateEvent(team: Team | null) {
-      this.$emit("change", team);
+    propagateEvent(user: User | null) {
+      this.$emit("change", user);
+    },
+    displayUsername({ firstname, lastname }: User): string {
+      return `${firstname} ${lastname}`;
     },
   },
 });

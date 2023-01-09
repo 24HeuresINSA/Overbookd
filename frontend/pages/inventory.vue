@@ -1,6 +1,6 @@
 <template>
   <div>
-    <EquipmentProposalDialogPage
+    <!--<EquipmentProposalDialogPage
       ref="equipPropPage"
     ></EquipmentProposalDialogPage>
 
@@ -79,9 +79,6 @@
                 @click="$refs.locationAdder.openDialog()"
                 >Ajouter</v-btn
               >
-              <!-- <v-btn color="primary" text @click="tryDeleteLocation()"
-                >Supprimer</v-btn
-              > -->
             </v-card-actions>
           </v-card>
           <br />
@@ -142,7 +139,6 @@
             </template>
 
             <template #[`item.borrow`]="{ item }">
-              <!-- Divs get better style, and list not that needed -->
               <div v-for="(borrow, index) of item.borrowed" :key="index">
                 {{ borrow.amount }} {{ borrow.from }}
               </div>
@@ -220,15 +216,15 @@
     ></EquipmentInformations>
     <v-snackbar v-model="snack.active" :timeout="snack.timeout">
       {{ snack.feedbackMessage }}
-    </v-snackbar>
+    </v-snackbar>-->
   </div>
 </template>
 
 <script lang="ts">
-import locationAdder from "../components/organisms/locationAdder.vue";
+import Vue from "vue";
+/*import locationAdder from "../components/organisms/locationAdder.vue";
 import cloneDeep from "lodash/cloneDeep";
 import isEqual from "lodash/isEqual";
-import Vue from "vue";
 import EquipmentInformations from "~/components/organisms/equipment/EquipmentInformations.vue";
 import EquipmentProposalDialog from "~/components/organisms/equipment/EquipmentProposalDialog.vue";
 import EquipmentProposalDialogPage from "~/components/organisms/equipment/EquipmentProposalDialogPage.vue";
@@ -267,11 +263,11 @@ interface Search {
   locationSigna: string;
   type: string;
   fromPool: boolean;
-}
+}*/
 
 export default Vue.extend({
   name: "Inventory",
-  components: {
+  /*components: {
     locationAdder,
     EquipmentInformations,
     EquipmentProposalDialog,
@@ -607,7 +603,7 @@ export default Vue.extend({
       // Prompt the browser to start file download
       this.download("inventaire.csv", parsedCSV);
     },
-  },
+  },*/
 });
 </script>
 
