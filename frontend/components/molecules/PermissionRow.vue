@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { team } from "~/utils/models/repo";
 import OverChips from "~/components/atoms/overChips.vue";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "PermissionRow",
@@ -63,7 +63,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    teams(): team[] {
+    teams(): Team[] {
       return this.$accessor.team.allTeams;
     },
     async addOrRemoveTeam() {

@@ -1,4 +1,4 @@
-import { FT } from "./FT";
+import { FT } from "./ft";
 import { Timeslot, User } from "./repo";
 
 export interface Assignment {

@@ -1,78 +1,80 @@
 <template>
-  <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+  <v-card>
     <v-card-title>Général</v-card-title>
     <v-card-text>
       <v-text-field
-        :v-model="name"
-        :value="data"
+        :value="mFT.name"
         label="Nom de la FT"
-        :disabled="disabled"
-        @change="onFormChange"
+        @change="onChange('name', $event)"
       ></v-text-field>
-      <v-autocomplete
-        :v-model="inCharge"
-        :value="data"
-        :label="Responsable"
-        :items="users"
-        :disabled="disabled"
-        dense
-        @change="onFormChange"
-      ></v-autocomplete>
+      <SearchUser
+        :value="mFT.inCharge"
+        label="Responsable"
+        :boxed="false"
+        @change="onChange('inCharge', $event)"
+      ></SearchUser>
       <v-switch
-        :v-model="areTimeframesStatic"
-        :value="data"
+        :value="mFT.areStatic"
         label="Créneaux statiques"
-        :disabled="disabled"
-        @change="onFormChange"
+        @change="onChange('areStatic', $event)"
       ></v-switch>
+      <v-autocomplete
+        label="Lieux"
+        :value="currentLocations"
+        :items="locations"
+        item-text="name"
+        item-value="id"
+        multiple
+        @change="onChange('locations', $event)"
+      ></v-autocomplete>
     </v-card-text>
   </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import { FT } from "~/utils/models/ft";
+import { SignaLocation } from "~/utils/models/signaLocation";
+import { User } from "~/utils/models/user";
+import SearchUser from "~/components/atoms/SearchUser.vue";
+
+export default Vue.extend({
   name: "FTGeneralCard",
-  props: {
-    topic: {
-      type: String,
-      default: () => "",
-    },
-    formKey: {
-      type: String,
-      default: () => {
-        null;
-      },
-    },
-    isDisabled: {
-      type: Boolean,
-      default: () => {
-        false;
-      },
-    },
-    form: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  data: () => {
-    return {
-      FORM: undefined,
-    };
-  },
+  components: { SearchUser },
   computed: {
-    data: function () {
-      return this.form[this.topic];
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
+    },
+    locations(): SignaLocation[] {
+      return this.$accessor.signa.locations;
+    },
+    users(): User[] {
+      return this.$accessor.user.users;
+    },
+    currentLocations(): SignaLocation[] {
+      const locations = this.mFT.locations ?? [];
+      return locations
+        .map((location) => {
+          return this.$accessor.signa.getLocationById(location.id);
+        })
+        .filter(
+          (location): location is SignaLocation => location !== undefined
+        );
     },
   },
-  mounted() {
-    this.FORM = Array.from(this.$accessor.config.getConfig(this.formKey));
+  async mounted() {
+    if (this.users.length === 0) {
+      this.$accessor.user.fetchUsers();
+    }
   },
   methods: {
-    onFormChange(form) {
-      this.$emit("form-change", form);
+    onChange(key: string, value: any) {
+      if (typeof value === "string") value = value.trim();
+      const updatedFT = { ...this.mFT, [key]: value };
+      this.$accessor.FT.setFT(updatedFT);
     },
   },
-};
+});
 </script>
 
 <style scoped></style>

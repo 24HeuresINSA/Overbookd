@@ -1,6 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { Feedback, SubjectType } from "~/utils/models/feedback";
 import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
 import {
   collaborator,
@@ -20,7 +21,6 @@ import {
   SortedStoredGearRequests,
   Status,
   StoredGearRequest,
-  subject_type,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
@@ -305,7 +305,7 @@ export const actions = actionTree(
 
     getAndSet: async function ({ commit }, id: number) {
       const [resFA, resGearRequests] = await Promise.all([
-        safeCall(this, repo.getFAByCount(this, id)),
+        safeCall(this, repo.getFAById(this, id)),
         safeCall(this, repo.getGearRequests(this, id)),
       ]);
       if (!resGearRequests || !resFA) return null;
@@ -321,11 +321,11 @@ export const actions = actionTree(
     ) {
       const authorName = `${author.firstname} ${author.lastname}`;
       if (!faId || !authorId || !author) return;
-      const comment: fa_comments = {
-        subject: subject_type.SUBMIT,
+      const comment: Feedback = {
+        subject: SubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       commit("UPDATE_STATUS", Status.SUBMITTED);
@@ -398,10 +398,10 @@ export const actions = actionTree(
       { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
-      if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
+      if (state.mFA.fa_validation?.find((v) => v.team.id === validator_id))
         return;
       if (state.mFA.fa_refuse?.length === 1) {
-        if (state.mFA.fa_refuse[0].Team.id === validator_id) {
+        if (state.mFA.fa_refuse[0].team.id === validator_id) {
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }
@@ -415,11 +415,11 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
-      const comment: fa_comments = {
-        subject: subject_type.VALIDATED,
+      const comment: Feedback = {
+        subject: SubjectType.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
         author: author.id,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -434,11 +434,11 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
-      const comment: fa_comments = {
-        subject: subject_type.REFUSED,
+      const comment: Feedback = {
+        subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author: author.id,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -466,11 +466,11 @@ export const actions = actionTree(
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
-      const comment: fa_comments = {
-        subject: subject_type.SUBMIT,
+      const comment: Feedback = {
+        subject: SubjectType.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
         author: author.id,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -482,7 +482,7 @@ export const actions = actionTree(
         comment,
         defaultAuthor,
       }: {
-        comment: fa_comments;
+        comment: Feedback;
         defaultAuthor: { firstname: string; lastname: string };
       }
     ) {

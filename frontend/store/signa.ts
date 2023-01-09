@@ -6,22 +6,22 @@ import { SignaLocation } from "~/utils/models/signaLocation";
 const repo = RepoFactory.signaLocationRepo;
 
 export const state = () => ({
-  signaLocations: [] as SignaLocation[],
-  signaLocation: {} as SignaLocation,
+  locations: [] as SignaLocation[],
+  location: {} as SignaLocation,
 });
 
 export const getters = getterTree(state, {
   getLocationById: (state) => (id: number) => {
-    return state.signaLocations.find((location) => location.id === id);
+    return state.locations.find((location) => location.id === id);
   },
 });
 
 export const mutations = mutationTree(state, {
   SET_SIGNA_LOCATIONS(state, signaLocations: SignaLocation[]) {
-    state.signaLocations = signaLocations;
+    state.locations = signaLocations;
   },
   SET_SIGNA_LOCATION(state, signaLocation: SignaLocation) {
-    state.signaLocation = signaLocation;
+    state.location = signaLocation;
   },
 });
 
