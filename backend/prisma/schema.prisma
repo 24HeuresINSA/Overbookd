@@ -73,6 +73,10 @@ model User {
   fa_validation fa_validation[]
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
+
+  ftsInCharge    Ft[]            @relation("inCharge")
+  ftComments     FtComments[]
+  ftUserRequests FtUserRequest[]
 }
 
 model Team {
@@ -86,6 +90,8 @@ model Team {
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
   owned_categories Catalog_Category[] @relation("owner")
+  ftRequests       FtTeamRequest[]
+  ftReviews        FtReview[]
   permissions      Team_Permission[]
 }
 
@@ -100,16 +106,16 @@ model User_Team {
 
 model Permission {
   id          Int               @id @default(autoincrement())
-  name        String            @db.VarChar(30) @unique
+  name        String            @unique @db.VarChar(30)
   description String?           @db.VarChar(255)
   teams       Team_Permission[]
 }
 
 model Team_Permission {
-  team            Team        @relation(fields: [team_code], references: [code])
+  team            Team       @relation(fields: [team_code], references: [code])
   team_code       String
-  permission      Permission  @relation(fields: [permission_name], references: [name], onDelete: Cascade)
-  permission_name String      @map("permission_name")
+  permission      Permission @relation(fields: [permission_name], references: [name], onDelete: Cascade)
+  permission_name String     @map("permission_name")
 
   @@id([team_code, permission_name])
 }
@@ -156,36 +162,37 @@ enum Status {
 }
 
 model fa {
-  id                        Int                        @id @default(autoincrement())
-  name                      String                     @db.VarChar(255)
-  fa_type_name              fa_type?
-  type                      String?                    @db.VarChar(255)
-  Team                      Team?                      @relation(fields: [team_id], references: [id])
-  team_id                   Int?
-  user_in_charge            User?                      @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge                 Int?
-  created_at                DateTime?                  @default(now())
-  location                  Signa_Location?            @relation(fields: [location_id], references: [id])
-  location_id               Int?
-  status                    Status?                    @default(DRAFT)
-  description               String?                    @db.Text
-  is_major                  Boolean?                   @default(false)
-  is_kids                   Boolean?                   @default(false)
-  security_needs            String?                    @db.Text
-  is_pass_required          Boolean?                   @db.Boolean
-  number_of_pass            Int?
-  water_needs               String?                    @db.Text
-  water_flow_required       Int?
-  is_deleted                Boolean                    @default(false)
-  fa_validation             fa_validation[]
-  fa_refuse                 fa_refuse[]
-  fa_collaborators          fa_collaborators[]
-  fa_electricity_needs      fa_electricity_needs[]
-  fa_signa_needs            fa_signa_needs[]
-  fa_comments               fa_comments[]
-  time_windows              time_windows[]
-  gearRequests              Animation_Gear_Request[]   @relation("gear-request-animation")
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @db.VarChar(255)
+  fa_type_name           fa_type?
+  type                   String?                  @db.VarChar(255)
+  Team                   Team?                    @relation(fields: [team_id], references: [id])
+  team_id                Int?
+  user_in_charge         User?                    @relation(fields: [in_charge], references: [id], name: "in_charge")
+  in_charge              Int?
+  created_at             DateTime?                @default(now())
+  location               Signa_Location?          @relation(fields: [location_id], references: [id])
+  location_id            Int?
+  status                 Status?                  @default(DRAFT)
+  description            String?                  @db.Text
+  is_major               Boolean?                 @default(false)
+  is_kids                Boolean?                 @default(false)
+  security_needs         String?                  @db.Text
+  is_pass_required       Boolean?                 @db.Boolean
+  number_of_pass         Int?
+  water_needs            String?                  @db.Text
+  water_flow_required    Int?
+  is_deleted             Boolean                  @default(false)
+  fa_validation          fa_validation[]
+  fa_refuse              fa_refuse[]
+  fa_collaborators       fa_collaborators[]
+  fa_electricity_needs   fa_electricity_needs[]
+  fa_signa_needs         fa_signa_needs[]
+  fa_comments            fa_comments[]
+  time_windows           time_windows[]
+  gearRequests           Animation_Gear_Request[] @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
+  fts                    Ft[]
 }
 
 enum fa_type {
@@ -240,6 +247,7 @@ model Signa_Location {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
   fa   fa[]
+  fts  Ft[]
 }
 
 model collaborator {
@@ -317,8 +325,8 @@ model fa_comments {
 
 model FaSitePublishAnimation {
   fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
-  faId       Int                                    @id @map("fa_id")
-  photoLink  String?                                @db.Text @map("photo_link ")
+  faId        Int                                    @id @map("fa_id")
+  photoLink   String?                                @map("photo_link ") @db.Text
   description String?                                @db.Text
   categories  site_publish_animation_category_type[]
 
@@ -395,4 +403,109 @@ model Animation_Gear_Request {
 
   @@unique([animationId, gearId, rentalPeriodId])
   @@index([status])
+}
+
+enum ftStatus {
+  DRAFT
+  SUBMITTED
+  VALIDATED
+  REFUSED
+  READY
+
+  @@map("ft_status")
+}
+
+model Ft {
+  id             Int             @id @default(autoincrement())
+  name           String
+  status         ftStatus
+  fa             fa?             @relation(fields: [parentFaId], references: [id])
+  parentFaId     Int?            @map("parent_fa_id")
+  isStatic       Boolean         @default(false) @map("is_static")
+  description    String?         @db.Text
+  userInCharge   User?           @relation(fields: [userInChargeId], references: [id], name: "inCharge")
+  userInChargeId Int?            @map("user_in_charge_id")
+  location       Signa_Location? @relation(fields: [locationId], references: [id])
+  locationId     Int?            @map("location_id")
+  isDeleted      Boolean         @default(false) @map("is_deleted")
+
+  comments    FtComments[]
+  timeWindows FtTimeWindows[]
+  reviews     FtReview[]
+
+  @@map("ft")
+}
+
+enum ftSubjectType {
+  REFUSED
+  SUBMIT
+  VALIDATED
+  COMMENT
+  READY
+
+  @@map("ft_subject_type")
+}
+
+model FtComments {
+  id        Int           @id @default(autoincrement())
+  ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId      Int           @map("ft_id")
+  comment   String        @db.Text
+  subject   ftSubjectType
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  Int           @map("author_id")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@map("ft_comments")
+}
+
+model FtTimeWindows {
+  id           Int             @id @default(autoincrement())
+  ft           Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId         Int             @map("ft_id")
+  start        DateTime
+  end          DateTime
+  userRequests FtUserRequest[]
+  teamRequests FtTeamRequest[]
+
+  @@map("ft_time_windows")
+}
+
+model FtUserRequest {
+  ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
+  ftTimeWindowsId Int           @map("ft_time_windows_id")
+  user            User          @relation(fields: [userId], references: [id])
+  userId          Int           @map("user_id")
+
+  @@unique([ftTimeWindowsId, userId])
+  @@map("ft_user_request")
+}
+
+model FtTeamRequest {
+  timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
+  timeWindowsId Int           @map("time_windows_id")
+  team          Team          @relation(fields: [teamId], references: [id])
+  teamId        Int           @map("team_id")
+  number        Int
+
+  @@unique([timeWindowsId, teamId])
+  @@map("ft_team_request")
+}
+
+enum reviewStatus {
+  VALIDATED
+  REFUSED
+
+  @@map("review_status")
+}
+
+model FtReview {
+  ft       Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId     Int          @map("ft_id")
+  team     Team         @relation(fields: [teamCode], references: [code])
+  teamCode String       @map("team_code")
+  status   reviewStatus
+
+  @@unique([ftId, teamCode])
+  @@map("ft_review")
 }
