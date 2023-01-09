@@ -27,7 +27,7 @@
       <FAGeneralCard id="general" />
       <FADetailCard id="detail" />
       <SignaCard id="signa" />
-      <TimeframeTable id="timeframe" />
+      <TimeframeTable id="timewindow" />
       <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
@@ -186,15 +186,16 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import GearRequestsValidation from "~/components/organisms/form/fa/GearRequestsValidation.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
+import GearRequestsValidation from "~/components/organisms/form/fa/GearRequestsValidation.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
@@ -202,15 +203,14 @@ import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { Status } from "~/utils/models/FA";
-import { team } from "~/utils/models/repo";
-import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import {
   getFAValidationStatus,
   isAnimationRefusedBy,
   isAnimationValidatedBy,
 } from "~/utils/fa/faUtils";
-import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import { Status } from "~/utils/models/FA";
+import { Team } from "~/utils/models/team";
+import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
   name: "Fa",
@@ -238,11 +238,11 @@ export default Vue.extend({
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
 
-    selectedValidator: undefined as team | undefined,
+    selectedValidator: undefined as Team | undefined,
 
     refuseComment: "",
     gearRequestApprovalDialog: false,
-    validatorTeam: { name: "", code: "", id: 0, color: "", icon: "" } as team,
+    validatorTeam: { name: "", code: "", id: 0, color: "", icon: "" } as Team,
 
     faRepo: RepoFactory.faRepo,
 
@@ -275,17 +275,17 @@ export default Vue.extend({
     faName(): string {
       return this.$accessor.FA.mFA.name;
     },
-    validators(): team[] {
+    validators(): Team[] {
       return this.$accessor.team.faValidators;
     },
-    mValidators(): team[] {
-      let mValidator: team[] = [];
+    mValidators(): Team[] {
+      let mValidator: Team[] = [];
       if (this.me.team.includes("admin")) {
         // admin has all the validators powers
         return this.validators;
       }
       if (this.validators) {
-        this.validators.forEach((validator: team) => {
+        this.validators.forEach((validator: Team) => {
           if (this.me.team && this.me.team.includes(validator.name)) {
             mValidator.push(validator);
           }
@@ -294,8 +294,8 @@ export default Vue.extend({
       }
       return [];
     },
-    teamsThatNotYetValidatedFA(): team[] {
-      return this.mValidators.filter((validator: team) => {
+    teamsThatNotYetValidatedFA(): Team[] {
+      return this.mValidators.filter((validator: Team) => {
         return !this.isAnimationValidatedBy(validator);
       });
     },
@@ -354,7 +354,7 @@ export default Vue.extend({
     if (this.mFA.name) title += " - " + this.mFA.name;
     document.title = title;
 
-    this.$accessor.signaLocation.getAllSignaLocations();
+    this.$accessor.signa.getAllSignaLocations();
 
     this.selectedValidator = this.mValidators[0];
     if (this.validators.length === 0) {
@@ -374,7 +374,7 @@ export default Vue.extend({
       await this.mFA.undelete();
     },
 
-    async validate(validator: team) {
+    async validate(validator: Team) {
       if (!validator) return;
 
       if (!this.shoudlValidateGearRequests(validator)) {
@@ -385,7 +385,7 @@ export default Vue.extend({
       this.gearRequestApprovalDialog = true;
     },
 
-    shoudlValidateGearRequests(validator: team) {
+    shoudlValidateGearRequests(validator: Team) {
       return (
         this.$accessor.FA.gearRequests.filter(
           (gr) => gr.gear.owner?.code === validator.code
@@ -393,12 +393,12 @@ export default Vue.extend({
       );
     },
 
-    async validateGearRequests(validator: team) {
+    async validateGearRequests(validator: Team) {
       this.gearRequestApprovalDialog = false;
       this.sendValidation(validator);
     },
 
-    sendValidation(validator: team) {
+    sendValidation(validator: Team) {
       if (!validator) return;
       const payload = {
         validator_id: validator.id,
@@ -409,7 +409,7 @@ export default Vue.extend({
       return this.$accessor.FA.validate(payload);
     },
 
-    async refuse(validator?: team) {
+    async refuse(validator?: Team) {
       if (!validator) return;
       if (
         this.mFA.status === Status.VALIDATED &&
@@ -444,19 +444,19 @@ export default Vue.extend({
       this.saveFA();
     },
 
-    validatorValidationStatus(validator: team) {
+    validatorValidationStatus(validator: Team) {
       return getFAValidationStatus(this.mFA, validator.code).toLowerCase();
     },
 
-    isAnimationValidatedBy(validator: team) {
+    isAnimationValidatedBy(validator: Team) {
       return isAnimationValidatedBy(this.mFA, validator.code);
     },
 
-    isAnimationRefusedBy(validator: team) {
+    isAnimationRefusedBy(validator: Team) {
       return isAnimationRefusedBy(this.mFA, validator.code);
     },
 
-    openRefuseDialog(validator: team) {
+    openRefuseDialog(validator: Team) {
       this.isRefuseDialogOpen = true;
       this.selectedValidator = validator;
     },

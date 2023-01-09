@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { team } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 
 const resource = "/team";
 type Context = { $axios: NuxtAxiosInstance };
@@ -8,7 +8,7 @@ export default {
   getTeams(context: Context) {
     return context.$axios.get(resource);
   },
-  linkUserToTeams(context: Context, userId: number, teams: team[]) {
+  linkUserToTeams(context: Context, userId: number, teams: Team[]) {
     return context.$axios.post(`${resource}/link`, {
       userId,
       teams,

@@ -148,10 +148,10 @@ export default Vue.extend({
     currentLocations(): SignaLocation | undefined {
       const locationId = this.$accessor.FA.mFA.location_id;
       if (!locationId) return undefined;
-      return this.$accessor.signaLocation.getLocationById(locationId);
+      return this.$accessor.signa.getLocationById(locationId);
     },
     locations(): SignaLocation[] {
-      return this.$accessor.signaLocation.signaLocations;
+      return this.$accessor.signa.locations;
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);

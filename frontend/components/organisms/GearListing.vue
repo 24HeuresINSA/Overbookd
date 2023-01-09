@@ -80,7 +80,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
-import { team } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
 import SearchCategory from "../atoms/SearchCategory.vue";
 import SearchTeam from "../atoms/SearchTeam.vue";
@@ -90,7 +90,7 @@ interface GearListingData {
   headers: Header[];
   name: string;
   category: Category | null;
-  team: Pick<team, "name" | "code"> | null;
+  team: Pick<Team, "name" | "code"> | null;
   loading: boolean;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;

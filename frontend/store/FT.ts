@@ -1,318 +1,105 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import FtRepo from "~/repositories/ftRepo";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { FTStatus } from "~/utils/FT";
-import { FormComment } from "~/utils/models/Comment";
-import { FT } from "~/utils/models/FT";
+import { FTCreation, FT, FTStatus, SearchFT } from "~/utils/models/ft";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
-  mFT: {
-    status: FTStatus.draft,
-    count: 0,
-    equipments: [] as any,
-    timeframes: [] as any,
-    validated: [] as any,
-    refused: [] as any,
-    comments: [] as any,
-  } as FT,
-  Fts: [] as FT[],
-  waitingForResponse: false,
+  mFT: defaultState() as FT,
+  FTs: [] as FT[],
 });
 
-export type FTState = ReturnType<typeof state>;
-
-export const getters = getterTree(state, {
-  timeframes: (state) => state.mFT.timeframes,
-  equipmentMap: function (state): Map<String, number> {
-    const equipmentMap = new Map<string, number>();
-    state.Fts.forEach((ft) => {
-      if (ft.equipments) {
-        ft.equipments.forEach((equipment) => {
-          if (equipmentMap.has(equipment._id)) {
-            equipmentMap.set(
-              equipment._id,
-              equipmentMap.get(equipment._id)! + equipment.required
-            );
-          } else {
-            equipmentMap.set(equipment._id, equipment.required);
-          }
-        });
-      }
-    });
-    return equipmentMap;
-  },
-  waitingForResponse: (state) => state.waitingForResponse,
-});
-
-/* ############################################ */
-/*                   mutations                  */
-/* ############################################ */
+export const getters = getterTree(state, {});
 
 export const mutations = mutationTree(state, {
-  SET_ALL_FTS: function (state, Fts: FT[]) {
-    state.Fts = Fts;
+  UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
+    state.mFT = { ...state.mFT, ...ft };
   },
-  SET_FT: function (state, mFT) {
-    state.mFT = mFT;
+
+  RESET_FT(state) {
+    state.mFT = defaultState() as FT;
   },
-  ASSIGN_FT: function ({ mFT }, data) {
-    const key = Object.keys(data)[0] as keyof FT;
-    if (!mFT[key]) {
-      mFT[key] = data[key] as never;
-    } else {
-      // @ts-ignore
-      Object.assign(mFT[key], data[key]);
-    }
-  },
-  ADD_TIMEFRAME_FT: function ({ mFT }, timeframe) {
-    if (mFT.timeframes === undefined) {
-      mFT.timeframes = [];
-    }
-    mFT.timeframes.push(timeframe);
-  },
-  SET_TIMEFRAME_FT: function (state, timeframes) {
-    state.mFT.timeframes = timeframes;
-  },
-  UPDATE_TIMEFRAME: function ({ mFT }, { index, timeframe }) {
-    mFT.timeframes.splice(index, 1, timeframe);
-  },
-  UPDATE_STATUS: function ({ mFT }, status) {
+
+  UPDATE_STATUS({ mFT }, status: FTStatus) {
     mFT.status = status;
   },
-  VALIDATE: function ({ mFT }, validator) {
-    if (mFT.validated === undefined) {
-      mFT.validated = [];
-    }
-    if (!mFT.validated.find((v) => v == validator)) {
-      // avoid duplicate
-      mFT.validated.push(validator);
 
-      // remove from refuse
-      // todo check for reactivity
-      if (mFT.refused) {
-        mFT.refused = mFT.refused.filter((v) => v !== validator);
-      }
-    }
+  SET_FTS(state, fts: FT[]) {
+    state.FTs = fts;
   },
-  REFUSE: function ({ mFT }, validator) {
-    if (mFT.refused === undefined) {
-      mFT.refused = [];
-    }
-    if (!mFT.refused.find((v) => v == validator)) {
-      // avoid duplicate
-      mFT.refused.push(validator);
 
-      // remove from refuse
-      // todo check for reactivity
-      if (mFT.validated) {
-        mFT.validated = mFT.validated.filter((v) => v !== validator);
-      }
-    }
+  ADD_FT({ FTs }, ft: FT) {
+    FTs.push(ft);
   },
-  ADD_EQUIPMENT: function (state, equipment) {
-    state.mFT.equipments.push(equipment);
-  },
-  ADD_COMMENT: function ({ mFT }, comment) {
-    if (mFT.comments === undefined) {
-      mFT.comments = [];
-    }
-    mFT.comments.unshift(comment);
-  },
-  DELETE_TIMEFRAME_FT: function ({ mFT }, index) {
-    mFT.timeframes.splice(index, 1);
-  },
-  SET_PARENT_FA: function ({ mFT }, faCount) {
-    mFT.FA = faCount;
-  },
-  ADD_REQUIREMENT: function ({ mFT }, { requirement, timeframeIndex }) {
-    const mTimeframe = mFT.timeframes.at(timeframeIndex);
-    if (mTimeframe?.required) {
-      mTimeframe.required = [];
-      mTimeframe.required.push({ ...requirement });
-      mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
-    }
-  },
-  DELETE_REQUIREMENT: function ({ mFT }, { requirementIndex, timeframeIndex }) {
-    const mTimeframe = mFT.timeframes.at(timeframeIndex);
-    if (mTimeframe?.required) {
-      mTimeframe.required.splice(requirementIndex, 1);
-      mFT.timeframes.splice(timeframeIndex, 1, mTimeframe); // update rendering
-    }
-  },
-  DELETE_EQUIPMENT: function ({ mFT }, index) {
-    mFT.equipments.splice(index, 1);
-  },
-  DELETE_EQUIPMENT_BY_ID: function ({ mFT }, equipmentId) {
-    mFT.equipments = mFT.equipments.filter((e) => e._id !== equipmentId);
-  },
-  UPDATE_EQUIPMENT_REQUIRED_COUNT: function ({ mFT }, { _id, count }) {
-    const equipment = mFT.equipments.find((e: any) => e._id === _id);
-    if (equipment) {
-      equipment.required = count;
-    }
-  },
-  MARK_READY_FOR_ASSIGNMENT: function ({ mFT }) {
-    mFT.status = "ready";
-    mFT.refused = [];
-    mFT.validated = ["humain", "log"]; // change with config later
-  },
-  SET_WAITING_FOR_RESPONSE: function (state, isWaiting) {
-    state.waitingForResponse = isWaiting;
+
+  DELETE_FT(state, ftId: number) {
+    state.FTs = state.FTs.filter((ft) => ft.id !== ftId);
   },
 });
-
-/* ############################################ */
-/*                    actions                   */
-/* ############################################ */
 
 export const actions = actionTree(
   { state },
   {
-    getAndSetFT: async function ({ commit }, count: number) {
-      // get FT
-      const res = await safeCall(this, repo.getFT(this, count.toString()));
-      if (res && res.data) {
-        commit("SET_FT", res.data);
-        return res.data;
-      }
-      return null;
+    setFT({ commit }, ft: FT) {
+      commit("UPDATE_SELECTED_FT", ft);
     },
-    fetchAll: async function ({ commit }) {
-      const res = await safeCall(this, repo.getAllFTs(this));
-      if (res) {
-        commit("SET_ALL_FTS", res.data.data);
-        return res.data;
-      }
-      return null;
+
+    resetFT({ commit }) {
+      commit("RESET_FT");
     },
-    saveFT: async function ({ state }) {
-      return safeCall(this, repo.updateFT(this, state.mFT), {
-        successMessage: "La FT a bien été sauvegardée",
-        errorMessage: "Erreur lors de la sauvegarde de la FT",
+
+    fetchFT({ commit }, id: number) {
+      commit("UPDATE_SELECTED_FT", fakeFT(id));
+    },
+
+    async fetchFTs({ commit }, search?: SearchFT) {
+      const res = await safeCall<FT[]>(this, repo.getAllFTs(this, search), {
+        errorMessage: "Impossible de charger les FTs",
       });
+      if (!res) return;
+      commit("SET_FTS", res.data);
     },
-    unlinkFA: async function ({ commit }) {
-      commit("SET_PARENT_FA", 0);
-    },
-    assignFT: function ({ commit }, payload) {
-      commit("ASSIGN_FT", payload);
-    },
-    addTimeframe: function ({ commit, state }, timeframe) {
-      // @ts-ignore
-      const tf = state.mFT.timeframes.find((t) => t.name === timeframe.name);
-      if (tf === undefined) {
-        commit("ADD_TIMEFRAME_FT", timeframe);
-      }
-    },
-    addTimeframes: function ({ dispatch }, timeframes) {
-      timeframes.forEach((t: any) => dispatch("addTimeframe", t));
-    },
-    setTimeframes: function ({ commit }, timeframes) {
-      commit("SET_TIMEFRAME_FT", timeframes);
-    },
-    addEquipment: function ({ commit, state }, equipment) {
-      if (!state.mFT.equipments.find((e: any) => equipment._id === e._id)) {
-        equipment.required = 1;
-        commit("ADD_EQUIPMENT", equipment);
-      }
-    },
-    deleteTimeframe: function ({ commit }, index) {
-      commit("DELETE_TIMEFRAME_FT", index);
-    },
-    updateTimeframe: function ({ commit }, payload) {
-      commit("UPDATE_TIMEFRAME", payload);
-    },
-    submitForReview: async function ({ dispatch, commit }) {
-      commit("UPDATE_STATUS", FTStatus.submitted);
-      await dispatch("saveFT");
-    },
-    /**
-     * Validate the FT from one validator
-     * @param validator validator name
-     */
-    validate: async function ({ dispatch, commit, state }, validator) {
-      const FT_VALIDATORS =
-        // @ts-ignore
-        this.$accessor.config.getConfig("ft_validators").length;
-      commit("VALIDATE", validator);
-      await dispatch("addComment", {
-        topic: "validated",
-        time: new Date(),
-        // @ts-ignore
-        validator: `${validator} - ${this.$accessor.user.me.firstname} - ${this.$accessor.user.me.lastname}`,
+
+    async createFT({ commit, dispatch }, ft: FTCreation) {
+      const res = await safeCall<FT>(this, repo.createFT(this, ft), {
+        successMessage: "FT créée 🥳",
+        errorMessage: "FT non créée 😢",
       });
-      if (state.mFT.validated.length === FT_VALIDATORS) {
-        // validated by all validators
-        commit("UPDATE_STATUS", FTStatus.validated);
-      }
-      await dispatch("saveFT");
+      if (!res) return;
+      commit("ADD_FT", res.data);
+      dispatch("setFT", res.data);
     },
-    /**
-     * Refuse the FT from one of the validators
-     * @param payload validator name and comment from him
-     */
-    refuse: async function ({ dispatch, commit }, { validator, comment }) {
-      commit("REFUSE", validator);
-      await dispatch("addComment", {
-        topic: "refused",
-        text: comment,
-        time: new Date(),
-        // @ts-ignore
-        validator: `${validator} - ${this.$accessor.user.me.firstname} - ${this.$accessor.user.me.lastname}`,
+
+    async deleteFT({ commit }, ftId: number) {
+      const res = await safeCall(this, repo.deleteFT(this, ftId), {
+        successMessage: "FT supprimée 🥳",
+        errorMessage: "FT non supprimée 😢",
       });
-      commit("UPDATE_STATUS", FTStatus.refused);
-      await dispatch("saveFT");
-    },
-    /**
-     * Add a comment to the FT
-     * @param comment Infos to push in history
-     */
-    addComment: async function ({ commit }, comment) {
-      commit("ADD_COMMENT", comment);
-    },
-    /**
-     * Mark FT as ready for assignment
-     * @param by validator name
-     */
-    readyForAssignment: async function ({ commit, state }, by: string) {
-      commit("MARK_READY_FOR_ASSIGNMENT", by);
-      commit("SET_WAITING_FOR_RESPONSE", true);
-      const comment: FormComment = {
-        topic: "ready",
-        text: "FT prête à affectation",
-        time: new Date(),
-        validator: by,
-      };
-      const res = await safeCall(
-        this,
-        FtRepo.markAsReady(this, state.mFT.count, comment)
-      );
-      if (res) {
-        commit("SET_FT", res.data);
-      }
-      commit("SET_WAITING_FOR_RESPONSE", false);
-    },
-    setParentFA: async function ({ dispatch, commit }, faCount) {
-      commit("SET_PARENT_FA", faCount);
-      dispatch("saveFT");
-    },
-    addRequirement: async function ({ commit }, payload) {
-      commit("ADD_REQUIREMENT", payload);
-    },
-    deleteRequirement: async function ({ commit }, payload) {
-      commit("DELETE_REQUIREMENT", payload);
-    },
-    deleteEquipment: async function ({ commit }, payload) {
-      commit("DELETE_EQUIPMENT", payload);
-    },
-    deleteEquipmentById: async function ({ commit }, payload) {
-      commit("DELETE_EQUIPMENT_BY_ID", payload);
-    },
-    updateEquipmentRequiredCount: async function ({ commit }, payload) {
-      commit("UPDATE_EQUIPMENT_REQUIRED_COUNT", payload);
+      if (!res) return;
+      commit("DELETE_FT", ftId);
     },
   }
 );
+
+function defaultState(): FTCreation {
+  return {
+    name: "",
+    status: FTStatus.DRAFT,
+    description: "",
+  };
+}
+
+function fakeFT(id: number): FT {
+  return {
+    id,
+    name: "name",
+    description: "",
+    areStatic: false,
+    ftComments: [],
+    status: FTStatus.DRAFT,
+    ftRefusals: [],
+    ftValidations: [],
+    locations: [],
+  };
+}

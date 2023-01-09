@@ -1,11 +1,11 @@
-import { team } from "./repo";
+import { Team } from "./team";
 
 export interface Gear {
   id: number;
   name: string;
   isPonctualUsage: boolean;
   slug: string;
-  owner?: Pick<team, "code" | "name">;
+  owner?: Pick<Team, "code" | "name">;
   category?: {
     id: number;
     name: string;
