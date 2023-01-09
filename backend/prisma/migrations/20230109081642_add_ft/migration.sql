@@ -2,7 +2,7 @@
 CREATE TYPE "Ft_Status" AS ENUM ('DRAFT', 'SUBMITTED', 'VALIDATED', 'REFUSED', 'READY');
 
 -- CreateEnum
-CREATE TYPE "ft_subject_type" AS ENUM ('REFUSED', 'SUBMIT', 'VALIDATED', 'COMMENT', 'READY');
+CREATE TYPE "ftSubjectType" AS ENUM ('REFUSED', 'SUBMIT', 'VALIDATED', 'COMMENT', 'READY');
 
 -- CreateEnum
 CREATE TYPE "Review_Status" AS ENUM ('VALIDATED', 'REFUSED');
@@ -27,7 +27,7 @@ CREATE TABLE "ft_comments" (
     "id" SERIAL NOT NULL,
     "ft_id" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
-    "subject" "ft_subject_type" NOT NULL,
+    "subject" "ftSubjectType" NOT NULL,
     "author_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

@@ -417,8 +417,8 @@ model Ft {
   id           Int             @id @default(autoincrement())
   name         String
   status       Ft_Status
-  fa           fa?             @relation(fields: [parentFaID], references: [id])
-  parentFaID   Int?            @map("parent_fa_id")
+  fa           fa?             @relation(fields: [parentFaId], references: [id])
+  parentFaId   Int?            @map("parent_fa_id")
   isStatic     Boolean         @default(false) @map("is_static")
   description  String?         @db.Text
   userInCharge User?           @relation(fields: [inCharge], references: [id], name: "inCharge")
@@ -432,7 +432,7 @@ model Ft {
   ftReviews   FtReview[]
 }
 
-enum ft_subject_type {
+enum ftSubjectType {
   REFUSED
   SUBMIT
   VALIDATED
@@ -441,14 +441,14 @@ enum ft_subject_type {
 }
 
 model FtComments {
-  id        Int             @id @default(autoincrement())
-  Ft        Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId      Int             @map("ft_id")
-  comment   String          @db.Text
-  subject   ft_subject_type
-  author    User            @relation(fields: [authorId], references: [id])
-  authorId  Int             @map("author_id")
-  createdAt DateTime        @default(now()) @map("created_at")
+  id        Int           @id @default(autoincrement())
+  Ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId      Int           @map("ft_id")
+  comment   String        @db.Text
+  subject   ftSubjectType
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  Int           @map("author_id")
+  createdAt DateTime      @default(now()) @map("created_at")
 
   @@map("ft_comments")
 }
