@@ -74,9 +74,9 @@ model User {
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
 
-  ftInCharge       Ft[]               @relation("inCharge")
-  FtComments       FtComments[]
-  FtUserAssignment FtUserAssignment[]
+  ftInCharge     Ft[]            @relation("inCharge")
+  ftComments     FtComments[]
+  ftUserRequests FtUserRequest[]
 }
 
 model Team {
@@ -90,7 +90,7 @@ model Team {
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
   owned_categories Catalog_Category[] @relation("owner")
-  ftAssignements   FtTeamAssignment[]
+  ftRequests       FtTeamRequest[]
   ftReviews        FtReview[]
   permissions      Team_Permission[]
 }
@@ -430,6 +430,8 @@ model Ft {
   comments    FtComments[]
   timeWindows FtTimeWindows[]
   ftReviews   FtReview[]
+
+  @@map("ft")
 }
 
 enum ftSubjectType {
@@ -442,7 +444,7 @@ enum ftSubjectType {
 
 model FtComments {
   id        Int           @id @default(autoincrement())
-  Ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId      Int           @map("ft_id")
   comment   String        @db.Text
   subject   ftSubjectType
@@ -454,18 +456,18 @@ model FtComments {
 }
 
 model FtTimeWindows {
-  id             Int                @id @default(autoincrement())
-  ft             Ft                 @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId           Int                @map("ft_id")
-  start          DateTime
-  end            DateTime
-  userAssignment FtUserAssignment[]
-  teamAssignment FtTeamAssignment[]
+  id           Int             @id @default(autoincrement())
+  ft           Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId         Int             @map("ft_id")
+  start        DateTime
+  end          DateTime
+  userRequests FtUserRequest[]
+  teamRequests FtTeamRequest[]
 
   @@map("ft_time_windows")
 }
 
-model FtUserAssignment {
+model FtUserRequest {
   FtTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
   ftTimeWindowsId Int           @map("ft_time_windows_id")
   user            User          @relation(fields: [userId], references: [id])
@@ -475,7 +477,7 @@ model FtUserAssignment {
   @@map("ft_user_assignment")
 }
 
-model FtTeamAssignment {
+model FtTeamRequest {
   timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("time_windows_id")
   team          Team          @relation(fields: [teamId], references: [id])

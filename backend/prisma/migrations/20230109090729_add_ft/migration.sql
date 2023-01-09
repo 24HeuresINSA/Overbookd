@@ -8,7 +8,7 @@ CREATE TYPE "ftSubjectType" AS ENUM ('REFUSED', 'SUBMIT', 'VALIDATED', 'COMMENT'
 CREATE TYPE "Review_Status" AS ENUM ('VALIDATED', 'REFUSED');
 
 -- CreateTable
-CREATE TABLE "Ft" (
+CREATE TABLE "ft" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "status" "Ft_Status" NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE "Ft" (
     "location_id" INTEGER,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "Ft_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ft_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -74,22 +74,22 @@ CREATE UNIQUE INDEX "ft_team_assignment_time_windows_id_team_id_key" ON "ft_team
 CREATE UNIQUE INDEX "ft_review_ft_id_team_code_key" ON "ft_review"("ft_id", "team_code");
 
 -- AddForeignKey
-ALTER TABLE "Ft" ADD CONSTRAINT "Ft_parent_fa_id_fkey" FOREIGN KEY ("parent_fa_id") REFERENCES "fa"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ft" ADD CONSTRAINT "ft_parent_fa_id_fkey" FOREIGN KEY ("parent_fa_id") REFERENCES "fa"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ft" ADD CONSTRAINT "Ft_in_charge_fkey" FOREIGN KEY ("in_charge") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ft" ADD CONSTRAINT "ft_in_charge_fkey" FOREIGN KEY ("in_charge") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ft" ADD CONSTRAINT "Ft_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Signa_Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ft" ADD CONSTRAINT "ft_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Signa_Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_time_windows" ADD CONSTRAINT "ft_time_windows_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ft_time_windows" ADD CONSTRAINT "ft_time_windows_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft_user_assignment" ADD CONSTRAINT "ft_user_assignment_ft_time_windows_id_fkey" FOREIGN KEY ("ft_time_windows_id") REFERENCES "ft_time_windows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -104,7 +104,7 @@ ALTER TABLE "ft_team_assignment" ADD CONSTRAINT "ft_team_assignment_time_windows
 ALTER TABLE "ft_team_assignment" ADD CONSTRAINT "ft_team_assignment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "Ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "Team"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
