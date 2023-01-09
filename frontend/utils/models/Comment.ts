@@ -1,22 +1,21 @@
-export interface FormComment {
-  // called FormComment because typescript already has a Comment class
-  id?: number;
-  comment: string;
-  subject: SubjectType;
-  created_at?: Date;
-  author: number;
-  User_author?: {
+interface DisplayedUser {
     firstname: string;
     lastname: string;
-  };
-}
+};
 
-export interface FormCommentUpdate {
-  id?: number;
+export interface Feedback {
   comment: string;
   subject: SubjectType;
-  created_at?: Date;
-  author: number;
+  createdAt: Date;
+  author: DisplayedUser
+}
+
+export interface SavedFeedback extends Feedback {
+  id: number
+}
+
+export interface FeedbackCreation extends Omit<Feedback, 'author'> {
+  author: number
 }
 
 export enum SubjectType {
