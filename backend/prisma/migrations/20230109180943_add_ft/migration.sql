@@ -15,7 +15,7 @@ CREATE TABLE "ft" (
     "parent_fa_id" INTEGER,
     "is_static" BOOLEAN NOT NULL DEFAULT false,
     "description" TEXT,
-    "in_charge" INTEGER,
+    "user_in_charge_id" INTEGER,
     "location_id" INTEGER,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -77,7 +77,7 @@ CREATE UNIQUE INDEX "ft_review_ft_id_team_code_key" ON "ft_review"("ft_id", "tea
 ALTER TABLE "ft" ADD CONSTRAINT "ft_parent_fa_id_fkey" FOREIGN KEY ("parent_fa_id") REFERENCES "fa"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft" ADD CONSTRAINT "ft_in_charge_fkey" FOREIGN KEY ("in_charge") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ft" ADD CONSTRAINT "ft_user_in_charge_id_fkey" FOREIGN KEY ("user_in_charge_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft" ADD CONSTRAINT "ft_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Signa_Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
