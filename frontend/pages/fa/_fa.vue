@@ -27,7 +27,7 @@
       <FAGeneralCard id="general" />
       <FADetailCard id="detail" />
       <SignaCard id="signa" />
-      <TimeframeTable id="timeframe" />
+      <TimeframeTable id="timewindow" />
       <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
