@@ -110,7 +110,6 @@ export default Vue.extend({
   .main {
     flex-direction: column;
   }
-
   .container {
     overflow: visible;
   }
