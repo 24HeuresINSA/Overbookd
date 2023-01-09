@@ -42,8 +42,8 @@ export default Vue.extend({
     headers: [
       { text: "Numéro", value: "id" },
       { text: "Nom", value: "name" },
-      { text: "Equipe", value: "Team" },
-      { text: "Resp", value: "user_in_charge" },
+      { text: "Equipe", value: "team" },
+      { text: "Resp", value: "inCharge" },
     ],
     parentFA: {} as FA,
     isFASelectDialogOpen: false,
