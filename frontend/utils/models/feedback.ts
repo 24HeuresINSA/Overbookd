@@ -1,7 +1,4 @@
-interface DisplayedUser {
-  firstname: string;
-  lastname: string;
-}
+import { DisplayedUser } from "./user";
 
 export interface Feedback {
   comment: string;

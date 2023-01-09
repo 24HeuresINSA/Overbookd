@@ -5,7 +5,7 @@
       <v-card-text>
         <v-data-table
           :headers="headers"
-          :items="parentFAs"
+          :items="[mFT.fa]"
           :hide-default-footer="true"
         >
         </v-data-table>
@@ -31,7 +31,7 @@
 import Vue from "vue";
 import FAChooser from "~/components/molecules/FAChooser.vue";
 import { FA } from "~/utils/models/FA";
-import { FT } from "~/utils/models/FT";
+import { FT } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ParentFACard",
@@ -45,8 +45,7 @@ export default Vue.extend({
       { text: "Equipe", value: "Team" },
       { text: "Resp", value: "user_in_charge" },
     ],
-
-    parentFAs: [] as FA[],
+    parentFA: {} as FA,
     isFASelectDialogOpen: false,
   }),
   computed: {
@@ -54,20 +53,15 @@ export default Vue.extend({
       return this.$accessor.FT.mFT;
     },
   },
-  async mounted() {
-    if (this.mFT.fa) await this.initParentFas(this.mFT.fa);
-  },
   methods: {
-    async initParentFas(id: number) {
-      const fa = await this.$accessor.FA.getFAbyId(id);
-      this.parentFAs = fa ? [fa] : [];
-    },
-    updateParentFA(faId: number) {
-      this.$accessor.FT.updateFT({ key: "fa", value: faId });
-      this.isFASelectDialogOpen = false;
+    updateParentFA(fa: FA) {
+      const updatedFT = { ...this.mFT, fa };
+      this.$accessor.FT.setFT(updatedFT);
+      this.closeFAChooser();
     },
     unlinkFA() {
-      this.$accessor.FT.updateFT({ key: "fa", value: undefined });
+      const updatedFT = { ...this.mFT, fa: undefined };
+      this.$accessor.FT.setFT(updatedFT);
     },
     openFAChooser() {
       this.isFASelectDialogOpen = true;

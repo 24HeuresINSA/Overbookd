@@ -1,40 +1,28 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { CreateFT, FT, FTStatus, SearchFT } from "~/utils/models/FT";
+import { FTCreation, FT, FTStatus, SearchFT } from "~/utils/models/ft";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
-  mFT: {
-    status: FTStatus.DRAFT,
-    name: "",
-  } as FT,
+  mFT: defaultState() as FT,
   FTs: [] as FT[],
 });
 
 export const getters = getterTree(state, {});
 
 export const mutations = mutationTree(state, {
-  SET_FT(state, ft: Partial<FT>) {
+  UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
     state.mFT = { ...state.mFT, ...ft };
   },
 
   RESET_FT(state) {
-    state.mFT = {
-      status: FTStatus.DRAFT,
-      name: "",
-    } as FT;
+    state.mFT = defaultState() as FT;
   },
 
   UPDATE_STATUS({ mFT }, status: FTStatus) {
     mFT.status = status;
-  },
-
-  UPDATE_FT({ mFT }, { key, value }) {
-    if (typeof mFT[key as keyof FT] !== "undefined") {
-      mFT[key as keyof FT] = value as never;
-    }
   },
 
   SET_FTS(state, fts: FT[]) {
@@ -54,22 +42,15 @@ export const actions = actionTree(
   { state },
   {
     setFT({ commit }, ft: FT) {
-      commit("SET_FT", ft);
+      commit("UPDATE_SELECTED_FT", ft);
     },
 
     resetFT({ commit }) {
       commit("RESET_FT");
     },
 
-    getAndSetFT: async function ({ commit }, id: number) {
-      const resFT = await safeCall(this, repo.getFT(this, id));
-      if (!resFT) return null;
-      commit("SET_FT", resFT.data);
-      return resFT.data;
-    },
-
-    updateFT({ commit }, { key, value }) {
-      commit("UPDATE_FT", { key, value });
+    fetchFT({ commit }, id: number) {
+      commit("UPDATE_SELECTED_FT", fakeFT(id));
     },
 
     async fetchFTs({ commit }, search?: SearchFT) {
@@ -80,7 +61,7 @@ export const actions = actionTree(
       commit("SET_FTS", res.data);
     },
 
-    async createFT({ commit, dispatch }, ft: CreateFT) {
+    async createFT({ commit, dispatch }, ft: FTCreation) {
       const res = await safeCall<FT>(this, repo.createFT(this, ft), {
         successMessage: "FT créée 🥳",
         errorMessage: "FT non créée 😢",
@@ -100,3 +81,25 @@ export const actions = actionTree(
     },
   }
 );
+
+function defaultState(): FTCreation {
+  return {
+    name: "",
+    status: FTStatus.DRAFT,
+    description: "",
+  };
+}
+
+function fakeFT(id: number): FT {
+  return {
+    id,
+    name: "name",
+    description: "",
+    areStatic: false,
+    ftComments: [],
+    status: FTStatus.DRAFT,
+    ftRefusals: [],
+    ftValidations: [],
+    locations: [],
+  };
+}

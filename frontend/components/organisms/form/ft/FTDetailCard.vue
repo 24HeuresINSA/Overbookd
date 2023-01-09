@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>Détail</v-card-title>
     <v-card-text>
-      <v-form @submit.prevent="">
+      <v-form>
         <RichEditor
           :value="mFT.description"
           class="mb-4"

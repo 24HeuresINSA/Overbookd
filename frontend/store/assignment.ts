@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
+import { FT } from "~/utils/models/ft";
 import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
 import { TimeSpan } from "~/utils/models/TimeSpan";

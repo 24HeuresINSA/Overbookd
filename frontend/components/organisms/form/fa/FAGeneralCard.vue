@@ -55,7 +55,8 @@ import {
   getFAValidationStatus,
 } from "~/utils/fa/faUtils";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import { team, User } from "~/utils/models/repo";
+import { User } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "FAGeneralCard",
@@ -69,7 +70,7 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    teams(): team[] {
+    teams(): Team[] {
       return this.$accessor.team.allTeams;
     },
     allTypes(): string[] {

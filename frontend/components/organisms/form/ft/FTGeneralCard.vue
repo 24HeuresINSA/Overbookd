@@ -7,18 +7,16 @@
         label="Nom de la FT"
         @change="onChange('name', $event)"
       ></v-text-field>
-      <v-autocomplete
-        :value="mFT.in_charge"
+      <SearchUser
+        :value="mFT.inCharge"
         label="Responsable"
-        :items="users"
-        item-value="id"
-        item-text="username"
-        @change="onChange('in_charge', $event)"
-      ></v-autocomplete>
+        :boxed="false"
+        @change="onChange('inCharge', $event)"
+      ></SearchUser>
       <v-switch
-        :value="mFT.are_static"
+        :value="mFT.areStatic"
         label="Créneaux statiques"
-        @change="onChange('are_static', $event)"
+        @change="onChange('areStatic', $event)"
       ></v-switch>
       <v-autocomplete
         label="Lieux"
@@ -35,27 +33,29 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FT } from "~/utils/models/FT";
-import { User } from "~/utils/models/repo";
+import { FT } from "~/utils/models/ft";
 import { SignaLocation } from "~/utils/models/signaLocation";
+import { User } from "~/utils/models/user";
+import SearchUser from "~/components/atoms/SearchUser.vue";
 
 export default Vue.extend({
   name: "FTGeneralCard",
-  data: () => ({
-    users: [] as Partial<User>[],
-  }),
+  components: { SearchUser },
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
     locations(): SignaLocation[] {
-      return this.$accessor.signaLocation.signaLocations;
+      return this.$accessor.signa.locations;
+    },
+    users(): User[] {
+      return this.$accessor.user.users;
     },
     currentLocations(): SignaLocation[] {
-      const locationIds = this.$accessor.FT.mFT.locations ?? [];
-      return locationIds
-        .map((locationId) => {
-          return this.$accessor.signaLocation.getLocationById(locationId);
+      const locations = this.mFT.locations ?? [];
+      return locations
+        .map((location) => {
+          return this.$accessor.signa.getLocationById(location.id);
         })
         .filter(
           (location): location is SignaLocation => location !== undefined
@@ -63,17 +63,15 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.users = this.$accessor.user.usernames;
     if (this.users.length === 0) {
-      // fetch usernames
-      await this.$accessor.user.getUsername("");
-      this.users = this.$accessor.user.usernames;
+      this.$accessor.user.fetchUsers();
     }
   },
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      this.$accessor.FT.updateFT({ key: key, value: value });
+      const updatedFT = { ...this.mFT, [key]: value };
+      this.$accessor.FT.setFT(updatedFT);
     },
   },
 });

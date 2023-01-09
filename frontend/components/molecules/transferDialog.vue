@@ -51,7 +51,7 @@ export default Vue.extend({
         reason: "",
         isValid: false,
       },
-      users: {},
+      users: [] as any[],
     };
   },
   computed: {
@@ -91,7 +91,7 @@ export default Vue.extend({
       return {
         text: user.username,
         value: user,
-      };
+      } as any;
     });
   },
   methods: {

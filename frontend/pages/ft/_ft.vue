@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="sidebar">
-      <h1>Fiche Tâches n°</h1>
+      <h1>Fiche Tâches n°{{ ftId }}</h1>
       <h2>Nom FT</h2>
       <div class="status">
         <span class="dot grey"></span>
@@ -17,9 +17,9 @@
     </div>
     <v-container class="container ft">
       <FTGeneralCard id="general" />
-      <ParentFACard id="info" />
+      <ParentFACard id="fa" />
       <FTDetailCard id="detail" />
-      <!--<LogisticsCard id="matos" title="Matos" owner="matos" />-->
+      <LogisticsCard id="matos" title="Matos" />
       <CommentCard id="comment" form="FT" />
     </v-container>
   </div>
@@ -31,6 +31,7 @@ import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FormSummary from "~/components/organisms/form/FormSummary.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 
 export default Vue.extend({
@@ -40,10 +41,17 @@ export default Vue.extend({
     FTGeneralCard,
     ParentFACard,
     FTDetailCard,
+    LogisticsCard,
     CommentCard,
   },
+  computed: {
+    ftId(): number {
+      return +this.$route.params.ft;
+    },
+  },
   async mounted() {
-    this.$accessor.signaLocation.getAllSignaLocations();
+    this.$accessor.FT.fetchFT(this.ftId);
+    this.$accessor.signa.getAllSignaLocations();
   },
   methods: {
     hasPermission(permission: string) {

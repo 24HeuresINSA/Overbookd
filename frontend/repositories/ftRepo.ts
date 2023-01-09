@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { FormComment } from "~/utils/models/Comment";
-import { CreateFT, FT, SearchFT } from "~/utils/models/FT";
+import { Feedback } from "~/utils/models/feedback";
+import { FTCreation, SearchFT, FTUpdate } from "~/utils/models/ft";
 
 const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };
@@ -12,16 +12,16 @@ export default {
   getFT(context: Context, id: number) {
     return context.$axios.get(`${resource}/${id}`);
   },
-  createFT(context: Context, FT: CreateFT) {
+  createFT(context: Context, FT: FTCreation) {
     return context.$axios.post(resource, FT);
   },
-  updateFT(context: Context, FT: FT) {
+  updateFT(context: Context, FT: FTUpdate) {
     return context.$axios.put(resource, FT);
   },
   deleteFT(context: Context, id: number) {
     return context.$axios.delete(`${resource}/${id}`);
   },
-  markAsReady(context: Context, FTCount: number, comment: FormComment) {
+  markAsReady(context: Context, FTCount: number, comment: Feedback) {
     return context.$axios.post(`${resource}/${FTCount}/ready`, { comment });
   },
   getFTsNumber(context: Context) {

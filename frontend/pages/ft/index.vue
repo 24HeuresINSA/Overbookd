@@ -170,7 +170,7 @@ import faRepo from "~/repositories/faRepo";
 import userRepo from "~/repositories/userRepo";
 import { safeCall } from "~/utils/api/calls";
 import { Header } from "~/utils/models/Data";
-import { FT } from "~/utils/models/FT";
+import { FT, FTCreation, FTStatus } from "~/utils/models/ft";
 import { SnackNotif } from "~/utils/models/store";
 import ftRepo from "../../repositories/ftRepo";
 
@@ -344,8 +344,10 @@ export default Vue.extend({
     },
 
     async createNewFT() {
-      const blankFT = {
+      const blankFT: FTCreation = {
         name: this.FTName,
+        description: "",
+        status: FTStatus.DRAFT,
       };
       const res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
         successMessage: "La FT a été créée",

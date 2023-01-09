@@ -1,14 +1,15 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { Feedback, SubjectType } from "~/utils/models/feedback";
 import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
-import { FormComment, SubjectType } from "~/utils/models/Comment";
 import {
   collaborator,
   CreateFA,
   FA,
   FaSitePublishAnimation,
   fa_collaborators,
+  fa_comments,
   fa_electricity_needs,
   fa_signa_needs,
   fa_validation_body,
@@ -110,7 +111,7 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_COMMENT({ mFA }, comment: FormComment) {
+  ADD_COMMENT({ mFA }, comment: fa_comments) {
     if (!mFA.fa_comments) mFA.fa_comments = [];
     mFA.fa_comments?.push(comment);
   },
@@ -260,7 +261,7 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  SET_COMMENTS({ mFA }, comments: FormComment[]) {
+  SET_COMMENTS({ mFA }, comments: fa_comments[]) {
     mFA.fa_comments = comments;
   },
 
@@ -294,11 +295,6 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    getFAbyId: async function ({ commit }, id: number) {
-      const res = await safeCall(this, repo.getFAById(this, id));
-      if (!res) return null;
-      return res.data;
-    },
     setFA({ commit }, FA: FA) {
       commit("SET_FA", FA);
     },
@@ -325,11 +321,11 @@ export const actions = actionTree(
     ) {
       const authorName = `${author.firstname} ${author.lastname}`;
       if (!faId || !authorId || !author) return;
-      const comment: FormComment = {
+      const comment: Feedback = {
         subject: SubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       commit("UPDATE_STATUS", Status.SUBMITTED);
@@ -402,10 +398,10 @@ export const actions = actionTree(
       { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
-      if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
+      if (state.mFA.fa_validation?.find((v) => v.team.id === validator_id))
         return;
       if (state.mFA.fa_refuse?.length === 1) {
-        if (state.mFA.fa_refuse[0].Team.id === validator_id) {
+        if (state.mFA.fa_refuse[0].team.id === validator_id) {
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }
@@ -419,11 +415,11 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
-      const comment: FormComment = {
+      const comment: Feedback = {
         subject: SubjectType.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
         author: author.id,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -438,11 +434,11 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
-      const comment: FormComment = {
+      const comment: Feedback = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author: author.id,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -470,11 +466,11 @@ export const actions = actionTree(
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
-      const comment: FormComment = {
+      const comment: Feedback = {
         subject: SubjectType.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
         author: author.id,
-        created_at: new Date(),
+        createdAt: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -486,7 +482,7 @@ export const actions = actionTree(
         comment,
         defaultAuthor,
       }: {
-        comment: FormComment;
+        comment: Feedback;
         defaultAuthor: { firstname: string; lastname: string };
       }
     ) {
