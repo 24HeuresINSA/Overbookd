@@ -37,7 +37,6 @@ export default Vue.extend({
   },
   async mounted() {
     this.$accessor.FT.fetchFT(this.ftId);
-    this.$accessor.signa.getAllSignaLocations();
   },
   methods: {
     hasPermission(permission: string) {
