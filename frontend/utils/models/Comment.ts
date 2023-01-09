@@ -1,21 +1,21 @@
 interface DisplayedUser {
-    firstname: string;
-    lastname: string;
-};
+  firstname: string;
+  lastname: string;
+}
 
 export interface Feedback {
   comment: string;
   subject: SubjectType;
   createdAt: Date;
-  author: DisplayedUser
+  author: DisplayedUser;
 }
 
 export interface SavedFeedback extends Feedback {
-  id: number
+  id: number;
 }
 
-export interface FeedbackCreation extends Omit<Feedback, 'author'> {
-  author: number
+export interface FeedbackCreation extends Omit<Feedback, "author"> {
+  author: number;
 }
 
 export enum SubjectType {
