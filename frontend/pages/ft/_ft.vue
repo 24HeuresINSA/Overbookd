@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <FormSidebar />
+    <FormSidebar form="FT" />
     <v-container class="container ft">
       <FTGeneralCard id="general" />
       <ParentFACard id="fa" />
