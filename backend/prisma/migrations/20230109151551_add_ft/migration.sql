@@ -45,13 +45,13 @@ CREATE TABLE "ft_time_windows" (
 );
 
 -- CreateTable
-CREATE TABLE "ft_user_assignment" (
+CREATE TABLE "ft_user_request" (
     "ft_time_windows_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "ft_team_assignment" (
+CREATE TABLE "ft_team_request" (
     "time_windows_id" INTEGER NOT NULL,
     "team_id" INTEGER NOT NULL,
     "number" INTEGER NOT NULL
@@ -65,10 +65,10 @@ CREATE TABLE "ft_review" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ft_user_assignment_ft_time_windows_id_user_id_key" ON "ft_user_assignment"("ft_time_windows_id", "user_id");
+CREATE UNIQUE INDEX "ft_user_request_ft_time_windows_id_user_id_key" ON "ft_user_request"("ft_time_windows_id", "user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ft_team_assignment_time_windows_id_team_id_key" ON "ft_team_assignment"("time_windows_id", "team_id");
+CREATE UNIQUE INDEX "ft_team_request_time_windows_id_team_id_key" ON "ft_team_request"("time_windows_id", "team_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ft_review_ft_id_team_code_key" ON "ft_review"("ft_id", "team_code");
@@ -92,16 +92,16 @@ ALTER TABLE "ft_comments" ADD CONSTRAINT "ft_comments_author_id_fkey" FOREIGN KE
 ALTER TABLE "ft_time_windows" ADD CONSTRAINT "ft_time_windows_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_user_assignment" ADD CONSTRAINT "ft_user_assignment_ft_time_windows_id_fkey" FOREIGN KEY ("ft_time_windows_id") REFERENCES "ft_time_windows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ft_user_request" ADD CONSTRAINT "ft_user_request_ft_time_windows_id_fkey" FOREIGN KEY ("ft_time_windows_id") REFERENCES "ft_time_windows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_user_assignment" ADD CONSTRAINT "ft_user_assignment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ft_user_request" ADD CONSTRAINT "ft_user_request_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_team_assignment" ADD CONSTRAINT "ft_team_assignment_time_windows_id_fkey" FOREIGN KEY ("time_windows_id") REFERENCES "ft_time_windows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ft_team_request" ADD CONSTRAINT "ft_team_request_time_windows_id_fkey" FOREIGN KEY ("time_windows_id") REFERENCES "ft_time_windows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ft_team_assignment" ADD CONSTRAINT "ft_team_assignment_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ft_team_request" ADD CONSTRAINT "ft_team_request_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "ft"("id") ON DELETE CASCADE ON UPDATE CASCADE;

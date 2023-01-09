@@ -474,7 +474,7 @@ model FtUserRequest {
   userId          Int           @map("user_id")
 
   @@unique([ftTimeWindowsId, userId])
-  @@map("ft_user_assignment")
+  @@map("ft_user_request")
 }
 
 model FtTeamRequest {
@@ -485,7 +485,7 @@ model FtTeamRequest {
   number        Int
 
   @@unique([timeWindowsId, teamId])
-  @@map("ft_team_assignment")
+  @@map("ft_team_request")
 }
 
 enum Review_Status {
