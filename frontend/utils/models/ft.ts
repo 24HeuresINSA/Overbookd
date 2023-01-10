@@ -29,7 +29,7 @@ export interface FT extends FTBase {
   areStatic: boolean;
   fa?: FA;
 
-  timeWindows: FTTimeWindow;
+  timeWindows: FTTimeWindow[];
   locations: SignaLocation[];
   ftValidations: Review[];
   ftRefusals: Review[];

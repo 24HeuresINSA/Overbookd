@@ -101,5 +101,6 @@ function fakeFT(id: number): FT {
     ftRefusals: [],
     ftValidations: [],
     locations: [],
+    timeWindows: [],
   };
 }
