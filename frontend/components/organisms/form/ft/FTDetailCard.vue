@@ -6,7 +6,7 @@
         <RichEditor
           :value="mFT.description"
           class="mb-4"
-          @change="onChange('descritpion', $event)"
+          @change="onChange('description', $event)"
         ></RichEditor>
       </v-form>
     </v-card-text>
@@ -16,12 +16,13 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
+import { FT } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "FTDetailCard",
   components: { RichEditor },
   computed: {
-    mFT() {
+    mFT(): FT {
       return this.$accessor.FT.mFT;
     },
   },
