@@ -418,7 +418,7 @@ enum ftStatus {
 model Ft {
   id             Int             @id @default(autoincrement())
   name           String
-  status         ftStatus
+  status         ftStatus?
   fa             fa?             @relation(fields: [parentFaId], references: [id])
   parentFaId     Int?            @map("parent_fa_id")
   isStatic       Boolean         @default(false) @map("is_static")
