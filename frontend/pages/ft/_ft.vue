@@ -5,7 +5,7 @@
       <FTGeneralCard id="general" />
       <ParentFACard id="fa" />
       <FTDetailCard id="detail" />
-      <CompleteTimeframeCard id="timewindow" />
+      <FTTimeWindowCard id="timewindow" />
       <LogisticsCard id="matos" title="Matos" />
       <CommentCard id="comment" form="FT" />
     </v-container>
@@ -20,7 +20,7 @@ import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
-import CompleteTimeframeCard from "~/components/organisms/form/ft/CompleteTimeframeCard.vue";
+import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vue";
 
 export default Vue.extend({
   name: "FT",
@@ -29,9 +29,9 @@ export default Vue.extend({
     FTGeneralCard,
     ParentFACard,
     FTDetailCard,
+    FTTimeWindowCard,
     LogisticsCard,
     CommentCard,
-    CompleteTimeframeCard,
   },
   computed: {
     ftId(): number {

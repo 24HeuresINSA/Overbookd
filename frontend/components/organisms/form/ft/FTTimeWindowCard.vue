@@ -6,13 +6,7 @@
         :store="store"
         :is-disabled="isDisabled"
       ></CompleteTimeframeTable>
-      <TimeframeSelector
-        complete
-        :disabled="isDisabled"
-        :store="store"
-        @add-timeframe="addTimeframe"
-        @set-timeframes="setTimeframes"
-      ></TimeframeSelector>
+      <TimeframeCalendar :timeframes="timeWindowsList" />
     </v-card-text>
   </v-card>
 </template>
@@ -21,11 +15,12 @@
 import Vue from "vue";
 import { Timeframe } from "~/utils/models/timeframe";
 import CompleteTimeframeTable from "~/components/molecules/timeframe/CompleteTimeframeTable.vue";
-import TimeframeSelector from "~/components/molecules/timeframe/TimeframeSelector.vue";
+import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
+import { FT, FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: "CompleteTimeframeCard",
-  components: { TimeframeSelector, CompleteTimeframeTable },
+  name: "FTTimeWindowCard",
+  components: { CompleteTimeframeTable, TimeframeCalendar },
   props: {
     store: {
       type: Object,
@@ -36,7 +31,14 @@ export default Vue.extend({
       default: () => false,
     },
   },
-
+  computed: {
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
+    },
+    timeWindowsList(): FTTimeWindow {
+      return this.mFT.timeWindows;
+    },
+  },
   methods: {
     addTimeframe(timeframe: Timeframe) {
       this.store.addTimeframe({ ...timeframe });
