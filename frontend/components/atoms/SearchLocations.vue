@@ -36,7 +36,7 @@ export default Vue.extend({
   props: {
     label: {
       type: String,
-      default: "Chercher une location",
+      default: "Chercher un lieu",
     },
     selectedLocations: {
       type: Array,
