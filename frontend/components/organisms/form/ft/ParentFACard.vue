@@ -41,8 +41,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateParentFA(fa: FA) {
-      const updatedFT = { ...this.mFT, fa };
+    updateParentFA(fa: FA | null) {
+      const updatedFT = { ...this.mFT, fa: fa ?? undefined };
       this.$accessor.FT.setFT(updatedFT);
     },
   },
