@@ -35,7 +35,7 @@ export default Vue.extend({
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    timeWindowsList(): FTTimeWindow {
+    timeWindowsList(): FTTimeWindow[] {
       return this.mFT.timeWindows;
     },
   },
