@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FtStatus } from '@prisma/client';
 import {
   IsBoolean,
   IsEnum,
@@ -10,13 +11,6 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-enum FtStatus {
-  DRAFT = 'DRAFT',
-  SUBMITTED = 'SUBMITTED',
-  VALIDATED = 'VALIDATED',
-  REFUSED = 'REFUSED',
-  READY = 'READY',
-}
 export class UpdateFtDto {
   @ApiProperty({
     required: true,
