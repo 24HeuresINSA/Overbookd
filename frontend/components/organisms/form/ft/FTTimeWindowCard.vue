@@ -1,51 +1,43 @@
 <template>
-  <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+  <v-card>
     <v-card-title>Créneau</v-card-title>
     <v-card-text>
-      <CompleteTimeframeTable
-        :store="store"
-        :is-disabled="isDisabled"
-      ></CompleteTimeframeTable>
-      <TimeframeCalendar :timeframes="timeWindowsList" />
+      <FTTimeWindowTable />
     </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn text @click="openAddDialog">Ajouter un créneau</v-btn>
+    </v-card-actions>
+    <TimeframeCalendar :timeframes="timeWindows" />
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Timeframe } from "~/utils/models/timeframe";
-import CompleteTimeframeTable from "~/components/molecules/timeframe/CompleteTimeframeTable.vue";
+import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTable.vue";
 import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
-  components: { CompleteTimeframeTable, TimeframeCalendar },
-  props: {
-    store: {
-      type: Object,
-      default: () => ({}),
-    },
-    isDisabled: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
+  components: { FTTimeWindowTable, TimeframeCalendar },
+  data: () => ({
+    isAddDialogOpen: false,
+  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    timeWindowsList(): FTTimeWindow[] {
+    timeWindows(): FTTimeWindow[] {
       return this.mFT.timeWindows;
     },
   },
   methods: {
-    addTimeframe(timeframe: Timeframe) {
-      this.store.addTimeframe({ ...timeframe });
+    openAddDialog() {
+      this.isAddDialogOpen = true;
     },
-    setTimeframes(timeframes: Timeframe[]) {
-      const store = this.$accessor.FT;
-      // store.addTimeframes(timeframes);
+    closeAddDialog() {
+      this.isAddDialogOpen = false;
     },
   },
 });
