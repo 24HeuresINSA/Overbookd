@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <h1>Fiche Tâches n°{{ id }}</h1>
+    <h1>{{ titleWithId }}</h1>
     <h2>Nom FT</h2>
     <div class="status">
       <span class="dot grey"></span>
@@ -30,10 +30,10 @@ export default Vue.extend({
     },
   },
   computed: {
-    id(): number {
-      return this.form === "FA"
-        ? +this.$route.params.fa
-        : +this.$route.params.ft;
+    titleWithId(): string {
+      const id =
+        this.form === "FA" ? +this.$route.params.fa : +this.$route.params.ft;
+      return `Fiche Tâches n°${id}`;
     },
   },
 });

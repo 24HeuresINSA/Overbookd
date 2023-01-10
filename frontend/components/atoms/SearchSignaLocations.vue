@@ -28,7 +28,7 @@ interface SearchLocationData {
 }
 
 export default Vue.extend({
-  name: "SearchLocation",
+  name: "SearchSignaLocations",
   model: {
     prop: "selectedLocations",
     event: "change",
