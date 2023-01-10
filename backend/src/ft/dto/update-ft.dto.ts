@@ -1,13 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   Min,
+  ValidationArguments,
 } from 'class-validator';
 
+enum FtStatus {
+  DRAFT = 'DRAFT',
+  SUBMITTED = 'SUBMITTED',
+  VALIDATED = 'VALIDATED',
+  REFUSED = 'REFUSED',
+  READY = 'READY',
+}
 export class UpdateFtDto {
   @ApiProperty({
     required: true,
@@ -16,6 +25,19 @@ export class UpdateFtDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'The status of the ft',
+    enum: FtStatus,
+    default: FtStatus.DRAFT,
+  })
+  @IsOptional()
+  @IsEnum(FtStatus, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(FtStatus)}`,
+  })
+  status?: FtStatus;
 
   @ApiProperty({
     required: false,
@@ -60,4 +82,13 @@ export class UpdateFtDto {
   @IsNumber()
   @Min(1)
   locationId?: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Is the ft deleted',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDeleted?: boolean;
 }
