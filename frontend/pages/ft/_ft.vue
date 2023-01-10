@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <FormSidebar form="FT" />
+    <FestivalEventSidebar festival-event="FT" />
     <v-container class="container ft">
       <FTGeneralCard id="general" />
       <ParentFACard id="fa" />
@@ -15,7 +15,7 @@
 <script lang="ts">
 import Vue from "vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import FormSidebar from "~/components/organisms/form/FormSidebar.vue";
+import FestivalEventSidebar from "~/components/organisms/form/FestivalEventSidebar.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
@@ -25,7 +25,7 @@ import CompleteTimeframeCard from "~/components/organisms/form/ft/CompleteTimefr
 export default Vue.extend({
   name: "FT",
   components: {
-    FormSidebar,
+    FestivalEventSidebar,
     FTGeneralCard,
     ParentFACard,
     FTDetailCard,

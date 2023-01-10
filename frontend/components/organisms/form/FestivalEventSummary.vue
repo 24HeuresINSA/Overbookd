@@ -27,9 +27,9 @@ interface SummaryItem {
 }
 
 export default Vue.extend({
-  name: "FormSummary",
+  name: "FestivalEventSummary",
   props: {
-    form: {
+    festivalEvent: {
       type: String,
       default: () => "FA",
     },
@@ -59,7 +59,7 @@ export default Vue.extend({
   }),
   computed: {
     items(): SummaryItem[] {
-      return this.form === "FA" ? this.faItems : this.ftItems;
+      return this.festivalEvent === "FA" ? this.faItems : this.ftItems;
     },
   },
 });

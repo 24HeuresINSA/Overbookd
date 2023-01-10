@@ -12,19 +12,19 @@
         <span class="icon-detail">Nom</span>
       </div>
     </div>
-    <FormSummary class="summary" form="FT"></FormSummary>
+    <FestivalEventSummary class="summary" festival-event="FT" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import FormSummary from "./FormSummary.vue";
+import FestivalEventSummary from "./FestivalEventSummary.vue";
 
 export default Vue.extend({
-  name: "FormSidebar",
-  components: { FormSummary },
+  name: "FestivalEventSidebar",
+  components: { FestivalEventSummary },
   props: {
-    form: {
+    festivalEvent: {
       type: String,
       default: () => "FA",
     },
@@ -32,7 +32,9 @@ export default Vue.extend({
   computed: {
     titleWithId(): string {
       const id =
-        this.form === "FA" ? +this.$route.params.fa : +this.$route.params.ft;
+        this.festivalEvent === "FA"
+          ? +this.$route.params.fa
+          : +this.$route.params.ft;
       return `Fiche Tâches n°${id}`;
     },
   },
