@@ -1,106 +1,51 @@
 <template>
-  <div>
-    <v-card>
-      <v-card-title>Créneau</v-card-title>
-      <v-card-text>
-        <FTTimeWindowTable
-          @update-time="openEditTimeDialog"
-          @update-volunteer="openEditVolunteerDialog"
-          @delete="deleteTimeWindow"
-        ></FTTimeWindowTable>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="openAddDialog">Ajouter un créneau</v-btn>
-      </v-card-actions>
-      <FestivalEventCalendar festival-event="FT" />
-    </v-card>
-    <v-dialog v-model="isAddDialogOpen" max-width="700">
-      <FTTimeWindowForm @change="addTimeWindow"></FTTimeWindowForm>
-    </v-dialog>
-    <v-dialog v-model="isEditTimeDialogOpen" max-width="700">
-      <FTTimeWindowForm
-        :time-window="selectedTimeWindow"
-        @change="updateTimeWindow"
-      ></FTTimeWindowForm>
-    </v-dialog>
-    <v-dialog v-model="isEditVolunteerDialogOpen" max-width="700">
-      <FTVolunteerRequirmentForm
-        :time-window="selectedTimeWindow"
-        @change="updateTimeWindow"
-      ></FTVolunteerRequirmentForm>
-    </v-dialog>
-  </div>
+  <v-card :style="isDisabled ? `border-left: 5px solid green` : ``">
+    <v-card-title>Créneau</v-card-title>
+    <v-card-text>
+      <CompleteTimeframeTable
+        :store="store"
+        :is-disabled="isDisabled"
+      ></CompleteTimeframeTable>
+      <TimeframeCalendar :timeframes="timeWindowsList" />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTable.vue";
-import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
-import FTTimeWindowForm from "~/components/molecules/timeframe/FTTimeWindowForm.vue";
+import { Timeframe } from "~/utils/models/timeframe";
+import CompleteTimeframeTable from "~/components/molecules/timeframe/CompleteTimeframeTable.vue";
+import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
-import FTVolunteerRequirmentForm from "~/components/molecules/timeframe/FTVolunteerRequirmentForm.vue";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
-  components: {
-    FTTimeWindowTable,
-    FestivalEventCalendar,
-    FTTimeWindowForm,
-    FTVolunteerRequirmentForm,
+  components: { CompleteTimeframeTable, TimeframeCalendar },
+  props: {
+    store: {
+      type: Object,
+      default: () => ({}),
+    },
+    isDisabled: {
+      type: Boolean,
+      default: () => false,
+    },
   },
-  data: () => ({
-    isAddDialogOpen: false,
-    isEditTimeDialogOpen: false,
-    isEditVolunteerDialogOpen: false,
-    selectedTimeWindow: null as FTTimeWindow | null,
-    selectedIndex: null as number | null,
-  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
+    timeWindowsList(): FTTimeWindow {
+      return this.mFT.timeWindows;
+    },
   },
   methods: {
-    addTimeWindow(timeWindow: FTTimeWindow) {
-      this.$accessor.FT.addTimeWindow(timeWindow);
-      this.closeAddDialog();
+    addTimeframe(timeframe: Timeframe) {
+      this.store.addTimeframe({ ...timeframe });
     },
-    updateTimeWindow(timeWindow: FTTimeWindow) {
-      this.$accessor.FT.updateTimeWindow({
-        index: this.selectedIndex,
-        timeWindow,
-      });
-      this.closeEditTimeDialog();
-    },
-    deleteTimeWindow(index: number) {
-      this.$accessor.FT.deleteTimeWindow(index);
-    },
-    openAddDialog() {
-      this.isAddDialogOpen = true;
-    },
-    closeAddDialog() {
-      this.isAddDialogOpen = false;
-    },
-    openEditTimeDialog(index: number, timeWindow: FTTimeWindow) {
-      this.selectedIndex = index;
-      this.selectedTimeWindow = timeWindow;
-      this.isEditTimeDialogOpen = true;
-    },
-    closeEditTimeDialog() {
-      this.selectedIndex = null;
-      this.selectedTimeWindow = null;
-      this.isEditTimeDialogOpen = false;
-    },
-    openEditVolunteerDialog(index: number, timeWindow: FTTimeWindow) {
-      this.selectedIndex = index;
-      this.selectedTimeWindow = timeWindow;
-      this.isEditVolunteerDialogOpen = true;
-    },
-    closeEditVolunteerDialog() {
-      this.selectedIndex = null;
-      this.selectedTimeWindow = null;
-      this.isEditVolunteerDialogOpen = false;
+    setTimeframes(timeframes: Timeframe[]) {
+      const store = this.$accessor.FT;
+      // store.addTimeframes(timeframes);
     },
   },
 });

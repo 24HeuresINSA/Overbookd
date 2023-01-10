@@ -50,6 +50,6 @@ export interface FTTimeWindow {
   start: Date;
   end: Date;
   sliceTime?: number;
-  userRequests?: User[];
-  teamRequests?: Team[];
+  userRequests: User[];
+  teamRequests: Team[];
 }
