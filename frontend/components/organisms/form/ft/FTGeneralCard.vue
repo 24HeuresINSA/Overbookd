@@ -18,15 +18,12 @@
         label="Créneaux statiques"
         @change="onChange('areStatic', $event)"
       ></v-switch>
-      <v-autocomplete
+      <SearchSignaLocations
+        :value="mFT.locations"
         label="Lieux"
-        :value="currentLocations"
-        :items="locations"
-        item-text="name"
-        item-value="id"
-        multiple
+        :boxed="false"
         @change="onChange('locations', $event)"
-      ></v-autocomplete>
+      ></SearchSignaLocations>
     </v-card-text>
   </v-card>
 </template>
@@ -34,38 +31,16 @@
 <script lang="ts">
 import Vue from "vue";
 import { FT } from "~/utils/models/ft";
-import { SignaLocation } from "~/utils/models/signaLocation";
-import { User } from "~/utils/models/user";
 import SearchUser from "~/components/atoms/SearchUser.vue";
+import SearchSignaLocations from "~/components/atoms/SearchSignaLocations.vue";
 
 export default Vue.extend({
   name: "FTGeneralCard",
-  components: { SearchUser },
+  components: { SearchUser, SearchSignaLocations },
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    locations(): SignaLocation[] {
-      return this.$accessor.signa.locations;
-    },
-    users(): User[] {
-      return this.$accessor.user.users;
-    },
-    currentLocations(): SignaLocation[] {
-      const locations = this.mFT.locations ?? [];
-      return locations
-        .map((location) => {
-          return this.$accessor.signa.getLocationById(location.id);
-        })
-        .filter(
-          (location): location is SignaLocation => location !== undefined
-        );
-    },
-  },
-  async mounted() {
-    if (this.users.length === 0) {
-      this.$accessor.user.fetchUsers();
-    }
   },
   methods: {
     onChange(key: string, value: any) {
