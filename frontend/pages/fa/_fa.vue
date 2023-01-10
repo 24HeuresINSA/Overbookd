@@ -21,7 +21,7 @@
           <span class="icon-detail">{{ validator.name }}</span>
         </div>
       </div>
-      <FormSummary class="summary" />
+      <FestivalEventSummary class="summary" />
     </div>
     <v-container class="container fa">
       <FAGeneralCard id="general" />
@@ -200,7 +200,7 @@ import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
-import FormSummary from "~/components/organisms/form/FormSummary.vue";
+import FestivalEventSummary from "~/components/organisms/form/FestivalEventSummary.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import {
@@ -225,7 +225,7 @@ export default Vue.extend({
     FAGeneralCard,
     FADetailCard,
     SecurityCard,
-    FormSummary,
+    FestivalEventSummary,
     SnackNotificationContainer,
     LogisticTimeWindow,
     CheckBeforeSubmitCard,
