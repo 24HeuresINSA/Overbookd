@@ -8,19 +8,19 @@
       <v-spacer></v-spacer>
       <v-btn text @click="openAddDialog">Ajouter un créneau</v-btn>
     </v-card-actions>
-    <TimeframeCalendar :timeframes="timeWindows" />
+    <FestivalEventCalendar :time-windows="timeWindows" festival-event="FT" />
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTable.vue";
-import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
+import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
-  components: { FTTimeWindowTable, TimeframeCalendar },
+  components: { FTTimeWindowTable, FestivalEventCalendar },
   data: () => ({
     isAddDialogOpen: false,
   }),

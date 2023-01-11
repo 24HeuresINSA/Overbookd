@@ -21,7 +21,7 @@
       ref="formCalendar"
       v-model="value"
       type="week"
-      :events="events"
+      :events="calendarTimeWindows"
       :event-color="getEventColor"
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -32,11 +32,23 @@
 <script lang="ts">
 import Vue from "vue";
 import { time_windows, time_windows_type } from "~/utils/models/FA";
+import { FTTimeWindow } from "~/utils/models/ft";
+
+interface CalendarTimeWindow {
+  start: string;
+  end: string;
+  color: string;
+  name: string;
+}
 
 export default Vue.extend({
-  name: "TimeframeCalendar",
+  name: "FestivalEventCalendar",
   props: {
-    timeframes: {
+    festivalEvent: {
+      type: String,
+      default: () => "FA",
+    },
+    timeWindows: {
       type: Array,
       default: () => [],
     },
@@ -45,8 +57,13 @@ export default Vue.extend({
     value: "",
   }),
   computed: {
-    events(): Array<any> {
-      return (this.timeframes as time_windows[]).map((timeWindow) => ({
+    calendarTimeWindows(): CalendarTimeWindow[] {
+      return this.festivalEvent === "FA"
+        ? this.faTimeWindows
+        : this.ftTimeWindows;
+    },
+    faTimeWindows(): CalendarTimeWindow[] {
+      return (this.timeWindows as time_windows[]).map((timeWindow) => ({
         start: this.formatDateForCalendar(timeWindow.start),
         end: this.formatDateForCalendar(timeWindow.end),
         color:
@@ -55,6 +72,14 @@ export default Vue.extend({
           timeWindow.type === time_windows_type.MATOS
             ? "Utilisation du matos"
             : "Tenue de l'animation",
+      }));
+    },
+    ftTimeWindows(): CalendarTimeWindow[] {
+      return (this.timeWindows as FTTimeWindow[]).map((timeWindow) => ({
+        start: this.formatDateForCalendar(timeWindow.start),
+        end: this.formatDateForCalendar(timeWindow.end),
+        color: "primary",
+        name: "Créneau",
       }));
     },
   },

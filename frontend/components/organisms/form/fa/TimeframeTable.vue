@@ -41,7 +41,7 @@
         >
       </v-card-actions>
 
-      <TimeframeCalendar :timeframes="timeWindowsList"></TimeframeCalendar>
+      <FestivalEventCalendar :time-windows="timeWindowsList" />
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
+import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
 import {
   getFAValidationStatusWithMultipleTeams,
@@ -100,7 +100,7 @@ interface IdentifiableTimeWindow extends time_windows {
 export default Vue.extend({
   name: "TimeframeTable",
   components: {
-    TimeframeCalendar,
+    FestivalEventCalendar,
     TimeframeForm,
     CardErrorList,
     ConfirmationMessage,
