@@ -26,6 +26,7 @@ import { CreateFtDto } from './dto/create-ft.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
+import { AllFtResponse, FtResponse } from './ftTypes';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -41,7 +42,7 @@ export class FtController {
     description: 'The ft has been successfully created.',
     type: Promise<Ft | null>,
   })
-  create(@Body() ft: CreateFtDto): Promise<Ft | null> {
+  create(@Body() ft: CreateFtDto): Promise<FtResponse | null> {
     return this.ftService.create(ft);
   }
 
@@ -59,7 +60,9 @@ export class FtController {
     type: Boolean,
     description: 'Get FTs that are deleted',
   })
-  findAll(@Query() searchRequest: FTSearchRequestDto): Promise<Ft[] | null> {
+  findAll(
+    @Query() searchRequest: FTSearchRequestDto,
+  ): Promise<AllFtResponse[] | null> {
     return this.ftService.findAll(searchRequest);
   }
 
@@ -77,7 +80,7 @@ export class FtController {
     description: 'Get ft by id',
     type: Promise<Ft | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<Ft | null> {
+  findOne(@Param('id', ParseIntPipe) id: string): Promise<FtResponse | null> {
     return this.ftService.findOne(+id);
   }
 
@@ -102,7 +105,7 @@ export class FtController {
   update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateFtDto: UpdateFtDto,
-  ): Promise<Ft | null> {
+  ): Promise<FtResponse | null> {
     return this.ftService.update(+id, updateFtDto);
   }
 
