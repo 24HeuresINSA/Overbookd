@@ -484,11 +484,11 @@ model FtUserRequest {
 model FtTeamRequest {
   timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("time_windows_id")
-  team          Team          @relation(fields: [teamId], references: [id])
-  teamId        Int           @map("team_id")
+  team          Team          @relation(fields: [teamCode], references: [code])
+  teamCode      String        @map("team_code")
   number        Int
 
-  @@unique([timeWindowsId, teamId])
+  @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
 }
 
