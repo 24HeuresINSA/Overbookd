@@ -13,15 +13,12 @@
     <template #[`item.endDate`]="{ item }">
       {{ formatDate(item.end) }}
     </template>
-    <template #[`item.action`]="{ item }">
+    <template #[`item.action`]="{ index, item }">
       <div>
-        <v-btn icon>
-          <v-icon>mdi-account-multiple-plus-outline</v-icon>
-        </v-btn>
-        <v-btn icon>
+        <v-btn icon @click="editTimeWindow(index, item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon @click="deleteTimeWindow(index)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </div>
@@ -62,6 +59,12 @@ export default Vue.extend({
       return new Intl.DateTimeFormat("fr", displayOptions).format(
         new Date(date)
       );
+    },
+    editTimeWindow(index: number, timeWindow: FTTimeWindow) {
+      this.$emit("update", index, timeWindow);
+    },
+    deleteTimeWindow(index: number) {
+      this.$emit("delete", index);
     },
   },
 });

@@ -31,8 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
-import { FTTimeWindow } from "~/utils/models/ft";
+import { time_windows_type } from "~/utils/models/FA";
 
 interface CalendarTimeWindow {
   start: string;
@@ -48,10 +47,6 @@ export default Vue.extend({
       type: String,
       default: () => "FA",
     },
-    timeWindows: {
-      type: Array,
-      default: () => [],
-    },
   },
   data: () => ({
     value: "",
@@ -63,7 +58,7 @@ export default Vue.extend({
         : this.ftTimeWindows;
     },
     faTimeWindows(): CalendarTimeWindow[] {
-      return (this.timeWindows as time_windows[]).map((timeWindow) => ({
+      return (this.$accessor.FA.mFA.time_windows ?? []).map((timeWindow) => ({
         start: this.formatDateForCalendar(timeWindow.start),
         end: this.formatDateForCalendar(timeWindow.end),
         color:
@@ -75,7 +70,7 @@ export default Vue.extend({
       }));
     },
     ftTimeWindows(): CalendarTimeWindow[] {
-      return (this.timeWindows as FTTimeWindow[]).map((timeWindow) => ({
+      return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
         start: this.formatDateForCalendar(timeWindow.start),
         end: this.formatDateForCalendar(timeWindow.end),
         color: "primary",

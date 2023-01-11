@@ -3,17 +3,27 @@
     <v-card>
       <v-card-title>Créneau</v-card-title>
       <v-card-text>
-        <FTTimeWindowTable />
+        <FTTimeWindowTable
+          @update="openEditDialog"
+          @delete="deleteTimeWindow"
+        ></FTTimeWindowTable>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="openAddDialog">Ajouter un créneau</v-btn>
       </v-card-actions>
-      <FestivalEventCalendar :time-windows="timeWindows" festival-event="FT" />
+      <FestivalEventCalendar festival-event="FT" />
     </v-card>
     <v-dialog v-model="isAddDialogOpen" max-width="600">
       <FTTimeWindowForm
         @change="addTimeWindow"
+        @close-dialog="closeAddDialog"
+      ></FTTimeWindowForm>
+    </v-dialog>
+    <v-dialog v-model="isEditDialogOpen" max-width="600">
+      <FTTimeWindowForm
+        :time-window="selectedTimeWindow"
+        @change="updateTimeWindow"
         @close-dialog="closeAddDialog"
       ></FTTimeWindowForm>
     </v-dialog>
@@ -32,25 +42,38 @@ export default Vue.extend({
   components: { FTTimeWindowTable, FestivalEventCalendar, FTTimeWindowForm },
   data: () => ({
     isAddDialogOpen: false,
+    isEditDialogOpen: false,
+    selectedTimeWindow: null as FTTimeWindow | null,
   }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    timeWindows(): FTTimeWindow[] {
-      return this.mFT.timeWindows;
-    },
   },
   methods: {
     addTimeWindow(timeWindow: FTTimeWindow) {
-      //this.$accessor.FT.addTimeWindow(timeWindow);
+      this.$accessor.FT.addTimeWindow(timeWindow);
       this.closeAddDialog();
+    },
+    updateTimeWindow(index: number, timeWindow: FTTimeWindow) {
+      this.$accessor.FT.updateTimeWindow({ index, timeWindow });
+      this.closeEditDialog();
+    },
+    deleteTimeWindow(index: number) {
+      this.$accessor.FT.deleteTimeWindow(index);
     },
     openAddDialog() {
       this.isAddDialogOpen = true;
     },
     closeAddDialog() {
       this.isAddDialogOpen = false;
+    },
+    openEditDialog(timeWindow: FTTimeWindow) {
+      this.selectedTimeWindow = timeWindow;
+      this.isEditDialogOpen = true;
+    },
+    closeEditDialog() {
+      this.isEditDialogOpen = false;
     },
   },
 });

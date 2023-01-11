@@ -119,7 +119,6 @@ export default Vue.extend({
     isEditDialogOpen: false,
     isConfirmationDialogOpen: false,
 
-    editIndex: null as number | null,
     selectedTimeWindow: null as IdentifiableTimeWindow | null,
   }),
   computed: {
