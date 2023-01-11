@@ -19,11 +19,6 @@ export interface SearchFt {
 export class FtService {
   constructor(private prisma: PrismaService) {}
 
-  private buildFindCondition({ isDeleted: is_deleted, status }: SearchFt) {
-    const statusCondition = status ? { status } : {};
-    return { is_deleted, ...statusCondition };
-  }
-
   async create(ft: CreateFtDto): Promise<FtResponse | null> {
     return this.prisma.ft.create({ data: ft, select: COMPLETE_FT_SELECT });
   }
@@ -72,5 +67,10 @@ export class FtService {
       where: { id },
       data: { isDeleted: true },
     });
+  }
+
+  private buildFindCondition({ isDeleted: is_deleted, status }: SearchFt) {
+    const statusCondition = status ? { status } : {};
+    return { is_deleted, ...statusCondition };
   }
 }
