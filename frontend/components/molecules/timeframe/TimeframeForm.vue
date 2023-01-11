@@ -226,9 +226,6 @@ export default Vue.extend({
         end: new Date(this.dateEnd + " " + this.timeEnd),
       };
     },
-    timeframes(): any {
-      return this.mFA.time_windows;
-    },
     timeWindowsType(): string[] {
       return Object.values(time_windows_type);
     },
