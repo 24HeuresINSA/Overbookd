@@ -134,7 +134,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="confirmTimeWindow">
-          {{ timeWindow ? "Modifier" : "Ajouter" }}
+          {{ isEditForm ? "Modifier" : "Ajouter" }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -163,6 +163,10 @@ export default Vue.extend({
     timeWindow: {
       type: Object,
       default: () => null,
+    },
+    index: {
+      type: Number,
+      default: () => -1,
     },
   },
   data: () => ({
@@ -196,9 +200,27 @@ export default Vue.extend({
     me(): any {
       return this.$accessor.user.me;
     },
+    isEditForm(): boolean {
+      return this.index !== -1 && this.timeWindow;
+    },
+    formIsInvalid(): boolean {
+      if (
+        !this.formatDateStart ||
+        !this.formatDateEnd ||
+        !this.dateStart ||
+        !this.timeStart ||
+        !this.dateEnd ||
+        !this.timeEnd
+      ) {
+        this.showErrorMessage();
+        return true;
+      }
+      return false;
+    },
   },
   watch: {
     timeWindow() {
+      console.log("watch");
       this.updateLocalVariable();
     },
   },
@@ -258,9 +280,8 @@ export default Vue.extend({
       }`;
     },
     updateLocalVariable() {
-      if (!this.timeWindow) {
-        return this.clearLocalVariable();
-      }
+      if (!this.isEditForm) return this.clearLocalVariable();
+
       const start = new Date(this.timeWindow.start);
       const end = new Date(this.timeWindow.end);
 
@@ -287,25 +308,17 @@ export default Vue.extend({
       );
     },
     confirmTimeWindow() {
-      if (this.formIsInvalid()) return;
+      if (this.formIsInvalid) return;
 
+      if (this.isEditForm) this.updateTimeWindow();
+      else this.addTimeWindow();
+    },
+    addTimeWindow() {
       this.$emit("change", this.mTimeWindow);
-      this.$emit("close-dialog");
       this.clearLocalVariable();
     },
-    formIsInvalid(): boolean {
-      if (
-        !this.formatDateStart ||
-        !this.formatDateEnd ||
-        !this.dateStart ||
-        !this.timeStart ||
-        !this.dateEnd ||
-        !this.timeEnd
-      ) {
-        this.showErrorMessage();
-        return true;
-      }
-      return false;
+    updateTimeWindow() {
+      this.$emit("change", this.index, this.mTimeWindow);
     },
     showErrorMessage() {
       return this.$store.dispatch("notif/pushNotification", {
@@ -342,7 +355,7 @@ export default Vue.extend({
     margin: 0 24px;
   }
 
-  .time-row .text-date {
+  .text-date {
     margin-right: 30px;
   }
 }
