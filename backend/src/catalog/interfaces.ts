@@ -26,12 +26,14 @@ export interface Gear {
   category?: SimplifiedCategory;
   owner?: Team;
   code?: string;
+  isPonctualUsage: boolean;
 }
 
 export interface SearchGear {
   slug?: string;
   category?: string;
   owner?: string;
+  ponctualUsage?: boolean;
 }
 
 export interface SearchCategory {

@@ -44,8 +44,18 @@ const BAR_DECOUVERTE = {
   status: Status.VALIDATED,
 };
 
-const TABLE: Gear = { id: 1, name: 'Table', slug: 'table' };
-const CHAISE: Gear = { id: 2, name: 'Chaise', slug: 'chaise' };
+const TABLE: Gear = {
+  id: 1,
+  name: 'Table',
+  slug: 'table',
+  isPonctualUsage: false,
+};
+const CHAISE: Gear = {
+  id: 2,
+  name: 'Chaise',
+  slug: 'chaise',
+  isPonctualUsage: false,
+};
 const GEARS = [TABLE, CHAISE];
 
 const GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {

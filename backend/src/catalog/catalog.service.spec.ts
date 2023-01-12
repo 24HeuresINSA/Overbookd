@@ -42,19 +42,22 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-const GEARS: Gear[] = [
-  {
-    id: 1,
-    name: 'Perceuse',
-    slug: 'perceuse',
-    category: {
-      id: CATEGORIES[1].id,
-      path: CATEGORIES[1].path,
-      name: CATEGORIES[1].name,
-    },
-    owner: teamMatos,
-    code: 'BR_OU_001',
+const PERCEUSE: Gear = {
+  id: 1,
+  name: 'Perceuse',
+  slug: 'perceuse',
+  category: {
+    id: CATEGORIES[1].id,
+    path: CATEGORIES[1].path,
+    name: CATEGORIES[1].name,
   },
+  owner: teamMatos,
+  code: 'BR_OU_001',
+  isPonctualUsage: true,
+};
+
+const GEARS: Gear[] = [
+  PERCEUSE,
   {
     id: 2,
     name: 'Chaise',
@@ -66,33 +69,41 @@ const GEARS: Gear[] = [
     },
     owner: teamMatos,
     code: 'MO_002',
+    isPonctualUsage: false,
   },
   {
     id: 3,
     name: 'Tireuse',
     slug: 'tireuse',
+    isPonctualUsage: false,
   },
 ];
 
+const TABLIER: Gear = {
+  id: 4,
+  name: 'Tablier',
+  slug: 'tablier',
+  isPonctualUsage: true,
+};
+
+const PONCEUSE: Gear = {
+  id: 5,
+  name: 'Ponçeuse',
+  slug: 'ponceuse',
+  category: {
+    id: CATEGORIES[1].id,
+    path: CATEGORIES[1].path,
+    name: CATEGORIES[1].name,
+  },
+  owner: teamMatos,
+  code: 'BR_OU_005',
+  isPonctualUsage: true,
+};
+
 const SIMILAR_GEARS: Gear[] = [
   ...GEARS,
-  {
-    id: 4,
-    name: 'Tablier',
-    slug: 'tablier',
-  },
-  {
-    id: 5,
-    name: 'Ponçeuse',
-    slug: 'ponceuse',
-    category: {
-      id: CATEGORIES[1].id,
-      path: CATEGORIES[1].path,
-      name: CATEGORIES[1].name,
-    },
-    owner: teamMatos,
-    code: 'BR_OU_005',
-  },
+  TABLIER,
+  PONCEUSE,
   {
     id: 6,
     name: 'Table',
@@ -104,6 +115,7 @@ const SIMILAR_GEARS: Gear[] = [
     },
     owner: teamMatos,
     code: 'MO_006',
+    isPonctualUsage: false,
   },
 ];
 
@@ -141,18 +153,19 @@ describe('Catalog', () => {
   });
   describe('Add gear', () => {
     describe.each`
-      name               | category     | expectedSlug       | expectedCategory                                         | expectedCodeStart | expectedOwner
-      ${'Marteau'}       | ${2}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Scie Sauteuse'} | ${2}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Table'}         | ${3}         | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${'MO_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Des'}           | ${undefined} | ${'des'}           | ${undefined}                                             | ${undefined}      | ${undefined}
-      ${'Gants'}         | ${4}         | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${'DI_'}          | ${undefined}
-      ${'Vauban'}        | ${5}         | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${'BA_'}          | ${{ name: teamBarriere.name, code: teamBarriere.code }}
+      name               | category     | isPonctualUsage | expectedSlug       | expectedCategory                                         | expectedCodeStart | expectedOwner
+      ${'Marteau'}       | ${2}         | ${true}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Scie Sauteuse'} | ${2}         | ${true}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Table'}         | ${3}         | ${false}        | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${'MO_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Des'}           | ${undefined} | ${false}        | ${'des'}           | ${undefined}                                             | ${undefined}      | ${undefined}
+      ${'Gants'}         | ${4}         | ${true}         | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${'DI_'}          | ${undefined}
+      ${'Vauban'}        | ${5}         | ${false}        | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${'BA_'}          | ${{ name: teamBarriere.name, code: teamBarriere.code }}
     `(
       'Add gear "$name" with #$category category to catalog',
       ({
         name,
         category,
+        isPonctualUsage,
         expectedSlug,
         expectedCategory,
         expectedCodeStart,
@@ -163,13 +176,16 @@ describe('Catalog', () => {
           gearRepository.gears = GEARS;
         });
         beforeAll(async () => {
-          gear = await catalog.add({ name, category });
+          gear = await catalog.add({ name, category, isPonctualUsage });
         });
         it(`should create gear ${name} with generated id and slug "${expectedSlug}"`, () => {
           expect(gear).toHaveProperty('id');
           expect(gear.id).toEqual(expect.any(Number));
           expect(gear.name).toBe(name);
           expect(gear.slug).toBe(expectedSlug);
+        });
+        it(`should set up ponctual usage property`, () => {
+          expect(gear.isPonctualUsage).toBe(isPonctualUsage);
         });
         if (expectedCategory) {
           it(`should link gear ${name} to category "${expectedCategory.name}"`, () => {
@@ -197,6 +213,7 @@ describe('Catalog', () => {
             await catalog.add({
               name: 'Random',
               category: 123,
+              isPonctualUsage: false,
             }),
         ).rejects.toThrow(`Category #${123} doesn\'t exist`);
       });
@@ -208,6 +225,7 @@ describe('Catalog', () => {
             await catalog.add({
               name: 'Perçeuse',
               category: 2,
+              isPonctualUsage: true,
             }),
         ).rejects.toThrow(`"Perceuse" gear already exist`);
       });
@@ -249,7 +267,12 @@ describe('Catalog', () => {
     describe("When gear doesn't exist", () => {
       it("should inform the user gear doesn't exist", async () => {
         await expect(
-          async () => await catalog.update({ id: 123, name: 'Lavabo' }),
+          async () =>
+            await catalog.update({
+              id: 123,
+              name: 'Lavabo',
+              isPonctualUsage: false,
+            }),
         ).rejects.toThrow(`Gear #${123} doesn\'t exist`);
       });
     });
@@ -277,26 +300,34 @@ describe('Catalog', () => {
       gearRepository.gears = GEARS;
     });
     describe.each`
-      searchName   | searchCategory  | searchOwner  | expectedGears
-      ${'TAblIer'} | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[3]]}
-      ${'TAblI'}   | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[3]]}
-      ${'TAbl'}    | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[3], SIMILAR_GEARS[5]]}
-      ${'TAblI'}   | ${'Mobilier'}   | ${undefined} | ${[]}
-      ${'euse'}    | ${undefined}    | ${undefined} | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[2], SIMILAR_GEARS[4]]}
-      ${'euse'}    | ${'BricolLage'} | ${undefined} | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[4]]}
-      ${undefined} | ${undefined}    | ${'Matos'}   | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[1], SIMILAR_GEARS[4], SIMILAR_GEARS[5]]}
-      ${undefined} | ${undefined}    | ${'maT'}     | ${[SIMILAR_GEARS[0], SIMILAR_GEARS[1], SIMILAR_GEARS[4], SIMILAR_GEARS[5]]}
-      ${'tab'}     | ${undefined}    | ${'maT'}     | ${[SIMILAR_GEARS[5]]}
-      ${'tab'}     | ${'Brico'}      | ${'maT'}     | ${[]}
-      ${undefined} | ${undefined}    | ${undefined} | ${SIMILAR_GEARS}
+      searchName   | searchCategory  | searchOwner  | searchPonctualUsage | expectedGears
+      ${'TAblIer'} | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER]}
+      ${'TAblI'}   | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER]}
+      ${'TAbl'}    | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER, SIMILAR_GEARS[5]]}
+      ${'TAblI'}   | ${'Mobilier'}   | ${undefined} | ${undefined}        | ${[]}
+      ${'euse'}    | ${undefined}    | ${undefined} | ${undefined}        | ${[PERCEUSE, SIMILAR_GEARS[2], PONCEUSE]}
+      ${'euse'}    | ${'BricolLage'} | ${undefined} | ${undefined}        | ${[PERCEUSE, PONCEUSE]}
+      ${undefined} | ${undefined}    | ${'Matos'}   | ${undefined}        | ${[PERCEUSE, SIMILAR_GEARS[1], PONCEUSE, SIMILAR_GEARS[5]]}
+      ${undefined} | ${undefined}    | ${'maT'}     | ${undefined}        | ${[PERCEUSE, SIMILAR_GEARS[1], PONCEUSE, SIMILAR_GEARS[5]]}
+      ${'tab'}     | ${undefined}    | ${'maT'}     | ${undefined}        | ${[SIMILAR_GEARS[5]]}
+      ${'tab'}     | ${'Brico'}      | ${'maT'}     | ${undefined}        | ${[]}
+      ${undefined} | ${undefined}    | ${undefined} | ${undefined}        | ${SIMILAR_GEARS}
+      ${undefined} | ${undefined}    | ${undefined} | ${true}             | ${[PERCEUSE, TABLIER, PONCEUSE]}
     `(
-      'When looking for "$searchName" in $searchCategory category with $searchOwner owner',
-      ({ searchName, searchCategory, searchOwner, expectedGears }) => {
+      'When looking for "$searchName" in $searchCategory category with $searchOwner owner with ponctual usage: $searchPonctualUsage',
+      ({
+        searchName,
+        searchCategory,
+        searchOwner,
+        searchPonctualUsage,
+        expectedGears,
+      }) => {
         it(`should retrieve ${expectedGears.length} gears`, async () => {
           const gears = await catalog.search({
             name: searchName,
             category: searchCategory,
             owner: searchOwner,
+            ponctualUsage: searchPonctualUsage,
           });
           expect(gears).toEqual(expectedGears);
         });

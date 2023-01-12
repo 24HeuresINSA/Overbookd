@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
 import { SearchGear } from '../interfaces';
 
 export class GearSearchRequestDto implements SearchGear {
@@ -28,4 +29,13 @@ export class GearSearchRequestDto implements SearchGear {
   @IsString()
   @MinLength(3)
   owner?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Gear usage',
+  })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  ponctualUsage?: boolean;
 }

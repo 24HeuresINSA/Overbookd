@@ -11,6 +11,7 @@ import {
 export type GearForm = {
   name: string;
   category?: number;
+  isPonctualUsage: boolean;
 };
 
 type GearUpdateForm = GearForm & {
@@ -23,6 +24,13 @@ export class GearNotFoundException extends NotFoundException {
   }
 }
 
+type GearSearchRequest = {
+  name?: string;
+  category?: string;
+  owner?: string;
+  ponctualUsage?: boolean;
+};
+
 @Injectable()
 export class CatalogService {
   constructor(
@@ -33,7 +41,11 @@ export class CatalogService {
     private readonly gearRepository: GearRepository,
   ) {}
 
-  async add({ name, category: categoryId }: GearForm): Promise<Gear> {
+  async add({
+    name,
+    category: categoryId,
+    isPonctualUsage,
+  }: GearForm): Promise<Gear> {
     const { category, slug, owner } = await this.generateComputedProperties(
       name,
       categoryId,
@@ -43,6 +55,7 @@ export class CatalogService {
       category,
       owner,
       slug,
+      isPonctualUsage,
     });
   }
 
@@ -72,11 +85,8 @@ export class CatalogService {
     name,
     category,
     owner,
-  }: {
-    name?: string;
-    category?: string;
-    owner?: string;
-  }): Promise<Gear[]> {
+    ponctualUsage,
+  }: GearSearchRequest): Promise<Gear[]> {
     const slug = this.slugService.slugify(name);
     const categorySlug = this.slugService.slugify(category);
     const ownerSlug = this.slugService.slugify(owner);
@@ -84,6 +94,7 @@ export class CatalogService {
       slug,
       category: categorySlug,
       owner: ownerSlug,
+      ponctualUsage,
     });
   }
 
