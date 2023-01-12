@@ -3,6 +3,7 @@ import { team } from "./repo";
 export interface Gear {
   id: number;
   name: string;
+  isPonctualUsage: boolean;
   slug: string;
   owner?: Pick<team, "code" | "name">;
   category?: {
