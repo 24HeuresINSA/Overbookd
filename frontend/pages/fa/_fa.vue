@@ -88,8 +88,8 @@
           v-if="shouldShowValidationButton"
           color="green"
           class="white--text"
-          @click="validate(mValidators[0])"
-          >validé par {{ mValidators[0].name }}
+          @click="validate(teamsThatNotYetValidatedFA[0])"
+          >validé par {{ teamsThatNotYetValidatedFA[0].name }}
         </v-btn>
         <v-menu v-if="shouldShowValidationMenu" offset-y>
           <template #activator="{ attrs, on }">
