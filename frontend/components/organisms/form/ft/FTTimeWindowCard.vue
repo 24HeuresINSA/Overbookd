@@ -22,6 +22,7 @@
     </v-dialog>
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <FTTimeWindowForm
+        :index="selectedIndex"
         :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
         @close-dialog="closeAddDialog"
@@ -44,6 +45,7 @@ export default Vue.extend({
     isAddDialogOpen: false,
     isEditDialogOpen: false,
     selectedTimeWindow: null as FTTimeWindow | null,
+    selectedIndex: null as number | null,
   }),
   computed: {
     mFT(): FT {
@@ -68,7 +70,8 @@ export default Vue.extend({
     closeAddDialog() {
       this.isAddDialogOpen = false;
     },
-    openEditDialog(timeWindow: FTTimeWindow) {
+    openEditDialog(index: number, timeWindow: FTTimeWindow) {
+      this.selectedIndex = index;
       this.selectedTimeWindow = timeWindow;
       this.isEditDialogOpen = true;
     },
