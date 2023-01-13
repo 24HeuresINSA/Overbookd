@@ -82,8 +82,8 @@ export class FtController {
     description: 'Get ft by id',
     type: Promise<Ft | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: string): Promise<FtResponse | null> {
-    return this.ftService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<FtResponse | null> {
+    return this.ftService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -105,10 +105,10 @@ export class FtController {
     required: true,
   })
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateFtDto: UpdateFtDto,
   ): Promise<FtResponse | null> {
-    return this.ftService.update(+id, updateFtDto);
+    return this.ftService.update(id, updateFtDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -126,7 +126,7 @@ export class FtController {
     description: 'FT id',
     required: true,
   })
-  remove(@Param('id') id: string): Promise<Ft | null> {
-    return this.ftService.remove(+id);
+  remove(@Param('id') id: number): Promise<Ft | null> {
+    return this.ftService.remove(id);
   }
 }
