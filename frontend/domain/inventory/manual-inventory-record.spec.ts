@@ -3,7 +3,11 @@ import { describe, beforeAll, expect, it } from "@jest/globals";
 import { Gear } from "~/utils/models/catalog.model";
 import { InMemoryGearRepository } from "./inmemory-gear.repository";
 import { InventoryRecord } from "./inventory-record";
-import { ManualInventoryRecord } from "./manual-inventory-record";
+import {
+  DisplayableManualInventoryRecordError,
+  ManualInventoryRecord,
+  ManualInventoryRecordError,
+} from "./manual-inventory-record";
 import { marteau, perceuse, scieCirculaire } from "./test-helper";
 
 describe("Inventory Fill Form", () => {
@@ -62,6 +66,28 @@ describe("Inventory Fill Form", () => {
       await expect(
         async () => await manualRecord.toInventoryRecord()
       ).rejects.toHaveProperty("record", manualRecord);
+    });
+  });
+  describe("When updating an error with existing gear", () => {
+    const gears = [marteau, perceuse, scieCirculaire];
+    const gearRepository = new InMemoryGearRepository(gears);
+    const quantity = 12;
+    const storage = "local";
+    const manualRecord = new ManualInventoryRecord(
+      "test",
+      quantity,
+      storage,
+      gearRepository
+    );
+    it("should generate an inventory record", () => {
+      const error = new ManualInventoryRecordError(manualRecord);
+      const displayableError =
+        DisplayableManualInventoryRecordError.fromError(error);
+      const inventoryRecord =
+        displayableError.toInventoryRecord(scieCirculaire);
+      expect(inventoryRecord.quantity).toBe(quantity);
+      expect(inventoryRecord.gear).toBe(scieCirculaire);
+      expect(inventoryRecord.storage).toBe(storage);
     });
   });
 });

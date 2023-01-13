@@ -6,10 +6,10 @@
     item-text="name"
     chips
     clearable
-    filled
+    :filled="boxed"
     item-value="id"
     :label="label"
-    solo
+    :solo="boxed"
     return-object
     :dense="dense"
     :hide-details="dense"
@@ -67,6 +67,10 @@ export default Vue.extend({
     dense: {
       type: Boolean,
       default: () => false,
+    },
+    boxed: {
+      type: Boolean,
+      default: () => true,
     },
   },
   data(): SearchGearData {

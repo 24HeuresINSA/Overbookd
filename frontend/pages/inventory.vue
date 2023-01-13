@@ -18,14 +18,11 @@
         <v-card-text>
           <v-data-table
             :headers="errorsHeaders"
-            :items="inventoryImportErrors"
+            :items="displayableInventoryImportErrors"
             :loading="loading"
           >
-            <template #item.gear="{ item, index }">
-              <span v-if="isInEditMode(index)">
-                <SearchGear :dense="true"
-              /></span>
-              <span v-else>{{ item.record.gear }}</span>
+            <template #item.gear="{ item }">
+              {{ item.record.gear }}
             </template>
             <template #item.quantity="{ item }">
               {{ item.record.quantity }}
@@ -33,23 +30,44 @@
             <template #item.storage="{ item }">
               {{ item.record.storage }}
             </template>
-            <template #item.action="{ index }">
-              <span v-if="isInEditMode(index)"> Ajouter </span>
-              <span v-else> Edit </span>
+            <template #item.action="{ item, index }">
+              <v-btn
+                small
+                fab
+                dark
+                color="warning"
+                @click="startEditMode(item, index)"
+              >
+                <v-icon dark> mdi-pencil </v-icon>
+              </v-btn>
             </template>
           </v-data-table>
         </v-card-text>
       </v-card>
 
-      <v-data-table
-        :headers="recordsHeaders"
-        :items="inventoryRecords"
-        :loading="loading"
+      <v-card class="listing">
+        <v-data-table
+          :headers="recordsHeaders"
+          :items="inventoryRecords"
+          :loading="loading"
+        >
+          <template #item.gear="{ item }">
+            {{ item.gear.name }}
+          </template>
+        </v-data-table>
+      </v-card>
+
+      <v-btn large color="success" rounded @click="saveInventory">
+        <v-icon dark> mdi-check </v-icon>Sauvegarder l'inventaire</v-btn
       >
-        <template #item.gear="{ item }">
-          {{ item.gear.name }}
-        </template>
-      </v-data-table>
+
+      <v-dialog v-model="isUpdateImportErrorDialogOpen" width="600px">
+        <InventoryRecordForm
+          :inventory-error="selectedImportError"
+          @close-dialog="stopEditMode"
+          @add-to-inventory="addToInventory"
+        />
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -62,8 +80,12 @@ import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryImport } from "~/domain/inventory/inventory-import";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
-import { ManualInventoryRecordError } from "~/domain/inventory/manual-inventory-record";
-import SearchGear from "~/components/atoms/SearchGear.vue";
+import {
+  DisplayableManualInventoryRecordError,
+  ManualInventoryRecordError,
+} from "~/domain/inventory/manual-inventory-record";
+import InventoryRecordForm from "~/components/organisms/form/InventoryRecordForm.vue";
+import { removeItemAtIndex } from "~/utils/functions/list";
 
 interface InventoryData {
   inventoryRecords: InventoryRecord[];
@@ -71,12 +93,14 @@ interface InventoryData {
   recordsHeaders: Header[];
   errorsHeaders: Header[];
   loading: boolean;
-  errorLinesInEditMode: number[];
+  selectedImportError?: DisplayableManualInventoryRecordError;
+  selectedImportErrorIndex: number;
+  isUpdateImportErrorDialogOpen: boolean;
 }
 
 export default Vue.extend({
   name: "Inventory",
-  components: { SearchGear },
+  components: { InventoryRecordForm },
   data: (): InventoryData => {
     return {
       inventoryRecords: [],
@@ -94,7 +118,9 @@ export default Vue.extend({
         { text: "Action", value: "action" },
       ],
       loading: false,
-      errorLinesInEditMode: [1],
+      selectedImportError: undefined,
+      selectedImportErrorIndex: -1,
+      isUpdateImportErrorDialogOpen: false,
     };
   },
   computed: {
@@ -106,6 +132,11 @@ export default Vue.extend({
     },
     hasError(): boolean {
       return this.inventoryImportErrors.length > 0;
+    },
+    displayableInventoryImportErrors(): DisplayableManualInventoryRecordError[] {
+      return this.inventoryImportErrors.map(
+        DisplayableManualInventoryRecordError.fromError
+      );
     },
   },
   mounted() {
@@ -131,9 +162,40 @@ export default Vue.extend({
       this.inventoryRecords = records;
       this.loading = false;
     },
-    isInEditMode(lineIndex: number): boolean {
-      return this.errorLinesInEditMode.includes(lineIndex);
+    stopEditMode() {
+      this.isUpdateImportErrorDialogOpen = false;
+    },
+    startEditMode(
+      inventoryError: DisplayableManualInventoryRecordError,
+      errorIndex: number
+    ) {
+      this.isUpdateImportErrorDialogOpen = true;
+      this.selectedImportErrorIndex = errorIndex;
+      this.selectedImportError = inventoryError;
+    },
+    addToInventory(inventoryRecord: InventoryRecord) {
+      this.inventoryRecords = inventoryRecord.mergeInside(
+        this.inventoryRecords
+      );
+      this.inventoryImportErrors = removeItemAtIndex(
+        this.inventoryImportErrors,
+        this.selectedImportErrorIndex
+      );
+    },
+    saveInventory() {
+      console.warn("One day I swear");
     },
   },
 });
 </script>
+
+<style scoped lang="scss">
+.btn-group {
+  display: flex;
+  gap: 5px;
+}
+
+.listing {
+  margin-bottom: 10px;
+}
+</style>

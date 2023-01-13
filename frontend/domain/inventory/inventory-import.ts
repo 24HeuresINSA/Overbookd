@@ -58,30 +58,9 @@ export class InventoryImport {
     inventoryRecords: InventoryRecord[]
   ): InventoryRecord[] {
     return inventoryRecords.reduce<InventoryRecord[]>(
-      (records, currentRecord) => {
-        const similarRecordIndex = records.findIndex(
-          isSimilarRecord(currentRecord)
-        );
-        if (similarRecordIndex === -1) return [...records, currentRecord];
-        const similarRecord = records[similarRecordIndex];
-        const updatedRecord = this.mergeRecords(similarRecord, currentRecord);
-        return updateItemToList(records, similarRecordIndex, updatedRecord);
-      },
+      (records, currentRecord) => currentRecord.mergeInside(records),
       []
     );
-  }
-
-  private static mergeRecords(
-    previousRecord: InventoryRecord,
-    currentRecord: InventoryRecord
-  ) {
-    const quantity = currentRecord.quantity + previousRecord.quantity;
-    const updatedRecord = new InventoryRecord(
-      currentRecord.gear,
-      quantity,
-      currentRecord.storage
-    );
-    return updatedRecord;
   }
 }
 
@@ -97,16 +76,4 @@ function isInventoryRecord(): (
 ) => value is InventoryRecord {
   return (record): record is InventoryRecord =>
     (record as InventoryRecord)?.gear?.name !== undefined;
-}
-
-function updateItemToList<T>(list: T[], index: number, newValue: T): T[] {
-  return [...list.slice(0, index), newValue, ...list.slice(index + 1)];
-}
-
-function isSimilarRecord(
-  currentRecord: InventoryRecord
-): (value: InventoryRecord) => boolean {
-  return (record) =>
-    record.gear.slug === currentRecord.gear.slug &&
-    record.storage === currentRecord.storage;
 }
