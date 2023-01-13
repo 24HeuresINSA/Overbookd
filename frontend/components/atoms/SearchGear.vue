@@ -58,6 +58,10 @@ export default Vue.extend({
       type: String,
       default: "",
     },
+    ponctualUsage: {
+      type: Boolean,
+      default: () => undefined,
+    },
   },
   data(): SearchGearData {
     return {
@@ -82,7 +86,11 @@ export default Vue.extend({
     buildSearchOptions(gearName: string | null): GearSearchOptions {
       const nameOption = gearName ? { name: gearName } : {};
       const ownerOption = this.owner ? { owner: this.owner } : {};
-      return { ...nameOption, ...ownerOption };
+      const ponctualUsageOption =
+        this.ponctualUsage !== undefined
+          ? { ponctualUsage: this.ponctualUsage }
+          : {};
+      return { ...nameOption, ...ownerOption, ...ponctualUsageOption };
     },
     async fetchGears(searchOptions: GearSearchOptions) {
       this.loading = true;

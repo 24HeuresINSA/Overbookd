@@ -37,9 +37,17 @@
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
       </h4>
       <LogisticTimeWindow />
-      <LogisticsCard title="Matos" owner="matos" />
-      <LogisticsCard title="Barrières" owner="barrieres" />
-      <LogisticsCard title="Matos Elec / Eau" owner="elec" />
+      <LogisticsCard title="Matos" owner="matos" :ponctual-usage-gear="false" />
+      <LogisticsCard
+        title="Barrières"
+        owner="barrieres"
+        :ponctual-usage-gear="false"
+      />
+      <LogisticsCard
+        title="Matos Elec / Eau"
+        owner="elec"
+        :ponctual-usage-gear="false"
+      />
       <ElecLogisticCard id="elec" />
       <WaterLogisticCard id="water" />
       <CommentCard id="comment" />
