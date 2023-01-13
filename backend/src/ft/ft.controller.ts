@@ -118,7 +118,6 @@ export class FtController {
   @ApiResponse({
     status: 204,
     description: 'ft deleted',
-    type: Promise<Ft | null>,
   })
   @ApiParam({
     name: 'id',
@@ -126,7 +125,7 @@ export class FtController {
     description: 'FT id',
     required: true,
   })
-  remove(@Param('id') id: number): Promise<Ft | null> {
+  remove(@Param('id') id: number) {
     return this.ftService.remove(id);
   }
 }
