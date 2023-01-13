@@ -38,7 +38,7 @@
           label="Responsable"
           :items="users"
           item-value="id"
-          item-text="username"
+          :item-text="displayUsername"
           :disabled="isValidatedByOwner"
           @change="onChange('in_charge', $event)"
         ></v-autocomplete>
@@ -55,13 +55,13 @@ import {
   getFAValidationStatus,
 } from "~/utils/fa/faUtils";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import { team, User } from "~/utils/models/repo";
+import { team } from "~/utils/models/repo";
+import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FAGeneralCard",
   components: { CardErrorList },
   data: () => ({
-    users: [] as Partial<User>[],
     owner: "humain",
     cardType: fa_card_type.GENERAL,
   }),
@@ -81,19 +81,23 @@ export default Vue.extend({
     validationStatus(): string {
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
+    users(): User[] {
+      return this.$accessor.user.users;
+    },
   },
   async mounted() {
-    this.users = this.$accessor.user.usernames;
+    this.users = this.$accessor.user.users;
     if (this.users.length === 0) {
-      // fetch usernames
-      await this.$accessor.user.getUsername("");
-      this.users = this.$accessor.user.usernames;
+      this.$accessor.user.fetchUsers();
     }
   },
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
       this.$accessor.FA.updateFA({ key: key, value: value });
+    },
+    displayUsername({ firstname, lastname }: User): string {
+      return `${firstname} ${lastname}`;
     },
   },
 });
