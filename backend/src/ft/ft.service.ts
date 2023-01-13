@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Ft, ftStatus } from '@prisma/client';
+import { ftStatus } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateFtDto } from './dto/create-ft.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
@@ -58,7 +58,7 @@ export class FtService {
     });
   }
 
-  async remove(id: number): Promise<Ft | null> {
+  async remove(id: number) {
     const ft = this.prisma.ft.findUnique({ where: { id } });
     if (!ft) {
       throw new NotFoundException(`ft #${id} not found`);

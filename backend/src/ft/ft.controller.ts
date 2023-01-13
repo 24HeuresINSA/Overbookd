@@ -22,11 +22,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Ft } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
+import { FtResponseDto } from './dto/ftResponse.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
@@ -45,7 +45,7 @@ export class FtController {
   @ApiResponse({
     status: 201,
     description: 'The ft has been successfully created.',
-    type: Promise<Ft | null>,
+    type: FtResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -66,7 +66,8 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'Get all ft',
-    type: Promise<Ft[] | null>,
+    isArray: true,
+    type: FtResponseDto,
   })
   @ApiQuery({
     name: 'isDeleted',
@@ -101,7 +102,7 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'Get ft by id',
-    type: Promise<Ft | null>,
+    type: FtResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -122,7 +123,7 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'ft updated',
-    type: Promise<Ft | null>,
+    type: FtResponseDto,
   })
   @ApiBody({
     description: 'Updated ft',
