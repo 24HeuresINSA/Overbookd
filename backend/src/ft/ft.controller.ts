@@ -12,8 +12,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiParam,
   ApiQuery,
   ApiResponse,
@@ -44,6 +47,15 @@ export class FtController {
     description: 'The ft has been successfully created.',
     type: Promise<Ft | null>,
   })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
   create(@Body() ft: CreateFtDto): Promise<FtResponse | null> {
     return this.ftService.create(ft);
   }
@@ -61,6 +73,15 @@ export class FtController {
     required: false,
     type: Boolean,
     description: 'Get FTs that are deleted',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
   })
   findAll(
     @Query() searchRequest: FTSearchRequestDto,
@@ -81,6 +102,15 @@ export class FtController {
     status: 200,
     description: 'Get ft by id',
     type: Promise<Ft | null>,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
   })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<FtResponse | null> {
     return this.ftService.findOne(id);
@@ -104,6 +134,15 @@ export class FtController {
     description: 'FT id',
     required: true,
   })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFtDto: UpdateFtDto,
@@ -118,6 +157,15 @@ export class FtController {
   @ApiResponse({
     status: 204,
     description: 'ft deleted',
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
   })
   @ApiParam({
     name: 'id',
