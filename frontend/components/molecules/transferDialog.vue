@@ -6,7 +6,7 @@
         <v-form v-model="transfer.isValid">
           <v-autocomplete
             v-model="transfer.user"
-            :items="users"
+            :items="userList"
             label="Utilisateur"
             required
             dense
@@ -34,8 +34,13 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
-import { Transfer } from "~/utils/models/repo";
+import { Transfer, User } from "~/utils/models/repo";
 import { TMapState } from "~/utils/types/store";
+
+type UserAutocompleteItem = {
+  text?: string;
+  value: Partial<User>;
+};
 
 export default Vue.extend({
   name: "TransferDialog",
@@ -51,7 +56,7 @@ export default Vue.extend({
         reason: "",
         isValid: false,
       },
-      users: {},
+      userList: [] as UserAutocompleteItem[],
     };
   },
   computed: {
@@ -87,7 +92,7 @@ export default Vue.extend({
       users = this.$accessor.user.usernames;
     }
     // sort alphabetically
-    this.users = users.map((user) => {
+    this.userList = users.map((user) => {
       return {
         text: user.username,
         value: user,
