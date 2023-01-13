@@ -76,13 +76,4 @@ export class UpdateFtDto {
   @IsNumber()
   @Min(1)
   locationId?: number;
-
-  @ApiProperty({
-    required: false,
-    description: 'Is the ft deleted',
-    default: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  isDeleted?: boolean;
 }
