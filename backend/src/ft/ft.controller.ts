@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -37,6 +38,7 @@ export class FtController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post()
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'The ft has been successfully created.',
@@ -62,7 +64,7 @@ export class FtController {
   })
   findAll(
     @Query() searchRequest: FTSearchRequestDto,
-  ): Promise<AllFtResponse[] | null> {
+  ): Promise<AllFtResponse[]> {
     return this.ftService.findAll(searchRequest);
   }
 
@@ -112,6 +114,7 @@ export class FtController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'ft deleted',
