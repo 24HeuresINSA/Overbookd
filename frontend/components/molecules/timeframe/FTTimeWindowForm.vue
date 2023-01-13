@@ -164,10 +164,6 @@ export default Vue.extend({
       type: Object,
       default: () => null,
     },
-    index: {
-      type: Number,
-      default: () => -1,
-    },
   },
   data: () => ({
     dateStart: "",
@@ -201,7 +197,7 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     isEditForm(): boolean {
-      return this.index !== -1 && this.timeWindow;
+      return this.timeWindow !== null;
     },
     formIsInvalid(): boolean {
       if (
@@ -310,15 +306,8 @@ export default Vue.extend({
     confirmTimeWindow() {
       if (this.formIsInvalid) return;
 
-      if (this.isEditForm) this.updateTimeWindow();
-      else this.addTimeWindow();
-    },
-    addTimeWindow() {
       this.$emit("change", this.mTimeWindow);
-      this.clearLocalVariable();
-    },
-    updateTimeWindow() {
-      this.$emit("change", this.index, this.mTimeWindow);
+      if (!this.isEditForm) this.clearLocalVariable();
     },
     showErrorMessage() {
       return this.$store.dispatch("notif/pushNotification", {

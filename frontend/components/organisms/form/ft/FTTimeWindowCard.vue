@@ -15,17 +15,12 @@
       <FestivalEventCalendar festival-event="FT" />
     </v-card>
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <FTTimeWindowForm
-        @change="addTimeWindow"
-        @close-dialog="closeAddDialog"
-      ></FTTimeWindowForm>
+      <FTTimeWindowForm @change="addTimeWindow"></FTTimeWindowForm>
     </v-dialog>
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <FTTimeWindowForm
-        :index="selectedIndex"
         :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
-        @close-dialog="closeAddDialog"
       ></FTTimeWindowForm>
     </v-dialog>
   </div>
@@ -57,8 +52,11 @@ export default Vue.extend({
       this.$accessor.FT.addTimeWindow(timeWindow);
       this.closeAddDialog();
     },
-    updateTimeWindow(index: number, timeWindow: FTTimeWindow) {
-      this.$accessor.FT.updateTimeWindow({ index, timeWindow });
+    updateTimeWindow(timeWindow: FTTimeWindow) {
+      this.$accessor.FT.updateTimeWindow({
+        index: this.selectedIndex,
+        timeWindow,
+      });
       this.closeEditDialog();
     },
     deleteTimeWindow(index: number) {
@@ -76,6 +74,8 @@ export default Vue.extend({
       this.isEditDialogOpen = true;
     },
     closeEditDialog() {
+      this.selectedIndex = null;
+      this.selectedTimeWindow = null;
       this.isEditDialogOpen = false;
     },
   },
