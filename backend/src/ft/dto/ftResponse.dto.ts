@@ -19,7 +19,7 @@ export class FtResponseDto {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    type: ftStatus,
+    enum: ftStatus,
   })
   status: ftStatus;
 
