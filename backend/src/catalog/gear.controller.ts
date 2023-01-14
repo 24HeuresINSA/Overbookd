@@ -68,9 +68,9 @@ export class GearController {
     description: 'Get gears that are owned by team that match name',
   })
   search(
-    @Query() { name, category, owner }: GearSearchRequestDto,
+    @Query() { name, category, owner, ponctualUsage }: GearSearchRequestDto,
   ): Promise<Gear[]> {
-    return this.catalogService.search({ name, category, owner });
+    return this.catalogService.search({ name, category, owner, ponctualUsage });
   }
 
   @Get(':id')

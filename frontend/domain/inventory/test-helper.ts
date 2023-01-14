@@ -20,6 +20,7 @@ export const marteau: Gear = {
   },
   owner: teamMatos,
   code: "BR_OU_001",
+  isPonctualUsage: true,
 };
 export const perceuse: Gear = {
   id: 2,
@@ -32,6 +33,7 @@ export const perceuse: Gear = {
   },
   owner: teamMatos,
   code: "BR_OU_002",
+  isPonctualUsage: true,
 };
 export const scieCirculaire: Gear = {
   id: 2,
@@ -44,4 +46,5 @@ export const scieCirculaire: Gear = {
   },
   owner: teamMatos,
   code: "BR_OU_003",
+  isPonctualUsage: false,
 };

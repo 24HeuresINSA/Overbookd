@@ -22,6 +22,7 @@ export interface GearSearchOptions {
 export interface GearForm {
   name: string;
   category?: number;
+  isPonctualUsage: boolean;
 }
 
 export interface GearUpdateForm extends GearForm {

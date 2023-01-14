@@ -21,6 +21,7 @@ class GearRepresentation implements Gear {
   slug: string;
   category?: SimplifiedCategoryRepresentation;
   owner?: TeamRepresentation;
+  isPonctualUsage: boolean;
 }
 
 class GearSeekerRepresentation implements GearSeeker {

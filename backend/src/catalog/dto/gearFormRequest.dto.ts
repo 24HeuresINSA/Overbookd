@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsDefined,
   IsInt,
   IsOptional,
@@ -17,6 +18,14 @@ export class GearFormRequestDto implements GearForm {
   @IsDefined()
   @MinLength(3)
   name: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'Gear usage',
+  })
+  @IsBoolean()
+  @IsDefined()
+  isPonctualUsage: boolean;
 
   @ApiProperty({
     required: false,

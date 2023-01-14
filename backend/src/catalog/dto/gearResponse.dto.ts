@@ -54,4 +54,10 @@ export class GearResponseDto implements Gear {
     type: String,
   })
   code?: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'Gear usage',
+  })
+  isPonctualUsage: boolean;
 }

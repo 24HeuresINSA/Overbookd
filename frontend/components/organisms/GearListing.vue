@@ -33,6 +33,12 @@
       :category="category"
       :loading="loading"
     >
+      <template #item.isPonctualUsage="{ item }">
+        <v-switch
+          :input-value="item.isPonctualUsage"
+          :disabled="true"
+        ></v-switch>
+      </template>
       <template #item.category="{ item }">
         <div v-show="item.category" class="category-details">
           <span class="category-details__name">{{ item.category?.name }}</span>
@@ -100,6 +106,7 @@ export default Vue.extend({
       headers: [
         { text: "Matos", value: "name" },
         { text: "Code de reference", value: "code" },
+        { text: "Matos d'appoint", value: "isPonctualUsage" },
         { text: "Category", value: "category" },
         { text: "Actions", value: "actions" },
       ],

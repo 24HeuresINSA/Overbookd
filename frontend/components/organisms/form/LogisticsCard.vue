@@ -13,6 +13,7 @@
           <SearchGear
             :gear="gear"
             :owner="owner"
+            :ponctual-usage="ponctualUsageGear"
             @change="updateCurrentGear"
           ></SearchGear>
           <v-btn
@@ -56,6 +57,10 @@ export default Vue.extend({
     owner: {
       type: String,
       default: () => "",
+    },
+    ponctualUsageGear: {
+      type: Boolean,
+      default: () => undefined,
     },
   },
   data: () => ({

@@ -21,10 +21,16 @@ export type DatabaseGear = {
     name: string;
     path: string;
   };
+  isPonctualUsage: boolean;
 };
 
 export function convertGearToApiContract(gear: DatabaseGear) {
-  const baseGear = { name: gear.name, slug: gear.slug, id: gear.id };
+  const baseGear = {
+    name: gear.name,
+    slug: gear.slug,
+    id: gear.id,
+    isPonctualUsage: gear.isPonctualUsage,
+  };
   const category = gear.category
     ? {
         name: gear.category.name,
@@ -46,6 +52,7 @@ export class PrismaGearRepository implements GearRepository {
   private readonly SELECT_GEAR = {
     id: true,
     name: true,
+    isPonctualUsage: true,
     slug: true,
     category: {
       select: {
@@ -124,14 +131,30 @@ export class PrismaGearRepository implements GearRepository {
     ).map(convertGearToApiContract);
   }
 
-  private buildSearchConditions({ slug, category, owner }: SearchGear) {
+  private buildSearchConditions({
+    slug,
+    category,
+    owner,
+    ponctualUsage,
+  }: SearchGear) {
     const slugCondition = slug ? { slug: { contains: slug } } : {};
     const categoryCondition = this.buildCategorySearchCondition(
       category,
       owner,
     );
+    const ponctualUsageCondition = this.buildUsageCondition(ponctualUsage);
 
-    return { ...slugCondition, ...categoryCondition };
+    return {
+      ...slugCondition,
+      ...categoryCondition,
+      ...ponctualUsageCondition,
+    };
+  }
+
+  private buildUsageCondition(ponctualUsage: boolean) {
+    return ponctualUsage !== undefined
+      ? { isPonctualUsage: ponctualUsage }
+      : {};
   }
 
   private buildCategorySearchCondition(category: string, owner: string) {

@@ -71,6 +71,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       select: {
         id: true,
         name: true,
+        isPonctualUsage: true,
         slug: true,
         category: {
           select: {

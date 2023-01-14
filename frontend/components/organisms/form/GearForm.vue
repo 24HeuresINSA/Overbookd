@@ -19,6 +19,12 @@
             counter
             :rules="[rules.nameMinLength]"
           ></v-text-field>
+          <v-switch
+            :input-value="isPonctualUsage"
+            :muliple="false"
+            label="Est du matos d'appoint"
+            @change="updatePonctualUsage"
+          ></v-switch>
           <SearchCategoryVue
             v-model="category"
             label="Choisisez une categorie associee"
@@ -43,6 +49,7 @@ import { InputRulesData, minLength } from "~/utils/rules/inputRules";
 interface GearFormData extends InputRulesData {
   name: string;
   category?: Category;
+  isPonctualUsage: boolean;
 }
 
 const nameMinLength = 3;
@@ -53,13 +60,18 @@ export default Vue.extend({
   props: {
     gear: {
       type: Object,
-      default: () => ({ name: "", category: undefined }),
+      default: () => ({
+        name: "",
+        category: undefined,
+        isPonctualUsage: false,
+      }),
     },
   },
   data(): GearFormData {
     return {
       name: this.gear.name,
       category: this.gear.category,
+      isPonctualUsage: this.gear.isPonctualUsage,
       rules: {
         nameMinLength: minLength(nameMinLength),
       },
@@ -74,11 +86,15 @@ export default Vue.extend({
     gear: function (g: Gear) {
       this.name = g.name;
       this.category = g.category;
+      this.isPonctualUsage = g.isPonctualUsage;
     },
   },
   methods: {
     async createOrUpdateGear() {
-      let gear: GearForm = { name: this.name };
+      let gear: GearForm = {
+        name: this.name,
+        isPonctualUsage: this.isPonctualUsage,
+      };
       if (this.shouldUpdateCategory) {
         gear = { ...gear, category: this.category?.id };
       }
@@ -93,6 +109,9 @@ export default Vue.extend({
     },
     closeDialog() {
       this.$emit("close-dialog");
+    },
+    updatePonctualUsage(ponctualUsage: boolean | null) {
+      this.isPonctualUsage = ponctualUsage ?? false;
     },
   },
 });

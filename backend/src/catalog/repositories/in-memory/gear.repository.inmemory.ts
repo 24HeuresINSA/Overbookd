@@ -12,6 +12,7 @@ class GearSearchBuilder {
   private ownerCondition = true;
   private slugCondition = true;
   private categoryContion = true;
+  private ponctualUsageContion = true;
   private gear: Gear;
 
   constructor(gear: Gear) {
@@ -39,8 +40,20 @@ class GearSearchBuilder {
     return this;
   }
 
+  addPonctualUsageCondition(ponctualUsage?: boolean) {
+    this.ponctualUsageContion = ponctualUsage
+      ? this.gear.isPonctualUsage === ponctualUsage
+      : true;
+    return this;
+  }
+
   get match(): boolean {
-    return this.ownerCondition && this.slugCondition && this.categoryContion;
+    return (
+      this.ownerCondition &&
+      this.slugCondition &&
+      this.categoryContion &&
+      this.ponctualUsageContion
+    );
   }
 }
 
@@ -90,13 +103,14 @@ export class InMemoryGearRepository implements GearRepository {
   }
 
   private isMatchingSearch(
-    { category, slug, owner }: SearchGear,
+    { category, slug, owner, ponctualUsage }: SearchGear,
     gear: Gear,
   ): boolean {
     const search = new GearSearchBuilder(gear)
       .addCategoryCondition(category)
       .addSlugCondition(slug)
-      .addOwnerCondition(owner);
+      .addOwnerCondition(owner)
+      .addPonctualUsageCondition(ponctualUsage);
     return search.match;
   }
 }
