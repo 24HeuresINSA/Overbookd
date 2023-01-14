@@ -32,7 +32,7 @@ export class FtResponseDto {
 
   @ApiProperty({
     required: false,
-    description: 'isStatic of the ft',
+    description: 'ft static status',
     type: Boolean,
   })
   isStatic?: boolean;
@@ -46,7 +46,7 @@ export class FtResponseDto {
 
   @ApiProperty({
     required: false,
-    description: 'The user in charge id of the ft',
+    description: 'The user id in charge of the ft',
     type: Number,
   })
   userInChargeId?: number;
@@ -60,7 +60,7 @@ export class FtResponseDto {
 
   @ApiProperty({
     required: false,
-    description: 'isDeleted of the ft',
+    description: 'ft delete status',
     type: Boolean,
   })
   isDeleted?: boolean;
