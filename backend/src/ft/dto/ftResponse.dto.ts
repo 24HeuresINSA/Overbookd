@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ftStatus } from '@prisma/client';
+import { FtStatus } from '@prisma/client';
 
 export class FtResponseDto {
   @ApiProperty({
@@ -19,9 +19,9 @@ export class FtResponseDto {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: ftStatus,
+    enum: FtStatus,
   })
-  status: ftStatus;
+  status: FtStatus;
 
   @ApiProperty({
     required: false,
