@@ -11,7 +11,7 @@ export type StatsPayload = {
   total: number;
 };
 
-export type StatsQueryResult = {
+type StatsQueryResult = {
   status: Status;
   team_id: number;
   _count: {
