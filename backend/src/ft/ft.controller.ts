@@ -27,11 +27,10 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
-import { FtResponseDto } from './dto/ftResponse.dto';
+import { AllFtResponseDto, FtResponseDto } from './dto/ft-response.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
-import { AllFtResponse, FtResponse } from './ftTypes';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -54,7 +53,7 @@ export class FtController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() ft: CreateFtDto): Promise<FtResponse | null> {
+  create(@Body() ft: CreateFtDto): Promise<FtResponseDto | null> {
     return this.ftService.create(ft);
   }
 
@@ -88,7 +87,7 @@ export class FtController {
   })
   findAll(
     @Query() searchRequest: FTSearchRequestDto,
-  ): Promise<AllFtResponse[]> {
+  ): Promise<AllFtResponseDto[]> {
     return this.ftService.findAll(searchRequest);
   }
 
@@ -115,7 +114,9 @@ export class FtController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<FtResponse | null> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FtResponseDto | null> {
     return this.ftService.findOne(id);
   }
 
@@ -149,7 +150,7 @@ export class FtController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFtDto: UpdateFtDto,
-  ): Promise<FtResponse | null> {
+  ): Promise<FtResponseDto | null> {
     return this.ftService.update(id, updateFtDto);
   }
 
