@@ -4,7 +4,8 @@
       <v-card-title>Créneau</v-card-title>
       <v-card-text>
         <FTTimeWindowTable
-          @update="openEditDialog"
+          @update-time="openEditTimeDialog"
+          @update-volunteer="openEditVolunteerDialog"
           @delete="deleteTimeWindow"
         ></FTTimeWindowTable>
       </v-card-text>
@@ -17,11 +18,17 @@
     <v-dialog v-model="isAddDialogOpen" max-width="700">
       <FTTimeWindowForm @change="addTimeWindow"></FTTimeWindowForm>
     </v-dialog>
-    <v-dialog v-model="isEditDialogOpen" max-width="700">
+    <v-dialog v-model="isEditTimeDialogOpen" max-width="700">
       <FTTimeWindowForm
         :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
       ></FTTimeWindowForm>
+    </v-dialog>
+    <v-dialog v-model="isEditVolunteerDialogOpen" max-width="700">
+      <FTVolunteerRequirmentForm
+        :time-window="selectedTimeWindow"
+        @change="updateTimeWindow"
+      ></FTVolunteerRequirmentForm>
     </v-dialog>
   </div>
 </template>
@@ -32,13 +39,20 @@ import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTabl
 import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
 import FTTimeWindowForm from "~/components/molecules/timeframe/FTTimeWindowForm.vue";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
+import FTVolunteerRequirmentForm from "~/components/molecules/timeframe/FTVolunteerRequirmentForm.vue";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
-  components: { FTTimeWindowTable, FestivalEventCalendar, FTTimeWindowForm },
+  components: {
+    FTTimeWindowTable,
+    FestivalEventCalendar,
+    FTTimeWindowForm,
+    FTVolunteerRequirmentForm,
+  },
   data: () => ({
     isAddDialogOpen: false,
-    isEditDialogOpen: false,
+    isEditTimeDialogOpen: false,
+    isEditVolunteerDialogOpen: false,
     selectedTimeWindow: null as FTTimeWindow | null,
     selectedIndex: null as number | null,
   }),
@@ -57,7 +71,7 @@ export default Vue.extend({
         index: this.selectedIndex,
         timeWindow,
       });
-      this.closeEditDialog();
+      this.closeEditTimeDialog();
     },
     deleteTimeWindow(index: number) {
       this.$accessor.FT.deleteTimeWindow(index);
@@ -68,15 +82,25 @@ export default Vue.extend({
     closeAddDialog() {
       this.isAddDialogOpen = false;
     },
-    openEditDialog(index: number, timeWindow: FTTimeWindow) {
+    openEditTimeDialog(index: number, timeWindow: FTTimeWindow) {
       this.selectedIndex = index;
       this.selectedTimeWindow = timeWindow;
-      this.isEditDialogOpen = true;
+      this.isEditTimeDialogOpen = true;
     },
-    closeEditDialog() {
+    closeEditTimeDialog() {
       this.selectedIndex = null;
       this.selectedTimeWindow = null;
-      this.isEditDialogOpen = false;
+      this.isEditTimeDialogOpen = false;
+    },
+    openEditVolunteerDialog(index: number, timeWindow: FTTimeWindow) {
+      this.selectedIndex = index;
+      this.selectedTimeWindow = timeWindow;
+      this.isEditVolunteerDialogOpen = true;
+    },
+    closeEditVolunteerDialog() {
+      this.selectedIndex = null;
+      this.selectedTimeWindow = null;
+      this.isEditVolunteerDialogOpen = false;
     },
   },
 });

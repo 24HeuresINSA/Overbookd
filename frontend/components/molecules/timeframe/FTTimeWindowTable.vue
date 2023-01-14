@@ -14,11 +14,11 @@
       {{ formatDate(item.end) }}
     </template>
     <template #[`item.sliceTime`]="{ item }">
-      {{ floatToHour(item.sliceTime) }}
+      {{ item.sliceTime ? floatToHour(item.sliceTime) : "" }}
     </template>
     <template #[`item.action`]="{ index, item }">
       <div>
-        <v-btn icon>
+        <v-btn icon @click="editVolunteer(index, item)">
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
         <v-btn icon @click="editTimeWindow(index, item)">
@@ -66,7 +66,10 @@ export default Vue.extend({
       );
     },
     editTimeWindow(index: number, timeWindow: FTTimeWindow) {
-      this.$emit("update", index, timeWindow);
+      this.$emit("update-time", index, timeWindow);
+    },
+    editVolunteer(index: number, timeWindow: FTTimeWindow) {
+      this.$emit("update-volunteer", index, timeWindow);
     },
     deleteTimeWindow(index: number) {
       this.$emit("delete", index);
@@ -74,7 +77,7 @@ export default Vue.extend({
     floatToHour(float: number): string {
       const hours = Math.floor(float);
       const minutes = Math.round((float - hours) * 60);
-      return `${hours}h${minutes}`;
+      return `${hours}h${minutes ? minutes : ""}`;
     },
   },
 });
