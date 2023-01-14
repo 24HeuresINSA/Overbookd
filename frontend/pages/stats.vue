@@ -26,8 +26,6 @@ export default {
       switchType: false,
       dataset: [],
       name: "FA",
-      FA: null,
-      FT: null,
     };
   },
   async mounted() {
@@ -41,17 +39,18 @@ export default {
   methods: {
     async update() {
       if (this.switchType) {
-        // this.FT = (
-        //   await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this))
-        // )["data"];
-        this.FT = [];
         this.name = "FT";
-        this.dataset = this.FT;
+        this.dataset = [];
       } else {
-        this.FA = (await this.$accessor.FA.getFaStats()).data;
         this.name = "FA";
-        this.dataset = this.FA;
+        this.dataset = await this.getStatsFA();
       }
+    },
+    async getStatsFA() {
+      if (this.$accessor.stats.statsFA.length === 0) {
+        await this.$accessor.stats.getFaStats();
+      }
+      return this.$accessor.stats.statsFA;
     },
   },
 };

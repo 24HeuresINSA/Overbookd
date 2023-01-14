@@ -24,7 +24,6 @@ import {
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
-import { StatsPayload } from "~/utils/models/stats";
 import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
@@ -829,10 +828,6 @@ export const actions = actionTree(
         );
       }
       commit("DELETE_PUBLISH_ANIMATION");
-    },
-
-    async getFaStats() {
-      return safeCall<StatsPayload>(this, RepoFactory.faRepo.getFaStats(this));
     },
   }
 );
