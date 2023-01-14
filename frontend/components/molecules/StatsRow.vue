@@ -17,8 +17,8 @@
       <v-col sm="1" class="text-center">Total {{ name }}s N-1</v-col>
       <v-col sm="1" class="text-center">%</v-col>
     </v-row>
-    <v-row v-for="com in dataset" :key="com.teamCode">
-      <v-col sm="2">{{ teamName(com.teamCode) }}</v-col>
+    <v-row v-for="com in dataset" :key="com.teamId">
+      <v-col sm="2">{{ team(com.teamId)?.name || "Sans équipe" }}</v-col>
       <v-col sm="7">
         <div class="d-flex">
           <div
@@ -33,9 +33,9 @@
         </div>
       </v-col>
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
-      <v-col sm="1" class="text-center">{{ history(com.teamCode) }}</v-col>
+      <v-col sm="1" class="text-center">{{ history(com.teamId) }}</v-col>
       <v-col sm="1" class="text-center">{{
-        ((com.status["VALIDATED"] || 0) / history(com.teamCode)).toFixed(2)
+        ((com.status["VALIDATED"] || 0) / history(com.teamId)).toFixed(2)
       }}</v-col>
     </v-row>
   </div>
@@ -78,7 +78,7 @@ export default {
         signa: 2,
         sponso: 9,
         sports: 20,
-        null: 0,
+        undefined: 0,
       },
       historyFT: {
         bar: 84,
@@ -103,36 +103,34 @@ export default {
         signa: 28,
         sponso: 35,
         sports: 61,
-        null: 46,
+        undefined: 46,
       },
     };
   },
   methods: {
-    teamName(teamCode) {
-      return this.$accessor.team.getTeamByCode(teamCode)?.name || "undefined";
+    team(teamId) {
+      return this.$accessor.team.getTeamById(teamId) || [];
     },
     getAllStatus() {
       let status = FAStatus;
-      // if (this.name === "FT") {
-      //   status = FTStatus;
-      // }
-      // Change status for PascalCase
-      return Object.keys(status).map(
-        (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
-      );
+      return Object.keys(status).map((w) => this.toPascalCase(w));
     },
-    history(team) {
+    history(teamId) {
+      const teamCode = this.team(teamId)?.code || "undefined";
       if (this.name === "FT") {
-        if (this.historyFT[team] === undefined) {
+        if (this.historyFT[teamCode] === undefined) {
           return NaN;
         }
-        return this.historyFT[team];
+        return this.historyFT[teamCode];
       }
 
-      if (this.historyFA[team] === undefined) {
+      if (this.historyFA[teamCode] === undefined) {
         return NaN;
       }
-      return this.historyFA[team];
+      return this.historyFA[teamCode];
+    },
+    toPascalCase(str) {
+      return `${str.at(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
     },
   },
 };

@@ -11,11 +11,7 @@ import {
   COMPLETE_FA_SELECT,
   FaResponse,
 } from './fa_types';
-import {
-  StatsPayload,
-  StatsQueryResult,
-  StatsService,
-} from 'src/common/services/stats.service';
+import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -58,15 +54,18 @@ export class FaService {
   }
 
   async getFaStats(): Promise<StatsPayload[]> {
-    // Raw SQL query
-    const fa = (await this.prisma.$queryRaw`
-      SELECT "Team".code as team_code, fa.status as fa_status, CAST(count(*) AS INT)
-      FROM fa
-      LEFT JOIN "Team" ON "Team".id = fa.team_id
-      WHERE fa.is_deleted = false
-      GROUP BY "Team".code, fa.status
-      ORDER BY "Team".code, fa.status
-    `) as StatsQueryResult;
+    const fa = await this.prisma.fa.groupBy({
+      by: ['team_id', 'status'],
+      where: {
+        is_deleted: false,
+      },
+      _count: {
+        status: true,
+      },
+      orderBy: {
+        team_id: 'asc',
+      },
+    });
     return this.statsService.stats(fa);
   }
 

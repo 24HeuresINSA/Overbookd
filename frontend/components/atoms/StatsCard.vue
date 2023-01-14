@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2 stats-card" :class="color()" tile outlined>
+  <div class="px-2 stats-card" :class="displayedStatus" tile outlined>
     <slot></slot>
   </div>
 </template>
@@ -7,9 +7,9 @@
 <script>
 export default {
   props: { status: { type: String, required: true } },
-  methods: {
-    color() {
-      return "bg-" + this.status.toLowerCase();
+  computed: {
+    displayedStatus() {
+      return this.status.toLowerCase();
     },
   },
 };
