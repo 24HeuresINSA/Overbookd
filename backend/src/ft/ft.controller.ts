@@ -64,7 +64,7 @@ export class FtController {
     status: 200,
     description: 'Get all ft',
     isArray: true,
-    type: FtResponseDto,
+    type: AllFtResponseDto,
   })
   @ApiQuery({
     name: 'isDeleted',

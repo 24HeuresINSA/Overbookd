@@ -2,6 +2,52 @@ import { ApiProperty } from '@nestjs/swagger';
 import { FtStatus, ftSubjectType, reviewStatus } from '@prisma/client';
 import { AllFtResponse, FtResponse } from '../ftTypes';
 
+class UserName {
+  firstname: string;
+  lastname: string;
+}
+class Comment {
+  id: number;
+  comment: string;
+  subject: ftSubjectType;
+  authorId: number;
+  createdAt: Date;
+  author: UserName;
+}
+
+class UserRequest {
+  userId: number;
+  user: {
+    firstname: string;
+    lastname: string;
+  };
+}
+
+class TeamRequest {
+  number: number;
+  teamCode: string;
+  team: {
+    name: string;
+    color: string;
+    icon: string;
+  };
+}
+
+class TimeWindow {
+  id: number;
+  start: Date;
+  end: Date;
+  userRequests: UserRequest[];
+  teamRequests: TeamRequest[];
+}
+
+class Review {
+  status: reviewStatus;
+  teamCode: string;
+  team: {
+    name: string;
+  };
+}
 export class FtResponseDto implements FtResponse {
   @ApiProperty({
     required: true,
@@ -70,31 +116,25 @@ export class FtResponseDto implements FtResponse {
     required: true,
     description: 'All the comments of the ft',
     isArray: true,
-    type: Object,
+    type: Comment,
   })
-  comments: {
-    id: number;
-    comment: string;
-    subject: ftSubjectType;
-    authorId: number;
-    createdAt: Date;
-    author: { firstname: string; lastname: string };
-  }[];
-  timeWindows: {
-    id: number;
-    start: Date;
-    end: Date;
-    userRequests: {
-      userId: number;
-      user: { firstname: string; lastname: string };
-    }[];
-    teamRequests: {
-      number: number;
-      teamCode: string;
-      team: { name: string; color: string; icon: string };
-    }[];
-  }[];
-  reviews: { status: reviewStatus; teamCode: string; team: { name: string } }[];
+  comments: Comment[];
+
+  @ApiProperty({
+    required: true,
+    description: 'All the time windows of the ft with their requests',
+    isArray: true,
+    type: TimeWindow,
+  })
+  timeWindows: TimeWindow[];
+
+  @ApiProperty({
+    required: true,
+    description: 'All the reviews of the ft',
+    isArray: true,
+    type: Review,
+  })
+  reviews: Review[];
 }
 
 export class AllFtResponseDto implements AllFtResponse {
@@ -102,15 +142,6 @@ export class AllFtResponseDto implements AllFtResponse {
   id: number;
   status: FtStatus;
   parentFaId: number;
-  userInCharge: {
-    firstname: string;
-    lastname: string;
-  };
-  reviews: {
-    status: reviewStatus;
-    teamCode: string;
-    team: {
-      name: string;
-    };
-  }[];
+  userInCharge: UserName;
+  reviews: Review[];
 }
