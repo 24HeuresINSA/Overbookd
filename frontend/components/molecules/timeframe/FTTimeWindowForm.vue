@@ -128,6 +128,7 @@ export default Vue.extend({
     },
     confirmTimeWindows() {
       if (this.isFormInvalid) return;
+
       this.$emit("change", this.mTimeWindow);
       if (!this.isEditForm) this.clearLocalVariable();
     },
