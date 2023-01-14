@@ -60,10 +60,8 @@ export class FtService {
 
   async remove(id: number) {
     const ft = this.prisma.ft.findUnique({ where: { id } });
-    if (!ft) {
-      throw new NotFoundException(`ft #${id} not found`);
-    }
-    return this.prisma.ft.update({
+    if (!ft) return;
+    await this.prisma.ft.update({
       where: { id },
       data: { isDeleted: true },
     });
