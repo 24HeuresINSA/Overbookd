@@ -40,7 +40,7 @@ export default Vue.extend({
       default: "Chercher un utilisateur",
     },
     users: {
-      type: Array,
+      type: Array<User>,
       default: () => [],
     },
     boxed: {
