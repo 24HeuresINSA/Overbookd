@@ -52,6 +52,7 @@ export const mutations = mutationTree(state, {
     if (mFT.timeWindows && mFT.timeWindows[index]) {
       mFT.timeWindows[index].start = timeWindow.start;
       mFT.timeWindows[index].end = timeWindow.end;
+      mFT.timeWindows[index].sliceTime = timeWindow.sliceTime;
     }
   },
 

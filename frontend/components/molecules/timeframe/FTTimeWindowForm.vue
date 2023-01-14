@@ -6,7 +6,7 @@
       </v-card-title>
 
       <v-card-text>
-        <h3 class="subtitle">Début du créneau</h3>
+        <h3>Début du créneau</h3>
         <div class="row">
           <v-menu
             v-model="menuDateStart"
@@ -69,7 +69,7 @@
           </v-menu>
         </div>
 
-        <h3 class="subtitle">Fin du créneau</h3>
+        <h3>Fin du créneau</h3>
         <div class="row">
           <v-menu
             v-model="menuDateEnd"
@@ -132,7 +132,7 @@
           </v-menu>
         </div>
 
-        <h3 class="subtitle">Découpage du créneau</h3>
+        <h3>Découpage du créneau</h3>
         <v-checkbox v-model="toSlice" label="Découper"></v-checkbox>
         <v-slider
           v-model="sliceTime"
@@ -210,9 +210,6 @@ export default Vue.extend({
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
     },
-    me(): any {
-      return this.$accessor.user.me;
-    },
     isEditForm(): boolean {
       return this.timeWindow !== null;
     },
@@ -231,7 +228,7 @@ export default Vue.extend({
 
       const isSliceValid = this.getHourDiff % this.sliceTime === 0;
       const sliceInOneTimeWindow = this.getHourDiff === this.sliceTime;
-      if (!isSliceValid || sliceInOneTimeWindow) {
+      if (this.toSlice && (!isSliceValid || sliceInOneTimeWindow)) {
         this.showSliceErrorMessage();
         return true;
       }
@@ -342,6 +339,7 @@ export default Vue.extend({
     },
     confirmTimeWindows() {
       if (this.isFormInvalid) return;
+
       this.$emit("change", this.mTimeWindow);
       if (!this.isEditForm) this.clearLocalVariable();
     },
