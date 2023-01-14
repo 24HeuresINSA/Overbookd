@@ -468,7 +468,7 @@ model FtTimeWindows {
   ftId         Int             @map("ft_id")
   start        DateTime
   end          DateTime
-  sliceTime    Int?            @map("slice_time")
+  sliceTime    Float?          @map("slice_time")
   userRequests FtUserRequest[]
   teamRequests FtTeamRequest[]
 
