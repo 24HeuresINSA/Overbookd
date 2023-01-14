@@ -34,6 +34,12 @@ import { FtService } from './ft.service';
 
 @ApiBearerAuth()
 @ApiTags('ft')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
 @Controller('ft')
 export class FtController {
   constructor(private readonly ftService: FtService) {}
@@ -79,12 +85,6 @@ export class FtController {
     enum: FtStatus,
     description: 'Get FTs with a specific status',
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
   findAll(
     @Query() searchRequest: FTSearchRequestDto,
   ): Promise<AllFtResponseDto[]> {
@@ -105,14 +105,8 @@ export class FtController {
     description: 'Get ft by id',
     type: FtResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
   @ApiNotFoundResponse({
     description: "Can't find a requested resource",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -138,14 +132,8 @@ export class FtController {
     description: 'FT id',
     required: true,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
   @ApiNotFoundResponse({
     description: "Can't find a requested resource",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -161,12 +149,6 @@ export class FtController {
   @ApiResponse({
     status: 204,
     description: 'ft deleted',
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   @ApiParam({
     name: 'id',
