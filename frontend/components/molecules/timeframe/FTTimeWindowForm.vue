@@ -137,6 +137,12 @@ export default Vue.extend({
         message,
       });
     },
+    showSliceErrorMessage() {
+      return this.$store.dispatch("notif/pushNotification", {
+        type: "error",
+        message: `❌ La durée de la plage horaire doit être un multiple de ${this.sliceTime}h !`,
+      });
+    },
     saveMenuTime(menu: any, time: string) {
       menu.save(time);
     },
