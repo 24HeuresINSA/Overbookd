@@ -31,14 +31,14 @@ export const getters = getterTree(state, {
       });
     },
   getTeamById:
-    (state, getters) =>
-    (id: number): team => {
-      return getters.allTeams.find((t: team) => t.id === id);
+    (state) =>
+    (id: number): team | undefined => {
+      return state.teams.find((t) => t.id === id);
     },
   getTeamByCode:
-    (state, getters) =>
-    (code: string): team => {
-      return getters.allTeams.find((t: team) => t.code === code);
+    (state) =>
+    (code: string): team | undefined => {
+      return state.teams.find((t: team) => t.code === code);
     },
 });
 

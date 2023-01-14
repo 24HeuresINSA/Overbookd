@@ -33,7 +33,9 @@
         </div>
       </v-col>
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
-      <v-col sm="1" class="text-center">{{ history(com.teamId) }}</v-col>
+      <v-col sm="1" class="text-center">{{
+        Number.isNaN(history(com.teamId)) ? "N/A" : history(com.teamId)
+      }}</v-col>
       <v-col sm="1" class="text-center">{{ historyPercentage(com) }}</v-col>
     </v-row>
   </div>
@@ -115,12 +117,15 @@ export default Vue.extend({
     };
   },
   methods: {
-    team(teamId: number): team {
+    team(teamId: number): team | undefined {
       return this.$accessor.team.getTeamById(teamId);
     },
     getAllStatus() {
-      let status = FAStatus;
-      return Object.keys(status).map((w) => this.toPascalCase(w));
+      return Object.keys(FAStatus).map((w) => this.toPascalCase(w));
+    },
+    displayHistory(teamId: number): string {
+      const lastYearValue = this.history(teamId);
+      return Number.isNaN(lastYearValue) ? "N/A" : lastYearValue.toString();
     },
     history(teamId: number): number {
       const teamCode = this.team(teamId)?.code || "undefined";
@@ -139,7 +144,7 @@ export default Vue.extend({
     historyPercentage(stats: StatsPayload): string {
       const lastYearCount = this.history(stats.teamId);
       if (Number.isNaN(lastYearCount) || lastYearCount === 0) {
-        return "NaN";
+        return "N/A";
       }
 
       const validatedNumber = stats.status.find(
