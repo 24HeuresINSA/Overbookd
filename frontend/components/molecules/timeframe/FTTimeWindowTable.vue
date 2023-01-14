@@ -13,13 +13,19 @@
     <template #[`item.endDate`]="{ item }">
       {{ formatDate(item.end) }}
     </template>
+    <template #[`item.sliceTime`]="{ item }">
+      {{ floatToHour(item.sliceTime) }}
+    </template>
     <template #[`item.action`]="{ index, item }">
       <div>
+        <v-btn icon>
+          <v-icon>mdi-account-multiple-plus</v-icon>
+        </v-btn>
         <v-btn icon @click="editTimeWindow(index, item)">
-          <v-icon>mdi-pencil</v-icon>
+          <v-icon>mdi-clock-edit</v-icon>
         </v-btn>
         <v-btn icon @click="deleteTimeWindow(index)">
-          <v-icon>mdi-delete</v-icon>
+          <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </div>
     </template>
@@ -36,9 +42,8 @@ export default Vue.extend({
     headers: [
       { text: "Date de début", value: "startDate" },
       { text: "Date de fin", value: "endDate" },
-      { text: "Découpage", value: "toSlice" },
+      { text: "Découpage", value: "sliceTime" },
       { text: "Requis", value: "required" },
-      { text: "Affecté", value: "assigned" },
       { text: "Action", value: "action" },
     ],
   }),
@@ -65,6 +70,11 @@ export default Vue.extend({
     },
     deleteTimeWindow(index: number) {
       this.$emit("delete", index);
+    },
+    floatToHour(float: number): string {
+      const hours = Math.floor(float);
+      const minutes = Math.round((float - hours) * 60);
+      return `${hours}h${minutes}`;
     },
   },
 });

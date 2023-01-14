@@ -14,10 +14,10 @@
       </v-card-actions>
       <FestivalEventCalendar festival-event="FT" />
     </v-card>
-    <v-dialog v-model="isAddDialogOpen" max-width="600">
+    <v-dialog v-model="isAddDialogOpen" max-width="700">
       <FTTimeWindowForm @change="addTimeWindow"></FTTimeWindowForm>
     </v-dialog>
-    <v-dialog v-model="isEditDialogOpen" max-width="600">
+    <v-dialog v-model="isEditDialogOpen" max-width="700">
       <FTTimeWindowForm
         :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
