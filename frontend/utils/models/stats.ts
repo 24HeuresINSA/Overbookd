@@ -1,6 +1,8 @@
 export interface StatsPayload {
-  teamName: string;
-  teamCode: string;
-  status: object;
+  teamId: number;
+  status: Array<{
+    count: number;
+    status: string;
+  }>;
   total: number;
 }

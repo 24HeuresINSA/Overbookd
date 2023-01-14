@@ -15,16 +15,18 @@
   </v-container>
 </template>
 
-<script>
-import StatsRow from "~/components/molecules/StatsRow";
+<script lang="ts">
+import Vue from "vue";
+import { StatsPayload } from "~/utils/models/stats";
+import StatsRow from "~/components/molecules/StatsRow.vue";
 
-export default {
+export default Vue.extend({
   name: "Stats",
   components: { StatsRow },
   data() {
     return {
       switchType: false,
-      dataset: [],
+      dataset: [] as StatsPayload[],
       name: "FA",
     };
   },
@@ -53,7 +55,7 @@ export default {
       return this.$accessor.stats.statsFA;
     },
   },
-};
+});
 </script>
 
 <style scoped></style>

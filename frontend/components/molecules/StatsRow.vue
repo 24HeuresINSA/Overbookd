@@ -34,24 +34,31 @@
       </v-col>
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
       <v-col sm="1" class="text-center">{{ history(com.teamId) }}</v-col>
-      <v-col sm="1" class="text-center">{{
-        ((com.status["VALIDATED"] || 0) / history(com.teamId)).toFixed(2)
-      }}</v-col>
+      <v-col sm="1" class="text-center">{{ historyPercentage(com) }}</v-col>
     </v-row>
   </div>
 </template>
 
-<script>
-import StatsCard from "~/components/atoms/StatsCard";
+<script lang="ts">
+import Vue from "vue";
+import { team } from "~/utils/models/repo";
+import { StatsPayload } from "~/utils/models/stats";
 import { Status as FAStatus } from "~/utils/models/FA";
+import StatsCard from "~/components/atoms/StatsCard.vue";
 
-export default {
+export default Vue.extend({
   components: {
     StatsCard,
   },
   props: {
-    name: { type: String, required: true },
-    dataset: { type: Array, required: true },
+    name: {
+      type: String,
+      required: true,
+    },
+    dataset: {
+      type: Array<StatsPayload>,
+      required: true,
+    },
   },
   data() {
     return {
@@ -79,7 +86,7 @@ export default {
         sponso: 9,
         sports: 20,
         undefined: 0,
-      },
+      } as Record<string, number>,
       historyFT: {
         bar: 84,
         barrieres: 37,
@@ -104,18 +111,18 @@ export default {
         sponso: 35,
         sports: 61,
         undefined: 46,
-      },
+      } as Record<string, number>,
     };
   },
   methods: {
-    team(teamId) {
-      return this.$accessor.team.getTeamById(teamId) || [];
+    team(teamId: number): team {
+      return this.$accessor.team.getTeamById(teamId);
     },
     getAllStatus() {
       let status = FAStatus;
       return Object.keys(status).map((w) => this.toPascalCase(w));
     },
-    history(teamId) {
+    history(teamId: number): number {
       const teamCode = this.team(teamId)?.code || "undefined";
       if (this.name === "FT") {
         if (this.historyFT[teamCode] === undefined) {
@@ -129,9 +136,21 @@ export default {
       }
       return this.historyFA[teamCode];
     },
-    toPascalCase(str) {
-      return `${str.at(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
+    historyPercentage(stats: StatsPayload): string {
+      const lastYearCount = this.history(stats.teamId);
+      if (Number.isNaN(lastYearCount) || lastYearCount === 0) {
+        return "NaN";
+      }
+
+      const validatedNumber = stats.status.find(
+        (s) => s.status === "VALIDATED"
+      )?.count;
+
+      return ((validatedNumber || 0) / lastYearCount).toFixed(2);
+    },
+    toPascalCase(str: string): string {
+      return `${str.at(0)?.toUpperCase()}${str.slice(1).toLowerCase()}`;
     },
   },
-};
+});
 </script>
