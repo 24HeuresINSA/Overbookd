@@ -65,6 +65,13 @@ export class FtResponseDto implements FtResponse {
     type: Boolean,
   })
   isDeleted: boolean;
+
+  @ApiProperty({
+    required: true,
+    description: 'All the comments of the ft',
+    isArray: true,
+    type: Object,
+  })
   comments: {
     id: number;
     comment: string;
