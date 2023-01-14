@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ftStatus } from '@prisma/client';
+import { FtStatus } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateFtDto } from './dto/create-ft.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
@@ -12,7 +12,7 @@ import {
 
 export interface SearchFt {
   isDeleted: boolean;
-  status?: ftStatus;
+  status?: FtStatus;
 }
 
 @Injectable()
