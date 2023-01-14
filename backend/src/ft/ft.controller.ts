@@ -22,6 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FtStatus } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -71,6 +72,13 @@ export class FtController {
     required: false,
     type: Boolean,
     description: 'Get FTs that are deleted',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: String,
+    enum: FtStatus,
+    description: 'Get FTs with a specific status',
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
