@@ -216,7 +216,6 @@ export default Vue.extend({
   },
   watch: {
     timeWindow() {
-      console.log("watch");
       this.updateLocalVariable();
     },
   },
