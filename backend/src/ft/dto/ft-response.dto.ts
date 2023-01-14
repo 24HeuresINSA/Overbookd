@@ -39,6 +39,7 @@ class TimeWindow {
   end: Date;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
+  sliceTime: number;
 }
 
 class Review {

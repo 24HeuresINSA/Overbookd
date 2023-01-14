@@ -37,6 +37,7 @@ export const COMPLETE_FT_SELECT = {
       id: true,
       start: true,
       end: true,
+      sliceTime: true,
       userRequests: {
         select: {
           userId: true,
