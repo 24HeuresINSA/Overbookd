@@ -50,9 +50,6 @@ export class FtController {
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
   })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
@@ -77,9 +74,6 @@ export class FtController {
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
@@ -161,9 +155,6 @@ export class FtController {
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
