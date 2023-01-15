@@ -75,7 +75,7 @@ export default Vue.extend({
         start: formatDateForComponent(timeWindow.start),
         end: formatDateForComponent(timeWindow.end),
         color: "primary",
-        name: "Créneau",
+        name: "Tâche",
       }));
     },
   },

@@ -69,8 +69,8 @@ export default Vue.extend({
         start: new Date(this.start),
         end: new Date(this.end),
         sliceTime: this.toSlice ? this.sliceTime : undefined,
-        userRequests: this?.timeWindow?.userRequests ?? [],
-        teamRequests: this?.timeWindow?.teamRequests ?? [],
+        userRequests: this.timeWindow?.userRequests ?? [],
+        teamRequests: this.timeWindow?.teamRequests ?? [],
       };
     },
     manifDate(): string {
