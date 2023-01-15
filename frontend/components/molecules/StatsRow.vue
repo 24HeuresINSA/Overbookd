@@ -33,9 +33,7 @@
         </div>
       </v-col>
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
-      <v-col sm="1" class="text-center">{{
-        displayHistory(com.teamId)
-      }}</v-col>
+      <v-col sm="1" class="text-center">{{ displayHistory(com.teamId) }}</v-col>
       <v-col sm="1" class="text-center">{{ historyPercentage(com) }}</v-col>
     </v-row>
   </div>
