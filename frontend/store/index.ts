@@ -20,6 +20,7 @@ import * as timeslot from "./timeslot";
 import * as transaction from "./transaction";
 import * as user from "./user";
 import * as permission from "./permission";
+import * as stats from "./stats";
 
 export const state = () => ({});
 
@@ -56,5 +57,6 @@ export const accessorType = getAccessorType({
     signaLocation,
     publishAnimation,
     permission,
+    stats,
   },
 });

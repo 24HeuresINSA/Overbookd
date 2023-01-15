@@ -18,6 +18,7 @@ import {
   StoredGearRequest,
   time_windows,
 } from "~/utils/models/FA";
+import { StatsPayload } from "~/utils/models/stats";
 
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
@@ -49,8 +50,8 @@ export default {
     return context.$axios.delete<void>(`${resource}/${id}`);
   },
 
-  getFAsNumber(context: Context) {
-    return context.$axios.get<number>(resource + "/count");
+  getFaStats(context: Context) {
+    return context.$axios.get<StatsPayload>(resource + "/stats");
   },
 
   updateFA(context: Context, id: number, FA: fa_general_update) {

@@ -10,54 +10,52 @@
       ></v-switch>
       <h1>FT</h1>
     </v-row>
-    <Needs :dataset="dataset" :name="name"></Needs>
+    <StatsRow :dataset="dataset" :name="name" />
+    <h1 v-if="switchType">Les stats FT ne sont pas encore disponibles</h1>
   </v-container>
 </template>
 
-<script>
-import { safeCall } from "../utils/api/calls";
-import { RepoFactory } from "../repositories/repoFactory";
-import Needs from "../components/Needs";
+<script lang="ts">
+import Vue from "vue";
+import { StatsPayload } from "~/utils/models/stats";
+import StatsRow from "~/components/molecules/StatsRow.vue";
 
-export default {
+export default Vue.extend({
   name: "Stats",
-  components: { Needs },
+  components: { StatsRow },
   data() {
     return {
       switchType: false,
-      dataset: [],
+      dataset: [] as StatsPayload[],
       name: "FA",
-      FA: null,
-      FT: null,
     };
   },
   async mounted() {
-    if (this.$accessor.user.hasPermission("hard")) {
-      await this.update();
-    } else {
+    if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });
     }
+    await this.update();
   },
   methods: {
     async update() {
       if (this.switchType) {
-        this.FT = (
-          await safeCall(this.$store, RepoFactory.ftRepo.getFTsNumber(this))
-        )["data"];
         this.name = "FT";
-        this.dataset = this.FT;
+        this.dataset = [];
       } else {
-        this.FA = (
-          await safeCall(this.$store, RepoFactory.faRepo.getFAsNumber(this))
-        )["data"];
         this.name = "FA";
-        this.dataset = this.FA;
+        this.dataset = await this.getStatsFA();
       }
     },
+    async getStatsFA() {
+      if (this.$accessor.stats.statsFA.length === 0) {
+        await this.$accessor.stats.getFaStats();
+      }
+      return this.$accessor.stats.statsFA;
+    },
   },
-};
+});
 </script>
 
 <style scoped></style>

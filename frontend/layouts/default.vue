@@ -232,6 +232,12 @@ export default {
           title: "Trombinoscope",
           to: "/trombinoscope",
         },
+        {
+          icon: "mdi-chart-areaspline-variant",
+          title: "Stats",
+          permission: "hard",
+          to: "/stats",
+        },
       ],
       items: [
         {
@@ -317,12 +323,6 @@ export default {
           title: "Conflits",
           roles: "hard",
           to: "/listeconflits",
-        },
-        {
-          icon: "mdi-chart-areaspline-variant",
-          title: "Stats",
-          roles: "hard",
-          to: "/stats",
         },
         {
           icon: "mdi-cog",
