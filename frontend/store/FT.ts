@@ -53,6 +53,8 @@ export const mutations = mutationTree(state, {
       mFT.timeWindows[index].start = timeWindow.start;
       mFT.timeWindows[index].end = timeWindow.end;
       mFT.timeWindows[index].sliceTime = timeWindow.sliceTime;
+      mFT.timeWindows[index].userRequests = timeWindow.userRequests;
+      mFT.timeWindows[index].teamRequests = timeWindow.teamRequests;
     }
   },
 

@@ -16,6 +16,34 @@
     <template #[`item.sliceTime`]="{ item }">
       {{ item.sliceTime ? floatToHour(item.sliceTime) : "" }}
     </template>
+    <template #[`item.userRequests`]="{ index, item }">
+      <v-chip-group column>
+        <template v-for="(req, i) in item.userRequests">
+          <v-chip
+            v-if="req"
+            :key="i"
+            close
+            @click:close="deleteUserRequest(index, i)"
+          >
+            {{ req.firstname + " " + req.lastname }}
+          </v-chip>
+        </template>
+      </v-chip-group>
+    </template>
+    <template #[`item.teamRequests`]="{ index, item }">
+      <v-chip-group column>
+        <template v-for="(req, i) in item.teamRequests">
+          <v-chip
+            v-if="req"
+            :key="i"
+            close
+            @click:close="deleteTeamRequest(index, i)"
+          >
+            {{ req.quantity + " " + req.team.name }}
+          </v-chip>
+        </template>
+      </v-chip-group>
+    </template>
     <template #[`item.action`]="{ index, item }">
       <div>
         <v-btn icon @click="editVolunteer(index, item)">
@@ -44,7 +72,8 @@ export default Vue.extend({
       { text: "Date de début", value: "startDate" },
       { text: "Date de fin", value: "endDate" },
       { text: "Découpage", value: "sliceTime" },
-      { text: "Requis", value: "required" },
+      { text: "Orga Requis", value: "userRequests" },
+      { text: "Team Requises", value: "teamRequests" },
       { text: "Action", value: "action" },
     ],
   }),
@@ -57,6 +86,11 @@ export default Vue.extend({
     formatDate(date: string): string {
       return formatStringDateToDisplay(date);
     },
+    floatToHour(float: number): string {
+      const hours = Math.floor(float);
+      const minutes = Math.round((float - hours) * 60);
+      return `${hours}h${minutes ? minutes : ""}`;
+    },
     editTimeWindow(index: number, timeWindow: FTTimeWindow) {
       this.$emit("update-time", index, timeWindow);
     },
@@ -66,10 +100,33 @@ export default Vue.extend({
     deleteTimeWindow(index: number) {
       this.$emit("delete", index);
     },
-    floatToHour(float: number): string {
-      const hours = Math.floor(float);
-      const minutes = Math.round((float - hours) * 60);
-      return `${hours}h${minutes ? minutes : ""}`;
+    deleteUserRequest(timeWindowIndex: number, userRequestIndex: number) {
+      const timeWindow = this.timeWindows[timeWindowIndex];
+      let userRequests = timeWindow.userRequests.slice();
+      userRequests.splice(userRequestIndex, 1);
+
+      const mTimeWindow: FTTimeWindow = {
+        ...timeWindow,
+        userRequests,
+      };
+      this.updateTimeWindow(timeWindowIndex, mTimeWindow);
+    },
+    deleteTeamRequest(timeWindowIndex: number, teamRequestIndex: number) {
+      const timeWindow = this.timeWindows[timeWindowIndex];
+      let teamRequests = timeWindow.teamRequests.slice();
+      teamRequests.splice(teamRequestIndex, 1);
+
+      const mTimeWindow: FTTimeWindow = {
+        ...timeWindow,
+        teamRequests,
+      };
+      this.updateTimeWindow(timeWindowIndex, mTimeWindow);
+    },
+    updateTimeWindow(index: number, timeWindow: FTTimeWindow) {
+      this.$accessor.FT.updateTimeWindow({
+        index,
+        timeWindow,
+      });
     },
   },
 });

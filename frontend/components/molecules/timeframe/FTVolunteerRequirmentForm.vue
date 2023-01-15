@@ -6,17 +6,43 @@
       </v-card-title>
 
       <v-card-text>
-        <h3>Ajouter un orga</h3>
+        <h3>Sélectionner les orgas</h3>
         <SearchUsers
           v-model="userRequests"
           :label="`Rechercher un orga`"
         ></SearchUsers>
 
         <h3>Ajouter une team</h3>
-        <SearchTeam
-          v-model="teamRequests"
-          :label="`Rechercher une team`"
-        ></SearchTeam>
+        <v-chip-group column>
+          <v-chip
+            v-for="(req, i) in teamRequests"
+            :key="i"
+            close
+            @click:close="deleteTeamRequest(i)"
+          >
+            {{ req.quantity + " " + req.team.name }}
+          </v-chip>
+        </v-chip-group>
+        <div class="flex-row">
+          <v-text-field
+            v-model="quantity"
+            type="number"
+            label="Quantité"
+            :rules="[rules.number, rules.min]"
+          />
+          <SearchTeam
+            v-model="selectedTeam"
+            :label="`Rechercher une team`"
+          ></SearchTeam>
+          <v-btn
+            rounded
+            class="margin-btn"
+            :disabled="!isTeamRequestValid"
+            @click="addTeamRequest"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
       </v-card-text>
 
       <v-card-actions>
@@ -33,7 +59,10 @@
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import SearchUsers from "~/components/atoms/SearchUsers.vue";
-import { FT, FTTimeWindow } from "~/utils/models/ft";
+import { FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
+import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "FTVolunteerRequirmentForm",
@@ -49,13 +78,18 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    userRequests: [],
-    teamRequests: [],
+    userRequests: [] as User[],
+    teamRequests: [] as FTTeamRequest[],
+
+    quantity: 1,
+    selectedTeam: null as Team | null,
+
+    rules: {
+      number: isNumber,
+      min: min(1),
+    },
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
-    },
     mTimeWindow(): FTTimeWindow {
       return {
         ...this.timeWindow,
@@ -63,8 +97,8 @@ export default Vue.extend({
         teamRequests: this.teamRequests,
       };
     },
-    manifDate(): string {
-      return this.$accessor.config.getConfig("event_date");
+    isTeamRequestValid(): boolean {
+      return Boolean(this.selectedTeam && this.quantity > 0);
     },
   },
   watch: {
@@ -76,7 +110,27 @@ export default Vue.extend({
     this.updateLocalVariable();
   },
   methods: {
-    updateLocalVariable() {},
+    updateLocalVariable() {
+      if (!this.timeWindow) return;
+      this.userRequests = this.timeWindow.userRequests.slice();
+      this.teamRequests = this.timeWindow.teamRequests.slice();
+      this.clearTeamRequestValue();
+    },
+    clearTeamRequestValue() {
+      this.quantity = 1;
+      this.selectedTeam = null;
+    },
+    addTeamRequest() {
+      const teamRequest: FTTeamRequest = {
+        quantity: this.quantity,
+        team: this.selectedTeam as Team,
+      };
+      this.teamRequests.push(teamRequest);
+      this.clearTeamRequestValue();
+    },
+    deleteTeamRequest(index: number) {
+      this.teamRequests.splice(index, 1);
+    },
     confirmVolunteerRequirment() {
       this.$emit("change", this.mTimeWindow);
     },
@@ -89,15 +143,15 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
 
-  .row {
+  .flex-row {
     display: flex;
-    flex-direction: row;
-    margin-top: 3px;
-    margin-bottom: 7px;
+    align-items: center;
+    gap: 1rem;
+  }
 
-    .v-text-field {
-      margin: 0 24px;
-    }
+  .flex-row .margin-btn {
+    margin-left: 20px;
+    margin-bottom: 30px;
   }
 }
 </style>

@@ -51,5 +51,10 @@ export interface FTTimeWindow {
   end: Date;
   sliceTime?: number;
   userRequests: User[];
-  teamRequests: Team[];
+  teamRequests: FTTeamRequest[];
+}
+
+export interface FTTeamRequest {
+  quantity: number;
+  team: Team;
 }
