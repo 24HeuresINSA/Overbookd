@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Feedback, SubjectType } from "~/utils/models/feedback";
+import { SubjectType } from "~/utils/models/feedback";
 import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
 import {
   collaborator,
@@ -321,11 +321,11 @@ export const actions = actionTree(
     ) {
       const authorName = `${author.firstname} ${author.lastname}`;
       if (!faId || !authorId || !author) return;
-      const comment: Feedback = {
+      const comment: fa_comments = {
         subject: SubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
         author: authorId,
-        createdAt: new Date(),
+        created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       commit("UPDATE_STATUS", Status.SUBMITTED);
@@ -415,11 +415,11 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
-      const comment: Feedback = {
+      const comment: fa_comments = {
         subject: SubjectType.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
         author: author.id,
-        createdAt: new Date(),
+        created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -434,11 +434,11 @@ export const actions = actionTree(
         team_id: validator_id,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
-      const comment: Feedback = {
+      const comment: fa_comments = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author: author.id,
-        createdAt: new Date(),
+        created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -466,11 +466,11 @@ export const actions = actionTree(
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
-      const comment: Feedback = {
+      const comment: fa_comments = {
         subject: SubjectType.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
         author: author.id,
-        createdAt: new Date(),
+        created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       dispatch("save");
@@ -482,7 +482,7 @@ export const actions = actionTree(
         comment,
         defaultAuthor,
       }: {
-        comment: Feedback;
+        comment: fa_comments;
         defaultAuthor: { firstname: string; lastname: string };
       }
     ) {
