@@ -34,7 +34,7 @@
       </v-col>
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
       <v-col sm="1" class="text-center">{{
-        Number.isNaN(history(com.teamId)) ? "N/A" : history(com.teamId)
+        displayHistory(com.teamId)
       }}</v-col>
       <v-col sm="1" class="text-center">{{ historyPercentage(com) }}</v-col>
     </v-row>
