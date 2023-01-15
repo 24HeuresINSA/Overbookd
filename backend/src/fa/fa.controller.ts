@@ -50,6 +50,7 @@ import {
   GearRequestsService,
   GearSeekerType,
 } from './gear-requests/gearRequests.service';
+import { StatsPayload } from 'src/common/services/stats.service';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -90,6 +91,18 @@ export class FaController {
     @Query() searchRequest: FASearchRequestDto,
   ): Promise<AllFaResponse[] | null> {
     return this.faService.findAll(searchRequest);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Get('stats')
+  @ApiResponse({
+    status: 200,
+    description: 'Get FA stats',
+    type: Promise<StatsPayload[]>,
+  })
+  getFaStats(): Promise<StatsPayload[]> {
+    return this.faService.getFaStats();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

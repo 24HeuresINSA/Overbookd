@@ -1,45 +1,54 @@
+@mixin background-color-by-status() {
+  &.validated {
+    background-color: $validated-color;
+  }
+  &.submitted {
+    background-color: $submitted-color;
+  }
+  &.refused {
+    background-color: $refused-color;
+  }
+  &.draft { 
+    background-color: $draft-color;
+  }
+}
+
+
 .fa, .ft {
   .v-card {
     &.validated {
-      border-left: 5px solid green;
+      border-left: 5px solid $validated-color;
     }
     &.submitted {
-      border-left: 5px solid orange;
+      border-left: 5px solid $submitted-color;
     }
     &.refused {
-      border-left: 5px solid red;
+      border-left: 5px solid $refused-color;
     }
     &.draft { 
-      border-left: 5px solid grey;
+      border-left: 5px solid $draft-color;
     }
   }
 
   .v-icon {
     &.validated {
-      color: green;
+      color: $validated-color;
     }
     &.refused {
-      color: red;
+      color: $refused-color;
     }
     &.draft, &.submitted {
-      color: grey;
+      color: $draft-color;
     }
   }
 
   .dot {
-    &.validated {
-      background-color: green;
-    }
-    &.submitted {
-      background-color: orange;
-    }
-    &.refused {
-      background-color: red;
-    }
-    &.draft { 
-      background-color: grey;
-    }
+    @include background-color-by-status();
   }
+}
+
+.stats-card {
+  @include background-color-by-status();
 }
 
 
