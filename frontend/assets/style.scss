@@ -80,9 +80,8 @@
   }
 }
 
-.stats-card {
-  @include background-color-by-status();
-}
+
+  
 
 .important {
   color: red !important;
