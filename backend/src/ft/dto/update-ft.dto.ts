@@ -1,14 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus } from '@prisma/client';
 import {
   IsBoolean,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   Min,
-  ValidationArguments,
 } from 'class-validator';
 
 export class UpdateFtDto {
@@ -19,19 +16,6 @@ export class UpdateFtDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The status of the ft',
-    enum: FtStatus,
-    default: FtStatus.DRAFT,
-  })
-  @IsOptional()
-  @IsEnum(FtStatus, {
-    message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(FtStatus)}`,
-  })
-  status?: FtStatus;
 
   @ApiProperty({
     required: false,
