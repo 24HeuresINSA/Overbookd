@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus, ftSubjectType, reviewStatus } from '@prisma/client';
+import { FtStatus, FtSubjectType, reviewStatus } from '@prisma/client';
 import { AllFtResponse, FtResponse } from '../ftTypes';
 
 class UserName {
@@ -9,7 +9,7 @@ class UserName {
 class Comment {
   id: number;
   comment: string;
-  subject: ftSubjectType;
+  subject: FtSubjectType;
   authorId: number;
   createdAt: Date;
   author: UserName;
