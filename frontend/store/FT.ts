@@ -44,18 +44,17 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    if (!mFT.timeWindows) mFT.timeWindows = [];
-    mFT.timeWindows?.push(timeWindow);
+    mFT.timeWindows = [...mFT.timeWindows, timeWindow];
   },
 
   UPDATE_TIME_WINDOW({ mFT }, { index, timeWindow }) {
-    if (mFT.timeWindows && mFT.timeWindows[index]) {
-      mFT.timeWindows[index].start = timeWindow.start;
-      mFT.timeWindows[index].end = timeWindow.end;
-      mFT.timeWindows[index].sliceTime = timeWindow.sliceTime;
-      mFT.timeWindows[index].userRequests = timeWindow.userRequests;
-      mFT.timeWindows[index].teamRequests = timeWindow.teamRequests;
-    }
+    const existingTimeWindow = mFT.timeWindows?.[index];
+    if (!existingTimeWindow) return;
+    mFT.timeWindows = [
+      ...mFT.timeWindows.slice(0, index),
+      timeWindow,
+      ...mFT.timeWindows.slice(index + 1),
+    ];
   },
 
   DELETE_TIME_WINDOW({ mFT }, index: number) {
@@ -107,16 +106,18 @@ export const actions = actionTree(
       commit("DELETE_FT", ftId);
     },
 
-    addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+    async addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
       commit("ADD_TIME_WINDOW", timeWindow);
+      // await repo.addFTTimeWindows(this, id);
     },
 
-    updateTimeWindow({ commit }, { index, timeWindow }) {
+    async updateTimeWindow({ commit }, { index, timeWindow }) {
       commit("UPDATE_TIME_WINDOW", { index, timeWindow });
+      // await repo.updateFTTimeWindows(this, id);
     },
 
     async deleteTimeWindow({ commit, state }, index: number) {
-      if (state.mFT.timeWindows && state.mFT.timeWindows[index]) {
+      if (state.mFT?.timeWindows?.[index]) {
         const id = state.mFT.timeWindows[index].id;
         // if (id) await repo.deleteFTTimeWindows(this, id);
       }
