@@ -22,9 +22,11 @@ export class FtService {
   }
 
   async findAll(search: SearchFt): Promise<LiteFtResponseDto[] | null> {
-    const where = this.buildFindCondition(search);
     return this.prisma.ft.findMany({
-      where,
+      where: {
+        isDeleted: search.isDeleted,
+        status: search.status,
+      },
       orderBy: {
         id: 'asc',
       },
