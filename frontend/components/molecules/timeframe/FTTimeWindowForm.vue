@@ -73,9 +73,6 @@ export default Vue.extend({
         teamRequests: this.timeWindow?.teamRequests ?? [],
       };
     },
-    manifDate(): string {
-      return this.$accessor.config.getConfig("event_date");
-    },
     isEditForm(): boolean {
       return this.timeWindow !== null;
     },

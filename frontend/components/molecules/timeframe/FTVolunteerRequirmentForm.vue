@@ -2,18 +2,18 @@
   <div>
     <v-card class="form-card">
       <v-card-title>
-        <span class="headline">Ajouter un orga ou un team</span>
+        <span class="headline">Ajouter des bénévoles</span>
       </v-card-title>
 
       <v-card-text>
-        <h3>Sélectionner les orgas</h3>
+        <h3>Ajouter un bénévole</h3>
         <SearchUsers
           v-model="userRequests"
-          :label="`Rechercher un orga`"
+          :label="`Rechercher un bénévole`"
         ></SearchUsers>
 
-        <h3>Ajouter une team</h3>
-        <v-chip-group column>
+        <h3>Ajouter des bénévoles d'une équipe</h3>
+        <v-chip-group>
           <v-chip
             v-for="(req, i) in teamRequests"
             :key="i"
@@ -32,7 +32,7 @@
           />
           <SearchTeam
             v-model="selectedTeam"
-            :label="`Rechercher une team`"
+            :label="`Rechercher une équipe`"
           ></SearchTeam>
           <v-btn
             rounded
@@ -147,11 +147,11 @@ export default Vue.extend({
     display: flex;
     align-items: center;
     gap: 1rem;
-  }
 
-  .flex-row .margin-btn {
-    margin-left: 20px;
-    margin-bottom: 30px;
+    .margin-btn {
+      margin-left: 20px;
+      margin-bottom: 30px;
+    }
   }
 }
 </style>

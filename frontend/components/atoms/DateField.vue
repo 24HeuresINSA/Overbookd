@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :value="value"
+    :value="date"
     :label="label"
     type="datetime-local"
     :min="min"
@@ -44,21 +44,6 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-  },
-  data: () => ({
-    manifDate: "",
-  }),
-  computed: {
-    value(): string | null {
-      if (!this.date) return this.manifDate;
-      return this.date;
-    },
-  },
-  mounted() {
-    const date = this.$accessor.config.getConfig("event_date");
-    let formattedDate = formatDateForComponent(new Date(date));
-    formattedDate = formattedDate.replace(/T\d\d:\d\d/, "T00:00");
-    this.manifDate = formattedDate;
   },
   methods: {
     propagateEvent(date: string | null) {
