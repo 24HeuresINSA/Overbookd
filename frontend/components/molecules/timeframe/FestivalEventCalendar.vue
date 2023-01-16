@@ -31,6 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatDateForComponent } from "~/utils/date/dateUtils";
 import { time_windows_type } from "~/utils/models/FA";
 
 interface CalendarTimeWindow {
@@ -59,8 +60,8 @@ export default Vue.extend({
     },
     faTimeWindows(): CalendarTimeWindow[] {
       return (this.$accessor.FA.mFA.time_windows ?? []).map((timeWindow) => ({
-        start: this.formatDateForCalendar(timeWindow.start),
-        end: this.formatDateForCalendar(timeWindow.end),
+        start: formatDateForComponent(timeWindow.start),
+        end: formatDateForComponent(timeWindow.end),
         color:
           timeWindow.type === time_windows_type.MATOS ? "secondary" : "primary",
         name:
@@ -71,8 +72,8 @@ export default Vue.extend({
     },
     ftTimeWindows(): CalendarTimeWindow[] {
       return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
-        start: this.formatDateForCalendar(timeWindow.start),
-        end: this.formatDateForCalendar(timeWindow.end),
+        start: formatDateForComponent(timeWindow.start),
+        end: formatDateForComponent(timeWindow.end),
         color: "primary",
         name: "Créneau",
       }));
@@ -82,16 +83,6 @@ export default Vue.extend({
     this.value = this.$accessor.config.getConfig("event_date");
   },
   methods: {
-    formatDateForCalendar(date: Date): string {
-      date = new Date(date);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const seconds = date.getSeconds();
-      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    },
     getEventColor(event: any): string {
       return event.color;
     },

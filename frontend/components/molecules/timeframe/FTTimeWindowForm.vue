@@ -38,6 +38,7 @@
 <script lang="ts">
 import Vue from "vue";
 import DateField from "~/components/atoms/DateField.vue";
+import { formatDateForComponent, getHourDiff } from "~/utils/date/dateUtils";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -91,8 +92,9 @@ export default Vue.extend({
         return true;
       }
 
-      const isSliceValid = this.getHourDiff % this.sliceTime === 0;
-      const sliceInOneTimeWindow = this.getHourDiff === this.sliceTime;
+      const hourDiff = getHourDiff(new Date(this.start), new Date(this.end));
+      const isSliceValid = hourDiff % this.sliceTime === 0;
+      const sliceInOneTimeWindow = hourDiff === this.sliceTime;
       if (this.toSlice && (!isSliceValid || sliceInOneTimeWindow)) {
         this.showErrorMessage(
           `❌ La durée de la plage horaire doit être un multiple de ${this.sliceTime}h !`
@@ -100,12 +102,6 @@ export default Vue.extend({
         return true;
       }
       return false;
-    },
-    getHourDiff(): number {
-      const start = new Date(this.start);
-      const end = new Date(this.end);
-      const diff = end.getTime() - start.getTime();
-      return diff / (1000 * 60 * 60);
     },
   },
   watch: {
@@ -119,13 +115,10 @@ export default Vue.extend({
   methods: {
     updateLocalVariable() {
       if (!this.isEditForm) return this.clearLocalVariable();
-      this.start = this.formatDateForField(this.timeWindow.start);
-      this.end = this.formatDateForField(this.timeWindow.end);
+      this.start = formatDateForComponent(this.timeWindow.start);
+      this.end = formatDateForComponent(this.timeWindow.end);
       this.toSlice = this.timeWindow.sliceTime !== undefined;
       this.sliceTime = this.timeWindow.sliceTime || 2;
-    },
-    formatDateForField(date: Date): string {
-      return date.toISOString().slice(0, -8);
     },
     clearLocalVariable() {
       this.start = "";

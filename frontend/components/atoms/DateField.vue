@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :value="date"
+    :value="value"
     :label="label"
     type="datetime-local"
     :min="min"
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatDateForComponent } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
   name: "DateField",
@@ -44,6 +45,21 @@ export default Vue.extend({
       default: true,
     },
   },
+  data: () => ({
+    manifDate: "",
+  }),
+  computed: {
+    value(): string | null {
+      if (!this.date) return this.manifDate;
+      return this.date;
+    },
+  },
+  mounted() {
+    const date = this.$accessor.config.getConfig("event_date");
+    let formattedDate = formatDateForComponent(new Date(date));
+    formattedDate = formattedDate.replace(/T\d\d:\d\d/, "T00:00");
+    this.manifDate = formattedDate;
+  },
   methods: {
     propagateEvent(date: string | null) {
       this.$emit("change", this.roundMinutes(date));
@@ -56,9 +72,8 @@ export default Vue.extend({
       if (minutes % 15 === 0) return date;
 
       const minutesRounded = Math.round(minutes / 15) * 15;
-      dateObj.setHours(dateObj.getHours() + 1);
       dateObj.setMinutes(minutesRounded);
-      return dateObj.toISOString().slice(0, -8);
+      return formatDateForComponent(dateObj);
     },
   },
 });

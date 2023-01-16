@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatStringDateToDisplay } from "~/utils/date/dateUtils";
 import { FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -54,16 +55,7 @@ export default Vue.extend({
   },
   methods: {
     formatDate(date: string): string {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+      return formatStringDateToDisplay(date);
     },
     editTimeWindow(index: number, timeWindow: FTTimeWindow) {
       this.$emit("update-time", index, timeWindow);

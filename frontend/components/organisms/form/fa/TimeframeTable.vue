@@ -92,6 +92,7 @@ import {
 } from "~/utils/models/FA";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import { formatStringDateToDisplay } from "~/utils/date/dateUtils";
 
 interface IdentifiableTimeWindow extends time_windows {
   key: string;
@@ -164,16 +165,7 @@ export default Vue.extend({
   },
   methods: {
     formatDate(date: string): string {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+      return formatStringDateToDisplay(date);
     },
     confirmToDeleteTimeframe(timeWindow: IdentifiableTimeWindow) {
       const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
