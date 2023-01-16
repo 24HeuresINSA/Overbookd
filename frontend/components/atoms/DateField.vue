@@ -3,6 +3,8 @@
     :value="date"
     :label="label"
     type="datetime-local"
+    :min="min"
+    :max="max"
     :solo="boxed"
     :filled="boxed"
     return-object
@@ -26,6 +28,14 @@ export default Vue.extend({
       default: "Date",
     },
     date: {
+      type: String,
+      default: null,
+    },
+    min: {
+      type: String,
+      default: null,
+    },
+    max: {
       type: String,
       default: null,
     },

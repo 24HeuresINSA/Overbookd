@@ -7,10 +7,10 @@
 
       <v-card-text>
         <h3>Début du créneau</h3>
-        <DateField v-model="start" label="Début"></DateField>
+        <DateField v-model="start" :max="end" label="Début"></DateField>
 
         <h3>Fin du créneau</h3>
-        <DateField v-model="end" label="Fin"></DateField>
+        <DateField v-model="end" :min="start" label="Fin"></DateField>
 
         <h3>Découpage du créneau</h3>
         <v-checkbox v-model="toSlice" label="Découper"></v-checkbox>
