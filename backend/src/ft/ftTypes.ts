@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client';
 
-export type FtResponse = Prisma.FtGetPayload<{
+export type CompleteFtResponse = Prisma.FtGetPayload<{
   select: typeof COMPLETE_FT_SELECT;
 }>;
-export type AllFtResponse = Prisma.FtGetPayload<{
-  select: typeof ALL_FT_SELECT;
+export type LiteFtResponse = Prisma.FtGetPayload<{
+  select: typeof LITE_FT_SELECT;
 }>;
 
 export const COMPLETE_FT_SELECT = {
@@ -77,7 +77,7 @@ export const COMPLETE_FT_SELECT = {
   },
 };
 
-export const ALL_FT_SELECT = {
+export const LITE_FT_SELECT = {
   id: true,
   name: true,
   status: true,

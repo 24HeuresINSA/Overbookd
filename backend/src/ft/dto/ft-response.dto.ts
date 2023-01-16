@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FtStatus, FtSubjectType, reviewStatus } from '@prisma/client';
-import { AllFtResponse, FtResponse } from '../ftTypes';
+import { CompleteFtResponse, LiteFtResponse } from '../ftTypes';
 
 class UserName {
   firstname: string;
@@ -49,7 +49,7 @@ class Review {
     name: string;
   };
 }
-export class FtResponseDto implements FtResponse {
+export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The id of the ft',
@@ -138,7 +138,7 @@ export class FtResponseDto implements FtResponse {
   reviews: Review[];
 }
 
-export class AllFtResponseDto implements AllFtResponse {
+export class LiteFtResponseDto implements LiteFtResponse {
   name: string;
   id: number;
   status: FtStatus;

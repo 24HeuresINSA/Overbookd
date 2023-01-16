@@ -27,7 +27,10 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
-import { AllFtResponseDto, FtResponseDto } from './dto/ft-response.dto';
+import {
+  CompleteFtResponseDto,
+  LiteFtResponseDto,
+} from './dto/ft-response.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
@@ -51,7 +54,7 @@ export class FtController {
   @ApiResponse({
     status: 201,
     description: 'The ft has been successfully created.',
-    type: FtResponseDto,
+    type: CompleteFtResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -59,7 +62,7 @@ export class FtController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() ft: CreateFtDto): Promise<FtResponseDto | null> {
+  create(@Body() ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
     return this.ftService.create(ft);
   }
 
@@ -70,7 +73,7 @@ export class FtController {
     status: 200,
     description: 'Get all ft',
     isArray: true,
-    type: AllFtResponseDto,
+    type: LiteFtResponseDto,
   })
   @ApiQuery({
     name: 'isDeleted',
@@ -87,7 +90,7 @@ export class FtController {
   })
   findAll(
     @Query() searchRequest: FTSearchRequestDto,
-  ): Promise<AllFtResponseDto[]> {
+  ): Promise<LiteFtResponseDto[]> {
     return this.ftService.findAll(searchRequest);
   }
 
@@ -103,14 +106,14 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'Get ft by id',
-    type: FtResponseDto,
+    type: CompleteFtResponseDto,
   })
   @ApiNotFoundResponse({
     description: "Can't find a requested resource",
   })
   findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<FtResponseDto | null> {
+  ): Promise<CompleteFtResponseDto | null> {
     return this.ftService.findOne(id);
   }
 
@@ -120,7 +123,7 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'ft updated',
-    type: FtResponseDto,
+    type: CompleteFtResponseDto,
   })
   @ApiBody({
     description: 'Updated ft',
@@ -138,7 +141,7 @@ export class FtController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFtDto: UpdateFtDto,
-  ): Promise<FtResponseDto | null> {
+  ): Promise<CompleteFtResponseDto | null> {
     return this.ftService.update(id, updateFtDto);
   }
 

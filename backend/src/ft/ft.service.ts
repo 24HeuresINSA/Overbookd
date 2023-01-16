@@ -2,9 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtStatus } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateFtDto } from './dto/create-ft.dto';
-import { AllFtResponseDto, FtResponseDto } from './dto/ft-response.dto';
+import {
+  CompleteFtResponseDto,
+  LiteFtResponseDto,
+} from './dto/ft-response.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
-import { ALL_FT_SELECT, COMPLETE_FT_SELECT } from './ftTypes';
+import { COMPLETE_FT_SELECT, LITE_FT_SELECT } from './ftTypes';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -14,22 +17,22 @@ export interface SearchFt {
 export class FtService {
   constructor(private prisma: PrismaService) {}
 
-  async create(ft: CreateFtDto): Promise<FtResponseDto | null> {
+  async create(ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
     return this.prisma.ft.create({ data: ft, select: COMPLETE_FT_SELECT });
   }
 
-  async findAll(search: SearchFt): Promise<AllFtResponseDto[] | null> {
+  async findAll(search: SearchFt): Promise<LiteFtResponseDto[] | null> {
     const where = this.buildFindCondition(search);
     return this.prisma.ft.findMany({
       where,
       orderBy: {
         id: 'asc',
       },
-      select: ALL_FT_SELECT,
+      select: LITE_FT_SELECT,
     });
   }
 
-  async findOne(id: number): Promise<FtResponseDto | null> {
+  async findOne(id: number): Promise<CompleteFtResponseDto | null> {
     return this.prisma.ft.findUnique({
       where: {
         id,
@@ -41,7 +44,7 @@ export class FtService {
   async update(
     id: number,
     updateFtDto: UpdateFtDto,
-  ): Promise<FtResponseDto | null> {
+  ): Promise<CompleteFtResponseDto | null> {
     const ft = this.prisma.ft.findUnique({ where: { id } });
     if (!ft) {
       throw new NotFoundException(`ft #${id} not found`);
