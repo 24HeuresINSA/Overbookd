@@ -139,10 +139,46 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
 }
 
 export class LiteFtResponseDto implements LiteFtResponse {
+  @ApiProperty({
+    required: true,
+    description: 'The name of the ft',
+    type: String,
+  })
   name: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'The id of the ft',
+    type: Number,
+  })
   id: number;
+
+  @ApiProperty({
+    required: true,
+    description: 'The status of the ft',
+    enum: FtStatus,
+  })
   status: FtStatus;
+
+  @ApiProperty({
+    required: true,
+    description: 'The parent fa id of the ft',
+    type: Number,
+  })
   parentFaId: number;
+
+  @ApiProperty({
+    required: true,
+    description: 'The user id in charge of the ft',
+    type: Number,
+  })
   userInCharge: UserName;
+
+  @ApiProperty({
+    required: true,
+    description: 'The reviews of the ft',
+    isArray: true,
+    type: Review,
+  })
   reviews: Review[];
 }
