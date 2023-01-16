@@ -34,14 +34,21 @@ export default Vue.extend({
       default: true,
     },
   },
-  watch: {
-    date() {
-      this.propagateEvent(this.date);
-    },
-  },
   methods: {
     propagateEvent(date: string | null) {
-      this.$emit("change", date);
+      this.$emit("change", this.roundMinutes(date));
+    },
+    roundMinutes(date: string | null): string | null {
+      if (!date) return null;
+
+      const dateObj = new Date(date);
+      const minutes = dateObj.getMinutes();
+      if (minutes % 15 === 0) return date;
+
+      const minutesRounded = Math.round(minutes / 15) * 15;
+      dateObj.setHours(dateObj.getHours() + 1);
+      dateObj.setMinutes(minutesRounded);
+      return dateObj.toISOString().slice(0, -8);
     },
   },
 });

@@ -117,15 +117,15 @@ export default Vue.extend({
     this.updateLocalVariable();
   },
   methods: {
-    allowedStep(m: number): boolean {
-      return m % 15 === 0;
-    },
     updateLocalVariable() {
       if (!this.isEditForm) return this.clearLocalVariable();
-      this.start = this.timeWindow.start;
-      this.end = this.timeWindow.end;
+      this.start = this.formatDateForField(this.timeWindow.start);
+      this.end = this.formatDateForField(this.timeWindow.end);
       this.toSlice = this.timeWindow.sliceTime !== undefined;
       this.sliceTime = this.timeWindow.sliceTime || 2;
+    },
+    formatDateForField(date: Date): string {
+      return date.toISOString().slice(0, -8);
     },
     clearLocalVariable() {
       this.start = "";
@@ -134,8 +134,6 @@ export default Vue.extend({
       this.sliceTime = 2;
     },
     confirmTimeWindows() {
-      console.log("start", this.start);
-      console.log("end", this.end);
       if (this.isFormInvalid) return;
       this.$emit("change", this.mTimeWindow);
       if (!this.isEditForm) this.clearLocalVariable();
