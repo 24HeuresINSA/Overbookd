@@ -39,7 +39,7 @@ export default Vue.extend({
       default: "Chercher une FA",
     },
     fa: {
-      type: Object,
+      type: Object as () => FA | null,
       default: null,
     },
     boxed: {

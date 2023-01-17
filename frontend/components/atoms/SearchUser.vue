@@ -39,7 +39,7 @@ export default Vue.extend({
       default: "Chercher un utilisateur",
     },
     user: {
-      type: Object,
+      type: Object as () => User | null,
       default: null,
     },
     boxed: {
