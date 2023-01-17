@@ -30,15 +30,15 @@ export default Vue.extend({
     },
     date: {
       type: String,
-      default: null,
+      default: "",
     },
     min: {
       type: String,
-      default: null,
+      default: "",
     },
     max: {
       type: String,
-      default: null,
+      default: "",
     },
     boxed: {
       type: Boolean,
@@ -46,10 +46,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    propagateEvent(date: string | null) {
+    propagateEvent(date: string) {
       this.$emit("change", this.roundMinutes(date));
     },
-    roundMinutes(date: string | null): string | null {
+    roundMinutes(date: string): string | null {
       if (!date) return null;
 
       const dateObj = new Date(date);

@@ -25,7 +25,7 @@
             close
             @click:close="deleteUserRequest(index, i)"
           >
-            {{ req.firstname + " " + req.lastname }}
+            {{ formatUsername(req) }}
           </v-chip>
         </template>
       </v-chip-group>
@@ -39,7 +39,7 @@
             close
             @click:close="deleteTeamRequest(index, i)"
           >
-            {{ req.quantity + " " + req.team.name }}
+            {{ formatTeamRequestText(req.quantity, req.team.name) }}
           </v-chip>
         </template>
       </v-chip-group>
@@ -64,6 +64,7 @@
 import Vue from "vue";
 import { formatStringDateAndHourToDisplay } from "~/utils/date/dateUtils";
 import { FTTimeWindow } from "~/utils/models/ft";
+import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FTTimeWindowTable",
@@ -85,6 +86,12 @@ export default Vue.extend({
   methods: {
     formatDate(date: string): string {
       return formatStringDateAndHourToDisplay(date);
+    },
+    formatUsername({ firstname, lastname }: User) {
+      return `${firstname} ${lastname}`;
+    },
+    formatTeamRequestText(quantity: number, teamName: string) {
+      return `${quantity} ${teamName}`;
     },
     floatToHour(float: number): string {
       const hours = Math.floor(float);

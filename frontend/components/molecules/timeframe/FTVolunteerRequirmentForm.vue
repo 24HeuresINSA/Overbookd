@@ -9,7 +9,7 @@
         <h3>Ajouter un bénévole</h3>
         <SearchUsers
           v-model="userRequests"
-          :label="`Rechercher un bénévole`"
+          label="Rechercher un bénévole"
         ></SearchUsers>
 
         <h3>Ajouter des bénévoles d'une équipe</h3>
@@ -32,7 +32,7 @@
           />
           <SearchTeam
             v-model="selectedTeam"
-            :label="`Rechercher une équipe`"
+            label="Rechercher une équipe"
           ></SearchTeam>
           <v-btn
             rounded
@@ -112,8 +112,8 @@ export default Vue.extend({
   methods: {
     updateLocalVariable() {
       if (!this.timeWindow) return;
-      this.userRequests = this.timeWindow.userRequests.slice();
-      this.teamRequests = this.timeWindow.teamRequests.slice();
+      this.userRequests = [...this.timeWindow.userRequests];
+      this.teamRequests = [...this.timeWindow.teamRequests];
       this.clearTeamRequestValue();
     },
     clearTeamRequestValue() {
@@ -121,9 +121,10 @@ export default Vue.extend({
       this.selectedTeam = null;
     },
     addTeamRequest() {
+      if (!this.selectedTeam) return;
       const teamRequest: FTTeamRequest = {
         quantity: this.quantity,
-        team: this.selectedTeam as Team,
+        team: this.selectedTeam,
       };
       this.teamRequests.push(teamRequest);
       this.clearTeamRequestValue();

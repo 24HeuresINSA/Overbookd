@@ -58,7 +58,7 @@ export const mutations = mutationTree(state, {
   },
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow?.id);
+    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
   },
 });
 
