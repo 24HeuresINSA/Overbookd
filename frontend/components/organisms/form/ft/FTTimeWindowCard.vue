@@ -54,7 +54,6 @@ export default Vue.extend({
     isEditTimeDialogOpen: false,
     isEditVolunteerDialogOpen: false,
     selectedTimeWindow: null as FTTimeWindow | null,
-    selectedIndex: null as number | null,
   }),
   computed: {
     mFT(): FT {
@@ -67,22 +66,11 @@ export default Vue.extend({
       this.closeAddDialog();
     },
     updateTimeWindow(timeWindow: FTTimeWindow) {
-      this.$accessor.FT.updateTimeWindow({
-        index: this.selectedIndex,
-        timeWindow,
-      });
+      this.$accessor.FT.updateTimeWindow(timeWindow);
       this.closeAllEditDialogs();
     },
-    deleteTimeWindow(index: number) {
-      this.$accessor.FT.deleteTimeWindow(index);
-    },
-    setSelectedData(index: number, timeWindow: FTTimeWindow) {
-      this.selectedIndex = index;
-      this.selectedTimeWindow = timeWindow;
-    },
-    resetSelectedData() {
-      this.selectedIndex = null;
-      this.selectedTimeWindow = null;
+    deleteTimeWindow(timeWindow: FTTimeWindow) {
+      this.$accessor.FT.deleteTimeWindow(timeWindow);
     },
     openAddDialog() {
       this.isAddDialogOpen = true;
@@ -90,18 +78,18 @@ export default Vue.extend({
     closeAddDialog() {
       this.isAddDialogOpen = false;
     },
-    openEditTimeDialog(index: number, timeWindow: FTTimeWindow) {
-      this.setSelectedData(index, timeWindow);
+    openEditTimeDialog(timeWindow: FTTimeWindow) {
+      this.selectedTimeWindow = timeWindow;
       this.isEditTimeDialogOpen = true;
     },
-    openEditVolunteerDialog(index: number, timeWindow: FTTimeWindow) {
-      this.setSelectedData(index, timeWindow);
+    openEditVolunteerDialog(timeWindow: FTTimeWindow) {
+      this.selectedTimeWindow = timeWindow;
       this.isEditVolunteerDialogOpen = true;
     },
     closeAllEditDialogs() {
       this.isEditTimeDialogOpen = false;
       this.isEditVolunteerDialogOpen = false;
-      this.resetSelectedData();
+      this.selectedTimeWindow = null;
     },
   },
 });

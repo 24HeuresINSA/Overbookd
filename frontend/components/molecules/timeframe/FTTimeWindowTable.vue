@@ -44,15 +44,15 @@
         </template>
       </v-chip-group>
     </template>
-    <template #[`item.action`]="{ index, item }">
+    <template #[`item.action`]="{ item }">
       <div>
-        <v-btn icon @click="editVolunteer(index, item)">
+        <v-btn icon @click="editVolunteer(item)">
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
-        <v-btn icon @click="editTimeWindow(index, item)">
+        <v-btn icon @click="editTimeWindow(item)">
           <v-icon>mdi-clock-edit</v-icon>
         </v-btn>
-        <v-btn icon @click="deleteTimeWindow(index)">
+        <v-btn icon @click="deleteTimeWindow(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </div>
@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatStringDateToDisplay } from "~/utils/date/dateUtils";
+import { formatStringCompleteDateToDisplay } from "~/utils/date/dateUtils";
 import { FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -84,21 +84,21 @@ export default Vue.extend({
   },
   methods: {
     formatDate(date: string): string {
-      return formatStringDateToDisplay(date);
+      return formatStringCompleteDateToDisplay(date);
     },
     floatToHour(float: number): string {
       const hours = Math.floor(float);
       const minutes = Math.round((float - hours) * 60);
       return `${hours}h${minutes ? minutes : ""}`;
     },
-    editTimeWindow(index: number, timeWindow: FTTimeWindow) {
-      this.$emit("update-time", index, timeWindow);
+    editTimeWindow(timeWindow: FTTimeWindow) {
+      this.$emit("update-time", timeWindow);
     },
-    editVolunteer(index: number, timeWindow: FTTimeWindow) {
-      this.$emit("update-volunteer", index, timeWindow);
+    editVolunteer(timeWindow: FTTimeWindow) {
+      this.$emit("update-volunteer", timeWindow);
     },
-    deleteTimeWindow(index: number) {
-      this.$emit("delete", index);
+    deleteTimeWindow(timeWindow: FTTimeWindow) {
+      this.$emit("delete", timeWindow);
     },
     deleteUserRequest(timeWindowIndex: number, userRequestIndex: number) {
       const timeWindow = this.timeWindows[timeWindowIndex];
@@ -109,7 +109,7 @@ export default Vue.extend({
         ...timeWindow,
         userRequests,
       };
-      this.updateTimeWindow(timeWindowIndex, mTimeWindow);
+      this.updateTimeWindow(mTimeWindow);
     },
     deleteTeamRequest(timeWindowIndex: number, teamRequestIndex: number) {
       const timeWindow = this.timeWindows[timeWindowIndex];
@@ -120,13 +120,10 @@ export default Vue.extend({
         ...timeWindow,
         teamRequests,
       };
-      this.updateTimeWindow(timeWindowIndex, mTimeWindow);
+      this.updateTimeWindow(mTimeWindow);
     },
-    updateTimeWindow(index: number, timeWindow: FTTimeWindow) {
-      this.$accessor.FT.updateTimeWindow({
-        index,
-        timeWindow,
-      });
+    updateTimeWindow(timeWindow: FTTimeWindow) {
+      this.$accessor.FT.updateTimeWindow(timeWindow);
     },
   },
 });

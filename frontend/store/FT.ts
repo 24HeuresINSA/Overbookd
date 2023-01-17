@@ -49,7 +49,7 @@ export const mutations = mutationTree(state, {
 
   UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
-    if (!index) return;
+    if (index === -1) return;
     mFT.timeWindows = [
       ...mFT.timeWindows.slice(0, index),
       timeWindow,
@@ -58,9 +58,7 @@ export const mutations = mutationTree(state, {
   },
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
-    if (!index) return;
-    mFT.timeWindows.splice(index, 1);
+    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow?.id);
   },
 });
 
