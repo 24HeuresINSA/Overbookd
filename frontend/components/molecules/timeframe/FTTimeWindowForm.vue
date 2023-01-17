@@ -140,7 +140,6 @@ export default Vue.extend({
     },
     confirmTimeWindows() {
       if (this.isFormInvalid) return;
-
       this.$emit("change", this.mTimeWindow);
       if (!this.isEditForm) this.clearLocalVariable();
     },
@@ -148,12 +147,6 @@ export default Vue.extend({
       return this.$store.dispatch("notif/pushNotification", {
         type: "error",
         message,
-      });
-    },
-    showSliceErrorMessage() {
-      return this.$store.dispatch("notif/pushNotification", {
-        type: "error",
-        message: `❌ La durée de la plage horaire doit être un multiple de ${this.sliceTime}h !`,
       });
     },
     saveMenuTime(menu: any, time: string) {
