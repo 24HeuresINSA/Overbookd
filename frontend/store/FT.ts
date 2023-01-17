@@ -47,9 +47,9 @@ export const mutations = mutationTree(state, {
     mFT.timeWindows = [...mFT.timeWindows, timeWindow];
   },
 
-  UPDATE_TIME_WINDOW({ mFT }, { index, timeWindow }) {
-    const existingTimeWindow = mFT.timeWindows?.[index];
-    if (!existingTimeWindow) return;
+  UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
+    if (!index) return;
     mFT.timeWindows = [
       ...mFT.timeWindows.slice(0, index),
       timeWindow,
@@ -57,10 +57,10 @@ export const mutations = mutationTree(state, {
     ];
   },
 
-  DELETE_TIME_WINDOW({ mFT }, index: number) {
-    if (mFT.timeWindows && mFT.timeWindows[index]) {
-      mFT.timeWindows.splice(index, 1);
-    }
+  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
+    if (!index) return;
+    mFT.timeWindows.splice(index, 1);
   },
 });
 
@@ -107,21 +107,20 @@ export const actions = actionTree(
     },
 
     async addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+      // await repo.addFTTimeWindows(this, timeWindow);
       commit("ADD_TIME_WINDOW", timeWindow);
-      // await repo.addFTTimeWindows(this, id);
     },
 
-    async updateTimeWindow({ commit }, { index, timeWindow }) {
-      commit("UPDATE_TIME_WINDOW", { index, timeWindow });
-      // await repo.updateFTTimeWindows(this, id);
+    async updateTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+      if (!timeWindow?.id) return;
+      // await repo.updateFTTimeWindows(this, timeWindow);
+      commit("UPDATE_TIME_WINDOW", timeWindow);
     },
 
-    async deleteTimeWindow({ commit, state }, index: number) {
-      if (state.mFT?.timeWindows?.[index]) {
-        const id = state.mFT.timeWindows[index].id;
-        // if (id) await repo.deleteFTTimeWindows(this, id);
-      }
-      commit("DELETE_TIME_WINDOW", index);
+    async deleteTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+      if (!timeWindow?.id) return;
+      // await repo.deleteFTTimeWindows(this, timeWindow);
+      commit("DELETE_TIME_WINDOW", timeWindow);
     },
   }
 );
@@ -140,11 +139,11 @@ function fakeFT(id: number): FT {
     name: "name",
     description: "",
     areStatic: false,
-    ftComments: [],
     status: FTStatus.DRAFT,
-    ftRefusals: [],
-    ftValidations: [],
     locations: [],
     timeWindows: [],
+    ftRefusals: [],
+    ftValidations: [],
+    ftComments: [],
   };
 }
