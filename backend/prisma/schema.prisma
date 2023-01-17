@@ -93,6 +93,7 @@ model Team {
   ftRequests       FtTeamRequest[]
   ftReviews        FtReview[]
   permissions      Team_Permission[]
+  Ft               Ft[]
 }
 
 model User_Team {
@@ -408,7 +409,7 @@ model Animation_Gear_Request {
   @@index([status])
 }
 
-enum ftStatus {
+enum FtStatus {
   DRAFT
   SUBMITTED
   VALIDATED
@@ -421,9 +422,11 @@ enum ftStatus {
 model Ft {
   id             Int             @id @default(autoincrement())
   name           String
-  status         ftStatus
+  status         FtStatus        @default(DRAFT)
   fa             fa?             @relation(fields: [parentFaId], references: [id])
   parentFaId     Int?            @map("parent_fa_id")
+  Team           Team?           @relation(fields: [teamCode], references: [code])
+  teamCode       String?         @map("team_code")
   isStatic       Boolean         @default(false) @map("is_static")
   description    String?         @db.Text
   userInCharge   User?           @relation(fields: [userInChargeId], references: [id], name: "inCharge")
@@ -439,7 +442,7 @@ model Ft {
   @@map("ft")
 }
 
-enum ftSubjectType {
+enum FtSubjectType {
   REFUSED
   SUBMIT
   VALIDATED
@@ -454,7 +457,7 @@ model FtComments {
   ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId      Int           @map("ft_id")
   comment   String        @db.Text
-  subject   ftSubjectType
+  subject   FtSubjectType
   author    User          @relation(fields: [authorId], references: [id])
   authorId  Int           @map("author_id")
   createdAt DateTime      @default(now()) @map("created_at")
@@ -468,6 +471,7 @@ model FtTimeWindows {
   ftId         Int             @map("ft_id")
   start        DateTime
   end          DateTime
+  sliceTime    Float?          @map("slice_time")
   userRequests FtUserRequest[]
   teamRequests FtTeamRequest[]
 
@@ -487,11 +491,11 @@ model FtUserRequest {
 model FtTeamRequest {
   timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("time_windows_id")
-  team          Team          @relation(fields: [teamId], references: [id])
-  teamId        Int           @map("team_id")
+  team          Team          @relation(fields: [teamCode], references: [code])
+  teamCode      String        @map("team_code")
   number        Int
 
-  @@unique([timeWindowsId, teamId])
+  @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
 }
 
