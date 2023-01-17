@@ -80,7 +80,8 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.value = this.$accessor.config.getConfig("event_date");
+    const manifDate = this.$accessor.config.getConfig("event_date");
+    this.value = formatDateForComponent(new Date(manifDate));
   },
   methods: {
     getEventColor(event: any): string {
