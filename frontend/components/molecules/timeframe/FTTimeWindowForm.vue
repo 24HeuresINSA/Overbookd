@@ -5,6 +5,10 @@
         <span class="headline">Ajouter un créneau</span>
       </v-card-title>
 
+      <v-card-subtitle v-show="displayedManifDate !== ''">
+        La manif commencera le {{ displayedManifDate }}.
+      </v-card-subtitle>
+
       <v-card-text>
         <h3>Début du créneau</h3>
         <DateField v-model="start" :max="end" label="Début"></DateField>
@@ -38,7 +42,11 @@
 <script lang="ts">
 import Vue from "vue";
 import DateField from "~/components/atoms/DateField.vue";
-import { formatDateForComponent, getHourDiff } from "~/utils/date/dateUtils";
+import {
+  formatDateForComponent,
+  formatStringDateToDisplay,
+  getHourDiff,
+} from "~/utils/date/dateUtils";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -101,6 +109,11 @@ export default Vue.extend({
         return true;
       }
       return false;
+    },
+    displayedManifDate(): string {
+      const date = this.$accessor.config.getConfig("event_date");
+      console.log(`vendredi ${formatStringDateToDisplay(date)}`);
+      return `vendredi ${formatStringDateToDisplay(date)}`;
     },
   },
   watch: {

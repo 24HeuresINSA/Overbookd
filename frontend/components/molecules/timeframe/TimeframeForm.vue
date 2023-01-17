@@ -172,7 +172,7 @@ import Vue from "vue";
 import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { hasAtLeastOneValidation } from "~/utils/fa/faUtils";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
-import { formatDayDate } from "~/utils/date/dateUtils";
+import { formatStringDateAndHourToDisplay } from "~/utils/date/dateUtils";
 
 interface BrakeDownDate {
   year: number;
@@ -319,7 +319,7 @@ export default Vue.extend({
       this.timeWindowType = time_windows_type.ANIM;
     },
     formatDate(date: string): string {
-      return formatDayDate(date);
+      return formatStringDateAndHourToDisplay(date);
     },
     confirmTimeWindow() {
       if (this.formIsInvalid()) return;

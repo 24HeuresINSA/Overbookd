@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatStringCompleteDateToDisplay } from "~/utils/date/dateUtils";
+import { formatStringDateAndHourToDisplay } from "~/utils/date/dateUtils";
 import { FTTimeWindow } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -84,7 +84,7 @@ export default Vue.extend({
   },
   methods: {
     formatDate(date: string): string {
-      return formatStringCompleteDateToDisplay(date);
+      return formatStringDateAndHourToDisplay(date);
     },
     floatToHour(float: number): string {
       const hours = Math.floor(float);

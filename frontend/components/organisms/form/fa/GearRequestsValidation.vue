@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatStringDateToDisplay } from "~/utils/date/dateUtils";
+import { formatStringDateAndHourToDisplay } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import { GearRequestWithDrive, StoredGearRequest } from "~/utils/models/FA";
 
@@ -116,7 +116,7 @@ export default Vue.extend({
 
   methods: {
     formatDate(date: string): string {
-      return formatStringDateToDisplay(date);
+      return formatStringDateAndHourToDisplay(date);
     },
 
     updateGearRequestWithDrive(gearRequest: StoredGearRequest, drive: string) {
