@@ -9,15 +9,11 @@
         :items-per-page="-1"
         sort-by="createdAt"
       >
-        <template #[`item.User_author`]="{ item }">
-          {{
-            item.User_author
-              ? item.User_author.firstname + " " + item.User_author.lastname
-              : me.firstname + " " + me.lastname
-          }}
+        <template #[`item.author`]="{ item }">
+          {{ getAuthorName(item.author) }}
         </template>
-        <template #[`item.created_at`]="{ item }">
-          {{ formatDateString(item.created_at) }}
+        <template #[`item.createdAt`]="{ item }">
+          {{ formatDateString(item.createdAt) }}
         </template>
       </v-data-table>
       <v-textarea
@@ -36,6 +32,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Feedback, SubjectType } from "~/utils/models/feedback";
+import { DisplayedUser, User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FeedbackCard",
@@ -47,7 +44,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Auteur", value: "User_author" },
+      { text: "Auteur", value: "author" },
       { text: "Sujet", value: "subject" },
       { text: "Commentaire", value: "comment" },
       { text: "Date", value: "createdAt" },
@@ -65,17 +62,25 @@ export default Vue.extend({
   methods: {
     async addComment() {
       if (!this.newComment) return;
-      if (this.form == "FA") {
-        const comment: Feedback = {
-          subject: SubjectType.COMMENT,
-          comment: this.newComment,
-          author: this.me.id,
-          createdAt: new Date(),
-        };
+      const author: User = {
+        id: this.me.id,
+        firstname: this.me.firstname,
+        lastname: this.me.lastname,
+      };
 
-        //await this.$accessor.FT.addComment({ comment, defaultAuthor: this.me });
-        this.newComment = "";
-      }
+      const comment: Feedback = {
+        subject: SubjectType.COMMENT,
+        comment: this.newComment,
+        author,
+        createdAt: new Date(),
+      };
+
+      await this.$accessor.FT.addComment(comment);
+      this.newComment = "";
+    },
+    getAuthorName(user: DisplayedUser) {
+      if (!user) return `${this.me.firstname} ${this.me.lastname}`;
+      return `${user.firstname} ${user.lastname}`;
     },
     formatDateString(date: string) {
       const displayOptions: Intl.DateTimeFormatOptions = {

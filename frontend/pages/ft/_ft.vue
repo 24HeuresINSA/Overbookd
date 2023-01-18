@@ -7,7 +7,7 @@
       <FTDetailCard id="detail" />
       <FTTimeWindowCard id="timewindow" />
       <LogisticsCard id="matos" title="Matos" />
-      <CommentCard id="comment" form="FT" />
+      <FeedbackCard id="comment" form="FT" />
     </v-container>
     <SnackNotificationContainer></SnackNotificationContainer>
   </div>
@@ -15,7 +15,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import FestivalEventSidebar from "~/components/organisms/form/FestivalEventSidebar.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
@@ -23,6 +22,7 @@ import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import FeedbackCard from "~/components/organisms/form/FeedbackCard.vue";
 
 export default Vue.extend({
   name: "FT",
@@ -33,8 +33,8 @@ export default Vue.extend({
     FTDetailCard,
     FTTimeWindowCard,
     LogisticsCard,
-    CommentCard,
     SnackNotificationContainer,
+    FeedbackCard,
   },
   computed: {
     ftId(): number {

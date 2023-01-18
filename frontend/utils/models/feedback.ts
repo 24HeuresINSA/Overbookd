@@ -1,10 +1,10 @@
-import { DisplayedUser } from "./user";
+import { User } from "./user";
 
 export interface Feedback {
   comment: string;
   subject: SubjectType;
   createdAt: Date;
-  author: DisplayedUser;
+  author: User;
 }
 
 export interface SavedFeedback extends Feedback {

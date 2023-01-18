@@ -8,6 +8,7 @@ import {
   SearchFT,
   FTTimeWindow,
 } from "~/utils/models/ft";
+import { Feedback } from "~/utils/models/feedback";
 
 const repo = RepoFactory.ftRepo;
 
@@ -59,6 +60,10 @@ export const mutations = mutationTree(state, {
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
+  },
+
+  ADD_COMMENT({ mFT }, comment: Feedback) {
+    mFT.ftComments = [...mFT.ftComments, comment];
   },
 });
 
@@ -119,6 +124,11 @@ export const actions = actionTree(
       if (!timeWindow?.id) return;
       // await repo.deleteFTTimeWindows(this, timeWindow);
       commit("DELETE_TIME_WINDOW", timeWindow);
+    },
+
+    async addComment({ commit }, comment: Feedback) {
+      // await repo.addFTComment(this, comment);
+      commit("ADD_COMMENT", { ...comment });
     },
   }
 );
