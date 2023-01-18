@@ -2,114 +2,101 @@
   <div>
     <h1>Fiche Tâche</h1>
 
-    <v-container style="display: grid; width: 100%; margin: 0">
-      <v-row>
-        <v-col md="3">
-          <v-card>
-            <v-card-title>Filtres</v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-model="filters.search"
-                label="Recherche"
-              ></v-text-field>
-              <v-select
-                v-model="filters.teams"
-                label="Équipe"
-                :items="$accessor.team.teamNames"
-                clearable
-                dense
-              ></v-select>
-              <label>Statut</label>
-              <v-btn-toggle
-                v-model="filters.status"
-                tile
-                style="flex-direction: column"
-                color="deep-purple accent-3"
-                group
-              >
-                <v-btn x-small value="draft">Brouillon</v-btn>
-                <v-btn x-small value="submitted">Soumise</v-btn>
-                <v-btn x-small value="refused">Refusé</v-btn>
-                <v-btn x-small value="validated">Validé</v-btn>
-                <v-btn x-small value="ready">Prêt a affectation</v-btn>
-              </v-btn-toggle>
-              <v-switch
-                v-model="filters.isDeleted"
-                label="FT supprimées"
-              ></v-switch>
-              <v-switch v-model="filters.myFTs" label="Mes FTs"></v-switch>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col md="9">
-          <v-btn color="green" width="100%" href="ft/ft_420">FT 420 🍃</v-btn>
-          <v-data-table
-            :headers="headers"
-            :items="filteredFTs"
-            sort-by="count"
-            :items-per-page="20"
-            :loading="loading"
-            :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
-          >
-            <template #item.general.name="{ item }">
-              <a
-                :href="`/ft/${item.count}`"
-                :style="
-                  item.isValid === false
-                    ? `text-decoration:line-through;`
-                    : `text-decoration:none;`
-                "
-                >{{ item.general ? item.general.name : "" }}</a
-              >
-            </template>
-            <template #[`item.FA`]="row">
-              <v-chip v-if="row.item.FA && row.item.FA > 0" small>
-                {{ row.item.FA }}
-              </v-chip>
-            </template>
-            <template #[`item.status`]="row">
-              <v-chip small :color="color[row.item.status]">
-                {{ row.item.count }}
-              </v-chip>
-            </template>
-            <template #item.validation="{ item }">
-              <!-- TODO implement the validator icons -->
-            </template>
-            <template #[`item.action`]="row">
-              <v-btn
-                style="margin: 5px"
-                icon
-                small
-                :href="'/ft/' + row.item.count"
-              >
-                <v-icon small>mdi-link</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="row.item.isValid !== false"
-                icon
-                small
-                @click="
-                  mFT = row.item;
-                  isDeleteDialogOpen = true;
-                "
-              >
-                <v-icon small>mdi-delete</v-icon>
-              </v-btn>
-              <v-btn
-                v-else
-                icon
-                small
-                @click="
-                  mFT = row.item;
-                  isRestoreDialogOpen = true;
-                "
-                ><v-icon small>mdi-delete-restore</v-icon></v-btn
-              >
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
-    </v-container>
+    <div class="custom_container">
+      <v-container class="sidebar">
+        <v-card>
+          <v-card-title>Filtres</v-card-title>
+          <v-card-text>
+            <v-text-field
+              v-model="filters.search"
+              label="Recherche"
+            ></v-text-field>
+            <SearchTeam
+              v-model="filters.team"
+              label="Équipe"
+              :boxed="false"
+            ></SearchTeam>
+
+            <h3>Statut</h3>
+            <v-list dense shaped>
+              <v-list-item-group v-model="filters.status">
+                <v-list-item :value="''">
+                  <v-list-item-title class="small">Tous</v-list-item-title>
+                </v-list-item>
+                <v-list-item value="DRAFT">
+                  <v-list-item-title class="small">Brouillon</v-list-item-title>
+                </v-list-item>
+                <v-list-item value="SUBMITTED">
+                  <v-list-item-title class="small">Soumise</v-list-item-title>
+                </v-list-item>
+                <v-list-item value="REFUSED">
+                  <v-list-item-title class="small">Refusée</v-list-item-title>
+                </v-list-item>
+                <v-list-item value="VALIDATED">
+                  <v-list-item-title class="small">Validée</v-list-item-title>
+                </v-list-item>
+                <v-list-item value="READY">
+                  <v-list-item-title class="small"
+                    >Prête à affectation
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            <v-switch
+              v-model="filters.isDeleted"
+              label="FT supprimées"
+            ></v-switch>
+            <v-switch v-model="filters.myFTs" label="Mes FTs"></v-switch>
+          </v-card-text>
+        </v-card>
+      </v-container>
+
+      <v-card class="data-table">
+        <v-btn color="green" width="100%" href="ft/ft_420">FT 420 🍃</v-btn>
+        <v-data-table
+          :headers="headers"
+          :items="filteredFTs"
+          :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
+          class="elevation-1"
+        >
+          <template #[`item.status`]="{ item }">
+            <v-chip :color="color[item.status]" small>{{ item.id }} </v-chip>
+          </template>
+          <template #item.name="{ item }">
+            <a
+              :href="`/ft/${item.id}`"
+              :style="
+                item.isValid === false
+                  ? `text-decoration:line-through;`
+                  : `text-decoration:none;`
+              "
+              >{{ item.name ?? "" }}</a
+            >
+          </template>
+          <template #[`item.FA`]="{ item }">
+            <v-chip v-if="item.FA && item.FA > 0" small>
+              {{ item.FA }}
+            </v-chip>
+          </template>
+          <template #item.validation="{ item }">
+            <!-- TODO implement the validator icons -->
+          </template>
+          <template #[`item.action`]="{ item }">
+            <v-btn
+              v-if="item.isDeleted !== true"
+              icon
+              small
+              @click="preDeleteFT(item)"
+            >
+              <v-icon small>mdi-delete</v-icon>
+            </v-btn>
+            <v-btn v-else icon small @click="preRestoreFT(item)"
+              ><v-icon small>mdi-delete-restore</v-icon></v-btn
+            >
+          </template>
+        </v-data-table>
+      </v-card>
+    </div>
 
     <v-btn
       color="secondary"
@@ -124,15 +111,13 @@
 
     <v-dialog v-model="isNewFTDialogOpen" width="600">
       <v-card>
-        <v-card-title>Crée une nouvelle FT</v-card-title>
-        <v-card-subtitle>Cette FT n'est relié a aucune FT</v-card-subtitle>
+        <v-card-title>Ajouter une nouvelle FT</v-card-title>
         <v-card-text>
           <v-text-field v-model="FTName" label="Nom de la FT"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn :disabled="!FTName" @click="createNewFT"
-            >Crée une nouvelle FT</v-btn
-          >
+          <v-spacer></v-spacer>
+          <v-btn :disabled="!FTName" @click="createNewFT">Créer la FT</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -165,35 +150,30 @@
 <script lang="ts">
 import Fuse from "fuse.js";
 import Vue from "vue";
+import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import faRepo from "~/repositories/faRepo";
-import userRepo from "~/repositories/userRepo";
-import { safeCall } from "~/utils/api/calls";
 import { Header } from "~/utils/models/Data";
-import { FT, FTCreation, FTStatus } from "~/utils/models/ft";
+import { FT, FTCreation, FTStatus, SearchFT } from "~/utils/models/ft";
 import { SnackNotif } from "~/utils/models/store";
-import ftRepo from "../../repositories/ftRepo";
+import { Team } from "~/utils/models/team";
 
 interface Data {
   color: { [key: string]: string };
   headers: Header[];
-  FTs: any[];
-  mFT: any;
+  mFT: FT | undefined;
   isDeleteDialogOpen: boolean;
   isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
   FTName: string;
-  users: any[] | undefined;
-  FAs: any[] | undefined;
   loading: boolean;
   notifs: { [key: string]: SnackNotif };
 
   filters: {
     search: string;
-    teams: string;
-    myFTs: string;
+    team: Team | undefined;
+    myFTs: boolean;
     isDeleted: boolean;
-    status: string;
+    status: FTStatus | undefined;
   };
 }
 
@@ -208,48 +188,30 @@ const color = {
 
 export default Vue.extend({
   name: "Index",
-  components: { SnackNotificationContainer },
+  components: { SnackNotificationContainer, SearchTeam },
   data(): Data {
     return {
       color,
       headers: [
-        {
-          text: "Statut",
-          value: "status",
-        },
+        { text: "Statut", value: "status" },
         { text: "Validation", value: "validation" },
-        {
-          text: "Nom",
-          value: "general.name",
-        },
-        {
-          text: "FA",
-          value: "FA",
-        },
-        {
-          text: "Resp",
-          value: "general.inCharge.username",
-        },
-        {
-          text: "Action",
-          value: "action",
-        },
+        { text: "Nom", value: "name" },
+        { text: "FA", value: "FA" },
+        { text: "Resp", value: "general.inCharge.username" },
+        { text: "Action", value: "action" },
       ],
       FTName: "",
-      FTs: [],
       filters: {
         search: "",
-        teams: "",
-        myFTs: "",
-        status: "",
+        team: undefined,
+        myFTs: false,
+        status: undefined,
         isDeleted: false,
       },
       mFT: undefined,
       isRestoreDialogOpen: false,
       isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
-      users: undefined,
-      FAs: undefined,
       loading: true,
       notifs: {
         serverError: { message: "Erreur serveur" },
@@ -262,45 +224,35 @@ export default Vue.extend({
   },
 
   computed: {
+    me(): any {
+      return this.$accessor.user.me;
+    },
+    FTs(): FT[] {
+      return this.$accessor.FT.FTs;
+    },
     filteredFTs(): FT[] {
       let res = this.FTs;
-      const { filters } = this;
-      const { search, teams, myFTs, isDeleted, status } = filters;
+      const { search, team, myFTs, isDeleted, status } = this.filters;
 
       if (isDeleted) {
-        res = res.filter((e) => e.isValid === false);
-      } else {
-        res = res.filter((e) => e.isValid !== false); // DO NOT CHANGE THIS LINE
-      }
-      if (teams) {
         res = res.filter((ft) => {
-          // if db did not answer
-          if (!this.users || !this.FAs) {
-            this.$accessor.notif.pushNotification(this.notifs.serverError);
-            return true;
-          }
-          // if FA is not set do not select
-          if (!ft.FA) {
-            return false;
-          }
-          const fa = this.FAs.find((fa) => fa.count == ft.FA);
-          // if FA fetching failed or if fa does not have a team
-          if (!fa || !fa.general.team) {
-            return false;
-          }
-          // returns if fa team is the good one or not
-          return teams == fa.general.team;
+          return ft.isDeleted === true;
+        });
+      }
+      if (team) {
+        res = res.filter((ft) => {
+          if (!ft.team) return false;
+          return ft.team.id === team.id;
         });
       }
       if (myFTs) {
         res = res.filter((ft) => {
-          if (ft.general.inCharge) {
-            return ft.general.inCharge.id === this.$accessor.user.me.id;
-          }
+          if (!ft.inCharge) return false;
+          return ft.inCharge.id === this.me.id;
         });
       }
       const fuse = new Fuse(res, {
-        keys: ["general.name", "count"],
+        keys: ["name", "id"],
         threshold: 0.2,
       });
       if (search) {
@@ -315,99 +267,115 @@ export default Vue.extend({
 
   async mounted() {
     if (this.hasPermission("hard")) {
-      let res = await safeCall(this.$store, ftRepo.getAllFTs(this));
-      if (res) {
-        this.FTs = res.data.data; // includes deleted FTs
-      }
-      res = await safeCall(this.$store, userRepo.getAllUsers(this));
-      if (res) {
-        this.users = res.data;
-      }
-      res = await safeCall(this.$store, faRepo.getAllFAs(this));
-      if (res) {
-        this.FAs = res.data;
-      }
+      await this.fetchFTs();
     } else {
       await this.$router.push({
         path: "/",
       });
     }
     this.loading = false;
+    console.log(this.$accessor.FT.FTs);
   },
 
   methods: {
     hasPermission(permission: string) {
       return this.$accessor.user.hasPermission(permission);
     },
-    getConfig(key: string) {
-      return this.$accessor.config.getConfig(key);
+
+    async fetchFTs() {
+      const searchParams: SearchFT = {
+        isDeleted: this.filters.isDeleted,
+        status: this.filters.status,
+      };
+      await this.$accessor.FT.fetchFTs(searchParams);
     },
 
     async createNewFT() {
+      if (!this.FTName) return;
       const blankFT: FTCreation = {
         name: this.FTName,
-        description: "",
-        status: FTStatus.DRAFT,
       };
-      const res = await safeCall(this.$store, ftRepo.createFT(this, blankFT), {
-        successMessage: "La FT a été créée",
-      });
-      if (res) {
-        await this.$router.push({
-          path: "/ft/" + res.data.count,
-        });
-      }
+      await this.$accessor.FT.createFT(blankFT);
+      const savedFT = this.$accessor.FT.mFT;
+      if (savedFT.id) await this.$router.push({ path: "ft/" + savedFT.id });
+    },
+
+    preDeleteFT(ft: FT) {
+      this.mFT = ft;
+      this.isDeleteDialogOpen = true;
     },
 
     async deleteFT() {
-      if (this.mFT.status === "validated" || this.mFT.status === "submitted") {
-        this.$accessor.notif.pushNotification(this.notifs.deleteError);
-      } else {
-        const res = await safeCall(
-          this.$store,
-          ftRepo.deleteFT(this, this.mFT),
-          {
-            successMessage: "La FT a été supprimée",
-            errorMessage: "Erreur lors de la suppression de la FT",
-          }
-        );
-        if (res) {
-          const index = this.FTs.findIndex((ft) => ft.id == this.mFT.id);
-          this.FTs[index].isValid = false;
-          this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
-        }
-      }
+      if (!this.mFT) return;
+      await this.$accessor.FT.deleteFT(this.mFT);
       this.isDeleteDialogOpen = false;
+      this.mFT = undefined;
     },
-    /**
-     * Restore mFT
-     */
+
+    preRestoreFT(ft: FT) {
+      this.mFT = ft;
+      this.isRestoreDialogOpen = true;
+    },
+
     async restoreFT() {
-      // switch FT to valid
-      this.mFT.isValid = true;
-      // call update on backend
-      const res = await safeCall(this.$store, ftRepo.updateFT(this, this.mFT), {
-        successMessage: "La FT a été restaurée",
-        errorMessage: "Erreur lors de la restauration de la FT",
-      });
-      // if success
-      if (res) {
-        // update current version
-        const index = this.FTs.findIndex((ft) => ft.id == this.mFT.id);
-        this.FTs[index].isValid = true;
-        this.FTs.splice(index, 1, this.FTs[index]); // update vue rendering
-      }
-      // close dialog
+      if (!this.mFT) return;
+      await this.$accessor.FT.restoreFT(this.mFT);
       this.isRestoreDialogOpen = false;
+      this.mFT = undefined;
     },
   },
 });
 </script>
 
 <style scoped>
-.fab-right {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
+h1 {
+  margin-left: 12px;
+}
+
+.small {
+  font-size: small;
+  margin-left: 0;
+}
+
+.custom_container {
+  display: flex;
+  margin: 1%;
+}
+
+.sidebar {
+  padding: 0;
+  width: fit-content;
+}
+
+.data-table {
+  margin-left: 20px;
+  height: fit-content;
+  width: 100vw;
+}
+
+.btn-check {
+  padding-right: 2px;
+  padding-left: 2px;
+}
+
+.btn-plus {
+  right: 20px;
+  bottom: 45px;
+  position: fixed;
+}
+
+@media only screen and (max-width: 800px) {
+  .custom_container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .data-table {
+    margin: 0;
+    width: 100%;
+  }
 }
 </style>

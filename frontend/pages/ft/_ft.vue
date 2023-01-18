@@ -37,12 +37,26 @@ export default Vue.extend({
     FeedbackCard,
   },
   computed: {
+    mFT() {
+      return this.$accessor.FT.mFT;
+    },
     ftId(): number {
       return +this.$route.params.ft;
     },
   },
   async mounted() {
-    this.$accessor.FT.fetchFT(this.ftId);
+    const res = await this.$accessor.FT.fetchFT(this.ftId);
+    console.log("res", res);
+    if (!res) {
+      alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");
+      await this.$router.push({
+        path: "/ft",
+      });
+    }
+
+    let title = "FT " + this.ftId;
+    if (this.mFT.name) title += " - " + this.mFT.name;
+    document.title = title;
   },
   methods: {
     hasPermission(permission: string) {
