@@ -1,10 +1,10 @@
 <template>
   <v-text-field
-    :value="date"
+    :value="dateStringified"
     :label="label"
     type="datetime-local"
-    :min="min"
-    :max="max"
+    :min="minStringified"
+    :max="maxStringified"
     :solo="boxed"
     :filled="boxed"
     return-object
@@ -29,36 +29,50 @@ export default Vue.extend({
       default: "Date",
     },
     date: {
-      type: String,
-      default: "",
+      type: Date,
+      default: () => undefined as Date | undefined,
     },
     min: {
-      type: String,
-      default: "",
+      type: Date,
+      default: () => undefined as Date | undefined,
     },
     max: {
-      type: String,
-      default: "",
+      type: Date,
+      default: () => undefined as Date | undefined,
     },
     boxed: {
       type: Boolean,
       default: true,
     },
   },
+  computed: {
+    dateStringified(): string {
+      return this.stringifyDate(this.date);
+    },
+    minStringified(): string {
+      return this.stringifyDate(this.min);
+    },
+    maxStringified(): string {
+      return this.stringifyDate(this.max);
+    },
+  },
   methods: {
     propagateEvent(date: string) {
-      this.$emit("change", this.roundMinutes(date));
+      this.$emit("change", this.roundMinutes(new Date(date)));
     },
-    roundMinutes(date: string): string | null {
+    roundMinutes(date: Date): Date | null {
       if (!date) return null;
 
-      const dateObj = new Date(date);
-      const minutes = dateObj.getMinutes();
+      const minutes = date.getMinutes();
       if (minutes % 15 === 0) return date;
 
       const minutesRounded = Math.round(minutes / 15) * 15;
-      dateObj.setMinutes(minutesRounded);
-      return formatDateForComponent(dateObj);
+      date.setMinutes(minutesRounded);
+      return date;
+    },
+    stringifyDate(date?: Date | string): string {
+      if (!date) return "";
+      return formatDateForComponent(new Date(date));
     },
   },
 });

@@ -42,12 +42,15 @@
 <script lang="ts">
 import Vue from "vue";
 import DateField from "~/components/atoms/DateField.vue";
-import {
-  formatDateForComponent,
-  formatStringDateToDisplay,
-  getHourDiff,
-} from "~/utils/date/dateUtils";
+import { formatStringDateToDisplay, getHourDiff } from "~/utils/date/dateUtils";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
+
+interface FTTimeWindowFormData {
+  start?: Date;
+  end?: Date;
+  toSlice: boolean;
+  sliceTime: number;
+}
 
 export default Vue.extend({
   name: "TimeframeForm",
@@ -62,9 +65,9 @@ export default Vue.extend({
       default: () => null,
     },
   },
-  data: () => ({
-    start: "",
-    end: "",
+  data: (): FTTimeWindowFormData => ({
+    start: undefined,
+    end: undefined,
     toSlice: false,
     sliceTime: 2,
   }),
@@ -74,12 +77,18 @@ export default Vue.extend({
     },
     mTimeWindow(): FTTimeWindow {
       return {
-        start: new Date(this.start),
-        end: new Date(this.end),
+        start: this.startOrManifDate,
+        end: this.endOrManifDate,
         sliceTime: this.toSlice ? this.sliceTime : undefined,
         userRequests: this.timeWindow?.userRequests ?? [],
         teamRequests: this.timeWindow?.teamRequests ?? [],
       };
+    },
+    startOrManifDate(): Date {
+      return this.start ?? this.manifDate;
+    },
+    endOrManifDate(): Date {
+      return this.end ?? this.manifDate;
     },
     isEditForm(): boolean {
       return this.timeWindow !== null;
@@ -91,7 +100,7 @@ export default Vue.extend({
         return true;
       }
 
-      const startBeforeEnd = this.start < this.end;
+      const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
       if (!startBeforeEnd) {
         this.showErrorMessage(
           "❌ La date de début doit être avant la date de fin !"
@@ -99,7 +108,7 @@ export default Vue.extend({
         return true;
       }
 
-      const hourDiff = getHourDiff(new Date(this.start), new Date(this.end));
+      const hourDiff = getHourDiff(this.startOrManifDate, this.endOrManifDate);
       const isSliceValid = hourDiff % this.sliceTime === 0;
       const sliceInOneTimeWindow = hourDiff === this.sliceTime;
       if (this.toSlice && (!isSliceValid || sliceInOneTimeWindow)) {
@@ -110,9 +119,11 @@ export default Vue.extend({
       }
       return false;
     },
+    manifDate(): Date {
+      return new Date(this.$accessor.config.getConfig("event_date"));
+    },
     displayedManifDate(): string {
-      const date = this.$accessor.config.getConfig("event_date");
-      return `vendredi ${formatStringDateToDisplay(date)}`;
+      return `vendredi ${formatStringDateToDisplay(this.manifDate.toString())}`; //TODO
     },
   },
   watch: {
@@ -126,14 +137,14 @@ export default Vue.extend({
   methods: {
     updateLocalVariable() {
       if (!this.isEditForm) return this.clearLocalVariable();
-      this.start = formatDateForComponent(this.timeWindow.start);
-      this.end = formatDateForComponent(this.timeWindow.end);
+      this.start = this.timeWindow.start;
+      this.end = this.timeWindow.end;
       this.toSlice = this.timeWindow.sliceTime !== undefined;
       this.sliceTime = this.timeWindow.sliceTime || 2;
     },
     clearLocalVariable() {
-      this.start = "";
-      this.end = "";
+      this.start = this.manifDate;
+      this.end = this.manifDate;
       this.toSlice = false;
       this.sliceTime = 2;
     },
