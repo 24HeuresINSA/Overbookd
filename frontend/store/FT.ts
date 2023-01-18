@@ -63,7 +63,7 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_FEEDBACK({ mFT }, feedback: Feedback) {
-    mFT.ftComments = [...mFT.ftComments, feedback];
+    mFT.feedbacks = [...mFT.feedbacks, feedback];
   },
 });
 
@@ -128,7 +128,7 @@ export const actions = actionTree(
 
     async addFeedback({ commit }, feedback: Feedback) {
       // await repo.addFTComment(this, comment);
-      commit("ADD_FEEDBACK", { ...feedback });
+      commit("ADD_FEEDBACK", feedback);
     },
   }
 );
@@ -147,11 +147,11 @@ function fakeFT(id: number): FT {
     name: "name",
     description: "",
     areStatic: false,
+    feedbacks: [],
     status: FTStatus.DRAFT,
     locations: [],
     timeWindows: [],
     ftRefusals: [],
     ftValidations: [],
-    ftComments: [],
   };
 }

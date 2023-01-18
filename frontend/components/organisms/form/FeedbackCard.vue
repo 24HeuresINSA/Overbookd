@@ -16,15 +16,11 @@
           {{ formatDateString(item.createdAt) }}
         </template>
       </v-data-table>
-      <v-textarea
-        v-model="newComment"
-        label="Commentaire"
-        rows="3"
-      ></v-textarea>
+      <v-textarea v-model="comment" label="Commentaire" rows="3"></v-textarea>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn text @click="addComment">ajouter un commentaire</v-btn>
+      <v-btn text @click="addFeedback">ajouter un commentaire</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -49,19 +45,19 @@ export default Vue.extend({
       { text: "Commentaire", value: "comment" },
       { text: "Date", value: "createdAt" },
     ],
-    newComment: "",
+    comment: "",
   }),
   computed: {
     feedbacks(): Feedback[] {
-      return this.$accessor.FT.mFT.ftComments;
+      return this.$accessor.FT.mFT.feedbacks;
     },
     me(): any {
       return this.$accessor.user.me;
     },
   },
   methods: {
-    async addComment() {
-      if (!this.newComment) return;
+    async addFeedback() {
+      if (!this.comment) return;
       const author: User = {
         id: this.me.id,
         firstname: this.me.firstname,
@@ -70,15 +66,15 @@ export default Vue.extend({
 
       const feedback: Feedback = {
         subject: SubjectType.COMMENT,
-        comment: this.newComment,
+        comment: this.comment,
         author,
         createdAt: new Date(),
       };
 
       await this.$accessor.FT.addFeedback(feedback);
-      this.newComment = "";
+      this.comment = "";
     },
-    getAuthorName(user: DisplayedUser) {
+    getAuthorName(user?: DisplayedUser) {
       if (!user) return `${this.me.firstname} ${this.me.lastname}`;
       return `${user.firstname} ${user.lastname}`;
     },

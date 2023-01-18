@@ -33,7 +33,7 @@ export interface FT extends FTBase {
   locations: SignaLocation[];
   ftValidations: Review[];
   ftRefusals: Review[];
-  ftComments: Feedback[];
+  feedbacks: Feedback[];
 }
 
 export interface FTUpdate extends Omit<FT, "inCharge"> {
