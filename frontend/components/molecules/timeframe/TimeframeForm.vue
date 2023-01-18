@@ -238,12 +238,12 @@ export default Vue.extend({
       return this.mFA.time_windows;
     },
     timeWindowsType(): string[] {
-      let types = Object.values(time_windows_type);
+      const allTimeWindowTypes = Object.values(time_windows_type);
       if (this.isValidatedByAnimOwner) {
-        types = types.filter((t) => t !== time_windows_type["ANIM"]);
+        return allTimeWindowTypes.filter((t) => t !== time_windows_type.ANIM);
       }
       if (this.isValidatedByMatosOwners) {
-        types = types.filter((t) => t !== time_windows_type["MATOS"]);
+        return allTimeWindowTypes.filter((t) => t !== time_windows_type.MATOS);
       }
       return types;
     },
