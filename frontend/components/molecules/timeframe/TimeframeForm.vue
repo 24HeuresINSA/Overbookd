@@ -245,7 +245,7 @@ export default Vue.extend({
       if (this.isValidatedByMatosOwners) {
         return allTimeWindowTypes.filter((t) => t !== time_windows_type.MATOS);
       }
-      return types;
+      return allTimeWindowTypes;
     },
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
