@@ -161,6 +161,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import SgConfigForm from "~/components/organisms/SgConfigForm.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import transactionRepo from "../repositories/transactionRepo";
+import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 const { safeCall } = require("../utils/api/calls");
 
 export default {
@@ -214,9 +215,10 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      const unitPrice = +(+this.totalPrice / +this.totalConsumptions); //Prix total / nombre de bâton -> prix d'un bâton
-      const round = Math.round(unitPrice * 100); //arrondi au centime
-      return (Math.ceil(round / 5) * 5 * 0.01).toFixed(2); // rajout d'une marge de sécurité de 5 centimes
+      return computeUnitPrice(
+        +this.totalPrice,
+        +this.totalConsumptions
+      ).toFixed(2);
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
