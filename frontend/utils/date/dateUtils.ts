@@ -1,6 +1,6 @@
 export const ONE_HOUR = 1000 * 60 * 60;
 
-export function formatStringDateAndHourToDisplay(date: string): string {
+export function formatStringDateAndHourToDisplay(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
@@ -11,7 +11,7 @@ export function formatStringDateAndHourToDisplay(date: string): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatStringDateToDisplay(date: string): string {
+export function formatStringDateToDisplay(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
@@ -22,15 +22,15 @@ export function formatStringDateToDisplay(date: string): string {
 
 export function formatDateForComponent(date: Date): string {
   const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  return `${year}-${month < 10 ? "0" + month : month}-${
-    day < 10 ? "0" + day : day
-  }T${hours < 10 ? "0" + hours : hours}:${
-    minutes < 10 ? "0" + minutes : minutes
-  }`;
+  const month = getTwoDigitsNumber(date.getMonth() + 1);
+  const day = getTwoDigitsNumber(date.getDate());
+  const hours = getTwoDigitsNumber(date.getHours());
+  const minutes = getTwoDigitsNumber(date.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+function getTwoDigitsNumber(number: number): string {
+  return number < 10 ? "0" + number : number.toString();
 }
 
 export function getHourDiff(start: Date, end: Date): number {
