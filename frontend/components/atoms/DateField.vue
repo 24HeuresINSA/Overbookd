@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateForComponent } from "~/utils/date/dateUtils";
+import { formatDateForComponent, roundMinutes } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
   name: "DateField",
@@ -58,17 +58,8 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(date: string) {
-      this.$emit("change", this.roundMinutes(new Date(date)));
-    },
-    roundMinutes(date: Date): Date | null {
-      if (!date) return null;
-
-      const minutes = date.getMinutes();
-      if (minutes % 15 === 0) return date;
-
-      const minutesRounded = Math.round(minutes / 15) * 15;
-      date.setMinutes(minutesRounded);
-      return date;
+      const roundedMinutes = roundMinutes(new Date(date), 15);
+      this.$emit("change", roundedMinutes);
     },
     stringifyDate(date?: Date | string): string {
       if (!date) return "";
