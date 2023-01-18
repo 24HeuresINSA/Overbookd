@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatStringDateAndHourToDisplay } from "~/utils/date/dateUtils";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { fa_comments } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 
@@ -85,7 +85,7 @@ export default Vue.extend({
       }
     },
     formatDate(date: string) {
-      return formatStringDateAndHourToDisplay(date);
+      return formatDateWithMinutes(date);
     },
   },
 });

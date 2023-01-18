@@ -1,6 +1,6 @@
 export const ONE_HOUR = 1000 * 60 * 60;
 
-export function formatStringDateAndHourToDisplay(date: string | Date): string {
+export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
@@ -11,7 +11,7 @@ export function formatStringDateAndHourToDisplay(date: string | Date): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatStringDateToDisplay(date: string | Date): string {
+export function formatDate(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",

@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatStringDateAndHourToDisplay } from "~/utils/date/dateUtils";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { FTTimeWindow } from "~/utils/models/ft";
 import { User } from "~/utils/models/user";
 
@@ -85,7 +85,7 @@ export default Vue.extend({
   },
   methods: {
     formatDate(date: string): string {
-      return formatStringDateAndHourToDisplay(date);
+      return formatDateWithMinutes(date);
     },
     formatUsername({ firstname, lastname }: User) {
       return `${firstname} ${lastname}`;

@@ -42,7 +42,7 @@
 <script lang="ts">
 import Vue from "vue";
 import DateField from "~/components/atoms/DateField.vue";
-import { formatStringDateToDisplay, getHourDiff } from "~/utils/date/dateUtils";
+import { formatDate, getHourDiff } from "~/utils/date/dateUtils";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
 
 interface FTTimeWindowFormData {
@@ -123,7 +123,7 @@ export default Vue.extend({
       return new Date(this.$accessor.config.getConfig("event_date"));
     },
     displayedManifDate(): string {
-      return `vendredi ${formatStringDateToDisplay(this.manifDate.toString())}`; //TODO
+      return `vendredi ${formatDate(this.manifDate)}`;
     },
   },
   watch: {
@@ -158,9 +158,6 @@ export default Vue.extend({
         type: "error",
         message,
       });
-    },
-    saveMenuTime(menu: any, time: string) {
-      menu.save(time);
     },
   },
 });
