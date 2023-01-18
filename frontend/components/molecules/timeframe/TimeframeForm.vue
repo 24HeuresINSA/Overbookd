@@ -6,6 +6,7 @@
       </v-card-title>
 
       <v-select
+        v-if="timeWindowsType.length > 0"
         v-model="timeWindowType"
         type="select"
         label="Type"
@@ -169,9 +170,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
-import { hasAtLeastOneValidation } from "~/utils/fa/faUtils";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import {
+  hasAllValidations,
+  hasAtLeastOneValidation,
+  isAnimationValidatedBy,
+} from "~/utils/fa/faUtils";
+import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 
 interface BrakeDownDate {
   year: number;
@@ -210,6 +215,9 @@ export default Vue.extend({
     menuTimeEnd: false,
 
     isConfirmationDialogOpen: false,
+
+    animOwner: "humain",
+    matosOwners: ["matos", "barrieres", "elec"],
   }),
   computed: {
     mFA(): FA {
@@ -230,13 +238,26 @@ export default Vue.extend({
       return this.mFA.time_windows;
     },
     timeWindowsType(): string[] {
-      return Object.values(time_windows_type);
+      const allTimeWindowTypes = Object.values(time_windows_type);
+      if (this.isValidatedByAnimOwner) {
+        return allTimeWindowTypes.filter((t) => t !== time_windows_type.ANIM);
+      }
+      if (this.isValidatedByMatosOwners) {
+        return allTimeWindowTypes.filter((t) => t !== time_windows_type.MATOS);
+      }
+      return allTimeWindowTypes;
     },
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
     },
     me(): any {
       return this.$accessor.user.me;
+    },
+    isValidatedByAnimOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.animOwner);
+    },
+    isValidatedByMatosOwners(): boolean {
+      return hasAllValidations(this.mFA, this.matosOwners);
     },
   },
   watch: {
