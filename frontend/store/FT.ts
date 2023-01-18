@@ -62,8 +62,8 @@ export const mutations = mutationTree(state, {
     mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
   },
 
-  ADD_COMMENT({ mFT }, comment: Feedback) {
-    mFT.ftComments = [...mFT.ftComments, comment];
+  ADD_FEEDBACK({ mFT }, feedback: Feedback) {
+    mFT.ftComments = [...mFT.ftComments, feedback];
   },
 });
 
@@ -126,9 +126,9 @@ export const actions = actionTree(
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
-    async addComment({ commit }, comment: Feedback) {
+    async addFeedback({ commit }, feedback: Feedback) {
       // await repo.addFTComment(this, comment);
-      commit("ADD_COMMENT", { ...comment });
+      commit("ADD_FEEDBACK", { ...feedback });
     },
   }
 );

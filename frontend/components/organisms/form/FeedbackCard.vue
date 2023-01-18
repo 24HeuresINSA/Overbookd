@@ -4,7 +4,7 @@
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="comments"
+        :items="feedbacks"
         hide-default-footer
         :items-per-page="-1"
         sort-by="createdAt"
@@ -52,7 +52,7 @@ export default Vue.extend({
     newComment: "",
   }),
   computed: {
-    comments(): Feedback[] {
+    feedbacks(): Feedback[] {
       return this.$accessor.FT.mFT.ftComments;
     },
     me(): any {
@@ -68,14 +68,14 @@ export default Vue.extend({
         lastname: this.me.lastname,
       };
 
-      const comment: Feedback = {
+      const feedback: Feedback = {
         subject: SubjectType.COMMENT,
         comment: this.newComment,
         author,
         createdAt: new Date(),
       };
 
-      await this.$accessor.FT.addComment(comment);
+      await this.$accessor.FT.addFeedback(feedback);
       this.newComment = "";
     },
     getAuthorName(user: DisplayedUser) {
