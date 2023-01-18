@@ -66,11 +66,11 @@ export default Vue.extend({
     },
     dense: {
       type: Boolean,
-      default: () => false,
+      default: false,
     },
     boxed: {
       type: Boolean,
-      default: () => true,
+      default: true,
     },
   },
   data(): SearchGearData {
