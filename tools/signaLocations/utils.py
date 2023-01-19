@@ -1,29 +1,7 @@
-import os
 import requests
-import functools
 
 TOKEN = "YOUR_TOKEN"
 DOMAIN = "preprod.overbookd.24heures.org"
-
-toAddLocations =[
-    "Derrière TC",
-    "Parking Infirmerie",
-    "Pelouse Gaston Berger",
-    "TC"
-]
-
-toDeleteLocationNames = [
-  "Derrière Gaston Berger",
-  "Local Clubelek",
-  "Lokal",
-  "Pas tes oignons !",
-] + toAddLocations
-
-toUpdateLocationForms = [
-  { "from": "Le lieu de la signa", "to": "Lieu de la signa - CRL" },
-  { "from": "Petite Scène", "to": "Scène Nord" },
-  { "from": "Pierre de Fermat", "to": "Pierre de Fermat / Myriam Mirzakhani" },
-]
 
 def deleteLocations(locations):
     for location in locations:
@@ -58,20 +36,18 @@ def findToUpdateNewName(previousName, toUpdateLocationForms):
 
     return previousName
 
-def setNewNames(toUpdateLocations):
+def setNewNames(toUpdateLocationForms, toUpdateLocations):
     return [{"id": location["id"], "name": findToUpdateNewName(location['name'], toUpdateLocationForms) } for location in toUpdateLocations]
 
 def setToUpdateLocations(toUpdateLocationForms, locations):
     toUpdateLocationNames = list(map(getOriginalName, toUpdateLocationForms))
     toUpdateLocations = findLocations(toUpdateLocationNames, locations)
-    return setNewNames(toUpdateLocations)
+    return setNewNames(toUpdateLocationForms, toUpdateLocations)
 
-def main():
-    locations = getAllLocations()
-    toDeleteLocations = findLocations(toDeleteLocationNames, locations)
-    toUpdateLocations = setToUpdateLocations(toUpdateLocationForms, locations)
-    deleteLocations(toDeleteLocations)
-    updateLocations(toUpdateLocations)
-    createLocations(toAddLocations)
-
-main()
+def main(toAddLocations, toDeleteLocationNames, toUpdateLocationForms ):
+  locations = getAllLocations()
+  toDeleteLocations = findLocations(toDeleteLocationNames, locations)
+  toUpdateLocations = setToUpdateLocations(toUpdateLocationForms, locations)
+  deleteLocations(toDeleteLocations)
+  updateLocations(toUpdateLocations)
+  createLocations(toAddLocations)
