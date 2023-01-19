@@ -21,6 +21,7 @@ import * as transaction from "./transaction";
 import * as user from "./user";
 import * as permission from "./permission";
 import * as stats from "./stats";
+import * as inventory from "./inventory";
 
 export const state = () => ({});
 
@@ -58,5 +59,6 @@ export const accessorType = getAccessorType({
     publishAnimation,
     permission,
     stats,
+    inventory,
   },
 });
