@@ -3,6 +3,7 @@ import { User } from "./user";
 import { SignaLocation } from "./signaLocation";
 import { Review } from "./review";
 import { FA } from "./FA";
+import { Team } from "./team";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -27,6 +28,8 @@ export interface FT extends FTBase {
   inCharge?: User;
   areStatic: boolean;
   fa?: FA;
+
+  timeWindows: FTTimeWindow[];
   locations: SignaLocation[];
   ftValidations: Review[];
   ftRefusals: Review[];
@@ -40,4 +43,18 @@ export interface FTUpdate extends Omit<FT, "inCharge"> {
 export interface SearchFT {
   isDeleted?: boolean;
   status?: FTStatus;
+}
+
+export interface FTTimeWindow {
+  id?: number;
+  start: Date;
+  end: Date;
+  sliceTime?: number;
+  userRequests: User[];
+  teamRequests: FTTeamRequest[];
+}
+
+export interface FTTeamRequest {
+  quantity: number;
+  team: Team;
 }

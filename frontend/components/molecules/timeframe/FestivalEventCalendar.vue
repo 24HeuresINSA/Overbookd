@@ -6,11 +6,7 @@
       </v-btn>
       <v-spacer class="calendar-title">
         <div>
-          {{
-            new Date(value).toLocaleString("fr-FR", { month: "long" }) +
-            " " +
-            new Date(value).getFullYear()
-          }}
+          {{ calendarTitle }}
         </div>
       </v-spacer>
       <v-btn icon class="ma-2" @click="nextPage()">
@@ -21,7 +17,7 @@
       ref="formCalendar"
       v-model="value"
       type="week"
-      :events="events"
+      :events="calendarTimeWindows"
       :event-color="getEventColor"
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -31,24 +27,45 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { time_windows, time_windows_type } from "~/utils/models/FA";
+import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+import { time_windows_type } from "~/utils/models/FA";
+
+interface CalendarTimeWindow {
+  start: Date;
+  end: Date;
+  color: string;
+  name: string;
+  timed: true;
+}
 
 export default Vue.extend({
-  name: "TimeframeCalendar",
+  name: "FestivalEventCalendar",
   props: {
-    timeframes: {
-      type: Array,
-      default: () => [],
+    festivalEvent: {
+      type: String,
+      default: () => "FA",
     },
   },
   data: () => ({
-    value: "",
+    value: new Date(),
   }),
   computed: {
-    events(): Array<any> {
-      return (this.timeframes as time_windows[]).map((timeWindow) => ({
-        start: this.formatDateForCalendar(timeWindow.start),
-        end: this.formatDateForCalendar(timeWindow.end),
+    manifDate(): Date {
+      return new Date(this.$accessor.config.getConfig("event_date"));
+    },
+    calendarTitle(): string {
+      return formatDateWithExplicitMonth(this.value);
+    },
+    calendarTimeWindows(): CalendarTimeWindow[] {
+      return this.festivalEvent === "FA"
+        ? this.faTimeWindows
+        : this.ftTimeWindows;
+    },
+    faTimeWindows(): CalendarTimeWindow[] {
+      return (this.$accessor.FA.mFA.time_windows ?? []).map((timeWindow) => ({
+        start: timeWindow.start,
+        end: timeWindow.end,
+        timed: true,
         color:
           timeWindow.type === time_windows_type.MATOS ? "secondary" : "primary",
         name:
@@ -57,21 +74,20 @@ export default Vue.extend({
             : "Tenue de l'animation",
       }));
     },
+    ftTimeWindows(): CalendarTimeWindow[] {
+      return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
+        start: timeWindow.start,
+        end: timeWindow.end,
+        timed: true,
+        color: "primary",
+        name: "Tâche",
+      }));
+    },
   },
   mounted() {
-    this.value = this.$accessor.config.getConfig("event_date");
+    this.value = this.manifDate;
   },
   methods: {
-    formatDateForCalendar(date: Date): string {
-      date = new Date(date);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const seconds = date.getSeconds();
-      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    },
     getEventColor(event: any): string {
       return event.color;
     },

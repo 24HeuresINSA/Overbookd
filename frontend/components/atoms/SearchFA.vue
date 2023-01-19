@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA } from "~/utils/models/FA";
+import { FA, Status } from "~/utils/models/FA";
 
 interface SearchFAData {
   loading: boolean;
@@ -39,7 +39,7 @@ export default Vue.extend({
       default: "Chercher une FA",
     },
     fa: {
-      type: Object,
+      type: Object as () => FA | null,
       default: null,
     },
     boxed: {
@@ -54,7 +54,9 @@ export default Vue.extend({
   },
   computed: {
     FAs() {
-      return this.$accessor.FA.FAs;
+      return this.$accessor.FA.FAs.filter((fa) => {
+        return fa.status === Status.VALIDATED;
+      });
     },
   },
   mounted() {

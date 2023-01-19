@@ -1,10 +1,11 @@
 <template>
   <v-autocomplete
-    :value="user"
-    :items="users"
+    :value="users"
+    :items="allUsers"
     :loading="loading"
     chips
     clearable
+    multiple
     item-value="id"
     :item-text="displayUsername"
     :label="label"
@@ -28,9 +29,9 @@ interface SearchUserData {
 }
 
 export default Vue.extend({
-  name: "SearchUser",
+  name: "SearchUsers",
   model: {
-    prop: "user",
+    prop: "users",
     event: "change",
   },
   props: {
@@ -38,9 +39,9 @@ export default Vue.extend({
       type: String,
       default: "Chercher un utilisateur",
     },
-    user: {
-      type: Object as () => User | null,
-      default: null,
+    users: {
+      type: Array<User>,
+      default: () => [],
     },
     boxed: {
       type: Boolean,
@@ -53,17 +54,17 @@ export default Vue.extend({
     };
   },
   computed: {
-    users() {
+    allUsers() {
       return this.$accessor.user.users;
     },
   },
   mounted() {
-    if (this.users.length) return;
+    if (this.allUsers.length) return;
     this.$accessor.user.fetchUsers();
   },
   methods: {
-    propagateEvent(user: User | null) {
-      this.$emit("change", user);
+    propagateEvent(users: User[]) {
+      this.$emit("change", users);
     },
     displayUsername({ firstname, lastname }: User): string {
       return `${firstname} ${lastname}`;
