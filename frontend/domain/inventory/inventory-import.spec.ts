@@ -1,15 +1,13 @@
 import { describe, it, expect } from "@jest/globals";
 import { GearRepository } from "./gear.repository";
 import { InMemoryGearRepository } from "./inmemory-gear.repository";
-import { InventoryImport, InventoryImportContainer } from "./inventory-import";
+import {
+  InventoryImport,
+  InventoryImportContainer,
+  InventoryImportRaw,
+} from "./inventory-import";
 import { ManualInventoryRecord } from "./manual-inventory-record";
 import { marteau, perceuse, scieCirculaire } from "./test-helper";
-
-type InventoryImportRaw = {
-  gear: string;
-  quantity: number;
-  storage: string;
-};
 
 class FakeInventoryImportContainer extends InventoryImportContainer {
   constructor(
@@ -19,17 +17,7 @@ class FakeInventoryImportContainer extends InventoryImportContainer {
     super(gearRepository);
   }
   extractManualRecords(): Promise<ManualInventoryRecord[]> {
-    return Promise.resolve(
-      this.raws.map(
-        ({ gear, quantity, storage }) =>
-          new ManualInventoryRecord(
-            gear,
-            quantity,
-            storage,
-            this.gearRepository
-          )
-      )
-    );
+    return Promise.resolve(this.convertImportRawsToManualRecords(this.raws));
   }
 }
 

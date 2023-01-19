@@ -221,6 +221,12 @@ export default {
           to: "/catalog",
         },
         {
+          icon: "mdi-warehouse",
+          permission: "inventory-write",
+          title: "Inventaire",
+          to: "/inventory",
+        },
+        {
           icon: "mdi-web-sync",
           permission: "communication-read",
           title: "Animations a publier",
