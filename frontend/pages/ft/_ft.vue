@@ -46,7 +46,6 @@ export default Vue.extend({
   },
   async mounted() {
     const res = await this.$accessor.FT.fetchFT(this.ftId);
-    console.log("res", res);
     if (!res) {
       alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");
       await this.$router.push({

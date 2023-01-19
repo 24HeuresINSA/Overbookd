@@ -22,7 +22,7 @@ export const getters = getterTree(state, {});
 
 export const mutations = mutationTree(state, {
   UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
-    state.mFT = { ...ft, ...state.mFT };
+    state.mFT = { ...state.mFT, ...ft };
   },
 
   RESET_FT(state) {
@@ -35,7 +35,6 @@ export const mutations = mutationTree(state, {
 
   SET_FTS(state, fts: FT[]) {
     state.FTs = fts;
-    console.log(state.FTs, "state.FTs");
   },
 
   ADD_FT({ FTs }, ft: FT) {
@@ -100,7 +99,7 @@ export const actions = actionTree(
         successMessage: "FT créée 🥳",
         errorMessage: "FT non créée 😢",
       });
-      console.log(res, "res");
+
       if (!res) return;
       commit("ADD_FT", res.data);
       dispatch("setFT", res.data);
@@ -117,6 +116,7 @@ export const actions = actionTree(
         successMessage: "FT sauvegardée 🥳",
         errorMessage: "FT non sauvegardée 😢",
       });
+      console.log("res", res);
       if (!res) return;
       commit("UPDATE_SELECTED_FT", res.data);
       dispatch("setFT", res.data);

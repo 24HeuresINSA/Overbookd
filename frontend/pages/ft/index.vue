@@ -197,7 +197,7 @@ export default Vue.extend({
         { text: "Validation", value: "validation" },
         { text: "Nom", value: "name" },
         { text: "FA", value: "FA" },
-        { text: "Resp", value: "general.inCharge.username" },
+        { text: "Resp", value: "inCharge" },
         { text: "Action", value: "action" },
       ],
       FTName: "",
@@ -274,7 +274,6 @@ export default Vue.extend({
       });
     }
     this.loading = false;
-    console.log(this.$accessor.FT.FTs);
   },
 
   methods: {
