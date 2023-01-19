@@ -132,11 +132,3 @@ export interface location {
   longitude?: number;
   neededBy: string[];
 }
-
-export interface team {
-  id: number;
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-}

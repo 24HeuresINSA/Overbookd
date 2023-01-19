@@ -1,4 +1,7 @@
 import { Gear } from "./catalog.model";
+import { SubjectType } from "./feedback";
+import { Review } from "./review";
+import { DisplayedUser } from "./user";
 
 export enum Status {
   DRAFT = "DRAFT",
@@ -38,12 +41,6 @@ export enum signa_type {
   BANNIERE = "BANNIERE",
   PANNEAU = "PANNEAU",
   PANCARTE = "PANCARTE",
-}
-export enum subject_type {
-  REFUSED = "REFUSED",
-  VALIDATED = "VALIDATED",
-  COMMENT = "COMMENT",
-  SUBMIT = "SUBMIT",
 }
 
 export enum fa_type {
@@ -125,33 +122,18 @@ export interface collaborator {
   comment?: string;
 }
 
-export interface fa_validation {
-  User: {
-    firstname: string;
-    lastname: string;
-  };
-  Team: {
-    id: number;
-    code: string;
-    name: string;
-    color: string;
-    icon: string;
-  };
+export interface fa_comments {
+  id?: number;
+  comment: string;
+  subject: SubjectType;
+  created_at?: Date;
+  author: number;
+  User_author?: DisplayedUser;
 }
 
-export interface fa_refuse {
-  User: {
-    firstname: string;
-    lastname: string;
-  };
-  Team: {
-    id: number;
-    code: string;
-    name: string;
-    color: string;
-    icon: string;
-  };
-}
+export type fa_validation = Review;
+
+export type fa_refuse = Review;
 
 export interface fa_electricity_needs {
   id?: number;
@@ -169,26 +151,6 @@ export interface fa_signa_needs {
   text: string;
   count: number;
   comment?: string;
-}
-
-export interface fa_comments {
-  id?: number;
-  comment: string;
-  subject: subject_type;
-  created_at?: Date;
-  author: number;
-  User_author?: {
-    firstname: string;
-    lastname: string;
-  };
-}
-
-export interface fa_comments_update {
-  id?: number;
-  comment: string;
-  subject: subject_type;
-  created_at?: Date;
-  author: number;
 }
 
 export interface time_windows {

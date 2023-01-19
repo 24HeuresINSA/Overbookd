@@ -17,7 +17,7 @@
           }}
         </template>
         <template #[`item.created_at`]="{ item }">
-          {{ formatDateString(item.created_at) }}
+          {{ formatDate(item.created_at) }}
         </template>
       </v-data-table>
       <v-textarea
@@ -35,7 +35,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { subject_type, fa_comments } from "~/utils/models/FA";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { fa_comments } from "~/utils/models/FA";
+import { SubjectType } from "~/utils/models/feedback";
 
 export default Vue.extend({
   name: "CommentCard",
@@ -72,7 +74,7 @@ export default Vue.extend({
       if (!this.newComment) return;
       if (this.form == "FA") {
         const comment: fa_comments = {
-          subject: subject_type.COMMENT,
+          subject: SubjectType.COMMENT,
           comment: this.newComment,
           author: this.me.id,
           created_at: new Date(),
@@ -82,17 +84,8 @@ export default Vue.extend({
         this.newComment = "";
       }
     },
-    formatDateString(date: string) {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+    formatDate(date: string) {
+      return formatDateWithMinutes(date);
     },
   },
 });

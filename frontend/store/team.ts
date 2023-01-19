@@ -1,52 +1,52 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { team } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 import { safeCall } from "~/utils/api/calls";
 
 const teamRepo = RepoFactory.teamRepo;
 
 // The state types definitions
 interface State {
-  teams: team[];
-  faValidators: team[];
+  teams: Team[];
+  faValidators: Team[];
 }
 
 export const state = (): State => ({
   teams: [],
-  faValidators: [] as team[],
+  faValidators: [] as Team[],
 });
 
 export const getters = getterTree(state, {
-  allTeams(state): team[] {
+  allTeams(state): Team[] {
     return state.teams;
   },
   teamNames(state, getters): string[] {
-    return getters.allTeams.map((team: team) => team.name);
+    return getters.allTeams.map((team: Team) => team.name);
   },
   getTeams:
     (state, getters) =>
-    (teamCodes: string[]): team[] => {
-      return getters.allTeams.filter((t: team) => {
+    (teamCodes: string[]): Team[] => {
+      return getters.allTeams.filter((t: Team) => {
         return teamCodes.includes(t.code);
       });
     },
   getTeamById:
     (state) =>
-    (id: number): team | undefined => {
+    (id: number): Team | undefined => {
       return state.teams.find((t) => t.id === id);
     },
   getTeamByCode:
-    (state) =>
-    (code: string): team | undefined => {
-      return state.teams.find((t: team) => t.code === code);
+    (state, getters) =>
+    (code: string): Team => {
+      return getters.allTeams.find((t: Team) => t.code === code);
     },
 });
 
 export const mutations = mutationTree(state, {
-  SET_TEAMS(state, teams: team[]) {
+  SET_TEAMS(state, teams: Team[]) {
     state.teams = teams;
   },
-  SET_FA_VALIDATORS(state, teams: team[]) {
+  SET_FA_VALIDATORS(state, teams: Team[]) {
     state.faValidators = teams;
   },
 });
@@ -63,7 +63,7 @@ export const actions = actionTree(
     },
     async linkUserToTeams(
       constext,
-      { userId, teams }: { userId: number; teams: team[] }
+      { userId, teams }: { userId: number; teams: Team[] }
     ): Promise<any> {
       return safeCall(this, teamRepo.linkUserToTeams(this, userId, teams));
     },

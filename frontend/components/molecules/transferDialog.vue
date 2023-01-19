@@ -96,7 +96,7 @@ export default Vue.extend({
       return {
         text: user.username,
         value: user,
-      };
+      } as any;
     });
   },
   methods: {

@@ -5,7 +5,6 @@ import {
   FaSitePublishAnimation,
   fa_collaborators,
   fa_comments,
-  fa_comments_update,
   fa_electricity_needs,
   fa_general_update,
   fa_signa_needs,
@@ -23,7 +22,7 @@ import { StatsPayload } from "~/utils/models/stats";
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
 
-function omitAuthors(comments: fa_comments[]): fa_comments_update[] {
+function omitAuthors(comments: fa_comments[]): fa_comments[] {
   return comments.map(({ id, comment, author, subject, created_at }) => ({
     id,
     comment,
@@ -38,8 +37,8 @@ export default {
     return context.$axios.get<FA[]>(resource, { params: search });
   },
 
-  getFAByCount(context: Context, count: number) {
-    return context.$axios.get<FA>(resource + `/${count}`);
+  getFAById(context: Context, id: number) {
+    return context.$axios.get<FA>(resource + `/${id}`);
   },
 
   createNewFA(context: Context, FA: CreateFA) {
@@ -110,7 +109,7 @@ export default {
   },
 
   updateFAComments(context: Context, id: number, comments: fa_comments[]) {
-    const comments_update: fa_comments_update[] = omitAuthors(comments);
+    const comments_update: fa_comments[] = omitAuthors(comments);
     return context.$axios.post<fa_comments[]>(
       `/fa-comment/${id}`,
       comments_update

@@ -14,7 +14,7 @@ import * as FT from "./FT";
 import * as location from "./location";
 import * as notif from "./notif";
 import * as publishAnimation from "./publishAnimation";
-import * as signaLocation from "./signaLocation";
+import * as signa from "./signa";
 import * as team from "./team";
 import * as timeslot from "./timeslot";
 import * as transaction from "./transaction";
@@ -54,7 +54,7 @@ export const accessorType = getAccessorType({
     conflict,
     catalog,
     configuration,
-    signaLocation,
+    signa,
     publishAnimation,
     permission,
     stats,
