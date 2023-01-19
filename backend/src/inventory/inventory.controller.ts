@@ -11,6 +11,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -33,6 +34,9 @@ import { InventoryRecord, InventoryService } from './inventory.service';
 })
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
 })
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
