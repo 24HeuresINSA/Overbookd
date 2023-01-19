@@ -23,6 +23,7 @@ import { CollaboratorModule } from './collaborator/collaborator.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { SignaLocationModule } from './signa_location/signa_location.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_sit
     SignaLocationModule,
     FaSitePublishAnimationModule,
     PermissionModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

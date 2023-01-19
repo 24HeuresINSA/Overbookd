@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SimplifiedCategoryRepresentation } from '../../../catalog/dto/gearResponse.dto';
-import { Gear, Team } from '../../../catalog/interfaces';
+import { GearRepresentation } from 'src/common/dto/gearRepresentation.dto';
+import { Gear } from '../../../catalog/interfaces';
 import {
   GearRequest,
   ApprovedGearRequest,
@@ -9,20 +9,6 @@ import {
   Period,
   APPROVED,
 } from '../gearRequests.service';
-
-class TeamRepresentation implements Team {
-  name: string;
-  code: string;
-}
-
-class GearRepresentation implements Gear {
-  id: number;
-  name: string;
-  slug: string;
-  category?: SimplifiedCategoryRepresentation;
-  owner?: TeamRepresentation;
-  isPonctualUsage: boolean;
-}
 
 class GearSeekerRepresentation implements GearSeeker {
   type: GearSeekerType;
