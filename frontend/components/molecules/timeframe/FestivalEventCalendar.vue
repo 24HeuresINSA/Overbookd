@@ -6,11 +6,7 @@
       </v-btn>
       <v-spacer class="calendar-title">
         <div>
-          {{
-            new Date(value).toLocaleString("fr-FR", { month: "long" }) +
-            " " +
-            new Date(value).getFullYear()
-          }}
+          {{ calendarTitle }}
         </div>
       </v-spacer>
       <v-btn icon class="ma-2" @click="nextPage()">
@@ -31,14 +27,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateForComponent } from "~/utils/date/dateUtils";
+import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { time_windows_type } from "~/utils/models/FA";
 
 interface CalendarTimeWindow {
-  start: string;
-  end: string;
+  start: Date;
+  end: Date;
   color: string;
   name: string;
+  timed: true;
 }
 
 export default Vue.extend({
@@ -50,9 +47,15 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    value: "",
+    value: new Date(),
   }),
   computed: {
+    manifDate(): Date {
+      return new Date(this.$accessor.config.getConfig("event_date"));
+    },
+    calendarTitle(): string {
+      return formatDateWithExplicitMonth(this.value);
+    },
     calendarTimeWindows(): CalendarTimeWindow[] {
       return this.festivalEvent === "FA"
         ? this.faTimeWindows
@@ -60,8 +63,9 @@ export default Vue.extend({
     },
     faTimeWindows(): CalendarTimeWindow[] {
       return (this.$accessor.FA.mFA.time_windows ?? []).map((timeWindow) => ({
-        start: formatDateForComponent(timeWindow.start),
-        end: formatDateForComponent(timeWindow.end),
+        start: timeWindow.start,
+        end: timeWindow.end,
+        timed: true,
         color:
           timeWindow.type === time_windows_type.MATOS ? "secondary" : "primary",
         name:
@@ -72,16 +76,16 @@ export default Vue.extend({
     },
     ftTimeWindows(): CalendarTimeWindow[] {
       return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
-        start: formatDateForComponent(timeWindow.start),
-        end: formatDateForComponent(timeWindow.end),
+        start: timeWindow.start,
+        end: timeWindow.end,
+        timed: true,
         color: "primary",
         name: "Tâche",
       }));
     },
   },
   mounted() {
-    const manifDate = this.$accessor.config.getConfig("event_date");
-    this.value = formatDateForComponent(new Date(manifDate));
+    this.value = this.manifDate;
   },
   methods: {
     getEventColor(event: any): string {

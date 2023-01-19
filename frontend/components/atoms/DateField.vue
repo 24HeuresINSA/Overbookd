@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateForComponent, roundMinutes } from "~/utils/date/dateUtils";
+import { formatLocalDateTime, roundMinutes } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
   name: "DateField",
@@ -63,7 +63,7 @@ export default Vue.extend({
     },
     stringifyDate(date?: Date | string): string {
       if (!date) return "";
-      return formatDateForComponent(new Date(date));
+      return formatLocalDateTime(new Date(date));
     },
   },
 });

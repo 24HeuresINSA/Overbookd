@@ -20,7 +20,7 @@ export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatDateForComponent(date: Date): string {
+export function formatLocalDateTime(date: Date): string {
   const year = date.getFullYear();
   const month = getTwoDigitsNumber(date.getMonth() + 1);
   const day = getTwoDigitsNumber(date.getDate());
@@ -47,4 +47,12 @@ export function roundMinutes(date: Date, round: number): Date | null {
   const minutesRounded = Math.round(minutes / round) * round;
   date.setMinutes(minutesRounded);
   return date;
+}
+
+export function formatDateWithExplicitMonth(date: Date | string): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
