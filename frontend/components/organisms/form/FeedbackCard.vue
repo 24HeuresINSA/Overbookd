@@ -13,7 +13,7 @@
           {{ getAuthorName(item.author) }}
         </template>
         <template #[`item.createdAt`]="{ item }">
-          {{ formatDateString(item.createdAt) }}
+          {{ formatDate(item.createdAt) }}
         </template>
       </v-data-table>
       <v-textarea v-model="comment" label="Commentaire" rows="3"></v-textarea>
@@ -29,6 +29,7 @@
 import Vue from "vue";
 import { Feedback, SubjectType } from "~/utils/models/feedback";
 import { DisplayedUser, User } from "~/utils/models/user";
+import { formatDate } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
   name: "FeedbackCard",
@@ -78,17 +79,8 @@ export default Vue.extend({
       if (!user) return `${this.me.firstname} ${this.me.lastname}`;
       return `${user.firstname} ${user.lastname}`;
     },
-    formatDateString(date: string) {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+    formatDate(date: Date | string): string {
+      return formatDate(date);
     },
   },
 });
