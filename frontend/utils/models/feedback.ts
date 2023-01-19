@@ -1,10 +1,10 @@
-import { DisplayedUser } from "./user";
+import { User } from "./user";
 
 export interface Feedback {
   comment: string;
   subject: SubjectType;
   createdAt: Date;
-  author: DisplayedUser;
+  author: User;
 }
 
 export interface SavedFeedback extends Feedback {
@@ -21,4 +21,10 @@ export enum SubjectType {
   COMMENT = "COMMENT",
   SUBMIT = "SUBMIT",
   READY = "READY",
+}
+
+export function isSavedFeedback(
+  feedback: Feedback | SavedFeedback
+): feedback is SavedFeedback {
+  return (feedback as SavedFeedback).id !== undefined;
 }

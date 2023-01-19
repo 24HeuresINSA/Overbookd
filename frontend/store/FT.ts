@@ -8,6 +8,7 @@ import {
   SearchFT,
   FTTimeWindow,
 } from "~/utils/models/ft";
+import { Feedback } from "~/utils/models/feedback";
 
 const repo = RepoFactory.ftRepo;
 
@@ -59,6 +60,10 @@ export const mutations = mutationTree(state, {
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
+  },
+
+  ADD_FEEDBACK({ mFT }, feedback: Feedback) {
+    mFT.feedbacks = [...mFT.feedbacks, feedback];
   },
 });
 
@@ -120,6 +125,11 @@ export const actions = actionTree(
       // await repo.deleteFTTimeWindows(this, timeWindow);
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
+
+    async addFeedback({ commit }, feedback: Feedback) {
+      // await repo.addFTComment(this, comment);
+      commit("ADD_FEEDBACK", feedback);
+    },
   }
 );
 
@@ -137,11 +147,11 @@ function fakeFT(id: number): FT {
     name: "name",
     description: "",
     areStatic: false,
+    feedbacks: [],
     status: FTStatus.DRAFT,
     locations: [],
     timeWindows: [],
     ftRefusals: [],
     ftValidations: [],
-    ftComments: [],
   };
 }
