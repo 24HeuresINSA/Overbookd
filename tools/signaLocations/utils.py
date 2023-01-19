@@ -44,7 +44,7 @@ def setToUpdateLocations(toUpdateLocationForms, locations):
     toUpdateLocations = findLocations(toUpdateLocationNames, locations)
     return setNewNames(toUpdateLocationForms, toUpdateLocations)
 
-def updateLocations(toAddLocations, toDeleteLocationNames, toUpdateLocationForms ):
+def main(toAddLocations, toDeleteLocationNames, toUpdateLocationForms ):
   locations = getAllLocations()
   toDeleteLocations = findLocations(toDeleteLocationNames, locations)
   toUpdateLocations = setToUpdateLocations(toUpdateLocationForms, locations)

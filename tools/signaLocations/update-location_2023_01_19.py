@@ -1,4 +1,4 @@
-from utils import *
+from utils import main as updateLocations
 
 toAddLocations = [
     "Devant AIP",
