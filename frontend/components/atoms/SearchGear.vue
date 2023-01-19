@@ -6,11 +6,13 @@
     item-text="name"
     chips
     clearable
-    filled
+    :filled="boxed"
     item-value="id"
     :label="label"
-    solo
+    :solo="boxed"
     return-object
+    :dense="dense"
+    :hide-details="dense"
     @update:search-input="searchGear"
     @change="propagateEvent"
     @focus="initList"
@@ -61,6 +63,14 @@ export default Vue.extend({
     ponctualUsage: {
       type: Boolean,
       default: () => undefined,
+    },
+    dense: {
+      type: Boolean,
+      default: false,
+    },
+    boxed: {
+      type: Boolean,
+      default: true,
     },
   },
   data(): SearchGearData {

@@ -26,3 +26,17 @@ export class ManualInventoryRecordError extends Error {
     super(`Gear ${record.gear} doesn't exist`);
   }
 }
+
+export class DisplayableManualInventoryRecordError {
+  constructor(public readonly record: ManualInventoryRecord) {}
+
+  static fromError(
+    error: ManualInventoryRecordError
+  ): DisplayableManualInventoryRecordError {
+    return new DisplayableManualInventoryRecordError(error.record);
+  }
+
+  toInventoryRecord(gear: Gear) {
+    return new InventoryRecord(gear, this.record.quantity, this.record.storage);
+  }
+}
