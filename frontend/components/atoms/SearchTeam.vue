@@ -39,7 +39,7 @@ export default Vue.extend({
       default: "Chercher une equipe",
     },
     team: {
-      type: Object,
+      type: Object as () => Team | null,
       default: null,
     },
     boxed: {

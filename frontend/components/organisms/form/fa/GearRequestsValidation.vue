@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import { GearRequestWithDrive, StoredGearRequest } from "~/utils/models/FA";
 
@@ -115,16 +116,7 @@ export default Vue.extend({
 
   methods: {
     formatDate(date: string): string {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+      return formatDateWithMinutes(date);
     },
 
     updateGearRequestWithDrive(gearRequest: StoredGearRequest, drive: string) {

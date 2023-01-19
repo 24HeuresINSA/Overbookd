@@ -1,7 +1,13 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { FTCreation, FT, FTStatus, SearchFT } from "~/utils/models/ft";
+import {
+  FTCreation,
+  FT,
+  FTStatus,
+  SearchFT,
+  FTTimeWindow,
+} from "~/utils/models/ft";
 
 const repo = RepoFactory.ftRepo;
 
@@ -35,6 +41,24 @@ export const mutations = mutationTree(state, {
 
   DELETE_FT(state, ftId: number) {
     state.FTs = state.FTs.filter((ft) => ft.id !== ftId);
+  },
+
+  ADD_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    mFT.timeWindows = [...mFT.timeWindows, timeWindow];
+  },
+
+  UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
+    if (index === -1) return;
+    mFT.timeWindows = [
+      ...mFT.timeWindows.slice(0, index),
+      timeWindow,
+      ...mFT.timeWindows.slice(index + 1),
+    ];
+  },
+
+  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
   },
 });
 
@@ -79,6 +103,23 @@ export const actions = actionTree(
       if (!res) return;
       commit("DELETE_FT", ftId);
     },
+
+    async addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+      // await repo.addFTTimeWindows(this, timeWindow);
+      commit("ADD_TIME_WINDOW", timeWindow);
+    },
+
+    async updateTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+      if (!timeWindow?.id) return;
+      // await repo.updateFTTimeWindows(this, timeWindow);
+      commit("UPDATE_TIME_WINDOW", timeWindow);
+    },
+
+    async deleteTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+      if (!timeWindow?.id) return;
+      // await repo.deleteFTTimeWindows(this, timeWindow);
+      commit("DELETE_TIME_WINDOW", timeWindow);
+    },
   }
 );
 
@@ -96,10 +137,11 @@ function fakeFT(id: number): FT {
     name: "name",
     description: "",
     areStatic: false,
-    ftComments: [],
     status: FTStatus.DRAFT,
+    locations: [],
+    timeWindows: [],
     ftRefusals: [],
     ftValidations: [],
-    locations: [],
+    ftComments: [],
   };
 }

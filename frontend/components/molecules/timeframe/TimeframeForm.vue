@@ -172,6 +172,7 @@ import Vue from "vue";
 import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { hasAtLeastOneValidation } from "~/utils/fa/faUtils";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 
 interface BrakeDownDate {
   year: number;
@@ -225,9 +226,6 @@ export default Vue.extend({
         start: new Date(this.dateStart + " " + this.timeStart),
         end: new Date(this.dateEnd + " " + this.timeEnd),
       };
-    },
-    timeframes(): any {
-      return this.mFA.time_windows;
     },
     timeWindowsType(): string[] {
       return Object.values(time_windows_type);
@@ -321,14 +319,7 @@ export default Vue.extend({
       this.timeWindowType = time_windows_type.ANIM;
     },
     formatDate(date: string): string {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+      return formatDateWithMinutes(date);
     },
     confirmTimeWindow() {
       if (this.formIsInvalid()) return;

@@ -41,7 +41,7 @@
         >
       </v-card-actions>
 
-      <TimeframeCalendar :timeframes="timeWindowsList"></TimeframeCalendar>
+      <FestivalEventCalendar :time-windows="timeWindowsList" />
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TimeframeCalendar from "~/components/molecules/timeframe/TimeframeCalendar.vue";
+import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
 import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
 import {
   getFAValidationStatusWithMultipleTeams,
@@ -92,6 +92,7 @@ import {
 } from "~/utils/models/FA";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 
 interface IdentifiableTimeWindow extends time_windows {
   key: string;
@@ -100,7 +101,7 @@ interface IdentifiableTimeWindow extends time_windows {
 export default Vue.extend({
   name: "TimeframeTable",
   components: {
-    TimeframeCalendar,
+    FestivalEventCalendar,
     TimeframeForm,
     CardErrorList,
     ConfirmationMessage,
@@ -119,7 +120,6 @@ export default Vue.extend({
     isEditDialogOpen: false,
     isConfirmationDialogOpen: false,
 
-    editIndex: null as number | null,
     selectedTimeWindow: null as IdentifiableTimeWindow | null,
   }),
   computed: {
@@ -165,16 +165,7 @@ export default Vue.extend({
   },
   methods: {
     formatDate(date: string): string {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+      return formatDateWithMinutes(date);
     },
     confirmToDeleteTimeframe(timeWindow: IdentifiableTimeWindow) {
       const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
