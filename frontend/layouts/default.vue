@@ -193,7 +193,7 @@ export default {
         {
           icon: "mdi-format-color-highlight",
           title: "Fiches Tâches",
-          permission: "hard",
+          permission: "admin",
           to: "/ft",
         },
         {
