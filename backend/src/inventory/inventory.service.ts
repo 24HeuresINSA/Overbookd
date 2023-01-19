@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Gear } from 'src/catalog/interfaces';
-import { SlugifyService } from 'src/common/services/slugify.service';
+import { SlugifyService } from '../common/services/slugify.service';
 
 export type GroupedRecord = {
   quantity: number;

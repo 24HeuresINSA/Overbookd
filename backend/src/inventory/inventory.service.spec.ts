@@ -178,7 +178,7 @@ describe('Icnventory Service', () => {
       ${'Unknown'}  | ${[]}
     `('When searching $gearName', ({ gearName, expectedGroupedRecords }) => {
       it('should return all grouped records matching the gear', async () => {
-        const records = await inventoryService.search(gearName);
+        const records = await inventoryService.search({ name: gearName });
         expect(records).toHaveLength(expectedGroupedRecords.length);
         expect(records).toEqual(expectedGroupedRecords);
       });
