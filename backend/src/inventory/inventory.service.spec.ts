@@ -62,7 +62,7 @@ const TABLE: Gear = {
   isPonctualUsage: false,
 };
 
-describe('Icnventory Service', () => {
+describe('Inventory Service', () => {
   const slugifyService = new SlugifyService();
   describe('Setup inventory', () => {
     const inventoryRepository = new InMemoryInventoryRepository();

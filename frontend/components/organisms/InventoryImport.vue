@@ -179,8 +179,11 @@ export default Vue.extend({
         this.selectedImportErrorIndex
       );
     },
-    saveInventory() {
-      console.warn("One day I swear");
+    async saveInventory() {
+      await this.$accessor.inventory.importInventory(this.inventoryRecords);
+      this.inventoryImportErrors = [];
+      this.inventoryRecords = [];
+      this.$emit("import-done");
     },
   },
 });

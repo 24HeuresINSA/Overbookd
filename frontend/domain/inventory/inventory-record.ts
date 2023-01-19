@@ -1,7 +1,13 @@
 import { updateItemToList } from "../../utils/functions/list";
 import { Gear } from "~/utils/models/catalog.model";
 
-export class InventoryRecord {
+export interface Record {
+  gear: Gear;
+  quantity: number;
+  storage: string;
+}
+
+export class InventoryRecord implements Record {
   constructor(
     public readonly gear: Gear,
     public readonly quantity: number,
@@ -26,6 +32,10 @@ export class InventoryRecord {
     const similarRecord = records[similarRecordIndex];
     const updatedRecord = this.add(similarRecord);
     return updateItemToList(records, similarRecordIndex, updatedRecord);
+  }
+
+  toJson(): Record {
+    return { gear: this.gear, quantity: this.quantity, storage: this.storage };
   }
 
   static isSimilar(
