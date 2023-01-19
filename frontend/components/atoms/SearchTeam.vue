@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { team } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 
 interface SearchTeamData {
   loading: boolean;
@@ -39,7 +39,7 @@ export default Vue.extend({
       default: "Chercher une equipe",
     },
     team: {
-      type: Object,
+      type: Object as () => Team | null,
       default: null,
     },
     boxed: {
@@ -62,7 +62,7 @@ export default Vue.extend({
     this.$accessor.team.setTeamsInStore();
   },
   methods: {
-    propagateEvent(team: team | null) {
+    propagateEvent(team: Team | null) {
       this.$emit("change", team);
     },
   },

@@ -42,13 +42,13 @@ import Vue from "vue";
 import SearchTeamVue from "~/components/atoms/SearchTeam.vue";
 import { CategoryForm } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
-import { team } from "~/utils/models/repo";
 import SearchCategoryVue from "../../atoms/SearchCategory.vue";
 import { InputRulesData, minLength } from "~/utils/rules/inputRules";
+import { Team } from "~/utils/models/team";
 
 interface CategoryFormData extends InputRulesData {
   name: string;
-  owner?: Pick<team, "code" | "name">;
+  owner?: Pick<Team, "code" | "name">;
   parent?: Category;
 }
 

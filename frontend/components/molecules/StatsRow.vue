@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { team } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 import { StatsPayload } from "~/utils/models/stats";
 import { Status as FAStatus } from "~/utils/models/FA";
 import StatsCard from "~/components/atoms/StatsCard.vue";
@@ -115,7 +115,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    team(teamId: number): team | undefined {
+    team(teamId: number): Team | undefined {
       return this.$accessor.team.getTeamById(teamId);
     },
     getAllStatus() {

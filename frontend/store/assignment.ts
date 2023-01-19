@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
-import { FT } from "~/utils/models/FT";
+import { FT } from "~/utils/models/ft";
 import { FA } from "~/utils/models/FA";
 import Fuse from "fuse.js";
 import { TimeSpan } from "~/utils/models/TimeSpan";
@@ -258,8 +258,7 @@ export const actions = actionTree(
             start: new Date(ts.start),
             end: new Date(ts.end),
             timed: true,
-            FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-              .name,
+            FTName: state.FTs.find((ft: FT) => ft.id === ts.FTID).name,
           }))
         );
       }
@@ -279,8 +278,7 @@ export const actions = actionTree(
               start: new Date(ts.start),
               end: new Date(ts.end),
               timed: true,
-              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-                .name,
+              FTName: state.FTs.find((ft: FT) => ft.id === ts.FTID).name,
             }))
           );
         }
@@ -304,8 +302,7 @@ export const actions = actionTree(
               start: new Date(ts.start),
               end: new Date(ts.end),
               timed: true,
-              FTName: state.FTs.find((ft: FT) => ft.count === ts.FTID)?.general
-                .name,
+              FTName: state.FTs.find((ft: FT) => ft.id === ts.FTID).name,
             }))
           );
         }
@@ -330,7 +327,7 @@ export const actions = actionTree(
     },
 
     async getRolesByFT({ commit }: any) {
-      const ret = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
+      const ret: any = await safeCall(this, TimeSpanRepo.getRolesByFT(this));
       if (ret) {
         commit("SET_ROLES", ret.data);
       }
@@ -409,7 +406,7 @@ export const actions = actionTree(
     },
     getFTNameById({ state }: any, id: string) {
       const ft = state.FTs.find((ft: FT) => {
-        if (ft.timeframes.length > 0) {
+        /*if (ft.timeframes.length > 0) {
           let res = false;
           ft.timeframes.forEach((tf: any) => {
             if (tf._id === id) {
@@ -417,9 +414,9 @@ export const actions = actionTree(
             }
           });
           return res;
-        }
+        }*/
       });
-      return ft ? ft.general.name : "";
+      return ft ? ft.name : "";
     },
 
     /**
@@ -476,12 +473,12 @@ export const actions = actionTree(
       if (ft !== undefined) {
         const ftTimespans = await TimeSpanRepo.getTimeSpanByFTID(
           this,
-          ft.count.toString()
+          ft.id.toString()
         );
         const timespanCompletion =
           await TimeSpanRepo.getTotalNumberOfTimespansAndAssignedTimespansByFTID(
             this,
-            ft.count.toString()
+            ft.id.toString()
           );
         if (ftTimespans && timespanCompletion) {
           const tosend = ftTimespans.data.map((ts: any) => ({
@@ -493,7 +490,7 @@ export const actions = actionTree(
               [...state.timespans, ...state.assignedTimespans],
               ts,
               timespanCompletion.data,
-              ft.general?.name || ""
+              ft.name
             ),
             completion: getFTCompletion(
               [...state.timespans, ...state.assignedTimespans],
@@ -619,7 +616,7 @@ export const getters = getterTree(state, {
     if (FTFilters.team.length > 0) {
       filtered = filtered.filter((ft: FT) =>
         FTFilters.team.any((filteredTeam: string) =>
-          state.missingRolesOnFTs[ft.count]?.includes(filteredTeam)
+          state.missingRolesOnFTs[ft.id]?.includes(filteredTeam)
         )
       );
     }
@@ -634,7 +631,7 @@ export const getters = getterTree(state, {
       filtered = fuse.search(FTFilters.search).map((e) => e.item);
     }
     if (FTFilters.areAssignedFTsDisplayed) {
-      filtered = filtered.filter((ft: FT) => state.missingRolesOnFTs[ft.count]);
+      filtered = filtered.filter((ft: FT) => state.missingRolesOnFTs[ft.id]);
     }
 
     return filtered;
