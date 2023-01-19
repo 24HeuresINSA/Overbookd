@@ -1,16 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  SimplifiedCategoryRepresentation,
+  TeamRepresentation,
+} from 'src/common/dto/gearRepresentation.dto';
 import { Gear, SimplifiedCategory, Team } from '../interfaces';
-
-export class SimplifiedCategoryRepresentation implements SimplifiedCategory {
-  id: number;
-  name: string;
-  path: string;
-}
-
-class TeamRepresentation implements Team {
-  name: string;
-  code: string;
-}
 
 export class GearResponseDto implements Gear {
   @ApiProperty({
