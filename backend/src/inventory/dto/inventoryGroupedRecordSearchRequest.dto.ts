@@ -8,6 +8,7 @@ export class InventoryGroupedRecordSearchRequestDto
   @ApiProperty({
     required: false,
     description: 'Gear name',
+    type: String,
   })
   @IsOptional()
   @IsString()
