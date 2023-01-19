@@ -18,8 +18,9 @@ export interface GroupedRecordSearch {
 }
 
 export interface InventoryRepository {
-  searchRecords(gearSlug?: string): Promise<GroupedRecord[]>;
+  searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]>;
   resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]>;
+  getRecords(gearId: number): Promise<InventoryRecord[]>;
 }
 
 export class InventoryService {
@@ -35,6 +36,10 @@ export class InventoryService {
 
   search({ name }: GroupedRecordSearch): Promise<GroupedRecord[]> {
     const gearSlug = this.slugifyService.slugify(name);
-    return this.inventoryRepository.searchRecords(gearSlug);
+    return this.inventoryRepository.searchGroupedRecords(gearSlug);
+  }
+
+  getDetails(gearId: number): Promise<InventoryRecord[]> {
+    return this.inventoryRepository.getRecords(gearId);
   }
 }

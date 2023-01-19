@@ -17,12 +17,13 @@
           {{ item.quantity }}
         </template>
         <template #expanded-item="{ item }">
-          <td
-            v-for="record in item.records"
-            :key="record.storage"
-            :colspan="headers.length"
-          >
-            {{ record.quantity }} se trouvent dans {{ record.storage }}
+          <td :colspan="headers.length">
+            <ul class="details">
+              <li v-for="record in item.records" :key="record.storage">
+                <strong>{{ record.quantity }}</strong> se trouvent dans
+                {{ record.storage }}
+              </li>
+            </ul>
           </td>
         </template>
       </v-data-table>
@@ -80,3 +81,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.details {
+  margin-top: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+</style>

@@ -20,4 +20,8 @@ export class InventoryRepository {
       this.basePath
     );
   }
+
+  static getRecords(context: Context, gearId: number) {
+    return context.$axios.get<InventoryRecord[]>(`${this.basePath}/${gearId}`);
+  }
 }

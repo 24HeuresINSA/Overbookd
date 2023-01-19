@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   UseGuards,
@@ -12,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiForbiddenResponse,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -80,5 +83,25 @@ export class InventoryController {
     @Body() records: InventoryRecord[],
   ): Promise<InventoryGroupedRecordResponseDto[]> {
     return this.inventoryService.setup(records);
+  }
+
+  @Permission('inventory-write')
+  @Get(':gearId')
+  @ApiResponse({
+    status: 200,
+    description: 'Get inventory records for a specific gear',
+    isArray: true,
+    type: InventoryRecordDto,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  details(
+    @Param('gearId', ParseIntPipe) gearId: number,
+  ): Promise<InventoryRecordDto[]> {
+    return this.inventoryService.getDetails(gearId);
   }
 }
