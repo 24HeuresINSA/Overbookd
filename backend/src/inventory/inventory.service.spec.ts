@@ -92,7 +92,7 @@ describe('Icnventory Service', () => {
         expect(inventory).toContainEqual({ quantity: 5, gear: MARTEAU });
       });
       it('should persist the inventory after setup', async () => {
-        const persistInventory = await inventoryService.search();
+        const persistInventory = await inventoryService.search({});
         expect(persistInventory).toEqual(inventory);
       });
     });
@@ -164,7 +164,7 @@ describe('Icnventory Service', () => {
     );
     describe('When searching all grouped records', () => {
       it('should return all grouped records with the sum of quantities', async () => {
-        const records = await inventoryService.search();
+        const records = await inventoryService.search({});
         expect(records).toHaveLength(3);
         expect(records).toContainEqual({ quantity: 30, gear: TABLE });
         expect(records).toContainEqual({ quantity: 3, gear: PONCEUSE });

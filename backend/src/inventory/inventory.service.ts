@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { Gear } from 'src/catalog/interfaces';
 import { SlugifyService } from 'src/common/services/slugify.service';
 
@@ -12,6 +13,10 @@ export type InventoryRecord = {
   storage: string;
 };
 
+export interface GroupedRecordSearch {
+  name?: string;
+}
+
 export interface InventoryRepository {
   searchRecords(gearSlug?: string): Promise<GroupedRecord[]>;
   resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]>;
@@ -19,6 +24,7 @@ export interface InventoryRepository {
 
 export class InventoryService {
   constructor(
+    @Inject('INVENTORY_REPOSITORY')
     private inventoryRepository: InventoryRepository,
     private slugifyService: SlugifyService,
   ) {}
@@ -27,8 +33,8 @@ export class InventoryService {
     return this.inventoryRepository.resetRecords(records);
   }
 
-  search(gearName?: string): Promise<GroupedRecord[]> {
-    const slug = this.slugifyService.slugify(gearName);
-    return this.inventoryRepository.searchRecords(slug);
+  search({ name }: GroupedRecordSearch): Promise<GroupedRecord[]> {
+    const gearSlug = this.slugifyService.slugify(name);
+    return this.inventoryRepository.searchRecords(gearSlug);
   }
 }
