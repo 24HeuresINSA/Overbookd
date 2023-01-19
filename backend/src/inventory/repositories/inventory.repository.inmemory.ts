@@ -14,10 +14,10 @@ export class InMemoryInventoryRepository implements InventoryRepository {
 
   resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]> {
     this.records = records;
-    return this.searchRecords();
+    return this.searchGroupedRecords();
   }
 
-  searchRecords(gearSlug?: string): Promise<GroupedRecord[]> {
+  searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]> {
     return Promise.resolve(
       this.records
         .filter((record) => record.gear.slug.includes(gearSlug ?? ''))
@@ -37,6 +37,12 @@ export class InMemoryInventoryRepository implements InventoryRepository {
             ...groupedRecords.slice(similarRecordIndex + 1),
           ];
         }, [] as GroupedRecord[]),
+    );
+  }
+
+  getRecords(gearId: number): Promise<InventoryRecord[]> {
+    return Promise.resolve(
+      this.records.filter((record) => record.gear.id === gearId),
     );
   }
 }

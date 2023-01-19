@@ -184,4 +184,45 @@ describe('Inventory Service', () => {
       });
     });
   });
+  describe('Retrieve inventory records for a dedicated gear', () => {
+    const records = [
+      { quantity: 3, gear: TABLE, storage: 'Local' },
+      { quantity: 20, gear: TABLE, storage: 'Cave du E' },
+      { quantity: 7, gear: TABLE, storage: 'Conteneur H' },
+      {
+        quantity: 3,
+        gear: PONCEUSE,
+        storage: 'Local',
+      },
+      {
+        quantity: 5,
+        gear: MARTEAU,
+        storage: 'Local',
+      },
+      {
+        quantity: 15,
+        gear: MARTEAU,
+        storage: 'Conteneur H',
+      },
+    ];
+    const inventoryRepository = new InMemoryInventoryRepository(records);
+    const inventoryService = new InventoryService(
+      inventoryRepository,
+      slugifyService,
+    );
+    describe.each`
+      gear                          | expectedRecords
+      ${MARTEAU}                    | ${[{ quantity: 5, gear: MARTEAU, storage: 'Local' }, { quantity: 15, gear: MARTEAU, storage: 'Conteneur H' }]}
+      ${TABLE}                      | ${[{ quantity: 3, gear: TABLE, storage: 'Local' }, { quantity: 20, gear: TABLE, storage: 'Cave du E' }, { quantity: 7, gear: TABLE, storage: 'Conteneur H' }]}
+      ${{ name: 'Unkownn', id: 0 }} | ${[]}
+    `(
+      'When looking for $gear.name inventory records',
+      ({ gear, expectedRecords }) => {
+        it(`should return all ${expectedRecords.length} records matching it`, async () => {
+          const res = await inventoryService.getDetails(gear.id);
+          expect(res).toHaveLength(expectedRecords.length);
+        });
+      },
+    );
+  });
 });

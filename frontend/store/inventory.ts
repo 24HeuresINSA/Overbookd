@@ -3,6 +3,7 @@ import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { updateItemToList } from "~/utils/functions/list";
 
 const inventoryRepository = RepoFactory.InventoryRepository;
 
@@ -30,6 +31,24 @@ export const getters = getterTree(state, {});
 export const mutations = mutationTree(state, {
   SET_GROUPED_RECORDS(state, groupedRecords: InventoryGroupedRecord[]) {
     state.groupedRecords = groupedRecords;
+  },
+  UPDATE_GEAR_RECORDS(
+    state,
+    { records, gearId }: { records: InventoryRecord[]; gearId: number }
+  ) {
+    const groupedRecordIndex = state.groupedRecords.findIndex(
+      (groupedRecord) => groupedRecord.gear.id === gearId
+    );
+    if (groupedRecordIndex === -1) return;
+    const updatedGroupedRecord = {
+      ...state.groupedRecords[groupedRecordIndex],
+      records,
+    };
+    state.groupedRecords = updateItemToList(
+      state.groupedRecords,
+      groupedRecordIndex,
+      updatedGroupedRecord
+    );
   },
 });
 
@@ -73,6 +92,12 @@ export const actions = actionTree(
 
     async fetchRecords(context, gearId: number): Promise<void> {
       console.warn("fetching details for gear #", gearId);
+      const res = await safeCall(
+        this,
+        inventoryRepository.getRecords(this, gearId)
+      );
+      if (!res) return;
+      context.commit("UPDATE_GEAR_RECORDS", { records: res.data, gearId });
     },
   }
 );
