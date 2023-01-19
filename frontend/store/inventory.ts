@@ -12,6 +12,11 @@ export interface InventoryGroupedRecord {
   records: InventoryRecord[];
 }
 
+export type GroupedRecordWithoutDetailedRecords = Omit<
+  InventoryGroupedRecord,
+  "records"
+>;
+
 interface State {
   groupedRecords: InventoryGroupedRecord[];
 }
@@ -41,21 +46,23 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      const groupedRecords: InventoryGroupedRecord[] = res.data.map(
-        (record) => ({
-          ...record,
-          records: [],
-        })
-      );
-      context.commit("SET_GROUPED_RECORDS", groupedRecords);
+      context.dispatch("updateGroupedRecords", res.data);
     },
+
     async fetchGroupedRecords(context): Promise<void> {
       const res = await safeCall(
         this,
         inventoryRepository.getGroupedRecords(this)
       );
       if (!res) return;
-      const groupedRecords: InventoryGroupedRecord[] = res.data.map(
+      context.dispatch("updateGroupedRecords", res.data);
+    },
+
+    updateGroupedRecords(
+      context,
+      liteGroupedRecords: GroupedRecordWithoutDetailedRecords[]
+    ) {
+      const groupedRecords: InventoryGroupedRecord[] = liteGroupedRecords.map(
         (record) => ({
           ...record,
           records: [],
@@ -63,6 +70,7 @@ export const actions = actionTree(
       );
       context.commit("SET_GROUPED_RECORDS", groupedRecords);
     },
+
     async fetchRecords(context, gearId: number): Promise<void> {
       console.warn("fetching details for gear #", gearId);
     },
