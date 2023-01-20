@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ft">
     <h1>Fiche Tâche</h1>
 
     <div class="custom_container">
@@ -20,24 +20,16 @@
             <h3>Statut</h3>
             <v-list dense shaped>
               <v-list-item-group v-model="filters.status">
-                <v-list-item :value="''">
+                <v-list-item value="">
                   <v-list-item-title class="small">Tous</v-list-item-title>
                 </v-list-item>
-                <v-list-item value="DRAFT">
-                  <v-list-item-title class="small">Brouillon</v-list-item-title>
-                </v-list-item>
-                <v-list-item value="SUBMITTED">
-                  <v-list-item-title class="small">Soumise</v-list-item-title>
-                </v-list-item>
-                <v-list-item value="REFUSED">
-                  <v-list-item-title class="small">Refusée</v-list-item-title>
-                </v-list-item>
-                <v-list-item value="VALIDATED">
-                  <v-list-item-title class="small">Validée</v-list-item-title>
-                </v-list-item>
-                <v-list-item value="READY">
-                  <v-list-item-title class="small"
-                    >Prête à affectation
+                <v-list-item
+                  v-for="item in statusData"
+                  :key="item.status"
+                  :value="item.status"
+                >
+                  <v-list-item-title class="small">
+                    {{ item.label }}
                   </v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
@@ -60,7 +52,9 @@
           class="elevation-1"
         >
           <template #[`item.status`]="{ item }">
-            <v-chip :color="color[item.status]" small>{{ item.id }} </v-chip>
+            <v-chip :color="getColorByStatus(item.status)" small>
+              <span class="chip-text">{{ item.id }}</span>
+            </v-chip>
           </template>
           <template #item.name="{ item }">
             <a
@@ -90,7 +84,7 @@
             >
               <v-icon small>mdi-delete</v-icon>
             </v-btn>
-            <v-btn v-else icon small @click="preRestoreFT(item)"
+            <v-btn v-else-if="isAdmin" icon small @click="preRestoreFT(item)"
               ><v-icon small>mdi-delete-restore</v-icon></v-btn
             >
           </template>
@@ -100,10 +94,9 @@
 
     <v-btn
       color="secondary"
+      class="btn-plus"
       elevation="2"
       fab
-      class="fab-right"
-      style="position: absolute; bottom: 10px; right: 10px"
       @click="isNewFTDialogOpen = true"
     >
       <v-icon> mdi-plus-thick</v-icon>
@@ -153,12 +146,18 @@ import Vue from "vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { Header } from "~/utils/models/Data";
-import { FT, FTCreation, FTStatus, SearchFT } from "~/utils/models/ft";
-import { SnackNotif } from "~/utils/models/store";
+import {
+  FT,
+  FTCreation,
+  FTStatus,
+  FTStatusColor,
+  FTStatusData,
+  FTStatusLabel,
+  SearchFT,
+} from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 
 interface Data {
-  color: { [key: string]: string };
   headers: Header[];
   mFT: FT | undefined;
   isDeleteDialogOpen: boolean;
@@ -166,7 +165,6 @@ interface Data {
   isNewFTDialogOpen: boolean;
   FTName: string;
   loading: boolean;
-  notifs: { [key: string]: SnackNotif };
 
   filters: {
     search: string;
@@ -177,27 +175,18 @@ interface Data {
   };
 }
 
-const color = {
-  undefined: "grey",
-  draft: "grey",
-  submitted: "orange",
-  validated: "green",
-  refused: "red",
-  ready: "#bf2bbd",
-};
-
 export default Vue.extend({
   name: "Index",
   components: { SnackNotificationContainer, SearchTeam },
   data(): Data {
     return {
-      color,
       headers: [
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validation" },
         { text: "Nom", value: "name" },
         { text: "FA", value: "FA" },
         { text: "Resp", value: "inCharge" },
+        { text: "Equipe", value: "team" },
         { text: "Action", value: "action" },
       ],
       FTName: "",
@@ -213,13 +202,6 @@ export default Vue.extend({
       isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
       loading: true,
-      notifs: {
-        serverError: { message: "Erreur serveur" },
-        deleteError: {
-          message:
-            "La FT ne peut pas etre suprimée si elle est validé ou soumise",
-        },
-      },
     };
   },
 
@@ -232,13 +214,8 @@ export default Vue.extend({
     },
     filteredFTs(): FT[] {
       let res = this.FTs;
-      const { search, team, myFTs, isDeleted, status } = this.filters;
+      const { search, team, myFTs, status } = this.filters;
 
-      if (isDeleted) {
-        res = res.filter((ft) => {
-          return ft.isDeleted === true;
-        });
-      }
       if (team) {
         res = res.filter((ft) => {
           if (!ft.team) return false;
@@ -263,6 +240,24 @@ export default Vue.extend({
       }
       return res;
     },
+    statusData(): FTStatusData[] {
+      return Object.keys(FTStatusColor).map((key) => {
+        return {
+          status: key as FTStatus,
+          label: FTStatusLabel[key as FTStatus],
+          color: FTStatusColor[key as FTStatus],
+        };
+      });
+    },
+    isAdmin(): boolean {
+      return this.$accessor.user.hasPermission("admin");
+    },
+  },
+
+  watch: {
+    async "filters.isDeleted"() {
+      await this.fetchFTs();
+    },
   },
 
   async mounted() {
@@ -279,6 +274,10 @@ export default Vue.extend({
   methods: {
     hasPermission(permission: string) {
       return this.$accessor.user.hasPermission(permission);
+    },
+
+    getColorByStatus(status: FTStatus): string {
+      return this.statusData.find((e) => e.status === status)?.color || "grey";
     },
 
     async fetchFTs() {
@@ -334,6 +333,11 @@ h1 {
 .small {
   font-size: small;
   margin-left: 0;
+}
+
+.chip-text {
+  font-weight: bold;
+  color: white;
 }
 
 .custom_container {

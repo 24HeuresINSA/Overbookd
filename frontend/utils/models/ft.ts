@@ -13,6 +13,28 @@ export enum FTStatus {
   READY = "READY",
 }
 
+export enum FTStatusLabel {
+  DRAFT = "Brouillon",
+  SUBMITTED = "Soumise à validation",
+  VALIDATED = "Validée",
+  REFUSED = "Refusée",
+  READY = "Prête à affectation",
+}
+
+export enum FTStatusColor {
+  DRAFT = "grey",
+  SUBMITTED = "orange",
+  VALIDATED = "green",
+  REFUSED = "red",
+  READY = "purple",
+}
+
+export interface FTStatusData {
+  status: FTStatus;
+  label: FTStatusLabel;
+  color: FTStatusColor;
+}
+
 interface FTBase {
   name: string;
   status: FTStatus;
