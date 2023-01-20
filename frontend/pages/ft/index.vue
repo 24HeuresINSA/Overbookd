@@ -35,6 +35,7 @@
               </v-list-item-group>
             </v-list>
             <v-switch
+              v-if="isAdmin"
               v-model="filters.isDeleted"
               label="FT supprimées"
             ></v-switch>
@@ -73,12 +74,7 @@
           </template>
 
           <template #item.name="{ item }">
-            <a
-              :href="`/ft/${item.id}`"
-              :class="
-                filters.isDeleted === false ? 'valid-text' : 'invalid-text'
-              "
-            >
+            <a :href="`/ft/${item.id}`" :class="deletedFTTextClass">
               {{ item.name }}
             </a>
           </template>
@@ -86,7 +82,7 @@
           <template #[`item.FA`]="{ item }">
             <v-chip
               v-if="item.FA && item.FA > 0"
-              :href="'fa/' + item.FA.id"
+              :href="`fa/${item.FA.id}`"
               small
             >
               {{ item.FA.id }}
@@ -94,7 +90,7 @@
           </template>
 
           <template #[`item.team`]="{ item }">
-            {{ item.team ? item.team.name : "" }}
+            {{ item.team?.name ?? "" }}
           </template>
 
           <template #[`item.inCharge`]="{ item }">
@@ -187,7 +183,7 @@ import { formatUsername } from "~/utils/user/userUtils";
 
 interface Data {
   headers: Header[];
-  mFT: FT | undefined;
+  selectedFT: FT | undefined;
   isDeleteDialogOpen: boolean;
   isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
@@ -225,7 +221,7 @@ export default Vue.extend({
         status: undefined,
         isDeleted: false,
       },
-      mFT: undefined,
+      selectedFT: undefined,
       isRestoreDialogOpen: false,
       isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
@@ -236,6 +232,9 @@ export default Vue.extend({
   computed: {
     me(): any {
       return this.$accessor.user.me;
+    },
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
     },
     FTs(): FT[] {
       return this.$accessor.FT.FTs;
@@ -283,6 +282,9 @@ export default Vue.extend({
     validators() {
       return this.$accessor.team.ftValidators;
     },
+    deletedFTTextClass(): string {
+      return this.filters.isDeleted === false ? "valid-text" : "invalid-text";
+    },
   },
 
   watch: {
@@ -300,14 +302,16 @@ export default Vue.extend({
       return;
     }
 
-    await this.fetchFTs();
-    if (this.validators.length === 0) {
-      await this.$accessor.team.fetchFtValidators();
-    }
+    await Promise.all([this.fetchFTs(), this.retrieveValidatorsIfNeeded()]);
     this.loading = false;
   },
 
   methods: {
+    async retrieveValidatorsIfNeeded(): Promise<void> {
+      if (this.validators.length) return;
+      return this.$accessor.team.fetchFtValidators();
+    },
+
     hasPermission(permission: string) {
       return this.$accessor.user.hasPermission(permission);
     },
@@ -341,32 +345,32 @@ export default Vue.extend({
         name: this.FTName,
       };
       await this.$accessor.FT.createFT(blankFT);
-      const savedFT = this.$accessor.FT.mFT;
-      if (savedFT.id) await this.$router.push({ path: "ft/" + savedFT.id });
+      if (!this.mFT?.id) return;
+      this.$router.push({ path: `ft/${this.mFT.id}` });
     },
 
     preDeleteFT(ft: FT) {
-      this.mFT = ft;
+      this.selectedFT = ft;
       this.isDeleteDialogOpen = true;
     },
 
     async deleteFT() {
-      if (!this.mFT) return;
-      await this.$accessor.FT.deleteFT(this.mFT);
+      if (!this.selectedFT) return;
+      await this.$accessor.FT.deleteFT(this.selectedFT);
       this.isDeleteDialogOpen = false;
-      this.mFT = undefined;
+      this.selectedFT = undefined;
     },
 
     preRestoreFT(ft: FT) {
-      this.mFT = ft;
+      this.selectedFT = ft;
       this.isRestoreDialogOpen = true;
     },
 
     async restoreFT() {
-      if (!this.mFT) return;
-      await this.$accessor.FT.restoreFT(this.mFT);
+      if (!this.selectedFT) return;
+      await this.$accessor.FT.restoreFT(this.selectedFT);
       this.isRestoreDialogOpen = false;
-      this.mFT = undefined;
+      this.selectedFT = undefined;
     },
   },
 });

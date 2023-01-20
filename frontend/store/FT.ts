@@ -72,7 +72,7 @@ export const actions = actionTree(
   { state },
   {
     setFT({ commit }, ft: FT) {
-      commit("UPDATE_SELECTED_FT", { ...fakeFT(ft.id), ...ft });
+      commit("UPDATE_SELECTED_FT", ft);
     },
 
     resetFT({ commit }) {
@@ -83,7 +83,6 @@ export const actions = actionTree(
       const res = await safeCall(this, repo.getFT(this, id));
       if (!res) return null;
       commit("UPDATE_SELECTED_FT", res.data);
-      return res.data;
     },
 
     async fetchFTs({ commit }, search?: SearchFT) {
@@ -102,10 +101,10 @@ export const actions = actionTree(
 
       if (!res) return;
       commit("ADD_FT", res.data);
-      dispatch("setFT", res.data);
+      dispatch("setFT", { ...fakeFT(res.data.id), ...res.data });
     },
 
-    async updateFT({ commit, dispatch }, ft: FT) {
+    async updateFT({ commit }, ft: FT) {
       const adaptedFT: FTUpdate = {
         ...ft,
         team: ft.team?.id,
@@ -116,10 +115,9 @@ export const actions = actionTree(
         successMessage: "FT sauvegardée 🥳",
         errorMessage: "FT non sauvegardée 😢",
       });
-      console.log("res", res);
+
       if (!res) return;
       commit("UPDATE_SELECTED_FT", res.data);
-      dispatch("setFT", res.data);
     },
 
     async deleteFT({ commit }, ft: FT) {

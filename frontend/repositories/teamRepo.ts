@@ -15,7 +15,7 @@ export default {
     });
   },
   getFaValidators(context: Context) {
-    return context.$axios.get(`${resource}`, {
+    return context.$axios.get<Team[]>(`${resource}`, {
       params: {
         permission: "fa-validator",
       },
@@ -23,7 +23,7 @@ export default {
   },
 
   getFtValidators(context: Context) {
-    return context.$axios.get(`${resource}`, {
+    return context.$axios.get<Team[]>(`${resource}`, {
       params: {
         permission: "ft-validator",
       },

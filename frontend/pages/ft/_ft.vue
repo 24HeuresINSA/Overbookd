@@ -43,19 +43,21 @@ export default Vue.extend({
     ftId(): number {
       return +this.$route.params.ft;
     },
+    title(): string {
+      const baseTitle = `FT ${this.ftId}`;
+      if (!this.mFT.name) return baseTitle;
+      return `${baseTitle} - ${this.mFT.name}`;
+    },
   },
   async mounted() {
-    const res = await this.$accessor.FT.fetchFT(this.ftId);
-    if (!res) {
+    await this.$accessor.FT.fetchFT(this.ftId);
+    if (this.mFT.id !== this.ftId) {
       alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");
       await this.$router.push({
         path: "/ft",
       });
     }
-
-    let title = "FT " + this.ftId;
-    if (this.mFT.name) title += " - " + this.mFT.name;
-    document.title = title;
+    document.title = this.title;
   },
   methods: {
     hasPermission(permission: string) {
