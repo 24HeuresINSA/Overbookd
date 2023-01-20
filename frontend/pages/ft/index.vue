@@ -84,8 +84,12 @@
           </template>
 
           <template #[`item.FA`]="{ item }">
-            <v-chip v-if="item.FA && item.FA > 0" small>
-              {{ item.FA }}
+            <v-chip
+              v-if="item.FA && item.FA > 0"
+              :href="'fa/' + item.FA.id"
+              small
+            >
+              {{ item.FA.id }}
             </v-chip>
           </template>
 
@@ -138,7 +142,7 @@
 
     <v-dialog v-model="isDeleteDialogOpen" width="600">
       <v-card>
-        <v-img src="sure.jpeg"></v-img>
+        <v-img src="/img/sure.jpeg"></v-img>
         <v-card-title>t'es sûr bébé ?</v-card-title>
         <v-card-actions>
           <v-btn right text @click="deleteFT()">oui 😏</v-btn>
@@ -148,7 +152,7 @@
 
     <v-dialog v-model="isRestoreDialogOpen" width="600">
       <v-card>
-        <v-img src="sure.jpeg"></v-img>
+        <v-img src="/img/sure.jpeg"></v-img>
         <v-card-title>t'es sûr bébé ?</v-card-title>
         <v-card-actions>
           <v-btn right text @click="restoreFT()">oui 😏</v-btn>
