@@ -5,6 +5,7 @@ import { SlugifyService } from '../common/services/slugify.service';
 export type GroupedRecord = {
   quantity: number;
   gear: Gear;
+  records: InventoryRecord[];
 };
 
 export type InventoryRecord = {

@@ -88,8 +88,28 @@ describe('Inventory Service', () => {
       });
       it('should return the new catalog with 2 grouped record', () => {
         expect(inventory).toHaveLength(2);
-        expect(inventory).toContainEqual({ quantity: 3, gear: PONCEUSE });
-        expect(inventory).toContainEqual({ quantity: 5, gear: MARTEAU });
+        expect(inventory).toContainEqual({
+          quantity: 3,
+          gear: PONCEUSE,
+          records: [
+            {
+              quantity: 3,
+              gear: PONCEUSE,
+              storage: 'Local',
+            },
+          ],
+        });
+        expect(inventory).toContainEqual({
+          quantity: 5,
+          gear: MARTEAU,
+          records: [
+            {
+              quantity: 5,
+              gear: MARTEAU,
+              storage: 'Local',
+            },
+          ],
+        });
       });
       it('should persist the inventory after setup', async () => {
         const persistInventory = await inventoryService.search({});
@@ -98,26 +118,35 @@ describe('Inventory Service', () => {
     });
     describe('when ask to setup inventory with 3 records for same gear', () => {
       it('should return a unique grouped record with the sum of quantities', async () => {
-        const inventory = await inventoryService.setup([
+        const records = [
           { quantity: 3, gear: TABLE, storage: 'Local' },
           { quantity: 20, gear: TABLE, storage: 'Cave du E' },
           { quantity: 7, gear: TABLE, storage: 'Conteneur H' },
-        ]);
+        ];
+        const inventory = await inventoryService.setup(records);
         expect(inventory).toHaveLength(1);
-        expect(inventory).toContainEqual({ quantity: 30, gear: TABLE });
+        expect(inventory).toContainEqual({
+          quantity: 30,
+          gear: TABLE,
+          records,
+        });
       });
     });
     describe('when ask to setup inventory with several records', () => {
       it('should return grouped records with the sum of quantities', async () => {
-        const inventory = await inventoryService.setup([
+        const tableRecords = [
           { quantity: 3, gear: TABLE, storage: 'Local' },
           { quantity: 20, gear: TABLE, storage: 'Cave du E' },
           { quantity: 7, gear: TABLE, storage: 'Conteneur H' },
+        ];
+        const ponceuseRecords = [
           {
             quantity: 3,
             gear: PONCEUSE,
             storage: 'Local',
           },
+        ];
+        const marteauRecords = [
           {
             quantity: 5,
             gear: MARTEAU,
@@ -128,24 +157,45 @@ describe('Inventory Service', () => {
             gear: MARTEAU,
             storage: 'Conteneur H',
           },
+        ];
+        const inventory = await inventoryService.setup([
+          ...tableRecords,
+          ...ponceuseRecords,
+          ...marteauRecords,
         ]);
         expect(inventory).toHaveLength(3);
-        expect(inventory).toContainEqual({ quantity: 30, gear: TABLE });
-        expect(inventory).toContainEqual({ quantity: 3, gear: PONCEUSE });
-        expect(inventory).toContainEqual({ quantity: 20, gear: MARTEAU });
+        expect(inventory).toContainEqual({
+          quantity: 30,
+          gear: TABLE,
+          records: tableRecords,
+        });
+        expect(inventory).toContainEqual({
+          quantity: 3,
+          gear: PONCEUSE,
+          records: ponceuseRecords,
+        });
+        expect(inventory).toContainEqual({
+          quantity: 20,
+          gear: MARTEAU,
+          records: marteauRecords,
+        });
       });
     });
   });
   describe('Retrieve inventory grouped records', () => {
-    const records = [
+    const tableRecords = [
       { quantity: 3, gear: TABLE, storage: 'Local' },
       { quantity: 20, gear: TABLE, storage: 'Cave du E' },
       { quantity: 7, gear: TABLE, storage: 'Conteneur H' },
+    ];
+    const ponceuseRecords = [
       {
         quantity: 3,
         gear: PONCEUSE,
         storage: 'Local',
       },
+    ];
+    const marteauRecords = [
       {
         quantity: 5,
         gear: MARTEAU,
@@ -157,6 +207,7 @@ describe('Inventory Service', () => {
         storage: 'Conteneur H',
       },
     ];
+    const records = [...tableRecords, ...marteauRecords, ...ponceuseRecords];
     const inventoryRepository = new InMemoryInventoryRepository(records);
     const inventoryService = new InventoryService(
       inventoryRepository,
@@ -166,15 +217,27 @@ describe('Inventory Service', () => {
       it('should return all grouped records with the sum of quantities', async () => {
         const records = await inventoryService.search({});
         expect(records).toHaveLength(3);
-        expect(records).toContainEqual({ quantity: 30, gear: TABLE });
-        expect(records).toContainEqual({ quantity: 3, gear: PONCEUSE });
-        expect(records).toContainEqual({ quantity: 20, gear: MARTEAU });
+        expect(records).toContainEqual({
+          quantity: 30,
+          gear: TABLE,
+          records: tableRecords,
+        });
+        expect(records).toContainEqual({
+          quantity: 3,
+          gear: PONCEUSE,
+          records: ponceuseRecords,
+        });
+        expect(records).toContainEqual({
+          quantity: 20,
+          gear: MARTEAU,
+          records: marteauRecords,
+        });
       });
     });
     describe.each`
       gearName      | expectedGroupedRecords
-      ${TABLE.name} | ${[{ quantity: 30, gear: TABLE }]}
-      ${'A'}        | ${[{ quantity: 30, gear: TABLE }, { quantity: 20, gear: MARTEAU }]}
+      ${TABLE.name} | ${[{ quantity: 30, gear: TABLE, records: tableRecords }]}
+      ${'A'}        | ${[{ quantity: 30, gear: TABLE, records: tableRecords }, { quantity: 20, gear: MARTEAU, records: marteauRecords }]}
       ${'Unknown'}  | ${[]}
     `('When searching $gearName', ({ gearName, expectedGroupedRecords }) => {
       it('should return all grouped records matching the gear', async () => {
