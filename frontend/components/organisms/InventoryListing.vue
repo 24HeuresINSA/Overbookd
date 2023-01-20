@@ -7,18 +7,18 @@
           <tbody>
             <template v-for="groupedRecord in items">
               <tr>
-                <td
+                <th
                   :rowspan="groupedRecord.records.length + 1"
                   class="text-start"
                 >
                   {{ groupedRecord.gear.name }}
-                </td>
-                <td
+                </th>
+                <th
                   :rowspan="groupedRecord.records.length + 1"
                   class="text-start"
                 >
                   {{ groupedRecord.quantity }}
-                </td>
+                </th>
               </tr>
               <tr v-for="record in groupedRecord.records" :key="record.storage">
                 <td class="text-start">{{ record.storage }}</td>
