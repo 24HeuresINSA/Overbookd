@@ -72,7 +72,7 @@ export const actions = actionTree(
   { state },
   {
     setFT({ commit }, ft: FT) {
-      commit("UPDATE_SELECTED_FT", ft);
+      commit("UPDATE_SELECTED_FT", { ...fakeFT(ft.id), ...ft });
     },
 
     resetFT({ commit }) {
