@@ -53,7 +53,7 @@ import { FA, fa_card_type, fa_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import { User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";

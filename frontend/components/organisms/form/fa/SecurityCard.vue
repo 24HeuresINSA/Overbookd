@@ -44,7 +44,7 @@ import Vue from "vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import { FA, fa_card_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";

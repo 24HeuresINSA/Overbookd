@@ -175,7 +175,7 @@ import {
   hasAllValidations,
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 
