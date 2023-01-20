@@ -2,29 +2,30 @@
   <v-card>
     <v-card-title> Listing </v-card-title>
     <v-card-text>
-      <v-data-table
-        :headers="headers"
-        :items="inventoryGroupedRecords"
-        show-expand
-        :expanded.sync="details"
-        item-key="gear.id"
-        @item-expanded="fetchDetails"
-      >
-        <template #item.gear="{ item }">
-          {{ item.gear.name }}
-        </template>
-        <template #item.quantity="{ item }">
-          {{ item.quantity }}
-        </template>
-        <template #expanded-item="{ item }">
-          <td :colspan="headers.length">
-            <ul class="details">
-              <li v-for="record in item.records" :key="record.storage">
-                <strong>{{ record.quantity }}</strong> se trouvent dans
-                {{ record.storage }}
-              </li>
-            </ul>
-          </td>
+      <v-data-table :headers="headers" :items="inventoryGroupedRecords">
+        <template #body="{ items }">
+          <tbody>
+            <template v-for="groupedRecord in items">
+              <tr>
+                <td
+                  :rowspan="groupedRecord.records.length + 1"
+                  class="text-start"
+                >
+                  {{ groupedRecord.gear.name }}
+                </td>
+                <td
+                  :rowspan="groupedRecord.records.length + 1"
+                  class="text-start"
+                >
+                  {{ groupedRecord.quantity }}
+                </td>
+              </tr>
+              <tr v-for="record in groupedRecord.records" :key="record.storage">
+                <td class="text-start">{{ record.storage }}</td>
+                <td class="text-start">{{ record.quantity }}</td>
+              </tr>
+            </template>
+          </tbody>
         </template>
       </v-data-table>
     </v-card-text>
@@ -50,8 +51,9 @@ export default Vue.extend({
   data: (): InventoryListingData => ({
     headers: [
       { text: "Matos", value: "gear" },
-      { text: "Quantite", value: "quantity" },
-      { text: "", value: "data-table-expand" },
+      { text: "Quantite Totale", value: "totalQuantity" },
+      { text: "Lieux de stockage", value: "storage" },
+      { text: "Quantite", value: "storageQuantity" },
     ],
     details: [],
   }),
