@@ -15,14 +15,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import FeedbackCard from "~/components/organisms/form/FeedbackCard.vue";
 import FestivalEventSidebar from "~/components/organisms/form/FestivalEventSidebar.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
-import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
-import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FeedbackCard from "~/components/organisms/form/FeedbackCard.vue";
+import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 
 export default Vue.extend({
   name: "FT",
