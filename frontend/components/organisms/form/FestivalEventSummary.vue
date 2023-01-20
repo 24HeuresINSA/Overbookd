@@ -46,7 +46,7 @@ export default Vue.extend({
       { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
       { id: "water", text: "Besoin Eau", icon: "mdi-water" },
       { id: "comment", text: "Commentaires", icon: "mdi-comment" },
-      // { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
+      { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
     ],
     ftItems: [
       { id: "general", text: "Général", icon: "mdi-card-text" },

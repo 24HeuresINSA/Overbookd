@@ -1,5 +1,6 @@
 import { Gear } from "./catalog.model";
 import { SubjectType } from "./feedback";
+import { FT } from "./ft";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
@@ -112,6 +113,7 @@ export interface FA {
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
   faSitePublishAnimation?: FaSitePublishAnimation;
+  fts?: FT[];
 }
 
 export type CreateFA = Pick<FA, "name">;
