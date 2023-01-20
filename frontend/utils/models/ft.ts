@@ -8,24 +8,24 @@ import { Team } from "./team";
 export enum FTStatus {
   DRAFT = "DRAFT",
   SUBMITTED = "SUBMITTED",
-  VALIDATED = "VALIDATED",
   REFUSED = "REFUSED",
+  VALIDATED = "VALIDATED",
   READY = "READY",
 }
 
 export enum FTStatusLabel {
   DRAFT = "Brouillon",
   SUBMITTED = "Soumise à validation",
-  VALIDATED = "Validée",
   REFUSED = "Refusée",
+  VALIDATED = "Validée",
   READY = "Prête à affectation",
 }
 
 export enum FTStatusColor {
   DRAFT = "grey",
   SUBMITTED = "orange",
-  VALIDATED = "green",
   REFUSED = "red",
+  VALIDATED = "green",
   READY = "purple",
 }
 
