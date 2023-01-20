@@ -83,10 +83,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.details {
-  margin-top: 0.8rem;
-  margin-bottom: 0.5rem;
-}
-</style>
