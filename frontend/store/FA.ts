@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { SubjectType } from "~/utils/models/feedback";
-import { isAnimationValidatedBy } from "~/utils/fa/faUtils";
+import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
   collaborator,
   CreateFA,

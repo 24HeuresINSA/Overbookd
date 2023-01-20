@@ -9,11 +9,13 @@ const teamRepo = RepoFactory.teamRepo;
 interface State {
   teams: Team[];
   faValidators: Team[];
+  ftValidators: Team[];
 }
 
 export const state = (): State => ({
   teams: [],
   faValidators: [] as Team[],
+  ftValidators: [] as Team[],
 });
 
 export const getters = getterTree(state, {
@@ -49,6 +51,9 @@ export const mutations = mutationTree(state, {
   SET_FA_VALIDATORS(state, teams: Team[]) {
     state.faValidators = teams;
   },
+  SET_FT_VALIDATORS(state, teams: Team[]) {
+    state.ftValidators = teams;
+  },
 });
 
 export const actions = actionTree(
@@ -61,6 +66,7 @@ export const actions = actionTree(
       }
       return res;
     },
+
     async linkUserToTeams(
       constext,
       { userId, teams }: { userId: number; teams: Team[] }
@@ -73,6 +79,12 @@ export const actions = actionTree(
         return;
       }
       context.commit("SET_FA_VALIDATORS", res.data);
+    },
+
+    async fetchFtValidators(context): Promise<void> {
+      const res = await safeCall(this, teamRepo.getFtValidators(this));
+      if (!res) return;
+      context.commit("SET_FT_VALIDATORS", res.data);
     },
   }
 );

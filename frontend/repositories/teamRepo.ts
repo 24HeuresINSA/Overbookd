@@ -21,4 +21,12 @@ export default {
       },
     });
   },
+
+  getFtValidators(context: Context) {
+    return context.$axios.get(`${resource}`, {
+      params: {
+        permission: "ft-validator",
+      },
+    });
+  },
 };

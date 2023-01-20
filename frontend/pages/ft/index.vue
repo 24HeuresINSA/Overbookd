@@ -56,6 +56,22 @@
               <span class="chip-text">{{ item.id }}</span>
             </v-chip>
           </template>
+
+          <template #[`item.validation`]="{ item }">
+            <v-chip-group>
+              <v-chip
+                v-for="(validator, i) of validators"
+                :key="i"
+                small
+                :color="getValidatorColor(item, validator)"
+              >
+                <v-icon small>
+                  {{ validator.icon }}
+                </v-icon>
+              </v-chip>
+            </v-chip-group>
+          </template>
+
           <template #item.name="{ item }">
             <a
               :href="`/ft/${item.id}`"
@@ -66,14 +82,21 @@
               {{ item.name }}
             </a>
           </template>
+
           <template #[`item.FA`]="{ item }">
             <v-chip v-if="item.FA && item.FA > 0" small>
               {{ item.FA }}
             </v-chip>
           </template>
-          <template #item.validation="{ item }">
-            <!-- TODO implement the validator icons -->
+
+          <template #[`item.team`]="{ item }">
+            {{ item.team ? item.team.name : "" }}
           </template>
+
+          <template #[`item.inCharge`]="{ item }">
+            {{ displayUsername(item.inCharge) }}
+          </template>
+
           <template #[`item.action`]="{ item }">
             <v-btn
               v-if="filters.isDeleted === false"
@@ -143,6 +166,7 @@ import Fuse from "fuse.js";
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
 import {
   FT,
@@ -154,6 +178,8 @@ import {
   SearchFT,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 interface Data {
   headers: Header[];
@@ -250,6 +276,9 @@ export default Vue.extend({
     isAdmin(): boolean {
       return this.$accessor.user.hasPermission("admin");
     },
+    validators() {
+      return this.$accessor.team.ftValidators;
+    },
   },
 
   watch: {
@@ -259,12 +288,17 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (this.hasPermission("hard")) {
-      await this.fetchFTs();
-    } else {
+    if (!this.hasPermission("hard")) {
       await this.$router.push({
         path: "/",
       });
+      this.loading = false;
+      return;
+    }
+
+    await this.fetchFTs();
+    if (this.validators.length === 0) {
+      await this.$accessor.team.fetchFtValidators();
     }
     this.loading = false;
   },
@@ -276,6 +310,17 @@ export default Vue.extend({
 
     getColorByStatus(status: FTStatus): string {
       return this.statusData.find((e) => e.status === status)?.color || "grey";
+    },
+
+    getValidatorColor(ft: FT, validator: Team) {
+      let status = getFTValidationStatus(ft, validator.code);
+      if (status === FTStatus.SUBMITTED) status = FTStatus.DRAFT;
+      return this.getColorByStatus(status);
+    },
+
+    displayUsername(user: User | null): string {
+      if (!user) return "";
+      return formatUsername(user);
     },
 
     async fetchFTs() {
