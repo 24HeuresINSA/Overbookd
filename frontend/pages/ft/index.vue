@@ -21,14 +21,14 @@
             <v-list dense shaped>
               <v-list-item-group v-model="filters.status">
                 <v-list-item value="">
-                  <v-list-item-title class="small">Tous</v-list-item-title>
+                  <v-list-item-title>Tous</v-list-item-title>
                 </v-list-item>
                 <v-list-item
                   v-for="item in statusData"
                   :key="item.status"
                   :value="item.status"
                 >
-                  <v-list-item-title class="small">
+                  <v-list-item-title>
                     {{ item.label }}
                   </v-list-item-title>
                 </v-list-item>
@@ -59,13 +59,12 @@
           <template #item.name="{ item }">
             <a
               :href="`/ft/${item.id}`"
-              :style="
-                item.isValid === false
-                  ? `text-decoration:line-through;`
-                  : `text-decoration:none;`
+              :class="
+                filters.isDeleted === false ? 'valid-text' : 'invalid-text'
               "
-              >{{ item.name ?? "" }}</a
             >
+              {{ item.name }}
+            </a>
           </template>
           <template #[`item.FA`]="{ item }">
             <v-chip v-if="item.FA && item.FA > 0" small>
@@ -77,15 +76,14 @@
           </template>
           <template #[`item.action`]="{ item }">
             <v-btn
-              v-if="item.isDeleted !== true"
+              v-if="filters.isDeleted === false"
               icon
-              small
               @click="preDeleteFT(item)"
             >
-              <v-icon small>mdi-delete</v-icon>
+              <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn v-else-if="isAdmin" icon small @click="preRestoreFT(item)"
-              ><v-icon small>mdi-delete-restore</v-icon></v-btn
+            <v-btn v-else icon @click="preRestoreFT(item)"
+              ><v-icon>mdi-delete-restore</v-icon></v-btn
             >
           </template>
         </v-data-table>
@@ -228,11 +226,11 @@ export default Vue.extend({
           return ft.inCharge.id === this.me.id;
         });
       }
-      const fuse = new Fuse(res, {
-        keys: ["name", "id"],
-        threshold: 0.2,
-      });
       if (search) {
+        const fuse = new Fuse(res, {
+          keys: ["name", "id"],
+          threshold: 0.2,
+        });
         res = fuse.search(search).map((e) => e.item);
       }
       if (status) {
@@ -325,40 +323,38 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h1 {
   margin-left: 12px;
-}
-
-.small {
-  font-size: small;
-  margin-left: 0;
-}
-
-.chip-text {
-  font-weight: bold;
-  color: white;
 }
 
 .custom_container {
   display: flex;
   margin: 1%;
-}
 
-.sidebar {
-  padding: 0;
-  width: fit-content;
-}
+  .sidebar {
+    padding: 0;
+    width: fit-content;
+  }
 
-.data-table {
-  margin-left: 20px;
-  height: fit-content;
-  width: 100vw;
-}
+  .data-table {
+    margin-left: 20px;
+    height: fit-content;
+    width: 100vw;
 
-.btn-check {
-  padding-right: 2px;
-  padding-left: 2px;
+    .chip-text {
+      font-weight: bold;
+      color: white;
+    }
+
+    .valid-text {
+      text-decoration: none;
+    }
+
+    .invalid-text {
+      text-decoration: line-through;
+    }
+  }
 }
 
 .btn-plus {
@@ -370,15 +366,15 @@ h1 {
 @media only screen and (max-width: 800px) {
   .custom_container {
     flex-direction: column;
-  }
 
-  .sidebar {
-    width: 100%;
-  }
+    .sidebar {
+      width: 100%;
+    }
 
-  .data-table {
-    margin: 0;
-    width: 100%;
+    .data-table {
+      margin: 0;
+      width: 100%;
+    }
   }
 }
 </style>
