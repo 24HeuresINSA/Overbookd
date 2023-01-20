@@ -4,15 +4,17 @@ import { GroupedRecord, InventoryRecord } from './inventory.service';
 export class InventoryGroupedRecord implements GroupedRecord {
   quantity: number;
   gear: Gear;
+  records: InventoryRecord[];
 
-  constructor(quantity: number, gear: Gear) {
+  constructor(quantity: number, gear: Gear, records: InventoryRecord[]) {
     this.quantity = quantity;
     this.gear = gear;
+    this.records = records;
   }
 
   static fromInventoryRecord(record: InventoryRecord) {
     const { quantity, gear } = record;
-    return new InventoryGroupedRecord(quantity, gear);
+    return new InventoryGroupedRecord(quantity, gear, [record]);
   }
 
   static isSimilar(
@@ -21,8 +23,11 @@ export class InventoryGroupedRecord implements GroupedRecord {
     return (r) => r.gear.id === record.gear.id;
   }
 
-  add({ quantity }: GroupedRecord) {
+  add({ quantity, records }: GroupedRecord) {
     const summedQuantities = this.quantity + quantity;
-    return new InventoryGroupedRecord(summedQuantities, this.gear);
+    return new InventoryGroupedRecord(summedQuantities, this.gear, [
+      ...records,
+      ...this.records,
+    ]);
   }
 }

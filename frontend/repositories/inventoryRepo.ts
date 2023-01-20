@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
-import { GroupedRecordWithoutDetailedRecords } from "~/store/inventory";
+import { InventoryGroupedRecord } from "~/store/inventory";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -9,16 +9,14 @@ export class InventoryRepository {
 
   static setupInventory(context: Context, inventoryRecords: InventoryRecord[]) {
     const records = inventoryRecords.map((record) => record.toJson());
-    return context.$axios.post<GroupedRecordWithoutDetailedRecords[]>(
+    return context.$axios.post<InventoryGroupedRecord[]>(
       this.basePath,
       records
     );
   }
 
   static getGroupedRecords(context: Context) {
-    return context.$axios.get<GroupedRecordWithoutDetailedRecords[]>(
-      this.basePath
-    );
+    return context.$axios.get<InventoryGroupedRecord[]>(this.basePath);
   }
 
   static getRecords(context: Context, gearId: number) {

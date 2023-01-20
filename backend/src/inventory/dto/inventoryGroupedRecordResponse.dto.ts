@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gear } from 'src/catalog/interfaces';
 import { GearRepresentation } from 'src/common/dto/gearRepresentation.dto';
-import { GroupedRecord } from '../inventory.service';
+import { GroupedRecord, InventoryRecord } from '../inventory.service';
+import { InventoryRecordDto } from './inventoryRecord.dto';
 
 export class InventoryGroupedRecordResponseDto implements GroupedRecord {
   @ApiProperty({
@@ -16,4 +17,11 @@ export class InventoryGroupedRecordResponseDto implements GroupedRecord {
     type: GearRepresentation,
   })
   gear: Gear;
+  @ApiProperty({
+    required: true,
+    description: 'All records for the gear',
+    isArray: true,
+    type: InventoryRecordDto,
+  })
+  records: InventoryRecord[];
 }
