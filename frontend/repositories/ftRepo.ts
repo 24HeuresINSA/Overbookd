@@ -1,19 +1,19 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Feedback } from "~/utils/models/feedback";
-import { FTCreation, SearchFT, FTUpdate } from "~/utils/models/ft";
+import { FTCreation, SearchFT, FTUpdate, FT } from "~/utils/models/ft";
 
 const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
   getAllFTs(context: Context, search?: SearchFT) {
-    return context.$axios.get(resource, { params: search });
+    return context.$axios.get<FT[]>(resource, { params: search });
   },
   getFT(context: Context, id: number) {
-    return context.$axios.get(`${resource}/${id}`);
+    return context.$axios.get<FT>(`${resource}/${id}`);
   },
   createFT(context: Context, FT: FTCreation) {
-    return context.$axios.post(resource, FT);
+    return context.$axios.post<FT>(resource, FT);
   },
   updateFT(context: Context, FT: FTUpdate) {
     return context.$axios.put(resource, FT);

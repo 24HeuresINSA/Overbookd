@@ -1,15 +1,19 @@
 @mixin background-color-by-status() {
   &.validated {
     background-color: $validated-color;
+    color: white;
   }
   &.submitted {
     background-color: $submitted-color;
+    color: black;
   }
   &.refused {
     background-color: $refused-color;
+    color: white;
   }
   &.draft { 
     background-color: $draft-color;
+    color: white;
   }
 }
 
@@ -45,14 +49,17 @@
   .dot {
     @include background-color-by-status();
   }
+
+  #status, #validators {
+    .v-chip {
+      @include background-color-by-status();
+    }
+  }
 }
 
 .stats-card {
   @include background-color-by-status();
 }
-
-
-  
 
 .important {
   color: red !important;

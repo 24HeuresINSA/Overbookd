@@ -16,16 +16,6 @@
       </v-icon>
     </v-container>
 
-    <v-row>
-      <v-col md="6">
-        <FTGeneralCard :is-disabled="true"> </FTGeneralCard>
-      </v-col>
-
-      <v-col md="6">
-        <FTInfoCard></FTInfoCard>
-      </v-col>
-    </v-row>
-
     <v-img src="/img/croutard.jpg"></v-img>
 
     <h3>BONSOIR, cher.e orga</h3>
@@ -209,23 +199,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 
 export default Vue.extend({
   name: "Ft420",
-  components: { FTGeneralCard },
-  data() {
-    return {
-      FT: {
-        general: {
-          name: "La FT 420",
-        },
-        detail: {
-          locations: ["Lokal"],
-        },
-      },
-    };
-  },
   computed: {
     teams(): any {
       return this.$accessor.team.allTeams;

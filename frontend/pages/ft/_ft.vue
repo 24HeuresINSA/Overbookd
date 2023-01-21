@@ -15,14 +15,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import FeedbackCard from "~/components/organisms/form/FeedbackCard.vue";
 import FestivalEventSidebar from "~/components/organisms/form/FestivalEventSidebar.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
-import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
-import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FeedbackCard from "~/components/organisms/form/FeedbackCard.vue";
+import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
+import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 
 export default Vue.extend({
   name: "FT",
@@ -37,12 +37,27 @@ export default Vue.extend({
     FeedbackCard,
   },
   computed: {
+    mFT() {
+      return this.$accessor.FT.mFT;
+    },
     ftId(): number {
       return +this.$route.params.ft;
     },
+    title(): string {
+      const baseTitle = `FT ${this.ftId}`;
+      if (!this.mFT.name) return baseTitle;
+      return `${baseTitle} - ${this.mFT.name}`;
+    },
   },
   async mounted() {
-    this.$accessor.FT.fetchFT(this.ftId);
+    await this.$accessor.FT.fetchFT(this.ftId);
+    if (this.mFT.id !== this.ftId) {
+      alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");
+      await this.$router.push({
+        path: "/ft",
+      });
+    }
+    document.title = this.title;
   },
   methods: {
     hasPermission(permission: string) {

@@ -72,7 +72,7 @@ import { FA, fa_card_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import { SitePublishAnimationCategoryType } from "~/utils/models/FA";
 

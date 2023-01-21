@@ -51,7 +51,7 @@ import Vue from "vue";
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import { FA, Period } from "~/utils/models/FA";
 
 export default Vue.extend({
