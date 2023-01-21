@@ -24,12 +24,12 @@
                   <v-list-item-title>Tous</v-list-item-title>
                 </v-list-item>
                 <v-list-item
-                  v-for="item in statusData"
-                  :key="item.status"
-                  :value="item.status"
+                  v-for="status in statuses"
+                  :key="status"
+                  :value="status"
                 >
                   <v-list-item-title>
-                    {{ item.label }}
+                    {{ getStatusLabel(status) }}
                   </v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
@@ -53,18 +53,20 @@
           class="elevation-1"
         >
           <template #[`item.status`]="{ item }">
-            <v-chip :color="getColorByStatus(item.status)" small>
-              <span class="chip-text">{{ item.id }}</span>
-            </v-chip>
+            <v-chip-group id="status">
+              <v-chip :color="getFTStatus(item.status)" small>
+                <span class="chip-text">{{ item.id }}</span>
+              </v-chip>
+            </v-chip-group>
           </template>
 
           <template #[`item.validation`]="{ item }">
-            <v-chip-group>
+            <v-chip-group id="validators">
               <v-chip
                 v-for="(validator, i) of validators"
                 :key="i"
                 small
-                :color="getValidatorColor(item, validator)"
+                :color="getValidatorStatus(item, validator)"
               >
                 <v-icon small>
                   {{ validator.icon }}
@@ -172,8 +174,6 @@ import {
   FT,
   FTCreation,
   FTStatus,
-  FTStatusColor,
-  FTStatusData,
   FTStatusLabel,
   SearchFT,
 } from "~/utils/models/ft";
@@ -240,41 +240,20 @@ export default Vue.extend({
       return this.$accessor.FT.FTs;
     },
     filteredFTs(): FT[] {
-      let res = this.FTs;
       const { search, team, myFTs, status } = this.filters;
 
-      if (team) {
-        res = res.filter((ft) => {
-          if (!ft.team) return false;
-          return ft.team.id === team.id;
-        });
-      }
-      if (myFTs) {
-        res = res.filter((ft) => {
-          if (!ft.inCharge) return false;
-          return ft.inCharge.id === this.me.id;
-        });
-      }
-      if (search) {
-        const fuse = new Fuse(res, {
-          keys: ["name", "id"],
-          threshold: 0.2,
-        });
-        res = fuse.search(search).map((e) => e.item);
-      }
-      if (status) {
-        res = res.filter((e) => e.status === status);
-      }
-      return res;
-    },
-    statusData(): FTStatusData[] {
-      return Object.keys(FTStatusColor).map((key) => {
-        return {
-          status: key as FTStatus,
-          label: FTStatusLabel[key as FTStatus],
-          color: FTStatusColor[key as FTStatus],
-        };
+      const res = this.fuzzyFindFT(search);
+
+      return res.filter((ft) => {
+        return (
+          this.filterFTByTeam(team)(ft) &&
+          this.filterFTByOwnership(myFTs)(ft) &&
+          this.filterFTByStatus(status)(ft)
+        );
       });
+    },
+    statuses(): FTStatus[] {
+      return Object.values(FTStatus);
     },
     isAdmin(): boolean {
       return this.$accessor.user.hasPermission("admin");
@@ -307,6 +286,33 @@ export default Vue.extend({
   },
 
   methods: {
+    filterFTByTeam(teamSearched?: Team): (ft: FT) => boolean {
+      return teamSearched
+        ? (ft: FT) => ft.team?.id === teamSearched.id
+        : () => true;
+    },
+
+    filterFTByOwnership(searchMyFTs: boolean): (ft: FT) => boolean {
+      return searchMyFTs
+        ? (ft: FT) => ft.inCharge?.id === this.me.id
+        : () => true;
+    },
+
+    filterFTByStatus(statusSearched?: FTStatus): (ft: FT) => boolean {
+      return statusSearched
+        ? (ft: FT) => ft.status === statusSearched
+        : () => true;
+    },
+
+    fuzzyFindFT(search?: string): FT[] {
+      if (!search) return this.FTs;
+      const fuse = new Fuse(this.FTs, {
+        keys: ["name", "id"],
+        threshold: 0.2,
+      });
+      return fuse.search(search).map((e) => e.item);
+    },
+
     async retrieveValidatorsIfNeeded(): Promise<void> {
       if (this.validators.length) return;
       return this.$accessor.team.fetchFtValidators();
@@ -316,19 +322,21 @@ export default Vue.extend({
       return this.$accessor.user.hasPermission(permission);
     },
 
-    getColorByStatus(status: FTStatus): string {
-      return this.statusData.find((e) => e.status === status)?.color || "grey";
+    getFTStatus(status: FTStatus): string {
+      return status.toLowerCase();
     },
 
-    getValidatorColor(ft: FT, validator: Team) {
-      let status = getFTValidationStatus(ft, validator.code);
-      if (status === FTStatus.SUBMITTED) status = FTStatus.DRAFT;
-      return this.getColorByStatus(status);
+    getValidatorStatus(ft: FT, validator: Team) {
+      return getFTValidationStatus(ft, validator.code).toLowerCase();
     },
 
     displayUsername(user: User | null): string {
       if (!user) return "";
       return formatUsername(user);
+    },
+
+    getStatusLabel(status: FTStatus): FTStatusLabel {
+      return FTStatusLabel[status];
     },
 
     async fetchFTs() {

@@ -21,20 +21,6 @@ export enum FTStatusLabel {
   READY = "Prête à affectation",
 }
 
-export enum FTStatusColor {
-  DRAFT = "grey",
-  SUBMITTED = "orange",
-  REFUSED = "red",
-  VALIDATED = "green",
-  READY = "purple",
-}
-
-export interface FTStatusData {
-  status: FTStatus;
-  label: FTStatusLabel;
-  color: FTStatusColor;
-}
-
 interface FTBase {
   name: string;
   status: FTStatus;

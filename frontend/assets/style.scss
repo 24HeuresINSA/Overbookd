@@ -45,14 +45,17 @@
   .dot {
     @include background-color-by-status();
   }
+
+  #status, #validators {
+    .v-chip {
+      @include background-color-by-status();
+    }
+  }
 }
 
 .stats-card {
   @include background-color-by-status();
 }
-
-
-  
 
 .important {
   color: red !important;
