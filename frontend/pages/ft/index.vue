@@ -55,7 +55,7 @@
           <template #[`item.status`]="{ item }">
             <v-chip-group id="status">
               <v-chip :color="getFTStatus(item.status)" small>
-                <span class="chip-text">{{ item.id }}</span>
+                {{ item.id }}
               </v-chip>
             </v-chip-group>
           </template>
@@ -401,11 +401,6 @@ h1 {
     margin-left: 20px;
     height: fit-content;
     width: 100vw;
-
-    .chip-text {
-      font-weight: bold;
-      color: white;
-    }
 
     .valid-text {
       text-decoration: none;
