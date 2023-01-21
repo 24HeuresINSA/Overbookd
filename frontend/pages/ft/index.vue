@@ -262,7 +262,7 @@ export default Vue.extend({
       return this.$accessor.team.ftValidators;
     },
     deletedFTTextClass(): string {
-      return this.filters.isDeleted === false ? "valid-text" : "invalid-text";
+      return this.filters.isDeleted ? "invalid-text" : "valid-text";
     },
   },
 
