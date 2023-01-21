@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { FA } from "~/utils/models/FA";
 import { FT, FTCreation } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -24,6 +25,9 @@ export default Vue.extend({
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
+    mFA(): FA {
+      return this.$accessor.FA.mFA;
+    },
   },
   methods: {
     async createNewFT() {
@@ -32,8 +36,16 @@ export default Vue.extend({
         name: this.ftName,
       };
       await this.$accessor.FT.createFT(blankFT);
-
       if (!this.mFT?.id) return;
+      if (this.mFA?.id) {
+        console.log("test");
+        const updatedFT = {
+          ...this.$accessor.FT.mFT,
+          fa: this.mFA,
+        };
+        this.$accessor.FT.updateFT(updatedFT);
+      }
+
       this.$router.push({ path: `/ft/${this.mFT.id}` });
       this.$emit("close-dialog");
     },
