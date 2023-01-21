@@ -126,16 +126,7 @@
     </v-btn>
 
     <v-dialog v-model="isNewFTDialogOpen" width="600">
-      <v-card>
-        <v-card-title>Ajouter une nouvelle FT</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="FTName" label="Nom de la FT"></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn :disabled="!FTName" @click="createNewFT">Créer la FT</v-btn>
-        </v-card-actions>
-      </v-card>
+      <NewFTCard />
     </v-dialog>
 
     <v-dialog v-model="isDeleteDialogOpen" width="600">
@@ -167,16 +158,11 @@
 import Fuse from "fuse.js";
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
-import {
-  FT,
-  FTCreation,
-  FTStatus,
-  FTStatusLabel,
-  SearchFT,
-} from "~/utils/models/ft";
+import { FT, FTStatus, FTStatusLabel, SearchFT } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
@@ -187,7 +173,6 @@ interface Data {
   isDeleteDialogOpen: boolean;
   isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
-  FTName: string;
   loading: boolean;
 
   filters: {
@@ -201,7 +186,7 @@ interface Data {
 
 export default Vue.extend({
   name: "Index",
-  components: { SnackNotificationContainer, SearchTeam },
+  components: { SnackNotificationContainer, SearchTeam, NewFTCard },
   data(): Data {
     return {
       headers: [
@@ -213,7 +198,6 @@ export default Vue.extend({
         { text: "Equipe", value: "team" },
         { text: "Action", value: "action" },
       ],
-      FTName: "",
       filters: {
         search: "",
         team: undefined,
@@ -344,16 +328,6 @@ export default Vue.extend({
         status: this.filters.status,
       };
       await this.$accessor.FT.fetchFTs(searchParams);
-    },
-
-    async createNewFT() {
-      if (!this.FTName) return;
-      const blankFT: FTCreation = {
-        name: this.FTName,
-      };
-      await this.$accessor.FT.createFT(blankFT);
-      if (!this.mFT?.id) return;
-      this.$router.push({ path: `ft/${this.mFT.id}` });
     },
 
     preDeleteFT(ft: FT) {
