@@ -368,13 +368,14 @@ model Catalog_Category {
 }
 
 model Catalog_Gear {
-  id              Int                      @id @default(autoincrement())
-  name            String
-  slug            String                   @unique
-  category_id     Int?
-  category        Catalog_Category?        @relation("category", fields: [category_id], references: [id])
-  requests        Animation_Gear_Request[] @relation("gear-request-gear")
-  isPonctualUsage Boolean                  @default(false) @map("is_ponctual_usage")
+  id               Int                      @id @default(autoincrement())
+  name             String
+  slug             String                   @unique
+  category_id      Int?
+  category         Catalog_Category?        @relation("category", fields: [category_id], references: [id])
+  requests         Animation_Gear_Request[] @relation("gear-request-gear")
+  isPonctualUsage  Boolean                  @default(false) @map("is_ponctual_usage")
+  inventoryRecords InventoryRecord[]        @relation()
 
   @@index([isPonctualUsage])
 }
@@ -515,4 +516,14 @@ model FtReview {
 
   @@unique([ftId, teamCode])
   @@map("ft_review")
+}
+
+model InventoryRecord {
+  gear     Catalog_Gear @relation(fields: [gearId], references: [id], onDelete: Cascade)
+  gearId   Int          @map("gear_id")
+  storage  String
+  quantity Int
+
+  @@unique([gearId, storage])
+  @@map("inventory_record")
 }
