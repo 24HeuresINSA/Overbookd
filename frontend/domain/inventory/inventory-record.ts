@@ -7,6 +7,8 @@ export interface Record {
   storage: string;
 }
 
+export type LiteInventoryRecord = Omit<Record, "gear">;
+
 export class InventoryRecord implements Record {
   constructor(
     public readonly gear: Gear,
@@ -36,6 +38,10 @@ export class InventoryRecord implements Record {
 
   toJson(): Record {
     return { gear: this.gear, quantity: this.quantity, storage: this.storage };
+  }
+
+  toLiteRecord(): LiteInventoryRecord {
+    return { quantity: this.quantity, storage: this.storage };
   }
 
   static isSimilar(

@@ -28,12 +28,18 @@ export class ManualInventoryRecordError extends Error {
 }
 
 export class DisplayableManualInventoryRecordError {
-  constructor(public readonly record: ManualInventoryRecord) {}
+  constructor(
+    public readonly record: ManualInventoryRecord,
+    public readonly error: string
+  ) {}
 
   static fromError(
     error: ManualInventoryRecordError
   ): DisplayableManualInventoryRecordError {
-    return new DisplayableManualInventoryRecordError(error.record);
+    return new DisplayableManualInventoryRecordError(
+      error.record,
+      error.message
+    );
   }
 
   toInventoryRecord(gear: Gear) {

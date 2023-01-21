@@ -20,7 +20,10 @@
                   {{ groupedRecord.quantity }}
                 </th>
               </tr>
-              <tr v-for="record in groupedRecord.records" :key="record.storage">
+              <tr
+                v-for="record in groupedRecord.records"
+                :key="`${groupedRecord.gear.id}-${record.storage}`"
+              >
                 <td class="text-start">{{ record.storage }}</td>
                 <td class="text-start">{{ record.quantity }}</td>
               </tr>
