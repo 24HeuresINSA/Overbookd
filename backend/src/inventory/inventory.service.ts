@@ -2,10 +2,12 @@ import { Inject } from '@nestjs/common';
 import { Gear } from 'src/catalog/interfaces';
 import { SlugifyService } from '../common/services/slugify.service';
 
+export type LiteInventoryRecord = Omit<InventoryRecord, 'gear'>;
+
 export type GroupedRecord = {
   quantity: number;
   gear: Gear;
-  records: InventoryRecord[];
+  records: LiteInventoryRecord[];
 };
 
 export type InventoryRecord = {
@@ -13,6 +15,10 @@ export type InventoryRecord = {
   gear: Gear;
   storage: string;
 };
+
+export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
+  return { quantity: record.quantity, storage: record.storage };
+}
 
 export interface GroupedRecordSearch {
   name?: string;

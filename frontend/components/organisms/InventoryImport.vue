@@ -28,6 +28,9 @@
           <template #item.storage="{ item }">
             {{ item.record.storage }}
           </template>
+          <template #item.message="{ item }">
+            {{ item.error }}
+          </template>
           <template #item.action="{ item, index }">
             <v-btn
               small

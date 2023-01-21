@@ -1,6 +1,10 @@
 import { Category, Gear } from 'src/catalog/interfaces';
 import { SlugifyService } from '../common/services/slugify.service';
-import { GroupedRecord, InventoryService } from './inventory.service';
+import {
+  GroupedRecord,
+  InventoryService,
+  toLiteRecord,
+} from './inventory.service';
 import { InMemoryInventoryRepository } from './repositories/inventory.repository.inmemory';
 
 const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
@@ -94,7 +98,6 @@ describe('Inventory Service', () => {
           records: [
             {
               quantity: 3,
-              gear: PONCEUSE,
               storage: 'Local',
             },
           ],
@@ -105,7 +108,6 @@ describe('Inventory Service', () => {
           records: [
             {
               quantity: 5,
-              gear: MARTEAU,
               storage: 'Local',
             },
           ],
@@ -128,7 +130,7 @@ describe('Inventory Service', () => {
         expect(inventory).toContainEqual({
           quantity: 30,
           gear: TABLE,
-          records,
+          records: records.map(toLiteRecord),
         });
       });
     });
@@ -167,17 +169,17 @@ describe('Inventory Service', () => {
         expect(inventory).toContainEqual({
           quantity: 30,
           gear: TABLE,
-          records: tableRecords,
+          records: tableRecords.map(toLiteRecord),
         });
         expect(inventory).toContainEqual({
           quantity: 3,
           gear: PONCEUSE,
-          records: ponceuseRecords,
+          records: ponceuseRecords.map(toLiteRecord),
         });
         expect(inventory).toContainEqual({
           quantity: 20,
           gear: MARTEAU,
-          records: marteauRecords,
+          records: marteauRecords.map(toLiteRecord),
         });
       });
     });
@@ -220,24 +222,24 @@ describe('Inventory Service', () => {
         expect(records).toContainEqual({
           quantity: 30,
           gear: TABLE,
-          records: tableRecords,
+          records: tableRecords.map(toLiteRecord),
         });
         expect(records).toContainEqual({
           quantity: 3,
           gear: PONCEUSE,
-          records: ponceuseRecords,
+          records: ponceuseRecords.map(toLiteRecord),
         });
         expect(records).toContainEqual({
           quantity: 20,
           gear: MARTEAU,
-          records: marteauRecords,
+          records: marteauRecords.map(toLiteRecord),
         });
       });
     });
     describe.each`
       gearName      | expectedGroupedRecords
-      ${TABLE.name} | ${[{ quantity: 30, gear: TABLE, records: tableRecords }]}
-      ${'A'}        | ${[{ quantity: 30, gear: TABLE, records: tableRecords }, { quantity: 20, gear: MARTEAU, records: marteauRecords }]}
+      ${TABLE.name} | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }]}
+      ${'A'}        | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }, { quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }]}
       ${'Unknown'}  | ${[]}
     `('When searching $gearName', ({ gearName, expectedGroupedRecords }) => {
       it('should return all grouped records matching the gear', async () => {

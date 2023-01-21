@@ -1,12 +1,17 @@
 import { Gear } from 'src/catalog/interfaces';
-import { GroupedRecord, InventoryRecord } from './inventory.service';
+import {
+  GroupedRecord,
+  InventoryRecord,
+  LiteInventoryRecord,
+  toLiteRecord,
+} from './inventory.service';
 
 export class InventoryGroupedRecord implements GroupedRecord {
   quantity: number;
   gear: Gear;
-  records: InventoryRecord[];
+  records: LiteInventoryRecord[];
 
-  constructor(quantity: number, gear: Gear, records: InventoryRecord[]) {
+  constructor(quantity: number, gear: Gear, records: LiteInventoryRecord[]) {
     this.quantity = quantity;
     this.gear = gear;
     this.records = records;
@@ -14,7 +19,7 @@ export class InventoryGroupedRecord implements GroupedRecord {
 
   static fromInventoryRecord(record: InventoryRecord) {
     const { quantity, gear } = record;
-    return new InventoryGroupedRecord(quantity, gear, [record]);
+    return new InventoryGroupedRecord(quantity, gear, [toLiteRecord(record)]);
   }
 
   static isSimilar(
