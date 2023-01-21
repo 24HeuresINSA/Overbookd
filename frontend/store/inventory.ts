@@ -1,5 +1,8 @@
 import { mutationTree, getterTree, actionTree } from "typed-vuex";
-import { InventoryRecord } from "~/domain/inventory/inventory-record";
+import {
+  InventoryRecord,
+  LiteInventoryRecord,
+} from "~/domain/inventory/inventory-record";
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -10,7 +13,7 @@ const inventoryRepository = RepoFactory.InventoryRepository;
 export interface InventoryGroupedRecord {
   gear: Gear;
   quantity: number;
-  records: InventoryRecord[];
+  records: LiteInventoryRecord[];
 }
 
 interface State {
@@ -37,7 +40,7 @@ export const mutations = mutationTree(state, {
     if (groupedRecordIndex === -1) return;
     const updatedGroupedRecord = {
       ...state.groupedRecords[groupedRecordIndex],
-      records,
+      records: records.map((r) => r.toLiteRecord()),
     };
     state.groupedRecords = updateItemToList(
       state.groupedRecords,
