@@ -7,6 +7,7 @@ import {
   FTStatus,
   SearchFT,
   FTTimeWindow,
+  FTUpdate,
 } from "~/utils/models/ft";
 import { Feedback } from "~/utils/models/feedback";
 
@@ -78,8 +79,10 @@ export const actions = actionTree(
       commit("RESET_FT");
     },
 
-    fetchFT({ commit }, id: number) {
-      commit("UPDATE_SELECTED_FT", fakeFT(id));
+    async fetchFT({ commit }, id: number) {
+      const res = await safeCall(this, repo.getFT(this, id));
+      if (!res) return null;
+      commit("UPDATE_SELECTED_FT", res.data);
     },
 
     async fetchFTs({ commit }, search?: SearchFT) {
@@ -95,18 +98,40 @@ export const actions = actionTree(
         successMessage: "FT créée 🥳",
         errorMessage: "FT non créée 😢",
       });
+
       if (!res) return;
       commit("ADD_FT", res.data);
-      dispatch("setFT", res.data);
+      dispatch("setFT", { ...fakeFT(res.data.id), ...res.data });
     },
 
-    async deleteFT({ commit }, ftId: number) {
-      const res = await safeCall(this, repo.deleteFT(this, ftId), {
+    async updateFT({ commit }, ft: FT) {
+      const adaptedFT: FTUpdate = {
+        ...ft,
+        team: ft.team?.id,
+        inCharge: ft.inCharge?.id,
+        fa: ft.fa?.id,
+      };
+      const res = await safeCall<FT>(this, repo.updateFT(this, adaptedFT), {
+        successMessage: "FT sauvegardée 🥳",
+        errorMessage: "FT non sauvegardée 😢",
+      });
+
+      if (!res) return;
+      commit("UPDATE_SELECTED_FT", res.data);
+    },
+
+    async deleteFT({ commit }, ft: FT) {
+      const res = await safeCall(this, repo.deleteFT(this, ft.id), {
         successMessage: "FT supprimée 🥳",
         errorMessage: "FT non supprimée 😢",
       });
       if (!res) return;
-      commit("DELETE_FT", ftId);
+      commit("DELETE_FT", ft.id);
+    },
+
+    async restoreFT({ dispatch }, ft: FT) {
+      const restoredFT = { ...ft, isDeleted: false };
+      dispatch("updateFT", restoredFT);
     },
 
     async addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
@@ -136,8 +161,6 @@ export const actions = actionTree(
 function defaultState(): FTCreation {
   return {
     name: "",
-    status: FTStatus.DRAFT,
-    description: "",
   };
 }
 
@@ -153,5 +176,6 @@ function fakeFT(id: number): FT {
     timeWindows: [],
     ftRefusals: [],
     ftValidations: [],
+    isDeleted: false,
   };
 }

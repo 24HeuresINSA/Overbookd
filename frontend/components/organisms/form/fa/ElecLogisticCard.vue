@@ -61,7 +61,7 @@ import Vue from "vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import {
   ElectricityTypeLabel,
   electricity_type,

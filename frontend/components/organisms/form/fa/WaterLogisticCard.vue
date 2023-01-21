@@ -33,7 +33,7 @@ import Vue from "vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({

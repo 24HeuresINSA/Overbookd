@@ -207,7 +207,7 @@ import {
   getFAValidationStatus,
   isAnimationRefusedBy,
   isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import { Status } from "~/utils/models/FA";
 import { Team } from "~/utils/models/team";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";

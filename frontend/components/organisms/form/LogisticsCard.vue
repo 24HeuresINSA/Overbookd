@@ -41,7 +41,7 @@ import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue"
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import { Gear } from "~/utils/models/catalog.model";
 import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";

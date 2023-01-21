@@ -82,7 +82,7 @@ import {
   isAnimationValidatedBy,
   hasAtLeastOneValidation,
   hasAllValidations,
-} from "~/utils/fa/faUtils";
+} from "~/utils/festivalEvent/faUtils";
 import {
   FA,
   Period,
