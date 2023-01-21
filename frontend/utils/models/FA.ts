@@ -9,6 +9,14 @@ export enum Status {
   VALIDATED = "VALIDATED",
   REFUSED = "REFUSED",
 }
+
+export enum FAStatusLabel {
+  DRAFT = "Brouillon",
+  SUBMITTED = "Soumise à validation",
+  REFUSED = "Refusée",
+  VALIDATED = "Validée",
+}
+
 export enum electricity_type {
   PC16 = "PC16_Prise_classique",
   P17_16A_MONO = "P17_16A_MONO",

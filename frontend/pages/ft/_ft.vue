@@ -51,17 +51,25 @@ export default Vue.extend({
   },
   async mounted() {
     await this.$accessor.FT.fetchFT(this.ftId);
+
     if (this.mFT.id !== this.ftId) {
       alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");
-      await this.$router.push({
+      return this.$router.push({
         path: "/ft",
       });
     }
+
+    this.retrieveValidatorsIfNeeded();
     document.title = this.title;
   },
   methods: {
     hasPermission(permission: string) {
       return this.$accessor.user.hasPermission(permission);
+    },
+
+    async retrieveValidatorsIfNeeded(): Promise<void> {
+      if (this.$accessor.team.ftValidators.length) return;
+      return this.$accessor.team.fetchFtValidators();
     },
   },
 });
