@@ -17,6 +17,7 @@ import {
   StoredGearRequest,
   time_windows,
 } from "~/utils/models/FA";
+import { FT } from "~/utils/models/ft";
 import { StatsPayload } from "~/utils/models/stats";
 
 const resource = "/fa";
@@ -217,5 +218,9 @@ export default {
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
       { drive }
     );
+  },
+
+  updateFAChildFTs(context: Context, id: number, ft: FT[]) {
+    return context.$axios.post(`/fts/${id}`, ft);
   },
 };

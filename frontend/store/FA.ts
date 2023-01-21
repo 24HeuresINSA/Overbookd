@@ -25,6 +25,7 @@ import {
 } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
+import { FT } from "~/utils/models/ft";
 
 const repo = RepoFactory.faRepo;
 
@@ -289,6 +290,11 @@ export const mutations = mutationTree(state, {
 
   DELETE_PUBLISH_ANIMATION({ mFA }) {
     mFA.faSitePublishAnimation = undefined;
+  },
+
+  ADD_FT({ mFA }, ft: FT) {
+    if (!mFA.fts) mFA.fts = [];
+    mFA.fts?.push(ft);
   },
 });
 
@@ -841,6 +847,11 @@ export const actions = actionTree(
         );
       }
       commit("DELETE_PUBLISH_ANIMATION");
+    },
+
+    addFT({ commit, state }, ft: FT) {
+      commit("ADD_FT", ft);
+      repo.updateFAChildFTs(this, state.mFA.id, state.mFA.fts ?? []);
     },
   }
 );

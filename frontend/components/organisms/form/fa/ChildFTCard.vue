@@ -82,6 +82,9 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
+    },
     childFTs(): FT[] {
       return this.mFA.fts ?? [];
     },
@@ -110,12 +113,13 @@ export default Vue.extend({
     },
     async updateChildFT(ft: FT) {
       await this.$accessor.FT.fetchFT(ft.id);
-      if (!this.$accessor.FT.mFT) return;
+      if (!this.mFT) return;
 
-      const updatedFT = { ...this.$accessor.FT.mFT, fa: this.mFA ?? undefined };
+      const updatedFT = { ...this.mFT, fa: this.mFA ?? undefined };
       this.$accessor.FT.updateFT(updatedFT);
+
+      this.$accessor.FA.addFT(this.mFT);
       this.$accessor.FT.resetFT();
-      this.$accessor.FA.getAndSet(this.mFA.id);
     },
   },
 });
