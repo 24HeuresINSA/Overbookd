@@ -18,6 +18,7 @@ import {
   time_windows,
 } from "~/utils/models/FA";
 import { StatsPayload } from "~/utils/models/stats";
+import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
@@ -34,15 +35,17 @@ function omitAuthors(comments: fa_comments[]): fa_comments[] {
 
 export default {
   getAllFAs(context: Context, search?: SearchFA) {
-    return context.$axios.get<FA[]>(resource, { params: search });
+    return context.$axios.get<HttpStringified<FA>[]>(resource, {
+      params: search,
+    });
   },
 
   getFAById(context: Context, id: number) {
-    return context.$axios.get<FA>(resource + `/${id}`);
+    return context.$axios.get<HttpStringified<FA>>(resource + `/${id}`);
   },
 
   createNewFA(context: Context, FA: CreateFA) {
-    return context.$axios.post<FA>(resource, FA);
+    return context.$axios.post<HttpStringified<FA>>(resource, FA);
   },
 
   deleteFA(context: Context, id: number) {
@@ -54,7 +57,7 @@ export default {
   },
 
   updateFA(context: Context, id: number, FA: fa_general_update) {
-    return context.$axios.post<FA>(resource + `/${id}`, FA);
+    return context.$axios.post<HttpStringified<FA>>(resource + `/${id}`, FA);
   },
 
   updateFACollaborators(
@@ -86,7 +89,10 @@ export default {
     id: number,
     time_windows: time_windows[]
   ) {
-    return context.$axios.post(`/time-windows/${id}`, time_windows);
+    return context.$axios.post<HttpStringified<time_windows>[]>(
+      `/time-windows/${id}`,
+      time_windows
+    );
   },
 
   deleteFATimeWindows(context: Context, id: number) {
@@ -133,14 +139,14 @@ export default {
     animationId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
-    return context.$axios.post<StoredGearRequest>(
+    return context.$axios.post<HttpStringified<StoredGearRequest>>(
       resource + `/${animationId}/gear-requests`,
       gearRequestCreationForm
     );
   },
 
   getGearRequests(context: Context, animationId: number) {
-    return context.$axios.get<StoredGearRequest[]>(
+    return context.$axios.get<HttpStringified<StoredGearRequest>[]>(
       resource + `/${animationId}/gear-requests`
     );
   },
