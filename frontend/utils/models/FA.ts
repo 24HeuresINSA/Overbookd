@@ -5,15 +5,15 @@ import { DisplayedUser } from "./user";
 
 export enum Status {
   DRAFT = "DRAFT",
+  REFUSED = "REFUSED",
   SUBMITTED = "SUBMITTED",
   VALIDATED = "VALIDATED",
-  REFUSED = "REFUSED",
 }
 
 export enum FAStatusLabel {
   DRAFT = "Brouillon",
-  SUBMITTED = "Soumise à validation",
   REFUSED = "Refusée",
+  SUBMITTED = "Soumise à validation",
   VALIDATED = "Validée",
 }
 
