@@ -26,12 +26,6 @@ export default Vue.extend({
     SearchFA,
   },
   data: () => ({
-    headers: [
-      { text: "Numéro", value: "id" },
-      { text: "Nom", value: "name" },
-      { text: "Equipe", value: "team" },
-      { text: "Resp", value: "inCharge" },
-    ],
     parentFA: {} as FASimplified,
     isFASelectDialogOpen: false,
   }),
