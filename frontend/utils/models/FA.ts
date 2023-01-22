@@ -1,5 +1,6 @@
 import { Gear } from "./catalog.model";
 import { SubjectType } from "./feedback";
+import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
 export enum Status {
@@ -139,17 +140,8 @@ export interface fa_comments {
 }
 
 export type fa_validation = {
-  User: {
-    firstname: string;
-    lastname: string;
-  };
-  Team: {
-    id: number;
-    name: string;
-    color: string;
-    icon: string;
-    code: string;
-  };
+  User: DisplayedUser;
+  Team: Team;
 };
 
 export type fa_refuse = fa_validation;
