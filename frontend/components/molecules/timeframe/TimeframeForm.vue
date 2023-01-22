@@ -177,7 +177,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { formatDate } from "~/utils/date/dateUtils";
 
 interface BrakeDownDate {
   year: number;
@@ -340,7 +340,7 @@ export default Vue.extend({
       this.timeWindowType = time_windows_type.ANIM;
     },
     formatDate(date: string): string {
-      return formatDateWithMinutes(date);
+      return formatDate(date);
     },
     confirmTimeWindow() {
       if (this.formIsInvalid()) return;

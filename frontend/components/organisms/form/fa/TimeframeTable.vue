@@ -41,7 +41,7 @@
         >
       </v-card-actions>
 
-      <FestivalEventCalendar :time-windows="timeWindowsList" />
+      <FestivalEventCalendar />
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
