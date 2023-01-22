@@ -34,20 +34,13 @@ export default Vue.extend({
       if (!this.ftName) return;
       const blankFT: FTCreation = {
         name: this.ftName,
+        fa: this.mFA,
       };
       await this.$accessor.FT.createFT(blankFT);
       if (!this.mFT?.id) return;
-      if (this.mFA?.id) {
-        console.log("test");
-        const updatedFT = {
-          ...this.$accessor.FT.mFT,
-          fa: this.mFA,
-        };
-        this.$accessor.FT.updateFT(updatedFT);
-      }
 
-      this.$router.push({ path: `/ft/${this.mFT.id}` });
       this.$emit("close-dialog");
+      this.$router.push({ path: `/ft/${this.mFT.id}` });
     },
   },
 });

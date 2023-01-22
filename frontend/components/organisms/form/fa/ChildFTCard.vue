@@ -23,35 +23,11 @@
       </v-card-text>
       <v-card-actions v-if="isFAValidated">
         <v-spacer></v-spacer>
-        <v-btn
-          text
-          @click="openAddingFTDialog"
-          @close-dialog="closeAddingFTDialog"
-          >Ajouter une FT existante</v-btn
-        >
         <v-btn text @click="openNewFTDialog" @close-dialog="closeNewFTDialog"
           >Créer une FT</v-btn
         >
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="isAddingFTDialogOpen" width="600">
-      <v-card>
-        <v-card-title>Lier une FT existante</v-card-title>
-        <v-card-text>
-          <SearchFT
-            v-model="selectedFT"
-            label="FT associée"
-            :boxed="false"
-          ></SearchFT>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn :disabled="!selectedFT" @click="updateChildFT"
-            >Lier la FT</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <v-dialog v-model="isNewFTDialogOpen" width="600">
       <NewFTCard />
     </v-dialog>
@@ -60,21 +36,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchFT from "~/components/atoms/SearchFT.vue";
 import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus, FTStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ChildFTCard",
-  components: { NewFTCard, SearchFT },
+  components: { NewFTCard },
   data: () => ({
     headers: [
       { text: "Numéro", value: "id" },
       { text: "Nom", value: "name" },
       { text: "Statut", value: "status" },
     ],
-    isAddingFTDialogOpen: false,
     isNewFTDialogOpen: false,
     selectedFT: null as FT | null,
   }),
@@ -99,27 +73,11 @@ export default Vue.extend({
     getStatusLabel(status: FTStatus): FTStatusLabel {
       return FTStatusLabel[status];
     },
-    openAddingFTDialog() {
-      this.isAddingFTDialogOpen = true;
-    },
-    closeAddingFTDialog() {
-      this.isAddingFTDialogOpen = false;
-    },
     openNewFTDialog() {
       this.isNewFTDialogOpen = true;
     },
     closeNewFTDialog() {
       this.isNewFTDialogOpen = false;
-    },
-    async updateChildFT(ft: FT) {
-      await this.$accessor.FT.fetchFT(ft.id);
-      if (!this.mFT) return;
-
-      const updatedFT = { ...this.mFT, fa: this.mFA ?? undefined };
-      this.$accessor.FT.updateFT(updatedFT);
-
-      this.$accessor.FA.addFT(this.mFT);
-      this.$accessor.FT.resetFT();
     },
   },
 });

@@ -848,10 +848,5 @@ export const actions = actionTree(
       }
       commit("DELETE_PUBLISH_ANIMATION");
     },
-
-    addFT({ commit, state }, ft: FT) {
-      commit("ADD_FT", ft);
-      repo.updateFAChildFTs(this, state.mFA.id, state.mFA.fts ?? []);
-    },
   }
 );
