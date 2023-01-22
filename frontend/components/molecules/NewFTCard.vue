@@ -20,7 +20,7 @@ export default Vue.extend({
   props: {
     faId: {
       type: Number,
-      default: null,
+      default: undefined,
     },
   },
   data: () => ({
@@ -34,8 +34,10 @@ export default Vue.extend({
   methods: {
     async createNewFT() {
       if (!this.ftName) return;
-      const blankFT: FTCreation = { name: this.ftName };
-      if (this.faId) blankFT.faId = this.faId;
+      const blankFT: FTCreation = {
+        name: this.ftName,
+        faId: this.faId,
+      };
 
       await this.$accessor.FT.createFT(blankFT);
       if (!this.mFT?.id) return;

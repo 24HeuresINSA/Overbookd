@@ -294,8 +294,7 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_FT({ mFA }, ft: FT) {
-    if (!mFA.fts) mFA.fts = [];
-    mFA.fts?.push(ft);
+    mFA.fts = [...mFA.fts, ft];
   },
 });
 
