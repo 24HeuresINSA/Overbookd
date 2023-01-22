@@ -28,7 +28,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
-import { time_windows_type } from "~/utils/models/FA";
 
 interface CalendarTimeWindow {
   start: Date;
@@ -62,17 +61,28 @@ export default Vue.extend({
         : this.ftTimeWindows;
     },
     faTimeWindows(): CalendarTimeWindow[] {
-      return (this.$accessor.FA.mFA.time_windows ?? []).map((timeWindow) => ({
+      const animationTimeWindows: CalendarTimeWindow[] = (
+        this.$accessor.FA.mFA.time_windows ?? []
+      ).map((timeWindow) => ({
         start: timeWindow.start,
         end: timeWindow.end,
         timed: true,
-        color:
-          timeWindow.type === time_windows_type.MATOS ? "secondary" : "primary",
-        name:
-          timeWindow.type === time_windows_type.MATOS
-            ? "Utilisation du matos"
-            : "Tenue de l'animation",
+        color: "primary",
+        name: "Tenue de l'animation",
       }));
+
+      const gearTimeWindows: CalendarTimeWindow[] =
+        this.$accessor.FA.gearRequestRentalPeriods.map(
+          (gearRequestRentalPeriod) => ({
+            start: gearRequestRentalPeriod.start,
+            end: gearRequestRentalPeriod.end,
+            timed: true,
+            color: "secondary",
+            name: "Utilisation du matos",
+          })
+        );
+
+      return [...animationTimeWindows, ...gearTimeWindows];
     },
     ftTimeWindows(): CalendarTimeWindow[] {
       return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
