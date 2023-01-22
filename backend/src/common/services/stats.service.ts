@@ -42,10 +42,12 @@ export class StatsService {
   private static extractStatusStats(
     teamStats: StatsQueryResult[],
   ): { status: Status; count: number }[] {
-    return teamStats.map(({ status, _count }) => ({
-      status,
-      count: _count.status,
-    }));
+    return teamStats
+      .map(({ status, _count }) => ({
+        status,
+        count: _count.status,
+      }))
+      .sort((a, b) => a.status.localeCompare(b.status));
   }
 
   private static sumStatusCount(teamStats: StatsQueryResult[]): number {

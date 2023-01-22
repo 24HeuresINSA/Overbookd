@@ -5,11 +5,11 @@
       <v-col sm="7">
         <v-row>
           <v-col
-            v-for="(status, key) in getAllStatus()"
-            :key="key"
+            v-for="(displayedStatus, status) in getAllStatus()"
+            :key="status"
             class="flex-grow-1"
           >
-            <StatsCard :status="status">{{ status }}</StatsCard>
+            <StatsCard :status="status">{{ displayedStatus }}</StatsCard>
           </v-col>
         </v-row>
       </v-col>
@@ -43,7 +43,7 @@
 import Vue from "vue";
 import { Team } from "~/utils/models/team";
 import { StatsPayload } from "~/utils/models/stats";
-import { Status as FAStatus } from "~/utils/models/FA";
+import { FAStatusLabel } from "~/utils/models/FA";
 import StatsCard from "~/components/atoms/StatsCard.vue";
 
 export default Vue.extend({
@@ -119,7 +119,7 @@ export default Vue.extend({
       return this.$accessor.team.getTeamById(teamId);
     },
     getAllStatus() {
-      return Object.keys(FAStatus).map((w) => this.toPascalCase(w));
+      return FAStatusLabel;
     },
     displayHistory(teamId: number): string {
       const lastYearValue = this.history(teamId);
@@ -149,7 +149,7 @@ export default Vue.extend({
         (s) => s.status === "VALIDATED"
       )?.count;
 
-      return ((validatedNumber || 0) / lastYearCount).toFixed(2);
+      return (((validatedNumber || 0) * 100) / lastYearCount).toFixed(0) + "%";
     },
     toPascalCase(str: string): string {
       return `${str.at(0)?.toUpperCase()}${str.slice(1).toLowerCase()}`;

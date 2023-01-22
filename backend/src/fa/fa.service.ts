@@ -62,9 +62,6 @@ export class FaService {
       _count: {
         status: true,
       },
-      orderBy: {
-        team_id: 'asc',
-      },
     });
     return this.statsService.stats(fa);
   }
