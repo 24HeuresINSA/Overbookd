@@ -45,7 +45,7 @@
       </v-container>
 
       <v-card class="data-table">
-        <v-btn color="green" width="100%" href="ft/ft_420">FT 420 🍃</v-btn>
+        <!--<v-btn color="green" width="100%" href="ft/ft_420">FT 420 🍃</v-btn>-->
         <v-data-table
           :headers="headers"
           :items="filteredFTs"
