@@ -1,7 +1,6 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { SubjectType } from "~/utils/models/feedback";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
   collaborator,
@@ -24,6 +23,7 @@ import {
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
+import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
@@ -398,10 +398,10 @@ export const actions = actionTree(
       { validator_id, team_name, author }
     ) {
       //check if the team is already in the list
-      if (state.mFA.fa_validation?.find((v) => v.team.id === validator_id))
+      if (state.mFA.fa_validation?.find((v) => v.Team.id === validator_id))
         return;
       if (state.mFA.fa_refuse?.length === 1) {
-        if (state.mFA.fa_refuse[0].team.id === validator_id) {
+        if (state.mFA.fa_refuse[0].Team.id === validator_id) {
           commit("UPDATE_STATUS", Status.SUBMITTED);
         }
       }

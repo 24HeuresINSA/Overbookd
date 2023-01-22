@@ -2,13 +2,13 @@ import { FA, fa_refuse, fa_validation, Status } from "../models/FA";
 
 export function isAnimationValidatedBy(fa: FA, teamCode: string): boolean {
   return (fa.fa_validation ?? []).some(
-    (validation: fa_validation) => validation.team.code === teamCode
+    (validation: fa_validation) => validation.Team.code === teamCode
   );
 }
 
 export function isAnimationRefusedBy(fa: FA, teamCode: string): boolean {
   return (fa.fa_refuse ?? []).some(
-    (refuse: fa_refuse) => refuse.team.code === teamCode
+    (refuse: fa_refuse) => refuse.Team.code === teamCode
   );
 }
 
