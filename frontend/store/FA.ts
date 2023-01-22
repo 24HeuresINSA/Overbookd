@@ -309,7 +309,21 @@ export const actions = actionTree(
         safeCall(this, repo.getGearRequests(this, id)),
       ]);
       if (!resGearRequests || !resFA) return null;
+      if (resGearRequests.data.length > 0) {
+        resGearRequests.data.forEach((gr) => {
+          gr.rentalPeriod.start = new Date(gr.rentalPeriod.start);
+          gr.rentalPeriod.end = new Date(gr.rentalPeriod.end);
+        });
+      }
       commit("SET_GEAR_REQUESTS", resGearRequests.data);
+      //update time windows to be a date
+      if (resFA.data.time_windows) {
+        resFA.data.time_windows.forEach((tw) => {
+          tw.start = new Date(tw.start);
+          tw.end = new Date(tw.end);
+        });
+      }
+      console.log("resFA.data", resFA.data);
       commit("SET_FA", resFA.data);
       commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
       return resFA.data;
