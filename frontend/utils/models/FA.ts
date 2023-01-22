@@ -1,3 +1,4 @@
+import { HttpStringified } from "../types/http";
 import { Gear } from "./catalog.model";
 import { SubjectType } from "./feedback";
 import { FTSimplified } from "./ft";
@@ -144,12 +145,14 @@ export interface fa_comments {
   User_author?: DisplayedUser;
 }
 
-export type fa_validation = {
+interface FAReview {
   User: DisplayedUser;
   Team: Team;
-};
+}
 
-export type fa_refuse = fa_validation;
+export type fa_validation = FAReview;
+
+export type fa_refuse = FAReview;
 
 export interface fa_electricity_needs {
   id?: number;
@@ -264,4 +267,51 @@ export interface SortedStoredGearRequests {
   matos: StoredGearRequest[];
   barrieres: StoredGearRequest[];
   elec: StoredGearRequest[];
+}
+
+export function castFaWithDate(fa: HttpStringified<FA>): FA {
+  const timeWindows = fa.time_windows?.map(castTimeWindowWithDate);
+  const created_at = fa.created_at ? new Date(fa.created_at) : undefined;
+  const faComments = fa.fa_comments?.map(castCommentWithDate);
+  return {
+    ...fa,
+    created_at,
+    time_windows: timeWindows,
+    fa_comments: faComments,
+  };
+}
+
+function castCommentWithDate(
+  comment: HttpStringified<fa_comments>
+): fa_comments {
+  const createdAt = comment.created_at
+    ? new Date(comment.created_at)
+    : undefined;
+  return {
+    ...comment,
+    created_at: createdAt,
+  };
+}
+
+function castTimeWindowWithDate(
+  timeWindow: HttpStringified<time_windows>
+): time_windows {
+  return {
+    ...timeWindow,
+    start: new Date(timeWindow.start),
+    end: new Date(timeWindow.end),
+  };
+}
+
+export function castGearRequestWithDate(
+  gearRequest: HttpStringified<StoredGearRequest>
+): StoredGearRequest {
+  return {
+    ...gearRequest,
+    rentalPeriod: {
+      ...gearRequest.rentalPeriod,
+      start: new Date(gearRequest.rentalPeriod.start),
+      end: new Date(gearRequest.rentalPeriod.end),
+    },
+  };
 }

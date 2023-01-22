@@ -3,6 +3,8 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
+  castFaWithDate,
+  castGearRequestWithDate,
   collaborator,
   CreateFA,
   FA,
@@ -315,23 +317,12 @@ export const actions = actionTree(
         safeCall(this, repo.getGearRequests(this, id)),
       ]);
       if (!resGearRequests || !resFA) return null;
-      if (resGearRequests.data.length > 0) {
-        resGearRequests.data.forEach((gr) => {
-          gr.rentalPeriod.start = new Date(gr.rentalPeriod.start);
-          gr.rentalPeriod.end = new Date(gr.rentalPeriod.end);
-        });
-      }
-      commit("SET_GEAR_REQUESTS", resGearRequests.data);
-      //update time windows to be a date
-      if (resFA.data.time_windows) {
-        resFA.data.time_windows.forEach((tw) => {
-          tw.start = new Date(tw.start);
-          tw.end = new Date(tw.end);
-        });
-      }
-      commit("SET_FA", resFA.data);
+
+      const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
+      const fa = castFaWithDate(resFA.data);
+      commit("SET_GEAR_REQUESTS", gearRequests);
+      commit("SET_FA", fa);
       commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
-      return resFA.data;
     },
 
     submitForReview: async function (
@@ -648,7 +639,8 @@ export const actions = actionTree(
         this,
         "La demande de matériel a été ajoutée avec succès ✅"
       );
-      commit("ADD_GEAR_REQUEST", res.data);
+      const createdGearRequest = castGearRequestWithDate(res.data);
+      commit("ADD_GEAR_REQUEST", createdGearRequest);
       return res.data;
     },
 
@@ -774,11 +766,12 @@ export const actions = actionTree(
         repo.getGearRequests(this, state.mFA.id)
       );
       if (!resGearRequests) return null;
-      commit("SET_GEAR_REQUESTS", resGearRequests.data);
+      const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
+      commit("SET_GEAR_REQUESTS", gearRequests);
     },
 
     async fetchFAs({ commit }, search?: SearchFA) {
-      const res = await safeCall<FA[]>(
+      const res = await safeCall(
         this,
         RepoFactory.faRepo.getAllFAs(this, search),
         {
@@ -786,11 +779,12 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("SET_FAS", res.data);
+      const fas = res.data.map(castFaWithDate);
+      commit("SET_FAS", fas);
     },
 
     async createFa({ commit, dispatch }, fa: CreateFA) {
-      const res = await safeCall<FA>(
+      const res = await safeCall(
         this,
         RepoFactory.faRepo.createNewFA(this, fa),
         {
@@ -799,8 +793,9 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("ADD_FA", res.data);
-      dispatch("setFA", res.data);
+      const createdFa = castFaWithDate(res.data);
+      commit("ADD_FA", createdFa);
+      dispatch("setFA", createdFa);
     },
 
     async deleteFA({ commit }, faId: number) {

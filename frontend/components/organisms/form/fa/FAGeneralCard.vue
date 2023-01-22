@@ -86,7 +86,6 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.users = this.$accessor.user.users;
     if (this.users.length === 0) {
       this.$accessor.user.fetchUsers();
     }
