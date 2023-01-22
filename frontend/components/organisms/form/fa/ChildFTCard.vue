@@ -21,7 +21,7 @@
           </template>
         </v-data-table>
       </v-card-text>
-      <v-card-actions v-if="isFAValidated">
+      <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="openNewFTDialog" @close-dialog="closeNewFTDialog"
           >Créer une FT</v-btn
@@ -37,7 +37,7 @@
 <script lang="ts">
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/NewFTCard.vue";
-import { FA, Status } from "~/utils/models/FA";
+import { FA } from "~/utils/models/FA";
 import { FT, FTStatus, FTStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -61,9 +61,6 @@ export default Vue.extend({
     },
     childFTs(): FT[] {
       return this.mFA.fts ?? [];
-    },
-    isFAValidated(): boolean {
-      return this.mFA.status === Status.VALIDATED;
     },
   },
   methods: {
