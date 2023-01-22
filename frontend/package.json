@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "1.6.2-rc.8",
+  "version": "1.7.0",
   "description": "Frontend pour le logiciel de gestion du festivale des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
