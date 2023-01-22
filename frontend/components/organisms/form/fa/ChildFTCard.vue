@@ -23,13 +23,13 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="openNewFTDialog" @close-dialog="closeNewFTDialog"
-          >Créer une FT</v-btn
-        >
+        <v-btn text @click="openNewFTDialog" @close-dialog="closeNewFTDialog">
+          Créer une FT
+        </v-btn>
       </v-card-actions>
     </v-card>
     <v-dialog v-model="isNewFTDialogOpen" width="600">
-      <NewFTCard />
+      <NewFTCard :fa-id="mFA.id" />
     </v-dialog>
   </div>
 </template>
@@ -38,7 +38,7 @@
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import { FA } from "~/utils/models/FA";
-import { FT, FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
+import { FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ChildFTCard",
@@ -50,14 +50,13 @@ export default Vue.extend({
       { text: "Statut", value: "status" },
     ],
     isNewFTDialogOpen: false,
-    selectedFT: null as FT | null,
   }),
   computed: {
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     childFTs(): FTSimplified[] {
-      return this.mFA.fts ?? [];
+      return this.mFA.fts;
     },
   },
   methods: {

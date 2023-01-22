@@ -116,7 +116,7 @@ export interface FA extends FASimplified {
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
   faSitePublishAnimation?: FaSitePublishAnimation;
-  fts?: FTSimplified[];
+  fts: FTSimplified[];
 }
 
 export type CreateFA = Pick<FA, "name">;

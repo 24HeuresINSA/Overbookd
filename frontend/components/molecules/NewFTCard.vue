@@ -13,11 +13,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FASimplified } from "~/utils/models/FA";
 import { FT, FTCreation } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "NewFTCard",
+  props: {
+    faId: {
+      type: Number,
+      default: null,
+    },
+  },
   data: () => ({
     ftName: "",
   }),
@@ -25,17 +30,13 @@ export default Vue.extend({
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    mFA(): FASimplified {
-      return this.$accessor.FA.mFA;
-    },
   },
   methods: {
     async createNewFT() {
       if (!this.ftName) return;
-      const blankFT: FTCreation = {
-        name: this.ftName,
-        fa: this.mFA,
-      };
+      const blankFT: FTCreation = { name: this.ftName };
+      if (this.faId) blankFT.faId = this.faId;
+
       await this.$accessor.FT.createFT(blankFT);
       if (!this.mFT?.id) return;
 

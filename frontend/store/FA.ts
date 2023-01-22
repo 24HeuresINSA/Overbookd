@@ -25,7 +25,7 @@ import {
 } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
-import { FT } from "~/utils/models/ft";
+import { FT, FTSimplified } from "~/utils/models/ft";
 
 const repo = RepoFactory.faRepo;
 
@@ -34,6 +34,7 @@ export const state = () => ({
   mFA: {
     status: Status.DRAFT,
     name: "",
+    fts: [] as FTSimplified[],
   } as FA,
   gearRequests: [] as StoredGearRequest[],
   localGearRequestRentalPeriods: [] as Period[],

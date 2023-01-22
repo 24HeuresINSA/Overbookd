@@ -24,10 +24,12 @@ export enum FTStatusLabel {
 interface FTBase {
   name: string;
   status: FTStatus;
-  fa?: FASimplified;
 }
 
-export type FTCreation = Pick<FTBase, "name" | "fa">;
+export interface FTCreation {
+  name: string;
+  faId?: number;
+}
 
 export interface FT extends FTBase {
   id: number;
@@ -35,6 +37,7 @@ export interface FT extends FTBase {
   team?: Team;
   inCharge?: User;
   areStatic: boolean;
+  fa?: FASimplified;
 
   timeWindows: FTTimeWindow[];
   locations: SignaLocation[];
