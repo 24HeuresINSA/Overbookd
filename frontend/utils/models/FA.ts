@@ -1,6 +1,6 @@
 import { Gear } from "./catalog.model";
 import { SubjectType } from "./feedback";
-import { FT } from "./ft";
+import { FTSimplified } from "./ft";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
@@ -87,15 +87,18 @@ export enum SitePublishAnimationCategoryType {
   Enfant = "Enfant",
 }
 
-export interface FA {
+export interface FASimplified {
   id: number;
   name: string;
+  status: Status;
+}
+
+export interface FA extends FASimplified {
   type?: fa_type;
   team_id?: number;
   in_charge?: number;
   created_at?: Date;
   location_id?: number;
-  status: Status;
   description?: string;
   is_major?: boolean;
   is_kids?: boolean;
@@ -113,7 +116,7 @@ export interface FA {
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
   faSitePublishAnimation?: FaSitePublishAnimation;
-  fts?: FT[];
+  fts?: FTSimplified[];
 }
 
 export type CreateFA = Pick<FA, "name">;

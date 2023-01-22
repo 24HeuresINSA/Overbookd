@@ -38,7 +38,7 @@
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import { FA } from "~/utils/models/FA";
-import { FT, FTStatus, FTStatusLabel } from "~/utils/models/ft";
+import { FT, FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ChildFTCard",
@@ -56,10 +56,7 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
-    },
-    childFTs(): FT[] {
+    childFTs(): FTSimplified[] {
       return this.mFA.fts ?? [];
     },
   },

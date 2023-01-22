@@ -2,7 +2,7 @@ import { Feedback } from "./feedback";
 import { User } from "./user";
 import { SignaLocation } from "./signaLocation";
 import { Review } from "./review";
-import { FA } from "./FA";
+import { FASimplified } from "./FA";
 import { Team } from "./team";
 
 export enum FTStatus {
@@ -24,7 +24,7 @@ export enum FTStatusLabel {
 interface FTBase {
   name: string;
   status: FTStatus;
-  fa?: FA;
+  fa?: FASimplified;
 }
 
 export type FTCreation = Pick<FTBase, "name" | "fa">;
@@ -54,6 +54,8 @@ export interface SearchFT {
   isDeleted?: boolean;
   status?: FTStatus;
 }
+
+export type FTSimplified = Pick<FT, "id" | "name" | "status">;
 
 export interface FTTimeWindow {
   id?: number;

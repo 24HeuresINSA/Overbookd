@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA } from "~/utils/models/FA";
+import { FASimplified } from "~/utils/models/FA";
 import { FT, FTCreation } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -25,7 +25,7 @@ export default Vue.extend({
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    mFA(): FA {
+    mFA(): FASimplified {
       return this.$accessor.FA.mFA;
     },
   },

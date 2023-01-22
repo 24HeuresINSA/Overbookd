@@ -17,7 +17,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchFA from "~/components/atoms/SearchFA.vue";
-import { FA } from "~/utils/models/FA";
+import { FASimplified } from "~/utils/models/FA";
 import { FT } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -32,7 +32,7 @@ export default Vue.extend({
       { text: "Equipe", value: "team" },
       { text: "Resp", value: "inCharge" },
     ],
-    parentFA: {} as FA,
+    parentFA: {} as FASimplified,
     isFASelectDialogOpen: false,
   }),
   computed: {
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateParentFA(fa: FA | null) {
+    updateParentFA(fa: FASimplified | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
       this.$accessor.FT.setFT(updatedFT);
     },
