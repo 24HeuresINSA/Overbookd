@@ -3,13 +3,13 @@ import { Review } from "../models/review";
 
 export function isTaskValidatedBy(ft: FT, teamCode: string): boolean {
   return (ft.ftValidations ?? []).some(
-    (validation: Review) => validation.Team.code === teamCode
+    (validation: Review) => validation.team.code === teamCode
   );
 }
 
 export function isTaskRefusedBy(ft: FT, teamCode: string): boolean {
   return (ft.ftRefusals ?? []).some(
-    (refuse: Review) => refuse.Team.code === teamCode
+    (refuse: Review) => refuse.team.code === teamCode
   );
 }
 

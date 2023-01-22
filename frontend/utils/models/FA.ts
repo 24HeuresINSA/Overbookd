@@ -1,6 +1,5 @@
 import { Gear } from "./catalog.model";
 import { SubjectType } from "./feedback";
-import { Review } from "./review";
 import { DisplayedUser } from "./user";
 
 export enum Status {
@@ -139,9 +138,21 @@ export interface fa_comments {
   User_author?: DisplayedUser;
 }
 
-export type fa_validation = Review;
+export type fa_validation = {
+  User: {
+    firstname: string;
+    lastname: string;
+  };
+  Team: {
+    id: number;
+    name: string;
+    color: string;
+    icon: string;
+    code: string;
+  };
+};
 
-export type fa_refuse = Review;
+export type fa_refuse = fa_validation;
 
 export interface fa_electricity_needs {
   id?: number;
