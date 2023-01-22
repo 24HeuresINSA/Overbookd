@@ -243,7 +243,6 @@ export default Vue.extend({
       const { search, team, myFTs, status } = this.filters;
 
       const res = this.fuzzyFindFT(search);
-
       return res.filter((ft) => {
         return (
           this.filterFTByTeam(team)(ft) &&
@@ -288,7 +287,7 @@ export default Vue.extend({
   methods: {
     filterFTByTeam(teamSearched?: Team): (ft: FT) => boolean {
       return teamSearched
-        ? (ft: FT) => ft.team?.id === teamSearched.id
+        ? (ft: FT) => ft.team?.code === teamSearched.code
         : () => true;
     },
 
