@@ -2,21 +2,21 @@ import { Feedback } from "./feedback";
 import { User } from "./user";
 import { SignaLocation } from "./signaLocation";
 import { Review } from "./review";
-import { FA } from "./FA";
+import { FASimplified } from "./FA";
 import { Team } from "./team";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
-  SUBMITTED = "SUBMITTED",
   REFUSED = "REFUSED",
+  SUBMITTED = "SUBMITTED",
   VALIDATED = "VALIDATED",
   READY = "READY",
 }
 
 export enum FTStatusLabel {
   DRAFT = "Brouillon",
-  SUBMITTED = "Soumise à validation",
   REFUSED = "Refusée",
+  SUBMITTED = "Soumise à validation",
   VALIDATED = "Validée",
   READY = "Prête à affectation",
 }
@@ -26,7 +26,10 @@ interface FTBase {
   status: FTStatus;
 }
 
-export type FTCreation = Pick<FTBase, "name">;
+export interface FTCreation {
+  name: string;
+  faId?: number;
+}
 
 export interface FT extends FTBase {
   id: number;
@@ -34,7 +37,7 @@ export interface FT extends FTBase {
   team?: Team;
   inCharge?: User;
   areStatic: boolean;
-  fa?: FA;
+  fa?: FASimplified;
 
   timeWindows: FTTimeWindow[];
   locations: SignaLocation[];
@@ -54,6 +57,8 @@ export interface SearchFT {
   isDeleted?: boolean;
   status?: FTStatus;
 }
+
+export type FTSimplified = Pick<FT, "id" | "name" | "status">;
 
 export interface FTTimeWindow {
   id?: number;

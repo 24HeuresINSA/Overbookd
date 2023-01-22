@@ -25,6 +25,7 @@ import {
 } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
+import { FT, FTSimplified } from "~/utils/models/ft";
 
 const repo = RepoFactory.faRepo;
 
@@ -33,6 +34,7 @@ export const state = () => ({
   mFA: {
     status: Status.DRAFT,
     name: "",
+    fts: [] as FTSimplified[],
   } as FA,
   gearRequests: [] as StoredGearRequest[],
   localGearRequestRentalPeriods: [] as Period[],
@@ -289,6 +291,10 @@ export const mutations = mutationTree(state, {
 
   DELETE_PUBLISH_ANIMATION({ mFA }) {
     mFA.faSitePublishAnimation = undefined;
+  },
+
+  ADD_FT({ mFA }, ft: FT) {
+    mFA.fts = [...mFA.fts, ft];
   },
 });
 

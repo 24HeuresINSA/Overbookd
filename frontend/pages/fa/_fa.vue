@@ -51,6 +51,7 @@
       <ElecLogisticCard id="elec" />
       <WaterLogisticCard id="water" />
       <CommentCard id="comment" />
+      <ChildFTCard id="ft" />
     </v-container>
     <SnackNotificationContainer />
 
@@ -191,6 +192,7 @@ import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWin
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
+import ChildFTCard from "~/components/organisms/form/fa/ChildFTCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
 import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
@@ -231,6 +233,7 @@ export default Vue.extend({
     CheckBeforeSubmitCard,
     GearRequestsValidation,
     ConfirmationMessage,
+    ChildFTCard,
   },
 
   data: () => ({
