@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus, FtSubjectType, reviewStatus } from '@prisma/client';
+import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
 import { CompleteFtResponse, LiteFtResponse } from '../ftTypes';
 
 class UserName {
   firstname: string;
   lastname: string;
+}
+
+class UserNameWithId extends UserName {
+  id: number;
 }
 class Comment {
   id: number;
@@ -48,6 +52,20 @@ class Review {
   team: {
     name: string;
   };
+}
+
+class Team {
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
+  code: string;
+}
+
+class MinimalFa {
+  id: number;
+  name: string;
+  status: Status;
 }
 export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
@@ -136,6 +154,27 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     type: Review,
   })
   reviews: Review[];
+
+  @ApiProperty({
+    required: true,
+    description: 'The team in charge of the ft',
+    type: Team,
+  })
+  Team: Team;
+
+  @ApiProperty({
+    required: true,
+    description: 'The user in charge of the ft',
+    type: UserNameWithId,
+  })
+  userInCharge: UserNameWithId | null;
+
+  @ApiProperty({
+    required: true,
+    description: 'The parent fa of the ft',
+    type: MinimalFa,
+  })
+  fa: MinimalFa | null;
 }
 
 export class LiteFtResponseDto implements LiteFtResponse {

@@ -75,6 +75,29 @@ export const COMPLETE_FT_SELECT = {
       },
     },
   },
+  Team: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      color: true,
+      icon: true,
+    },
+  },
+  userInCharge: {
+    select: {
+      firstname: true,
+      lastname: true,
+      id: true,
+    },
+  },
+  fa: {
+    select: {
+      id: true,
+      name: true,
+      status: true,
+    },
+  },
 };
 
 export const LITE_FT_SELECT = {
