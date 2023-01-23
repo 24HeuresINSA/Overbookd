@@ -25,6 +25,7 @@ import { SignaLocationModule } from './signa_location/signa_location.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { FtModule } from './ft/ft.module';
+import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { FtModule } from './ft/ft.module';
     PermissionModule,
     InventoryModule,
     FtModule,
+    FtTimeWindowsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
