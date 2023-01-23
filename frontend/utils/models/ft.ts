@@ -49,7 +49,7 @@ export interface FT extends FTBase {
 
 export type FTSimplified = Pick<
   FT,
-  "id" | "name" | "status" | "userInCharge" | "team" | "reviews"
+  "id" | "name" | "fa" | "status" | "userInCharge" | "team" | "reviews"
 >;
 
 export interface FTUpdate {
@@ -61,6 +61,7 @@ export interface FTUpdate {
   userInChargeId: number | null;
   teamCode: string | null;
   locationId: number | null;
+  isDeleted: boolean;
 }
 
 export interface SearchFT {
@@ -131,6 +132,7 @@ export function toUpdateFT({
   userInCharge,
   team,
   location,
+  isDeleted,
 }: FT): FTUpdate {
   return {
     id,
@@ -141,5 +143,26 @@ export function toUpdateFT({
     userInChargeId: userInCharge?.id ?? null,
     teamCode: team?.code ?? null,
     locationId: location?.id ?? null,
+    isDeleted,
+  };
+}
+
+export function toSimplifiedFT({
+  id,
+  name,
+  fa,
+  reviews,
+  status,
+  team,
+  userInCharge,
+}: FT): FTSimplified {
+  return {
+    id,
+    name,
+    fa,
+    reviews,
+    status,
+    team,
+    userInCharge,
   };
 }

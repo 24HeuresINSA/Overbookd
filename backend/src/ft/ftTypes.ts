@@ -17,6 +17,22 @@ const TEAM_SELECT = {
   },
 };
 
+const MINIMAL_FA_SELECT = {
+  select: {
+    id: true,
+    name: true,
+    status: true,
+  },
+};
+
+const DISPLAY_USER_WITH_ID_SELECT = {
+  select: {
+    firstname: true,
+    lastname: true,
+    id: true,
+  },
+};
+
 export const COMPLETE_FT_SELECT = {
   id: true,
   name: true,
@@ -53,13 +69,7 @@ export const COMPLETE_FT_SELECT = {
       sliceTime: true,
       userRequests: {
         select: {
-          userId: true,
-          user: {
-            select: {
-              firstname: true,
-              lastname: true,
-            },
-          },
+          user: DISPLAY_USER_WITH_ID_SELECT,
         },
       },
       teamRequests: {
@@ -77,33 +87,17 @@ export const COMPLETE_FT_SELECT = {
     },
   },
   team: TEAM_SELECT,
-  userInCharge: {
-    select: {
-      firstname: true,
-      lastname: true,
-      id: true,
-    },
-  },
-  fa: {
-    select: {
-      id: true,
-      name: true,
-      status: true,
-    },
-  },
+  userInCharge: DISPLAY_USER_WITH_ID_SELECT,
+  fa: MINIMAL_FA_SELECT,
 };
 
 export const LITE_FT_SELECT = {
   id: true,
   name: true,
   status: true,
-  userInCharge: {
-    select: {
-      firstname: true,
-      lastname: true,
-    },
-  },
+  userInCharge: DISPLAY_USER_WITH_ID_SELECT,
   team: TEAM_SELECT,
+  fa: MINIMAL_FA_SELECT,
   reviews: {
     select: {
       status: true,

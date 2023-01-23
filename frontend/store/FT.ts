@@ -126,6 +126,7 @@ export const actions = actionTree(
     },
 
     async fetchFTs({ commit }, search?: SearchFT) {
+      console.log("store", search);
       const res = await safeCall(this, repo.getAllFTs(this, search), {
         errorMessage: "Impossible de charger les FTs",
       });
@@ -146,14 +147,15 @@ export const actions = actionTree(
     },
 
     async updateFT({ commit }, ft: FT) {
-      const updatedFT = toUpdateFT(ft);
-      const res = await safeCall(this, repo.updateFT(this, updatedFT), {
+      const ftToUpdate = toUpdateFT(ft);
+      const res = await safeCall(this, repo.updateFT(this, ftToUpdate), {
         successMessage: "FT sauvegardée 🥳",
         errorMessage: "FT non sauvegardée 😢",
       });
 
       if (!res) return;
-      commit("UPDATE_SELECTED_FT", castFTWithDate(res.data));
+      const updatedFT = castFTWithDate(res.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
     },
 
     async deleteFT({ commit }, ft: FT) {
@@ -165,9 +167,10 @@ export const actions = actionTree(
       commit("DELETE_FT", ft.id);
     },
 
-    async restoreFT({ dispatch }, ft: FT) {
+    async restoreFT({ commit, dispatch }, ft: FT) {
       const restoredFT = { ...ft, isDeleted: false };
       dispatch("updateFT", restoredFT);
+      commit("DELETE_FT", ft.id);
     },
 
     async addTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {

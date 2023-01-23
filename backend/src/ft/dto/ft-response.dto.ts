@@ -20,11 +20,7 @@ class Feedback {
 }
 
 class UserRequest {
-  userId: number;
-  user: {
-    firstname: string;
-    lastname: string;
-  };
+  user: UserNameWithId;
 }
 
 class TeamRequest {
@@ -186,9 +182,9 @@ export class LiteFtResponseDto implements LiteFtResponse {
   @ApiProperty({
     required: false,
     description: 'The user in charge of the ft',
-    type: UserName,
+    type: UserNameWithId,
   })
-  userInCharge: UserName | null;
+  userInCharge: UserNameWithId | null;
 
   @ApiProperty({
     required: false,
@@ -196,6 +192,13 @@ export class LiteFtResponseDto implements LiteFtResponse {
     type: Team,
   })
   team: Team | null;
+
+  @ApiProperty({
+    required: true,
+    description: 'The parent fa of the ft',
+    type: MinimalFa,
+  })
+  fa: MinimalFa | null;
 
   @ApiProperty({
     required: true,
