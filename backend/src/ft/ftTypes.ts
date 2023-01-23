@@ -13,9 +13,14 @@ export const COMPLETE_FT_SELECT = {
   status: true,
   isStatic: true,
   description: true,
-  locationId: true,
+  location: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
   isDeleted: true,
-  comments: {
+  feedbacks: {
     select: {
       id: true,
       comment: true,
@@ -73,7 +78,7 @@ export const COMPLETE_FT_SELECT = {
       },
     },
   },
-  Team: {
+  team: {
     select: {
       id: true,
       name: true,

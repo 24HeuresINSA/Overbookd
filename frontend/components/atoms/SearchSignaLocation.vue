@@ -1,6 +1,6 @@
 <template>
   <v-autocomplete
-    :value="selectedLocation"
+    :value="location"
     :items="locations"
     :loading="loading"
     chips
@@ -30,7 +30,7 @@ interface SearchLocationData {
 export default Vue.extend({
   name: "SearchSignaLocation",
   model: {
-    prop: "selectedLocation",
+    prop: "location",
     event: "change",
   },
   props: {
@@ -38,7 +38,7 @@ export default Vue.extend({
       type: String,
       default: "Chercher un lieu",
     },
-    selectedLocation: {
+    location: {
       type: Object as () => SignaLocation | null,
       default: () => null,
     },

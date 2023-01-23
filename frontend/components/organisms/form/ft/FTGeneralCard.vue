@@ -5,30 +5,30 @@
       <v-text-field
         :value="mFT.name"
         label="Nom de la FT"
-        @change="onChange('name', $event)"
+        @change="updateName($event)"
       ></v-text-field>
       <SearchUser
-        :value="mFT.userInCharge"
+        :user="mFT.userInCharge"
         label="Responsable"
         :boxed="false"
-        @change="onChange('userInCharge', $event)"
+        @change="updateUserInCharge($event)"
       ></SearchUser>
       <SearchTeam
-        :value="mFT.Team"
+        :team="mFT.team"
         label="Équipe"
         :boxed="false"
-        @change="onChange('Team', $event)"
+        @change="updateTeam($event)"
       ></SearchTeam>
       <SearchSignaLocation
-        :value="mFT.location"
+        :location="mFT.location"
         label="Lieux"
         :boxed="false"
-        @change="onChange('location', $event)"
+        @change="updateLocation($event)"
       ></SearchSignaLocation>
       <v-switch
         :value="mFT.isStatic"
         label="Créneaux statiques"
-        @change="onChange('isStatic', $event)"
+        @change="updateIsStatic($event)"
       ></v-switch>
     </v-card-text>
   </v-card>
@@ -40,6 +40,9 @@ import { FT } from "~/utils/models/ft";
 import SearchUser from "~/components/atoms/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/SearchSignaLocation.vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import { User } from "~/utils/models/user";
+import { Team } from "~/utils/models/team";
+import { SignaLocation } from "~/utils/models/signaLocation";
 
 export default Vue.extend({
   name: "FTGeneralCard",
@@ -50,12 +53,23 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      if (typeof value === "boolean" && value) value = false;
-
-      const updatedFT = { ...this.mFT, [key]: value };
-      this.$accessor.FT.updateFT(updatedFT);
+    updateName(name: string) {
+      return this.updateFT({ name: name.trim() });
+    },
+    updateUserInCharge(userInCharge: User | null) {
+      return this.updateFT({ userInCharge: userInCharge ?? undefined });
+    },
+    updateTeam(team: Team | null) {
+      return this.updateFT({ team: team ?? undefined });
+    },
+    updateLocation(location: SignaLocation | null) {
+      return this.updateFT({ location: location ?? undefined });
+    },
+    updateIsStatic(isStatic: boolean | null) {
+      return this.updateFT({ isStatic: isStatic === true });
+    },
+    updateFT(ftChunk: Partial<FT>) {
+      this.$accessor.FT.updateFT({ ...this.mFT, ...ftChunk });
     },
   },
 });

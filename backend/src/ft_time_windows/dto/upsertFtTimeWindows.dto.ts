@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class UpsertFtTimeWindowsDto {
   @ApiProperty({
@@ -17,7 +17,7 @@ export class UpsertFtTimeWindowsDto {
     type: Date,
     description: 'The start of the time window',
   })
-  @IsDate()
+  @IsDateString()
   start: Date;
 
   @ApiProperty({
@@ -25,7 +25,7 @@ export class UpsertFtTimeWindowsDto {
     type: Date,
     description: 'The end of the time window',
   })
-  @IsDate()
+  @IsDateString()
   end: Date;
 
   @ApiProperty({

@@ -4,9 +4,9 @@
     <v-card-text>
       <v-form>
         <RichEditor
-          :value="mFT.description"
+          :data="mFT.description"
           class="mb-4"
-          @change="onChange('description', $event)"
+          @change="onChange($event)"
         ></RichEditor>
       </v-form>
     </v-card-text>
@@ -30,16 +30,17 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(key: string, value: any) {
+    onChange(description: string) {
       if (this.delay) clearInterval(this.delay);
       this.delay = setTimeout(() => {
-        this.updateRichEditorValue(key, value);
+        this.updateDescription(description);
       }, 500);
     },
-    updateRichEditorValue(key: string, value: string) {
-      value = value.trim();
-      const updatedFT = { ...this.mFT, [key]: value };
-      this.$accessor.FT.updateFT(updatedFT);
+    updateDescription(description: string) {
+      return this.updateFT({ description: description.trim() });
+    },
+    updateFT(ftChunk: Partial<FT>) {
+      this.$accessor.FT.updateFT({ ...this.mFT, ...ftChunk });
     },
   },
 });

@@ -4,7 +4,7 @@
       <v-card-title>FA associée</v-card-title>
       <v-card-text>
         <SearchFA
-          :value="mFT.fa"
+          :fa="mFT.fa"
           label="FA associée"
           :boxed="false"
           @change="updateParentFA($event)"

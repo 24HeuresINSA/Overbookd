@@ -98,7 +98,14 @@ export default Vue.extend({
       };
     },
     isTeamRequestValid(): boolean {
-      return Boolean(this.selectedTeam && this.quantity > 0);
+      return Boolean(
+        this.selectedTeam && this.quantity > 0 && !this.isTeamAlreadyRequested
+      );
+    },
+    isTeamAlreadyRequested(): boolean {
+      return this.teamRequests.some(
+        (teamRequest) => teamRequest.team.id === this.selectedTeam?.id
+      );
     },
   },
   watch: {

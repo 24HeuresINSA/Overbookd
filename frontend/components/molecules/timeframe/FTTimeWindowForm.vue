@@ -140,7 +140,7 @@ export default Vue.extend({
       if (!this.isEditForm) return this.clearLocalVariable();
       this.start = this.timeWindow.start;
       this.end = this.timeWindow.end;
-      this.toSlice = this.timeWindow.sliceTime !== undefined;
+      this.toSlice = this.timeWindow.sliceTime !== null;
       this.sliceTime = this.timeWindow.sliceTime || 2;
     },
     clearLocalVariable() {

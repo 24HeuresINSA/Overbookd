@@ -277,7 +277,7 @@ export default Vue.extend({
 
     filterFTByOwnership(searchMyFTs: boolean): (ft: FT) => boolean {
       return searchMyFTs
-        ? (ft: FT) => ft.inCharge?.id === this.me.id
+        ? (ft: FT) => ft.userInCharge?.id === this.me.id
         : () => true;
     },
 

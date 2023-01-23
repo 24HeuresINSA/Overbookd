@@ -4,6 +4,7 @@ import { SignaLocation } from "./signaLocation";
 import { Review } from "./review";
 import { FASimplified } from "./FA";
 import { Team } from "./team";
+import { HttpStringified } from "../types/http";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -34,7 +35,7 @@ export interface FTCreation {
 export interface FT extends FTBase {
   id: number;
   description: string;
-  Team?: Team;
+  team?: Team;
   userInCharge?: User;
   isStatic: boolean;
   fa?: FASimplified;
@@ -86,17 +87,15 @@ export interface FTTeamRequest {
   team: Team;
 }
 
-export function castFTWithDate(ft: FT): FT {
+export function castFTWithDate(ft: HttpStringified<FT>): FT {
   const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
-  //const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
-  return {
-    ...ft,
-    timeWindows: timeWindows,
-    //feedbacks: feedbacks,
-  };
+  const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
+  return { ...ft, timeWindows, feedbacks };
 }
 
-function castTimeWindowWithDate(timeWindow: FTTimeWindow): FTTimeWindow {
+export function castTimeWindowWithDate(
+  timeWindow: HttpStringified<FTTimeWindow>
+): FTTimeWindow {
   return {
     ...timeWindow,
     start: new Date(timeWindow.start),
@@ -104,7 +103,7 @@ function castTimeWindowWithDate(timeWindow: FTTimeWindow): FTTimeWindow {
   };
 }
 
-function castFeedbackWithDate(feedback: Feedback): Feedback {
+function castFeedbackWithDate(feedback: HttpStringified<Feedback>): Feedback {
   const createdAt = new Date(feedback.createdAt);
   return {
     ...feedback,
@@ -112,13 +111,33 @@ function castFeedbackWithDate(feedback: Feedback): Feedback {
   };
 }
 
-export function getTimeWindowsWithoutRequests(
-  timeWindows: FTTimeWindow[]
-): FTTimeWindowUpdate[] {
-  return timeWindows.map((tw) => ({
-    id: tw.id,
-    start: tw.start,
-    end: tw.end,
-    sliceTime: tw.sliceTime,
-  }));
+export function getTimeWindowWithoutRequests({
+  id,
+  start,
+  end,
+  sliceTime,
+}: FTTimeWindow): FTTimeWindowUpdate {
+  return { id, start, end, sliceTime };
+}
+
+export function toUpdateFT({
+  id,
+  name,
+  fa,
+  isStatic,
+  description,
+  userInCharge,
+  team,
+  location,
+}: FT): FTUpdate {
+  return {
+    id,
+    name,
+    parentFaId: fa?.id ?? null,
+    isStatic,
+    description,
+    userInChargeId: userInCharge?.id ?? null,
+    teamCode: team?.code ?? null,
+    locationId: location?.id ?? null,
+  };
 }

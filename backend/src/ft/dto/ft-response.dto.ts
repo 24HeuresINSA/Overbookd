@@ -10,7 +10,7 @@ class UserName {
 class UserNameWithId extends UserName {
   id: number;
 }
-class Comment {
+class Feedback {
   id: number;
   comment: string;
   subject: FtSubjectType;
@@ -67,6 +67,12 @@ class MinimalFa {
   name: string;
   status: Status;
 }
+
+class SignaLocation {
+  id: number;
+  name: string;
+}
+
 export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: true,
@@ -104,11 +110,11 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   description: string;
 
   @ApiProperty({
-    required: true,
-    description: 'The location id of the ft',
-    type: Number,
+    required: false,
+    description: 'The location of the ft',
+    type: SignaLocation,
   })
-  locationId: number;
+  location: SignaLocation | null;
 
   @ApiProperty({
     required: true,
@@ -119,11 +125,11 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
 
   @ApiProperty({
     required: true,
-    description: 'All the comments of the ft',
+    description: 'All feedbacks of the ft',
     isArray: true,
-    type: Comment,
+    type: Feedback,
   })
-  comments: Comment[];
+  feedbacks: Feedback[];
 
   @ApiProperty({
     required: true,
@@ -142,14 +148,14 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   reviews: Review[];
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The team in charge of the ft',
     type: Team,
   })
-  Team: Team;
+  team: Team | null;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The user in charge of the ft',
     type: UserNameWithId,
   })

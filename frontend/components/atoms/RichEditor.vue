@@ -6,6 +6,7 @@
       :disabled="disabled"
       :extensions="extensions"
       :toolbar-attributes="{ color: 'black', dark: true }"
+      @input="updateContent"
     />
     <template #placeholder> Loading... </template>
   </ClientOnly>
@@ -77,7 +78,7 @@ export default {
   }),
   watch: {
     content() {
-      this.$emit("change", this.content);
+      //this.$emit("change", this.content);
     },
     data: function () {
       this.content = this.data;
@@ -85,6 +86,11 @@ export default {
   },
   mounted() {
     this.content = this.data;
+  },
+  methods: {
+    updateContent() {
+      this.$emit("change", this.content);
+    },
   },
 };
 </script>
