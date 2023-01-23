@@ -13,6 +13,7 @@ import {
 class GearSeekerRepresentation implements GearSeeker {
   type: GearSeekerType;
   id: number;
+  name: string;
 }
 
 class PeriodRepresentation implements Period {

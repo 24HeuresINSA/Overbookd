@@ -59,14 +59,22 @@ const CHAISE: Gear = {
 const GEARS = [TABLE, CHAISE];
 
 const GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {
-  seeker: { type: GearSeekerType.Animation, id: CHATEAU_GONFLABLE.id },
+  seeker: {
+    type: GearSeekerType.Animation,
+    id: CHATEAU_GONFLABLE.id,
+    name: CHATEAU_GONFLABLE.name,
+  },
   quantity: 5,
   status: PENDING,
   gear: TABLE,
   rentalPeriod: MAY_24_1,
 };
 const GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE: GearRequest = {
-  seeker: { type: GearSeekerType.Animation, id: CHATEAU_GONFLABLE.id },
+  seeker: {
+    type: GearSeekerType.Animation,
+    id: CHATEAU_GONFLABLE.id,
+    name: CHATEAU_GONFLABLE.name,
+  },
   quantity: 10,
   status: PENDING,
   gear: CHAISE,
@@ -74,7 +82,11 @@ const GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE: GearRequest = {
 };
 
 const GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {
-  seeker: { type: GearSeekerType.Animation, id: CHATEAU_GONFLABLE.id },
+  seeker: {
+    type: GearSeekerType.Animation,
+    id: CHATEAU_GONFLABLE.id,
+    name: CHATEAU_GONFLABLE.name,
+  },
   quantity: 10,
   status: PENDING,
   gear: CHAISE,
@@ -82,7 +94,11 @@ const GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {
 };
 
 const GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE: GearRequest = {
-  seeker: { type: GearSeekerType.Animation, id: CHATEAU_GONFLABLE.id },
+  seeker: {
+    type: GearSeekerType.Animation,
+    id: CHATEAU_GONFLABLE.id,
+    name: CHATEAU_GONFLABLE.name,
+  },
   quantity: 2,
   status: APPROVED,
   gear: CHAISE,
@@ -158,7 +174,8 @@ describe('Gear requests', () => {
           it(`should link the request to ${fa.name} as gear seeker`, () => {
             expect(gearRequest.seeker).toEqual({
               type: GearSeekerType.Animation,
-              id: CHATEAU_GONFLABLE.id,
+              id: fa.id,
+              name: fa.name,
             });
           });
           it('should be accessible after', async () => {
@@ -173,7 +190,7 @@ describe('Gear requests', () => {
                 rentalPeriodId: gearRequest.rentalPeriod.id,
               });
             expect(searchedGearRequest).toMatchObject({
-              seeker,
+              seeker: { ...seeker, name: fa.name },
               status: PENDING,
               quantity,
               gear,

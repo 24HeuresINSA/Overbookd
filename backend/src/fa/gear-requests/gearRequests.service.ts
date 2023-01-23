@@ -68,6 +68,7 @@ export type PeriodForm = Omit<Period, 'id'>;
 export type GearSeeker = {
   type: GearSeekerType;
   id: number;
+  name: string;
 };
 
 export enum GearSeekerType {
@@ -118,7 +119,7 @@ export type GearRequestIdentifier = {
 };
 
 export type SearchGearRequest = {
-  seeker?: GearSeeker;
+  seeker?: Omit<GearSeeker, 'name'>;
 };
 
 export interface GearRequestRepository {
@@ -188,7 +189,11 @@ export class GearRequestsService {
       throw new AnimationAlreadyValidatedError(seekerId);
 
     const gearRequest = {
-      seeker: { type: GearSeekerType.Animation, id: seekerId },
+      seeker: {
+        type: GearSeekerType.Animation,
+        id: seekerId,
+        name: existingAnimation.name,
+      },
       status: PENDING,
       quantity,
       gear: existingGear,
