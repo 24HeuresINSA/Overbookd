@@ -34,7 +34,7 @@ export default Vue.extend({
       if (this.delay) clearInterval(this.delay);
       this.delay = setTimeout(() => {
         this.updateRichEditorValue(key, value);
-      }, 800);
+      }, 500);
     },
     updateRichEditorValue(key: string, value: string) {
       value = value.trim();

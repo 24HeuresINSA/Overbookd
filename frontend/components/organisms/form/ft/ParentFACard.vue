@@ -23,10 +23,6 @@ import { FT } from "~/utils/models/ft";
 export default Vue.extend({
   name: "ParentFACard",
   components: { SearchFA },
-  data: () => ({
-    parentFA: {} as FASimplified,
-    isFASelectDialogOpen: false,
-  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;

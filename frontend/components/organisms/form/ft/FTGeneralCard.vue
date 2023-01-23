@@ -8,16 +8,16 @@
         @change="onChange('name', $event)"
       ></v-text-field>
       <SearchUser
-        :value="mFT.inCharge"
+        :value="mFT.userInCharge"
         label="Responsable"
         :boxed="false"
-        @change="onChange('inCharge', $event)"
+        @change="onChange('userInCharge', $event)"
       ></SearchUser>
       <SearchTeam
-        :value="mFT.team"
+        :value="mFT.Team"
         label="Équipe"
         :boxed="false"
-        @change="onChange('team', $event)"
+        @change="onChange('Team', $event)"
       ></SearchTeam>
       <SearchSignaLocation
         :value="mFT.location"

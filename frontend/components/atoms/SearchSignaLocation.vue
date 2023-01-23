@@ -39,7 +39,7 @@ export default Vue.extend({
       default: "Chercher un lieu",
     },
     selectedLocation: {
-      type: Object as () => SignaLocation,
+      type: Object as () => SignaLocation | null,
       default: () => null,
     },
     boxed: {
