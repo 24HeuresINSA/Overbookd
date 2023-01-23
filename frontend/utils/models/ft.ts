@@ -36,21 +36,26 @@ export interface FT extends FTBase {
   description: string;
   team?: Team;
   inCharge?: User;
-  areStatic: boolean;
+  isStatic: boolean;
   fa?: FASimplified;
+  location?: SignaLocation;
 
   timeWindows: FTTimeWindow[];
-  locations: SignaLocation[];
   ftValidations: Review[];
   ftRefusals: Review[];
   feedbacks: Feedback[];
   isDeleted: boolean;
 }
 
-export interface FTUpdate extends Omit<FT, "team" | "inCharge" | "fa"> {
-  team?: number;
-  inCharge?: number;
-  fa?: number;
+export interface FTUpdate {
+  id: number;
+  name: string;
+  parentFaId: number | null;
+  isStatic: boolean;
+  description: string;
+  userInChargeId: number | null;
+  teamCode: string | null;
+  locationId: number | null;
 }
 
 export interface SearchFT {

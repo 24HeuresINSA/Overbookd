@@ -54,6 +54,14 @@ export class UpdateFtDto {
 
   @ApiProperty({
     required: false,
+    description: 'The code of the team whos responsible of the ft',
+  })
+  @IsOptional()
+  @IsString()
+  teamCode?: string;
+
+  @ApiProperty({
+    required: false,
     description: 'The id of the location of the ft',
   })
   @IsOptional()

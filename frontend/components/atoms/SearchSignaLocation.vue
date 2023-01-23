@@ -1,10 +1,10 @@
 <template>
   <v-autocomplete
-    :value="selectedLocations"
+    :value="selectedLocation"
     :items="locations"
     :loading="loading"
     chips
-    multiple
+    clearable
     item-value="id"
     item-text="name"
     :label="label"
@@ -28,9 +28,9 @@ interface SearchLocationData {
 }
 
 export default Vue.extend({
-  name: "SearchSignaLocations",
+  name: "SearchSignaLocation",
   model: {
-    prop: "selectedLocations",
+    prop: "selectedLocation",
     event: "change",
   },
   props: {
@@ -38,9 +38,9 @@ export default Vue.extend({
       type: String,
       default: "Chercher un lieu",
     },
-    selectedLocations: {
-      type: Array,
-      default: () => [] as SignaLocation[],
+    selectedLocation: {
+      type: Object as () => SignaLocation,
+      default: () => null,
     },
     boxed: {
       type: Boolean,
@@ -62,8 +62,8 @@ export default Vue.extend({
     this.$accessor.signa.getAllSignaLocations();
   },
   methods: {
-    propagateEvent(locations: SignaLocation[]) {
-      this.$emit("change", locations);
+    propagateEvent(location: SignaLocation) {
+      this.$emit("change", location);
     },
   },
 });

@@ -106,11 +106,16 @@ export const actions = actionTree(
 
     async updateFT({ commit }, ft: FT) {
       const adaptedFT: FTUpdate = {
-        ...ft,
-        team: ft.team?.id,
-        inCharge: ft.inCharge?.id,
-        fa: ft.fa?.id,
+        id: ft.id,
+        name: ft.name,
+        parentFaId: ft.fa?.id ?? null,
+        isStatic: ft.isStatic,
+        description: ft.description,
+        userInChargeId: ft.inCharge?.id ?? null,
+        teamCode: ft.team?.code ?? null,
+        locationId: ft.location?.id ?? null,
       };
+      console.log(adaptedFT);
       const res = await safeCall<FT>(this, repo.updateFT(this, adaptedFT), {
         successMessage: "FT sauvegardée 🥳",
         errorMessage: "FT non sauvegardée 😢",
@@ -169,10 +174,9 @@ function fakeFT(id: number): FT {
     id,
     name: "name",
     description: "",
-    areStatic: false,
+    isStatic: false,
     feedbacks: [],
     status: FTStatus.DRAFT,
-    locations: [],
     timeWindows: [],
     ftRefusals: [],
     ftValidations: [],

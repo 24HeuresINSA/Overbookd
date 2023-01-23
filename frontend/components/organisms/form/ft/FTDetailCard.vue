@@ -30,7 +30,7 @@ export default Vue.extend({
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
       const updatedFT = { ...this.mFT, [key]: value };
-      this.$accessor.FT.setFT(updatedFT);
+      this.$accessor.FT.updateFT(updatedFT);
     },
   },
 });

@@ -16,7 +16,7 @@ export default {
     return context.$axios.post<FT>(resource, FT);
   },
   updateFT(context: Context, FT: FTUpdate) {
-    return context.$axios.put(resource, FT);
+    return context.$axios.patch(`${resource}/${FT.id}`, FT);
   },
   deleteFT(context: Context, id: number) {
     return context.$axios.delete(`${resource}/${id}`);

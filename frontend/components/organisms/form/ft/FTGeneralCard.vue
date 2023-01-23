@@ -19,16 +19,16 @@
         :boxed="false"
         @change="onChange('team', $event)"
       ></SearchTeam>
-      <SearchSignaLocations
-        :value="mFT.locations"
+      <SearchSignaLocation
+        :value="mFT.location"
         label="Lieux"
         :boxed="false"
-        @change="onChange('locations', $event)"
-      ></SearchSignaLocations>
+        @change="onChange('location', $event)"
+      ></SearchSignaLocation>
       <v-switch
-        :value="mFT.areStatic"
+        :value="mFT.isStatic"
         label="Créneaux statiques"
-        @change="onChange('areStatic', $event)"
+        @change="onChange('isStatic', $event)"
       ></v-switch>
     </v-card-text>
   </v-card>
@@ -38,12 +38,12 @@
 import Vue from "vue";
 import { FT } from "~/utils/models/ft";
 import SearchUser from "~/components/atoms/SearchUser.vue";
-import SearchSignaLocations from "~/components/atoms/SearchSignaLocations.vue";
+import SearchSignaLocation from "~/components/atoms/SearchSignaLocation.vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 
 export default Vue.extend({
   name: "FTGeneralCard",
-  components: { SearchUser, SearchSignaLocations, SearchTeam },
+  components: { SearchUser, SearchSignaLocation, SearchTeam },
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
@@ -52,11 +52,11 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
+      if (typeof value === "boolean" && value) value = false;
+
       const updatedFT = { ...this.mFT, [key]: value };
-      this.$accessor.FT.setFT(updatedFT);
+      this.$accessor.FT.updateFT(updatedFT);
     },
   },
 });
 </script>
-
-<style scoped></style>
