@@ -21,6 +21,9 @@ import { FT } from "~/utils/models/ft";
 export default Vue.extend({
   name: "FTDetailCard",
   components: { RichEditor },
+  data: () => ({
+    delay: undefined as any,
+  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
@@ -28,7 +31,13 @@ export default Vue.extend({
   },
   methods: {
     onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
+      if (this.delay) clearInterval(this.delay);
+      this.delay = setTimeout(() => {
+        this.updateRichEditorValue(key, value);
+      }, 800);
+    },
+    updateRichEditorValue(key: string, value: string) {
+      value = value.trim();
       const updatedFT = { ...this.mFT, [key]: value };
       this.$accessor.FT.updateFT(updatedFT);
     },
