@@ -11,10 +11,8 @@ export const COMPLETE_FT_SELECT = {
   id: true,
   name: true,
   status: true,
-  parentFaId: true,
   isStatic: true,
   description: true,
-  userInChargeId: true,
   locationId: true,
   isDeleted: true,
   comments: {
@@ -104,7 +102,6 @@ export const LITE_FT_SELECT = {
   id: true,
   name: true,
   status: true,
-  parentFaId: true,
   userInCharge: {
     select: {
       firstname: true,

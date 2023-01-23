@@ -91,13 +91,6 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
 
   @ApiProperty({
     required: true,
-    description: 'The parent fa id of the ft',
-    type: Number,
-  })
-  parentFaId: number;
-
-  @ApiProperty({
-    required: true,
     description: 'ft static status',
     type: Boolean,
   })
@@ -109,13 +102,6 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     type: String,
   })
   description: string;
-
-  @ApiProperty({
-    required: true,
-    description: 'The user id in charge of the ft',
-    type: Number,
-  })
-  userInChargeId: number;
 
   @ApiProperty({
     required: true,
@@ -198,13 +184,6 @@ export class LiteFtResponseDto implements LiteFtResponse {
     enum: FtStatus,
   })
   status: FtStatus;
-
-  @ApiProperty({
-    required: true,
-    description: 'The parent fa id of the ft',
-    type: Number,
-  })
-  parentFaId: number;
 
   @ApiProperty({
     required: true,
