@@ -42,11 +42,15 @@ export interface FT extends FTBase {
   location?: SignaLocation;
 
   timeWindows: FTTimeWindow[];
-  ftValidations: Review[];
-  ftRefusals: Review[];
+  reviews: Review[];
   feedbacks: Feedback[];
   isDeleted: boolean;
 }
+
+export type FTSimplified = Pick<
+  FT,
+  "id" | "name" | "status" | "userInCharge" | "team" | "reviews"
+>;
 
 export interface FTUpdate {
   id: number;
@@ -63,8 +67,6 @@ export interface SearchFT {
   isDeleted?: boolean;
   status?: FTStatus;
 }
-
-export type FTSimplified = Pick<FT, "id" | "name" | "status">;
 
 export interface FTTimeWindow {
   id?: number;

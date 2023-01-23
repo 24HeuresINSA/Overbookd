@@ -29,12 +29,7 @@ class UserRequest {
 
 class TeamRequest {
   number: number;
-  teamCode: string;
-  team: {
-    name: string;
-    color: string;
-    icon: string;
-  };
+  team: Team;
 }
 
 class TimeWindow {
@@ -48,10 +43,7 @@ class TimeWindow {
 
 class Review {
   status: reviewStatus;
-  teamCode: string;
-  team: {
-    name: string;
-  };
+  team: Team;
 }
 
 class Team {
@@ -192,11 +184,18 @@ export class LiteFtResponseDto implements LiteFtResponse {
   status: FtStatus;
 
   @ApiProperty({
-    required: true,
-    description: 'The user id in charge of the ft',
-    type: Number,
+    required: false,
+    description: 'The user in charge of the ft',
+    type: UserName,
   })
-  userInCharge: UserName;
+  userInCharge: UserName | null;
+
+  @ApiProperty({
+    required: false,
+    description: 'The team in charge of the ft',
+    type: Team,
+  })
+  team: Team | null;
 
   @ApiProperty({
     required: true,

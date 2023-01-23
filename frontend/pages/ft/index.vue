@@ -162,7 +162,13 @@ import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
-import { FT, FTStatus, FTStatusLabel, SearchFT } from "~/utils/models/ft";
+import {
+  FT,
+  FTSimplified,
+  FTStatus,
+  FTStatusLabel,
+  SearchFT,
+} from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
@@ -220,10 +226,10 @@ export default Vue.extend({
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    FTs(): FT[] {
+    FTs(): FTSimplified[] {
       return this.$accessor.FT.FTs;
     },
-    filteredFTs(): FT[] {
+    filteredFTs(): FTSimplified[] {
       const { search, team, myFTs, status } = this.filters;
 
       const res = this.fuzzyFindFT(search);
@@ -269,25 +275,23 @@ export default Vue.extend({
   },
 
   methods: {
-    filterFTByTeam(teamSearched?: Team): (ft: FT) => boolean {
+    filterFTByTeam(teamSearched?: Team): (ft: FTSimplified) => boolean {
       return teamSearched
-        ? (ft: FT) => ft.team?.code === teamSearched.code
+        ? (ft) => ft.team?.code === teamSearched.code
         : () => true;
     },
 
-    filterFTByOwnership(searchMyFTs: boolean): (ft: FT) => boolean {
+    filterFTByOwnership(searchMyFTs: boolean): (ft: FTSimplified) => boolean {
       return searchMyFTs
-        ? (ft: FT) => ft.userInCharge?.id === this.me.id
+        ? (ft) => ft.userInCharge?.id === this.me.id
         : () => true;
     },
 
-    filterFTByStatus(statusSearched?: FTStatus): (ft: FT) => boolean {
-      return statusSearched
-        ? (ft: FT) => ft.status === statusSearched
-        : () => true;
+    filterFTByStatus(statusSearched?: FTStatus): (ft: FTSimplified) => boolean {
+      return statusSearched ? (ft) => ft.status === statusSearched : () => true;
     },
 
-    fuzzyFindFT(search?: string): FT[] {
+    fuzzyFindFT(search?: string): FTSimplified[] {
       if (!search) return this.FTs;
       const fuse = new Fuse(this.FTs, {
         keys: ["name", "id"],

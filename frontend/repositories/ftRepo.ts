@@ -7,6 +7,7 @@ import {
   FT,
   FTTimeWindowUpdate,
   FTTimeWindow,
+  FTSimplified,
 } from "~/utils/models/ft";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -15,7 +16,7 @@ type Context = { $axios: NuxtAxiosInstance };
 
 export default {
   getAllFTs(context: Context, search?: SearchFT) {
-    return context.$axios.get<HttpStringified<FT>[]>(resource, {
+    return context.$axios.get<HttpStringified<FTSimplified>[]>(resource, {
       params: search,
     });
   },

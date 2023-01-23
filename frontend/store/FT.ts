@@ -12,6 +12,7 @@ import {
   getTimeWindowWithoutRequests,
   castTimeWindowWithDate,
   castFTWithDate,
+  FTSimplified,
 } from "~/utils/models/ft";
 import { Feedback } from "~/utils/models/feedback";
 import { User } from "~/utils/models/user";
@@ -21,7 +22,7 @@ const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
   mFT: defaultState() as FT,
-  FTs: [] as FT[],
+  FTs: [] as FTSimplified[],
 });
 
 export const getters = getterTree(state, {});
@@ -39,7 +40,7 @@ export const mutations = mutationTree(state, {
     mFT.status = status;
   },
 
-  SET_FTS(state, fts: FT[]) {
+  SET_FTS(state, fts: FTSimplified[]) {
     state.FTs = fts;
   },
 
@@ -129,8 +130,7 @@ export const actions = actionTree(
         errorMessage: "Impossible de charger les FTs",
       });
       if (!res) return;
-      const fts = res.data.map(castFTWithDate);
-      commit("SET_FTS", fts);
+      commit("SET_FTS", res.data);
     },
 
     async createFT({ commit, dispatch }, ft: FTCreation) {
@@ -262,8 +262,7 @@ function fakeFT(id: number): FT {
     feedbacks: [],
     status: FTStatus.DRAFT,
     timeWindows: [],
-    ftRefusals: [],
-    ftValidations: [],
+    reviews: [],
     isDeleted: false,
   };
 }

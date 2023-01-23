@@ -7,6 +7,16 @@ export type LiteFtResponse = Prisma.FtGetPayload<{
   select: typeof LITE_FT_SELECT;
 }>;
 
+const TEAM_SELECT = {
+  select: {
+    id: true,
+    name: true,
+    code: true,
+    color: true,
+    icon: true,
+  },
+};
+
 export const COMPLETE_FT_SELECT = {
   id: true,
   name: true,
@@ -54,39 +64,19 @@ export const COMPLETE_FT_SELECT = {
       },
       teamRequests: {
         select: {
-          teamCode: true,
           number: true,
-          team: {
-            select: {
-              name: true,
-              color: true,
-              icon: true,
-            },
-          },
+          team: TEAM_SELECT,
         },
       },
     },
   },
   reviews: {
     select: {
-      teamCode: true,
       status: true,
-      team: {
-        select: {
-          name: true,
-        },
-      },
+      team: TEAM_SELECT,
     },
   },
-  team: {
-    select: {
-      id: true,
-      name: true,
-      code: true,
-      color: true,
-      icon: true,
-    },
-  },
+  team: TEAM_SELECT,
   userInCharge: {
     select: {
       firstname: true,
@@ -113,15 +103,11 @@ export const LITE_FT_SELECT = {
       lastname: true,
     },
   },
+  team: TEAM_SELECT,
   reviews: {
     select: {
-      teamCode: true,
       status: true,
-      team: {
-        select: {
-          name: true,
-        },
-      },
+      team: TEAM_SELECT,
     },
   },
 };
