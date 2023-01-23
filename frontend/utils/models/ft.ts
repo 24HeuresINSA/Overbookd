@@ -111,3 +111,14 @@ function castFeedbackWithDate(feedback: Feedback): Feedback {
     createdAt: createdAt,
   };
 }
+
+export function getTimeWindowsWithoutRequests(
+  timeWindows: FTTimeWindow[]
+): FTTimeWindowUpdate[] {
+  return timeWindows.map((tw) => ({
+    id: tw.id,
+    start: tw.start,
+    end: tw.end,
+    sliceTime: tw.sliceTime,
+  }));
+}

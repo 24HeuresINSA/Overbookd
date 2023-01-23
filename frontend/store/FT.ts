@@ -9,9 +9,12 @@ import {
   FTTimeWindow,
   FTUpdate,
   FTTimeWindowUpdate,
+  FTTeamRequest,
   castFTWithDate,
+  getTimeWindowsWithoutRequests,
 } from "~/utils/models/ft";
 import { Feedback } from "~/utils/models/feedback";
+import { User } from "~/utils/models/user";
 
 const repo = RepoFactory.ftRepo;
 
@@ -54,11 +57,49 @@ export const mutations = mutationTree(state, {
 
   UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
-    console.log("index", index);
     if (index === -1) return;
     mFT.timeWindows = [
       ...mFT.timeWindows.slice(0, index),
       timeWindow,
+      ...mFT.timeWindows.slice(index + 1),
+    ];
+  },
+
+  DELETE_USER_REQUEST(
+    { mFT },
+    { timeWindow, userRequest }: { timeWindow: FTTimeWindow; userRequest: User }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    mFT.timeWindows = [
+      ...mFT.timeWindows.slice(0, index),
+      {
+        ...timeWindow,
+        userRequests: timeWindow.userRequests.filter(
+          (ur) => ur.id !== userRequest.id
+        ),
+      },
+      ...mFT.timeWindows.slice(index + 1),
+    ];
+  },
+
+  DELETE_TEAM_REQUEST(
+    { mFT },
+    {
+      timeWindow,
+      teamRequest,
+    }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    mFT.timeWindows = [
+      ...mFT.timeWindows.slice(0, index),
+      {
+        ...timeWindow,
+        teamRequests: timeWindow.teamRequests.filter(
+          (tr) => tr.team.id !== teamRequest.team.id
+        ),
+      },
       ...mFT.timeWindows.slice(index + 1),
     ];
   },
@@ -146,25 +187,51 @@ export const actions = actionTree(
     async addTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       commit("ADD_TIME_WINDOW", timeWindow);
       const adaptedTimeWindows: FTTimeWindowUpdate[] =
-        state.mFT.timeWindows.map((tw) => ({
-          id: tw.id,
-          start: tw.start,
-          end: tw.end,
-          sliceTime: tw.sliceTime,
-        }));
+        getTimeWindowsWithoutRequests(state.mFT.timeWindows);
       await repo.updateFTTimeWindows(this, state.mFT.id, adaptedTimeWindows);
     },
 
     async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       commit("UPDATE_TIME_WINDOW", timeWindow);
       const adaptedTimeWindows: FTTimeWindowUpdate[] =
-        state.mFT.timeWindows.map((tw) => ({
-          id: tw.id,
-          start: tw.start,
-          end: tw.end,
-          sliceTime: tw.sliceTime,
-        }));
+        getTimeWindowsWithoutRequests(state.mFT.timeWindows);
       await repo.updateFTTimeWindows(this, state.mFT.id, adaptedTimeWindows);
+    },
+
+    async updateTimeWindowRequirements({ commit }, timeWindow: FTTimeWindow) {
+      commit("UPDATE_TIME_WINDOW", timeWindow);
+      /*await Promise.all([
+        safeCall(
+          this,
+          repo.updateUserRequests(this, state.mFT.id, timeWindow.userRequests)
+        ),
+        safeCall(
+          this,
+          repo.updateTeamRequests(this, state.mFT.id, timeWindow.teamRequests)
+        ),
+      ]);*/
+    },
+
+    async deleteUserRequest(
+      { commit },
+      {
+        timeWindow,
+        userRequest,
+      }: { timeWindow: FTTimeWindow; userRequest: User }
+    ) {
+      commit("DELETE_USER_REQUEST", { timeWindow, userRequest });
+      // request
+    },
+
+    async deleteTeamRequest(
+      { commit },
+      {
+        timeWindow,
+        teamRequest,
+      }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
+    ) {
+      commit("DELETE_TEAM_REQUEST", { timeWindow, teamRequest });
+      // request
     },
 
     async deleteTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
