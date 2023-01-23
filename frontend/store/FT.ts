@@ -8,6 +8,8 @@ import {
   SearchFT,
   FTTimeWindow,
   FTUpdate,
+  FTTimeWindowUpdate,
+  castFTWithDate,
 } from "~/utils/models/ft";
 import { Feedback } from "~/utils/models/feedback";
 
@@ -22,7 +24,8 @@ export const getters = getterTree(state, {});
 
 export const mutations = mutationTree(state, {
   UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
-    state.mFT = { ...state.mFT, ...ft };
+    const completeFT = { ...state.mFT, ...ft };
+    state.mFT = castFTWithDate(completeFT);
   },
 
   RESET_FT(state) {
@@ -50,7 +53,8 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    console.log("index", index);
     if (index === -1) return;
     mFT.timeWindows = [
       ...mFT.timeWindows.slice(0, index),
@@ -111,11 +115,11 @@ export const actions = actionTree(
         parentFaId: ft.fa?.id ?? null,
         isStatic: ft.isStatic,
         description: ft.description,
-        userInChargeId: ft.inCharge?.id ?? null,
-        teamCode: ft.team?.code ?? null,
+        userInChargeId: ft.userInCharge?.id ?? null,
+        teamCode: ft.Team?.code ?? null,
         locationId: ft.location?.id ?? null,
       };
-      console.log(adaptedFT);
+
       const res = await safeCall<FT>(this, repo.updateFT(this, adaptedFT), {
         successMessage: "FT sauvegardée 🥳",
         errorMessage: "FT non sauvegardée 😢",
@@ -139,20 +143,33 @@ export const actions = actionTree(
       dispatch("updateFT", restoredFT);
     },
 
-    async addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
-      // await repo.addFTTimeWindows(this, timeWindow);
+    async addTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       commit("ADD_TIME_WINDOW", timeWindow);
+      const adaptedTimeWindows: FTTimeWindowUpdate[] =
+        state.mFT.timeWindows.map((tw) => ({
+          id: tw.id,
+          start: tw.start,
+          end: tw.end,
+          sliceTime: tw.sliceTime,
+        }));
+      await repo.updateFTTimeWindows(this, state.mFT.id, adaptedTimeWindows);
     },
 
-    async updateTimeWindow({ commit }, timeWindow: FTTimeWindow) {
-      if (!timeWindow?.id) return;
-      // await repo.updateFTTimeWindows(this, timeWindow);
+    async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       commit("UPDATE_TIME_WINDOW", timeWindow);
+      const adaptedTimeWindows: FTTimeWindowUpdate[] =
+        state.mFT.timeWindows.map((tw) => ({
+          id: tw.id,
+          start: tw.start,
+          end: tw.end,
+          sliceTime: tw.sliceTime,
+        }));
+      await repo.updateFTTimeWindows(this, state.mFT.id, adaptedTimeWindows);
     },
 
-    async deleteTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+    async deleteTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       if (!timeWindow?.id) return;
-      // await repo.deleteFTTimeWindows(this, timeWindow);
+      await repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id);
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
 

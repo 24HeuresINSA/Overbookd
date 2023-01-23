@@ -34,8 +34,8 @@ export interface FTCreation {
 export interface FT extends FTBase {
   id: number;
   description: string;
-  team?: Team;
-  inCharge?: User;
+  Team?: Team;
+  userInCharge?: User;
   isStatic: boolean;
   fa?: FASimplified;
   location?: SignaLocation;
@@ -74,7 +74,40 @@ export interface FTTimeWindow {
   teamRequests: FTTeamRequest[];
 }
 
+export interface FTTimeWindowUpdate {
+  id?: number;
+  start: Date;
+  end: Date;
+  sliceTime?: number;
+}
+
 export interface FTTeamRequest {
   quantity: number;
   team: Team;
+}
+
+export function castFTWithDate(ft: FT): FT {
+  const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
+  //const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
+  return {
+    ...ft,
+    timeWindows: timeWindows,
+    //feedbacks: feedbacks,
+  };
+}
+
+function castTimeWindowWithDate(timeWindow: FTTimeWindow): FTTimeWindow {
+  return {
+    ...timeWindow,
+    start: new Date(timeWindow.start),
+    end: new Date(timeWindow.end),
+  };
+}
+
+function castFeedbackWithDate(feedback: Feedback): Feedback {
+  const createdAt = new Date(feedback.createdAt);
+  return {
+    ...feedback,
+    createdAt: createdAt,
+  };
 }

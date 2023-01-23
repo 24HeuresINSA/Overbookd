@@ -1,6 +1,13 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Feedback } from "~/utils/models/feedback";
-import { FTCreation, SearchFT, FTUpdate, FT } from "~/utils/models/ft";
+import {
+  FTCreation,
+  SearchFT,
+  FTUpdate,
+  FT,
+  FTTimeWindowUpdate,
+} from "~/utils/models/ft";
+import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };
@@ -21,6 +28,20 @@ export default {
   deleteFT(context: Context, id: number) {
     return context.$axios.delete(`${resource}/${id}`);
   },
+  updateFTTimeWindows(
+    context: Context,
+    ftId: number,
+    timeWindows: FTTimeWindowUpdate[]
+  ) {
+    return context.$axios.post<HttpStringified<FTTimeWindowUpdate>[]>(
+      `${resource}/${ftId}/time-windows`,
+      timeWindows
+    );
+  },
+  deleteFTTimeWindow(context: Context, ftId: number, twId: number) {
+    return context.$axios.delete(`${resource}/${ftId}/time-windows/${twId}`);
+  },
+
   markAsReady(context: Context, FTCount: number, comment: Feedback) {
     return context.$axios.post(`${resource}/${FTCount}/ready`, { comment });
   },

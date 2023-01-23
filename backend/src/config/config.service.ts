@@ -556,7 +556,7 @@ export class ConfigService {
       // },
       {
         key: 'event_date',
-        value: '2023-05-12',
+        value: '2023-05-12 00:00',
       },
       // {
       //   key: 'fa_external_form',

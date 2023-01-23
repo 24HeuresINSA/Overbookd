@@ -77,6 +77,7 @@ export default Vue.extend({
     },
     mTimeWindow(): FTTimeWindow {
       return {
+        id: this.timeWindow?.id ?? undefined,
         start: this.startOrManifDate,
         end: this.endOrManifDate,
         sliceTime: this.toSlice ? this.sliceTime : undefined,
