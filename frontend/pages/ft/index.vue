@@ -20,7 +20,7 @@
             <h3>Statut</h3>
             <v-list dense shaped>
               <v-list-item-group v-model="filters.status">
-                <v-list-item value="">
+                <v-list-item :value="null">
                   <v-list-item-title>Tous</v-list-item-title>
                 </v-list-item>
                 <v-list-item
@@ -75,19 +75,15 @@
             </v-chip-group>
           </template>
 
-          <template #item.name="{ item }">
-            <a :href="`/ft/${item.id}`" :class="deletedFTTextClass">
+          <template #[`item.name`]="{ item }">
+            <nuxt-link :to="`/ft/${item.id}`" :class="deletedFTTextClass">
               {{ item.name }}
-            </a>
+            </nuxt-link>
           </template>
 
-          <template #[`item.FA`]="{ item }">
-            <v-chip
-              v-if="item.FA && item.FA > 0"
-              :href="`fa/${item.FA.id}`"
-              small
-            >
-              {{ item.FA.id }}
+          <template #[`item.fa`]="{ item }">
+            <v-chip v-if="item.fa" :to="`fa/${item.fa.id}`" small>
+              {{ item.fa.id }} - {{ item.fa.name }}
             </v-chip>
           </template>
 
@@ -95,8 +91,8 @@
             {{ item.team?.name ?? "" }}
           </template>
 
-          <template #[`item.inCharge`]="{ item }">
-            {{ displayUsername(item.inCharge) }}
+          <template #[`item.userInCharge`]="{ item }">
+            {{ displayUsername(item.userInCharge) }}
           </template>
 
           <template #[`item.action`]="{ item }">
@@ -162,7 +158,13 @@ import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
-import { FT, FTStatus, FTStatusLabel, SearchFT } from "~/utils/models/ft";
+import {
+  FT,
+  FTSimplified,
+  FTStatus,
+  FTStatusLabel,
+  FTSearch,
+} from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
@@ -193,8 +195,8 @@ export default Vue.extend({
         { text: "Statut", value: "status" },
         { text: "Validation", value: "validation" },
         { text: "Nom", value: "name" },
-        { text: "FA", value: "FA" },
-        { text: "Resp", value: "inCharge" },
+        { text: "FA", value: "fa" },
+        { text: "Resp", value: "userInCharge" },
         { text: "Equipe", value: "team" },
         { text: "Action", value: "action" },
       ],
@@ -220,10 +222,10 @@ export default Vue.extend({
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
-    FTs(): FT[] {
+    FTs(): FTSimplified[] {
       return this.$accessor.FT.FTs;
     },
-    filteredFTs(): FT[] {
+    filteredFTs(): FTSimplified[] {
       const { search, team, myFTs, status } = this.filters;
 
       const res = this.fuzzyFindFT(search);
@@ -269,25 +271,23 @@ export default Vue.extend({
   },
 
   methods: {
-    filterFTByTeam(teamSearched?: Team): (ft: FT) => boolean {
+    filterFTByTeam(teamSearched?: Team): (ft: FTSimplified) => boolean {
       return teamSearched
-        ? (ft: FT) => ft.team?.code === teamSearched.code
+        ? (ft) => ft.team?.code === teamSearched.code
         : () => true;
     },
 
-    filterFTByOwnership(searchMyFTs: boolean): (ft: FT) => boolean {
+    filterFTByOwnership(searchMyFTs: boolean): (ft: FTSimplified) => boolean {
       return searchMyFTs
-        ? (ft: FT) => ft.inCharge?.id === this.me.id
+        ? (ft) => ft.userInCharge?.id === this.me.id
         : () => true;
     },
 
-    filterFTByStatus(statusSearched?: FTStatus): (ft: FT) => boolean {
-      return statusSearched
-        ? (ft: FT) => ft.status === statusSearched
-        : () => true;
+    filterFTByStatus(statusSearched?: FTStatus): (ft: FTSimplified) => boolean {
+      return statusSearched ? (ft) => ft.status === statusSearched : () => true;
     },
 
-    fuzzyFindFT(search?: string): FT[] {
+    fuzzyFindFT(search?: string): FTSimplified[] {
       if (!search) return this.FTs;
       const fuse = new Fuse(this.FTs, {
         keys: ["name", "id"],
@@ -323,7 +323,7 @@ export default Vue.extend({
     },
 
     async fetchFTs() {
-      const searchParams: SearchFT = {
+      const searchParams: FTSearch = {
         isDeleted: this.filters.isDeleted,
         status: this.filters.status,
       };

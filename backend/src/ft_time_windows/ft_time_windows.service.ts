@@ -9,22 +9,19 @@ export class FtTimeWindowsService {
 
   upsert(
     ftId: number,
-    tws: UpsertFtTimeWindowsDto[],
-  ): Promise<ftTimeWindowsResponseDto[]> {
-    const operations = tws.map((tw: UpsertFtTimeWindowsDto) => {
-      const completeTw = {
-        ...tw,
-        ftId,
-      };
-      return this.prisma.ftTimeWindows.upsert({
-        where: {
-          id: completeTw.id || 0,
-        },
-        update: completeTw,
-        create: completeTw,
-      });
+    tw: UpsertFtTimeWindowsDto,
+  ): Promise<ftTimeWindowsResponseDto> {
+    const completeTw = {
+      ...tw,
+      ftId,
+    };
+    return this.prisma.ftTimeWindows.upsert({
+      where: {
+        id: completeTw.id || 0,
+      },
+      update: completeTw,
+      create: completeTw,
     });
-    return this.prisma.$transaction(operations);
   }
 
   async remove(ftId: number, id: number): Promise<void> {

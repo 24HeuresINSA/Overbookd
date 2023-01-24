@@ -1,15 +1,17 @@
 import { FT, FTStatus } from "../models/ft";
-import { Review } from "../models/review";
+import { ReviewStatus } from "../models/review";
 
 export function isTaskValidatedBy(ft: FT, teamCode: string): boolean {
-  return (ft.ftValidations ?? []).some(
-    (validation: Review) => validation.team.code === teamCode
+  return (ft.reviews ?? []).some(
+    (review) =>
+      review.status === ReviewStatus.VALIDATED && review.team.code === teamCode
   );
 }
 
 export function isTaskRefusedBy(ft: FT, teamCode: string): boolean {
-  return (ft.ftRefusals ?? []).some(
-    (refuse: Review) => refuse.team.code === teamCode
+  return (ft.reviews ?? []).some(
+    (review) =>
+      review.status === ReviewStatus.REFUSED && review.team.code === teamCode
   );
 }
 

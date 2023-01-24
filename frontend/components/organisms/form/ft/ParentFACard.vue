@@ -4,7 +4,7 @@
       <v-card-title>FA associée</v-card-title>
       <v-card-text>
         <SearchFA
-          :value="mFT.fa"
+          :fa="mFT.fa"
           label="FA associée"
           :boxed="false"
           @change="updateParentFA($event)"
@@ -22,13 +22,7 @@ import { FT } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ParentFACard",
-  components: {
-    SearchFA,
-  },
-  data: () => ({
-    parentFA: {} as FASimplified,
-    isFASelectDialogOpen: false,
-  }),
+  components: { SearchFA },
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
@@ -37,7 +31,7 @@ export default Vue.extend({
   methods: {
     updateParentFA(fa: FASimplified | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
-      this.$accessor.FT.setFT(updatedFT);
+      this.$accessor.FT.updateFT(updatedFT);
     },
   },
 });

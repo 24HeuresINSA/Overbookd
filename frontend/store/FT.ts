@@ -5,17 +5,24 @@ import {
   FTCreation,
   FT,
   FTStatus,
-  SearchFT,
+  FTSearch,
   FTTimeWindow,
-  FTUpdate,
+  FTTeamRequest,
+  toUpdateFT,
+  getTimeWindowWithoutRequests,
+  castTimeWindowWithDate,
+  castFTWithDate,
+  FTSimplified,
 } from "~/utils/models/ft";
 import { Feedback } from "~/utils/models/feedback";
+import { User } from "~/utils/models/user";
+import { updateItemToList } from "~/utils/functions/list";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
   mFT: defaultState() as FT,
-  FTs: [] as FT[],
+  FTs: [] as FTSimplified[],
 });
 
 export const getters = getterTree(state, {});
@@ -33,7 +40,7 @@ export const mutations = mutationTree(state, {
     mFT.status = status;
   },
 
-  SET_FTS(state, fts: FT[]) {
+  SET_FTS(state, fts: FTSimplified[]) {
     state.FTs = fts;
   },
 
@@ -50,13 +57,46 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow?.id);
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
     mFT.timeWindows = [
       ...mFT.timeWindows.slice(0, index),
       timeWindow,
       ...mFT.timeWindows.slice(index + 1),
     ];
+  },
+
+  DELETE_USER_REQUEST(
+    { mFT },
+    { timeWindow, userRequest }: { timeWindow: FTTimeWindow; userRequest: User }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    const userRequests = timeWindow.userRequests.filter(
+      (ur) => ur.id !== userRequest.id
+    );
+    mFT.timeWindows = updateItemToList(mFT.timeWindows, index, {
+      ...timeWindow,
+      userRequests,
+    });
+  },
+
+  DELETE_TEAM_REQUEST(
+    { mFT },
+    {
+      timeWindow,
+      teamRequest,
+    }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    const teamRequests = timeWindow.teamRequests.filter(
+      (tr) => tr.team.id !== teamRequest.team.id
+    );
+    mFT.timeWindows = updateItemToList(mFT.timeWindows, index, {
+      ...timeWindow,
+      teamRequests,
+    });
   },
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
@@ -82,11 +122,11 @@ export const actions = actionTree(
     async fetchFT({ commit }, id: number) {
       const res = await safeCall(this, repo.getFT(this, id));
       if (!res) return null;
-      commit("UPDATE_SELECTED_FT", res.data);
+      commit("UPDATE_SELECTED_FT", castFTWithDate(res.data));
     },
 
-    async fetchFTs({ commit }, search?: SearchFT) {
-      const res = await safeCall<FT[]>(this, repo.getAllFTs(this, search), {
+    async fetchFTs({ commit }, search?: FTSearch) {
+      const res = await safeCall(this, repo.getAllFTs(this, search), {
         errorMessage: "Impossible de charger les FTs",
       });
       if (!res) return;
@@ -94,30 +134,27 @@ export const actions = actionTree(
     },
 
     async createFT({ commit, dispatch }, ft: FTCreation) {
-      const res = await safeCall<FT>(this, repo.createFT(this, ft), {
+      const res = await safeCall(this, repo.createFT(this, ft), {
         successMessage: "FT créée 🥳",
         errorMessage: "FT non créée 😢",
       });
 
       if (!res) return;
-      commit("ADD_FT", res.data);
-      dispatch("setFT", { ...fakeFT(res.data.id), ...res.data });
+      const createdFT = castFTWithDate(res.data);
+      commit("ADD_FT", createdFT);
+      dispatch("setFT", { ...fakeFT(res.data.id), ...createdFT });
     },
 
     async updateFT({ commit }, ft: FT) {
-      const adaptedFT: FTUpdate = {
-        ...ft,
-        team: ft.team?.id,
-        inCharge: ft.inCharge?.id,
-        fa: ft.fa?.id,
-      };
-      const res = await safeCall<FT>(this, repo.updateFT(this, adaptedFT), {
+      const ftToUpdate = toUpdateFT(ft);
+      const res = await safeCall(this, repo.updateFT(this, ftToUpdate), {
         successMessage: "FT sauvegardée 🥳",
         errorMessage: "FT non sauvegardée 😢",
       });
 
       if (!res) return;
-      commit("UPDATE_SELECTED_FT", res.data);
+      const updatedFT = castFTWithDate(res.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
     },
 
     async deleteFT({ commit }, ft: FT) {
@@ -129,25 +166,83 @@ export const actions = actionTree(
       commit("DELETE_FT", ft.id);
     },
 
-    async restoreFT({ dispatch }, ft: FT) {
+    async restoreFT({ commit, dispatch }, ft: FT) {
       const restoredFT = { ...ft, isDeleted: false };
       dispatch("updateFT", restoredFT);
+      commit("DELETE_FT", ft.id);
     },
 
-    async addTimeWindow({ commit }, timeWindow: FTTimeWindow) {
-      // await repo.addFTTimeWindows(this, timeWindow);
-      commit("ADD_TIME_WINDOW", timeWindow);
+    async addTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
+      const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
+      const res = await safeCall(
+        this,
+        repo.updateFTTimeWindow(this, state.mFT.id, adaptedTimeWindow),
+        {
+          successMessage: "Créneau ajouté 🥳",
+          errorMessage: "Créneau non ajouté 😢",
+        }
+      );
+      if (!res) return;
+      commit("ADD_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
-    async updateTimeWindow({ commit }, timeWindow: FTTimeWindow) {
-      if (!timeWindow?.id) return;
-      // await repo.updateFTTimeWindows(this, timeWindow);
+    async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
+      const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
+      const res = await safeCall(
+        this,
+        repo.updateFTTimeWindow(this, state.mFT.id, adaptedTimeWindow),
+        {
+          successMessage: "Créneau modifié 🥳",
+          errorMessage: "Créneau non modifié 😢",
+        }
+      );
+      if (!res) return;
+      commit("UPDATE_TIME_WINDOW", castTimeWindowWithDate(res.data));
+    },
+
+    async updateTimeWindowRequirements({ commit }, timeWindow: FTTimeWindow) {
       commit("UPDATE_TIME_WINDOW", timeWindow);
+      /*await Promise.all([
+        safeCall(
+          this,
+          repo.updateUserRequests(this, state.mFT.id, timeWindow.userRequests)
+        ),
+        safeCall(
+          this,
+          repo.updateTeamRequests(this, state.mFT.id, timeWindow.teamRequests)
+        ),
+      ]);*/
     },
 
-    async deleteTimeWindow({ commit }, timeWindow: FTTimeWindow) {
+    async deleteUserRequest(
+      { commit },
+      {
+        timeWindow,
+        userRequest,
+      }: { timeWindow: FTTimeWindow; userRequest: User }
+    ) {
+      commit("DELETE_USER_REQUEST", { timeWindow, userRequest });
+      // request
+    },
+
+    async deleteTeamRequest(
+      { commit },
+      {
+        timeWindow,
+        teamRequest,
+      }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
+    ) {
+      commit("DELETE_TEAM_REQUEST", { timeWindow, teamRequest });
+      // request
+    },
+
+    async deleteTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       if (!timeWindow?.id) return;
-      // await repo.deleteFTTimeWindows(this, timeWindow);
+      const res = await safeCall(
+        this,
+        repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id)
+      );
+      if (!res) return;
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
@@ -169,13 +264,11 @@ function fakeFT(id: number): FT {
     id,
     name: "name",
     description: "",
-    areStatic: false,
+    isStatic: false,
     feedbacks: [],
     status: FTStatus.DRAFT,
-    locations: [],
     timeWindows: [],
-    ftRefusals: [],
-    ftValidations: [],
+    reviews: [],
     isDeleted: false,
   };
 }

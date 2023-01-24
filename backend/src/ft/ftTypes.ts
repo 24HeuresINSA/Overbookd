@@ -7,17 +7,46 @@ export type LiteFtResponse = Prisma.FtGetPayload<{
   select: typeof LITE_FT_SELECT;
 }>;
 
+const TEAM_SELECT = {
+  select: {
+    id: true,
+    name: true,
+    code: true,
+    color: true,
+    icon: true,
+  },
+};
+
+const MINIMAL_FA_SELECT = {
+  select: {
+    id: true,
+    name: true,
+    status: true,
+  },
+};
+
+const DISPLAY_USER_WITH_ID_SELECT = {
+  select: {
+    firstname: true,
+    lastname: true,
+    id: true,
+  },
+};
+
 export const COMPLETE_FT_SELECT = {
   id: true,
   name: true,
   status: true,
-  parentFaId: true,
   isStatic: true,
   description: true,
-  userInChargeId: true,
-  locationId: true,
+  location: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
   isDeleted: true,
-  comments: {
+  feedbacks: {
     select: {
       id: true,
       comment: true,
@@ -40,86 +69,39 @@ export const COMPLETE_FT_SELECT = {
       sliceTime: true,
       userRequests: {
         select: {
-          userId: true,
-          user: {
-            select: {
-              firstname: true,
-              lastname: true,
-            },
-          },
+          user: DISPLAY_USER_WITH_ID_SELECT,
         },
       },
       teamRequests: {
         select: {
-          teamCode: true,
           number: true,
-          team: {
-            select: {
-              name: true,
-              color: true,
-              icon: true,
-            },
-          },
+          team: TEAM_SELECT,
         },
       },
     },
   },
   reviews: {
     select: {
-      teamCode: true,
       status: true,
-      team: {
-        select: {
-          name: true,
-        },
-      },
+      team: TEAM_SELECT,
     },
   },
-  Team: {
-    select: {
-      id: true,
-      name: true,
-      code: true,
-      color: true,
-      icon: true,
-    },
-  },
-  userInCharge: {
-    select: {
-      firstname: true,
-      lastname: true,
-      id: true,
-    },
-  },
-  fa: {
-    select: {
-      id: true,
-      name: true,
-      status: true,
-    },
-  },
+  team: TEAM_SELECT,
+  userInCharge: DISPLAY_USER_WITH_ID_SELECT,
+  fa: MINIMAL_FA_SELECT,
 };
 
 export const LITE_FT_SELECT = {
   id: true,
   name: true,
   status: true,
-  parentFaId: true,
-  userInCharge: {
-    select: {
-      firstname: true,
-      lastname: true,
-    },
-  },
+  userInCharge: DISPLAY_USER_WITH_ID_SELECT,
+  team: TEAM_SELECT,
+  fa: MINIMAL_FA_SELECT,
   reviews: {
     select: {
-      teamCode: true,
       status: true,
-      team: {
-        select: {
-          name: true,
-        },
-      },
+      team: TEAM_SELECT,
     },
   },
 };

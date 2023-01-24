@@ -40,7 +40,7 @@ export default Vue.extend({
     },
     fa: {
       type: Object as () => FASimplified | null,
-      default: null,
+      default: () => null,
     },
     boxed: {
       type: Boolean,

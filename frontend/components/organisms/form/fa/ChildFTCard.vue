@@ -8,9 +8,9 @@
             <v-chip small>{{ item.id }}</v-chip>
           </template>
           <template #[`item.name`]="{ item }">
-            <a :href="`/ft/${item.id}`" class="no-decoration">
+            <nuxt-link :to="`/ft/${item.id}`" class="no-decoration">
               {{ item.name }}
-            </a>
+            </nuxt-link>
           </template>
           <template #[`item.status`]="{ item }">
             <v-chip-group id="status">

@@ -53,13 +53,13 @@ export class FtTimeWindowsController {
     required: true,
   })
   @ApiBody({
-    type: [UpsertFtTimeWindowsDto],
-    description: 'FT time windows to upsert',
+    type: UpsertFtTimeWindowsDto,
+    description: 'FT time window to upsert',
   })
   upsert(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Body() upsertFtTimeWindowsDto: UpsertFtTimeWindowsDto[],
-  ): Promise<ftTimeWindowsResponseDto[]> {
+    @Body() upsertFtTimeWindowsDto: UpsertFtTimeWindowsDto,
+  ): Promise<ftTimeWindowsResponseDto> {
     return this.ftTimeWindowsService.upsert(ftId, upsertFtTimeWindowsDto);
   }
 
