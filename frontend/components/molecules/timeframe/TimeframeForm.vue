@@ -205,7 +205,7 @@ export default Vue.extend({
     dateEnd: "",
     timeStart: "",
     timeEnd: "",
-    timeWindowType: time_windows_type.ANIM,
+    timeWindowType: "",
 
     formatDateStart: "",
     formatDateEnd: "",
@@ -337,7 +337,7 @@ export default Vue.extend({
 
       this.formatDateStart = "";
       this.formatDateEnd = "";
-      this.timeWindowType = time_windows_type.ANIM;
+      this.timeWindowType = "";
     },
     formatDate(date: string): string {
       return formatDate(date);
