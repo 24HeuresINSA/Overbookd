@@ -17,6 +17,7 @@ import {
 import { Feedback } from "~/utils/models/feedback";
 import { User } from "~/utils/models/user";
 import { updateItemToList } from "~/utils/functions/list";
+import { castGearRequestWithDate } from "~/utils/models/gearRequests";
 
 const repo = RepoFactory.ftRepo;
 
@@ -119,10 +120,21 @@ export const actions = actionTree(
       commit("RESET_FT");
     },
 
-    async fetchFT({ commit }, id: number) {
-      const res = await safeCall(this, repo.getFT(this, id));
+    async fetchFT({ commit, dispatch }, id: number) {
+      const resFT = await safeCall(this, repo.getFT(this, id));
+      if (!resFT) return null;
+      commit("UPDATE_SELECTED_FT", castFTWithDate(resFT.data));
+      if (resFT.data.fa) dispatch("fetchGearRequests", resFT.data.fa.id);
+    },
+
+    async fetchGearRequests({ commit }, faId: number) {
+      const res = await safeCall(
+        this,
+        RepoFactory.faRepo.getGearRequests(this, faId)
+      );
       if (!res) return null;
-      commit("UPDATE_SELECTED_FT", castFTWithDate(res.data));
+      const faGearRequests = res.data.map(castGearRequestWithDate);
+      commit("UPDATE_SELECTED_FT", { faGearRequests });
     },
 
     async fetchFTs({ commit }, search?: FTSearch) {

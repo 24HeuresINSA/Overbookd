@@ -1,7 +1,6 @@
 import { HttpStringified } from "../types/http";
 import { SubjectType } from "./feedback";
 import { FTSimplified } from "./ft";
-import { StoredGearRequest } from "./gearRequests";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
@@ -220,12 +219,6 @@ export interface ElectricityTypeLabel {
   label: electricity_type_label;
 }
 
-export interface SortedStoredGearRequests {
-  matos: StoredGearRequest<"FA">[];
-  barrieres: StoredGearRequest<"FA">[];
-  elec: StoredGearRequest<"FA">[];
-}
-
 export function castFaWithDate(fa: HttpStringified<FA>): FA {
   const timeWindows = fa.time_windows?.map(castTimeWindowWithDate);
   const created_at = fa.created_at ? new Date(fa.created_at) : undefined;
@@ -257,18 +250,5 @@ function castTimeWindowWithDate(
     ...timeWindow,
     start: new Date(timeWindow.start),
     end: new Date(timeWindow.end),
-  };
-}
-
-export function castGearRequestWithDate(
-  gearRequest: HttpStringified<StoredGearRequest<"FA">>
-): StoredGearRequest<"FA"> {
-  return {
-    ...gearRequest,
-    rentalPeriod: {
-      ...gearRequest.rentalPeriod,
-      start: new Date(gearRequest.rentalPeriod.start),
-      end: new Date(gearRequest.rentalPeriod.end),
-    },
   };
 }

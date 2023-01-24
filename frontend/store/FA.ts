@@ -4,7 +4,6 @@ import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
   castFaWithDate,
-  castGearRequestWithDate,
   collaborator,
   CreateFA,
   FA,
@@ -15,7 +14,6 @@ import {
   fa_signa_needs,
   fa_validation_body,
   SearchFA,
-  SortedStoredGearRequests,
   Status,
   time_windows,
   time_windows_type,
@@ -24,10 +22,12 @@ import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
 import { FT, FTSimplified } from "~/utils/models/ft";
 import {
+  castGearRequestWithDate,
   GearRequest,
   GearRequestCreation,
   GearRequestWithDrive,
   Period,
+  SortedStoredGearRequests,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 

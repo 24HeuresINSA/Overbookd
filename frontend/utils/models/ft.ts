@@ -2,9 +2,10 @@ import { Feedback } from "./feedback";
 import { User } from "./user";
 import { SignaLocation } from "./signaLocation";
 import { Review } from "./review";
-import { FASimplified } from "./FA";
 import { Team } from "./team";
 import { HttpStringified } from "../types/http";
+import { FASimplified } from "./FA";
+import { StoredGearRequest } from "./gearRequests";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -32,7 +33,7 @@ export interface FTCreation {
   faId?: number;
 }
 
-export interface FT extends FTBase {
+export interface FTResponse extends FTBase {
   id: number;
   description: string;
   team?: Team;
@@ -45,6 +46,10 @@ export interface FT extends FTBase {
   reviews: Review[];
   feedbacks: Feedback[];
   isDeleted: boolean;
+}
+
+export interface FT extends FTResponse {
+  faGearRequests?: StoredGearRequest<"FA">[];
 }
 
 export type FTSimplified = Pick<
@@ -86,7 +91,7 @@ export interface FTTeamRequest {
   team: Team;
 }
 
-export function castFTWithDate(ft: HttpStringified<FT>): FT {
+export function castFTWithDate(ft: HttpStringified<FTResponse>): FTResponse {
   const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
   const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
   return { ...ft, timeWindows, feedbacks };
