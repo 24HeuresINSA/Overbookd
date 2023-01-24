@@ -14,20 +14,22 @@ import {
   fa_electricity_needs,
   fa_signa_needs,
   fa_validation_body,
-  GearRequest,
-  GearRequestCreation,
-  GearRequestWithDrive,
-  Period,
   SearchFA,
   SortedStoredGearRequests,
   Status,
-  StoredGearRequest,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
 import { FT, FTSimplified } from "~/utils/models/ft";
+import {
+  GearRequest,
+  GearRequestCreation,
+  GearRequestWithDrive,
+  Period,
+  StoredGearRequest,
+} from "~/utils/models/gearRequests";
 
 const repo = RepoFactory.faRepo;
 
@@ -38,7 +40,7 @@ export const state = () => ({
     name: "",
     fts: [] as FTSimplified[],
   } as FA,
-  gearRequests: [] as StoredGearRequest[],
+  gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: 1001,
 });
@@ -75,14 +77,14 @@ export const getters = getterTree(state, {
     }, [] as Period[]);
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
-  uniqueByGearGearRequests(state): StoredGearRequest[] {
+  uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
     return state.gearRequests.reduce((gearRequests, gearRequest) => {
       const savedGearRequest = gearRequests.find(
         (gr) => gr.gear.id === gearRequest.gear.id
       );
       if (savedGearRequest) return gearRequests;
       return [...gearRequests, gearRequest];
-    }, [] as StoredGearRequest[]);
+    }, [] as StoredGearRequest<"FA">[]);
   },
   allSortedGearRequests(state, getters): SortedStoredGearRequests {
     return {
@@ -194,15 +196,15 @@ export const mutations = mutationTree(state, {
     }
   },
 
-  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest) {
+  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest<"FA">) {
     gearRequests.push(gearRequest);
   },
 
-  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest[]) {
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<"FA">[]) {
     state.gearRequests = gearRequestsResponse;
   },
 
-  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive) {
+  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive<"FA">) {
     const gearRequestIndex = state.gearRequests.findIndex(
       (gr) =>
         gr.gear.id === updatedGearRequest.gear.id &&
@@ -218,7 +220,7 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  REMOVE_GEAR_REQUEST(state, gearRequest: GearRequest) {
+  REMOVE_GEAR_REQUEST(state, gearRequest: GearRequest<"FA">) {
     state.gearRequests = state.gearRequests.filter(
       (gr) =>
         gr.gear.id !== gearRequest.gear.id &&
@@ -583,7 +585,8 @@ export const actions = actionTree(
       { dispatch, getters, commit },
       rentalPeriod: Omit<Period, "id">
     ) {
-      const gearRequests = getters.uniqueByGearGearRequests as GearRequest[];
+      const gearRequests =
+        getters.uniqueByGearGearRequests as GearRequest<"FA">[];
       if (gearRequests.length === 0) {
         return commit("ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
       }
@@ -644,17 +647,20 @@ export const actions = actionTree(
       return res.data;
     },
 
-    async setDriveToGearRequest({ commit }, gearRequest: GearRequestWithDrive) {
+    async setDriveToGearRequest(
+      { commit },
+      gearRequest: GearRequestWithDrive<"FA">
+    ) {
       commit("UDPATE_GEAR_REQUEST", gearRequest);
     },
 
     async validateGearRequests(
       { state, dispatch },
-      gearRequests: GearRequestWithDrive[]
+      gearRequests: GearRequestWithDrive<"FA">[]
     ) {
       await Promise.all(
         gearRequests.map((gr) =>
-          safeCall<GearRequestWithDrive>(
+          safeCall<GearRequestWithDrive<"FA">>(
             this,
             RepoFactory.faRepo.validateGearRequest(this, state.mFA.id, gr),
             {
