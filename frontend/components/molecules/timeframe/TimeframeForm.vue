@@ -205,7 +205,7 @@ export default Vue.extend({
     dateEnd: "",
     timeStart: "",
     timeEnd: "",
-    timeWindowType: time_windows_type.ANIM,
+    timeWindowType: "",
 
     formatDateStart: "",
     formatDateEnd: "",
@@ -337,7 +337,7 @@ export default Vue.extend({
 
       this.formatDateStart = "";
       this.formatDateEnd = "";
-      this.timeWindowType = time_windows_type.ANIM;
+      this.timeWindowType = this.timeWindowsType?.[0] ?? "";
     },
     formatDate(date: string): string {
       return formatDate(date);
@@ -363,6 +363,7 @@ export default Vue.extend({
       this.confirmTimeWindow();
     },
     closeAllDialogs() {
+      this.clearLocalVariable();
       this.isConfirmationDialogOpen = false;
       this.$emit("close-dialog");
     },
