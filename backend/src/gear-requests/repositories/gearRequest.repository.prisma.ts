@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import {
   convertGearToApiContract,
   DatabaseGear,
-} from '../../../catalog/repositories/prisma/gear.repository.prisma';
-import { PrismaService } from '../../../prisma.service';
+} from '../../catalog/repositories/prisma/gear.repository.prisma';
+import { PrismaService } from '../../prisma.service';
 import {
   AnimationOnlyError,
   APPROVED,
@@ -148,10 +148,6 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   async getGearRequests(
     gearRequestSearch: SearchGearRequest,
   ): Promise<GearRequest[]> {
-    if (!this.isAnimationRequest(gearRequestSearch)) {
-      throw new AnimationOnlyError();
-    }
-
     const where = this.buildGearRequestSearchConditions(gearRequestSearch);
     const gearRequests =
       await this.prismaService.animation_Gear_Request.findMany({

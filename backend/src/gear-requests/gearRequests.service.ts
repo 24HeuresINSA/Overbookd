@@ -5,8 +5,8 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
-import { Gear, GearRepository } from '../../catalog/interfaces';
-import { Status } from '../dto/update-fa.dto';
+import { Gear, GearRepository } from '../catalog/interfaces';
+import { Status } from '../fa/dto/update-fa.dto';
 
 export const PENDING = 'PENDING';
 export const APPROVED = 'APPROVED';
@@ -252,5 +252,9 @@ export class GearRequestsService {
       gearRequestIdentifier,
       drive,
     );
+  }
+
+  getAllRequests(): Promise<GearRequest[]> {
+    return this.gearRequestRepository.getGearRequests({});
   }
 }

@@ -58,8 +58,8 @@ export const actions = actionTree(
         this,
         inventoryRepository.setupInventory(this, records),
         {
-          successMessage: "L'inventaire a ete reinitialise avec succes",
-          errorMessage: "Erreur lors de la reinitialisation de l'inventaire",
+          successMessage: "L'inventaire a ete reinitialise avec succes ✅",
+          errorMessage: "Erreur lors de la reinitialisation de l'inventaire ❌",
         }
       );
       if (!res) return;

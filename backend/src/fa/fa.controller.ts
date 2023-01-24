@@ -34,22 +34,22 @@ import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 import { FaService } from './fa.service';
 import { AllFaResponse, FaResponse } from './fa_types';
-import { GearRequestsApproveFormRequestDto } from './gear-requests/dto/gearRequestApproveFormRequest.dto';
+import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
   GearRequestFormRequestDto,
   NewPeriodGearRequestFormRequestDto,
-} from './gear-requests/dto/gearRequestFormRequest.dto';
+} from '../gear-requests/dto/gearRequestFormRequest.dto';
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
-} from './gear-requests/dto/gearRequestResponse.dto';
-import { GearRequestUpdateFormRequestDto } from './gear-requests/dto/gearRequestUpdateFormRequest.dto';
+} from '../gear-requests/dto/gearRequestResponse.dto';
+import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import {
   ApprovedGearRequest,
   GearRequestsService,
   GearSeekerType,
-} from './gear-requests/gearRequests.service';
+} from '../gear-requests/gearRequests.service';
 import { StatsPayload } from 'src/common/services/stats.service';
 
 @ApiBearerAuth()

@@ -26,6 +26,7 @@ import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_sit
 import { InventoryModule } from './inventory/inventory.module';
 import { FtModule } from './ft/ft.module';
 import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
+import { GearRequestsModule } from './gear-requests/gearRequests.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
     InventoryModule,
     FtModule,
     FtTimeWindowsModule,
+    GearRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

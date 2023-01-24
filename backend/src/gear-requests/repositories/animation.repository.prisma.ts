@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Status } from 'src/fa/dto/update-fa.dto';
-import { PrismaService } from '../../../prisma.service';
+import { PrismaService } from '../../prisma.service';
 import { Animation, AnimationRepository } from '../gearRequests.service';
 
 @Injectable()
