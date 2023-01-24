@@ -52,19 +52,15 @@ export type FTSimplified = Pick<
   "id" | "name" | "fa" | "status" | "userInCharge" | "team" | "reviews"
 >;
 
-export interface FTUpdate {
-  id: number;
-  name: string;
+export interface FTUpdate
+  extends Pick<FT, "id" | "name" | "isStatic" | "description" | "isDeleted"> {
   parentFaId: number | null;
-  isStatic: boolean;
-  description: string;
   userInChargeId: number | null;
   teamCode: string | null;
   locationId: number | null;
-  isDeleted: boolean;
 }
 
-export interface SearchFT {
+export interface FTSearch {
   isDeleted?: boolean;
   status?: FTStatus;
 }

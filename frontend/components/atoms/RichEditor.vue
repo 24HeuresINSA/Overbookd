@@ -77,9 +77,6 @@ export default {
     content: undefined,
   }),
   watch: {
-    content() {
-      //this.$emit("change", this.content);
-    },
     data: function () {
       this.content = this.data;
     },

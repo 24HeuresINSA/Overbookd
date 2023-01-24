@@ -5,7 +5,7 @@ import {
   FTCreation,
   FT,
   FTStatus,
-  SearchFT,
+  FTSearch,
   FTTimeWindow,
   FTTeamRequest,
   toUpdateFT,
@@ -125,8 +125,7 @@ export const actions = actionTree(
       commit("UPDATE_SELECTED_FT", castFTWithDate(res.data));
     },
 
-    async fetchFTs({ commit }, search?: SearchFT) {
-      console.log("store", search);
+    async fetchFTs({ commit }, search?: FTSearch) {
       const res = await safeCall(this, repo.getAllFTs(this, search), {
         errorMessage: "Impossible de charger les FTs",
       });
@@ -239,7 +238,11 @@ export const actions = actionTree(
 
     async deleteTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       if (!timeWindow?.id) return;
-      await repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id);
+      const res = await safeCall(
+        this,
+        repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id)
+      );
+      if (!res) return;
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
 

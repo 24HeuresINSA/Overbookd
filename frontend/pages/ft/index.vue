@@ -163,7 +163,7 @@ import {
   FTSimplified,
   FTStatus,
   FTStatusLabel,
-  SearchFT,
+  FTSearch,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
@@ -323,7 +323,7 @@ export default Vue.extend({
     },
 
     async fetchFTs() {
-      const searchParams: SearchFT = {
+      const searchParams: FTSearch = {
         isDeleted: this.filters.isDeleted,
         status: this.filters.status,
       };

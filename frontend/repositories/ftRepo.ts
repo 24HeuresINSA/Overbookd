@@ -2,7 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Feedback } from "~/utils/models/feedback";
 import {
   FTCreation,
-  SearchFT,
+  FTSearch,
   FTUpdate,
   FT,
   FTTimeWindowUpdate,
@@ -15,7 +15,7 @@ const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
-  getAllFTs(context: Context, search?: SearchFT) {
+  getAllFTs(context: Context, search?: FTSearch) {
     return context.$axios.get<HttpStringified<FTSimplified>[]>(resource, {
       params: search,
     });

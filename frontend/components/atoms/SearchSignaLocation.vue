@@ -62,7 +62,7 @@ export default Vue.extend({
     this.$accessor.signa.getAllSignaLocations();
   },
   methods: {
-    propagateEvent(location: SignaLocation) {
+    propagateEvent(location: SignaLocation | null) {
       this.$emit("change", location);
     },
   },
