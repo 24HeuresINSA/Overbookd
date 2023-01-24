@@ -363,6 +363,7 @@ export default Vue.extend({
       this.confirmTimeWindow();
     },
     closeAllDialogs() {
+      this.clearLocalVariable();
       this.isConfirmationDialogOpen = false;
       this.$emit("close-dialog");
     },
