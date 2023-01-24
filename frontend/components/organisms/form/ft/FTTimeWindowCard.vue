@@ -25,10 +25,10 @@
       ></FTTimeWindowForm>
     </v-dialog>
     <v-dialog v-model="isEditVolunteerDialogOpen" max-width="700">
-      <FTVolunteerRequirmentForm
+      <FTVolunteerRequirementForm
         :time-window="selectedTimeWindow"
-        @change="updateTimeWindow"
-      ></FTVolunteerRequirmentForm>
+        @change="updateRequirements"
+      ></FTVolunteerRequirementForm>
     </v-dialog>
   </div>
 </template>
@@ -39,7 +39,7 @@ import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTabl
 import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
 import FTTimeWindowForm from "~/components/molecules/timeframe/FTTimeWindowForm.vue";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
-import FTVolunteerRequirmentForm from "~/components/molecules/timeframe/FTVolunteerRequirmentForm.vue";
+import FTVolunteerRequirementForm from "~/components/molecules/timeframe/FTVolunteerRequirementForm.vue";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
@@ -47,7 +47,7 @@ export default Vue.extend({
     FTTimeWindowTable,
     FestivalEventCalendar,
     FTTimeWindowForm,
-    FTVolunteerRequirmentForm,
+    FTVolunteerRequirementForm,
   },
   data: () => ({
     isAddDialogOpen: false,
@@ -67,6 +67,10 @@ export default Vue.extend({
     },
     updateTimeWindow(timeWindow: FTTimeWindow) {
       this.$accessor.FT.updateTimeWindow(timeWindow);
+      this.closeAllEditDialogs();
+    },
+    updateRequirements(timeWindow: FTTimeWindow) {
+      this.$accessor.FT.updateTimeWindowRequirements(timeWindow);
       this.closeAllEditDialogs();
     },
     deleteTimeWindow(timeWindow: FTTimeWindow) {

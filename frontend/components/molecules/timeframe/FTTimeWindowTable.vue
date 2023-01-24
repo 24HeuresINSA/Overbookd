@@ -16,28 +16,28 @@
     <template #[`item.sliceTime`]="{ item }">
       {{ item.sliceTime ? floatToHour(item.sliceTime) : "" }}
     </template>
-    <template #[`item.userRequests`]="{ index, item }">
+    <template #[`item.userRequests`]="{ item }">
       <v-chip-group column>
         <template v-for="(req, i) in item.userRequests">
           <v-chip
             v-if="req"
             :key="i"
             close
-            @click:close="deleteUserRequest(index, i)"
+            @click:close="deleteUserRequest(item, req)"
           >
             {{ formatUsername(req) }}
           </v-chip>
         </template>
       </v-chip-group>
     </template>
-    <template #[`item.teamRequests`]="{ index, item }">
+    <template #[`item.teamRequests`]="{ item }">
       <v-chip-group column>
         <template v-for="(req, i) in item.teamRequests">
           <v-chip
             v-if="req"
             :key="i"
             close
-            @click:close="deleteTeamRequest(index, i)"
+            @click:close="deleteTeamRequest(item, req)"
           >
             {{ formatTeamRequestText(req.quantity, req.team.name) }}
           </v-chip>
@@ -63,7 +63,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { FTTimeWindow } from "~/utils/models/ft";
+import { FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
 import { User } from "~/utils/models/user";
 
 export default Vue.extend({
@@ -107,27 +107,11 @@ export default Vue.extend({
     deleteTimeWindow(timeWindow: FTTimeWindow) {
       this.$emit("delete", timeWindow);
     },
-    deleteUserRequest(timeWindowIndex: number, userRequestIndex: number) {
-      const timeWindow = this.timeWindows[timeWindowIndex];
-      let userRequests = timeWindow.userRequests.slice();
-      userRequests.splice(userRequestIndex, 1);
-
-      const mTimeWindow: FTTimeWindow = {
-        ...timeWindow,
-        userRequests,
-      };
-      this.updateTimeWindow(mTimeWindow);
+    deleteUserRequest(timeWindow: FTTimeWindow, userRequest: User) {
+      this.$accessor.FT.deleteUserRequest({ timeWindow, userRequest });
     },
-    deleteTeamRequest(timeWindowIndex: number, teamRequestIndex: number) {
-      const timeWindow = this.timeWindows[timeWindowIndex];
-      let teamRequests = timeWindow.teamRequests.slice();
-      teamRequests.splice(teamRequestIndex, 1);
-
-      const mTimeWindow: FTTimeWindow = {
-        ...timeWindow,
-        teamRequests,
-      };
-      this.updateTimeWindow(mTimeWindow);
+    deleteTeamRequest(timeWindow: FTTimeWindow, teamRequest: FTTeamRequest) {
+      this.$accessor.FT.deleteTeamRequest({ timeWindow, teamRequest });
     },
     updateTimeWindow(timeWindow: FTTimeWindow) {
       this.$accessor.FT.updateTimeWindow(timeWindow);

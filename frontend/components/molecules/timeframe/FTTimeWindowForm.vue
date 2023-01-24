@@ -77,6 +77,7 @@ export default Vue.extend({
     },
     mTimeWindow(): FTTimeWindow {
       return {
+        id: this.timeWindow?.id ?? undefined,
         start: this.startOrManifDate,
         end: this.endOrManifDate,
         sliceTime: this.toSlice ? this.sliceTime : undefined,
@@ -139,7 +140,7 @@ export default Vue.extend({
       if (!this.isEditForm) return this.clearLocalVariable();
       this.start = this.timeWindow.start;
       this.end = this.timeWindow.end;
-      this.toSlice = this.timeWindow.sliceTime !== undefined;
+      this.toSlice = this.timeWindow.sliceTime !== null;
       this.sliceTime = this.timeWindow.sliceTime || 2;
     },
     clearLocalVariable() {

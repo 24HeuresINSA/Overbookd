@@ -54,10 +54,26 @@ export class UpdateFtDto {
 
   @ApiProperty({
     required: false,
+    description: 'The code of the team whos responsible of the ft',
+  })
+  @IsOptional()
+  @IsString()
+  teamCode?: string;
+
+  @ApiProperty({
+    required: false,
     description: 'The id of the location of the ft',
   })
   @IsOptional()
   @IsNumber()
   @Min(1)
   locationId?: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'The deleted status of the ft',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDeleted?: boolean;
 }

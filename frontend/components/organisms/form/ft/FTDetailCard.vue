@@ -4,9 +4,9 @@
     <v-card-text>
       <v-form>
         <RichEditor
-          :value="mFT.description"
+          :data="mFT.description"
           class="mb-4"
-          @change="onChange('description', $event)"
+          @change="onChange($event)"
         ></RichEditor>
       </v-form>
     </v-card-text>
@@ -21,16 +21,26 @@ import { FT } from "~/utils/models/ft";
 export default Vue.extend({
   name: "FTDetailCard",
   components: { RichEditor },
+  data: () => ({
+    delay: undefined as any,
+  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
     },
   },
   methods: {
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      const updatedFT = { ...this.mFT, [key]: value };
-      this.$accessor.FT.setFT(updatedFT);
+    onChange(description: string) {
+      if (this.delay) clearInterval(this.delay);
+      this.delay = setTimeout(() => {
+        this.updateDescription(description);
+      }, 500);
+    },
+    updateDescription(description: string) {
+      return this.updateFT({ description: description.trim() });
+    },
+    updateFT(ftChunk: Partial<FT>) {
+      this.$accessor.FT.updateFT({ ...this.mFT, ...ftChunk });
     },
   },
 });

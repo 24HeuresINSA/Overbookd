@@ -47,7 +47,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="confirmVolunteerRequirment"
+        <v-btn color="blue darken-1" text @click="confirmVolunteerRequirement"
           >Sauvegarder</v-btn
         >
       </v-card-actions>
@@ -65,7 +65,7 @@ import { User } from "~/utils/models/user";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: "FTVolunteerRequirmentForm",
+  name: "FTVolunteerRequirementForm",
   components: { SearchUsers, SearchTeam },
   model: {
     prop: "timeWindow",
@@ -98,7 +98,14 @@ export default Vue.extend({
       };
     },
     isTeamRequestValid(): boolean {
-      return Boolean(this.selectedTeam && this.quantity > 0);
+      return Boolean(
+        this.selectedTeam && this.quantity > 0 && !this.isTeamAlreadyRequested
+      );
+    },
+    isTeamAlreadyRequested(): boolean {
+      return this.teamRequests.some(
+        (teamRequest) => teamRequest.team.id === this.selectedTeam?.id
+      );
     },
   },
   watch: {
@@ -132,7 +139,7 @@ export default Vue.extend({
     deleteTeamRequest(index: number) {
       this.teamRequests.splice(index, 1);
     },
-    confirmVolunteerRequirment() {
+    confirmVolunteerRequirement() {
       this.$emit("change", this.mTimeWindow);
     },
   },

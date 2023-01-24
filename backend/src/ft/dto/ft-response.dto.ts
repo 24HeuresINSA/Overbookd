@@ -10,7 +10,7 @@ class UserName {
 class UserNameWithId extends UserName {
   id: number;
 }
-class Comment {
+class Feedback {
   id: number;
   comment: string;
   subject: FtSubjectType;
@@ -20,21 +20,12 @@ class Comment {
 }
 
 class UserRequest {
-  userId: number;
-  user: {
-    firstname: string;
-    lastname: string;
-  };
+  user: UserNameWithId;
 }
 
 class TeamRequest {
   number: number;
-  teamCode: string;
-  team: {
-    name: string;
-    color: string;
-    icon: string;
-  };
+  team: Team;
 }
 
 class TimeWindow {
@@ -48,10 +39,7 @@ class TimeWindow {
 
 class Review {
   status: reviewStatus;
-  teamCode: string;
-  team: {
-    name: string;
-  };
+  team: Team;
 }
 
 class Team {
@@ -67,6 +55,12 @@ class MinimalFa {
   name: string;
   status: Status;
 }
+
+class SignaLocation {
+  id: number;
+  name: string;
+}
+
 export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: true,
@@ -91,13 +85,6 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
 
   @ApiProperty({
     required: true,
-    description: 'The parent fa id of the ft',
-    type: Number,
-  })
-  parentFaId: number;
-
-  @ApiProperty({
-    required: true,
     description: 'ft static status',
     type: Boolean,
   })
@@ -111,18 +98,11 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   description: string;
 
   @ApiProperty({
-    required: true,
-    description: 'The user id in charge of the ft',
-    type: Number,
+    required: false,
+    description: 'The location of the ft',
+    type: SignaLocation,
   })
-  userInChargeId: number;
-
-  @ApiProperty({
-    required: true,
-    description: 'The location id of the ft',
-    type: Number,
-  })
-  locationId: number;
+  location: SignaLocation | null;
 
   @ApiProperty({
     required: true,
@@ -133,11 +113,11 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
 
   @ApiProperty({
     required: true,
-    description: 'All the comments of the ft',
+    description: 'All feedbacks of the ft',
     isArray: true,
-    type: Comment,
+    type: Feedback,
   })
-  comments: Comment[];
+  feedbacks: Feedback[];
 
   @ApiProperty({
     required: true,
@@ -156,14 +136,14 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   reviews: Review[];
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The team in charge of the ft',
     type: Team,
   })
-  Team: Team;
+  team: Team | null;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The user in charge of the ft',
     type: UserNameWithId,
   })
@@ -200,18 +180,25 @@ export class LiteFtResponseDto implements LiteFtResponse {
   status: FtStatus;
 
   @ApiProperty({
-    required: true,
-    description: 'The parent fa id of the ft',
-    type: Number,
+    required: false,
+    description: 'The user in charge of the ft',
+    type: UserNameWithId,
   })
-  parentFaId: number;
+  userInCharge: UserNameWithId | null;
+
+  @ApiProperty({
+    required: false,
+    description: 'The team in charge of the ft',
+    type: Team,
+  })
+  team: Team | null;
 
   @ApiProperty({
     required: true,
-    description: 'The user id in charge of the ft',
-    type: Number,
+    description: 'The parent fa of the ft',
+    type: MinimalFa,
   })
-  userInCharge: UserName;
+  fa: MinimalFa | null;
 
   @ApiProperty({
     required: true,

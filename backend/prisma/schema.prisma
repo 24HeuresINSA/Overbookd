@@ -426,7 +426,7 @@ model Ft {
   status         FtStatus        @default(DRAFT)
   fa             fa?             @relation(fields: [parentFaId], references: [id])
   parentFaId     Int?            @map("parent_fa_id")
-  Team           Team?           @relation(fields: [teamCode], references: [code])
+  team           Team?           @relation(fields: [teamCode], references: [code])
   teamCode       String?         @map("team_code")
   isStatic       Boolean         @default(false) @map("is_static")
   description    String?         @db.Text
@@ -436,7 +436,7 @@ model Ft {
   locationId     Int?            @map("location_id")
   isDeleted      Boolean         @default(false) @map("is_deleted")
 
-  comments    FtComments[]
+  feedbacks    FtComments[]
   timeWindows FtTimeWindows[]
   reviews     FtReview[]
 
