@@ -24,7 +24,7 @@
 import Vue from "vue";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
-import { GearRequest } from "~/utils/models/FA";
+import { GearRequest } from "~/utils/models/gearRequests";
 
 export default Vue.extend({
   name: "LogisticsTable",
@@ -50,22 +50,22 @@ export default Vue.extend({
         ? [...commonHeaders, driveHeader]
         : [...commonHeaders, actionHeader];
     },
-    gearRequest(): GearRequest[] {
+    gearRequest(): GearRequest<"FA">[] {
       switch (this.owner) {
         case "matos":
           return this.$accessor.FA.matosGearRequests.reduce(
             this.uniqueGearReducer,
-            [] as GearRequest[]
+            [] as GearRequest<"FA">[]
           );
         case "elec":
           return this.$accessor.FA.elecGearRequests.reduce(
             this.uniqueGearReducer,
-            [] as GearRequest[]
+            [] as GearRequest<"FA">[]
           );
         case "barrieres":
           return this.$accessor.FA.barrieresGearRequests.reduce(
             this.uniqueGearReducer,
-            [] as GearRequest[]
+            [] as GearRequest<"FA">[]
           );
         default:
           return [];
@@ -76,7 +76,10 @@ export default Vue.extend({
     deleteGear(gear: Gear) {
       this.$accessor.FA.removeGearRequest(gear.id);
     },
-    uniqueGearReducer(gearRequests: GearRequest[], gearRequest: GearRequest) {
+    uniqueGearReducer(
+      gearRequests: GearRequest<"FA">[],
+      gearRequest: GearRequest<"FA">
+    ) {
       const existingGearRequest = gearRequests.find(
         (gr) => gr.gear.id === gearRequest.gear.id
       );

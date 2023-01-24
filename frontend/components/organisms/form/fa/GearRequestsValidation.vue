@@ -49,7 +49,10 @@
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
-import { GearRequestWithDrive, StoredGearRequest } from "~/utils/models/FA";
+import {
+  GearRequestWithDrive,
+  StoredGearRequest,
+} from "~/utils/models/gearRequests";
 
 interface GearRequestsValidationData {
   headers: Header[];
@@ -103,7 +106,7 @@ export default Vue.extend({
   },
 
   computed: {
-    gearRequestsToApprove(): StoredGearRequest[] {
+    gearRequestsToApprove(): StoredGearRequest<"FA">[] {
       return this.$accessor.FA.gearRequests.filter(
         (gr) => gr.gear.owner?.code === this.validator.code
       );
@@ -119,13 +122,16 @@ export default Vue.extend({
       return formatDateWithMinutes(date);
     },
 
-    updateGearRequestWithDrive(gearRequest: StoredGearRequest, drive: string) {
+    updateGearRequestWithDrive(
+      gearRequest: StoredGearRequest<"FA">,
+      drive: string
+    ) {
       this.$accessor.FA.setDriveToGearRequest({ ...gearRequest, drive });
     },
 
     async validateGearRequests() {
       const gearRequests = this.gearRequestsToApprove.filter(
-        (gr): gr is GearRequestWithDrive => Boolean(gr.drive)
+        (gr): gr is GearRequestWithDrive<"FA"> => Boolean(gr.drive)
       );
       await this.$accessor.FA.validateGearRequests(gearRequests);
       this.$emit("close-dialog");
