@@ -14,6 +14,7 @@ import {
   fa_signa_needs,
   fa_validation_body,
   SearchFA,
+  SortedStoredGearRequests,
   Status,
   time_windows,
   time_windows_type,
@@ -27,7 +28,6 @@ import {
   GearRequestCreation,
   GearRequestWithDrive,
   Period,
-  SortedStoredGearRequests,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 

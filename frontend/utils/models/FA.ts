@@ -1,6 +1,7 @@
 import { HttpStringified } from "../types/http";
 import { SubjectType } from "./feedback";
 import { FTSimplified } from "./ft";
+import { StoredGearRequest } from "./gearRequests";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
@@ -217,6 +218,12 @@ export interface FaSitePublishAnimation {
 export interface ElectricityTypeLabel {
   type: electricity_type;
   label: electricity_type_label;
+}
+
+export interface SortedStoredGearRequests {
+  matos: StoredGearRequest<"FA">[];
+  barrieres: StoredGearRequest<"FA">[];
+  elec: StoredGearRequest<"FA">[];
 }
 
 export function castFaWithDate(fa: HttpStringified<FA>): FA {

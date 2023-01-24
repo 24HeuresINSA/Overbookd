@@ -6,10 +6,11 @@ import {
   fa_electricity_needs,
   fa_signa_needs,
   fa_type,
+  SortedStoredGearRequests,
   time_windows,
   time_windows_type,
 } from "../models/FA";
-import { GearRequest, SortedStoredGearRequests } from "../models/gearRequests";
+import { GearRequest } from "../models/gearRequests";
 
 export function hasAtLeastOneError(
   mFA: FA,
@@ -233,7 +234,7 @@ export function collaboratorWarnings(fa: FA): string[] {
 }
 
 export function hasAtLeastOneMatosGearRequest(
-  gearRequests: GearRequest<"FA" | "FT">[]
+  gearRequests: GearRequest<"FA">[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -241,7 +242,7 @@ export function hasAtLeastOneMatosGearRequest(
   );
 }
 export function hasAtLeastOneBarrieresGearRequest(
-  gearRequests: GearRequest<"FA" | "FT">[]
+  gearRequests: GearRequest<"FA">[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -249,7 +250,7 @@ export function hasAtLeastOneBarrieresGearRequest(
   );
 }
 export function hasAtLeastOneElecGearRequest(
-  gearRequests: GearRequest<"FA" | "FT">[]
+  gearRequests: GearRequest<"FA">[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -257,7 +258,7 @@ export function hasAtLeastOneElecGearRequest(
   );
 }
 export function hasMatosGearRequestWithQuantityHigherThanZero(
-  matosGearRequests: GearRequest<"FA" | "FT">[]
+  matosGearRequests: GearRequest<"FA">[]
 ): string | boolean {
   return (
     matosGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
@@ -265,7 +266,7 @@ export function hasMatosGearRequestWithQuantityHigherThanZero(
   );
 }
 export function hasBarrieresGearRequestWithQuantityHigherThanZero(
-  barrieresGearRequests: GearRequest<"FA" | "FT">[]
+  barrieresGearRequests: GearRequest<"FA">[]
 ): string | boolean {
   return (
     barrieresGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
@@ -273,7 +274,7 @@ export function hasBarrieresGearRequestWithQuantityHigherThanZero(
   );
 }
 export function hasElecGearRequestWithQuantityHigherThanZero(
-  elecGearRequests: GearRequest<"FA" | "FT">[]
+  elecGearRequests: GearRequest<"FA">[]
 ): string | boolean {
   return (
     elecGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||

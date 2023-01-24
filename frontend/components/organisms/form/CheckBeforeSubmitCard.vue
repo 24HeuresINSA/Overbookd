@@ -149,8 +149,7 @@ import {
   elecWarnings,
   waterWarnings,
 } from "~/utils/rules/faValidationRules";
-import { FA } from "~/utils/models/FA";
-import { SortedStoredGearRequests } from "~/utils/models/gearRequests";
+import { FA, SortedStoredGearRequests } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "CheckBeforeSubmitCard",
