@@ -20,7 +20,7 @@ import {
 } from '../gearRequests.service';
 
 type DatabaseGearRequest = {
-  animationId: number;
+  animation: { id: number; name: string };
   rentalPeriod: Period;
   quantity: number;
   status: string;
@@ -42,12 +42,13 @@ function convertApprovedAnimationGearRequestToApiContract(
 function convertAnimationGearRequestToApiContract(
   gearRequest: DatabaseGearRequest,
 ): GearRequest {
-  const { animationId, rentalPeriod, quantity, status, gear, drive } =
+  const { animation, rentalPeriod, quantity, status, gear, drive } =
     gearRequest;
   return {
     seeker: {
       type: GearSeekerType.Animation,
-      id: animationId,
+      id: animation.id,
+      name: animation.name,
     },
     rentalPeriod,
     quantity,
@@ -62,7 +63,12 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   private readonly SELECT_GEAR_REQUEST = {
-    animationId: true,
+    animation: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
     rentalPeriod: { select: { start: true, end: true, id: true } },
     quantity: true,
     status: true,

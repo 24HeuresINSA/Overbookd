@@ -9,14 +9,16 @@ import {
   fa_general_update,
   fa_signa_needs,
   fa_validation_body,
+  SearchFA,
+  time_windows,
+} from "~/utils/models/FA";
+import {
   GearRequest,
   GearRequestCreation,
   GearRequestUpdate,
   GearRequestWithDrive,
-  SearchFA,
   StoredGearRequest,
-  time_windows,
-} from "~/utils/models/FA";
+} from "~/utils/models/gearRequests";
 import { StatsPayload } from "~/utils/models/stats";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -139,14 +141,14 @@ export default {
     animationId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
-    return context.$axios.post<HttpStringified<StoredGearRequest>>(
+    return context.$axios.post<HttpStringified<StoredGearRequest<"FA">>>(
       resource + `/${animationId}/gear-requests`,
       gearRequestCreationForm
     );
   },
 
   getGearRequests(context: Context, animationId: number) {
-    return context.$axios.get<HttpStringified<StoredGearRequest>[]>(
+    return context.$axios.get<HttpStringified<StoredGearRequest<"FA">>[]>(
       resource + `/${animationId}/gear-requests`
     );
   },
@@ -170,7 +172,7 @@ export default {
     rentalPeriodId: number,
     gearRequestUpdateForm: GearRequestUpdate
   ) {
-    return context.$axios.patch<GearRequest>(
+    return context.$axios.patch<GearRequest<"FA">>(
       resource +
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
@@ -211,14 +213,14 @@ export default {
   validateGearRequest(
     context: Context,
     animationId: number,
-    gearRequest: GearRequestWithDrive
+    gearRequest: GearRequestWithDrive<"FA">
   ) {
     const {
       gear: { id: gearId },
       rentalPeriod: { id: rentalPeriodId },
       drive,
     } = gearRequest;
-    return context.$axios.patch<GearRequestWithDrive>(
+    return context.$axios.patch<GearRequestWithDrive<"FA">>(
       resource +
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
       { drive }

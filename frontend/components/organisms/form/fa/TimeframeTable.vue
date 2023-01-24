@@ -85,7 +85,6 @@ import {
 } from "~/utils/festivalEvent/faUtils";
 import {
   FA,
-  Period,
   fa_card_type,
   time_windows,
   time_windows_type,
@@ -93,6 +92,7 @@ import {
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { Period } from "~/utils/models/gearRequests";
 
 interface IdentifiableTimeWindow extends time_windows {
   key: string;
