@@ -337,7 +337,7 @@ export default Vue.extend({
 
       this.formatDateStart = "";
       this.formatDateEnd = "";
-      this.timeWindowType = "";
+      this.timeWindowType = this.timeWindowsType?.[0] ?? "";
     },
     formatDate(date: string): string {
       return formatDate(date);
