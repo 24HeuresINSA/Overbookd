@@ -1,7 +1,7 @@
 import { HttpStringified } from "../types/http";
-import { Gear } from "./catalog.model";
 import { SubjectType } from "./feedback";
 import { FTSimplified } from "./ft";
+import { StoredGearRequest } from "./gearRequests";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
@@ -203,49 +203,6 @@ export interface fa_validation_body {
   team_id: number;
 }
 
-export interface BaseGearRequestCreation {
-  gearId: number;
-  quantity: number;
-}
-
-export interface ExistingPeriodGearRequestCreation
-  extends BaseGearRequestCreation {
-  periodId: number;
-}
-
-export interface NewPeriodGearRequestCreation extends BaseGearRequestCreation {
-  start: Date;
-  end: Date;
-}
-
-export type GearRequestCreation =
-  | NewPeriodGearRequestCreation
-  | ExistingPeriodGearRequestCreation;
-
-export type GearRequestUpdate = Partial<
-  Omit<NewPeriodGearRequestCreation, "gearId">
->;
-
-export interface Period {
-  id: number;
-  start: Date;
-  end: Date;
-}
-
-export interface GearRequest {
-  rentalPeriod: Period;
-  quantity: number;
-  gear: Gear;
-}
-
-export interface StoredGearRequest extends GearRequest {
-  drive?: string;
-}
-
-export interface GearRequestWithDrive extends GearRequest {
-  drive: string;
-}
-
 export interface SearchFA {
   isDeleted?: boolean;
   status?: Status;
@@ -264,9 +221,9 @@ export interface ElectricityTypeLabel {
 }
 
 export interface SortedStoredGearRequests {
-  matos: StoredGearRequest[];
-  barrieres: StoredGearRequest[];
-  elec: StoredGearRequest[];
+  matos: StoredGearRequest<"FA">[];
+  barrieres: StoredGearRequest<"FA">[];
+  elec: StoredGearRequest<"FA">[];
 }
 
 export function castFaWithDate(fa: HttpStringified<FA>): FA {
@@ -304,8 +261,8 @@ function castTimeWindowWithDate(
 }
 
 export function castGearRequestWithDate(
-  gearRequest: HttpStringified<StoredGearRequest>
-): StoredGearRequest {
+  gearRequest: HttpStringified<StoredGearRequest<"FA">>
+): StoredGearRequest<"FA"> {
   return {
     ...gearRequest,
     rentalPeriod: {
