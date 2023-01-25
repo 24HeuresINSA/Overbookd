@@ -35,6 +35,8 @@ export interface Seeker<T extends "FA" | "FT"> {
   name: string;
 }
 
+export type EventSeeker = Seeker<"FA"> | Seeker<"FT">;
+
 export interface GearRequest<T extends "FA" | "FT"> {
   rentalPeriod: Period;
   quantity: number;
@@ -51,3 +53,7 @@ export interface GearRequestWithDrive<T extends "FA" | "FT">
   extends GearRequest<T> {
   drive: string;
 }
+
+export type EventGearRequest =
+  | GearRequestWithDrive<"FA">
+  | GearRequestWithDrive<"FT">;

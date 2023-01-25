@@ -22,6 +22,7 @@ import * as user from "./user";
 import * as permission from "./permission";
 import * as stats from "./stats";
 import * as inventory from "./inventory";
+import * as gearRequest from "./gearRequest";
 
 export const state = () => ({});
 
@@ -60,5 +61,6 @@ export const accessorType = getAccessorType({
     permission,
     stats,
     inventory,
+    gearRequest,
   },
 });
