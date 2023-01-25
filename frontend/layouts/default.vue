@@ -233,6 +233,12 @@ export default {
           to: "/inventory",
         },
         {
+          icon: "mdi-truck",
+          permission: "inventory-write",
+          title: "Logistique",
+          to: "/logistic",
+        },
+        {
           icon: "mdi-web-sync",
           permission: "communication-read",
           title: "Animations a publier",
