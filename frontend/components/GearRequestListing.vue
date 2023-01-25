@@ -53,6 +53,10 @@ export default Vue.extend({
       return this.$accessor.gearRequest.gearRequests;
     },
   },
+  mounted() {
+    if (this.gearRequests.length) return;
+    this.$accessor.gearRequest.fetchGearRequests();
+  },
   methods: {
     displaySeeker({ type, id, name }: EventSeeker): string {
       return `${type} #${id} - ${name}`;

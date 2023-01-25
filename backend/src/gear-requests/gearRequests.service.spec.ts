@@ -1,5 +1,5 @@
-import { InMemoryGearRepository } from '../../catalog/repositories/in-memory';
-import { Gear } from '../../catalog/interfaces';
+import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
+import { Gear } from '../catalog/interfaces';
 import {
   APPROVED,
   GearRequest,
@@ -8,7 +8,7 @@ import {
   PENDING,
 } from './gearRequests.service';
 import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
-import { Status } from '../dto/update-fa.dto';
+import { Status } from '../fa/dto/update-fa.dto';
 import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 
@@ -378,18 +378,19 @@ describe('Gear requests', () => {
     });
   });
   describe('List gear requests', () => {
+    const gearRequestsCopy = [...GEAR_REQUESTS];
     afterAll(() => {
       gearRequestRepository.gearRequests = [];
     });
     beforeAll(() => {
-      gearRequestRepository.gearRequests = [...GEAR_REQUESTS];
+      gearRequestRepository.gearRequests = gearRequestsCopy;
     });
     describe.each`
       fa                   | expectedRequests
       ${CHATEAU_GONFLABLE} | ${[GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE, GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE, GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE, GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE]}
       ${KRAVMAGA}          | ${[]}
     `(
-      'When looking for all gear requests for $fa.name',
+      'When looking for all gear requests for FA $fa.name',
       ({ fa, expectedRequests }) => {
         it(`should find ${expectedRequests.length} requests`, async () => {
           const gearRequests = await gearRequestService.getAnimationRequests(
@@ -400,6 +401,12 @@ describe('Gear requests', () => {
         });
       },
     );
+    describe('When looking for all gear requests', () => {
+      it(`should retrieve all ${gearRequestsCopy.length} gear requests`, async () => {
+        const gearRequests = await gearRequestService.getAllRequests();
+        expect(gearRequests).toHaveLength(gearRequestsCopy.length);
+      });
+    });
   });
   describe('Approve gear requests', () => {
     beforeAll(() => {

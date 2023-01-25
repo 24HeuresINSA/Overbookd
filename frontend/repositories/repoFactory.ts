@@ -14,6 +14,7 @@ import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
 import permissionRepo from "./permissionRepo";
 import { InventoryRepository } from "./inventoryRepo";
+import { GearRequestRepository } from "./gearRequestRepo";
 
 const repositories = {
   user: userRepo,
@@ -33,6 +34,7 @@ const repositories = {
   signaLocation: signaLocationRepo,
   permission: permissionRepo,
   inventoryRepository: InventoryRepository,
+  gearRequestRepository: GearRequestRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -56,4 +58,5 @@ export const RepoFactory = {
   signaLocationRepo,
   permissionRepo,
   InventoryRepository,
+  GearRequestRepository,
 };
