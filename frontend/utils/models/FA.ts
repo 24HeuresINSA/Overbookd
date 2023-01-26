@@ -259,16 +259,3 @@ function castTimeWindowWithDate(
     end: new Date(timeWindow.end),
   };
 }
-
-export function castGearRequestWithDate(
-  gearRequest: HttpStringified<StoredGearRequest<"FA">>
-): StoredGearRequest<"FA"> {
-  return {
-    ...gearRequest,
-    rentalPeriod: {
-      ...gearRequest.rentalPeriod,
-      start: new Date(gearRequest.rentalPeriod.start),
-      end: new Date(gearRequest.rentalPeriod.end),
-    },
-  };
-}

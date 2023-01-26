@@ -119,10 +119,12 @@ export const actions = actionTree(
       commit("RESET_FT");
     },
 
-    async fetchFT({ commit }, id: number) {
-      const res = await safeCall(this, repo.getFT(this, id));
-      if (!res) return null;
-      commit("UPDATE_SELECTED_FT", castFTWithDate(res.data));
+    async fetchFT({ commit, dispatch }, id: number) {
+      const resFT = await safeCall(this, repo.getFT(this, id));
+      if (!resFT) return null;
+      commit("UPDATE_SELECTED_FT", castFTWithDate(resFT.data));
+      if (resFT.data.fa)
+        dispatch("FA/fetchGearRequests", resFT.data.fa.id, { root: true });
     },
 
     async fetchFTs({ commit }, search?: FTSearch) {

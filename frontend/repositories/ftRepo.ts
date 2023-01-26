@@ -4,10 +4,10 @@ import {
   FTCreation,
   FTSearch,
   FTUpdate,
-  FT,
   FTTimeWindowUpdate,
   FTTimeWindow,
   FTSimplified,
+  FT,
 } from "~/utils/models/ft";
 import { HttpStringified } from "~/utils/types/http";
 

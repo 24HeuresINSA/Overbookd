@@ -1,3 +1,4 @@
+import { HttpStringified } from "../types/http";
 import { Gear } from "./catalog.model";
 
 export interface BaseGearRequestCreation {
@@ -57,3 +58,16 @@ export interface GearRequestWithDrive<T extends "FA" | "FT">
 export type EventGearRequest =
   | GearRequestWithDrive<"FA">
   | GearRequestWithDrive<"FT">;
+
+export function castGearRequestWithDate(
+  gearRequest: HttpStringified<StoredGearRequest<"FA" | "FT">>
+): StoredGearRequest<"FA" | "FT"> {
+  return {
+    ...gearRequest,
+    rentalPeriod: {
+      ...gearRequest.rentalPeriod,
+      start: new Date(gearRequest.rentalPeriod.start),
+      end: new Date(gearRequest.rentalPeriod.end),
+    },
+  };
+}

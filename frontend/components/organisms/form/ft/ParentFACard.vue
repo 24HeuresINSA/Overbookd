@@ -9,6 +9,7 @@
           :boxed="false"
           @change="updateParentFA($event)"
         ></SearchFA>
+        <CompleteLogisticsTable v-if="mFT.fa" class="elevation-1" />
       </v-card-text>
     </v-card>
   </div>
@@ -17,12 +18,13 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchFA from "~/components/atoms/SearchFA.vue";
+import CompleteLogisticsTable from "~/components/molecules/logistics/CompleteLogisticsTable.vue";
 import { FASimplified } from "~/utils/models/FA";
 import { FT } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ParentFACard",
-  components: { SearchFA },
+  components: { SearchFA, CompleteLogisticsTable },
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
@@ -32,6 +34,7 @@ export default Vue.extend({
     updateParentFA(fa: FASimplified | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
       this.$accessor.FT.updateFT(updatedFT);
+      if (fa) this.$accessor.FA.fetchGearRequests(fa.id);
     },
   },
 });

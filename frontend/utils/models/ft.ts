@@ -2,9 +2,9 @@ import { Feedback } from "./feedback";
 import { User } from "./user";
 import { SignaLocation } from "./signaLocation";
 import { Review } from "./review";
-import { FASimplified } from "./FA";
 import { Team } from "./team";
 import { HttpStringified } from "../types/http";
+import { FASimplified } from "./FA";
 
 export enum FTStatus {
   DRAFT = "DRAFT",

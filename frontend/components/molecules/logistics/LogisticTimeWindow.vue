@@ -7,7 +7,7 @@
         "MATOS"</v-card-subtitle
       >
       <v-card-actions>
-        <v-btn v-show="!isValidatedByOwners" href="#timeframe" text>
+        <v-btn v-show="!isValidatedByOwners" href="#timewindow" text>
           Aller à la partie créneau
         </v-btn>
       </v-card-actions>
