@@ -4,7 +4,6 @@ import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
   castFaWithDate,
-  castGearRequestWithDate,
   collaborator,
   CreateFA,
   FA,
@@ -24,6 +23,7 @@ import { SubjectType } from "~/utils/models/feedback";
 import { sendNotification } from "./catalog";
 import { FT, FTSimplified } from "~/utils/models/ft";
 import {
+  castGearRequestWithDate,
   GearRequest,
   GearRequestCreation,
   GearRequestWithDrive,
@@ -766,10 +766,11 @@ export const actions = actionTree(
       }
     },
 
-    async fetchGearRequests({ state, commit }) {
+    async fetchGearRequests({ commit, state }, id?: number) {
+      const faId = id ?? state.mFA.id;
       const resGearRequests = await safeCall(
         this,
-        repo.getGearRequests(this, state.mFA.id)
+        repo.getGearRequests(this, faId)
       );
       if (!resGearRequests) return null;
       const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
