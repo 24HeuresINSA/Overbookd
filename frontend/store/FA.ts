@@ -766,10 +766,11 @@ export const actions = actionTree(
       }
     },
 
-    async fetchGearRequests({ state, commit }) {
+    async fetchGearRequests({ commit, state }, id?: number) {
+      const faId = id ?? state.mFA.id;
       const resGearRequests = await safeCall(
         this,
-        repo.getGearRequests(this, state.mFA.id)
+        repo.getGearRequests(this, faId)
       );
       if (!resGearRequests) return null;
       const gearRequests = resGearRequests.data.map(castGearRequestWithDate);

@@ -7,7 +7,7 @@ import {
   FTTimeWindowUpdate,
   FTTimeWindow,
   FTSimplified,
-  FTResponse,
+  FT,
 } from "~/utils/models/ft";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -21,13 +21,13 @@ export default {
     });
   },
   getFT(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<FTResponse>>(`${resource}/${id}`);
+    return context.$axios.get<HttpStringified<FT>>(`${resource}/${id}`);
   },
   createFT(context: Context, ft: FTCreation) {
-    return context.$axios.post<HttpStringified<FTResponse>>(resource, ft);
+    return context.$axios.post<HttpStringified<FT>>(resource, ft);
   },
   updateFT(context: Context, ft: FTUpdate) {
-    return context.$axios.patch<HttpStringified<FTResponse>>(
+    return context.$axios.patch<HttpStringified<FT>>(
       `${resource}/${ft.id}`,
       ft
     );

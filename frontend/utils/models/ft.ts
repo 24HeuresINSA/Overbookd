@@ -5,7 +5,6 @@ import { Review } from "./review";
 import { Team } from "./team";
 import { HttpStringified } from "../types/http";
 import { FASimplified } from "./FA";
-import { StoredGearRequest } from "./gearRequests";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -33,7 +32,7 @@ export interface FTCreation {
   faId?: number;
 }
 
-export interface FTResponse extends FTBase {
+export interface FT extends FTBase {
   id: number;
   description: string;
   team?: Team;
@@ -46,10 +45,6 @@ export interface FTResponse extends FTBase {
   reviews: Review[];
   feedbacks: Feedback[];
   isDeleted: boolean;
-}
-
-export interface FT extends FTResponse {
-  faGearRequests?: StoredGearRequest<"FA">[];
 }
 
 export type FTSimplified = Pick<
@@ -91,7 +86,7 @@ export interface FTTeamRequest {
   team: Team;
 }
 
-export function castFTWithDate(ft: HttpStringified<FTResponse>): FTResponse {
+export function castFTWithDate(ft: HttpStringified<FT>): FT {
   const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
   const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
   return { ...ft, timeWindows, feedbacks };

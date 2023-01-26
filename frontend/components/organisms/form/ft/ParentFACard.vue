@@ -34,7 +34,7 @@ export default Vue.extend({
     updateParentFA(fa: FASimplified | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
       this.$accessor.FT.updateFT(updatedFT);
-      if (fa) this.$accessor.FT.fetchGearRequests(fa.id);
+      if (fa) this.$accessor.FA.fetchGearRequests(fa.id);
     },
   },
 });

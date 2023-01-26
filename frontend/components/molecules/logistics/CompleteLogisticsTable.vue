@@ -31,29 +31,8 @@ export default Vue.extend({
   }),
   computed: {
     gearRequests(): StoredGearRequest<"FA">[] {
-      return (this.$accessor.FT.mFT.faGearRequests ?? []).reduce(
-        this.uniqueGearReducer,
-        [] as StoredGearRequest<"FA">[]
-      );
-    },
-  },
-  methods: {
-    uniqueGearReducer(
-      gearRequests: StoredGearRequest<"FA">[],
-      gearRequest: StoredGearRequest<"FA">
-    ) {
-      const existingGearRequest = gearRequests.find(
-        (gr) => gr.gear.id === gearRequest.gear.id
-      );
-      if (existingGearRequest) return gearRequests;
-      return [...gearRequests, gearRequest];
+      return this.$accessor.FA.uniqueByGearGearRequests;
     },
   },
 });
 </script>
-
-<style scoped>
-.text-width {
-  max-width: 200px;
-}
-</style>
