@@ -59,12 +59,6 @@ export type EventGearRequest =
   | GearRequestWithDrive<"FA">
   | GearRequestWithDrive<"FT">;
 
-export interface SortedStoredGearRequests {
-  matos: StoredGearRequest<"FA" | "FT">[];
-  barrieres: StoredGearRequest<"FA" | "FT">[];
-  elec: StoredGearRequest<"FA" | "FT">[];
-}
-
 export function castGearRequestWithDate(
   gearRequest: HttpStringified<StoredGearRequest<"FA" | "FT">>
 ): StoredGearRequest<"FA" | "FT"> {
