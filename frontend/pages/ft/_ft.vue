@@ -61,8 +61,8 @@ export default Vue.extend({
     LogisticsCard,
     SnackNotificationContainer,
     FeedbackCard,
-    FTCheckBeforeSubmitCard
-},
+    FTCheckBeforeSubmitCard,
+  },
   data: () => ({
     isValidationDialogOpen: false,
   }),
