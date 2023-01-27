@@ -14,9 +14,16 @@ import {
   castFTWithDate,
   FTSimplified,
 } from "~/utils/models/ft";
-import { Feedback } from "~/utils/models/feedback";
+import {
+  Feedback,
+  FeedbackCreation,
+  SubjectType,
+} from "~/utils/models/feedback";
 import { User } from "~/utils/models/user";
 import { updateItemToList } from "~/utils/functions/list";
+import { Team } from "~/utils/models/team";
+import { formatUsername } from "~/utils/user/userUtils";
+import { Review, ReviewBody, ReviewStatus } from "~/utils/models/review";
 
 const repo = RepoFactory.ftRepo;
 
@@ -25,7 +32,14 @@ export const state = () => ({
   FTs: [] as FTSimplified[],
 });
 
-export const getters = getterTree(state, {});
+export const getters = getterTree(state, {
+  validationReviews(state): Review[] {
+    return state.mFT.reviews.filter((r) => r.status === ReviewStatus.VALIDATED);
+  },
+  refusalReviews(state): Review[] {
+    return state.mFT.reviews.filter((r) => r.status === ReviewStatus.REFUSED);
+  },
+});
 
 export const mutations = mutationTree(state, {
   UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
@@ -34,10 +48,6 @@ export const mutations = mutationTree(state, {
 
   RESET_FT(state) {
     state.mFT = defaultState() as FT;
-  },
-
-  UPDATE_STATUS({ mFT }, status: FTStatus) {
-    mFT.status = status;
   },
 
   SET_FTS(state, fts: FTSimplified[]) {
@@ -50,6 +60,10 @@ export const mutations = mutationTree(state, {
 
   DELETE_FT(state, ftId: number) {
     state.FTs = state.FTs.filter((ft) => ft.id !== ftId);
+  },
+
+  UPDATE_STATUS({ mFT }, status: FTStatus) {
+    mFT.status = status;
   },
 
   ADD_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
@@ -188,6 +202,72 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
+    async submitForReview({ dispatch, state }, author: User) {
+      const authorName = formatUsername(author);
+      const feedback: Feedback = {
+        subject: SubjectType.SUBMIT,
+        comment: `La FT a été soumise à validation par ${authorName}.`,
+        author,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", { ...feedback, author });
+      dispatch("updateFT", { ...state.mFT, status: FTStatus.SUBMITTED });
+    },
+
+    async validate(
+      { dispatch, commit, state, getters, rootState },
+      { validator, team, author }: { validator: User; team: Team; author: User }
+    ) {
+      //check if the team is already in the list
+      if (
+        getters.validationReviews.find(
+          (r: Review) => r.team.id === validator.id
+        )
+      ) {
+        return;
+      }
+      if (getters.refusalReviews.length === 1) {
+        if (getters.refusalReviews[0].team.id === validator.id) {
+          commit("UPDATE_STATUS", FTStatus.SUBMITTED);
+        }
+      }
+      const MAX_VALIDATORS = rootState.team.ftValidators.length;
+      // -1 car la validation est faite avant l'ajout du validateur
+      if (getters.validationReviews.length === MAX_VALIDATORS - 1) {
+        commit("UPDATE_STATUS", FTStatus.VALIDATED);
+      }
+
+      const ftToUpdate = toUpdateFT(state.mFT);
+      const res = await safeCall(this, repo.updateFT(this, ftToUpdate));
+      if (!res) return;
+
+      const body: ReviewBody = { userId: author.id };
+      await repo.validateFT(this, state.mFT.id, validator.id, body);
+
+      const feedback: Feedback = {
+        subject: SubjectType.VALIDATED,
+        comment: `La FT a été validée par ${team.name}.`,
+        author: author,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", { ...feedback, author });
+    },
+
+    async refuse({ dispatch, state }, { validator, message, author }) {
+      dispatch("updateFT", { ...state.mFT, status: FTStatus.REFUSED });
+
+      const body: ReviewBody = { userId: author.id };
+      await repo.refuseFT(this, state.mFT.id, validator.id, body);
+
+      const feedback: Feedback = {
+        subject: SubjectType.REFUSED,
+        comment: `La FA a été refusée${message ? ": " + message : "."}`,
+        author: author.id,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", { ...feedback, author });
+    },
+
     async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
@@ -248,8 +328,12 @@ export const actions = actionTree(
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
-    async addFeedback({ commit }, feedback: Feedback) {
-      // await repo.addFTComment(this, comment);
+    async addFeedback({ commit, state }, feedback: Feedback) {
+      const feedbackCreation: FeedbackCreation = {
+        ...feedback,
+        author: feedback.author.id,
+      };
+      await repo.addFTFeedback(this, state.mFT.id, feedbackCreation);
       commit("ADD_FEEDBACK", feedback);
     },
   }

@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Feedback } from "~/utils/models/feedback";
+import { Feedback, FeedbackCreation } from "~/utils/models/feedback";
 import {
   FTCreation,
   FTSearch,
@@ -9,6 +9,7 @@ import {
   FTSimplified,
   FT,
 } from "~/utils/models/ft";
+import { ReviewBody } from "~/utils/models/review";
 import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/ft";
@@ -35,6 +36,14 @@ export default {
   deleteFT(context: Context, id: number) {
     return context.$axios.delete(`${resource}/${id}`);
   },
+
+  validateFT(context: Context, ftId: number, teamId: number, body: ReviewBody) {
+    return context.$axios.post(`${resource}/${ftId}/validate/${teamId}`, body);
+  },
+  refuseFT(context: Context, ftId: number, teamId: number, body: ReviewBody) {
+    return context.$axios.post(`${resource}/${ftId}/refuse/${teamId}`, body);
+  },
+
   updateFTTimeWindow(
     context: Context,
     ftId: number,
@@ -49,6 +58,14 @@ export default {
     return context.$axios.delete(`${resource}/${ftId}/time-windows/${twId}`);
   },
 
+  addFTFeedback(context: Context, ftId: number, feedback: FeedbackCreation) {
+    return context.$axios.post<HttpStringified<Feedback>>(
+      `${resource}/${ftId}/feedbacks`,
+      feedback
+    );
+  },
+
+  // old requests
   markAsReady(context: Context, FTCount: number, comment: Feedback) {
     return context.$axios.post(`${resource}/${FTCount}/ready`, { comment });
   },

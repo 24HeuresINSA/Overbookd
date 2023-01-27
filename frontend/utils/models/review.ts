@@ -9,3 +9,7 @@ export enum ReviewStatus {
   VALIDATED = "VALIDATED",
   REFUSED = "REFUSED",
 }
+
+export interface ReviewBody {
+  userId: number;
+}
