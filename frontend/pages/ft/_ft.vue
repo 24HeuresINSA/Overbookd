@@ -9,6 +9,26 @@
       <LogisticsCard id="matos" title="Matos" />
       <FeedbackCard id="comment" form="FT" />
     </v-container>
+
+    <div class="bottom-bar">
+      <div class="bottom-bar__actions">
+        <v-btn
+          v-if="isDraftOrRefused"
+          color="warning"
+          :disabled="mFT.status === 'SUBMITTED' && hasAtLeastOneErrorOrWarning"
+          @click="checkBeforeSubmit()"
+          >soumettre à validation
+        </v-btn>
+      </div>
+    </div>
+
+    <v-dialog v-model="isValidationDialogOpen" width="600">
+      <FTCheckBeforeSubmitCard
+        @close-dialog="isValidationDialogOpen = false"
+        @submit="submit"
+      ></FTCheckBeforeSubmitCard>
+    </v-dialog>
+
     <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
@@ -18,11 +38,17 @@ import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FeedbackCard from "~/components/organisms/form/FeedbackCard.vue";
 import FestivalEventSidebar from "~/components/organisms/form/FestivalEventSidebar.vue";
+import FTCheckBeforeSubmitCard from "~/components/organisms/form/ft/FTCheckBeforeSubmitCard.vue";
 import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vue";
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
+import { FTStatus } from "~/utils/models/ft";
+import {
+  hasAtLeastOneFTError,
+  hasAtLeastOneFTWarning,
+} from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
   name: "FT",
@@ -35,7 +61,11 @@ export default Vue.extend({
     LogisticsCard,
     SnackNotificationContainer,
     FeedbackCard,
-  },
+    FTCheckBeforeSubmitCard
+},
+  data: () => ({
+    isValidationDialogOpen: false,
+  }),
   computed: {
     mFT() {
       return this.$accessor.FT.mFT;
@@ -47,6 +77,15 @@ export default Vue.extend({
       const baseTitle = `FT ${this.ftId}`;
       if (!this.mFT.name) return baseTitle;
       return `${baseTitle} - ${this.mFT.name}`;
+    },
+    isDraftOrRefused(): boolean {
+      return (
+        this.mFT.status === FTStatus.DRAFT ||
+        this.mFT.status === FTStatus.REFUSED
+      );
+    },
+    hasAtLeastOneErrorOrWarning(): boolean {
+      return hasAtLeastOneFTError(this.mFT) || hasAtLeastOneFTWarning(this.mFT);
     },
   },
   async mounted() {
@@ -70,6 +109,18 @@ export default Vue.extend({
     async retrieveValidatorsIfNeeded(): Promise<void> {
       if (this.$accessor.team.ftValidators.length) return;
       return this.$accessor.team.fetchFtValidators();
+    },
+
+    checkBeforeSubmit() {
+      if (this.mFT.status === FTStatus.DRAFT)
+        return (this.isValidationDialogOpen = true);
+      this.submit();
+    },
+
+    async submit() {
+      this.isValidationDialogOpen = false;
+      console.log("submit");
+      //await this.$accessor.FT.submitFT(this.ftId);
     },
   },
 });

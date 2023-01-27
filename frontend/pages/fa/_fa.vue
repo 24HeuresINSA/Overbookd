@@ -140,10 +140,10 @@
     </div>
 
     <v-dialog v-model="isValidationDialogOpen" width="600">
-      <CheckBeforeSubmitCard
+      <FACheckBeforeSubmitCard
         @close-dialog="isValidationDialogOpen = false"
         @submit="submit"
-      ></CheckBeforeSubmitCard>
+      ></FACheckBeforeSubmitCard>
     </v-dialog>
 
     <v-dialog v-model="isRefuseDialogOpen" max-width="600px">
@@ -190,7 +190,7 @@ import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CheckBeforeSubmitCard from "~/components/organisms/form/CheckBeforeSubmitCard.vue";
+import FACheckBeforeSubmitCard from "~/components/organisms/form/fa/FACheckBeforeSubmitCard.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import ChildFTCard from "~/components/organisms/form/fa/ChildFTCard.vue";
 import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
@@ -230,7 +230,7 @@ export default Vue.extend({
     FestivalEventSummary,
     SnackNotificationContainer,
     LogisticTimeWindow,
-    CheckBeforeSubmitCard,
+    FACheckBeforeSubmitCard,
     GearRequestsValidation,
     ConfirmationMessage,
     ChildFTCard,
