@@ -8,6 +8,8 @@ import {
   FTTimeWindow,
   FTSimplified,
   FT,
+  FTTeamRequestUpdate,
+  FTUserRequestUpdate,
 } from "~/utils/models/ft";
 import { ReviewBody } from "~/utils/models/review";
 import { HttpStringified } from "~/utils/types/http";
@@ -56,6 +58,29 @@ export default {
   },
   deleteFTTimeWindow(context: Context, ftId: number, twId: number) {
     return context.$axios.delete(`${resource}/${ftId}/time-windows/${twId}`);
+  },
+  updateFTUserRequests(
+    context: Context,
+    ftId: number,
+    twId: number,
+    userRequests: FTUserRequestUpdate[]
+  ) {
+    return context.$axios.post(
+      `${resource}/${ftId}/time-windows/${twId}/user-requests`,
+      userRequests
+    );
+  },
+
+  updateFTTeamRequests(
+    context: Context,
+    ftId: number,
+    twId: number,
+    teamRequests: FTTeamRequestUpdate[]
+  ) {
+    return context.$axios.post(
+      `${resource}/${ftId}/time-windows/${twId}/team-requests`,
+      teamRequests
+    );
   },
 
   addFTFeedback(context: Context, ftId: number, feedback: FeedbackCreation) {

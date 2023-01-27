@@ -13,6 +13,8 @@ import {
   castTimeWindowWithDate,
   castFTWithDate,
   FTSimplified,
+  FTUserRequestUpdate,
+  FTTeamRequestUpdate,
 } from "~/utils/models/ft";
 import {
   Feedback,
@@ -282,18 +284,42 @@ export const actions = actionTree(
       commit("UPDATE_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
-    async updateTimeWindowRequirements({ commit }, timeWindow: FTTimeWindow) {
+    async updateTimeWindowRequirements(
+      { commit, state },
+      timeWindow: FTTimeWindow
+    ) {
+      if (!timeWindow.id) return;
       commit("UPDATE_TIME_WINDOW", timeWindow);
-      /*await Promise.all([
+      const adaptedUserRequests: FTUserRequestUpdate[] =
+        timeWindow.userRequests.map((ur) => ({
+          userId: ur.id,
+        }));
+      const adaptedTeamRequests: FTTeamRequestUpdate[] =
+        timeWindow.teamRequests.map((tr) => ({
+          teamCode: tr.team.code,
+          quantity: tr.quantity,
+        }));
+
+      await Promise.all([
         safeCall(
           this,
-          repo.updateUserRequests(this, state.mFT.id, timeWindow.userRequests)
+          repo.updateFTUserRequests(
+            this,
+            state.mFT.id,
+            timeWindow.id,
+            adaptedUserRequests
+          )
         ),
         safeCall(
           this,
-          repo.updateTeamRequests(this, state.mFT.id, timeWindow.teamRequests)
+          repo.updateFTTeamRequests(
+            this,
+            state.mFT.id,
+            timeWindow.id,
+            adaptedTeamRequests
+          )
         ),
-      ]);*/
+      ]);
     },
 
     async deleteUserRequest(
