@@ -18,17 +18,17 @@ export function hasAtLeastOneFTWarning(mFT: FT): boolean {
   return warnings.length > 0;
 }
 
-function hasName(value: string | undefined): string | boolean {
-  return !!value || "La tâche doit avoir un nom.";
+function hasName(name?: string): string | boolean {
+  return Boolean(name) || "La tâche doit avoir un nom.";
 }
-function hasTeam(value: Team | undefined): string | boolean {
-  return value !== null || "La tâche doit avoir une équipe associée.";
+function hasTeam(team?: Team): string | boolean {
+  return Boolean(team) || "La tâche doit avoir une équipe associée.";
 }
-function hasUserInCharge(value: User | undefined): string | boolean {
-  return value !== null || "La tâche doit avoir un responsable.";
+function hasUserInCharge(user?: User): string | boolean {
+  return Boolean(user) || "La tâche doit avoir un responsable.";
 }
-function hasLocation(value: SignaLocation | undefined): string | boolean {
-  return Boolean(value) || "La tâche doit avoir un lieu.";
+function hasLocation(location?: SignaLocation): string | boolean {
+  return Boolean(location) || "La tâche doit avoir un lieu.";
 }
 export function generalErrors(ft: FT): string[] {
   return [
@@ -39,7 +39,7 @@ export function generalErrors(ft: FT): string[] {
   ].filter((error): error is string => error !== true);
 }
 
-function hasParentFA(fa: FASimplified | undefined): string | boolean {
+function hasParentFA(fa?: FASimplified): string | boolean {
   return Boolean(fa) || "La tâche doit avoir une FA asscoiée.";
 }
 export function parentFAErrors(ft: FT): string[] {
@@ -48,8 +48,11 @@ export function parentFAErrors(ft: FT): string[] {
   );
 }
 
-function hasDescription(description: string | undefined): string | boolean {
-  return Boolean(description) || "La tâche doit avoir une description.";
+function hasDescription(description: string): string | boolean {
+  return (
+    (Boolean(description) && description !== "<p></p>") ||
+    "La tâche doit avoir une description."
+  );
 }
 export function detailErrors(ft: FT): string[] {
   return [hasDescription(ft.description)].filter(

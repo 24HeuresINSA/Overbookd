@@ -15,9 +15,9 @@
         <v-btn
           v-if="isDraftOrRefused"
           color="warning"
-          :disabled="mFT.status === 'SUBMITTED' && hasAtLeastOneErrorOrWarning"
+          :disabled="canSubmit"
           @click="checkBeforeSubmit()"
-          >soumettre à validation
+          >Soumettre à validation
         </v-btn>
       </div>
     </div>
@@ -86,6 +86,12 @@ export default Vue.extend({
     },
     hasAtLeastOneErrorOrWarning(): boolean {
       return hasAtLeastOneFTError(this.mFT) || hasAtLeastOneFTWarning(this.mFT);
+    },
+    canSubmit(): boolean {
+      return (
+        this.mFT.status === FTStatus.SUBMITTED &&
+        this.hasAtLeastOneErrorOrWarning
+      );
     },
   },
   async mounted() {
