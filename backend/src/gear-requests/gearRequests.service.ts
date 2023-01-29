@@ -147,6 +147,26 @@ export interface AnimationRepository {
   getAnimation(animationId: number): Promise<Animation>;
 }
 
+export interface Task {
+  id: number;
+  name: string;
+  status: TaskStatus;
+}
+
+export const taskStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  VALIDATED: 'VALIDATED',
+  REFUSED: 'REFUSED',
+  READY: 'READY',
+};
+
+type TaskStatus = (typeof taskStatus)[keyof typeof taskStatus];
+
+export interface TaskRepository {
+  getTask(taskId: number): Promise<Task>;
+}
+
 export interface PeriodRepository {
   addPeriod(period: PeriodForm): Promise<Period>;
   getPeriod(id: number): Promise<Period>;
@@ -155,6 +175,13 @@ export interface PeriodRepository {
 class AnimationAlreadyValidatedError extends BadRequestException {
   constructor(animationId: number) {
     const message = `Animation #${animationId} already validated, you can't add gear request`;
+    super(message);
+  }
+}
+
+class TaskAlreadyValidatedError extends BadRequestException {
+  constructor(taskId: number, status: TaskStatus) {
+    const message = `Task #${taskId} already ${status.toLowerCase()}, you can't add gear request`;
     super(message);
   }
 }
@@ -170,6 +197,7 @@ export class GearRequestsService {
     private readonly animationRepository: AnimationRepository,
     @Inject('PERIOD_REPOSITORY')
     private readonly periodRepository: PeriodRepository,
+    private readonly taskRepository: TaskRepository,
   ) {}
 
   async findGearRequest(gearRequestId: GearRequestIdentifier) {
@@ -200,6 +228,40 @@ export class GearRequestsService {
       rentalPeriod: await this.retrieveRentalPeriod(createForm),
     };
     return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  async addTaskRequest(
+    createForm: CreateGearRequestForm,
+  ): Promise<GearRequest> {
+    const { seekerId, quantity, gearId } = createForm;
+
+    const [existingTask, existingGear] = await Promise.all([
+      this.taskRepository.getTask(seekerId),
+      this.gearRepository.getGear(gearId),
+    ]);
+
+    if (this.isAlreadyValidated(existingTask))
+      throw new TaskAlreadyValidatedError(seekerId, existingTask.status);
+
+    const gearRequest = {
+      seeker: {
+        type: GearSeekerType.Task,
+        id: seekerId,
+        name: existingTask.name,
+      },
+      status: PENDING,
+      quantity,
+      gear: existingGear,
+      rentalPeriod: await this.retrieveRentalPeriod(createForm),
+    };
+    return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  private isAlreadyValidated(existingTask: Task): boolean {
+    return (
+      existingTask.status === taskStatus.VALIDATED ||
+      existingTask.status === taskStatus.READY
+    );
   }
 
   private retrieveRentalPeriod(form: CreateGearRequestForm) {
@@ -239,6 +301,18 @@ export class GearRequestsService {
   ): Promise<void> {
     return this.gearRequestRepository.removeGearRequest({
       seeker: { type: GearSeekerType.Animation, id: animationId },
+      gearId,
+      rentalPeriodId: periodId,
+    });
+  }
+
+  removeTaskRequest(
+    taskId: number,
+    gearId: number,
+    periodId: number,
+  ): Promise<void> {
+    return this.gearRequestRepository.removeGearRequest({
+      seeker: { type: GearSeekerType.Task, id: taskId },
       gearId,
       rentalPeriodId: periodId,
     });

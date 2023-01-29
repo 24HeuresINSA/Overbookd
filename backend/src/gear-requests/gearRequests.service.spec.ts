@@ -6,11 +6,14 @@ import {
   GearRequestsService,
   GearSeekerType,
   PENDING,
+  Task,
+  taskStatus,
 } from './gearRequests.service';
 import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
 import { Status } from '../fa/dto/update-fa.dto';
 import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
+import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
 
 const MAGASIN = 'Magasin';
 
@@ -43,6 +46,21 @@ const BAR_DECOUVERTE = {
   name: 'Bar Decouverte',
   status: Status.VALIDATED,
 };
+const INSTALLER_CHATEAU_GONFLABLE: Task = {
+  id: 1,
+  name: 'Installer le Chateau Gonflable',
+  status: taskStatus.DRAFT,
+};
+const GARDIENNER_CHATEAU_GONFLABLE: Task = {
+  id: 2,
+  name: 'Gardienner le Chateau Gonflable',
+  status: taskStatus.VALIDATED,
+};
+const DEMONTER_CHATEAU_GONFLABLE: Task = {
+  id: 3,
+  name: 'Demonter le Chateau Gonflable',
+  status: taskStatus.READY,
+};
 
 const TABLE: Gear = {
   id: 1,
@@ -56,7 +74,19 @@ const CHAISE: Gear = {
   slug: 'chaise',
   isPonctualUsage: false,
 };
-const GEARS = [TABLE, CHAISE];
+const MARTEAU: Gear = {
+  id: 3,
+  name: 'Marteau',
+  slug: 'marteau',
+  isPonctualUsage: true,
+};
+const GANT: Gear = {
+  id: 4,
+  name: 'Gant',
+  slug: 'gant',
+  isPonctualUsage: true,
+};
+const GEARS = [TABLE, CHAISE, MARTEAU, GANT];
 
 const GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {
   seeker: {
@@ -106,11 +136,24 @@ const GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE: GearRequest = {
   drive: MAGASIN,
 };
 
+const GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE: GearRequest = {
+  seeker: {
+    type: GearSeekerType.Task,
+    id: INSTALLER_CHATEAU_GONFLABLE.id,
+    name: INSTALLER_CHATEAU_GONFLABLE.name,
+  },
+  quantity: 10,
+  status: PENDING,
+  gear: GANT,
+  rentalPeriod: MAY_24_1,
+};
+
 const GEAR_REQUESTS = [
   GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE,
   GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE,
   GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE,
   GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE,
+  GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
 ];
 describe('Gear requests', () => {
   const periodRepository = new InMemoryPeriodRepository([
@@ -125,125 +168,263 @@ describe('Gear requests', () => {
     KRAVMAGA,
     BAR_DECOUVERTE,
   ]);
+  const taskRepository = new InMemoryTaskRepository([
+    INSTALLER_CHATEAU_GONFLABLE,
+    GARDIENNER_CHATEAU_GONFLABLE,
+    DEMONTER_CHATEAU_GONFLABLE,
+  ]);
   gearRepository.gears = GEARS;
   const gearRequestService = new GearRequestsService(
     gearRequestRepository,
     gearRepository,
     animationRepository,
     periodRepository,
+    taskRepository,
   );
   describe('Create gear requests', () => {
-    describe('When asking for the first gear request for a period', () => {
-      describe.each`
-        fa                   | gear      | quantity | startDate                          | endDate                            | excepectedStatus
-        ${CHATEAU_GONFLABLE} | ${TABLE}  | ${10}    | ${new Date('2022-05-23T09:15:00')} | ${new Date('2022-05-23T19:15:00')} | ${PENDING}
-        ${CHATEAU_GONFLABLE} | ${CHAISE} | ${5}     | ${new Date('2022-05-24T09:15:00')} | ${new Date('2022-05-24T19:15:00')} | ${PENDING}
-      `(
-        'When animation $fa.name ask for $quantity $gear.name from $startDate to $endDate',
-        ({ fa, gear, quantity, startDate, endDate, excepectedStatus }) => {
-          let gearRequest: any;
-          beforeAll(
-            async () =>
-              (gearRequest = await gearRequestService.addAnimationRequest({
-                seekerId: fa.id,
-                quantity,
-                gearId: gear.id,
+    describe('For Animations', () => {
+      describe('When asking for the first gear request for a period', () => {
+        describe.each`
+          fa                   | gear      | quantity | startDate                          | endDate                            | excepectedStatus
+          ${CHATEAU_GONFLABLE} | ${TABLE}  | ${10}    | ${new Date('2022-05-23T09:15:00')} | ${new Date('2022-05-23T19:15:00')} | ${PENDING}
+          ${CHATEAU_GONFLABLE} | ${CHAISE} | ${5}     | ${new Date('2022-05-24T09:15:00')} | ${new Date('2022-05-24T19:15:00')} | ${PENDING}
+        `(
+          'When animation $fa.name ask for $quantity $gear.name from $startDate to $endDate',
+          ({ fa, gear, quantity, startDate, endDate, excepectedStatus }) => {
+            let gearRequest: any;
+            beforeAll(
+              async () =>
+                (gearRequest = await gearRequestService.addAnimationRequest({
+                  seekerId: fa.id,
+                  quantity,
+                  gearId: gear.id,
+                  start: startDate,
+                  end: endDate,
+                })),
+            );
+            afterAll(() => {
+              gearRequestRepository.gearRequests = [];
+            });
+            it(`should set the gear request to ${excepectedStatus}`, () => {
+              expect(gearRequest.status).toBe(excepectedStatus);
+            });
+            it(`should set the gear request quantity to ${quantity}`, () => {
+              expect(gearRequest.quantity).toBe(quantity);
+            });
+            it(`should link the gear request ${gear.name} gear`, () => {
+              expect(gearRequest.gear).toEqual(gear);
+            });
+            it('should set the rental period', () => {
+              expect(gearRequest.rentalPeriod).toMatchObject({
+                id: expect.any(Number),
                 start: startDate,
                 end: endDate,
-              })),
-          );
-          afterAll(() => {
-            gearRequestRepository.gearRequests = [];
-          });
-          it(`should set the gear request to ${excepectedStatus}`, () => {
-            expect(gearRequest.status).toBe(excepectedStatus);
-          });
-          it(`should set the gear request quantity to ${quantity}`, () => {
-            expect(gearRequest.quantity).toBe(quantity);
-          });
-          it(`should link the gear request ${gear.name} gear`, () => {
-            expect(gearRequest.gear).toEqual(gear);
-          });
-          it('should set the rental period', () => {
-            expect(gearRequest.rentalPeriod).toMatchObject({
-              id: expect.any(Number),
-              start: startDate,
-              end: endDate,
-            });
-          });
-          it(`should link the request to ${fa.name} as gear seeker`, () => {
-            expect(gearRequest.seeker).toEqual({
-              type: GearSeekerType.Animation,
-              id: fa.id,
-              name: fa.name,
-            });
-          });
-          it('should be accessible after', async () => {
-            const seeker = {
-              type: GearSeekerType.Animation,
-              id: fa.id,
-            };
-            const searchedGearRequest =
-              await gearRequestService.findGearRequest({
-                seeker,
-                gearId: gear.id,
-                rentalPeriodId: gearRequest.rentalPeriod.id,
               });
-            expect(searchedGearRequest).toMatchObject({
-              seeker: { ...seeker, name: fa.name },
-              status: PENDING,
-              quantity,
-              gear,
-              rentalPeriod: { start: startDate, end: endDate },
             });
-          });
-        },
-      );
-    });
-
-    describe('When asking a gear for an exiting period', () => {
-      it('should link gear request to the existing period', async () => {
-        const createdGearRequest = await gearRequestService.addAnimationRequest(
-          {
-            seekerId: KRAVMAGA.id,
-            quantity: 3,
-            periodId: MAY_23.id,
-            gearId: CHAISE.id,
+            it(`should link the request to ${fa.name} as gear seeker`, () => {
+              expect(gearRequest.seeker).toEqual({
+                type: GearSeekerType.Animation,
+                id: fa.id,
+                name: fa.name,
+              });
+            });
+            it('should be accessible after', async () => {
+              const seeker = {
+                type: GearSeekerType.Animation,
+                id: fa.id,
+              };
+              const searchedGearRequest =
+                await gearRequestService.findGearRequest({
+                  seeker,
+                  gearId: gear.id,
+                  rentalPeriodId: gearRequest.rentalPeriod.id,
+                });
+              expect(searchedGearRequest).toMatchObject({
+                seeker: { ...seeker, name: fa.name },
+                status: PENDING,
+                quantity,
+                gear,
+                rentalPeriod: { start: startDate, end: endDate },
+              });
+            });
           },
         );
-        expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
       });
-    });
 
-    describe('When asking for an unknown gear', () => {
-      it("should inform user gear doesn't exist", async () => {
-        const inexistantGear = 1000;
-        await expect(
-          async () =>
+      describe('When asking a gear for an exiting period', () => {
+        it('should link gear request to the existing period', async () => {
+          const createdGearRequest =
             await gearRequestService.addAnimationRequest({
-              seekerId: CHATEAU_GONFLABLE.id,
-              quantity: 10,
-              gearId: inexistantGear,
-              start: new Date(),
-              end: new Date(),
-            }),
-        ).rejects.toThrow(`Gear #${inexistantGear} doesn\'t exist`);
+              seekerId: KRAVMAGA.id,
+              quantity: 3,
+              periodId: MAY_23.id,
+              gearId: CHAISE.id,
+            });
+          expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
+        });
+      });
+
+      describe('When asking for an unknown gear', () => {
+        it("should inform user gear doesn't exist", async () => {
+          const inexistantGear = 1000;
+          await expect(
+            async () =>
+              await gearRequestService.addAnimationRequest({
+                seekerId: CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: inexistantGear,
+                start: new Date(),
+                end: new Date(),
+              }),
+          ).rejects.toThrow(`Gear #${inexistantGear} doesn\'t exist`);
+        });
+      });
+      describe('When asking gear from a validated animation', () => {
+        it('should inform user animation is already validated', async () => {
+          await expect(
+            async () =>
+              await gearRequestService.addAnimationRequest({
+                seekerId: BAR_DECOUVERTE.id,
+                quantity: 10,
+                gearId: CHAISE.id,
+                start: new Date(),
+                end: new Date(),
+              }),
+          ).rejects.toThrow(
+            `Animation #${BAR_DECOUVERTE.id} already validated, you can't add gear request`,
+          );
+        });
       });
     });
-    describe('When asking gear from a validated animation', () => {
-      it('should inform user animation is already validated', async () => {
-        await expect(
-          async () =>
-            await gearRequestService.addAnimationRequest({
-              seekerId: BAR_DECOUVERTE.id,
-              quantity: 10,
-              gearId: CHAISE.id,
-              start: new Date(),
-              end: new Date(),
-            }),
-        ).rejects.toThrow(
-          `Animation #${BAR_DECOUVERTE.id} already validated, you can't add gear request`,
+    describe('For Tasks', () => {
+      describe('When asking for the first gear request for a period', () => {
+        describe.each`
+          ft                             | gear       | quantity | startDate                          | endDate                            | excepectedStatus
+          ${INSTALLER_CHATEAU_GONFLABLE} | ${GANT}    | ${10}    | ${new Date('2022-05-23T09:15:00')} | ${new Date('2022-05-23T19:15:00')} | ${PENDING}
+          ${INSTALLER_CHATEAU_GONFLABLE} | ${MARTEAU} | ${5}     | ${new Date('2022-05-23T09:15:00')} | ${new Date('2022-05-23T19:15:00')} | ${PENDING}
+        `(
+          'When task $ft.name ask for $quantity $gear.name from $startDate to $endDate',
+          ({ ft, gear, quantity, startDate, endDate, excepectedStatus }) => {
+            let gearRequest: any;
+            beforeAll(
+              async () =>
+                (gearRequest = await gearRequestService.addTaskRequest({
+                  seekerId: ft.id,
+                  quantity,
+                  gearId: gear.id,
+                  start: startDate,
+                  end: endDate,
+                })),
+            );
+            afterAll(() => {
+              gearRequestRepository.gearRequests = [];
+            });
+            it(`should set the gear request to ${excepectedStatus}`, () => {
+              expect(gearRequest.status).toBe(excepectedStatus);
+            });
+            it(`should set the gear request quantity to ${quantity}`, () => {
+              expect(gearRequest.quantity).toBe(quantity);
+            });
+            it(`should link the gear request ${gear.name} gear`, () => {
+              expect(gearRequest.gear).toEqual(gear);
+            });
+            it('should set the rental period', () => {
+              expect(gearRequest.rentalPeriod).toMatchObject({
+                id: expect.any(Number),
+                start: startDate,
+                end: endDate,
+              });
+            });
+            it(`should link the request to ${ft.name} as gear seeker`, () => {
+              expect(gearRequest.seeker).toEqual({
+                type: GearSeekerType.Task,
+                id: ft.id,
+                name: ft.name,
+              });
+            });
+            it('should be accessible after', async () => {
+              const seeker = {
+                type: GearSeekerType.Task,
+                id: ft.id,
+              };
+              const searchedGearRequest =
+                await gearRequestService.findGearRequest({
+                  seeker,
+                  gearId: gear.id,
+                  rentalPeriodId: gearRequest.rentalPeriod.id,
+                });
+              expect(searchedGearRequest).toMatchObject({
+                seeker: { ...seeker, name: ft.name },
+                status: PENDING,
+                quantity,
+                gear,
+                rentalPeriod: { start: startDate, end: endDate },
+              });
+            });
+          },
         );
+      });
+
+      describe('When asking a gear for an exiting period', () => {
+        it('should link gear request to the existing period', async () => {
+          const createdGearRequest = await gearRequestService.addTaskRequest({
+            seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+            quantity: 5,
+            periodId: MAY_23.id,
+            gearId: MARTEAU.id,
+          });
+          expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
+        });
+      });
+
+      describe('When asking for an unknown gear', () => {
+        it("should inform user gear doesn't exist", async () => {
+          const inexistantGear = 1000;
+          await expect(
+            async () =>
+              await gearRequestService.addTaskRequest({
+                seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: inexistantGear,
+                start: new Date(),
+                end: new Date(),
+              }),
+          ).rejects.toThrow(`Gear #${inexistantGear} doesn\'t exist`);
+        });
+      });
+
+      describe('When asking gear from a validated task', () => {
+        it('should inform user task is already validated', async () => {
+          await expect(
+            async () =>
+              await gearRequestService.addTaskRequest({
+                seekerId: GARDIENNER_CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: MARTEAU.id,
+                start: new Date(),
+                end: new Date(),
+              }),
+          ).rejects.toThrow(
+            `Task #${GARDIENNER_CHATEAU_GONFLABLE.id} already validated, you can't add gear request`,
+          );
+        });
+      });
+
+      describe('When asking gear from a ready task', () => {
+        it('should inform user task is already ready', async () => {
+          await expect(
+            async () =>
+              await gearRequestService.addTaskRequest({
+                seekerId: DEMONTER_CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: MARTEAU.id,
+                start: new Date(),
+                end: new Date(),
+              }),
+          ).rejects.toThrow(
+            `Task #${DEMONTER_CHATEAU_GONFLABLE.id} already ready, you can't add gear request`,
+          );
+        });
       });
     });
   });
@@ -351,29 +532,59 @@ describe('Gear requests', () => {
     beforeAll(() => {
       gearRequestRepository.gearRequests = [...GEAR_REQUESTS];
     });
-    describe('When deleting an existing gear request', () => {
-      it('should remove gear request from persistance', async () => {
-        await gearRequestService.removeAnimationRequest(
-          GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker.id,
-          GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.gear.id,
-          GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.rentalPeriod.id,
-        );
-        await expect(
-          async () =>
-            await gearRequestService.findGearRequest({
-              seeker: GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker,
-              gearId: GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.gear.id,
-              rentalPeriodId:
-                GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.rentalPeriod.id,
-            }),
-        ).rejects.toThrow(
-          `Request for gear #${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.gear.id} from ${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker.type} #${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker.id} not found`,
-        );
+    describe('For animation', () => {
+      describe('When deleting an existing gear request', () => {
+        it('should remove gear request from persistance', async () => {
+          await gearRequestService.removeAnimationRequest(
+            GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker.id,
+            GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.gear.id,
+            GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.rentalPeriod.id,
+          );
+          await expect(
+            async () =>
+              await gearRequestService.findGearRequest({
+                seeker: GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker,
+                gearId: GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.gear.id,
+                rentalPeriodId:
+                  GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.rentalPeriod.id,
+              }),
+          ).rejects.toThrow(
+            `Request for gear #${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.gear.id} from ${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker.type} #${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE.seeker.id} not found`,
+          );
+        });
+      });
+      describe('When deleting an inexisting gear request', () => {
+        it('should go smoothly', async () => {
+          await gearRequestService.removeAnimationRequest(45, 67, 4);
+        });
       });
     });
-    describe('When deleting an inexisting gear request', () => {
-      it('should go smoothly', async () => {
-        await gearRequestService.removeAnimationRequest(45, 67, 4);
+
+    describe('For Task', () => {
+      describe('When deleting an existing gear request', () => {
+        it('should remove gear request from persistance', async () => {
+          await gearRequestService.removeTaskRequest(
+            GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.seeker.id,
+            GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.gear.id,
+            GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.rentalPeriod.id,
+          );
+          await expect(
+            async () =>
+              await gearRequestService.findGearRequest({
+                seeker: GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.seeker,
+                gearId: GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.gear.id,
+                rentalPeriodId:
+                  GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.rentalPeriod.id,
+              }),
+          ).rejects.toThrow(
+            `Request for gear #${GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.gear.id} from ${GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.seeker.type} #${GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.seeker.id} not found`,
+          );
+        });
+      });
+      describe('When deleting an inexisting gear request', () => {
+        it('should go smoothly', async () => {
+          await gearRequestService.removeAnimationRequest(45, 67, 4);
+        });
       });
     });
   });
