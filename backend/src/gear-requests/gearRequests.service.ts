@@ -197,6 +197,7 @@ export class GearRequestsService {
     private readonly animationRepository: AnimationRepository,
     @Inject('PERIOD_REPOSITORY')
     private readonly periodRepository: PeriodRepository,
+    @Inject('TASK_REPOSITORY')
     private readonly taskRepository: TaskRepository,
   ) {}
 
