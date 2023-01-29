@@ -125,8 +125,7 @@ export default Vue.extend({
 
     async submit() {
       this.isValidationDialogOpen = false;
-      console.log("submit");
-      //await this.$accessor.FT.submitFT(this.ftId);
+      //await this.$accessor.FT.submitFT();
     },
   },
 });

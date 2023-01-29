@@ -14,7 +14,7 @@ export function hasAtLeastOneFTError(mFT: FT): boolean {
   return errors.length > 0;
 }
 export function hasAtLeastOneFTWarning(mFT: FT): boolean {
-  const warnings = [...timeWindowsWarnings(mFT)];
+  const warnings = []; // Aucun warning pour le moment
   return warnings.length > 0;
 }
 
@@ -67,22 +67,6 @@ function hasAtLeastOneTimeWindow(
     timeWindows.length > 0 || "La tâche doit avoir au moins une plage horaire."
   );
 }
-function hasAtLeastOneUserRequestPerTimeWindow(
-  timeWindows: FTTimeWindow[]
-): string | boolean {
-  return (
-    timeWindows.every((tw) => tw.userRequests.length > 0) ||
-    "Tu as des créneaux sans demande de bénévole précis."
-  );
-}
-function hasAtLeastOneTeamRequestPerTimeWindow(
-  timeWindows: FTTimeWindow[]
-): string | boolean {
-  return (
-    timeWindows.every((tw) => tw.teamRequests.length > 0) ||
-    "Tu as des créneaux sans demande de bénévole d'une équipe."
-  );
-}
 function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
   timeWindows: FTTimeWindow[]
 ): string | boolean {
@@ -97,10 +81,4 @@ export function timeWindowsErrors(ft: FT): string[] {
     hasAtLeastOneTimeWindow(ft.timeWindows),
     hasAtLeastOneUserOrTeamRequestPerTimeWindow(ft.timeWindows),
   ].filter((error): error is string => error !== true);
-}
-export function timeWindowsWarnings(ft: FT): string[] {
-  return [
-    hasAtLeastOneUserRequestPerTimeWindow(ft.timeWindows),
-    hasAtLeastOneTeamRequestPerTimeWindow(ft.timeWindows),
-  ].filter((warning): warning is string => warning !== true);
 }

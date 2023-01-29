@@ -38,12 +38,6 @@
     <v-divider></v-divider>
     <div v-show="hasAtLeastOneWarning" class="my-container my-3">
       <h3>⚠️ Avertissements ⚠️</h3>
-      <div v-show="timeWindowsWarnings.length > 0">
-        <h4>Détail</h4>
-        <ul>
-          <li v-for="label in timeWindowsWarnings" :key="label">{{ label }}</li>
-        </ul>
-      </div>
     </div>
 
     <v-divider></v-divider>
@@ -75,11 +69,10 @@ import {
   hasAtLeastOneFTWarning,
   parentFAErrors,
   timeWindowsErrors,
-  timeWindowsWarnings,
 } from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
-  name: "FACheckBeforeSubmitCard",
+  name: "FTCheckBeforeSubmitCard",
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
@@ -117,12 +110,6 @@ export default Vue.extend({
     },
     hasTimeWindowsErrors(): boolean {
       return this.timeWindowsErrors.length > 0;
-    },
-    timeWindowsWarnings(): string[] {
-      return timeWindowsWarnings(this.mFT);
-    },
-    hasTimeWindowsWarnings(): boolean {
-      return this.timeWindowsWarnings.length > 0;
     },
   },
 });
