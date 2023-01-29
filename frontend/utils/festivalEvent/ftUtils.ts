@@ -1,6 +1,5 @@
 import { FT, FTStatus } from "../models/ft";
 import { Review, ReviewStatus } from "../models/review";
-import { User } from "../models/user";
 
 export function isTaskValidatedBy(
   reviews: Review[],
@@ -57,23 +56,4 @@ export function getValidationReviews(reviews: Review[]): Review[] {
 
 export function getRefusalReviews(reviews: Review[]): Review[] {
   return reviews.filter((r) => r.status === ReviewStatus.REFUSED);
-}
-
-export function shouldBeSwitchToSumbittedStatus(
-  reviews: Review[],
-  validator: User
-): boolean {
-  const refusalReviews = getRefusalReviews(reviews);
-  return (
-    refusalReviews.length === 1 && refusalReviews[0].team.id === validator.id
-  );
-}
-
-export function shouldBeSwitchToValidatedStatus(
-  reviews: Review[],
-  maxValidators: number
-): boolean {
-  const validationReviews = getValidationReviews(reviews);
-  // -1 car la validation est faite avant l'ajout du validateur
-  return validationReviews.length === maxValidators - 1;
 }

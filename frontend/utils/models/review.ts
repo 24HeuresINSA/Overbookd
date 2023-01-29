@@ -10,6 +10,6 @@ export enum ReviewStatus {
   REFUSED = "REFUSED",
 }
 
-export interface ReviewBody {
+export interface Reviewer {
   userId: number;
 }

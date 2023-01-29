@@ -25,11 +25,7 @@ import { User } from "~/utils/models/user";
 import { updateItemToList } from "~/utils/functions/list";
 import { Team } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
-import { Review, ReviewBody } from "~/utils/models/review";
-import {
-  shouldBeSwitchToSumbittedStatus,
-  shouldBeSwitchToValidatedStatus,
-} from "~/utils/festivalEvent/ftUtils";
+import { Review, Reviewer } from "~/utils/models/review";
 
 const repo = RepoFactory.ftRepo;
 
@@ -228,31 +224,17 @@ export const actions = actionTree(
     },
 
     async validate(
-      { dispatch, commit, state, rootState },
+      { dispatch, commit, state },
       { validator, team, author }: { validator: User; team: Team; author: User }
     ) {
-      const MAX_VALIDATORS = rootState.team.ftValidators.length;
-      if (shouldBeSwitchToValidatedStatus(state.mFT.reviews, MAX_VALIDATORS)) {
-        commit("UPDATE_STATUS", FTStatus.VALIDATED);
-      } else if (
-        shouldBeSwitchToSumbittedStatus(state.mFT.reviews, validator)
-      ) {
-        commit("UPDATE_STATUS", FTStatus.SUBMITTED);
-      }
-
-      const ftToUpdate = toUpdateFT(state.mFT);
-      const reviewBody: ReviewBody = { userId: author.id };
-      const [resFT, resReviews] = await Promise.all([
-        await safeCall(this, repo.updateFT(this, ftToUpdate)),
-        await safeCall(
-          this,
-          repo.validateFT(this, state.mFT.id, validator.id, reviewBody)
-        ),
-      ]);
-      if (!resFT || !resReviews) return;
+      const reviewBody: Reviewer = { userId: author.id };
+      const resFT = await safeCall(
+        this,
+        repo.validateFT(this, state.mFT.id, validator.id, reviewBody)
+      );
+      if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
-      if (resReviews) commit("UPDATE_REVIEWS", resReviews.data);
 
       const feedback: Feedback = {
         subject: SubjectType.VALIDATED,
@@ -264,12 +246,14 @@ export const actions = actionTree(
     },
 
     async refuse({ commit, dispatch, state }, { validator, message, author }) {
-      dispatch("updateFT", { ...state.mFT, status: FTStatus.REFUSED });
-
-      const body: ReviewBody = { userId: author.id };
-      const res = await repo.refuseFT(this, state.mFT.id, validator.id, body);
-      if (!res) return;
-      commit("UPDATE_REVIEWS", res.data);
+      const reviewBody: Reviewer = { userId: author.id };
+      const resFT = await safeCall(
+        this,
+        repo.refuseFT(this, state.mFT.id, validator.id, reviewBody)
+      );
+      if (!resFT) return;
+      const updatedFT = castFTWithDate(resFT.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,

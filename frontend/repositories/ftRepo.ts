@@ -16,7 +16,7 @@ import {
   FTUserRequestUpdate,
   FTTeamRequest,
 } from "~/utils/models/ft";
-import { Review, ReviewBody } from "~/utils/models/review";
+import { Reviewer } from "~/utils/models/review";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -45,14 +45,14 @@ export default {
     return context.$axios.delete(`${resource}/${id}`);
   },
 
-  validateFT(context: Context, ftId: number, teamId: number, body: ReviewBody) {
-    return context.$axios.post<HttpStringified<Review>>(
+  validateFT(context: Context, ftId: number, teamId: number, body: Reviewer) {
+    return context.$axios.post<HttpStringified<FT>>(
       `${resource}/${ftId}/validate/${teamId}`,
       body
     );
   },
-  refuseFT(context: Context, ftId: number, teamId: number, body: ReviewBody) {
-    return context.$axios.post<HttpStringified<Review>>(
+  refuseFT(context: Context, ftId: number, teamId: number, body: Reviewer) {
+    return context.$axios.post<HttpStringified<FT>>(
       `${resource}/${ftId}/refuse/${teamId}`,
       body
     );
