@@ -1,5 +1,9 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Feedback, FeedbackCreation } from "~/utils/models/feedback";
+import {
+  Feedback,
+  FeedbackCreation,
+  SavedFeedback,
+} from "~/utils/models/feedback";
 import {
   FTCreation,
   FTSearch,
@@ -10,8 +14,10 @@ import {
   FT,
   FTTeamRequestUpdate,
   FTUserRequestUpdate,
+  FTTeamRequest,
 } from "~/utils/models/ft";
-import { ReviewBody } from "~/utils/models/review";
+import { Review, ReviewBody } from "~/utils/models/review";
+import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/ft";
@@ -40,10 +46,16 @@ export default {
   },
 
   validateFT(context: Context, ftId: number, teamId: number, body: ReviewBody) {
-    return context.$axios.post(`${resource}/${ftId}/validate/${teamId}`, body);
+    return context.$axios.post<HttpStringified<Review>>(
+      `${resource}/${ftId}/validate/${teamId}`,
+      body
+    );
   },
   refuseFT(context: Context, ftId: number, teamId: number, body: ReviewBody) {
-    return context.$axios.post(`${resource}/${ftId}/refuse/${teamId}`, body);
+    return context.$axios.post<HttpStringified<Review>>(
+      `${resource}/${ftId}/refuse/${teamId}`,
+      body
+    );
   },
 
   updateFTTimeWindow(
@@ -65,7 +77,7 @@ export default {
     twId: number,
     userRequests: FTUserRequestUpdate[]
   ) {
-    return context.$axios.post(
+    return context.$axios.post<HttpStringified<User[]>>(
       `${resource}/${ftId}/time-windows/${twId}/user-requests`,
       userRequests
     );
@@ -77,14 +89,14 @@ export default {
     twId: number,
     teamRequests: FTTeamRequestUpdate[]
   ) {
-    return context.$axios.post(
+    return context.$axios.post<HttpStringified<FTTeamRequest>>(
       `${resource}/${ftId}/time-windows/${twId}/team-requests`,
       teamRequests
     );
   },
 
   addFTFeedback(context: Context, ftId: number, feedback: FeedbackCreation) {
-    return context.$axios.post<HttpStringified<Feedback>>(
+    return context.$axios.post<HttpStringified<SavedFeedback>>(
       `${resource}/${ftId}/feedbacks`,
       feedback
     );

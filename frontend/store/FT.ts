@@ -1,4 +1,4 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
@@ -25,22 +25,17 @@ import { User } from "~/utils/models/user";
 import { updateItemToList } from "~/utils/functions/list";
 import { Team } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
-import { Review, ReviewBody, ReviewStatus } from "~/utils/models/review";
+import { Review, ReviewBody } from "~/utils/models/review";
+import {
+  shouldBeSwitchToSumbittedStatus,
+  shouldBeSwitchToValidatedStatus,
+} from "~/utils/festivalEvent/ftUtils";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
   mFT: defaultState() as FT,
   FTs: [] as FTSimplified[],
-});
-
-export const getters = getterTree(state, {
-  validationReviews(state): Review[] {
-    return state.mFT.reviews.filter((r) => r.status === ReviewStatus.VALIDATED);
-  },
-  refusalReviews(state): Review[] {
-    return state.mFT.reviews.filter((r) => r.status === ReviewStatus.REFUSED);
-  },
 });
 
 export const mutations = mutationTree(state, {
@@ -82,6 +77,22 @@ export const mutations = mutationTree(state, {
     ];
   },
 
+  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
+  },
+
+  UPDATE_USER_REQUESTS({ mFT }, timeWindow: FTTimeWindow) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    mFT.timeWindows[index].userRequests = timeWindow.userRequests;
+  },
+
+  UPDATE_TEAM_REQUESTS({ mFT }, timeWindow: FTTimeWindow) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    mFT.timeWindows[index].teamRequests = timeWindow.teamRequests;
+  },
+
   DELETE_USER_REQUEST(
     { mFT },
     { timeWindow, userRequest }: { timeWindow: FTTimeWindow; userRequest: User }
@@ -115,8 +126,8 @@ export const mutations = mutationTree(state, {
     });
   },
 
-  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
+  UPDATE_REVIEWS({ mFT }, reviews: Review[]) {
+    mFT.reviews = reviews;
   },
 
   ADD_FEEDBACK({ mFT }, feedback: Feedback) {
@@ -217,34 +228,31 @@ export const actions = actionTree(
     },
 
     async validate(
-      { dispatch, commit, state, getters, rootState },
+      { dispatch, commit, state, rootState },
       { validator, team, author }: { validator: User; team: Team; author: User }
     ) {
-      //check if the team is already in the list
-      if (
-        getters.validationReviews.find(
-          (r: Review) => r.team.id === validator.id
-        )
-      ) {
-        return;
-      }
-      if (getters.refusalReviews.length === 1) {
-        if (getters.refusalReviews[0].team.id === validator.id) {
-          commit("UPDATE_STATUS", FTStatus.SUBMITTED);
-        }
-      }
       const MAX_VALIDATORS = rootState.team.ftValidators.length;
-      // -1 car la validation est faite avant l'ajout du validateur
-      if (getters.validationReviews.length === MAX_VALIDATORS - 1) {
+      if (shouldBeSwitchToValidatedStatus(state.mFT.reviews, MAX_VALIDATORS)) {
         commit("UPDATE_STATUS", FTStatus.VALIDATED);
+      } else if (
+        shouldBeSwitchToSumbittedStatus(state.mFT.reviews, validator)
+      ) {
+        commit("UPDATE_STATUS", FTStatus.SUBMITTED);
       }
 
       const ftToUpdate = toUpdateFT(state.mFT);
-      const res = await safeCall(this, repo.updateFT(this, ftToUpdate));
-      if (!res) return;
-
-      const body: ReviewBody = { userId: author.id };
-      await repo.validateFT(this, state.mFT.id, validator.id, body);
+      const reviewBody: ReviewBody = { userId: author.id };
+      const [resFT, resReviews] = await Promise.all([
+        await safeCall(this, repo.updateFT(this, ftToUpdate)),
+        await safeCall(
+          this,
+          repo.validateFT(this, state.mFT.id, validator.id, reviewBody)
+        ),
+      ]);
+      if (!resFT || !resReviews) return;
+      const updatedFT = castFTWithDate(resFT.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
+      if (resReviews) commit("UPDATE_REVIEWS", resReviews.data);
 
       const feedback: Feedback = {
         subject: SubjectType.VALIDATED,
@@ -255,11 +263,13 @@ export const actions = actionTree(
       dispatch("addFeedback", { ...feedback, author });
     },
 
-    async refuse({ dispatch, state }, { validator, message, author }) {
+    async refuse({ commit, dispatch, state }, { validator, message, author }) {
       dispatch("updateFT", { ...state.mFT, status: FTStatus.REFUSED });
 
       const body: ReviewBody = { userId: author.id };
-      await repo.refuseFT(this, state.mFT.id, validator.id, body);
+      const res = await repo.refuseFT(this, state.mFT.id, validator.id, body);
+      if (!res) return;
+      commit("UPDATE_REVIEWS", res.data);
 
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
@@ -289,7 +299,6 @@ export const actions = actionTree(
       timeWindow: FTTimeWindow
     ) {
       if (!timeWindow.id) return;
-      commit("UPDATE_TIME_WINDOW", timeWindow);
       const adaptedUserRequests: FTUserRequestUpdate[] =
         timeWindow.userRequests.map((ur) => ({
           userId: ur.id,
@@ -300,7 +309,7 @@ export const actions = actionTree(
           quantity: tr.quantity,
         }));
 
-      await Promise.all([
+      const [resTeamRequests, resUserRequests] = await Promise.all([
         safeCall(
           this,
           repo.updateFTUserRequests(
@@ -320,6 +329,8 @@ export const actions = actionTree(
           )
         ),
       ]);
+      if (resUserRequests) commit("UPDATE_USER_REQUESTS", timeWindow);
+      if (resTeamRequests) commit("UPDATE_TEAM_REQUESTS", timeWindow);
     },
 
     async deleteUserRequest(
@@ -359,8 +370,12 @@ export const actions = actionTree(
         ...feedback,
         author: feedback.author.id,
       };
-      await repo.addFTFeedback(this, state.mFT.id, feedbackCreation);
-      commit("ADD_FEEDBACK", feedback);
+      const res = await safeCall(
+        this,
+        repo.addFTFeedback(this, state.mFT.id, feedbackCreation)
+      );
+      if (!res) return;
+      commit("ADD_FEEDBACK", res.data);
     },
   }
 );
