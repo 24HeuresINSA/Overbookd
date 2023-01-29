@@ -15,7 +15,7 @@
         <v-btn
           v-if="isDraftOrRefused"
           color="warning"
-          :disabled="canSubmit"
+          :disabled="isSubmitted"
           @click="checkBeforeSubmit()"
           >Soumettre à validation
         </v-btn>
@@ -45,10 +45,7 @@ import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vu
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
 import { FTStatus } from "~/utils/models/ft";
-import {
-  hasAtLeastOneFTError,
-  hasAtLeastOneFTWarning,
-} from "~/utils/rules/ftValidationRules";
+import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
   name: "FT",
@@ -84,14 +81,8 @@ export default Vue.extend({
         this.mFT.status === FTStatus.REFUSED
       );
     },
-    hasAtLeastOneErrorOrWarning(): boolean {
-      return hasAtLeastOneFTError(this.mFT) || hasAtLeastOneFTWarning(this.mFT);
-    },
-    canSubmit(): boolean {
-      return (
-        this.mFT.status === FTStatus.SUBMITTED &&
-        this.hasAtLeastOneErrorOrWarning
-      );
+    isSubmitted(): boolean {
+      return this.mFT.status === FTStatus.SUBMITTED;
     },
   },
   async mounted() {
@@ -118,7 +109,7 @@ export default Vue.extend({
     },
 
     checkBeforeSubmit() {
-      if (this.mFT.status === FTStatus.DRAFT)
+      if (this.mFT.status === FTStatus.DRAFT && hasAtLeastOneFTError(this.mFT))
         return (this.isValidationDialogOpen = true);
       this.submit();
     },

@@ -36,11 +36,6 @@
     </div>
 
     <v-divider></v-divider>
-    <div v-show="hasAtLeastOneWarning" class="my-container my-3">
-      <h3>⚠️ Avertissements ⚠️</h3>
-    </div>
-
-    <v-divider></v-divider>
     <v-card-actions>
       <v-btn color="blue darken-1" text @click="$emit('close-dialog')">
         Annuler
@@ -66,7 +61,6 @@ import {
   detailErrors,
   generalErrors,
   hasAtLeastOneFTError,
-  hasAtLeastOneFTWarning,
   parentFAErrors,
   timeWindowsErrors,
 } from "~/utils/rules/ftValidationRules";
@@ -79,9 +73,6 @@ export default Vue.extend({
     },
     hasAtLeatOneError(): boolean {
       return hasAtLeastOneFTError(this.mFT);
-    },
-    hasAtLeastOneWarning(): boolean {
-      return hasAtLeastOneFTWarning(this.mFT);
     },
 
     generalErrors(): string[] {

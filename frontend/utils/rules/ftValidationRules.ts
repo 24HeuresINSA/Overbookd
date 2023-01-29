@@ -13,10 +13,6 @@ export function hasAtLeastOneFTError(mFT: FT): boolean {
   ];
   return errors.length > 0;
 }
-export function hasAtLeastOneFTWarning(mFT: FT): boolean {
-  const warnings = []; // Aucun warning pour le moment
-  return warnings.length > 0;
-}
 
 function hasName(name?: string): string | boolean {
   return Boolean(name) || "La tâche doit avoir un nom.";
