@@ -268,7 +268,7 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
-        author: validator.id,
+        author: validator,
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
