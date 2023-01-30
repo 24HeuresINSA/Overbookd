@@ -9,3 +9,8 @@ export enum ReviewStatus {
   VALIDATED = "VALIDATED",
   REFUSED = "REFUSED",
 }
+
+export interface Reviewer {
+  teamCode: string;
+  userId: number;
+}

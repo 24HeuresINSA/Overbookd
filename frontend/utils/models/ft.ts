@@ -86,6 +86,14 @@ export interface FTTeamRequest {
   team: Team;
 }
 
+export interface FTTeamRequestUpdate extends Omit<FTTeamRequest, "team"> {
+  teamCode: string;
+}
+
+export interface FTUserRequestUpdate {
+  userId: number;
+}
+
 export function castFTWithDate(ft: HttpStringified<FT>): FT {
   const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
   const feedbacks = ft.feedbacks.map(castFeedbackWithDate);

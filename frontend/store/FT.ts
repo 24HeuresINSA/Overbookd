@@ -1,4 +1,4 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
@@ -13,10 +13,19 @@ import {
   castTimeWindowWithDate,
   castFTWithDate,
   FTSimplified,
+  FTUserRequestUpdate,
+  FTTeamRequestUpdate,
 } from "~/utils/models/ft";
-import { Feedback } from "~/utils/models/feedback";
+import {
+  Feedback,
+  FeedbackCreation,
+  SubjectType,
+} from "~/utils/models/feedback";
 import { User } from "~/utils/models/user";
 import { updateItemToList } from "~/utils/functions/list";
+import { Team } from "~/utils/models/team";
+import { formatUsername } from "~/utils/user/userUtils";
+import { Review, Reviewer } from "~/utils/models/review";
 
 const repo = RepoFactory.ftRepo;
 
@@ -25,8 +34,6 @@ export const state = () => ({
   FTs: [] as FTSimplified[],
 });
 
-export const getters = getterTree(state, {});
-
 export const mutations = mutationTree(state, {
   UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
     state.mFT = { ...state.mFT, ...ft };
@@ -34,10 +41,6 @@ export const mutations = mutationTree(state, {
 
   RESET_FT(state) {
     state.mFT = defaultState() as FT;
-  },
-
-  UPDATE_STATUS({ mFT }, status: FTStatus) {
-    mFT.status = status;
   },
 
   SET_FTS(state, fts: FTSimplified[]) {
@@ -64,6 +67,34 @@ export const mutations = mutationTree(state, {
       timeWindow,
       ...mFT.timeWindows.slice(index + 1),
     ];
+  },
+
+  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
+  },
+
+  UPDATE_USER_REQUESTS(
+    { mFT },
+    {
+      timeWindowId,
+      userRequests,
+    }: { timeWindowId: number; userRequests: User[] }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
+    if (index === -1) return;
+    mFT.timeWindows[index].userRequests = userRequests;
+  },
+
+  UPDATE_TEAM_REQUESTS(
+    { mFT },
+    {
+      timeWindowId,
+      teamRequests,
+    }: { timeWindowId: number; teamRequests: FTTeamRequest[] }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
+    if (index === -1) return;
+    mFT.timeWindows[index].teamRequests = teamRequests;
   },
 
   DELETE_USER_REQUEST(
@@ -99,8 +130,8 @@ export const mutations = mutationTree(state, {
     });
   },
 
-  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
-    mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
+  UPDATE_REVIEWS({ mFT }, reviews: Review[]) {
+    mFT.reviews = reviews;
   },
 
   ADD_FEEDBACK({ mFT }, feedback: Feedback) {
@@ -188,6 +219,61 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
+    async submitForReview({ dispatch, state }, author: User) {
+      const authorName = formatUsername(author);
+      const feedback: Feedback = {
+        subject: SubjectType.SUBMIT,
+        comment: `La FT a été soumise à validation par ${authorName}.`,
+        author,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", { ...feedback, author });
+      dispatch("updateFT", { ...state.mFT, status: FTStatus.SUBMITTED });
+    },
+
+    async validate(
+      { dispatch, commit, state },
+      { validator, team }: { validator: User; team: Team }
+    ) {
+      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
+      const resFT = await safeCall(
+        this,
+        repo.validateFT(this, state.mFT.id, reviewer),
+        { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
+      );
+      if (!resFT) return;
+      const updatedFT = castFTWithDate(resFT.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
+
+      const feedback: Feedback = {
+        subject: SubjectType.VALIDATED,
+        comment: `La FT a été validée par ${team.name}.`,
+        author: validator,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", feedback);
+    },
+
+    async refuse({ commit, dispatch, state }, { validator, team, message }) {
+      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
+      const resFT = await safeCall(
+        this,
+        repo.refuseFT(this, state.mFT.id, reviewer),
+        { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
+      );
+      if (!resFT) return;
+      const updatedFT = castFTWithDate(resFT.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
+
+      const feedback: Feedback = {
+        subject: SubjectType.REFUSED,
+        comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
+        author: validator,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", feedback);
+    },
+
     async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
@@ -202,18 +288,51 @@ export const actions = actionTree(
       commit("UPDATE_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
-    async updateTimeWindowRequirements({ commit }, timeWindow: FTTimeWindow) {
-      commit("UPDATE_TIME_WINDOW", timeWindow);
-      /*await Promise.all([
+    async updateTimeWindowRequirements(
+      { commit, state },
+      timeWindow: FTTimeWindow
+    ) {
+      if (!timeWindow.id) return;
+      const adaptedUserRequests: FTUserRequestUpdate[] =
+        timeWindow.userRequests.map((ur) => ({
+          userId: ur.id,
+        }));
+      const adaptedTeamRequests: FTTeamRequestUpdate[] =
+        timeWindow.teamRequests.map((tr) => ({
+          teamCode: tr.team.code,
+          quantity: tr.quantity,
+        }));
+
+      const [resTeamRequests, resUserRequests] = await Promise.all([
         safeCall(
           this,
-          repo.updateUserRequests(this, state.mFT.id, timeWindow.userRequests)
+          repo.updateFTUserRequests(
+            this,
+            state.mFT.id,
+            timeWindow.id,
+            adaptedUserRequests
+          )
         ),
         safeCall(
           this,
-          repo.updateTeamRequests(this, state.mFT.id, timeWindow.teamRequests)
+          repo.updateFTTeamRequests(
+            this,
+            state.mFT.id,
+            timeWindow.id,
+            adaptedTeamRequests
+          )
         ),
-      ]);*/
+      ]);
+      if (resUserRequests)
+        commit("UPDATE_USER_REQUESTS", {
+          timeWindowId: timeWindow.id,
+          userRequests: resUserRequests.data,
+        });
+      if (resTeamRequests)
+        commit("UPDATE_TEAM_REQUESTS", {
+          timeWindowId: timeWindow.id,
+          teamRequests: resTeamRequests.data,
+        });
     },
 
     async deleteUserRequest(
@@ -248,9 +367,21 @@ export const actions = actionTree(
       commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
-    async addFeedback({ commit }, feedback: Feedback) {
-      // await repo.addFTComment(this, comment);
-      commit("ADD_FEEDBACK", feedback);
+    async addFeedback({ commit, state }, feedback: Feedback) {
+      const feedbackCreation: FeedbackCreation = {
+        ...feedback,
+        author: feedback.author.id,
+      };
+      const res = await safeCall(
+        this,
+        repo.addFTFeedback(this, state.mFT.id, feedbackCreation),
+        {
+          successMessage: "Commentaire ajouté 🥳",
+          errorMessage: "Commentaire non ajouté 😢",
+        }
+      );
+      if (!res) return;
+      commit("ADD_FEEDBACK", res.data);
     },
   }
 );
