@@ -50,12 +50,8 @@
     }
   }
 
-  .dot {
-    @include background-color-by-status();
-  }
-
   #status, #validators {
-    .v-chip {
+    .v-chip, #dot {
       @include background-color-by-status();
     }
   }

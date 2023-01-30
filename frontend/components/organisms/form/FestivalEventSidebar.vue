@@ -1,9 +1,9 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar fa ft">
     <h1>{{ titleWithId }}</h1>
     <h2>{{ name }}</h2>
-    <div class="status">
-      <span class="dot grey"></span>
+    <div id="status">
+      <span id="dot" :class="status"></span>
       <h3>{{ statusLabel }}</h3>
     </div>
     <div class="icons">
@@ -62,6 +62,10 @@ export default Vue.extend({
       if (this.isFA) return this.$accessor.team.faValidators;
       return this.$accessor.team.ftValidators;
     },
+    status(): string {
+      if (this.isFA) return this.mFA.status.toLowerCase();
+      return this.mFT.status.toLowerCase();
+    },
   },
   methods: {
     getValidatorStatus(validator: Team) {
@@ -102,14 +106,13 @@ export default Vue.extend({
     overflow: hidden;
   }
 
-  .status {
+  #status {
     display: flex;
     align-items: center;
 
-    .dot {
+    #dot {
       height: 25px;
       width: 25px;
-      background-color: #bbb;
       border-radius: 50%;
       display: inline-block;
       margin-left: 16px;
