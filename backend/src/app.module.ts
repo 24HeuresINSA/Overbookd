@@ -27,6 +27,7 @@ import { InventoryModule } from './inventory/inventory.module';
 import { FtModule } from './ft/ft.module';
 import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
 import { GearRequestsModule } from './gear-requests/gearRequests.module';
+import { FtFeedbacksModule } from './ft_feedbacks/ft_feedbacks.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { GearRequestsModule } from './gear-requests/gearRequests.module';
     FtModule,
     FtTimeWindowsModule,
     GearRequestsModule,
+    FtFeedbacksModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

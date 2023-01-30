@@ -75,7 +75,7 @@ model User {
   fa_comments   fa_comments[]
 
   ftsInCharge    Ft[]            @relation("inCharge")
-  ftComments     FtComments[]
+  ftFeedbacks    FtFeedbacks[]
   ftUserRequests FtUserRequest[]
 }
 
@@ -457,7 +457,7 @@ enum FtSubjectType {
   @@map("ft_subject_type")
 }
 
-model FtComments {
+model FtFeedbacks {
   id        Int           @id @default(autoincrement())
   ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId      Int           @map("ft_id")
@@ -467,7 +467,7 @@ model FtComments {
   authorId  Int           @map("author_id")
   createdAt DateTime      @default(now()) @map("created_at")
 
-  @@map("ft_comments")
+  @@map("ft_feedbacks")
 }
 
 model FtTimeWindows {
