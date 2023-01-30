@@ -80,6 +80,9 @@ export default Vue.extend({
         this.mFT.status === FTStatus.REFUSED
       );
     },
+    me(): any {
+      return this.$accessor.user.me;
+    },
   },
   async mounted() {
     await this.$accessor.FT.fetchFT(this.ftId);
@@ -105,14 +108,14 @@ export default Vue.extend({
     },
 
     checkBeforeSubmit() {
-      if (this.mFT.status === FTStatus.DRAFT && hasAtLeastOneFTError(this.mFT))
-        return (this.isValidationDialogOpen = true);
+      //if (this.mFT.status === FTStatus.DRAFT && hasAtLeastOneFTError(this.mFT))
+      //  return (this.isValidationDialogOpen = true);
       this.submit();
     },
 
     async submit() {
       this.isValidationDialogOpen = false;
-      //await this.$accessor.FT.submitFT();
+      await this.$accessor.FT.submitForReview(this.me);
     },
   },
 });

@@ -230,7 +230,7 @@ export const actions = actionTree(
       if (!res) return;
       const createdFT = castFTWithDate(res.data);
       commit("ADD_FT", createdFT);
-      dispatch("setFT", { ...fakeFT(res.data.id), ...createdFT });
+      dispatch("setFT", { ...defaultState(), ...createdFT, id: res.data.id });
     },
 
     async updateFT({ commit }, ft: FT) {
@@ -274,7 +274,20 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
-    async submitForReview({ dispatch, state }, author: User) {
+    async submitForReview({ commit, dispatch, state }, author: User) {
+      const ftToUpdate = toUpdateFT({
+        ...state.mFT,
+        status: FTStatus.SUBMITTED,
+      });
+      const res = await safeCall(this, repo.updateFT(this, ftToUpdate), {
+        successMessage: "FT soumise à validation 🥳",
+        errorMessage: "FT non soumise à validation 😢",
+      });
+
+      if (!res) return;
+      const updatedFT = castFTWithDate(res.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
+
       const authorName = formatUsername(author);
       const feedback: Feedback = {
         subject: SubjectType.SUBMIT,
@@ -283,7 +296,6 @@ export const actions = actionTree(
         createdAt: new Date(),
       };
       dispatch("addFeedback", { ...feedback, author });
-      dispatch("updateFT", { ...state.mFT, status: FTStatus.SUBMITTED });
     },
 
     async validate(
@@ -499,21 +511,14 @@ export const actions = actionTree(
   }
 );
 
-function defaultState(): FTCreation {
+function defaultState(): Omit<FT, "id"> {
   return {
     name: "",
-  };
-}
-
-function fakeFT(id: number): FT {
-  return {
-    id,
-    name: "name",
+    status: FTStatus.DRAFT,
     description: "",
     isStatic: false,
-    feedbacks: [],
-    status: FTStatus.DRAFT,
     timeWindows: [],
+    feedbacks: [],
     reviews: [],
     isDeleted: false,
   };
