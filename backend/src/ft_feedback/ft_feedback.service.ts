@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateFtFeedbacksDto } from './dto/createFtFeedbacks.dto';
-import { FtFeedbacksResponseDto } from './dto/ftFeedbacksResponse.dto';
+import { CreateFtFeedbackDto } from './dto/createFtFeedback.dto';
+import { FtFeedbackResponseDto } from './dto/ftFeedbackResponse.dto';
 
 @Injectable()
-export class FtFeedbacksService {
+export class FtFeedbackService {
   constructor(private prisma: PrismaService) {}
 
   create(
     ftId: number,
-    feedback: CreateFtFeedbacksDto,
-  ): Promise<FtFeedbacksResponseDto> {
-    return this.prisma.ftFeedbacks.create({
+    feedback: CreateFtFeedbackDto,
+  ): Promise<FtFeedbackResponseDto> {
+    return this.prisma.ftFeedback.create({
       data: {
         ...feedback,
         ftId,
