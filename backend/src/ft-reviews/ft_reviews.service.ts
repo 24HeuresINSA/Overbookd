@@ -7,21 +7,16 @@ import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 export class FtReviewsService {
   constructor(private prisma: PrismaService) {}
 
-  validateFt(
+  async validateFt(
     ftId: number,
-    teamId: number,
-    tw: UpsertFtReviewsDto,
+    teamCode: string,
+    reviewer: UpsertFtReviewsDto,
   ): Promise<CompleteFtResponseDto> {
     const completeReview = {
-      ...tw,
       ftId,
+      teamCode,
+      userId: reviewer.userId,
     };
-    return this.prisma.ftTimeWindows.upsert({
-      where: {
-        id: completeTw.id || 0,
-      },
-      update: completeTw,
-      create: completeTw,
-    });
+    await this.prisma.ftReview.create({ data: completeReview });
   }
 }

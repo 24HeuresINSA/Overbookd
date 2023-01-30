@@ -58,9 +58,9 @@ export class FtReviewsController {
     required: true,
   })
   @ApiParam({
-    name: 'teamId',
+    name: 'teamCode',
     type: Number,
-    description: 'validator team id',
+    description: 'validator team code',
     required: true,
   })
   @ApiBody({
@@ -69,9 +69,9 @@ export class FtReviewsController {
   })
   upsert(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Param('teamId', ParseIntPipe) teamId: number,
+    @Param('teamCode') teamCode: string,
     @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
   ): Promise<CompleteFtResponseDto | null> {
-    return this.ftReviewsService.validateFt(ftId, teamId, upsertFtReviewsDto);
+    return this.ftReviewsService.validateFt(ftId, teamCode, upsertFtReviewsDto);
   }
 }
