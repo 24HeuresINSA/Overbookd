@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { FtReview, FtStatus, reviewStatus } from '@prisma/client';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { COMPLETE_FT_SELECT } from 'src/ft/ftTypes';
+import { PermissionService } from 'src/permission/permission.service';
 import { PrismaService } from '../prisma.service';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 
 @Injectable()
 export class FtReviewsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly permissionService: PermissionService,
+  ) {}
 
   async validateFt(
     ftId: number,
@@ -24,7 +28,7 @@ export class FtReviewsService {
       update: completeReview,
     });
 
-    const status = this.getNewFtStatusAfterValidation(ftId);
+    const status = await this.getNewFtStatusAfterValidation(ftId);
     const updateStatus = this.prisma.ft.update({
       where: { id: ftId },
       data: { status },
@@ -55,8 +59,22 @@ export class FtReviewsService {
     return this.prisma.$transaction([upsertReview, updateStatus])[1];
   }
 
-  getNewFtStatusAfterValidation(ftId: number): FtStatus {
-    // A Modifier
+  async getNewFtStatusAfterValidation(ftId: number): Promise<FtStatus> {
+    const ftValidators = await this.permissionService.permission({
+      where: { name: 'ft-validator' },
+    });
+    const ftReviews = await this.prisma.ftReview.findMany({
+      where: { ftId },
+      select: { teamCode: true, status: true },
+    });
+    const validatedReviews = ftReviews.filter(
+      (review) => review.status === reviewStatus.VALIDATED,
+    );
+
+    // -1 because the review is not yet created
+    if (validatedReviews.length === ftValidators.length - 1) {
+      return FtStatus.VALIDATED;
+    }
     return FtStatus.SUBMITTED;
   }
 }
