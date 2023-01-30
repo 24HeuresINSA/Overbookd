@@ -33,7 +33,7 @@ const DISPLAY_USER_WITH_ID_SELECT = {
   },
 };
 
-export const FEEDBACK_SELECT = {
+const FEEDBACK_SELECT = {
   select: {
     id: true,
     comment: true,
