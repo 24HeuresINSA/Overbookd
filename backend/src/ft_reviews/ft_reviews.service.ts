@@ -72,7 +72,7 @@ export class FtReviewsService {
     );
 
     // -1 because the review is not yet created
-    if (validatedReviews.length === ftValidators.length - 1) {
+    if (validatedReviews.length === ftValidators.length) {
       return FtStatus.VALIDATED;
     }
     return FtStatus.SUBMITTED;

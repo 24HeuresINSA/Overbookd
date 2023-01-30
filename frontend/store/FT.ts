@@ -308,7 +308,7 @@ export const actions = actionTree(
         repo.validateFT(this, state.mFT.id, reviewer),
         { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
       );
-      if (!resFT) return;
+      if (!resFT?.data) return;
       const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
 
@@ -331,7 +331,7 @@ export const actions = actionTree(
         repo.refuseFT(this, state.mFT.id, reviewer),
         { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
       );
-      if (!resFT) return;
+      if (!resFT?.data) return;
       const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
 
