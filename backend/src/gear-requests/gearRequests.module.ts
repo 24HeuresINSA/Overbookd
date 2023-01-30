@@ -7,6 +7,7 @@ import { GearRequestsService } from './gearRequests.service';
 import { PrismaAnimationRepository } from './repositories/animation.repository.prisma';
 import { PrismaGearRequestRepository } from './repositories/gearRequest.repository.prisma';
 import { PrismaPeriodRepository } from './repositories/period.repository.prisma';
+import { PrismaTaskRepository } from './repositories/task.repository.prisma';
 
 @Module({
   imports: [CommonModule],
@@ -26,6 +27,10 @@ import { PrismaPeriodRepository } from './repositories/period.repository.prisma'
     {
       provide: 'PERIOD_REPOSITORY',
       useClass: PrismaPeriodRepository,
+    },
+    {
+      provide: 'TASK_REPOSITORY',
+      useClass: PrismaTaskRepository,
     },
   ],
   exports: [GearRequestsService],

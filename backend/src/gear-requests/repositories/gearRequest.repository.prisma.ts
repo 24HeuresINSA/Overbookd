@@ -13,14 +13,22 @@ import {
   GearRequestIdentifier,
   GearRequestNotFound,
   GearRequestRepository,
+  GearSeeker,
   GearSeekerType,
   Period,
   SearchGearRequest,
   UpdateGearRequestForm,
 } from '../gearRequests.service';
 
-type DatabaseGearRequest = {
+type Animation = {
   animation: { id: number; name: string };
+};
+
+type Task = {
+  task: { id: number; name: string };
+};
+
+type DatabaseGearRequest<T extends Animation | Task = Animation> = T & {
   rentalPeriod: Period;
   quantity: number;
   status: string;
@@ -29,7 +37,10 @@ type DatabaseGearRequest = {
 };
 
 function convertApprovedAnimationGearRequestToApiContract(
-  gearRequest: DatabaseGearRequest & { drive: string; status: typeof APPROVED },
+  gearRequest: DatabaseGearRequest<Animation> & {
+    drive: string;
+    status: typeof APPROVED;
+  },
 ): ApprovedGearRequest {
   const { drive, status } = gearRequest;
   return {
@@ -40,16 +51,36 @@ function convertApprovedAnimationGearRequestToApiContract(
 }
 
 function convertAnimationGearRequestToApiContract(
-  gearRequest: DatabaseGearRequest,
+  gearRequest: DatabaseGearRequest<Animation>,
 ): GearRequest {
-  const { animation, rentalPeriod, quantity, status, gear, drive } =
-    gearRequest;
+  const { animation } = gearRequest;
+  const seeker = {
+    type: GearSeekerType.Animation,
+    id: animation.id,
+    name: animation.name,
+  };
+  return buildGearRequest(seeker, gearRequest);
+}
+
+function convertTaskGearRequestToApiContract(
+  gearRequest: DatabaseGearRequest<Task>,
+): GearRequest {
+  const { task } = gearRequest;
+  const seeker = {
+    type: GearSeekerType.Task,
+    id: task.id,
+    name: task.name,
+  };
+  return buildGearRequest(seeker, gearRequest);
+}
+
+function buildGearRequest(
+  seeker: GearSeeker,
+  gearRequest: DatabaseGearRequest<Animation | Task>,
+): GearRequest {
+  const { rentalPeriod, quantity, status, gear, drive } = gearRequest;
   return {
-    seeker: {
-      type: GearSeekerType.Animation,
-      id: animation.id,
-      name: animation.name,
-    },
+    seeker,
     rentalPeriod,
     quantity,
     status,
@@ -58,12 +89,34 @@ function convertAnimationGearRequestToApiContract(
   };
 }
 
+function convertGearRequestToApiContract(
+  gearRequest: DatabaseGearRequest<Animation | Task>,
+): GearRequest {
+  if (isAnimationGearRequest(gearRequest))
+    return convertAnimationGearRequestToApiContract(gearRequest);
+  return convertTaskGearRequestToApiContract(gearRequest);
+}
+
+function isAnimationGearRequest(
+  gearRequest: DatabaseGearRequest<Animation | Task>,
+): gearRequest is DatabaseGearRequest<Animation> {
+  return (
+    (gearRequest as DatabaseGearRequest<Animation>).animation !== undefined
+  );
+}
+
 @Injectable()
 export class PrismaGearRequestRepository implements GearRequestRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   private readonly SELECT_GEAR_REQUEST = {
     animation: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+    task: {
       select: {
         id: true,
         name: true,
@@ -99,8 +152,13 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   async addGearRequest(gearRequest: GearRequest): Promise<GearRequest> {
     const { seeker, rentalPeriod, gear, quantity, status } = gearRequest;
 
+    const seekerData =
+      seeker.type === GearSeekerType.Animation
+        ? { animationId: seeker.id }
+        : { taskId: seeker.id };
+
     const data = {
-      animationId: seeker.id,
+      ...seekerData,
       rentalPeriodId: rentalPeriod.id,
       gearId: gear.id,
       quantity,
@@ -108,13 +166,12 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     };
 
     try {
-      const savedGearRequest =
-        await this.prismaService.animation_Gear_Request.create({
-          select: this.SELECT_GEAR_REQUEST,
-          data,
-        });
+      const savedGearRequest = await this.prismaService.gearRequest.create({
+        select: this.SELECT_GEAR_REQUEST,
+        data,
+      });
 
-      return convertAnimationGearRequestToApiContract(savedGearRequest);
+      return convertGearRequestToApiContract(savedGearRequest);
     } catch (e) {
       if (this.prismaService.isUniqueConstraintViolation(e)) {
         throw new GearRequestAlreadyExists(gearRequest);
@@ -132,29 +189,27 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
 
-    const gearRequest =
-      await this.prismaService.animation_Gear_Request.findUnique({
-        where,
-        select: this.SELECT_GEAR_REQUEST,
-      });
+    const gearRequest = await this.prismaService.gearRequest.findUnique({
+      where,
+      select: this.SELECT_GEAR_REQUEST,
+    });
 
     if (!gearRequest) {
       throw new GearRequestNotFound(gearRequestId);
     }
 
-    return convertAnimationGearRequestToApiContract(gearRequest);
+    return convertGearRequestToApiContract(gearRequest);
   }
 
   async getGearRequests(
     gearRequestSearch: SearchGearRequest,
   ): Promise<GearRequest[]> {
     const where = this.buildGearRequestSearchConditions(gearRequestSearch);
-    const gearRequests =
-      await this.prismaService.animation_Gear_Request.findMany({
-        select: this.SELECT_GEAR_REQUEST,
-        where,
-      });
-    return gearRequests.map(convertAnimationGearRequestToApiContract);
+    const gearRequests = await this.prismaService.gearRequest.findMany({
+      select: this.SELECT_GEAR_REQUEST,
+      where,
+    });
+    return gearRequests.map(convertGearRequestToApiContract);
   }
 
   async updateGearRequest(
@@ -168,18 +223,17 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     const data = this.buildUpdateGearRequestData(updateGearRequestForm);
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
 
-    const updatedGearRequest =
-      await this.prismaService.animation_Gear_Request.update({
-        select: this.SELECT_GEAR_REQUEST,
-        data,
-        where,
-      });
-    return convertAnimationGearRequestToApiContract(updatedGearRequest);
+    const updatedGearRequest = await this.prismaService.gearRequest.update({
+      select: this.SELECT_GEAR_REQUEST,
+      data,
+      where,
+    });
+    return convertGearRequestToApiContract(updatedGearRequest);
   }
 
   async removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
-    await this.prismaService.animation_Gear_Request.delete({
+    await this.prismaService.gearRequest.delete({
       where,
       select: { rentalPeriodId: true, gearId: true, animationId: true },
     });
@@ -192,12 +246,11 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     const data = { status: APPROVED, drive };
     const where = this.buildGearRequestUniqueCondition(gearRequestIdentifier);
 
-    const approvedGearRequest =
-      await this.prismaService.animation_Gear_Request.update({
-        where,
-        data,
-        select: this.SELECT_GEAR_REQUEST,
-      });
+    const approvedGearRequest = await this.prismaService.gearRequest.update({
+      where,
+      data,
+      select: this.SELECT_GEAR_REQUEST,
+    });
     return convertApprovedAnimationGearRequestToApiContract({
       ...approvedGearRequest,
       status: APPROVED,
@@ -222,8 +275,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
   ) {
     return {
-      animationId_gearId_rentalPeriodId: {
-        animationId: gearRequestId.seeker.id,
+      gearId_rentalPeriodId: {
         gearId: gearRequestId.gearId,
         rentalPeriodId: gearRequestId.rentalPeriodId,
       },
@@ -238,7 +290,9 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   }
 
   private buildGearRequestSearchConditions({ seeker }: SearchGearRequest) {
-    const seekerCondition = seeker?.id ? { animationId: seeker.id } : {};
+    const seekerType =
+      seeker?.type === GearSeekerType.Animation ? 'animationId' : 'taskId';
+    const seekerCondition = seeker?.id ? { [seekerType]: seeker.id } : {};
 
     return { ...seekerCondition };
   }

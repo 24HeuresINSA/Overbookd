@@ -191,7 +191,7 @@ model fa {
   fa_signa_needs         fa_signa_needs[]
   fa_comments            fa_comments[]
   time_windows           time_windows[]
-  gearRequests           Animation_Gear_Request[] @relation("gear-request-animation")
+  gearRequests           GearRequest[] @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
 }
@@ -373,7 +373,7 @@ model Catalog_Gear {
   slug             String                   @unique
   category_id      Int?
   category         Catalog_Category?        @relation("category", fields: [category_id], references: [id])
-  requests         Animation_Gear_Request[] @relation("gear-request-gear")
+  requests         GearRequest[] @relation("gear-request-gear")
   isPonctualUsage  Boolean                  @default(false) @map("is_ponctual_usage")
   inventoryRecords InventoryRecord[]        @relation()
 
@@ -390,24 +390,27 @@ model Period {
   id          Int                      @id @default(autoincrement())
   start       DateTime
   end         DateTime
-  gearRequest Animation_Gear_Request[] @relation("gear-request-rental-period")
+  gearRequest GearRequest[] @relation("gear-request-rental-period")
 
   @@index([start, end])
 }
 
-model Animation_Gear_Request {
-  animationId    Int
-  animation      fa           @relation("gear-request-animation", fields: [animationId], references: [id])
+model GearRequest {
+  animationId    Int?
+  animation      fa?          @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
+  taskId         Int?
+  task           Ft?          @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
   rentalPeriodId Int
   rentalPeriod   Period       @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
   gearId         Int
-  gear           Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id])
+  gear           Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
   quantity       Int
   status         String
   drive          String?
 
-  @@unique([animationId, gearId, rentalPeriodId])
+  @@unique([gearId, rentalPeriodId])
   @@index([status])
+	@@map("gear_request")
 }
 
 enum FtStatus {
@@ -437,8 +440,9 @@ model Ft {
   isDeleted      Boolean         @default(false) @map("is_deleted")
 
   feedbacks    FtComments[]
-  timeWindows FtTimeWindows[]
-  reviews     FtReview[]
+  timeWindows  FtTimeWindows[]
+  reviews      FtReview[]
+  gearRequests GearRequest[] @relation("gear-request-task")
 
   @@map("ft")
 }
