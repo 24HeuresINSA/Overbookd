@@ -36,7 +36,7 @@ export default Vue.extend({
       if (!this.ftName) return;
       const blankFT: FTCreation = {
         name: this.ftName,
-        faId: this.faId,
+        parentFaId: this.faId,
       };
 
       await this.$accessor.FT.createFT(blankFT);

@@ -128,6 +128,13 @@ export const COMPLETE_FA_SELECT = {
       type: true,
     },
   },
+  fts: {
+    select: {
+      id: true,
+      name: true,
+      status: true,
+    },
+  },
 };
 
 export const ALL_FA_SELECT = {
