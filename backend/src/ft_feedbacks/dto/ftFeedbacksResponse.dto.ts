@@ -7,11 +7,9 @@ class UserName {
   lastname: string;
 }
 
-class UserNameWithId extends UserName {
-  id: number;
-}
-
-export class FtFeedbacksResponseDto implements FtFeedbacks {
+export class FtFeedbacksResponseDto
+  implements Omit<FtFeedbacks, 'authorId' | 'ftId'>
+{
   @ApiProperty({
     required: true,
     description: 'The id of the ft feedback',
@@ -22,20 +20,11 @@ export class FtFeedbacksResponseDto implements FtFeedbacks {
 
   @ApiProperty({
     required: true,
-    description: 'The ft id of the ft feedback',
-    type: Number,
+    type: UserName,
+    description: 'The author of feedback',
   })
   @IsNumber()
-  ftId: number;
-
-  // TODO: A remplacer par un objet UserNameWithId
-  @ApiProperty({
-    required: true,
-    type: Number,
-    description: 'The author id of feedback',
-  })
-  @IsNumber()
-  authorId: number;
+  author: UserName;
 
   @ApiProperty({
     required: true,

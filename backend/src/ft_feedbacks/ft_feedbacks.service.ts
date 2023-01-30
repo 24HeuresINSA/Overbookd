@@ -16,6 +16,18 @@ export class FtFeedbacksService {
         ...feedback,
         ftId,
       },
+      select: {
+        id: true,
+        author: {
+          select: {
+            firstname: true,
+            lastname: true,
+          },
+        },
+        createdAt: true,
+        subject: true,
+        comment: true,
+      },
     });
   }
 }
