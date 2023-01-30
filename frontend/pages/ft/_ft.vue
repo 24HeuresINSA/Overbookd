@@ -44,7 +44,6 @@ import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vu
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
 import FTLogisticsCard from "~/components/organisms/form/FTLogisticsCard.vue";
 import { FTStatus } from "~/utils/models/ft";
-import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
   name: "FT",
