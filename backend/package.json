@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.7.2-rc.12",
+  "version": "1.7.2-rc.13",
   "description": "Backend pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
