@@ -6,7 +6,7 @@
       <ParentFACard id="fa" />
       <FTDetailCard id="detail" />
       <FTTimeWindowCard id="timewindow" />
-      <LogisticsCard id="matos" title="Matos" />
+      <LogisticsCardFA id="matos" title="Matos" />
       <FeedbackCard id="comment" form="FT" />
     </v-container>
 
@@ -42,7 +42,7 @@ import FTDetailCard from "~/components/organisms/form/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/form/ft/FTGeneralCard.vue";
 import FTTimeWindowCard from "~/components/organisms/form/ft/FTTimeWindowCard.vue";
 import ParentFACard from "~/components/organisms/form/ft/ParentFACard.vue";
-import LogisticsCard from "~/components/organisms/form/LogisticsCard.vue";
+import LogisticsCardFA from "~/components/organisms/form/LogisticsCardFA.vue";
 import { FTStatus } from "~/utils/models/ft";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 
@@ -54,7 +54,7 @@ export default Vue.extend({
     ParentFACard,
     FTDetailCard,
     FTTimeWindowCard,
-    LogisticsCard,
+    LogisticsCardFA,
     SnackNotificationContainer,
     FeedbackCard,
     FTCheckBeforeSubmitCard,
