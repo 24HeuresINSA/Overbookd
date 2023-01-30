@@ -1,4 +1,4 @@
-FROM node:16.17.1-alpine3.16 AS installer
+FROM node:19.5.0-alpine3.16 AS installer
 
 WORKDIR /overbookd/frontend
 
@@ -16,7 +16,7 @@ COPY . .
 
 RUN npm run build:ci
 
-FROM node:16.17.1-alpine3.16
+FROM node:19.5.0-alpine3.16
 
 ENV NODE_ENV production
 
