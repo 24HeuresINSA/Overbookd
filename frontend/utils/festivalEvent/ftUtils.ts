@@ -10,7 +10,7 @@ export function isTaskValidatedBy(
 }
 
 export function isTaskRefusedBy(reviews: Review[], teamCode: string): boolean {
-  const refusalReviews = getValidationReviews(reviews);
+  const refusalReviews = getRefusalReviews(reviews);
   return refusalReviews.some((review) => review.team.code === teamCode);
 }
 

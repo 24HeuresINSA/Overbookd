@@ -89,7 +89,7 @@ export default {
     twId: number,
     teamRequests: FTTeamRequestUpdate[]
   ) {
-    return context.$axios.post<HttpStringified<FTTeamRequest>>(
+    return context.$axios.post<HttpStringified<FTTeamRequest[]>>(
       `${resource}/${ftId}/time-windows/${twId}/team-requests`,
       teamRequests
     );

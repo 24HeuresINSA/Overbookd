@@ -77,16 +77,28 @@ export const mutations = mutationTree(state, {
     mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
   },
 
-  UPDATE_USER_REQUESTS({ mFT }, timeWindow: FTTimeWindow) {
-    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+  UPDATE_USER_REQUESTS(
+    { mFT },
+    {
+      timeWindowId,
+      userRequests,
+    }: { timeWindowId: number; userRequests: User[] }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    mFT.timeWindows[index].userRequests = timeWindow.userRequests;
+    mFT.timeWindows[index].userRequests = userRequests;
   },
 
-  UPDATE_TEAM_REQUESTS({ mFT }, timeWindow: FTTimeWindow) {
-    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+  UPDATE_TEAM_REQUESTS(
+    { mFT },
+    {
+      timeWindowId,
+      teamRequests,
+    }: { timeWindowId: number; teamRequests: FTTeamRequest[] }
+  ) {
+    const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    mFT.timeWindows[index].teamRequests = timeWindow.teamRequests;
+    mFT.timeWindows[index].teamRequests = teamRequests;
   },
 
   DELETE_USER_REQUEST(
@@ -230,7 +242,8 @@ export const actions = actionTree(
       const reviewBody: Reviewer = { userId: author.id };
       const resFT = await safeCall(
         this,
-        repo.validateFT(this, state.mFT.id, validator.id, reviewBody)
+        repo.validateFT(this, state.mFT.id, validator.id, reviewBody),
+        { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
@@ -249,7 +262,8 @@ export const actions = actionTree(
       const reviewBody: Reviewer = { userId: author.id };
       const resFT = await safeCall(
         this,
-        repo.refuseFT(this, state.mFT.id, validator.id, reviewBody)
+        repo.refuseFT(this, state.mFT.id, validator.id, reviewBody),
+        { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
@@ -257,7 +271,7 @@ export const actions = actionTree(
 
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
-        comment: `La FA a été refusée${message ? ": " + message : "."}`,
+        comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
         author: author.id,
         createdAt: new Date(),
       };
@@ -313,8 +327,16 @@ export const actions = actionTree(
           )
         ),
       ]);
-      if (resUserRequests) commit("UPDATE_USER_REQUESTS", timeWindow);
-      if (resTeamRequests) commit("UPDATE_TEAM_REQUESTS", timeWindow);
+      if (resUserRequests)
+        commit("UPDATE_USER_REQUESTS", {
+          timeWindowId: timeWindow.id,
+          userRequests: resUserRequests.data,
+        });
+      if (resTeamRequests)
+        commit("UPDATE_TEAM_REQUESTS", {
+          timeWindowId: timeWindow.id,
+          teamRequests: resTeamRequests.data,
+        });
     },
 
     async deleteUserRequest(
@@ -356,7 +378,11 @@ export const actions = actionTree(
       };
       const res = await safeCall(
         this,
-        repo.addFTFeedback(this, state.mFT.id, feedbackCreation)
+        repo.addFTFeedback(this, state.mFT.id, feedbackCreation),
+        {
+          successMessage: "Commentaire ajouté 🥳",
+          errorMessage: "Commentaire non ajouté 😢",
+        }
       );
       if (!res) return;
       commit("ADD_FEEDBACK", res.data);
