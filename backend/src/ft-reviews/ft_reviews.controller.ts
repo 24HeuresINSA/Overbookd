@@ -37,13 +37,12 @@ export class FtReviewsController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('ft-validator')
-  @Post(':ftId/validation/:teamId')
+  @Post(':ftId/validation')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Validate a FT',
     type: CompleteFtResponseDto,
-    isArray: true,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -57,21 +56,46 @@ export class FtReviewsController {
     description: 'FT id',
     required: true,
   })
-  @ApiParam({
-    name: 'teamCode',
-    type: Number,
-    description: 'validator team code',
-    required: true,
-  })
   @ApiBody({
     type: UpsertFtReviewsDto,
     description: 'FT to validate',
   })
-  upsert(
+  validateFt(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Param('teamCode') teamCode: string,
     @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
   ): Promise<CompleteFtResponseDto | null> {
-    return this.ftReviewsService.validateFt(ftId, teamCode, upsertFtReviewsDto);
+    return this.ftReviewsService.validateFt(ftId, upsertFtReviewsDto);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('ft-validator')
+  @Post(':ftId/refusal')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Refuse a FT',
+    type: CompleteFtResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Request is not formated as expected',
+  })
+  @ApiForbiddenResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'ftId',
+    type: Number,
+    description: 'FT id',
+    required: true,
+  })
+  @ApiBody({
+    type: UpsertFtReviewsDto,
+    description: 'FT to refuse',
+  })
+  refuseFt(
+    @Param('ftId', ParseIntPipe) ftId: number,
+    @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
+  ): Promise<CompleteFtResponseDto | null> {
+    return this.ftReviewsService.refuseFt(ftId, upsertFtReviewsDto);
   }
 }
