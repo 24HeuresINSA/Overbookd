@@ -152,7 +152,7 @@ import {
 import { FA, SortedStoredGearRequests } from "~/utils/models/FA";
 
 export default Vue.extend({
-  name: "CheckBeforeSubmitCard",
+  name: "FACheckBeforeSubmitCard",
   computed: {
     FA(): any {
       return this.$accessor.FA;
