@@ -37,7 +37,7 @@ export class FtFeedbackController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':ftId/feedbacks')
+  @Post(':ftId/feedback')
   @HttpCode(201)
   @ApiResponse({
     status: 201,

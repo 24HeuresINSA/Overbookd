@@ -101,7 +101,7 @@ export default {
 
   addFTFeedback(context: Context, ftId: number, feedback: FeedbackCreation) {
     return context.$axios.post<HttpStringified<SavedFeedback>>(
-      `${resource}/${ftId}/feedbacks`,
+      `${resource}/${ftId}/feedback`,
       feedback
     );
   },
