@@ -288,9 +288,9 @@ export const actions = actionTree(
 
     async validate(
       { dispatch, commit, state },
-      { validator, team }: { validator: User; team: Team }
+      { author, team }: { author: User; team: Team }
     ) {
-      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
+      const reviewer: Reviewer = { teamCode: team.code };
       const resFT = await safeCall(
         this,
         repo.validateFT(this, state.mFT.id, reviewer),
@@ -303,14 +303,17 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.VALIDATED,
         comment: `La FT a été validée par ${team.name}.`,
-        author: validator,
+        author,
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
     },
 
-    async refuse({ commit, dispatch, state }, { validator, team, message }) {
-      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
+    async refuse(
+      { commit, dispatch, state },
+      { author, team, message }: { author: User; team: Team; message?: string }
+    ) {
+      const reviewer: Reviewer = { teamCode: team.code };
       const resFT = await safeCall(
         this,
         repo.refuseFT(this, state.mFT.id, reviewer),
@@ -323,7 +326,7 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
-        author: validator,
+        author,
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
