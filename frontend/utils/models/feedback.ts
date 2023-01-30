@@ -12,7 +12,7 @@ export interface SavedFeedback extends Feedback {
 }
 
 export interface FeedbackCreation extends Omit<Feedback, "author"> {
-  author: number;
+  authorId: number;
 }
 
 export enum SubjectType {

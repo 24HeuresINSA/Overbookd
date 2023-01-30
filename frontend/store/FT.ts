@@ -425,7 +425,7 @@ export const actions = actionTree(
     async addFeedback({ commit, state }, feedback: Feedback) {
       const feedbackCreation: FeedbackCreation = {
         ...feedback,
-        author: feedback.author.id,
+        authorId: feedback.author.id,
       };
       const res = await safeCall(
         this,
