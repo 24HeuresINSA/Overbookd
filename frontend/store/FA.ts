@@ -30,6 +30,7 @@ import {
   Period,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
+import { uniqueGerRequestPeriodsReducer } from "~/utils/functions/gearRequest";
 
 const repo = RepoFactory.faRepo;
 
@@ -65,16 +66,7 @@ export const getters = getterTree(state, {
     );
   },
   gearRequestRentalPeriods(state): Period[] {
-    const savedPeriods = state.gearRequests.reduce((periods, gearRequest) => {
-      const period = periods.find(
-        (period) =>
-          period.id === gearRequest.rentalPeriod.id ||
-          (period.start === gearRequest.rentalPeriod.start &&
-            period.end === gearRequest.rentalPeriod.end)
-      );
-      if (period) return periods;
-      return [...periods, gearRequest.rentalPeriod];
-    }, [] as Period[]);
+    const savedPeriods = uniqueGerRequestPeriodsReducer(state.gearRequests);
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {

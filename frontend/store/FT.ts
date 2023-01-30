@@ -1,4 +1,4 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
@@ -26,12 +26,44 @@ import { updateItemToList } from "~/utils/functions/list";
 import { Team } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
 import { Review, Reviewer } from "~/utils/models/review";
+import {
+  castGearRequestWithDate,
+  GearRequestCreation,
+  Period,
+  StoredGearRequest,
+} from "~/utils/models/gearRequests";
+import {
+  uniqueGerRequestPeriodsReducer,
+  uniquePeriodsReducer,
+} from "~/utils/functions/gearRequest";
 
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
   mFT: defaultState() as FT,
   FTs: [] as FTSimplified[],
+  gearRequests: [] as StoredGearRequest<"FT">[],
+  localGearRequestRentalPeriodId: 1001,
+});
+
+export const getters = getterTree(state, {
+  ftPeriods(state): Period[] {
+    return state.mFT.timeWindows.map(({ start, end }, index) => ({
+      start,
+      end,
+      id: state.localGearRequestRentalPeriodId + index,
+    }));
+  },
+  gearRequestRentalPeriods(state, getters): Period[] {
+    const savedPeriods = uniqueGerRequestPeriodsReducer(state.gearRequests);
+    const ftPeriods = getters.ftPeriods;
+    return uniquePeriodsReducer([...savedPeriods, ...ftPeriods]);
+  },
+  localGearRequestRentalPeriods(state, getters): Period[] {
+    return (getters.gearRequestRentalPeriods as Period[]).filter(
+      ({ id }) => id >= state.localGearRequestRentalPeriodId
+    );
+  },
 });
 
 export const mutations = mutationTree(state, {
@@ -136,6 +168,10 @@ export const mutations = mutationTree(state, {
 
   ADD_FEEDBACK({ mFT }, feedback: Feedback) {
     mFT.feedbacks = [...mFT.feedbacks, feedback];
+  },
+
+  ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
+    state.gearRequests = [...state.gearRequests, gearRequest];
   },
 });
 
@@ -382,6 +418,64 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("ADD_FEEDBACK", res.data);
+    },
+
+    async addGearRequestForAllRentalPeriods(
+      { commit, getters, dispatch },
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+    ) {
+      const gearRequestCreationForms: GearRequestCreation[] = (
+        getters.gearRequestRentalPeriods as Period[]
+      ).map(({ start, end, id: periodId }) => {
+        const periodPart: { start: Date; end: Date } | { periodId: number } =
+          periodId > 1000 ? { start, end } : { periodId };
+        return {
+          ...periodPart,
+          gearId,
+          quantity,
+        };
+      });
+      await Promise.all(
+        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
+      );
+    },
+
+    async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
+      const res = await safeCall(
+        this,
+        RepoFactory.ftRepo.createGearRequest(this, state.mFT.id, gearRequest),
+        {
+          successMessage: "La demande de matériel a été ajoutée avec succès ✅",
+          errorMessage: "La demande de matériel n'a pas pu etre ajoutée ❌",
+        }
+      );
+      if (!res) return;
+      const createdGearRequest = castGearRequestWithDate(res.data);
+      commit("ADD_GEAR_REQUEST", createdGearRequest);
+    },
+
+    async removeGearRequest({ commit, state }, gearId: number) {
+      await Promise.all(
+        state.gearRequests
+          .filter((gearRequest) => gearRequest.gear.id === gearId)
+          .map((gearRequest) =>
+            safeCall(
+              this,
+              repo.deleteGearRequest(
+                this,
+                state.mFT.id,
+                gearId,
+                gearRequest.rentalPeriod.id
+              ),
+              {
+                successMessage: "La demande de matériel a été supprimée 🗑️",
+                errorMessage:
+                  "La demande de matériel na pas a été supprimée ❌",
+              }
+            )
+          )
+      );
+      commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
   }
 );

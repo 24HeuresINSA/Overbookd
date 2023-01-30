@@ -28,15 +28,11 @@ import { Header } from "~/utils/models/Data";
 import { GearRequest } from "~/utils/models/gearRequests";
 
 export default Vue.extend({
-  name: "LogisticsTableFA",
+  name: "LogisticsTableFT",
   props: {
     isDisabled: {
       type: Boolean,
       default: () => false,
-    },
-    owner: {
-      type: String,
-      default: () => "",
     },
   },
   computed: {
@@ -51,31 +47,16 @@ export default Vue.extend({
         ? [...commonHeaders, driveHeader]
         : [...commonHeaders, actionHeader];
     },
-    gearRequest(): GearRequest<"FA">[] {
-      switch (this.owner) {
-        case "matos":
-          return this.$accessor.FA.matosGearRequests.reduce(
-            uniqueGearReducer<"FA">,
-            [] as GearRequest<"FA">[]
-          );
-        case "elec":
-          return this.$accessor.FA.elecGearRequests.reduce(
-            uniqueGearReducer<"FA">,
-            [] as GearRequest<"FA">[]
-          );
-        case "barrieres":
-          return this.$accessor.FA.barrieresGearRequests.reduce(
-            uniqueGearReducer<"FA">,
-            [] as GearRequest<"FA">[]
-          );
-        default:
-          return [];
-      }
+    gearRequest(): GearRequest<"FT">[] {
+      return this.$accessor.FT.gearRequests.reduce(
+        uniqueGearReducer<"FT">,
+        [] as GearRequest<"FT">[]
+      );
     },
   },
   methods: {
     deleteGear(gear: Gear) {
-      this.$accessor.FA.removeGearRequest(gear.id);
+      this.$accessor.FT.removeGearRequest(gear.id);
     },
   },
 });

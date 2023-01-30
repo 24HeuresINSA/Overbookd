@@ -16,6 +16,10 @@ import {
   FTUserRequestUpdate,
   FTTeamRequest,
 } from "~/utils/models/ft";
+import {
+  GearRequestCreation,
+  StoredGearRequest,
+} from "~/utils/models/gearRequests";
 import { Reviewer } from "~/utils/models/review";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
@@ -99,6 +103,29 @@ export default {
     return context.$axios.post<HttpStringified<SavedFeedback>>(
       `${resource}/${ftId}/feedbacks`,
       feedback
+    );
+  },
+
+  createGearRequest(
+    context: Context,
+    taskId: number,
+    gearRequestCreationForm: GearRequestCreation
+  ) {
+    return context.$axios.post<HttpStringified<StoredGearRequest<"FT">>>(
+      resource + `/${taskId}/gear-requests`,
+      gearRequestCreationForm
+    );
+  },
+
+  deleteGearRequest(
+    context: Context,
+    taskId: number,
+    gearId: number,
+    rentalPeriodId: number
+  ) {
+    return context.$axios.delete(
+      resource +
+        `/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
     );
   },
 
