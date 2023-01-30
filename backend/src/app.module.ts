@@ -28,6 +28,7 @@ import { FtModule } from './ft/ft.module';
 import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
 import { GearRequestsModule } from './gear-requests/gearRequests.module';
 import { FtFeedbackModule } from './ft_feedback/ft_feedback.module';
+import { FtReviewsModule } from './ft-reviews/ft_reviews.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { FtFeedbackModule } from './ft_feedback/ft_feedback.module';
     FtTimeWindowsModule,
     GearRequestsModule,
     FtFeedbackModule,
+    FtReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
