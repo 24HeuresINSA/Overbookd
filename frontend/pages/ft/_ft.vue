@@ -15,7 +15,6 @@
         <v-btn
           v-if="isDraftOrRefused"
           color="warning"
-          :disabled="isSubmitted"
           @click="checkBeforeSubmit()"
           >Soumettre à validation
         </v-btn>
@@ -80,9 +79,6 @@ export default Vue.extend({
         this.mFT.status === FTStatus.DRAFT ||
         this.mFT.status === FTStatus.REFUSED
       );
-    },
-    isSubmitted(): boolean {
-      return this.mFT.status === FTStatus.SUBMITTED;
     },
   },
   async mounted() {
