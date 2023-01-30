@@ -55,10 +55,6 @@ export const mutations = mutationTree(state, {
     state.FTs = state.FTs.filter((ft) => ft.id !== ftId);
   },
 
-  UPDATE_STATUS({ mFT }, status: FTStatus) {
-    mFT.status = status;
-  },
-
   ADD_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     mFT.timeWindows = [...mFT.timeWindows, timeWindow];
   },
@@ -237,12 +233,12 @@ export const actions = actionTree(
 
     async validate(
       { dispatch, commit, state },
-      { validator, team, author }: { validator: User; team: Team; author: User }
+      { validator, team }: { validator: User; team: Team }
     ) {
-      const reviewBody: Reviewer = { userId: author.id };
+      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
       const resFT = await safeCall(
         this,
-        repo.validateFT(this, state.mFT.id, validator.id, reviewBody),
+        repo.validateFT(this, state.mFT.id, reviewer),
         { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
       );
       if (!resFT) return;
@@ -252,17 +248,17 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.VALIDATED,
         comment: `La FT a été validée par ${team.name}.`,
-        author: author,
+        author: validator,
         createdAt: new Date(),
       };
-      dispatch("addFeedback", { ...feedback, author });
+      dispatch("addFeedback", feedback);
     },
 
-    async refuse({ commit, dispatch, state }, { validator, message, author }) {
-      const reviewBody: Reviewer = { userId: author.id };
+    async refuse({ commit, dispatch, state }, { validator, team, message }) {
+      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
       const resFT = await safeCall(
         this,
-        repo.refuseFT(this, state.mFT.id, validator.id, reviewBody),
+        repo.refuseFT(this, state.mFT.id, reviewer),
         { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
       );
       if (!resFT) return;
@@ -272,10 +268,10 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
-        author: author.id,
+        author: validator.id,
         createdAt: new Date(),
       };
-      dispatch("addFeedback", { ...feedback, author });
+      dispatch("addFeedback", feedback);
     },
 
     async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {

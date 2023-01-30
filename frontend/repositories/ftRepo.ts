@@ -45,16 +45,16 @@ export default {
     return context.$axios.delete(`${resource}/${id}`);
   },
 
-  validateFT(context: Context, ftId: number, teamId: number, body: Reviewer) {
+  validateFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/validate/${teamId}`,
-      body
+      `${resource}/${ftId}/validate`,
+      reviewer
     );
   },
-  refuseFT(context: Context, ftId: number, teamId: number, body: Reviewer) {
+  refuseFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/refuse/${teamId}`,
-      body
+      `${resource}/${ftId}/refuse`,
+      reviewer
     );
   },
 
