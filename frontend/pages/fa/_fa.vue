@@ -37,17 +37,17 @@
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
       </h4>
       <LogisticTimeWindow />
-      <LogisticsCardFA
+      <FALogisticsCard
         title="Matos"
         owner="matos"
         :ponctual-usage-gear="false"
       />
-      <LogisticsCardFA
+      <FALogisticsCard
         title="Barrières"
         owner="barrieres"
         :ponctual-usage-gear="false"
       />
-      <LogisticsCardFA
+      <FALogisticsCard
         title="Matos Elec / Eau"
         owner="elec"
         :ponctual-usage-gear="false"
@@ -207,7 +207,7 @@ import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
 import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FestivalEventSummary from "~/components/organisms/form/FestivalEventSummary.vue";
-import LogisticsCardFA from "~/components/organisms/form/LogisticsCardFA.vue";
+import FALogisticsCard from "~/components/organisms/form/FALogisticsCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import {
   getFAValidationStatus,
@@ -224,7 +224,7 @@ export default Vue.extend({
     ElecLogisticCard,
     CommentCard,
     SignaCard,
-    LogisticsCardFA,
+    FALogisticsCard,
     TimeframeTable,
     CollaboratorCard,
     WaterLogisticCard,
