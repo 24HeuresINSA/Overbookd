@@ -48,8 +48,7 @@ export function uniqueGearReducer<T extends "FA" | "FT">(
 
 export function generateGearRequestCreationBuilder(
   gearId: number,
-  quantity: number,
-  isCreatedPeriod: (perriod: Period) => boolean
+  quantity: number
 ): (period: Period) => GearRequestCreation {
   return (period: Period) => {
     const periodPart = isCreatedPeriod(period)
@@ -62,4 +61,8 @@ export function generateGearRequestCreationBuilder(
       quantity,
     };
   };
+}
+
+function isCreatedPeriod(period: Period): boolean {
+  return period.id > 0;
 }

@@ -44,7 +44,7 @@ export const state = () => ({
   mFT: defaultState() as FT,
   FTs: [] as FTSimplified[],
   gearRequests: [] as StoredGearRequest<"FT">[],
-  localGearRequestRentalPeriodId: 1001,
+  localGearRequestRentalPeriodId: -1,
 });
 
 export const getters = getterTree(state, {
@@ -52,7 +52,7 @@ export const getters = getterTree(state, {
     return state.mFT.timeWindows.map(({ start, end }, index) => ({
       start,
       end,
-      id: state.localGearRequestRentalPeriodId + index,
+      id: state.localGearRequestRentalPeriodId - index,
     }));
   },
   gearRequestRentalPeriods(state, getters): Period[] {
@@ -62,7 +62,7 @@ export const getters = getterTree(state, {
   },
   localGearRequestRentalPeriods(state, getters): Period[] {
     return (getters.gearRequestRentalPeriods as Period[]).filter(
-      ({ id }) => id >= state.localGearRequestRentalPeriodId
+      ({ id }) => id <= state.localGearRequestRentalPeriodId
     );
   },
 });
@@ -440,16 +440,12 @@ export const actions = actionTree(
     },
 
     async addGearRequestForAllRentalPeriods(
-      { state, getters, dispatch },
+      { getters, dispatch },
       { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
-      function isCreatedPeriod(period: Period) {
-        return period.id < state.localGearRequestRentalPeriodId;
-      }
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity,
-        isCreatedPeriod
+        quantity
       );
       const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]

@@ -46,7 +46,7 @@ export const state = () => ({
   } as FA,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
-  localGearRequestRentalPeriodId: 1001,
+  localGearRequestRentalPeriodId: -1,
 });
 
 export const getters = getterTree(state, {
@@ -229,7 +229,7 @@ export const mutations = mutationTree(state, {
   ) {
     const id = state.localGearRequestRentalPeriodId;
     state.localGearRequestRentalPeriodId =
-      state.localGearRequestRentalPeriodId + 1;
+      state.localGearRequestRentalPeriodId - 1;
     state.localGearRequestRentalPeriods = [
       ...state.localGearRequestRentalPeriods,
       {
@@ -607,16 +607,12 @@ export const actions = actionTree(
     },
 
     async addGearRequestForAllRentalPeriods(
-      { commit, state, dispatch, getters },
+      { commit, dispatch, getters },
       { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
-      function isCreatedPeriod(period: Period) {
-        return period.id < state.localGearRequestRentalPeriodId;
-      }
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity,
-        isCreatedPeriod
+        quantity
       );
       const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]
