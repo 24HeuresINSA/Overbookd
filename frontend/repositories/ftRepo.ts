@@ -112,14 +112,14 @@ export default {
     gearRequestCreationForm: GearRequestCreation
   ) {
     return context.$axios.post<HttpStringified<StoredGearRequest<"FT">>>(
-      resource + `/${taskId}/gear-requests`,
+      `${resource}/${taskId}/gear-requests`,
       gearRequestCreationForm
     );
   },
 
   getGearRequests(context: Context, taskId: number) {
     return context.$axios.get<HttpStringified<StoredGearRequest<"FA">>[]>(
-      resource + `/${taskId}/gear-requests`
+      `${resource}/${taskId}/gear-requests`
     );
   },
 
@@ -130,8 +130,7 @@ export default {
     rentalPeriodId: number
   ) {
     return context.$axios.delete(
-      resource +
-        `/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
+      `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
     );
   },
 
