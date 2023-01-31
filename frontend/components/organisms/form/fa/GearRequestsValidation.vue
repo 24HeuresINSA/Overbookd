@@ -63,6 +63,10 @@ export default Vue.extend({
   name: "GearRequestsValidation",
 
   props: {
+    festivalEvent: {
+      type: String,
+      default: () => "FA",
+    },
     validator: {
       type: Object,
       required: true,
