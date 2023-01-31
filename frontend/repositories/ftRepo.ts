@@ -117,6 +117,12 @@ export default {
     );
   },
 
+  getGearRequests(context: Context, taskId: number) {
+    return context.$axios.get<HttpStringified<StoredGearRequest<"FA">>[]>(
+      resource + `/${taskId}/gear-requests`
+    );
+  },
+
   deleteGearRequest(
     context: Context,
     taskId: number,

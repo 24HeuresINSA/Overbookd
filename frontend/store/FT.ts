@@ -173,6 +173,16 @@ export const mutations = mutationTree(state, {
   ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     state.gearRequests = [...state.gearRequests, gearRequest];
   },
+
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<"FT">[]) {
+    state.gearRequests = gearRequestsResponse;
+  },
+
+  REMOVE_GEAR_RELATED_GEAR_REQUESTS(state, gearId: number) {
+    state.gearRequests = state.gearRequests.filter(
+      (gr) => gr.gear.id !== gearId
+    );
+  },
 });
 
 export const actions = actionTree(
@@ -187,9 +197,16 @@ export const actions = actionTree(
     },
 
     async fetchFT({ commit, dispatch }, id: number) {
-      const resFT = await safeCall(this, repo.getFT(this, id));
-      if (!resFT) return null;
-      commit("UPDATE_SELECTED_FT", castFTWithDate(resFT.data));
+      const [resFT, resGearRequests] = await Promise.all([
+        safeCall(this, repo.getFT(this, id)),
+        safeCall(this, repo.getGearRequests(this, id)),
+      ]);
+      if (!resFT || !resGearRequests) return;
+
+      const ft = castFTWithDate(resFT.data);
+      const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
+      commit("UPDATE_SELECTED_FT", ft);
+      commit("SET_GEAR_REQUESTS", gearRequests);
       if (resFT.data.fa)
         dispatch("FA/fetchGearRequests", resFT.data.fa.id, { root: true });
     },
@@ -455,7 +472,7 @@ export const actions = actionTree(
     },
 
     async removeGearRequest({ commit, state }, gearId: number) {
-      await Promise.all(
+      const removals = await Promise.all(
         state.gearRequests
           .filter((gearRequest) => gearRequest.gear.id === gearId)
           .map((gearRequest) =>
@@ -475,6 +492,7 @@ export const actions = actionTree(
             )
           )
       );
+      if (removals.some((res) => res === undefined)) return;
       commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
   }

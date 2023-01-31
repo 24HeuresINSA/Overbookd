@@ -25,10 +25,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-        <LogisticsTableFA
-          :owner="owner"
-          :is-disabled="isValidatedByOwner"
-        ></LogisticsTableFA>
+        <LogisticsTableFT :is-disabled="isValidatedByOwner"></LogisticsTableFT>
       </v-container>
     </v-card-text>
   </v-card>
@@ -37,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
-import LogisticsTableFA from "~/components/molecules/logistics/LogisticsTableFA.vue";
+import LogisticsTableFT from "~/components/molecules/logistics/LogisticsTableFT.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
@@ -48,7 +45,7 @@ import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "LogisticsCardFT",
-  components: { LogisticsTableFA, SearchGear },
+  components: { LogisticsTableFT, SearchGear },
   props: {
     title: {
       type: String,
