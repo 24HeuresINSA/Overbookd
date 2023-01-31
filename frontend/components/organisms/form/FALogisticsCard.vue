@@ -112,10 +112,9 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.flex-row .margin-btn {
-  margin-left: 20px;
-  margin-bottom: 30px;
+  .margin-btn {
+    margin-left: 20px;
+    margin-bottom: 30px;
+  }
 }
 </style>
