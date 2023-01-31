@@ -17,8 +17,18 @@ export function uniquePeriodsReducer(rentalPeriods: Period[]): Period[] {
 
 function isSimilarPeriod(rentalPeriod: Period): (value: Period) => boolean {
   return (period) =>
-    period.id === rentalPeriod.id ||
-    (period.start === rentalPeriod.start && period.end === rentalPeriod.end);
+    period.id === rentalPeriod.id || haveSamePeriodRange(period, rentalPeriod);
+}
+
+function haveSamePeriodRange(period: Period, otherPerid: Period): boolean {
+  return (
+    areSimilarDate(period.start, otherPerid.start) &&
+    areSimilarDate(period.end, otherPerid.end)
+  );
+}
+
+function areSimilarDate(date: Date, otherDate: Date): boolean {
+  return date.getTime() === otherDate.getTime();
 }
 
 export function uniqueGearReducer<T extends "FA" | "FT">(
