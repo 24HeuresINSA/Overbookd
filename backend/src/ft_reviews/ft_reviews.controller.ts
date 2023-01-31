@@ -38,9 +38,9 @@ export class FtReviewsController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('ft-validator')
   @Post(':ftId/validation')
-  @HttpCode(204)
+  @HttpCode(201)
   @ApiResponse({
-    status: 204,
+    status: 201,
     description: 'Validate a FT',
     type: CompleteFtResponseDto,
   })
@@ -64,9 +64,9 @@ export class FtReviewsController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('ft-validator')
   @Post(':ftId/refusal')
-  @HttpCode(204)
+  @HttpCode(201)
   @ApiResponse({
-    status: 204,
+    status: 201,
     description: 'Refuse a FT',
     type: CompleteFtResponseDto,
   })
