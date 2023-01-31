@@ -3,7 +3,7 @@
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
       <v-container>
-        <v-form v-if="!isValidatedByOwner" class="flex-row">
+        <v-form v-if="!isValidatedByMatos" class="flex-row">
           <v-text-field
             v-model="quantity"
             type="number"
@@ -12,7 +12,6 @@
           />
           <SearchGear
             :gear="gear"
-            :owner="owner"
             :ponctual-usage="true"
             @change="updateCurrentGear"
           ></SearchGear>
@@ -25,7 +24,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-        <LogisticsTableFT :is-disabled="isValidatedByOwner"></LogisticsTableFT>
+        <LogisticsTableFT :is-disabled="isValidatedByMatos"></LogisticsTableFT>
       </v-container>
     </v-card-text>
   </v-card>
@@ -51,10 +50,6 @@ export default Vue.extend({
       type: String,
       default: () => "",
     },
-    owner: {
-      type: String,
-      default: () => "",
-    },
   },
   data: () => ({
     gear: undefined as Gear | undefined,
@@ -73,14 +68,14 @@ export default Vue.extend({
         this.gear &&
           parseInt(this.quantity) >= 1 &&
           this.$accessor.FT.gearRequestRentalPeriods.length > 0 &&
-          !this.isValidatedByOwner
+          !this.isValidatedByMatos
       );
     },
-    isValidatedByOwner(): boolean {
-      return isTaskValidatedBy(this.mFT.reviews, this.owner);
+    isValidatedByMatos(): boolean {
+      return isTaskValidatedBy(this.mFT.reviews, "matos");
     },
     validationStatus(): string {
-      return getFTValidationStatus(this.mFT, this.owner).toLowerCase();
+      return getFTValidationStatus(this.mFT, "matos").toLowerCase();
     },
   },
   methods: {
