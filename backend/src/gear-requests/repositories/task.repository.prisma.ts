@@ -1,6 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Task, TaskRepository } from '../gearRequests.service';
 
+@Injectable()
 export class PrismaTaskRepository implements TaskRepository {
   private readonly SELECT_TASK = {
     id: true,

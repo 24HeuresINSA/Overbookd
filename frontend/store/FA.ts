@@ -30,6 +30,10 @@ import {
   Period,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
+import {
+  generateGearRequestCreationBuilder,
+  uniqueGerRequestPeriodsReducer,
+} from "~/utils/functions/gearRequest";
 
 const repo = RepoFactory.faRepo;
 
@@ -42,7 +46,7 @@ export const state = () => ({
   } as FA,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
-  localGearRequestRentalPeriodId: 1001,
+  localGearRequestRentalPeriodId: -1,
 });
 
 export const getters = getterTree(state, {
@@ -65,16 +69,7 @@ export const getters = getterTree(state, {
     );
   },
   gearRequestRentalPeriods(state): Period[] {
-    const savedPeriods = state.gearRequests.reduce((periods, gearRequest) => {
-      const period = periods.find(
-        (period) =>
-          period.id === gearRequest.rentalPeriod.id ||
-          (period.start === gearRequest.rentalPeriod.start &&
-            period.end === gearRequest.rentalPeriod.end)
-      );
-      if (period) return periods;
-      return [...periods, gearRequest.rentalPeriod];
-    }, [] as Period[]);
+    const savedPeriods = uniqueGerRequestPeriodsReducer(state.gearRequests);
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
@@ -234,7 +229,7 @@ export const mutations = mutationTree(state, {
   ) {
     const id = state.localGearRequestRentalPeriodId;
     state.localGearRequestRentalPeriodId =
-      state.localGearRequestRentalPeriodId + 1;
+      state.localGearRequestRentalPeriodId - 1;
     state.localGearRequestRentalPeriods = [
       ...state.localGearRequestRentalPeriods,
       {
@@ -612,20 +607,17 @@ export const actions = actionTree(
     },
 
     async addGearRequestForAllRentalPeriods(
-      { commit, getters, dispatch },
+      { commit, dispatch, getters },
       { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
-      const gearRequestCreationForms: GearRequestCreation[] = (
+      const generateGearRequestCreation = generateGearRequestCreationBuilder(
+        gearId,
+        quantity
+      );
+      const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]
-      ).map(({ start, end, id: periodId }) => {
-        const periodPart: { start: Date; end: Date } | { periodId: number } =
-          periodId > 1000 ? { start, end } : { periodId };
-        return {
-          ...periodPart,
-          gearId,
-          quantity,
-        };
-      });
+      ).map(generateGearRequestCreation);
+
       await Promise.all(
         gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
