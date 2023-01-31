@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { FtFeedback, FtSubjectType } from '@prisma/client';
 import { IsDateString, IsNumber, IsString } from 'class-validator';
 
-class UserName {
+class Author {
   firstname: string;
   lastname: string;
 }
@@ -20,11 +20,11 @@ export class FtFeedbackResponseDto
 
   @ApiProperty({
     required: true,
-    type: UserName,
+    type: Author,
     description: 'The author of feedback',
   })
   @IsNumber()
-  author: UserName;
+  author: Author;
 
   @ApiProperty({
     required: true,
