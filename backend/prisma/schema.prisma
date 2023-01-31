@@ -75,7 +75,7 @@ model User {
   fa_comments   fa_comments[]
 
   ftsInCharge    Ft[]            @relation("inCharge")
-  ftComments     FtComments[]
+  ftFeedbacks    FtFeedback[]
   ftUserRequests FtUserRequest[]
 }
 
@@ -439,7 +439,7 @@ model Ft {
   locationId     Int?            @map("location_id")
   isDeleted      Boolean         @default(false) @map("is_deleted")
 
-  feedbacks    FtComments[]
+  feedbacks    FtFeedback[]
   timeWindows  FtTimeWindows[]
   reviews      FtReview[]
   gearRequests GearRequest[] @relation("gear-request-task")
@@ -457,7 +457,7 @@ enum FtSubjectType {
   @@map("ft_subject_type")
 }
 
-model FtComments {
+model FtFeedback {
   id        Int           @id @default(autoincrement())
   ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId      Int           @map("ft_id")
@@ -467,7 +467,7 @@ model FtComments {
   authorId  Int           @map("author_id")
   createdAt DateTime      @default(now()) @map("created_at")
 
-  @@map("ft_comments")
+  @@map("ft_feedback")
 }
 
 model FtTimeWindows {
