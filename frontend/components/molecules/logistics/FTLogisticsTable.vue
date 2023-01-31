@@ -28,7 +28,7 @@ import { Header } from "~/utils/models/Data";
 import { GearRequest } from "~/utils/models/gearRequests";
 
 export default Vue.extend({
-  name: "LogisticsTableFT",
+  name: "FTLogisticsTable",
   props: {
     isDisabled: {
       type: Boolean,

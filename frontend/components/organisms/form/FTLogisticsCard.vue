@@ -24,7 +24,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-        <LogisticsTableFT :is-disabled="isValidatedByMatos"></LogisticsTableFT>
+        <FTLogisticsTable :is-disabled="isValidatedByMatos" />
       </v-container>
     </v-card-text>
   </v-card>
@@ -33,7 +33,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
-import LogisticsTableFT from "~/components/molecules/logistics/LogisticsTableFT.vue";
+import FTLogisticsTable from "~/components/molecules/logistics/FTLogisticsTable.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
@@ -43,8 +43,8 @@ import { FT } from "~/utils/models/ft";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: "LogisticsCardFT",
-  components: { LogisticsTableFT, SearchGear },
+  name: "FTLogisticsCard",
+  components: { FTLogisticsTable, SearchGear },
   props: {
     title: {
       type: String,
