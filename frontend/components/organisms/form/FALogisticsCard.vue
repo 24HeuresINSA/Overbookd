@@ -25,10 +25,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-        <LogisticsTable
-          :owner="owner"
-          :is-disabled="isValidatedByOwner"
-        ></LogisticsTable>
+        <FALogisticsTable :owner="owner" :is-disabled="isValidatedByOwner" />
       </v-container>
     </v-card-text>
   </v-card>
@@ -37,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchGear from "~/components/atoms/SearchGear.vue";
-import LogisticsTable from "~/components/molecules/logistics/LogisticsTable.vue";
+import FALogisticsTable from "~/components/molecules/logistics/FALogisticsTable.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
@@ -47,8 +44,8 @@ import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: "LogisticsCard",
-  components: { LogisticsTable, SearchGear },
+  name: "FALogisticsCard",
+  components: { FALogisticsTable, SearchGear },
   props: {
     title: {
       type: String,
@@ -115,10 +112,9 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.flex-row .margin-btn {
-  margin-left: 20px;
-  margin-bottom: 30px;
+  .margin-btn {
+    margin-left: 20px;
+    margin-bottom: 30px;
+  }
 }
 </style>

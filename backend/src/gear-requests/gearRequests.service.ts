@@ -279,6 +279,12 @@ export class GearRequestsService {
     });
   }
 
+  async getTaskRequests(taskId: number): Promise<GearRequest[]> {
+    return this.gearRequestRepository.getGearRequests({
+      seeker: { type: GearSeekerType.Task, id: taskId },
+    });
+  }
+
   updateAnimationRequest(
     animationId: number,
     gearId: number,

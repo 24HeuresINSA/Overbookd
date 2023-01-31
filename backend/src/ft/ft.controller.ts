@@ -25,6 +25,13 @@ import {
 import { FtStatus } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import {
+  ExistingPeriodGearRequestFormRequestDto,
+  GearRequestFormRequestDto,
+  NewPeriodGearRequestFormRequestDto,
+} from 'src/gear-requests/dto/gearRequestFormRequest.dto';
+import { GearRequestResponseDto } from 'src/gear-requests/dto/gearRequestResponse.dto';
+import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
 import {
@@ -45,7 +52,10 @@ import { FtService } from './ft.service';
 })
 @Controller('ft')
 export class FtController {
-  constructor(private readonly ftService: FtService) {}
+  constructor(
+    private readonly ftService: FtService,
+    private readonly gearRequestService: GearRequestsService,
+  ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
@@ -161,5 +171,92 @@ export class FtController {
   })
   remove(@Param('id') id: number) {
     return this.ftService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Post(':id/gear-requests')
+  @ApiResponse({
+    status: 201,
+    description: 'Creating a new gear request',
+    type: GearRequestResponseDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  @ApiBody({ type: GearRequestFormRequestDto })
+  addGearRequest(
+    @Param('id', ParseIntPipe) id: number,
+    @Body()
+    gearRequestForm:
+      | NewPeriodGearRequestFormRequestDto
+      | ExistingPeriodGearRequestFormRequestDto,
+  ): Promise<GearRequestResponseDto> {
+    return this.gearRequestService.addTaskRequest({
+      ...gearRequestForm,
+      seekerId: id,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Get(':id/gear-requests')
+  @ApiResponse({
+    status: 200,
+    description: 'Get task gear requests',
+    isArray: true,
+    type: GearRequestResponseDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  getGearRequests(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<GearRequestResponseDto[]> {
+    return this.gearRequestService.getTaskRequests(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Delete(':taskId/gear-requests/:gearId/rental-period/:rentalPeriodId')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Gear request deleted',
+  })
+  @ApiParam({
+    name: 'taskId',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
+  deleteGearRequest(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+  ): Promise<void> {
+    return this.gearRequestService.removeTaskRequest(
+      taskId,
+      gearId,
+      rentalPeriodId,
+    );
   }
 }
