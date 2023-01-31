@@ -59,7 +59,7 @@ export default Vue.extend({
   methods: {
     async addFeedback() {
       const trimedComment = this.comment.trim();
-      if (!trimedComment) return (this.comment = "");
+      if (!trimedComment) return;
 
       const author: User = {
         id: this.me.id,
