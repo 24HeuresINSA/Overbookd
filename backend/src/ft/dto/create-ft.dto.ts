@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateFtDto {
   @ApiProperty({
@@ -9,4 +9,12 @@ export class CreateFtDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'The parent fa id of the ft',
+  })
+  @IsOptional()
+  @IsNumber()
+  parentFaId?: number;
 }

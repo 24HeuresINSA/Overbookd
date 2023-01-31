@@ -29,7 +29,7 @@ interface FTBase {
 
 export interface FTCreation {
   name: string;
-  faId?: number;
+  parentFaId?: number;
 }
 
 export interface FT extends FTBase {
