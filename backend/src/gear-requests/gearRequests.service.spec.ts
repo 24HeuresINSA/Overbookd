@@ -596,27 +596,47 @@ describe('Gear requests', () => {
     beforeAll(() => {
       gearRequestRepository.gearRequests = gearRequestsCopy;
     });
-    describe.each`
-      fa                   | expectedRequests
-      ${CHATEAU_GONFLABLE} | ${[GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE, GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE, GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE, GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE]}
-      ${KRAVMAGA}          | ${[]}
-    `(
-      'When looking for all gear requests for FA $fa.name',
-      ({ fa, expectedRequests }) => {
-        it(`should find ${expectedRequests.length} requests`, async () => {
-          const gearRequests = await gearRequestService.getAnimationRequests(
-            fa.id,
-          );
-          expect(gearRequests).toHaveLength(expectedRequests.length);
-          expect(gearRequests).toMatchObject(expectedRequests);
+    describe('For Animations', () => {
+      describe.each`
+        fa                   | expectedRequests
+        ${CHATEAU_GONFLABLE} | ${[GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE, GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE, GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE, GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE]}
+        ${KRAVMAGA}          | ${[]}
+      `(
+        'When looking for all gear requests for FA $fa.name',
+        ({ fa, expectedRequests }) => {
+          it(`should find ${expectedRequests.length} requests`, async () => {
+            const gearRequests = await gearRequestService.getAnimationRequests(
+              fa.id,
+            );
+            expect(gearRequests).toHaveLength(expectedRequests.length);
+            expect(gearRequests).toMatchObject(expectedRequests);
+          });
+        },
+      );
+      describe('When looking for all gear requests', () => {
+        it(`should retrieve all ${gearRequestsCopy.length} gear requests`, async () => {
+          const gearRequests = await gearRequestService.getAllRequests();
+          expect(gearRequests).toHaveLength(gearRequestsCopy.length);
         });
-      },
-    );
-    describe('When looking for all gear requests', () => {
-      it(`should retrieve all ${gearRequestsCopy.length} gear requests`, async () => {
-        const gearRequests = await gearRequestService.getAllRequests();
-        expect(gearRequests).toHaveLength(gearRequestsCopy.length);
       });
+    });
+    describe('For Tasks', () => {
+      describe.each`
+        ft                              | expectedRequests
+        ${INSTALLER_CHATEAU_GONFLABLE}  | ${[GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE]}
+        ${GARDIENNER_CHATEAU_GONFLABLE} | ${[]}
+      `(
+        'When looking for all gear request for Task $ft.name',
+        ({ ft, expectedRequests }) => {
+          it(`should find ${expectedRequests.length} requests`, async () => {
+            const gearRequests = await gearRequestService.getTaskRequests(
+              ft.id,
+            );
+            expect(gearRequests).toHaveLength(expectedRequests.length);
+            expect(gearRequests).toMatchObject(expectedRequests);
+          });
+        },
+      );
     });
   });
   describe('Approve gear requests', () => {

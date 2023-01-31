@@ -100,9 +100,7 @@ function convertGearRequestToApiContract(
 function isAnimationGearRequest(
   gearRequest: DatabaseGearRequest<Animation | Task>,
 ): gearRequest is DatabaseGearRequest<Animation> {
-  return (
-    (gearRequest as DatabaseGearRequest<Animation>).animation !== undefined
-  );
+  return (gearRequest as DatabaseGearRequest<Animation>).animation !== null;
 }
 
 @Injectable()
