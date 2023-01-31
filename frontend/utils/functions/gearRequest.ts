@@ -1,4 +1,8 @@
-import { GearRequest, Period } from "../models/gearRequests";
+import {
+  GearRequest,
+  GearRequestCreation,
+  Period,
+} from "../models/gearRequests";
 
 export function uniqueGerRequestPeriodsReducer(
   gearRequests: GearRequest<"FA" | "FT">[]
@@ -40,4 +44,22 @@ export function uniqueGearReducer<T extends "FA" | "FT">(
   );
   if (existingGearRequest) return gearRequests;
   return [...gearRequests, gearRequest];
+}
+
+export function generateGearRequestCreationBuilder(
+  gearId: number,
+  quantity: number,
+  isCreatedPeriod: (perriod: Period) => boolean
+): (period: Period) => GearRequestCreation {
+  return (period: Period) => {
+    const periodPart = isCreatedPeriod(period)
+      ? { periodId: period.id }
+      : { start: period.start, end: period.end };
+
+    return {
+      ...periodPart,
+      gearId,
+      quantity,
+    };
+  };
 }

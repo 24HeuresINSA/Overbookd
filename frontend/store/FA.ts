@@ -30,7 +30,10 @@ import {
   Period,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
-import { uniqueGerRequestPeriodsReducer } from "~/utils/functions/gearRequest";
+import {
+  generateGearRequestCreationBuilder,
+  uniqueGerRequestPeriodsReducer,
+} from "~/utils/functions/gearRequest";
 
 const repo = RepoFactory.faRepo;
 
@@ -604,20 +607,21 @@ export const actions = actionTree(
     },
 
     async addGearRequestForAllRentalPeriods(
-      { commit, getters, dispatch },
+      { commit, state, dispatch, getters },
       { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
-      const gearRequestCreationForms: GearRequestCreation[] = (
+      function isCreatedPeriod(period: Period) {
+        return period.id < state.localGearRequestRentalPeriodId;
+      }
+      const generateGearRequestCreation = generateGearRequestCreationBuilder(
+        gearId,
+        quantity,
+        isCreatedPeriod
+      );
+      const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]
-      ).map(({ start, end, id: periodId }) => {
-        const periodPart: { start: Date; end: Date } | { periodId: number } =
-          periodId > 1000 ? { start, end } : { periodId };
-        return {
-          ...periodPart,
-          gearId,
-          quantity,
-        };
-      });
+      ).map(generateGearRequestCreation);
+
       await Promise.all(
         gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
