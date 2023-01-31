@@ -33,6 +33,22 @@ const DISPLAY_USER_WITH_ID_SELECT = {
   },
 };
 
+const FEEDBACK_SELECT = {
+  select: {
+    id: true,
+    comment: true,
+    subject: true,
+    authorId: true,
+    createdAt: true,
+    author: {
+      select: {
+        firstname: true,
+        lastname: true,
+      },
+    },
+  },
+};
+
 export const COMPLETE_FT_SELECT = {
   id: true,
   name: true,
@@ -46,21 +62,7 @@ export const COMPLETE_FT_SELECT = {
     },
   },
   isDeleted: true,
-  feedbacks: {
-    select: {
-      id: true,
-      comment: true,
-      subject: true,
-      authorId: true,
-      createdAt: true,
-      author: {
-        select: {
-          firstname: true,
-          lastname: true,
-        },
-      },
-    },
-  },
+  feedbacks: FEEDBACK_SELECT,
   timeWindows: {
     select: {
       id: true,

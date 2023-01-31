@@ -58,7 +58,9 @@ export default Vue.extend({
   },
   methods: {
     async addFeedback() {
-      if (!this.comment) return;
+      const trimedComment = this.comment.trim();
+      if (!trimedComment) return;
+
       const author: User = {
         id: this.me.id,
         firstname: this.me.firstname,
@@ -67,7 +69,7 @@ export default Vue.extend({
 
       const feedback: Feedback = {
         subject: SubjectType.COMMENT,
-        comment: this.comment,
+        comment: trimedComment,
         author,
         createdAt: new Date(),
       };
