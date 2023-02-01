@@ -10,14 +10,8 @@ import {
   StreamableFile,
   UploadedFile,
   UseGuards,
-  UseInterceptors,
-  Header,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { Permission } from 'src/auth/permissions-auth.decorator';
