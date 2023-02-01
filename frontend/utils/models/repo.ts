@@ -76,6 +76,7 @@ export interface User {
   charisma?: number;
   availabilities: string[];
   hasDriverLicense: boolean;
+  pp: String;
 }
 
 export interface availability {
