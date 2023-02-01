@@ -32,6 +32,8 @@ import {
 } from "~/utils/models/gearRequests";
 import {
   generateGearRequestCreationBuilder,
+  isSimilarPeriod,
+  uniqueByGearReducer,
   uniqueGerRequestPeriodsReducer,
 } from "~/utils/functions/gearRequest";
 
@@ -73,13 +75,10 @@ export const getters = getterTree(state, {
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
-    return state.gearRequests.reduce((gearRequests, gearRequest) => {
-      const savedGearRequest = gearRequests.find(
-        (gr) => gr.gear.id === gearRequest.gear.id
-      );
-      if (savedGearRequest) return gearRequests;
-      return [...gearRequests, gearRequest];
-    }, [] as StoredGearRequest<"FA">[]);
+    return state.gearRequests.reduce(
+      uniqueByGearReducer,
+      [] as StoredGearRequest<"FA">[]
+    );
   },
   allSortedGearRequests(state, getters): SortedStoredGearRequests {
     return {
@@ -636,7 +635,7 @@ export const actions = actionTree(
       );
       const createdGearRequest = castGearRequestWithDate(res.data);
       commit("ADD_GEAR_REQUEST", createdGearRequest);
-      return res.data;
+      return createdGearRequest;
     },
 
     async setDriveToGearRequest(
@@ -667,16 +666,17 @@ export const actions = actionTree(
 
     async removeGearRequestRentalPeriod(
       { state, commit, dispatch },
-      rentalPeriod: Period
+      rentalPeriodToDelete: Period
     ) {
-      if (rentalPeriod.id > 1000) {
-        return commit("REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
+      if (rentalPeriodToDelete.id > 1000) {
+        return commit(
+          "REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD",
+          rentalPeriodToDelete
+        );
       }
       const impactedGearRequest = state.gearRequests.filter(
-        (gr) =>
-          gr.rentalPeriod.id === rentalPeriod.id ||
-          (gr.rentalPeriod.start === rentalPeriod.start &&
-            gr.rentalPeriod.end === rentalPeriod.end)
+        ({ rentalPeriod }) =>
+          isSimilarPeriod(rentalPeriodToDelete)(rentalPeriod)
       );
       await Promise.all(
         impactedGearRequest.map((gr) =>

@@ -63,6 +63,10 @@ export default Vue.extend({
   methods: {
     addTimeWindow(timeWindow: FTTimeWindow) {
       this.$accessor.FT.addTimeWindow(timeWindow);
+      this.$accessor.FT.addGearRequestRentalPeriod({
+        start: timeWindow.start,
+        end: timeWindow.end,
+      });
       this.closeAddDialog();
     },
     updateTimeWindow(timeWindow: FTTimeWindow) {
@@ -75,6 +79,10 @@ export default Vue.extend({
     },
     deleteTimeWindow(timeWindow: FTTimeWindow) {
       this.$accessor.FT.deleteTimeWindow(timeWindow);
+      this.$accessor.FT.removeGearRequestRentalPeriod({
+        start: timeWindow.start,
+        end: timeWindow.end,
+      });
     },
     openAddDialog() {
       this.isAddDialogOpen = true;
