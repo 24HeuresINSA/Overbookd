@@ -55,10 +55,9 @@ export default Vue.extend({
       if (this.me && this.PP) {
         let form = new FormData();
         form.append("files", this.PP, this.PP.name);
-        form.append("id", this.me.id);
         const res = await safeCall(
           this.$store,
-          RepoFactory.userRepo.addPP(this, form)
+          RepoFactory.userRepo.addPP(this, form, this.me.id)
         );
         if (res) {
           this.$accessor.notif.pushNotification({

@@ -7,8 +7,11 @@ import {
   Post,
   Put,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
@@ -20,10 +23,22 @@ import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { UserService, UserWithoutPassword } from './user.service';
 
+export var diskStorage = diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
+
+
+
 
   @Post()
   @ApiBody({
@@ -166,4 +181,23 @@ export class UserController {
       req.user,
     );
   }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('hard')
+  @Post('pp')
+  @UseInterceptors(FileInterceptor('files', { storage: diskStorage }))
+  @ApiBody({
+    description: 'Add a pp to a user',
+    type: UserModificationDto,
+  })
+  uploadPP(
+    @Body('userId', ParseIntPipe) userId: number,
+    @UploadedFile() pp: Express.Multer.File,
+  ): Promise<UserWithoutPassword> {
+    console.log(pp);
+    return this.userService.uploadPP(userId, pp.buffer.toString('base64'));
+  }
+
+
 }

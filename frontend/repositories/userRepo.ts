@@ -37,7 +37,7 @@ export default {
   transfer(context: Context, data: Transfer) {
     return context.$axios.post(`${resource}/transfer`, data);
   },
-  addPP(context: Context, data: any) {
+  addPP(context: Context, userId: String, data: Partial<User>) {
     return context.$axios.post(`${resource}/pp`, data);
   },
   updateNotifications(context: Context, userId: string, data: Notification[]) {

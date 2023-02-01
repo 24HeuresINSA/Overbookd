@@ -56,7 +56,7 @@ export type UserPasswordOnly = Pick<User, 'password'>;
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async user(
     findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
@@ -184,10 +184,21 @@ export class UserService {
     const permissions = retrievePermissions(user.team);
     return user
       ? {
-          ...user,
-          team: teams,
-          permissions: [...permissions],
-        }
+        ...user,
+        team: teams,
+        permissions: [...permissions],
+      }
       : undefined;
+  }
+
+  async uploadPP(
+    user_id: number,
+    pp: string,
+  ): Promise<UserWithoutPassword> {
+    return this.prisma.user.update({
+      where: { id: user_id },
+      data: { pp: pp },
+      select: SELECT_USER,
+    });
   }
 }
