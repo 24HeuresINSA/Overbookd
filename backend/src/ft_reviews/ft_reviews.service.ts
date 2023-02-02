@@ -59,17 +59,21 @@ export class FtReviewsService {
   }
 
   async getNewFtStatusAfterValidation(ftId: number): Promise<FtStatus> {
-    const ftValidatorsCount = await this.prisma.team_Permission.count({
+    const ftValidators = this.prisma.team_Permission.count({
       where: {
         permission_name: 'ft-validator',
       },
     });
-    const ftReviewsCount = await this.prisma.ftReview.count({
+    const ftReviews = this.prisma.ftReview.count({
       where: {
         ftId,
         status: reviewStatus.VALIDATED,
       },
     });
+    const [ftValidatorsCount, ftReviewsCount] = await this.prisma.$transaction([
+      ftValidators,
+      ftReviews,
+    ]);
 
     // +1 because the review is not yet created
     if (ftReviewsCount + 1 >= ftValidatorsCount) return FtStatus.VALIDATED;
