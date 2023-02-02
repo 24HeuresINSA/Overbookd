@@ -104,32 +104,7 @@ export default Vue.extend({
   margin-bottom: 8px;
 }
 
-.bottom-bar {
-  position: fixed;
-  right: 5%;
-  bottom: 42px;
-  z-index: 3;
-  display: flex;
-  gap: 30px;
-  justify-content: space-between;
-  align-items: center;
-  background-color: transparent;
-  &__actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 10px;
-  }
-}
-
 @media only screen and (max-width: 965px) {
-  .bottom-bar {
-    position: fixed;
-    bottom: 42px;
-    &__actions {
-      flex-direction: column;
-    }
-  }
   .container {
     padding-bottom: 200px;
   }

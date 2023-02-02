@@ -15,19 +15,19 @@
           v-if="shouldShowRefuseButton"
           color="red"
           class="white--text"
-          @click="openRefuseDialog(mValidators[0])"
-          >refusé par {{ mValidators[0].name }}
+          @click="openRefuseDialog(teamsThatCanBeRefused[0])"
+          >refusé par {{ teamsThatCanBeRefused[0].name }}
         </v-btn>
+
         <v-menu v-if="shouldShowRefuseMenu" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="red" v-on="on">
               Refuser
             </v-btn>
           </template>
-
           <v-list>
             <v-list-item
-              v-for="validator of mValidators"
+              v-for="validator of teamsThatCanBeRefused"
               :key="validator.id"
               link
             >
@@ -38,6 +38,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
+
         <v-btn
           v-if="shouldShowValidationButton"
           color="green"
@@ -45,6 +46,7 @@
           @click="validate(teamsThatNotYetValidated[0])"
           >validé par {{ teamsThatNotYetValidated[0].name }}
         </v-btn>
+
         <v-menu v-if="shouldShowValidationMenu" offset-y>
           <template #activator="{ attrs, on }">
             <v-btn class="white--text" v-bind="attrs" color="green" v-on="on">
@@ -65,6 +67,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
+
         <v-btn
           v-if="isDraft || isRefused"
           color="warning"
@@ -218,6 +221,14 @@ export default Vue.extend({
         return !this.isTaskValidatedBy(validator);
       });
     },
+    teamsThatCanBeRefused(): Team[] {
+      if (this.isSubmitted) return this.mValidators;
+
+      return this.mValidators.filter((validator: Team) => {
+        if (this.isFA) return !this.isAnimationRefusedBy(validator);
+        return !this.isTaskRefusedBy(validator);
+      });
+    },
     hasAtLeastOneError(): boolean {
       if (this.isFA) {
         return hasAtLeastOneError(
@@ -256,14 +267,14 @@ export default Vue.extend({
       return this.teamsThatNotYetValidated.length === 1 && isSubmittedOrRefused;
     },
     shouldShowRefuseButton(): boolean {
-      return this.mValidators.length === 1 && !this.isDraft;
+      return this.teamsThatCanBeRefused.length === 1 && !this.isDraft;
     },
     shouldShowValidationMenu(): boolean {
       const isSubmittedOrRefused = this.isSubmitted || this.isRefused;
       return this.teamsThatNotYetValidated.length > 1 && isSubmittedOrRefused;
     },
     shouldShowRefuseMenu(): boolean {
-      return this.mValidators.length > 1 && !this.isDraft;
+      return this.teamsThatCanBeRefused.length > 1 && !this.isDraft;
     },
     previousLink(): string {
       if (this.isFA) return `/fa/${this.mFA.id - 1}`;
@@ -352,8 +363,7 @@ export default Vue.extend({
       const hasError = this.isFA
         ? hasAtLeastOneError(this.mFA, this.$accessor.FA.allSortedGearRequests)
         : hasAtLeastOneFTError(this.mFT);
-      // TODO : remove comment after tests
-      //if (this.isDraft && hasError) return (this.isValidationDialogOpen = true);
+      if (this.isDraft && hasError) return (this.isValidationDialogOpen = true);
       this.submit();
     },
     async submit() {
@@ -408,6 +418,16 @@ export default Vue.extend({
     align-items: center;
     justify-content: space-around;
     gap: 10px;
+  }
+}
+
+@media only screen and (max-width: 965px) {
+  .bottom-bar {
+    position: fixed;
+    bottom: 42px;
+    &__actions {
+      flex-direction: column;
+    }
   }
 }
 </style>
