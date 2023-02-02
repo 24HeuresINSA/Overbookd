@@ -29,12 +29,16 @@ export class FtReviewsService {
     });
 
     const status = await this.getNewFtStatusAfterValidation(ftId);
+    console.log(status);
     const updateStatus = this.prisma.ft.update({
       where: { id: ftId },
       data: { status },
       select: COMPLETE_FT_SELECT,
     });
-    return this.prisma.$transaction([upsertReview, updateStatus])[1];
+    const updatedFt = await this.prisma
+      .$transaction([upsertReview, updateStatus])
+      .then((res) => res[1]);
+    return updatedFt;
   }
 
   async refuseFt(
@@ -70,9 +74,10 @@ export class FtReviewsService {
     const validatedReviews = ftReviews.filter(
       (review) => review.status === reviewStatus.VALIDATED,
     );
+    console.log(validatedReviews.length, ftValidators.length);
 
     // -1 because the review is not yet created
-    if (validatedReviews.length === ftValidators.length) {
+    if (validatedReviews.length - 1 === ftValidators.length) {
       return FtStatus.VALIDATED;
     }
     return FtStatus.SUBMITTED;
