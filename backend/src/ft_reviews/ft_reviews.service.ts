@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { FtReview, FtStatus, reviewStatus } from '@prisma/client';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
+import { FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT } from 'src/ft/ftTypes';
 import { PrismaService } from '../prisma.service';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 
 @Injectable()
 export class FtReviewsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private ft: FtService) {}
 
   async validateFt(
     ftId: number,
@@ -25,15 +26,20 @@ export class FtReviewsService {
     });
 
     const status = await this.getNewFtStatusAfterValidation(ftId);
-    const updateStatus = this.prisma.ft.update({
-      where: { id: ftId },
-      data: { status },
-      select: COMPLETE_FT_SELECT,
-    });
-    const updatedFt = await this.prisma
-      .$transaction([upsertReview, updateStatus])
-      .then((res) => res[1]);
-    return updatedFt;
+    if (status) {
+      const updateStatus = this.prisma.ft.update({
+        where: { id: ftId },
+        data: { status },
+        select: COMPLETE_FT_SELECT,
+      });
+      const updatedFt = await this.prisma
+        .$transaction([upsertReview, updateStatus])
+        .then((res) => res[1]);
+      return updatedFt;
+    }
+
+    await this.prisma.$transaction([upsertReview]);
+    return this.ft.findOne(ftId);
   }
 
   async refuseFt(
@@ -63,25 +69,25 @@ export class FtReviewsService {
     return updatedFt;
   }
 
-  async getNewFtStatusAfterValidation(ftId: number): Promise<FtStatus> {
+  async getNewFtStatusAfterValidation(ftId: number): Promise<FtStatus> | null {
     const ftValidators = this.prisma.team_Permission.count({
       where: {
         permission_name: 'ft-validator',
       },
     });
-    const ftReviews = this.prisma.ftReview.count({
+    const ftValidatedReviews = this.prisma.ftReview.count({
       where: {
         ftId,
         status: reviewStatus.VALIDATED,
       },
     });
-    const [ftValidatorsCount, ftReviewsCount] = await this.prisma.$transaction([
-      ftValidators,
-      ftReviews,
-    ]);
+    const [ftValidatorsCount, ftValidatedReviewsCount] =
+      await this.prisma.$transaction([ftValidators, ftValidatedReviews]);
 
     // +1 because the review is not yet created
-    if (ftReviewsCount + 1 >= ftValidatorsCount) return FtStatus.VALIDATED;
-    return FtStatus.SUBMITTED;
+    if (ftValidatedReviewsCount + 1 >= ftValidatorsCount) {
+      return FtStatus.VALIDATED;
+    }
+    return null;
   }
 }
