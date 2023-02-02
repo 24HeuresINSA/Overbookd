@@ -2,6 +2,7 @@ import {
   GearRequest,
   GearRequestCreation,
   Period,
+  StoredGearRequest,
 } from "../models/gearRequests";
 
 export function uniqueGerRequestPeriodsReducer(
@@ -19,7 +20,9 @@ export function uniquePeriodsReducer(rentalPeriods: Period[]): Period[] {
   }, [] as Period[]);
 }
 
-function isSimilarPeriod(rentalPeriod: Period): (value: Period) => boolean {
+export function isSimilarPeriod(
+  rentalPeriod: Period
+): (value: Period) => boolean {
   return (period) =>
     period.id === rentalPeriod.id || haveSamePeriodRange(period, rentalPeriod);
 }
@@ -65,4 +68,28 @@ export function generateGearRequestCreationBuilder(
 
 function isCreatedPeriod(period: Period): boolean {
   return period.id > 0;
+}
+
+export function uniqueByGearReducer<T extends "FA" | "FT">(
+  gearRequests: StoredGearRequest<T>[],
+  gearRequest: StoredGearRequest<T>
+): StoredGearRequest<T>[] {
+  const savedGearRequest = gearRequests.find(
+    (gr) => gr.gear.id === gearRequest.gear.id
+  );
+  if (savedGearRequest) return gearRequests;
+  return [...gearRequests, gearRequest];
+}
+
+export function isSimilarGearRequest<T extends "FA" | "FT">(
+  gearRequest: StoredGearRequest<T>
+): (value: StoredGearRequest<T>) => boolean {
+  return (gr: StoredGearRequest<T>) => {
+    return (
+      gearRequest.gear.id === gr.gear.id &&
+      gearRequest.rentalPeriod.id === gr.rentalPeriod.id &&
+      gearRequest.seeker.id === gr.seeker.id &&
+      gearRequest.seeker.type === gr.seeker.type
+    );
+  };
 }

@@ -34,6 +34,9 @@ import {
 } from "~/utils/models/gearRequests";
 import {
   generateGearRequestCreationBuilder,
+  isSimilarGearRequest,
+  isSimilarPeriod,
+  uniqueByGearReducer,
   uniqueGerRequestPeriodsReducer,
   uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
@@ -63,6 +66,12 @@ export const getters = getterTree(state, {
   localGearRequestRentalPeriods(state, getters): Period[] {
     return (getters.gearRequestRentalPeriods as Period[]).filter(
       ({ id }) => id <= state.localGearRequestRentalPeriodId
+    );
+  },
+  uniqueByGearGearRequests(state): StoredGearRequest<"FT">[] {
+    return state.gearRequests.reduce(
+      uniqueByGearReducer,
+      [] as StoredGearRequest<"FT">[]
     );
   },
 });
@@ -182,6 +191,12 @@ export const mutations = mutationTree(state, {
   REMOVE_GEAR_RELATED_GEAR_REQUESTS(state, gearId: number) {
     state.gearRequests = state.gearRequests.filter(
       (gr) => gr.gear.id !== gearId
+    );
+  },
+
+  DELETE_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
+    state.gearRequests = state.gearRequests.filter(
+      isSimilarGearRequest(gearRequest)
     );
   },
 });
@@ -482,6 +497,7 @@ export const actions = actionTree(
       if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
       commit("ADD_GEAR_REQUEST", createdGearRequest);
+      return createdGearRequest;
     },
 
     async removeGearRequest({ commit, state }, gearId: number) {
@@ -507,6 +523,77 @@ export const actions = actionTree(
       );
       if (removals.some((res) => res === undefined)) return;
       commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
+    },
+
+    async addGearRequestRentalPeriod(
+      { dispatch, getters },
+      rentalPeriod: Omit<Period, "id">
+    ) {
+      const gearRequests =
+        getters.uniqueByGearGearRequests as StoredGearRequest<"FT">[];
+      if (gearRequests.length === 0) return;
+      const [firstGearRequest, ...otherGearRequests] = gearRequests;
+
+      const periodId = await dispatch("getFirstSavedGearRequestPeriodId", {
+        gearRequest: firstGearRequest,
+        rentalPeriod,
+      });
+
+      otherGearRequests.map(({ gear: { id: gearId }, quantity }) =>
+        dispatch("addGearRequest", { gearId, quantity, periodId })
+      );
+    },
+
+    async getFirstSavedGearRequestPeriodId(
+      { dispatch },
+      {
+        gearRequest,
+        rentalPeriod,
+      }: {
+        gearRequest: StoredGearRequest<"FT">;
+        rentalPeriod: Omit<Period, "id">;
+      }
+    ): Promise<number> {
+      const firstGearRequestCreation = {
+        gearId: gearRequest.gear.id,
+        quantity: gearRequest.quantity,
+        ...rentalPeriod,
+      };
+      const {
+        rentalPeriod: { id: periodId },
+      } = await dispatch("addGearRequest", firstGearRequestCreation);
+      return periodId;
+    },
+
+    async removeGearRequestRentalPeriod(
+      { commit, state },
+      { start, end }: Omit<Period, "id">
+    ) {
+      const deletedPeriod = { start, end, id: -1 };
+      const toDeleteGearRequests = state.gearRequests.filter(
+        ({ rentalPeriod }) => isSimilarPeriod(deletedPeriod)(rentalPeriod)
+      );
+      const responses = await Promise.all(
+        toDeleteGearRequests.map((gearRequest) =>
+          safeCall(
+            this,
+            repo.deleteGearRequest(
+              this,
+              state.mFT.id,
+              gearRequest.gear.id,
+              gearRequest.rentalPeriod.id
+            ),
+            {
+              successMessage: "La demande de matériel a été supprimée 🗑️",
+              errorMessage: "La demande de matériel na pas a été supprimée ❌",
+            }
+          )
+        )
+      );
+      if (responses.some((response) => response === undefined)) return;
+      toDeleteGearRequests.map((gearRequest) =>
+        commit("DELETE_GEAR_REQUESTS", gearRequest)
+      );
     },
   }
 );
