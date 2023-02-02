@@ -50,12 +50,17 @@ export class FtReviewsService {
       create: completeReview,
       update: completeReview,
     });
+
     const updateStatus = this.prisma.ft.update({
       where: { id: ftId },
       data: { status: FtStatus.REFUSED },
       select: COMPLETE_FT_SELECT,
     });
-    return this.prisma.$transaction([upsertReview, updateStatus])[1];
+
+    const updatedFt = await this.prisma
+      .$transaction([upsertReview, updateStatus])
+      .then((res) => res[1]);
+    return updatedFt;
   }
 
   async getNewFtStatusAfterValidation(ftId: number): Promise<FtStatus> {

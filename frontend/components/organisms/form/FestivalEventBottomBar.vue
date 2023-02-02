@@ -68,7 +68,6 @@
         <v-btn
           v-if="isDraft || isRefused"
           color="warning"
-          :disabled="mFA.status === 'SUBMITTED' && hasAtLeastOneError"
           @click="checkBeforeSubmitForReview()"
           >soumettre à validation
         </v-btn>
@@ -97,6 +96,23 @@
         :validator="validatorTeam"
         @close-dialog="validateGearRequests(validatorTeam)"
       ></GearRequestsValidation>
+    </v-dialog>
+
+    <v-dialog v-model="isRefuseDialogOpen" max-width="600px">
+      <v-card>
+        <v-card-title> Refuser </v-card-title>
+        <v-card-text>
+          <h3>Pourquoi c'est de la 💩 ?</h3>
+          <p>sans trop de 🧂</p>
+          <v-textarea v-model="refuseComment" required dense></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="refuse(selectedValidator)">
+            enregistrer</v-btn
+          >
+        </v-card-actions>
+      </v-card>
     </v-dialog>
 
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
@@ -287,7 +303,7 @@ export default Vue.extend({
     },
     sendValidation(validator: Team) {
       if (!validator) return;
-      const user: User = {
+      const author: User = {
         id: this.me.id,
         firstname: this.me.firstname,
         lastname: this.me.lastname,
@@ -297,19 +313,19 @@ export default Vue.extend({
           validator_id: validator.id,
           user_id: this.me.id,
           team_name: validator.name,
-          author: user,
+          author,
         };
         return this.$accessor.FA.validate(payload);
       }
-      const payload = { user, team: validator };
+      const payload = { author, team: validator };
       return this.$accessor.FT.validate(payload);
     },
-    async refuse(validator: Team) {
+    async refuse(validator?: Team) {
       if (!validator) return;
       if (this.isValidated && !this.isConfirmationDialogOpen) {
         return (this.isConfirmationDialogOpen = true);
       }
-      const user: User = {
+      const author: User = {
         id: this.me.id,
         firstname: this.me.firstname,
         lastname: this.me.lastname,
@@ -318,11 +334,15 @@ export default Vue.extend({
         const payload = {
           validator_id: validator.id,
           message: this.refuseComment,
-          author: user,
+          author,
         };
         await this.$accessor.FA.refuse(payload);
       } else {
-        const payload = { user, team: validator, message: this.refuseComment };
+        const payload = {
+          author,
+          team: validator,
+          message: this.refuseComment,
+        };
         await this.$accessor.FT.refuse(payload);
       }
       this.refuseComment = "";
@@ -332,7 +352,8 @@ export default Vue.extend({
       const hasError = this.isFA
         ? hasAtLeastOneError(this.mFA, this.$accessor.FA.allSortedGearRequests)
         : hasAtLeastOneFTError(this.mFT);
-      if (this.isDraft && hasError) return (this.isValidationDialogOpen = true);
+      // TODO : remove comment after tests
+      //if (this.isDraft && hasError) return (this.isValidationDialogOpen = true);
       this.submit();
     },
     async submit() {
