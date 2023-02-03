@@ -38,7 +38,7 @@ export class FtReviewsService {
       return updatedFt;
     }
 
-    await this.prisma.$transaction([upsertReview]);
+    await upsertReview;
     return this.ft.findOne(ftId);
   }
 
@@ -69,7 +69,9 @@ export class FtReviewsService {
     return updatedFt;
   }
 
-  async getNewFtStatusAfterValidation(ftId: number): Promise<FtStatus> | null {
+  private async getNewFtStatusAfterValidation(
+    ftId: number,
+  ): Promise<FtStatus> | null {
     const ftValidators = this.prisma.team_Permission.count({
       where: {
         permission_name: 'ft-validator',

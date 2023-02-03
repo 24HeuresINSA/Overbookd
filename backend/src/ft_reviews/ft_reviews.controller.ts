@@ -70,12 +70,6 @@ export class FtReviewsController {
     description: 'Refuse a FT',
     type: CompleteFtResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: 'ftId',
     type: Number,

@@ -2,7 +2,7 @@
   <div>
     <div class="bottom-bar">
       <v-btn
-        v-if="mFA.id > 1"
+        v-if="id > 1"
         class="bottom-bar__navigation"
         small
         fab
@@ -15,8 +15,8 @@
           v-if="shouldShowRefuseButton"
           color="red"
           class="white--text"
-          @click="openRefuseDialog(teamsThatCanBeRefused[0])"
-          >refusé par {{ teamsThatCanBeRefused[0].name }}
+          @click="openRefuseDialog(teamsThatCanRefuse[0])"
+          >refusé par {{ teamsThatCanRefuse[0].name }}
         </v-btn>
 
         <v-menu v-if="shouldShowRefuseMenu" offset-y>
@@ -27,7 +27,7 @@
           </template>
           <v-list>
             <v-list-item
-              v-for="validator of teamsThatCanBeRefused"
+              v-for="validator of teamsThatCanRefuse"
               :key="validator.id"
               link
             >
@@ -43,8 +43,8 @@
           v-if="shouldShowValidationButton"
           color="green"
           class="white--text"
-          @click="validate(teamsThatNotYetValidated[0])"
-          >validé par {{ teamsThatNotYetValidated[0].name }}
+          @click="validate(teamsThatNotValidateYet[0])"
+          >validé par {{ teamsThatNotValidateYet[0].name }}
         </v-btn>
 
         <v-menu v-if="shouldShowValidationMenu" offset-y>
@@ -55,7 +55,7 @@
           </template>
           <v-list>
             <v-list-item
-              v-for="validator of teamsThatNotYetValidated"
+              v-for="validator of teamsThatNotValidateYet"
               :key="validator.id"
               link
             >
@@ -96,8 +96,8 @@
     <v-dialog v-model="gearRequestApprovalDialog" max-width="1000px">
       <GearRequestsValidation
         :festival-event="festivalEvent"
-        :validator="validatorTeam"
-        @close-dialog="validateGearRequests(validatorTeam)"
+        :validator="selectedValidator"
+        @close-dialog="validateGearRequests(selectedValidator)"
       ></GearRequestsValidation>
     </v-dialog>
 
@@ -123,10 +123,10 @@
         @close-dialog="isConfirmationDialogOpen = false"
         @confirm="refuse(mValidators[0])"
       >
-        <template #title> Refuser la {{ name }} </template>
+        <template #title> Refuser la {{ festivalEvent }} </template>
         <template #statement>
-          Cette {{ name }} était pourtant validée par tous les orgas... Tu es
-          sûr de vouloir la refuser ?
+          Cette {{ festivalEvent }} était pourtant validée par tous les orgas...
+          Tu es sûr de vouloir la refuser ?
         </template>
       </ConfirmationMessage>
     </v-dialog>
@@ -174,10 +174,9 @@ export default Vue.extend({
     isValidationDialogOpen: false,
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
-    selectedValidator: undefined as Team | undefined,
     refuseComment: "",
     gearRequestApprovalDialog: false,
-    validatorTeam: { name: "", code: "", id: 0, color: "", icon: "" } as Team,
+    selectedValidator: {} as Team,
   }),
   computed: {
     mFA(): FA {
@@ -192,36 +191,29 @@ export default Vue.extend({
     me(): any {
       return this.$accessor.user.me;
     },
-    name(): string {
-      return this.isFA ? "FA" : "FT";
+    id(): number {
+      return this.isFA ? this.mFA.id : this.mFT.id;
     },
     validators(): Team[] {
       if (this.isFA) return this.$accessor.team.faValidators;
       return this.$accessor.team.ftValidators;
     },
     mValidators(): Team[] {
-      let mValidator: Team[] = [];
-      if (this.me.team.includes("admin")) {
-        // admin has all the validators powers
-        return this.validators;
-      }
-      if (this.validators) {
-        this.validators.forEach((validator: Team) => {
-          if (this.me.team && this.me.team.includes(validator.name)) {
-            mValidator.push(validator);
-          }
-        });
-        return mValidator;
-      }
-      return [];
+      if (!this.validators) return [];
+      // admin has all the validators powers
+      if (this.me.team.includes("admin")) return this.validators;
+
+      return this.validators.filter((validator: Team) =>
+        this.me.team.includes(validator.name)
+      );
     },
-    teamsThatNotYetValidated(): Team[] {
+    teamsThatNotValidateYet(): Team[] {
       return this.mValidators.filter((validator: Team) => {
         if (this.isFA) return !this.isAnimationValidatedBy(validator);
         return !this.isTaskValidatedBy(validator);
       });
     },
-    teamsThatCanBeRefused(): Team[] {
+    teamsThatCanRefuse(): Team[] {
       if (this.isSubmitted) return this.mValidators;
 
       return this.mValidators.filter((validator: Team) => {
@@ -262,19 +254,22 @@ export default Vue.extend({
         ? this.mFA.status === Status.VALIDATED
         : this.mFT.status === FTStatus.VALIDATED;
     },
+    isSubmittedOrRefused(): boolean {
+      return this.isSubmitted || this.isRefused;
+    },
     shouldShowValidationButton(): boolean {
-      const isSubmittedOrRefused = this.isSubmitted || this.isRefused;
-      return this.teamsThatNotYetValidated.length === 1 && isSubmittedOrRefused;
+      const isSubmittedOrRefused = this.isSubmittedOrRefused;
+      return this.teamsThatNotValidateYet.length === 1 && isSubmittedOrRefused;
     },
     shouldShowRefuseButton(): boolean {
-      return this.teamsThatCanBeRefused.length === 1 && !this.isDraft;
+      return this.teamsThatCanRefuse.length === 1 && !this.isDraft;
     },
     shouldShowValidationMenu(): boolean {
-      const isSubmittedOrRefused = this.isSubmitted || this.isRefused;
-      return this.teamsThatNotYetValidated.length > 1 && isSubmittedOrRefused;
+      const isSubmittedOrRefused = this.isSubmittedOrRefused;
+      return this.teamsThatNotValidateYet.length > 1 && isSubmittedOrRefused;
     },
     shouldShowRefuseMenu(): boolean {
-      return this.teamsThatCanBeRefused.length > 1 && !this.isDraft;
+      return this.teamsThatCanRefuse.length > 1 && !this.isDraft;
     },
     previousLink(): string {
       if (this.isFA) return `/fa/${this.mFA.id - 1}`;
@@ -291,7 +286,7 @@ export default Vue.extend({
       if (!this.shouldValidateGearRequests(validator)) {
         return this.sendValidation(validator);
       }
-      this.validatorTeam = validator;
+      this.selectedValidator = validator;
       this.gearRequestApprovalDialog = true;
     },
     shouldValidateGearRequests(validator: Team) {
@@ -331,8 +326,7 @@ export default Vue.extend({
       const payload = { author, team: validator };
       return this.$accessor.FT.validate(payload);
     },
-    async refuse(validator?: Team) {
-      if (!validator) return;
+    async refuse(validator: Team) {
       if (this.isValidated && !this.isConfirmationDialogOpen) {
         return (this.isConfirmationDialogOpen = true);
       }
