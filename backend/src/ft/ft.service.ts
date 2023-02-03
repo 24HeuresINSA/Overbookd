@@ -47,13 +47,26 @@ export class FtService {
     id: number,
     updateFtDto: UpdateFtDto,
   ): Promise<CompleteFtResponseDto | null> {
-    const ft = this.prisma.ft.findUnique({ where: { id } });
+    const ft = await this.findOne(id);
     if (!ft) {
       throw new NotFoundException(`ft #${id} not found`);
     }
     return this.prisma.ft.update({
       where: { id },
       data: updateFtDto,
+      select: COMPLETE_FT_SELECT,
+    });
+  }
+
+  async submit(id: number): Promise<CompleteFtResponseDto | null> {
+    const ft = await this.findOne(id);
+    if (!ft) throw new NotFoundException(`ft #${id} not found`);
+
+    return this.prisma.ft.update({
+      where: { id },
+      data: {
+        status: FtStatus.SUBMITTED,
+      },
       select: COMPLETE_FT_SELECT,
     });
   }

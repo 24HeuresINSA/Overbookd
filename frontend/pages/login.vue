@@ -46,9 +46,9 @@
             >Mot de passe oublié ?</nuxt-link
           >
           <v-spacer />
-          <btn class="forgot-a" @click="isDialogOpen = true"
-            >Un problème lors de l'inscription ?</btn
-          >
+          <v-btn class="forgot-a" @click="isDialogOpen = true">
+            Un problème lors de l'inscription ?
+          </v-btn>
         </v-row>
       </v-container>
       <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn btn"

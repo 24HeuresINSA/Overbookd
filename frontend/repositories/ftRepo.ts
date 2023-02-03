@@ -49,15 +49,20 @@ export default {
     return context.$axios.delete(`${resource}/${id}`);
   },
 
+  submitFT(context: Context, ftId: number) {
+    return context.$axios.patch<HttpStringified<FT>>(
+      `${resource}/${ftId}/submit`
+    );
+  },
   validateFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/validate`,
+      `${resource}/${ftId}/validation`,
       reviewer
     );
   },
   refuseFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/refuse`,
+      `${resource}/${ftId}/refusal`,
       reviewer
     );
   },

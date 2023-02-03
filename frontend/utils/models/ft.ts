@@ -53,7 +53,10 @@ export type FTSimplified = Pick<
 >;
 
 export interface FTUpdate
-  extends Pick<FT, "id" | "name" | "isStatic" | "description" | "isDeleted"> {
+  extends Pick<
+    FT,
+    "id" | "name" | "status" | "isStatic" | "description" | "isDeleted"
+  > {
   parentFaId: number | null;
   userInChargeId: number | null;
   teamCode: string | null;
@@ -107,6 +110,8 @@ export function castTimeWindowWithDate(
     ...timeWindow,
     start: new Date(timeWindow.start),
     end: new Date(timeWindow.end),
+    userRequests: timeWindow.userRequests ?? [],
+    teamRequests: timeWindow.teamRequests ?? [],
   };
 }
 
@@ -130,6 +135,7 @@ export function getTimeWindowWithoutRequests({
 export function toUpdateFT({
   id,
   name,
+  status,
   fa,
   isStatic,
   description,
@@ -141,6 +147,7 @@ export function toUpdateFT({
   return {
     id,
     name,
+    status,
     parentFaId: fa?.id ?? null,
     isStatic,
     description,

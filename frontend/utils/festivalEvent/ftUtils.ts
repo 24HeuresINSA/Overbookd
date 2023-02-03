@@ -26,28 +26,37 @@ export function getFTValidationStatusWithMultipleTeams(
   teamCodes: string[]
 ): FTStatus {
   if (ft.status === FTStatus.DRAFT) return FTStatus.DRAFT;
-  if (hasAllFTValidations(ft, teamCodes)) return FTStatus.VALIDATED;
-  if (hasAllFTRefusals(ft, teamCodes)) return FTStatus.REFUSED;
+  if (hasAllFTValidations(ft.reviews, teamCodes)) return FTStatus.VALIDATED;
+  if (hasAllFTRefusals(ft.reviews, teamCodes)) return FTStatus.REFUSED;
   return FTStatus.SUBMITTED;
 }
 
 export function hasAtLeastOneFTValidation(
-  ft: FT,
+  reviews: Review[],
   teamCodes: string[]
 ): boolean {
-  return teamCodes.some((code) => isTaskValidatedBy(ft.reviews, code));
+  return teamCodes.some((code) => isTaskValidatedBy(reviews, code));
 }
 
-export function hasAtLeastOneFTRefusal(ft: FT, teamCodes: string[]): boolean {
-  return teamCodes.some((code) => isTaskRefusedBy(ft.reviews, code));
+export function hasAtLeastOneFTRefusal(
+  reviews: Review[],
+  teamCodes: string[]
+): boolean {
+  return teamCodes.some((code) => isTaskRefusedBy(reviews, code));
 }
 
-export function hasAllFTValidations(ft: FT, teamCodes: string[]): boolean {
-  return teamCodes.every((code) => isTaskValidatedBy(ft.reviews, code));
+export function hasAllFTValidations(
+  reviews: Review[],
+  teamCodes: string[]
+): boolean {
+  return teamCodes.every((code) => isTaskValidatedBy(reviews, code));
 }
 
-export function hasAllFTRefusals(ft: FT, teamCodes: string[]): boolean {
-  return teamCodes.every((code) => isTaskRefusedBy(ft.reviews, code));
+export function hasAllFTRefusals(
+  reviews: Review[],
+  teamCodes: string[]
+): boolean {
+  return teamCodes.every((code) => isTaskRefusedBy(reviews, code));
 }
 
 export function getValidationReviews(reviews: Review[]): Review[] {
