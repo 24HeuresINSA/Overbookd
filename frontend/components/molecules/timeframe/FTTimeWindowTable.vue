@@ -22,7 +22,7 @@
           <v-chip
             v-if="req"
             :key="i"
-            close
+            :close="!disabled"
             @click:close="deleteUserRequest(item, req)"
           >
             {{ formatUsername(req) }}
@@ -36,7 +36,7 @@
           <v-chip
             v-if="req"
             :key="i"
-            close
+            :close="!disabled"
             @click:close="deleteTeamRequest(item, req)"
           >
             {{ formatTeamRequestText(req.quantity, req.team.name) }}

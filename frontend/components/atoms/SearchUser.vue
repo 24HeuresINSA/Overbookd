@@ -10,6 +10,7 @@
     :label="label"
     :solo="boxed"
     :filled="boxed"
+    :disabled="disabled"
     return-object
     @change="propagateEvent"
   >
@@ -45,6 +46,10 @@ export default Vue.extend({
     boxed: {
       type: Boolean,
       default: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data(): SearchUserData {
