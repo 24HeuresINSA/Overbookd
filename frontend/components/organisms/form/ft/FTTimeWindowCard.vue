@@ -5,6 +5,7 @@
       <v-card-title>Créneau</v-card-title>
       <v-card-text>
         <FTTimeWindowTable
+          :disabled="isValidatedByOwners"
           @update-time="openEditTimeDialog"
           @update-volunteer="openEditVolunteerDialog"
           @delete="deleteTimeWindow"
@@ -12,7 +13,9 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="openAddDialog">Ajouter un créneau</v-btn>
+        <v-btn v-if="!isValidatedByOwners" text @click="openAddDialog">
+          Ajouter un créneau
+        </v-btn>
       </v-card-actions>
       <FestivalEventCalendar festival-event="FT" />
     </v-card>
@@ -42,7 +45,10 @@ import FTTimeWindowForm from "~/components/molecules/timeframe/FTTimeWindowForm.
 import { FT, FTCardType, FTTimeWindow } from "~/utils/models/ft";
 import FTVolunteerRequirementForm from "~/components/molecules/timeframe/FTVolunteerRequirementForm.vue";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import { getFTValidationStatusWithMultipleTeams } from "~/utils/festivalEvent/ftUtils";
+import {
+  getFTValidationStatusWithMultipleTeams,
+  hasAllFTValidations,
+} from "~/utils/festivalEvent/ftUtils";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
@@ -65,6 +71,9 @@ export default Vue.extend({
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    isValidatedByOwners(): boolean {
+      return hasAllFTValidations(this.mFT.reviews, this.owners);
     },
     validationStatus(): string {
       return getFTValidationStatusWithMultipleTeams(

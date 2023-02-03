@@ -45,7 +45,7 @@
       </v-chip-group>
     </template>
     <template #[`item.action`]="{ item }">
-      <div>
+      <div v-if="!disabled">
         <v-btn icon @click="editVolunteer(item)">
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
@@ -68,6 +68,12 @@ import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FTTimeWindowTable",
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data: () => ({
     headers: [
       { text: "Date de début", value: "startDate" },

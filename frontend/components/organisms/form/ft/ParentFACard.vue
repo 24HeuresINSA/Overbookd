@@ -7,6 +7,7 @@
         :fa="mFT.fa"
         label="FA associée"
         :boxed="false"
+        :disabled="isValidatedByOwner"
         @change="updateParentFA($event)"
       ></SearchFA>
       <CompleteLogisticsTable v-if="mFT.fa" class="elevation-1" />
@@ -19,7 +20,10 @@ import Vue from "vue";
 import SearchFA from "~/components/atoms/SearchFA.vue";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import CompleteLogisticsTable from "~/components/molecules/logistics/CompleteLogisticsTable.vue";
-import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
+import {
+  getFTValidationStatus,
+  isTaskValidatedBy,
+} from "~/utils/festivalEvent/ftUtils";
 import { FASimplified } from "~/utils/models/FA";
 import { FT, FTCardType } from "~/utils/models/ft";
 
@@ -33,6 +37,9 @@ export default Vue.extend({
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    isValidatedByOwner(): boolean {
+      return isTaskValidatedBy(this.mFT.reviews, this.owner);
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();

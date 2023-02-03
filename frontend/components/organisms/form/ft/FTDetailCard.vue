@@ -7,6 +7,7 @@
         <RichEditor
           :data="mFT.description"
           class="mb-4"
+          :disabled="isValidatedByOwner"
           @change="onChange($event)"
         ></RichEditor>
       </v-form>
@@ -18,7 +19,10 @@
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
+import {
+  getFTValidationStatus,
+  isTaskValidatedBy,
+} from "~/utils/festivalEvent/ftUtils";
 import { FT, FTCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -32,6 +36,9 @@ export default Vue.extend({
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    isValidatedByOwner(): boolean {
+      return isTaskValidatedBy(this.mFT.reviews, this.owner);
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();

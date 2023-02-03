@@ -6,29 +6,34 @@
       <v-text-field
         :value="mFT.name"
         label="Nom de la FT"
+        :disabled="isValidatedByOwner"
         @change="updateName($event)"
       ></v-text-field>
       <SearchUser
         :user="mFT.userInCharge"
         label="Responsable"
         :boxed="false"
+        :disabled="isValidatedByOwner"
         @change="updateUserInCharge($event)"
       ></SearchUser>
       <SearchTeam
         :team="mFT.team"
         label="Équipe"
         :boxed="false"
+        :disabled="isValidatedByOwner"
         @change="updateTeam($event)"
       ></SearchTeam>
       <SearchSignaLocation
         :location="mFT.location"
         label="Lieux"
         :boxed="false"
+        :disabled="isValidatedByOwner"
         @change="updateLocation($event)"
       ></SearchSignaLocation>
       <v-switch
         :value="mFT.isStatic"
         label="Créneaux statiques"
+        :disabled="isValidatedByOwner"
         @change="updateIsStatic($event)"
       ></v-switch>
     </v-card-text>
@@ -45,7 +50,10 @@ import { User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
+import {
+  getFTValidationStatus,
+  isTaskValidatedBy,
+} from "~/utils/festivalEvent/ftUtils";
 
 export default Vue.extend({
   name: "FTGeneralCard",
@@ -57,6 +65,9 @@ export default Vue.extend({
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    isValidatedByOwner(): boolean {
+      return isTaskValidatedBy(this.mFT.reviews, this.owner);
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();
