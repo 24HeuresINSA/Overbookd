@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card>
+    <v-card :class="validationStatus">
+      <CardErrorList :type="cardType" />
       <v-card-title>Créneau</v-card-title>
       <v-card-text>
         <FTTimeWindowTable
@@ -38,8 +39,10 @@ import Vue from "vue";
 import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTable.vue";
 import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
 import FTTimeWindowForm from "~/components/molecules/timeframe/FTTimeWindowForm.vue";
-import { FT, FTTimeWindow } from "~/utils/models/ft";
+import { FT, FTCardType, FTTimeWindow } from "~/utils/models/ft";
 import FTVolunteerRequirementForm from "~/components/molecules/timeframe/FTVolunteerRequirementForm.vue";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import { getFTValidationStatusWithMultipleTeams } from "~/utils/festivalEvent/ftUtils";
 
 export default Vue.extend({
   name: "FTTimeWindowCard",
@@ -48,8 +51,12 @@ export default Vue.extend({
     FestivalEventCalendar,
     FTTimeWindowForm,
     FTVolunteerRequirementForm,
+    CardErrorList,
   },
   data: () => ({
+    owners: ["humain", "matos"],
+    cardType: FTCardType.TIME_WINDOW,
+
     isAddDialogOpen: false,
     isEditTimeDialogOpen: false,
     isEditVolunteerDialogOpen: false,
@@ -58,6 +65,12 @@ export default Vue.extend({
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    validationStatus(): string {
+      return getFTValidationStatusWithMultipleTeams(
+        this.mFT,
+        this.owners
+      ).toLowerCase();
     },
   },
   methods: {

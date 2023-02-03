@@ -1,5 +1,6 @@
 <template>
-  <v-card>
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Détail</v-card-title>
     <v-card-text>
       <v-form>
@@ -16,17 +17,24 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/RichEditor.vue";
-import { FT } from "~/utils/models/ft";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
+import { FT, FTCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "FTDetailCard",
-  components: { RichEditor },
+  components: { RichEditor, CardErrorList },
   data: () => ({
+    owner: "humain",
+    cardType: FTCardType.DETAIL,
     delay: undefined as any,
   }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    validationStatus(): string {
+      return getFTValidationStatus(this.mFT, this.owner).toLowerCase();
     },
   },
   methods: {

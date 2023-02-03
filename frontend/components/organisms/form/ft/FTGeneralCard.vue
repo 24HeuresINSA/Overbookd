@@ -1,5 +1,6 @@
 <template>
-  <v-card>
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
     <v-card-title>Général</v-card-title>
     <v-card-text>
       <v-text-field
@@ -36,20 +37,29 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FT } from "~/utils/models/ft";
+import { FT, FTCardType } from "~/utils/models/ft";
 import SearchUser from "~/components/atoms/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/SearchSignaLocation.vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import { User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 import { SignaLocation } from "~/utils/models/signaLocation";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 
 export default Vue.extend({
   name: "FTGeneralCard",
-  components: { SearchUser, SearchSignaLocation, SearchTeam },
+  components: { SearchUser, SearchSignaLocation, SearchTeam, CardErrorList },
+  data: () => ({
+    owner: "humain",
+    cardType: FTCardType.GENERAL,
+  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    validationStatus(): string {
+      return getFTValidationStatus(this.mFT, this.owner).toLowerCase();
     },
   },
   methods: {

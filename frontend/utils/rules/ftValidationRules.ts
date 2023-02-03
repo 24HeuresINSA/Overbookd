@@ -6,10 +6,10 @@ import { User } from "../models/user";
 
 export function hasAtLeastOneFTError(mFT: FT): boolean {
   const errors = [
-    ...generalErrors(mFT),
-    ...parentFAErrors(mFT),
-    ...detailErrors(mFT),
-    ...timeWindowsErrors(mFT),
+    ...ftGeneralErrors(mFT),
+    ...ftParentFAErrors(mFT),
+    ...ftDetailErrors(mFT),
+    ...ftTimeWindowsErrors(mFT),
   ];
   return errors.length > 0;
 }
@@ -26,7 +26,7 @@ function hasUserInCharge(user?: User): string | boolean {
 function hasLocation(location?: SignaLocation): string | boolean {
   return Boolean(location) || "La tâche doit avoir un lieu.";
 }
-export function generalErrors(ft: FT): string[] {
+export function ftGeneralErrors(ft: FT): string[] {
   return [
     hasName(ft.name),
     hasTeam(ft.team),
@@ -38,7 +38,7 @@ export function generalErrors(ft: FT): string[] {
 function hasParentFA(fa?: FASimplified): string | boolean {
   return Boolean(fa) || "La tâche doit avoir une FA asscoiée.";
 }
-export function parentFAErrors(ft: FT): string[] {
+export function ftParentFAErrors(ft: FT): string[] {
   return [hasParentFA(ft.fa)].filter(
     (error): error is string => error !== true
   );
@@ -50,7 +50,7 @@ function hasDescription(description: string): string | boolean {
     "La tâche doit avoir une description."
   );
 }
-export function detailErrors(ft: FT): string[] {
+export function ftDetailErrors(ft: FT): string[] {
   return [hasDescription(ft.description)].filter(
     (error): error is string => error !== true
   );
@@ -72,7 +72,7 @@ function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
     ) || "Tu as des créneaux sans demande de bénévole."
   );
 }
-export function timeWindowsErrors(ft: FT): string[] {
+export function ftTimeWindowsErrors(ft: FT): string[] {
   return [
     hasAtLeastOneTimeWindow(ft.timeWindows),
     hasAtLeastOneUserOrTeamRequestPerTimeWindow(ft.timeWindows),

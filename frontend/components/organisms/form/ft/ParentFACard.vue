@@ -1,33 +1,41 @@
 <template>
-  <div>
-    <v-card>
-      <v-card-title>FA associée</v-card-title>
-      <v-card-text>
-        <SearchFA
-          :fa="mFT.fa"
-          label="FA associée"
-          :boxed="false"
-          @change="updateParentFA($event)"
-        ></SearchFA>
-        <CompleteLogisticsTable v-if="mFT.fa" class="elevation-1" />
-      </v-card-text>
-    </v-card>
-  </div>
+  <v-card :class="validationStatus">
+    <CardErrorList :type="cardType" />
+    <v-card-title>FA associée</v-card-title>
+    <v-card-text>
+      <SearchFA
+        :fa="mFT.fa"
+        label="FA associée"
+        :boxed="false"
+        @change="updateParentFA($event)"
+      ></SearchFA>
+      <CompleteLogisticsTable v-if="mFT.fa" class="elevation-1" />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import SearchFA from "~/components/atoms/SearchFA.vue";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import CompleteLogisticsTable from "~/components/molecules/logistics/CompleteLogisticsTable.vue";
+import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { FASimplified } from "~/utils/models/FA";
-import { FT } from "~/utils/models/ft";
+import { FT, FTCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ParentFACard",
-  components: { SearchFA, CompleteLogisticsTable },
+  components: { SearchFA, CompleteLogisticsTable, CardErrorList },
+  data: () => ({
+    owner: "humain",
+    cardType: FTCardType.PARENT_FA,
+  }),
   computed: {
     mFT(): FT {
       return this.$accessor.FT.mFT;
+    },
+    validationStatus(): string {
+      return getFTValidationStatus(this.mFT, this.owner).toLowerCase();
     },
   },
   methods: {

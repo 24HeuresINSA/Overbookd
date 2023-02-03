@@ -22,6 +22,14 @@ export enum FTStatusLabel {
   READY = "Prête à affectation",
 }
 
+export enum FTCardType {
+  GENERAL = "GENERAL",
+  PARENT_FA = "PARENT_FA",
+  DETAIL = "DETAIL",
+  TIME_WINDOW = "TIME_WINDOW",
+  LOGISTICS = "LOGISTICS",
+}
+
 interface FTBase {
   name: string;
   status: FTStatus;
