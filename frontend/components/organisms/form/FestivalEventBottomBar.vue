@@ -204,7 +204,7 @@ export default Vue.extend({
       if (this.me.team.includes("admin")) return this.validators;
 
       return this.validators.filter((validator: Team) =>
-        this.me.team.includes(validator.name)
+        this.me.team.includes(validator.code)
       );
     },
     teamsThatNotValidateYet(): Team[] {
@@ -258,15 +258,17 @@ export default Vue.extend({
       return this.isSubmitted || this.isRefused;
     },
     shouldShowValidationButton(): boolean {
-      const isSubmittedOrRefused = this.isSubmittedOrRefused;
-      return this.teamsThatNotValidateYet.length === 1 && isSubmittedOrRefused;
+      return (
+        this.teamsThatNotValidateYet.length === 1 && this.isSubmittedOrRefused
+      );
     },
     shouldShowRefuseButton(): boolean {
       return this.teamsThatCanRefuse.length === 1 && !this.isDraft;
     },
     shouldShowValidationMenu(): boolean {
-      const isSubmittedOrRefused = this.isSubmittedOrRefused;
-      return this.teamsThatNotValidateYet.length > 1 && isSubmittedOrRefused;
+      return (
+        this.teamsThatNotValidateYet.length > 1 && this.isSubmittedOrRefused
+      );
     },
     shouldShowRefuseMenu(): boolean {
       return this.teamsThatCanRefuse.length > 1 && !this.isDraft;

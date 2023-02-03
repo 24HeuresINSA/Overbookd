@@ -59,7 +59,7 @@ export class FtService {
   }
 
   async submit(id: number): Promise<CompleteFtResponseDto | null> {
-    const ft = this.findOne(id);
+    const ft = await this.findOne(id);
     if (!ft) throw new NotFoundException(`ft #${id} not found`);
 
     return this.prisma.ft.update({
