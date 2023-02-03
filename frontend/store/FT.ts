@@ -290,11 +290,7 @@ export const actions = actionTree(
     },
 
     async submitForReview({ commit, dispatch, state }, author: User) {
-      const ftToUpdate = toUpdateFT({
-        ...state.mFT,
-        status: FTStatus.SUBMITTED,
-      });
-      const res = await safeCall(this, repo.updateFT(this, ftToUpdate), {
+      const res = await safeCall(this, repo.submitFT(this, state.mFT.id), {
         successMessage: "FT soumise à validation 🥳",
         errorMessage: "FT non soumise à validation 😢",
       });
@@ -323,7 +319,7 @@ export const actions = actionTree(
         repo.validateFT(this, state.mFT.id, reviewer),
         { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
       );
-      if (!resFT?.data) return;
+      if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
 
@@ -346,7 +342,7 @@ export const actions = actionTree(
         repo.refuseFT(this, state.mFT.id, reviewer),
         { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
       );
-      if (!resFT?.data) return;
+      if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
 

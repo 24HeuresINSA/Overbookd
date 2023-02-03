@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus } from '@prisma/client';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -17,14 +16,6 @@ export class UpdateFtDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    required: true,
-    description: 'The status of the ft',
-  })
-  @IsString()
-  @IsNotEmpty()
-  status: FtStatus;
 
   @ApiProperty({
     required: false,
