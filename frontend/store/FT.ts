@@ -378,8 +378,14 @@ export const actions = actionTree(
       );
       if (!res) return;
       const savedTimeWindow = castTimeWindowWithDate(res.data);
+      const previousTimeWindow = state.mFT.timeWindows.find(
+        ({ id }) => id === savedTimeWindow.id
+      );
       commit("UPDATE_TIME_WINDOW", savedTimeWindow);
-      dispatch("updateGearRequestRentalPeriod", savedTimeWindow);
+      dispatch("updateGearRequestRentalPeriod", {
+        previous: previousTimeWindow,
+        updated: savedTimeWindow,
+      });
     },
 
     async updateTimeWindowRequirements(
@@ -607,14 +613,21 @@ export const actions = actionTree(
 
     async updateGearRequestRentalPeriod(
       { commit, dispatch, state },
-      { start, end }: Omit<Period, "id">
+      {
+        previous,
+        updated,
+      }: { previous: Omit<Period, "id">; updated: Omit<Period, "id"> }
     ) {
-      const fakeUpdatedPeriod = { start, end, id: -1 };
+      const previousPeriod = {
+        start: previous.start,
+        end: previous.end,
+        id: -1,
+      };
       const toUpdateGearRequest = state.gearRequests.find(({ rentalPeriod }) =>
-        isSimilarPeriod(fakeUpdatedPeriod)(rentalPeriod)
+        isSimilarPeriod(previousPeriod)(rentalPeriod)
       );
       if (!toUpdateGearRequest) {
-        dispatch("addGearRequestRentalPeriod", fakeUpdatedPeriod);
+        dispatch("addGearRequestRentalPeriod", updated);
         return;
       }
       const res = await safeCall(
@@ -624,7 +637,7 @@ export const actions = actionTree(
           state.mFT.id,
           toUpdateGearRequest.gear.id,
           toUpdateGearRequest.rentalPeriod.id,
-          { start, end }
+          { start: updated.start, end: updated.end }
         ),
         {
           successMessage:
