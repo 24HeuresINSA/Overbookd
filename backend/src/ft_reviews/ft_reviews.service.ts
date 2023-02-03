@@ -32,9 +32,10 @@ export class FtReviewsService {
         data: { status },
         select: COMPLETE_FT_SELECT,
       });
-      const updatedFt = await this.prisma
-        .$transaction([upsertReview, updateStatus])
-        .then((res) => res[1]);
+      const [_, updatedFt] = await this.prisma.$transaction([
+        upsertReview,
+        updateStatus,
+      ]);
       return updatedFt;
     }
 
@@ -63,9 +64,10 @@ export class FtReviewsService {
       select: COMPLETE_FT_SELECT,
     });
 
-    const updatedFt = await this.prisma
-      .$transaction([upsertReview, updateStatus])
-      .then((res) => res[1]);
+    const [_, updatedFt] = await this.prisma.$transaction([
+      upsertReview,
+      updateStatus,
+    ]);
     return updatedFt;
   }
 
