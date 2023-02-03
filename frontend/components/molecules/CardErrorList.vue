@@ -31,7 +31,7 @@ import {
 export default Vue.extend({
   name: "CardErrorList",
   props: {
-    fesivalEvent: {
+    festivalEvent: {
       type: String,
       default: "FA",
     },
@@ -48,7 +48,7 @@ export default Vue.extend({
       return this.$accessor.FT.mFT;
     },
     isFA(): boolean {
-      return this.fesivalEvent === "FA";
+      return this.festivalEvent === "FA";
     },
     errors(): string[] {
       if (this.isFA) return this.faErrors;

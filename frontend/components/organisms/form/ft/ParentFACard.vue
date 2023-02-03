@@ -1,6 +1,6 @@
 <template>
   <v-card :class="validationStatus">
-    <CardErrorList :type="cardType" />
+    <CardErrorList festival-event="FT" :type="cardType" />
     <v-card-title>FA associée</v-card-title>
     <v-card-text>
       <SearchFA

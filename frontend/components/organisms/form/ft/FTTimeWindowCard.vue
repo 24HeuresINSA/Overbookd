@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card :class="validationStatus">
-      <CardErrorList :type="cardType" />
+      <CardErrorList festival-event="FT" :type="cardType" />
       <v-card-title>Créneau</v-card-title>
       <v-card-text>
         <FTTimeWindowTable
