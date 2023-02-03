@@ -3,7 +3,6 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  NotImplementedException,
 } from '@nestjs/common';
 import { Gear, GearRepository } from '../catalog/interfaces';
 import { Status } from '../fa/dto/update-fa.dto';
@@ -12,12 +11,6 @@ export const PENDING = 'PENDING';
 export const APPROVED = 'APPROVED';
 
 type GearRequestStatus = typeof PENDING | typeof APPROVED;
-
-export class AnimationOnlyError extends NotImplementedException {
-  constructor() {
-    super(`Only handle gear requests for ${GearSeekerType.Animation}`);
-  }
-}
 
 export class GearRequestAlreadyExists extends BadRequestException {
   gearRequest: GearRequest;

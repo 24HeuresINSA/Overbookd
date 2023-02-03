@@ -5,7 +5,6 @@ import {
 } from '../../catalog/repositories/prisma/gear.repository.prisma';
 import { PrismaService } from '../../prisma.service';
 import {
-  AnimationOnlyError,
   APPROVED,
   ApprovedGearRequest,
   GearRequest,
@@ -181,10 +180,6 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   async getGearRequest(
     gearRequestId: GearRequestIdentifier,
   ): Promise<GearRequest> {
-    if (!this.isAnimationRequest(gearRequestId)) {
-      throw new AnimationOnlyError();
-    }
-
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
 
     const gearRequest = await this.prismaService.gearRequest.findUnique({
@@ -214,10 +209,6 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
     updateGearRequestForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
-    if (!this.isAnimationRequest(gearRequestId)) {
-      throw new AnimationOnlyError();
-    }
-
     const data = this.buildUpdateGearRequestData(updateGearRequestForm);
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
 
