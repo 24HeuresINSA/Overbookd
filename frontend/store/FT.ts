@@ -245,7 +245,7 @@ export const actions = actionTree(
       if (!res) return;
       const createdFT = castFTWithDate(res.data);
       commit("ADD_FT", createdFT);
-      dispatch("setFT", { ...fakeFT(res.data.id), ...createdFT });
+      dispatch("setFT", { ...defaultState(), ...createdFT, id: res.data.id });
     },
 
     async updateFT({ commit }, ft: FT) {
@@ -289,7 +289,16 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", castTimeWindowWithDate(res.data));
     },
 
-    async submitForReview({ dispatch, state }, author: User) {
+    async submitForReview({ commit, dispatch, state }, author: User) {
+      const res = await safeCall(this, repo.submitFT(this, state.mFT.id), {
+        successMessage: "FT soumise à validation 🥳",
+        errorMessage: "FT non soumise à validation 😢",
+      });
+
+      if (!res) return;
+      const updatedFT = castFTWithDate(res.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
+
       const authorName = formatUsername(author);
       const feedback: Feedback = {
         subject: SubjectType.SUBMIT,
@@ -298,14 +307,13 @@ export const actions = actionTree(
         createdAt: new Date(),
       };
       dispatch("addFeedback", { ...feedback, author });
-      dispatch("updateFT", { ...state.mFT, status: FTStatus.SUBMITTED });
     },
 
     async validate(
       { dispatch, commit, state },
-      { validator, team }: { validator: User; team: Team }
+      { author, team }: { author: User; team: Team }
     ) {
-      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
+      const reviewer: Reviewer = { teamCode: team.code };
       const resFT = await safeCall(
         this,
         repo.validateFT(this, state.mFT.id, reviewer),
@@ -318,14 +326,17 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.VALIDATED,
         comment: `La FT a été validée par ${team.name}.`,
-        author: validator,
+        author,
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
     },
 
-    async refuse({ commit, dispatch, state }, { validator, team, message }) {
-      const reviewer: Reviewer = { teamCode: team.code, userId: validator.id };
+    async refuse(
+      { commit, dispatch, state },
+      { author, team, message }: { author: User; team: Team; message?: string }
+    ) {
+      const reviewer: Reviewer = { teamCode: team.code };
       const resFT = await safeCall(
         this,
         repo.refuseFT(this, state.mFT.id, reviewer),
@@ -338,7 +349,7 @@ export const actions = actionTree(
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
-        author: validator,
+        author,
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
@@ -583,21 +594,14 @@ export const actions = actionTree(
   }
 );
 
-function defaultState(): FTCreation {
+function defaultState(): Omit<FT, "id"> {
   return {
     name: "",
-  };
-}
-
-function fakeFT(id: number): FT {
-  return {
-    id,
-    name: "name",
+    status: FTStatus.DRAFT,
     description: "",
     isStatic: false,
-    feedbacks: [],
-    status: FTStatus.DRAFT,
     timeWindows: [],
+    feedbacks: [],
     reviews: [],
     isDeleted: false,
   };

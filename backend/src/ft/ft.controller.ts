@@ -157,6 +157,29 @@ export class FtController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
+  @Patch(':id/submit')
+  @ApiResponse({
+    status: 200,
+    description: 'ft submitted',
+    type: CompleteFtResponseDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FT id',
+    required: true,
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  submit(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CompleteFtResponseDto | null> {
+    return this.ftService.submit(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Delete(':id')
   @HttpCode(204)
   @ApiResponse({

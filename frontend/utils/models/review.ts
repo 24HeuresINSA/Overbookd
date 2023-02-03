@@ -12,5 +12,4 @@ export enum ReviewStatus {
 
 export interface Reviewer {
   teamCode: string;
-  userId: number;
 }
