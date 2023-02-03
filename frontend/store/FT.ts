@@ -199,6 +199,14 @@ export const mutations = mutationTree(state, {
       isSimilarGearRequest(gearRequest)
     );
   },
+
+  UPATE_GEAR_REQUESTS_RENTAL_PERIOD(state, rentalPeriod: Period) {
+    state.gearRequests = state.gearRequests.map((gearRequest) => {
+      if (!isSimilarPeriod(gearRequest.rentalPeriod)(rentalPeriod))
+        return gearRequest;
+      return { ...gearRequest, rentalPeriod };
+    });
+  },
 });
 
 export const actions = actionTree(
@@ -355,7 +363,10 @@ export const actions = actionTree(
       dispatch("addFeedback", feedback);
     },
 
-    async updateTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
+    async updateTimeWindow(
+      { commit, dispatch, state },
+      timeWindow: FTTimeWindow
+    ) {
       const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
         this,
@@ -366,7 +377,9 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("UPDATE_TIME_WINDOW", castTimeWindowWithDate(res.data));
+      const savedTimeWindow = castTimeWindowWithDate(res.data);
+      commit("UPDATE_TIME_WINDOW", savedTimeWindow);
+      dispatch("updateGearRequestRentalPeriod", savedTimeWindow);
     },
 
     async updateTimeWindowRequirements(
@@ -589,6 +602,41 @@ export const actions = actionTree(
       if (responses.some((response) => response === undefined)) return;
       toDeleteGearRequests.map((gearRequest) =>
         commit("DELETE_GEAR_REQUESTS", gearRequest)
+      );
+    },
+
+    async updateGearRequestRentalPeriod(
+      { commit, dispatch, state },
+      { start, end }: Omit<Period, "id">
+    ) {
+      const fakeUpdatedPeriod = { start, end, id: -1 };
+      const toUpdateGearRequest = state.gearRequests.find(({ rentalPeriod }) =>
+        isSimilarPeriod(fakeUpdatedPeriod)(rentalPeriod)
+      );
+      if (!toUpdateGearRequest) {
+        dispatch("addGearRequestRentalPeriod", fakeUpdatedPeriod);
+        return;
+      }
+      const res = await safeCall(
+        this,
+        repo.updateGearRequest(
+          this,
+          state.mFT.id,
+          toUpdateGearRequest.gear.id,
+          toUpdateGearRequest.rentalPeriod.id,
+          { start, end }
+        ),
+        {
+          successMessage:
+            "La demande de matériel a été mise a jour avec succès ✅",
+          errorMessage: "La demande de matériel na pas a été mise a jour ❌",
+        }
+      );
+      if (!res) return;
+      const updatedGearRequest = castGearRequestWithDate(res.data);
+      commit(
+        "UPATE_GEAR_REQUESTS_RENTAL_PERIOD",
+        updatedGearRequest.rentalPeriod
       );
     },
   }
