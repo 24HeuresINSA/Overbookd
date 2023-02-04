@@ -642,7 +642,7 @@ export const actions = actionTree(
         {
           successMessage:
             "La demande de matériel a été mise a jour avec succès ✅",
-          errorMessage: "La demande de matériel na pas a été mise a jour ❌",
+          errorMessage: "La demande de matériel n'a pas a été mise a jour ❌",
         }
       );
       if (!res) return;
