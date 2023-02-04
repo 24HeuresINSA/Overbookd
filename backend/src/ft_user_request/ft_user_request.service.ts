@@ -12,7 +12,6 @@ export class FtUserRequestService {
     ftId: number,
     twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
-    //check if Ft and Tw exist
     const allRequests = [];
     for (const req of request) {
       allRequests.push(
@@ -20,15 +19,6 @@ export class FtUserRequestService {
           data: {
             ftTimeWindowsId: twId,
             userId: req.userId,
-          },
-          select: {
-            user: {
-              select: {
-                id: true,
-                firstname: true,
-                lastname: true,
-              },
-            },
           },
         }),
       );
@@ -48,7 +38,18 @@ export class FtUserRequestService {
     });
   }
 
-  async delete(request: FtUserRequestDto) {
-    return null;
+  async delete(
+    request: FtUserRequestDto,
+    ftId: number,
+    twId: number,
+  ): Promise<void> {
+    await this.prisma.ftUserRequest.delete({
+      where: {
+        ftTimeWindowsId_userId: {
+          ftTimeWindowsId: twId,
+          userId: request.userId,
+        },
+      },
+    });
   }
 }

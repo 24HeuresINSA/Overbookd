@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -12,6 +13,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -29,6 +31,9 @@ import { FtUserRequestService } from './ft_user_request.service';
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
+})
+@ApiNotFoundResponse({
+  description: 'Resource not found',
 })
 @Controller('ft')
 export class FtUserRequestController {
@@ -53,5 +58,25 @@ export class FtUserRequestController {
     @Param('twId', ParseIntPipe) twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
     return this.ftUserRequestService.create(requests, ftId, twId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Delete('/:ftId/time-windows/:twId/user-requests')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'The user requests have been successfully deleted.',
+  })
+  @ApiBody({
+    description: 'The user request to delete',
+    type: FtUserRequestDto,
+  })
+  async delete(
+    @Body() request: FtUserRequestDto,
+    @Param('ftId', ParseIntPipe) ftId: number,
+    @Param('twId', ParseIntPipe) twId: number,
+  ): Promise<void> {
+    return this.ftUserRequestService.delete(request, ftId, twId);
   }
 }
