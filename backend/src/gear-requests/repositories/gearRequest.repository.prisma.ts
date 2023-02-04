@@ -35,15 +35,18 @@ type DatabaseGearRequest<T extends Animation | Task = Animation> = T & {
   drive?: string;
 };
 
-function convertApprovedAnimationGearRequestToApiContract(
-  gearRequest: DatabaseGearRequest<Animation> & {
+function convertApprovedGearRequestToApiContract(
+  gearRequest: DatabaseGearRequest<Animation | Task> & {
     drive: string;
     status: typeof APPROVED;
   },
 ): ApprovedGearRequest {
   const { drive, status } = gearRequest;
+  const convertedGearRequest = isAnimationGearRequest(gearRequest)
+    ? convertAnimationGearRequestToApiContract(gearRequest)
+    : convertTaskGearRequestToApiContract(gearRequest);
   return {
-    ...convertAnimationGearRequestToApiContract(gearRequest),
+    ...convertedGearRequest,
     drive,
     status,
   };
@@ -240,7 +243,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       data,
       select: this.SELECT_GEAR_REQUEST,
     });
-    return convertApprovedAnimationGearRequestToApiContract({
+    return convertApprovedGearRequestToApiContract({
       ...approvedGearRequest,
       status: APPROVED,
     });
