@@ -50,6 +50,18 @@ export interface StoredGearRequest<T extends "FA" | "FT">
   drive?: string;
 }
 
+export function isFAStoredGearRequest(
+  storedGearRequest: StoredGearRequest<"FA" | "FT">
+): storedGearRequest is StoredGearRequest<"FA"> {
+  return storedGearRequest.seeker.type === "FA";
+}
+
+export function isFTStoredGearRequest(
+  storedGearRequest: StoredGearRequest<"FA" | "FT">
+): storedGearRequest is StoredGearRequest<"FT"> {
+  return storedGearRequest.seeker.type === "FT";
+}
+
 export interface GearRequestWithDrive<T extends "FA" | "FT">
   extends GearRequest<T> {
   drive: string;

@@ -213,7 +213,7 @@ export default {
   validateGearRequest(
     context: Context,
     animationId: number,
-    gearRequest: GearRequestWithDrive<"FA">
+    gearRequest: GearRequestWithDrive<"FA" | "FT">
   ) {
     const {
       gear: { id: gearId },

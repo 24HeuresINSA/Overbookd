@@ -51,6 +51,8 @@ import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import {
   GearRequestWithDrive,
+  isFAStoredGearRequest,
+  isFTStoredGearRequest,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 
@@ -67,6 +69,10 @@ export default Vue.extend({
       type: Object,
       required: true,
       default: () => {},
+    },
+    festivalEvent: {
+      type: String,
+      default: () => "FA",
     },
   },
 
@@ -106,12 +112,17 @@ export default Vue.extend({
   },
 
   computed: {
-    gearRequestsToApprove(): StoredGearRequest<"FA">[] {
-      return this.$accessor.FA.gearRequests.filter(
+    isFA(): boolean {
+      return this.festivalEvent === "FA";
+    },
+    gearRequestsToApprove(): StoredGearRequest<"FA" | "FT">[] {
+      const gearRequests: StoredGearRequest<"FA" | "FT">[] = this.isFA
+        ? this.$accessor.FA.gearRequests
+        : this.$accessor.FT.gearRequests;
+      return gearRequests.filter(
         (gr) => gr.gear.owner?.code === this.validator.code
       );
     },
-
     canValidateGearRequest(): boolean {
       return this.gearRequestsToApprove.every((gr) => gr.drive);
     },
@@ -123,17 +134,29 @@ export default Vue.extend({
     },
 
     updateGearRequestWithDrive(
-      gearRequest: StoredGearRequest<"FA">,
+      gearRequest: StoredGearRequest<"FA" | "FT">,
       drive: string
     ) {
-      this.$accessor.FA.setDriveToGearRequest({ ...gearRequest, drive });
+      const payload = {
+        ...gearRequest,
+        drive,
+      };
+      if (isFAStoredGearRequest(payload)) {
+        return this.$accessor.FA.setDriveToGearRequest(payload);
+      }
+      if (isFTStoredGearRequest(payload)) {
+        return this.$accessor.FT.setDriveToGearRequest(payload);
+      }
     },
 
     async validateGearRequests() {
       const gearRequests = this.gearRequestsToApprove.filter(
-        (gr): gr is GearRequestWithDrive<"FA"> => Boolean(gr.drive)
+        (gr): gr is GearRequestWithDrive<"FA" | "FT"> => Boolean(gr.drive)
       );
-      await this.$accessor.FA.validateGearRequests(gearRequests);
+      const validation = this.isFA
+        ? this.$accessor.FA.validateGearRequests(gearRequests)
+        : this.$accessor.FT.validateGearRequests(gearRequests);
+      await validation;
       this.$emit("close-dialog");
     },
   },
