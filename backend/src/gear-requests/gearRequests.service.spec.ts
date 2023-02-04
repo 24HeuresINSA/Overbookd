@@ -442,6 +442,9 @@ describe('Gear requests', () => {
       ${undefined} | ${undefined}                       | ${new Date('2022-05-24T09:15:00')} | ${GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE}
       ${2}         | ${new Date('2022-05-24T11:30:00')} | ${new Date('2022-05-24T21:30:00')} | ${GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE}
       ${undefined} | ${new Date('2022-05-24T11:30:00')} | ${new Date('2022-05-24T21:30:00')} | ${GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE}
+      ${16}        | ${undefined}                       | ${undefined}                       | ${GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE}
+      ${undefined} | ${new Date('2022-05-22T20:15:00')} | ${undefined}                       | ${GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE}
+      ${undefined} | ${undefined}                       | ${new Date('2022-05-24T09:15:00')} | ${GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE}
     `(
       `When changing $gearRequest.seeker.type #$gearRequest.seeker.id request for $gearRequest.gear.name
       with $quantity as quantity, $start as rental start date and $end as rental end date`,
@@ -449,12 +452,33 @@ describe('Gear requests', () => {
         let updatedGearRequest: GearRequest;
 
         beforeAll(async () => {
-          updatedGearRequest = await gearRequestService.updateAnimationRequest(
-            gearRequest.seeker.id,
-            gearRequest.gear.id,
-            gearRequest.rentalPeriod.id,
-            { quantity, start, end },
-          );
+          switch (gearRequest.seeker.type) {
+            case GearSeekerType.Animation:
+              updatedGearRequest =
+                await gearRequestService.updateAnimationRequest(
+                  gearRequest.seeker.id,
+                  gearRequest.gear.id,
+                  gearRequest.rentalPeriod.id,
+                  { quantity, start, end },
+                );
+              break;
+            case GearSeekerType.Task:
+              updatedGearRequest = await gearRequestService.updateTaskRequest(
+                gearRequest.seeker.id,
+                gearRequest.gear.id,
+                gearRequest.rentalPeriod.id,
+                { quantity, start, end },
+              );
+              break;
+            default:
+              updatedGearRequest =
+                await gearRequestService.updateAnimationRequest(
+                  gearRequest.seeker.id,
+                  gearRequest.gear.id,
+                  gearRequest.rentalPeriod.id,
+                  { quantity, start, end },
+                );
+          }
         });
 
         afterAll(() => {
