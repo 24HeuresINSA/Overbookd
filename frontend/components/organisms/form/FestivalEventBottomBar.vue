@@ -74,6 +74,7 @@
           @click="checkBeforeSubmitForReview()"
           >soumettre à validation
         </v-btn>
+        <v-btn v-if="canSave" @click="save">sauvegarder</v-btn>
       </div>
       <v-btn class="bottom-bar__navigation" small fab :to="nextLink">
         <v-icon small>mdi-arrow-right</v-icon>
@@ -288,6 +289,9 @@ export default Vue.extend({
       if (this.isFA) return `/fa/${this.mFA.id + 1}`;
       return `/ft/${this.mFT.id + 1}`;
     },
+    canSave(): boolean {
+      return this.isFA && !this.isValidated;
+    },
   },
   methods: {
     async validate(validator: Team) {
@@ -393,6 +397,9 @@ export default Vue.extend({
     openRefuseDialog(validator: Team) {
       this.isRefuseDialogOpen = true;
       this.selectedValidator = validator;
+    },
+    save() {
+      this.$accessor.FA.save();
     },
   },
 });
