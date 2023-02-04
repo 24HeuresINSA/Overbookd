@@ -13,22 +13,28 @@ export class FtTeamRequestService {
     ftId: number,
     twId: number,
   ): Promise<FtTeamRequestResponseDto[]> {
-    const allRequests = [];
-    for (const req of createFtTeamRequestDto) {
-      allRequests.push(
-        this.prisma.ftTeamRequest.create({
-          data: {
+    const allRequests = createFtTeamRequestDto.map(({ quantity, teamCode }) =>
+      this.prisma.ftTeamRequest.upsert({
+        where: {
+          timeWindowsId_teamCode: {
             timeWindowsId: twId,
-            teamCode: req.teamCode,
-            quantity: req.quantity,
+            teamCode,
           },
-          select: {
-            quantity: true,
-            team: true,
-          },
-        }),
-      );
-    }
+        },
+        update: {
+          quantity,
+        },
+        create: {
+          timeWindowsId: twId,
+          teamCode,
+          quantity,
+        },
+        select: {
+          quantity: true,
+          team: true,
+        },
+      }),
+    );
     return this.prisma.$transaction(allRequests);
   }
 
