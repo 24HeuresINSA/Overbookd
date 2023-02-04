@@ -46,7 +46,11 @@
     </template>
     <template #[`item.action`]="{ item }">
       <div v-if="!disabled">
-        <v-btn icon @click="editVolunteer(item)">
+        <v-btn
+          v-if="shouldDisplayVolunteerEdition"
+          icon
+          @click="editVolunteer(item)"
+        >
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
         <v-btn icon @click="editTimeWindow(item)">
@@ -63,7 +67,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
+import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
+import { FT, FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
 import { User } from "~/utils/models/user";
 
 export default Vue.extend({
@@ -85,8 +90,14 @@ export default Vue.extend({
     ],
   }),
   computed: {
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
+    },
     timeWindows(): FTTimeWindow[] {
-      return this.$accessor.FT.mFT.timeWindows;
+      return this.mFT.timeWindows;
+    },
+    shouldDisplayVolunteerEdition(): boolean {
+      return !isTaskValidatedBy(this.mFT.reviews, "humain");
     },
   },
   methods: {

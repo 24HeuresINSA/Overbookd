@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -85,5 +86,32 @@ export class FtReviewsController {
     @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
   ): Promise<CompleteFtResponseDto | null> {
     return this.ftReviewsService.refuseFt(ftId, upsertFtReviewsDto);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('ft-validator')
+  @Delete(':ftId/reviews/:teamCode')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Remove a review',
+  })
+  @ApiParam({
+    name: 'ftId',
+    type: Number,
+    description: 'FT id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'teamCode',
+    type: String,
+    description: 'Team code of review',
+    required: true,
+  })
+  remove(
+    @Param('ftId', ParseIntPipe) ftId: number,
+    @Param('teamCode') teamCode: string,
+  ): Promise<void> {
+    return this.ftReviewsService.remove(ftId, teamCode);
   }
 }

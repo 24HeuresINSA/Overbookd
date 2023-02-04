@@ -41,6 +41,7 @@ import {
   uniqueGerRequestPeriodsReducer,
   uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
+import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 
 const repo = RepoFactory.ftRepo;
 
@@ -175,6 +176,10 @@ export const mutations = mutationTree(state, {
 
   UPDATE_REVIEWS({ mFT }, reviews: Review[]) {
     mFT.reviews = reviews;
+  },
+
+  DELETE_REVIEWS({ mFT }, reviews: Review[]) {
+    mFT.reviews = mFT.reviews.filter((r) => !reviews.includes(r));
   },
 
   ADD_FEEDBACK({ mFT }, feedback: Feedback) {
@@ -476,6 +481,20 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("DELETE_TIME_WINDOW", timeWindow);
+    },
+
+    async resetValidations({ commit, state }) {
+      const validationReviews = getValidationReviews(state.mFT.reviews);
+      const res = await Promise.all(
+        validationReviews.map((review) =>
+          safeCall(
+            this,
+            repo.deleteFTReview(this, state.mFT.id, review.team.code)
+          )
+        )
+      );
+      if (!res || res.length !== validationReviews.length) return;
+      commit("DELETE_REVIEWS", validationReviews);
     },
 
     async addFeedback({ commit, state }, feedback: Feedback) {

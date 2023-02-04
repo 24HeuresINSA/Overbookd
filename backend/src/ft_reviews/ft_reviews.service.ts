@@ -71,6 +71,12 @@ export class FtReviewsService {
     return updatedFt;
   }
 
+  async remove(ftId: number, teamCode: string): Promise<void> {
+    await this.prisma.ftReview.delete({
+      where: { ftId_teamCode: { ftId, teamCode: teamCode } },
+    });
+  }
+
   private async getNewFtStatusAfterValidation(
     ftId: number,
   ): Promise<FtStatus> | null {
