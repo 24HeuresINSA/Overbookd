@@ -3,7 +3,6 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  NotImplementedException,
 } from '@nestjs/common';
 import { Gear, GearRepository } from '../catalog/interfaces';
 import { Status } from '../fa/dto/update-fa.dto';
@@ -12,12 +11,6 @@ export const PENDING = 'PENDING';
 export const APPROVED = 'APPROVED';
 
 type GearRequestStatus = typeof PENDING | typeof APPROVED;
-
-export class AnimationOnlyError extends NotImplementedException {
-  constructor() {
-    super(`Only handle gear requests for ${GearSeekerType.Animation}`);
-  }
-}
 
 export class GearRequestAlreadyExists extends BadRequestException {
   gearRequest: GearRequest;
@@ -109,11 +102,13 @@ export interface ApproveGearRequestForm {
   drive: string;
 }
 
+type GearRequestIdentifierSeeker = {
+  type: GearSeekerType;
+  id: number;
+};
+
 export type GearRequestIdentifier = {
-  seeker: {
-    type: GearSeekerType;
-    id: number;
-  };
+  seeker: GearRequestIdentifierSeeker;
   gearId: number;
   rentalPeriodId: number;
 };
@@ -291,9 +286,29 @@ export class GearRequestsService {
     periodId: number,
     updateForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
+    const seeker = { type: GearSeekerType.Animation, id: animationId };
+    return this.updateRequest(seeker, gearId, periodId, updateForm);
+  }
+
+  updateTaskRequest(
+    taskId: number,
+    gearId: number,
+    periodId: number,
+    updateForm: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
+    const seeker = { type: GearSeekerType.Task, id: taskId };
+    return this.updateRequest(seeker, gearId, periodId, updateForm);
+  }
+
+  private updateRequest(
+    seeker: GearRequestIdentifierSeeker,
+    gearId: number,
+    periodId: number,
+    updateForm: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
     return this.gearRequestRepository.updateGearRequest(
       {
-        seeker: { type: GearSeekerType.Animation, id: animationId },
+        seeker,
         gearId,
         rentalPeriodId: periodId,
       },
