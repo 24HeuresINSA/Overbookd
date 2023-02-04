@@ -12,22 +12,19 @@ export class FtUserRequestService {
     ftId: number,
     twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
-    const allRequests = [];
-    for (const req of request) {
-      allRequests.push(
-        this.prisma.ftUserRequest.create({
-          data: {
-            ftTimeWindowsId: twId,
-            userId: req.userId,
-          },
-        }),
-      );
-    }
-    await this.prisma.$transaction(allRequests);
+    const allRequests = request.map(({ userId }) =>
+      this.prisma.ftUserRequest.create({
+        data: {
+          ftTimeWindowsId: twId,
+          userId: userId,
+        },
+      }),
+    );
+    const result = await this.prisma.$transaction(allRequests);
     return this.prisma.user.findMany({
       where: {
         id: {
-          in: request.map((req) => req.userId),
+          in: result.map((r) => r.userId),
         },
       },
       select: {
