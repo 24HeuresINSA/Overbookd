@@ -154,7 +154,6 @@ export default Vue.extend({
         start: timeWindow.start,
         end: timeWindow.end,
       });
-      console.log("addTimeWindow 2");
       this.closeAddDialog();
     },
     updateTimeWindow(timeWindow: FTTimeWindow) {
