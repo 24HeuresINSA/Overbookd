@@ -24,7 +24,7 @@ class UserRequest {
 }
 
 class TeamRequest {
-  number: number;
+  quantity: number;
   team: Team;
 }
 
