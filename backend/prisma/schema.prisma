@@ -163,27 +163,27 @@ enum Status {
 }
 
 model fa {
-  id                     Int                      @id @default(autoincrement())
-  name                   String                   @db.VarChar(255)
+  id                     Int                     @id @default(autoincrement())
+  name                   String                  @db.VarChar(255)
   fa_type_name           fa_type?
-  type                   String?                  @db.VarChar(255)
-  Team                   Team?                    @relation(fields: [team_id], references: [id])
+  type                   String?                 @db.VarChar(255)
+  Team                   Team?                   @relation(fields: [team_id], references: [id])
   team_id                Int?
-  user_in_charge         User?                    @relation(fields: [in_charge], references: [id], name: "in_charge")
+  user_in_charge         User?                   @relation(fields: [in_charge], references: [id], name: "in_charge")
   in_charge              Int?
-  created_at             DateTime?                @default(now())
-  location               Signa_Location?          @relation(fields: [location_id], references: [id])
+  created_at             DateTime?               @default(now())
+  location               Signa_Location?         @relation(fields: [location_id], references: [id])
   location_id            Int?
-  status                 Status?                  @default(DRAFT)
-  description            String?                  @db.Text
-  is_major               Boolean?                 @default(false)
-  is_kids                Boolean?                 @default(false)
-  security_needs         String?                  @db.Text
-  is_pass_required       Boolean?                 @db.Boolean
+  status                 Status?                 @default(DRAFT)
+  description            String?                 @db.Text
+  is_major               Boolean?                @default(false)
+  is_kids                Boolean?                @default(false)
+  security_needs         String?                 @db.Text
+  is_pass_required       Boolean?                @db.Boolean
   number_of_pass         Int?
-  water_needs            String?                  @db.Text
+  water_needs            String?                 @db.Text
   water_flow_required    Int?
-  is_deleted             Boolean                  @default(false)
+  is_deleted             Boolean                 @default(false)
   fa_validation          fa_validation[]
   fa_refuse              fa_refuse[]
   fa_collaborators       fa_collaborators[]
@@ -191,7 +191,7 @@ model fa {
   fa_signa_needs         fa_signa_needs[]
   fa_comments            fa_comments[]
   time_windows           time_windows[]
-  gearRequests           GearRequest[] @relation("gear-request-animation")
+  gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
 }
@@ -368,14 +368,14 @@ model Catalog_Category {
 }
 
 model Catalog_Gear {
-  id               Int                      @id @default(autoincrement())
+  id               Int               @id @default(autoincrement())
   name             String
-  slug             String                   @unique
+  slug             String            @unique
   category_id      Int?
-  category         Catalog_Category?        @relation("category", fields: [category_id], references: [id])
-  requests         GearRequest[] @relation("gear-request-gear")
-  isPonctualUsage  Boolean                  @default(false) @map("is_ponctual_usage")
-  inventoryRecords InventoryRecord[]        @relation()
+  category         Catalog_Category? @relation("category", fields: [category_id], references: [id])
+  requests         GearRequest[]     @relation("gear-request-gear")
+  isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
+  inventoryRecords InventoryRecord[] @relation()
 
   @@index([isPonctualUsage])
 }
@@ -387,7 +387,7 @@ model Configuration {
 }
 
 model Period {
-  id          Int                      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   start       DateTime
   end         DateTime
   gearRequest GearRequest[] @relation("gear-request-rental-period")
@@ -410,7 +410,7 @@ model GearRequest {
 
   @@unique([gearId, rentalPeriodId])
   @@index([status])
-	@@map("gear_request")
+  @@map("gear_request")
 }
 
 enum FtStatus {
@@ -442,7 +442,7 @@ model Ft {
   feedbacks    FtFeedback[]
   timeWindows  FtTimeWindows[]
   reviews      FtReview[]
-  gearRequests GearRequest[] @relation("gear-request-task")
+  gearRequests GearRequest[]   @relation("gear-request-task")
 
   @@map("ft")
 }
@@ -498,7 +498,7 @@ model FtTeamRequest {
   timeWindowsId Int           @map("time_windows_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
-  number        Int
+  quantity      Int
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")

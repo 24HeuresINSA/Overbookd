@@ -83,7 +83,7 @@ export const COMPLETE_FT_SELECT = {
       },
       teamRequests: {
         select: {
-          number: true,
+          quantity: true,
           team: TEAM_SELECT,
         },
       },
