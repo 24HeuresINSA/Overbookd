@@ -347,10 +347,7 @@ export class FaController {
       rentalPeriodId,
     };
     const { drive } = approveForm;
-    return this.gearRequestService.approveAnimationGearRequest(
-      gearRequestId,
-      drive,
-    );
+    return this.gearRequestService.approveGearRequest(gearRequestId, drive);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
