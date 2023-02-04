@@ -46,11 +46,13 @@ export class FtUserRequestController {
   @ApiResponse({
     status: 201,
     description: 'The user request has been successfully created.',
-    type: [FtUserRequestResponseDto],
+    type: FtUserRequestResponseDto,
+    isArray: true,
   })
   @ApiBody({
     description: 'All of the user requests to create',
-    type: [FtUserRequestDto],
+    type: FtUserRequestDto,
+    isArray: true,
   })
   async create(
     @Body() requests: FtUserRequestDto[],

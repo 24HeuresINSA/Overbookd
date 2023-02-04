@@ -46,12 +46,14 @@ export class FtTeamRequestController {
   @HttpCode(201)
   @ApiBody({
     description: 'All of the team requests to create',
-    type: [CreateFtTeamRequestDto],
+    type: CreateFtTeamRequestDto,
+    isArray: true,
   })
   @ApiResponse({
     status: 201,
     description: 'The team request has been successfully created.',
-    type: [FtTeamRequestResponseDto],
+    type: FtTeamRequestResponseDto,
+    isArray: true,
   })
   async create(
     @Body() createFtTeamRequestDto: CreateFtTeamRequestDto[],
