@@ -18,21 +18,19 @@ export class FtUserRequestService {
           ftTimeWindowsId: twId,
           userId: userId,
         },
+        select: {
+          user: {
+            select: {
+              id: true,
+              firstname: true,
+              lastname: true,
+            },
+          },
+        },
       }),
     );
     const result = await this.prisma.$transaction(allRequests);
-    return this.prisma.user.findMany({
-      where: {
-        id: {
-          in: result.map((r) => r.userId),
-        },
-      },
-      select: {
-        id: true,
-        firstname: true,
-        lastname: true,
-      },
-    });
+    return result.map(({ user }) => user);
   }
 
   async delete(
