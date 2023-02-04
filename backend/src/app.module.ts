@@ -30,6 +30,7 @@ import { TeamModule } from './team/team.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
+import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { UserModule } from './user/user.module';
     FtFeedbackModule,
     FtUserRequestModule,
     FtReviewsModule,
+    FtTeamRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
