@@ -31,6 +31,7 @@ import {
   NewPeriodGearRequestFormRequestDto,
 } from 'src/gear-requests/dto/gearRequestFormRequest.dto';
 import { GearRequestResponseDto } from 'src/gear-requests/dto/gearRequestResponse.dto';
+import { GearRequestUpdateFormRequestDto } from 'src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
@@ -280,6 +281,49 @@ export class FtController {
       taskId,
       gearId,
       rentalPeriodId,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Patch(':taskId/gear-requests/:gearId/rental-period/:rentalPeriodId')
+  @ApiResponse({
+    status: 200,
+    description: 'Update an existing gear request',
+    type: GearRequestResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'taskId',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
+  updateGearRequest(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Body() gearRequestForm: GearRequestUpdateFormRequestDto,
+  ): Promise<GearRequestResponseDto> {
+    return this.gearRequestService.updateTaskRequest(
+      taskId,
+      gearId,
+      rentalPeriodId,
+      gearRequestForm,
     );
   }
 }

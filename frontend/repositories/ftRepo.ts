@@ -18,6 +18,7 @@ import {
 } from "~/utils/models/ft";
 import {
   GearRequestCreation,
+  GearRequestUpdate,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 import { Reviewer } from "~/utils/models/review";
@@ -123,7 +124,7 @@ export default {
   },
 
   getGearRequests(context: Context, taskId: number) {
-    return context.$axios.get<HttpStringified<StoredGearRequest<"FA">>[]>(
+    return context.$axios.get<HttpStringified<StoredGearRequest<"FT">>[]>(
       `${resource}/${taskId}/gear-requests`
     );
   },
@@ -136,6 +137,19 @@ export default {
   ) {
     return context.$axios.delete(
       `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
+    );
+  },
+
+  updateGearRequest(
+    context: Context,
+    taskId: number,
+    gearId: number,
+    rentalPeriodId: number,
+    gearRequestUpdateForm: GearRequestUpdate
+  ) {
+    return context.$axios.patch<HttpStringified<StoredGearRequest<"FT">>>(
+      `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
+      gearRequestUpdateForm
     );
   },
 
