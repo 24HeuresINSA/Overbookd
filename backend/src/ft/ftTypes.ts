@@ -49,6 +49,13 @@ const FEEDBACK_SELECT = {
   },
 };
 
+const REVIEWS_SELECT = {
+  select: {
+    status: true,
+    team: TEAM_SELECT,
+  },
+};
+
 export const COMPLETE_FT_SELECT = {
   id: true,
   name: true,
@@ -82,12 +89,7 @@ export const COMPLETE_FT_SELECT = {
       },
     },
   },
-  reviews: {
-    select: {
-      status: true,
-      team: TEAM_SELECT,
-    },
-  },
+  reviews: REVIEWS_SELECT,
   team: TEAM_SELECT,
   userInCharge: DISPLAY_USER_WITH_ID_SELECT,
   fa: MINIMAL_FA_SELECT,
@@ -100,10 +102,5 @@ export const LITE_FT_SELECT = {
   userInCharge: DISPLAY_USER_WITH_ID_SELECT,
   team: TEAM_SELECT,
   fa: MINIMAL_FA_SELECT,
-  reviews: {
-    select: {
-      status: true,
-      team: TEAM_SELECT,
-    },
-  },
+  reviews: REVIEWS_SELECT,
 };
