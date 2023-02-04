@@ -17,6 +17,7 @@ import { FtModule } from './ft/ft.module';
 import { FtFeedbackModule } from './ft_feedback/ft_feedback.module';
 import { FtReviewsModule } from './ft_reviews/ft_reviews.module';
 import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
+import { FtUserRequestModule } from './ft_user_request/ft_user_request.module';
 import { GearRequestsModule } from './gear-requests/gearRequests.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
@@ -29,6 +30,7 @@ import { TeamModule } from './team/team.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
+import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
 
 @Module({
   imports: [
@@ -74,7 +76,9 @@ import { UserModule } from './user/user.module';
     FtTimeWindowsModule,
     GearRequestsModule,
     FtFeedbackModule,
+    FtUserRequestModule,
     FtReviewsModule,
+    FtTeamRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
