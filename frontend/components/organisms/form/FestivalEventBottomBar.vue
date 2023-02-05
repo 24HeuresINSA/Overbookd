@@ -71,7 +71,7 @@
         <v-btn
           v-if="isDraft || isRefused"
           color="warning"
-          :disabled="hasAtLeastOneError"
+          :disabled="isRefused && hasAtLeastOneError"
           @click="checkBeforeSubmitForReview()"
           >soumettre à validation
         </v-btn>
