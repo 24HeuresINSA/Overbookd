@@ -9,12 +9,12 @@
         <h3>Ajouter un bénévole</h3>
         <v-chip-group>
           <v-chip
-            v-for="(req, i) in userRequests"
+            v-for="(userRequest, i) in userRequests"
             :key="i"
             close
-            @click:close="deleteUserRequest(i)"
+            @click:close="deleteUserRequest(userRequest, i)"
           >
-            {{ displayUsername(req.user) }}
+            {{ displayUsername(userRequest.user) }}
           </v-chip>
         </v-chip-group>
         <div class="flex-row">
@@ -32,12 +32,12 @@
         <h3>Ajouter des bénévoles d'une équipe</h3>
         <v-chip-group>
           <v-chip
-            v-for="(req, i) in teamRequests"
+            v-for="(teamRequest, i) in teamRequests"
             :key="i"
             close
-            @click:close="deleteTeamRequest(i)"
+            @click:close="deleteTeamRequest(teamRequest, i)"
           >
-            {{ req.quantity + " " + req.team.name }}
+            {{ `${teamRequest.quantity} ${teamRequest.team.name}` }}
           </v-chip>
         </v-chip-group>
         <div class="flex-row">
@@ -172,10 +172,18 @@ export default Vue.extend({
       this.userRequests.push(userRequest);
       this.selectedUser = null;
     },
-    deleteTeamRequest(index: number) {
+    deleteTeamRequest(teamRequest: FTTeamRequest, index: number) {
+      this.$accessor.FT.deleteTeamRequest({
+        timeWindow: this.timeWindow,
+        teamRequest,
+      });
       this.teamRequests.splice(index, 1);
     },
-    deleteUserRequest(index: number) {
+    deleteUserRequest(userRequest: FTUserRequest, index: number) {
+      this.$accessor.FT.deleteUserRequest({
+        timeWindow: this.timeWindow,
+        userRequest,
+      });
       this.userRequests.splice(index, 1);
     },
     confirmVolunteerRequirement() {
