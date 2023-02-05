@@ -47,6 +47,12 @@ const SELECT_USER_TEAM = {
   },
 };
 
+export const SELECT_USERNAME_WITH_ID = {
+  id: true,
+  firstname: true,
+  lastname: true,
+};
+
 export type UserWithoutPassword = Omit<User, 'password'>;
 type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 import { FtUserRequestResponseDto } from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestDto } from './dto/ft_user_request.dto';
 
@@ -12,33 +13,25 @@ export class FtUserRequestService {
     ftId: number,
     twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
-    const allRequests = request.map(({ userId }) =>
-      this.prisma.ftUserRequest.upsert({
+    const allRequests = request.map(({ userId }) => {
+      const userRequest = {
+        ftTimeWindowsId: twId,
+        userId: userId,
+      };
+      return this.prisma.ftUserRequest.upsert({
         where: {
-          ftTimeWindowsId_userId: {
-            ftTimeWindowsId: twId,
-            userId: userId,
-          },
+          ftTimeWindowsId_userId: userRequest,
         },
-        create: {
-          ftTimeWindowsId: twId,
-          userId: userId,
-        },
-        update: {
-          ftTimeWindowsId: twId,
-          userId: userId,
-        },
+        create: userRequest,
+
+        update: userRequest,
         select: {
           user: {
-            select: {
-              id: true,
-              firstname: true,
-              lastname: true,
-            },
+            select: SELECT_USERNAME_WITH_ID,
           },
         },
-      }),
-    );
+      });
+    });
     return this.prisma.$transaction(allRequests);
   }
 
