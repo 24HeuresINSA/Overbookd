@@ -7,10 +7,9 @@ import { CreateFtDto } from './dto/create-ft.dto';
 import {
   CompleteFtResponseDto,
   LiteFtResponseDto,
-  TimeWindow,
 } from './dto/ft-response.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
-import { COMPLETE_FT_SELECT, LITE_FT_SELECT } from './ftTypes';
+import { COMPLETE_FT_SELECT, LITE_FT_SELECT, TimeWindow } from './ftTypes';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;

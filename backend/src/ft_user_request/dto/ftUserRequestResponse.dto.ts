@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserNameWithId } from 'src/ft/dto/ft-response.dto';
-import { AlsoRequestedByFT } from 'src/ft/ftTypes';
+import { AlsoRequestedByFT, UserNameWithId } from 'src/ft/ftTypes';
 import { PeriodForm } from 'src/gear-requests/gearRequests.service';
 
 export interface UserRequest {

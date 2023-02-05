@@ -1,9 +1,82 @@
-import { Prisma } from '@prisma/client';
+import {
+  FtStatus,
+  FtSubjectType,
+  Prisma,
+  reviewStatus,
+  Status,
+} from '@prisma/client';
+import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.service';
+export class SignaLocation {
+  id: number;
+  name: string;
+}
+export class UserName {
+  firstname: string;
+  lastname: string;
+}
 
-export type CompleteFtResponse = Prisma.FtGetPayload<{
-  select: typeof COMPLETE_FT_SELECT;
-}>;
+export class UserNameWithId extends UserName {
+  id: number;
+}
+
+export class Team {
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
+  code: string;
+}
+
+export class TeamRequest {
+  quantity: number;
+  team: Team;
+}
+
+export interface TimeWindow {
+  id: number;
+  start: Date;
+  end: Date;
+  userRequests: UserRequest[];
+  teamRequests: TeamRequest[];
+  sliceTime: number;
+}
+
+export class Review {
+  status: reviewStatus;
+  team: Team;
+}
+
+export class Feedback {
+  id: number;
+  comment: string;
+  subject: FtSubjectType;
+  authorId: number;
+  createdAt: Date;
+  author: UserName;
+}
+export class MinimalFa {
+  id: number;
+  name: string;
+  status: Status;
+}
+
+export interface CompleteFtResponse {
+  id: number;
+  name: string;
+  status: FtStatus;
+  isStatic: boolean;
+  description: string;
+  location: SignaLocation | null;
+  isDeleted: boolean;
+  feedbacks: Feedback[];
+  timeWindows: TimeWindow[];
+  reviews: Review[];
+  team: Team | null;
+  userInCharge: UserNameWithId | null;
+  fa: MinimalFa | null;
+}
+
 export type LiteFtResponse = Prisma.FtGetPayload<{
   select: typeof LITE_FT_SELECT;
 }>;
@@ -85,6 +158,7 @@ export const COMPLETE_FT_SELECT = {
       userRequests: {
         select: {
           user: DISPLAY_USER_WITH_ID_SELECT,
+          ftTimeWindowsId: true,
         },
       },
       teamRequests: {
