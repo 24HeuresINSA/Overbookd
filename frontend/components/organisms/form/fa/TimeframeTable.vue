@@ -63,7 +63,7 @@
         @close-dialog="isConfirmationDialogOpen = false"
         @confirm="resetLogValidations"
       >
-        <template #title> Suppression ce créneau MATOS </template>
+        <template #title> Suppression du créneau MATOS </template>
         <template #statement>
           Confirmer cette suppression annulera les validations des orgas Matos,
           Barrieres et Elec 😠

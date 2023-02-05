@@ -22,7 +22,7 @@
           <v-chip
             v-if="req"
             :key="i"
-            close
+            :close="!disabled"
             @click:close="deleteUserRequest(item, req)"
           >
             {{ formatUsername(req) }}
@@ -36,7 +36,7 @@
           <v-chip
             v-if="req"
             :key="i"
-            close
+            :close="!disabled"
             @click:close="deleteTeamRequest(item, req)"
           >
             {{ formatTeamRequestText(req.quantity, req.team.name) }}
@@ -45,8 +45,12 @@
       </v-chip-group>
     </template>
     <template #[`item.action`]="{ item }">
-      <div>
-        <v-btn icon @click="editVolunteer(item)">
+      <div v-if="!disabled">
+        <v-btn
+          v-if="shouldDisplayVolunteerEdition"
+          icon
+          @click="editVolunteer(item)"
+        >
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
         <v-btn icon @click="editTimeWindow(item)">
@@ -63,11 +67,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
+import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
+import { FT, FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
 import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FTTimeWindowTable",
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data: () => ({
     headers: [
       { text: "Date de début", value: "startDate" },
@@ -79,8 +90,14 @@ export default Vue.extend({
     ],
   }),
   computed: {
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
+    },
     timeWindows(): FTTimeWindow[] {
-      return this.$accessor.FT.mFT.timeWindows;
+      return this.mFT.timeWindows;
+    },
+    shouldDisplayVolunteerEdition(): boolean {
+      return !isTaskValidatedBy(this.mFT.reviews, "humain");
     },
   },
   methods: {
