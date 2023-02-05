@@ -12,7 +12,7 @@
             v-for="(userRequest, i) in allUserRequests"
             :key="i"
             close
-            @click:close="deleteUserRequest(userRequest, i)"
+            @click:close="deleteUserRequest(userRequest)"
           >
             {{ displayUsername(userRequest.user) }}
           </v-chip>
@@ -35,7 +35,7 @@
             v-for="(teamRequest, i) in allTeamRequests"
             :key="i"
             close
-            @click:close="deleteTeamRequest(teamRequest, i)"
+            @click:close="deleteTeamRequest(teamRequest)"
           >
             {{ `${teamRequest.quantity} ${teamRequest.team.name}` }}
           </v-chip>
@@ -185,26 +185,49 @@ export default Vue.extend({
       this.newUserRequests.push(userRequest);
       this.selectedUser = null;
     },
-    async deleteTeamRequest(teamRequest: FTTeamRequest, index: number) {
-      if (this.isSavedTeamRequest(teamRequest)) {
-        await this.$accessor.FT.deleteTeamRequest({
-          timeWindow: this.timeWindow,
-          teamRequest,
-        });
-        return this.savedTeamRequests.splice(index, 1);
+    async deleteTeamRequest(teamRequest: FTTeamRequest) {
+      if (!this.isSavedTeamRequest(teamRequest)) {
+        this.removeTeamRequestFromNewOnes(teamRequest);
+        return;
       }
-      this.newTeamRequests.splice(index - this.savedTeamRequests.length, 1);
+      await this.$accessor.FT.deleteTeamRequest({
+        timeWindow: this.timeWindow,
+        teamRequest,
+      });
+      this.removeTeamRequestFromSavedOnes(teamRequest);
     },
-    async deleteUserRequest(userRequest: FTUserRequest, index: number) {
-      if (this.isSavedUserRequest(userRequest)) {
-        await this.$accessor.FT.deleteUserRequest({
-          timeWindow: this.timeWindow,
-          userRequest,
-        });
-        return this.savedUserRequests.splice(index, 1);
+    removeTeamRequestFromNewOnes(teamRequest: FTTeamRequest) {
+      this.newTeamRequests = this.newTeamRequests.filter(
+        ({ team }) => team.code !== teamRequest.team.code
+      );
+    },
+    removeTeamRequestFromSavedOnes(teamRequest: FTTeamRequest) {
+      this.savedTeamRequests = this.savedTeamRequests.filter(
+        ({ team }) => team.code !== teamRequest.team.code
+      );
+    },
+    async deleteUserRequest(userRequest: FTUserRequest) {
+      if (!this.isSavedUserRequest(userRequest)) {
+        this.removeUserRequestFromNewOnes(userRequest);
+        return;
       }
-      this.newUserRequests.splice(index - this.savedUserRequests.length, 1);
+      await this.$accessor.FT.deleteUserRequest({
+        timeWindow: this.timeWindow,
+        userRequest,
+      });
+      this.removeUserRequestFromSavedOnes(userRequest);
     },
+    removeUserRequestFromNewOnes(userRequest: FTUserRequest) {
+      this.newUserRequests = this.newUserRequests.filter(
+        ({ user }) => user.id !== userRequest.user.id
+      );
+    },
+    removeUserRequestFromSavedOnes(userRequest: FTUserRequest) {
+      this.savedUserRequests = this.savedUserRequests.filter(
+        ({ user }) => user.id !== userRequest.user.id
+      );
+    },
+
     isSavedTeamRequest(teamRequest: FTTeamRequest): boolean {
       return this.savedTeamRequests.some(
         (savedTeamRequest) => savedTeamRequest.team.id === teamRequest.team.id
