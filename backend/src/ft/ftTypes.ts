@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { PeriodForm } from 'src/gear-requests/gearRequests.service';
 
 export type CompleteFtResponse = Prisma.FtGetPayload<{
   select: typeof COMPLETE_FT_SELECT;
@@ -6,6 +7,11 @@ export type CompleteFtResponse = Prisma.FtGetPayload<{
 export type LiteFtResponse = Prisma.FtGetPayload<{
   select: typeof LITE_FT_SELECT;
 }>;
+export interface AlsoRequestedByFT {
+  id: number;
+  name: string;
+  period: PeriodForm;
+}
 
 const TEAM_SELECT = {
   select: {

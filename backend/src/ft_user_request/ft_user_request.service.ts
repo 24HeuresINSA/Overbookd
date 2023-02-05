@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
-import { FtUserRequestResponseDto } from './dto/ftUserRequestResponse.dto';
+import {
+  DataBaseUserRequest,
+  FtUserRequestResponseDto,
+  UserRequest,
+} from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestDto } from './dto/ft_user_request.dto';
 
 @Injectable()
@@ -32,7 +36,8 @@ export class FtUserRequestService {
         },
       });
     });
-    return this.prisma.$transaction(allRequests);
+    const userRequests = await this.prisma.$transaction(allRequests);
+    return Promise.all(userRequests.map(this.convertToUserRequest));
   }
 
   async delete(ftId: number, twId: number, userId: number): Promise<void> {
@@ -44,5 +49,12 @@ export class FtUserRequestService {
         },
       },
     });
+  }
+
+  async convertToUserRequest(
+    userRequest: DataBaseUserRequest,
+  ): Promise<UserRequest> {
+    const alsoRequestedBy = [];
+    return { ...userRequest, alsoRequestedBy };
   }
 }

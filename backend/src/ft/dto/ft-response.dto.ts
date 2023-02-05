@@ -25,7 +25,16 @@ class TeamRequest {
   team: Team;
 }
 
-class TimeWindow {
+export interface TimeWindow {
+  id: number;
+  start: Date;
+  end: Date;
+  userRequests: UserRequest[];
+  teamRequests: TeamRequest[];
+  sliceTime: number;
+}
+
+class TimeWindowRepresentation implements TimeWindow {
   id: number;
   start: Date;
   end: Date;
@@ -120,9 +129,9 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     required: true,
     description: 'All the time windows of the ft with their requests',
     isArray: true,
-    type: TimeWindow,
+    type: TimeWindowRepresentation,
   })
-  timeWindows: TimeWindow[];
+  timeWindows: TimeWindowRepresentation[];
 
   @ApiProperty({
     required: true,
