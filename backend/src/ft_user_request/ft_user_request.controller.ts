@@ -64,21 +64,17 @@ export class FtUserRequestController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Delete('/:ftId/time-windows/:twId/user-requests')
+  @Delete('/:ftId/time-windows/:twId/user-requests/:userId')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'The user requests have been successfully deleted.',
   })
-  @ApiBody({
-    description: 'The user request to delete',
-    type: FtUserRequestDto,
-  })
   async delete(
-    @Body() request: FtUserRequestDto,
     @Param('ftId', ParseIntPipe) ftId: number,
     @Param('twId', ParseIntPipe) twId: number,
+    @Param('userId', ParseIntPipe) userId: number,
   ): Promise<void> {
-    return this.ftUserRequestService.delete(request, ftId, twId);
+    return this.ftUserRequestService.delete(ftId, twId, userId);
   }
 }

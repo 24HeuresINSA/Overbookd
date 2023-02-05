@@ -21,7 +21,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CreateFtTeamRequestDto } from './dto/create-ft_team_request.dto';
-import { DeleteFtTeamRequestDto } from './dto/deleteFtTeamRequest.dto';
 import { FtTeamRequestResponseDto } from './dto/ftTeamRequestResponse.dto';
 import { FtTeamRequestService } from './ft_team_request.service';
 
@@ -65,21 +64,17 @@ export class FtTeamRequestController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Delete(':ftId/time-windows/:twId/team-requests')
+  @Delete(':ftId/time-windows/:twId/team-requests/:teamCode')
   @HttpCode(204)
-  @ApiBody({
-    description: 'The team request to delete',
-    type: DeleteFtTeamRequestDto,
-  })
   @ApiResponse({
     status: 204,
     description: 'The team request has been successfully deleted.',
   })
   remove(
-    @Body() deleteFtTeamRequest: DeleteFtTeamRequestDto,
     @Param('ftId', ParseIntPipe) ftId: number,
     @Param('twId', ParseIntPipe) twId: number,
+    @Param('teamCode') teamCode: string,
   ) {
-    return this.ftTeamRequestService.remove(deleteFtTeamRequest, ftId, twId);
+    return this.ftTeamRequestService.remove(ftId, twId, teamCode);
   }
 }

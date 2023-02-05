@@ -33,16 +33,12 @@ export class FtUserRequestService {
     return result.map(({ user }) => user);
   }
 
-  async delete(
-    request: FtUserRequestDto,
-    ftId: number,
-    twId: number,
-  ): Promise<void> {
+  async delete(ftId: number, twId: number, userId: number): Promise<void> {
     await this.prisma.ftUserRequest.delete({
       where: {
         ftTimeWindowsId_userId: {
           ftTimeWindowsId: twId,
-          userId: request.userId,
+          userId,
         },
       },
     });
