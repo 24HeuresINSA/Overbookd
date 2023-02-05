@@ -68,6 +68,9 @@ export default {
       reviewer
     );
   },
+  deleteFTReview(context: Context, ftId: number, teamCode: string) {
+    return context.$axios.delete(`${resource}/${ftId}/reviews/${teamCode}`);
+  },
 
   updateFTTimeWindow(
     context: Context,

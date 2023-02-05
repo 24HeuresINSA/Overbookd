@@ -12,6 +12,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { FA, fa_card_type, Status } from "~/utils/models/FA";
+import { FT, FTCardType, FTStatus } from "~/utils/models/ft";
 import {
   generalErrors,
   detailErrors,
@@ -20,10 +21,20 @@ import {
   securityErrors,
   collaboratorErrors,
 } from "~/utils/rules/faValidationRules";
+import {
+  ftDetailErrors,
+  ftGeneralErrors,
+  ftParentFAErrors,
+  ftTimeWindowsErrors,
+} from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
   name: "CardErrorList",
   props: {
+    festivalEvent: {
+      type: String,
+      default: "FA",
+    },
     type: {
       type: String,
       required: true,
@@ -33,7 +44,17 @@ export default Vue.extend({
     mFA(): FA {
       return this.$accessor.FA.mFA;
     },
+    mFT(): FT {
+      return this.$accessor.FT.mFT;
+    },
+    isFA(): boolean {
+      return this.festivalEvent === "FA";
+    },
     errors(): string[] {
+      if (this.isFA) return this.faErrors;
+      return this.ftErrors;
+    },
+    faErrors(): string[] {
       switch (this.type) {
         case fa_card_type.GENERAL:
           return generalErrors(this.mFA);
@@ -51,10 +72,32 @@ export default Vue.extend({
           return [];
       }
     },
+    ftErrors(): string[] {
+      switch (this.type) {
+        case FTCardType.GENERAL:
+          return ftGeneralErrors(this.mFT);
+        case FTCardType.PARENT_FA:
+          return ftParentFAErrors(this.mFT);
+        case FTCardType.DETAIL:
+          return ftDetailErrors(this.mFT);
+        case FTCardType.TIME_WINDOW:
+          return ftTimeWindowsErrors(this.mFT);
+        case FTCardType.LOGISTICS:
+          return [];
+        default:
+          return [];
+      }
+    },
     isDisplayErrorMode(): boolean {
+      if (this.isFA) {
+        return (
+          this.mFA.status === Status.SUBMITTED ||
+          this.mFA.status === Status.REFUSED
+        );
+      }
       return (
-        this.mFA.status === Status.SUBMITTED ||
-        this.mFA.status === Status.REFUSED
+        this.mFT.status === FTStatus.SUBMITTED ||
+        this.mFT.status === FTStatus.REFUSED
       );
     },
     hasError(): boolean {

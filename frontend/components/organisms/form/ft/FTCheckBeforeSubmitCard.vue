@@ -58,11 +58,11 @@ import Vue from "vue";
 
 import { FT } from "~/utils/models/ft";
 import {
-  detailErrors,
-  generalErrors,
+  ftDetailErrors,
+  ftGeneralErrors,
+  ftParentFAErrors,
+  ftTimeWindowsErrors,
   hasAtLeastOneFTError,
-  parentFAErrors,
-  timeWindowsErrors,
 } from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
@@ -76,28 +76,28 @@ export default Vue.extend({
     },
 
     generalErrors(): string[] {
-      return generalErrors(this.mFT);
+      return ftGeneralErrors(this.mFT);
     },
     hasGeneralErrors(): boolean {
       return this.generalErrors.length > 0;
     },
 
     parentFAErrors(): string[] {
-      return parentFAErrors(this.mFT);
+      return ftParentFAErrors(this.mFT);
     },
     hasParentFAErrors(): boolean {
       return this.parentFAErrors.length > 0;
     },
 
     detailErrors(): string[] {
-      return detailErrors(this.mFT);
+      return ftDetailErrors(this.mFT);
     },
     hasDetailErrors(): boolean {
       return this.detailErrors.length > 0;
     },
 
     timeWindowsErrors(): string[] {
-      return timeWindowsErrors(this.mFT);
+      return ftTimeWindowsErrors(this.mFT);
     },
     hasTimeWindowsErrors(): boolean {
       return this.timeWindowsErrors.length > 0;
