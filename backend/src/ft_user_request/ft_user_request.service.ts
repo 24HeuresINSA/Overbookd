@@ -13,8 +13,18 @@ export class FtUserRequestService {
     twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
     const allRequests = request.map(({ userId }) =>
-      this.prisma.ftUserRequest.create({
-        data: {
+      this.prisma.ftUserRequest.upsert({
+        where: {
+          ftTimeWindowsId_userId: {
+            ftTimeWindowsId: twId,
+            userId: userId,
+          },
+        },
+        create: {
+          ftTimeWindowsId: twId,
+          userId: userId,
+        },
+        update: {
           ftTimeWindowsId: twId,
           userId: userId,
         },
@@ -29,8 +39,7 @@ export class FtUserRequestService {
         },
       }),
     );
-    const result = await this.prisma.$transaction(allRequests);
-    return result.map(({ user }) => user);
+    return this.prisma.$transaction(allRequests);
   }
 
   async delete(ftId: number, twId: number, userId: number): Promise<void> {

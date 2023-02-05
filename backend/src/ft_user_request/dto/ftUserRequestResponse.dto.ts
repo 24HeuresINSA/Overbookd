@@ -1,24 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserNameWithId } from 'src/ft/dto/ft-response.dto';
+
+export class UserRequest {
+  user: UserNameWithId;
+}
 
 export class FtUserRequestResponseDto {
   @ApiProperty({
-    description: 'The id of the user requested on the time window',
-    example: 1,
+    description: 'The user requested on the time window',
+    type: UserNameWithId,
     required: true,
   })
-  id: number;
-
-  @ApiProperty({
-    description: 'The firstname of the user requested on the time window',
-    example: 'Jhon',
-    required: true,
-  })
-  firstname: string;
-
-  @ApiProperty({
-    description: 'The lastname of the user requested on the time window',
-    example: 'Doe',
-    required: true,
-  })
-  lastname: string;
+  user: UserNameWithId;
 }

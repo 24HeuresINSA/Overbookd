@@ -107,11 +107,7 @@ export const mutations = mutationTree(state, {
   UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
-    mFT.timeWindows = [
-      ...mFT.timeWindows.slice(0, index),
-      timeWindow,
-      ...mFT.timeWindows.slice(index + 1),
-    ];
+    mFT.timeWindows = updateItemToList(mFT.timeWindows, index, timeWindow);
   },
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
@@ -127,7 +123,13 @@ export const mutations = mutationTree(state, {
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    mFT.timeWindows[index].userRequests = userRequests;
+    const previousTimeWindow = mFT.timeWindows[index];
+    const updatedTimeWindow = { ...previousTimeWindow, userRequests };
+    mFT.timeWindows = updateItemToList(
+      mFT.timeWindows,
+      index,
+      updatedTimeWindow
+    );
   },
 
   UPDATE_TEAM_REQUESTS(
@@ -139,7 +141,13 @@ export const mutations = mutationTree(state, {
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    mFT.timeWindows[index].teamRequests = teamRequests;
+    const previousTimeWindow = mFT.timeWindows[index];
+    const updatedTimeWindow = { ...previousTimeWindow, teamRequests };
+    mFT.timeWindows = updateItemToList(
+      mFT.timeWindows,
+      index,
+      updatedTimeWindow
+    );
   },
 
   DELETE_USER_REQUEST(
@@ -451,7 +459,6 @@ export const actions = actionTree(
           }
         ),
       ]);
-      console.log("res", resUserRequests?.data);
       if (resUserRequests) {
         commit("UPDATE_USER_REQUESTS", {
           timeWindowId: timeWindow.id,
