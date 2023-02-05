@@ -11,7 +11,7 @@ export class SignaLocation {
   id: number;
   name: string;
 }
-export class UserName {
+class UserName {
   firstname: string;
   lastname: string;
 }
