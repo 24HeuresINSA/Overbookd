@@ -25,7 +25,7 @@
             :close="!disabled"
             @click:close="deleteUserRequest(item, req)"
           >
-            {{ formatUsername(req) }}
+            {{ formatUsername(req.user) }}
           </v-chip>
         </template>
       </v-chip-group>
@@ -68,8 +68,14 @@
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
-import { FT, FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
+import {
+  FT,
+  FTTeamRequest,
+  FTTimeWindow,
+  FTUserRequest,
+} from "~/utils/models/ft";
 import { User } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "FTTimeWindowTable",
@@ -104,8 +110,8 @@ export default Vue.extend({
     formatDate(date: string): string {
       return formatDateWithMinutes(date);
     },
-    formatUsername({ firstname, lastname }: User) {
-      return `${firstname} ${lastname}`;
+    formatUsername(user: User) {
+      return formatUsername(user);
     },
     formatTeamRequestText(quantity: number, teamName: string) {
       return `${quantity} ${teamName}`;
@@ -124,7 +130,7 @@ export default Vue.extend({
     deleteTimeWindow(timeWindow: FTTimeWindow) {
       this.$emit("delete", timeWindow);
     },
-    deleteUserRequest(timeWindow: FTTimeWindow, userRequest: User) {
+    deleteUserRequest(timeWindow: FTTimeWindow, userRequest: FTUserRequest) {
       this.$accessor.FT.deleteUserRequest({ timeWindow, userRequest });
     },
     deleteTeamRequest(timeWindow: FTTimeWindow, teamRequest: FTTeamRequest) {

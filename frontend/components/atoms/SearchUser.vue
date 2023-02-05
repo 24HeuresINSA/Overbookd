@@ -23,6 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { User } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 interface SearchUserData {
   loading: boolean;
@@ -70,8 +71,8 @@ export default Vue.extend({
     propagateEvent(user: User | null) {
       this.$emit("change", user);
     },
-    displayUsername({ firstname, lastname }: User): string {
-      return `${firstname} ${lastname}`;
+    displayUsername(user: User): string {
+      return formatUsername(user);
     },
   },
 });

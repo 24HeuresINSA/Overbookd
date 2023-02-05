@@ -7,10 +7,27 @@
 
       <v-card-text>
         <h3>Ajouter un bénévole</h3>
-        <SearchUsers
-          v-model="userRequests"
-          label="Rechercher un bénévole"
-        ></SearchUsers>
+        <v-chip-group>
+          <v-chip
+            v-for="(req, i) in userRequests"
+            :key="i"
+            close
+            @click:close="deleteUserRequest(i)"
+          >
+            {{ displayUsername(req.user) }}
+          </v-chip>
+        </v-chip-group>
+        <div class="flex-row">
+          <SearchUser v-model="selectedUser" />
+          <v-btn
+            rounded
+            class="margin-btn"
+            :disabled="!isUserRequestValid"
+            @click="addUserRequest"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
 
         <h3>Ajouter des bénévoles d'une équipe</h3>
         <v-chip-group>
@@ -30,10 +47,7 @@
             label="Quantité"
             :rules="[rules.number, rules.min]"
           />
-          <SearchTeam
-            v-model="selectedTeam"
-            label="Rechercher une équipe"
-          ></SearchTeam>
+          <SearchTeam v-model="selectedTeam" />
           <v-btn
             rounded
             class="margin-btn"
@@ -58,15 +72,16 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
-import SearchUsers from "~/components/atoms/SearchUsers.vue";
-import { FTTeamRequest, FTTimeWindow } from "~/utils/models/ft";
+import SearchUser from "~/components/atoms/SearchUser.vue";
+import { FTTeamRequest, FTTimeWindow, FTUserRequest } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { isNumber, min } from "~/utils/rules/inputRules";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "FTVolunteerRequirementForm",
-  components: { SearchUsers, SearchTeam },
+  components: { SearchTeam, SearchUser },
   model: {
     prop: "timeWindow",
     event: "change",
@@ -78,11 +93,12 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    userRequests: [] as User[],
+    userRequests: [] as FTUserRequest[],
     teamRequests: [] as FTTeamRequest[],
 
     quantity: 1,
     selectedTeam: null as Team | null,
+    selectedUser: null as User | null,
 
     rules: {
       number: isNumber,
@@ -105,6 +121,14 @@ export default Vue.extend({
     isTeamAlreadyRequested(): boolean {
       return this.teamRequests.some(
         (teamRequest) => teamRequest.team.id === this.selectedTeam?.id
+      );
+    },
+    isUserRequestValid(): boolean {
+      return Boolean(this.selectedUser && !this.isUserAlreadyRequested);
+    },
+    isUserAlreadyRequested(): boolean {
+      return this.userRequests.some(
+        (userRequest) => userRequest.user.id === this.selectedUser?.id
       );
     },
   },
@@ -130,17 +154,35 @@ export default Vue.extend({
     addTeamRequest() {
       if (!this.selectedTeam) return;
       const teamRequest: FTTeamRequest = {
-        quantity: this.quantity,
+        quantity: +this.quantity,
         team: this.selectedTeam,
       };
       this.teamRequests.push(teamRequest);
       this.clearTeamRequestValue();
     },
+    addUserRequest() {
+      if (!this.selectedUser) return;
+      const userRequest: FTUserRequest = {
+        user: {
+          id: this.selectedUser.id,
+          firstname: this.selectedUser.firstname,
+          lastname: this.selectedUser.lastname,
+        },
+      };
+      this.userRequests.push(userRequest);
+      this.selectedUser = null;
+    },
     deleteTeamRequest(index: number) {
       this.teamRequests.splice(index, 1);
     },
+    deleteUserRequest(index: number) {
+      this.userRequests.splice(index, 1);
+    },
     confirmVolunteerRequirement() {
       this.$emit("change", this.mTimeWindow);
+    },
+    displayUsername(user: User): string {
+      return formatUsername(user);
     },
   },
 });
