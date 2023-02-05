@@ -74,6 +74,7 @@
           @click="checkBeforeSubmitForReview()"
           >soumettre à validation
         </v-btn>
+        <v-btn v-if="canSave" @click="save">sauvegarder</v-btn>
       </div>
       <v-btn class="bottom-bar__navigation" small fab :to="nextLink">
         <v-icon small>mdi-arrow-right</v-icon>
@@ -121,7 +122,7 @@
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
       <ConfirmationMessage
         @close-dialog="isConfirmationDialogOpen = false"
-        @confirm="refuse(mValidators[0])"
+        @confirm="refuse(selectedValidator)"
       >
         <template #title> Refuser la {{ festivalEvent }} </template>
         <template #statement>
@@ -153,7 +154,7 @@ import { User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
-import GearRequestsValidation from "./fa/GearRequestsValidation.vue";
+import GearRequestsValidation from "./GearRequestsValidation.vue";
 import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
 
 export default Vue.extend({
@@ -190,6 +191,13 @@ export default Vue.extend({
     },
     me(): any {
       return this.$accessor.user.me;
+    },
+    meAsUser(): User {
+      return {
+        id: this.me.id,
+        firstname: this.me.firstname,
+        lastname: this.me.lastname,
+      };
     },
     id(): number {
       return this.isFA ? this.mFA.id : this.mFT.id;
@@ -281,6 +289,9 @@ export default Vue.extend({
       if (this.isFA) return `/fa/${this.mFA.id + 1}`;
       return `/ft/${this.mFT.id + 1}`;
     },
+    canSave(): boolean {
+      return this.isFA && !this.isValidated;
+    },
   },
   methods: {
     async validate(validator: Team) {
@@ -311,11 +322,7 @@ export default Vue.extend({
     },
     sendValidation(validator: Team) {
       if (!validator) return;
-      const author: User = {
-        id: this.me.id,
-        firstname: this.me.firstname,
-        lastname: this.me.lastname,
-      };
+      const author = this.meAsUser;
       if (this.isFA) {
         const payload = {
           validator_id: validator.id,
@@ -332,11 +339,7 @@ export default Vue.extend({
       if (this.isValidated && !this.isConfirmationDialogOpen) {
         return (this.isConfirmationDialogOpen = true);
       }
-      const author: User = {
-        id: this.me.id,
-        firstname: this.me.firstname,
-        lastname: this.me.lastname,
-      };
+      const author = this.meAsUser;
       if (this.isFA) {
         const payload = {
           validator_id: validator.id,
@@ -364,13 +367,14 @@ export default Vue.extend({
     },
     async submit() {
       this.isValidationDialogOpen = false;
-      const user: User = {
-        id: this.me.id,
-        firstname: this.me.firstname,
-        lastname: this.me.lastname,
-      };
-      if (this.isFA) return this.$accessor.FA.submitForReview(user);
-      return this.$accessor.FT.submitForReview(user);
+      const author = this.meAsUser;
+      if (this.isFA)
+        return this.$accessor.FA.submitForReview({
+          faId: this.id,
+          authorId: author.id,
+          author,
+        });
+      return this.$accessor.FT.submitForReview(author);
     },
     validatorValidationStatus(validator: Team) {
       if (this.isFA) {
@@ -393,6 +397,9 @@ export default Vue.extend({
     openRefuseDialog(validator: Team) {
       this.isRefuseDialogOpen = true;
       this.selectedValidator = validator;
+    },
+    save() {
+      this.$accessor.FA.save();
     },
   },
 });

@@ -9,7 +9,7 @@
       <FTLogisticsCard id="matos" title="Matos" />
       <FeedbackCard id="comment" form="FT" />
     </v-container>
-    <FestivalEventBottomBar class="bottom-bar" festival-event="FT" />
+    <FestivalEventBottomBar festival-event="FT" />
     <SnackNotificationContainer />
   </div>
 </template>

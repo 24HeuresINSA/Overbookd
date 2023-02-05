@@ -29,6 +29,7 @@ import { Review, Reviewer } from "~/utils/models/review";
 import {
   castGearRequestWithDate,
   GearRequestCreation,
+  GearRequestWithDrive,
   Period,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
@@ -206,6 +207,16 @@ export const mutations = mutationTree(state, {
         return gearRequest;
       return { ...gearRequest, rentalPeriod };
     });
+  },
+
+  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive<"FT">) {
+    const gearRequestIndex = state.gearRequests.findIndex(
+      (gr) =>
+        gr.gear.id === updatedGearRequest.gear.id &&
+        gr.rentalPeriod.id === updatedGearRequest.rentalPeriod.id
+    );
+    if (gearRequestIndex === -1) return;
+    state.gearRequests.splice(gearRequestIndex, 1, updatedGearRequest);
   },
 });
 
@@ -651,6 +662,32 @@ export const actions = actionTree(
         "UPATE_GEAR_REQUESTS_RENTAL_PERIOD",
         updatedGearRequest.rentalPeriod
       );
+    },
+
+    async setDriveToGearRequest(
+      { commit },
+      gearRequest: GearRequestWithDrive<"FT">
+    ) {
+      commit("UDPATE_GEAR_REQUEST", gearRequest);
+    },
+
+    async validateGearRequests(
+      { state, dispatch },
+      gearRequests: GearRequestWithDrive<"FA" | "FT">[]
+    ) {
+      await Promise.all(
+        gearRequests.map((gr) =>
+          safeCall<GearRequestWithDrive<"FT">>(
+            this,
+            repo.validateGearRequest(this, state.mFT.id, gr),
+            {
+              successMessage: "Validation effectuée ✅",
+              errorMessage: "La tentative de validation n'a pas abouti",
+            }
+          )
+        )
+      );
+      dispatch("fetchGearRequests");
     },
   }
 );

@@ -340,7 +340,7 @@ export class GearRequestsService {
     });
   }
 
-  approveAnimationGearRequest(
+  approveGearRequest(
     gearRequestIdentifier: GearRequestIdentifier,
     drive: string,
   ): Promise<ApprovedGearRequest> {
