@@ -81,7 +81,7 @@ export interface FTTimeWindow {
   start: Date;
   end: Date;
   sliceTime?: number;
-  userRequests: User[];
+  userRequests: FTUserRequest[];
   teamRequests: FTTeamRequest[];
 }
 
@@ -90,6 +90,10 @@ export interface FTTimeWindowUpdate {
   start: Date;
   end: Date;
   sliceTime?: number;
+}
+
+export interface FTUserRequest {
+  user: User;
 }
 
 export interface FTTeamRequest {

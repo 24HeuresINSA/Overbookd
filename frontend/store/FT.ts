@@ -15,6 +15,7 @@ import {
   FTSimplified,
   FTUserRequestUpdate,
   FTTeamRequestUpdate,
+  FTUserRequest,
 } from "~/utils/models/ft";
 import {
   Feedback,
@@ -106,11 +107,7 @@ export const mutations = mutationTree(state, {
   UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
-    mFT.timeWindows = [
-      ...mFT.timeWindows.slice(0, index),
-      timeWindow,
-      ...mFT.timeWindows.slice(index + 1),
-    ];
+    mFT.timeWindows = updateItemToList(mFT.timeWindows, index, timeWindow);
   },
 
   DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
@@ -122,11 +119,17 @@ export const mutations = mutationTree(state, {
     {
       timeWindowId,
       userRequests,
-    }: { timeWindowId: number; userRequests: User[] }
+    }: { timeWindowId: number; userRequests: FTUserRequest[] }
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    mFT.timeWindows[index].userRequests = userRequests;
+    const previousTimeWindow = mFT.timeWindows[index];
+    const updatedTimeWindow = { ...previousTimeWindow, userRequests };
+    mFT.timeWindows = updateItemToList(
+      mFT.timeWindows,
+      index,
+      updatedTimeWindow
+    );
   },
 
   UPDATE_TEAM_REQUESTS(
@@ -138,17 +141,26 @@ export const mutations = mutationTree(state, {
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    mFT.timeWindows[index].teamRequests = teamRequests;
+    const previousTimeWindow = mFT.timeWindows[index];
+    const updatedTimeWindow = { ...previousTimeWindow, teamRequests };
+    mFT.timeWindows = updateItemToList(
+      mFT.timeWindows,
+      index,
+      updatedTimeWindow
+    );
   },
 
   DELETE_USER_REQUEST(
     { mFT },
-    { timeWindow, userRequest }: { timeWindow: FTTimeWindow; userRequest: User }
+    {
+      timeWindow,
+      userRequest,
+    }: { timeWindow: FTTimeWindow; userRequest: FTUserRequest }
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
     const userRequests = timeWindow.userRequests.filter(
-      (ur) => ur.id !== userRequest.id
+      (ur) => ur.user.id !== userRequest.user.id
     );
     mFT.timeWindows = updateItemToList(mFT.timeWindows, index, {
       ...timeWindow,
@@ -411,7 +423,7 @@ export const actions = actionTree(
       if (!timeWindow.id) return;
       const adaptedUserRequests: FTUserRequestUpdate[] =
         timeWindow.userRequests.map((ur) => ({
-          userId: ur.id,
+          userId: ur.user.id,
         }));
       const adaptedTeamRequests: FTTeamRequestUpdate[] =
         timeWindow.teamRequests.map((tr) => ({
@@ -419,7 +431,7 @@ export const actions = actionTree(
           quantity: tr.quantity,
         }));
 
-      const [resTeamRequests, resUserRequests] = await Promise.all([
+      const [resUserRequests, resTeamRequests] = await Promise.all([
         safeCall(
           this,
           repo.updateFTUserRequests(
@@ -427,7 +439,11 @@ export const actions = actionTree(
             state.mFT.id,
             timeWindow.id,
             adaptedUserRequests
-          )
+          ),
+          {
+            successMessage: "Demandes de bénévole mises à jour 🥳",
+            errorMessage: "Demandes de bénévoles non mises à jour 😢",
+          }
         ),
         safeCall(
           this,
@@ -436,48 +452,86 @@ export const actions = actionTree(
             state.mFT.id,
             timeWindow.id,
             adaptedTeamRequests
-          )
+          ),
+          {
+            successMessage: "Demandes d'équipes mises à jour 🥳",
+            errorMessage: "Demandes d'équipes non mises à jour 😢",
+          }
         ),
       ]);
-      if (resUserRequests)
+      if (resUserRequests) {
         commit("UPDATE_USER_REQUESTS", {
           timeWindowId: timeWindow.id,
           userRequests: resUserRequests.data,
         });
-      if (resTeamRequests)
+      }
+      if (resTeamRequests) {
         commit("UPDATE_TEAM_REQUESTS", {
           timeWindowId: timeWindow.id,
           teamRequests: resTeamRequests.data,
         });
+      }
     },
 
     async deleteUserRequest(
-      { commit },
+      { commit, state },
       {
         timeWindow,
         userRequest,
-      }: { timeWindow: FTTimeWindow; userRequest: User }
+      }: { timeWindow: FTTimeWindow; userRequest: FTUserRequest }
     ) {
+      if (!timeWindow?.id) return;
+      const res = await safeCall(
+        this,
+        repo.deleteFTUserRequest(
+          this,
+          state.mFT.id,
+          timeWindow.id,
+          userRequest.user.id
+        ),
+        {
+          successMessage: "Demande de bénévole supprimée 🥳",
+          errorMessage: "Demande de bénévole non supprimée 😢",
+        }
+      );
+      if (!res) return;
       commit("DELETE_USER_REQUEST", { timeWindow, userRequest });
-      // request
     },
 
     async deleteTeamRequest(
-      { commit },
+      { commit, state },
       {
         timeWindow,
         teamRequest,
       }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
     ) {
+      if (!timeWindow?.id) return;
+      const res = await safeCall(
+        this,
+        repo.deleteFTTeamRequest(
+          this,
+          state.mFT.id,
+          timeWindow.id,
+          teamRequest.team.code
+        ),
+        {
+          successMessage: "Demande d'équipe supprimée 🥳",
+          errorMessage: "Demande d'équipe non supprimée 😢",
+        }
+      );
+      if (!res) return;
       commit("DELETE_TEAM_REQUEST", { timeWindow, teamRequest });
-      // request
     },
 
     async deleteTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
         this,
-        repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id)
+        repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id),
+        {
+          successMessage: "Créneau supprimé 🥳",
+          errorMessage: "Créneau non supprimé 😢",
+        }
       );
       if (!res) return;
       commit("DELETE_TIME_WINDOW", timeWindow);

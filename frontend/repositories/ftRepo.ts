@@ -85,6 +85,7 @@ export default {
   deleteFTTimeWindow(context: Context, ftId: number, twId: number) {
     return context.$axios.delete(`${resource}/${ftId}/time-windows/${twId}`);
   },
+
   updateFTUserRequests(
     context: Context,
     ftId: number,
@@ -94,6 +95,16 @@ export default {
     return context.$axios.post<HttpStringified<User[]>>(
       `${resource}/${ftId}/time-windows/${twId}/user-requests`,
       userRequests
+    );
+  },
+  deleteFTUserRequest(
+    context: Context,
+    ftId: number,
+    twId: number,
+    userId: number
+  ) {
+    return context.$axios.delete(
+      `${resource}/${ftId}/time-windows/${twId}/user-requests/${userId}`
     );
   },
 
@@ -106,6 +117,16 @@ export default {
     return context.$axios.post<HttpStringified<FTTeamRequest[]>>(
       `${resource}/${ftId}/time-windows/${twId}/team-requests`,
       teamRequests
+    );
+  },
+  deleteFTTeamRequest(
+    context: Context,
+    ftId: number,
+    twId: number,
+    teamCode: string
+  ) {
+    return context.$axios.delete(
+      `${resource}/${ftId}/time-windows/${twId}/team-requests/${teamCode}`
     );
   },
 

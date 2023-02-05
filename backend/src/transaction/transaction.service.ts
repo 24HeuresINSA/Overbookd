@@ -6,26 +6,21 @@ import {
 import { PrismaService } from '../prisma.service';
 import { Transaction, TransactionType } from '@prisma/client';
 import { User } from '@prisma/client';
+import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 
 type CreateTransaction = Omit<
   Transaction,
   'id' | 'from' | 'type' | 'is_deleted' | 'created_at'
 >;
 
-const SELECT_TRANSACTION_USER = {
-  id: true,
-  firstname: true,
-  lastname: true,
-};
-
 const SELECT_TRANSACTION = {
   id: true,
   type: true,
   user_from: {
-    select: SELECT_TRANSACTION_USER,
+    select: SELECT_USERNAME_WITH_ID,
   },
   user_to: {
-    select: SELECT_TRANSACTION_USER,
+    select: SELECT_USERNAME_WITH_ID,
   },
   amount: true,
   context: true,

@@ -37,7 +37,7 @@ export default Vue.extend({
   props: {
     label: {
       type: String,
-      default: "Chercher une equipe",
+      default: "Chercher une équipe",
     },
     team: {
       type: Object as () => Team | null,

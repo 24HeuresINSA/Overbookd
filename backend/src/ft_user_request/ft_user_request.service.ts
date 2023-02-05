@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 import { FtUserRequestResponseDto } from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestDto } from './dto/ft_user_request.dto';
 
@@ -12,37 +13,34 @@ export class FtUserRequestService {
     ftId: number,
     twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
-    const allRequests = request.map(({ userId }) =>
-      this.prisma.ftUserRequest.create({
-        data: {
-          ftTimeWindowsId: twId,
-          userId: userId,
+    const allRequests = request.map(({ userId }) => {
+      const userRequest = {
+        ftTimeWindowsId: twId,
+        userId: userId,
+      };
+      return this.prisma.ftUserRequest.upsert({
+        where: {
+          ftTimeWindowsId_userId: userRequest,
         },
+        create: userRequest,
+
+        update: userRequest,
         select: {
           user: {
-            select: {
-              id: true,
-              firstname: true,
-              lastname: true,
-            },
+            select: SELECT_USERNAME_WITH_ID,
           },
         },
-      }),
-    );
-    const result = await this.prisma.$transaction(allRequests);
-    return result.map(({ user }) => user);
+      });
+    });
+    return this.prisma.$transaction(allRequests);
   }
 
-  async delete(
-    request: FtUserRequestDto,
-    ftId: number,
-    twId: number,
-  ): Promise<void> {
+  async delete(ftId: number, twId: number, userId: number): Promise<void> {
     await this.prisma.ftUserRequest.delete({
       where: {
         ftTimeWindowsId_userId: {
           ftTimeWindowsId: twId,
-          userId: request.userId,
+          userId,
         },
       },
     });
