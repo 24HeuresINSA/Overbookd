@@ -325,8 +325,8 @@ export const actions = actionTree(
       { commit, dispatch },
       { faId, authorId, author }
     ) {
-      const authorName = `${author.firstname} ${author.lastname}`;
       if (!faId || !authorId || !author) return;
+      const authorName = `${author.firstname} ${author.lastname}`;
       const comment: fa_comments = {
         subject: SubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
@@ -335,6 +335,7 @@ export const actions = actionTree(
       };
       dispatch("addComment", { comment, defaultAuthor: author });
       commit("UPDATE_STATUS", Status.SUBMITTED);
+      dispatch("save");
     },
 
     updateFA({ commit }, { key, value }) {
@@ -647,7 +648,7 @@ export const actions = actionTree(
 
     async validateGearRequests(
       { state, dispatch },
-      gearRequests: GearRequestWithDrive<"FA">[]
+      gearRequests: GearRequestWithDrive<"FA" | "FT">[]
     ) {
       await Promise.all(
         gearRequests.map((gr) =>

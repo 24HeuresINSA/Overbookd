@@ -19,6 +19,7 @@ import {
 import {
   GearRequestCreation,
   GearRequestUpdate,
+  GearRequestWithDrive,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 import { Reviewer } from "~/utils/models/review";
@@ -150,6 +151,22 @@ export default {
     return context.$axios.patch<HttpStringified<StoredGearRequest<"FT">>>(
       `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
+    );
+  },
+
+  validateGearRequest(
+    context: Context,
+    taskId: number,
+    gearRequest: GearRequestWithDrive<"FA" | "FT">
+  ) {
+    const {
+      gear: { id: gearId },
+      rentalPeriod: { id: rentalPeriodId },
+      drive,
+    } = gearRequest;
+    return context.$axios.patch<GearRequestWithDrive<"FT">>(
+      `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
+      { drive }
     );
   },
 

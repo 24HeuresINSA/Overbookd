@@ -25,14 +25,22 @@ import {
 import { FtStatus } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { GearRequestsApproveFormRequestDto } from 'src/gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
   GearRequestFormRequestDto,
   NewPeriodGearRequestFormRequestDto,
 } from 'src/gear-requests/dto/gearRequestFormRequest.dto';
-import { GearRequestResponseDto } from 'src/gear-requests/dto/gearRequestResponse.dto';
+import {
+  ApprovedGearRequestResponseDto,
+  GearRequestResponseDto,
+} from 'src/gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from 'src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
-import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
+import {
+  ApprovedGearRequest,
+  GearRequestsService,
+  GearSeekerType,
+} from 'src/gear-requests/gearRequests.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
 import {
@@ -325,5 +333,50 @@ export class FtController {
       rentalPeriodId,
       gearRequestForm,
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Patch(':taskId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Gear request approved',
+    type: ApprovedGearRequestResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'taskId',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'gearId',
+    type: Number,
+    description: 'Gear id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'rentalPeriodId',
+    type: Number,
+    description: 'Rental period id',
+    required: true,
+  })
+  approveGearRequest(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Param('gearId', ParseIntPipe) gearId: number,
+    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Body() approveForm: GearRequestsApproveFormRequestDto,
+  ): Promise<ApprovedGearRequest> {
+    const gearRequestId = {
+      seeker: { type: GearSeekerType.Task, id: taskId },
+      gearId,
+      rentalPeriodId,
+    };
+    const { drive } = approveForm;
+    return this.gearRequestService.approveGearRequest(gearRequestId, drive);
   }
 }

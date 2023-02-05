@@ -679,11 +679,10 @@ describe('Gear requests', () => {
         rentalPeriodId,
       };
       it('should update gear requests status to approved', async () => {
-        const approvedGearReques =
-          await gearRequestService.approveAnimationGearRequest(
-            gearRequestId,
-            MAGASIN,
-          );
+        const approvedGearReques = await gearRequestService.approveGearRequest(
+          gearRequestId,
+          MAGASIN,
+        );
         expect(approvedGearReques.status).toBe(APPROVED);
         const searchedGearRequest = await gearRequestService.findGearRequest({
           gearId,
@@ -693,11 +692,10 @@ describe('Gear requests', () => {
         expect(searchedGearRequest.status).toBe(APPROVED);
       });
       it('should update gear requests with a drive', async () => {
-        const approvedGearRequest =
-          await gearRequestService.approveAnimationGearRequest(
-            gearRequestId,
-            MAGASIN,
-          );
+        const approvedGearRequest = await gearRequestService.approveGearRequest(
+          gearRequestId,
+          MAGASIN,
+        );
         expect(approvedGearRequest.drive).toBe(MAGASIN);
         const searchedGearRequest = await gearRequestService.findGearRequest({
           gearId,
