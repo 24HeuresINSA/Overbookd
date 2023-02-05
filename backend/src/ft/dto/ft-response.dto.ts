@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
+import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { CompleteFtResponse, LiteFtResponse } from '../ftTypes';
 
 class UserName {
@@ -7,7 +8,7 @@ class UserName {
   lastname: string;
 }
 
-class UserNameWithId extends UserName {
+export class UserNameWithId extends UserName {
   id: number;
 }
 class Feedback {
@@ -17,10 +18,6 @@ class Feedback {
   authorId: number;
   createdAt: Date;
   author: UserName;
-}
-
-class UserRequest {
-  user: UserNameWithId;
 }
 
 class TeamRequest {
