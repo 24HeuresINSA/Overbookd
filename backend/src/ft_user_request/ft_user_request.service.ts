@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PeriodForm } from 'src/gear-requests/gearRequests.service';
 import { PrismaService } from 'src/prisma.service';
 import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 import {
@@ -8,9 +9,28 @@ import {
 } from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestDto } from './dto/ft_user_request.dto';
 
+type UserId = {
+  userId: number;
+};
+
+type PeriodWithUserRequestedIds = PeriodForm & {
+  userRequests: UserId[];
+};
+
 @Injectable()
 export class FtUserRequestService {
   constructor(private prisma: PrismaService) {}
+
+  private SELECT_ALSO_REQUESTED_BY_FT = {
+    ft: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+    start: true,
+    end: true,
+  };
 
   async create(
     request: FtUserRequestDto[],
@@ -33,11 +53,14 @@ export class FtUserRequestService {
           user: {
             select: SELECT_USERNAME_WITH_ID,
           },
+          ftTimeWindowsId: true,
         },
       });
     });
     const userRequests = await this.prisma.$transaction(allRequests);
-    return Promise.all(userRequests.map(this.convertToUserRequest));
+    return Promise.all(
+      userRequests.map((userRequest) => this.convertToUserRequest(userRequest)),
+    );
   }
 
   async delete(ftId: number, twId: number, userId: number): Promise<void> {
@@ -54,7 +77,64 @@ export class FtUserRequestService {
   async convertToUserRequest(
     userRequest: DataBaseUserRequest,
   ): Promise<UserRequest> {
-    const alsoRequestedBy = [];
+    const timeWindow = await this.retrieveTimeWindow(userRequest);
+    const fts = await this.findFtWhereUserIsAlsoRequestedInSamePeriod(
+      timeWindow,
+      userRequest,
+    );
+    const alsoRequestedBy = fts.map(({ ft, start, end }) => ({
+      ...ft,
+      period: { start, end },
+    }));
     return { ...userRequest, alsoRequestedBy };
+  }
+
+  private async findFtWhereUserIsAlsoRequestedInSamePeriod(
+    timeWindow: PeriodWithUserRequestedIds,
+    userRequest: DataBaseUserRequest,
+  ) {
+    const where = this.buildUserIsAlsoRequestedInSamePeriodCondition(
+      timeWindow,
+      userRequest,
+    );
+    const select = this.SELECT_ALSO_REQUESTED_BY_FT;
+    return this.prisma.ftTimeWindows.findMany({ where, select });
+  }
+
+  private buildUserIsAlsoRequestedInSamePeriodCondition(
+    timeWindow: PeriodWithUserRequestedIds,
+    userRequest: DataBaseUserRequest,
+  ) {
+    return {
+      start: {
+        lt: timeWindow.end,
+      },
+      end: {
+        gt: timeWindow.start,
+      },
+      NOT: {
+        id: userRequest.ftTimeWindowsId,
+      },
+      userRequests: {
+        some: {
+          userId: userRequest.user.id,
+        },
+      },
+    };
+  }
+
+  private async retrieveTimeWindow(userRequest: DataBaseUserRequest) {
+    return this.prisma.ftTimeWindows.findUnique({
+      where: { id: userRequest.ftTimeWindowsId },
+      select: {
+        start: true,
+        end: true,
+        userRequests: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
   }
 }

@@ -7,7 +7,9 @@ export interface UserRequest {
   alsoRequestedBy: AlsoRequestedByFT[];
 }
 
-export type DataBaseUserRequest = Pick<UserRequest, 'user'>;
+export type DataBaseUserRequest = Pick<UserRequest, 'user'> & {
+  ftTimeWindowsId: number;
+};
 
 class AlsoRequestedByFTRepresentation implements AlsoRequestedByFT {
   id: number;
