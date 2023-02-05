@@ -3,8 +3,6 @@
     :value="dateStringified"
     :label="label"
     type="datetime-local"
-    :min="minStringified"
-    :max="maxStringified"
     :solo="boxed"
     :filled="boxed"
     return-object
@@ -32,14 +30,6 @@ export default Vue.extend({
       type: Date,
       default: () => undefined as Date | undefined,
     },
-    min: {
-      type: Date,
-      default: () => undefined as Date | undefined,
-    },
-    max: {
-      type: Date,
-      default: () => undefined as Date | undefined,
-    },
     boxed: {
       type: Boolean,
       default: true,
@@ -48,12 +38,6 @@ export default Vue.extend({
   computed: {
     dateStringified(): string {
       return this.stringifyDate(this.date);
-    },
-    minStringified(): string {
-      return this.stringifyDate(this.min);
-    },
-    maxStringified(): string {
-      return this.stringifyDate(this.max);
     },
   },
   methods: {
