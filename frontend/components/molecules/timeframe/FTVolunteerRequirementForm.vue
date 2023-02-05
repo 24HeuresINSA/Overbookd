@@ -9,10 +9,10 @@
         <h3>Ajouter un bénévole</h3>
         <v-chip-group>
           <v-chip
-            v-for="(userRequest, i) in userRequests"
+            v-for="(userRequest, i) in allUserRequests"
             :key="i"
             close
-            @click:close="deleteUserRequest(userRequest, i)"
+            @click:close="deleteUserRequest(userRequest)"
           >
             {{ displayUsername(userRequest.user) }}
           </v-chip>
@@ -32,10 +32,10 @@
         <h3>Ajouter des bénévoles d'une équipe</h3>
         <v-chip-group>
           <v-chip
-            v-for="(teamRequest, i) in teamRequests"
+            v-for="(teamRequest, i) in allTeamRequests"
             :key="i"
             close
-            @click:close="deleteTeamRequest(teamRequest, i)"
+            @click:close="deleteTeamRequest(teamRequest)"
           >
             {{ `${teamRequest.quantity} ${teamRequest.team.name}` }}
           </v-chip>
@@ -93,8 +93,11 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    userRequests: [] as FTUserRequest[],
-    teamRequests: [] as FTTeamRequest[],
+    newUserRequests: [] as FTUserRequest[],
+    newTeamRequests: [] as FTTeamRequest[],
+
+    savedUserRequests: [] as FTUserRequest[],
+    savedTeamRequests: [] as FTTeamRequest[],
 
     quantity: 1,
     selectedTeam: null as Team | null,
@@ -106,28 +109,36 @@ export default Vue.extend({
     },
   }),
   computed: {
+    allUserRequests(): FTUserRequest[] {
+      return [...this.savedUserRequests, ...this.newUserRequests];
+    },
+    allTeamRequests(): FTTeamRequest[] {
+      return [...this.savedTeamRequests, ...this.newTeamRequests];
+    },
     mTimeWindow(): FTTimeWindow {
       return {
         ...this.timeWindow,
-        userRequests: this.userRequests,
-        teamRequests: this.teamRequests,
+        userRequests: this.allUserRequests,
+        teamRequests: this.allTeamRequests,
       };
     },
     isTeamRequestValid(): boolean {
-      return Boolean(
-        this.selectedTeam && this.quantity > 0 && !this.isTeamAlreadyRequested
+      return (
+        Boolean(this.selectedTeam) &&
+        this.quantity > 0 &&
+        !this.isTeamAlreadyRequested
       );
     },
     isTeamAlreadyRequested(): boolean {
-      return this.teamRequests.some(
+      return this.allTeamRequests.some(
         (teamRequest) => teamRequest.team.id === this.selectedTeam?.id
       );
     },
     isUserRequestValid(): boolean {
-      return Boolean(this.selectedUser && !this.isUserAlreadyRequested);
+      return Boolean(this.selectedUser) && !this.isUserAlreadyRequested;
     },
     isUserAlreadyRequested(): boolean {
-      return this.userRequests.some(
+      return this.allUserRequests.some(
         (userRequest) => userRequest.user.id === this.selectedUser?.id
       );
     },
@@ -143,8 +154,10 @@ export default Vue.extend({
   methods: {
     updateLocalVariable() {
       if (!this.timeWindow) return;
-      this.userRequests = [...this.timeWindow.userRequests];
-      this.teamRequests = [...this.timeWindow.teamRequests];
+      this.savedUserRequests = this.timeWindow.userRequests;
+      this.savedTeamRequests = this.timeWindow.teamRequests;
+      this.newUserRequests = [];
+      this.newTeamRequests = [];
       this.clearTeamRequestValue();
     },
     clearTeamRequestValue() {
@@ -157,7 +170,7 @@ export default Vue.extend({
         quantity: +this.quantity,
         team: this.selectedTeam,
       };
-      this.teamRequests.push(teamRequest);
+      this.newTeamRequests.push(teamRequest);
       this.clearTeamRequestValue();
     },
     addUserRequest() {
@@ -169,22 +182,61 @@ export default Vue.extend({
           lastname: this.selectedUser.lastname,
         },
       };
-      this.userRequests.push(userRequest);
+      this.newUserRequests.push(userRequest);
       this.selectedUser = null;
     },
-    deleteTeamRequest(teamRequest: FTTeamRequest, index: number) {
-      this.$accessor.FT.deleteTeamRequest({
+    async deleteTeamRequest(teamRequest: FTTeamRequest) {
+      if (!this.isSavedTeamRequest(teamRequest)) {
+        this.removeTeamRequestFromNewOnes(teamRequest);
+        return;
+      }
+      await this.$accessor.FT.deleteTeamRequest({
         timeWindow: this.timeWindow,
         teamRequest,
       });
-      this.teamRequests.splice(index, 1);
+      this.removeTeamRequestFromSavedOnes(teamRequest);
     },
-    deleteUserRequest(userRequest: FTUserRequest, index: number) {
-      this.$accessor.FT.deleteUserRequest({
+    removeTeamRequestFromNewOnes(teamRequest: FTTeamRequest) {
+      this.newTeamRequests = this.newTeamRequests.filter(
+        ({ team }) => team.code !== teamRequest.team.code
+      );
+    },
+    removeTeamRequestFromSavedOnes(teamRequest: FTTeamRequest) {
+      this.savedTeamRequests = this.savedTeamRequests.filter(
+        ({ team }) => team.code !== teamRequest.team.code
+      );
+    },
+    async deleteUserRequest(userRequest: FTUserRequest) {
+      if (!this.isSavedUserRequest(userRequest)) {
+        this.removeUserRequestFromNewOnes(userRequest);
+        return;
+      }
+      await this.$accessor.FT.deleteUserRequest({
         timeWindow: this.timeWindow,
         userRequest,
       });
-      this.userRequests.splice(index, 1);
+      this.removeUserRequestFromSavedOnes(userRequest);
+    },
+    removeUserRequestFromNewOnes(userRequest: FTUserRequest) {
+      this.newUserRequests = this.newUserRequests.filter(
+        ({ user }) => user.id !== userRequest.user.id
+      );
+    },
+    removeUserRequestFromSavedOnes(userRequest: FTUserRequest) {
+      this.savedUserRequests = this.savedUserRequests.filter(
+        ({ user }) => user.id !== userRequest.user.id
+      );
+    },
+
+    isSavedTeamRequest(teamRequest: FTTeamRequest): boolean {
+      return this.savedTeamRequests.some(
+        (savedTeamRequest) => savedTeamRequest.team.id === teamRequest.team.id
+      );
+    },
+    isSavedUserRequest(userRequest: FTUserRequest): boolean {
+      return this.savedUserRequests.some(
+        (savedUserRequest) => savedUserRequest.user.id === userRequest.user.id
+      );
     },
     confirmVolunteerRequirement() {
       this.$emit("change", this.mTimeWindow);
