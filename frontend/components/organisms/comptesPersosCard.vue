@@ -34,7 +34,7 @@
             <template #[`item.created_at`]="{ item }">
               {{
                 new Date(item.created_at).toLocaleDateString("fr-FR", {
-                  timezone: "Europe/Paris",
+                  timeZone: "Europe/Paris",
                 })
               }}
             </template>
@@ -54,7 +54,6 @@
 <script lang="ts">
 import Vue from "vue";
 import TransferDialog from "~/components/molecules/transferDialog.vue";
-import { Transaction } from "~/utils/models/repo";
 
 export default Vue.extend({
   name: "ComptePersosCard",
@@ -95,12 +94,12 @@ export default Vue.extend({
       this.$store.dispatch("dialog/openDialog", "transfer");
     },
 
-    isNegativeTransaction(transaction: Transaction) {
+    isNegativeTransaction(transaction: any) {
       switch (transaction.type) {
         case "DEPOSIT":
           return false;
         case "TRANSFER":
-          return transaction.from === this.me.id;
+          return transaction.user_from.id === this.me.id;
         case "EXPENSE":
           return true;
         default:
