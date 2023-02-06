@@ -481,6 +481,8 @@ model FtTimeWindows {
   teamRequests FtTeamRequest[]
 
   @@map("ft_time_windows")
+  @@index([start(sort: Asc)])
+  @@index([end(sort: Desc)])
 }
 
 model FtUserRequest {

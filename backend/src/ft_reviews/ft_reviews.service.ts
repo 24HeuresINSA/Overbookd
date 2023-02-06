@@ -36,7 +36,7 @@ export class FtReviewsService {
         upsertReview,
         updateStatus,
       ]);
-      return updatedFt;
+      return this.ft.convertFTtoApiContract(updatedFt);
     }
 
     await upsertReview;
@@ -68,7 +68,7 @@ export class FtReviewsService {
       upsertReview,
       updateStatus,
     ]);
-    return updatedFt;
+    return this.ft.convertFTtoApiContract(updatedFt);
   }
 
   async remove(ftId: number, teamCode: string): Promise<void> {

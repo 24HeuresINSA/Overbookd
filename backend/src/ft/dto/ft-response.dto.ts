@@ -1,61 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
+import { FtStatus } from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { CompleteFtResponse, LiteFtResponse } from '../ftTypes';
+import {
+  CompleteFtResponse,
+  Feedback,
+  LiteFtResponse,
+  MinimalFa,
+  Review,
+  SignaLocation,
+  Team,
+  TeamRequest,
+  TimeWindow,
+  UserNameWithId,
+} from '../ftTypes';
 
-class UserName {
-  firstname: string;
-  lastname: string;
-}
-
-export class UserNameWithId extends UserName {
-  id: number;
-}
-class Feedback {
-  id: number;
-  comment: string;
-  subject: FtSubjectType;
-  authorId: number;
-  createdAt: Date;
-  author: UserName;
-}
-
-class TeamRequest {
-  quantity: number;
-  team: Team;
-}
-
-class TimeWindow {
+class TimeWindowRepresentation implements TimeWindow {
   id: number;
   start: Date;
   end: Date;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
   sliceTime: number;
-}
-
-class Review {
-  status: reviewStatus;
-  team: Team;
-}
-
-class Team {
-  id: number;
-  name: string;
-  color: string;
-  icon: string;
-  code: string;
-}
-
-class MinimalFa {
-  id: number;
-  name: string;
-  status: Status;
-}
-
-class SignaLocation {
-  id: number;
-  name: string;
 }
 
 export class CompleteFtResponseDto implements CompleteFtResponse {
@@ -120,9 +85,9 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     required: true,
     description: 'All the time windows of the ft with their requests',
     isArray: true,
-    type: TimeWindow,
+    type: TimeWindowRepresentation,
   })
-  timeWindows: TimeWindow[];
+  timeWindows: TimeWindowRepresentation[];
 
   @ApiProperty({
     required: true,
