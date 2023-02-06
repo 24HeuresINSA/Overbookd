@@ -409,7 +409,12 @@ export const actions = actionTree(
       const previousTimeWindow = state.mFT.timeWindows.find(
         ({ id }) => id === savedTimeWindow.id
       );
-      commit("UPDATE_TIME_WINDOW", savedTimeWindow);
+      const { teamRequests, userRequests } = timeWindow;
+      commit("UPDATE_TIME_WINDOW", {
+        ...savedTimeWindow,
+        teamRequests,
+        userRequests,
+      });
       dispatch("updateGearRequestRentalPeriod", {
         previous: previousTimeWindow,
         updated: savedTimeWindow,
