@@ -75,10 +75,8 @@ type BaseCreateGearRequestForm = {
   gearId: number;
 };
 
-export type NewPeriodCreateGearRequestForm = BaseCreateGearRequestForm & {
-  start: Date;
-  end: Date;
-};
+export type NewPeriodCreateGearRequestForm = BaseCreateGearRequestForm &
+  PeriodForm;
 
 export type ExistingPeriodGearRequestForm = BaseCreateGearRequestForm & {
   periodId: number;
