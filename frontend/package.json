@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.4.1",
-    "@nuxt/types": "^2.14.12",
+    "@nuxt/types": "^2.16.0",
     "@nuxt/typescript-build": "^2.0.4",
     "@nuxtjs/color-mode": "^2.1.1",
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
