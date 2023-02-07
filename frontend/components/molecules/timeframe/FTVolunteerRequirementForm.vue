@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VolunteerRequestChip from "~/components/organisms/assignment/VolunteerRequestChip.vue";
+import VolunteerRequestChip from "~/components/atoms/assignment/VolunteerRequestChip.vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import SearchUser from "~/components/atoms/SearchUser.vue";
 import {

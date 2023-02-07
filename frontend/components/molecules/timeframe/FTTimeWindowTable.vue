@@ -63,7 +63,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VolunteerRequestChip from "~/components/organisms/assignment/VolunteerRequestChip.vue";
+import VolunteerRequestChip from "~/components/atoms/assignment/VolunteerRequestChip.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
 import {
