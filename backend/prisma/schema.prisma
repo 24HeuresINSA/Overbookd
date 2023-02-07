@@ -338,6 +338,7 @@ enum site_publish_animation_category_type {
   Culture
   Sport
   Enfant
+  Autre
 }
 
 enum time_windows_type {

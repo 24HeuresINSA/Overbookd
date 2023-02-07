@@ -6,3 +6,6 @@
 */
 -- AlterTable
 ALTER TABLE "fa" DROP COLUMN "is_kids";
+
+-- AlterEnum
+ALTER TYPE "site_publish_animation_category_type" ADD VALUE 'Autre';

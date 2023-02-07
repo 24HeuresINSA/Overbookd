@@ -12,4 +12,5 @@ export enum SitePublishAnimationCategoryType {
   Culture = 'Culture',
   Sport = 'Sport',
   Enfant = 'Enfant',
+  Autre = 'Autre',
 }
