@@ -1,12 +1,23 @@
 <template>
   <div class="volunteer-request">
-    <v-chip
-      :close="!disabled"
-      :class="userRequestStatus"
-      @click:close="deleteUserRequest()"
-    >
-      {{ userName }}
-    </v-chip>
+    <v-tooltip top color="error" :disabled="!hasErrors">
+      <template #activator="{ on, attrs }">
+        <v-chip
+          :close="!disabled"
+          :class="userRequestStatus"
+          v-bind="attrs"
+          @click:close="deleteUserRequest()"
+          v-on="on"
+        >
+          {{ userName }}
+        </v-chip>
+      </template>
+      <v-list-item dark>
+        <v-list-item-content v-for="(message, i) in errorMessages" :key="i">
+          <v-list-item-title> {{ message }} </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-tooltip>
   </div>
 </template>
 
@@ -28,12 +39,19 @@ export default Vue.extend({
   },
   computed: {
     userRequestStatus(): string {
-      return this.userRequest.alsoRequestedBy.length > 0
-        ? "also-requested-by-ft"
-        : "";
+      return this.hasErrors ? "also-requested-by-ft" : "";
     },
     userName(): string {
       return formatUsername(this.userRequest.user);
+    },
+    hasErrors(): boolean {
+      return this.userRequest.alsoRequestedBy.length > 0;
+    },
+    errorMessages(): string[] {
+      if (!this.hasErrors) return [];
+      return this.userRequest.alsoRequestedBy.map(
+        (ft) => `Aussi demande dans la FT #${ft.id} - ${ft.name}`
+      );
     },
   },
   methods: {
