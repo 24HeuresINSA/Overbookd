@@ -56,17 +56,24 @@ export default Vue.extend({
         let form = new FormData();
         form.append("files", this.PP, this.PP.name);
         form.append("id", this.me.id);
+    
+        if  (this.PP.size < 2000000 ||! this.PP.type.includes("image") ) {
         const res = await safeCall(
           this.$store,
           RepoFactory.userRepo.addPP(this, form)
         );
-        if (res) {
+        if (res ) {
           this.$accessor.notif.pushNotification({
             message: "Photo ajoutée, rafraîchis la page pour la voir.",
           });
           this.$accessor.dialog.closeDialog();
         }
       }
+    } else {
+      this.$accessor.notif.pushNotification({
+        message: "Fichier trop lourd (< 2Mb) ou mauvais format",
+      });
+    }
     },
   },
 });
