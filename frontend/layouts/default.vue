@@ -256,6 +256,12 @@ export default {
           permission: "hard",
           to: "/stats",
         },
+        {
+          icon: "mdi-image",
+          permission: "hard",
+          title: "Trombinoscope",
+          to: "/trombinoscope",
+        },
       ],
       items: [
         {
