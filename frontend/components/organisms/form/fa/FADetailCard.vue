@@ -47,19 +47,13 @@
             @change="onChangePublishAnimation('categories', $event)"
           >
           </v-combobox>
+          <v-switch
+            :value="mFA.is_major"
+            label="Anim phare qui sera mise en avant sur les réseaux sociaux"
+            :disabled="isValidatedByOwner"
+            @change="onChange('is_major', $event)"
+          ></v-switch>
         </v-form>
-        <v-switch
-          :value="mFA.is_major"
-          label="Anim phare"
-          :disabled="isValidatedByOwner"
-          @change="onChange('is_major', $event)"
-        ></v-switch>
-        <v-switch
-          :value="mFA.is_kids"
-          label="Anim pour les gosses"
-          :disabled="isValidatedByOwner"
-          @change="onChange('is_kids', $event)"
-        ></v-switch>
       </v-form>
     </v-card-text>
   </v-card>

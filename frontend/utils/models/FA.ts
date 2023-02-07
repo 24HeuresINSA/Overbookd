@@ -86,6 +86,7 @@ export enum SitePublishAnimationCategoryType {
   Culture = "Culture",
   Sport = "Sport",
   Enfant = "Enfant",
+  Autre = "Autre",
 }
 
 export interface FASimplified {
@@ -102,7 +103,6 @@ export interface FA extends FASimplified {
   location_id?: number;
   description?: string;
   is_major?: boolean;
-  is_kids?: boolean;
   security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
@@ -190,7 +190,6 @@ export interface fa_general_update {
   description?: string;
   is_publishable?: boolean;
   is_major?: boolean;
-  is_kids?: boolean;
   security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
