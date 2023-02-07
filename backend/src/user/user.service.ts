@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
@@ -7,6 +8,9 @@ import {
   retrievePermissions,
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
+import { join } from 'path';
+
+
 
 const SELECT_USER = {
   email: true,
@@ -192,13 +196,44 @@ export class UserService {
   }
 
   async uploadPP(
-    user_id: number,
+    where: Prisma.UserWhereUniqueInput,
     pp: string,
   ): Promise<UserWithoutPassword> {
+    if (this.getPP(where) !== null) {
+      await this.deletePP(where);
+    }
     return this.prisma.user.update({
-      where: { id: user_id },
-      data: { pp: pp },
-      select: SELECT_USER,
+      where,
+      data: { pp },
     });
+  }
+
+  async getPP(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<string> {
+    const file = await this.prisma.user.findUnique({
+      where,
+      select: { pp: true },
+    });
+    return file.pp;
+  }
+
+  async deletePP(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<void> {
+    const file = await this.prisma.user.findUnique({
+      where,
+      select: { pp: true },
+    });
+    if (file.pp) {
+      const filepath = join(process.cwd(), '/public', file.pp);
+      if (fs.existsSync(filepath)) {
+        await fs.unlink(filepath, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
+      }
+    }
   }
 }

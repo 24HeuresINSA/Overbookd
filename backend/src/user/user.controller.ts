@@ -7,12 +7,17 @@ import {
   Post,
   Put,
   Request,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Header,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { Permission } from 'src/auth/permissions-auth.decorator';
@@ -22,15 +27,10 @@ import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { UserService, UserWithoutPassword } from './user.service';
+import { diskStorage } from 'multer';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
-export var diskStorage = diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
 
 @ApiTags('user')
 @Controller('user')
@@ -186,18 +186,45 @@ export class UserController {
   @ApiBearerAuth()
   @Permission('hard')
   @Post('pp')
-  @UseInterceptors(FileInterceptor('files', { storage: diskStorage }))
+  @UseInterceptors(FileInterceptor('files', {
+    storage: diskStorage({
+      destination: __dirname + '/../../../public',
+      filename: (req, file, cb) => {
+        const filename: string = file.originalname.split('.')[0] + '-' + Date.now();
+        const extension: string = file.originalname.split('.')[1];
+        cb(null, `${filename}-${Date.now()}.${extension}`);
+      }
+    })
+  }))
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Add a pp to a user',
+    description: 'Add a profile picture to a user',
     type: UserModificationDto,
   })
-  uploadPP(
-    @Body('userId', ParseIntPipe) userId: number,
-    @UploadedFile() pp: Express.Multer.File,
+  async(
+    @Body('id') id: number,
+    @UploadedFile(new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 2 }),
+        new FileTypeValidator({ fileType: '.(png|jpeg|jpg|gif)' }),
+      ],
+    })
+    ) file: Express.Multer.File,
   ): Promise<UserWithoutPassword> {
-    console.log(pp);
-    return this.userService.uploadPP(userId, pp.buffer.toString('base64'));
+    return this.userService.uploadPP({ id: Number(id) }, file.filename);
   }
 
-
+  @Header('content-type', 'image/jpg')
+  @Get('pp/:name')
+  @ApiResponse({
+    status: 200,
+    description: 'Get a users pp',
+    type: StreamableFile,
+  })
+  getPP(
+    @Param('name') name: string,
+  ): StreamableFile {
+    const file = createReadStream(join(process.cwd(), 'public', name));
+    return new StreamableFile(file);
+  }
 }
