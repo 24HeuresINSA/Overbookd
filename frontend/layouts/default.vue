@@ -245,12 +245,6 @@ export default {
           to: "/comcom",
         },
         {
-          icon: "mdi-image",
-          permission: "hard",
-          title: "Trombinoscope",
-          to: "/trombinoscope",
-        },
-        {
           icon: "mdi-chart-areaspline-variant",
           title: "Stats",
           permission: "hard",
