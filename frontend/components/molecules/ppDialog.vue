@@ -57,7 +57,10 @@ export default Vue.extend({
         form.append("files", this.PP, this.PP.name);
         form.append("id", this.me.id);
 
-        if (this.PP.size < 2000000 && this.PP.type == ("image/jpeg" || "image/png")) {
+        if (
+          this.PP.size < 2000000 &&
+          this.PP.type == ("image/jpeg" || "image/png")
+        ) {
           const res = await safeCall(
             this.$store,
             RepoFactory.userRepo.addPP(this, form)
@@ -77,5 +80,4 @@ export default Vue.extend({
     },
   },
 });
-
 </script>
