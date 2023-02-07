@@ -226,6 +226,12 @@ export default {
           title: "Animations a publier",
           to: "/comcom",
         },
+        {
+          icon: "mdi-image",
+          permission: "hard",
+          title: "Trombinoscope",
+          to: "/trombinoscope",
+        },
       ],
       items: [
         {
