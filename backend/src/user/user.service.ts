@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import * as fs from 'fs';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
@@ -9,8 +9,6 @@ import {
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
 import { join } from 'path';
-
-
 
 const SELECT_USER = {
   email: true,
@@ -66,7 +64,7 @@ export type UserPasswordOnly = Pick<User, 'password'>;
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async user(
     findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
@@ -194,10 +192,10 @@ export class UserService {
     const permissions = retrievePermissions(user.team);
     return user
       ? {
-        ...user,
-        team: teams,
-        permissions: [...permissions],
-      }
+          ...user,
+          team: teams,
+          permissions: [...permissions],
+        }
       : undefined;
   }
 
@@ -214,9 +212,7 @@ export class UserService {
     });
   }
 
-  async getPP(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<string> {
+  async getPP(where: Prisma.UserWhereUniqueInput): Promise<string> {
     const file = await this.prisma.user.findUnique({
       where,
       select: { pp: true },
@@ -224,9 +220,7 @@ export class UserService {
     return file.pp;
   }
 
-  async deletePP(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<void> {
+  async deletePP(where: Prisma.UserWhereUniqueInput): Promise<void> {
     const file = await this.prisma.user.findUnique({
       where,
       select: { pp: true },

@@ -12,7 +12,13 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { Permission } from 'src/auth/permissions-auth.decorator';
@@ -27,14 +33,10 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
-
-
-
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @ApiBody({
@@ -182,16 +184,19 @@ export class UserController {
   @ApiBearerAuth()
   @Permission('hard')
   @Post('pp')
-  @UseInterceptors(FileInterceptor('files', {
-    storage: diskStorage({
-      destination: __dirname + '/../../../public',
-      filename: (req, file, cb) => {
-        const filename: string = file.originalname.split('.')[0] + '-' + Date.now();
-        const extension: string = file.originalname.split('.')[1];
-        cb(null, `${filename}-${Date.now()}.${extension}`);
-      }
-    })
-  }))
+  @UseInterceptors(
+    FileInterceptor('files', {
+      storage: diskStorage({
+        destination: __dirname + '/../../../public',
+        filename: (req, file, cb) => {
+          const filename: string =
+            file.originalname.split('.')[0] + '-' + Date.now();
+          const extension: string = file.originalname.split('.')[1];
+          cb(null, `${filename}-${Date.now()}.${extension}`);
+        },
+      }),
+    }),
+  )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Add a profile picture to a user',
@@ -210,9 +215,7 @@ export class UserController {
     description: 'Get a users pp',
     type: StreamableFile,
   })
-  getPP(
-    @Param('name') name: string,
-  ): StreamableFile {
+  getPP(@Param('name') name: string): StreamableFile {
     const file = createReadStream(join(process.cwd(), 'public', name));
     return new StreamableFile(file);
   }
