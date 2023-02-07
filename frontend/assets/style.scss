@@ -64,14 +64,14 @@
   #user-requests {
     .v-chip {
       &.also-requested-by-ft {
-        background-color: $also-requested-by-ft-color;
+        background-color: $conflict-also-requested-by-ft-color;
         color: white;
         .v-icon {
           color: white;
         }
         &.v-chip--clickable:hover {
           background-color: darken(
-            $color: $also-requested-by-ft-color,
+            $color: $conflict-also-requested-by-ft-color,
             $amount: 5%
           );
         }
