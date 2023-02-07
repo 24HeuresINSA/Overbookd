@@ -5,6 +5,7 @@ import { Review } from "./review";
 import { Team } from "./team";
 import { HttpStringified } from "../types/http";
 import { FASimplified } from "./FA";
+import { Period } from "./period";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -92,8 +93,25 @@ export interface FTTimeWindowUpdate {
   sliceTime?: number;
 }
 
+interface AlsoRequiredByFt {
+  id: number;
+  name: string;
+  period: Period;
+}
+
 export interface FTUserRequest {
   user: User;
+  alsoRequestedBy: AlsoRequiredByFt[];
+}
+
+export class FTUserRequestImpl implements FTUserRequest {
+  user: User;
+  alsoRequestedBy: AlsoRequiredByFt[];
+
+  constructor({ user, alsoRequestedBy }: FTUserRequest) {
+    this.user = user;
+    this.alsoRequestedBy = alsoRequestedBy;
+  }
 }
 
 export interface FTTeamRequest {
@@ -122,7 +140,7 @@ export function castTimeWindowWithDate(
     ...timeWindow,
     start: new Date(timeWindow.start),
     end: new Date(timeWindow.end),
-    userRequests: timeWindow.userRequests ?? [],
+    userRequests: timeWindow.userRequests.map(castUserRequestWithDate) ?? [],
     teamRequests: timeWindow.teamRequests ?? [],
   };
 }
@@ -187,5 +205,20 @@ export function toSimplifiedFT({
     status,
     team,
     userInCharge,
+  };
+}
+
+export function castUserRequestWithDate(
+  userRequest: HttpStringified<FTUserRequest>
+): FTUserRequest {
+  return {
+    ...userRequest,
+    alsoRequestedBy: userRequest.alsoRequestedBy.map(
+      ({ id, name, period }) => ({
+        id,
+        name,
+        period: { start: new Date(period.start), end: new Date(period.end) },
+      })
+    ),
   };
 }
