@@ -203,13 +203,7 @@ export class UserController {
   })
   async(
     @Body('id') id: number,
-    @UploadedFile(new ParseFilePipe({
-      validators: [
-        new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 2 }),
-        new FileTypeValidator({ fileType: '.(png|jpeg|jpg|gif)' }),
-      ],
-    })
-    ) file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<UserWithoutPassword> {
     return this.userService.uploadPP({ id: Number(id) }, file.filename);
   }
