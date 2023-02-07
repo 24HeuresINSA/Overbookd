@@ -71,6 +71,7 @@ import {
   FTTeamRequest,
   FTTimeWindow,
   FTUserRequest,
+  FTUserRequestImpl,
 } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -97,7 +98,10 @@ export default Vue.extend({
       return this.$accessor.FT.mFT;
     },
     timeWindows(): FTTimeWindow[] {
-      return this.mFT.timeWindows;
+      return this.mFT.timeWindows.map((timeWindow) => ({
+        ...timeWindow,
+        userRequests: timeWindow.userRequests.map(FTUserRequestImpl.build),
+      }));
     },
     shouldDisplayVolunteerEdition(): boolean {
       return !isTaskValidatedBy(this.mFT.reviews, "humain");

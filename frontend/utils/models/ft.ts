@@ -112,6 +112,10 @@ export class FTUserRequestImpl implements FTUserRequest {
     this.user = user;
     this.alsoRequestedBy = alsoRequestedBy;
   }
+
+  static build(userRequest: FTUserRequest): FTUserRequestImpl {
+    return new FTUserRequestImpl(userRequest);
+  }
 }
 
 export interface FTTeamRequest {
