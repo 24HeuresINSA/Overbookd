@@ -18,7 +18,6 @@ export const COMPLETE_FA_SELECT = {
   location_id: true,
   status: true,
   description: true,
-  is_major: true,
   security_needs: true,
   is_pass_required: true,
   number_of_pass: true,
@@ -115,6 +114,7 @@ export const COMPLETE_FA_SELECT = {
     select: {
       faId: true,
       photoLink: true,
+      isMajor: true,
       description: true,
       categories: true,
     },
@@ -146,7 +146,6 @@ export const ALL_FA_SELECT = {
   location_id: true,
   status: true,
   description: true,
-  is_major: true,
   security_needs: true,
   is_pass_required: true,
   number_of_pass: true,

@@ -102,7 +102,6 @@ export interface FA extends FASimplified {
   created_at?: Date;
   location_id?: number;
   description?: string;
-  is_major?: boolean;
   security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
@@ -189,7 +188,6 @@ export interface fa_general_update {
   status: Status;
   description?: string;
   is_publishable?: boolean;
-  is_major?: boolean;
   security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
@@ -211,6 +209,7 @@ export interface FaSitePublishAnimation {
   faId: number;
   photoLink?: string;
   description?: string;
+  isMajor?: boolean;
   categories?: SitePublishAnimationCategoryType[];
 }
 

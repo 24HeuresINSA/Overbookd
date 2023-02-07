@@ -241,7 +241,7 @@ export default {
         {
           icon: "mdi-web-sync",
           permission: "communication-read",
-          title: "Animations a publier",
+          title: "Animations à publier",
           to: "/comcom",
         },
         {

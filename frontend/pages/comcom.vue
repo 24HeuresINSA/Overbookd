@@ -2,7 +2,14 @@
   <div>
     <v-data-table :headers="headers" :items="publishAnimations">
       <template #[`item.faId`]="{ item }">
-        <nuxt-link :to="`/fa/${item.faId}`"> {{ item.faId }}</nuxt-link>
+        <v-chip-group>
+          <v-chip small>{{ item.faId }}</v-chip>
+        </v-chip-group>
+      </template>
+      <template #[`item.name`]="{ item }">
+        <nuxt-link :to="`/fa/${item.faId}`">
+          {{ item.name }}
+        </nuxt-link>
       </template>
       <template #[`item.photoLink`]="{ item }">
         <a :href="item.photoLink" target="_blank"> {{ item.photoLink }}</a>
@@ -32,10 +39,12 @@ export default Vue.extend({
   data(): Comcom {
     return {
       headers: [
-        { text: "FA", value: "faId" },
+        { text: "Id", value: "faId" },
+        { text: "Nom", value: "name" },
         { text: "Lien de la photo", value: "photoLink" },
         { text: "Description", value: "description" },
         { text: "Categories", value: "categories" },
+        { text: "Anim phare", value: "isMajor" },
       ],
     };
   },

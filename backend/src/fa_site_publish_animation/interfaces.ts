@@ -4,6 +4,7 @@ export interface FaSitePublishAnimation {
   faId: number;
   photoLink?: string;
   desctiption?: string;
+  isMajor?: boolean;
   categories?: site_publish_animation_category_type[];
 }
 

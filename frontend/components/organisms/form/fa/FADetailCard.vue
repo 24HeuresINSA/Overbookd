@@ -48,10 +48,10 @@
           >
           </v-combobox>
           <v-switch
-            :value="mFA.is_major"
+            :input-value="mFA.faSitePublishAnimation?.isMajor"
             label="Anim phare qui sera mise en avant sur les réseaux sociaux"
             :disabled="isValidatedByOwner"
-            @change="onChange('is_major', $event)"
+            @change="onChangePublishAnimation('isMajor', $event)"
           ></v-switch>
         </v-form>
       </v-form>
@@ -106,7 +106,7 @@ export default Vue.extend({
       this.$accessor.FA.updateFA({ key: key, value: value });
     },
     onChangePublishAnimation(key: string, value: any) {
-      if (key !== "categories") value = value.trim();
+      if (key === "description" || key === "photoLink") value = value.trim();
       this.$accessor.FA.updatePublishAnimation({ key, value });
     },
     switchPublishAnimation(value: boolean) {

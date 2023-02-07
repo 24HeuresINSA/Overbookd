@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDefined,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import {
   FaSitePublishAnimation,
   SitePublishAnimationCategoryType,
@@ -23,6 +29,14 @@ export class FaSitePublishAnimationFormRequestDto
   @IsOptional()
   @IsString()
   photoLink?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Is the activty a major activity',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isMajor?: boolean;
 
   @ApiProperty({
     required: false,

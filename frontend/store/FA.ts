@@ -284,6 +284,7 @@ export const mutations = mutationTree(state, {
       photoLink: publishAnimation.photoLink ?? "",
       description: publishAnimation.description ?? "",
       categories: publishAnimation.categories ?? [],
+      isMajor: publishAnimation.isMajor ?? false,
     };
   },
 

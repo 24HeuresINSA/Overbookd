@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { site_publish_animation_category_type } from '@prisma/client';
+import { IsBoolean } from 'class-validator';
 import {
   FaSitePublishAnimation,
   SitePublishAnimationCategoryType,
@@ -21,6 +22,13 @@ export class FaSitePublishAnimationResponseDto
     type: String,
   })
   photoLink: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Is the activty a major activity',
+  })
+  @IsBoolean()
+  isMajor?: boolean;
 
   @ApiProperty({
     required: true,
