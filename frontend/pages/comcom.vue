@@ -15,7 +15,10 @@
                   {{ publishAnimation.fa.name }}
                 </nuxt-link>
               </td>
-              <th :rowspan="publishAnimation.fa.timeWindows.length + 1">
+              <th
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-center"
+              >
                 <v-btn icon :href="publishAnimation.photoLink" target="_blank">
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
@@ -33,7 +36,10 @@
                   </v-chip>
                 </v-chip-group>
               </td>
-              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
+              <td
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-center"
+              >
                 <v-icon v-if="publishAnimation.isMajor" color="green" large>
                   mdi-check-circle
                 </v-icon>
