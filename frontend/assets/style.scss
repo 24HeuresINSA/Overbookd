@@ -11,7 +11,7 @@
     background-color: $refused-color;
     color: white;
   }
-  &.draft { 
+  &.draft {
     background-color: $draft-color;
     color: white;
   }
@@ -21,8 +21,8 @@
   }
 }
 
-
-.fa, .ft {
+.fa,
+.ft {
   .v-card {
     &.validated {
       border-left: 5px solid $validated-color;
@@ -33,7 +33,7 @@
     &.refused {
       border-left: 5px solid $refused-color;
     }
-    &.draft { 
+    &.draft {
       border-left: 5px solid $draft-color;
     }
   }
@@ -45,14 +45,37 @@
     &.refused {
       color: $refused-color;
     }
-    &.draft, &.submitted {
+    &.draft,
+    &.submitted {
       color: $draft-color;
     }
   }
 
-  #status, #validators {
-    .v-chip, #dot {
+  #status,
+  #validators {
+    .v-chip,
+    #dot {
       @include background-color-by-status();
+    }
+  }
+}
+
+.ft {
+  #user-requests {
+    .v-chip {
+      &.also-requested-by-ft {
+        background-color: $conflict-also-requested-by-ft-color;
+        color: white;
+        .v-icon {
+          color: white;
+        }
+        &.v-chip--clickable:hover {
+          background-color: darken(
+            $color: $conflict-also-requested-by-ft-color,
+            $amount: 5%
+          );
+        }
+      }
     }
   }
 }

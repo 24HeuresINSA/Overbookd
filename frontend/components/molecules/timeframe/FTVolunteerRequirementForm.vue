@@ -8,14 +8,12 @@
       <v-card-text>
         <h3>Ajouter un bénévole</h3>
         <v-chip-group>
-          <v-chip
-            v-for="(userRequest, i) in allUserRequests"
-            :key="i"
-            close
-            @click:close="deleteUserRequest(userRequest)"
-          >
-            {{ displayUsername(userRequest.user) }}
-          </v-chip>
+          <VolunteerRequestChip
+            v-for="userRequest in allUserRequests"
+            :key="userRequest.user.id"
+            :user-request="userRequest"
+            @delete-user-request="deleteUserRequest"
+          />
         </v-chip-group>
         <div class="flex-row">
           <SearchUser v-model="selectedUser" />
@@ -71,9 +69,15 @@
 
 <script lang="ts">
 import Vue from "vue";
+import VolunteerRequestChip from "~/components/atoms/assignment/VolunteerRequestChip.vue";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import SearchUser from "~/components/atoms/SearchUser.vue";
-import { FTTeamRequest, FTTimeWindow, FTUserRequest } from "~/utils/models/ft";
+import {
+  FTTeamRequest,
+  FTTimeWindow,
+  FTUserRequest,
+  FTUserRequestImpl,
+} from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { isNumber, min } from "~/utils/rules/inputRules";
@@ -81,7 +85,7 @@ import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "FTVolunteerRequirementForm",
-  components: { SearchTeam, SearchUser },
+  components: { SearchTeam, SearchUser, VolunteerRequestChip },
   model: {
     prop: "timeWindow",
     event: "change",
@@ -110,7 +114,10 @@ export default Vue.extend({
   }),
   computed: {
     allUserRequests(): FTUserRequest[] {
-      return [...this.savedUserRequests, ...this.newUserRequests];
+      return [
+        ...this.savedUserRequests.map(FTUserRequestImpl.build),
+        ...this.newUserRequests,
+      ];
     },
     allTeamRequests(): FTTeamRequest[] {
       return [...this.savedTeamRequests, ...this.newTeamRequests];
@@ -175,13 +182,14 @@ export default Vue.extend({
     },
     addUserRequest() {
       if (!this.selectedUser) return;
-      const userRequest: FTUserRequest = {
+      const userRequest = FTUserRequestImpl.build({
         user: {
           id: this.selectedUser.id,
           firstname: this.selectedUser.firstname,
           lastname: this.selectedUser.lastname,
         },
-      };
+        alsoRequestedBy: [],
+      });
       this.newUserRequests.push(userRequest);
       this.selectedUser = null;
     },

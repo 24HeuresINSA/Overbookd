@@ -7,30 +7,27 @@
     :items-per-page="-1"
     sort-by="dateStart"
   >
-    <template #[`item.startDate`]="{ item }">
+    <template #item.startDate="{ item }">
       {{ formatDate(item.start) }}
     </template>
-    <template #[`item.endDate`]="{ item }">
+    <template #item.endDate="{ item }">
       {{ formatDate(item.end) }}
     </template>
-    <template #[`item.sliceTime`]="{ item }">
+    <template #item.sliceTime="{ item }">
       {{ item.sliceTime ? floatToHour(item.sliceTime) : "" }}
     </template>
-    <template #[`item.userRequests`]="{ item }">
-      <v-chip-group column>
-        <template v-for="(req, i) in item.userRequests">
-          <v-chip
-            v-if="req"
-            :key="i"
-            :close="!disabled"
-            @click:close="deleteUserRequest(item, req)"
-          >
-            {{ formatUsername(req.user) }}
-          </v-chip>
-        </template>
+    <template #item.userRequests="{ item }">
+      <v-chip-group id="user-requests" column>
+        <VolunteerRequestChip
+          v-for="userRequest in item.userRequests"
+          :key="userRequest.user.id"
+          :disabled="disabled"
+          :user-request="userRequest"
+          @delete-user-request="deleteUserRequest(item, userRequest)"
+        />
       </v-chip-group>
     </template>
-    <template #[`item.teamRequests`]="{ item }">
+    <template #item.teamRequests="{ item }">
       <v-chip-group column>
         <template v-for="(req, i) in item.teamRequests">
           <v-chip
@@ -44,7 +41,7 @@
         </template>
       </v-chip-group>
     </template>
-    <template #[`item.action`]="{ item }">
+    <template #item.action="{ item }">
       <div v-if="!disabled">
         <v-btn
           v-if="shouldDisplayVolunteerEdition"
@@ -66,6 +63,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import VolunteerRequestChip from "~/components/atoms/assignment/VolunteerRequestChip.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
 import {
@@ -73,12 +71,12 @@ import {
   FTTeamRequest,
   FTTimeWindow,
   FTUserRequest,
+  FTUserRequestImpl,
 } from "~/utils/models/ft";
-import { User } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "FTTimeWindowTable",
+  components: { VolunteerRequestChip },
   props: {
     disabled: {
       type: Boolean,
@@ -100,7 +98,10 @@ export default Vue.extend({
       return this.$accessor.FT.mFT;
     },
     timeWindows(): FTTimeWindow[] {
-      return this.mFT.timeWindows;
+      return this.mFT.timeWindows.map((timeWindow) => ({
+        ...timeWindow,
+        userRequests: timeWindow.userRequests.map(FTUserRequestImpl.build),
+      }));
     },
     shouldDisplayVolunteerEdition(): boolean {
       return !isTaskValidatedBy(this.mFT.reviews, "humain");
@@ -109,9 +110,6 @@ export default Vue.extend({
   methods: {
     formatDate(date: string): string {
       return formatDateWithMinutes(date);
-    },
-    formatUsername(user: User) {
-      return formatUsername(user);
     },
     formatTeamRequestText(quantity: number, teamName: string) {
       return `${quantity} ${teamName}`;

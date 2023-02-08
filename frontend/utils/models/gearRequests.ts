@@ -1,5 +1,6 @@
 import { HttpStringified } from "../types/http";
 import { Gear } from "./catalog.model";
+import { Period as GeneralPeriod } from "./period";
 
 export interface BaseGearRequestCreation {
   gearId: number;
@@ -24,10 +25,8 @@ export type GearRequestUpdate = Partial<
   Omit<NewPeriodGearRequestCreation, "gearId">
 >;
 
-export interface Period {
+export interface Period extends GeneralPeriod {
   id: number;
-  start: Date;
-  end: Date;
 }
 
 export interface Seeker<T extends "FA" | "FT"> {
