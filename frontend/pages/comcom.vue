@@ -33,10 +33,7 @@
                   </v-chip>
                 </v-chip-group>
               </td>
-              <td
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
-                class="text-center"
-              >
+              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
                 <v-icon v-if="publishAnimation.isMajor" color="green" large>
                   mdi-check-circle
                 </v-icon>
@@ -45,7 +42,9 @@
             </tr>
 
             <tr
-              v-for="timeWindow in publishAnimation.fa.timeWindows"
+              v-for="timeWindow in sortTimeWindows(
+                publishAnimation.fa.timeWindows
+              )"
               :key="`${timeWindow.start}-${timeWindow.end}`"
             >
               <td class="text-start">
@@ -66,6 +65,7 @@ import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import { SitePublishAnimationWithFa } from "~/utils/models/FA";
+import { Period } from "~/utils/models/period";
 
 interface Comcom {
   headers: Header[];
@@ -97,6 +97,15 @@ export default Vue.extend({
   methods: {
     formatDate(date: Date): string {
       return formatDateWithMinutes(date);
+    },
+    sortTimeWindows(timeWindows: Period[]): Period[] {
+      const sortedTimeWindows = [...timeWindows].sort((a, b) => {
+        if (a.start === b.start) {
+          return new Date(a.end).getTime() - new Date(b.end).getTime();
+        }
+        return new Date(a.start).getTime() - new Date(b.start).getTime();
+      });
+      return sortedTimeWindows;
     },
   },
 });
