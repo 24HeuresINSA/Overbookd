@@ -5,40 +5,25 @@
         <tbody>
           <template v-for="publishAnimation in items">
             <tr>
-              <th
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
-                class="text-start"
-              >
+              <th :rowspan="publishAnimation.fa.timeWindows.length + 1">
                 <v-chip-group>
                   <v-chip small>{{ publishAnimation.fa.id }}</v-chip>
                 </v-chip-group>
               </th>
-              <td
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
-                class="text-start"
-              >
+              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
                 <nuxt-link :to="`/fa/${publishAnimation.fa.id}`">
                   {{ publishAnimation.fa.name }}
                 </nuxt-link>
               </td>
-              <th
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
-                class="text-center"
-              >
+              <th :rowspan="publishAnimation.fa.timeWindows.length + 1">
                 <v-btn icon :href="publishAnimation.photoLink" target="_blank">
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
-              <td
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
-                class="text-start"
-              >
+              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
                 {{ publishAnimation.description }}
               </td>
-              <td
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
-                class="text-start"
-              >
+              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
                 <v-chip-group column>
                   <v-chip
                     v-for="category in publishAnimation.categories"
@@ -91,11 +76,11 @@ export default Vue.extend({
   data(): Comcom {
     return {
       headers: [
-        { text: "Id", value: "faId" },
+        { text: "Numéro", value: "faId" },
         { text: "Nom", value: "name" },
-        { text: "Lien de la photo", value: "photoLink", align: "center" },
+        { text: "Photo", value: "photoLink", align: "center" },
         { text: "Description", value: "description" },
-        { text: "Categories", value: "categories" },
+        { text: "Catégories", value: "categories" },
         { text: "Anim phare", value: "isMajor", align: "center" },
         { text: "Créneaux", value: "timeWindows" },
       ],
