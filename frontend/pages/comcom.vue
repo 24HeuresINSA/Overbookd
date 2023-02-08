@@ -61,7 +61,7 @@
 
             <tr
               v-for="timeWindow in publishAnimation.fa.timeWindows"
-              :key="timeWindow"
+              :key="`${timeWindow.start}-${timeWindow.end}`"
             >
               <td class="text-start">
                 {{ formatDate(timeWindow.start) }}
