@@ -1,11 +1,11 @@
 import {
   collaborator,
   FA,
-  FaSitePublishAnimation,
   fa_collaborators,
   fa_electricity_needs,
   fa_signa_needs,
   fa_type,
+  SitePublishAnimation,
   SortedStoredGearRequests,
   time_windows,
   time_windows_type,
@@ -92,7 +92,7 @@ export function hasCategoriesToPublish(fa: FA): string | boolean {
   );
 }
 export function isPublishable(
-  value: FaSitePublishAnimation | undefined
+  value: SitePublishAnimation | undefined
 ): string | boolean {
   return !!value || "L'animation ne sera pas publiée sur le site.";
 }

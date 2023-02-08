@@ -1,7 +1,7 @@
 import { HttpStringified } from "../types/http";
 import { SubjectType } from "./feedback";
 import { FTSimplified } from "./ft";
-import { StoredGearRequest } from "./gearRequests";
+import { Period, StoredGearRequest } from "./gearRequests";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
@@ -115,7 +115,7 @@ export interface FA extends FASimplified {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
-  faSitePublishAnimation?: FaSitePublishAnimation;
+  faSitePublishAnimation?: SitePublishAnimation;
   fts: FTSimplified[];
 }
 
@@ -205,12 +205,23 @@ export interface SearchFA {
   status?: Status;
 }
 
-export interface FaSitePublishAnimation {
+export interface SitePublishAnimationCreation {
   faId: number;
+}
+
+export interface SitePublishAnimation {
   photoLink?: string;
   description?: string;
   isMajor?: boolean;
   categories?: SitePublishAnimationCategoryType[];
+}
+
+export interface SitePublishAnimationWithFa extends SitePublishAnimation {
+  fa: {
+    id: number;
+    name: string;
+    timeWindows: Omit<Period, "id">[];
+  };
 }
 
 export interface ElectricityTypeLabel {

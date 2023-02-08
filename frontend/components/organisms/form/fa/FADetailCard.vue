@@ -93,7 +93,7 @@ export default Vue.extend({
   watch: {
     mFA: {
       handler() {
-        if (this.mFA.faSitePublishAnimation?.faId) {
+        if (this.mFA.faSitePublishAnimation) {
           this.isPublishable = true;
         }
       },
@@ -110,11 +110,9 @@ export default Vue.extend({
       this.$accessor.FA.updatePublishAnimation({ key, value });
     },
     switchPublishAnimation(value: boolean) {
-      if (value) return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      if (value) return this.$accessor.FA.createPublishAnimation();
       if (this.mFA.faSitePublishAnimation) {
-        return this.$accessor.FA.deletePublishAnimation(
-          this.mFA.faSitePublishAnimation
-        );
+        return this.$accessor.FA.deletePublishAnimation();
       }
     },
   },

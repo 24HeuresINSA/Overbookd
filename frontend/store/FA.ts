@@ -3,24 +3,30 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
+  generateGearRequestCreationBuilder,
+  isSimilarPeriod,
+  uniqueByGearReducer,
+  uniqueGerRequestPeriodsReducer,
+} from "~/utils/functions/gearRequest";
+import {
   castFaWithDate,
   collaborator,
   CreateFA,
   FA,
-  FaSitePublishAnimation,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
   fa_signa_needs,
   fa_validation_body,
   SearchFA,
+  SitePublishAnimation,
+  SitePublishAnimationCreation,
   SortedStoredGearRequests,
   Status,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
-import { sendNotification } from "./catalog";
 import { FT, FTSimplified } from "~/utils/models/ft";
 import {
   castGearRequestWithDate,
@@ -30,12 +36,7 @@ import {
   Period,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
-import {
-  generateGearRequestCreationBuilder,
-  isSimilarPeriod,
-  uniqueByGearReducer,
-  uniqueGerRequestPeriodsReducer,
-} from "~/utils/functions/gearRequest";
+import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
 
@@ -277,10 +278,9 @@ export const mutations = mutationTree(state, {
     state.FAs = state.FAs.filter((fa) => fa.id !== faId);
   },
 
-  UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: FaSitePublishAnimation) {
+  UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: SitePublishAnimation) {
     mFA.faSitePublishAnimation = {
       ...mFA.faSitePublishAnimation,
-      faId: mFA.id,
       photoLink: publishAnimation.photoLink ?? "",
       description: publishAnimation.description ?? "",
       categories: publishAnimation.categories ?? [],
@@ -812,9 +812,9 @@ export const actions = actionTree(
       commit("DELETE_FA", faId);
     },
 
-    async createPublishAnimation({ commit }, faId: number) {
-      const publishAnimation: FaSitePublishAnimation = {
-        faId,
+    async createPublishAnimation({ commit, state }) {
+      const publishAnimation: SitePublishAnimationCreation = {
+        faId: state.mFA.id,
       };
       const res = await safeCall(
         this,
@@ -832,16 +832,12 @@ export const actions = actionTree(
       commit("UPDATE_PUBLISH_ANIMATION", publishAnimation);
     },
 
-    async deletePublishAnimation(
-      { commit },
-      publishAnimation: FaSitePublishAnimation
-    ) {
-      if (publishAnimation?.faId) {
-        await safeCall(
-          this,
-          RepoFactory.faRepo.deletePublishAnimation(this, publishAnimation.faId)
-        );
-      }
+    async deletePublishAnimation({ commit, state }) {
+      const res = await safeCall(
+        this,
+        RepoFactory.faRepo.deletePublishAnimation(this, state.mFA.id)
+      );
+      if (!res) return;
       commit("DELETE_PUBLISH_ANIMATION");
     },
   }

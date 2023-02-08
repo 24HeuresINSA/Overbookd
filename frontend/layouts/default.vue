@@ -465,7 +465,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
 
     async clickOnTitle() {
       this.counter++;
-      if (this.counter > 10) {
+      if (this.counter > 24) {
         this.isJauneActive = true;
         this.title = "RICARD - Pastis";
         const audio = new Audio("audio/jaune.m4a");
