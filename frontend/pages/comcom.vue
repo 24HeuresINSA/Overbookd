@@ -1,33 +1,76 @@
 <template>
   <div>
     <v-data-table :headers="headers" :items="publishAnimations">
-      <template #item.faId="{ item }">
-        <v-chip-group>
-          <v-chip small>{{ item.fa.id }}</v-chip>
-        </v-chip-group>
-      </template>
-      <template #item.name="{ item }">
-        <nuxt-link :to="`/fa/${item.fa.name}`">
-          {{ item.fa.name }}
-        </nuxt-link>
-      </template>
-      <template #item.photoLink="{ item }">
-        <v-btn icon :href="item.photoLink" target="_blank">
-          <v-icon large>mdi-camera</v-icon>
-        </v-btn>
-      </template>
-      <template #item.categories="{ item }">
-        <v-chip-group column>
-          <v-chip v-for="category in item.categories" :key="category">
-            {{ category }}
-          </v-chip>
-        </v-chip-group>
-      </template>
-      <template #item.isMajor="{ item }">
-        <v-icon v-if="item.isMajor" color="green" large>
-          mdi-check-circle
-        </v-icon>
-        <v-icon v-else color="red" large>mdi-close-circle</v-icon>
+      <template #body="{ items }">
+        <tbody>
+          <template v-for="publishAnimation in items">
+            <tr>
+              <th
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-start"
+              >
+                <v-chip-group>
+                  <v-chip small>{{ publishAnimation.fa.id }}</v-chip>
+                </v-chip-group>
+              </th>
+              <td
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-start"
+              >
+                <nuxt-link :to="`/fa/${publishAnimation.fa.id}`">
+                  {{ publishAnimation.fa.name }}
+                </nuxt-link>
+              </td>
+              <th
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-center"
+              >
+                <v-btn icon :href="publishAnimation.photoLink" target="_blank">
+                  <v-icon large>mdi-camera</v-icon>
+                </v-btn>
+              </th>
+              <td
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-start"
+              >
+                {{ publishAnimation.description }}
+              </td>
+              <td
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-start"
+              >
+                <v-chip-group column>
+                  <v-chip
+                    v-for="category in publishAnimation.categories"
+                    :key="category"
+                  >
+                    {{ category }}
+                  </v-chip>
+                </v-chip-group>
+              </td>
+              <td
+                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                class="text-center"
+              >
+                <v-icon v-if="publishAnimation.isMajor" color="green" large>
+                  mdi-check-circle
+                </v-icon>
+                <v-icon v-else color="red" large>mdi-close-circle</v-icon>
+              </td>
+            </tr>
+
+            <tr
+              v-for="timeWindow in publishAnimation.fa.timeWindows"
+              :key="timeWindow"
+            >
+              <td class="text-start">
+                {{ formatDate(timeWindow.start) }}
+                <span class="font-weight-bold">-</span>
+                {{ formatDate(timeWindow.end) }}
+              </td>
+            </tr>
+          </template>
+        </tbody>
       </template>
     </v-data-table>
   </div>
@@ -35,6 +78,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import { SitePublishAnimationWithFa } from "~/utils/models/FA";
 
@@ -53,6 +97,7 @@ export default Vue.extend({
         { text: "Description", value: "description" },
         { text: "Categories", value: "categories" },
         { text: "Anim phare", value: "isMajor", align: "center" },
+        { text: "Créneaux", value: "timeWindows" },
       ],
     };
   },
@@ -63,6 +108,11 @@ export default Vue.extend({
   },
   async beforeMount() {
     this.$accessor.publishAnimation.fetchAllPublishAnimations();
+  },
+  methods: {
+    formatDate(date: Date): string {
+      return formatDateWithMinutes(date);
+    },
   },
 });
 </script>
