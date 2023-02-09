@@ -6,15 +6,16 @@
           <template v-for="publishAnimation in items">
             <tr>
               <th :rowspan="publishAnimation.fa.timeWindows.length + 1">
-                <v-chip-group>
-                  <v-chip small>{{ publishAnimation.fa.id }}</v-chip>
-                </v-chip-group>
-              </th>
-              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
-                <nuxt-link :to="`/fa/${publishAnimation.fa.id}`">
-                  {{ publishAnimation.fa.name }}
+                <nuxt-link
+                  :to="`/fa/${publishAnimation.fa.id}`"
+                  class="name-text"
+                >
+                  <v-chip-group>
+                    <v-chip small>{{ publishAnimation.fa.id }}</v-chip>
+                  </v-chip-group>
+                  <v-label> - {{ publishAnimation.fa.name }}</v-label>
                 </nuxt-link>
-              </td>
+              </th>
               <th
                 :rowspan="publishAnimation.fa.timeWindows.length + 1"
                 class="text-center"
@@ -82,8 +83,7 @@ export default Vue.extend({
   data(): Comcom {
     return {
       headers: [
-        { text: "Numéro", value: "faId" },
-        { text: "Nom", value: "name" },
+        { text: "FA", value: "fa" },
         { text: "Photo", value: "photoLink", align: "center" },
         { text: "Description", value: "description" },
         { text: "Catégories", value: "categories" },
@@ -116,3 +116,11 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.name-text {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+</style>
