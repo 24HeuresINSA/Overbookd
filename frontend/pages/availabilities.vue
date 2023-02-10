@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Mes disponibilités</h2>
+    <h1>Mes disponibilités</h1>
     <p>{{ detailMessage }}</p>
     <h2>Mon Charisme : {{ charisma }}</h2>
     <v-spacer></v-spacer>
@@ -68,4 +68,8 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+h1 {
+  margin-left: 12px;
+}
+</style>
