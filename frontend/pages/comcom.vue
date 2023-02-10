@@ -122,5 +122,9 @@ export default Vue.extend({
   text-decoration: none;
   display: flex;
   align-items: center;
+
+  .v-label {
+    cursor: pointer;
+  }
 }
 </style>

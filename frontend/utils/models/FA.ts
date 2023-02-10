@@ -217,7 +217,8 @@ export interface SitePublishAnimation {
   categories?: SitePublishAnimationCategoryType[];
 }
 
-export interface SitePublishAnimationWithFa extends SitePublishAnimation {
+export interface SitePublishAnimationWithFa
+  extends Required<SitePublishAnimation> {
   fa: {
     id: number;
     name: string;

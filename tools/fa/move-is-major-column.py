@@ -22,12 +22,10 @@ def main():
   faSitePublishAnimations = getAllFaSitePusblishAnimation()
   for faSitePublishAnimation in faSitePublishAnimations:
     fa = next((fa for fa in fas if fa["id"] == faSitePublishAnimation["fa"]["id"]), None)
-    # TODO: renvoyer l'ancien champ is major
-    if fa is None or not fa["isMajor"]:
+    if fa is None or not fa["is_major"]:
       continue
         
     faSitePublishAnimationData = json.dumps({"isMajor": True})
-    requests.put(f"https://{DOMAIN}/api/fa/{fa['id']}/fa-site-publish-animation/{faSitePublishAnimation['id']}", data=faSitePublishAnimationData, headers={"Authorization": f"Bearer {TOKEN}"})
+    requests.put(f"https://{DOMAIN}/api/fa-site-publish-animation/{faSitePublishAnimation['faId']}", data=faSitePublishAnimationData, headers={"Authorization": f"Bearer {TOKEN}"})
 
 main()
-
