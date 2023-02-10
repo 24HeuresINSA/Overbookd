@@ -20,8 +20,9 @@ export class FaSitePublishAnimationFormRequestDto
     required: false,
     description: 'Is the activty a major activity',
   })
+  @IsOptional()
   @IsBoolean()
-  isMajor: boolean;
+  isMajor?: boolean;
 
   @ApiProperty({
     required: false,

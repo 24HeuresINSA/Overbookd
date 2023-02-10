@@ -15,7 +15,7 @@ export interface SitePublishAnimation
 export interface LiteSitePublishAnimation {
   photoLink?: string;
   description?: string;
-  isMajor: boolean;
+  isMajor?: boolean;
   categories?: site_publish_animation_category_type[];
 }
 
