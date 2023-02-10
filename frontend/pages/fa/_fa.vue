@@ -4,8 +4,8 @@
       <h1>Fiche Activité n°{{ faId }}</h1>
       <h2>{{ faName }}</h2>
 
-      <div class="status">
-        <span class="dot" :class="faValidationStatus"></span>
+      <div id="status">
+        <span id="dot" :class="faValidationStatus"></span>
         <h3>
           {{
             mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
@@ -203,11 +203,11 @@ export default Vue.extend({
     overflow: hidden;
   }
 
-  .status {
+  #status {
     display: flex;
     align-items: center;
 
-    .dot {
+    #dot {
       height: 25px;
       width: 25px;
       border-radius: 50%;

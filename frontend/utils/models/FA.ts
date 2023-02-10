@@ -4,6 +4,7 @@ import { FTSimplified } from "./ft";
 import { StoredGearRequest } from "./gearRequests";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
+import { Period } from "./period";
 
 export enum Status {
   DRAFT = "DRAFT",
@@ -86,6 +87,7 @@ export enum SitePublishAnimationCategoryType {
   Culture = "Culture",
   Sport = "Sport",
   Enfant = "Enfant",
+  Autre = "Autre",
 }
 
 export interface FASimplified {
@@ -101,8 +103,6 @@ export interface FA extends FASimplified {
   created_at?: Date;
   location_id?: number;
   description?: string;
-  is_major?: boolean;
-  is_kids?: boolean;
   security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
@@ -116,7 +116,7 @@ export interface FA extends FASimplified {
   fa_signa_needs?: fa_signa_needs[];
   fa_comments?: fa_comments[];
   time_windows?: time_windows[];
-  faSitePublishAnimation?: FaSitePublishAnimation;
+  faSitePublishAnimation?: SitePublishAnimation;
   fts: FTSimplified[];
 }
 
@@ -189,8 +189,6 @@ export interface fa_general_update {
   status: Status;
   description?: string;
   is_publishable?: boolean;
-  is_major?: boolean;
-  is_kids?: boolean;
   security_needs?: string;
   is_pass_required?: boolean;
   number_of_pass?: number;
@@ -208,11 +206,24 @@ export interface SearchFA {
   status?: Status;
 }
 
-export interface FaSitePublishAnimation {
+export interface SitePublishAnimationCreation {
   faId: number;
+}
+
+export interface SitePublishAnimation {
   photoLink?: string;
   description?: string;
+  isMajor?: boolean;
   categories?: SitePublishAnimationCategoryType[];
+}
+
+export interface SitePublishAnimationWithFa
+  extends Required<SitePublishAnimation> {
+  fa: {
+    id: number;
+    name: string;
+    timeWindows: Period[];
+  };
 }
 
 export interface ElectricityTypeLabel {

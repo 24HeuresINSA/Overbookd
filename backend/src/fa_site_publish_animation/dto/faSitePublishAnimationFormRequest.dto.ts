@@ -1,21 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import {
-  FaSitePublishAnimation,
+  LiteSitePublishAnimation,
   SitePublishAnimationCategoryType,
 } from '../interfaces';
 
 export class FaSitePublishAnimationFormRequestDto
-  implements FaSitePublishAnimation
+  implements LiteSitePublishAnimation
 {
-  @ApiProperty({
-    required: true,
-    description: 'The id of the linked fa',
-  })
-  @IsDefined()
-  @IsNumber()
-  faId: number;
-
   @ApiProperty({
     required: true,
     description: 'The link to the photo',
@@ -23,6 +15,14 @@ export class FaSitePublishAnimationFormRequestDto
   @IsOptional()
   @IsString()
   photoLink?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Is the activty a major activity',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isMajor?: boolean;
 
   @ApiProperty({
     required: false,

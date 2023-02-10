@@ -1,26 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { site_publish_animation_category_type } from '@prisma/client';
+import { IsBoolean } from 'class-validator';
 import {
-  FaSitePublishAnimation,
+  LiteSitePublishAnimation,
   SitePublishAnimationCategoryType,
 } from '../interfaces';
 
-export class FaSitePublishAnimationResponseDto
-  implements FaSitePublishAnimation
+export class LiteSitePublishAnimationResponseDto
+  implements LiteSitePublishAnimation
 {
-  @ApiProperty({
-    required: true,
-    description: 'Related FA id of the publish animation',
-    type: Number,
-  })
-  faId: number;
-
   @ApiProperty({
     required: true,
     description: 'The link to the photo',
     type: String,
   })
   photoLink: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Is the activty a major activity',
+  })
+  @IsBoolean()
+  isMajor: boolean;
 
   @ApiProperty({
     required: true,

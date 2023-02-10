@@ -177,7 +177,6 @@ model fa {
   status                 Status?                 @default(DRAFT)
   description            String?                 @db.Text
   is_major               Boolean?                @default(false)
-  is_kids                Boolean?                @default(false)
   security_needs         String?                 @db.Text
   is_pass_required       Boolean?                @db.Boolean
   number_of_pass         Int?
@@ -327,8 +326,9 @@ model fa_comments {
 model FaSitePublishAnimation {
   fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId        Int                                    @id @map("fa_id")
-  photoLink   String?                                @map("photo_link ") @db.Text
-  description String?                                @db.Text
+  photoLink   String                                 @map("photo_link ") @db.Text @default("")
+  description String                                 @db.Text @default("")
+  isMajor     Boolean                                @default(false)
   categories  site_publish_animation_category_type[]
 
   @@map("fa_site_publish_animation")
@@ -339,6 +339,7 @@ enum site_publish_animation_category_type {
   Culture
   Sport
   Enfant
+  Autre
 }
 
 enum time_windows_type {

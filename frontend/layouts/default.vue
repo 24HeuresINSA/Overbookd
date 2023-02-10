@@ -241,7 +241,7 @@ export default {
         {
           icon: "mdi-web-sync",
           permission: "communication-read",
-          title: "Animations a publier",
+          title: "Animations à publier",
           to: "/comcom",
         },
         {
@@ -465,7 +465,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
 
     async clickOnTitle() {
       this.counter++;
-      if (this.counter > 10) {
+      if (this.counter > 24) {
         this.isJauneActive = true;
         this.title = "RICARD - Pastis";
         const audio = new Audio("audio/jaune.m4a");

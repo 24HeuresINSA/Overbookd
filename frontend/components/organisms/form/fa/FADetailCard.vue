@@ -47,19 +47,13 @@
             @change="onChangePublishAnimation('categories', $event)"
           >
           </v-combobox>
+          <v-switch
+            :input-value="mFA.faSitePublishAnimation?.isMajor"
+            label="Anim phare qui sera mise en avant sur les réseaux sociaux"
+            :disabled="isValidatedByOwner"
+            @change="onChangePublishAnimation('isMajor', $event)"
+          ></v-switch>
         </v-form>
-        <v-switch
-          :value="mFA.is_major"
-          label="Anim phare"
-          :disabled="isValidatedByOwner"
-          @change="onChange('is_major', $event)"
-        ></v-switch>
-        <v-switch
-          :value="mFA.is_kids"
-          label="Anim pour les gosses"
-          :disabled="isValidatedByOwner"
-          @change="onChange('is_kids', $event)"
-        ></v-switch>
       </v-form>
     </v-card-text>
   </v-card>
@@ -99,7 +93,7 @@ export default Vue.extend({
   watch: {
     mFA: {
       handler() {
-        if (this.mFA.faSitePublishAnimation?.faId) {
+        if (this.mFA.faSitePublishAnimation) {
           this.isPublishable = true;
         }
       },
@@ -112,15 +106,13 @@ export default Vue.extend({
       this.$accessor.FA.updateFA({ key: key, value: value });
     },
     onChangePublishAnimation(key: string, value: any) {
-      if (key !== "categories") value = value.trim();
+      if (key === "description" || key === "photoLink") value = value.trim();
       this.$accessor.FA.updatePublishAnimation({ key, value });
     },
     switchPublishAnimation(value: boolean) {
-      if (value) return this.$accessor.FA.createPublishAnimation(this.mFA.id);
+      if (value) return this.$accessor.FA.createPublishAnimation();
       if (this.mFA.faSitePublishAnimation) {
-        return this.$accessor.FA.deletePublishAnimation(
-          this.mFA.faSitePublishAnimation
-        );
+        return this.$accessor.FA.deletePublishAnimation();
       }
     },
   },

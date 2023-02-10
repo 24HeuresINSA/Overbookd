@@ -135,14 +135,6 @@ export class UpdateFaDto {
 
   @ApiProperty({
     required: false,
-    description: 'Is the activity for kids',
-  })
-  @IsOptional()
-  @IsBoolean()
-  is_kids?: boolean;
-
-  @ApiProperty({
-    required: false,
     description: 'The security needs',
   })
   @IsOptional()

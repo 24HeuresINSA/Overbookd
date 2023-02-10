@@ -18,11 +18,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FaSitePublishAnimationCreationFormRequestDto } from './dto/faSitePublishAnimationCreationForm.dto';
 import { FaSitePublishAnimationFormRequestDto } from './dto/faSitePublishAnimationFormRequest.dto';
-import { FaSitePublishAnimationResponseDto } from './dto/faSitePublishAnimationResponse.dto';
+import { LiteSitePublishAnimationResponseDto } from './dto/liteSitePublishAnimationResponse.dto';
+import { SitePublishAnimationResponseDto } from './dto/sitePublishAnimationResponse.dto';
 import { FaSitePublishAnimationService } from './fa_site_publish_animation.service';
 
 @ApiBearerAuth()
@@ -36,11 +38,11 @@ export class FaSitePublishAnimationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post()
-  @ApiBody({ type: FaSitePublishAnimationFormRequestDto })
+  @ApiBody({ type: FaSitePublishAnimationCreationFormRequestDto })
   @ApiResponse({
     status: 201,
     description: 'Create a new fa site publish animation',
-    type: FaSitePublishAnimationResponseDto,
+    type: LiteSitePublishAnimationResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -50,7 +52,7 @@ export class FaSitePublishAnimationController {
   })
   create(
     @Body()
-    publishAnimationForm: FaSitePublishAnimationFormRequestDto,
+    publishAnimationForm: FaSitePublishAnimationCreationFormRequestDto,
   ) {
     return this.faSitePublishAnimationService.create(publishAnimationForm);
   }
@@ -61,7 +63,7 @@ export class FaSitePublishAnimationController {
   @ApiResponse({
     status: 200,
     description: 'Updating a fa site publish animation',
-    type: FaSitePublishAnimationResponseDto,
+    type: LiteSitePublishAnimationResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -88,12 +90,12 @@ export class FaSitePublishAnimationController {
     status: 200,
     description: 'Get all fa site publish animations',
     isArray: true,
-    type: FaSitePublishAnimationResponseDto,
+    type: SitePublishAnimationResponseDto,
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  findAll() {
+  findAll(): Promise<SitePublishAnimationResponseDto[]> {
     return this.faSitePublishAnimationService.findAll();
   }
 
@@ -104,7 +106,7 @@ export class FaSitePublishAnimationController {
     status: 200,
     description: 'Get a fa site publish animation',
     isArray: false,
-    type: FaSitePublishAnimationResponseDto,
+    type: LiteSitePublishAnimationResponseDto,
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
