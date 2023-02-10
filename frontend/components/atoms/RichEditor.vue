@@ -6,7 +6,7 @@
       :disabled="disabled"
       :extensions="extensions"
       :toolbar-attributes="{ color: 'black', dark: true }"
-      @input="updateContent"
+      @blur="updateContent"
     />
     <template #placeholder> Loading... </template>
   </ClientOnly>

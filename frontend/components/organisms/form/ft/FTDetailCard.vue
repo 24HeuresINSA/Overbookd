@@ -8,7 +8,7 @@
           :data="mFT.description"
           class="mb-4"
           :disabled="isValidatedByOwner"
-          @change="onChange($event)"
+          @change="updateDescription($event)"
         ></RichEditor>
       </v-form>
     </v-card-text>
@@ -31,7 +31,6 @@ export default Vue.extend({
   data: () => ({
     owner: "humain",
     cardType: FTCardType.DETAIL,
-    delay: undefined as any,
   }),
   computed: {
     mFT(): FT {
@@ -45,13 +44,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(description: string) {
-      if (this.delay) clearInterval(this.delay);
-      this.delay = setTimeout(() => {
-        this.updateDescription(description);
-      }, 500);
-    },
     updateDescription(description: string) {
+      if (this.mFT.description === description) return;
       return this.updateFT({ description: description.trim() });
     },
     updateFT(ftChunk: Partial<FT>) {

@@ -31,7 +31,7 @@
         @change="updateLocation($event)"
       ></SearchSignaLocation>
       <v-switch
-        :value="mFT.isStatic"
+        :input-value="mFT.isStatic"
         label="Créneaux statiques"
         :disabled="isValidatedByOwner"
         @change="updateIsStatic($event)"
