@@ -10,21 +10,24 @@ TOKEN = "YOUR_TOKEN"
 DOMAIN = "overbookd.traefik.me"
 
 def getAllFa():
-  return requests.get(f"https://{DOMAIN}/api/fa", headers={"Authorization": f"Bearer {TOKEN}"}).json()
+  fas = requests.get(f"https://{DOMAIN}/api/fa", headers={"Authorization": f"Bearer {TOKEN}"}, verify=False).json()
+  return [requests.get(f"https://{DOMAIN}/api/fa/{fa['id']}", headers={"Authorization": f"Bearer {TOKEN}"}, verify=False).json() for fa in fas]
 
 def getAllFaSitePusblishAnimation():
-  return requests.get(f"https://{DOMAIN}/api/fa-site-publish-animation", headers={"Authorization": f"Bearer {TOKEN}"}).json()
+  return requests.get(f"https://{DOMAIN}/api/fa-site-publish-animation", headers={"Authorization": f"Bearer {TOKEN}"}, verify=False).json()
 
 def main():
   fas = getAllFa()
+  print(fas)
   faSitePublishAnimations = getAllFaSitePusblishAnimation()
   for faSitePublishAnimation in faSitePublishAnimations:
-    fa = next((fa for fa in fas if fa["id"] == faSitePublishAnimation["faId"]), None)
+    fa = next((fa for fa in fas if fa["id"] == faSitePublishAnimation["fa"]["id"]), None)
+    # TODO: renvoyer l'ancien champ is major
     if fa is None or not fa["isMajor"]:
       continue
         
     faSitePublishAnimationData = json.dumps({"isMajor": True})
-    requests.put(f"https://{DOMAIN}/api/fa/{fa.id}/fa-site-publish-animation/{faSitePublishAnimation.id}", data=faSitePublishAnimationData, headers={"Authorization": f"Bearer {TOKEN}"})
+    requests.put(f"https://{DOMAIN}/api/fa/{fa['id']}/fa-site-publish-animation/{faSitePublishAnimation['id']}", data=faSitePublishAnimationData, headers={"Authorization": f"Bearer {TOKEN}"})
 
-
+main()
 
