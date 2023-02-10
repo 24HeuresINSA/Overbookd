@@ -39,7 +39,7 @@
         </v-col>
 
         <v-col v-if="isManif()" cols="12" sm="6" md="8">
-          <AvailabilitiesCard v-if="isAvailabilityMomennt()" />
+          <AvailabilitiesSummaryCard v-if="isAvailabilityMomennt()" />
           <PlanningCard v-else />
         </v-col>
       </v-row>
@@ -69,7 +69,7 @@ import UserNotifications from "@/components/organisms/userNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
-import AvailabilitiesCard from "@/components/organisms/AvailabilitiesCard.vue";
+import AvailabilitiesSummaryCard from "~/components/organisms/availabilities/AvailabilitiesSummaryCard.vue";
 import PlanningCard from "@/components/organisms/PlanningCard.vue";
 
 export default {
@@ -79,7 +79,7 @@ export default {
     SnackNotificationContainer,
     ComptesPersosCard,
     FriendsCard,
-    AvailabilitiesCard,
+    AvailabilitiesSummaryCard,
     PlanningCard,
   },
 

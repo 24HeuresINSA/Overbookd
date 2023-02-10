@@ -42,6 +42,7 @@
 import timeslotRepo from "~/repositories/timeslotRepo.ts";
 
 export default {
+  name: "AvailabilitiesCalendar",
   props: {
     mUser: {
       type: Object,

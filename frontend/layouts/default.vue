@@ -203,6 +203,12 @@ export default {
           to: "/humans",
         },
         {
+          icon: "mdi-clock",
+          title: "Mes dispos",
+          permission: "validated-user",
+          to: "/availabilities",
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
