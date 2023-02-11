@@ -41,21 +41,26 @@
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
-        <v-row>
-          <nuxt-link class="forgot-a" to="/forgot"
-            >Mot de passe oublié ?</nuxt-link
-          >
+        <v-row class="sub-form" align="center">
+          <nuxt-link class="forgot-a" to="/forgot">
+            Mot de passe oublié ?
+          </nuxt-link>
           <v-spacer />
-          <v-btn class="forgot-a" @click="isDialogOpen = true">
+          <v-btn @click="isDialogOpen = true">
             Un problème lors de l'inscription ?
           </v-btn>
         </v-row>
       </v-container>
-      <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn btn"
-        >s'inscrire
+      <v-btn
+        color="secondary"
+        elevation="2"
+        to="/signup"
+        class="signup-btn btn"
+      >
+        s'inscrire
       </v-btn>
-      <v-btn color="primary" elevation="2" class="loginBtn btn" @click="login()"
-        >connexion
+      <v-btn color="primary" elevation="2" class="login-btn btn" @click="login">
+        connexion
       </v-btn>
     </v-form>
 
@@ -228,19 +233,34 @@ export default {
   z-index: 20;
 }
 
-.loginBtn {
+.login-btn {
   right: 20px;
 }
 
-.signupBtn {
+.signup-btn {
   left: 20px;
 }
 
-.forgot-a {
-  z-index: 2;
-  background-color: rgba(50, 50, 50, 0.7);
-  padding: 0.8rem;
-  border-radius: 0.2rem;
-  color: white;
+.sub-form {
+  .forgot-a,
+  .v-btn {
+    z-index: 2;
+    background-color: rgba(50, 50, 50, 0.7);
+    padding: 0.8rem;
+    border-radius: 0.2rem;
+    color: white;
+    padding: 12px;
+  }
+}
+
+@media only screen and (max-width: 740px) {
+  .sub-form {
+    display: flex;
+    flex-direction: column;
+
+    .forgot-a {
+      margin-bottom: 15px;
+    }
+  }
 }
 </style>
