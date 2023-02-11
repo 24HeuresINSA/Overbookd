@@ -34,6 +34,7 @@
     <v-dialog v-model="isEditVolunteerDialogOpen" max-width="700">
       <FTVolunteerRequirementForm
         :time-window="selectedTimeWindow"
+        @close-dialog="closeAllEditDialogs"
         @change="updateRequirements"
       ></FTVolunteerRequirementForm>
     </v-dialog>
