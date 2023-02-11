@@ -86,6 +86,10 @@ export interface AlsoRequestedByFT {
   period: PeriodForm;
 }
 
+export type FtIdResponse = Prisma.FtGetPayload<{
+  select: typeof FT_ID_SELECT;
+}>;
+
 const TEAM_SELECT = {
   select: {
     id: true,
@@ -183,4 +187,8 @@ export const LITE_FT_SELECT = {
   team: TEAM_SELECT,
   fa: MINIMAL_FA_SELECT,
   reviews: REVIEWS_SELECT,
+};
+
+export const FT_ID_SELECT = {
+  id: true,
 };

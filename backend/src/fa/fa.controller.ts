@@ -33,7 +33,7 @@ import { FASearchRequestDto } from './dto/faSearchRequest.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 import { FaService } from './fa.service';
-import { AllFaResponse, FaResponse } from './fa_types';
+import { AllFaResponse, FaIdResponse, FaResponse } from './fa_types';
 import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
@@ -54,6 +54,15 @@ import { StatsPayload } from 'src/common/services/stats.service';
 
 @ApiBearerAuth()
 @ApiTags('fa')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@ApiNotFoundResponse({
+  description: "Can't find a requested resource",
+})
 @Controller('fa')
 export class FaController {
   constructor(
@@ -156,12 +165,6 @@ export class FaController {
     status: 204,
     description: 'Validate a fa',
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -184,12 +187,6 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Remove a validation of fa',
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "Can't find a requested resource",
   })
   @ApiParam({
     name: 'faId',
@@ -218,12 +215,6 @@ export class FaController {
     status: 204,
     description: 'Refuse a fa',
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -241,17 +232,39 @@ export class FaController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
+  @Get(':id/previous')
+  @ApiResponse({
+    status: 200,
+    description: 'Get the previous fa',
+    type: Promise<FaIdResponse | null>,
+  })
+  findPrevious(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FaIdResponse | null> {
+    return this.faService.findPrevious(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Get(':id/next')
+  @ApiResponse({
+    status: 200,
+    description: 'Get the next fa',
+    type: Promise<FaIdResponse | null>,
+  })
+  findNext(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FaIdResponse | null> {
+    return this.faService.findNext(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
   @Post(':id/gear-requests')
   @ApiResponse({
     status: 201,
     description: 'Creating a new gear request',
     type: GearRequestResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
   })
   @ApiParam({
     name: 'id',
@@ -282,12 +295,6 @@ export class FaController {
     isArray: true,
     type: GearRequestResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -310,12 +317,6 @@ export class FaController {
     status: 200,
     description: 'Gear request approved',
     type: ApprovedGearRequestResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
   })
   @ApiParam({
     name: 'animationId',
@@ -358,12 +359,6 @@ export class FaController {
     description: 'Update an existing gear request',
     type: GearRequestResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: 'animationId',
     type: Number,
@@ -403,12 +398,6 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Gear request deleted',
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
   })
   @ApiParam({
     name: 'animationId',

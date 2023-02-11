@@ -8,6 +8,10 @@ export type AllFaResponse = Prisma.faGetPayload<{
   select: typeof ALL_FA_SELECT;
 }>;
 
+export type FaIdResponse = Prisma.faGetPayload<{
+  select: typeof FA_ID_SELECT;
+}>;
+
 export const COMPLETE_FA_SELECT = {
   id: true,
   name: true,
@@ -182,4 +186,8 @@ export const ALL_FA_SELECT = {
       },
     },
   },
+};
+
+export const FA_ID_SELECT = {
+  id: true,
 };

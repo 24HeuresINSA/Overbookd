@@ -13,6 +13,7 @@ import {
   collaborator,
   CreateFA,
   FA,
+  FAPageId,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
@@ -484,6 +485,34 @@ export const actions = actionTree(
       dispatch("save");
     },
 
+    async previousPage({ state }) {
+      const res = await safeCall<FAPageId>(
+        this,
+        repo.getPreviousFa(this, state.mFA.id),
+        {
+          errorMessage: "La FA précédente n'a pas été trouvée 😢",
+        }
+      );
+      if (!res) return;
+      return this.$router.push({
+        path: `/fa/${res.data.id}`,
+      });
+    },
+
+    async nextPage({ state }) {
+      const res = await safeCall<FAPageId>(
+        this,
+        repo.getNextFa(this, state.mFA.id),
+        {
+          errorMessage: "La FA suivante n'a pas été trouvée 😢",
+        }
+      );
+      if (!res) return;
+      return this.$router.push({
+        path: `/fa/${res.data.id}`,
+      });
+    },
+
     async addComment(
       { commit, state },
       {
@@ -692,7 +721,7 @@ export const actions = actionTree(
             ),
             {
               successMessage: "La demande de matériel a été supprimée 🗑️",
-              errorMessage: "La demande de matériel na pas a été supprimée ❌",
+              errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
             }
           )
         )
@@ -716,7 +745,7 @@ export const actions = actionTree(
               {
                 successMessage: "La demande de matériel a été supprimée 🗑️",
                 errorMessage:
-                  "La demande de matériel na pas a été supprimée ❌",
+                  "La demande de matériel n'a pas a été supprimée ❌",
               }
             )
           )

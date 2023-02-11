@@ -206,6 +206,10 @@ export interface SearchFA {
   status?: Status;
 }
 
+export interface FAPageId {
+  id: number;
+}
+
 export interface SitePublishAnimationCreation {
   faId: number;
 }

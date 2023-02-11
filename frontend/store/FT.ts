@@ -16,6 +16,7 @@ import {
   FTUserRequestUpdate,
   FTTeamRequestUpdate,
   FTUserRequest,
+  FTPageId,
 } from "~/utils/models/ft";
 import {
   Feedback,
@@ -389,6 +390,34 @@ export const actions = actionTree(
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
+    },
+
+    async previousPage({ state }) {
+      const res = await safeCall<FTPageId>(
+        this,
+        repo.getPreviousFT(this, state.mFT.id),
+        {
+          errorMessage: "La FT précédente n'a pas été trouvée 😢",
+        }
+      );
+      if (!res) return;
+      return this.$router.push({
+        path: `/ft/${res.data.id}`,
+      });
+    },
+
+    async nextPage({ state }) {
+      const res = await safeCall<FTPageId>(
+        this,
+        repo.getNextFT(this, state.mFT.id),
+        {
+          errorMessage: "La FT suivante n'a pas été trouvée 😢",
+        }
+      );
+      if (!res) return;
+      return this.$router.push({
+        path: `/ft/${res.data.id}`,
+      });
     },
 
     async updateTimeWindow(
