@@ -144,7 +144,7 @@ export function castTimeWindowWithDate(
     ...timeWindow,
     start: new Date(timeWindow.start),
     end: new Date(timeWindow.end),
-    userRequests: timeWindow.userRequests.map(castUserRequestWithDate) ?? [],
+    userRequests: timeWindow.userRequests?.map(castUserRequestWithDate) ?? [],
     teamRequests: timeWindow.teamRequests ?? [],
   };
 }
