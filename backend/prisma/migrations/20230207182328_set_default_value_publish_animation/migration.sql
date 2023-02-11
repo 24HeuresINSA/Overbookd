@@ -7,8 +7,16 @@
 
 */
 -- AlterTable
-ALTER TABLE "fa_site_publish_animation" ALTER COLUMN "photo_link " SET NOT NULL,
+ALTER TABLE "fa_site_publish_animation" 
 ALTER COLUMN "photo_link " SET DEFAULT '',
+ALTER COLUMN "description" SET DEFAULT '';
+
+-- Update Values
+UPDATE "fa_site_publish_animation" SET "photo_link " = '' where "photo_link " IS NULL;
+UPDATE "fa_site_publish_animation" SET "description" = '' where "description" IS NULL;
+
+-- AlterTable
+ALTER TABLE "fa_site_publish_animation" 
 ALTER COLUMN "description" SET NOT NULL,
-ALTER COLUMN "description" SET DEFAULT '',
+ALTER COLUMN "photo_link " SET NOT NULL,
 ALTER COLUMN "isMajor" SET NOT NULL;
