@@ -11,7 +11,6 @@ import {
   COMPLETE_FA_SELECT,
   FaIdResponse,
   FaResponse,
-  FA_ID_SELECT,
 } from './fa_types';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 
@@ -173,7 +172,9 @@ export class FaService {
         is_deleted: false,
       },
       orderBy: { id: 'desc' },
-      select: FA_ID_SELECT,
+      select: {
+        id: true,
+      },
     });
     if (previous) return previous;
 
@@ -182,7 +183,9 @@ export class FaService {
         is_deleted: false,
       },
       orderBy: { id: 'desc' },
-      select: FA_ID_SELECT,
+      select: {
+        id: true,
+      },
     });
   }
 
@@ -193,7 +196,9 @@ export class FaService {
         is_deleted: false,
       },
       orderBy: { id: 'asc' },
-      select: FA_ID_SELECT,
+      select: {
+        id: true,
+      },
     });
 
     if (next) return next;
@@ -203,7 +208,9 @@ export class FaService {
         is_deleted: false,
       },
       orderBy: { id: 'asc' },
-      select: FA_ID_SELECT,
+      select: {
+        id: true,
+      },
     });
   }
 
