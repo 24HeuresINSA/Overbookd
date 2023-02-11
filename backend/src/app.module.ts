@@ -31,6 +31,7 @@ import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
+import { CharismaGroupModule } from './charisma_group/charisma_group.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
     FtUserRequestModule,
     FtReviewsModule,
     FtTeamRequestModule,
+    CharismaGroupModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
