@@ -17,8 +17,8 @@ export class CharismaGroupService {
   }
 
   async updateCharismaGroup(
-    charismaGroup: UpdateCharismaGroupDto,
     id: number,
+    charismaGroup: UpdateCharismaGroupDto,
   ): Promise<CharismaGroupResponseDto> {
     return this.prisma.charismaGroup.update({
       where: { id },
