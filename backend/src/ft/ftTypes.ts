@@ -87,9 +87,7 @@ export interface AlsoRequestedByFT {
 }
 
 export type FtIdResponse = {
-  select: {
-    id: number;
-  };
+  id: number;
 };
 
 const TEAM_SELECT = {

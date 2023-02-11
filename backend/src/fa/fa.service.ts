@@ -166,20 +166,9 @@ export class FaService {
   }
 
   async findPrevious(id: number): Promise<FaIdResponse | null> {
-    const previous = await this.prisma.fa.findFirst({
-      where: {
-        id: { lt: id },
-        is_deleted: false,
-      },
-      orderBy: { id: 'desc' },
-      select: {
-        id: true,
-      },
-    });
-    if (previous) return previous;
-
     return this.prisma.fa.findFirst({
       where: {
+        id: { lt: id },
         is_deleted: false,
       },
       orderBy: { id: 'desc' },
@@ -190,21 +179,9 @@ export class FaService {
   }
 
   async findNext(id: number): Promise<FaIdResponse | null> {
-    const next = await this.prisma.fa.findFirst({
-      where: {
-        id: { gt: id },
-        is_deleted: false,
-      },
-      orderBy: { id: 'asc' },
-      select: {
-        id: true,
-      },
-    });
-
-    if (next) return next;
-
     return this.prisma.fa.findFirst({
       where: {
+        id: { gt: id },
         is_deleted: false,
       },
       orderBy: { id: 'asc' },

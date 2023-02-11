@@ -401,6 +401,12 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
+      if (!res.data) {
+        alert("Il n'y a pas de FT avant celle-ci 😢");
+        return this.$router.push({
+          path: `/ft`,
+        });
+      }
       return this.$router.push({
         path: `/ft/${res.data.id}`,
       });
@@ -415,6 +421,12 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
+      if (!res.data) {
+        alert("🎉 Tu as atteint la dernière FT ! 🎉");
+        return this.$router.push({
+          path: `/ft`,
+        });
+      }
       return this.$router.push({
         path: `/ft/${res.data.id}`,
       });
