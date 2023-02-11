@@ -497,7 +497,7 @@ export const actions = actionTree(
       if (!res.data) {
         alert("Il n'y a pas de FA avant celle-ci 😢");
         return this.$router.push({
-          path: `/ft`,
+          path: `/fa`,
         });
       }
       return this.$router.push({
@@ -517,7 +517,7 @@ export const actions = actionTree(
       if (!res.data) {
         alert("🎉 Tu as atteint la dernière FA ! 🎉");
         return this.$router.push({
-          path: `/ft`,
+          path: `/fa`,
         });
       }
       return this.$router.push({
