@@ -58,10 +58,11 @@
       </v-card-text>
 
       <v-card-actions>
+        <v-btn text @click="closeDialog"> Annuler </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="confirmVolunteerRequirement"
-          >Sauvegarder</v-btn
-        >
+        <v-btn color="blue darken-1" text @click="confirmVolunteerRequirement">
+          Sauvegarder
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -111,6 +112,7 @@ export default Vue.extend({
       number: isNumber,
       min: min(1),
     },
+    hasChanges: false,
   }),
   computed: {
     allUserRequests(): FTUserRequest[] {
@@ -160,6 +162,7 @@ export default Vue.extend({
   },
   methods: {
     updateLocalVariable() {
+      this.hasChanges = false;
       if (!this.timeWindow) return;
       this.savedUserRequests = this.timeWindow.userRequests;
       this.savedTeamRequests = this.timeWindow.teamRequests;
@@ -179,6 +182,7 @@ export default Vue.extend({
       };
       this.newTeamRequests.push(teamRequest);
       this.clearTeamRequestValue();
+      this.hasChanges = true;
     },
     addUserRequest() {
       if (!this.selectedUser) return;
@@ -192,6 +196,7 @@ export default Vue.extend({
       });
       this.newUserRequests.push(userRequest);
       this.selectedUser = null;
+      this.hasChanges = true;
     },
     async deleteTeamRequest(teamRequest: FTTeamRequest) {
       if (!this.isSavedTeamRequest(teamRequest)) {
@@ -247,10 +252,20 @@ export default Vue.extend({
       );
     },
     confirmVolunteerRequirement() {
+      if (!this.hasChanges) {
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "warning",
+          message:
+            "🤔 Tu n'as pas fait de demandes, n'oublie pas d'appuyer sur +",
+        });
+      }
       this.$emit("change", this.mTimeWindow);
     },
     displayUsername(user: User): string {
       return formatUsername(user);
+    },
+    closeDialog() {
+      this.$emit("close-dialog");
     },
   },
 });
