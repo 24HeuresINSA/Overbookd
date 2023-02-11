@@ -74,10 +74,10 @@ model User {
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
 
-  ftsInCharge     Ft[]              @relation("inCharge")
-  ftFeedbacks     FtFeedback[]
-  ftUserRequests  FtUserRequest[]
-  UserAvailabilty UserAvailabilty[]
+  ftsInCharge    Ft[]              @relation("inCharge")
+  ftFeedbacks    FtFeedback[]
+  ftUserRequests FtUserRequest[]
+  availabilities UserAvailabilty[]
 }
 
 model Team {
@@ -544,6 +544,9 @@ model CharismaGroup {
   start       DateTime
   end         DateTime
 
+  @@index([start(sort: Asc)])
+  @@index([end(sort: Asc)])
+  @@index([start(sort: Asc), end(sort: Asc)])
   @@map("charisma_group")
 }
 
@@ -554,5 +557,8 @@ model UserAvailabilty {
   end    DateTime
 
   @@unique([userId, start, end])
+  @@index([start(sort: Asc)])
+  @@index([end(sort: Asc)])
+  @@index([start(sort: Asc), end(sort: Asc)])
   @@map("user_availabilty")
 }

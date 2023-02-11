@@ -18,6 +18,24 @@ CREATE TABLE "user_availabilty" (
 );
 
 -- CreateIndex
+CREATE INDEX "charisma_group_start_idx" ON "charisma_group"("start" ASC);
+
+-- CreateIndex
+CREATE INDEX "charisma_group_end_idx" ON "charisma_group"("end" ASC);
+
+-- CreateIndex
+CREATE INDEX "charisma_group_start_end_idx" ON "charisma_group"("start" ASC, "end" ASC);
+
+-- CreateIndex
+CREATE INDEX "user_availabilty_start_idx" ON "user_availabilty"("start" ASC);
+
+-- CreateIndex
+CREATE INDEX "user_availabilty_end_idx" ON "user_availabilty"("end" ASC);
+
+-- CreateIndex
+CREATE INDEX "user_availabilty_start_end_idx" ON "user_availabilty"("start" ASC, "end" ASC);
+
+-- CreateIndex
 CREATE UNIQUE INDEX "user_availabilty_user_id_start_end_key" ON "user_availabilty"("user_id", "start", "end");
 
 -- AddForeignKey
