@@ -10,8 +10,8 @@
             class="logo"
           ></v-img>
         </v-row>
-        <v-row>
-          <h2 class="version">
+        <v-row class="version justify-center">
+          <h2>
             {{ version }}
           </h2>
         </v-row>
@@ -41,12 +41,12 @@
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
-        <v-row class="sub-form" align="center">
+        <v-row class="sub-form justify-center" align="center">
           <nuxt-link class="forgot-a" to="/forgot">
             Mot de passe oublié ?
           </nuxt-link>
           <v-spacer />
-          <v-btn @click="isDialogOpen = true">
+          <v-btn class="problem-btn" @click="isDialogOpen = true">
             Un problème lors de l'inscription ?
           </v-btn>
         </v-row>
@@ -171,7 +171,7 @@ export default {
   },
 
   methods: {
-    login: async function () {
+    async login() {
       try {
         if (this.credentials.email && this.credentials.password) {
           await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
@@ -213,10 +213,13 @@ export default {
 }
 
 .version {
-  right: -40%;
-  position: relative;
-  color: red;
   z-index: 20;
+  text-align: center;
+  position: relative;
+
+  h2 {
+    color: red;
+  }
 }
 
 .form-container {
@@ -243,23 +246,22 @@ export default {
 
 .sub-form {
   .forgot-a,
-  .v-btn {
+  .problem-btn {
     z-index: 2;
     background-color: rgba(50, 50, 50, 0.7);
     padding: 0.8rem;
     border-radius: 0.2rem;
     color: white;
-    padding: 12px;
   }
 }
 
 @media only screen and (max-width: 740px) {
   .sub-form {
-    display: flex;
     flex-direction: column;
 
-    .forgot-a {
-      margin-bottom: 15px;
+    .problem-btn {
+      margin-top: 115px;
+      position: absolute;
     }
   }
 }
