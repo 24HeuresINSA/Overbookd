@@ -46,7 +46,8 @@
       "release",
       "Location",
       "animation",
-      "FT"
+      "FT",
+      "Availabilities"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],

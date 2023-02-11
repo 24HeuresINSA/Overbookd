@@ -74,9 +74,10 @@ model User {
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
 
-  ftsInCharge    Ft[]            @relation("inCharge")
-  ftFeedbacks    FtFeedback[]
-  ftUserRequests FtUserRequest[]
+  ftsInCharge     Ft[]              @relation("inCharge")
+  ftFeedbacks     FtFeedback[]
+  ftUserRequests  FtUserRequest[]
+  UserAvailabilty UserAvailabilty[]
 }
 
 model Team {
@@ -326,8 +327,8 @@ model fa_comments {
 model FaSitePublishAnimation {
   fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId        Int                                    @id @map("fa_id")
-  photoLink   String                                 @map("photo_link ") @db.Text @default("")
-  description String                                 @db.Text @default("")
+  photoLink   String                                 @default("") @map("photo_link ") @db.Text
+  description String                                 @default("") @db.Text
   isMajor     Boolean                                @default(false)
   categories  site_publish_animation_category_type[]
 
@@ -481,9 +482,9 @@ model FtTimeWindows {
   userRequests FtUserRequest[]
   teamRequests FtTeamRequest[]
 
-  @@map("ft_time_windows")
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
+  @@map("ft_time_windows")
 }
 
 model FtUserRequest {
@@ -533,4 +534,25 @@ model InventoryRecord {
 
   @@unique([gearId, storage])
   @@map("inventory_record")
+}
+
+model CharismaGroup {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  charisma    Int      @default(5)
+  start       DateTime
+  end         DateTime
+
+  @@map("charisma_group")
+}
+
+model UserAvailabilty {
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int      @map("user_id")
+  start  DateTime
+  end    DateTime
+
+  @@unique([userId, start, end])
+  @@map("user_availabilty")
 }
