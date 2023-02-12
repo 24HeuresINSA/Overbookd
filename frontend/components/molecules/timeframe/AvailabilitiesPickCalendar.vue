@@ -7,7 +7,7 @@
       :weekday-format="() => ''"
       :start="start"
       :end="end"
-      class="no-scroll"
+      class="no-scroll elevation-2"
     >
       <template #day-label-header="{ date }">
         <div class="day-header">
@@ -112,10 +112,12 @@ export default Vue.extend({
   justify-content: center;
   align-items: center;
   position: relative;
+  user-select: none;
 }
 
 .selected {
   background-color: rgba(25, 118, 210, 1);
+  color: white;
 }
 
 /* Hover only on computer but not with touchscreen */
