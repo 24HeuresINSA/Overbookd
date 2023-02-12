@@ -14,7 +14,10 @@
 
         <v-stepper-items>
           <v-stepper-content step="1">
-            <AvailabilitiesPickCalendar start="2023-05-08" end="2023-05-14" />
+            <AvailabilitiesPickCalendar
+              start="2023-05-08 00:00"
+              end="2023-05-14 23:59"
+            />
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" @click="incrementStep"> Suivant </v-btn>
@@ -22,7 +25,10 @@
           </v-stepper-content>
 
           <v-stepper-content step="2">
-            <AvailabilitiesPickCalendar start="2023-05-15" end="2023-05-17" />
+            <AvailabilitiesPickCalendar
+              start="2023-05-15 00:00"
+              end="2023-05-17 23:59"
+            />
             <v-card-actions>
               <v-btn @click="decrementStep"> Précédent </v-btn>
               <v-spacer></v-spacer>
