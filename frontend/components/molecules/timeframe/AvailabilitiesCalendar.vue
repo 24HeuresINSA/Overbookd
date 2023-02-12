@@ -33,8 +33,9 @@
             height: 100%;
             width: 100%;
           "
-        ></div> </template
-    ></v-calendar>
+        />
+      </template>
+    </v-calendar>
   </div>
 </template>
 

@@ -4,17 +4,15 @@
     <p>{{ detailMessage }}</p>
     <h2>Mon Charisme : {{ charisma }}</h2>
     <v-spacer></v-spacer>
-    <v-container>
-      <AvailabilitiesCard />
-      <v-row>
-        <v-col v-for="group in existingGroupTitles" :key="group.title" md="12">
-          <TimeslotTable
-            v-if="!group.onlyForHard || $accessor.user.me.team.includes('hard')"
-            :group-title="group.title"
-          ></TimeslotTable>
-        </v-col>
-      </v-row>
-    </v-container>
+    <AvailabilitiesCard />
+    <v-row>
+      <v-col v-for="group in existingGroupTitles" :key="group.title" md="12">
+        <TimeslotTable
+          v-if="!group.onlyForHard || $accessor.user.me.team.includes('hard')"
+          :group-title="group.title"
+        ></TimeslotTable>
+      </v-col>
+    </v-row>
     <TimeslotSnackBar></TimeslotSnackBar>
   </div>
 </template>

@@ -3,33 +3,44 @@
     <v-calendar
       ref="refCalendar"
       type="week"
-      :short-weekdays="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-      :events="events"
-      :event-ripple="false"
+      :weekday-format="() => ''"
       :start="start"
       :end="end"
-      color="primary"
-      class="elevation-1"
-      @click:event="activeEvent"
-      @mouseover:event="hoverEvent"
-      @mouseleave:event="leaveEvent"
-    ></v-calendar>
+      class="no-scroll"
+    >
+      <template #day-label-header="{ date }">
+        <div class="day-header">
+          <p>
+            {{
+              new Date(date).toLocaleDateString("fr-FR", { weekday: "short" })
+            }}
+          </p>
+          <p>
+            {{ new Date(date).toLocaleDateString("fr-FR", { day: "numeric" }) }}
+          </p>
+        </div>
+      </template>
+      <template #interval="{ date, time }">
+        <div
+          v-if="!dayEvent(time) || getHour(time) % 2 === 0"
+          class="event"
+          :class="{
+            'two-hours': dayEvent(time),
+            'one-hour': !dayEvent(time),
+            selected: isSelected(date, time),
+          }"
+          @click="selectEvent(date, time)"
+        >
+          5
+        </div>
+      </template>
+    </v-calendar>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-
-interface CalendarTimeWindow {
-  start: Date;
-  end: Date;
-  color: string;
-  name: string;
-  timed: boolean;
-  active: boolean;
-  hover: boolean;
-}
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",
@@ -44,57 +55,106 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    events: [] as CalendarTimeWindow[],
+    selected: [] as any[],
   }),
-  async mounted() {
-    this.initEvents();
+  computed: {
+    isSelected() {
+      return (date: string, time: string) => {
+        const hour = this.getHour(time);
+        const selected = this.selected.find(
+          (event) =>
+            event.start.getDate() === new Date(date).getDate() &&
+            event.start.getHours() === hour
+        );
+        return selected !== undefined;
+      };
+    },
   },
   methods: {
-    initEvents() {
-      let currentDate = new Date(this.start);
-      currentDate.setHours(0);
-      currentDate.setMinutes(0);
-
-      let endDate = new Date(this.end);
-      while (currentDate < endDate) {
-        let event: CalendarTimeWindow = {
-          start: currentDate,
-          end: new Date(currentDate),
-          color: "rgba(25,118,210,0.20)",
-          name: "Créneau",
-          timed: true,
-          active: false,
-          hover: false,
-        };
-        event.end.setHours(event.end.getHours() + 2);
-        this.events.push(event);
-        currentDate = event.end;
-      }
-      console.log(this.events);
+    getHour(time: string) {
+      return parseInt(time.split(":")[0]);
     },
-    activeEvent({ event }: { event: CalendarTimeWindow }) {
-      event.active = !event.active;
-      if (!event.active) {
-        console.log("desactive");
-        event.color = "rgba(25,118,210,0.20)";
+    dayEvent(time: string) {
+      const hour = this.getHour(time);
+      return hour >= 6 && hour <= 19;
+    },
+    selectEvent(date: string, time: string) {
+      if (this.isSelected(date, time)) {
+        this.selected = this.selected.filter(
+          (event) =>
+            event.start.getDate() !== new Date(date).getDate() ||
+            event.start.getHours() !== this.getHour(time)
+        );
         return;
       }
-      console.log("active");
-      event.color = "primary";
-      event.hover = false;
-    },
-    hoverEvent({ event }: { event: CalendarTimeWindow }) {
-      if (event.hover || event.active) return;
-      console.log("hover");
-      event.color = "primary";
-      event.hover = true;
-    },
-    leaveEvent({ event }: { event: CalendarTimeWindow }) {
-      if (!event.hover || event.active) return;
-      console.log("leave");
-      event.color = "rgba(25,118,210,0.20)";
-      event.hover = false;
+      const hour = this.getHour(time);
+      let length = 1;
+      if (this.dayEvent(time)) {
+        length = 2;
+      }
+      this.selected.push({
+        start: new Date(`${date} ${time}`),
+        end: new Date(`${date} ${time}`).setHours(hour + length),
+      });
     },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.event {
+  background-color: rgba(25, 118, 210, 0.2);
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.selected {
+  background-color: rgba(25, 118, 210, 1);
+}
+
+/* Hover only on computer but not with touchscreen */
+@media (hover: hover) and (pointer: fine) {
+  .event:hover {
+    background-color: rgba(25, 118, 210, 0.8);
+  }
+}
+
+.one-hour {
+  height: 100%;
+}
+
+.two-hours {
+  height: 200%;
+}
+
+.day-header {
+  min-height: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin: 0;
+  }
+}
+</style>
+
+<style lang="scss">
+/* hide the scrollbar */
+.no-scroll {
+  .v-calendar-daily__head {
+    margin-right: 0;
+  }
+
+  .v-calendar-daily__scroll-area {
+    overflow: hidden;
+  }
+}
+</style>
