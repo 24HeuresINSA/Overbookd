@@ -10,8 +10,8 @@
             class="logo"
           ></v-img>
         </v-row>
-        <v-row>
-          <h2 class="version">
+        <v-row class="version justify-center">
+          <h2>
             {{ version }}
           </h2>
         </v-row>
@@ -41,21 +41,26 @@
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
-        <v-row>
-          <nuxt-link class="forgot-a" to="/forgot"
-            >Mot de passe oublié ?</nuxt-link
-          >
+        <v-row class="sub-form justify-center" align="center">
+          <nuxt-link class="forgot-a" to="/forgot">
+            Mot de passe oublié ?
+          </nuxt-link>
           <v-spacer />
-          <v-btn class="forgot-a" @click="isDialogOpen = true">
+          <v-btn class="problem-btn" @click="isDialogOpen = true">
             Un problème lors de l'inscription ?
           </v-btn>
         </v-row>
       </v-container>
-      <v-btn color="secondary" elevation="2" to="/signup" class="signupBtn btn"
-        >s'inscrire
+      <v-btn
+        color="secondary"
+        elevation="2"
+        to="/signup"
+        class="signup-btn btn"
+      >
+        s'inscrire
       </v-btn>
-      <v-btn color="primary" elevation="2" class="loginBtn btn" @click="login()"
-        >connexion
+      <v-btn color="primary" elevation="2" class="login-btn btn" @click="login">
+        connexion
       </v-btn>
     </v-form>
 
@@ -166,7 +171,7 @@ export default {
   },
 
   methods: {
-    login: async function () {
+    async login() {
       try {
         if (this.credentials.email && this.credentials.password) {
           await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
@@ -208,10 +213,13 @@ export default {
 }
 
 .version {
-  right: -40%;
-  position: relative;
-  color: red;
   z-index: 20;
+  text-align: center;
+  position: relative;
+
+  h2 {
+    color: red;
+  }
 }
 
 .form-container {
@@ -228,19 +236,33 @@ export default {
   z-index: 20;
 }
 
-.loginBtn {
+.login-btn {
   right: 20px;
 }
 
-.signupBtn {
+.signup-btn {
   left: 20px;
 }
 
-.forgot-a {
-  z-index: 2;
-  background-color: rgba(50, 50, 50, 0.7);
-  padding: 0.8rem;
-  border-radius: 0.2rem;
-  color: white;
+.sub-form {
+  .forgot-a,
+  .problem-btn {
+    z-index: 2;
+    background-color: rgba(50, 50, 50, 0.7);
+    padding: 0.8rem;
+    border-radius: 0.2rem;
+    color: white;
+  }
+}
+
+@media only screen and (max-width: 740px) {
+  .sub-form {
+    flex-direction: column;
+
+    .problem-btn {
+      margin-top: 115px;
+      position: absolute;
+    }
+  }
 }
 </style>
