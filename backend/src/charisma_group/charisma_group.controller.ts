@@ -39,8 +39,7 @@ import { UpdateCharismaGroupDto } from './dto/updateCharismaGroup.dto';
 export class CharismaGroupController {
   constructor(private readonly charismaGroupService: CharismaGroupService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('validated-user')
+  @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(200)
   @ApiResponse({
@@ -53,8 +52,7 @@ export class CharismaGroupController {
     return this.charismaGroupService.findAllCharismaGroups();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('validated-user')
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @HttpCode(200)
   @ApiResponse({
@@ -75,7 +73,7 @@ export class CharismaGroupController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-team')
+  @Permission('can-affect')
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -94,7 +92,7 @@ export class CharismaGroupController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-team')
+  @Permission('can-affect')
   @Put(':id')
   @HttpCode(200)
   @ApiResponse({
@@ -120,7 +118,7 @@ export class CharismaGroupController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-team')
+  @Permission('can-affect')
   @Delete(':id')
   @HttpCode(204)
   @ApiResponse({
