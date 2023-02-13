@@ -38,7 +38,7 @@
     "@nestjs/common": "^9.3.3",
     "@nestjs/core": "^9.3.3",
     "@nestjs/jwt": "^10.0.1",
-    "@nestjs/passport": "^9.0.1",
+    "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.3.3",
     "@nestjs/swagger": "^6.2.1",
     "@prisma/client": "^4.9.0",
