@@ -6,7 +6,7 @@
     :solo="boxed"
     :filled="boxed"
     return-object
-    @change="propagateEvent"
+    @change="updateDate"
   >
   </v-text-field>
 </template>
@@ -51,7 +51,7 @@ export default Vue.extend({
     this.dateStringified = this.stringifyDate(this.date);
   },
   methods: {
-    propagateEvent(date: string) {
+    updateDate(date: string) {
       const roundedMinutes = roundMinutes(new Date(date), this.step);
       this.$emit("change", roundedMinutes);
     },
