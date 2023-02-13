@@ -198,7 +198,7 @@ export default Vue.extend({
         { text: "FA", value: "fa" },
         { text: "Resp", value: "userInCharge" },
         { text: "Equipe", value: "team" },
-        { text: "Action", value: "action" },
+        { text: "Action", value: "action", sortable: false },
       ],
       filters: {
         search: "",
