@@ -1,12 +1,12 @@
 <template>
   <v-text-field
-    :value="dateStringified"
+    v-model="dateStringified"
     :label="label"
     type="datetime-local"
     :solo="boxed"
     :filled="boxed"
     return-object
-    @change="propagateEvent"
+    @change="updateDate"
   >
   </v-text-field>
 </template>
@@ -34,15 +34,25 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-  },
-  computed: {
-    dateStringified(): string {
-      return this.stringifyDate(this.date);
+    step: {
+      type: Number,
+      default: 15,
     },
   },
+  data: () => ({
+    dateStringified: "",
+  }),
+  watch: {
+    date() {
+      this.dateStringified = this.stringifyDate(this.date);
+    },
+  },
+  mounted() {
+    this.dateStringified = this.stringifyDate(this.date);
+  },
   methods: {
-    propagateEvent(date: string) {
-      const roundedMinutes = roundMinutes(new Date(date), 15);
+    updateDate(date: string) {
+      const roundedMinutes = roundMinutes(new Date(date), this.step);
       this.$emit("change", roundedMinutes);
     },
     stringifyDate(date?: Date | string): string {

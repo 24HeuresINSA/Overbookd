@@ -1,42 +1,42 @@
 <template>
-  <div>
-    <v-card class="form-card">
-      <v-card-title>
-        <span class="headline">Ajouter un créneau</span>
-      </v-card-title>
+  <v-card class="form-card">
+    <v-card-title>
+      <span class="headline">
+        {{ isEditForm ? "Modifier" : "Ajouter" }} un créneau
+      </span>
+    </v-card-title>
 
-      <v-card-subtitle v-show="displayedManifDate !== ''">
-        La manif commencera le {{ displayedManifDate }}.
-      </v-card-subtitle>
+    <v-card-subtitle v-show="displayedManifDate !== ''">
+      La manif commencera le {{ displayedManifDate }}.
+    </v-card-subtitle>
 
-      <v-card-text>
-        <h3>Début du créneau</h3>
-        <DateField v-model="start" label="Début"></DateField>
+    <v-card-text>
+      <h3>Début du créneau</h3>
+      <DateField v-model="start" label="Début"></DateField>
 
-        <h3>Fin du créneau</h3>
-        <DateField v-model="end" label="Fin"></DateField>
+      <h3>Fin du créneau</h3>
+      <DateField v-model="end" label="Fin"></DateField>
 
-        <h3>Découpage du créneau</h3>
-        <v-checkbox v-model="toSlice" label="Découper"></v-checkbox>
-        <v-slider
-          v-model="sliceTime"
-          label="Nombre d'heures par découpage"
-          :disabled="!toSlice"
-          min="0.5"
-          max="4"
-          step="0.5"
-          thumb-label="always"
-        ></v-slider>
-      </v-card-text>
+      <h3>Découpage du créneau</h3>
+      <v-checkbox v-model="toSlice" label="Découper"></v-checkbox>
+      <v-slider
+        v-model="sliceTime"
+        label="Nombre d'heures par découpage"
+        :disabled="!toSlice"
+        min="0.5"
+        max="4"
+        step="0.5"
+        thumb-label="always"
+      ></v-slider>
+    </v-card-text>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="confirmTimeWindows">
-          {{ isEditForm ? "Modifier" : "Ajouter" }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="blue darken-1" text @click="confirmTimeWindows">
+        {{ isEditForm ? "Modifier" : "Ajouter" }}
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts">
