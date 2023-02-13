@@ -24,11 +24,13 @@
         @confirm="updateAvailability"
       ></AvailabilitiesCreationForm>
     </v-dialog>
+    <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AvailabilitiesCreationCalendar from "~/components/molecules/timeframe/AvailabilitiesCreationCalendar.vue";
 import AvailabilitiesCreationForm from "~/components/molecules/timeframe/AvailabilitiesCreationForm.vue";
 import AvailabilitiesCreationTable from "~/components/molecules/timeframe/AvailabilitiesCreationTable.vue";
@@ -39,6 +41,7 @@ export default Vue.extend({
     AvailabilitiesCreationTable,
     AvailabilitiesCreationCalendar,
     AvailabilitiesCreationForm,
+    SnackNotificationContainer,
   },
   data: () => ({
     selectedAvailability: null,

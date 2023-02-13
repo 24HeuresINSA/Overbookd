@@ -45,12 +45,17 @@ export default Vue.extend({
         {
           start: new Date("2023-05-12 22:00"),
           end: new Date("2023-05-13 02:00"),
-          charisma: 1,
+          charisma: 10,
         },
         {
-          start: new Date(),
-          end: new Date(),
+          start: new Date("2023-05-11 00:00"),
+          end: new Date("2023-05-12 20:00"),
           charisma: 5,
+        },
+        {
+          start: new Date("2023-05-10 00:00"),
+          end: new Date("2023-05-10 20:00"),
+          charisma: 1,
         },
       ];
     },

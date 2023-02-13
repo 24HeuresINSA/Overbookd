@@ -17,8 +17,7 @@
       ref="formCalendar"
       v-model="value"
       type="week"
-      :events="availabilities"
-      :event-color="getCharismaColor"
+      :events="calendarEvents"
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
     ></v-calendar>
@@ -28,6 +27,14 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+
+interface CalendarAvailability {
+  start: Date;
+  end: Date;
+  name: string;
+  color: string;
+  timed: true;
+}
 
 export default Vue.extend({
   name: "AvailabilitiesCreationCalendar",
@@ -44,26 +51,46 @@ export default Vue.extend({
           charisma: 10,
         },
         {
-          start: new Date(),
-          end: new Date(),
+          start: new Date("2023-05-11 00:00"),
+          end: new Date("2023-05-12 20:00"),
           charisma: 5,
+        },
+        {
+          start: new Date("2023-05-10 00:00"),
+          end: new Date("2023-05-10 20:00"),
+          charisma: 1,
         },
       ];
     },
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.value);
     },
+    calendarEvents(): CalendarAvailability[] {
+      return this.availabilities.map((a) => ({
+        start: a.start,
+        end: a.end,
+        name: a.charisma.toString(),
+        color: this.getCharismaColor(a.charisma),
+        timed: true,
+      }));
+    },
     manifDate(): Date {
       return new Date(this.$accessor.config.getConfig("event_date"));
+    },
+    maxCharisma(): number {
+      return Math.max(...this.availabilities.map((a) => a.charisma));
     },
   },
   mounted() {
     this.value = this.manifDate;
   },
   methods: {
-    getCharismaColor({ charisma }: any) {
-      const opacity = charisma / 15;
-      return `rgba(25, 118, 210, ${opacity})`;
+    getCharismaColor(charisma: number) {
+      const ratio = charisma / this.maxCharisma;
+      const red = Math.round(ratio * (33 - 255) + 255);
+      const green = Math.round(ratio * (150 - 255) + 255);
+      const blue = Math.round(ratio * (243 - 255) + 255);
+      return `rgb(${red}, ${green}, ${blue})`;
     },
     previousPage() {
       const calendar = this.$refs.formCalendar;

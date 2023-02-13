@@ -27,8 +27,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CalendarItem } from "~/store/calendar";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+
+interface CalendarTimeWindow {
+  start: Date;
+  end: Date;
+  color: string;
+  name: string;
+  timed: true;
+}
 
 export default Vue.extend({
   name: "FestivalEventCalendar",
@@ -48,13 +55,13 @@ export default Vue.extend({
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.value);
     },
-    calendarTimeWindows(): CalendarItem[] {
+    calendarTimeWindows(): CalendarTimeWindow[] {
       return this.festivalEvent === "FA"
         ? this.faTimeWindows
         : this.ftTimeWindows;
     },
-    faTimeWindows(): CalendarItem[] {
-      const animationTimeWindows: CalendarItem[] = (
+    faTimeWindows(): CalendarTimeWindow[] {
+      const animationTimeWindows: CalendarTimeWindow[] = (
         this.$accessor.FA.mFA.time_windows ?? []
       ).map((timeWindow) => ({
         start: timeWindow.start,
@@ -64,7 +71,7 @@ export default Vue.extend({
         name: "Tenue de l'animation",
       }));
 
-      const gearTimeWindows: CalendarItem[] =
+      const gearTimeWindows: CalendarTimeWindow[] =
         this.$accessor.FA.gearRequestRentalPeriods.map(
           (gearRequestRentalPeriod) => ({
             start: gearRequestRentalPeriod.start,
@@ -77,7 +84,7 @@ export default Vue.extend({
 
       return [...animationTimeWindows, ...gearTimeWindows];
     },
-    ftTimeWindows(): CalendarItem[] {
+    ftTimeWindows(): CalendarTimeWindow[] {
       return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
         start: timeWindow.start,
         end: timeWindow.end,
