@@ -1,14 +1,20 @@
 <template>
-  <v-data-table :headers="headers">
+  <v-data-table
+    :headers="headers"
+    :items="availabilities"
+    :items-per-page="-1"
+    sort-by="start"
+    dense
+  >
     <template #item.start="{ item }">
       {{ formatDate(item.start) }}
     </template>
     <template #item.end="{ item }">
       {{ formatDate(item.end) }}
     </template>
-    <template #item.action="{ item }">
+    <template #item.actions="{ item }">
       <v-btn icon @click="updateAvailability(item)">
-        <v-icon>mdi-clock-edit</v-icon>
+        <v-icon>mdi-pencil</v-icon>
       </v-btn>
       <v-btn icon @click="deleteAvailability(item)">
         <v-icon>mdi-trash-can</v-icon>
@@ -28,10 +34,27 @@ export default Vue.extend({
     headers: [
       { text: "Début", value: "start" },
       { text: "Fin", value: "end" },
-      { text: "Charisme", value: "charisma" },
+      { text: "Charisme/h", value: "charisma" },
       { text: "Actions", value: "actions", sortable: false },
     ],
   }),
+  computed: {
+    availabilities(): any[] {
+      // TODO: call store
+      return [
+        {
+          start: new Date("2023-05-12 22:00"),
+          end: new Date("2023-05-13 02:00"),
+          charisma: 1,
+        },
+        {
+          start: new Date(),
+          end: new Date(),
+          charisma: 5,
+        },
+      ];
+    },
+  },
   methods: {
     updateAvailability(availability: any) {
       this.$emit("update", availability);

@@ -14,7 +14,7 @@
       <v-text-field
         v-model="charisma"
         type="number"
-        label="Charisme"
+        label="Charisme par heure"
         :rules="[rules.number, rules.min]"
       ></v-text-field>
     </v-card-text>
