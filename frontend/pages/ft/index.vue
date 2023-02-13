@@ -373,6 +373,7 @@ h1 {
 
   .data-table {
     margin-left: 20px;
+    margin-bottom: 45px;
     height: fit-content;
     width: 100vw;
 
