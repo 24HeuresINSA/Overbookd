@@ -59,7 +59,6 @@
 
                   <v-btn :value="false" small> Non payée</v-btn>
                 </v-btn-toggle>
-                <v-btn text @click="exportCSV">exporter</v-btn>
               </template>
             </v-card-text>
           </v-card>
@@ -76,6 +75,9 @@
                 <v-btn :value="true" small> oui</v-btn>
                 <v-btn :value="false" small> Non</v-btn>
               </v-btn-toggle>
+            </v-card-text>
+            <v-card-text>
+              <v-btn text @click="exportCSV">exporter</v-btn>
             </v-card-text>
           </v-card>
         </v-col>
