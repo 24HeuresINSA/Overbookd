@@ -203,6 +203,12 @@ export default {
           to: "/humans",
         },
         {
+          icon: "mdi-clock-edit",
+          title: "Créer dispos",
+          permission: "can-affect",
+          to: "/createavailibility", //TODO: change this to /createavailability
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
