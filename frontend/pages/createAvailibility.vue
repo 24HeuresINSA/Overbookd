@@ -3,17 +3,26 @@
     <v-card>
       <v-card-title>Création des disponibilités pour la manif</v-card-title>
       <v-card-text>
-        <AvailabilitiesCreationTable />
+        <AvailabilitiesCreationTable
+          @update="openEditDialog"
+          @delete="deleteAvailability"
+        ></AvailabilitiesCreationTable>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn @click="openDialog"> Ajouter un créneau </v-btn>
+        <v-btn @click="openAddDialog"> Ajouter un créneau </v-btn>
       </v-card-actions>
       <AvailabilitiesCreationCalendar />
     </v-card>
 
-    <v-dialog v-model="isDialogOpen" max-width="600px">
-      <AvailabilitiesCreationForm />
+    <v-dialog v-model="isAddDialogOpen" max-width="600px">
+      <AvailabilitiesCreationForm @confirm="addAvailability" />
+    </v-dialog>
+    <v-dialog v-model="isUpdateDialogOpen" max-width="600px">
+      <AvailabilitiesCreationForm
+        :availability="selectedAvailability"
+        @confirm="updateAvailability"
+      ></AvailabilitiesCreationForm>
     </v-dialog>
   </div>
 </template>
@@ -32,11 +41,29 @@ export default Vue.extend({
     AvailabilitiesCreationForm,
   },
   data: () => ({
-    isDialogOpen: false,
+    selectedAvailability: null,
+
+    isAddDialogOpen: false,
+    isUpdateDialogOpen: false,
   }),
   methods: {
-    openDialog() {
-      this.isDialogOpen = true;
+    openAddDialog() {
+      this.isAddDialogOpen = true;
+    },
+    openEditDialog(availability: any) {
+      this.selectedAvailability = availability;
+      this.isUpdateDialogOpen = true;
+    },
+    addAvailability() {
+      console.log("addAvailability");
+      this.isAddDialogOpen = false;
+    },
+    updateAvailability() {
+      console.log("updateAvailability");
+      this.isUpdateDialogOpen = false;
+    },
+    deleteAvailability() {
+      console.log("deleteAvailability");
     },
   },
 });
