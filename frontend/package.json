@@ -49,7 +49,7 @@
     "vuex-module-decorators": "^1.0.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.4.1",
+    "@jest/globals": "^29.4.2",
     "@nuxt/types": "^2.14.12",
     "@nuxt/typescript-build": "^2.0.4",
     "@nuxtjs/color-mode": "^2.1.1",
