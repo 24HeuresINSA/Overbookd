@@ -9,7 +9,12 @@ import {
   LiteFtResponseDto,
 } from './dto/ft-response.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
-import { COMPLETE_FT_SELECT, LITE_FT_SELECT, TimeWindow } from './ftTypes';
+import {
+  COMPLETE_FT_SELECT,
+  FtIdResponse,
+  LITE_FT_SELECT,
+  TimeWindow,
+} from './ftTypes';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -98,6 +103,32 @@ export class FtService {
     await this.prisma.ft.update({
       where: { id },
       data: { isDeleted: true },
+    });
+  }
+
+  async findPrevious(id: number): Promise<FtIdResponse | null> {
+    return this.prisma.ft.findFirst({
+      where: {
+        id: { lt: id },
+        isDeleted: false,
+      },
+      orderBy: { id: 'desc' },
+      select: {
+        id: true,
+      },
+    });
+  }
+
+  async findNext(id: number): Promise<FtIdResponse | null> {
+    return this.prisma.ft.findFirst({
+      where: {
+        id: { gt: id },
+        isDeleted: false,
+      },
+      orderBy: { id: 'asc' },
+      select: {
+        id: true,
+      },
     });
   }
 

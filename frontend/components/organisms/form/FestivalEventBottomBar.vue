@@ -1,13 +1,7 @@
 <template>
   <div>
     <div class="bottom-bar">
-      <v-btn
-        v-if="id > 1"
-        class="bottom-bar__navigation"
-        small
-        fab
-        :to="previousLink"
-      >
+      <v-btn class="bottom-bar__navigation" small fab @click="previousPage">
         <v-icon small>mdi-arrow-left</v-icon>
       </v-btn>
       <div class="bottom-bar__actions">
@@ -77,7 +71,7 @@
         </v-btn>
         <v-btn v-if="canSave" @click="save">sauvegarder</v-btn>
       </div>
-      <v-btn class="bottom-bar__navigation" small fab :to="nextLink">
+      <v-btn class="bottom-bar__navigation" small fab @click="nextPage">
         <v-icon small>mdi-arrow-right</v-icon>
       </v-btn>
     </div>
@@ -401,6 +395,14 @@ export default Vue.extend({
     },
     save() {
       this.$accessor.FA.save();
+    },
+    previousPage() {
+      if (this.isFA) return this.$accessor.FA.previousPage();
+      return this.$accessor.FT.previousPage();
+    },
+    nextPage() {
+      if (this.isFA) return this.$accessor.FA.nextPage();
+      return this.$accessor.FT.nextPage();
     },
   },
 });

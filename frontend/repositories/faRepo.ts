@@ -2,6 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CreateFA,
   FA,
+  FAPageId,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
@@ -136,6 +137,14 @@ export default {
 
   refuseFA(context: Context, id: number, body: fa_validation_body) {
     return context.$axios.post(resource + `/${id}/refusal`, body);
+  },
+
+  getPreviousFa(context: Context, id: number) {
+    return context.$axios.get<FAPageId>(resource + `/${id}/previous`);
+  },
+
+  getNextFa(context: Context, id: number) {
+    return context.$axios.get<FAPageId>(resource + `/${id}/next`);
   },
 
   createGearRequest(

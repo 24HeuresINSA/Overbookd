@@ -77,6 +77,10 @@ export interface FTSearch {
   status?: FTStatus;
 }
 
+export interface FTPageId {
+  id: number;
+}
+
 export interface FTTimeWindow {
   id?: number;
   start: Date;

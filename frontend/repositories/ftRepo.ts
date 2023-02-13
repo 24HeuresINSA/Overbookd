@@ -15,6 +15,7 @@ import {
   FTTeamRequestUpdate,
   FTUserRequestUpdate,
   FTTeamRequest,
+  FTPageId,
 } from "~/utils/models/ft";
 import {
   GearRequestCreation,
@@ -70,6 +71,14 @@ export default {
   },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {
     return context.$axios.delete(`${resource}/${ftId}/reviews/${teamCode}`);
+  },
+
+  getPreviousFT(context: Context, id: number) {
+    return context.$axios.get<FTPageId>(resource + `/${id}/previous`);
+  },
+
+  getNextFT(context: Context, id: number) {
+    return context.$axios.get<FTPageId>(resource + `/${id}/next`);
   },
 
   updateFTTimeWindow(

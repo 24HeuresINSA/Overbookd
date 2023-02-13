@@ -9,6 +9,7 @@ import {
   AllFaResponse,
   ALL_FA_SELECT,
   COMPLETE_FA_SELECT,
+  FaIdResponse,
   FaResponse,
 } from './fa_types';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
@@ -162,6 +163,32 @@ export class FaService {
       }),
       this.removeValidationFromTeam(fa_id, team_id),
     ]);
+  }
+
+  async findPrevious(id: number): Promise<FaIdResponse | null> {
+    return this.prisma.fa.findFirst({
+      where: {
+        id: { lt: id },
+        is_deleted: false,
+      },
+      orderBy: { id: 'desc' },
+      select: {
+        id: true,
+      },
+    });
+  }
+
+  async findNext(id: number): Promise<FaIdResponse | null> {
+    return this.prisma.fa.findFirst({
+      where: {
+        id: { gt: id },
+        is_deleted: false,
+      },
+      orderBy: { id: 'asc' },
+      select: {
+        id: true,
+      },
+    });
   }
 
   private async checkFaExistence(id: number): Promise<void> {

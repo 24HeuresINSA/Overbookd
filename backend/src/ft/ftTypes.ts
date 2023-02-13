@@ -86,6 +86,10 @@ export interface AlsoRequestedByFT {
   period: PeriodForm;
 }
 
+export type FtIdResponse = {
+  id: number;
+};
+
 const TEAM_SELECT = {
   select: {
     id: true,

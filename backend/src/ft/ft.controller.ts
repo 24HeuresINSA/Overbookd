@@ -50,6 +50,7 @@ import {
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
+import { FtIdResponse } from './ftTypes';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -203,6 +204,34 @@ export class FtController {
   })
   remove(@Param('id') id: number) {
     return this.ftService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Get(':id/previous')
+  @ApiResponse({
+    status: 200,
+    description: 'Get the previous ft',
+    type: Promise<FtIdResponse | null>,
+  })
+  findPrevious(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FtIdResponse | null> {
+    return this.ftService.findPrevious(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Get(':id/next')
+  @ApiResponse({
+    status: 200,
+    description: 'Get the next ft',
+    type: Promise<FtIdResponse | null>,
+  })
+  findNext(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FtIdResponse | null> {
+    return this.ftService.findNext(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
