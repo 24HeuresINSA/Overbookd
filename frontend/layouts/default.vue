@@ -206,7 +206,7 @@ export default {
           icon: "mdi-clock-edit",
           title: "Créer dispos",
           permission: "can-affect",
-          to: "/createavailibility", //TODO: change this to /createavailability
+          to: "/createAvailability",
         },
         {
           icon: "mdi-cog",
@@ -304,7 +304,7 @@ export default {
           icon: "mdi-clock",
           title: "Créer dispos",
           roles: "humain",
-          to: "/createavailibility",
+          to: "/createAvailability",
         },
         {
           icon: "mdi-account",
