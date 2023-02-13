@@ -189,7 +189,7 @@ export default {
         { text: "Nom", value: "name" },
         { text: "Equipe", value: "Team" },
         { text: "Resp", value: "user_in_charge" },
-        { text: "Action", value: "action" },
+        { text: "Action", value: "action", sortable: false },
       ],
       color: {
         SUBMITTED: "warning",

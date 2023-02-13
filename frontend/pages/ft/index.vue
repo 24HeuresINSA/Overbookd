@@ -198,7 +198,7 @@ export default Vue.extend({
         { text: "FA", value: "fa" },
         { text: "Resp", value: "userInCharge" },
         { text: "Equipe", value: "team" },
-        { text: "Action", value: "action" },
+        { text: "Action", value: "action", sortable: false },
       ],
       filters: {
         search: "",
@@ -373,6 +373,7 @@ h1 {
 
   .data-table {
     margin-left: 20px;
+    margin-bottom: 45px;
     height: fit-content;
     width: 100vw;
 
