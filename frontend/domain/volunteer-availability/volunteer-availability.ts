@@ -34,6 +34,10 @@ export class Availability {
     return new Availability(new Date(startTime), new Date(endTime));
   }
 
+  canMerge({ start, end }: Availability): boolean {
+    return this.isJointedPeriod({ start, end });
+  }
+
   private isJointedPeriod(period: Period): boolean {
     return this.start <= period.end && this.end >= period.start;
   }
