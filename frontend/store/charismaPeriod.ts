@@ -2,8 +2,6 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-  toCharismaPeriodCreation,
-  toCharismaPeriodUpdate,
 } from "~/utils/models/charismaPeriod";
 import { updateItemToList } from "~/utils/functions/list";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -45,10 +43,9 @@ export const actions = actionTree(
   { state },
   {
     async addCharismaPeriod({ commit }, charismaPeriod: CharismaPeriod) {
-      const adaptedCharismaPeriod = toCharismaPeriodCreation(charismaPeriod);
       const res = await safeCall(
         this,
-        repo.createCharismaPeriod(this, adaptedCharismaPeriod),
+        repo.createCharismaPeriod(this, charismaPeriod),
         {
           successMessage: "Période créée 🥳",
           errorMessage: "Période non créée 😢",
@@ -62,10 +59,9 @@ export const actions = actionTree(
       { commit },
       charismaPeriod: SavedCharismaPeriod
     ) {
-      const adaptedCharismaPeriod = toCharismaPeriodUpdate(charismaPeriod);
       const res = await safeCall(
         this,
-        repo.updateCharismaPeriod(this, adaptedCharismaPeriod),
+        repo.updateCharismaPeriod(this, charismaPeriod),
         {
           successMessage: "Période mise à jour 🥳",
           errorMessage: "Période non mise à jour 😢",

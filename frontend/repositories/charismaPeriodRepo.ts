@@ -1,7 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
-  CharismaPeriodCreation,
-  CharismaPeriodUpdate,
+  CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charismaPeriod";
 import { HttpStringified } from "~/utils/types/http";
@@ -13,7 +12,7 @@ export class CharismaPeriodRepository {
 
   static async createCharismaPeriod(
     context: Context,
-    charismaPeriod: CharismaPeriodCreation
+    charismaPeriod: CharismaPeriod
   ) {
     return context.$axios.post<HttpStringified<SavedCharismaPeriod>>(
       `${this.basePath}`,
@@ -23,7 +22,7 @@ export class CharismaPeriodRepository {
 
   static async updateCharismaPeriod(
     context: Context,
-    charismaPeriod: CharismaPeriodUpdate
+    charismaPeriod: SavedCharismaPeriod
   ) {
     return context.$axios.patch<HttpStringified<SavedCharismaPeriod>>(
       `${this.basePath}/${charismaPeriod.id}}`,

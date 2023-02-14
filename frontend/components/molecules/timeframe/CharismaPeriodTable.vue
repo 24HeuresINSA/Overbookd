@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="availabilities"
+    :items="charismaPeriods"
     :items-per-page="-1"
     sort-by="start"
     dense
@@ -20,16 +20,17 @@
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
     </template>
-    <template #no-data> Aucune disponibilité ajoutée </template>
+    <template #no-data> Aucun créneau ajouté </template>
   </v-data-table>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
 
 export default Vue.extend({
-  name: "AvailabilitiesCreationTable",
+  name: "CharismaPeriodTable",
   data: () => ({
     headers: [
       { text: "Début", value: "start" },
@@ -39,33 +40,16 @@ export default Vue.extend({
     ],
   }),
   computed: {
-    availabilities(): any[] {
-      // TODO: call store
-      return [
-        {
-          start: new Date("2023-05-12 22:00"),
-          end: new Date("2023-05-13 02:00"),
-          charisma: 10,
-        },
-        {
-          start: new Date("2023-05-11 00:00"),
-          end: new Date("2023-05-12 20:00"),
-          charisma: 5,
-        },
-        {
-          start: new Date("2023-05-10 00:00"),
-          end: new Date("2023-05-10 20:00"),
-          charisma: 1,
-        },
-      ];
+    charismaPeriods(): SavedCharismaPeriod[] {
+      return this.$accessor.charismaPeriod.charismaPeriods;
     },
   },
   methods: {
-    updateAvailability(availability: any) {
-      this.$emit("update", availability);
+    updateAvailability(charismaPeriod: SavedCharismaPeriod) {
+      this.$emit("update", charismaPeriod);
     },
-    deleteAvailability(availability: any) {
-      this.$emit("delete", availability);
+    deleteAvailability(charismaPeriod: SavedCharismaPeriod) {
+      this.$emit("delete", charismaPeriod);
     },
     formatDate(date: string): string {
       return formatDateWithMinutes(date);

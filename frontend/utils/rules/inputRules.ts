@@ -22,6 +22,10 @@ export function minLength(minLength: number) {
   };
 }
 
+export function required(value: any) {
+  return Boolean(value) || "Ce champ est requis";
+}
+
 export interface InputRulesData {
   rules: Record<string, (value: string | null) => string | boolean>;
 }

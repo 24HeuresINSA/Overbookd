@@ -204,9 +204,9 @@ export default {
         },
         {
           icon: "mdi-clock-edit",
-          title: "Créer dispos",
+          title: "Charisme des dispos",
           permission: "can-affect",
-          to: "/createAvailability",
+          to: "/charismaPeriod",
         },
         {
           icon: "mdi-cog",

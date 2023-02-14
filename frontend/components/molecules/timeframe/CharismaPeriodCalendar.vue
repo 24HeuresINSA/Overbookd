@@ -15,7 +15,7 @@
     </v-sheet>
     <v-calendar
       ref="formCalendar"
-      v-model="value"
+      v-model="calendarMarker"
       type="week"
       :events="calendarEvents"
       :event-ripple="false"
@@ -27,8 +27,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
 
-interface CalendarAvailability {
+interface CalendarItem {
   start: Date;
   end: Date;
   name: string;
@@ -37,36 +38,19 @@ interface CalendarAvailability {
 }
 
 export default Vue.extend({
-  name: "AvailabilitiesCreationCalendar",
+  name: "CharismaPeriodCalendar",
   data: () => ({
-    value: new Date(),
+    calendarMarker: new Date(),
   }),
   computed: {
-    availabilities(): any[] {
-      // TODO: call store
-      return [
-        {
-          start: new Date("2023-05-12 22:00"),
-          end: new Date("2023-05-13 02:00"),
-          charisma: 10,
-        },
-        {
-          start: new Date("2023-05-11 00:00"),
-          end: new Date("2023-05-12 20:00"),
-          charisma: 5,
-        },
-        {
-          start: new Date("2023-05-10 00:00"),
-          end: new Date("2023-05-10 20:00"),
-          charisma: 1,
-        },
-      ];
+    charismaPeriods(): SavedCharismaPeriod[] {
+      return this.$accessor.charismaPeriod.charismaPeriods;
     },
     calendarTitle(): string {
-      return formatDateWithExplicitMonth(this.value);
+      return formatDateWithExplicitMonth(this.calendarMarker);
     },
-    calendarEvents(): CalendarAvailability[] {
-      return this.availabilities.map((a) => ({
+    calendarEvents(): CalendarItem[] {
+      return this.charismaPeriods.map((a) => ({
         start: a.start,
         end: a.end,
         name: a.charisma.toString(),
@@ -78,11 +62,11 @@ export default Vue.extend({
       return new Date(this.$accessor.config.getConfig("event_date"));
     },
     maxCharisma(): number {
-      return Math.max(...this.availabilities.map((a) => a.charisma));
+      return Math.max(...this.charismaPeriods.map((a) => a.charisma));
     },
   },
   mounted() {
-    this.value = this.manifDate;
+    this.calendarMarker = this.manifDate;
   },
   methods: {
     getCharismaColor(charisma: number) {
