@@ -8,10 +8,10 @@ import {
   IsString,
 } from 'class-validator';
 
-export class CreateCharismaGroupDto {
+export class CreateCharismaPeriodDto {
   @ApiProperty({
     required: true,
-    description: 'The name of the Charisma Group',
+    description: 'The name of the Charisma Period',
     type: String,
   })
   @IsString()
@@ -20,7 +20,7 @@ export class CreateCharismaGroupDto {
 
   @ApiProperty({
     required: false,
-    description: 'The description of the Charisma Group',
+    description: 'The description of the Charisma Period',
     type: String,
   })
   @IsString()
@@ -29,7 +29,7 @@ export class CreateCharismaGroupDto {
 
   @ApiProperty({
     required: true,
-    description: 'The charisma associated the Charisma Group',
+    description: 'The charisma associated the Charisma Period',
     type: Number,
   })
   @IsDefined()
@@ -38,7 +38,7 @@ export class CreateCharismaGroupDto {
 
   @ApiProperty({
     required: true,
-    description: 'The start date of the Charisma Group',
+    description: 'The start date of the Charisma Period',
     type: Date,
   })
   @IsNotEmpty()
@@ -47,7 +47,7 @@ export class CreateCharismaGroupDto {
 
   @ApiProperty({
     required: true,
-    description: 'The end date of the Charisma Group',
+    description: 'The end date of the Charisma Period',
     type: Date,
   })
   @IsNotEmpty()
