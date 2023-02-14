@@ -1,6 +1,7 @@
 import { Period } from "~/utils/models/period";
 import {
   AvailabilityMinimumPeriodDurationError,
+  AvailabilityPeriodsJointError,
   AvailabilityPeriodTimelineError,
   AvailabilityStartError,
 } from "./volunteer-availability.error";
@@ -25,10 +26,16 @@ export class Availability {
     this.end = end;
   }
 
-  addPeriod(period: Period): Availability[] {
+  addPeriod(period: Period): Availability {
+    if (!this.isJointedPeriod(period))
+      throw new AvailabilityPeriodsJointError();
     const startTime = Math.min(this.start.getTime(), period.start.getTime());
     const endTime = Math.max(this.end.getTime(), period.end.getTime());
-    return [new Availability(new Date(startTime), new Date(endTime))];
+    return new Availability(new Date(startTime), new Date(endTime));
+  }
+
+  private isJointedPeriod(period: Period): boolean {
+    return this.start <= period.end && this.end >= period.start;
   }
 
   private lastLessThanTwoHours(start: Date, end: Date) {

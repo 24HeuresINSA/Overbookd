@@ -1,11 +1,8 @@
 import { describe, expect, it } from "@jest/globals";
+import { formatDateWithMinutes } from "../../utils/date/dateUtils";
 import { Period } from "~/utils/models/period";
 import { Availability } from "./volunteer-availability";
-import {
-  AVAILABILITY_MINIMUM_PERIOD_DURATION_ERROR_MESSAGE,
-  AVAILABILITY_PERIOD_TIMELINE_ERROR_MESSAGE,
-  AVAILABILITY_START_ERROR_MESSAGE,
-} from "./volunteer-availability.error";
+import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error";
 
 describe("volunteer availability", () => {
   describe("start and end timeline", () => {
@@ -46,7 +43,7 @@ describe("volunteer availability", () => {
             end: new Date("2023-05-13 09:00"),
           };
           expect(() => Availability.fromPeriod(period)).toThrow(
-            AVAILABILITY_START_ERROR_MESSAGE
+            AVAILABILITY_ERROR_MESSAGES.START_HOUR
           );
         });
       });
@@ -66,7 +63,7 @@ describe("volunteer availability", () => {
             end: new Date("2023-05-13 13:00"),
           };
           expect(() => Availability.fromPeriod(period)).toThrow(
-            AVAILABILITY_START_ERROR_MESSAGE
+            AVAILABILITY_ERROR_MESSAGES.START_HOUR
           );
         });
       });
@@ -79,7 +76,7 @@ describe("volunteer availability", () => {
           end: start,
         };
         expect(() => Availability.fromPeriod(period)).toThrow(
-          AVAILABILITY_PERIOD_TIMELINE_ERROR_MESSAGE
+          AVAILABILITY_ERROR_MESSAGES.PERIOD_TIMELINE
         );
       });
     });
@@ -92,7 +89,7 @@ describe("volunteer availability", () => {
           end,
         };
         expect(() => Availability.fromPeriod(period)).toThrow(
-          AVAILABILITY_PERIOD_TIMELINE_ERROR_MESSAGE
+          AVAILABILITY_ERROR_MESSAGES.PERIOD_TIMELINE
         );
       });
     });
@@ -116,7 +113,7 @@ describe("volunteer availability", () => {
           end: new Date("2023-05-13 02:00"),
         };
         expect(() => Availability.fromPeriod(period)).toThrow(
-          AVAILABILITY_MINIMUM_PERIOD_DURATION_ERROR_MESSAGE
+          AVAILABILITY_ERROR_MESSAGES.MINIMUM_PERIOD_DURATION
         );
       });
     });
@@ -127,6 +124,8 @@ describe("volunteer availability", () => {
         firstPeriodStart                | firstPeriodEnd                  | secondPeriodStart               | secondPeriodEnd                 | expectedStart                   | expectedEnd
         ${new Date("2023-05-13 01:00")} | ${new Date("2023-05-13 10:00")} | ${new Date("2023-05-13 10:00")} | ${new Date("2023-05-13 14:00")} | ${new Date("2023-05-13 01:00")} | ${new Date("2023-05-13 14:00")}
         ${new Date("2023-05-13 01:00")} | ${new Date("2023-05-13 10:00")} | ${new Date("2023-05-12 10:00")} | ${new Date("2023-05-13 01:00")} | ${new Date("2023-05-12 10:00")} | ${new Date("2023-05-13 10:00")}
+        ${new Date("2023-05-12 01:00")} | ${new Date("2023-05-13 10:00")} | ${new Date("2023-05-12 10:00")} | ${new Date("2023-05-12 14:00")} | ${new Date("2023-05-12 01:00")} | ${new Date("2023-05-13 10:00")}
+        ${new Date("2023-05-13 01:00")} | ${new Date("2023-05-13 10:00")} | ${new Date("2023-05-13 08:00")} | ${new Date("2023-05-13 14:00")} | ${new Date("2023-05-13 01:00")} | ${new Date("2023-05-13 14:00")}
       `(
         "when adding a period from $firstPeriodStart to $firstPeriodEnd and another from $secondPeriodStart to $secondPeriodEnd",
         ({
@@ -137,7 +136,10 @@ describe("volunteer availability", () => {
           expectedStart,
           expectedEnd,
         }) => {
-          it(`should be merged to a period starting from ${expectedStart} to ${expectedEnd}`, () => {
+          it(`should be merged to a period starting\
+              from ${formatDateWithMinutes(expectedStart)}\
+              to ${formatDateWithMinutes(expectedEnd)}\
+             `, () => {
             const firstPeriod = {
               start: firstPeriodStart,
               end: firstPeriodEnd,
@@ -148,12 +150,27 @@ describe("volunteer availability", () => {
             };
             const availability = Availability.fromPeriod(firstPeriod);
             const mergedAvailabilities = availability.addPeriod(secondPeriod);
-            expect(mergedAvailabilities).toHaveLength(1);
-            expect(mergedAvailabilities[0].start).toEqual(expectedStart);
-            expect(mergedAvailabilities[0].end).toEqual(expectedEnd);
+            expect(mergedAvailabilities.start).toEqual(expectedStart);
+            expect(mergedAvailabilities.end).toEqual(expectedEnd);
           });
         }
       );
+    });
+    describe("when availabilities are isolated", () => {
+      it("should inform that periods should overlap or follow to be added", () => {
+        const firstPeriod = {
+          start: new Date("2023-05-12 01:00"),
+          end: new Date("2023-05-12 05:00"),
+        };
+        const secondPeriod = {
+          start: new Date("2023-05-12 10:00"),
+          end: new Date("2023-05-12 16:00"),
+        };
+        const availability = Availability.fromPeriod(firstPeriod);
+        expect(() => availability.addPeriod(secondPeriod)).toThrow(
+          AVAILABILITY_ERROR_MESSAGES.PERIODS_JOINT
+        );
+      });
     });
   });
 });
