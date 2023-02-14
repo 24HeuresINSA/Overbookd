@@ -57,9 +57,10 @@ export const actions = actionTree(
       { commit },
       charismaPeriod: SavedCharismaPeriod
     ) {
+      const { id, ...CharismaPeriodWithoutId } = charismaPeriod;
       const res = await safeCall(
         this,
-        repo.updateCharismaPeriod(this, charismaPeriod),
+        repo.updateCharismaPeriod(this, id, CharismaPeriodWithoutId),
         {
           successMessage: "Période mise à jour 🥳",
           errorMessage: "Période non mise à jour 😢",

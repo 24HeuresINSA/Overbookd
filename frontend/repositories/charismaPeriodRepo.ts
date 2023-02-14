@@ -22,10 +22,11 @@ export class CharismaPeriodRepository {
 
   static async updateCharismaPeriod(
     context: Context,
-    charismaPeriod: SavedCharismaPeriod
+    cpId: number,
+    charismaPeriod: CharismaPeriod
   ) {
     return context.$axios.patch<HttpStringified<SavedCharismaPeriod>>(
-      `${this.basePath}/${charismaPeriod.id}}`,
+      `${this.basePath}/${cpId}}`,
       charismaPeriod
     );
   }
