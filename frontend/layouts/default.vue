@@ -301,10 +301,10 @@ export default {
           to: "/availabilities",
         },
         {
-          icon: "mdi-clock",
-          title: "Créer dispos",
-          roles: "humain",
-          to: "/createAvailability",
+          icon: "mdi-clock-edit",
+          title: "Charisme des dispos",
+          permission: "can-affect",
+          to: "/charismaPeriod",
         },
         {
           icon: "mdi-account",
