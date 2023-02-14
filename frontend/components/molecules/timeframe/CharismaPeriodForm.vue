@@ -8,21 +8,22 @@
       <v-form v-model="isFormValid">
         <v-text-field
           v-model="name"
-          label="Nom du créneau"
+          label="Nom"
           :rules="[rules.required]"
         ></v-text-field>
-
-        <v-text-field
-          v-model="description"
-          label="Description du créneau"
-        ></v-text-field>
-
-        <h4>Début du créneau</h4>
-        <DateField v-model="start" label="Début" :step="60"></DateField>
-
-        <h4>Fin du créneau</h4>
-        <DateField v-model="end" label="Fin" :step="60"></DateField>
-
+        <v-text-field v-model="description" label="Description"></v-text-field>
+        <DateField
+          v-model="start"
+          label="Début"
+          :boxed="false"
+          :step="60"
+        ></DateField>
+        <DateField
+          v-model="end"
+          label="Fin"
+          :boxed="false"
+          :step="60"
+        ></DateField>
         <v-text-field
           v-model="charisma"
           type="number"
