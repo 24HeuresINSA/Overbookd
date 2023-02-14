@@ -74,10 +74,10 @@ model User {
   fa_refuse     fa_refuse[]
   fa_comments   fa_comments[]
 
-  ftsInCharge    Ft[]              @relation("inCharge")
+  ftsInCharge    Ft[]                   @relation("inCharge")
   ftFeedbacks    FtFeedback[]
   ftUserRequests FtUserRequest[]
-  availabilities UserAvailabilty[]
+  availabilities VolunteerAvailabilty[]
 }
 
 model Team {
@@ -536,7 +536,7 @@ model InventoryRecord {
   @@map("inventory_record")
 }
 
-model CharismaGroup {
+model CharismaPeriod {
   id          Int      @id @default(autoincrement())
   name        String
   description String?  @db.Text
@@ -547,10 +547,10 @@ model CharismaGroup {
   @@index([start(sort: Asc)])
   @@index([end(sort: Asc)])
   @@index([start(sort: Asc), end(sort: Asc)])
-  @@map("charisma_group")
+  @@map("charisma_period")
 }
 
-model UserAvailabilty {
+model VolunteerAvailabilty {
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int      @map("user_id")
   start  DateTime
@@ -560,5 +560,5 @@ model UserAvailabilty {
   @@index([start(sort: Asc)])
   @@index([end(sort: Asc)])
   @@index([start(sort: Asc), end(sort: Asc)])
-  @@map("user_availabilty")
+  @@map("volunteer_availabilty")
 }
