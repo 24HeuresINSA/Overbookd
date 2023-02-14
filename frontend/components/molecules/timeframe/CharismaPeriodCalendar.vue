@@ -71,9 +71,10 @@ export default Vue.extend({
   methods: {
     getCharismaColor(charisma: number) {
       const ratio = charisma / this.maxCharisma;
-      const red = Math.round(ratio * (33 - 255) + 255);
-      const green = Math.round(ratio * (150 - 255) + 255);
-      const blue = Math.round(ratio * (243 - 255) + 255);
+      // primary color is rgb(33, 150, 243)
+      const red = Math.round(33 - (33 / 2) * ratio);
+      const green = Math.round(150 - (150 / 2) * ratio);
+      const blue = Math.round(243 - (243 / 2) * ratio);
       return `rgb(${red}, ${green}, ${blue})`;
     },
     previousPage() {

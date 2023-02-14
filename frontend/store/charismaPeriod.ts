@@ -1,4 +1,4 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
@@ -12,8 +12,6 @@ const repo = RepoFactory.CharismaPeriodRepository;
 export const state = () => ({
   charismaPeriods: [] as SavedCharismaPeriod[],
 });
-
-export const getters = getterTree(state, {});
 
 export const mutations = mutationTree(state, {
   ADD_CHARISMA_PERIOD(state, charismaPeriod: SavedCharismaPeriod) {
