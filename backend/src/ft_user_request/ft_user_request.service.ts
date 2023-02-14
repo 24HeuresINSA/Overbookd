@@ -106,6 +106,9 @@ export class FtUserRequestService {
     userRequest: DataBaseUserRequest,
   ) {
     return {
+      ft: {
+        isDeleted: false,
+      },
       start: {
         lt: timeWindow.end,
       },
