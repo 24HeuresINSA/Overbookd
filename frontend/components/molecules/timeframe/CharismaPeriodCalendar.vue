@@ -1,21 +1,9 @@
 <template>
   <div>
-    <v-sheet tile height="54" class="d-flex">
-      <v-btn icon class="ma-2" @click="previousPage">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <v-spacer class="calendar-title">
-        <div>
-          {{ calendarTitle }}
-        </div>
-      </v-spacer>
-      <v-btn icon class="ma-2" @click="nextPage">
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-    </v-sheet>
     <OverCalendarV2
       v-model="calendarMarker"
       :events="calendarEvents"
+      :title="calendarTitle"
     ></OverCalendarV2>
   </div>
 </template>
@@ -92,24 +80,6 @@ export default Vue.extend({
       const { red, blue, green } = this.getCharismaColorLevels(charisma);
       return `rgb(${red}, ${green}, ${blue})`;
     },
-    previousPage() {
-      const calendar = this.$refs.calendar as any;
-      if (calendar) calendar.prev();
-    },
-    nextPage() {
-      const calendar = this.$refs.calendar as any;
-      if (calendar) calendar.next();
-    },
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.calendar-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 500;
-}
-</style>

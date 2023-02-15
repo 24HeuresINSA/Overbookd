@@ -1,65 +1,80 @@
 <template>
-  <v-calendar
-    ref="calendar"
-    :value="date"
-    type="week"
-    :events="events"
-    :event-ripple="true"
-    :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-    @change="updateDate"
-  >
-    <template
-      #interval="{
-        date: intervalDate,
-        year,
-        mounth,
-        day,
-        hour,
-        minute,
-        weekday,
-        hasDay,
-        hasTime,
-        past,
-        present,
-        future,
-        time,
-        timeToY,
-        timeDelta,
-        minutesToPixels,
-        week,
-      }"
+  <div>
+    <v-sheet tile height="54" class="d-flex">
+      <v-btn icon class="ma-2" @click="previousPage">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <v-spacer class="calendar-title">
+        <div>
+          {{ title }}
+        </div>
+      </v-spacer>
+      <v-btn icon class="ma-2" @click="nextPage">
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </v-sheet>
+    <v-calendar
+      ref="calendar"
+      :value="date"
+      type="week"
+      :events="events"
+      :event-ripple="true"
+      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      @input="updateDate"
     >
-      <slot
-        name="interval"
-        :date="intervalDate"
-        :year="year"
-        :mounth="mounth"
-        :day="day"
-        :hour="hour"
-        :minute="minute"
-        :weekday="weekday"
-        :hasDay="hasDay"
-        :hasTime="hasTime"
-        :past="past"
-        :present="present"
-        :future="future"
-        :time="time"
-        :timeToY="timeToY"
-        :timeDelta="timeDelta"
-        :minutesToPixels="minutesToPixels"
-        :week="week"
-      ></slot>
-      <div
-        :class="{
-          shift: isShiftHour(hour),
-          'shift-party': isPartyHour(hour),
-          'shift-day': isDayHour(hour),
-          'shift-night': isNightHour(hour),
+      <template
+        #interval="{
+          date: intervalDate,
+          year,
+          mounth,
+          day,
+          hour,
+          minute,
+          weekday,
+          hasDay,
+          hasTime,
+          past,
+          present,
+          future,
+          time,
+          timeToY,
+          timeDelta,
+          minutesToPixels,
+          week,
         }"
-        :style="{ top: timeToY(time) }"
-      ></div>
-    </template>
-  </v-calendar>
+      >
+        <slot
+          name="interval"
+          :date="intervalDate"
+          :year="year"
+          :mounth="mounth"
+          :day="day"
+          :hour="hour"
+          :minute="minute"
+          :weekday="weekday"
+          :hasDay="hasDay"
+          :hasTime="hasTime"
+          :past="past"
+          :present="present"
+          :future="future"
+          :time="time"
+          :timeToY="timeToY"
+          :timeDelta="timeDelta"
+          :minutesToPixels="minutesToPixels"
+          :week="week"
+        ></slot>
+        <div
+          :class="{
+            shift: isShiftHour(hour),
+            'shift-party': isPartyHour(hour),
+            'shift-day': isDayHour(hour),
+            'shift-night': isNightHour(hour),
+          }"
+          :style="{ top: timeToY(time) }"
+        ></div>
+      </template>
+    </v-calendar>
+  </div>
 </template>
 
 <script lang="ts">
@@ -83,6 +98,10 @@ export default Vue.extend({
       required: true,
       default: () => new Date(),
     },
+    title: {
+      type: String,
+      default: () => "Calendar",
+    },
   },
   data() {
     return {};
@@ -102,14 +121,30 @@ export default Vue.extend({
         this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
       );
     },
-    updateDate() {
-      this.$emit("change", this.date);
+    updateDate(date: Date) {
+      console.log("update", date);
+      this.$emit("change", date);
+    },
+    previousPage() {
+      const calendar = this.$refs.calendar as any;
+      if (calendar) calendar.prev();
+    },
+    nextPage() {
+      const calendar = this.$refs.calendar as any;
+      if (calendar) calendar.next();
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.calendar-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+}
 .shift {
   height: 2px;
   position: absolute;
