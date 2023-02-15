@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
+import { CharismaPeriodModule } from './charisma_period/charisma_period.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigurationModule } from './configuration/configuration.module';
@@ -16,6 +17,7 @@ import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_sit
 import { FtModule } from './ft/ft.module';
 import { FtFeedbackModule } from './ft_feedback/ft_feedback.module';
 import { FtReviewsModule } from './ft_reviews/ft_reviews.module';
+import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
 import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
 import { FtUserRequestModule } from './ft_user_request/ft_user_request.module';
 import { GearRequestsModule } from './gear-requests/gearRequests.module';
@@ -30,7 +32,6 @@ import { TeamModule } from './team/team.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
-import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
     FtUserRequestModule,
     FtReviewsModule,
     FtTeamRequestModule,
+    CharismaPeriodModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
