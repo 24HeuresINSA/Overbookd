@@ -53,6 +53,9 @@ export default Vue.extend({
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
   }),
+  async mounted() {
+    await this.$accessor.charismaPeriod.fetchCharismaPeriods();
+  },
   methods: {
     openAddDialog() {
       this.isAddDialogOpen = true;

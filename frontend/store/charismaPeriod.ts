@@ -1,5 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import {
+  castCharismaPeriodsWithDate,
+  castCharismaPeriodWithDate,
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charismaPeriod";
@@ -14,6 +16,10 @@ export const state = () => ({
 });
 
 export const mutations = mutationTree(state, {
+  SET_CHARISMA_PERIODS(state, charismaPeriods: SavedCharismaPeriod[]) {
+    state.charismaPeriods = charismaPeriods;
+  },
+
   ADD_CHARISMA_PERIOD(state, charismaPeriod: SavedCharismaPeriod) {
     state.charismaPeriods = [...state.charismaPeriods, charismaPeriod];
   },
@@ -40,6 +46,12 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
+    async fetchCharismaPeriods({ commit }) {
+      const res = await safeCall(this, repo.getCharismaPeriods(this));
+      if (!res) return;
+      commit("SET_CHARISMA_PERIODS", castCharismaPeriodsWithDate(res.data));
+    },
+
     async addCharismaPeriod({ commit }, charismaPeriod: CharismaPeriod) {
       const res = await safeCall(
         this,
@@ -50,7 +62,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("ADD_CHARISMA_PERIOD", res.data);
+      commit("ADD_CHARISMA_PERIOD", castCharismaPeriodWithDate(res.data));
     },
 
     async updateCharismaPeriod(
@@ -67,7 +79,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("UPDATE_CHARISMA_PERIOD", res.data);
+      commit("UPDATE_CHARISMA_PERIOD", castCharismaPeriodWithDate(res.data));
     },
 
     async deleteCharismaPeriod(

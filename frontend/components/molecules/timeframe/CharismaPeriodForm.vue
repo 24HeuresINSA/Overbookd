@@ -63,9 +63,9 @@ export default Vue.extend({
   data: () => ({
     name: "",
     description: "",
-    start: undefined,
-    end: undefined,
-    charisma: 0,
+    start: undefined as Date | undefined,
+    end: undefined as Date | undefined,
+    charisma: "0",
 
     isFormValid: false,
     rules: {
@@ -117,6 +117,7 @@ export default Vue.extend({
       const start = this.start;
       const end = this.end;
       return this.charismaPeriods.some((cp) => {
+        if (this.isEditForm && cp.id === this.charismaPeriod?.id) return false;
         return start < cp.end && end > cp.start;
       });
     },
@@ -131,11 +132,20 @@ export default Vue.extend({
   },
   methods: {
     updateLocalVariable() {
-      this.name = this.charismaPeriod?.name ?? "";
-      this.description = this.charismaPeriod?.description ?? "";
+      if (!this.isEditForm) return this.clearLocalVariable();
+
+      this.name = this.charismaPeriod.name;
+      this.description = this.charismaPeriod.description;
       this.start = this.charismaPeriod?.start ?? this.manifDate;
       this.end = this.charismaPeriod?.end ?? this.manifDate;
-      this.charisma = this.charismaPeriod?.charisma ?? 0;
+      this.charisma = this.charismaPeriod?.charisma.toString();
+    },
+    clearLocalVariable() {
+      this.name = "";
+      this.description = "";
+      this.start = this.manifDate;
+      this.end = this.manifDate;
+      this.charisma = "0";
     },
     confirmCharismaPeriod() {
       if (this.isCharismaPeriodInvalid) return;
@@ -148,18 +158,19 @@ export default Vue.extend({
         description: this.description,
         start: this.startOrManifDate,
         end: this.endOrManifDate,
-        charisma: this.charisma,
+        charisma: +this.charisma,
       };
       this.$emit("create", charismaPeriod);
+      this.clearLocalVariable();
     },
     updateCharismaPeriod() {
       const charismaPeriod: SavedCharismaPeriod = {
         id: this.charismaPeriod.id,
         name: this.name,
         description: this.description,
-        start: this.charismaPeriod.start,
-        end: this.charismaPeriod.end,
-        charisma: this.charisma,
+        start: this.start ?? this.charismaPeriod.start,
+        end: this.end ?? this.charismaPeriod.end,
+        charisma: +this.charisma,
       };
       this.$emit("update", charismaPeriod);
     },

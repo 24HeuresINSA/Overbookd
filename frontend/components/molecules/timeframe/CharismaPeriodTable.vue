@@ -33,6 +33,8 @@ export default Vue.extend({
   name: "CharismaPeriodTable",
   data: () => ({
     headers: [
+      { text: "Nom", value: "name" },
+      { text: "Description", value: "description" },
       { text: "Début", value: "start" },
       { text: "Fin", value: "end" },
       { text: "Charisme/h", value: "charisma" },

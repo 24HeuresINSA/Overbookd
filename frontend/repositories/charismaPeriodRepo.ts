@@ -8,7 +8,19 @@ import { HttpStringified } from "~/utils/types/http";
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class CharismaPeriodRepository {
-  private static readonly basePath = "/charisma-period";
+  private static readonly basePath = "charisma-period";
+
+  static async getCharismaPeriods(context: Context) {
+    return context.$axios.get<HttpStringified<SavedCharismaPeriod[]>>(
+      `${this.basePath}`
+    );
+  }
+
+  static async getCharismaPeriod(context: Context, cpId: number) {
+    return context.$axios.get<HttpStringified<SavedCharismaPeriod>>(
+      `${this.basePath}/${cpId}`
+    );
+  }
 
   static async createCharismaPeriod(
     context: Context,
@@ -25,13 +37,13 @@ export class CharismaPeriodRepository {
     cpId: number,
     charismaPeriod: CharismaPeriod
   ) {
-    return context.$axios.patch<HttpStringified<SavedCharismaPeriod>>(
-      `${this.basePath}/${cpId}}`,
+    return context.$axios.put<HttpStringified<SavedCharismaPeriod>>(
+      `${this.basePath}/${cpId}`,
       charismaPeriod
     );
   }
 
   static async deleteCharismaPeriod(context: Context, cpId: number) {
-    return context.$axios.delete(`${this.basePath}/${cpId}}`);
+    return context.$axios.delete(`${this.basePath}/${cpId}`);
   }
 }
