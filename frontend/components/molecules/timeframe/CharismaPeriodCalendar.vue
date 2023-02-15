@@ -18,9 +18,21 @@
       v-model="calendarMarker"
       type="week"
       :events="calendarEvents"
-      :event-ripple="false"
+      :event-ripple="true"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-    ></v-calendar>
+    >
+      <template #interval="{ hour, time, timeToY }">
+        <div
+          :class="{
+            shift: isShiftHour(hour),
+            'shift-party': isPartyHour(hour),
+            'shift-day': isDayHour(hour),
+            'shift-night': isNightHour(hour),
+          }"
+          :style="{ top: timeToY(time) }"
+        ></div>
+      </template>
+    </v-calendar>
   </div>
 </template>
 
@@ -28,6 +40,7 @@
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
+import { SHIFT_HOURS } from "~/utils/shift/shift";
 
 interface CalendarItem {
   start: Date;
@@ -90,6 +103,20 @@ export default Vue.extend({
     lightenColor(colorLevel: number, lighterRatio: number): number {
       return Math.round(colorLevel - (colorLevel / 2) * lighterRatio);
     },
+    isPartyHour(hour: number): boolean {
+      return hour === SHIFT_HOURS.PARTY;
+    },
+    isDayHour(hour: number): boolean {
+      return hour === SHIFT_HOURS.DAY;
+    },
+    isNightHour(hour: number): boolean {
+      return hour === SHIFT_HOURS.NIGHT;
+    },
+    isShiftHour(hour: number): boolean {
+      return (
+        this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
+      );
+    },
     getCharismaColor(charisma: number) {
       const { red, blue, green } = this.getCharismaColorLevels(charisma);
       return `rgb(${red}, ${green}, ${blue})`;
@@ -113,5 +140,22 @@ export default Vue.extend({
   align-items: center;
   font-size: 18px;
   font-weight: 500;
+}
+
+.shift {
+  height: 2px;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+  &-party {
+    background-color: purple;
+  }
+  &-night {
+    background-color: black;
+  }
+  &-day {
+    background-color: darksalmon;
+  }
 }
 </style>
