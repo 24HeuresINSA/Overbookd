@@ -8,7 +8,47 @@
     :weekdays="[1, 2, 3, 4, 5, 6, 0]"
     @change="updateDate"
   >
-    <template #interval="{ hour, time, timeToY }">
+    <template
+      #interval="{
+        date: intervalDate,
+        year,
+        mounth,
+        day,
+        hour,
+        minute,
+        weekday,
+        hasDay,
+        hasTime,
+        past,
+        present,
+        future,
+        time,
+        timeToY,
+        timeDelta,
+        minutesToPixels,
+        week,
+      }"
+    >
+      <slot
+        name="interval"
+        :date="intervalDate"
+        :year="year"
+        :mounth="mounth"
+        :day="day"
+        :hour="hour"
+        :minute="minute"
+        :weekday="weekday"
+        :hasDay="hasDay"
+        :hasTime="hasTime"
+        :past="past"
+        :present="present"
+        :future="future"
+        :time="time"
+        :timeToY="timeToY"
+        :timeDelta="timeDelta"
+        :minutesToPixels="minutesToPixels"
+        :week="week"
+      ></slot>
       <div
         :class="{
           shift: isShiftHour(hour),
