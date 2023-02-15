@@ -37,6 +37,12 @@ interface CalendarItem {
   timed: true;
 }
 
+const PRIMARY_COLOR = {
+  RED_LEVEL: 33,
+  GREEN_LEVEL: 150,
+  BLUE_LEVEL: 243,
+};
+
 export default Vue.extend({
   name: "CharismaPeriodCalendar",
   data: () => ({
@@ -69,24 +75,31 @@ export default Vue.extend({
     this.calendarMarker = this.manifDate;
   },
   methods: {
+    getCharismaColorLevels(charisma: number): {
+      red: number;
+      blue: number;
+      green: number;
+    } {
+      const ratio = this.maxCharisma === 0 ? 0 : charisma / this.maxCharisma;
+      return {
+        red: this.lightenColor(PRIMARY_COLOR.RED_LEVEL, ratio),
+        blue: this.lightenColor(PRIMARY_COLOR.BLUE_LEVEL, ratio),
+        green: this.lightenColor(PRIMARY_COLOR.GREEN_LEVEL, ratio),
+      };
+    },
+    lightenColor(colorLevel: number, lighterRatio: number): number {
+      return Math.round(colorLevel - (colorLevel / 2) * lighterRatio);
+    },
     getCharismaColor(charisma: number) {
-      // primary color is rgb(33, 150, 243)
-      if (this.maxCharisma === 0) return "rgb(33, 150, 243)";
-      const ratio = charisma / this.maxCharisma;
-
-      const red = Math.round(33 - (33 / 2) * ratio);
-      const green = Math.round(150 - (150 / 2) * ratio);
-      const blue = Math.round(243 - (243 / 2) * ratio);
+      const { red, blue, green } = this.getCharismaColorLevels(charisma);
       return `rgb(${red}, ${green}, ${blue})`;
     },
     previousPage() {
-      const calendar = this.$refs.formCalendar;
-      // @ts-ignore
+      const calendar = this.$refs.formCalendar as any;
       if (calendar) calendar.prev();
     },
     nextPage() {
-      const calendar = this.$refs.formCalendar;
-      // @ts-ignore
+      const calendar = this.$refs.formCalendar as any;
       if (calendar) calendar.next();
     },
   },

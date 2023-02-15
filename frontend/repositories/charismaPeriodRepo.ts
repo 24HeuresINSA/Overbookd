@@ -16,9 +16,9 @@ export class CharismaPeriodRepository {
     );
   }
 
-  static async getCharismaPeriod(context: Context, cpId: number) {
+  static async getCharismaPeriod(context: Context, charismaPeriodId: number) {
     return context.$axios.get<HttpStringified<SavedCharismaPeriod>>(
-      `${this.basePath}/${cpId}`
+      `${this.basePath}/${charismaPeriodId}`
     );
   }
 
@@ -34,16 +34,19 @@ export class CharismaPeriodRepository {
 
   static async updateCharismaPeriod(
     context: Context,
-    cpId: number,
+    charismaPeriodId: number,
     charismaPeriod: CharismaPeriod
   ) {
     return context.$axios.put<HttpStringified<SavedCharismaPeriod>>(
-      `${this.basePath}/${cpId}`,
+      `${this.basePath}/${charismaPeriodId}`,
       charismaPeriod
     );
   }
 
-  static async deleteCharismaPeriod(context: Context, cpId: number) {
-    return context.$axios.delete(`${this.basePath}/${cpId}`);
+  static async deleteCharismaPeriod(
+    context: Context,
+    charismaPeriodId: number
+  ) {
+    return context.$axios.delete(`${this.basePath}/${charismaPeriodId}`);
   }
 }

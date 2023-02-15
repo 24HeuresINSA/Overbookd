@@ -301,12 +301,6 @@ export default {
           to: "/availabilities",
         },
         {
-          icon: "mdi-clock-edit",
-          title: "Charisme des dispos",
-          permission: "can-affect",
-          to: "/charismaPeriod",
-        },
-        {
           icon: "mdi-account",
           title: "Liste des Orgas",
           roles: "hard",
