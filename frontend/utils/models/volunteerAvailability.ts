@@ -8,7 +8,7 @@ export interface VolunteerWithAvailabilities extends User {
   availabilities: VolunteerAvailability[];
 }
 
-export function castAllVolunteerAvailabilitysWithDate(
+export function castAllVolunteerAvailabilitiesWithDate(
   volunteersWithAvailabilities: HttpStringified<VolunteerWithAvailabilities[]>
 ): VolunteerWithAvailabilities[] {
   return volunteersWithAvailabilities.map((volunteerWithAvailabilities) => ({

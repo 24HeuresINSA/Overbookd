@@ -2,7 +2,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
-  castAllVolunteerAvailabilitysWithDate,
+  castAllVolunteerAvailabilitiesWithDate,
   castVolunteerAvailabilitiesWithDate,
   VolunteerAvailability,
   VolunteerWithAvailabilities,
@@ -60,7 +60,7 @@ export const actions = actionTree(
       if (!res) return;
       commit(
         "SET_ALL_VOLUNTEER_AVAILABILITIES",
-        castAllVolunteerAvailabilitysWithDate(res.data)
+        castAllVolunteerAvailabilitiesWithDate(res.data)
       );
     },
 
@@ -77,9 +77,11 @@ export const actions = actionTree(
     },
 
     async updateVolunteerAvailabilities({ commit, state }, userId: number) {
+      const volunteerAvailabilities = state.mAvailabilities;
+      // Add merge and other transformations here
       const res = await safeCall(
         this,
-        repo.updateVolunteerAvailability(this, userId, state.mAvailabilities),
+        repo.updateVolunteerAvailability(this, userId, volunteerAvailabilities),
         {
           successMessage: "Disponibilitiés sauvegardées 🥳",
           errorMessage: "Disponibilitiés non sauvegardées 😢",
