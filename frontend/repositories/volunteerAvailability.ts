@@ -1,20 +1,11 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import {
-  VolunteerAvailability,
-  VolunteerWithAvailabilities,
-} from "~/utils/models/volunteerAvailability";
+import { VolunteerAvailability } from "~/utils/models/volunteerAvailability";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class VolunteerAvailabilityRepository {
   private static readonly basePath = "volunteer-availability";
-
-  static async getAllVolunteerAvailabilities(context: Context) {
-    return context.$axios.get<HttpStringified<VolunteerWithAvailabilities[]>>(
-      `${this.basePath}`
-    );
-  }
 
   static async getVolunteerAvailabilities(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerAvailability[]>>(

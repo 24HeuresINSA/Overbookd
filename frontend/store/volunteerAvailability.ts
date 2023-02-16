@@ -2,32 +2,24 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
-  castAllVolunteerAvailabilitiesWithDate,
   castVolunteerAvailabilitiesWithDate,
   VolunteerAvailability,
-  VolunteerWithAvailabilities,
 } from "~/utils/models/volunteerAvailability";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;
 
 export const state = () => ({
-  allAvailabilities: [] as VolunteerWithAvailabilities[],
+  registeredAvailabilities: [] as VolunteerAvailability[],
   mAvailabilities: [] as VolunteerAvailability[],
 });
 
 export const mutations = mutationTree(state, {
-  SET_ALL_VOLUNTEER_AVAILABILITIES(
-    state,
-    volunteerAvailabilities: VolunteerWithAvailabilities[]
-  ) {
-    state.allAvailabilities = volunteerAvailabilities;
-  },
-
   SET_VOLUNTEER_AVAILABILITIES(
     state,
     volunteerAvailabilities: VolunteerAvailability[]
   ) {
     state.mAvailabilities = volunteerAvailabilities;
+    state.registeredAvailabilities = volunteerAvailabilities;
   },
 
   ADD_VOLUNTEER_AVAILABILITY(
@@ -52,18 +44,6 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async fetchAllVolunteerAvailabilities({ commit }) {
-      const res = await safeCall(
-        this,
-        repo.getAllVolunteerAvailabilities(this)
-      );
-      if (!res) return;
-      commit(
-        "SET_ALL_VOLUNTEER_AVAILABILITIES",
-        castAllVolunteerAvailabilitiesWithDate(res.data)
-      );
-    },
-
     async fetchVolunteerAvailabilities({ commit }, userId: number) {
       const res = await safeCall(
         this,
