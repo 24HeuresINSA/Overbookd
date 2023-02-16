@@ -26,6 +26,7 @@
             'two-hours': dayEvent(time),
             'one-hour': !dayEvent(time),
             selected: isSelected(date, time),
+            locked: isLocked(date, time),
           }"
           @click="selectEvent(date, time)"
         >
@@ -40,6 +41,7 @@
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { Period } from "~/utils/models/period";
+import { SHIFT_HOURS } from "~/utils/shift/shift";
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",
@@ -55,10 +57,13 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    selected: [] as any[],
+    selected: [] as Period[],
   }),
   computed: {
-    isSelected() {
+    lockedAvailabilities(): Period[] {
+      return [];
+    },
+    isSelected(): (date: string, time: string) => boolean {
       return (date: string, time: string) => {
         const hour = this.getHour(time);
         const selected = this.selected.find(
@@ -69,6 +74,17 @@ export default Vue.extend({
         return selected !== undefined;
       };
     },
+    isLocked(): (date: string, time: string) => boolean {
+      return (date: string, time: string) => {
+        const hour = this.getHour(time);
+        const locked = this.lockedAvailabilities.find(
+          (event) =>
+            event.start.getDate() === new Date(date).getDate() &&
+            event.start.getHours() === hour
+        );
+        return locked !== undefined;
+      };
+    },
   },
   methods: {
     getHour(time: string) {
@@ -76,18 +92,18 @@ export default Vue.extend({
     },
     dayEvent(time: string) {
       const hour = this.getHour(time);
-      return hour >= 6 && hour <= 19;
+      return hour >= SHIFT_HOURS.NIGHT && hour < SHIFT_HOURS.PARTY;
     },
     getWeekdayNumbers(period: Period): Number[] {
-      const days = [];
+      const weekdays = [];
       for (
         let date = new Date(period.start);
         date <= period.end;
         date.setDate(date.getDate() + 1)
       ) {
-        days.push(date.getDay());
+        weekdays.push(date.getDay());
       }
-      return days;
+      return weekdays;
     },
     selectEvent(date: string, time: string) {
       if (this.isSelected(date, time)) {
@@ -105,7 +121,8 @@ export default Vue.extend({
       }
       this.selected.push({
         start: new Date(`${date} ${time}`),
-        end: new Date(`${date} ${time}`).setHours(hour + length),
+        // commentaire de Shagasse
+        end: new Date(new Date(`${date} ${time}`).setHours(hour + length)),
       });
     },
   },
@@ -128,6 +145,11 @@ export default Vue.extend({
 
 .selected {
   background-color: rgba(25, 118, 210, 1);
+  color: white;
+}
+
+.locked {
+  background-color: rgba(76, 175, 80, 1);
   color: white;
 }
 

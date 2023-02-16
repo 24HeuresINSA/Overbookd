@@ -31,7 +31,6 @@
         <v-stepper-content step="2">
           <AvailabilitiesPickCalendar :period="preManifPeriod" />
           <v-card-actions>
-            <v-spacer></v-spacer>
             <v-btn @click="decrementStep"> Précédent </v-btn>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="incrementStep"> Suivant </v-btn>
