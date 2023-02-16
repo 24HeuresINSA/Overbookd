@@ -3,7 +3,7 @@ import { Availability } from "~/domain/volunteer-availability/volunteer-availabi
 import { AvailabilityRegistery } from "~/domain/volunteer-availability/volunteer-availability.registery";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Period } from "~/utils/models/period";
+import { castPeriods, Period } from "~/utils/models/period";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;
 
@@ -37,7 +37,7 @@ export const actions = actionTree(
         repo.getVolunteerAvailabilities(this, userId)
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", res.data);
+      commit("SET_VOLUNTEER_AVAILABILITIES", castPeriods(res.data));
     },
 
     async updateVolunteerAvailabilities({ commit, state }, userId: number) {
@@ -54,7 +54,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", res.data);
+      commit("SET_VOLUNTEER_AVAILABILITIES", castPeriods(res.data));
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {

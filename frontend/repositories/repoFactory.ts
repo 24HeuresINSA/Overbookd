@@ -16,7 +16,7 @@ import signaLocationRepo from "./signaLocationRepo";
 import teamRepo from "./teamRepo";
 import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
-import { VolunteerAvailabilityRepository } from "./volunteerAvailability";
+import { VolunteerAvailabilityRepository } from "./volunteerAvailabilityRepo";
 
 const repositories = {
   user: userRepo,
