@@ -1,4 +1,5 @@
 import { Period } from "~/utils/models/period";
+import { SHIFT_HOURS } from "../../utils/shift/shift";
 import {
   AvailabilityMinimumPeriodDurationError,
   AvailabilityPeriodsJointError,
@@ -52,8 +53,8 @@ export class Availability {
 
   private isOddHourDuringNightOrDayShift(start: Date) {
     return (
-      start.getHours() > 6 &&
-      start.getHours() < 18 &&
+      start.getHours() > SHIFT_HOURS.NIGHT &&
+      start.getHours() < SHIFT_HOURS.PARTY &&
       start.getHours() % 2 !== 0
     );
   }
