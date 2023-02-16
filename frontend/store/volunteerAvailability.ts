@@ -43,7 +43,7 @@ export const actions = actionTree(
     async updateVolunteerAvailabilities({ commit, state }, userId: number) {
       const res = await safeCall(
         this,
-        repo.updateVolunteerAvailability(
+        repo.updateVolunteerAvailabilities(
           this,
           userId,
           state.availabilityRegistery.availabilities

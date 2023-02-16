@@ -14,7 +14,7 @@ export class VolunteerAvailabilityRepository {
     );
   }
 
-  static async updateVolunteerAvailability(
+  static async updateVolunteerAvailabilities(
     context: Context,
     userId: number,
     availabilities: Availability[]
