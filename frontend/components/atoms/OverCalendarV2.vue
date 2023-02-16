@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-sheet tile height="54" class="d-flex">
+  <div class="calendar">
+    <v-sheet v-if="title" tile height="54" class="d-flex">
       <v-btn icon class="ma-2" @click="previousPage">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -100,7 +100,7 @@ export default Vue.extend({
     },
     title: {
       type: String,
-      default: () => "Calendar",
+      default: () => "",
     },
   },
   data() {
@@ -138,27 +138,30 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.calendar-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 500;
-}
-.shift {
-  height: 2px;
-  position: absolute;
-  left: -1px;
-  right: 0;
-  pointer-events: none;
-  &-party {
-    background-color: purple;
+.calendar {
+  &-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
   }
-  &-night {
-    background-color: black;
-  }
-  &-day {
-    background-color: darksalmon;
+
+  .shift {
+    height: 2px;
+    position: absolute;
+    left: -1px;
+    right: 0;
+    pointer-events: none;
+    &-party {
+      background-color: purple;
+    }
+    &-night {
+      background-color: black;
+    }
+    &-day {
+      background-color: darksalmon;
+    }
   }
 }
 </style>
