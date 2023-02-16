@@ -103,9 +103,6 @@ export default Vue.extend({
       default: () => "",
     },
   },
-  data() {
-    return {};
-  },
   methods: {
     isPartyHour(hour: number): boolean {
       return hour === SHIFT_HOURS.PARTY;
