@@ -60,3 +60,5 @@ export const actions = actionTree(
     async addVolunteerAvailability({ commit }, availability: Availability) {
       commit("ADD_VOLUNTEER_AVAILABILITY", availability);
     },
+  }
+);
