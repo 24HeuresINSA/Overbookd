@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { VolunteerAvailability } from "~/utils/models/volunteerAvailability";
+import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
@@ -8,7 +8,7 @@ export class VolunteerAvailabilityRepository {
   private static readonly basePath = "volunteer-availability";
 
   static async getVolunteerAvailabilities(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<VolunteerAvailability[]>>(
+    return context.$axios.get<HttpStringified<Availability[]>>(
       `${this.basePath}/${userId}`
     );
   }
@@ -16,11 +16,11 @@ export class VolunteerAvailabilityRepository {
   static async updateVolunteerAvailability(
     context: Context,
     userId: number,
-    volunteerAvailabilities: VolunteerAvailability[]
+    availabilities: Availability[]
   ) {
-    return context.$axios.put<HttpStringified<VolunteerAvailability[]>>(
+    return context.$axios.put<HttpStringified<Availability[]>>(
       `${this.basePath}/${userId}`,
-      volunteerAvailabilities
+      availabilities
     );
   }
 }
