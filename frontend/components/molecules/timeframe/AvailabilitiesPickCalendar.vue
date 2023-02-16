@@ -1,12 +1,9 @@
 <template>
   <div>
-    <v-calendar
-      ref="refCalendar"
-      type="week"
-      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-      :weekday-format="() => ''"
-      :start="start"
-      :end="end"
+    <OverCalendarV2
+      :date="period.start"
+      :weekdays="getWeekdayNumbers(period)"
+      :events="[]"
       class="no-scroll elevation-2"
     >
       <template #day-label-header="{ date }">
@@ -35,23 +32,26 @@
           5
         </div>
       </template>
-    </v-calendar>
+    </OverCalendarV2>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
+import { Period } from "~/utils/models/period";
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",
+  components: { OverCalendarV2 },
   props: {
-    start: {
-      type: String,
+    period: {
+      type: Object as () => Period,
       required: true,
-    },
-    end: {
-      type: String,
-      required: true,
+      default: () => ({
+        start: new Date(),
+        end: new Date(),
+      }),
     },
   },
   data: () => ({
@@ -77,6 +77,17 @@ export default Vue.extend({
     dayEvent(time: string) {
       const hour = this.getHour(time);
       return hour >= 6 && hour <= 19;
+    },
+    getWeekdayNumbers(period: Period): Number[] {
+      const days = [];
+      for (
+        let date = new Date(period.start);
+        date <= period.end;
+        date.setDate(date.getDate() + 1)
+      ) {
+        days.push(date.getDay());
+      }
+      return days;
     },
     selectEvent(date: string, time: string) {
       if (this.isSelected(date, time)) {
