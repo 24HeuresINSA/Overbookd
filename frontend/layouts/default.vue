@@ -203,6 +203,12 @@ export default {
           to: "/humans",
         },
         {
+          icon: "mdi-clock-edit",
+          title: "Charisme des dispos",
+          permission: "can-affect",
+          to: "/charismaPeriod",
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
@@ -293,12 +299,6 @@ export default {
           title: "Mes dispos",
           roles: "everyone",
           to: "/availabilities",
-        },
-        {
-          icon: "mdi-clock",
-          title: "Créer dispos",
-          roles: "humain",
-          to: "/createavailibility",
         },
         {
           icon: "mdi-account",

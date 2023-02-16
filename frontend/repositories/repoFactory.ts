@@ -2,19 +2,20 @@ import authRepo from "~/repositories/authRepo";
 import equipmentRepo from "~/repositories/equipementRepo";
 import transactionRepo from "~/repositories/transactionRepo";
 import { CategoryRepository, GearsRepository } from "./catalog.repository";
+import { CharismaPeriodRepository } from "./charismaPeriodRepo";
 import configurationRepo from "./configurationRepo";
 import conflictsRepo from "./conflictsRepo";
 import equipmentProposalRepo from "./equipmentProposalRepo";
 import faRepo from "./faRepo";
 import ftRepo from "./ftRepo";
+import { GearRequestRepository } from "./gearRequestRepo";
+import { InventoryRepository } from "./inventoryRepo";
 import locationRepo from "./locationRepo";
+import permissionRepo from "./permissionRepo";
 import signaLocationRepo from "./signaLocationRepo";
 import teamRepo from "./teamRepo";
 import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
-import permissionRepo from "./permissionRepo";
-import { InventoryRepository } from "./inventoryRepo";
-import { GearRequestRepository } from "./gearRequestRepo";
 
 const repositories = {
   user: userRepo,
@@ -35,6 +36,7 @@ const repositories = {
   permission: permissionRepo,
   inventoryRepository: InventoryRepository,
   gearRequestRepository: GearRequestRepository,
+  charismaPeriod: CharismaPeriodRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -59,4 +61,5 @@ export const RepoFactory = {
   permissionRepo,
   InventoryRepository,
   GearRequestRepository,
+  CharismaPeriodRepository,
 };
