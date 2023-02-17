@@ -16,6 +16,7 @@ import signaLocationRepo from "./signaLocationRepo";
 import teamRepo from "./teamRepo";
 import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
+import { VolunteerAvailabilityRepository } from "./volunteerAvailabilityRepo";
 
 const repositories = {
   user: userRepo,
@@ -37,6 +38,7 @@ const repositories = {
   inventoryRepository: InventoryRepository,
   gearRequestRepository: GearRequestRepository,
   charismaPeriod: CharismaPeriodRepository,
+  volunteerAvailability: VolunteerAvailabilityRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -62,4 +64,5 @@ export const RepoFactory = {
   InventoryRepository,
   GearRequestRepository,
   CharismaPeriodRepository,
+  VolunteerAvailabilityRepository,
 };
