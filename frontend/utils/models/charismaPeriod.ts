@@ -26,3 +26,15 @@ export function castCharismaPeriodWithDate(
     end: new Date(charismaPeriod.end),
   };
 }
+
+export function getCharismaByDate(
+  charismaPeriods: SavedCharismaPeriod[],
+  date: Date
+): number {
+  return (
+    charismaPeriods.find((charismaPeriod) => {
+      const { start, end } = charismaPeriod;
+      return date >= start && date < end;
+    })?.charisma ?? 0
+  );
+}

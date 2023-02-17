@@ -30,6 +30,7 @@ export default Vue.extend({
     if (!this.$accessor.user.me) {
       await this.$accessor.user.fetchUser();
     }
+    await this.$accessor.charismaPeriod.fetchCharismaPeriods();
   },
 });
 </script>

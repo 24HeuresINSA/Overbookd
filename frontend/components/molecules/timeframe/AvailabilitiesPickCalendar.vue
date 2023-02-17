@@ -23,7 +23,7 @@
           }"
           @click="selectPeriod(date, hour, time)"
         >
-          5
+          {{ getCharisma(date, hour, time) }}
         </div>
       </template>
     </OverCalendarV2>
@@ -34,6 +34,7 @@
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
+import { getCharismaByDate } from "~/utils/models/charismaPeriod";
 import { Period } from "~/utils/models/period";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 
@@ -116,6 +117,14 @@ export default Vue.extend({
           period.start.getDate() !== new Date(date).getDate() ||
           period.start.getHours() !== hour
       );
+    },
+    getCharisma(date: string, hour: number, time: string): number {
+      const charismaPeriods =
+        this.$accessor.charismaPeriod.charismaPeriods ?? [];
+      const validDate = new Date(`${date} ${time}`);
+      const charisma = getCharismaByDate(charismaPeriods, validDate);
+      if (!this.isPartyShift(hour)) return charisma * 2;
+      return charisma;
     },
     formatDateDay(date: string): string {
       return new Date(date).toLocaleDateString("fr-FR", { weekday: "short" });
