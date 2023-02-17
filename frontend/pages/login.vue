@@ -2,6 +2,7 @@
   <div>
     <v-img :src="randomURL" class="img-background"></v-img>
     <div class="opacity-filter"></div>
+    <div class="opacity-filter"></div>
     <v-form>
       <v-container class="form-container">
         <v-row>
@@ -52,7 +53,7 @@
           <v-btn
             color="secondary"
             elevation="2"
-            to="/register"
+            to="/signup"
             class="signup-btn btn btn-secondary"
           >
             s'inscrire
@@ -63,8 +64,7 @@
             Mot de passe oublié ?
           </v-btn>
           <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
-            Un problème
-            <span class="desktop">&nbsp;lors de l'inscription </span>?
+            Un problème <span class="desktop">lors de l'inscription </span>?
           </v-btn>
         </v-row>
       </v-container>
