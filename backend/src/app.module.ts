@@ -32,6 +32,7 @@ import { TeamModule } from './team/team.module';
 import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
+import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { UserModule } from './user/user.module';
     FtReviewsModule,
     FtTeamRequestModule,
     CharismaPeriodModule,
+    VolunteerAvailabilityModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
