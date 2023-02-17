@@ -213,6 +213,12 @@ export default {
           to: "/charismaPeriod",
         },
         {
+          icon: "mdi-human-greeting",
+          title: "Affectation",
+          permission: "can-affect",
+          to: "/assignment",
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
@@ -263,24 +269,6 @@ export default {
       ],
       items: [
         {
-          icon: "mdi-apps",
-          title: "Accueil",
-          to: "/",
-          roles: "hard",
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Fiches Activités",
-          roles: this.getConfig("fa_required_role"),
-          to: "/fa",
-        },
-        {
-          icon: "mdi-format-color-highlight",
-          title: "Fiches Tâches",
-          roles: this.getConfig("ft_required_role"),
-          to: "/ft",
-        },
-        {
           icon: "mdi-calendar-clock",
           title: "Planning",
           roles: "hard",
@@ -321,12 +309,6 @@ export default {
           title: "Logistique",
           roles: "log",
           to: "/logistics",
-        },
-        {
-          icon: "mdi-human-greeting",
-          title: "Affectation",
-          roles: "humain",
-          to: "/assignment",
         },
         {
           icon: "mdi-clock",
