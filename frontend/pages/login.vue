@@ -2,6 +2,7 @@
   <div>
     <v-img :src="randomURL" class="img-background"></v-img>
     <div class="opacity-filter"></div>
+    <div class="opacity-filter"></div>
     <v-form>
       <v-container class="form-container">
         <v-row>
