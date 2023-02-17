@@ -2,33 +2,26 @@
   <div>
     <OverCalendarV2
       :date="period.start"
-      :weekdays="getWeekdayNumbers(period)"
-      :events="[]"
+      :weekdays="getWeekdayNumbers()"
       class="no-scroll elevation-2"
     >
       <template #day-label-header="{ date }">
         <div class="day-header">
-          <p>
-            {{
-              new Date(date).toLocaleDateString("fr-FR", { weekday: "short" })
-            }}
-          </p>
-          <p>
-            {{ new Date(date).toLocaleDateString("fr-FR", { day: "numeric" }) }}
-          </p>
+          <p>{{ formatDateDay(date) }}</p>
+          <p>{{ formatDateDayNumber(date) }}</p>
         </div>
       </template>
-      <template #interval="{ date, time }">
+      <template #interval="{ date, hour, time }">
         <div
-          v-if="!dayEvent(time) || getHour(time) % 2 === 0"
+          v-if="isSecondHourOfTwoHoursPeriod(hour)"
           class="event"
           :class="{
-            'two-hours': dayEvent(time),
-            'one-hour': !dayEvent(time),
-            selected: isSelected(date, time),
-            locked: isLocked(date, time),
+            'two-hours': !isPartyShift(hour),
+            'one-hour': isPartyShift(hour),
+            selected: isSelected(date, hour),
+            locked: isLocked(date, hour),
           }"
-          @click="selectEvent(date, time)"
+          @click="selectPeriod(date, hour, time)"
         >
           5
         </div>
@@ -40,6 +33,7 @@
 <script lang="ts">
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
+import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { Period } from "~/utils/models/period";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 
@@ -60,70 +54,74 @@ export default Vue.extend({
     selected: [] as Period[],
   }),
   computed: {
-    lockedAvailabilities(): Period[] {
+    lockedAvailabilities(): Availability[] {
+      // return this.$accessor.volunteerAvailabilities.registeredAvailabilities;
       return [];
     },
-    isSelected(): (date: string, time: string) => boolean {
-      return (date: string, time: string) => {
-        const hour = this.getHour(time);
-        const selected = this.selected.find(
-          (event) =>
-            event.start.getDate() === new Date(date).getDate() &&
-            event.start.getHours() === hour
+    isSelected(): (date: string, hour: number) => boolean {
+      return (date: string, hour: number) => {
+        return this.selected.some(
+          (period) =>
+            period.start.getDate() === new Date(date).getDate() &&
+            period.start.getHours() === hour
         );
-        return selected !== undefined;
       };
     },
-    isLocked(): (date: string, time: string) => boolean {
-      return (date: string, time: string) => {
-        const hour = this.getHour(time);
+    isLocked(): (date: string, hour: number) => boolean {
+      return (date: string, hour: number) => {
         const locked = this.lockedAvailabilities.find(
-          (event) =>
-            event.start.getDate() === new Date(date).getDate() &&
-            event.start.getHours() === hour
+          (period) =>
+            period.start.getDate() === new Date(date).getDate() &&
+            period.start.getHours() === hour
         );
         return locked !== undefined;
       };
     },
   },
   methods: {
-    getHour(time: string) {
-      return parseInt(time.split(":")[0]);
+    isPartyShift(hour: number): boolean {
+      return hour >= SHIFT_HOURS.PARTY || hour < SHIFT_HOURS.NIGHT;
     },
-    dayEvent(time: string) {
-      const hour = this.getHour(time);
-      return hour >= SHIFT_HOURS.NIGHT && hour < SHIFT_HOURS.PARTY;
+    isSecondHourOfTwoHoursPeriod(hour: number): boolean {
+      return this.isPartyShift(hour) || hour % 2 === 0;
     },
-    getWeekdayNumbers(period: Period): Number[] {
-      const weekdays = [];
-      for (
-        let date = new Date(period.start);
-        date <= period.end;
-        date.setDate(date.getDate() + 1)
-      ) {
-        weekdays.push(date.getDay());
-      }
-      return weekdays;
+    getWeekdayNumbers(): Number[] {
+      return this.generateWeekdayList([], new Date(this.period.start));
     },
-    selectEvent(date: string, time: string) {
-      if (this.isSelected(date, time)) {
-        this.selected = this.selected.filter(
-          (event) =>
-            event.start.getDate() !== new Date(date).getDate() ||
-            event.start.getHours() !== this.getHour(time)
-        );
-        return;
-      }
-      const hour = this.getHour(time);
-      let length = 1;
-      if (this.dayEvent(time)) {
-        length = 2;
-      }
-      this.selected.push({
-        start: new Date(`${date} ${time}`),
-        // commentaire de Shagasse
-        end: new Date(new Date(`${date} ${time}`).setHours(hour + length)),
-      });
+    generateWeekdayList(weekdays: number[], date: Date): number[] {
+      if (date > this.period.end) return weekdays;
+      const weekday = date.getDay();
+      const tomorrow = new Date(date);
+      tomorrow.setDate(date.getDate() + 1);
+      return this.generateWeekdayList([...weekdays, weekday], tomorrow);
+    },
+    selectPeriod(date: string, hour: number, time: string) {
+      if (this.isSelected(date, hour)) return this.removePeriod(date, hour);
+      this.addPeriod(date, time, hour);
+    },
+    addPeriod(date: string, time: string, hour: number) {
+      const periodToAdd = this.generateNewPeriod(date, time, hour);
+      this.selected = [...this.selected, periodToAdd];
+    },
+    generateNewPeriod(date: string, time: string, hour: number): Period {
+      const durationInHours = this.isPartyShift(hour) ? 1 : 2;
+      const start = new Date(`${date} ${time}`);
+      let end = new Date(start);
+      end.setHours(hour + durationInHours);
+      return { start, end };
+    },
+    removePeriod(date: string, hour: number) {
+      this.selected = this.selected.filter(
+        (period) =>
+          period.start.getDate() !== new Date(date).getDate() ||
+          period.start.getHours() !== hour
+      );
+    },
+    formatDateDay(date: string): string {
+      return new Date(date).toLocaleDateString("fr-FR", { weekday: "short" });
+    },
+    formatDateDayNumber(date: string): string {
+      return new Date(date).toLocaleDateString("fr-FR", { day: "numeric" });
     },
   },
 });

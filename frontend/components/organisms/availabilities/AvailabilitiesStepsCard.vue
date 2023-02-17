@@ -1,59 +1,36 @@
+<!-- eslint-disable vue/valid-v-for -->
 <template>
   <div>
     <v-stepper v-model="step">
       <v-stepper-header>
-        <v-stepper-step :complete="step > 1" step="1">
-          Pré-pré-festival
-        </v-stepper-step>
-        <v-divider></v-divider>
-        <v-stepper-step :complete="step > 2" step="2">
-          Pré-festival
-        </v-stepper-step>
-        <v-divider></v-divider>
-        <v-stepper-step :complete="step > 3" step="3">
-          Festival
-        </v-stepper-step>
-        <v-divider></v-divider>
-        <v-stepper-step :complete="step > 4" step="4">
-          Post-festival
-        </v-stepper-step>
+        <template v-for="({ title }, index) in calendarSteps">
+          <v-stepper-step :step="index + 1" :complete="step > index + 1">
+            {{ title }}
+          </v-stepper-step>
+          <v-divider
+            v-if="index < calendarSteps.length - 1"
+            :key="`divider-${index}`"
+          />
+        </template>
       </v-stepper-header>
 
       <v-stepper-items>
-        <v-stepper-content step="1">
-          <AvailabilitiesPickCalendar :period="prePreManifPeriod" />
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="incrementStep"> Suivant </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
-
-        <v-stepper-content step="2">
-          <AvailabilitiesPickCalendar :period="preManifPeriod" />
-          <v-card-actions>
-            <v-btn @click="decrementStep"> Précédent </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="incrementStep"> Suivant </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
-
-        <v-stepper-content step="3">
-          <AvailabilitiesPickCalendar :period="manifPeriod" />
-          <v-card-actions>
-            <v-btn @click="decrementStep"> Précédent </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="incrementStep"> Suivant </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
-
-        <v-stepper-content step="4">
-          <AvailabilitiesPickCalendar :period="postManifPeriod" />
-          <v-card-actions>
-            <v-btn @click="decrementStep"> Précédent </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn color="success"> Sauvegarder et terminer </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
+        <template v-for="({ period }, index) in calendarSteps">
+          <v-stepper-content :step="index + 1">
+            <AvailabilitiesPickCalendar :period="period" />
+            <v-card-actions>
+              <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                v-if="index < calendarSteps.length - 1"
+                color="primary"
+                @click="incrementStep"
+              >
+                Suivant
+              </v-btn>
+            </v-card-actions>
+          </v-stepper-content>
+        </template>
       </v-stepper-items>
     </v-stepper>
   </div>
@@ -64,6 +41,11 @@ import Vue from "vue";
 import AvailabilitiesPickCalendar from "~/components/molecules/timeframe/AvailabilitiesPickCalendar.vue";
 import { Period } from "~/utils/models/period";
 
+interface CalendarStep {
+  title: string;
+  period: Period;
+}
+
 export default Vue.extend({
   name: "AvailabilitiesStepsCard",
   components: { AvailabilitiesPickCalendar },
@@ -71,28 +53,52 @@ export default Vue.extend({
     step: 1,
   }),
   computed: {
-    prePreManifPeriod(): Period {
+    isHardUser(): boolean {
+      return this.$accessor.user.hasPermission("hard");
+    },
+    softCalendarSteps(): CalendarStep[] {
+      return [this.preManifStep, this.manifStep, this.postManifStep];
+    },
+    hardCalendarSteps(): CalendarStep[] {
+      return [this.prePreManifStep, ...this.softCalendarSteps];
+    },
+    calendarSteps(): CalendarStep[] {
+      return this.isHardUser ? this.hardCalendarSteps : this.softCalendarSteps;
+    },
+    prePreManifStep(): CalendarStep {
       return {
-        start: new Date("2023-05-01"),
-        end: new Date("2023-05-07"),
+        title: "Pré-pré-festival",
+        period: {
+          start: new Date("2023-05-01"),
+          end: new Date("2023-05-07"),
+        },
       };
     },
-    preManifPeriod(): Period {
+    preManifStep(): CalendarStep {
       return {
-        start: new Date("2023-05-08"),
-        end: new Date("2023-05-11"),
+        title: "Pré-festival",
+        period: {
+          start: new Date("2023-05-08"),
+          end: new Date("2023-05-11"),
+        },
       };
     },
-    manifPeriod(): Period {
+    manifStep(): CalendarStep {
       return {
-        start: new Date("2023-05-12"),
-        end: new Date("2023-05-15"),
+        title: "Festival",
+        period: {
+          start: new Date("2023-05-12"),
+          end: new Date("2023-05-15"),
+        },
       };
     },
-    postManifPeriod(): Period {
+    postManifStep(): CalendarStep {
       return {
-        start: new Date("2023-05-16"),
-        end: new Date("2023-05-17"),
+        title: "Post-festival",
+        period: {
+          start: new Date("2023-05-16"),
+          end: new Date("2023-05-17"),
+        },
       };
     },
   },

@@ -90,7 +90,6 @@ export default Vue.extend({
   props: {
     events: {
       type: Array,
-      required: true,
       default: () => [],
     },
     date: {
