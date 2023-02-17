@@ -4,6 +4,7 @@ import { AvailabilityRegistery } from "~/domain/volunteer-availability/volunteer
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriods, Period } from "~/utils/models/period";
+import { HttpStringified } from "~/utils/types/http";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;
 
@@ -37,7 +38,11 @@ export const actions = actionTree(
         repo.getVolunteerAvailabilities(this, userId)
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", castPeriods(res.data));
+
+      commit(
+        "SET_VOLUNTEER_AVAILABILITIES",
+        stringifiedPeriodsToAvailabilities(res.data)
+      );
     },
 
     async updateVolunteerAvailabilities({ commit, state }, userId: number) {
@@ -54,7 +59,10 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", castPeriods(res.data));
+      commit(
+        "SET_VOLUNTEER_AVAILABILITIES",
+        stringifiedPeriodsToAvailabilities(res.data)
+      );
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {
@@ -62,3 +70,12 @@ export const actions = actionTree(
     },
   }
 );
+
+function stringifiedPeriodsToAvailabilities(
+  periods: HttpStringified<Period[]>
+) {
+  const castedPeriods = castPeriods(periods);
+  return castedPeriods.map((period) => {
+    return Availability.fromPeriod(period);
+  });
+}

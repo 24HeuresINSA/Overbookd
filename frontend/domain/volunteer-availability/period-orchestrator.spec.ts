@@ -71,14 +71,24 @@ describe("Period orchestrator", () => {
       ]);
     });
     describe("when adding a period before the period from 2 to 3", () => {
+      const periodOrchestrator = PeriodOrchestrator.init(periods);
+      const period = {
+        start: new Date("2023-05-12 00:00"),
+        end: new Date("2023-05-12 02:00"),
+      };
+      periodOrchestrator.addPeriod(period);
       it("shouldn't have any error in the report", () => {
-        const periodOrchestrator = PeriodOrchestrator.init(periods);
-        const period = {
-          start: new Date("2023-05-12 00:00"),
-          end: new Date("2023-05-12 02:00"),
-        };
-        periodOrchestrator.addPeriod(period);
         expect(periodOrchestrator.errors).toEqual([]);
+      });
+      describe("when adding a period before the period from 8 to 10", () => {
+        it("shouldn't have any error in the report", () => {
+          const period_ = {
+            start: new Date("2023-05-12 06:00"),
+            end: new Date("2023-05-12 08:00"),
+          };
+          periodOrchestrator.addPeriod(period_);
+          expect(periodOrchestrator.errors).toEqual([]);
+        });
       });
     });
   });

@@ -19,7 +19,7 @@ export class VolunteerAvailabilityRepository {
     userId: number,
     availabilities: Availability[]
   ) {
-    return context.$axios.put<HttpStringified<Period[]>>(
+    return context.$axios.post<HttpStringified<Period[]>>(
       `${this.basePath}/${userId}`,
       availabilities
     );
