@@ -39,10 +39,7 @@ export const actions = actionTree(
       );
       if (!res) return;
 
-      commit(
-        "SET_VOLUNTEER_AVAILABILITIES",
-        stringifiedPeriodsToAvailabilities(res.data)
-      );
+      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
     },
 
     async updateVolunteerAvailabilities({ commit, state }, userId: number) {
@@ -59,10 +56,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit(
-        "SET_VOLUNTEER_AVAILABILITIES",
-        stringifiedPeriodsToAvailabilities(res.data)
-      );
+      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {
@@ -71,9 +65,7 @@ export const actions = actionTree(
   }
 );
 
-function stringifiedPeriodsToAvailabilities(
-  periods: HttpStringified<Period[]>
-) {
+function castToAvailabilities(periods: HttpStringified<Period[]>) {
   const castedPeriods = castPeriods(periods);
   return castedPeriods.map((period) => {
     return Availability.fromPeriod(period);

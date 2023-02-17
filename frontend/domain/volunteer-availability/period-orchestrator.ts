@@ -34,19 +34,50 @@ export class PeriodOrchestrator {
   }
 
   get availabilityPeriods(): Period[] {
-    return this.periods.reduce(
-      PeriodOrchestrator.reduceToMergedPeriods,
-      [] as Period[]
+    return this.mergePeriods(this.periods);
+  }
+
+  private mergePeriods(periods: Period[]): Period[] {
+    if (!this.canMergeAtLeastOnePeriod(periods)) return periods;
+    return this.mergePeriods(
+      periods.reduce(PeriodOrchestrator.reduceToMergedPeriods, [] as Period[])
     );
   }
 
-  private static reduceToMergedPeriods(periods: Period[], period: Period) {
+  private canMergeAtLeastOnePeriod(periods: Period[]): boolean {
+    return periods.some(PeriodOrchestrator.isMergeableFromOneOf(periods));
+  }
+
+  private static reduceToMergedPeriods(
+    periods: Period[],
+    period: Period
+  ): Period[] {
     const mergeablePeriodIndex = periods.findIndex(
       PeriodOrchestrator.isFollowingPeriod(period)
     );
-    if (mergeablePeriodIndex === -1) {
-      return [...periods, period];
-    }
+    if (mergeablePeriodIndex === -1) return [...periods, period];
+    return PeriodOrchestrator.mergePeriodToPeriodList(
+      periods,
+      mergeablePeriodIndex,
+      period
+    );
+  }
+
+  private static isMergeableFromOneOf(
+    periods: Period[]
+  ): (value: Period, index: number) => boolean {
+    return (period, startIndex) => {
+      return periods
+        .slice(startIndex + 1)
+        .some(PeriodOrchestrator.isFollowingPeriod(period));
+    };
+  }
+
+  private static mergePeriodToPeriodList(
+    periods: Period[],
+    mergeablePeriodIndex: number,
+    period: Period
+  ) {
     const mergeablePeriod = periods[mergeablePeriodIndex];
     const mergedPeriod = {
       start: new Date(
@@ -56,14 +87,19 @@ export class PeriodOrchestrator {
         Math.max(mergeablePeriod.end.getTime(), period.end.getTime())
       ),
     };
-    return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
+    const updatedPeriods = updateItemToList(
+      periods,
+      mergeablePeriodIndex,
+      mergedPeriod
+    );
+    return updatedPeriods;
   }
 
   private static isFollowingPeriod(period: Period): (value: Period) => boolean {
-    return (p) => {
+    return (existingPeriod) => {
       return (
-        p.start.getTime() === period.end.getTime() ||
-        p.end.getTime() === period.start.getTime()
+        existingPeriod.start.getTime() === period.end.getTime() ||
+        existingPeriod.end.getTime() === period.start.getTime()
       );
     };
   }
