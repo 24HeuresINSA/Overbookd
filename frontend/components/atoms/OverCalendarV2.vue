@@ -70,7 +70,7 @@
             'shift-day': isDayHour(hour),
             'shift-night': isNightHour(hour),
           }"
-          :style="{ top: timeToY(time) }"
+          :style="{ top: `${timeToY(time)}px` }"
         ></div>
       </template>
     </v-calendar>
@@ -138,7 +138,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .calendar {
   &-title {
     display: flex;
