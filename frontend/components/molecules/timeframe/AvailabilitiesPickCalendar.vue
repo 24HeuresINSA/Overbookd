@@ -23,7 +23,7 @@
           }"
           @click="selectPeriod(date, hour, time)"
         >
-          {{ getCharisma(date, hour, time) }}
+          {{ getDisplayedCharisma(date, hour, time) }}
         </div>
       </template>
     </OverCalendarV2>
@@ -118,11 +118,14 @@ export default Vue.extend({
           period.start.getHours() !== hour
       );
     },
-    getCharisma(date: string, hour: number, time: string): number {
+    getCharismaByHour(date: string, hour: number, time: string): number {
       const charismaPeriods =
         this.$accessor.charismaPeriod.charismaPeriods ?? [];
       const validDate = new Date(`${date} ${time}`);
-      const charisma = getCharismaByDate(charismaPeriods, validDate);
+      return getCharismaByDate(charismaPeriods, validDate);
+    },
+    getDisplayedCharisma(date: string, hour: number, time: string): number {
+      const charisma = this.getCharismaByHour(date, hour, time);
       if (!this.isPartyShift(hour)) return charisma * 2;
       return charisma;
     },
