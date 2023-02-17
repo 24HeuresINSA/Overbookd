@@ -19,9 +19,9 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_VOLUNTEER_AVAILABILITIES(state, availability: Availability[]) {
+  SET_VOLUNTEER_AVAILABILITIES(state, availabilities: Availability[]) {
     state.availabilityRegistery =
-      AvailabilityRegistery.fromAvailabilities(availability);
+      AvailabilityRegistery.fromAvailabilities(availabilities);
   },
 
   ADD_VOLUNTEER_AVAILABILITY(state, period: Period) {
@@ -38,7 +38,6 @@ export const actions = actionTree(
         repo.getVolunteerAvailabilities(this, userId)
       );
       if (!res) return;
-
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
     },
 
@@ -66,8 +65,5 @@ export const actions = actionTree(
 );
 
 function castToAvailabilities(periods: HttpStringified<Period[]>) {
-  const castedPeriods = castPeriods(periods);
-  return castedPeriods.map((period) => {
-    return Availability.fromPeriod(period);
-  });
+  return castPeriods(periods).map(Availability.fromPeriod);
 }

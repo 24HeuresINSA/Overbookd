@@ -87,12 +87,7 @@ export class PeriodOrchestrator {
         Math.max(mergeablePeriod.end.getTime(), period.end.getTime())
       ),
     };
-    const updatedPeriods = updateItemToList(
-      periods,
-      mergeablePeriodIndex,
-      mergedPeriod
-    );
-    return updatedPeriods;
+    return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
   }
 
   private static isFollowingPeriod(period: Period): (value: Period) => boolean {
