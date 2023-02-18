@@ -52,7 +52,7 @@
           <v-btn
             color="secondary"
             elevation="2"
-            to="/signup"
+            to="/register"
             class="signup-btn btn btn-secondary"
           >
             s'inscrire
