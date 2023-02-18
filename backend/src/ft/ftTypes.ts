@@ -39,7 +39,13 @@ export interface TimeWindow {
   end: Date;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
-  sliceTime: number;
+  sliceTime?: number;
+}
+
+export interface Timespan {
+  timeWindowId: number;
+  start: Date;
+  end: Date;
 }
 
 export class Review {

@@ -1,14 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from '@nestjs/common';
 import { FtReview, FtStatus, reviewStatus } from '@prisma/client';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
-import { FtService } from 'src/ft/ft.service';
-import { COMPLETE_FT_SELECT } from 'src/ft/ftTypes';
+import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
+import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
+import { CreateFtFeedbackDto } from 'src/ft_feedback/dto/createFtFeedback.dto';
 import { PrismaService } from '../prisma.service';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
+import { TimespansGenerator } from './timespansGenerator';
 
 @Injectable()
 export class FtReviewsService {
-  constructor(private prisma: PrismaService, private ft: FtService) {}
+  constructor(private prisma: PrismaService, private ftService: FtService) {}
 
   async validateFt(
     ftId: number,
@@ -36,11 +43,11 @@ export class FtReviewsService {
         upsertReview,
         updateStatus,
       ]);
-      return this.ft.convertFTtoApiContract(updatedFt);
+      return this.ftService.convertFTtoApiContract(updatedFt);
     }
 
     await upsertReview;
-    return this.ft.findOne(ftId);
+    return this.ftService.findOne(ftId);
   }
 
   async refuseFt(
@@ -68,7 +75,53 @@ export class FtReviewsService {
       upsertReview,
       updateStatus,
     ]);
-    return this.ft.convertFTtoApiContract(updatedFt);
+    return this.ftService.convertFTtoApiContract(updatedFt);
+  }
+
+  async assignementApproval(
+    ftId: number,
+    userId: number,
+  ): Promise<CompleteFtResponseDto | null> {
+    const ft = await this.prisma.ft.findUnique({
+      where: { id: ftId },
+      select: COMPLETE_FT_SELECT,
+    });
+    this.checkSwitchableToReady(ft);
+
+    const timespans = this.computeTimeSpans(ft);
+
+    const updateStatus = this.prisma.ft.update({
+      where: { id: ftId },
+      data: { status: FtStatus.READY },
+      select: COMPLETE_FT_SELECT,
+    });
+
+    const insertTimespans = this.prisma.ftTimespan.createMany({
+      data: timespans,
+    });
+
+    const feedback: CreateFtFeedbackDto = {
+      comment: 'Prête pour affectation !',
+      subject: FtStatus.READY,
+      authorId: userId,
+      createdAt: new Date(),
+    };
+
+    const insertFeedback = this.prisma.ftFeedback.create({
+      data: {
+        ...feedback,
+        ftId,
+      },
+      select: { id: true },
+    });
+
+    const [_, updatedFt] = await this.prisma.$transaction([
+      insertFeedback,
+      updateStatus,
+      insertTimespans,
+    ]);
+
+    return this.ftService.convertFTtoApiContract(updatedFt);
   }
 
   async remove(ftId: number, teamCode: string): Promise<void> {
@@ -99,5 +152,24 @@ export class FtReviewsService {
       return FtStatus.VALIDATED;
     }
     return null;
+  }
+
+  private checkSwitchableToReady(ft: DataBaseCompleteFt): boolean {
+    if (!ft) {
+      throw new NotFoundException('FT not found');
+    }
+    if (ft.status !== FtStatus.VALIDATED) {
+      throw new BadRequestException('FT is not validated');
+    }
+    if (ft.fa.status !== FtStatus.VALIDATED) {
+      throw new BadRequestException('FA is not validated');
+    }
+    // TODO Check for conflicts
+    throw new NotImplementedException();
+    return true;
+  }
+
+  private computeTimeSpans(ft: DataBaseCompleteFt): Timespan[] {
+    return ft.timeWindows.flatMap(TimespansGenerator.generateTimespans);
   }
 }

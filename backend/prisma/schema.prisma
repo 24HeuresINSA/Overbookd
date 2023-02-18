@@ -481,6 +481,7 @@ model FtTimeWindows {
   sliceTime    Float?          @map("slice_time")
   userRequests FtUserRequest[]
   teamRequests FtTeamRequest[]
+  timespans    FtTimespan[]
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
@@ -506,6 +507,19 @@ model FtTeamRequest {
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
+}
+
+model FtTimespan {
+  id            Int            @id @default(autoincrement())
+  timeWindows   FtTimeWindows  @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindowId  Int            @map("time_window_id")
+  start         DateTime
+  end           DateTime
+
+  @@index([start(sort: Asc)])
+  @@index([end(sort: Desc)])
+  @@index([start(sort: Asc), end(sort: Asc)])
+  @@map("ft_timespan")
 }
 
 enum reviewStatus {
