@@ -8,8 +8,9 @@
       <v-img
         class="register-illustration"
         src="https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
-      ></v-img>
-      <v-card-title class="register-title"> 👋 Inscription 👋 </v-card-title>
+      >
+        <v-card-title class="register-title"> 👋 Inscription 👋 </v-card-title>
+      </v-img>
       <v-stepper v-model="step" vertical>
         <v-stepper-step :complete="step > 1" step="1" @click="step = 1">
           Devenir Benevole
@@ -165,10 +166,23 @@ export default Vue.extend({
   height: 100%;
   width: 100%;
 
+  &-card {
+    max-width: 1000px;
+  }
+
   &-illustration {
-    height: 15hv;
+    height: 20vh;
     min-height: 100px;
     max-height: 350px;
+  }
+
+  &-title {
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    justify-content: center;
   }
   .data {
     display: flex;
