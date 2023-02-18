@@ -52,7 +52,7 @@
         </v-stepper-step>
 
         <v-stepper-content step="2">
-          <v-form class="personnal-data">
+          <v-form class="data dense personnal-data">
             <v-text-field label="Prénom*" required></v-text-field>
             <v-text-field label="Surnom"></v-text-field>
             <v-text-field label="Nom*" required></v-text-field>
@@ -69,7 +69,7 @@
         </v-stepper-step>
 
         <v-stepper-content step="3">
-          <v-form class="contact-data">
+          <v-form class="data contact-data">
             <v-select
               label="Equipe"
               :items="[
@@ -91,8 +91,12 @@
               hint="Pas d'adresse insa 🙏"
               persistent-hint
             ></v-text-field>
-
             <v-text-field label="Ton 06 ?*" required></v-text-field>
+            <v-textarea
+              label="Commentaire"
+              hint="Laisse nous un petit mot. 💌"
+              persistent-hint
+            ></v-textarea>
           </v-form>
           <v-btn color="primary" @click="step = 4"> On se capte 🤙 </v-btn>
           <v-btn text @click="step = 2"> Revenir </v-btn>
@@ -102,7 +106,7 @@
           Securite <small>Un mot de passe</small>
         </v-stepper-step>
         <v-stepper-content step="4">
-          <v-form class="security-data">
+          <v-form class="data security-data">
             <v-text-field
               type="password"
               label="Mot de passe*"
@@ -119,7 +123,7 @@
               persistent-hint
             ></v-text-field>
           </v-form>
-          <v-btn color="primary" @click="step = 1"> M'inscrire </v-btn>
+          <v-btn color="primary" disabled @click="step = 1"> M'inscrire </v-btn>
           <v-btn text @click="step = 3"> Revenir </v-btn>
         </v-stepper-content>
       </v-stepper>
@@ -164,6 +168,14 @@ export default Vue.extend({
     height: 15hv;
     min-height: 100px;
     max-height: 350px;
+  }
+  .data {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    &.dense {
+      gap: 0px;
+    }
   }
 }
 </style>
