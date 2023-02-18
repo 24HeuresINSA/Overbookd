@@ -28,12 +28,13 @@
           <p>
             Pour que l'on puisse t'accueillir dans les meilleures conditions il
             nous faut cependant quelques informations sur toi et le temps que tu
-            souhaite consacrer a nous aider.
+            souhaites consacrer a nous aider.
           </p>
           <p>
-            Si tu as la moindre question sur le festival et ce pour quoi tu peux
-            nous aider, n'hesite pas a contacter les
+            Si tu as la moindre question sur le festival et ce que tu peux faire
+            pour nous aider, n'hesite pas a contacter les
             <a href="mailto:humains@24heures.org">responsables benevoles</a>.
+            <br />
             Ils seront tes principaux interlocuteurs en amont et en aval du
             festival. 😎
           </p>
