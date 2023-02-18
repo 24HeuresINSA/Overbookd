@@ -56,11 +56,8 @@
             <v-text-field label="Prénom*" required></v-text-field>
             <v-text-field label="Surnom"></v-text-field>
             <v-text-field label="Nom*" required></v-text-field>
-            <v-switch
-              label="J'ai plus de 18 ans"
-              hint="Obligatoire pour servir au bar"
-              persistent-hint
-            ></v-switch>
+            <v-text-field label="Date de naissance*" type="date" return-object>
+            </v-text-field>
           </v-form>
           <v-btn color="primary" @click="step = 3"> Vous savez tout 🕵️</v-btn>
           <v-btn text @click="step = 1"> Revenir</v-btn>
