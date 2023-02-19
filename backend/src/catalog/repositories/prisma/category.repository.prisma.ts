@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaPromise } from '@prisma/client';
 import { PrismaService } from '../../../prisma.service';
 import {
   Category,
@@ -67,7 +66,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     );
   }
 
-  updateCategory(category: Category): PrismaPromise<Category> {
+  updateCategory(category: Category) {
     const { id, ...baseCategory } = category;
     const data = this.buildUpsertData(baseCategory);
     return this.prismaService.catalog_Category.update({
