@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, Team } from '@prisma/client';
-import { Departements, Years } from '../src/user/dto/common';
 import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
+import { Departements, Years } from '../src/user/dto/common';
 import { categoriesAndGears } from './seeders/gears';
 import { permissions } from './seeders/permissions';
 import { signaLocations } from './seeders/signa-locations';
@@ -456,6 +456,27 @@ async function main() {
   );
 
   console.log(`\n${locations.length} Signa Locations inserted ⛳\n`);
+
+  const charismaPeriodData = [];
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 12; j += 2) {
+      charismaPeriodData.push({
+        name: `Charisma ${i} - ${j}`,
+        description: `Charisma ${i} - ${j}`,
+        start: new Date(2021, 8, i, j),
+        end: new Date(2021, 8, i, j + 2),
+        charisma: j % 2 === 0 ? 10 : 5,
+      });
+    }
+  }
+
+  const charismaPeriods = await Promise.all(
+    charismaPeriodData.map((period) =>
+      prisma.charismaPeriod.create({ data: period }),
+    ),
+  );
+
+  console.log(`\n${charismaPeriods.length} Charisma Periods inserted 🎉\n`);
 }
 main()
   .then(async () => {
