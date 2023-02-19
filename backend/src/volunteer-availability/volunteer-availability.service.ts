@@ -51,6 +51,10 @@ export class VolunteerAvailabilityService {
       }
     }
     console.log('New availabilities are longer than older ones');
+    let newCharismaPoints = 0;
+    for (const period of newPeriods) {
+      newCharismaPoints += await this.computeCharismaPoints(period);
+    }
     return null;
   }
 
@@ -59,5 +63,29 @@ export class VolunteerAvailabilityService {
       (new Date(params.end).getTime() - new Date(params.start).getTime()) /
         1000,
     );
+  }
+
+  private async computeCharismaPoints(params: Period): Promise<number> {
+    const allUsefulCharismaPeriod = await this.prisma.charismaPeriod.findMany({
+      where: {
+        AND: [
+          {
+            start: {
+              gte: params.start,
+            },
+          },
+          {
+            end: {
+              lte: params.end,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        start: 'asc',
+      },
+    });
+    console.log(allUsefulCharismaPeriod);
+    return 0;
   }
 }
