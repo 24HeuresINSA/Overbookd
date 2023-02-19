@@ -4,6 +4,7 @@ import {
   Delete,
   HttpCode,
   Param,
+  Request,
   ParseIntPipe,
   Post,
   UseGuards,
@@ -17,6 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { RequestWithUserPayload } from 'src/app.controller';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
@@ -86,6 +88,28 @@ export class FtReviewsController {
     @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
   ): Promise<CompleteFtResponseDto | null> {
     return this.ftReviewsService.refuseFt(ftId, upsertFtReviewsDto);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Post(':ftId/assignement-approval')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Switch FT to ready for assignement',
+    type: CompleteFtResponseDto,
+  })
+  @ApiParam({
+    name: 'ftId',
+    type: Number,
+    description: 'FT id',
+    required: true,
+  })
+  assignementApproval(
+    @Param('ftId', ParseIntPipe) ftId: number,
+    @Request() req: RequestWithUserPayload,
+  ): Promise<CompleteFtResponseDto | null> {
+    return this.ftReviewsService.assignementApproval(ftId, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

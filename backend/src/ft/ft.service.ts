@@ -24,7 +24,7 @@ type DataBaseTimeWindow = Omit<TimeWindow, 'userRequests'> & {
   userRequests: DataBaseUserRequest[];
 };
 
-type DataBaseCompleteFt = Omit<CompleteFtResponseDto, 'timeWindows'> & {
+export type DataBaseCompleteFt = Omit<CompleteFtResponseDto, 'timeWindows'> & {
   timeWindows: DataBaseTimeWindow[];
 };
 

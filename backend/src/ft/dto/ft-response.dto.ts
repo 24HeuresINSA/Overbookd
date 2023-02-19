@@ -20,7 +20,7 @@ class TimeWindowRepresentation implements TimeWindow {
   end: Date;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
-  sliceTime: number;
+  sliceTime?: number;
 }
 
 export class CompleteFtResponseDto implements CompleteFtResponse {

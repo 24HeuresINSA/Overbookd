@@ -57,7 +57,7 @@ export class AvailabilityRegistery {
   private static reduceToMergedAvailabilities(
     availabilities: Availability[],
     availability: Availability
-  ) {
+  ): Availability[] {
     const mergeableAvailabilityIndex = availabilities.findIndex(
       AvailabilityRegistery.isAvailabilityMergeableToOther(availability)
     );
@@ -99,19 +99,19 @@ export class AvailabilityRegistery {
 
   private static isAvailabilityMergeableToOther(
     availability: Availability
-  ): (value: Availability) => unknown {
+  ): (value: Availability) => boolean {
     return (existingAvailability) =>
       existingAvailability.canMerge(availability);
   }
 
   private static isMergeableFromOneOf(
     availabilities: Availability[]
-  ): (value: Availability, index: number) => unknown {
+  ): (value: Availability, index: number) => boolean {
     return (availability, startIndex) =>
       availabilities
         .slice(startIndex + 1)
-        .findIndex(
+        .some(
           AvailabilityRegistery.isAvailabilityMergeableToOther(availability)
-        ) !== -1;
+        );
   }
 }

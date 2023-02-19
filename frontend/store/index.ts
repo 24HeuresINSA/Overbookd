@@ -24,6 +24,7 @@ import * as stats from "./stats";
 import * as inventory from "./inventory";
 import * as gearRequest from "./gearRequest";
 import * as charismaPeriod from "./charismaPeriod";
+import * as volunteerAvailabilitiy from "./volunteerAvailability";
 
 export const state = () => ({});
 
@@ -64,5 +65,6 @@ export const accessorType = getAccessorType({
     inventory,
     gearRequest,
     charismaPeriod,
+    volunteerAvailabilitiy,
   },
 });

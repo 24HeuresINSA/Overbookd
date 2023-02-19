@@ -46,13 +46,13 @@ case $1 in
         "--bash")
                 echo "Bash command dev containers"
                 echo "---------------------------"
-                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16.17.1-alpine3.16 sh
+                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16-alpine sh
                 ;;
 
         "--updateVersion" | "-uv")
                 echo "Bash update version dev containers"
                 echo "----------------------------------"
-                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16.17.1-alpine3.16 sh -c "(cd /app/backend && npm version prerelease --preid=rc) && ( cd /app/frontend && npm version prerelease --preid=rc)"
+                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16-alpine sh -c "(cd /app/backend && npm version prerelease --preid=rc) && ( cd /app/frontend && npm version prerelease --preid=rc)"
                 ;;
 
         "--traefik"|"-t") 
