@@ -1,39 +1,38 @@
-<!-- eslint-disable vue/valid-v-for -->
 <template>
-  <div>
-    <v-stepper v-model="step">
-      <v-stepper-header>
-        <template v-for="({ title }, index) in calendarSteps">
-          <v-stepper-step :step="index + 1" :complete="step > index + 1">
-            {{ title }}
-          </v-stepper-step>
-          <v-divider
-            v-if="index < calendarSteps.length - 1"
-            :key="`divider-${index}`"
-          />
-        </template>
-      </v-stepper-header>
+  <v-stepper v-model="step" alt-labels>
+    <v-stepper-header>
+      <v-stepper-step
+        v-for="({ title }, index) in calendarSteps"
+        :key="title"
+        :complete="step > index + 1"
+        :step="index + 1"
+      >
+        {{ title }}
+      </v-stepper-step>
+    </v-stepper-header>
 
-      <v-stepper-items>
-        <template v-for="({ period }, index) in calendarSteps">
-          <v-stepper-content :step="index + 1">
-            <AvailabilitiesPickCalendar :period="period" />
-            <v-card-actions>
-              <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                v-if="index < calendarSteps.length - 1"
-                color="primary"
-                @click="incrementStep"
-              >
-                Suivant
-              </v-btn>
-            </v-card-actions>
-          </v-stepper-content>
-        </template>
-      </v-stepper-items>
-    </v-stepper>
-  </div>
+    <v-stepper-items>
+      <div
+        v-for="({ period }, index) in calendarSteps"
+        :key="`${period.start}-${period.end}`"
+      >
+        <v-stepper-content :step="index + 1">
+          <AvailabilitiesPickCalendar :period="period" />
+          <v-card-actions>
+            <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              v-if="index < calendarSteps.length - 1"
+              color="primary"
+              @click="incrementStep"
+            >
+              Suivant
+            </v-btn>
+          </v-card-actions>
+        </v-stepper-content>
+      </div>
+    </v-stepper-items>
+  </v-stepper>
 </template>
 
 <script lang="ts">
