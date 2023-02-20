@@ -1,0 +1,163 @@
+Nom,Path,Resp,Appoint
+Demi palette 0.6x0.8m,matos->manutention,matos,1
+Frontale,matos->manutention,matos,1
+Lot chapeau casquette 2022,matos->autres,matos,1
+Agrafe cercleuse,barrieres,barrieres,1
+Cercleuse mécanique,barrieres,barrieres,1
+Clef pompier,matos->secu,matos,1
+Raboteuse,matos->outillage,matos,1
+Seau jaune,matos->proprete,matos,1
+Seau rouge,matos->proprete,matos,1
+Etabli,matos->outillage,matos,1
+Gants manutention (paire),matos->manutention,matos,1
+Réglet 1m,matos->outillage,matos,1
+Scie égoïne,matos->outillage,matos,1
+Serre joint 800mm,matos->outillage,matos,1
+Ciseaux,matos->outillage,matos,1
+Marqueur permanent noir,matos->outillage,matos,1
+Marqueur POSCA,matos->outillage,matos,1
+Trouilloteuse,matos->bureautique,matos,1
+Balai poil dur,matos->proprete,matos,1
+Balai sans manche,matos->proprete,matos,1
+Balayette balai,matos->proprete,matos,1
+Balayette pelle,matos->proprete,matos,1
+Caisse plastique,matos->manutention,matos,1
+Gants ménage paire,matos->proprete,matos,1
+Grande pelle,matos->outillage,matos,1
+Pousse-pousse,matos->proprete,matos,1
+Raclette,matos->proprete,matos,1
+Rateau,matos->outillage,matos,1
+Seau,matos->proprete,matos,1
+Serpillère (tissu),matos->proprete,matos,1
+Serpillère avec manche,matos->proprete,matos,1
+Mètre,matos->outillage,matos,1
+Cutter avec sécurité,matos->outillage,matos,1
+niveau à bulles,matos->outillage,matos,1
+Décamètre 60m,matos->outillage,matos,1
+Equerre,matos->outillage,matos,1
+Cisceaux à bois 15mm,matos->outillage,matos,1
+Ciseaux à bois 20mm,matos->outillage,matos,1
+Aiguilles,matos->outillage,matos,1
+Ciseaux,matos->outillage,matos,1
+Cutter,matos->outillage,matos,1
+Tonailles,matos->outillage,matos,1
+Pince multiprise plate,matos->outillage,matos,1
+Pince multiprise plate fine,matos->outillage,matos,1
+Pince coupante,matos->outillage,matos,1
+Pince multiprise,matos->outillage,matos,1
+Lame cutter grande,matos->outillage,matos,1
+Lame cutter fine,matos->outillage,matos,1
+Cutter fin,matos->outillage,matos,1
+Reglet 50cm,matos->outillage,matos,1
+Pince à denuder,matos->outillage,matos,1
+Pince à sertir,matos->outillage,matos,1
+Clef à mollette 30mm,matos->outillage,matos,1
+Pince à colson,matos->outillage,matos,1
+Clef à pipe 22mm,matos->outillage,matos,1
+Clef à pipe 21mm,matos->outillage,matos,1
+Clef à pipe 19mm,matos->outillage,matos,1
+Clef allen 10mm,matos->outillage,matos,1
+Clef allen 8mm,matos->outillage,matos,1
+Clef allen 6mm,matos->outillage,matos,1
+Clef allen 5mm,matos->outillage,matos,1
+Clef allen 4mm,matos->outillage,matos,1
+Clef allen 3mm,matos->outillage,matos,1
+"Clef allen 2,5mm",matos->outillage,matos,1
+Clef allen 2mm,matos->outillage,matos,1
+"Clef allen 1,5mm",matos->outillage,matos,1
+"Multioutils allen 8-1,5mm",matos->outillage,matos,1
+Set Clefs plates 22-6mm,matos->outillage,matos,1
+Set Clef plates 6-17mm,matos->outillage,matos,1
+Clef plate/oeil 22mm,matos->outillage,matos,1
+Clef plate/oeil 21mm,matos->outillage,matos,1
+Clef plate/oeil 17mm,matos->outillage,matos,1
+Clef plate/oeil 16mm,matos->outillage,matos,1
+Clef plate/oeil 13mm,matos->outillage,matos,1
+Clef plate/oeil 10mm,matos->outillage,matos,1
+Clef plate 6-7mm,matos->outillage,matos,1
+Clef plate 8-9mm,matos->outillage,matos,1
+Clef plate 12-13mm,matos->outillage,matos,1
+Clef plate 20-22mm,matos->outillage,matos,1
+Clef plate 22-23mm,matos->outillage,matos,1
+Clef plate 6-8mm,matos->outillage,matos,1
+Tournevis P3,matos->outillage,matos,1
+Tournevis P5,matos->outillage,matos,1
+Tournevis P6 court,matos->outillage,matos,1
+Tournevis P8,matos->outillage,matos,1
+Tournevis P6,matos->outillage,matos,1
+Tournevis cruciforme PZ2,matos->outillage,matos,1
+Tournevis P3 electriciren,matos->outillage,matos,1
+Set tournevis electricien T6-10 PH0 PH00 P3 P4,matos->outillage,matos,1
+Tournevis PH2,matos->outillage,matos,1
+Tournevis PH0,matos->outillage,matos,1
+Set cliquet douille HC 8-32mm,matos->outillage,matos,1
+Scie égoïne,matos->outillage,matos,1
+Set 4 limes finition,matos->outillage,matos,1
+Serre joint 250mm,matos->outillage,matos,1
+Serre joint 350mm,matos->outillage,matos,1
+Lime ébauche demi-lune,matos->outillage,matos,1
+Agrapheuse murale,matos->outillage,matos,1
+Vis FZ Ø4x35mm,matos->outillage,matos,1
+Vis FZ Ø4x20mm,matos->outillage,matos,1
+Vis FZ Ø5x50mm,matos->outillage,matos,1
+Vis FZ Ø5x70mm,matos->outillage,matos,1
+Vis FZ Ø4x40mm,matos->outillage,matos,1
+Vis FZ Ø6x50mm,matos->outillage,matos,1
+Vis FZ Ø5x60mm,matos->outillage,matos,1
+"Vis FZ Ø3,5x55mm",matos->outillage,matos,1
+Vis FX Ø6x120mm,matos->outillage,matos,1
+Vis FX Ø6x100mm,matos->outillage,matos,1
+Casque anti-bruit,matos->outillage,matos,1
+Masque de sécurité,matos->outillage,matos,1
+Lunette de sécurité,matos->outillage,matos,1
+Gants de manutention,matos->outillage,matos,1
+Marteau,matos->outillage,matos,1
+Pied de biche,matos->outillage,matos,1
+Marteau arrache clou,matos->outillage,matos,1
+Pince monseigneur,matos->outillage,matos,1
+Frontale,matos->manutention,matos,1
+Dérouleur à scotch 50mm,matos->outillage,matos,1
+Grilles frigo,matos->electromenager,matos,1
+Bac frigo,matos->electromenager,matos,1
+Étagère porte frigo,matos->electromenager,matos,1
+Tourne attache canisse,matos->outillage,matos,1
+Meuleuse filaire Bosch,matos->outillage,matos,1
+Chargeur batterie double Makita,matos->outillage,matos,1
+Batterie Makita,matos->outillage,matos,1
+Boulonneuse portable Makita,matos->outillage,matos,1
+Scie sauteuse portable Makita,matos->outillage,matos,1
+Petite boulonneuse portable Makita,matos->outillage,matos,1
+Ponceuse rotative filaire Makita,matos->outillage,matos,1
+Mèches métal 8-2mm,matos->outillage,matos,1
+"Set embouts BTR (PH, PZ, TX, P)",matos->outillage,matos,1
+Scie circulaire filaire Makita,matos->outillage,matos,1
+Poste à souder électronique,matos->outillage,matos,1
+Rapporteur d'angle métrique,matos->outillage,matos,1
+Forêt métal Ø5,matos->outillage,matos,1
+Embout BTR PH2,matos->outillage,matos,1
+Embout BTR PZ2,matos->outillage,matos,1
+Embout BTR T20,matos->outillage,matos,1
+Set forêt bois Ø10-4mm,matos->outillage,matos,1
+Set scie cloche Ø86-40mm multiusage,matos->outillage,matos,1
+Set forêt bois Ø24-14mm,matos->outillage,matos,1
+Set scie cloche Ø60-24mm multiusage,matos->outillage,matos,1
+"forêt métal Ø2,4mm",matos->outillage,matos,1
+"forêt métal Ø3,8mm",matos->outillage,matos,1
+"forêt métal Ø3,8mm",matos->outillage,matos,1
+Set forêts bâton Ø10-4mm,matos->outillage,matos,1
+Set forêt métal Ø10-1mm,matos->outillage,matos,1
+"Set embouts BTR (PH, PZ, TX, P)",matos->outillage,matos,1
+Set forêts bâton/bois/métal vieux,matos->outillage,matos,1
+Multimètre pince,matos->outillage,matos,1
+Rabot électrique filaire Parkside,matos->outillage,matos,1
+Ponceuse translative filaire Bosch,matos->outillage,matos,1
+Pistolet à colle,matos->outillage,matos,1
+Disque (scie circulaire),matos->outillage,matos,1
+Pointeau,matos->outillage,matos,1
+Cagette pliante,matos->manutention,matos,1
+Escabeau,matos->manutention,matos,1
+Diable,matos->manutention,matos,1
+Diable,matos->manutention,matos,1
+Echelle 3 brins,matos->manutention,matos,1
+Echelle 1 brin,matos->manutention,matos,1
+Aspirateur industriel,matos->manutention,matos,1
