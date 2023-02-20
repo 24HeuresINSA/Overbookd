@@ -60,12 +60,16 @@ export default Vue.extend({
     },
     isSelected(): (date: string, hour: number) => boolean {
       return (date: string, hour: number) => {
-        return this.isInPeriodArray(date, hour, this.selected);
+        const selected = this.selected.find(this.isSamePeriod(date, hour));
+        return selected !== undefined;
       };
     },
     isLocked(): (date: string, hour: number) => boolean {
       return (date: string, hour: number) => {
-        return this.isInPeriodArray(date, hour, this.savedAvailabilities);
+        const locked = this.savedAvailabilities.find(
+          this.isSamePeriod(date, hour)
+        );
+        return locked !== undefined;
       };
     },
     weekdayNumbers(): Number[] {
@@ -73,12 +77,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    isInPeriodArray(date: string, hour: number, periods: Period[]): boolean {
-      return periods.some(
-        (period) =>
-          period.start.getDate() === new Date(date).getDate() &&
-          period.start.getHours() === hour
-      );
+    isSamePeriod(date: string, hour: number): (value: Period) => boolean {
+      return (period) =>
+        period.start.getDate() === new Date(date).getDate() &&
+        period.start.getHours() === hour;
     },
     isPartyShift(hour: number): boolean {
       return hour >= SHIFT_HOURS.PARTY || hour < SHIFT_HOURS.NIGHT;
@@ -111,9 +113,7 @@ export default Vue.extend({
     },
     removePeriod(date: string, hour: number) {
       this.selected = this.selected.filter(
-        (period) =>
-          period.start.getDate() !== new Date(date).getDate() ||
-          period.start.getHours() !== hour
+        (period) => !this.isSamePeriod(date, hour)(period)
       );
     },
     getCharismaByDate(date: string, time: string): number {
