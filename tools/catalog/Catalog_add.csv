@@ -1,0 +1,622 @@
+Nom;Path;Resp;Appoint
+Bâche cuve fen ~25m2;barrieres;barrieres;0
+Pistolet à eau;matos->autres;matos;0
+Corde à linge 20m;matos->autres;matos;0
+Aspirateur (vieux avec ecocup au bout);matos->electromenager;matos;0
+Canopée Scène Roots;matos->deco;scenes;0
+Demi palette 0.6x0.8m;matos->manutention;matos;1
+Assiette plastique;matos->cuisine;matos;0
+Casserole moyenne;matos->cuisine;matos;0
+Choppe en bois;matos->cuisine;matos;0
+Couteau;matos->cuisine;matos;0
+Couvercle marmitte petit;matos->cuisine;matos;0
+Couvercle tupperware petit;matos->cuisine;matos;0
+Couvercle tupperware petit;matos->cuisine;matos;0
+Econome;matos->cuisine;matos;0
+Ecumoir;matos->cuisine;matos;0
+Eponges;matos->cuisine;matos;0
+Fourchette;matos->cuisine;matos;0
+Couteau coupant gros;matos->cuisine;matos;0
+Fouet gros;matos->cuisine;matos;0
+Cuillère grande;matos->cuisine;matos;0
+Marmitte petite;matos->cuisine;matos;0
+Moule muffin;matos->cuisine;matos;0
+Couteau coupant moyen;matos->cuisine;matos;0
+Paire de manique;matos->cuisine;matos;0
+Passoire;matos->cuisine;matos;0
+Couteau coupant petit;matos->cuisine;matos;0
+Saladier petit;matos->cuisine;matos;0
+Shaker petit;matos->cuisine;matos;0
+Cuillère petite;matos->cuisine;matos;0
+Marmitte petite;matos->cuisine;matos;0
+Plat en verre;matos->cuisine;matos;0
+Plateaux;matos->cuisine;matos;0
+Poêle grande;matos->cuisine;matos;0
+Poêle moyenne;matos->cuisine;matos;0
+Saladier à fond plat;matos->cuisine;matos;0
+Séchoir (vaiselle);matos->cuisine;matos;0
+Tablier;matos->cuisine;matos;0
+Tasse;matos->cuisine;matos;0
+Théière jaune;matos->cuisine;matos;0
+Torchon;matos->cuisine;matos;0
+Tupperware petit;matos->cuisine;matos;0
+Verre à shot;matos->cuisine;matos;0
+Wok;matos->cuisine;matos;0
+Appareil croque monsieur;matos->cuisine;matos;0
+Assiette carton;matos->cuisine;matos;0
+Coupelle tasse;matos->cuisine;matos;0
+Assiette plastique;matos->cuisine;matos;0
+Baguette chinoise;matos->cuisine;matos;0
+Thermos 250mL;matos->cuisine;matos;0
+Boite allumette (x240);matos->cuisine;matos;0
+Bol alu;matos->cuisine;matos;0
+Bougie;matos->cuisine;matos;0
+Briquet fonctinnel;matos->cuisine;matos;0
+Broche mergez;matos->cuisine;matos;0
+Chinois;matos->cuisine;matos;0
+Corbeille à fruit;matos->cuisine;matos;0
+Coupe griffe;matos->cuisine;matos;0
+Coupelle beurk;matos->cuisine;matos;0
+Couteau à pain;matos->cuisine;matos;0
+Couteau plastique (x100);matos->cuisine;matos;0
+Cuillère a soupe plastique;matos->cuisine;matos;0
+Cuillère bois jetable petite;matos->cuisine;matos;0
+Cuillère bois grande;matos->cuisine;matos;0
+Cuillère café plastique;matos->cuisine;matos;0
+Cuillère salade;matos->cuisine;matos;0
+Cure dent;matos->cuisine;matos;0
+Ecrase ail;matos->cuisine;matos;0
+Entonoir;matos->cuisine;matos;0
+Essui verre;matos->cuisine;matos;0
+Film plastique (rouleau);matos->cuisine;matos;0
+Filtre café;matos->cuisine;matos;0
+Fouet;matos->cuisine;matos;0
+Fourchette bois jetable;matos->cuisine;matos;0
+Fourchette plastique (x100);matos->cuisine;matos;0
+Gaz chantilly;matos->cuisine;matos;0
+Gobelet plastique;matos->cuisine;matos;0
+Grand ecumoir;matos->cuisine;matos;0
+Grand perco;matos->cuisine;matos;0
+Gros couteau;matos->cuisine;matos;0
+Grosse poele;matos->cuisine;matos;0
+Hachoir;matos->cuisine;matos;0
+Huile d'olive extra vierge (L);matos->bouffe;matos;0
+Huile de tournesol (L);matos->bouffe;matos;0
+Huile spécial pizza (cL);matos->bouffe;matos;0
+Jus citron (L);matos->bouffe;matos;0
+Machine à café;matos->cuisine;matos;0
+Fouet grand;matos->cuisine;matos;0
+Mixeur;matos->cuisine;matos;0
+Nappe carrée;matos->cuisine;matos;0
+Ouvre boite;matos->cuisine;matos;0
+Panière à pain;matos->cuisine;matos;0
+Panière à pain métal;matos->cuisine;matos;0
+Ecumoir petit;matos->cuisine;matos;0
+Fouet petit;matos->cuisine;matos;0
+Rouleau à patisserie petit;matos->cuisine;matos;0
+Wok petit;matos->cuisine;matos;0
+Louche petite;matos->cuisine;matos;0
+Poêle petite;matos->cuisine;matos;0
+Pierre à éguiser;matos->cuisine;matos;0
+Pince;matos->cuisine;matos;0
+Pince à linge;matos->cuisine;matos;0
+Pique brochette;matos->cuisine;matos;0
+Planche à découper;matos->cuisine;matos;0
+Plat rond en verre;matos->cuisine;matos;0
+Plateau métal;matos->cuisine;matos;0
+Plateau plastique beurk;matos->cuisine;matos;0
+Plateau repas plastique;matos->cuisine;matos;0
+Poêle à crêpes;matos->cuisine;matos;0
+Poêle sans manche;matos->cuisine;matos;0
+Poêlon raclette;matos->cuisine;matos;0
+Poignée casserole;matos->cuisine;matos;0
+Poupée russe de bol;matos->cuisine;matos;0
+Raclette crepe;matos->cuisine;matos;0
+Range couvert;matos->cuisine;matos;0
+Rape;matos->cuisine;matos;0
+Sac liasse biodegradable (x100);matos->cuisine;matos;0
+Sac plastique;matos->cuisine;matos;0
+Sèche couvert;matos->cuisine;matos;0
+Sel (sachet 5g);matos->bouffe;matos;0
+Serviette jetable;matos->cuisine;matos;0
+Siphon chantilly;matos->cuisine;matos;0
+Spatule;matos->cuisine;matos;0
+Spatule bois;matos->cuisine;matos;0
+Tablier PE gauffré;matos->cuisine;matos;0
+Tasse;matos->cuisine;matos;0
+Tasse café;matos->cuisine;matos;0
+Thé;matos->bouffe;matos;0
+Théière;matos->cuisine;matos;0
+Thermos 0,5L;matos->cuisine;matos;0
+Thermos 1,5L;matos->cuisine;matos;0
+Thermos 1L;matos->cuisine;matos;0
+Touillette plastique;matos->cuisine;matos;0
+Tourchon;matos->cuisine;matos;0
+Vérine plastique;matos->cuisine;matos;0
+Verre à vin;matos->cuisine;matos;0
+Verre coca;matos->cuisine;matos;0
+Verre doseur 750mL;matos->cuisine;matos;0
+Verre long cocktail;matos->cuisine;matos;0
+Verre plastique;matos->cuisine;matos;0
+Verre verre;matos->cuisine;matos;0
+Verre whisky;matos->cuisine;matos;0
+Vinaigre balsamique (L);matos->bouffe;matos;0
+Vinaigre de cidre (L);matos->bouffe;matos;0
+Couvercle petite casserole;matos->cuisine;matos;0
+Cuillère à spaghetti;matos->cuisine;matos;0
+Etaleur pâte à crêpes;matos->cuisine;matos;0
+Four multifonction;matos->cuisine;matos;0
+Grand saladier métal;matos->cuisine;matos;0
+Louche grande;matos->cuisine;matos;0
+Poêle grande;matos->cuisine;matos;0
+Grille four;matos->cuisine;matos;0
+Machine à croque;matos->cuisine;matos;0
+Marmitte;matos->cuisine;matos;0
+Mini rouleau à patisserie;matos->cuisine;matos;0
+Plat pyrex rectangulaire;matos->cuisine;matos;0
+Moule glaçon;matos->cuisine;matos;0
+Saladier petit alu;matos->cuisine;matos;0
+Marmitte petite;matos->cuisine;matos;0
+Pince à barbecue;matos->cuisine;matos;0
+Plaque de four;matos->cuisine;matos;0
+Plaque electrique 2000W;matos->cuisine;matos;0
+Plat à tarte;matos->cuisine;matos;0
+Rouleau à pizza;matos->cuisine;matos;0
+Saladier de présentation en verre;matos->cuisine;matos;0
+Saladier en verre;matos->cuisine;matos;0
+Sac colliers heras;barrieres;barrieres;0
+Semoule kg;matos->bouffe;catering;0
+Colson;matos->consommable;matos;1
+Tuyaux eau potable PE Ø25 50m;elec->flotte;elec;0
+Frontale;matos->manutention;matos;1
+Canapés;matos->canape/fauteuil;matos;0
+Lot chapeau casquette 2022;matos->autres;matos;1
+Betteraves rouges conserves kg;matos->bouffe;catering;0
+Confiture abricot kg;matos->bouffe;catering;0
+Haricots rouges kg;matos->bouffe;catering;0
+Miel kg;matos->bouffe;catering;0
+Lentille 400g conserve;matos->bouffe;catering;0
+Sac poubelle noir 100L (rouleau);matos->proprete;matos;0
+Sac poubelle vert 100L (rouleau);matos->proprete;matos;0
+Lest sable;matos->tente;matos;0
+Barnier multicolor x10;matos->consommable;scenes;1
+Barnier noir;matos->consommable;scenes;1
+Scotch gaffer blanc;matos->consommable;scenes;1
+Scotch gaffer noir;matos->consommable;scenes;1
+Poubelle plastique blanche;matos->proprete;matos;0
+Porte 6x14 blanche;matos->tente;matos;0
+Mât démontable;elec->autres;elec;0
+Vinaigre de cidre L;matos->bouffe;catering;0
+Rouleau sac poubelle jaune transparent 100L (rouleau);matos->consommable;matos;1
+Rouleau sac poubelle transparent 100L (rouleau);matos->consommable;matos;1
+Rouleau sac poubelle vert opaque 100L (rouleau);matos->consommable;matos;1
+Leste fonte;matos->tente;matos;0
+Mur 3x3 (3x2 m) blanc;matos->tente;matos;0
+Mur 3x3 (3x2 m) noir;matos->tente;matos;0
+Palette 1.2x0.8 m;matos->manutention;matos;0
+Poubelle haute;matos->proprete;matos;0
+Agrafe cercleuse;barrieres;barrieres;1
+Ampoule LED 4W filament;elec->eclairage;elec;0
+Assiette moche;matos->cuisine;matos;0
+Bac lave vaiselle plat 50x50;matos->cuisine;matos;0
+Bac lave vaiselle verre 50x50;matos->cuisine;matos;0
+Bidon 10 L avec verseur;matos->cuisine;matos;0
+Bidon 10L sans bouchon;matos->cuisine;matos;0
+Bidon 15L;matos->cuisine;matos;0
+Kaplas;matos->deco;deco;0
+Bracelets coureur;matos->autres;matos;0
+café à machine à café kg;matos->bouffe;catering;0
+café moulut g;matos->bouffe;catering;0
+café soluble kg;matos->bouffe;catering;0
+Caisse laposte 200x500mm;matos->manutention;matos;0
+Caisse pliante;matos->manutention;matos;0
+Carton pions bataille navale;matos->deco;deco;0
+Casque chantier;matos->manutention;scenes;1
+Cassoulet conserve 400g;matos->bouffe;catering;0
+Cercleuse mécanique;barrieres;barrieres;1
+Chaine plastique 25m;matos->secu;matos;0
+Champignons paris 230g;matos->bouffe;catering;0
+Chocolat au lait céréal kg;matos->bouffe;catering;0
+Chocolat lait;matos->bouffe;catering;0
+Clef pompier;matos->secu;matos;1
+Compote pomme kg;matos->bouffe;catering;0
+Confiture fraise;matos->bouffe;catering;0
+Confiture fromboise g;matos->bouffe;catering;0
+Cornflex kg;matos->bouffe;catering;0
+Cornichons kg;matos->bouffe;catering;0
+Coulis de tomates kg;matos->bouffe;catering;0
+Crême de marron 500g;matos->bouffe;catering;0
+Curcuma moulu g;matos->bouffe;catering;0
+Dosette café soluble;matos->bouffe;catering;0
+Double concentré de tomates 800g;matos->bouffe;catering;0
+Enrouleur cable cuivre;elec->autres;elec;0
+Enrouleur ficelle;matos->consommable;matos;1
+Epices massala;matos->bouffe;catering;0
+Epinards haché kg;matos->bouffe;catering;0
+Fil de terre (en m);elec->autres;elec;0
+Film étirable 300m;matos->cuisine;catering;1
+Gastro moyen 65mm;matos->cuisine;catering;1
+Gourde;matos->cuisine;catering;1
+Grand thermos sans couvercle;matos->cuisine;catering;1
+Haricots verts kg;matos->bouffe;catering;0
+Herbe de provence kg;matos->bouffe;catering;0
+Huile de colza L;matos->bouffe;catering;0
+Huile de tournesol L;matos->bouffe;catering;0
+Jus de raisin quali L;matos->bouffe;catering;0
+Kit étagère métal;matos->mobilier;matos;0
+Lambe de chevet loge bois;matos->mobilier;matos;0
+Lentilles corail sèches kg;matos->bouffe;catering;0
+Lentilles sèches kg;matos->bouffe;catering;0
+Lubrifiant méca fluide 125ml;matos->consommable;matos;1
+Lubrifiant méca fluide 300ml;matos->consommable;matos;1
+Maïs kg;matos->bouffe;catering;0
+Mini gastro 150mm;matos->bouffe;catering;0
+Néon sans câble (décom);elec->eclairage;elec;0
+Nesquik kg;matos->bouffe;catering;0
+Nouilles chinoise kg;matos->bouffe;catering;0
+Olive vertes conserve kg;matos->bouffe;catering;0
+Origan g;matos->bouffe;catering;0
+Papier alu 100m;matos->consommable;catering;0
+Papier cuisson rouleau;matos->consommable;catering;0
+Pâtes kg;matos->bouffe;catering;0
+Pâtes lasagne kg;matos->bouffe;catering;0
+Peluches sac;matos->autres;matos;0
+Petit gastro 65mm;matos->bouffe;catering;0
+Petite assiette plastique;matos->bouffe;catering;0
+Petits poids kg;matos->bouffe;catering;0
+Pied parasol plastique;matos->mobilier;catering;0
+Piquet de terre;elec->autres;elec;0
+Poivre g;matos->bouffe;catering;0
+Pompe d'évacuation eau usée;elec->flotte;elec;0
+Pousse pousse sauce alimentaire;matos->cuisine;catering;0
+Projet vélo chargeur;matos->autres;matos;0
+Prolongateur (P+N+T) 16A 45m;elec->alimentation;elec;0
+Pulvérisateur manuel;matos->autres;matos;0
+Purée de tomates kg;matos->bouffe;catering;0
+Raboteuse;matos->outillage;matos;1
+Réhausse de demi-palette 0.6x0.8m;matos->manutention;matos;0
+Réhausse de palette 1.2x0.8m;matos->manutention;matos;0
+Réhausse de palette démontée (planche);matos->manutention;matos;0
+Riz kg;matos->bouffe;catering;0
+Rouleau ficelle plastique m;matos->consommable;matos;1
+Rouleau velcros blanc;matos->consommable;matos;1
+Rouleau velcros noir;matos->consommable;matos;1
+Ruban courses rouges;matos->consommable;matos;1
+Sachet papier sandwich;matos->consommable;catering;1
+Seau jaune;matos->proprete;matos;1
+Seau rouge;matos->proprete;matos;1
+Sel de table kg;matos->bouffe;catering;0
+Serviette papier;matos->consommable;catering;1
+Sonette vélo;matos->autres;matos;0
+Sucre de canne roux kg;matos->bouffe;catering;0
+Sucre morceaux kg;matos->bouffe;catering;0
+T-shirt orga;matos->autres;matos;0
+Tablier jetable;matos->cuisine;catering;1
+Tahini g;matos->bouffe;catering;0
+Thé noir sachet;matos->bouffe;catering;0
+Thé vanilles 25 sachet;matos->bouffe;catering;0
+Thé vert sachet x30;matos->bouffe;catering;0
+Thon conserve kg;matos->bouffe;catering;0
+Tomates pellée entiere conserve kg;matos->bouffe;catering;0
+Tomates pellée kg;matos->bouffe;catering;0
+Tours de cou médaille;matos->autres;matos;0
+Trépied métal base;matos->autres;matos;0
+Trétau bois;matos->outillage;matos;0
+Vin blanc liquoreux 75cl;matos->bouffe;catering;0
+Vin blanc muscat 75cl;matos->bouffe;catering;0
+Vinaigre balsamique L;matos->bouffe;catering;0
+Whisky ninka 70cl;matos->bouffe;catering;0
+Bar VIP 1ml;matos->deco;deco;0
+Cône de chantier;matos->autres;matos;0
+Mur (2x2) blanc;matos->tente;matos;0
+Mur 3x3 (3x2 m) blanc;matos->tente;matos;0
+Porte 3x3 blanche;matos->tente;matos;0
+Porte 5x8 blanche (2x5);matos->tente;matos;0
+Matelas 1.9x0.9m;matos->literie;matos;0
+Demi palette 0.6x0.8m;matos->manutention;matos;0
+Palette 1.2x0.8 m;matos->manutention;matos;0
+Evier;elec->flotte;elec;0
+Grande Planche 1,5x3m;matos->deco;deco;1
+Lambris bois 2m;matos->deco;deco;1
+Logo 24h en bois 3D;matos->deco;deco;1
+Nuage logo 24h;matos->deco;deco;1
+Pouf;matos->mobilier;matos;0
+Table avec pieds detachés;matos->mobilier;matos;0
+Tasseaux 4m 38x63mm;matos->deco;deco;1
+Balai poil souple;matos->proprete;matos;0
+Banc 1m80;matos->mobilier;matos;0
+Boule disco;elec->eclairage;elec;0
+Câble HDMI / HDMI 2m;matos->bureautique;matos;0
+Câble Jack / XLR 10m;matos->bureautique;matos;0
+Caisse plastique;matos->manutention;matos;0
+Clavier;matos->bureautique;matos;0
+Enceinte stereo local;matos->bureautique;matos;0
+Grand coussin banquette;matos->mobilier;matos;0
+Grande table bois;matos->mobilier;matos;0
+Logo 24h deco 3 pièces;matos->deco;deco;0
+Souris;matos->bureautique;matos;0
+Tableau blanc 2x1.5m;matos->mobilier;matos;0
+Tabouret haut;matos->mobilier;matos;0
+Traversin banquette;matos->mobilier;matos;0
+Adaptateur P17 M / P16 F;matos->bureautique;matos;0
+Borne WiFi 4G;matos->bureautique;matos;0
+Bouchons d'oreilles (paire);matos->consommable;matos;1
+Câble alimentation bipolaire 1m;matos->bureautique;matos;0
+Câble alimentation tripolaire 1m50;matos->bureautique;matos;0
+Câble Display Port 1m50;matos->bureautique;matos;0
+Câble ethernet (RJ45) 10m;matos->bureautique;matos;0
+Câble ethernet (RJ45) 15m;matos->bureautique;matos;0
+Câble ethernet (RJ45) 1m;matos->bureautique;matos;0
+Cable RJ45 / RJ11;matos->bureautique;matos;0
+Cable RJ45 / USB A;matos->bureautique;matos;0
+Câble USB A / USB B 1m;matos->bureautique;matos;0
+Câble VGA / VGA 2m;matos->bureautique;matos;0
+Cadenas ordinateur;matos->bureautique;matos;0
+Capotes (M/F);matos->consommable;matos;1
+Chargeurs allume cigare / USB A;matos->bureautique;matos;0
+Corde d'escalade 15m;matos->manutention;matos;0
+Draps colorés;matos->literie;matos;0
+Etabli;matos->outillage;matos;1
+Gants manutention (paire);matos->manutention;matos;1
+Matelas gonflable;matos->literie;matos;0
+Multiprise 8 prises;elec->alimentation;elec;0
+Pinces crocodiles;elec->autres;elec;0
+Prolongateur (P+N) 16A 2m;elec->alimentation;elec;0
+Réglet 1m;matos->outillage;matos;1
+Routeur 8x RJ45;matos->bureautique;matos;0
+Sangle à cliquet 2m 500kg;matos->manutention;matos;0
+Sangle à cliquet 3m 500kg;matos->manutention;matos;0
+Sangle à cliquet 3m 500kg crochets;matos->manutention;matos;0
+Sangle à cliquet 5m 1250kg;matos->manutention;matos;0
+Sangle à cliquet 5m 500kg;matos->manutention;matos;0
+Sangle camion 5m 6000kg;matos->manutention;matos;0
+Sangle rapide 2m 500kg;matos->manutention;matos;0
+Sangle rapide 5m 500kg;matos->manutention;matos;0
+Scie égoïne;matos->outillage;matos;1
+Serre joint 800mm;matos->outillage;matos;1
+Spanset / Elingue fen;matos->manutention;matos;0
+Téléphone fixe gigaset;matos->bureautique;matos;0
+Triplette (prise);elec->alimentation;elec;0
+Agrafe de bureau;matos->consommable;matos;1
+Batterie externe;matos->bureautique;matos;0
+Box internet;matos->bureautique;matos;0
+Câble alimentation PC16 / bipolaire;matos->bureautique;matos;0
+Câble alimentation PC16 / tripolaire CEE7;matos->bureautique;matos;0
+Câble fouet (USB, ligthning);matos->bureautique;matos;0
+Câble HDMI / HDMI 2m;matos->bureautique;matos;0
+Câble micro jack / micro jack;matos->bureautique;matos;0
+Cable RCA / micro jack;matos->bureautique;matos;0
+Câble RJ45 / RJ45;matos->bureautique;matos;0
+Câble téléphone T / RJ11;matos->bureautique;matos;0
+Câble USB A / Apple lightning;matos->bureautique;matos;0
+Câble USB A / micro USB;matos->bureautique;matos;0
+Câble USB A / USB B;matos->bureautique;matos;0
+Câble USB A / USB C;matos->bureautique;matos;0
+Câble VGA / VGA 2m;matos->bureautique;matos;0
+Cable XLR / Jack 35mm 5m;matos->bureautique;matos;0
+Calculatrice;matos->bureautique;matos;0
+Chargeur 230V / micro USB;matos->bureautique;matos;0
+Chargeur MAC;matos->bureautique;matos;0
+Chargeur USB C;matos->bureautique;matos;0
+Ciseaux;matos->outillage;matos;1
+Clavier filaire;matos->bureautique;matos;0
+Clavier sans fil;matos->bureautique;matos;0
+Ecouteurs;matos->bureautique;matos;0
+Enceinte mono local;matos->bureautique;matos;0
+Etiqueteuse;matos->bureautique;matos;0
+Marqueur permanent noir;matos->outillage;matos;1
+Marqueur POSCA;matos->outillage;matos;1
+Micro output XLR;matos->bureautique;matos;0
+Onduleur 8x prises;matos->bureautique;matos;0
+Ordinateur portable;matos->bureautique;matos;0
+Papier blanc A4;matos->consommable;matos;1
+Pochette à plastifier A3;matos->consommable;matos;1
+Pochette à plastifier A4;matos->consommable;matos;1
+Pochette plastique classeur A4;matos->consommable;matos;1
+Porte badge;matos->bureautique;matos;0
+Poubelle de bureau;matos->mobilier;matos;0
+Routeur 8x RJ45;matos->bureautique;matos;0
+Scanner A4;matos->bureautique;matos;0
+Scotch de bureau (rouleau);matos->consommable;matos;1
+Souris;matos->bureautique;matos;0
+Tableau blanc 1.5x1m;matos->mobilier;matos;0
+Trombone;matos->consommable;matos;1
+Trouilloteuse;matos->bureautique;matos;1
+Balai poil dur;matos->proprete;matos;1
+Balai sans manche;matos->proprete;matos;1
+Balayette balai;matos->proprete;matos;1
+Balayette pelle;matos->proprete;matos;1
+Bidon 20L;matos->autres;matos;0
+Caisse plastique;matos->manutention;matos;1
+Gants ménage paire;matos->proprete;matos;1
+Grande pelle;matos->outillage;matos;1
+Pousse-pousse;matos->proprete;matos;1
+Raclette;matos->proprete;matos;1
+Rateau;matos->outillage;matos;1
+Seau;matos->proprete;matos;1
+Serpillère (tissu);matos->proprete;matos;1
+Serpillère avec manche;matos->proprete;matos;1
+Mètre;matos->outillage;matos;1
+Cutter avec sécurité;matos->outillage;matos;1
+niveau à bulles;matos->outillage;matos;1
+Décamètre 60m;matos->outillage;matos;1
+Equerre;matos->outillage;matos;1
+Cisceaux à bois 15mm;matos->outillage;matos;1
+Ciseaux à bois 20mm;matos->outillage;matos;1
+Aiguilles;matos->outillage;matos;1
+Ciseaux;matos->outillage;matos;1
+Cutter;matos->outillage;matos;1
+Tonailles;matos->outillage;matos;1
+Pince multiprise plate;matos->outillage;matos;1
+Pince multiprise plate fine;matos->outillage;matos;1
+Pince coupante;matos->outillage;matos;1
+Pince multiprise;matos->outillage;matos;1
+Lame cutter grande;matos->outillage;matos;1
+Lame cutter fine;matos->outillage;matos;1
+Cutter fin;matos->outillage;matos;1
+Reglet 50cm;matos->outillage;matos;1
+Pince à denuder;matos->outillage;matos;1
+Pince à sertir;matos->outillage;matos;1
+Clef à mollette 30mm;matos->outillage;matos;1
+Pince à colson;matos->outillage;matos;1
+Clef à pipe 22mm;matos->outillage;matos;1
+Clef à pipe 21mm;matos->outillage;matos;1
+Clef à pipe 19mm;matos->outillage;matos;1
+Clef allen 10mm;matos->outillage;matos;1
+Clef allen 8mm;matos->outillage;matos;1
+Clef allen 6mm;matos->outillage;matos;1
+Clef allen 5mm;matos->outillage;matos;1
+Clef allen 4mm;matos->outillage;matos;1
+Clef allen 3mm;matos->outillage;matos;1
+Clef allen 2,5mm;matos->outillage;matos;1
+Clef allen 2mm;matos->outillage;matos;1
+Clef allen 1,5mm;matos->outillage;matos;1
+Multioutils allen 8-1,5mm;matos->outillage;matos;1
+Set Clefs plates 22-6mm;matos->outillage;matos;1
+Set Clef plates 6-17mm;matos->outillage;matos;1
+Clef plate/oeil 22mm;matos->outillage;matos;1
+Clef plate/oeil 21mm;matos->outillage;matos;1
+Clef plate/oeil 17mm;matos->outillage;matos;1
+Clef plate/oeil 16mm;matos->outillage;matos;1
+Clef plate/oeil 13mm;matos->outillage;matos;1
+Clef plate/oeil 10mm;matos->outillage;matos;1
+Clef plate 6-7mm;matos->outillage;matos;1
+Clef plate 8-9mm;matos->outillage;matos;1
+Clef plate 12-13mm;matos->outillage;matos;1
+Clef plate 20-22mm;matos->outillage;matos;1
+Clef plate 22-23mm;matos->outillage;matos;1
+Clef plate 6-8mm;matos->outillage;matos;1
+Tournevis P3;matos->outillage;matos;1
+Tournevis P5;matos->outillage;matos;1
+Tournevis P6 court;matos->outillage;matos;1
+Tournevis P8;matos->outillage;matos;1
+Tournevis P6;matos->outillage;matos;1
+Tournevis cruciforme PZ2;matos->outillage;matos;1
+Tournevis P3 electriciren;matos->outillage;matos;1
+Set tournevis electricien T6-10 PH0 PH00 P3 P4;matos->outillage;matos;1
+Tournevis PH2;matos->outillage;matos;1
+Tournevis PH0;matos->outillage;matos;1
+Set cliquet douille HC 8-32mm;matos->outillage;matos;1
+Scie égoïne;matos->outillage;matos;1
+Set 4 limes finition;matos->outillage;matos;1
+Serre joint 250mm;matos->outillage;matos;1
+Serre joint 350mm;matos->outillage;matos;1
+Lime ébauche demi-lune;matos->outillage;matos;1
+Agrapheuse murale;matos->outillage;matos;1
+Vis FZ ?4x35mm;matos->outillage;matos;1
+Vis FZ ?4x20mm;matos->outillage;matos;1
+Vis FZ ?5x50mm;matos->outillage;matos;1
+Vis FZ ?5x70mm;matos->outillage;matos;1
+Vis FZ ?4x40mm;matos->outillage;matos;1
+Vis FZ ?6x50mm;matos->outillage;matos;1
+Vis FZ ?5x60mm;matos->outillage;matos;1
+Vis FZ ?3,5x55mm;matos->outillage;matos;1
+Vis FX ?6x120mm;matos->outillage;matos;1
+Vis FX ?6x100mm;matos->outillage;matos;1
+Casque anti-bruit;matos->outillage;matos;1
+Masque de sécurité;matos->outillage;matos;1
+Lunette de sécurité;matos->outillage;matos;1
+Gants de manutention;matos->outillage;matos;1
+Masque FFP1;matos->consommable;matos;1
+Marteau;matos->outillage;matos;1
+Pied de biche;matos->outillage;matos;1
+Marteau arrache clou;matos->outillage;matos;1
+Pince monseigneur;matos->outillage;matos;1
+Frontale;matos->manutention;matos;1
+Scotch marron 50mm;matos->consommable;matos;1
+Scotch cristal 50mm;matos->consommable;matos;1
+Scotch chantier 50mm;matos->consommable;matos;1
+Scotch double face 50mm;matos->consommable;matos;1
+Rubalise;matos->consommable;matos;1
+Scotch masquage 50mm;matos->consommable;matos;1
+Scotch masquage 25mm;matos->consommable;matos;1
+Scotch Gaffer alu 50mm;matos->consommable;matos;1
+Scotch Gaffer 50mm;matos->consommable;matos;1
+Scotch Gaffer noir 50mm;matos->consommable;matos;1
+Scotch marquage 25mm;matos->consommable;matos;1
+Scotch double face 12mm;matos->consommable;matos;1
+Scotch cristal 25mm;matos->consommable;matos;1
+Dérouleur à scotch 50mm;matos->outillage;matos;1
+Scotch de bureau;matos->consommable;matos;1
+Velcro 10m;matos->consommable;matos;1
+Scotch barnier noir;matos->consommable;matos;1
+Scotch barnier;matos->consommable;matos;1
+Grilles frigo;matos->electromenager;matos;1
+Bac frigo;matos->electromenager;matos;1
+Étagère porte frigo;matos->electromenager;matos;1
+Câble acier Ø3 (m);matos->consommable;matos;1
+Fil de fer 50m (rouleau);matos->consommable;matos;1
+Fil de cuivre Ø1,5 (m);matos->consommable;matos;1
+Elastique tendeur Ø4 (m);matos->consommable;matos;1
+Tourne attache canisse;matos->outillage;matos;1
+Rubalise réutilisable (60m);matos->consommable;matos;1
+Ruban courses (50m);matos->consommable;matos;1
+Colson 150mm;matos->consommable;matos;1
+Colson 350mm;matos->consommable;matos;1
+Colson 500mm;matos->consommable;matos;1
+Corde drisse (m);matos->consommable;matos;1
+Elastique tendeur Ø10 (m);matos->consommable;matos;1
+Meuleuse filaire Bosch;matos->outillage;matos;1
+Disque à tronçonner;matos->consommable;matos;1
+Disque flap;matos->consommable;matos;1
+Chargeur batterie double Makita;matos->outillage;matos;1
+Batterie Makita;matos->outillage;matos;1
+Boulonneuse portable Makita;matos->outillage;matos;1
+Scie sauteuse portable Makita;matos->outillage;matos;1
+Petite boulonneuse portable Makita;matos->outillage;matos;1
+Ponceuse rotative filaire Makita;matos->outillage;matos;1
+Disque de ponçage 125grain;matos->consommable;matos;1
+Disque de ponçage 80grain;matos->consommable;matos;1
+Mèches métal 8-2mm;matos->outillage;matos;1
+Set embouts BTR (PH, PZ, TX, P);matos->outillage;matos;1
+Scie circulaire filaire Makita;matos->outillage;matos;1
+Poste à souder électronique;matos->outillage;matos;1
+Fil étain (m);matos->consommable;matos;1
+Serre Câble étrier Ø3-4mm;matos->consommable;matos;1
+Serre Câble plat Ø3-4mm;matos->consommable;matos;1
+Boulon H M6 L50;matos->consommable;matos;1
+Bande perforée acier zinc (m);matos->consommable;matos;1
+Ecrou M8;matos->consommable;matos;1
+Rapporteur d'angle métrique;matos->outillage;matos;1
+Pile AA 1,5V;matos->consommable;matos;1
+Pile I23 3V;matos->consommable;matos;1
+Pile AAA 1,5V;matos->consommable;matos;1
+Pile 6LP3146 9V;matos->consommable;matos;1
+Pile LR14 1,5V;matos->consommable;matos;1
+Rondelle M14;matos->consommable;matos;1
+Clou Ø2,4 L50;matos->consommable;matos;1
+Clou Ø2,7 L55;matos->consommable;matos;1
+Clou Ø3,5 L80;matos->consommable;matos;1
+Forêt métal Ø5;matos->outillage;matos;1
+Embout BTR PH2;matos->outillage;matos;1
+Embout BTR PZ2;matos->outillage;matos;1
+Embout BTR T20;matos->outillage;matos;1
+Set forêt bois Ø10-4mm;matos->outillage;matos;1
+Set scie cloche Ø86-40mm multiusage;matos->outillage;matos;1
+Set forêt bois Ø24-14mm;matos->outillage;matos;1
+Set scie cloche Ø60-24mm multiusage;matos->outillage;matos;1
+forêt métal Ø2,4mm;matos->outillage;matos;1
+forêt métal Ø3,8mm;matos->outillage;matos;1
+forêt métal Ø3,8mm;matos->outillage;matos;1
+Set forêts bâton Ø10-4mm;matos->outillage;matos;1
+Set forêt métal Ø10-1mm;matos->outillage;matos;1
+Set embouts BTR (PH, PZ, TX, P);matos->outillage;matos;1
+Set forêts bâton/bois/métal vieux;matos->outillage;matos;1
+Multimètre pince;matos->outillage;matos;1
+Rabot électrique filaire Parkside;matos->outillage;matos;1
+Ponceuse translative filaire Bosch;matos->outillage;matos;1
+Pistolet à colle;matos->outillage;matos;1
+Baton de colle;matos->consommable;matos;1
+Papier à poncer 80grain (m);matos->consommable;matos;1
+Papier à poncer 120grain (m);matos->consommable;matos;1
+Disque (scie circulaire);matos->outillage;matos;1
+Pointeau;matos->outillage;matos;1
+Cagette pliante;matos->manutention;matos;1
+Escabeau;matos->manutention;matos;1
+Diable;matos->manutention;matos;1
+Diable;matos->manutention;matos;1
+Echelle 3 brins;matos->manutention;matos;1
+Echelle 1 brin;matos->manutention;matos;1
+Aspirateur industriel;matos->manutention;matos;1
+Serre joint 350mm;matos->cuisine;matos;0
+Plaque à induction 2000W;matos->cuisine;matos;0
