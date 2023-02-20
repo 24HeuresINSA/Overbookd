@@ -59,18 +59,12 @@ export default Vue.extend({
       return [];
     },
     isSelected(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) => {
-        const selected = this.selected.find(this.isSamePeriod(date, hour));
-        return selected !== undefined;
-      };
+      return (date: string, hour: number) =>
+        this.selected.some(this.isSamePeriod(date, hour));
     },
     isSaved(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) => {
-        const saved = this.savedAvailabilities.find(
-          this.isSamePeriod(date, hour)
-        );
-        return saved !== undefined;
-      };
+      return (date: string, hour: number) =>
+        this.savedAvailabilities.some(this.isSamePeriod(date, hour));
     },
     weekdayNumbers(): Number[] {
       return this.generateWeekdayList([], new Date(this.period.start));
