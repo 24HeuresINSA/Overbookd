@@ -19,7 +19,7 @@
             'two-hours': !isPartyShift(hour),
             'one-hour': isPartyShift(hour),
             selected: isSelected(date, hour),
-            locked: isLocked(date, hour),
+            saved: isSaved(date, hour),
           }"
           @click="selectPeriod(date, hour, time)"
         >
@@ -64,12 +64,12 @@ export default Vue.extend({
         return selected !== undefined;
       };
     },
-    isLocked(): (date: string, hour: number) => boolean {
+    isSaved(): (date: string, hour: number) => boolean {
       return (date: string, hour: number) => {
-        const locked = this.savedAvailabilities.find(
+        const saved = this.savedAvailabilities.find(
           this.isSamePeriod(date, hour)
         );
-        return locked !== undefined;
+        return saved !== undefined;
       };
     },
     weekdayNumbers(): Number[] {
@@ -96,7 +96,7 @@ export default Vue.extend({
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
     selectPeriod(date: string, hour: number, time: string) {
-      if (this.isLocked(date, hour)) return;
+      if (this.isSaved(date, hour)) return;
       if (this.isSelected(date, hour)) return this.removePeriod(date, hour);
       this.addPeriod(date, time, hour);
     },
@@ -104,10 +104,13 @@ export default Vue.extend({
       const periodToAdd = this.generateNewPeriod(date, time, hour);
       this.selected = [...this.selected, periodToAdd];
     },
+    getPeriodDurationInHours(hour: number): number {
+      return this.isPartyShift(hour) ? 1 : 2;
+    },
     generateNewPeriod(date: string, time: string, hour: number): Period {
-      const durationInHours = this.isPartyShift(hour) ? 1 : 2;
+      const durationInHours = this.getPeriodDurationInHours(hour);
       const start = new Date(`${date} ${time}`);
-      let end = new Date(start);
+      const end = new Date(start);
       end.setHours(hour + durationInHours);
       return { start, end };
     },
@@ -124,8 +127,7 @@ export default Vue.extend({
     },
     getDisplayedCharisma(date: string, hour: number, time: string): number {
       const charisma = this.getCharismaByDate(date, time);
-      if (!this.isPartyShift(hour)) return charisma * 2;
-      return charisma;
+      return charisma * this.getPeriodDurationInHours(hour);
     },
     formatDateDay(date: string): string {
       return new Date(date).toLocaleDateString("fr-FR", { weekday: "short" });
@@ -156,7 +158,7 @@ export default Vue.extend({
   color: white;
 }
 
-.locked {
+.saved {
   background-color: rgba(76, 175, 80, 1);
   color: white;
 }
