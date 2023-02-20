@@ -46,7 +46,7 @@
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "vuetify-datetime-picker": "^2.1.1",
-    "vuex-module-decorators": "^1.0.1"
+    "vuex-module-decorators": "^2.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.4.2",
