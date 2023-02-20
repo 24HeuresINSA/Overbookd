@@ -19,7 +19,7 @@
       type="week"
       :events="events"
       :event-ripple="true"
-      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      :weekdays="weekdays"
       @input="updateDate"
     >
       <template
@@ -70,7 +70,7 @@
             'shift-day': isDayHour(hour),
             'shift-night': isNightHour(hour),
           }"
-          :style="{ top: timeToY(time) }"
+          :style="{ top: `${timeToY(time)}px` }"
         ></div>
       </template>
     </v-calendar>
@@ -90,7 +90,6 @@ export default Vue.extend({
   props: {
     events: {
       type: Array,
-      required: true,
       default: () => [],
     },
     date: {
@@ -101,6 +100,10 @@ export default Vue.extend({
     title: {
       type: String,
       default: () => "",
+    },
+    weekdays: {
+      type: Array,
+      default: () => [1, 2, 3, 4, 5, 6, 0],
     },
   },
   methods: {

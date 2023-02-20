@@ -21,6 +21,7 @@
       :event-color="getEventColor"
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      :short-weekdays="false"
     ></v-calendar>
   </div>
 </template>
