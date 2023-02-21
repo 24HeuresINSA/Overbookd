@@ -46,7 +46,7 @@
         <v-stepper-step
           :complete="step > 2"
           step="2"
-          :rules="[() => !(step > 2)]"
+          :rules="presentationRules"
           @click="step = 2"
         >
           Presentation
@@ -55,17 +55,41 @@
 
         <v-stepper-content step="2">
           <v-form class="data dense personnal-data">
-            <v-text-field label="Prénom*" required></v-text-field>
-            <v-text-field label="Surnom"></v-text-field>
-            <v-text-field label="Nom*" required></v-text-field>
-            <v-text-field label="Date de naissance*" type="date" return-object>
+            <v-text-field
+              v-model="firstname"
+              label="Prénom*"
+              required
+              :rules="[rules.required]"
+            ></v-text-field>
+            <v-text-field v-model="surname" label="Surnom"></v-text-field>
+            <v-text-field
+              v-model="lastname"
+              label="Nom*"
+              :rules="[rules.required]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="birthday"
+              label="Date de naissance*"
+              type="date"
+              :rules="[
+                rules.required,
+                rules.birthdayMaxDate,
+                rules.birthdayMaxDate,
+              ]"
+            >
             </v-text-field>
           </v-form>
           <v-btn color="primary" @click="step = 3"> Vous savez tout 🕵️</v-btn>
           <v-btn text @click="step = 1"> Revenir</v-btn>
         </v-stepper-content>
 
-        <v-stepper-step :complete="step > 3" step="3" @click="step = 3">
+        <v-stepper-step
+          :complete="step > 3"
+          step="3"
+          :rules="contactRules"
+          @click="step = 3"
+        >
           Contact
           <small>Comment on reste connectes ?</small>
         </v-stepper-step>
@@ -73,6 +97,7 @@
         <v-stepper-content step="3">
           <v-form class="data contact-data">
             <v-select
+              v-model="team"
               label="Equipe"
               :items="[
                 'BDE',
@@ -83,18 +108,25 @@
                 'Tendrestival',
               ]"
               clearable
-              required
               hint="Tu nous rejoins a plusieurs ?"
               persistent-hint
             ></v-select>
             <v-text-field
+              v-model="email"
               label="Email*"
               required
               hint="Pas d'adresse insa 🙏"
+              :rules="[rules.required, rules.email, rules.insaEmail]"
               persistent-hint
             ></v-text-field>
-            <v-text-field label="Ton 06 ?*" required></v-text-field>
+            <v-text-field
+              v-model="phone"
+              label="Ton 06 ?*"
+              required
+              :rules="[rules.required, rules.mobilePhone]"
+            ></v-text-field>
             <v-textarea
+              v-model="comment"
               label="Commentaire"
               hint="Laisse nous un petit mot. 💌"
               persistent-hint
@@ -110,19 +142,23 @@
         <v-stepper-content step="4">
           <v-form class="data security-data">
             <v-text-field
+              v-model="password"
               type="password"
               label="Mot de passe*"
               required
-              hint="Au moins 1 minuscule, 1 majuscule et 8 caracteres 🔒"
+              hint="Au moins une MAJUSCULE, minuscule, un chiffre et 6 caractères 🔒"
               persistent-hint
+              :rules="[rules.password]"
             ></v-text-field>
 
             <v-text-field
+              v-model="repeatPassword"
               type="password"
               label="Confirme ton mot de passe*"
               required
               hint="Il faut que ca soit le meme 🔒"
               persistent-hint
+              :rules="[repeatPasswordRule]"
             ></v-text-field>
           </v-form>
           <v-btn color="primary" disabled @click="step = 1"> M'inscrire </v-btn>
@@ -135,15 +171,85 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {
+  InputRulesData,
+  required,
+  minDate,
+  maxDate,
+  isEmail,
+  isInsaEmail,
+  isMobilePhoneNumber,
+  password,
+  isSame,
+} from "~/utils/rules/inputRules";
+
+interface RegisterData extends InputRulesData {
+  step: number;
+  firstname: string;
+  lastname: string;
+  surname?: string;
+  birthday: string;
+  team?: string;
+  phone: string;
+  comment?: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+}
 
 export default Vue.extend({
   name: "Register",
   auth: false,
   layout: "none",
-  data() {
+  data(): RegisterData {
     return {
       step: 1,
+      firstname: "",
+      lastname: "",
+      surname: undefined,
+      birthday: "2000-01-01",
+      email: "",
+      phone: "",
+      comment: undefined,
+      team: undefined,
+      password: "",
+      repeatPassword: "",
+      rules: {
+        required: required,
+        birthdayMinDate: minDate(new Date("1950-01-01")),
+        birthdayMaxDate: maxDate(),
+        email: isEmail,
+        insaEmail: isInsaEmail,
+        mobilePhone: isMobilePhoneNumber,
+        password: password,
+      },
     };
+  },
+  computed: {
+    birthdayDate(): Date {
+      return new Date();
+    },
+    presentationRules(): (() => boolean | string)[] {
+      return [
+        () => this.step <= 2 || this.rules.required(this.firstname),
+        () => this.step <= 2 || this.rules.required(this.lastname),
+        () => this.step <= 2 || this.rules.required(this.birthday),
+        () => this.step <= 2 || this.rules.birthdayMaxDate(this.birthday),
+        () => this.step <= 2 || this.rules.birthdayMinDate(this.birthday),
+      ];
+    },
+    contactRules(): (() => boolean | string)[] {
+      return [
+        () => this.step <= 3 || this.rules.required(this.email),
+        () => this.step <= 3 || this.rules.required(this.phone),
+        () => this.step <= 3 || this.rules.email(this.email),
+        () => this.step <= 3 || this.rules.insaEmail(this.email),
+        () => this.step <= 3 || this.rules.mobilePhone(this.phone),
+      ];
+    },
+    repeatPasswordRule(): (value: string | null) => boolean | string {
+      return isSame(this.password);
+    },
   },
 });
 </script>
