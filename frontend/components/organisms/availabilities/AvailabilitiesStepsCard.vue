@@ -28,6 +28,9 @@
             >
               Suivant
             </v-btn>
+            <v-btn v-else color="success" @click="saveAvailabilities">
+              Valider
+            </v-btn>
           </v-card-actions>
         </v-stepper-content>
       </div>
@@ -107,6 +110,11 @@ export default Vue.extend({
     },
     incrementStep() {
       this.step++;
+    },
+    async saveAvailabilities() {
+      return this.$accessor.volunteerAvailability.updateVolunteerAvailabilities(
+        +this.$accessor.user.me.id
+      );
     },
   },
 });

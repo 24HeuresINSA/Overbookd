@@ -130,6 +130,10 @@ export default Vue.extend({
     addPeriod(date: Date) {
       const periodToAdd = this.generateNewPeriod(date);
       this.selected = [...this.selected, periodToAdd];
+      this.$accessor.volunteerAvailability.incrementCharisma(
+        this.getCharismaByDate(date) *
+          this.getPeriodDurationInHours(date.getHours())
+      );
     },
     addPeriodsInDay(date: Date) {
       const periods = this.generateAllPeriodsFor(date);
@@ -161,6 +165,10 @@ export default Vue.extend({
     removePeriod(date: Date) {
       this.selected = this.selected.filter(
         (period) => !this.isSamePeriod(date)(period)
+      );
+      this.$accessor.volunteerAvailability.decrementCharisma(
+        this.getCharismaByDate(date) *
+          this.getPeriodDurationInHours(date.getHours())
       );
     },
     removePeriodsInDay(date: Date) {

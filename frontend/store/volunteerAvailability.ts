@@ -10,6 +10,7 @@ const repo = RepoFactory.VolunteerAvailabilityRepository;
 
 export const state = () => ({
   availabilityRegistery: AvailabilityRegistery.init(),
+  currentCharisma: 0,
 });
 
 export const getters = getterTree(state, {
@@ -27,12 +28,22 @@ export const mutations = mutationTree(state, {
   ADD_VOLUNTEER_AVAILABILITY(state, period: Period) {
     state.availabilityRegistery.addPeriod(period);
   },
+
+  SET_CURRENT_CHARISMA(state, charisma: number) {
+    state.currentCharisma = charisma;
+  },
 });
 
 export const actions = actionTree(
   { state },
   {
-    async fetchVolunteerAvailabilities({ commit }, userId: number) {
+    async fetchVolunteerAvailabilities(
+      { commit, dispatch, rootState },
+      userId: number
+    ) {
+      if (!rootState.user.me) dispatch("user/fetchUser", null, { root: true });
+      commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
+
       const res = await safeCall(
         this,
         repo.getVolunteerAvailabilities(this, userId)
@@ -41,7 +52,10 @@ export const actions = actionTree(
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
     },
 
-    async updateVolunteerAvailabilities({ commit, state }, userId: number) {
+    async updateVolunteerAvailabilities(
+      { commit, dispatch, state },
+      userId: number
+    ) {
       const res = await safeCall(
         this,
         repo.updateVolunteerAvailabilities(
@@ -56,10 +70,26 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
+
+      const payload = {
+        userID: userId,
+        userData: {
+          charisma: state.currentCharisma,
+        },
+      };
+      dispatch("user/updateUser", payload, { root: true });
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {
       commit("ADD_VOLUNTEER_AVAILABILITY", availability);
+    },
+
+    incrementCharisma({ commit, state }, increment: number) {
+      commit("SET_CURRENT_CHARISMA", state.currentCharisma + increment);
+    },
+
+    decrementCharisma({ commit, state }, decrement: number) {
+      commit("SET_CURRENT_CHARISMA", state.currentCharisma - decrement);
     },
   }
 );

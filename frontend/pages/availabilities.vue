@@ -20,17 +20,15 @@ export default Vue.extend({
       return this.$accessor.config.getConfig("availabilities_description");
     },
     charisma(): number {
-      return this.$accessor.user.me.charisma ?? 0;
+      return this.$accessor.volunteerAvailability.currentCharisma ?? 0;
     },
     maxCharisma(): number {
       return +this.$accessor.config.getConfig("max_charisma");
     },
   },
   async mounted() {
-    if (!this.$accessor.user.me) {
-      await this.$accessor.user.fetchUser();
-    }
     await this.$accessor.charismaPeriod.fetchCharismaPeriods();
+    await this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities();
   },
 });
 </script>
