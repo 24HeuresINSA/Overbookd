@@ -176,12 +176,12 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import { RepoFactory } from "~/repositories/repoFactory";
 import {
   InputRulesData,
+  required,
+  minDate,
+  maxDate,
   isEmail,
   isInsaEmail,
   isMobilePhoneNumber,
-  isSame,
-  maxDate,
-  minDate,
   password,
   required,
 } from "~/utils/rules/inputRules";
