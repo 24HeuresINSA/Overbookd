@@ -173,14 +173,14 @@
 import Vue from "vue";
 import {
   InputRulesData,
-  required,
-  minDate,
-  maxDate,
   isEmail,
   isInsaEmail,
   isMobilePhoneNumber,
-  password,
   isSame,
+  maxDate,
+  minDate,
+  password,
+  required,
 } from "~/utils/rules/inputRules";
 
 interface RegisterData extends InputRulesData {
