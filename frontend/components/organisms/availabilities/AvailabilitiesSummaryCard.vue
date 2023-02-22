@@ -10,9 +10,10 @@
 </template>
 
 <script>
-import AvailabilitiesCalendar from "~/components/molecules/AvailabilitiesCalendar.vue";
+import AvailabilitiesCalendar from "~/components/molecules/timeframe/AvailabilitiesCalendar.vue";
 
 export default {
+  name: "AvailabilitiesSummaryCard",
   components: {
     AvailabilitiesCalendar,
   },

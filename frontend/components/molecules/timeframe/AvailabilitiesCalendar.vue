@@ -33,8 +33,9 @@
             height: 100%;
             width: 100%;
           "
-        ></div> </template
-    ></v-calendar>
+        />
+      </template>
+    </v-calendar>
   </div>
 </template>
 
@@ -42,6 +43,7 @@
 import timeslotRepo from "~/repositories/timeslotRepo.ts";
 
 export default {
+  name: "AvailabilitiesCalendar",
   props: {
     mUser: {
       type: Object,
