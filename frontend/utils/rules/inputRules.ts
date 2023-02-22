@@ -26,7 +26,7 @@ export function minDate(minDate: Date) {
   return function (value: string | null) {
     return (
       (value && new Date(value).getTime() >= minDate.getTime()) ||
-      "Vous n'etes pas si vieux !"
+      "Vous n'êtes pas si vieux !"
     );
   };
 }
@@ -58,7 +58,7 @@ const mobilePhoneNumberPattern = new RegExp(`0[6-7]{1}[0-9]{8}$`);
 export function isMobilePhoneNumber(value: string | null) {
   return (
     (value && mobilePhoneNumberPattern.test(value)) ||
-    "Numero de telephone non valable"
+    "Numéro de téléphone non valable"
   );
 }
 

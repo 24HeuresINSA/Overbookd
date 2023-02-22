@@ -13,27 +13,27 @@
       </v-img>
       <v-stepper v-model="step" vertical>
         <v-stepper-step :complete="step > 1" step="1" @click="step = 1">
-          Devenir Benevole
+          Devenir Bénévole
           <small>Tout ce qu'il faut savoir sur le festival</small>
         </v-stepper-step>
 
         <v-stepper-content step="1">
-          <p>Hello et merci d'etre venu jusqu'ici ! 🤗</p>
+          <p>Hello et merci d'être venu jusqu'ici ! 🤗</p>
           <p>
-            Le festival des 24 heures de l'INSA n'est possible que grace aux
+            Le festival des 24 heures de l'INSA n'est possible que grâce aux
             plus de
-            <strong>350 benevoles</strong> qui, comme toi, ont accepte de venir
-            nous donner un coup de main pour preparer, organiser et faire en
+            <strong>350 benevoles</strong> qui, comme toi, ont accepté de venir
+            nous donner un coup de main pour préparer, organiser et faire en
             sorte que les festivaliers passent le meilleur moment possible. 🎉
           </p>
           <p>
             Pour que l'on puisse t'accueillir dans les meilleures conditions il
             nous faut cependant quelques informations sur toi et le temps que tu
-            souhaites consacrer a nous aider.
+            souhaites consacrer à nous aider.
           </p>
           <p>
             Si tu as la moindre question sur le festival et ce que tu peux faire
-            pour nous aider, n'hesite pas a contacter les
+            pour nous aider, n'hésite pas a contacter les
             <a href="mailto:humains@24heures.org">responsables benevoles</a>.
             <br />
             Ils seront tes principaux interlocuteurs en amont et en aval du
@@ -49,7 +49,7 @@
           :rules="presentationRules"
           @click="step = 2"
         >
-          Presentation
+          Présentation
           <small>Dis nous en un peu plus sur toi</small>
         </v-stepper-step>
 
@@ -91,14 +91,14 @@
           @click="step = 3"
         >
           Contact
-          <small>Comment on reste connectes ?</small>
+          <small>Comment on reste connectés ?</small>
         </v-stepper-step>
 
         <v-stepper-content step="3">
           <v-form class="data contact-data">
             <v-select
               v-model="team"
-              label="Equipe"
+              label="Équipe"
               :items="[
                 'BDE',
                 'Kfet',
@@ -108,7 +108,7 @@
                 'Tendrestival',
               ]"
               clearable
-              hint="Tu nous rejoins a plusieurs ?"
+              hint="Tu nous rejoins à plusieurs ?"
               persistent-hint
             ></v-select>
             <v-text-field
@@ -137,7 +137,7 @@
         </v-stepper-content>
 
         <v-stepper-step step="4" @click="step = 4">
-          Securite <small>Un mot de passe</small>
+          Sécurité <small>Un mot de passe</small>
         </v-stepper-step>
         <v-stepper-content step="4">
           <v-form class="data security-data">
@@ -156,7 +156,7 @@
               type="password"
               label="Confirme ton mot de passe*"
               required
-              hint="Il faut que ca soit le meme 🔒"
+              hint="Il faut que ça soit le même 🔒"
               persistent-hint
               :rules="[repeatPasswordRule]"
             ></v-text-field>
