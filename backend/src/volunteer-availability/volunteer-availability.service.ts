@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { VolunteerAvailability } from '@prisma/client';
+import { Prisma, VolunteerAvailability } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import {
   CreateVolunteerAvailabilityDto,
@@ -80,7 +80,18 @@ export class VolunteerAvailabilityService {
           };
         }),
       });
-    await this.prisma.$transaction([userUpdate, volunteerAvailabilityUpdate]);
+    const volunteerAvailabilityDelete =
+      this.prisma.volunteerAvailability.deleteMany({
+        where: {
+          userId,
+        },
+      });
+    await this.prisma.$transaction(
+      [volunteerAvailabilityDelete, userUpdate, volunteerAvailabilityUpdate],
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
     const availabilities = await this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
