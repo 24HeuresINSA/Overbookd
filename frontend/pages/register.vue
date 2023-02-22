@@ -75,7 +75,7 @@
               :rules="[
                 rules.required,
                 rules.birthdayMaxDate,
-                rules.birthdayMaxDate,
+                rules.birthdayMinDate,
               ]"
             >
             </v-text-field>
@@ -274,6 +274,7 @@ export default Vue.extend({
 
   &-card {
     max-width: 1000px;
+    width: 100%;
   }
 
   &-illustration {
