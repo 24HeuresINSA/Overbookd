@@ -50,12 +50,51 @@ export class VolunteerAvailabilityService {
         );
       }
     }
-    console.log('New availabilities are longer than older ones');
     let newCharismaPoints = 0;
     for (const period of newPeriods) {
       newCharismaPoints += await this.computeCharismaPoints(period);
     }
-    return null;
+    let oldCharismaPoints = 0;
+    for (const period of oldAvailabilities) {
+      oldCharismaPoints += await this.computeCharismaPoints(period);
+    }
+    const charismaPoints = newCharismaPoints - oldCharismaPoints;
+    console.log(charismaPoints);
+    const userUpdate = this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        charisma: {
+          increment: charismaPoints,
+        },
+      },
+    });
+    const volunteerAvailabilityUpdate =
+      this.prisma.volunteerAvailability.createMany({
+        data: newPeriods.map((period) => {
+          return {
+            start: period.start,
+            end: period.end,
+            userId,
+          };
+        }),
+      });
+    await this.prisma.$transaction([userUpdate, volunteerAvailabilityUpdate]);
+    const availabilities = await this.prisma.volunteerAvailability.findMany({
+      where: {
+        userId,
+      },
+    });
+    return {
+      userId,
+      periods: availabilities.map((av) => {
+        return {
+          start: av.start,
+          end: av.end,
+        };
+      }),
+    };
   }
 
   private getPeriodDuration(params: Period): number {
@@ -85,7 +124,13 @@ export class VolunteerAvailabilityService {
         start: 'asc',
       },
     });
-    console.log(allUsefulCharismaPeriod);
+    if (allUsefulCharismaPeriod.length > 0) {
+      let totalCharismaPoints = 0;
+      for (const period of allUsefulCharismaPeriod) {
+        totalCharismaPoints += period.charisma;
+      }
+      return totalCharismaPoints;
+    }
     return 0;
   }
 }
