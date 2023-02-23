@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-img :src="randomURL" class="img-background"></v-img>
+    <div class="opacity-filter"></div>
     <v-form>
       <v-container class="form-container">
         <v-row>
@@ -24,7 +25,6 @@
             autofocus
             outlined
             solo
-            filled
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
@@ -37,31 +37,37 @@
             outlined
             clearable
             solo
-            filled
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
-        <v-row class="sub-form justify-center" align="center">
-          <nuxt-link class="forgot-a" to="/forgot">
+        <v-row class="ctas">
+          <v-btn
+            color="primary"
+            elevation="2"
+            class="login-btn btn btn-primary"
+            @click="login"
+          >
+            connexion
+          </v-btn>
+          <v-btn
+            color="secondary"
+            elevation="2"
+            to="/register"
+            class="signup-btn btn btn-secondary"
+          >
+            s'inscrire
+          </v-btn>
+        </v-row>
+        <v-row class="ctas">
+          <v-btn class="btn btn-tertiary" to="/forgot">
             Mot de passe oublié ?
-          </nuxt-link>
-          <v-spacer />
-          <v-btn class="problem-btn" @click="isDialogOpen = true">
-            Un problème lors de l'inscription ?
+          </v-btn>
+          <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
+            Un problème
+            <span class="desktop">&nbsp;lors de l'inscription </span>?
           </v-btn>
         </v-row>
       </v-container>
-      <v-btn
-        color="secondary"
-        elevation="2"
-        to="/signup"
-        class="signup-btn btn"
-      >
-        s'inscrire
-      </v-btn>
-      <v-btn color="primary" elevation="2" class="login-btn btn" @click="login">
-        connexion
-      </v-btn>
     </v-form>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
@@ -70,7 +76,8 @@
         <v-card-text>
           <h4>
             Si vous avez rencontré un problème lors de l'inscription vous pouvez
-            nous envoyer un mail à l'adresse humains@24heures.org <br />
+            nous envoyer un mail à l'adresse humains@24heures.org
+            <br />
             Nous nous en occuperons au plus vite.
           </h4>
         </v-card-text>
@@ -212,6 +219,17 @@ export default {
   transform: translate(100px, 0);
 }
 
+.opacity-filter {
+  opacity: 0.15;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  background-color: black;
+}
+
 .version {
   z-index: 20;
   text-align: center;
@@ -230,28 +248,26 @@ export default {
   max-width: 600px;
 }
 
-.btn {
-  position: fixed;
-  bottom: 20px;
-  z-index: 20;
-}
-
-.login-btn {
-  right: 20px;
-}
-
-.signup-btn {
-  left: 20px;
-}
-
-.sub-form {
-  .forgot-a,
-  .problem-btn {
-    z-index: 2;
-    background-color: rgba(50, 50, 50, 0.7);
-    padding: 0.8rem;
-    border-radius: 0.2rem;
-    color: white;
+.ctas {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+  .btn {
+    border-radius: 20px/50%;
+    &-primary,
+    &-secondary {
+      height: 48px;
+      width: 100%;
+    }
+    &-tertiary {
+      background-color: rgba(50, 50, 50, 0.7);
+      color: white;
+      height: 36px;
+      width: 60%;
+      font-size: 0.7rem;
+    }
   }
 }
 
@@ -262,6 +278,16 @@ export default {
     .problem-btn {
       margin-top: 115px;
       position: absolute;
+    }
+  }
+  .desktop {
+    display: none;
+  }
+  .ctas {
+    .btn {
+      &-tertiary {
+        width: 90%;
+      }
     }
   }
 }
