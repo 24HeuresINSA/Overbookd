@@ -61,7 +61,7 @@ export default Vue.extend({
     },
     periodsInDay(): number {
       const dayAndNightHours = SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT;
-      return 24 - dayAndNightHours / 2;
+      return 24 - SHIFT_HOURS.PARTY + SHIFT_HOURS.NIGHT + dayAndNightHours / 2;
     },
     isSelected(): (date: string, hour: number) => boolean {
       return (date: string, hour: number) =>
@@ -121,7 +121,7 @@ export default Vue.extend({
       this.selected = [...this.selected, periodToAdd];
     },
     addPeriodsInDay(date: string) {
-      const periods = this.generatePeriodsInDay(date);
+      const periods = this.generateAllPeriodsFor(date);
       this.selected = [...this.selected, ...periods];
     },
     getPeriodDurationInHours(hour: number): number {
@@ -134,15 +134,14 @@ export default Vue.extend({
       end.setHours(hour + durationInHours);
       return { start, end };
     },
-    generatePeriodsInDay(date: string): Period[] {
+    generateAllPeriodsFor(dayDate: string): Period[] {
       const periods = [];
-      let time = "00:00";
       for (let hour = 0; hour < 24; hour++) {
-        if (this.isSelectedOrSaved(date, hour) || !this.isEndOfPeriod(hour))
+        if (this.isSelectedOrSaved(dayDate, hour) || !this.isEndOfPeriod(hour))
           continue;
 
-        time = `${hour}:00`;
-        const newPeriod = this.generateNewPeriod(date, time, hour);
+        const time = `${hour}:00`;
+        const newPeriod = this.generateNewPeriod(dayDate, time, hour);
         periods.push(newPeriod);
       }
       return periods;
