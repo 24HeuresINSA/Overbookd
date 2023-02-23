@@ -63,7 +63,8 @@
             Mot de passe oublié ?
           </v-btn>
           <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
-            Un problème <span class="desktop">lors de l'inscription </span>?
+            Un problème
+            <span class="desktop">&nbsp;lors de l'inscription </span>?
           </v-btn>
         </v-row>
       </v-container>
