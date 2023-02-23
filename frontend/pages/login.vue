@@ -2,7 +2,6 @@
   <div>
     <v-img :src="randomURL" class="img-background"></v-img>
     <div class="opacity-filter"></div>
-    <div class="opacity-filter"></div>
     <v-form>
       <v-container class="form-container">
         <v-row>
@@ -41,26 +40,6 @@
             @keydown.enter="login()"
           ></v-text-field>
         </v-row>
-        <v-row class="ctas">
-          <v-btn
-            color="primary"
-            elevation="2"
-            class="login-btn btn btn-primary"
-            @click="login"
-          >
-            connexion
-          </v-btn>
-          <v-btn
-            color="secondary"
-            elevation="2"
-            to="/register"
-            class="signup-btn btn btn-secondary"
-          >
-            s'inscrire
-          </v-btn>
-        </v-row>
-        <v-row class="ctas">
-          <v-btn class="btn btn-tertiary" to="/forgot">
         <v-row class="ctas">
           <v-btn
             color="primary"
