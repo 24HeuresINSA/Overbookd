@@ -22,7 +22,7 @@
           <p>
             Le festival des 24 heures de l'INSA n'est possible que grâce aux
             plus de
-            <strong>350 benevoles</strong> qui, comme toi, ont accepté de venir
+            <strong>350 bénévoles</strong> qui, comme toi, ont accepté de venir
             nous donner un coup de main pour préparer, organiser et faire en
             sorte que les festivaliers passent le meilleur moment possible. 🎉
           </p>
@@ -34,7 +34,7 @@
           <p>
             Si tu as la moindre question sur le festival et ce que tu peux faire
             pour nous aider, n'hésite pas a contacter les
-            <a href="mailto:humains@24heures.org">responsables benevoles</a>.
+            <a href="mailto:humains@24heures.org">responsables bénévoles</a>.
             <br />
             Ils seront tes principaux interlocuteurs en amont et en aval du
             festival. 😎
