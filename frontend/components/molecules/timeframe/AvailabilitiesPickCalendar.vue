@@ -60,27 +60,30 @@ export default Vue.extend({
       return [];
     },
     periodsInDay(): number {
-      const dayAndNightHours = SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT;
-      return 24 - SHIFT_HOURS.PARTY + SHIFT_HOURS.NIGHT + dayAndNightHours / 2;
+      const dayAndNightShiftsDurationHours =
+        SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT;
+      const nightShiftDurationHours =
+        24 - SHIFT_HOURS.PARTY + SHIFT_HOURS.NIGHT;
+      return nightShiftDurationHours + dayAndNightShiftsDurationHours / 2;
     },
-    isSelected(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) =>
-        this.selected.some(this.isSamePeriod(date, hour));
+    isSelected(): (date: string | Date, hour: number) => boolean {
+      return (date: string | Date, hour: number) =>
+        this.selected.some(this.isSamePeriod(new Date(date), hour));
     },
-    isAllPeriodsInDaySelected(): (date: string) => boolean {
-      return (date: string) => {
+    isAllPeriodsInDaySelected(): (date: Date) => boolean {
+      return (date: Date) => {
         const selectedDayPeriods = this.selected.filter(
-          (period) => period.start.getDate() === new Date(date).getDate()
+          (period) => period.start.getDate() === date.getDate()
         );
         return selectedDayPeriods.length === this.periodsInDay;
       };
     },
-    isSaved(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) =>
-        this.savedAvailabilities.some(this.isSamePeriod(date, hour));
+    isSaved(): (date: string | Date, hour: number) => boolean {
+      return (date: string | Date, hour: number) =>
+        this.savedAvailabilities.some(this.isSamePeriod(new Date(date), hour));
     },
-    isSelectedOrSaved(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) =>
+    isSelectedOrSaved(): (date: string | Date, hour: number) => boolean {
+      return (date: string | Date, hour: number) =>
         this.isSelected(date, hour) || this.isSaved(date, hour);
     },
     weekdayNumbers(): Number[] {
@@ -88,9 +91,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    isSamePeriod(date: string, hour: number): (value: Period) => boolean {
+    isSamePeriod(date: Date, hour: number): (value: Period) => boolean {
       return (period) =>
-        period.start.getDate() === new Date(date).getDate() &&
+        period.start.getDate() === date.getDate() &&
         period.start.getHours() === hour;
     },
     isPartyShift(hour: number): boolean {
@@ -106,35 +109,37 @@ export default Vue.extend({
       tomorrow.setDate(date.getDate() + 1);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(date: string, hour: number, time: string) {
+    selectPeriod(dateString: string, hour: number, time: string) {
+      const date = new Date(dateString);
       if (this.isSaved(date, hour)) return;
       if (this.isSelected(date, hour)) return this.removePeriod(date, hour);
       this.addPeriod(date, time, hour);
     },
-    selectDay(date: string) {
+    selectDay(dateString: string) {
+      const date = new Date(dateString);
       if (this.isAllPeriodsInDaySelected(date))
         return this.removePeriodsInDay(date);
       this.addPeriodsInDay(date);
     },
-    addPeriod(date: string, time: string, hour: number) {
+    addPeriod(date: Date, time: string, hour: number) {
       const periodToAdd = this.generateNewPeriod(date, time, hour);
       this.selected = [...this.selected, periodToAdd];
     },
-    addPeriodsInDay(date: string) {
+    addPeriodsInDay(date: Date) {
       const periods = this.generateAllPeriodsFor(date);
       this.selected = [...this.selected, ...periods];
     },
     getPeriodDurationInHours(hour: number): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
-    generateNewPeriod(date: string, time: string, hour: number): Period {
+    generateNewPeriod(date: Date, time: string, hour: number): Period {
       const durationInHours = this.getPeriodDurationInHours(hour);
-      const start = new Date(`${date} ${time}`);
+      const start = this.formatDateWithTime(date, time);
       const end = new Date(start);
       end.setHours(hour + durationInHours);
       return { start, end };
     },
-    generateAllPeriodsFor(dayDate: string): Period[] {
+    generateAllPeriodsFor(dayDate: Date): Period[] {
       const periods = [];
       for (let hour = 0; hour < 24; hour++) {
         if (this.isSelectedOrSaved(dayDate, hour) || !this.isEndOfPeriod(hour))
@@ -146,31 +151,40 @@ export default Vue.extend({
       }
       return periods;
     },
-    removePeriod(date: string, hour: number) {
+    removePeriod(date: Date, hour: number) {
       this.selected = this.selected.filter(
         (period) => !this.isSamePeriod(date, hour)(period)
       );
     },
-    removePeriodsInDay(date: string) {
+    removePeriodsInDay(date: Date) {
       this.selected = this.selected.filter(
-        (period) => period.start.getDate() !== new Date(date).getDate()
+        (period) => period.start.getDate() !== date.getDate()
       );
     },
-    getCharismaByDate(date: string, time: string): number {
+    getCharismaByDate(date: Date, time: string): number {
       const charismaPeriods =
         this.$accessor.charismaPeriod.charismaPeriods ?? [];
-      const validDate = new Date(`${date} ${time}`);
+      const validDate = this.formatDateWithTime(date, time);
       return getCharismaByDate(charismaPeriods, validDate);
     },
     getDisplayedCharisma(date: string, hour: number, time: string): number {
-      const charisma = this.getCharismaByDate(date, time);
+      const charisma = this.getCharismaByDate(new Date(date), time);
       return charisma * this.getPeriodDurationInHours(hour);
     },
-    formatDateDay(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", { weekday: "short" });
+    formatDateDay(dateString: string): string {
+      return new Date(dateString).toLocaleDateString("fr-FR", {
+        weekday: "short",
+      });
     },
-    formatDateDayNumber(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", { day: "numeric" });
+    formatDateDayNumber(dateString: string): string {
+      return new Date(dateString).toLocaleDateString("fr-FR", {
+        day: "numeric",
+      });
+    },
+    formatDateWithTime(date: Date, time: string): Date {
+      const stringDate = date.toLocaleDateString("fr-FR");
+      const stringDateTime = `${stringDate} ${time}`;
+      return new Date(stringDateTime);
     },
   },
 });
