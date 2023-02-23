@@ -61,6 +61,26 @@
         </v-row>
         <v-row class="ctas">
           <v-btn class="btn btn-tertiary" to="/forgot">
+        <v-row class="ctas">
+          <v-btn
+            color="primary"
+            elevation="2"
+            class="login-btn btn btn-primary"
+            @click="login"
+          >
+            connexion
+          </v-btn>
+          <v-btn
+            color="secondary"
+            elevation="2"
+            to="/register"
+            class="signup-btn btn btn-secondary"
+          >
+            s'inscrire
+          </v-btn>
+        </v-row>
+        <v-row class="ctas">
+          <v-btn class="btn btn-tertiary" to="/forgot">
             Mot de passe oublié ?
           </v-btn>
           <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
