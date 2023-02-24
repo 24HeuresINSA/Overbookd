@@ -6,7 +6,6 @@ import {
   Transfer,
   User,
 } from "~/utils/models/repo";
-import { SoftUserCreation } from "~/utils/models/user";
 import { AxiosResponse } from "axios";
 
 const resource = "/user";
@@ -18,7 +17,10 @@ export default {
     return context.$axios.$post(`${resource}`, user);
   },
   registerVolunteer(context: Context, volunteer: VolunteerCreation) {
-    return context.$axios.$post<HttpStringified<User>>(`${resource}/soft`, volunteer);
+    return context.$axios.$post<HttpStringified<User>>(
+      `${resource}/soft`,
+      volunteer
+    );
   },
   getUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/${userId}`);
