@@ -130,6 +130,26 @@ export class UserService {
     return this.prisma.user.create({ data: data, select: SELECT_USER });
   }
 
+  async createSoft(
+    payload: Prisma.UserCreateInput,
+  ): Promise<UserWithoutPassword> {
+    // take only the right fields
+    const data: Prisma.UserUncheckedCreateInput = {
+      firstname: payload.firstname,
+      lastname: payload.lastname,
+      email: payload.email,
+      password: await new HashingUtilsService().hash(payload.password),
+      nickname: payload.nickname,
+      birthdate: payload.birthdate,
+      phone: payload.phone,
+      department: payload.department,
+      comment: payload.comment,
+      year: payload.year,
+    };
+    return this.prisma.user.create({ data: data, select: SELECT_USER });
+  }
+
+
   async addAvailabilitiesToUser(
     user_id: number,
     availabilities: number[],
