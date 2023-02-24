@@ -183,7 +183,7 @@ import {
   isInsaEmail,
   isMobilePhoneNumber,
   password,
-  required,
+  isSame,
 } from "~/utils/rules/inputRules";
 
 interface RegisterData extends InputRulesData {
@@ -278,7 +278,7 @@ export default Vue.extend({
           message: "Problème de mot de passe :(",
         });
       }
-      let res = await RepoFactory.userRepo.createSoft(this, {
+      let res = await RepoFactory.userRepo.registerVolunteer(this, {
         firstname: this.firstname,
         lastname: this.lastname,
         birthdate: new Date(this.birthday).toISOString(),
