@@ -12,7 +12,7 @@
           <p>{{ formatDateDayNumber(date) }}</p>
         </div>
       </template>
-      <template #interval="{ date, hour, time }">
+      <template #interval="{ date, hour }">
         <div
           v-if="isEndOfPeriod(hour)"
           class="event"
@@ -22,9 +22,9 @@
             selected: isSelected(date, hour),
             saved: isSaved(date, hour),
           }"
-          @click="selectPeriod(date, hour, time)"
+          @click="selectPeriod(date, hour)"
         >
-          {{ getDisplayedCharisma(date, hour, time) }}
+          {{ getDisplayedCharisma(date, hour) }}
         </div>
       </template>
     </OverCalendarV2>
@@ -68,7 +68,9 @@ export default Vue.extend({
     },
     isSelected(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
-        this.selected.some(this.isSamePeriod(new Date(date), hour));
+        this.selected.some(
+          this.isSamePeriod(this.updateDateWithHour(new Date(date), hour))
+        );
     },
     isAllPeriodsInDaySelected(): (date: Date) => boolean {
       return (date: Date) => {
@@ -80,7 +82,9 @@ export default Vue.extend({
     },
     isSaved(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
-        this.savedAvailabilities.some(this.isSamePeriod(new Date(date), hour));
+        this.savedAvailabilities.some(
+          this.isSamePeriod(this.updateDateWithHour(new Date(date), hour))
+        );
     },
     isSelectedOrSaved(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
@@ -91,10 +95,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    isSamePeriod(date: Date, hour: number): (value: Period) => boolean {
+    isSamePeriod(date: Date): (value: Period) => boolean {
       return (period) =>
         period.start.getDate() === date.getDate() &&
-        period.start.getHours() === hour;
+        period.start.getHours() === date.getHours();
     },
     isPartyShift(hour: number): boolean {
       return hour >= SHIFT_HOURS.PARTY || hour < SHIFT_HOURS.NIGHT;
@@ -109,11 +113,13 @@ export default Vue.extend({
       tomorrow.setDate(date.getDate() + 1);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(dateString: string, hour: number, time: string) {
+    selectPeriod(dateString: string, hour: number) {
       const date = new Date(dateString);
       if (this.isSaved(date, hour)) return;
-      if (this.isSelected(date, hour)) return this.removePeriod(date, hour);
-      this.addPeriod(date, time, hour);
+
+      const updatedDate = this.updateDateWithHour(new Date(date), hour);
+      if (this.isSelected(date, hour)) return this.removePeriod(updatedDate);
+      this.addPeriod(updatedDate);
     },
     selectDay(dateString: string) {
       const date = new Date(dateString);
@@ -121,8 +127,8 @@ export default Vue.extend({
         return this.removePeriodsInDay(date);
       this.addPeriodsInDay(date);
     },
-    addPeriod(date: Date, time: string, hour: number) {
-      const periodToAdd = this.generateNewPeriod(date, time, hour);
+    addPeriod(date: Date) {
+      const periodToAdd = this.generateNewPeriod(date);
       this.selected = [...this.selected, periodToAdd];
     },
     addPeriodsInDay(date: Date) {
@@ -132,11 +138,11 @@ export default Vue.extend({
     getPeriodDurationInHours(hour: number): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
-    generateNewPeriod(date: Date, time: string, hour: number): Period {
-      const durationInHours = this.getPeriodDurationInHours(hour);
-      const start = this.formatDateWithTime(date, time);
+    generateNewPeriod(date: Date): Period {
+      const durationInHours = this.getPeriodDurationInHours(date.getHours());
+      const start = new Date(date);
       const end = new Date(start);
-      end.setHours(hour + durationInHours);
+      end.setHours(date.getHours() + durationInHours);
       return { start, end };
     },
     generateAllPeriodsFor(dayDate: Date): Period[] {
@@ -145,15 +151,16 @@ export default Vue.extend({
         if (this.isSelectedOrSaved(dayDate, hour) || !this.isEndOfPeriod(hour))
           continue;
 
-        const time = `${hour}:00`;
-        const newPeriod = this.generateNewPeriod(dayDate, time, hour);
+        const newPeriod = this.generateNewPeriod(
+          this.updateDateWithHour(dayDate, hour)
+        );
         periods.push(newPeriod);
       }
       return periods;
     },
-    removePeriod(date: Date, hour: number) {
+    removePeriod(date: Date) {
       this.selected = this.selected.filter(
-        (period) => !this.isSamePeriod(date, hour)(period)
+        (period) => !this.isSamePeriod(date)(period)
       );
     },
     removePeriodsInDay(date: Date) {
@@ -161,14 +168,15 @@ export default Vue.extend({
         (period) => period.start.getDate() !== date.getDate()
       );
     },
-    getCharismaByDate(date: Date, time: string): number {
+    getCharismaByDate(date: Date): number {
       const charismaPeriods =
         this.$accessor.charismaPeriod.charismaPeriods ?? [];
-      const validDate = this.formatDateWithTime(date, time);
-      return getCharismaByDate(charismaPeriods, validDate);
+      return getCharismaByDate(charismaPeriods, date);
     },
-    getDisplayedCharisma(date: string, hour: number, time: string): number {
-      const charisma = this.getCharismaByDate(new Date(date), time);
+    getDisplayedCharisma(date: string, hour: number): number {
+      const charisma = this.getCharismaByDate(
+        this.updateDateWithHour(new Date(date), hour)
+      );
       return charisma * this.getPeriodDurationInHours(hour);
     },
     formatDateDay(dateString: string): string {
@@ -181,10 +189,8 @@ export default Vue.extend({
         day: "numeric",
       });
     },
-    formatDateWithTime(date: Date, time: string): Date {
-      const stringDate = date.toLocaleDateString("fr-FR");
-      const stringDateTime = `${stringDate} ${time}`;
-      return new Date(stringDateTime);
+    updateDateWithHour(date: Date, hour: number): Date {
+      return new Date(new Date(date.setHours(hour)).setMinutes(0));
     },
   },
 });
