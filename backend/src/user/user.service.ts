@@ -149,7 +149,6 @@ export class UserService {
     return this.prisma.user.create({ data: data, select: SELECT_USER });
   }
 
-
   async addAvailabilitiesToUser(
     user_id: number,
     availabilities: number[],

@@ -95,7 +95,6 @@ export class SoftCreationDto {
   @IsString()
   comment?: string;
 
-
   @ApiProperty({
     required: true,
     description: 'The departement of the user',
