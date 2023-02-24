@@ -5,6 +5,7 @@ import {
   Notification,
   Transfer,
   User,
+  UserCreation,
 } from "~/utils/models/repo";
 import { AxiosResponse } from "axios";
 
@@ -13,7 +14,7 @@ const resource = "/user";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
-  createUser(context: Context, user: User): Promise<AxiosResponse> {
+  createUser(context: Context, user: UserCreation): Promise<AxiosResponse> {
     return context.$axios.$post(`${resource}`, user);
   },
   getUser(context: Context, userId: string) {
