@@ -5,8 +5,8 @@ import {
   Notification,
   Transfer,
   User,
-  UserCreation,
 } from "~/utils/models/repo";
+import { SoftUserCreation } from "~/utils/models/user";
 import { AxiosResponse } from "axios";
 
 const resource = "/user";
@@ -14,8 +14,11 @@ const resource = "/user";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
-  createUser(context: Context, user: UserCreation): Promise<AxiosResponse> {
+  createUser(context: Context, user: User): Promise<AxiosResponse> {
     return context.$axios.$post(`${resource}`, user);
+  },
+  createSoft(context: Context, user: SoftUserCreation): Promise<AxiosResponse> {
+    return context.$axios.$post(`${resource}/soft`, user);
   },
   getUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/${userId}`);
