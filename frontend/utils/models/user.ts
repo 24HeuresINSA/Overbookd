@@ -6,7 +6,7 @@ export interface User {
 
 export type DisplayedUser = Pick<User, "firstname" | "lastname">;
 
-export interface SoftUserCreation {
+export interface VolunteerCreation {
   firstname: string;
   lastname: string;
   nickname?: string;
@@ -16,7 +16,5 @@ export interface SoftUserCreation {
   password: string;
   comment?: string;
   team?: string;
-  department?: string;
-  year?: string;
 }
 
