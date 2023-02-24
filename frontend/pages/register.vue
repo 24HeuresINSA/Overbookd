@@ -161,16 +161,19 @@
               :rules="[repeatPasswordRule]"
             ></v-text-field>
           </v-form>
-          <v-btn color="primary" disabled @click="step = 1"> M'inscrire </v-btn>
+          <v-btn color="primary" @click="register"> M'inscrire </v-btn>
           <v-btn text @click="step = 3"> Revenir </v-btn>
         </v-stepper-content>
       </v-stepper>
     </v-card>
+    <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
 import {
   InputRulesData,
   isEmail,
@@ -200,6 +203,9 @@ interface RegisterData extends InputRulesData {
 export default Vue.extend({
   name: "Register",
   auth: false,
+  components: {
+    SnackNotificationContainer,
+  },
   layout: "none",
   data(): RegisterData {
     return {
@@ -249,6 +255,50 @@ export default Vue.extend({
     },
     repeatPasswordRule(): (value: string | null) => boolean | string {
       return isSame(this.password);
+    },
+  },
+  methods: {
+    async register() {
+      for (const rule of this.presentationRules) {
+        if (rule() !== true) {
+          return this.$accessor.notif.pushNotification({
+            message: "Problème dans les infos de présentation :(",
+          });
+        }
+      }
+      for (const rule of this.contactRules) {
+        if (rule() !== true) {
+          return this.$accessor.notif.pushNotification({
+            message: "Problème dans les infos de contact :(",
+          });
+        }
+      }
+      if (this.repeatPasswordRule(this.repeatPassword) !== true) {
+        return this.$accessor.notif.pushNotification({
+          message: "Problème de mot de passe :(",
+        });
+      }
+      let res = await RepoFactory.userRepo.createSoft(this, {
+        firstname: this.firstname,
+        lastname: this.lastname,
+        birthdate: new Date(this.birthday).toISOString(),
+        email: this.email,
+        phone: this.phone,
+        comment: this.comment,
+        password: this.password,
+        department: "AUTRE",
+        year: "AUTRE",
+      });
+      if (res) {
+        this.$accessor.notif.pushNotification({
+          message: "🎉 Inscription terminée Bienvenue au 24 ! 🎉",
+        });
+        this.$router.push({ path: "/login" });
+      } else {
+        return this.$accessor.notif.pushNotification({
+          message: "🚨 Une erreur est survenue 🚨",
+        });
+      }
     },
   },
 });
