@@ -122,7 +122,6 @@ export default Vue.extend({
       );
     },
     updateDate(date: Date) {
-      console.log("update", date);
       this.$emit("change", date);
     },
     previousPage() {

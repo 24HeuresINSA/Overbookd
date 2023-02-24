@@ -4,6 +4,7 @@
       :date="period.start"
       :weekdays="weekdayNumbers"
       class="no-scroll elevation-2"
+      @change="selectDay"
     >
       <template #day-label-header="{ date }">
         <div class="day-header">
@@ -11,7 +12,7 @@
           <p>{{ formatDateDayNumber(date) }}</p>
         </div>
       </template>
-      <template #interval="{ date, hour, time }">
+      <template #interval="{ date, hour }">
         <div
           v-if="isEndOfPeriod(hour)"
           class="event"
@@ -21,9 +22,9 @@
             selected: isSelected(date, hour),
             saved: isSaved(date, hour),
           }"
-          @click="selectPeriod(date, hour, time)"
+          @click="selectPeriod(date, hour)"
         >
-          {{ getDisplayedCharisma(date, hour, time) }}
+          {{ getDisplayedCharisma(date, hour) }}
         </div>
       </template>
     </OverCalendarV2>
@@ -58,23 +59,46 @@ export default Vue.extend({
       // return this.$accessor.volunteerAvailabilities.registeredAvailabilities;
       return [];
     },
-    isSelected(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) =>
-        this.selected.some(this.isSamePeriod(date, hour));
+    periodsInDay(): number {
+      const dayAndNightShiftsDurationHours =
+        SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT;
+      const nightShiftDurationHours =
+        24 - SHIFT_HOURS.PARTY + SHIFT_HOURS.NIGHT;
+      return nightShiftDurationHours + dayAndNightShiftsDurationHours / 2;
     },
-    isSaved(): (date: string, hour: number) => boolean {
-      return (date: string, hour: number) =>
-        this.savedAvailabilities.some(this.isSamePeriod(date, hour));
+    isSelected(): (date: string | Date, hour: number) => boolean {
+      return (date: string | Date, hour: number) =>
+        this.selected.some(
+          this.isSamePeriod(this.updateDateWithHour(new Date(date), hour))
+        );
+    },
+    isAllPeriodsInDaySelected(): (date: Date) => boolean {
+      return (date: Date) => {
+        const selectedDayPeriods = this.selected.filter(
+          (period) => period.start.getDate() === date.getDate()
+        );
+        return selectedDayPeriods.length === this.periodsInDay;
+      };
+    },
+    isSaved(): (date: string | Date, hour: number) => boolean {
+      return (date: string | Date, hour: number) =>
+        this.savedAvailabilities.some(
+          this.isSamePeriod(this.updateDateWithHour(new Date(date), hour))
+        );
+    },
+    isSelectedOrSaved(): (date: string | Date, hour: number) => boolean {
+      return (date: string | Date, hour: number) =>
+        this.isSelected(date, hour) || this.isSaved(date, hour);
     },
     weekdayNumbers(): Number[] {
       return this.generateWeekdayList([], new Date(this.period.start));
     },
   },
   methods: {
-    isSamePeriod(date: string, hour: number): (value: Period) => boolean {
+    isSamePeriod(date: Date): (value: Period) => boolean {
       return (period) =>
-        period.start.getDate() === new Date(date).getDate() &&
-        period.start.getHours() === hour;
+        period.start.getDate() === date.getDate() &&
+        period.start.getHours() === date.getHours();
     },
     isPartyShift(hour: number): boolean {
       return hour >= SHIFT_HOURS.PARTY || hour < SHIFT_HOURS.NIGHT;
@@ -89,45 +113,84 @@ export default Vue.extend({
       tomorrow.setDate(date.getDate() + 1);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(date: string, hour: number, time: string) {
+    selectPeriod(dateString: string, hour: number) {
+      const date = new Date(dateString);
       if (this.isSaved(date, hour)) return;
-      if (this.isSelected(date, hour)) return this.removePeriod(date, hour);
-      this.addPeriod(date, time, hour);
+
+      const updatedDate = this.updateDateWithHour(new Date(date), hour);
+      if (this.isSelected(date, hour)) return this.removePeriod(updatedDate);
+      this.addPeriod(updatedDate);
     },
-    addPeriod(date: string, time: string, hour: number) {
-      const periodToAdd = this.generateNewPeriod(date, time, hour);
+    selectDay(dateString: string) {
+      const date = new Date(dateString);
+      if (this.isAllPeriodsInDaySelected(date))
+        return this.removePeriodsInDay(date);
+      this.addPeriodsInDay(date);
+    },
+    addPeriod(date: Date) {
+      const periodToAdd = this.generateNewPeriod(date);
       this.selected = [...this.selected, periodToAdd];
+    },
+    addPeriodsInDay(date: Date) {
+      const periods = this.generateAllPeriodsFor(date);
+      this.selected = [...this.selected, ...periods];
     },
     getPeriodDurationInHours(hour: number): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
-    generateNewPeriod(date: string, time: string, hour: number): Period {
-      const durationInHours = this.getPeriodDurationInHours(hour);
-      const start = new Date(`${date} ${time}`);
+    generateNewPeriod(date: Date): Period {
+      const durationInHours = this.getPeriodDurationInHours(date.getHours());
+      const start = new Date(date);
       const end = new Date(start);
-      end.setHours(hour + durationInHours);
+      end.setHours(date.getHours() + durationInHours);
       return { start, end };
     },
-    removePeriod(date: string, hour: number) {
+    generateAllPeriodsFor(dayDate: Date): Period[] {
+      const periods = [];
+      for (let hour = 0; hour < 24; hour++) {
+        if (this.isSelectedOrSaved(dayDate, hour) || !this.isEndOfPeriod(hour))
+          continue;
+
+        const newPeriod = this.generateNewPeriod(
+          this.updateDateWithHour(dayDate, hour)
+        );
+        periods.push(newPeriod);
+      }
+      return periods;
+    },
+    removePeriod(date: Date) {
       this.selected = this.selected.filter(
-        (period) => !this.isSamePeriod(date, hour)(period)
+        (period) => !this.isSamePeriod(date)(period)
       );
     },
-    getCharismaByDate(date: string, time: string): number {
+    removePeriodsInDay(date: Date) {
+      this.selected = this.selected.filter(
+        (period) => period.start.getDate() !== date.getDate()
+      );
+    },
+    getCharismaByDate(date: Date): number {
       const charismaPeriods =
         this.$accessor.charismaPeriod.charismaPeriods ?? [];
-      const validDate = new Date(`${date} ${time}`);
-      return getCharismaByDate(charismaPeriods, validDate);
+      return getCharismaByDate(charismaPeriods, date);
     },
-    getDisplayedCharisma(date: string, hour: number, time: string): number {
-      const charisma = this.getCharismaByDate(date, time);
+    getDisplayedCharisma(date: string, hour: number): number {
+      const charisma = this.getCharismaByDate(
+        this.updateDateWithHour(new Date(date), hour)
+      );
       return charisma * this.getPeriodDurationInHours(hour);
     },
-    formatDateDay(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", { weekday: "short" });
+    formatDateDay(dateString: string): string {
+      return new Date(dateString).toLocaleDateString("fr-FR", {
+        weekday: "short",
+      });
     },
-    formatDateDayNumber(date: string): string {
-      return new Date(date).toLocaleDateString("fr-FR", { day: "numeric" });
+    formatDateDayNumber(dateString: string): string {
+      return new Date(dateString).toLocaleDateString("fr-FR", {
+        day: "numeric",
+      });
+    },
+    updateDateWithHour(date: Date, hour: number): Date {
+      return new Date(new Date(date.setHours(hour)).setMinutes(0));
     },
   },
 });
