@@ -15,6 +15,7 @@ import { RequestWithUserPayload } from 'src/app.controller';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { SoftCreationDto } from './dto/softCreation.dto';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
@@ -23,7 +24,7 @@ import { UserService, UserWithoutPassword } from './user.service';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @ApiBody({
@@ -32,6 +33,15 @@ export class UserController {
   })
   createUser(@Body() userData: UserCreationDto): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
+  }
+
+  @Post('soft')
+  @ApiBody({
+    description: 'Add new soft user',
+    type: SoftCreationDto,
+  })
+  createSoft(@Body() userData: SoftCreationDto): Promise<UserWithoutPassword> {
+    return this.userService.createSoft(userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
