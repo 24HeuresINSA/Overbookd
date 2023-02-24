@@ -17,8 +17,8 @@ export default {
   createUser(context: Context, user: User): Promise<AxiosResponse> {
     return context.$axios.$post(`${resource}`, user);
   },
-  createSoft(context: Context, user: SoftUserCreation): Promise<AxiosResponse> {
-    return context.$axios.$post(`${resource}/soft`, user);
+  registerVolunteer(context: Context, volunteer: VolunteerCreation) {
+    return context.$axios.$post<HttpStringified<User>>(`${resource}/soft`, volunteer);
   },
   getUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/${userId}`);
