@@ -11,8 +11,10 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiBody,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -48,6 +50,16 @@ export class VolunteerAvailabilityController {
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
+  @ApiBody({
+    type: CreateVolunteerAvailabilityDto,
+    description: 'The availability periods to add.',
+  })
+  @ApiParam({
+    name: 'userId',
+    description: 'The id of the user to add the availability periods to.',
+    type: Number,
+    required: true,
+  })
   add(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() periods: CreateVolunteerAvailabilityDto,
@@ -76,6 +88,12 @@ export class VolunteerAvailabilityController {
     description: 'The record has been successfully retrieved.',
     type: VolunteerAvailabilityResponseDto,
   })
+  @ApiParam({
+    name: 'userId',
+    description: 'The id of the user to retrieve the availability periods of.',
+    type: Number,
+    required: true,
+  })
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
@@ -93,6 +111,16 @@ export class VolunteerAvailabilityController {
     status: 201,
     description: 'The record has been successfully created.',
     type: VolunteerAvailabilityResponseDto,
+  })
+  @ApiParam({
+    name: 'userId',
+    description: 'The id of the user to add the availability periods to.',
+    type: Number,
+    required: true,
+  })
+  @ApiBody({
+    type: CreateVolunteerAvailabilityDto,
+    description: 'The availability periods to add.',
   })
   @ApiNotFoundResponse({
     description: 'User not found.',
