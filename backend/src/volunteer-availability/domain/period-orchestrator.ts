@@ -2,6 +2,10 @@ import { updateItemToList } from '../../utils/list';
 import { Period } from './period.model';
 import { Availability } from './volunteer-availability';
 
+export type PeriodWithError = Period & {
+  message: string;
+};
+
 export class PeriodOrchestrator {
   private periods: Period[] = [];
 
@@ -17,13 +21,14 @@ export class PeriodOrchestrator {
     this.periods = [...this.periods, period];
   }
 
-  get errors(): (Period & { message: string })[] {
+  get errors(): PeriodWithError[] {
     return this.availabilityPeriods
       .filter((period) => {
         try {
           Availability.fromPeriod(period);
           return false;
         } catch (e) {
+          console.log(e);
           return true;
         }
       })
@@ -34,7 +39,15 @@ export class PeriodOrchestrator {
   }
 
   get availabilityPeriods(): Period[] {
-    return this.mergePeriods(this.periods);
+    const periods = this.mergePeriods(this.periods);
+    return periods.filter(
+      (period, index) =>
+        periods.findIndex(
+          (p) =>
+            new Date(p.start).getTime() === new Date(period.start).getTime() &&
+            new Date(p.end).getTime() === new Date(period.end).getTime(),
+        ) === index,
+    );
   }
 
   private mergePeriods(periods: Period[]): Period[] {
@@ -81,10 +94,16 @@ export class PeriodOrchestrator {
     const mergeablePeriod = periods[mergeablePeriodIndex];
     const mergedPeriod = {
       start: new Date(
-        Math.min(mergeablePeriod.start.getTime(), period.start.getTime()),
+        Math.min(
+          new Date(mergeablePeriod.start).getTime(),
+          new Date(period.start).getTime(),
+        ),
       ),
       end: new Date(
-        Math.max(mergeablePeriod.end.getTime(), period.end.getTime()),
+        Math.max(
+          new Date(mergeablePeriod.end).getTime(),
+          new Date(period.end).getTime(),
+        ),
       ),
     };
     return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
@@ -93,8 +112,10 @@ export class PeriodOrchestrator {
   private static isFollowingPeriod(period: Period): (value: Period) => boolean {
     return (existingPeriod) => {
       return (
-        existingPeriod.start.getTime() === period.end.getTime() ||
-        existingPeriod.end.getTime() === period.start.getTime()
+        new Date(existingPeriod.start).getTime() ===
+          new Date(period.end).getTime() ||
+        new Date(existingPeriod.end).getTime() ===
+          new Date(period.start).getTime()
       );
     };
   }

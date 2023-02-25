@@ -30,8 +30,14 @@ export class Availability {
   addPeriod(period: Period): Availability {
     if (!this.isJointedPeriod(period))
       throw new AvailabilityPeriodsJointError();
-    const startTime = Math.min(this.start.getTime(), period.start.getTime());
-    const endTime = Math.max(this.end.getTime(), period.end.getTime());
+    const startTime = Math.min(
+      new Date(this.start).getTime(),
+      new Date(period.start).getTime(),
+    );
+    const endTime = Math.max(
+      new Date(this.end).getTime(),
+      new Date(period.end).getTime(),
+    );
     return new Availability(new Date(startTime), new Date(endTime));
   }
 
@@ -44,18 +50,20 @@ export class Availability {
   }
 
   private lastLessThanTwoHours(start: Date, end: Date) {
-    return end.getTime() - start.getTime() < TWO_HOURS_IN_MS;
+    return (
+      new Date(end).getTime() - new Date(start).getTime() < TWO_HOURS_IN_MS
+    );
   }
 
   private invalidPeriodTimeline(start: Date, end: Date) {
-    return start.getTime() >= end.getTime();
+    return new Date(start).getTime() >= new Date(end).getTime();
   }
 
   private isOddHourDuringNightOrDayShift(start: Date) {
     return (
-      start.getHours() > SHIFT_HOURS.NIGHT &&
-      start.getHours() < SHIFT_HOURS.PARTY &&
-      start.getHours() % 2 !== 0
+      new Date(start).getHours() > SHIFT_HOURS.NIGHT &&
+      new Date(start).getHours() < SHIFT_HOURS.PARTY &&
+      new Date(start).getHours() % 2 !== 0
     );
   }
 
