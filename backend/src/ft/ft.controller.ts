@@ -123,7 +123,7 @@ export class FtController {
     description: 'Get FA stats',
     type: Promise<StatsPayload[]>,
   })
-  getFaStats(): Promise<StatsPayload[]> {
+  getFtStats(): Promise<StatsPayload[]> {
     return this.ftService.getFtStats();
   }
 
