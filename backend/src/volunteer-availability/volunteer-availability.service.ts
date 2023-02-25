@@ -16,20 +16,15 @@ export class VolunteerAvailabilityService {
     createVolunteerAvailability: CreateVolunteerAvailabilityDto,
   ): Promise<VolunteerAvailabilityResponseDto> {
     const newPeriods = createVolunteerAvailability.periods;
-    const oldAvailabilities = await this.prisma.volunteerAvailability
-      .findMany({
-        where: {
-          userId,
-        },
-      })
-      .then((el: VolunteerAvailability[]) => {
-        return el.map((av) => {
-          return {
-            start: av.start,
-            end: av.end,
-          };
-        });
-      });
+    const oldAvailabilities = await this.prisma.volunteerAvailability.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        start: true,
+        end: true,
+      },
+    });
     if (oldAvailabilities.length > 0) {
       const oldAvailabilitiesDuration = oldAvailabilities.reduce(
         (acc, curr) => acc + this.getPeriodDuration(curr),
