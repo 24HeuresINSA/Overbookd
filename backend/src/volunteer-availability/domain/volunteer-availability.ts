@@ -1,4 +1,5 @@
 import { SHIFT_HOURS } from '../../shift/shift.constant';
+import { ONE_HOUR_IN_MS } from '../../utils/date';
 import { Period } from './period.model';
 import {
   AvailabilityMinimumPeriodDurationError,
@@ -7,7 +8,7 @@ import {
   AvailabilityStartError,
 } from './volunteer-availability.error';
 
-const TWO_HOURS_IN_MS = 2 * 60 * 60 * 1000;
+const TWO_HOURS_IN_MS = 2 * ONE_HOUR_IN_MS;
 
 export class Availability {
   public start: Date;

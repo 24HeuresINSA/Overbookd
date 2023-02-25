@@ -9,3 +9,5 @@ export function formatDateWithMinutes(date: string | Date): string {
   };
   return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
 }
+
+export const ONE_HOUR_IN_MS = 60 * 60 * 1000;

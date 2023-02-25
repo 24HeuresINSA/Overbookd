@@ -2,13 +2,12 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { formatDateWithMinutes } from 'src/utils/date';
 import { PrismaService } from '../prisma.service';
+import { ONE_HOUR_IN_MS } from '../utils/date';
 import {
   PeriodOrchestrator,
   PeriodWithError,
 } from './domain/period-orchestrator';
 import { PeriodDto } from './dto/period.dto';
-
-const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
 @Injectable()
 export class VolunteerAvailabilityService {
