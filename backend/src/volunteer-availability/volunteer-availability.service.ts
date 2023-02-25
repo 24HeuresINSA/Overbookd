@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { Prisma, VolunteerAvailability } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import {
   CreateVolunteerAvailabilityDto,
@@ -15,7 +15,7 @@ export class VolunteerAvailabilityService {
     createVolunteerAvailability: CreateVolunteerAvailabilityDto,
   ): Promise<Period[]> {
     const newPeriods = createVolunteerAvailability.periods;
-    const oldAvailabilities = await this.prisma.volunteerAvailability.findMany({
+    const oldPeriods = await this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
       },
@@ -24,30 +24,13 @@ export class VolunteerAvailabilityService {
         end: true,
       },
     });
-    if (oldAvailabilities.length > 0) {
-      const oldAvailabilitiesDuration = oldAvailabilities.reduce(
-        (acc, curr) => acc + this.getPeriodDuration(curr),
-        0,
-      );
-      const newAvailabilitiesDuration = newPeriods.reduce(
-        (acc, curr) => acc + this.getPeriodDuration(curr),
-        0,
-      );
-      if (newAvailabilitiesDuration < oldAvailabilitiesDuration) {
-        throw new ForbiddenException(
-          'New availabilities are shorter than older ones. Please add more periods.',
-        );
-      }
+    if (oldPeriods.length > 0) {
+      this.computePeriodDifference(oldPeriods, newPeriods);
     }
-    let newCharismaPoints = 0;
-    for (const period of newPeriods) {
-      newCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    let oldCharismaPoints = 0;
-    for (const period of oldAvailabilities) {
-      oldCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    const charismaPoints = newCharismaPoints - oldCharismaPoints;
+    const charismaPoints = await this.computeCharismaDifference(
+      oldPeriods,
+      newPeriods,
+    );
     const userUpdate = this.prisma.user.update({
       where: {
         id: userId,
@@ -112,29 +95,19 @@ export class VolunteerAvailabilityService {
     createVolunteerAvailability: CreateVolunteerAvailabilityDto,
   ): Promise<void> {
     const newPeriods = createVolunteerAvailability.periods;
-    const oldAvailabilities = await this.prisma.volunteerAvailability
-      .findMany({
-        where: {
-          userId,
-        },
-      })
-      .then((el: VolunteerAvailability[]) => {
-        return el.map((av) => {
-          return {
-            start: av.start,
-            end: av.end,
-          };
-        });
-      });
-    let newCharismaPoints = 0;
-    for (const period of newPeriods) {
-      newCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    let oldCharismaPoints = 0;
-    for (const period of oldAvailabilities) {
-      oldCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    const charismaPoints = newCharismaPoints - oldCharismaPoints;
+    const oldPeriods = await this.prisma.volunteerAvailability.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        start: true,
+        end: true,
+      },
+    });
+    const charismaPoints = await this.computeCharismaDifference(
+      oldPeriods,
+      newPeriods,
+    );
     const userUpdate = this.prisma.user.update({
       where: {
         id: userId,
@@ -172,11 +145,27 @@ export class VolunteerAvailabilityService {
     );
   }
 
-  private getPeriodDuration(params: Period): number {
-    return Math.floor(
-      (new Date(params.end).getTime() - new Date(params.start).getTime()) /
-        1000,
+  private getPeriodDuration({ start, end }: Period): number {
+    return Math.floor(new Date(end).getTime() - new Date(start).getTime());
+  }
+
+  private computePeriodDifference(
+    oldPeriods: Period[],
+    newPeriods: Period[],
+  ): void {
+    const oldAvailabilitiesDuration = oldPeriods.reduce(
+      (acc, curr) => acc + this.getPeriodDuration(curr),
+      0,
     );
+    const newAvailabilitiesDuration = newPeriods.reduce(
+      (acc, curr) => acc + this.getPeriodDuration(curr),
+      0,
+    );
+    if (newAvailabilitiesDuration < oldAvailabilitiesDuration) {
+      throw new ForbiddenException(
+        'New availabilities are shorter than older ones. Please add more periods.',
+      );
+    }
   }
 
   private async computeCharismaPoints(params: Period): Promise<number> {
@@ -199,13 +188,24 @@ export class VolunteerAvailabilityService {
         start: 'asc',
       },
     });
-    if (allUsefulCharismaPeriod.length > 0) {
-      let totalCharismaPoints = 0;
-      for (const period of allUsefulCharismaPeriod) {
-        totalCharismaPoints += period.charisma;
-      }
-      return totalCharismaPoints;
+    return allUsefulCharismaPeriod.reduce(
+      (charisma, period) => charisma + period.charisma,
+      0,
+    );
+  }
+
+  private async computeCharismaDifference(
+    oldPeriods: Period[],
+    newPeriods: Period[],
+  ): Promise<number> {
+    let newCharismaPoints = 0;
+    for (const period of newPeriods) {
+      newCharismaPoints += await this.computeCharismaPoints(period);
     }
-    return 0;
+    let oldCharismaPoints = 0;
+    for (const period of oldPeriods) {
+      oldCharismaPoints += await this.computeCharismaPoints(period);
+    }
+    return newCharismaPoints - oldCharismaPoints;
   }
 }
