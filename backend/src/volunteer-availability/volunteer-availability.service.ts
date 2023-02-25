@@ -19,9 +19,6 @@ export class VolunteerAvailabilityService {
     const previousAvailabilityPeriods = await this.findUserAvailabilities(
       userId,
     );
-    if (previousAvailabilityPeriods.length > 0) {
-      this.computePeriodDifference(previousAvailabilityPeriods, periods);
-    }
     const periodOrchestrator = PeriodOrchestrator.init(
       previousAvailabilityPeriods,
     );
@@ -185,29 +182,6 @@ export class VolunteerAvailabilityService {
         isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       },
     );
-  }
-
-  private getPeriodDuration({ start, end }: PeriodDto): number {
-    return Math.floor(new Date(end).getTime() - new Date(start).getTime());
-  }
-
-  private computePeriodDifference(
-    oldPeriods: PeriodDto[],
-    newPeriods: PeriodDto[],
-  ): void {
-    const oldAvailabilitiesDuration = oldPeriods.reduce(
-      (acc, curr) => acc + this.getPeriodDuration(curr),
-      0,
-    );
-    const newAvailabilitiesDuration = newPeriods.reduce(
-      (acc, curr) => acc + this.getPeriodDuration(curr),
-      0,
-    );
-    if (newAvailabilitiesDuration < oldAvailabilitiesDuration) {
-      throw new ForbiddenException(
-        'New availabilities are shorter than older ones. Please add more periods.',
-      );
-    }
   }
 }
 

@@ -38,15 +38,7 @@ export class PeriodOrchestrator {
   }
 
   get availabilityPeriods(): Period[] {
-    const periods = this.mergePeriods(this.periods);
-    return periods.filter(
-      (period, index) =>
-        periods.findIndex(
-          (p) =>
-            new Date(p.start).getTime() === new Date(period.start).getTime() &&
-            new Date(p.end).getTime() === new Date(period.end).getTime(),
-        ) === index,
-    );
+    return this.mergePeriods(this.periods);
   }
 
   private mergePeriods(periods: Period[]): Period[] {
@@ -111,9 +103,9 @@ export class PeriodOrchestrator {
   private static isFollowingPeriod(period: Period): (value: Period) => boolean {
     return (existingPeriod) => {
       return (
-        new Date(existingPeriod.start).getTime() ===
-          new Date(period.end).getTime() ||
-        new Date(existingPeriod.end).getTime() ===
+        new Date(existingPeriod.start).getTime() <=
+          new Date(period.end).getTime() &&
+        new Date(existingPeriod.end).getTime() >=
           new Date(period.start).getTime()
       );
     };

@@ -88,6 +88,34 @@ describe('Period orchestrator', () => {
         },
       ]);
     });
+    describe('when adding an existing period', () => {
+      let periodOrchestrator: PeriodOrchestrator;
+      beforeEach(() => {
+        periodOrchestrator = PeriodOrchestrator.init(periods);
+        const period = {
+          start: new Date('2023-05-12 04:00'),
+          end: new Date('2023-05-12 05:00'),
+        };
+        periodOrchestrator.addPeriod(period);
+      });
+      it('should not duplicate periods', () => {
+        expect(periodOrchestrator.availabilityPeriods).toHaveLength(3);
+        expect(periodOrchestrator.availabilityPeriods).toEqual([
+          {
+            start: new Date('2023-05-12 02:00'),
+            end: new Date('2023-05-12 03:00'),
+          },
+          {
+            start: new Date('2023-05-12 04:00'),
+            end: new Date('2023-05-12 06:00'),
+          },
+          {
+            start: new Date('2023-05-12 08:00'),
+            end: new Date('2023-05-12 12:00'),
+          },
+        ]);
+      });
+    });
     describe('when adding a period before the period from 2 to 3', () => {
       let periodOrchestrator: PeriodOrchestrator;
       beforeEach(() => {
