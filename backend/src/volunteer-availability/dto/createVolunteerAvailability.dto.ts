@@ -30,6 +30,8 @@ export class CreateVolunteerAvailabilityDto {
     type: Period,
     isArray: true,
   })
-  @IsDefined()
+  @IsDefined({
+    each: true,
+  })
   periods: Period[];
 }
