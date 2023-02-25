@@ -205,7 +205,7 @@ export default {
         {
           icon: "mdi-clock",
           title: "Mes dispos",
-          permission: "validated-user",
+          permission: "admin",
           to: "/availabilities",
         },
         {
