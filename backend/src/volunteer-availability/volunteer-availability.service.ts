@@ -8,6 +8,8 @@ import {
 } from './domain/period-orchestrator';
 import { PeriodDto } from './dto/period.dto';
 
+const ONE_HOUR_IN_MS = 60 * 60 * 1000;
+
 @Injectable()
 export class VolunteerAvailabilityService {
   constructor(private prisma: PrismaService) {}
@@ -24,12 +26,7 @@ export class VolunteerAvailabilityService {
     );
     periods.map((period) => periodOrchestrator.addPeriod(period));
 
-    if (periodOrchestrator.errors.length > 0) {
-      const errors = periodOrchestrator.errors
-        .map(buildPeriodOrchestratorErrorMessage)
-        .join('\n');
-      throw new ForbiddenException(errors);
-    }
+    this.checkPeriodsErrors(periodOrchestrator);
 
     const updatedAvailabilityPeriods = periodOrchestrator.availabilityPeriods;
 
@@ -62,45 +59,25 @@ export class VolunteerAvailabilityService {
     userId: number,
     newPeriods: PeriodDto[],
   ): Promise<PeriodDto[]> {
-    const oldPeriods = await this.findUserAvailabilities(userId);
-    const charismaPoints = await this.computeCharismaDifference(
-      oldPeriods,
-      newPeriods,
+    const previousAvailabilityPeriods = await this.findUserAvailabilities(
+      userId,
     );
-    const userUpdate = this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      select: {
-        id: true,
-      },
-      data: {
-        charisma: {
-          increment: charismaPoints,
-        },
-      },
-    });
-    const volunteerAvailabilityUpdate =
-      this.prisma.volunteerAvailability.createMany({
-        data: newPeriods.map((period) => {
-          return {
-            start: period.start,
-            end: period.end,
-            userId,
-          };
-        }),
-      });
-    const volunteerAvailabilityDelete =
-      this.prisma.volunteerAvailability.deleteMany({
-        where: {
-          userId,
-        },
-      });
-    await this.prisma.$transaction(
-      [volunteerAvailabilityDelete, userUpdate, volunteerAvailabilityUpdate],
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      },
+    const periodOrchestrator = PeriodOrchestrator.init();
+    newPeriods.map((period) => periodOrchestrator.addPeriod(period));
+
+    this.checkPeriodsErrors(periodOrchestrator);
+
+    const updatedAvailabilityPeriods = periodOrchestrator.availabilityPeriods;
+
+    const charismaDelta = await this.computeCharismaDifference(
+      previousAvailabilityPeriods,
+      updatedAvailabilityPeriods,
+    );
+
+    await this.updateVolunteer(
+      userId,
+      updatedAvailabilityPeriods,
+      charismaDelta,
     );
     return this.findUserAvailabilities(userId);
   }
@@ -123,15 +100,22 @@ export class VolunteerAvailabilityService {
       },
       select: {
         charisma: true,
+        start: true,
+        end: true,
       },
       orderBy: {
         start: 'asc',
       },
     });
-    return allUsefulCharismaPeriod.reduce(
-      (charisma, period) => charisma + period.charisma,
-      0,
-    );
+    return allUsefulCharismaPeriod.reduce((totalCharisma, charismaPeriod) => {
+      const start = Math.max(
+        charismaPeriod.start.getTime(),
+        params.start.getTime(),
+      );
+      const end = Math.min(charismaPeriod.end.getTime(), params.end.getTime());
+      const overlapDurationInHours = (end - start) / ONE_HOUR_IN_MS;
+      return totalCharisma + overlapDurationInHours * charismaPeriod.charisma;
+    }, 0);
   }
 
   private async computeCharismaDifference(
@@ -182,6 +166,15 @@ export class VolunteerAvailabilityService {
         isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       },
     );
+  }
+
+  private checkPeriodsErrors(periodOrchestrator: PeriodOrchestrator): void {
+    if (periodOrchestrator.errors.length > 0) {
+      const errors = periodOrchestrator.errors
+        .map(buildPeriodOrchestratorErrorMessage)
+        .join('\n');
+      throw new ForbiddenException(errors);
+    }
   }
 }
 
