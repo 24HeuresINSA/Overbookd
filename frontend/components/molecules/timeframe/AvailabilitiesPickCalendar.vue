@@ -130,10 +130,6 @@ export default Vue.extend({
     addPeriod(date: Date) {
       const periodToAdd = this.generateNewPeriod(date);
       this.selected = [...this.selected, periodToAdd];
-      this.$accessor.volunteerAvailability.incrementCharisma(
-        this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours())
-      );
     },
     addPeriodsInDay(date: Date) {
       const periods = this.generateAllPeriodsFor(date);
@@ -147,6 +143,7 @@ export default Vue.extend({
       const start = new Date(date);
       const end = new Date(start);
       end.setHours(date.getHours() + durationInHours);
+      this.incrementCharismaByDate(start);
       return { start, end };
     },
     generateAllPeriodsFor(dayDate: Date): Period[] {
@@ -166,14 +163,13 @@ export default Vue.extend({
       this.selected = this.selected.filter(
         (period) => !this.isSamePeriod(date)(period)
       );
-      this.$accessor.volunteerAvailability.decrementCharisma(
-        this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours())
-      );
+      this.decrementCharismaByDate(date);
     },
     removePeriodsInDay(date: Date) {
       this.selected = this.selected.filter(
-        (period) => period.start.getDate() !== date.getDate()
+        (period) => {
+          period.start.getDate() !== date.getDate()
+        }
       );
     },
     getCharismaByDate(date: Date): number {
@@ -199,6 +195,18 @@ export default Vue.extend({
     },
     updateDateWithHour(date: Date, hour: number): Date {
       return new Date(new Date(date.setHours(hour)).setMinutes(0));
+    },
+    incrementCharismaByDate(date: Date) {
+      this.$accessor.volunteerAvailability.incrementCharisma(
+        this.getCharismaByDate(date) *
+          this.getPeriodDurationInHours(date.getHours())
+      );
+    },
+    decrementCharismaByDate(date: Date) {
+      this.$accessor.volunteerAvailability.decrementCharisma(
+        this.getCharismaByDate(date) *
+          this.getPeriodDurationInHours(date.getHours())
+      );
     },
   },
 });
