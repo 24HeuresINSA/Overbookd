@@ -40,7 +40,7 @@
             festival. 😎
           </p>
           <v-btn color="primary" @click="step = 2"> C'est parti ! 🚀 </v-btn>
-          <v-btn text> Annuler </v-btn>
+          <v-btn text @click="returnToLogin"> Annuler </v-btn>
         </v-stepper-content>
 
         <v-stepper-step
@@ -288,6 +288,9 @@ export default Vue.extend({
   methods: {
     async register() {
       await this.$accessor.user.createUser(this.mUser);
+    },
+    returnToLogin() {
+      this.$router.push("/login");
     },
   },
 });
