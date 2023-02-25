@@ -64,7 +64,7 @@ export class VolunteerAvailabilityService {
   async addAvailabilitiesWithoutCheck(
     userId: number,
     newPeriods: PeriodDto[],
-  ): Promise<void> {
+  ): Promise<PeriodDto[]> {
     const oldPeriods = await this.findUserAvailabilities(userId);
     const charismaPoints = await this.computeCharismaDifference(
       oldPeriods,
@@ -105,6 +105,7 @@ export class VolunteerAvailabilityService {
         isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       },
     );
+    return this.findUserAvailabilities(userId);
   }
 
   private async computeCharismaPoints(params: PeriodDto): Promise<number> {

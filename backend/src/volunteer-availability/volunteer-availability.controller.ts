@@ -44,7 +44,7 @@ export class VolunteerAvailabilityController {
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'The record has been successfully created.',
+    description: "Volunteer's availability periods successfully created.",
     type: PeriodDto,
     isArray: true,
   })
@@ -74,7 +74,7 @@ export class VolunteerAvailabilityController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'The record has been successfully retrieved.',
+    description: "Volunteer's availability periods",
     type: PeriodDto,
     isArray: true,
   })
@@ -93,8 +93,8 @@ export class VolunteerAvailabilityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Patch(':userId/human')
-  @HttpCode(204)
+  @Patch(':userId')
+  @HttpCode(201)
   @ApiParam({
     name: 'userId',
     description: 'The id of the user to add the availability periods to.',
@@ -106,13 +106,19 @@ export class VolunteerAvailabilityController {
     description: 'The availability periods to add.',
     isArray: true,
   })
+  @ApiResponse({
+    status: 201,
+    description: "Volunteer's availability periods successfully created.",
+    type: PeriodDto,
+    isArray: true,
+  })
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
   overrideHuman(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() periods: PeriodDto[],
-  ): Promise<void> {
+  ): Promise<PeriodDto[]> {
     return this.volunteerAvailabilityService.addAvailabilitiesWithoutCheck(
       userId,
       periods,
