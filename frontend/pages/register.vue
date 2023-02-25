@@ -230,7 +230,8 @@ export default Vue.extend({
       return new Date(this.birthday);
     },
     softCreationTeams(): Team[] {
-      return this.$accessor.team.softCreationTeams;
+      const emptyTeam = { id: 0, name: "Aucune" } as Team;
+      return [...this.$accessor.team.softCreationTeams, emptyTeam];
     },
     presentationRules(): (() => boolean | string)[] {
       return [
@@ -276,7 +277,7 @@ export default Vue.extend({
         email: this.email,
         phone: this.phone,
         comment: this.comment,
-        teamId: this.teamId,
+        teamId: this.teamId === 0 ? undefined : this.teamId,
         password: this.password,
       };
     },
