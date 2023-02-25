@@ -166,11 +166,11 @@ export default Vue.extend({
       this.decrementCharismaByDate(date);
     },
     removePeriodsInDay(date: Date) {
-      this.selected = this.selected.filter(
-        (period) => {
-          period.start.getDate() !== date.getDate()
-        }
-      );
+      this.selected = this.selected.filter((period) => {
+        const isSameDay = period.start.getDate() === date.getDate();
+        if (isSameDay) this.decrementCharismaByDate(period.start);
+        return !isSameDay;
+      });
     },
     getCharismaByDate(date: Date): number {
       const charismaPeriods =

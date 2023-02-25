@@ -52,7 +52,10 @@ export const actions = actionTree(
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
     },
 
-    async updateVolunteerAvailabilities({ commit, state }, userId: number) {
+    async updateVolunteerAvailabilities(
+      { commit, dispatch, state, rootState },
+      userId: number
+    ) {
       const res = await safeCall(
         this,
         repo.updateVolunteerAvailabilities(
@@ -67,6 +70,9 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
+
+      dispatch("user/fetchUser", null, { root: true });
+      commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {
