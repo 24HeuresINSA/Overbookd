@@ -109,36 +109,6 @@ export class VolunteerAvailabilityService {
     };
   }
 
-  async findAll(): Promise<VolunteerAvailabilityResponseDto[]> {
-    const allAvailabilities =
-      await this.prisma.volunteerAvailability.findMany();
-    //map group by user id and concat periods
-    const formattedAvailabilities: VolunteerAvailabilityResponseDto[] = [];
-    for (const availability of allAvailabilities) {
-      const user = formattedAvailabilities.find(
-        (el) => el.userId === availability.userId,
-      );
-      if (user) {
-        user.periods.push({
-          start: availability.start,
-          end: availability.end,
-        });
-      } else {
-        formattedAvailabilities.push({
-          userId: availability.userId,
-          periods: [
-            {
-              start: availability.start,
-              end: availability.end,
-            },
-          ],
-        });
-      }
-    }
-    //map for each user as we want to return an array of objects
-    return formattedAvailabilities;
-  }
-
   async findUserAvailabilities(
     userId: number,
   ): Promise<VolunteerAvailabilityResponseDto> {
