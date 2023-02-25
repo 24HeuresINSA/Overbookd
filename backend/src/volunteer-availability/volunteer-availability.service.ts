@@ -16,11 +16,6 @@ export class VolunteerAvailabilityService {
     createVolunteerAvailability: CreateVolunteerAvailabilityDto,
     humanOverride = false,
   ): Promise<VolunteerAvailabilityResponseDto> {
-    /**
-     * First step : check that new availabilities are longer than older ones
-     * Second step : compute new charisma points based on this availabilities
-     * Third step : update the user with the new charisma points and the new availabilities through a transaction
-     */
     const newPeriods = createVolunteerAvailability.periods;
     const oldAvailabilities = await this.prisma.volunteerAvailability
       .findMany({
@@ -60,7 +55,6 @@ export class VolunteerAvailabilityService {
       oldCharismaPoints += await this.computeCharismaPoints(period);
     }
     const charismaPoints = newCharismaPoints - oldCharismaPoints;
-    console.log(charismaPoints);
     const userUpdate = this.prisma.user.update({
       where: {
         id: userId,
