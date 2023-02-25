@@ -11,6 +11,7 @@ import {
   IsDefined,
   IsDateString,
   IsPhoneNumber,
+  IsNumber,
 } from 'class-validator';
 import { Years, Departements, upperCaseCharacter, OneNumber } from './common';
 
@@ -70,28 +71,39 @@ export class UserCreationDto {
   phone: string;
 
   @ApiProperty({
-    required: true,
+    required: false,
+    description: 'The team id of the user',
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  teamId?: number;
+
+  @ApiProperty({
+    required: false,
     description: 'The departement of the user',
     enum: Departements,
   })
+  @IsOptional()
   @IsDefined()
   @IsEnum(Departements, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(Departements)}`,
   })
-  department: Departements;
+  department?: Departements;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The study year of the user',
     enum: Years,
   })
+  @IsOptional()
   @IsDefined()
   @IsEnum(Years, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(Years)}`,
   })
-  year: Years;
+  year?: Years;
 
   @ApiProperty({
     required: true,

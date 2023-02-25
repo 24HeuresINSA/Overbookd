@@ -49,12 +49,12 @@ model User {
   email                   String     @unique
   birthdate               DateTime
   phone                   String     @db.VarChar(30)
-  department              Department
+  department              Department?
   comment                 String?
   reset_password_token    String?    @unique
   reset_password_expires  DateTime?
   has_payed_contributions Boolean    @default(false)
-  year                    Year
+  year                    Year?
   pp                      String?
   charisma                Float      @default(0)
   balance                 Float      @default(0)

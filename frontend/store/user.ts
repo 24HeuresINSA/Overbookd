@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
-import { User as UserV2 } from "~/utils/models/user";
+import { User as UserV2, UserCreation } from "~/utils/models/user";
 import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
@@ -93,6 +93,13 @@ export const actions = actionTree(
       if (res) {
         commit("SET_USERNAMES", res.data);
       }
+    },
+    async createUser(_, user: UserCreation) {
+      const res = await safeCall(this, UserRepo.createUser(this, user), {
+        successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
+        errorMessage: "Mince, le compte n'a pas pu être créé 😢",
+      });
+      if (res) this.$router.push("/login");
     },
     async getUsername({ dispatch, state }, userID) {
       if (state.usernames.length === 0) {
