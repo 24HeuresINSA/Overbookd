@@ -59,6 +59,9 @@ export class VolunteerAvailabilityService {
       where: {
         id: userId,
       },
+      select: {
+        id: true,
+      },
       data: {
         charisma: {
           increment: charismaPoints,
