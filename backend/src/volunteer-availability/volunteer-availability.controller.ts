@@ -22,8 +22,10 @@ import {
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateVolunteerAvailabilityDto } from './dto/createVolunteerAvailability.dto';
-import { VolunteerAvailabilityResponseDto } from './dto/volunteerAvailabilityResponse.dto';
+import {
+  CreateVolunteerAvailabilityDto,
+  Period,
+} from './dto/createVolunteerAvailability.dto';
 import { VolunteerAvailabilityService } from './volunteer-availability.service';
 
 @ApiBearerAuth()
@@ -46,7 +48,8 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: VolunteerAvailabilityResponseDto,
+    type: Period,
+    isArray: true,
   })
   @ApiNotFoundResponse({
     description: 'User not found.',
@@ -64,7 +67,7 @@ export class VolunteerAvailabilityController {
   add(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() periods: CreateVolunteerAvailabilityDto,
-  ): Promise<VolunteerAvailabilityResponseDto> {
+  ): Promise<Period[]> {
     return this.volunteerAvailabilityService.addAvailabilities(userId, periods);
   }
 
@@ -74,7 +77,8 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully retrieved.',
-    type: VolunteerAvailabilityResponseDto,
+    type: Period,
+    isArray: true,
   })
   @ApiParam({
     name: 'userId',
@@ -85,9 +89,7 @@ export class VolunteerAvailabilityController {
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
-  findOne(
-    @Param('userId', ParseIntPipe) userId: number,
-  ): Promise<VolunteerAvailabilityResponseDto> {
+  findOne(@Param('userId', ParseIntPipe) userId: number): Promise<Period[]> {
     return this.volunteerAvailabilityService.findUserAvailabilities(userId);
   }
 

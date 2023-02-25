@@ -5,7 +5,6 @@ import {
   CreateVolunteerAvailabilityDto,
   Period,
 } from './dto/createVolunteerAvailability.dto';
-import { VolunteerAvailabilityResponseDto } from './dto/volunteerAvailabilityResponse.dto';
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -14,7 +13,7 @@ export class VolunteerAvailabilityService {
   async addAvailabilities(
     userId: number,
     createVolunteerAvailability: CreateVolunteerAvailabilityDto,
-  ): Promise<VolunteerAvailabilityResponseDto> {
+  ): Promise<Period[]> {
     const newPeriods = createVolunteerAvailability.periods;
     const oldAvailabilities = await this.prisma.volunteerAvailability.findMany({
       where: {
@@ -88,41 +87,24 @@ export class VolunteerAvailabilityService {
       where: {
         userId,
       },
+      select: {
+        start: true,
+        end: true,
+      },
     });
-    return {
-      userId,
-      periods: availabilities.map((av) => {
-        return {
-          start: av.start,
-          end: av.end,
-        };
-      }),
-    };
+    return availabilities;
   }
 
-  async findUserAvailabilities(
-    userId: number,
-  ): Promise<VolunteerAvailabilityResponseDto> {
-    const userAvailabilities = await this.prisma.volunteerAvailability.findMany(
-      {
-        where: {
-          userId,
-        },
-        select: {
-          start: true,
-          end: true,
-        },
+  async findUserAvailabilities(userId: number): Promise<Period[]> {
+    return this.prisma.volunteerAvailability.findMany({
+      where: {
+        userId,
       },
-    );
-    return {
-      userId,
-      periods: userAvailabilities.map((av) => {
-        return {
-          start: av.start,
-          end: av.end,
-        };
-      }),
-    };
+      select: {
+        start: true,
+        end: true,
+      },
+    });
   }
 
   async addAvailabilitiesWithoutCheck(
