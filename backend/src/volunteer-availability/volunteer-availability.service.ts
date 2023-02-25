@@ -82,7 +82,6 @@ export class VolunteerAvailabilityService {
   }
 
   private async computeCharismaPoints(params: PeriodDto): Promise<number> {
-    //Get all charisma periods between start and end
     const allCharismaPeriods = await this.prisma.charismaPeriod.findMany({
       where: {
         start: {
@@ -100,10 +99,13 @@ export class VolunteerAvailabilityService {
     });
     return allCharismaPeriods.reduce((totalCharisma, charismaPeriod) => {
       const start = Math.max(
-        charismaPeriod.start.getTime(),
-        params.start.getTime(),
+        new Date(charismaPeriod.start).getTime(),
+        new Date(params.start).getTime(),
       );
-      const end = Math.min(charismaPeriod.end.getTime(), params.end.getTime());
+      const end = Math.min(
+        new Date(charismaPeriod.end).getTime(),
+        new Date(params.end).getTime(),
+      );
       const overlapDurationInHours = (end - start) / ONE_HOUR_IN_MS;
       return totalCharisma + overlapDurationInHours * charismaPeriod.charisma;
     }, 0);
