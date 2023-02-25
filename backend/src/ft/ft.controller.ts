@@ -120,7 +120,7 @@ export class FtController {
   @Get('stats')
   @ApiResponse({
     status: 200,
-    description: 'Get FA stats',
+    description: 'Get FT stats',
     type: Promise<StatsPayload[]>,
   })
   getFtStats(): Promise<StatsPayload[]> {
