@@ -14,7 +14,6 @@ export class VolunteerAvailabilityService {
   async addAvailabilities(
     userId: number,
     createVolunteerAvailability: CreateVolunteerAvailabilityDto,
-    humanOverride = false,
   ): Promise<VolunteerAvailabilityResponseDto> {
     const newPeriods = createVolunteerAvailability.periods;
     const oldAvailabilities = await this.prisma.volunteerAvailability
@@ -31,7 +30,7 @@ export class VolunteerAvailabilityService {
           };
         });
       });
-    if (oldAvailabilities.length > 0 && !humanOverride) {
+    if (oldAvailabilities.length > 0) {
       const oldAvailabilitiesDuration = oldAvailabilities.reduce(
         (acc, curr) => acc + this.getPeriodDuration(curr),
         0,
@@ -125,6 +124,71 @@ export class VolunteerAvailabilityService {
         };
       }),
     };
+  }
+
+  async addAvailabilitiesWithoutCheck(
+    userId: number,
+    createVolunteerAvailability: CreateVolunteerAvailabilityDto,
+  ): Promise<void> {
+    const newPeriods = createVolunteerAvailability.periods;
+    const oldAvailabilities = await this.prisma.volunteerAvailability
+      .findMany({
+        where: {
+          userId,
+        },
+      })
+      .then((el: VolunteerAvailability[]) => {
+        return el.map((av) => {
+          return {
+            start: av.start,
+            end: av.end,
+          };
+        });
+      });
+    let newCharismaPoints = 0;
+    for (const period of newPeriods) {
+      newCharismaPoints += await this.computeCharismaPoints(period);
+    }
+    let oldCharismaPoints = 0;
+    for (const period of oldAvailabilities) {
+      oldCharismaPoints += await this.computeCharismaPoints(period);
+    }
+    const charismaPoints = newCharismaPoints - oldCharismaPoints;
+    const userUpdate = this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+      },
+      data: {
+        charisma: {
+          increment: charismaPoints,
+        },
+      },
+    });
+    const volunteerAvailabilityUpdate =
+      this.prisma.volunteerAvailability.createMany({
+        data: newPeriods.map((period) => {
+          return {
+            start: period.start,
+            end: period.end,
+            userId,
+          };
+        }),
+      });
+    const volunteerAvailabilityDelete =
+      this.prisma.volunteerAvailability.deleteMany({
+        where: {
+          userId,
+        },
+      });
+    await this.prisma.$transaction(
+      [volunteerAvailabilityDelete, userUpdate, volunteerAvailabilityUpdate],
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
   }
 
   private getPeriodDuration(params: Period): number {
