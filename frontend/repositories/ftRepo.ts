@@ -24,6 +24,7 @@ import {
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 import { Reviewer } from "~/utils/models/review";
+import { StatsPayload } from "~/utils/models/stats";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -41,6 +42,9 @@ export default {
   },
   createFT(context: Context, ft: FTCreation) {
     return context.$axios.post<HttpStringified<FT>>(resource, ft);
+  },
+  getFtStats(context: Context) {
+    return context.$axios.get<StatsPayload>(resource + "/stats");
   },
   updateFT(context: Context, ft: FTUpdate) {
     return context.$axios.patch<HttpStringified<FT>>(

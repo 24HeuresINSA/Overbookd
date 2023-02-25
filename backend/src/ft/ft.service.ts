@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtStatus } from '@prisma/client';
+import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { FtUserRequestService } from 'src/ft_user_request/ft_user_request.service';
 import { PrismaService } from '../prisma.service';
@@ -31,8 +32,9 @@ export type DataBaseCompleteFt = Omit<CompleteFtResponseDto, 'timeWindows'> & {
 @Injectable()
 export class FtService {
   constructor(
-    private prisma: PrismaService,
-    private userRequestService: FtUserRequestService,
+    private readonly prisma: PrismaService,
+    private readonly statsService: StatsService,
+    private readonly userRequestService: FtUserRequestService,
   ) {}
 
   async create(ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
@@ -55,6 +57,22 @@ export class FtService {
       },
       select: LITE_FT_SELECT,
     });
+  }
+
+  async getFtStats(): Promise<StatsPayload[]> {
+    const ft = await this.prisma.ft.groupBy({
+      by: ['teamCode', 'status'],
+      where: {
+        isDeleted: false,
+      },
+      _count: {
+        status: true,
+      },
+      orderBy: {
+        teamCode: 'asc',
+      },
+    });
+    return this.statsService.stats(ft);
   }
 
   async findOne(id: number): Promise<CompleteFtResponseDto | null> {

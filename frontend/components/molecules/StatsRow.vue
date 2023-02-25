@@ -17,8 +17,8 @@
       <v-col sm="1" class="text-center">Total {{ name }}s N-1</v-col>
       <v-col sm="1" class="text-center">%</v-col>
     </v-row>
-    <v-row v-for="com in dataset" :key="com.teamId">
-      <v-col sm="2">{{ team(com.teamId)?.name || "Sans équipe" }}</v-col>
+    <v-row v-for="com in dataset" :key="com.teamCode">
+      <v-col sm="2">{{ team(com.teamCode)?.name || "Sans équipe" }}</v-col>
       <v-col sm="7">
         <div class="d-flex">
           <div
@@ -33,7 +33,9 @@
         </div>
       </v-col>
       <v-col sm="1" class="text-center">{{ com.total }}</v-col>
-      <v-col sm="1" class="text-center">{{ displayHistory(com.teamId) }}</v-col>
+      <v-col sm="1" class="text-center">{{
+        displayHistory(com.teamCode)
+      }}</v-col>
       <v-col sm="1" class="text-center">{{ historyPercentage(com) }}</v-col>
     </v-row>
   </div>
@@ -115,18 +117,17 @@ export default Vue.extend({
     };
   },
   methods: {
-    team(teamId: number): Team | undefined {
-      return this.$accessor.team.getTeamById(teamId);
+    team(teamCode: string): Team | undefined {
+      return this.$accessor.team.getTeamByCode(teamCode);
     },
     getAllStatus() {
       return FAStatusLabel;
     },
-    displayHistory(teamId: number): string {
-      const lastYearValue = this.history(teamId);
+    displayHistory(teamCode: string): string {
+      const lastYearValue = this.history(teamCode);
       return Number.isNaN(lastYearValue) ? "N/A" : lastYearValue.toString();
     },
-    history(teamId: number): number {
-      const teamCode = this.team(teamId)?.code || "undefined";
+    history(teamCode: string): number {
       if (this.name === "FT") {
         if (this.historyFT[teamCode] === undefined) {
           return NaN;
@@ -140,7 +141,7 @@ export default Vue.extend({
       return this.historyFA[teamCode];
     },
     historyPercentage(stats: StatsPayload): string {
-      const lastYearCount = this.history(stats.teamId);
+      const lastYearCount = this.history(stats.teamCode);
       if (Number.isNaN(lastYearCount) || lastYearCount === 0) {
         return "N/A";
       }
