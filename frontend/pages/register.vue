@@ -75,7 +75,7 @@
               :rules="[
                 rules.required,
                 rules.birthdayMaxDate,
-                rules.birthdayMinDate
+                rules.birthdayMinDate,
               ]"
             >
             </v-text-field>
@@ -105,7 +105,7 @@
                 'Karna',
                 'Woods',
                 'Teckos',
-                'Tendrestival'
+                'Tendrestival',
               ]"
               clearable
               hint="Tu nous rejoins à plusieurs ?"
@@ -161,7 +161,13 @@
               :rules="[repeatPasswordRule]"
             ></v-text-field>
           </v-form>
-          <v-btn color="primary" @click="register" :disabled=isRegistrationDisabled> M'inscrire </v-btn>
+          <v-btn
+            color="primary"
+            :disabled="isRegistrationDisabled"
+            @click="register"
+          >
+            M'inscrire
+          </v-btn>
           <v-btn text @click="step = 3"> Revenir </v-btn>
         </v-stepper-content>
       </v-stepper>
@@ -175,15 +181,15 @@ import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import {
-InputRulesData,
-isEmail,
-isInsaEmail,
-isMobilePhoneNumber,
-isSame,
-maxDate,
-minDate,
-password,
-required,
+  InputRulesData,
+  isEmail,
+  isInsaEmail,
+  isMobilePhoneNumber,
+  isSame,
+  maxDate,
+  minDate,
+  password,
+  required,
 } from "~/utils/rules/inputRules";
 
 interface RegisterData extends InputRulesData {
@@ -257,15 +263,19 @@ export default Vue.extend({
       return isSame(this.password);
     },
     isRegistrationDisabled(): boolean {
-    return [...this.presentationRules, ...this.contactRules, ...this.securityRules].some(rule => rule() !== true)
-  },
-  securityRules(): (() => boolean | string)[] {
-    return [
-      () => this.step === 4 || this.rules.required(this.password),
-      () => this.step === 4 || this.rules.password(this.password),
-      () => this.step === 4 || this.repeatPasswordRule(this.repeatPassword),
-    ]
-  }
+      return [
+        ...this.presentationRules,
+        ...this.contactRules,
+        ...this.securityRules,
+      ].some((rule) => rule() !== true);
+    },
+    securityRules(): (() => boolean | string)[] {
+      return [
+        () => this.step === 4 || this.rules.required(this.password),
+        () => this.step === 4 || this.rules.password(this.password),
+        () => this.step === 4 || this.repeatPasswordRule(this.repeatPassword),
+      ];
+    },
   },
 
   methods: {
