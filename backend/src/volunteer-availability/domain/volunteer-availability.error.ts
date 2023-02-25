@@ -5,7 +5,7 @@ export const AVAILABILITY_ERROR_MESSAGES = {
   PERIODS_JOINT: 'periods should overlap or follow to be added',
 };
 
-export class AvailabilityError extends Error {}
+class AvailabilityError extends Error {}
 
 export class AvailabilityPeriodTimelineError extends AvailabilityError {
   constructor() {
