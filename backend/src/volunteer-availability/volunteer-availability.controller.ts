@@ -5,6 +5,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -92,13 +93,8 @@ export class VolunteerAvailabilityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Post(':userId/human')
-  @HttpCode(201)
-  @ApiResponse({
-    status: 201,
-    description: 'The record has been successfully created.',
-    type: VolunteerAvailabilityResponseDto,
-  })
+  @Patch(':userId/human')
+  @HttpCode(204)
   @ApiParam({
     name: 'userId',
     description: 'The id of the user to add the availability periods to.',
@@ -115,11 +111,10 @@ export class VolunteerAvailabilityController {
   overrideHuman(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() periods: CreateVolunteerAvailabilityDto,
-  ): Promise<VolunteerAvailabilityResponseDto> {
-    return this.volunteerAvailabilityService.addAvailabilities(
+  ): Promise<void> {
+    return this.volunteerAvailabilityService.addAvailabilitiesWithoutCheck(
       userId,
       periods,
-      true,
     );
   }
 }
