@@ -22,16 +22,3 @@ export class Period {
   @IsDateString()
   end: Date;
 }
-
-export class CreateVolunteerAvailabilityDto {
-  @ApiProperty({
-    description: 'Every periods given by the volunteer',
-    required: true,
-    type: Period,
-    isArray: true,
-  })
-  @IsDefined({
-    each: true,
-  })
-  periods: Period[];
-}

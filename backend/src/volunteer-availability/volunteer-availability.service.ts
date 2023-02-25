@@ -1,10 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import {
-  CreateVolunteerAvailabilityDto,
-  Period,
-} from './dto/createVolunteerAvailability.dto';
+import { Period } from './dto/createVolunteerAvailability.dto';
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -12,9 +9,8 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilities(
     userId: number,
-    createVolunteerAvailability: CreateVolunteerAvailabilityDto,
+    newPeriods: Period[],
   ): Promise<Period[]> {
-    const newPeriods = createVolunteerAvailability.periods;
     const oldPeriods = await this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
@@ -92,9 +88,8 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilitiesWithoutCheck(
     userId: number,
-    createVolunteerAvailability: CreateVolunteerAvailabilityDto,
+    newPeriods: Period[],
   ): Promise<void> {
-    const newPeriods = createVolunteerAvailability.periods;
     const oldPeriods = await this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
