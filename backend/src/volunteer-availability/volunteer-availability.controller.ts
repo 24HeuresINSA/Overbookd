@@ -68,19 +68,6 @@ export class VolunteerAvailabilityController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: 'The records have been successfully retrieved.',
-    type: VolunteerAvailabilityResponseDto,
-    isArray: true,
-  })
-  findAll(): Promise<VolunteerAvailabilityResponseDto[]> {
-    return this.volunteerAvailabilityService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get(':userId')
   @HttpCode(200)
   @ApiResponse({
