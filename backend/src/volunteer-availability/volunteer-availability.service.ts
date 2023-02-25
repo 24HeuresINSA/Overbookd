@@ -159,7 +159,6 @@ export class VolunteerAvailabilityService {
     const deleteAvailabilities = this.prisma.volunteerAvailability.deleteMany({
       where: { userId },
     });
-    console.log('updatedAvailabilityPeriods', updatedAvailabilityPeriods);
     const createAvailabilities = this.prisma.volunteerAvailability.createMany({
       data: updatedAvailabilityPeriods.map((period) => ({
         start: period.start,

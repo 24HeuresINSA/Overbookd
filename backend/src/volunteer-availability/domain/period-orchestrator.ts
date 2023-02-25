@@ -28,7 +28,6 @@ export class PeriodOrchestrator {
           Availability.fromPeriod(period);
           return false;
         } catch (e) {
-          console.log(e);
           return true;
         }
       })
