@@ -96,21 +96,6 @@
 
         <v-stepper-content step="3">
           <v-form class="data contact-data">
-            <v-select
-              v-model="team"
-              label="Équipe"
-              :items="[
-                'BDE',
-                'Kfet',
-                'Karna',
-                'Woods',
-                'Teckos',
-                'Tendrestival',
-              ]"
-              clearable
-              hint="Tu nous rejoins à plusieurs ?"
-              persistent-hint
-            ></v-select>
             <v-text-field
               v-model="email"
               label="Email*"
@@ -125,6 +110,22 @@
               required
               :rules="[rules.required, rules.mobilePhone]"
             ></v-text-field>
+            <v-select
+              v-model="team"
+              label="Équipe"
+              :items="[
+                { text: 'BDE', value: 'bde' },
+                { text: 'Kfet', value: 'kfet' },
+                { text: 'Karna', value: 'karna' },
+                { text: 'Woods', value: 'woods' },
+                { text: 'Teckos', value: 'teckos' },
+                { text: 'Tendrestival', value: 'tendrestival' },
+                { text: 'Aucune', value: null },
+              ]"
+              clearable
+              hint="Tu nous rejoins à plusieurs ?"
+              persistent-hint
+            ></v-select>
             <v-textarea
               v-model="comment"
               label="Commentaire"
