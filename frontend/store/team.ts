@@ -42,6 +42,17 @@ export const getters = getterTree(state, {
     (code: string): Team => {
       return getters.allTeams.find((t: Team) => t.code === code);
     },
+  softCreationTeams(state): Team[] {
+    const teamsCodes = [
+      "bde",
+      "kfet",
+      "karna",
+      "woods",
+      "teckos",
+      "tendrestival",
+    ];
+    return state.teams.filter((t) => teamsCodes.includes(t.code));
+  },
 });
 
 export const mutations = mutationTree(state, {

@@ -61,7 +61,7 @@
               required
               :rules="[rules.required]"
             ></v-text-field>
-            <v-text-field v-model="surname" label="Surnom"></v-text-field>
+            <v-text-field v-model="nickname" label="Surnom"></v-text-field>
             <v-text-field
               v-model="lastname"
               label="Nom*"
@@ -111,17 +111,11 @@
               :rules="[rules.required, rules.mobilePhone]"
             ></v-text-field>
             <v-select
-              v-model="team"
+              v-model="teamId"
               label="Équipe"
-              :items="[
-                { text: 'BDE', value: 'bde' },
-                { text: 'Kfet', value: 'kfet' },
-                { text: 'Karna', value: 'karna' },
-                { text: 'Woods', value: 'woods' },
-                { text: 'Teckos', value: 'teckos' },
-                { text: 'Tendrestival', value: 'tendrestival' },
-                { text: 'Aucune', value: null },
-              ]"
+              :items="softCreationTeams"
+              item-text="name"
+              item-value="id"
               clearable
               hint="Tu nous rejoins à plusieurs ?"
               persistent-hint
@@ -147,8 +141,6 @@
               type="password"
               label="Mot de passe*"
               required
-              hint="Au moins une MAJUSCULE, minuscule, un chiffre et 6 caractères 🔒"
-              persistent-hint
               :rules="[rules.password]"
             ></v-text-field>
 
@@ -157,21 +149,25 @@
               type="password"
               label="Confirme ton mot de passe*"
               required
-              hint="Il faut que ça soit le même 🔒"
-              persistent-hint
               :rules="[repeatPasswordRule]"
             ></v-text-field>
           </v-form>
-          <v-btn color="primary" disabled @click="step = 1"> M'inscrire </v-btn>
+          <v-btn color="primary" :disabled="isFormInvalid" @click="register">
+            M'inscrire
+          </v-btn>
           <v-btn text @click="step = 3"> Revenir </v-btn>
         </v-stepper-content>
       </v-stepper>
     </v-card>
+    <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { Team } from "~/utils/models/team";
+import { UserCreation } from "~/utils/models/user";
 import {
   InputRulesData,
   required,
@@ -188,9 +184,9 @@ interface RegisterData extends InputRulesData {
   step: number;
   firstname: string;
   lastname: string;
-  surname?: string;
+  nickname?: string;
   birthday: string;
-  team?: string;
+  teamId?: number;
   phone: string;
   comment?: string;
   email: string;
@@ -201,18 +197,19 @@ interface RegisterData extends InputRulesData {
 export default Vue.extend({
   name: "Register",
   auth: false,
+  components: { SnackNotificationContainer },
   layout: "none",
   data(): RegisterData {
     return {
       step: 1,
       firstname: "",
       lastname: "",
-      surname: undefined,
+      nickname: undefined,
       birthday: "2000-01-01",
       email: "",
       phone: "",
       comment: undefined,
-      team: undefined,
+      teamId: undefined,
       password: "",
       repeatPassword: "",
       rules: {
@@ -228,7 +225,10 @@ export default Vue.extend({
   },
   computed: {
     birthdayDate(): Date {
-      return new Date();
+      return new Date(this.birthday);
+    },
+    softCreationTeams(): Team[] {
+      return this.$accessor.team.softCreationTeams;
     },
     presentationRules(): (() => boolean | string)[] {
       return [
@@ -248,8 +248,43 @@ export default Vue.extend({
         () => this.step <= 3 || this.rules.mobilePhone(this.phone),
       ];
     },
+    securityRules(): (() => boolean | string)[] {
+      return [
+        () => this.step <= 3 || this.rules.required(this.password),
+        () => this.step <= 3 || this.rules.password(this.password),
+      ];
+    },
     repeatPasswordRule(): (value: string | null) => boolean | string {
       return isSame(this.password);
+    },
+    isFormInvalid(): boolean {
+      return (
+        this.presentationRules.some((rule) => rule() !== true) ||
+        this.contactRules.some((rule) => rule() !== true) ||
+        this.securityRules.some((rule) => rule() !== true) ||
+        this.repeatPasswordRule(this.repeatPassword) !== true
+      );
+    },
+    mUser(): UserCreation {
+      return {
+        firstname: this.firstname,
+        lastname: this.lastname,
+        nickname: this.nickname,
+        birthdate: this.birthdayDate,
+        email: this.email,
+        phone: this.phone,
+        comment: this.comment,
+        teamId: this.teamId,
+        password: this.password,
+      };
+    },
+  },
+  mounted() {
+    this.$accessor.team.setTeamsInStore();
+  },
+  methods: {
+    async register() {
+      await this.$accessor.user.createUser(this.mUser);
     },
   },
 });

@@ -111,10 +111,9 @@ export class UserService {
   }
 
   async createUser(
-    payload: Prisma.UserCreateInput,
+    payload: Prisma.UserCreateInput & { teamId?: number },
   ): Promise<UserWithoutPassword> {
-    // take only the right fields
-    const data: Prisma.UserUncheckedCreateInput = {
+    const newUserData: Prisma.UserUncheckedCreateInput = {
       firstname: payload.firstname,
       lastname: payload.lastname,
       email: payload.email,
@@ -127,7 +126,23 @@ export class UserService {
       year: payload.year,
     };
 
-    return this.prisma.user.create({ data: data, select: SELECT_USER });
+    const newUser = await this.prisma.user.create({
+      data: newUserData,
+      select: SELECT_USER,
+    });
+    console.log('before if', payload.teamId);
+    if (!payload.teamId) return newUser;
+    console.log('after if', payload.teamId);
+
+    const addTeamData: Prisma.User_TeamUncheckedCreateInput = {
+      team_id: payload.teamId,
+      user_id: newUser.id,
+    };
+
+    await this.prisma.user_Team.create({
+      data: addTeamData,
+    });
+    return newUser;
   }
 
   async addAvailabilitiesToUser(
