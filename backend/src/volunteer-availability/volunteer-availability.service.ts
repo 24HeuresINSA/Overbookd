@@ -82,31 +82,23 @@ export class VolunteerAvailabilityService {
   }
 
   private async computeCharismaPoints(params: PeriodDto): Promise<number> {
-    const allUsefulCharismaPeriod = await this.prisma.charismaPeriod.findMany({
+    //Get all charisma periods between start and end
+    const allCharismaPeriods = await this.prisma.charismaPeriod.findMany({
       where: {
-        AND: [
-          {
-            start: {
-              gte: params.start,
-            },
-          },
-          {
-            end: {
-              lte: params.end,
-            },
-          },
-        ],
+        start: {
+          lte: params.end,
+        },
+        end: {
+          gte: params.start,
+        },
       },
       select: {
-        charisma: true,
         start: true,
         end: true,
-      },
-      orderBy: {
-        start: 'asc',
+        charisma: true,
       },
     });
-    return allUsefulCharismaPeriod.reduce((totalCharisma, charismaPeriod) => {
+    return allCharismaPeriods.reduce((totalCharisma, charismaPeriod) => {
       const start = Math.max(
         charismaPeriod.start.getTime(),
         params.start.getTime(),
