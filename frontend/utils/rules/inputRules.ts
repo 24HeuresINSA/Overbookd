@@ -63,13 +63,13 @@ export function isMobilePhoneNumber(value: string | null) {
 }
 
 const passwordPattern = new RegExp(
-  `^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$`
+  `^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$`
 );
 
 export function password(value: string | null) {
   return (
     (value && passwordPattern.test(value)) ||
-    "Au moins une MAJUSCULE, minuscule, un chiffre et 6 caractères"
+    "Au moins une MAJUSCULE, minuscule, un chiffre et 8 caractères"
   );
 }
 

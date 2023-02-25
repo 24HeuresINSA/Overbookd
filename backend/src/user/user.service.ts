@@ -7,6 +7,7 @@ import {
   retrievePermissions,
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
+import { UserCreationDto } from './dto/userCreation.dto';
 
 const SELECT_USER = {
   email: true,
@@ -110,9 +111,7 @@ export class UserService {
     return users.map((user) => this.getUserWithTeamAndPermission(user));
   }
 
-  async createUser(
-    payload: Prisma.UserCreateInput & { teamId?: number },
-  ): Promise<UserWithoutPassword> {
+  async createUser(payload: UserCreationDto): Promise<UserWithoutPassword> {
     const newUserData: Prisma.UserUncheckedCreateInput = {
       firstname: payload.firstname,
       lastname: payload.lastname,
@@ -130,9 +129,7 @@ export class UserService {
       data: newUserData,
       select: SELECT_USER,
     });
-    console.log('before if', payload.teamId);
     if (!payload.teamId) return newUser;
-    console.log('after if', payload.teamId);
 
     const addTeamData: Prisma.User_TeamUncheckedCreateInput = {
       team_id: payload.teamId,

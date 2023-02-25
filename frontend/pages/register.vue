@@ -141,6 +141,8 @@
               type="password"
               label="Mot de passe*"
               required
+              hint="Au moins une MAJUSCULE, minuscule, un chiffre et 6 caractères 🔒"
+              persistent-hint
               :rules="[rules.password]"
             ></v-text-field>
 
