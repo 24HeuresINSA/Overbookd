@@ -7,6 +7,8 @@ import {
   User,
 } from "~/utils/models/repo";
 import { AxiosResponse } from "axios";
+import { VolunteerCreation } from "~/utils/models/user";
+import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/user";
 
