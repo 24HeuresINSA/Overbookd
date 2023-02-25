@@ -25,6 +25,7 @@ import {
 import { FtStatus } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { StatsPayload } from 'src/common/services/stats.service';
 import { GearRequestsApproveFormRequestDto } from 'src/gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
@@ -112,6 +113,18 @@ export class FtController {
     @Query() searchRequest: FTSearchRequestDto,
   ): Promise<LiteFtResponseDto[]> {
     return this.ftService.findAll(searchRequest);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Get('stats')
+  @ApiResponse({
+    status: 200,
+    description: 'Get FA stats',
+    type: Promise<StatsPayload[]>,
+  })
+  getFaStats(): Promise<StatsPayload[]> {
+    return this.ftService.getFtStats();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -64,7 +64,12 @@ export class FaService {
         status: true,
       },
     });
-    return this.statsService.stats(fa);
+    const teams = await this.prisma.team.findMany({});
+    const transformedFa = fa.map((fa) => ({
+      ...fa,
+      teamCode: teams.find((team) => team.id === fa.team_id)?.code,
+    }));
+    return this.statsService.stats(transformedFa);
   }
 
   /**      **/
