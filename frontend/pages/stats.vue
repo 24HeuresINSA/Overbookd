@@ -11,7 +11,6 @@
       <h1>FT</h1>
     </v-row>
     <StatsRow :dataset="dataset" :name="name" />
-    <h1 v-if="switchType">Les stats FT ne sont pas encore disponibles</h1>
   </v-container>
 </template>
 
@@ -42,7 +41,7 @@ export default Vue.extend({
     async update() {
       if (this.switchType) {
         this.name = "FT";
-        this.dataset = [];
+        this.dataset = await this.getStatsFT();
       } else {
         this.name = "FA";
         this.dataset = await this.getStatsFA();
@@ -53,6 +52,12 @@ export default Vue.extend({
         await this.$accessor.stats.getFaStats();
       }
       return this.$accessor.stats.statsFA;
+    },
+    async getStatsFT() {
+      if (this.$accessor.stats.statsFT.length === 0) {
+        await this.$accessor.stats.getFtStats();
+      }
+      return this.$accessor.stats.statsFT;
     },
   },
 });
