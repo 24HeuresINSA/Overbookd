@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsDefined } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsDateString,
+  IsDefined,
+  ValidateNested,
+} from 'class-validator';
+import { Period } from '../domain/period.model';
 
-export class Period {
+export class PeriodDto implements Period {
   @ApiProperty({
     example: '2021-01-01T00:00:00.000Z',
     description: 'Start date of the period',
@@ -27,11 +34,11 @@ export class CreateVolunteerAvailabilityDto {
   @ApiProperty({
     description: 'Every periods given by the volunteer',
     required: true,
-    type: Period,
+    type: PeriodDto,
     isArray: true,
   })
-  @IsDefined({
-    each: true,
-  })
-  periods: Period[];
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PeriodDto)
+  periods: PeriodDto[];
 }

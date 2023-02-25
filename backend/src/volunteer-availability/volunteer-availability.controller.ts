@@ -22,8 +22,10 @@ import {
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateVolunteerAvailabilityDto } from './dto/createVolunteerAvailability.dto';
-import { VolunteerAvailabilityResponseDto } from './dto/volunteerAvailabilityResponse.dto';
+import {
+  CreateVolunteerAvailabilityDto,
+  PeriodDto,
+} from './dto/createVolunteerAvailability.dto';
 import { VolunteerAvailabilityService } from './volunteer-availability.service';
 
 @ApiBearerAuth()
@@ -46,7 +48,8 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: VolunteerAvailabilityResponseDto,
+    type: PeriodDto,
+    isArray: true,
   })
   @ApiNotFoundResponse({
     description: 'User not found.',
@@ -64,7 +67,7 @@ export class VolunteerAvailabilityController {
   add(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() periods: CreateVolunteerAvailabilityDto,
-  ): Promise<VolunteerAvailabilityResponseDto> {
+  ): Promise<PeriodDto[]> {
     return this.volunteerAvailabilityService.addAvailabilities(userId, periods);
   }
 
@@ -73,8 +76,9 @@ export class VolunteerAvailabilityController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'The record has been successfully retrieved.',
-    type: VolunteerAvailabilityResponseDto,
+    description: "User's availabilities.",
+    type: PeriodDto,
+    isArray: true,
   })
   @ApiParam({
     name: 'userId',
@@ -85,16 +89,20 @@ export class VolunteerAvailabilityController {
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
-  findOne(
-    @Param('userId', ParseIntPipe) userId: number,
-  ): Promise<VolunteerAvailabilityResponseDto> {
+  findOne(@Param('userId', ParseIntPipe) userId: number): Promise<PeriodDto[]> {
     return this.volunteerAvailabilityService.findUserAvailabilities(userId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Patch(':userId/human')
-  @HttpCode(204)
+  @Patch(':userId')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Availabilities updated.',
+    type: PeriodDto,
+    isArray: true,
+  })
   @ApiParam({
     name: 'userId',
     description: 'The id of the user to add the availability periods to.',
@@ -110,9 +118,9 @@ export class VolunteerAvailabilityController {
   })
   overrideHuman(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() periods: CreateVolunteerAvailabilityDto,
-  ): Promise<void> {
-    return this.volunteerAvailabilityService.addAvailabilitiesWithoutCheck(
+    @Body() { periods }: CreateVolunteerAvailabilityDto,
+  ): Promise<PeriodDto[]> {
+    return this.volunteerAvailabilityService.overrideAvailabilities(
       userId,
       periods,
     );

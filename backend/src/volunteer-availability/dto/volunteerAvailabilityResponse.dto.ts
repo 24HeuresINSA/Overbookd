@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Period } from './createVolunteerAvailability.dto';
+import { PeriodDto } from './createVolunteerAvailability.dto';
 
 export class VolunteerAvailabilityResponseDto {
   @ApiProperty({
@@ -19,8 +19,8 @@ export class VolunteerAvailabilityResponseDto {
     ],
     description: 'Every periods given by the volunteer',
     required: true,
-    type: Period,
+    type: PeriodDto,
     isArray: true,
   })
-  periods: Period[];
+  periods: PeriodDto[];
 }

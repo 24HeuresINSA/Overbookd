@@ -1,11 +1,17 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { Prisma, VolunteerAvailability } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { formatDateWithMinutes } from 'src/utils/date';
 import { PrismaService } from '../prisma.service';
 import {
-  CreateVolunteerAvailabilityDto,
-  Period,
-} from './dto/createVolunteerAvailability.dto';
-import { VolunteerAvailabilityResponseDto } from './dto/volunteerAvailabilityResponse.dto';
+  PeriodOrchestrator,
+  PeriodWithError,
+} from './domain/period-orchestrator';
+import { Period } from './domain/period.model';
+import { CreateVolunteerAvailabilityDto } from './dto/createVolunteerAvailability.dto';
+
+type CharismaPeriod = Period & {
+  charisma: number;
+};
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -13,10 +19,150 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilities(
     userId: number,
-    createVolunteerAvailability: CreateVolunteerAvailabilityDto,
-  ): Promise<VolunteerAvailabilityResponseDto> {
-    const newPeriods = createVolunteerAvailability.periods;
-    const oldAvailabilities = await this.prisma.volunteerAvailability.findMany({
+    { periods }: CreateVolunteerAvailabilityDto,
+  ): Promise<Period[]> {
+    const previousAvailabilityPeriods = await this.getAvailabilityPeriods(
+      userId,
+    );
+    const periodOrchestrator = PeriodOrchestrator.init(
+      previousAvailabilityPeriods,
+    );
+    periods.map((period) => periodOrchestrator.addPeriod(period));
+
+    if (periodOrchestrator.errors.length > 0) {
+      const errors = periodOrchestrator.errors
+        .map(buildPeriodOrchestratorErrorMessage)
+        .join('\n');
+      throw new ForbiddenException(errors);
+    }
+
+    const updatedAvailabilityPeriods = periodOrchestrator.availabilityPeriods;
+
+    const charismaDelta = await this.computeCharismaDelta(
+      previousAvailabilityPeriods,
+      updatedAvailabilityPeriods,
+    );
+
+    await this.updateVolunteer(
+      userId,
+      updatedAvailabilityPeriods,
+      charismaDelta,
+    );
+    return this.getAvailabilityPeriods(userId);
+  }
+
+  async overrideAvailabilities(
+    userId: number,
+    periods: Period[],
+  ): Promise<Period[]> {
+    const periodOrchestrator = PeriodOrchestrator.init(periods);
+
+    if (periodOrchestrator.errors.length > 0) {
+      const errors = periodOrchestrator.errors
+        .map(buildPeriodOrchestratorErrorMessage)
+        .join('\n');
+      throw new ForbiddenException(errors);
+    }
+
+    const previousAvailabilityPeriods = await this.getAvailabilityPeriods(
+      userId,
+    );
+
+    const charismaDelta = await this.computeCharismaDelta(
+      previousAvailabilityPeriods,
+      periods,
+    );
+
+    await this.updateVolunteer(userId, periods, charismaDelta);
+    return this.getAvailabilityPeriods(userId);
+  }
+
+  async findUserAvailabilities(userId: number): Promise<Period[]> {
+    return this.getAvailabilityPeriods(userId);
+  }
+
+  private async updateVolunteer(
+    userId: number,
+    updatedAvailabilityPeriods: Period[],
+    charismaDelta: number,
+  ) {
+    const deleteAvailabilities = this.deleteVolunteerAvailabilities(userId);
+    const createAvailabilities = this.createAvailabilities(
+      userId,
+      updatedAvailabilityPeriods,
+    );
+    const updateVolunteerCharisma = this.updateVolunteerCharisma(
+      userId,
+      charismaDelta,
+    );
+
+    await this.prisma.$transaction(
+      [deleteAvailabilities, updateVolunteerCharisma, createAvailabilities],
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
+  }
+
+  private createAvailabilities(
+    userId: number,
+    updatedAvailabilityPeriods: Period[],
+  ) {
+    return this.prisma.volunteerAvailability.createMany({
+      data: updatedAvailabilityPeriods.map((period) => ({
+        ...period,
+        userId,
+      })),
+    });
+  }
+
+  private deleteVolunteerAvailabilities(userId: number) {
+    return this.prisma.volunteerAvailability.deleteMany({
+      where: { userId },
+    });
+  }
+
+  private updateVolunteerCharisma(userId: number, charismaDelta: number) {
+    return this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      select: { id: true },
+      data: {
+        charisma: {
+          increment: charismaDelta,
+        },
+      },
+    });
+  }
+
+  private async computeCharismaDelta(
+    previousAvailabilityPeriods: Period[],
+    updatedAvailabilityPeriods: Period[],
+  ) {
+    const previousCharismas = await this.computeCharisma(
+      previousAvailabilityPeriods,
+    );
+    const currentCharismas = await this.computeCharisma(
+      updatedAvailabilityPeriods,
+    );
+    return previousCharismas - currentCharismas;
+  }
+
+  private async computeCharisma(
+    updatedAvailabilityPeriods: Period[],
+  ): Promise<number> {
+    return (
+      await Promise.all(
+        updatedAvailabilityPeriods.map((period) =>
+          this.computeCharismaPoints(period),
+        ),
+      )
+    ).reduce((totalCharisma, charisma) => totalCharisma + charisma, 0);
+  }
+
+  private async getAvailabilityPeriods(userId: number): Promise<Period[]> {
+    return await this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
       },
@@ -25,205 +171,57 @@ export class VolunteerAvailabilityService {
         end: true,
       },
     });
-    if (oldAvailabilities.length > 0) {
-      const oldAvailabilitiesDuration = oldAvailabilities.reduce(
-        (acc, curr) => acc + this.getPeriodDuration(curr),
-        0,
-      );
-      const newAvailabilitiesDuration = newPeriods.reduce(
-        (acc, curr) => acc + this.getPeriodDuration(curr),
-        0,
-      );
-      if (newAvailabilitiesDuration < oldAvailabilitiesDuration) {
-        throw new ForbiddenException(
-          'New availabilities are shorter than older ones. Please add more periods.',
-        );
-      }
-    }
-    let newCharismaPoints = 0;
-    for (const period of newPeriods) {
-      newCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    let oldCharismaPoints = 0;
-    for (const period of oldAvailabilities) {
-      oldCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    const charismaPoints = newCharismaPoints - oldCharismaPoints;
-    const userUpdate = this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      select: {
-        id: true,
-      },
-      data: {
-        charisma: {
-          increment: charismaPoints,
-        },
-      },
-    });
-    const volunteerAvailabilityUpdate =
-      this.prisma.volunteerAvailability.createMany({
-        data: newPeriods.map((period) => {
-          return {
-            start: period.start,
-            end: period.end,
-            userId,
-          };
-        }),
-      });
-    const volunteerAvailabilityDelete =
-      this.prisma.volunteerAvailability.deleteMany({
-        where: {
-          userId,
-        },
-      });
-    await this.prisma.$transaction(
-      [volunteerAvailabilityDelete, userUpdate, volunteerAvailabilityUpdate],
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      },
-    );
-    const availabilities = await this.prisma.volunteerAvailability.findMany({
-      where: {
-        userId,
-      },
-    });
-    return {
-      userId,
-      periods: availabilities.map((av) => {
-        return {
-          start: av.start,
-          end: av.end,
-        };
-      }),
-    };
   }
 
-  async findUserAvailabilities(
-    userId: number,
-  ): Promise<VolunteerAvailabilityResponseDto> {
-    const userAvailabilities = await this.prisma.volunteerAvailability.findMany(
-      {
-        where: {
-          userId,
-        },
-        select: {
-          start: true,
-          end: true,
-        },
-      },
+  private async computeCharismaPoints(period: Period): Promise<number> {
+    const allUsefulCharismaPeriod = await this.findUsefullCharismaPeriod(
+      period,
     );
-    return {
-      userId,
-      periods: userAvailabilities.map((av) => {
-        return {
-          start: av.start,
-          end: av.end,
-        };
-      }),
-    };
-  }
-
-  async addAvailabilitiesWithoutCheck(
-    userId: number,
-    createVolunteerAvailability: CreateVolunteerAvailabilityDto,
-  ): Promise<void> {
-    const newPeriods = createVolunteerAvailability.periods;
-    const oldAvailabilities = await this.prisma.volunteerAvailability
-      .findMany({
-        where: {
-          userId,
-        },
-      })
-      .then((el: VolunteerAvailability[]) => {
-        return el.map((av) => {
-          return {
-            start: av.start,
-            end: av.end,
-          };
-        });
-      });
-    let newCharismaPoints = 0;
-    for (const period of newPeriods) {
-      newCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    let oldCharismaPoints = 0;
-    for (const period of oldAvailabilities) {
-      oldCharismaPoints += await this.computeCharismaPoints(period);
-    }
-    const charismaPoints = newCharismaPoints - oldCharismaPoints;
-    const userUpdate = this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      select: {
-        id: true,
-      },
-      data: {
-        charisma: {
-          increment: charismaPoints,
-        },
-      },
-    });
-    const volunteerAvailabilityUpdate =
-      this.prisma.volunteerAvailability.createMany({
-        data: newPeriods.map((period) => {
-          return {
-            start: period.start,
-            end: period.end,
-            userId,
-          };
-        }),
-      });
-    const volunteerAvailabilityDelete =
-      this.prisma.volunteerAvailability.deleteMany({
-        where: {
-          userId,
-        },
-      });
-    await this.prisma.$transaction(
-      [volunteerAvailabilityDelete, userUpdate, volunteerAvailabilityUpdate],
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      },
+    // FIXME: this is not the right algorithm, we need to multiplie period duration with it corresponding charisma period charisma
+    return allUsefulCharismaPeriod.reduce(
+      (totalCharisma, charismaPeriod) =>
+        totalCharisma + charismaPeriod.charisma,
+      0,
     );
   }
 
-  private getPeriodDuration(params: Period): number {
-    return Math.floor(
-      (new Date(params.end).getTime() - new Date(params.start).getTime()) /
-        1000,
-    );
-  }
-
-  private async computeCharismaPoints(params: Period): Promise<number> {
-    const allUsefulCharismaPeriod = await this.prisma.charismaPeriod.findMany({
+  private async findUsefullCharismaPeriod({
+    start,
+    end,
+  }: Period): Promise<CharismaPeriod[]> {
+    return this.prisma.charismaPeriod.findMany({
       where: {
         AND: [
           {
             start: {
-              gte: params.start,
+              gte: start,
             },
           },
           {
             end: {
-              lte: params.end,
+              lte: end,
             },
           },
         ],
+      },
+      select: {
+        charisma: true,
+        start: true,
+        end: true,
       },
       orderBy: {
         start: 'asc',
       },
     });
-    if (allUsefulCharismaPeriod.length > 0) {
-      let totalCharismaPoints = 0;
-      for (const period of allUsefulCharismaPeriod) {
-        totalCharismaPoints += period.charisma;
-      }
-      return totalCharismaPoints;
-    }
-    return 0;
   }
+}
+
+function buildPeriodOrchestratorErrorMessage({
+  start,
+  end,
+  message,
+}: PeriodWithError): string {
+  return `[${formatDateWithMinutes(start)}-${formatDateWithMinutes(
+    end,
+  )}]${message}`;
 }
