@@ -108,6 +108,10 @@ export class VolunteerAvailabilityService {
         where: {
           userId,
         },
+        select: {
+          start: true,
+          end: true,
+        },
       },
     );
     return {
