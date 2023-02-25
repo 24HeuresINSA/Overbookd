@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { Period } from './dto/createVolunteerAvailability.dto';
+import { PeriodDto } from './dto/period.dto';
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -9,8 +9,8 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilities(
     userId: number,
-    newPeriods: Period[],
-  ): Promise<Period[]> {
+    newPeriods: PeriodDto[],
+  ): Promise<PeriodDto[]> {
     const oldPeriods = await this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
@@ -74,7 +74,7 @@ export class VolunteerAvailabilityService {
     return availabilities;
   }
 
-  async findUserAvailabilities(userId: number): Promise<Period[]> {
+  async findUserAvailabilities(userId: number): Promise<PeriodDto[]> {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         userId,
@@ -88,7 +88,7 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilitiesWithoutCheck(
     userId: number,
-    newPeriods: Period[],
+    newPeriods: PeriodDto[],
   ): Promise<void> {
     const oldPeriods = await this.prisma.volunteerAvailability.findMany({
       where: {
@@ -140,13 +140,13 @@ export class VolunteerAvailabilityService {
     );
   }
 
-  private getPeriodDuration({ start, end }: Period): number {
+  private getPeriodDuration({ start, end }: PeriodDto): number {
     return Math.floor(new Date(end).getTime() - new Date(start).getTime());
   }
 
   private computePeriodDifference(
-    oldPeriods: Period[],
-    newPeriods: Period[],
+    oldPeriods: PeriodDto[],
+    newPeriods: PeriodDto[],
   ): void {
     const oldAvailabilitiesDuration = oldPeriods.reduce(
       (acc, curr) => acc + this.getPeriodDuration(curr),
@@ -163,7 +163,7 @@ export class VolunteerAvailabilityService {
     }
   }
 
-  private async computeCharismaPoints(params: Period): Promise<number> {
+  private async computeCharismaPoints(params: PeriodDto): Promise<number> {
     const allUsefulCharismaPeriod = await this.prisma.charismaPeriod.findMany({
       where: {
         AND: [
@@ -190,8 +190,8 @@ export class VolunteerAvailabilityService {
   }
 
   private async computeCharismaDifference(
-    oldPeriods: Period[],
-    newPeriods: Period[],
+    oldPeriods: PeriodDto[],
+    newPeriods: PeriodDto[],
   ): Promise<number> {
     let newCharismaPoints = 0;
     for (const period of newPeriods) {

@@ -22,7 +22,7 @@ import {
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Period } from './dto/createVolunteerAvailability.dto';
+import { PeriodDto } from './dto/period.dto';
 import { VolunteerAvailabilityService } from './volunteer-availability.service';
 
 @ApiBearerAuth()
@@ -45,14 +45,14 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: Period,
+    type: PeriodDto,
     isArray: true,
   })
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
   @ApiBody({
-    type: Period,
+    type: PeriodDto,
     description: 'The availability periods to add.',
     isArray: true,
   })
@@ -64,8 +64,8 @@ export class VolunteerAvailabilityController {
   })
   add(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() periods: Period[],
-  ): Promise<Period[]> {
+    @Body() periods: PeriodDto[],
+  ): Promise<PeriodDto[]> {
     return this.volunteerAvailabilityService.addAvailabilities(userId, periods);
   }
 
@@ -75,7 +75,7 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully retrieved.',
-    type: Period,
+    type: PeriodDto,
     isArray: true,
   })
   @ApiParam({
@@ -87,7 +87,7 @@ export class VolunteerAvailabilityController {
   @ApiNotFoundResponse({
     description: 'User not found.',
   })
-  findOne(@Param('userId', ParseIntPipe) userId: number): Promise<Period[]> {
+  findOne(@Param('userId', ParseIntPipe) userId: number): Promise<PeriodDto[]> {
     return this.volunteerAvailabilityService.findUserAvailabilities(userId);
   }
 
@@ -102,7 +102,7 @@ export class VolunteerAvailabilityController {
     required: true,
   })
   @ApiBody({
-    type: Period,
+    type: PeriodDto,
     description: 'The availability periods to add.',
     isArray: true,
   })
@@ -111,7 +111,7 @@ export class VolunteerAvailabilityController {
   })
   overrideHuman(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() periods: Period[],
+    @Body() periods: PeriodDto[],
   ): Promise<void> {
     return this.volunteerAvailabilityService.addAvailabilitiesWithoutCheck(
       userId,

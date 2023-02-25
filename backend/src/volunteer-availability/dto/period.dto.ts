@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsDefined } from 'class-validator';
+import { Period } from '../domain/period.model';
 
-export class Period {
+export class PeriodDto implements Period {
   @ApiProperty({
     example: '2021-01-01T00:00:00.000Z',
     description: 'Start date of the period',
