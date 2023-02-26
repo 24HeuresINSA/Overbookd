@@ -74,7 +74,7 @@ export default Vue.extend({
     isSelected(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
         this.selectedAvailabilities.some(
-          this.isPeriodincludeDate(
+          this.isDateIncludedByPeriod(
             this.updateDateWithHour(new Date(date), hour)
           )
         ) && !this.isSaved(date, hour);
@@ -82,7 +82,7 @@ export default Vue.extend({
     isAllPeriodsInDaySelected(): (date: Date) => boolean {
       return (date: Date) => {
         const start = new Date(new Date(date).setHours(0));
-        const end = new Date(new Date(start).setDate(start.getDate() + 1));
+        const end = this.computeTomorrowDate(start);
         const period = { start, end };
         return this.selectedAvailabilities.some(
           this.isPeriodIncludedByAnother(period)
@@ -92,7 +92,7 @@ export default Vue.extend({
     isSaved(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
         this.savedAvailabilities.some(
-          this.isPeriodincludeDate(
+          this.isDateIncludedByPeriod(
             this.updateDateWithHour(new Date(date), hour)
           )
         );
@@ -118,7 +118,7 @@ export default Vue.extend({
         period.start.getTime() === otherPeriod.start.getTime() &&
         period.end.getTime() === otherPeriod.end.getTime();
     },
-    isPeriodincludeDate(date: Date): (value: Period) => boolean {
+    isDateIncludedByPeriod(date: Date): (value: Period) => boolean {
       return (period) => period.start <= date && period.end > date;
     },
     isPeriodIncludedByAnother(period: Period): (value: Period) => boolean {
@@ -239,6 +239,11 @@ export default Vue.extend({
         this.getCharismaByDate(date) *
           this.getPeriodDurationInHours(date.getHours())
       );
+    },
+    computeTomorrowDate(date: Date): Date {
+      const tomorrow = new Date(date);
+      tomorrow.setDate(date.getDate() + 1);
+      return tomorrow;
     },
   },
 });
