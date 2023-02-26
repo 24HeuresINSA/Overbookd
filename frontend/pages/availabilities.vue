@@ -1,9 +1,13 @@
 <template>
   <div>
-    <h1>Mes disponibilités</h1>
-    <p>{{ detailMessage }}</p>
-    <h2>Mon Charisme : {{ charisma }}</h2>
-    <v-spacer></v-spacer>
+    <div class="header">
+      <h1>Mes disponibilités</h1>
+      <p>{{ detailMessage }}</p>
+      <div class="important">
+        ⚠️ Les disponibilités doivent durer au moins 2 heures consécutives !
+      </div>
+      <h2>Mon Charisme : {{ charisma }}</h2>
+    </div>
     <AvailabilitiesStepsCard />
     <SnackNotificationContainer />
   </div>
@@ -44,6 +48,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 h1 {
-  margin-left: 12px;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 </style>
