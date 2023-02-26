@@ -51,7 +51,8 @@ export const getters = getterTree(state, {
       return state.timeslots.find((_timeslot) => _timeslot === _id);
     });
   },
-  hasPermission: (state: UserState) => (permission: string) => {
+  hasPermission: (state: UserState) => (permission?: string) => {
+    if (!permission) return true;
     return (
       state.me.permissions.includes("admin") ||
       state.me.permissions.includes(permission) ||

@@ -182,7 +182,6 @@ export default {
           icon: "mdi-apps",
           title: "Accueil",
           to: "/",
-          permission: "validated-user",
         },
         {
           icon: "mdi-chart-bubble",
@@ -205,7 +204,6 @@ export default {
         {
           icon: "mdi-clock",
           title: "Mes dispos",
-          permission: "validated-user",
           to: "/availabilities",
         },
         {
