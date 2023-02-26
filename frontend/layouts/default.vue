@@ -182,7 +182,6 @@ export default {
           icon: "mdi-apps",
           title: "Accueil",
           to: "/",
-          permission: "validated-user",
         },
         {
           icon: "mdi-chart-bubble",
