@@ -143,6 +143,7 @@ export default Vue.extend({
       const start = new Date(date);
       const end = new Date(start);
       end.setHours(date.getHours() + durationInHours);
+      this.incrementCharismaByDate(start);
       return { start, end };
     },
     generateAllPeriodsFor(dayDate: Date): Period[] {
@@ -162,11 +163,14 @@ export default Vue.extend({
       this.selected = this.selected.filter(
         (period) => !this.isSamePeriod(date)(period)
       );
+      this.decrementCharismaByDate(date);
     },
     removePeriodsInDay(date: Date) {
-      this.selected = this.selected.filter(
-        (period) => period.start.getDate() !== date.getDate()
-      );
+      this.selected = this.selected.filter((period) => {
+        const isSameDay = period.start.getDate() === date.getDate();
+        if (isSameDay) this.decrementCharismaByDate(period.start);
+        return !isSameDay;
+      });
     },
     getCharismaByDate(date: Date): number {
       const charismaPeriods =
@@ -191,6 +195,18 @@ export default Vue.extend({
     },
     updateDateWithHour(date: Date, hour: number): Date {
       return new Date(new Date(date.setHours(hour)).setMinutes(0));
+    },
+    incrementCharismaByDate(date: Date) {
+      this.$accessor.volunteerAvailability.incrementCharisma(
+        this.getCharismaByDate(date) *
+          this.getPeriodDurationInHours(date.getHours())
+      );
+    },
+    decrementCharismaByDate(date: Date) {
+      this.$accessor.volunteerAvailability.decrementCharisma(
+        this.getCharismaByDate(date) *
+          this.getPeriodDurationInHours(date.getHours())
+      );
     },
   },
 });
