@@ -1,10 +1,12 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
 import { FtReview, FtStatus, reviewStatus } from '@prisma/client';
+import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
@@ -53,7 +55,9 @@ export class FtReviewsService {
   async refuseFt(
     ftId: number,
     reviewer: UpsertFtReviewsDto,
+    user: JwtPayload,
   ): Promise<CompleteFtResponseDto> {
+    await this.verifyValidRefusal(ftId, user);
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
@@ -71,8 +75,17 @@ export class FtReviewsService {
       select: COMPLETE_FT_SELECT,
     });
 
-    const [_, updatedFt] = await this.prisma.$transaction([
+    const removeTimespans = this.prisma.ftTimespan.deleteMany({
+      where: {
+        timeWindows: {
+          ftId,
+        },
+      },
+    });
+
+    const [_, __, updatedFt] = await this.prisma.$transaction([
       upsertReview,
+      removeTimespans,
       updateStatus,
     ]);
     return this.ftService.convertFTtoApiContract(updatedFt);
@@ -86,7 +99,7 @@ export class FtReviewsService {
       where: { id: ftId },
       select: COMPLETE_FT_SELECT,
     });
-    this.checkSwitchableToReady(ft);
+    await this.checkSwitchableToReady(ft);
 
     const timespans = this.computeTimeSpans(ft);
 
@@ -154,7 +167,9 @@ export class FtReviewsService {
     return null;
   }
 
-  private checkSwitchableToReady(ft: DataBaseCompleteFt): boolean {
+  private async checkSwitchableToReady(
+    ft: DataBaseCompleteFt,
+  ): Promise<boolean> {
     if (!ft) {
       throw new NotFoundException('FT not found');
     }
@@ -164,12 +179,52 @@ export class FtReviewsService {
     if (ft.fa.status !== FtStatus.VALIDATED) {
       throw new BadRequestException('FA is not validated');
     }
-    // TODO Check for conflicts
+    await this.checkForAlsoRequestedConflicts(ft);
+    // TODO Check for other conflicts (availability, timespans)
     throw new NotImplementedException();
     return true;
   }
 
   private computeTimeSpans(ft: DataBaseCompleteFt): Timespan[] {
     return ft.timeWindows.flatMap(TimespansGenerator.generateTimespans);
+  }
+
+  private async checkForAlsoRequestedConflicts(
+    ft: DataBaseCompleteFt,
+  ): Promise<void> {
+    const ftWithAlsoRequestedConflicts =
+      await this.ftService.convertFTtoApiContract(ft);
+    const alsoRequestedBy = ftWithAlsoRequestedConflicts.timeWindows
+      .flatMap((tw) => tw.userRequests)
+      .flatMap((ur) => ur.alsoRequestedBy);
+
+    if (alsoRequestedBy.length > 0) {
+      throw new BadRequestException('Conflict with also requested');
+    }
+  }
+
+  private async verifyValidRefusal(
+    ftId: number,
+    jwtPayload: JwtPayload,
+  ): Promise<void> {
+    const ft = await this.prisma.ft.findUnique({
+      where: { id: ftId },
+      select: { status: true },
+    });
+
+    if (!ft) {
+      throw new NotFoundException('FT not found');
+    }
+
+    if (ft.status !== FtStatus.READY) {
+      return;
+    }
+
+    const user = new JwtUtil(jwtPayload);
+    if (!user.isAdmin() && !user.hasPermission('can-affect')) {
+      throw new ForbiddenException(
+        'Only can-affect users can refuse FTs with status READY',
+      );
+    }
   }
 }

@@ -86,8 +86,9 @@ export class FtReviewsController {
   refuseFt(
     @Param('ftId', ParseIntPipe) ftId: number,
     @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<CompleteFtResponseDto | null> {
-    return this.ftReviewsService.refuseFt(ftId, upsertFtReviewsDto);
+    return this.ftReviewsService.refuseFt(ftId, upsertFtReviewsDto, req.user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
