@@ -73,6 +73,11 @@ export default {
       reviewer
     );
   },
+  switchToReadyForAssignment(context: Context, ftId: number) {
+    return context.$axios
+      .post<void>(`${resource}/${ftId}/assignement-approval`)
+      .catch((err) => err.response.data.message);
+  },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {
     return context.$axios.delete(`${resource}/${ftId}/reviews/${teamCode}`);
   },

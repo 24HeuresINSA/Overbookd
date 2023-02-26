@@ -392,6 +392,17 @@ export const actions = actionTree(
       dispatch("addFeedback", feedback);
     },
 
+    async switchToReadyForAssignment({ commit, state }) {
+      const res = await repo.switchToReadyForAssignment(this, state.mFT.id);
+      console.log(res);
+      if (!res.data) {
+        this.dispatch("notif/pushNotification", { message: res });
+        return;
+      }
+      const updatedFT = castFTWithDate(res.data);
+      commit("UPDATE_SELECTED_FT", updatedFT);
+    },
+
     async previousPage({ state }) {
       const res = await safeCall<FTPageId>(
         this,

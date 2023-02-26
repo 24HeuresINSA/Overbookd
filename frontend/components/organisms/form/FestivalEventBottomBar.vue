@@ -10,7 +10,7 @@
           color="red"
           class="white--text"
           @click="openRefuseDialog(teamsThatCanRefuse[0])"
-          >refusé par {{ teamsThatCanRefuse[0].name }}
+          >refusé pour {{ teamsThatCanRefuse[0].name }}
         </v-btn>
 
         <v-menu v-if="shouldShowRefuseMenu" offset-y>
@@ -38,7 +38,7 @@
           color="green"
           class="white--text"
           @click="validate(teamsThatNotValidateYet[0])"
-          >validé par {{ teamsThatNotValidateYet[0].name }}
+          >validé pour {{ teamsThatNotValidateYet[0].name }}
         </v-btn>
 
         <v-menu v-if="shouldShowValidationMenu" offset-y>
@@ -61,6 +61,14 @@
             </v-list-item>
           </v-list>
         </v-menu>
+
+        <v-btn
+          v-if="shouldShowReadyButton"
+          color="purple"
+          class="white--text"
+          @click="switchToReadyForAssignment"
+          >Prêt pour affectation
+        </v-btn>
 
         <v-btn
           v-if="isDraft || isRefused"
@@ -276,6 +284,13 @@ export default Vue.extend({
     shouldShowRefuseMenu(): boolean {
       return this.teamsThatCanRefuse.length > 1 && !this.isDraft;
     },
+    shouldShowReadyButton(): boolean {
+      return (
+        !this.isFA &&
+        this.isValidated &&
+        this.$accessor.user.hasPermission("can-affect")
+      );
+    },
     previousLink(): string {
       if (this.isFA) return `/fa/${this.mFA.id - 1}`;
       return `/ft/${this.mFT.id - 1}`;
@@ -352,6 +367,9 @@ export default Vue.extend({
       }
       this.refuseComment = "";
       this.isRefuseDialogOpen = false;
+    },
+    async switchToReadyForAssignment() {
+      return this.$accessor.FT.switchToReadyForAssignment();
     },
     checkBeforeSubmitForReview() {
       const hasError = this.isFA
