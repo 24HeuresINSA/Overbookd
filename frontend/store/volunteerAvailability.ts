@@ -1,4 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { AvailabilityRegistery } from "~/domain/volunteer-availability/volunteer-availability.registery";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -10,6 +11,7 @@ const repo = RepoFactory.VolunteerAvailabilityRepository;
 
 export const state = () => ({
   availabilityRegistery: AvailabilityRegistery.init(),
+  periodOrchestrator: PeriodOrchestrator.init(),
   currentCharisma: 0,
 });
 
@@ -25,8 +27,20 @@ export const mutations = mutationTree(state, {
       AvailabilityRegistery.fromAvailabilities(availabilities);
   },
 
+  SET_PERIOD_ORCHESTRATOR(state, periods: Period[]) {
+    state.periodOrchestrator = PeriodOrchestrator.init(periods);
+  },
+
   ADD_VOLUNTEER_AVAILABILITY(state, period: Period) {
     state.availabilityRegistery.addPeriod(period);
+  },
+
+  ADD_PERIOD_IN_PERIOD_ORCHESTRATOR(state, period: Period) {
+    state.periodOrchestrator.addPeriod(period);
+  },
+
+  REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR(state, period: Period) {
+    state.periodOrchestrator.removePeriod(period);
   },
 
   SET_CURRENT_CHARISMA(state, charisma: number) {
@@ -46,6 +60,7 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
+      commit("SET_PERIOD_ORCHESTRATOR", castPeriods(res.data));
     },
 
     async updateVolunteerAvailabilities(
@@ -73,6 +88,26 @@ export const actions = actionTree(
 
     async addVolunteerAvailability({ commit }, availability: Availability) {
       commit("ADD_VOLUNTEER_AVAILABILITY", availability);
+    },
+
+    addAvailabilityPeriod({ commit }, period: Period) {
+      commit("ADD_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
+    },
+
+    addAvailabilityPeriods({ commit }, periods: Period[]) {
+      periods.map((period) => {
+        commit("ADD_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
+      });
+    },
+
+    removeAvailabilityPeriod({ commit }, period: Period) {
+      commit("REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
+    },
+
+    removeAvailabilityPeriods({ commit }, periods: Period[]) {
+      periods.map((period) => {
+        commit("REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
+      });
     },
 
     incrementCharisma({ commit, state }, increment: number) {
