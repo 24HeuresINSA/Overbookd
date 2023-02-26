@@ -17,24 +17,23 @@
               <p>
                 Tu n'as pas encore été validé par les responsables bénévoles
                 <br />
-                N'hésite pas a
-                <nuxt-link to="availabilities">
-                  compléter tes disponibilités
-                </nuxt-link>
-                pour augmenter tes chances.
+                N'hésite pas
+                <strong> a compléter tes disponibilités </strong> pour augmenter
+                tes chances.
               </p>
             </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" class="cta" to="/availabilities">
+                rajouter des disponibilités
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
 
         <v-col cols="12" sm="6" md="4">
           <ComptesPersosCard v-if="hasPermission('cp')" />
-          <FriendsCard v-else />
-        </v-col>
-
-        <v-col v-if="isManif()" cols="12" sm="6" md="8">
-          <AvailabilitiesSummaryCard v-if="isAvailabilityUpdateActive()" />
-          <PlanningCard v-else />
+          <!-- <FriendsCard v-else /> -->
         </v-col>
       </v-row>
     </v-container>
@@ -62,9 +61,6 @@ import UserCard from "@/components/organisms/userCard.vue";
 import UserNotifications from "@/components/organisms/userNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
-import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
-import AvailabilitiesSummaryCard from "~/components/organisms/availabilities/AvailabilitiesSummaryCard.vue";
-import PlanningCard from "@/components/organisms/PlanningCard.vue";
 
 export default {
   components: {
@@ -72,9 +68,6 @@ export default {
     UserNotifications,
     SnackNotificationContainer,
     ComptesPersosCard,
-    FriendsCard,
-    AvailabilitiesSummaryCard,
-    PlanningCard,
   },
 
   computed: {
@@ -113,4 +106,8 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss" scoped>
+.cta {
+  color: white;
+}
+</style>
