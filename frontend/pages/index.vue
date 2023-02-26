@@ -17,8 +17,11 @@
               <p>
                 Tu n'as pas encore été validé par les responsables bénévoles
                 <br />
-                N'hésite pas a compléter tes disponibilités pour augmenter tes
-                chances.
+                N'hésite pas a
+                <nuxt-link to="availabilities">
+                  compléter tes disponibilités
+                </nuxt-link>
+                pour augmenter tes chances.
               </p>
             </v-card-text>
           </v-card>
