@@ -16,6 +16,9 @@ export default Vue.extend({
   name: "Availabilities",
   components: { AvailabilitiesStepsCard },
   computed: {
+    userId(): number {
+      return +this.$accessor.user.me.id;
+    },
     detailMessage(): string {
       return this.$accessor.config.getConfig("availabilities_description");
     },
@@ -27,10 +30,10 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    if (!this.$accessor.user.me) this.$accessor.user.fetchUser();
+    if (!this.$accessor.user.me) await this.$accessor.user.fetchUser();
     await this.$accessor.charismaPeriod.fetchCharismaPeriods();
     await this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-      +this.$accessor.user.me.id
+      this.userId
     );
   },
 });

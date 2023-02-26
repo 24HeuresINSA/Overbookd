@@ -37,11 +37,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async fetchVolunteerAvailabilities(
-      { commit, dispatch, rootState },
-      userId: number
-    ) {
-      if (!rootState.user.me) dispatch("user/fetchUser", null, { root: true });
+    async fetchVolunteerAvailabilities({ commit, rootState }, userId: number) {
       commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
 
       const res = await safeCall(
