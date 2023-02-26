@@ -14,6 +14,7 @@ import { FaCommentModule } from './fa_comment/fa_comment.module';
 import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
+import { FriendModule } from './friend/friend.module';
 import { FtModule } from './ft/ft.module';
 import { FtFeedbackModule } from './ft_feedback/ft_feedback.module';
 import { FtReviewsModule } from './ft_reviews/ft_reviews.module';
@@ -83,6 +84,7 @@ import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-
     FtTeamRequestModule,
     CharismaPeriodModule,
     VolunteerAvailabilityModule,
+    FriendModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
