@@ -90,12 +90,12 @@ export default Vue.extend({
       };
     },
     isSaved(): (date: string | Date, hour: number) => boolean {
-      return (date: string | Date, hour: number) =>
-        this.savedAvailabilities.some(
-          this.isDateIncludedByPeriod(
-            this.updateDateWithHour(new Date(date), hour)
-          )
+      return (date: string | Date, hour: number) => {
+        const updatedDate = this.updateDateWithHour(new Date(date), hour);
+        return this.savedAvailabilities.some(
+          this.isDateIncludedByPeriod(updatedDate)
         );
+      };
     },
     isSelectedOrSaved(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
@@ -280,7 +280,7 @@ export default Vue.extend({
 
 /* Hover only on computer but not with touchscreen */
 @media (hover: hover) and (pointer: fine) {
-  .event:hover {
+  .event:hover:not(.saved) {
     background-color: rgba(25, 118, 210, 0.8);
   }
 }

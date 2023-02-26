@@ -24,11 +24,17 @@
             <v-btn
               v-if="index < calendarSteps.length - 1"
               color="primary"
+              :disabled="hasAvailabilityError"
               @click="incrementStep"
             >
               Suivant
             </v-btn>
-            <v-btn v-else color="success" @click="saveAvailabilities">
+            <v-btn
+              v-else
+              color="success"
+              :disabled="hasAvailabilityError"
+              @click="saveAvailabilities"
+            >
               Valider
             </v-btn>
           </v-card-actions>
@@ -102,6 +108,12 @@ export default Vue.extend({
           end: new Date("2023-05-17"),
         },
       };
+    },
+    hasAvailabilityError(): boolean {
+      return (
+        this.$accessor.volunteerAvailability.periodOrchestrator.errors.length >
+        0
+      );
     },
   },
   methods: {
