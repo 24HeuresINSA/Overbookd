@@ -21,6 +21,18 @@ export class PeriodOrchestrator {
     this.periods = [...this.periods, period];
   }
 
+  removePeriod(period: Period) {
+    this.periods = this.periods.filter(
+      PeriodOrchestrator.isDifferentPeriod(period),
+    );
+  }
+
+  private static isDifferentPeriod(period: Period): (value: Period) => boolean {
+    return (p) =>
+      p.start.getTime() !== period.start.getTime() ||
+      p.end.getTime() !== period.end.getTime();
+  }
+
   get errors(): PeriodWithError[] {
     return this.availabilityPeriods
       .filter((period) => {

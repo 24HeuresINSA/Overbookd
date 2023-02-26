@@ -2,6 +2,10 @@ import { updateItemToList } from "../../utils/functions/list";
 import { Period } from "../../utils/models/period";
 import { Availability } from "./volunteer-availability";
 
+export type PeriodWithError = Period & {
+  message: string;
+};
+
 export class PeriodOrchestrator {
   private periods: Period[] = [];
 
@@ -17,7 +21,19 @@ export class PeriodOrchestrator {
     this.periods = [...this.periods, period];
   }
 
-  get errors(): (Period & { message: string })[] {
+  removePeriod(period: Period) {
+    this.periods = this.periods.filter(
+      PeriodOrchestrator.isDifferentPeriod(period)
+    );
+  }
+
+  private static isDifferentPeriod(period: Period): (value: Period) => boolean {
+    return (p) =>
+      p.start.getTime() !== period.start.getTime() ||
+      p.end.getTime() !== period.end.getTime();
+  }
+
+  get errors(): PeriodWithError[] {
     return this.availabilityPeriods
       .filter((period) => {
         try {
@@ -81,10 +97,16 @@ export class PeriodOrchestrator {
     const mergeablePeriod = periods[mergeablePeriodIndex];
     const mergedPeriod = {
       start: new Date(
-        Math.min(mergeablePeriod.start.getTime(), period.start.getTime())
+        Math.min(
+          new Date(mergeablePeriod.start).getTime(),
+          new Date(period.start).getTime()
+        )
       ),
       end: new Date(
-        Math.max(mergeablePeriod.end.getTime(), period.end.getTime())
+        Math.max(
+          new Date(mergeablePeriod.end).getTime(),
+          new Date(period.end).getTime()
+        )
       ),
     };
     return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
@@ -93,8 +115,10 @@ export class PeriodOrchestrator {
   private static isFollowingPeriod(period: Period): (value: Period) => boolean {
     return (existingPeriod) => {
       return (
-        existingPeriod.start.getTime() === period.end.getTime() ||
-        existingPeriod.end.getTime() === period.start.getTime()
+        new Date(existingPeriod.start).getTime() <=
+          new Date(period.end).getTime() &&
+        new Date(existingPeriod.end).getTime() >=
+          new Date(period.start).getTime()
       );
     };
   }
