@@ -1,36 +1,27 @@
 <template>
   <div>
-    <v-container
-      v-if="!hasPermission('validated-user')"
-      class="align-stretch flex-wrap align-content-start"
-    >
+    <v-container class="align-stretch flex-wrap align-content-start">
       <v-row>
         <v-col cols="12" sm="6" md="4">
           <UserCard />
         </v-col>
 
-        <v-col cols="12" sm="6" md="8">
+        <v-col v-if="hasPermission('validated-user')" cols="12" sm="6" md="8">
+          <UserNotifications />
+        </v-col>
+
+        <v-col v-else cols="12" sm="6" md="8">
           <v-card>
             <v-card-title><h3>Tu n'as pas été validé</h3></v-card-title>
             <v-card-text style="font-size: 1.1em">
               <p>
-                Tu n'as pas encore été validé par le magnifique Lucas <br />
-                Tu ferais bien de lui donner 1 euros apparement ça aide ...
+                Tu n'as pas encore été validé par les responsables bénévoles
+                <br />
+                N'hésite pas a compléter tes disponibilités pour augmenter tes
+                chances.
               </p>
             </v-card-text>
           </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-container v-else class="align-stretch flex-wrap align-content-start">
-      <v-row>
-        <v-col cols="12" sm="6" md="4">
-          <UserCard />
-        </v-col>
-
-        <v-col cols="12" sm="6" md="8">
-          <UserNotifications />
         </v-col>
 
         <v-col cols="12" sm="6" md="4">
@@ -39,7 +30,7 @@
         </v-col>
 
         <v-col v-if="isManif()" cols="12" sm="6" md="8">
-          <AvailabilitiesSummaryCard v-if="isAvailabilityMomennt()" />
+          <AvailabilitiesSummaryCard v-if="isAvailabilityUpdateActive()" />
           <PlanningCard v-else />
         </v-col>
       </v-row>
@@ -110,12 +101,11 @@ export default {
         path: "/login",
       });
     },
-    isAvailabilityMomennt() {
-      return this.$accessor.config.getConfig("availabilityMoment");
+    isAvailabilityUpdateActive() {
+      return true;
     },
     isManif() {
-      //TODO: check if manif is active
-      return false;
+      return true;
     },
   },
 };
