@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
-import { User as UserV2, UserCreation } from "~/utils/models/user";
+import { Friend, User as UserV2, UserCreation } from "~/utils/models/user";
 import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
@@ -12,6 +12,8 @@ export const state = () => ({
   usernames: [] as Partial<User>[],
   mUser: {} as User,
   timeslots: [],
+  friends: [] as Friend[],
+  mFriends: [] as Friend[],
 });
 
 export type UserState = ReturnType<typeof state>;
@@ -42,6 +44,15 @@ export const mutations = mutationTree(state, {
   },
   SET_TIMESLOTS(state: UserState, data: any) {
     state.timeslots = data;
+  },
+  SET_FRIENDS(state: UserState, friends: Friend[]) {
+    state.friends = friends;
+  },
+  SET_MY_FRIENDS(state: UserState, friends: Friend[]) {
+    state.mFriends = friends;
+  },
+  ADD_MY_FRIEND(state: UserState, friend: Friend) {
+    state.mFriends = [...state.mFriends, friend];
   },
 });
 
@@ -81,6 +92,27 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepo.getAllUsers(this));
       if (res) {
         commit("SET_USERS", res.data);
+      }
+    },
+    async fetchFriends({ commit }) {
+      const res = await safeCall(this, UserRepo.getFriends(this));
+      if (res) {
+        commit("SET_FRIENDS", res.data);
+      }
+    },
+    async fetchMyFriends({ commit, state }) {
+      const res = await safeCall(
+        this,
+        UserRepo.getUserFriends(this, +state.me.id)
+      );
+      if (res) {
+        commit("SET_MY_FRIENDS", res.data);
+      }
+    },
+    async addFriend({ commit }, friend: Friend) {
+      const res = await safeCall(this, UserRepo.addFriend(this, friend.id));
+      if (res) {
+        commit("ADD_MY_FRIEND", res.data);
       }
     },
     async fetchUsernames({ commit }) {

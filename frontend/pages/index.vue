@@ -33,7 +33,7 @@
 
         <v-col cols="12" sm="6" md="4">
           <ComptesPersosCard v-if="hasPermission('cp')" />
-          <!-- <FriendsCard v-else /> -->
+          <FriendsCard v-else />
         </v-col>
       </v-row>
     </v-container>
@@ -61,6 +61,7 @@ import UserCard from "@/components/organisms/userCard.vue";
 import UserNotifications from "@/components/organisms/userNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
+import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
 
 export default {
   components: {
@@ -68,6 +69,7 @@ export default {
     UserNotifications,
     SnackNotificationContainer,
     ComptesPersosCard,
+    FriendsCard,
   },
 
   computed: {
