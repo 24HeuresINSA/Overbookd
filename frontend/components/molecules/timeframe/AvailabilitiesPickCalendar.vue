@@ -280,11 +280,8 @@ export default Vue.extend({
 
 /* Hover only on computer but not with touchscreen */
 @media (hover: hover) and (pointer: fine) {
-  .event:hover {
+  .event:hover:not(.saved) {
     background-color: rgba(25, 118, 210, 0.8);
-  }
-  .saved:hover {
-    background-color: rgba(76, 175, 80, 1);
   }
 }
 
