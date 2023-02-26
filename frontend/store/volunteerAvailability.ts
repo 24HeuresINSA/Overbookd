@@ -84,6 +84,8 @@ export const actions = actionTree(
 
       dispatch("user/fetchUser", null, { root: true });
       commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
+
+      return this.$router.push({ path: "/" });
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {

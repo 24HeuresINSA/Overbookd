@@ -5,16 +5,18 @@
     <h2>Mon Charisme : {{ charisma }}</h2>
     <v-spacer></v-spacer>
     <AvailabilitiesStepsCard />
+    <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AvailabilitiesStepsCard from "~/components/organisms/availabilities/AvailabilitiesStepsCard.vue";
 
 export default Vue.extend({
   name: "Availabilities",
-  components: { AvailabilitiesStepsCard },
+  components: { AvailabilitiesStepsCard, SnackNotificationContainer },
   computed: {
     userId(): number {
       return +this.$accessor.user.me.id;
