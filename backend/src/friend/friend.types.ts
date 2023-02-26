@@ -1,7 +1,10 @@
+export type Friend = {
+  id: number;
+  lastname: string;
+  firstname: string;
+  nickname: string;
+};
+
 export type FriendWithData = {
-    friend: {
-        id: number;
-        firstname: string;
-        lastname: string;
-    };
-  };
+  friend: Friend;
+};

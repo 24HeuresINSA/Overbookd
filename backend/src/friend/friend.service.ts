@@ -1,67 +1,70 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
-import { FriendCreationDto } from "./dto/friendCreation.dto";
-import { FriendResponseDto } from "./dto/friendResponse.dto";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma.service';
+import { FriendResponseDto } from './dto/friendResponse.dto';
+import { FriendWithData } from './friend.types';
 
 @Injectable()
 export class FriendService {
   constructor(private prisma: PrismaService) {}
 
-  async findMany(id: number): Promise<FriendResponseDto[] | null> {
+  private readonly SELECT_FRIEND = {
+    id: true,
+    lastname: true,
+    firstname: true,
+    nickname: true,
+  };
+
+  async findUserFriends(id: number): Promise<FriendResponseDto[] | null> {
     const friends = await this.prisma.friend.findMany({
       where: {
         requestorId: id,
       },
       select: {
         friend: {
-          select: {
-            id: true,
-            lastname: true,
-            firstname: true,
-          },
+          select: this.SELECT_FRIEND,
         },
       },
     });
 
-    return friends.map(({ friend }) => ({
-      id: friend.id,
-      firstname: friend.firstname,
-      lastname: friend.lastname,
-    }));
+    return friends.map(retrieveFriend);
   }
 
-  async create(id: number, friend: FriendCreationDto): Promise<FriendResponseDto | null> {
-    const newFriend = await this.prisma.friend.create({
+  async create(
+    requestorId: number,
+    friendId: number,
+  ): Promise<FriendResponseDto | null> {
+    const { friend } = await this.prisma.friend.create({
       data: {
-        requestorId: id,
-        friendId: friend.id,
+        requestorId,
+        friendId,
       },
       select: {
         friend: {
-          select: {
-            id: true,
-            lastname: true,
-            firstname: true,
-          },
+          select: this.SELECT_FRIEND,
         },
       },
     });
 
-    return {
-      id: newFriend.friend.id,
-      firstname: newFriend.friend.firstname,
-      lastname: newFriend.friend.lastname,
-    };
+    return friend;
   }
 
-  async delete(userId: number, friendId : number ): Promise<void> {
+  async delete(requestorId: number, friendId: number): Promise<void> {
     await this.prisma.friend.delete({
       where: {
         requestorId_friendId: {
-          requestorId: userId,
-          friendId: friendId,
+          requestorId,
+          friendId,
         },
       },
     });
-  } 
+  }
+}
+
+function retrieveFriend({ friend }: FriendWithData): FriendResponseDto {
+  return {
+    id: friend.id,
+    firstname: friend.firstname,
+    lastname: friend.lastname,
+    nickname: friend.nickname,
+  };
 }

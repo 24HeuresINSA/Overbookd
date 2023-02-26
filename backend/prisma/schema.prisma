@@ -78,8 +78,8 @@ model User {
   ftFeedbacks             FtFeedback[]
   ftUserRequests          FtUserRequest[]
   availabilities          VolunteerAvailability[]
-  friends                 Friend[]                @relation("friend")
   friendRequestors        Friend[]                @relation("friend_requestor")
+  friends                 Friend[]                @relation("friend")
 }
 
 model Team {

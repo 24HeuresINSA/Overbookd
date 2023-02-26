@@ -1,9 +1,30 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiNotFoundResponse, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { FriendCreationDto } from "./dto/friendCreation.dto";
-import { FriendResponseDto } from "./dto/friendResponse.dto";
-import { FriendService } from "./friend.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { RequestWithUserPayload } from 'src/app.controller';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FriendCreationDto } from './dto/friendCreation.dto';
+import { FriendResponseDto } from './dto/friendResponse.dto';
+import { FriendService } from './friend.service';
 
 @ApiBearerAuth()
 @ApiTags('friend')
@@ -15,9 +36,7 @@ import { FriendService } from "./friend.service";
 })
 @Controller('friend')
 export class FriendController {
-  constructor(
-    private readonly friendService: FriendService,
-  ) { }
+  constructor(private readonly friendService: FriendService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
@@ -38,22 +57,16 @@ export class FriendController {
   findMany(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<FriendResponseDto[]> {
-    return this.friendService.findMany(id);
+    return this.friendService.findUserFriends(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post(':id')
+  @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Create relation between two users',
     type: FriendResponseDto,
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'User id',
-    type: Number,
-    required: true,
   })
   @ApiBody({
     description: 'Friend id',
@@ -61,24 +74,18 @@ export class FriendController {
   })
   @ApiNotFoundResponse({ description: 'Friend not found' })
   create(
-    @Param('id', ParseIntPipe) id: number,
     @Body() friend: FriendCreationDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<FriendResponseDto> {
-    return this.friendService.create(id, friend);
+    return this.friendService.create(req.user.id, friend.id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':friendId/requestor/:userId')
+  @Delete(':friendId')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete relation between two users',
-  })
-  @ApiParam({
-    name: 'userId',
-    description: 'User id',
-    type: Number,
-    required: true,
   })
   @ApiParam({
     name: 'friendId',
@@ -88,9 +95,9 @@ export class FriendController {
   })
   @ApiNotFoundResponse({ description: 'Friend not found' })
   remove(
-    @Param('userId', ParseIntPipe) userId: number,
     @Param('friendId', ParseIntPipe) friendId: number,
+    @Request() req: RequestWithUserPayload,
   ): Promise<void> {
-    return this.friendService.delete(userId, friendId);
+    return this.friendService.delete(req.user.id, friendId);
   }
 }
