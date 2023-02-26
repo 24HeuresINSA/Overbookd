@@ -34,9 +34,22 @@ import { FriendService } from './friend.service';
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('friend')
+@Controller('friends')
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get friends list',
+    isArray: true,
+    type: FriendResponseDto,
+  })
+  getFriends(): Promise<FriendResponseDto[]> {
+    return this.friendService.findFriends();
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')

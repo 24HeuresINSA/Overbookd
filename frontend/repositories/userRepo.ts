@@ -7,7 +7,8 @@ import {
   User,
 } from "~/utils/models/repo";
 import { AxiosResponse } from "axios";
-import { UserCreation } from "~/utils/models/user";
+import { Friend, UserCreation } from "~/utils/models/user";
+import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/user";
 
@@ -81,5 +82,16 @@ export default {
     data: { userID: string; timeslotID: string }
   ) {
     return context.$axios.post(`${resource}/addAvailabilityToUser`, data);
+  },
+  getFriends(context: Context) {
+    return context.$axios.get<HttpStringified<Friend[]>>("friends");
+  },
+  getUserFriends(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<Friend[]>>(`friends/${userId}`);
+  },
+  addFriend(context: Context, friendId: number) {
+    return context.$axios.post<HttpStringified<Friend>>(`friends`, {
+      id: friendId,
+    });
   },
 };

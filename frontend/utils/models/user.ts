@@ -4,6 +4,10 @@ export interface User {
   lastname: string;
 }
 
+export interface Friend extends User {
+  nickname?: string;
+}
+
 export type DisplayedUser = Pick<User, "firstname" | "lastname">;
 
 export interface UserCreation extends Omit<User, "id"> {

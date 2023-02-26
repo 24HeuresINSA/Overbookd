@@ -29,6 +29,23 @@ export class FriendService {
     return friends.map(retrieveFriend);
   }
 
+  async findFriends(): Promise<FriendResponseDto[]> {
+    const nonFriendableTeams = ['fen', 'voiture', 'camion'];
+
+    return this.prisma.user.findMany({
+      select: this.SELECT_FRIEND,
+      where: {
+        team: {
+          none: {
+            team: {
+              code: { in: nonFriendableTeams },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async create(
     requestorId: number,
     friendId: number,
