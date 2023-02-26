@@ -72,7 +72,7 @@ export const actions = actionTree(
         repo.updateVolunteerAvailabilities(
           this,
           userId,
-          state.availabilityRegistery.availabilities
+          state.periodOrchestrator.availabilityPeriods
         ),
         {
           successMessage: "Disponibilitiés sauvegardées 🥳",

@@ -90,12 +90,12 @@ export default Vue.extend({
       };
     },
     isSaved(): (date: string | Date, hour: number) => boolean {
-      return (date: string | Date, hour: number) =>
-        this.savedAvailabilities.some(
-          this.isDateIncludedByPeriod(
-            this.updateDateWithHour(new Date(date), hour)
-          )
+      return (date: string | Date, hour: number) => {
+        const updatedDate = this.updateDateWithHour(new Date(date), hour);
+        return this.savedAvailabilities.some(
+          this.isDateIncludedByPeriod(updatedDate)
         );
+      };
     },
     isSelectedOrSaved(): (date: string | Date, hour: number) => boolean {
       return (date: string | Date, hour: number) =>
@@ -282,6 +282,9 @@ export default Vue.extend({
 @media (hover: hover) and (pointer: fine) {
   .event:hover {
     background-color: rgba(25, 118, 210, 0.8);
+  }
+  .saved:hover {
+    background-color: rgba(76, 175, 80, 1);
   }
 }
 

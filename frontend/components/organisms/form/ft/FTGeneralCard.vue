@@ -25,7 +25,7 @@
       ></SearchTeam>
       <SearchSignaLocation
         :location="mFT.location"
-        label="Lieux"
+        label="Lieu de rendez-vous"
         :boxed="false"
         :disabled="isValidatedByOwner"
         @change="updateLocation($event)"

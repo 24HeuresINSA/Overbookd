@@ -1,5 +1,4 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { Period } from "~/utils/models/period";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -17,11 +16,11 @@ export class VolunteerAvailabilityRepository {
   static async updateVolunteerAvailabilities(
     context: Context,
     userId: number,
-    availabilities: Availability[]
+    periods: Period[]
   ) {
     return context.$axios.post<HttpStringified<Period[]>>(
       `${this.basePath}/${userId}`,
-      availabilities
+      periods
     );
   }
 }
