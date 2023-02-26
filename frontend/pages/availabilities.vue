@@ -30,11 +30,12 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    if (!this.$accessor.user.me) await this.$accessor.user.fetchUser();
-    await this.$accessor.charismaPeriod.fetchCharismaPeriods();
-    await this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-      this.userId
-    );
+    await Promise.all([
+      this.$accessor.charismaPeriod.fetchCharismaPeriods(),
+      this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
+        this.userId
+      ),
+    ]);
   },
 });
 </script>
