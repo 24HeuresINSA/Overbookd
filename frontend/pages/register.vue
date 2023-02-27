@@ -287,7 +287,14 @@ export default Vue.extend({
   },
   methods: {
     async register() {
-      await this.$accessor.user.createUser(this.mUser);
+      const res = await this.$accessor.user.createUser(this.mUser);
+      if (!res) return;
+      await this.$auth.loginWith("local", {
+        data: { email: this.email, password: this.password },
+      });
+      await this.$router.push({
+        path: "/",
+      });
     },
     returnToLogin() {
       this.$router.push("/login");
@@ -333,10 +340,12 @@ export default Vue.extend({
     background-color: rgba($color: #000000, $alpha: 0.3);
     justify-content: center;
   }
+
   .data {
     display: flex;
     flex-direction: column;
     gap: 10px;
+
     &.dense {
       gap: 0px;
     }
