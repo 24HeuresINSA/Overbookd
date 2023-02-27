@@ -14,8 +14,10 @@
     <v-stepper-items>
       <v-stepper-content
         v-for="({ period }, index) in calendarSteps"
+        :id="`calendar-part-${index + 1}`"
         :key="`${period.start}-${period.end}`"
         :step="index + 1"
+        class="content-calendar"
       >
         <AvailabilitiesPickCalendar :period="period" />
         <v-card-actions>
@@ -130,3 +132,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+@media only screen and (max-width: 960px) {
+  @for $index from 1 through 5 {
+    #calendar-part-#{$index} {
+      padding: 24px 0px 16px 0px;
+    }
+  }
+}
+</style>
