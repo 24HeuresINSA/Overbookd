@@ -1,5 +1,5 @@
 <template>
-  <v-stepper v-model="step" alt-labels>
+  <v-stepper v-model="step">
     <v-stepper-header>
       <v-stepper-step
         v-for="({ title }, index) in calendarSteps"
@@ -12,34 +12,33 @@
     </v-stepper-header>
 
     <v-stepper-items>
-      <div
+      <v-stepper-content
         v-for="({ period }, index) in calendarSteps"
         :key="`${period.start}-${period.end}`"
+        :step="index + 1"
       >
-        <v-stepper-content :step="index + 1">
-          <AvailabilitiesPickCalendar :period="period" />
-          <v-card-actions>
-            <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn
-              v-if="index < calendarSteps.length - 1"
-              color="primary"
-              :disabled="hasAvailabilityError"
-              @click="incrementStep"
-            >
-              Suivant
-            </v-btn>
-            <v-btn
-              v-else
-              color="success"
-              :disabled="hasAvailabilityError"
-              @click="saveAvailabilities"
-            >
-              Valider
-            </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
-      </div>
+        <AvailabilitiesPickCalendar :period="period" />
+        <v-card-actions>
+          <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            v-if="index < calendarSteps.length - 1"
+            color="primary"
+            :disabled="hasAvailabilityError"
+            @click="incrementStep"
+          >
+            Suivant
+          </v-btn>
+          <v-btn
+            v-else
+            color="success"
+            :disabled="hasAvailabilityError"
+            @click="saveAvailabilities"
+          >
+            Valider
+          </v-btn>
+        </v-card-actions>
+      </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
 </template>
