@@ -127,12 +127,12 @@ export const actions = actionTree(
         commit("SET_USERNAMES", res.data);
       }
     },
-    async createUser(_, user: UserCreation) {
+    async createUser(_, user: UserCreation): Promise<any | undefined> {
       const res = await safeCall(this, UserRepo.createUser(this, user), {
         successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
       });
-      if (res) this.$router.push("/login");
+      return res;
     },
     async getUsername({ dispatch, state }, userID) {
       if (state.usernames.length === 0) {
