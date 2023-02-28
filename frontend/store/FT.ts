@@ -385,7 +385,7 @@ export const actions = actionTree(
 
       const feedback: Feedback = {
         subject: SubjectType.REFUSED,
-        comment: `La FA a été refusée${message ? `: ${message}` : "."}`,
+        comment: `La FT a été refusée${message ? `: ${message}` : "."}`,
         author,
         createdAt: new Date(),
       };
