@@ -10,12 +10,11 @@
         Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à
         tous tes créneaux et te laisserons du temps pour te reposer et profiter
         du festival !
-        <strong>
-          Les créneaux verts ne sont plus modifiables une fois sauvegardés.
-        </strong>
       </p>
       <p class="important text-center">
-        ⚠️ Les disponibilités doivent durer au moins 2 heures consécutives !
+        Les disponibilités doivent durer au moins 2 heures consécutives !
+        <br />
+        Les créneaux verts ne sont plus modifiables une fois sauvegardés.
       </p>
       <h2>Mon Charisme : {{ charisma }} 😎</h2>
     </div>
