@@ -6,8 +6,8 @@
   >
     <div>
       <v-card-title>Amis ❤️</v-card-title>
-      <v-card-text class="no-padding">
-        <v-list dense class="no-padding">
+      <v-card-text class="friends-card__content">
+        <v-list dense class="friends-list">
           <v-list-item-group>
             <v-list-item v-for="(friend, index) in mFriends" :key="index">
               <v-list-item-content>
@@ -24,13 +24,13 @@
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
             class="mb-2"
           ></v-img>
-          <div class="text-justify">
+          <p class="text-justify">
             N'hésites pas à demander d'autres bénévoles en ami !
-          </div>
-          <div class="text-justify">
+          </p>
+          <p class="text-justify">
             Si tu ne trouves pas son nom, alors il n'est pas encore inscrit sur
             le site.
-          </div>
+          </p>
         </v-container>
       </v-card-text>
     </div>
@@ -114,7 +114,8 @@ export default Vue.extend({
   }
 }
 
-.no-padding {
+.friends-card__content,
+.friends-list {
   padding-top: 0;
   padding-bottom: 0;
 }

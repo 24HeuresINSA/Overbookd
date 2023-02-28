@@ -122,7 +122,6 @@ export const actions = actionTree(
       }
     },
     async removeFriend({ commit }, friend: Friend) {
-      console.log(friend);
       const res = await safeCall(this, UserRepo.removeFriend(this, friend.id), {
         successMessage: `${friend.firstname} a été supprimé de tes amis`,
         errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
