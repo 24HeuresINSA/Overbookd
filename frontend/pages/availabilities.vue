@@ -2,19 +2,19 @@
   <div>
     <div class="header">
       <h1>Mes disponibilités</h1>
-      <div>
+      <p>
         Remplis tes disponibilités, plus tu as de points de charisme, plus tu as
         de chances de faire parti de l'aventure.
-      </div>
-      <div class="mb-3">
+      </p>
+      <p class="mb-3">
         Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à
         tous tes créneaux et te laisserons du temps pour te reposer et profiter
         du festival ! Les créneaux verts ne sont plus modifiables une fois
         cochés.
-      </div>
-      <div class="important text-center">
+      </p>
+      <p class="important text-center">
         ⚠️ Les disponibilités doivent durer au moins 2 heures consécutives !
-      </div>
+      </p>
       <h2>Mon Charisme : {{ charisma }} 😎</h2>
     </div>
     <AvailabilitiesStepsCard />
@@ -63,7 +63,8 @@ h1 {
 
 h2 {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 500;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 </style>
