@@ -16,7 +16,7 @@
             {{ me.nickname ? me.nickname : me.firstname }} 👋</v-card-title
           >
           <v-card-subtitle>
-            {{ me.firstname }}.{{ me.lastname }}</v-card-subtitle
+            {{ me.firstname }} {{ me.lastname }}</v-card-subtitle
           >
         </div>
       </v-container>
