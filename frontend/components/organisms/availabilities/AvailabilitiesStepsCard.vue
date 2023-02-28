@@ -19,7 +19,29 @@
         :step="index + 1"
         class="content-calendar"
       >
+        <v-card-actions>
+          <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            v-if="index < calendarSteps.length - 1"
+            color="primary"
+            :disabled="hasAvailabilityError"
+            @click="incrementStep"
+          >
+            Suivant
+          </v-btn>
+          <v-btn
+            v-else
+            color="success"
+            :disabled="hasAvailabilityError"
+            @click="saveAvailabilities"
+          >
+            Valider
+          </v-btn>
+        </v-card-actions>
+
         <AvailabilitiesPickCalendar :period="period" />
+
         <v-card-actions>
           <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
           <v-spacer></v-spacer>
@@ -134,10 +156,14 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.content-calendar {
+  padding-top: 5px;
+}
+
 @media only screen and (max-width: 960px) {
   @for $index from 1 through 5 {
     #calendar-part-#{$index} {
-      padding: 24px 0px 16px 0px;
+      padding: 5px 0 16px 0;
     }
   }
 }
