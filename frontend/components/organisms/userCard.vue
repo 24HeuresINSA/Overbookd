@@ -11,13 +11,13 @@
           class="pp"
         ></v-img>
         <div>
-          <v-card-title class="pt-2"
-            >Bonsoir
-            {{ me.nickname ? me.nickname : me.firstname }} 👋</v-card-title
-          >
+          <v-card-title class="pt-2">
+            Bonsoir
+            {{ me.nickname ? me.nickname : me.firstname }} 👋
+          </v-card-title>
           <v-card-subtitle>
-            {{ me.firstname }}.{{ me.lastname }}</v-card-subtitle
-          >
+            {{ me.firstname }} {{ me.lastname }}
+          </v-card-subtitle>
         </div>
       </v-container>
       <v-card-actions class="d-flex justify-start">

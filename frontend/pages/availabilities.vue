@@ -1,9 +1,22 @@
 <template>
   <div>
-    <h1>Mes disponibilités</h1>
-    <p>{{ detailMessage }}</p>
-    <h2>Mon Charisme : {{ charisma }}</h2>
-    <v-spacer></v-spacer>
+    <div class="header">
+      <h1>Mes disponibilités</h1>
+      <p>
+        Remplis tes disponibilités, plus tu as de points de charisme, plus tu as
+        de chances de faire parti de l'aventure.
+      </p>
+      <p class="mb-3">
+        Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à
+        tous tes créneaux et te laisserons du temps pour te reposer et profiter
+        du festival ! Les créneaux verts ne sont plus modifiables une fois
+        cochés.
+      </p>
+      <p class="important text-center">
+        ⚠️ Les disponibilités doivent durer au moins 2 heures consécutives !
+      </p>
+      <h2>Mon Charisme : {{ charisma }} 😎</h2>
+    </div>
     <AvailabilitiesStepsCard />
     <SnackNotificationContainer />
   </div>
@@ -21,14 +34,8 @@ export default Vue.extend({
     userId(): number {
       return +this.$accessor.user.me.id;
     },
-    detailMessage(): string {
-      return this.$accessor.config.getConfig("availabilities_description");
-    },
     charisma(): number {
       return this.$accessor.volunteerAvailability.currentCharisma ?? 0;
-    },
-    maxCharisma(): number {
-      return +this.$accessor.config.getConfig("max_charisma");
     },
   },
   async mounted() {
@@ -43,7 +50,21 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.header {
+  margin: 1rem;
+  text-align: justify;
+}
+
 h1 {
-  margin-left: 12px;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 </style>
