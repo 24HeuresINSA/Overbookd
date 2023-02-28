@@ -94,4 +94,9 @@ export default {
       id: friendId,
     });
   },
+  removeFriend(context: Context, friendId: number) {
+    return context.$axios.delete<HttpStringified<Friend>>(
+      `friends/${friendId}`
+    );
+  },
 };

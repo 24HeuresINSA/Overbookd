@@ -25,7 +25,9 @@
           @click="openBroadcastDialog()"
           >broadcast
         </v-btn>
-        <v-btn text to="/humans" class="ml-0">Liste des Orgas </v-btn>
+        <v-btn v-if="hasPermission('hard')" text to="/humans" class="ml-0">
+          Liste des Orgas
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>

@@ -54,6 +54,9 @@ export const mutations = mutationTree(state, {
   ADD_MY_FRIEND(state: UserState, friend: Friend) {
     state.mFriends = [...state.mFriends, friend];
   },
+  REMOVE_MY_FRIEND(state: UserState, friend: Friend) {
+    state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
+  },
 });
 
 export const getters = getterTree(state, {
@@ -110,11 +113,24 @@ export const actions = actionTree(
       }
     },
     async addFriend({ commit }, friend: Friend) {
-      const res = await safeCall(this, UserRepo.addFriend(this, friend.id));
+      const res = await safeCall(this, UserRepo.addFriend(this, friend.id), {
+        successMessage: `${friend.firstname} a été ajouté à tes amis 🎉`,
+        errorMessage: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
+      });
       if (res) {
         commit("ADD_MY_FRIEND", res.data);
       }
     },
+    async removeFriend({ commit }, friend: Friend) {
+      const res = await safeCall(this, UserRepo.removeFriend(this, friend.id), {
+        successMessage: `${friend.firstname} a été supprimé de tes amis`,
+        errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
+      });
+      if (res) {
+        commit("REMOVE_MY_FRIEND", friend);
+      }
+    },
+
     async fetchUsernames({ commit }) {
       const res = await safeCall(this, UserRepo.getAllUsernames(this));
       if (res) {

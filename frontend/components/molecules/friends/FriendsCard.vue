@@ -6,24 +6,30 @@
   >
     <div>
       <v-card-title>Amis ❤️</v-card-title>
-      <v-card-text>
-        <v-list dense>
+      <v-card-text class="friends-card__content">
+        <v-list dense class="friends-list">
           <v-list-item-group>
             <v-list-item v-for="(friend, index) in mFriends" :key="index">
               <v-list-item-content>
-                <v-list-item-title>
-                  {{ displayFriend(friend) }}
-                </v-list-item-title>
+                {{ displayFriend(friend) }}
               </v-list-item-content>
+              <v-list-item-action>
+                <v-icon @click="removeFriend(friend)">mdi-close</v-icon>
+              </v-list-item-action>
             </v-list-item>
           </v-list-item-group>
         </v-list>
         <v-container v-if="!mFriends.length">
           <v-img
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
+            class="mb-2"
           ></v-img>
-          <p>
-            Pour demander un orga en ami, mets le prénom, nom de tes potes !
+          <p class="text-justify">
+            N'hésites pas à demander d'autres bénévoles en ami !
+          </p>
+          <p class="text-justify">
+            Si tu ne trouves pas son nom, alors il n'est pas encore inscrit sur
+            le site.
           </p>
         </v-container>
       </v-card-text>
@@ -74,6 +80,7 @@ export default Vue.extend({
   },
   methods: {
     async sendFriendRequest() {
+      if (!this.newFriend.id) return;
       if (+this.me.id === this.newFriend.id) {
         // asked himself to be friend
         window.open(
@@ -82,9 +89,17 @@ export default Vue.extend({
         return;
       }
       this.$accessor.user.addFriend(this.newFriend);
+      this.newFriend = {
+        id: 0,
+        firstname: "",
+        lastname: "",
+      };
     },
     displayFriend(friend: Friend): string {
       return formatFriendName(friend);
+    },
+    removeFriend(friend: Friend) {
+      this.$accessor.user.removeFriend(friend);
     },
   },
 });
@@ -97,5 +112,15 @@ export default Vue.extend({
   &__input {
     width: 90%;
   }
+}
+
+.friends-card__content,
+.friends-list {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.text-justify {
+  text-align: justify;
 }
 </style>
