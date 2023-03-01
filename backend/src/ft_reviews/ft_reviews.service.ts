@@ -57,7 +57,7 @@ export class FtReviewsService {
     reviewer: UpsertFtReviewsDto,
     user: JwtPayload,
   ): Promise<CompleteFtResponseDto> {
-    await this.verifyValidRefusal(ftId, user);
+    await this.verifyRefusalValidity(ftId, user);
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
@@ -165,7 +165,7 @@ export class FtReviewsService {
     ft: DataBaseCompleteFt,
   ): Promise<boolean> {
     if (!ft) {
-      throw new NotFoundException('FT introvable');
+      throw new NotFoundException('FT introuvable');
     }
     if (ft.status !== FtStatus.VALIDATED) {
       throw new BadRequestException('FT non validée');
@@ -197,7 +197,7 @@ export class FtReviewsService {
     }
   }
 
-  private async verifyValidRefusal(
+  private async verifyRefusalValidity(
     ftId: number,
     jwtPayload: JwtPayload,
   ): Promise<void> {
@@ -207,7 +207,7 @@ export class FtReviewsService {
     });
 
     if (!ft) {
-      throw new NotFoundException('FT not found');
+      throw new NotFoundException('FT introuvable');
     }
 
     if (ft.status !== FtStatus.READY) {
@@ -217,7 +217,7 @@ export class FtReviewsService {
     const user = new JwtUtil(jwtPayload);
     if (!user.isAdmin() && !user.hasPermission('can-affect')) {
       throw new ForbiddenException(
-        'Only can-affect users can refuse FTs with status READY',
+        'Seuls les utilisateurs avec la permission can-affect peuvent refuser une FT avec le statut READY',
       );
     }
   }
