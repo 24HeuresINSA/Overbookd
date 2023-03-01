@@ -1,4 +1,4 @@
-import { SHIFT_HOURS } from '../../shift/shift.constant';
+import { SHIFT_HOURS_UTC } from '../../shift/shift.constant';
 import { ONE_HOUR_IN_MS } from '../../utils/date';
 import { Period } from './period.model';
 import {
@@ -62,9 +62,9 @@ export class Availability {
 
   private isOddHourDuringNightOrDayShift(start: Date) {
     return (
-      new Date(start).getHours() > SHIFT_HOURS.NIGHT &&
-      new Date(start).getHours() < SHIFT_HOURS.PARTY &&
-      new Date(start).getHours() % 2 !== 0
+      new Date(start).getUTCHours() > SHIFT_HOURS_UTC.NIGHT &&
+      new Date(start).getUTCHours() < SHIFT_HOURS_UTC.PARTY &&
+      new Date(start).getUTCHours() % 2 !== 0
     );
   }
 
