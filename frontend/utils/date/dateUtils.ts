@@ -1,4 +1,4 @@
-export const ONE_HOUR = 1000 * 60 * 60;
+export const ONE_HOUR_IN_MS = 1000 * 60 * 60;
 
 export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
@@ -35,7 +35,7 @@ function getTwoDigitsNumber(number: number): string {
 
 export function getHourDiff(start: Date, end: Date): number {
   const diff = end.getTime() - start.getTime();
-  return diff / ONE_HOUR;
+  return diff / ONE_HOUR_IN_MS;
 }
 
 export function roundMinutes(date: Date, round: number): Date | null {
