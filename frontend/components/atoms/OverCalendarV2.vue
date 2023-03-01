@@ -5,9 +5,11 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer class="calendar-title">
-        <div>
-          {{ title }}
-        </div>
+        <slot name="title">
+          <div>
+            {{ title }}
+          </div>
+        </slot>
       </v-spacer>
       <v-btn icon class="ma-2" @click="nextPage">
         <v-icon>mdi-chevron-right</v-icon>
