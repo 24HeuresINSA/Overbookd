@@ -24,12 +24,21 @@ export async function safeCall<T = any>(
     }
     return res;
   } catch (error: any) {
-    if (message?.errorMessage) {
-      const notif: SnackNotif = {
-        message: message.errorMessage,
-      };
-      store.dispatch("notif/pushNotification", notif);
-    }
+    const notifMessage = getNotifMessage(error, message?.errorMessage);
+    const notif: SnackNotif = {
+      message: notifMessage,
+    };
+    store.dispatch("notif/pushNotification", notif);
     return undefined;
   }
+}
+
+function getNotifMessage(error: any, customErrorMessage?: string) {
+  if (customErrorMessage) {
+    return customErrorMessage;
+  }
+  if (error.response?.data?.message) {
+    return error.response.data.message;
+  }
+  return "Une erreur est survenue 😢";
 }
