@@ -3,3 +3,9 @@ export const SHIFT_HOURS_UTC = {
   NIGHT: 4,
   PARTY: 16,
 };
+
+export const SHIFT_HOURS = {
+  DAY: SHIFT_HOURS_UTC.DAY + 2,
+  NIGHT: SHIFT_HOURS_UTC.NIGHT + 2,
+  PARTY: SHIFT_HOURS_UTC.PARTY + 2,
+};
