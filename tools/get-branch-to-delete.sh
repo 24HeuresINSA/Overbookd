@@ -15,27 +15,37 @@ CLOSED_MR=$(curl --silent --location --request GET 'https://gitlab.com/api/v4/pr
 
 BRANCHES=$(echo $CLOSED_MR | jq -r '.[] | .source_branch')
 
+TO_DELETE_BRANCHES=""
+
 for branch in $BRANCHES;
 do
     isRemoteBranchExist=$([[ -z $(git ls-remote --heads origin $branch) ]] && echo false  || echo true )
-    if [ $isRemoteBranchExist = true ];
-    then
+    if [ $isRemoteBranchExist = true ]; then
         echo -e "${BLUE}Going to delete ${branch}${NC}"
-        while true;
-        do
-            read -p "Do you want to proceed? (y/n) " yn
 
-            case $yn in 
-                [yY]es | [yY] )
-                    git push origin --delete $branch
-                    break;;
-                [nN]o | [nN] ) 
-                    echo "Continue verification..."
-                    break;;
-                * ) 
-                echo "Invalid response"
-                ;;
-            esac
-        done
+        read -p "Do you want to proceed? (y/n) " yn
+
+        case $yn in 
+            [yY]es | [yY] )
+                TO_DELETE_BRANCHES="${TO_DELETE_BRANCHES} ${branch}"
+                continue;;
+            [nN]o | [nN] ) 
+                echo "Continue verification..."
+                continue;;
+            * ) 
+            echo "Invalid response"
+            ;;
+        esac
+    else
+        break
     fi
 done
+
+echo About to delete: $TO_DELETE_BRANCHES
+
+for branch in $TO_DELETE_BRANCHES;
+do
+    git push origin --delete $branch
+done
+
+exit 1
