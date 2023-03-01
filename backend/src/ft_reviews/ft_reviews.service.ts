@@ -5,7 +5,7 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
-import { FtReview, FtStatus, reviewStatus } from '@prisma/client';
+import { FtReview, FtStatus, reviewStatus, Status } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
@@ -75,18 +75,12 @@ export class FtReviewsService {
       select: COMPLETE_FT_SELECT,
     });
 
-    const removeTimespans = this.prisma.ftTimespan.deleteMany({
-      where: {
-        timeWindows: {
-          ftId,
-        },
-      },
-    });
+    const removeTimespans = this.removeFtTimespans(ftId);
 
-    const [_, __, updatedFt] = await this.prisma.$transaction([
+    const [_, updatedFt] = await this.prisma.$transaction([
       upsertReview,
-      removeTimespans,
       updateStatus,
+      removeTimespans,
     ]);
     return this.ftService.convertFTtoApiContract(updatedFt);
   }
@@ -171,13 +165,13 @@ export class FtReviewsService {
     ft: DataBaseCompleteFt,
   ): Promise<boolean> {
     if (!ft) {
-      throw new NotFoundException('FT not found');
+      throw new NotFoundException('FT introvable');
     }
     if (ft.status !== FtStatus.VALIDATED) {
-      throw new BadRequestException('FT is not validated');
+      throw new BadRequestException('FT non validée');
     }
-    if (ft.fa.status !== FtStatus.VALIDATED) {
-      throw new BadRequestException('FA is not validated');
+    if (ft.fa.status !== Status.VALIDATED) {
+      throw new BadRequestException('FA non validée');
     }
     await this.checkForAlsoRequestedConflicts(ft);
     // TODO Check for other conflicts (availability, timespans)
@@ -199,7 +193,7 @@ export class FtReviewsService {
       .flatMap((ur) => ur.alsoRequestedBy);
 
     if (alsoRequestedBy.length > 0) {
-      throw new BadRequestException('Conflict with also requested');
+      throw new BadRequestException('La FT a des conflits avec d’autres FTs');
     }
   }
 
@@ -226,5 +220,15 @@ export class FtReviewsService {
         'Only can-affect users can refuse FTs with status READY',
       );
     }
+  }
+
+  private removeFtTimespans(ftId: number) {
+    return this.prisma.ftTimespan.deleteMany({
+      where: {
+        timeWindows: {
+          ftId,
+        },
+      },
+    });
   }
 }

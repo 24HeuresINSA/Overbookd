@@ -392,7 +392,10 @@ export const actions = actionTree(
       dispatch("addFeedback", feedback);
     },
 
-    async switchToReadyForAssignment({ commit, state }) {
+    async switchToReadyForAssignment(
+      { dispatch, commit, state },
+      author: User
+    ) {
       const resFT = await safeCall(
         this,
         repo.switchToReadyForAssignment(this, state.mFT.id),
@@ -401,6 +404,14 @@ export const actions = actionTree(
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
+
+      const feedback: Feedback = {
+        subject: SubjectType.READY,
+        comment: "Prête pour affectation !",
+        author,
+        createdAt: new Date(),
+      };
+      dispatch("addFeedback", feedback);
     },
 
     async previousPage({ state }) {
