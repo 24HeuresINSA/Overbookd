@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
 import { ValidationPipe } from '@nestjs/common';
+import { json, urlencoded } from 'body-parser';
 
 const allowedOrigins = [
   'http://localhost:3000',
@@ -52,6 +53,9 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
+
+  app.use(json({ limit: '200kb' }));
+  app.use(urlencoded({ limit: '200kb', extended: true }));
 
   await app.listen(3000);
 }
