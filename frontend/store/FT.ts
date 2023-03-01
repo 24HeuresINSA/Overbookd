@@ -393,13 +393,13 @@ export const actions = actionTree(
     },
 
     async switchToReadyForAssignment({ commit, state }) {
-      const res = await repo.switchToReadyForAssignment(this, state.mFT.id);
-      console.log(res);
-      if (!res.data) {
-        this.dispatch("notif/pushNotification", { message: res });
-        return;
-      }
-      const updatedFT = castFTWithDate(res.data);
+      const resFT = await safeCall(
+        this,
+        repo.switchToReadyForAssignment(this, state.mFT.id),
+        { successMessage: "FT prête à affectation 🥳" }
+      );
+      if (!resFT) return;
+      const updatedFT = castFTWithDate(resFT.data);
       commit("UPDATE_SELECTED_FT", updatedFT);
     },
 
