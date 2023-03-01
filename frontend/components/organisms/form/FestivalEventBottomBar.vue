@@ -369,7 +369,7 @@ export default Vue.extend({
       this.isRefuseDialogOpen = false;
     },
     async switchToReadyForAssignment() {
-      return this.$accessor.FT.switchToReadyForAssignment();
+      return this.$accessor.FT.switchToReadyForAssignment(this.meAsUser);
     },
     checkBeforeSubmitForReview() {
       const hasError = this.isFA
