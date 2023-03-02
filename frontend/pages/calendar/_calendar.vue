@@ -2,9 +2,10 @@
   <div>
     <!-- TODO - Check why we can't switch the week -->
     <OverCalendarV2
+      :date="calendarCentralDate"
       title="true"
-      :date="new Date('2023-05-12 00:00+02:00')"
       class="no-scroll elevation-2"
+      @change="updateDate"
     >
       <template #title>
         <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
@@ -39,6 +40,7 @@ export default {
     return {
       userId: this.$route.params.calendar,
       user: undefined,
+      calendarCentralDate: new Date("2023-05-12 00:00+02:00"),
     };
   },
   async created() {
@@ -66,6 +68,9 @@ export default {
       return (
         year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg
       );
+    },
+    updateDate(date) {
+      this.calendarCentralDate = date;
     },
     getColor(type) {
       switch (type) {
