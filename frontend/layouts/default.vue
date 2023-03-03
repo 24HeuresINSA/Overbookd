@@ -465,6 +465,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage["theme"] = this.$vuetify.theme.dark;
+      this.$accessor.theme.toggleDarkTheme();
     },
 
     async clickOnTitle() {

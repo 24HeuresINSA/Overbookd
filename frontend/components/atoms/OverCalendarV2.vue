@@ -69,8 +69,9 @@
             'shift-party': isPartyHour(hour),
             'shift-day': isDayHour(hour),
             'shift-night': isNightHour(hour),
+            'theme--dark': isDarkTheme,
           }"
-          :style="{ top: `${timeToY(time)}px` }"
+          :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
         ></div>
       </template>
     </v-calendar>
@@ -104,6 +105,11 @@ export default Vue.extend({
     weekdays: {
       type: Array,
       default: () => [1, 2, 3, 4, 5, 6, 0],
+    },
+  },
+  computed: {
+    isDarkTheme(): boolean {
+      return this.$accessor.theme.darkTheme;
     },
   },
   methods: {
@@ -147,11 +153,16 @@ export default Vue.extend({
   }
 
   .shift {
-    height: 2px;
+    height: 5px;
     position: absolute;
     left: -1px;
     right: 0;
     pointer-events: none;
+    &.theme--dark {
+      &.shift-night {
+        background-color: beige;
+      }
+    }
     &-party {
       background-color: purple;
     }
