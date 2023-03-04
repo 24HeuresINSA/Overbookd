@@ -52,6 +52,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    list: {
+      type: Array as () => User[] | null,
+      default: () => null,
+    },
   },
   data(): SearchUserData {
     return {
@@ -60,7 +64,7 @@ export default Vue.extend({
   },
   computed: {
     users() {
-      return this.$accessor.user.users;
+      return this.list ?? this.$accessor.user.users;
     },
   },
   mounted() {

@@ -1,14 +1,14 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
-import { Friend, User as UserV2, UserCreation } from "~/utils/models/user";
+import { Friend, UserCreation, UserWithPermissions } from "~/utils/models/user";
 import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
   me: {} as User,
-  users: [] as UserV2[],
+  users: [] as UserWithPermissions[],
   usernames: [] as Partial<User>[],
   mUser: {} as User,
   timeslots: [],
@@ -25,7 +25,7 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_USER(state: UserState, data: User) {
     state.mUser = data;
   },
-  SET_USERS(state: UserState, data: UserV2[]) {
+  SET_USERS(state: UserState, data: UserWithPermissions[]) {
     state.users = data;
   },
   SET_USERNAMES(state: UserState, data: User[]) {
@@ -71,6 +71,11 @@ export const getters = getterTree(state, {
       state.me.permissions.includes("admin") ||
       state.me.permissions.includes(permission) ||
       false
+    );
+  },
+  validatedUsers: (state: UserState) => {
+    return state.users.filter(({ permissions }) =>
+      permissions.includes("validated-user")
     );
   },
 });

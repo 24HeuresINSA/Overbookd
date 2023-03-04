@@ -4,6 +4,10 @@ export interface User {
   lastname: string;
 }
 
+export interface UserWithPermissions extends User {
+  permissions: string[];
+}
+
 export interface Friend extends User {
   nickname?: string;
 }

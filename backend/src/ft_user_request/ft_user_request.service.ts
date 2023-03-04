@@ -35,36 +35,16 @@ export class FtUserRequestService {
 
   async create(
     request: FtUserRequestDto[],
-    ftId: number,
     twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
-    const allRequests = request.map(({ userId }) => {
-      const userRequest = {
-        ftTimeWindowsId: twId,
-        userId: userId,
-      };
-      return this.prisma.ftUserRequest.upsert({
-        where: {
-          ftTimeWindowsId_userId: userRequest,
-        },
-        create: userRequest,
-
-        update: userRequest,
-        select: {
-          user: {
-            select: SELECT_USERNAME_WITH_ID,
-          },
-          ftTimeWindowsId: true,
-        },
-      });
-    });
-    const userRequests = await this.prisma.$transaction(allRequests);
+    const requestableUsers = await this.findRequestableUsers(request);
+    const userRequests = await this.createUserRequests(requestableUsers, twId);
     return Promise.all(
       userRequests.map((userRequest) => this.convertToUserRequest(userRequest)),
     );
   }
 
-  async delete(ftId: number, twId: number, userId: number): Promise<void> {
+  async delete(twId: number, userId: number): Promise<void> {
     await this.prisma.ftUserRequest.delete({
       where: {
         ftTimeWindowsId_userId: {
@@ -165,6 +145,57 @@ export class FtUserRequestService {
         userRequests: {
           select: {
             userId: true,
+          },
+        },
+      },
+    });
+  }
+
+  private async createUserRequests(
+    requestableUsers: { id: number }[],
+    twId: number,
+  ) {
+    const allRequests = requestableUsers.map(({ id }) => {
+      const userRequest = {
+        ftTimeWindowsId: twId,
+        userId: id,
+      };
+      return this.prisma.ftUserRequest.upsert({
+        where: {
+          ftTimeWindowsId_userId: userRequest,
+        },
+        create: userRequest,
+
+        update: userRequest,
+        select: {
+          user: {
+            select: SELECT_USERNAME_WITH_ID,
+          },
+          ftTimeWindowsId: true,
+        },
+      });
+    });
+    return this.prisma.$transaction(allRequests);
+  }
+
+  private async findRequestableUsers(request: FtUserRequestDto[]) {
+    const requestablePermission = 'validated-user';
+    const requestedUserIds = request.map(({ userId }) => userId);
+    return this.prisma.user.findMany({
+      select: { id: true },
+      where: {
+        id: { in: requestedUserIds },
+        team: {
+          some: {
+            team: {
+              permissions: {
+                some: {
+                  permission: {
+                    name: requestablePermission,
+                  },
+                },
+              },
+            },
           },
         },
       },

@@ -56,10 +56,9 @@ export class FtUserRequestController {
   })
   async create(
     @Body() requests: FtUserRequestDto[],
-    @Param('ftId', ParseIntPipe) ftId: number,
     @Param('twId', ParseIntPipe) twId: number,
   ): Promise<FtUserRequestResponseDto[]> {
-    return this.ftUserRequestService.create(requests, ftId, twId);
+    return this.ftUserRequestService.create(requests, twId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -71,10 +70,9 @@ export class FtUserRequestController {
     description: 'The user requests have been successfully deleted.',
   })
   async delete(
-    @Param('ftId', ParseIntPipe) ftId: number,
     @Param('twId', ParseIntPipe) twId: number,
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<void> {
-    return this.ftUserRequestService.delete(ftId, twId, userId);
+    return this.ftUserRequestService.delete(twId, userId);
   }
 }
