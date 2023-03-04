@@ -16,7 +16,7 @@
           />
         </v-chip-group>
         <div class="flex-row">
-          <SearchUser v-model="selectedUser" />
+          <SearchUser v-model="selectedUser" :list="requestableUsers" />
           <v-btn
             rounded
             class="margin-btn"
@@ -150,6 +150,9 @@ export default Vue.extend({
       return this.allUserRequests.some(
         (userRequest) => userRequest.user.id === this.selectedUser?.id
       );
+    },
+    requestableUsers(): User[] {
+      return this.$accessor.user.validatedUsers;
     },
   },
   watch: {
