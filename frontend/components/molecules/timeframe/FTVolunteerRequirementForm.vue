@@ -193,6 +193,7 @@ export default Vue.extend({
           lastname: this.selectedUser.lastname,
         },
         alsoRequestedBy: [],
+        isAvailable: true,
       });
       this.newUserRequests.push(userRequest);
       this.selectedUser = null;

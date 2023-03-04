@@ -106,15 +106,18 @@ interface AlsoRequiredByFt {
 export interface FTUserRequest {
   user: User;
   alsoRequestedBy: AlsoRequiredByFt[];
+  isAvailable: boolean;
 }
 
 export class FTUserRequestImpl implements FTUserRequest {
   user: User;
   alsoRequestedBy: AlsoRequiredByFt[];
+  isAvailable: boolean;
 
-  constructor({ user, alsoRequestedBy }: FTUserRequest) {
+  constructor({ user, alsoRequestedBy, isAvailable }: FTUserRequest) {
     this.user = user;
     this.alsoRequestedBy = alsoRequestedBy;
+    this.isAvailable = isAvailable;
   }
 
   static build(userRequest: FTUserRequest): FTUserRequestImpl {

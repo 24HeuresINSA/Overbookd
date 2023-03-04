@@ -45,13 +45,22 @@ export default Vue.extend({
       return formatUsername(this.userRequest.user);
     },
     hasErrors(): boolean {
-      return this.userRequest.alsoRequestedBy.length > 0;
+      return (
+        this.userRequest.alsoRequestedBy.length > 0 ||
+        !this.userRequest.isAvailable
+      );
     },
     errorMessages(): string[] {
       if (!this.hasErrors) return [];
+      return [...this.alsoRequestedByErrors, this.notAvailableError];
+    },
+    alsoRequestedByErrors(): string[] {
       return this.userRequest.alsoRequestedBy.map(
         (ft) => `Aussi demande dans la FT #${ft.id} - ${ft.name}`
       );
+    },
+    notAvailableError(): string {
+      return "N'est pas disponible sur le creneau";
     },
   },
   methods: {
