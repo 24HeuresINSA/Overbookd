@@ -6,10 +6,21 @@ interface AuthOptions {
   data: any;
 }
 
+interface AuthStrategy {
+  token: GetterSetter<string>;
+  refreshToken: GetterSetter<string>;
+}
+
+interface GetterSetter<T> {
+  get: () => T | undefined;
+  set: (value: T) => void;
+}
+
 interface Auth {
   logout: () => Promise<void>;
   loginWith: (startegy: "local", options: AuthOptions) => Promise<void>;
   loggedIn: boolean;
+  strategy: AuthStrategy;
 }
 
 declare module "vue/types/vue" {
