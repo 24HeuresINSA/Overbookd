@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PeriodForm } from 'src/gear-requests/gearRequests.service';
 import { PrismaService } from 'src/prisma.service';
 import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 import {
   DataBaseUserRequest,
   FtUserRequestResponseDto,
@@ -78,6 +79,10 @@ export class FtUserRequestService {
     userRequest: DataBaseUserRequest,
   ): Promise<UserRequest> {
     const timeWindow = await this.retrieveTimeWindow(userRequest);
+    const isAvailable = await this.isUserAvailable(userRequest.user.id, {
+      start: timeWindow.start,
+      end: timeWindow.end,
+    });
     const fts = await this.findFtWhereUserIsAlsoRequestedInSamePeriod(
       timeWindow,
       userRequest,
@@ -86,7 +91,32 @@ export class FtUserRequestService {
       ...ft,
       period: { start, end },
     }));
-    return { ...userRequest, alsoRequestedBy };
+    return { ...userRequest, alsoRequestedBy, isAvailable };
+  }
+
+  private async isUserAvailable(
+    userId: number,
+    period: Period,
+  ): Promise<boolean> {
+    const matchingAvailability = await this.findMatchingAvailabilities(
+      userId,
+      period,
+    );
+    return Boolean(matchingAvailability);
+  }
+
+  private async findMatchingAvailabilities(
+    userId: number,
+    { start, end }: Period,
+  ) {
+    return this.prisma.volunteerAvailability.findFirst({
+      select: { userId: true },
+      where: {
+        userId,
+        start: { lte: start },
+        end: { gte: end },
+      },
+    });
   }
 
   private async findFtWhereUserIsAlsoRequestedInSamePeriod(

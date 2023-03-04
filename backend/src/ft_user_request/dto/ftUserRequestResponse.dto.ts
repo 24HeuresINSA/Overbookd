@@ -5,6 +5,7 @@ import { PeriodForm } from 'src/gear-requests/gearRequests.service';
 export interface UserRequest {
   user: UserNameWithId;
   alsoRequestedBy: AlsoRequestedByFT[];
+  isAvailable: boolean;
 }
 
 export type DataBaseUserRequest = Pick<UserRequest, 'user'> & {
@@ -31,4 +32,10 @@ export class FtUserRequestResponseDto implements UserRequest {
     type: AlsoRequestedByFTRepresentation,
   })
   alsoRequestedBy: AlsoRequestedByFT[];
+
+  @ApiProperty({
+    description: 'Is the volunteer available during requested period',
+    type: Boolean,
+  })
+  isAvailable: boolean;
 }
