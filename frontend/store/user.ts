@@ -91,7 +91,9 @@ export const actions = actionTree(
       }
     },
     async fetchUser({ commit }) {
-      const res = await safeCall(this, UserRepo.getMyUser(this));
+      const res = await safeCall(this, UserRepo.getMyUser(this), {
+        errorMessage: "Session expirée 💨",
+      });
       if (res) {
         commit("SET_USER", res.data);
       }
