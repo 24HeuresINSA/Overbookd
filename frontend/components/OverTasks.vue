@@ -7,19 +7,16 @@
             label="Recherche"
             style="padding: 2px"
             @input="updateFilters('search', $event)"
-          ></v-text-field>
-          <TeamSearchField
-            @input="updateFilters('team', $event)"
-          ></TeamSearchField>
-          <v-switch
-            label="ft non-complète"
-            dense
-            :input-value="true"
-            @change="updateFilters('areAssignedFTsDisplayed', $event)"
           />
+          <TeamSearchField @input="updateFilters('team', $event)" />
         </div>
         <div class="content">
-          <ListFT class="ft" />
+          <ListTasks class="task" />
+          <p>
+            Nombre de tache possible :
+            {{ $accessor.assignment.availableTimeSpans.length }}
+          </p>
+
           <CommentsDisplay class="comment" />
         </div>
       </v-card-text>
@@ -28,13 +25,14 @@
 </template>
 
 <script>
-import ListFT from "./listFT.vue";
-import TeamSearchField from "./atoms/TeamSearchField.vue";
+// list tasks that are assigned to user and available tasks
+import ListTasks from "./ListTasks";
 import CommentsDisplay from "./molecules/commentsDisplay.vue";
+import TeamSearchField from "./atoms/TeamSearchField.vue";
 
 export default {
   name: "OverTasks",
-  components: { ListFT, TeamSearchField, CommentsDisplay },
+  components: { ListTasks, CommentsDisplay, TeamSearchField },
 
   data() {
     return {

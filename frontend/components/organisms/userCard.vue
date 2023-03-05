@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import OverChips from "@/components/atoms/overChips.vue";
+import OverChips from "~/components/atoms/OverChips.vue";
 import Vue from "vue";
 import { mapState } from "vuex";
 import { UserState } from "~/store/user";

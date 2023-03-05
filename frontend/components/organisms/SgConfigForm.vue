@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts">
-import cloneDeep from "lodash/cloneDeep";
 import Vue from "vue";
 import { Configuration } from "~/utils/models/Configuration";
 
@@ -84,7 +83,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.tempSgConfig = cloneDeep(this.sgConfig);
+    this.tempSgConfig = { ...this.sgConfig };
   },
   methods: {
     save() {

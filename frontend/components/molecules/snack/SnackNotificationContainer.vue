@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SnackNotification from "@/components/atoms/snackNotification.vue";
+import SnackNotification from "~/components/atoms/SnackNotification.vue";
 import { SnackNotif } from "~/utils/models/store";
 
 export default Vue.extend({

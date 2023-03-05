@@ -173,78 +173,13 @@
             </v-col>
           </v-row>
         </v-col>
-        <!--
-        <v-col md="7">
-          <v-sheet
-            class="charismaContainer"
-            color="warning"
-            outlined
-            rounded
-            width="30%"
-            align="center"
-          >
-            <h2 class="userCharisma">
-              Charisme total :
-              {{ mUser.charisma === undefined ? 0 : mUser.charisma }}
-            </h2></v-sheet
-          >
-          <AvailabilitiesCalendar :m-user="mUser" class="myCal" />
-          <v-row>
-            <v-col md="3">
-              <v-btn text @click="saveUser()">sauvegarder</v-btn>
-            </v-col>
-            <v-col md="3">
-              <v-btn
-                v-if="hasEditingRole"
-                text
-                color="red"
-                @click="deleteUser()"
-                >supprimer</v-btn
-              >
-            </v-col>
-            
-            <v-col md="3">
-              <v-btn
-                v-if="hasEditingRole && !isValidated()"
-                color="#48C52D"
-                @click="validateUser()"
-                >Valider (soft)</v-btn
-              >
-              <v-btn
-                v-if="hasEditingRole && isValidated() && isSoft()"
-                color="red"
-                @click="$refs.confirmUnassign.open()"
-                >Dévalider (soft)</v-btn
-              >
-              <ConfirmDialog ref="confirmUnassign" @confirm="unvalidateUser">
-                Ce soft sera desaffecter de <b>toutes</b> ses taches
-                actuellement affectées !
-              </ConfirmDialog>
-            </v-col>
-            <v-col md="3">
-              <v-btn
-                v-if="hasEditingRole"
-                color="#65B3F3"
-                @click="isEditingAvailability = true"
-                >Modifier dispos</v-btn
-              ></v-col
-            >
-
-          </v-row>        
-        </v-col>
-        -->
       </v-row>
     </v-card>
-    <!--
-    <v-dialog v-model="isEditingAvailability" width="80%"
-      ><ModificationCard :user="user"
-    /></v-dialog>
-    -->
   </v-dialog>
 </template>
 
 <script>
-import OverChips from "~/components/atoms/overChips";
+import OverChips from "~/components/atoms/OverChips";
 import { RepoFactory } from "~/repositories/repoFactory";
 import userRepo from "~/repositories/userRepo";
 import { safeCall } from "../../utils/api/calls";

@@ -81,10 +81,12 @@
 import planningRepo from "~/repositories/planningRepo";
 import Loader from "~/components/atoms/Loader.vue";
 import { Snack } from "~/utils/models/snack";
+import OverField from "~/components/OverField.vue";
 
 export default {
   components: {
     Loader,
+    OverField,
   },
   data() {
     return {

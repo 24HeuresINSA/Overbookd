@@ -6,6 +6,7 @@
 
 <script>
 export default {
+  name: "StatsCard",
   props: { status: { type: String, required: true } },
   computed: {
     displayedStatus() {

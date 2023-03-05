@@ -261,7 +261,7 @@
 </template>
 
 <script>
-import OverChips from "../components/atoms/overChips";
+import OverChips from "../components/atoms/OverChips";
 import Fuse from "fuse.js";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import UserInformation from "../components/organisms/userInformation";

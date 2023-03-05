@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import UsersList from "./usersList";
+import UsersList from "./UsersList";
 import FriendsDisplay from "./molecules/friends/FriendsDisplay.vue";
 
 export default {

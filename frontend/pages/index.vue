@@ -58,7 +58,7 @@
 
 <script>
 import UserCard from "@/components/organisms/userCard.vue";
-import UserNotifications from "@/components/organisms/userNotifications.vue";
+import UserNotifications from "~/components/organisms/UserNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
 import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";

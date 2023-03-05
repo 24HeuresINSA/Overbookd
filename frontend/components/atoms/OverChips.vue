@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "OverChips",
@@ -23,9 +24,8 @@ export default Vue.extend({
       default: () => [],
     },
   },
-
   computed: {
-    mRoles() {
+    mRoles(): Team[] {
       return this.$accessor.team.getTeams(this.roles);
     },
   },

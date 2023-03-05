@@ -33,7 +33,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "ConfirmamtionMessage",
+  name: "ConfirmationMessage",
   props: {
     confirmColor: {
       type: String,

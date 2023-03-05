@@ -43,7 +43,7 @@ import { Snack } from "~/utils/models/snack";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 
 export default {
-  name: "ListTasks",
+  name: "ListFT",
   components: { MiniUserBadge },
 
   data() {

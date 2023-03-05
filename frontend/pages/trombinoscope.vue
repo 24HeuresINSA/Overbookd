@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import OverChips from "~/components/atoms/overChips";
+import OverChips from "~/components/atoms/OverChips";
 export default {
   name: "Trombinoscope",
   components: { OverChips },

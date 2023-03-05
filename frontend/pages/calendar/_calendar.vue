@@ -51,7 +51,7 @@
 <script>
 import { RepoFactory } from "~/repositories/repoFactory";
 import { Snack } from "~/utils/models/snack";
-import OverChips from "~/components/atoms/overChips";
+import OverChips from "~/components/atoms/OverChips";
 
 export default {
   name: "Calendar",
