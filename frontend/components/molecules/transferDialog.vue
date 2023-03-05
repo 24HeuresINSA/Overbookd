@@ -56,7 +56,6 @@ export default Vue.extend({
         reason: "",
         isValid: false,
       },
-      userList: [] as UserAutocompleteItem[],
     };
   },
   computed: {
@@ -83,21 +82,12 @@ export default Vue.extend({
         }
       },
     },
-  },
-  async mounted() {
-    let users = this.$accessor.user.usernames;
-    if (users.length === 0) {
-      // fetch usernames
-      await this.$accessor.user.fetchUsernamesWithCP();
-      users = this.$accessor.user.usernames;
-    }
-    // sort alphabetically
-    this.userList = users.map((user) => {
-      return {
-        text: user.username,
+    userList(): { text: string; value: Partial<User> }[] {
+      return this.$accessor.user.usernames.map((user) => ({
+        text: user.username ?? "",
         value: user,
-      } as any;
-    });
+      }));
+    },
   },
   methods: {
     async transferMoney(): Promise<any> {
