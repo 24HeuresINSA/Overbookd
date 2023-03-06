@@ -1,9 +1,9 @@
 <template>
-  <v-dialog v-model="mToggle" width="100%">
+  <v-dialog v-model="mToggle">
     <v-card>
-      <v-row style="display: contents">
-        <v-col md="12"
-          ><v-img
+      <div class="user-information">
+        <div class="user-information__personnal-data">
+          <v-img
             v-if="mUser.pp"
             :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
             max-height="200px"
@@ -172,8 +172,11 @@
               >
             </v-col>
           </v-row>
-        </v-col>
-      </v-row>
+        </div>
+        <div class="user-information__availabilities">
+          <AvailabilitiesSumup :user-id="mUser.id" />
+        </div>
+      </div>
     </v-card>
   </v-dialog>
 </template>
@@ -183,11 +186,13 @@ import OverChips from "~/components/atoms/OverChips";
 import { RepoFactory } from "~/repositories/repoFactory";
 import userRepo from "~/repositories/userRepo";
 import { safeCall } from "../../utils/api/calls";
+import AvailabilitiesSumup from "../molecules/availabilities/AvailabilitiesSumup.vue";
 
 export default {
   name: "UserInformation",
   components: {
     OverChips,
+    AvailabilitiesSumup,
   },
   props: {
     user: {
@@ -370,15 +375,27 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.myCal {
-  height: 65vh;
-  width: 50vw;
+<style lang="scss" scoped>
+.user-information {
+  display: flex;
+  gap: 10px;
+
+  &__personnal-data {
+    width: 40%;
+  }
+  &__availabilities {
+    width: 60%;
+  }
 }
-.charismaContainer {
-  margin-top: 4vh;
-  .userCharisma {
-    color: rgb(0, 0, 0);
+
+@media only screen and(max-width: 965px) {
+  .user-information {
+    flex-direction: column;
+
+    &__personnal-data,
+    &__availabilities {
+      width: 100%;
+    }
   }
 }
 </style>

@@ -56,3 +56,7 @@ export function formatDateWithExplicitMonth(date: Date | string): string {
   };
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
+
+export function setDateHour(date: Date, hour: number): Date {
+  return new Date(new Date(date.setHours(hour)).setMinutes(0));
+}

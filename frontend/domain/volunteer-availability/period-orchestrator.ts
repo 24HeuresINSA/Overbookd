@@ -22,15 +22,38 @@ export class PeriodOrchestrator {
   }
 
   removePeriod(period: Period) {
-    this.periods = this.periods.filter(
-      PeriodOrchestrator.isDifferentPeriod(period)
-    );
+    this.periods = this.periods.reduce((periods, currentPeriod) => {
+      const isPeriodIncluded = this.isPeriodIncludedBy(period)(currentPeriod);
+      if (!isPeriodIncluded) return [...periods, currentPeriod];
+
+      const splitedPeriods = this.splitPeriod(currentPeriod, period);
+      return [
+        ...periods,
+        ...splitedPeriods.filter(PeriodOrchestrator.hasDuration),
+      ];
+    }, [] as Period[]);
   }
 
-  private static isDifferentPeriod(period: Period): (value: Period) => boolean {
+  private splitPeriod(currentPeriod: Period, period: Period): Period[] {
+    const pastPeriod = {
+      start: currentPeriod.start,
+      end: period.start,
+    };
+    const futurPeriod = {
+      start: period.end,
+      end: currentPeriod.end,
+    };
+    return [pastPeriod, futurPeriod];
+  }
+
+  private isPeriodIncludedBy(period: Period): (value: Period) => boolean {
     return (p) =>
-      p.start.getTime() !== period.start.getTime() ||
-      p.end.getTime() !== period.end.getTime();
+      p.start.getTime() <= period.start.getTime() &&
+      p.end.getTime() >= period.end.getTime();
+  }
+
+  private static hasDuration(period: Period): boolean {
+    return period.start.getTime() !== period.end.getTime();
   }
 
   get errors(): PeriodWithError[] {

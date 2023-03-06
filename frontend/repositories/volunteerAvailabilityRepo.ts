@@ -23,4 +23,15 @@ export class VolunteerAvailabilityRepository {
       periods
     );
   }
+
+  static async overrideVolunteerAvailabilities(
+    context: Context,
+    userId: number,
+    periods: Period[]
+  ) {
+    return context.$axios.patch<HttpStringified<Period[]>>(
+      `${this.basePath}/${userId}`,
+      periods
+    );
+  }
 }
