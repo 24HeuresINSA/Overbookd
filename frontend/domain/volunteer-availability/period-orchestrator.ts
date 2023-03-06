@@ -27,10 +27,7 @@ export class PeriodOrchestrator {
       if (!isPeriodIncluded) return [...periods, currentPeriod];
 
       const splitedPeriods = this.splitPeriod(currentPeriod, period);
-      return [
-        ...periods,
-        ...splitedPeriods.filter(PeriodOrchestrator.hasDuration),
-      ];
+      return [...periods, ...splitedPeriods];
     }, [] as Period[]);
   }
 
@@ -43,7 +40,7 @@ export class PeriodOrchestrator {
       start: period.end,
       end: currentPeriod.end,
     };
-    return [pastPeriod, futurPeriod];
+    return [pastPeriod, futurPeriod].filter(PeriodOrchestrator.hasDuration);
   }
 
   private isPeriodIncludedBy(period: Period): (value: Period) => boolean {

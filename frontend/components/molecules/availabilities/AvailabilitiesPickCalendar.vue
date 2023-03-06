@@ -84,12 +84,15 @@ export default Vue.extend({
       return nightShiftDurationHours + dayAndNightShiftsDurationHours / 2;
     },
     isSelected(): (date: string | Date, hour: number) => boolean {
-      return isAvailabilityPeriodSelected(this.selectedAvailabilities, []);
+      return isAvailabilityPeriodSelected(
+        this.selectedAvailabilities,
+        this.savedAvailabilities
+      );
     },
     isAllPeriodsInDaySelected(): (date: Date) => boolean {
       return (date: Date) => {
-        const start = new Date(new Date(date).setHours(0));
-        const end = this.computeTomorrowDate(start);
+        const start = setDateHour(date, 0);
+        const end = computeTomorrowDate(start);
         const period = { start, end };
         return this.selectedAvailabilities.some(
           this.isPeriodIncludedByAnother(period)
@@ -132,8 +135,7 @@ export default Vue.extend({
     generateWeekdayList(weekdays: number[], date: Date): number[] {
       if (date > this.period.end) return weekdays;
       const weekday = date.getDay();
-      const tomorrow = new Date(date);
-      tomorrow.setDate(date.getDate() + 1);
+      const tomorrow = computeTomorrowDate(date);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
     selectPeriod(dateString: string, hour: number) {
