@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import UserResume from "~/components/organisms/UserResume";
-import UserInformation from "./organisms/userInformation";
 import { Snack } from "~/utils/models/snack";
+import UserInformation from "./organisms/UserInformation.vue";
+import UserResume from "./organisms/UserResume.vue";
 
 export default {
   name: "UsersList",

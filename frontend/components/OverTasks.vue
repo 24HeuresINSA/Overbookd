@@ -27,7 +27,7 @@
 <script>
 // list tasks that are assigned to user and available tasks
 import ListTasks from "./ListTasks";
-import CommentsDisplay from "./molecules/commentsDisplay.vue";
+import CommentsDisplay from "./molecules/CommentsDisplay.vue";
 import TeamSearchField from "./atoms/TeamSearchField.vue";
 
 export default {

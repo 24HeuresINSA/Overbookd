@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PPDialog />
+    <ProfilePictureDialog />
     <v-card v-if="me">
       <v-container class="d-flex flex-no-wrap">
         <v-img
@@ -55,11 +55,11 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
-import PPDialog from "@/components/molecules/ppDialog.vue";
+import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
 
 export default Vue.extend({
   name: "UserCard",
-  components: { OverChips, PPDialog },
+  components: { OverChips, ProfilePictureDialog },
   props: {
     user: {
       type: Object,

@@ -57,10 +57,10 @@
 </template>
 
 <script>
-import UserCard from "@/components/organisms/userCard.vue";
+import UserCard from "~/components/organisms/UserCard.vue";
 import UserNotifications from "~/components/organisms/UserNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import ComptesPersosCard from "@/components/organisms/comptesPersosCard.vue";
+import ComptesPersosCard from "~/components/organisms/ComptesPersosCard.vue";
 import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
 
 export default {

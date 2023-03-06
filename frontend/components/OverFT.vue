@@ -30,7 +30,7 @@
 <script>
 import ListFT from "./ListFT.vue";
 import TeamSearchField from "./atoms/TeamSearchField.vue";
-import CommentsDisplay from "./molecules/commentsDisplay.vue";
+import CommentsDisplay from "./molecules/CommentsDisplay.vue";
 
 export default {
   name: "OverFT",

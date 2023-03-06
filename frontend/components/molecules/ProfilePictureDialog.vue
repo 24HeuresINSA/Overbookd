@@ -17,7 +17,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 
 export default Vue.extend({
-  name: "PPDialog",
+  name: "ProfilePictureDialog",
   data() {
     return {
       PP: undefined as undefined | File,

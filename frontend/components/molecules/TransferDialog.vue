@@ -82,7 +82,7 @@ export default Vue.extend({
         }
       },
     },
-    userList(): { text: string; value: Partial<User> }[] {
+    userList(): UserAutocompleteItem[] {
       return this.$accessor.user.usernames.map((user) => ({
         text: user.username ?? "",
         value: user,
