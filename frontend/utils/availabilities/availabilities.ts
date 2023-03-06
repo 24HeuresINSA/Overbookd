@@ -40,3 +40,11 @@ export function hasAvailabilityPeriodError(
     return periodOrchestrator.errors.some(isSamePeriod(period));
   };
 }
+
+export function isPeriodIncludedByAnother(
+  period: Period
+): (value: Period) => boolean {
+  return (anotherPeriod) =>
+    anotherPeriod.start.getTime() <= period.start.getTime() &&
+    anotherPeriod.end.getTime() >= period.end.getTime();
+}
