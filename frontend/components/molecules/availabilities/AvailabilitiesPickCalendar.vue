@@ -44,7 +44,7 @@ import {
 import { generateNewPeriod } from "~/utils/availabilities/period";
 import { getCharismaByDate } from "~/utils/models/charismaPeriod";
 import { Period } from "~/utils/models/period";
-import { isPartyShift, SHIFT_HOURS } from "~/utils/shift/shift";
+import { isPartyShift } from "~/utils/shift/shift";
 import {
   formatDateDayName,
   formatDateDayNumber,
@@ -76,13 +76,6 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    periodsInDay(): number {
-      const dayAndNightShiftsDurationHours =
-        SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT;
-      const nightShiftDurationHours =
-        24 - SHIFT_HOURS.PARTY + SHIFT_HOURS.NIGHT;
-      return nightShiftDurationHours + dayAndNightShiftsDurationHours / 2;
-    },
     isSelected(): (date: string | Date, hour: number) => boolean {
       return isAvailabilityPeriodSelected(
         this.selectedAvailabilities,
@@ -95,16 +88,12 @@ export default Vue.extend({
         const end = computeTomorrowDate(start);
         const period = { start, end };
         return this.selectedAvailabilities.some(
-          this.isPeriodIncludedByAnother(period)
+          isPeriodIncludedByAnother(period)
         );
       };
     },
     isSaved(): (date: string | Date, hour: number) => boolean {
       return isAvailabilityPeriodSaved(this.savedAvailabilities);
-    },
-    isSelectedOrSaved(): (date: string | Date, hour: number) => boolean {
-      return (date: string | Date, hour: number) =>
-        this.isSelected(date, hour) || this.isSaved(date, hour);
     },
     hasError(): (date: string | Date, hour: number) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
@@ -114,9 +103,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    isPeriodIncludedByAnother(period: Period): (value: Period) => boolean {
-      return isPeriodIncludedByAnother(period);
-    },
     isEndOfPeriod(hour: number): boolean {
       return isEndOfAvailabilityPeriod(hour);
     },
@@ -128,9 +114,6 @@ export default Vue.extend({
     },
     formatDateDayNumber(dateString: string): string {
       return formatDateDayNumber(dateString);
-    },
-    computeTomorrowDate(date: Date): Date {
-      return computeTomorrowDate(date);
     },
     generateWeekdayList(weekdays: number[], date: Date): number[] {
       if (date > this.period.end) return weekdays;

@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import AvailabilitiesPickCalendar from "~/components/molecules/timeframe/AvailabilitiesPickCalendar.vue";
+import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue";
 import { Period } from "~/utils/models/period";
 
 interface CalendarStep {
