@@ -42,7 +42,7 @@
     "tiptap-vuetify": "^2.24.0"
   },
   "devDependencies": {
-    "@jest/globals": "^29.4.3",
+    "@jest/globals": "^29.5.0",
     "@nuxt/types": "^2.14.12",
     "@nuxt/typescript-build": "^2.0.4",
     "@nuxtjs/color-mode": "^2.1.1",
