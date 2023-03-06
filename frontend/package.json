@@ -33,7 +33,7 @@
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.29.0",
-    "csv-parse": "^5.3.5",
+    "csv-parse": "^5.3.6",
     "eslint-plugin-prettier": "^4.2.1",
     "file-saver": "^2.0.5",
     "fuse.js": "^6.6.2",
