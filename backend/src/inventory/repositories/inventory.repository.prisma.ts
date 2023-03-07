@@ -22,6 +22,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
     id: true,
     name: true,
     isPonctualUsage: true,
+    isConsumable: true,
     slug: true,
     category: {
       select: {

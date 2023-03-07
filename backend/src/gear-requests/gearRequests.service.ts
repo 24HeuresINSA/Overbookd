@@ -113,6 +113,7 @@ export type GearRequestIdentifier = {
 
 export type SearchGearRequest = {
   seeker?: Omit<GearSeeker, 'name'>;
+  gear?: Pick<Gear, 'id' | 'isConsumable'>;
 };
 
 export interface GearRequestRepository {
@@ -202,14 +203,31 @@ export class GearRequestsService {
     createForm: CreateGearRequestForm,
   ): Promise<GearRequest> {
     const { seekerId, quantity, gearId } = createForm;
-    const [existingAnimation, existingGear] = await Promise.all([
-      this.animationRepository.getAnimation(seekerId),
-      this.gearRepository.getGear(gearId),
-    ]);
+
+    const gearRequestSearch = {
+      seeker: { type: GearSeekerType.Animation, id: seekerId },
+      gear: { id: gearId, isConsumable: true },
+    };
+
+    const [existingAnimation, existingGear, [similarGearRequest]] =
+      await Promise.all([
+        this.animationRepository.getAnimation(seekerId),
+        this.gearRepository.getGear(gearId),
+        this.gearRequestRepository.getGearRequests(gearRequestSearch),
+      ]);
 
     if (existingAnimation.status === Status.VALIDATED)
       throw new AnimationAlreadyValidatedError(seekerId);
 
+    if (
+      this.isConsumableGearRequestOnNewPeriod(createForm, similarGearRequest)
+    ) {
+      return this.updateConsumableGearRequest(
+        similarGearRequest,
+        createForm,
+        GearSeekerType.Animation,
+      );
+    }
     const gearRequest = {
       seeker: {
         type: GearSeekerType.Animation,
@@ -229,13 +247,30 @@ export class GearRequestsService {
   ): Promise<GearRequest> {
     const { seekerId, quantity, gearId } = createForm;
 
-    const [existingTask, existingGear] = await Promise.all([
-      this.taskRepository.getTask(seekerId),
-      this.gearRepository.getGear(gearId),
-    ]);
+    const gearRequestSearch = {
+      seeker: { type: GearSeekerType.Task, id: seekerId },
+      gear: { id: gearId, isConsumable: true },
+    };
+
+    const [existingTask, existingGear, [similarGearRequest]] =
+      await Promise.all([
+        this.taskRepository.getTask(seekerId),
+        this.gearRepository.getGear(gearId),
+        this.gearRequestRepository.getGearRequests(gearRequestSearch),
+      ]);
 
     if (this.isAlreadyValidated(existingTask))
       throw new TaskAlreadyValidatedError(seekerId, existingTask.status);
+
+    if (
+      this.isConsumableGearRequestOnNewPeriod(createForm, similarGearRequest)
+    ) {
+      return this.updateConsumableGearRequest(
+        similarGearRequest,
+        createForm,
+        GearSeekerType.Task,
+      );
+    }
 
     const gearRequest = {
       seeker: {
@@ -249,6 +284,40 @@ export class GearRequestsService {
       rentalPeriod: await this.retrieveRentalPeriod(createForm),
     };
     return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  private isConsumableGearRequestOnNewPeriod(
+    createForm: CreateGearRequestForm,
+    similarGearRequest: GearRequest,
+  ): createForm is NewPeriodCreateGearRequestForm {
+    return Boolean(!isExistingPeriodForm(createForm) && similarGearRequest);
+  }
+
+  private updateConsumableGearRequest(
+    similarGearRequest: GearRequest,
+    createForm: NewPeriodCreateGearRequestForm,
+    seekerType: GearSeekerType,
+  ) {
+    const { seekerId, quantity, gearId } = createForm;
+
+    const gearRequestIdentifier = {
+      seeker: { type: seekerType, id: seekerId },
+      gearId,
+      rentalPeriodId: similarGearRequest.rentalPeriod.id,
+    };
+    const mergedPeriod = mergePeriods([
+      similarGearRequest.rentalPeriod,
+      createForm,
+    ]);
+    const gearRequestUpdateForm = {
+      quantity,
+      ...mergedPeriod,
+    };
+
+    return this.gearRequestRepository.updateGearRequest(
+      gearRequestIdentifier,
+      gearRequestUpdateForm,
+    );
   }
 
   private isAlreadyValidated(existingTask: Task): boolean {
@@ -351,4 +420,12 @@ export class GearRequestsService {
   getAllRequests(): Promise<GearRequest[]> {
     return this.gearRequestRepository.getGearRequests({});
   }
+}
+
+function mergePeriods(periods: PeriodForm[]): PeriodForm {
+  const start = new Date(
+    Math.min(...periods.map(({ start }) => start.getTime())),
+  );
+  const end = new Date(Math.max(...periods.map(({ end }) => end.getTime())));
+  return { start, end };
 }

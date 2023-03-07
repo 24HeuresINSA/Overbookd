@@ -22,6 +22,7 @@ export type DatabaseGear = {
     path: string;
   };
   isPonctualUsage: boolean;
+  isConsumable: boolean;
 };
 
 export function convertGearToApiContract(gear: DatabaseGear) {
@@ -30,6 +31,7 @@ export function convertGearToApiContract(gear: DatabaseGear) {
     slug: gear.slug,
     id: gear.id,
     isPonctualUsage: gear.isPonctualUsage,
+    isConsumable: gear.isConsumable,
   };
   const category = gear.category
     ? {
@@ -53,6 +55,7 @@ export class PrismaGearRepository implements GearRepository {
     id: true,
     name: true,
     isPonctualUsage: true,
+    isConsumable: true,
     slug: true,
     category: {
       select: {

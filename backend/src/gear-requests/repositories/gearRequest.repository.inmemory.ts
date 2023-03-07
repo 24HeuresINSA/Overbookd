@@ -77,11 +77,15 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
     gearRequestSearch: SearchGearRequest,
     gearRequest: GearRequest,
   ): boolean {
-    return (
+    const seekerSearch =
       !gearRequestSearch.seeker ||
       (gearRequestSearch.seeker.id === gearRequest.seeker.id &&
-        gearRequestSearch.seeker.type === gearRequest.seeker.type)
-    );
+        gearRequestSearch.seeker.type === gearRequest.seeker.type);
+    const gearSearch =
+      !gearRequestSearch.gear ||
+      (gearRequestSearch.gear.id === gearRequest.gear.id &&
+        gearRequestSearch.gear.isConsumable === gearRequest.gear.isConsumable);
+    return seekerSearch && gearSearch;
   }
 
   updateGearRequest(

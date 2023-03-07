@@ -42,44 +42,44 @@ enum Department {
 }
 
 model User {
-  id                      Int                     @id @default(autoincrement())
-  firstname               String                  @db.VarChar(30)
-  lastname                String                  @db.VarChar(30)
-  nickname                String?                 @db.VarChar(30)
-  email                   String                  @unique
+  id                      Int         @id @default(autoincrement())
+  firstname               String      @db.VarChar(30)
+  lastname                String      @db.VarChar(30)
+  nickname                String?     @db.VarChar(30)
+  email                   String      @unique
   birthdate               DateTime
-  phone                   String                  @db.VarChar(30)
+  phone                   String      @db.VarChar(30)
   department              Department?
   comment                 String?
-  reset_password_token    String?                 @unique
+  reset_password_token    String?     @unique
   reset_password_expires  DateTime?
-  has_payed_contributions Boolean                 @default(false)
+  has_payed_contributions Boolean     @default(false)
   year                    Year?
   pp                      String?
-  charisma                Float                   @default(0)
-  balance                 Float                   @default(0)
-  password                String                  @default("")
-  created_at              DateTime                @default(now())
-  updated_at              DateTime                @updatedAt
+  charisma                Float       @default(0)
+  balance                 Float       @default(0)
+  password                String      @default("")
+  created_at              DateTime    @default(now())
+  updated_at              DateTime    @updatedAt
 
-  team                    User_Team[]
-  Availabilities          Availabilities[]
+  team           User_Team[]
+  Availabilities Availabilities[]
 
-  transactions_from       Transaction[]           @relation("from")
-  transactions_to         Transaction[]           @relation("to")
+  transactions_from Transaction[] @relation("from")
+  transactions_to   Transaction[] @relation("to")
 
-  is_deleted              Boolean                 @default(false)
-  fa_in_charge            fa[]                    @relation("in_charge")
-  fa_validation           fa_validation[]
-  fa_refuse               fa_refuse[]
-  fa_comments             fa_comments[]
+  is_deleted    Boolean         @default(false)
+  fa_in_charge  fa[]            @relation("in_charge")
+  fa_validation fa_validation[]
+  fa_refuse     fa_refuse[]
+  fa_comments   fa_comments[]
 
-  ftsInCharge             Ft[]                    @relation("inCharge")
-  ftFeedbacks             FtFeedback[]
-  ftUserRequests          FtUserRequest[]
-  availabilities          VolunteerAvailability[]
-  friendRequestors        Friend[]                @relation("friend_requestor")
-  friends                 Friend[]                @relation("friend")
+  ftsInCharge      Ft[]                    @relation("inCharge")
+  ftFeedbacks      FtFeedback[]
+  ftUserRequests   FtUserRequest[]
+  availabilities   VolunteerAvailability[]
+  friendRequestors Friend[]                @relation("friend_requestor")
+  friends          Friend[]                @relation("friend")
 }
 
 model Team {
@@ -379,6 +379,7 @@ model Catalog_Gear {
   category         Catalog_Category? @relation("category", fields: [category_id], references: [id])
   requests         GearRequest[]     @relation("gear-request-gear")
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
+  isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
 
   @@index([isPonctualUsage])
@@ -580,10 +581,10 @@ model VolunteerAvailability {
 }
 
 model Friend {
-  requestor    User @relation("friend_requestor", fields: [requestorId], references: [id], onDelete: Cascade)
-  requestorId  Int  @map("requestor_id")
-  friend       User @relation("friend", fields: [friendId], references: [id], onDelete: Cascade)
-  friendId     Int  @map("friend_id")
+  requestor   User @relation("friend_requestor", fields: [requestorId], references: [id], onDelete: Cascade)
+  requestorId Int  @map("requestor_id")
+  friend      User @relation("friend", fields: [friendId], references: [id], onDelete: Cascade)
+  friendId    Int  @map("friend_id")
 
   @@id([requestorId, friendId])
 }

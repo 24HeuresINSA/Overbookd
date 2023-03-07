@@ -53,4 +53,10 @@ export class GearResponseDto implements Gear {
     description: 'Gear usage',
   })
   isPonctualUsage: boolean;
+
+  @ApiProperty({
+    required: true,
+    description: 'Gear consumable status',
+  })
+  isConsumable: boolean;
 }

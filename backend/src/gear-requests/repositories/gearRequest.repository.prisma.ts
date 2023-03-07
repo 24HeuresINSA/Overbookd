@@ -131,6 +131,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
         id: true,
         name: true,
         isPonctualUsage: true,
+        isConsumable: true,
         slug: true,
         category: {
           select: {
@@ -281,11 +282,17 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     );
   }
 
-  private buildGearRequestSearchConditions({ seeker }: SearchGearRequest) {
+  private buildGearRequestSearchConditions({
+    seeker,
+    gear,
+  }: SearchGearRequest) {
     const seekerType =
       seeker?.type === GearSeekerType.Animation ? 'animationId' : 'taskId';
     const seekerCondition = seeker?.id ? { [seekerType]: seeker.id } : {};
+    const gearCondition = gear
+      ? { id: gear.id, isConsumable: gear.isConsumable }
+      : {};
 
-    return { ...seekerCondition };
+    return { ...seekerCondition, gear: gearCondition };
   }
 }

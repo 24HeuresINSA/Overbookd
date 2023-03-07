@@ -12,6 +12,7 @@ export type GearForm = {
   name: string;
   category?: number;
   isPonctualUsage: boolean;
+  isConsumable: boolean;
 };
 
 type GearUpdateForm = GearForm & {
@@ -45,6 +46,7 @@ export class CatalogService {
     name,
     category: categoryId,
     isPonctualUsage,
+    isConsumable,
   }: GearForm): Promise<Gear> {
     const { category, slug, owner } = await this.generateComputedProperties(
       name,
@@ -56,6 +58,7 @@ export class CatalogService {
       owner,
       slug,
       isPonctualUsage,
+      isConsumable,
     });
   }
 

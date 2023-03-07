@@ -27,6 +27,7 @@ export interface Gear {
   owner?: Team;
   code?: string;
   isPonctualUsage: boolean;
+  isConsumable: boolean;
 }
 
 export interface SearchGear {

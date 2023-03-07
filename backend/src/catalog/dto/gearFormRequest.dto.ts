@@ -28,6 +28,14 @@ export class GearFormRequestDto implements GearForm {
   isPonctualUsage: boolean;
 
   @ApiProperty({
+    required: true,
+    description: 'Gear consumable status',
+  })
+  @IsBoolean()
+  @IsDefined()
+  isConsumable: boolean;
+
+  @ApiProperty({
     required: false,
     description: 'Category id to link gear to',
   })
