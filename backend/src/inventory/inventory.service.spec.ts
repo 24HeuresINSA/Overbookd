@@ -36,6 +36,7 @@ const PONCEUSE: Gear = {
   owner: teamMatos,
   code: 'BR_OU_005',
   isPonctualUsage: true,
+  isConsumable: false,
 };
 
 const MARTEAU: Gear = {
@@ -50,6 +51,7 @@ const MARTEAU: Gear = {
   owner: teamMatos,
   code: 'BR_OU_001',
   isPonctualUsage: true,
+  isConsumable: false,
 };
 
 const TABLE: Gear = {
@@ -64,6 +66,7 @@ const TABLE: Gear = {
   owner: teamMatos,
   code: 'MO_006',
   isPonctualUsage: false,
+  isConsumable: false,
 };
 
 describe('Inventory Service', () => {
