@@ -42,18 +42,10 @@ describe("Period orchestrator", () => {
       },
       {
         start: new Date("2023-05-12 04:00+02:00"),
-        end: new Date("2023-05-12 05:00+02:00"),
-      },
-      {
-        start: new Date("2023-05-12 05:00+02:00"),
         end: new Date("2023-05-12 06:00+02:00"),
       },
       {
         start: new Date("2023-05-12 08:00+02:00"),
-        end: new Date("2023-05-12 10:00+02:00"),
-      },
-      {
-        start: new Date("2023-05-12 10:00+02:00"),
         end: new Date("2023-05-12 12:00+02:00"),
       },
     ];
@@ -228,11 +220,13 @@ describe("Period orchestrator", () => {
         });
       });
       describe("when removing center part of a period", () => {
-        it("should update impated period", () => {
+        it("should update impacted period", () => {
+          const [firstPeriod, secondPeriod] = periods;
           const periodOrchestrator = PeriodOrchestrator.init([
-            ...periods,
+            firstPeriod,
+            secondPeriod,
             {
-              start: new Date("2023-05-12 12:00+02:00"),
+              start: new Date("2023-05-12 08:00+02:00"),
               end: new Date("2023-05-12 14:00+02:00"),
             },
           ]);

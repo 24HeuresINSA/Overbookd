@@ -88,6 +88,23 @@ export const actions = actionTree(
       return this.$router.push({ path: "/" });
     },
 
+    async overrideVolunteerAvailabilities({ commit, state }, userId: number) {
+      const res = await safeCall(
+        this,
+        repo.overrideVolunteerAvailabilities(
+          this,
+          userId,
+          state.periodOrchestrator.availabilityPeriods
+        ),
+        {
+          successMessage: "Disponibilitiés sauvegardées 🥳",
+          errorMessage: "Disponibilitiés non sauvegardées 😢",
+        }
+      );
+      if (!res) return;
+      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
+    },
+
     async addVolunteerAvailability({ commit }, availability: Availability) {
       commit("ADD_VOLUNTEER_AVAILABILITY", availability);
     },
