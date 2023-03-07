@@ -131,6 +131,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
         id: true,
         name: true,
         isPonctualUsage: true,
+        isConsumable: true,
         slug: true,
         category: {
           select: {
@@ -249,6 +250,23 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     });
   }
 
+  async changeLinkedPeriod(
+    gearRequestId: GearRequestIdentifier,
+    rentalPeriod: Period,
+  ): Promise<GearRequest> {
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+
+    const gearRequest = await this.prismaService.gearRequest.update({
+      data: {
+        rentalPeriodId: rentalPeriod.id,
+      },
+      where,
+      select: this.SELECT_GEAR_REQUEST,
+    });
+
+    return convertGearRequestToApiContract(gearRequest);
+  }
+
   private buildUpdateGearRequestData(
     updateGearRequestForm: UpdateGearRequestForm,
   ) {
@@ -281,11 +299,17 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     );
   }
 
-  private buildGearRequestSearchConditions({ seeker }: SearchGearRequest) {
+  private buildGearRequestSearchConditions({
+    seeker,
+    gear,
+  }: SearchGearRequest) {
     const seekerType =
       seeker?.type === GearSeekerType.Animation ? 'animationId' : 'taskId';
     const seekerCondition = seeker?.id ? { [seekerType]: seeker.id } : {};
+    const gearCondition = gear
+      ? { id: gear.id, isConsumable: gear.isConsumable }
+      : {};
 
-    return { ...seekerCondition };
+    return { ...seekerCondition, gear: gearCondition };
   }
 }

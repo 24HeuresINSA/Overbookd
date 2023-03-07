@@ -1,5 +1,6 @@
-import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
 import { Gear } from '../catalog/interfaces';
+import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
+import { Status } from '../fa/dto/update-fa.dto';
 import {
   APPROVED,
   GearRequest,
@@ -9,9 +10,8 @@ import {
   Task,
   taskStatus,
 } from './gearRequests.service';
-import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
-import { Status } from '../fa/dto/update-fa.dto';
 import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';
+import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
 
@@ -67,26 +67,44 @@ const TABLE: Gear = {
   name: 'Table',
   slug: 'table',
   isPonctualUsage: false,
+  isConsumable: false,
 };
 const CHAISE: Gear = {
   id: 2,
   name: 'Chaise',
   slug: 'chaise',
   isPonctualUsage: false,
+  isConsumable: false,
 };
 const MARTEAU: Gear = {
   id: 3,
   name: 'Marteau',
   slug: 'marteau',
   isPonctualUsage: true,
+  isConsumable: false,
 };
 const GANT: Gear = {
   id: 4,
   name: 'Gant',
   slug: 'gant',
   isPonctualUsage: true,
+  isConsumable: false,
 };
-const GEARS = [TABLE, CHAISE, MARTEAU, GANT];
+const SCOTCH: Gear = {
+  id: 5,
+  name: 'Scotch',
+  slug: 'scotch',
+  isPonctualUsage: true,
+  isConsumable: true,
+};
+const SAC_POUBELLE: Gear = {
+  id: 6,
+  name: 'Sac Poubelle',
+  slug: 'sac-poubelle',
+  isPonctualUsage: false,
+  isConsumable: true,
+};
+const GEARS = [TABLE, CHAISE, MARTEAU, GANT, SCOTCH, SAC_POUBELLE];
 
 const GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE: GearRequest = {
   seeker: {
@@ -424,6 +442,231 @@ describe('Gear requests', () => {
           ).rejects.toThrow(
             `Task #${DEMONTER_CHATEAU_GONFLABLE.id} already ready, you can't add gear request`,
           );
+        });
+      });
+    });
+    describe('For Consumable gear', () => {
+      describe('When asking for "scotch" gear for a task', () => {
+        describe('When the request period doesnt exist', () => {
+          beforeEach(() => {
+            gearRequestRepository.gearRequests = [];
+          });
+          it('should create a gear request', async () => {
+            const start = new Date('2022-05-23T09:15:00');
+            const end = new Date('2022-05-24T19:15:00');
+            const createdGearRequest = await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 10,
+              gearId: SCOTCH.id,
+              start,
+              end,
+            });
+            expect(createdGearRequest).toMatchObject({
+              seeker: {
+                id: INSTALLER_CHATEAU_GONFLABLE.id,
+                type: GearSeekerType.Task,
+              },
+              quantity: 10,
+              gear: SCOTCH,
+              status: PENDING,
+              rentalPeriod: { start, end },
+            });
+          });
+          describe('When scotch is already requested for another period', () => {
+            it('should merge to a unique gear request', async () => {
+              const previousGearRequestStart = new Date('2022-05-23T09:15:00');
+              const previousGearRequestEnd = new Date('2022-05-23T19:15:00');
+              await gearRequestService.addTaskRequest({
+                seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: SCOTCH.id,
+                start: previousGearRequestStart,
+                end: previousGearRequestEnd,
+              });
+              const newGearRequestStart = new Date('2022-05-24T09:15:00');
+              const newGearRequestEnd = new Date('2022-05-24T19:15:00');
+              const createdGearRequest =
+                await gearRequestService.addTaskRequest({
+                  seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+                  quantity: 10,
+                  gearId: SCOTCH.id,
+                  start: newGearRequestStart,
+                  end: newGearRequestEnd,
+                });
+              expect(createdGearRequest.rentalPeriod).toMatchObject({
+                start: previousGearRequestStart,
+                end: newGearRequestEnd,
+              });
+            });
+          });
+        });
+        describe('When the request period already exists', () => {
+          beforeAll(async () => {
+            gearRequestRepository.gearRequests = [];
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: MARTEAU.id,
+            });
+          });
+          it('should link gear request to the existing period', async () => {
+            const createdGearRequest = await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: SCOTCH.id,
+            });
+            expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
+          });
+        });
+        describe('When there is several request period existing', () => {
+          beforeAll(async () => {
+            gearRequestRepository.gearRequests = [];
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: MARTEAU.id,
+            });
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_24_1.id,
+              gearId: MARTEAU.id,
+            });
+          });
+          it('should create dedicated request period for "scotch" gear requests', async () => {
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: SCOTCH.id,
+            });
+            const secondGearRequest = await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_24_1.id,
+              gearId: SCOTCH.id,
+            });
+            expect(secondGearRequest.rentalPeriod).toMatchObject({
+              start: MAY_23.start,
+              end: MAY_24_1.end,
+            });
+          });
+        });
+      });
+      describe('When asking for "Sac poubelle" gear for an activity', () => {
+        describe('When the request period doesnt exist', () => {
+          beforeEach(() => {
+            gearRequestRepository.gearRequests = [];
+          });
+          it('should create a gear request', async () => {
+            const start = new Date('2022-05-23T09:15:00');
+            const end = new Date('2022-05-24T19:15:00');
+            const createdGearRequest =
+              await gearRequestService.addAnimationRequest({
+                seekerId: CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: SAC_POUBELLE.id,
+                start,
+                end,
+              });
+            expect(createdGearRequest).toMatchObject({
+              seeker: {
+                id: CHATEAU_GONFLABLE.id,
+                type: GearSeekerType.Animation,
+              },
+              quantity: 10,
+              gear: SAC_POUBELLE,
+              status: PENDING,
+              rentalPeriod: { start, end },
+            });
+          });
+          describe('When sac poubelle is already requested for another period', () => {
+            it('should merge to a unique gear request', async () => {
+              const previousGearRequestStart = new Date('2022-05-23T09:15:00');
+              const previousGearRequestEnd = new Date('2022-05-23T19:15:00');
+              await gearRequestService.addAnimationRequest({
+                seekerId: CHATEAU_GONFLABLE.id,
+                quantity: 10,
+                gearId: SAC_POUBELLE.id,
+                start: previousGearRequestStart,
+                end: previousGearRequestEnd,
+              });
+              const newGearRequestStart = new Date('2022-05-24T09:15:00');
+              const newGearRequestEnd = new Date('2022-05-24T19:15:00');
+              const createdGearRequest =
+                await gearRequestService.addAnimationRequest({
+                  seekerId: CHATEAU_GONFLABLE.id,
+                  quantity: 10,
+                  gearId: SAC_POUBELLE.id,
+                  start: newGearRequestStart,
+                  end: newGearRequestEnd,
+                });
+              expect(createdGearRequest.rentalPeriod).toMatchObject({
+                start: previousGearRequestStart,
+                end: newGearRequestEnd,
+              });
+            });
+          });
+        });
+        describe('When the request period already exists', () => {
+          beforeAll(async () => {
+            gearRequestRepository.gearRequests = [];
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: TABLE.id,
+            });
+          });
+          it('should link gear request to the existing period', async () => {
+            const createdGearRequest =
+              await gearRequestService.addAnimationRequest({
+                seekerId: CHATEAU_GONFLABLE.id,
+                quantity: 5,
+                periodId: MAY_23.id,
+                gearId: SAC_POUBELLE.id,
+              });
+            expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
+          });
+        });
+        describe('When there is several request period existing', () => {
+          beforeAll(async () => {
+            gearRequestRepository.gearRequests = [];
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: TABLE.id,
+            });
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_24_1.id,
+              gearId: TABLE.id,
+            });
+          });
+          it('should create dedicated request period for "Sac Poubelle" gear requests', async () => {
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: SAC_POUBELLE.id,
+            });
+            const secondGearRequest =
+              await gearRequestService.addAnimationRequest({
+                seekerId: CHATEAU_GONFLABLE.id,
+                quantity: 5,
+                periodId: MAY_24_1.id,
+                gearId: SAC_POUBELLE.id,
+              });
+            expect(secondGearRequest.rentalPeriod).toMatchObject({
+              start: MAY_23.start,
+              end: MAY_24_1.end,
+            });
+          });
         });
       });
     });

@@ -6,6 +6,7 @@ import {
   GearRequestNotFound,
   GearRequestRepository,
   PENDING,
+  Period,
   SearchGearRequest,
   UpdateGearRequestForm,
 } from '../gearRequests.service';
@@ -77,11 +78,15 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
     gearRequestSearch: SearchGearRequest,
     gearRequest: GearRequest,
   ): boolean {
-    return (
+    const seekerSearch =
       !gearRequestSearch.seeker ||
       (gearRequestSearch.seeker.id === gearRequest.seeker.id &&
-        gearRequestSearch.seeker.type === gearRequest.seeker.type)
-    );
+        gearRequestSearch.seeker.type === gearRequest.seeker.type);
+    const gearSearch =
+      !gearRequestSearch.gear ||
+      (gearRequestSearch.gear.id === gearRequest.gear.id &&
+        gearRequestSearch.gear.isConsumable === gearRequest.gear.isConsumable);
+    return seekerSearch && gearSearch;
   }
 
   updateGearRequest(
@@ -143,5 +148,27 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       status: PENDING,
     };
     return newGearRequest;
+  }
+
+  changeLinkedPeriod(
+    gearRequestId: GearRequestIdentifier,
+    rentalPeriod: Period,
+  ): Promise<GearRequest> {
+    const gearRequestIndex = this.gearRequests.findIndex(
+      this.isSameGearRequest(gearRequestId),
+    );
+    if (gearRequestIndex === -1) {
+      return Promise.reject(new GearRequestNotFound(gearRequestId));
+    }
+
+    const existingGearRequest = this.gearRequests[gearRequestIndex];
+
+    const newGearRequest = {
+      ...existingGearRequest,
+      rentalPeriod,
+    };
+
+    this.gearRequests[gearRequestIndex] = newGearRequest;
+    return Promise.resolve(newGearRequest);
   }
 }

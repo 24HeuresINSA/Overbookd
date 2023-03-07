@@ -7,6 +7,7 @@ export class GearRepresentation implements Gear {
   category?: SimplifiedCategoryRepresentation;
   owner?: TeamRepresentation;
   isPonctualUsage: boolean;
+  isConsumable: boolean;
 }
 
 export class TeamRepresentation implements Team {

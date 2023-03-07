@@ -40,6 +40,12 @@ const CATEGORIES: Category[] = [
     path: 'barrieres',
     owner: teamBarriere,
   },
+  {
+    id: 6,
+    name: 'Nettoyage',
+    path: 'nettoyage',
+    owner: teamMatos,
+  },
 ];
 
 const PERCEUSE: Gear = {
@@ -54,6 +60,7 @@ const PERCEUSE: Gear = {
   owner: teamMatos,
   code: 'BR_OU_001',
   isPonctualUsage: true,
+  isConsumable: false,
 };
 
 const GEARS: Gear[] = [
@@ -70,12 +77,14 @@ const GEARS: Gear[] = [
     owner: teamMatos,
     code: 'MO_002',
     isPonctualUsage: false,
+    isConsumable: false,
   },
   {
     id: 3,
     name: 'Tireuse',
     slug: 'tireuse',
     isPonctualUsage: false,
+    isConsumable: false,
   },
 ];
 
@@ -84,6 +93,7 @@ const TABLIER: Gear = {
   name: 'Tablier',
   slug: 'tablier',
   isPonctualUsage: true,
+  isConsumable: false,
 };
 
 const PONCEUSE: Gear = {
@@ -98,6 +108,7 @@ const PONCEUSE: Gear = {
   owner: teamMatos,
   code: 'BR_OU_005',
   isPonctualUsage: true,
+  isConsumable: false,
 };
 
 const SIMILAR_GEARS: Gear[] = [
@@ -116,6 +127,7 @@ const SIMILAR_GEARS: Gear[] = [
     owner: teamMatos,
     code: 'MO_006',
     isPonctualUsage: false,
+    isConsumable: false,
   },
 ];
 
@@ -153,19 +165,22 @@ describe('Catalog', () => {
   });
   describe('Add gear', () => {
     describe.each`
-      name               | category     | isPonctualUsage | expectedSlug       | expectedCategory                                         | expectedCodeStart | expectedOwner
-      ${'Marteau'}       | ${2}         | ${true}         | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Scie Sauteuse'} | ${2}         | ${true}         | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Table'}         | ${3}         | ${false}        | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${'MO_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
-      ${'Des'}           | ${undefined} | ${false}        | ${'des'}           | ${undefined}                                             | ${undefined}      | ${undefined}
-      ${'Gants'}         | ${4}         | ${true}         | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${'DI_'}          | ${undefined}
-      ${'Vauban'}        | ${5}         | ${false}        | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${'BA_'}          | ${{ name: teamBarriere.name, code: teamBarriere.code }}
+      name               | category     | isPonctualUsage | isConsumable | expectedSlug       | expectedCategory                                         | expectedCodeStart | expectedOwner
+      ${'Marteau'}       | ${2}         | ${true}         | ${false}     | ${'marteau'}       | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Scie Sauteuse'} | ${2}         | ${true}         | ${false}     | ${'scie-sauteuse'} | ${{ id: 2, name: 'Outils', path: 'bricollage->outils' }} | ${'BR_OU_'}       | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Table'}         | ${3}         | ${false}        | ${false}     | ${'table'}         | ${{ id: 3, name: 'Mobilier', path: 'mobilier' }}         | ${'MO_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Des'}           | ${undefined} | ${false}        | ${false}     | ${'des'}           | ${undefined}                                             | ${undefined}      | ${undefined}
+      ${'Gants'}         | ${4}         | ${true}         | ${false}     | ${'gants'}         | ${{ id: 4, name: 'Divers', path: 'divers' }}             | ${'DI_'}          | ${undefined}
+      ${'Vauban'}        | ${5}         | ${false}        | ${false}     | ${'vauban'}        | ${{ id: 5, name: 'Barrieres', path: 'barrieres' }}       | ${'BA_'}          | ${{ name: teamBarriere.name, code: teamBarriere.code }}
+      ${'Colson'}        | ${1}         | ${true}         | ${true}      | ${'colson'}        | ${{ id: 1, name: 'Bricollage', path: 'bricollage' }}     | ${'BR_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
+      ${'Sac Poubelle'}  | ${6}         | ${false}        | ${true}      | ${'sac-poubelle'}  | ${{ id: 6, name: 'Nettoyage', path: 'nettoyage' }}       | ${'NE_'}          | ${{ name: teamMatos.name, code: teamMatos.code }}
     `(
       'Add gear "$name" with #$category category to catalog',
       ({
         name,
         category,
         isPonctualUsage,
+        isConsumable,
         expectedSlug,
         expectedCategory,
         expectedCodeStart,
@@ -176,7 +191,12 @@ describe('Catalog', () => {
           gearRepository.gears = GEARS;
         });
         beforeAll(async () => {
-          gear = await catalog.add({ name, category, isPonctualUsage });
+          gear = await catalog.add({
+            name,
+            category,
+            isPonctualUsage,
+            isConsumable,
+          });
         });
         it(`should create gear ${name} with generated id and slug "${expectedSlug}"`, () => {
           expect(gear).toHaveProperty('id');
@@ -186,6 +206,9 @@ describe('Catalog', () => {
         });
         it(`should set up ponctual usage property`, () => {
           expect(gear.isPonctualUsage).toBe(isPonctualUsage);
+        });
+        it(`should set up consumable property`, () => {
+          expect(gear.isConsumable).toBe(isConsumable);
         });
         if (expectedCategory) {
           it(`should link gear ${name} to category "${expectedCategory.name}"`, () => {
@@ -214,6 +237,7 @@ describe('Catalog', () => {
               name: 'Random',
               category: 123,
               isPonctualUsage: false,
+              isConsumable: false,
             }),
         ).rejects.toThrow(`Category #${123} doesn\'t exist`);
       });
@@ -226,6 +250,7 @@ describe('Catalog', () => {
               name: 'Perçeuse',
               category: 2,
               isPonctualUsage: true,
+              isConsumable: false,
             }),
         ).rejects.toThrow(`"Perceuse" gear already exist`);
       });
@@ -272,6 +297,7 @@ describe('Catalog', () => {
               id: 123,
               name: 'Lavabo',
               isPonctualUsage: false,
+              isConsumable: false,
             }),
         ).rejects.toThrow(`Gear #${123} doesn\'t exist`);
       });
