@@ -8,17 +8,8 @@
             :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
             max-height="200px"
           ></v-img>
-          <v-card-title
-            >{{
-              mUser.nickname
-                ? mUser.nickname +
-                  " ( " +
-                  mUser.firstname +
-                  " " +
-                  mUser.lastname +
-                  " )"
-                : mUser.firstname + " " + mUser.lastname
-            }}
+          <v-card-title>
+            {{ formatNameWithNickname }}
           </v-card-title>
           <v-card-text>
             <OverChips :roles="mUser.team" />
@@ -58,44 +49,43 @@
                   <v-text-field
                     v-model="mUser.lastname"
                     label="Nom"
-                    :disabled="!(hasEditingRole || isMe())"
+                    :disabled="!canEditUserData"
                   ></v-text-field>
                 </v-col>
                 <v-col md="6">
                   <v-text-field
                     v-model="mUser.firstname"
                     label="Prénom"
-                    :disabled="!(hasEditingRole || isMe())"
+                    :disabled="!canEditUserData"
                   ></v-text-field>
                 </v-col>
                 <v-col md="12">
                   <v-textarea
                     v-model="mUser.comment"
                     label="Commentaire"
-                    :disabled="!(hasEditingRole || isMe())"
+                    :disabled="!canEditUserData"
                   ></v-textarea>
                 </v-col>
                 <v-col md="4">
                   <v-text-field
                     v-model="mUser.nickname"
                     label="Surnom"
-                    :disabled="!(hasEditingRole || isMe())"
+                    :disabled="!canEditUserData"
                   ></v-text-field>
                 </v-col>
                 <v-col md="4">
-                  <v-text-field
+                  <DateField
                     v-model="mUser.birthdate"
                     label="Date de naissance"
-                    placeholder="AAAA-MM-JJ"
-                    :disabled="true"
-                  ></v-text-field>
+                    :boxed="false"
+                  ></DateField>
                 </v-col>
                 <v-col md="4" style="display: flex; align-items: baseline">
                   <p>+33&nbsp;</p>
                   <v-text-field
                     v-model="mUser.phone"
                     label="Numéro de téléphone "
-                    :disabled="!(hasEditingRole || isMe())"
+                    :disabled="!canEditUserData"
                     type="number"
                   ></v-text-field>
                 </v-col>
@@ -137,31 +127,10 @@
                   ></v-switch> </v-col
               ></v-row>
             </v-container>
-            <v-container v-if="me.team.includes('humain') && mUser.friends">
-              <h3>Amis :</h3>
-              <v-chip
-                v-for="(friend, index) in mUser.friends"
-                :key="index"
-                class="p-2"
-                >{{ friend.username }}</v-chip
-              >
-              <v-card-actions class="d-flex align-start">
-                <v-autocomplete
-                  v-model="newFriend"
-                  label="prénom.nom"
-                  :items="usernames"
-                  class="mx-2"
-                ></v-autocomplete>
-                <v-btn text @click="addFriend">Ajouter</v-btn>
-              </v-card-actions>
-            </v-container>
           </v-card-text>
           <v-row
             style="display: flex; justify-content: center; align-items: center"
           >
-            <v-col md="3">
-              <v-btn text @click="saveUser()">sauvegarder</v-btn>
-            </v-col>
             <v-col md="3">
               <v-btn
                 v-if="hasEditingRole"
@@ -170,6 +139,9 @@
                 @click="deleteUser()"
                 >supprimer</v-btn
               >
+            </v-col>
+            <v-col md="3">
+              <v-btn text @click="saveUser()">sauvegarder</v-btn>
             </v-col>
           </v-row>
         </div>
@@ -184,8 +156,9 @@
 <script>
 import OverChips from "~/components/atoms/OverChips";
 import { RepoFactory } from "~/repositories/repoFactory";
-import userRepo from "~/repositories/userRepo";
+import { formatNameWithNickname } from "~/utils/user/userUtils";
 import { safeCall } from "../../utils/api/calls";
+import DateField from "../atoms/DateField.vue";
 import AvailabilitiesSumup from "../molecules/availabilities/AvailabilitiesSumup.vue";
 
 export default {
@@ -193,6 +166,7 @@ export default {
   components: {
     OverChips,
     AvailabilitiesSumup,
+    DateField,
   },
   props: {
     user: {
@@ -209,7 +183,6 @@ export default {
     return {
       newRole: undefined,
       teamNames: [],
-      hasEditingRole: false,
       isEditingAvailability: false,
       usernames: undefined,
       newFriend: undefined,
@@ -236,11 +209,28 @@ export default {
         this.$emit("update-toggle", t);
       },
     },
+    formatNameWithNickname() {
+      return formatNameWithNickname(this.mUser);
+    },
+    canEditUserData() {
+      return this.hasEditingRole || this.isMe;
+    },
+    hasEditingRole() {
+      return this.hasPermission("manage-users");
+    },
+    isMe() {
+      return this.$accessor.user.me.id === this.mUser.id;
+    },
+    isValidated() {
+      return this.$accessor.permission.isValidated(this.mUser);
+    },
+    isSoft() {
+      return this.mUser.team.includes("soft");
+    },
   },
 
   async mounted() {
     this.teamNames = this.$accessor.team.teamNames;
-    this.hasEditingRole = this.hasPermission("manage-users");
     const res = await safeCall(
       this.$store,
       RepoFactory.userRepo.getAllUsers(this)
@@ -302,29 +292,13 @@ export default {
         });
       }
     },
-    async saveUser() {
-      await safeCall(
-        this.$store,
-        userRepo.updateUser(this, this.mUser.id, this.mUser),
-        {
-          successMessage: "Utilisateur mis à jour !",
-          errorMessage: "Erreur lors de la mise à jour de l'utilisateur !",
-        }
-      );
+    saveUser() {
+      this.$accessor.user.updateUser(this.mUser);
       this.mToggle = false;
     },
-    async deleteUser() {
+    deleteUser() {
       this.mUser.isValid = false;
-      await this.saveUser();
-    },
-    isMe() {
-      return this.$accessor.user.me._id === this.mUser._id;
-    },
-    isValidated() {
-      return this.$accessor.permission.isValidated(this.mUser);
-    },
-    isSoft() {
-      return this.mUser.team.includes("soft");
+      this.saveUser();
     },
     hasUserRole(roles) {
       if (this.mUser.team === undefined) {
@@ -352,23 +326,6 @@ export default {
         this.mUser.team = ["toValidate"];
         this.mUser.availabilities = [];
         await this.$axios.get("/timespan/user/unassignall/" + this.mUser._id);
-      }
-    },
-    async addFriend() {
-      if (this.newFriend && this.newFriend._id) {
-        //TODO: RepoFactory + safeCall
-        await this.$axios
-          .post(`/user/friends`, {
-            from: this.mUser._id,
-            to: {
-              id: this.newFriend._id,
-              username:
-                this.newFriend.firstname + " " + this.newFriend.lastname,
-            },
-          })
-          .then(() => {
-            alert("La relation a été ajoutée !");
-          });
       }
     },
   },

@@ -45,7 +45,7 @@ export default {
   updateNotifications(context: Context, userId: string, data: Notification[]) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
-  updateUser(context: Context, userId: string, data: Partial<User>) {
+  updateUser(context: Context, userId: number, data: Partial<User>) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
   isMigrated(context: Context) {

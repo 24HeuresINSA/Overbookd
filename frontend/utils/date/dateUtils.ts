@@ -29,6 +29,13 @@ export function formatLocalDateTime(date: Date): string {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+export function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = getTwoDigitsNumber(date.getMonth() + 1);
+  const day = getTwoDigitsNumber(date.getDate());
+  return `${year}-${month}-${day}`;
+}
+
 function getTwoDigitsNumber(number: number): string {
   return number < 10 ? "0" + number : number.toString();
 }

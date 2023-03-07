@@ -128,18 +128,6 @@
                 >
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
-                <v-btn
-                  icon
-                  small
-                  :href="
-                    'https://www.facebook.com/search/top?q=' +
-                    item.firstname +
-                    ' ' +
-                    item.lastname
-                  "
-                >
-                  <v-icon small>mdi-facebook</v-icon>
-                </v-btn>
               </template>
 
               <template #[`item.balance`]="{ item }">

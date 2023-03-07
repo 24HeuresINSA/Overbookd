@@ -168,11 +168,11 @@ export const actions = actionTree(
     },
     async updateUser(
       { commit },
-      payload: { userID: string; userData: Partial<User> }
+      payload: { id: string; userData: Partial<User> }
     ) {
       const res = await safeCall(
         this,
-        UserRepo.updateUser(this, payload.userID, payload.userData)
+        UserRepo.updateUser(this, +payload.id, payload.userData)
       );
       if (res) {
         commit("UPDATE_USER", payload.userData);
