@@ -78,6 +78,7 @@
                     v-model="mUser.birthdate"
                     label="Date de naissance"
                     :boxed="false"
+                    :disabled="!hasEditingRole"
                   ></DateField>
                 </v-col>
                 <v-col md="4" style="display: flex; align-items: baseline">

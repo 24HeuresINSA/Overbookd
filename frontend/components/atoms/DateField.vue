@@ -5,6 +5,7 @@
     type="date"
     :solo="boxed"
     :filled="boxed"
+    :disabled="disabled"
     return-object
     @change="updateDate"
   >
@@ -27,16 +28,16 @@ export default Vue.extend({
       default: "Date",
     },
     date: {
-      type: Date,
-      default: () => undefined as Date | undefined,
+      type: [String, Date],
+      default: () => undefined as Date | string | undefined,
     },
     boxed: {
       type: Boolean,
       default: true,
     },
-    step: {
-      type: Number,
-      default: 15,
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({

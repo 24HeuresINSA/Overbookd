@@ -7,7 +7,7 @@ import {
   User,
 } from "~/utils/models/repo";
 import { AxiosResponse } from "axios";
-import { Friend, UserCreation } from "~/utils/models/user";
+import { Friend, UserCreation, UserModification } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/user";
@@ -45,8 +45,8 @@ export default {
   updateNotifications(context: Context, userId: string, data: Notification[]) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
-  updateUser(context: Context, userId: number, data: Partial<User>) {
-    return context.$axios.put(`${resource}/${userId}`, data);
+  updateUser(context: Context, userId: number, userData: UserModification) {
+    return context.$axios.put(`${resource}/${userId}`, userData);
   },
   isMigrated(context: Context) {
     return context.$axios.get(`${resource}/isMigrated`);

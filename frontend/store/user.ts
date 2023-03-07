@@ -1,7 +1,12 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
-import { Friend, UserCreation, UserWithPermissions } from "~/utils/models/user";
+import {
+  castToUserModification,
+  Friend,
+  UserCreation,
+  UserWithPermissions,
+} from "~/utils/models/user";
 import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
@@ -166,16 +171,14 @@ export const actions = actionTree(
         return u.username;
       }
     },
-    async updateUser(
-      { commit },
-      payload: { id: string; userData: Partial<User> }
-    ) {
+    async updateUser({ commit }, user: User) {
+      const { id, ...userData } = user;
       const res = await safeCall(
         this,
-        UserRepo.updateUser(this, +payload.id, payload.userData)
+        UserRepo.updateUser(this, +id, castToUserModification(userData))
       );
       if (res) {
-        commit("UPDATE_USER", payload.userData);
+        commit("UPDATE_USER", userData);
         return true;
       }
       return false;

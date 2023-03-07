@@ -134,20 +134,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission('hard')
-  @Post('availabilities')
-  @ApiBody({
-    description: 'Add availabilities to current user',
-    type: Array,
-  })
-  addAvailabilitiesToCurrentUser(
-    @Body('availabilities') availabilities: number[],
-  ): Promise<User> {
-    return null;
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission('hard')
   @Put(':id')
   @ApiBody({
     description: 'Update a user by id',
@@ -155,15 +141,8 @@ export class UserController {
   })
   updateUserById(
     @Param('id', ParseIntPipe) id: number,
-    @Body() userData: Partial<User>,
-    @Request() req: Express.Request,
+    @Body() user: UserModificationDto,
   ): Promise<UserWithoutPassword> {
-    return this.userService.updateUser(
-      {
-        where: { id: Number(id) },
-        data: userData,
-      },
-      req.user,
-    );
+    return this.userService.updateUser(id, user);
   }
 }

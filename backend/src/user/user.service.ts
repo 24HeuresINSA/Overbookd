@@ -8,6 +8,7 @@ import {
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
+import { UserModificationDto } from './dto/userModification.dto';
 
 const SELECT_USER = {
   email: true,
@@ -142,38 +143,14 @@ export class UserService {
     return newUser;
   }
 
-  async addAvailabilitiesToUser(
-    user_id: number,
-    availabilities: number[],
-  ): Promise<null> {
-    return null;
-  }
-
   async updateUser(
-    params: {
-      where: Prisma.UserWhereUniqueInput;
-      data: Prisma.UserUpdateInput;
-    },
-    currentUser: any,
+    id: number,
+    user: UserModificationDto,
   ): Promise<UserWithoutPassword> {
-    if (!currentUser.role.includes('admin')) {
-      // Remove balance from data
-      delete params.data.balance;
-    }
-    if (!currentUser.role.filter((n: any) => ['human', 'admin'].includes(n))) {
-      // Remove teams from charisma
-      delete params.data.charisma;
-    }
-    const team = params.data.team;
-    if (team) {
-      // Remove teams from data
-      delete params.data.team;
-    }
-    const { where, data } = params;
     return this.prisma.user.update({
       select: SELECT_USER,
-      data,
-      where,
+      data: user,
+      where: { id },
     });
   }
 
