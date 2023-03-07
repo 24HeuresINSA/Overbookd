@@ -520,6 +520,41 @@ describe('Gear requests', () => {
             expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
           });
         });
+        describe('When there is several request period existing', () => {
+          beforeAll(async () => {
+            gearRequestRepository.gearRequests = [];
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: MARTEAU.id,
+            });
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_24_1.id,
+              gearId: MARTEAU.id,
+            });
+          });
+          it('should create dedicated request period for "scotch" gear requests', async () => {
+            await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: SCOTCH.id,
+            });
+            const secondGearRequest = await gearRequestService.addTaskRequest({
+              seekerId: INSTALLER_CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_24_1.id,
+              gearId: SCOTCH.id,
+            });
+            expect(secondGearRequest.rentalPeriod).toMatchObject({
+              start: MAY_23.start,
+              end: MAY_24_1.end,
+            });
+          });
+        });
       });
       describe('When asking for "Sac poubelle" gear for an activity', () => {
         describe('When the request period doesnt exist', () => {
@@ -595,6 +630,42 @@ describe('Gear requests', () => {
                 gearId: SAC_POUBELLE.id,
               });
             expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
+          });
+        });
+        describe('When there is several request period existing', () => {
+          beforeAll(async () => {
+            gearRequestRepository.gearRequests = [];
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: TABLE.id,
+            });
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_24_1.id,
+              gearId: TABLE.id,
+            });
+          });
+          it('should create dedicated request period for "Sac Poubelle" gear requests', async () => {
+            await gearRequestService.addAnimationRequest({
+              seekerId: CHATEAU_GONFLABLE.id,
+              quantity: 5,
+              periodId: MAY_23.id,
+              gearId: SAC_POUBELLE.id,
+            });
+            const secondGearRequest =
+              await gearRequestService.addAnimationRequest({
+                seekerId: CHATEAU_GONFLABLE.id,
+                quantity: 5,
+                periodId: MAY_24_1.id,
+                gearId: SAC_POUBELLE.id,
+              });
+            expect(secondGearRequest.rentalPeriod).toMatchObject({
+              start: MAY_23.start,
+              end: MAY_24_1.end,
+            });
           });
         });
       });

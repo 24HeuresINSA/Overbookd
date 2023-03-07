@@ -6,6 +6,7 @@ import {
   GearRequestNotFound,
   GearRequestRepository,
   PENDING,
+  Period,
   SearchGearRequest,
   UpdateGearRequestForm,
 } from '../gearRequests.service';
@@ -147,5 +148,27 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       status: PENDING,
     };
     return newGearRequest;
+  }
+
+  changeLinkedPeriod(
+    gearRequestId: GearRequestIdentifier,
+    rentalPeriod: Period,
+  ): Promise<GearRequest> {
+    const gearRequestIndex = this.gearRequests.findIndex(
+      this.isSameGearRequest(gearRequestId),
+    );
+    if (gearRequestIndex === -1) {
+      return Promise.reject(new GearRequestNotFound(gearRequestId));
+    }
+
+    const existingGearRequest = this.gearRequests[gearRequestIndex];
+
+    const newGearRequest = {
+      ...existingGearRequest,
+      rentalPeriod,
+    };
+
+    this.gearRequests[gearRequestIndex] = newGearRequest;
+    return Promise.resolve(newGearRequest);
   }
 }

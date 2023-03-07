@@ -129,6 +129,10 @@ export interface GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
     drive: string,
   ): Promise<ApprovedGearRequest>;
+  changeLinkedPeriod(
+    gearRequestId: GearRequestIdentifier,
+    rentalPeriod: Period,
+  ): Promise<GearRequest>;
 }
 
 export interface Animation {
@@ -219,12 +223,10 @@ export class GearRequestsService {
     if (existingAnimation.status === Status.VALIDATED)
       throw new AnimationAlreadyValidatedError(seekerId);
 
-    if (
-      this.isConsumableGearRequestOnNewPeriod(createForm, similarGearRequest)
-    ) {
-      return this.updateConsumableGearRequest(
-        similarGearRequest,
+    if (similarGearRequest) {
+      return this.updateGearRequestPeriod(
         createForm,
+        similarGearRequest,
         GearSeekerType.Animation,
       );
     }
@@ -262,12 +264,10 @@ export class GearRequestsService {
     if (this.isAlreadyValidated(existingTask))
       throw new TaskAlreadyValidatedError(seekerId, existingTask.status);
 
-    if (
-      this.isConsumableGearRequestOnNewPeriod(createForm, similarGearRequest)
-    ) {
-      return this.updateConsumableGearRequest(
-        similarGearRequest,
+    if (similarGearRequest) {
+      return this.updateGearRequestPeriod(
         createForm,
+        similarGearRequest,
         GearSeekerType.Task,
       );
     }
@@ -286,11 +286,27 @@ export class GearRequestsService {
     return this.gearRequestRepository.addGearRequest(gearRequest);
   }
 
-  private isConsumableGearRequestOnNewPeriod(
+  private async updateGearRequestPeriod(
     createForm: CreateGearRequestForm,
     similarGearRequest: GearRequest,
-  ): createForm is NewPeriodCreateGearRequestForm {
-    return Boolean(!isExistingPeriodForm(createForm) && similarGearRequest);
+    seekerType: GearSeekerType,
+  ) {
+    const { seekerId, gearId } = createForm;
+    const newRentalPeriod = await this.retrieveRentalPeriod(createForm);
+    const mergedPeriod = mergePeriods([
+      newRentalPeriod,
+      similarGearRequest.rentalPeriod,
+    ]);
+    const savedPeriod = await this.periodRepository.addPeriod(mergedPeriod);
+    const gearRequestIdentifier = {
+      seeker: { type: seekerType, id: seekerId },
+      gearId,
+      rentalPeriodId: similarGearRequest.rentalPeriod.id,
+    };
+    return this.gearRequestRepository.changeLinkedPeriod(
+      gearRequestIdentifier,
+      savedPeriod,
+    );
   }
 
   private updateConsumableGearRequest(

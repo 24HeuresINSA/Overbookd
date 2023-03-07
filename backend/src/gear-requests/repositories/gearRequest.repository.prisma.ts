@@ -250,6 +250,23 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     });
   }
 
+  async changeLinkedPeriod(
+    gearRequestId: GearRequestIdentifier,
+    rentalPeriod: Period,
+  ): Promise<GearRequest> {
+    const where = this.buildGearRequestUniqueCondition(gearRequestId);
+
+    const gearRequest = await this.prismaService.gearRequest.update({
+      data: {
+        rentalPeriodId: rentalPeriod.id,
+      },
+      where,
+      select: this.SELECT_GEAR_REQUEST,
+    });
+
+    return convertGearRequestToApiContract(gearRequest);
+  }
+
   private buildUpdateGearRequestData(
     updateGearRequestForm: UpdateGearRequestForm,
   ) {
