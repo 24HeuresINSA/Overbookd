@@ -5,10 +5,12 @@ import {
   StoredGearRequest,
 } from "../models/gearRequests";
 
-export function uniqueGerRequestPeriodsReducer(
+export function uniqueGearRequestPeriodsReducer(
   gearRequests: GearRequest<"FA" | "FT">[]
 ): Period[] {
-  const rentalPeriods = gearRequests.map(({ rentalPeriod }) => rentalPeriod);
+  const rentalPeriods = gearRequests
+    .filter(({ gear }) => !gear.isConsumable)
+    .map(({ rentalPeriod }) => rentalPeriod);
   return uniquePeriodsReducer(rentalPeriods);
 }
 
@@ -90,6 +92,19 @@ export function isSimilarGearRequest<T extends "FA" | "FT">(
       gearRequest.rentalPeriod.id === gr.rentalPeriod.id &&
       gearRequest.seeker.id === gr.seeker.id &&
       gearRequest.seeker.type === gr.seeker.type
+    );
+  };
+}
+
+export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
+  gearRequest: StoredGearRequest<T>
+): (value: StoredGearRequest<T>) => boolean {
+  return (gr: StoredGearRequest<T>) => {
+    return (
+      gearRequest.gear.id === gr.gear.id &&
+      gearRequest.seeker.id === gr.seeker.id &&
+      gearRequest.seeker.type === gr.seeker.type &&
+      gr.gear.isConsumable
     );
   };
 }

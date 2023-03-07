@@ -84,10 +84,18 @@ export default Vue.extend({
     },
     addGear() {
       if (!this.gear) return;
-      return this.$accessor.FT.addGearRequestForAllRentalPeriods({
+      const gearRequestCreation = {
         gearId: this.gear.id,
         quantity: parseInt(this.quantity, 10),
-      });
+      };
+      if (this.gear.isConsumable) {
+        return this.$accessor.FT.addConsumableGearRequestForAllRentalPeriods(
+          gearRequestCreation
+        );
+      }
+      return this.$accessor.FT.addGearRequestForAllRentalPeriods(
+        gearRequestCreation
+      );
     },
   },
 });

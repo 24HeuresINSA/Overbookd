@@ -4,6 +4,7 @@ export interface Gear {
   id: number;
   name: string;
   isPonctualUsage: boolean;
+  isConsumable: boolean;
   slug: string;
   owner?: Pick<Team, "code" | "name">;
   category?: {

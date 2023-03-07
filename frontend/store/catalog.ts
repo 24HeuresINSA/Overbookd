@@ -1,4 +1,4 @@
-import { actionTree, mutationTree, getterTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { GearRepository as InventoryGearRepository } from "~/domain/inventory/gear.repository";
 import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.repository";
 import { RepoFactory } from "~/repositories/repoFactory";
@@ -25,6 +25,7 @@ export interface GearForm {
   name: string;
   category?: number;
   isPonctualUsage: boolean;
+  isConsumable: boolean;
 }
 
 export interface GearUpdateForm extends GearForm {

@@ -6,7 +6,7 @@ import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
   uniqueByGearReducer,
-  uniqueGerRequestPeriodsReducer,
+  uniqueGearRequestPeriodsReducer,
 } from "~/utils/functions/gearRequest";
 import {
   castFaWithDate,
@@ -73,7 +73,7 @@ export const getters = getterTree(state, {
     );
   },
   gearRequestRentalPeriods(state): Period[] {
-    const savedPeriods = uniqueGerRequestPeriodsReducer(state.gearRequests);
+    const savedPeriods = uniqueGearRequestPeriodsReducer(state.gearRequests);
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
