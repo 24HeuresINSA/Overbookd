@@ -25,6 +25,12 @@
             label="Est du matos d'appoint"
             @change="updatePonctualUsage"
           ></v-switch>
+          <v-switch
+            :input-value="isConsumable"
+            :muliple="false"
+            label="Est du matos consommable"
+            @change="updateConsumableStatus"
+          ></v-switch>
           <SearchCategoryVue
             v-model="category"
             label="Choisisez une categorie associee"
@@ -43,13 +49,14 @@
 import Vue from "vue";
 import { GearForm } from "~/store/catalog";
 import { Category, Gear } from "~/utils/models/catalog.model";
-import SearchCategoryVue from "../../atoms/SearchCategory.vue";
 import { InputRulesData, minLength } from "~/utils/rules/inputRules";
+import SearchCategoryVue from "../../atoms/SearchCategory.vue";
 
 interface GearFormData extends InputRulesData {
   name: string;
   category?: Category;
   isPonctualUsage: boolean;
+  isConsumable: boolean;
 }
 
 const nameMinLength = 3;
@@ -64,6 +71,7 @@ export default Vue.extend({
         name: "",
         category: undefined,
         isPonctualUsage: false,
+        isConsumable: false,
       }),
     },
   },
@@ -72,6 +80,7 @@ export default Vue.extend({
       name: this.gear.name,
       category: this.gear.category,
       isPonctualUsage: this.gear.isPonctualUsage,
+      isConsumable: this.gear.isConsumable,
       rules: {
         nameMinLength: minLength(nameMinLength),
       },
@@ -94,6 +103,7 @@ export default Vue.extend({
       let gear: GearForm = {
         name: this.name,
         isPonctualUsage: this.isPonctualUsage,
+        isConsumable: this.isConsumable,
       };
       if (this.shouldUpdateCategory) {
         gear = { ...gear, category: this.category?.id };
@@ -112,6 +122,9 @@ export default Vue.extend({
     },
     updatePonctualUsage(ponctualUsage: boolean | null) {
       this.isPonctualUsage = ponctualUsage ?? false;
+    },
+    updateConsumableStatus(consumable: boolean | null) {
+      this.isConsumable = consumable ?? false;
     },
   },
 });

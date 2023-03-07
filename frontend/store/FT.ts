@@ -1,33 +1,39 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 import {
-  FTCreation,
-  FT,
-  FTStatus,
-  FTSearch,
-  FTTimeWindow,
-  FTTeamRequest,
-  toUpdateFT,
-  getTimeWindowWithoutRequests,
-  castTimeWindowWithDate,
-  castFTWithDate,
-  FTSimplified,
-  FTUserRequestUpdate,
-  FTTeamRequestUpdate,
-  FTUserRequest,
-  FTPageId,
-} from "~/utils/models/ft";
+  generateGearRequestCreationBuilder,
+  isSimilarConsumableGearRequest,
+  isSimilarGearRequest,
+  isSimilarPeriod,
+  uniqueByGearReducer,
+  uniqueGerRequestPeriodsReducer,
+  uniquePeriodsReducer,
+} from "~/utils/functions/gearRequest";
+import { updateItemToList } from "~/utils/functions/list";
 import {
   Feedback,
   FeedbackCreation,
   SubjectType,
 } from "~/utils/models/feedback";
-import { User } from "~/utils/models/user";
-import { updateItemToList } from "~/utils/functions/list";
-import { Team } from "~/utils/models/team";
-import { formatUsername } from "~/utils/user/userUtils";
-import { Review, Reviewer } from "~/utils/models/review";
+import {
+  castFTWithDate,
+  castTimeWindowWithDate,
+  FT,
+  FTCreation,
+  FTPageId,
+  FTSearch,
+  FTSimplified,
+  FTStatus,
+  FTTeamRequest,
+  FTTeamRequestUpdate,
+  FTTimeWindow,
+  FTUserRequest,
+  FTUserRequestUpdate,
+  getTimeWindowWithoutRequests,
+  toUpdateFT,
+} from "~/utils/models/ft";
 import {
   castGearRequestWithDate,
   GearRequestCreation,
@@ -35,15 +41,10 @@ import {
   Period,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
-import {
-  generateGearRequestCreationBuilder,
-  isSimilarGearRequest,
-  isSimilarPeriod,
-  uniqueByGearReducer,
-  uniqueGerRequestPeriodsReducer,
-  uniquePeriodsReducer,
-} from "~/utils/functions/gearRequest";
-import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
+import { Review, Reviewer } from "~/utils/models/review";
+import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 const repo = RepoFactory.ftRepo;
 
@@ -200,7 +201,22 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
-    state.gearRequests = [...state.gearRequests, gearRequest];
+    if (!gearRequest.gear.isConsumable) {
+      state.gearRequests = [...state.gearRequests, gearRequest];
+      return;
+    }
+    const index = state.gearRequests.findIndex(
+      isSimilarConsumableGearRequest(gearRequest)
+    );
+    if (index === -1) {
+      state.gearRequests = [...state.gearRequests, gearRequest];
+      return;
+    }
+    state.gearRequests = updateItemToList(
+      state.gearRequests,
+      index,
+      gearRequest
+    );
   },
 
   SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<"FT">[]) {
@@ -650,6 +666,23 @@ export const actions = actionTree(
       await Promise.all(
         gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
+    },
+
+    async addConsumableGearRequestForAllRentalPeriods(
+      { getters, dispatch },
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+    ) {
+      const generateGearRequestCreation = generateGearRequestCreationBuilder(
+        gearId,
+        quantity
+      );
+      const gearRequestCreationForms = (
+        getters.gearRequestRentalPeriods as Period[]
+      ).map(generateGearRequestCreation);
+      // On passe par une boucle pour éviter les pb de concurrences dans la BDD
+      for (const form of gearRequestCreationForms) {
+        await dispatch("addGearRequest", form);
+      }
     },
 
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {

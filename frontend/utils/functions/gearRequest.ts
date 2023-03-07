@@ -93,3 +93,15 @@ export function isSimilarGearRequest<T extends "FA" | "FT">(
     );
   };
 }
+
+export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
+  gearRequest: StoredGearRequest<T>
+): (value: StoredGearRequest<T>) => boolean {
+  return (gr: StoredGearRequest<T>) => {
+    return (
+      gearRequest.gear.id === gr.gear.id &&
+      gearRequest.seeker.id === gr.seeker.id &&
+      gearRequest.seeker.type === gr.seeker.type
+    );
+  };
+}
