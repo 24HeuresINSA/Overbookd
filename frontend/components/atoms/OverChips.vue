@@ -1,7 +1,13 @@
 <template>
   <v-container style="padding: 0">
     <v-chip-group>
-      <v-chip v-for="(role, i) in mRoles" :key="i" small :color="role.color">
+      <v-chip
+        v-for="(role, i) in mRoles"
+        :key="i"
+        small
+        :color="role.color"
+        :class="getFlipClass(role)"
+      >
         <v-icon small left color="white">
           {{ role.icon }}
         </v-icon>
@@ -29,7 +35,16 @@ export default Vue.extend({
       return this.$accessor.team.getTeams(this.roles);
     },
   },
+  methods: {
+    getFlipClass(role: Team): string {
+      return role.code === "bde" ? "flip" : "";
+    },
+  },
 });
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.flip {
+  transform: rotate(180deg);
+}
+</style>
