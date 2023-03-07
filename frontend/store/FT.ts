@@ -8,7 +8,7 @@ import {
   isSimilarGearRequest,
   isSimilarPeriod,
   uniqueByGearReducer,
-  uniqueGerRequestPeriodsReducer,
+  uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
@@ -64,7 +64,7 @@ export const getters = getterTree(state, {
     }));
   },
   gearRequestRentalPeriods(state, getters): Period[] {
-    const savedPeriods = uniqueGerRequestPeriodsReducer(state.gearRequests);
+    const savedPeriods = uniqueGearRequestPeriodsReducer(state.gearRequests);
     const ftPeriods = getters.ftPeriods;
     return uniquePeriodsReducer([...savedPeriods, ...ftPeriods]);
   },
@@ -201,10 +201,6 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
-    if (!gearRequest.gear.isConsumable) {
-      state.gearRequests = [...state.gearRequests, gearRequest];
-      return;
-    }
     const index = state.gearRequests.findIndex(
       isSimilarConsumableGearRequest(gearRequest)
     );
