@@ -39,28 +39,33 @@ export default Vue.extend({
   },
   computed: {
     userRequestStatus(): string {
-      return this.hasErrors ? "also-requested-by-ft" : "";
+      if (this.isNotAvailable) return "not-available";
+      if (this.isAlsoRequested) return "also-requested-by-ft";
+      return "";
     },
     userName(): string {
       return formatUsername(this.userRequest.user);
     },
+    isNotAvailable(): boolean {
+      return !this.userRequest.isAvailable;
+    },
+    isAlsoRequested(): boolean {
+      return this.userRequest.alsoRequestedBy.length > 0;
+    },
     hasErrors(): boolean {
-      return (
-        this.userRequest.alsoRequestedBy.length > 0 ||
-        !this.userRequest.isAvailable
-      );
+      return this.isNotAvailable || this.isAlsoRequested;
     },
     errorMessages(): string[] {
       if (!this.hasErrors) return [];
-      return [...this.alsoRequestedByErrors, this.notAvailableError];
+      return [...this.notAvailableErrors, ...this.alsoRequestedByErrors];
     },
     alsoRequestedByErrors(): string[] {
       return this.userRequest.alsoRequestedBy.map(
         (ft) => `Aussi demande dans la FT #${ft.id} - ${ft.name}`
       );
     },
-    notAvailableError(): string {
-      return "N'est pas disponible sur le creneau";
+    notAvailableErrors(): string[] {
+      return this.isNotAvailable ? ["N'est pas disponible sur le creneau"] : [];
     },
   },
   methods: {
