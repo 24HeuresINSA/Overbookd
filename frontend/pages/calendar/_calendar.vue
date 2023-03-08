@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- TODO - Check why we can't switch the week -->
     <OverCalendarV2
       :date="calendarCentralDate"
       title="true"
@@ -26,11 +25,12 @@
   </div>
 </template>
 
-<script>
-import OverChips from "~/components/atoms/overChips";
+<script lang="ts">
+import { defineComponent } from "vue";
+import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 
-export default {
+export default defineComponent({
   name: "Calendar",
   components: {
     OverChips,
@@ -38,73 +38,43 @@ export default {
   },
   data: function () {
     return {
-      userId: this.$route.params.calendar,
-      user: undefined,
       calendarCentralDate: new Date("2023-05-12 00:00+02:00"),
     };
   },
+  computed: {
+    availabilities() {
+      return this.$accessor.volunteerAvailability.mAvailabilities;
+    },
+    user() {
+      return this.$accessor.user.mUser;
+    },
+  },
   async created() {
-    if (!this.$accessor.user.hasPermission("hard")) {
+    const userId = parseInt(this.$route.params.calendar);
+    if (!this.$accessor.user.hasPermission("hard") || isNaN(userId)) {
       await this.$router.push({
         path: "/",
       });
     }
     await Promise.all([
-      this.$accessor.user.findUserById(this.userId),
-      this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.userId
-      ),
+      this.$accessor.user.findUserById(userId),
+      this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
     ]);
-    this.user = this.$accessor.user.mUser;
   },
   methods: {
-    getFormattedDate(date) {
-      const month = ("0" + (date.getMonth() + 1)).slice(-2);
-      const day = ("0" + date.getDate()).slice(-2);
-      const year = date.getFullYear();
-      const hour = ("0" + date.getHours()).slice(-2);
-      const min = ("0" + date.getMinutes()).slice(-2);
-      const seg = ("0" + date.getSeconds()).slice(-2);
-      return (
-        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg
-      );
-    },
-    updateDate(date) {
+    updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
-    getColor(type) {
-      switch (type) {
-        case "refused":
-          return "red";
-        case "submitted":
-          return "orange";
-        case "draft":
-          return "grey";
-        case "validated":
-          return "success";
-        case "affected":
-          return "deep-purple";
-        default:
-          return "grey";
-      }
-    },
-    isUserAvailableInTimeframe(date, time) {
-      const timeframe = new Date(date + " " + time);
-      const availabilities =
-        this.$accessor.volunteerAvailability.availabilityRegistery
-          .availabilities;
-      const isUserAvailableInTimeframe = availabilities.some((availability) => {
-        const start = new Date(availability.start);
-        const end = new Date(availability.end);
-        return (
-          start.getTime() <= timeframe.getTime() + 5000 &&
-          end.getTime() >= timeframe.getTime() + 5000
-        );
-      });
-      return isUserAvailableInTimeframe;
+    isUserAvailableInTimeframe(date: string, time: string) {
+      const period = new Date(`${date} ${time}`);
+      return this.availabilities.some(
+        (availability) =>
+          availability.start.getTime() <= period.getTime() &&
+          availability.end.getTime() >= period.getTime()
+      );
     },
   },
-};
+});
 </script>
 
 <style scoped>

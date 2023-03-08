@@ -242,10 +242,11 @@ export const actions = actionTree(
       return;
     },
     async findUserById({ commit }, id: number) {
-      const res = await UserRepo.getUser(this, id);
-
-      if (res && res.data) commit("SET_SELECTED_USER", res.data);
-      return res;
+      const res = await safeCall(this, UserRepo.getUser(this, id));
+      if (res) {
+        commit("SET_SELECTED_USER", res.data);
+      }
+      return;
     },
 
     async removeAvailability(
