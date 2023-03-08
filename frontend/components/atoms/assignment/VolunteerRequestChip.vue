@@ -12,8 +12,8 @@
           {{ userName }}
         </v-chip>
       </template>
-      <v-list-item dark>
-        <v-list-item-content v-for="(message, i) in errorMessages" :key="i">
+      <v-list-item v-for="(message, i) in errorMessages" :key="i" dark>
+        <v-list-item-content>
           <v-list-item-title> {{ message }} </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
