@@ -144,13 +144,20 @@ export class UserService {
   }
 
   async updateUser(
-    id: number,
-    user: UserModificationDto,
+    targetUserId: number,
+    userData: UserModificationDto,
+    authorId: number,
   ): Promise<UserWithoutPassword> {
+    const canManageUsers = await this.hasAtLeastOnePermission(authorId, [
+      'manage-users',
+      'admin',
+    ]);
+    if (!canManageUsers) delete userData.charisma;
+
     return this.prisma.user.update({
       select: SELECT_USER,
-      data: user,
-      where: { id },
+      data: userData,
+      where: { id: targetUserId },
     });
   }
 
@@ -184,5 +191,22 @@ export class UserService {
           permissions: [...permissions],
         }
       : undefined;
+  }
+
+  private async hasAtLeastOnePermission(
+    userId: number,
+    permissions: string[],
+  ): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
+      },
+    });
+    const userWithPermissions = this.getUserWithTeamAndPermission(user);
+    return permissions.some((permission) =>
+      userWithPermissions.permissions.includes(permission),
+    );
   }
 }

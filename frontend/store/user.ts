@@ -44,8 +44,12 @@ export const mutations = mutationTree(state, {
     );
     state.usernames = data;
   },
-  UPDATE_USER(state: UserState, data: Partial<User>) {
-    Object.assign(state.me, data);
+  UPDATE_USER(state: UserState, data: User) {
+    if (!data.id) return;
+    const index = state.users.findIndex((user) => user.id === +data.id);
+    if (index !== -1) {
+      state.users[index] = { ...state.users[index], ...data, id: +data.id };
+    }
   },
   SET_TIMESLOTS(state: UserState, data: any) {
     state.timeslots = data;
@@ -171,17 +175,15 @@ export const actions = actionTree(
         return u.username;
       }
     },
-    async updateUser({ commit }, user: User) {
+    async updateUser({ commit, state }, user: User) {
       const { id, ...userData } = user;
       const res = await safeCall(
         this,
         UserRepo.updateUser(this, +id, castToUserModification(userData))
       );
-      if (res) {
-        commit("UPDATE_USER", userData);
-        return true;
-      }
-      return false;
+      if (!res) return;
+      commit("UPDATE_USER", userData);
+      if (res.data.id === state.me.id) commit("SET_USER", userData);
     },
 
     async acceptSelection({ commit }, timeslotIDS: string[]) {

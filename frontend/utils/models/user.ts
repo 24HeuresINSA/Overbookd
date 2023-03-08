@@ -33,6 +33,7 @@ export interface UserModification
   extends Omit<UserCreation, "password" | "teamId"> {
   has_payed_contributions?: boolean;
   pp?: string;
+  charisma?: number;
 }
 
 export function castToUserModification(user: any): UserModification {
@@ -48,5 +49,6 @@ export function castToUserModification(user: any): UserModification {
     comment: user.comment || null,
     has_payed_contributions: user.has_payed_contributions || false,
     pp: user.pp || null,
+    charisma: +user.charisma,
   };
 }

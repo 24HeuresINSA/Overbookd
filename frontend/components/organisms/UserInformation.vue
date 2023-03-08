@@ -108,6 +108,8 @@
                   <v-text-field
                     v-model="mUser.charisma"
                     label="Charisme"
+                    type="number"
+                    :rules="[rules.number, rules.min]"
                     :disabled="!hasEditingRole"
                   ></v-text-field>
                 </v-col>
@@ -157,6 +159,7 @@
 <script>
 import OverChips from "~/components/atoms/OverChips";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { isNumber, min } from "~/utils/rules/inputRules";
 import { formatNameWithNickname } from "~/utils/user/userUtils";
 import { safeCall } from "../../utils/api/calls";
 import DateField from "../atoms/DateField.vue";
@@ -187,6 +190,10 @@ export default {
       isEditingAvailability: false,
       usernames: undefined,
       newFriend: undefined,
+      rules: {
+        number: isNumber,
+        min: min(0),
+      },
     };
   },
 

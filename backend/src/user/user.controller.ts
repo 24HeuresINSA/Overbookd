@@ -140,9 +140,10 @@ export class UserController {
     type: UserModificationDto,
   })
   updateUserById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) targetUserId: number,
     @Body() user: UserModificationDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<UserWithoutPassword> {
-    return this.userService.updateUser(id, user);
+    return this.userService.updateUser(targetUserId, user, req.user.id);
   }
 }
