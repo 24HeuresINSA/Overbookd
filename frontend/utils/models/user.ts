@@ -1,9 +1,9 @@
-export interface UserName {
+export interface DisplayedUser {
   firstname: string;
   lastname: string;
 }
 
-export interface User extends UserName {
+export interface User extends DisplayedUser {
   id: number;
 }
 
@@ -15,9 +15,7 @@ export interface Friend extends User {
   nickname?: string;
 }
 
-export type DisplayedUser = Pick<User, "firstname" | "lastname">;
-
-export interface UserCreation extends UserName {
+export interface UserCreation extends DisplayedUser {
   nickname?: string;
   email: string;
   birthdate: Date;

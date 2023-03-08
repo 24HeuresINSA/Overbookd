@@ -9,7 +9,7 @@
             max-height="200px"
           ></v-img>
           <v-card-title>
-            {{ formatNameWithNickname }}
+            {{ formatUserNameWithNickname }}
           </v-card-title>
           <v-card-text>
             <OverChips :roles="mUser.team" />
@@ -160,7 +160,7 @@
 import OverChips from "~/components/atoms/OverChips";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import { formatNameWithNickname } from "~/utils/user/userUtils";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 import { safeCall } from "../../utils/api/calls";
 import DateField from "../atoms/DateField.vue";
 import AvailabilitiesSumup from "../molecules/availabilities/AvailabilitiesSumup.vue";
@@ -217,8 +217,8 @@ export default {
         this.$emit("update-toggle", t);
       },
     },
-    formatNameWithNickname() {
-      return formatNameWithNickname(this.mUser);
+    formatUserNameWithNickname() {
+      return formatUserNameWithNickname(this.mUser);
     },
     canEditUserData() {
       return this.hasEditingRole || this.isMe;

@@ -4,7 +4,7 @@ export function formatUsername({ firstname, lastname }: User): string {
   return `${firstname} ${lastname}`;
 }
 
-export function formatNameWithNickname({
+export function formatUserNameWithNickname({
   lastname,
   firstname,
   nickname,
