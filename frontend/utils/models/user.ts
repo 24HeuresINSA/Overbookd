@@ -1,3 +1,5 @@
+import { Notification } from "./repo";
+
 enum Department {
   TC = "TC",
   IF = "IF",
@@ -76,6 +78,9 @@ export interface CompleteUser extends User {
   is_deleted: boolean;
   team: string[];
   permissions: string[];
+
+  // This is not in the API response, but is used in the frontend
+  notifications: Notification[];
 }
 
 export interface CompleteUserWithoutId extends Omit<CompleteUser, "id"> {}

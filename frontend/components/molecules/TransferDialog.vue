@@ -97,7 +97,7 @@ export default Vue.extend({
       this.toggled = false;
       this.transfer.amount = this.transfer.amount.replace(",", ".");
       // transaction to self...
-      if (this.transfer.user.id == this.me.id) {
+      if (this.transfer.user.id == this.me.id.toString()) {
         this.$accessor.notif.pushNotification({
           message:
             "Trouve toi des amis plutôt que de faire des virements a toi même...",
@@ -120,7 +120,7 @@ export default Vue.extend({
           let newTransfer: Partial<Transfer> = {
             amount: +this.transfer.amount,
             context: this.transfer.reason,
-            from: this.me.id,
+            from: this.me.id.toString(),
             to: this.transfer.user.id,
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
