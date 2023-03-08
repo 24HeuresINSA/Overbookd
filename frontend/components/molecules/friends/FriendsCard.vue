@@ -47,7 +47,7 @@
 import Vue from "vue";
 import SearchFriend from "~/components/atoms/SearchFriend.vue";
 import { Friend } from "~/utils/models/user";
-import { formatFriendName } from "~/utils/user/userUtils";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 interface FriendsCardData {
   newFriend: Friend;
@@ -96,7 +96,7 @@ export default Vue.extend({
       };
     },
     displayFriend(friend: Friend): string {
-      return formatFriendName(friend);
+      return formatUserNameWithNickname(friend);
     },
     removeFriend(friend: Friend) {
       this.$accessor.user.removeFriend(friend);

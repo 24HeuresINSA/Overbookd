@@ -3,19 +3,21 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { User } from "~/utils/models/repo";
 import {
   castToUserModification,
+  CompleteUser,
   Friend,
   UserCreation,
   UserWithPermissions,
 } from "~/utils/models/user";
+import { updateItemToList } from "~/utils/functions/list";
 import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
-  me: {} as User,
+  me: {} as CompleteUser,
   users: [] as UserWithPermissions[],
   usernames: [] as Partial<User>[],
-  mUser: {} as User,
+  mUser: {} as CompleteUser,
   timeslots: [],
   friends: [] as Friend[],
   mFriends: [] as Friend[],
@@ -24,10 +26,10 @@ export const state = () => ({
 export type UserState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_USER(state: UserState, data: User) {
+  SET_USER(state: UserState, data: CompleteUser) {
     state.me = data;
   },
-  SET_SELECTED_USER(state: UserState, data: User) {
+  SET_SELECTED_USER(state: UserState, data: CompleteUser) {
     state.mUser = data;
   },
   SET_USERS(state: UserState, data: UserWithPermissions[]) {
@@ -44,11 +46,11 @@ export const mutations = mutationTree(state, {
     );
     state.usernames = data;
   },
-  UPDATE_USER(state: UserState, data: User) {
+  UPDATE_USER(state: UserState, data: CompleteUser) {
     if (!data.id) return;
     const index = state.users.findIndex((user) => user.id === +data.id);
     if (index !== -1) {
-      state.users[index] = { ...state.users[index], ...data, id: +data.id };
+      updateItemToList(state.users, index, data);
     }
   },
   SET_TIMESLOTS(state: UserState, data: any) {
@@ -69,11 +71,6 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  availabilities: (state: UserState) => {
-    return state.mUser.availabilities.map((_id) => {
-      return state.timeslots.find((_timeslot) => _timeslot === _id);
-    });
-  },
   hasPermission: (state: UserState) => (permission?: string) => {
     if (!permission) return true;
     return (
@@ -175,11 +172,15 @@ export const actions = actionTree(
         return u.username;
       }
     },
-    async updateUser({ commit, state }, user: User) {
+    async updateUser({ commit, state }, user: CompleteUser) {
       const { id, ...userData } = user;
       const res = await safeCall(
         this,
-        UserRepo.updateUser(this, +id, castToUserModification(userData))
+        UserRepo.updateUser(this, +id, castToUserModification(userData)),
+        {
+          successMessage: "Profil mis à jour ! 🎉",
+          errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
+        }
       );
       if (!res) return;
       commit("UPDATE_USER", userData);

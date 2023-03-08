@@ -1,3 +1,27 @@
+enum Department {
+  TC = "TC",
+  IF = "IF",
+  GE = "GE",
+  GM = "GM",
+  GI = "GI",
+  GCU = "GCU",
+  GEN = "GEN",
+  SGM = "SGM",
+  BS = "BS",
+  FIMI = "FIMI",
+  AUTRE = "AUTRE",
+}
+
+enum Year {
+  A1 = "A1",
+  A2 = "A2",
+  A3 = "A3",
+  A4 = "A4",
+  A5 = "A5",
+  VIEUX = "VIEUX",
+  AUTRE = "AUTRE",
+}
+
 export interface DisplayedUser {
   firstname: string;
   lastname: string;
@@ -29,24 +53,48 @@ export interface UserCreation extends DisplayedUser {
 
 export interface UserModification
   extends Omit<UserCreation, "password" | "teamId"> {
-  has_payed_contributions?: boolean;
+  has_payed_contributions: boolean;
   pp?: string;
-  charisma?: number;
+  charisma: number;
 }
 
-export function castToUserModification(user: any): UserModification {
+export interface CompleteUser extends User {
+  nickname?: string;
+  email: string;
+  birthdate: Date;
+  phone: string;
+  department?: Department;
+  comment?: string;
+  has_payed_contributions: boolean;
+  year?: Year;
+  pp?: string;
+  charisma: number;
+  balance: number;
+  password: string;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+  team: string[];
+  permissions: string[];
+}
+
+export interface CompleteUserWithoutId extends Omit<CompleteUser, "id"> {}
+
+export function castToUserModification(
+  user: CompleteUserWithoutId
+): UserModification {
   return {
-    firstname: user.firstname || null,
-    lastname: user.lastname || null,
-    nickname: user.nickname || null,
-    email: user.email || null,
-    birthdate: user.birthdate,
-    phone: user.phone || null,
-    department: user.department || null,
-    year: user.year || null,
-    comment: user.comment || null,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    nickname: user.nickname || undefined,
+    email: user.email,
+    birthdate: new Date(user.birthdate),
+    phone: user.phone,
+    department: user.department,
+    year: user.year || undefined,
+    comment: user.comment || undefined,
     has_payed_contributions: user.has_payed_contributions || false,
-    pp: user.pp || null,
+    pp: user.pp || undefined,
     charisma: +user.charisma,
   };
 }

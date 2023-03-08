@@ -140,11 +140,14 @@
                 text
                 color="red"
                 @click="deleteUser()"
-                >supprimer</v-btn
               >
+                supprimer
+              </v-btn>
             </v-col>
             <v-col md="3">
-              <v-btn text @click="saveUser()">sauvegarder</v-btn>
+              <v-btn text color="success" @click="saveUser()">
+                sauvegarder
+              </v-btn>
             </v-col>
           </v-row>
         </div>
@@ -228,12 +231,6 @@ export default {
     },
     isMe() {
       return this.$accessor.user.me.id === this.mUser.id;
-    },
-    isValidated() {
-      return this.$accessor.permission.isValidated(this.mUser);
-    },
-    isSoft() {
-      return this.mUser.team.includes("soft");
     },
   },
 
