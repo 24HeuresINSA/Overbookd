@@ -26,14 +26,7 @@
 
             <v-container>
               <v-row>
-                <v-col
-                  md="6"
-                  style="
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                  "
-                >
+                <v-col md="6" class="d-flex align-center justify-center">
                   <v-btn icon :href="'mailto:' + mUser.email">
                     <v-icon>mdi-send</v-icon>
                   </v-btn>
@@ -154,7 +147,7 @@
         <div class="user-information__availabilities">
           <AvailabilitiesSumup
             :user-id="mUser.id"
-            @close-dialog="closeDialog"
+            @availabilities-updated="fetchUser"
           ></AvailabilitiesSumup>
         </div>
       </div>
@@ -166,7 +159,10 @@
 import OverChips from "~/components/atoms/OverChips";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import {
+  formatUsername,
+  formatUserNameWithNickname,
+} from "~/utils/user/userUtils";
 import { safeCall } from "../../utils/api/calls";
 import DateField from "../atoms/DateField.vue";
 import AvailabilitiesSumup from "../molecules/availabilities/AvailabilitiesSumup.vue";
@@ -247,7 +243,7 @@ export default {
       this.usernames = res.data
         .map((user) => {
           if (!user.team.includes("hard")) {
-            const username = user.firstname + " " + user.lastname;
+            const username = formatUsername(user);
             return { text: username, value: user };
           }
         })
@@ -302,14 +298,11 @@ export default {
     },
     saveUser() {
       this.$accessor.user.updateUser(this.mUser);
-      this.closeDialog();
+      this.mToggle = false;
     },
     deleteUser() {
       this.mUser.isValid = false;
       this.saveUser();
-    },
-    closeDialog() {
-      this.mToggle = false;
     },
     hasUserRole(roles) {
       if (this.mUser.team === undefined) {
@@ -318,26 +311,9 @@ export default {
         return this.mUser.team.includes(roles);
       }
     },
-    async validateUser() {
-      if (this.mUser.team.includes("toValidate")) {
-        for (var i = 0; i < this.mUser.team.length; i++) {
-          if (this.mUser.team[i] === "toValidate") {
-            this.mUser.team.splice(i, 1);
-          }
-        }
-        this.mUser.team.push("soft");
-        await this.$axios.put(`/user/${this.mUser._id}`, {
-          team: this.mUser.team,
-        });
-        this.saveUser();
-      }
-    },
-    async unvalidateUser() {
-      if (this.mUser.team.includes("soft")) {
-        this.mUser.team = ["toValidate"];
-        this.mUser.availabilities = [];
-        await this.$axios.get("/timespan/user/unassignall/" + this.mUser._id);
-      }
+    fetchUser(userId) {
+      this.$accessor.user.fetchAndUpdateLocalUser(userId);
+      this.mToggle = false;
     },
   },
 };

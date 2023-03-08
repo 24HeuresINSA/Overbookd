@@ -265,7 +265,6 @@ export default {
   },
   data() {
     return {
-      users: [],
       filteredUsers: [],
       headers: [
         { text: "Prénom Nom (Surnom)", value: "firstname" },
@@ -321,61 +320,23 @@ export default {
     };
   },
 
+  computed: {
+    users() {
+      return this.$accessor.user.users.filter((user) => !user.is_deleted);
+    },
+  },
+
   watch: {
     filters: {
       handler() {
-        let mUsers = this.users;
+        this.updateFilteredUsers();
+      },
+      deep: true,
+    },
 
-        // filter by search
-        if (this.filters.search) {
-          const options = {
-            // Search in `author` and in `tags` array
-            keys: ["firstname", "lastname", "nickname", "phone"],
-          };
-          const fuse = new Fuse(mUsers, options);
-
-          mUsers = fuse.search(this.filters.search).map((e) => e.item);
-          this.options.page = 1; // reset page
-        }
-
-        // filter by not validated
-        if (this.filters.isValidated !== undefined) {
-          if (this.filters.isValidated) {
-            mUsers = mUsers.filter((user) =>
-              this.$accessor.permission.isValidated(user)
-            );
-          } else {
-            mUsers = mUsers.filter(
-              (user) => !this.$accessor.permission.isValidated(user)
-            );
-          }
-          this.options.page = 1; // reset page
-        }
-
-        // filter by payed contributions
-        if (this.filters.hasPayedContribution !== undefined) {
-          if (this.filters.hasPayedContribution) {
-            mUsers = mUsers.filter((user) => user.has_payed_contributions);
-          } else {
-            mUsers = mUsers.filter((user) => !user.has_payed_contributions);
-          }
-          this.options.page = 1; // reset page
-        }
-
-        // filter by team
-        if (this.filters.teams) {
-          this.filteredUsers = mUsers.filter((user) => {
-            if (user.team) {
-              return (
-                user.team.filter((value) => this.filters.teams.includes(value))
-                  .length === this.filters.teams.length
-              );
-            } else {
-              return false;
-            }
-          });
-          this.options.page = 1; // reset page
-        }
+    users: {
+      handler() {
+        this.updateFilteredUsers();
       },
       deep: true,
     },
@@ -397,11 +358,10 @@ export default {
   },
 
   async mounted() {
+    await this.$accessor.user.fetchUsers();
     //await this.initStore();
     if (this.hasPermission("hard")) {
       // user has the HARD role
-      this.users = (await this.$axios.get("/user")).data;
-      this.users.filter((user) => !user.is_deleted);
       this.filteredUsers = this.users;
       this.filters.isValidated = true; // default set to true
 
@@ -734,6 +694,60 @@ export default {
     },
     openCalendar(userID) {
       window.open("/calendar/" + userID, "_blank");
+    },
+    updateFilteredUsers() {
+      let mUsers = this.users;
+
+      // filter by search
+      if (this.filters.search) {
+        const options = {
+          // Search in `author` and in `tags` array
+          keys: ["firstname", "lastname", "nickname", "phone"],
+        };
+        const fuse = new Fuse(mUsers, options);
+
+        mUsers = fuse.search(this.filters.search).map((e) => e.item);
+        this.options.page = 1; // reset page
+      }
+
+      // filter by not validated
+      if (this.filters.isValidated !== undefined) {
+        if (this.filters.isValidated) {
+          mUsers = mUsers.filter((user) =>
+            this.$accessor.permission.isValidated(user)
+          );
+        } else {
+          mUsers = mUsers.filter(
+            (user) => !this.$accessor.permission.isValidated(user)
+          );
+        }
+        this.options.page = 1; // reset page
+      }
+
+      // filter by payed contributions
+      if (this.filters.hasPayedContribution !== undefined) {
+        if (this.filters.hasPayedContribution) {
+          mUsers = mUsers.filter((user) => user.has_payed_contributions);
+        } else {
+          mUsers = mUsers.filter((user) => !user.has_payed_contributions);
+        }
+        this.options.page = 1; // reset page
+      }
+
+      // filter by team
+      if (this.filters.teams) {
+        this.filteredUsers = mUsers.filter((user) => {
+          if (user.team) {
+            return (
+              user.team.filter((value) => this.filters.teams.includes(value))
+                .length === this.filters.teams.length
+            );
+          } else {
+            return false;
+          }
+        });
+        this.options.page = 1; // reset page
+      }
     },
   },
 };

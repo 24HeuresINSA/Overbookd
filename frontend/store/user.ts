@@ -49,7 +49,7 @@ export const mutations = mutationTree(state, {
   UPDATE_USER(state: UserState, data: CompleteUser) {
     const index = state.users.findIndex((user) => user.id === data.id);
     if (index !== -1) {
-      updateItemToList(state.users, index, data);
+      state.users = updateItemToList(state.users, index, data);
     }
   },
   SET_TIMESLOTS(state: UserState, data: any) {
@@ -186,6 +186,13 @@ export const actions = actionTree(
       if (res.data.id === state.me.id) commit("SET_USER", userData);
     },
 
+    async fetchAndUpdateLocalUser({ commit, state }, userId: number) {
+      const res = await safeCall(this, UserRepo.getUser(this, userId));
+      if (!res) return;
+      commit("UPDATE_USER", res.data);
+      if (res.data.id === state.me.id) commit("SET_USER", res.data);
+    },
+
     async acceptSelection({ commit }, timeslotIDS: string[]) {
       const res = await safeCall(
         this,
@@ -197,7 +204,7 @@ export const actions = actionTree(
       return;
     },
     async findUserById({ commit }, id: string) {
-      const res = await UserRepo.getUser(this, id);
+      const res = await UserRepo.getUser(this, +id);
 
       if (res && res.data) commit("SET_SELECTED_USER", res.data);
       return res;

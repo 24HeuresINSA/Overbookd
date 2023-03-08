@@ -195,14 +195,14 @@ export class UserService {
       : undefined;
   }
 
-  canUpdateCharisma(author: JwtPayload): boolean {
+  private canUpdateCharisma(author: JwtPayload): boolean {
     return (
       author.permissions.includes('update_charisma') ||
       author.permissions.includes('admin')
     );
   }
 
-  canUpdateContributionPayment(author: JwtPayload): boolean {
+  private canUpdateContributionPayment(author: JwtPayload): boolean {
     return (
       author.permissions.includes('sg') || author.permissions.includes('admin')
     );

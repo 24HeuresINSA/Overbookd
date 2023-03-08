@@ -121,11 +121,11 @@ export default Vue.extend({
         periodToRemove
       );
     },
-    saveAvailabilities() {
-      this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
+    async saveAvailabilities() {
+      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
         this.userId
       );
-      this.$emit("close-dialog");
+      this.$emit("availabilities-updated", this.userId);
     },
   },
 });

@@ -23,7 +23,7 @@ export default {
   createUser(context: Context, user: UserCreation) {
     return context.$axios.$post(`${resource}`, user);
   },
-  getUser(context: Context, userId: string) {
+  getUser(context: Context, userId: number) {
     return context.$axios.get(`${resource}/${userId}`);
   },
   getMyUser(context: Context) {
