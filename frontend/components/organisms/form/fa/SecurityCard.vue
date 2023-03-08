@@ -12,7 +12,7 @@
       <v-form>
         <v-switch
           :value="mFA.is_pass_required"
-          label="Besoin de Pass Sécu"
+          label="Besoin de laissez-passer"
           :disabled="isValidatedByOwner"
           @change="onChange('is_pass_required', $event)"
         ></v-switch>
@@ -41,13 +41,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { FA, fa_card_type } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
 
 export default Vue.extend({
   name: "SecurityCard",
