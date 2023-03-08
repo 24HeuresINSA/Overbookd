@@ -133,7 +133,6 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('hard')
   @Put(':id')
   @ApiBody({
     description: 'Update a user by id',
@@ -144,6 +143,6 @@ export class UserController {
     @Body() user: UserModificationDto,
     @Request() req: RequestWithUserPayload,
   ): Promise<UserWithoutPassword> {
-    return this.userService.updateUser(targetUserId, user, req.user.id);
+    return this.userService.updateUser(targetUserId, user, req.user);
   }
 }

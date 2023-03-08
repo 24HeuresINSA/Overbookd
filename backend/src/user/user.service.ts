@@ -9,6 +9,7 @@ import {
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
+import { JwtPayload } from 'src/auth/entities/JwtUtil.entity';
 
 const SELECT_USER = {
   email: true,
@@ -146,13 +147,16 @@ export class UserService {
   async updateUser(
     targetUserId: number,
     userData: UserModificationDto,
-    authorId: number,
+    author: JwtPayload,
   ): Promise<UserWithoutPassword> {
-    const canManageUsers = await this.hasAtLeastOnePermission(authorId, [
-      'manage-users',
-      'admin',
-    ]);
-    if (!canManageUsers) delete userData.charisma;
+    if (!author.permissions.includes('admin')) {
+      if (!author.permissions.includes('manage-users')) {
+        delete userData.charisma;
+      }
+      if (!author.permissions.includes('sg')) {
+        delete userData.has_payed_contributions;
+      }
+    }
 
     return this.prisma.user.update({
       select: SELECT_USER,
@@ -191,22 +195,5 @@ export class UserService {
           permissions: [...permissions],
         }
       : undefined;
-  }
-
-  private async hasAtLeastOnePermission(
-    userId: number,
-    permissions: string[],
-  ): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        ...SELECT_USER,
-        ...SELECT_USER_TEAM,
-      },
-    });
-    const userWithPermissions = this.getUserWithTeamAndPermission(user);
-    return permissions.some((permission) =>
-      userWithPermissions.permissions.includes(permission),
-    );
   }
 }

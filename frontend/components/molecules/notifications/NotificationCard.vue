@@ -122,10 +122,10 @@ export default Vue.extend({
       const notifications = this.me.notifications.filter(
         (item) => item.date != date
       );
-      this.$accessor.user.updateUser({
+      /*this.$accessor.user.updateUser({
         userID: this.me.id,
         userData: { notifications },
-      });
+      });*/
     },
   },
 });

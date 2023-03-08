@@ -55,6 +55,9 @@ export interface Notification {
   index?: number;
 }
 
+/**
+ * @deprecated use CompleteUser instead
+ */
 export interface User {
   id: string;
   team: string[];
