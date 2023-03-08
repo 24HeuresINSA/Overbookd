@@ -76,6 +76,19 @@
           );
         }
       }
+      &.not-available {
+        background-color: $conflict-not-available-for-ft-color;
+        color: black;
+        .v-icon {
+          color: black;
+        }
+        &.v-chip--clickable:hover {
+          background-color: darken(
+            $color: $conflict-not-available-for-ft-color,
+            $amount: 5%
+          );
+        }
+      }
     }
   }
 }
