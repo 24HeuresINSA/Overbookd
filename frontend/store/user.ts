@@ -47,8 +47,7 @@ export const mutations = mutationTree(state, {
     state.usernames = data;
   },
   UPDATE_USER(state: UserState, data: CompleteUser) {
-    if (!data.id) return;
-    const index = state.users.findIndex((user) => user.id === +data.id);
+    const index = state.users.findIndex((user) => user.id === data.id);
     if (index !== -1) {
       updateItemToList(state.users, index, data);
     }
@@ -119,7 +118,7 @@ export const actions = actionTree(
     async fetchMyFriends({ commit, state }) {
       const res = await safeCall(
         this,
-        UserRepo.getUserFriends(this, +state.me.id)
+        UserRepo.getUserFriends(this, state.me.id)
       );
       if (res) {
         commit("SET_MY_FRIENDS", res.data);
@@ -176,7 +175,7 @@ export const actions = actionTree(
       const { id, ...userData } = user;
       const res = await safeCall(
         this,
-        UserRepo.updateUser(this, +id, castToUserModification(userData)),
+        UserRepo.updateUser(this, id, castToUserModification(userData)),
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",

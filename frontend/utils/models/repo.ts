@@ -36,8 +36,8 @@ export interface Deposit {
 
 export interface Transfer {
   type: "TRANSFER";
-  from: string;
-  to: string;
+  from: number;
+  to: number;
   amount: number;
   context: string;
   created_at: Date;

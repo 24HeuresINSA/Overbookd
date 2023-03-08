@@ -149,13 +149,11 @@ export class UserService {
     userData: UserModificationDto,
     author: JwtPayload,
   ): Promise<UserWithoutPassword> {
-    if (!author.permissions.includes('admin')) {
-      if (!author.permissions.includes('manage-users')) {
-        delete userData.charisma;
-      }
-      if (!author.permissions.includes('sg')) {
-        delete userData.has_payed_contributions;
-      }
+    if (!this.canUpdateCharisma(author)) {
+      delete userData.charisma;
+    }
+    if (!this.canUpdateContributionPayment(author)) {
+      delete userData.has_payed_contributions;
     }
 
     return this.prisma.user.update({
@@ -195,5 +193,18 @@ export class UserService {
           permissions: [...permissions],
         }
       : undefined;
+  }
+
+  canUpdateCharisma(author: JwtPayload): boolean {
+    return (
+      author.permissions.includes('update_charisma') ||
+      author.permissions.includes('admin')
+    );
+  }
+
+  canUpdateContributionPayment(author: JwtPayload): boolean {
+    return (
+      author.permissions.includes('sg') || author.permissions.includes('admin')
+    );
   }
 }

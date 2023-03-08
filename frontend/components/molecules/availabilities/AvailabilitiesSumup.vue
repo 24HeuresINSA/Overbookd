@@ -22,8 +22,9 @@
         color="success"
         class="cta__btn"
         @click="saveAvailabilities"
-        >Valider</v-btn
       >
+        Valider
+      </v-btn>
     </div>
   </div>
 </template>
@@ -124,6 +125,7 @@ export default Vue.extend({
       this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
         this.userId
       );
+      this.$emit("close-dialog");
     },
   },
 });

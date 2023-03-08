@@ -152,7 +152,10 @@
           </v-row>
         </div>
         <div class="user-information__availabilities">
-          <AvailabilitiesSumup :user-id="mUser.id" />
+          <AvailabilitiesSumup
+            :user-id="mUser.id"
+            @close-dialog="closeDialog"
+          ></AvailabilitiesSumup>
         </div>
       </div>
     </v-card>
@@ -299,11 +302,14 @@ export default {
     },
     saveUser() {
       this.$accessor.user.updateUser(this.mUser);
-      this.mToggle = false;
+      this.closeDialog();
     },
     deleteUser() {
       this.mUser.isValid = false;
       this.saveUser();
+    },
+    closeDialog() {
+      this.mToggle = false;
     },
     hasUserRole(roles) {
       if (this.mUser.team === undefined) {
