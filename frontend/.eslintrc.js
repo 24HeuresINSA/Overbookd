@@ -8,6 +8,7 @@ module.exports = {
   plugins: ["unused-imports", "@typescript-eslint"],
   extends: [
     "plugin:vue/recommended",
+    "plugin:security/recommended",
     "eslint:recommended",
     "prettier/vue",
     "prettier/@typescript-eslint",

@@ -114,7 +114,10 @@ export class PeriodOrchestrator {
     mergeablePeriodIndex: number,
     period: Period,
   ) {
-    const mergeablePeriod = periods[mergeablePeriodIndex];
+    const mergeablePeriod = periods.at(mergeablePeriodIndex);
+
+    if (!mergeablePeriod) return periods;
+
     const mergedPeriod = {
       start: new Date(
         Math.min(

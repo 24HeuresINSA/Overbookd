@@ -181,8 +181,8 @@ export default {
       isSwitchDialogOpen: false,
       isSgConfigDialogOpen: false,
       regex: {
-        int: "^\\d*$",
-        float: "^\\d*(\\.\\d+)?$",
+        int: new RegExp(`^\\d*$`),
+        float: new RegExp(`^\\d*(\\.\\d+)?$`),
       },
 
       feedbacks: {
@@ -222,9 +222,7 @@ export default {
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
-      return [
-        (v) => new RegExp(regex).test(v) || `Il faut mettre un nombre valide`,
-      ];
+      return [(v) => regex.test(v) || `Il faut mettre un nombre valide`];
     },
     isExpenseMode() {
       return this.mode === "cask" || this.mode === "closet";
@@ -324,12 +322,10 @@ export default {
       return user.permissions.includes("cp");
     },
     isFloat(number) {
-      const floatRegex = new RegExp(this.regex.float);
-      return floatRegex.test(number);
+      return this.regex.float.test(number);
     },
     isInteger(number) {
-      const floatRegex = new RegExp(this.regex.int);
-      return floatRegex.test(number);
+      return this.regex.int.test(number);
     },
     async saveTransactions() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);

@@ -7,6 +7,7 @@ import {
   GearRepository,
   SearchGear,
 } from '../../interfaces';
+import { removeItemAtIndex, updateItemToList } from '../../../utils/list';
 
 class GearSearchBuilder {
   private ownerCondition = true;
@@ -75,24 +76,21 @@ export class InMemoryGearRepository implements GearRepository {
       ? GearReferenceCodeService.computeGearCode(gear.category, id)
       : undefined;
     const createdGear = { ...gear, id, code };
-    this.gears.push(createdGear);
+    this.gears = [...this.gears, createdGear];
     return Promise.resolve(createdGear);
   }
 
   updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear | undefined> {
     const gearIndex = this.gears.findIndex((g) => g.id === gear.id);
     if (gearIndex === -1) return Promise.resolve(undefined);
-    this.gears[gearIndex] = gear;
+    this.gears = updateItemToList(this.gears, gearIndex, gear);
     return Promise.resolve(gear);
   }
 
   removeGear(id: number): Promise<void> {
     const gearIndex = this.gears.findIndex((gear) => gear.id === id);
     if (gearIndex === -1) return Promise.resolve();
-    this.gears = [
-      ...this.gears.slice(0, gearIndex),
-      ...this.gears.slice(gearIndex + 1),
-    ];
+    this.gears = removeItemAtIndex(this.gears, gearIndex);
     return Promise.resolve();
   }
 

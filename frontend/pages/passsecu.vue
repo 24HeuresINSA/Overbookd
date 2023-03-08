@@ -126,55 +126,45 @@ export default Vue.extend({
 
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-      let csv =
-        "Email;ID;Nom Prenom;Entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;Raison;FA;comment \n";
-      for (let i = 0; i < this.pass.length; i++) {
-        csv +=
-          this.pass[i].email +
-          ";" +
-          i +
-          ";" +
-          this.pass[i].fullname +
-          ";" +
-          this.pass[i].entity +
-          ";" +
-          this.pass[i].licensePlate +
-          ";" +
-          (this.pass[i].timeslot
-            ? this.pass[i].timeslot.includes("Vendredi 18h-20h")
-            : "false") +
-          ";" +
-          (this.pass[i].timeslot
-            ? this.pass[i].timeslot.includes("vendredi 20h-5h")
-            : "false") +
-          ";" +
-          (this.pass[i].timeslot
-            ? this.pass[i].timeslot.includes("samedi 5h-20h")
-            : "false") +
-          ";" +
-          (this.pass[i].timeslot
-            ? this.pass[i].timeslot.includes("samedi 20h-5h")
-            : "false") +
-          ";" +
-          (this.pass[i].timeslot
-            ? this.pass[i].timeslot.includes("dimanche 5h-20h")
-            : "false") +
-          ";" +
-          (this.pass[i].timeslot
-            ? this.pass[i].timeslot.includes("dicmanche 20h-00h")
-            : "false") +
-          ";;;;;;" +
-          this.pass[i].reason +
-          ";" +
-          this.pass[i].linkedFA +
-          ";" +
-          this.pass[i].comment +
-          "\n";
-      }
+      const csvHeader =
+        "Email;ID;Nom Prenom;Entite;Imatriculation;Vendredi 18-20;Vendredi 20-5;Samedi 5-20;Samedi 20-5;Dimanche 5-20;Dimanche 20-00;PS1;PS2;PS3;PS4;PS5;Raison;FA;comment";
+      const csvRows = this.pass.map((pass, index) => {
+        const fridayEvening = pass.timeslot.includes("Vendredi 18h-20h");
+        const fridayNight = pass.timeslot.includes("vendredi 20h-5h");
+        const saturdayDay = pass.timeslot.includes("samedi 5h-20h");
+        const saturdayNight = pass.timeslot.includes("samedi 20h-5h");
+        const sundayDay = pass.timeslot.includes("dimanche 5h-20h");
+        const sundayNight = pass.timeslot.includes("dimanche 20h-00h");
+        const ps = "";
+        const rowData = [
+          pass.email,
+          index,
+          pass.fullname,
+          pass.entity,
+          pass.licencePlate,
+          fridayEvening,
+          fridayNight,
+          saturdayDay,
+          saturdayNight,
+          sundayDay,
+          sundayNight,
+          ps,
+          ps,
+          ps,
+          ps,
+          ps,
+          pass.reason,
+          pass.linkedFA,
+          pass.comment,
+        ];
+        return `${rowData.join(";")}`;
+      });
+
+      const csv = [csvHeader, ...csvRows].join("\n");
 
       const regex = new RegExp(/undefined/i, "g");
 
-      let parsedCSV = csv.replaceAll(regex, "");
+      const parsedCSV = csv.replaceAll(regex, "");
       // Prompt the browser to start file download
       this.download("passsecu.csv", parsedCSV);
     },

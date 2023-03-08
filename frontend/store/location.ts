@@ -2,6 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { location } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
+import { updateItemToList } from "~/utils/functions/list";
 
 const locationRepo = RepoFactory.locationRepo;
 
@@ -39,7 +40,7 @@ export const mutations = mutationTree(state, {
   },
   UPDATE_LOCATION(state, location: location) {
     const index = state.locations.findIndex((l) => l._id === location._id);
-    state.locations[index] = location;
+    state.locations = updateItemToList(state.locations, index, location);
   },
 });
 

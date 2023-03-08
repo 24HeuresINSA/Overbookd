@@ -311,7 +311,7 @@ export default {
         }
         return FA;
       });
-      return FAs.filter((FA) => FA?.status === s[status]);
+      return FAs.filter((FA) => FA?.status === s.at(status));
     },
     isAnimationValidatedBy(FA, validatorId) {
       return FA.fa_validation.some(

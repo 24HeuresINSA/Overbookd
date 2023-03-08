@@ -5,3 +5,7 @@ export function updateItemToList<T>(
 ): T[] {
   return [...list.slice(0, index), newValue, ...list.slice(index + 1)];
 }
+
+export function removeItemAtIndex<T = any>(list: T[], index: number): T[] {
+  return [...list.slice(0, index), ...list.slice(index + 1)];
+}

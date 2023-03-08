@@ -6,18 +6,13 @@ import { Configuration } from "~/utils/models/Configuration";
 const configurationRepo = RepoFactory.configurationRepo;
 
 // The state types definitions
-interface State {
-  [key: string]: Object;
-}
+type State = Map<string, Object>;
 
-const state = (): State => ({});
+const state = (): State => new Map<string, Object>();
 
 export const mutations = mutationTree(state, {
   SET_CONFIG: function (state, config: Configuration) {
-    if (state[config.key] === undefined) {
-      state[config.key] = config.value;
-    }
-    Object.assign(state[config.key], config.value);
+    state.set(config.key, config.value);
   },
 });
 
@@ -70,6 +65,6 @@ export const actions = actionTree(
 
 export const getters = getterTree(state, {
   get: (state) => (key: string) => {
-    return state[key];
+    return state.get(key);
   },
 });

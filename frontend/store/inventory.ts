@@ -38,8 +38,12 @@ export const mutations = mutationTree(state, {
       (groupedRecord) => groupedRecord.gear.id === gearId
     );
     if (groupedRecordIndex === -1) return;
+
+    const groupedRecord = state.groupedRecords.at(groupedRecordIndex);
+    if (!groupedRecord) return;
+
     const updatedGroupedRecord = {
-      ...state.groupedRecords[groupedRecordIndex],
+      ...groupedRecord,
       records: records.map((r) => r.toLiteRecord()),
     };
     state.groupedRecords = updateItemToList(
