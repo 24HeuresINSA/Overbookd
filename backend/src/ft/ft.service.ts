@@ -170,6 +170,21 @@ export class FtService {
     taskId: number,
     reviewerId: number,
   ): Promise<ReviewerResponseDto> {
+    await this.checkAssignementValidity(taskId, reviewerId);
+
+    const data = { reviewerId };
+    const where = { id: taskId };
+
+    const ftAssigned = await this.prisma.ft.update({
+      data,
+      where,
+      select: this.SELECT_REVIEWER,
+    });
+
+    return ftAssigned.reviewer;
+  }
+
+  private async checkAssignementValidity(taskId: number, reviewerId: number) {
     const [existingTask, reviewer] = await Promise.all([
       this.prisma.ft.findFirst({
         select: { id: true },
@@ -182,21 +197,11 @@ export class FtService {
     ]);
 
     if (!existingTask) throw new NotFoundException(`FT #${taskId} non trouvee`);
-    if (!reviewer)
+    if (!reviewer) {
       throw new BadRequestException(
         'Mauvais candidat pour devenir responsable',
       );
-
-    const data = { reviewerId };
-    const where = { id: taskId };
-
-    const ftAssigned = await this.prisma.ft.update({
-      data,
-      where,
-      select: this.SELECT_REVIEWER,
-    });
-
-    return ftAssigned.reviewer;
+    }
   }
 
   async convertFTtoApiContract(
