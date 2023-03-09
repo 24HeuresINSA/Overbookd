@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { FtStatus } from '@prisma/client';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
@@ -9,6 +13,7 @@ import {
   CompleteFtResponseDto,
   LiteFtResponseDto,
 } from './dto/ft-response.dto';
+import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import {
   COMPLETE_FT_SELECT,
@@ -36,6 +41,17 @@ export class FtService {
     private readonly statsService: StatsService,
     private readonly userRequestService: FtUserRequestService,
   ) {}
+
+  private readonly SELECT_REVIEWER = {
+    reviewer: {
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        nickname: true,
+      },
+    },
+  };
 
   async create(ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
     const createdFt = await this.prisma.ft.create({
@@ -148,6 +164,44 @@ export class FtService {
         id: true,
       },
     });
+  }
+
+  async assignReviewer(
+    taskId: number,
+    reviewerId: number,
+  ): Promise<ReviewerResponseDto> {
+    await this.checkAssignmentValidity(taskId, reviewerId);
+
+    const data = { reviewerId };
+    const where = { id: taskId };
+
+    const ftAssigned = await this.prisma.ft.update({
+      data,
+      where,
+      select: this.SELECT_REVIEWER,
+    });
+
+    return ftAssigned.reviewer;
+  }
+
+  private async checkAssignmentValidity(taskId: number, reviewerId: number) {
+    const [existingTask, reviewer] = await Promise.all([
+      this.prisma.ft.findFirst({
+        select: { id: true },
+        where: { id: taskId },
+      }),
+      this.prisma.user.findFirst({
+        select: { id: true },
+        where: { id: reviewerId, team: { some: { team: { code: 'humain' } } } },
+      }),
+    ]);
+
+    if (!existingTask) throw new NotFoundException(`FT #${taskId} non trouvee`);
+    if (!reviewer) {
+      throw new BadRequestException(
+        'Mauvais candidat pour devenir responsable',
+      );
+    }
   }
 
   async convertFTtoApiContract(

@@ -1,6 +1,7 @@
 import { mutationTree, actionTree, getterTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { updateItemToList } from "~/utils/functions/list";
 import { EquipmentProposal } from "~/utils/models/Equipment";
 
 const equipmentProposalRepo = RepoFactory.equipmentProposalRepo;
@@ -29,7 +30,11 @@ export const mutations = mutationTree(state, {
     const index = state.equipmentProposals.findIndex(
       (l) => l._id === equipmentProposal._id
     );
-    state.equipmentProposals[index] = equipmentProposal;
+    state.equipmentProposals = updateItemToList(
+      state.equipmentProposals,
+      index,
+      equipmentProposal
+    );
   },
 });
 

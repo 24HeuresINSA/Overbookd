@@ -80,6 +80,7 @@ model User {
   availabilities   VolunteerAvailability[]
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
+  ftsInReview      Ft[]                    @relation("reviewer")
 }
 
 model Team {
@@ -443,6 +444,8 @@ model Ft {
   location       Signa_Location? @relation(fields: [locationId], references: [id])
   locationId     Int?            @map("location_id")
   isDeleted      Boolean         @default(false) @map("is_deleted")
+  reviewerId     Int?            @map("reviewer_id")
+  reviewer       User?           @relation("reviewer", fields: [reviewerId], references: [id])
 
   feedbacks    FtFeedback[]
   timeWindows  FtTimeWindows[]

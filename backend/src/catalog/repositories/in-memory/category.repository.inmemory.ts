@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { removeItemAtIndex, updateItemToList } from '../../../utils/list';
 import {
   Category,
   CategoryAlreadyExists,
@@ -61,7 +62,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
       ...category,
       id,
     };
-    this.categories.push(createdCategory);
+    this.categories = [...this.categories, createdCategory];
     return Promise.resolve(createdCategory);
   }
 
@@ -70,11 +71,8 @@ export class InMemoryCategoryRepository implements CategoryRepository {
       (category) => category.id === id,
     );
     if (categoryIndex === -1) return Promise.resolve(undefined);
-    const category = this.categories[categoryIndex];
-    this.categories = [
-      ...this.categories.slice(0, categoryIndex),
-      ...this.categories.slice(categoryIndex + 1),
-    ];
+    const category = this.categories.at(categoryIndex);
+    this.categories = removeItemAtIndex(this.categories, categoryIndex);
     return Promise.resolve(category);
   }
 
@@ -89,7 +87,11 @@ export class InMemoryCategoryRepository implements CategoryRepository {
       (categ) => categ.id === category.id,
     );
     if (categoryIndex === -1) return Promise.resolve(undefined);
-    this.categories[categoryIndex] = category;
+    this.categories = updateItemToList(
+      this.categories,
+      categoryIndex,
+      category,
+    );
     return Promise.resolve(category);
   }
 

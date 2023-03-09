@@ -125,7 +125,8 @@ export const mutations = mutationTree(state, {
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    const previousTimeWindow = mFT.timeWindows[index];
+    const previousTimeWindow = mFT.timeWindows.at(index);
+    if (!previousTimeWindow) return;
     const updatedTimeWindow = { ...previousTimeWindow, userRequests };
     mFT.timeWindows = updateItemToList(
       mFT.timeWindows,
@@ -143,7 +144,8 @@ export const mutations = mutationTree(state, {
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
-    const previousTimeWindow = mFT.timeWindows[index];
+    const previousTimeWindow = mFT.timeWindows.at(index);
+    if (!previousTimeWindow) return;
     const updatedTimeWindow = { ...previousTimeWindow, teamRequests };
     mFT.timeWindows = updateItemToList(
       mFT.timeWindows,

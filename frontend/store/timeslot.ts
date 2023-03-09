@@ -2,6 +2,7 @@ import { mutationTree, actionTree, getterTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { Timeslot } from "~/utils/models/repo";
 import { safeCall } from "~/utils/api/calls";
+import { updateItemToList } from "~/utils/functions/list";
 
 const timeslotRepo = RepoFactory.timeslotRepo;
 
@@ -29,9 +30,7 @@ export const mutations = mutationTree(state, {
   REPLACE_TIMESLOT(state, obj: { timeslot: Timeslot; id: string }) {
     const index = state.timeslots.findIndex((t) => t._id === obj.id);
     if (index !== -1) {
-      state.timeslots[index] = obj.timeslot;
-      //Component that watch this timeslots wont reload if we dont do the next line :D
-      state.timeslots = [...state.timeslots];
+      state.timeslots = updateItemToList(state.timeslots, index, obj.timeslot);
     }
   },
   DELETE_TIMESLOT(state, id: string) {
