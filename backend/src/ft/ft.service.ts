@@ -184,7 +184,7 @@ export class FtService {
     return ftAssigned.reviewer;
   }
 
-  private async checkAssignementValidity(taskId: number, reviewerId: number) {
+  private async checkAssignmentValidity(taskId: number, reviewerId: number) {
     const [existingTask, reviewer] = await Promise.all([
       this.prisma.ft.findFirst({
         select: { id: true },
