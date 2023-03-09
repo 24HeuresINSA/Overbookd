@@ -192,7 +192,7 @@ export class FtService {
       }),
       this.prisma.user.findFirst({
         select: { id: true },
-        where: { id: reviewerId, team: { some: { team: { code: 'human' } } } },
+        where: { id: reviewerId, team: { some: { team: { code: 'humain' } } } },
       }),
     ]);
 
