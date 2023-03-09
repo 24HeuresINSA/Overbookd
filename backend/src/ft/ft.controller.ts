@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -49,6 +50,8 @@ import {
   LiteFtResponseDto,
 } from './dto/ft-response.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
+import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
+import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
@@ -420,5 +423,34 @@ export class FtController {
     };
     const { drive } = approveForm;
     return this.gearRequestService.approveGearRequest(gearRequestId, drive);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('ft-validator')
+  @Put(':taskId/humanReviewer')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Assigned reviewer',
+    type: ReviewerResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: "Can't find a requested resource",
+  })
+  @ApiParam({
+    name: 'taskId',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  @ApiBody({
+    description: 'Reviewer to assign',
+    type: ReviewerFormRequestDto,
+  })
+  assignReviewer(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Body() reviewerForm: ReviewerFormRequestDto,
+  ): Promise<ReviewerResponseDto> {
+    return this.ftService.assignReviewer(taskId, reviewerForm.id);
   }
 }
