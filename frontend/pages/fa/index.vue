@@ -53,6 +53,7 @@
               v-model="isDeletedFilter"
               label="Afficher les FA supprimées"
             ></v-switch>
+            <v-btn v-if="isSecu" @click="exportCSV()">Export sécu</v-btn>
           </v-card-text>
         </v-card>
       </v-container>
@@ -214,6 +215,9 @@ export default {
     isAdmin() {
       return this.$accessor.user.hasPermission("admin");
     },
+    isSecu() {
+      return this.$accessor.user.hasPermission("secu");
+    },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
       mFAs = this.filterByValidatorStatus(mFAs);
@@ -365,6 +369,47 @@ export default {
         });
       }
       return color;
+    },
+    download(filename, text) {
+      // We use the 'a' HTML element to incorporate file generation into
+      // the browser rather than server-side
+      const element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      );
+      element.setAttribute("download", filename);
+
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+    async exportCSV() {
+      // Parse data into a CSV string to be passed to the download function
+      let csv = "Numero;Nom;Resp;Nombre_de_passe;\n";
+      const fas = this.selectedFAs;
+      for (let i = 0; i < fas.length; i++) {
+        csv +=
+          fas[i].id +
+          ";" +
+          fas[i].name +
+          ";" +
+          (fas[i].user_in_charge.firstname +
+            " " +
+            fas[i].user_in_charge.lastname) +
+          ";" +
+          fas[i].number_of_pass +
+          ";" +
+          "\n";
+      }
+      console.log(csv);
+
+      const regex = new RegExp(/undefined/i, "g");
+
+      let parsedCSV = csv.replaceAll(regex, "");
+      // Prompt the browser to start file download
+      this.download("pass.csv", parsedCSV);
     },
   },
 };
