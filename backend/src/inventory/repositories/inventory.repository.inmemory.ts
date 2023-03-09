@@ -29,7 +29,7 @@ export class InMemoryInventoryRepository implements InventoryRepository {
           );
           if (similarRecordIndex === -1)
             return [...groupedRecords, groupedRecord];
-          const existingRecord = groupedRecords[similarRecordIndex];
+          const existingRecord = groupedRecords.at(similarRecordIndex);
           const mergedRecord = groupedRecord.add(existingRecord);
           return [
             ...groupedRecords.slice(0, similarRecordIndex),

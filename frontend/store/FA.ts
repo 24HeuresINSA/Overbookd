@@ -8,6 +8,7 @@ import {
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
 } from "~/utils/functions/gearRequest";
+import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import {
   castFaWithDate,
   collaborator,
@@ -124,15 +125,15 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_SIGNA_NEED_COUNT({ mFA }, { index, count }) {
-    if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
-      mFA.fa_signa_needs[index].count = Number(count);
+    const existingSignaNeeds = mFA.fa_signa_needs?.at(index);
+    if (existingSignaNeeds) {
+      existingSignaNeeds.count = Number(count);
     }
   },
 
   DELETE_SIGNA_NEED({ mFA }, index: number) {
-    if (mFA.fa_signa_needs && mFA.fa_signa_needs[index]) {
-      mFA.fa_signa_needs.splice(index, 1);
-    }
+    const minimumList = mFA.fa_signa_needs ?? [];
+    mFA.fa_signa_needs = removeItemAtIndex(minimumList, index);
   },
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: time_windows) {
@@ -140,18 +141,17 @@ export const mutations = mutationTree(state, {
     mFA.time_windows?.push(timeWindow);
   },
 
-  UPDATE_TIME_WINDOW({ mFA }, { index, timeWindow }) {
-    if (mFA.time_windows && mFA.time_windows[index]) {
-      mFA.time_windows[index].start = timeWindow.start;
-      mFA.time_windows[index].end = timeWindow.end;
-      mFA.time_windows[index].type = timeWindow.type;
-    }
+  UPDATE_TIME_WINDOW(
+    { mFA },
+    { index, timeWindow }: { index: number; timeWindow: time_windows }
+  ) {
+    const minimumList = mFA.time_windows ?? [];
+    mFA.time_windows = updateItemToList(minimumList, index, timeWindow);
   },
 
   DELETE_TIME_WINDOW({ mFA }, index: number) {
-    if (mFA.time_windows && mFA.time_windows[index]) {
-      mFA.time_windows.splice(index, 1);
-    }
+    const minimumList = mFA.time_windows ?? [];
+    mFA.time_windows = removeItemAtIndex(minimumList, index);
   },
 
   ADD_COLLABORATOR({ mFA }, collaborator: fa_collaborators) {
@@ -166,9 +166,8 @@ export const mutations = mutationTree(state, {
   },
 
   DELETE_COLLABORATOR({ mFA }, index: number) {
-    if (mFA.fa_collaborators && mFA.fa_collaborators[index]) {
-      mFA.fa_collaborators.splice(index, 1);
-    }
+    const minimumList = mFA.fa_collaborators ?? [];
+    mFA.fa_collaborators = removeItemAtIndex(minimumList, index);
   },
 
   ADD_ELECTRICITY_NEED({ mFA }, elecNeed: fa_electricity_needs) {
@@ -176,20 +175,17 @@ export const mutations = mutationTree(state, {
     mFA.fa_electricity_needs?.push(elecNeed);
   },
 
-  UPDATE_ELECTRICITY_NEED({ mFA }, { index, elecNeed }) {
-    if (!mFA.fa_electricity_needs || !mFA.fa_electricity_needs[index]) return;
-    mFA.fa_electricity_needs[index].electricity_type =
-      elecNeed.electricity_type;
-    mFA.fa_electricity_needs[index].device = elecNeed.device;
-    mFA.fa_electricity_needs[index].power = elecNeed.power;
-    mFA.fa_electricity_needs[index].count = elecNeed.count;
-    mFA.fa_electricity_needs[index].comment = elecNeed.comment;
+  UPDATE_ELECTRICITY_NEED(
+    { mFA },
+    { index, elecNeed }: { index: number; elecNeed: fa_electricity_needs }
+  ) {
+    const minimumList = mFA.fa_electricity_needs ?? [];
+    mFA.fa_electricity_needs = updateItemToList(minimumList, index, elecNeed);
   },
 
   DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
-    if (mFA.fa_electricity_needs && mFA.fa_electricity_needs[index]) {
-      mFA.fa_electricity_needs.splice(index, 1);
-    }
+    const minimumList = mFA.fa_electricity_needs ?? [];
+    mFA.fa_electricity_needs = removeItemAtIndex(minimumList, index);
   },
 
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest<"FA">) {
@@ -553,11 +549,12 @@ export const actions = actionTree(
     },
 
     async deleteSignaNeed({ commit, state }, index: number) {
-      if (state.mFA.fa_signa_needs && state.mFA.fa_signa_needs[index]) {
-        const id = state.mFA.fa_signa_needs[index].id;
-        if (id) {
-          await RepoFactory.faRepo.deleteFASignaNeeds(this, id);
-        }
+      const currentSignaNeedId = state.mFA.fa_signa_needs?.at(index)?.id;
+      if (currentSignaNeedId) {
+        await safeCall(
+          this,
+          RepoFactory.faRepo.deleteFASignaNeeds(this, currentSignaNeedId)
+        );
       }
       commit("DELETE_SIGNA_NEED", index);
     },
@@ -566,16 +563,20 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", timeWindow);
     },
 
-    updateTimeWindow({ commit }, { index, timeWindow }) {
+    updateTimeWindow(
+      { commit },
+      { index, timeWindow }: { index: number; timeWindow: time_windows }
+    ) {
       commit("UPDATE_TIME_WINDOW", { index, timeWindow });
     },
 
     async deleteTimeWindow({ commit, state }, index: number) {
-      if (state.mFA.time_windows && state.mFA.time_windows[index]) {
-        const id = state.mFA.time_windows[index].id;
-        if (id) {
-          await RepoFactory.faRepo.deleteFATimeWindows(this, id);
-        }
+      const currentTimeWindowId = state.mFA.time_windows?.at(index)?.id;
+      if (currentTimeWindowId) {
+        await safeCall(
+          this,
+          RepoFactory.faRepo.deleteFATimeWindows(this, currentTimeWindowId)
+        );
       }
       commit("DELETE_TIME_WINDOW", index);
     },
@@ -590,9 +591,12 @@ export const actions = actionTree(
 
     async deleteCollaborator({ commit, state }, index: number) {
       const collaboratorId =
-        state.mFA.fa_collaborators?.[index]?.collaborator?.id;
+        state.mFA.fa_collaborators?.at(index)?.collaborator?.id;
       if (collaboratorId) {
-        await RepoFactory.faRepo.deleteFACollaborators(this, collaboratorId);
+        await safeCall(
+          this,
+          RepoFactory.faRepo.deleteFACollaborators(this, collaboratorId)
+        );
       }
       commit("DELETE_COLLABORATOR", index);
     },
@@ -606,14 +610,16 @@ export const actions = actionTree(
     },
 
     async deleteElectricityNeed({ commit, state }, index: number) {
-      if (
-        state.mFA.fa_electricity_needs &&
-        state.mFA.fa_electricity_needs[index]
-      ) {
-        const id = state.mFA.fa_electricity_needs[index].id;
-        if (id) {
-          await RepoFactory.faRepo.deleteFAElectricityNeeds(this, id);
-        }
+      const currentElectricityNeedId =
+        state.mFA.fa_electricity_needs?.at(index)?.id;
+      if (currentElectricityNeedId) {
+        await safeCall(
+          this,
+          RepoFactory.faRepo.deleteFAElectricityNeeds(
+            this,
+            currentElectricityNeedId
+          )
+        );
       }
       commit("DELETE_ELECTRICITY_NEED", index);
     },

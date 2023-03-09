@@ -31,7 +31,8 @@ export class InventoryRecord implements Record {
       InventoryRecord.isSimilar(this)
     );
     if (similarRecordIndex === -1) return [...records, this];
-    const similarRecord = records[similarRecordIndex];
+    const similarRecord = records.at(similarRecordIndex);
+    if (!similarRecord) return [...records, this];
     const updatedRecord = this.add(similarRecord);
     return updateItemToList(records, similarRecordIndex, updatedRecord);
   }

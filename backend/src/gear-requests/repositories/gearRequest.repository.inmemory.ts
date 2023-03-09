@@ -1,3 +1,4 @@
+import { updateItemToList } from '../../utils/list';
 import {
   APPROVED,
   ApprovedGearRequest,
@@ -65,12 +66,19 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
     if (gearRequestIndex === -1) {
       return Promise.reject(new GearRequestNotFound(gearRequestId));
     }
+
+    const gearRequest = this.gearRequests.at(gearRequestIndex);
+
     const approvedGearRequest: ApprovedGearRequest = {
-      ...this.gearRequests[gearRequestIndex],
+      ...gearRequest,
       status: APPROVED,
       drive,
     };
-    this.gearRequests[gearRequestIndex] = approvedGearRequest;
+    this.gearRequests = updateItemToList(
+      this.gearRequests,
+      gearRequestIndex,
+      approvedGearRequest,
+    );
     return Promise.resolve(approvedGearRequest);
   }
 
@@ -99,11 +107,18 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
     if (gearRequestIndex === -1) {
       return Promise.reject(new GearRequestNotFound(gearRequestId));
     }
+
+    const gearRequest = this.gearRequests.at(gearRequestIndex);
+
     const newGearRequest = this.mergePreviousAndNewGearRequest(
-      gearRequestIndex,
+      gearRequest,
       updateGearRequestForm,
     );
-    this.gearRequests[gearRequestIndex] = newGearRequest;
+    this.gearRequests = updateItemToList(
+      this.gearRequests,
+      gearRequestIndex,
+      newGearRequest,
+    );
     return Promise.resolve(newGearRequest);
   }
 
@@ -121,10 +136,9 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
   }
 
   private mergePreviousAndNewGearRequest(
-    gearRequestIndex: number,
+    previousGearRequest: GearRequest,
     updateGearRequestForm: UpdateGearRequestForm,
   ): GearRequest {
-    const previousGearRequest = this.gearRequests[gearRequestIndex];
     const quantity = updateGearRequestForm.quantity
       ? { quantity: updateGearRequestForm.quantity }
       : { quantity: previousGearRequest.quantity };
@@ -161,14 +175,18 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       return Promise.reject(new GearRequestNotFound(gearRequestId));
     }
 
-    const existingGearRequest = this.gearRequests[gearRequestIndex];
+    const existingGearRequest = this.gearRequests.at(gearRequestIndex);
 
     const newGearRequest = {
       ...existingGearRequest,
       rentalPeriod,
     };
 
-    this.gearRequests[gearRequestIndex] = newGearRequest;
+    this.gearRequests = updateItemToList(
+      this.gearRequests,
+      gearRequestIndex,
+      newGearRequest,
+    );
     return Promise.resolve(newGearRequest);
   }
 }

@@ -80,17 +80,17 @@ export default {
   },
   methods: {
     async loadDay() {
-      for (let i = 0; i < this.datepicker.length; i++) {
+      for (const datepicker of this.datepicker) {
         if (
-          !this.displayed.includes(this.datepicker[i]) &&
-          !this.loading.includes(this.datepicker[i])
+          !this.displayed.includes(datepicker) &&
+          !this.loading.includes(datepicker)
         ) {
           // load the day
-          this.loading.push(this.datepicker[i]);
+          this.loading.push(datepicker);
           const timestamp = new Date(
             new Date().getFullYear(),
             4,
-            this.datepicker[i] + 1
+            datepicker + 1
           ).getTime();
           await safeCall(
             this.$store,
@@ -98,7 +98,7 @@ export default {
           ).then((res) => {
             if (res.data.length > 0) {
               // add it to the displayed
-              this.displayed.push(this.datepicker[i]);
+              this.displayed.push(datepicker);
               this.days.push({
                 dayName: new Date(timestamp).toLocaleDateString("fr-FR", {
                   weekday: "long",
@@ -107,16 +107,16 @@ export default {
                 }),
                 data: res.data,
               });
-              this.loading.splice(this.loading.indexOf(this.datepicker[i]), 1);
+              this.loading.splice(this.loading.indexOf(datepicker), 1);
             }
           });
         }
       }
       // if displayed contains a value that is not in datepicker, remove it
-      for (let i = 0; i < this.displayed.length; i++) {
-        if (!this.datepicker.includes(this.displayed[i])) {
-          this.displayed.splice(i, 1);
-          this.days.splice(i, 1);
+      for (const datepicker of this.displayed) {
+        if (!this.datepicker.includes(datepicker)) {
+          this.displayed.splice(this.displayed.indexOf(datepicker), 1);
+          this.days.splice(this.displayed.indexOf(datepicker), 1);
         }
       }
     },

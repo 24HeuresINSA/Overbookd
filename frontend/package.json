@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "1.10.1-rc.3",
+  "version": "1.10.1-rc.4",
   "description": "Frontend pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -59,6 +59,7 @@
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-nuxt": "^4.0.0",
+    "eslint-plugin-security": "^1.7.1",
     "eslint-plugin-unused-imports": "^1.1.5",
     "eslint-plugin-vue": "^7.5.0",
     "jest": "^29.5.0",

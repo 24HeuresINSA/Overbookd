@@ -64,8 +64,15 @@ export class AvailabilityRegistery {
     if (mergeableAvailabilityIndex === -1) {
       return [...availabilities, availability];
     }
-    const mergeableAvailability =
-      availabilities[mergeableAvailabilityIndex].addPeriod(availability);
+
+    const mergeableAvailability = availabilities
+      .at(mergeableAvailabilityIndex)
+      ?.addPeriod(availability);
+
+    if (!mergeableAvailability) {
+      return [...availabilities, availability];
+    }
+
     return updateItemToList(
       availabilities,
       mergeableAvailabilityIndex,
