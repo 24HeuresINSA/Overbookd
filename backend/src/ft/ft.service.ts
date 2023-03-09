@@ -170,7 +170,7 @@ export class FtService {
     taskId: number,
     reviewerId: number,
   ): Promise<ReviewerResponseDto> {
-    await this.checkAssignementValidity(taskId, reviewerId);
+    await this.checkAssignmentValidity(taskId, reviewerId);
 
     const data = { reviewerId };
     const where = { id: taskId };
