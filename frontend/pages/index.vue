@@ -34,7 +34,7 @@
         <v-col cols="12" sm="6" md="4">
           <FriendsCard />
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="hasPermission('cp')">
+        <v-col v-if="hasPermission('cp')" cols="12" sm="6" md="4">
           <ComptesPersosCard />
         </v-col>
       </v-row>
