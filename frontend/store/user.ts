@@ -4,9 +4,10 @@ import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User } from "~/utils/models/repo";
 import {
-  castPermissionUsersWithDate,
   castToUserModification,
+  castUsersWithPermissionsWithDate,
   castUserWithDate,
+  castUserWithPermissionsWithDate,
   CompleteUser,
   CompleteUserWithPermissions,
   Friend,
@@ -108,7 +109,7 @@ export const actions = actionTree(
     async fetchUsers({ commit }) {
       const res = await safeCall(this, UserRepo.getAllUsers(this));
       if (res) {
-        commit("SET_USERS", castPermissionUsersWithDate(res.data));
+        commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
       }
     },
     async fetchFriends({ commit }) {
@@ -173,7 +174,7 @@ export const actions = actionTree(
         return u.username;
       }
     },
-    async updateUser({ commit, state }, user: CompleteUser) {
+    async updateUser({ commit, state }, user: CompleteUserWithPermissions) {
       const { id, ...userData } = user;
       const res = await safeCall(
         this,
@@ -184,7 +185,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("UPDATE_USER", userData);
+      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
       if (res.data.id === state.me.id) {
         commit("SET_USER", castUserWithDate(res.data));
       }

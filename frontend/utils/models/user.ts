@@ -124,7 +124,7 @@ export function castUsersWithDate(users: HttpStringified<CompleteUser[]>) {
   return users.map(castUserWithDate);
 }
 
-export function castPermissionUserWithDate(
+export function castUserWithPermissionsWithDate(
   user: HttpStringified<CompleteUserWithPermissions>
 ) {
   return {
@@ -133,8 +133,8 @@ export function castPermissionUserWithDate(
   };
 }
 
-export function castPermissionUsersWithDate(
+export function castUsersWithPermissionsWithDate(
   users: HttpStringified<CompleteUserWithPermissions[]>
 ) {
-  return users.map(castPermissionUserWithDate);
+  return users.map(castUserWithPermissionsWithDate);
 }

@@ -28,8 +28,8 @@ export default Vue.extend({
       default: "Date",
     },
     date: {
-      type: [String, Date],
-      default: () => undefined as Date | string | undefined,
+      type: Date,
+      default: () => undefined as Date | undefined,
     },
     boxed: {
       type: Boolean,
@@ -53,7 +53,7 @@ export default Vue.extend({
   },
   methods: {
     updateDate(date: string) {
-      this.$emit("change", date);
+      this.$emit("change", new Date(date));
     },
     stringifyDate(date?: Date | string): string {
       if (!date) return "";

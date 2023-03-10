@@ -157,13 +157,8 @@
 
 <script>
 import OverChips from "~/components/atoms/OverChips";
-import { RepoFactory } from "~/repositories/repoFactory";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import {
-  formatUsername,
-  formatUserNameWithNickname,
-} from "~/utils/user/userUtils";
-import { safeCall } from "../../utils/api/calls";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 import DateField from "../atoms/DateField.vue";
 import AvailabilitiesSumup from "../molecules/availabilities/AvailabilitiesSumup.vue";
 
@@ -190,8 +185,6 @@ export default {
       newRole: undefined,
       teamNames: [],
       isEditingAvailability: false,
-      usernames: undefined,
-      newFriend: undefined,
       rules: {
         number: isNumber,
         min: min(0),
@@ -205,7 +198,7 @@ export default {
     },
     mUser: {
       get: function () {
-        return this.user;
+        return { ...this.user };
       },
       set: function (newUser) {
         this.$emit("update-user", newUser);
@@ -235,20 +228,6 @@ export default {
 
   async mounted() {
     this.teamNames = this.$accessor.team.teamNames;
-    const res = await safeCall(
-      this.$store,
-      RepoFactory.userRepo.getAllUsers(this)
-    );
-    if (res) {
-      this.usernames = res.data
-        .map((user) => {
-          if (!user.team.includes("hard")) {
-            const username = formatUsername(user);
-            return { text: username, value: user };
-          }
-        })
-        .filter((item) => item);
-    }
   },
 
   methods: {

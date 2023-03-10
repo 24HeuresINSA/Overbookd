@@ -12,13 +12,18 @@ import {
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { UserService, UserWithoutPassword } from './user.service';
+import {
+  UserService,
+  UserWithoutPassword,
+  UserWithTeamAndPermission,
+} from './user.service';
 
 @ApiTags('user')
 @Controller('user')
@@ -131,7 +136,7 @@ export class UserController {
     return this.userService.user({ id: Number(id) });
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Put(':id')
   @ApiBody({
@@ -142,7 +147,11 @@ export class UserController {
     @Param('id', ParseIntPipe) targetUserId: number,
     @Body() user: UserModificationDto,
     @Request() req: RequestWithUserPayload,
-  ): Promise<UserWithoutPassword> {
-    return this.userService.updateUser(targetUserId, user, req.user);
+  ): Promise<UserWithTeamAndPermission> {
+    return this.userService.updateUser(
+      targetUserId,
+      user,
+      new JwtUtil(req.user),
+    );
   }
 }

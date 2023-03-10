@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
@@ -9,7 +9,7 @@ import {
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
-import { JwtPayload } from 'src/auth/entities/JwtUtil.entity';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 
 const SELECT_USER = {
   email: true,
@@ -57,7 +57,7 @@ export const SELECT_USERNAME_WITH_ID = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
-type UserWithTeamAndPermission = UserWithoutPassword & {
+export type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];
   permissions: string[];
 };
@@ -147,8 +147,12 @@ export class UserService {
   async updateUser(
     targetUserId: number,
     userData: UserModificationDto,
-    author: JwtPayload,
-  ): Promise<UserWithoutPassword> {
+    author: JwtUtil,
+  ): Promise<UserWithTeamAndPermission> {
+    if (!this.canUpdateUser(author, targetUserId)) {
+      throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
+    }
+
     if (!this.canUpdateCharisma(author)) {
       delete userData.charisma;
     }
@@ -156,11 +160,15 @@ export class UserService {
       delete userData.has_payed_contributions;
     }
 
-    return this.prisma.user.update({
-      select: SELECT_USER,
+    const user = await this.prisma.user.update({
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
+      },
       data: userData,
       where: { id: targetUserId },
     });
+    return this.getUserWithTeamAndPermission(user);
   }
 
   async deleteUser(
@@ -195,16 +203,20 @@ export class UserService {
       : undefined;
   }
 
-  private canUpdateCharisma(author: JwtPayload): boolean {
+  private canUpdateCharisma(author: JwtUtil): boolean {
+    return author.isAdmin() || author.hasPermission('manage-users');
+  }
+
+  private canUpdateContributionPayment(author: JwtUtil): boolean {
+    return author.isAdmin() || author.hasPermission("manage-cp")
+  }
+
+  private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
     return (
-      author.permissions.includes('update_charisma') ||
-      author.permissions.includes('admin')
+      author.isAdmin() ||
+      author.hasPermission('manage-users') ||
+      author.id === targetUserId
     );
   }
 
-  private canUpdateContributionPayment(author: JwtPayload): boolean {
-    return (
-      author.permissions.includes('sg') || author.permissions.includes('admin')
-    );
-  }
 }

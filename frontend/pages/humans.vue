@@ -322,7 +322,7 @@ export default {
 
   computed: {
     users() {
-      return this.$accessor.user.users.filter((user) => !user.is_deleted);
+      return this.$accessor.user.users;
     },
   },
 
@@ -359,23 +359,19 @@ export default {
 
   async mounted() {
     await this.$accessor.user.fetchUsers();
-    //await this.initStore();
-    if (this.hasPermission("hard")) {
-      // user has the HARD role
-      this.filteredUsers = this.users;
-      this.filters.isValidated = true; // default set to true
-
-      // add CP if admin or sg
-      if (this.hasPermission("sg")) {
-        this.headers.splice(this.headers.length - 1, 0, {
-          text: "CP",
-          value: "balance",
-          align: "end",
-        });
-      }
-    } else {
-      await this.$router.push({
+    if (!this.hasPermission("hard")) {
+      return this.$router.push({
         path: "/",
+      });
+    }
+    this.filters.isValidated = true; // default set to true
+
+    // add CP if admin or sg
+    if (this.hasPermission("sg")) {
+      this.headers.splice(this.headers.length - 1, 0, {
+        text: "CP",
+        value: "balance",
+        align: "end",
       });
     }
   },
@@ -712,15 +708,11 @@ export default {
 
       // filter by not validated
       if (this.filters.isValidated !== undefined) {
-        if (this.filters.isValidated) {
-          mUsers = mUsers.filter((user) =>
-            this.$accessor.permission.isValidated(user)
-          );
-        } else {
-          mUsers = mUsers.filter(
-            (user) => !this.$accessor.permission.isValidated(user)
-          );
-        }
+        mUsers = mUsers.filter(
+          (user) =>
+            this.$accessor.permission.isValidated(user) ===
+            this.filters.isValidated
+        );
         this.options.page = 1; // reset page
       }
 
@@ -735,8 +727,8 @@ export default {
       }
 
       // filter by team
-      if (this.filters.teams) {
-        this.filteredUsers = mUsers.filter((user) => {
+      if (this.filters.teams.length > 0) {
+        mUsers = mUsers.filter((user) => {
           if (user.team) {
             return (
               user.team.filter((value) => this.filters.teams.includes(value))
@@ -748,6 +740,7 @@ export default {
         });
         this.options.page = 1; // reset page
       }
+      this.filteredUsers = mUsers;
     },
   },
 };

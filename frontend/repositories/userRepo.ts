@@ -54,7 +54,7 @@ export default {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
   updateUser(context: Context, userId: number, userData: UserModification) {
-    return context.$axios.put<HttpStringified<CompleteUser>>(
+    return context.$axios.put<HttpStringified<CompleteUserWithPermissions>>(
       `${resource}/${userId}`,
       userData
     );
