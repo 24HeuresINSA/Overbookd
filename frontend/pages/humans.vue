@@ -281,7 +281,7 @@ export default {
       return this.$accessor.user.users;
     },
     teams() {
-      return this.$accessor.team.allTeams
+      return this.$accessor.team.allTeams;
     },
   },
 
