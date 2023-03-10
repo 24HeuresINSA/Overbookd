@@ -40,7 +40,11 @@
         <OverChips :roles="me.team"></OverChips>
 
         <v-progress-linear
+<<<<<<< HEAD
           :value="((me.charisma ?? 0) / maxCharisma) * 100"
+=======
+          :value="(me.charisma ?? 0 / maxCharisma) * 100"
+>>>>>>> e77c3496 (feat(Front): ✨ add friends for hard #883)
         ></v-progress-linear>
       </v-card-text>
     </v-card>
@@ -48,11 +52,18 @@
 </template>
 
 <script lang="ts">
+<<<<<<< HEAD
 import OverChips from "@/components/atoms/OverChips.vue";
 import PPDialog from "@/components/molecules/ProfilePictureDialog.vue";
 import Vue from "vue";
 import userRepo from "~/repositories/userRepo";
 import { CompleteUser } from "~/utils/models/user";
+=======
+import Vue from "vue";
+import OverChips from "~/components/atoms/OverChips.vue";
+import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
+import { User } from "~/utils/models/repo";
+>>>>>>> e77c3496 (feat(Front): ✨ add friends for hard #883)
 
 export default Vue.extend({
   name: "UserCard",
@@ -74,8 +85,28 @@ export default Vue.extend({
   },
 
   computed: {
+<<<<<<< HEAD
     me(): CompleteUser {
       return this.$accessor.user.me;
+=======
+    me(): User {
+      return this.$accessor.user.me;
+    },
+    friends(): number {
+      return this.$accessor.user.mFriends.length;
+    },
+  },
+
+  mounted() {
+    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
+  },
+
+  methods: {
+    getPPUrl() {
+      return process.env.NODE_ENV === "development"
+        ? "http://localhost:2424/"
+        : "";
+>>>>>>> e77c3496 (feat(Front): ✨ add friends for hard #883)
     },
     friends(): number {
       return this.$accessor.user.mFriends.length;
