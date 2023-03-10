@@ -1,6 +1,7 @@
 <template>
   <OverCalendarV2
     :date="period.start"
+    :display-header="false"
     :weekdays="weekdayNumbers"
     class="no-scroll elevation-2"
     @change="selectDay"
