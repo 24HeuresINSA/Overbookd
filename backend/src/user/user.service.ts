@@ -150,7 +150,7 @@ export class UserService {
     author: JwtUtil,
   ): Promise<UserWithTeamAndPermission> {
     if (!this.canUpdateUser(author, targetUserId)) {
-      throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
+      throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
     }
 
     if (!this.canUpdateCharisma(author)) {
@@ -208,7 +208,7 @@ export class UserService {
   }
 
   private canUpdateContributionPayment(author: JwtUtil): boolean {
-    return author.isAdmin() || author.hasPermission("manage-cp")
+    return author.isAdmin() || author.hasPermission('manage-cp');
   }
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
@@ -218,5 +218,4 @@ export class UserService {
       author.id === targetUserId
     );
   }
-
 }
