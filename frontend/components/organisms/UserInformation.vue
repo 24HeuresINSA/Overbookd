@@ -29,7 +29,7 @@
                   <v-btn icon :href="'mailto:' + selectedUser.email">
                     <v-icon>mdi-send</v-icon>
                   </v-btn>
-                  <h3>{{ user.email }}</h3>
+                  <h3>{{ selectedUser.email }}</h3>
                 </v-col>
                 <v-col md="6" style="display: flex; align-items: baseline">
                   <v-btn icon :href="'tel:+33:' + selectedUser.phone">
@@ -258,8 +258,8 @@ export default {
       this.mToggle = false;
     },
     deleteUser() {
-      this.$emit("change", { ...this.selectedUser, isDeleted: true });
-      this.saveUser();
+      this.$accessor.user.deleteUser(this.user.id);
+      this.mToggle = false;
     },
     fetchUser(userId) {
       this.$accessor.user.fetchAndUpdateLocalUser(userId);

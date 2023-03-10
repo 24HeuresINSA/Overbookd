@@ -265,20 +265,16 @@ export default {
       isSnackbarOpen: false,
 
       newRole: undefined,
-
       feedbackMessage: "Sauvegardé 🥳",
-
       isModeStatsActive: false,
 
-      options: {
-        page: 1,
-      },
+      options: { page: 1 },
     };
   },
 
   computed: {
     users() {
-      return this.$accessor.user.users;
+      return this.$accessor.user.users.filter(({ is_deleted }) => !is_deleted);
     },
     teams() {
       return this.$accessor.team.allTeams;
@@ -398,48 +394,31 @@ export default {
 
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-      let csv =
-        "Prénom;Nom;Surnom;Charisme;Poles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire\n";
+      const csvHeader =
+        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire\n";
 
-      const users = this.users;
-      for (let i = 0; i < users.length; i++) {
-        csv +=
-          users[i].firstname +
-          ";" +
-          users[i].lastname +
-          ";" +
-          users[i].nickname +
-          ";" +
-          users[i].charisma +
-          ";" +
-          '"' +
-          users[i].team +
-          '"' +
-          ";" +
-          users[i].email +
-          ";" +
-          users[i].birthdate +
-          ";" +
-          "+33" +
-          users[i].phone +
-          ";" +
-          users[i].department +
-          ";" +
-          users[i].year +
-          ";" +
-          users[i].balance +
-          ";" +
-          users[i].has_payed_contributions +
-          ";" +
-          users[i].comment +
-          ";" +
-          "\n";
-      }
+      const csvContent = this.users.map((user) => {
+        return [
+          user.firstname,
+          user.lastname,
+          user.nickname,
+          user.charisma,
+          `"${user.team}"`,
+          user.email,
+          user.birthdate,
+          `+33${user.phone}`,
+          user.department,
+          user.year,
+          user.balance,
+          user.has_payed_contributions,
+          user.comment,
+        ].join(";");
+      });
 
+      const csv = [csvHeader, ...csvContent].join("\n");
       const regex = new RegExp(/undefined/i, "g");
 
-      let parsedCSV = csv.replaceAll(regex, "");
-      // Prompt the browser to start file download
+      const parsedCSV = csv.replace(regex, "");
       this.download("utilisateurs.csv", parsedCSV);
     },
     async initStats() {

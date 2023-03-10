@@ -171,12 +171,11 @@ export class UserService {
     return this.getUserWithTeamAndPermission(user);
   }
 
-  async deleteUser(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserWithoutPassword> {
-    return this.prisma.user.delete({
-      select: SELECT_USER,
-      where,
+  async deleteUser(id: number): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { is_deleted: true },
+      select: { id: true },
     });
   }
 

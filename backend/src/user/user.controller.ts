@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -49,7 +51,7 @@ export class UserController {
     type: Array,
   })
   getUsers(): Promise<Partial<User>[]> {
-    return this.userService.users({});
+    return this.userService.users({ where: { is_deleted: false } });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -153,5 +155,18 @@ export class UserController {
       user,
       new JwtUtil(req.user),
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('manage-users')
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Delete a user by id',
+  })
+  deleteUser(@Param('id', ParseIntPipe) userId: number): Promise<void> {
+    return this.userService.deleteUser(userId);
   }
 }

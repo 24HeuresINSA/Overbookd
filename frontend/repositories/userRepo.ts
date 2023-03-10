@@ -59,6 +59,9 @@ export default {
       userData
     );
   },
+  deleteUser(context: Context, userId: number) {
+    return context.$axios.delete<void>(`${resource}/${userId}`);
+  },
   isMigrated(context: Context) {
     return context.$axios.get(`${resource}/isMigrated`);
   },

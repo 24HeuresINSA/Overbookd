@@ -187,6 +187,17 @@ export const actions = actionTree(
       }
     },
 
+    async deleteUser({ commit, state }, userId: number) {
+      const res = await safeCall(this, UserRepo.deleteUser(this, userId), {
+        successMessage: "Utilisateur supprimé ! 🎉",
+        errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
+      });
+      if (!res) return;
+      const user = { ...state.selectedUser, is_deleted: true };
+      commit("UPDATE_USER", user);
+      if (user.id === state.me.id) commit("SET_USER", user);
+    },
+
     async updateSelectedUserTeams({ commit, state }, teams: string[]) {
       const res = await safeCall(
         this,
