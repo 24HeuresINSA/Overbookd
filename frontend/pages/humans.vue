@@ -116,7 +116,7 @@
                   v-if="hasPermission('manage-users')"
                   icon
                   small
-                  @click="openCalendar(item._id)"
+                  @click="openCalendar(item.id)"
                 >
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
@@ -164,7 +164,7 @@
                   v-if="hasPermission('manage-users')"
                   icon
                   small
-                  @click="openCalendar(item._id)"
+                  @click="openCalendar(item.id)"
                 >
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>

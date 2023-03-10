@@ -19,7 +19,7 @@
         </div>
       </template>
       <template #interval="{ date, time }">
-        <div v-if="isUserAvailableInTimeframe(date, time)" class="available" />
+        <div :class="{ available: isUserAvailableInPeriod(date, time) }" />
       </template>
     </OverCalendarV2>
   </div>
@@ -50,7 +50,7 @@ export default defineComponent({
     },
   },
   async created() {
-    const userId = parseInt(this.$route.params.calendar);
+    const userId = +this.$route.params.calendar;
     if (!this.$accessor.user.hasPermission("hard") || isNaN(userId)) {
       await this.$router.push({
         path: "/",
@@ -65,7 +65,7 @@ export default defineComponent({
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
-    isUserAvailableInTimeframe(date: string, time: string) {
+    isUserAvailableInPeriod(date: string, time: string) {
       const period = new Date(`${date} ${time}`);
       return this.availabilities.some(
         (availability) =>

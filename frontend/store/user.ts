@@ -236,17 +236,13 @@ export const actions = actionTree(
         this,
         UserRepo.acceptSelection(this, timeslotIDS)
       );
-      if (res) {
-        commit("UPDATE_USER", res.data);
-      }
-      return;
+      if (!res) return;
+      commit("UPDATE_USER", res.data);
     },
     async findUserById({ commit }, id: number) {
       const res = await safeCall(this, UserRepo.getUser(this, id));
-      if (res) {
-        commit("SET_SELECTED_USER", res.data);
-      }
-      return;
+      if (!res) return;
+      commit("SET_SELECTED_USER", res.data);
     },
 
     async removeAvailability(
