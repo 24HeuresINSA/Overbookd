@@ -77,7 +77,6 @@ export interface CompleteUser extends User {
   pp?: string;
   charisma: number;
   balance: number;
-  password: string;
   created_at: Date;
   updated_at: Date;
   is_deleted: boolean;

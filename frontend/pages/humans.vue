@@ -320,8 +320,7 @@ export default {
     }
     this.filters.isValidated = true; // default set to true
 
-    // add CP if admin or sg
-    if (this.hasPermission("sg")) {
+    if (this.hasPermission("manage-cp")) {
       this.headers.splice(this.headers.length - 1, 0, {
         text: "CP",
         value: "balance",

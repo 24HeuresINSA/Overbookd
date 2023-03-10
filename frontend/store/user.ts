@@ -32,7 +32,7 @@ export const mutations = mutationTree(state, {
   SET_USER(state: UserState, data: CompleteUser) {
     state.me = data;
   },
-  SET_SELECTED_USER(state: UserState, data: CompleteUser) {
+  SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
     state.selectedUser = data;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
@@ -49,7 +49,7 @@ export const mutations = mutationTree(state, {
     );
     state.usernames = data;
   },
-  UPDATE_USER(state: UserState, data: CompleteUser) {
+  UPDATE_USER(state: UserState, data: CompleteUserWithPermissions) {
     const index = state.users.findIndex((user) => user.id === data.id);
     if (index !== -1) {
       state.users = updateItemToList(state.users, index, data);
@@ -226,8 +226,9 @@ export const actions = actionTree(
     async fetchAndUpdateLocalUser({ commit, state }, userId: number) {
       const res = await safeCall(this, UserRepo.getUser(this, userId));
       if (!res) return;
-      commit("UPDATE_USER", res.data);
-      if (res.data.id === state.me.id) commit("SET_USER", res.data);
+      const user = { ...state.selectedUser, charisma: res.data.charisma };
+      commit("UPDATE_USER", user);
+      if (res.data.id === state.me.id) commit("SET_USER", user);
     },
 
     async acceptSelection({ commit }, timeslotIDS: string[]) {
