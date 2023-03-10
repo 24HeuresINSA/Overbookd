@@ -112,11 +112,7 @@
                 <v-btn icon small :href="'mailto:' + item.email">
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
-                <v-btn
-                  icon
-                  small
-                  @click="openCalendar(item.id)"
-                >
+                <v-btn icon small @click="openCalendar(item.id)">
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
               </template>
@@ -159,11 +155,7 @@
                 >
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
-                <v-btn
-                  icon
-                  small
-                  @click="openCalendar(item.id)"
-                >
+                <v-btn icon small @click="openCalendar(item.id)">
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
               </template>
