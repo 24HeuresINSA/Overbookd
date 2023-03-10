@@ -113,7 +113,6 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasPermission('manage-users')"
                   icon
                   small
                   @click="openCalendar(item.id)"
@@ -161,7 +160,6 @@
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasPermission('manage-users')"
                   icon
                   small
                   @click="openCalendar(item.id)"
