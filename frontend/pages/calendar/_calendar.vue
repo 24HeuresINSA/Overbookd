@@ -14,7 +14,7 @@
         </div>
       </template>
       <template #interval="{ date, time }">
-        <div :class="{ available: isUserAvailableInPeriod(date, time) }" />
+        <div :class="{ available: isUserAvailable(date, time) }" />
       </template>
     </OverCalendarV2>
   </div>
@@ -24,6 +24,7 @@
 import { defineComponent } from "vue";
 import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
+import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 
 export default defineComponent({
   name: "Calendar",
@@ -60,12 +61,10 @@ export default defineComponent({
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
-    isUserAvailableInPeriod(date: string, time: string) {
-      const period = new Date(`${date} ${time}`);
+    isUserAvailable(date: string, time: string) {
+      const datetime = new Date(`${date} ${time}`);
       return this.availabilities.some(
-        (availability) =>
-          availability.start.getTime() <= period.getTime() &&
-          availability.end.getTime() >= period.getTime()
+        isPeriodIncludedByAnother({ start: datetime, end: datetime })
       );
     },
   },
