@@ -387,29 +387,20 @@ export default {
     },
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-      let csv = "Numero;Nom;Resp;Nombre_de_passe;\n";
-      const fas = this.selectedFAs;
-      for (let i = 0; i < fas.length; i++) {
-        csv +=
-          fas[i].id +
-          ";" +
-          fas[i].name +
-          ";" +
-          (fas[i].user_in_charge.firstname +
-            " " +
-            fas[i].user_in_charge.lastname) +
-          ";" +
-          fas[i].number_of_pass +
-          ";" +
-          "\n";
-      }
-      console.log(csv);
-
+      const csvHeader = "Numero;Nom;Resp;Nombre_de_passe;";
+      const csvRows = this.selectedFAs.map((fa) => {
+        const rowData = [
+          fa.id,
+          fa.name,
+          fa.user_in_charge.firstname + " " + fa.user_in_charge.lastname,
+          fa.number_of_pass,
+        ];
+        return `${rowData.join(";")}`;
+      });
+      const csv = [csvHeader, ...csvRows].join("\n");
       const regex = new RegExp(/undefined/i, "g");
-
-      let parsedCSV = csv.replaceAll(regex, "");
-      // Prompt the browser to start file download
-      this.download("pass.csv", parsedCSV);
+      const parsedCSV = csv.replaceAll(regex, "");
+      this.download("passsecu.csv", parsedCSV);
     },
   },
 };
