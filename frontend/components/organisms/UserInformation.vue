@@ -217,7 +217,7 @@ export default {
       return this.$accessor.user.me.id === this.selectedUser.id;
     },
     isHard() {
-      return this.selectedUser.team.includes("hard");
+      return (this.selectedUser.team ?? []).includes("hard");
     },
   },
 
