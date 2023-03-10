@@ -20,9 +20,7 @@
         <v-btn @click="sendResetRequest()">Envoyer</v-btn>
       </v-container>
     </v-form>
-    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-      {{ snack.feedbackMessage }}
-    </v-snackbar>
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
 
@@ -30,16 +28,16 @@
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { Snack } from "~/utils/models/snack";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
   name: "ForgotPassword",
+  components: { SnackNotificationContainer },
   auth: false,
   layout: "none",
 
   data: () => ({
     email: "",
-    snack: new Snack(3000),
   }),
 
   methods: {
@@ -48,24 +46,21 @@ export default Vue.extend({
         this.$store,
         RepoFactory.authRepo.requestResetPassword(this, {
           email: this.email,
-        })
+        }),
+        {
+          successMessage:
+            "Un lien pour changer de mot de passe a été envoyé à cette adresse si un bénévole s'est inscrit avec. 📨",
+          messageDuration: 10000,
+        }
       );
 
-      if (!res) {
-        return this.snack.display(
-          "Il y a eu une erreur, recommence plus tard."
-        );
-      }
-
-      this.snack.display(
-        "OK ! Regarde ta boite mail ! Redirection au login..."
-      );
+      if (!res) return;
 
       setTimeout(async () => {
         await this.$router.push({
           path: "/",
         });
-      }, 3000);
+      }, 10000);
     },
   },
 });
