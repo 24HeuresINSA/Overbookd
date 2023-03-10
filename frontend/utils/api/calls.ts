@@ -4,6 +4,7 @@ import { SnackNotif } from "../models/store";
 interface ActionMessage {
   successMessage?: string;
   errorMessage?: string;
+  messageDuration?: number;
 }
 
 export async function safeCall<T = any>(
@@ -19,6 +20,7 @@ export async function safeCall<T = any>(
     if (message?.successMessage) {
       const notif: SnackNotif = {
         message: message.successMessage,
+        timeout: message.messageDuration,
       };
       store.dispatch("notif/pushNotification", notif);
     }
@@ -27,6 +29,7 @@ export async function safeCall<T = any>(
     const notifMessage = getNotifMessage(error, message?.errorMessage);
     const notif: SnackNotif = {
       message: notifMessage,
+      timeout: message?.messageDuration,
     };
     store.dispatch("notif/pushNotification", notif);
     return undefined;
