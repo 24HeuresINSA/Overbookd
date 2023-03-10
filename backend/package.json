@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version": "1.10.2-rc.1",
 =======
   "version": "1.10.1-rc.6",
@@ -13,6 +14,9 @@
 =======
   "version": "1.10.1-rc.8",
 >>>>>>> d6c3c1f9 (refactor: :construction: Update _calendar page)
+=======
+  "version": "1.10.1-rc.9",
+>>>>>>> c3b916ff (fix(security): display generic success message on reset password. #876)
   "description": "Backend pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
