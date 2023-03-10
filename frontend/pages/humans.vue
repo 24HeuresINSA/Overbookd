@@ -113,6 +113,7 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <v-btn icon small @click="openCalendar(item.id)">
 =======
                 <v-btn
@@ -122,6 +123,9 @@
                   @click="openCalendar(item._id)"
                 >
 >>>>>>> 425eafdb (fix: User update in human page)
+=======
+                <v-btn icon small @click="openCalendar(item.id)">
+>>>>>>> d6c3c1f9 (refactor: :construction: Update _calendar page)
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
               </template>

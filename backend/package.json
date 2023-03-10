@@ -2,6 +2,7 @@
   "name": "backend",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version": "1.10.2-rc.1",
 =======
   "version": "1.10.1-rc.6",
@@ -9,6 +10,9 @@
 =======
   "version": "1.10.1-rc.7",
 >>>>>>> 425eafdb (fix: User update in human page)
+=======
+  "version": "1.10.1-rc.8",
+>>>>>>> d6c3c1f9 (refactor: :construction: Update _calendar page)
   "description": "Backend pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",

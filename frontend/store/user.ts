@@ -241,6 +241,7 @@ export const actions = actionTree(
     },
     async findUserById({ commit }, id: number) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       const res = await safeCall(this, UserRepo.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
@@ -250,6 +251,11 @@ export const actions = actionTree(
       if (res && res.data) commit("SET_SELECTED_USER", res.data);
       return res;
 >>>>>>> 425eafdb (fix: User update in human page)
+=======
+      const res = await safeCall(this, UserRepo.getUser(this, id));
+      if (!res) return;
+      commit("SET_SELECTED_USER", res.data);
+>>>>>>> d6c3c1f9 (refactor: :construction: Update _calendar page)
     },
 
     async removeAvailability(
