@@ -4,11 +4,10 @@ import {
   FriendRequestData,
   Notification,
   Transfer,
-  User,
 } from "~/utils/models/repo";
-import { AxiosResponse } from "axios";
 import {
   CompleteUser,
+  CompleteUserWithPermissions,
   Friend,
   UserCreation,
   UserModification,
@@ -24,13 +23,17 @@ export default {
     return context.$axios.$post(`${resource}`, user);
   },
   getUser(context: Context, userId: number) {
-    return context.$axios.get(`${resource}/${userId}`);
+    return context.$axios.get<HttpStringified<CompleteUser>>(
+      `${resource}/${userId}`
+    );
   },
   getMyUser(context: Context) {
     return context.$axios.get(`${resource}/me`);
   },
-  getAllUsers(context: Context): Promise<AxiosResponse<User[]>> {
-    return context.$axios.get(`${resource}`);
+  getAllUsers(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+      `${resource}`
+    );
   },
   getAllUsernames(context: Context) {
     return context.$axios.get(`${resource}/all`);
@@ -51,7 +54,10 @@ export default {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
   updateUser(context: Context, userId: number, userData: UserModification) {
-    return context.$axios.put<CompleteUser>(`${resource}/${userId}`, userData);
+    return context.$axios.put<HttpStringified<CompleteUser>>(
+      `${resource}/${userId}`,
+      userData
+    );
   },
   isMigrated(context: Context) {
     return context.$axios.get(`${resource}/isMigrated`);

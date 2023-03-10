@@ -1,28 +1,33 @@
+import { HttpStringified } from "../types/http";
 import { Notification } from "./repo";
 
-enum Department {
-  TC = "TC",
-  IF = "IF",
-  GE = "GE",
-  GM = "GM",
-  GI = "GI",
-  GCU = "GCU",
-  GEN = "GEN",
-  SGM = "SGM",
-  BS = "BS",
-  FIMI = "FIMI",
-  AUTRE = "AUTRE",
-}
+const Departments = {
+  TC: "TC",
+  IF: "IF",
+  GE: "GE",
+  GM: "GM",
+  GI: "GI",
+  GCU: "GCU",
+  GEN: "GEN",
+  SGM: "SGM",
+  BS: "BS",
+  FIMI: "FIMI",
+  AUTRE: "AUTRE",
+};
 
-enum Year {
-  A1 = "A1",
-  A2 = "A2",
-  A3 = "A3",
-  A4 = "A4",
-  A5 = "A5",
-  VIEUX = "VIEUX",
-  AUTRE = "AUTRE",
-}
+type Department = keyof typeof Departments;
+
+const Years = {
+  A1: "A1",
+  A2: "A2",
+  A3: "A3",
+  A4: "A4",
+  A5: "A5",
+  VIEUX: "VIEUX",
+  AUTRE: "AUTRE",
+};
+
+type Year = keyof typeof Years;
 
 export interface DisplayedUser {
   firstname: string;
@@ -85,6 +90,10 @@ export interface CompleteUser extends User {
 
 export interface CompleteUserWithoutId extends Omit<CompleteUser, "id"> {}
 
+export interface CompleteUserWithPermissions extends CompleteUser {
+  permissions: string[];
+}
+
 export function castToUserModification(
   user: CompleteUserWithoutId
 ): UserModification {
@@ -102,4 +111,30 @@ export function castToUserModification(
     pp: user.pp || undefined,
     charisma: +user.charisma,
   };
+}
+
+export function castUserWithDate(user: HttpStringified<CompleteUser>) {
+  return {
+    ...user,
+    birthdate: new Date(user.birthdate),
+  };
+}
+
+export function castUsersWithDate(users: HttpStringified<CompleteUser[]>) {
+  return users.map(castUserWithDate);
+}
+
+export function castPermissionUserWithDate(
+  user: HttpStringified<CompleteUserWithPermissions>
+) {
+  return {
+    ...user,
+    birthdate: new Date(user.birthdate),
+  };
+}
+
+export function castPermissionUsersWithDate(
+  users: HttpStringified<CompleteUserWithPermissions[]>
+) {
+  return users.map(castPermissionUserWithDate);
 }

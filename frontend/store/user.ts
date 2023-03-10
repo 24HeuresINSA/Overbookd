@@ -1,21 +1,23 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
+import { updateItemToList } from "~/utils/functions/list";
 import { User } from "~/utils/models/repo";
 import {
+  castPermissionUsersWithDate,
   castToUserModification,
+  castUserWithDate,
   CompleteUser,
+  CompleteUserWithPermissions,
   Friend,
   UserCreation,
-  UserWithPermissions,
 } from "~/utils/models/user";
-import { updateItemToList } from "~/utils/functions/list";
-import { safeCall } from "~/utils/api/calls";
 
 const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
   me: {} as CompleteUser,
-  users: [] as UserWithPermissions[],
+  users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<User>[],
   mUser: {} as CompleteUser,
   timeslots: [],
@@ -32,7 +34,7 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_USER(state: UserState, data: CompleteUser) {
     state.mUser = data;
   },
-  SET_USERS(state: UserState, data: UserWithPermissions[]) {
+  SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
   },
   SET_USERNAMES(state: UserState, data: User[]) {
@@ -100,13 +102,13 @@ export const actions = actionTree(
         errorMessage: "Session expirée 💨",
       });
       if (res) {
-        commit("SET_USER", res.data);
+        commit("SET_USER", castUserWithDate(res.data));
       }
     },
     async fetchUsers({ commit }) {
       const res = await safeCall(this, UserRepo.getAllUsers(this));
       if (res) {
-        commit("SET_USERS", res.data);
+        commit("SET_USERS", castPermissionUsersWithDate(res.data));
       }
     },
     async fetchFriends({ commit }) {
@@ -183,7 +185,9 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("UPDATE_USER", userData);
-      if (res.data.id === state.me.id) commit("SET_USER", userData);
+      if (res.data.id === state.me.id) {
+        commit("SET_USER", castUserWithDate(res.data));
+      }
     },
 
     async fetchAndUpdateLocalUser({ commit, state }, userId: number) {
@@ -203,8 +207,8 @@ export const actions = actionTree(
       }
       return;
     },
-    async findUserById({ commit }, id: string) {
-      const res = await UserRepo.getUser(this, +id);
+    async findUserById({ commit }, id: number) {
+      const res = await UserRepo.getUser(this, id);
 
       if (res && res.data) commit("SET_SELECTED_USER", res.data);
       return res;
