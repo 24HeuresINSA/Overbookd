@@ -3,7 +3,6 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User } from "~/utils/models/repo";
-import { Team } from "~/utils/models/team";
 import {
   castToUserModification,
   castUsersWithPermissionsWithDate,
@@ -191,14 +190,21 @@ export const actions = actionTree(
     async updateSelectedUserTeams({ commit, state }, teams: string[]) {
       const res = await safeCall(
         this,
-        RepoFactory.teamRepo.linkUserToTeams(this, state.selectedUser.id, teams),
+        RepoFactory.teamRepo.linkUserToTeams(
+          this,
+          state.selectedUser.id,
+          teams
+        ),
         {
           successMessage: "Equipes mises à jour ! 🎉",
           errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
         }
       );
       if (!res) return;
-      const user: CompleteUserWithPermissions = { ...state.selectedUser, team: res.data.teams };
+      const user: CompleteUserWithPermissions = {
+        ...state.selectedUser,
+        team: res.data.teams,
+      };
       commit("UPDATE_USER", user);
       commit("SET_SELECTED_USER", user);
       if (res.data.userId === state.me.id) {

@@ -10,7 +10,9 @@ export default {
     return context.$axios.get(resource);
   },
   linkUserToTeams(context: Context, userId: number, teams: string[]) {
-    return context.$axios.post<HttpStringified<{userId: number, teams: string[]}>>(`${resource}/link`, {
+    return context.$axios.post<
+      HttpStringified<{ userId: number; teams: string[] }>
+    >(`${resource}/link`, {
       userId,
       teams,
     });
