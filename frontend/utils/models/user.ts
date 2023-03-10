@@ -117,6 +117,8 @@ export function castUserWithDate(user: HttpStringified<CompleteUser>) {
   return {
     ...user,
     birthdate: new Date(user.birthdate),
+    created_at: new Date(user.created_at),
+    updated_at: new Date(user.updated_at),
   };
 }
 
@@ -130,6 +132,8 @@ export function castUserWithPermissionsWithDate(
   return {
     ...user,
     birthdate: new Date(user.birthdate),
+    created_at: new Date(user.created_at),
+    updated_at: new Date(user.updated_at),
   };
 }
 
