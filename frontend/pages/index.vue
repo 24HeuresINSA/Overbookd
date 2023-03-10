@@ -32,8 +32,10 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="4">
-          <ComptesPersosCard v-if="hasPermission('cp')" />
-          <FriendsCard v-else />
+          <FriendsCard />
+        </v-col>
+        <v-col v-if="hasPermission('cp')" cols="12" sm="6" md="8">
+          <ComptesPersosCard />
         </v-col>
       </v-row>
     </v-container>
