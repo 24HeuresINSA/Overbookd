@@ -42,7 +42,7 @@ export default defineComponent({
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
     user() {
-      return this.$accessor.user.mUser;
+      return this.$accessor.user.selectedUser;
     },
   },
   async created() {
