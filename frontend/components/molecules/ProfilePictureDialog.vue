@@ -56,6 +56,7 @@ export default Vue.extend({
         let form = new FormData();
         form.append("files", this.PP, this.PP.name);
         form.append("id", this.me.id.toString());
+<<<<<<< HEAD
         const twoMegabytes = 2 * 1024 * 1024;
         if (
           this.PP.size < twoMegabytes &&
@@ -74,6 +75,13 @@ export default Vue.extend({
             this.$accessor.dialog.closeDialog();
           }
         } else {
+=======
+        const res = await safeCall(
+          this.$store,
+          RepoFactory.userRepo.addPP(this, form)
+        );
+        if (res) {
+>>>>>>> 425eafdb (fix: User update in human page)
           this.$accessor.notif.pushNotification({
             message:
               "Fichier trop lourd (< 2Mb) ou mauvais format (jpeg/jpg, png, gif acceptés)",

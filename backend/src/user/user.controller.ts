@@ -29,11 +29,14 @@ import {
   UserWithoutPassword,
   UserWithTeamAndPermission,
 } from './user.service';
+<<<<<<< HEAD
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { createReadStream } from 'fs';
 import { diskStorage } from 'multer';
+=======
+>>>>>>> 425eafdb (fix: User update in human page)
 
 @ApiTags('user')
 @Controller('user')
@@ -165,6 +168,7 @@ export class UserController {
     );
   }
 
+<<<<<<< HEAD
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Post('pp')
@@ -205,6 +209,8 @@ export class UserController {
     return new StreamableFile(file);
   }
 
+=======
+>>>>>>> 425eafdb (fix: User update in human page)
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission('manage-users')

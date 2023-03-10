@@ -41,10 +41,14 @@
 
         <v-progress-linear
 <<<<<<< HEAD
+<<<<<<< HEAD
           :value="((me.charisma ?? 0) / maxCharisma) * 100"
 =======
           :value="(me.charisma ?? 0 / maxCharisma) * 100"
 >>>>>>> e77c3496 (feat(Front): ✨ add friends for hard #883)
+=======
+          :value="((me.charisma ?? 0) / maxCharisma) * 100"
+>>>>>>> 425eafdb (fix: User update in human page)
         ></v-progress-linear>
       </v-card-text>
     </v-card>
@@ -62,8 +66,12 @@ import { CompleteUser } from "~/utils/models/user";
 import Vue from "vue";
 import OverChips from "~/components/atoms/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
+<<<<<<< HEAD
 import { User } from "~/utils/models/repo";
 >>>>>>> e77c3496 (feat(Front): ✨ add friends for hard #883)
+=======
+import { CompleteUser } from "~/utils/models/user";
+>>>>>>> 425eafdb (fix: User update in human page)
 
 export default Vue.extend({
   name: "UserCard",
@@ -86,14 +94,21 @@ export default Vue.extend({
 
   computed: {
 <<<<<<< HEAD
+<<<<<<< HEAD
     me(): CompleteUser {
       return this.$accessor.user.me;
 =======
     me(): User {
+=======
+    me(): CompleteUser {
+>>>>>>> 425eafdb (fix: User update in human page)
       return this.$accessor.user.me;
     },
     friends(): number {
       return this.$accessor.user.mFriends.length;
+    },
+    hasDriverLicense(): boolean {
+      return this.me.team.includes("conducteur");
     },
   },
 

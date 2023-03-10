@@ -112,7 +112,16 @@
                 <v-btn icon small :href="'mailto:' + item.email">
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
+<<<<<<< HEAD
                 <v-btn icon small @click="openCalendar(item.id)">
+=======
+                <v-btn
+                  v-if="hasPermission('manage-users')"
+                  icon
+                  small
+                  @click="openCalendar(item._id)"
+                >
+>>>>>>> 425eafdb (fix: User update in human page)
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
               </template>

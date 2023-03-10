@@ -10,8 +10,11 @@ import {
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
+<<<<<<< HEAD
 import { join } from 'path';
 import { existsSync, unlink } from 'fs';
+=======
+>>>>>>> 425eafdb (fix: User update in human page)
 
 const SELECT_USER = {
   email: true,
@@ -219,6 +222,7 @@ export class UserService {
       author.id === targetUserId
     );
   }
+<<<<<<< HEAD
 
   async uploadPP(
     where: Prisma.UserWhereUniqueInput,
@@ -257,4 +261,6 @@ export class UserService {
       }
     }
   }
+=======
+>>>>>>> 425eafdb (fix: User update in human page)
 }

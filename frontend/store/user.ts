@@ -240,9 +240,16 @@ export const actions = actionTree(
       commit("UPDATE_USER", res.data);
     },
     async findUserById({ commit }, id: number) {
+<<<<<<< HEAD
       const res = await safeCall(this, UserRepo.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
+=======
+      const res = await UserRepo.getUser(this, id);
+
+      if (res && res.data) commit("SET_SELECTED_USER", res.data);
+      return res;
+>>>>>>> 425eafdb (fix: User update in human page)
     },
 
     async removeAvailability(
