@@ -106,7 +106,7 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-row v-if="hasUserRole('hard')">
+              <v-row v-if="isHard">
                 <v-col md="4">
                   <v-text-field
                     v-model="user.balance"
@@ -216,6 +216,9 @@ export default {
     isMe() {
       return this.$accessor.user.me.id === this.selectedUser.id;
     },
+    isHard() {
+      return this.selectedUser.team.includes("hard");
+    },
   },
 
   watch: {
@@ -257,13 +260,6 @@ export default {
     deleteUser() {
       this.$emit("change", { ...this.selectedUser, isDeleted: true });
       this.saveUser();
-    },
-    hasUserRole(roles) {
-      if (this.selectedUser.team === undefined) {
-        return false;
-      } else {
-        return this.selectedUser.team.includes(roles);
-      }
     },
     fetchUser(userId) {
       this.$accessor.user.fetchAndUpdateLocalUser(userId);
