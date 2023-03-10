@@ -1,11 +1,6 @@
 <template>
   <div>
-    <OverCalendarV2
-      :date="calendarCentralDate"
-      title="true"
-      class="no-scroll elevation-2"
-      @change="updateDate"
-    >
+    <OverCalendarV2 v-model="calendarCentralDate" class="no-scroll elevation-2">
       <template #title>
         <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
         <div class="ml-2">
