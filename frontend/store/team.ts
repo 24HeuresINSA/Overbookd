@@ -78,12 +78,6 @@ export const actions = actionTree(
       return res;
     },
 
-    async linkUserToTeams(
-      constext,
-      { userId, teams }: { userId: number; teams: Team[] }
-    ): Promise<any> {
-      return safeCall(this, teamRepo.linkUserToTeams(this, userId, teams));
-    },
     async fetchFaValidators(context): Promise<void> {
       const res = await safeCall(this, teamRepo.getFaValidators(this));
       if (!res) {

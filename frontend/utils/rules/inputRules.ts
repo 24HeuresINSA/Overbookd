@@ -1,13 +1,14 @@
 export function isNumber(value: string | null): boolean | string {
   return (
-    (value && !isNaN(parseInt(value, 10))) || "La valeur doit être un nombre"
+    (value != undefined && !isNaN(parseInt(value, 10))) ||
+    "La valeur doit être un nombre"
   );
 }
 
 export function min(minValue: number) {
   return function (value: string | null) {
     return (
-      (value && parseInt(value, 10) >= minValue) ||
+      (value != undefined && parseInt(value, 10) >= minValue) ||
       `La valeur doit être au moins de ${minValue}`
     );
   };

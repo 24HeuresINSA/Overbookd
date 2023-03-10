@@ -1,16 +1,26 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { User } from "~/utils/models/repo";
-import { Friend, UserCreation, UserWithPermissions } from "~/utils/models/user";
 import { safeCall } from "~/utils/api/calls";
+import { updateItemToList } from "~/utils/functions/list";
+import { User } from "~/utils/models/repo";
+import {
+  castToUserModification,
+  castUsersWithPermissionsWithDate,
+  castUserWithDate,
+  castUserWithPermissionsWithDate,
+  CompleteUser,
+  CompleteUserWithPermissions,
+  Friend,
+  UserCreation,
+} from "~/utils/models/user";
 
 const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
-  me: {} as User,
-  users: [] as UserWithPermissions[],
+  me: {} as CompleteUser,
+  users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<User>[],
-  mUser: {} as User,
+  selectedUser: {} as CompleteUserWithPermissions,
   timeslots: [],
   friends: [] as Friend[],
   mFriends: [] as Friend[],
@@ -19,13 +29,13 @@ export const state = () => ({
 export type UserState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_USER(state: UserState, data: User) {
+  SET_USER(state: UserState, data: CompleteUser) {
     state.me = data;
   },
-  SET_SELECTED_USER(state: UserState, data: User) {
-    state.mUser = data;
+  SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
+    state.selectedUser = data;
   },
-  SET_USERS(state: UserState, data: UserWithPermissions[]) {
+  SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
   },
   SET_USERNAMES(state: UserState, data: User[]) {
@@ -39,8 +49,11 @@ export const mutations = mutationTree(state, {
     );
     state.usernames = data;
   },
-  UPDATE_USER(state: UserState, data: Partial<User>) {
-    Object.assign(state.me, data);
+  UPDATE_USER(state: UserState, data: CompleteUserWithPermissions) {
+    const index = state.users.findIndex((user) => user.id === data.id);
+    if (index !== -1) {
+      state.users = updateItemToList(state.users, index, data);
+    }
   },
   SET_TIMESLOTS(state: UserState, data: any) {
     state.timeslots = data;
@@ -60,11 +73,6 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  availabilities: (state: UserState) => {
-    return state.mUser.availabilities.map((_id) => {
-      return state.timeslots.find((_timeslot) => _timeslot === _id);
-    });
-  },
   hasPermission: (state: UserState) => (permission?: string) => {
     if (!permission) return true;
     return (
@@ -83,25 +91,21 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async setSelectedUser({ commit, state }, user: User) {
+    async setSelectedUser({ commit }, user: CompleteUserWithPermissions) {
       commit("SET_SELECTED_USER", user);
-      if (state.timeslots.length === 0) {
-        const timeslots = (await this.$axios.get("/availabilities")).data;
-        commit("SET_TIMESLOTS", timeslots);
-      }
     },
     async fetchUser({ commit }) {
       const res = await safeCall(this, UserRepo.getMyUser(this), {
         errorMessage: "Session expirée 💨",
       });
       if (res) {
-        commit("SET_USER", res.data);
+        commit("SET_USER", castUserWithDate(res.data));
       }
     },
     async fetchUsers({ commit }) {
       const res = await safeCall(this, UserRepo.getAllUsers(this));
       if (res) {
-        commit("SET_USERS", res.data);
+        commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
       }
     },
     async fetchFriends({ commit }) {
@@ -113,7 +117,7 @@ export const actions = actionTree(
     async fetchMyFriends({ commit, state }) {
       const res = await safeCall(
         this,
-        UserRepo.getUserFriends(this, +state.me.id)
+        UserRepo.getUserFriends(this, state.me.id)
       );
       if (res) {
         commit("SET_MY_FRIENDS", res.data);
@@ -166,19 +170,65 @@ export const actions = actionTree(
         return u.username;
       }
     },
-    async updateUser(
-      { commit },
-      payload: { userID: string; userData: Partial<User> }
-    ) {
+    async updateUser({ commit, state }, user: CompleteUserWithPermissions) {
+      const { id, ...userData } = user;
       const res = await safeCall(
         this,
-        UserRepo.updateUser(this, payload.userID, payload.userData)
+        UserRepo.updateUser(this, id, castToUserModification(userData)),
+        {
+          successMessage: "Profil mis à jour ! 🎉",
+          errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
+        }
       );
-      if (res) {
-        commit("UPDATE_USER", payload.userData);
-        return true;
+      if (!res) return;
+      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
+      if (res.data.id === state.me.id) {
+        commit("SET_USER", castUserWithDate(res.data));
       }
-      return false;
+    },
+
+    async deleteUser({ commit, state }, userId: number) {
+      const res = await safeCall(this, UserRepo.deleteUser(this, userId), {
+        successMessage: "Utilisateur supprimé ! 🎉",
+        errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
+      });
+      if (!res) return;
+      const user = { ...state.selectedUser, is_deleted: true };
+      commit("UPDATE_USER", user);
+      if (user.id === state.me.id) commit("SET_USER", user);
+    },
+
+    async updateSelectedUserTeams({ commit, state }, teams: string[]) {
+      const res = await safeCall(
+        this,
+        RepoFactory.teamRepo.linkUserToTeams(
+          this,
+          state.selectedUser.id,
+          teams
+        ),
+        {
+          successMessage: "Equipes mises à jour ! 🎉",
+          errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
+        }
+      );
+      if (!res) return;
+      const user: CompleteUserWithPermissions = {
+        ...state.selectedUser,
+        team: res.data.teams,
+      };
+      commit("UPDATE_USER", user);
+      commit("SET_SELECTED_USER", user);
+      if (res.data.userId === state.me.id) {
+        commit("SET_USER", user);
+      }
+    },
+
+    async fetchAndUpdateLocalUser({ commit, state }, userId: number) {
+      const res = await safeCall(this, UserRepo.getUser(this, userId));
+      if (!res) return;
+      const user = { ...state.selectedUser, charisma: res.data.charisma };
+      commit("UPDATE_USER", user);
+      if (res.data.id === state.me.id) commit("SET_USER", user);
     },
 
     async acceptSelection({ commit }, timeslotIDS: string[]) {
@@ -191,7 +241,7 @@ export const actions = actionTree(
       }
       return;
     },
-    async findUserById({ commit }, id: string) {
+    async findUserById({ commit }, id: number) {
       const res = await UserRepo.getUser(this, id);
 
       if (res && res.data) commit("SET_SELECTED_USER", res.data);
