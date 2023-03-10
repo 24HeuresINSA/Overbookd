@@ -3,6 +3,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User } from "~/utils/models/repo";
+import { Team } from "~/utils/models/team";
 import {
   castToUserModification,
   castUsersWithPermissionsWithDate,
@@ -20,7 +21,7 @@ export const state = () => ({
   me: {} as CompleteUser,
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<User>[],
-  mUser: {} as CompleteUser,
+  selectedUser: {} as CompleteUserWithPermissions,
   timeslots: [],
   friends: [] as Friend[],
   mFriends: [] as Friend[],
@@ -33,7 +34,7 @@ export const mutations = mutationTree(state, {
     state.me = data;
   },
   SET_SELECTED_USER(state: UserState, data: CompleteUser) {
-    state.mUser = data;
+    state.selectedUser = data;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
@@ -91,12 +92,8 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async setSelectedUser({ commit, state }, user: User) {
+    async setSelectedUser({ commit }, user: CompleteUserWithPermissions) {
       commit("SET_SELECTED_USER", user);
-      if (state.timeslots.length === 0) {
-        const timeslots = (await this.$axios.get("/availabilities")).data;
-        commit("SET_TIMESLOTS", timeslots);
-      }
     },
     async fetchUser({ commit }) {
       const res = await safeCall(this, UserRepo.getMyUser(this), {
@@ -188,6 +185,24 @@ export const actions = actionTree(
       commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
       if (res.data.id === state.me.id) {
         commit("SET_USER", castUserWithDate(res.data));
+      }
+    },
+
+    async updateSelectedUserTeams({ commit, state }, teams: string[]) {
+      const res = await safeCall(
+        this,
+        RepoFactory.teamRepo.linkUserToTeams(this, state.selectedUser.id, teams),
+        {
+          successMessage: "Equipes mises à jour ! 🎉",
+          errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
+        }
+      );
+      if (!res) return;
+      const user: CompleteUserWithPermissions = { ...state.selectedUser, team: res.data.teams };
+      commit("UPDATE_USER", user);
+      commit("SET_SELECTED_USER", user);
+      if (res.data.userId === state.me.id) {
+        commit("SET_USER", user);
       }
     },
 

@@ -4,15 +4,15 @@
       <div class="user-information">
         <div class="user-information__personnal-data">
           <v-img
-            v-if="mUser.pp"
-            :src="getPPUrl() + 'api/user/pp/' + mUser.pp"
+            v-if="selectedUser.pp"
+            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
             max-height="200px"
           ></v-img>
           <v-card-title>
             {{ formatUserNameWithNickname }}
           </v-card-title>
           <v-card-text>
-            <OverChips :roles="mUser.team" />
+            <OverChips :roles="selectedUser.team" />
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newRole"
@@ -21,54 +21,53 @@
               >
               </v-select>
               <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
-              <v-btn text @click="saveUserRoles()">Sauvegarder les roles</v-btn>
             </div>
 
             <v-container>
               <v-row>
                 <v-col md="6" class="d-flex align-center justify-center">
-                  <v-btn icon :href="'mailto:' + mUser.email">
+                  <v-btn icon :href="'mailto:' + selectedUser.email">
                     <v-icon>mdi-send</v-icon>
                   </v-btn>
-                  <h3>{{ mUser.email }}</h3>
+                  <h3>{{ user.email }}</h3>
                 </v-col>
                 <v-col md="6" style="display: flex; align-items: baseline">
-                  <v-btn icon :href="'tel:+33:' + mUser.phone">
+                  <v-btn icon :href="'tel:+33:' + selectedUser.phone">
                     <v-icon>mdi-phone</v-icon>
                   </v-btn>
-                  <h3>+33{{ mUser.phone }}</h3>
+                  <h3>+33{{ selectedUser.phone }}</h3>
                 </v-col>
                 <v-col md="6">
                   <v-text-field
-                    v-model="mUser.lastname"
+                    v-model="user.lastname"
                     label="Nom"
                     :disabled="!canEditUserData"
                   ></v-text-field>
                 </v-col>
                 <v-col md="6">
                   <v-text-field
-                    v-model="mUser.firstname"
+                    v-model="user.firstname"
                     label="Prénom"
                     :disabled="!canEditUserData"
                   ></v-text-field>
                 </v-col>
                 <v-col md="12">
                   <v-textarea
-                    v-model="mUser.comment"
+                    v-model="user.comment"
                     label="Commentaire"
                     :disabled="!canEditUserData"
                   ></v-textarea>
                 </v-col>
                 <v-col md="4">
                   <v-text-field
-                    v-model="mUser.nickname"
+                    v-model="user.nickname"
                     label="Surnom"
                     :disabled="!canEditUserData"
                   ></v-text-field>
                 </v-col>
                 <v-col md="4">
                   <DateField
-                    v-model="mUser.birthdate"
+                    v-model="user.birthdate"
                     label="Date de naissance"
                     :boxed="false"
                     :disabled="!hasEditingRole"
@@ -77,7 +76,7 @@
                 <v-col md="4" style="display: flex; align-items: baseline">
                   <p>+33&nbsp;</p>
                   <v-text-field
-                    v-model="mUser.phone"
+                    v-model="user.phone"
                     label="Numéro de téléphone "
                     :disabled="!canEditUserData"
                     type="number"
@@ -85,21 +84,21 @@
                 </v-col>
                 <v-col md="4">
                   <v-text-field
-                    v-model="mUser.year"
+                    v-model="user.year"
                     label="Année"
                     :disabled="!hasEditingRole"
                   ></v-text-field>
                 </v-col>
                 <v-col md="4">
                   <v-text-field
-                    v-model="mUser.department"
+                    v-model="user.department"
                     label="Département"
                     :disabled="!hasEditingRole"
                   ></v-text-field>
                 </v-col>
                 <v-col md="4">
                   <v-text-field
-                    v-model="mUser.charisma"
+                    v-model="user.charisma"
                     label="Charisme"
                     type="number"
                     :rules="[rules.number, rules.min]"
@@ -110,14 +109,14 @@
               <v-row v-if="hasUserRole('hard')">
                 <v-col md="4">
                   <v-text-field
-                    v-model="mUser.balance"
+                    v-model="user.balance"
                     label="Solde compte perso"
                     :disabled="true"
                   ></v-text-field>
                 </v-col>
                 <v-col md="4">
                   <v-switch
-                    v-model="mUser.has_payed_contributions"
+                    v-model="user.has_payed_contributions"
                     label="Cotisation"
                     :disabled="!hasEditingRole"
                   ></v-switch> </v-col
@@ -146,7 +145,7 @@
         </div>
         <div class="user-information__availabilities">
           <AvailabilitiesSumup
-            :user-id="mUser.id"
+            :user-id="selectedUser.id"
             @availabilities-updated="fetchUser"
           ></AvailabilitiesSumup>
         </div>
@@ -157,6 +156,7 @@
 
 <script>
 import OverChips from "~/components/atoms/OverChips";
+import { removeItemAtIndex } from "~/utils/functions/list";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 import DateField from "../atoms/DateField.vue";
@@ -170,10 +170,6 @@ export default {
     DateField,
   },
   props: {
-    user: {
-      type: Object,
-      default: () => undefined,
-    },
     toggle: {
       type: Boolean,
       default: () => false,
@@ -182,6 +178,7 @@ export default {
 
   data: () => {
     return {
+      user: {},
       newRole: undefined,
       teamNames: [],
       isEditingAvailability: false,
@@ -196,13 +193,8 @@ export default {
     me() {
       return this.$accessor.user.me;
     },
-    mUser: {
-      get: function () {
-        return { ...this.user };
-      },
-      set: function (newUser) {
-        this.$emit("update-user", newUser);
-      },
+    selectedUser() {
+      return this.$accessor.user.selectedUser;
     },
     mToggle: {
       get: function () {
@@ -213,7 +205,7 @@ export default {
       },
     },
     formatUserNameWithNickname() {
-      return formatUserNameWithNickname(this.mUser);
+      return formatUserNameWithNickname(this.selectedUser);
     },
     canEditUserData() {
       return this.hasEditingRole || this.isMe;
@@ -222,12 +214,19 @@ export default {
       return this.hasPermission("manage-users");
     },
     isMe() {
-      return this.$accessor.user.me.id === this.mUser.id;
+      return this.$accessor.user.me.id === this.selectedUser.id;
+    },
+  },
+
+  watch: {
+    selectedUser() {
+      this.user = { ...this.selectedUser };
     },
   },
 
   async mounted() {
     this.teamNames = this.$accessor.team.teamNames;
+    this.user = { ...this.selectedUser };
   },
 
   methods: {
@@ -240,54 +239,30 @@ export default {
       return this.$accessor.user.hasPermission(permission);
     },
     addRemoveRole() {
-      if (!this.teamNames.includes(this.newRole)) {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "Veuillez choisir une option valide !",
-        });
-        return;
-      }
-      // verify the user is not already in the team
-      if (this.mUser.team.includes(this.newRole)) {
-        // Remove it
-        this.mUser.team = this.mUser.team.filter(
-          (role) => role !== this.newRole
-        );
-      } else {
-        this.mUser.team.push(this.newRole);
-      }
+      if (!this.newRole) return;
+      const teams = this.computeTeams();
+      this.$accessor.user.updateSelectedUserTeams(teams);
     },
-    async saveUserRoles() {
-      const res = await this.$accessor.team.linkUserToTeams({
-        userId: this.mUser.id,
-        teams: this.mUser.team,
-      });
-      if (res.status === 201) {
-        this.mUser.team = res.data.teams;
-        this.$accessor.notif.pushNotification({
-          type: "success",
-          message: "Roles mis à jour",
-        });
-      } else {
-        this.$accessor.notif.pushNotification({
-          type: "error",
-          message: "Une erreur est survenue !",
-        });
+    computeTeams() {
+      const teamIndex = this.selectedUser.team.indexOf(this.newRole);
+      if (teamIndex !== -1) {
+        return removeItemAtIndex(this.selectedUser.team, teamIndex);
       }
+      return [...this.selectedUser.team, this.newRole];
     },
     saveUser() {
-      this.$accessor.user.updateUser(this.mUser);
+      this.$accessor.user.updateUser(this.user);
       this.mToggle = false;
     },
     deleteUser() {
-      this.mUser.isValid = false;
+      this.$emit("change", { ...this.selectedUser, isDeleted: true });
       this.saveUser();
     },
     hasUserRole(roles) {
-      if (this.mUser.team === undefined) {
+      if (this.selectedUser.team === undefined) {
         return false;
       } else {
-        return this.mUser.team.includes(roles);
+        return this.selectedUser.team.includes(roles);
       }
     },
     fetchUser(userId) {

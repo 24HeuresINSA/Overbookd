@@ -113,14 +113,6 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasPermission('bureau')"
-                  icon
-                  small
-                  @click="openCharismaDialog(item)"
-                >
-                  <v-icon small>mdi-emoticon-cool</v-icon>
-                </v-btn>
-                <v-btn
                   v-if="hasPermission('manage-users')"
                   icon
                   small
@@ -209,26 +201,6 @@
       </v-row>
     </div>
 
-    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Charisme 😎</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="newCharisma.reason" label="raison">
-          </v-text-field>
-          <v-text-field
-            v-model="newCharisma.amount"
-            label="quantité"
-            type="number"
-          >
-          </v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="saveNewCharisma()">+</v-btn>
-          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
       {{ feedbackMessage }}
 
@@ -241,7 +213,6 @@
 
     <SnackNotificationContainer></SnackNotificationContainer>
     <UserInformation
-      :user="selectedUser"
       :toggle="isUserDialogOpen"
       @update-toggle="(t) => (isUserDialogOpen = t)"
     ></UserInformation>
@@ -281,7 +252,6 @@ export default {
         { text: "Action", value: "action", sortable: false },
       ],
 
-      teams: this.$accessor.team.allTeams,
       loading: false,
 
       filters: {
@@ -291,23 +261,9 @@ export default {
         hasPayedContribution: undefined,
       },
 
-      isTransactionDialogOpen: false,
       isUserDialogOpen: false,
       isSnackbarOpen: false,
-      isCharismaDialogOpen: false,
 
-      selectedUser: {
-        nickname: undefined,
-      },
-
-      newTransaction: {
-        reason: "recharge compte perso",
-        amount: undefined,
-      },
-      newCharisma: {
-        reason: undefined,
-        amount: undefined,
-      },
       newRole: undefined,
 
       feedbackMessage: "Sauvegardé 🥳",
@@ -323,6 +279,9 @@ export default {
   computed: {
     users() {
       return this.$accessor.user.users;
+    },
+    teams() {
+      return this.$accessor.team.allTeams
     },
   },
 
@@ -343,7 +302,6 @@ export default {
 
     selections() {
       const selections = [];
-
       for (const selection of this.filters.teams) {
         selections.push(selection);
       }
@@ -398,27 +356,9 @@ export default {
         ? (item.balance || 0).toFixed(2) + " €"
         : undefined;
     },
-    openCharismaDialog(user) {
-      this.selectedUser = user;
-      this.isCharismaDialogOpen = true;
-    },
 
     hasPermission(permission) {
       return this.$accessor.user.hasPermission(permission);
-    },
-
-    async addRole() {
-      let user = this.selectedUser;
-      if (user.team === undefined) {
-        user.team = [];
-      }
-      if (user.team.find((role) => role === this.newRole)) {
-        // already has role
-      } else {
-        user.team.push(this.newRole);
-        this.$set(user, "team", user.team); // update rendering
-        await this.$axios.put(`/user/${user._id}`, { team: user.team });
-      }
     },
 
     getPPUrl() {
@@ -427,96 +367,9 @@ export default {
         : "";
     },
 
-    openTransactionDialog(user) {
-      this.isTransactionDialogOpen = true;
-      this.selectedUser = user;
-    },
-
     openInformationDialog(user) {
-      this.selectedUser = user;
+      this.$accessor.user.setSelectedUser(user);
       this.isUserDialogOpen = true;
-    },
-
-    async saveNewCharisma(isExpense) {
-      if (!this.selectedUser.charisma) {
-        this.selectedUser.charisma = 0;
-      }
-
-      if (!this.selectedUser.charismaHistory) {
-        this.selectedUser.charismaHistory = [];
-      }
-      this.newCharisma.amount =
-        (isExpense ? "-" : "+") + this.newCharisma.amount;
-      this.selectedUser.charismaHistory.unshift(this.newCharisma);
-
-      this.selectedUser.charisma =
-        +this.selectedUser.charisma + +this.newCharisma.amount;
-
-      // update notifications
-      if (!this.selectedUser.notifications) {
-        this.selectedUser.notifications = [];
-      }
-      this.selectedUser.notifications.unshift({
-        date: new Date(),
-        team: "bureau",
-        message: `tu as reçu ${this.newCharisma.amount} points de charisme pour ${this.newCharisma.reason}`,
-        type: "charisma",
-      });
-
-      await this.$axios.put(
-        "/user/" + this.selectedUser._id,
-        this.selectedUser
-      );
-      this.isSnackbarOpen = true;
-      this.isCharismaDialogOpen = false;
-    },
-
-    async transaction(isExpense) {
-      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
-      const amountNumber = +this.newTransaction.amount;
-
-      if (amountNumber <= 0) {
-        await this.$store.dispatch("notif/pushNotification", {
-          type: "success",
-          message: "les virments negatif sont interdit 🤑",
-        });
-        return;
-      }
-
-      let mTransaction = {
-        type: isExpense ? "expense" : "deposit",
-        from: isExpense ? this.selectedUser._id : null,
-        to: isExpense ? null : this.selectedUser._id,
-        context: this.newTransaction.reason,
-        amount: amountNumber,
-        createdAt: new Date(),
-      };
-
-      // update on screen
-      if (this.selectedUser.balance === undefined) {
-        this.selectedUser.balance = 0;
-      }
-      this.selectedUser.balance = +this.selectedUser.balance + amountNumber;
-      try {
-        let res = await RepoFactory.transactionRepo.createTransactions(this, [
-          mTransaction,
-        ]);
-        if (res.status !== 200) {
-          throw new Error();
-        }
-        await this.$store.dispatch("notif/pushNotification", {
-          type: "success",
-          message: "Transfer sent !",
-        });
-      } catch (error) {
-        // let notif: SnackNotif = {
-        //   type: "error",
-        //   message: "Could not transfer",
-        // };
-        // await this.$store.dispatch("notif/pushNotification", notif);
-      }
-      this.isSnackbarOpen = true;
-      this.isTransactionDialogOpen = false;
     },
 
     getRoleMetadata(roleName) {
@@ -525,27 +378,6 @@ export default {
 
     removeTeamInFilter(item) {
       this.filters.teams.splice(this.filters.teams.indexOf(item), 1);
-    },
-
-    async saveUser() {
-      await this.$axios.put(
-        `/user/${this.selectedUser._id}`,
-        this.selectedUser
-      );
-      this.isUserDialogOpen = false;
-    },
-
-    async deleteUser() {
-      this.selectedUser.isValid = false;
-      await this.saveUser();
-    },
-
-    async deleteAllTeams() {
-      this.selectedUser.team = [];
-      await this.$axios.put(
-        `/user/${this.selectedUser._id}`,
-        this.selectedUser
-      );
     },
 
     download(filename, text) {
