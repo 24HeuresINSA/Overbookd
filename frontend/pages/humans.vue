@@ -113,32 +113,12 @@
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="hasPermission('bureau')"
-                  icon
-                  small
-                  @click="openCharismaDialog(item)"
-                >
-                  <v-icon small>mdi-emoticon-cool</v-icon>
-                </v-btn>
-                <v-btn
                   v-if="hasPermission('manage-users')"
                   icon
                   small
                   @click="openCalendar(item._id)"
                 >
                   <v-icon small>mdi-calendar</v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  small
-                  :href="
-                    'https://www.facebook.com/search/top?q=' +
-                    item.firstname +
-                    ' ' +
-                    item.lastname
-                  "
-                >
-                  <v-icon small>mdi-facebook</v-icon>
                 </v-btn>
               </template>
 
@@ -221,26 +201,6 @@
       </v-row>
     </div>
 
-    <v-dialog v-model="isCharismaDialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Charisme 😎</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="newCharisma.reason" label="raison">
-          </v-text-field>
-          <v-text-field
-            v-model="newCharisma.amount"
-            label="quantité"
-            type="number"
-          >
-          </v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="saveNewCharisma()">+</v-btn>
-          <v-btn text @click="saveNewCharisma(true)">-</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
       {{ feedbackMessage }}
 
@@ -253,7 +213,6 @@
 
     <SnackNotificationContainer></SnackNotificationContainer>
     <UserInformation
-      :user="selectedUser"
       :toggle="isUserDialogOpen"
       @update-toggle="(t) => (isUserDialogOpen = t)"
     ></UserInformation>
@@ -277,7 +236,6 @@ export default {
   },
   data() {
     return {
-      users: [],
       filteredUsers: [],
       headers: [
         { text: "Prénom Nom (Surnom)", value: "firstname" },
@@ -294,7 +252,6 @@ export default {
         { text: "Action", value: "action", sortable: false },
       ],
 
-      teams: this.$accessor.team.allTeams,
       loading: false,
 
       filters: {
@@ -304,97 +261,43 @@ export default {
         hasPayedContribution: undefined,
       },
 
-      isTransactionDialogOpen: false,
       isUserDialogOpen: false,
       isSnackbarOpen: false,
-      isCharismaDialogOpen: false,
 
-      selectedUser: {
-        nickname: undefined,
-      },
-
-      newTransaction: {
-        reason: "recharge compte perso",
-        amount: undefined,
-      },
-      newCharisma: {
-        reason: undefined,
-        amount: undefined,
-      },
       newRole: undefined,
-
       feedbackMessage: "Sauvegardé 🥳",
-
       isModeStatsActive: false,
 
-      options: {
-        page: 1,
-      },
+      options: { page: 1 },
     };
+  },
+
+  computed: {
+    users() {
+      return this.$accessor.user.users.filter(({ is_deleted }) => !is_deleted);
+    },
+    teams() {
+      return this.$accessor.team.allTeams;
+    },
   },
 
   watch: {
     filters: {
       handler() {
-        let mUsers = this.users;
+        this.updateFilteredUsers();
+      },
+      deep: true,
+    },
 
-        // filter by search
-        if (this.filters.search) {
-          const options = {
-            // Search in `author` and in `tags` array
-            keys: ["firstname", "lastname", "nickname", "phone"],
-          };
-          const fuse = new Fuse(mUsers, options);
-
-          mUsers = fuse.search(this.filters.search).map((e) => e.item);
-          this.options.page = 1; // reset page
-        }
-
-        // filter by not validated
-        if (this.filters.isValidated !== undefined) {
-          if (this.filters.isValidated) {
-            mUsers = mUsers.filter((user) =>
-              this.$accessor.permission.isValidated(user)
-            );
-          } else {
-            mUsers = mUsers.filter(
-              (user) => !this.$accessor.permission.isValidated(user)
-            );
-          }
-          this.options.page = 1; // reset page
-        }
-
-        // filter by payed contributions
-        if (this.filters.hasPayedContribution !== undefined) {
-          if (this.filters.hasPayedContribution) {
-            mUsers = mUsers.filter((user) => user.has_payed_contributions);
-          } else {
-            mUsers = mUsers.filter((user) => !user.has_payed_contributions);
-          }
-          this.options.page = 1; // reset page
-        }
-
-        // filter by team
-        if (this.filters.teams) {
-          this.filteredUsers = mUsers.filter((user) => {
-            if (user.team) {
-              return (
-                user.team.filter((value) => this.filters.teams.includes(value))
-                  .length === this.filters.teams.length
-              );
-            } else {
-              return false;
-            }
-          });
-          this.options.page = 1; // reset page
-        }
+    users: {
+      handler() {
+        this.updateFilteredUsers();
       },
       deep: true,
     },
 
     selections() {
       const selections = [];
-
       for (const selection of this.filters.teams) {
         selections.push(selection);
       }
@@ -409,25 +312,19 @@ export default {
   },
 
   async mounted() {
-    //await this.initStore();
-    if (this.hasPermission("hard")) {
-      // user has the HARD role
-      this.users = (await this.$axios.get("/user")).data;
-      this.users.filter((user) => !user.is_deleted);
-      this.filteredUsers = this.users;
-      this.filters.isValidated = true; // default set to true
-
-      // add CP if admin or sg
-      if (this.hasPermission("sg")) {
-        this.headers.splice(this.headers.length - 1, 0, {
-          text: "CP",
-          value: "balance",
-          align: "end",
-        });
-      }
-    } else {
-      await this.$router.push({
+    await this.$accessor.user.fetchUsers();
+    if (!this.hasPermission("hard")) {
+      return this.$router.push({
         path: "/",
+      });
+    }
+    this.filters.isValidated = true; // default set to true
+
+    if (this.hasPermission("manage-cp")) {
+      this.headers.splice(this.headers.length - 1, 0, {
+        text: "CP",
+        value: "balance",
+        align: "end",
       });
     }
   },
@@ -454,27 +351,9 @@ export default {
         ? (item.balance || 0).toFixed(2) + " €"
         : undefined;
     },
-    openCharismaDialog(user) {
-      this.selectedUser = user;
-      this.isCharismaDialogOpen = true;
-    },
 
     hasPermission(permission) {
       return this.$accessor.user.hasPermission(permission);
-    },
-
-    async addRole() {
-      let user = this.selectedUser;
-      if (user.team === undefined) {
-        user.team = [];
-      }
-      if (user.team.find((role) => role === this.newRole)) {
-        // already has role
-      } else {
-        user.team.push(this.newRole);
-        this.$set(user, "team", user.team); // update rendering
-        await this.$axios.put(`/user/${user._id}`, { team: user.team });
-      }
     },
 
     getPPUrl() {
@@ -483,96 +362,9 @@ export default {
         : "";
     },
 
-    openTransactionDialog(user) {
-      this.isTransactionDialogOpen = true;
-      this.selectedUser = user;
-    },
-
     openInformationDialog(user) {
-      this.selectedUser = user;
+      this.$accessor.user.setSelectedUser(user);
       this.isUserDialogOpen = true;
-    },
-
-    async saveNewCharisma(isExpense) {
-      if (!this.selectedUser.charisma) {
-        this.selectedUser.charisma = 0;
-      }
-
-      if (!this.selectedUser.charismaHistory) {
-        this.selectedUser.charismaHistory = [];
-      }
-      this.newCharisma.amount =
-        (isExpense ? "-" : "+") + this.newCharisma.amount;
-      this.selectedUser.charismaHistory.unshift(this.newCharisma);
-
-      this.selectedUser.charisma =
-        +this.selectedUser.charisma + +this.newCharisma.amount;
-
-      // update notifications
-      if (!this.selectedUser.notifications) {
-        this.selectedUser.notifications = [];
-      }
-      this.selectedUser.notifications.unshift({
-        date: new Date(),
-        team: "bureau",
-        message: `tu as reçu ${this.newCharisma.amount} points de charisme pour ${this.newCharisma.reason}`,
-        type: "charisma",
-      });
-
-      await this.$axios.put(
-        "/user/" + this.selectedUser._id,
-        this.selectedUser
-      );
-      this.isSnackbarOpen = true;
-      this.isCharismaDialogOpen = false;
-    },
-
-    async transaction(isExpense) {
-      this.newTransaction.amount = this.newTransaction.amount.replace(",", "."); // accept , in input
-      const amountNumber = +this.newTransaction.amount;
-
-      if (amountNumber <= 0) {
-        await this.$store.dispatch("notif/pushNotification", {
-          type: "success",
-          message: "les virments negatif sont interdit 🤑",
-        });
-        return;
-      }
-
-      let mTransaction = {
-        type: isExpense ? "expense" : "deposit",
-        from: isExpense ? this.selectedUser._id : null,
-        to: isExpense ? null : this.selectedUser._id,
-        context: this.newTransaction.reason,
-        amount: amountNumber,
-        createdAt: new Date(),
-      };
-
-      // update on screen
-      if (this.selectedUser.balance === undefined) {
-        this.selectedUser.balance = 0;
-      }
-      this.selectedUser.balance = +this.selectedUser.balance + amountNumber;
-      try {
-        let res = await RepoFactory.transactionRepo.createTransactions(this, [
-          mTransaction,
-        ]);
-        if (res.status !== 200) {
-          throw new Error();
-        }
-        await this.$store.dispatch("notif/pushNotification", {
-          type: "success",
-          message: "Transfer sent !",
-        });
-      } catch (error) {
-        // let notif: SnackNotif = {
-        //   type: "error",
-        //   message: "Could not transfer",
-        // };
-        // await this.$store.dispatch("notif/pushNotification", notif);
-      }
-      this.isSnackbarOpen = true;
-      this.isTransactionDialogOpen = false;
     },
 
     getRoleMetadata(roleName) {
@@ -581,27 +373,6 @@ export default {
 
     removeTeamInFilter(item) {
       this.filters.teams.splice(this.filters.teams.indexOf(item), 1);
-    },
-
-    async saveUser() {
-      await this.$axios.put(
-        `/user/${this.selectedUser._id}`,
-        this.selectedUser
-      );
-      this.isUserDialogOpen = false;
-    },
-
-    async deleteUser() {
-      this.selectedUser.isValid = false;
-      await this.saveUser();
-    },
-
-    async deleteAllTeams() {
-      this.selectedUser.team = [];
-      await this.$axios.put(
-        `/user/${this.selectedUser._id}`,
-        this.selectedUser
-      );
     },
 
     download(filename, text) {
@@ -622,48 +393,31 @@ export default {
 
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-      let csv =
-        "Prénom;Nom;Surnom;Charisme;Poles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire\n";
+      const csvHeader =
+        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire\n";
 
-      const users = this.users;
-      for (let i = 0; i < users.length; i++) {
-        csv +=
-          users[i].firstname +
-          ";" +
-          users[i].lastname +
-          ";" +
-          users[i].nickname +
-          ";" +
-          users[i].charisma +
-          ";" +
-          '"' +
-          users[i].team +
-          '"' +
-          ";" +
-          users[i].email +
-          ";" +
-          users[i].birthdate +
-          ";" +
-          "+33" +
-          users[i].phone +
-          ";" +
-          users[i].department +
-          ";" +
-          users[i].year +
-          ";" +
-          users[i].balance +
-          ";" +
-          users[i].has_payed_contributions +
-          ";" +
-          users[i].comment +
-          ";" +
-          "\n";
-      }
+      const csvContent = this.users.map((user) => {
+        return [
+          user.firstname,
+          user.lastname,
+          user.nickname,
+          user.charisma,
+          `"${user.team}"`,
+          user.email,
+          user.birthdate,
+          `+33${user.phone}`,
+          user.department,
+          user.year,
+          user.balance,
+          user.has_payed_contributions,
+          user.comment,
+        ].join(";");
+      });
 
+      const csv = [csvHeader, ...csvContent].join("\n");
       const regex = new RegExp(/undefined/i, "g");
 
-      let parsedCSV = csv.replaceAll(regex, "");
-      // Prompt the browser to start file download
+      const parsedCSV = csv.replace(regex, "");
       this.download("utilisateurs.csv", parsedCSV);
     },
     async initStats() {
@@ -746,6 +500,57 @@ export default {
     },
     openCalendar(userID) {
       window.open("/calendar/" + userID, "_blank");
+    },
+    updateFilteredUsers() {
+      let mUsers = this.users;
+
+      // filter by search
+      if (this.filters.search) {
+        const options = {
+          // Search in `author` and in `tags` array
+          keys: ["firstname", "lastname", "nickname", "phone"],
+        };
+        const fuse = new Fuse(mUsers, options);
+
+        mUsers = fuse.search(this.filters.search).map((e) => e.item);
+        this.options.page = 1; // reset page
+      }
+
+      // filter by not validated
+      if (this.filters.isValidated !== undefined) {
+        mUsers = mUsers.filter(
+          (user) =>
+            this.$accessor.permission.isValidated(user) ===
+            this.filters.isValidated
+        );
+        this.options.page = 1; // reset page
+      }
+
+      // filter by payed contributions
+      if (this.filters.hasPayedContribution !== undefined) {
+        if (this.filters.hasPayedContribution) {
+          mUsers = mUsers.filter((user) => user.has_payed_contributions);
+        } else {
+          mUsers = mUsers.filter((user) => !user.has_payed_contributions);
+        }
+        this.options.page = 1; // reset page
+      }
+
+      // filter by team
+      if (this.filters.teams.length > 0) {
+        mUsers = mUsers.filter((user) => {
+          if (user.team) {
+            return (
+              user.team.filter((value) => this.filters.teams.includes(value))
+                .length === this.filters.teams.length
+            );
+          } else {
+            return false;
+          }
+        });
+        this.options.page = 1; // reset page
+      }
+      this.filteredUsers = mUsers;
     },
   },
 };

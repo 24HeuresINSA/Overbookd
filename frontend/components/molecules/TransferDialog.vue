@@ -50,7 +50,7 @@ export default Vue.extend({
       transfer: {
         user: {
           username: undefined,
-          id: "",
+          id: 0,
         },
         amount: "0",
         reason: "",
@@ -127,7 +127,7 @@ export default Vue.extend({
           this.$emit("transaction", newTransfer.amount);
           //reset form data
           this.transfer = {
-            user: { username: undefined, id: "" },
+            user: { username: undefined, id: 0 },
             amount: "0",
             reason: "",
             isValid: false,

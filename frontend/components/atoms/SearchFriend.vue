@@ -22,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Friend } from "~/utils/models/user";
-import { formatFriendName } from "~/utils/user/userUtils";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 interface SearchFriendData {
   loading: boolean;
@@ -71,7 +71,7 @@ export default Vue.extend({
       this.$emit("change", friend);
     },
     displayUsername(friend: Friend): string {
-      return formatFriendName(friend);
+      return formatUserNameWithNickname(friend);
     },
   },
 });

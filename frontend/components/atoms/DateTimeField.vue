@@ -2,10 +2,9 @@
   <v-text-field
     v-model="dateStringified"
     :label="label"
-    type="date"
+    type="datetime-local"
     :solo="boxed"
     :filled="boxed"
-    :disabled="disabled"
     return-object
     @change="updateDate"
   >
@@ -14,10 +13,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatLocalDate } from "~/utils/date/dateUtils";
+import { formatLocalDateTime, roundMinutes } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
-  name: "DateField",
+  name: "DateTimeField",
   model: {
     prop: "date",
     event: "change",
@@ -35,9 +34,9 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    disabled: {
-      type: Boolean,
-      default: false,
+    step: {
+      type: Number,
+      default: 15,
     },
   },
   data: () => ({
@@ -53,11 +52,12 @@ export default Vue.extend({
   },
   methods: {
     updateDate(date: string) {
-      this.$emit("change", new Date(date));
+      const roundedMinutes = roundMinutes(new Date(date), this.step);
+      this.$emit("change", roundedMinutes);
     },
     stringifyDate(date?: Date | string): string {
       if (!date) return "";
-      return formatLocalDate(new Date(date));
+      return formatLocalDateTime(new Date(date));
     },
   },
 });

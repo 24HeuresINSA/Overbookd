@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
@@ -8,6 +8,8 @@ import {
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
+import { UserModificationDto } from './dto/userModification.dto';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { join } from 'path';
 import { existsSync, unlink } from 'fs';
 
@@ -57,7 +59,7 @@ export const SELECT_USERNAME_WITH_ID = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
-type UserWithTeamAndPermission = UserWithoutPassword & {
+export type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];
   permissions: string[];
 };
@@ -144,47 +146,38 @@ export class UserService {
     return newUser;
   }
 
-  async addAvailabilitiesToUser(
-    user_id: number,
-    availabilities: number[],
-  ): Promise<null> {
-    return null;
-  }
-
   async updateUser(
-    params: {
-      where: Prisma.UserWhereUniqueInput;
-      data: Prisma.UserUpdateInput;
-    },
-    currentUser: any,
-  ): Promise<UserWithoutPassword> {
-    if (!currentUser.role.includes('admin')) {
-      // Remove balance from data
-      delete params.data.balance;
+    targetUserId: number,
+    userData: UserModificationDto,
+    author: JwtUtil,
+  ): Promise<UserWithTeamAndPermission> {
+    if (!this.canUpdateUser(author, targetUserId)) {
+      throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
     }
-    if (!currentUser.role.filter((n: any) => ['human', 'admin'].includes(n))) {
-      // Remove teams from charisma
-      delete params.data.charisma;
+
+    if (!this.canUpdateCharisma(author)) {
+      delete userData.charisma;
     }
-    const team = params.data.team;
-    if (team) {
-      // Remove teams from data
-      delete params.data.team;
+    if (!this.canUpdateContributionPayment(author)) {
+      delete userData.has_payed_contributions;
     }
-    const { where, data } = params;
-    return this.prisma.user.update({
-      select: SELECT_USER,
-      data,
-      where,
+
+    const user = await this.prisma.user.update({
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
+      },
+      data: userData,
+      where: { id: targetUserId },
     });
+    return this.getUserWithTeamAndPermission(user);
   }
 
-  async deleteUser(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserWithoutPassword> {
-    return this.prisma.user.delete({
-      select: SELECT_USER,
-      where,
+  async deleteUser(id: number): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { is_deleted: true },
+      select: { id: true },
     });
   }
 
@@ -209,6 +202,22 @@ export class UserService {
           permissions: [...permissions],
         }
       : undefined;
+  }
+
+  private canUpdateCharisma(author: JwtUtil): boolean {
+    return author.isAdmin() || author.hasPermission('manage-users');
+  }
+
+  private canUpdateContributionPayment(author: JwtUtil): boolean {
+    return author.isAdmin() || author.hasPermission('manage-cp');
+  }
+
+  private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
+    return (
+      author.isAdmin() ||
+      author.hasPermission('manage-users') ||
+      author.id === targetUserId
+    );
   }
 
   async uploadPP(

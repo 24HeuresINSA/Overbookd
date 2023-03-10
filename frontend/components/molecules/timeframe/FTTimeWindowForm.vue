@@ -12,10 +12,10 @@
 
     <v-card-text>
       <h3>Début du créneau</h3>
-      <DateField v-model="start" label="Début"></DateField>
+      <DateTimeField v-model="start" label="Début"></DateTimeField>
 
       <h3>Fin du créneau</h3>
-      <DateField v-model="end" label="Fin"></DateField>
+      <DateTimeField v-model="end" label="Fin"></DateTimeField>
 
       <h3>Découpage du créneau</h3>
       <v-checkbox v-model="toSlice" label="Découper"></v-checkbox>
@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DateField from "~/components/atoms/DateField.vue";
+import DateTimeField from "~/components/atoms/DateTimeField.vue";
 import { formatDate, getHourDiff } from "~/utils/date/dateUtils";
 import { FT, FTTimeWindow } from "~/utils/models/ft";
 
@@ -54,7 +54,7 @@ interface FTTimeWindowFormData {
 
 export default Vue.extend({
   name: "TimeframeForm",
-  components: { DateField },
+  components: { DateTimeField },
   model: {
     prop: "timeWindow",
     event: "change",

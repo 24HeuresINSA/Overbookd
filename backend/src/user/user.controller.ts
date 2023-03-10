@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -15,13 +17,18 @@ import {
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { UserService, UserWithoutPassword } from './user.service';
+import {
+  UserService,
+  UserWithoutPassword,
+  UserWithTeamAndPermission,
+} from './user.service';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -51,7 +58,7 @@ export class UserController {
     type: Array,
   })
   getUsers(): Promise<Partial<User>[]> {
-    return this.userService.users({});
+    return this.userService.users({ where: { is_deleted: false } });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -138,40 +145,36 @@ export class UserController {
     return this.userService.user({ id: Number(id) });
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Permission('hard')
-  @Post('availabilities')
-  @ApiBody({
-    description: 'Add availabilities to current user',
-    type: Array,
-  })
-  addAvailabilitiesToCurrentUser(
-    @Body('availabilities') availabilities: number[],
-  ): Promise<User> {
-    return null;
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission('hard')
   @Put(':id')
   @ApiBody({
     description: 'Update a user by id',
     type: UserModificationDto,
   })
   updateUserById(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() userData: Partial<User>,
-    @Request() req: Express.Request,
-  ): Promise<UserWithoutPassword> {
+    @Param('id', ParseIntPipe) targetUserId: number,
+    @Body() user: UserModificationDto,
+    @Request() req: RequestWithUserPayload,
+  ): Promise<UserWithTeamAndPermission> {
     return this.userService.updateUser(
-      {
-        where: { id: Number(id) },
-        data: userData,
-      },
-      req.user,
+      targetUserId,
+      user,
+      new JwtUtil(req.user),
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('manage-users')
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Delete a user by id',
+  })
+  deleteUser(@Param('id', ParseIntPipe) userId: number): Promise<void> {
+    return this.userService.deleteUser(userId);
   }
 
   @UseGuards(JwtAuthGuard)
