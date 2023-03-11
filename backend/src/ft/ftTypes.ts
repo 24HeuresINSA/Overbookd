@@ -1,10 +1,4 @@
-import {
-  FtStatus,
-  FtSubjectType,
-  Prisma,
-  reviewStatus,
-  Status,
-} from '@prisma/client';
+import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.service';
 export class SignaLocation {
@@ -14,6 +8,7 @@ export class SignaLocation {
 class UserName {
   firstname: string;
   lastname: string;
+  nickname?: string;
 }
 
 export class UserNameWithId extends UserName {
@@ -78,14 +73,23 @@ export interface CompleteFtResponse {
   feedbacks: Feedback[];
   timeWindows: TimeWindow[];
   reviews: Review[];
+  reviewer?: UserNameWithId;
   team: Team | null;
   userInCharge: UserNameWithId | null;
   fa: MinimalFa | null;
 }
 
-export type LiteFtResponse = Prisma.FtGetPayload<{
-  select: typeof LITE_FT_SELECT;
-}>;
+export type LiteFtResponse = Pick<
+  CompleteFtResponse,
+  | 'id'
+  | 'name'
+  | 'status'
+  | 'userInCharge'
+  | 'team'
+  | 'fa'
+  | 'reviews'
+  | 'reviewer'
+>;
 export interface AlsoRequestedByFT {
   id: number;
   name: string;
@@ -118,6 +122,7 @@ const DISPLAY_USER_WITH_ID_SELECT = {
   select: {
     firstname: true,
     lastname: true,
+    nickname: true,
     id: true,
   },
 };
@@ -183,6 +188,7 @@ export const COMPLETE_FT_SELECT = {
   team: TEAM_SELECT,
   userInCharge: DISPLAY_USER_WITH_ID_SELECT,
   fa: MINIMAL_FA_SELECT,
+  reviewer: DISPLAY_USER_WITH_ID_SELECT,
 };
 
 export const LITE_FT_SELECT = {
@@ -193,4 +199,5 @@ export const LITE_FT_SELECT = {
   team: TEAM_SELECT,
   fa: MINIMAL_FA_SELECT,
   reviews: REVIEWS_SELECT,
+  reviewer: DISPLAY_USER_WITH_ID_SELECT,
 };

@@ -117,6 +117,13 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     type: MinimalFa,
   })
   fa: MinimalFa | null;
+
+  @ApiProperty({
+    required: false,
+    description: 'The user in charge of the ft review',
+    type: UserNameWithId,
+  })
+  reviewer?: UserNameWithId;
 }
 
 export class LiteFtResponseDto implements LiteFtResponse {
@@ -169,4 +176,11 @@ export class LiteFtResponseDto implements LiteFtResponse {
     type: Review,
   })
   reviews: Review[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The user in charge of the ft review',
+    type: UserNameWithId,
+  })
+  reviewer?: UserNameWithId;
 }
