@@ -4,10 +4,14 @@ import {
   FriendRequestData,
   Notification,
   Transfer,
-  User,
 } from "~/utils/models/repo";
-import { AxiosResponse } from "axios";
-import { Friend, UserCreation } from "~/utils/models/user";
+import {
+  CompleteUser,
+  CompleteUserWithPermissions,
+  Friend,
+  UserCreation,
+  UserModification,
+} from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/user";
@@ -18,14 +22,18 @@ export default {
   createUser(context: Context, user: UserCreation) {
     return context.$axios.$post(`${resource}`, user);
   },
-  getUser(context: Context, userId: string) {
-    return context.$axios.get(`${resource}/${userId}`);
+  getUser(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<CompleteUser>>(
+      `${resource}/${userId}`
+    );
   },
   getMyUser(context: Context) {
     return context.$axios.get(`${resource}/me`);
   },
-  getAllUsers(context: Context): Promise<AxiosResponse<User[]>> {
-    return context.$axios.get(`${resource}`);
+  getAllUsers(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+      `${resource}`
+    );
   },
   getAllUsernames(context: Context) {
     return context.$axios.get(`${resource}/all`);
@@ -45,8 +53,14 @@ export default {
   updateNotifications(context: Context, userId: string, data: Notification[]) {
     return context.$axios.put(`${resource}/${userId}`, data);
   },
-  updateUser(context: Context, userId: string, data: Partial<User>) {
-    return context.$axios.put(`${resource}/${userId}`, data);
+  updateUser(context: Context, userId: number, userData: UserModification) {
+    return context.$axios.put<HttpStringified<CompleteUserWithPermissions>>(
+      `${resource}/${userId}`,
+      userData
+    );
+  },
+  deleteUser(context: Context, userId: number) {
+    return context.$axios.delete<void>(`${resource}/${userId}`);
   },
   isMigrated(context: Context) {
     return context.$axios.get(`${resource}/isMigrated`);

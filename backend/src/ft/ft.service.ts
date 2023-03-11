@@ -118,13 +118,19 @@ export class FtService {
   }
 
   async submit(id: number): Promise<CompleteFtResponseDto | null> {
-    const ft = await this.findOne(id);
+    const [ft, reviewerCandidate] = await Promise.all([
+      this.findOne(id),
+      this.findBestReviewerCandidate(),
+    ]);
     if (!ft) throw new NotFoundException(`ft #${id} not found`);
+
+    const reviewerId = ft.reviewer?.id ?? reviewerCandidate.id;
 
     const submittedFt = await this.prisma.ft.update({
       where: { id },
       data: {
         status: FtStatus.SUBMITTED,
+        reviewerId,
       },
       select: COMPLETE_FT_SELECT,
     });
@@ -185,6 +191,7 @@ export class FtService {
   }
 
   private async checkAssignmentValidity(taskId: number, reviewerId: number) {
+    const team = this.buildTeamCodeCondition('humain');
     const [existingTask, reviewer] = await Promise.all([
       this.prisma.ft.findFirst({
         select: { id: true },
@@ -192,7 +199,7 @@ export class FtService {
       }),
       this.prisma.user.findFirst({
         select: { id: true },
-        where: { id: reviewerId, team: { some: { team: { code: 'humain' } } } },
+        where: { id: reviewerId, team },
       }),
     ]);
 
@@ -222,5 +229,18 @@ export class FtService {
       ),
     );
     return { ...timeWindow, userRequests };
+  }
+
+  private async findBestReviewerCandidate() {
+    const team = this.buildTeamCodeCondition('humain');
+    return this.prisma.user.findFirst({
+      select: { id: true },
+      where: { team },
+      orderBy: [{ ftsInReview: { _count: 'asc' } }],
+    });
+  }
+
+  private buildTeamCodeCondition(code: string) {
+    return { some: { team: { code } } };
   }
 }

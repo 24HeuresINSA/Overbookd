@@ -1,13 +1,15 @@
 <template>
   <div class="calendar">
-    <v-sheet v-if="title" tile height="54" class="d-flex">
+    <v-sheet v-if="displayHeader" tile height="54" class="d-flex">
       <v-btn icon class="ma-2" @click="previousPage">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-spacer class="calendar-title">
-        <div>
-          {{ title }}
-        </div>
+        <slot name="title">
+          <div>
+            {{ title }}
+          </div>
+        </slot>
       </v-spacer>
       <v-btn icon class="ma-2" @click="nextPage">
         <v-icon>mdi-chevron-right</v-icon>
@@ -97,6 +99,10 @@ export default Vue.extend({
       type: Date,
       required: true,
       default: () => new Date(),
+    },
+    displayHeader: {
+      type: Boolean,
+      default: true,
     },
     title: {
       type: String,

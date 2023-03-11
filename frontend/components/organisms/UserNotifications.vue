@@ -41,7 +41,7 @@ import NotificationCard from "~/components/molecules/notifications/NotificationC
 import { RepoFactory } from "~/repositories/repoFactory";
 import { UserState } from "~/store/user";
 import { safeCall } from "~/utils/api/calls";
-import { User } from "~/utils/models/repo";
+import { castUsersWithPermissionsWithDate } from "~/utils/models/user";
 import { TMapState } from "~/utils/types/store";
 
 export default Vue.extend({
@@ -71,9 +71,9 @@ export default Vue.extend({
         RepoFactory.userRepo.getAllUsers(this)
       );
       if (res) {
-        const users: User[] = res.data;
+        const users = castUsersWithPermissionsWithDate(res.data);
         return users.filter(
-          (user: User) => !this.$accessor.permission.isValidated(user)
+          (user) => !this.$accessor.permission.isValidated(user)
         ).length;
       }
       return 0;

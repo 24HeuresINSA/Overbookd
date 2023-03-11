@@ -12,18 +12,18 @@
           :rules="[rules.required]"
         ></v-text-field>
         <v-text-field v-model="description" label="Description"></v-text-field>
-        <DateField
+        <DateTimeField
           v-model="start"
           label="Début"
           :boxed="false"
           :step="60"
-        ></DateField>
-        <DateField
+        ></DateTimeField>
+        <DateTimeField
           v-model="end"
           label="Fin"
           :boxed="false"
           :step="60"
-        ></DateField>
+        ></DateTimeField>
         <v-text-field
           v-model="charisma"
           type="number"
@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DateField from "~/components/atoms/DateField.vue";
+import DateTimeField from "~/components/atoms/DateTimeField.vue";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
@@ -53,7 +53,7 @@ import { isNumber, min, required } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "CharismaPeriodForm",
-  components: { DateField },
+  components: { DateTimeField },
   props: {
     charismaPeriod: {
       type: Object,

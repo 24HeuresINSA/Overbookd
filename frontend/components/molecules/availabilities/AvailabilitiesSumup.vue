@@ -22,8 +22,9 @@
         color="success"
         class="cta__btn"
         @click="saveAvailabilities"
-        >Valider</v-btn
       >
+        Valider
+      </v-btn>
     </div>
   </div>
 </template>
@@ -120,10 +121,11 @@ export default Vue.extend({
         periodToRemove
       );
     },
-    saveAvailabilities() {
-      this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
+    async saveAvailabilities() {
+      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
         this.userId
       );
+      this.$emit("availabilities-updated", this.userId);
     },
   },
 });

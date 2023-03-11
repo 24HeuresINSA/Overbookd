@@ -30,19 +30,17 @@
         <h3 class="mt-1">📩 {{ me.email }}</h3>
         <h3 class="mt-1">📞 +33 {{ me.phone }}</h3>
         <h3 class="mt-1">😎 {{ me.charisma || 0 }} points de charisme</h3>
-        <h3 class="mt-1">❤️ {{ me.friends ? me.friends.length : 0 }} amis</h3>
+        <h3 class="mt-1">❤️ {{ friends }} amis</h3>
         <h3 class="mt-1">
           📆 {{ new Date(me.birthdate).toLocaleDateString() }}
         </h3>
-        <h3 class="mt-1">
-          🗣 {{ me.assigned ? me.assigned.length : 0 }} tâches affectées
-        </h3>
-        <h3 class="mt-1">🚗 {{ me.hasDriverLicense ? "✅" : "🛑" }}</h3>
+        <h3 class="mt-1">🗣 0 tâches affectées</h3>
+        <h3 class="mt-1">🚗 {{ hasDriverLicense ? "✅" : "🛑" }}</h3>
 
         <OverChips :roles="me.team"></OverChips>
 
         <v-progress-linear
-          :value="(me.charisma / maxCharisma) * 100"
+          :value="((me.charisma ?? 0) / maxCharisma) * 100"
         ></v-progress-linear>
       </v-card-text>
     </v-card>
@@ -50,12 +48,10 @@
 </template>
 
 <script lang="ts">
-import OverChips from "~/components/atoms/OverChips.vue";
 import Vue from "vue";
-import { mapState } from "vuex";
-import { UserState } from "~/store/user";
-import { TMapState } from "~/utils/types/store";
+import OverChips from "~/components/atoms/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
+import { CompleteUser } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "UserCard",
@@ -76,9 +72,15 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state: UserState) => state.me,
-    }),
+    me(): CompleteUser {
+      return this.$accessor.user.me;
+    },
+    friends(): number {
+      return this.$accessor.user.mFriends.length;
+    },
+    hasDriverLicense(): boolean {
+      return this.me.team.includes("conducteur");
+    },
   },
 
   mounted() {

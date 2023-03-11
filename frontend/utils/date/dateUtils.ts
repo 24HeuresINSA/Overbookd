@@ -1,5 +1,6 @@
 export const ONE_HOUR_IN_MS = 1000 * 60 * 60;
 
+// return format dd/mm/yyyy hh:mm
 export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -11,6 +12,7 @@ export function formatDateWithMinutes(date: string | Date): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
+// return format dd/mm/yyyy
 export function formatDate(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -20,6 +22,7 @@ export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
+// return format yyyy-mm-ddThh:mm
 export function formatLocalDateTime(date: Date): string {
   const year = date.getFullYear();
   const month = getTwoDigitsNumber(date.getMonth() + 1);
@@ -27,6 +30,14 @@ export function formatLocalDateTime(date: Date): string {
   const hours = getTwoDigitsNumber(date.getHours());
   const minutes = getTwoDigitsNumber(date.getMinutes());
   return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+// return format yyyy-mm-dd
+export function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = getTwoDigitsNumber(date.getMonth() + 1);
+  const day = getTwoDigitsNumber(date.getDate());
+  return `${year}-${month}-${day}`;
 }
 
 function getTwoDigitsNumber(number: number): string {

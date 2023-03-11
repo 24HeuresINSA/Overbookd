@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserPasswordOnly, UserService } from '../user/user.service';
@@ -84,10 +83,10 @@ export class AuthService {
   }
 
   async forgot({ email }: UserEmail): Promise<void> {
-    const user = await this.userService.user({ email });
+    const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      throw new NotFoundException('Email invalid');
+      return;
     }
 
     const reset_token = randomBytes(20).toString('hex');

@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Team } from "~/utils/models/team";
+import { HttpStringified } from "~/utils/types/http";
 
 const resource = "/team";
 type Context = { $axios: NuxtAxiosInstance };
@@ -8,8 +9,10 @@ export default {
   getTeams(context: Context) {
     return context.$axios.get(resource);
   },
-  linkUserToTeams(context: Context, userId: number, teams: Team[]) {
-    return context.$axios.post(`${resource}/link`, {
+  linkUserToTeams(context: Context, userId: number, teams: string[]) {
+    return context.$axios.post<
+      HttpStringified<{ userId: number; teams: string[] }>
+    >(`${resource}/link`, {
       userId,
       teams,
     });
