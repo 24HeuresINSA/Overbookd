@@ -21,7 +21,7 @@ export const state = () => ({
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<User>[],
   selectedUser: {} as CompleteUserWithPermissions,
-  timeslots: [],
+
   friends: [] as Friend[],
   mFriends: [] as Friend[],
   selectedUserFriends: [] as Friend[],
@@ -55,9 +55,6 @@ export const mutations = mutationTree(state, {
     if (index !== -1) {
       state.users = updateItemToList(state.users, index, data);
     }
-  },
-  SET_TIMESLOTS(state: UserState, data: any) {
-    state.timeslots = data;
   },
   SET_FRIENDS(state: UserState, friends: Friend[]) {
     state.friends = friends;
@@ -240,45 +237,10 @@ export const actions = actionTree(
       if (res.data.id === state.me.id) commit("SET_USER", user);
     },
 
-    async acceptSelection({ commit }, timeslotIDS: string[]) {
-      const res = await safeCall(
-        this,
-        UserRepo.acceptSelection(this, timeslotIDS)
-      );
-      if (!res) return;
-      commit("UPDATE_USER", res.data);
-    },
     async findUserById({ commit }, id: number) {
       const res = await safeCall(this, UserRepo.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
-    },
-
-    async removeAvailability(
-      _,
-      payload: { userID: string; timeslotID: string }
-    ) {
-      const res = await safeCall(
-        this,
-        UserRepo.removeAvailability(this, payload)
-      );
-      if (res) {
-        return true;
-      }
-      return false;
-    },
-    async addAvailabilityToUser(
-      _,
-      payload: { userID: string; timeslotID: string }
-    ) {
-      const res = await safeCall(
-        this,
-        UserRepo.addAvailabilityToUser(this, payload)
-      );
-      if (res) {
-        return true;
-      }
-      return false;
     },
   }
 );

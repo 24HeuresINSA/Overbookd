@@ -1,10 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import {
-  BroadcastNotif,
-  FriendRequestData,
-  Notification,
-  Transfer,
-} from "~/utils/models/repo";
+import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -61,41 +56,6 @@ export default {
   },
   deleteUser(context: Context, userId: number) {
     return context.$axios.delete<void>(`${resource}/${userId}`);
-  },
-  isMigrated(context: Context) {
-    return context.$axios.get(`${resource}/isMigrated`);
-  },
-  // /**
-  //  * @deprecated
-  //  * @param context
-  //  * @param data
-  //  */
-  // sendFriendRequest(context: Context, data: FriendRequestData) {
-  //   return context.$axios.put(
-  //     `${resource}/notification/${data.to.lastname}/${data.to.firstname}`,
-  //     data.data
-  //   );
-  // },
-  sendFriendRequestByKeycloakID(context: Context, data: FriendRequestData) {
-    return context.$axios.put(
-      `${resource}/notificationKeycloakID/${data.to}`, // TODO ask tom about new name
-      data.data
-    );
-  },
-  acceptSelection(context: Context, timeslotsIDS: String[]) {
-    return context.$axios.post(`${resource}/availabilities`, timeslotsIDS);
-  },
-  removeAvailability(
-    context: Context,
-    data: { userID: string; timeslotID: string }
-  ) {
-    return context.$axios.post(`${resource}/removeAvailability`, data);
-  },
-  addAvailabilityToUser(
-    context: Context,
-    data: { userID: string; timeslotID: string }
-  ) {
-    return context.$axios.post(`${resource}/addAvailabilityToUser`, data);
   },
   getFriends(context: Context) {
     return context.$axios.get<HttpStringified<Friend[]>>("friends");
