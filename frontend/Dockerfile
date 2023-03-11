@@ -41,4 +41,6 @@ COPY --chown=node:node --from=builder /overbookd/frontend/dist ./dist
 
 EXPOSE 1234
 
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:1234/"]
+
 CMD ["./node_modules/.bin/serve", "--single", "--listen", "1234", "dist"]

@@ -39,4 +39,6 @@ COPY --chown=node:node --from=builder /overbookd/backend/prisma ./prisma
 
 EXPOSE 3000
 
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:3000/"]
+
 CMD [  "npm", "run", "start:migrate:prod" ]
