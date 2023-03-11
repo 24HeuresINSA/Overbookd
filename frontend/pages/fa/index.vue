@@ -216,7 +216,7 @@ export default {
       return this.$accessor.user.hasPermission("admin");
     },
     isSecu() {
-      return this.$accessor.user.hasPermission("secu");
+      return this.$accessor.user.hasPermission("manage-pass-secu");
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
