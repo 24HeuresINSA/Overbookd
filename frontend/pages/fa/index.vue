@@ -53,6 +53,7 @@
               v-model="isDeletedFilter"
               label="Afficher les FA supprimées"
             ></v-switch>
+            <v-btn v-if="isSecu" @click="exportCSV()">Export sécu</v-btn>
           </v-card-text>
         </v-card>
       </v-container>
@@ -168,6 +169,7 @@
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import { Status } from "~/utils/models/FA";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default {
   name: "Fa",
@@ -213,6 +215,9 @@ export default {
     },
     isAdmin() {
       return this.$accessor.user.hasPermission("admin");
+    },
+    isSecu() {
+      return this.$accessor.user.hasPermission("manage-pass-secu");
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
@@ -365,6 +370,38 @@ export default {
         });
       }
       return color;
+    },
+    download(filename, text) {
+      // We use the 'a' HTML element to incorporate file generation into
+      // the browser rather than server-side
+      const element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      );
+      element.setAttribute("download", filename);
+
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+    async exportCSV() {
+      // Parse data into a CSV string to be passed to the download function
+      const csvHeader = "Numero;Nom;Resp;Nombre_de_pass;";
+      const csvRows = this.selectedFAs.map((fa) => {
+        const rowData = [
+          fa.id,
+          fa.name,
+          formatUsername(fa.user_in_charge),
+          fa.number_of_pass,
+        ];
+        return `${rowData.join(";")}`;
+      });
+      const csv = [csvHeader, ...csvRows].join("\n");
+      const regex = new RegExp(/undefined/i, "g");
+      const parsedCSV = csv.replace(regex, "");
+      this.download("passsecu.csv", parsedCSV);
     },
   },
 };
