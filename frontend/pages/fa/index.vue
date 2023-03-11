@@ -169,6 +169,7 @@
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/SearchTeam.vue";
 import { Status } from "~/utils/models/FA";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default {
   name: "Fa",
@@ -392,7 +393,7 @@ export default {
         const rowData = [
           fa.id,
           fa.name,
-          fa.user_in_charge.firstname + " " + fa.user_in_charge.lastname,
+          formatUsername(fa.user_in_charge),
           fa.number_of_pass,
         ];
         return `${rowData.join(";")}`;
