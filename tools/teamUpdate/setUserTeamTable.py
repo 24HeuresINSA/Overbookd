@@ -1,8 +1,11 @@
-import json, time, requests
+import json
+import time
+
+import requests
 from requests.structures import CaseInsensitiveDict
 
-URL="http://127.0.0.1:2424"
-BEARER=""
+URL = "http://127.0.0.1:2424"
+BEARER = ""
 
 headers = CaseInsensitiveDict()
 headers["Accept"] = "application/json"
@@ -14,13 +17,15 @@ users = json.load(open("users.json"))
 
 print(f"Number of users in users.json : {len(users)}")
 
-for user in users:    
+for user in users:
     payload = json.dumps({
         "userId": user["id"],
         "teams": user["team"],
     })
     print(payload)
-    
-    response = requests.post(URL + '/team/link', headers=headers, data=payload)
-    print(f"Create userTeam for user {user['lastname']} reponse : {response.text}")
+
+    response = requests.post(
+        URL + '/team/link', headers=headers, data=payload, timeout=5)
+    print(
+        f"Create userTeam for user {user['lastname']} reponse : {response.text}")
     time.sleep(1)

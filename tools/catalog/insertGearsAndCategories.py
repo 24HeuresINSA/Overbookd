@@ -1,34 +1,40 @@
 import csv
 import os
+
 import requests
 
 TOKEN = "YOUR_JWT"
 DOMAIN = "preprod.overbookd.24heures.org"
 
+
 def cleanAll():
-    categories = requests.get(f"https://{DOMAIN}/api/categories", headers={"Authorization": f"Bearer {TOKEN}"}).json()
-    gears = requests.get(f"https://{DOMAIN}/api/gears", headers={"Authorization": f"Bearer {TOKEN}"}).json()
+    categories = requests.get(f"https://{DOMAIN}/api/categories", headers={
+                              "Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
+    gears = requests.get(f"https://{DOMAIN}/api/gears",
+                         headers={"Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
     for category in categories:
         print(f"deleting {category['name']}")
-        requests.delete(f"https://{DOMAIN}/api/categories/{category['id']}", headers={"Authorization": f"Bearer {TOKEN}"})
+        requests.delete(f"https://{DOMAIN}/api/categories/{category['id']}", headers={
+                        "Authorization": f"Bearer {TOKEN}"}, timeout=5)
 
     for gear in gears:
         print(f"deleting {gear['name']}")
-        requests.delete(f"https://{DOMAIN}/api/gears/{gear['id']}", headers={"Authorization": f"Bearer {TOKEN}"})
+        requests.delete(f"https://{DOMAIN}/api/gears/{gear['id']}", headers={
+                        "Authorization": f"Bearer {TOKEN}"}, timeout=5)
 
-
-    
 
 def createCategory(name: str, parent: str = None):
     print(f"Try to create category {name} with {parent} as parent")
     data = {"name": name, "owner": name.lower()}
-    if(parent):
+    if (parent):
         data.update({"parent": int(parent)})
-    return requests.post(f"https://{DOMAIN}/api/categories", json=data, headers={"Authorization": f"Bearer {TOKEN}"}).json()
+    return requests.post(f"https://{DOMAIN}/api/categories", json=data, headers={"Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
+
 
 def createGear(name: str, category: str):
     print(f"Try to create gear {name} with {category} as category")
-    return requests.post(f"https://{DOMAIN}/api/gears", json={"name": name, "category": int(category)}, headers={"Authorization": f"Bearer {TOKEN}"}).json()
+    return requests.post(f"https://{DOMAIN}/api/gears", json={"name": name, "category": int(category)}, headers={"Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
+
 
 def extractFromFile():
     real_path = os.path.realpath(__file__)
@@ -44,17 +50,22 @@ def extractFromFile():
             if toCreate.get(main):
                 if sub:
                     if toCreate[main]["categories"].get(sub):
-                        toCreate[main]["categories"][sub]["gears"].add(gearName)
+                        toCreate[main]["categories"][sub]["gears"].add(
+                            gearName)
                     else:
-                        toCreate[main]["categories"].update({sub: {"gears": {gearName}}})
+                        toCreate[main]["categories"].update(
+                            {sub: {"gears": {gearName}}})
                 else:
                     toCreate[main]["gears"].add(gearName)
             else:
                 if sub:
-                    toCreate.update({main: { "categories": {sub: { "gears": {gearName}}}}})
+                    toCreate.update(
+                        {main: {"categories": {sub: {"gears": {gearName}}}}})
                 else:
-                    toCreate.update({main: { "categories": {}, "gears": {gearName}}})
+                    toCreate.update(
+                        {main: {"categories": {}, "gears": {gearName}}})
     return toCreate
+
 
 def createAll():
     toCreate = extractFromFile()
@@ -69,6 +80,7 @@ def createAll():
             gears = subCategoryTree.get("gears", [])
             for gear in gears:
                 createGear(gear, subres.get("id"))
+
 
 cleanAll()
 createAll()
