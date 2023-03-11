@@ -13,7 +13,7 @@
         </div>
         <v-divider></v-divider>
         <div class="content">
-          <UsersList :users="filteredUsers" />
+          <UserList :users="filteredUsers" />
           <p>
             Nombre de personnes dans la liste :
             <span class="font-weight-bold">{{ filteredUsers.length }}</span>
@@ -36,14 +36,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import UsersList from "~/components/molecules/users/UsersList.vue";
+import UserList from "~/components/molecules/users/UserList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
 import SearchUser from "~/components/atoms/SearchUser.vue";
+import { CompleteUser } from "~/utils/models/user";
 
 export default Vue.extend({
-  name: "FilteredUsers",
-  components: { UsersList, FriendsDisplay, SearchTeams, SearchUser },
+  name: "FilterableUserList",
+  components: { UserList, FriendsDisplay, SearchTeams, SearchUser },
   props: {
     assignmentMode: {
       type: String,
@@ -58,15 +59,16 @@ export default Vue.extend({
   },
 
   computed: {
-    filteredUsers(): any[] {
-      const showToValidate =
+    filteredUsers(): CompleteUser[] {
+      /*const showToValidate =
         this.$accessor.assignment.filters.user.showToValidate;
       return this.$accessor.assignment.filteredUsers.filter(
         (user) =>
           showToValidate ||
           user.team.includes("hard") ||
           user.team.includes("soft")
-      );
+      );*/
+      return this.$accessor.user.users;
     },
     isModeOrgaToTask(): boolean {
       return this.assignmentMode === "orga-task";

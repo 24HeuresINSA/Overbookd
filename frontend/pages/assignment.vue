@@ -1,6 +1,6 @@
 <template>
   <v-container class="assignment-container">
-    <FilteredUsers class="filtered-user" />
+    <FilterableUserList class="filtered-user" />
 
     <!--<OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
@@ -18,13 +18,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FilteredUsers from "~/components/organisms/assignment/FilteredUsers.vue";
+import FilterableUserList from "~/components/organisms/assignment/FilterableUserList.vue";
+import { CompleteUser } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "Assignment",
-  components: { FilteredUsers },
+  components: { FilterableUserList },
+  computed: {
+    users(): CompleteUser[] {
+      return this.$accessor.user.users;
+    },
+  },
   async mounted() {
-    await this.$accessor.user.fetchUsers();
+    if (!this.users.length) await this.$accessor.user.fetchUsers();
   },
   /*data() {
     return {

@@ -9,3 +9,9 @@ export function updateItemToList<T>(
 export function removeItemAtIndex<T = any>(list: T[], index: number): T[] {
   return [...list.slice(0, index), ...list.slice(index + 1)];
 }
+
+export function moveAtFirstIndex<T = any>(list: T[], index: number): T[] {
+  const item = list.at(index);
+  if (!item) return list;
+  return [item, ...list.slice(0, index), ...list.slice(index + 1)];
+}

@@ -24,6 +24,7 @@ export const state = () => ({
   timeslots: [],
   friends: [] as Friend[],
   mFriends: [] as Friend[],
+  selectedUserFriends: [] as Friend[],
 });
 
 export type UserState = ReturnType<typeof state>;
@@ -63,6 +64,9 @@ export const mutations = mutationTree(state, {
   },
   SET_MY_FRIENDS(state: UserState, friends: Friend[]) {
     state.mFriends = friends;
+  },
+  SET_SELECTED_USER_FRIENDS(state: UserState, friends: Friend[]) {
+    state.selectedUserFriends = friends;
   },
   ADD_MY_FRIEND(state: UserState, friend: Friend) {
     state.mFriends = [...state.mFriends, friend];
@@ -122,6 +126,11 @@ export const actions = actionTree(
       if (res) {
         commit("SET_MY_FRIENDS", res.data);
       }
+    },
+    async fetchSelectedUserFriends({ commit }, userId: number) {
+      const res = await safeCall(this, UserRepo.getUserFriends(this, userId));
+      if (!res) return;
+      commit("SET_SELECTED_USER_FRIENDS", res.data);
     },
     async addFriend({ commit }, friend: Friend) {
       const res = await safeCall(this, UserRepo.addFriend(this, friend.id), {
