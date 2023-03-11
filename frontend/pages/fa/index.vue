@@ -388,7 +388,7 @@ export default {
     },
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-      const csvHeader = "Numero;Nom;Resp;Nombre_de_passe;";
+      const csvHeader = "Numero;Nom;Resp;Nombre_de_pass;";
       const csvRows = this.selectedFAs.map((fa) => {
         const rowData = [
           fa.id,
