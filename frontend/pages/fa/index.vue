@@ -399,7 +399,7 @@ export default {
       });
       const csv = [csvHeader, ...csvRows].join("\n");
       const regex = new RegExp(/undefined/i, "g");
-      const parsedCSV = csv.replaceAll(regex, "");
+      const parsedCSV = csv.replace(regex, "");
       this.download("passsecu.csv", parsedCSV);
     },
   },
