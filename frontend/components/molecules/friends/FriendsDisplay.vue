@@ -1,100 +1,51 @@
 <template>
-  <div class="content">
-    <div v-if="isModeOrgaToTache">
-      <h2>{{ "Amis de " + getSelectedUserName + " :" }}</h2>
-      <v-virtual-scroll
-        :items="selectedUserFriends"
-        :height="height"
-        item-height="30"
-      >
-        <template #default="{ item }">
-          <v-list-item
-            :value="item"
-            class="clickable"
-            @click="switchUser(item)"
-          >
-            {{ item.username }}
-          </v-list-item>
-        </template>
-      </v-virtual-scroll>
-    </div>
-    <div v-else>
-      <h2>Amis</h2>
-      <p style="font-style: italic">
-        Les amis ne sont disponible qu'en mode orga-tâche
-      </p>
-    </div>
-  </div>
+  <v-card v-if="selectedUserFriends.length > 0" class="friend-list">
+    <v-card-title>{{ title }}</v-card-title>
+    <v-card-content>
+      <v-list-item-group>
+        <v-list-item
+          v-for="friend in selectedUserFriends"
+          :key="friend.id"
+          :value="friend.id"
+          @click="selectUser(friend)"
+        >
+          {{ formatUsername(friend) }}
+        </v-list-item>
+      </v-list-item-group>
+    </v-card-content>
+  </v-card>
 </template>
 
-<script>
-import { Snack } from "~/utils/models/snack";
+<script lang="ts">
+import Vue from "vue";
+import { CompleteUserWithPermissions, Friend } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
-export default {
-  data() {
-    return {
-      snack: new Snack(),
-    };
-  },
-
+export default Vue.extend({
+  name: "FriendsDisplay",
   computed: {
-    selectedUserFriends() {
-      const user = this.$accessor.assignment.selectedUser;
-      if (user && user.friends) {
-        let uniqueFriends = [];
-        /* enlever les amis qui ont le même nom */
-        user.friends.forEach((friend) => {
-          if (
-            uniqueFriends.findIndex((u) => u.username === friend.username) ===
-            -1
-          ) {
-            uniqueFriends.push(friend);
-          }
-        });
-        return uniqueFriends;
-      } else {
-        return [];
-      }
+    selectedUser(): CompleteUserWithPermissions {
+      return this.$accessor.user.selectedUser;
     },
-    height() {
-      return window.innerHeight * 0.15;
+    selectedUserFriends(): Friend[] {
+      return this.$accessor.user.selectedUserFriends;
     },
-    getSelectedUserName() {
-      const user = this.$accessor.assignment.selectedUser;
-      if (user && user.firstname) {
-        return user.firstname;
-      } else {
-        return "";
-      }
-    },
-    isModeOrgaToTache() {
-      return this.$accessor.assignment.filters.isModeOrgaToTache;
+    title(): string {
+      return `Amis de ${this.selectedUser.firstname} :`;
     },
   },
   methods: {
-    switchUser({ id }) {
-      if (!this.isModeOrgaToTache) {
-        return;
-      }
-      this.$accessor.assignment.setSelectedUserBasedOnId(id);
-      const selectedUser = this.$accessor.assignment.selectedUser;
-      this.$accessor.assignment.getAvailableTimespansForUser(selectedUser);
-      this.$accessor.assignment
-        .getUserAssignedTimespans(selectedUser)
-        .then(() => {
-          this.snack.display("Planning chargé ✅");
-        });
+    selectUser(friend: Friend) {
+      const user = this.$accessor.user.users.find(
+        (user) => user.id === friend.id
+      );
+      if (!user) return;
+      this.$accessor.user.setSelectedUser(user);
+      this.$accessor.user.fetchSelectedUserFriends(user.id);
+    },
+    formatUsername(user: Friend): string {
+      return formatUsername(user);
     },
   },
-};
+});
 </script>
-
-<style scoped lang="scss">
-.content {
-  h2,
-  p {
-    margin: 0.5vh;
-  }
-  border: 1px solid #e0e0e0;
-}
-</style>

@@ -1,37 +1,25 @@
 <template>
-  <div>
-    <!-- list of  filtered users -->
-    <v-card>
-      <v-card-text>
-        <div class="filters">
-          <SearchUser class="pt-0 mt-0" :boxed="false"></SearchUser>
-          <SearchTeams class="pt-0 mt-0" :boxed="false"></SearchTeams>
-          <v-btn-toggle tile group color="primary">
-            <v-btn x-small :value="true">Permis</v-btn>
-            <v-btn x-small :value="false">Pas de permis</v-btn>
-          </v-btn-toggle>
-        </div>
-        <v-divider></v-divider>
-        <div class="content">
-          <UserList :users="filteredUsers" />
-          <p>
-            Nombre de personnes dans la liste :
-            <span class="font-weight-bold">{{ filteredUsers.length }}</span>
-          </p>
-          <FriendsDisplay v-if="isModeOrgaToTask" />
-          <v-switch
-            v-if="!isModeOrgaToTask"
-            label="Bypass les roles (TACHE-ORGA ONLY)"
-            @change="toggleBypass()"
-          ></v-switch>
-          <!-- <v-switch
-            label="Afficher users en cours de validation (ORGA-TACHE)"
-            @change="toggleShowToValidate()"
-          ></v-switch> -->
-        </div>
-      </v-card-text>
-    </v-card>
-  </div>
+  <v-card>
+    <v-card-text>
+      <div class="filters">
+        <SearchUser class="filters__field" :boxed="false"></SearchUser>
+        <SearchTeams class="filters__field" :boxed="false"></SearchTeams>
+        <v-btn-toggle tile group color="primary">
+          <v-btn x-small :value="true">Permis</v-btn>
+          <v-btn x-small :value="false">Pas de permis</v-btn>
+        </v-btn-toggle>
+      </div>
+      <v-divider></v-divider>
+      <div class="user-list">
+        <UserList :users="filteredUsers" />
+        <p>
+          Nombre de personnes dans la liste :
+          <span class="font-weight-bold">{{ filteredUsers.length }}</span>
+        </p>
+        <FriendsDisplay />
+      </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -40,61 +28,34 @@ import UserList from "~/components/molecules/users/UserList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
 import SearchUser from "~/components/atoms/SearchUser.vue";
-import { CompleteUser } from "~/utils/models/user";
+import { CompleteUserWithPermissions } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FilterableUserList",
   components: { UserList, FriendsDisplay, SearchTeams, SearchUser },
-  props: {
-    assignmentMode: {
-      type: String,
-      default: "orga-task",
-    },
-  },
-
-  data() {
-    return {
-      teams: this.$accessor.team.allTeams,
-    };
-  },
-
   computed: {
-    filteredUsers(): CompleteUser[] {
-      /*const showToValidate =
-        this.$accessor.assignment.filters.user.showToValidate;
-      return this.$accessor.assignment.filteredUsers.filter(
-        (user) =>
-          showToValidate ||
-          user.team.includes("hard") ||
-          user.team.includes("soft")
-      );*/
-      return this.$accessor.user.users;
-    },
-    isModeOrgaToTask(): boolean {
-      return this.assignmentMode === "orga-task";
-    },
-  },
-
-  methods: {
-    toggleBypass() {
-      this.$accessor.assignment.toggleBypass();
-    },
-    toggleShowToValidate() {
-      this.$accessor.assignment.toggleShowToValidate();
+    filteredUsers(): CompleteUserWithPermissions[] {
+      return this.$accessor.user.users.filter(
+        (user) => user.team.includes("hard") || user.team.includes("soft")
+      );
     },
   },
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .filters {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  &__field {
+    padding-top: 0;
+    margin-top: 0;
+  }
 }
 
-.content {
+.user-list {
   display: flex;
   flex-direction: column;
 }

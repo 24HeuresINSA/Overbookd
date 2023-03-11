@@ -1,16 +1,14 @@
 <template>
-  <v-list>
-    <v-list-item-group>
-      <v-list-item
-        v-for="user in users"
-        :key="user.id"
-        :value="user.id"
-        @click="selectUser(user)"
-      >
-        <UserResume :user="user" />
-      </v-list-item>
-    </v-list-item-group>
-  </v-list>
+  <v-list-item-group>
+    <v-list-item
+      v-for="user in users"
+      :key="user.id"
+      :value="user.id"
+      @click="selectUser(user)"
+    >
+      <UserResume :user="user" />
+    </v-list-item>
+  </v-list-item-group>
 </template>
 
 <script lang="ts">

@@ -49,7 +49,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    openCalendar(): any {
+    openCalendar() {
       window.open(`/calendar/${this.user.id}`, "_blank");
     },
   },
