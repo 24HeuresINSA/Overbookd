@@ -45,12 +45,12 @@ import {
   GearRequestResponseDto,
 } from '../gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
+import { GearRequestsService } from '../gear-requests/gearRequests.service';
+import { StatsPayload } from 'src/common/services/stats.service';
 import {
   ApprovedGearRequest,
-  GearRequestsService,
   GearSeekerType,
-} from '../gear-requests/gearRequests.service';
-import { StatsPayload } from 'src/common/services/stats.service';
+} from 'src/gear-requests/gearRequests.model';
 
 @ApiBearerAuth()
 @ApiTags('fa')

@@ -5,19 +5,21 @@ import {
 } from '../../catalog/repositories/prisma/gear.repository.prisma';
 import { PrismaService } from '../../prisma.service';
 import {
+  GearRequestAlreadyExists,
+  GearRequestNotFound,
+} from '../gearRequest.error';
+import {
   APPROVED,
   ApprovedGearRequest,
   GearRequest,
-  GearRequestAlreadyExists,
   GearRequestIdentifier,
-  GearRequestNotFound,
-  GearRequestRepository,
   GearSeeker,
   GearSeekerType,
   Period,
   SearchGearRequest,
   UpdateGearRequestForm,
-} from '../gearRequests.service';
+} from '../gearRequests.model';
+import { GearRequestRepository } from '../gearRequests.service';
 
 type Animation = {
   animation: { id: number; name: string };

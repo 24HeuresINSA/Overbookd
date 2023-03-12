@@ -1,16 +1,16 @@
 import { updateItemToList } from '../../utils/list';
+import { GearRequestNotFound } from '../gearRequest.error';
 import {
   APPROVED,
   ApprovedGearRequest,
   GearRequest,
   GearRequestIdentifier,
-  GearRequestNotFound,
-  GearRequestRepository,
   PENDING,
   Period,
   SearchGearRequest,
   UpdateGearRequestForm,
-} from '../gearRequests.service';
+} from '../gearRequests.model';
+import { GearRequestRepository } from '../gearRequests.service';
 
 export class InMemoryGearRequestRepository implements GearRequestRepository {
   gearRequests: GearRequest[];

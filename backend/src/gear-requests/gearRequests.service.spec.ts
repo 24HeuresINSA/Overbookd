@@ -4,16 +4,15 @@ import { Status } from '../fa/dto/update-fa.dto';
 import {
   APPROVED,
   GearRequest,
-  GearRequestsService,
   GearSeekerType,
   PENDING,
-  Task,
-  taskStatus,
-} from './gearRequests.service';
+} from './gearRequests.model';
+import { GearRequestsService } from './gearRequests.service';
 import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';
 import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
+import { Task, taskStatus } from './tasks/task.model';
 
 const MAGASIN = 'Magasin';
 

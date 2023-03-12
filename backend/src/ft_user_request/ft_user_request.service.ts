@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PeriodForm } from 'src/gear-requests/gearRequests.service';
+import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { PrismaService } from 'src/prisma.service';
 import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 import { Period } from 'src/volunteer-availability/domain/period.model';

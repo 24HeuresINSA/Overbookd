@@ -1,5 +1,5 @@
 import { site_publish_animation_category_type } from '@prisma/client';
-import { Period } from 'src/gear-requests/gearRequests.service';
+import { Period } from 'src/gear-requests/gearRequests.model';
 
 export interface SitePublishAnimationFa {
   id: number;

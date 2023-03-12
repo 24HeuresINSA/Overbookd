@@ -1,6 +1,6 @@
 import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { PeriodForm } from 'src/gear-requests/gearRequests.service';
+import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { TEAM_SELECT } from 'src/team/team.service';
 export class SignaLocation {
   id: number;

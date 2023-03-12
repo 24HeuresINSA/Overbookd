@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { ApproveGearRequestForm } from '../gearRequests.service';
+import { ApproveGearRequestForm } from '../gearRequests.model';
 
 export class GearRequestsApproveFormRequestDto
   implements ApproveGearRequestForm

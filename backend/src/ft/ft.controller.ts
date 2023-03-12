@@ -40,9 +40,9 @@ import {
 import { GearRequestUpdateFormRequestDto } from 'src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import {
   ApprovedGearRequest,
-  GearRequestsService,
   GearSeekerType,
-} from 'src/gear-requests/gearRequests.service';
+} from 'src/gear-requests/gearRequests.model';
+import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
 import {

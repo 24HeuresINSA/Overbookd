@@ -4,7 +4,7 @@ import {
   CreateGearRequestForm,
   ExistingPeriodGearRequestForm,
   NewPeriodCreateGearRequestForm,
-} from '../gearRequests.service';
+} from '../gearRequests.model';
 
 export class GearRequestFormRequestDto
   implements Omit<CreateGearRequestForm, 'seekerId'>

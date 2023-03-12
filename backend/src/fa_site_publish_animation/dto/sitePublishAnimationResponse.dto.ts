@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Period } from 'src/gear-requests/gearRequests.service';
+import { Period } from 'src/gear-requests/gearRequests.model';
 import { SitePublishAnimation, SitePublishAnimationFa } from '../interfaces';
 import { LiteSitePublishAnimationResponseDto } from './liteSitePublishAnimationResponse.dto';
 

@@ -8,7 +8,7 @@ import {
   GearSeekerType,
   Period,
   APPROVED,
-} from '../gearRequests.service';
+} from '../gearRequests.model';
 
 class GearSeekerRepresentation implements GearSeeker {
   type: GearSeekerType;

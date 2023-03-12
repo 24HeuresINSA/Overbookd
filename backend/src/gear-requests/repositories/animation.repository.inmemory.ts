@@ -1,4 +1,5 @@
-import { Animation, AnimationRepository } from '../gearRequests.service';
+import { AnimationRepository } from '../gearRequests.service';
+import { Animation } from '../animations/animation.model';
 
 export class InMemoryAnimationRepository implements AnimationRepository {
   animations: Animation[] = [];
