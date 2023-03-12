@@ -76,6 +76,38 @@
           :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
         ></div>
       </template>
+      <template
+        #event="{
+          event,
+          eventParsed,
+          day,
+          outside,
+          start,
+          end,
+          timed,
+          singleline,
+          overlapsNoon,
+          formatTime,
+          timeSummary,
+          eventSummary,
+        }"
+      >
+        <slot
+          name="event"
+          :event="event"
+          :eventParsed="eventParsed"
+          :day="day"
+          :outside="outside"
+          :start="start"
+          :end="end"
+          :timed="timed"
+          :singleline="singleline"
+          :overlapsNoon="overlapsNoon"
+          :formatTime="formatTime"
+          :timeSummary="timeSummary"
+          :eventSummary="eventSummary"
+        ></slot>
+      </template>
     </v-calendar>
   </div>
 </template>
