@@ -8,6 +8,8 @@ import {
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
+import { join } from 'path';
+import { existsSync, unlink } from 'fs';
 
 const SELECT_USER = {
   email: true,
@@ -208,4 +210,43 @@ export class UserService {
         }
       : undefined;
   }
+
+  async uploadPP(
+    where: Prisma.UserWhereUniqueInput,
+    pp: string,
+  ): Promise<UserWithoutPassword> {
+    if (this.getPP(where) !== null) {
+      await this.deletePP(where);
+    }
+    return this.prisma.user.update({
+      where,
+      data: { pp },
+    });
+  }
+
+  async getPP(where: Prisma.UserWhereUniqueInput): Promise<string> {
+    const file = await this.prisma.user.findUnique({
+      where,
+      select: { pp: true },
+    });
+    return file.pp;
+  }
+
+  async deletePP(where: Prisma.UserWhereUniqueInput): Promise<void> {
+    const file = await this.prisma.user.findUnique({
+      where,
+      select: { pp: true },
+    });
+    if (file.pp) {
+      const filepath = join(process.cwd(), '/public', file.pp);
+      if (existsSync(filepath)) {
+        await unlink(filepath, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
+      }
+    }
+  }
 }
+
