@@ -163,11 +163,11 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
 import {
-FT,
-FTSearch,
-FTSimplified,
-FTStatus,
-FTStatusLabel
+  FT,
+  FTSearch,
+  FTSimplified,
+  FTStatus,
+  FTStatusLabel,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { CompleteUserWithPermissions, User } from "~/utils/models/user";
