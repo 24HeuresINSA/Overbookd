@@ -12,7 +12,7 @@
       >
         <v-img
           v-if="userBornToday.pp"
-          :src="getPPUrl() + 'api/user/pp/' + userBornToday.pp"
+          :src="userBornTodayPP"
           max-width="400px"
           max-height="350px"
         ></v-img>
@@ -36,11 +36,7 @@
         style="margin: 5px"
         max-width="250px"
       >
-        <v-img
-          v-if="user.pp"
-          :src="getPPUrl() + 'api/user/pp/' + user.pp"
-          max-height="250px"
-        ></v-img>
+        <v-img v-if="user.pp" :src="PPs[i]" max-height="250px"></v-img>
         <v-card-title
           >{{ user.nickname }} ({{ user.firstname }} {{ user.lastname }})
         </v-card-title>
@@ -57,13 +53,17 @@
 
 <script>
 import OverChips from "~/components/atoms/OverChips";
+import userRepo from "~/repositories/userRepo";
 export default {
   name: "Trombinoscope",
   components: { OverChips },
   data: () => ({
     users: [],
     userBornToday: undefined,
+    userBornTodayPP: undefined,
+    PPs: [],
   }),
+
 
   async mounted() {
     if (this.$accessor.user.hasPermission("hard")) {
@@ -79,8 +79,18 @@ export default {
         path: "/",
       });
     }
+    this.PPs = await Promise.all(
+      this.users.map(async (user) => {
+        if (user.pp) {
+          return await this.getPP(user.pp);
+        }
+      })
+    );
+    if (this.userBornToday && this.userBornToday.pp) {
+      this.userBornTodayPP = await this.getPP(this.userBornToday.pp);
+    }
   },
-
+  
   methods: {
     isToday(someDate) {
       const today = new Date();
@@ -89,10 +99,14 @@ export default {
         someDate.getMonth() === today.getMonth()
       );
     },
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
+    async getPP(pp) {
+      const token = this.$auth.strategy.token.get();
+      if (token) {
+        const url = await userRepo.getPP(pp, token);
+        if (url) {
+          return url;
+        }
+      }
     },
   },
 };

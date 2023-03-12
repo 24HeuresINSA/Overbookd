@@ -51,9 +51,7 @@
 import OverChips from "@/components/atoms/OverChips.vue";
 import PPDialog from "@/components/molecules/ProfilePictureDialog.vue";
 import Vue from "vue";
-import { mapState } from "vuex";
-import { UserState } from "~/store/user";
-import { TMapState } from "~/utils/types/store";
+import userRepo from "~/repositories/userRepo";
 import { CompleteUser } from "~/utils/models/user";
 
 export default Vue.extend({
@@ -89,29 +87,20 @@ export default Vue.extend({
 
   async mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
-    this.url = await this.getPP();
+    this.url = await this.getPP() as string;
   },
   methods: {
     openPPDialog() {
       this.$store.dispatch("dialog/openDialog", "pp");
     },
-    async getPP(): Promise<string> {
-      const response = await fetch(
-        `${process.env.BASE_URL}user/pp/${this.me.pp}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `${token}`,
-          },
+    async getPP() {
+      const token = this.$auth.strategy.token.get();
+      if (token && this.me.pp) {
+        const url = await userRepo.getPP(this.me.pp, token);
+        if (url) {
+          return url;
         }
-      );
-      if (response.status === 200) {
-        const url = URL.createObjectURL(await response.blob());
-        console.log(response.blob);
-        console.log(url);
-        return url;
       }
-      return "";
     },
   },
 });
