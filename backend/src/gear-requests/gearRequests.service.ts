@@ -45,6 +45,182 @@ export interface GearRequest {
   drive?: string;
 }
 
+interface GearSeekerRegistery {
+  getSeeker(id: number): Promise<GearSeeker | undefined>;
+  checkSeekerInteractionPossibility(id: number): Promise<void>;
+  buildSeekerIdentifier(id: number): GearRequestIdentifierSeeker;
+}
+
+class AnimationGearSeekerRegistery implements GearSeekerRegistery {
+  constructor(private readonly animationRepository: AnimationRepository) {}
+
+  async getSeeker(id: number): Promise<GearSeeker> {
+    const animation = await this.animationRepository.getAnimation(id);
+    return {
+      type: GearSeekerType.Animation,
+      id,
+      name: animation.name,
+    };
+  }
+
+  async checkSeekerInteractionPossibility(id: number): Promise<void> {
+    const animation = await this.animationRepository.getAnimation(id);
+    if (animation.status === Status.VALIDATED)
+      throw new AnimationAlreadyValidatedError(id);
+  }
+
+  buildSeekerIdentifier(id: number): GearRequestIdentifierSeeker {
+    return {
+      type: GearSeekerType.Animation,
+      id,
+    };
+  }
+}
+
+class TaskGearSeekerRegistery implements GearSeekerRegistery {
+  constructor(private readonly taskRepository: TaskRepository) {}
+
+  async getSeeker(id: number): Promise<GearSeeker> {
+    const task = await this.taskRepository.getTask(id);
+    return {
+      type: GearSeekerType.Task,
+      id,
+      name: task.name,
+    };
+  }
+
+  async checkSeekerInteractionPossibility(id: number): Promise<void> {
+    const task = await this.taskRepository.getTask(id);
+    if ([taskStatus.VALIDATED, taskStatus.READY].includes(task.status))
+      throw new TaskAlreadyValidatedError(id, task.status);
+  }
+
+  buildSeekerIdentifier(id: number): GearRequestIdentifierSeeker {
+    return {
+      type: GearSeekerType.Task,
+      id,
+    };
+  }
+}
+
+abstract class GearRequestOrchestrator {
+  constructor(
+    protected readonly gearSeekerRegistery: GearSeekerRegistery,
+    protected readonly gearRepository: GearRepository,
+    protected readonly gearRequestRepository: GearRequestRepository,
+    protected readonly periodRepository: PeriodRepository,
+  ) {}
+
+  abstract add(form: CreateGearRequestForm): Promise<GearRequest>;
+  update(
+    seekerId: number,
+    gearId: number,
+    periodId: number,
+    form: UpdateGearRequestForm,
+  ): Promise<GearRequest> {
+    const seeker = this.gearSeekerRegistery.buildSeekerIdentifier(seekerId);
+    return this.gearRequestRepository.updateGearRequest(
+      {
+        seeker,
+        gearId,
+        rentalPeriodId: periodId,
+      },
+      form,
+    );
+  }
+  abstract remove(identifier: GearRequestIdentifier): Promise<void>;
+}
+
+class StandardGearRequest extends GearRequestOrchestrator {
+  async add(form: CreateGearRequestForm): Promise<GearRequest> {
+    const { seekerId, quantity, gearId } = form;
+
+    const [seeker, existingGear] = await Promise.all([
+      this.gearSeekerRegistery.getSeeker(seekerId),
+      this.gearRepository.getGear(gearId),
+      this.gearSeekerRegistery.checkSeekerInteractionPossibility(seekerId),
+    ]);
+
+    const gearRequest = {
+      seeker,
+      status: PENDING,
+      quantity,
+      gear: existingGear,
+      rentalPeriod: await this.retrieveRentalPeriod(form),
+    };
+    return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  private retrieveRentalPeriod(form: CreateGearRequestForm) {
+    if (isExistingPeriodForm(form))
+      return this.periodRepository.getPeriod(form.periodId);
+
+    const { start, end } = form;
+    return this.periodRepository.addPeriod({ start, end });
+  }
+
+  remove(identifier: GearRequestIdentifier): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+}
+
+class ConsumableGearRequest extends GearRequestOrchestrator {
+  add(form: CreateGearRequestForm): Promise<GearRequest> {
+    throw new Error('Method not implemented.');
+  }
+
+  remove(identifier: GearRequestIdentifier): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+}
+
+class GearRequestOrchestratorBuild {
+  static build(
+    seekerType: GearSeekerType,
+    gearIsConsumable: boolean,
+    repositories: {
+      animation: AnimationRepository;
+      task: TaskRepository;
+      gear: GearRepository;
+      gearRequest: GearRequestRepository;
+      period: PeriodRepository;
+    },
+  ): GearRequestOrchestrator {
+    const gearSeekerRegistery =
+      GearRequestOrchestratorBuild.buildGearSeekerRegistery(
+        seekerType,
+        repositories,
+      );
+    return gearIsConsumable
+      ? new ConsumableGearRequest(
+          gearSeekerRegistery,
+          repositories.gear,
+          repositories.gearRequest,
+          repositories.period,
+        )
+      : new StandardGearRequest(
+          gearSeekerRegistery,
+          repositories.gear,
+          repositories.gearRequest,
+          repositories.period,
+        );
+  }
+
+  private static buildGearSeekerRegistery(
+    seekerType: GearSeekerType,
+    repositories: {
+      animation: AnimationRepository;
+      task: TaskRepository;
+      gear: GearRepository;
+      gearRequest: GearRequestRepository;
+    },
+  ) {
+    return seekerType === GearSeekerType.Animation
+      ? new AnimationGearSeekerRegistery(repositories.animation)
+      : new TaskGearSeekerRegistery(repositories.task);
+  }
+}
+
 export interface ApprovedGearRequest extends GearRequest {
   status: typeof APPROVED;
   drive: string;
