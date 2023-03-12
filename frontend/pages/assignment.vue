@@ -26,6 +26,7 @@ export default Vue.extend({
   components: { FilterableUserList },
   computed: {
     users(): CompleteUser[] {
+      //TODO : Use Assignment store
       return this.$accessor.user.users;
     },
   },

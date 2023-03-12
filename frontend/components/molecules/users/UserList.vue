@@ -31,6 +31,7 @@ export default Vue.extend({
   }),
   methods: {
     selectUser(user: CompleteUserWithPermissions) {
+      //TODO : Use Assignment store
       this.selectedUserId = user.id;
       this.$accessor.user.setSelectedUser(user);
       this.$accessor.user.fetchSelectedUserFriends(user.id);

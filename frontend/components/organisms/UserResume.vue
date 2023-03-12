@@ -1,7 +1,7 @@
 <template>
   <div class="user-card" @contextmenu.prevent="openCalendar">
     <div>
-      {{ user.firstname }} {{ user.lastname }} | {{ user.charisma }}
+      {{ formattedUserInformations }}
       <v-tooltip v-if="user.comment" top>
         <template #activator="{ on, attrs }">
           <v-icon right small v-bind="attrs" class="comment-icon" v-on="on">
@@ -22,6 +22,7 @@ import Vue from "vue";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 import { moveAtFirstIndex } from "~/utils/functions/list";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "UserResume",
@@ -46,6 +47,9 @@ export default Vue.extend({
         filteredTeams = moveAtFirstIndex(filteredTeams, hardIndex);
       }
       return filteredTeams;
+    },
+    formattedUserInformations(): string {
+      return `${formatUsername(this.user)} | ${this.user.charisma}`;
     },
   },
   methods: {

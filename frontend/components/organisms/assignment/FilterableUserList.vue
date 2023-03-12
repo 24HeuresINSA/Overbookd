@@ -57,6 +57,7 @@ export default Vue.extend({
   },
   computed: {
     filteredUsers(): CompleteUserWithPermissions[] {
+      //TODO : Use Assignment store
       let filteredUsers = this.$accessor.user.users;
 
       // Keep users with hard or soft teams
