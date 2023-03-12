@@ -55,7 +55,7 @@ export default Vue.extend({
       if (this.me && this.PP) {
         let form = new FormData();
         form.append("files", this.PP, this.PP.name);
-        form.append("id", this.me.id);
+        form.append("id", this.me.id.toString());
         const twoMegabytes = 2 * 1024 * 1024;
         if (
           this.PP.size < twoMegabytes &&

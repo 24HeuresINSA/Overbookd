@@ -54,8 +54,6 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
-import OverChips from "@/components/atoms/OverChips.vue";
-import PPDialog from "@/components/molecules/ProfilePictureDialog.vue";
 import { CompleteUser } from "~/utils/models/user";
 
 export default Vue.extend({
@@ -98,8 +96,6 @@ export default Vue.extend({
       this.$store.dispatch("dialog/openDialog", "pp");
     },
     async getPP(): Promise<string> {
-      const token = localStorage.getItem("auth._token.local");
-      console.log(token);
       const response = await fetch(
         `${process.env.BASE_URL}user/pp/${this.me.pp}`,
         {
