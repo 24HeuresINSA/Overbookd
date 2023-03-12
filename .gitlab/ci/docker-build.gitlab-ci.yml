@@ -43,7 +43,7 @@ frontend_docker_pre_build:
     - VERSION=$(jq -r '.version' ./${SCOPE}/package.json)
   script:
     - docker load -i ${SCOPE}_installer.tar
-    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:installer --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL ./$SCOPE
+    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:installer --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$SCOPE
     - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${SCOPE}:${TAG} ${CI_REGISTRY_IMAGE}/${SCOPE}:${VERSION_TAG_PREFIX}${VERSION}
   after_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -120,7 +120,7 @@ backend_docker_build:
         - backend/**/*
     - when: never
   script:
-    - docker build --tag $CI_REGISTRY_IMAGE/$SCOPE:latest --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL ./$SCOPE
+    - docker build --tag $CI_REGISTRY_IMAGE/$SCOPE:latest --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$SCOPE
     - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${SCOPE}:latest ${CI_REGISTRY_IMAGE}/${SCOPE}:${VERSION} ${CI_REGISTRY_IMAGE}/${SCOPE}:pre-prod ${CI_REGISTRY_IMAGE}/${SCOPE}:pre-prod_${VERSION}
   artifacts:
     paths:
