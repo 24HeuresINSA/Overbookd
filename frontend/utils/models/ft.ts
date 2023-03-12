@@ -146,6 +146,14 @@ export interface FTUserRequestUpdate {
   userId: number;
 }
 
+export interface PeriodWithFtId {
+  ftId: number;
+  ftName: string;
+  ftStatus: FTStatus;
+  start: string;
+  end: string;
+}
+
 export function castFTWithDate(ft: HttpStringified<FT>): FT {
   const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
   const feedbacks = ft.feedbacks.map(castFeedbackWithDate);

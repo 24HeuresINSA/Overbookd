@@ -25,7 +25,7 @@ import { FtUserRequestResponseDto } from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestDto } from './dto/ft_user_request.dto';
 import {
   FtUserRequestService,
-  PeriodWithFtId,
+  PeriodWithFtNameAndStatus,
 } from './ft_user_request.service';
 
 @ApiBearerAuth()
@@ -54,7 +54,7 @@ export class FtUserRequestController {
   })
   async getByUserId(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PeriodWithFtId[]> {
+  ): Promise<PeriodWithFtNameAndStatus[]> {
     return this.ftUserRequestService.getByUserId(id);
   }
 

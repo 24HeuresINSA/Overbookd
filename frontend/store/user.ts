@@ -233,5 +233,17 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
     },
+
+    async getUserFtRequests(_, userId: number) {
+      const res = await safeCall(
+        this,
+        UserRepo.getUserFtRequests(this, userId)
+      );
+
+      if (res) {
+        return res.data;
+      }
+      return [];
+    },
   }
 );

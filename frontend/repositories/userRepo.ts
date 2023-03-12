@@ -1,4 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { PeriodWithFtId } from "~/utils/models/ft";
 import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
   CompleteUser,
@@ -70,5 +71,10 @@ export default {
   },
   removeFriend(context: Context, friendId: number) {
     return context.$axios.delete<HttpStringified<User>>(`friends/${friendId}`);
+  },
+  getUserFtRequests(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<PeriodWithFtId[]>>(
+      `ft/user-requests/${userId}`
+    );
   },
 };

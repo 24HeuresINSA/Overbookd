@@ -18,9 +18,10 @@ type PeriodWithUserRequestedIds = PeriodForm & {
   userRequests: UserId[];
 };
 
-export type PeriodWithFtId = Period & {
+export type PeriodWithFtNameAndStatus = Period & {
   ftId: number;
   ftName: string;
+  ftStatus: string;
 };
 
 @Injectable()
@@ -47,13 +48,14 @@ export class FtUserRequestService {
           select: {
             id: true,
             name: true,
+            status: true,
           },
         },
       },
     },
   };
 
-  async getByUserId(userId: number): Promise<PeriodWithFtId[]> {
+  async getByUserId(userId: number): Promise<PeriodWithFtNameAndStatus[]> {
     const userRequests = await this.prisma.ftUserRequest.findMany({
       where: { userId },
       select: this.SELECT_REQUESTS_BY_USER,
@@ -61,6 +63,7 @@ export class FtUserRequestService {
     return userRequests.map(({ ftTimeWindows }) => ({
       ftId: ftTimeWindows.ft.id,
       ftName: ftTimeWindows.ft.name,
+      ftStatus: ftTimeWindows.ft.status,
       start: ftTimeWindows.start,
       end: ftTimeWindows.end,
     }));
