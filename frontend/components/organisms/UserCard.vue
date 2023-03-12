@@ -48,7 +48,12 @@
 </template>
 
 <script lang="ts">
+import OverChips from "@/components/atoms/OverChips.vue";
+import PPDialog from "@/components/molecules/ProfilePictureDialog.vue";
 import Vue from "vue";
+import { mapState } from "vuex";
+import { UserState } from "~/store/user";
+import { TMapState } from "~/utils/types/store";
 import OverChips from "@/components/atoms/OverChips.vue";
 import PPDialog from "@/components/molecules/ProfilePictureDialog.vue";
 import { CompleteUser } from "~/utils/models/user";
