@@ -1,23 +1,23 @@
 <template>
   <div>
-    <ProfilePictureDialog />
+    <PPDialog />
     <v-card v-if="me">
       <v-container class="d-flex flex-no-wrap">
         <v-img
           v-if="me.pp"
-          :src="getPPUrl() + 'api/user/pp/' + me.pp"
+          :src="url"
           max-width="80px"
           max-height="80px"
           class="pp"
         ></v-img>
         <div>
-          <v-card-title class="pt-2">
-            Bonsoir
-            {{ me.nickname ? me.nickname : me.firstname }} 👋
-          </v-card-title>
+          <v-card-title class="pt-2"
+            >Bonsoir
+            {{ me.nickname ? me.nickname : me.firstname }} 👋</v-card-title
+          >
           <v-card-subtitle>
-            {{ me.firstname }} {{ me.lastname }}
-          </v-card-subtitle>
+            {{ me.firstname }}.{{ me.lastname }}</v-card-subtitle
+          >
         </div>
       </v-container>
       <v-card-actions class="d-flex justify-start">
@@ -50,16 +50,16 @@
 </template>
 
 <script lang="ts">
-import OverChips from "~/components/atoms/OverChips.vue";
+import OverChips from "@/components/atoms/OverChips.vue";
+import PPDialog from "@/components/molecules/ProfilePictureDialog.vue";
 import Vue from "vue";
 import { mapState } from "vuex";
 import { UserState } from "~/store/user";
 import { TMapState } from "~/utils/types/store";
-import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
 
 export default Vue.extend({
   name: "UserCard",
-  components: { OverChips, ProfilePictureDialog },
+  components: { OverChips, PPDialog },
   props: {
     user: {
       type: Object,
@@ -72,6 +72,7 @@ export default Vue.extend({
   data() {
     return {
       maxCharisma: 1500,
+      url: "",
     };
   },
 
@@ -81,18 +82,33 @@ export default Vue.extend({
     }),
   },
 
-  mounted() {
+  async mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
+    this.url = await this.getPP();
   },
-
   methods: {
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
-    },
     openPPDialog() {
       this.$store.dispatch("dialog/openDialog", "pp");
+    },
+    async getPP(): Promise<string> {
+      const token = localStorage.getItem("auth._token.local");
+      console.log(token);
+      const response = await fetch(
+        `${process.env.BASE_URL}user/pp/${this.me.pp}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        const url = URL.createObjectURL(await response.blob());
+        console.log(response.blob);
+        console.log(url);
+        return url;
+      }
+      return "";
     },
   },
 });

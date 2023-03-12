@@ -17,7 +17,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 
 export default Vue.extend({
-  name: "ProfilePictureDialog",
+  name: "PPDialog",
   data() {
     return {
       PP: undefined as undefined | File,
@@ -56,15 +56,28 @@ export default Vue.extend({
         let form = new FormData();
         form.append("files", this.PP, this.PP.name);
         form.append("id", this.me.id);
-        const res = await safeCall(
-          this.$store,
-          RepoFactory.userRepo.addPP(this, form)
-        );
-        if (res) {
+        const twoMegabytes = 2 * 1024 * 1024;
+        if (
+          this.PP.size < twoMegabytes &&
+          (this.PP.type == "image/jpeg" ||
+            this.PP.type == "image/png" ||
+            this.PP.type == "image/gif")
+        ) {
+          const res = await safeCall(
+            this.$store,
+            RepoFactory.userRepo.addPP(this, form)
+          );
+          if (res) {
+            this.$accessor.notif.pushNotification({
+              message: "Photo ajoutée, rafraîchis la page pour la voir.",
+            });
+            this.$accessor.dialog.closeDialog();
+          }
+        } else {
           this.$accessor.notif.pushNotification({
-            message: "Photo ajoutée, rafraîchis la page pour la voir.",
+            message:
+              "Fichier trop lourd (< 2Mb) ou mauvais format (jpeg/jpg, png, gif acceptés)",
           });
-          this.$accessor.dialog.closeDialog();
         }
       }
     },
