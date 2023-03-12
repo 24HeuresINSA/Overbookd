@@ -18,6 +18,15 @@ RUN npm prune --production
 
 FROM node:16-alpine
 
+ARG VERSION
+
+LABEL org.24heures.overbookd.image.title="Overbookd-backend" \
+  org.24heures.overbookd.image.documentation="https://gitlab.com/24-heures-insa/overbookd-mono/-/wikis/home" \
+  org.24heures.overbookd.image.licenses="https://gitlab.com/24-heures-insa/overbookd-mono/-/blob/main/LICENSE" \
+  org.24heures.overbookd.image.source="https://gitlab.com/24-heures-insa/overbookd-mono" \
+  org.24heures.overbookd.image.authors="https://gitlab.com/24-heures-insa/overbookd-mono/-/graphs/main" \
+  org.24heures.overbookd.image.version=${VERSION}
+
 ENV NODE_ENV production
 
 USER node
@@ -29,5 +38,7 @@ COPY --chown=node:node --from=builder /overbookd/backend/node_modules ./node_mod
 COPY --chown=node:node --from=builder /overbookd/backend/prisma ./prisma
 
 EXPOSE 3000
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:3000/"]
 
 CMD [  "npm", "run", "start:migrate:prod" ]
