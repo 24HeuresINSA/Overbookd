@@ -33,6 +33,8 @@ import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { createReadStream } from 'fs';
+import { diskStorage } from 'multer';
+
 
 @ApiTags('user')
 @Controller('user')
@@ -216,45 +218,4 @@ export class UserController {
   deleteUser(@Param('id', ParseIntPipe) userId: number): Promise<void> {
     return this.userService.deleteUser(userId);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @Post('pp')
-  @UseInterceptors(
-    FileInterceptor('files', {
-      storage: diskStorage({
-        destination: join(process.cwd(), 'public'),
-        filename: (req, file, cb) => {
-          const uuid = randomUUID();
-          const filename: string = file.originalname.split('.')[0] + '-' + uuid;
-          const extension: string = file.originalname.split('.')[1];
-          cb(null, `${filename}-${uuid}.${extension}`);
-        },
-      }),
-    }),
-  )
-  @ApiBody({
-    description: 'Add a profile picture to a user',
-    type: UserModificationDto,
-  })
-  async(
-    @Body('id') id: number,
-    @UploadedFile() file: Express.Multer.File,
-  ): Promise<UserWithoutPassword> {
-    return this.userService.uploadPP({ id: Number(id) }, file.filename);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @Get('pp/:name')
-  @ApiResponse({
-    status: 200,
-    description: 'Get a users pp',
-    type: StreamableFile,
-  })
-  getPP(@Param('name') name: string): StreamableFile {
-    const file = createReadStream(join(process.cwd(), 'public', name));
-    return new StreamableFile(file);
-  }
 }
-
