@@ -1,11 +1,11 @@
-import { Feedback } from "./feedback";
-import { User } from "./user";
-import { SignaLocation } from "./signaLocation";
-import { Review } from "./review";
-import { Team } from "./team";
 import { HttpStringified } from "../types/http";
 import { FASimplified } from "./FA";
+import { Feedback } from "./feedback";
 import { Period } from "./period";
+import { Review } from "./review";
+import { SignaLocation } from "./signaLocation";
+import { Team } from "./team";
+import { User } from "./user";
 
 export enum FTStatus {
   DRAFT = "DRAFT",
@@ -54,11 +54,19 @@ export interface FT extends FTBase {
   reviews: Review[];
   feedbacks: Feedback[];
   isDeleted: boolean;
+  reviewer: User;
 }
 
 export type FTSimplified = Pick<
   FT,
-  "id" | "name" | "fa" | "status" | "userInCharge" | "team" | "reviews"
+  | "id"
+  | "name"
+  | "fa"
+  | "status"
+  | "userInCharge"
+  | "team"
+  | "reviews"
+  | "reviewer"
 >;
 
 export interface FTUpdate
@@ -207,6 +215,7 @@ export function toSimplifiedFT({
   status,
   team,
   userInCharge,
+  reviewer,
 }: FT): FTSimplified {
   return {
     id,
@@ -216,6 +225,7 @@ export function toSimplifiedFT({
     status,
     team,
     userInCharge,
+    reviewer,
   };
 }
 

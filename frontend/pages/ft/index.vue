@@ -39,7 +39,11 @@
               v-model="filters.isDeleted"
               label="FT supprimées"
             ></v-switch>
-            <v-switch v-model="filters.myFTs" label="Mes FTs"></v-switch>
+            <v-switch v-model="filters.myFTs" label="Mes FT"></v-switch>
+            <v-switch
+              v-model="filters.myFTsToReview"
+              label="Mes FT à valider"
+            ></v-switch>
           </v-card-text>
         </v-card>
       </v-container>
@@ -159,14 +163,14 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
 import {
-  FT,
-  FTSimplified,
-  FTStatus,
-  FTStatusLabel,
-  FTSearch,
+FT,
+FTSearch,
+FTSimplified,
+FTStatus,
+FTStatusLabel
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
+import { CompleteUserWithPermissions, User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 interface Data {
@@ -183,6 +187,7 @@ interface Data {
     myFTs: boolean;
     isDeleted: boolean;
     status: FTStatus | undefined;
+    myFTsToReview: boolean;
   };
 }
 
@@ -206,6 +211,7 @@ export default Vue.extend({
         myFTs: false,
         status: undefined,
         isDeleted: false,
+        myFTsToReview: false,
       },
       selectedFT: undefined,
       isRestoreDialogOpen: false,
@@ -216,7 +222,7 @@ export default Vue.extend({
   },
 
   computed: {
-    me(): any {
+    me(): CompleteUserWithPermissions {
       return this.$accessor.user.me;
     },
     mFT(): FT {
@@ -226,14 +232,15 @@ export default Vue.extend({
       return this.$accessor.FT.FTs;
     },
     filteredFTs(): FTSimplified[] {
-      const { search, team, myFTs, status } = this.filters;
+      const { search, team, myFTs, status, myFTsToReview } = this.filters;
 
       const res = this.fuzzyFindFT(search);
       return res.filter((ft) => {
         return (
           this.filterFTByTeam(team)(ft) &&
           this.filterFTByOwnership(myFTs)(ft) &&
-          this.filterFTByStatus(status)(ft)
+          this.filterFTByStatus(status)(ft) &&
+          this.filterFTByReviewer(myFTsToReview)(ft)
         );
       });
     },
@@ -285,6 +292,14 @@ export default Vue.extend({
 
     filterFTByStatus(statusSearched?: FTStatus): (ft: FTSimplified) => boolean {
       return statusSearched ? (ft) => ft.status === statusSearched : () => true;
+    },
+
+    filterFTByReviewer(
+      searchMyFTsToReview: boolean
+    ): (ft: FTSimplified) => boolean {
+      return searchMyFTsToReview
+        ? (ft) => ft.reviewer?.id === this.me.id
+        : () => true;
     },
 
     fuzzyFindFT(search?: string): FTSimplified[] {
