@@ -87,7 +87,7 @@ export default Vue.extend({
 
   async mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
-    this.url = await this.getPP() as string;
+    this.url = (await this.getPP()) as string;
   },
   methods: {
     openPPDialog() {

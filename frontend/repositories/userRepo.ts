@@ -9,7 +9,6 @@ import {
   CompleteUser,
   CompleteUserWithPermissions,
   Friend,
-  User,
   UserCreation,
   UserModification,
 } from "~/utils/models/user";
@@ -115,19 +114,16 @@ export default {
     );
   },
   async getPP(userPP: String, token: string): Promise<String> {
-      const response = await fetch(
-        `${process.env.BASE_URL}user/pp/${userPP}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        const url = URL.createObjectURL(await response.blob());
-        return url;
-      }
-      return "";
+    const response = await fetch(`${process.env.BASE_URL}user/pp/${userPP}`, {
+      method: "GET",
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      const url = URL.createObjectURL(await response.blob());
+      return url;
     }
-  }
+    return "";
+  },
+};

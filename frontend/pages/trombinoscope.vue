@@ -64,7 +64,6 @@ export default {
     PPs: [],
   }),
 
-
   async mounted() {
     if (this.$accessor.user.hasPermission("hard")) {
       this.users = (await this.$axios.get("/user")).data;
@@ -90,7 +89,7 @@ export default {
       this.userBornTodayPP = await this.getPP(this.userBornToday.pp);
     }
   },
-  
+
   methods: {
     isToday(someDate) {
       const today = new Date();
