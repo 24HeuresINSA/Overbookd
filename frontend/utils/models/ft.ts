@@ -54,7 +54,7 @@ export interface FT extends FTBase {
   reviews: Review[];
   feedbacks: Feedback[];
   isDeleted: boolean;
-  reviewer: User;
+  reviewer?: User;
 }
 
 export type FTSimplified = Pick<
