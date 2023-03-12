@@ -128,7 +128,14 @@ abstract class GearRequestOrchestrator {
       form,
     );
   }
-  abstract remove(identifier: GearRequestIdentifier): Promise<void>;
+
+  protected retrieveRentalPeriod(form: CreateGearRequestForm) {
+    if (isExistingPeriodForm(form))
+      return this.periodRepository.getPeriod(form.periodId);
+
+    const { start, end } = form;
+    return this.periodRepository.addPeriod({ start, end });
+  }
 }
 
 class StandardGearRequest extends GearRequestOrchestrator {
@@ -150,31 +157,62 @@ class StandardGearRequest extends GearRequestOrchestrator {
     };
     return this.gearRequestRepository.addGearRequest(gearRequest);
   }
-
-  private retrieveRentalPeriod(form: CreateGearRequestForm) {
-    if (isExistingPeriodForm(form))
-      return this.periodRepository.getPeriod(form.periodId);
-
-    const { start, end } = form;
-    return this.periodRepository.addPeriod({ start, end });
-  }
-
-  remove(identifier: GearRequestIdentifier): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
 }
 
 class ConsumableGearRequest extends GearRequestOrchestrator {
-  add(form: CreateGearRequestForm): Promise<GearRequest> {
-    throw new Error('Method not implemented.');
+  async add(form: CreateGearRequestForm): Promise<GearRequest> {
+    const { seekerId, quantity, gearId } = form;
+
+    const gearRequestSearch = {
+      seeker: this.gearSeekerRegistery.buildSeekerIdentifier(seekerId),
+      gear: { id: gearId, isConsumable: true },
+    };
+
+    const [seeker, gear, [similarGearRequest]] = await Promise.all([
+      this.gearSeekerRegistery.getSeeker(seekerId),
+      this.gearRepository.getGear(gearId),
+      this.gearRequestRepository.getGearRequests(gearRequestSearch),
+      this.gearSeekerRegistery.checkSeekerInteractionPossibility(seekerId),
+    ]);
+
+    if (similarGearRequest) {
+      return this.updateGearRequestPeriod(form, similarGearRequest);
+    }
+
+    const gearRequest = {
+      seeker,
+      status: PENDING,
+      quantity,
+      gear,
+      rentalPeriod: await this.retrieveRentalPeriod(form),
+    };
+    return this.gearRequestRepository.addGearRequest(gearRequest);
   }
 
-  remove(identifier: GearRequestIdentifier): Promise<void> {
-    throw new Error('Method not implemented.');
+  private async updateGearRequestPeriod(
+    createForm: CreateGearRequestForm,
+    similarGearRequest: GearRequest,
+  ) {
+    const { seekerId, gearId } = createForm;
+    const newRentalPeriod = await this.retrieveRentalPeriod(createForm);
+    const mergedPeriod = mergePeriods([
+      newRentalPeriod,
+      similarGearRequest.rentalPeriod,
+    ]);
+    const savedPeriod = await this.periodRepository.addPeriod(mergedPeriod);
+    const gearRequestIdentifier = {
+      seeker: this.gearSeekerRegistery.buildSeekerIdentifier(seekerId),
+      gearId,
+      rentalPeriodId: similarGearRequest.rentalPeriod.id,
+    };
+    return this.gearRequestRepository.changeLinkedPeriod(
+      gearRequestIdentifier,
+      savedPeriod,
+    );
   }
 }
 
-class GearRequestOrchestratorBuild {
+class GearRequestOrchestratorBuilder {
   static build(
     seekerType: GearSeekerType,
     gearIsConsumable: boolean,
@@ -187,7 +225,7 @@ class GearRequestOrchestratorBuild {
     },
   ): GearRequestOrchestrator {
     const gearSeekerRegistery =
-      GearRequestOrchestratorBuild.buildGearSeekerRegistery(
+      GearRequestOrchestratorBuilder.buildGearSeekerRegistery(
         seekerType,
         repositories,
       );
@@ -375,6 +413,14 @@ export class GearRequestsService {
     private readonly taskRepository: TaskRepository,
   ) {}
 
+  private gearOrchestratorRepositories = {
+    animation: this.animationRepository,
+    task: this.taskRepository,
+    gear: this.gearRepository,
+    gearRequest: this.gearRequestRepository,
+    period: this.periodRepository,
+  };
+
   async findGearRequest(gearRequestId: GearRequestIdentifier) {
     return this.gearRequestRepository.getGearRequest(gearRequestId);
   }
@@ -382,149 +428,25 @@ export class GearRequestsService {
   async addAnimationRequest(
     createForm: CreateGearRequestForm,
   ): Promise<GearRequest> {
-    const { seekerId, quantity, gearId } = createForm;
-
-    const gearRequestSearch = {
-      seeker: { type: GearSeekerType.Animation, id: seekerId },
-      gear: { id: gearId, isConsumable: true },
-    };
-
-    const [existingAnimation, existingGear, [similarGearRequest]] =
-      await Promise.all([
-        this.animationRepository.getAnimation(seekerId),
-        this.gearRepository.getGear(gearId),
-        this.gearRequestRepository.getGearRequests(gearRequestSearch),
-      ]);
-
-    if (existingAnimation.status === Status.VALIDATED)
-      throw new AnimationAlreadyValidatedError(seekerId);
-
-    if (similarGearRequest) {
-      return this.updateGearRequestPeriod(
-        createForm,
-        similarGearRequest,
-        GearSeekerType.Animation,
-      );
-    }
-    const gearRequest = {
-      seeker: {
-        type: GearSeekerType.Animation,
-        id: seekerId,
-        name: existingAnimation.name,
-      },
-      status: PENDING,
-      quantity,
-      gear: existingGear,
-      rentalPeriod: await this.retrieveRentalPeriod(createForm),
-    };
-    return this.gearRequestRepository.addGearRequest(gearRequest);
+    const gear = await this.gearRepository.getGear(createForm.gearId);
+    const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
+      GearSeekerType.Animation,
+      gear.isConsumable,
+      this.gearOrchestratorRepositories,
+    );
+    return gearRequestOrchestrator.add(createForm);
   }
 
   async addTaskRequest(
     createForm: CreateGearRequestForm,
   ): Promise<GearRequest> {
-    const { seekerId, quantity, gearId } = createForm;
-
-    const gearRequestSearch = {
-      seeker: { type: GearSeekerType.Task, id: seekerId },
-      gear: { id: gearId, isConsumable: true },
-    };
-
-    const [existingTask, existingGear, [similarGearRequest]] =
-      await Promise.all([
-        this.taskRepository.getTask(seekerId),
-        this.gearRepository.getGear(gearId),
-        this.gearRequestRepository.getGearRequests(gearRequestSearch),
-      ]);
-
-    if (this.isAlreadyValidated(existingTask))
-      throw new TaskAlreadyValidatedError(seekerId, existingTask.status);
-
-    if (similarGearRequest) {
-      return this.updateGearRequestPeriod(
-        createForm,
-        similarGearRequest,
-        GearSeekerType.Task,
-      );
-    }
-
-    const gearRequest = {
-      seeker: {
-        type: GearSeekerType.Task,
-        id: seekerId,
-        name: existingTask.name,
-      },
-      status: PENDING,
-      quantity,
-      gear: existingGear,
-      rentalPeriod: await this.retrieveRentalPeriod(createForm),
-    };
-    return this.gearRequestRepository.addGearRequest(gearRequest);
-  }
-
-  private async updateGearRequestPeriod(
-    createForm: CreateGearRequestForm,
-    similarGearRequest: GearRequest,
-    seekerType: GearSeekerType,
-  ) {
-    const { seekerId, gearId } = createForm;
-    const newRentalPeriod = await this.retrieveRentalPeriod(createForm);
-    const mergedPeriod = mergePeriods([
-      newRentalPeriod,
-      similarGearRequest.rentalPeriod,
-    ]);
-    const savedPeriod = await this.periodRepository.addPeriod(mergedPeriod);
-    const gearRequestIdentifier = {
-      seeker: { type: seekerType, id: seekerId },
-      gearId,
-      rentalPeriodId: similarGearRequest.rentalPeriod.id,
-    };
-    return this.gearRequestRepository.changeLinkedPeriod(
-      gearRequestIdentifier,
-      savedPeriod,
+    const gear = await this.gearRepository.getGear(createForm.gearId);
+    const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
+      GearSeekerType.Task,
+      gear.isConsumable,
+      this.gearOrchestratorRepositories,
     );
-  }
-
-  private updateConsumableGearRequest(
-    similarGearRequest: GearRequest,
-    createForm: NewPeriodCreateGearRequestForm,
-    seekerType: GearSeekerType,
-  ) {
-    const { seekerId, quantity, gearId } = createForm;
-
-    const gearRequestIdentifier = {
-      seeker: { type: seekerType, id: seekerId },
-      gearId,
-      rentalPeriodId: similarGearRequest.rentalPeriod.id,
-    };
-    const mergedPeriod = mergePeriods([
-      similarGearRequest.rentalPeriod,
-      createForm,
-    ]);
-    const gearRequestUpdateForm = {
-      quantity,
-      ...mergedPeriod,
-    };
-
-    return this.gearRequestRepository.updateGearRequest(
-      gearRequestIdentifier,
-      gearRequestUpdateForm,
-    );
-  }
-
-  private isAlreadyValidated(existingTask: Task): boolean {
-    return (
-      existingTask.status === taskStatus.VALIDATED ||
-      existingTask.status === taskStatus.READY
-    );
-  }
-
-  private retrieveRentalPeriod(form: CreateGearRequestForm) {
-    if (isExistingPeriodForm(form))
-      return this.periodRepository.getPeriod(form.periodId);
-
-    const { start, end } = form;
-    return this.periodRepository.addPeriod({ start, end });
+    return gearRequestOrchestrator.add(createForm);
   }
 
   async getAnimationRequests(animationId: number): Promise<GearRequest[]> {
@@ -539,40 +461,39 @@ export class GearRequestsService {
     });
   }
 
-  updateAnimationRequest(
+  async updateAnimationRequest(
     animationId: number,
     gearId: number,
     periodId: number,
     updateForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
-    const seeker = { type: GearSeekerType.Animation, id: animationId };
-    return this.updateRequest(seeker, gearId, periodId, updateForm);
+    const gear = await this.gearRepository.getGear(gearId);
+    const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
+      GearSeekerType.Animation,
+      gear.isConsumable,
+      this.gearOrchestratorRepositories,
+    );
+    return gearRequestOrchestrator.update(
+      animationId,
+      gearId,
+      periodId,
+      updateForm,
+    );
   }
 
-  updateTaskRequest(
+  async updateTaskRequest(
     taskId: number,
     gearId: number,
     periodId: number,
     updateForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
-    const seeker = { type: GearSeekerType.Task, id: taskId };
-    return this.updateRequest(seeker, gearId, periodId, updateForm);
-  }
-
-  private updateRequest(
-    seeker: GearRequestIdentifierSeeker,
-    gearId: number,
-    periodId: number,
-    updateForm: UpdateGearRequestForm,
-  ): Promise<GearRequest> {
-    return this.gearRequestRepository.updateGearRequest(
-      {
-        seeker,
-        gearId,
-        rentalPeriodId: periodId,
-      },
-      updateForm,
+    const gear = await this.gearRepository.getGear(gearId);
+    const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
+      GearSeekerType.Task,
+      gear.isConsumable,
+      this.gearOrchestratorRepositories,
     );
+    return gearRequestOrchestrator.update(taskId, gearId, periodId, updateForm);
   }
 
   removeAnimationRequest(
