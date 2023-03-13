@@ -70,6 +70,7 @@ export default defineComponent({
       this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
     ]);
+    document.title = this.user?.firstname + " " + this.user?.lastname;
   },
   methods: {
     updateDate(date: Date) {
