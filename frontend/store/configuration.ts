@@ -1,4 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import Vue from "vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Configuration } from "~/utils/models/Configuration";
@@ -6,13 +7,15 @@ import { Configuration } from "~/utils/models/Configuration";
 const configurationRepo = RepoFactory.configurationRepo;
 
 // The state types definitions
-type State = Map<string, Object>;
+type State = {
+  [key: string]: Object;
+};
 
-const state = (): State => new Map<string, Object>();
+const state = (): State => Object.create(null);
 
 export const mutations = mutationTree(state, {
-  SET_CONFIG: function (state, config: Configuration) {
-    state.set(config.key, config.value);
+  SET_CONFIG(state, config: Configuration) {
+    Vue.set(state, config.key, config.value);
   },
 });
 
@@ -24,7 +27,7 @@ export const actions = actionTree(
       if (!res) {
         return null;
       }
-      res.data.forEach((config: Configuration) => {
+      res.data.forEach((config) => {
         commit("SET_CONFIG", config);
       });
       return res;
@@ -64,7 +67,12 @@ export const actions = actionTree(
 );
 
 export const getters = getterTree(state, {
-  get: (state) => (key: string) => {
-    return state.get(key);
+  get: (state: State) => (key: string) => {
+    for (const [k, value] of Object.entries(state)) {
+      if (k === key) {
+        return value;
+      }
+    }
+    return undefined;
   },
 });
