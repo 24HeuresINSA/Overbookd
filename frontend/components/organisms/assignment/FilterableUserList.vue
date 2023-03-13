@@ -36,7 +36,7 @@ import UserList from "~/components/molecules/users/UserList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
 import SearchUser from "~/components/atoms/SearchUser.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { CompleteUserWithPermissions, User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 import { Volunteer } from "~/utils/models/assignment";
 
@@ -58,43 +58,55 @@ export default Vue.extend({
   },
   computed: {
     filteredVolunteers(): Volunteer[] {
-      let filteredUsers = this.$accessor.assignment.volunteers;
-
-      // Keep users with hard or soft teams
-      filteredUsers = filteredUsers.filter(
-        (user) =>
-          user.teams.map((team) => team.code).includes("hard") ||
-          user.teams.map((team) => team.code).includes("soft")
-      );
-
-      // Keep users with the selected teams
-      if (this.teams.length > 0) {
-        filteredUsers = filteredUsers.filter((user) =>
-          this.teams.some((team) =>
-            user.teams.map((t) => t.code).includes(team.code)
-          )
+      return this.$accessor.assignment.volunteers.filter((volunteer) => {
+        return (
+          (this.filterVolunteerByTeamCode("soft")(volunteer) ||
+            this.filterVolunteerByTeamCode("hard")(volunteer)) &&
+          this.filterVolunteerByUser(this.user)(volunteer) &&
+          this.filterVolunteerByTeams(this.teams)(volunteer) &&
+          this.filterVolunteerByLicense(this.hasLicense)(volunteer)
         );
-      }
-
-      // Keep users with the selected user
-      if (this.user) {
-        filteredUsers = filteredUsers.filter(
-          (user) => user.id === (this.user as CompleteUserWithPermissions).id
-        );
-      }
-
-      // Keep users with or without license
-      if (this.hasLicense !== undefined) {
-        filteredUsers = filteredUsers.filter(
-          (user) =>
-            (this.hasLicense &&
-              user.teams.map((t) => t.code).includes("conducteur")) ||
-            (!this.hasLicense &&
-              !user.teams.map((t) => t.code).includes("conducteur"))
-        );
-      }
-
-      return filteredUsers;
+      });
+    },
+  },
+  methods: {
+    filterVolunteerByTeamCode(
+      teamSearchedCode?: string
+    ): (volunteer: Volunteer) => boolean {
+      return teamSearchedCode
+        ? (volunteer) =>
+            volunteer.teams.map((team) => team.code).includes(teamSearchedCode)
+        : () => true;
+    },
+    filterVolunteerByTeams(
+      teamsSearched: Team[]
+    ): (volunteer: Volunteer) => boolean {
+      return teamsSearched.length > 0
+        ? (volunteer) =>
+            volunteer.teams
+              .map((team) => team.code)
+              .some((code) =>
+                teamsSearched.map((team) => team.code).includes(code)
+              )
+        : () => true;
+    },
+    filterVolunteerByUser(
+      userSearched?: User
+    ): (volunteer: Volunteer) => boolean {
+      return userSearched
+        ? (volunteer) => volunteer.id === userSearched.id
+        : () => true;
+    },
+    filterVolunteerByLicense(
+      hasLicense?: boolean
+    ): (volunteer: Volunteer) => boolean {
+      return hasLicense !== undefined
+        ? (volunteer) =>
+            (hasLicense &&
+              this.filterVolunteerByTeamCode("conducteur")(volunteer)) ||
+            (!hasLicense &&
+              !this.filterVolunteerByTeamCode("conducteur")(volunteer))
+        : () => true;
     },
   },
 });
