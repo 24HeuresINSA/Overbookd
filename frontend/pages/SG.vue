@@ -106,7 +106,7 @@
         multi-sort
         :sort-by="['firstname', 'lastname']"
       >
-        <template #[`item.action`]="{ item }" style="display: flex">
+        <template #[`item.action`]="{ item }">
           <v-text-field
             v-model="item.newConsumption"
             :label="isExpenseMode ? 'Nombre de bâton' : 'thunas (en euro)'"
@@ -159,9 +159,9 @@
  */
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import SgConfigForm from "~/components/organisms/SgConfigForm.vue";
+import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repoFactory";
 import transactionRepo from "../repositories/transactionRepo";
-import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 const { safeCall } = require("../utils/api/calls");
 
 export default {

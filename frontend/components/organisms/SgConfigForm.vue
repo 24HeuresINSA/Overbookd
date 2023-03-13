@@ -55,14 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Configuration } from "~/utils/models/Configuration";
-
-type SgConfig = {
-  prixFutBlonde: number;
-  prixFutBlanche: number;
-  prixFutTriple: number;
-  prixFutFlower: number;
-};
+import { Configuration, SgConfig } from "~/utils/models/Configuration";
 
 export default Vue.extend({
   name: "SgConfigForm",
@@ -79,7 +72,8 @@ export default Vue.extend({
   },
   computed: {
     sgConfig(): SgConfig {
-      return this.$accessor.configuration.get("sg") as SgConfig;
+      return (this.$accessor.configuration.get("sg") ||
+        this.tempSgConfig) as SgConfig;
     },
   },
   async mounted() {
@@ -87,11 +81,16 @@ export default Vue.extend({
   },
   methods: {
     save() {
-      const configuraion: Configuration = {
+      const configuration: Configuration = {
         key: "sg",
-        value: this.tempSgConfig,
+        value: {
+          prixFutBlonde: +this.tempSgConfig.prixFutBlonde,
+          prixFutBlanche: +this.tempSgConfig.prixFutBlanche,
+          prixFutTriple: +this.tempSgConfig.prixFutTriple,
+          prixFutFlower: +this.tempSgConfig.prixFutFlower,
+        },
       };
-      this.$accessor.configuration.update(configuraion);
+      this.$accessor.configuration.update(configuration);
       this.closeDialog();
     },
     closeDialog() {
