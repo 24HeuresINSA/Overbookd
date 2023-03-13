@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -23,10 +22,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { FtUserRequestResponseDto } from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestDto } from './dto/ft_user_request.dto';
-import {
-  FtUserRequestService,
-  PeriodWithFtNameAndStatus,
-} from './ft_user_request.service';
+import { FtUserRequestService } from './ft_user_request.service';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -42,21 +38,6 @@ import {
 @Controller('ft')
 export class FtUserRequestController {
   constructor(private readonly ftUserRequestService: FtUserRequestService) {}
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission('hard')
-  @Get('user-requests/:id')
-  @ApiResponse({
-    status: 200,
-    description: 'Get the ft user requests of a user by id',
-    type: Array,
-  })
-  async getByUserId(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PeriodWithFtNameAndStatus[]> {
-    return this.ftUserRequestService.getByUserId(id);
-  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')

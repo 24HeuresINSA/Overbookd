@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma, User } from '@prisma/client';
+import { Ft, Prisma, User } from '@prisma/client';
 import { Username } from './dto/userName.dto';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import {
@@ -10,6 +10,7 @@ import {
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 const SELECT_USER = {
   email: true,
@@ -56,12 +57,30 @@ export const SELECT_USERNAME_WITH_ID = {
   lastname: true,
 };
 
+const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
+  ftTimeWindows: {
+    select: {
+      start: true,
+      end: true,
+      ft: {
+        select: {
+          id: true,
+          name: true,
+          status: true,
+        },
+      },
+    },
+  },
+};
+
 export type UserWithoutPassword = Omit<User, 'password'>;
 export type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];
   permissions: string[];
 };
 export type UserPasswordOnly = Pick<User, 'password'>;
+
+export type RequiredOnTask = Period & Pick<Ft, 'id' & 'name' & 'status'>;
 
 @Injectable()
 export class UserService {
@@ -111,6 +130,18 @@ export class UserService {
       },
     });
     return users.map((user) => this.getUserWithTeamAndPermission(user));
+  }
+
+  async getFtUserRequestsByUserId(userId: number): Promise<RequiredOnTask[]> {
+    const userRequests = await this.prisma.ftUserRequest.findMany({
+      where: { userId },
+      select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
+    });
+    return userRequests.map(({ ftTimeWindows: { start, end, ft } }) => ({
+      start,
+      end,
+      ft,
+    }));
   }
 
   async createUser(payload: UserCreationDto): Promise<UserWithoutPassword> {

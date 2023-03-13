@@ -20,10 +20,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { PeriodWithFtId } from "~/utils/models/ft";
 import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { getColorByStatus } from "~/domain/common/status-color";
 
 export default defineComponent({
   name: "Calendar",
@@ -33,7 +33,6 @@ export default defineComponent({
   },
   data: function () {
     return {
-      ftUserRequests: [] as PeriodWithFtId[],
       calendarCentralDate: new Date("2023-05-12 00:00+02:00"),
     };
   },
@@ -41,14 +40,19 @@ export default defineComponent({
     availabilities() {
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
+    ftRequests() {
+      return this.$accessor.user.selectedUserFtRequests.map(
+        ({ start, end, ft }) => ({
+          start,
+          end,
+          name: `[${ft.id}] ${ft.name}`,
+          color: getColorByStatus(ft.status),
+          timed: true,
+        })
+      );
+    },
     events() {
-      return this.ftUserRequests.map((ftRequest) => ({
-        start: new Date(ftRequest.start),
-        end: new Date(ftRequest.end),
-        name: `[${ftRequest.ftId}] ${ftRequest.ftName}`,
-        color: "#ff0000",
-        timed: true,
-      }));
+      return this.ftRequests; // TODO: ajouter les créneaux affectés
     },
     user() {
       return this.$accessor.user.selectedUser;
@@ -61,12 +65,11 @@ export default defineComponent({
         path: "/",
       });
     }
-    const res = await Promise.all([
-      this.$accessor.user.getUserFtRequests(userId),
+    await Promise.all([
       this.$accessor.user.findUserById(userId),
+      this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
     ]);
-    this.ftUserRequests = res[0];
   },
   methods: {
     updateDate(date: Date) {

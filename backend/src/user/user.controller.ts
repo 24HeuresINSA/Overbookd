@@ -22,6 +22,7 @@ import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import {
+  RequiredOnTask,
   UserService,
   UserWithoutPassword,
   UserWithTeamAndPermission,
@@ -136,6 +137,21 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserWithoutPassword> {
     return this.userService.user({ id: Number(id) });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('hard')
+  @Get(':id/ft-requests')
+  @ApiResponse({
+    status: 200,
+    description: 'Get the ft user requests of a user by id',
+    type: Array,
+  })
+  async getFtUserRequestsByUserId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<RequiredOnTask[]> {
+    return this.userService.getFtUserRequestsByUserId(id);
   }
 
   @UseGuards(JwtAuthGuard)

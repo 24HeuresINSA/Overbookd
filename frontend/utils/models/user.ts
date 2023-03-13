@@ -1,4 +1,5 @@
 import { HttpStringified } from "../types/http";
+import { FTStatus } from "./ft";
 import { Notification } from "./repo";
 
 const Departments = {
@@ -90,6 +91,16 @@ export interface CompleteUserWithPermissions extends CompleteUser {
   permissions: string[];
 }
 
+export interface PeriodWithFtId {
+  start: Date;
+  end: Date;
+  ft: {
+    id: number;
+    name: string;
+    status: FTStatus;
+  };
+}
+
 export function castToUserModification(
   user: CompleteUserWithoutId
 ): UserModification {
@@ -137,4 +148,14 @@ export function castUsersWithPermissionsWithDate(
   users: HttpStringified<CompleteUserWithPermissions[]>
 ) {
   return users.map(castUserWithPermissionsWithDate);
+}
+
+export function castPeriodWithFtWithDate(
+  periods: HttpStringified<PeriodWithFtId[]>
+): PeriodWithFtId[] {
+  return periods.map(({ start, end, ft }) => ({
+    start: new Date(start),
+    end: new Date(end),
+    ft,
+  }));
 }

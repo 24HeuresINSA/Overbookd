@@ -3,8 +3,9 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
-import { User } from "~/utils/models/user";
+import { PeriodWithFtId, User } from "~/utils/models/user";
 import {
+  castPeriodWithFtWithDate,
   castToUserModification,
   castUsersWithPermissionsWithDate,
   castUserWithDate,
@@ -21,7 +22,7 @@ export const state = () => ({
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
-
+  selectedUserFtRequests: [] as PeriodWithFtId[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -34,6 +35,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
     state.selectedUser = data;
+  },
+  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: PeriodWithFtId[]) {
+    state.selectedUserFtRequests = periods;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
@@ -234,16 +238,15 @@ export const actions = actionTree(
       commit("SET_SELECTED_USER", res.data);
     },
 
-    async getUserFtRequests(_, userId: number) {
+    async getUserFtRequests({ commit }, userId: number) {
       const res = await safeCall(
         this,
         UserRepo.getUserFtRequests(this, userId)
       );
 
-      if (res) {
-        return res.data;
-      }
-      return [];
+      if (!res) return;
+      const periods = castPeriodWithFtWithDate(res.data);
+      commit("SET_SELECTED_USER_FT_REQUESTS", periods);
     },
   }
 );

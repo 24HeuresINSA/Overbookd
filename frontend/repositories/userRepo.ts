@@ -1,9 +1,9 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { PeriodWithFtId } from "~/utils/models/ft";
 import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
+  PeriodWithFtId,
   User,
   UserCreation,
   UserModification,
@@ -74,7 +74,7 @@ export default {
   },
   getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<PeriodWithFtId[]>>(
-      `ft/user-requests/${userId}`
+      `user/${userId}/ft-requests`
     );
   },
 };
