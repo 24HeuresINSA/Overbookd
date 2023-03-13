@@ -1,22 +1,8 @@
 <template>
-  <v-container
-    style="
-      left: 0;
-      max-width: none;
-      margin-left: 0;
-      margin-right: 0;
-      position: absolute;
-      display: flex;
-      height: 100%;
-      width: 100%;
-    "
-  >
-    <!--<FilteredUsers
-      style="max-width: 350px; height: 100%"
-      class="filteredUser"
-    />
+  <v-container class="assignment-container">
+    <FilterableUserList class="filtered-user" />
 
-    <OverCalendar @open-unassign-dialog="openUnassignDialog" />
+    <!--<OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
     <OverTasks
       v-if="isModeOrgaToTache"
@@ -30,21 +16,25 @@
   </v-container>
 </template>
 
-<script>
-/*import FilteredUsers from "../components/FiltredUsers";
-import OverTasks from "../components/OverTasks";
-import OverCalendar from "../components/OverCalendar";
-import OverFT from "../components/OverFT.vue";*/
+<script lang="ts">
+import Vue from "vue";
+import FilterableUserList from "~/components/organisms/assignment/FilterableUserList.vue";
+import { Volunteer } from "~/utils/models/assignment";
 
-export default {
+export default Vue.extend({
   name: "Assignment",
-  /*components: {
-    OverCalendar,
-    OverTasks,
-    FilteredUsers,
-    OverFT,
+  components: { FilterableUserList },
+  computed: {
+    volunteers(): Volunteer[] {
+      return this.$accessor.assignment.volunteers;
+    },
   },
-  data() {
+  async mounted() {
+    if (!this.volunteers.length) {
+      await this.$accessor.assignment.fetchVolunteers();
+    }
+  },
+  /*data() {
     return {
       isUnassignDialogOpen: false,
     };
@@ -84,14 +74,24 @@ export default {
       this.isUnassignDialogOpen = false;
     },
   },*/
-};
+});
 </script>
 
 <style scoped>
-.container {
+.assignment-container {
   padding: 0;
+  left: 0;
+  top: 0;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  position: absolute;
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
-.filteredUser {
-  height: 100vh;
+
+.filtered-user {
+  max-width: 350px;
 }
 </style>

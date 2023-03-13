@@ -32,6 +32,7 @@ type Year = keyof typeof Years;
 export interface DisplayedUser {
   firstname: string;
   lastname: string;
+  nickname?: string;
 }
 
 export interface User extends DisplayedUser {
@@ -40,10 +41,6 @@ export interface User extends DisplayedUser {
 
 export interface UserWithPermissions extends User {
   permissions: string[];
-}
-
-export interface Friend extends User {
-  nickname?: string;
 }
 
 export interface UserCreation extends DisplayedUser {

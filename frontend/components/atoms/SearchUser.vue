@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { User } from "~/utils/models/user";
+import { CompleteUserWithPermissions as User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 interface SearchUserData {

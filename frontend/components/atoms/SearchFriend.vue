@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Friend } from "~/utils/models/user";
+import { User } from "~/utils/models/user";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 interface SearchFriendData {
@@ -40,7 +40,7 @@ export default Vue.extend({
       default: "Chercher un bénévole",
     },
     friend: {
-      type: Object as () => Friend | null,
+      type: Object as () => User | null,
       default: null,
     },
     boxed: {
@@ -58,7 +58,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    friends() {
+    friends(): User[] {
       return this.$accessor.user.friends;
     },
   },
@@ -67,10 +67,10 @@ export default Vue.extend({
     this.$accessor.user.fetchFriends();
   },
   methods: {
-    propagateEvent(friend: Friend | null) {
+    propagateEvent(friend: User | null) {
       this.$emit("change", friend);
     },
-    displayUsername(friend: Friend): string {
+    displayUsername(friend: User): string {
       return formatUserNameWithNickname(friend);
     },
   },

@@ -1,6 +1,7 @@
 import authRepo from "~/repositories/authRepo";
 import equipmentRepo from "~/repositories/equipementRepo";
 import transactionRepo from "~/repositories/transactionRepo";
+import { AssignmentRepository } from "./assignmentRepo";
 import { CategoryRepository, GearsRepository } from "./catalog.repository";
 import { CharismaPeriodRepository } from "./charismaPeriodRepo";
 import configurationRepo from "./configurationRepo";
@@ -39,6 +40,7 @@ const repositories = {
   gearRequestRepository: GearRequestRepository,
   charismaPeriod: CharismaPeriodRepository,
   volunteerAvailability: VolunteerAvailabilityRepository,
+  assignmentRepository: AssignmentRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -65,4 +67,5 @@ export const RepoFactory = {
   GearRequestRepository,
   CharismaPeriodRepository,
   VolunteerAvailabilityRepository,
+  AssignmentRepository,
 };

@@ -1,10 +1,11 @@
 <template>
-  <v-autocomplete
-    :value="team"
-    :items="teams"
+  <v-combobox
+    :value="teams"
+    :items="allTeams"
     :loading="loading"
     item-text="name"
     item-value="code"
+    multiple
     chips
     clearable
     :label="label"
@@ -17,7 +18,7 @@
     <template #no-data>
       <v-list-item> Aucune equipe correspondante </v-list-item>
     </template>
-  </v-autocomplete>
+  </v-combobox>
 </template>
 
 <script lang="ts">
@@ -29,19 +30,19 @@ interface SearchTeamData {
 }
 
 export default Vue.extend({
-  name: "SearchTeam",
+  name: "SearchTeams",
   model: {
-    prop: "team",
+    prop: "teams",
     event: "change",
   },
   props: {
     label: {
       type: String,
-      default: "Chercher une équipe",
+      default: "Chercher des équipes",
     },
-    team: {
-      type: Object as () => Team | null,
-      default: null,
+    teams: {
+      type: Array as () => Team[],
+      default: () => [],
     },
     boxed: {
       type: Boolean,
@@ -58,17 +59,17 @@ export default Vue.extend({
     };
   },
   computed: {
-    teams(): Team[] {
+    allTeams(): Team[] {
       return this.$accessor.team.teams;
     },
   },
   mounted() {
-    if (this.teams.length) return;
+    if (this.allTeams.length) return;
     this.$accessor.team.setTeamsInStore();
   },
   methods: {
-    propagateEvent(team: Team | null) {
-      this.$emit("change", team);
+    propagateEvent(teams: Team[]) {
+      this.$emit("change", teams);
     },
   },
 });
