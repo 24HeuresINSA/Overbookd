@@ -12,10 +12,6 @@
           class="filters__field"
           :boxed="false"
         ></SearchTeams>
-        <v-btn-toggle v-model="hasLicense" tile group color="primary">
-          <v-btn x-small :value="true">Permis</v-btn>
-          <v-btn x-small :value="false">Pas de permis</v-btn>
-        </v-btn-toggle>
       </div>
       <v-divider></v-divider>
       <div class="user-list">
@@ -43,7 +39,6 @@ import { Volunteer } from "~/utils/models/assignment";
 interface FiltersData {
   teams: Team[];
   user?: CompleteUserWithPermissions;
-  hasLicense?: boolean;
 }
 
 export default Vue.extend({
@@ -53,30 +48,24 @@ export default Vue.extend({
     return {
       teams: [],
       user: undefined,
-      hasLicense: undefined,
     };
   },
   computed: {
     filteredVolunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers.filter((volunteer) => {
         return (
-          (this.filterVolunteerByTeamCode("soft")(volunteer) ||
-            this.filterVolunteerByTeamCode("hard")(volunteer)) &&
+          this.filterVolunteerByValidity()(volunteer) &&
           this.filterVolunteerByUser(this.user)(volunteer) &&
-          this.filterVolunteerByTeams(this.teams)(volunteer) &&
-          this.filterVolunteerByLicense(this.hasLicense)(volunteer)
+          this.filterVolunteerByTeams(this.teams)(volunteer)
         );
       });
     },
   },
   methods: {
-    filterVolunteerByTeamCode(
-      teamSearchedCode?: string
-    ): (volunteer: Volunteer) => boolean {
-      return teamSearchedCode
-        ? (volunteer) =>
-            volunteer.teams.map((team) => team.code).includes(teamSearchedCode)
-        : () => true;
+    filterVolunteerByValidity(): (volunteer: Volunteer) => boolean {
+      return (volunteer) =>
+        volunteer.teams.map((team) => team.code).includes("soft") ||
+        volunteer.teams.map((team) => team.code).includes("hard");
     },
     filterVolunteerByTeams(
       teamsSearched: Team[]
@@ -95,17 +84,6 @@ export default Vue.extend({
     ): (volunteer: Volunteer) => boolean {
       return userSearched
         ? (volunteer) => volunteer.id === userSearched.id
-        : () => true;
-    },
-    filterVolunteerByLicense(
-      hasLicense?: boolean
-    ): (volunteer: Volunteer) => boolean {
-      return hasLicense !== undefined
-        ? (volunteer) =>
-            (hasLicense &&
-              this.filterVolunteerByTeamCode("conducteur")(volunteer)) ||
-            (!hasLicense &&
-              !this.filterVolunteerByTeamCode("conducteur")(volunteer))
         : () => true;
     },
   },
