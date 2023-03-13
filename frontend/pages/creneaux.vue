@@ -163,7 +163,7 @@ export default Vue.extend({
       return user ? user.username : "";
     },
     deleteTimespan() {
-      this.$accessor.assignment.deleteTimespan(this.selectedTimeSpan);
+      //this.$accessor.assignment.deleteTimespan(this.selectedTimeSpan);
       this.timeSpans.splice(this.timeSpans.indexOf(this.selectedTimeSpan), 1);
       this.selectedTimeSpan = undefined;
       this.isDeleting = false;
