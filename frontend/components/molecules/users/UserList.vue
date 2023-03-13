@@ -1,40 +1,40 @@
 <template>
   <v-list-item-group>
     <v-list-item
-      v-for="user in users"
-      :key="user.id"
-      :value="user.id"
-      @click="selectUser(user)"
+      v-for="volunteer in volunteers"
+      :key="volunteer.id"
+      :value="volunteer.id"
+      @click="selectVolunteer(volunteer)"
     >
-      <UserResume :user="user" />
+      <VolunteerResume :volunteer="volunteer" />
     </v-list-item>
   </v-list-item-group>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import UserResume from "~/components/organisms/UserResume.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
+import VolunteerResume from "~/components/organisms/assignment/VolunteerResume.vue";
+import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
   name: "UserList",
-  components: { UserResume },
+  components: { VolunteerResume },
   props: {
-    users: {
-      type: Array as () => CompleteUserWithPermissions[],
+    volunteers: {
+      type: Array as () => Volunteer[],
       required: true,
       default: () => [],
     },
   },
   data: () => ({
-    selectedUserId: -1,
+    selectedVolunteerId: -1,
   }),
   methods: {
-    selectUser(user: CompleteUserWithPermissions) {
+    selectVolunteer(volunteer: Volunteer) {
       //TODO : Use Assignment store
-      this.selectedUserId = user.id;
-      this.$accessor.user.setSelectedUser(user);
-      this.$accessor.user.fetchSelectedUserFriends(user.id);
+      this.selectedVolunteerId = volunteer.id;
+      this.$accessor.assignment.setSelectedVolunteer(volunteer);
+      this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
     },
   },
 });

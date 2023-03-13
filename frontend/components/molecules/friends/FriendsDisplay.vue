@@ -1,13 +1,13 @@
 <template>
-  <v-card v-if="selectedUserFriends.length > 0" class="friend-list">
+  <v-card v-if="selectedVolunteerFriends.length > 0" class="friend-list">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-content>
       <v-list-item-group>
         <v-list-item
-          v-for="friend in selectedUserFriends"
+          v-for="friend in selectedVolunteerFriends"
           :key="friend.id"
           :value="friend.id"
-          @click="selectUser(friend)"
+          @click="selectVolunteer(friend)"
         >
           {{ formatUsername(friend) }}
         </v-list-item>
@@ -18,32 +18,33 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CompleteUserWithPermissions, Friend } from "~/utils/models/user";
+import { Volunteer } from "~/utils/models/assignment";
+import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "FriendsDisplay",
   computed: {
-    selectedUser(): CompleteUserWithPermissions {
-      return this.$accessor.user.selectedUser;
+    selectedVolunteer(): Volunteer {
+      return this.$accessor.assignment.selectedVolunteer;
     },
-    selectedUserFriends(): Friend[] {
-      return this.$accessor.user.selectedUserFriends;
+    selectedVolunteerFriends(): User[] {
+      return this.$accessor.assignment.selectedVolunteerFriends;
     },
     title(): string {
-      return `Amis de ${this.selectedUser.firstname} :`;
+      return `Amis de ${this.selectedVolunteer.firstname} :`;
     },
   },
   methods: {
-    selectUser(friend: Friend) {
-      const user = this.$accessor.user.users.find(
+    selectVolunteer(friend: User) {
+      const user = this.$accessor.assignment.volunteers.find(
         (user) => user.id === friend.id
       );
       if (!user) return;
-      this.$accessor.user.setSelectedUser(user);
-      this.$accessor.user.fetchSelectedUserFriends(user.id);
+      this.$accessor.assignment.setSelectedVolunteer(user);
+      this.$accessor.assignment.fetchSelectedVolunteerFriends(user.id);
     },
-    formatUsername(user: Friend): string {
+    formatUsername(user: User): string {
       return formatUsername(user);
     },
   },

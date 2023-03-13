@@ -3,7 +3,7 @@ import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
-  Friend,
+  User,
   UserCreation,
   UserModification,
 } from "~/utils/models/user";
@@ -58,19 +58,17 @@ export default {
     return context.$axios.delete<void>(`${resource}/${userId}`);
   },
   getFriends(context: Context) {
-    return context.$axios.get<HttpStringified<Friend[]>>("friends");
+    return context.$axios.get<HttpStringified<User[]>>("friends");
   },
   getUserFriends(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<Friend[]>>(`friends/${userId}`);
+    return context.$axios.get<HttpStringified<User[]>>(`friends/${userId}`);
   },
   addFriend(context: Context, friendId: number) {
-    return context.$axios.post<HttpStringified<Friend>>(`friends`, {
+    return context.$axios.post<HttpStringified<User>>(`friends`, {
       id: friendId,
     });
   },
   removeFriend(context: Context, friendId: number) {
-    return context.$axios.delete<HttpStringified<Friend>>(
-      `friends/${friendId}`
-    );
+    return context.$axios.delete<HttpStringified<User>>(`friends/${friendId}`);
   },
 };

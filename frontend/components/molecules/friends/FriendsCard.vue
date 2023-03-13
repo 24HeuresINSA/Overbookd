@@ -46,11 +46,11 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchFriend from "~/components/atoms/SearchFriend.vue";
-import { Friend } from "~/utils/models/user";
+import { User } from "~/utils/models/user";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 interface FriendsCardData {
-  newFriend: Friend;
+  newFriend: User;
 }
 
 export default Vue.extend({
@@ -71,7 +71,7 @@ export default Vue.extend({
     me() {
       return this.$accessor.user.me;
     },
-    mFriends(): Friend[] {
+    mFriends(): User[] {
       return this.$accessor.user.mFriends;
     },
   },
@@ -95,10 +95,10 @@ export default Vue.extend({
         lastname: "",
       };
     },
-    displayFriend(friend: Friend): string {
+    displayFriend(friend: User): string {
       return formatUserNameWithNickname(friend);
     },
-    removeFriend(friend: Friend) {
+    removeFriend(friend: User) {
       this.$accessor.user.removeFriend(friend);
     },
   },

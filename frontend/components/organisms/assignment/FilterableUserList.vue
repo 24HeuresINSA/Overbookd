@@ -19,10 +19,10 @@
       </div>
       <v-divider></v-divider>
       <div class="user-list">
-        <UserList :users="filteredUsers" />
+        <UserList :volunteers="filteredVolunteers" />
         <p>
           Nombre de personnes dans la liste :
-          <span class="font-weight-bold">{{ filteredUsers.length }}</span>
+          <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
         </p>
         <FriendsDisplay />
       </div>
@@ -38,6 +38,7 @@ import SearchTeams from "~/components/atoms/SearchTeams.vue";
 import SearchUser from "~/components/atoms/SearchUser.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
+import { Volunteer } from "~/utils/models/assignment";
 
 interface FiltersData {
   teams: Team[];
@@ -56,19 +57,22 @@ export default Vue.extend({
     };
   },
   computed: {
-    filteredUsers(): CompleteUserWithPermissions[] {
-      //TODO : Use Assignment store
-      let filteredUsers = this.$accessor.user.users;
+    filteredVolunteers(): Volunteer[] {
+      let filteredUsers = this.$accessor.assignment.volunteers;
 
       // Keep users with hard or soft teams
       filteredUsers = filteredUsers.filter(
-        (user) => user.team.includes("hard") || user.team.includes("soft")
+        (user) =>
+          user.teams.map((team) => team.code).includes("hard") ||
+          user.teams.map((team) => team.code).includes("soft")
       );
 
       // Keep users with the selected teams
       if (this.teams.length > 0) {
         filteredUsers = filteredUsers.filter((user) =>
-          this.teams.some((team) => user.team.includes(team.code))
+          this.teams.some((team) =>
+            user.teams.map((t) => t.code).includes(team.code)
+          )
         );
       }
 
@@ -83,8 +87,10 @@ export default Vue.extend({
       if (this.hasLicense !== undefined) {
         filteredUsers = filteredUsers.filter(
           (user) =>
-            (this.hasLicense && user.team.includes("conducteur")) ||
-            (!this.hasLicense && !user.team.includes("conducteur"))
+            (this.hasLicense &&
+              user.teams.map((t) => t.code).includes("conducteur")) ||
+            (!this.hasLicense &&
+              !user.teams.map((t) => t.code).includes("conducteur"))
         );
       }
 

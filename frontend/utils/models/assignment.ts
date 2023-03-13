@@ -1,10 +1,8 @@
-import { FT } from "./ft";
-import { Timeslot, User } from "./repo";
+import { Team } from "./team";
+import { User } from "./user";
 
-export interface Assignment {
-  name: string;
-  user: User;
-  FT: FT;
-  timeslot: Timeslot;
-  by: User;
+export interface Volunteer extends User {
+  charisma: number;
+  comment?: string;
+  teams: Team[];
 }

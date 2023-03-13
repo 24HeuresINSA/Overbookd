@@ -19,19 +19,20 @@
 <script lang="ts">
 import Vue from "vue";
 import FilterableUserList from "~/components/organisms/assignment/FilterableUserList.vue";
-import { CompleteUser } from "~/utils/models/user";
+import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
   name: "Assignment",
   components: { FilterableUserList },
   computed: {
-    users(): CompleteUser[] {
-      //TODO : Use Assignment store
-      return this.$accessor.user.users;
+    volunteers(): Volunteer[] {
+      return this.$accessor.assignment.volunteers;
     },
   },
   async mounted() {
-    if (!this.users.length) await this.$accessor.user.fetchUsers();
+    if (!this.volunteers.length) {
+      await this.$accessor.assignment.fetchVolunteers();
+    }
   },
   /*data() {
     return {

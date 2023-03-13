@@ -2,7 +2,8 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
-import { User } from "~/utils/models/repo";
+import { User as UserV1 } from "~/utils/models/repo";
+import { User } from "~/utils/models/user";
 import {
   castToUserModification,
   castUsersWithPermissionsWithDate,
@@ -10,7 +11,6 @@ import {
   castUserWithPermissionsWithDate,
   CompleteUser,
   CompleteUserWithPermissions,
-  Friend,
   UserCreation,
 } from "~/utils/models/user";
 
@@ -19,12 +19,11 @@ const UserRepo = RepoFactory.userRepo;
 export const state = () => ({
   me: {} as CompleteUser,
   users: [] as CompleteUserWithPermissions[],
-  usernames: [] as Partial<User>[],
+  usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
 
-  friends: [] as Friend[],
-  mFriends: [] as Friend[],
-  selectedUserFriends: [] as Friend[],
+  friends: [] as User[],
+  mFriends: [] as User[],
 });
 
 export type UserState = ReturnType<typeof state>;
@@ -39,9 +38,9 @@ export const mutations = mutationTree(state, {
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
   },
-  SET_USERNAMES(state: UserState, data: User[]) {
+  SET_USERNAMES(state: UserState, data: UserV1[]) {
     data.sort(
-      ({ username: username1 }: User, { username: username2 }: User) => {
+      ({ username: username1 }: UserV1, { username: username2 }: UserV1) => {
         if (username1 && username2) {
           return username1 > username2 ? 1 : -1;
         }
@@ -56,19 +55,16 @@ export const mutations = mutationTree(state, {
       state.users = updateItemToList(state.users, index, data);
     }
   },
-  SET_FRIENDS(state: UserState, friends: Friend[]) {
+  SET_FRIENDS(state: UserState, friends: User[]) {
     state.friends = friends;
   },
-  SET_MY_FRIENDS(state: UserState, friends: Friend[]) {
+  SET_MY_FRIENDS(state: UserState, friends: User[]) {
     state.mFriends = friends;
   },
-  SET_SELECTED_USER_FRIENDS(state: UserState, friends: Friend[]) {
-    state.selectedUserFriends = friends;
-  },
-  ADD_MY_FRIEND(state: UserState, friend: Friend) {
+  ADD_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = [...state.mFriends, friend];
   },
-  REMOVE_MY_FRIEND(state: UserState, friend: Friend) {
+  REMOVE_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
   },
 });
@@ -124,12 +120,7 @@ export const actions = actionTree(
         commit("SET_MY_FRIENDS", res.data);
       }
     },
-    async fetchSelectedUserFriends({ commit }, userId: number) {
-      const res = await safeCall(this, UserRepo.getUserFriends(this, userId));
-      if (!res) return;
-      commit("SET_SELECTED_USER_FRIENDS", res.data);
-    },
-    async addFriend({ commit }, friend: Friend) {
+    async addFriend({ commit }, friend: User) {
       const res = await safeCall(this, UserRepo.addFriend(this, friend.id), {
         successMessage: `${friend.firstname} a été ajouté à tes amis 🎉`,
         errorMessage: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
@@ -138,7 +129,7 @@ export const actions = actionTree(
         commit("ADD_MY_FRIEND", res.data);
       }
     },
-    async removeFriend({ commit }, friend: Friend) {
+    async removeFriend({ commit }, friend: User) {
       const res = await safeCall(this, UserRepo.removeFriend(this, friend.id), {
         successMessage: `${friend.firstname} a été supprimé de tes amis`,
         errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,

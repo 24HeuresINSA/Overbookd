@@ -2,17 +2,21 @@
   <div class="user-card" @contextmenu.prevent="openCalendar">
     <div>
       {{ formattedUserInformations }}
-      <v-tooltip v-if="user.comment" top>
+      <v-tooltip v-if="volunteer.comment" top>
         <template #activator="{ on, attrs }">
           <v-icon right small v-bind="attrs" class="comment-icon" v-on="on">
             mdi-comment
           </v-icon>
         </template>
-        <span>{{ user.comment }}</span>
+        <span>{{ volunteer.comment }}</span>
       </v-tooltip>
     </div>
     <div>
-      <MiniUserBadge v-for="team of sortedUserTeams" :key="team" :team="team" />
+      <MiniUserBadge
+        v-for="team of sortedVolunteerTeams"
+        :key="team"
+        :team="team"
+      ></MiniUserBadge>
     </div>
   </div>
 </template>
@@ -21,40 +25,41 @@
 import Vue from "vue";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 import { moveAtFirstIndex } from "~/utils/functions/list";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { Volunteer } from "~/utils/models/assignment";
+import { Team } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "UserResume",
+  name: "VolunteerResume",
   components: { MiniUserBadge },
   props: {
-    user: {
-      type: Object as () => CompleteUserWithPermissions,
+    volunteer: {
+      type: Object as () => Volunteer,
       required: true,
     },
   },
   computed: {
-    sortedUserTeams(): string[] {
-      let filteredTeams = this.user.team.filter(
-        (team) => team !== "admin" && team !== "orga"
+    sortedVolunteerTeams(): Team[] {
+      let filteredTeams = this.volunteer.teams.filter(
+        (team) => team.code !== "admin" && team.code !== "orga"
       );
-      const softIndex = filteredTeams.indexOf("soft");
+      const softIndex = filteredTeams.findIndex((team) => team.code === "soft");
       if (softIndex !== -1) {
         filteredTeams = moveAtFirstIndex(filteredTeams, softIndex);
       }
-      const hardIndex = filteredTeams.indexOf("hard");
+      const hardIndex = filteredTeams.findIndex((team) => team.code === "hard");
       if (hardIndex !== -1) {
         filteredTeams = moveAtFirstIndex(filteredTeams, hardIndex);
       }
       return filteredTeams;
     },
     formattedUserInformations(): string {
-      return `${formatUsername(this.user)} | ${this.user.charisma}`;
+      return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
     },
   },
   methods: {
     openCalendar() {
-      window.open(`/calendar/${this.user.id}`, "_blank");
+      window.open(`/calendar/${this.volunteer.id}`, "_blank");
     },
   },
 });
