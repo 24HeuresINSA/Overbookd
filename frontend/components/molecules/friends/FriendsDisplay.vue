@@ -37,12 +37,12 @@ export default Vue.extend({
   },
   methods: {
     selectVolunteer(friend: User) {
-      const user = this.$accessor.assignment.volunteers.find(
-        (user) => user.id === friend.id
+      const volunteer = this.$accessor.assignment.volunteers.find(
+        (volunteer) => volunteer.id === friend.id
       );
-      if (!user) return;
-      this.$accessor.assignment.setSelectedVolunteer(user);
-      this.$accessor.assignment.fetchSelectedVolunteerFriends(user.id);
+      if (!volunteer) return;
+      this.$accessor.assignment.setSelectedVolunteer(volunteer);
+      this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
     },
     formatUsername(user: User): string {
       return formatUsername(user);
