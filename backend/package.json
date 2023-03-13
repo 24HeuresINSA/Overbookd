@@ -46,7 +46,7 @@
     "body-parser": "^1.20.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
-    "ejs": "^3.1.8",
+    "ejs": "^3.1.9",
     "express-basic-auth": "^1.2.1",
     "nodemailer": "^6.9.1",
     "passport": "^0.6.0",
