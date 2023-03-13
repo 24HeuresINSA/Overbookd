@@ -26,13 +26,8 @@ export default Vue.extend({
       default: () => [],
     },
   },
-  data: () => ({
-    selectedVolunteerId: -1,
-  }),
   methods: {
     selectVolunteer(volunteer: Volunteer) {
-      //TODO : Use Assignment store
-      this.selectedVolunteerId = volunteer.id;
       this.$accessor.assignment.setSelectedVolunteer(volunteer);
       this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
     },
