@@ -1,6 +1,7 @@
 import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.service';
+import { TEAM_SELECT } from 'src/team/team.service';
 export class SignaLocation {
   id: number;
   name: string;
@@ -98,16 +99,6 @@ export interface AlsoRequestedByFT {
 
 export type FtIdResponse = {
   id: number;
-};
-
-const TEAM_SELECT = {
-  select: {
-    id: true,
-    name: true,
-    code: true,
-    color: true,
-    icon: true,
-  },
 };
 
 const MINIMAL_FA_SELECT = {

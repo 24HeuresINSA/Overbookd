@@ -34,6 +34,7 @@ import { TimeWindowsModule } from './time_windows/time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
+import { AssignmentModule } from './assignment/assignment.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-
     CharismaPeriodModule,
     VolunteerAvailabilityModule,
     FriendModule,
+    AssignmentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
