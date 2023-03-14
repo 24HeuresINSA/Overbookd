@@ -13,7 +13,7 @@ type emailResetPassword = {
 };
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(private readonly mailerService: MailerService) { }
   private logger = new Logger('MailService');
 
   async mailTest({ email, username }: emailTestDto): Promise<void> {
@@ -58,6 +58,30 @@ export class MailService {
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException("Can't send reset password mail");
+    }
+  }
+
+  async mailWelcome({
+    email,
+    firstname,
+  }: { email: string; firstname: string }): Promise<void> {
+    try {
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: 'Bienvenue sur Overbookd !',
+        template: 'welcome',
+        context: {
+          email,
+          firstname,
+          loginLink: `https://${process.env.DOMAIN}/login`,
+        },
+      });
+      if (mail) {
+        this.logger.log(`Welcome mail sent to ${email}`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException("Can't send welcome mail");
     }
   }
 }

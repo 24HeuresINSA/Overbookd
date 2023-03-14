@@ -1,0 +1,36 @@
+<table style="text-align: center;">
+    <h1>Validation Overbookd</h1>
+    <p>
+      Félicitation <%= firstname %>, ton inscription sur Overbookd est dorénavant complète ! <br/>
+    </p>
+    <p>    
+      Tu peux maintenant te connecter avec ton email comme identifiant: <%= email %> 
+    </p>
+    <h2>
+      N'hésite pas à renseigner tes disponibilités. <br/>
+      <span style="color:red">N'oublie pas que plus de dispo = plus rapidement validé !!</span>
+    </h2>
+    <a
+      id="link-button"
+      href="<%= loginLink %>"
+      style="
+        background-color: green;
+        padding: 1rem 1rem 1rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        margin: 1rem;
+      "
+      >Connexion à Overbookd</a
+    >
+    <p>
+      Si le lien ne marche pas, va a cette adresse :
+      <%= loginLink %>
+    </p>
+  
+    <p>
+      Merci pour ton investissement ! <br />
+      La Team OB
+    </p>
+</table>

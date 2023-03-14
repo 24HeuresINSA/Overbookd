@@ -11,6 +11,7 @@ import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { MailService } from 'src/mail/mail.service';
 
 const SELECT_USER = {
   email: true,
@@ -84,7 +85,7 @@ export type RequiredOnTask = Period & Pick<Ft, 'id' & 'name' & 'status'>;
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private mail: MailService) {}
 
   async user(
     findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
@@ -162,6 +163,16 @@ export class UserService {
       data: newUserData,
       select: SELECT_USER,
     });
+
+    try {
+      await this.mail.mailWelcome({
+        email: payload.email,
+        firstname: payload.firstname,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
     if (!payload.teamId) return newUser;
 
     const addTeamData: Prisma.User_TeamUncheckedCreateInput = {
