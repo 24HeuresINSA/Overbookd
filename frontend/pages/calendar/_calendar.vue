@@ -1,20 +1,23 @@
 <template>
   <div>
-    <OverCalendarV2 v-model="calendarCentralDate" class="no-scroll elevation-2">
+    <OverCalendarV2
+      v-model="calendarCentralDate"
+      :events="events"
+      class="no-scroll elevation-2"
+    >
       <template #title>
         <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
         <div class="ml-2">
           <OverChips :roles="user?.team"></OverChips>
         </div>
       </template>
-      <template #event="{ event }">
-        <!-- TODO - Add FT call -->
-        <div class="text-wrap">
-          <h3>[{{ event.count }}]{{ event.name }}</h3>
-        </div>
-      </template>
       <template #interval="{ date, time }">
         <div :class="{ available: isUserAvailable(date, time) }" />
+      </template>
+      <template #event="{ event }">
+        <div class="pa-1 event underline-on-hover" @click="openFt(event.ft.id)">
+          {{ `[${event.ft.id}] ${event.ft.name}` }}
+        </div>
       </template>
     </OverCalendarV2>
   </div>
@@ -22,9 +25,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { formatUsername } from "~/utils/user/userUtils";
 import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { getColorByStatus } from "~/domain/common/status-color";
 
 export default defineComponent({
   name: "Calendar",
@@ -41,6 +46,20 @@ export default defineComponent({
     availabilities() {
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
+    ftRequests() {
+      return this.$accessor.user.selectedUserFtRequests.map(
+        ({ start, end, ft }) => ({
+          start,
+          end,
+          ft,
+          color: getColorByStatus(ft.status),
+          timed: true,
+        })
+      );
+    },
+    events() {
+      return this.ftRequests; // TODO: ajouter les créneaux affectés
+    },
     user() {
       return this.$accessor.user.selectedUser;
     },
@@ -54,8 +73,10 @@ export default defineComponent({
     }
     await Promise.all([
       this.$accessor.user.findUserById(userId),
+      this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
     ]);
+    document.title = formatUsername(this.user);
   },
   methods: {
     updateDate(date: Date) {
@@ -67,6 +88,11 @@ export default defineComponent({
         isPeriodIncludedByAnother({ start: datetime, end: datetime })
       );
     },
+    openFt(ftId: number) {
+      this.$router.push({
+        path: `/ft/${ftId}`,
+      });
+    },
   },
 });
 </script>
@@ -76,5 +102,13 @@ export default defineComponent({
   background-color: rgba(95, 219, 72, 0.45);
   height: 100%;
   width: 100%;
+}
+
+.event {
+  height: 100%;
+}
+
+.underline-on-hover:hover {
+  text-decoration: underline;
 }
 </style>

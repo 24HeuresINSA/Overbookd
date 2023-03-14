@@ -3,6 +3,7 @@ import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
+  RequiredOnTask,
   User,
   UserCreation,
   UserModification,
@@ -70,5 +71,10 @@ export default {
   },
   removeFriend(context: Context, friendId: number) {
     return context.$axios.delete<HttpStringified<User>>(`friends/${friendId}`);
+  },
+  getUserFtRequests(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<RequiredOnTask[]>>(
+      `user/${userId}/ft-requests`
+    );
   },
 };
