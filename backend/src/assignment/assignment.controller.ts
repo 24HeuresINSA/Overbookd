@@ -26,7 +26,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get()
+  @Get('volunteers')
   @HttpCode(200)
   @ApiResponse({
     status: 200,

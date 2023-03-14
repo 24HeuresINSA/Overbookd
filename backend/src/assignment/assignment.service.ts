@@ -25,6 +25,15 @@ export class AssignmentService {
     const volunteers = await this.prisma.user.findMany({
       where: {
         is_deleted: false,
+        team: {
+          some: {
+            team: {
+              code: {
+                in: ['hard', 'soft'],
+              },
+            },
+          },
+        },
       },
       select: SELECT_VOLUNTEER,
     });
