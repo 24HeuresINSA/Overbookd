@@ -14,13 +14,17 @@
       <template #interval="{ date, time }">
         <div :class="{ available: isUserAvailable(date, time) }" />
       </template>
+      <template #event="{ event }">
+        <div class="pa-1 event underline-on-hover" @click="openFt(event.ft.id)">
+          {{ `[${event.ft.id}] ${event.ft.name}` }}
+        </div>
+      </template>
     </OverCalendarV2>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { formatUsername } from "~/utils/user/userUtils";
 import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
@@ -46,7 +50,7 @@ export default defineComponent({
         ({ start, end, ft }) => ({
           start,
           end,
-          name: `[${ft.id}] ${ft.name}`,
+          ft,
           color: getColorByStatus(ft.status),
           timed: true,
         })
@@ -71,7 +75,7 @@ export default defineComponent({
       this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
     ]);
-    document.title = formatUsername(this.user);
+    document.title = this.user?.firstname + " " + this.user?.lastname;
   },
   methods: {
     updateDate(date: Date) {
@@ -83,6 +87,11 @@ export default defineComponent({
         isPeriodIncludedByAnother({ start: datetime, end: datetime })
       );
     },
+    openFt(ftId: number) {
+      this.$router.push({
+        path: `/ft/${ftId}`,
+      });
+    },
   },
 });
 </script>
@@ -92,5 +101,13 @@ export default defineComponent({
   background-color: rgba(95, 219, 72, 0.45);
   height: 100%;
   width: 100%;
+}
+
+.event {
+  height: 100%;
+}
+
+.underline-on-hover:hover {
+  text-decoration: underline;
 }
 </style>
