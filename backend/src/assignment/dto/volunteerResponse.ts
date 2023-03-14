@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Team } from 'src/ft/ftTypes';
 
 export class VolunteerResponse {
   @ApiProperty({
@@ -44,8 +43,8 @@ export class VolunteerResponse {
 
   @ApiProperty({
     required: true,
-    description: 'The teams of the volunteer',
-    type: [Team],
+    description: 'The team codes of the volunteer',
+    type: [String],
   })
-  teams: Team[];
+  teamCodes: string[];
 }

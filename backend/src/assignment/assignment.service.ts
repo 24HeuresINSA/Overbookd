@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { TEAM_SELECT } from 'src/team/team.service';
 import { VolunteerResponse } from './dto/volunteerResponse';
 
 const SELECT_VOLUNTEER = {
@@ -12,7 +11,11 @@ const SELECT_VOLUNTEER = {
   comment: true,
   team: {
     select: {
-      team: TEAM_SELECT,
+      team: {
+        select: {
+          code: true,
+        },
+      },
     },
   },
 };
@@ -21,7 +24,7 @@ const SELECT_VOLUNTEER = {
 export class AssignmentService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<VolunteerResponse[]> {
+  async findAllVolunteers(): Promise<VolunteerResponse[]> {
     const volunteers = await this.prisma.user.findMany({
       where: {
         is_deleted: false,
@@ -38,9 +41,9 @@ export class AssignmentService {
       select: SELECT_VOLUNTEER,
     });
 
-    return volunteers.map((v) => {
-      const teams = v.team.map((t) => t.team);
-      return { ...v, teams };
-    });
+    return volunteers.map((volunteer) => ({
+      ...volunteer,
+      teamCodes: volunteer.team.map((t) => t.team.code),
+    }));
   }
 }

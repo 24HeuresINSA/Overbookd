@@ -14,6 +14,8 @@ import { VolunteerResponse } from './dto/volunteerResponse';
 
 ApiBearerAuth();
 @ApiTags('assignment')
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@Permission('can-affect')
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
 })
@@ -24,8 +26,6 @@ ApiBearerAuth();
 export class AssignmentController {
   constructor(private readonly assignmentService: AssignmentService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
   @Get('volunteers')
   @HttpCode(200)
   @ApiResponse({
@@ -34,7 +34,7 @@ export class AssignmentController {
     isArray: true,
     type: VolunteerResponse,
   })
-  findAll(): Promise<VolunteerResponse[]> {
-    return this.assignmentService.findAll();
+  findAllVolunteers(): Promise<VolunteerResponse[]> {
+    return this.assignmentService.findAllVolunteers();
   }
 }
