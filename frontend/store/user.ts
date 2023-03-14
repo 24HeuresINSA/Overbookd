@@ -3,7 +3,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
-import { PeriodWithFtId, User } from "~/utils/models/user";
+import { RequiredOnTask, User } from "~/utils/models/user";
 import {
   castPeriodWithFtWithDate,
   castToUserModification,
@@ -22,7 +22,7 @@ export const state = () => ({
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
-  selectedUserFtRequests: [] as PeriodWithFtId[],
+  selectedUserFtRequests: [] as RequiredOnTask[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -36,7 +36,7 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
     state.selectedUser = data;
   },
-  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: PeriodWithFtId[]) {
+  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: RequiredOnTask[]) {
     state.selectedUserFtRequests = periods;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {

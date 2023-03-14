@@ -91,7 +91,7 @@ export interface CompleteUserWithPermissions extends CompleteUser {
   permissions: string[];
 }
 
-export interface PeriodWithFtId {
+export interface RequiredOnTask {
   start: Date;
   end: Date;
   ft: {
@@ -151,8 +151,8 @@ export function castUsersWithPermissionsWithDate(
 }
 
 export function castPeriodWithFtWithDate(
-  periods: HttpStringified<PeriodWithFtId[]>
-): PeriodWithFtId[] {
+  periods: HttpStringified<RequiredOnTask[]>
+): RequiredOnTask[] {
   return periods.map(({ start, end, ft }) => ({
     start: new Date(start),
     end: new Date(end),
