@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { formatUsername } from "~/utils/user/userUtils";
 import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
@@ -75,7 +76,7 @@ export default defineComponent({
       this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
     ]);
-    document.title = this.user?.firstname + " " + this.user?.lastname;
+    document.title = formatUsername(this.user);
   },
   methods: {
     updateDate(date: Date) {
