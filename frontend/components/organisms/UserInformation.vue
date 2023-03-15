@@ -16,11 +16,11 @@
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newRole"
-                label="Ajouter un role"
+                label="Choix de l'équipe"
                 :items="teamNames"
               >
               </v-select>
-              <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
+              <v-btn text @click="addRemoveRole()">Ajouter/Retirer</v-btn>
             </div>
 
             <v-container>
