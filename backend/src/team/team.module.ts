@@ -9,11 +9,6 @@ import { TeamService } from './team.service';
 @Module({
   imports: [CommonModule],
   controllers: [TeamController],
-  providers: [
-    PrismaService,
-    UserService,
-    TeamService,
-    MailService
-  ],
+  providers: [PrismaService, UserService, TeamService, MailService],
 })
 export class TeamModule {}

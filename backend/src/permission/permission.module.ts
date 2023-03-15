@@ -16,7 +16,7 @@ import { PermissionService } from './permission.service';
     TeamService,
     UserService,
     SlugifyService,
-    MailService
+    MailService,
   ],
 })
 export class PermissionModule {}

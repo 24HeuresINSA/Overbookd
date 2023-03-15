@@ -13,7 +13,7 @@ type emailResetPassword = {
 };
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) { }
+  constructor(private readonly mailerService: MailerService) {}
   private logger = new Logger('MailService');
 
   async mailTest({ email, username }: emailTestDto): Promise<void> {
@@ -64,7 +64,10 @@ export class MailService {
   async mailWelcome({
     email,
     firstname,
-  }: { email: string; firstname: string }): Promise<void> {
+  }: {
+    email: string;
+    firstname: string;
+  }): Promise<void> {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
