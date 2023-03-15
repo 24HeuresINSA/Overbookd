@@ -13,23 +13,23 @@ import { AssignmentService } from './assignment.service';
 import { VolunteerResponse } from './dto/volunteerResponse';
 import { VolunteerService } from './volunteer.service';
 
-ApiBearerAuth();
+@ApiBearerAuth()
 @ApiTags('assignment')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
-@Permission('can-affect')
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('assignments')
+@Controller('assignment')
 export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
     private readonly volunteerService: VolunteerService,
   ) {}
 
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
   @Get('volunteers')
   @HttpCode(200)
   @ApiResponse({
