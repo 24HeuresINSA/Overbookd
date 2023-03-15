@@ -1,0 +1,64 @@
+name;ponctual;consumable;category
+Baton de colle (unité);1;1;matos->adhésif
+Scotch barnier coloré (rouleau 10m);1;1;matos->adhésif
+Scotch barnier noir (rouleau 10m);1;1;matos->adhésif
+Scotch cristal 25mm (rouleau 25m);1;1;matos->adhésif
+Scotch cristal 50mm (rouleau 25m);1;1;matos->adhésif
+Scotch de bureau (rouleau 25m);1;1;matos->adhésif
+Scotch double face 12mm (rouleau 25m);1;1;matos->adhésif
+Scotch double face 50mm (rouleau 25m);1;1;matos->adhésif
+Scotch Gaffer aluminium 50mm (rouleau 25m);1;1;matos->adhésif
+Scotch Gaffer coloré 50mm (rouleau 25m);1;1;matos->adhésif
+Scotch Gaffer noir 50mm (rouleau 25m);1;1;matos->adhésif
+Scotch marron PP 50mm (rouleau 25m);1;1;matos->adhésif
+Scotch masquage papier 25mm (rouleau 25m);1;1;matos->adhésif
+Scotch masquage papier 50mm (rouleau 25m);1;1;matos->adhésif
+Velcros blanc (m);1;1;matos->adhésif
+Velcros noir (m);1;1;matos->adhésif
+Agrafe de bureau (x100);1;1;matos->bureautique
+Papier blanc A4 (x500);1;1;matos->bureautique
+Pochette à plastifier A3 (unité);1;1;matos->bureautique
+Pochette à plastifier A4 (unité);1;1;matos->bureautique
+Pochette plastique classeur A4 (unité);1;1;matos->bureautique
+Trombone (x100);1;1;matos->bureautique
+Papier alu (rouleau 100m);1;1;matos->cuisine
+Papier cuisson (rouleau 50m);1;1;matos->cuisine
+Sachet papier sandwich (x100);1;1;matos->cuisine
+Serviette papier (x100);1;1;matos->cuisine
+Fil de cuivre Ø1,5 (m);1;1;matos->elec
+Fil étain (m);1;1;matos->elec
+Pile 6LP3146 9V (unité);1;1;matos->elec
+Pile AA 1,5V (unité);1;1;matos->elec
+Pile AAA 1,5V (unité);1;1;matos->elec
+Pile I23 3V (unité);1;1;matos->elec
+Pile LR14 1,5V (unité);1;1;matos->elec
+Corde drisse (m);1;1;matos->ficelle
+Elastique tendeur Ø10 (m);1;1;matos->ficelle
+Elastique tendeur Ø4 (m);1;1;matos->ficelle
+Ficelle (m);1;1;matos->ficelle
+Ficelle plastique (m);1;1;matos->ficelle
+Lubrifiant méca fluide (125ml);1;1;matos->mécanique
+Lubrifiant méca fluide (300ml);1;1;matos->mécanique
+Disque à tronçonner (unité);1;1;matos->outillage
+Disque de ponçage 125grain (unité);1;1;matos->outillage
+Disque de ponçage 80grain (unité);1;1;matos->outillage
+Disque flap (unité);1;1;matos->outillage
+Papier à poncer 120grain (m);1;1;matos->outillage
+Papier à poncer 80grain (m);1;1;matos->outillage
+Capotes M/F (unité);1;1;matos->prévention
+Masque FFP1 (unité);1;1;matos->prévention
+Rubalise (rouleau 50m);1;1;matos->prévention
+Bande perforée acier zinc (m);1;1;matos->quincaillerie
+Boulon H M6 L50 (unité);1;1;matos->quincaillerie
+Câble acier Ø3 (m);1;1;matos->quincaillerie
+Clou Ø2,4 L50 (unité);1;1;matos->quincaillerie
+Clou Ø2,7 L55 (unité);1;1;matos->quincaillerie
+Clou Ø3,5 L80 (unité);1;1;matos->quincaillerie
+Colson 150mm (unité);1;1;matos->quincaillerie
+Colson 350mm (unité);1;1;matos->quincaillerie
+Colson 500mm (unité);1;1;matos->quincaillerie
+Ecrou M8 (unité);1;1;matos->quincaillerie
+Fil de fer (rouleau 50m);1;1;matos->quincaillerie
+Rondelle M14 (unité);1;1;matos->quincaillerie
+Serre câble étrier Ø3-4mm (unité);1;1;matos->quincaillerie
+Serre câble plat Ø3-4mm (unité);1;1;matos->quincaillerie
