@@ -125,3 +125,12 @@ export class UserModificationDto {
   @IsNumber()
   charisma?: number;
 }
+
+export class UserCommentDto {
+  @ApiProperty({
+    required: true,
+    description: 'The comment of the user',
+  })
+  @IsString()
+  comment: string;
+}
