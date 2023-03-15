@@ -11,6 +11,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { AssignmentService } from './assignment.service';
 import { VolunteerResponse } from './dto/volunteerResponse';
+import { VolunteerService } from './volunteer.service';
 
 ApiBearerAuth();
 @ApiTags('assignment')
@@ -22,9 +23,12 @@ ApiBearerAuth();
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('assignment')
+@Controller('assignments')
 export class AssignmentController {
-  constructor(private readonly assignmentService: AssignmentService) {}
+  constructor(
+    private readonly assignmentService: AssignmentService,
+    private readonly volunteerService: VolunteerService,
+  ) {}
 
   @Get('volunteers')
   @HttpCode(200)
@@ -35,6 +39,6 @@ export class AssignmentController {
     type: VolunteerResponse,
   })
   findAllVolunteers(): Promise<VolunteerResponse[]> {
-    return this.assignmentService.findAllVolunteers();
+    return this.volunteerService.findAllVolunteers();
   }
 }

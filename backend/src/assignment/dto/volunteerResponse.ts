@@ -46,5 +46,5 @@ export class VolunteerResponse {
     description: 'The team codes of the volunteer',
     type: [String],
   })
-  teamCodes: string[];
+  teams: string[];
 }
