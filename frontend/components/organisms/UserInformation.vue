@@ -20,7 +20,7 @@
                 :items="teamNames"
               >
               </v-select>
-              <v-btn text @click="addRemoveRole()">Ajouter/Retier</v-btn>
+              <v-btn text @click="addRemoveRole()">Ajouter/Retirer</v-btn>
             </div>
 
             <v-container>
