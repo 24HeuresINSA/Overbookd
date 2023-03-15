@@ -41,6 +41,7 @@
             ></v-switch>
             <v-switch v-model="filters.myFTs" label="Mes FT"></v-switch>
             <v-switch
+              v-if="hasHumanRole"
               v-model="filters.myFTsToReview"
               label="Mes FT à valider"
             ></v-switch>
@@ -249,6 +250,9 @@ export default Vue.extend({
     },
     isAdmin(): boolean {
       return this.$accessor.user.hasPermission("admin");
+    },
+    hasHumanRole(): boolean {
+      return this.$accessor.user.me.team.indexOf("humain") !== -1;
     },
     validators() {
       return this.$accessor.team.ftValidators;

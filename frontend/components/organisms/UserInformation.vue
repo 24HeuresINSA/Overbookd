@@ -16,7 +16,7 @@
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newRole"
-                label="Ajouter un role"
+                label="Choix de l'équipe"
                 :items="teamNames"
               >
               </v-select>
