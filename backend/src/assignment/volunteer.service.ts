@@ -41,9 +41,16 @@ export class VolunteerService {
       select: SELECT_VOLUNTEER,
     });
 
-    return volunteers.map((volunteer) => ({
-      ...volunteer,
-      teams: volunteer.team.map((t) => t.team.code),
-    }));
+    return volunteers.map(
+      ({ id, firstname, lastname, nickname, charisma, comment, team }) => ({
+        id,
+        firstname,
+        lastname,
+        nickname,
+        charisma,
+        comment,
+        teams: team.map((t) => t.team.code),
+      }),
+    );
   }
 }
