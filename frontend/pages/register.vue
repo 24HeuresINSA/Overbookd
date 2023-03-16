@@ -125,8 +125,6 @@
               label="Commentaire"
               hint="Laisse nous un petit mot. 💌"
               persistent-hint
-              :counter="200"
-              :rules="[rules.maxCharacters]"
             ></v-textarea>
           </v-form>
           <v-btn color="primary" @click="step = 4"> On se capte 🤙 </v-btn>
@@ -182,7 +180,6 @@ import {
   isMobilePhoneNumber,
   password,
   isSame,
-  maxCharacters,
 } from "~/utils/rules/inputRules";
 
 interface RegisterData extends InputRulesData {
@@ -225,7 +222,6 @@ export default Vue.extend({
         insaEmail: isInsaEmail,
         mobilePhone: isMobilePhoneNumber,
         password: password,
-        maxCharacters: maxCharacters(200),
       },
     };
   },

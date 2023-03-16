@@ -188,10 +188,10 @@ export const actions = actionTree(
       }
     },
 
-    async updateComment({ commit, state }, comment: string) {
+    async updateComment({ commit }, comment: string) {
       const res = await safeCall(
         this,
-        UserRepo.updateComment(this, state.me.id, comment),
+        UserRepo.updateMyUser(this, { comment }),
         {
           successMessage: "Commentaire mis à jour ! 🎉",
           errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",

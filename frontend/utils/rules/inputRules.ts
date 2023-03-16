@@ -85,15 +85,6 @@ export function required(value: any) {
   return Boolean(value) || "Ce champ est requis";
 }
 
-export function maxCharacters(maxCharacters: number) {
-  return function (value: string | null) {
-    return (
-      (value && value.length <= maxCharacters) ||
-      `${maxCharacters} caractères maximum`
-    );
-  };
-}
-
 export interface InputRulesData {
   rules: Record<string, (value: string | null) => string | boolean>;
 }

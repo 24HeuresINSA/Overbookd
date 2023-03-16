@@ -8,10 +8,7 @@ import {
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
-import {
-  UserCommentDto,
-  UserModificationDto,
-} from './dto/userModification.dto';
+import { UserModificationDto } from './dto/userModification.dto';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { MailService } from '../mail/mail.service';
@@ -111,6 +108,21 @@ export class UserService {
       where: findCondition,
       select: { password: true },
     });
+  }
+
+  async patchCurrentUser(
+    id: number,
+    user: Partial<UserModificationDto>,
+  ): Promise<UserWithTeamAndPermission | null> {
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: user,
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
+      },
+    });
+    return this.getUserWithTeamAndPermission(updatedUser);
   }
 
   async users(params: {
@@ -213,21 +225,6 @@ export class UserService {
       },
       data: userData,
       where: { id: targetUserId },
-    });
-    return this.getUserWithTeamAndPermission(user);
-  }
-
-  async updateUserComment(
-    id: number,
-    commentData: UserCommentDto,
-  ): Promise<UserWithTeamAndPermission> {
-    const user = await this.prisma.user.update({
-      select: {
-        ...SELECT_USER,
-        ...SELECT_USER_TEAM,
-      },
-      data: { comment: commentData.comment },
-      where: { id },
     });
     return this.getUserWithTeamAndPermission(user);
   }

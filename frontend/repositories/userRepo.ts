@@ -55,10 +55,10 @@ export default {
       userData
     );
   },
-  updateComment(context: Context, userId: number, comment: string) {
+  updateMyUser(context: Context, userData: Partial<UserModification>) {
     return context.$axios.patch<HttpStringified<CompleteUserWithPermissions>>(
-      `${resource}/${userId}/comment`,
-      { comment }
+      `${resource}/me`,
+      userData
     );
   },
   deleteUser(context: Context, userId: number) {

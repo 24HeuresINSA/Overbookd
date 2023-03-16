@@ -20,10 +20,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserCreationDto } from './dto/userCreation.dto';
-import {
-  UserCommentDto,
-  UserModificationDto,
-} from './dto/userModification.dto';
+import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import {
   RequiredOnTask,
@@ -68,8 +65,22 @@ export class UserController {
   })
   async getCurrentUser(
     @Request() req: RequestWithUserPayload,
-  ): Promise<UserWithoutPassword> {
+  ): Promise<UserWithTeamAndPermission | null> {
     return this.userService.user({ id: req.user.userId ?? req.user.id });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Patch('me')
+  @ApiResponse({
+    status: 200,
+    description: 'Update a current user',
+  })
+  async updateCurrentUser(
+    @Request() req: RequestWithUserPayload,
+    @Body() userData: Partial<UserModificationDto>,
+  ): Promise<UserWithTeamAndPermission | null> {
+    return this.userService.patchCurrentUser(req.user.id, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -175,20 +186,6 @@ export class UserController {
       user,
       new JwtUtil(req.user),
     );
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @Patch(':id/comment')
-  @ApiBody({
-    description: 'Update a user comment',
-    type: UserModificationDto,
-  })
-  updateUserComment(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() commentData: UserCommentDto,
-  ): Promise<UserWithTeamAndPermission> {
-    return this.userService.updateUserComment(id, commentData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
