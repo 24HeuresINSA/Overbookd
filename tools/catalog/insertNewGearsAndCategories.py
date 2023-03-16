@@ -1,6 +1,7 @@
 import csv
 import os
 from typing import Dict, List
+
 import requests
 
 TOKEN = "YOUR_TOKEN"
@@ -9,7 +10,7 @@ DOMAIN = "preprod.overbookd.24heures.org"
 
 def fetchExistingCategories():
     categoryList = requests.get(
-        f"https://{DOMAIN}/api/categories", headers={"Authorization": f"Bearer {TOKEN}"}).json()
+        f"https://{DOMAIN}/api/categories", headers={"Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
     categories = dict()
     for category in categoryList:
         categories.update({category.get("path"): {"path": category.get(
@@ -20,7 +21,7 @@ def fetchExistingCategories():
 
 def getCategoryId(categoryName: str) -> int:
     categories = requests.get(f"https://{DOMAIN}/api/categories", headers={
-                              "Authorization": f"Bearer {TOKEN}"}, params={"name": categoryName}).json()
+                              "Authorization": f"Bearer {TOKEN}"}, params={"name": categoryName}, timeout=5).json()
     [category] = [category for category in categories if category.get(
         "path") == categoryName]
     return int(category.get("id"))
@@ -52,12 +53,12 @@ def createCategory(name: str, parent: int = None):
     data = {"name": name.upper()}
     if (parent):
         data.update({"parent": parent})
-    return requests.post(f"https://{DOMAIN}/api/categories", json=data, headers={"Authorization": f"Bearer {TOKEN}"}).json()
+    return requests.post(f"https://{DOMAIN}/api/categories", json=data, headers={"Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
 
 
 def createGear(name: str, category: int, ponctualGear: bool = False):
     print(f"Try to create gear {name} with {category} as category")
-    return requests.post(f"https://{DOMAIN}/api/gears", json={"name": name, "category": category, "isPonctualUsage": ponctualGear}, headers={"Authorization": f"Bearer {TOKEN}"}).json()
+    return requests.post(f"https://{DOMAIN}/api/gears", json={"name": name, "category": category, "isPonctualUsage": ponctualGear}, headers={"Authorization": f"Bearer {TOKEN}"}, timeout=5).json()
 
 
 def extractFromFile(categories: Dict, filename: str = "catalog-fa-after-inventory.csv"):
