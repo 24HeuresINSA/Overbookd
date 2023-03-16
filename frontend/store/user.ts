@@ -188,6 +188,20 @@ export const actions = actionTree(
       }
     },
 
+    async updateComment({ commit }, comment: string) {
+      const res = await safeCall(
+        this,
+        UserRepo.updateMyUser(this, { comment }),
+        {
+          successMessage: "Commentaire mis à jour ! 🎉",
+          errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",
+        }
+      );
+      if (!res) return;
+      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
+      commit("SET_USER", castUserWithDate(res.data));
+    },
+
     async deleteUser({ commit, state }, userId: number) {
       const res = await safeCall(this, UserRepo.deleteUser(this, userId), {
         successMessage: "Utilisateur supprimé ! 🎉",

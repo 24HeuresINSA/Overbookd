@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Request,
@@ -64,8 +65,22 @@ export class UserController {
   })
   async getCurrentUser(
     @Request() req: RequestWithUserPayload,
-  ): Promise<UserWithoutPassword> {
+  ): Promise<UserWithTeamAndPermission | null> {
     return this.userService.user({ id: req.user.userId ?? req.user.id });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Patch('me')
+  @ApiResponse({
+    status: 200,
+    description: 'Update a current user',
+  })
+  async updateCurrentUser(
+    @Request() req: RequestWithUserPayload,
+    @Body() userData: Partial<UserModificationDto>,
+  ): Promise<UserWithTeamAndPermission | null> {
+    return this.userService.updateUserPersonnalData(req.user.id, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

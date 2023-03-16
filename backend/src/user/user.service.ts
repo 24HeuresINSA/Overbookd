@@ -1,17 +1,17 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
 import { Ft, Prisma, User } from '@prisma/client';
-import { Username } from './dto/userName.dto';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
+import { MailService } from '../mail/mail.service';
+import { PrismaService } from '../prisma.service';
 import {
   retrievePermissions,
   TeamWithNestedPermissions,
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { Period } from 'src/volunteer-availability/domain/period.model';
-import { MailService } from '../mail/mail.service';
+import { Username } from './dto/userName.dto';
 
 const SELECT_USER = {
   email: true,
@@ -108,6 +108,21 @@ export class UserService {
       where: findCondition,
       select: { password: true },
     });
+  }
+
+  async updateUserPersonnalData(
+    id: number,
+    user: Partial<UserModificationDto>,
+  ): Promise<UserWithTeamAndPermission | null> {
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: user,
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAM,
+      },
+    });
+    return this.getUserWithTeamAndPermission(updatedUser);
   }
 
   async users(params: {

@@ -55,6 +55,12 @@ export default {
       userData
     );
   },
+  updateMyUser(context: Context, userData: Partial<UserModification>) {
+    return context.$axios.patch<HttpStringified<CompleteUserWithPermissions>>(
+      `${resource}/me`,
+      userData
+    );
+  },
   deleteUser(context: Context, userId: number) {
     return context.$axios.delete<void>(`${resource}/${userId}`);
   },
