@@ -80,7 +80,7 @@ export class UserController {
     @Request() req: RequestWithUserPayload,
     @Body() userData: Partial<UserModificationDto>,
   ): Promise<UserWithTeamAndPermission | null> {
-    return this.userService.patchCurrentUser(req.user.id, userData);
+    return this.userService.updateUserPersonnalData(req.user.id, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

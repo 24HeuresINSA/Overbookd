@@ -17,24 +17,21 @@ import Vue from "vue";
 export default Vue.extend({
   name: "CommentEditionCard",
   data: () => ({
-    comment: "",
+    localComment: "",
   }),
   computed: {
-    savedComment(): string {
-      return this.$accessor.user.me.comment ?? "";
+    comment: {
+      get(): string {
+        return this.$accessor.user.me.comment ?? "";
+      },
+      set(comment: string) {
+        this.localComment = comment;
+      },
     },
-  },
-  watch: {
-    savedComment() {
-      this.comment = this.savedComment;
-    },
-  },
-  mounted() {
-    this.comment = this.savedComment;
   },
   methods: {
     saveComment() {
-      this.$accessor.user.updateComment(this.comment);
+      this.$accessor.user.updateComment(this.localComment);
     },
   },
 });
