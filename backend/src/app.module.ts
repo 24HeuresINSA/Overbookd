@@ -3,6 +3,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AssignmentModule } from './assignment/assignment.module';
 import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { CharismaPeriodModule } from './charisma_period/charisma_period.module';
@@ -85,6 +86,7 @@ import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-
     CharismaPeriodModule,
     VolunteerAvailabilityModule,
     FriendModule,
+    AssignmentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
