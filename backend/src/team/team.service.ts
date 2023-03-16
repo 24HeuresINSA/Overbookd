@@ -5,6 +5,16 @@ import { PrismaService } from 'src/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 
+export const TEAM_SELECT = {
+  select: {
+    id: true,
+    name: true,
+    code: true,
+    color: true,
+    icon: true,
+  },
+};
+
 @Injectable()
 export class TeamService {
   constructor(

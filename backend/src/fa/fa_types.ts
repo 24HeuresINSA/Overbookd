@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { TEAM_SELECT } from 'src/team/team.service';
 
 export type FaResponse = Prisma.faGetPayload<{
   select: typeof COMPLETE_FA_SELECT;
@@ -51,15 +52,7 @@ export const COMPLETE_FA_SELECT = {
           lastname: true,
         },
       },
-      Team: {
-        select: {
-          id: true,
-          name: true,
-          color: true,
-          icon: true,
-          code: true,
-        },
-      },
+      Team: TEAM_SELECT,
     },
   },
   fa_refuse: {
@@ -70,15 +63,7 @@ export const COMPLETE_FA_SELECT = {
           lastname: true,
         },
       },
-      Team: {
-        select: {
-          id: true,
-          name: true,
-          color: true,
-          icon: true,
-          code: true,
-        },
-      },
+      Team: TEAM_SELECT,
     },
   },
   fa_electricity_needs: {
