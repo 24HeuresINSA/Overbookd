@@ -771,6 +771,25 @@ export const actions = actionTree(
       commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
 
+    async removeGearRequest({ commit }, gearRequest: StoredGearRequest<"FA">) {
+      const { seeker, gear, rentalPeriod } = gearRequest;
+      const res = safeCall(
+        this,
+        RepoFactory.faRepo.deleteGearRequest(
+          this,
+          seeker.id,
+          gear.id,
+          rentalPeriod.id
+        ),
+        {
+          successMessage: "La demande de matériel a été supprimée 🗑️",
+          errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
+        }
+      );
+      if (!res) return;
+      commit("REMOVE_GEAR_REQUEST", gearRequest);
+    },
+
     async updateGearPeriod({ commit, state, dispatch }, rentalPeriod: Period) {
       const { id: rentalPeriodId, start, end } = rentalPeriod;
       if (rentalPeriodId > 1000) {
