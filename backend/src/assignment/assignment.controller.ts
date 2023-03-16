@@ -14,14 +14,14 @@ import { VolunteerResponse } from './dto/volunteerResponse';
 import { VolunteerService } from './volunteer.service';
 
 @ApiBearerAuth()
-@ApiTags('assignment')
+@ApiTags('assignments')
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('assignment')
+@Controller('assignments')
 export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
