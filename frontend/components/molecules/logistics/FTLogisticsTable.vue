@@ -56,7 +56,7 @@ export default Vue.extend({
   },
   methods: {
     deleteGear(gear: Gear) {
-      this.$accessor.FT.removeGearRequest(gear.id);
+      this.$accessor.FT.removeGearRelatedGearRequest(gear.id);
     },
   },
 });
