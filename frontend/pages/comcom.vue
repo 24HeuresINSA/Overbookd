@@ -21,7 +21,7 @@
                 class="text-center"
               >
                 <v-btn
-                  v-if="publishAnimation.photoLink"
+                  v-show="publishAnimation.photoLink"
                   icon
                   :href="publishAnimation.photoLink"
                   target="_blank"
