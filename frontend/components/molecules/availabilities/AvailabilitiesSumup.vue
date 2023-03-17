@@ -16,16 +16,6 @@
         ></div>
       </template>
     </OverCalendarV2>
-    <div class="cta">
-      <v-btn
-        v-if="!isReadonly"
-        color="success"
-        class="cta__btn"
-        @click="saveAvailabilities"
-      >
-        Valider
-      </v-btn>
-    </div>
   </div>
 </template>
 
@@ -121,12 +111,6 @@ export default Vue.extend({
         periodToRemove
       );
     },
-    async saveAvailabilities() {
-      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        this.userId
-      );
-      this.$emit("availabilities-updated", this.userId);
-    },
   },
 });
 </script>
@@ -171,15 +155,6 @@ export default Vue.extend({
 @media (hover: hover) and (pointer: fine) {
   .event:hover:not(.read-only) {
     background-color: rgba(25, 118, 210, 0.8);
-  }
-}
-
-.cta {
-  width: 100%;
-  display: flex;
-  justify-content: right;
-  &__btn {
-    margin: 5px;
   }
 }
 </style>

@@ -253,9 +253,14 @@ export default {
       }
       return [...this.selectedUser.team, this.newRole];
     },
-    saveUser() {
-      this.$accessor.user.updateUser(this.user);
-      this.mToggle = false;
+    async saveUser() {
+      await Promise.all([
+        this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
+          this.user.id
+        ),
+        this.$accessor.user.updateUser(this.user),
+      ]);
+      this.fetchUser(this.user.id);
     },
     deleteUser() {
       this.$accessor.user.deleteUser(this.user.id);
