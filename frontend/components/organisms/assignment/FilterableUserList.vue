@@ -2,18 +2,18 @@
   <v-card class="filterable-user-list">
     <v-card-text>
       <div class="filters">
-        <SearchUser
-          v-model="user"
+        <v-text-field
+          v-model="volunteer"
           class="filters__field"
-          :boxed="false"
-        ></SearchUser>
+          label="Recherche"
+        ></v-text-field>
         <SearchTeams
           v-model="teams"
           class="filters__field"
           :boxed="false"
         ></SearchTeams>
       </div>
-      <v-divider></v-divider>
+      <v-divider />
       <div class="user-list">
         <UserList :volunteers="filteredVolunteers" />
         <p>
@@ -28,44 +28,45 @@
 
 <script lang="ts">
 import Vue from "vue";
+import Fuse from "fuse.js";
 import UserList from "~/components/molecules/users/UserList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
-import SearchUser from "~/components/atoms/SearchUser.vue";
-import { CompleteUserWithPermissions, User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 import { Volunteer } from "~/utils/models/assignment";
 
 interface FiltersData {
   teams: Team[];
-  user?: CompleteUserWithPermissions;
+  volunteer: string;
 }
 
 export default Vue.extend({
   name: "FilterableUserList",
-  components: { UserList, FriendsDisplay, SearchTeams, SearchUser },
+  components: { UserList, FriendsDisplay, SearchTeams },
   data(): FiltersData {
     return {
       teams: [],
-      user: undefined,
+      volunteer: "",
     };
   },
   computed: {
     filteredVolunteers(): Volunteer[] {
-      return this.$accessor.assignment.volunteers.filter((volunteer) => {
-        return (
-          this.filterVolunteerByValidity()(volunteer) &&
-          this.filterVolunteerByUser(this.user)(volunteer) &&
-          this.filterVolunteerByTeams(this.teams)(volunteer)
-        );
-      });
+      const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
+        (volunteer) => {
+          return (
+            this.filterVolunteerByValidity()(volunteer) &&
+            this.filterVolunteerByTeams(this.teams)(volunteer)
+          );
+        }
+      );
+      return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
     },
   },
   methods: {
     filterVolunteerByValidity(): (volunteer: Volunteer) => boolean {
       return (volunteer) =>
-        volunteer.teams.map((team) => team.code).includes("soft") ||
-        volunteer.teams.map((team) => team.code).includes("hard");
+        volunteer.teams.map((team) => team).includes("soft") ||
+        volunteer.teams.map((team) => team).includes("hard");
     },
     filterVolunteerByTeams(
       teamsSearched: Team[]
@@ -73,18 +74,19 @@ export default Vue.extend({
       return teamsSearched.length > 0
         ? (volunteer) =>
             volunteer.teams
-              .map((team) => team.code)
+              .map((team) => team)
               .some((code) =>
                 teamsSearched.map((team) => team.code).includes(code)
               )
         : () => true;
     },
-    filterVolunteerByUser(
-      userSearched?: User
-    ): (volunteer: Volunteer) => boolean {
-      return userSearched
-        ? (volunteer) => volunteer.id === userSearched.id
-        : () => true;
+    fuzzyFindVolunteer(volunteers: Volunteer[], search?: string): Volunteer[] {
+      if (!search) return volunteers;
+      const fuse = new Fuse(volunteers, {
+        keys: ["firstname", "lastname"],
+        threshold: 0.4,
+      });
+      return fuse.search(search).map((e) => e.item);
     },
   },
 });
@@ -100,7 +102,9 @@ export default Vue.extend({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 1rem;
   &__field {
+    width: 100%;
     padding-top: 0;
     margin-top: 0;
   }

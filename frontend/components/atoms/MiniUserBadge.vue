@@ -40,4 +40,8 @@ export default Vue.extend({
 });
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.v-chip {
+  margin-right: 2px;
+}
+</style>
