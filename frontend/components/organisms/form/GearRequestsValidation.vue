@@ -8,6 +8,9 @@
         dense
         :items-per-page="-1"
       >
+        <template #item.delete="{ item }">
+          <v-icon small @click="removeGearRequest(item)"> mdi-delete </v-icon>
+        </template>
         <template #[`item.gear`]="{ item }">
           {{ item.gear.name }}
         </template>
@@ -79,6 +82,7 @@ export default Vue.extend({
   data(): GearRequestsValidationData {
     return {
       headers: [
+        { text: "Suppression", value: "delete" },
         { text: "Quantite", value: "quantity" },
         { text: "Matos", value: "gear" },
         { text: "Du", value: "startDate" },
@@ -146,6 +150,15 @@ export default Vue.extend({
       }
       if (isFTStoredGearRequest(payload)) {
         return this.$accessor.FT.setDriveToGearRequest(payload);
+      }
+    },
+
+    removeGearRequest(gearRequest: StoredGearRequest<"FA" | "FT">) {
+      if (isFAStoredGearRequest(gearRequest)) {
+        return this.$accessor.FA.removeGearRequest(gearRequest);
+      }
+      if (isFTStoredGearRequest(gearRequest)) {
+        return this.$accessor.FT.removeGearRequest(gearRequest);
       }
     },
 

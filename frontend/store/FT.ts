@@ -698,7 +698,7 @@ export const actions = actionTree(
       return createdGearRequest;
     },
 
-    async removeGearRequest({ commit, state }, gearId: number) {
+    async removeGearRelatedGearRequest({ commit, state }, gearId: number) {
       const removals = await Promise.all(
         state.gearRequests
           .filter((gearRequest) => gearRequest.gear.id === gearId)
@@ -721,6 +721,20 @@ export const actions = actionTree(
       );
       if (removals.some((res) => res === undefined)) return;
       commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
+    },
+
+    async removeGearRequest({ commit }, gearRequest: StoredGearRequest<"FT">) {
+      const { seeker, gear, rentalPeriod } = gearRequest;
+      const res = safeCall(
+        this,
+        repo.deleteGearRequest(this, seeker.id, gear.id, rentalPeriod.id),
+        {
+          successMessage: "La demande de matériel a été supprimée 🗑️",
+          errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
+        }
+      );
+      if (!res) return;
+      commit("DELETE_GEAR_REQUEST", gearRequest);
     },
 
     async addGearRequestRentalPeriod(
