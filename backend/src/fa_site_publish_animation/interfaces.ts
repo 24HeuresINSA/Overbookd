@@ -4,7 +4,7 @@ import { Period } from 'src/gear-requests/gearRequests.model';
 export interface SitePublishAnimationFa {
   id: number;
   name: string;
-  timeWindows: Omit<Period, 'id'>[];
+  timeWindows: Period[];
 }
 
 export interface SitePublishAnimation

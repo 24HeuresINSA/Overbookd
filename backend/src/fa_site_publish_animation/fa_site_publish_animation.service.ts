@@ -13,7 +13,7 @@ type DatabaseSitePublishAnimationFa = Omit<
   SitePublishAnimationFa,
   'timeWindows'
 > & {
-  time_windows: Omit<Period, 'id'>[];
+  time_windows: Period[];
 };
 
 type DatabaseSitePublishAnimation = Omit<SitePublishAnimation, 'fa'> & {
@@ -52,6 +52,7 @@ export class FaSitePublishAnimationService {
         name: true,
         time_windows: {
           select: {
+            id: true,
             start: true,
             end: true,
           },

@@ -5,12 +5,17 @@ export interface Period {
   end: Date;
 }
 
+export interface PeriodWithId extends Period {
+  id: number;
+}
+
 export function castPeriods(periods: HttpStringified<Period[]>): Period[] {
   return periods.map(castPeriod);
 }
 
 function castPeriod(period: HttpStringified<Period>): Period {
   return {
+    ...period,
     start: new Date(period.start),
     end: new Date(period.end),
   };

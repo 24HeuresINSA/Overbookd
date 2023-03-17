@@ -6,7 +6,7 @@ import { LiteSitePublishAnimationResponseDto } from './liteSitePublishAnimationR
 class SitePublishAnimationFaRepresentation implements SitePublishAnimationFa {
   id: number;
   name: string;
-  timeWindows: Omit<Period, 'id'>[];
+  timeWindows: Period[];
 }
 
 export class SitePublishAnimationResponseDto
