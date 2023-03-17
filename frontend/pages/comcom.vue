@@ -20,7 +20,12 @@
                 :rowspan="publishAnimation.fa.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-btn icon :href="publishAnimation.photoLink" target="_blank">
+                <v-btn
+                  v-if="publishAnimation.photoLink"
+                  icon
+                  :href="publishAnimation.photoLink"
+                  target="_blank"
+                >
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
@@ -52,7 +57,7 @@
               v-for="timeWindow in sortTimeWindows(
                 publishAnimation.fa.timeWindows
               )"
-              :key="`${timeWindow.start}-${timeWindow.end}`"
+              :key="timeWindow.id"
             >
               <td class="text-start">
                 {{ formatDate(timeWindow.start) }}
@@ -72,7 +77,7 @@ import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import { SitePublishAnimationWithFa } from "~/utils/models/FA";
-import { Period } from "~/utils/models/period";
+import { PeriodWithId } from "~/utils/models/period";
 
 interface Comcom {
   headers: Header[];
@@ -104,7 +109,7 @@ export default Vue.extend({
     formatDate(date: Date): string {
       return formatDateWithMinutes(date);
     },
-    sortTimeWindows(timeWindows: Period[]): Period[] {
+    sortTimeWindows(timeWindows: PeriodWithId[]): PeriodWithId[] {
       const sortedTimeWindows = [...timeWindows].sort((a, b) => {
         if (a.start === b.start) {
           return new Date(a.end).getTime() - new Date(b.end).getTime();

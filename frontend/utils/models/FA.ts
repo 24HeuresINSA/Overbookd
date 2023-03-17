@@ -2,9 +2,9 @@ import { HttpStringified } from "../types/http";
 import { SubjectType } from "./feedback";
 import { FTSimplified } from "./ft";
 import { StoredGearRequest } from "./gearRequests";
+import { PeriodWithId } from "./period";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
-import { Period } from "./period";
 
 export enum Status {
   DRAFT = "DRAFT",
@@ -226,7 +226,7 @@ export interface SitePublishAnimationWithFa
   fa: {
     id: number;
     name: string;
-    timeWindows: Period[];
+    timeWindows: PeriodWithId[];
   };
 }
 
