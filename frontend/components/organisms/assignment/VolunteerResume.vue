@@ -26,7 +26,6 @@ import Vue from "vue";
 import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
 import { moveAtFirstIndex } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
-import { Team } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
@@ -39,15 +38,15 @@ export default Vue.extend({
     },
   },
   computed: {
-    sortedVolunteerTeams(): Team[] {
+    sortedVolunteerTeams(): string[] {
       let filteredTeams = this.volunteer.teams.filter(
-        (team) => team.code !== "admin" && team.code !== "orga"
+        (team) => team !== "admin" && team !== "orga"
       );
-      const softIndex = filteredTeams.findIndex((team) => team.code === "soft");
+      const softIndex = filteredTeams.findIndex((team) => team === "soft");
       if (softIndex !== -1) {
         filteredTeams = moveAtFirstIndex(filteredTeams, softIndex);
       }
-      const hardIndex = filteredTeams.findIndex((team) => team.code === "hard");
+      const hardIndex = filteredTeams.findIndex((team) => team === "hard");
       if (hardIndex !== -1) {
         filteredTeams = moveAtFirstIndex(filteredTeams, hardIndex);
       }
