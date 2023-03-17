@@ -83,7 +83,7 @@ export default Vue.extend({
     fuzzyFindVolunteer(volunteers: Volunteer[], search?: string): Volunteer[] {
       if (!search) return volunteers;
       const fuse = new Fuse(volunteers, {
-        keys: ["firstname", "lastname", "id", "charisma"],
+        keys: ["firstname", "lastname"],
         threshold: 0.4,
       });
       return fuse.search(search).map((e) => e.item);
