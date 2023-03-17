@@ -229,7 +229,7 @@ export const mutations = mutationTree(state, {
 
   DELETE_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     state.gearRequests = state.gearRequests.filter(
-      isSimilarGearRequest(gearRequest)
+      (gr) => !isSimilarGearRequest(gearRequest)(gr)
     );
   },
 
