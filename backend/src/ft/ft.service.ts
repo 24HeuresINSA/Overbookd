@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { FtStatus } from '@prisma/client';
@@ -52,6 +53,8 @@ export class FtService {
       },
     },
   };
+
+  private readonly logger = new Logger(FtService.name);
 
   async create(ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
     const createdFt = await this.prisma.ft.create({
@@ -109,6 +112,8 @@ export class FtService {
     if (!ft) {
       throw new NotFoundException(`ft #${id} not found`);
     }
+    this.logger.log(`Updating FT #${id}`);
+    this.logger.debug(updateFtDto);
     const updatedFt = await this.prisma.ft.update({
       where: { id },
       data: updateFtDto,
@@ -126,6 +131,7 @@ export class FtService {
 
     const reviewerId = ft.reviewer?.id ?? reviewerCandidate.id;
 
+    this.logger.log(`Submitting FT #${id}`);
     const submittedFt = await this.prisma.ft.update({
       where: { id },
       data: {
@@ -140,6 +146,7 @@ export class FtService {
   async remove(id: number) {
     const ft = this.prisma.ft.findUnique({ where: { id } });
     if (!ft) return;
+    this.logger.log(`Deleting FT #${id}`);
     await this.prisma.ft.update({
       where: { id },
       data: { isDeleted: true },
@@ -181,6 +188,9 @@ export class FtService {
     const data = { reviewerId };
     const where = { id: taskId };
 
+    this.logger.log(
+      `Assigning User #${reviewerId} as reviewer for FT #${taskId}`,
+    );
     const ftAssigned = await this.prisma.ft.update({
       data,
       where,
