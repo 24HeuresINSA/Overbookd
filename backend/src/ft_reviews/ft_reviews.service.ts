@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
@@ -19,6 +20,8 @@ import { TimespansGenerator } from './timespansGenerator';
 export class FtReviewsService {
   constructor(private prisma: PrismaService, private ftService: FtService) {}
 
+  private readonly logger = new Logger(FtReviewsService.name);
+
   async validateFt(
     ftId: number,
     reviewer: UpsertFtReviewsDto,
@@ -28,6 +31,7 @@ export class FtReviewsService {
       teamCode: reviewer.teamCode,
       status: reviewStatus.VALIDATED,
     };
+    this.logger.log(`Validate FT #${ftId} as ${reviewer.teamCode}`);
     const upsertReview = this.prisma.ftReview.upsert({
       where: { ftId_teamCode: { ftId, teamCode: reviewer.teamCode } },
       create: completeReview,
@@ -36,6 +40,7 @@ export class FtReviewsService {
 
     const status = await this.getNewFtStatusAfterValidation(ftId);
     if (status) {
+      this.logger.log(`Updating FT #${ftId} status to ${status}`);
       const updateStatus = this.prisma.ft.update({
         where: { id: ftId },
         data: { status },
@@ -63,12 +68,14 @@ export class FtReviewsService {
       teamCode: reviewer.teamCode,
       status: reviewStatus.REFUSED,
     };
+    this.logger.log(`Refuse FT #${ftId} as ${reviewer.teamCode}`);
     const upsertReview = this.prisma.ftReview.upsert({
       where: { ftId_teamCode: { ftId, teamCode: reviewer.teamCode } },
       create: completeReview,
       update: completeReview,
     });
 
+    this.logger.log(`Updating FT #${ftId} status to ${FtStatus.REFUSED}`);
     const updateStatus = this.prisma.ft.update({
       where: { id: ftId },
       data: { status: FtStatus.REFUSED },
@@ -97,12 +104,14 @@ export class FtReviewsService {
 
     const timespans = this.computeTimeSpans(ft);
 
+    this.logger.log(`Setting FT #${ftId} as READY`);
     const updateStatus = this.prisma.ft.update({
       where: { id: ftId },
       data: { status: FtStatus.READY },
       select: COMPLETE_FT_SELECT,
     });
 
+    this.logger.log(`Creating timespans for FT #${ftId}`);
     const insertTimespans = this.prisma.ftTimespan.createMany({
       data: timespans,
     });
@@ -114,6 +123,7 @@ export class FtReviewsService {
       createdAt: new Date(),
     };
 
+    this.logger.log(`Generating a default READY comment for FT #${ftId}`);
     const insertFeedback = this.prisma.ftFeedback.create({
       data: {
         ...feedback,
