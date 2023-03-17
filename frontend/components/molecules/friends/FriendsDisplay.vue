@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="selectedVolunteerFriends.length > 0" class="friend-list">
+  <v-card class="friend-list">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-content>
       <v-list-item-group>
@@ -8,8 +8,12 @@
           :key="friend.id"
           :value="friend.id"
           @click="selectVolunteer(friend)"
+          @contextmenu.prevent="openCalendar(friend.id)"
         >
           {{ formatUsername(friend) }}
+        </v-list-item>
+        <v-list-item v-if="selectedVolunteerFriends.length === 0">
+          Aucun ami 😢
         </v-list-item>
       </v-list-item-group>
     </v-card-content>
@@ -46,6 +50,9 @@ export default Vue.extend({
     },
     formatUsername(user: User): string {
       return formatUsername(user);
+    },
+    openCalendar(id: number) {
+      window.open(`/calendar/${id}`, "_blank");
     },
   },
 });

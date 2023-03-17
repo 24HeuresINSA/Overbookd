@@ -1,15 +1,15 @@
 <template>
   <div class="user-card" @contextmenu.prevent="openCalendar">
-    <div>
-      {{ formattedUserInformations }}
-      <v-tooltip v-if="volunteer.comment" top>
-        <template #activator="{ on, attrs }">
-          <v-icon right small v-bind="attrs" class="comment-icon" v-on="on">
-            mdi-comment
-          </v-icon>
-        </template>
-        <span>{{ volunteer.comment }}</span>
-      </v-tooltip>
+    <div class="user-card__info-row">
+      <span>{{ formattedUserInformations }}</span>
+      <div class="user-card__info-row__icons">
+        <v-tooltip v-if="volunteer.comment">
+          <template #activator="{ on, attrs }">
+            <v-icon small v-bind="attrs" v-on="on"> mdi-comment </v-icon>
+          </template>
+          <span>{{ volunteer.comment }}</span>
+        </v-tooltip>
+      </div>
     </div>
     <div>
       <MiniUserBadge
@@ -71,11 +71,14 @@ export default Vue.extend({
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
 
-.comment-icon {
-  position: absolute !important;
-  top: 0px;
-  right: 0px;
+  &__info-row {
+    display: flex;
+    justify-content: space-between;
+
+    &__icons {
+      display: flex;
+    }
+  }
 }
 </style>
