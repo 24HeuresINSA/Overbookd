@@ -215,7 +215,7 @@ export default {
         {
           icon: "mdi-human-greeting",
           title: "Affectation",
-          permission: "can-affect",
+          permission: "admin", // can-affect
           to: "/assignment",
         },
         {
