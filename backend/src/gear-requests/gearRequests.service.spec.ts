@@ -1,3 +1,4 @@
+import { formatDateWithMinutes } from '../utils/date';
 import { Gear } from '../catalog/interfaces';
 import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
 import { Status } from '../fa/dto/update-fa.dto';
@@ -392,6 +393,59 @@ describe('Gear requests', () => {
           });
           expect(createdGearRequest.rentalPeriod).toBe(MAY_23);
         });
+      });
+
+      describe('When asking for an already requested gear with an overlapping period', () => {
+        const baseForm = {
+          seekerId: GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.seeker.id,
+          quantity: GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.quantity,
+          gearId: GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.gear.id,
+        };
+        beforeEach(() => {
+          gearRequestRepository.gearRequests = [...GEAR_REQUESTS];
+        });
+        afterAll(() => {
+          gearRequestRepository.gearRequests = [];
+        });
+        describe.each`
+          newStartDate                       | newEndDate                         | expectedStartDate                  | expectedEndDate
+          ${new Date('2022-05-24T10:00:00')} | ${new Date('2022-05-24T12:00:00')} | ${MAY_24_1.start}                  | ${MAY_24_1.end}
+          ${new Date('2022-05-24T08:00:00')} | ${new Date('2022-05-24T12:00:00')} | ${new Date('2022-05-24T08:00:00')} | ${MAY_24_1.end}
+          ${new Date('2022-05-24T08:00:00')} | ${new Date('2022-05-24T09:15:00')} | ${new Date('2022-05-24T08:00:00')} | ${MAY_24_1.end}
+          ${new Date('2022-05-24T18:00:00')} | ${new Date('2022-05-24T20:00:00')} | ${MAY_24_1.start}                  | ${new Date('2022-05-24T20:00:00')}
+          ${new Date('2022-05-24T19:15:00')} | ${new Date('2022-05-24T20:00:00')} | ${MAY_24_1.start}                  | ${new Date('2022-05-24T20:00:00')}
+          ${new Date('2022-05-24T06:00:00')} | ${new Date('2022-05-24T20:00:00')} | ${new Date('2022-05-24T06:00:00')} | ${new Date('2022-05-24T20:00:00')}
+        `(
+          'When asking for 10 gants for ft installer chateau gonflable from $newStartDate to $newEndDate',
+          ({
+            newStartDate,
+            newEndDate,
+            expectedStartDate,
+            expectedEndDate,
+          }) => {
+            it(`should return existing gear request for gant with perid from ${formatDateWithMinutes(
+              expectedStartDate,
+            )} to ${formatDateWithMinutes(expectedEndDate)}`, async () => {
+              const form = {
+                ...baseForm,
+                start: newStartDate,
+                end: newEndDate,
+              };
+              const gearRequest = await gearRequestService.addTaskRequest(form);
+              const expectedRentalPeriod = {
+                id: GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE.rentalPeriod
+                  .id,
+                start: expectedStartDate,
+                end: expectedEndDate,
+              };
+              expect(gearRequest).toEqual({
+                ...GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+                rentalPeriod: expectedRentalPeriod,
+              });
+              console.log(gearRequest);
+            });
+          },
+        );
       });
 
       describe('When asking for an unknown gear', () => {

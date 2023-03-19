@@ -2,8 +2,12 @@ import {
   GearRequest,
   GearRequestCreation,
   Period,
+  Seeker,
   StoredGearRequest,
 } from "../models/gearRequests";
+
+import { Period as BasePeriod } from "../models/period";
+import { updateItemToList } from "./list";
 
 export function uniqueGearRequestPeriodsReducer(
   gearRequests: GearRequest<"FA" | "FT">[]
@@ -16,9 +20,22 @@ export function uniqueGearRequestPeriodsReducer(
 
 export function uniquePeriodsReducer(rentalPeriods: Period[]): Period[] {
   return rentalPeriods.reduce((periods, rentalPeriod) => {
-    const period = periods.find(isSimilarPeriod(rentalPeriod));
-    if (period) return periods;
-    return [...periods, rentalPeriod];
+    const similarPeriodIndex = periods.findIndex(isSimilarPeriod(rentalPeriod));
+    if (similarPeriodIndex === -1) return [...periods, rentalPeriod];
+    const similarPeriod = periods.at(similarPeriodIndex);
+    if (!similarPeriod) return [...periods, rentalPeriod];
+    const mergedPeriod = {
+      id: similarPeriod.id,
+      start: new Date(
+        Math.min(rentalPeriod.start.getTime(), similarPeriod.start.getTime())
+      ),
+      end: new Date(
+        Math.max(rentalPeriod.end.getTime(), similarPeriod.end.getTime())
+      ),
+    };
+    return uniquePeriodsReducer(
+      updateItemToList(periods, similarPeriodIndex, mergedPeriod)
+    );
   }, [] as Period[]);
 }
 
@@ -26,18 +43,7 @@ export function isSimilarPeriod(
   rentalPeriod: Period
 ): (value: Period) => boolean {
   return (period) =>
-    period.id === rentalPeriod.id || haveSamePeriodRange(period, rentalPeriod);
-}
-
-function haveSamePeriodRange(period: Period, otherPerid: Period): boolean {
-  return (
-    areSimilarDate(period.start, otherPerid.start) &&
-    areSimilarDate(period.end, otherPerid.end)
-  );
-}
-
-function areSimilarDate(date: Date, otherDate: Date): boolean {
-  return date.getTime() === otherDate.getTime();
+    period.id === rentalPeriod.id || isOverlappingPeriod(period)(rentalPeriod);
 }
 
 export function uniqueGearReducer<T extends "FA" | "FT">(
@@ -83,7 +89,7 @@ export function uniqueByGearReducer<T extends "FA" | "FT">(
   return [...gearRequests, gearRequest];
 }
 
-export function isSimilarGearRequest<T extends "FA" | "FT">(
+export function isSameGearRequest<T extends "FA" | "FT">(
   gearRequest: StoredGearRequest<T>
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
@@ -94,6 +100,36 @@ export function isSimilarGearRequest<T extends "FA" | "FT">(
       gearRequest.seeker.type === gr.seeker.type
     );
   };
+}
+
+export function isSimilarGearRequest<T extends "FA" | "FT">(
+  gearRequest: StoredGearRequest<T>
+): (value: StoredGearRequest<T>) => boolean {
+  return (gr: StoredGearRequest<T>) => {
+    const isSameGear = gearRequest.gear.id === gr.gear.id;
+    const isSameSeeker = isSameGearRequestSeeker(gearRequest.seeker)(gr.seeker);
+    const isSimilarPeriod = isOverlappingPeriod(gearRequest.rentalPeriod)(
+      gr.rentalPeriod
+    );
+    return (
+      (isSameGear && isSameSeeker && isSimilarPeriod) ||
+      isSimilarConsumableGearRequest(gearRequest)(gr)
+    );
+  };
+}
+
+function isSameGearRequestSeeker<T extends "FA" | "FT">(
+  seeker: Seeker<T>
+): (value: Seeker<T>) => boolean {
+  return (s: Seeker<T>) => seeker.id === s.id && seeker.type === s.type;
+}
+
+function isOverlappingPeriod(
+  period: BasePeriod
+): (value: BasePeriod) => boolean {
+  return (p: BasePeriod) =>
+    period.start.getTime() <= p.end.getTime() &&
+    period.end.getTime() >= p.start.getTime();
 }
 
 export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(

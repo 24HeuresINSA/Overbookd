@@ -81,4 +81,5 @@ export type GearRequestIdentifier = {
 export type SearchGearRequest = {
   seeker?: Omit<GearSeeker, 'name'>;
   gear?: Pick<Gear, 'id' | 'isConsumable'>;
+  period?: PeriodForm;
 };

@@ -2,8 +2,11 @@ import { GearRepository } from 'src/catalog/interfaces';
 import {
   CreateGearRequestForm,
   GearRequest,
+  GearRequestIdentifier,
   isExistingPeriodForm,
+  NewPeriodCreateGearRequestForm,
   PENDING,
+  Period,
   PeriodForm,
   UpdateGearRequestForm,
 } from '../gearRequests.model';
@@ -46,17 +49,39 @@ export abstract class GearRequestOrchestrator {
     const { start, end } = form;
     return this.periodRepository.addPeriod({ start, end });
   }
+
+  protected async buildPeriodSearch(
+    form: CreateGearRequestForm,
+  ): Promise<PeriodForm> {
+    if (!isExistingPeriodForm(form)) {
+      const { start, end } = form;
+      return { start, end };
+    }
+
+    const { start, end } = await this.periodRepository.getPeriod(form.periodId);
+    return { start, end };
+  }
 }
 
 export class StandardGearRequest extends GearRequestOrchestrator {
   async add(form: CreateGearRequestForm): Promise<GearRequest> {
     const { seekerId, quantity, gearId } = form;
 
-    const [seeker, existingGear] = await Promise.all([
+    const { start, end } = await this.buildPeriodSearch(form);
+
+    const [seeker, existingGear, overlappingGearRequests] = await Promise.all([
       this.gearSeekerRegistery.getSeeker(seekerId),
       this.gearRepository.getGear(gearId),
+      this.findOverlappingGearRequests({ ...form, start, end }),
       this.gearSeekerRegistery.checkSeekerInteractionPossibility(seekerId),
     ]);
+
+    if (overlappingGearRequests.length > 0) {
+      return this.mergeGearRequests(overlappingGearRequests, {
+        start,
+        end,
+      });
+    }
 
     const gearRequest = {
       seeker,
@@ -66,6 +91,93 @@ export class StandardGearRequest extends GearRequestOrchestrator {
       rentalPeriod: await this.retrieveRentalPeriod(form),
     };
     return this.gearRequestRepository.addGearRequest(gearRequest);
+  }
+
+  private async mergeGearRequests(
+    overlappingGearRequests: GearRequest[],
+    period: PeriodForm,
+  ): Promise<GearRequest> {
+    const gearRequestModel = overlappingGearRequests.at(0);
+    const periodId = gearRequestModel.rentalPeriod.id;
+    const rentalPeriod = this.buildUpdatedRentalPeriod(
+      overlappingGearRequests,
+      period,
+      periodId,
+    );
+    const toDeleteGearRequests = overlappingGearRequests.filter(
+      ({ rentalPeriod }) => rentalPeriod.id !== periodId,
+    );
+    const toUpdateGearRequest = { ...gearRequestModel, rentalPeriod };
+    return this.cleanGearRequests(toUpdateGearRequest, toDeleteGearRequests);
+  }
+
+  private async cleanGearRequests(
+    toUpdateGearRequest: GearRequest,
+    toDeleteGearRequests: GearRequest[],
+  ): Promise<GearRequest> {
+    const updateGearRequestForm = {
+      start: toUpdateGearRequest.rentalPeriod.start,
+      end: toUpdateGearRequest.rentalPeriod.end,
+    };
+    const gearRequestId = this.buildGearRequestIdentifier(toUpdateGearRequest);
+    const [updatedGearRequest] = await Promise.all([
+      this.gearRequestRepository.updateGearRequest(
+        gearRequestId,
+        updateGearRequestForm,
+      ),
+      ...toDeleteGearRequests.map((gr) =>
+        this.gearRequestRepository.removeGearRequest(
+          this.buildGearRequestIdentifier(gr),
+        ),
+      ),
+    ]);
+    return updatedGearRequest;
+  }
+
+  private buildGearRequestIdentifier({
+    gear,
+    seeker,
+    rentalPeriod,
+  }: GearRequest): GearRequestIdentifier {
+    return {
+      seeker: seeker,
+      gearId: gear.id,
+      rentalPeriodId: rentalPeriod.id,
+    };
+  }
+
+  private buildUpdatedRentalPeriod(
+    overlappingGearRequests: GearRequest[],
+    period: PeriodForm,
+    periodId: number,
+  ): Period {
+    const periods = [
+      ...overlappingGearRequests.map(({ rentalPeriod }) => rentalPeriod),
+      { ...period, id: -1 },
+    ];
+    const startTimes = periods.map(({ start }) => new Date(start).getTime());
+    const endTimes = periods.map(({ end }) => new Date(end).getTime());
+    const rentalPeriod = {
+      id: periodId,
+      start: new Date(Math.min(...startTimes)),
+      end: new Date(Math.max(...endTimes)),
+    };
+    return rentalPeriod;
+  }
+
+  private async findOverlappingGearRequests(
+    form: NewPeriodCreateGearRequestForm,
+  ): Promise<GearRequest[]> {
+    const periodSearch = { start: form.start, end: form.end };
+    const seekerSearch = this.gearSeekerRegistery.buildSeekerIdentifier(
+      form.seekerId,
+    );
+    const gearSearch = { id: form.gearId, isConsumable: false };
+    return this.gearRequestRepository.getGearRequests({
+      seeker: seekerSearch,
+      period: periodSearch,
+      gear: gearSearch,
+    });
   }
 }
 

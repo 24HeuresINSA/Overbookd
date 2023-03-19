@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   HttpCode,
+  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -36,6 +37,8 @@ import { FtTimeWindowsService } from './ft_time_windows.service';
 export class FtTimeWindowsController {
   constructor(private readonly ftTimeWindowsService: FtTimeWindowsService) {}
 
+  private readonly logger = new Logger(FtTimeWindowsController.name);
+
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':ftId/time-windows')
@@ -60,6 +63,7 @@ export class FtTimeWindowsController {
     @Param('ftId', ParseIntPipe) ftId: number,
     @Body() upsertFtTimeWindowsDto: UpsertFtTimeWindowsDto,
   ): Promise<ftTimeWindowsResponseDto> {
+    this.logger.log(`Inserting or updating timewindow for FT#${ftId}`);
     return this.ftTimeWindowsService.upsert(ftId, upsertFtTimeWindowsDto);
   }
 
@@ -87,6 +91,7 @@ export class FtTimeWindowsController {
     @Param('ftId', ParseIntPipe) ftId: number,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
+    this.logger.log(`Removing timewindow #${id} for FT #${ftId}`);
     return this.ftTimeWindowsService.remove(ftId, id);
   }
 }
