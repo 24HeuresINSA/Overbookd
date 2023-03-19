@@ -304,6 +304,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   private buildGearRequestSearchConditions({
     seeker,
     gear,
+    period,
   }: SearchGearRequest) {
     const seekerType =
       seeker?.type === GearSeekerType.Animation ? 'animationId' : 'taskId';
@@ -311,7 +312,21 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     const gearCondition = gear
       ? { id: gear.id, isConsumable: gear.isConsumable }
       : {};
+    const peridCondition = period
+      ? {
+          start: {
+            lte: period.end,
+          },
+          end: {
+            gte: period.start,
+          },
+        }
+      : {};
 
-    return { ...seekerCondition, gear: gearCondition };
+    return {
+      ...seekerCondition,
+      gear: gearCondition,
+      rentalPeriod: peridCondition,
+    };
   }
 }
