@@ -39,6 +39,9 @@ export class VolunteerService {
         },
       },
       select: SELECT_VOLUNTEER,
+      orderBy: {
+        charisma: 'desc',
+      },
     });
 
     return volunteers.map(

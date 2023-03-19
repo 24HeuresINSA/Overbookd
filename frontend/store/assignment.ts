@@ -1,7 +1,11 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Volunteer } from "~/utils/models/assignment";
+import {
+  Volunteer,
+  AssignmentMode,
+  AssignmentModes,
+} from "~/utils/models/assignment";
 import { User } from "~/utils/models/user";
 
 const UserRepo = RepoFactory.userRepo;
@@ -9,8 +13,9 @@ const AssignmentRepo = RepoFactory.AssignmentRepository;
 
 export const state = () => ({
   volunteers: [] as Volunteer[],
-  selectedVolunteer: {} as Volunteer,
+  selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
+  mode: AssignmentModes.ORGA_TASK as AssignmentMode,
 });
 
 export const mutations = mutationTree(state, {
@@ -25,6 +30,10 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_VOLUNTEER_FRIENDS(state, friends: User[]) {
     state.selectedVolunteerFriends = friends;
   },
+
+  SET_MODE(state, mode: AssignmentMode) {
+    state.mode = mode;
+  },
 });
 
 export const actions = actionTree(
@@ -36,7 +45,7 @@ export const actions = actionTree(
       commit("SET_VOLUNTEERS", res.data);
     },
 
-    async setSelectedVolunteer({ commit }, volunteer: Volunteer) {
+    setSelectedVolunteer({ commit }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
     },
 
@@ -44,6 +53,9 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepo.getUserFriends(this, id));
       if (!res) return;
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
+    },
+    updateMode({ commit }, mode: AssignmentMode) {
+      commit("SET_MODE", mode);
     },
   }
 );

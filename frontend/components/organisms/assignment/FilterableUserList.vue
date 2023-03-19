@@ -20,7 +20,7 @@
           Nombre de personnes dans la liste :
           <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
         </p>
-        <FriendsDisplay />
+        <FriendsDisplay v-if="isOrgaTaskMode" />
       </div>
     </v-card-text>
   </v-card>
@@ -33,7 +33,7 @@ import UserList from "~/components/molecules/users/UserList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
 import { Team } from "~/utils/models/team";
-import { Volunteer } from "~/utils/models/assignment";
+import { Volunteer, AssignmentModes } from "~/utils/models/assignment";
 
 interface FiltersData {
   teams: Team[];
@@ -60,6 +60,9 @@ export default Vue.extend({
         }
       );
       return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
+    },
+    isOrgaTaskMode(): boolean {
+      return this.$accessor.assignment.mode === AssignmentModes.ORGA_TASK;
     },
   },
   methods: {
@@ -98,11 +101,14 @@ export default Vue.extend({
 }
 
 .filters {
+  position: sticky;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
   padding: 0 1rem;
+
   &__field {
     width: 100%;
     padding-top: 0;
