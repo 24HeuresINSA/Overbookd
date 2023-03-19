@@ -1,3 +1,4 @@
+import { isSamePeriod } from "../availabilities/period";
 import {
   GearRequest,
   GearRequestCreation,
@@ -143,4 +144,33 @@ export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
       gr.gear.isConsumable
     );
   };
+}
+
+export function splitGearRequest<T extends "FA" | "FT">(
+  gearRequest: GearRequest<T>,
+  toRemovePeriod: BasePeriod,
+  availablePeriods: BasePeriod[]
+): GearRequest<T>[] {
+  const remainingPeriods = availablePeriods.filter(
+    (period) => !isSamePeriod(toRemovePeriod)(period)
+  );
+  if (gearRequest.gear.isConsumable) {
+    const start = new Date(
+      Math.min(...remainingPeriods.map(({ start }) => start.getTime()))
+    );
+    const end = new Date(
+      Math.max(...remainingPeriods.map(({ end }) => end.getTime()))
+    );
+    return [{ ...gearRequest, rentalPeriod: { id: -1, start, end } }];
+  }
+  const mergedPeriods = uniquePeriodsReducer(
+    remainingPeriods.map((period, index) => ({
+      ...period,
+      id: -1 * (index + 1),
+    }))
+  );
+  return mergedPeriods.map((rentalPeriod) => ({
+    ...gearRequest,
+    rentalPeriod,
+  }));
 }
