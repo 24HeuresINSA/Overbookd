@@ -13,7 +13,7 @@ const AssignmentRepo = RepoFactory.AssignmentRepository;
 
 export const state = () => ({
   volunteers: [] as Volunteer[],
-  selectedVolunteer: {} as Volunteer,
+  selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
   mode: AssignmentModes.ORGA_TASK as AssignmentMode,
 });

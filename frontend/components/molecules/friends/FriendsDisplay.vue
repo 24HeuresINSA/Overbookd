@@ -1,5 +1,5 @@
 <template>
-  <v-card class="friend-list">
+  <v-card v-if="selectedVolunteer" class="friend-list">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-content>
       <v-list-item-group>
@@ -29,14 +29,14 @@ import { formatUsername } from "~/utils/user/userUtils";
 export default Vue.extend({
   name: "FriendsDisplay",
   computed: {
-    selectedVolunteer(): Volunteer {
+    selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
     },
     selectedVolunteerFriends(): User[] {
       return this.$accessor.assignment.selectedVolunteerFriends;
     },
     title(): string {
-      return `Amis de ${this.selectedVolunteer.firstname} :`;
+      return `Amis de ${this.selectedVolunteer?.firstname} :`;
     },
   },
   methods: {
