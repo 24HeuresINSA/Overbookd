@@ -4,12 +4,12 @@ import { safeCall } from "~/utils/api/calls";
 import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 import {
   generateGearRequestCreationBuilder,
-  isSimilarConsumableGearRequest,
-  isSimilarGearRequest,
+  isSameGearRequest,
   isSimilarPeriod,
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
+  isSimilarGearRequest,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
 import {
@@ -204,7 +204,7 @@ export const mutations = mutationTree(state, {
 
   ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     const index = state.gearRequests.findIndex(
-      isSimilarConsumableGearRequest(gearRequest)
+      isSimilarGearRequest(gearRequest)
     );
     if (index === -1) {
       state.gearRequests = [...state.gearRequests, gearRequest];
@@ -229,7 +229,7 @@ export const mutations = mutationTree(state, {
 
   DELETE_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     state.gearRequests = state.gearRequests.filter(
-      (gr) => !isSimilarGearRequest(gearRequest)(gr)
+      (gr) => !isSameGearRequest(gearRequest)(gr)
     );
   },
 
