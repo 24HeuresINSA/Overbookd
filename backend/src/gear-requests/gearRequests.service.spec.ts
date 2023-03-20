@@ -166,12 +166,25 @@ const GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE: GearRequest = {
   rentalPeriod: MAY_24_1,
 };
 
+const GR_2_SCOTCH_MAY_24_INSTALLER_CHATEAU_GONFLABLE: GearRequest = {
+  seeker: {
+    type: GearSeekerType.Task,
+    id: INSTALLER_CHATEAU_GONFLABLE.id,
+    name: INSTALLER_CHATEAU_GONFLABLE.name,
+  },
+  quantity: 2,
+  status: PENDING,
+  gear: SCOTCH,
+  rentalPeriod: MAY_24_1,
+};
+
 const GEAR_REQUESTS = [
   GR_10_CHAISE_MAY_23_CHATEAU_GONFLABLE,
   GR_5_TABLE_MAY_24_CHATEAU_GONFLABLE,
   GR_10_CHAISE_MAY_24_CHATEAU_GONFLABLE,
   GR_2_CHAISE_MAY_24_NIGHT_CHATEAU_GONFLABLE,
   GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+  GR_2_SCOTCH_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
 ];
 describe('Gear requests', () => {
   const periodRepository = new InMemoryPeriodRepository([
@@ -442,7 +455,6 @@ describe('Gear requests', () => {
                 ...GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
                 rentalPeriod: expectedRentalPeriod,
               });
-              console.log(gearRequest);
             });
           },
         );
@@ -943,7 +955,7 @@ describe('Gear requests', () => {
     describe('For Tasks', () => {
       describe.each`
         ft                              | expectedRequests
-        ${INSTALLER_CHATEAU_GONFLABLE}  | ${[GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE]}
+        ${INSTALLER_CHATEAU_GONFLABLE}  | ${[GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE, GR_2_SCOTCH_MAY_24_INSTALLER_CHATEAU_GONFLABLE]}
         ${GARDIENNER_CHATEAU_GONFLABLE} | ${[]}
       `(
         'When looking for all gear request for Task $ft.name',
@@ -999,6 +1011,121 @@ describe('Gear requests', () => {
           rentalPeriodId,
         });
         expect(searchedGearRequest.drive).toBe(MAGASIN);
+      });
+    });
+  });
+  describe('Remove several gear requests for a period', () => {
+    afterAll(() => {
+      gearRequestRepository.gearRequests = [];
+    });
+    beforeEach(() => {
+      gearRequestRepository.gearRequests = [...GEAR_REQUESTS];
+    });
+    describe('When removing a part of current rental period', () => {
+      it('should split rental period in two periods', async () => {
+        const gearRequests = await gearRequestService.removeTaskRequests(
+          INSTALLER_CHATEAU_GONFLABLE.id,
+          {
+            start: new Date('2022-05-24T12:00:00'),
+            end: new Date('2022-05-24T14:00:00'),
+          },
+        );
+        const expectedGearRequests = [
+          {
+            ...GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+            rentalPeriod: {
+              id: expect.any(Number),
+              start: MAY_24_1.start,
+              end: new Date('2022-05-24T12:00:00'),
+            },
+          },
+          {
+            ...GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+            rentalPeriod: {
+              id: expect.any(Number),
+              start: new Date('2022-05-24T14:00:00'),
+              end: MAY_24_1.end,
+            },
+          },
+        ];
+        expect(gearRequests).toEqual(expectedGearRequests);
+      });
+    });
+    describe('When removing from the begining of a current rental period', () => {
+      it('should create a unique new period and update consumable gear requests', async () => {
+        const gearRequests = await gearRequestService.removeTaskRequests(
+          INSTALLER_CHATEAU_GONFLABLE.id,
+          {
+            start: MAY_24_1.start,
+            end: new Date('2022-05-24T14:00:00'),
+          },
+        );
+        const expectedGearRequests = [
+          {
+            ...GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+            rentalPeriod: {
+              id: expect.any(Number),
+              start: new Date('2022-05-24T14:00:00'),
+              end: MAY_24_1.end,
+            },
+          },
+          {
+            ...GR_2_SCOTCH_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+            rentalPeriod: {
+              id: expect.any(Number),
+              start: new Date('2022-05-24T14:00:00'),
+              end: MAY_24_1.end,
+            },
+          },
+        ];
+        expect(gearRequests).toEqual(expectedGearRequests);
+      });
+    });
+    describe('When removing to the end of a current rental period', () => {
+      it('should create a unique new period and update consumable gear requests', async () => {
+        const gearRequests = await gearRequestService.removeTaskRequests(
+          INSTALLER_CHATEAU_GONFLABLE.id,
+          {
+            start: new Date('2022-05-24T14:00:00'),
+            end: MAY_24_1.end,
+          },
+        );
+        const expectedGearRequests = [
+          {
+            ...GR_10_GANT_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+            rentalPeriod: {
+              id: expect.any(Number),
+              start: MAY_24_1.start,
+              end: new Date('2022-05-24T14:00:00'),
+            },
+          },
+          {
+            ...GR_2_SCOTCH_MAY_24_INSTALLER_CHATEAU_GONFLABLE,
+            rentalPeriod: {
+              id: expect.any(Number),
+              start: MAY_24_1.start,
+              end: new Date('2022-05-24T14:00:00'),
+            },
+          },
+        ];
+        expect(gearRequests).toEqual(expectedGearRequests);
+      });
+    });
+    describe('When removing a bigger period than the current one', () => {
+      it('should remove all gear requests', async () => {
+        const gearRequests = await gearRequestService.removeTaskRequests(
+          INSTALLER_CHATEAU_GONFLABLE.id,
+          {
+            start: new Date('2022-05-20T00:00:00'),
+            end: new Date('2022-05-30T00:00:00'),
+          },
+        );
+        expect(gearRequests).toEqual([]);
+        expect(
+          await gearRequestService.getTaskRequests(
+            INSTALLER_CHATEAU_GONFLABLE.id,
+          ),
+        ).toEqual([]);
       });
     });
   });

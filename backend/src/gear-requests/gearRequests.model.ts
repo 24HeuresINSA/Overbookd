@@ -80,6 +80,44 @@ export type GearRequestIdentifier = {
 
 export type SearchGearRequest = {
   seeker?: Omit<GearSeeker, 'name'>;
-  gear?: Pick<Gear, 'id' | 'isConsumable'>;
+  gear?: Partial<Pick<Gear, 'id' | 'isConsumable'>>;
   period?: PeriodForm;
 };
+
+type MultiOperand<T> = {
+  toDelete: T[];
+  toInsert: T[];
+  toUpdate: T[];
+};
+
+export type MultiOperandGearRequest = MultiOperand<GearRequest>;
+
+export function buildGearRequestIdentifier({
+  gear,
+  seeker,
+  rentalPeriod,
+}: GearRequest): GearRequestIdentifier {
+  return {
+    seeker: seeker,
+    gearId: gear.id,
+    rentalPeriodId: rentalPeriod.id,
+  };
+}
+
+export function isSameGeaRequestIdentifier(
+  gearRequestId: GearRequestIdentifier,
+): (value: GearRequestIdentifier) => boolean {
+  return (grId: GearRequestIdentifier) =>
+    gearRequestId.gearId === grId.gearId &&
+    gearRequestId.rentalPeriodId === grId.rentalPeriodId &&
+    gearRequestId.seeker.id === grId.seeker.id &&
+    gearRequestId.seeker.type === grId.seeker.type;
+}
+
+function getPeriodDurationInMs({ start, end }: PeriodForm): number {
+  return end.getTime() - start.getTime();
+}
+
+export function isPeriodWithDuration(period: PeriodForm): boolean {
+  return getPeriodDurationInMs(period) > 0;
+}

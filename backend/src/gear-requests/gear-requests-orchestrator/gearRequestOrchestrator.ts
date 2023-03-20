@@ -1,9 +1,10 @@
 import { GearRepository } from 'src/catalog/interfaces';
 import {
+  buildGearRequestIdentifier,
   CreateGearRequestForm,
   GearRequest,
-  GearRequestIdentifier,
   isExistingPeriodForm,
+  isPeriodWithDuration,
   NewPeriodCreateGearRequestForm,
   PENDING,
   Period,
@@ -25,6 +26,12 @@ export abstract class GearRequestOrchestrator {
   ) {}
 
   abstract add(form: CreateGearRequestForm): Promise<GearRequest>;
+
+  abstract removeOnPeriod(
+    taskId: number,
+    periodRemoval: PeriodForm,
+  ): Promise<GearRequest[]>;
+
   update(
     seekerId: number,
     gearId: number,
@@ -61,6 +68,19 @@ export abstract class GearRequestOrchestrator {
     const { start, end } = await this.periodRepository.getPeriod(form.periodId);
     return { start, end };
   }
+
+  protected findImpactedByRemovalGearRequests(
+    taskId: number,
+    periodRemoval: PeriodForm,
+    isConsumableGear: boolean,
+  ): Promise<GearRequest[]> {
+    const seeker = this.gearSeekerRegistery.buildSeekerIdentifier(taskId);
+    return this.gearRequestRepository.getGearRequests({
+      seeker,
+      period: periodRemoval,
+      gear: { isConsumable: isConsumableGear },
+    });
+  }
 }
 
 export class StandardGearRequest extends GearRequestOrchestrator {
@@ -93,6 +113,52 @@ export class StandardGearRequest extends GearRequestOrchestrator {
     return this.gearRequestRepository.addGearRequest(gearRequest);
   }
 
+  async removeOnPeriod(
+    taskId: number,
+    periodRemoval: PeriodForm,
+  ): Promise<GearRequest[]> {
+    const impactedGearRequests = await this.findImpactedByRemovalGearRequests(
+      taskId,
+      periodRemoval,
+      false,
+    );
+    const updatedGearRequests = impactedGearRequests
+      .flatMap(splitGearRequest(periodRemoval))
+      .filter((gr) => isPeriodWithDuration(gr.rentalPeriod));
+
+    const toDeleteGearRequests = impactedGearRequests;
+    const toInsertGearRequests: GearRequest[] = await this.buildGearRequests(
+      updatedGearRequests,
+    );
+
+    const gearRequests =
+      await this.gearRequestRepository.transactionalMultiOperation({
+        toDelete: toDeleteGearRequests,
+        toInsert: toInsertGearRequests,
+        toUpdate: [],
+      });
+    return gearRequests;
+  }
+
+  private async buildGearRequests(
+    updatedGearRequests: GearRequestWithRentalPeriodForm[],
+  ): Promise<GearRequest[]> {
+    return Promise.all(
+      updatedGearRequests.map(async (gr) => {
+        const rentalPeriod = await this.retrieveRentalPeriod({
+          ...gr.rentalPeriod,
+          gearId: gr.gear.id,
+          seekerId: gr.seeker.id,
+          quantity: gr.quantity,
+        });
+        return {
+          ...gr,
+          rentalPeriod,
+        };
+      }),
+    );
+  }
+
   private async mergeGearRequests(
     overlappingGearRequests: GearRequest[],
     period: PeriodForm,
@@ -119,7 +185,7 @@ export class StandardGearRequest extends GearRequestOrchestrator {
       start: toUpdateGearRequest.rentalPeriod.start,
       end: toUpdateGearRequest.rentalPeriod.end,
     };
-    const gearRequestId = this.buildGearRequestIdentifier(toUpdateGearRequest);
+    const gearRequestId = buildGearRequestIdentifier(toUpdateGearRequest);
     const [updatedGearRequest] = await Promise.all([
       this.gearRequestRepository.updateGearRequest(
         gearRequestId,
@@ -127,23 +193,11 @@ export class StandardGearRequest extends GearRequestOrchestrator {
       ),
       ...toDeleteGearRequests.map((gr) =>
         this.gearRequestRepository.removeGearRequest(
-          this.buildGearRequestIdentifier(gr),
+          buildGearRequestIdentifier(gr),
         ),
       ),
     ]);
     return updatedGearRequest;
-  }
-
-  private buildGearRequestIdentifier({
-    gear,
-    seeker,
-    rentalPeriod,
-  }: GearRequest): GearRequestIdentifier {
-    return {
-      seeker: seeker,
-      gearId: gear.id,
-      rentalPeriodId: rentalPeriod.id,
-    };
   }
 
   private buildUpdatedRentalPeriod(
@@ -211,6 +265,94 @@ export class ConsumableGearRequest extends GearRequestOrchestrator {
     return this.gearRequestRepository.addGearRequest(gearRequest);
   }
 
+  async removeOnPeriod(
+    taskId: number,
+    periodRemoval: PeriodForm,
+  ): Promise<GearRequest[]> {
+    const impactedGearRequests = await this.findImpactedByRemovalGearRequests(
+      taskId,
+      periodRemoval,
+      true,
+    );
+
+    const toUpdateGearRequests = this.buildGearRequests(
+      impactedGearRequests,
+      periodRemoval,
+    );
+
+    const toDeleteGearRequests = impactedGearRequests.filter(
+      isPeriodIncludeGearRequestRentalPeriod(periodRemoval),
+    );
+
+    const updatedGearRequests =
+      await this.gearRequestRepository.transactionalMultiOperation({
+        toDelete: toDeleteGearRequests,
+        toInsert: [],
+        toUpdate: toUpdateGearRequests,
+      });
+
+    return updatedGearRequests;
+  }
+
+  private buildGearRequests(
+    impactedGearRequests: GearRequest[],
+    periodRemoval: PeriodForm,
+  ) {
+    return impactedGearRequests
+      .reduce(
+        (gearRequests, currentGearRequest) =>
+          this.shortenConsumableGearRequestRentalPeriodByRemovalPeriod(
+            periodRemoval,
+          )(gearRequests, currentGearRequest),
+        [] as GearRequest[],
+      )
+      .filter((gr) => isPeriodWithDuration(gr.rentalPeriod));
+  }
+
+  private shortenConsumableGearRequestRentalPeriodByRemovalPeriod(
+    removalPeriod: PeriodForm,
+  ): (gearRequests: GearRequest[], gearRequest: GearRequest) => GearRequest[] {
+    return (gearRequests, currentGearRequest) => {
+      const isRemovalPeriodNotEffective = isPeriodStrictlyIncludeAnother(
+        currentGearRequest.rentalPeriod,
+      )(removalPeriod);
+      if (isRemovalPeriodNotEffective) return gearRequests;
+
+      const rentalPeriod = this.buildUpdatedPeriod(
+        currentGearRequest,
+        removalPeriod,
+      );
+      return [
+        ...gearRequests,
+        {
+          ...currentGearRequest,
+          rentalPeriod,
+        },
+      ];
+    };
+  }
+
+  private buildUpdatedPeriod(
+    currentGearRequest: GearRequest,
+    periodRemoval: PeriodForm,
+  ): Period {
+    if (
+      periodRemoval.start.getTime() <=
+      currentGearRequest.rentalPeriod.start.getTime()
+    ) {
+      return {
+        start: periodRemoval.end,
+        end: currentGearRequest.rentalPeriod.end,
+        id: currentGearRequest.rentalPeriod.id,
+      };
+    }
+    return {
+      start: currentGearRequest.rentalPeriod.start,
+      end: periodRemoval.start,
+      id: currentGearRequest.rentalPeriod.id,
+    };
+  }
+
   private async updateGearRequestPeriod(
     createForm: CreateGearRequestForm,
     similarGearRequest: GearRequest,
@@ -240,4 +382,55 @@ function mergePeriods(periods: PeriodForm[]): PeriodForm {
   );
   const end = new Date(Math.max(...periods.map(({ end }) => end.getTime())));
   return { start, end };
+}
+
+type GearRequestWithRentalPeriodForm = Omit<GearRequest, 'rentalPeriod'> & {
+  rentalPeriod: PeriodForm;
+};
+
+function splitGearRequest(
+  periodRemoval: PeriodForm,
+): (value: GearRequest) => GearRequestWithRentalPeriodForm[] {
+  return (gr: GearRequest) => {
+    const firstPeriod = {
+      start: new Date(gr.rentalPeriod.start),
+      end: new Date(periodRemoval.start),
+    };
+    const secondPeriod = {
+      start: new Date(periodRemoval.end),
+      end: new Date(gr.rentalPeriod.end),
+    };
+    return [
+      { ...gr, rentalPeriod: firstPeriod },
+      { ...gr, rentalPeriod: secondPeriod },
+    ];
+  };
+}
+
+function convertToGearRequestCreationForm(
+  gearRequest: GearRequestWithRentalPeriodForm,
+): CreateGearRequestForm {
+  return {
+    gearId: gearRequest.gear.id,
+    seekerId: gearRequest.seeker.id,
+    quantity: gearRequest.quantity,
+    start: gearRequest.rentalPeriod.start,
+    end: gearRequest.rentalPeriod.end,
+  };
+}
+
+function isPeriodIncludeGearRequestRentalPeriod(
+  period: PeriodForm,
+): (value: GearRequest) => boolean {
+  return (gearRequest: GearRequest) =>
+    period.start.getTime() <= gearRequest.rentalPeriod.start.getTime() &&
+    period.end.getTime() >= gearRequest.rentalPeriod.end.getTime();
+}
+
+function isPeriodStrictlyIncludeAnother(
+  period: Period | PeriodForm,
+): (value: Period | PeriodForm) => boolean {
+  return (otherPeriod: Period | PeriodForm) =>
+    period.start.getTime() < otherPeriod.start.getTime() &&
+    period.end.getTime() > otherPeriod.end.getTime();
 }
