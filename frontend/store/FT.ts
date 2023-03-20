@@ -10,6 +10,7 @@ import {
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
   isSimilarGearRequest,
+  splitGearRequest,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
 import {
@@ -737,6 +738,16 @@ export const actions = actionTree(
       commit("DELETE_GEAR_REQUEST", gearRequest);
     },
 
+    async fetchGearRequests({ commit, state }) {
+      const res = await safeCall(
+        this,
+        repo.getGearRequests(this, state.mFT.id)
+      );
+      if (!res) return;
+      const gearRequests = res.data.map(castGearRequestWithDate);
+      commit("SET_GEAR_REQUESTS", gearRequests);
+    },
+
     async addGearRequestRentalPeriod(
       { dispatch, getters },
       rentalPeriod: Omit<Period, "id">
@@ -754,6 +765,7 @@ export const actions = actionTree(
       otherGearRequests.map(({ gear: { id: gearId }, quantity }) =>
         dispatch("addGearRequest", { gearId, quantity, periodId })
       );
+      dispatch("fetchGearRequests");
     },
 
     async getFirstSavedGearRequestPeriodId(
@@ -778,7 +790,7 @@ export const actions = actionTree(
     },
 
     async removeGearRequestRentalPeriod(
-      { commit, state },
+      { dispatch, state, getters },
       { start, end }: Omit<Period, "id">
     ) {
       const deletedPeriod = { start, end, id: -1 };
@@ -786,8 +798,13 @@ export const actions = actionTree(
         ({ rentalPeriod }) => isSimilarPeriod(deletedPeriod)(rentalPeriod)
       );
       const responses = await Promise.all(
-        toDeleteGearRequests.map((gearRequest) =>
-          safeCall(
+        toDeleteGearRequests.map(async (gearRequest) => {
+          const toCreateGearRequests = splitGearRequest(
+            gearRequest,
+            { start, end },
+            getters.ftPeriods
+          );
+          await safeCall(
             this,
             repo.deleteGearRequest(
               this,
@@ -797,15 +814,27 @@ export const actions = actionTree(
             ),
             {
               successMessage: "La demande de matériel a été supprimée 🗑️",
-              errorMessage: "La demande de matériel na pas a été supprimée ❌",
+              errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
             }
-          )
-        )
+          );
+          return Promise.all(
+            toCreateGearRequests.map((gr) => {
+              const gearRequestCreation = {
+                gearId: gr.gear.id,
+                quantity: gr.quantity,
+                start: gr.rentalPeriod.start,
+                end: gr.rentalPeriod.end,
+              };
+              return safeCall(
+                this,
+                repo.createGearRequest(this, state.mFT.id, gearRequestCreation)
+              );
+            })
+          );
+        })
       );
       if (responses.some((response) => response === undefined)) return;
-      toDeleteGearRequests.map((gearRequest) =>
-        commit("DELETE_GEAR_REQUESTS", gearRequest)
-      );
+      dispatch("fetchGearRequests");
     },
 
     async updateGearRequestRentalPeriod(
