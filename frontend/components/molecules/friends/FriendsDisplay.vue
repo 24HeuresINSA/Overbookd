@@ -1,18 +1,22 @@
 <template>
-  <v-card v-if="selectedVolunteer" class="friend-list">
-    <v-card-title>{{ title }}</v-card-title>
+  <v-card class="friends-card">
+    <v-card-title class="friends-card__title">{{ title }}</v-card-title>
     <v-card-content>
-      <v-list-item-group>
+      <v-list-item-group class="friends-card__list">
         <v-list-item
           v-for="friend in selectedVolunteerFriends"
           :key="friend.id"
+          class="friends-card__list__item"
           :value="friend.id"
           @click="selectVolunteer(friend)"
           @contextmenu.prevent="openCalendar(friend.id)"
         >
           {{ formatUsername(friend) }}
         </v-list-item>
-        <v-list-item v-if="selectedVolunteerFriends.length === 0">
+        <v-list-item
+          v-if="selectedVolunteerFriends.length === 0"
+          class="friends-card__list__item"
+        >
           Aucun ami 😢
         </v-list-item>
       </v-list-item-group>
@@ -57,3 +61,24 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.friends-card {
+  width: 100%;
+  height: 180px;
+  border: 1px solid;
+
+  &__title {
+    padding: 8px 16px;
+  }
+
+  &__list {
+    height: 110px;
+    overflow-y: scroll;
+
+    &__item {
+      min-height: 36px;
+    }
+  }
+}
+</style>
