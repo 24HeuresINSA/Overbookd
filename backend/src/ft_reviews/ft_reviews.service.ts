@@ -4,7 +4,6 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  NotImplementedException,
 } from '@nestjs/common';
 import { FtReview, FtStatus, reviewStatus, Status } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
@@ -13,6 +12,7 @@ import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
 import { CreateFtFeedbackDto } from 'src/ft_feedback/dto/createFtFeedback.dto';
 import { PrismaService } from '../prisma.service';
+import { TimespanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { TimespansGenerator } from './timespansGenerator';
 
@@ -92,9 +92,10 @@ export class FtReviewsService {
     return this.ftService.convertFTtoApiContract(updatedFt);
   }
 
-  async assignementApproval(
+  async assignmentApproval(
     ftId: number,
     userId: number,
+    timeSpanParameters: TimespanParametersDto,
   ): Promise<CompleteFtResponseDto | null> {
     const ft = await this.prisma.ft.findUnique({
       where: { id: ftId },
@@ -102,7 +103,10 @@ export class FtReviewsService {
     });
     await this.checkSwitchableToReady(ft);
 
-    const timespans = this.computeTimeSpans(ft);
+    const timespans = this.computeTimeSpans(ft).map((timespan) => ({
+      ...timespan,
+      ...timeSpanParameters,
+    }));
 
     this.logger.log(`Setting FT #${ftId} as READY`);
     const updateStatus = this.prisma.ft.update({
@@ -171,9 +175,7 @@ export class FtReviewsService {
     return null;
   }
 
-  private async checkSwitchableToReady(
-    ft: DataBaseCompleteFt,
-  ): Promise<boolean> {
+  private async checkSwitchableToReady(ft: DataBaseCompleteFt) {
     if (!ft) {
       throw new NotFoundException('FT introuvable');
     }
@@ -183,25 +185,29 @@ export class FtReviewsService {
     if (ft.fa.status !== Status.VALIDATED) {
       throw new BadRequestException('FA non validée');
     }
-    await this.checkForAlsoRequestedConflicts(ft);
-    // TODO Check for other conflicts (availability, timespans)
-    throw new NotImplementedException();
-    return true;
+    await this.hasAtLeastOneConflict(ft);
   }
 
   private computeTimeSpans(ft: DataBaseCompleteFt): Timespan[] {
     return ft.timeWindows.flatMap(TimespansGenerator.generateTimespans);
   }
 
-  private async checkForAlsoRequestedConflicts(
-    ft: DataBaseCompleteFt,
-  ): Promise<void> {
+  private async hasAtLeastOneConflict(ft: DataBaseCompleteFt): Promise<void> {
     const ftWithAlsoRequestedConflicts =
       await this.ftService.convertFTtoApiContract(ft);
+
+    const areUsersAvailable = ftWithAlsoRequestedConflicts.timeWindows
+      .flatMap((tw) => tw.userRequests)
+      .flatMap((ur) => ur.isAvailable)
+      .some((na) => na === false);
+    if (areUsersAvailable) {
+      throw new BadRequestException(
+        'Certains bénévoles ne sont pas disponibles',
+      );
+    }
     const alsoRequestedBy = ftWithAlsoRequestedConflicts.timeWindows
       .flatMap((tw) => tw.userRequests)
       .flatMap((ur) => ur.alsoRequestedBy);
-
     if (alsoRequestedBy.length > 0) {
       throw new BadRequestException('La FT a des conflits avec d’autres FTs');
     }

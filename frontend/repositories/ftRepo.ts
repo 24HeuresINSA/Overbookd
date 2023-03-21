@@ -5,17 +5,17 @@ import {
   SavedFeedback,
 } from "~/utils/models/feedback";
 import {
-  FTCreation,
-  FTSearch,
-  FTUpdate,
-  FTTimeWindowUpdate,
-  FTTimeWindow,
-  FTSimplified,
   FT,
-  FTTeamRequestUpdate,
-  FTUserRequestUpdate,
-  FTTeamRequest,
+  FTCreation,
   FTPageId,
+  FTSearch,
+  FTSimplified,
+  FTTeamRequest,
+  FTTeamRequestUpdate,
+  FTTimeWindow,
+  FTTimeWindowUpdate,
+  FTUpdate,
+  FTUserRequestUpdate,
 } from "~/utils/models/ft";
 import {
   GearRequestCreation,
@@ -76,7 +76,7 @@ export default {
   },
   switchToReadyForAssignment(context: Context, ftId: number) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/assignement-approval`
+      `${resource}/${ftId}/assignment-approval`
     );
   },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {

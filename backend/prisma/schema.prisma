@@ -81,6 +81,7 @@ model User {
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
+  FtTimespan       FtTimespan[]
 }
 
 model Team {
@@ -515,12 +516,26 @@ model FtTeamRequest {
   @@map("ft_team_request")
 }
 
+enum TaskCategory {
+  STATIQUE
+  BAR
+  MANUTENTION
+  ANIMATION
+  NETTOYAGE
+
+  @@map("task_category")
+}
+
 model FtTimespan {
-  id           Int           @id @default(autoincrement())
-  timeWindows  FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
-  timeWindowId Int           @map("time_window_id")
-  start        DateTime
-  end          DateTime
+  id              Int           @id @default(autoincrement())
+  timeWindows     FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindowId    Int           @map("time_window_id")
+  start           DateTime
+  end             DateTime
+  user            User?         @relation(fields: [userRequestedId], references: [id])
+  userRequestedId Int?          @map("user_requested_id")
+  hasPriority     Boolean       @default(false) @map("has_priority")
+  category        TaskCategory
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
