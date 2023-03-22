@@ -12,6 +12,10 @@
           class="filters__field"
           :boxed="false"
         ></SearchTeams>
+        <p>
+          Nombre de personnes dans la liste :
+          <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
+        </p>
       </div>
       <v-divider />
       <div
@@ -19,10 +23,6 @@
         :class="shouldDisplayFriends ? 'user-list__with-friend-list' : ''"
       >
         <UserList :volunteers="filteredVolunteers" />
-        <p>
-          Nombre de personnes dans la liste :
-          <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
-        </p>
       </div>
       <FriendsDisplay v-if="shouldDisplayFriends" class="friend-list" />
     </v-card-text>
@@ -117,7 +117,7 @@ export default Vue.extend({
 
 .filters {
   width: 100%;
-  height: 110px;
+  height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -134,12 +134,12 @@ export default Vue.extend({
 
 .user-list {
   width: 100%;
-  max-height: calc(100vh - 230px);
+  max-height: calc(100vh - 260px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   &__with-friend-list {
-    max-height: calc(100vh - 400px);
+    max-height: calc(100vh - 430px);
   }
 }
 
@@ -147,5 +147,10 @@ export default Vue.extend({
   max-width: 300px;
   height: 160px;
   position: fixed;
+  bottom: 36px;
+}
+
+.v-text-field__details {
+  display: none;
 }
 </style>
