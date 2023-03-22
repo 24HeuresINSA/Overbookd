@@ -3,8 +3,11 @@ import { GearRequestNotFound } from '../gearRequest.error';
 import {
   APPROVED,
   ApprovedGearRequest,
+  buildGearRequestIdentifier,
   GearRequest,
   GearRequestIdentifier,
+  isSameGeaRequestIdentifier,
+  MultiOperandGearRequest,
   PENDING,
   Period,
   SearchGearRequest,
@@ -92,8 +95,11 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
         gearRequestSearch.seeker.type === gearRequest.seeker.type);
     const gearSearch =
       !gearRequestSearch.gear ||
-      (gearRequestSearch.gear.id === gearRequest.gear.id &&
-        gearRequestSearch.gear.isConsumable === gearRequest.gear.isConsumable);
+      (gearRequestSearch.gear.id
+        ? gearRequestSearch.gear.id === gearRequest.gear.id
+        : true && gearRequestSearch.gear.isConsumable !== undefined
+        ? gearRequestSearch.gear.isConsumable === gearRequest.gear.isConsumable
+        : true);
     const periodSearch =
       !gearRequestSearch.period ||
       (gearRequestSearch.period.start.getTime() <=
@@ -138,6 +144,16 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       ...this.gearRequests.slice(gearRequestIndex + 1),
     ];
 
+    return Promise.resolve();
+  }
+
+  removeGearRequests(gearRequestIds: GearRequestIdentifier[]): Promise<void> {
+    this.gearRequests = this.gearRequests.filter((gr) => {
+      const grId = buildGearRequestIdentifier(gr);
+      return gearRequestIds.every(
+        (id) => !isSameGeaRequestIdentifier(grId)(id),
+      );
+    });
     return Promise.resolve();
   }
 
@@ -194,5 +210,23 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       newGearRequest,
     );
     return Promise.resolve(newGearRequest);
+  }
+
+  async transactionalMultiOperation({
+    toDelete,
+    toInsert,
+    toUpdate,
+  }: MultiOperandGearRequest): Promise<GearRequest[]> {
+    await this.removeGearRequests(toDelete.map(buildGearRequestIdentifier));
+    return Promise.all([
+      ...toInsert.map((gr) => this.addGearRequest(gr)),
+      ...toUpdate.map(
+        ({ gear, seeker, rentalPeriod: { id: rentalPeriodId, start, end } }) =>
+          this.updateGearRequest(
+            { seeker, gearId: gear.id, rentalPeriodId },
+            { start, end },
+          ),
+      ),
+    ]);
   }
 }

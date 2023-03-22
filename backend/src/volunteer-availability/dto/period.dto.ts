@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsDefined } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsDefined } from 'class-validator';
 import { Period } from '../domain/period.model';
 
 export class PeriodDto implements Period {
@@ -10,7 +11,8 @@ export class PeriodDto implements Period {
     type: Date,
   })
   @IsDefined()
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   start: Date;
 
   @ApiProperty({
@@ -20,6 +22,7 @@ export class PeriodDto implements Period {
     type: Date,
   })
   @IsDefined()
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   end: Date;
 }

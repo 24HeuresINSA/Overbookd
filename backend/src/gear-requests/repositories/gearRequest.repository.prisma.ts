@@ -11,10 +11,12 @@ import {
 import {
   APPROVED,
   ApprovedGearRequest,
+  buildGearRequestIdentifier,
   GearRequest,
   GearRequestIdentifier,
   GearSeeker,
   GearSeekerType,
+  MultiOperandGearRequest,
   Period,
   SearchGearRequest,
   UpdateGearRequestForm,
@@ -153,6 +155,19 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   };
 
   async addGearRequest(gearRequest: GearRequest): Promise<GearRequest> {
+    try {
+      const savedGearRequest = await this.prismaAddGearRequest(gearRequest);
+
+      return convertGearRequestToApiContract(savedGearRequest);
+    } catch (e) {
+      if (this.prismaService.isUniqueConstraintViolation(e)) {
+        throw new GearRequestAlreadyExists(gearRequest);
+      }
+      throw e;
+    }
+  }
+
+  private prismaAddGearRequest(gearRequest: GearRequest) {
     const { seeker, rentalPeriod, gear, quantity, status } = gearRequest;
 
     const seekerData =
@@ -168,19 +183,10 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
       status,
     };
 
-    try {
-      const savedGearRequest = await this.prismaService.gearRequest.create({
-        select: this.SELECT_GEAR_REQUEST,
-        data,
-      });
-
-      return convertGearRequestToApiContract(savedGearRequest);
-    } catch (e) {
-      if (this.prismaService.isUniqueConstraintViolation(e)) {
-        throw new GearRequestAlreadyExists(gearRequest);
-      }
-      throw e;
-    }
+    return this.prismaService.gearRequest.create({
+      select: this.SELECT_GEAR_REQUEST,
+      data,
+    });
   }
 
   async getGearRequest(
@@ -215,15 +221,25 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
     updateGearRequestForm: UpdateGearRequestForm,
   ): Promise<GearRequest> {
+    const updatedGearRequest = await this.prismaUpdateGearRequest(
+      gearRequestId,
+      updateGearRequestForm,
+    );
+    return convertGearRequestToApiContract(updatedGearRequest);
+  }
+
+  private prismaUpdateGearRequest(
+    gearRequestId: GearRequestIdentifier,
+    updateGearRequestForm: UpdateGearRequestForm,
+  ) {
     const data = this.buildUpdateGearRequestData(updateGearRequestForm);
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
 
-    const updatedGearRequest = await this.prismaService.gearRequest.update({
+    return this.prismaService.gearRequest.update({
       select: this.SELECT_GEAR_REQUEST,
       data,
       where,
     });
-    return convertGearRequestToApiContract(updatedGearRequest);
   }
 
   async removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void> {
@@ -231,6 +247,19 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     await this.prismaService.gearRequest.delete({
       where,
       select: { rentalPeriodId: true, gearId: true, animationId: true },
+    });
+  }
+
+  async removeGearRequests(
+    gearRequestIds: GearRequestIdentifier[],
+  ): Promise<void> {
+    await this.prismaRemoveGearRequests(gearRequestIds);
+  }
+
+  private prismaRemoveGearRequests(gearRequestIds: GearRequestIdentifier[]) {
+    const where = this.buildRemoveManyCondition(gearRequestIds);
+    return this.prismaService.gearRequest.deleteMany({
+      where,
     });
   }
 
@@ -294,13 +323,6 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     };
   }
 
-  private isAnimationRequest(gearRequestSearch: SearchGearRequest) {
-    return (
-      gearRequestSearch.seeker?.type &&
-      gearRequestSearch.seeker?.type === GearSeekerType.Animation
-    );
-  }
-
   private buildGearRequestSearchConditions({
     seeker,
     gear,
@@ -309,9 +331,11 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     const seekerType =
       seeker?.type === GearSeekerType.Animation ? 'animationId' : 'taskId';
     const seekerCondition = seeker?.id ? { [seekerType]: seeker.id } : {};
-    const gearCondition = gear
-      ? { id: gear.id, isConsumable: gear.isConsumable }
-      : {};
+    const gearIdCondition = gear?.id ? { id: gear.id } : {};
+    const gearConsumableCondition =
+      gear?.isConsumable !== undefined
+        ? { isConsumable: gear.isConsumable }
+        : {};
     const peridCondition = period
       ? {
           start: {
@@ -325,8 +349,80 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
     return {
       ...seekerCondition,
-      gear: gearCondition,
+      gear: { ...gearIdCondition, ...gearConsumableCondition },
       rentalPeriod: peridCondition,
     };
+  }
+
+  private buildRemoveManyCondition(gearRequestIds: GearRequestIdentifier[]) {
+    const { gearIds, rentalPeriodIds, taskIds, animationIds } =
+      this.buildGearRequestManyRemoveIds(gearRequestIds);
+
+    return {
+      gearId: {
+        in: gearIds,
+      },
+      rentalPeriodId: {
+        in: rentalPeriodIds,
+      },
+      OR: [
+        {
+          taskId: {
+            in: taskIds,
+          },
+        },
+        {
+          animationId: {
+            in: animationIds,
+          },
+        },
+      ],
+    };
+  }
+
+  private buildGearRequestManyRemoveIds(
+    gearRequestIds: GearRequestIdentifier[],
+  ): {
+    gearIds: number[];
+    rentalPeriodIds: number[];
+    taskIds: number[];
+    animationIds: number[];
+  } {
+    const taskIds = gearRequestIds.reduce((taskIds, grId) => {
+      if (grId.seeker.type === GearSeekerType.Animation) return taskIds;
+      return [...taskIds, grId.seeker.id];
+    }, [] as number[]);
+
+    const animationIds = gearRequestIds.reduce((animationIds, grId) => {
+      if (grId.seeker.type === GearSeekerType.Task) return animationIds;
+      return [...animationIds, grId.seeker.id];
+    }, [] as number[]);
+
+    const gearIds = gearRequestIds.map(({ gearId }) => gearId);
+
+    const rentalPeriodIds = gearRequestIds.map(
+      ({ rentalPeriodId }) => rentalPeriodId,
+    );
+
+    return { taskIds, animationIds, gearIds, rentalPeriodIds };
+  }
+
+  async transactionalMultiOperation({
+    toDelete,
+    toInsert,
+    toUpdate,
+  }: MultiOperandGearRequest): Promise<GearRequest[]> {
+    const [deletion, ...gearRequests] = await this.prismaService.$transaction([
+      this.prismaRemoveGearRequests(toDelete.map(buildGearRequestIdentifier)),
+      ...toInsert.map((gr) => this.prismaAddGearRequest(gr)),
+      ...toUpdate.map(
+        ({ gear, seeker, rentalPeriod: { id: rentalPeriodId, start, end } }) =>
+          this.prismaUpdateGearRequest(
+            { seeker, gearId: gear.id, rentalPeriodId },
+            { start, end },
+          ),
+      ),
+    ]);
+    return gearRequests.map(convertGearRequestToApiContract);
   }
 }

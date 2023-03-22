@@ -43,6 +43,7 @@ import {
   GearSeekerType,
 } from 'src/gear-requests/gearRequests.model';
 import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
+import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/create-ft.dto';
 import {
@@ -297,6 +298,32 @@ export class FtController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<GearRequestResponseDto[]> {
     return this.gearRequestService.getTaskRequests(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Delete(':taskId/gear-requests/')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Delete gear requests on a dedicated period',
+  })
+  @ApiParam({
+    name: 'taskId',
+    type: Number,
+    description: 'Task id',
+    required: true,
+  })
+  @ApiBody({
+    type: PeriodDto,
+    description: 'Period to remove gear requests on',
+    required: true,
+  })
+  async deleteGearRequests(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Body() period: PeriodDto,
+  ): Promise<void> {
+    await this.gearRequestService.removeTaskRequests(taskId, period);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

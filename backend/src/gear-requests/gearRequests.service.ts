@@ -12,6 +12,7 @@ import {
   ApprovedGearRequest,
   Period,
   PeriodForm,
+  MultiOperandGearRequest,
 } from './gearRequests.model';
 import { Task } from './tasks/task.model';
 
@@ -24,6 +25,7 @@ export interface GearRequestRepository {
     updateGearRequestForm: UpdateGearRequestForm,
   ): Promise<GearRequest>;
   removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void>;
+  removeGearRequests(gearRequestIds: GearRequestIdentifier[]): Promise<void>;
   approveGearRequest(
     gearRequestId: GearRequestIdentifier,
     drive: string,
@@ -32,6 +34,9 @@ export interface GearRequestRepository {
     gearRequestId: GearRequestIdentifier,
     rentalPeriod: Period,
   ): Promise<GearRequest>;
+  transactionalMultiOperation(
+    multiOperand: MultiOperandGearRequest,
+  ): Promise<GearRequest[]>;
 }
 
 export interface AnimationRepository {
@@ -167,6 +172,35 @@ export class GearRequestsService {
       gearId,
       rentalPeriodId: periodId,
     });
+  }
+
+  async removeTaskRequests(
+    taskId: number,
+    periodRemoval: PeriodForm,
+  ): Promise<GearRequest[]> {
+    const standardGearRequestOrchestrator =
+      GearRequestOrchestratorBuilder.build(
+        GearSeekerType.Task,
+        false,
+        this.gearOrchestratorRepositories,
+      );
+    const consumableGearRequestOrchestrator =
+      GearRequestOrchestratorBuilder.build(
+        GearSeekerType.Task,
+        true,
+        this.gearOrchestratorRepositories,
+      );
+    const gearRequestsOrchestrators = [
+      standardGearRequestOrchestrator,
+      consumableGearRequestOrchestrator,
+    ];
+    return (
+      await Promise.all(
+        gearRequestsOrchestrators.map((orchestrator) =>
+          orchestrator.removeOnPeriod(taskId, periodRemoval),
+        ),
+      )
+    ).flat();
   }
 
   approveGearRequest(
