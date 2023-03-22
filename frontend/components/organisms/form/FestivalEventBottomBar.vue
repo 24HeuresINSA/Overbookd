@@ -66,7 +66,7 @@
           v-if="shouldShowReadyButton"
           color="purple"
           class="white--text"
-          @click="switchToReadyForAssignment"
+          @click="showReadyForAssignment"
           >Prêt pour affectation
         </v-btn>
 
@@ -135,10 +135,31 @@
       </ConfirmationMessage>
     </v-dialog>
 
-    <v-dialog
-      v-model="isReadyForAssignmentDialogOpen"
-      max-width="600px"
-    ></v-dialog>
+    <v-dialog v-model="isReadyForAssignmentDialogOpen" max-width="600px">
+      <v-card>
+        <v-card-title> Prêt à validation </v-card-title>
+        <v-card-text>
+          <h3>Veuillez sélectionner le type et la priorité des créneaux</h3>
+        </v-card-text>
+        <v-select
+          v-model="timeSpanParameters.category"
+          class="category_list"
+          label="Catégorie"
+          :items="categories"
+        ></v-select>
+        <v-switch
+          v-model="timeSpanParameters.hasPriority"
+          class="switch_priority"
+          label="Créneaux prioritaire"
+        ></v-switch>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="switchReadyForAssignment()"
+            >Enregistrer</v-btn
+          >
+        </v-card-actions>
+      </v-card></v-dialog
+    >
   </div>
 </template>
 
@@ -158,6 +179,7 @@ import {
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
+import { TimeSpanCategory, TimeSpanParameters } from "~/utils/models/TimeSpan";
 import { User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
@@ -184,6 +206,11 @@ export default Vue.extend({
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
     isReadyForAssignmentDialogOpen: false,
+    categories: Object.values(TimeSpanCategory),
+    timeSpanParameters: {
+      hasPriority: false,
+      category: TimeSpanCategory.BAR,
+    } as TimeSpanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
@@ -374,8 +401,16 @@ export default Vue.extend({
       this.refuseComment = "";
       this.isRefuseDialogOpen = false;
     },
-    async switchToReadyForAssignment() {
-      //return this.$accessor.FT.switchToReadyForAssignment(this.meAsUser);
+    showReadyForAssignment() {
+      if (!this.isReadyForAssignmentDialogOpen)
+        this.isReadyForAssignmentDialogOpen = true;
+    },
+    switchReadyForAssignment() {
+      this.isReadyForAssignmentDialogOpen = false;
+      this.$accessor.FT.switchToReadyForAssignment({
+        author: this.meAsUser,
+        timeSpanParameters: this.timeSpanParameters,
+      });
     },
     checkBeforeSubmitForReview() {
       const hasError = this.isFA
@@ -451,6 +486,15 @@ export default Vue.extend({
   }
 }
 
+.category_list {
+  margin: 0 auto;
+  width: 75%;
+}
+
+.switch_priority {
+  margin: 0 auto;
+  width: 75%;
+}
 @media only screen and (max-width: 965px) {
   .bottom-bar {
     position: fixed;

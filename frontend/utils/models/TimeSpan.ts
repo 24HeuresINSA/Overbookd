@@ -8,7 +8,7 @@ export interface TimeSpan {
   _id: string;
 }
 
-enum TimeSpanCategory {
+export enum TimeSpanCategory {
   STATIQUE = "STATIQUE",
   BAR = "BAR",
   MANUTENTION = "MANUTENTION",
