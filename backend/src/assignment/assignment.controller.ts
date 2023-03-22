@@ -10,7 +10,9 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { AssignmentService } from './assignment.service';
+import { FtTimespan } from './dto/ftTimespanResponse';
 import { VolunteerResponse } from './dto/volunteerResponse';
+import { FtTimespanService } from './ftTimespan.service';
 import { VolunteerService } from './volunteer.service';
 
 @ApiBearerAuth()
@@ -26,6 +28,7 @@ export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
     private readonly volunteerService: VolunteerService,
+    private readonly ftTimespanService: FtTimespanService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -40,5 +43,19 @@ export class AssignmentController {
   })
   findAllVolunteers(): Promise<VolunteerResponse[]> {
     return this.volunteerService.findAllVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Get('ft-timespans')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get all valid ft timespans',
+    isArray: true,
+    type: FtTimespan,
+  })
+  findAllFtTimespans(): Promise<FtTimespan[]> {
+    return this.ftTimespanService.findAllFtTimespans();
   }
 }
