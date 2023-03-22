@@ -95,6 +95,7 @@ export default Vue.extend({
         "Benne Parking K-fet",
         "Parking Eiffel",
         "Creux GCU",
+        "Creux GM",
         "Cave E",
         "Club Rock",
         "Conteneur 24h",
