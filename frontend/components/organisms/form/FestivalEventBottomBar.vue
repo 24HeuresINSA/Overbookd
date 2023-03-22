@@ -134,6 +134,11 @@
         </template>
       </ConfirmationMessage>
     </v-dialog>
+
+    <v-dialog
+      v-model="isReadyForAssignmentDialogOpen"
+      max-width="600px"
+    ></v-dialog>
   </div>
 </template>
 
@@ -157,8 +162,8 @@ import { User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
-import GearRequestsValidation from "./GearRequestsValidation.vue";
 import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
+import GearRequestsValidation from "./GearRequestsValidation.vue";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",
@@ -178,6 +183,7 @@ export default Vue.extend({
     isValidationDialogOpen: false,
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
+    isReadyForAssignmentDialogOpen: false,
     refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
@@ -369,7 +375,7 @@ export default Vue.extend({
       this.isRefuseDialogOpen = false;
     },
     async switchToReadyForAssignment() {
-      return this.$accessor.FT.switchToReadyForAssignment(this.meAsUser);
+      //return this.$accessor.FT.switchToReadyForAssignment(this.meAsUser);
     },
     checkBeforeSubmitForReview() {
       const hasError = this.isFA

@@ -26,6 +26,7 @@ import {
 import { Period } from "~/utils/models/period";
 import { Reviewer } from "~/utils/models/review";
 import { StatsPayload } from "~/utils/models/stats";
+import { TimeSpanParameters } from "~/utils/models/TimeSpan";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -74,9 +75,14 @@ export default {
       reviewer
     );
   },
-  switchToReadyForAssignment(context: Context, ftId: number) {
+  switchToReadyForAssignment(
+    context: Context,
+    ftId: number,
+    timeSpanParameters: TimeSpanParameters
+  ) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/assignment-approval`
+      `${resource}/${ftId}/assignment-approval`,
+      timeSpanParameters
     );
   },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {

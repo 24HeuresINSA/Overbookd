@@ -5,12 +5,12 @@ import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,
+  isSimilarGearRequest,
   isSimilarPeriod,
+  splitGearRequest,
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
-  isSimilarGearRequest,
-  splitGearRequest,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
 import {
@@ -44,6 +44,7 @@ import {
 } from "~/utils/models/gearRequests";
 import { Review, Reviewer } from "~/utils/models/review";
 import { Team } from "~/utils/models/team";
+import { TimeSpanParameters } from "~/utils/models/TimeSpan";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
@@ -409,11 +410,14 @@ export const actions = actionTree(
 
     async switchToReadyForAssignment(
       { dispatch, commit, state },
-      author: User
+      {
+        author,
+        timeSpanParameters,
+      }: { author: User; timeSpanParameters: TimeSpanParameters }
     ) {
       const resFT = await safeCall(
         this,
-        repo.switchToReadyForAssignment(this, state.mFT.id),
+        repo.switchToReadyForAssignment(this, state.mFT.id, timeSpanParameters),
         { successMessage: "FT prête à affectation 🥳" }
       );
       if (!resFT) return;
