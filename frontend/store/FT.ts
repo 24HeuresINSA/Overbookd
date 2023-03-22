@@ -484,19 +484,21 @@ export const actions = actionTree(
       );
       if (!res) return;
       const savedTimeWindow = castTimeWindowWithDate(res.data);
+      const { teamRequests, userRequests } = timeWindow;
       const previousTimeWindow = state.mFT.timeWindows.find(
         ({ id }) => id === savedTimeWindow.id
       );
-      const { teamRequests, userRequests } = timeWindow;
       commit("UPDATE_TIME_WINDOW", {
         ...savedTimeWindow,
         teamRequests,
         userRequests,
       });
-      dispatch("updateGearRequestRentalPeriod", {
-        previous: previousTimeWindow,
-        updated: savedTimeWindow,
-      });
+      if (!previousTimeWindow) return;
+      const previousPeriod = {
+        start: previousTimeWindow.start,
+        end: previousTimeWindow.end,
+      };
+      dispatch("updateGearRequestRentalPeriod", previousPeriod);
     },
 
     async updateTimeWindowRequirements(
@@ -665,6 +667,41 @@ export const actions = actionTree(
       await Promise.all(
         gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
+    },
+
+    async addGearRequestForAllFtPeriods(
+      { getters, dispatch },
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+    ) {
+      const generateGearRequestCreation = generateGearRequestCreationBuilder(
+        gearId,
+        quantity
+      );
+      const periods = uniquePeriodsReducer(getters.ftPeriods) as Period[];
+      const gearRequestCreationForms = periods.map(generateGearRequestCreation);
+      await Promise.all(
+        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
+      );
+    },
+
+    async addConsumableGearRequestForAllFtPeriods(
+      { getters, dispatch },
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+    ) {
+      const generateGearRequestCreation = generateGearRequestCreationBuilder(
+        gearId,
+        quantity
+      );
+      const periods = uniquePeriodsReducer(getters.ftPeriods) as Period[];
+      const period = {
+        start: new Date(
+          Math.min(...periods.map(({ start }) => start.getTime()))
+        ),
+        end: new Date(Math.max(...periods.map(({ end }) => end.getTime()))),
+        id: -1,
+      };
+      const gearRequestCreationForm = generateGearRequestCreation(period);
+      dispatch("addGearRequest", gearRequestCreationForm);
     },
 
     async addConsumableGearRequestForAllRentalPeriods(
@@ -838,45 +875,27 @@ export const actions = actionTree(
     },
 
     async updateGearRequestRentalPeriod(
-      { commit, dispatch, state },
-      {
-        previous,
-        updated,
-      }: { previous: Omit<Period, "id">; updated: Omit<Period, "id"> }
+      { state, dispatch, getters },
+      previousPeriod: Omit<Period, "id">
     ) {
-      const previousPeriod = {
-        start: previous.start,
-        end: previous.end,
-        id: -1,
-      };
-      const toUpdateGearRequest = state.gearRequests.find(({ rentalPeriod }) =>
-        isSimilarPeriod(previousPeriod)(rentalPeriod)
-      );
-      if (!toUpdateGearRequest) {
-        dispatch("addGearRequestRentalPeriod", updated);
-        return;
-      }
-      const res = await safeCall(
+      await safeCall(
         this,
-        repo.updateGearRequest(
-          this,
-          state.mFT.id,
-          toUpdateGearRequest.gear.id,
-          toUpdateGearRequest.rentalPeriod.id,
-          { start: updated.start, end: updated.end }
-        ),
-        {
-          successMessage:
-            "La demande de matériel a été mise a jour avec succès ✅",
-          errorMessage: "La demande de matériel n'a pas a été mise a jour ❌",
-        }
+        repo.removeGearRequestRentalPeriod(this, state.mFT.id, previousPeriod)
       );
-      if (!res) return;
-      const updatedGearRequest = castGearRequestWithDate(res.data);
-      commit(
-        "UPATE_GEAR_REQUESTS_RENTAL_PERIOD",
-        updatedGearRequest.rentalPeriod
+      const gearRequests =
+        getters.uniqueByGearGearRequests as StoredGearRequest<"FT">[];
+      await Promise.all(
+        gearRequests.map(({ gear, quantity }) => {
+          const form = {
+            gearId: gear.id,
+            quantity,
+          };
+          if (gear.isConsumable)
+            return dispatch("addConsumableGearRequestForAllFtPeriods", form);
+          return dispatch("addGearRequestForAllFtPeriods", form);
+        })
       );
+      dispatch("fetchGearRequests");
     },
 
     async setDriveToGearRequest(

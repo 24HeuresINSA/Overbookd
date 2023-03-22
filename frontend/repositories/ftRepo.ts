@@ -23,6 +23,7 @@ import {
   GearRequestWithDrive,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
+import { Period } from "~/utils/models/period";
 import { Reviewer } from "~/utils/models/review";
 import { StatsPayload } from "~/utils/models/stats";
 import { User } from "~/utils/models/user";
@@ -181,6 +182,16 @@ export default {
     return context.$axios.delete(
       `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
     );
+  },
+
+  removeGearRequestRentalPeriod(
+    context: Context,
+    taskId: number,
+    removalPeriod: Period
+  ) {
+    return context.$axios.delete(`${resource}/${taskId}/gear-requests`, {
+      data: removalPeriod,
+    });
   },
 
   updateGearRequest(
