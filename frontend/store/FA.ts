@@ -6,7 +6,7 @@ import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
   uniqueByGearReducer,
-  uniqueGearRequestPeriodsReducer,
+  uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
 import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import {
@@ -74,7 +74,9 @@ export const getters = getterTree(state, {
     );
   },
   gearRequestRentalPeriods(state): Period[] {
-    const savedPeriods = uniqueGearRequestPeriodsReducer(state.gearRequests);
+    const savedPeriods = uniquePeriodsReducer(
+      state.gearRequests.map((gr) => gr.rentalPeriod)
+    );
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
