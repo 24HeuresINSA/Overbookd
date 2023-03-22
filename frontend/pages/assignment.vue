@@ -77,7 +77,7 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .assignment-container {
   padding: 0;
   left: 0;

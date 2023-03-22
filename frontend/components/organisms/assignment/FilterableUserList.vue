@@ -12,16 +12,19 @@
           class="filters__field"
           :boxed="false"
         ></SearchTeams>
-      </div>
-      <v-divider />
-      <div class="user-list">
-        <UserList :volunteers="filteredVolunteers" />
         <p>
           Nombre de personnes dans la liste :
           <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
         </p>
-        <FriendsDisplay v-if="isOrgaTaskMode" />
       </div>
+      <v-divider />
+      <div
+        class="user-list"
+        :class="shouldDisplayFriends ? 'user-list__with-friend-list' : ''"
+      >
+        <UserList :volunteers="filteredVolunteers" />
+      </div>
+      <FriendsDisplay v-if="shouldDisplayFriends" class="friend-list" />
     </v-card-text>
   </v-card>
 </template>
@@ -64,6 +67,12 @@ export default Vue.extend({
     isOrgaTaskMode(): boolean {
       return this.$accessor.assignment.mode === AssignmentModes.ORGA_TASK;
     },
+    hasSelectedVolunteer(): boolean {
+      return !!this.$accessor.assignment.selectedVolunteer;
+    },
+    shouldDisplayFriends(): boolean {
+      return this.isOrgaTaskMode && this.hasSelectedVolunteer;
+    },
   },
   methods: {
     filterVolunteerByValidity(): (volunteer: Volunteer) => boolean {
@@ -97,11 +106,18 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .filterable-user-list {
-  overflow-y: auto;
+  width: 100%;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .v-card__text {
+    height: fit-content;
+  }
 }
 
 .filters {
-  position: sticky;
+  width: 100%;
+  height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,7 +133,24 @@ export default Vue.extend({
 }
 
 .user-list {
+  width: 100%;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  &__with-friend-list {
+    max-height: calc(100vh - 430px);
+  }
+}
+
+.friend-list {
+  max-width: 300px;
+  height: 160px;
+  position: fixed;
+  bottom: 36px;
+}
+
+.v-text-field__details {
+  display: none;
 }
 </style>
