@@ -107,6 +107,7 @@ export default Vue.extend({
         "Conteneur Parking K-fet",
         "Conteneur Scène Roots",
         "Hall des Humanités",
+        "Local 24h",
         "Magasin",
         "MdE",
         "Salle Montréal",
