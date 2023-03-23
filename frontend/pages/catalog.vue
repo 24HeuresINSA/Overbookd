@@ -4,7 +4,13 @@
     <div class="catalog">
       <section class="gears">
         <GearListing></GearListing>
-        <v-btn large color="success" rounded @click="openGearCreationDialog">
+        <v-btn
+          v-if="isCatalogWriter"
+          large
+          color="success"
+          rounded
+          @click="openGearCreationDialog"
+        >
           <v-icon dark> mdi-plus </v-icon>Ajouter du matos</v-btn
         >
       </section>
@@ -36,6 +42,11 @@ export default Vue.extend({
     return {
       gearCreationDialogOpened: false,
     };
+  },
+  computed: {
+    isCatalogWriter(): boolean {
+      return this.$accessor.user.hasPermission("catalog-write");
+    },
   },
   methods: {
     openGearCreationDialog() {

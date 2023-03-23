@@ -238,7 +238,7 @@ export default {
         },
         {
           icon: "mdi-bookshelf",
-          permission: "catalog-write",
+          permission: "catalog-read",
           title: "Catalogue",
           to: "/catalog",
         },
