@@ -48,7 +48,7 @@
           <span class="category-details__path"> {{ item.category?.path }}</span>
         </div>
       </template>
-      <template #item.actions="{ item }">
+      <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateGearDialog(item)">
           mdi-pencil
         </v-icon>
@@ -138,6 +138,9 @@ export default Vue.extend({
         )
       );
     },
+    isCatalogWriter(): boolean {
+      return this.$accessor.user.hasPermission("catalog-write");
+    },
   },
   beforeMount() {
     this.fetchGears({});
@@ -193,7 +196,7 @@ export default Vue.extend({
     },
     defectSearchGears() {
       if (this.delay) clearInterval(this.delay);
-      this.delay = setTimeout(this.searchGears, 500);
+      this.delay = setTimeout(this.searchGears, 800);
     },
   },
 });

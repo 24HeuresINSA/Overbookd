@@ -9,12 +9,24 @@
     >
       <template #label="{ item }">
         {{ item.name }}
-        <v-icon class="ml-2" small @click="openInformationDialog(item)">
+        <v-icon
+          v-if="isCatalogWriter"
+          class="ml-2"
+          small
+          @click="openInformationDialog(item)"
+        >
           mdi-information
         </v-icon>
       </template>
     </v-treeview>
-    <v-btn dark large rounded color="amber" @click="openCreationDialog">
+    <v-btn
+      v-if="isCatalogWriter"
+      dark
+      large
+      rounded
+      color="amber"
+      @click="openCreationDialog"
+    >
       <v-icon dark> mdi-plus </v-icon>
       Ajouter une categorie
     </v-btn>
@@ -55,6 +67,9 @@ export default Vue.extend({
   computed: {
     categories() {
       return this.$accessor.catalog.categoryTree;
+    },
+    isCatalogWriter(): boolean {
+      return this.$accessor.user.hasPermission("catalog-write");
     },
   },
   mounted() {
