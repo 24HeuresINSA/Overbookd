@@ -1,9 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import {
-  Feedback,
-  FeedbackCreation,
-  SavedFeedback,
-} from "~/utils/models/feedback";
+import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
   FT,
   FTCreation,
@@ -230,12 +226,6 @@ export default {
   },
 
   // old requests
-  markAsReady(context: Context, FTCount: number, comment: Feedback) {
-    return context.$axios.post(`${resource}/${FTCount}/ready`, { comment });
-  },
-  getFTsNumber(context: Context) {
-    return context.$axios.get(resource + "/count");
-  },
   getOrgaRequis(context: Context) {
     return context.$axios.get(resource + "/orga-requis");
   },

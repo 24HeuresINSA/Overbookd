@@ -59,4 +59,11 @@ export class FtTimespan {
     type: SimplifiedFT,
   })
   ft: SimplifiedFT;
+
+  @ApiProperty({
+    required: true,
+    description: 'The ft timespan requested teams',
+    type: [String],
+  })
+  requestedTeams: string[];
 }

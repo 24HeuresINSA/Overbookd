@@ -1,4 +1,11 @@
-import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -57,5 +64,21 @@ export class AssignmentController {
   })
   findAllFtTimespans(): Promise<FtTimespan[]> {
     return this.ftTimespanService.findAllFtTimespans();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Get('volunteers/:id/ft-timespans')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get ft timespans available for volunteer',
+    isArray: true,
+    type: FtTimespan,
+  })
+  findFtTimespansAvailableForVolunteer(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FtTimespan[]> {
+    return this.ftTimespanService.findFtTimespansAvailableForVolunteer(id);
   }
 }
