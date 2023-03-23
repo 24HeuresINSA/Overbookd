@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { UserService } from 'src/user/user.service';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import { PrismaService } from '../prisma.service';
 import { AssignmentController } from './assignment.controller';
@@ -14,6 +15,7 @@ import { VolunteerService } from './volunteer.service';
     FtTimespanService,
     PrismaService,
     VolunteerAvailabilityService,
+    UserService,
   ],
 })
 export class AssignmentModule {}

@@ -17,7 +17,7 @@ class SimplifiedFT {
   name: string;
 }
 
-export class FtTimespan {
+export class FtTimespanResponseDto {
   @ApiProperty({
     required: true,
     description: 'The id of the ft timespan',

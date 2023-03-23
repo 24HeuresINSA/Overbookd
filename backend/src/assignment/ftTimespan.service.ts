@@ -1,28 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { UserService } from 'src/user/user.service';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
-import { FtTimespan } from './dto/ftTimespanResponse';
-import { FtTimespanAfterRequest, SELECT_FT_TIMESPAN } from './ftTimespanTypes';
+import { FtTimespanResponseDto } from './dto/ftTimespanResponse.dto';
+import {
+  FtTimespanAfterRequest,
+  SELECT_FT_TIMESPAN,
+} from './utils/ftTimespanTypes';
 
 @Injectable()
 export class FtTimespanService {
   constructor(
     private prisma: PrismaService,
     private volunteerAvailability: VolunteerAvailabilityService,
+    private user: UserService,
   ) {}
 
-  async findAllFtTimespans(): Promise<FtTimespan[]> {
-    return this.requestFtTimespan();
+  async findAllFtTimespans(): Promise<FtTimespanResponseDto[]> {
+    const ftTimespans = await this.prisma.ftTimespan.findMany({
+      select: SELECT_FT_TIMESPAN,
+      orderBy: {
+        start: 'asc',
+      },
+    });
+    return this.formatFtTimespans(ftTimespans);
+  }
+
+  async findFtTimespan(id: number): Promise<FtTimespanResponseDto> {
+    const ftTimespan = await this.prisma.ftTimespan.findUnique({
+      where: { id },
+      select: SELECT_FT_TIMESPAN,
+    });
+    return this.formatFtTimespan(ftTimespan);
   }
 
   async findFtTimespansAvailableForVolunteer(
     id: number,
-  ): Promise<FtTimespan[]> {
+  ): Promise<FtTimespanResponseDto[]> {
     const availabilities =
       await this.volunteerAvailability.findUserAvailabilities(id);
-    const ftTimespans = await this.requestFtTimespan();
-    const volunteerTeams = await this.getVolunteerTeams(id);
+    const ftTimespans = await this.findAllFtTimespans();
+    const volunteerTeams = await this.user.getUserTeams(id);
 
     const ftTimespansFilteredByTeams = this.filterFtTimespansByVolunteerTeams(
       ftTimespans,
@@ -34,47 +53,19 @@ export class FtTimespanService {
     );
   }
 
-  private async requestFtTimespan(): Promise<FtTimespan[]> {
-    const ftTimespans = await this.prisma.ftTimespan.findMany({
-      select: SELECT_FT_TIMESPAN,
-      orderBy: {
-        start: 'asc',
-      },
-    });
-    return this.formatFtTimespans(ftTimespans);
-  }
-
-  private async getVolunteerTeams(id: number): Promise<string[]> {
-    const volunteer = await this.prisma.user.findUnique({
-      where: { id },
-      select: {
-        team: {
-          select: {
-            team: {
-              select: {
-                code: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    return volunteer.team.map((t) => t.team.code);
-  }
-
   private filterFtTimespansByVolunteerTeams(
-    ftTimespans: FtTimespan[],
+    ftTimespans: FtTimespanResponseDto[],
     teams: string[],
-  ): FtTimespan[] {
+  ): FtTimespanResponseDto[] {
     return ftTimespans.filter((ftTimespan) => {
       return ftTimespan.requestedTeams.some((team) => teams.includes(team));
     });
   }
 
   private filterFtTimespansByVolunteerAvailabilities(
-    ftTimespans: FtTimespan[],
+    ftTimespans: FtTimespanResponseDto[],
     availabilities: Period[],
-  ): FtTimespan[] {
+  ): FtTimespanResponseDto[] {
     return ftTimespans.filter((ftTimespan) => {
       return this.checkIfVolunteerIsAvailableDuringFtTimespan(
         availabilities,
@@ -83,9 +74,9 @@ export class FtTimespanService {
     });
   }
 
-  private checkIfVolunteerIsAvailableDuringFtTimespan(
+  checkIfVolunteerIsAvailableDuringFtTimespan(
     availabilities: Period[],
-    ftTimespan: FtTimespan,
+    ftTimespan: FtTimespanResponseDto,
   ): boolean {
     return availabilities.some((a) => {
       return (
@@ -97,13 +88,15 @@ export class FtTimespanService {
 
   private formatFtTimespans(
     ftTimespans: FtTimespanAfterRequest[],
-  ): FtTimespan[] {
+  ): FtTimespanResponseDto[] {
     return ftTimespans.map((ts) => {
       return this.formatFtTimespan(ts);
     });
   }
 
-  private formatFtTimespan(ftTimespan: FtTimespanAfterRequest): FtTimespan {
+  private formatFtTimespan(
+    ftTimespan: FtTimespanAfterRequest,
+  ): FtTimespanResponseDto {
     const requestedTeams = ftTimespan.timeWindows.teamRequests.map(
       (tr) => tr.team.code,
     );

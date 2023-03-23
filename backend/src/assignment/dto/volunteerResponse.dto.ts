@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class VolunteerResponse {
+export class VolunteerResponseDto {
   @ApiProperty({
     required: true,
     description: 'The id of the volunteer',

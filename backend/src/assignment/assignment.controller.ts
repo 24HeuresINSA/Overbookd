@@ -17,8 +17,8 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { AssignmentService } from './assignment.service';
-import { FtTimespan } from './dto/ftTimespanResponse';
-import { VolunteerResponse } from './dto/volunteerResponse';
+import { FtTimespanResponseDto } from './dto/ftTimespanResponse.dto';
+import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import { VolunteerService } from './volunteer.service';
 
@@ -46,9 +46,9 @@ export class AssignmentController {
     status: 200,
     description: 'Get all valid volunteers',
     isArray: true,
-    type: VolunteerResponse,
+    type: VolunteerResponseDto,
   })
-  findAllVolunteers(): Promise<VolunteerResponse[]> {
+  findAllVolunteers(): Promise<VolunteerResponseDto[]> {
     return this.volunteerService.findAllVolunteers();
   }
 
@@ -60,25 +60,41 @@ export class AssignmentController {
     status: 200,
     description: 'Get all valid ft timespans',
     isArray: true,
-    type: FtTimespan,
+    type: FtTimespanResponseDto,
   })
-  findAllFtTimespans(): Promise<FtTimespan[]> {
+  findAllFtTimespans(): Promise<FtTimespanResponseDto[]> {
     return this.ftTimespanService.findAllFtTimespans();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('volunteers/:id/ft-timespans')
+  @Get('volunteer/:id/ft-timespans')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get ft timespans available for volunteer',
     isArray: true,
-    type: FtTimespan,
+    type: FtTimespanResponseDto,
   })
   findFtTimespansAvailableForVolunteer(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<FtTimespan[]> {
+  ): Promise<FtTimespanResponseDto[]> {
     return this.ftTimespanService.findFtTimespansAvailableForVolunteer(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Get('ft-timespan/:id/volunteers')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get volunteers available for ft timespan',
+    isArray: true,
+    type: VolunteerResponseDto,
+  })
+  findAvailableVolunteersForFtTimespan(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VolunteerResponseDto[]> {
+    return this.volunteerService.findAvailableVolunteersForFtTimespan(id);
   }
 }
