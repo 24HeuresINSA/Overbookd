@@ -7,20 +7,21 @@
         :items="gearRequestsToApprove"
         dense
         :items-per-page="-1"
+        :custom-sort="sortGearRequests"
       >
         <template #item.delete="{ item }">
           <v-icon small @click="removeGearRequest(item)"> mdi-delete </v-icon>
         </template>
-        <template #[`item.gear`]="{ item }">
+        <template #item.gear="{ item }">
           {{ item.gear.name }}
         </template>
-        <template #[`item.startDate`]="{ item }">
+        <template #item.startDate="{ item }">
           {{ formatDate(item.rentalPeriod.start) }}
         </template>
-        <template #[`item.endDate`]="{ item }">
+        <template #item.endDate="{ item }">
           {{ formatDate(item.rentalPeriod.end) }}
         </template>
-        <template #[`item.drive`]="{ item }">
+        <template #item.drive="{ item }">
           <v-autocomplete
             class="drive"
             :value="item.drive"
@@ -51,11 +52,14 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { gearRequestsSorts } from "~/utils/functions/gearRequest";
 import { Header } from "~/utils/models/Data";
 import {
+  GearRequest,
   GearRequestWithDrive,
   isFAStoredGearRequest,
   isFTStoredGearRequest,
+  sortableGearRequestHeader,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 
@@ -82,12 +86,12 @@ export default Vue.extend({
   data(): GearRequestsValidationData {
     return {
       headers: [
-        { text: "Suppression", value: "delete" },
+        { text: "Suppression", value: "delete", sortable: false },
         { text: "Quantite", value: "quantity" },
         { text: "Matos", value: "gear" },
         { text: "Du", value: "startDate" },
         { text: "Au", value: "endDate" },
-        { text: "Magasin", value: "drive", width: "30%" },
+        { text: "Magasin", value: "drive", width: "30%", sortable: false },
       ],
 
       drives: [
@@ -120,8 +124,8 @@ export default Vue.extend({
     isFA(): boolean {
       return this.festivalEvent === "FA";
     },
-    gearRequestsToApprove(): StoredGearRequest<"FA" | "FT">[] {
-      const gearRequests: StoredGearRequest<"FA" | "FT">[] = this.isFA
+    gearRequestsToApprove(): StoredGearRequest[] {
+      const gearRequests: StoredGearRequest[] = this.isFA
         ? this.$accessor.FA.gearRequests
         : this.$accessor.FT.gearRequests;
       return gearRequests.filter(
@@ -138,10 +142,7 @@ export default Vue.extend({
       return formatDateWithMinutes(date);
     },
 
-    updateGearRequestWithDrive(
-      gearRequest: StoredGearRequest<"FA" | "FT">,
-      drive: string
-    ) {
+    updateGearRequestWithDrive(gearRequest: StoredGearRequest, drive: string) {
       const payload = {
         ...gearRequest,
         drive,
@@ -154,7 +155,7 @@ export default Vue.extend({
       }
     },
 
-    removeGearRequest(gearRequest: StoredGearRequest<"FA" | "FT">) {
+    removeGearRequest(gearRequest: StoredGearRequest) {
       if (isFAStoredGearRequest(gearRequest)) {
         return this.$accessor.FA.removeGearRequest(gearRequest);
       }
@@ -172,6 +173,20 @@ export default Vue.extend({
         : this.$accessor.FT.validateGearRequests(gearRequests);
       await validation;
       this.$emit("close-dialog");
+    },
+
+    sortGearRequests(
+      gearRequests: GearRequest[],
+      sortsBy: sortableGearRequestHeader[],
+      sortsDesc: boolean[]
+    ): GearRequest[] {
+      const sortBy = sortsBy.at(0) ?? "quantity";
+      const sortFnc = gearRequestsSorts.get(sortBy);
+
+      if (!sortFnc) return gearRequests;
+
+      const sortDesc = sortsDesc.at(0) ?? false;
+      return sortFnc(gearRequests, sortDesc);
     },
   },
 });

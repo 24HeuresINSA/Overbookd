@@ -29,7 +29,7 @@ export interface Period extends GeneralPeriod {
   id: number;
 }
 
-export interface Seeker<T extends "FA" | "FT"> {
+export interface Seeker<T extends "FA" | "FT" = "FA" | "FT"> {
   type: T;
   id: number;
   name: string;
@@ -37,31 +37,31 @@ export interface Seeker<T extends "FA" | "FT"> {
 
 export type EventSeeker = Seeker<"FA"> | Seeker<"FT">;
 
-export interface GearRequest<T extends "FA" | "FT"> {
+export interface GearRequest<T extends "FA" | "FT" = "FA" | "FT"> {
   rentalPeriod: Period;
   quantity: number;
   gear: Gear;
   seeker: Seeker<T>;
 }
 
-export interface StoredGearRequest<T extends "FA" | "FT">
+export interface StoredGearRequest<T extends "FA" | "FT" = "FA" | "FT">
   extends GearRequest<T> {
   drive?: string;
 }
 
 export function isFAStoredGearRequest(
-  storedGearRequest: StoredGearRequest<"FA" | "FT">
+  storedGearRequest: StoredGearRequest
 ): storedGearRequest is StoredGearRequest<"FA"> {
   return storedGearRequest.seeker.type === "FA";
 }
 
 export function isFTStoredGearRequest(
-  storedGearRequest: StoredGearRequest<"FA" | "FT">
+  storedGearRequest: StoredGearRequest
 ): storedGearRequest is StoredGearRequest<"FT"> {
   return storedGearRequest.seeker.type === "FT";
 }
 
-export interface GearRequestWithDrive<T extends "FA" | "FT">
+export interface GearRequestWithDrive<T extends "FA" | "FT" = "FA" | "FT">
   extends GearRequest<T> {
   drive: string;
 }
@@ -71,8 +71,8 @@ export type EventGearRequest =
   | GearRequestWithDrive<"FT">;
 
 export function castGearRequestWithDate(
-  gearRequest: HttpStringified<StoredGearRequest<"FA" | "FT">>
-): StoredGearRequest<"FA" | "FT"> {
+  gearRequest: HttpStringified<StoredGearRequest>
+): StoredGearRequest {
   return {
     ...gearRequest,
     rentalPeriod: {
@@ -82,3 +82,14 @@ export function castGearRequestWithDate(
     },
   };
 }
+
+export type sortableGearRequestHeader =
+  | "quantity"
+  | "gear"
+  | "startDate"
+  | "endDate";
+
+export type gearRequestSortFunction = (
+  gearRequests: GearRequest[],
+  desc: boolean
+) => GearRequest[];

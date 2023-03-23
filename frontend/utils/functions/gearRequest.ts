@@ -2,8 +2,10 @@ import { isSamePeriod } from "../availabilities/period";
 import {
   GearRequest,
   GearRequestCreation,
+  gearRequestSortFunction,
   Period,
   Seeker,
+  sortableGearRequestHeader,
   StoredGearRequest,
 } from "../models/gearRequests";
 
@@ -174,3 +176,41 @@ export function splitGearRequest<T extends "FA" | "FT">(
     rentalPeriod,
   }));
 }
+
+function sortOnQuantity(gearRequests: GearRequest[], desc: boolean) {
+  const order = desc ? -1 : 1;
+  return gearRequests.sort((a, b) => (a.quantity - b.quantity) * order);
+}
+
+function sortOnGear(gearRequests: GearRequest[], desc: boolean) {
+  const order = desc ? -1 : 1;
+  return gearRequests.sort(
+    (a, b) => a.gear.name.localeCompare(b.gear.name) * order
+  );
+}
+
+function sortOnRentalPeriodStart(gearRequests: GearRequest[], desc: boolean) {
+  const order = desc ? -1 : 1;
+  return gearRequests.sort(
+    (a, b) =>
+      (a.rentalPeriod.start.getTime() - b.rentalPeriod.start.getTime()) * order
+  );
+}
+
+function sortOnRentalPeriodEnd(gearRequests: GearRequest[], desc: boolean) {
+  const order = desc ? -1 : 1;
+  return gearRequests.sort(
+    (a, b) =>
+      (a.rentalPeriod.end.getTime() - b.rentalPeriod.end.getTime()) * order
+  );
+}
+
+export const gearRequestsSorts = new Map<
+  sortableGearRequestHeader,
+  gearRequestSortFunction
+>([
+  ["quantity", sortOnQuantity],
+  ["gear", sortOnGear],
+  ["startDate", sortOnRentalPeriodStart],
+  ["endDate", sortOnRentalPeriodEnd],
+]);
