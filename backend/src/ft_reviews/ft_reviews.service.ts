@@ -12,7 +12,7 @@ import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
 import { CreateFtFeedbackDto } from 'src/ft_feedback/dto/createFtFeedback.dto';
 import { PrismaService } from '../prisma.service';
-import { TimespanParametersDto } from './dto/timeSpanParameters.dto';
+import { TimespanParametersDto } from './dto/timespanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { TimespansGenerator } from './timespansGenerator';
 

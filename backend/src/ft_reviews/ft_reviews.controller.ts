@@ -23,7 +23,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TimespanParametersDto } from './dto/timeSpanParameters.dto';
+import { TimespanParametersDto } from './dto/timespanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { FtReviewsService } from './ft_reviews.service';
 

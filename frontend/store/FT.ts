@@ -35,7 +35,7 @@ import {
   getTimeWindowWithoutRequests,
   toUpdateFT,
 } from "~/utils/models/ft";
-import { TimeSpanParameters } from "~/utils/models/ftTimeSpan";
+import { TimespanParameters } from "~/utils/models/ftTimespan";
 import {
   castGearRequestWithDate,
   GearRequestCreation,
@@ -412,12 +412,12 @@ export const actions = actionTree(
       { dispatch, commit, state },
       {
         author,
-        timeSpanParameters,
-      }: { author: User; timeSpanParameters: TimeSpanParameters }
+        timespanParameters,
+      }: { author: User; timespanParameters: TimespanParameters }
     ) {
       const resFT = await safeCall(
         this,
-        repo.switchToReadyForAssignment(this, state.mFT.id, timeSpanParameters),
+        repo.switchToReadyForAssignment(this, state.mFT.id, timespanParameters),
         { successMessage: "FT prête à affectation 🥳" }
       );
       if (!resFT) return;

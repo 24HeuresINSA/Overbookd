@@ -1,4 +1,4 @@
-export enum TimeSpanCategory {
+export enum TimespanCategory {
   STATIQUE = "STATIQUE",
   BAR = "BAR",
   MANUTENTION = "MANUTENTION",
@@ -7,7 +7,7 @@ export enum TimeSpanCategory {
   AUTRE = "AUTRE",
 }
 
-export interface TimeSpanParameters {
+export interface TimespanParameters {
   hasPriority: boolean;
-  category?: TimeSpanCategory;
+  category?: TimespanCategory;
 }

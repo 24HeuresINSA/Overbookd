@@ -142,13 +142,13 @@
           <h3>Sélectionne le type et la priorité des créneaux</h3>
         </v-card-text>
         <v-select
-          v-model="timeSpanParameters.category"
+          v-model="timespanParameters.category"
           class="category-list"
           label="Catégorie"
           :items="categories"
         ></v-select>
         <v-switch
-          v-model="timeSpanParameters.hasPriority"
+          v-model="timespanParameters.hasPriority"
           class="switch-priority"
           label="Créneaux prioritaires"
         ></v-switch>
@@ -179,9 +179,9 @@ import {
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
-  TimeSpanCategory,
-  TimeSpanParameters,
-} from "~/utils/models/ftTimeSpan";
+  TimespanCategory,
+  TimespanParameters,
+} from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
@@ -209,11 +209,11 @@ export default Vue.extend({
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
     isReadyForAssignmentDialogOpen: false,
-    categories: Object.values(TimeSpanCategory),
-    timeSpanParameters: {
+    categories: Object.values(TimespanCategory),
+    timespanParameters: {
       hasPriority: false,
-      category: TimeSpanCategory.BAR,
-    } as TimeSpanParameters,
+      category: TimespanCategory.BAR,
+    } as TimespanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
@@ -410,12 +410,12 @@ export default Vue.extend({
     },
     switchReadyForAssignment() {
       this.isReadyForAssignmentDialogOpen = false;
-      if (this.timeSpanParameters.category === TimeSpanCategory.AUTRE) {
-        this.timeSpanParameters.category = undefined;
+      if (this.timespanParameters.category === TimespanCategory.AUTRE) {
+        this.timespanParameters.category = undefined;
       }
       this.$accessor.FT.switchToReadyForAssignment({
         author: this.meAsUser,
-        timeSpanParameters: this.timeSpanParameters,
+        timespanParameters: this.timespanParameters,
       });
     },
     checkBeforeSubmitForReview() {
