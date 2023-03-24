@@ -17,7 +17,10 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { AssignmentService } from './assignment.service';
-import { FtTimespanResponseDto } from './dto/ftTimespanResponse.dto';
+import {
+  FtWithTimespansResponseDto,
+  TimespanWithFtResponseDto,
+} from './dto/ftTimespanResponse.dto';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import { VolunteerService } from './volunteer.service';
@@ -58,12 +61,12 @@ export class AssignmentController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get all valid ft timespans',
+    description: 'Get all valid ft with timespans',
     isArray: true,
-    type: FtTimespanResponseDto,
+    type: FtWithTimespansResponseDto,
   })
-  findAllFtTimespans(): Promise<FtTimespanResponseDto[]> {
-    return this.ftTimespanService.findAllFtTimespans();
+  findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
+    return this.ftTimespanService.findAllFtsWithTimespans();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -74,12 +77,12 @@ export class AssignmentController {
     status: 200,
     description: 'Get ft timespans available for volunteer',
     isArray: true,
-    type: FtTimespanResponseDto,
+    type: TimespanWithFtResponseDto,
   })
   findFtTimespansAvailableForVolunteer(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<FtTimespanResponseDto[]> {
-    return this.ftTimespanService.findFtTimespansAvailableForVolunteer(id);
+  ): Promise<TimespanWithFtResponseDto[]> {
+    return this.ftTimespanService.findTimespansWithFtAvailableForVolunteer(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

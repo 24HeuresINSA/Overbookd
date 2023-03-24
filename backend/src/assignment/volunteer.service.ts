@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { FtTimespanResponseDto } from './dto/ftTimespanResponse.dto';
+import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import {
@@ -8,7 +8,7 @@ import {
   SELECT_VOLUNTEER_WITH_AVAILABILITIES,
   VolunteerAfterRequest,
   VolunteerWithAvailabilities,
-} from './utils/volunteerTypes';
+} from './types/volunteerTypes';
 
 @Injectable()
 export class VolunteerService {
@@ -68,7 +68,7 @@ export class VolunteerService {
   ): Promise<VolunteerResponseDto[]> {
     const volunteers = await this.findAllVolunteersWithAvailabilities();
 
-    const ftTimespan = await this.ftTimespan.findFtTimespan(id);
+    const ftTimespan = await this.ftTimespan.findTimespanWithFt(id);
     const volunteersFilteredByTeams = this.filterVolunteersByRequestedTeams(
       volunteers,
       ftTimespan.requestedTeams,
@@ -96,7 +96,7 @@ export class VolunteerService {
 
   private filterVolunteersByAvailabilitiesDuringFtTimespan(
     volunteers: VolunteerWithAvailabilities[],
-    ftTimespan: FtTimespanResponseDto,
+    ftTimespan: TimespanWithFtResponseDto,
   ): VolunteerWithAvailabilities[] {
     return volunteers.filter((volunteer) => {
       return this.ftTimespan.checkIfVolunteerIsAvailableDuringFtTimespan(

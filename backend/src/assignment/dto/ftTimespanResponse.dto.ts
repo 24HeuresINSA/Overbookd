@@ -15,9 +15,23 @@ class SimplifiedFT {
     type: String,
   })
   name: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'The ft priority',
+    type: Boolean,
+  })
+  hasPriority: boolean;
+
+  @ApiProperty({
+    required: true,
+    description: 'The ft category',
+    enum: TaskCategory,
+  })
+  category: TaskCategory;
 }
 
-export class FtTimespanResponseDto {
+class FtTimespan {
   @ApiProperty({
     required: true,
     description: 'The id of the ft timespan',
@@ -41,29 +55,26 @@ export class FtTimespanResponseDto {
 
   @ApiProperty({
     required: true,
-    description: 'The ft timespan priority',
-    type: Boolean,
+    description: 'The ft timespan requested teams',
+    type: [String],
   })
-  hasPriority: boolean;
+  requestedTeams: string[];
+}
 
-  @ApiProperty({
-    required: true,
-    description: 'The ft timespan category',
-    enum: TaskCategory,
-  })
-  category: TaskCategory;
-
+export class TimespanWithFtResponseDto extends FtTimespan {
   @ApiProperty({
     required: true,
     description: 'The ft of the ft timespan',
     type: SimplifiedFT,
   })
   ft: SimplifiedFT;
+}
 
+export class FtWithTimespansResponseDto extends SimplifiedFT {
   @ApiProperty({
     required: true,
-    description: 'The ft timespan requested teams',
-    type: [String],
+    description: 'The ft timespans',
+    type: [FtTimespan],
   })
-  requestedTeams: string[];
+  timespans: FtTimespan[];
 }
