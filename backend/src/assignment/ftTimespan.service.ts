@@ -104,7 +104,7 @@ export class FtTimespanService {
   private formatTimespanWithFt(
     ftTimespan: TimespanWithFtAfterRequest,
   ): TimespanWithFtResponseDto {
-    const requestedTeams = ftTimespan.timeWindows.teamRequests.map(
+    const requestedTeams = ftTimespan.timeWindow.teamRequests.map(
       (tr) => tr.team.code,
     );
     return {
@@ -112,10 +112,10 @@ export class FtTimespanService {
       start: ftTimespan.start,
       end: ftTimespan.end,
       ft: {
-        id: ftTimespan.timeWindows.ft.id,
-        name: ftTimespan.timeWindows.ft.name,
-        hasPriority: ftTimespan.timeWindows.ft.hasPriority,
-        category: ftTimespan.timeWindows.ft.category,
+        id: ftTimespan.timeWindow.ft.id,
+        name: ftTimespan.timeWindow.ft.name,
+        hasPriority: ftTimespan.timeWindow.ft.hasPriority,
+        category: ftTimespan.timeWindow.ft.category,
       },
       requestedTeams,
     };

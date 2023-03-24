@@ -4,7 +4,7 @@ export interface TimespanWithFtAfterRequest {
   id: number;
   start: Date;
   end: Date;
-  timeWindows: {
+  timeWindow: {
     ft: {
       id: number;
       name: string;
@@ -42,7 +42,7 @@ export const SELECT_TIMESPAN_WITH_FT = {
   id: true,
   start: true,
   end: true,
-  timeWindows: {
+  timeWindow: {
     select: {
       ft: {
         select: {
