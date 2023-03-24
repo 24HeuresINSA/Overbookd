@@ -530,7 +530,7 @@ model FtTeamRequest {
 
 model FtTimespan {
   id              Int           @id @default(autoincrement())
-  timeWindows     FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindow      FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
   timeWindowId    Int           @map("time_window_id")
   start           DateTime
   end             DateTime

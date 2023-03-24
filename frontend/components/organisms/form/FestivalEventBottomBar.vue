@@ -139,24 +139,24 @@
       <v-card>
         <v-card-title> Prêt à validation </v-card-title>
         <v-card-text>
-          <h3>Veuillez sélectionner le type et la priorité des créneaux</h3>
+          <h3>Sélectionne le type et la priorité des créneaux</h3>
         </v-card-text>
         <v-select
           v-model="timeSpanParameters.category"
-          class="category_list"
+          class="category-list"
           label="Catégorie"
           :items="categories"
         ></v-select>
         <v-switch
           v-model="timeSpanParameters.hasPriority"
-          class="switch_priority"
-          label="Créneaux prioritaire"
+          class="switch-priority"
+          label="Créneaux prioritaires"
         ></v-switch>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="switchReadyForAssignment()"
-            >Enregistrer</v-btn
-          >
+          <v-btn color="primary" text @click="switchReadyForAssignment()">
+            Enregistrer
+          </v-btn>
         </v-card-actions>
       </v-card></v-dialog
     >
@@ -178,8 +178,11 @@ import {
 } from "~/utils/festivalEvent/ftUtils";
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
+import {
+  TimeSpanCategory,
+  TimeSpanParameters,
+} from "~/utils/models/ftTimeSpan";
 import { Team } from "~/utils/models/team";
-import { TimeSpanCategory, TimeSpanParameters } from "~/utils/models/TimeSpan";
 import { User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
@@ -486,15 +489,15 @@ export default Vue.extend({
   }
 }
 
-.category_list {
+.category-list {
+  margin: 0 auto;
+  width: 75%;
+}
+.switch-priority {
   margin: 0 auto;
   width: 75%;
 }
 
-.switch_priority {
-  margin: 0 auto;
-  width: 75%;
-}
 @media only screen and (max-width: 965px) {
   .bottom-bar {
     position: fixed;

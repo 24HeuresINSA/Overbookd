@@ -35,6 +35,7 @@ import {
   getTimeWindowWithoutRequests,
   toUpdateFT,
 } from "~/utils/models/ft";
+import { TimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
   castGearRequestWithDate,
   GearRequestCreation,
@@ -44,7 +45,6 @@ import {
 } from "~/utils/models/gearRequests";
 import { Review, Reviewer } from "~/utils/models/review";
 import { Team } from "~/utils/models/team";
-import { TimeSpanParameters } from "~/utils/models/TimeSpan";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
