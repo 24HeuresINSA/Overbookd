@@ -17,6 +17,7 @@ import {
   FTUpdate,
   FTUserRequestUpdate,
 } from "~/utils/models/ft";
+import { TimespanParameters } from "~/utils/models/ftTimespan";
 import {
   GearRequestCreation,
   GearRequestUpdate,
@@ -26,7 +27,6 @@ import {
 import { Period } from "~/utils/models/period";
 import { Reviewer } from "~/utils/models/review";
 import { StatsPayload } from "~/utils/models/stats";
-import { TimeSpanParameters } from "~/utils/models/TimeSpan";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -78,11 +78,11 @@ export default {
   switchToReadyForAssignment(
     context: Context,
     ftId: number,
-    timeSpanParameters: TimeSpanParameters
+    timespanParameters: TimespanParameters
   ) {
     return context.$axios.post<HttpStringified<FT>>(
       `${resource}/${ftId}/assignment-approval`,
-      timeSpanParameters
+      timespanParameters
     );
   },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {
