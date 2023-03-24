@@ -4,7 +4,6 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  NotImplementedException,
 } from '@nestjs/common';
 import { FtReview, FtStatus, reviewStatus, Status } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
@@ -13,6 +12,7 @@ import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
 import { CreateFtFeedbackDto } from 'src/ft_feedback/dto/createFtFeedback.dto';
 import { PrismaService } from '../prisma.service';
+import { TimespanParametersDto } from './dto/timespanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { TimespansGenerator } from './timespansGenerator';
 
@@ -92,9 +92,10 @@ export class FtReviewsService {
     return this.ftService.convertFTtoApiContract(updatedFt);
   }
 
-  async assignementApproval(
+  async assignmentApproval(
     ftId: number,
     userId: number,
+    timeSpanParameters: TimespanParametersDto,
   ): Promise<CompleteFtResponseDto | null> {
     const ft = await this.prisma.ft.findUnique({
       where: { id: ftId },
@@ -105,9 +106,13 @@ export class FtReviewsService {
     const timespans = this.computeTimeSpans(ft);
 
     this.logger.log(`Setting FT #${ftId} as READY`);
-    const updateStatus = this.prisma.ft.update({
+    const updateStatusCategoryPriority = this.prisma.ft.update({
       where: { id: ftId },
-      data: { status: FtStatus.READY },
+      data: {
+        status: FtStatus.READY,
+        category: timeSpanParameters.category,
+        hasPriority: timeSpanParameters.hasPriority,
+      },
       select: COMPLETE_FT_SELECT,
     });
 
@@ -134,7 +139,7 @@ export class FtReviewsService {
 
     const [_, updatedFt] = await this.prisma.$transaction([
       insertFeedback,
-      updateStatus,
+      updateStatusCategoryPriority,
       insertTimespans,
     ]);
 
@@ -171,9 +176,7 @@ export class FtReviewsService {
     return null;
   }
 
-  private async checkSwitchableToReady(
-    ft: DataBaseCompleteFt,
-  ): Promise<boolean> {
+  private async checkSwitchableToReady(ft: DataBaseCompleteFt) {
     if (!ft) {
       throw new NotFoundException('FT introuvable');
     }
@@ -183,28 +186,33 @@ export class FtReviewsService {
     if (ft.fa.status !== Status.VALIDATED) {
       throw new BadRequestException('FA non validée');
     }
-    await this.checkForAlsoRequestedConflicts(ft);
-    // TODO Check for other conflicts (availability, timespans)
-    throw new NotImplementedException();
-    return true;
+    await this.hasAtLeastOneConflict(ft);
   }
 
   private computeTimeSpans(ft: DataBaseCompleteFt): Timespan[] {
     return ft.timeWindows.flatMap(TimespansGenerator.generateTimespans);
   }
 
-  private async checkForAlsoRequestedConflicts(
-    ft: DataBaseCompleteFt,
-  ): Promise<void> {
-    const ftWithAlsoRequestedConflicts =
-      await this.ftService.convertFTtoApiContract(ft);
-    const alsoRequestedBy = ftWithAlsoRequestedConflicts.timeWindows
-      .flatMap((tw) => tw.userRequests)
-      .flatMap((ur) => ur.alsoRequestedBy);
+  private async hasAtLeastOneConflict(ft: DataBaseCompleteFt): Promise<void> {
+    const ftWithConflicts = await this.ftService.convertFTtoApiContract(ft);
 
-    if (alsoRequestedBy.length > 0) {
-      throw new BadRequestException('La FT a des conflits avec d’autres FTs');
-    }
+    const userRequests = ftWithConflicts.timeWindows.flatMap(
+      ({ userRequests }) => userRequests,
+    );
+
+    const availableError = 'Certains bénévoles ne sont pas disponibles';
+    const alsoRequestedByError = 'La FT a des conflits avec d’autres FTs';
+
+    userRequests.map(({ alsoRequestedBy, isAvailable }) => {
+      if (isAvailable && alsoRequestedBy.length === 0) return;
+
+      const errors = [
+        !isAvailable ? availableError : '',
+        alsoRequestedBy.length > 0 ? alsoRequestedByError : '',
+      ].filter((err) => err);
+
+      throw new BadRequestException(errors.join(' & '));
+    });
   }
 
   private async verifyRefusalValidity(
@@ -235,7 +243,7 @@ export class FtReviewsService {
   private removeFtTimespans(ftId: number) {
     return this.prisma.ftTimespan.deleteMany({
       where: {
-        timeWindows: {
+        timeWindow: {
           ftId,
         },
       },

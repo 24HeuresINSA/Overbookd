@@ -5,18 +5,19 @@ import {
   SavedFeedback,
 } from "~/utils/models/feedback";
 import {
-  FTCreation,
-  FTSearch,
-  FTUpdate,
-  FTTimeWindowUpdate,
-  FTTimeWindow,
-  FTSimplified,
   FT,
-  FTTeamRequestUpdate,
-  FTUserRequestUpdate,
-  FTTeamRequest,
+  FTCreation,
   FTPageId,
+  FTSearch,
+  FTSimplified,
+  FTTeamRequest,
+  FTTeamRequestUpdate,
+  FTTimeWindow,
+  FTTimeWindowUpdate,
+  FTUpdate,
+  FTUserRequestUpdate,
 } from "~/utils/models/ft";
+import { TimespanParameters } from "~/utils/models/ftTimespan";
 import {
   GearRequestCreation,
   GearRequestUpdate,
@@ -74,9 +75,14 @@ export default {
       reviewer
     );
   },
-  switchToReadyForAssignment(context: Context, ftId: number) {
+  switchToReadyForAssignment(
+    context: Context,
+    ftId: number,
+    timespanParameters: TimespanParameters
+  ) {
     return context.$axios.post<HttpStringified<FT>>(
-      `${resource}/${ftId}/assignement-approval`
+      `${resource}/${ftId}/assignment-approval`,
+      timespanParameters
     );
   },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {

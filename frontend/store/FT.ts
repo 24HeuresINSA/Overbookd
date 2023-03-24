@@ -5,12 +5,12 @@ import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,
+  isSimilarGearRequest,
   isSimilarPeriod,
+  splitGearRequest,
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
-  isSimilarGearRequest,
-  splitGearRequest,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
 import {
@@ -35,6 +35,7 @@ import {
   getTimeWindowWithoutRequests,
   toUpdateFT,
 } from "~/utils/models/ft";
+import { TimespanParameters } from "~/utils/models/ftTimespan";
 import {
   castGearRequestWithDate,
   GearRequestCreation,
@@ -409,11 +410,14 @@ export const actions = actionTree(
 
     async switchToReadyForAssignment(
       { dispatch, commit, state },
-      author: User
+      {
+        author,
+        timespanParameters,
+      }: { author: User; timespanParameters: TimespanParameters }
     ) {
       const resFT = await safeCall(
         this,
-        repo.switchToReadyForAssignment(this, state.mFT.id),
+        repo.switchToReadyForAssignment(this, state.mFT.id, timespanParameters),
         { successMessage: "FT prête à affectation 🥳" }
       );
       if (!resFT) return;

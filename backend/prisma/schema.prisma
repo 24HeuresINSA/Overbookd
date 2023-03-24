@@ -429,6 +429,16 @@ enum FtStatus {
   @@map("ft_status")
 }
 
+enum TaskCategory {
+  STATIQUE
+  BAR
+  MANUTENTION
+  ANIMATION
+  NETTOYAGE
+
+  @@map("task_category")
+}
+
 model Ft {
   id             Int             @id @default(autoincrement())
   name           String
@@ -446,6 +456,8 @@ model Ft {
   isDeleted      Boolean         @default(false) @map("is_deleted")
   reviewerId     Int?            @map("reviewer_id")
   reviewer       User?           @relation("reviewer", fields: [reviewerId], references: [id])
+  hasPriority    Boolean?        @default(false) @map("has_priority")
+  category       TaskCategory?
 
   feedbacks    FtFeedback[]
   timeWindows  FtTimeWindows[]
@@ -517,7 +529,7 @@ model FtTeamRequest {
 
 model FtTimespan {
   id           Int           @id @default(autoincrement())
-  timeWindows  FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
   timeWindowId Int           @map("time_window_id")
   start        DateTime
   end          DateTime

@@ -66,7 +66,7 @@
           v-if="shouldShowReadyButton"
           color="purple"
           class="white--text"
-          @click="switchToReadyForAssignment"
+          @click="showReadyForAssignment"
           >Prêt pour affectation
         </v-btn>
 
@@ -134,6 +134,32 @@
         </template>
       </ConfirmationMessage>
     </v-dialog>
+
+    <v-dialog v-model="isReadyForAssignmentDialogOpen" max-width="600px">
+      <v-card>
+        <v-card-title> Prêt à validation </v-card-title>
+        <v-card-text>
+          <h3>Sélectionne le type et la priorité des créneaux</h3>
+        </v-card-text>
+        <v-select
+          v-model="timespanParameters.category"
+          class="category-list"
+          label="Catégorie"
+          :items="categories"
+        ></v-select>
+        <v-switch
+          v-model="timespanParameters.hasPriority"
+          class="switch-priority"
+          label="Créneaux prioritaires"
+        ></v-switch>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="switchReadyForAssignment()">
+            Enregistrer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -152,13 +178,17 @@ import {
 } from "~/utils/festivalEvent/ftUtils";
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
+import {
+  TimespanCategory,
+  TimespanParameters,
+} from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
-import GearRequestsValidation from "./GearRequestsValidation.vue";
 import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
+import GearRequestsValidation from "./GearRequestsValidation.vue";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",
@@ -178,6 +208,12 @@ export default Vue.extend({
     isValidationDialogOpen: false,
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
+    isReadyForAssignmentDialogOpen: false,
+    categories: Object.values(TimespanCategory),
+    timespanParameters: {
+      hasPriority: false,
+      category: TimespanCategory.BAR,
+    } as TimespanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
@@ -368,8 +404,19 @@ export default Vue.extend({
       this.refuseComment = "";
       this.isRefuseDialogOpen = false;
     },
-    async switchToReadyForAssignment() {
-      return this.$accessor.FT.switchToReadyForAssignment(this.meAsUser);
+    showReadyForAssignment() {
+      if (!this.isReadyForAssignmentDialogOpen)
+        this.isReadyForAssignmentDialogOpen = true;
+    },
+    switchReadyForAssignment() {
+      this.isReadyForAssignmentDialogOpen = false;
+      if (this.timespanParameters.category === TimespanCategory.AUTRE) {
+        this.timespanParameters.category = undefined;
+      }
+      this.$accessor.FT.switchToReadyForAssignment({
+        author: this.meAsUser,
+        timespanParameters: this.timespanParameters,
+      });
     },
     checkBeforeSubmitForReview() {
       const hasError = this.isFA
@@ -443,6 +490,15 @@ export default Vue.extend({
     justify-content: space-around;
     gap: 10px;
   }
+}
+
+.category-list {
+  margin: 0 auto;
+  width: 75%;
+}
+.switch-priority {
+  margin: 0 auto;
+  width: 75%;
 }
 
 @media only screen and (max-width: 965px) {

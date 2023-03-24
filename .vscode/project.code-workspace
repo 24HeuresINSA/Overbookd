@@ -47,7 +47,8 @@
       "Location",
       "animation",
       "FT",
-      "Availabilities"
+      "Availabilities",
+      "Affect"
     ],
     "cSpell.enabled": false,
     "colorize.languages": ["javascript", "json"],

@@ -4,9 +4,9 @@ import {
   Delete,
   HttpCode,
   Param,
-  Request,
   ParseIntPipe,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -23,6 +23,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TimespanParametersDto } from './dto/timespanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { FtReviewsService } from './ft_reviews.service';
 
@@ -93,7 +94,7 @@ export class FtReviewsController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Post(':ftId/assignement-approval')
+  @Post(':ftId/assignment-approval')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -106,11 +107,20 @@ export class FtReviewsController {
     description: 'FT id',
     required: true,
   })
-  assignementApproval(
+  @ApiBody({
+    type: TimespanParametersDto,
+    description: 'Timespan parameters',
+  })
+  assignmentApproval(
     @Param('ftId', ParseIntPipe) ftId: number,
     @Request() req: RequestWithUserPayload,
+    @Body() timeSpanParameters: TimespanParametersDto,
   ): Promise<CompleteFtResponseDto | null> {
-    return this.ftReviewsService.assignementApproval(ftId, req.user.userId);
+    return this.ftReviewsService.assignmentApproval(
+      ftId,
+      req.user.userId,
+      timeSpanParameters,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
