@@ -81,7 +81,6 @@ model User {
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
-  FtTimespan       FtTimespan[]
 }
 
 model Team {
@@ -529,13 +528,11 @@ model FtTeamRequest {
 }
 
 model FtTimespan {
-  id              Int           @id @default(autoincrement())
-  timeWindow      FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
-  timeWindowId    Int           @map("time_window_id")
-  start           DateTime
-  end             DateTime
-  user            User?         @relation(fields: [userRequestedId], references: [id])
-  userRequestedId Int?          @map("user_requested_id")
+  id           Int           @id @default(autoincrement())
+  timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindowId Int           @map("time_window_id")
+  start        DateTime
+  end          DateTime
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
