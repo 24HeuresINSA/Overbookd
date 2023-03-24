@@ -194,24 +194,25 @@ export class FtReviewsService {
   }
 
   private async hasAtLeastOneConflict(ft: DataBaseCompleteFt): Promise<void> {
-    const ftWithAlsoRequestedConflicts =
-      await this.ftService.convertFTtoApiContract(ft);
+    const ftWithConflicts = await this.ftService.convertFTtoApiContract(ft);
 
-    const areUsersAvailable = ftWithAlsoRequestedConflicts.timeWindows
-      .flatMap((tw) => tw.userRequests)
-      .flatMap((ur) => ur.isAvailable)
-      .some((na) => na === false);
-    if (areUsersAvailable) {
-      throw new BadRequestException(
-        'Certains bénévoles ne sont pas disponibles',
-      );
-    }
-    const alsoRequestedBy = ftWithAlsoRequestedConflicts.timeWindows
-      .flatMap((tw) => tw.userRequests)
-      .flatMap((ur) => ur.alsoRequestedBy);
-    if (alsoRequestedBy.length > 0) {
-      throw new BadRequestException('La FT a des conflits avec d’autres FTs');
-    }
+    const userRequests = ftWithConflicts.timeWindows.flatMap(
+      ({ userRequests }) => userRequests,
+    );
+
+    const availableError = 'Certains bénévoles ne sont pas disponibles';
+    const alsoRequestedByError = 'La FT a des conflits avec d’autres FTs';
+
+    userRequests.map(({ alsoRequestedBy, isAvailable }) => {
+      if (isAvailable && alsoRequestedBy.length === 0) return;
+
+      const errors = [
+        !isAvailable ? availableError : '',
+        alsoRequestedBy.length > 0 ? alsoRequestedByError : '',
+      ].filter((err) => err);
+
+      throw new BadRequestException(errors.join(' & '));
+    });
   }
 
   private async verifyRefusalValidity(
@@ -242,7 +243,7 @@ export class FtReviewsService {
   private removeFtTimespans(ftId: number) {
     return this.prisma.ftTimespan.deleteMany({
       where: {
-        timeWindows: {
+        timeWindow: {
           ftId,
         },
       },

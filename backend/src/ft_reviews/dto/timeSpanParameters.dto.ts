@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsDefined,
   IsEnum,
+  IsOptional,
   ValidationArguments,
 } from 'class-validator';
 
@@ -22,7 +23,7 @@ export class TimespanParametersDto {
     example: TaskCategory.NETTOYAGE,
     enum: TaskCategory,
   })
-  @IsDefined()
+  @IsOptional()
   @IsEnum(TaskCategory, {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(TaskCategory)}`,

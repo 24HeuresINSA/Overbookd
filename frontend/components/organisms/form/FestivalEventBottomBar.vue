@@ -410,6 +410,9 @@ export default Vue.extend({
     },
     switchReadyForAssignment() {
       this.isReadyForAssignmentDialogOpen = false;
+      if (this.timeSpanParameters.category === TimeSpanCategory.AUTRE) {
+        this.timeSpanParameters.category = undefined;
+      }
       this.$accessor.FT.switchToReadyForAssignment({
         author: this.meAsUser,
         timeSpanParameters: this.timeSpanParameters,

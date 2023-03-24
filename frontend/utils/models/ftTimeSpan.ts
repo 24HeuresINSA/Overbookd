@@ -4,9 +4,10 @@ export enum TimeSpanCategory {
   MANUTENTION = "MANUTENTION",
   ANIMATION = "ANIMATION",
   NETTOYAGE = "NETTOYAGE",
+  AUTRE = "AUTRE",
 }
 
 export interface TimeSpanParameters {
   hasPriority: boolean;
-  category: TimeSpanCategory;
+  category?: TimeSpanCategory;
 }
