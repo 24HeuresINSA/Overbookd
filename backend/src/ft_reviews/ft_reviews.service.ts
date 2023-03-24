@@ -103,15 +103,16 @@ export class FtReviewsService {
     });
     await this.checkSwitchableToReady(ft);
 
-    const timespans = this.computeTimeSpans(ft).map((timespan) => ({
-      ...timespan,
-      ...timeSpanParameters,
-    }));
+    const timespans = this.computeTimeSpans(ft);
 
     this.logger.log(`Setting FT #${ftId} as READY`);
-    const updateStatus = this.prisma.ft.update({
+    const updateStatusCategoryPriority = this.prisma.ft.update({
       where: { id: ftId },
-      data: { status: FtStatus.READY },
+      data: {
+        status: FtStatus.READY,
+        category: timeSpanParameters.category,
+        hasPriority: timeSpanParameters.hasPriority,
+      },
       select: COMPLETE_FT_SELECT,
     });
 
@@ -138,7 +139,7 @@ export class FtReviewsService {
 
     const [_, updatedFt] = await this.prisma.$transaction([
       insertFeedback,
-      updateStatus,
+      updateStatusCategoryPriority,
       insertTimespans,
     ]);
 
