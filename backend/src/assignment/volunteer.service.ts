@@ -130,7 +130,6 @@ export class VolunteerService {
       id: volunteer.id,
       firstname: volunteer.firstname,
       lastname: volunteer.lastname,
-      nickname: volunteer.nickname,
       comment: volunteer.comment,
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),

@@ -19,7 +19,6 @@ export const SELECT_VOLUNTEER = {
   id: true,
   firstname: true,
   lastname: true,
-  nickname: true,
   charisma: true,
   comment: true,
   team: {

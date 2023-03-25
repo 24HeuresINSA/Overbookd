@@ -23,12 +23,6 @@ export class VolunteerResponseDto {
   lastname: string;
 
   @ApiProperty({
-    description: 'The nickname of the volunteer',
-    type: String,
-  })
-  nickname?: string;
-
-  @ApiProperty({
     required: true,
     description: 'The charisma of the volunteer',
     type: Number,
