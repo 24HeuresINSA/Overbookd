@@ -71,7 +71,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('volunteer/:id/ft-timespans')
+  @Get('volunteer/:volunteerId/ft-timespans')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -80,14 +80,16 @@ export class AssignmentController {
     type: TimespanWithFtResponseDto,
   })
   findFtTimespansAvailableForVolunteer(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('volunteerId', ParseIntPipe) volunteerId: number,
   ): Promise<TimespanWithFtResponseDto[]> {
-    return this.ftTimespanService.findTimespansWithFtAvailableForVolunteer(id);
+    return this.ftTimespanService.findTimespansWithFtAvailableForVolunteer(
+      volunteerId,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('ft-timespan/:id/volunteers')
+  @Get('ft-timespan/:timespanId/volunteers')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -96,8 +98,10 @@ export class AssignmentController {
     type: VolunteerResponseDto,
   })
   findAvailableVolunteersForFtTimespan(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('timespanId', ParseIntPipe) timespanId: number,
   ): Promise<VolunteerResponseDto[]> {
-    return this.volunteerService.findAvailableVolunteersForFtTimespan(id);
+    return this.volunteerService.findAvailableVolunteersForFtTimespan(
+      timespanId,
+    );
   }
 }

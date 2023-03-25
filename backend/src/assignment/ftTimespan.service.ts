@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { FtStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { Period } from 'src/volunteer-availability/domain/period.model';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
   FtWithTimespansResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
 import {
-  FtWithTimespansAfterRequest,
+  DatabaseFtWithTimespans,
+  DatabaseTimespanWithFt,
   SELECT_FT_WITH_TIMESPANS,
   SELECT_TIMESPAN_WITH_FT,
-  TimespanWithFtAfterRequest,
 } from './types/ftTimespanTypes';
 
 @Injectable()
@@ -24,6 +24,14 @@ export class FtTimespanService {
 
   async findAllTimespansWithFt(): Promise<TimespanWithFtResponseDto[]> {
     const ftTimespans = await this.prisma.ftTimespan.findMany({
+      where: {
+        timeWindow: {
+          ft: {
+            isDeleted: false,
+            status: FtStatus.READY,
+          },
+        },
+      },
       select: SELECT_TIMESPAN_WITH_FT,
     });
     return this.formatTimespansWithFt(ftTimespans);
@@ -31,70 +39,83 @@ export class FtTimespanService {
 
   async findAllFtsWithTimespans(): Promise<FtWithTimespansResponseDto[]> {
     const fts = await this.prisma.ft.findMany({
+      where: {
+        isDeleted: false,
+        status: FtStatus.READY,
+      },
       select: SELECT_FT_WITH_TIMESPANS,
     });
     return this.formatFtsWithTimespans(fts);
   }
 
-  async findTimespanWithFt(id: number): Promise<TimespanWithFtResponseDto> {
+  async findTimespanWithFt(
+    timespanId: number,
+  ): Promise<TimespanWithFtResponseDto> {
     const ftTimespan = await this.prisma.ftTimespan.findUnique({
-      where: { id },
+      where: {
+        id: timespanId,
+      },
       select: SELECT_TIMESPAN_WITH_FT,
     });
+    if (!ftTimespan) {
+      throw new NotFoundException(`Timespan with id ${timespanId} not found`);
+    }
     return this.formatTimespanWithFt(ftTimespan);
   }
 
   async findTimespansWithFtAvailableForVolunteer(
-    id: number,
+    volunteerId: number,
   ): Promise<TimespanWithFtResponseDto[]> {
-    const availabilities =
-      await this.volunteerAvailability.findUserAvailabilities(id);
-    const ftTimespans = await this.findAllTimespansWithFt();
-    const volunteerTeams = await this.user.getUserTeams(id);
+    const [volunteerTeams, availabilities] = await Promise.all([
+      this.user.getUserTeams(volunteerId),
+      this.volunteerAvailability.findUserAvailabilities(volunteerId),
+    ]);
 
-    const ftTimespansFilteredByTeams =
-      this.filterTimespansWithFtByVolunteerTeams(ftTimespans, volunteerTeams);
-    return this.filterTimespansWithFtByVolunteerAvailabilities(
-      ftTimespansFilteredByTeams,
-      availabilities,
-    );
-  }
-
-  private filterTimespansWithFtByVolunteerTeams(
-    ftTimespans: TimespanWithFtResponseDto[],
-    teams: string[],
-  ): TimespanWithFtResponseDto[] {
-    return ftTimespans.filter((ftTimespan) => {
-      return ftTimespan.requestedTeams.some((team) => teams.includes(team));
+    const timespans = await this.prisma.ftTimespan.findMany({
+      select: SELECT_TIMESPAN_WITH_FT,
+      where: {
+        AND: [
+          {
+            timeWindow: {
+              teamRequests: {
+                some: {
+                  team: {
+                    code: {
+                      in: volunteerTeams,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            OR: availabilities.map((availability) => ({
+              start: {
+                gte: availability.start,
+                lte: availability.end,
+              },
+              end: {
+                gte: availability.start,
+                lte: availability.end,
+              },
+            })),
+          },
+          {
+            timeWindow: {
+              ft: {
+                isDeleted: false,
+                status: FtStatus.READY,
+              },
+            },
+          },
+        ],
+      },
     });
-  }
-
-  private filterTimespansWithFtByVolunteerAvailabilities(
-    ftTimespans: TimespanWithFtResponseDto[],
-    availabilities: Period[],
-  ): TimespanWithFtResponseDto[] {
-    return ftTimespans.filter((ftTimespan) => {
-      return this.checkIfVolunteerIsAvailableDuringFtTimespan(
-        availabilities,
-        ftTimespan,
-      );
-    });
-  }
-
-  checkIfVolunteerIsAvailableDuringFtTimespan(
-    availabilities: Period[],
-    ftTimespan: TimespanWithFtResponseDto,
-  ): boolean {
-    return availabilities.some((a) => {
-      return (
-        a.start.getTime() <= ftTimespan.start.getTime() &&
-        a.end.getTime() >= ftTimespan.end.getTime()
-      );
-    });
+    return this.formatTimespansWithFt(timespans);
   }
 
   private formatTimespansWithFt(
-    ftTimespans: TimespanWithFtAfterRequest[],
+    ftTimespans: DatabaseTimespanWithFt[],
   ): TimespanWithFtResponseDto[] {
     return ftTimespans.map((ts) => {
       return this.formatTimespanWithFt(ts);
@@ -102,7 +123,7 @@ export class FtTimespanService {
   }
 
   private formatTimespanWithFt(
-    ftTimespan: TimespanWithFtAfterRequest,
+    ftTimespan: DatabaseTimespanWithFt,
   ): TimespanWithFtResponseDto {
     const requestedTeams = ftTimespan.timeWindow.teamRequests.map(
       (tr) => tr.team.code,
@@ -122,15 +143,13 @@ export class FtTimespanService {
   }
 
   private formatFtsWithTimespans(
-    fts: FtWithTimespansAfterRequest[],
+    fts: DatabaseFtWithTimespans[],
   ): FtWithTimespansResponseDto[] {
-    return fts.map((ft) => {
-      return this.formatFtWithTimespans(ft);
-    });
+    return fts.map((ft) => this.formatFtWithTimespans(ft));
   }
 
   private formatFtWithTimespans(
-    ft: FtWithTimespansAfterRequest,
+    ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
     const timespans = ft.timeWindows.flatMap((tw) => {
       const requestedTeams = tw.teamRequests.map((tr) => tr.team.code);

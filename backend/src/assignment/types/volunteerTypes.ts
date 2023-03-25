@@ -1,18 +1,13 @@
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { VolunteerResponseDto } from '../dto/volunteerResponse.dto';
 
-export interface VolunteerAfterRequest
-  extends Omit<VolunteerResponseDto, 'teams'> {
+export interface DatabaseVolunteer extends Omit<VolunteerResponseDto, 'teams'> {
   team: {
     team: {
       code: string;
     };
   }[];
   availabilities?: Period[];
-}
-
-export interface VolunteerWithAvailabilities extends VolunteerResponseDto {
-  availabilities: Period[];
 }
 
 export const SELECT_VOLUNTEER = {
@@ -28,16 +23,6 @@ export const SELECT_VOLUNTEER = {
           code: true,
         },
       },
-    },
-  },
-};
-
-export const SELECT_VOLUNTEER_WITH_AVAILABILITIES = {
-  ...SELECT_VOLUNTEER,
-  availabilities: {
-    select: {
-      start: true,
-      end: true,
     },
   },
 };

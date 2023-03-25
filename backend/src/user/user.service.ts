@@ -162,21 +162,19 @@ export class UserService {
   }
 
   async getUserTeams(id: number): Promise<string[]> {
-    const volunteer = await this.prisma.user.findUnique({
-      where: { id },
+    const teams = await this.prisma.team.findMany({
       select: {
-        team: {
-          select: {
-            team: {
-              select: {
-                code: true,
-              },
-            },
+        code: true,
+      },
+      where: {
+        users: {
+          some: {
+            user_id: id,
           },
         },
       },
     });
-    return volunteer.team.map((t) => t.team.code);
+    return teams.map((t) => t.code);
   }
 
   async createUser(payload: UserCreationDto): Promise<UserWithoutPassword> {

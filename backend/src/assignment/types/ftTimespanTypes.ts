@@ -1,6 +1,6 @@
 import { TaskCategory } from '@prisma/client';
 
-export interface TimespanWithFtAfterRequest {
+export interface DatabaseTimespanWithFt {
   id: number;
   start: Date;
   end: Date;
@@ -19,7 +19,7 @@ export interface TimespanWithFtAfterRequest {
   };
 }
 
-export interface FtWithTimespansAfterRequest {
+export interface DatabaseFtWithTimespans {
   id: number;
   name: string;
   hasPriority: boolean;
