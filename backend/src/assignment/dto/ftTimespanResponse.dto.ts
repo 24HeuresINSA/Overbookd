@@ -56,7 +56,8 @@ class FtTimespan {
   @ApiProperty({
     required: true,
     description: 'The ft timespan requested teams',
-    type: [String],
+    type: String,
+    isArray: true,
   })
   requestedTeams: string[];
 }
@@ -74,7 +75,8 @@ export class FtWithTimespansResponseDto extends SimplifiedFT {
   @ApiProperty({
     required: true,
     description: 'The ft timespans',
-    type: [FtTimespan],
+    type: FtTimespan,
+    isArray: true,
   })
   timespans: FtTimespan[];
 }

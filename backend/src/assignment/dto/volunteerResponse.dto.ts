@@ -44,7 +44,8 @@ export class VolunteerResponseDto {
   @ApiProperty({
     required: true,
     description: 'The team codes of the volunteer',
-    type: [String],
+    type: String,
+    isArray: true,
   })
   teams: string[];
 }
