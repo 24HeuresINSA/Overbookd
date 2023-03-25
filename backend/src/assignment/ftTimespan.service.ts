@@ -117,9 +117,7 @@ export class FtTimespanService {
   private formatTimespansWithFt(
     ftTimespans: DatabaseTimespanWithFt[],
   ): TimespanWithFtResponseDto[] {
-    return ftTimespans.map((ts) => {
-      return this.formatTimespanWithFt(ts);
-    });
+    return ftTimespans.map((ts) => this.formatTimespanWithFt(ts));
   }
 
   private formatTimespanWithFt(
