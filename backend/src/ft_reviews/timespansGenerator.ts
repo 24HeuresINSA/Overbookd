@@ -1,6 +1,9 @@
 import { TimeWindow, Timespan } from '../ft/ftTypes';
+import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 
-type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'>;
+type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {
+  userRequests?: DataBaseUserRequest[];
+};
 type Period = {
   start: Date;
   end: Date;
@@ -24,12 +27,13 @@ export class TimespansGenerator {
     start,
     end,
     sliceTime,
+    userRequests,
   }: LiteTimeWindow): Timespan[] {
     const durationInHour = TimespansGenerator.computeDuration({ start, end });
     const stepDuration = sliceTime ?? durationInHour;
     const nbTimespans = durationInHour / stepDuration;
     return Array.from({ length: nbTimespans }).map(
-      TimespansGenerator.buildTimespan(start, stepDuration, id),
+      TimespansGenerator.buildTimespan(start, stepDuration, id, userRequests),
     );
   }
 
@@ -37,6 +41,7 @@ export class TimespansGenerator {
     start: Date,
     stepDuration: number,
     timeWindowId: number,
+    userRequests: DataBaseUserRequest[],
   ) {
     return (_, step: number) => {
       const slicedStart = TimespansGenerator.computeSlicedStart(
@@ -53,6 +58,7 @@ export class TimespansGenerator {
         timeWindowId,
         start: slicedStart,
         end: slicedEnd,
+        assignments: this.buildAssignments(userRequests),
       };
     };
   }
@@ -69,6 +75,16 @@ export class TimespansGenerator {
     return TimespansGenerator.generateStepedDate(start, step + 1, duration);
   }
 
+  private static buildAssignments(userRequests: DataBaseUserRequest[]) {
+    if (!userRequests) return null;
+    return {
+      create: userRequests.map(({ id, user }) => ({
+        userRequestId: id,
+        assigneeId: user.id,
+      })),
+    };
+  }
+
   private static generateStepedDate(
     start: Date,
     step: number,
@@ -79,7 +95,7 @@ export class TimespansGenerator {
 
   private static canBeSliced({ start, end, sliceTime }: LiteTimeWindow) {
     const durationInHour = TimespansGenerator.computeDuration({ start, end });
-    return durationInHour % (sliceTime ?? 1) === 0;
+    return durationInHour % (sliceTime ?? durationInHour) === 0;
   }
 
   private static computeDuration(period: Period) {

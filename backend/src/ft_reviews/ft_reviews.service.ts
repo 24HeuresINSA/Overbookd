@@ -117,9 +117,9 @@ export class FtReviewsService {
     });
 
     this.logger.log(`Creating timespans for FT #${ftId}`);
-    const insertTimespans = this.prisma.ftTimespan.createMany({
-      data: timespans,
-    });
+    const insertTimespans = timespans.map((data) =>
+      this.prisma.ftTimespan.create({ data }),
+    );
 
     const feedback: CreateFtFeedbackDto = {
       comment: 'Prête pour affectation !',
@@ -140,7 +140,7 @@ export class FtReviewsService {
     const [_, updatedFt] = await this.prisma.$transaction([
       insertFeedback,
       updateStatusCategoryPriority,
-      insertTimespans,
+      ...insertTimespans,
     ]);
 
     return this.ftService.convertFTtoApiContract(updatedFt);

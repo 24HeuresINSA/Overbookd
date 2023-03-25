@@ -6,14 +6,15 @@ describe('Timespans Generator', () => {
       const timespans = TimespansGenerator.generateTimespans({
         id: 1,
         start: new Date('2023-05-13 10:00'),
-        end: new Date('2023-05-13 12:00'),
+        end: new Date('2023-05-13 12:30'),
         sliceTime: null,
       });
       expect(timespans).toEqual([
         {
           timeWindowId: 1,
           start: new Date('2023-05-13 10:00'),
-          end: new Date('2023-05-13 12:00'),
+          end: new Date('2023-05-13 12:30'),
+          assignments: null,
         },
       ]);
     });
@@ -44,6 +45,7 @@ describe('Timespans Generator', () => {
             timeWindowId: 1,
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 11:00'),
+            assignments: null,
           },
         ]);
       });
@@ -63,16 +65,19 @@ describe('Timespans Generator', () => {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
               end: new Date('2023-05-13 11:00'),
+              assignments: null,
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 11:00'),
               end: new Date('2023-05-13 12:00'),
+              assignments: null,
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 12:00'),
               end: new Date('2023-05-13 13:00'),
+              assignments: null,
             },
           ]);
         });
@@ -91,11 +96,80 @@ describe('Timespans Generator', () => {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
               end: new Date('2023-05-13 11:30'),
+              assignments: null,
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 11:30'),
               end: new Date('2023-05-13 13:00'),
+              assignments: null,
+            },
+          ]);
+        });
+      });
+      describe('when time duration is 3h and slice time is 1.5h and there is 2 userRequests', () => {
+        it('should return 2 timespans', () => {
+          const timespans = TimespansGenerator.generateTimespans({
+            id: 1,
+            start: new Date('2023-05-13 10:00'),
+            end: new Date('2023-05-13 13:00'),
+            sliceTime: 1.5,
+            userRequests: [
+              {
+                id: 11,
+                ftTimeWindowsId: 1,
+                user: {
+                  id: 1,
+                  firstname: 'John',
+                  lastname: 'Doe',
+                },
+              },
+              {
+                id: 15,
+                ftTimeWindowsId: 2,
+                user: {
+                  id: 2,
+                  firstname: 'Jane',
+                  lastname: 'Doe',
+                },
+              },
+            ],
+          });
+          expect(timespans).toHaveLength(2);
+          expect(timespans).toEqual([
+            {
+              timeWindowId: 1,
+              start: new Date('2023-05-13 10:00'),
+              end: new Date('2023-05-13 11:30'),
+              assignments: {
+                create: [
+                  {
+                    userRequestId: 11,
+                    assigneeId: 1,
+                  },
+                  {
+                    userRequestId: 15,
+                    assigneeId: 2,
+                  },
+                ],
+              },
+            },
+            {
+              timeWindowId: 1,
+              start: new Date('2023-05-13 11:30'),
+              end: new Date('2023-05-13 13:00'),
+              assignments: {
+                create: [
+                  {
+                    userRequestId: 11,
+                    assigneeId: 1,
+                  },
+                  {
+                    userRequestId: 15,
+                    assigneeId: 2,
+                  },
+                ],
+              },
             },
           ]);
         });

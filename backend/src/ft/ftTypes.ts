@@ -1,4 +1,10 @@
-import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
+import {
+  Assignment,
+  FtStatus,
+  FtSubjectType,
+  reviewStatus,
+  Status,
+} from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { TEAM_SELECT } from 'src/team/team.service';
@@ -42,6 +48,7 @@ export interface Timespan {
   timeWindowId: number;
   start: Date;
   end: Date;
+  assignments: { create: Pick<Assignment, 'userRequestId' | 'assigneeId'>[] };
 }
 
 export class Review {
@@ -163,6 +170,7 @@ export const COMPLETE_FT_SELECT = {
       sliceTime: true,
       userRequests: {
         select: {
+          id: true,
           user: DISPLAY_USER_WITH_ID_SELECT,
           ftTimeWindowsId: true,
         },
