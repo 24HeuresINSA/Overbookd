@@ -4,7 +4,7 @@ import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
 
-export const WHERE_VALIDATED_USER = {
+const WHERE_VALIDATED_USER = {
   team: {
     some: {
       team: {
