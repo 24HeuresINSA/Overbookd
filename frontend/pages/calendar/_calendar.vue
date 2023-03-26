@@ -15,7 +15,11 @@
         <div :class="{ available: isUserAvailable(date, time) }" />
       </template>
       <template #event="{ event }">
-        <div class="pa-1 event underline-on-hover" @click="openFt(event.ft.id)">
+        <div
+          class="pa-1 event underline-on-hover"
+          @click="openFt(event.ft.id)"
+          @mouseup.middle="openFtNewTab(event.ft.id)"
+        >
           {{ `[${event.ft.id}] ${event.ft.name}` }}
         </div>
       </template>
@@ -25,11 +29,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { formatUsername } from "~/utils/user/userUtils";
-import OverChips from "~/components/atoms/OverChips.vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import OverChips from "~/components/atoms/OverChips.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
+import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default defineComponent({
   name: "Calendar",
@@ -92,6 +96,9 @@ export default defineComponent({
       this.$router.push({
         path: `/ft/${ftId}`,
       });
+    },
+    openFtNewTab(ftId: number) {
+      window.open(`/ft/${ftId}`);
     },
   },
 });
