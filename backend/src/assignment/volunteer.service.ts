@@ -4,6 +4,20 @@ import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
 
+export const WHERE_VALIDATED_USER = {
+  team: {
+    some: {
+      team: {
+        permissions: {
+          some: {
+            permission_name: 'validated-user',
+          },
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -15,17 +29,7 @@ export class VolunteerService {
     const volunteers = await this.prisma.user.findMany({
       where: {
         is_deleted: false,
-        team: {
-          some: {
-            team: {
-              permissions: {
-                some: {
-                  permission_name: 'validated-user',
-                },
-              },
-            },
-          },
-        },
+        ...WHERE_VALIDATED_USER,
       },
       select: SELECT_VOLUNTEER,
       orderBy: {
@@ -57,17 +61,7 @@ export class VolunteerService {
             },
           },
           {
-            team: {
-              some: {
-                team: {
-                  permissions: {
-                    some: {
-                      permission_name: 'validated-user',
-                    },
-                  },
-                },
-              },
-            },
+            ...WHERE_VALIDATED_USER,
           },
         ],
         availabilities: {
