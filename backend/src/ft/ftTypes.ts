@@ -42,6 +42,17 @@ export interface Timespan {
   timeWindowId: number;
   start: Date;
   end: Date;
+  assignments: (UserRequestAssignment | TeamRequestAssignment)[];
+}
+
+interface UserRequestAssignment {
+  assigneeId: number;
+  userRequestId: number;
+}
+
+interface TeamRequestAssignment {
+  assigneeId: number;
+  teamRequestId: number;
 }
 
 export class Review {
@@ -163,6 +174,7 @@ export const COMPLETE_FT_SELECT = {
       sliceTime: true,
       userRequests: {
         select: {
+          id: true,
           user: DISPLAY_USER_WITH_ID_SELECT,
           ftTimeWindowsId: true,
         },

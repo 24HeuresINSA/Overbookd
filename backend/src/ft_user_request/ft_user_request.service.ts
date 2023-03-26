@@ -171,6 +171,7 @@ export class FtUserRequestService {
           user: {
             select: SELECT_USERNAME_WITH_ID,
           },
+          id: true,
           ftTimeWindowsId: true,
         },
       });

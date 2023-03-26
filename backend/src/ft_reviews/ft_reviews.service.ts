@@ -117,9 +117,8 @@ export class FtReviewsService {
     });
 
     this.logger.log(`Creating timespans for FT #${ftId}`);
-    const insertTimespans = this.prisma.ftTimespan.createMany({
-      data: timespans,
-    });
+    const insertTimespans =
+      this.createNestedTimespansWithAssignments(timespans);
 
     const feedback: CreateFtFeedbackDto = {
       comment: 'Prête pour affectation !',
@@ -140,7 +139,7 @@ export class FtReviewsService {
     const [_, updatedFt] = await this.prisma.$transaction([
       insertFeedback,
       updateStatusCategoryPriority,
-      insertTimespans,
+      ...insertTimespans,
     ]);
 
     return this.ftService.convertFTtoApiContract(updatedFt);
@@ -247,6 +246,20 @@ export class FtReviewsService {
           ftId,
         },
       },
+    });
+  }
+
+  private createNestedTimespansWithAssignments(timespans: Timespan[]) {
+    return timespans.map((data) => {
+      const { assignments, ...timespan } = data;
+      return this.prisma.ftTimespan.create({
+        data: {
+          ...timespan,
+          assignments: {
+            create: assignments,
+          },
+        },
+      });
     });
   }
 }

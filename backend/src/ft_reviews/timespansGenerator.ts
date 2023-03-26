@@ -1,6 +1,9 @@
 import { TimeWindow, Timespan } from '../ft/ftTypes';
+import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 
-type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'>;
+type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {
+  userRequests: DataBaseUserRequest[];
+};
 type Period = {
   start: Date;
   end: Date;
@@ -10,6 +13,13 @@ const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
 const DIVIDABLE_ERROR_MESSAGE =
   'Time window duration is not dividable by the slice time';
+
+type TimespanBuilderParams = {
+  start: Date;
+  stepDuration: number;
+  timeWindowId: number;
+  userRequests: DataBaseUserRequest[];
+};
 
 export class TimespansGenerator {
   static generateTimespans(timeWindow: LiteTimeWindow): Timespan[] {
@@ -24,20 +34,27 @@ export class TimespansGenerator {
     start,
     end,
     sliceTime,
+    userRequests,
   }: LiteTimeWindow): Timespan[] {
     const durationInHour = TimespansGenerator.computeDuration({ start, end });
     const stepDuration = sliceTime ?? durationInHour;
     const nbTimespans = durationInHour / stepDuration;
     return Array.from({ length: nbTimespans }).map(
-      TimespansGenerator.buildTimespan(start, stepDuration, id),
+      TimespansGenerator.buildTimespan({
+        start,
+        userRequests,
+        stepDuration,
+        timeWindowId: id,
+      }),
     );
   }
 
-  private static buildTimespan(
-    start: Date,
-    stepDuration: number,
-    timeWindowId: number,
-  ) {
+  private static buildTimespan({
+    start,
+    stepDuration,
+    timeWindowId,
+    userRequests,
+  }: TimespanBuilderParams) {
     return (_, step: number) => {
       const slicedStart = TimespansGenerator.computeSlicedStart(
         start,
@@ -53,6 +70,7 @@ export class TimespansGenerator {
         timeWindowId,
         start: slicedStart,
         end: slicedEnd,
+        assignments: this.buildAssignments(userRequests),
       };
     };
   }
@@ -69,6 +87,13 @@ export class TimespansGenerator {
     return TimespansGenerator.generateStepedDate(start, step + 1, duration);
   }
 
+  private static buildAssignments(userRequests: DataBaseUserRequest[]) {
+    return userRequests.map(({ id, user }) => ({
+      userRequestId: id,
+      assigneeId: user.id,
+    }));
+  }
+
   private static generateStepedDate(
     start: Date,
     step: number,
@@ -79,7 +104,7 @@ export class TimespansGenerator {
 
   private static canBeSliced({ start, end, sliceTime }: LiteTimeWindow) {
     const durationInHour = TimespansGenerator.computeDuration({ start, end });
-    return durationInHour % (sliceTime ?? 1) === 0;
+    return durationInHour % (sliceTime ?? durationInHour) === 0;
   }
 
   private static computeDuration(period: Period) {

@@ -81,6 +81,8 @@ model User {
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
+
+  assignments         Assignment[]
 }
 
 model Team {
@@ -507,21 +509,27 @@ model FtTimeWindows {
 }
 
 model FtUserRequest {
+  id              Int           @id @default(autoincrement())
   ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
   ftTimeWindowsId Int           @map("ft_time_windows_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
+
+  assignments     Assignment[]
 
   @@unique([ftTimeWindowsId, userId])
   @@map("ft_user_request")
 }
 
 model FtTeamRequest {
+  id            Int           @id @default(autoincrement())
   timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("time_windows_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
   quantity      Int
+
+  assignments   Assignment[]
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
@@ -534,11 +542,27 @@ model FtTimespan {
   start        DateTime
   end          DateTime
 
+  assignments  Assignment[]
+
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
   @@index([start(sort: Asc), end(sort: Asc)])
   @@map("ft_timespan")
 }
+
+model Assignment {
+  id            Int             @id @default(autoincrement())
+  timespanId    Int
+  timespan      FtTimespan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
+  userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
+  userRequestId Int?            @map("user_request_id")
+  teamRequest   FtTeamRequest?  @relation(fields: [teamRequestId], references: [id], onDelete: Cascade)
+  teamRequestId Int?            @map("team_request_id")
+  assignee      User            @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
+  assigneeId    Int             @map("assignee_id")
+
+  @@unique([timespanId, assigneeId])
+} 
 
 enum reviewStatus {
   VALIDATED
