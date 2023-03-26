@@ -39,6 +39,8 @@ export class VolunteerService {
     timespanId: number,
   ): Promise<VolunteerResponseDto[]> {
     const ftTimespan = await this.ftTimespan.findTimespanWithFt(timespanId);
+    const teamCodes = ftTimespan.requestedTeams.map((team) => team.code);
+
     const volunteers = await this.prisma.user.findMany({
       where: {
         is_deleted: false,
@@ -48,7 +50,7 @@ export class VolunteerService {
               some: {
                 team: {
                   code: {
-                    in: ftTimespan.requestedTeams,
+                    in: teamCodes,
                   },
                 },
               },

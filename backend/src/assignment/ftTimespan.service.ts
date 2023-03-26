@@ -51,16 +51,22 @@ export class FtTimespanService {
   async findTimespanWithFt(
     timespanId: number,
   ): Promise<TimespanWithFtResponseDto> {
-    const ftTimespan = await this.prisma.ftTimespan.findUnique({
+    const ftTimespans = await this.prisma.ftTimespan.findMany({
       where: {
         id: timespanId,
+        timeWindow: {
+          ft: {
+            isDeleted: false,
+            status: FtStatus.READY,
+          },
+        },
       },
       select: SELECT_TIMESPAN_WITH_FT,
     });
-    if (!ftTimespan) {
+    if (!ftTimespans.length) {
       throw new NotFoundException(`Timespan with id ${timespanId} not found`);
     }
-    return this.formatTimespanWithFt(ftTimespan);
+    return this.formatTimespanWithFt(ftTimespans[0]);
   }
 
   async findTimespansWithFtAvailableForVolunteer(
@@ -123,9 +129,12 @@ export class FtTimespanService {
   private formatTimespanWithFt(
     ftTimespan: DatabaseTimespanWithFt,
   ): TimespanWithFtResponseDto {
-    const requestedTeams = ftTimespan.timeWindow.teamRequests.map(
-      (tr) => tr.team.code,
-    );
+    const requestedTeams = ftTimespan.timeWindow.teamRequests.map((tr) => {
+      return {
+        code: tr.teamCode,
+        quantity: tr.quantity,
+      };
+    });
     return {
       id: ftTimespan.id,
       start: ftTimespan.start,
@@ -150,7 +159,12 @@ export class FtTimespanService {
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
     const timespans = ft.timeWindows.flatMap((tw) => {
-      const requestedTeams = tw.teamRequests.map((tr) => tr.team.code);
+      const requestedTeams = tw.teamRequests.map((tr) => {
+        return {
+          code: tr.teamCode,
+          quantity: tr.quantity,
+        };
+      });
       return tw.timespans.map((ts) => {
         return {
           id: ts.id,

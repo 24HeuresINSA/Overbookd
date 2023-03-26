@@ -31,6 +31,22 @@ class SimplifiedFT {
   category: TaskCategory;
 }
 
+class RequestedTeam {
+  @ApiProperty({
+    required: true,
+    description: 'The code of the requested team',
+    type: String,
+  })
+  code: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'The quantity of the requested team',
+    type: Number,
+  })
+  quantity: number;
+}
+
 class FtTimespan {
   @ApiProperty({
     required: true,
@@ -56,10 +72,10 @@ class FtTimespan {
   @ApiProperty({
     required: true,
     description: 'The ft timespan requested teams',
-    type: String,
+    type: RequestedTeam,
     isArray: true,
   })
-  requestedTeams: string[];
+  requestedTeams: RequestedTeam[];
 }
 
 export class TimespanWithFtResponseDto extends FtTimespan {

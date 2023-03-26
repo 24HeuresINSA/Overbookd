@@ -12,9 +12,8 @@ export interface DatabaseTimespanWithFt {
       category: TaskCategory;
     };
     teamRequests: {
-      team: {
-        code: string;
-      };
+      teamCode: string;
+      quantity: number;
     }[];
   };
 }
@@ -31,9 +30,8 @@ export interface DatabaseFtWithTimespans {
       end: Date;
     }[];
     teamRequests: {
-      team: {
-        code: string;
-      };
+      teamCode: string;
+      quantity: number;
     }[];
   }[];
 }
@@ -54,11 +52,8 @@ export const SELECT_TIMESPAN_WITH_FT = {
       },
       teamRequests: {
         select: {
-          team: {
-            select: {
-              code: true,
-            },
-          },
+          teamCode: true,
+          quantity: true,
         },
       },
     },
@@ -81,11 +76,8 @@ export const SELECT_FT_WITH_TIMESPANS = {
       },
       teamRequests: {
         select: {
-          team: {
-            select: {
-              code: true,
-            },
-          },
+          teamCode: true,
+          quantity: true,
         },
       },
     },
