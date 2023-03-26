@@ -383,8 +383,11 @@ export default {
 
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
+
+      const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
+
       const csvHeader =
-        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire\n";
+        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire";
 
       const csvContent = this.users.map((user) => {
         return [
@@ -400,7 +403,7 @@ export default {
           user.year,
           user.balance,
           user.has_payed_contributions,
-          user.comment,
+          user.comment.replace(lineReturnRegex, " "),
         ].join(";");
       });
 
