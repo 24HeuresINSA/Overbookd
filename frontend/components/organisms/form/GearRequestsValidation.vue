@@ -59,7 +59,7 @@ import {
   GearRequestWithDrive,
   isFAStoredGearRequest,
   isFTStoredGearRequest,
-  sortableGearRequestHeader,
+  SortableGearRequestHeader,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
 
@@ -178,7 +178,7 @@ export default Vue.extend({
 
     sortGearRequests(
       gearRequests: GearRequest[],
-      sortsBy: sortableGearRequestHeader[],
+      sortsBy: SortableGearRequestHeader[],
       sortsDesc: boolean[]
     ): GearRequest[] {
       const sortBy = sortsBy.at(0) ?? "quantity";
