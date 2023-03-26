@@ -117,9 +117,8 @@ export class FtReviewsService {
     });
 
     this.logger.log(`Creating timespans for FT #${ftId}`);
-    const insertTimespans = timespans.map((data) =>
-      this.prisma.ftTimespan.create({ data }),
-    );
+    const insertTimespans =
+      this.createNestedTimespansWithAssignments(timespans);
 
     const feedback: CreateFtFeedbackDto = {
       comment: 'Prête pour affectation !',
@@ -247,6 +246,20 @@ export class FtReviewsService {
           ftId,
         },
       },
+    });
+  }
+
+  private createNestedTimespansWithAssignments(timespans: Timespan[]) {
+    return timespans.map((data) => {
+      const { assignments, ...timespan } = data;
+      return this.prisma.ftTimespan.create({
+        data: {
+          ...timespan,
+          assignments: {
+            create: assignments,
+          },
+        },
+      });
     });
   }
 }

@@ -1,10 +1,4 @@
-import {
-  Assignment,
-  FtStatus,
-  FtSubjectType,
-  reviewStatus,
-  Status,
-} from '@prisma/client';
+import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { TEAM_SELECT } from 'src/team/team.service';
@@ -48,7 +42,17 @@ export interface Timespan {
   timeWindowId: number;
   start: Date;
   end: Date;
-  assignments: { create: Pick<Assignment, 'userRequestId' | 'assigneeId'>[] };
+  assignments: (UserRequestAssignment | TeamRequestAssignment)[];
+}
+
+export interface UserRequestAssignment {
+  assigneeId: number;
+  userRequestId: number;
+}
+
+export interface TeamRequestAssignment {
+  assigneeId: number;
+  teamRequestId: number;
 }
 
 export class Review {

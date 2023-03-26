@@ -14,6 +14,13 @@ const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 const DIVIDABLE_ERROR_MESSAGE =
   'Time window duration is not dividable by the slice time';
 
+type TimespanBuilderParams = {
+  start: Date;
+  stepDuration: number;
+  timeWindowId: number;
+  userRequests: DataBaseUserRequest[];
+};
+
 export class TimespansGenerator {
   static generateTimespans(timeWindow: LiteTimeWindow): Timespan[] {
     if (!TimespansGenerator.canBeSliced(timeWindow)) {
@@ -33,16 +40,21 @@ export class TimespansGenerator {
     const stepDuration = sliceTime ?? durationInHour;
     const nbTimespans = durationInHour / stepDuration;
     return Array.from({ length: nbTimespans }).map(
-      TimespansGenerator.buildTimespan(start, stepDuration, id, userRequests),
+      TimespansGenerator.buildTimespan({
+        start,
+        userRequests,
+        stepDuration,
+        timeWindowId: id,
+      }),
     );
   }
 
-  private static buildTimespan(
-    start: Date,
-    stepDuration: number,
-    timeWindowId: number,
-    userRequests: DataBaseUserRequest[],
-  ) {
+  private static buildTimespan({
+    start,
+    stepDuration,
+    timeWindowId,
+    userRequests,
+  }: TimespanBuilderParams) {
     return (_, step: number) => {
       const slicedStart = TimespansGenerator.computeSlicedStart(
         start,
@@ -76,13 +88,11 @@ export class TimespansGenerator {
   }
 
   private static buildAssignments(userRequests: DataBaseUserRequest[]) {
-    if (!userRequests) return null;
-    return {
-      create: userRequests.map(({ id, user }) => ({
-        userRequestId: id,
-        assigneeId: user.id,
-      })),
-    };
+    if (!userRequests) return [];
+    return userRequests.map(({ id, user }) => ({
+      userRequestId: id,
+      assigneeId: user.id,
+    }));
   }
 
   private static generateStepedDate(

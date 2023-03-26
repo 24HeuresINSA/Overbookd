@@ -14,7 +14,7 @@ describe('Timespans Generator', () => {
           timeWindowId: 1,
           start: new Date('2023-05-13 10:00'),
           end: new Date('2023-05-13 12:30'),
-          assignments: null,
+          assignments: [],
         },
       ]);
     });
@@ -45,7 +45,7 @@ describe('Timespans Generator', () => {
             timeWindowId: 1,
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 11:00'),
-            assignments: null,
+            assignments: [],
           },
         ]);
       });
@@ -65,19 +65,19 @@ describe('Timespans Generator', () => {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
               end: new Date('2023-05-13 11:00'),
-              assignments: null,
+              assignments: [],
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 11:00'),
               end: new Date('2023-05-13 12:00'),
-              assignments: null,
+              assignments: [],
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 12:00'),
               end: new Date('2023-05-13 13:00'),
-              assignments: null,
+              assignments: [],
             },
           ]);
         });
@@ -96,19 +96,19 @@ describe('Timespans Generator', () => {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
               end: new Date('2023-05-13 11:30'),
-              assignments: null,
+              assignments: [],
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 11:30'),
               end: new Date('2023-05-13 13:00'),
-              assignments: null,
+              assignments: [],
             },
           ]);
         });
       });
       describe('when time duration is 3h and slice time is 1.5h and there is 2 userRequests', () => {
-        it('should return 2 timespans', () => {
+        it('should return 2 timespans with 2 nested assignments', () => {
           const timespans = TimespansGenerator.generateTimespans({
             id: 1,
             start: new Date('2023-05-13 10:00'),
@@ -141,35 +141,31 @@ describe('Timespans Generator', () => {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
               end: new Date('2023-05-13 11:30'),
-              assignments: {
-                create: [
-                  {
-                    userRequestId: 11,
-                    assigneeId: 1,
-                  },
-                  {
-                    userRequestId: 15,
-                    assigneeId: 2,
-                  },
-                ],
-              },
+              assignments: [
+                {
+                  userRequestId: 11,
+                  assigneeId: 1,
+                },
+                {
+                  userRequestId: 15,
+                  assigneeId: 2,
+                },
+              ],
             },
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 11:30'),
               end: new Date('2023-05-13 13:00'),
-              assignments: {
-                create: [
-                  {
-                    userRequestId: 11,
-                    assigneeId: 1,
-                  },
-                  {
-                    userRequestId: 15,
-                    assigneeId: 2,
-                  },
-                ],
-              },
+              assignments: [
+                {
+                  userRequestId: 11,
+                  assigneeId: 1,
+                },
+                {
+                  userRequestId: 15,
+                  assigneeId: 2,
+                },
+              ],
             },
           ]);
         });
