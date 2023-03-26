@@ -53,7 +53,8 @@
               v-model="isDeletedFilter"
               label="Afficher les FA supprimées"
             ></v-switch>
-            <v-btn v-if="isSecu" @click="exportCSV()">Export sécu</v-btn>
+            <v-btn v-if="isSecu" @click="exportCsvSecu()">Export sécu</v-btn>
+            <v-btn v-if="isSigna" @click="exportCsvSigna()">Export signa</v-btn>
           </v-card-text>
         </v-card>
       </v-container>
@@ -218,6 +219,9 @@ export default {
     },
     isSecu() {
       return this.$accessor.user.hasPermission("manage-pass-secu");
+    },
+    isSigna() {
+      return this.$accessor.user.hasPermission("manage-location");
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
@@ -386,7 +390,7 @@ export default {
       element.click();
       document.body.removeChild(element);
     },
-    async exportCSV() {
+    async exportCsvSecu() {
       // Parse data into a CSV string to be passed to the download function
       const csvHeader = "Numero;Nom;Resp;Nombre_de_pass;";
       const csvRows = this.selectedFAs.map((fa) => {
@@ -402,6 +406,25 @@ export default {
       const regex = new RegExp(/undefined/i, "g");
       const parsedCSV = csv.replace(regex, "");
       this.download("passsecu.csv", parsedCSV);
+    },
+    async exportCsvSigna() {
+      const signa_needs = await this.$accessor.FA.getSignaNeedsForCsv();
+      const csvHeader = "Numero FA;Nom FA;Type;Texte;Nombre;Commentaire;";
+      const csvRows = signa_needs.map((signa_need) => {
+        const rowData = [
+          signa_need.fa_id,
+          signa_need.fa_name,
+          signa_need.signa_type,
+          signa_need.text,
+          signa_need.count,
+          signa_need.comment,
+        ];
+        return `${rowData.join(";")}`;
+      });
+      const csv = [csvHeader, ...csvRows].join("\n");
+      const regex = new RegExp(/undefined/i, "g");
+      const parsedCSV = csv.replace(regex, "");
+      this.download("exportSigna.csv", parsedCSV);
     },
   },
 };

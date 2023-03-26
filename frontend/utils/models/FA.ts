@@ -172,6 +172,11 @@ export interface fa_signa_needs {
   comment?: string;
 }
 
+export interface FaSignaNeedsExportCsv extends Omit<fa_signa_needs, "id"> {
+  fa_name: string;
+  fa_id: number;
+}
+
 export interface time_windows {
   id?: number;
   type: time_windows_type;

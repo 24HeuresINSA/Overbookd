@@ -15,6 +15,7 @@ import {
   CreateFA,
   FA,
   FAPageId,
+  FaSignaNeedsExportCsv,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
@@ -907,6 +908,15 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("DELETE_PUBLISH_ANIMATION");
+    },
+
+    async getSignaNeedsForCsv() {
+      const res = await safeCall<FaSignaNeedsExportCsv[]>(
+        this,
+        RepoFactory.faRepo.exportSignaNeedsForCsv(this)
+      );
+      if (!res) return;
+      return res.data;
     },
   }
 );
