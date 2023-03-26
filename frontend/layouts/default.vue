@@ -208,7 +208,7 @@ export default {
         },
         {
           icon: "mdi-calendar-clock",
-          title: "Calendrier",
+          title: "Planning",
           permission: "hard",
           to: `/calendar/${this.$accessor.user.me.id}`,
         },
