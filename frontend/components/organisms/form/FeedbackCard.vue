@@ -7,7 +7,6 @@
         :items="feedbacks"
         hide-default-footer
         :items-per-page="-1"
-        sort-by="createdAt"
       >
         <template #[`item.author`]="{ item }">
           {{ getAuthorName(item.author) }}
@@ -28,7 +27,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Feedback, SubjectType } from "~/utils/models/feedback";
-import { DisplayedUser, User } from "~/utils/models/user";
+import { CompleteUser, DisplayedUser, User } from "~/utils/models/user";
 import { formatDate } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
@@ -50,9 +49,12 @@ export default Vue.extend({
   }),
   computed: {
     feedbacks(): Feedback[] {
-      return this.$accessor.FT.mFT.feedbacks;
+      const feedbacks = [...this.$accessor.FT.mFT.feedbacks];
+      return feedbacks.sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+      );
     },
-    me(): any {
+    me(): CompleteUser {
       return this.$accessor.user.me;
     },
   },

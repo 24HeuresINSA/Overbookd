@@ -654,7 +654,8 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("ADD_FEEDBACK", res.data);
+      const createdAt = new Date(res.data.createdAt);
+      commit("ADD_FEEDBACK", { ...res.data, createdAt });
     },
 
     async addGearRequestForAllRentalPeriods(
