@@ -2,7 +2,7 @@ import { TimeWindow, Timespan } from '../ft/ftTypes';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 
 type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {
-  userRequests?: DataBaseUserRequest[];
+  userRequests: DataBaseUserRequest[];
 };
 type Period = {
   start: Date;
@@ -88,7 +88,6 @@ export class TimespansGenerator {
   }
 
   private static buildAssignments(userRequests: DataBaseUserRequest[]) {
-    if (!userRequests) return [];
     return userRequests.map(({ id, user }) => ({
       userRequestId: id,
       assigneeId: user.id,
