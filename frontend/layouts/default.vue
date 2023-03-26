@@ -207,6 +207,12 @@ export default {
           to: "/availabilities",
         },
         {
+          icon: "mdi-calendar-clock",
+          title: "Calendrier",
+          permission: "hard",
+          to: `/calendar/${this.$accessor.user.me.id}`,
+        },
+        {
           icon: "mdi-clock-edit",
           title: "Charisme des dispos",
           permission: "can-affect",

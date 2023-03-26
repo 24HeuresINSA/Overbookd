@@ -7,6 +7,7 @@
           :class="userRequestStatus"
           v-bind="attrs"
           @click:close="deleteUserRequest()"
+          @click="redirectToCalendar()"
           v-on="on"
         >
           {{ userName }}
@@ -71,6 +72,9 @@ export default Vue.extend({
   methods: {
     deleteUserRequest(): void {
       this.$emit("delete-user-request", this.userRequest);
+    },
+    redirectToCalendar() {
+      window.open(`/calendar/${this.userRequest.user.id}`);
     },
   },
 });
