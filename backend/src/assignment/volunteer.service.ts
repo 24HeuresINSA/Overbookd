@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { TeamService } from 'src/team/team.service';
+import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
@@ -43,46 +45,45 @@ export class VolunteerService {
     timespanId: number,
   ): Promise<VolunteerResponseDto[]> {
     const ftTimespan = await this.ftTimespan.findTimespanWithFt(timespanId);
-    const teamCodes = ftTimespan.requestedTeams.map((team) => team.code);
+    const where = this.buildAssignableVolunteersCondition(ftTimespan);
 
     const volunteers = await this.prisma.user.findMany({
-      where: {
-        is_deleted: false,
-        AND: [
-          {
-            team: {
-              some: {
-                team: {
-                  code: {
-                    in: teamCodes,
-                  },
-                },
-              },
-            },
-          },
-          {
-            ...WHERE_VALIDATED_USER,
-          },
-        ],
-        availabilities: {
-          some: {
-            start: {
-              lte: ftTimespan.end,
-              gte: ftTimespan.start,
-            },
-            end: {
-              lte: ftTimespan.end,
-              gte: ftTimespan.start,
-            },
-          },
-        },
-      },
+      where,
       select: SELECT_VOLUNTEER,
       orderBy: {
         charisma: 'desc',
       },
     });
     return this.formatVolunteers(volunteers);
+  }
+
+  private buildAssignableVolunteersCondition(
+    ftTimespan: TimespanWithFtResponseDto,
+  ) {
+    const teamCodes = ftTimespan.requestedTeams.map((team) => team.code);
+    const team = TeamService.buildIsMemberOfCondition(teamCodes);
+    const availabilities = this.buildAvailableVolunteersCondition(ftTimespan);
+
+    return {
+      is_deleted: false,
+      AND: [{ team }, { ...WHERE_VALIDATED_USER }],
+      availabilities,
+    };
+  }
+
+  private buildAvailableVolunteersCondition(
+    ftTimespan: TimespanWithFtResponseDto,
+  ) {
+    return {
+      some: {
+        start: {
+          lte: ftTimespan.start,
+        },
+        end: {
+          gte: ftTimespan.end,
+        },
+      },
+    };
   }
 
   private formatVolunteers(

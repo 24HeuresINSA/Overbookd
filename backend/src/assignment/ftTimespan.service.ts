@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { TeamService } from 'src/team/team.service';
 import { UserService } from 'src/user/user.service';
+import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
   FtWithTimespansResponseDto,
@@ -77,41 +79,47 @@ export class FtTimespanService {
       this.user.getUserTeams(volunteerId),
       this.volunteerAvailability.findUserAvailabilities(volunteerId),
     ]);
+    const where = this.buildAssignableToTimespanCondition(
+      volunteerTeams,
+      availabilities,
+    );
 
     const timespans = await this.prisma.ftTimespan.findMany({
       select: SELECT_TIMESPAN_WITH_FT,
-      where: {
-        AND: [
-          {
-            timeWindow: {
-              teamRequests: {
-                some: {
-                  team: {
-                    code: {
-                      in: volunteerTeams,
-                    },
-                  },
-                },
-              },
-              ...WHERE_READY_FT,
-            },
-          },
-          {
-            OR: availabilities.map((availability) => ({
-              start: {
-                gte: availability.start,
-                lte: availability.end,
-              },
-              end: {
-                gte: availability.start,
-                lte: availability.end,
-              },
-            })),
-          },
-        ],
-      },
+      where,
     });
     return this.formatTimespansWithFt(timespans);
+  }
+
+  private buildAssignableToTimespanCondition(
+    volunteerTeams: string[],
+    availabilities: PeriodDto[],
+  ) {
+    const teamRequests = TeamService.buildIsMemberOfCondition(volunteerTeams);
+
+    const availabilitiesCondition =
+      this.buildTimespanConditionOverAvailability(availabilities);
+
+    return {
+      timeWindow: {
+        teamRequests,
+        ...WHERE_READY_FT,
+      },
+      ...availabilitiesCondition,
+    };
+  }
+
+  private buildTimespanConditionOverAvailability(availabilities: PeriodDto[]) {
+    return {
+      OR: availabilities.map((availability) => ({
+        start: {
+          gte: availability.start,
+        },
+        end: {
+          lte: availability.end,
+        },
+      })),
+    };
   }
 
   private formatTimespansWithFt(
