@@ -9,6 +9,15 @@ export type AllFaResponse = Prisma.faGetPayload<{
   select: typeof ALL_FA_SELECT;
 }>;
 
+export type ExportSignaNeeds = {
+  fa_id: number;
+  fa_name: string;
+  signa_type: string;
+  text: string;
+  count: number;
+  comment: string;
+};
+
 export type FaIdResponse = {
   id: number;
 };
@@ -169,6 +178,19 @@ export const ALL_FA_SELECT = {
           id: true,
         },
       },
+    },
+  },
+};
+
+export const EXPORT_SIGNA_SELECT = {
+  fa_id: true,
+  signa_type: true,
+  text: true,
+  count: true,
+  comment: true,
+  fa: {
+    select: {
+      name: true,
     },
   },
 };

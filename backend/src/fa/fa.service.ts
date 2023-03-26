@@ -3,6 +3,7 @@ import { fa, Status } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
+import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/create-fa.dto';
 import {
@@ -12,7 +13,6 @@ import {
   FaIdResponse,
   FaResponse,
 } from './fa_types';
-import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -38,11 +38,6 @@ export class FaService {
         id: 'asc',
       },
     });
-  }
-
-  private buildFindCondition({ isDeleted: is_deleted, status }: SearchFa) {
-    const statusCondition = status ? { status } : {};
-    return { is_deleted, ...statusCondition };
   }
 
   async findOne(id: number): Promise<FaResponse | null> {
@@ -194,6 +189,11 @@ export class FaService {
         id: true,
       },
     });
+  }
+
+  private buildFindCondition({ isDeleted: is_deleted, status }: SearchFa) {
+    const statusCondition = status ? { status } : {};
+    return { is_deleted, ...statusCondition };
   }
 
   private async checkFaExistence(id: number): Promise<void> {
