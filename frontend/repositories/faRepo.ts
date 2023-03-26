@@ -3,6 +3,7 @@ import {
   CreateFA,
   FA,
   FAPageId,
+  FaSignaNeedsExportCsv,
   fa_collaborators,
   fa_comments,
   fa_electricity_needs,
@@ -235,6 +236,12 @@ export default {
       resource +
         `/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
       { drive }
+    );
+  },
+
+  exportSignaNeedsForCsv(context: Context) {
+    return context.$axios.get<FaSignaNeedsExportCsv[]>(
+      `/fa-signa-needs/export-csv`
     );
   },
 };
