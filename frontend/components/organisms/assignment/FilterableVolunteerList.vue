@@ -1,22 +1,12 @@
 <template>
   <v-card class="filterable-user-list">
     <v-card-text>
-      <div class="filters">
-        <v-text-field
-          v-model="volunteer"
-          class="filters__field"
-          label="Recherche"
-        ></v-text-field>
-        <SearchTeams
-          v-model="teams"
-          class="filters__field"
-          :boxed="false"
-        ></SearchTeams>
-        <p>
-          Nombre de personnes dans la liste :
-          <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
-        </p>
-      </div>
+      <AssignmentFilters
+        :list-length="filteredVolunteers.length"
+        class="filters"
+        @change:search="volunteer = $event"
+        @change:teams="teams = $event"
+      ></AssignmentFilters>
       <v-divider />
       <div
         class="user-list"
@@ -34,24 +24,17 @@ import Vue from "vue";
 import Fuse from "fuse.js";
 import UserList from "~/components/molecules/users/UserList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
-import SearchTeams from "~/components/atoms/SearchTeams.vue";
+import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
 import { Team } from "~/utils/models/team";
 import { Volunteer, AssignmentModes } from "~/utils/models/assignment";
 
-interface FiltersData {
-  teams: Team[];
-  volunteer: string;
-}
-
 export default Vue.extend({
-  name: "FilterableUserList",
-  components: { UserList, FriendsDisplay, SearchTeams },
-  data(): FiltersData {
-    return {
-      teams: [],
-      volunteer: "",
-    };
-  },
+  name: "FilterableVolunteerList",
+  components: { UserList, FriendsDisplay, AssignmentFilters },
+  data: () => ({
+    teams: [],
+    volunteer: "",
+  }),
   computed: {
     filteredVolunteers(): Volunteer[] {
       const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
@@ -108,18 +91,6 @@ export default Vue.extend({
 .filters {
   width: 100%;
   height: 140px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  padding: 0 1rem;
-
-  &__field {
-    width: 100%;
-    padding-top: 0;
-    margin-top: 0;
-  }
 }
 
 .user-list {

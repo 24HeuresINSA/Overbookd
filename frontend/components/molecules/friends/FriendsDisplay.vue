@@ -6,7 +6,7 @@
         <v-list-item
           v-for="friend in selectedVolunteerFriends"
           :key="friend.id"
-          class="friends-card__list__item"
+          class="friend-item"
           :value="friend.id"
           @click="selectVolunteer(friend)"
           @contextmenu.prevent="openCalendar(friend.id)"
@@ -15,7 +15,7 @@
         </v-list-item>
         <v-list-item
           v-if="selectedVolunteerFriends.length === 0"
-          class="friends-card__list__item"
+          class="friend-item"
         >
           Aucun ami 😢
         </v-list-item>
@@ -76,7 +76,7 @@ export default Vue.extend({
   &__list {
     overflow-y: scroll;
 
-    &__item {
+    .friend-item {
       min-height: 36px;
     }
   }

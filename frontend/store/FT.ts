@@ -35,7 +35,7 @@ import {
   getTimeWindowWithoutRequests,
   toUpdateFT,
 } from "~/utils/models/ft";
-import { TimespanParameters } from "~/utils/models/ftTimespan";
+import { FtTimespanParameters } from "~/utils/models/ftTimespan";
 import {
   castGearRequestWithDate,
   GearRequestCreation,
@@ -413,7 +413,7 @@ export const actions = actionTree(
       {
         author,
         timespanParameters,
-      }: { author: User; timespanParameters: TimespanParameters }
+      }: { author: User; timespanParameters: FtTimespanParameters }
     ) {
       const resFT = await safeCall(
         this,

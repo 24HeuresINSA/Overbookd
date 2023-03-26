@@ -1,6 +1,6 @@
 <template>
   <v-container class="assignment-container">
-    <FilterableUserList class="filtered-user" />
+    <FilterableVolunteerList class="filtered-user" />
 
     <!--<OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FilterableUserList from "~/components/organisms/assignment/FilterableUserList.vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
   name: "Assignment",
-  components: { FilterableUserList },
+  components: { FilterableVolunteerList },
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers;
