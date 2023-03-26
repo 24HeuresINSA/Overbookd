@@ -1,12 +1,13 @@
 import {
-  Controller,
   Get,
   Post,
   Body,
   Param,
-  ParseIntPipe,
-  UseGuards,
   Delete,
+  UseGuards,
+  Controller,
+  ParseIntPipe,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { TimeWindowsService } from './time_windows.service';
 import { CreateTimeWindowDto } from './dto/create-time_window.dto';
@@ -25,10 +26,16 @@ export class TimeWindowsController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':faID')
-  @ApiBody({ type: [CreateTimeWindowDto] })
+  @ApiBody({ type: CreateTimeWindowDto, isArray: true })
   upsert(
     @Param('faID', ParseIntPipe) faID: string,
-    @Body() tWindows: CreateTimeWindowDto[],
+    @Body(
+      new ParseArrayPipe({
+        items: CreateTimeWindowDto,
+        whitelist: true,
+      }),
+    )
+    tWindows: CreateTimeWindowDto[],
   ): Promise<time_windows[] | null> {
     return this.timeWindowsService.upsert(+faID, tWindows);
   }
