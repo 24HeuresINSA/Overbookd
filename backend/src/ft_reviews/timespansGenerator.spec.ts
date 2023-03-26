@@ -8,6 +8,7 @@ describe('Timespans Generator', () => {
         start: new Date('2023-05-13 10:00'),
         end: new Date('2023-05-13 12:30'),
         sliceTime: null,
+        userRequests: [],
       });
       expect(timespans).toEqual([
         {
@@ -28,6 +29,7 @@ describe('Timespans Generator', () => {
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 12:01'),
             sliceTime: 30,
+            userRequests: [],
           });
         }).toThrow('Time window duration is not dividable by the slice time');
       });
@@ -39,6 +41,7 @@ describe('Timespans Generator', () => {
           start: new Date('2023-05-13 10:00'),
           end: new Date('2023-05-13 11:00'),
           sliceTime: 1,
+          userRequests: [],
         });
         expect(timespans).toEqual([
           {
@@ -58,6 +61,7 @@ describe('Timespans Generator', () => {
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 13:00'),
             sliceTime: 1,
+            userRequests: [],
           });
           expect(timespans).toHaveLength(3);
           expect(timespans).toEqual([
@@ -89,6 +93,7 @@ describe('Timespans Generator', () => {
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 13:00'),
             sliceTime: 1.5,
+            userRequests: [],
           });
           expect(timespans).toHaveLength(2);
           expect(timespans).toEqual([
