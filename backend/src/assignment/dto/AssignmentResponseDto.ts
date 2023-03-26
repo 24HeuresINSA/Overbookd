@@ -27,12 +27,12 @@ export class AssignmentResponseDto {
     description: 'The id of the team request',
     type: Number,
   })
-  teamRequestId: number;
+  teamRequestId?: number;
 
   @ApiProperty({
     required: false,
     description: 'The id of the user request',
     type: Number,
   })
-  userRequestId: number;
+  userRequestId?: number;
 }

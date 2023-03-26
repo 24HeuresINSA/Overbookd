@@ -1,6 +1,6 @@
 import { PrismaService } from 'src/prisma.service';
-import { FtTeamRequest, FtTimespan } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
 import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
 
 const TIMESPAN_SELECTOR = {
@@ -36,6 +36,14 @@ const TIMESPAN_SELECTOR = {
 
 const TEAM_ORDER = ['orga', 'hard', 'confiance', 'soft'];
 
+type UserWithTeams = User & {
+  team: {
+    team: {
+      code: string;
+    };
+  }[];
+};
+
 type SmallTeamRequest = Pick<FtTeamRequest, 'id' | 'teamCode' | 'quantity'>;
 
 type FullTimespan = FtTimespan & {
@@ -49,6 +57,18 @@ type FullTimespan = FtTimespan & {
   }[];
 };
 
+const VOLUNTEER_INCLUDE = {
+  team: {
+    select: {
+      team: {
+        select: {
+          code: true,
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
@@ -60,33 +80,23 @@ export class AssignmentService {
     const timespan = await this.getTimespan(timespanId);
     const volunteer = await this.getVolunteer(volunteerId, timespan);
 
-    const userTeams = volunteer.team.map((t) => t.team.code);
-    const assignableTeams = this.getAssignableTeam(userTeams);
-
-    const teamRequestId = this.getTeamRequestId(timespan, assignableTeams);
+    const teamRequestId = this.getTeamRequestId(timespan, volunteer);
 
     return this.prisma.assignment.create({
       data: {
         timespanId,
-        assigneeId: volunteerId,
         teamRequestId,
+        assigneeId: volunteerId,
       },
     });
   }
 
-  private async getVolunteer(volunteerId: number, ftTimespan: FtTimespan) {
+  private async getVolunteer(
+    volunteerId: number,
+    ftTimespan: FullTimespan,
+  ): Promise<UserWithTeams> {
     const volunteer = await this.prisma.user.findMany({
-      include: {
-        team: {
-          select: {
-            team: {
-              select: {
-                code: true,
-              },
-            },
-          },
-        },
-      },
+      include: VOLUNTEER_INCLUDE,
       where: {
         id: volunteerId,
         availabilities: {
@@ -131,7 +141,7 @@ export class AssignmentService {
 
     if (!timespan) {
       throw new NotFoundException(
-        "Le créneau n'existe pas. Aller regarder la FT.",
+        "Le créneau n'existe pas. Allez regarder la FT.",
       );
     }
 
@@ -140,10 +150,12 @@ export class AssignmentService {
 
   private getTeamRequestId(
     timespan: FullTimespan,
-    volunteerTeamCodes: string[],
-  ) {
+    volunteer: UserWithTeams,
+  ): number {
     const countAssignmentsByTeamRequest =
       this.countAssignmentsByTeamRequest(timespan);
+
+    const volunteerTeamCodes = this.getAssignableTeamFromVolunteer(volunteer);
 
     const filteredTeamRequest = timespan.timeWindow.teamRequests.filter(
       (tr) =>
@@ -162,6 +174,11 @@ export class AssignmentService {
       (a, b) => this.indexOfTeam(a.teamCode) - this.indexOfTeam(b.teamCode),
     );
     return filteredTeamRequest[0].id;
+  }
+
+  private getAssignableTeamFromVolunteer(volunteer: UserWithTeams): string[] {
+    const userTeams = volunteer.team.map((t) => t.team.code);
+    return this.getAssignableTeam(userTeams);
   }
 
   private countAssignmentsByTeamRequest(timespan: FullTimespan) {
