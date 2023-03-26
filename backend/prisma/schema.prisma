@@ -515,7 +515,7 @@ model FtUserRequest {
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
 
-  assignment     Assignment?
+  assignments     Assignment[]
 
   @@unique([ftTimeWindowsId, userId])
   @@map("ft_user_request")
@@ -555,7 +555,7 @@ model Assignment {
   timespanId    Int
   timespan      FtTimespan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
   userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
-  userRequestId Int?            @unique @map("user_request_id")
+  userRequestId Int?            @map("user_request_id")
   teamRequest   FtTeamRequest?  @relation(fields: [teamRequestId], references: [id], onDelete: Cascade)
   teamRequestId Int?            @map("team_request_id")
   assignee      User            @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
