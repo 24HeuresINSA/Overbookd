@@ -83,13 +83,13 @@ export function castGearRequestWithDate(
   };
 }
 
-export type sortableGearRequestHeader =
+export type SortableGearRequestHeader =
   | "quantity"
   | "gear"
   | "startDate"
   | "endDate";
 
-export type gearRequestSortFunction = (
+export type GearRequestSortFunction = (
   gearRequests: GearRequest[],
   desc: boolean
 ) => GearRequest[];

@@ -5,7 +5,7 @@
     dense
     item-key="key"
     :items-per-page="-1"
-    sort-by="dateStart"
+    :custom-sort="sortTimeWindows"
   >
     <template #item.startDate="{ item }">
       {{ formatDate(item.start) }}
@@ -66,12 +66,14 @@ import Vue from "vue";
 import VolunteerRequestChip from "~/components/atoms/assignment/VolunteerRequestChip.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
+import { ftTimeWindowsSorts } from "~/utils/functions/timeWindow";
 import {
   FT,
   FTTeamRequest,
   FTTimeWindow,
   FTUserRequest,
   FTUserRequestImpl,
+  SortableTimeWindowHeader,
 } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -87,10 +89,10 @@ export default Vue.extend({
     headers: [
       { text: "Date de début", value: "startDate" },
       { text: "Date de fin", value: "endDate" },
-      { text: "Découpage", value: "sliceTime" },
-      { text: "Bénévoles Requis", value: "userRequests" },
-      { text: "Equipes Requises", value: "teamRequests" },
-      { text: "Action", value: "action" },
+      { text: "Découpage", value: "sliceTime", sortable: false },
+      { text: "Bénévoles Requis", value: "userRequests", sortable: false },
+      { text: "Equipes Requises", value: "teamRequests", sortable: false },
+      { text: "Action", value: "action", sortable: false },
     ],
   }),
   computed: {
@@ -136,6 +138,19 @@ export default Vue.extend({
     },
     updateTimeWindow(timeWindow: FTTimeWindow) {
       this.$accessor.FT.updateTimeWindow(timeWindow);
+    },
+    sortTimeWindows(
+      timeWindows: FTTimeWindow[],
+      sortsBy: SortableTimeWindowHeader[],
+      sortsDesc: boolean[]
+    ) {
+      const sortBy = sortsBy.at(0) ?? "startDate";
+      const sortFnc = ftTimeWindowsSorts.get(sortBy);
+
+      if (!sortFnc) return timeWindows;
+
+      const sortDesc = sortsDesc.at(0) ?? false;
+      return sortFnc(timeWindows, sortDesc);
     },
   },
 });

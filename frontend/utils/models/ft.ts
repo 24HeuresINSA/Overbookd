@@ -105,6 +105,13 @@ export interface FTTimeWindowUpdate {
   sliceTime?: number;
 }
 
+export type SortableTimeWindowHeader = "startDate" | "endDate";
+
+export type FTTimeWindowSortFunction = (
+  timeWindows: FTTimeWindow[],
+  desc: boolean
+) => FTTimeWindow[];
+
 interface AlsoRequiredByFt {
   id: number;
   name: string;

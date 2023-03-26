@@ -2,10 +2,10 @@ import { isSamePeriod } from "../availabilities/period";
 import {
   GearRequest,
   GearRequestCreation,
-  gearRequestSortFunction,
+  GearRequestSortFunction,
   Period,
   Seeker,
-  sortableGearRequestHeader,
+  SortableGearRequestHeader,
   StoredGearRequest,
 } from "../models/gearRequests";
 
@@ -206,8 +206,8 @@ function sortOnRentalPeriodEnd(gearRequests: GearRequest[], desc: boolean) {
 }
 
 export const gearRequestsSorts = new Map<
-  sortableGearRequestHeader,
-  gearRequestSortFunction
+  SortableGearRequestHeader,
+  GearRequestSortFunction
 >([
   ["quantity", sortOnQuantity],
   ["gear", sortOnGear],
