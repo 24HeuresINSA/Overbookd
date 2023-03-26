@@ -45,12 +45,12 @@ export interface Timespan {
   assignments: (UserRequestAssignment | TeamRequestAssignment)[];
 }
 
-export interface UserRequestAssignment {
+interface UserRequestAssignment {
   assigneeId: number;
   userRequestId: number;
 }
 
-export interface TeamRequestAssignment {
+interface TeamRequestAssignment {
   assigneeId: number;
   teamRequestId: number;
 }
