@@ -1,29 +1,32 @@
 import {
-  Controller,
   Get,
-  HttpCode,
+  Post,
   Param,
-  ParseIntPipe,
+  HttpCode,
   UseGuards,
+  Controller,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
+  ApiTags,
+  ApiResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { VolunteerService } from './volunteer.service';
 import { AssignmentService } from './assignment.service';
 import {
   FtWithTimespansResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
-import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
-import { VolunteerService } from './volunteer.service';
+import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
+import { VolunteerResponse } from './dto/volunteerResponse';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -101,6 +104,23 @@ export class AssignmentController {
     @Param('timespanId', ParseIntPipe) timespanId: number,
   ): Promise<VolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteersForFtTimespan(
+      timespanId,
+    );
+  }
+
+  @Post(':volonteerId/timespan/:timespanId')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Affect volunteers to time windows',
+    type: AssignmentResponseDto,
+  })
+  affectVolunteersToTimeSpan(
+    @Param('timespanId', ParseIntPipe) timespanId: number,
+    @Param('volonteerId', ParseIntPipe) volonteerId: number,
+  ): Promise<AssignmentResponseDto> {
+    return this.assignmentService.affectVolunteersToTimeSpan(
+      volonteerId,
       timespanId,
     );
   }
