@@ -9,7 +9,7 @@ import {
   SELECT_VOLUNTEER,
 } from './types/volunteerTypes';
 
-const WHERE_VALIDATED_USER = {
+export const WHERE_VALIDATED_USER = {
   team: {
     some: {
       team: {

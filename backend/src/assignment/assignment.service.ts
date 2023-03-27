@@ -1,5 +1,6 @@
 import { PrismaService } from 'src/prisma.service';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
+import { WHERE_VALIDATED_USER } from './volunteer.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
 import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
@@ -86,6 +87,7 @@ export class AssignmentService {
       include: SELECT_USER_TEAMS,
       where: {
         id: volunteerId,
+        ...WHERE_VALIDATED_USER,
         availabilities: {
           some: {
             start: {
