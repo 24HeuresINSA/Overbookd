@@ -35,7 +35,19 @@ const SELECT_USER = {
   is_deleted: true,
 };
 
-const SELECT_USER_TEAM = {
+export const SELECT_USER_TEAMS = {
+  team: {
+    select: {
+      team: {
+        select: {
+          code: true,
+        },
+      },
+    },
+  },
+};
+
+const SELECT_USER_TEAMS_AND_PERMISSIONS = {
   team: {
     select: {
       team: {
@@ -95,7 +107,7 @@ export class UserService {
       where: findCondition,
       select: {
         ...SELECT_USER,
-        ...SELECT_USER_TEAM,
+        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
     return this.getUserWithTeamAndPermission(user);
@@ -119,7 +131,7 @@ export class UserService {
       data: user,
       select: {
         ...SELECT_USER,
-        ...SELECT_USER_TEAM,
+        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
     return this.getUserWithTeamAndPermission(updatedUser);
@@ -143,7 +155,7 @@ export class UserService {
       orderBy,
       select: {
         ...SELECT_USER,
-        ...SELECT_USER_TEAM,
+        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
     return users.map((user) => this.getUserWithTeamAndPermission(user));
@@ -237,7 +249,7 @@ export class UserService {
     const user = await this.prisma.user.update({
       select: {
         ...SELECT_USER,
-        ...SELECT_USER_TEAM,
+        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
       data: userData,
       where: { id: targetUserId },

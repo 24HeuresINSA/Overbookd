@@ -1,7 +1,14 @@
 import { PrismaService } from 'src/prisma.service';
+import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
 import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
+
+const SELECT_TEAM_REQUEST = {
+  id: true,
+  teamCode: true,
+  quantity: true,
+};
 
 const TIMESPAN_SELECTOR = {
   id: true,
@@ -12,11 +19,7 @@ const TIMESPAN_SELECTOR = {
     select: {
       id: true,
       teamRequests: {
-        select: {
-          id: true,
-          teamCode: true,
-          quantity: true,
-        },
+        select: SELECT_TEAM_REQUEST,
       },
     },
   },
@@ -24,11 +27,7 @@ const TIMESPAN_SELECTOR = {
     select: {
       id: true,
       teamRequest: {
-        select: {
-          id: true,
-          teamCode: true,
-          quantity: true,
-        },
+        select: SELECT_TEAM_REQUEST,
       },
     },
   },
@@ -57,18 +56,6 @@ type FullTimespan = FtTimespan & {
   }[];
 };
 
-const VOLUNTEER_INCLUDE = {
-  team: {
-    select: {
-      team: {
-        select: {
-          code: true,
-        },
-      },
-    },
-  },
-};
-
 @Injectable()
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
@@ -95,8 +82,8 @@ export class AssignmentService {
     volunteerId: number,
     ftTimespan: FullTimespan,
   ): Promise<UserWithTeams> {
-    const volunteer = await this.prisma.user.findMany({
-      include: VOLUNTEER_INCLUDE,
+    const volunteer = await this.prisma.user.findFirst({
+      include: SELECT_USER_TEAMS,
       where: {
         id: volunteerId,
         availabilities: {
@@ -124,13 +111,13 @@ export class AssignmentService {
       },
     });
 
-    if (volunteer.length !== 1) {
+    if (!volunteer) {
       throw new NotFoundException(
         "Le bénévole n'a pas été trouvé. Il n'est soit pas disponible, soit déjà affecté à un autre créneau.",
       );
     }
 
-    return volunteer[0];
+    return volunteer;
   }
 
   private async getTimespan(timespanId: number): Promise<FullTimespan> {
