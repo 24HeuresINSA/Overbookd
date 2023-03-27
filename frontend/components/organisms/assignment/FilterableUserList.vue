@@ -55,12 +55,7 @@ export default Vue.extend({
   computed: {
     filteredVolunteers(): Volunteer[] {
       const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
-        (volunteer) => {
-          return (
-            this.filterVolunteerByValidity()(volunteer) &&
-            this.filterVolunteerByTeams(this.teams)(volunteer)
-          );
-        }
+        (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer)
       );
       return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
     },
@@ -75,11 +70,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    filterVolunteerByValidity(): (volunteer: Volunteer) => boolean {
-      return (volunteer) =>
-        volunteer.teams.map((team) => team).includes("soft") ||
-        volunteer.teams.map((team) => team).includes("hard");
-    },
     filterVolunteerByTeams(
       teamsSearched: Team[]
     ): (volunteer: Volunteer) => boolean {
