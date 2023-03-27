@@ -14,18 +14,17 @@ import {
   ApiForbiddenResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { VolunteerService } from './volunteer.service';
-import { AssignmentService } from './assignment.service';
 import {
   FtWithTimespansResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { VolunteerService } from './volunteer.service';
+import { AssignmentService } from './assignment.service';
 import { FtTimespanService } from './ftTimespan.service';
-import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
-import { VolunteerResponse } from './dto/volunteerResponse';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
 
 @ApiBearerAuth()
