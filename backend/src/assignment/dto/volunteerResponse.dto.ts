@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class VolunteerResponse {
+export class VolunteerResponseDto {
   @ApiProperty({
     required: true,
     description: 'The id of the volunteer',
@@ -23,12 +23,6 @@ export class VolunteerResponse {
   lastname: string;
 
   @ApiProperty({
-    description: 'The nickname of the volunteer',
-    type: String,
-  })
-  nickname?: string;
-
-  @ApiProperty({
     required: true,
     description: 'The charisma of the volunteer',
     type: Number,
@@ -44,7 +38,8 @@ export class VolunteerResponse {
   @ApiProperty({
     required: true,
     description: 'The team codes of the volunteer',
-    type: [String],
+    type: String,
+    isArray: true,
   })
   teams: string[];
 }

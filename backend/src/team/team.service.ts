@@ -91,6 +91,18 @@ export class TeamService {
     return;
   }
 
+  static buildIsMemberOfCondition(teamCodes: string[]) {
+    return {
+      some: {
+        team: {
+          code: {
+            in: teamCodes,
+          },
+        },
+      },
+    };
+  }
+
   private async forceUserTeams(userId: number, teamsToLink: Team[]) {
     const deleteAll = this.prisma.user_Team.deleteMany({
       where: {

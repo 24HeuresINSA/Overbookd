@@ -161,6 +161,22 @@ export class UserService {
     }));
   }
 
+  async getUserTeams(id: number): Promise<string[]> {
+    const teams = await this.prisma.team.findMany({
+      select: {
+        code: true,
+      },
+      where: {
+        users: {
+          some: {
+            user_id: id,
+          },
+        },
+      },
+    });
+    return teams.map((t) => t.code);
+  }
+
   async createUser(payload: UserCreationDto): Promise<UserWithoutPassword> {
     const newUserData: Prisma.UserUncheckedCreateInput = {
       firstname: payload.firstname,

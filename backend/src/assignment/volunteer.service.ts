@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { VolunteerResponse } from './dto/volunteerResponse';
+import { TeamService } from 'src/team/team.service';
+import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
+import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
+import { FtTimespanService } from './ftTimespan.service';
+import {
+  DatabaseVolunteerWithAvailabilities,
+  SELECT_VOLUNTEER,
+} from './types/volunteerTypes';
 
-const SELECT_VOLUNTEER = {
-  id: true,
-  firstname: true,
-  lastname: true,
-  nickname: true,
-  charisma: true,
-  comment: true,
+const WHERE_VALIDATED_USER = {
   team: {
-    select: {
+    some: {
       team: {
-        select: {
-          code: true,
+        permissions: {
+          some: {
+            permission_name: 'validated-user',
+          },
         },
       },
     },
@@ -22,38 +25,86 @@ const SELECT_VOLUNTEER = {
 
 @Injectable()
 export class VolunteerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private ftTimespan: FtTimespanService,
+  ) {}
 
-  async findAllVolunteers(): Promise<VolunteerResponse[]> {
+  async findAllVolunteers(): Promise<VolunteerResponseDto[]> {
     const volunteers = await this.prisma.user.findMany({
       where: {
         is_deleted: false,
-        team: {
-          some: {
-            team: {
-              code: {
-                in: ['hard', 'soft'],
-              },
-            },
-          },
-        },
+        ...WHERE_VALIDATED_USER,
       },
       select: SELECT_VOLUNTEER,
       orderBy: {
         charisma: 'desc',
       },
     });
+    return this.formatVolunteers(volunteers);
+  }
 
-    return volunteers.map(
-      ({ id, firstname, lastname, nickname, charisma, comment, team }) => ({
-        id,
-        firstname,
-        lastname,
-        nickname,
-        charisma,
-        comment,
-        teams: team.map((t) => t.team.code),
-      }),
-    );
+  async findAvailableVolunteersForFtTimespan(
+    timespanId: number,
+  ): Promise<VolunteerResponseDto[]> {
+    const ftTimespan = await this.ftTimespan.findTimespanWithFt(timespanId);
+    const where = this.buildAssignableVolunteersCondition(ftTimespan);
+
+    const volunteers = await this.prisma.user.findMany({
+      where,
+      select: SELECT_VOLUNTEER,
+      orderBy: {
+        charisma: 'desc',
+      },
+    });
+    return this.formatVolunteers(volunteers);
+  }
+
+  private buildAssignableVolunteersCondition(
+    ftTimespan: TimespanWithFtResponseDto,
+  ) {
+    const teamCodes = ftTimespan.requestedTeams.map((team) => team.code);
+    const team = TeamService.buildIsMemberOfCondition(teamCodes);
+    const availabilities = this.buildAvailableVolunteersCondition(ftTimespan);
+
+    return {
+      is_deleted: false,
+      AND: [{ team }, { ...WHERE_VALIDATED_USER }],
+      availabilities,
+    };
+  }
+
+  private buildAvailableVolunteersCondition(
+    ftTimespan: TimespanWithFtResponseDto,
+  ) {
+    return {
+      some: {
+        start: {
+          lte: ftTimespan.start,
+        },
+        end: {
+          gte: ftTimespan.end,
+        },
+      },
+    };
+  }
+
+  private formatVolunteers(
+    volunteers: DatabaseVolunteerWithAvailabilities[],
+  ): VolunteerResponseDto[] {
+    return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
+  }
+
+  private formatVolunteer(
+    volunteer: DatabaseVolunteerWithAvailabilities,
+  ): VolunteerResponseDto {
+    return {
+      id: volunteer.id,
+      firstname: volunteer.firstname,
+      lastname: volunteer.lastname,
+      comment: volunteer.comment,
+      charisma: volunteer.charisma,
+      teams: volunteer.team.map((t) => t.team.code),
+    };
   }
 }
