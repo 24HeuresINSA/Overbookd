@@ -2,6 +2,7 @@
   <v-container class="assignment-container">
     <FilterableVolunteerList class="filtered-user" />
 
+    <FilterableTimespanList class="filtered-timespan" />
     <!--<OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
     <OverTasks
@@ -19,19 +20,27 @@
 <script lang="ts">
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
+import FilterableTimespanList from "~/components/organisms/assignment/FilterableTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "Assignment",
-  components: { FilterableVolunteerList },
+  components: { FilterableVolunteerList, FilterableTimespanList },
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers;
+    },
+    ftWithTimespans(): FtWithTimespan[] {
+      return this.$accessor.assignment.ftWithTimespans;
     },
   },
   async mounted() {
     if (!this.volunteers.length) {
       await this.$accessor.assignment.fetchVolunteers();
+    }
+    if (!this.ftWithTimespans.length) {
+      await this.$accessor.assignment.fetchFtWithTimespans();
     }
   },
   /*data() {
@@ -87,11 +96,16 @@ export default Vue.extend({
   margin-right: 0;
   position: absolute;
   display: flex;
+  justify-content: space-between;
   height: 100%;
   width: 100%;
 }
 
 .filtered-user {
   max-width: 350px;
+}
+
+.filtered-timespan {
+  max-width: 400px;
 }
 </style>

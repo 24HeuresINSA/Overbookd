@@ -10,9 +10,9 @@
       <v-divider />
       <div
         class="user-list"
-        :class="shouldDisplayFriends ? 'user-list__with-friend-list' : ''"
+        :class="shouldDisplayFriends ? 'user-list--with-friend-list' : ''"
       >
-        <UserList :volunteers="filteredVolunteers" />
+        <VolunteerList :volunteers="filteredVolunteers" />
       </div>
       <FriendsDisplay v-if="shouldDisplayFriends" class="friend-list" />
     </v-card-text>
@@ -22,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import UserList from "~/components/molecules/users/UserList.vue";
+import VolunteerList from "~/components/molecules/assignment/VolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
 import { Team } from "~/utils/models/team";
@@ -30,7 +30,7 @@ import { Volunteer, AssignmentModes } from "~/utils/models/assignment";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",
-  components: { UserList, FriendsDisplay, AssignmentFilters },
+  components: { VolunteerList, FriendsDisplay, AssignmentFilters },
   data: () => ({
     teams: [],
     volunteer: "",
@@ -99,7 +99,7 @@ export default Vue.extend({
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  &__with-friend-list {
+  &--with-friend-list {
     max-height: calc(100vh - 430px);
   }
 }
@@ -109,9 +109,5 @@ export default Vue.extend({
   height: 160px;
   position: fixed;
   bottom: 36px;
-}
-
-.v-text-field__details {
-  display: none;
 }
 </style>

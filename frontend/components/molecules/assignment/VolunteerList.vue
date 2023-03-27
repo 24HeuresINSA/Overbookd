@@ -14,11 +14,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VolunteerResume from "~/components/organisms/assignment/VolunteerResume.vue";
+import VolunteerResume from "~/components/molecules/assignment/VolunteerResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
-  name: "UserList",
+  name: "VolunteerList",
   components: { VolunteerResume },
   props: {
     volunteers: {

@@ -45,12 +45,12 @@ export default Vue.extend({
   computed: {
     counterLabel(): string {
       switch (this.type) {
-        case "volunteer":
-          return "Nombre de bénévoles dans la liste : ";
+        case "timespan":
+          return "Nombre de créneaux dans la liste : ";
         case "ft":
           return "Nombre de FT dans la liste : ";
         default:
-          return "Nombre de créneaux dans la liste : ";
+          return "Nombre de bénévoles dans la liste : ";
       }
     },
   },

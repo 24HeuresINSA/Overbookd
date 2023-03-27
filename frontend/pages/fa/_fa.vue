@@ -84,6 +84,8 @@ import {
 } from "~/utils/festivalEvent/faUtils";
 import { Team } from "~/utils/models/team";
 import FestivalEventBottomBar from "~/components/organisms/form/FestivalEventBottomBar.vue";
+import { CompleteUser } from "~/utils/models/user";
+import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "Fa",
@@ -118,10 +120,10 @@ export default Vue.extend({
     FA(): any {
       return this.$accessor.FA;
     },
-    mFA(): any {
+    mFA(): FA {
       return this.FA.mFA;
     },
-    me(): any {
+    me(): CompleteUser {
       return this.$accessor.user.me;
     },
     faId(): number {

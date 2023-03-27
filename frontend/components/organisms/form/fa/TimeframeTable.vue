@@ -93,6 +93,7 @@ import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Period } from "~/utils/models/gearRequests";
+import { CompleteUser } from "~/utils/models/user";
 
 interface IdentifiableTimeWindow extends time_windows {
   key: string;
@@ -159,7 +160,7 @@ export default Vue.extend({
         owners
       ).toLowerCase();
     },
-    me(): any {
+    me(): CompleteUser {
       return this.$accessor.user.me;
     },
   },
