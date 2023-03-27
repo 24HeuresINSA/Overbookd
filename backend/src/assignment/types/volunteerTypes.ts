@@ -1,5 +1,6 @@
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { VolunteerResponseDto } from '../dto/volunteerResponse.dto';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 export interface DatabaseVolunteerWithAvailabilities
   extends Omit<VolunteerResponseDto, 'teams'> {
@@ -17,13 +18,5 @@ export const SELECT_VOLUNTEER = {
   lastname: true,
   charisma: true,
   comment: true,
-  team: {
-    select: {
-      team: {
-        select: {
-          code: true,
-        },
-      },
-    },
-  },
+  ...SELECT_USER_TEAMS,
 };
