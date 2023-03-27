@@ -82,7 +82,7 @@ export class AssignmentController {
   findFtTimespansAvailableForVolunteer(
     @Param('volunteerId', ParseIntPipe) volunteerId: number,
   ): Promise<TimespanWithFtResponseDto[]> {
-    return this.ftTimespanService.findTimespansWithFtAvailableForVolunteer(
+    return this.ftTimespanService.findTimespansWithFtWhereVolunteerIsAssignableTo(
       volunteerId,
     );
   }

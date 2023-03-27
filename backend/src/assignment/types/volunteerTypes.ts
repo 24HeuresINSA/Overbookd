@@ -1,7 +1,8 @@
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { VolunteerResponseDto } from '../dto/volunteerResponse.dto';
 
-export interface DatabaseVolunteer extends Omit<VolunteerResponseDto, 'teams'> {
+export interface DatabaseVolunteerWithAvailabilities
+  extends Omit<VolunteerResponseDto, 'teams'> {
   team: {
     team: {
       code: string;

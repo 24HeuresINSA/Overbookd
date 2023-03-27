@@ -4,7 +4,10 @@ import { TeamService } from 'src/team/team.service';
 import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
-import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
+import {
+  DatabaseVolunteerWithAvailabilities,
+  SELECT_VOLUNTEER,
+} from './types/volunteerTypes';
 
 const WHERE_VALIDATED_USER = {
   team: {
@@ -87,12 +90,14 @@ export class VolunteerService {
   }
 
   private formatVolunteers(
-    volunteers: DatabaseVolunteer[],
+    volunteers: DatabaseVolunteerWithAvailabilities[],
   ): VolunteerResponseDto[] {
     return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
   }
 
-  private formatVolunteer(volunteer: DatabaseVolunteer): VolunteerResponseDto {
+  private formatVolunteer(
+    volunteer: DatabaseVolunteerWithAvailabilities,
+  ): VolunteerResponseDto {
     return {
       id: volunteer.id,
       firstname: volunteer.firstname,
