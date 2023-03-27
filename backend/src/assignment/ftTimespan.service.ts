@@ -16,10 +16,14 @@ import {
   SELECT_TIMESPAN_WITH_FT,
 } from './types/ftTimespanTypes';
 
-const WHERE_READY_FT = {
+const WHERE_EXISTS_AND_READY = {
+  isDeleted: false,
+  status: FtStatus.READY,
+};
+
+const WHERE_FT_EXISTS_AND_READY = {
   ft: {
-    isDeleted: false,
-    status: FtStatus.READY,
+    ...WHERE_EXISTS_AND_READY,
   },
 };
 
@@ -35,7 +39,7 @@ export class FtTimespanService {
     const ftTimespans = await this.prisma.ftTimespan.findMany({
       where: {
         timeWindow: {
-          ...WHERE_READY_FT,
+          ...WHERE_FT_EXISTS_AND_READY,
         },
       },
       select: SELECT_TIMESPAN_WITH_FT,
@@ -46,8 +50,7 @@ export class FtTimespanService {
   async findAllFtsWithTimespans(): Promise<FtWithTimespansResponseDto[]> {
     const fts = await this.prisma.ft.findMany({
       where: {
-        isDeleted: false,
-        status: FtStatus.READY,
+        ...WHERE_EXISTS_AND_READY,
       },
       select: SELECT_FT_WITH_TIMESPANS,
     });
@@ -61,7 +64,7 @@ export class FtTimespanService {
       where: {
         id: timespanId,
         timeWindow: {
-          ...WHERE_READY_FT,
+          ...WHERE_FT_EXISTS_AND_READY,
         },
       },
       select: SELECT_TIMESPAN_WITH_FT,
@@ -103,7 +106,7 @@ export class FtTimespanService {
     return {
       timeWindow: {
         teamRequests,
-        ...WHERE_READY_FT,
+        ...WHERE_FT_EXISTS_AND_READY,
       },
       ...availabilitiesCondition,
     };
