@@ -151,7 +151,7 @@ export class UserService {
 
   async getFtUserRequestsByUserId(userId: number): Promise<RequiredOnTask[]> {
     const userRequests = await this.prisma.ftUserRequest.findMany({
-      where: { userId },
+      where: { userId, ftTimeWindows: { ft: { isDeleted: false } } },
       select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
     });
     return userRequests.map(({ ftTimeWindows: { start, end, ft } }) => ({
