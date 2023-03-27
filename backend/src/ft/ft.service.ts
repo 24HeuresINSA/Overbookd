@@ -113,7 +113,7 @@ export class FtService {
       throw new NotFoundException(`ft #${id} not found`);
     }
     this.logger.log(`Updating FT #${id}`);
-    this.logger.debug(updateFtDto);
+    this.logger.debug(JSON.stringify(updateFtDto));
     const updatedFt = await this.prisma.ft.update({
       where: { id },
       data: updateFtDto,
