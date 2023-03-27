@@ -403,7 +403,7 @@ export default {
           user.year,
           user.balance,
           user.has_payed_contributions,
-          user.comment.replace(lineReturnRegex, " "),
+          user.comment?.replace(lineReturnRegex, " ") ?? "",
         ].join(";");
       });
 
