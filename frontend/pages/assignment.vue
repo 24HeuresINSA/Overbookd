@@ -101,8 +101,11 @@ export default Vue.extend({
   width: 100%;
 }
 
-.filtered-user,
-.filtered-timespan {
+.filtered-user {
   max-width: 350px;
+}
+
+.filtered-timespan {
+  max-width: 400px;
 }
 </style>

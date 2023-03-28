@@ -19,15 +19,12 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "MiniUserBadge",
+  name: "TeamChip",
   props: {
     team: {
       type: String,
       required: true,
     },
-  },
-  data() {
-    return {};
   },
   methods: {
     getTeamMetadate(team: string): any {

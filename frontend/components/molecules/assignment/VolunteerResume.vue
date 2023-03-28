@@ -12,25 +12,25 @@
       </div>
     </div>
     <div>
-      <MiniUserBadge
+      <TeamChip
         v-for="team of sortedVolunteerTeams"
         :key="team"
         :team="team"
-      ></MiniUserBadge>
+      ></TeamChip>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
+import TeamChip from "~/components/atoms/TeamChip.vue";
 import { moveAtFirstIndex } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "VolunteerResume",
-  components: { MiniUserBadge },
+  components: { TeamChip },
   props: {
     volunteer: {
       type: Object as () => Volunteer,
@@ -71,6 +71,7 @@ export default Vue.extend({
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid #e0e0e0;
 
   &__info-row {
     display: flex;

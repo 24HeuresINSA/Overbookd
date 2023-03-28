@@ -7,7 +7,7 @@ import {
   Volunteer,
 } from "~/utils/models/assignment";
 import {
-  castFtWithTimespansWithDate,
+  castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
   FtWithTimespan,
   TimespanWithFt,
@@ -62,14 +62,15 @@ export const actions = actionTree(
       commit("SET_VOLUNTEERS", res.data);
     },
 
-    setSelectedVolunteer({ commit }, volunteer: Volunteer) {
+    setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
+      dispatch("fetchTimespansForVolunteer", volunteer.id);
     },
 
     async fetchFtsWithTimespans({ commit }) {
       const res = await safeCall(this, AssignmentRepo.getFtWithTimespans(this));
       if (!res) return;
-      commit("SET_TIMESPANS", castFtWithTimespansWithDate(res.data));
+      commit("SET_FTS", castFtsWithTimespansWithDate(res.data));
     },
 
     async fetchTimespansForVolunteer({ commit }, volunteerId: number) {
@@ -78,7 +79,7 @@ export const actions = actionTree(
         AssignmentRepo.getTimespansForVolunteer(this, volunteerId)
       );
       if (!res) return;
-      commit("SET_FTS", castTimespansWithFtWithDate(res.data));
+      commit("SET_TIMESPANS", castTimespansWithFtWithDate(res.data));
     },
 
     async fetchVolunteersForTimespan({ commit }, timespanId: number) {

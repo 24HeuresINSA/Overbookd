@@ -57,15 +57,15 @@ export function castTimespanWithFtWithDate(
   };
 }
 
-export function castFtWithTimespansWithDate(
+export function castFtsWithTimespansWithDate(
   ftWithTimespans: HttpStringified<FtWithTimespan[]>
 ): FtWithTimespan[] {
   return ftWithTimespans.map((ftWithTimespan) =>
-    castFtWithTimespanWithDate(ftWithTimespan)
+    castFtWithTimespansWithDate(ftWithTimespan)
   );
 }
 
-export function castFtWithTimespanWithDate(
+export function castFtWithTimespansWithDate(
   ftWithTimespan: HttpStringified<FtWithTimespan>
 ): FtWithTimespan {
   return {

@@ -78,6 +78,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+$filters-height: 140px;
+$header-footer-height: 116px;
+$friends-height: 160px;
+
 .filterable-user-list {
   width: 100%;
   max-height: 100vh;
@@ -90,23 +94,25 @@ export default Vue.extend({
 
 .filters {
   width: 100%;
-  height: 140px;
+  height: $filters-height;
 }
 
 .user-list {
   width: 100%;
-  height: calc(100vh - 260px);
+  height: calc(100vh - #{$filters-height + $header-footer-height});
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   &--with-friend-list {
-    max-height: calc(100vh - 430px);
+    max-height: calc(
+      100vh - #{$filters-height + $header-footer-height + $friends-height}
+    );
   }
 }
 
 .friend-list {
   max-width: 300px;
-  height: 160px;
+  height: $friends-height;
   position: fixed;
   bottom: 36px;
 }
