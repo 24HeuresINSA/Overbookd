@@ -95,7 +95,7 @@ export default Vue.extend({
 
 .user-list {
   width: 100%;
-  max-height: calc(100vh - 260px);
+  height: calc(100vh - 260px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;

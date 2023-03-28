@@ -1,5 +1,5 @@
 <template>
-  <v-virtual-scroll :items="volunteers" height="600" item-height="60">
+  <v-virtual-scroll :items="volunteers" item-height="60" class="virtual-scroll">
     <template #default="{ item }">
       <v-list-item
         :key="item.id"
@@ -35,3 +35,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.virtual-scroll {
+  height: 100%;
+}
+</style>
