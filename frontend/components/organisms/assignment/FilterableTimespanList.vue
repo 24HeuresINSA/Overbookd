@@ -34,7 +34,7 @@ export default Vue.extend({
   }),
   computed: {
     filteredTimespans(): TimespanWithFt[] {
-      return [];
+      return this.$accessor.assignment.timespans;
     },
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;

@@ -32,7 +32,7 @@ export default Vue.extend({
       return this.$accessor.assignment.volunteers;
     },
     ftWithTimespans(): FtWithTimespan[] {
-      return this.$accessor.assignment.ftWithTimespans;
+      return this.$accessor.assignment.fts;
     },
   },
   async mounted() {
@@ -40,7 +40,7 @@ export default Vue.extend({
       await this.$accessor.assignment.fetchVolunteers();
     }
     if (!this.ftWithTimespans.length) {
-      await this.$accessor.assignment.fetchFtWithTimespans();
+      await this.$accessor.assignment.fetchFtsWithTimespans();
     }
   },
   /*data() {
