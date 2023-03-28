@@ -1,5 +1,5 @@
 <template>
-  <v-card class="filterable-user-list">
+  <v-card class="filterable-volunteer-list">
     <v-card-text>
       <AssignmentFilters
         :list-length="filteredVolunteers.length"
@@ -9,8 +9,8 @@
       ></AssignmentFilters>
       <v-divider />
       <div
-        class="user-list"
-        :class="shouldDisplayFriends ? 'user-list--with-friend-list' : ''"
+        class="volunteer-list"
+        :class="shouldDisplayFriends ? 'volunteer-list--with-friend-list' : ''"
       >
         <VolunteerList :volunteers="filteredVolunteers" />
       </div>
@@ -79,10 +79,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $filters-height: 140px;
-$header-footer-height: 116px;
+$header-footer-height: 122px;
 $friends-height: 160px;
 
-.filterable-user-list {
+.filterable-volunteer-list {
   width: 100%;
   max-height: 100vh;
   display: flex;
@@ -97,7 +97,7 @@ $friends-height: 160px;
   height: $filters-height;
 }
 
-.user-list {
+.volunteer-list {
   width: 100%;
   height: calc(100vh - #{$filters-height + $header-footer-height});
   overflow-y: auto;

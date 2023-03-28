@@ -52,7 +52,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $filters-height: 140px;
-$header-footer-height: 116px;
+$header-footer-height: 122px;
 
 .filterable-timespan-list {
   width: 100%;

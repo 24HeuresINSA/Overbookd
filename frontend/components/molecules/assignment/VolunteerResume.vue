@@ -66,8 +66,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .user-card {
+  width: 100%;
   height: 60px;
-  width: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
