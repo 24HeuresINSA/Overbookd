@@ -1,14 +1,15 @@
 <template>
-  <v-list-item-group>
-    <v-list-item
-      v-for="volunteer in volunteers"
-      :key="volunteer.id"
-      :value="volunteer.id"
-      @click="selectVolunteer(volunteer)"
-    >
-      <VolunteerResume :volunteer="volunteer" />
-    </v-list-item>
-  </v-list-item-group>
+  <v-virtual-scroll :items="volunteers" height="600" item-height="60">
+    <template #default="{ item }">
+      <v-list-item
+        :key="item.id"
+        :value="item.id"
+        @click="selectVolunteer(item)"
+      >
+        <VolunteerResume :volunteer="item" />
+      </v-list-item>
+    </template>
+  </v-virtual-scroll>
 </template>
 
 <script lang="ts">
