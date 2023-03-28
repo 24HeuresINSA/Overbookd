@@ -2,7 +2,7 @@
   <div class="user-card" @contextmenu.prevent="openCalendar">
     <div class="user-card__info-row">
       <span>{{ formattedUserInformations }}</span>
-      <div class="user-card__info-row__icons">
+      <div class="icons">
         <v-tooltip v-if="volunteer.comment">
           <template #activator="{ on, attrs }">
             <v-icon small v-bind="attrs" v-on="on"> mdi-comment </v-icon>
@@ -76,7 +76,7 @@ export default Vue.extend({
     display: flex;
     justify-content: space-between;
 
-    &__icons {
+    .icons {
       display: flex;
     }
   }

@@ -1,28 +1,18 @@
 <template>
   <v-card class="filterable-user-list">
     <v-card-text>
-      <div class="filters">
-        <v-text-field
-          v-model="volunteer"
-          class="filters__field"
-          label="Recherche"
-        ></v-text-field>
-        <SearchTeams
-          v-model="teams"
-          class="filters__field"
-          :boxed="false"
-        ></SearchTeams>
-        <p>
-          Nombre de personnes dans la liste :
-          <span class="font-weight-bold">{{ filteredVolunteers.length }}</span>
-        </p>
-      </div>
+      <AssignmentFilters
+        :list-length="filteredVolunteers.length"
+        class="filters"
+        @change:search="volunteer = $event"
+        @change:teams="teams = $event"
+      ></AssignmentFilters>
       <v-divider />
       <div
         class="user-list"
-        :class="shouldDisplayFriends ? 'user-list__with-friend-list' : ''"
+        :class="shouldDisplayFriends ? 'user-list--with-friend-list' : ''"
       >
-        <UserList :volunteers="filteredVolunteers" />
+        <VolunteerList :volunteers="filteredVolunteers" />
       </div>
       <FriendsDisplay v-if="shouldDisplayFriends" class="friend-list" />
     </v-card-text>
@@ -32,26 +22,19 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import UserList from "~/components/molecules/users/UserList.vue";
+import VolunteerList from "~/components/molecules/assignment/VolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
-import SearchTeams from "~/components/atoms/SearchTeams.vue";
+import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
 import { Team } from "~/utils/models/team";
 import { Volunteer, AssignmentModes } from "~/utils/models/assignment";
 
-interface FiltersData {
-  teams: Team[];
-  volunteer: string;
-}
-
 export default Vue.extend({
-  name: "FilterableUserList",
-  components: { UserList, FriendsDisplay, SearchTeams },
-  data(): FiltersData {
-    return {
-      teams: [],
-      volunteer: "",
-    };
-  },
+  name: "FilterableVolunteerList",
+  components: { VolunteerList, FriendsDisplay, AssignmentFilters },
+  data: () => ({
+    teams: [],
+    volunteer: "",
+  }),
   computed: {
     filteredVolunteers(): Volunteer[] {
       const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
@@ -108,27 +91,15 @@ export default Vue.extend({
 .filters {
   width: 100%;
   height: 140px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  padding: 0 1rem;
-
-  &__field {
-    width: 100%;
-    padding-top: 0;
-    margin-top: 0;
-  }
 }
 
 .user-list {
   width: 100%;
-  max-height: calc(100vh - 260px);
+  height: calc(100vh - 260px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  &__with-friend-list {
+  &--with-friend-list {
     max-height: calc(100vh - 430px);
   }
 }
@@ -138,9 +109,5 @@ export default Vue.extend({
   height: 160px;
   position: fixed;
   bottom: 36px;
-}
-
-.v-text-field__details {
-  display: none;
 }
 </style>

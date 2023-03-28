@@ -178,6 +178,7 @@ import {
 } from "~/utils/festivalEvent/faUtils";
 import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { formatDate } from "~/utils/date/dateUtils";
+import { CompleteUser } from "~/utils/models/user";
 
 interface BrakeDownDate {
   year: number;
@@ -248,7 +249,7 @@ export default Vue.extend({
     manifDate(): string {
       return this.$accessor.config.getConfig("event_date");
     },
-    me(): any {
+    me(): CompleteUser {
       return this.$accessor.user.me;
     },
     isValidatedByAnimOwner(): boolean {

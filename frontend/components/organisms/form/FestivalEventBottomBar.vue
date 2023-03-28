@@ -179,11 +179,11 @@ import {
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
-  TimespanCategory,
-  TimespanParameters,
+  FtTimespanCategory,
+  FtTimespanParameters,
 } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
+import { CompleteUser, User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
@@ -209,11 +209,11 @@ export default Vue.extend({
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
     isReadyForAssignmentDialogOpen: false,
-    categories: Object.values(TimespanCategory),
+    categories: Object.values(FtTimespanCategory),
     timespanParameters: {
       hasPriority: false,
-      category: TimespanCategory.BAR,
-    } as TimespanParameters,
+      category: FtTimespanCategory.BAR,
+    } as FtTimespanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
@@ -228,7 +228,7 @@ export default Vue.extend({
     isFA(): boolean {
       return this.festivalEvent === "FA";
     },
-    me(): any {
+    me(): CompleteUser {
       return this.$accessor.user.me;
     },
     meAsUser(): User {
@@ -410,7 +410,7 @@ export default Vue.extend({
     },
     switchReadyForAssignment() {
       this.isReadyForAssignmentDialogOpen = false;
-      if (this.timespanParameters.category === TimespanCategory.AUTRE) {
+      if (this.timespanParameters.category === FtTimespanCategory.AUTRE) {
         this.timespanParameters.category = undefined;
       }
       this.$accessor.FT.switchToReadyForAssignment({

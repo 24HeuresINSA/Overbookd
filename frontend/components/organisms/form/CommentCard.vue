@@ -38,6 +38,7 @@ import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { fa_comments } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
+import { CompleteUser } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "CommentCard",
@@ -65,7 +66,7 @@ export default Vue.extend({
       if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments ?? [];
       return [];
     },
-    me(): any {
+    me(): CompleteUser {
       return this.$accessor.user.me;
     },
   },
