@@ -39,10 +39,10 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    if (!this.volunteers.length) {
+    if (this.isModeOrgaTask && !this.volunteers.length) {
       await this.$accessor.assignment.fetchVolunteers();
     }
-    if (!this.ftWithTimespans.length) {
+    if (!this.isModeOrgaTask && !this.ftWithTimespans.length) {
       await this.$accessor.assignment.fetchFtsWithTimespans();
     }
   },
