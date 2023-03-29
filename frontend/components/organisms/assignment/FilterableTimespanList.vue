@@ -64,7 +64,7 @@ export default Vue.extend({
         ? (timespan) =>
             teamsSearched.every((teamSearched) =>
               timespan.requestedTeams.some(
-                (TimespanTeam) => teamSearched.code === TimespanTeam.code
+                (timespanTeam) => teamSearched.code === timespanTeam.code
               )
             )
         : () => true;

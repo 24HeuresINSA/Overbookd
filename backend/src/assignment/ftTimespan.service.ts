@@ -60,7 +60,7 @@ export class FtTimespanService {
   async findTimespanWithFt(
     timespanId: number,
   ): Promise<TimespanWithFtResponseDto> {
-    const ftTimespans = await this.prisma.ftTimespan.findFirst({
+    const ftTimespan = await this.prisma.ftTimespan.findFirst({
       where: {
         id: timespanId,
         timeWindow: {
@@ -69,10 +69,10 @@ export class FtTimespanService {
       },
       select: SELECT_TIMESPAN_WITH_FT,
     });
-    if (!ftTimespans) {
+    if (!ftTimespan) {
       throw new NotFoundException(`Timespan with id ${timespanId} not found`);
     }
-    return this.formatTimespanWithFt(ftTimespans[0]);
+    return this.formatTimespanWithFt(ftTimespan);
   }
 
   async findTimespansWithFtWhereVolunteerIsAssignableTo(

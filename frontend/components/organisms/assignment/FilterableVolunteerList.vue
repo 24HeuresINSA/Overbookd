@@ -8,11 +8,15 @@
         @change:teams="teams = $event"
       ></AssignmentFilters>
       <v-divider />
-      <div
+      <VolunteerList
+        v-if="shouldShowVolunteerList"
+        :volunteers="filteredVolunteers"
         class="volunteer-list"
         :class="shouldDisplayFriends ? 'volunteer-list--with-friend-list' : ''"
-      >
-        <VolunteerList :volunteers="filteredVolunteers" />
+      ></VolunteerList>
+      <div v-else class="error-message">
+        <p v-if="!selectedTimespan">Aucun créneau séléctionné</p>
+        <p v-else>Aucun bénévole disponible pour ce créneau</p>
       </div>
       <FriendsDisplay v-if="shouldDisplayFriends" class="friend-list" />
     </v-card-text>
@@ -27,6 +31,7 @@ import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
 import { Team } from "~/utils/models/team";
 import { Volunteer, AssignmentModes } from "~/utils/models/assignment";
+import { FtTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",
@@ -47,6 +52,15 @@ export default Vue.extend({
     },
     hasSelectedVolunteer(): boolean {
       return !!this.$accessor.assignment.selectedVolunteer;
+    },
+    selectedTimespan(): FtTimespan | null {
+      return this.$accessor.assignment.selectedTimespan;
+    },
+    shouldShowVolunteerList(): boolean {
+      return (
+        this.isOrgaTaskMode ||
+        (this.selectedTimespan !== null && this.filteredVolunteers.length > 0)
+      );
     },
     shouldDisplayFriends(): boolean {
       return this.isOrgaTaskMode && this.hasSelectedVolunteer;
@@ -97,16 +111,32 @@ $friends-height: 160px;
   height: $filters-height;
 }
 
-.volunteer-list {
+.volunteer-list,
+.error-message {
   width: 100%;
   height: calc(100vh - #{$filters-height + $header-footer-height});
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+.volunteer-list {
+  overflow-y: auto;
   &--with-friend-list {
     max-height: calc(
       100vh - #{$filters-height + $header-footer-height + $friends-height}
     );
+  }
+}
+
+.error-message {
+  align-items: center;
+  justify-content: center;
+
+  p {
+    text-align: center;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    opacity: 0.6;
   }
 }
 

@@ -9,6 +9,7 @@ import {
 import {
   castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
+  FtTimespan,
   FtWithTimespan,
   TimespanWithFt,
 } from "~/utils/models/ftTimespan";
@@ -24,6 +25,9 @@ export const state = () => ({
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
+  selectedTimespan: null as FtTimespan | null,
+  selectedFt: null as FtWithTimespan | null,
+
   mode: AssignmentModes.ORGA_TASK as AssignmentMode,
 });
 
@@ -48,6 +52,14 @@ export const mutations = mutationTree(state, {
     state.selectedVolunteerFriends = friends;
   },
 
+  SET_SELECTED_TIMESPAN(state, timespan: FtTimespan) {
+    state.selectedTimespan = timespan;
+  },
+
+  SET_SELECTED_FT(state, ft: FtWithTimespan) {
+    state.selectedFt = ft;
+  },
+
   SET_MODE(state, mode: AssignmentMode) {
     state.mode = mode;
   },
@@ -56,11 +68,19 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setModeTaskOrga({ commit }) {
-      commit("SET_MODE", AssignmentModes.TASK_ORGA);
-    },
-    setModeOrgaTask({ commit }) {
+    setModeOrgaTask({ commit, dispatch }) {
       commit("SET_MODE", AssignmentModes.ORGA_TASK);
+      dispatch("clearSelectedVariables");
+    },
+    setModeTaskOrga({ commit, dispatch }) {
+      commit("SET_MODE", AssignmentModes.TASK_ORGA);
+      dispatch("clearSelectedVariables");
+    },
+    clearSelectedVariables({ commit }) {
+      commit("SET_SELECTED_VOLUNTEER", null);
+      commit("SET_SELECTED_VOLUNTEER_FRIENDS", []);
+      commit("SET_SELECTED_TIMESPAN", null);
+      commit("SET_SELECTED_FT", null);
     },
     async fetchVolunteers({ commit }) {
       const res = await safeCall(this, AssignmentRepo.getVolunteers(this));
@@ -71,6 +91,15 @@ export const actions = actionTree(
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       dispatch("fetchTimespansForVolunteer", volunteer.id);
+    },
+
+    setSelectedTimespan({ commit, dispatch }, timespan: FtTimespan) {
+      commit("SET_SELECTED_TIMESPAN", timespan);
+      dispatch("fetchVolunteersForTimespan", timespan.id);
+    },
+
+    setSelectedFt({ commit }, ft: FtWithTimespan) {
+      commit("SET_SELECTED_FT", ft);
     },
 
     async fetchFtsWithTimespans({ commit }) {
