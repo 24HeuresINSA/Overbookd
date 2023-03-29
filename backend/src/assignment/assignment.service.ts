@@ -4,6 +4,7 @@ import { WHERE_VALIDATED_USER } from './volunteer.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
 import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -11,24 +12,25 @@ const SELECT_TEAM_REQUEST = {
   quantity: true,
 };
 
-const TIMESPAN_SELECTOR = {
+const SELECT_BASE_TIMESPAN = {
   id: true,
   start: true,
   end: true,
-  timeWindowId: true,
+};
+
+const SELECT_TIMESPAN_WITH_STATS = {
+  ...SELECT_BASE_TIMESPAN,
   timeWindow: {
     select: {
-      id: true,
       teamRequests: {
-        select: SELECT_TEAM_REQUEST,
-      },
-    },
-  },
-  assignments: {
-    select: {
-      id: true,
-      teamRequest: {
-        select: SELECT_TEAM_REQUEST,
+        select: {
+          ...SELECT_TEAM_REQUEST,
+          _count: {
+            select: {
+              assignments: true,
+            },
+          },
+        },
       },
     },
   },
@@ -44,31 +46,36 @@ type UserWithTeams = User & {
   }[];
 };
 
-type SmallTeamRequest = Pick<FtTeamRequest, 'id' | 'teamCode' | 'quantity'>;
+type TeamRequest = Pick<FtTeamRequest, 'quantity' | 'id' | 'teamCode'>;
 
-type FullTimespan = FtTimespan & {
-  timeWindow: {
-    id: number;
-    teamRequests: SmallTeamRequest[];
+type DataBaseTeamRequestWithAssignmentStats = TeamRequest & {
+  _count: {
+    assignments: number;
   };
-  assignments: {
-    id: number;
-    teamRequest: SmallTeamRequest;
-  }[];
+};
+
+type DataBaseTimespanWithStats = Pick<FtTimespan, 'id' | 'start' | 'end'> & {
+  timeWindow: {
+    teamRequests: DataBaseTeamRequestWithAssignmentStats[];
+  };
+};
+
+type TeamRequestWithAssignmentStats = TeamRequest & {
+  assigned: number;
 };
 
 @Injectable()
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async affectVolunteersToTimeSpan(
+  async assignVolunteerToTimespan(
     volunteerId: number,
     timespanId: number,
   ): Promise<AssignmentResponseDto> {
-    const timespan = await this.getTimespan(timespanId);
-    const volunteer = await this.getVolunteer(volunteerId, timespan);
+    const timespan = await this.retrieveTimespan(timespanId);
+    const volunteer = await this.retrieveVolunteer(volunteerId, timespan);
 
-    const teamRequestId = this.getTeamRequestId(timespan, volunteer);
+    const teamRequestId = this.retrieveBestTeamRequestId(timespan, volunteer);
 
     return this.prisma.assignment.create({
       data: {
@@ -79,90 +86,140 @@ export class AssignmentService {
     });
   }
 
-  private async getVolunteer(
-    volunteerId: number,
-    ftTimespan: FullTimespan,
-  ): Promise<UserWithTeams> {
-    const volunteer = await this.prisma.user.findFirst({
-      include: SELECT_USER_TEAMS,
-      where: {
-        id: volunteerId,
-        ...WHERE_VALIDATED_USER,
-        availabilities: {
-          some: {
-            start: {
-              lte: ftTimespan.start,
-            },
-            end: {
-              gte: ftTimespan.end,
-            },
-          },
-        },
-        assignments: {
-          every: {
-            NOT: [
-              {
-                OR: [
-                  { timespan: { start: { gte: ftTimespan.end } } },
-                  { timespan: { end: { lte: ftTimespan.start } } },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    });
-
-    if (!volunteer) {
-      throw new NotFoundException(
-        "Le bénévole n'a pas été trouvé. Il n'est soit pas disponible, soit déjà affecté à un autre créneau.",
-      );
-    }
-
-    return volunteer;
-  }
-
-  private async getTimespan(timespanId: number): Promise<FullTimespan> {
-    const timespan = await this.prisma.ftTimespan.findUnique({
-      where: { id: timespanId },
-      select: TIMESPAN_SELECTOR,
-    });
+  private async retrieveTimespan(timespanId: number) {
+    const timespan = await this.getTimespanWithItStats(timespanId);
 
     if (!timespan) {
       throw new NotFoundException(
         "Le créneau n'existe pas. Allez regarder la FT.",
       );
     }
-
     return timespan;
   }
 
-  private getTeamRequestId(
-    timespan: FullTimespan,
+  private async retrieveVolunteer(
+    volunteerId: number,
+    timespan: {
+      id: number;
+      timeWindow: {
+        teamRequests: {
+          quantity: number;
+          id: number;
+          teamCode: string;
+          _count: { assignments: number };
+        }[];
+      };
+      start: Date;
+      end: Date;
+    },
+  ) {
+    const volunteer = await this.getVolunteer(volunteerId, timespan);
+
+    if (!volunteer) {
+      throw new NotFoundException(
+        "Le bénévole n'a pas été trouvé. Il n'est soit pas disponible, soit déjà affecté à un autre créneau.",
+      );
+    }
+    return volunteer;
+  }
+
+  private retrieveBestTeamRequestId(
+    timespan: DataBaseTimespanWithStats,
     volunteer: UserWithTeams,
-  ): number {
-    const countAssignmentsByTeamRequest =
-      this.countAssignmentsByTeamRequest(timespan);
+  ) {
+    const teamRequestsStats = this.extractTeamRequestsStats(timespan);
 
-    const volunteerTeamCodes = this.getAssignableTeamFromVolunteer(volunteer);
-
-    const filteredTeamRequest = timespan.timeWindow.teamRequests.filter(
-      (tr) =>
-        tr.quantity >
-          (countAssignmentsByTeamRequest.find((c) => c.id === tr.id)?.count ||
-            0) && volunteerTeamCodes.includes(tr.teamCode), // TODO: Add bypass of team code check
+    const teamRequestId = this.selectTeamRequestId(
+      teamRequestsStats,
+      volunteer,
     );
 
-    if (filteredTeamRequest.length === 0) {
+    if (teamRequestId === 0) {
       throw new NotFoundException(
         "Aucune équipe compatible n'est disponible pour ce créneau. Un autre humain vous a peut-être devancé.",
       );
     }
+    return teamRequestId;
+  }
 
-    filteredTeamRequest.sort(
-      (a, b) => this.indexOfTeam(a.teamCode) - this.indexOfTeam(b.teamCode),
+  private extractTeamRequestsStats(timespan: DataBaseTimespanWithStats) {
+    return timespan.timeWindow.teamRequests.map(
+      convertToTeamRequestWithAssignmentStats,
     );
-    return filteredTeamRequest[0].id;
+  }
+
+  private async getVolunteer(
+    volunteerId: number,
+    ftTimespan: Period,
+  ): Promise<UserWithTeams | null> {
+    const availabilities =
+      this.buildVolunteerIsAvailableDuringPeriodCondition(ftTimespan);
+
+    const assignments =
+      this.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(ftTimespan);
+
+    return this.prisma.user.findFirst({
+      include: SELECT_USER_TEAMS,
+      where: {
+        id: volunteerId,
+        ...WHERE_VALIDATED_USER,
+        availabilities,
+        assignments,
+      },
+    });
+  }
+
+  private buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
+    start,
+    end,
+  }: Period) {
+    return {
+      every: {
+        NOT: [
+          { timespan: { start: { lt: end } } },
+          { timespan: { end: { gt: start } } },
+        ],
+      },
+    };
+  }
+
+  private buildVolunteerIsAvailableDuringPeriodCondition({
+    start,
+    end,
+  }: Period) {
+    return {
+      some: {
+        start: {
+          lte: start,
+        },
+        end: {
+          gte: end,
+        },
+      },
+    };
+  }
+
+  private getTimespanWithItStats(timespanId: number) {
+    return this.prisma.ftTimespan.findUnique({
+      where: { id: timespanId },
+      select: SELECT_TIMESPAN_WITH_STATS,
+    });
+  }
+
+  private selectTeamRequestId(
+    teamRequests: TeamRequestWithAssignmentStats[],
+    volunteer: UserWithTeams,
+  ): number {
+    const volunteerTeamCodes = this.getAssignableTeamFromVolunteer(volunteer);
+
+    const filteredTeamRequest = teamRequests
+      .filter(
+        (tr) =>
+          tr.quantity > tr.assigned && volunteerTeamCodes.includes(tr.teamCode), // TODO: Add bypass of team code check
+      )
+      .sort((a, b) => sortByTeamHierarchy(a.teamCode, b.teamCode));
+
+    return filteredTeamRequest.at(0)?.id ?? 0;
   }
 
   private getAssignableTeamFromVolunteer(volunteer: UserWithTeams): string[] {
@@ -170,44 +227,32 @@ export class AssignmentService {
     return this.getAssignableTeam(userTeams);
   }
 
-  private countAssignmentsByTeamRequest(timespan: FullTimespan) {
-    const counts: { [key: number]: number } = timespan.assignments.reduce(
-      (acc, assignment) => {
-        const teamRequestId = assignment.teamRequest.id;
-        acc[teamRequestId] = (acc[teamRequestId] || 0) + 1;
-        return acc;
-      },
-      {},
-    );
-
-    return Object.entries(counts).map(([id, count]) => ({
-      id: parseInt(id),
-      count,
-    }));
-  }
-
   private getAssignableTeam(teamCodes: string[]): string[] {
-    const teams = [];
-    for (const teamCode of teamCodes) {
-      teams.push(...this.getUnderlyingTeam(teamCode));
-    }
-
-    const sortedTeams = teams.sort(
-      (a, b) => this.indexOfTeam(a) - this.indexOfTeam(b),
-    );
-    return [...new Set(sortedTeams)];
+    return teamCodes
+      .filter((code) => TEAM_ORDER.includes(code))
+      .sort(sortByTeamHierarchy);
   }
+}
 
-  private getUnderlyingTeam(teamCode: string): string[] {
-    const teamIndex = TEAM_ORDER.indexOf(teamCode);
-    if (teamIndex === -1) {
-      return [teamCode];
-    }
-    return TEAM_ORDER.slice(teamIndex);
-  }
+function sortByTeamHierarchy(teamA: string, teamB: string) {
+  return teamHierarchyPosition(teamA) - teamHierarchyPosition(teamB);
+}
 
-  private indexOfTeam(teamCode: string): number {
-    const teamIndex = TEAM_ORDER.indexOf(teamCode);
-    return teamIndex === -1 ? -TEAM_ORDER.length : teamIndex;
-  }
+function teamHierarchyPosition(teamCode: string): number {
+  const teamIndex = TEAM_ORDER.indexOf(teamCode);
+  return teamIndex;
+}
+
+function convertToTeamRequestWithAssignmentStats({
+  id,
+  teamCode,
+  quantity,
+  _count,
+}: DataBaseTeamRequestWithAssignmentStats): TeamRequestWithAssignmentStats {
+  return {
+    id,
+    teamCode,
+    quantity,
+    assigned: _count.assignments,
+  };
 }
