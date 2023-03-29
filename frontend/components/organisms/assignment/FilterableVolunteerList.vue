@@ -58,11 +58,11 @@ export default Vue.extend({
     ): (volunteer: Volunteer) => boolean {
       return teamsSearched.length > 0
         ? (volunteer) =>
-            volunteer.teams
-              .map((team) => team)
-              .some((code) =>
-                teamsSearched.map((team) => team.code).includes(code)
+            teamsSearched.every((teamSearched) =>
+              volunteer.teams.some(
+                (volunteerTeamCode) => teamSearched.code === volunteerTeamCode
               )
+            )
         : () => true;
     },
     fuzzyFindVolunteer(volunteers: Volunteer[], search?: string): Volunteer[] {

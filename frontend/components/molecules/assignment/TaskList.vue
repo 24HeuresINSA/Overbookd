@@ -2,7 +2,7 @@
   <div class="task-list">
     <v-data-table
       :headers="headers"
-      :items="availableTimespans"
+      :items="timespans"
       hide-default-footer
       disable-pagination
       dense
@@ -42,6 +42,13 @@ import TeamChip from "~/components/atoms/TeamChip.vue";
 export default Vue.extend({
   name: "ListTasks",
   components: { TeamChip },
+  props: {
+    timespans: {
+      type: Array as () => TimespanWithFt[],
+      required: true,
+      default: () => [],
+    },
+  },
   data: () => ({
     headers: [
       { text: "FT", value: "ftId" },
@@ -49,12 +56,6 @@ export default Vue.extend({
       { text: "Requis", value: "required", sortable: false },
     ],
   }),
-
-  computed: {
-    availableTimespans(): TimespanWithFt[] {
-      return this.$accessor.assignment.timespans;
-    },
-  },
   methods: {
     formatDate(date: Date) {
       return formatDateWithMinutes(date);

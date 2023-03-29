@@ -9,7 +9,11 @@
         @change:teams="teams = $event"
       ></AssignmentFilters>
       <v-divider />
-      <TaskList v-if="shouldShowTimespanList" class="timespan-list" />
+      <TaskList
+        v-if="shouldShowTimespanList"
+        :timespans="filteredTimespans"
+        class="timespan-list"
+      ></TaskList>
       <div v-else class="error-message">
         <p v-if="!selectedVolunteer">Aucun bénévole séléctionné</p>
         <p v-else>
@@ -22,10 +26,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import Fuse from "fuse.js";
 import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
 import TaskList from "~/components/molecules/assignment/TaskList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "FilterableTimespanList",
@@ -36,7 +42,10 @@ export default Vue.extend({
   }),
   computed: {
     filteredTimespans(): TimespanWithFt[] {
-      return this.$accessor.assignment.timespans;
+      const filteredTimespans = this.$accessor.assignment.timespans.filter(
+        (timespan) => this.filterVolunteerByTeams(this.teams)(timespan)
+      );
+      return this.fuzzyFindVolunteer(filteredTimespans, this.timespan);
     },
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
@@ -45,6 +54,31 @@ export default Vue.extend({
       return (
         this.selectedVolunteer !== null && this.filteredTimespans.length > 0
       );
+    },
+  },
+  methods: {
+    filterVolunteerByTeams(
+      teamsSearched: Team[]
+    ): (timespan: TimespanWithFt) => boolean {
+      return teamsSearched.length > 0
+        ? (timespan) =>
+            teamsSearched.every((teamSearched) =>
+              timespan.requestedTeams.some(
+                (TimespanTeam) => teamSearched.code === TimespanTeam.code
+              )
+            )
+        : () => true;
+    },
+    fuzzyFindVolunteer(
+      timespans: TimespanWithFt[],
+      search?: string
+    ): TimespanWithFt[] {
+      if (!search) return timespans;
+      const fuse = new Fuse(timespans, {
+        keys: ["ft.id", "ft.name"],
+        threshold: 0.4,
+      });
+      return fuse.search(search).map((e) => e.item);
     },
   },
 });
