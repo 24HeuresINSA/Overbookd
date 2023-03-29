@@ -43,9 +43,9 @@ export default Vue.extend({
   computed: {
     filteredTimespans(): TimespanWithFt[] {
       const filteredTimespans = this.$accessor.assignment.timespans.filter(
-        (timespan) => this.filterVolunteerByTeams(this.teams)(timespan)
+        (timespan) => this.filterTimespansByTeams(this.teams)(timespan)
       );
-      return this.fuzzyFindVolunteer(filteredTimespans, this.timespan);
+      return this.fuzzyFindTimespan(filteredTimespans, this.timespan);
     },
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
@@ -57,7 +57,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    filterVolunteerByTeams(
+    filterTimespansByTeams(
       teamsSearched: Team[]
     ): (timespan: TimespanWithFt) => boolean {
       return teamsSearched.length > 0
@@ -69,7 +69,7 @@ export default Vue.extend({
             )
         : () => true;
     },
-    fuzzyFindVolunteer(
+    fuzzyFindTimespan(
       timespans: TimespanWithFt[],
       search?: string
     ): TimespanWithFt[] {
