@@ -9,11 +9,11 @@
         @change:teams="teams = $event"
       ></AssignmentFilters>
       <v-divider />
-      <TaskList
+      <FtTimespanList
         v-if="shouldShowTimespanList"
         :timespans="filteredTimespans"
         class="timespan-list"
-      ></TaskList>
+      ></FtTimespanList>
       <div v-else class="error-message">
         <p v-if="!selectedVolunteer">Aucun bénévole séléctionné</p>
         <p v-else>
@@ -28,14 +28,14 @@
 import Vue from "vue";
 import Fuse from "fuse.js";
 import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
-import TaskList from "~/components/molecules/assignment/TaskList.vue";
+import FtTimespanList from "~/components/molecules/assignment/FtTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "FilterableTimespanList",
-  components: { AssignmentFilters, TaskList },
+  components: { AssignmentFilters, FtTimespanList },
   data: () => ({
     teams: [],
     timespan: "",

@@ -1,5 +1,5 @@
 <template>
-  <div class="task-list">
+  <div class="timespan-list">
     <v-data-table
       :headers="headers"
       :items="timespans"
@@ -12,7 +12,7 @@
           <tr
             v-for="(item, index) in items"
             :key="index"
-            class="task-list__item"
+            class="timespan-list__item"
             @contextmenu.prevent="openFtNewTab(item.ft.id)"
           >
             <td>{{ item.ft.id }} - {{ item.ft.name }}</td>
@@ -40,7 +40,7 @@ import { TimespanWithFt } from "~/utils/models/ftTimespan";
 import TeamChip from "~/components/atoms/TeamChip.vue";
 
 export default Vue.extend({
-  name: "ListTasks",
+  name: "FtTimespanList",
   components: { TeamChip },
   props: {
     timespans: {
@@ -68,7 +68,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.task-list {
+.timespan-list {
   width: 100%;
   height: 100%;
   overflow: auto;
