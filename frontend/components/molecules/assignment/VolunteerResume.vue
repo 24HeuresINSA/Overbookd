@@ -1,6 +1,6 @@
 <template>
-  <div class="user-card" @contextmenu.prevent="openCalendar">
-    <div class="user-card__info-row">
+  <div class="volunteer-card" @contextmenu.prevent="openCalendar">
+    <div class="volunteer-card__info-row">
       <span>{{ formattedUserInformations }}</span>
       <div class="icons">
         <v-tooltip v-if="volunteer.comment">
@@ -65,7 +65,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.user-card {
+.volunteer-card {
   width: 100%;
   height: 60px;
   overflow: hidden;

@@ -56,6 +56,12 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
+    setModeTaskOrga({ commit }) {
+      commit("SET_MODE", AssignmentModes.TASK_ORGA);
+    },
+    setModeOrgaTask({ commit }) {
+      commit("SET_MODE", AssignmentModes.ORGA_TASK);
+    },
     async fetchVolunteers({ commit }) {
       const res = await safeCall(this, AssignmentRepo.getVolunteers(this));
       if (!res) return;
