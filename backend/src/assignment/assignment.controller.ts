@@ -114,11 +114,11 @@ export class AssignmentController {
     description: 'Affect volunteers to time windows',
     type: AssignmentResponseDto,
   })
-  affectVolunteersToTimeSpan(
+  assignVolunteerToTimeSpan(
     @Param('timespanId', ParseIntPipe) timespanId: number,
     @Param('volonteerId', ParseIntPipe) volonteerId: number,
   ): Promise<AssignmentResponseDto> {
-    return this.assignmentService.affectVolunteersToTimeSpan(
+    return this.assignmentService.assignVolunteerToTimeSpan(
       volonteerId,
       timespanId,
     );

@@ -4,6 +4,7 @@ import { WHERE_VALIDATED_USER } from './volunteer.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
 import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -11,14 +12,16 @@ const SELECT_TEAM_REQUEST = {
   quantity: true,
 };
 
-const TIMESPAN_SELECTOR = {
+const SELECT_BASE_TIMESPAN = {
   id: true,
   start: true,
   end: true,
-  timeWindowId: true,
+};
+
+const SELECT_TIMESPAN_WITH_STATS = {
+  ...SELECT_BASE_TIMESPAN,
   timeWindow: {
     select: {
-      id: true,
       teamRequests: {
         select: SELECT_TEAM_REQUEST,
       },
@@ -34,7 +37,13 @@ const TIMESPAN_SELECTOR = {
   },
 };
 
-const TEAM_ORDER = ['orga', 'hard', 'confiance', 'soft'];
+const TEAM_ORDER = [
+  'conducteur-fen',
+  'conducteur',
+  'hard',
+  'confiance',
+  'soft',
+];
 
 type UserWithTeams = User & {
   team: {
@@ -44,16 +53,15 @@ type UserWithTeams = User & {
   }[];
 };
 
-type SmallTeamRequest = Pick<FtTeamRequest, 'id' | 'teamCode' | 'quantity'>;
+type TeamRequest = Pick<FtTeamRequest, 'id' | 'teamCode' | 'quantity'>;
 
-type FullTimespan = FtTimespan & {
+type DataBaseTimespanWithStats = Pick<FtTimespan, 'id' | 'start' | 'end'> & {
   timeWindow: {
-    id: number;
-    teamRequests: SmallTeamRequest[];
+    teamRequests: TeamRequest[];
   };
   assignments: {
     id: number;
-    teamRequest: SmallTeamRequest;
+    teamRequest: TeamRequest;
   }[];
 };
 
@@ -61,14 +69,14 @@ type FullTimespan = FtTimespan & {
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async affectVolunteersToTimeSpan(
+  async assignVolunteerToTimeSpan(
     volunteerId: number,
     timespanId: number,
   ): Promise<AssignmentResponseDto> {
-    const timespan = await this.getTimespan(timespanId);
-    const volunteer = await this.getVolunteer(volunteerId, timespan);
+    const timespan = await this.retrieveTimespan(timespanId);
+    const volunteer = await this.retrieveVolunteer(volunteerId, timespan);
 
-    const teamRequestId = this.getTeamRequestId(timespan, volunteer);
+    const teamRequestId = this.retrieveBestTeamRequestId(timespan, volunteer);
 
     return this.prisma.assignment.create({
       data: {
@@ -79,53 +87,26 @@ export class AssignmentService {
     });
   }
 
-  private async getVolunteer(
-    volunteerId: number,
-    ftTimespan: FullTimespan,
-  ): Promise<UserWithTeams> {
-    const volunteer = await this.prisma.user.findFirst({
-      include: SELECT_USER_TEAMS,
-      where: {
-        id: volunteerId,
-        ...WHERE_VALIDATED_USER,
-        availabilities: {
-          some: {
-            start: {
-              lte: ftTimespan.start,
-            },
-            end: {
-              gte: ftTimespan.end,
-            },
-          },
-        },
-        assignments: {
-          every: {
-            NOT: [
-              {
-                OR: [
-                  { timespan: { start: { gte: ftTimespan.end } } },
-                  { timespan: { end: { lte: ftTimespan.start } } },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    });
+  private async retrieveTimespan(
+    timespanId: number,
+  ): Promise<DataBaseTimespanWithStats> {
+    const timespan = await this.getTimespanWithStats(timespanId);
 
-    if (!volunteer) {
+    if (!timespan) {
       throw new NotFoundException(
-        "Le bénévole n'a pas été trouvé. Il n'est soit pas disponible, soit déjà affecté à un autre créneau.",
+        "Le créneau n'existe pas. Allez regarder la FT.",
       );
     }
 
-    return volunteer;
+    return timespan;
   }
 
-  private async getTimespan(timespanId: number): Promise<FullTimespan> {
+  private async getTimespanWithStats(
+    timespanId: number,
+  ): Promise<DataBaseTimespanWithStats> {
     const timespan = await this.prisma.ftTimespan.findUnique({
       where: { id: timespanId },
-      select: TIMESPAN_SELECTOR,
+      select: SELECT_TIMESPAN_WITH_STATS,
     });
 
     if (!timespan) {
@@ -137,14 +118,99 @@ export class AssignmentService {
     return timespan;
   }
 
-  private getTeamRequestId(
-    timespan: FullTimespan,
+  private async retrieveVolunteer(
+    volunteerId: number,
+    ftTimespan: DataBaseTimespanWithStats,
+  ): Promise<UserWithTeams> {
+    const volunteer = await this.getVolunteer(volunteerId, ftTimespan);
+
+    if (!volunteer) {
+      throw new NotFoundException(
+        "Le bénévole n'a pas été trouvé. Il n'est soit pas disponible, soit déjà affecté à un autre créneau.",
+      );
+    }
+
+    return volunteer;
+  }
+
+  private async getVolunteer(
+    volunteerId: number,
+    ftTimespan: DataBaseTimespanWithStats,
+  ): Promise<UserWithTeams> {
+    const availabilities =
+      this.buildVolunteerIsAvailableDuringPeriodCondition(ftTimespan);
+
+    const assignments =
+      this.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(ftTimespan);
+
+    return this.prisma.user.findFirst({
+      include: SELECT_USER_TEAMS,
+      where: {
+        id: volunteerId,
+        ...WHERE_VALIDATED_USER,
+        availabilities,
+        NOT: { assignments },
+      },
+    });
+  }
+
+  private buildVolunteerIsAvailableDuringPeriodCondition({
+    start,
+    end,
+  }: Period) {
+    return {
+      some: {
+        start: {
+          lte: start,
+        },
+        end: {
+          gte: end,
+        },
+      },
+    };
+  }
+
+  private buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
+    start,
+    end,
+  }: Period) {
+    return {
+      some: {
+        AND: [
+          { timespan: { start: { lt: end } } },
+          { timespan: { end: { gt: start } } },
+        ],
+      },
+    };
+  }
+
+  private retrieveBestTeamRequestId(
+    timespan: DataBaseTimespanWithStats,
     volunteer: UserWithTeams,
   ): number {
+    const teamRequestId = this.selectTeamRequestId(timespan, volunteer);
+
+    if (!teamRequestId) {
+      throw new NotFoundException(
+        "Aucune équipe compatible n'est disponible pour ce créneau. Un autre humain vous a peut-être devancé.",
+      );
+    }
+
+    return teamRequestId;
+  }
+
+  private selectTeamRequestId(
+    timespan: DataBaseTimespanWithStats,
+    volunteer: UserWithTeams,
+  ): number {
+    console.dir(timespan, { depth: null });
+    console.dir(volunteer, { depth: null });
     const countAssignmentsByTeamRequest =
       this.countAssignmentsByTeamRequest(timespan);
+    console.dir(countAssignmentsByTeamRequest);
 
     const volunteerTeamCodes = this.getAssignableTeamFromVolunteer(volunteer);
+    console.dir(volunteerTeamCodes);
 
     const filteredTeamRequest = timespan.timeWindow.teamRequests.filter(
       (tr) =>
@@ -153,24 +219,18 @@ export class AssignmentService {
             0) && volunteerTeamCodes.includes(tr.teamCode), // TODO: Add bypass of team code check
     );
 
-    if (filteredTeamRequest.length === 0) {
-      throw new NotFoundException(
-        "Aucune équipe compatible n'est disponible pour ce créneau. Un autre humain vous a peut-être devancé.",
-      );
-    }
-
     filteredTeamRequest.sort(
       (a, b) => this.indexOfTeam(a.teamCode) - this.indexOfTeam(b.teamCode),
     );
-    return filteredTeamRequest[0].id;
+    return filteredTeamRequest.at(0)?.id ?? 0;
   }
 
   private getAssignableTeamFromVolunteer(volunteer: UserWithTeams): string[] {
     const userTeams = volunteer.team.map((t) => t.team.code);
-    return this.getAssignableTeam(userTeams);
+    return this.getAssignableTeams(userTeams);
   }
 
-  private countAssignmentsByTeamRequest(timespan: FullTimespan) {
+  private countAssignmentsByTeamRequest(timespan: DataBaseTimespanWithStats) {
     const counts: { [key: number]: number } = timespan.assignments.reduce(
       (acc, assignment) => {
         const teamRequestId = assignment.teamRequest.id;
@@ -186,7 +246,7 @@ export class AssignmentService {
     }));
   }
 
-  private getAssignableTeam(teamCodes: string[]): string[] {
+  private getAssignableTeams(teamCodes: string[]): string[] {
     const teams = [];
     for (const teamCode of teamCodes) {
       teams.push(...this.getUnderlyingTeam(teamCode));
@@ -207,7 +267,6 @@ export class AssignmentService {
   }
 
   private indexOfTeam(teamCode: string): number {
-    const teamIndex = TEAM_ORDER.indexOf(teamCode);
-    return teamIndex === -1 ? -TEAM_ORDER.length : teamIndex;
+    return TEAM_ORDER.indexOf(teamCode);
   }
 }
