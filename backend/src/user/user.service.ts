@@ -224,7 +224,7 @@ export class UserService {
     const newUserData: Prisma.UserUncheckedCreateInput = {
       firstname: payload.firstname,
       lastname: payload.lastname,
-      email: payload.email,
+      email: payload.email.toLowerCase().trim(),
       password: await new HashingUtilsService().hash(payload.password),
       nickname: payload.nickname,
       birthdate: payload.birthdate,

@@ -76,7 +76,8 @@ export class AuthService {
     email,
     password,
   }: UserCredentials): Promise<{ access_token: string }> {
-    const jwtPayload = await this.validateUser(email, password);
+    const formattedEmail = email.toLowerCase().trim();
+    const jwtPayload = await this.validateUser(formattedEmail, password);
     return {
       access_token: this.jwtService.sign(jwtPayload),
     };
