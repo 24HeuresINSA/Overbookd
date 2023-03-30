@@ -18,25 +18,33 @@ const SELECT_BASE_TIMESPAN = {
   end: true,
 };
 
-const SELECT_TIMESPAN_WITH_STATS = {
-  ...SELECT_BASE_TIMESPAN,
-  timeWindow: {
-    select: {
-      teamRequests: {
-        select: {
-          ...SELECT_TEAM_REQUEST,
-          _count: {
-            select: {
-              assignments: true,
+function buildTimespanWithStatsSelection(timespanId: number) {
+  return {
+    ...SELECT_BASE_TIMESPAN,
+    timeWindow: {
+      select: {
+        teamRequests: {
+          select: {
+            ...SELECT_TEAM_REQUEST,
+            _count: {
+              select: {
+                assignments: { where: { timespanId } },
+              },
             },
           },
         },
       },
     },
-  },
-};
+  };
+}
 
-const TEAM_ORDER = ['orga', 'hard', 'confiance', 'soft'];
+const TEAM_ORDER = [
+  'conducteur-fen',
+  'conducteur',
+  'hard',
+  'confiance',
+  'soft',
+];
 
 type UserWithTeams = User & {
   team: {
@@ -175,10 +183,7 @@ export class AssignmentService {
   }: Period) {
     return {
       every: {
-        NOT: [
-          { timespan: { start: { lt: end } } },
-          { timespan: { end: { gt: start } } },
-        ],
+        NOT: [{ timespan: { start: { lt: end }, end: { gt: start } } }],
       },
     };
   }
@@ -202,7 +207,7 @@ export class AssignmentService {
   private getTimespanWithItStats(timespanId: number) {
     return this.prisma.ftTimespan.findUnique({
       where: { id: timespanId },
-      select: SELECT_TIMESPAN_WITH_STATS,
+      select: buildTimespanWithStatsSelection(timespanId),
     });
   }
 
@@ -228,9 +233,11 @@ export class AssignmentService {
   }
 
   private getAssignableTeam(teamCodes: string[]): string[] {
-    return teamCodes
+    const teamHierarchies = teamCodes
       .filter((code) => TEAM_ORDER.includes(code))
-      .sort(sortByTeamHierarchy);
+      .map(teamHierarchyPosition);
+    const mostImportantHierarchyPosition = Math.min(...teamHierarchies);
+    return TEAM_ORDER.slice(mostImportantHierarchyPosition);
   }
 }
 
@@ -239,8 +246,7 @@ function sortByTeamHierarchy(teamA: string, teamB: string) {
 }
 
 function teamHierarchyPosition(teamCode: string): number {
-  const teamIndex = TEAM_ORDER.indexOf(teamCode);
-  return teamIndex;
+  return TEAM_ORDER.indexOf(teamCode);
 }
 
 function convertToTeamRequestWithAssignmentStats({
