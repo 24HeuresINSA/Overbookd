@@ -12,5 +12,6 @@ export interface Volunteer extends User {
 }
 
 export function getAssignmentModeFromRoute(url: string): string {
-  return url.split("/").at(-1) ?? "";
+  const mode = url.split("/").at(-1);
+  return mode ?? AssignmentModes.ORGA_TASK;
 }
