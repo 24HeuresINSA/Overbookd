@@ -19,12 +19,12 @@
             <td>{{ ft.count + " - " + ft.general.name }}</td>
             <td>
               <template v-for="data of getFTExtraData(ft.count)">
-                <MiniUserBadge
+                <TeamChip
                   v-if="data"
                   :key="data"
                   :team="data"
                   @click.native.stop="clickBadge(ft, data)"
-                ></MiniUserBadge>
+                ></TeamChip>
               </template>
             </td>
           </tr>
@@ -40,11 +40,11 @@
 
 <script>
 import { Snack } from "~/utils/models/snack";
-import MiniUserBadge from "~/components/atoms/MiniUserBadge.vue";
+import TeamChip from "~/components/atoms/TeamChip.vue";
 
 export default {
   name: "ListFT",
-  components: { MiniUserBadge },
+  components: { TeamChip },
 
   data() {
     return {

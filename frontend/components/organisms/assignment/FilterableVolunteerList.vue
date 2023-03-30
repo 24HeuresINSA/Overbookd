@@ -1,5 +1,5 @@
 <template>
-  <v-card class="filterable-user-list">
+  <v-card class="filterable-volunteer-list">
     <v-card-text>
       <AssignmentFilters
         :list-length="filteredVolunteers.length"
@@ -9,8 +9,8 @@
       ></AssignmentFilters>
       <v-divider />
       <div
-        class="user-list"
-        :class="shouldDisplayFriends ? 'user-list--with-friend-list' : ''"
+        class="volunteer-list"
+        :class="shouldDisplayFriends ? 'volunteer-list--with-friend-list' : ''"
       >
         <VolunteerList :volunteers="filteredVolunteers" />
       </div>
@@ -58,11 +58,11 @@ export default Vue.extend({
     ): (volunteer: Volunteer) => boolean {
       return teamsSearched.length > 0
         ? (volunteer) =>
-            volunteer.teams
-              .map((team) => team)
-              .some((code) =>
-                teamsSearched.map((team) => team.code).includes(code)
+            teamsSearched.every((teamSearched) =>
+              volunteer.teams.some(
+                (volunteerTeamCode) => teamSearched.code === volunteerTeamCode
               )
+            )
         : () => true;
     },
     fuzzyFindVolunteer(volunteers: Volunteer[], search?: string): Volunteer[] {
@@ -78,7 +78,11 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.filterable-user-list {
+$filters-height: 140px;
+$header-footer-height: 122px;
+$friends-height: 160px;
+
+.filterable-volunteer-list {
   width: 100%;
   max-height: 100vh;
   display: flex;
@@ -90,23 +94,25 @@ export default Vue.extend({
 
 .filters {
   width: 100%;
-  height: 140px;
+  height: $filters-height;
 }
 
-.user-list {
+.volunteer-list {
   width: 100%;
-  height: calc(100vh - 260px);
+  height: calc(100vh - #{$filters-height + $header-footer-height});
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   &--with-friend-list {
-    max-height: calc(100vh - 430px);
+    max-height: calc(
+      100vh - #{$filters-height + $header-footer-height + $friends-height}
+    );
   }
 }
 
 .friend-list {
   max-width: 300px;
-  height: 160px;
+  height: $friends-height;
   position: fixed;
   bottom: 36px;
 }
