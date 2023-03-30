@@ -50,7 +50,7 @@ export class TeamService {
     const teamsToLink = await this.fetchExistingTeams(teams);
     await this.forceUserTeams(userId, teamsToLink);
 
-    const newLinkedTeams = teamsToLink.map((team) => team.name);
+    const newLinkedTeams = teamsToLink.map((team) => team.code);
     return { userId, teams: newLinkedTeams };
   }
 
@@ -123,7 +123,7 @@ export class TeamService {
   private async fetchExistingTeams(teams: string[]): Promise<Team[]> {
     return await this.prisma.team.findMany({
       where: {
-        name: {
+        code: {
           in: teams,
         },
       },

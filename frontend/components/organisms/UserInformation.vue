@@ -15,9 +15,11 @@
             <OverChips :roles="selectedUser.team" />
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
-                v-model="newRole"
+                v-model="newTeam"
                 label="Choix de l'équipe"
-                :items="teamNames"
+                :items="teams"
+                item-value="code"
+                item-text="name"
               >
               </v-select>
               <v-btn text @click="addRemoveRole()">Ajouter/Retirer</v-btn>
@@ -179,8 +181,7 @@ export default {
   data: () => {
     return {
       user: {},
-      newRole: undefined,
-      teamNames: [],
+      newTeam: undefined,
       isEditingAvailability: false,
       rules: {
         number: isNumber,
@@ -219,6 +220,9 @@ export default {
     isHard() {
       return (this.selectedUser.team ?? []).includes("hard");
     },
+    teams() {
+      return this.$accessor.team.allTeams;
+    },
   },
 
   watch: {
@@ -228,7 +232,6 @@ export default {
   },
 
   async mounted() {
-    this.teamNames = this.$accessor.team.teamNames;
     this.user = { ...this.selectedUser };
   },
 
@@ -242,16 +245,16 @@ export default {
       return this.$accessor.user.hasPermission(permission);
     },
     addRemoveRole() {
-      if (!this.newRole) return;
+      if (!this.newTeam) return;
       const teams = this.computeTeams();
       this.$accessor.user.updateSelectedUserTeams(teams);
     },
     computeTeams() {
-      const teamIndex = this.selectedUser.team.indexOf(this.newRole);
+      const teamIndex = this.selectedUser.team.indexOf(this.newTeam);
       if (teamIndex !== -1) {
         return removeItemAtIndex(this.selectedUser.team, teamIndex);
       }
-      return [...this.selectedUser.team, this.newRole];
+      return [...this.selectedUser.team, this.newTeam];
     },
     async saveUser() {
       await Promise.all([
