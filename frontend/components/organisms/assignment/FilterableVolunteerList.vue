@@ -2,7 +2,7 @@
   <v-card class="filterable-volunteer-list">
     <v-card-text>
       <AssignmentFilters
-        :list-length="filteredVolunteers.length"
+        :list-length="numberOfVolunteers"
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
@@ -30,7 +30,11 @@ import VolunteerList from "~/components/molecules/assignment/VolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
 import { Team } from "~/utils/models/team";
-import { Volunteer, AssignmentModes } from "~/utils/models/assignment";
+import {
+  Volunteer,
+  AssignmentModes,
+  getAssignmentModeFromRoute,
+} from "~/utils/models/assignment";
 import { FtTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
@@ -47,8 +51,15 @@ export default Vue.extend({
       );
       return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
     },
+    numberOfVolunteers(): number {
+      if (!this.shouldShowVolunteerList) return 0;
+      return this.$accessor.assignment.volunteers.length;
+    },
     isOrgaTaskMode(): boolean {
-      return this.$accessor.assignment.mode === AssignmentModes.ORGA_TASK;
+      return (
+        getAssignmentModeFromRoute(this.$route.fullPath) ===
+        AssignmentModes.ORGA_TASK
+      );
     },
     hasSelectedVolunteer(): boolean {
       return !!this.$accessor.assignment.selectedVolunteer;

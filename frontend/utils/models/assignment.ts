@@ -5,10 +5,13 @@ export const AssignmentModes = {
   TASK_ORGA: "task-orga",
 };
 
-export type AssignmentMode = keyof typeof AssignmentModes;
-
 export interface Volunteer extends User {
   charisma: number;
   comment?: string;
   teams: string[];
+}
+
+export function getAssignmentModeFromRoute(url: string): string {
+  const mode = url.split("/").at(-1);
+  return mode ?? AssignmentModes.ORGA_TASK;
 }

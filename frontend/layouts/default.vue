@@ -220,9 +220,15 @@ export default {
         },
         {
           icon: "mdi-human-greeting",
-          title: "Affectation",
+          title: "Affect Orga-Tâche",
           permission: "admin", // can-affect
-          to: "/assignment",
+          to: "/assignment/orga-task",
+        },
+        {
+          icon: "mdi-human-greeting",
+          title: "Affect Tâche-Orga",
+          permission: "admin", // can-affect
+          to: "/assignment/task-orga",
         },
         {
           icon: "mdi-cog",
