@@ -1,11 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import {
-  AssignmentMode,
-  AssignmentModes,
-  Volunteer,
-} from "~/utils/models/assignment";
+import { Volunteer } from "~/utils/models/assignment";
 import {
   castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
@@ -27,8 +23,6 @@ export const state = () => ({
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
   selectedFt: null as FtWithTimespan | null,
-
-  mode: AssignmentModes.ORGA_TASK as AssignmentMode,
 });
 
 export const mutations = mutationTree(state, {
@@ -59,29 +53,18 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_FT(state, ft: FtWithTimespan) {
     state.selectedFt = ft;
   },
-
-  SET_MODE(state, mode: AssignmentMode) {
-    state.mode = mode;
-  },
 });
 
 export const actions = actionTree(
   { state },
   {
-    setModeOrgaTask({ commit, dispatch }) {
-      commit("SET_MODE", AssignmentModes.ORGA_TASK);
-      dispatch("clearSelectedVariables");
-    },
-    setModeTaskOrga({ commit, dispatch }) {
-      commit("SET_MODE", AssignmentModes.TASK_ORGA);
-      dispatch("clearSelectedVariables");
-    },
     clearSelectedVariables({ commit }) {
       commit("SET_SELECTED_VOLUNTEER", null);
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", []);
       commit("SET_SELECTED_TIMESPAN", null);
       commit("SET_SELECTED_FT", null);
     },
+
     async fetchVolunteers({ commit }) {
       const res = await safeCall(this, AssignmentRepo.getVolunteers(this));
       if (!res) return;
@@ -130,9 +113,6 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepo.getUserFriends(this, id));
       if (!res) return;
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
-    },
-    updateMode({ commit }, mode: AssignmentMode) {
-      commit("SET_MODE", mode);
     },
   }
 );

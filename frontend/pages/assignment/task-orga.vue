@@ -23,7 +23,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.$accessor.assignment.setModeTaskOrga();
+    this.$accessor.assignment.clearSelectedVariables();
     if (!this.ftWithTimespans.length) {
       await this.$accessor.assignment.fetchFtsWithTimespans();
     }

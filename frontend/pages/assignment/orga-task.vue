@@ -23,7 +23,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.$accessor.assignment.setModeOrgaTask();
+    this.$accessor.assignment.clearSelectedVariables();
     if (!this.volunteers.length) {
       await this.$accessor.assignment.fetchVolunteers();
     }
