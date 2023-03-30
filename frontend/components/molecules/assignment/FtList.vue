@@ -51,7 +51,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "FT", value: "ft" },
+      { text: "FT", value: "ft", sortable: false },
       { text: "Equipes", value: "teams", sortable: false },
     ],
   }),
