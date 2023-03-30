@@ -212,7 +212,7 @@ export default Vue.extend({
     categories: Object.values(FtTimespanCategory),
     timespanParameters: {
       hasPriority: false,
-      category: FtTimespanCategory.BAR,
+      category: FtTimespanCategory.AUCUNE,
     } as FtTimespanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
@@ -410,7 +410,7 @@ export default Vue.extend({
     },
     switchReadyForAssignment() {
       this.isReadyForAssignmentDialogOpen = false;
-      if (this.timespanParameters.category === FtTimespanCategory.AUTRE) {
+      if (this.timespanParameters.category === FtTimespanCategory.AUCUNE) {
         this.timespanParameters.category = undefined;
       }
       this.$accessor.FT.switchToReadyForAssignment({

@@ -20,7 +20,7 @@ export class TimespanParametersDto {
 
   @ApiProperty({
     description: 'The category of the task',
-    example: TaskCategory.NETTOYAGE,
+    example: TaskCategory.RELOU,
     enum: TaskCategory,
   })
   @IsOptional()
