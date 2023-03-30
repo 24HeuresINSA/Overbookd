@@ -4,9 +4,9 @@ export enum FtTimespanCategory {
   STATIQUE = "STATIQUE",
   BAR = "BAR",
   MANUTENTION = "MANUTENTION",
-  ANIMATION = "ANIMATION",
-  NETTOYAGE = "NETTOYAGE",
-  AUTRE = "AUTRE",
+  FUN = "FUN",
+  RELOU = "RELOU",
+  AUCUNE = "AUCUNE",
 }
 
 export interface FtTimespanParameters {
