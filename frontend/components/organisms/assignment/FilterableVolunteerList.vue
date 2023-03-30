@@ -2,7 +2,7 @@
   <v-card class="filterable-volunteer-list">
     <v-card-text>
       <AssignmentFilters
-        :list-length="volunteersLength"
+        :list-length="numberOfVolunteers"
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
@@ -51,7 +51,7 @@ export default Vue.extend({
       );
       return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
     },
-    volunteersLength(): number {
+    numberOfVolunteers(): number {
       if (!this.shouldShowVolunteerList) return 0;
       return this.$accessor.assignment.volunteers.length;
     },
