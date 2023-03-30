@@ -1,8 +1,9 @@
 <template>
   <v-container class="assignment-container">
-    <FilterableVolunteerList class="filtered-user" />
+    <FilterableVolunteerList class="volunteer-list" />
 
-    <FilterableTimespanList v-if="isModeOrgaTask" class="filtered-timespan" />
+    <FilterableTimespanList v-if="isModeOrgaTask" class="task-list" />
+    <FilterableFtList v-else class="task-list" />
     <!--<OverCalendar @open-unassign-dialog="openUnassignDialog" />
 
     <OverTasks
@@ -23,10 +24,15 @@ import FilterableVolunteerList from "~/components/organisms/assignment/Filterabl
 import FilterableTimespanList from "~/components/organisms/assignment/FilterableTimespanList.vue";
 import { AssignmentModes, Volunteer } from "~/utils/models/assignment";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
 
 export default Vue.extend({
   name: "Assignment",
-  components: { FilterableVolunteerList, FilterableTimespanList },
+  components: {
+    FilterableVolunteerList,
+    FilterableTimespanList,
+    FilterableFtList,
+  },
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers;
@@ -39,6 +45,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    this.$accessor.assignment.setModeTaskOrga();
     if (this.isModeOrgaTask && !this.volunteers.length) {
       await this.$accessor.assignment.fetchVolunteers();
     }
@@ -104,11 +111,11 @@ export default Vue.extend({
   width: 100%;
 }
 
-.filtered-user {
+.volunteer-list {
   max-width: 350px;
 }
 
-.filtered-timespan {
+.task-list {
   max-width: 450px;
 }
 </style>

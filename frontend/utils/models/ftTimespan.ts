@@ -24,7 +24,7 @@ interface RequestedTeam {
   quantity: number;
 }
 
-interface FtTimespan {
+export interface FtTimespan {
   id: number;
   start: Date;
   end: Date;
@@ -37,6 +37,13 @@ export interface TimespanWithFt extends FtTimespan {
 
 export interface FtWithTimespan extends SimplifiedFT {
   timespans: FtTimespan[];
+}
+
+export function getRequiredTeamsInFt(ft: FtWithTimespan): string[] {
+  const teams = ft.timespans.flatMap((timespan) =>
+    timespan.requestedTeams.map((team) => team.code)
+  );
+  return [...new Set(teams)];
 }
 
 export function castTimespansWithFtWithDate(
