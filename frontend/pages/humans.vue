@@ -17,7 +17,8 @@
                 clearable
                 dense
                 label="Team"
-                :items="teams.map((team) => team.name)"
+                :items="teams"
+                item-text="name"
               >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
@@ -286,14 +287,6 @@ export default {
       deep: true,
     },
 
-    selections() {
-      const selections = [];
-      for (const selection of this.filters.teams) {
-        selections.push(selection);
-      }
-
-      return selections;
-    },
     isModeStatsActive() {
       if (this.isModeStatsActive) {
         this.initStats();
@@ -357,8 +350,8 @@ export default {
       this.isUserDialogOpen = true;
     },
 
-    getRoleMetadata(roleName) {
-      return this.teams.find((e) => e.name === roleName);
+    getRoleMetadata(team) {
+      return this.teams.find((t) => t.code === team.code);
     },
 
     removeTeamInFilter(item) {
@@ -534,8 +527,9 @@ export default {
         mUsers = mUsers.filter((user) => {
           if (user.team) {
             return (
-              user.team.filter((value) => this.filters.teams.includes(value))
-                .length === this.filters.teams.length
+              user.team.filter((value) =>
+                this.filters.teams.map((team) => team.code).includes(value)
+              ).length === this.filters.teams.length
             );
           } else {
             return false;
