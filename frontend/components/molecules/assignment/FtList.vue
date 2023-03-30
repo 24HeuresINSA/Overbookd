@@ -61,7 +61,7 @@ export default Vue.extend({
     },
     selectFt(ft: FtWithTimespan) {
       this.$accessor.assignment.setSelectedFt(ft);
-      // TODO: Pour test, à retirer
+      // TODO: A retirer quand il y aura le calendrier
       this.$accessor.assignment.setSelectedTimespan(ft.timespans[0]);
     },
     openFtNewTab(ftId: number) {

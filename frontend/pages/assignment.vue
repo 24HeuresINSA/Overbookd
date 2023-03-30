@@ -1,6 +1,6 @@
 <template>
   <v-container class="assignment-container">
-    <FilterableVolunteerList class="user-list" />
+    <FilterableVolunteerList class="volunteer-list" />
 
     <FilterableTimespanList v-if="isModeOrgaTask" class="task-list" />
     <FilterableFtList v-else class="task-list" />
@@ -111,7 +111,7 @@ export default Vue.extend({
   width: 100%;
 }
 
-.user-list {
+.volunteer-list {
   max-width: 350px;
 }
 
