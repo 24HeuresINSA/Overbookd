@@ -1,5 +1,5 @@
 <template>
-  <OverCalendarV2 v-model="calendarMarker" :title="calendarTitle">
+  <OverCalendarV2 v-model="calendarMarker" :title="volunteerName">
     <template #interval="{ date, time }">
       <div :class="{ available: isVolunteerAvailable(date, time) }" />
     </template>
@@ -10,7 +10,8 @@
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+import { Volunteer } from "~/utils/models/assignment";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "AssignmentCalendar",
@@ -19,14 +20,17 @@ export default Vue.extend({
     calendarMarker: new Date(),
   }),
   computed: {
-    calendarTitle(): string {
-      return formatDateWithExplicitMonth(this.calendarMarker);
+    selectedVolunteer(): Volunteer | null {
+      return this.$accessor.assignment.selectedVolunteer;
+    },
+    volunteerName(): string {
+      if (!this.selectedVolunteer) return "";
+      return formatUsername(this.selectedVolunteer);
     },
     manifDate(): Date {
       return new Date(this.$accessor.config.getConfig("event_date"));
     },
     availabilities() {
-      console.log(this.$accessor.volunteerAvailability.mAvailabilities);
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
   },

@@ -58,11 +58,14 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    clearSelectedVariables({ commit }) {
+    clearSelectedVariables({ commit, dispatch }) {
       commit("SET_SELECTED_VOLUNTEER", null);
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", []);
       commit("SET_SELECTED_TIMESPAN", null);
       commit("SET_SELECTED_FT", null);
+      dispatch("volunteerAvailability/clearVolunteerAvailabilities", null, {
+        root: true,
+      });
     },
 
     async fetchVolunteers({ commit }) {

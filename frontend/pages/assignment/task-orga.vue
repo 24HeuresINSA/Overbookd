@@ -1,6 +1,7 @@
 <template>
   <v-container class="assignment-container">
     <FilterableVolunteerList class="volunteer-list" />
+    <AssignmentCalendar class="calendar" />
     <FilterableFtList class="task-list" />
   </v-container>
 </template>
@@ -10,12 +11,14 @@ import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
+import AssignmentCalendar from "~/components/organisms/assignment/AssignmentCalendar.vue";
 
 export default Vue.extend({
   name: "TaskOrga",
   components: {
     FilterableVolunteerList,
     FilterableFtList,
+    AssignmentCalendar,
   },
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
@@ -49,6 +52,11 @@ $header-footer-height: 100px;
 .volunteer-list {
   max-width: 350px;
   height: calc(100vh - #{$header-footer-height});
+}
+
+.calendar {
+  width: 1000px;
+  height: 100%;
 }
 
 .task-list {
