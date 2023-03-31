@@ -1,9 +1,10 @@
 import { PrismaService } from 'src/prisma.service';
+import { TeamService } from 'src/team/team.service';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { WHERE_VALIDATED_USER } from './volunteer.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
-import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
+import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 
 const SELECT_TEAM_REQUEST = {
@@ -18,12 +19,13 @@ const SELECT_BASE_TIMESPAN = {
   end: true,
 };
 
-function buildTimespanWithStatsSelection(timespanId: number) {
+function buildTimespanWithStatsSelection(timespanId: number, teamCode: string) {
   return {
     ...SELECT_BASE_TIMESPAN,
     timeWindow: {
       select: {
         teamRequests: {
+          where: { teamCode },
           select: {
             ...SELECT_TEAM_REQUEST,
             _count: {
@@ -38,13 +40,7 @@ function buildTimespanWithStatsSelection(timespanId: number) {
   };
 }
 
-const TEAM_ORDER = [
-  'conducteur-fen',
-  'conducteur',
-  'hard',
-  'confiance',
-  'soft',
-];
+const UNDERLYING_TEAMS = ['hard', 'confiance', 'soft'];
 
 type UserWithTeams = User & {
   team: {
@@ -79,11 +75,12 @@ export class AssignmentService {
   async assignVolunteerToTimespan(
     volunteerId: number,
     timespanId: number,
+    teamCode: string,
   ): Promise<AssignmentResponseDto> {
-    const timespan = await this.retrieveTimespan(timespanId);
-    const volunteer = await this.retrieveVolunteer(volunteerId, timespan);
+    const timespan = await this.retrieveTimespan(timespanId, teamCode);
+    await this.checkVolunteerCompatibility(volunteerId, timespan, teamCode);
 
-    const teamRequestId = this.retrieveBestTeamRequestId(timespan, volunteer);
+    const teamRequestId = this.retrieveTeamRequestId(timespan, teamCode);
 
     return this.prisma.assignment.create({
       data: {
@@ -94,53 +91,39 @@ export class AssignmentService {
     });
   }
 
-  private async retrieveTimespan(timespanId: number) {
-    const timespan = await this.getTimespanWithItStats(timespanId);
+  private async retrieveTimespan(timespanId: number, teamCode: string) {
+    const timespan = await this.getTimespanWithItStats(timespanId, teamCode);
 
     if (!timespan) {
       throw new NotFoundException(
-        "Le créneau n'existe pas. Allez regarder la FT.",
+        "Le créneau n'existe pas avec la team demandée. Allez regarder la FT.",
       );
     }
     return timespan;
   }
 
-  private async retrieveVolunteer(
+  private async checkVolunteerCompatibility(
     volunteerId: number,
-    timespan: {
-      id: number;
-      timeWindow: {
-        teamRequests: {
-          quantity: number;
-          id: number;
-          teamCode: string;
-          _count: { assignments: number };
-        }[];
-      };
-      start: Date;
-      end: Date;
-    },
+    timespan: DataBaseTimespanWithStats,
+    teamCode: string,
   ) {
-    const volunteer = await this.getVolunteer(volunteerId, timespan);
+    const volunteer = await this.getVolunteer(volunteerId, timespan, teamCode);
 
     if (!volunteer) {
       throw new NotFoundException(
-        "Le bénévole n'a pas été trouvé. Il n'est soit pas disponible, soit déjà affecté à un autre créneau.",
+        'Le bénévole demandé ne peut pas être assigné à ce créneau. Un autre humain vous a peut-être devancé.',
       );
     }
     return volunteer;
   }
 
-  private retrieveBestTeamRequestId(
+  private retrieveTeamRequestId(
     timespan: DataBaseTimespanWithStats,
-    volunteer: UserWithTeams,
+    teamCode: string,
   ) {
     const teamRequestsStats = this.extractTeamRequestsStats(timespan);
 
-    const teamRequestId = this.selectTeamRequestId(
-      teamRequestsStats,
-      volunteer,
-    );
+    const teamRequestId = this.selectTeamRequestId(teamRequestsStats, teamCode);
 
     if (teamRequestId === 0) {
       throw new NotFoundException(
@@ -159,12 +142,15 @@ export class AssignmentService {
   private async getVolunteer(
     volunteerId: number,
     ftTimespan: Period,
+    teamCode: string,
   ): Promise<UserWithTeams | null> {
     const availabilities =
       this.buildVolunteerIsAvailableDuringPeriodCondition(ftTimespan);
 
     const assignments =
       this.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(ftTimespan);
+
+    const team = this.buildVolunteerIsMemberOfTeamCondition(teamCode);
 
     return this.prisma.user.findFirst({
       include: SELECT_USER_TEAMS,
@@ -173,8 +159,24 @@ export class AssignmentService {
         ...WHERE_VALIDATED_USER,
         availabilities,
         assignments,
+        team,
       },
     });
+  }
+
+  private buildVolunteerIsMemberOfTeamCondition(teamCode: string) {
+    const underlyingTeams = this.getUnderlyingTeams(teamCode);
+    const team = TeamService.buildIsMemberOfCondition([
+      teamCode,
+      ...underlyingTeams,
+    ]);
+    return team;
+  }
+
+  private getUnderlyingTeams(requestedTeamCode: string): string[] {
+    const teamIndex = UNDERLYING_TEAMS.indexOf(requestedTeamCode);
+    if (teamIndex === -1) return [];
+    return UNDERLYING_TEAMS.slice(0, teamIndex);
   }
 
   private buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
@@ -204,49 +206,31 @@ export class AssignmentService {
     };
   }
 
-  private getTimespanWithItStats(timespanId: number) {
-    return this.prisma.ftTimespan.findUnique({
-      where: { id: timespanId },
-      select: buildTimespanWithStatsSelection(timespanId),
+  private getTimespanWithItStats(timespanId: number, teamCode: string) {
+    return this.prisma.ftTimespan.findFirst({
+      where: {
+        id: timespanId,
+        timeWindow: {
+          teamRequests: {
+            some: {
+              teamCode,
+            },
+          },
+        },
+      },
+      select: buildTimespanWithStatsSelection(timespanId, teamCode),
     });
   }
 
   private selectTeamRequestId(
     teamRequests: TeamRequestWithAssignmentStats[],
-    volunteer: UserWithTeams,
+    teamCode: string,
   ): number {
-    const volunteerTeamCodes = this.getAssignableTeamFromVolunteer(volunteer);
-
-    const filteredTeamRequest = teamRequests
-      .filter(
-        (tr) =>
-          tr.quantity > tr.assigned && volunteerTeamCodes.includes(tr.teamCode), // TODO: Add bypass of team code check
-      )
-      .sort((a, b) => sortByTeamHierarchy(a.teamCode, b.teamCode));
-
-    return filteredTeamRequest.at(0)?.id ?? 0;
+    const teamRequest = teamRequests.find(
+      (tr) => tr.quantity > tr.assigned && tr.teamCode === teamCode,
+    );
+    return teamRequest?.id ?? 0;
   }
-
-  private getAssignableTeamFromVolunteer(volunteer: UserWithTeams): string[] {
-    const userTeams = volunteer.team.map((t) => t.team.code);
-    return this.getAssignableTeam(userTeams);
-  }
-
-  private getAssignableTeam(teamCodes: string[]): string[] {
-    const teamHierarchies = teamCodes
-      .filter((code) => TEAM_ORDER.includes(code))
-      .map(teamHierarchyPosition);
-    const mostImportantHierarchyPosition = Math.min(...teamHierarchies);
-    return TEAM_ORDER.slice(mostImportantHierarchyPosition);
-  }
-}
-
-function sortByTeamHierarchy(teamA: string, teamB: string) {
-  return teamHierarchyPosition(teamA) - teamHierarchyPosition(teamB);
-}
-
-function teamHierarchyPosition(teamCode: string): number {
-  return TEAM_ORDER.indexOf(teamCode);
 }
 
 function convertToTeamRequestWithAssignmentStats({

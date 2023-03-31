@@ -1,6 +1,7 @@
 import {
   Get,
   Post,
+  Body,
   Param,
   HttpCode,
   UseGuards,
@@ -25,7 +26,8 @@ import { FtTimespanService } from './ftTimespan.service';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
-import { AssignmentResponseDto } from './dto/AssignmentResponseDto';
+import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
+import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -107,20 +109,20 @@ export class AssignmentController {
     );
   }
 
-  @Post(':volonteerId/timespan/:timespanId')
+  @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Affect volunteers to time windows',
+    description: 'Affect volunteers to timespan as team member',
     type: AssignmentResponseDto,
   })
   assignVolunteerToTimeSpan(
-    @Param('timespanId', ParseIntPipe) timespanId: number,
-    @Param('volonteerId', ParseIntPipe) volonteerId: number,
+    @Body() { volunteerId, timespanId, teamCode }: AssignmentRequestDto,
   ): Promise<AssignmentResponseDto> {
     return this.assignmentService.assignVolunteerToTimespan(
-      volonteerId,
+      volunteerId,
       timespanId,
+      teamCode,
     );
   }
 }
