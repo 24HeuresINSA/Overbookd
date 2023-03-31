@@ -71,7 +71,6 @@ export default Vue.extend({
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid #e0e0e0;
 
   &__info-row {
     display: flex;
