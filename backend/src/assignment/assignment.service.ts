@@ -186,12 +186,8 @@ export class AssignmentService {
   }: Period) {
     return {
       some: {
-        start: {
-          lte: start,
-        },
-        end: {
-          gte: end,
-        },
+        start: { lte: start },
+        end: { gte: end },
       },
     };
   }
@@ -201,11 +197,7 @@ export class AssignmentService {
       where: {
         id: timespanId,
         timeWindow: {
-          teamRequests: {
-            some: {
-              teamCode,
-            },
-          },
+          teamRequests: { some: { teamCode } },
         },
       },
       select: buildTimespanWithStatsSelection(timespanId, teamCode),
