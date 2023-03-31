@@ -1,9 +1,8 @@
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
-import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { WHERE_VALIDATED_USER } from './volunteer.service';
+import { FtTeamRequest, FtTimespan } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FtTeamRequest, FtTimespan, User } from '@prisma/client';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 
@@ -41,14 +40,6 @@ function buildTimespanWithStatsSelection(timespanId: number, teamCode: string) {
 }
 
 const UNDERLYING_TEAMS = ['hard', 'confiance', 'soft'];
-
-type UserWithTeams = User & {
-  team: {
-    team: {
-      code: string;
-    };
-  }[];
-};
 
 type TeamRequest = Pick<FtTeamRequest, 'quantity' | 'id' | 'teamCode'>;
 
@@ -106,7 +97,7 @@ export class AssignmentService {
     volunteerId: number,
     timespan: DataBaseTimespanWithStats,
     teamCode: string,
-  ) {
+  ): Promise<void> {
     const volunteer = await this.getVolunteer(volunteerId, timespan, teamCode);
 
     if (!volunteer) {
@@ -114,7 +105,6 @@ export class AssignmentService {
         'Le bénévole demandé ne peut pas être assigné à ce créneau. Un autre humain vous a peut-être devancé.',
       );
     }
-    return volunteer;
   }
 
   private retrieveTeamRequestId(
@@ -143,7 +133,7 @@ export class AssignmentService {
     volunteerId: number,
     ftTimespan: Period,
     teamCode: string,
-  ): Promise<UserWithTeams | null> {
+  ): Promise<{ id: number } | null> {
     const availabilities =
       this.buildVolunteerIsAvailableDuringPeriodCondition(ftTimespan);
 
@@ -153,7 +143,7 @@ export class AssignmentService {
     const team = this.buildVolunteerIsMemberOfTeamCondition(teamCode);
 
     return this.prisma.user.findFirst({
-      include: SELECT_USER_TEAMS,
+      select: { id: true },
       where: {
         id: volunteerId,
         ...WHERE_VALIDATED_USER,
