@@ -104,17 +104,15 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $filters-height: 140px;
-$header-footer-height: 122px;
+$header-footer-height: 100px;
 $friends-height: 160px;
+$card-padding: 32px;
 
 .filterable-volunteer-list {
   width: 100%;
   max-height: 100vh;
   display: flex;
   flex-direction: column;
-  .v-card__text {
-    height: fit-content;
-  }
 }
 
 .filters {
@@ -122,19 +120,14 @@ $friends-height: 160px;
   height: $filters-height;
 }
 
-.volunteer-list,
-.error-message {
-  width: 100%;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
-  display: flex;
-  flex-direction: column;
-}
-
 .volunteer-list {
-  overflow-y: auto;
+  height: calc(
+    100vh - #{$filters-height + $header-footer-height + $card-padding + 12px}
+  );
   &--with-friend-list {
     max-height: calc(
-      100vh - #{$filters-height + $header-footer-height + $friends-height}
+      100vh - #{$filters-height + $header-footer-height + $friends-height +
+        $card-padding}
     );
   }
 }
@@ -142,6 +135,10 @@ $friends-height: 160px;
 .error-message {
   align-items: center;
   justify-content: center;
+  display: flex;
+  height: calc(
+    100vh - #{$filters-height + $header-footer-height + $card-padding + 12px}
+  );
 
   p {
     text-align: center;

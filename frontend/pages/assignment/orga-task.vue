@@ -24,14 +24,14 @@ export default Vue.extend({
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    if (!this.volunteers.length) {
-      await this.$accessor.assignment.fetchVolunteers();
-    }
+    await this.$accessor.assignment.fetchVolunteers();
   },
 });
 </script>
 
 <style lang="scss" scoped>
+$header-footer-height: 100px;
+
 .assignment-container {
   padding: 0;
   left: 0;
@@ -48,9 +48,11 @@ export default Vue.extend({
 
 .volunteer-list {
   max-width: 350px;
+  height: calc(100vh - #{$header-footer-height});
 }
 
 .task-list {
   max-width: 450px;
+  height: calc(100vh - #{$header-footer-height});
 }
 </style>

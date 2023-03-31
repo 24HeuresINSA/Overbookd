@@ -86,16 +86,14 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $filters-height: 140px;
-$header-footer-height: 122px;
+$header-footer-height: 100px;
+$card-padding: 32px;
 
 .filterable-timespan-list {
   width: 100%;
   max-height: 100vh;
   display: flex;
   flex-direction: column;
-  .v-card__text {
-    height: fit-content;
-  }
 }
 
 .filters {
@@ -106,7 +104,9 @@ $header-footer-height: 122px;
 .timespan-list,
 .error-message {
   width: 100%;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
+  height: calc(
+    100vh - #{$filters-height + $header-footer-height + $card-padding}
+  );
   display: flex;
   flex-direction: column;
 }
