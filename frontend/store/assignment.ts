@@ -74,6 +74,11 @@ export const actions = actionTree(
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       dispatch("fetchTimespansForVolunteer", volunteer.id);
+      dispatch(
+        "volunteerAvailability/fetchVolunteerAvailabilities",
+        volunteer.id,
+        { root: true }
+      );
     },
 
     setSelectedTimespan({ commit, dispatch }, timespan: FtTimespan) {

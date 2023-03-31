@@ -1,6 +1,7 @@
 <template>
   <v-container class="assignment-container">
     <FilterableVolunteerList class="volunteer-list" />
+    <AssignmentCalendar class="calendar" />
     <FilterableTimespanList class="task-list" />
   </v-container>
 </template>
@@ -10,12 +11,14 @@ import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
 import FilterableTimespanList from "~/components/organisms/assignment/FilterableTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
+import AssignmentCalendar from "~/components/organisms/assignment/AssignmentCalendar.vue";
 
 export default Vue.extend({
   name: "OrgaTask",
   components: {
     FilterableVolunteerList,
     FilterableTimespanList,
+    AssignmentCalendar,
   },
   computed: {
     volunteers(): Volunteer[] {
@@ -37,18 +40,23 @@ $header-footer-height: 100px;
   left: 0;
   top: 0;
   max-width: none;
-  margin-left: 0;
-  margin-right: 0;
+  margin: 0;
   position: absolute;
   display: flex;
   justify-content: space-between;
   height: 100%;
   width: 100%;
+  overflow-y: hidden;
 }
 
 .volunteer-list {
-  max-width: 350px;
+  width: 350px;
   height: calc(100vh - #{$header-footer-height});
+}
+
+.calendar {
+  width: 1000px;
+  height: 100%;
 }
 
 .task-list {

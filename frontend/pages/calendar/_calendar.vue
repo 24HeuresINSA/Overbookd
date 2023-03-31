@@ -1,30 +1,28 @@
 <template>
-  <div>
-    <OverCalendarV2
-      v-model="calendarCentralDate"
-      :events="events"
-      class="no-scroll elevation-2"
-    >
-      <template #title>
-        <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
-        <div class="ml-2">
-          <OverChips :roles="user?.team"></OverChips>
-        </div>
-      </template>
-      <template #interval="{ date, time }">
-        <div :class="{ available: isUserAvailable(date, time) }" />
-      </template>
-      <template #event="{ event }">
-        <div
-          class="pa-1 event underline-on-hover"
-          @click="openFt(event.ft.id)"
-          @mouseup.middle="openFtNewTab(event.ft.id)"
-        >
-          {{ `[${event.ft.id}] ${event.ft.name}` }}
-        </div>
-      </template>
-    </OverCalendarV2>
-  </div>
+  <OverCalendarV2
+    v-model="calendarCentralDate"
+    :events="events"
+    class="no-scroll elevation-2"
+  >
+    <template #title>
+      <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
+      <div class="ml-2">
+        <OverChips :roles="user?.team"></OverChips>
+      </div>
+    </template>
+    <template #interval="{ date, time }">
+      <div :class="{ available: isUserAvailable(date, time) }" />
+    </template>
+    <template #event="{ event }">
+      <div
+        class="pa-1 event underline-on-hover"
+        @click="openFt(event.ft.id)"
+        @mouseup.middle="openFtNewTab(event.ft.id)"
+      >
+        {{ `[${event.ft.id}] ${event.ft.name}` }}
+      </div>
+    </template>
+  </OverCalendarV2>
 </template>
 
 <script lang="ts">
