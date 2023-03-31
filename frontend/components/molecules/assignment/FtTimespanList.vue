@@ -1,5 +1,5 @@
 <template>
-  <div class="timespan-list">
+  <div class="timespan-list" @mouseleave="hoverTimespan(null)">
     <v-data-table
       :headers="headers"
       :items="timespans"
@@ -14,6 +14,7 @@
             :key="index"
             class="timespan-list__item"
             @contextmenu.prevent="openFtNewTab(item.ft.id)"
+            @mouseover="hoverTimespan(item)"
           >
             <td>{{ item.ft.id }} - {{ item.ft.name }}</td>
             <td>
@@ -51,7 +52,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "FT", value: "ftId" },
+      { text: "FT", value: "ft" },
       { text: "Date", value: "start" },
       { text: "Requis", value: "required", sortable: false },
     ],
@@ -59,6 +60,9 @@ export default Vue.extend({
   methods: {
     formatDate(date: Date) {
       return formatDateWithMinutes(date);
+    },
+    hoverTimespan(timespan: TimespanWithFt | null) {
+      this.$accessor.assignment.setHoverTimespan(timespan);
     },
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");

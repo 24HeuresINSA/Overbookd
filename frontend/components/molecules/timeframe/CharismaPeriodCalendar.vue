@@ -12,15 +12,8 @@
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+import { CalendarItem } from "~/utils/models/calendar";
 import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
-
-interface CalendarItem {
-  start: Date;
-  end: Date;
-  name: string;
-  color: string;
-  timed: true;
-}
 
 const PRIMARY_COLOR = {
   RED_LEVEL: 33,

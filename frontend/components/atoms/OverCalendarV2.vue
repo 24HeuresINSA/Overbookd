@@ -114,6 +114,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { CalendarItem } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 
 export default Vue.extend({
@@ -124,7 +125,7 @@ export default Vue.extend({
   },
   props: {
     events: {
-      type: Array,
+      type: Array as () => CalendarItem[],
       default: () => [],
     },
     date: {

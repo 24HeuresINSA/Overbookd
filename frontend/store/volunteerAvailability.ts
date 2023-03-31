@@ -51,6 +51,11 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
+    clearVolunteerAvailabilities({ commit }) {
+      commit("SET_VOLUNTEER_AVAILABILITIES", []);
+      commit("SET_PERIOD_ORCHESTRATOR", []);
+      commit("SET_CURRENT_CHARISMA", 0);
+    },
     async fetchVolunteerAvailabilities({ commit, rootState }, userId: number) {
       commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
 

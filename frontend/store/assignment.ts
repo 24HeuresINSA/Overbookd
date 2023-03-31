@@ -23,6 +23,8 @@ export const state = () => ({
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
   selectedFt: null as FtWithTimespan | null,
+
+  hoverTimespan: null as TimespanWithFt | null,
 });
 
 export const mutations = mutationTree(state, {
@@ -53,16 +55,24 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_FT(state, ft: FtWithTimespan) {
     state.selectedFt = ft;
   },
+
+  SET_HOVER_TIMESPAN(state, timespan: TimespanWithFt | null) {
+    state.hoverTimespan = timespan;
+  },
 });
 
 export const actions = actionTree(
   { state },
   {
-    clearSelectedVariables({ commit }) {
+    clearSelectedVariables({ commit, dispatch }) {
       commit("SET_SELECTED_VOLUNTEER", null);
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", []);
       commit("SET_SELECTED_TIMESPAN", null);
       commit("SET_SELECTED_FT", null);
+      commit("SET_HOVER_TIMESPAN", null);
+      dispatch("volunteerAvailability/clearVolunteerAvailabilities", null, {
+        root: true,
+      });
     },
 
     async fetchVolunteers({ commit }) {
@@ -74,6 +84,11 @@ export const actions = actionTree(
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       dispatch("fetchTimespansForVolunteer", volunteer.id);
+      dispatch(
+        "volunteerAvailability/fetchVolunteerAvailabilities",
+        volunteer.id,
+        { root: true }
+      );
     },
 
     setSelectedTimespan({ commit, dispatch }, timespan: FtTimespan) {
@@ -113,6 +128,10 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepo.getUserFriends(this, id));
       if (!res) return;
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
+    },
+
+    setHoverTimespan({ commit }, timespan: TimespanWithFt | null) {
+      commit("SET_HOVER_TIMESPAN", timespan);
     },
   }
 );
