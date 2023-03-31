@@ -1,29 +1,33 @@
 import {
-  Controller,
   Get,
-  HttpCode,
+  Post,
+  Body,
   Param,
-  ParseIntPipe,
+  HttpCode,
   UseGuards,
+  Controller,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
+  ApiTags,
+  ApiResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { AssignmentService } from './assignment.service';
 import {
   FtWithTimespansResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
-import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
-import { FtTimespanService } from './ftTimespan.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { VolunteerService } from './volunteer.service';
+import { AssignmentService } from './assignment.service';
+import { FtTimespanService } from './ftTimespan.service';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
+import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
+import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -102,6 +106,23 @@ export class AssignmentController {
   ): Promise<VolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteersForFtTimespan(
       timespanId,
+    );
+  }
+
+  @Post()
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Affect volunteers to timespan as team member',
+    type: AssignmentResponseDto,
+  })
+  assignVolunteerToTimeSpan(
+    @Body() { volunteerId, timespanId, teamCode }: AssignmentRequestDto,
+  ): Promise<AssignmentResponseDto> {
+    return this.assignmentService.assignVolunteerToTimespan(
+      volunteerId,
+      timespanId,
+      teamCode,
     );
   }
 }
