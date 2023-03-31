@@ -1,6 +1,6 @@
 import requests
 
-TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI3LCJ1c2VySWQiOjIyNywidGVhbXMiOlsiYWRtaW4iLCJoYXJkIiwiaW5mb3JtYXRpcXVlIl0sInBlcm1pc3Npb25zIjpbImFkbWluIiwiY29uZmlnLXdyaXRlIiwiaGFyZCIsImNwIiwidmFsaWRhdGVkLXVzZXIiLCJjYXRhbG9nLXJlYWQiXSwiaWF0IjoxNjgwMjQ1OTk3LCJleHAiOjE2ODAzMzIzOTd9.3eFsS-0eDqeKedJftnCXahxEDSoJeTObVAnbEm0rOVM"
+TOKEN = "YOUR_TOKEN"
 DOMAIN = "overbookd.traefik.me"
 
 def getAllUsers():
