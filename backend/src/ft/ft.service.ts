@@ -108,7 +108,7 @@ export class FtService {
     id: number,
     updateFtDto: UpdateFtDto,
   ): Promise<CompleteFtResponseDto | null> {
-    const ft = await this.findOne(id);
+    const ft = await this.findSubmittableFt(id);
     if (!ft) {
       throw new NotFoundException(`ft #${id} not found`);
     }
