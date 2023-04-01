@@ -3,7 +3,12 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
-import { RequiredOnTask, User } from "~/utils/models/user";
+import {
+  AssignedOnTask,
+  castAssignedOnTaskPeriodsWithDate,
+  RequiredOnTask,
+  User,
+} from "~/utils/models/user";
 import {
   castPeriodWithFtWithDate,
   castToUserModification,
@@ -23,6 +28,7 @@ export const state = () => ({
   usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
   selectedUserFtRequests: [] as RequiredOnTask[],
+  selectedUserAssignments: [] as AssignedOnTask[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -38,6 +44,12 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: RequiredOnTask[]) {
     state.selectedUserFtRequests = periods;
+  },
+  SET_SELECTED_USER_ASSIGNMENT(
+    state: UserState,
+    assignments: AssignedOnTask[]
+  ) {
+    state.selectedUserAssignments = assignments;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
@@ -261,6 +273,17 @@ export const actions = actionTree(
       if (!res) return;
       const periods = castPeriodWithFtWithDate(res.data);
       commit("SET_SELECTED_USER_FT_REQUESTS", periods);
+    },
+
+    async getUserAssignments({ commit }, userId: number) {
+      const res = await safeCall(
+        this,
+        UserRepo.getUserAssignments(this, userId)
+      );
+
+      if (!res) return;
+      const periods = castAssignedOnTaskPeriodsWithDate(res.data);
+      commit("SET_SELECTED_USER_ASSIGNMENT", periods);
     },
   }
 );

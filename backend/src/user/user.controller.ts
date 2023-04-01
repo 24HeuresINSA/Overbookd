@@ -22,6 +22,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
+import { VolunteerAssignmentDto } from './dto/volunteerAssignment.dto';
 import {
   RequiredOnTask,
   UserService,
@@ -167,6 +168,22 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<RequiredOnTask[]> {
     return this.userService.getFtUserRequestsByUserId(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('hard')
+  @Get(':id/assignments')
+  @ApiResponse({
+    status: 200,
+    description: 'Get tasks a volunteer is assigned to',
+    isArray: true,
+    type: VolunteerAssignmentDto,
+  })
+  async getVolunteerAssignments(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VolunteerAssignmentDto[]> {
+    return this.userService.getVolunteerAssignments(id);
   }
 
   @UseGuards(JwtAuthGuard)

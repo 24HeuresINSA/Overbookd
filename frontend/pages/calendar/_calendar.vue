@@ -29,8 +29,9 @@
 import { defineComponent } from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import OverChips from "~/components/atoms/OverChips.vue";
-import { getColorByStatus } from "~/domain/common/status-color";
+import { getColorByStatus, PURPLE } from "~/domain/common/status-color";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { FTStatus } from "~/utils/models/ft";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default defineComponent({
@@ -49,18 +50,29 @@ export default defineComponent({
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
     ftRequests() {
-      return this.$accessor.user.selectedUserFtRequests.map(
-        ({ start, end, ft }) => ({
+      return this.$accessor.user.selectedUserFtRequests
+        .filter(({ ft }) => ft.status !== FTStatus.READY)
+        .map(({ start, end, ft }) => ({
           start,
           end,
           ft,
           color: getColorByStatus(ft.status),
           timed: true,
+        }));
+    },
+    assignments() {
+      return this.$accessor.user.selectedUserAssignments.map(
+        ({ start, end, ft }) => ({
+          start,
+          end,
+          ft,
+          color: PURPLE,
+          timed: true,
         })
       );
     },
     events() {
-      return this.ftRequests; // TODO: ajouter les créneaux affectés
+      return [...this.ftRequests, ...this.assignments];
     },
     user() {
       return this.$accessor.user.selectedUser;
@@ -77,6 +89,7 @@ export default defineComponent({
       this.$accessor.user.findUserById(userId),
       this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
+      this.$accessor.user.getUserAssignments(userId),
     ]);
     document.title = formatUsername(this.user);
   },

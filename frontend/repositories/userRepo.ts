@@ -1,6 +1,7 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
+  AssignedOnTask,
   CompleteUser,
   CompleteUserWithPermissions,
   RequiredOnTask,
@@ -81,6 +82,11 @@ export default {
   getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<RequiredOnTask[]>>(
       `user/${userId}/ft-requests`
+    );
+  },
+  getUserAssignments(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<AssignedOnTask[]>>(
+      `user/${userId}/assignments`
     );
   },
 };

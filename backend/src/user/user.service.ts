@@ -94,6 +94,7 @@ export type UserWithTeamAndPermission = UserWithoutPassword & {
 export type UserPasswordOnly = Pick<User, 'password'>;
 
 export type RequiredOnTask = Period & Pick<Ft, 'id' & 'name' & 'status'>;
+export type AssignedOnTask = Period & { ft: { id: number; name: string } };
 
 @Injectable()
 export class UserService {
@@ -171,6 +172,30 @@ export class UserService {
       end,
       ft,
     }));
+  }
+
+  async getVolunteerAssignments(
+    volunteerId: number,
+  ): Promise<AssignedOnTask[]> {
+    const assignments = await this.prisma.assignment.findMany({
+      where: { assigneeId: volunteerId },
+      select: {
+        timespan: {
+          select: {
+            start: true,
+            end: true,
+            timeWindow: {
+              select: { ft: { select: { name: true, id: true } } },
+            },
+          },
+        },
+      },
+    });
+    return assignments.map(({ timespan }) => {
+      const { start, end } = timespan;
+      const { ft } = timespan.timeWindow;
+      return { start, end, ft };
+    });
   }
 
   async getUserTeams(id: number): Promise<string[]> {

@@ -1,6 +1,8 @@
 import { FTStatus } from "~/utils/models/ft";
 
-type StatusColor = "grey" | "red" | "orange" | "green" | "#673ab7";
+export const PURPLE = "#673ab7";
+
+type StatusColor = "grey" | "red" | "orange" | "green" | typeof PURPLE;
 
 const statusColors = new Map<FTStatus, StatusColor>([
   [FTStatus.DRAFT, "grey"],
