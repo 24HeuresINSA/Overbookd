@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, Prisma, User } from '@prisma/client';
+import { Ft, FtStatus, Prisma, User } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
@@ -86,6 +86,20 @@ const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
   },
 };
 
+const SELECT_VOLUNTEER_ASSIGNMENTS = {
+  timespan: {
+    select: {
+      start: true,
+      end: true,
+      timeWindow: {
+        select: {
+          ft: { select: { name: true, id: true, status: true } },
+        },
+      },
+    },
+  },
+};
+
 export type UserWithoutPassword = Omit<User, 'password'>;
 export type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];
@@ -93,7 +107,7 @@ export type UserWithTeamAndPermission = UserWithoutPassword & {
 };
 export type UserPasswordOnly = Pick<User, 'password'>;
 
-export type RequiredOnTask = Period & Pick<Ft, 'id' & 'name' & 'status'>;
+export type VolunteerTask = Period & { ft: Pick<Ft, 'id' | 'name' | 'status'> };
 
 @Injectable()
 export class UserService {
@@ -161,16 +175,33 @@ export class UserService {
     return users.map((user) => this.getUserWithTeamAndPermission(user));
   }
 
-  async getFtUserRequestsByUserId(userId: number): Promise<RequiredOnTask[]> {
+  async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
+    const ftTimeWindows = {
+      ft: { isDeleted: false, NOT: { status: FtStatus.READY } },
+    };
     const userRequests = await this.prisma.ftUserRequest.findMany({
-      where: { userId, ftTimeWindows: { ft: { isDeleted: false } } },
+      where: { userId, ftTimeWindows },
       select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
     });
+
     return userRequests.map(({ ftTimeWindows: { start, end, ft } }) => ({
       start,
       end,
       ft,
     }));
+  }
+
+  async getVolunteerAssignments(volunteerId: number): Promise<VolunteerTask[]> {
+    const assignments = await this.prisma.assignment.findMany({
+      where: { assigneeId: volunteerId },
+      select: SELECT_VOLUNTEER_ASSIGNMENTS,
+    });
+
+    return assignments.map(({ timespan }) => {
+      const { start, end } = timespan;
+      const { ft } = timespan.timeWindow;
+      return { start, end, ft };
+    });
   }
 
   async getUserTeams(id: number): Promise<string[]> {

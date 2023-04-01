@@ -91,14 +91,19 @@ export interface CompleteUserWithPermissions extends CompleteUser {
   permissions: string[];
 }
 
-export interface RequiredOnTask {
+interface Period {
   start: Date;
   end: Date;
-  ft: {
-    id: number;
-    name: string;
-    status: FTStatus;
-  };
+}
+
+interface Task {
+  id: number;
+  name: string;
+  status: FTStatus;
+}
+
+export interface VolunteerTask extends Period {
+  ft: Task;
 }
 
 export function castToUserModification(
@@ -150,9 +155,9 @@ export function castUsersWithPermissionsWithDate(
   return users.map(castUserWithPermissionsWithDate);
 }
 
-export function castPeriodWithFtWithDate(
-  periods: HttpStringified<RequiredOnTask[]>
-): RequiredOnTask[] {
+export function castVolunteerTaskWithDate(
+  periods: HttpStringified<VolunteerTask[]>
+): VolunteerTask[] {
   return periods.map(({ start, end, ft }) => ({
     start: new Date(start),
     end: new Date(end),

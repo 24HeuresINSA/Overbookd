@@ -49,7 +49,13 @@ export default defineComponent({
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
     ftRequests() {
-      return this.$accessor.user.selectedUserFtRequests.map(
+      return this.$accessor.user.selectedUserFtRequests;
+    },
+    assignments() {
+      return this.$accessor.user.selectedUserAssignments;
+    },
+    events() {
+      return [...this.ftRequests, ...this.assignments].map(
         ({ start, end, ft }) => ({
           start,
           end,
@@ -58,9 +64,6 @@ export default defineComponent({
           timed: true,
         })
       );
-    },
-    events() {
-      return this.ftRequests; // TODO: ajouter les créneaux affectés
     },
     user() {
       return this.$accessor.user.selectedUser;
@@ -77,6 +80,7 @@ export default defineComponent({
       this.$accessor.user.findUserById(userId),
       this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
+      this.$accessor.user.getVolunteerAssignments(userId),
     ]);
     document.title = formatUsername(this.user);
   },
