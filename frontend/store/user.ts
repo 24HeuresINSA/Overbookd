@@ -275,10 +275,10 @@ export const actions = actionTree(
       commit("SET_SELECTED_USER_FT_REQUESTS", periods);
     },
 
-    async getUserAssignments({ commit }, userId: number) {
+    async getVolunteerAssignments({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        UserRepo.getUserAssignments(this, userId)
+        UserRepo.getVolunteerAssignments(this, userId)
       );
 
       if (!res) return;

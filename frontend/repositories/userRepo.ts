@@ -84,7 +84,7 @@ export default {
       `user/${userId}/ft-requests`
     );
   },
-  getUserAssignments(context: Context, userId: number) {
+  getVolunteerAssignments(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<AssignedOnTask[]>>(
       `user/${userId}/assignments`
     );

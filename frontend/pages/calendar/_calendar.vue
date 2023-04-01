@@ -89,7 +89,7 @@ export default defineComponent({
       this.$accessor.user.findUserById(userId),
       this.$accessor.user.getUserFtRequests(userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
-      this.$accessor.user.getUserAssignments(userId),
+      this.$accessor.user.getVolunteerAssignments(userId),
     ]);
     document.title = formatUsername(this.user);
   },
