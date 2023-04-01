@@ -144,9 +144,17 @@ export class FtService {
   }
 
   async remove(id: number) {
-    const ft = this.prisma.ft.findUnique({ where: { id } });
-    if (!ft) return;
-    this.logger.log(`Deleting FT #${id}`);
+    this.logger.log(`Trying to delete FT #${id}`);
+    const ft = await this.prisma.ft.findFirst({
+      where: { id, NOT: { status: FtStatus.READY } },
+    });
+
+    if (!ft) {
+      throw new BadRequestException(
+        "La FT n'est pas supprimable, il faut peut-etre la refuser avant",
+      );
+    }
+
     await this.prisma.ft.update({
       where: { id },
       data: { isDeleted: true },

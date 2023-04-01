@@ -316,7 +316,6 @@ export const actions = actionTree(
     async deleteFT({ commit }, ft: FT) {
       const res = await safeCall(this, repo.deleteFT(this, ft.id), {
         successMessage: "FT supprimée 🥳",
-        errorMessage: "FT non supprimée 😢",
       });
       if (!res) return;
       commit("DELETE_FT", ft.id);
