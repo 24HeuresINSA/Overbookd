@@ -124,12 +124,12 @@ export class FtService {
 
   async submit(id: number): Promise<CompleteFtResponseDto | null> {
     const [ft, reviewerCandidate] = await Promise.all([
-      this.findOne(id),
+      this.findSubmittableFt(id),
       this.findBestReviewerCandidate(),
     ]);
     if (!ft) throw new NotFoundException(`ft #${id} not found`);
 
-    const reviewerId = ft.reviewer?.id ?? reviewerCandidate.id;
+    const reviewerId = ft.reviewerId ?? reviewerCandidate.id;
 
     this.logger.log(`Submitting FT #${id}`);
     const submittedFt = await this.prisma.ft.update({
@@ -260,5 +260,15 @@ export class FtService {
 
   private buildTeamCodeCondition(code: string) {
     return { some: { team: { code } } };
+  }
+
+  private findSubmittableFt(id: number) {
+    return this.prisma.ft.findFirst({
+      where: {
+        id,
+        NOT: { status: { in: [FtStatus.READY, FtStatus.VALIDATED] } },
+      },
+      select: { reviewerId: true },
+    });
   }
 }
