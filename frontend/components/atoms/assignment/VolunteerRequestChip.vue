@@ -42,6 +42,7 @@ export default Vue.extend({
     userRequestStatus(): string {
       if (this.isNotAvailable) return "not-available";
       if (this.isAlsoRequested) return "also-requested-by-ft";
+      if (this.isAlreadyAssigned) return "already-assigned";
       return "";
     },
     userName(): string {
@@ -50,15 +51,24 @@ export default Vue.extend({
     isNotAvailable(): boolean {
       return !this.userRequest.isAvailable;
     },
+    isAlreadyAssigned(): boolean {
+      return this.userRequest.isAlreadyAssigned;
+    },
     isAlsoRequested(): boolean {
       return this.userRequest.alsoRequestedBy.length > 0;
     },
     hasErrors(): boolean {
-      return this.isNotAvailable || this.isAlsoRequested;
+      return (
+        this.isNotAvailable || this.isAlsoRequested || this.isAlreadyAssigned
+      );
     },
     errorMessages(): string[] {
       if (!this.hasErrors) return [];
-      return [...this.notAvailableErrors, ...this.alsoRequestedByErrors];
+      return [
+        ...this.notAvailableErrors,
+        ...this.alsoRequestedByErrors,
+        ...this.alreadyAssignedErrors,
+      ];
     },
     alsoRequestedByErrors(): string[] {
       return this.userRequest.alsoRequestedBy.map(
@@ -67,6 +77,11 @@ export default Vue.extend({
     },
     notAvailableErrors(): string[] {
       return this.isNotAvailable ? ["N'est pas disponible sur le creneau"] : [];
+    },
+    alreadyAssignedErrors(): string[] {
+      return this.isAlreadyAssigned
+        ? ["Déjà assigné à un autre creneau. Cliquez pour voir son planning."]
+        : [];
     },
   },
   methods: {
