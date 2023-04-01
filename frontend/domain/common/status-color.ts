@@ -1,15 +1,24 @@
 import { FTStatus } from "~/utils/models/ft";
 
-export const PURPLE = "#673ab7";
+const GREY = "grey";
+const RED = "red";
+const ORANGE = "orange";
+const GREEN = "green";
+const PURPLE = "#673ab7";
 
-type StatusColor = "grey" | "red" | "orange" | "green" | typeof PURPLE;
+type StatusColor =
+  | typeof GREY
+  | typeof RED
+  | typeof ORANGE
+  | typeof GREEN
+  | typeof PURPLE;
 
 const statusColors = new Map<FTStatus, StatusColor>([
-  [FTStatus.DRAFT, "grey"],
-  [FTStatus.REFUSED, "red"],
-  [FTStatus.SUBMITTED, "orange"],
-  [FTStatus.VALIDATED, "green"],
-  [FTStatus.READY, "#673ab7"],
+  [FTStatus.DRAFT, GREY],
+  [FTStatus.REFUSED, RED],
+  [FTStatus.SUBMITTED, ORANGE],
+  [FTStatus.VALIDATED, GREEN],
+  [FTStatus.READY, PURPLE],
 ]);
 
 export function getColorByStatus(status: FTStatus): StatusColor {

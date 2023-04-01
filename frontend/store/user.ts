@@ -4,19 +4,15 @@ import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
 import {
-  AssignedOnTask,
-  castAssignedOnTaskPeriodsWithDate,
-  RequiredOnTask,
-  User,
-} from "~/utils/models/user";
-import {
-  castPeriodWithFtWithDate,
+  castVolunteerTaskWithDate,
   castToUserModification,
   castUsersWithPermissionsWithDate,
   castUserWithDate,
   castUserWithPermissionsWithDate,
   CompleteUser,
   CompleteUserWithPermissions,
+  VolunteerTask,
+  User,
   UserCreation,
 } from "~/utils/models/user";
 
@@ -27,8 +23,8 @@ export const state = () => ({
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
-  selectedUserFtRequests: [] as RequiredOnTask[],
-  selectedUserAssignments: [] as AssignedOnTask[],
+  selectedUserFtRequests: [] as VolunteerTask[],
+  selectedUserAssignments: [] as VolunteerTask[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -42,13 +38,10 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
     state.selectedUser = data;
   },
-  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: RequiredOnTask[]) {
+  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: VolunteerTask[]) {
     state.selectedUserFtRequests = periods;
   },
-  SET_SELECTED_USER_ASSIGNMENT(
-    state: UserState,
-    assignments: AssignedOnTask[]
-  ) {
+  SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: VolunteerTask[]) {
     state.selectedUserAssignments = assignments;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
@@ -271,7 +264,7 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      const periods = castPeriodWithFtWithDate(res.data);
+      const periods = castVolunteerTaskWithDate(res.data);
       commit("SET_SELECTED_USER_FT_REQUESTS", periods);
     },
 
@@ -282,7 +275,7 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      const periods = castAssignedOnTaskPeriodsWithDate(res.data);
+      const periods = castVolunteerTaskWithDate(res.data);
       commit("SET_SELECTED_USER_ASSIGNMENT", periods);
     },
   }

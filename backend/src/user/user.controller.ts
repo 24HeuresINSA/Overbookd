@@ -22,9 +22,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { VolunteerAssignmentDto } from './dto/volunteerAssignment.dto';
+import { VolunteerAssignmentDto as VolunteerTaskDto } from './dto/volunteerAssignment.dto';
 import {
-  RequiredOnTask,
   UserService,
   UserWithoutPassword,
   UserWithTeamAndPermission,
@@ -161,12 +160,13 @@ export class UserController {
   @Get(':id/ft-requests')
   @ApiResponse({
     status: 200,
-    description: 'Get the ft user requests of a user by id',
-    type: Array,
+    description: 'Get tasks a volunteer is required on',
+    isArray: true,
+    type: VolunteerTaskDto,
   })
   async getFtUserRequestsByUserId(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<RequiredOnTask[]> {
+  ): Promise<VolunteerTaskDto[]> {
     return this.userService.getFtUserRequestsByUserId(id);
   }
 
@@ -178,11 +178,11 @@ export class UserController {
     status: 200,
     description: 'Get tasks a volunteer is assigned to',
     isArray: true,
-    type: VolunteerAssignmentDto,
+    type: VolunteerTaskDto,
   })
   async getVolunteerAssignments(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<VolunteerAssignmentDto[]> {
+  ): Promise<VolunteerTaskDto[]> {
     return this.userService.getVolunteerAssignments(id);
   }
 

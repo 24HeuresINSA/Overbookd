@@ -99,14 +99,10 @@ interface Period {
 interface Task {
   id: number;
   name: string;
-  status?: FTStatus;
+  status: FTStatus;
 }
 
-export interface RequiredOnTask extends Period {
-  ft: Required<Task>;
-}
-
-export interface AssignedOnTask extends Period {
+export interface VolunteerTask extends Period {
   ft: Task;
 }
 
@@ -159,19 +155,9 @@ export function castUsersWithPermissionsWithDate(
   return users.map(castUserWithPermissionsWithDate);
 }
 
-export function castPeriodWithFtWithDate(
-  periods: HttpStringified<RequiredOnTask[]>
-): RequiredOnTask[] {
-  return periods.map(({ start, end, ft }) => ({
-    start: new Date(start),
-    end: new Date(end),
-    ft,
-  }));
-}
-
-export function castAssignedOnTaskPeriodsWithDate(
-  periods: HttpStringified<AssignedOnTask[]>
-): AssignedOnTask[] {
+export function castVolunteerTaskWithDate(
+  periods: HttpStringified<VolunteerTask[]>
+): VolunteerTask[] {
   return periods.map(({ start, end, ft }) => ({
     start: new Date(start),
     end: new Date(end),
