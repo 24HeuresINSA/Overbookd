@@ -15,7 +15,7 @@
     </template>
     <template #event="{ event }">
       <div
-        class="pa-1 event underline-on-hover"
+        class="event underline-on-hover"
         @click="openFt(event.ft.id)"
         @mouseup.middle="openFtNewTab(event.ft.id)"
       >
@@ -115,6 +115,9 @@ export default defineComponent({
 
 .event {
   height: 100%;
+  white-space: normal;
+  padding: 2px;
+  overflow: hidden;
 }
 
 .underline-on-hover:hover {

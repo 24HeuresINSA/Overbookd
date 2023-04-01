@@ -9,7 +9,7 @@
     </template>
     <template #event="{ event }">
       <div
-        class="pa-1 event underline-on-hover"
+        class="event underline-on-hover"
         @mouseup.middle="openFtNewTab(event.timespan.ft.id)"
       >
         {{ `[${event.timespan.ft.id}] ${event.timespan.ft.name}` }}
@@ -104,6 +104,9 @@ export default Vue.extend({
 
 .event {
   height: 100%;
+  white-space: normal;
+  padding: 2px;
+  overflow: hidden;
 }
 
 .underline-on-hover:hover {
