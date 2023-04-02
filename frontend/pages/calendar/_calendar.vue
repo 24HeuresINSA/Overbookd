@@ -31,6 +31,7 @@ import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import OverChips from "~/components/atoms/OverChips.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default defineComponent({
@@ -89,9 +90,10 @@ export default defineComponent({
       this.calendarCentralDate = date;
     },
     isUserAvailable(date: string, time: string) {
-      const datetime = new Date(`${date} ${time}`);
+      const start = new Date(`${date} ${time}`);
+      const end = computeNextHourDate(start);
       return this.availabilities.some(
-        isPeriodIncludedByAnother({ start: datetime, end: datetime })
+        isPeriodIncludedByAnother({ start, end })
       );
     },
     openFt(ftId: number) {

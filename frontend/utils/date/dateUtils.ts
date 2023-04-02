@@ -89,3 +89,9 @@ export function computeTomorrowDate(date: Date): Date {
   tomorrow.setDate(date.getDate() + 1);
   return tomorrow;
 }
+
+export function computeNextHourDate(date: Date): Date {
+  const nextHour = new Date(date);
+  nextHour.setHours(date.getHours() + 1);
+  return nextHour;
+}
