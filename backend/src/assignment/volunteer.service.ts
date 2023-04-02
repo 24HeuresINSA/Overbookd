@@ -8,6 +8,7 @@ import {
   DatabaseVolunteerWithAvailabilities,
   SELECT_VOLUNTEER,
 } from './types/volunteerTypes';
+import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -63,8 +64,14 @@ export class VolunteerService {
   private buildAssignableVolunteersCondition(
     ftTimespan: TimespanWithFtResponseDto,
   ) {
-    const teamCodes = ftTimespan.requestedTeams.map((team) => team.code);
-    const team = TeamService.buildIsMemberOfCondition(teamCodes);
+    const requestedTeamCodes = ftTimespan.requestedTeams.map(
+      (team) => team.code,
+    );
+    const underlyingTeams = requestedTeamCodes.flatMap((tc) =>
+      getOtherAssignableTeams(tc),
+    );
+    const teams = [...requestedTeamCodes, ...underlyingTeams];
+    const team = TeamService.buildIsMemberOfCondition(teams);
     const availabilities = this.buildAvailableVolunteersCondition(ftTimespan);
 
     return {
