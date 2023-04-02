@@ -5,6 +5,7 @@ import { FtTeamRequest, FtTimespan } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -38,8 +39,6 @@ function buildTimespanWithStatsSelection(timespanId: number, teamCode: string) {
     },
   };
 }
-
-const UNDERLYING_TEAMS = ['hard', 'confiance', 'soft'];
 
 type TeamRequest = Pick<FtTeamRequest, 'quantity' | 'id' | 'teamCode'>;
 
@@ -155,18 +154,12 @@ export class AssignmentService {
   }
 
   private buildVolunteerIsMemberOfTeamCondition(teamCode: string) {
-    const underlyingTeams = this.getUnderlyingTeams(teamCode);
+    const assignableTeams = getOtherAssignableTeams(teamCode);
     const team = TeamService.buildIsMemberOfCondition([
       teamCode,
-      ...underlyingTeams,
+      ...assignableTeams,
     ]);
     return team;
-  }
-
-  private getUnderlyingTeams(requestedTeamCode: string): string[] {
-    const teamIndex = UNDERLYING_TEAMS.indexOf(requestedTeamCode);
-    if (teamIndex === -1) return [];
-    return UNDERLYING_TEAMS.slice(0, teamIndex);
   }
 
   private buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({

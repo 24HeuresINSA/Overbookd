@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
+import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
 import { UserService } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
@@ -82,6 +83,7 @@ export class FtTimespanService {
       this.user.getUserTeams(volunteerId),
       this.volunteerAvailability.findUserAvailabilities(volunteerId),
     ]);
+
     const where = this.buildAssignableToTimespanCondition(
       volunteerTeams,
       availabilities,
@@ -98,7 +100,9 @@ export class FtTimespanService {
     volunteerTeams: string[],
     availabilities: PeriodDto[],
   ) {
-    const teamRequests = TeamService.buildIsMemberOfCondition(volunteerTeams);
+    const underlyingTeams = getUnderlyingTeams(volunteerTeams);
+    const teams = [...volunteerTeams, ...underlyingTeams];
+    const teamRequests = TeamService.buildIsMemberOfCondition(teams);
 
     const availabilitiesCondition =
       this.buildTimespanConditionOverAvailability(availabilities);
