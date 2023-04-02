@@ -6,9 +6,24 @@
         <v-icon v-if="volunteer.friendAvailable" small>
           mdi-account-group
         </v-icon>
-        <v-tooltip v-if="volunteer.comment">
+        <v-tooltip top>
           <template #activator="{ on, attrs }">
-            <v-icon small v-bind="attrs" v-on="on"> mdi-comment </v-icon>
+            <v-icon
+              v-if="volunteer.friendAvailable"
+              small
+              v-bind="attrs"
+              v-on="on"
+            >
+              mdi-account-group
+            </v-icon>
+          </template>
+          <span>Amis disponible sur le même créneau</span>
+        </v-tooltip>
+        <v-tooltip top max-width="20rem">
+          <template #activator="{ on, attrs }">
+            <v-icon v-if="volunteer.comment" small v-bind="attrs" v-on="on">
+              mdi-comment
+            </v-icon>
           </template>
           <span>{{ volunteer.comment }}</span>
         </v-tooltip>
@@ -95,6 +110,7 @@ export default Vue.extend({
 
   &__icons {
     display: flex;
+    gap: 5px;
   }
 }
 </style>
