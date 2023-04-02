@@ -7,6 +7,7 @@ import { FtTimespanService } from './ftTimespan.service';
 import { DatabaseVolunteer, Volunteer } from './types/volunteerTypes';
 import { TaskCategory } from '@prisma/client';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
+import { AssignmentService } from './assignment.service';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -36,6 +37,7 @@ export class VolunteerService {
   constructor(
     private prisma: PrismaService,
     private ftTimespan: FtTimespanService,
+    private assignmentService: AssignmentService,
   ) {}
 
   async findAllVolunteers(): Promise<Volunteer[]> {
@@ -61,7 +63,10 @@ export class VolunteerService {
       this.ftTimespan.findTimespanWithFt(timespanId),
     ]);
     const where = this.buildAssignableVolunteersCondition(ftTimespan);
-    const select = this.buildAssignableVolunteersSelection(ftCategory);
+    const select = this.buildAssignableVolunteersSelection(
+      ftTimespan,
+      ftCategory,
+    );
 
     const volunteers = await this.prisma.user.findMany({
       where,
@@ -82,35 +87,40 @@ export class VolunteerService {
     );
     const teams = [...requestedTeamCodes, ...assignableTeams];
     const team = TeamService.buildIsMemberOfCondition(teams);
-    const availabilities = this.buildAvailableVolunteersCondition(ftTimespan);
+    const availabilities =
+      this.assignmentService.buildVolunteerIsAvailableDuringPeriodCondition(
+        ftTimespan,
+      );
+
+    const assignments =
+      this.assignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
+        ftTimespan,
+      );
 
     return {
       is_deleted: false,
       AND: [{ team }, { ...WHERE_VALIDATED_USER }],
       availabilities,
+      assignments,
     };
   }
 
-  private buildAvailableVolunteersCondition(
+  private buildAssignableVolunteersSelection(
     ftTimespan: TimespanWithFtResponseDto,
+    category: TaskCategory | null,
   ) {
-    return {
-      some: {
-        start: {
-          lte: ftTimespan.start,
-        },
-        end: {
-          gte: ftTimespan.end,
-        },
-      },
-    };
-  }
-
-  private buildAssignableVolunteersSelection(category: TaskCategory | null) {
+    const assignablebleVolunteerCondition =
+      this.buildAssignableVolunteersCondition(ftTimespan);
     return {
       ...SELECT_VOLUNTEER,
       _count: {
         select: {
+          friends: {
+            where: { requestor: assignablebleVolunteerCondition },
+          },
+          friendRequestors: {
+            where: { friend: assignablebleVolunteerCondition },
+          },
           assignments: {
             where: {
               timespan: {
@@ -140,6 +150,8 @@ export class VolunteerService {
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
       assignments: volunteer._count?.assignments ?? 0,
+      friendAvailable:
+        volunteer?._count.friends + volunteer?._count.friendRequestors > 0,
     };
   }
 }

@@ -162,7 +162,7 @@ export class AssignmentService {
     return team;
   }
 
-  private buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
+  buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
     start,
     end,
   }: Period) {
@@ -173,10 +173,7 @@ export class AssignmentService {
     };
   }
 
-  private buildVolunteerIsAvailableDuringPeriodCondition({
-    start,
-    end,
-  }: Period) {
+  buildVolunteerIsAvailableDuringPeriodCondition({ start, end }: Period) {
     return {
       some: {
         start: { lte: start },

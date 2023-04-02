@@ -50,4 +50,11 @@ export class VolunteerResponseDto implements Volunteer {
     type: Number,
   })
   assignments: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Has friends available on the same timespan',
+    type: Boolean,
+  })
+  friendAvailable?: boolean;
 }
