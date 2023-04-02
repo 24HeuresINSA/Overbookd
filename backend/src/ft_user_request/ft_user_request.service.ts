@@ -59,18 +59,11 @@ export class FtUserRequestService {
     userRequest: DataBaseUserRequest,
   ): Promise<UserRequest> {
     const timeWindow = await this.retrieveTimeWindow(userRequest);
-    const isAvailable = await this.isUserAvailable(
-      userRequest.user.id,
-      timeWindow,
-    );
-    const fts = await this.findFtWhereUserIsAlsoRequestedInSamePeriod(
-      timeWindow,
-      userRequest,
-    );
-    const isAlreadyAssigned = await this.isUserAlreadyAssigned(
-      userRequest.user.id,
-      timeWindow,
-    );
+    const [isAvailable, fts, isAlreadyAssigned] = await Promise.all([
+      this.isUserAvailable(userRequest.user.id, timeWindow),
+      this.findFtWhereUserIsAlsoRequestedInSamePeriod(timeWindow, userRequest),
+      this.isUserAlreadyAssigned(userRequest.user.id, timeWindow)
+    ]);
     const alsoRequestedBy = fts.map(({ ft, start, end }) => ({
       ...ft,
       period: { start, end },
