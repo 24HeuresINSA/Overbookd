@@ -6,6 +6,7 @@ export interface UserRequest {
   user: UserNameWithId;
   alsoRequestedBy: AlsoRequestedByFT[];
   isAvailable: boolean;
+  isAlreadyAssigned: boolean;
 }
 
 export type DataBaseUserRequest = Pick<UserRequest, 'user'> & {
@@ -39,4 +40,10 @@ export class FtUserRequestResponseDto implements UserRequest {
     type: Boolean,
   })
   isAvailable: boolean;
+
+  @ApiProperty({
+    description: 'Is the volunteer already assigned during requested period',
+    type: Boolean,
+  })
+  isAlreadyAssigned: boolean;
 }

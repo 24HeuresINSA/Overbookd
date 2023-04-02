@@ -122,17 +122,25 @@ export interface FTUserRequest {
   user: User;
   alsoRequestedBy: AlsoRequiredByFt[];
   isAvailable: boolean;
+  isAlreadyAssigned: boolean;
 }
 
 export class FTUserRequestImpl implements FTUserRequest {
   user: User;
   alsoRequestedBy: AlsoRequiredByFt[];
   isAvailable: boolean;
+  isAlreadyAssigned: boolean;
 
-  constructor({ user, alsoRequestedBy, isAvailable }: FTUserRequest) {
+  constructor({
+    user,
+    alsoRequestedBy,
+    isAvailable,
+    isAlreadyAssigned,
+  }: FTUserRequest) {
     this.user = user;
     this.alsoRequestedBy = alsoRequestedBy;
     this.isAvailable = isAvailable;
+    this.isAlreadyAssigned = isAlreadyAssigned;
   }
 
   static build(userRequest: FTUserRequest): FTUserRequestImpl {

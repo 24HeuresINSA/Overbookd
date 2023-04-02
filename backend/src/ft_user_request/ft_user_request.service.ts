@@ -59,19 +59,16 @@ export class FtUserRequestService {
     userRequest: DataBaseUserRequest,
   ): Promise<UserRequest> {
     const timeWindow = await this.retrieveTimeWindow(userRequest);
-    const isAvailable = await this.isUserAvailable(userRequest.user.id, {
-      start: timeWindow.start,
-      end: timeWindow.end,
-    });
-    const fts = await this.findFtWhereUserIsAlsoRequestedInSamePeriod(
-      timeWindow,
-      userRequest,
-    );
+    const [isAvailable, fts, isAlreadyAssigned] = await Promise.all([
+      this.isUserAvailable(userRequest.user.id, timeWindow),
+      this.findFtWhereUserIsAlsoRequestedInSamePeriod(timeWindow, userRequest),
+      this.isUserAlreadyAssigned(userRequest.user.id, timeWindow),
+    ]);
     const alsoRequestedBy = fts.map(({ ft, start, end }) => ({
       ...ft,
       period: { start, end },
     }));
-    return { ...userRequest, alsoRequestedBy, isAvailable };
+    return { ...userRequest, alsoRequestedBy, isAvailable, isAlreadyAssigned };
   }
 
   private async isUserAvailable(
@@ -95,6 +92,30 @@ export class FtUserRequestService {
         userId,
         start: { lte: start },
         end: { gte: end },
+      },
+    });
+  }
+
+  private async isUserAlreadyAssigned(
+    userId: number,
+    period: Period,
+  ): Promise<boolean> {
+    const matchingAssignment = await this.findMatchingAssignment(
+      userId,
+      period,
+    );
+    return Boolean(matchingAssignment);
+  }
+
+  private async findMatchingAssignment(userId: number, { start, end }: Period) {
+    return this.prisma.assignment.findFirst({
+      select: { assigneeId: true },
+      where: {
+        assigneeId: userId,
+        timespan: {
+          start: { lt: end },
+          end: { gt: start },
+        },
       },
     });
   }

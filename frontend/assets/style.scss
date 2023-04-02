@@ -89,6 +89,19 @@
           );
         }
       }
+      &.already-assigned {
+        background-color: $conflict-already-assigned;
+        color: white;
+        .v-icon {
+          color: white;
+        }
+        &.v-chip--clickable:hover {
+          background-color: darken(
+            $color: $conflict-already-assigned,
+            $amount: 5%
+          );
+        }
+      }
     }
   }
 }

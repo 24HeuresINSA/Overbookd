@@ -201,13 +201,16 @@ export class FtReviewsService {
 
     const availableError = 'Certains bénévoles ne sont pas disponibles';
     const alsoRequestedByError = 'La FT a des conflits avec d’autres FTs';
+    const alreadyAssignedError = 'Certains bénévoles sont déjà affectés';
 
-    userRequests.map(({ alsoRequestedBy, isAvailable }) => {
-      if (isAvailable && alsoRequestedBy.length === 0) return;
+    userRequests.map(({ alsoRequestedBy, isAvailable, isAlreadyAssigned }) => {
+      if (isAvailable && alsoRequestedBy.length === 0 && !isAlreadyAssigned)
+        return;
 
       const errors = [
         !isAvailable ? availableError : '',
         alsoRequestedBy.length > 0 ? alsoRequestedByError : '',
+        isAlreadyAssigned ? alreadyAssignedError : '',
       ].filter((err) => err);
 
       throw new BadRequestException(errors.join(' & '));
