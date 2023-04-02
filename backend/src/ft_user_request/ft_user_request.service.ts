@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { PrismaService } from 'src/prisma.service';
 import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 import { Period } from 'src/volunteer-availability/domain/period.model';
@@ -14,8 +13,12 @@ type UserId = {
   userId: number;
 };
 
-type PeriodWithUserRequestedIds = PeriodForm & {
+type PeriodWithUserRequestedIds = Period & {
   userRequests: UserId[];
+};
+
+type TimeWindow = Period & {
+  ftId: number;
 };
 
 @Injectable()
@@ -98,16 +101,22 @@ export class FtUserRequestService {
 
   private async isUserAlreadyAssigned(
     userId: number,
-    period: Period,
+    timeWindow: TimeWindow,
   ): Promise<boolean> {
+    const { ftId, ...period } = timeWindow;
     const matchingAssignment = await this.findMatchingAssignment(
       userId,
+      ftId,
       period,
     );
     return Boolean(matchingAssignment);
   }
 
-  private async findMatchingAssignment(userId: number, { start, end }: Period) {
+  private async findMatchingAssignment(
+    userId: number,
+    ftId: number,
+    { start, end }: Period,
+  ) {
     return this.prisma.assignment.findFirst({
       select: { assigneeId: true },
       where: {
@@ -115,6 +124,7 @@ export class FtUserRequestService {
         timespan: {
           start: { lt: end },
           end: { gt: start },
+          timeWindow: { NOT: { ftId } },
         },
       },
     });
@@ -168,6 +178,7 @@ export class FtUserRequestService {
             userId: true,
           },
         },
+        ftId: true,
       },
     });
   }
