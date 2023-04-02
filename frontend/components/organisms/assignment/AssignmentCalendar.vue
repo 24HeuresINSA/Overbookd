@@ -23,6 +23,7 @@ import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
 import { CalendarItem } from "~/utils/models/calendar";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
@@ -71,9 +72,10 @@ export default Vue.extend({
   },
   methods: {
     isVolunteerAvailable(date: string, time: string) {
-      const datetime = new Date(`${date} ${time}`);
+      const start = new Date(`${date} ${time}`);
+      const end = computeNextHourDate(start);
       return this.availabilities.some(
-        isPeriodIncludedByAnother({ start: datetime, end: datetime })
+        isPeriodIncludedByAnother({ start, end })
       );
     },
     openFtNewTab(ftId: number) {
