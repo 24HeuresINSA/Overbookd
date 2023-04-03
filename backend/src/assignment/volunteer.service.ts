@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
+import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
-import {
-  DatabaseVolunteerWithAvailabilities,
-  SELECT_VOLUNTEER,
-} from './types/volunteerTypes';
-import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
+import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -97,14 +94,12 @@ export class VolunteerService {
   }
 
   private formatVolunteers(
-    volunteers: DatabaseVolunteerWithAvailabilities[],
+    volunteers: DatabaseVolunteer[],
   ): VolunteerResponseDto[] {
     return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
   }
 
-  private formatVolunteer(
-    volunteer: DatabaseVolunteerWithAvailabilities,
-  ): VolunteerResponseDto {
+  private formatVolunteer(volunteer: DatabaseVolunteer): VolunteerResponseDto {
     return {
       id: volunteer.id,
       firstname: volunteer.firstname,

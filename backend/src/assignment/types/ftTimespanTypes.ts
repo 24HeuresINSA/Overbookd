@@ -32,6 +32,9 @@ export interface DatabaseFtWithTimespans {
     teamRequests: {
       teamCode: string;
       quantity: number;
+      _count: {
+        assignments: number;
+      };
     }[];
   }[];
 }
@@ -78,6 +81,11 @@ export const SELECT_FT_WITH_TIMESPANS = {
         select: {
           teamCode: true,
           quantity: true,
+          _count: {
+            select: {
+              assignments: true,
+            },
+          },
         },
       },
     },

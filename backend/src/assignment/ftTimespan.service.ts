@@ -28,6 +28,16 @@ const WHERE_FT_EXISTS_AND_READY = {
   },
 };
 
+const WHERE_HAS_TEAM_REQUESTS = {
+  timeWindows: {
+    some: {
+      teamRequests: {
+        some: {},
+      },
+    },
+  },
+};
+
 @Injectable()
 export class FtTimespanService {
   constructor(
@@ -52,8 +62,11 @@ export class FtTimespanService {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
+        ...WHERE_HAS_TEAM_REQUESTS,
       },
-      select: SELECT_FT_WITH_TIMESPANS,
+      select: {
+        ...SELECT_FT_WITH_TIMESPANS,
+      },
     });
     return this.formatFtsWithTimespans(fts);
   }
@@ -167,8 +180,10 @@ export class FtTimespanService {
   private formatFtWithTimespans(
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
+    let assignmentCount = 0;
     const timespans = ft.timeWindows.flatMap((tw) => {
       const requestedTeams = tw.teamRequests.map((tr) => {
+        assignmentCount += tr._count.assignments;
         return {
           code: tr.teamCode,
           quantity: tr.quantity,
@@ -189,6 +204,7 @@ export class FtTimespanService {
       hasPriority: ft.hasPriority,
       category: ft.category,
       timespans,
+      assignmentCount,
     };
   }
 }

@@ -95,4 +95,11 @@ export class FtWithTimespansResponseDto extends SimplifiedFT {
     isArray: true,
   })
   timespans: FtTimespan[];
+
+  @ApiProperty({
+    required: true,
+    description: 'Number of assignments',
+    type: Number,
+  })
+  assignmentCount: number;
 }
