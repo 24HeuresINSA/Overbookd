@@ -31,7 +31,7 @@ class SimplifiedFT {
   category: TaskCategory;
 }
 
-class RequestedTeam {
+export class RequestedTeam {
   @ApiProperty({
     required: true,
     description: 'The code of the requested team',
@@ -45,6 +45,13 @@ class RequestedTeam {
     type: Number,
   })
   quantity: number;
+
+  @ApiProperty({
+    required: true,
+    description: 'Number of assignments',
+    type: Number,
+  })
+  assignmentCount: number;
 }
 
 class FtTimespan {

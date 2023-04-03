@@ -8,10 +8,12 @@ import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
   FtWithTimespansResponseDto,
+  RequestedTeam,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
 import {
   DatabaseFtWithTimespans,
+  DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
   SELECT_FT_WITH_TIMESPANS,
   SELECT_TIMESPAN_WITH_FT,
@@ -23,8 +25,16 @@ const WHERE_EXISTS_AND_READY = {
 };
 
 const WHERE_FT_EXISTS_AND_READY = {
-  ft: {
-    ...WHERE_EXISTS_AND_READY,
+  ft: WHERE_EXISTS_AND_READY,
+};
+
+const WHERE_HAS_TEAM_REQUESTS = {
+  timeWindows: {
+    some: {
+      teamRequests: {
+        some: {},
+      },
+    },
   },
 };
 
@@ -52,6 +62,7 @@ export class FtTimespanService {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
+        ...WHERE_HAS_TEAM_REQUESTS,
       },
       select: SELECT_FT_WITH_TIMESPANS,
     });
@@ -64,9 +75,7 @@ export class FtTimespanService {
     const ftTimespan = await this.prisma.ftTimespan.findFirst({
       where: {
         id: timespanId,
-        timeWindow: {
-          ...WHERE_FT_EXISTS_AND_READY,
-        },
+        timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select: SELECT_TIMESPAN_WITH_FT,
     });
@@ -138,12 +147,9 @@ export class FtTimespanService {
   private formatTimespanWithFt(
     ftTimespan: DatabaseTimespanWithFt,
   ): TimespanWithFtResponseDto {
-    const requestedTeams = ftTimespan.timeWindow.teamRequests.map((tr) => {
-      return {
-        code: tr.teamCode,
-        quantity: tr.quantity,
-      };
-    });
+    const requestedTeams = this.formatRequestedTeams(
+      ftTimespan.timeWindow.teamRequests,
+    );
     return {
       id: ftTimespan.id,
       start: ftTimespan.start,
@@ -168,12 +174,7 @@ export class FtTimespanService {
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
     const timespans = ft.timeWindows.flatMap((tw) => {
-      const requestedTeams = tw.teamRequests.map((tr) => {
-        return {
-          code: tr.teamCode,
-          quantity: tr.quantity,
-        };
-      });
+      const requestedTeams = this.formatRequestedTeams(tw.teamRequests);
       return tw.timespans.map((ts) => {
         return {
           id: ts.id,
@@ -190,5 +191,14 @@ export class FtTimespanService {
       category: ft.category,
       timespans,
     };
+  }
+
+  private formatRequestedTeams(
+    requestedTeams: DatabaseRequestedTeam[],
+  ): RequestedTeam[] {
+    return requestedTeams.map((tr) => {
+      const assignmentCount = tr._count.assignments;
+      return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
+    });
   }
 }
