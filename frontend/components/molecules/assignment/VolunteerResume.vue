@@ -17,7 +17,7 @@
               mdi-account-group
             </v-icon>
           </template>
-          <span>Amis disponible sur le même créneau</span>
+          <span>Amis disponibles sur le même créneau</span>
         </v-tooltip>
         <v-tooltip top max-width="20rem">
           <template #activator="{ on, attrs }">

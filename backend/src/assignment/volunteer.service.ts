@@ -37,7 +37,6 @@ export class VolunteerService {
   constructor(
     private prisma: PrismaService,
     private ftTimespan: FtTimespanService,
-    private assignmentService: AssignmentService,
   ) {}
 
   async findAllVolunteers(): Promise<Volunteer[]> {
@@ -88,18 +87,19 @@ export class VolunteerService {
     const teams = [...requestedTeamCodes, ...assignableTeams];
     const team = TeamService.buildIsMemberOfCondition(teams);
     const availabilities =
-      this.assignmentService.buildVolunteerIsAvailableDuringPeriodCondition(
+      AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(
         ftTimespan,
       );
 
     const assignments =
-      this.assignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
+      AssignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
         ftTimespan,
       );
 
     return {
+      ...WHERE_VALIDATED_USER,
       is_deleted: false,
-      AND: [{ team }, { ...WHERE_VALIDATED_USER }],
+      team,
       availabilities,
       assignments,
     };
