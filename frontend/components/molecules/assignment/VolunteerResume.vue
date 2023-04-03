@@ -62,11 +62,11 @@ export default Vue.extend({
     },
     assignmentStats(): string {
       const counter = this.volunteer.assignments;
-      return `Taches ${this.category.toLowerCase()}: ${counter}`;
+      return `Tâches ${this.category.toLowerCase()}: ${counter}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affectees";
-      return this.selectedFt?.category ?? "indeterminees";
+      if (!this.selectedFt) return "affectées";
+      return this.selectedFt?.category ?? "indéterminées";
     },
   },
   methods: {
