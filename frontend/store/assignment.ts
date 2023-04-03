@@ -30,12 +30,11 @@ export const state = () => ({
 export const getters = getterTree(state, {
   assignableFts(state) {
     return state.fts.filter((ft) => {
-      const teamRequestCount = ft.timespans
-        .flatMap((timespan) =>
-          timespan.requestedTeams.map((team) => team.quantity)
+      return ft.timespans.some((timespan) =>
+        timespan.requestedTeams.some(
+          (teamRequest) => teamRequest.quantity > teamRequest.assignmentCount
         )
-        .reduce((a, b) => a + b, 0);
-      return teamRequestCount > ft.assignmentCount;
+      );
     });
   },
 });

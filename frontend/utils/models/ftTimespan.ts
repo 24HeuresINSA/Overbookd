@@ -22,6 +22,7 @@ interface SimplifiedFT extends FtTimespanParameters {
 interface RequestedTeam {
   code: string;
   quantity: number;
+  assignmentCount: number;
 }
 
 export interface FtTimespan {
@@ -37,7 +38,6 @@ export interface TimespanWithFt extends FtTimespan {
 
 export interface FtWithTimespan extends SimplifiedFT {
   timespans: FtTimespan[];
-  assignmentCount: number;
 }
 
 export function getRequiredTeamsInFt(ft: FtWithTimespan): string[] {

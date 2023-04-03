@@ -8,10 +8,12 @@ import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
   FtWithTimespansResponseDto,
+  RequestedTeam,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
 import {
   DatabaseFtWithTimespans,
+  DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
   SELECT_FT_WITH_TIMESPANS,
   SELECT_TIMESPAN_WITH_FT,
@@ -151,12 +153,9 @@ export class FtTimespanService {
   private formatTimespanWithFt(
     ftTimespan: DatabaseTimespanWithFt,
   ): TimespanWithFtResponseDto {
-    const requestedTeams = ftTimespan.timeWindow.teamRequests.map((tr) => {
-      return {
-        code: tr.teamCode,
-        quantity: tr.quantity,
-      };
-    });
+    const requestedTeams = this.formatRequestedTeams(
+      ftTimespan.timeWindow.teamRequests,
+    );
     return {
       id: ftTimespan.id,
       start: ftTimespan.start,
@@ -180,15 +179,8 @@ export class FtTimespanService {
   private formatFtWithTimespans(
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
-    let assignmentCount = 0;
     const timespans = ft.timeWindows.flatMap((tw) => {
-      const requestedTeams = tw.teamRequests.map((tr) => {
-        assignmentCount += tr._count.assignments;
-        return {
-          code: tr.teamCode,
-          quantity: tr.quantity,
-        };
-      });
+      const requestedTeams = this.formatRequestedTeams(tw.teamRequests);
       return tw.timespans.map((ts) => {
         return {
           id: ts.id,
@@ -204,7 +196,15 @@ export class FtTimespanService {
       hasPriority: ft.hasPriority,
       category: ft.category,
       timespans,
-      assignmentCount,
     };
+  }
+
+  private formatRequestedTeams(
+    requestedTeams: DatabaseRequestedTeam[],
+  ): RequestedTeam[] {
+    return requestedTeams.map((tr) => {
+      const assignmentCount = tr._count.assignments;
+      return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
+    });
   }
 }

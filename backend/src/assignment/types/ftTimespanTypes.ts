@@ -1,5 +1,13 @@
 import { TaskCategory } from '@prisma/client';
 
+export interface DatabaseRequestedTeam {
+  teamCode: string;
+  quantity: number;
+  _count: {
+    assignments: number;
+  };
+}
+
 export interface DatabaseTimespanWithFt {
   id: number;
   start: Date;
@@ -11,10 +19,7 @@ export interface DatabaseTimespanWithFt {
       hasPriority: boolean;
       category: TaskCategory;
     };
-    teamRequests: {
-      teamCode: string;
-      quantity: number;
-    }[];
+    teamRequests: DatabaseRequestedTeam[];
   };
 }
 
@@ -29,15 +34,21 @@ export interface DatabaseFtWithTimespans {
       start: Date;
       end: Date;
     }[];
-    teamRequests: {
-      teamCode: string;
-      quantity: number;
-      _count: {
-        assignments: number;
-      };
-    }[];
+    teamRequests: DatabaseRequestedTeam[];
   }[];
 }
+
+const SELECT_TEAM_REQUEST = {
+  select: {
+    teamCode: true,
+    quantity: true,
+    _count: {
+      select: {
+        assignments: true,
+      },
+    },
+  },
+};
 
 export const SELECT_TIMESPAN_WITH_FT = {
   id: true,
@@ -53,12 +64,7 @@ export const SELECT_TIMESPAN_WITH_FT = {
           category: true,
         },
       },
-      teamRequests: {
-        select: {
-          teamCode: true,
-          quantity: true,
-        },
-      },
+      teamRequests: SELECT_TEAM_REQUEST,
     },
   },
 };
@@ -77,17 +83,7 @@ export const SELECT_FT_WITH_TIMESPANS = {
           end: true,
         },
       },
-      teamRequests: {
-        select: {
-          teamCode: true,
-          quantity: true,
-          _count: {
-            select: {
-              assignments: true,
-            },
-          },
-        },
-      },
+      teamRequests: SELECT_TEAM_REQUEST,
     },
   },
 };
