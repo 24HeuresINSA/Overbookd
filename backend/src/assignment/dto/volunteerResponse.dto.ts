@@ -1,21 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class CategoryAssignmentStat {
-  @ApiProperty({
-    required: true,
-    description: 'The category of the assignment',
-    type: String,
-  })
-  name: string;
-
-  @ApiProperty({
-    required: true,
-    description: 'The number of assignments for this category',
-    type: Number,
-  })
-  count: number;
-}
-
 export class VolunteerResponseDto {
   @ApiProperty({
     required: true,
@@ -61,8 +45,8 @@ export class VolunteerResponseDto {
 
   @ApiProperty({
     required: false,
-    description: 'The Category assignment stat of the volunteer',
-    type: CategoryAssignmentStat,
+    description: 'The category task count of the volunteer',
+    type: Number,
   })
-  categoryStat?: CategoryAssignmentStat;
+  categoryTaskCount?: number;
 }

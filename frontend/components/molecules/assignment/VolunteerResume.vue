@@ -68,7 +68,7 @@ export default Vue.extend({
       return Boolean(this.selectedFt !== null && this.selectedFt?.category);
     },
     categoryStatText(): string {
-      return `${this.selectedFt?.category} : 2`; //TODO: get real stat
+      return `${this.selectedFt?.category}: ${this.volunteer.categoryTaskCount}`;
     },
   },
   methods: {

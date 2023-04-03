@@ -58,7 +58,7 @@ export class VolunteerService {
       orderBy: { charisma: 'desc' },
     });
     console.log(volunteers[0]._count.assignments);
-    return this.formatVolunteers(volunteers, ftCategory);
+    return this.formatVolunteers(volunteers);
   }
 
   private buildAssignableVolunteersCondition(
@@ -121,17 +121,11 @@ export class VolunteerService {
 
   private formatVolunteers(
     volunteers: DatabaseVolunteer[],
-    category?: TaskCategory,
   ): VolunteerResponseDto[] {
-    return volunteers.map((volunteer) =>
-      this.formatVolunteer(volunteer, category),
-    );
+    return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
   }
 
-  private formatVolunteer(
-    volunteer: DatabaseVolunteer,
-    category?: TaskCategory,
-  ): VolunteerResponseDto {
+  private formatVolunteer(volunteer: DatabaseVolunteer): VolunteerResponseDto {
     const formattedVolunteer = {
       id: volunteer.id,
       firstname: volunteer.firstname,
@@ -141,13 +135,10 @@ export class VolunteerService {
       teams: volunteer.team.map((t) => t.team.code),
     };
 
-    if (category) {
+    if (volunteer?._count) {
       return {
         ...formattedVolunteer,
-        categoryStat: {
-          name: category,
-          count: volunteer._count.assignments,
-        },
+        categoryTaskCount: volunteer._count.assignments,
       };
     }
     return formattedVolunteer;
