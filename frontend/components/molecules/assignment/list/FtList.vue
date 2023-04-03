@@ -33,18 +33,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  FtWithTimespan,
-  getRequiredTeamsInFt,
-} from "~/utils/models/ftTimespan";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import { FtWithTeamRequests } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FtList",
   components: { TeamIconChip },
   props: {
     fts: {
-      type: Array as () => FtWithTimespan[],
+      type: Array as () => FtWithTeamRequests[],
       required: true,
       default: () => [],
     },
@@ -56,13 +53,12 @@ export default Vue.extend({
     ],
   }),
   methods: {
-    getRequiredTeams(ft: FtWithTimespan) {
-      return getRequiredTeamsInFt(ft);
+    getRequiredTeams(ft: FtWithTeamRequests) {
+      return [...new Set(ft.teamRequests.map(({ code }) => code))];
     },
-    selectFt(ft: FtWithTimespan) {
+    selectFt(ft: FtWithTeamRequests) {
       this.$accessor.assignment.setSelectedFt(ft);
-      // TODO: A retirer quand il y aura le calendrier
-      this.$accessor.assignment.setSelectedTimespan(ft.timespans[0]);
+      this.$accessor.assignment.setVolunteers([]);
     },
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");

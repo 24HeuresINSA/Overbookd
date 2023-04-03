@@ -61,7 +61,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('ft-timespans')
+  @Get('fts')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -69,8 +69,8 @@ export class AssignmentController {
     isArray: true,
     type: FtWithTimespansResponseDto,
   })
-  findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
-    return this.ftTimespanService.findAllFtsWithTimespans();
+  findAllFtsWithRequestedTeams(): Promise<FtWithTimespansResponseDto[]> {
+    return this.ftTimespanService.findAllFtsWithRequestedTeams();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

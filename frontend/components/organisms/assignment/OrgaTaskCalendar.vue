@@ -34,7 +34,7 @@ interface CalendarItemWithTimespan extends CalendarItem {
 }
 
 export default Vue.extend({
-  name: "AssignmentCalendar",
+  name: "OrgaTaskCalendar",
   components: { OverCalendarV2 },
   data: () => ({
     calendarMarker: new Date(),
