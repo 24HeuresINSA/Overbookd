@@ -1,12 +1,11 @@
-import { getterTree, actionTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
 import {
-  castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
   FtTimespan,
-  FtWithTimespan,
+  FtWithTeamRequests,
   TimespanWithFt,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
@@ -17,26 +16,14 @@ const AssignmentRepo = RepoFactory.AssignmentRepository;
 export const state = () => ({
   volunteers: [] as Volunteer[],
   timespans: [] as TimespanWithFt[],
-  fts: [] as FtWithTimespan[],
+  fts: [] as FtWithTeamRequests[],
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
-  selectedFt: null as FtWithTimespan | null,
+  selectedFt: null as FtWithTeamRequests | null,
 
   hoverTimespan: null as TimespanWithFt | null,
-});
-
-export const getters = getterTree(state, {
-  assignableFts(state) {
-    return state.fts.filter((ft) => {
-      return ft.timespans.some((timespan) =>
-        timespan.requestedTeams.some(
-          (teamRequest) => teamRequest.quantity > teamRequest.assignmentCount
-        )
-      );
-    });
-  },
 });
 
 export const mutations = mutationTree(state, {
@@ -48,7 +35,7 @@ export const mutations = mutationTree(state, {
     state.timespans = timespansWithFt;
   },
 
-  SET_FTS(state, ftWithTimespans: FtWithTimespan[]) {
+  SET_FTS(state, ftWithTimespans: FtWithTeamRequests[]) {
     state.fts = ftWithTimespans;
   },
 
@@ -64,7 +51,7 @@ export const mutations = mutationTree(state, {
     state.selectedTimespan = timespan;
   },
 
-  SET_SELECTED_FT(state, ft: FtWithTimespan) {
+  SET_SELECTED_FT(state, ft: FtWithTeamRequests) {
     state.selectedFt = ft;
   },
 
@@ -108,14 +95,21 @@ export const actions = actionTree(
       dispatch("fetchVolunteersForTimespan", timespan.id);
     },
 
-    setSelectedFt({ commit }, ft: FtWithTimespan) {
+    setSelectedFt({ commit }, ft: FtWithTeamRequests) {
       commit("SET_SELECTED_FT", ft);
     },
 
-    async fetchFtsWithTimespans({ commit }) {
-      const res = await safeCall(this, AssignmentRepo.getFtWithTimespans(this));
+    setVolunteers({ commit }, volunteers: Volunteer[]) {
+      commit("SET_VOLUNTEERS", volunteers);
+    },
+
+    async fetchFtsWithTeamRequests({ commit }) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.getFtWithTeamRequests(this)
+      );
       if (!res) return;
-      commit("SET_FTS", castFtsWithTimespansWithDate(res.data));
+      commit("SET_FTS", res.data);
     },
 
     async fetchTimespansForVolunteer({ commit }, volunteerId: number) {
