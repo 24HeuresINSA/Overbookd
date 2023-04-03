@@ -48,6 +48,10 @@ export interface FtWithTeamRequests extends SimplifiedFT {
   teamRequests: RequestedTeam[];
 }
 
+export interface TimespansWithStats extends FtTimespan {
+  teamRequest: RequestedTeam;
+}
+
 export function castTimespansWithFtWithDate(
   timespansWithFt: HttpStringified<TimespanWithFt[]>
 ): TimespanWithFt[] {

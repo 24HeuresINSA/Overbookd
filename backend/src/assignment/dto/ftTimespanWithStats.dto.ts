@@ -6,7 +6,7 @@ class TeamRequestStatDto {
     description: 'The code of the requested team',
     type: String,
   })
-  teamCode: string;
+  code: string;
 
   @ApiProperty({
     required: true,
@@ -48,8 +48,7 @@ export class FtTimespanWithStatsDto {
   @ApiProperty({
     required: true,
     description: 'The ft timespan requested teams',
-    isArray: true,
     type: TeamRequestStatDto,
   })
-  teamRequests: TeamRequestStatDto[];
+  teamRequest: TeamRequestStatDto;
 }
