@@ -123,7 +123,8 @@ export class FtTimespanService {
         start: timespan.start,
         end: timespan.end,
         teamRequests: timeWindow.teamRequests.map((teamRequest) => ({
-          ...teamRequest,
+          code: teamRequest.teamCode,
+          quantity: teamRequest.quantity,
           assignmentCount: timespan.assignments.filter(
             (assignment) =>
               assignment.teamRequest?.teamCode === teamRequest.teamCode,
@@ -132,7 +133,16 @@ export class FtTimespanService {
       })),
     );
 
-    return timespans;
+    const timespansWithStats = timespans.flatMap((timespan) =>
+      timespan.teamRequests.map((teamRequest) => ({
+        id: timespan.id,
+        start: timespan.start,
+        end: timespan.end,
+        teamRequest,
+      })),
+    );
+
+    return timespansWithStats;
   }
 
   async findTimespanWithFt(
