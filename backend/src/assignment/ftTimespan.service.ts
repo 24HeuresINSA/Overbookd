@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
-  FtWithTimespansResponseDto,
+  FtWithTeamRequestsResponseDto,
   RequestedTeam,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
@@ -18,6 +18,7 @@ import {
   SELECT_FT_WITH_TEAM_REQUESTS,
   SELECT_TIMESPAN_WITH_FT,
 } from './types/ftTimespanTypes';
+import { FtTimespanWithStatsDto } from './dto/ftTimespanWithStats.dto';
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
@@ -56,7 +57,9 @@ export class FtTimespanService {
     return this.formatTimespansWithFt(ftTimespans);
   }
 
-  async findAllFtsWithRequestedTeams(): Promise<FtWithTimespansResponseDto[]> {
+  async findAllFtsWithRequestedTeams(): Promise<
+    FtWithTeamRequestsResponseDto[]
+  > {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
@@ -66,6 +69,70 @@ export class FtTimespanService {
     });
     const formattedFts = this.formatFtsWithTeamRequests(fts);
     return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
+  }
+
+  async findTimespansWithStats(
+    ftId: number,
+  ): Promise<FtTimespanWithStatsDto[]> {
+    const ft = await this.prisma.ft.findFirst({
+      where: {
+        id: ftId,
+        ...WHERE_EXISTS_AND_READY,
+        ...WHERE_HAS_TEAM_REQUESTS,
+      },
+      select: {
+        timeWindows: {
+          select: {
+            teamRequests: {
+              select: {
+                teamCode: true,
+                quantity: true,
+              },
+            },
+            timespans: {
+              select: {
+                id: true,
+                start: true,
+                end: true,
+                assignments: {
+                  select: {
+                    teamRequest: {
+                      select: {
+                        teamCode: true,
+                      },
+                    },
+                  },
+                  where: {
+                    userRequest: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!ft) {
+      throw new NotFoundException(`FT with id ${ftId} not found`);
+    }
+
+    const timespans = ft.timeWindows.flatMap((timeWindow) =>
+      timeWindow.timespans.map((timespan) => ({
+        id: timespan.id,
+        start: timespan.start,
+        end: timespan.end,
+        teamRequests: timeWindow.teamRequests.map((teamRequest) => ({
+          ...teamRequest,
+          assignmentCount: timespan.assignments.filter(
+            (assignment) =>
+              assignment.teamRequest?.teamCode === teamRequest.teamCode,
+          ).length,
+        })),
+      })),
+    );
+
+    return timespans;
   }
 
   async findTimespanWithFt(
@@ -189,13 +256,13 @@ export class FtTimespanService {
 
   private formatFtsWithTeamRequests(
     fts: DatabaseFtWithTimespans[],
-  ): FtWithTimespansResponseDto[] {
+  ): FtWithTeamRequestsResponseDto[] {
     return fts.map((ft) => this.formatFtWithTeamRequests(ft));
   }
 
   private formatFtWithTeamRequests(
     ft: DatabaseFtWithTimespans,
-  ): FtWithTimespansResponseDto {
+  ): FtWithTeamRequestsResponseDto {
     const teamRequests = ft.timeWindows.flatMap((tw) => {
       return this.formatRequestedTeams(tw.teamRequests);
     });
@@ -218,8 +285,8 @@ export class FtTimespanService {
   }
 
   private filterFtsWithoutAssignableTeamRequests(
-    fts: FtWithTimespansResponseDto[],
-  ): FtWithTimespansResponseDto[] {
+    fts: FtWithTeamRequestsResponseDto[],
+  ): FtWithTeamRequestsResponseDto[] {
     return fts.filter((ft) =>
       ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
     );
