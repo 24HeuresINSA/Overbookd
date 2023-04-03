@@ -1,5 +1,9 @@
 <template>
-  <v-virtual-scroll :items="volunteers" item-height="60" class="virtual-scroll">
+  <v-virtual-scroll
+    :items="volunteers"
+    :item-height="shouldShowStat ? '75' : '60'"
+    class="virtual-scroll"
+  >
     <template #default="{ item }">
       <v-list-item
         :key="item.id"
@@ -16,6 +20,7 @@
 import Vue from "vue";
 import VolunteerResume from "~/components/molecules/assignment/VolunteerResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "VolunteerList",
@@ -25,6 +30,14 @@ export default Vue.extend({
       type: Array as () => Volunteer[],
       required: true,
       default: () => [],
+    },
+  },
+  computed: {
+    selectedFt(): FtWithTimespan | null {
+      return this.$accessor.assignment.selectedFt;
+    },
+    shouldShowStat(): boolean {
+      return Boolean(this.selectedFt !== null && this.selectedFt.category);
     },
   },
   methods: {

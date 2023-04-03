@@ -1,8 +1,12 @@
 <template>
-  <div class="volunteer-card" @contextmenu.prevent="openCalendar">
-    <div class="volunteer-card__info-row">
+  <div
+    class="volunteer-card"
+    :class="shouldShowStat ? 'volunteer-card--with-stat' : ''"
+    @contextmenu.prevent="openCalendar"
+  >
+    <div class="info-row">
       <span>{{ formattedUserInformations }}</span>
-      <div class="icons">
+      <div class="info-row__icons">
         <v-tooltip v-if="volunteer.comment">
           <template #activator="{ on, attrs }">
             <v-icon small v-bind="attrs" v-on="on"> mdi-comment </v-icon>
@@ -12,25 +16,27 @@
       </div>
     </div>
     <div>
-      <TeamChip
+      <TeamIconChip
         v-for="team of sortedVolunteerTeams"
         :key="team"
         :team="team"
-      ></TeamChip>
+      ></TeamIconChip>
     </div>
+    <p v-show="shouldShowStat">{{ categoryStatText }}</p>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 import { moveAtFirstIndex } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "VolunteerResume",
-  components: { TeamChip },
+  components: { TeamIconChip },
   props: {
     volunteer: {
       type: Object as () => Volunteer,
@@ -55,6 +61,15 @@ export default Vue.extend({
     formattedUserInformations(): string {
       return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
     },
+    selectedFt(): FtWithTimespan | null {
+      return this.$accessor.assignment.selectedFt;
+    },
+    shouldShowStat(): boolean {
+      return Boolean(this.selectedFt !== null && this.selectedFt?.category);
+    },
+    categoryStatText(): string {
+      return `${this.selectedFt?.category} : 2`; //TODO: get real stat
+    },
   },
   methods: {
     openCalendar() {
@@ -72,13 +87,17 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
 
-  &__info-row {
-    display: flex;
-    justify-content: space-between;
+  &--with-stat {
+    height: 75px;
+  }
+}
 
-    .icons {
-      display: flex;
-    }
+.info-row {
+  display: flex;
+  justify-content: space-between;
+
+  &__icons {
+    display: flex;
   }
 }
 </style>

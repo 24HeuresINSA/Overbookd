@@ -21,11 +21,11 @@
               {{ formatDate(item.start) }}
             </td>
             <td>
-              <TeamChip
+              <TeamIconChip
                 v-for="requestedTeam of item.requestedTeams"
                 :key="requestedTeam.code"
                 :team="requestedTeam.code"
-              ></TeamChip>
+              ></TeamIconChip>
             </td>
           </tr>
         </tbody>
@@ -38,11 +38,11 @@
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 
 export default Vue.extend({
   name: "FtTimespanList",
-  components: { TeamChip },
+  components: { TeamIconChip },
   props: {
     timespans: {
       type: Array as () => TimespanWithFt[],

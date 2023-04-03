@@ -18,11 +18,11 @@
           >
             <td>{{ item.id }} - {{ item.name }}</td>
             <td>
-              <TeamChip
+              <TeamIconChip
                 v-for="teamCode of getRequiredTeams(item)"
                 :key="teamCode"
                 :team="teamCode"
-              ></TeamChip>
+              ></TeamIconChip>
             </td>
           </tr>
         </tbody>
@@ -37,11 +37,11 @@ import {
   FtWithTimespan,
   getRequiredTeamsInFt,
 } from "~/utils/models/ftTimespan";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 
 export default Vue.extend({
   name: "FtList",
-  components: { TeamChip },
+  components: { TeamIconChip },
   props: {
     fts: {
       type: Array as () => FtWithTimespan[],
