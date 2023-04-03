@@ -1,8 +1,8 @@
 <template>
   <div class="volunteer-card" @contextmenu.prevent="openCalendar">
-    <div class="volunteer-card__info-row">
+    <div class="info-row">
       <span>{{ formattedUserInformations }}</span>
-      <div class="icons">
+      <div class="info-row__icons">
         <v-tooltip v-if="volunteer.comment">
           <template #activator="{ on, attrs }">
             <v-icon small v-bind="attrs" v-on="on"> mdi-comment </v-icon>
@@ -12,25 +12,27 @@
       </div>
     </div>
     <div>
-      <TeamChip
+      <TeamIconChip
         v-for="team of sortedVolunteerTeams"
         :key="team"
         :team="team"
-      ></TeamChip>
+      ></TeamIconChip>
     </div>
+    <p>{{ assignmentStats }}</p>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 import { moveAtFirstIndex } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "VolunteerResume",
-  components: { TeamChip },
+  components: { TeamIconChip },
   props: {
     volunteer: {
       type: Object as () => Volunteer,
@@ -55,6 +57,17 @@ export default Vue.extend({
     formattedUserInformations(): string {
       return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
     },
+    selectedFt(): FtWithTimespan | null {
+      return this.$accessor.assignment.selectedFt;
+    },
+    assignmentStats(): string {
+      const counter = this.volunteer.assignments;
+      return `Tâches ${this.category.toLowerCase()}: ${counter}`;
+    },
+    category(): string {
+      if (!this.selectedFt) return "affectées";
+      return this.selectedFt?.category ?? "indéterminées";
+    },
   },
   methods: {
     openCalendar() {
@@ -67,18 +80,18 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .volunteer-card {
   width: 100%;
-  height: 60px;
+  height: 75px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
 
-  &__info-row {
+.info-row {
+  display: flex;
+  justify-content: space-between;
+
+  &__icons {
     display: flex;
-    justify-content: space-between;
-
-    .icons {
-      display: flex;
-    }
   }
 }
 </style>

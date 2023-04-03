@@ -9,6 +9,7 @@ export interface Volunteer extends User {
   charisma: number;
   comment?: string;
   teams: string[];
+  assignments: number;
 }
 
 export function getAssignmentModeFromRoute(url: string): string {

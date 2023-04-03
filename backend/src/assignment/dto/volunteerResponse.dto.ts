@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Volunteer } from '../types/volunteerTypes';
 
-export class VolunteerResponseDto {
+export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({
     required: true,
     description: 'The id of the volunteer',
@@ -42,4 +43,11 @@ export class VolunteerResponseDto {
     isArray: true,
   })
   teams: string[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The category task count of the volunteer',
+    type: Number,
+  })
+  assignments: number;
 }

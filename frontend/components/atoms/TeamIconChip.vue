@@ -6,7 +6,13 @@
   >
     <v-tooltip top>
       <template #activator="{ on, attrs }">
-        <v-icon v-if="getTeamMetadate(team)" small v-bind="attrs" v-on="on">
+        <v-icon
+          v-if="getTeamMetadate(team)"
+          small
+          v-bind="attrs"
+          color="white"
+          v-on="on"
+        >
           {{ getTeamMetadate(team).icon }}
         </v-icon>
       </template>
@@ -19,7 +25,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "TeamChip",
+  name: "TeamIconChip",
   props: {
     team: {
       type: String,
