@@ -61,15 +61,15 @@ export class VolunteerService {
       this.ftTimespan.getTaskCategory(timespanId),
       this.ftTimespan.findTimespanWithFt(timespanId),
     ]);
-    const where = this.buildAssignableVolunteersCondition(ftTimespan);
     const select = this.buildAssignableVolunteersSelection(
       ftTimespan,
       ftCategory,
     );
+    const where = this.buildAssignableVolunteersCondition(ftTimespan);
 
     const volunteers = await this.prisma.user.findMany({
-      where,
       select,
+      where,
       orderBy: { charisma: 'desc' },
     });
     return this.formatVolunteers(volunteers);
@@ -132,6 +132,14 @@ export class VolunteerService {
               },
             },
           },
+          ftUserRequests: {
+            where: {
+              ftTimeWindows: {
+                start: { lt: ftTimespan.end },
+                end: { gt: ftTimespan.start },
+              },
+            },
+          },
         },
       },
     };
@@ -152,6 +160,7 @@ export class VolunteerService {
       assignments: volunteer._count?.assignments ?? 0,
       friendAvailable:
         volunteer?._count.friends + volunteer?._count.friendRequestors > 0,
+      hasUserRequest: volunteer?._count?.ftUserRequests > 0,
     };
   }
 }

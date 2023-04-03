@@ -57,4 +57,10 @@ export class VolunteerResponseDto implements Volunteer {
     type: Boolean,
   })
   friendAvailable?: boolean;
+
+  @ApiProperty({
+    description: 'Whether the volunteer has a user request on the timespan',
+    type: Boolean,
+  })
+  hasUserRequest?: boolean;
 }

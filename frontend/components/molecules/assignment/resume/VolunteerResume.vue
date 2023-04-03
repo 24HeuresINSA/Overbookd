@@ -25,6 +25,22 @@
             </template>
             <span>{{ volunteer.comment }}</span>
           </v-tooltip>
+          <v-tooltip top>
+            <template #activator="{ on, attrs }">
+              <v-icon
+                v-if="volunteer.hasUserRequest"
+                small
+                color="orange"
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-alert
+              </v-icon>
+            </template>
+            <span>
+              Ce bénévole est demandé sur ce créneau dans une FT non terminée
+            </span>
+          </v-tooltip>
         </div>
       </div>
       <div>
