@@ -57,7 +57,6 @@ export class VolunteerService {
       select,
       orderBy: { charisma: 'desc' },
     });
-    console.log(volunteers[0]._count.assignments);
     return this.formatVolunteers(volunteers);
   }
 
