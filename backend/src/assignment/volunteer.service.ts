@@ -6,6 +6,7 @@ import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
+import { TaskCategory } from '@prisma/client';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -35,9 +36,7 @@ export class VolunteerService {
         ...WHERE_VALIDATED_USER,
       },
       select: SELECT_VOLUNTEER,
-      orderBy: {
-        charisma: 'desc',
-      },
+      orderBy: { charisma: 'desc' },
     });
     return this.formatVolunteers(volunteers);
   }
@@ -45,17 +44,21 @@ export class VolunteerService {
   async findAvailableVolunteersForFtTimespan(
     timespanId: number,
   ): Promise<VolunteerResponseDto[]> {
-    const ftTimespan = await this.ftTimespan.findTimespanWithFt(timespanId);
+    const [ftCategory, ftTimespan] = await Promise.all([
+      this.ftTimespan.getCategoryByTimespan(timespanId),
+      this.ftTimespan.findTimespanWithFt(timespanId),
+    ]);
     const where = this.buildAssignableVolunteersCondition(ftTimespan);
+    const select =
+      this.buildAssignableVolunteersWithCategoryTaskCountSelection(ftCategory);
 
     const volunteers = await this.prisma.user.findMany({
       where,
-      select: SELECT_VOLUNTEER,
-      orderBy: {
-        charisma: 'desc',
-      },
+      select,
+      orderBy: { charisma: 'desc' },
     });
-    return this.formatVolunteers(volunteers);
+    console.log(volunteers[0]._count.assignments);
+    return this.formatVolunteers(volunteers, ftCategory);
   }
 
   private buildAssignableVolunteersCondition(
@@ -93,14 +96,43 @@ export class VolunteerService {
     };
   }
 
-  private formatVolunteers(
-    volunteers: DatabaseVolunteer[],
-  ): VolunteerResponseDto[] {
-    return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
+  private buildAssignableVolunteersWithCategoryTaskCountSelection(
+    category: TaskCategory,
+  ) {
+    return {
+      ...SELECT_VOLUNTEER,
+      _count: {
+        select: {
+          assignments: {
+            where: {
+              timespan: {
+                timeWindow: {
+                  ft: {
+                    category,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
   }
 
-  private formatVolunteer(volunteer: DatabaseVolunteer): VolunteerResponseDto {
-    return {
+  private formatVolunteers(
+    volunteers: DatabaseVolunteer[],
+    category?: TaskCategory,
+  ): VolunteerResponseDto[] {
+    return volunteers.map((volunteer) =>
+      this.formatVolunteer(volunteer, category),
+    );
+  }
+
+  private formatVolunteer(
+    volunteer: DatabaseVolunteer,
+    category?: TaskCategory,
+  ): VolunteerResponseDto {
+    const formattedVolunteer = {
       id: volunteer.id,
       firstname: volunteer.firstname,
       lastname: volunteer.lastname,
@@ -108,5 +140,16 @@ export class VolunteerService {
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
     };
+
+    if (category) {
+      return {
+        ...formattedVolunteer,
+        categoryStat: {
+          name: category,
+          count: volunteer._count.assignments,
+        },
+      };
+    }
+    return formattedVolunteer;
   }
 }

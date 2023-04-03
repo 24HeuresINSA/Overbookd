@@ -7,6 +7,9 @@ export interface DatabaseVolunteer extends Omit<VolunteerResponseDto, 'teams'> {
       code: string;
     };
   }[];
+  _count?: {
+    assignments: number;
+  };
 }
 
 export const SELECT_VOLUNTEER = {

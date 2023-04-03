@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FtStatus } from '@prisma/client';
+import { FtStatus, TaskCategory } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
@@ -49,9 +49,7 @@ export class FtTimespanService {
   async findAllTimespansWithFt(): Promise<TimespanWithFtResponseDto[]> {
     const ftTimespans = await this.prisma.ftTimespan.findMany({
       where: {
-        timeWindow: {
-          ...WHERE_FT_EXISTS_AND_READY,
-        },
+        timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select: SELECT_TIMESPAN_WITH_FT,
     });
@@ -103,6 +101,30 @@ export class FtTimespanService {
       where,
     });
     return this.formatTimespansWithFt(timespans);
+  }
+
+  async getCategoryByTimespan(timespanId: number): Promise<TaskCategory> {
+    const ftTimespan = await this.prisma.ftTimespan.findFirst({
+      where: {
+        id: timespanId,
+        timeWindow: WHERE_FT_EXISTS_AND_READY,
+      },
+      select: {
+        timeWindow: {
+          select: {
+            ft: {
+              select: {
+                category: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!ftTimespan) {
+      throw new NotFoundException(`Créneau ${timespanId} non trouvé`);
+    }
+    return ftTimespan.timeWindow.ft.category;
   }
 
   private buildAssignableToTimespanCondition(
