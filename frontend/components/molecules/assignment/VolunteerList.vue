@@ -16,7 +16,6 @@
 import Vue from "vue";
 import VolunteerResume from "~/components/molecules/assignment/VolunteerResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "VolunteerList",
@@ -26,11 +25,6 @@ export default Vue.extend({
       type: Array as () => Volunteer[],
       required: true,
       default: () => [],
-    },
-  },
-  computed: {
-    selectedFt(): FtWithTimespan | null {
-      return this.$accessor.assignment.selectedFt;
     },
   },
   methods: {
