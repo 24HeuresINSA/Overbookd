@@ -1,7 +1,7 @@
 <template>
   <v-container class="assignment-container">
     <FilterableVolunteerList class="volunteer-list" />
-    <AssignmentCalendar class="calendar" />
+    <TaskOrgaCalendar class="calendar" />
     <FilterableFtList class="task-list" />
   </v-container>
 </template>
@@ -9,25 +9,25 @@
 <script lang="ts">
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import { FtWithTeamRequests } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
-import AssignmentCalendar from "~/components/organisms/assignment/AssignmentCalendar.vue";
+import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
 
 export default Vue.extend({
   name: "TaskOrga",
   components: {
     FilterableVolunteerList,
     FilterableFtList,
-    AssignmentCalendar,
+    TaskOrgaCalendar,
   },
   computed: {
-    ftWithTimespans(): FtWithTimespan[] {
+    ftWithTimespans(): FtWithTeamRequests[] {
       return this.$accessor.assignment.fts;
     },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchFtsWithTimespans();
+    await this.$accessor.assignment.fetchFtsWithTeamRequests();
   },
 });
 </script>

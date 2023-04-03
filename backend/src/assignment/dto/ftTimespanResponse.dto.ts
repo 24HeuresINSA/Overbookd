@@ -101,5 +101,5 @@ export class FtWithTimespansResponseDto extends SimplifiedFT {
     type: FtTimespan,
     isArray: true,
   })
-  timespans: FtTimespan[];
+  teamRequests: RequestedTeam[];
 }

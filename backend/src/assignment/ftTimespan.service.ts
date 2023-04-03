@@ -15,7 +15,7 @@ import {
   DatabaseFtWithTimespans,
   DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
-  SELECT_FT_WITH_TIMESPANS,
+  SELECT_FT_WITH_TEAM_REQUESTS,
   SELECT_TIMESPAN_WITH_FT,
 } from './types/ftTimespanTypes';
 
@@ -56,15 +56,16 @@ export class FtTimespanService {
     return this.formatTimespansWithFt(ftTimespans);
   }
 
-  async findAllFtsWithTimespans(): Promise<FtWithTimespansResponseDto[]> {
+  async findAllFtsWithRequestedTeams(): Promise<FtWithTimespansResponseDto[]> {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
         ...WHERE_HAS_TEAM_REQUESTS,
       },
-      select: SELECT_FT_WITH_TIMESPANS,
+      select: SELECT_FT_WITH_TEAM_REQUESTS,
     });
-    return this.formatFtsWithTimespans(fts);
+    const formattedFts = this.formatFtsWithTeamRequests(fts);
+    return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
   }
 
   async findTimespanWithFt(
@@ -186,32 +187,24 @@ export class FtTimespanService {
     };
   }
 
-  private formatFtsWithTimespans(
+  private formatFtsWithTeamRequests(
     fts: DatabaseFtWithTimespans[],
   ): FtWithTimespansResponseDto[] {
-    return fts.map((ft) => this.formatFtWithTimespans(ft));
+    return fts.map((ft) => this.formatFtWithTeamRequests(ft));
   }
 
-  private formatFtWithTimespans(
+  private formatFtWithTeamRequests(
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
-    const timespans = ft.timeWindows.flatMap((tw) => {
-      const requestedTeams = this.formatRequestedTeams(tw.teamRequests);
-      return tw.timespans.map((ts) => {
-        return {
-          id: ts.id,
-          start: ts.start,
-          end: ts.end,
-          requestedTeams,
-        };
-      });
+    const teamRequests = ft.timeWindows.flatMap((tw) => {
+      return this.formatRequestedTeams(tw.teamRequests);
     });
     return {
       id: ft.id,
       name: ft.name,
       hasPriority: ft.hasPriority,
       category: ft.category,
-      timespans,
+      teamRequests,
     };
   }
 
@@ -222,5 +215,13 @@ export class FtTimespanService {
       const assignmentCount = tr._count.assignments;
       return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
     });
+  }
+
+  private filterFtsWithoutAssignableTeamRequests(
+    fts: FtWithTimespansResponseDto[],
+  ): FtWithTimespansResponseDto[] {
+    return fts.filter((ft) =>
+      ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
+    );
   }
 }

@@ -10,7 +10,7 @@
         @change:category="category = $event"
       ></FtTimespanFilters>
       <v-divider />
-      <FtList :fts="filteredFts" class="task-list"></FtList>
+      <FtList :fts="filteredFts" class="task-list" />
     </v-card-text>
   </v-card>
 </template>
@@ -20,12 +20,8 @@ import Vue from "vue";
 import Fuse from "fuse.js";
 import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
 import FtList from "~/components/molecules/assignment/list/FtList.vue";
-import {
-  FtWithTimespan,
-  TaskCategory,
-  TaskPriority,
-  getRequiredTeamsInFt,
-} from "~/utils/models/ftTimespan";
+import { TaskCategory, TaskPriority } from "~/utils/models/ftTimespan";
+import { FtWithTeamRequests } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 import { TaskPriorities } from "~/utils/models/ftTimespan";
 
@@ -38,28 +34,24 @@ export default Vue.extend({
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
-    filteredFts(): FtWithTimespan[] {
-      const filteredFts = this.$accessor.assignment.assignableFts.filter(
-        (ft) => {
-          return (
-            this.filterFtByTeamRequests(this.teams)(ft) &&
-            this.filterFtByCatergoryOrPriority(this.category)(ft)
-          );
-        }
-      );
+    filteredFts(): FtWithTeamRequests[] {
+      const filteredFts = this.$accessor.assignment.fts.filter((ft) => {
+        return (
+          this.filterFtByTeamRequests(this.teams)(ft) &&
+          this.filterFtByCatergoryOrPriority(this.category)(ft)
+        );
+      });
       return this.fuzzyFindFt(filteredFts, this.ft);
     },
   },
   methods: {
     filterFtByTeamRequests(
       teamsSearched: Team[]
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTeamRequests) => boolean {
       return teamsSearched.length > 0
         ? (ft) =>
             teamsSearched.every((teamSearched) =>
-              getRequiredTeamsInFt(ft).some(
-                (timespanTeamCode) => teamSearched.code === timespanTeamCode
-              )
+              ft.teamRequests.some(({ code }) => teamSearched.code === code)
             )
         : () => true;
     },
@@ -70,7 +62,7 @@ export default Vue.extend({
     },
     filterFtByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTeamRequests) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
         return this.filterByPriority(categorySearched);
@@ -79,16 +71,19 @@ export default Vue.extend({
     },
     filterFtByCategory(
       categorySearched: TaskCategory
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTeamRequests) => boolean {
       return (ft) => ft.category === categorySearched;
     },
     filterByPriority(
       prioritySearched: TaskPriority
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTeamRequests) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
     },
-    fuzzyFindFt(fts: FtWithTimespan[], search?: string): FtWithTimespan[] {
+    fuzzyFindFt(
+      fts: FtWithTeamRequests[],
+      search?: string
+    ): FtWithTeamRequests[] {
       if (!search) return fts;
       const fuse = new Fuse(fts, {
         keys: ["id", "name"],
