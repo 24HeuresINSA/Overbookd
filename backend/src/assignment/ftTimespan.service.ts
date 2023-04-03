@@ -25,9 +25,7 @@ const WHERE_EXISTS_AND_READY = {
 };
 
 const WHERE_FT_EXISTS_AND_READY = {
-  ft: {
-    ...WHERE_EXISTS_AND_READY,
-  },
+  ft: WHERE_EXISTS_AND_READY,
 };
 
 const WHERE_HAS_TEAM_REQUESTS = {
@@ -66,9 +64,7 @@ export class FtTimespanService {
         ...WHERE_EXISTS_AND_READY,
         ...WHERE_HAS_TEAM_REQUESTS,
       },
-      select: {
-        ...SELECT_FT_WITH_TIMESPANS,
-      },
+      select: SELECT_FT_WITH_TIMESPANS,
     });
     return this.formatFtsWithTimespans(fts);
   }
@@ -79,9 +75,7 @@ export class FtTimespanService {
     const ftTimespan = await this.prisma.ftTimespan.findFirst({
       where: {
         id: timespanId,
-        timeWindow: {
-          ...WHERE_FT_EXISTS_AND_READY,
-        },
+        timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select: SELECT_TIMESPAN_WITH_FT,
     });
