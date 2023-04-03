@@ -59,6 +59,7 @@ export default Vue.extend({
     selectFt(ft: FtWithTeamRequests) {
       this.$accessor.assignment.setSelectedFt(ft);
       this.$accessor.assignment.setVolunteers([]);
+      this.$accessor.assignment.fetchTimespansWithStats(ft.id);
     },
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");

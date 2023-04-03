@@ -6,6 +6,7 @@ import {
   castTimespansWithFtWithDate,
   FtTimespan,
   FtWithTeamRequests,
+  TimespansWithStats,
   TimespanWithFt,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
@@ -22,6 +23,7 @@ export const state = () => ({
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
   selectedFt: null as FtWithTeamRequests | null,
+  selectedFtTimespans: [] as TimespansWithStats[],
 
   hoverTimespan: null as TimespanWithFt | null,
 });
@@ -37,6 +39,10 @@ export const mutations = mutationTree(state, {
 
   SET_FTS(state, ftWithTimespans: FtWithTeamRequests[]) {
     state.fts = ftWithTimespans;
+  },
+
+  SET_FT_TIMESPANS(state, timespans: TimespansWithStats[]) {
+    state.selectedFtTimespans = timespans;
   },
 
   SET_SELECTED_VOLUNTEER(state, volunteer: Volunteer) {
@@ -110,6 +116,15 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_FTS", res.data);
+    },
+
+    async fetchTimespansWithStats({ commit }, ftId: number) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.getTimespansWithStats(this, ftId)
+      );
+      if (!res) return;
+      commit("SET_FT_TIMESPANS", res.data);
     },
 
     async fetchTimespansForVolunteer({ commit }, volunteerId: number) {
