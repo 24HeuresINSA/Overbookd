@@ -1,4 +1,4 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { getterTree, actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
@@ -25,6 +25,19 @@ export const state = () => ({
   selectedFt: null as FtWithTimespan | null,
 
   hoverTimespan: null as TimespanWithFt | null,
+});
+
+export const getters = getterTree(state, {
+  assignableFts(state) {
+    return state.fts.filter((ft) => {
+      const teamRequestCount = ft.timespans
+        .flatMap((timespan) =>
+          timespan.requestedTeams.map((team) => team.quantity)
+        )
+        .reduce((a, b) => a + b, 0);
+      return teamRequestCount > ft.assignmentCount;
+    });
+  },
 });
 
 export const mutations = mutationTree(state, {

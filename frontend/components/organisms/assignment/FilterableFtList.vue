@@ -34,7 +34,7 @@ export default Vue.extend({
   }),
   computed: {
     filteredFts(): FtWithTimespan[] {
-      const filteredFts = this.$accessor.assignment.fts.filter((ft) =>
+      const filteredFts = this.$accessor.assignment.assignableFts.filter((ft) =>
         this.filterFtByTeamRequests(this.teams)(ft)
       );
       return this.fuzzyFindFt(filteredFts, this.ft);
