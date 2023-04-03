@@ -103,7 +103,7 @@ export class FtTimespanService {
     return this.formatTimespansWithFt(timespans);
   }
 
-  async getCategoryByTimespan(timespanId: number): Promise<TaskCategory> {
+  async getTaskCategory(timespanId: number): Promise<TaskCategory | null> {
     const ftTimespan = await this.prisma.ftTimespan.findFirst({
       where: {
         id: timespanId,

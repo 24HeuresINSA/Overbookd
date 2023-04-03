@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="volunteer-card"
-    :class="shouldShowStat ? 'volunteer-card--with-stat' : ''"
-    @contextmenu.prevent="openCalendar"
-  >
+  <div class="volunteer-card" @contextmenu.prevent="openCalendar">
     <div class="info-row">
       <span>{{ formattedUserInformations }}</span>
       <div class="info-row__icons">
@@ -22,7 +18,7 @@
         :team="team"
       ></TeamIconChip>
     </div>
-    <p v-show="shouldShowStat">{{ categoryStatText }}</p>
+    <p>{{ assignmentStats }}</p>
   </div>
 </template>
 
@@ -64,11 +60,13 @@ export default Vue.extend({
     selectedFt(): FtWithTimespan | null {
       return this.$accessor.assignment.selectedFt;
     },
-    shouldShowStat(): boolean {
-      return Boolean(this.selectedFt !== null && this.selectedFt?.category);
+    assignmentStats(): string {
+      const counter = this.volunteer.assignments;
+      return `Taches ${this.category.toLowerCase()}: ${counter}`;
     },
-    categoryStatText(): string {
-      return `${this.selectedFt?.category}: ${this.volunteer.categoryTaskCount}`;
+    category(): string {
+      if (!this.selectedFt) return "affectees";
+      return this.selectedFt?.category ?? "indeterminees";
     },
   },
   methods: {
@@ -82,14 +80,10 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .volunteer-card {
   width: 100%;
-  height: 60px;
+  height: 75px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-
-  &--with-stat {
-    height: 75px;
-  }
 }
 
 .info-row {

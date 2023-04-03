@@ -1,9 +1,5 @@
 <template>
-  <v-virtual-scroll
-    :items="volunteers"
-    :item-height="shouldShowStat ? '75' : '60'"
-    class="virtual-scroll"
-  >
+  <v-virtual-scroll :items="volunteers" item-height="75" class="virtual-scroll">
     <template #default="{ item }">
       <v-list-item
         :key="item.id"
@@ -35,9 +31,6 @@ export default Vue.extend({
   computed: {
     selectedFt(): FtWithTimespan | null {
       return this.$accessor.assignment.selectedFt;
-    },
-    shouldShowStat(): boolean {
-      return Boolean(this.selectedFt !== null && this.selectedFt.category);
     },
   },
   methods: {

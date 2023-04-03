@@ -1,7 +1,17 @@
-import { SELECT_USER_TEAMS } from 'src/user/user.service';
-import { VolunteerResponseDto } from '../dto/volunteerResponse.dto';
+interface BaseVolunteer {
+  id: number;
+  firstname: string;
+  lastname: string;
+  charisma: number;
+  comment?: string;
+}
 
-export interface DatabaseVolunteer extends Omit<VolunteerResponseDto, 'teams'> {
+export interface Volunteer extends BaseVolunteer {
+  teams: string[];
+  assignments: number;
+}
+
+export interface DatabaseVolunteer extends BaseVolunteer {
   team: {
     team: {
       code: string;
@@ -11,12 +21,3 @@ export interface DatabaseVolunteer extends Omit<VolunteerResponseDto, 'teams'> {
     assignments: number;
   };
 }
-
-export const SELECT_VOLUNTEER = {
-  id: true,
-  firstname: true,
-  lastname: true,
-  charisma: true,
-  comment: true,
-  ...SELECT_USER_TEAMS,
-};

@@ -3,10 +3,10 @@ import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
-import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
-import { DatabaseVolunteer, SELECT_VOLUNTEER } from './types/volunteerTypes';
+import { DatabaseVolunteer, Volunteer } from './types/volunteerTypes';
 import { TaskCategory } from '@prisma/client';
+import { SELECT_USER_TEAMS } from 'src/user/user.service';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -22,6 +22,15 @@ export const WHERE_VALIDATED_USER = {
   },
 };
 
+const SELECT_VOLUNTEER = {
+  id: true,
+  firstname: true,
+  lastname: true,
+  charisma: true,
+  comment: true,
+  ...SELECT_USER_TEAMS,
+};
+
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -29,13 +38,16 @@ export class VolunteerService {
     private ftTimespan: FtTimespanService,
   ) {}
 
-  async findAllVolunteers(): Promise<VolunteerResponseDto[]> {
+  async findAllVolunteers(): Promise<Volunteer[]> {
     const volunteers = await this.prisma.user.findMany({
       where: {
         is_deleted: false,
         ...WHERE_VALIDATED_USER,
       },
-      select: SELECT_VOLUNTEER,
+      select: {
+        ...SELECT_VOLUNTEER,
+        _count: { select: { assignments: true } },
+      },
       orderBy: { charisma: 'desc' },
     });
     return this.formatVolunteers(volunteers);
@@ -43,14 +55,13 @@ export class VolunteerService {
 
   async findAvailableVolunteersForFtTimespan(
     timespanId: number,
-  ): Promise<VolunteerResponseDto[]> {
+  ): Promise<Volunteer[]> {
     const [ftCategory, ftTimespan] = await Promise.all([
-      this.ftTimespan.getCategoryByTimespan(timespanId),
+      this.ftTimespan.getTaskCategory(timespanId),
       this.ftTimespan.findTimespanWithFt(timespanId),
     ]);
     const where = this.buildAssignableVolunteersCondition(ftTimespan);
-    const select =
-      this.buildAssignableVolunteersWithCategoryTaskCountSelection(ftCategory);
+    const select = this.buildAssignableVolunteersSelection(ftCategory);
 
     const volunteers = await this.prisma.user.findMany({
       where,
@@ -95,9 +106,7 @@ export class VolunteerService {
     };
   }
 
-  private buildAssignableVolunteersWithCategoryTaskCountSelection(
-    category: TaskCategory,
-  ) {
+  private buildAssignableVolunteersSelection(category: TaskCategory | null) {
     return {
       ...SELECT_VOLUNTEER,
       _count: {
@@ -118,28 +127,19 @@ export class VolunteerService {
     };
   }
 
-  private formatVolunteers(
-    volunteers: DatabaseVolunteer[],
-  ): VolunteerResponseDto[] {
+  private formatVolunteers(volunteers: DatabaseVolunteer[]): Volunteer[] {
     return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
   }
 
-  private formatVolunteer(volunteer: DatabaseVolunteer): VolunteerResponseDto {
-    const formattedVolunteer = {
+  private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
+    return {
       id: volunteer.id,
       firstname: volunteer.firstname,
       lastname: volunteer.lastname,
       comment: volunteer.comment,
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
+      assignments: volunteer._count?.assignments ?? 0,
     };
-
-    if (volunteer?._count) {
-      return {
-        ...formattedVolunteer,
-        categoryTaskCount: volunteer._count.assignments,
-      };
-    }
-    return formattedVolunteer;
   }
 }
