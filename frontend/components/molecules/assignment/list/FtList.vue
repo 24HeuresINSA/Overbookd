@@ -22,7 +22,7 @@
                 v-for="teamCode of getRequiredTeams(item)"
                 :key="teamCode"
                 :team="teamCode"
-              ></TeamIconChip>
+              />
             </td>
           </tr>
         </tbody>
