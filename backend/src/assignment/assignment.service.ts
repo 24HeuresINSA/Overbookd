@@ -134,10 +134,14 @@ export class AssignmentService {
     teamCode: string,
   ): Promise<{ id: number } | null> {
     const availabilities =
-      this.buildVolunteerIsAvailableDuringPeriodCondition(ftTimespan);
+      AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(
+        ftTimespan,
+      );
 
     const assignments =
-      this.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(ftTimespan);
+      AssignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
+        ftTimespan,
+      );
 
     const team = this.buildVolunteerIsMemberOfTeamCondition(teamCode);
 
@@ -162,7 +166,7 @@ export class AssignmentService {
     return team;
   }
 
-  private buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
+  static buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
     start,
     end,
   }: Period) {
@@ -173,7 +177,7 @@ export class AssignmentService {
     };
   }
 
-  private buildVolunteerIsAvailableDuringPeriodCondition({
+  static buildVolunteerIsAvailableDuringPeriodCondition({
     start,
     end,
   }: Period) {

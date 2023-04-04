@@ -10,6 +10,7 @@ export interface Volunteer extends User {
   comment?: string;
   teams: string[];
   assignments: number;
+  friendAvailable?: boolean;
 }
 
 export function getAssignmentModeFromRoute(url: string): string {
