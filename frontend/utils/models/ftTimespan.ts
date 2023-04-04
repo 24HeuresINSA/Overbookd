@@ -1,17 +1,24 @@
 import { HttpStringified } from "../types/http";
 
-export enum FtTimespanCategory {
-  STATIQUE = "STATIQUE",
-  BAR = "BAR",
-  MANUTENTION = "MANUTENTION",
-  FUN = "FUN",
-  RELOU = "RELOU",
-  AUCUNE = "AUCUNE",
-}
+export const TaskCategories = {
+  STATIQUE: "STATIQUE",
+  BAR: "BAR",
+  MANUTENTION: "MANUTENTION",
+  FUN: "FUN",
+  RELOU: "RELOU",
+  AUCUNE: "AUCUNE",
+};
+
+export type TaskCategory = keyof typeof TaskCategories;
+
+export const TaskPriorities = {
+  PRIORITAIRE: "PRIORITAIRE",
+  NON_PRIORITAIRE: "NON PRIORITAIRE",
+};
 
 export interface FtTimespanParameters {
   hasPriority: boolean;
-  category?: FtTimespanCategory;
+  category?: TaskCategory;
 }
 
 interface SimplifiedFT extends FtTimespanParameters {

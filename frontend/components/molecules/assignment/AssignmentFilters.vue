@@ -1,5 +1,5 @@
 <template>
-  <div class="filters">
+  <div class="filters" :class="isFtFilter ? 'filters--with-category' : ''">
     <v-text-field
       :value="search"
       class="filters__field"
@@ -12,6 +12,16 @@
       :boxed="false"
       @change="changeTeams"
     ></SearchTeams>
+    <v-combobox
+      v-if="isFtFilter"
+      :value="category"
+      :items="categoryItems"
+      label="Catégorie"
+      class="filters__field"
+      clearable
+      return-object
+      @change="changeCategory"
+    ></v-combobox>
     <p>
       {{ counterLabel }}
       <span class="font-weight-bold">{{ listLength }}</span>
@@ -22,6 +32,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
+import { TaskCategories, TaskPriorities } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
@@ -41,6 +52,7 @@ export default Vue.extend({
   data: () => ({
     search: "",
     teams: [],
+    category: "",
   }),
   computed: {
     counterLabel(): string {
@@ -53,6 +65,15 @@ export default Vue.extend({
           return "Nombre de bénévoles dans la liste : ";
       }
     },
+    isFtFilter(): boolean {
+      return this.type === "ft";
+    },
+    categoryItems(): string[] {
+      return [
+        ...Object.values(TaskPriorities),
+        ...Object.values(TaskCategories),
+      ];
+    },
   },
   methods: {
     changeSearch(search: string) {
@@ -60,6 +81,9 @@ export default Vue.extend({
     },
     changeTeams(teams: Team[]) {
       this.$emit("change:teams", teams);
+    },
+    changeCategory(category: string) {
+      this.$emit("change:category", category);
     },
   },
 });
@@ -81,5 +105,9 @@ export default Vue.extend({
     padding-top: 0;
     margin-top: 0;
   }
+}
+
+.filters--with-category {
+  height: 190px !important;
 }
 </style>
