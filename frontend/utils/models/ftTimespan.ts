@@ -40,6 +40,12 @@ export interface FtTimespan {
   end: Date;
 }
 
+export interface FtTimespanEvent extends FtTimespan {
+  name: string;
+  color: string;
+  timed: boolean;
+}
+
 export interface TimespanWithFt extends FtTimespan {
   ft: SimplifiedFT;
 }
