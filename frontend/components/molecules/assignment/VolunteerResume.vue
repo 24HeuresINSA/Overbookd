@@ -3,9 +3,6 @@
     <div class="info-row">
       <span>{{ formattedUserInformations }}</span>
       <div class="info-row__icons">
-        <v-icon v-if="volunteer.friendAvailable" small>
-          mdi-account-group
-        </v-icon>
         <v-tooltip top>
           <template #activator="{ on, attrs }">
             <v-icon
