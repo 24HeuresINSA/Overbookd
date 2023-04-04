@@ -78,16 +78,13 @@ export default Vue.extend({
         : () => true;
     },
     filterFtByCategory(
-      categorySearched: TaskCategory | null
+      categorySearched: TaskCategory
     ): (ft: FtWithTimespan) => boolean {
-      return categorySearched
-        ? (ft) => ft.category === categorySearched
-        : () => true;
+      return (ft) => ft.category === categorySearched;
     },
     filterByPriority(
-      prioritySearched: TaskPriority | null
+      prioritySearched: TaskPriority
     ): (ft: FtWithTimespan) => boolean {
-      if (prioritySearched === null) return () => true;
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
     },
