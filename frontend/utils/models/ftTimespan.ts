@@ -16,6 +16,8 @@ export const TaskPriorities = {
   NON_PRIORITAIRE: "NON PRIORITAIRE",
 };
 
+export type TaskPriority = keyof typeof TaskPriorities;
+
 export interface FtTimespanParameters {
   hasPriority: boolean;
   category?: TaskCategory;

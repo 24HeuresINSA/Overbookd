@@ -7,6 +7,7 @@
         type="ft"
         @change:search="ft = $event"
         @change:teams="teams = $event"
+        @change:category="category = $event"
       ></AssignmentFilters>
       <v-divider />
       <FtList :fts="filteredFts" class="task-list"></FtList>
@@ -21,23 +22,37 @@ import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilte
 import FtList from "~/components/molecules/assignment/FtList.vue";
 import {
   FtWithTimespan,
+  TaskCategory,
+  TaskPriority,
   getRequiredTeamsInFt,
 } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
+import { TaskPriorities } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FilterableFtList",
   components: { AssignmentFilters, FtList },
   data: () => ({
-    teams: [],
+    teams: [] as Team[],
     ft: "",
+    category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
     filteredFts(): FtWithTimespan[] {
-      const filteredFts = this.$accessor.assignment.assignableFts.filter((ft) =>
-        this.filterFtByTeamRequests(this.teams)(ft)
+      const filteredFts = this.$accessor.assignment.assignableFts.filter(
+        (ft) => {
+          return (
+            this.filterFtByTeamRequests(this.teams)(ft) &&
+            this.filterFtByCatergoryOrPriority(this.category)(ft)
+          );
+        }
       );
       return this.fuzzyFindFt(filteredFts, this.ft);
+    },
+    isTaskPriority(): boolean {
+      return Object.values(TaskPriorities).includes(
+        this.category as TaskPriority
+      );
     },
   },
   methods: {
@@ -52,6 +67,29 @@ export default Vue.extend({
               )
             )
         : () => true;
+    },
+    filterFtByCatergoryOrPriority(
+      categorySearched: TaskCategory | TaskPriority | null
+    ): (ft: FtWithTimespan) => boolean {
+      return categorySearched
+        ? this.isTaskPriority
+          ? this.filterByPriority(categorySearched as TaskPriority)
+          : this.filterFtByCategory(categorySearched as TaskCategory)
+        : () => true;
+    },
+    filterFtByCategory(
+      categorySearched: TaskCategory | null
+    ): (ft: FtWithTimespan) => boolean {
+      return categorySearched
+        ? (ft) => ft.category === categorySearched
+        : () => true;
+    },
+    filterByPriority(
+      prioritySearched: TaskPriority | null
+    ): (ft: FtWithTimespan) => boolean {
+      if (prioritySearched === null) return () => true;
+      const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
+      return (ft) => ft.hasPriority === hasPriority;
     },
     fuzzyFindFt(fts: FtWithTimespan[], search?: string): FtWithTimespan[] {
       if (!search) return fts;
