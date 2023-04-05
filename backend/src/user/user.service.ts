@@ -6,8 +6,8 @@ import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import {
-  retrievePermissions,
   TeamWithNestedPermissions,
+  retrievePermissions,
 } from '../team/utils/permissions';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
@@ -224,7 +224,7 @@ export class UserService {
     const newUserData: Prisma.UserUncheckedCreateInput = {
       firstname: payload.firstname,
       lastname: payload.lastname,
-      email: payload.email.toLowerCase().trim(),
+      email: payload.email,
       password: await new HashingUtilsService().hash(payload.password),
       nickname: payload.nickname,
       birthdate: payload.birthdate,
