@@ -27,7 +27,7 @@ export default Vue.extend({
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchFtsWithTeamRequests();
+    await this.$accessor.assignment.fetchFtsWithTimespans();
   },
 });
 </script>
