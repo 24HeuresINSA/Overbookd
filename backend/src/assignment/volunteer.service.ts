@@ -160,7 +160,7 @@ export class VolunteerService {
       assignments: volunteer._count?.assignments ?? 0,
       friendAvailable:
         volunteer?._count.friends + volunteer?._count.friendRequestors > 0,
-      hasUserRequest: volunteer?._count?.ftUserRequests > 0,
+      isRequestedOnSamePeriod: volunteer?._count?.ftUserRequests > 0,
     };
   }
 }

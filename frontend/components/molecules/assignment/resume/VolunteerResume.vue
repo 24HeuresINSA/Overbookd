@@ -28,7 +28,7 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-icon
-                v-if="volunteer.hasUserRequest"
+                v-if="volunteer.isRequestedOnSamePeriod"
                 small
                 color="orange"
                 v-bind="attrs"

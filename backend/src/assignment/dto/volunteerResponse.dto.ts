@@ -59,8 +59,9 @@ export class VolunteerResponseDto implements Volunteer {
   friendAvailable?: boolean;
 
   @ApiProperty({
-    description: 'Whether the volunteer has a user request on the timespan',
+    description:
+      'Whether the volunteer is requested by a non validated FT on the same period',
     type: Boolean,
   })
-  hasUserRequest?: boolean;
+  isRequestedOnSamePeriod?: boolean;
 }

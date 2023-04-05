@@ -10,7 +10,7 @@ export interface Volunteer extends BaseVolunteer {
   teams: string[];
   assignments: number;
   friendAvailable?: boolean;
-  hasUserRequest?: boolean;
+  isRequestedOnSamePeriod?: boolean;
 }
 
 export interface DatabaseVolunteer extends BaseVolunteer {
