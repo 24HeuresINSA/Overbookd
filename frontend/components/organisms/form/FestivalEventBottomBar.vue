@@ -179,7 +179,7 @@ import {
 import { FA, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
-  FtTimespanCategory,
+  TaskCategories,
   FtTimespanParameters,
 } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
@@ -209,10 +209,10 @@ export default Vue.extend({
     isConfirmationDialogOpen: false,
     isRefuseDialogOpen: false,
     isReadyForAssignmentDialogOpen: false,
-    categories: Object.values(FtTimespanCategory),
+    categories: Object.values(TaskCategories),
     timespanParameters: {
       hasPriority: false,
-      category: FtTimespanCategory.AUCUNE,
+      category: TaskCategories.AUCUNE,
     } as FtTimespanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
@@ -410,7 +410,7 @@ export default Vue.extend({
     },
     switchReadyForAssignment() {
       this.isReadyForAssignmentDialogOpen = false;
-      if (this.timespanParameters.category === FtTimespanCategory.AUCUNE) {
+      if (this.timespanParameters.category === TaskCategories.AUCUNE) {
         this.timespanParameters.category = undefined;
       }
       this.$accessor.FT.switchToReadyForAssignment({

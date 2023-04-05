@@ -15,8 +15,11 @@ import {
   DatabaseFtWithTimespans,
   DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
+  FtTimespanWithAggregatedStats,
   SELECT_FT_WITH_TEAM_REQUESTS,
   SELECT_TIMESPAN_WITH_FT,
+  TeamRequestForStats,
+  TimeWindowWithStats,
 } from './types/ftTimespanTypes';
 import { FtTimespanWithStatsDto } from './dto/ftTimespanWithStats.dto';
 
@@ -34,6 +37,38 @@ const WHERE_HAS_TEAM_REQUESTS = {
     some: {
       teamRequests: {
         some: {},
+      },
+    },
+  },
+};
+
+const SELECT_FT_TIMESPANS_WITH_STATS = {
+  timeWindows: {
+    select: {
+      teamRequests: {
+        select: {
+          teamCode: true,
+          quantity: true,
+        },
+      },
+      timespans: {
+        select: {
+          id: true,
+          start: true,
+          end: true,
+          assignments: {
+            select: {
+              teamRequest: {
+                select: {
+                  teamCode: true,
+                },
+              },
+            },
+            where: {
+              userRequest: null,
+            },
+          },
+        },
       },
     },
   },
@@ -80,69 +115,24 @@ export class FtTimespanService {
         ...WHERE_EXISTS_AND_READY,
         ...WHERE_HAS_TEAM_REQUESTS,
       },
-      select: {
-        timeWindows: {
-          select: {
-            teamRequests: {
-              select: {
-                teamCode: true,
-                quantity: true,
-              },
-            },
-            timespans: {
-              select: {
-                id: true,
-                start: true,
-                end: true,
-                assignments: {
-                  select: {
-                    teamRequest: {
-                      select: {
-                        teamCode: true,
-                      },
-                    },
-                  },
-                  where: {
-                    userRequest: null,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      select: SELECT_FT_TIMESPANS_WITH_STATS,
     });
 
     if (!ft) {
       throw new NotFoundException(`FT with id ${ftId} not found`);
     }
 
-    const timespans = ft.timeWindows.flatMap((timeWindow) =>
-      timeWindow.timespans.map((timespan) => ({
-        id: timespan.id,
-        start: timespan.start,
-        end: timespan.end,
-        teamRequests: timeWindow.teamRequests.map((teamRequest) => ({
-          code: teamRequest.teamCode,
-          quantity: teamRequest.quantity,
-          assignmentCount: timespan.assignments.filter(
-            (assignment) =>
-              assignment.teamRequest?.teamCode === teamRequest.teamCode,
-          ).length,
-        })),
-      })),
-    );
+    return this.formatTimespansWithStatsResponse(ft);
+  }
 
-    const timespansWithStats = timespans.flatMap((timespan) =>
-      timespan.teamRequests.map((teamRequest) => ({
-        id: timespan.id,
-        start: timespan.start,
-        end: timespan.end,
-        teamRequest,
-      })),
+  private formatTimespansWithStatsResponse(ft: {
+    timeWindows: TimeWindowWithStats[];
+  }) {
+    return ft.timeWindows.flatMap(({ timespans, teamRequests }) =>
+      timespans.flatMap(({ id, start, end, assignments }) =>
+        teamRequests.flatMap(flatMapTeamRequests(assignments, id, start, end)),
+      ),
     );
-
-    return timespansWithStats;
   }
 
   async findTimespanWithFt(
@@ -301,4 +291,45 @@ export class FtTimespanService {
       ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
     );
   }
+}
+
+function flatMapTeamRequests(
+  assignments: { teamRequest: { teamCode: string } }[],
+  id: number,
+  start: Date,
+  end: Date,
+): (
+  this: undefined,
+  value: TeamRequestForStats,
+  index: number,
+  array: TeamRequestForStats[],
+) => FtTimespanWithAggregatedStats | readonly FtTimespanWithAggregatedStats[] {
+  return ({ teamCode: code, quantity }) => {
+    const assignmentCounts = assignments.reduce(
+      reduceTeamRequestsAssignmentCounts(code),
+      { assignmentCount: 0 },
+    );
+    return {
+      id,
+      start,
+      end,
+      teamRequest: { code, quantity, ...assignmentCounts },
+    };
+  };
+}
+
+function reduceTeamRequestsAssignmentCounts(
+  teamCode: string,
+): (
+  previousValue: { assignmentCount: number },
+  currentValue: { teamRequest: { teamCode: string } },
+  currentIndex: number,
+  array: { teamRequest: { teamCode: string } }[],
+) => { assignmentCount: number } {
+  return (counts, assignment) => {
+    if (assignment.teamRequest?.teamCode === teamCode) {
+      counts.assignmentCount++;
+    }
+    return counts;
+  };
 }
