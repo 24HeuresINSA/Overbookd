@@ -1,8 +1,8 @@
 <template>
   <v-card class="filterable-volunteer-list">
-    <v-card-text>
+    <v-card-text class="filterable-volunteer-list__text">
       <VolunteerFilters
-        :list-length="numberOfVolunteers"
+        :list-length="filteredVolunteers.length"
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
@@ -50,10 +50,6 @@ export default Vue.extend({
         (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer)
       );
       return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
-    },
-    numberOfVolunteers(): number {
-      if (!this.shouldShowVolunteerList) return 0;
-      return this.$accessor.assignment.volunteers.length;
     },
     isOrgaTaskMode(): boolean {
       return (
@@ -103,31 +99,32 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 140px;
+$filters-height: 165px;
 $header-footer-height: 100px;
 $friends-height: 160px;
-$card-padding: 32px;
 
 .filterable-volunteer-list {
   width: 100%;
   max-height: 100vh;
   display: flex;
   flex-direction: column;
+
+  &__text {
+    padding: 0;
+  }
 }
 
 .filters {
   width: 100%;
-  height: $filters-height;
+  height: $filters-height - 25px;
 }
 
 .volunteer-list {
-  height: calc(
-    100vh - #{$filters-height + $header-footer-height + $card-padding + 12px}
-  );
+  padding: 0 5px;
+  height: calc(100vh - #{$filters-height + $header-footer-height});
   &--with-friend-list {
     max-height: calc(
-      100vh - #{$filters-height + $header-footer-height + $friends-height +
-        $card-padding}
+      100vh - #{$filters-height + $header-footer-height + $friends-height}
     );
   }
 }
@@ -136,9 +133,8 @@ $card-padding: 32px;
   align-items: center;
   justify-content: center;
   display: flex;
-  height: calc(
-    100vh - #{$filters-height + $header-footer-height + $card-padding + 12px}
-  );
+  height: calc(100vh - #{$filters-height + $header-footer-height});
+  margin: 0 10%;
 
   p {
     text-align: center;
