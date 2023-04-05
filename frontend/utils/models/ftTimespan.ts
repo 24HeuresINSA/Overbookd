@@ -50,7 +50,7 @@ export interface TimespanWithFt extends FtTimespan {
   ft: SimplifiedFT;
 }
 
-export interface FtWithTeamRequests extends SimplifiedFT {
+export interface FtWithTimespan extends SimplifiedFT {
   teamRequests: RequestedTeam[];
 }
 

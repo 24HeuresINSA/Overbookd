@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
-  FtWithTeamRequestsResponseDto,
+  FtWithTimespansResponseDto,
   RequestedTeam,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
@@ -16,7 +16,7 @@ import {
   DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
   FtTimespanWithAggregatedStats,
-  SELECT_FT_WITH_TEAM_REQUESTS,
+  SELECT_FT_WITH_TIMESPANS,
   SELECT_TIMESPAN_WITH_FT,
   TeamRequestForStats,
   TimeWindowWithStats,
@@ -92,15 +92,13 @@ export class FtTimespanService {
     return this.formatTimespansWithFt(ftTimespans);
   }
 
-  async findAllFtsWithRequestedTeams(): Promise<
-    FtWithTeamRequestsResponseDto[]
-  > {
+  async findAllFtsWithTimespans(): Promise<FtWithTimespansResponseDto[]> {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
         ...WHERE_HAS_TEAM_REQUESTS,
       },
-      select: SELECT_FT_WITH_TEAM_REQUESTS,
+      select: SELECT_FT_WITH_TIMESPANS,
     });
     const formattedFts = this.formatFtsWithTeamRequests(fts);
     return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
@@ -256,13 +254,13 @@ export class FtTimespanService {
 
   private formatFtsWithTeamRequests(
     fts: DatabaseFtWithTimespans[],
-  ): FtWithTeamRequestsResponseDto[] {
+  ): FtWithTimespansResponseDto[] {
     return fts.map((ft) => this.formatFtWithTeamRequests(ft));
   }
 
   private formatFtWithTeamRequests(
     ft: DatabaseFtWithTimespans,
-  ): FtWithTeamRequestsResponseDto {
+  ): FtWithTimespansResponseDto {
     const teamRequests = ft.timeWindows.flatMap((tw) => {
       return this.formatRequestedTeams(tw.teamRequests);
     });
@@ -285,8 +283,8 @@ export class FtTimespanService {
   }
 
   private filterFtsWithoutAssignableTeamRequests(
-    fts: FtWithTeamRequestsResponseDto[],
-  ): FtWithTeamRequestsResponseDto[] {
+    fts: FtWithTimespansResponseDto[],
+  ): FtWithTimespansResponseDto[] {
     return fts.filter((ft) =>
       ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
     );

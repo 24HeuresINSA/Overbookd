@@ -9,7 +9,7 @@
 <script lang="ts">
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import { FtWithTeamRequests } from "~/utils/models/ftTimespan";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
 
@@ -21,7 +21,7 @@ export default Vue.extend({
     TaskOrgaCalendar,
   },
   computed: {
-    ftWithTimespans(): FtWithTeamRequests[] {
+    ftWithTimespans(): FtWithTimespan[] {
       return this.$accessor.assignment.fts;
     },
   },

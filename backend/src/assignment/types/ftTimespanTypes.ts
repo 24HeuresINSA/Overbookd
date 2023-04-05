@@ -46,6 +46,11 @@ export interface DatabaseFtWithTimespans {
   hasPriority: boolean;
   category: TaskCategory;
   timeWindows: {
+    timespans: {
+      id: number;
+      start: Date;
+      end: Date;
+    }[];
     teamRequests: DatabaseRequestedTeam[];
   }[];
 }
@@ -81,13 +86,20 @@ export const SELECT_TIMESPAN_WITH_FT = {
   },
 };
 
-export const SELECT_FT_WITH_TEAM_REQUESTS = {
+export const SELECT_FT_WITH_TIMESPANS = {
   id: true,
   name: true,
   hasPriority: true,
   category: true,
   timeWindows: {
     select: {
+      timespans: {
+        select: {
+          id: true,
+          start: true,
+          end: true,
+        },
+      },
       teamRequests: SELECT_TEAM_REQUEST,
     },
   },
