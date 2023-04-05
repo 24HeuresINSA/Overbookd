@@ -1,19 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
+  IsDateString,
+  IsDefined,
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPhoneNumber,
   IsString,
   Matches,
   MinLength,
   ValidationArguments,
-  IsOptional,
-  IsDefined,
-  IsDateString,
-  IsPhoneNumber,
-  IsNumber,
 } from 'class-validator';
-import { Years, Departements, upperCaseCharacter, OneNumber } from './common';
+import { Departements, OneNumber, Years, upperCaseCharacter } from './common';
 
 export class UserCreationDto {
   @ApiProperty({
@@ -50,6 +51,7 @@ export class UserCreationDto {
   @IsDefined()
   @IsEmail()
   @IsNotEmpty()
+  @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
   @ApiProperty({

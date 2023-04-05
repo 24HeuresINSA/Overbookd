@@ -3,15 +3,15 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserPasswordOnly, UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { User } from '@prisma/client';
 import { randomBytes, timingSafeEqual } from 'crypto';
+import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
-import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { retrievePermissions } from '../team/utils/permissions';
+import { UserPasswordOnly, UserService } from '../user/user.service';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { JwtPayload } from './entities/JwtUtil.entity';
 
 type UserCredentials = Pick<User, 'email' | 'password'>;
