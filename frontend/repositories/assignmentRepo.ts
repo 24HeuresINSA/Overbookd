@@ -18,7 +18,7 @@ export class AssignmentRepository {
     );
   }
 
-  static async getFtWithTeamRequests(context: Context) {
+  static async getFtWithTimespans(context: Context) {
     return context.$axios.get<HttpStringified<FtWithTimespan[]>>(
       `${this.basePath}/ft-timespans`
     );

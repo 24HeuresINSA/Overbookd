@@ -34,7 +34,10 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import {
+  FtWithTimespan,
+  getRequiredTeamsInFt,
+} from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FtList",
@@ -54,7 +57,7 @@ export default Vue.extend({
   }),
   methods: {
     getRequiredTeams(ft: FtWithTimespan) {
-      return [...new Set(ft.teamRequests.map(({ code }) => code))];
+      return getRequiredTeamsInFt(ft);
     },
     selectFt(ft: FtWithTimespan) {
       this.$accessor.assignment.setSelectedFt(ft);
