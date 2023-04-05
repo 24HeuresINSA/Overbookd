@@ -5,7 +5,7 @@ import { Volunteer } from "~/utils/models/assignment";
 import {
   castTimespansWithFtWithDate,
   FtTimespan,
-  FtWithTeamRequests,
+  FtWithTimespan,
   TimespansWithStats,
   TimespanWithFt,
 } from "~/utils/models/ftTimespan";
@@ -17,12 +17,12 @@ const AssignmentRepo = RepoFactory.AssignmentRepository;
 export const state = () => ({
   volunteers: [] as Volunteer[],
   timespans: [] as TimespanWithFt[],
-  fts: [] as FtWithTeamRequests[],
+  fts: [] as FtWithTimespan[],
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
-  selectedFt: null as FtWithTeamRequests | null,
+  selectedFt: null as FtWithTimespan | null,
   selectedFtTimespans: [] as TimespansWithStats[],
 
   hoverTimespan: null as TimespanWithFt | null,
@@ -37,7 +37,7 @@ export const mutations = mutationTree(state, {
     state.timespans = timespansWithFt;
   },
 
-  SET_FTS(state, ftWithTimespans: FtWithTeamRequests[]) {
+  SET_FTS(state, ftWithTimespans: FtWithTimespan[]) {
     state.fts = ftWithTimespans;
   },
 
@@ -57,7 +57,7 @@ export const mutations = mutationTree(state, {
     state.selectedTimespan = timespan;
   },
 
-  SET_SELECTED_FT(state, ft: FtWithTeamRequests) {
+  SET_SELECTED_FT(state, ft: FtWithTimespan) {
     state.selectedFt = ft;
   },
 
@@ -101,7 +101,7 @@ export const actions = actionTree(
       dispatch("fetchVolunteersForTimespan", timespan.id);
     },
 
-    setSelectedFt({ commit }, ft: FtWithTeamRequests) {
+    setSelectedFt({ commit }, ft: FtWithTimespan) {
       commit("SET_SELECTED_FT", ft);
     },
 

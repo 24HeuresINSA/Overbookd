@@ -21,7 +21,7 @@ import Fuse from "fuse.js";
 import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
 import FtList from "~/components/molecules/assignment/list/FtList.vue";
 import { TaskCategory, TaskPriority } from "~/utils/models/ftTimespan";
-import { FtWithTeamRequests } from "~/utils/models/ftTimespan";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 import { TaskPriorities } from "~/utils/models/ftTimespan";
 
@@ -34,7 +34,7 @@ export default Vue.extend({
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
-    filteredFts(): FtWithTeamRequests[] {
+    filteredFts(): FtWithTimespan[] {
       const filteredFts = this.$accessor.assignment.fts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&
@@ -47,7 +47,7 @@ export default Vue.extend({
   methods: {
     filterFtByTeamRequests(
       teamsSearched: Team[]
-    ): (ft: FtWithTeamRequests) => boolean {
+    ): (ft: FtWithTimespan) => boolean {
       return teamsSearched.length > 0
         ? (ft) =>
             teamsSearched.every((teamSearched) =>
@@ -62,7 +62,7 @@ export default Vue.extend({
     },
     filterFtByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null
-    ): (ft: FtWithTeamRequests) => boolean {
+    ): (ft: FtWithTimespan) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
         return this.filterByPriority(categorySearched);
@@ -71,19 +71,16 @@ export default Vue.extend({
     },
     filterFtByCategory(
       categorySearched: TaskCategory
-    ): (ft: FtWithTeamRequests) => boolean {
+    ): (ft: FtWithTimespan) => boolean {
       return (ft) => ft.category === categorySearched;
     },
     filterByPriority(
       prioritySearched: TaskPriority
-    ): (ft: FtWithTeamRequests) => boolean {
+    ): (ft: FtWithTimespan) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
     },
-    fuzzyFindFt(
-      fts: FtWithTeamRequests[],
-      search?: string
-    ): FtWithTeamRequests[] {
+    fuzzyFindFt(fts: FtWithTimespan[], search?: string): FtWithTimespan[] {
       if (!search) return fts;
       const fuse = new Fuse(fts, {
         keys: ["id", "name"],

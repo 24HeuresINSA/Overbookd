@@ -13,7 +13,7 @@ import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import {
   FtTimespanEvent,
-  FtWithTeamRequests,
+  FtWithTimespan,
   TimespansWithStats,
 } from "~/utils/models/ftTimespan";
 
@@ -24,7 +24,7 @@ export default Vue.extend({
     calendarMarker: new Date(),
   }),
   computed: {
-    selectedFt(): FtWithTeamRequests | null {
+    selectedFt(): FtWithTimespan | null {
       return this.$accessor.assignment.selectedFt;
     },
     ftName(): string {
