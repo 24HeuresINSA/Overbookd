@@ -82,3 +82,24 @@ export function castTimespanWithFtWithDate(
     end: new Date(timespanWithFt.end),
   };
 }
+
+export function castFtsWithTimespansWithDate(
+  ftWithTimespans: HttpStringified<FtWithTimespan[]>
+): FtWithTimespan[] {
+  return ftWithTimespans.map((ftWithTimespan) =>
+    castFtWithTimespansWithDate(ftWithTimespan)
+  );
+}
+
+export function castFtWithTimespansWithDate(
+  ftWithTimespan: HttpStringified<FtWithTimespan>
+): FtWithTimespan {
+  return {
+    ...ftWithTimespan,
+    timespans: ftWithTimespan.timespans.map((timespan) => ({
+      ...timespan,
+      start: new Date(timespan.start),
+      end: new Date(timespan.end),
+    })),
+  };
+}

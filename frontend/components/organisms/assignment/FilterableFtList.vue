@@ -35,12 +35,14 @@ export default Vue.extend({
   }),
   computed: {
     filteredFts(): FtWithTimespan[] {
-      const filteredFts = this.$accessor.assignment.fts.filter((ft) => {
-        return (
-          this.filterFtByTeamRequests(this.teams)(ft) &&
-          this.filterFtByCatergoryOrPriority(this.category)(ft)
-        );
-      });
+      const filteredFts = this.$accessor.assignment.assignableFts.filter(
+        (ft) => {
+          return (
+            this.filterFtByTeamRequests(this.teams)(ft) &&
+            this.filterFtByCatergoryOrPriority(this.category)(ft)
+          );
+        }
+      );
       return this.fuzzyFindFt(filteredFts, this.ft);
     },
   },

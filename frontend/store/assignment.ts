@@ -124,7 +124,7 @@ export const actions = actionTree(
     async fetchFtsWithTimespans({ commit }) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getFtWithTeamRequests(this)
+        AssignmentRepo.getFtWithTimespans(this)
       );
       if (!res) return;
       commit("SET_FTS", res.data);
