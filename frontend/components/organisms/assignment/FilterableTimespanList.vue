@@ -1,13 +1,12 @@
 <template>
   <v-card class="filterable-timespan-list">
     <v-card-text>
-      <AssignmentFilters
+      <FtTimespanFilters
         :list-length="filteredTimespans.length"
         class="filters"
-        type="timespan"
         @change:search="timespan = $event"
         @change:teams="teams = $event"
-      ></AssignmentFilters>
+      ></FtTimespanFilters>
       <v-divider />
       <FtTimespanList
         v-if="shouldShowTimespanList"
@@ -27,7 +26,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import AssignmentFilters from "~/components/molecules/assignment/filter/AssignmentFilters.vue";
+import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
 import FtTimespanList from "~/components/molecules/assignment/list/FtTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
@@ -35,9 +34,9 @@ import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "FilterableTimespanList",
-  components: { AssignmentFilters, FtTimespanList },
+  components: { FtTimespanFilters, FtTimespanList },
   data: () => ({
-    teams: [],
+    teams: [] as Team[],
     timespan: "",
   }),
   computed: {
@@ -85,7 +84,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 140px;
+$filters-height: 190px;
 $header-footer-height: 100px;
 $card-padding: 32px;
 

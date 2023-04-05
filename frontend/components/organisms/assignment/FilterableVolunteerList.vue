@@ -1,12 +1,12 @@
 <template>
   <v-card class="filterable-volunteer-list">
     <v-card-text>
-      <AssignmentFilters
+      <VolunteerFilters
         :list-length="numberOfVolunteers"
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
-      ></AssignmentFilters>
+      ></VolunteerFilters>
       <v-divider />
       <VolunteerList
         v-if="shouldShowVolunteerList"
@@ -28,7 +28,7 @@ import Vue from "vue";
 import Fuse from "fuse.js";
 import VolunteerList from "~/components/molecules/assignment/list/VolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
-import AssignmentFilters from "~/components/molecules/assignment/filter/AssignmentFilters.vue";
+import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team";
 import {
   Volunteer,
@@ -39,9 +39,9 @@ import { FtTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",
-  components: { VolunteerList, FriendsDisplay, AssignmentFilters },
+  components: { VolunteerList, FriendsDisplay, VolunteerFilters },
   data: () => ({
-    teams: [],
+    teams: [] as Team[],
     volunteer: "",
   }),
   computed: {

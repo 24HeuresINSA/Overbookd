@@ -1,5 +1,5 @@
 <template>
-  <div class="filters" :class="isFtFilter ? 'filters--with-category' : ''">
+  <div class="filters">
     <v-text-field
       :value="search"
       class="filters__field"
@@ -13,7 +13,6 @@
       @change="changeTeams"
     ></SearchTeams>
     <v-combobox
-      v-if="isFtFilter"
       :value="category"
       :items="categoryItems"
       label="Catégorie"
@@ -32,17 +31,22 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
-import { TaskCategories, TaskPriorities } from "~/utils/models/ftTimespan";
+import {
+  TaskCategories,
+  TaskCategory,
+  TaskPriorities,
+  TaskPriority,
+} from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: "AssignmentFilters",
+  name: "FtTimespanFilters",
   components: { SearchTeams },
   props: {
     type: {
       type: String,
       required: false,
-      default: "volunteer",
+      default: "ft",
     },
     listLength: {
       type: Number,
@@ -51,22 +55,14 @@ export default Vue.extend({
   },
   data: () => ({
     search: "",
-    teams: [],
-    category: "",
+    teams: [] as Team[],
+    category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
     counterLabel(): string {
-      switch (this.type) {
-        case "timespan":
-          return "Nombre de créneaux dans la liste : ";
-        case "ft":
-          return "Nombre de FT dans la liste : ";
-        default:
-          return "Nombre de bénévoles dans la liste : ";
-      }
-    },
-    isFtFilter(): boolean {
-      return this.type === "ft";
+      return this.type === "ft"
+        ? "Nombre de FT dans la liste : "
+        : "Nombre de créneaux dans la liste : ";
     },
     categoryItems(): string[] {
       return [
@@ -92,7 +88,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 140px;
+  height: 190px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -105,9 +101,5 @@ export default Vue.extend({
     padding-top: 0;
     margin-top: 0;
   }
-}
-
-.filters--with-category {
-  height: 190px !important;
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
   <v-card class="filterable-task-list">
     <v-card-text>
-      <AssignmentFilters
+      <FtTimespanFilters
         :list-length="filteredFts.length"
         class="filters"
         type="ft"
         @change:search="ft = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
-      ></AssignmentFilters>
+      ></FtTimespanFilters>
       <v-divider />
       <FtList :fts="filteredFts" class="task-list"></FtList>
     </v-card-text>
@@ -18,7 +18,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import AssignmentFilters from "~/components/molecules/assignment/filter/AssignmentFilters.vue";
+import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
 import FtList from "~/components/molecules/assignment/list/FtList.vue";
 import {
   FtWithTimespan,
@@ -31,7 +31,7 @@ import { TaskPriorities } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FilterableFtList",
-  components: { AssignmentFilters, FtList },
+  components: { FtTimespanFilters, FtList },
   data: () => ({
     teams: [] as Team[],
     ft: "",
@@ -101,7 +101,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 140px;
+$filters-height: 190px;
 $header-footer-height: 100px;
 $card-padding: 32px;
 
