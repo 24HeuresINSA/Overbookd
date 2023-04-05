@@ -100,7 +100,7 @@ export class FtTimespanService {
       },
       select: SELECT_FT_WITH_TIMESPANS,
     });
-    return this.formatFtsWithTeamRequests(fts);
+    return this.formatFtsWithTimespans(fts);
     // return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
   }
 
@@ -252,13 +252,13 @@ export class FtTimespanService {
     };
   }
 
-  private formatFtsWithTeamRequests(
+  private formatFtsWithTimespans(
     fts: DatabaseFtWithTimespans[],
   ): FtWithTimespansResponseDto[] {
-    return fts.map((ft) => this.formatFtWithTeamRequests(ft));
+    return fts.map((ft) => this.formatFtWithTimespans(ft));
   }
 
-  private formatFtWithTeamRequests(
+  private formatFtWithTimespans(
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
     const timespans = ft.timeWindows.flatMap((tw) => {
