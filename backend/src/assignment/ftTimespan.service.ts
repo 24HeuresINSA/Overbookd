@@ -100,8 +100,8 @@ export class FtTimespanService {
       },
       select: SELECT_FT_WITH_TIMESPANS,
     });
-    const formattedFts = this.formatFtsWithTeamRequests(fts);
-    return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
+    return this.formatFtsWithTeamRequests(fts);
+    // return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
   }
 
   async findTimespansWithStats(
@@ -261,15 +261,23 @@ export class FtTimespanService {
   private formatFtWithTeamRequests(
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
-    const teamRequests = ft.timeWindows.flatMap((tw) => {
-      return this.formatRequestedTeams(tw.teamRequests);
+    const timespans = ft.timeWindows.flatMap((tw) => {
+      const requestedTeams = this.formatRequestedTeams(tw.teamRequests);
+      return tw.timespans.map((ts) => {
+        return {
+          id: ts.id,
+          start: ts.start,
+          end: ts.end,
+          requestedTeams,
+        };
+      });
     });
     return {
       id: ft.id,
       name: ft.name,
       hasPriority: ft.hasPriority,
       category: ft.category,
-      teamRequests,
+      timespans,
     };
   }
 
@@ -282,13 +290,13 @@ export class FtTimespanService {
     });
   }
 
-  private filterFtsWithoutAssignableTeamRequests(
-    fts: FtWithTimespansResponseDto[],
-  ): FtWithTimespansResponseDto[] {
-    return fts.filter((ft) =>
-      ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
-    );
-  }
+  // private filterFtsWithoutAssignableTeamRequests(
+  //   fts: FtWithTimespansResponseDto[],
+  // ): FtWithTimespansResponseDto[] {
+  //   return fts.filter((ft) =>
+  //     ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
+  //   );
+  // }
 }
 
 function flatMapTeamRequests(
