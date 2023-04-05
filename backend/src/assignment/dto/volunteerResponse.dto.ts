@@ -57,4 +57,11 @@ export class VolunteerResponseDto implements Volunteer {
     type: Boolean,
   })
   friendAvailable?: boolean;
+
+  @ApiProperty({
+    description:
+      'Whether the volunteer is requested by a non validated FT on the same period',
+    type: Boolean,
+  })
+  isRequestedOnSamePeriod?: boolean;
 }
