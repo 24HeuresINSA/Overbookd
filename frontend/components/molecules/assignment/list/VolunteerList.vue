@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VolunteerResume from "~/components/molecules/assignment/VolunteerResume.vue";
+import VolunteerResume from "~/components/molecules/assignment/resume/VolunteerResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({

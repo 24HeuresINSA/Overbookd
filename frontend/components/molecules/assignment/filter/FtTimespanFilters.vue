@@ -12,6 +12,15 @@
       :boxed="false"
       @change="changeTeams"
     ></SearchTeams>
+    <v-combobox
+      :value="category"
+      :items="categoryItems"
+      label="Catégorie"
+      class="filters__field"
+      clearable
+      return-object
+      @change="changeCategory"
+    ></v-combobox>
     <p>
       {{ counterLabel }}
       <span class="font-weight-bold">{{ listLength }}</span>
@@ -22,16 +31,22 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeams from "~/components/atoms/SearchTeams.vue";
+import {
+  TaskCategories,
+  TaskCategory,
+  TaskPriorities,
+  TaskPriority,
+} from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: "AssignmentFilters",
+  name: "FtTimespanFilters",
   components: { SearchTeams },
   props: {
     type: {
       type: String,
       required: false,
-      default: "volunteer",
+      default: "ft",
     },
     listLength: {
       type: Number,
@@ -40,18 +55,20 @@ export default Vue.extend({
   },
   data: () => ({
     search: "",
-    teams: [],
+    teams: [] as Team[],
+    category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
     counterLabel(): string {
-      switch (this.type) {
-        case "timespan":
-          return "Nombre de créneaux dans la liste : ";
-        case "ft":
-          return "Nombre de FT dans la liste : ";
-        default:
-          return "Nombre de bénévoles dans la liste : ";
-      }
+      return this.type === "ft"
+        ? "Nombre de FT dans la liste : "
+        : "Nombre de créneaux dans la liste : ";
+    },
+    categoryItems(): string[] {
+      return [
+        ...Object.values(TaskPriorities),
+        ...Object.values(TaskCategories),
+      ];
     },
   },
   methods: {
@@ -61,6 +78,9 @@ export default Vue.extend({
     changeTeams(teams: Team[]) {
       this.$emit("change:teams", teams);
     },
+    changeCategory(category: string) {
+      this.$emit("change:category", category);
+    },
   },
 });
 </script>
@@ -68,7 +88,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 140px;
+  height: 190px;
   display: flex;
   flex-direction: column;
   justify-content: center;
