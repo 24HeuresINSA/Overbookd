@@ -15,7 +15,7 @@
     <v-combobox
       :value="category"
       :items="categoryItems"
-      label="Catégorie"
+      label="Chercher une catégorie"
       class="filters__field"
       clearable
       return-object

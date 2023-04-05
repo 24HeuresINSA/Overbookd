@@ -1,39 +1,42 @@
 <template>
-  <div class="volunteer-card" @contextmenu.prevent="openCalendar">
-    <div class="info-row">
-      <span>{{ formattedUserInformations }}</span>
-      <div class="info-row__icons">
-        <v-tooltip top>
-          <template #activator="{ on, attrs }">
-            <v-icon
-              v-if="volunteer.friendAvailable"
-              small
-              v-bind="attrs"
-              v-on="on"
-            >
-              mdi-account-group
-            </v-icon>
-          </template>
-          <span>Amis disponibles sur le même créneau</span>
-        </v-tooltip>
-        <v-tooltip top max-width="20rem">
-          <template #activator="{ on, attrs }">
-            <v-icon v-if="volunteer.comment" small v-bind="attrs" v-on="on">
-              mdi-comment
-            </v-icon>
-          </template>
-          <span>{{ volunteer.comment }}</span>
-        </v-tooltip>
+  <div class="volunteer-card">
+    <div class="volunteer-card-data" @contextmenu.prevent="openCalendar">
+      <div class="info-row">
+        <span class="info-row__title">{{ formattedUserInformations }}</span>
+        <div class="info-row__icons">
+          <v-tooltip top>
+            <template #activator="{ on, attrs }">
+              <v-icon
+                v-if="volunteer.friendAvailable"
+                small
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-account-group
+              </v-icon>
+            </template>
+            <span>Amis disponibles sur le même créneau</span>
+          </v-tooltip>
+          <v-tooltip top max-width="20rem">
+            <template #activator="{ on, attrs }">
+              <v-icon v-if="volunteer.comment" small v-bind="attrs" v-on="on">
+                mdi-comment
+              </v-icon>
+            </template>
+            <span>{{ volunteer.comment }}</span>
+          </v-tooltip>
+        </div>
       </div>
+      <div>
+        <TeamIconChip
+          v-for="team of sortedVolunteerTeams"
+          :key="team"
+          :team="team"
+        ></TeamIconChip>
+      </div>
+      <p class="stats-text">{{ assignmentStats }}</p>
     </div>
-    <div>
-      <TeamIconChip
-        v-for="team of sortedVolunteerTeams"
-        :key="team"
-        :team="team"
-      ></TeamIconChip>
-    </div>
-    <p>{{ assignmentStats }}</p>
+    <v-divider />
   </div>
 </template>
 
@@ -95,19 +98,35 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .volunteer-card {
   width: 100%;
-  height: 75px;
-  overflow: hidden;
+  height: 80px;
   display: flex;
   flex-direction: column;
+}
+
+.volunteer-card-data {
+  overflow: hidden;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
 
+  &__title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+
   &__icons {
     display: flex;
     gap: 5px;
   }
+}
+
+.stats-text {
+  font-size: 0.9rem;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 </style>

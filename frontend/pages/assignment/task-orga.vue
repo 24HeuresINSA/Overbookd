@@ -36,17 +36,18 @@ export default Vue.extend({
 $header-footer-height: 100px;
 
 .assignment-container {
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
   padding: 0;
   left: 0;
   top: 0;
-  max-width: none;
   margin-left: 0;
   margin-right: 0;
   position: absolute;
   display: flex;
   justify-content: space-between;
-  height: 100%;
-  width: 100%;
+  overflow: hidden;
 }
 
 .volunteer-list {

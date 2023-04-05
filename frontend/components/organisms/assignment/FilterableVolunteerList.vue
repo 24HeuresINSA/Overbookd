@@ -2,7 +2,7 @@
   <v-card class="filterable-volunteer-list">
     <v-card-text>
       <VolunteerFilters
-        :list-length="numberOfVolunteers"
+        :list-length="filteredVolunteers.length"
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
@@ -50,10 +50,6 @@ export default Vue.extend({
         (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer)
       );
       return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
-    },
-    numberOfVolunteers(): number {
-      if (!this.shouldShowVolunteerList) return 0;
-      return this.$accessor.assignment.volunteers.length;
     },
     isOrgaTaskMode(): boolean {
       return (
