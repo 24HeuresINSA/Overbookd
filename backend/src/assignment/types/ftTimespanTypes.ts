@@ -1,11 +1,28 @@
-import { TaskCategory } from '@prisma/client';
+import { FtTimespan, TaskCategory } from '@prisma/client';
 
-export interface DatabaseRequestedTeam {
+export interface TeamRequestForStats {
   teamCode: string;
   quantity: number;
+}
+export interface DatabaseRequestedTeam extends TeamRequestForStats {
   _count: {
     assignments: number;
   };
+}
+
+export type FtTimespanForStats = Pick<FtTimespan, 'id' | 'start' | 'end'>;
+
+export interface FtTimespanWithStats extends FtTimespanForStats {
+  assignments: { teamRequest: { teamCode: string } }[];
+}
+
+export interface FtTimespanWithAggregatedStats extends FtTimespanForStats {
+  teamRequest: { assignmentCount: number; code: string; quantity: number };
+}
+
+export interface TimeWindowWithStats {
+  teamRequests: TeamRequestForStats[];
+  timespans: FtTimespanWithStats[];
 }
 
 export interface DatabaseTimespanWithFt {
