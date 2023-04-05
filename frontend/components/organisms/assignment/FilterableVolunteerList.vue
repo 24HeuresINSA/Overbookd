@@ -122,7 +122,7 @@ $friends-height: 160px;
 .volunteer-list {
   padding: 0 5px;
   height: calc(100vh - #{$filters-height + $header-footer-height});
-  & &--with-friend-list {
+  &--with-friend-list {
     max-height: calc(
       100vh - #{$filters-height + $header-footer-height + $friends-height}
     );
