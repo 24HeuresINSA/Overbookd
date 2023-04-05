@@ -1,13 +1,14 @@
-import { getterTree, actionTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
 import {
-  castTimespansWithFtWithDate,
   FtTimespan,
   FtWithTimespan,
-  TimespansWithStats,
   TimespanWithFt,
+  TimespansWithStats,
+  castFtsWithTimespansWithDate,
+  castTimespansWithFtWithDate,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
 
@@ -122,12 +123,9 @@ export const actions = actionTree(
     },
 
     async fetchFtsWithTimespans({ commit }) {
-      const res = await safeCall(
-        this,
-        AssignmentRepo.getFtWithTimespans(this)
-      );
+      const res = await safeCall(this, AssignmentRepo.getFtWithTimespans(this));
       if (!res) return;
-      commit("SET_FTS", res.data);
+      commit("SET_FTS", castFtsWithTimespansWithDate(res.data));
     },
 
     async fetchTimespansWithStats({ commit }, ftId: number) {

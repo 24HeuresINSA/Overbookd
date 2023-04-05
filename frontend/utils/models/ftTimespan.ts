@@ -40,6 +40,10 @@ export interface FtTimespan {
   end: Date;
 }
 
+export interface FtTimespanWithRequestedTeams extends FtTimespan {
+  requestedTeams: RequestedTeam[];
+}
+
 export interface FtTimespanEvent extends FtTimespan {
   name: string;
   color: string;
@@ -51,7 +55,7 @@ export interface TimespanWithFt extends FtTimespan {
 }
 
 export interface FtWithTimespan extends SimplifiedFT {
-  timespans: FtTimespan[];
+  timespans: FtTimespanWithRequestedTeams[];
 }
 
 export interface TimespansWithStats extends FtTimespan {
