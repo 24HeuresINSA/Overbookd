@@ -94,7 +94,7 @@ export class TimespanWithFtResponseDto extends FtTimespan {
   ft: SimplifiedFT;
 }
 
-export class FtWithTeamRequestsResponseDto extends SimplifiedFT {
+export class FtWithTimespansResponseDto extends SimplifiedFT {
   @ApiProperty({
     required: true,
     description: 'The ft timespans',

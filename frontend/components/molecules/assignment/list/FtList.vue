@@ -34,14 +34,14 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
-import { FtWithTeamRequests } from "~/utils/models/ftTimespan";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FtList",
   components: { TeamIconChip },
   props: {
     fts: {
-      type: Array as () => FtWithTeamRequests[],
+      type: Array as () => FtWithTimespan[],
       required: true,
       default: () => [],
     },
@@ -53,10 +53,10 @@ export default Vue.extend({
     ],
   }),
   methods: {
-    getRequiredTeams(ft: FtWithTeamRequests) {
+    getRequiredTeams(ft: FtWithTimespan) {
       return [...new Set(ft.teamRequests.map(({ code }) => code))];
     },
-    selectFt(ft: FtWithTeamRequests) {
+    selectFt(ft: FtWithTimespan) {
       this.$accessor.assignment.setSelectedFt(ft);
       this.$accessor.assignment.setVolunteers([]);
       this.$accessor.assignment.fetchTimespansWithStats(ft.id);

@@ -16,7 +16,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import {
-  FtWithTeamRequestsResponseDto,
+  FtWithTimespansResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -62,16 +62,16 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('fts')
+  @Get('ft-timespans')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get all valid ft with timespans',
     isArray: true,
-    type: FtWithTeamRequestsResponseDto,
+    type: FtWithTimespansResponseDto,
   })
-  findAllFtsWithRequestedTeams(): Promise<FtWithTeamRequestsResponseDto[]> {
-    return this.ftTimespanService.findAllFtsWithRequestedTeams();
+  findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
+    return this.ftTimespanService.findAllFtsWithTimespans();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
