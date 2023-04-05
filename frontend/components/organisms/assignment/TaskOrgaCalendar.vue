@@ -1,7 +1,11 @@
 <template>
   <OverCalendarV2 v-model="calendarMarker" :title="ftName" :events="timespans">
     <template #event="{ event: timespan }">
-      <div class="event underline-on-hover" @click="selectTimespan(timespan)">
+      <div
+        class="event underline-on-hover"
+        :class="{ highlight: timespan.id === selectedTimespanId }"
+        @click="selectTimespan(timespan)"
+      >
         {{ timespan.name }}
       </div>
     </template>
@@ -40,6 +44,9 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedFtTimespans.map((timespan) =>
         this.mapTimespanToEvent(timespan)
       );
+    },
+    selectedTimespanId(): number | null {
+      return this.$accessor.assignment.selectedTimespan?.id ?? null;
     },
   },
   mounted() {
@@ -87,5 +94,9 @@ export default Vue.extend({
   white-space: normal;
   padding: 2px;
   overflow: hidden;
+}
+
+.highlight {
+  border: solid;
 }
 </style>

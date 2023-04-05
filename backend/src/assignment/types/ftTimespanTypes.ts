@@ -10,9 +10,9 @@ export interface DatabaseRequestedTeam extends TeamRequestForStats {
   };
 }
 
-export type FtTimespanForStats = Pick<FtTimespan, 'id' | 'start' | 'end'>;
+type FtTimespanForStats = Pick<FtTimespan, 'id' | 'start' | 'end'>;
 
-export interface FtTimespanWithStats extends FtTimespanForStats {
+interface FtTimespanWithStats extends FtTimespanForStats {
   assignments: { teamRequest: { teamCode: string } }[];
 }
 
