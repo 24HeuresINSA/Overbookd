@@ -23,6 +23,7 @@ export const state = () => ({
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
+  selectedUserFriends: [] as User[],
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   friends: [] as User[],
@@ -37,6 +38,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
     state.selectedUser = data;
+  },
+  SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
+    state.selectedUserFriends = friends;
   },
   SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: VolunteerTask[]) {
     state.selectedUserFtRequests = periods;
@@ -98,6 +102,9 @@ export const actions = actionTree(
   { state },
   {
     async setSelectedUser({ commit }, user: CompleteUserWithPermissions) {
+      const res = await safeCall(this, UserRepo.getUserFriends(this, user.id));
+      if (!res) return;
+      commit("SET_SELECTED_USER_FRIENDS", res.data);
       commit("SET_SELECTED_USER", user);
     },
     async fetchUser({ commit }) {

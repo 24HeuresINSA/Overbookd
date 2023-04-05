@@ -121,8 +121,24 @@
                     v-model="user.has_payed_contributions"
                     label="Cotisation"
                     :disabled="!hasEditingRole"
-                  ></v-switch> </v-col
-              ></v-row>
+                  ></v-switch>
+                </v-col>
+              </v-row>
+              <v-col class="pl-0">
+                <h4 class="mb-4">Amis :</h4>
+                <v-row>
+                  <v-chip
+                    v-for="friend in selectedUserFriends"
+                    :key="friend.id"
+                    class="mr-2 mb-2"
+                  >
+                    {{ friend.firstname }} {{ friend.lastname }}
+                  </v-chip>
+                  <p v-show="selectedUserFriends.length === 0" class="ml-3">
+                    Aucun ami
+                  </p>
+                </v-row>
+              </v-col>
             </v-container>
           </v-card-text>
           <v-row
@@ -196,6 +212,9 @@ export default {
     },
     selectedUser() {
       return this.$accessor.user.selectedUser;
+    },
+    selectedUserFriends() {
+      return this.$accessor.user.selectedUserFriends;
     },
     mToggle: {
       get: function () {
