@@ -101,7 +101,6 @@ export class FtTimespanService {
       select: SELECT_FT_WITH_TIMESPANS,
     });
     return this.formatFtsWithTimespans(fts);
-    // return this.filterFtsWithoutAssignableTeamRequests(formattedFts);
   }
 
   async findTimespansWithStats(
@@ -289,14 +288,6 @@ export class FtTimespanService {
       return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
     });
   }
-
-  // private filterFtsWithoutAssignableTeamRequests(
-  //   fts: FtWithTimespansResponseDto[],
-  // ): FtWithTimespansResponseDto[] {
-  //   return fts.filter((ft) =>
-  //     ft.teamRequests.some((tr) => tr.quantity > tr.assignmentCount),
-  //   );
-  // }
 }
 
 function flatMapTeamRequests(

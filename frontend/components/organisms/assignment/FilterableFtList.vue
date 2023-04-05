@@ -20,8 +20,12 @@ import Vue from "vue";
 import Fuse from "fuse.js";
 import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
 import FtList from "~/components/molecules/assignment/list/FtList.vue";
-import { TaskCategory, TaskPriority } from "~/utils/models/ftTimespan";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import {
+  FtWithTimespan,
+  TaskCategory,
+  TaskPriority,
+  getRequiredTeamsInFt,
+} from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 import { TaskPriorities } from "~/utils/models/ftTimespan";
 
@@ -53,7 +57,9 @@ export default Vue.extend({
       return teamsSearched.length > 0
         ? (ft) =>
             teamsSearched.every((teamSearched) =>
-              ft.teamRequests.some(({ code }) => teamSearched.code === code)
+              getRequiredTeamsInFt(ft).some(
+                (timespanTeamCode) => teamSearched.code === timespanTeamCode
+              )
             )
         : () => true;
     },
