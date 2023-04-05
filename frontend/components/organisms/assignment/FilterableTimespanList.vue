@@ -27,8 +27,8 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
-import FtTimespanList from "~/components/molecules/assignment/FtTimespanList.vue";
+import AssignmentFilters from "~/components/molecules/assignment/filter/AssignmentFilters.vue";
+import FtTimespanList from "~/components/molecules/assignment/list/FtTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";

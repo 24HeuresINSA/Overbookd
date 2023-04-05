@@ -26,9 +26,9 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import VolunteerList from "~/components/molecules/assignment/VolunteerList.vue";
+import VolunteerList from "~/components/molecules/assignment/list/VolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
-import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
+import AssignmentFilters from "~/components/molecules/assignment/filter/AssignmentFilters.vue";
 import { Team } from "~/utils/models/team";
 import {
   Volunteer,

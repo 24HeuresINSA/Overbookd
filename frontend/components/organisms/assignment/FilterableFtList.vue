@@ -18,8 +18,8 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import AssignmentFilters from "~/components/molecules/assignment/AssignmentFilters.vue";
-import FtList from "~/components/molecules/assignment/FtList.vue";
+import AssignmentFilters from "~/components/molecules/assignment/filter/AssignmentFilters.vue";
+import FtList from "~/components/molecules/assignment/list/FtList.vue";
 import {
   FtWithTimespan,
   TaskCategory,
@@ -49,11 +49,6 @@ export default Vue.extend({
       );
       return this.fuzzyFindFt(filteredFts, this.ft);
     },
-    isTaskPriority(): boolean {
-      return Object.values(TaskPriorities).includes(
-        this.category as TaskPriority
-      );
-    },
   },
   methods: {
     filterFtByTeamRequests(
@@ -68,14 +63,19 @@ export default Vue.extend({
             )
         : () => true;
     },
+    isTaskPriority(
+      category: TaskPriority | TaskCategory
+    ): category is TaskPriority {
+      return Object.values(TaskPriorities).includes(category);
+    },
     filterFtByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null
     ): (ft: FtWithTimespan) => boolean {
-      return categorySearched
-        ? this.isTaskPriority
-          ? this.filterByPriority(categorySearched as TaskPriority)
-          : this.filterFtByCategory(categorySearched as TaskCategory)
-        : () => true;
+      if (!categorySearched) return () => true;
+      if (this.isTaskPriority(categorySearched)) {
+        return this.filterByPriority(categorySearched);
+      }
+      return this.filterFtByCategory(categorySearched);
     },
     filterFtByCategory(
       categorySearched: TaskCategory
