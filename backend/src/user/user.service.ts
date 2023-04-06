@@ -156,17 +156,16 @@ export class UserService {
     take?: number;
     cursor?: Prisma.UserWhereUniqueInput;
     where?: Prisma.UserWhereInput;
-    orderBy?: Prisma.UserOrderByWithRelationInput;
     select?: Prisma.UserSelect;
   }): Promise<UserWithTeamAndPermission[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { skip, take, cursor, where } = params;
     //get all users with their teams
     const users = await this.prisma.user.findMany({
       skip,
       take,
       cursor,
       where,
-      orderBy,
+      orderBy: { id: 'asc' },
       select: {
         ...SELECT_USER,
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
