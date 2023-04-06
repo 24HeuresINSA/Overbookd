@@ -26,6 +26,7 @@
               :categories="volunteerIds"
               :events="events"
               :interval-height="24"
+              class="planning__calendar"
             >
               <template #category="{ category }">
                 <VolunteerResumeCalendarHeader
@@ -46,6 +47,16 @@
                 ></div>
               </template>
             </v-calendar>
+            <v-btn
+              v-if="taskAssignmentVolunteer?.friendAvailable"
+              class="planning_add-candidate"
+              fab
+              dark
+              large
+              color="green"
+            >
+              <v-icon dark> mdi-account-multiple-plus </v-icon>
+            </v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -100,6 +111,7 @@ export default Vue.extend({
       return this.$accessor.assignment.taskAssignment.candidates.at(0)
         ?.volunteer;
     },
+
     taskStart(): Date {
       return this.$accessor.assignment.taskAssignment.task.start;
     },
@@ -227,5 +239,16 @@ export default Vue.extend({
 
 .date-navigation {
   display: flex;
+}
+
+.planning {
+  display: flex;
+  gap: 40px;
+  &__calendar {
+    flex-grow: 5;
+  }
+  &__add-candidate {
+    flex-grow: 1;
+  }
 }
 </style>
