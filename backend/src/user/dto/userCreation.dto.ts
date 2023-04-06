@@ -41,7 +41,6 @@ export class UserCreationDto {
   })
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   nickname?: string;
 
   @ApiProperty({
