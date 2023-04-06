@@ -17,8 +17,9 @@ import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
 import {
   FtTimespanEvent,
+  FtTimespanWithRequestedTeams,
   FtWithTimespan,
-  TimespansWithStats,
+  RequestedTeam,
 } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
@@ -41,7 +42,7 @@ export default Vue.extend({
       return new Date(this.$accessor.config.getConfig("event_date"));
     },
     timespans(): FtTimespanEvent[] {
-      return this.$accessor.assignment.selectedFtTimespans.map((timespan) =>
+      return this.$accessor.assignment.selectedFtTimespans.flatMap((timespan) =>
         this.mapTimespanToEvent(timespan)
       );
     },
@@ -56,28 +57,31 @@ export default Vue.extend({
     selectTimespan(timespan: FtTimespanEvent) {
       this.$accessor.assignment.setSelectedTimespan(timespan);
     },
-    mapTimespanToEvent(timespan: TimespansWithStats): FtTimespanEvent {
-      return {
+    mapTimespanToEvent(
+      timespan: FtTimespanWithRequestedTeams
+    ): FtTimespanEvent[] {
+      return timespan.requestedTeams.map((team) => ({
         ...timespan,
         start: new Date(timespan.start),
         end: new Date(timespan.end),
-        name: this.buildEventName(timespan),
+        name: this.buildEventName(team),
         timed: true,
-        color: this.defineEventColor(timespan),
-      };
+        color: this.defineEventColor(team),
+      }));
     },
-    buildEventName(timespan: TimespansWithStats): string {
-      return `[${timespan.teamRequest.assignmentCount}/${timespan.teamRequest.quantity}] ${timespan.teamRequest.code}`;
+    buildEventName({ assignmentCount, quantity, code }: RequestedTeam): string {
+      return `[${assignmentCount}/${quantity}] ${code}`;
     },
     getTeamColor(code: string): string {
       return this.$accessor.team.getTeamByCode(code).color;
     },
-    defineEventColor(timespan: TimespansWithStats): string {
-      const color = this.getTeamColor(timespan.teamRequest.code);
-      const spread =
-        (180 * timespan.teamRequest.assignmentCount) /
-          timespan.teamRequest.quantity +
-        75;
+    defineEventColor({
+      code,
+      quantity,
+      assignmentCount,
+    }: RequestedTeam): string {
+      const color = this.getTeamColor(code);
+      const spread = (180 * assignmentCount) / quantity + 75;
       return color + this.convertDecimalToHex(spread);
     },
     convertDecimalToHex(decimal: number): string {

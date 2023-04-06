@@ -1,28 +1,37 @@
-import { FtTimespan, TaskCategory } from '@prisma/client';
+import { TaskCategory } from '@prisma/client';
 
-export interface TeamRequestForStats {
+export interface RequestedTeam {
+  code: string;
+  quantity: number;
+  assignmentCount: number;
+}
+export interface DatabaseRequestedTeam {
   teamCode: string;
   quantity: number;
-}
-export interface DatabaseRequestedTeam extends TeamRequestForStats {
   _count: {
     assignments: number;
   };
 }
 
-type FtTimespanForStats = Pick<FtTimespan, 'id' | 'start' | 'end'>;
+type TimespanBase = {
+  id: number;
+  start: Date;
+  end: Date;
+};
 
-interface FtTimespanWithStats extends FtTimespanForStats {
-  assignments: { teamRequest: { teamCode: string } }[];
+export type AssignmentAsTeamMember = { teamRequest: { teamCode: string } };
+
+export interface DatabaseTimespanWithAssignedTeamMembers extends TimespanBase {
+  assignments: AssignmentAsTeamMember[];
 }
 
-export interface FtTimespanWithAggregatedStats extends FtTimespanForStats {
-  teamRequest: { assignmentCount: number; code: string; quantity: number };
+export interface Timespan extends TimespanBase {
+  requestedTeams: RequestedTeam[];
 }
 
-export interface TimeWindowWithStats {
-  teamRequests: TeamRequestForStats[];
-  timespans: FtTimespanWithStats[];
+export interface DatabaseTimeWindow {
+  teamRequests: DatabaseRequestedTeam[];
+  timespans: DatabaseTimespanWithAssignedTeamMembers[];
 }
 
 export interface DatabaseTimespanWithFt {
@@ -54,6 +63,21 @@ export interface DatabaseFtWithTimespans {
     teamRequests: DatabaseRequestedTeam[];
   }[];
 }
+
+export interface SimplifiedFT {
+  id: number;
+  name: string;
+  hasPriority: boolean;
+  category: TaskCategory;
+}
+
+export type TimespanWithFt = Timespan & {
+  ft: SimplifiedFT;
+};
+
+export type FtWithTimespan = SimplifiedFT & {
+  timespans: Timespan[];
+};
 
 const SELECT_TEAM_REQUEST = {
   select: {

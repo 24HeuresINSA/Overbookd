@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TaskCategory } from '@prisma/client';
+import {
+  FtWithTimespan,
+  RequestedTeam,
+  SimplifiedFT,
+  Timespan,
+  TimespanWithFt,
+} from '../types/ftTimespanTypes';
 
-class SimplifiedFT {
+class SimplifiedFTRepresentation implements SimplifiedFT {
   @ApiProperty({
     required: true,
     description: 'The id of the ft',
@@ -31,7 +38,7 @@ class SimplifiedFT {
   category: TaskCategory;
 }
 
-export class RequestedTeam {
+class RequestedTeamRepresentation implements RequestedTeam {
   @ApiProperty({
     required: true,
     description: 'The code of the requested team',
@@ -41,7 +48,7 @@ export class RequestedTeam {
 
   @ApiProperty({
     required: true,
-    description: 'The quantity of the requested team',
+    description: 'The quantity of the requested team members',
     type: Number,
   })
   quantity: number;
@@ -54,52 +61,58 @@ export class RequestedTeam {
   assignmentCount: number;
 }
 
-class FtTimespan {
+export class FtTimespanResponseDto implements Timespan {
   @ApiProperty({
     required: true,
-    description: 'The id of the ft timespan',
+    description: 'The id of the timespan',
     type: Number,
   })
   id: number;
 
   @ApiProperty({
     required: true,
-    description: 'The start of the ft timespan',
+    description: 'The start of the timespan',
     type: Date,
   })
   start: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The end of the ft timespan',
+    description: 'The end of the timespan',
     type: Date,
   })
   end: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The ft timespan requested teams',
-    type: RequestedTeam,
+    description: 'The requested teams during timespan',
+    type: RequestedTeamRepresentation,
     isArray: true,
   })
   requestedTeams: RequestedTeam[];
 }
 
-export class TimespanWithFtResponseDto extends FtTimespan {
+export class TimespanWithFtResponseDto
+  extends FtTimespanResponseDto
+  implements TimespanWithFt
+{
   @ApiProperty({
     required: true,
-    description: 'The ft of the ft timespan',
-    type: SimplifiedFT,
+    description: 'The ft of the timespan',
+    type: SimplifiedFTRepresentation,
   })
   ft: SimplifiedFT;
 }
 
-export class FtWithTimespansResponseDto extends SimplifiedFT {
+export class FtWithTimespansResponseDto
+  extends SimplifiedFTRepresentation
+  implements FtWithTimespan
+{
   @ApiProperty({
     required: true,
     description: 'The ft timespans',
-    type: FtTimespan,
+    type: FtTimespanResponseDto,
     isArray: true,
   })
-  timespans: FtTimespan[];
+  timespans: FtTimespanResponseDto[];
 }

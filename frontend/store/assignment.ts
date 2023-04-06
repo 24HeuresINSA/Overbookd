@@ -6,9 +6,9 @@ import {
   FtTimespan,
   FtWithTimespan,
   TimespanWithFt,
-  TimespansWithStats,
   castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
+  FtTimespanWithRequestedTeams,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
 
@@ -24,7 +24,7 @@ export const state = () => ({
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
   selectedFt: null as FtWithTimespan | null,
-  selectedFtTimespans: [] as TimespansWithStats[],
+  selectedFtTimespans: [] as FtTimespanWithRequestedTeams[],
 
   hoverTimespan: null as TimespanWithFt | null,
 });
@@ -54,7 +54,7 @@ export const mutations = mutationTree(state, {
     state.fts = ftWithTimespans;
   },
 
-  SET_FT_TIMESPANS(state, timespans: TimespansWithStats[]) {
+  SET_FT_TIMESPANS(state, timespans: FtTimespanWithRequestedTeams[]) {
     state.selectedFtTimespans = timespans;
   },
 
