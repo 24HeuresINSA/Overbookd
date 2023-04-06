@@ -4,62 +4,7 @@
     <TaskOrgaCalendar class="calendar" />
     <FilterableFtList class="task-list" />
     <v-dialog v-model="openTaskAssignmentDialog">
-      <v-card>
-        <v-card-title>{{ taskAssignmentTitle }}</v-card-title>
-        <v-card-text>
-          <div class="date-navigation">
-            <v-btn icon class="ma-2" @click="previousDay">
-              <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-spacer />
-            <v-btn icon class="ma-2" @click="nextDay">
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-          </div>
-
-          <div class="planning">
-            <v-calendar
-              ref="calendar"
-              v-model="calendarDate"
-              type="category"
-              category-show-all
-              :categories="volunteerIds"
-              :events="events"
-              :interval-height="24"
-              class="planning__calendar"
-            >
-              <template #category="{ category }">
-                <VolunteerResumeCalendarHeader
-                  v-if="retrieveVolunteer(category)"
-                  :volunteer="retrieveVolunteer(category)"
-                ></VolunteerResumeCalendarHeader>
-              </template>
-              <template #interval="{ hour, time, timeToY }">
-                <div
-                  :class="{
-                    shift: isShiftHour(hour),
-                    'shift-party': isPartyHour(hour),
-                    'shift-day': isDayHour(hour),
-                    'shift-night': isNightHour(hour),
-                    'theme--dark': isDarkTheme,
-                  }"
-                  :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
-                ></div>
-              </template>
-            </v-calendar>
-            <v-btn
-              v-if="taskAssignmentVolunteer?.friendAvailable"
-              class="planning_add-candidate"
-              fab
-              dark
-              large
-              color="green"
-            >
-              <v-icon dark> mdi-account-multiple-plus </v-icon>
-            </v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
+      <AssignmentForm />
     </v-dialog>
   </v-container>
 </template>
@@ -70,11 +15,7 @@ import FilterableVolunteerList from "~/components/organisms/assignment/Filterabl
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
-import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
-import { Volunteer } from "~/utils/models/assignment";
-import { getColorByStatus } from "~/domain/common/status-color";
-import { TaskAssignment } from "~/domain/timespan-assignment/timespanAssignment";
-import { SHIFT_HOURS } from "~/utils/shift/shift";
+import AssignmentForm from "~/components/organisms/assignment/AssignmentForm.vue";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -82,12 +23,7 @@ export default Vue.extend({
     FilterableVolunteerList,
     FilterableFtList,
     TaskOrgaCalendar,
-    VolunteerResumeCalendarHeader,
-  },
-  data: () => {
-    return {
-      calendarDate: new Date(),
-    };
+    AssignmentForm,
   },
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
@@ -101,86 +37,10 @@ export default Vue.extend({
         this.$accessor.assignment.resetAssignment();
       },
     },
-    taskAssignment(): TaskAssignment {
-      return this.$accessor.assignment.taskAssignment;
-    },
-    taskAssignmentTitle(): string {
-      return this.$accessor.assignment.taskAssignment.task.name;
-    },
-    taskAssignmentVolunteer(): Volunteer | undefined {
-      return this.$accessor.assignment.taskAssignment.candidates.at(0)
-        ?.volunteer;
-    },
-
-    taskStart(): Date {
-      return this.$accessor.assignment.taskAssignment.task.start;
-    },
-    volunteerIds(): string[] {
-      return this.$accessor.assignment.taskAssignment.candidates.map((c) =>
-        c.volunteer.id.toString()
-      );
-    },
-    events() {
-      return this.$accessor.assignment.taskAssignment.candidates.flatMap(
-        ({ volunteer, tasks }) => {
-          const { start, end, name } =
-            this.$accessor.assignment.taskAssignment.task;
-          return [
-            ...tasks.map(({ start, end, ft: { id, name, status } }) => ({
-              start,
-              end,
-              category: volunteer.id.toString(),
-              name: `[${id}] ${name}`,
-              color: getColorByStatus(status),
-              timed: true,
-            })),
-            {
-              start,
-              end,
-              name,
-              category: volunteer.id.toString(),
-              timed: true,
-            },
-          ];
-        }
-      );
-    },
-    isDarkTheme(): boolean {
-      return this.$accessor.theme.darkTheme;
-    },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchFtsWithTimespans();
-    this.calendarDate = this.taskStart;
-  },
-  methods: {
-    retrieveVolunteer(id: string): Volunteer | undefined {
-      return this.taskAssignment.getCandidate(+id)?.volunteer;
-    },
-    isPartyHour(hour: number): boolean {
-      return hour === SHIFT_HOURS.PARTY;
-    },
-    isDayHour(hour: number): boolean {
-      return hour === SHIFT_HOURS.DAY;
-    },
-    isNightHour(hour: number): boolean {
-      return hour === SHIFT_HOURS.NIGHT;
-    },
-    isShiftHour(hour: number): boolean {
-      return (
-        this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
-      );
-    },
-    previousDay() {
-      const calendar = this.$refs.calendar as any;
-      console.log(calendar);
-      if (calendar) calendar.prev();
-    },
-    nextDay() {
-      const calendar = this.$refs.calendar as any;
-      if (calendar) calendar.next();
-    },
   },
 });
 </script>
@@ -213,42 +73,5 @@ export default Vue.extend({
 .task-list {
   max-width: 25%;
   height: 100%;
-}
-
-.shift {
-  height: 5px;
-  position: absolute;
-  left: -1px;
-  right: 0;
-  pointer-events: none;
-  &.theme--dark {
-    &.shift-night {
-      background-color: beige;
-    }
-  }
-  &-party {
-    background-color: purple;
-  }
-  &-night {
-    background-color: black;
-  }
-  &-day {
-    background-color: darksalmon;
-  }
-}
-
-.date-navigation {
-  display: flex;
-}
-
-.planning {
-  display: flex;
-  gap: 40px;
-  &__calendar {
-    flex-grow: 5;
-  }
-  &__add-candidate {
-    flex-grow: 1;
-  }
 }
 </style>
