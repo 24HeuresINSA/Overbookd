@@ -10,7 +10,7 @@
         @change:category="category = $event"
       ></FtTimespanFilters>
       <v-divider />
-      <FtList :fts="filteredFts" class="task-list" />
+      <TaskList :fts="filteredFts" class="task-list" />
     </v-card-text>
   </v-card>
 </template>
@@ -19,7 +19,7 @@
 import Vue from "vue";
 import Fuse from "fuse.js";
 import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
-import FtList from "~/components/molecules/assignment/list/FtList.vue";
+import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
 import {
   FtWithTimespan,
   TaskCategory,
@@ -31,7 +31,7 @@ import { TaskPriorities } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "FilterableFtList",
-  components: { FtTimespanFilters, FtList },
+  components: { FtTimespanFilters, TaskList },
   data: () => ({
     teams: [] as Team[],
     ft: "",
@@ -114,15 +114,11 @@ $card-padding: 32px;
 
 .filters {
   width: 100%;
-  height: $filters-height;
+  height: $filters-height - 25px;
 }
 
 .task-list {
-  width: 100%;
-  height: calc(
-    100vh - #{$filters-height + $header-footer-height + $card-padding}
-  );
-  display: flex;
-  flex-direction: column;
+  padding: 0 5px;
+  height: calc(100vh - #{$filters-height + $header-footer-height});
 }
 </style>

@@ -21,7 +21,7 @@
       return-object
       @change="changeCategory"
     ></v-combobox>
-    <p>
+    <p class="stats">
       {{ counterLabel }}
       <span class="font-weight-bold">{{ listLength }}</span>
     </p>
@@ -93,13 +93,17 @@ export default Vue.extend({
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
-  padding: 0 1rem;
+  margin-top: 15px;
+  padding: 0 25px;
 
   &__field {
     width: 100%;
     padding-top: 0;
     margin-top: 0;
   }
+}
+
+.stats {
+  margin-bottom: 5px;
 }
 </style>

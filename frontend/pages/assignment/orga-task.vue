@@ -33,34 +33,32 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$header-footer-height: 100px;
-
 .assignment-container {
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
   padding: 0;
   left: 0;
   top: 0;
-  max-width: none;
-  margin: 0;
+  margin-left: 0;
+  margin-right: 0;
   position: absolute;
   display: flex;
   justify-content: space-between;
-  height: 100%;
-  width: 100%;
-  overflow-y: hidden;
 }
 
 .volunteer-list {
-  width: 350px;
-  height: calc(100vh - #{$header-footer-height});
-}
-
-.calendar {
-  width: 1000px;
+  max-width: 20%;
   height: 100%;
 }
 
+.calendar {
+  width: 55%;
+  height: calc(100% - 50px);
+}
+
 .task-list {
-  max-width: 450px;
-  height: calc(100vh - #{$header-footer-height});
+  max-width: 25%;
+  height: 100%;
 }
 </style>
