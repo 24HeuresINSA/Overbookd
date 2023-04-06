@@ -1,4 +1,8 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import {
+  AssignmentCandidate,
+  TaskAssignment,
+} from "~/domain/timespan-assignment/timespanAssignment";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
@@ -10,7 +14,11 @@ import {
   castTimespansWithFtWithDate,
   FtTimespanWithRequestedTeams,
 } from "~/utils/models/ftTimespan";
-import { User } from "~/utils/models/user";
+import {
+  castVolunteerTaskWithDate,
+  User,
+  VolunteerTask,
+} from "~/utils/models/user";
 
 const UserRepo = RepoFactory.userRepo;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
@@ -26,6 +34,8 @@ export const state = () => ({
   selectedFt: null as FtWithTimespan | null,
   selectedFtTimespans: [] as FtTimespanWithRequestedTeams[],
 
+  taskAssignment: TaskAssignment.init(),
+
   hoverTimespan: null as TimespanWithFt | null,
 });
 
@@ -38,6 +48,11 @@ export const getters = getterTree(state, {
         )
       );
     });
+  },
+  openTaskAssignmentDialog(state): boolean {
+    return state.taskAssignment.candidates.some(
+      ({ volunteer }) => volunteer.id === state.selectedVolunteer?.id
+    );
   },
 });
 
@@ -76,6 +91,27 @@ export const mutations = mutationTree(state, {
 
   SET_HOVER_TIMESPAN(state, timespan: TimespanWithFt | null) {
     state.hoverTimespan = timespan;
+  },
+
+  START_TIMESPAN_ASSIGNMENT_WITH_VOLUNTEER(state, volunteer: Volunteer) {
+    if (!state.selectedFt || !state.selectedTimespan) return;
+
+    const candidate = new AssignmentCandidate(volunteer);
+    state.taskAssignment = TaskAssignment.init({
+      ...state.selectedTimespan,
+      name: state.selectedFt.name,
+    }).addCandidate(candidate);
+  },
+
+  SET_CANDIDATE_TASKS(
+    state,
+    { tasks, id }: { tasks: VolunteerTask[]; id: number }
+  ) {
+    state.taskAssignment.withCandidateTasks(id, tasks);
+  },
+
+  RESET_TIMESPAN_ASSIGNMENT(state) {
+    state.taskAssignment = TaskAssignment.init();
   },
 });
 
@@ -163,6 +199,24 @@ export const actions = actionTree(
 
     setHoverTimespan({ commit }, timespan: TimespanWithFt | null) {
       commit("SET_HOVER_TIMESPAN", timespan);
+    },
+
+    async startAssignment({ commit }, volunteer: Volunteer) {
+      commit("SET_SELECTED_VOLUNTEER", volunteer);
+      commit("START_TIMESPAN_ASSIGNMENT_WITH_VOLUNTEER", volunteer);
+      const [userRequestsRes, assignmentRes] = await Promise.all([
+        safeCall(this, UserRepo.getUserFtRequests(this, volunteer.id)),
+        safeCall(this, UserRepo.getVolunteerAssignments(this, volunteer.id)),
+      ]);
+      const tasks = castVolunteerTaskWithDate([
+        ...(userRequestsRes?.data ?? []),
+        ...(assignmentRes?.data ?? []),
+      ]);
+      commit("SET_CANDIDATE_TASKS", { id: volunteer.id, tasks });
+    },
+
+    resetAssignment({ commit }) {
+      commit("RESET_TIMESPAN_ASSIGNMENT");
     },
   }
 );

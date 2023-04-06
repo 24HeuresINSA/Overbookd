@@ -13,6 +13,7 @@
         :volunteers="filteredVolunteers"
         class="volunteer-list"
         :class="shouldDisplayFriends ? 'volunteer-list--with-friend-list' : ''"
+        @select-volunteer="handleVolunteerSelection"
       ></VolunteerList>
       <div v-else class="error-message">
         <p v-if="!selectedTimespan">Aucun créneau séléctionné</p>
@@ -93,6 +94,14 @@ export default Vue.extend({
         threshold: 0.4,
       });
       return fuse.search(search).map((e) => e.item);
+    },
+    handleVolunteerSelection(volunteer: Volunteer) {
+      if (this.isOrgaTaskMode) {
+        this.$accessor.assignment.setSelectedVolunteer(volunteer);
+        this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
+        return;
+      }
+      this.$accessor.assignment.startAssignment(volunteer);
     },
   },
 });

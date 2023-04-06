@@ -3,6 +3,31 @@
     <FilterableVolunteerList class="volunteer-list" />
     <TaskOrgaCalendar class="calendar" />
     <FilterableFtList class="task-list" />
+    <v-dialog v-model="openTaskAssignmentDialog">
+      <v-card>
+        <v-card-title>{{ taskAssignmentTitle }}</v-card-title>
+        <v-card-text>
+          <div class="planning">
+            <v-calendar
+              ref="calendar"
+              v-model="taskStart"
+              type="category"
+              category-show-all
+              :categories="volunteerIds"
+              :events="events"
+              :interval-height="24"
+            >
+              <template #category="{ category }">
+                <VolunteerResumeCalendarHeader
+                  v-if="retrieveVolunteer(category)"
+                  :volunteer="retrieveVolunteer(category)"
+                ></VolunteerResumeCalendarHeader>
+              </template>
+            </v-calendar>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -12,6 +37,10 @@ import FilterableVolunteerList from "~/components/organisms/assignment/Filterabl
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
+import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
+import { Volunteer } from "~/utils/models/assignment";
+import { getColorByStatus } from "~/domain/common/status-color";
+import { TaskAssignment } from "~/domain/timespan-assignment/timespanAssignment";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -19,15 +48,72 @@ export default Vue.extend({
     FilterableVolunteerList,
     FilterableFtList,
     TaskOrgaCalendar,
+    VolunteerResumeCalendarHeader,
   },
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
       return this.$accessor.assignment.fts;
     },
+    openTaskAssignmentDialog: {
+      get(): boolean {
+        return this.$accessor.assignment.openTaskAssignmentDialog;
+      },
+      set(): void {
+        this.$accessor.assignment.resetAssignment();
+      },
+    },
+    taskAssignment(): TaskAssignment {
+      return this.$accessor.assignment.taskAssignment;
+    },
+    taskAssignmentTitle(): string {
+      return this.$accessor.assignment.taskAssignment.task.name;
+    },
+    taskAssignmentVolunteer(): Volunteer | undefined {
+      return this.$accessor.assignment.taskAssignment.candidates.at(0)
+        ?.volunteer;
+    },
+    taskStart(): Date {
+      return this.$accessor.assignment.taskAssignment.task.start;
+    },
+    volunteerIds(): string[] {
+      return this.$accessor.assignment.taskAssignment.candidates.map((c) =>
+        c.volunteer.id.toString()
+      );
+    },
+    events() {
+      return this.$accessor.assignment.taskAssignment.candidates.flatMap(
+        ({ volunteer, tasks }) => {
+          const { start, end, name } =
+            this.$accessor.assignment.taskAssignment.task;
+          return [
+            ...tasks.map(({ start, end, ft: { id, name, status } }) => ({
+              start,
+              end,
+              category: volunteer.id.toString(),
+              name: `[${id}] ${name}`,
+              color: getColorByStatus(status),
+              timed: true,
+            })),
+            {
+              start,
+              end,
+              name,
+              category: volunteer.id.toString(),
+              timed: true,
+            },
+          ];
+        }
+      );
+    },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchFtsWithTimespans();
+  },
+  methods: {
+    retrieveVolunteer(id: string): Volunteer | undefined {
+      return this.taskAssignment.getCandidate(+id)?.volunteer;
+    },
   },
 });
 </script>
