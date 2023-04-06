@@ -48,6 +48,7 @@ export const getters = getterTree(state, {
       "kfet",
       "karna",
       "woods",
+      "strasbourg",
       "teckos",
       "tendrestival",
     ];
