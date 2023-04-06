@@ -7,10 +7,20 @@
       <v-card>
         <v-card-title>{{ taskAssignmentTitle }}</v-card-title>
         <v-card-text>
+          <div class="date-navigation">
+            <v-btn icon class="ma-2" @click="previousDay">
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-spacer />
+            <v-btn icon class="ma-2" @click="nextDay">
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+          </div>
+
           <div class="planning">
             <v-calendar
               ref="calendar"
-              v-model="taskStart"
+              v-model="calendarDate"
               type="category"
               category-show-all
               :categories="volunteerIds"
@@ -22,6 +32,18 @@
                   v-if="retrieveVolunteer(category)"
                   :volunteer="retrieveVolunteer(category)"
                 ></VolunteerResumeCalendarHeader>
+              </template>
+              <template #interval="{ hour, time, timeToY }">
+                <div
+                  :class="{
+                    shift: isShiftHour(hour),
+                    'shift-party': isPartyHour(hour),
+                    'shift-day': isDayHour(hour),
+                    'shift-night': isNightHour(hour),
+                    'theme--dark': isDarkTheme,
+                  }"
+                  :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
+                ></div>
               </template>
             </v-calendar>
           </div>
@@ -41,6 +63,7 @@ import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/res
 import { Volunteer } from "~/utils/models/assignment";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { TaskAssignment } from "~/domain/timespan-assignment/timespanAssignment";
+import { SHIFT_HOURS } from "~/utils/shift/shift";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -49,6 +72,11 @@ export default Vue.extend({
     FilterableFtList,
     TaskOrgaCalendar,
     VolunteerResumeCalendarHeader,
+  },
+  data: () => {
+    return {
+      calendarDate: new Date(),
+    };
   },
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
@@ -105,14 +133,41 @@ export default Vue.extend({
         }
       );
     },
+    isDarkTheme(): boolean {
+      return this.$accessor.theme.darkTheme;
+    },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchFtsWithTimespans();
+    this.calendarDate = this.taskStart;
   },
   methods: {
     retrieveVolunteer(id: string): Volunteer | undefined {
       return this.taskAssignment.getCandidate(+id)?.volunteer;
+    },
+    isPartyHour(hour: number): boolean {
+      return hour === SHIFT_HOURS.PARTY;
+    },
+    isDayHour(hour: number): boolean {
+      return hour === SHIFT_HOURS.DAY;
+    },
+    isNightHour(hour: number): boolean {
+      return hour === SHIFT_HOURS.NIGHT;
+    },
+    isShiftHour(hour: number): boolean {
+      return (
+        this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
+      );
+    },
+    previousDay() {
+      const calendar = this.$refs.calendar as any;
+      console.log(calendar);
+      if (calendar) calendar.prev();
+    },
+    nextDay() {
+      const calendar = this.$refs.calendar as any;
+      if (calendar) calendar.next();
     },
   },
 });
@@ -146,5 +201,31 @@ export default Vue.extend({
 .task-list {
   max-width: 25%;
   height: 100%;
+}
+
+.shift {
+  height: 5px;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+  &.theme--dark {
+    &.shift-night {
+      background-color: beige;
+    }
+  }
+  &-party {
+    background-color: purple;
+  }
+  &-night {
+    background-color: black;
+  }
+  &-day {
+    background-color: darksalmon;
+  }
+}
+
+.date-navigation {
+  display: flex;
 }
 </style>
