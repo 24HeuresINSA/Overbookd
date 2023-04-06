@@ -1,6 +1,10 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Volunteer } from "~/utils/models/assignment";
-import { FtWithTimespan, TimespanWithFt } from "~/utils/models/ftTimespan";
+import {
+  FtTimespanWithRequestedTeams,
+  FtWithTimespan,
+  TimespanWithFt,
+} from "~/utils/models/ftTimespan";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
@@ -17,6 +21,12 @@ export class AssignmentRepository {
   static async getFtWithTimespans(context: Context) {
     return context.$axios.get<HttpStringified<FtWithTimespan[]>>(
       `${this.basePath}/ft-timespans`
+    );
+  }
+
+  static async getTimespansWithStats(context: Context, ftId: number) {
+    return context.$axios.get<HttpStringified<FtTimespanWithRequestedTeams[]>>(
+      `${this.basePath}/ft/${ftId}`
     );
   }
 

@@ -10,7 +10,7 @@
         @change:category="category = $event"
       ></FtTimespanFilters>
       <v-divider />
-      <FtList :fts="filteredFts" class="task-list"></FtList>
+      <FtList :fts="filteredFts" class="task-list" />
     </v-card-text>
   </v-card>
 </template>

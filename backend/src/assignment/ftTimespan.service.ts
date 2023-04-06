@@ -7,16 +7,22 @@ import { UserService } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
-  FtWithTimespansResponseDto,
-  RequestedTeam,
   TimespanWithFtResponseDto,
+  FtWithTimespansResponseDto,
 } from './dto/ftTimespanResponse.dto';
 import {
   DatabaseFtWithTimespans,
   DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
+  Timespan,
   SELECT_FT_WITH_TIMESPANS,
   SELECT_TIMESPAN_WITH_FT,
+  RequestedTeam,
+  DatabaseTimeWindow,
+  TimespanWithFt,
+  FtWithTimespan,
+  DatabaseTimespanWithAssignedTeamMembers,
+  AssignmentAsTeamMember as AssignedAsTeamMember,
 } from './types/ftTimespanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -38,6 +44,43 @@ const WHERE_HAS_TEAM_REQUESTS = {
   },
 };
 
+const SELECT_FT_TIMESPANS_WITH_STATS = {
+  timeWindows: {
+    select: {
+      teamRequests: {
+        select: {
+          teamCode: true,
+          quantity: true,
+          _count: {
+            select: {
+              assignments: true,
+            },
+          },
+        },
+      },
+      timespans: {
+        select: {
+          id: true,
+          start: true,
+          end: true,
+          assignments: {
+            select: {
+              teamRequest: {
+                select: {
+                  teamCode: true,
+                },
+              },
+            },
+            where: {
+              userRequest: null,
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class FtTimespanService {
   constructor(
@@ -46,7 +89,7 @@ export class FtTimespanService {
     private user: UserService,
   ) {}
 
-  async findAllTimespansWithFt(): Promise<TimespanWithFtResponseDto[]> {
+  async findAllTimespansWithFt(): Promise<TimespanWithFt[]> {
     const ftTimespans = await this.prisma.ftTimespan.findMany({
       where: {
         timeWindow: WHERE_FT_EXISTS_AND_READY,
@@ -56,7 +99,7 @@ export class FtTimespanService {
     return this.formatTimespansWithFt(ftTimespans);
   }
 
-  async findAllFtsWithTimespans(): Promise<FtWithTimespansResponseDto[]> {
+  async findAllFtsWithTimespans(): Promise<FtWithTimespan[]> {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
@@ -65,6 +108,31 @@ export class FtTimespanService {
       select: SELECT_FT_WITH_TIMESPANS,
     });
     return this.formatFtsWithTimespans(fts);
+  }
+
+  async findTimespansForFt(ftId: number): Promise<Timespan[]> {
+    const ft = await this.prisma.ft.findFirst({
+      where: {
+        id: ftId,
+        ...WHERE_EXISTS_AND_READY,
+        ...WHERE_HAS_TEAM_REQUESTS,
+      },
+      select: SELECT_FT_TIMESPANS_WITH_STATS,
+    });
+
+    if (!ft) {
+      throw new NotFoundException(`FT with id ${ftId} not found`);
+    }
+
+    return this.formatTimespansWithStatsResponse(ft);
+  }
+
+  private formatTimespansWithStatsResponse(ft: {
+    timeWindows: DatabaseTimeWindow[];
+  }): Timespan[] {
+    return ft.timeWindows.flatMap(({ timespans, teamRequests }) =>
+      timespans.flatMap(convertToTimespan(teamRequests)),
+    );
   }
 
   async findTimespanWithFt(
@@ -223,4 +291,41 @@ export class FtTimespanService {
       return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
     });
   }
+}
+
+function convertToTimespan(
+  teamRequests: DatabaseRequestedTeam[],
+): (value: DatabaseTimespanWithAssignedTeamMembers) => Timespan {
+  return ({ assignments, ...timespan }) => {
+    const requestedTeams = teamRequests.map((teamRequest) =>
+      convertToRequestedTeam(teamRequest, assignments),
+    );
+    return {
+      ...timespan,
+      requestedTeams,
+    };
+  };
+}
+
+function convertToRequestedTeam(
+  teamRequest: DatabaseRequestedTeam,
+  assignments: AssignedAsTeamMember[],
+): RequestedTeam {
+  const assignmentCount = countMemberAssigned(
+    assignments,
+    teamRequest.teamCode,
+  );
+  return {
+    code: teamRequest.teamCode,
+    quantity: teamRequest.quantity,
+    assignmentCount,
+  };
+}
+
+function countMemberAssigned(
+  assignments: AssignedAsTeamMember[],
+  code: string,
+) {
+  return assignments.filter(({ teamRequest }) => teamRequest?.teamCode === code)
+    .length;
 }

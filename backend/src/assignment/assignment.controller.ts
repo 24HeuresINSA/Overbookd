@@ -16,6 +16,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import {
+  FtTimespanResponseDto,
   FtWithTimespansResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
@@ -28,6 +29,7 @@ import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
 import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
+import { Timespan } from './types/ftTimespanTypes';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -71,6 +73,22 @@ export class AssignmentController {
   })
   findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
     return this.ftTimespanService.findAllFtsWithTimespans();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Get('ft/:ftId')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get ft with timespans and stats',
+    isArray: true,
+    type: FtTimespanResponseDto,
+  })
+  findFtTimespans(
+    @Param('ftId', ParseIntPipe) ftId: number,
+  ): Promise<Timespan[]> {
+    return this.ftTimespanService.findTimespansForFt(ftId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

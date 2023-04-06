@@ -1,13 +1,14 @@
-import { getterTree, actionTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
 import {
-  castFtsWithTimespansWithDate,
-  castTimespansWithFtWithDate,
   FtTimespan,
   FtWithTimespan,
   TimespanWithFt,
+  castFtsWithTimespansWithDate,
+  castTimespansWithFtWithDate,
+  FtTimespanWithRequestedTeams,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
 
@@ -23,6 +24,7 @@ export const state = () => ({
   selectedVolunteerFriends: [] as User[],
   selectedTimespan: null as FtTimespan | null,
   selectedFt: null as FtWithTimespan | null,
+  selectedFtTimespans: [] as FtTimespanWithRequestedTeams[],
 
   hoverTimespan: null as TimespanWithFt | null,
 });
@@ -50,6 +52,10 @@ export const mutations = mutationTree(state, {
 
   SET_FTS(state, ftWithTimespans: FtWithTimespan[]) {
     state.fts = ftWithTimespans;
+  },
+
+  SET_FT_TIMESPANS(state, timespans: FtTimespanWithRequestedTeams[]) {
+    state.selectedFtTimespans = timespans;
   },
 
   SET_SELECTED_VOLUNTEER(state, volunteer: Volunteer) {
@@ -112,10 +118,23 @@ export const actions = actionTree(
       commit("SET_SELECTED_FT", ft);
     },
 
+    setVolunteers({ commit }, volunteers: Volunteer[]) {
+      commit("SET_VOLUNTEERS", volunteers);
+    },
+
     async fetchFtsWithTimespans({ commit }) {
       const res = await safeCall(this, AssignmentRepo.getFtWithTimespans(this));
       if (!res) return;
       commit("SET_FTS", castFtsWithTimespansWithDate(res.data));
+    },
+
+    async fetchTimespansWithStats({ commit }, ftId: number) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.getTimespansWithStats(this, ftId)
+      );
+      if (!res) return;
+      commit("SET_FT_TIMESPANS", res.data);
     },
 
     async fetchTimespansForVolunteer({ commit }, volunteerId: number) {

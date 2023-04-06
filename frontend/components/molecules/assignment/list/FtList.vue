@@ -22,7 +22,7 @@
                 v-for="teamCode of getRequiredTeams(item)"
                 :key="teamCode"
                 :team="teamCode"
-              ></TeamIconChip>
+              />
             </td>
           </tr>
         </tbody>
@@ -33,11 +33,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 import {
   FtWithTimespan,
   getRequiredTeamsInFt,
 } from "~/utils/models/ftTimespan";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 
 export default Vue.extend({
   name: "FtList",
@@ -61,8 +61,8 @@ export default Vue.extend({
     },
     selectFt(ft: FtWithTimespan) {
       this.$accessor.assignment.setSelectedFt(ft);
-      // TODO: A retirer quand il y aura le calendrier
-      this.$accessor.assignment.setSelectedTimespan(ft.timespans[0]);
+      this.$accessor.assignment.setVolunteers([]);
+      this.$accessor.assignment.fetchTimespansWithStats(ft.id);
     },
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
