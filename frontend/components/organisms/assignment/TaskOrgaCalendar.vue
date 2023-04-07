@@ -1,5 +1,10 @@
 <template>
-  <OverCalendarV2 v-model="calendarMarker" :title="ftName" :events="timespans">
+  <OverCalendarV2
+    v-model="calendarMarker"
+    :title="ftName"
+    :events="timespans"
+    :scroll-to-time="timespans.length > 0 ? timespans[0].start : null"
+  >
     <template #event="{ event: timespan }">
       <div
         class="event underline-on-hover"

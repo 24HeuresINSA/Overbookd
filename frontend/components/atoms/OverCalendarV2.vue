@@ -145,10 +145,24 @@ export default Vue.extend({
       type: Array,
       default: () => [1, 2, 3, 4, 5, 6, 0],
     },
+    scrollToTime: {
+      type: Date,
+      default: null,
+    },
   },
   computed: {
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
+    },
+  },
+  watch: {
+    scrollToTime() {
+      if (this.scrollToTime === null) return;
+      const date = new Date(this.scrollToTime);
+      const time = `${date.getHours()}:${date.getMinutes()}`;
+
+      const calendar = this.$refs.calendar as any;
+      if (calendar) calendar.scrollToTime(time);
     },
   },
   methods: {
