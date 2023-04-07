@@ -93,7 +93,7 @@ export default Vue.extend({
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 25px;
   padding: 0 25px;
 
   &__field {

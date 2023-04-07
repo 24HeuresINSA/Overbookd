@@ -79,7 +79,7 @@ export default Vue.extend({
   padding-right: 8px;
   margin-left: 5px;
   flex-wrap: wrap;
-  flex-basis: 140px;
+  flex-basis: 130px;
 
   &__team {
     margin: 2px;

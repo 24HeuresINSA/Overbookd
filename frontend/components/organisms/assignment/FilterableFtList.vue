@@ -1,6 +1,6 @@
 <template>
   <v-card class="filterable-task-list">
-    <v-card-text>
+    <v-card-text class="filterable-task-list__text">
       <FtTimespanFilters
         :list-length="filteredFts.length"
         class="filters"
@@ -101,15 +101,18 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 190px;
+$filters-height: 215px;
 $header-footer-height: 100px;
-$card-padding: 32px;
 
 .filterable-task-list {
   width: 100%;
-  max-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
+
+  &__text {
+    padding: 0;
+  }
 }
 
 .filters {
