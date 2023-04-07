@@ -9,7 +9,6 @@
           v-for="teamCode of sortedVolunteerTeams"
           :key="teamCode"
           :team="teamCode"
-          class="task-teams__team"
         />
       </div>
     </div>
@@ -77,12 +76,9 @@ export default Vue.extend({
   align-items: center;
   justify-content: center;
   padding-right: 8px;
-  margin-left: 5px;
+  margin: 2px 0 2px 5px;
   flex-wrap: wrap;
-  flex-basis: 130px;
-
-  &__team {
-    margin: 2px;
-  }
+  flex-basis: 100px;
+  gap: 2px;
 }
 </style>
