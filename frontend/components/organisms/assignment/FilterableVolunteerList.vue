@@ -105,7 +105,7 @@ $friends-height: 160px;
 
 .filterable-volunteer-list {
   width: 100%;
-  max-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 
@@ -134,7 +134,7 @@ $friends-height: 160px;
   justify-content: center;
   display: flex;
   height: calc(100vh - #{$filters-height + $header-footer-height});
-  margin: 0 10%;
+  margin: 0 5%;
 
   p {
     text-align: center;

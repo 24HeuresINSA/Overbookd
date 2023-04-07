@@ -59,9 +59,9 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
-import { moveAtFirstIndex } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import { sortTeamsForAssignment } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
@@ -75,18 +75,7 @@ export default Vue.extend({
   },
   computed: {
     sortedVolunteerTeams(): string[] {
-      let filteredTeams = this.volunteer.teams.filter(
-        (team) => team !== "admin" && team !== "orga"
-      );
-      const softIndex = filteredTeams.findIndex((team) => team === "soft");
-      if (softIndex !== -1) {
-        filteredTeams = moveAtFirstIndex(filteredTeams, softIndex);
-      }
-      const hardIndex = filteredTeams.findIndex((team) => team === "hard");
-      if (hardIndex !== -1) {
-        filteredTeams = moveAtFirstIndex(filteredTeams, hardIndex);
-      }
-      return filteredTeams;
+      return sortTeamsForAssignment(this.volunteer.teams);
     },
     formattedUserInformations(): string {
       return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
