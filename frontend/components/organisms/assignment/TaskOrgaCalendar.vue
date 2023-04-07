@@ -55,8 +55,7 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedTimespan?.id ?? null;
     },
     hourToScrollTo(): number | null {
-      if (this.timespans.length === 0) return null;
-      return this.timespans[0].start.getHours();
+      return this.timespans.at(0)?.start.getHours() ?? null;
     },
   },
   mounted() {
