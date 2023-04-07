@@ -56,10 +56,7 @@ export default Vue.extend({
     },
     hourToScrollTo(): number | null {
       if (this.timespans.length === 0) return null;
-      return this.timespans.reduce(
-        (min, timespan) => Math.min(min, timespan.start.getHours()),
-        24
-      );
+      return this.timespans[0].start.getHours();
     },
   },
   mounted() {
