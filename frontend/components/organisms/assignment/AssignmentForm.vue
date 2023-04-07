@@ -147,7 +147,6 @@ export default Vue.extend({
     },
     previousDay() {
       const calendar = this.$refs.calendar as any;
-      console.log(calendar);
       if (calendar) calendar.prev();
     },
     nextDay() {
