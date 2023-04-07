@@ -145,8 +145,8 @@ export default Vue.extend({
       type: Array,
       default: () => [1, 2, 3, 4, 5, 6, 0],
     },
-    scrollToTime: {
-      type: Date,
+    hourToScrollTo: {
+      type: Number,
       default: null,
     },
   },
@@ -156,11 +156,9 @@ export default Vue.extend({
     },
   },
   watch: {
-    scrollToTime() {
-      if (this.scrollToTime === null) return;
-      const date = new Date(this.scrollToTime);
-      const time = `${date.getHours()}:${date.getMinutes()}`;
-
+    hourToScrollTo() {
+      if (this.hourToScrollTo === null) return;
+      const time = `${this.hourToScrollTo}:00`;
       const calendar = this.$refs.calendar as any;
       if (calendar) calendar.scrollToTime(time);
     },

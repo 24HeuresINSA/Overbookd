@@ -3,7 +3,7 @@
     v-model="calendarMarker"
     :title="ftName"
     :events="timespans"
-    :scroll-to-time="timespans.length > 0 ? timespans[0].start : null"
+    :hour-to-scroll-to="hourToScrollTo"
   >
     <template #event="{ event: timespan }">
       <div
@@ -53,6 +53,13 @@ export default Vue.extend({
     },
     selectedTimespanId(): number | null {
       return this.$accessor.assignment.selectedTimespan?.id ?? null;
+    },
+    hourToScrollTo(): number | null {
+      if (this.timespans.length === 0) return null;
+      return this.timespans.reduce(
+        (min, timespan) => Math.min(min, timespan.start.getHours()),
+        24
+      );
     },
   },
   mounted() {
