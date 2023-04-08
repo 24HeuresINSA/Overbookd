@@ -264,15 +264,16 @@ export const actions = actionTree(
         await Promise.all([
           safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
           safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
-          ...state.taskAssignment.candidates.map(({ volunteer }) =>
-            safeCall(
-              this,
-              AssignmentRepo.getAvailableFriends(
+          ...state.taskAssignment.candidateToRetrieveFriendsFor.map(
+            ({ volunteer }) =>
+              safeCall(
                 this,
-                volunteer.id,
-                state.selectedTimespan?.id ?? 0
+                AssignmentRepo.getAvailableFriends(
+                  this,
+                  volunteer.id,
+                  state.selectedTimespan?.id ?? 0
+                )
               )
-            )
           ),
         ]);
       const tasks = castVolunteerTaskWithDate([

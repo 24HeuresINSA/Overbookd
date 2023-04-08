@@ -154,6 +154,11 @@ export class TaskAssignment {
     return this;
   }
 
+  get candidateToRetrieveFriendsFor(): AssignmentCandidate[] {
+    const endIndex = this._candidates.length === 1 ? 1 : -1;
+    return this._candidates.slice(0, endIndex);
+  }
+
   get candidateFriends(): Volunteer[] {
     return this._friends.filter(
       (friend) =>
@@ -291,7 +296,7 @@ class PreviousCandidateReplacementStrategy implements ReplacementStrategy {
     potentialCandidates: Volunteer[]
   ): AssignmentCandidate | undefined {
     const previousFriend =
-      potentialCandidates
+      [...potentialCandidates]
         .reverse()
         .find((friend) => friend.id < lastCandidate.volunteer.id) ??
       potentialCandidates.at(-1);
