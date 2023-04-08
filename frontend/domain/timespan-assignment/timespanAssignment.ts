@@ -149,7 +149,7 @@ export class TaskAssignment {
       }));
   }
 
-  withCandidateFriends(friends: Volunteer[]): TaskAssignment {
+  withCandidatesFriends(friends: Volunteer[]): TaskAssignment {
     this._friends = friends.sort((a, b) => a.id - b.id);
     return this;
   }
@@ -226,36 +226,29 @@ export class TaskAssignment {
   }
 
   changeLastCandidateToPreviousFriend(): TaskAssignment {
-    const lastCandidate = this.candidates.at(-1);
-    if (!lastCandidate) return this;
-    const previousFriend =
-      this.potentialCandidates
-        .reverse()
-        .find((friend) => friend.id < lastCandidate.volunteer.id) ??
-      this.potentialCandidates.at(-1);
-    if (!previousFriend) return this;
-    const previousCandidate = new AssignmentCandidate(previousFriend);
-    return this.replaceCandidateBy(
-      lastCandidate.volunteer.id,
-      previousCandidate
-    );
+    const strategy = new PreviousCandidateReplacementStrategy();
+    return this.replaceCandidate(strategy);
   }
 
   changeLastCandidateToNextFriend(): TaskAssignment {
+    const strategy = new NextCandidateReplacementStrategy();
+    return this.replaceCandidate(strategy);
+  }
+
+  private replaceCandidate(strategy: ReplacementStrategy): TaskAssignment {
     const lastCandidate = this.candidates.at(-1);
     if (!lastCandidate) return this;
-    const nextFriend =
-      this.potentialCandidates.find(
-        (friend) => friend.id > lastCandidate.volunteer.id
-      ) ?? this.potentialCandidates.at(0);
-    if (!nextFriend) return this;
-    const nextCandidate = new AssignmentCandidate(nextFriend);
-    return this.replaceCandidateBy(lastCandidate.volunteer.id, nextCandidate);
+    const newCandidate = strategy.findNewCandidate(
+      lastCandidate,
+      this.potentialCandidates
+    );
+    if (!newCandidate) return this;
+    return this.replaceCandidateBy(lastCandidate.volunteer.id, newCandidate);
   }
 
   get canAssign(): boolean {
     return (
-      this.areAllTeamRequestBellowMaxCapacity && this.areAllCandidateAssigned
+      this.areAllTeamRequestBelowMaxCapacity && this.areAllCandidateAssigned
     );
   }
 
@@ -263,10 +256,46 @@ export class TaskAssignment {
     return this.candidates.every((candidate) => candidate.assignment !== "");
   }
 
-  private get areAllTeamRequestBellowMaxCapacity(): boolean {
+  private get areAllTeamRequestBelowMaxCapacity(): boolean {
     return this.teamRequests.every(
       ({ teamCode, quantity, assignments }) =>
         assignments + this.countCandidateAssignedTo(teamCode) <= quantity
     );
+  }
+}
+
+interface ReplacementStrategy {
+  findNewCandidate(
+    lastCandidate: AssignmentCandidate,
+    potentialCandidates: Volunteer[]
+  ): AssignmentCandidate | undefined;
+}
+
+class NextCandidateReplacementStrategy implements ReplacementStrategy {
+  findNewCandidate(
+    lastCandidate: AssignmentCandidate,
+    potentialCandidates: Volunteer[]
+  ): AssignmentCandidate | undefined {
+    const nextFriend =
+      potentialCandidates.find(
+        (friend) => friend.id > lastCandidate.volunteer.id
+      ) ?? potentialCandidates.at(0);
+    if (!nextFriend) return undefined;
+    return new AssignmentCandidate(nextFriend);
+  }
+}
+
+class PreviousCandidateReplacementStrategy implements ReplacementStrategy {
+  findNewCandidate(
+    lastCandidate: AssignmentCandidate,
+    potentialCandidates: Volunteer[]
+  ): AssignmentCandidate | undefined {
+    const previousFriend =
+      potentialCandidates
+        .reverse()
+        .find((friend) => friend.id < lastCandidate.volunteer.id) ??
+      potentialCandidates.at(-1);
+    if (!previousFriend) return undefined;
+    return new AssignmentCandidate(previousFriend);
   }
 }

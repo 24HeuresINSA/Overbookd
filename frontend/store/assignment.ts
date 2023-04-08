@@ -126,7 +126,7 @@ export const mutations = mutationTree(state, {
   },
 
   SET_CANDIDATES_FRIENDS(state, friends: Volunteer[]) {
-    state.taskAssignment = state.taskAssignment.withCandidateFriends(friends);
+    state.taskAssignment = state.taskAssignment.withCandidatesFriends(friends);
   },
 
   ASSIGN_VOLUNTEER_AS_MEMBER_OF(
@@ -305,7 +305,11 @@ export const actions = actionTree(
         )
       );
       if (assignmentsRes.some((res) => res === undefined)) {
-        alert("problem");
+        const notif = {
+          message:
+            "Toutes les affectations n'ont pas eu lieu. Regardez le détails du créneau.",
+        };
+        dispatch("notif/pushNotification", notif);
         return;
       }
       commit("SET_SELECTED_VOLUNTEER", null);
@@ -322,15 +326,15 @@ export const actions = actionTree(
 
     previousCandidate({ commit, dispatch }) {
       commit("SET_PREVIOUS_CANDIDATE");
-      dispatch("retrieveLasCandidateRelatedData");
+      dispatch("retrieveLastCandidateRelatedData");
     },
 
     nextCandidate({ commit, dispatch }) {
       commit("SET_NEXT_CANDIDATE");
-      dispatch("retrieveLasCandidateRelatedData");
+      dispatch("retrieveLastCandidateRelatedData");
     },
 
-    retrieveLasCandidateRelatedData({ state, dispatch }) {
+    retrieveLastCandidateRelatedData({ state, dispatch }) {
       const lastCandidate = state.taskAssignment.candidates.at(-1);
       if (!lastCandidate) return;
       dispatch("retrieveVolunteerRelatedData", lastCandidate.volunteer.id);

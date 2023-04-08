@@ -133,7 +133,6 @@ export default Vue.extend({
   data: () => {
     return {
       calendarDate: new Date(),
-      candidateIndex: 0,
     };
   },
   computed: {
@@ -255,7 +254,6 @@ export default Vue.extend({
     },
     addCandidate() {
       this.$accessor.assignment.addCandidate();
-      this.candidateIndex = 0;
     },
     previousCandidate() {
       this.$accessor.assignment.previousCandidate();
