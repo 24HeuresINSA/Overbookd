@@ -132,7 +132,7 @@ export class FtTimespanService {
     );
   }
 
-  async findTimespanWithFt(
+  async findTimespanWithFtAndAssignments(
     timespanId: number,
   ): Promise<TimespanWithFtResponseDto> {
     const ftTimespan = await this.prisma.ftTimespan.findFirst({
@@ -248,6 +248,7 @@ export class FtTimespanService {
         category: ftTimespan.timeWindow.ft.category,
       },
       requestedTeams,
+      assignees: formatTimespanAssignees(ftTimespan),
     };
   }
 
@@ -288,6 +289,10 @@ export class FtTimespanService {
       return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
     });
   }
+}
+
+function formatTimespanAssignees(ftTimespan: DatabaseTimespanWithFt): number[] {
+  return ftTimespan.assignments.map(({ assignee }) => assignee.id);
 }
 
 function flatMapTeamRequests(

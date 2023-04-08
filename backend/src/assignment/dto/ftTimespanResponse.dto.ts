@@ -83,6 +83,14 @@ class FtTimespan {
     isArray: true,
   })
   requestedTeams: RequestedTeam[];
+
+  @ApiProperty({
+    required: false,
+    description: 'The ft timespan assignees ids',
+    type: Number,
+    isArray: true,
+  })
+  assignees?: number[];
 }
 
 export class TimespanWithFtResponseDto extends FtTimespan {

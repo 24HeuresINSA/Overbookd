@@ -38,6 +38,11 @@ export interface DatabaseTimespanWithFt {
     };
     teamRequests: DatabaseRequestedTeam[];
   };
+  assignments: {
+    assignee: {
+      id: number;
+    };
+  }[];
 }
 
 export interface DatabaseFtWithTimespans {
@@ -82,6 +87,15 @@ export const SELECT_TIMESPAN_WITH_FT = {
         },
       },
       teamRequests: SELECT_TEAM_REQUEST,
+    },
+  },
+  assignments: {
+    select: {
+      assignee: {
+        select: {
+          id: true,
+        },
+      },
     },
   },
 };

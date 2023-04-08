@@ -11,12 +11,23 @@ export interface Volunteer extends BaseVolunteer {
   assignments: number;
   friendAvailable?: boolean;
   isRequestedOnSamePeriod?: boolean;
+  hasFriendAssigned?: boolean;
 }
 
 export interface DatabaseVolunteer extends BaseVolunteer {
   team: {
     team: {
       code: string;
+    };
+  }[];
+  friends?: {
+    requestor: {
+      id: number;
+    };
+  }[];
+  friendRequestors?: {
+    friend: {
+      id: number;
     };
   }[];
   _count?: {
