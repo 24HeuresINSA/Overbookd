@@ -1,5 +1,10 @@
 <template>
-  <OverCalendarV2 v-model="calendarMarker" :title="ftName" :events="timespans">
+  <OverCalendarV2
+    v-model="calendarMarker"
+    :title="ftName"
+    :events="timespans"
+    :hour-to-scroll-to="hourToScrollTo"
+  >
     <template #event="{ event: timespan }">
       <div
         class="event underline-on-hover"
@@ -48,6 +53,9 @@ export default Vue.extend({
     },
     selectedTimespanId(): number | null {
       return this.$accessor.assignment.selectedTimespan?.id ?? null;
+    },
+    hourToScrollTo(): number | null {
+      return this.timespans.at(0)?.start.getHours() ?? null;
     },
   },
   mounted() {
