@@ -155,6 +155,11 @@ export default Vue.extend({
       );
     },
   },
+  watch: {
+    taskAssignment() {
+      this.calendarDate = this.start;
+    },
+  },
   mounted() {
     this.calendarDate = this.start;
   },
