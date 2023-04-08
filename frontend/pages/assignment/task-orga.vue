@@ -3,7 +3,7 @@
     <FilterableVolunteerList class="volunteer-list" />
     <TaskOrgaCalendar class="calendar" />
     <FilterableFtList class="task-list" />
-    <v-dialog v-model="openTaskAssignmentDialog">
+    <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
       <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
     </v-dialog>
   </v-container>

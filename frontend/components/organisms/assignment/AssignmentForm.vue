@@ -5,18 +5,16 @@
     </v-btn>
     <v-card-title>{{ taskTitle }}</v-card-title>
     <v-card-text>
-      <div class="date-navigation">
-        <v-btn icon class="ma-2" @click="previousDay">
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-spacer />
-        <v-btn icon class="ma-2" @click="nextDay">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </div>
-
       <div class="planning-list">
         <div class="planning">
+          <div class="date-navigation">
+            <v-btn icon @click="previousDay">
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn icon @click="nextDay">
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+          </div>
           <v-calendar
             ref="calendar"
             v-model="calendarDate"
@@ -70,9 +68,10 @@
             <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Affecter
           </v-btn>
         </div>
-        <div class="add-cadidate">
+        <aside class="add-cadidate-corridor">
           <v-btn
             v-if="mainCandidate?.volunteer.friendAvailable"
+            id="add-candidate"
             fab
             dark
             large
@@ -80,7 +79,7 @@
           >
             <v-icon dark> mdi-account-multiple-plus </v-icon>
           </v-btn>
-        </div>
+        </aside>
       </div>
     </v-card-text>
   </v-card>
@@ -247,6 +246,8 @@ export default Vue.extend({
 
 .date-navigation {
   display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .planning-list {
@@ -275,9 +276,14 @@ export default Vue.extend({
       cursor: initial;
     }
   }
-  .add-candidate {
+  .add-candidate-corridor {
     flex-grow: 1;
   }
+}
+
+#add-candidate {
+  position: sticky;
+  top: 55px;
 }
 
 .close-btn {
