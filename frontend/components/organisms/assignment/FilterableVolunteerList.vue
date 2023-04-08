@@ -6,6 +6,7 @@
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
+        @change:sort="sort = $event"
       ></VolunteerFilters>
       <v-divider />
       <VolunteerList
@@ -44,13 +45,18 @@ export default Vue.extend({
   data: () => ({
     teams: [] as Team[],
     volunteer: "",
+    sort: 0,
   }),
   computed: {
     filteredVolunteers(): Volunteer[] {
       const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
         (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer)
       );
-      return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
+      const searchedVolunteers = this.fuzzyFindVolunteer(
+        filteredVolunteers,
+        this.volunteer
+      );
+      return this.sortVolunteers(searchedVolunteers);
     },
     isOrgaTaskMode(): boolean {
       return (
@@ -103,6 +109,17 @@ export default Vue.extend({
         return;
       }
       this.$accessor.assignment.startAssignment(volunteer);
+    },
+    sortVolunteers(volunteers: Volunteer[]) {
+      return volunteers.sort((a, b) => {
+        if (this.sort === 0) {
+          return b.charisma - a.charisma;
+        } else if (this.sort === 1) {
+          return a.assignments - b.assignments;
+        } else {
+          return b.assignments - a.assignments;
+        }
+      });
     },
   },
 });
