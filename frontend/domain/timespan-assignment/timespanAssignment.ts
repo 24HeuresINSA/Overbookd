@@ -34,6 +34,7 @@ export class AssignmentCandidate {
   }
 
   unassign() {
+    if (this.assignableTeams.length === 1) return;
     this._assignment = "";
   }
 

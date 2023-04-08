@@ -17,8 +17,11 @@
         >
           {{ getTeamMetadate(team).icon }}
         </v-icon>
+        <span v-if="withName" class="name">
+          {{ getTeamMetadate(team).name }}
+        </span>
       </template>
-      <span>{{ getTeamMetadate(team) ? getTeamMetadate(team).name : "" }}</span>
+      <span>{{ getTeamMetadate(team)?.name ?? "" }}</span>
     </v-tooltip>
   </v-chip>
 </template>
@@ -36,6 +39,10 @@ export default Vue.extend({
     size: {
       type: String,
       default: "small",
+    },
+    withName: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -60,5 +67,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .v-chip {
   margin-right: 2px;
+}
+span.name {
+  color: white;
 }
 </style>

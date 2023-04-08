@@ -51,9 +51,10 @@
               v-for="team of getAssignableTeams(mainCandidate)"
               :key="team"
               :team="team"
+              with-name
               size="large"
               :class="{
-                'not-selected': isAnotherTeamAssigned(team, mainCandidate),
+                'not-selected': isAssignedAs(team, mainCandidate),
               }"
               @click="temporaryAssign(team, mainCandidate)"
             ></TeamIconChip>
@@ -209,12 +210,8 @@ export default Vue.extend({
         this.$accessor.assignment.assign({ teamCode, volunteerId });
       }
     },
-    isAnotherTeamAssigned(
-      teamCode: string,
-      candidate?: AssignmentCandidate
-    ): boolean {
+    isAssignedAs(teamCode: string, candidate?: AssignmentCandidate): boolean {
       if (!candidate) return false;
-      if (!candidate.assignment) return false;
       return candidate.assignment !== teamCode;
     },
     assign() {
