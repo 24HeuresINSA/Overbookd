@@ -1,5 +1,8 @@
 <template>
   <v-card>
+    <v-btn class="close-btn" icon @click="closeDialog">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
     <v-card-title>{{ taskTitle }}</v-card-title>
     <v-card-text>
       <div class="date-navigation">
@@ -60,8 +63,11 @@
 <script lang="ts">
 import Vue from "vue";
 import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
-import { getColorByStatus } from "~/domain/common/status-color";
 import { TaskAssignment } from "~/domain/timespan-assignment/timespanAssignment";
+import {
+  convertTaskToPlanningEvent,
+  createTemporaryTaskPlanningEvent,
+} from "~/domain/common/planning-events";
 import { Volunteer } from "~/utils/models/assignment";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 
@@ -98,24 +104,15 @@ export default Vue.extend({
     events() {
       return this.$accessor.assignment.taskAssignment.candidates.flatMap(
         ({ volunteer, tasks }) => {
-          const { start, end, name } =
-            this.$accessor.assignment.taskAssignment.task;
+          const currentTask = this.$accessor.assignment.taskAssignment.task;
           return [
-            ...tasks.map(({ start, end, ft: { id, name, status } }) => ({
-              start,
-              end,
-              category: volunteer.id.toString(),
-              name: `[${id}] ${name}`,
-              color: getColorByStatus(status),
-              timed: true,
-            })),
-            {
-              start,
-              end,
-              name,
-              category: volunteer.id.toString(),
-              timed: true,
-            },
+            ...tasks.map((task) =>
+              convertTaskToPlanningEvent(task, volunteer.id.toString())
+            ),
+            createTemporaryTaskPlanningEvent(
+              currentTask,
+              volunteer.id.toString()
+            ),
           ];
         }
       );
@@ -152,6 +149,9 @@ export default Vue.extend({
     nextDay() {
       const calendar = this.$refs.calendar as any;
       if (calendar) calendar.next();
+    },
+    closeDialog() {
+      this.$emit("close-dialog");
     },
   },
 });
@@ -193,5 +193,11 @@ export default Vue.extend({
   &__add-candidate {
     flex-grow: 1;
   }
+}
+
+.close-btn {
+  position: absolute;
+  top: 3px;
+  right: 3px;
 }
 </style>

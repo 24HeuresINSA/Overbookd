@@ -4,7 +4,7 @@
     <TaskOrgaCalendar class="calendar" />
     <FilterableFtList class="task-list" />
     <v-dialog v-model="openTaskAssignmentDialog">
-      <AssignmentForm />
+      <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
     </v-dialog>
   </v-container>
 </template>
@@ -41,6 +41,11 @@ export default Vue.extend({
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchFtsWithTimespans();
+  },
+  methods: {
+    closeTaskAssignmentDialog() {
+      this.openTaskAssignmentDialog = false;
+    },
   },
 });
 </script>
