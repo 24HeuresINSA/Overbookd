@@ -52,6 +52,7 @@ export class AssignmentCandidate {
 export class TaskAssignment {
   private teamRequests: TeamRequest[] = [];
   private _candidates: AssignmentCandidate[] = [];
+  private _friends: Volunteer[] = [];
 
   private constructor(readonly task: Task) {}
 
@@ -134,5 +135,58 @@ export class TaskAssignment {
         teamCode: candidate.assignment,
         volunteerId: candidate.volunteer.id,
       }));
+  }
+
+  withCandidateFriends(friends: Volunteer[]): TaskAssignment {
+    this._friends = friends;
+    return this;
+  }
+
+  get candidateFriends(): Volunteer[] {
+    return this._friends.filter(
+      (friend) => !this.getCandidate(friend.id) && this.canBeAssigned(friend)
+    );
+  }
+
+  get canAssignMoreVolunteer(): boolean {
+    return this.areRemainingTeamRequests && this.areFriendsAvailable;
+  }
+
+  private get areRemainingTeamRequests() {
+    return this.remainingTeamRequestsAfterAssignment.length > 0;
+  }
+
+  private get remainingTeamRequestsAfterAssignment(): string[] {
+    return this.teamRequests
+      .filter((teamRequest) =>
+        this.isRemainingTeamRequestAfterAssignment(teamRequest)
+      )
+      .map(({ teamCode }) => teamCode);
+  }
+
+  private isRemainingTeamRequestAfterAssignment({
+    quantity,
+    assignments,
+    teamCode,
+  }: TeamRequest): boolean {
+    return quantity > assignments + this.countCandidateAssignedTo(teamCode);
+  }
+
+  private countCandidateAssignedTo(teamCode: string): number {
+    return this._candidates.filter(
+      (candidate) => candidate.assignment === teamCode
+    ).length;
+  }
+
+  private get areFriendsAvailable(): boolean {
+    return this.candidateFriends.length > 1;
+  }
+
+  private canBeAssigned(volunteer: Volunteer): boolean {
+    const asCandidate = new AssignmentCandidate(volunteer);
+    const assignableTeams = asCandidate.assignableTeams(
+      this.remainingTeamRequestsAfterAssignment
+    );
+    return assignableTeams.length > 0;
   }
 }

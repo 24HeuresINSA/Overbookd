@@ -51,7 +51,7 @@ export class AssignmentRepository {
 
   static async getVolunteersForTimespan(context: Context, timespanId: number) {
     return context.$axios.get<HttpStringified<Volunteer[]>>(
-      `${this.basePath}/ft-timespan/${timespanId}/volunteers`
+      `${this.basePath}/ft-timespans/${timespanId}/volunteers`
     );
   }
 
@@ -59,6 +59,16 @@ export class AssignmentRepository {
     return context.$axios.post<HttpStringified<AssignmentResponse>>(
       this.basePath,
       assignment
+    );
+  }
+
+  static async getAvailableFriends(
+    context: Context,
+    volunteerId: number,
+    timespanId: number
+  ) {
+    return context.$axios.get<HttpStringified<Volunteer[]>>(
+      `${this.basePath}/ft-timespans/${timespanId}/volunteers/${volunteerId}/available-friends`
     );
   }
 }

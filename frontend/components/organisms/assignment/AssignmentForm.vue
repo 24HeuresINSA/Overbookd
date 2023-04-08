@@ -70,7 +70,7 @@
         </div>
         <aside class="add-cadidate-corridor">
           <v-btn
-            v-if="mainCandidate?.volunteer.friendAvailable"
+            v-if="canAssignMoreVolunteer"
             id="add-candidate"
             fab
             dark
@@ -153,6 +153,9 @@ export default Vue.extend({
       return this.$accessor.assignment.taskAssignment.candidates.some(
         (candidate) => candidate.assignment === ""
       );
+    },
+    canAssignMoreVolunteer(): boolean {
+      return this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
     },
   },
   watch: {

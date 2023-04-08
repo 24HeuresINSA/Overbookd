@@ -111,7 +111,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('ft-timespan/:timespanId/volunteers')
+  @Get('ft-timespans/:timespanId/volunteers')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -124,6 +124,26 @@ export class AssignmentController {
   ): Promise<VolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteersForFtTimespan(
       timespanId,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Get('ft-timespans/:timespanId/volunteers/:volunteerId/available-friends')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Get volunteer's friends available for ft timespan",
+    isArray: true,
+    type: VolunteerResponseDto,
+  })
+  findAvailableVolunteerFriendsForFtTimespan(
+    @Param('timespanId', ParseIntPipe) timespanId: number,
+    @Param('volunteerId', ParseIntPipe) volunteerId: number,
+  ): Promise<VolunteerResponseDto[]> {
+    return this.volunteerService.findAvailableVolunteerFriendsForFtTimespan(
+      timespanId,
+      volunteerId,
     );
   }
 

@@ -125,6 +125,10 @@ export const mutations = mutationTree(state, {
     state.taskAssignment.withCandidateTasks(id, tasks);
   },
 
+  SET_CANDIDATES_FRIENDS(state, friends: Volunteer[]) {
+    state.taskAssignment = state.taskAssignment.withCandidateFriends(friends);
+  },
+
   ASSIGN_VOLUNTEER_AS_MEMBER_OF(
     state,
     { volunteerId, teamCode }: AssignmentParameters
@@ -234,18 +238,28 @@ export const actions = actionTree(
       commit("SET_HOVER_TIMESPAN", timespan);
     },
 
-    async startAssignment({ commit }, volunteer: Volunteer) {
+    async startAssignment({ commit, state }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       commit("START_TIMESPAN_ASSIGNMENT_WITH_VOLUNTEER", volunteer);
-      const [userRequestsRes, assignmentRes] = await Promise.all([
-        safeCall(this, UserRepo.getUserFtRequests(this, volunteer.id)),
-        safeCall(this, UserRepo.getVolunteerAssignments(this, volunteer.id)),
-      ]);
+      const [userRequestsRes, assignmentRes, volunteerFriendsRes] =
+        await Promise.all([
+          safeCall(this, UserRepo.getUserFtRequests(this, volunteer.id)),
+          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteer.id)),
+          safeCall(
+            this,
+            AssignmentRepo.getAvailableFriends(
+              this,
+              volunteer.id,
+              state.selectedTimespan?.id ?? 0
+            )
+          ),
+        ]);
       const tasks = castVolunteerTaskWithDate([
         ...(userRequestsRes?.data ?? []),
         ...(assignmentRes?.data ?? []),
       ]);
       commit("SET_CANDIDATE_TASKS", { id: volunteer.id, tasks });
+      commit("SET_CANDIDATES_FRIENDS", volunteerFriendsRes?.data ?? []);
     },
 
     resetAssignment({ commit }) {
