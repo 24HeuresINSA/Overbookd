@@ -32,6 +32,27 @@ const SELECT_VOLUNTEER = {
   ...SELECT_USER_TEAMS,
 };
 
+const SELECT_FRIENDS = {
+  friends: {
+    select: {
+      requestor: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+  friendRequestors: {
+    select: {
+      friend: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -59,7 +80,7 @@ export class VolunteerService {
   ): Promise<Volunteer[]> {
     const [ftCategory, ftTimespan] = await Promise.all([
       this.ftTimespan.getTaskCategory(timespanId),
-      this.ftTimespan.findTimespanWithFt(timespanId),
+      this.ftTimespan.findTimespanWithFtAndAssignments(timespanId),
     ]);
     const select = this.buildAssignableVolunteersSelection(
       ftTimespan,
@@ -72,7 +93,7 @@ export class VolunteerService {
       where,
       orderBy: { charisma: 'desc' },
     });
-    return this.formatVolunteers(volunteers);
+    return this.formatVolunteers(volunteers, ftTimespan.assignees);
   }
 
   async findAvailableVolunteerFriendsForFtTimespan(
@@ -147,6 +168,7 @@ export class VolunteerService {
       this.buildAssignableVolunteersCondition(ftTimespan);
     return {
       ...SELECT_VOLUNTEER,
+      ...SELECT_FRIENDS,
       _count: {
         select: {
           friends: {
@@ -179,11 +201,19 @@ export class VolunteerService {
     };
   }
 
-  private formatVolunteers(volunteers: DatabaseVolunteer[]): Volunteer[] {
-    return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
+  private formatVolunteers(
+    volunteers: DatabaseVolunteer[],
+    assignees: number[] = [],
+  ): Volunteer[] {
+    return volunteers.map((volunteer) =>
+      this.formatVolunteer(volunteer, assignees),
+    );
   }
 
-  private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
+  private formatVolunteer(
+    volunteer: DatabaseVolunteer,
+    assignees: number[],
+  ): Volunteer {
     return {
       id: volunteer.id,
       firstname: volunteer.firstname,
@@ -195,6 +225,20 @@ export class VolunteerService {
       friendAvailable:
         volunteer?._count.friends + volunteer?._count.friendRequestors > 0,
       isRequestedOnSamePeriod: volunteer?._count?.ftUserRequests > 0,
+      hasFriendAssigned: this.hasFriendAssigned(volunteer, assignees),
     };
+  }
+
+  private hasFriendAssigned(
+    volunteer: DatabaseVolunteer,
+    assignees: number[],
+  ): boolean {
+    if (!volunteer.friends || !volunteer.friendRequestors) {
+      return false;
+    }
+    return volunteer.friends
+      .map(({ requestor }) => requestor.id)
+      .concat(volunteer.friendRequestors.map(({ friend }) => friend.id))
+      .some((id) => assignees.some((assignee) => assignee === id));
   }
 }
