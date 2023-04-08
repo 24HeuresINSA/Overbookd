@@ -1,6 +1,7 @@
 <template>
   <v-chip
-    small
+    :small="small"
+    :large="large"
     :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
     @click="sendEvent"
   >
@@ -8,7 +9,8 @@
       <template #activator="{ on, attrs }">
         <v-icon
           v-if="getTeamMetadate(team)"
-          small
+          :small="small"
+          :large="large"
           v-bind="attrs"
           color="white"
           v-on="on"
@@ -30,6 +32,18 @@ export default Vue.extend({
     team: {
       type: String,
       required: true,
+    },
+    size: {
+      type: String,
+      default: "small",
+    },
+  },
+  computed: {
+    small(): boolean {
+      return this.size === "small";
+    },
+    large(): boolean {
+      return this.size === "large";
     },
   },
   methods: {

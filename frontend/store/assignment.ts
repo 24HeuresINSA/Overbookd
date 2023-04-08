@@ -7,18 +7,23 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
 import {
-  FtTimespan,
   FtWithTimespan,
   TimespanWithFt,
   castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
   FtTimespanWithRequestedTeams,
+  FtTimespan,
 } from "~/utils/models/ftTimespan";
 import {
   castVolunteerTaskWithDate,
   User,
   VolunteerTask,
 } from "~/utils/models/user";
+
+type AssignmentParameters = {
+  volunteerId: number;
+  teamCode: string;
+};
 
 const UserRepo = RepoFactory.userRepo;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
@@ -30,7 +35,7 @@ export const state = () => ({
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
-  selectedTimespan: null as FtTimespan | null,
+  selectedTimespan: null as FtTimespanWithRequestedTeams | null,
   selectedFt: null as FtWithTimespan | null,
   selectedFtTimespans: [] as FtTimespanWithRequestedTeams[],
 
@@ -81,7 +86,7 @@ export const mutations = mutationTree(state, {
     state.selectedVolunteerFriends = friends;
   },
 
-  SET_SELECTED_TIMESPAN(state, timespan: FtTimespan) {
+  SET_SELECTED_TIMESPAN(state, timespan: FtTimespanWithRequestedTeams) {
     state.selectedTimespan = timespan;
   },
 
@@ -97,10 +102,20 @@ export const mutations = mutationTree(state, {
     if (!state.selectedFt || !state.selectedTimespan) return;
 
     const candidate = new AssignmentCandidate(volunteer);
+    const teamRequests = state.selectedTimespan.requestedTeams.map(
+      ({ assignmentCount, code, quantity }) => ({
+        quantity,
+        teamCode: code,
+        assignments: assignmentCount,
+      })
+    );
+
     state.taskAssignment = TaskAssignment.init({
       ...state.selectedTimespan,
       name: state.selectedFt.name,
-    }).addCandidate(candidate);
+    })
+      .withRemaingTeamRequests(teamRequests)
+      .addCandidate(candidate);
   },
 
   SET_CANDIDATE_TASKS(
@@ -108,6 +123,17 @@ export const mutations = mutationTree(state, {
     { tasks, id }: { tasks: VolunteerTask[]; id: number }
   ) {
     state.taskAssignment.withCandidateTasks(id, tasks);
+  },
+
+  ASSIGN_VOLUNTEER_AS_MEMBER_OF(
+    state,
+    { volunteerId, teamCode }: AssignmentParameters
+  ) {
+    state.taskAssignment.assignCandidate(volunteerId, teamCode);
+  },
+
+  UNASSIGN_VOLUNTEER(state, volunteerId: number) {
+    state.taskAssignment.unassignCandidate(volunteerId);
   },
 
   RESET_TIMESPAN_ASSIGNMENT(state) {
@@ -145,8 +171,15 @@ export const actions = actionTree(
       );
     },
 
-    setSelectedTimespan({ commit, dispatch }, timespan: FtTimespan) {
-      commit("SET_SELECTED_TIMESPAN", timespan);
+    setSelectedTimespan({ commit, dispatch, state }, timespan: FtTimespan) {
+      const selectedTimespan = state.selectedFtTimespans.find(
+        (selectedTimespan) => selectedTimespan.id === timespan.id
+      );
+      if (!selectedTimespan) return;
+      commit("SET_SELECTED_TIMESPAN", {
+        ...timespan,
+        requestedTams: selectedTimespan.requestedTeams,
+      });
       dispatch("fetchVolunteersForTimespan", timespan.id);
     },
 
@@ -217,6 +250,24 @@ export const actions = actionTree(
 
     resetAssignment({ commit }) {
       commit("RESET_TIMESPAN_ASSIGNMENT");
+    },
+
+    assign({ commit }, assignment: AssignmentParameters) {
+      commit("ASSIGN_VOLUNTEER_AS_MEMBER_OF", assignment);
+    },
+
+    unassign({ commit }, volunteerId: number) {
+      commit("UNASSIGN_VOLUNTEER", volunteerId);
+    },
+
+    async saveAssignments({ state, dispatch, commit }) {
+      const assignment = state.taskAssignment.assignments.at(0);
+      if (!assignment) return;
+      const res = await safeCall(this, AssignmentRepo.assign(this, assignment));
+      if (!res) return;
+      commit("SET_SELECTED_VOLUNTEER", null);
+      await dispatch("fetchTimespansWithStats", state.selectedFt?.id);
+      dispatch("setSelectedTimespan", state.selectedTimespan);
     },
   }
 );

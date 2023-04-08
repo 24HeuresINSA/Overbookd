@@ -15,46 +15,71 @@
         </v-btn>
       </div>
 
-      <div class="planning">
-        <v-calendar
-          ref="calendar"
-          v-model="calendarDate"
-          type="category"
-          category-show-all
-          :categories="volunteerIds"
-          :events="events"
-          :interval-height="24"
-          class="planning__calendar"
-        >
-          <template #category="{ category }">
-            <VolunteerResumeCalendarHeader
-              v-if="retrieveVolunteer(category)"
-              :volunteer="retrieveVolunteer(category)"
-            ></VolunteerResumeCalendarHeader>
-          </template>
-          <template #interval="{ hour, time, timeToY }">
-            <div
+      <div class="planning-list">
+        <div class="planning">
+          <v-calendar
+            ref="calendar"
+            v-model="calendarDate"
+            type="category"
+            category-show-all
+            :categories="volunteerIds"
+            :events="events"
+            :interval-height="24"
+            class="planning__calendar"
+          >
+            <template #category="{ category }">
+              <VolunteerResumeCalendarHeader
+                v-if="retrieveVolunteer(category)"
+                :volunteer="retrieveVolunteer(category)"
+              ></VolunteerResumeCalendarHeader>
+            </template>
+            <template #interval="{ hour, time, timeToY }">
+              <div
+                :class="{
+                  shift: isShiftHour(hour),
+                  'shift-party': isPartyHour(hour),
+                  'shift-day': isDayHour(hour),
+                  'shift-night': isNightHour(hour),
+                  'theme--dark': isDarkTheme,
+                }"
+                :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
+              ></div>
+            </template>
+          </v-calendar>
+          <div class="planning__teams">
+            <TeamIconChip
+              v-for="team of getAssignableTeams(mainCandidate)"
+              :key="team"
+              :team="team"
+              size="large"
               :class="{
-                shift: isShiftHour(hour),
-                'shift-party': isPartyHour(hour),
-                'shift-day': isDayHour(hour),
-                'shift-night': isNightHour(hour),
-                'theme--dark': isDarkTheme,
+                'not-selected': isAnotherTeamAssigned(team, mainCandidate),
               }"
-              :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
-            ></div>
-          </template>
-        </v-calendar>
-        <v-btn
-          v-if="mainVolunteer?.friendAvailable"
-          class="planning_add-candidate"
-          fab
-          dark
-          large
-          color="green"
-        >
-          <v-icon dark> mdi-account-multiple-plus </v-icon>
-        </v-btn>
+              @click="temporaryAssign(team, mainCandidate)"
+            ></TeamIconChip>
+          </div>
+          <v-btn
+            color="success"
+            :class="{ invalid: areSomeCandidatesNotAssigned }"
+            dark
+            large
+            class="planning__assignment"
+            @click="assign"
+          >
+            <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Affecter
+          </v-btn>
+        </div>
+        <div class="add-cadidate">
+          <v-btn
+            v-if="mainCandidate?.volunteer.friendAvailable"
+            fab
+            dark
+            large
+            color="green"
+          >
+            <v-icon dark> mdi-account-multiple-plus </v-icon>
+          </v-btn>
+        </div>
       </div>
     </v-card-text>
   </v-card>
@@ -62,19 +87,25 @@
 
 <script lang="ts">
 import Vue from "vue";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
-import { TaskAssignment } from "~/domain/timespan-assignment/timespanAssignment";
+import {
+  AssignmentCandidate,
+  TaskAssignment,
+} from "~/domain/timespan-assignment/timespanAssignment";
 import {
   convertTaskToPlanningEvent,
   createTemporaryTaskPlanningEvent,
 } from "~/domain/common/planning-events";
 import { Volunteer } from "~/utils/models/assignment";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
+import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 
 export default Vue.extend({
   name: "AssignmentForm",
   components: {
     VolunteerResumeCalendarHeader,
+    TeamIconChip,
   },
   data: () => {
     return {
@@ -88,11 +119,9 @@ export default Vue.extend({
     taskTitle(): string {
       return this.$accessor.assignment.taskAssignment.task.name;
     },
-    mainVolunteer(): Volunteer | undefined {
-      return this.$accessor.assignment.taskAssignment.candidates.at(0)
-        ?.volunteer;
+    mainCandidate(): AssignmentCandidate | undefined {
+      return this.$accessor.assignment.taskAssignment.candidates.at(0);
     },
-
     start(): Date {
       return this.$accessor.assignment.taskAssignment.task.start;
     },
@@ -119,6 +148,11 @@ export default Vue.extend({
     },
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
+    },
+    areSomeCandidatesNotAssigned(): boolean {
+      return this.$accessor.assignment.taskAssignment.candidates.some(
+        (candidate) => candidate.assignment === ""
+      );
     },
   },
   mounted() {
@@ -153,6 +187,35 @@ export default Vue.extend({
     closeDialog() {
       this.$emit("close-dialog");
     },
+    getAssignableTeams(candidate?: AssignmentCandidate): string[] {
+      if (!candidate) return [];
+      const underlyingTeams = getUnderlyingTeams(candidate.volunteer.teams);
+      const teams = [...candidate.volunteer.teams, ...underlyingTeams];
+      return teams.filter((team) =>
+        this.taskAssignment.remainingTeamRequest.includes(team)
+      );
+    },
+    temporaryAssign(teamCode: string, candidate?: AssignmentCandidate) {
+      if (!candidate) return;
+      const volunteerId = candidate.volunteer.id;
+      if (candidate.assignment === teamCode) {
+        this.$accessor.assignment.unassign(volunteerId);
+      } else {
+        this.$accessor.assignment.assign({ teamCode, volunteerId });
+      }
+    },
+    isAnotherTeamAssigned(
+      teamCode: string,
+      candidate?: AssignmentCandidate
+    ): boolean {
+      if (!candidate) return false;
+      if (!candidate.assignment) return false;
+      return candidate.assignment !== teamCode;
+    },
+    assign() {
+      if (this.areSomeCandidatesNotAssigned) return;
+      this.$accessor.assignment.saveAssignments();
+    },
   },
 });
 </script>
@@ -184,13 +247,33 @@ export default Vue.extend({
   display: flex;
 }
 
-.planning {
+.planning-list {
   display: flex;
   gap: 40px;
-  &__calendar {
-    flex-grow: 5;
+  .planning {
+    flex-grow: 9;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    &__calendar {
+      width: 100%;
+    }
+    &__teams {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      .not-selected {
+        opacity: 0.4;
+      }
+    }
+    &__assignment.invalid {
+      opacity: 0.3;
+      cursor: initial;
+    }
   }
-  &__add-candidate {
+  .add-candidate {
     flex-grow: 1;
   }
 }
