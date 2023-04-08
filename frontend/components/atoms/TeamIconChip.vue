@@ -1,6 +1,7 @@
 <template>
   <v-chip
-    small
+    :small="small"
+    :large="large"
     :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
     @click="sendEvent"
   >
@@ -8,15 +9,19 @@
       <template #activator="{ on, attrs }">
         <v-icon
           v-if="getTeamMetadate(team)"
-          small
+          :small="small"
+          :large="large"
           v-bind="attrs"
           color="white"
           v-on="on"
         >
           {{ getTeamMetadate(team).icon }}
         </v-icon>
+        <span v-if="withName" class="name">
+          {{ getTeamMetadate(team).name }}
+        </span>
       </template>
-      <span>{{ getTeamMetadate(team) ? getTeamMetadate(team).name : "" }}</span>
+      <span>{{ getTeamMetadate(team)?.name ?? "" }}</span>
     </v-tooltip>
   </v-chip>
 </template>
@@ -30,6 +35,22 @@ export default Vue.extend({
     team: {
       type: String,
       required: true,
+    },
+    size: {
+      type: String,
+      default: "small",
+    },
+    withName: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    small(): boolean {
+      return this.size === "small";
+    },
+    large(): boolean {
+      return this.size === "large";
     },
   },
   methods: {
@@ -46,5 +67,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .v-chip {
   margin-right: 2px;
+}
+span.name {
+  color: white;
 }
 </style>

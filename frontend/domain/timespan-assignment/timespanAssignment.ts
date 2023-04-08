@@ -1,10 +1,12 @@
 import { updateItemToList } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { VolunteerTask } from "~/utils/models/user";
+import { getUnderlyingTeams } from "./underlying-teams";
 
 type TeamRequest = {
   teamCode: string;
   quantity: number;
+  assignments: number;
 };
 
 type Task = {
@@ -16,8 +18,35 @@ type Task = {
 
 export class AssignmentCandidate {
   tasks: VolunteerTask[] = [];
+  private _assignment: string = "";
 
   constructor(readonly volunteer: Volunteer) {}
+
+  private canBeAssignedAs(teamCode: string): boolean {
+    const underlyingTeams = getUnderlyingTeams(this.volunteer.teams);
+    const teams = [...this.volunteer.teams, ...underlyingTeams];
+    return teams.includes(teamCode);
+  }
+
+  assign(team: string) {
+    if (!this.canBeAssignedAs(team)) return;
+    this._assignment = team;
+  }
+
+  unassign() {
+    if (this.assignableTeams.length === 1) return;
+    this._assignment = "";
+  }
+
+  get assignment(): string {
+    return this._assignment;
+  }
+
+  assignableTeams(teamsRequested: string[]): string[] {
+    const underlyingTeams = getUnderlyingTeams(this.volunteer.teams);
+    const teams = [...this.volunteer.teams, ...underlyingTeams];
+    return teams.filter((team) => teamsRequested.includes(team));
+  }
 }
 
 export class TaskAssignment {
@@ -42,10 +71,18 @@ export class TaskAssignment {
   }
 
   get remainingTeamRequest(): string[] {
-    return this.teamRequests.map(({ teamCode }) => teamCode);
+    return this.teamRequests
+      .filter(({ quantity, assignments }) => quantity > assignments)
+      .map(({ teamCode }) => teamCode);
   }
 
   addCandidate(candidate: AssignmentCandidate): TaskAssignment {
+    const assignableTeams = candidate.assignableTeams(
+      this.remainingTeamRequest
+    );
+    if (assignableTeams.length === 1) {
+      candidate.assign(assignableTeams[0]);
+    }
     this._candidates = [...this._candidates, candidate];
     return this;
   }
@@ -75,5 +112,27 @@ export class TaskAssignment {
 
   getCandidate(id: number): AssignmentCandidate | undefined {
     return this._candidates.find((candidate) => candidate.volunteer.id === id);
+  }
+
+  assignCandidate(id: number, team: string) {
+    const candidate = this.getCandidate(id);
+    if (!candidate) return;
+    candidate.assign(team);
+  }
+
+  unassignCandidate(id: number) {
+    const candidate = this.getCandidate(id);
+    if (!candidate) return;
+    candidate.unassign();
+  }
+
+  get assignments() {
+    return this._candidates
+      .filter((candidate) => candidate.assignment !== "")
+      .map((candidate) => ({
+        timespanId: this.task.id,
+        teamCode: candidate.assignment,
+        volunteerId: candidate.volunteer.id,
+      }));
   }
 }

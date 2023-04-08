@@ -9,6 +9,19 @@ import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
+type AssignmentRequest = {
+  timespanId: number;
+  teamCode: string;
+  volunteerId: number;
+};
+
+type AssignmentResponse = {
+  id: number;
+  assigneeId: number;
+  timespanId: number;
+  teamRequestId: number;
+};
+
 export class AssignmentRepository {
   private static readonly basePath = "assignments";
 
@@ -39,6 +52,13 @@ export class AssignmentRepository {
   static async getVolunteersForTimespan(context: Context, timespanId: number) {
     return context.$axios.get<HttpStringified<Volunteer[]>>(
       `${this.basePath}/ft-timespan/${timespanId}/volunteers`
+    );
+  }
+
+  static assign(context: Context, assignment: AssignmentRequest) {
+    return context.$axios.post<HttpStringified<AssignmentResponse>>(
+      this.basePath,
+      assignment
     );
   }
 }
