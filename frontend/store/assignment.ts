@@ -148,6 +148,16 @@ export const mutations = mutationTree(state, {
     const candidate = new AssignmentCandidate(volunteer);
     state.taskAssignment = state.taskAssignment.addCandidate(candidate);
   },
+
+  SET_PREVIOUS_CANDIDATE(state) {
+    state.taskAssignment =
+      state.taskAssignment.changeLastCandidateToPreviousFriend();
+  },
+
+  SET_NEXT_CANDIDATE(state) {
+    state.taskAssignment =
+      state.taskAssignment.changeLastCandidateToNextFriend();
+  },
 });
 
 export const actions = actionTree(
@@ -303,6 +313,22 @@ export const actions = actionTree(
       if (!volunteer) return;
       commit("ADD_CANDIDATE", volunteer);
       dispatch("retrieveVolunteerRelatedData", volunteer.id);
+    },
+
+    previousCandidate({ commit, dispatch }) {
+      commit("SET_PREVIOUS_CANDIDATE");
+      dispatch("retrieveLasCandidateRelatedData");
+    },
+
+    nextCandidate({ commit, dispatch }) {
+      commit("SET_NEXT_CANDIDATE");
+      dispatch("retrieveLasCandidateRelatedData");
+    },
+
+    retrieveLasCandidateRelatedData({ state, dispatch }) {
+      const lastCandidate = state.taskAssignment.candidates.at(-1);
+      if (!lastCandidate) return;
+      dispatch("retrieveVolunteerRelatedData", lastCandidate.volunteer.id);
     },
   }
 );

@@ -88,6 +88,18 @@ export class TaskAssignment {
     return this;
   }
 
+  replaceCandidateBy(
+    id: number,
+    candidate: AssignmentCandidate
+  ): TaskAssignment {
+    const remainingCandidates = this.candidates.filter(
+      (c) => c.volunteer.id !== id
+    );
+    if (remainingCandidates.length === this.candidates.length) return this;
+    this._candidates = remainingCandidates;
+    return this.addCandidate(candidate);
+  }
+
   get candidates(): AssignmentCandidate[] {
     return this._candidates;
   }
@@ -138,13 +150,23 @@ export class TaskAssignment {
   }
 
   withCandidateFriends(friends: Volunteer[]): TaskAssignment {
-    this._friends = friends;
+    this._friends = friends.sort((a, b) => a.id - b.id);
     return this;
   }
 
   get candidateFriends(): Volunteer[] {
     return this._friends.filter(
-      (friend) => !this.getCandidate(friend.id) && this.canBeAssigned(friend)
+      (friend) =>
+        !this.getCandidate(friend.id) &&
+        this.canBeAssigned(friend, this.remainingTeamRequestsAfterAssignment)
+    );
+  }
+
+  get potentialCandidates(): Volunteer[] {
+    return this._friends.filter(
+      (friend) =>
+        !this.getCandidate(friend.id) &&
+        this.canBeAssigned(friend, this.remainingTeamRequest)
     );
   }
 
@@ -182,11 +204,40 @@ export class TaskAssignment {
     return this.candidateFriends.length > 1;
   }
 
-  private canBeAssigned(volunteer: Volunteer): boolean {
+  private canBeAssigned(
+    volunteer: Volunteer,
+    remainingTeamRequests: string[]
+  ): boolean {
     const asCandidate = new AssignmentCandidate(volunteer);
-    const assignableTeams = asCandidate.assignableTeams(
-      this.remainingTeamRequestsAfterAssignment
-    );
+    const assignableTeams = asCandidate.assignableTeams(remainingTeamRequests);
     return assignableTeams.length > 0;
+  }
+
+  changeLastCandidateToPreviousFriend(): TaskAssignment {
+    const lastCandidate = this.candidates.at(-1);
+    if (!lastCandidate) return this;
+    const previousFriend =
+      this.potentialCandidates
+        .reverse()
+        .find((friend) => friend.id < lastCandidate.volunteer.id) ??
+      this.potentialCandidates.at(-1);
+    if (!previousFriend) return this;
+    const previousCandidate = new AssignmentCandidate(previousFriend);
+    return this.replaceCandidateBy(
+      lastCandidate.volunteer.id,
+      previousCandidate
+    );
+  }
+
+  changeLastCandidateToNextFriend(): TaskAssignment {
+    const lastCandidate = this.candidates.at(-1);
+    if (!lastCandidate) return this;
+    const nextFriend =
+      this.potentialCandidates.find(
+        (friend) => friend.id > lastCandidate.volunteer.id
+      ) ?? this.potentialCandidates.at(0);
+    if (!nextFriend) return this;
+    const nextCandidate = new AssignmentCandidate(nextFriend);
+    return this.replaceCandidateBy(lastCandidate.volunteer.id, nextCandidate);
   }
 }

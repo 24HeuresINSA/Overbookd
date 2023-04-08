@@ -26,10 +26,26 @@
             class="planning__calendar"
           >
             <template #category="{ category }">
-              <VolunteerResumeCalendarHeader
-                v-if="retrieveVolunteer(category)"
-                :volunteer="retrieveVolunteer(category)"
-              ></VolunteerResumeCalendarHeader>
+              <div class="candidate">
+                <v-btn
+                  v-if="isReplacable(category)"
+                  icon
+                  @click="previousCandidate"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <VolunteerResumeCalendarHeader
+                  v-if="retrieveVolunteer(category)"
+                  :volunteer="retrieveVolunteer(category)"
+                ></VolunteerResumeCalendarHeader>
+                <v-btn
+                  v-if="isReplacable(category)"
+                  icon
+                  @click="nextCandidate"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+              </div>
             </template>
             <template #interval="{ hour, time, timeToY }">
               <div
@@ -111,6 +127,7 @@ export default Vue.extend({
   data: () => {
     return {
       calendarDate: new Date(),
+      candidateIndex: 0,
     };
   },
   computed: {
@@ -157,6 +174,11 @@ export default Vue.extend({
     },
     canAssignMoreVolunteer(): boolean {
       return this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
+    },
+    areOtherFriendsAvailable(): boolean {
+      return (
+        this.$accessor.assignment.taskAssignment.potentialCandidates.length > 0
+      );
     },
   },
   watch: {
@@ -223,6 +245,32 @@ export default Vue.extend({
     },
     addCandidate() {
       this.$accessor.assignment.addCandidate();
+      this.candidateIndex = 0;
+    },
+    previousCandidate() {
+      this.$accessor.assignment.previousCandidate();
+    },
+    nextCandidate() {
+      this.$accessor.assignment.nextCandidate();
+    },
+    isReplacable(volunteerId: string): boolean {
+      return (
+        this.isLastAddedCandidate(volunteerId) &&
+        this.areOtherFriendsAvailable &&
+        !this.isFirstAddedCandidate(volunteerId)
+      );
+    },
+    isLastAddedCandidate(volunteerId: string): boolean {
+      const candidateIndex = this.taskAssignment.candidates.findIndex(
+        (candidate) => candidate.volunteer.id === +volunteerId
+      );
+      return candidateIndex + 1 === this.taskAssignment.candidates.length;
+    },
+    isFirstAddedCandidate(volunteerId: string): boolean {
+      const candidateIndex = this.taskAssignment.candidates.findIndex(
+        (candidate) => candidate.volunteer.id === +volunteerId
+      );
+      return candidateIndex === 0;
     },
   },
 });
@@ -297,5 +345,12 @@ export default Vue.extend({
   position: absolute;
   top: 3px;
   right: 3px;
+}
+
+.candidate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 </style>
