@@ -78,9 +78,9 @@ export class VolunteerService {
   private buildAssignableVolunteersCondition(
     ftTimespan: TimespanWithFtResponseDto,
   ) {
-    const requestedTeamCodes = ftTimespan.requestedTeams.map(
-      (team) => team.code,
-    );
+    const requestedTeamCodes = ftTimespan.requestedTeams
+      .filter(({ quantity, assignmentCount }) => quantity > assignmentCount)
+      .map((team) => team.code);
     const assignableTeams = requestedTeamCodes.flatMap((tc) =>
       getOtherAssignableTeams(tc),
     );
