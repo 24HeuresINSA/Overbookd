@@ -40,6 +40,12 @@ export class AssignmentCandidate {
   get assignment(): string {
     return this._assignment;
   }
+
+  assignableTeams(teamsRequested: string[]): string[] {
+    const underlyingTeams = getUnderlyingTeams(this.volunteer.teams);
+    const teams = [...this.volunteer.teams, ...underlyingTeams];
+    return teams.filter((team) => teamsRequested.includes(team));
+  }
 }
 
 export class TaskAssignment {
@@ -72,6 +78,12 @@ export class TaskAssignment {
   addCandidate(candidate: AssignmentCandidate): TaskAssignment {
     if (this.remainingTeamRequest.length === 1) {
       candidate.assign(this.remainingTeamRequest[0]);
+    }
+    const assignableTeams = candidate.assignableTeams(
+      this.remainingTeamRequest
+    );
+    if (assignableTeams.length === 1) {
+      candidate.assign(assignableTeams[0]);
     }
     this._candidates = [...this._candidates, candidate];
     return this;
