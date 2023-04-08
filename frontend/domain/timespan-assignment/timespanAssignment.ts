@@ -213,7 +213,7 @@ export class TaskAssignment {
   }
 
   private get areFriendsAvailable(): boolean {
-    return this.candidateFriends.length > 1;
+    return this.candidateFriends.length > 0;
   }
 
   private canBeAssigned(

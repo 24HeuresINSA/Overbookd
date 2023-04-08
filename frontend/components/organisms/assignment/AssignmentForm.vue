@@ -316,6 +316,7 @@ export default Vue.extend({
 .planning-list {
   display: flex;
   gap: 40px;
+  overflow-y: scroll;
   .planning {
     flex-grow: 9;
     display: flex;
