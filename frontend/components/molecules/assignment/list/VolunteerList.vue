@@ -29,8 +29,7 @@ export default Vue.extend({
   },
   methods: {
     selectVolunteer(volunteer: Volunteer) {
-      this.$accessor.assignment.setSelectedVolunteer(volunteer);
-      this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
+      this.$emit("select-volunteer", volunteer);
     },
   },
 });

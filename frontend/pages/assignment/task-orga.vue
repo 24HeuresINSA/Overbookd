@@ -3,6 +3,9 @@
     <FilterableVolunteerList class="volunteer-list" />
     <TaskOrgaCalendar class="calendar" />
     <FilterableFtList class="task-list" />
+    <v-dialog v-model="openTaskAssignmentDialog">
+      <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -12,6 +15,7 @@ import FilterableVolunteerList from "~/components/organisms/assignment/Filterabl
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
+import AssignmentForm from "~/components/organisms/assignment/AssignmentForm.vue";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -19,15 +23,29 @@ export default Vue.extend({
     FilterableVolunteerList,
     FilterableFtList,
     TaskOrgaCalendar,
+    AssignmentForm,
   },
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
       return this.$accessor.assignment.fts;
     },
+    openTaskAssignmentDialog: {
+      get(): boolean {
+        return this.$accessor.assignment.openTaskAssignmentDialog;
+      },
+      set(): void {
+        this.$accessor.assignment.resetAssignment();
+      },
+    },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchFtsWithTimespans();
+  },
+  methods: {
+    closeTaskAssignmentDialog() {
+      this.openTaskAssignmentDialog = false;
+    },
   },
 });
 </script>
