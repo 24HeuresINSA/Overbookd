@@ -260,16 +260,18 @@ export const actions = actionTree(
     },
 
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
-      const [userRequestsRes, assignmentRes, volunteerFriendsRes] =
+      const [userRequestsRes, assignmentRes, ...volunteerFriendsRes] =
         await Promise.all([
           safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
           safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
-          safeCall(
-            this,
-            AssignmentRepo.getAvailableFriends(
+          ...state.taskAssignment.candidates.map(({ volunteer }) =>
+            safeCall(
               this,
-              volunteerId,
-              state.selectedTimespan?.id ?? 0
+              AssignmentRepo.getAvailableFriends(
+                this,
+                volunteer.id,
+                state.selectedTimespan?.id ?? 0
+              )
             )
           ),
         ]);
@@ -278,12 +280,10 @@ export const actions = actionTree(
         ...(assignmentRes?.data ?? []),
       ]);
       commit("SET_CANDIDATE_TASKS", { id: volunteerId, tasks });
-      const candidateFriends = volunteerFriendsRes?.data ?? [];
-      const friends = [
-        ...state.taskAssignment.candidateFriends,
-        ...candidateFriends,
-      ];
-      commit("SET_CANDIDATES_FRIENDS", friends);
+      const candidateFriends = volunteerFriendsRes.flatMap(
+        (res) => res?.data ?? []
+      );
+      commit("SET_CANDIDATES_FRIENDS", candidateFriends);
     },
 
     resetAssignment({ commit }) {
@@ -299,10 +299,15 @@ export const actions = actionTree(
     },
 
     async saveAssignments({ state, dispatch, commit }) {
-      const assignment = state.taskAssignment.assignments.at(0);
-      if (!assignment) return;
-      const res = await safeCall(this, AssignmentRepo.assign(this, assignment));
-      if (!res) return;
+      const assignmentsRes = await Promise.all(
+        state.taskAssignment.assignments.map((assignment) =>
+          safeCall(this, AssignmentRepo.assign(this, assignment))
+        )
+      );
+      if (assignmentsRes.some((res) => res === undefined)) {
+        alert("problem");
+        return;
+      }
       commit("SET_SELECTED_VOLUNTEER", null);
       await dispatch("fetchTimespansWithStats", state.selectedFt?.id);
       dispatch("setSelectedTimespan", state.selectedTimespan);

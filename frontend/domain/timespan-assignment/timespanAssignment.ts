@@ -171,7 +171,19 @@ export class TaskAssignment {
   }
 
   get canAssignMoreVolunteer(): boolean {
-    return this.areRemainingTeamRequests && this.areFriendsAvailable;
+    return (
+      this.areRemainingTeamRequests &&
+      this.areFriendsAvailable &&
+      this.areNotEnoughCandidate
+    );
+  }
+
+  private get areNotEnoughCandidate(): boolean {
+    const requirements = this.teamRequests.reduce(
+      (sum, { quantity, assignments }) => sum + quantity - assignments,
+      0
+    );
+    return requirements > this.candidates.length;
   }
 
   private get areRemainingTeamRequests() {
@@ -239,5 +251,22 @@ export class TaskAssignment {
     if (!nextFriend) return this;
     const nextCandidate = new AssignmentCandidate(nextFriend);
     return this.replaceCandidateBy(lastCandidate.volunteer.id, nextCandidate);
+  }
+
+  get canAssign(): boolean {
+    return (
+      this.areAllTeamRequestBellowMaxCapacity && this.areAllCandidateAssigned
+    );
+  }
+
+  private get areAllCandidateAssigned(): boolean {
+    return this.candidates.every((candidate) => candidate.assignment !== "");
+  }
+
+  private get areAllTeamRequestBellowMaxCapacity(): boolean {
+    return this.teamRequests.every(
+      ({ teamCode, quantity, assignments }) =>
+        assignments + this.countCandidateAssignedTo(teamCode) <= quantity
+    );
   }
 }

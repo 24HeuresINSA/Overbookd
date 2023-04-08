@@ -61,21 +61,27 @@
             </template>
           </v-calendar>
           <div class="planning__teams">
-            <TeamIconChip
-              v-for="team of getAssignableTeams(mainCandidate)"
-              :key="team"
-              :team="team"
-              with-name
-              size="large"
-              :class="{
-                'not-selected': isAssignedAs(team, mainCandidate),
-              }"
-              @click="temporaryAssign(team, mainCandidate)"
-            ></TeamIconChip>
+            <div
+              v-for="candidate in candidates"
+              :key="candidate.volunteer.id"
+              class="candidate-teams"
+            >
+              <TeamIconChip
+                v-for="team of getAssignableTeams(candidate)"
+                :key="team"
+                :team="team"
+                with-name
+                size="large"
+                :class="{
+                  'not-selected': isNotAssignedAs(team, candidate),
+                }"
+                @click="temporaryAssign(team, candidate)"
+              ></TeamIconChip>
+            </div>
           </div>
           <v-btn
             color="success"
-            :class="{ invalid: areSomeCandidatesNotAssigned }"
+            :class="{ invalid: canNotAssign }"
             dark
             large
             class="planning__assignment"
@@ -167,10 +173,8 @@ export default Vue.extend({
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
     },
-    areSomeCandidatesNotAssigned(): boolean {
-      return this.$accessor.assignment.taskAssignment.candidates.some(
-        (candidate) => candidate.assignment === ""
-      );
+    canNotAssign(): boolean {
+      return !this.$accessor.assignment.taskAssignment.canAssign;
     },
     canAssignMoreVolunteer(): boolean {
       return this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
@@ -179,6 +183,9 @@ export default Vue.extend({
       return (
         this.$accessor.assignment.taskAssignment.potentialCandidates.length > 0
       );
+    },
+    candidates(): AssignmentCandidate[] {
+      return this.$accessor.assignment.taskAssignment.candidates;
     },
   },
   watch: {
@@ -235,12 +242,15 @@ export default Vue.extend({
         this.$accessor.assignment.assign({ teamCode, volunteerId });
       }
     },
-    isAssignedAs(teamCode: string, candidate?: AssignmentCandidate): boolean {
+    isNotAssignedAs(
+      teamCode: string,
+      candidate?: AssignmentCandidate
+    ): boolean {
       if (!candidate) return false;
       return candidate.assignment !== teamCode;
     },
     assign() {
-      if (this.areSomeCandidatesNotAssigned) return;
+      if (this.canNotAssign) return;
       this.$accessor.assignment.saveAssignments();
     },
     addCandidate() {
@@ -319,12 +329,8 @@ export default Vue.extend({
     }
     &__teams {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      .not-selected {
-        opacity: 0.4;
-      }
+      justify-content: space-around;
+      width: 100%;
     }
     &__assignment.invalid {
       opacity: 0.3;
@@ -352,5 +358,15 @@ export default Vue.extend({
   align-items: center;
   justify-content: center;
   gap: 20px;
+  &-teams {
+    min-width: $calendar-category-column-min-width;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    .not-selected {
+      opacity: 0.4;
+    }
+  }
 }
 </style>
