@@ -143,6 +143,11 @@ export const mutations = mutationTree(state, {
   RESET_TIMESPAN_ASSIGNMENT(state) {
     state.taskAssignment = TaskAssignment.init();
   },
+
+  ADD_CANDIDATE(state, volunteer: Volunteer) {
+    const candidate = new AssignmentCandidate(volunteer);
+    state.taskAssignment = state.taskAssignment.addCandidate(candidate);
+  },
 });
 
 export const actions = actionTree(
@@ -238,18 +243,22 @@ export const actions = actionTree(
       commit("SET_HOVER_TIMESPAN", timespan);
     },
 
-    async startAssignment({ commit, state }, volunteer: Volunteer) {
+    startAssignment({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       commit("START_TIMESPAN_ASSIGNMENT_WITH_VOLUNTEER", volunteer);
+      dispatch("retrieveVolunteerRelatedData", volunteer.id);
+    },
+
+    async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
       const [userRequestsRes, assignmentRes, volunteerFriendsRes] =
         await Promise.all([
-          safeCall(this, UserRepo.getUserFtRequests(this, volunteer.id)),
-          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteer.id)),
+          safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
+          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
           safeCall(
             this,
             AssignmentRepo.getAvailableFriends(
               this,
-              volunteer.id,
+              volunteerId,
               state.selectedTimespan?.id ?? 0
             )
           ),
@@ -258,8 +267,13 @@ export const actions = actionTree(
         ...(userRequestsRes?.data ?? []),
         ...(assignmentRes?.data ?? []),
       ]);
-      commit("SET_CANDIDATE_TASKS", { id: volunteer.id, tasks });
-      commit("SET_CANDIDATES_FRIENDS", volunteerFriendsRes?.data ?? []);
+      commit("SET_CANDIDATE_TASKS", { id: volunteerId, tasks });
+      const candidateFriends = volunteerFriendsRes?.data ?? [];
+      const friends = [
+        ...state.taskAssignment.candidateFriends,
+        ...candidateFriends,
+      ];
+      commit("SET_CANDIDATES_FRIENDS", friends);
     },
 
     resetAssignment({ commit }) {
@@ -282,6 +296,13 @@ export const actions = actionTree(
       commit("SET_SELECTED_VOLUNTEER", null);
       await dispatch("fetchTimespansWithStats", state.selectedFt?.id);
       dispatch("setSelectedTimespan", state.selectedTimespan);
+    },
+
+    async addCandidate({ state, commit, dispatch }) {
+      const volunteer = state.taskAssignment.candidateFriends.at(0);
+      if (!volunteer) return;
+      commit("ADD_CANDIDATE", volunteer);
+      dispatch("retrieveVolunteerRelatedData", volunteer.id);
     },
   }
 );

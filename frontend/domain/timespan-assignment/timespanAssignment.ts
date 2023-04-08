@@ -79,7 +79,7 @@ export class TaskAssignment {
 
   addCandidate(candidate: AssignmentCandidate): TaskAssignment {
     const assignableTeams = candidate.assignableTeams(
-      this.remainingTeamRequest
+      this.remainingTeamRequestsAfterAssignment
     );
     if (assignableTeams.length === 1) {
       candidate.assign(assignableTeams[0]);

@@ -76,6 +76,7 @@
             dark
             large
             color="green"
+            @click="addCandidate"
           >
             <v-icon dark> mdi-account-multiple-plus </v-icon>
           </v-btn>
@@ -219,6 +220,9 @@ export default Vue.extend({
     assign() {
       if (this.areSomeCandidatesNotAssigned) return;
       this.$accessor.assignment.saveAssignments();
+    },
+    addCandidate() {
+      this.$accessor.assignment.addCandidate();
     },
   },
 });
