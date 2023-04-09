@@ -87,10 +87,10 @@ export class VolunteerService {
       this.ftTimespan.getTaskCategory(timespanId),
       this.ftTimespan.findTimespanWithFtAndAssignment(timespanId),
     ]);
-    const select = this.buildAssignableVolunteersSelection(
-      ftTimespan,
-      ftCategory,
-    );
+    const select = {
+      ...this.buildAssignableVolunteersSelection(ftTimespan, ftCategory),
+      ...SELECT_FRIENDS,
+    };
     const where = this.buildAssignableVolunteersCondition(ftTimespan);
 
     const volunteers = await this.prisma.user.findMany({
@@ -173,7 +173,6 @@ export class VolunteerService {
       this.buildAssignableVolunteersCondition(ftTimespan);
     return {
       ...SELECT_VOLUNTEER,
-      ...SELECT_FRIENDS,
       _count: {
         select: {
           friends: {
