@@ -228,9 +228,6 @@ export class VolunteerService {
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
       assignments: volunteer._count?.assignments ?? 0,
-      friendAvailable:
-        volunteer?._count.friends + volunteer?._count.friendRequestors > 0,
-      isRequestedOnSamePeriod: volunteer?._count?.ftUserRequests > 0,
     };
   }
 

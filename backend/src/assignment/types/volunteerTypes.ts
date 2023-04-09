@@ -9,14 +9,9 @@ interface BaseVolunteer {
 export interface Volunteer extends BaseVolunteer {
   teams: string[];
   assignments: number;
-  friendAvailable?: boolean;
-  isRequestedOnSamePeriod?: boolean;
-  hasFriendAssigned?: boolean;
 }
 
-export interface AvailableVolunteer extends BaseVolunteer {
-  teams: string[];
-  assignments: number;
+export interface AvailableVolunteer extends Volunteer {
   friendAvailable: boolean;
   isRequestedOnSamePeriod: boolean;
   hasFriendAssigned: boolean;
