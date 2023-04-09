@@ -52,6 +52,8 @@ export class AssignmentCandidate {
 export class TaskAssignment {
   private teamRequests: TeamRequest[] = [];
   private _candidates: AssignmentCandidate[] = [];
+  private _friends: Volunteer[] = [];
+  private _potentialCandidates: Volunteer[] = [];
 
   private constructor(readonly task: Task) {}
 
@@ -78,13 +80,26 @@ export class TaskAssignment {
 
   addCandidate(candidate: AssignmentCandidate): TaskAssignment {
     const assignableTeams = candidate.assignableTeams(
-      this.remainingTeamRequest
+      this.remainingTeamRequestsAfterAssignment
     );
     if (assignableTeams.length === 1) {
       candidate.assign(assignableTeams[0]);
     }
     this._candidates = [...this._candidates, candidate];
+    this._potentialCandidates = [...this._friends];
     return this;
+  }
+
+  replaceCandidateBy(
+    id: number,
+    candidate: AssignmentCandidate
+  ): TaskAssignment {
+    const remainingCandidates = this.candidates.filter(
+      (c) => c.volunteer.id !== id
+    );
+    if (remainingCandidates.length === this.candidates.length) return this;
+    this._candidates = remainingCandidates;
+    return this.addCandidate(candidate);
   }
 
   get candidates(): AssignmentCandidate[] {
@@ -134,5 +149,160 @@ export class TaskAssignment {
         teamCode: candidate.assignment,
         volunteerId: candidate.volunteer.id,
       }));
+  }
+
+  withCandidatesFriends(friends: Volunteer[]): TaskAssignment {
+    this._friends = friends.sort((a, b) => a.id - b.id);
+    return this;
+  }
+
+  get candidateToRetrieveFriendsFor(): AssignmentCandidate[] {
+    const endIndex = this._candidates.length === 1 ? 1 : -1;
+    return this._candidates.slice(0, endIndex);
+  }
+
+  get candidateFriends(): Volunteer[] {
+    return this._friends.filter(
+      (friend) =>
+        !this.getCandidate(friend.id) &&
+        this.canBeAssigned(friend, this.remainingTeamRequestsAfterAssignment)
+    );
+  }
+
+  get potentialCandidates(): Volunteer[] {
+    return this._potentialCandidates.filter(
+      (potentialCandidate) =>
+        !this.getCandidate(potentialCandidate.id) &&
+        this.canBeAssigned(potentialCandidate, this.remainingTeamRequest)
+    );
+  }
+
+  get canAssignMoreVolunteer(): boolean {
+    return (
+      this.areRemainingTeamRequests &&
+      this.areFriendsAvailable &&
+      this.areNotEnoughCandidate
+    );
+  }
+
+  private get areNotEnoughCandidate(): boolean {
+    const requirements = this.teamRequests.reduce(
+      (sum, { quantity, assignments }) => sum + quantity - assignments,
+      0
+    );
+    return requirements > this.candidates.length;
+  }
+
+  private get areRemainingTeamRequests() {
+    return this.remainingTeamRequestsAfterAssignment.length > 0;
+  }
+
+  private get remainingTeamRequestsAfterAssignment(): string[] {
+    return this.teamRequests
+      .filter((teamRequest) =>
+        this.isRemainingTeamRequestAfterAssignment(teamRequest)
+      )
+      .map(({ teamCode }) => teamCode);
+  }
+
+  private isRemainingTeamRequestAfterAssignment({
+    quantity,
+    assignments,
+    teamCode,
+  }: TeamRequest): boolean {
+    return quantity > assignments + this.countCandidateAssignedTo(teamCode);
+  }
+
+  private countCandidateAssignedTo(teamCode: string): number {
+    return this._candidates.filter(
+      (candidate) => candidate.assignment === teamCode
+    ).length;
+  }
+
+  private get areFriendsAvailable(): boolean {
+    return this.candidateFriends.length > 0;
+  }
+
+  private canBeAssigned(
+    volunteer: Volunteer,
+    remainingTeamRequests: string[]
+  ): boolean {
+    const asCandidate = new AssignmentCandidate(volunteer);
+    const assignableTeams = asCandidate.assignableTeams(remainingTeamRequests);
+    return assignableTeams.length > 0;
+  }
+
+  changeLastCandidateToPreviousFriend(): TaskAssignment {
+    const strategy = new PreviousCandidateReplacementStrategy();
+    return this.replaceCandidate(strategy);
+  }
+
+  changeLastCandidateToNextFriend(): TaskAssignment {
+    const strategy = new NextCandidateReplacementStrategy();
+    return this.replaceCandidate(strategy);
+  }
+
+  private replaceCandidate(strategy: ReplacementStrategy): TaskAssignment {
+    const lastCandidate = this.candidates.at(-1);
+    if (!lastCandidate) return this;
+    const newCandidate = strategy.findNewCandidate(
+      lastCandidate,
+      this.potentialCandidates
+    );
+    if (!newCandidate) return this;
+    return this.replaceCandidateBy(lastCandidate.volunteer.id, newCandidate);
+  }
+
+  get canAssign(): boolean {
+    return (
+      this.areAllTeamRequestBelowMaxCapacity && this.areAllCandidateAssigned
+    );
+  }
+
+  private get areAllCandidateAssigned(): boolean {
+    return this.candidates.every((candidate) => candidate.assignment !== "");
+  }
+
+  private get areAllTeamRequestBelowMaxCapacity(): boolean {
+    return this.teamRequests.every(
+      ({ teamCode, quantity, assignments }) =>
+        assignments + this.countCandidateAssignedTo(teamCode) <= quantity
+    );
+  }
+}
+
+interface ReplacementStrategy {
+  findNewCandidate(
+    lastCandidate: AssignmentCandidate,
+    potentialCandidates: Volunteer[]
+  ): AssignmentCandidate | undefined;
+}
+
+class NextCandidateReplacementStrategy implements ReplacementStrategy {
+  findNewCandidate(
+    lastCandidate: AssignmentCandidate,
+    potentialCandidates: Volunteer[]
+  ): AssignmentCandidate | undefined {
+    const nextFriend =
+      potentialCandidates.find(
+        (friend) => friend.id > lastCandidate.volunteer.id
+      ) ?? potentialCandidates.at(0);
+    if (!nextFriend) return undefined;
+    return new AssignmentCandidate(nextFriend);
+  }
+}
+
+class PreviousCandidateReplacementStrategy implements ReplacementStrategy {
+  findNewCandidate(
+    lastCandidate: AssignmentCandidate,
+    potentialCandidates: Volunteer[]
+  ): AssignmentCandidate | undefined {
+    const previousFriend =
+      [...potentialCandidates]
+        .reverse()
+        .find((friend) => friend.id < lastCandidate.volunteer.id) ??
+      potentialCandidates.at(-1);
+    if (!previousFriend) return undefined;
+    return new AssignmentCandidate(previousFriend);
   }
 }

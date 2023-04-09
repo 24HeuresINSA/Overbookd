@@ -75,6 +75,40 @@ export class VolunteerService {
     return this.formatVolunteers(volunteers);
   }
 
+  async findAvailableVolunteerFriendsForFtTimespan(
+    timespanId: number,
+    volunteerId: number,
+  ): Promise<Volunteer[]> {
+    const [ftCategory, ftTimespan] = await Promise.all([
+      this.ftTimespan.getTaskCategory(timespanId),
+      this.ftTimespan.findTimespanWithFt(timespanId),
+    ]);
+    const select = this.buildAssignableVolunteersSelection(
+      ftTimespan,
+      ftCategory,
+    );
+    const isAssignable = this.buildAssignableVolunteersCondition(ftTimespan);
+    const isFriend = this.buildIsVolunteerFriendCondition(volunteerId);
+
+    const volunteers = await this.prisma.user.findMany({
+      select,
+      where: {
+        ...isAssignable,
+        ...isFriend,
+      },
+    });
+    return this.formatVolunteers(volunteers);
+  }
+
+  private buildIsVolunteerFriendCondition(volunteerId: number) {
+    return {
+      OR: [
+        { friends: { some: { requestorId: volunteerId } } },
+        { friendRequestors: { some: { friendId: volunteerId } } },
+      ],
+    };
+  }
+
   private buildAssignableVolunteersCondition(
     ftTimespan: TimespanWithFtResponseDto,
   ) {

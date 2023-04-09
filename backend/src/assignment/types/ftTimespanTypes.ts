@@ -45,6 +45,9 @@ export interface DatabaseTimespanWithFt {
       hasPriority: boolean;
       category: TaskCategory;
     };
+    _count: {
+      timespans: number;
+    };
     teamRequests: DatabaseRequestedTeam[];
   };
 }
@@ -60,6 +63,9 @@ export interface DatabaseFtWithTimespans {
       start: Date;
       end: Date;
     }[];
+    _count: {
+      timespans: number;
+    };
     teamRequests: DatabaseRequestedTeam[];
   }[];
 }
@@ -77,6 +83,14 @@ export type TimespanWithFt = Timespan & {
 
 export type FtWithTimespan = SimplifiedFT & {
   timespans: Timespan[];
+};
+
+const COUNT_TIMESPANS = {
+  _count: {
+    select: {
+      timespans: true,
+    },
+  },
 };
 
 const SELECT_TEAM_REQUEST = {
@@ -106,6 +120,7 @@ export const SELECT_TIMESPAN_WITH_FT = {
         },
       },
       teamRequests: SELECT_TEAM_REQUEST,
+      ...COUNT_TIMESPANS,
     },
   },
 };
@@ -124,6 +139,7 @@ export const SELECT_FT_WITH_TIMESPANS = {
           end: true,
         },
       },
+      ...COUNT_TIMESPANS,
       teamRequests: SELECT_TEAM_REQUEST,
     },
   },

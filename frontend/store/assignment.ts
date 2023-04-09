@@ -125,6 +125,10 @@ export const mutations = mutationTree(state, {
     state.taskAssignment.withCandidateTasks(id, tasks);
   },
 
+  SET_CANDIDATES_FRIENDS(state, friends: Volunteer[]) {
+    state.taskAssignment = state.taskAssignment.withCandidatesFriends(friends);
+  },
+
   ASSIGN_VOLUNTEER_AS_MEMBER_OF(
     state,
     { volunteerId, teamCode }: AssignmentParameters
@@ -138,6 +142,21 @@ export const mutations = mutationTree(state, {
 
   RESET_TIMESPAN_ASSIGNMENT(state) {
     state.taskAssignment = TaskAssignment.init();
+  },
+
+  ADD_CANDIDATE(state, volunteer: Volunteer) {
+    const candidate = new AssignmentCandidate(volunteer);
+    state.taskAssignment = state.taskAssignment.addCandidate(candidate);
+  },
+
+  SET_PREVIOUS_CANDIDATE(state) {
+    state.taskAssignment =
+      state.taskAssignment.changeLastCandidateToPreviousFriend();
+  },
+
+  SET_NEXT_CANDIDATE(state) {
+    state.taskAssignment =
+      state.taskAssignment.changeLastCandidateToNextFriend();
   },
 });
 
@@ -234,18 +253,38 @@ export const actions = actionTree(
       commit("SET_HOVER_TIMESPAN", timespan);
     },
 
-    async startAssignment({ commit }, volunteer: Volunteer) {
+    startAssignment({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       commit("START_TIMESPAN_ASSIGNMENT_WITH_VOLUNTEER", volunteer);
-      const [userRequestsRes, assignmentRes] = await Promise.all([
-        safeCall(this, UserRepo.getUserFtRequests(this, volunteer.id)),
-        safeCall(this, UserRepo.getVolunteerAssignments(this, volunteer.id)),
-      ]);
+      dispatch("retrieveVolunteerRelatedData", volunteer.id);
+    },
+
+    async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
+      const [userRequestsRes, assignmentRes, ...volunteerFriendsRes] =
+        await Promise.all([
+          safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
+          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
+          ...state.taskAssignment.candidateToRetrieveFriendsFor.map(
+            ({ volunteer }) =>
+              safeCall(
+                this,
+                AssignmentRepo.getAvailableFriends(
+                  this,
+                  volunteer.id,
+                  state.selectedTimespan?.id ?? 0
+                )
+              )
+          ),
+        ]);
       const tasks = castVolunteerTaskWithDate([
         ...(userRequestsRes?.data ?? []),
         ...(assignmentRes?.data ?? []),
       ]);
-      commit("SET_CANDIDATE_TASKS", { id: volunteer.id, tasks });
+      commit("SET_CANDIDATE_TASKS", { id: volunteerId, tasks });
+      const candidateFriends = volunteerFriendsRes.flatMap(
+        (res) => res?.data ?? []
+      );
+      commit("SET_CANDIDATES_FRIENDS", candidateFriends);
     },
 
     resetAssignment({ commit }) {
@@ -261,13 +300,45 @@ export const actions = actionTree(
     },
 
     async saveAssignments({ state, dispatch, commit }) {
-      const assignment = state.taskAssignment.assignments.at(0);
-      if (!assignment) return;
-      const res = await safeCall(this, AssignmentRepo.assign(this, assignment));
-      if (!res) return;
+      const assignmentsRes = await Promise.all(
+        state.taskAssignment.assignments.map((assignment) =>
+          safeCall(this, AssignmentRepo.assign(this, assignment))
+        )
+      );
+      if (assignmentsRes.some((res) => res === undefined)) {
+        const notif = {
+          message:
+            "Toutes les affectations n'ont pas eu lieu. Regardez le détails du créneau.",
+        };
+        dispatch("notif/pushNotification", notif);
+        return;
+      }
       commit("SET_SELECTED_VOLUNTEER", null);
       await dispatch("fetchTimespansWithStats", state.selectedFt?.id);
       dispatch("setSelectedTimespan", state.selectedTimespan);
+    },
+
+    async addCandidate({ state, commit, dispatch }) {
+      const volunteer = state.taskAssignment.candidateFriends.at(0);
+      if (!volunteer) return;
+      commit("ADD_CANDIDATE", volunteer);
+      dispatch("retrieveVolunteerRelatedData", volunteer.id);
+    },
+
+    previousCandidate({ commit, dispatch }) {
+      commit("SET_PREVIOUS_CANDIDATE");
+      dispatch("retrieveLastCandidateRelatedData");
+    },
+
+    nextCandidate({ commit, dispatch }) {
+      commit("SET_NEXT_CANDIDATE");
+      dispatch("retrieveLastCandidateRelatedData");
+    },
+
+    retrieveLastCandidateRelatedData({ state, dispatch }) {
+      const lastCandidate = state.taskAssignment.candidates.at(-1);
+      if (!lastCandidate) return;
+      dispatch("retrieveVolunteerRelatedData", lastCandidate.volunteer.id);
     },
   }
 );

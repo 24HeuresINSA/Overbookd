@@ -26,10 +26,26 @@
             class="planning__calendar"
           >
             <template #category="{ category }">
-              <VolunteerResumeCalendarHeader
-                v-if="retrieveVolunteer(category)"
-                :volunteer="retrieveVolunteer(category)"
-              ></VolunteerResumeCalendarHeader>
+              <div class="candidate">
+                <v-btn
+                  v-if="isReplacable(category)"
+                  icon
+                  @click="previousCandidate"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <VolunteerResumeCalendarHeader
+                  v-if="retrieveVolunteer(category)"
+                  :volunteer="retrieveVolunteer(category)"
+                ></VolunteerResumeCalendarHeader>
+                <v-btn
+                  v-if="isReplacable(category)"
+                  icon
+                  @click="nextCandidate"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+              </div>
             </template>
             <template #interval="{ hour, time, timeToY }">
               <div
@@ -45,21 +61,27 @@
             </template>
           </v-calendar>
           <div class="planning__teams">
-            <TeamIconChip
-              v-for="team of getAssignableTeams(mainCandidate)"
-              :key="team"
-              :team="team"
-              with-name
-              size="large"
-              :class="{
-                'not-selected': isAssignedAs(team, mainCandidate),
-              }"
-              @click="temporaryAssign(team, mainCandidate)"
-            ></TeamIconChip>
+            <div
+              v-for="candidate in candidates"
+              :key="candidate.volunteer.id"
+              class="candidate-teams"
+            >
+              <TeamIconChip
+                v-for="team of getAssignableTeams(candidate)"
+                :key="team"
+                :team="team"
+                with-name
+                size="large"
+                :class="{
+                  'not-selected': isNotAssignedAs(team, candidate),
+                }"
+                @click="temporaryAssign(team, candidate)"
+              ></TeamIconChip>
+            </div>
           </div>
           <v-btn
             color="success"
-            :class="{ invalid: areSomeCandidatesNotAssigned }"
+            :class="{ invalid: canNotAssign }"
             dark
             large
             class="planning__assignment"
@@ -70,12 +92,13 @@
         </div>
         <aside class="add-cadidate-corridor">
           <v-btn
-            v-if="mainCandidate?.volunteer.friendAvailable"
+            v-if="canAssignMoreVolunteer"
             id="add-candidate"
             fab
             dark
             large
             color="green"
+            @click="addCandidate"
           >
             <v-icon dark> mdi-account-multiple-plus </v-icon>
           </v-btn>
@@ -149,10 +172,19 @@ export default Vue.extend({
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
     },
-    areSomeCandidatesNotAssigned(): boolean {
-      return this.$accessor.assignment.taskAssignment.candidates.some(
-        (candidate) => candidate.assignment === ""
+    canNotAssign(): boolean {
+      return !this.$accessor.assignment.taskAssignment.canAssign;
+    },
+    canAssignMoreVolunteer(): boolean {
+      return this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
+    },
+    areOtherFriendsAvailable(): boolean {
+      return (
+        this.$accessor.assignment.taskAssignment.potentialCandidates.length > 0
       );
+    },
+    candidates(): AssignmentCandidate[] {
+      return this.$accessor.assignment.taskAssignment.candidates;
     },
   },
   watch: {
@@ -209,13 +241,44 @@ export default Vue.extend({
         this.$accessor.assignment.assign({ teamCode, volunteerId });
       }
     },
-    isAssignedAs(teamCode: string, candidate?: AssignmentCandidate): boolean {
+    isNotAssignedAs(
+      teamCode: string,
+      candidate?: AssignmentCandidate
+    ): boolean {
       if (!candidate) return false;
       return candidate.assignment !== teamCode;
     },
     assign() {
-      if (this.areSomeCandidatesNotAssigned) return;
+      if (this.canNotAssign) return;
       this.$accessor.assignment.saveAssignments();
+    },
+    addCandidate() {
+      this.$accessor.assignment.addCandidate();
+    },
+    previousCandidate() {
+      this.$accessor.assignment.previousCandidate();
+    },
+    nextCandidate() {
+      this.$accessor.assignment.nextCandidate();
+    },
+    isReplacable(volunteerId: string): boolean {
+      return (
+        this.isLastAddedCandidate(volunteerId) &&
+        this.areOtherFriendsAvailable &&
+        !this.isFirstAddedCandidate(volunteerId)
+      );
+    },
+    isLastAddedCandidate(volunteerId: string): boolean {
+      const candidateIndex = this.taskAssignment.candidates.findIndex(
+        (candidate) => candidate.volunteer.id === +volunteerId
+      );
+      return candidateIndex + 1 === this.taskAssignment.candidates.length;
+    },
+    isFirstAddedCandidate(volunteerId: string): boolean {
+      const candidateIndex = this.taskAssignment.candidates.findIndex(
+        (candidate) => candidate.volunteer.id === +volunteerId
+      );
+      return candidateIndex === 0;
     },
   },
 });
@@ -253,6 +316,7 @@ export default Vue.extend({
 .planning-list {
   display: flex;
   gap: 40px;
+  overflow-y: scroll;
   .planning {
     flex-grow: 9;
     display: flex;
@@ -264,12 +328,8 @@ export default Vue.extend({
     }
     &__teams {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      .not-selected {
-        opacity: 0.4;
-      }
+      justify-content: space-around;
+      width: 100%;
     }
     &__assignment.invalid {
       opacity: 0.3;
@@ -290,5 +350,22 @@ export default Vue.extend({
   position: absolute;
   top: 3px;
   right: 3px;
+}
+
+.candidate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  &-teams {
+    min-width: $calendar-category-column-min-width;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    .not-selected {
+      opacity: 0.4;
+    }
+  }
 }
 </style>

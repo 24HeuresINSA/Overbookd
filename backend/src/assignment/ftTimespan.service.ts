@@ -19,7 +19,6 @@ import {
   SELECT_TIMESPAN_WITH_FT,
   RequestedTeam,
   DatabaseTimeWindow,
-  TimespanWithFt,
   FtWithTimespan,
   DatabaseTimespanWithAssignedTeamMembers,
   AssignmentAsTeamMember as AssignedAsTeamMember,
@@ -88,16 +87,6 @@ export class FtTimespanService {
     private volunteerAvailability: VolunteerAvailabilityService,
     private user: UserService,
   ) {}
-
-  async findAllTimespansWithFt(): Promise<TimespanWithFt[]> {
-    const ftTimespans = await this.prisma.ftTimespan.findMany({
-      where: {
-        timeWindow: WHERE_FT_EXISTS_AND_READY,
-      },
-      select: SELECT_TIMESPAN_WITH_FT,
-    });
-    return this.formatTimespansWithFt(ftTimespans);
-  }
 
   async findAllFtsWithTimespans(): Promise<FtWithTimespan[]> {
     const fts = await this.prisma.ft.findMany({
@@ -239,6 +228,7 @@ export class FtTimespanService {
   ): TimespanWithFtResponseDto {
     const requestedTeams = this.formatRequestedTeams(
       ftTimespan.timeWindow.teamRequests,
+      ftTimespan.timeWindow._count.timespans,
     );
     return {
       id: ftTimespan.id,
@@ -264,7 +254,10 @@ export class FtTimespanService {
     ft: DatabaseFtWithTimespans,
   ): FtWithTimespansResponseDto {
     const timespans = ft.timeWindows.flatMap((tw) => {
-      const requestedTeams = this.formatRequestedTeams(tw.teamRequests);
+      const requestedTeams = this.formatRequestedTeams(
+        tw.teamRequests,
+        tw._count.timespans,
+      );
       return tw.timespans.map((ts) => {
         return {
           id: ts.id,
@@ -285,10 +278,12 @@ export class FtTimespanService {
 
   private formatRequestedTeams(
     requestedTeams: DatabaseRequestedTeam[],
+    impactedTimespans: number,
   ): RequestedTeam[] {
     return requestedTeams.map((tr) => {
       const assignmentCount = tr._count.assignments;
-      return { code: tr.teamCode, quantity: tr.quantity, assignmentCount };
+      const globalQuantity = tr.quantity * impactedTimespans;
+      return { code: tr.teamCode, quantity: globalQuantity, assignmentCount };
     });
   }
 }
