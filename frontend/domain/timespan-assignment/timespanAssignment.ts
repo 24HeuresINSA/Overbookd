@@ -53,6 +53,7 @@ export class TaskAssignment {
   private teamRequests: TeamRequest[] = [];
   private _candidates: AssignmentCandidate[] = [];
   private _friends: Volunteer[] = [];
+  private _potentialCandidates: Volunteer[] = [];
 
   private constructor(readonly task: Task) {}
 
@@ -85,6 +86,7 @@ export class TaskAssignment {
       candidate.assign(assignableTeams[0]);
     }
     this._candidates = [...this._candidates, candidate];
+    this._potentialCandidates = [...this._friends];
     return this;
   }
 
@@ -168,10 +170,10 @@ export class TaskAssignment {
   }
 
   get potentialCandidates(): Volunteer[] {
-    return this._friends.filter(
-      (friend) =>
-        !this.getCandidate(friend.id) &&
-        this.canBeAssigned(friend, this.remainingTeamRequest)
+    return this._potentialCandidates.filter(
+      (potentialCandidate) =>
+        !this.getCandidate(potentialCandidate.id) &&
+        this.canBeAssigned(potentialCandidate, this.remainingTeamRequest)
     );
   }
 
