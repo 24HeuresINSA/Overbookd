@@ -7,10 +7,6 @@ import { UserService } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
-  TimespanWithFtResponseDto,
-  FtWithTimespansResponseDto,
-} from './dto/ftTimespanResponse.dto';
-import {
   DatabaseFtWithTimespans,
   DatabaseRequestedTeam,
   DatabaseTimespanWithFt,
@@ -22,6 +18,10 @@ import {
   FtWithTimespan,
   DatabaseTimespanWithAssignedTeamMembers,
   AssignmentAsTeamMember as AssignedAsTeamMember,
+  TimespanWithFt,
+  SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
+  TimespanWithFtAndAssignees,
+  DatabaseTimespanWithFtAndAssignees,
 } from './types/ftTimespanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -124,9 +124,7 @@ export class FtTimespanService {
     );
   }
 
-  async findTimespanWithFtAndAssignments(
-    timespanId: number,
-  ): Promise<TimespanWithFtResponseDto> {
+  async findTimespanWithFt(timespanId: number): Promise<TimespanWithFt> {
     const ftTimespan = await this.prisma.ftTimespan.findFirst({
       where: {
         id: timespanId,
@@ -140,9 +138,25 @@ export class FtTimespanService {
     return this.formatTimespanWithFt(ftTimespan);
   }
 
+  async findTimespanWithFtAndAssignment(
+    timespanId: number,
+  ): Promise<TimespanWithFtAndAssignees> {
+    const ftTimespan = await this.prisma.ftTimespan.findFirst({
+      where: {
+        id: timespanId,
+        timeWindow: WHERE_FT_EXISTS_AND_READY,
+      },
+      select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
+    });
+    if (!ftTimespan) {
+      throw new NotFoundException(`Timespan with id ${timespanId} not found`);
+    }
+    return this.formatTimespanWithFtAndAssignees(ftTimespan);
+  }
+
   async findTimespansWithFtWhereVolunteerIsAssignableTo(
     volunteerId: number,
-  ): Promise<TimespanWithFtResponseDto[]> {
+  ): Promise<TimespanWithFt[]> {
     const [volunteerTeams, availabilities] = await Promise.all([
       this.user.getUserTeams(volunteerId),
       this.volunteerAvailability.findUserAvailabilities(volunteerId),
@@ -219,13 +233,13 @@ export class FtTimespanService {
 
   private formatTimespansWithFt(
     ftTimespans: DatabaseTimespanWithFt[],
-  ): TimespanWithFtResponseDto[] {
+  ): TimespanWithFt[] {
     return ftTimespans.map((ts) => this.formatTimespanWithFt(ts));
   }
 
   private formatTimespanWithFt(
     ftTimespan: DatabaseTimespanWithFt,
-  ): TimespanWithFtResponseDto {
+  ): TimespanWithFt {
     const requestedTeams = this.formatRequestedTeams(
       ftTimespan.timeWindow.teamRequests,
       ftTimespan.timeWindow._count.timespans,
@@ -241,19 +255,26 @@ export class FtTimespanService {
         category: ftTimespan.timeWindow.ft.category,
       },
       requestedTeams,
-      assignees: formatTimespanAssignees(ftTimespan),
+    };
+  }
+
+  private formatTimespanWithFtAndAssignees(
+    timespan: DatabaseTimespanWithFtAndAssignees,
+  ): TimespanWithFtAndAssignees {
+    const assignees = formatTimespanAssignees(timespan);
+    return {
+      ...this.formatTimespanWithFt(timespan),
+      assignees,
     };
   }
 
   private formatFtsWithTimespans(
     fts: DatabaseFtWithTimespans[],
-  ): FtWithTimespansResponseDto[] {
+  ): FtWithTimespan[] {
     return fts.map((ft) => this.formatFtWithTimespans(ft));
   }
 
-  private formatFtWithTimespans(
-    ft: DatabaseFtWithTimespans,
-  ): FtWithTimespansResponseDto {
+  private formatFtWithTimespans(ft: DatabaseFtWithTimespans): FtWithTimespan {
     const timespans = ft.timeWindows.flatMap((tw) => {
       const requestedTeams = this.formatRequestedTeams(
         tw.teamRequests,
@@ -303,7 +324,9 @@ function convertToTimespan(
   };
 }
 
-function formatTimespanAssignees(ftTimespan: DatabaseTimespanWithFt): number[] {
+function formatTimespanAssignees(
+  ftTimespan: DatabaseTimespanWithFtAndAssignees,
+): number[] {
   return ftTimespan.assignments.map(({ assignee }) => assignee.id);
 }
 

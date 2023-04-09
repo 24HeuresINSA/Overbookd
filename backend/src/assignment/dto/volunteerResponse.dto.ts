@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Volunteer } from '../types/volunteerTypes';
+import { AvailableVolunteer, Volunteer } from '../types/volunteerTypes';
 
 export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({
@@ -64,4 +64,35 @@ export class VolunteerResponseDto implements Volunteer {
     type: Boolean,
   })
   isRequestedOnSamePeriod?: boolean;
+
+  @ApiProperty({
+    description: 'Has friends assigned on the same timespan',
+    type: Boolean,
+  })
+  hasFriendAssigned?: boolean;
+}
+
+export class AvailableVolunteerResponseDto
+  extends VolunteerResponseDto
+  implements AvailableVolunteer
+{
+  @ApiProperty({
+    required: false,
+    description: 'Has friends available on the same timespan',
+    type: Boolean,
+  })
+  friendAvailable: boolean;
+
+  @ApiProperty({
+    description:
+      'Whether the volunteer is requested by a non validated FT on the same period',
+    type: Boolean,
+  })
+  isRequestedOnSamePeriod: boolean;
+
+  @ApiProperty({
+    description: 'Has friends assigned on the same timespan',
+    type: Boolean,
+  })
+  hasFriendAssigned: boolean;
 }

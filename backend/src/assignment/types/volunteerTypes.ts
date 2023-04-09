@@ -14,20 +14,18 @@ export interface Volunteer extends BaseVolunteer {
   hasFriendAssigned?: boolean;
 }
 
+export interface AvailableVolunteer extends BaseVolunteer {
+  teams: string[];
+  assignments: number;
+  friendAvailable: boolean;
+  isRequestedOnSamePeriod: boolean;
+  hasFriendAssigned: boolean;
+}
+
 export interface DatabaseVolunteer extends BaseVolunteer {
   team: {
     team: {
       code: string;
-    };
-  }[];
-  friends?: {
-    requestor: {
-      id: number;
-    };
-  }[];
-  friendRequestors?: {
-    friend: {
-      id: number;
     };
   }[];
   _count?: {
@@ -36,4 +34,17 @@ export interface DatabaseVolunteer extends BaseVolunteer {
     friendRequestors?: number;
     ftUserRequests?: number;
   };
+}
+
+export interface DatabaseVolunteerWithFriendRequests extends DatabaseVolunteer {
+  friends: {
+    requestor: {
+      id: number;
+    };
+  }[];
+  friendRequestors: {
+    friend: {
+      id: number;
+    };
+  }[];
 }
