@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
@@ -84,13 +85,7 @@ export default Vue.extend({
   },
   methods: {
     displayDate(date: Date): string {
-      const displayOptions: Intl.DateTimeFormatOptions = {
-        dateStyle: "long",
-        timeStyle: "short",
-      };
-      return new Intl.DateTimeFormat("fr", displayOptions).format(
-        new Date(date)
-      );
+      return formatDateToHumanReadable(date);
     },
   },
 });
