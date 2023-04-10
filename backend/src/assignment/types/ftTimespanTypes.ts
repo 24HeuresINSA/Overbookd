@@ -60,39 +60,26 @@ export type DatabaseTimespanWithFtAndAssignees = DatabaseTimespanWithFt & {
   }[];
 };
 
-export type DatabaseTimespanWithAssignees = TimespanBase & {
-  assignments: {
-    teamRequest: {
-      teamCode: string;
-    };
-    assignee: {
-      id: number;
-      firstname: string;
-      lastname: string;
-      friends: {
-        requestor: {
-          id: number;
-          firstname: string;
-          lastname: string;
-        };
-      }[];
-      friendRequestors: {
-        friend: {
-          id: number;
-          firstname: string;
-          lastname: string;
-        };
-      }[];
-    };
+export type DatabaseAssignee = Assignee & {
+  friends: {
+    requestor: Assignee;
   }[];
+  friendRequestors: {
+    friend: Assignee;
+  }[];
+};
+
+export type DatabaseAssignmentsAsTeamMember = {
+  teamRequest: {
+    teamCode: string;
+  };
+  assignee: DatabaseAssignee;
+};
+
+export type DatabaseTimespanWithAssignees = TimespanBase & {
+  assignments: DatabaseAssignmentsAsTeamMember[];
   timeWindow: {
-    teamRequests: {
-      teamCode: string;
-      quantity: number;
-      _count: {
-        assignments: number;
-      };
-    }[];
+    teamRequests: DatabaseRequestedTeam[];
     ft: {
       id: number;
       name: string;
