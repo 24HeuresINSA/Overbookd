@@ -19,6 +19,7 @@ import {
   User,
   VolunteerTask,
 } from "~/utils/models/user";
+import { HttpStringified } from "~/utils/types/http";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -222,7 +223,8 @@ export const actions = actionTree(
         AssignmentRepo.getTimespansWithStats(this, ftId)
       );
       if (!res) return;
-      commit("SET_FT_TIMESPANS", res.data);
+      const timespans = convertToTimespans(res.data);
+      commit("SET_FT_TIMESPANS", timespans);
     },
 
     async fetchTimespansForVolunteer({ commit }, volunteerId: number) {
@@ -315,7 +317,11 @@ export const actions = actionTree(
       }
       commit("SET_SELECTED_VOLUNTEER", null);
       await dispatch("fetchTimespansWithStats", state.selectedFt?.id);
-      dispatch("setSelectedTimespan", state.selectedTimespan);
+      const updatedTimespan = state.selectedFtTimespans.find(
+        (timespan) => timespan.id === state.selectedTimespan?.id
+      );
+      if (!updatedTimespan) return;
+      dispatch("setSelectedTimespan", updatedTimespan);
     },
 
     async addCandidate({ state, commit, dispatch }) {
@@ -342,3 +348,13 @@ export const actions = actionTree(
     },
   }
 );
+
+function convertToTimespans(
+  timespans: HttpStringified<FtTimespanWithRequestedTeams>[]
+): FtTimespanWithRequestedTeams[] {
+  return timespans.map((timespan) => ({
+    ...timespan,
+    start: new Date(timespan.start),
+    end: new Date(timespan.end),
+  }));
+}
