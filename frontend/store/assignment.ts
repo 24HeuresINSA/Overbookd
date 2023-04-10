@@ -13,6 +13,7 @@ import {
   castTimespansWithFtWithDate,
   FtTimespanWithRequestedTeams,
   FtTimespan,
+  TimespanWithAssignees,
 } from "~/utils/models/ftTimespan";
 import {
   castVolunteerTaskWithDate,
@@ -43,6 +44,7 @@ export const state = () => ({
   taskAssignment: TaskAssignment.init(),
 
   hoverTimespan: null as TimespanWithFt | null,
+  timespanToDisplayDetails: null as TimespanWithAssignees | null,
 });
 
 export const getters = getterTree(state, {
@@ -89,6 +91,10 @@ export const mutations = mutationTree(state, {
 
   SET_SELECTED_TIMESPAN(state, timespan: FtTimespanWithRequestedTeams) {
     state.selectedTimespan = timespan;
+  },
+
+  SET_TIMESPAN_TO_DISPLAY_DETAILS(state, timespan: TimespanWithAssignees) {
+    state.timespanToDisplayDetails = timespan;
   },
 
   SET_SELECTED_FT(state, ft: FtWithTimespan) {
@@ -346,6 +352,16 @@ export const actions = actionTree(
       if (!lastCandidate) return;
       dispatch("retrieveVolunteerRelatedData", lastCandidate.volunteer.id);
     },
+
+    async fetchTimespanDetails({ commit }, timespanId: number) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.getTimespanDetails(this, timespanId)
+      );
+      if (!res) return;
+      const timespan = convertToTimespanWithAssignees(res.data);
+      commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespan);
+    },
   }
 );
 
@@ -357,4 +373,14 @@ function convertToTimespans(
     start: new Date(timespan.start),
     end: new Date(timespan.end),
   }));
+}
+
+function convertToTimespanWithAssignees(
+  timespan: HttpStringified<TimespanWithAssignees>
+): TimespanWithAssignees {
+  return {
+    ...timespan,
+    start: new Date(timespan.start),
+    end: new Date(timespan.end),
+  };
 }

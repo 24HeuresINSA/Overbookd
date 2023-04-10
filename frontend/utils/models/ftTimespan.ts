@@ -1,4 +1,5 @@
 import { HttpStringified } from "../types/http";
+import { User } from "./user";
 
 export const TaskCategories = {
   STATIQUE: "STATIQUE",
@@ -52,6 +53,21 @@ export interface FtTimespanEvent extends FtTimespan {
 
 export interface TimespanWithFt extends FtTimespan {
   ft: SimplifiedFT;
+}
+
+export interface TimespanAssignee extends User {
+  assignedTeam: string;
+  friends: User[];
+}
+
+export interface TimespanWithAssignees extends FtTimespanWithRequestedTeams {
+  ft: {
+    id: number;
+    name: string;
+    location: string;
+  };
+  requiredVolunteers: User[];
+  assignees: TimespanAssignee[];
 }
 
 export interface FtWithTimespan extends SimplifiedFT {

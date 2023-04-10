@@ -95,3 +95,11 @@ export function computeNextHourDate(date: Date): Date {
   nextHour.setHours(date.getHours() + 1);
   return nextHour;
 }
+
+export function formatDateToHumanReadable(date: Date | string): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    dateStyle: "long",
+    timeStyle: "short",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}

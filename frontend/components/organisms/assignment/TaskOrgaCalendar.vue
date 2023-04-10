@@ -10,6 +10,7 @@
         class="event underline-on-hover"
         :class="{ highlight: timespan.id === selectedTimespanId }"
         @click="selectTimespan(timespan)"
+        @contextmenu.prevent="selectTimespanToDisplayDetails(timespan.id)"
       >
         {{ timespan.name }}
       </div>
@@ -64,6 +65,9 @@ export default Vue.extend({
   methods: {
     selectTimespan(timespan: FtTimespanEvent) {
       this.$accessor.assignment.setSelectedTimespan(timespan);
+    },
+    selectTimespanToDisplayDetails(timespanId: number) {
+      this.$emit("display-timespan-details", timespanId);
     },
     mapTimespanToEvent(
       timespan: FtTimespanWithRequestedTeams

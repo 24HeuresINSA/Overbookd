@@ -18,6 +18,7 @@ import {
 import {
   FtTimespanResponseDto,
   FtWithTimespansResponseDto,
+  TimespanWithAssigneesResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -32,7 +33,7 @@ import {
 } from './dto/volunteerResponse.dto';
 import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
-import { Timespan } from './types/ftTimespanTypes';
+import { Timespan, TimespanWithAssignees } from './types/ftTimespanTypes';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -128,6 +129,21 @@ export class AssignmentController {
     return this.volunteerService.findAvailableVolunteersForFtTimespan(
       timespanId,
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Get('ft-timespans/:timespanId')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get timespan details',
+    type: TimespanWithAssigneesResponseDto,
+  })
+  findTimespanDetails(
+    @Param('timespanId', ParseIntPipe) timespanId: number,
+  ): Promise<TimespanWithAssignees> {
+    return this.ftTimespanService.findTimespanWithAssignees(timespanId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

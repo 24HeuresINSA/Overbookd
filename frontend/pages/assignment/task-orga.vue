@@ -1,10 +1,16 @@
 <template>
   <v-container class="assignment-container">
     <FilterableVolunteerList class="volunteer-list" />
-    <TaskOrgaCalendar class="calendar" />
+    <TaskOrgaCalendar
+      class="calendar"
+      @display-timespan-details="openTimespanDetailsDialog"
+    />
     <FilterableFtList class="task-list" />
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
       <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
+    </v-dialog>
+    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
+      <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
     </v-dialog>
   </v-container>
 </template>
@@ -12,10 +18,11 @@
 <script lang="ts">
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
 import AssignmentForm from "~/components/organisms/assignment/AssignmentForm.vue";
+import TimespanDetails from "~/components/organisms/assignment/TimespanDetails.vue";
+import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -24,6 +31,12 @@ export default Vue.extend({
     FilterableFtList,
     TaskOrgaCalendar,
     AssignmentForm,
+    TimespanDetails,
+  },
+  data() {
+    return {
+      displayTimespanDetailsDialog: false,
+    };
   },
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
@@ -45,6 +58,13 @@ export default Vue.extend({
   methods: {
     closeTaskAssignmentDialog() {
       this.openTaskAssignmentDialog = false;
+    },
+    closeTimespanDetailsDialog() {
+      this.displayTimespanDetailsDialog = false;
+    },
+    openTimespanDetailsDialog(timespanId: number) {
+      this.$accessor.assignment.fetchTimespanDetails(timespanId);
+      this.displayTimespanDetailsDialog = true;
     },
   },
 });

@@ -70,5 +70,6 @@ export default Vue.extend({
 }
 span.name {
   color: white;
+  margin-left: 4px;
 }
 </style>
