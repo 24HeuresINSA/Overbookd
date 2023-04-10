@@ -37,8 +37,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchTeams from "~/components/atoms/SearchTeams.vue";
 import { Team } from "~/utils/models/team";
+import { nextSortDirection } from "~/utils/models/assignment";
+import SearchTeams from "~/components/atoms/SearchTeams.vue";
 
 export default Vue.extend({
   name: "VolunteerFilters",
@@ -67,7 +68,7 @@ export default Vue.extend({
       this.$emit("change:teams", teams);
     },
     updateSort() {
-      this.sort = ((this.sort + 2) % 3) - 1;
+      this.sort = nextSortDirection(this.sort);
       this.$emit("change:sort", this.sort);
     },
   },

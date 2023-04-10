@@ -33,6 +33,7 @@ import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team";
 import {
+  Sort,
   Volunteer,
   AssignmentModes,
   getAssignmentModeFromRoute,
@@ -112,9 +113,9 @@ export default Vue.extend({
     },
     sortVolunteers(volunteers: Volunteer[]) {
       return volunteers.sort((a, b) => {
-        if (this.sort === 0) {
+        if (this.sort === Sort.NONE) {
           return b.charisma - a.charisma;
-        } else if (this.sort === 1) {
+        } else if (this.sort === Sort.ASC) {
           return a.assignments - b.assignments;
         } else {
           return b.assignments - a.assignments;
