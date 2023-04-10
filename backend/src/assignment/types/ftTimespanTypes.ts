@@ -60,6 +60,49 @@ export type DatabaseTimespanWithFtAndAssignees = DatabaseTimespanWithFt & {
   }[];
 };
 
+export type DatabaseTimespanWithAssignees = TimespanBase & {
+  assignments: {
+    teamRequest: {
+      teamCode: string;
+    };
+    assignee: {
+      id: number;
+      firstname: string;
+      lastname: string;
+      friends: {
+        requestor: {
+          id: number;
+          firstname: string;
+          lastname: string;
+        };
+      }[];
+      friendRequestors: {
+        friend: {
+          id: number;
+          firstname: string;
+          lastname: string;
+        };
+      }[];
+    };
+  }[];
+  timeWindow: {
+    teamRequests: {
+      teamCode: string;
+      quantity: number;
+      _count: {
+        assignments: number;
+      };
+    }[];
+    ft: {
+      id: number;
+      name: string;
+      location: {
+        name: string;
+      };
+    };
+  };
+};
+
 export interface DatabaseFtWithTimespans {
   id: number;
   name: string;
@@ -95,6 +138,29 @@ export type TimespanWithFtAndAssignees = TimespanWithFt & {
 
 export type FtWithTimespan = SimplifiedFT & {
   timespans: Timespan[];
+};
+
+export type Assignee = {
+  id: number;
+  firstname: string;
+  lastname: string;
+};
+
+export type TimespanAssignee = Assignee & {
+  assignedTeam: string;
+  friends: Assignee[];
+};
+
+export type FtWithLocation = {
+  id: number;
+  name: string;
+  location: string;
+};
+
+export type TimespanWithAssignees = Timespan & {
+  ft: FtWithLocation;
+  requiredVolunteers: Assignee[];
+  assignees: TimespanAssignee[];
 };
 
 const COUNT_TIMESPANS = {

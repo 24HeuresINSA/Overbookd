@@ -93,63 +93,63 @@ export const mutations = mutationTree(state, {
     state.selectedTimespan = timespan;
   },
 
-  SET_TIMESPAN_TO_DISPLAY_DETAILS(state, timespanId: number) {
-    const timespan = {
-      id: timespanId,
-      start: new Date("2023-05-12 20:00"),
-      end: new Date("2023-05-12 22:00"),
-      requestedTeams: [
-        { code: "soft", quantity: 2, assignmentCount: 2 },
-        { code: "confiance", quantity: 1, assignmentCount: 1 },
-      ],
-      ft: {
-        id: 123,
-        name: "Ma tache",
-        location: "DTC",
-      },
-      requiredVolunteers: [
-        { id: 1, firstname: "Leon", lastname: "Brole" },
-        { id: 4, firstname: "Antoine", lastname: "Matuvu" },
-      ],
-      assignees: [
-        {
-          id: 2,
-          firstname: "Jean",
-          lastname: "CuleDesPoules",
-          assignedTeam: "confiance",
-          friends: [],
-        },
-        {
-          id: 3,
-          firstname: "Jean",
-          lastname: "Neymar",
-          assignedTeam: "soft",
-          friends: [
-            { id: 1, firstname: "Leon", lastname: "Brole" },
-            { id: 4, firstname: "Antoine", lastname: "Matuvu" },
-            { id: 5, firstname: "Tristan", lastname: "Roussillon" },
-            { id: 6, firstname: "Titouan", lastname: "Doux" },
-            { id: 7, firstname: "Titouan", lastname: "Doux" },
-            { id: 8, firstname: "Titouan", lastname: "Doux" },
-            { id: 9, firstname: "Titouan", lastname: "Doux" },
-          ],
-        },
-        {
-          id: 5,
-          firstname: "Tristan",
-          lastname: "Roussillon",
-          assignedTeam: "soft",
-          friends: [{ id: 3, firstname: "Jean", lastname: "Neymar" }],
-        },
-        {
-          id: 6,
-          firstname: "Titouan",
-          lastname: "Doux",
-          assignedTeam: "soft",
-          friends: [{ id: 3, firstname: "Jean", lastname: "Neymar" }],
-        },
-      ],
-    };
+  SET_TIMESPAN_TO_DISPLAY_DETAILS(state, timespan: TimespanWithAssignees) {
+    // const timespan = {
+    //   id: timespanId,
+    //   start: new Date("2023-05-12 20:00"),
+    //   end: new Date("2023-05-12 22:00"),
+    //   requestedTeams: [
+    //     { code: "soft", quantity: 2, assignmentCount: 2 },
+    //     { code: "confiance", quantity: 1, assignmentCount: 1 },
+    //   ],
+    //   ft: {
+    //     id: 123,
+    //     name: "Ma tache",
+    //     location: "DTC",
+    //   },
+    //   requiredVolunteers: [
+    //     { id: 1, firstname: "Leon", lastname: "Brole" },
+    //     { id: 4, firstname: "Antoine", lastname: "Matuvu" },
+    //   ],
+    //   assignees: [
+    //     {
+    //       id: 2,
+    //       firstname: "Jean",
+    //       lastname: "CuleDesPoules",
+    //       assignedTeam: "confiance",
+    //       friends: [],
+    //     },
+    //     {
+    //       id: 3,
+    //       firstname: "Jean",
+    //       lastname: "Neymar",
+    //       assignedTeam: "soft",
+    //       friends: [
+    //         { id: 1, firstname: "Leon", lastname: "Brole" },
+    //         { id: 4, firstname: "Antoine", lastname: "Matuvu" },
+    //         { id: 5, firstname: "Tristan", lastname: "Roussillon" },
+    //         { id: 6, firstname: "Titouan", lastname: "Doux" },
+    //         { id: 7, firstname: "Titouan", lastname: "Doux" },
+    //         { id: 8, firstname: "Titouan", lastname: "Doux" },
+    //         { id: 9, firstname: "Titouan", lastname: "Doux" },
+    //       ],
+    //     },
+    //     {
+    //       id: 5,
+    //       firstname: "Tristan",
+    //       lastname: "Roussillon",
+    //       assignedTeam: "soft",
+    //       friends: [{ id: 3, firstname: "Jean", lastname: "Neymar" }],
+    //     },
+    //     {
+    //       id: 6,
+    //       firstname: "Titouan",
+    //       lastname: "Doux",
+    //       assignedTeam: "soft",
+    //       friends: [{ id: 3, firstname: "Jean", lastname: "Neymar" }],
+    //     },
+    //   ],
+    // };
     state.timespanToDisplayDetails = timespan;
   },
 
@@ -409,8 +409,14 @@ export const actions = actionTree(
       dispatch("retrieveVolunteerRelatedData", lastCandidate.volunteer.id);
     },
 
-    fetchTimespanDetails({ commit }, timespanId: number) {
-      commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespanId);
+    async fetchTimespanDetails({ commit }, timespanId: number) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.getTimespanDetails(this, timespanId)
+      );
+      if (!res) return;
+      const timespan = res.data;
+      commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespan);
     },
   }
 );

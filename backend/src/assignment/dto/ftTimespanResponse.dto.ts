@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TaskCategory } from '@prisma/client';
 import {
+  Assignee,
+  FtWithLocation,
   FtWithTimespan,
   RequestedTeam,
   SimplifiedFT,
   Timespan,
+  TimespanAssignee,
+  TimespanWithAssignees,
   TimespanWithFt,
 } from '../types/ftTimespanTypes';
 
@@ -115,4 +119,52 @@ export class FtWithTimespansResponseDto
     isArray: true,
   })
   timespans: FtTimespanResponseDto[];
+}
+
+class FtWithLocationRepresentation implements FtWithLocation {
+  id: number;
+  name: string;
+  location: string;
+}
+
+class AssigneeRepresentation implements Assignee {
+  id: number;
+  firstname: string;
+  lastname: string;
+}
+
+class TimespanAssigneeRepresentation
+  extends AssigneeRepresentation
+  implements TimespanAssignee
+{
+  assignedTeam: string;
+  friends: AssigneeRepresentation[];
+}
+
+export class TimespanWithAssigneesResponseDto
+  extends FtTimespanResponseDto
+  implements TimespanWithAssignees
+{
+  @ApiProperty({
+    required: true,
+    description: 'The ft with location',
+    type: FtWithLocationRepresentation,
+  })
+  ft: FtWithLocation;
+
+  @ApiProperty({
+    required: true,
+    description: 'Volunteer required on this timespan',
+    type: AssigneeRepresentation,
+    isArray: true,
+  })
+  requiredVolunteers: Assignee[];
+
+  @ApiProperty({
+    required: true,
+    description: 'Volunteer assigned on this timespan as team member',
+    type: TimespanAssigneeRepresentation,
+    isArray: true,
+  })
+  assignees: TimespanAssignee[];
 }

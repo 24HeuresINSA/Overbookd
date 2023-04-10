@@ -22,6 +22,9 @@ import {
   SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
   TimespanWithFtAndAssignees,
   DatabaseTimespanWithFtAndAssignees,
+  TimespanWithAssignees,
+  DatabaseTimespanWithAssignees,
+  Assignee,
 } from './types/ftTimespanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -136,6 +139,160 @@ export class FtTimespanService {
       throw new NotFoundException(`Timespan with id ${timespanId} not found`);
     }
     return this.formatTimespanWithFt(ftTimespan);
+  }
+
+  async findTimespanWithAssignees(
+    timespanId: number,
+  ): Promise<TimespanWithAssignees> {
+    const timespan = await this.prisma.ftTimespan.findFirst({
+      where: {
+        id: timespanId,
+        timeWindow: WHERE_FT_EXISTS_AND_READY,
+      },
+      select: {
+        id: true,
+        start: true,
+        end: true,
+        timeWindow: {
+          select: {
+            teamRequests: {
+              select: {
+                teamCode: true,
+                quantity: true,
+                _count: {
+                  select: {
+                    assignments: { where: { timespanId } },
+                  },
+                },
+              },
+            },
+            ft: {
+              select: {
+                id: true,
+                name: true,
+                location: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        assignments: {
+          select: {
+            assignee: {
+              select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                friends: {
+                  select: {
+                    requestor: {
+                      select: {
+                        id: true,
+                        firstname: true,
+                        lastname: true,
+                      },
+                    },
+                  },
+                  where: {
+                    requestor: {
+                      assignments: {
+                        some: {
+                          timespanId,
+                        },
+                      },
+                    },
+                  },
+                },
+                friendRequestors: {
+                  select: {
+                    friend: {
+                      select: {
+                        id: true,
+                        firstname: true,
+                        lastname: true,
+                      },
+                    },
+                  },
+                  where: {
+                    friend: {
+                      assignments: {
+                        some: {
+                          timespanId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            teamRequest: {
+              select: {
+                teamCode: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return this.formatTimespanWithDetails(timespan);
+  }
+
+  private formatTimespanWithDetails(
+    timespan: DatabaseTimespanWithAssignees,
+  ): TimespanWithAssignees {
+    const { id, start, end, assignments, timeWindow } = timespan;
+    const ft = {
+      id: timeWindow.ft.id,
+      name: timeWindow.ft.name,
+      location: timeWindow.ft.location.name,
+    };
+    return {
+      id,
+      start,
+      end,
+      ft,
+      requestedTeams: timeWindow.teamRequests.map(
+        ({ teamCode, quantity, _count }) => ({
+          code: teamCode,
+          quantity,
+          assignmentCount: _count.assignments,
+        }),
+      ),
+      requiredVolunteers: assignments
+        .filter(({ teamRequest }) => teamRequest === null)
+        .map(({ assignee }) => ({
+          id: assignee.id,
+          firstname: assignee.firstname,
+          lastname: assignee.lastname,
+        })),
+      assignees: assignments
+        .filter(({ teamRequest }) => teamRequest !== null)
+        .map(({ assignee, teamRequest }) => ({
+          id: assignee.id,
+          firstname: assignee.firstname,
+          lastname: assignee.lastname,
+          assignedTeam: teamRequest.teamCode,
+          friends: [
+            ...assignee.friends.map(({ requestor }) => ({
+              id: requestor.id,
+              firstname: requestor.firstname,
+              lastname: requestor.lastname,
+            })),
+            ...assignee.friendRequestors.map(({ friend }) => ({
+              id: friend.id,
+              firstname: friend.firstname,
+              lastname: friend.lastname,
+            })),
+          ].reduce((friendList, currentFriend) => {
+            const exist = friendList.find(({ id }) => id === currentFriend.id);
+            if (exist) return friendList;
+            return [...friendList, currentFriend];
+          }, [] as Assignee[]),
+        })),
+    };
   }
 
   async findTimespanWithFtAndAssignment(
