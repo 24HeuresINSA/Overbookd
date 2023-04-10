@@ -4,7 +4,12 @@ import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
-import { DatabaseVolunteer, Volunteer } from './types/volunteerTypes';
+import {
+  AvailableVolunteer,
+  DatabaseVolunteer,
+  DatabaseVolunteerWithFriendRequests,
+  Volunteer,
+} from './types/volunteerTypes';
 import { TaskCategory } from '@prisma/client';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { AssignmentService } from './assignment.service';
@@ -32,6 +37,27 @@ const SELECT_VOLUNTEER = {
   ...SELECT_USER_TEAMS,
 };
 
+const SELECT_FRIENDS = {
+  friends: {
+    select: {
+      requestor: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+  friendRequestors: {
+    select: {
+      friend: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -56,15 +82,15 @@ export class VolunteerService {
 
   async findAvailableVolunteersForFtTimespan(
     timespanId: number,
-  ): Promise<Volunteer[]> {
+  ): Promise<AvailableVolunteer[]> {
     const [ftCategory, ftTimespan] = await Promise.all([
       this.ftTimespan.getTaskCategory(timespanId),
-      this.ftTimespan.findTimespanWithFt(timespanId),
+      this.ftTimespan.findTimespanWithFtAndAssignment(timespanId),
     ]);
-    const select = this.buildAssignableVolunteersSelection(
-      ftTimespan,
-      ftCategory,
-    );
+    const select = {
+      ...this.buildAssignableVolunteersSelection(ftTimespan, ftCategory),
+      ...SELECT_FRIENDS,
+    };
     const where = this.buildAssignableVolunteersCondition(ftTimespan);
 
     const volunteers = await this.prisma.user.findMany({
@@ -72,7 +98,7 @@ export class VolunteerService {
       where,
       orderBy: { charisma: 'desc' },
     });
-    return this.formatVolunteers(volunteers);
+    return this.formatAvailableVolunteers(volunteers, ftTimespan.assignees);
   }
 
   async findAvailableVolunteerFriendsForFtTimespan(
@@ -183,6 +209,15 @@ export class VolunteerService {
     return volunteers.map((volunteer) => this.formatVolunteer(volunteer));
   }
 
+  private formatAvailableVolunteers(
+    volunteers: DatabaseVolunteerWithFriendRequests[],
+    assignees: number[],
+  ): AvailableVolunteer[] {
+    return volunteers.map((volunteer) =>
+      this.formatAvailableVolunteer(volunteer, assignees),
+    );
+  }
+
   private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
     return {
       id: volunteer.id,
@@ -192,9 +227,32 @@ export class VolunteerService {
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
       assignments: volunteer._count?.assignments ?? 0,
-      friendAvailable:
-        volunteer?._count.friends + volunteer?._count.friendRequestors > 0,
-      isRequestedOnSamePeriod: volunteer?._count?.ftUserRequests > 0,
     };
+  }
+
+  private formatAvailableVolunteer(
+    volunteer: DatabaseVolunteerWithFriendRequests,
+    assignees: number[],
+  ): AvailableVolunteer {
+    const { _count: count } = volunteer;
+    const friendAvailable = count.friends + count.friendRequestors > 0;
+    const hasFriendAssigned = this.hasFriendAssigned(volunteer, assignees);
+    const isRequestedOnSamePeriod = volunteer._count?.ftUserRequests > 0;
+    return {
+      ...this.formatVolunteer(volunteer),
+      friendAvailable,
+      isRequestedOnSamePeriod,
+      hasFriendAssigned,
+    };
+  }
+
+  private hasFriendAssigned(
+    volunteer: DatabaseVolunteerWithFriendRequests,
+    assignees: number[],
+  ): boolean {
+    return volunteer.friends
+      .map(({ requestor }) => requestor.id)
+      .concat(volunteer.friendRequestors.map(({ friend }) => friend.id))
+      .some((id) => assignees.some((assignee) => assignee === id));
   }
 }

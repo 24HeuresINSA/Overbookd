@@ -12,6 +12,7 @@ export interface Volunteer extends User {
   assignments: number;
   friendAvailable?: boolean;
   isRequestedOnSamePeriod?: boolean;
+  hasFriendAssigned?: boolean;
 }
 
 export function getAssignmentModeFromRoute(url: string): string {

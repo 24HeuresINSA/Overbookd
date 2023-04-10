@@ -26,7 +26,10 @@ import { AssignmentService } from './assignment.service';
 import { FtTimespanService } from './ftTimespan.service';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { VolunteerResponseDto } from './dto/volunteerResponse.dto';
+import {
+  AvailableVolunteerResponseDto,
+  VolunteerResponseDto,
+} from './dto/volunteerResponse.dto';
 import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import { Timespan } from './types/ftTimespanTypes';
@@ -117,11 +120,11 @@ export class AssignmentController {
     status: 200,
     description: 'Get volunteers available for ft timespan',
     isArray: true,
-    type: VolunteerResponseDto,
+    type: AvailableVolunteerResponseDto,
   })
   findAvailableVolunteersForFtTimespan(
     @Param('timespanId', ParseIntPipe) timespanId: number,
-  ): Promise<VolunteerResponseDto[]> {
+  ): Promise<AvailableVolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteersForFtTimespan(
       timespanId,
     );

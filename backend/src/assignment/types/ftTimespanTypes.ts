@@ -52,6 +52,14 @@ export interface DatabaseTimespanWithFt {
   };
 }
 
+export type DatabaseTimespanWithFtAndAssignees = DatabaseTimespanWithFt & {
+  assignments: {
+    assignee: {
+      id: number;
+    };
+  }[];
+};
+
 export interface DatabaseFtWithTimespans {
   id: number;
   name: string;
@@ -79,6 +87,10 @@ export interface SimplifiedFT {
 
 export type TimespanWithFt = Timespan & {
   ft: SimplifiedFT;
+};
+
+export type TimespanWithFtAndAssignees = TimespanWithFt & {
+  assignees: number[];
 };
 
 export type FtWithTimespan = SimplifiedFT & {
@@ -121,6 +133,19 @@ export const SELECT_TIMESPAN_WITH_FT = {
       },
       teamRequests: SELECT_TEAM_REQUEST,
       ...COUNT_TIMESPANS,
+    },
+  },
+};
+
+export const SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS = {
+  ...SELECT_TIMESPAN_WITH_FT,
+  assignments: {
+    select: {
+      assignee: {
+        select: {
+          id: true,
+        },
+      },
     },
   },
 };

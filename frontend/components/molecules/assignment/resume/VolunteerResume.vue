@@ -7,6 +7,20 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-icon
+                v-if="volunteer.hasFriendAssigned"
+                small
+                color="green"
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-account-check
+              </v-icon>
+            </template>
+            <span>Ami déjà assigné sur le créneau</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template #activator="{ on, attrs }">
+              <v-icon
                 v-if="volunteer.friendAvailable"
                 small
                 v-bind="attrs"
