@@ -61,7 +61,7 @@ export default Vue.extend({
 }
 
 .timespan-card-data {
-  height: 64px;
+  height: 70px;
   overflow: hidden;
   display: flex;
 }

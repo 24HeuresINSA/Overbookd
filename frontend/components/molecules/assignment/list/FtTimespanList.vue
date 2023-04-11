@@ -2,7 +2,7 @@
   <div class="timespan-list" @mouseleave="hoverTimespan(null)">
     <v-virtual-scroll
       :items="timespans"
-      item-height="64"
+      item-height="70"
       class="virtual-scroll"
     >
       <template #default="{ item }">
