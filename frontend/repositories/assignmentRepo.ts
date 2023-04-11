@@ -1,4 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { AssignmentRequest } from "~/store/assignment";
 import { Volunteer } from "~/utils/models/assignment";
 import {
   FtTimespanWithRequestedTeams,
@@ -9,12 +10,6 @@ import {
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
-
-type AssignmentRequest = {
-  timespanId: number;
-  teamCode: string;
-  volunteerId: number;
-};
 
 type AssignmentResponse = {
   id: number;

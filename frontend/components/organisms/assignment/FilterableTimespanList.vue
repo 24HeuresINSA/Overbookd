@@ -6,6 +6,7 @@
         class="filters"
         @change:search="timespan = $event"
         @change:teams="teams = $event"
+        @change:category="category = $event"
       ></FtTimespanFilters>
       <v-divider />
       <FtTimespanList
@@ -29,8 +30,15 @@ import Fuse from "fuse.js";
 import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
 import FtTimespanList from "~/components/molecules/assignment/list/FtTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
-import { TimespanWithFt } from "~/utils/models/ftTimespan";
+import {
+  SimplifiedFT,
+  TaskCategory,
+  TaskPriorities,
+  TaskPriority,
+  TimespanWithFt,
+} from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
+import { AssignmentCandidate } from "~/domain/timespan-assignment/timespanAssignment";
 
 export default Vue.extend({
   name: "FilterableTimespanList",
@@ -38,12 +46,13 @@ export default Vue.extend({
   data: () => ({
     teams: [] as Team[],
     timespan: "",
+    category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
     filteredTimespans(): TimespanWithFt[] {
-      const filteredTimespans = this.$accessor.assignment.timespans.filter(
-        (timespan) => this.filterTimespansByTeams(this.teams)(timespan)
-      );
+      const filteredTimespans = this.$accessor.assignment.timespans
+        .filter((timespan) => this.isMatchingFilter(timespan))
+        .map((timespan) => this.removeUnavailableTeamRequests(timespan));
       return this.fuzzyFindTimespan(filteredTimespans, this.timespan);
     },
     selectedVolunteer(): Volunteer | null {
@@ -67,6 +76,57 @@ export default Vue.extend({
               )
             )
         : () => true;
+    },
+    filterFtByCatergoryOrPriority(
+      categorySearched: TaskCategory | TaskPriority | null
+    ): (ft: SimplifiedFT) => boolean {
+      if (!categorySearched) return () => true;
+      if (this.isTaskPriority(categorySearched)) {
+        return this.filterByPriority(categorySearched);
+      }
+      return this.filterFtByCategory(categorySearched);
+    },
+    isTaskPriority(
+      category: TaskPriority | TaskCategory
+    ): category is TaskPriority {
+      return Object.values(TaskPriorities).includes(category);
+    },
+    filterFtByCategory(
+      categorySearched: TaskCategory
+    ): (ft: SimplifiedFT) => boolean {
+      return (ft) => ft.category === categorySearched;
+    },
+    filterByPriority(
+      prioritySearched: TaskPriority
+    ): (ft: SimplifiedFT) => boolean {
+      const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
+      return (ft) => ft.hasPriority === hasPriority;
+    },
+    isVolunteerAssignableTo(teamCode: string): boolean {
+      if (!this.selectedVolunteer) return false;
+      const candidate = new AssignmentCandidate(this.selectedVolunteer);
+      return candidate.canBeAssignedAs(teamCode);
+    },
+    removeUnavailableTeamRequests(timespan: TimespanWithFt): TimespanWithFt {
+      const requestedTeams = timespan.requestedTeams.filter(({ code }) =>
+        this.isVolunteerAssignableTo(code)
+      );
+      return {
+        ...timespan,
+        requestedTeams,
+      };
+    },
+    isMatchingFilter(timespan: TimespanWithFt): boolean {
+      return (
+        this.notFull(timespan) &&
+        this.filterTimespansByTeams(this.teams)(timespan) &&
+        this.filterFtByCatergoryOrPriority(this.category)(timespan.ft)
+      );
+    },
+    notFull(timespan: TimespanWithFt): boolean {
+      return timespan.requestedTeams.some(
+        ({ quantity, assignmentCount }) => quantity > assignmentCount
+      );
     },
     fuzzyFindTimespan(
       timespans: TimespanWithFt[],

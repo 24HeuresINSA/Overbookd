@@ -22,7 +22,7 @@ export class AssignmentCandidate {
 
   constructor(readonly volunteer: Volunteer) {}
 
-  private canBeAssignedAs(teamCode: string): boolean {
+  canBeAssignedAs(teamCode: string): boolean {
     const underlyingTeams = getUnderlyingTeams(this.volunteer.teams);
     const teams = [...this.volunteer.teams, ...underlyingTeams];
     return teams.includes(teamCode);
