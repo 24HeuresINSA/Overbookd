@@ -11,7 +11,7 @@
     <template #event="{ event }">
       <div
         class="event underline-on-hover"
-        @mouseup.middle="openFtNewTab(event.ft.id)"
+        @mouseup.middle="openFtInNewTab(event.ft.id)"
         @contextmenu.prevent="selectTimespanToDisplayDetails(event.timespanId)"
       >
         {{ `[${event.ft.id}] ${event.ft.name}` }}
@@ -102,8 +102,7 @@ export default Vue.extend({
       }
       this.$emit("display-timespan-details", timespanId);
     },
-
-    openFtNewTab(ftId: number) {
+    openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
     formatTimespanForCalendar({

@@ -10,6 +10,7 @@
         class="event underline-on-hover"
         :class="{ highlight: timespan.id === selectedTimespanId }"
         @click="selectTimespan(timespan)"
+        @mouseup.middle="openSelectedFtInNewTab()"
         @contextmenu.prevent="selectTimespanToDisplayDetails(timespan.id)"
       >
         {{ timespan.name }}
@@ -99,6 +100,10 @@ export default Vue.extend({
     convertDecimalToHex(decimal: number): string {
       const hex = decimal.toString(16);
       return hex.length === 1 ? "0" + hex : hex;
+    },
+    openSelectedFtInNewTab() {
+      if (this.selectedFt === null) return;
+      window.open(`/ft/${this.selectedFt.id}`);
     },
   },
 });
