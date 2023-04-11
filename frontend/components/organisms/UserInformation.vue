@@ -141,25 +141,17 @@
               </v-col>
             </v-container>
           </v-card-text>
-          <v-row
-            style="display: flex; justify-content: center; align-items: center"
-          >
-            <v-col md="3">
-              <v-btn
-                v-if="hasEditingRole"
-                text
-                color="red"
-                @click="deleteUser()"
-              >
-                supprimer
-              </v-btn>
-            </v-col>
-            <v-col md="3">
-              <v-btn text color="success" @click="saveUser()">
-                sauvegarder
-              </v-btn>
-            </v-col>
-          </v-row>
+          <div class="ctas">
+            <v-btn v-if="hasEditingRole" text color="red" @click="deleteUser()">
+              supprimer
+            </v-btn>
+            <v-btn text color="success" @click="savePersonnalData()">
+              changer les informations personnelles
+            </v-btn>
+            <v-btn text color="warning" @click="saveAvailabilities()">
+              changer les disponibilites
+            </v-btn>
+          </div>
         </div>
         <div class="user-information__availabilities">
           <AvailabilitiesSumup
@@ -275,14 +267,15 @@ export default {
       }
       return [...this.selectedUser.team, this.newTeam];
     },
-    async saveUser() {
-      await Promise.all([
-        this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-          this.user.id
-        ),
-        this.$accessor.user.updateUser(this.user),
-      ]);
+    async savePersonnalData() {
+      await this.$accessor.user.updateUser(this.user);
       this.fetchUser(this.user.id);
+    },
+    async saveAvailabilities() {
+      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
+        this.user.id
+      ),
+        this.fetchUser(this.user.id);
     },
     deleteUser() {
       this.$accessor.user.deleteUser(this.user.id);
@@ -306,6 +299,19 @@ export default {
   }
   &__availabilities {
     width: 60%;
+  }
+}
+
+.ctas {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media only screen and(max-width: 2055px) {
+  .ctas {
+    flex-direction: column;
   }
 }
 
