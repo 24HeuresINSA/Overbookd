@@ -17,10 +17,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
-import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
 import AssignmentForm from "~/components/organisms/assignment/AssignmentForm.vue";
+import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
+import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
 import TimespanDetails from "~/components/organisms/assignment/TimespanDetails.vue";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 

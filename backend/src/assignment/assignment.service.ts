@@ -1,11 +1,11 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { FtTeamRequest, FtTimespan } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
-import { WHERE_VALIDATED_USER } from './volunteer.service';
-import { FtTeamRequest, FtTimespan } from '@prisma/client';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
-import { Period } from 'src/volunteer-availability/domain/period.model';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
+import { Period } from 'src/volunteer-availability/domain/period.model';
+import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
+import { WHERE_VALIDATED_USER } from './volunteer.service';
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -77,6 +77,18 @@ export class AssignmentService {
         timespanId,
         teamRequestId,
         assigneeId: volunteerId,
+      },
+    });
+  }
+
+  async unassignVolunteerToTimespan(
+    assigneeId: number,
+    timespanId: number,
+  ): Promise<void> {
+    await this.prisma.assignment.deleteMany({
+      where: {
+        assigneeId,
+        timespanId,
       },
     });
   }

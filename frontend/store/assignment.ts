@@ -7,18 +7,18 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/assignment";
 import {
+  FtTimespan,
+  FtTimespanWithRequestedTeams,
   FtWithTimespan,
+  TimespanWithAssignees,
   TimespanWithFt,
   castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
-  FtTimespanWithRequestedTeams,
-  FtTimespan,
-  TimespanWithAssignees,
 } from "~/utils/models/ftTimespan";
 import {
-  castVolunteerTaskWithDate,
   User,
   VolunteerTask,
+  castVolunteerTaskWithDate,
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -328,6 +328,25 @@ export const actions = actionTree(
       );
       if (!updatedTimespan) return;
       dispatch("setSelectedTimespan", updatedTimespan);
+    },
+
+    async unassignVolunteer(
+      { dispatch },
+      timespanId: number,
+      volunteerId: number
+    ) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.unassign(this, timespanId, volunteerId),
+        {
+          successMessage: "Le bénévole a été désaffecté 🥳",
+          errorMessage: "Le bénévole n'a pas pu être désaffecté 😢",
+        }
+      );
+      if (!res) return;
+      dispatch("fetchTimespanDetails", timespanId);
+      // Si orga-task: fetchTimespansForVolunteer()
+      // Si task-orga: fetchVolunteersForTimespan()
     },
 
     async addCandidate({ state, commit, dispatch }) {

@@ -63,6 +63,12 @@ export class AssignmentRepository {
     );
   }
 
+  static unassign(context: Context, volunteerId: number, timespanId: number) {
+    return context.$axios.delete<HttpStringified<AssignmentResponse>>(
+      `${this.basePath}/ft-timespans/${timespanId}/volunteers/${volunteerId}`
+    );
+  }
+
   static getAvailableFriends(
     context: Context,
     volunteerId: number,
