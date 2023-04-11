@@ -6,6 +6,8 @@
       @display-timespan-details="openTimespanDetailsDialog"
     />
     <FilterableFtList class="task-list" />
+    <SnackNotificationContainer />
+
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
       <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
     </v-dialog>
@@ -17,10 +19,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
-import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AssignmentForm from "~/components/organisms/assignment/AssignmentForm.vue";
+import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
+import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
 import TimespanDetails from "~/components/organisms/assignment/TimespanDetails.vue";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
@@ -32,6 +35,7 @@ export default Vue.extend({
     TaskOrgaCalendar,
     AssignmentForm,
     TimespanDetails,
+    SnackNotificationContainer,
   },
   data() {
     return {

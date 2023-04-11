@@ -1,39 +1,40 @@
 import {
-  Get,
-  Post,
   Body,
-  Param,
-  HttpCode,
-  UseGuards,
   Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
   ParseIntPipe,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiResponse,
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiBadRequestResponse,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { AssignmentService } from './assignment.service';
+import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
+import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import {
   FtTimespanResponseDto,
   FtWithTimespansResponseDto,
   TimespanWithAssigneesResponseDto,
   TimespanWithFtResponseDto,
 } from './dto/ftTimespanResponse.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { VolunteerService } from './volunteer.service';
-import { AssignmentService } from './assignment.service';
-import { FtTimespanService } from './ftTimespan.service';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import {
   AvailableVolunteerResponseDto,
   VolunteerResponseDto,
 } from './dto/volunteerResponse.dto';
-import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
-import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
+import { FtTimespanService } from './ftTimespan.service';
 import { Timespan, TimespanWithAssignees } from './types/ftTimespanTypes';
+import { VolunteerService } from './volunteer.service';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -166,6 +167,8 @@ export class AssignmentController {
     );
   }
 
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -173,13 +176,31 @@ export class AssignmentController {
     description: 'Affect volunteers to timespan as team member',
     type: AssignmentResponseDto,
   })
-  assignVolunteerToTimeSpan(
+  assignVolunteerToTimespan(
     @Body() { volunteerId, timespanId, teamCode }: AssignmentRequestDto,
   ): Promise<AssignmentResponseDto> {
     return this.assignmentService.assignVolunteerToTimespan(
       volunteerId,
       timespanId,
       teamCode,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Delete('ft-timespans/:timespanId/volunteers/:assigneeId')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Unaffect volunteers from timespan',
+  })
+  unassignVolunteerToTimespan(
+    @Param('timespanId', ParseIntPipe) timespanId: number,
+    @Param('assigneeId', ParseIntPipe) assigneeId: number,
+  ) {
+    return this.assignmentService.unassignVolunteerToTimespan(
+      assigneeId,
+      timespanId,
     );
   }
 }

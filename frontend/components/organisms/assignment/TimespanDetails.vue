@@ -50,6 +50,12 @@
               </v-chip>
             </div>
           </template>
+          <template #item.actions="{ item }">
+            <v-btn icon @click="unassignVolunteer(item)">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+          <template #no-data> Aucun bénévole affecté sur ce créneau </template>
         </v-data-table>
       </div>
     </v-card-text>
@@ -58,13 +64,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
-import { User } from "~/utils/models/user";
-import {
-  TimespanWithAssignees,
-  TimespanAssignee,
-} from "~/utils/models/ftTimespan";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import {
+  TimespanAssignee,
+  TimespanWithAssignees,
+} from "~/utils/models/ftTimespan";
+import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "TimespanDetails",
@@ -74,6 +80,7 @@ export default Vue.extend({
       { text: "Bénévole", value: "volunteer", width: 200, sortable: false },
       { text: "Affecté en tant que", value: "assignedTeam", sortable: false },
       { text: "Amis affectés", value: "friends", sortable: false },
+      { text: "Actions", value: "actions", sortable: false },
     ],
   }),
   computed: {
@@ -104,6 +111,13 @@ export default Vue.extend({
     },
   },
   methods: {
+    unassignVolunteer(assignee: TimespanAssignee) {
+      if (!this.timespan) return;
+      this.$accessor.assignment.unassignVolunteer({
+        timespanId: this.timespan.id,
+        assigneeId: assignee.id,
+      });
+    },
     closeDialog() {
       this.$emit("close-dialog");
     },

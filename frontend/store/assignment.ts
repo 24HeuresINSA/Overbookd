@@ -5,20 +5,24 @@ import {
 } from "~/domain/timespan-assignment/timespanAssignment";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Volunteer } from "~/utils/models/assignment";
 import {
+  AssignmentModes,
+  Volunteer,
+  getAssignmentModeFromRoute,
+} from "~/utils/models/assignment";
+import {
+  FtTimespan,
+  FtTimespanWithRequestedTeams,
   FtWithTimespan,
+  TimespanWithAssignees,
   TimespanWithFt,
   castFtsWithTimespansWithDate,
   castTimespansWithFtWithDate,
-  FtTimespanWithRequestedTeams,
-  FtTimespan,
-  TimespanWithAssignees,
 } from "~/utils/models/ftTimespan";
 import {
-  castVolunteerTaskWithDate,
   User,
   VolunteerTask,
+  castVolunteerTaskWithDate,
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -328,6 +332,30 @@ export const actions = actionTree(
       );
       if (!updatedTimespan) return;
       dispatch("setSelectedTimespan", updatedTimespan);
+    },
+
+    async unassignVolunteer(
+      { dispatch },
+      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
+    ) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.unassign(this, timespanId, assigneeId),
+        {
+          successMessage: "Le bénévole a été désaffecté 🥳",
+          errorMessage: "Le bénévole n'a pas pu être désaffecté 😢",
+        }
+      );
+      if (!res) return;
+      dispatch("fetchTimespanDetails", timespanId);
+      const route = this.$router.currentRoute.fullPath;
+      const isOrgaTaskMode =
+        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
+
+      if (isOrgaTaskMode) {
+        return dispatch("fetchTimespansForVolunteer", assigneeId);
+      }
+      return dispatch("fetchVolunteersForTimespan", timespanId);
     },
 
     async addCandidate({ state, commit, dispatch }) {
