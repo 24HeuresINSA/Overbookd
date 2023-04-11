@@ -108,8 +108,9 @@ export default Vue.extend({
       return candidate.canBeAssignedAs(teamCode);
     },
     removeUnavailableTeamRequests(timespan: TimespanWithFt): TimespanWithFt {
-      const requestedTeams = timespan.requestedTeams.filter(({ code }) =>
-        this.isVolunteerAssignableTo(code)
+      const requestedTeams = timespan.requestedTeams.filter(
+        ({ code, quantity, assignmentCount }) =>
+          this.isVolunteerAssignableTo(code) && quantity > assignmentCount
       );
       return {
         ...timespan,
