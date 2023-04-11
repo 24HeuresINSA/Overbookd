@@ -267,7 +267,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
     },
 
-    fetchSelectedVolunteerPlanning({ dispatch }, volunteerId) {
+    fetchSelectedVolunteerPlanning({ dispatch }, volunteerId: number) {
       dispatch("user/getUserFtRequests", volunteerId, { root: true });
       dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
     },
@@ -334,6 +334,7 @@ export const actions = actionTree(
       if (!res) return;
       dispatch("fetchTimespansForVolunteer", assignment.volunteerId);
       dispatch("fetchVolunteers");
+      dispatch("fetchSelectedVolunteerPlanning", assignment.volunteerId);
     },
 
     async saveAssignments({ state, dispatch, commit }) {
