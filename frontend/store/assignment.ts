@@ -318,7 +318,14 @@ export const actions = actionTree(
     },
 
     async saveAssignment({ dispatch }, assignment: AssignmentRequest) {
-      const res = await safeCall(this, AssignmentRepo.assign(this, assignment));
+      const res = await safeCall(
+        this,
+        AssignmentRepo.assign(this, assignment),
+        {
+          successMessage: "Le bénévole a été affecté 🥳",
+          errorMessage: "Le bénévole n'a pas pu être affecté 😢",
+        }
+      );
       if (!res) return;
       dispatch("fetchTimespansForVolunteer", assignment.volunteerId);
       dispatch("fetchVolunteers");
