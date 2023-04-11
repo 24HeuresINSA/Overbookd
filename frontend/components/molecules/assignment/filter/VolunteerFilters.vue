@@ -102,6 +102,7 @@ export default Vue.extend({
 }
 
 .team_filter_categoy_sort {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 5px;

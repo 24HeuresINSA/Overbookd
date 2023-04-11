@@ -114,7 +114,7 @@ export default Vue.extend({
     sortVolunteers(volunteers: Volunteer[]) {
       return volunteers.sort((a, b) => {
         if (this.sort === Sort.NONE) {
-          return b.charisma - a.charisma;
+          return a.charisma - b.charisma;
         } else if (this.sort === Sort.ASC) {
           return a.assignments - b.assignments;
         } else {
