@@ -12,6 +12,7 @@
       <div
         class="event underline-on-hover"
         @mouseup.middle="openFtNewTab(event.ft.id)"
+        @contextmenu.prevent="selectTimespanToDisplayDetails(event.timespanId)"
       >
         {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
@@ -33,6 +34,7 @@ import { VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 interface CalendarItemWithTask extends CalendarItem {
+  timespanId?: number;
   ft: { id: number; name: string };
 }
 
@@ -92,6 +94,15 @@ export default Vue.extend({
         isPeriodIncludedByAnother({ start, end })
       );
     },
+    selectTimespanToDisplayDetails(timespanId?: number) {
+      if (!timespanId) {
+        return this.$accessor.notif.pushNotification({
+          message: "La FT n'est pas prête à être affectée",
+        });
+      }
+      this.$emit("display-timespan-details", timespanId);
+    },
+
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
@@ -112,6 +123,7 @@ export default Vue.extend({
       ft,
       start,
       end,
+      timespanId,
     }: VolunteerTask): CalendarItemWithTask {
       return {
         start,
@@ -120,6 +132,7 @@ export default Vue.extend({
         color: getColorByStatus(ft.status),
         timed: true,
         ft,
+        timespanId,
       };
     },
   },

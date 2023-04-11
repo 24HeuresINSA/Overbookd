@@ -1,9 +1,16 @@
 <template>
   <v-container class="assignment-container">
     <FilterableVolunteerList class="volunteer-list" />
-    <OrgaTaskCalendar class="calendar" />
+    <OrgaTaskCalendar
+      class="calendar"
+      @display-timespan-details="openTimespanDetailsDialog"
+    />
     <FilterableTimespanList class="task-list" />
     <SnackNotificationContainer />
+
+    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
+      <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -14,6 +21,7 @@ import FilterableTimespanList from "~/components/organisms/assignment/Filterable
 import { Volunteer } from "~/utils/models/assignment";
 import OrgaTaskCalendar from "~/components/organisms/assignment/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import TimespanDetails from "~/components/organisms/assignment/TimespanDetails.vue";
 
 export default Vue.extend({
   name: "OrgaTask",
@@ -22,7 +30,11 @@ export default Vue.extend({
     FilterableTimespanList,
     OrgaTaskCalendar,
     SnackNotificationContainer,
+    TimespanDetails,
   },
+  data: () => ({
+    displayTimespanDetailsDialog: false,
+  }),
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers;
@@ -31,6 +43,15 @@ export default Vue.extend({
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchVolunteers();
+  },
+  methods: {
+    closeTimespanDetailsDialog() {
+      this.displayTimespanDetailsDialog = false;
+    },
+    openTimespanDetailsDialog(timespanId: number) {
+      this.$accessor.assignment.fetchTimespanDetails(timespanId);
+      this.displayTimespanDetailsDialog = true;
+    },
   },
 });
 </script>

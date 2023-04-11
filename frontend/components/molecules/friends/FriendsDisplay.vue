@@ -1,7 +1,7 @@
 <template>
   <v-card class="friends-card">
     <v-card-title class="friends-card__title">{{ title }}</v-card-title>
-    <v-card-content class="friends-card__list">
+    <v-card-text class="friends-card__list">
       <v-list-item-group>
         <v-list-item
           v-for="friend in selectedVolunteerFriends"
@@ -20,7 +20,7 @@
           Aucun ami 😢
         </v-list-item>
       </v-list-item-group>
-    </v-card-content>
+    </v-card-text>
   </v-card>
 </template>
 

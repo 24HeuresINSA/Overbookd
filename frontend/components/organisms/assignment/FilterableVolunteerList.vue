@@ -155,7 +155,7 @@ $friends-height: 160px;
 }
 
 .friend-list {
-  max-width: 300px;
+  max-width: calc(20% - 10px);
   height: $friends-height;
   position: fixed;
   bottom: 36px;
