@@ -267,6 +267,11 @@ export const actions = actionTree(
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
     },
 
+    fetchSelectedVolunteerPlanning({ dispatch }, volunteerId) {
+      dispatch("user/getUserFtRequests", volunteerId, { root: true });
+      dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
+    },
+
     setHoverTimespan({ commit }, timespan: TimespanWithFt | null) {
       commit("SET_HOVER_TIMESPAN", timespan);
     },
@@ -342,7 +347,7 @@ export const actions = actionTree(
           message:
             "Toutes les affectations n'ont pas eu lieu. Regardez le détails du créneau.",
         };
-        dispatch("notif/pushNotification", notif);
+        dispatch("notif/pushNotification", notif, { root: true });
         return;
       }
       commit("SET_SELECTED_VOLUNTEER", null);

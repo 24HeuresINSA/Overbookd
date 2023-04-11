@@ -2,7 +2,7 @@
   <OverCalendarV2
     v-model="calendarMarker"
     :title="volunteerName"
-    :events="assignedTimespans"
+    :events="assignedTasks"
   >
     <template #interval="{ date, time }">
       <div :class="{ available: isVolunteerAvailable(date, time) }" />
@@ -10,9 +10,9 @@
     <template #event="{ event }">
       <div
         class="event underline-on-hover"
-        @mouseup.middle="openFtNewTab(event.timespan.ft.id)"
+        @mouseup.middle="openFtNewTab(event.ft.id)"
       >
-        {{ `[${event.timespan.ft.id}] ${event.timespan.ft.name}` }}
+        {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
     </template>
   </OverCalendarV2>
@@ -21,16 +21,18 @@
 <script lang="ts">
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
+import { getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
 import { CalendarItem } from "~/utils/models/calendar";
 import { TimespanWithFt } from "~/utils/models/ftTimespan";
+import { VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
-interface CalendarItemWithTimespan extends CalendarItem {
-  timespan: TimespanWithFt;
+interface CalendarItemWithTask extends CalendarItem {
+  ft: { id: number; name: string };
 }
 
 export default Vue.extend({
@@ -56,10 +58,18 @@ export default Vue.extend({
     hoverTimespan(): TimespanWithFt | null {
       return this.$accessor.assignment.hoverTimespan;
     },
-    assignedTimespans(): CalendarItemWithTimespan[] {
-      // TODO: add assigned timespans
-      const timespans = this.hoverTimespan ? [this.hoverTimespan] : [];
-      return this.formatTimespanForCalendar(timespans);
+    assignedTasks(): CalendarItemWithTask[] {
+      const tasks = [
+        ...this.$accessor.user.selectedUserFtRequests,
+        ...this.$accessor.user.selectedUserAssignments,
+      ];
+      const timespans = this.hoverTimespan
+        ? [this.formatTimespanForCalendar(this.hoverTimespan)]
+        : [];
+      return [
+        ...tasks.map((task) => this.formatTaskForCalendar(task)),
+        ...timespans,
+      ];
     },
   },
   watch: {
@@ -81,17 +91,32 @@ export default Vue.extend({
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
-    formatTimespanForCalendar(
-      timespans: TimespanWithFt[]
-    ): CalendarItemWithTimespan[] {
-      return timespans.map((timespan) => ({
-        start: timespan.start,
-        end: timespan.end,
-        name: timespan.ft.name,
-        color: "#000000",
+    formatTimespanForCalendar({
+      ft,
+      start,
+      end,
+    }: TimespanWithFt): CalendarItemWithTask {
+      return {
+        start,
+        end,
+        name: ft.name,
         timed: true,
-        timespan,
-      }));
+        ft,
+      };
+    },
+    formatTaskForCalendar({
+      ft,
+      start,
+      end,
+    }: VolunteerTask): CalendarItemWithTask {
+      return {
+        start,
+        end,
+        name: ft.name,
+        color: getColorByStatus(ft.status),
+        timed: true,
+        ft,
+      };
     },
   },
 });
