@@ -63,9 +63,9 @@ export class AssignmentRepository {
     );
   }
 
-  static unassign(context: Context, volunteerId: number, timespanId: number) {
+  static unassign(context: Context, timespanId: number, assigneeId: number) {
     return context.$axios.delete<HttpStringified<AssignmentResponse>>(
-      `${this.basePath}/ft-timespans/${timespanId}/volunteers/${volunteerId}`
+      `${this.basePath}/ft-timespans/${timespanId}/volunteers/${assigneeId}`
     );
   }
 

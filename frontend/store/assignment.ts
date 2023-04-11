@@ -332,12 +332,11 @@ export const actions = actionTree(
 
     async unassignVolunteer(
       { dispatch },
-      timespanId: number,
-      volunteerId: number
+      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
     ) {
       const res = await safeCall(
         this,
-        AssignmentRepo.unassign(this, timespanId, volunteerId),
+        AssignmentRepo.unassign(this, timespanId, assigneeId),
         {
           successMessage: "Le bénévole a été désaffecté 🥳",
           errorMessage: "Le bénévole n'a pas pu être désaffecté 😢",
