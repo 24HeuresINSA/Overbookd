@@ -24,7 +24,7 @@ export interface FtTimespanParameters {
   category?: TaskCategory;
 }
 
-interface SimplifiedFT extends FtTimespanParameters {
+export interface SimplifiedFT extends FtTimespanParameters {
   id: number;
   name: string;
 }
@@ -51,7 +51,7 @@ export interface FtTimespanEvent extends FtTimespan {
   timed: boolean;
 }
 
-export interface TimespanWithFt extends FtTimespan {
+export interface TimespanWithFt extends FtTimespanWithRequestedTeams {
   ft: SimplifiedFT;
 }
 

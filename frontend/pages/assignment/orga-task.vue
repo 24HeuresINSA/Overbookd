@@ -3,6 +3,7 @@
     <FilterableVolunteerList class="volunteer-list" />
     <OrgaTaskCalendar class="calendar" />
     <FilterableTimespanList class="task-list" />
+    <SnackNotificationContainer />
   </v-container>
 </template>
 
@@ -12,6 +13,7 @@ import FilterableVolunteerList from "~/components/organisms/assignment/Filterabl
 import FilterableTimespanList from "~/components/organisms/assignment/FilterableTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import OrgaTaskCalendar from "~/components/organisms/assignment/OrgaTaskCalendar.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
   name: "OrgaTask",
@@ -19,6 +21,7 @@ export default Vue.extend({
     FilterableVolunteerList,
     FilterableTimespanList,
     OrgaTaskCalendar,
+    SnackNotificationContainer,
   },
   computed: {
     volunteers(): Volunteer[] {

@@ -50,14 +50,20 @@ export interface DatabaseTimespanWithFt {
     };
     teamRequests: DatabaseRequestedTeam[];
   };
+  assignments: AssignmentAsTeamMember[];
 }
 
-export type DatabaseTimespanWithFtAndAssignees = DatabaseTimespanWithFt & {
-  assignments: {
-    assignee: {
-      id: number;
-    };
-  }[];
+type AssignedAsTeamMember = AssignmentAsTeamMember & {
+  assignee: {
+    id: number;
+  };
+};
+
+export type DatabaseTimespanWithFtAndAssignees = Omit<
+  DatabaseTimespanWithFt,
+  'assignments'
+> & {
+  assignments: AssignedAsTeamMember[];
 };
 
 export type DatabaseAssignee = Assignee & {
@@ -100,10 +106,8 @@ export interface DatabaseFtWithTimespans {
       id: number;
       start: Date;
       end: Date;
+      assignments: AssignmentAsTeamMember[];
     }[];
-    _count: {
-      timespans: number;
-    };
     teamRequests: DatabaseRequestedTeam[];
   }[];
 }
@@ -170,6 +174,14 @@ const SELECT_TEAM_REQUEST = {
   },
 };
 
+const SELECT_TEAM_REQUEST_CODE = {
+  teamRequest: {
+    select: {
+      teamCode: true,
+    },
+  },
+};
+
 export const SELECT_TIMESPAN_WITH_FT = {
   id: true,
   start: true,
@@ -188,6 +200,10 @@ export const SELECT_TIMESPAN_WITH_FT = {
       ...COUNT_TIMESPANS,
     },
   },
+  assignments: {
+    select: SELECT_TEAM_REQUEST_CODE,
+    where: { NOT: { teamRequestId: null } },
+  },
 };
 
 export const SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS = {
@@ -199,6 +215,7 @@ export const SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS = {
           id: true,
         },
       },
+      ...SELECT_TEAM_REQUEST_CODE,
     },
   },
 };
@@ -215,6 +232,10 @@ export const SELECT_FT_WITH_TIMESPANS = {
           id: true,
           start: true,
           end: true,
+          assignments: {
+            select: SELECT_TEAM_REQUEST_CODE,
+            where: { NOT: { teamRequestId: null } },
+          },
         },
       },
       ...COUNT_TIMESPANS,

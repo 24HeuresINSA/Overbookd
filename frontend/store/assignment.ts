@@ -31,6 +31,12 @@ type AssignmentParameters = {
   teamCode: string;
 };
 
+export type AssignmentRequest = {
+  timespanId: number;
+  teamCode: string;
+  volunteerId: number;
+};
+
 const UserRepo = RepoFactory.userRepo;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
 
@@ -309,6 +315,20 @@ export const actions = actionTree(
 
     unassign({ commit }, volunteerId: number) {
       commit("UNASSIGN_VOLUNTEER", volunteerId);
+    },
+
+    async saveAssignment({ dispatch }, assignment: AssignmentRequest) {
+      const res = await safeCall(
+        this,
+        AssignmentRepo.assign(this, assignment),
+        {
+          successMessage: "Le bénévole a été affecté 🥳",
+          errorMessage: "Le bénévole n'a pas pu être affecté 😢",
+        }
+      );
+      if (!res) return;
+      dispatch("fetchTimespansForVolunteer", assignment.volunteerId);
+      dispatch("fetchVolunteers");
     },
 
     async saveAssignments({ state, dispatch, commit }) {
