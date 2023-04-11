@@ -321,6 +321,7 @@ export const actions = actionTree(
       const res = await safeCall(this, AssignmentRepo.assign(this, assignment));
       if (!res) return;
       dispatch("fetchTimespansForVolunteer", assignment.volunteerId);
+      dispatch("fetchVolunteers");
     },
 
     async saveAssignments({ state, dispatch, commit }) {

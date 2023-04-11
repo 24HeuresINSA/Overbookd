@@ -217,7 +217,7 @@ export class FtTimespanService {
 
     const timespans = await this.prisma.ftTimespan.findMany({
       select: SELECT_TIMESPAN_WITH_FT,
-      where: { ...where },
+      where,
       orderBy: { start: 'asc' },
     });
     return this.formatTimespansWithFt(timespans);

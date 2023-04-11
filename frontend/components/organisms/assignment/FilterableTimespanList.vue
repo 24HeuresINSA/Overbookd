@@ -118,12 +118,12 @@ export default Vue.extend({
     },
     isMatchingFilter(timespan: TimespanWithFt): boolean {
       return (
-        this.notFull(timespan) &&
+        this.hasSlotsAvailable(timespan) &&
         this.filterTimespansByTeams(this.teams)(timespan) &&
         this.filterFtByCatergoryOrPriority(this.category)(timespan.ft)
       );
     },
-    notFull(timespan: TimespanWithFt): boolean {
+    hasSlotsAvailable(timespan: TimespanWithFt): boolean {
       return timespan.requestedTeams.some(
         ({ quantity, assignmentCount }) => quantity > assignmentCount
       );
