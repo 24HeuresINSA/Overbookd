@@ -119,14 +119,18 @@ export default Vue.extend({
     },
     isMatchingFilter(timespan: TimespanWithFt): boolean {
       return (
-        this.hasSlotsAvailable(timespan) &&
+        this.hasAssignableSlotsAvailable(timespan) &&
         this.filterTimespansByTeams(this.teams)(timespan) &&
         this.filterFtByCatergoryOrPriority(this.category)(timespan.ft)
       );
     },
-    hasSlotsAvailable(timespan: TimespanWithFt): boolean {
+    hasAssignableSlotsAvailable(timespan: TimespanWithFt): boolean {
       return timespan.requestedTeams.some(
-        ({ quantity, assignmentCount }) => quantity > assignmentCount
+        ({ code, quantity, assignmentCount }) => {
+          if (!this.selectedVolunteer) return false;
+          const candidate = new AssignmentCandidate(this.selectedVolunteer);
+          return quantity > assignmentCount && candidate.canBeAssignedAs(code);
+        }
       );
     },
     fuzzyFindTimespan(
