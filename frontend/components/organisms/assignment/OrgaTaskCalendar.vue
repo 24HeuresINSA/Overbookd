@@ -3,6 +3,7 @@
     v-model="calendarMarker"
     :title="volunteerName"
     :events="assignedTasks"
+    :hour-to-scroll-to="hourToScrollTo"
   >
     <template #interval="{ date, time }">
       <div :class="{ available: isVolunteerAvailable(date, time) }" />
@@ -70,6 +71,9 @@ export default Vue.extend({
         ...tasks.map((task) => this.formatTaskForCalendar(task)),
         ...timespans,
       ];
+    },
+    hourToScrollTo(): number | null {
+      return this.hoverTimespan?.start.getHours() ?? null;
     },
   },
   watch: {
