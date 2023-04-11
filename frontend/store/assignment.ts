@@ -5,7 +5,11 @@ import {
 } from "~/domain/timespan-assignment/timespanAssignment";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Volunteer } from "~/utils/models/assignment";
+import {
+  AssignmentModes,
+  Volunteer,
+  getAssignmentModeFromRoute,
+} from "~/utils/models/assignment";
 import {
   FtTimespan,
   FtTimespanWithRequestedTeams,
@@ -344,8 +348,14 @@ export const actions = actionTree(
       );
       if (!res) return;
       dispatch("fetchTimespanDetails", timespanId);
-      // Si orga-task: fetchTimespansForVolunteer()
-      // Si task-orga: fetchVolunteersForTimespan()
+      const route = this.$router.currentRoute.fullPath;
+      const isOrgaTaskMode =
+        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
+
+      if (isOrgaTaskMode) {
+        return dispatch("fetchTimespansForVolunteer", assigneeId);
+      }
+      return dispatch("fetchVolunteersForTimespan", timespanId);
     },
 
     async addCandidate({ state, commit, dispatch }) {
