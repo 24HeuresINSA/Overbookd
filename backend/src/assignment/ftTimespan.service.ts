@@ -17,7 +17,6 @@ import {
   DatabaseTimeWindow,
   FtWithTimespan,
   DatabaseTimespanWithAssignedTeamMembers,
-  AssignmentAsTeamMember as AssignedAsTeamMember,
   TimespanWithFt,
   SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
   TimespanWithFtAndAssignees,
@@ -28,6 +27,7 @@ import {
   DatabaseAssignee,
   DatabaseAssignmentsAsTeamMember,
   TimespanAssignee,
+  AssignmentAsTeamMember,
 } from './types/ftTimespanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -199,19 +199,26 @@ export class FtTimespanService {
   async findTimespansWithFtWhereVolunteerIsAssignableTo(
     volunteerId: number,
   ): Promise<TimespanWithFt[]> {
-    const [volunteerTeams, availabilities] = await Promise.all([
-      this.user.getUserTeams(volunteerId),
-      this.volunteerAvailability.findUserAvailabilities(volunteerId),
-    ]);
+    const [volunteerTeams, availabilities, requests, assignments] =
+      await Promise.all([
+        this.user.getUserTeams(volunteerId),
+        this.volunteerAvailability.findUserAvailabilities(volunteerId),
+        this.user.getFtUserRequestsByUserId(volunteerId),
+        this.user.getVolunteerAssignments(volunteerId),
+      ]);
+
+    const busyPeriods = [...requests, ...assignments];
 
     const where = this.buildAssignableToTimespanCondition(
       volunteerTeams,
       availabilities,
+      busyPeriods,
     );
 
     const timespans = await this.prisma.ftTimespan.findMany({
       select: SELECT_TIMESPAN_WITH_FT,
-      where,
+      where: { ...where },
+      orderBy: { start: 'asc' },
     });
     return this.formatTimespansWithFt(timespans);
   }
@@ -243,13 +250,16 @@ export class FtTimespanService {
   private buildAssignableToTimespanCondition(
     volunteerTeams: string[],
     availabilities: PeriodDto[],
+    busyPeriods: PeriodDto[],
   ) {
     const underlyingTeams = getUnderlyingTeams(volunteerTeams);
     const teams = [...volunteerTeams, ...underlyingTeams];
     const teamRequests = TeamService.buildIsMemberOfCondition(teams);
 
-    const availabilitiesCondition =
-      this.buildTimespanConditionOverAvailability(availabilities);
+    const availabilitiesCondition = this.buildTimespanConditionOverAvailability(
+      availabilities,
+      busyPeriods,
+    );
 
     return {
       timeWindow: {
@@ -260,7 +270,10 @@ export class FtTimespanService {
     };
   }
 
-  private buildTimespanConditionOverAvailability(availabilities: PeriodDto[]) {
+  private buildTimespanConditionOverAvailability(
+    availabilities: PeriodDto[],
+    busyPeriods: PeriodDto[],
+  ) {
     return {
       OR: availabilities.map((availability) => ({
         start: {
@@ -268,6 +281,14 @@ export class FtTimespanService {
         },
         end: {
           lte: availability.end,
+        },
+      })),
+      NOT: busyPeriods.map(({ start, end }) => ({
+        start: {
+          lt: end,
+        },
+        end: {
+          gt: start,
         },
       })),
     };
@@ -362,7 +383,7 @@ export class FtTimespanService {
   ): TimespanWithFt {
     const requestedTeams = this.formatRequestedTeams(
       ftTimespan.timeWindow.teamRequests,
-      ftTimespan.timeWindow._count.timespans,
+      ftTimespan.assignments,
     );
     return {
       id: ftTimespan.id,
@@ -396,11 +417,11 @@ export class FtTimespanService {
 
   private formatFtWithTimespans(ft: DatabaseFtWithTimespans): FtWithTimespan {
     const timespans = ft.timeWindows.flatMap((tw) => {
-      const requestedTeams = this.formatRequestedTeams(
-        tw.teamRequests,
-        tw._count.timespans,
-      );
       return tw.timespans.map((ts) => {
+        const requestedTeams = this.formatRequestedTeams(
+          tw.teamRequests,
+          ts.assignments,
+        );
         return {
           id: ts.id,
           start: ts.start,
@@ -420,12 +441,11 @@ export class FtTimespanService {
 
   private formatRequestedTeams(
     requestedTeams: DatabaseRequestedTeam[],
-    impactedTimespans: number,
+    assignments: AssignmentAsTeamMember[],
   ): RequestedTeam[] {
-    return requestedTeams.map((tr) => {
-      const assignmentCount = tr._count.assignments;
-      const globalQuantity = tr.quantity * impactedTimespans;
-      return { code: tr.teamCode, quantity: globalQuantity, assignmentCount };
+    return requestedTeams.map(({ teamCode, quantity }) => {
+      const assignmentCount = countAssignedMembers(teamCode, assignments);
+      return { code: teamCode, quantity, assignmentCount };
     });
   }
 
@@ -447,7 +467,7 @@ export class FtTimespanService {
       name: timeWindow.ft.name,
       location: timeWindow.ft.location.name,
     };
-    const requestedTeams = this.formatRequestedTeams(teamRequests, 1);
+    const requestedTeams = this.formatRequestedTeams(teamRequests, assignments);
     return {
       id,
       start,
@@ -486,7 +506,7 @@ function formatTimespanAssignees(
 
 function convertToRequestedTeam(
   teamRequest: DatabaseRequestedTeam,
-  assignments: AssignedAsTeamMember[],
+  assignments: AssignmentAsTeamMember[],
 ): RequestedTeam {
   const assignmentCount = countMemberAssigned(
     assignments,
@@ -500,7 +520,7 @@ function convertToRequestedTeam(
 }
 
 function countMemberAssigned(
-  assignments: AssignedAsTeamMember[],
+  assignments: AssignmentAsTeamMember[],
   code: string,
 ) {
   return assignments.filter(({ teamRequest }) => teamRequest?.teamCode === code)
@@ -544,4 +564,13 @@ function deduplicateFriends(
   const exist = friends.find(({ id }) => id === currentFriend.id);
   if (exist) return friends;
   return [...friends, currentFriend];
+}
+
+function countAssignedMembers(
+  teamCode: string,
+  assignments: AssignmentAsTeamMember[],
+): number {
+  return assignments.filter(
+    ({ teamRequest }) => teamRequest?.teamCode === teamCode,
+  ).length;
 }
