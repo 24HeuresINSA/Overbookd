@@ -37,11 +37,9 @@ export default Vue.extend({
     TimespanDetails,
     SnackNotificationContainer,
   },
-  data() {
-    return {
-      displayTimespanDetailsDialog: false,
-    };
-  },
+  data: () => ({
+    displayTimespanDetailsDialog: false,
+  }),
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
       return this.$accessor.assignment.fts;

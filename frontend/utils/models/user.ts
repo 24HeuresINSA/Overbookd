@@ -104,6 +104,7 @@ interface Task {
 
 export interface VolunteerTask extends Period {
   ft: Task;
+  timespanId?: number;
 }
 
 export function castToUserModification(
@@ -158,9 +159,9 @@ export function castUsersWithPermissionsWithDate(
 export function castVolunteerTaskWithDate(
   periods: HttpStringified<VolunteerTask[]>
 ): VolunteerTask[] {
-  return periods.map(({ start, end, ft }) => ({
-    start: new Date(start),
-    end: new Date(end),
-    ft,
+  return periods.map((task) => ({
+    ...task,
+    start: new Date(task.start),
+    end: new Date(task.end),
   }));
 }

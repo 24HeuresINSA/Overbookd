@@ -17,6 +17,13 @@
           <v-icon left>mdi-clock</v-icon>
           <span>{{ timetable }}</span>
         </v-chip>
+        <TeamIconChip
+          v-for="team in requestedTeams"
+          :key="team"
+          :team="team"
+          size="medium"
+          with-name
+        />
       </div>
       <div class="required-volunteers">
         <h2>Bénévoles requis sur le créneau</h2>
@@ -26,6 +33,9 @@
             <span>{{ volunteer.firstname }} {{ volunteer.lastname }}</span>
           </v-chip>
         </div>
+        <p v-if="requiredVolunteers.length === 0">
+          Aucun bénévole requis spécifiquement sur ce créneau
+        </p>
       </div>
       <div class="assignees">
         <h2>Bénévoles affectés sur le créneau</h2>
@@ -100,6 +110,10 @@ export default Vue.extend({
       const start = formatDateToHumanReadable(this.timespan.start);
       const end = formatDateToHumanReadable(this.timespan.end);
       return `${start} - ${end}`;
+    },
+    requestedTeams(): string[] {
+      if (!this.timespan) return [];
+      return this.timespan.requestedTeams.map((team) => team.code);
     },
     requiredVolunteers(): User[] {
       if (!this.timespan) return [];

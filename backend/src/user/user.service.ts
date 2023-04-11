@@ -98,6 +98,7 @@ const SELECT_VOLUNTEER_ASSIGNMENTS = {
       },
     },
   },
+  timespanId: true,
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
@@ -107,7 +108,10 @@ export type UserWithTeamAndPermission = UserWithoutPassword & {
 };
 export type UserPasswordOnly = Pick<User, 'password'>;
 
-export type VolunteerTask = Period & { ft: Pick<Ft, 'id' | 'name' | 'status'> };
+export type VolunteerTask = Period & {
+  ft: Pick<Ft, 'id' | 'name' | 'status'>;
+  timespanId?: number;
+};
 
 @Injectable()
 export class UserService {
@@ -196,10 +200,10 @@ export class UserService {
       select: SELECT_VOLUNTEER_ASSIGNMENTS,
     });
 
-    return assignments.map(({ timespan }) => {
+    return assignments.map(({ timespan, timespanId }) => {
       const { start, end } = timespan;
       const { ft } = timespan.timeWindow;
-      return { start, end, ft };
+      return { start, end, ft, timespanId };
     });
   }
 
