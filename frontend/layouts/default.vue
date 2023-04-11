@@ -221,7 +221,7 @@ export default {
         {
           icon: "mdi-human-greeting",
           title: "Affect Orga-Tâche",
-          permission: "admin", // can-affect
+          permission: "can-affect",
           to: "/assignment/orga-task",
         },
         {
