@@ -140,7 +140,9 @@ export default Vue.extend({
       return this.$accessor.assignment.taskAssignment;
     },
     taskTitle(): string {
-      return this.$accessor.assignment.taskAssignment.task.name;
+      const id = this.$accessor.assignment.taskAssignment.task.id;
+      const name = this.$accessor.assignment.taskAssignment.task.name;
+      return `[${id}] ${name}`;
     },
     mainCandidate(): AssignmentCandidate | undefined {
       return this.$accessor.assignment.taskAssignment.candidates.at(0);
@@ -325,6 +327,7 @@ export default Vue.extend({
     align-items: center;
     &__calendar {
       width: 100%;
+      overflow-y: hidden;
     }
     &__teams {
       display: flex;
