@@ -129,7 +129,9 @@ export function castToUserModification(
   };
 }
 
-export function castUserWithDate(user: HttpStringified<CompleteUser>) {
+export function castUserWithDate(
+  user: HttpStringified<CompleteUser | MyUserInformation>
+) {
   return {
     ...user,
     birthdate: new Date(user.birthdate),

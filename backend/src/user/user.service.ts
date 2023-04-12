@@ -117,6 +117,11 @@ export type UserWithTeamAndPermission = UserWithoutPassword & {
 export type MyUserInformation = UserWithTeamAndPermission & {
   tasksCount: number;
 };
+type DatabaseMyUserInformation = UserWithoutPassword & {
+  team: TeamWithNestedPermissions[];
+  _count: { assignments: number };
+};
+
 export type UserPasswordOnly = Pick<User, 'password'>;
 
 export type VolunteerTask = Period & {
@@ -335,10 +340,7 @@ export class UserService {
   }
 
   private getMyUserInformation(
-    user: UserWithoutPassword & {
-      team: TeamWithNestedPermissions[];
-      _count: { assignments: number };
-    },
+    user: DatabaseMyUserInformation,
   ): MyUserInformation {
     const { _count, ...userWithoutCount } = user;
     const userWithTeamAndPermission =
