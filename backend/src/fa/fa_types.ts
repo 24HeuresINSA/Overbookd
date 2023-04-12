@@ -132,6 +132,7 @@ export const COMPLETE_FA_SELECT = {
       name: true,
       status: true,
     },
+    where: { isDeleted: false },
   },
 };
 
