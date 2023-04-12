@@ -79,7 +79,6 @@ export interface CompleteUser extends User {
   updated_at: Date;
   is_deleted: boolean;
   team: string[];
-  permissions: string[];
 
   // This is not in the API response, but is used in the frontend
   notifications: Notification[];
@@ -89,6 +88,10 @@ export interface CompleteUserWithoutId extends Omit<CompleteUser, "id"> {}
 
 export interface CompleteUserWithPermissions extends CompleteUser {
   permissions: string[];
+}
+
+export interface MyUserInformation extends CompleteUserWithPermissions {
+  tasksCount: number;
 }
 
 interface Period {
