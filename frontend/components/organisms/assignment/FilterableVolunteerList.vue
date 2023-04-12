@@ -6,6 +6,7 @@
         class="filters"
         @change:search="volunteer = $event"
         @change:teams="teams = $event"
+        @change:sort="sort = $event"
       ></VolunteerFilters>
       <v-divider />
       <VolunteerList
@@ -32,6 +33,7 @@ import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team";
 import {
+  Sort,
   Volunteer,
   AssignmentModes,
   getAssignmentModeFromRoute,
@@ -44,13 +46,18 @@ export default Vue.extend({
   data: () => ({
     teams: [] as Team[],
     volunteer: "",
+    sort: 0,
   }),
   computed: {
     filteredVolunteers(): Volunteer[] {
       const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
         (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer)
       );
-      return this.fuzzyFindVolunteer(filteredVolunteers, this.volunteer);
+      const searchedVolunteers = this.fuzzyFindVolunteer(
+        filteredVolunteers,
+        this.volunteer
+      );
+      return this.sortVolunteers(searchedVolunteers);
     },
     isOrgaTaskMode(): boolean {
       return (
@@ -103,6 +110,13 @@ export default Vue.extend({
         return;
       }
       this.$accessor.assignment.startAssignment(volunteer);
+    },
+    sortVolunteers(volunteers: Volunteer[]) {
+      return volunteers.sort((a, b) => {
+        if (this.sort === Sort.NONE) return a.charisma - b.charisma;
+        if (this.sort === Sort.ASC) return a.assignments - b.assignments;
+        return b.assignments - a.assignments;
+      });
     },
   },
 });
