@@ -110,13 +110,16 @@ const SELECT_VOLUNTEER_ASSIGNMENTS = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
+
 export type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];
   permissions: string[];
 };
+
 export type MyUserInformation = UserWithTeamAndPermission & {
   tasksCount: number;
 };
+
 type DatabaseMyUserInformation = UserWithoutPassword & {
   team: TeamWithNestedPermissions[];
   _count: { assignments: number };
