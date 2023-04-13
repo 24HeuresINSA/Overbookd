@@ -361,7 +361,7 @@ export const actions = actionTree(
     },
 
     async unassignVolunteer(
-      { dispatch },
+      { state, dispatch },
       { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
     ) {
       const res = await safeCall(
@@ -379,9 +379,12 @@ export const actions = actionTree(
         getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
 
       if (isOrgaTaskMode) {
-        return dispatch("fetchTimespansForVolunteer", assigneeId);
+        dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
+        dispatch("fetchTimespansForVolunteer", assigneeId);
+        return;
       }
-      return dispatch("fetchVolunteersForTimespan", timespanId);
+      dispatch("fetchTimespansWithStats", state.selectedFt?.id);
+      dispatch("fetchVolunteersForTimespan", timespanId);
     },
 
     async addCandidate({ state, commit, dispatch }) {
