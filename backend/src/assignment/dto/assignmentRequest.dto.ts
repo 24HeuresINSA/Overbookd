@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsNumber,
   IsPositive,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { VolunteerAssignmentRequest } from '../assignment.service';
+import { Type } from 'class-transformer';
 
 class VolunteerAssignmentRequestDto implements VolunteerAssignmentRequest {
   @ApiProperty({
@@ -33,8 +35,10 @@ export class AssignmentRequestDto {
     isArray: true,
     type: VolunteerAssignmentRequestDto,
   })
+  @IsArray()
+  @Type(() => VolunteerAssignmentRequestDto)
   @ValidateNested({ each: true })
-  volunteers: VolunteerAssignmentRequest[];
+  volunteers: VolunteerAssignmentRequestDto[];
 
   @ApiProperty({
     required: true,

@@ -142,13 +142,14 @@ export class TaskAssignment {
   }
 
   get assignments() {
-    return this._candidates
+    const volunteers = this._candidates
       .filter((candidate) => candidate.assignment !== "")
       .map((candidate) => ({
-        timespanId: this.task.id,
         teamCode: candidate.assignment,
-        volunteerId: candidate.volunteer.id,
+        id: candidate.volunteer.id,
       }));
+    const timespanId = this.task.id;
+    return { volunteers, timespanId };
   }
 
   withCandidatesFriends(friends: Volunteer[]): TaskAssignment {

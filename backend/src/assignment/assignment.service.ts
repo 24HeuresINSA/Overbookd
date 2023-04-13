@@ -99,7 +99,7 @@ export class AssignmentService {
   }
 
   private async prepareAssignment(
-    { teamCode, id }: { teamCode: string; id: number },
+    { teamCode, id }: VolunteerAssignmentRequest,
     timespanId: number,
   ): Promise<Assignment> {
     const timespan = await this.retrieveTimespan(timespanId, teamCode);
