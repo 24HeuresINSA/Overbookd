@@ -61,6 +61,9 @@
             </div>
           </template>
           <template #item.actions="{ item }">
+            <v-btn icon @click="openCalendarInNewTab(item.id)">
+              <v-icon>mdi-calendar</v-icon>
+            </v-btn>
             <v-btn icon @click="unassignVolunteer(item)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -139,6 +142,9 @@ export default Vue.extend({
       if (!this.timespan) return;
       const ftId = this.timespan.ft.id;
       window.open(`/ft/${ftId}`, "_blank");
+    },
+    openCalendarInNewTab(assigneeId: number) {
+      window.open(`/calendar/${assigneeId}`, "_blank");
     },
   },
 });
