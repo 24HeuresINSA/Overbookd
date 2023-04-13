@@ -24,6 +24,7 @@ import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentDto as VolunteerTaskDto } from './dto/volunteerAssignment.dto';
 import {
+  MyUserInformation,
   UserService,
   UserWithoutPassword,
   UserWithTeamAndPermission,
@@ -65,7 +66,7 @@ export class UserController {
   })
   async getCurrentUser(
     @Request() req: RequestWithUserPayload,
-  ): Promise<UserWithTeamAndPermission | null> {
+  ): Promise<MyUserInformation | null> {
     return this.userService.user({ id: req.user.userId ?? req.user.id });
   }
 
@@ -151,7 +152,7 @@ export class UserController {
   getUserById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserWithoutPassword> {
-    return this.userService.user({ id: Number(id) });
+    return this.userService.user({ id });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

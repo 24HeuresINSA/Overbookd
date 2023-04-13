@@ -34,8 +34,7 @@
         <h3 class="mt-1">
           📆 {{ new Date(me.birthdate).toLocaleDateString() }}
         </h3>
-        <h3 class="mt-1">🗣 0 tâches affectées</h3>
-        <h3 class="mt-1">🚗 {{ hasDriverLicense ? "✅" : "🛑" }}</h3>
+        <h3 class="mt-1">🗣 {{ me.tasksCount }} tâches affectées</h3>
 
         <OverChips :roles="me.team"></OverChips>
 
@@ -51,7 +50,7 @@
 import Vue from "vue";
 import OverChips from "~/components/atoms/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
-import { CompleteUser } from "~/utils/models/user";
+import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "UserCard",
@@ -72,14 +71,11 @@ export default Vue.extend({
   },
 
   computed: {
-    me(): CompleteUser {
+    me(): MyUserInformation {
       return this.$accessor.user.me;
     },
     friends(): number {
       return this.$accessor.user.mFriends.length;
-    },
-    hasDriverLicense(): boolean {
-      return this.me.team.includes("conducteur");
     },
   },
 

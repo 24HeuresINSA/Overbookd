@@ -171,7 +171,7 @@ import {
   FTStatusLabel,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
-import { CompleteUserWithPermissions, User } from "~/utils/models/user";
+import { MyUserInformation, User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 interface Data {
@@ -223,7 +223,7 @@ export default Vue.extend({
   },
 
   computed: {
-    me(): CompleteUserWithPermissions {
+    me(): MyUserInformation {
       return this.$accessor.user.me;
     },
     mFT(): FT {

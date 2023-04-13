@@ -7,6 +7,7 @@ import {
   User,
   UserCreation,
   UserModification,
+  MyUserInformation,
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -24,7 +25,9 @@ export default {
     );
   },
   getMyUser(context: Context) {
-    return context.$axios.get(`${resource}/me`);
+    return context.$axios.get<HttpStringified<MyUserInformation>>(
+      `${resource}/me`
+    );
   },
   getAllUsers(context: Context) {
     return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(

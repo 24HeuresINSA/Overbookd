@@ -183,7 +183,7 @@ import {
   TaskCategories,
 } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
-import { CompleteUser, User } from "~/utils/models/user";
+import { MyUserInformation, User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
@@ -228,7 +228,7 @@ export default Vue.extend({
     isFA(): boolean {
       return this.festivalEvent === "FA";
     },
-    me(): CompleteUser {
+    me(): MyUserInformation {
       return this.$accessor.user.me;
     },
     meAsUser(): User {

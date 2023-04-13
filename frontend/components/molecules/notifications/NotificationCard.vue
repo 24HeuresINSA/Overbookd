@@ -47,7 +47,7 @@
 import Vue, { PropType } from "vue";
 import OverChips from "~/components/atoms/OverChips.vue";
 import { Notification } from "~/utils/models/repo";
-import { CompleteUser } from "~/utils/models/user";
+import { MyUserInformation } from "~/utils/models/user";
 import { SnackNotif } from "../../../utils/models/store";
 
 export default Vue.extend({
@@ -77,7 +77,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    me(): CompleteUser {
+    me(): MyUserInformation {
       return this.$accessor.user.me;
     },
   },

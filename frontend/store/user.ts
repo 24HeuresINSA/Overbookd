@@ -9,17 +9,17 @@ import {
   castUsersWithPermissionsWithDate,
   castUserWithDate,
   castUserWithPermissionsWithDate,
-  CompleteUser,
   CompleteUserWithPermissions,
   VolunteerTask,
   User,
   UserCreation,
+  MyUserInformation,
 } from "~/utils/models/user";
 
 const UserRepo = RepoFactory.userRepo;
 
 export const state = () => ({
-  me: {} as CompleteUser,
+  me: {} as MyUserInformation,
   users: [] as CompleteUserWithPermissions[],
   usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
@@ -33,7 +33,7 @@ export const state = () => ({
 export type UserState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_USER(state: UserState, data: CompleteUser) {
+  SET_USER(state: UserState, data: MyUserInformation) {
     state.me = data;
   },
   SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {

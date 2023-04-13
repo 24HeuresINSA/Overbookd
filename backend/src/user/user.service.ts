@@ -64,6 +64,14 @@ const SELECT_USER_TEAMS_AND_PERMISSIONS = {
   },
 };
 
+const SELECT_USER_TASKS_COUNT = {
+  _count: {
+    select: {
+      assignments: true,
+    },
+  },
+};
+
 export const SELECT_USERNAME_WITH_ID = {
   id: true,
   firstname: true,
@@ -102,10 +110,21 @@ const SELECT_VOLUNTEER_ASSIGNMENTS = {
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
+
 export type UserWithTeamAndPermission = UserWithoutPassword & {
   team: string[];
   permissions: string[];
 };
+
+export type MyUserInformation = UserWithTeamAndPermission & {
+  tasksCount: number;
+};
+
+type DatabaseMyUserInformation = UserWithoutPassword & {
+  team: TeamWithNestedPermissions[];
+  _count: { assignments: number };
+};
+
 export type UserPasswordOnly = Pick<User, 'password'>;
 
 export type VolunteerTask = Period & {
@@ -120,15 +139,16 @@ export class UserService {
 
   async user(
     findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
-  ): Promise<UserWithTeamAndPermission | null> {
+  ): Promise<MyUserInformation | null> {
     const user = await this.prisma.user.findUnique({
       where: findCondition,
       select: {
         ...SELECT_USER,
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
+        ...SELECT_USER_TASKS_COUNT,
       },
     });
-    return this.getUserWithTeamAndPermission(user);
+    return this.getMyUserInformation(user);
   }
 
   async getUserPassword(
@@ -320,6 +340,18 @@ export class UserService {
           permissions: [...permissions],
         }
       : undefined;
+  }
+
+  private getMyUserInformation(
+    user: DatabaseMyUserInformation,
+  ): MyUserInformation {
+    const { _count, ...userWithoutCount } = user;
+    const userWithTeamAndPermission =
+      this.getUserWithTeamAndPermission(userWithoutCount);
+    return {
+      ...userWithTeamAndPermission,
+      tasksCount: _count.assignments,
+    };
   }
 
   private canUpdateCharisma(author: JwtUtil): boolean {

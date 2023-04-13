@@ -27,7 +27,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Feedback, SubjectType } from "~/utils/models/feedback";
-import { CompleteUser, DisplayedUser, User } from "~/utils/models/user";
+import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user";
 import { formatDate } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
@@ -54,7 +54,7 @@ export default Vue.extend({
         (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
       );
     },
-    me(): CompleteUser {
+    me(): MyUserInformation {
       return this.$accessor.user.me;
     },
   },
