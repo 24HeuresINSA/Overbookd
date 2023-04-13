@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { TimespanWithFt } from "~/utils/models/ftTimespan";
+import { AvailableTimespan } from "~/utils/models/ftTimespan";
 import TimespanResume from "../resume/TimespanResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
 
@@ -33,7 +33,7 @@ export default Vue.extend({
   components: { TimespanResume },
   props: {
     timespans: {
-      type: Array as () => TimespanWithFt[],
+      type: Array as () => AvailableTimespan[],
       required: true,
       default: () => [],
     },
@@ -47,7 +47,7 @@ export default Vue.extend({
     formatDate(date: Date) {
       return formatDateWithMinutes(date);
     },
-    hoverTimespan(timespan: TimespanWithFt | null) {
+    hoverTimespan(timespan: AvailableTimespan | null) {
       this.$accessor.assignment.setHoverTimespan(timespan);
     },
     openFtNewTab(ftId: number) {

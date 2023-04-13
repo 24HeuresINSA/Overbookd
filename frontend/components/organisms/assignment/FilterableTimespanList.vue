@@ -31,11 +31,11 @@ import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimesp
 import FtTimespanList from "~/components/molecules/assignment/list/FtTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import {
+  AvailableTimespan,
   SimplifiedFT,
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-  TimespanWithFt,
 } from "~/utils/models/ftTimespan";
 import { Team } from "~/utils/models/team";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timespanAssignment";
@@ -49,7 +49,7 @@ export default Vue.extend({
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
-    filteredTimespans(): TimespanWithFt[] {
+    filteredTimespans(): AvailableTimespan[] {
       const filteredTimespans = this.$accessor.assignment.timespans
         .filter((timespan) => this.isMatchingFilter(timespan))
         .map((timespan) => this.removeUnavailableTeamRequests(timespan));
@@ -67,7 +67,7 @@ export default Vue.extend({
   methods: {
     filterTimespansByTeams(
       teamsSearched: Team[]
-    ): (timespan: TimespanWithFt) => boolean {
+    ): (timespan: AvailableTimespan) => boolean {
       return teamsSearched.length > 0
         ? (timespan) =>
             teamsSearched.every((teamSearched) =>
@@ -107,7 +107,9 @@ export default Vue.extend({
       const candidate = new AssignmentCandidate(this.selectedVolunteer);
       return candidate.canBeAssignedAs(teamCode);
     },
-    removeUnavailableTeamRequests(timespan: TimespanWithFt): TimespanWithFt {
+    removeUnavailableTeamRequests(
+      timespan: AvailableTimespan
+    ): AvailableTimespan {
       const requestedTeams = timespan.requestedTeams.filter(
         ({ code, quantity, assignmentCount }) =>
           this.isVolunteerAssignableTo(code) && quantity > assignmentCount
@@ -117,14 +119,14 @@ export default Vue.extend({
         requestedTeams,
       };
     },
-    isMatchingFilter(timespan: TimespanWithFt): boolean {
+    isMatchingFilter(timespan: AvailableTimespan): boolean {
       return (
         this.hasAssignableSlotsAvailable(timespan) &&
         this.filterTimespansByTeams(this.teams)(timespan) &&
         this.filterFtByCatergoryOrPriority(this.category)(timespan.ft)
       );
     },
-    hasAssignableSlotsAvailable(timespan: TimespanWithFt): boolean {
+    hasAssignableSlotsAvailable(timespan: AvailableTimespan): boolean {
       return timespan.requestedTeams.some(
         ({ code, quantity, assignmentCount }) => {
           if (!this.selectedVolunteer) return false;
@@ -134,9 +136,9 @@ export default Vue.extend({
       );
     },
     fuzzyFindTimespan(
-      timespans: TimespanWithFt[],
+      timespans: AvailableTimespan[],
       search?: string
-    ): TimespanWithFt[] {
+    ): AvailableTimespan[] {
       if (!search) return timespans;
       const fuse = new Fuse(timespans, {
         keys: ["ft.id", "ft.name"],

@@ -17,6 +17,22 @@
         />
       </div>
     </div>
+    <div class="has-friends-assigned">
+      <v-tooltip top>
+        <template #activator="{ on, attrs }">
+          <v-icon
+            v-if="timespan.hasFriendsAssigned"
+            small
+            color="green"
+            v-bind="attrs"
+            v-on="on"
+          >
+            mdi-account-check
+          </v-icon>
+        </template>
+        <span>Ami(s) déjà assigné(s) sur le créneau</span>
+      </v-tooltip>
+    </div>
     <v-divider />
   </div>
 </template>
@@ -24,14 +40,14 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
-import { TimespanWithFt } from "~/utils/models/ftTimespan";
+import { AvailableTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "TimespanResume",
   components: { TeamIconChip },
   props: {
     timespan: {
-      type: Object as () => TimespanWithFt,
+      type: Object as () => AvailableTimespan,
       required: true,
     },
   },
@@ -82,5 +98,11 @@ export default Vue.extend({
   flex-wrap: wrap;
   flex-basis: 100px;
   gap: 2px;
+}
+
+.has-friends-assigned {
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 </style>
