@@ -13,6 +13,7 @@ import {
 import { TaskCategory } from '@prisma/client';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { AssignmentService } from './assignment.service';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -58,6 +59,19 @@ const SELECT_FRIENDS = {
   },
 };
 
+const SELECT_ASSIGNMENTS_PERIOD = {
+  assignments: {
+    select: {
+      timespan: {
+        select: {
+          start: true,
+          end: true,
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -73,7 +87,7 @@ export class VolunteerService {
       },
       select: {
         ...SELECT_VOLUNTEER,
-        _count: { select: { assignments: true } },
+        ...SELECT_ASSIGNMENTS_PERIOD,
       },
       orderBy: { charisma: 'desc' },
     });
@@ -171,8 +185,32 @@ export class VolunteerService {
   ) {
     const assignablebleVolunteerCondition =
       this.buildAssignableVolunteersCondition(ftTimespan);
+
+    const SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY = {
+      assigments: {
+        select: {
+          timespan: {
+            select: {
+              start: true,
+              end: true,
+            },
+          },
+        },
+        where: {
+          timespan: {
+            timeWindow: {
+              ft: {
+                category,
+              },
+            },
+          },
+        },
+      },
+    };
+
     return {
       ...SELECT_VOLUNTEER,
+      ...SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY,
       _count: {
         select: {
           friends: {
@@ -180,17 +218,6 @@ export class VolunteerService {
           },
           friendRequestors: {
             where: { friend: assignablebleVolunteerCondition },
-          },
-          assignments: {
-            where: {
-              timespan: {
-                timeWindow: {
-                  ft: {
-                    category,
-                  },
-                },
-              },
-            },
           },
           ftUserRequests: {
             where: {
@@ -219,6 +246,11 @@ export class VolunteerService {
   }
 
   private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
+    const assignmentTime = volunteer.assignments.reduce(
+      (acc, assignment) => acc + this.getAssignmentTime(assignment.timespan),
+      0,
+    );
+
     return {
       id: volunteer.id,
       firstname: volunteer.firstname,
@@ -226,7 +258,7 @@ export class VolunteerService {
       comment: volunteer.comment,
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
-      assignments: volunteer._count?.assignments ?? 0,
+      assignmentTime,
     };
   }
 
@@ -244,6 +276,10 @@ export class VolunteerService {
       isRequestedOnSamePeriod,
       hasFriendAssigned,
     };
+  }
+
+  private getAssignmentTime({ start, end }: Period): number {
+    return Math.abs(end.getTime() - start.getTime());
   }
 
   private hasFriendAssigned(

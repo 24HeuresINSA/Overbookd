@@ -8,7 +8,7 @@ interface BaseVolunteer {
 
 export interface Volunteer extends BaseVolunteer {
   teams: string[];
-  assignments: number;
+  assignmentTime: number;
 }
 
 export interface AvailableVolunteer extends Volunteer {
@@ -24,11 +24,16 @@ export interface DatabaseVolunteer extends BaseVolunteer {
     };
   }[];
   _count?: {
-    assignments: number;
     friends?: number;
     friendRequestors?: number;
     ftUserRequests?: number;
   };
+  assignments?: {
+    timespan: {
+      start: Date;
+      end: Date;
+    };
+  }[];
 }
 
 export interface DatabaseVolunteerWithFriendRequests extends DatabaseVolunteer {

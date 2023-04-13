@@ -46,10 +46,10 @@ export class VolunteerResponseDto implements Volunteer {
 
   @ApiProperty({
     required: false,
-    description: 'The category task count of the volunteer',
+    description: 'The category task time of the volunteer',
     type: Number,
   })
-  assignments: number;
+  assignmentTime: number;
 }
 
 export class AvailableVolunteerResponseDto

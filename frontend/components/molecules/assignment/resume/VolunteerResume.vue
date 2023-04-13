@@ -73,6 +73,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import { formatDateToHourAndMinutes } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import { sortTeamsForAssignment } from "~/utils/models/team";
@@ -98,8 +99,9 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedFt;
     },
     assignmentStats(): string {
-      const counter = this.volunteer.assignments;
-      return `Tâches ${this.category.toLowerCase()}: ${counter}`;
+      const date = new Date(this.volunteer.assignmentTime);
+      const formattedHour = formatDateToHourAndMinutes(date);
+      return `Tâches ${this.category.toLowerCase()}: ${formattedHour}`;
     },
     category(): string {
       if (!this.selectedFt) return "affectées";
