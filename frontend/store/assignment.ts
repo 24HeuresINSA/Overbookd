@@ -380,7 +380,8 @@ export const actions = actionTree(
 
       if (isOrgaTaskMode) {
         dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
-        return dispatch("fetchTimespansForVolunteer", assigneeId);
+        dispatch("fetchTimespansForVolunteer", assigneeId);
+        return;
       }
       dispatch("fetchTimespansWithStats", state.selectedFt?.id);
       dispatch("fetchVolunteersForTimespan", timespanId);
