@@ -73,6 +73,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import { Duration } from "~/utils/date/duration";
 import { Volunteer } from "~/utils/models/assignment";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 import { sortTeamsForAssignment } from "~/utils/models/team";
@@ -98,12 +99,14 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedFt;
     },
     assignmentStats(): string {
-      const counter = this.volunteer.assignments;
-      return `Tâches ${this.category.toLowerCase()}: ${counter}`;
+      const duration = Duration.fromMilliseconds(
+        this.volunteer.assignmentDuration
+      );
+      return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affectées";
-      return this.selectedFt?.category ?? "indéterminées";
+      if (!this.selectedFt) return "affecté";
+      return this.selectedFt?.category ?? "indéterminé";
     },
   },
   methods: {
@@ -144,6 +147,7 @@ export default Vue.extend({
 }
 
 .stats-text {
+  text-transform: capitalize;
   font-size: 0.9rem;
   margin-top: 2px;
   margin-bottom: 4px;

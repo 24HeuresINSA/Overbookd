@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { TaskCategory } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
+import { SELECT_USER_TEAMS } from 'src/user/user.service';
+import { AssignmentService } from './assignment.service';
 import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import {
@@ -10,9 +13,7 @@ import {
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
 } from './types/volunteerTypes';
-import { TaskCategory } from '@prisma/client';
-import { SELECT_USER_TEAMS } from 'src/user/user.service';
-import { AssignmentService } from './assignment.service';
+import { getPeriodDuration } from 'src/utils/duration';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -58,6 +59,21 @@ const SELECT_FRIENDS = {
   },
 };
 
+const SELECT_TIMESPAN_PERIOD = {
+  timespan: {
+    select: {
+      start: true,
+      end: true,
+    },
+  },
+};
+
+const SELECT_ASSIGNMENTS_PERIOD = {
+  assignments: {
+    select: SELECT_TIMESPAN_PERIOD,
+  },
+};
+
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -73,7 +89,7 @@ export class VolunteerService {
       },
       select: {
         ...SELECT_VOLUNTEER,
-        _count: { select: { assignments: true } },
+        ...SELECT_ASSIGNMENTS_PERIOD,
       },
       orderBy: { charisma: 'desc' },
     });
@@ -171,8 +187,25 @@ export class VolunteerService {
   ) {
     const assignablebleVolunteerCondition =
       this.buildAssignableVolunteersCondition(ftTimespan);
+
+    const SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY = {
+      assignments: {
+        select: SELECT_TIMESPAN_PERIOD,
+        where: {
+          timespan: {
+            timeWindow: {
+              ft: {
+                category,
+              },
+            },
+          },
+        },
+      },
+    };
+
     return {
       ...SELECT_VOLUNTEER,
+      ...SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY,
       _count: {
         select: {
           friends: {
@@ -180,17 +213,6 @@ export class VolunteerService {
           },
           friendRequestors: {
             where: { friend: assignablebleVolunteerCondition },
-          },
-          assignments: {
-            where: {
-              timespan: {
-                timeWindow: {
-                  ft: {
-                    category,
-                  },
-                },
-              },
-            },
           },
           ftUserRequests: {
             where: {
@@ -219,6 +241,11 @@ export class VolunteerService {
   }
 
   private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
+    const assignmentDuration = volunteer.assignments.reduce(
+      (acc, assignment) => acc + getPeriodDuration(assignment.timespan),
+      0,
+    );
+
     return {
       id: volunteer.id,
       firstname: volunteer.firstname,
@@ -226,7 +253,7 @@ export class VolunteerService {
       comment: volunteer.comment,
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
-      assignments: volunteer._count?.assignments ?? 0,
+      assignmentDuration,
     };
   }
 

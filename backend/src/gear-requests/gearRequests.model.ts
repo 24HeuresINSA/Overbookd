@@ -1,3 +1,4 @@
+import { getPeriodDuration } from '../utils/duration';
 import { Gear } from '../catalog/interfaces';
 
 export const PENDING = 'PENDING';
@@ -114,10 +115,6 @@ export function isSameGeaRequestIdentifier(
     gearRequestId.seeker.type === grId.seeker.type;
 }
 
-function getPeriodDurationInMs({ start, end }: PeriodForm): number {
-  return end.getTime() - start.getTime();
-}
-
 export function isPeriodWithDuration(period: PeriodForm): boolean {
-  return getPeriodDurationInMs(period) > 0;
+  return getPeriodDuration(period) > 0;
 }

@@ -1,8 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { formatDateWithMinutes } from 'src/utils/date';
 import { PrismaService } from '../prisma.service';
-import { ONE_HOUR_IN_MS } from '../utils/date';
+import { ONE_HOUR_IN_MS, formatDateWithMinutes } from '../utils/date';
 import {
   PeriodOrchestrator,
   PeriodWithError,

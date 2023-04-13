@@ -1,5 +1,7 @@
+import { ONE_HOUR_IN_MS } from '../utils/date';
 import { TimeWindow, Timespan } from '../ft/ftTypes';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
+import { getPeriodDuration } from '../utils/duration';
 
 type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {
   userRequests: DataBaseUserRequest[];
@@ -9,7 +11,6 @@ type Period = {
   end: Date;
 };
 class TimespansGeneratorException extends Error {}
-const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
 const DIVIDABLE_ERROR_MESSAGE =
   'Time window duration is not dividable by the slice time';
@@ -108,10 +109,6 @@ export class TimespansGenerator {
   }
 
   private static computeDuration(period: Period) {
-    return TimespansGenerator.computeDurationInMs(period) / ONE_HOUR_IN_MS;
-  }
-
-  private static computeDurationInMs({ start, end }: Period) {
-    return end.getTime() - start.getTime();
+    return getPeriodDuration(period) / ONE_HOUR_IN_MS;
   }
 }
