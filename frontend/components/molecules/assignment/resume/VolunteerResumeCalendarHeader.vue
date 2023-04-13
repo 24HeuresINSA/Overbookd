@@ -106,6 +106,7 @@ export default Vue.extend({
 }
 
 .stats-text {
+  text-transform: capitalize;
   font-size: 0.9rem;
   margin-top: 2px;
   margin-bottom: 4px;
