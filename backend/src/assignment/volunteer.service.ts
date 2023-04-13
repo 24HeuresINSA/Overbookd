@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { TaskCategory } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
+import { SELECT_USER_TEAMS } from 'src/user/user.service';
+import { AssignmentService } from './assignment.service';
 import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
 import { FtTimespanService } from './ftTimespan.service';
 import {
@@ -10,10 +13,7 @@ import {
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
 } from './types/volunteerTypes';
-import { TaskCategory } from '@prisma/client';
-import { SELECT_USER_TEAMS } from 'src/user/user.service';
-import { AssignmentService } from './assignment.service';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { getPeriodDuration } from 'src/utils/duration';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -246,8 +246,8 @@ export class VolunteerService {
   }
 
   private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
-    const assignmentTime = volunteer.assignments.reduce(
-      (acc, assignment) => acc + this.getAssignmentTime(assignment.timespan),
+    const assignmentDuration = volunteer.assignments.reduce(
+      (acc, assignment) => acc + getPeriodDuration(assignment.timespan),
       0,
     );
 
@@ -258,7 +258,7 @@ export class VolunteerService {
       comment: volunteer.comment,
       charisma: volunteer.charisma,
       teams: volunteer.team.map((t) => t.team.code),
-      assignmentTime,
+      assignmentDuration,
     };
   }
 
@@ -276,10 +276,6 @@ export class VolunteerService {
       isRequestedOnSamePeriod,
       hasFriendAssigned,
     };
-  }
-
-  private getAssignmentTime({ start, end }: Period): number {
-    return Math.abs(end.getTime() - start.getTime());
   }
 
   private hasFriendAssigned(

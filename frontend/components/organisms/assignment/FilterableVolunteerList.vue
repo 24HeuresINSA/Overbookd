@@ -118,8 +118,10 @@ export default Vue.extend({
     sortVolunteers(volunteers: Volunteer[]) {
       return volunteers.sort((a, b) => {
         if (this.sort === Sort.NONE) return a.charisma - b.charisma;
-        if (this.sort === Sort.ASC) return a.assignments - b.assignments;
-        return b.assignments - a.assignments;
+        if (this.sort === Sort.ASC) {
+          return a.assignmentDuration - b.assignmentDuration;
+        }
+        return b.assignmentDuration - a.assignmentDuration;
       });
     },
   },

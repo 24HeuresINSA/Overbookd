@@ -9,7 +9,7 @@ export interface Volunteer extends User {
   charisma: number;
   comment?: string;
   teams: string[];
-  assignmentTime: number;
+  assignmentDuration: number;
   friendAvailable?: boolean;
   isRequestedOnSamePeriod?: boolean;
   hasFriendAssigned?: boolean;

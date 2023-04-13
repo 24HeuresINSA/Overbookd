@@ -8,7 +8,7 @@ interface BaseVolunteer {
 
 export interface Volunteer extends BaseVolunteer {
   teams: string[];
-  assignmentTime: number;
+  assignmentDuration: number;
 }
 
 export interface AvailableVolunteer extends Volunteer {

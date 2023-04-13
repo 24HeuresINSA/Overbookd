@@ -1,3 +1,4 @@
+import { getPeriodDuration } from 'src/utils/duration';
 import { SHIFT_HOURS_UTC } from '../../shift/shift.constant';
 import { ONE_HOUR_IN_MS } from '../../utils/date';
 import { Period } from './period.model';
@@ -51,9 +52,11 @@ export class Availability {
   }
 
   private lastLessThanTwoHours(start: Date, end: Date) {
-    return (
-      new Date(end).getTime() - new Date(start).getTime() < TWO_HOURS_IN_MS
-    );
+    const period = {
+      start: new Date(start),
+      end: new Date(end),
+    };
+    return getPeriodDuration(period) < TWO_HOURS_IN_MS;
   }
 
   private invalidPeriodTimeline(start: Date, end: Date) {
