@@ -104,10 +104,6 @@ export function formatDateToHumanReadable(date: Date | string): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatDateToHourAndMinutes(date: Date | string): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+export function getTotalHoursFromTime(time: number): number {
+  return Math.floor(time / ONE_HOUR_IN_MS);
 }

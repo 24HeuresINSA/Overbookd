@@ -187,7 +187,7 @@ export class VolunteerService {
       this.buildAssignableVolunteersCondition(ftTimespan);
 
     const SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY = {
-      assigments: {
+      assignments: {
         select: {
           timespan: {
             select: {
