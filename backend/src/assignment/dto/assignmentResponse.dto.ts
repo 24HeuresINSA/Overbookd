@@ -1,13 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Assignment } from '../assignment.service';
 
-export class AssignmentResponseDto {
-  @ApiProperty({
-    required: true,
-    description: 'The id of the assignment',
-    type: Number,
-  })
-  id: number;
-
+export class AssignmentResponseDto implements Assignment {
   @ApiProperty({
     required: true,
     description: 'The id of the assignee',

@@ -4,7 +4,6 @@ import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { Period } from 'src/volunteer-availability/domain/period.model';
-import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import { WHERE_VALIDATED_USER } from './volunteer.service';
 
 const SELECT_TEAM_REQUEST = {
@@ -17,6 +16,12 @@ const SELECT_BASE_TIMESPAN = {
   id: true,
   start: true,
   end: true,
+};
+
+const SELECT_ASSIGNMENT = {
+  assigneeId: true,
+  timespanId: true,
+  teamRequestId: true,
 };
 
 function buildTimespanWithStatsSelection(timespanId: number, teamCode: string) {
@@ -58,27 +63,54 @@ type TeamRequestWithAssignmentStats = TeamRequest & {
   assigned: number;
 };
 
+export type Assignment = {
+  assigneeId: number;
+  timespanId: number;
+  teamRequestId?: number;
+  userRequestId?: number;
+};
+
+export type VolunteerAssignmentRequest = {
+  teamCode: string;
+  id: number;
+};
+
 @Injectable()
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async assignVolunteerToTimespan(
-    volunteerId: number,
+  async assignVolunteersToTimespan(
+    volunteers: VolunteerAssignmentRequest[],
     timespanId: number,
-    teamCode: string,
-  ): Promise<AssignmentResponseDto> {
+  ): Promise<Assignment[]> {
+    const assignments = await Promise.all(
+      volunteers.map((volunteer) =>
+        this.prepareAssignment(volunteer, timespanId),
+      ),
+    );
+    return this.prisma.$transaction(
+      assignments.map((volunteerAssignment) =>
+        this.prisma.assignment.create({
+          data: volunteerAssignment,
+          select: SELECT_ASSIGNMENT,
+        }),
+      ),
+    );
+  }
+
+  private async prepareAssignment(
+    { teamCode, id }: { teamCode: string; id: number },
+    timespanId: number,
+  ): Promise<Assignment> {
     const timespan = await this.retrieveTimespan(timespanId, teamCode);
-    await this.checkVolunteerCompatibility(volunteerId, timespan, teamCode);
+    await this.checkVolunteerCompatibility(id, timespan, teamCode);
 
     const teamRequestId = this.retrieveTeamRequestId(timespan, teamCode);
-
-    return this.prisma.assignment.create({
-      data: {
-        timespanId,
-        teamRequestId,
-        assigneeId: volunteerId,
-      },
-    });
+    return {
+      timespanId,
+      teamRequestId,
+      assigneeId: id,
+    };
   }
 
   async unassignVolunteerToTimespan(
