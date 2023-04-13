@@ -3,7 +3,12 @@
     <v-card class="fa">
       <v-card-title>FT associées</v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :items="childFTs" :items-per-page="5">
+        <v-data-table
+          :headers="headers"
+          :items="childFTs"
+          :items-per-page="-1"
+          :hide-default-footer="true"
+        >
           <template #[`item.id`]="{ item }">
             <v-chip small>{{ item.id }}</v-chip>
           </template>

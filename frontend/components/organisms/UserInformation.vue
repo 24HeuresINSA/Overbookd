@@ -37,7 +37,7 @@
                   <v-btn icon :href="'tel:+33:' + selectedUser.phone">
                     <v-icon>mdi-phone</v-icon>
                   </v-btn>
-                  <h3>+33{{ selectedUser.phone }}</h3>
+                  <h3>{{ formattedSelectedUserPhone }}</h3>
                 </v-col>
                 <v-col md="6">
                   <v-text-field
@@ -233,6 +233,11 @@ export default {
     },
     teams() {
       return this.$accessor.team.allTeams;
+    },
+    formattedSelectedUserPhone() {
+      let phone = this.selectedUser.phone;
+      if (phone[0] !== "0") phone = "0" + phone;
+      return phone.replace(/(\d{2})/g, "$1 ");
     },
   },
 
