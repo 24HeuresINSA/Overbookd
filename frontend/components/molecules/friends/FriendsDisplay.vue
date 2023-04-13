@@ -49,8 +49,7 @@ export default Vue.extend({
         (volunteer) => volunteer.id === friend.id
       );
       if (!volunteer) return;
-      this.$accessor.assignment.setSelectedVolunteer(volunteer);
-      this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
+      this.$emit("select-volunteer", volunteer);
     },
     formatUsername(user: User): string {
       return formatUsername(user);

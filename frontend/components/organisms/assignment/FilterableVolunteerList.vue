@@ -20,7 +20,11 @@
         <p v-if="!selectedTimespan">Aucun créneau séléctionné</p>
         <p v-else>Aucun bénévole disponible pour ce créneau</p>
       </div>
-      <FriendsDisplay v-if="shouldDisplayFriends" class="friend-list" />
+      <FriendsDisplay
+        v-if="shouldDisplayFriends"
+        class="friend-list"
+        @select-volunteer="handleVolunteerSelection"
+      ></FriendsDisplay>
     </v-card-text>
   </v-card>
 </template>
