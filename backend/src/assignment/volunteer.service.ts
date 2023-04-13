@@ -59,16 +59,18 @@ const SELECT_FRIENDS = {
   },
 };
 
+const SELECT_TIMESPAN_PERIOD = {
+  timespan: {
+    select: {
+      start: true,
+      end: true,
+    },
+  },
+};
+
 const SELECT_ASSIGNMENTS_PERIOD = {
   assignments: {
-    select: {
-      timespan: {
-        select: {
-          start: true,
-          end: true,
-        },
-      },
-    },
+    select: SELECT_TIMESPAN_PERIOD,
   },
 };
 
@@ -188,14 +190,7 @@ export class VolunteerService {
 
     const SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY = {
       assignments: {
-        select: {
-          timespan: {
-            select: {
-              start: true,
-              end: true,
-            },
-          },
-        },
+        select: SELECT_TIMESPAN_PERIOD,
         where: {
           timespan: {
             timeWindow: {

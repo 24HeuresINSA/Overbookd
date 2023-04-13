@@ -28,7 +28,7 @@ export interface DatabaseVolunteer extends BaseVolunteer {
     friendRequestors?: number;
     ftUserRequests?: number;
   };
-  assignments?: {
+  assignments: {
     timespan: {
       start: Date;
       end: Date;
