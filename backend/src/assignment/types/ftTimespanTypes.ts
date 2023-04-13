@@ -66,7 +66,7 @@ export type DatabaseTimespanWithFtAndAssignees = Omit<
   assignments: AssignedAsTeamMember[];
 };
 
-export type DatabaseWithFriends<T extends { id: number }> = {
+type DatabaseWithFriends<T extends { id: number }> = {
   friends: {
     requestor: T;
   }[];
@@ -210,10 +210,6 @@ export const SELECT_TIMESPAN_WITH_FT = {
     select: SELECT_TEAM_REQUEST_CODE,
     where: { NOT: { teamRequestId: null } },
   },
-};
-
-export const SELECT_AVAILABLE_FOR_VOLUNTEER_TIMESPAN = {
-  ...SELECT_TIMESPAN_WITH_FT,
 };
 
 export const SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS = {
