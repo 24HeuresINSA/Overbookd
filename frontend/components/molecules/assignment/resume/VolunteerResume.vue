@@ -107,8 +107,8 @@ export default Vue.extend({
       return `Temps ${this.category.toLowerCase()}: ${hour}h${displayedMinutes}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affectées";
-      return this.selectedFt?.category ?? "indéterminées";
+      if (!this.selectedFt) return "affecté";
+      return this.selectedFt?.category ?? "indéterminé";
     },
   },
   methods: {
