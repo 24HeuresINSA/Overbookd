@@ -83,12 +83,17 @@ export default {
   },
   getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `user/${userId}/ft-requests`
+      `${resource}/${userId}/ft-requests`
     );
   },
   getVolunteerAssignments(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `user/${userId}/assignments`
+      `${resource}/${userId}/assignments`
+    );
+  },
+  getVolunteerAssignmentStats(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<VolunteerTask[]>>(
+      `${resource}/${userId}/assignments/stats`
     );
   },
 };

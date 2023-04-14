@@ -193,7 +193,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission('can-affect')
-  @Get(':id/assignment-stats')
+  @Get(':id/assignments/stats')
   @ApiResponse({
     status: 200,
     description: 'Get duration of assignments for a volunteer',

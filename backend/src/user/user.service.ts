@@ -13,7 +13,7 @@ import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
-import { getPeriodDuration } from 'src/utils/duration';
+import { getPeriodDuration } from '../utils/duration';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 
 const SELECT_USER = {
