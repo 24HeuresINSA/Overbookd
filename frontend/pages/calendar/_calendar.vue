@@ -15,7 +15,7 @@
           class="mr-2"
         />
       </div>
-      <div class="user-stats">
+      <div v-show="shouldShowStats" class="user-stats">
         <div v-for="stat in stats" :key="stat.category" class="stat">
           <v-tooltip top>
             <template #activator="{ on, attrs }">
@@ -130,7 +130,6 @@ export default Vue.extend({
     if (this.shouldShowStats) {
       await this.$accessor.user.getVolunteerAssignmentStats(userId);
     }
-    console.log(this.stats);
     document.title = formatUsername(this.user);
   },
   methods: {
