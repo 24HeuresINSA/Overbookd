@@ -318,7 +318,7 @@ export default Vue.extend({
 
 .planning-list {
   display: flex;
-  gap: 40px;
+  gap: 25px;
   overflow-y: scroll;
   .planning {
     flex-grow: 9;
@@ -347,6 +347,7 @@ export default Vue.extend({
   }
   .add-candidate-corridor {
     flex-grow: 1;
+    padding: 10px;
   }
   .invalid {
     opacity: 0.3;
