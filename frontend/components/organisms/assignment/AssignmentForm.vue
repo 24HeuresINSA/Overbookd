@@ -92,8 +92,8 @@
         </div>
         <aside class="add-cadidate-corridor">
           <v-btn
-            v-if="canAssignMoreVolunteer"
             id="add-candidate"
+            :class="{ invalid: canNotAssignMoreVolunteer }"
             fab
             dark
             large
@@ -177,8 +177,8 @@ export default Vue.extend({
     canNotAssign(): boolean {
       return !this.$accessor.assignment.taskAssignment.canAssign;
     },
-    canAssignMoreVolunteer(): boolean {
-      return this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
+    canNotAssignMoreVolunteer(): boolean {
+      return !this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
     },
     areOtherFriendsAvailable(): boolean {
       return (
@@ -255,6 +255,7 @@ export default Vue.extend({
       this.$accessor.assignment.saveAssignments();
     },
     addCandidate() {
+      if (this.canNotAssignMoreVolunteer) return;
       this.$accessor.assignment.addCandidate();
     },
     previousCandidate() {
@@ -325,6 +326,7 @@ export default Vue.extend({
     flex-direction: column;
     gap: 10px;
     align-items: center;
+    padding-bottom: 80px;
     &__calendar {
       width: 100%;
       overflow-y: hidden;
@@ -334,13 +336,21 @@ export default Vue.extend({
       justify-content: space-around;
       width: 100%;
     }
-    &__assignment.invalid {
-      opacity: 0.3;
-      cursor: initial;
+    &__assignment {
+      position: fixed;
+      right: calc(50% - 42px);
+      bottom: calc(5% + 36px);
+      @media only screen and(min-height: 1130px) {
+        bottom: calc(50% - 465px);
+      }
     }
   }
   .add-candidate-corridor {
     flex-grow: 1;
+  }
+  .invalid {
+    opacity: 0.3;
+    cursor: initial;
   }
 }
 
