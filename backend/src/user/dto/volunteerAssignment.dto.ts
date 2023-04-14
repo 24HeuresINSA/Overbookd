@@ -31,8 +31,8 @@ export class VolunteerAssignmentStatResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'The duration in milliseconds of the stats',
-    type: String,
+    description: 'Assignment duration in milliseconds',
+    type: Number,
   })
   duration: number;
 }

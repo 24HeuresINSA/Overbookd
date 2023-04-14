@@ -12,7 +12,9 @@ export const TaskCategories = {
 
 export type TaskCategory = keyof typeof TaskCategories;
 
-export const TaskCategoryEmojis = {
+type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
+
+export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
   STATIQUE: "🥶",
   BAR: "🍻",
   MANUTENTION: "👷",
@@ -21,7 +23,16 @@ export const TaskCategoryEmojis = {
   AUCUNE: "🤷‍♂️",
 };
 
-export type TaskCategoryEmoji = keyof typeof TaskCategoryEmojis;
+export const taskCategoryEmojis: Map<TaskCategory, TaskCategoryEmoji> = new Map(
+  [
+    ["STATIQUE", TaskCategoryEmojis.STATIQUE],
+    ["BAR", TaskCategoryEmojis.BAR],
+    ["MANUTENTION", TaskCategoryEmojis.MANUTENTION],
+    ["FUN", TaskCategoryEmojis.FUN],
+    ["RELOU", TaskCategoryEmojis.RELOU],
+    ["AUCUNE", TaskCategoryEmojis.AUCUNE],
+  ]
+);
 
 export const TaskPriorities = {
   PRIORITAIRE: "PRIORITAIRE",

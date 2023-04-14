@@ -8,6 +8,7 @@ import {
   UserCreation,
   UserModification,
   MyUserInformation,
+  VolunteerAssignmentStat,
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -92,7 +93,7 @@ export default {
     );
   },
   getVolunteerAssignmentStats(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<VolunteerTask[]>>(
+    return context.$axios.get<HttpStringified<VolunteerAssignmentStat[]>>(
       `${resource}/${userId}/assignments/stats`
     );
   },

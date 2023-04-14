@@ -353,17 +353,14 @@ export class UserService {
   private formatAssignmentStats(
     assignments: DatabaseVolunteerAssignmentStat[],
   ) {
-    const stats = new Map<TaskCategory, VolunteerAssignmentStat>();
-    assignments.map(({ timespan }) => {
+    const stats = assignments.reduce((stats, { timespan }) => {
       const category = timespan.timeWindow.ft.category;
-      const duration = getPeriodDuration(timespan);
-      let stat = stats.get(category);
-      if (!stat) {
-        stats.set(category, { category, duration: 0 });
-        stat = stats.get(category);
-      }
-      stat.duration += duration;
-    });
+      const durationToAdd = getPeriodDuration(timespan);
+      const previousDuration = stats.get(category)?.duration ?? 0;
+      const duration = previousDuration + durationToAdd;
+      stats.set(category, { category, duration });
+      return stats;
+    }, new Map<TaskCategory, VolunteerAssignmentStat>());
     return [...stats.values()];
   }
 
