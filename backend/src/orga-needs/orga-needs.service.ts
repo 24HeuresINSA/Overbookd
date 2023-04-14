@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { OrgaNeedsResponseDto } from './dto/orga-needs-response.dto';
 import { VolunteerAvailability } from '@prisma/client';
+import { WHERE_VALIDATED_USER } from 'src/assignment/volunteer.service';
 
 const TIME_IN_ONE_MINUTE = 60 * 1000;
 const TIME_IN_15_MINUTES = 15 * TIME_IN_ONE_MINUTE;
@@ -44,6 +45,7 @@ export class OrgaNeedsService {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         AND: [{ start: { lte: endOfDay } }, { end: { gte: startOfDay } }],
+        user: WHERE_VALIDATED_USER,
       },
     });
   }
