@@ -31,10 +31,15 @@ type AssignmentParameters = {
   teamCode: string;
 };
 
-export type AssignmentRequest = {
-  timespanId: number;
-  teamCode: string;
+type AssignmentRequest = {
   volunteerId: number;
+  teamCode: string;
+  timespanId: number;
+};
+
+export type BulkAssignmentRequest = {
+  volunteers: { id: number; teamCode: string }[];
+  timespanId: number;
 };
 
 const UserRepo = RepoFactory.userRepo;
@@ -322,33 +327,40 @@ export const actions = actionTree(
       commit("UNASSIGN_VOLUNTEER", volunteerId);
     },
 
-    async saveAssignment({ dispatch }, assignment: AssignmentRequest) {
+    async saveAssignment(
+      { dispatch },
+      { volunteerId, timespanId, teamCode }: AssignmentRequest
+    ) {
+      const bulkRequest = {
+        volunteers: [{ id: volunteerId, teamCode }],
+        timespanId,
+      };
       const res = await safeCall(
         this,
-        AssignmentRepo.assign(this, assignment),
+        AssignmentRepo.assign(this, bulkRequest),
         {
           successMessage: "Le bénévole a été affecté 🥳",
           errorMessage: "Le bénévole n'a pas pu être affecté 😢",
         }
       );
       if (!res) return;
-      dispatch("fetchTimespansForVolunteer", assignment.volunteerId);
+      dispatch("fetchTimespansForVolunteer", volunteerId);
       dispatch("fetchVolunteers");
-      dispatch("fetchSelectedVolunteerPlanning", assignment.volunteerId);
+      dispatch("fetchSelectedVolunteerPlanning", volunteerId);
     },
 
     async saveAssignments({ state, dispatch, commit }) {
-      const assignmentsRes = await Promise.all(
-        state.taskAssignment.assignments.map((assignment) =>
-          safeCall(this, AssignmentRepo.assign(this, assignment))
-        )
+      const assignments = state.taskAssignment.assignments;
+      const assignmentsRes = await safeCall(
+        this,
+        AssignmentRepo.assign(this, assignments),
+        {
+          successMessage: "Les bénévoles ont été affectés 🥳",
+          errorMessage:
+            "Une erreur lors de l'affectation est survenue, aucun bénévole n'a été affecté 😢",
+        }
       );
-      if (assignmentsRes.some((res) => res === undefined)) {
-        const notif = {
-          message:
-            "Toutes les affectations n'ont pas eu lieu. Regardez le détails du créneau.",
-        };
-        dispatch("notif/pushNotification", notif, { root: true });
+      if (!assignmentsRes) {
         return;
       }
       commit("SET_SELECTED_VOLUNTEER", null);

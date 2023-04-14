@@ -177,12 +177,11 @@ export class AssignmentController {
     type: AssignmentResponseDto,
   })
   assignVolunteerToTimespan(
-    @Body() { volunteerId, timespanId, teamCode }: AssignmentRequestDto,
-  ): Promise<AssignmentResponseDto> {
-    return this.assignmentService.assignVolunteerToTimespan(
-      volunteerId,
+    @Body() { volunteers, timespanId }: AssignmentRequestDto,
+  ): Promise<AssignmentResponseDto[]> {
+    return this.assignmentService.assignVolunteersToTimespan(
+      volunteers,
       timespanId,
-      teamCode,
     );
   }
 

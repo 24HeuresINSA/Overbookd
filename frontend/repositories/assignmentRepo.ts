@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { AssignmentRequest } from "~/store/assignment";
+import { BulkAssignmentRequest } from "~/store/assignment";
 import { Volunteer } from "~/utils/models/assignment";
 import {
   FtTimespanWithRequestedTeams,
@@ -12,7 +12,6 @@ import { HttpStringified } from "~/utils/types/http";
 export type Context = { $axios: NuxtAxiosInstance };
 
 type AssignmentResponse = {
-  id: number;
   assigneeId: number;
   timespanId: number;
   teamRequestId: number;
@@ -51,7 +50,7 @@ export class AssignmentRepository {
     );
   }
 
-  static assign(context: Context, assignment: AssignmentRequest) {
+  static assign(context: Context, assignment: BulkAssignmentRequest) {
     return context.$axios.post<HttpStringified<AssignmentResponse>>(
       this.basePath,
       assignment
