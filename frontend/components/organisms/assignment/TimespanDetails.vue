@@ -48,6 +48,12 @@
         >
           <template #item.volunteer="{ item }">
             {{ item.firstname }} {{ item.lastname }}
+            <TeamIconChip
+              v-for="team in item.teams"
+              :key="team"
+              :team="team"
+              class="ml-1"
+            />
           </template>
           <template #item.assignedTeam="{ item }">
             <TeamIconChip :team="item.assignedTeam" size="medium" with-name />
@@ -64,6 +70,13 @@
             <v-btn icon @click="openCalendarInNewTab(item.id)">
               <v-icon>mdi-calendar</v-icon>
             </v-btn>
+            <v-btn
+              v-if="canEditAffectedTeam(item)"
+              icon
+              @click="editAffectedTeam(item.id)"
+            >
+              <v-icon>mdi-swap-vertical</v-icon>
+            </v-btn>
             <v-btn icon @click="unassignVolunteer(item)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -78,6 +91,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import {
   TimespanAssignee,
@@ -90,7 +104,7 @@ export default Vue.extend({
   components: { TeamIconChip },
   data: () => ({
     headers: [
-      { text: "Bénévole", value: "volunteer", width: 200, sortable: false },
+      { text: "Bénévole", value: "volunteer", width: 300, sortable: false },
       { text: "Affecté en tant que", value: "assignedTeam", sortable: false },
       { text: "Amis affectés", value: "friends", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
@@ -145,6 +159,21 @@ export default Vue.extend({
     },
     openCalendarInNewTab(assigneeId: number) {
       window.open(`/calendar/${assigneeId}`, "_blank");
+    },
+    canEditAffectedTeam(assignee: TimespanAssignee): boolean {
+      if (!this.timespan) return false;
+      const assignableTeams = this.timespan.requestedTeams
+        .filter((team) => team.quantity > team.assignmentCount)
+        .map((team) => team.code);
+      if (assignableTeams.length === 0) return false;
+
+      const underlyingTeams = getUnderlyingTeams(assignee.teams);
+      const volunteerTeams = [...underlyingTeams, ...assignee.teams];
+
+      return volunteerTeams.some((team) => assignableTeams.includes(team));
+    },
+    editAffectedTeam(assigneeId: number) {
+      // TODO
     },
   },
 });
