@@ -23,7 +23,7 @@
           :team="team"
           size="medium"
           with-name
-        />
+        ></TeamIconChip>
       </div>
       <div class="required-volunteers">
         <h2>Bénévoles requis sur le créneau</h2>
@@ -53,7 +53,7 @@
               :key="team"
               :team="team"
               class="ml-1"
-            />
+            ></TeamIconChip>
           </template>
           <template #item.assignedTeam="{ item }">
             <div v-if="isUpdateAffectedTeamToggled(item.id)">
@@ -64,9 +64,7 @@
                 size="medium"
                 class="mr-1"
                 with-name
-                :class="{
-                  'not-selected': isTeamNotSelected(team),
-                }"
+                :class="{ 'not-selected': isTeamNotSelected(team) }"
                 @click="selectTeamToAssign(team)"
               ></TeamIconChip>
               <v-icon color="red" @click="cancelUpdateAffectedTeam()">
@@ -118,6 +116,7 @@ import Vue from "vue";
 import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import { Header } from "~/utils/models/Data";
 import {
   TimespanAssignee,
   TimespanWithAssignees,
@@ -128,12 +127,6 @@ export default Vue.extend({
   name: "TimespanDetails",
   components: { TeamIconChip },
   data: () => ({
-    headers: [
-      { text: "Bénévole", value: "volunteer", width: 300, sortable: false },
-      { text: "Affecté en tant que", value: "assignedTeam", sortable: false },
-      { text: "Amis affectés", value: "friends", sortable: false },
-      { text: "Actions", value: "actions", sortable: false },
-    ],
     selectedAssigneeId: null as number | null,
     selectedTeamToAssign: null as string | null,
   }),
@@ -172,6 +165,29 @@ export default Vue.extend({
       return this.timespan.requestedTeams
         .filter((team) => team.quantity > team.assignmentCount)
         .map((team) => team.code);
+    },
+    headers(): Header[] {
+      const volunteer = {
+        text: "Bénévole",
+        value: "volunteer",
+        width: "300px",
+        sortable: false,
+      };
+      const assignedTeam = {
+        text: "Affecté en tant que",
+        value: "assignedTeam",
+        sortable: false,
+      };
+      const friends = {
+        text: "Amis affectés",
+        value: "friends",
+        sortable: false,
+      };
+      const actions = { text: "Actions", value: "actions", sortable: false };
+      if (this.selectedAssigneeId !== null) {
+        return [volunteer, assignedTeam, actions];
+      }
+      return [volunteer, assignedTeam, friends, actions];
     },
   },
   methods: {
