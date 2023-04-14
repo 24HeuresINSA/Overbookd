@@ -28,6 +28,7 @@ import {
   DatabaseAssignmentsAsTeamMember,
   TimespanAssignee,
   AssignmentAsTeamMember,
+  AvailableTimespan as AvailableTimespan,
 } from './types/ftTimespanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -116,6 +117,27 @@ const SELECT_ASSIGNED_TEAM = {
   },
 };
 
+export const SELECT_FRIENDS = {
+  friends: {
+    select: {
+      requestor: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+  friendRequestors: {
+    select: {
+      friend: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  },
+};
+
 @Injectable()
 export class FtTimespanService {
   constructor(
@@ -198,13 +220,14 @@ export class FtTimespanService {
 
   async findTimespansWithFtWhereVolunteerIsAssignableTo(
     volunteerId: number,
-  ): Promise<TimespanWithFt[]> {
-    const [volunteerTeams, availabilities, requests, assignments] =
+  ): Promise<AvailableTimespan[]> {
+    const [volunteerTeams, availabilities, requests, assignments, friends] =
       await Promise.all([
         this.user.getUserTeams(volunteerId),
         this.volunteerAvailability.findUserAvailabilities(volunteerId),
         this.user.getFtUserRequestsByUserId(volunteerId),
         this.user.getVolunteerAssignments(volunteerId),
+        this.findAllVolunteerFriends(volunteerId),
       ]);
 
     const busyPeriods = [...requests, ...assignments];
@@ -216,11 +239,11 @@ export class FtTimespanService {
     );
 
     const timespans = await this.prisma.ftTimespan.findMany({
-      select: SELECT_TIMESPAN_WITH_FT,
+      select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
       where,
       orderBy: { start: 'asc' },
     });
-    return this.formatTimespansWithFt(timespans);
+    return this.formatAvailableForVolunteerTimespans(timespans, friends);
   }
 
   async getTaskCategory(timespanId: number): Promise<TaskCategory | null> {
@@ -245,6 +268,19 @@ export class FtTimespanService {
       throw new NotFoundException(`Créneau ${timespanId} non trouvé`);
     }
     return ftTimespan.timeWindow.ft.category;
+  }
+
+  private async findAllVolunteerFriends(
+    volunteerId: number,
+  ): Promise<number[]> {
+    const volunteer = await this.prisma.user.findUnique({
+      where: { id: volunteerId },
+      select: { ...SELECT_FRIENDS },
+    });
+    return [
+      ...volunteer.friendRequestors.map(({ friend }) => friend.id),
+      ...volunteer.friends.map(({ requestor }) => requestor.id),
+    ];
   }
 
   private buildAssignableToTimespanCondition(
@@ -372,10 +408,16 @@ export class FtTimespanService {
     return SELECT_TIMESPAN_WITH_ASSIGNEES;
   }
 
-  private formatTimespansWithFt(
-    ftTimespans: DatabaseTimespanWithFt[],
-  ): TimespanWithFt[] {
-    return ftTimespans.map((ts) => this.formatTimespanWithFt(ts));
+  private formatAvailableForVolunteerTimespans(
+    ftTimespans: DatabaseTimespanWithFtAndAssignees[],
+    friends: number[],
+  ): AvailableTimespan[] {
+    return ftTimespans.map((ts) => {
+      const hasFriendsAssigned = ts.assignments.some(({ assignee }) =>
+        friends.includes(assignee.id),
+      );
+      return { ...this.formatTimespanWithFt(ts), hasFriendsAssigned };
+    });
   }
 
   private formatTimespanWithFt(

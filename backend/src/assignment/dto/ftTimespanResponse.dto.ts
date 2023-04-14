@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TaskCategory } from '@prisma/client';
 import {
   Assignee,
+  AvailableTimespan as AvailableTimespan,
   FtWithLocation,
   FtWithTimespan,
   RequestedTeam,
@@ -9,7 +10,6 @@ import {
   Timespan,
   TimespanAssignee,
   TimespanWithAssignees,
-  TimespanWithFt,
 } from '../types/ftTimespanTypes';
 
 class SimplifiedFTRepresentation implements SimplifiedFT {
@@ -98,7 +98,7 @@ export class FtTimespanResponseDto implements Timespan {
 
 export class TimespanWithFtResponseDto
   extends FtTimespanResponseDto
-  implements TimespanWithFt
+  implements AvailableTimespan
 {
   @ApiProperty({
     required: true,
@@ -106,6 +106,13 @@ export class TimespanWithFtResponseDto
     type: SimplifiedFTRepresentation,
   })
   ft: SimplifiedFT;
+
+  @ApiProperty({
+    required: true,
+    description: "Indicate if some volunteer's are assigned on the timespan",
+    type: Boolean,
+  })
+  hasFriendsAssigned: boolean;
 }
 
 export class FtWithTimespansResponseDto

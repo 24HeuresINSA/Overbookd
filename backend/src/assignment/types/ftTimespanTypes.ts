@@ -66,14 +66,16 @@ export type DatabaseTimespanWithFtAndAssignees = Omit<
   assignments: AssignedAsTeamMember[];
 };
 
-export type DatabaseAssignee = Assignee & {
+type DatabaseWithFriends<T extends { id: number }> = {
   friends: {
-    requestor: Assignee;
+    requestor: T;
   }[];
   friendRequestors: {
-    friend: Assignee;
+    friend: T;
   }[];
 };
+
+export type DatabaseAssignee = Assignee & DatabaseWithFriends<Assignee>;
 
 export type DatabaseAssignmentsAsTeamMember = {
   teamRequest: {
@@ -121,6 +123,10 @@ export interface SimplifiedFT {
 
 export type TimespanWithFt = Timespan & {
   ft: SimplifiedFT;
+};
+
+export type AvailableTimespan = TimespanWithFt & {
+  hasFriendsAssigned: boolean;
 };
 
 export type TimespanWithFtAndAssignees = TimespanWithFt & {

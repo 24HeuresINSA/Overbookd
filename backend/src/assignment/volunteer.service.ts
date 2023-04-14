@@ -5,8 +5,7 @@ import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
 import { AssignmentService } from './assignment.service';
-import { TimespanWithFtResponseDto } from './dto/ftTimespanResponse.dto';
-import { FtTimespanService } from './ftTimespan.service';
+import { FtTimespanService, SELECT_FRIENDS } from './ftTimespan.service';
 import {
   AvailableVolunteer,
   DatabaseVolunteer,
@@ -14,6 +13,7 @@ import {
   Volunteer,
 } from './types/volunteerTypes';
 import { getPeriodDuration } from 'src/utils/duration';
+import { TimespanWithFt } from './types/ftTimespanTypes';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -36,27 +36,6 @@ const SELECT_VOLUNTEER = {
   charisma: true,
   comment: true,
   ...SELECT_USER_TEAMS,
-};
-
-const SELECT_FRIENDS = {
-  friends: {
-    select: {
-      requestor: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  },
-  friendRequestors: {
-    select: {
-      friend: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  },
 };
 
 const SELECT_TIMESPAN_PERIOD = {
@@ -151,9 +130,7 @@ export class VolunteerService {
     };
   }
 
-  private buildAssignableVolunteersCondition(
-    ftTimespan: TimespanWithFtResponseDto,
-  ) {
+  private buildAssignableVolunteersCondition(ftTimespan: TimespanWithFt) {
     const requestedTeamCodes = ftTimespan.requestedTeams
       .filter(({ quantity, assignmentCount }) => quantity > assignmentCount)
       .map((team) => team.code);
@@ -182,7 +159,7 @@ export class VolunteerService {
   }
 
   private buildAssignableVolunteersSelection(
-    ftTimespan: TimespanWithFtResponseDto,
+    ftTimespan: TimespanWithFt,
     category: TaskCategory | null,
   ) {
     const assignablebleVolunteerCondition =

@@ -29,7 +29,7 @@ import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
 import { CalendarItem } from "~/utils/models/calendar";
-import { TimespanWithFt } from "~/utils/models/ftTimespan";
+import { AvailableTimespan } from "~/utils/models/ftTimespan";
 import { VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
@@ -58,7 +58,7 @@ export default Vue.extend({
     availabilities(): Availability[] {
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
-    hoverTimespan(): TimespanWithFt | null {
+    hoverTimespan(): AvailableTimespan | null {
       return this.$accessor.assignment.hoverTimespan;
     },
     assignedTasks(): CalendarItemWithTask[] {
@@ -109,7 +109,7 @@ export default Vue.extend({
       ft,
       start,
       end,
-    }: TimespanWithFt): CalendarItemWithTask {
+    }: AvailableTimespan): CalendarItemWithTask {
       return {
         start,
         end,

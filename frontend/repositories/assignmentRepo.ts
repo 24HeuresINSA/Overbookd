@@ -2,10 +2,10 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { BulkAssignmentRequest } from "~/store/assignment";
 import { Volunteer } from "~/utils/models/assignment";
 import {
+  AvailableTimespan,
   FtTimespanWithRequestedTeams,
   FtWithTimespan,
   TimespanWithAssignees,
-  TimespanWithFt,
 } from "~/utils/models/ftTimespan";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -39,7 +39,7 @@ export class AssignmentRepository {
   }
 
   static getTimespansForVolunteer(context: Context, volunteerId: number) {
-    return context.$axios.get<HttpStringified<TimespanWithFt[]>>(
+    return context.$axios.get<HttpStringified<AvailableTimespan[]>>(
       `${this.basePath}/volunteer/${volunteerId}/ft-timespans`
     );
   }

@@ -15,9 +15,9 @@ import {
   FtTimespanWithRequestedTeams,
   FtWithTimespan,
   TimespanWithAssignees,
-  TimespanWithFt,
   castFtsWithTimespansWithDate,
-  castTimespansWithFtWithDate,
+  castAvailableTimespansWithDate,
+  AvailableTimespan,
 } from "~/utils/models/ftTimespan";
 import {
   User,
@@ -47,7 +47,7 @@ const AssignmentRepo = RepoFactory.AssignmentRepository;
 
 export const state = () => ({
   volunteers: [] as Volunteer[],
-  timespans: [] as TimespanWithFt[],
+  timespans: [] as AvailableTimespan[],
   fts: [] as FtWithTimespan[],
 
   selectedVolunteer: null as Volunteer | null,
@@ -58,7 +58,7 @@ export const state = () => ({
 
   taskAssignment: TaskAssignment.init(),
 
-  hoverTimespan: null as TimespanWithFt | null,
+  hoverTimespan: null as AvailableTimespan | null,
   timespanToDisplayDetails: null as TimespanWithAssignees | null,
 });
 
@@ -84,7 +84,7 @@ export const mutations = mutationTree(state, {
     state.volunteers = volunteers;
   },
 
-  SET_TIMESPANS(state, timespansWithFt: TimespanWithFt[]) {
+  SET_TIMESPANS(state, timespansWithFt: AvailableTimespan[]) {
     state.timespans = timespansWithFt;
   },
 
@@ -116,7 +116,7 @@ export const mutations = mutationTree(state, {
     state.selectedFt = ft;
   },
 
-  SET_HOVER_TIMESPAN(state, timespan: TimespanWithFt | null) {
+  SET_HOVER_TIMESPAN(state, timespan: AvailableTimespan | null) {
     state.hoverTimespan = timespan;
   },
 
@@ -254,7 +254,7 @@ export const actions = actionTree(
         AssignmentRepo.getTimespansForVolunteer(this, volunteerId)
       );
       if (!res) return;
-      commit("SET_TIMESPANS", castTimespansWithFtWithDate(res.data));
+      commit("SET_TIMESPANS", castAvailableTimespansWithDate(res.data));
     },
 
     async fetchVolunteersForTimespan({ commit }, timespanId: number) {
@@ -277,7 +277,7 @@ export const actions = actionTree(
       dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
     },
 
-    setHoverTimespan({ commit }, timespan: TimespanWithFt | null) {
+    setHoverTimespan({ commit }, timespan: AvailableTimespan | null) {
       commit("SET_HOVER_TIMESPAN", timespan);
     },
 

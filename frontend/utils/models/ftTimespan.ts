@@ -51,8 +51,9 @@ export interface FtTimespanEvent extends FtTimespan {
   timed: boolean;
 }
 
-export interface TimespanWithFt extends FtTimespanWithRequestedTeams {
+export interface AvailableTimespan extends FtTimespanWithRequestedTeams {
   ft: SimplifiedFT;
+  hasFriendsAssigned: boolean;
 }
 
 export interface TimespanAssignee extends User {
@@ -81,17 +82,17 @@ export function getRequiredTeamsInFt(ft: FtWithTimespan): string[] {
   return [...new Set(teams)];
 }
 
-export function castTimespansWithFtWithDate(
-  timespansWithFt: HttpStringified<TimespanWithFt[]>
-): TimespanWithFt[] {
+export function castAvailableTimespansWithDate(
+  timespansWithFt: HttpStringified<AvailableTimespan[]>
+): AvailableTimespan[] {
   return timespansWithFt.map((timespanWithFt) =>
-    castTimespanWithFtWithDate(timespanWithFt)
+    castAvailableTimespanWithDate(timespanWithFt)
   );
 }
 
-export function castTimespanWithFtWithDate(
-  timespanWithFt: HttpStringified<TimespanWithFt>
-): TimespanWithFt {
+export function castAvailableTimespanWithDate(
+  timespanWithFt: HttpStringified<AvailableTimespan>
+): AvailableTimespan {
   return {
     ...timespanWithFt,
     start: new Date(timespanWithFt.start),
