@@ -57,7 +57,7 @@ import { Duration } from "~/utils/date/duration";
 import {
   TaskCategory,
   TaskCategoryEmojis,
-  taskCategoryEmojis,
+  TaskCategoryEmojiMap,
 } from "~/utils/models/ftTimespan";
 import {
   CompleteUserWithPermissions,
@@ -138,7 +138,7 @@ export default Vue.extend({
     },
     getStatCategoryEmoji(category: TaskCategory | null): string {
       if (category === null) return TaskCategoryEmojis.AUCUNE;
-      return taskCategoryEmojis.get(category) ?? TaskCategoryEmojis.AUCUNE;
+      return TaskCategoryEmojiMap.get(category) ?? TaskCategoryEmojis.AUCUNE;
     },
     getStatCategoryName(category: TaskCategory | null): string {
       return category?.toLowerCase() ?? "indeterminé";

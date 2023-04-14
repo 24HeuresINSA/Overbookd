@@ -23,16 +23,15 @@ export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
   AUCUNE: "🤷‍♂️",
 };
 
-export const taskCategoryEmojis: Map<TaskCategory, TaskCategoryEmoji> = new Map(
-  [
+export const TaskCategoryEmojiMap: Map<TaskCategory, TaskCategoryEmoji> =
+  new Map([
     ["STATIQUE", TaskCategoryEmojis.STATIQUE],
     ["BAR", TaskCategoryEmojis.BAR],
     ["MANUTENTION", TaskCategoryEmojis.MANUTENTION],
     ["FUN", TaskCategoryEmojis.FUN],
     ["RELOU", TaskCategoryEmojis.RELOU],
     ["AUCUNE", TaskCategoryEmojis.AUCUNE],
-  ]
-);
+  ]);
 
 export const TaskPriorities = {
   PRIORITAIRE: "PRIORITAIRE",
