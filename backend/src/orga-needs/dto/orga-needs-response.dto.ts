@@ -20,5 +20,5 @@ export class OrgaNeedsResponseDto {
     description: 'The number of volunteers available',
     type: Number,
   })
-  availableVolunteers?: number;
+  availableVolunteers: number;
 }
