@@ -9,11 +9,11 @@
     </v-card-title>
     <v-card-text class="timespan-details__content">
       <div class="timespan-metadata">
-        <v-chip class="location" color="primary">
+        <v-chip color="primary">
           <v-icon left>mdi-map-marker</v-icon>
           <span>{{ location }}</span>
         </v-chip>
-        <v-chip class="timetable" color="primary">
+        <v-chip color="primary">
           <v-icon left>mdi-clock</v-icon>
           <span>{{ timetable }}</span>
         </v-chip>
@@ -37,7 +37,7 @@
           Aucun bénévole requis spécifiquement sur ce créneau
         </p>
       </div>
-      <div class="assignees">
+      <div>
         <h2>Bénévoles affectés sur le créneau</h2>
         <v-data-table
           :headers="headers"
@@ -56,7 +56,32 @@
             />
           </template>
           <template #item.assignedTeam="{ item }">
-            <TeamIconChip :team="item.assignedTeam" size="medium" with-name />
+            <div v-if="isUpdateAffectedTeamToggled(item.id)">
+              <TeamIconChip
+                v-for="team of getAssignableTeamsForVolunteer(item)"
+                :key="team"
+                :team="team"
+                size="medium"
+                class="mr-1"
+                with-name
+                :class="{
+                  'not-selected': isTeamNotSelected(team),
+                }"
+                @click="selectTeamToAssign(team)"
+              ></TeamIconChip>
+              <v-icon color="red" @click="cancelUpdateAffectedTeam()">
+                mdi-close-circle
+              </v-icon>
+              <v-icon color="green" @click="updateAffectedTeam(item.id)">
+                mdi-check-circle
+              </v-icon>
+            </div>
+            <TeamIconChip
+              v-else
+              :team="item.assignedTeam"
+              size="medium"
+              with-name
+            ></TeamIconChip>
           </template>
           <template #item.friends="{ item }">
             <div class="volunteer-list">
@@ -71,9 +96,9 @@
               <v-icon>mdi-calendar</v-icon>
             </v-btn>
             <v-btn
-              v-if="canEditAffectedTeam(item)"
+              v-if="canUpdateAffectedTeam(item)"
               icon
-              @click="editAffectedTeam(item.id)"
+              @click="toggleUpdateAffectedTeam(item)"
             >
               <v-icon>mdi-swap-vertical</v-icon>
             </v-btn>
@@ -109,6 +134,8 @@ export default Vue.extend({
       { text: "Amis affectés", value: "friends", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
+    selectedAssigneeId: null as number | null,
+    selectedTeamToAssign: null as string | null,
   }),
   computed: {
     timespan(): TimespanWithAssignees | null {
@@ -140,6 +167,12 @@ export default Vue.extend({
       if (!this.timespan) return [];
       return this.timespan.assignees;
     },
+    allTimespansTeamCodes(): string[] {
+      if (!this.timespan) return [];
+      return this.timespan.requestedTeams
+        .filter((team) => team.quantity > team.assignmentCount)
+        .map((team) => team.code);
+    },
   },
   methods: {
     unassignVolunteer(assignee: TimespanAssignee) {
@@ -160,31 +193,54 @@ export default Vue.extend({
     openCalendarInNewTab(assigneeId: number) {
       window.open(`/calendar/${assigneeId}`, "_blank");
     },
-    canEditAffectedTeam(assignee: TimespanAssignee): boolean {
-      if (!this.timespan) return false;
-      const assignableTeams = this.timespan.requestedTeams
-        .filter((team) => team.quantity > team.assignmentCount)
-        .map((team) => team.code);
-      if (assignableTeams.length === 0) return false;
-
+    getAllVolunteerTeams(assignee: TimespanAssignee) {
       const underlyingTeams = getUnderlyingTeams(assignee.teams);
-      const volunteerTeams = [...underlyingTeams, ...assignee.teams];
-
-      return volunteerTeams.some((team) => assignableTeams.includes(team));
+      return [...underlyingTeams, ...assignee.teams];
     },
-    editAffectedTeam(assigneeId: number) {
-      // TODO
+    getAssignableTeamsForVolunteer(assignee: TimespanAssignee) {
+      const volunteerTeams = this.getAllVolunteerTeams(assignee);
+      return this.allTimespansTeamCodes.filter((team) =>
+        volunteerTeams.includes(team)
+      );
+    },
+    canUpdateAffectedTeam(assignee: TimespanAssignee): boolean {
+      return this.getAssignableTeamsForVolunteer(assignee).length > 0;
+    },
+    toggleUpdateAffectedTeam(assignee: TimespanAssignee) {
+      if (this.selectedAssigneeId === null) {
+        this.selectedAssigneeId = assignee.id;
+        this.selectedTeamToAssign = assignee.assignedTeam;
+        return;
+      }
+      this.cancelUpdateAffectedTeam();
+    },
+    isUpdateAffectedTeamToggled(assigneeId: number): boolean {
+      return this.selectedAssigneeId === assigneeId;
+    },
+    selectTeamToAssign(team: string) {
+      this.selectedTeamToAssign = team;
+    },
+    isTeamNotSelected(team: string): boolean {
+      return this.selectedTeamToAssign !== team;
+    },
+    cancelUpdateAffectedTeam() {
+      this.selectedAssigneeId = null;
+      this.selectedTeamToAssign = null;
+    },
+    updateAffectedTeam(assigneeId: number) {
+      if (!this.timespan) return;
+      /*this.$accessor.assignment.updateAffectedTeam({
+        timespanId: this.timespan.id,
+        assigneeId,
+        this.selectedTeamToAssign,
+      });*/
+      this.cancelUpdateAffectedTeam();
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.close-btn {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-}
 .timespan-metadata {
   display: flex;
   gap: 15px;
@@ -205,5 +261,9 @@ export default Vue.extend({
       margin: 4px 0;
     }
   }
+}
+
+.not-selected {
+  opacity: 0.4;
 }
 </style>
