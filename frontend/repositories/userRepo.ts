@@ -8,6 +8,7 @@ import {
   UserCreation,
   UserModification,
   MyUserInformation,
+  VolunteerAssignmentStat,
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -83,12 +84,17 @@ export default {
   },
   getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `user/${userId}/ft-requests`
+      `${resource}/${userId}/ft-requests`
     );
   },
   getVolunteerAssignments(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `user/${userId}/assignments`
+      `${resource}/${userId}/assignments`
+    );
+  },
+  getVolunteerAssignmentStats(context: Context, userId: number) {
+    return context.$axios.get<HttpStringified<VolunteerAssignmentStat[]>>(
+      `${resource}/${userId}/assignments/stats`
     );
   },
 };

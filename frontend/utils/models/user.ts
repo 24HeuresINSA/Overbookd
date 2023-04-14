@@ -1,5 +1,6 @@
 import { HttpStringified } from "../types/http";
 import { FTStatus } from "./ft";
+import { TaskCategory } from "./ftTimespan";
 import { Notification } from "./repo";
 
 const Departments = {
@@ -99,7 +100,7 @@ interface Period {
   end: Date;
 }
 
-interface Task {
+export interface Task {
   id: number;
   name: string;
   status: FTStatus;
@@ -108,6 +109,11 @@ interface Task {
 export interface VolunteerTask extends Period {
   ft: Task;
   timespanId?: number;
+}
+
+export interface VolunteerAssignmentStat {
+  category: TaskCategory;
+  duration: number;
 }
 
 export function castToUserModification(

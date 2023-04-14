@@ -14,6 +14,7 @@ import {
   User,
   UserCreation,
   MyUserInformation,
+  VolunteerAssignmentStat,
 } from "~/utils/models/user";
 
 const UserRepo = RepoFactory.userRepo;
@@ -26,6 +27,7 @@ export const state = () => ({
   selectedUserFriends: [] as User[],
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
+  selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -47,6 +49,12 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: VolunteerTask[]) {
     state.selectedUserAssignments = assignments;
+  },
+  SET_SELECTED_USER_ASSIGNMENT_STATS(
+    state: UserState,
+    stats: VolunteerAssignmentStat[]
+  ) {
+    state.selectedUserAssignmentStats = stats;
   },
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
@@ -284,6 +292,16 @@ export const actions = actionTree(
       if (!res) return;
       const periods = castVolunteerTaskWithDate(res.data);
       commit("SET_SELECTED_USER_ASSIGNMENT", periods);
+    },
+
+    async getVolunteerAssignmentStats({ commit }, userId: number) {
+      const res = await safeCall(
+        this,
+        UserRepo.getVolunteerAssignmentStats(this, userId)
+      );
+
+      if (!res) return;
+      commit("SET_SELECTED_USER_ASSIGNMENT_STATS", res.data);
     },
   }
 );

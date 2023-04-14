@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, FtStatus, Prisma, User } from '@prisma/client';
+import { Ft, FtStatus, Prisma, TaskCategory, User } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
@@ -12,6 +12,9 @@ import {
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
+import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
+import { getPeriodDuration } from '../utils/duration';
+import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 
 const SELECT_USER = {
   email: true,
@@ -107,6 +110,24 @@ const SELECT_VOLUNTEER_ASSIGNMENTS = {
     },
   },
   timespanId: true,
+};
+
+const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
+  timespan: {
+    select: {
+      start: true,
+      end: true,
+      timeWindow: {
+        select: {
+          ft: {
+            select: {
+              category: true,
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 export type UserWithoutPassword = Omit<User, 'password'>;
@@ -317,6 +338,30 @@ export class UserService {
       data: { is_deleted: true },
       select: { id: true },
     });
+  }
+
+  async getVolunteerAssignmentStats(
+    volunteerId: number,
+  ): Promise<VolunteerAssignmentStat[]> {
+    const assignments = await this.prisma.assignment.findMany({
+      where: { assigneeId: volunteerId },
+      select: SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
+    });
+    return this.formatAssignmentStats(assignments);
+  }
+
+  private formatAssignmentStats(
+    assignments: DatabaseVolunteerAssignmentStat[],
+  ) {
+    const stats = assignments.reduce((stats, { timespan }) => {
+      const category = timespan.timeWindow.ft.category;
+      const durationToAdd = getPeriodDuration(timespan);
+      const previousDuration = stats.get(category)?.duration ?? 0;
+      const duration = previousDuration + durationToAdd;
+      stats.set(category, { category, duration });
+      return stats;
+    }, new Map<TaskCategory, VolunteerAssignmentStat>());
+    return [...stats.values()];
   }
 
   getUsername(user: UserWithoutPassword): Username {
