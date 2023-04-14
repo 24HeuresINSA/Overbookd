@@ -22,7 +22,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
-import { VolunteerAssignmentDto as VolunteerTaskDto } from './dto/volunteerAssignment.dto';
+import {
+  VolunteerAssignmentStatResponseDto,
+  VolunteerAssignmentDto,
+} from './dto/volunteerAssignment.dto';
 import {
   MyUserInformation,
   UserService,
@@ -163,11 +166,11 @@ export class UserController {
     status: 200,
     description: 'Get tasks a volunteer is required on',
     isArray: true,
-    type: VolunteerTaskDto,
+    type: VolunteerAssignmentDto,
   })
   async getFtUserRequestsByUserId(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<VolunteerTaskDto[]> {
+  ): Promise<VolunteerAssignmentDto[]> {
     return this.userService.getFtUserRequestsByUserId(id);
   }
 
@@ -179,12 +182,28 @@ export class UserController {
     status: 200,
     description: 'Get tasks a volunteer is assigned to',
     isArray: true,
-    type: VolunteerTaskDto,
+    type: VolunteerAssignmentDto,
   })
   async getVolunteerAssignments(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<VolunteerTaskDto[]> {
+  ): Promise<VolunteerAssignmentDto[]> {
     return this.userService.getVolunteerAssignments(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('can-affect')
+  @Get(':id/assignment-stats')
+  @ApiResponse({
+    status: 200,
+    description: 'Get duration of assignments for a volunteer',
+    isArray: true,
+    type: VolunteerAssignmentStatResponseDto,
+  })
+  async getVolunteerAssignmentStats(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VolunteerAssignmentStatResponseDto[]> {
+    return this.userService.getVolunteerAssignmentStats(id);
   }
 
   @UseGuards(JwtAuthGuard)
