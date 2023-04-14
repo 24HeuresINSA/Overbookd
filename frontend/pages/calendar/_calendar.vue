@@ -6,8 +6,22 @@
   >
     <template #title>
       <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
-      <div class="ml-2">
-        <OverChips :roles="user?.team"></OverChips>
+      <div class="ml-4">
+        <TeamIconChip
+          v-for="team in user?.team"
+          :key="team"
+          :team="team"
+          :with-name="true"
+          class="mr-2"
+        />
+      </div>
+      <div class="user-stats">
+        <div v-for="stat in stats" :key="stat.category" class="stat">
+          <h3 class="stat__category">{{ getStatCategory(stat.category) }}:</h3>
+          <p class="stat__duration">
+            {{ getDisplayedDuration(stat.duration) }}
+          </p>
+        </div>
       </div>
     </template>
     <template #interval="{ date, time }">
@@ -26,36 +40,53 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
-import OverChips from "~/components/atoms/OverChips.vue";
-import { getColorByStatus } from "~/domain/common/status-color";
+import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
+import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
+import { Duration } from "~/utils/date/duration";
+import { TaskCategory } from "~/utils/models/ftTimespan";
+import {
+  CompleteUserWithPermissions,
+  Task,
+  VolunteerAssignmentStat,
+  VolunteerTask,
+} from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
-export default defineComponent({
+interface CalendarEventWithFt {
+  start: Date;
+  end: Date;
+  ft: Task;
+  color: StatusColor;
+  timed: boolean;
+}
+
+export default Vue.extend({
   name: "Calendar",
-  components: {
-    OverChips,
-    OverCalendarV2,
-  },
+  components: { OverCalendarV2, TeamIconChip },
   data: function () {
     return {
       calendarCentralDate: new Date("2023-05-12 00:00+02:00"),
     };
   },
   computed: {
-    availabilities() {
+    availabilities(): Availability[] {
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
-    ftRequests() {
+    ftRequests(): VolunteerTask[] {
       return this.$accessor.user.selectedUserFtRequests;
     },
-    assignments() {
+    assignments(): VolunteerTask[] {
       return this.$accessor.user.selectedUserAssignments;
     },
-    events() {
+    stats(): VolunteerAssignmentStat[] {
+      return this.$accessor.user.selectedUserAssignmentStats;
+    },
+    events(): CalendarEventWithFt[] {
       return [...this.ftRequests, ...this.assignments].map(
         ({ start, end, ft }) => ({
           start,
@@ -66,8 +97,11 @@ export default defineComponent({
         })
       );
     },
-    user() {
+    user(): CompleteUserWithPermissions {
       return this.$accessor.user.selectedUser;
+    },
+    shouldShowStats(): boolean {
+      return this.$accessor.user.hasPermission("can-affect");
     },
   },
   async created() {
@@ -83,11 +117,21 @@ export default defineComponent({
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
       this.$accessor.user.getVolunteerAssignments(userId),
     ]);
+    if (this.shouldShowStats) {
+      await this.$accessor.user.getVolunteerAssignmentStats(userId);
+    }
+    console.log(this.stats);
     document.title = formatUsername(this.user);
   },
   methods: {
     updateDate(date: Date) {
       this.calendarCentralDate = date;
+    },
+    getStatCategory(category: TaskCategory | null) {
+      return category?.toLowerCase() ?? "indeterminé";
+    },
+    getDisplayedDuration(duration: number) {
+      return Duration.fromMilliseconds(duration).toString();
     },
     isUserAvailable(date: string, time: string) {
       const start = new Date(`${date} ${time}`);
@@ -108,7 +152,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .available {
   background-color: rgba(95, 219, 72, 0.45);
   height: 100%;
@@ -124,5 +168,24 @@ export default defineComponent({
 
 .underline-on-hover:hover {
   text-decoration: underline;
+}
+
+.user-stats {
+  margin-left: 5px;
+  display: flex;
+}
+
+.stat {
+  align-items: center;
+  margin-right: 10px;
+
+  &__category {
+    text-transform: capitalize;
+    font-size: 1rem;
+  }
+  &__duration {
+    font-size: 1rem;
+    margin: 0;
+  }
 }
 </style>

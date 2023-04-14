@@ -6,7 +6,7 @@ const ORANGE = "orange";
 const GREEN = "green";
 const PURPLE = "#673ab7";
 
-type StatusColor =
+export type StatusColor =
   | typeof GREY
   | typeof RED
   | typeof ORANGE
