@@ -80,7 +80,10 @@ export default Vue.extend({
     filterFtByCategory(
       categorySearched: TaskCategory
     ): (ft: FtWithTimespan) => boolean {
-      return (ft) => ft.category === categorySearched;
+      return (ft) => {
+        if (categorySearched === "AUCUNE") return ft.category === null;
+        return ft.category === categorySearched;
+      };
     },
     filterByPriority(
       prioritySearched: TaskPriority
