@@ -17,10 +17,16 @@
       </div>
       <div class="user-stats">
         <div v-for="stat in stats" :key="stat.category" class="stat">
-          <h3 class="stat__category">{{ getStatCategory(stat.category) }}:</h3>
-          <p class="stat__duration">
-            {{ getDisplayedDuration(stat.duration) }}
-          </p>
+          <v-tooltip top>
+            <template #activator="{ on, attrs }">
+              <p class="stat__duration" v-bind="attrs" v-on="on">
+                {{ getDisplayedStat(stat) }}
+              </p>
+            </template>
+            <span class="stat__category">{{
+              getStatCategoryName(stat.category)
+            }}</span>
+          </v-tooltip>
         </div>
       </div>
     </template>
@@ -48,7 +54,11 @@ import { Availability } from "~/domain/volunteer-availability/volunteer-availabi
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Duration } from "~/utils/date/duration";
-import { TaskCategory } from "~/utils/models/ftTimespan";
+import {
+  TaskCategory,
+  TaskCategoryEmojis,
+  TaskCategoryEmoji,
+} from "~/utils/models/ftTimespan";
 import {
   CompleteUserWithPermissions,
   Task,
@@ -127,13 +137,23 @@ export default Vue.extend({
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
-    getStatCategory(category: TaskCategory | null) {
+    getStatCategoryEmoji(category: TaskCategory | null): string {
+      return category
+        ? TaskCategoryEmojis[category as TaskCategoryEmoji]
+        : TaskCategoryEmojis.AUCUNE;
+    },
+    getStatCategoryName(category: TaskCategory | null): string {
       return category?.toLowerCase() ?? "indeterminé";
     },
-    getDisplayedDuration(duration: number) {
+    getDisplayedDuration(duration: number): string {
       return Duration.fromMilliseconds(duration).toString();
     },
-    isUserAvailable(date: string, time: string) {
+    getDisplayedStat(stat: VolunteerAssignmentStat): string {
+      const emoji = this.getStatCategoryEmoji(stat.category);
+      const duration = this.getDisplayedDuration(stat.duration);
+      return `${emoji} ${duration}`;
+    },
+    isUserAvailable(date: string, time: string): boolean {
       const start = new Date(`${date} ${time}`);
       const end = computeNextHourDate(start);
       return this.availabilities.some(
@@ -141,9 +161,7 @@ export default Vue.extend({
       );
     },
     openFt(ftId: number) {
-      this.$router.push({
-        path: `/ft/${ftId}`,
-      });
+      this.$router.push({ path: `/ft/${ftId}` });
     },
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
@@ -171,20 +189,21 @@ export default Vue.extend({
 }
 
 .user-stats {
+  margin-top: 4px;
   margin-left: 5px;
   display: flex;
 }
 
 .stat {
+  display: flex;
   align-items: center;
   margin-right: 10px;
 
   &__category {
     text-transform: capitalize;
-    font-size: 1rem;
   }
   &__duration {
-    font-size: 1rem;
+    font-size: 1.1rem;
     margin: 0;
   }
 }

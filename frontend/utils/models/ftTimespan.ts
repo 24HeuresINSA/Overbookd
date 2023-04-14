@@ -12,6 +12,17 @@ export const TaskCategories = {
 
 export type TaskCategory = keyof typeof TaskCategories;
 
+export const TaskCategoryEmojis = {
+  STATIQUE: "🥶",
+  BAR: "🍻",
+  MANUTENTION: "👷",
+  FUN: "😂",
+  RELOU: "🥱",
+  AUCUNE: "🤷‍♂️",
+};
+
+export type TaskCategoryEmoji = keyof typeof TaskCategoryEmojis;
+
 export const TaskPriorities = {
   PRIORITAIRE: "PRIORITAIRE",
   NON_PRIORITAIRE: "NON PRIORITAIRE",
