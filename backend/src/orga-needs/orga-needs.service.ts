@@ -11,7 +11,27 @@ export interface OrgaNeedsResponse {
   start: Date;
   end: Date;
   availableVolunteers: number;
+  requestedVolunteers: number;
 }
+
+const SELECT_REQUESTED_VOLUNTEERS = {
+  start: true,
+  end: true,
+  teamRequests: {
+    select: {
+      quantity: true,
+    },
+  },
+  _count: {
+    select: {
+      userRequests: true,
+    },
+  },
+};
+
+type RequestedVolunteersOverPeriod = Period & {
+  requestedVolunteers: number;
+};
 
 @Injectable()
 export class OrgaNeedsService {
@@ -19,31 +39,59 @@ export class OrgaNeedsService {
 
   async orgaNeeds(period: Period): Promise<OrgaNeedsResponse[]> {
     const intervals = this.buildOrgaNeedsIntervals(period);
-    return this.getAvailableVolunteers(period, intervals);
+    const [availabilities, requestedVolunteers] = await Promise.all([
+      this.getAvailabilities(period),
+      this.getRequestedVolunteers(period),
+    ]);
+
+    return intervals.map((interval) =>
+      this.formatIntervalStats(interval, availabilities, requestedVolunteers),
+    );
   }
 
-  private async getAvailableVolunteers(
-    period: Period,
-    intervals: Period[],
-  ): Promise<OrgaNeedsResponse[]> {
-    const availabilities = await this.getAvailabilities(period);
+  private formatIntervalStats(
+    interval: Period,
+    availabilities: VolunteerAvailability[],
+    requestedVolunteers: RequestedVolunteersOverPeriod[],
+  ) {
+    const availableVolunteers = availabilities.filter(
+      includedPeriods(interval),
+    ).length;
+    const requiredVolunteersForInterval = requestedVolunteers
+      .filter(includedPeriods(interval))
+      .reduce((acc, { requestedVolunteers }) => acc + requestedVolunteers, 0);
 
-    return intervals.map(({ start, end }) => {
-      const availableVolunteers = availabilities.filter(
-        (availability) => availability.start < end && availability.end > start,
-      ).length;
-      return { start, end, availableVolunteers };
+    return {
+      start: interval.start,
+      end: interval.end,
+      availableVolunteers,
+      requestedVolunteers: requiredVolunteersForInterval,
+    };
+  }
+
+  private async getRequestedVolunteers(
+    period: Period,
+  ): Promise<RequestedVolunteersOverPeriod[]> {
+    const timeWindows = await this.prisma.ftTimeWindows.findMany({
+      where: this.periodIncludedCondition(period),
+      select: SELECT_REQUESTED_VOLUNTEERS,
+    });
+
+    return timeWindows.map(({ start, end, teamRequests, _count }) => {
+      const requestedVolunteers =
+        teamRequests.reduce((acc, { quantity }) => acc + quantity, 0) +
+        _count.userRequests;
+
+      return { start, end, requestedVolunteers };
     });
   }
 
-  private async getAvailabilities({
-    start,
-    end,
-  }: Period): Promise<VolunteerAvailability[]> {
+  private async getAvailabilities(
+    period: Period,
+  ): Promise<VolunteerAvailability[]> {
     return this.prisma.volunteerAvailability.findMany({
       where: {
-        start: { lte: end },
-        end: { gte: start },
+        ...this.periodIncludedCondition(period),
         user: WHERE_VALIDATED_USER,
       },
     });
@@ -67,4 +115,18 @@ export class OrgaNeedsService {
         return { start, end };
       });
   }
+
+  private periodIncludedCondition({ start, end }: Period) {
+    return {
+      start: { lte: end },
+      end: { gte: start },
+    };
+  }
+}
+
+function includedPeriods({
+  start,
+  end,
+}: Period): (value: Period & unknown) => unknown {
+  return (period) => period.start < end && period.end > start;
 }

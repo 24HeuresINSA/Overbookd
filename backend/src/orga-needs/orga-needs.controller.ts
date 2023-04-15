@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -28,6 +28,7 @@ export class OrgaNeedsController {
 
   @Permission('hard')
   @Post()
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Returns the needs for a given day per 15 minutes interval',
