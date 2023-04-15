@@ -1,16 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Matches, ValidationArguments } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate } from 'class-validator';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
-export class OrgaNeedsRequestDto {
+export class OrgaNeedsRequestDto implements Period {
   @ApiProperty({
-    name: 'selectedDay',
-    description: 'The day to get the needs for',
-    type: String,
+    name: 'start',
+    description: 'The start of the period',
+    type: Date,
   })
-  @IsString()
-  @Matches(new RegExp(/^\d{4}-\d{2}-\d{2}$/), {
-    message: (va: ValidationArguments) =>
-      `${va.property} should be in the format YYYY-MM-DD`,
+  @Type(() => Date)
+  @IsDate()
+  start: Date;
+
+  @ApiProperty({
+    name: 'end',
+    description: 'The end of the period',
+    type: Date,
   })
-  selectedDay: string;
+  @Type(() => Date)
+  @IsDate()
+  end: Date;
 }
