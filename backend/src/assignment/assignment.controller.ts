@@ -213,7 +213,8 @@ export class AssignmentController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Update affected team for assignee',
+    description: 'Update assigned team for assignee',
+    type: AssignmentResponseDto,
   })
   updateAssignedTeam(
     @Param('timespanId', ParseIntPipe) timespanId: number,

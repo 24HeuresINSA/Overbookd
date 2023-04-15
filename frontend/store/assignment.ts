@@ -390,7 +390,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchVariablesAfterTimespanDetailsUpdate", {
+      dispatch("restoreStateAfterTimespanDetailsUpdate", {
         timespanId,
         assigneeId,
       });
@@ -434,7 +434,7 @@ export const actions = actionTree(
       commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespan);
     },
 
-    fetchVariablesAfterTimespanDetailsUpdate(
+    restoreStateAfterTimespanDetailsUpdate(
       { state, dispatch },
       { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
     ) {
@@ -467,7 +467,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchVariablesAfterTimespanDetailsUpdate", {
+      dispatch("restoreStateAfterTimespanDetailsUpdate", {
         timespanId,
         assigneeId,
       });
