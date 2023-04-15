@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { VolunteerAvailability } from '@prisma/client';
 import { WHERE_VALIDATED_USER } from 'src/assignment/volunteer.service';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { getPeriodDuration } from 'src/utils/duration';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
@@ -59,7 +60,7 @@ type DataBaseOrgaStats = {
 export class OrgaNeedsService {
   constructor(private prisma: PrismaService) {}
 
-  async orgaNeeds(period: Period): Promise<OrgaNeedsResponse[]> {
+  async computeOrgaStats(period: Period): Promise<OrgaNeedsResponse[]> {
     const intervals = this.buildOrgaNeedsIntervals(period);
     const [assignments, availabilities, requestedVolunteers] =
       await Promise.all([
@@ -98,8 +99,7 @@ export class OrgaNeedsService {
     );
 
     return {
-      start: interval.start,
-      end: interval.end,
+      ...interval,
       assignedVolunteers,
       availableVolunteers,
       requestedVolunteers: requestedVolunteersForInterval,
@@ -174,19 +174,16 @@ export class OrgaNeedsService {
     }));
   }
 
-  private buildOrgaNeedsIntervals({
-    start: periodStart,
-    end: periodEnd,
-  }: Period): Period[] {
+  private buildOrgaNeedsIntervals(period: Period): Period[] {
     const numberOfIntervals = Math.floor(
-      (periodEnd.getTime() - periodStart.getTime()) / FIFTEEN_MINUTES_IN_MS,
+      getPeriodDuration(period) / FIFTEEN_MINUTES_IN_MS,
     );
 
     return Array(numberOfIntervals)
       .fill({})
       .map((_, index) => {
         const start = new Date(
-          periodStart.getTime() + index * FIFTEEN_MINUTES_IN_MS,
+          period.start.getTime() + index * FIFTEEN_MINUTES_IN_MS,
         );
         const end = new Date(start.getTime() + FIFTEEN_MINUTES_IN_MS);
         return { start, end };

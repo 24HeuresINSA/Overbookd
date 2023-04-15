@@ -25,7 +25,7 @@ export class OrgaNeedsResponseDto implements OrgaNeedsResponse {
 
   @ApiProperty({
     name: 'availableVolunteers',
-    description: 'The number of availabled volunteers on the interval',
+    description: 'The number of available volunteers on the interval',
     type: Number,
   })
   availableVolunteers: number;

@@ -36,8 +36,8 @@ export class OrgaNeedsController {
     isArray: true,
   })
   async getOrgaNeeds(
-    @Body() body: OrgaNeedsRequestDto,
+    @Body() period: OrgaNeedsRequestDto,
   ): Promise<OrgaNeedsResponseDto[]> {
-    return this.orgaNeedsService.orgaNeeds(body);
+    return this.orgaNeedsService.computeOrgaStats(period);
   }
 }
