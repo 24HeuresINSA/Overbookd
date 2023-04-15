@@ -54,19 +54,36 @@ export class OrgaNeedsService {
     availabilities: VolunteerAvailability[],
     requestedVolunteers: RequestedVolunteersOverPeriod[],
   ) {
-    const availableVolunteers = availabilities.filter(
-      includedPeriods(interval),
-    ).length;
-    const requiredVolunteersForInterval = requestedVolunteers
-      .filter(includedPeriods(interval))
-      .reduce((acc, { requestedVolunteers }) => acc + requestedVolunteers, 0);
+    const availableVolunteers = this.countAvailableVolunteersOnInterval(
+      availabilities,
+      interval,
+    );
+
+    const requestedVolunteersForInterval =
+      this.countRequestedVolunteersOnInterval(requestedVolunteers, interval);
 
     return {
       start: interval.start,
       end: interval.end,
       availableVolunteers,
-      requestedVolunteers: requiredVolunteersForInterval,
+      requestedVolunteers: requestedVolunteersForInterval,
     };
+  }
+
+  private countRequestedVolunteersOnInterval(
+    requestedVolunteers: RequestedVolunteersOverPeriod[],
+    interval: Period,
+  ) {
+    return requestedVolunteers
+      .filter(includedPeriods(interval))
+      .reduce((acc, { requestedVolunteers }) => acc + requestedVolunteers, 0);
+  }
+
+  private countAvailableVolunteersOnInterval(
+    availabilities: VolunteerAvailability[],
+    interval: Period,
+  ) {
+    return availabilities.filter(includedPeriods(interval)).length;
   }
 
   private async getRequestedVolunteers(
@@ -124,9 +141,6 @@ export class OrgaNeedsService {
   }
 }
 
-function includedPeriods({
-  start,
-  end,
-}: Period): (value: Period & unknown) => unknown {
+function includedPeriods({ start, end }: Period): (value: Period) => boolean {
   return (period) => period.start < end && period.end > start;
 }
