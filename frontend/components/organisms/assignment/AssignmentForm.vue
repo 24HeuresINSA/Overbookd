@@ -26,25 +26,38 @@
             class="planning__calendar"
           >
             <template #category="{ category }">
-              <div class="candidate">
-                <v-btn
-                  v-if="isReplacable(category)"
-                  icon
-                  @click="previousCandidate"
-                >
-                  <v-icon>mdi-chevron-left</v-icon>
-                </v-btn>
-                <VolunteerResumeCalendarHeader
-                  v-if="retrieveVolunteer(category)"
-                  :volunteer="retrieveVolunteer(category)"
-                ></VolunteerResumeCalendarHeader>
-                <v-btn
-                  v-if="isReplacable(category)"
-                  icon
-                  @click="nextCandidate"
-                >
-                  <v-icon>mdi-chevron-right</v-icon>
-                </v-btn>
+              <div class="calendar-header">
+                <div class="calendar-header__action">
+                  <v-btn
+                    v-if="isRemovable(category)"
+                    icon
+                    color="red"
+                    @click="removeLastCandidate()"
+                  >
+                    <v-icon>mdi-account-minus</v-icon>
+                  </v-btn>
+                </div>
+                <div class="calendar-header__candidate">
+                  <v-btn
+                    v-if="isReplacable(category)"
+                    icon
+                    @click="previousCandidate"
+                  >
+                    <v-icon>mdi-chevron-left</v-icon>
+                  </v-btn>
+                  <VolunteerResumeCalendarHeader
+                    v-if="retrieveVolunteer(category)"
+                    :volunteer="retrieveVolunteer(category)"
+                    class="volunteer-resume"
+                  ></VolunteerResumeCalendarHeader>
+                  <v-btn
+                    v-if="isReplacable(category)"
+                    icon
+                    @click="nextCandidate"
+                  >
+                    <v-icon>mdi-chevron-right</v-icon>
+                  </v-btn>
+                </div>
               </div>
             </template>
             <template #interval="{ hour, time, timeToY }">
@@ -283,6 +296,15 @@ export default Vue.extend({
       );
       return candidateIndex === 0;
     },
+    isRemovable(volunteerId: string): boolean {
+      return (
+        this.isLastAddedCandidate(volunteerId) &&
+        !this.isFirstAddedCandidate(volunteerId)
+      );
+    },
+    removeLastCandidate(): void {
+      this.$accessor.assignment.removeLastCandidate();
+    },
   },
 });
 </script>
@@ -366,20 +388,32 @@ export default Vue.extend({
   right: 3px;
 }
 
-.candidate {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  &-teams {
-    min-width: $calendar-category-column-min-width;
+.calendar-header {
+  &__candidate {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    .not-selected {
-      opacity: 0.4;
+    gap: 2px;
+    .volunteer-resume {
+      width: 100%;
     }
+    &-teams {
+      min-width: $calendar-category-column-min-width;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      .not-selected {
+        opacity: 0.4;
+      }
+    }
+  }
+
+  &__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
   }
 }
 </style>

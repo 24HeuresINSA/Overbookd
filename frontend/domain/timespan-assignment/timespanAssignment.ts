@@ -1,4 +1,4 @@
-import { updateItemToList } from "~/utils/functions/list";
+import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { VolunteerTask } from "~/utils/models/user";
 import { getUnderlyingTeams } from "./underlying-teams";
@@ -87,6 +87,17 @@ export class TaskAssignment {
     }
     this._candidates = [...this._candidates, candidate];
     this._potentialCandidates = [...this._friends];
+    return this;
+  }
+
+  removeLastCandidate(): TaskAssignment {
+    const hasOnlyOneCandidate = this._candidates.length === 1;
+    if (hasOnlyOneCandidate) return this;
+
+    this._candidates = removeItemAtIndex(
+      this._candidates,
+      this._candidates.length - 1
+    );
     return this;
   }
 

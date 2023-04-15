@@ -171,6 +171,10 @@ export const mutations = mutationTree(state, {
     state.taskAssignment = state.taskAssignment.addCandidate(candidate);
   },
 
+  REMOVE_LAST_CANDIDATE(state) {
+    state.taskAssignment = state.taskAssignment.removeLastCandidate();
+  },
+
   SET_PREVIOUS_CANDIDATE(state) {
     state.taskAssignment =
       state.taskAssignment.changeLastCandidateToPreviousFriend();
@@ -404,6 +408,11 @@ export const actions = actionTree(
       if (!volunteer) return;
       commit("ADD_CANDIDATE", volunteer);
       dispatch("retrieveVolunteerRelatedData", volunteer.id);
+    },
+
+    removeLastCandidate({ commit, dispatch }) {
+      commit("REMOVE_LAST_CANDIDATE");
+      dispatch("retrieveLastCandidateRelatedData");
     },
 
     previousCandidate({ commit, dispatch }) {
