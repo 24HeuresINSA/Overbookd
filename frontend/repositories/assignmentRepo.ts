@@ -78,4 +78,16 @@ export class AssignmentRepository {
       `${this.basePath}/ft-timespans/${timespanId}`
     );
   }
+
+  static updateAffectedTeam(
+    context: Context,
+    timespanId: number,
+    assigneeId: number,
+    team: string
+  ) {
+    return context.$axios.patch<void>(
+      `${this.basePath}/ft-timespans/${timespanId}/assignees/${assigneeId}/affected-team`,
+      { team }
+    );
+  }
 }

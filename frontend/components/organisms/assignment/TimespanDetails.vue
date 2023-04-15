@@ -70,7 +70,7 @@
               <v-icon color="red" @click="cancelUpdateAffectedTeam()">
                 mdi-close-circle
               </v-icon>
-              <v-icon color="green" @click="updateAffectedTeam(item.id)">
+              <v-icon color="green" @click="updateAffectedTeam(item)">
                 mdi-check-circle
               </v-icon>
             </div>
@@ -193,10 +193,7 @@ export default Vue.extend({
   methods: {
     unassignVolunteer(assignee: TimespanAssignee) {
       if (!this.timespan) return;
-      this.$accessor.assignment.unassignVolunteer({
-        timespanId: this.timespan.id,
-        assigneeId: assignee.id,
-      });
+      this.$accessor.assignment.unassignVolunteer(assignee.id);
     },
     closeDialog() {
       this.$emit("close-dialog");
@@ -215,12 +212,14 @@ export default Vue.extend({
     },
     getAssignableTeamsForVolunteer(assignee: TimespanAssignee) {
       const volunteerTeams = this.getAllVolunteerTeams(assignee);
-      return this.allTimespansTeamCodes.filter((team) =>
-        volunteerTeams.includes(team)
+      const assignableTeams = this.allTimespansTeamCodes.filter(
+        (team) =>
+          volunteerTeams.includes(team) && team !== assignee.assignedTeam
       );
+      return [assignee.assignedTeam, ...assignableTeams];
     },
     canUpdateAffectedTeam(assignee: TimespanAssignee): boolean {
-      return this.getAssignableTeamsForVolunteer(assignee).length > 0;
+      return this.getAssignableTeamsForVolunteer(assignee).length > 1;
     },
     toggleUpdateAffectedTeam(assignee: TimespanAssignee) {
       if (this.selectedAssigneeId === null) {
@@ -243,13 +242,17 @@ export default Vue.extend({
       this.selectedAssigneeId = null;
       this.selectedTeamToAssign = null;
     },
-    updateAffectedTeam(assigneeId: number) {
-      if (!this.timespan) return;
-      /*this.$accessor.assignment.updateAffectedTeam({
-        timespanId: this.timespan.id,
-        assigneeId,
-        this.selectedTeamToAssign,
-      });*/
+    updateAffectedTeam(assignee: TimespanAssignee) {
+      console.log(assignee);
+      if (!this.selectedAssigneeId || !this.selectedTeamToAssign) return;
+      if (this.selectedTeamToAssign === assignee.assignedTeam) {
+        this.cancelUpdateAffectedTeam();
+        return;
+      }
+      this.$accessor.assignment.updateAffectedTeam({
+        assigneeId: this.selectedAssigneeId,
+        teamCode: this.selectedTeamToAssign,
+      });
       this.cancelUpdateAffectedTeam();
     },
   },
@@ -257,6 +260,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.close-btn {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+}
+
 .timespan-metadata {
   display: flex;
   gap: 15px;

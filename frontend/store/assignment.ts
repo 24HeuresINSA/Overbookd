@@ -376,10 +376,9 @@ export const actions = actionTree(
       dispatch("setSelectedTimespan", updatedTimespan);
     },
 
-    async unassignVolunteer(
-      { state, dispatch },
-      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
-    ) {
+    async unassignVolunteer({ state, dispatch }, assigneeId: number) {
+      if (!state.timespanToDisplayDetails) return;
+      const timespanId = state.timespanToDisplayDetails.id;
       const res = await safeCall(
         this,
         AssignmentRepo.unassign(this, timespanId, assigneeId),
@@ -389,18 +388,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchTimespanDetails", timespanId);
-      const route = this.$router.currentRoute.fullPath;
-      const isOrgaTaskMode =
-        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
-
-      if (isOrgaTaskMode) {
-        dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
-        dispatch("fetchTimespansForVolunteer", assigneeId);
-        return;
-      }
-      dispatch("fetchTimespansWithStats", state.selectedFt?.id);
-      dispatch("fetchVolunteersForTimespan", timespanId);
+      dispatch("fetchVariablesAfterTimespanDetailsUpdate", assigneeId);
     },
 
     async addCandidate({ state, commit, dispatch }) {
@@ -439,6 +427,49 @@ export const actions = actionTree(
       if (!res) return;
       const timespan = convertToTimespanWithAssignees(res.data);
       commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespan);
+    },
+
+    fetchVariablesAfterTimespanDetailsUpdate(
+      { state, dispatch },
+      assigneeId: number
+    ) {
+      if (!state.timespanToDisplayDetails) return;
+      const timespanId = state.timespanToDisplayDetails.id;
+      dispatch("fetchTimespanDetails", timespanId);
+
+      const route = this.$router.currentRoute.fullPath;
+      const isOrgaTaskMode =
+        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
+
+      if (isOrgaTaskMode) {
+        dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
+        dispatch("fetchTimespansForVolunteer", assigneeId);
+        return;
+      }
+      dispatch("fetchTimespansWithStats", state.selectedFt?.id);
+      dispatch("fetchVolunteersForTimespan", timespanId);
+    },
+
+    async updateAffectedTeam(
+      { state, dispatch },
+      { assigneeId, teamCode }: { assigneeId: number; teamCode: string }
+    ) {
+      if (!state.timespanToDisplayDetails) return;
+      const res = await safeCall(
+        this,
+        AssignmentRepo.updateAffectedTeam(
+          this,
+          state.timespanToDisplayDetails.id,
+          assigneeId,
+          teamCode
+        ),
+        {
+          successMessage: "L'équipe affectée a été mise à jour 🥳",
+          errorMessage: "L'équipe affectée n'a pas pu être mise à jour 😢",
+        }
+      );
+      if (!res) return;
+      dispatch("fetchVariablesAfterTimespanDetailsUpdate", assigneeId);
     },
   }
 );

@@ -49,3 +49,13 @@ export class AssignmentRequestDto {
   @IsPositive()
   timespanId: number;
 }
+
+export class UpdateAffectedTeamRequestDto {
+  @ApiProperty({
+    required: true,
+    description: 'The team code volunteer will be assigned as',
+    type: String,
+  })
+  @IsString()
+  team: string;
+}
