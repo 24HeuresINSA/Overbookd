@@ -37,7 +37,7 @@
           Aucun bénévole requis spécifiquement sur ce créneau
         </p>
       </div>
-      <div>
+      <div class="assignees">
         <h2>Bénévoles affectés sur le créneau</h2>
         <v-data-table
           :headers="headers"
@@ -52,25 +52,29 @@
               v-for="team in item.teams"
               :key="team"
               :team="team"
-              class="ml-1"
+              class="assignee-team"
             ></TeamIconChip>
           </template>
           <template #item.assignedTeam="{ item }">
-            <div v-if="isUpdateAffectedTeamToggled(item.id)">
-              <TeamIconChip
-                v-for="team of getAssignableTeamsForVolunteer(item)"
-                :key="team"
-                :team="team"
-                size="medium"
-                class="mr-1"
-                with-name
-                :class="{ 'not-selected': isTeamNotSelected(team) }"
-                @click="selectTeamToAssign(team)"
-              ></TeamIconChip>
-              <v-icon color="red" @click="cancelUpdateAffectedTeam()">
+            <div
+              v-if="isUpdateAssignedTeamActiveForAssignee(item.id)"
+              class="team-update"
+            >
+              <div class="team-update__teams">
+                <TeamIconChip
+                  v-for="team of getAssignableTeamsForVolunteer(item)"
+                  :key="team"
+                  :team="team"
+                  size="medium"
+                  with-name
+                  :class="{ 'not-selected': isTeamNotSelected(team) }"
+                  @click="selectTeamToAssign(team)"
+                ></TeamIconChip>
+              </div>
+              <v-icon color="red" @click="cancelUpdateAssignedTeam()">
                 mdi-close-circle
               </v-icon>
-              <v-icon color="green" @click="updateAffectedTeam(item)">
+              <v-icon color="green" @click="updateAssignedTeam(item)">
                 mdi-check-circle
               </v-icon>
             </div>
@@ -94,9 +98,9 @@
               <v-icon>mdi-calendar</v-icon>
             </v-btn>
             <v-btn
-              v-if="canUpdateAffectedTeam(item)"
+              v-if="canActivateAssignedTeamUpdate(item)"
               icon
-              @click="toggleUpdateAffectedTeam(item)"
+              @click="toggleUpdateAssignedTeam(item)"
             >
               <v-icon>mdi-swap-vertical</v-icon>
             </v-btn>
@@ -117,11 +121,13 @@ import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
+import { UpdateAssignedTeam } from "~/utils/models/assignment";
 import {
   TimespanAssignee,
   TimespanWithAssignees,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
+import { isNumber, isString } from "~/utils/types/check";
 
 export default Vue.extend({
   name: "TimespanDetails",
@@ -166,6 +172,9 @@ export default Vue.extend({
         .filter((team) => team.quantity > team.assignmentCount)
         .map((team) => team.code);
     },
+    isUpdateAssignedTeamActive(): boolean {
+      return this.selectedAssigneeId !== null;
+    },
     headers(): Header[] {
       const volunteer = {
         text: "Bénévole",
@@ -184,7 +193,7 @@ export default Vue.extend({
         sortable: false,
       };
       const actions = { text: "Actions", value: "actions", sortable: false };
-      if (this.selectedAssigneeId !== null) {
+      if (this.isUpdateAssignedTeamActive) {
         return [volunteer, assignedTeam, actions];
       }
       return [volunteer, assignedTeam, friends, actions];
@@ -193,7 +202,10 @@ export default Vue.extend({
   methods: {
     unassignVolunteer(assignee: TimespanAssignee) {
       if (!this.timespan) return;
-      this.$accessor.assignment.unassignVolunteer(assignee.id);
+      this.$accessor.assignment.unassignVolunteer({
+        timespanId: this.timespan.id,
+        assigneeId: assignee.id,
+      });
     },
     closeDialog() {
       this.$emit("close-dialog");
@@ -218,18 +230,18 @@ export default Vue.extend({
       );
       return [assignee.assignedTeam, ...assignableTeams];
     },
-    canUpdateAffectedTeam(assignee: TimespanAssignee): boolean {
+    canActivateAssignedTeamUpdate(assignee: TimespanAssignee): boolean {
       return this.getAssignableTeamsForVolunteer(assignee).length > 1;
     },
-    toggleUpdateAffectedTeam(assignee: TimespanAssignee) {
-      if (this.selectedAssigneeId === null) {
-        this.selectedAssigneeId = assignee.id;
-        this.selectedTeamToAssign = assignee.assignedTeam;
+    toggleUpdateAssignedTeam(assignee: TimespanAssignee) {
+      if (this.isUpdateAssignedTeamActive) {
+        this.cancelUpdateAssignedTeam();
         return;
       }
-      this.cancelUpdateAffectedTeam();
+      this.selectedAssigneeId = assignee.id;
+      this.selectedTeamToAssign = assignee.assignedTeam;
     },
-    isUpdateAffectedTeamToggled(assigneeId: number): boolean {
+    isUpdateAssignedTeamActiveForAssignee(assigneeId: number): boolean {
       return this.selectedAssigneeId === assigneeId;
     },
     selectTeamToAssign(team: string) {
@@ -238,22 +250,34 @@ export default Vue.extend({
     isTeamNotSelected(team: string): boolean {
       return this.selectedTeamToAssign !== team;
     },
-    cancelUpdateAffectedTeam() {
+    cancelUpdateAssignedTeam() {
       this.selectedAssigneeId = null;
       this.selectedTeamToAssign = null;
     },
-    updateAffectedTeam(assignee: TimespanAssignee) {
-      console.log(assignee);
-      if (!this.selectedAssigneeId || !this.selectedTeamToAssign) return;
+    canUpdateAssignedTeam(input: {
+      timespanId?: number | null;
+      assigneeId: number | null;
+      team: string | null;
+    }): input is UpdateAssignedTeam {
+      return (
+        isNumber(input.timespanId) &&
+        isNumber(input.assigneeId) &&
+        isString(input.team)
+      );
+    },
+    updateAssignedTeam(assignee: TimespanAssignee) {
+      const updateAssignedTeamForm = {
+        timespanId: this.timespan?.id,
+        assigneeId: this.selectedAssigneeId,
+        team: this.selectedTeamToAssign,
+      };
+      if (!this.canUpdateAssignedTeam(updateAssignedTeamForm)) return;
       if (this.selectedTeamToAssign === assignee.assignedTeam) {
-        this.cancelUpdateAffectedTeam();
+        this.cancelUpdateAssignedTeam();
         return;
       }
-      this.$accessor.assignment.updateAffectedTeam({
-        assigneeId: this.selectedAssigneeId,
-        teamCode: this.selectedTeamToAssign,
-      });
-      this.cancelUpdateAffectedTeam();
+      this.$accessor.assignment.updateAssignedTeam(updateAssignedTeamForm);
+      this.cancelUpdateAssignedTeam();
     },
   },
 });
@@ -285,6 +309,20 @@ export default Vue.extend({
       flex-wrap: wrap;
       margin: 4px 0;
     }
+  }
+}
+
+.assignee-team {
+  margin-left: 4px;
+}
+
+.team-update {
+  display: flex;
+  gap: 3px;
+  &__teams {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
   }
 }
 

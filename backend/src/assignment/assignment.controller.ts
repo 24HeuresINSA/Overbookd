@@ -23,7 +23,7 @@ import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { AssignmentService } from './assignment.service';
 import {
   AssignmentRequestDto,
-  UpdateAffectedTeamRequestDto,
+  UpdateAssignedTeamRequestDto,
 } from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import {
@@ -215,12 +215,12 @@ export class AssignmentController {
     status: 200,
     description: 'Update affected team for assignee',
   })
-  updateAffectedTeam(
+  updateAssignedTeam(
     @Param('timespanId', ParseIntPipe) timespanId: number,
     @Param('assigneeId', ParseIntPipe) assigneeId: number,
-    @Body() { team }: UpdateAffectedTeamRequestDto,
-  ) {
-    return this.assignmentService.updateAffectedTeam(
+    @Body() { team }: UpdateAssignedTeamRequestDto,
+  ): Promise<AssignmentResponseDto> {
+    return this.assignmentService.updateAssignedTeam(
       timespanId,
       assigneeId,
       team,

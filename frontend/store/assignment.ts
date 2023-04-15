@@ -7,17 +7,18 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
   AssignmentModes,
+  UpdateAssignedTeam,
   Volunteer,
   getAssignmentModeFromRoute,
 } from "~/utils/models/assignment";
 import {
+  AvailableTimespan,
   FtTimespan,
   FtTimespanWithRequestedTeams,
   FtWithTimespan,
   TimespanWithAssignees,
-  castFtsWithTimespansWithDate,
   castAvailableTimespansWithDate,
-  AvailableTimespan,
+  castFtsWithTimespansWithDate,
 } from "~/utils/models/ftTimespan";
 import {
   User,
@@ -376,9 +377,10 @@ export const actions = actionTree(
       dispatch("setSelectedTimespan", updatedTimespan);
     },
 
-    async unassignVolunteer({ state, dispatch }, assigneeId: number) {
-      if (!state.timespanToDisplayDetails) return;
-      const timespanId = state.timespanToDisplayDetails.id;
+    async unassignVolunteer(
+      { dispatch },
+      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
+    ) {
       const res = await safeCall(
         this,
         AssignmentRepo.unassign(this, timespanId, assigneeId),
@@ -388,7 +390,10 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchVariablesAfterTimespanDetailsUpdate", assigneeId);
+      dispatch("fetchVariablesAfterTimespanDetailsUpdate", {
+        timespanId,
+        assigneeId,
+      });
     },
 
     async addCandidate({ state, commit, dispatch }) {
@@ -431,10 +436,8 @@ export const actions = actionTree(
 
     fetchVariablesAfterTimespanDetailsUpdate(
       { state, dispatch },
-      assigneeId: number
+      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
     ) {
-      if (!state.timespanToDisplayDetails) return;
-      const timespanId = state.timespanToDisplayDetails.id;
       dispatch("fetchTimespanDetails", timespanId);
 
       const route = this.$router.currentRoute.fullPath;
@@ -450,26 +453,24 @@ export const actions = actionTree(
       dispatch("fetchVolunteersForTimespan", timespanId);
     },
 
-    async updateAffectedTeam(
-      { state, dispatch },
-      { assigneeId, teamCode }: { assigneeId: number; teamCode: string }
+    async updateAssignedTeam(
+      { dispatch },
+      { timespanId, assigneeId, team }: UpdateAssignedTeam
     ) {
-      if (!state.timespanToDisplayDetails) return;
+      const data = { timespanId, assigneeId, team };
       const res = await safeCall(
         this,
-        AssignmentRepo.updateAffectedTeam(
-          this,
-          state.timespanToDisplayDetails.id,
-          assigneeId,
-          teamCode
-        ),
+        AssignmentRepo.updateAssignedTeam(this, data),
         {
           successMessage: "L'équipe affectée a été mise à jour 🥳",
           errorMessage: "L'équipe affectée n'a pas pu être mise à jour 😢",
         }
       );
       if (!res) return;
-      dispatch("fetchVariablesAfterTimespanDetailsUpdate", assigneeId);
+      dispatch("fetchVariablesAfterTimespanDetailsUpdate", {
+        timespanId,
+        assigneeId,
+      });
     },
   }
 );

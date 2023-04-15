@@ -125,19 +125,22 @@ export class AssignmentService {
     });
   }
 
-  async updateAffectedTeam(
+  async updateAssignedTeam(
     timespanId: number,
     assigneeId: number,
     teamCode: string,
-  ): Promise<void> {
+  ): Promise<Assignment> {
     const timespan = await this.retrieveTimespan(timespanId, teamCode);
     const teamRequestId = this.retrieveTeamRequestId(timespan, teamCode);
-    await this.prisma.assignment.updateMany({
+    return this.prisma.assignment.update({
       where: {
-        timespanId,
-        assigneeId,
+        timespanId_assigneeId: {
+          timespanId,
+          assigneeId,
+        },
       },
       data: { teamRequestId },
+      select: SELECT_ASSIGNMENT,
     });
   }
 

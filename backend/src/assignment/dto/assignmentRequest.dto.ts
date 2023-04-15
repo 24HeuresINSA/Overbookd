@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsNumber,
@@ -7,7 +8,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { VolunteerAssignmentRequest } from '../assignment.service';
-import { Type } from 'class-transformer';
 
 class VolunteerAssignmentRequestDto implements VolunteerAssignmentRequest {
   @ApiProperty({
@@ -50,7 +50,7 @@ export class AssignmentRequestDto {
   timespanId: number;
 }
 
-export class UpdateAffectedTeamRequestDto {
+export class UpdateAssignedTeamRequestDto {
   @ApiProperty({
     required: true,
     description: 'The team code volunteer will be assigned as',
