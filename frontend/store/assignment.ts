@@ -7,17 +7,18 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
   AssignmentModes,
+  UpdateAssignedTeam,
   Volunteer,
   getAssignmentModeFromRoute,
 } from "~/utils/models/assignment";
 import {
+  AvailableTimespan,
   FtTimespan,
   FtTimespanWithRequestedTeams,
   FtWithTimespan,
   TimespanWithAssignees,
-  castFtsWithTimespansWithDate,
   castAvailableTimespansWithDate,
-  AvailableTimespan,
+  castFtsWithTimespansWithDate,
 } from "~/utils/models/ftTimespan";
 import {
   User,
@@ -377,7 +378,7 @@ export const actions = actionTree(
     },
 
     async unassignVolunteer(
-      { state, dispatch },
+      { dispatch },
       { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
     ) {
       const res = await safeCall(
@@ -389,18 +390,10 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchTimespanDetails", timespanId);
-      const route = this.$router.currentRoute.fullPath;
-      const isOrgaTaskMode =
-        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
-
-      if (isOrgaTaskMode) {
-        dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
-        dispatch("fetchTimespansForVolunteer", assigneeId);
-        return;
-      }
-      dispatch("fetchTimespansWithStats", state.selectedFt?.id);
-      dispatch("fetchVolunteersForTimespan", timespanId);
+      dispatch("restoreStateAfterTimespanDetailsUpdate", {
+        timespanId,
+        assigneeId,
+      });
     },
 
     async addCandidate({ state, commit, dispatch }) {
@@ -439,6 +432,45 @@ export const actions = actionTree(
       if (!res) return;
       const timespan = convertToTimespanWithAssignees(res.data);
       commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespan);
+    },
+
+    restoreStateAfterTimespanDetailsUpdate(
+      { state, dispatch },
+      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
+    ) {
+      dispatch("fetchTimespanDetails", timespanId);
+
+      const route = this.$router.currentRoute.fullPath;
+      const isOrgaTaskMode =
+        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
+
+      if (isOrgaTaskMode) {
+        dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
+        dispatch("fetchTimespansForVolunteer", assigneeId);
+        return;
+      }
+      dispatch("fetchTimespansWithStats", state.selectedFt?.id);
+      dispatch("fetchVolunteersForTimespan", timespanId);
+    },
+
+    async updateAssignedTeam(
+      { dispatch },
+      { timespanId, assigneeId, team }: UpdateAssignedTeam
+    ) {
+      const data = { timespanId, assigneeId, team };
+      const res = await safeCall(
+        this,
+        AssignmentRepo.updateAssignedTeam(this, data),
+        {
+          successMessage: "L'équipe affectée a été mise à jour 🥳",
+          errorMessage: "L'équipe affectée n'a pas pu être mise à jour 😢",
+        }
+      );
+      if (!res) return;
+      dispatch("restoreStateAfterTimespanDetailsUpdate", {
+        timespanId,
+        assigneeId,
+      });
     },
   }
 );

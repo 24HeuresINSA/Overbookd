@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -20,7 +21,10 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { AssignmentService } from './assignment.service';
-import { AssignmentRequestDto } from './dto/assignmentRequest.dto';
+import {
+  AssignmentRequestDto,
+  UpdateAssignedTeamRequestDto,
+} from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
 import {
   FtTimespanResponseDto,
@@ -200,6 +204,27 @@ export class AssignmentController {
     return this.assignmentService.unassignVolunteerToTimespan(
       assigneeId,
       timespanId,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('can-affect')
+  @Patch('ft-timespans/:timespanId/assignees/:assigneeId/affected-team')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Update assigned team for assignee',
+    type: AssignmentResponseDto,
+  })
+  updateAssignedTeam(
+    @Param('timespanId', ParseIntPipe) timespanId: number,
+    @Param('assigneeId', ParseIntPipe) assigneeId: number,
+    @Body() { team }: UpdateAssignedTeamRequestDto,
+  ): Promise<AssignmentResponseDto> {
+    return this.assignmentService.updateAssignedTeam(
+      timespanId,
+      assigneeId,
+      team,
     );
   }
 }

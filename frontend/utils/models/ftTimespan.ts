@@ -78,6 +78,7 @@ export interface AvailableTimespan extends FtTimespanWithRequestedTeams {
 }
 
 export interface TimespanAssignee extends User {
+  teams: string[];
   assignedTeam: string;
   friends: User[];
 }

@@ -125,6 +125,25 @@ export class AssignmentService {
     });
   }
 
+  async updateAssignedTeam(
+    timespanId: number,
+    assigneeId: number,
+    teamCode: string,
+  ): Promise<Assignment> {
+    const timespan = await this.retrieveTimespan(timespanId, teamCode);
+    const teamRequestId = this.retrieveTeamRequestId(timespan, teamCode);
+    return this.prisma.assignment.update({
+      where: {
+        timespanId_assigneeId: {
+          timespanId,
+          assigneeId,
+        },
+      },
+      data: { teamRequestId },
+      select: SELECT_ASSIGNMENT,
+    });
+  }
+
   private async retrieveTimespan(timespanId: number, teamCode: string) {
     const timespan = await this.getTimespanWithItStats(timespanId, teamCode);
 

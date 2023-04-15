@@ -15,6 +15,12 @@ export interface Volunteer extends User {
   hasFriendAssigned?: boolean;
 }
 
+export interface UpdateAssignedTeam {
+  timespanId: number;
+  assigneeId: number;
+  team: string;
+}
+
 export function getAssignmentModeFromRoute(url: string): string {
   const mode = url.split("/").at(-1);
   return mode ?? AssignmentModes.ORGA_TASK;

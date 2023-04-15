@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { BulkAssignmentRequest } from "~/store/assignment";
-import { Volunteer } from "~/utils/models/assignment";
+import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment";
 import {
   AvailableTimespan,
   FtTimespanWithRequestedTeams,
@@ -76,6 +76,16 @@ export class AssignmentRepository {
   static getTimespanDetails(context: Context, timespanId: number) {
     return context.$axios.get<HttpStringified<TimespanWithAssignees>>(
       `${this.basePath}/ft-timespans/${timespanId}`
+    );
+  }
+
+  static updateAssignedTeam(
+    context: Context,
+    { timespanId, assigneeId, team }: UpdateAssignedTeam
+  ) {
+    return context.$axios.patch<HttpStringified<AssignmentResponse>>(
+      `${this.basePath}/ft-timespans/${timespanId}/assignees/${assigneeId}/affected-team`,
+      { team }
     );
   }
 }

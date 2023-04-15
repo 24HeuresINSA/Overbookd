@@ -3,7 +3,7 @@ import { FtStatus, TaskCategory } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
-import { UserService } from 'src/user/user.service';
+import { UserService, SELECT_USER_TEAMS } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import {
@@ -396,6 +396,7 @@ export class FtTimespanService {
           assignee: {
             select: {
               ...SELECT_ASSIGNEE,
+              ...SELECT_USER_TEAMS,
               ...SELECT_VOLUNTEERS_ALSO_ASSIGNED_ASKING_ME_AS_FRIEND,
               ...SELECT_VOLUNTEERS_ALSO_ASSIGNED_ASKED_AS_MY_FRIEND,
             },
@@ -581,12 +582,14 @@ function convertToTimespanAssignee({
   assignee,
   teamRequest,
 }: DatabaseAssignmentsAsTeamMember): TimespanAssignee {
+  const teams = assignee.team.map(({ team }) => team.code);
   const friends = extractDeduplicatedFriends(assignee);
 
   return {
     id: assignee.id,
     firstname: assignee.firstname,
     lastname: assignee.lastname,
+    teams,
     assignedTeam: teamRequest.teamCode,
     friends,
   };

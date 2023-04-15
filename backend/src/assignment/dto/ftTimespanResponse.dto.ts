@@ -144,6 +144,7 @@ class TimespanAssigneeRepresentation
   extends AssigneeRepresentation
   implements TimespanAssignee
 {
+  teams: string[];
   assignedTeam: string;
   friends: AssigneeRepresentation[];
 }
