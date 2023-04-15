@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OrgaNeedsResponse } from '../orga-needs.service';
 
-export class OrgaNeedsResponseDto {
+export class OrgaNeedsResponseDto implements OrgaNeedsResponse {
   @ApiProperty({
     name: 'start',
     description: 'The start of the interval',

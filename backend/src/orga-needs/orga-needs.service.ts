@@ -1,27 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { OrgaNeedsResponseDto } from './dto/orga-needs-response.dto';
 import { VolunteerAvailability } from '@prisma/client';
 import { WHERE_VALIDATED_USER } from 'src/assignment/volunteer.service';
+import { OrgaNeedsRequestDto } from './dto/orga-needs-request.dto';
 
-const TIME_IN_ONE_MINUTE = 60 * 1000;
-const TIME_IN_15_MINUTES = 15 * TIME_IN_ONE_MINUTE;
+const ONE_MINUTE_IN_MS = 60 * 1000;
+const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
+const ONE_DAY_IN_MS = 24 * 60 * ONE_MINUTE_IN_MS;
+
+export interface OrgaNeedsResponse {
+  start: Date;
+  end: Date;
+  availableVolunteers: number;
+}
 
 @Injectable()
 export class OrgaNeedsService {
   constructor(private prisma: PrismaService) {}
 
-  async orgaNeeds(selectedDay: Date): Promise<OrgaNeedsResponseDto[]> {
-    const { startOfDay, endOfDay } = this.getStartAndEndOfDay(selectedDay);
-    const intervals = this.buildOrgaNeedsIntervals(startOfDay);
+  async orgaNeeds(body: OrgaNeedsRequestDto): Promise<OrgaNeedsResponse[]> {
+    const { startOfDay, endOfDay } = this.getStartAndEndOfDay(body.selectedDay);
+    const intervals = this.buildOrgaNeedsIntervals(startOfDay, endOfDay);
     return this.getAvailableVolunteers(startOfDay, endOfDay, intervals);
   }
 
   private async getAvailableVolunteers(
     startOfDay: Date,
     endOfDay: Date,
-    intervals: OrgaNeedsResponseDto[],
-  ): Promise<OrgaNeedsResponseDto[]> {
+    intervals: OrgaNeedsResponse[],
+  ): Promise<OrgaNeedsResponse[]> {
     const availabilities = await this.getAvailabilities(startOfDay, endOfDay);
 
     for (const availability of availabilities) {
@@ -50,24 +57,30 @@ export class OrgaNeedsService {
     });
   }
 
-  private getStartAndEndOfDay(selectedDay: Date) {
+  private getStartAndEndOfDay(selectedDay: string) {
     const startOfDay = new Date(selectedDay);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date(selectedDay);
-    endOfDay.setHours(23, 59, 59, 999);
+    const endOfDay = new Date(startOfDay.getTime() + ONE_DAY_IN_MS);
 
     return { startOfDay, endOfDay };
   }
 
-  private buildOrgaNeedsIntervals(startOfDay: Date): OrgaNeedsResponseDto[] {
-    return Array(96)
+  private buildOrgaNeedsIntervals(
+    startOfDay: Date,
+    endOfDay: Date,
+  ): OrgaNeedsResponse[] {
+    const numberOfIntervals = Math.floor(
+      (endOfDay.getTime() - startOfDay.getTime()) / FIFTEEN_MINUTES_IN_MS,
+    );
+
+    return Array(numberOfIntervals)
       .fill({})
       .map((_, index) => {
         const start = new Date(
-          startOfDay.getTime() + index * TIME_IN_15_MINUTES,
+          startOfDay.getTime() + index * FIFTEEN_MINUTES_IN_MS,
         );
-        const end = new Date(start.getTime() + TIME_IN_15_MINUTES);
+        const end = new Date(start.getTime() + FIFTEEN_MINUTES_IN_MS);
         return { start, end, availableVolunteers: 0 };
       });
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -11,6 +11,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { OrgaNeedsResponseDto } from './dto/orga-needs-response.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { OrgaNeedsRequestDto } from './dto/orga-needs-request.dto';
 
 @ApiTags('orga-needs')
 @Controller('orga-needs')
@@ -26,16 +27,16 @@ export class OrgaNeedsController {
   constructor(private readonly orgaNeedsService: OrgaNeedsService) {}
 
   @Permission('hard')
-  @Get(':selectedDay')
+  @Post()
   @ApiResponse({
     status: 200,
-    description: 'Get all permissions',
+    description: 'Returns the needs for a given day per 15 minutes interval',
     type: OrgaNeedsResponseDto,
     isArray: true,
   })
   async getOrgaNeeds(
-    @Param('selectedDay') selectedDay: Date,
+    @Body() body: OrgaNeedsRequestDto,
   ): Promise<OrgaNeedsResponseDto[]> {
-    return this.orgaNeedsService.orgaNeeds(selectedDay);
+    return this.orgaNeedsService.orgaNeeds(body);
   }
 }
