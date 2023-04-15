@@ -10,6 +10,7 @@ const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
 export interface OrgaNeedsResponse {
   start: Date;
   end: Date;
+  assignedVolunteers: number;
   availableVolunteers: number;
   requestedVolunteers: number;
 }
@@ -29,8 +30,29 @@ const SELECT_REQUESTED_VOLUNTEERS = {
   },
 };
 
+const SELECT_ASSIGNED_VOLUNTEERS = {
+  start: true,
+  end: true,
+  _count: {
+    select: {
+      assignments: true,
+    },
+  },
+};
+
 type RequestedVolunteersOverPeriod = Period & {
   requestedVolunteers: number;
+};
+
+type AssignmentsOverPeriod = Period & {
+  assigments: number;
+};
+
+type DataBaseOrgaStats = {
+  interval: Period;
+  assignments: AssignmentsOverPeriod[];
+  availabilities: VolunteerAvailability[];
+  requestedVolunteers: RequestedVolunteersOverPeriod[];
 };
 
 @Injectable()
@@ -39,21 +61,29 @@ export class OrgaNeedsService {
 
   async orgaNeeds(period: Period): Promise<OrgaNeedsResponse[]> {
     const intervals = this.buildOrgaNeedsIntervals(period);
-    const [availabilities, requestedVolunteers] = await Promise.all([
-      this.getAvailabilities(period),
-      this.getRequestedVolunteers(period),
-    ]);
+    const [assignments, availabilities, requestedVolunteers] =
+      await Promise.all([
+        this.getAssignments(period),
+        this.getAvailabilities(period),
+        this.getRequestedVolunteers(period),
+      ]);
 
     return intervals.map((interval) =>
-      this.formatIntervalStats(interval, availabilities, requestedVolunteers),
+      this.formatIntervalStats({
+        interval,
+        assignments,
+        availabilities,
+        requestedVolunteers,
+      }),
     );
   }
 
-  private formatIntervalStats(
-    interval: Period,
-    availabilities: VolunteerAvailability[],
-    requestedVolunteers: RequestedVolunteersOverPeriod[],
-  ) {
+  private formatIntervalStats({
+    interval,
+    assignments,
+    availabilities,
+    requestedVolunteers,
+  }: DataBaseOrgaStats) {
     const availableVolunteers = this.countAvailableVolunteersOnInterval(
       availabilities,
       interval,
@@ -62,12 +92,27 @@ export class OrgaNeedsService {
     const requestedVolunteersForInterval =
       this.countRequestedVolunteersOnInterval(requestedVolunteers, interval);
 
+    const assignedVolunteers = this.countAssignedVolunteersOnInterval(
+      assignments,
+      interval,
+    );
+
     return {
       start: interval.start,
       end: interval.end,
+      assignedVolunteers,
       availableVolunteers,
       requestedVolunteers: requestedVolunteersForInterval,
     };
+  }
+
+  private countAssignedVolunteersOnInterval(
+    assignments: AssignmentsOverPeriod[],
+    interval: Period,
+  ) {
+    return assignments
+      .filter(includedPeriods(interval))
+      .reduce((acc, { assigments }) => acc + assigments, 0);
   }
 
   private countRequestedVolunteersOnInterval(
@@ -112,6 +157,21 @@ export class OrgaNeedsService {
         user: WHERE_VALIDATED_USER,
       },
     });
+  }
+
+  private async getAssignments(
+    period: Period,
+  ): Promise<AssignmentsOverPeriod[]> {
+    const assignments = await this.prisma.ftTimespan.findMany({
+      where: this.periodIncludedCondition(period),
+      select: SELECT_ASSIGNED_VOLUNTEERS,
+    });
+
+    return assignments.map(({ start, end, _count }) => ({
+      start,
+      end,
+      assigments: _count.assignments,
+    }));
   }
 
   private buildOrgaNeedsIntervals({
