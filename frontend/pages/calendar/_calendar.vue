@@ -7,13 +7,13 @@
     <template #title>
       <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
       <div class="ml-4">
-        <TeamIconChip
+        <TeamChip
           v-for="team in user?.team"
           :key="team"
           :team="team"
           :with-name="true"
           class="mr-2"
-        />
+        ></TeamChip>
       </div>
       <div v-show="shouldShowStats" class="user-stats">
         <div v-for="stat in stats" :key="stat.category" class="stat">
@@ -48,7 +48,7 @@
 <script lang="ts">
 import Vue from "vue";
 import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import TeamChip from "~/components/atoms/TeamChip.vue";
 import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
@@ -77,7 +77,7 @@ interface CalendarEventWithFt {
 
 export default Vue.extend({
   name: "Calendar",
-  components: { OverCalendarV2, TeamIconChip },
+  components: { OverCalendarV2, TeamChip },
   data: function () {
     return {
       calendarCentralDate: new Date("2023-05-12 00:00+02:00"),

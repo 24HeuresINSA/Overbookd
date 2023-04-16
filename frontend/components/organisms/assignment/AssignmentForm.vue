@@ -79,7 +79,7 @@
               :key="candidate.volunteer.id"
               class="candidate-teams"
             >
-              <TeamIconChip
+              <TeamChip
                 v-for="team of getAssignableTeams(candidate)"
                 :key="team"
                 :team="team"
@@ -89,7 +89,7 @@
                   'not-selected': isNotAssignedAs(team, candidate),
                 }"
                 @click="temporaryAssign(team, candidate)"
-              ></TeamIconChip>
+              ></TeamChip>
             </div>
           </div>
           <v-btn
@@ -123,7 +123,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import TeamChip from "~/components/atoms/TeamChip.vue";
 import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
 import {
   AssignmentCandidate,
@@ -141,7 +141,7 @@ export default Vue.extend({
   name: "AssignmentForm",
   components: {
     VolunteerResumeCalendarHeader,
-    TeamIconChip,
+    TeamChip,
   },
   data: () => {
     return {

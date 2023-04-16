@@ -2,35 +2,37 @@
   <v-chip
     :small="small"
     :large="large"
-    :color="getTeamMetadate(team) ? getTeamMetadate(team).color : 'grey'"
+    :color="color"
+    :class="flipClass"
     @click="sendEvent"
   >
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <v-icon
-          v-if="getTeamMetadate(team)"
+          v-if="teamMetadate"
           :small="small"
           :large="large"
           v-bind="attrs"
           color="white"
           v-on="on"
         >
-          {{ getTeamMetadate(team).icon }}
+          {{ teamMetadate.icon }}
         </v-icon>
         <span v-if="withName" class="name">
-          {{ getTeamMetadate(team).name }}
+          {{ teamMetadate.name }}
         </span>
       </template>
-      <span>{{ getTeamMetadate(team)?.name ?? "" }}</span>
+      <span>{{ teamMetadate?.name ?? "" }}</span>
     </v-tooltip>
   </v-chip>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: "TeamIconChip",
+  name: "TeamChip",
   props: {
     team: {
       type: String,
@@ -52,11 +54,17 @@ export default Vue.extend({
     large(): boolean {
       return this.size === "large";
     },
+    teamMetadate(): Team {
+      return this.$accessor.team.getTeams([this.team])?.[0];
+    },
+    color(): string {
+      return this.teamMetadate?.color ?? "grey";
+    },
+    flipClass(): string {
+      return this.team === "bde" ? "flip" : "";
+    },
   },
   methods: {
-    getTeamMetadate(team: string): any {
-      return this.$accessor.team.getTeams([team])?.[0];
-    },
     sendEvent() {
       this.$emit("click", this.team);
     },
@@ -71,5 +79,8 @@ export default Vue.extend({
 span.name {
   color: white;
   margin-left: 4px;
+}
+.flip {
+  transform: rotate(180deg);
 }
 </style>

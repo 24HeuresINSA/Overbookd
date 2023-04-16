@@ -17,13 +17,13 @@
           <v-icon left>mdi-clock</v-icon>
           <span>{{ timetable }}</span>
         </v-chip>
-        <TeamIconChip
+        <TeamChip
           v-for="team in requestedTeams"
           :key="team"
           :team="team"
           size="medium"
           with-name
-        ></TeamIconChip>
+        ></TeamChip>
       </div>
       <div class="required-volunteers">
         <h2>Bénévoles requis sur le créneau</h2>
@@ -48,12 +48,12 @@
         >
           <template #item.volunteer="{ item }">
             {{ item.firstname }} {{ item.lastname }}
-            <TeamIconChip
+            <TeamChip
               v-for="team in item.teams"
               :key="team"
               :team="team"
               class="assignee-team"
-            ></TeamIconChip>
+            ></TeamChip>
           </template>
           <template #item.assignedTeam="{ item }">
             <div
@@ -61,7 +61,7 @@
               class="team-update"
             >
               <div class="team-update__teams">
-                <TeamIconChip
+                <TeamChip
                   v-for="team of getAssignableTeamsForVolunteer(item)"
                   :key="team"
                   :team="team"
@@ -69,7 +69,7 @@
                   with-name
                   :class="{ 'not-selected': isTeamNotSelected(team) }"
                   @click="selectTeamToAssign(team)"
-                ></TeamIconChip>
+                ></TeamChip>
               </div>
               <v-icon color="red" @click="cancelUpdateAssignedTeam()">
                 mdi-close-circle
@@ -78,12 +78,12 @@
                 mdi-check-circle
               </v-icon>
             </div>
-            <TeamIconChip
+            <TeamChip
               v-else
               :team="item.assignedTeam"
               size="medium"
               with-name
-            ></TeamIconChip>
+            ></TeamChip>
           </template>
           <template #item.friends="{ item }">
             <div class="volunteer-list">
@@ -117,7 +117,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import TeamChip from "~/components/atoms/TeamChip.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
@@ -131,7 +131,7 @@ import { isNumber, isString } from "~/utils/types/check";
 
 export default Vue.extend({
   name: "TimespanDetails",
-  components: { TeamIconChip },
+  components: { TeamChip },
   data: () => ({
     selectedAssigneeId: null as number | null,
     selectedTeamToAssign: null as string | null,

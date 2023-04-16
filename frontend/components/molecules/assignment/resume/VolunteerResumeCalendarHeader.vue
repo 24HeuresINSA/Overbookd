@@ -5,11 +5,11 @@
         <span class="info-row__title">{{ formattedUserInformations }}</span>
       </div>
       <div class="teams">
-        <TeamIconChip
+        <TeamChip
           v-for="team of sortedVolunteerTeams"
           :key="team"
           :team="team"
-        ></TeamIconChip>
+        ></TeamChip>
       </div>
       <p class="stats-text">{{ assignmentStats }}</p>
     </div>
@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import TeamChip from "~/components/atoms/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
 import { moveAtFirstIndex } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
@@ -28,7 +28,7 @@ import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "VolunteerResumeCalendarHeader",
-  components: { TeamIconChip },
+  components: { TeamChip },
   props: {
     volunteer: {
       type: Object as () => Volunteer,
