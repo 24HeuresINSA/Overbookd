@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverChips from "~/components/atoms/OverChips.vue";
+import OverChips from "~/components/atoms/chip/OverChips.vue";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({

@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
+import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarItem } from "~/utils/models/calendar";
 import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";

@@ -79,7 +79,7 @@
 
 <script>
 import planningRepo from "~/repositories/planningRepo";
-import Loader from "~/components/atoms/Loader.vue";
+import Loader from "~/components/atoms/loader/Loader.vue";
 import { Snack } from "~/utils/models/snack";
 import OverField from "~/components/OverField.vue";
 

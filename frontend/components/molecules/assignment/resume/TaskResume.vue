@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FtWithTimespan,
   getRequiredTeamsInFt,

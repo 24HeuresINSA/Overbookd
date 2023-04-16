@@ -64,7 +64,7 @@ import {
   hasAllFTValidations,
   hasAtLeastOneFTValidation,
 } from "~/utils/festivalEvent/ftUtils";
-import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 
 enum ConfirmationType {
   ADD = "Ajout",

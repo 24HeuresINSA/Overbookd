@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/OverCalendarV2.vue";
+import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";

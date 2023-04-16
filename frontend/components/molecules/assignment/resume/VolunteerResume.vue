@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
 import { Volunteer } from "~/utils/models/assignment";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";

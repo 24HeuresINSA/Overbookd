@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import RichEditor from "./atoms/RichEditor.vue";
+import RichEditor from "./atoms/field/RichEditor.vue";
 import userRepo from "~/repositories/userRepo";
 
 export default {

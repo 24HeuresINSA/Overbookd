@@ -165,11 +165,11 @@
 </template>
 
 <script>
-import OverChips from "~/components/atoms/OverChips";
+import OverChips from "~/components/atoms/chip/OverChips.vue";
 import { removeItemAtIndex } from "~/utils/functions/list";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
-import DateField from "../atoms/DateField.vue";
+import DateField from "../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../molecules/availabilities/AvailabilitiesSumup.vue";
 
 export default {

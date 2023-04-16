@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SnackNotification from "~/components/atoms/SnackNotification.vue";
+import SnackNotification from "~/components/atoms/snack/SnackNotification.vue";
 import { SnackNotif } from "~/utils/models/store";
 
 export default Vue.extend({
@@ -26,9 +26,6 @@ export default Vue.extend({
         true;
       },
     },
-  },
-  data() {
-    return {};
   },
   computed: {
     queue(): SnackNotif[] {

@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchGear from "~/components/atoms/SearchGear.vue";
+import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
 import FTLogisticsTable from "~/components/molecules/logistics/FTLogisticsTable.vue";
 import {
   getFTValidationStatus,

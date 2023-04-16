@@ -39,10 +39,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchTeamVue from "~/components/atoms/SearchTeam.vue";
+import SearchTeamVue from "~/components/atoms/field/search/SearchTeam.vue";
 import { CategoryForm } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
-import SearchCategoryVue from "../../atoms/SearchCategory.vue";
+import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
 import { InputRulesData, minLength } from "~/utils/rules/inputRules";
 import { Team } from "~/utils/models/team";
 

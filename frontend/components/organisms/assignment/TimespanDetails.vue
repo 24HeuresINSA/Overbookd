@@ -117,7 +117,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamChip from "~/components/atoms/TeamChip.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";

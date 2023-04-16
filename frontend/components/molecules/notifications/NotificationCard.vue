@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import OverChips from "~/components/atoms/OverChips.vue";
+import OverChips from "~/components/atoms/chip/OverChips.vue";
 import { Notification } from "~/utils/models/repo";
 import { MyUserInformation } from "~/utils/models/user";
 import { SnackNotif } from "../../../utils/models/store";

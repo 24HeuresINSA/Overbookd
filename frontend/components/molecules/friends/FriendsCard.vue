@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchFriend from "~/components/atoms/SearchFriend.vue";
+import SearchFriend from "~/components/atoms/field/search/SearchFriend.vue";
 import { User } from "~/utils/models/user";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 

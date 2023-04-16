@@ -46,7 +46,7 @@ import Vue from "vue";
 import { Team } from "~/utils/models/team";
 import { StatsPayload } from "~/utils/models/stats";
 import { FAStatusLabel } from "~/utils/models/FA";
-import StatsCard from "~/components/atoms/StatsCard.vue";
+import StatsCard from "~/components/atoms/card/StatsCard.vue";
 
 export default Vue.extend({
   components: {

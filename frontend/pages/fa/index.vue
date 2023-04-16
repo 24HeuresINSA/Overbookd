@@ -168,7 +168,7 @@
 
 <script>
 import Fuse from "fuse.js";
-import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { Status } from "~/utils/models/FA";
 import { formatUsername } from "~/utils/user/userUtils";
 

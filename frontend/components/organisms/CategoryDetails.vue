@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ConfirmationMessage from "../atoms/ConfirmationMessage.vue";
+import ConfirmationMessage from "../atoms/card/ConfirmationMessage.vue";
 import CategoryForm from "./form/CategoryForm.vue";
 
 export default Vue.extend({

@@ -43,9 +43,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { FT, FTCardType } from "~/utils/models/ft";
-import SearchUser from "~/components/atoms/SearchUser.vue";
-import SearchSignaLocation from "~/components/atoms/SearchSignaLocation.vue";
-import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
+import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 import { SignaLocation } from "~/utils/models/signaLocation";
