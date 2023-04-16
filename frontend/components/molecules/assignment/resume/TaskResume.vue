@@ -5,11 +5,11 @@
         <span>{{ ft.id }} - {{ ft.name }}</span>
       </div>
       <div class="task-teams">
-        <TeamIconChip
+        <TeamChip
           v-for="teamCode of sortedVolunteerTeams"
           :key="teamCode"
           :team="teamCode"
-        />
+        ></TeamChip>
       </div>
     </div>
     <v-divider />
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FtWithTimespan,
   getRequiredTeamsInFt,
@@ -27,7 +27,7 @@ import { sortTeamsForAssignment } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "TaskResume",
-  components: { TeamIconChip },
+  components: { TeamChip },
   props: {
     ft: {
       type: Object as () => FtWithTimespan,

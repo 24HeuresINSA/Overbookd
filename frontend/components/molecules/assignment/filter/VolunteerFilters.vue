@@ -39,7 +39,7 @@
 import Vue from "vue";
 import { Team } from "~/utils/models/team";
 import { nextSortDirection } from "~/utils/models/assignment";
-import SearchTeams from "~/components/atoms/SearchTeams.vue";
+import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 
 export default Vue.extend({
   name: "VolunteerFilters",

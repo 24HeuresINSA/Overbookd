@@ -158,7 +158,7 @@
 <script lang="ts">
 import Fuse from "fuse.js";
 import Vue from "vue";
-import SearchTeam from "~/components/atoms/SearchTeam.vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFTCard from "~/components/molecules/NewFTCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";

@@ -90,7 +90,7 @@ import {
   time_windows_type,
 } from "~/utils/models/FA";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
-import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Period } from "~/utils/models/gearRequests";
 import { MyUserInformation } from "~/utils/models/user";

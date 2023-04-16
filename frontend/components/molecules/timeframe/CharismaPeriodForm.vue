@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DateTimeField from "~/components/atoms/DateTimeField.vue";
+import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,

@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchFA from "~/components/atoms/SearchFA.vue";
+import SearchFA from "~/components/atoms/field/search/SearchFA.vue";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import CompleteLogisticsTable from "~/components/molecules/logistics/CompleteLogisticsTable.vue";
 import {

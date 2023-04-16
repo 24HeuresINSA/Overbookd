@@ -170,7 +170,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ConfirmationMessage from "~/components/atoms/ConfirmationMessage.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import {
   hasAllValidations,
   hasAtLeastOneValidation,

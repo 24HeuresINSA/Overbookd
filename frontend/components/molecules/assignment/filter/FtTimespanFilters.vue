@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchTeams from "~/components/atoms/SearchTeams.vue";
+import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import {
   TaskCategories,
   TaskCategory,

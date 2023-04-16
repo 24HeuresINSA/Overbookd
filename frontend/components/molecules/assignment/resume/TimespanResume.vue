@@ -8,13 +8,13 @@
         <span>{{ timespan.ft.id }} - {{ timespan.ft.name }}</span>
       </div>
       <div class="timespan-teams">
-        <TeamIconChip
+        <TeamChip
           v-for="requestedTeam of timespan.requestedTeams"
           :key="requestedTeam.code"
           :team="requestedTeam.code"
           with-name
           @click="selectTeam(requestedTeam.code)"
-        />
+        ></TeamChip>
       </div>
     </div>
     <div class="has-friends-assigned">
@@ -39,12 +39,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamIconChip from "~/components/atoms/TeamIconChip.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { AvailableTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
   name: "TimespanResume",
-  components: { TeamIconChip },
+  components: { TeamChip },
   props: {
     timespan: {
       type: Object as () => AvailableTimespan,

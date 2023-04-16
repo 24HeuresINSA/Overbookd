@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import RichEditor from "~/components/atoms/RichEditor.vue";
+import RichEditor from "~/components/atoms/field/RichEditor.vue";
 import CardErrorList from "~/components/molecules/CardErrorList.vue";
 import {
   getFTValidationStatus,

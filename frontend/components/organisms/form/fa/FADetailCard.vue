@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import RichEditor from "~/components/atoms/RichEditor.vue";
+import RichEditor from "~/components/atoms/field/RichEditor.vue";
 import { FA, fa_card_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,

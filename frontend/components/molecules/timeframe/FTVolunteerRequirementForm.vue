@@ -70,9 +70,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VolunteerRequestChip from "~/components/atoms/assignment/VolunteerRequestChip.vue";
-import SearchTeam from "~/components/atoms/SearchTeam.vue";
-import SearchUser from "~/components/atoms/SearchUser.vue";
+import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {
   FTTeamRequest,
   FTTimeWindow,
@@ -197,6 +197,7 @@ export default Vue.extend({
         },
         alsoRequestedBy: [],
         isAvailable: true,
+        isAlreadyAssigned: false,
       });
       this.newUserRequests.push(userRequest);
       this.selectedUser = null;
