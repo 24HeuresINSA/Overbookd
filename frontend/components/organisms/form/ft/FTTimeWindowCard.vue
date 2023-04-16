@@ -53,12 +53,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FTTimeWindowTable from "~/components/molecules/timeframe/FTTimeWindowTable.vue";
-import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
-import FTTimeWindowForm from "~/components/molecules/timeframe/FTTimeWindowForm.vue";
+import FTTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowTable.vue";
+import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
+import FTTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowForm.vue";
 import { FT, FTCardType, FTTimeWindow } from "~/utils/models/ft";
-import FTVolunteerRequirementForm from "~/components/molecules/timeframe/FTVolunteerRequirementForm.vue";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import FTVolunteerRequirementForm from "~/components/molecules/festivalEvent/timeWindow/FTVolunteerRequirementForm.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFTValidationStatusWithMultipleTeams,
   hasAllFTValidations,

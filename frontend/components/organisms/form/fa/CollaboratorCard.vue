@@ -68,7 +68,7 @@ import {
   fa_card_type,
   fa_collaborators,
 } from "~/utils/models/FA";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 
 export default Vue.extend({
   name: "CollaboratorCard",

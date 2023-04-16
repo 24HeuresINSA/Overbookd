@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
-import FALogisticsTable from "~/components/molecules/logistics/FALogisticsTable.vue";
+import FALogisticsTable from "~/components/molecules/festivalEvent/logistics/FALogisticsTable.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,

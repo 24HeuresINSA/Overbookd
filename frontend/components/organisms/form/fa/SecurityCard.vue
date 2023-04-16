@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,

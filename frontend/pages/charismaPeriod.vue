@@ -31,9 +31,9 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CharismaPeriodCalendar from "~/components/molecules/timeframe/CharismaPeriodCalendar.vue";
-import CharismaPeriodForm from "~/components/molecules/timeframe/CharismaPeriodForm.vue";
-import CharismaPeriodTable from "~/components/molecules/timeframe/CharismaPeriodTable.vue";
+import CharismaPeriodCalendar from "~/components/molecules/charismaPeriod/CharismaPeriodCalendar.vue";
+import CharismaPeriodForm from "~/components/molecules/charismaPeriod/CharismaPeriodForm.vue";
+import CharismaPeriodTable from "~/components/molecules/charismaPeriod/CharismaPeriodTable.vue";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,

@@ -17,7 +17,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { StatsPayload } from "~/utils/models/stats";
-import StatsRow from "~/components/molecules/StatsRow.vue";
+import StatsRow from "~/components/molecules/stats/StatsRow.vue";
 
 export default Vue.extend({
   name: "Stats",

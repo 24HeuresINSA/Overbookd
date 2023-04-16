@@ -45,18 +45,18 @@
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <TimeframeForm
+      <FATimeWindowForm
         @change="addTimeWindow"
         @close-dialog="isAddDialogOpen = false"
-      ></TimeframeForm>
+      ></FATimeWindowForm>
     </v-dialog>
 
     <v-dialog v-model="isEditDialogOpen" max-width="600">
-      <TimeframeForm
+      <FATimeWindowForm
         v-model="selectedTimeWindow"
         @change="updateTimeWindow"
         @close-dialog="isEditDialogOpen = false"
-      ></TimeframeForm>
+      ></FATimeWindowForm>
     </v-dialog>
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
       <ConfirmationMessage
@@ -75,8 +75,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FestivalEventCalendar from "~/components/molecules/timeframe/FestivalEventCalendar.vue";
-import TimeframeForm from "~/components/molecules/timeframe/TimeframeForm.vue";
+import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
+import FATimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowForm.vue";
 import {
   getFAValidationStatusWithMultipleTeams,
   isAnimationValidatedBy,
@@ -89,7 +89,7 @@ import {
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Period } from "~/utils/models/gearRequests";
@@ -100,10 +100,10 @@ interface IdentifiableTimeWindow extends time_windows {
 }
 
 export default Vue.extend({
-  name: "TimeframeTable",
+  name: "FATimeWindowCard",
   components: {
     FestivalEventCalendar,
-    TimeframeForm,
+    FATimeWindowForm,
     CardErrorList,
     ConfirmationMessage,
   },

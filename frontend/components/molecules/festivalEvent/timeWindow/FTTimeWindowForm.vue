@@ -53,7 +53,7 @@ interface FTTimeWindowFormData {
 }
 
 export default Vue.extend({
-  name: "TimeframeForm",
+  name: "FTTimeWindowForm",
   components: { DateTimeField },
   model: {
     prop: "timeWindow",

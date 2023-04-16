@@ -69,7 +69,7 @@ import {
   FA,
   fa_electricity_needs,
 } from "~/utils/models/FA";
-import ElecLogisticForm from "~/components/molecules/logistics/ElecLogisticForm.vue";
+import ElecLogisticForm from "~/components/molecules/festivalEvent/logistics/ElecLogisticForm.vue";
 
 const headers = [
   { text: "Type de raccordement", value: "electricity_type" },

@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TransferDialog from "~/components/molecules/TransferDialog.vue";
+import TransferDialog from "~/components/molecules/user/TransferDialog.vue";
 
 export default Vue.extend({
   name: "ComptesPersosCard",

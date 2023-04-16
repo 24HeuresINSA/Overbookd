@@ -67,7 +67,7 @@ import {
   isAnimationValidatedBy,
   getFAValidationStatus,
 } from "~/utils/festivalEvent/faUtils";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import { SitePublishAnimationCategoryType } from "~/utils/models/FA";
 
 export default Vue.extend({
