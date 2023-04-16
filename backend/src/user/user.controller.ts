@@ -32,11 +32,16 @@ import {
   UserWithoutPassword,
   UserWithTeamAndPermission,
 } from './user.service';
+import { TaskResponseDto } from 'src/volunteer-planning/dto/taskResponse.dto';
+import { VolunteerPlanningService } from 'src/volunteer-planning/volunteer-planning.service';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly planningService: VolunteerPlanningService,
+  ) {}
 
   @Post()
   @ApiBody({
@@ -71,6 +76,23 @@ export class UserController {
     @Request() req: RequestWithUserPayload,
   ): Promise<MyUserInformation | null> {
     return this.userService.user({ id: req.user.userId ?? req.user.id });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Permission('can-view-planning')
+  @ApiBearerAuth()
+  @Get('me/planning')
+  @ApiResponse({
+    status: 200,
+    description: 'Get current user planning',
+    isArray: true,
+    type: TaskResponseDto,
+  })
+  async getCurrentVolunteerPlanning(
+    @Request() req: RequestWithUserPayload,
+  ): Promise<TaskResponseDto[]> {
+    const volunteerId = req.user.userId ?? req.user.id;
+    return this.planningService.getVolunteerPlanning(volunteerId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -188,6 +210,22 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<VolunteerAssignmentDto[]> {
     return this.userService.getVolunteerAssignments(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Permission('can-affect')
+  @ApiBearerAuth()
+  @Get(':id/planning')
+  @ApiResponse({
+    status: 200,
+    description: 'Get current user planning',
+    isArray: true,
+    type: TaskResponseDto,
+  })
+  async getVolunteerPlanning(
+    @Param('id', ParseIntPipe) volunteerId: number,
+  ): Promise<TaskResponseDto[]> {
+    return this.planningService.getVolunteerPlanning(volunteerId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
