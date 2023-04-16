@@ -13,27 +13,10 @@
         <h3>Fin du créneau</h3>
         <DateTimeField v-model="end" label="Fin"></DateTimeField>
       </div>
+
+      <v-btn color="success" class="btn" @click="updateStats"> Appliquer</v-btn>
     </v-card-text>
-    <table>
-      <thead>
-        <th>Date</th>
-        <th>Bénévoles Disponibles</th>
-        <th>Bénévoles Requis</th>
-        <th>Bénévoles Assignés</th>
-      </thead>
-      <tbody class="table-body">
-        <tr
-          v-for="(stat, index) in stats"
-          :key="index"
-          :style="`color: ${getColor(stat)}`"
-        >
-          <td>{{ stat.start.toLocaleString() }}</td>
-          <td>{{ stat.availableVolunteers }}</td>
-          <td>{{ stat.requestedVolunteers }}</td>
-          <td>{{ stat.assignedVolunteers }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <OrgaNeedsChart></OrgaNeedsChart>
   </div>
 </template>
 
@@ -41,12 +24,13 @@
 import Vue from "vue";
 import DateTimeField from "~/components/atoms/DateTimeField.vue";
 import { OrgaNeedsResponse } from "~/store/orgaNeeds";
+import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
 
 const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
 
 export default Vue.extend({
   name: "OrgaNeeds",
-  components: { DateTimeField },
+  components: { DateTimeField, OrgaNeedsChart },
   data() {
     return {
       start: undefined as Date | undefined,
@@ -65,18 +49,8 @@ export default Vue.extend({
     this.$accessor.orgaNeeds.fetchStats({ start: this.start, end: this.end });
   },
   methods: {
-    getColor(stat: OrgaNeedsResponse) {
-      if (stat.assignedVolunteers >= stat.requestedVolunteers) {
-        return "#0066ff";
-      } else if (stat.availableVolunteers >= stat.requestedVolunteers + 5) {
-        return "green";
-      } else if (stat.availableVolunteers >= stat.requestedVolunteers) {
-        return "#00cc66";
-      } else if (stat.availableVolunteers >= stat.requestedVolunteers - 5) {
-        return "#ff7f7f";
-      } else {
-        return "red";
-      }
+    updateStats() {
+      this.$accessor.orgaNeeds.fetchStats({ start: this.start, end: this.end });
     },
   },
 });
@@ -86,13 +60,6 @@ export default Vue.extend({
 .datepicker {
   display: flex;
   gap: 2rem;
-}
-
-.table-body {
-  text-align-last: right;
-}
-
-td {
-  padding: 0 15px;
+  align-items: center;
 }
 </style>
