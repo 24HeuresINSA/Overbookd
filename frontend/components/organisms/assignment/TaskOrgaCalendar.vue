@@ -1,5 +1,5 @@
 <template>
-  <OverCalendarV2
+  <OverCalendar
     v-model="calendarMarker"
     :title="ftName"
     :events="timespans"
@@ -16,12 +16,12 @@
         {{ timespan.name }}
       </div>
     </template>
-  </OverCalendarV2>
+  </OverCalendar>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
+import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
 import {
   FtTimespanEvent,
   FtTimespanWithRequestedTeams,
@@ -31,7 +31,7 @@ import {
 
 export default Vue.extend({
   name: "TaskOrgaCalendar",
-  components: { OverCalendarV2 },
+  components: { OverCalendar },
   data: () => ({
     calendarMarker: new Date(),
   }),

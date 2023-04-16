@@ -118,7 +118,7 @@ import { CalendarItem } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 
 export default Vue.extend({
-  name: "OverCalendarV2",
+  name: "OverCalendar",
   model: {
     prop: "date",
     event: "change",

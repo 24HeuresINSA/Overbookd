@@ -1,16 +1,16 @@
 <template>
   <div>
-    <OverCalendarV2
+    <OverCalendar
       v-model="calendarMarker"
       :events="calendarEvents"
       :title="calendarTitle"
-    ></OverCalendarV2>
+    ></OverCalendar>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
+import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarItem } from "~/utils/models/calendar";
 import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
@@ -23,7 +23,7 @@ const PRIMARY_COLOR = {
 
 export default Vue.extend({
   name: "CharismaPeriodCalendar",
-  components: { OverCalendarV2 },
+  components: { OverCalendar },
   data: () => ({
     calendarMarker: new Date(),
   }),

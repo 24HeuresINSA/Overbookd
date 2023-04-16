@@ -1,6 +1,6 @@
 <template>
   <div>
-    <OverCalendarV2 v-model="calendarMarker" :title="calendarTitle">
+    <OverCalendar v-model="calendarMarker" :title="calendarTitle">
       <template #interval="{ date, hour }">
         <div
           v-if="isEndOfPeriod(hour)"
@@ -15,13 +15,13 @@
           @click="togglePeriod(date, hour)"
         ></div>
       </template>
-    </OverCalendarV2>
+    </OverCalendar>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
+import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
 import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
 import {
   hasAvailabilityPeriodError,
@@ -38,7 +38,7 @@ import { isPartyShift } from "~/utils/shift/shift";
 
 export default Vue.extend({
   name: "AvailabilitiesSumup",
-  components: { OverCalendarV2 },
+  components: { OverCalendar },
   props: {
     userId: {
       type: Number,

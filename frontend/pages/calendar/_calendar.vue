@@ -1,5 +1,5 @@
 <template>
-  <OverCalendarV2
+  <OverCalendar
     v-model="calendarCentralDate"
     :events="events"
     class="no-scroll elevation-2"
@@ -42,12 +42,12 @@
         {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
     </template>
-  </OverCalendarV2>
+  </OverCalendar>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
+import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
@@ -77,7 +77,7 @@ interface CalendarEventWithFt {
 
 export default Vue.extend({
   name: "Calendar",
-  components: { OverCalendarV2, TeamChip },
+  components: { OverCalendar, TeamChip },
   data: function () {
     return {
       calendarCentralDate: new Date("2023-05-12 00:00+02:00"),

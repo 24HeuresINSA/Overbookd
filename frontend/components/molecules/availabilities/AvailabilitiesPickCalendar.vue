@@ -1,5 +1,5 @@
 <template>
-  <OverCalendarV2
+  <OverCalendar
     :date="period.start"
     :display-header="false"
     :weekdays="weekdayNumbers"
@@ -28,12 +28,12 @@
         {{ getDisplayedCharisma(date, hour) }}
       </div>
     </template>
-  </OverCalendarV2>
+  </OverCalendar>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
+import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
 import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
 import {
   hasAvailabilityPeriodError,
@@ -55,7 +55,7 @@ import {
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",
-  components: { OverCalendarV2 },
+  components: { OverCalendar },
   props: {
     period: {
       type: Object as () => Period,
