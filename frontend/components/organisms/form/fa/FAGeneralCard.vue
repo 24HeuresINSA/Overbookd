@@ -54,7 +54,7 @@ import {
   isAnimationValidatedBy,
   getFAValidationStatus,
 } from "~/utils/festivalEvent/faUtils";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import { User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 

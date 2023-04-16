@@ -139,9 +139,9 @@
           ></v-time-picker>
         </v-menu>
       </div>
-      <v-card-text
-        >Les activités en journée se passent entre 11h et 18h.</v-card-text
-      >
+      <v-card-text>
+        Les activités en journée se passent entre 11h et 18h.
+      </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -189,7 +189,7 @@ interface BrakeDownDate {
 }
 
 export default Vue.extend({
-  name: "TimeframeForm",
+  name: "FATimeWindowForm",
   components: { ConfirmationMessage },
   model: {
     prop: "timeWindow",

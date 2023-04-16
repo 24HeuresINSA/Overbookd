@@ -49,7 +49,7 @@ import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { User } from "~/utils/models/user";
 import { Team } from "~/utils/models/team";
 import { SignaLocation } from "~/utils/models/signaLocation";
-import CardErrorList from "~/components/molecules/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,

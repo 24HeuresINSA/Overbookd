@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import PermissionRow from "~/components/molecules/PermissionRow.vue";
+import PermissionRow from "~/components/molecules/permission/PermissionRow.vue";
 import { Permission } from "~/utils/models/Permission";
 
 export default Vue.extend({

@@ -49,7 +49,7 @@
 <script lang="ts">
 import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
-import ProfilePictureDialog from "~/components/molecules/ProfilePictureDialog.vue";
+import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({

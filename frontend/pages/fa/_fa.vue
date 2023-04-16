@@ -27,7 +27,7 @@
       <FAGeneralCard id="general" />
       <FADetailCard id="detail" />
       <SignaCard id="signa" />
-      <TimeframeTable id="timewindow" />
+      <FATimeWindowCard id="timewindow" />
       <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import LogisticTimeWindow from "~/components/molecules/logistics/LogisticTimeWindow.vue";
+import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistics/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import CommentCard from "~/components/organisms/form/CommentCard.vue";
 import ChildFTCard from "~/components/organisms/form/fa/ChildFTCard.vue";
@@ -74,7 +74,7 @@ import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
 import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
 import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
 import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
-import TimeframeTable from "~/components/organisms/form/fa/TimeframeTable.vue";
+import FATimeWindowCard from "~/components/organisms/form/fa/FATimeWindowCard.vue";
 import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
 import FestivalEventSummary from "~/components/organisms/form/FestivalEventSummary.vue";
 import FALogisticsCard from "~/components/organisms/form/FALogisticsCard.vue";
@@ -94,7 +94,7 @@ export default Vue.extend({
     CommentCard,
     SignaCard,
     FALogisticsCard,
-    TimeframeTable,
+    FATimeWindowCard,
     CollaboratorCard,
     WaterLogisticCard,
     FAGeneralCard,

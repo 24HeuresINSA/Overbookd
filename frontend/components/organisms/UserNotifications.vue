@@ -36,8 +36,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import NotificationBroadcastDialog from "~/components/molecules/notifications/NotificationBroadcastDialog.vue";
-import NotificationCard from "~/components/molecules/notifications/NotificationCard.vue";
+import NotificationBroadcastDialog from "~/components/molecules/notification/NotificationBroadcastDialog.vue";
+import NotificationCard from "~/components/molecules/notification/NotificationCard.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { UserState } from "~/store/user";
 import { safeCall } from "~/utils/api/calls";
