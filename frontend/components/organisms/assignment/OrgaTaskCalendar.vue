@@ -1,5 +1,5 @@
 <template>
-  <OverCalendarV2
+  <OverCalendar
     v-model="calendarMarker"
     :title="volunteerName"
     :events="assignedTasks"
@@ -17,12 +17,12 @@
         {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
     </template>
-  </OverCalendarV2>
+  </OverCalendar>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendarV2 from "~/components/atoms/calendar/OverCalendarV2.vue";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
@@ -40,7 +40,7 @@ interface CalendarItemWithTask extends CalendarItem {
 
 export default Vue.extend({
   name: "OrgaTaskCalendar",
-  components: { OverCalendarV2 },
+  components: { OverCalendar },
   data: () => ({
     calendarMarker: new Date(),
   }),

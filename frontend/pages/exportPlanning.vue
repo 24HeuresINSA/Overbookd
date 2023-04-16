@@ -5,15 +5,7 @@
       <p>
         Veuillez séléctionner l'orga dont vous souhaitez exporter le planning
       </p>
-      <OverField
-        class="selector"
-        :field="{
-          key: 'validated_user',
-          label: 'orga',
-          type: 'validated_user',
-        }"
-        @value="updateUser"
-      ></OverField>
+      <SearchUser v-model="selected_user" class="selector" />
       <div class="buttons">
         <v-btn
           color="success"
@@ -21,16 +13,16 @@
           :disabled="selected_user === undefined"
           @click="generatePlanning"
         >
-          Générer<v-icon right dark> mdi-cog </v-icon></v-btn
-        >
+          Générer<v-icon right dark> mdi-cog </v-icon>
+        </v-btn>
         <v-btn
           color="secondary"
           class="btn"
           :disabled="uniquePlanning === undefined"
           @click="exportPlanning()"
         >
-          Télécharger <v-icon right dark> mdi-download </v-icon></v-btn
-        >
+          Télécharger <v-icon right dark> mdi-download </v-icon>
+        </v-btn>
       </div>
     </div>
     <div class="multiple">
@@ -42,8 +34,8 @@
       </p>
       <div class="buttons">
         <v-btn color="red" class="btn" @click="confirmation = true">
-          Générer<v-icon right dark> mdi-cog </v-icon></v-btn
-        >
+          Générer<v-icon right dark> mdi-cog </v-icon>
+        </v-btn>
         <div v-for="(data, index) in multiplePlanning" :key="index">
           <v-btn
             color="secondary"
@@ -51,8 +43,8 @@
             @click="exportSpecificPlanning(data)"
           >
             {{ "Partie " + (index + 1) }}
-            <v-icon right dark> mdi-download </v-icon></v-btn
-          >
+            <v-icon right dark> mdi-download </v-icon>
+          </v-btn>
         </div>
       </div>
     </div>
@@ -66,11 +58,11 @@
         <v-card-text>T'es vraiment sûr de ce que tu veux faire ?</v-card-text>
         <div style="display: flex; justify-content: center; padding: 1%">
           <v-btn color="red" style="margin: 2%" @click="generateAllPlanning">
-            OUI</v-btn
-          >
+            OUI
+          </v-btn>
           <v-btn color="green" style="margin: 2%" @click="confirmation = false">
-            NON</v-btn
-          >
+            NON
+          </v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -81,13 +73,11 @@
 import planningRepo from "~/repositories/planningRepo";
 import Loader from "~/components/atoms/loader/Loader.vue";
 import { Snack } from "~/utils/models/snack";
-import OverField from "~/components/OverField.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 
 export default {
-  components: {
-    Loader,
-    OverField,
-  },
+  name: "ExportPlanning",
+  components: { Loader, SearchUser },
   data() {
     return {
       selected_user: undefined,
@@ -99,15 +89,12 @@ export default {
     };
   },
   methods: {
-    updateUser(value) {
-      this.selected_user = value.value;
-    },
     async generatePlanning() {
       this.isLoading = true;
       this.uniquePlanning = undefined;
       this.multiplePlanning = [];
       await planningRepo
-        .createPlanning(this, this.selected_user._id)
+        .createPlanning(this, this.selected_user.id)
         .then((res) => {
           if (res) {
             this.uniquePlanning = res.data;
