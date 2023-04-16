@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   FtTimespanEvent,
   FtTimespanWithRequestedTeams,

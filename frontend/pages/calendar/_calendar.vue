@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverCalendar from "~/components/atoms/calendar/OverCalendar.vue";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
