@@ -66,24 +66,24 @@
 import Vue from "vue";
 import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistics/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CommentCard from "~/components/organisms/form/CommentCard.vue";
-import ChildFTCard from "~/components/organisms/form/fa/ChildFTCard.vue";
-import CollaboratorCard from "~/components/organisms/form/fa/CollaboratorCard.vue";
-import ElecLogisticCard from "~/components/organisms/form/fa/ElecLogisticCard.vue";
-import FADetailCard from "~/components/organisms/form/fa/FADetailCard.vue";
-import FAGeneralCard from "~/components/organisms/form/fa/FAGeneralCard.vue";
-import SecurityCard from "~/components/organisms/form/fa/SecurityCard.vue";
-import SignaCard from "~/components/organisms/form/fa/SignaCard.vue";
-import FATimeWindowCard from "~/components/organisms/form/fa/FATimeWindowCard.vue";
-import WaterLogisticCard from "~/components/organisms/form/fa/WaterLogisticCard.vue";
-import FestivalEventSummary from "~/components/organisms/form/FestivalEventSummary.vue";
-import FALogisticsCard from "~/components/organisms/form/FALogisticsCard.vue";
+import CommentCard from "~/components/organisms/festivalEvent/fa/CommentCard.vue";
+import ChildFTCard from "~/components/organisms/festivalEvent/fa/ChildFTCard.vue";
+import CollaboratorCard from "~/components/organisms/festivalEvent/fa/CollaboratorCard.vue";
+import ElecLogisticCard from "~/components/organisms/festivalEvent/fa/ElecLogisticCard.vue";
+import FADetailCard from "~/components/organisms/festivalEvent/fa/FADetailCard.vue";
+import FAGeneralCard from "~/components/organisms/festivalEvent/fa/FAGeneralCard.vue";
+import SecurityCard from "~/components/organisms/festivalEvent/fa/SecurityCard.vue";
+import SignaCard from "~/components/organisms/festivalEvent/fa/SignaCard.vue";
+import FATimeWindowCard from "~/components/organisms/festivalEvent/fa/FATimeWindowCard.vue";
+import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
+import FestivalEventSummary from "~/components/organisms/festivalEvent/FestivalEventSummary.vue";
+import FALogisticsCard from "~/components/organisms/festivalEvent/fa/FALogisticsCard.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { Team } from "~/utils/models/team";
-import FestivalEventBottomBar from "~/components/organisms/form/FestivalEventBottomBar.vue";
+import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
 import { MyUserInformation } from "~/utils/models/user";
 import { FA } from "~/utils/models/FA";
 

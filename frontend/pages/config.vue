@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import PermissionsCard from "~/components/organisms/PermissionsCard.vue";
+import PermissionsCard from "~/components/organisms/permission/PermissionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default {

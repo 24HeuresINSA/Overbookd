@@ -60,12 +60,12 @@
 </template>
 
 <script>
-import UserCard from "~/components/organisms/UserCard.vue";
-import UserNotifications from "~/components/organisms/UserNotifications.vue";
+import UserCard from "~/components/organisms/user/data/UserCard.vue";
+import UserNotifications from "~/components/organisms/user/data/UserNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import ComptesPersosCard from "~/components/organisms/ComptesPersosCard.vue";
+import ComptesPersosCard from "~/components/organisms/user/personnalAccount/PersonnalAccountCard.vue";
 import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
-import CommentEditionCard from "~/components/organisms/CommentEditionCard.vue";
+import CommentEditionCard from "~/components/organisms/user/data/CommentEditionCard.vue";
 
 export default {
   components: {

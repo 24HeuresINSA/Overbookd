@@ -158,7 +158,7 @@
  * and every user that consumed get charged accordingly
  */
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import SgConfigForm from "~/components/organisms/SgConfigForm.vue";
+import SgConfigForm from "~/components/organisms/user/personnalAccount/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repoFactory";
 import transactionRepo from "../repositories/transactionRepo";

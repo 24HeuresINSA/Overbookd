@@ -31,7 +31,7 @@
       Ajouter une categorie
     </v-btn>
     <v-dialog v-model="isCreateDialogOpen" width="600px">
-      <CategoryFormVue @close-dialog="closeCreationDialog"></CategoryFormVue>
+      <CategoryForm @close-dialog="closeCreationDialog"></CategoryForm>
     </v-dialog>
     <v-dialog v-model="isInformationDialogOpen" width="600px">
       <CategoryDetails
@@ -45,8 +45,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Category, CategoryTree } from "~/utils/models/catalog.model";
-import CategoryDetails from "./CategoryDetails.vue";
-import CategoryFormVue from "./form/CategoryForm.vue";
+import CategoryDetails from "../../molecules/gear/CategoryDetails.vue";
+import CategoryForm from "../../molecules/gear/CategoryForm.vue";
 
 interface CategoryTreeViewData {
   isCreateDialogOpen: boolean;
@@ -56,7 +56,7 @@ interface CategoryTreeViewData {
 
 export default Vue.extend({
   name: "CategoriesTreeView",
-  components: { CategoryFormVue, CategoryDetails },
+  components: { CategoryForm, CategoryDetails },
   data(): CategoryTreeViewData {
     return {
       isCreateDialogOpen: false,

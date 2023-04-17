@@ -188,7 +188,7 @@ import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
 import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
-import GearRequestsValidation from "./GearRequestsValidation.vue";
+import GearRequestsValidation from "../../molecules/gear/GearRequestsValidation.vue";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",

@@ -20,11 +20,11 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import AssignmentForm from "~/components/organisms/assignment/AssignmentForm.vue";
-import FilterableFtList from "~/components/organisms/assignment/FilterableFtList.vue";
-import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import TaskOrgaCalendar from "~/components/organisms/assignment/TaskOrgaCalendar.vue";
-import TimespanDetails from "~/components/organisms/assignment/TimespanDetails.vue";
+import AssignmentForm from "~/components/organisms/assignment/card/AssignmentForm.vue";
+import FilterableFtList from "~/components/organisms/assignment/list/FilterableFtList.vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
+import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
+import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
 import { FtWithTimespan } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({

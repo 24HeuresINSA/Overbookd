@@ -10,8 +10,8 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import InventoryImport from "~/components/organisms/InventoryImport.vue";
-import InventoryListing from "~/components/organisms/InventoryListing.vue";
+import InventoryImport from "~/components/organisms/gear/InventoryImport.vue";
+import InventoryListing from "~/components/organisms/gear/InventoryListing.vue";
 
 interface InventoryData {
   importing: boolean;
