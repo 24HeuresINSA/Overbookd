@@ -113,7 +113,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 215px;
+$filters-height: 225px;
 $header-footer-height: 100px;
 
 .filterable-task-list {
@@ -129,7 +129,7 @@ $header-footer-height: 100px;
 
 .filters {
   width: 100%;
-  height: $filters-height - 25px;
+  height: $filters-height;
 }
 
 .task-list {
