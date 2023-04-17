@@ -1,12 +1,19 @@
-import { Task } from './task.model';
+import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Assignment, Task } from './task.model';
 
-export type JsonStoredTask = Task & {
+export type JsonStoredTask = Pick<
+  Task,
+  'description' | 'location' | 'name' | 'period'
+> & {
   id: number;
-  assignees: { id: number }[];
+  assignees: { period: Period; id: number; name: string }[];
 };
 
 export class StoredTask {
-  constructor(private readonly storedTask: JsonStoredTask) {}
+  constructor(
+    private readonly storedTask: JsonStoredTask,
+    private readonly assignments: Assignment[],
+  ) {}
 
   get start(): Date {
     return this.storedTask.period.start;
@@ -21,12 +28,22 @@ export class StoredTask {
     const endTimestamp = Math.max(this.end.getTime(), task.end.getTime());
     const start = new Date(startTimestamp);
     const end = new Date(endTimestamp);
-    return new StoredTask({ ...this.storedTask, period: { start, end } });
+    const assignments = [...this.assignments, ...task.assignments];
+    return new StoredTask(
+      { ...this.storedTask, period: { start, end } },
+      assignments,
+    );
   }
 
   toTask(): Task {
     const { name, description, period, location } = this.storedTask;
-    return { name, description, period, location };
+    return {
+      name,
+      description,
+      period,
+      location,
+      assignments: this.assignments,
+    };
   }
 
   canMergeWith(task: StoredTask): boolean {
