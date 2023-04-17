@@ -6,12 +6,19 @@
       label="Recherche"
       @input="changeSearch"
     ></v-text-field>
-    <SearchTeams
-      :value="teams"
-      class="filters__field"
-      :boxed="false"
-      @change="changeTeams"
-    ></SearchTeams>
+    <div class="team_filter_completed_switch">
+      <SearchTeams
+        :value="teams"
+        class="filters__field"
+        :boxed="false"
+        @change="changeTeams"
+      ></SearchTeams>
+      <v-switch
+        v-model="completed"
+        label="Toutes les FTs"
+        @change="changeCompleted"
+      ></v-switch>
+    </div>
     <v-combobox
       :value="category"
       :items="categoryItems"
@@ -54,6 +61,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
+    completed: false,
     search: "",
     teams: [] as Team[],
     category: null as TaskCategory | TaskPriority | null,
@@ -81,6 +89,10 @@ export default Vue.extend({
     changeCategory(category: string) {
       this.$emit("change:category", category);
     },
+    changeCompleted(state: boolean) {
+      this.completed = state;
+      this.$emit("change:completed", state);
+    },
   },
 });
 </script>
@@ -105,5 +117,12 @@ export default Vue.extend({
 
 .stats {
   margin-bottom: 5px;
+}
+
+.team_filter_completed_switch {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 </style>
