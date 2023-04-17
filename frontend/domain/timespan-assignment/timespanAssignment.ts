@@ -2,6 +2,7 @@ import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { VolunteerTask } from "~/utils/models/user";
 import { getUnderlyingTeams } from "./underlying-teams";
+import { Period } from "~/utils/models/period";
 
 type TeamRequest = {
   teamCode: string;
@@ -19,6 +20,7 @@ type Task = {
 export class AssignmentCandidate {
   tasks: VolunteerTask[] = [];
   private _assignment: string = "";
+  availabilities: Period[] = [];
 
   constructor(readonly volunteer: Volunteer) {}
 
@@ -127,6 +129,28 @@ export class TaskAssignment {
     if (!candidate) return this;
 
     candidate.tasks = tasks;
+    this._candidates = updateItemToList(
+      this._candidates,
+      candidateIndex,
+      candidate
+    );
+
+    return this;
+  }
+
+  withCandidateAvailabilities(
+    id: number,
+    availabilities: Period[]
+  ): TaskAssignment {
+    const candidateIndex = this._candidates.findIndex(
+      (candidate) => candidate.volunteer.id === id
+    );
+
+    if (candidateIndex === -1) return this;
+    const candidate = this._candidates.at(candidateIndex);
+    if (!candidate) return this;
+
+    candidate.availabilities = availabilities;
     this._candidates = updateItemToList(
       this._candidates,
       candidateIndex,

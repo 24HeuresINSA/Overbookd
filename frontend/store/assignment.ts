@@ -20,6 +20,7 @@ import {
   castAvailableTimespansWithDate,
   castFtsWithTimespansWithDate,
 } from "~/utils/models/ftTimespan";
+import { Period, castPeriods } from "~/utils/models/period";
 import {
   User,
   VolunteerTask,
@@ -45,6 +46,7 @@ export type BulkAssignmentRequest = {
 
 const UserRepo = RepoFactory.userRepo;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
+const AvailabilityRepo = RepoFactory.VolunteerAvailabilityRepository;
 
 export const state = () => ({
   volunteers: [] as Volunteer[],
@@ -141,6 +143,16 @@ export const mutations = mutationTree(state, {
 
   SET_CANDIDATES_FRIENDS(state, friends: Volunteer[]) {
     state.taskAssignment = state.taskAssignment.withCandidatesFriends(friends);
+  },
+
+  SET_CANDIDATE_AVAILABILITIES(
+    state,
+    { availabilities, id }: { availabilities: Period[]; id: number }
+  ) {
+    state.taskAssignment = state.taskAssignment.withCandidateAvailabilities(
+      id,
+      availabilities
+    );
   },
 
   ASSIGN_VOLUNTEER_AS_MEMBER_OF(
@@ -284,22 +296,30 @@ export const actions = actionTree(
     },
 
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
-      const [userRequestsRes, assignmentRes, ...volunteerFriendsRes] =
-        await Promise.all([
-          safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
-          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
-          ...state.taskAssignment.candidateToRetrieveFriendsFor.map(
-            ({ volunteer }) =>
-              safeCall(
+      const [
+        userRequestsRes,
+        assignmentRes,
+        availabilitiesRes,
+        ...volunteerFriendsRes
+      ] = await Promise.all([
+        safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
+        safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
+        safeCall(
+          this,
+          AvailabilityRepo.getVolunteerAvailabilities(this, volunteerId)
+        ),
+        ...state.taskAssignment.candidateToRetrieveFriendsFor.map(
+          ({ volunteer }) =>
+            safeCall(
+              this,
+              AssignmentRepo.getAvailableFriends(
                 this,
-                AssignmentRepo.getAvailableFriends(
-                  this,
-                  volunteer.id,
-                  state.selectedTimespan?.id ?? 0
-                )
+                volunteer.id,
+                state.selectedTimespan?.id ?? 0
               )
-          ),
-        ]);
+            )
+        ),
+      ]);
       const tasks = castVolunteerTaskWithDate([
         ...(userRequestsRes?.data ?? []),
         ...(assignmentRes?.data ?? []),
@@ -309,6 +329,11 @@ export const actions = actionTree(
         (res) => res?.data ?? []
       );
       commit("SET_CANDIDATES_FRIENDS", candidateFriends);
+      const availabilities = castPeriods(availabilitiesRes?.data ?? []);
+      commit("SET_CANDIDATE_AVAILABILITIES", {
+        availabilities,
+        id: volunteerId,
+      });
     },
 
     resetAssignment({ commit }) {

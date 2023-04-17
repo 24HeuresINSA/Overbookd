@@ -60,7 +60,7 @@
                 </div>
               </div>
             </template>
-            <template #interval="{ hour, time, timeToY }">
+            <template #interval="{ hour, time, date, timeToY, category }">
               <div
                 :class="{
                   shift: isShiftHour(hour),
@@ -71,6 +71,11 @@
                 }"
                 :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
               ></div>
+              <div
+                :class="{
+                  available: isVolunteerAvailable(date, time, +category),
+                }"
+              />
             </template>
           </v-calendar>
           <div class="planning__teams">
@@ -136,6 +141,8 @@ import {
 import { Volunteer } from "~/utils/models/assignment";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
+import { computeNextHourDate } from "~/utils/date/dateUtils";
+import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 
 export default Vue.extend({
   name: "AssignmentForm",
@@ -211,6 +218,20 @@ export default Vue.extend({
     this.calendarDate = this.start;
   },
   methods: {
+    isVolunteerAvailable(
+      date: string,
+      time: string,
+      candidateId: number
+    ): boolean {
+      const candidate = this.taskAssignment.getCandidate(candidateId);
+      if (!candidate) return false;
+
+      const start = new Date(`${date} ${time}`);
+      const end = computeNextHourDate(start);
+      return candidate.availabilities.some(
+        isPeriodIncludedByAnother({ start, end })
+      );
+    },
     retrieveVolunteer(id: string): Volunteer | undefined {
       return this.taskAssignment.getCandidate(+id)?.volunteer;
     },
@@ -397,16 +418,6 @@ export default Vue.extend({
     .volunteer-resume {
       width: 100%;
     }
-    &-teams {
-      min-width: $calendar-category-column-min-width;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      .not-selected {
-        opacity: 0.4;
-      }
-    }
   }
 
   &__action {
@@ -415,5 +426,22 @@ export default Vue.extend({
     justify-content: center;
     min-height: 36px;
   }
+}
+
+.candidate-teams {
+  min-width: $calendar-category-column-min-width;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  .not-selected {
+    opacity: 0.4;
+  }
+}
+
+.available {
+  background-color: $calendar-available-background-color;
+  height: 100%;
+  width: 100%;
 }
 </style>
