@@ -235,8 +235,7 @@ export default {
       return this.$accessor.team.allTeams;
     },
     formattedSelectedUserPhone() {
-      let phone = this.selectedUser.phone;
-      if (phone[0] !== "0") phone = "0" + phone;
+      const phone = (this.selectedUser.phone ?? "").padStart(10, "0");
       return phone.replace(/(\d{2})/g, "$1 ");
     },
   },
