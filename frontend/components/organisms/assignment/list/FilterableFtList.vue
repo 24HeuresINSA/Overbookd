@@ -8,6 +8,7 @@
         @change:search="ft = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
+        @change:completed="completed = $event"
       ></FtTimespanFilters>
       <v-divider />
       <TaskList :fts="filteredFts" class="task-list" />
@@ -33,20 +34,20 @@ export default Vue.extend({
   name: "FilterableFtList",
   components: { FtTimespanFilters, TaskList },
   data: () => ({
+    completed: false,
     teams: [] as Team[],
     ft: "",
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
     filteredFts(): FtWithTimespan[] {
-      const filteredFts = this.$accessor.assignment.assignableFts.filter(
-        (ft) => {
-          return (
-            this.filterFtByTeamRequests(this.teams)(ft) &&
-            this.filterFtByCatergoryOrPriority(this.category)(ft)
-          );
-        }
-      );
+      const filteredFts = this.$accessor.assignment.fts.filter((ft) => {
+        return (
+          this.filterFtByTeamRequests(this.teams)(ft) &&
+          this.filterFtByCatergoryOrPriority(this.category)(ft) &&
+          this.filterFtByQuantity(ft)
+        );
+      });
       return this.fuzzyFindFt(filteredFts, this.ft);
     },
   },
@@ -90,6 +91,14 @@ export default Vue.extend({
     ): (ft: FtWithTimespan) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
+    },
+    filterFtByQuantity({ timespans }: FtWithTimespan): boolean {
+      if (this.completed) return true;
+      return timespans.some(({ requestedTeams }) =>
+        requestedTeams.some(
+          ({ quantity, assignmentCount }) => quantity > assignmentCount
+        )
+      );
     },
     fuzzyFindFt(fts: FtWithTimespan[], search?: string): FtWithTimespan[] {
       if (!search) return fts;
