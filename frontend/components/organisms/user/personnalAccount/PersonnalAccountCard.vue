@@ -56,7 +56,7 @@ import Vue from "vue";
 import TransferDialog from "~/components/molecules/user/TransferDialog.vue";
 
 export default Vue.extend({
-  name: "ComptesPersosCard",
+  name: "PersonnalAccountCard",
   components: { TransferDialog },
   data() {
     return {
