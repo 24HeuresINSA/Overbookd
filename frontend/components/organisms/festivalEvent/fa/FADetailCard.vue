@@ -10,7 +10,7 @@
     <v-card-text>
       <v-form @submit.prevent="">
         <RichEditor
-          :data="mFA.description"
+          :data="mFA.description ?? ''"
           label="Description"
           :disabled="isValidatedByOwner"
           class="mb-4"
@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import RichEditor from "~/components/atoms/field/RichEditor.vue";
+import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import { FA, fa_card_type } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
