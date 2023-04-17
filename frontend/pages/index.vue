@@ -35,7 +35,7 @@
           <FriendsCard />
         </v-col>
         <v-col cols="12" sm="6" md="8">
-          <ComptesPersosCard v-if="hasPermission('cp')" />
+          <PersonnalAccountCard v-if="hasPermission('cp')" />
           <CommentEditionCard v-else />
         </v-col>
       </v-row>
@@ -60,19 +60,19 @@
 </template>
 
 <script>
-import UserCard from "~/components/organisms/UserCard.vue";
-import UserNotifications from "~/components/organisms/UserNotifications.vue";
+import UserCard from "~/components/organisms/user/data/UserCard.vue";
+import UserNotifications from "~/components/organisms/user/data/UserNotifications.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import ComptesPersosCard from "~/components/organisms/ComptesPersosCard.vue";
-import FriendsCard from "~/components/molecules/friends/FriendsCard.vue";
-import CommentEditionCard from "~/components/organisms/CommentEditionCard.vue";
+import PersonnalAccountCard from "~/components/organisms/user/personnalAccount/PersonnalAccountCard.vue";
+import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
+import CommentEditionCard from "~/components/organisms/user/data/CommentEditionCard.vue";
 
 export default {
   components: {
     UserCard,
     UserNotifications,
     SnackNotificationContainer,
-    ComptesPersosCard,
+    PersonnalAccountCard,
     FriendsCard,
     CommentEditionCard,
   },

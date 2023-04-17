@@ -214,7 +214,7 @@
 import Fuse from "fuse.js";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import UserInformation from "~/components/organisms/UserInformation.vue";
+import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
 
 const { RepoFactory } = require("../repositories/repoFactory");
 

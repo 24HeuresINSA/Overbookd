@@ -33,7 +33,7 @@
 import Vue from "vue";
 import Fuse from "fuse.js";
 import VolunteerList from "~/components/molecules/assignment/list/VolunteerList.vue";
-import FriendsDisplay from "~/components/molecules/friends/FriendsDisplay.vue";
+import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team";
 import {

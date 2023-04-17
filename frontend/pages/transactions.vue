@@ -31,7 +31,7 @@
 
 <script>
 import { RepoFactory } from "~/repositories/repoFactory";
-import OverTransactions from "~/components/OverTransactions.vue";
+import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
 const { safeCall } = require("../utils/api/calls");
 
 export default {

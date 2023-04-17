@@ -16,12 +16,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FilterableVolunteerList from "~/components/organisms/assignment/FilterableVolunteerList.vue";
-import FilterableTimespanList from "~/components/organisms/assignment/FilterableTimespanList.vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
+import FilterableTimespanList from "~/components/organisms/assignment/list/FilterableTimespanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
-import OrgaTaskCalendar from "~/components/organisms/assignment/OrgaTaskCalendar.vue";
+import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import TimespanDetails from "~/components/organisms/assignment/TimespanDetails.vue";
+import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
 
 export default Vue.extend({
   name: "OrgaTask",

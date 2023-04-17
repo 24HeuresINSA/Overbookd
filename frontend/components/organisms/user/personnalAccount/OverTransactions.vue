@@ -60,8 +60,8 @@
 </template>
 
 <script>
-import SnackNotificationContainer from "./molecules/snack/SnackNotificationContainer.vue";
-const { safeCall } = require("../utils/api/calls");
+import SnackNotificationContainer from "../../../molecules/snack/SnackNotificationContainer.vue";
+const { safeCall } = require("../../../../utils/api/calls");
 import { RepoFactory } from "~/repositories/repoFactory";
 
 export default {

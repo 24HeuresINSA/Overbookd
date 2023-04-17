@@ -84,10 +84,10 @@ import { GearSearchOptions } from "~/store/catalog";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/Data";
 import { Team } from "~/utils/models/team";
-import ConfirmationMessage from "../atoms/card/ConfirmationMessage.vue";
-import SearchCategory from "../atoms/field/search/SearchCategory.vue";
-import SearchTeam from "../atoms/field/search/SearchTeam.vue";
-import GearForm from "./form/GearForm.vue";
+import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
+import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
+import SearchTeam from "../../atoms/field/search/SearchTeam.vue";
+import GearForm from "../../molecules/logistic/GearForm.vue";
 
 interface GearListingData {
   headers: Header[];

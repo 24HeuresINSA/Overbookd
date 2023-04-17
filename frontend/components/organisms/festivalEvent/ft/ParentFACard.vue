@@ -19,7 +19,7 @@
 import Vue from "vue";
 import SearchFA from "~/components/atoms/field/search/SearchFA.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import CompleteLogisticsTable from "~/components/molecules/festivalEvent/logistics/CompleteLogisticsTable.vue";
+import CompleteLogisticsTable from "~/components/molecules/festivalEvent/logistic/CompleteLogisticsTable.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,

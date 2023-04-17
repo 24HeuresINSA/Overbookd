@@ -81,7 +81,7 @@
 <script lang="js">
 import Vue from "vue";
 import {RepoFactory} from "~/repositories/repoFactory";
-import ShowCalendar from "../components/ShowCalendar";
+import ShowCalendar from "~/components/organisms/planning/ShowCalendar.vue";
 
 export default Vue.extend({
   name: "Planning",
