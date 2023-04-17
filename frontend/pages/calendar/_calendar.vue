@@ -170,7 +170,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .available {
-  background-color: rgba(95, 219, 72, 0.45);
+  background-color: $calendar-available-background-color;
   height: 100%;
   width: 100%;
 }

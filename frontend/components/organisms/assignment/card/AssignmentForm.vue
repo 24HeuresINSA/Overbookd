@@ -223,10 +223,11 @@ export default Vue.extend({
       time: string,
       candidateId: number
     ): boolean {
-      const start = new Date(`${date} ${time}`);
-      const end = computeNextHourDate(start);
       const candidate = this.taskAssignment.getCandidate(candidateId);
       if (!candidate) return false;
+
+      const start = new Date(`${date} ${time}`);
+      const end = computeNextHourDate(start);
       return candidate.availabilities.some(
         isPeriodIncludedByAnother({ start, end })
       );
@@ -439,7 +440,7 @@ export default Vue.extend({
 }
 
 .available {
-  background-color: rgba(95, 219, 72, 0.45);
+  background-color: $calendar-available-background-color;
   height: 100%;
   width: 100%;
 }
