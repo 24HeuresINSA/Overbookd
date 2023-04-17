@@ -22,8 +22,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DateTimeField from "~/components/atoms/DateTimeField.vue";
 import { OrgaNeedsResponse } from "~/store/orgaNeeds";
+import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
 
 const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
