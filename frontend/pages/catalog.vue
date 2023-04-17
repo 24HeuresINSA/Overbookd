@@ -26,9 +26,9 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CategoriesTreeView from "~/components/organisms/gear/CategoriesTreeView.vue";
-import GearForm from "~/components/molecules/gear/GearForm.vue";
-import GearListing from "~/components/organisms/gear/GearListing.vue";
+import CategoriesTreeView from "~/components/organisms/logistic/CategoriesTreeView.vue";
+import GearForm from "~/components/molecules/logistic/GearForm.vue";
+import GearListing from "~/components/organisms/logistic/GearListing.vue";
 
 export default Vue.extend({
   name: "Catalog",

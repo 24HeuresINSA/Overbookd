@@ -45,8 +45,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Category, CategoryTree } from "~/utils/models/catalog.model";
-import CategoryDetails from "../../molecules/gear/CategoryDetails.vue";
-import CategoryForm from "../../molecules/gear/CategoryForm.vue";
+import CategoryDetails from "../../molecules/logistic/CategoryDetails.vue";
+import CategoryForm from "../../molecules/logistic/CategoryForm.vue";
 
 interface CategoryTreeViewData {
   isCreateDialogOpen: boolean;

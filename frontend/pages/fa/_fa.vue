@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistics/LogisticTimeWindow.vue";
+import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistic/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import CommentCard from "~/components/organisms/festivalEvent/fa/CommentCard.vue";
 import ChildFTCard from "~/components/organisms/festivalEvent/fa/ChildFTCard.vue";

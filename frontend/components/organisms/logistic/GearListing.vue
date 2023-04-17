@@ -87,7 +87,7 @@ import { Team } from "~/utils/models/team";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 import SearchTeam from "../../atoms/field/search/SearchTeam.vue";
-import GearForm from "../../molecules/gear/GearForm.vue";
+import GearForm from "../../molecules/logistic/GearForm.vue";
 
 interface GearListingData {
   headers: Header[];

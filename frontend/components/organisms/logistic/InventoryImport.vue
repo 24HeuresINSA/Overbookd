@@ -84,7 +84,7 @@ import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,
 } from "~/domain/inventory/manual-inventory-record";
-import InventoryRecordForm from "../../molecules/gear/InventoryRecordForm.vue";
+import InventoryRecordForm from "../../molecules/logistic/InventoryRecordForm.vue";
 import { removeItemAtIndex } from "~/utils/functions/list";
 
 interface InventoryData {

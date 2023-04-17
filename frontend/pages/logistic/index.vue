@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import GearRequestListing from "~/components/organisms/gear/GearRequestListing.vue";
+import GearRequestListing from "~/components/organisms/logistic/GearRequestListing.vue";
 
 export default Vue.extend({
   name: "Logistic",
