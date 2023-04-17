@@ -38,14 +38,14 @@ export default {
   },
   watch: {
     data() {
-      //this.editor.commands.setContent(this.data ?? "");
+      this.editor.commands.setContent(this.data ?? "");
       this.editor.setEditable(!this.disabled);
     },
   },
   mounted() {
     this.editor = new Editor({
       extensions: [StarterKit],
-      content: "<u>hello world</u>",
+      content: this.data ?? "",
       editable: !this.disabled,
       onBlur: () => this.update(),
     });
