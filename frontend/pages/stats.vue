@@ -30,7 +30,7 @@ export default Vue.extend({
     };
   },
   head: () => ({
-    title: "Statis",
+    title: "Statistiques",
   }),
   async mounted() {
     if (!this.$accessor.user.hasPermission("hard")) {
