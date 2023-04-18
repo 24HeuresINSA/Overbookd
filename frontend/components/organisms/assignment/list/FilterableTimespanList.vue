@@ -1,6 +1,6 @@
 <template>
   <v-card class="filterable-timespan-list">
-    <v-card-text>
+    <v-card-text class="filterable-timespan-list__text">
       <FtTimespanFilters
         :list-length="filteredTimespans.length"
         class="filters"
@@ -151,15 +151,19 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 190px;
+$filters-height: 225px;
 $header-footer-height: 100px;
 $card-padding: 32px;
 
 .filterable-timespan-list {
   width: 100%;
-  max-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
+
+  &__text {
+    padding: 0;
+  }
 }
 
 .filters {
@@ -167,19 +171,17 @@ $card-padding: 32px;
   height: $filters-height;
 }
 
-.timespan-list,
-.error-message {
-  width: 100%;
-  height: calc(
-    100vh - #{$filters-height + $header-footer-height + $card-padding}
-  );
-  display: flex;
-  flex-direction: column;
+.timespan-list {
+  padding: 0 5px;
+  height: calc(100vh - #{$filters-height + $header-footer-height});
 }
 
 .error-message {
   align-items: center;
   justify-content: center;
+  display: flex;
+  height: calc(100vh - #{$filters-height + $header-footer-height});
+  margin: 0 5%;
 
   p {
     text-align: center;

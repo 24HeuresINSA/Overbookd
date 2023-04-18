@@ -6,7 +6,7 @@
       label="Recherche"
       @input="changeSearch"
     ></v-text-field>
-    <div class="team_filter_completed_switch">
+    <div class="team-filter-completed-switch">
       <SearchTeams
         :value="teams"
         class="filters__field"
@@ -16,6 +16,7 @@
       <v-switch
         v-model="completed"
         label="Toutes les FTs"
+        class="filters__switch"
         @change="changeCompleted"
       ></v-switch>
     </div>
@@ -100,18 +101,16 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 190px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: 25px;
-  padding: 0 25px;
 
   &__field {
     width: 100%;
-    padding-top: 0;
-    margin-top: 0;
+    padding: 0 25px;
   }
 }
 
@@ -119,10 +118,19 @@ export default Vue.extend({
   margin-bottom: 5px;
 }
 
-.team_filter_completed_switch {
+.team-filter-completed-switch {
   width: 100%;
   display: flex;
   align-items: center;
   gap: 5px;
+  .filters {
+    &__field {
+      padding-right: 10px;
+    }
+    &__switch {
+      margin-top: 0;
+      margin-right: 5px;
+    }
+  }
 }
 </style>

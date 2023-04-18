@@ -13,7 +13,7 @@
         v-if="shouldShowVolunteerList"
         :volunteers="filteredVolunteers"
         class="volunteer-list"
-        :class="shouldDisplayFriends ? 'volunteer-list--with-friend-list' : ''"
+        :class="isOrgaTaskMode ? 'volunteer-list--with-friend-list' : ''"
         @select-volunteer="handleVolunteerSelection"
       ></VolunteerList>
       <div v-else class="error-message">
@@ -21,7 +21,7 @@
         <p v-else>Aucun bénévole disponible pour ce créneau</p>
       </div>
       <FriendsDisplay
-        v-if="shouldDisplayFriends"
+        v-if="isOrgaTaskMode"
         class="friend-list"
         @select-volunteer="handleVolunteerSelection"
       ></FriendsDisplay>
@@ -80,9 +80,6 @@ export default Vue.extend({
         this.isOrgaTaskMode ||
         (this.selectedTimespan !== null && this.filteredVolunteers.length > 0)
       );
-    },
-    shouldDisplayFriends(): boolean {
-      return this.isOrgaTaskMode && this.hasSelectedVolunteer;
     },
   },
   methods: {
@@ -175,9 +172,6 @@ $friends-height: 160px;
 }
 
 .friend-list {
-  max-width: calc(20% - 10px);
   height: $friends-height;
-  position: fixed;
-  bottom: 36px;
 }
 </style>
