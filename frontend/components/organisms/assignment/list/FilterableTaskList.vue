@@ -31,7 +31,7 @@ import { Team } from "~/utils/models/team";
 import { TaskPriorities } from "~/utils/models/ftTimespan";
 
 export default Vue.extend({
-  name: "FilterableFtList",
+  name: "FilterableTaskList",
   components: { FtTimespanFilters, TaskList },
   data: () => ({
     completed: false,

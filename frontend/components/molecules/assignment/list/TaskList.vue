@@ -1,7 +1,12 @@
 <template>
   <v-virtual-scroll :items="fts" item-height="64" class="virtual-scroll">
     <template #default="{ item }">
-      <v-list-item :key="item.id" :value="item.id" @click="selectFt(item)">
+      <v-list-item
+        :key="item.id"
+        v-model="selectedTaskId"
+        :value="item.id"
+        @click="selectFt(item)"
+      >
         <TaskResume :ft="item" />
       </v-list-item>
     </template>
@@ -24,6 +29,17 @@ export default Vue.extend({
       type: Array as () => FtWithTimespan[],
       required: true,
       default: () => [],
+    },
+  },
+  computed: {
+    selectedTaskId: {
+      get(): number | null {
+        return this.$accessor.assignment.selectedFt?.id ?? null;
+      },
+      set(ftId: number): void {
+        const ft = this.fts.find((ft) => ft.id === ftId);
+        if (ft) this.selectFt(ft);
+      },
     },
   },
   methods: {
