@@ -1,8 +1,29 @@
 import { Period } from 'src/volunteer-availability/domain/period.model';
-import { Task } from '../domain/task.model';
+import { Assignment, Task, Volunteer } from '../domain/task.model';
 import { ApiProperty } from '@nestjs/swagger';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 
+class VolunteerRepresentation implements Volunteer {
+  id: number;
+  name: string;
+}
+
+class AssignmentRepresentation implements Assignment {
+  @ApiProperty({
+    name: 'period',
+    description: 'period volunteers are assigned',
+    type: PeriodDto,
+  })
+  period: Period;
+
+  @ApiProperty({
+    name: 'volunteers',
+    description: "volunteer's assigned during the period",
+    type: VolunteerRepresentation,
+    isArray: true,
+  })
+  volunteers: Volunteer[];
+}
 export class TaskResponseDto implements Task {
   @ApiProperty({
     name: 'name',
@@ -31,4 +52,12 @@ export class TaskResponseDto implements Task {
     type: String,
   })
   location: string;
+
+  @ApiProperty({
+    name: 'assignments',
+    description: 'other volunteers assigned during similar periods',
+    type: AssignmentRepresentation,
+    isArray: true,
+  })
+  assignments: Assignment[];
 }
