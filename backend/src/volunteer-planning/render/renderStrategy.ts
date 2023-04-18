@@ -1,7 +1,8 @@
-import { createEvents, DateArray } from 'ics';
+import { EventAttributes, createEvents } from 'ics';
 
-import { Task } from '../domain/task.model';
-import { formatDateWithHoursAndMinutesOnly } from 'src/utils/date';
+import { Assignment, Task } from '../domain/task.model';
+import { formatDateWithHoursAndMinutesOnly, toDateArray } from 'src/utils/date';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 export const JsonType = 'application/json';
 export const IcalType = 'text/calendar';
@@ -35,47 +36,49 @@ class JsonRenderStrategy implements RenderStrategy {
 class IcalRenderStrategy implements RenderStrategy {
   render(tasks: Task[]) {
     return new Promise((res, rej) => {
-      const events = tasks.map((task) => {
-        const start: DateArray = [
-          task.period.start.getFullYear(),
-          task.period.start.getMonth() + 1,
-          task.period.start.getDate(),
-          task.period.start.getHours(),
-          task.period.start.getMinutes(),
-        ];
-        const end: DateArray = [
-          task.period.end.getFullYear(),
-          task.period.end.getMonth() + 1,
-          task.period.end.getDate(),
-          task.period.end.getHours(),
-          task.period.end.getMinutes(),
-        ];
-        const assignmentsDescription = task.assignments.reduce(
-          (description, assignment) => {
-            const volunteers = assignment.volunteers
-              .map(({ name }) => `<li>${name}</li>`)
-              .join('');
-            const period = `${formatDateWithHoursAndMinutesOnly(
-              assignment.period.start,
-            )} - ${formatDateWithHoursAndMinutesOnly(assignment.period.end)}`;
-            return `${description}\n<li>${period}<ul>${volunteers}</ul></li>`;
-          },
-          '<h2>Affectés avec toi</h2><ul>',
-        );
-        const description = `${task.description}\n\n${assignmentsDescription}</ul>`;
-        return {
-          start,
-          end,
-          title: task.name,
-          location: task.location,
-          calName: "24 Heures de l'INSA - 48e",
-          description,
-        };
-      });
+      const events = tasks.map((task) => this.buildIcalEvent(task));
       createEvents(events, (error, value) => {
         if (error) rej(error);
         res(value);
       });
     });
+  }
+
+  private buildIcalEvent(task: Task): EventAttributes {
+    const start = toDateArray(task.period.start);
+    const end = toDateArray(task.period.end);
+    const assignments = this.buildAssignmentsDescription(task.assignments);
+    const description = `${task.description}${assignments}`;
+
+    return {
+      start,
+      end,
+      title: task.name,
+      location: task.location,
+      calName: "24 Heures de l'INSA - 48e",
+      description,
+    };
+  }
+
+  private buildAssignmentsDescription(assignments: Assignment[]) {
+    const header = '<h2>Affectés avec toi</h2>';
+    const listing = assignments.reduce((description, assignment) => {
+      const volunteers = this.generateVolunteerList(assignment);
+      const period = this.generatePeriodHeader(assignment.period);
+      return `${description}<li>${period}<ul>${volunteers}</ul></li>`;
+    }, '');
+
+    return `${header}<ul>${listing}</ul>`;
+  }
+
+  private generatePeriodHeader(period: Period) {
+    const start = formatDateWithHoursAndMinutesOnly(period.start);
+    const end = formatDateWithHoursAndMinutesOnly(period.end);
+
+    return `<h3>${start} - ${end}</h3>`;
+  }
+
+  private generateVolunteerList(assignment: Assignment) {
+    return assignment.volunteers.map(({ name }) => `<li>${name}</li>`).join('');
   }
 }

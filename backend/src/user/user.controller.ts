@@ -104,10 +104,23 @@ export class UserController {
   })
   @ApiProduces(JsonType, IcalType)
   async getCurrentVolunteerPlanning(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @RequestDecorator() request: RequestWithUserPayload,
+    @Res() response: Response,
   ): Promise<TaskResponseDto[]> {
-    const volunteerId = req.user.userId ?? req.user.id;
-    return this.planningService.getVolunteerPlanning(volunteerId);
+    const volunteerId = request.user.userId ?? request.user.id;
+    const format = request.headers.accept;
+    try {
+      const planning = await this.formatPlanning(volunteerId, format);
+      response.setHeader('content-type', format);
+      response.send(planning);
+      return;
+    } catch (e) {
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      response.status(500).send(e);
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -245,13 +258,9 @@ export class UserController {
   ): Promise<TaskResponseDto[]> {
     const format = request.headers.accept;
     try {
-      const tasks = await this.planningService.getVolunteerPlanning(
-        volunteerId,
-      );
-      const renderStrategy = PlanningRenderStrategy.get(format);
+      const planning = await this.formatPlanning(volunteerId, format);
       response.setHeader('content-type', format);
-      const render = await renderStrategy.render(tasks);
-      response.send(render);
+      response.send(planning);
       return;
     } catch (e) {
       if (e instanceof HttpException) {
@@ -260,6 +269,13 @@ export class UserController {
       }
       response.status(500).send(e);
     }
+  }
+
+  private async formatPlanning(volunteerId: number, format: string) {
+    const tasks = await this.planningService.getVolunteerPlanning(volunteerId);
+    const renderStrategy = PlanningRenderStrategy.get(format);
+    const render = await renderStrategy.render(tasks);
+    return render;
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
