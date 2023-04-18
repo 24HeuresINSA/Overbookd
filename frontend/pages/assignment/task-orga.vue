@@ -5,7 +5,7 @@
       class="calendar"
       @display-timespan-details="openTimespanDetailsDialog"
     />
-    <FilterableFtList class="task-list" />
+    <FilterableTaskList class="task-list" />
     <SnackNotificationContainer />
 
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
@@ -21,7 +21,7 @@
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AssignmentForm from "~/components/organisms/assignment/card/AssignmentForm.vue";
-import FilterableFtList from "~/components/organisms/assignment/list/FilterableFtList.vue";
+import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
@@ -31,7 +31,7 @@ export default Vue.extend({
   name: "TaskOrga",
   components: {
     FilterableVolunteerList,
-    FilterableFtList,
+    FilterableTaskList,
     TaskOrgaCalendar,
     AssignmentForm,
     TimespanDetails,

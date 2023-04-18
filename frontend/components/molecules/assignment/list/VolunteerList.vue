@@ -1,13 +1,11 @@
 <template>
   <v-virtual-scroll :items="volunteers" item-height="80" class="virtual-scroll">
     <template #default="{ item }">
-      <v-list-item
-        :key="item.id"
-        :value="item.id"
-        @click="selectVolunteer(item)"
-      >
-        <VolunteerResume :volunteer="item" />
-      </v-list-item>
+      <v-list-item-group v-model="selectedVolunteerId">
+        <v-list-item :key="item.id" :value="item">
+          <VolunteerResume :volunteer="item" />
+        </v-list-item>
+      </v-list-item-group>
     </template>
   </v-virtual-scroll>
 </template>
@@ -27,9 +25,14 @@ export default Vue.extend({
       default: () => [],
     },
   },
-  methods: {
-    selectVolunteer(volunteer: Volunteer) {
-      this.$emit("select-volunteer", volunteer);
+  computed: {
+    selectedVolunteerId: {
+      get(): number | null {
+        return this.$accessor.assignment.selectedVolunteer?.id ?? null;
+      },
+      set(volunteer: Volunteer): void {
+        this.$emit("select-volunteer", volunteer);
+      },
     },
   },
 });
