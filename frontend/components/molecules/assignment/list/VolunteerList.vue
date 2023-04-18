@@ -31,6 +31,7 @@ export default Vue.extend({
         return this.$accessor.assignment.selectedVolunteer?.id ?? null;
       },
       set(volunteer: Volunteer): void {
+        if (!volunteer) return;
         this.$emit("select-volunteer", volunteer);
       },
     },
