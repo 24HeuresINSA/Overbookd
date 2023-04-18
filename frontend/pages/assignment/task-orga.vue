@@ -40,6 +40,9 @@ export default Vue.extend({
   data: () => ({
     displayTimespanDetailsDialog: false,
   }),
+  head: () => ({
+    title: "Affect Tâche-Orga",
+  }),
   computed: {
     ftWithTimespans(): FtWithTimespan[] {
       return this.$accessor.assignment.fts;

@@ -204,6 +204,10 @@ export default {
     };
   },
 
+  head: () => ({
+    title: "SG",
+  }),
+
   computed: {
     totalConsumptions() {
       let totalConsumptions = 0;

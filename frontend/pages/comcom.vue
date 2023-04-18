@@ -97,6 +97,9 @@ export default Vue.extend({
       ],
     };
   },
+  head: () => ({
+    title: "Animations à publier",
+  }),
   computed: {
     publishAnimations(): SitePublishAnimationWithFa[] {
       return this.$accessor.publishAnimation.publishAnimations;

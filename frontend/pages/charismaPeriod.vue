@@ -53,6 +53,9 @@ export default Vue.extend({
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
   }),
+  head: () => ({
+    title: "Charisme des dipos",
+  }),
   async mounted() {
     await this.$accessor.charismaPeriod.fetchCharismaPeriods();
   },

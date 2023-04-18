@@ -23,6 +23,9 @@ export default Vue.extend({
   data: (): InventoryData => ({
     importing: false,
   }),
+  head: () => ({
+    title: "Inventaire",
+  }),
   methods: {
     switchToImport() {
       this.importing = true;

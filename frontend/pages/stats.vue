@@ -29,6 +29,9 @@ export default Vue.extend({
       name: "FA",
     };
   },
+  head: () => ({
+    title: "Statis",
+  }),
   async mounted() {
     if (!this.$accessor.user.hasPermission("hard")) {
       await this.$router.push({

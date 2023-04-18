@@ -263,6 +263,10 @@ export default {
     };
   },
 
+  head: () => ({
+    title: "Liste des bénévoles",
+  }),
+
   computed: {
     users() {
       return this.$accessor.user.users.filter(({ is_deleted }) => !is_deleted);

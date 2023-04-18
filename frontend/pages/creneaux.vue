@@ -116,6 +116,10 @@ export default Vue.extend({
     };
   },
 
+  head: () => ({
+    title: "Créneaux",
+  }),
+
   async beforeMount() {
     if (this.$accessor.user.hasPermission("can-affect")) {
       await this.getAllTimeSpans();

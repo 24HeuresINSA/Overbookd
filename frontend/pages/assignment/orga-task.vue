@@ -35,6 +35,9 @@ export default Vue.extend({
   data: () => ({
     displayTimespanDetailsDialog: false,
   }),
+  head: () => ({
+    title: "Affect Orga-Tâche",
+  }),
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers;
