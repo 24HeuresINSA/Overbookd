@@ -9,10 +9,18 @@ import {
   Patch,
   Post,
   Put,
-  Request,
   UseGuards,
+  Request as RequestDecorator,
+  Res,
+  HttpException,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
@@ -34,6 +42,12 @@ import {
 } from './user.service';
 import { TaskResponseDto } from 'src/volunteer-planning/dto/taskResponse.dto';
 import { VolunteerPlanningService } from 'src/volunteer-planning/volunteer-planning.service';
+import { Request, Response } from 'express';
+import {
+  IcalType,
+  JsonType,
+  PlanningRenderStrategy,
+} from 'src/volunteer-planning/render/renderStrategy';
 
 @ApiTags('user')
 @Controller('user')
@@ -73,7 +87,7 @@ export class UserController {
     description: 'Get a current user',
   })
   async getCurrentUser(
-    @Request() req: RequestWithUserPayload,
+    @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<MyUserInformation | null> {
     return this.userService.user({ id: req.user.userId ?? req.user.id });
   }
@@ -88,8 +102,9 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
+  @ApiProduces(JsonType, IcalType)
   async getCurrentVolunteerPlanning(
-    @Request() req: RequestWithUserPayload,
+    @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<TaskResponseDto[]> {
     const volunteerId = req.user.userId ?? req.user.id;
     return this.planningService.getVolunteerPlanning(volunteerId);
@@ -103,7 +118,7 @@ export class UserController {
     description: 'Update a current user',
   })
   async updateCurrentUser(
-    @Request() req: RequestWithUserPayload,
+    @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: Partial<UserModificationDto>,
   ): Promise<UserWithTeamAndPermission | null> {
     return this.userService.updateUserPersonnalData(req.user.id, userData);
@@ -222,10 +237,29 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
+  @ApiProduces(JsonType, IcalType)
   async getVolunteerPlanning(
     @Param('id', ParseIntPipe) volunteerId: number,
+    @RequestDecorator() request: Request,
+    @Res() response: Response,
   ): Promise<TaskResponseDto[]> {
-    return this.planningService.getVolunteerPlanning(volunteerId);
+    const format = request.headers.accept;
+    try {
+      const tasks = await this.planningService.getVolunteerPlanning(
+        volunteerId,
+      );
+      const renderStrategy = PlanningRenderStrategy.get(format);
+      response.setHeader('content-type', format);
+      const render = await renderStrategy.render(tasks);
+      response.send(render);
+      return;
+    } catch (e) {
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      response.status(500).send(e);
+    }
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -254,7 +288,7 @@ export class UserController {
   updateUserById(
     @Param('id', ParseIntPipe) targetUserId: number,
     @Body() user: UserModificationDto,
-    @Request() req: RequestWithUserPayload,
+    @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<UserWithTeamAndPermission> {
     return this.userService.updateUser(
       targetUserId,
