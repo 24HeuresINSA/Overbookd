@@ -160,18 +160,18 @@ export default Vue.extend({
       return this.$accessor.assignment.taskAssignment;
     },
     taskTitle(): string {
-      const id = this.$accessor.assignment.taskAssignment.task.id;
-      const name = this.$accessor.assignment.taskAssignment.task.name;
+      const id = this.taskAssignment.task.id;
+      const name = this.taskAssignment.task.name;
       return `[${id}] ${name}`;
     },
     mainCandidate(): AssignmentCandidate | undefined {
-      return this.$accessor.assignment.taskAssignment.candidates.at(0);
+      return this.taskAssignment.candidates.at(0);
     },
     start(): Date {
-      return this.$accessor.assignment.taskAssignment.task.start;
+      return this.taskAssignment.task.start;
     },
     volunteerIds(): string[] {
-      return this.$accessor.assignment.taskAssignment.candidates.map((c) =>
+      return this.taskAssignment.candidates.map((c) =>
         c.volunteer.id.toString()
       );
     },
@@ -195,18 +195,16 @@ export default Vue.extend({
       return this.$accessor.theme.darkTheme;
     },
     canNotAssign(): boolean {
-      return !this.$accessor.assignment.taskAssignment.canAssign;
+      return !this.taskAssignment.canAssign;
     },
     canNotAssignMoreVolunteer(): boolean {
-      return !this.$accessor.assignment.taskAssignment.canAssignMoreVolunteer;
+      return !this.taskAssignment.canAssignMoreVolunteer;
     },
     areOtherFriendsAvailable(): boolean {
-      return (
-        this.$accessor.assignment.taskAssignment.potentialCandidates.length > 0
-      );
+      return this.taskAssignment.potentialCandidates.length > 0;
     },
     candidates(): AssignmentCandidate[] {
-      return this.$accessor.assignment.taskAssignment.candidates;
+      return this.taskAssignment.candidates;
     },
   },
   watch: {

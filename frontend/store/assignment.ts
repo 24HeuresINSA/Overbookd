@@ -128,6 +128,7 @@ export const mutations = mutationTree(state, {
 
     state.taskAssignment = TaskAssignment.init({
       ...state.selectedTimespan,
+      id: state.selectedFt.id,
       name: state.selectedFt.name,
     })
       .withRemaingTeamRequests(teamRequests)
