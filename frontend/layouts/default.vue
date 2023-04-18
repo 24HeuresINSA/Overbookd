@@ -31,7 +31,6 @@
             :to="item.to"
             router
             exact
-            @click="updatePageTitle(item.title)"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -385,6 +384,12 @@ export default {
     };
   },
 
+  head() {
+    return {
+      title: this.pageTitle,
+    };
+  },
+
   computed: {
     me() {
       return this.$accessor.user.me;
@@ -435,6 +440,14 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     isPreProd() {
       return process.env.BASE_URL.includes("preprod");
     },
+    pageTitle() {
+      const path = this.$route.path;
+      const pageItem = this.working_items.find((item) => item.to === path);
+      if (!pageItem || pageItem.to === "/" || pageItem.to === "/login") {
+        return "Overbookd";
+      }
+      return pageItem.title;
+    },
   },
 
   mounted() {
@@ -481,10 +494,6 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     },
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
-    },
-
-    updatePageTitle(title) {
-      document.title = title;
     },
   },
 };

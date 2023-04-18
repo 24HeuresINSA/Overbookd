@@ -56,8 +56,6 @@ export default Vue.extend({
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchFtsWithTimespans();
-
-    document.title = "Affect Tâche-Orga";
   },
   methods: {
     closeTaskAssignmentDialog() {
