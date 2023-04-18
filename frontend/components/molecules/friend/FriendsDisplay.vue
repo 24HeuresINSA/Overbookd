@@ -40,7 +40,8 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedVolunteerFriends;
     },
     title(): string {
-      return `Amis de ${this.selectedVolunteer?.firstname} :`;
+      const volunteerName = this.selectedVolunteer?.firstname ?? "...";
+      return `Amis de ${volunteerName} :`;
     },
   },
   methods: {
