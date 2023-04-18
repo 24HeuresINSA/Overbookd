@@ -31,6 +31,7 @@
             :to="item.to"
             router
             exact
+            @click="updatePageTitle(item.title)"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -480,6 +481,10 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     },
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
+    },
+
+    updatePageTitle(title) {
+      document.title = title;
     },
   },
 };

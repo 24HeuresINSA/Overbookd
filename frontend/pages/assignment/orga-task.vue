@@ -43,6 +43,8 @@ export default Vue.extend({
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchVolunteers();
+
+    document.title = "Affect Orga-Tâche";
   },
   methods: {
     closeTimespanDetailsDialog() {
