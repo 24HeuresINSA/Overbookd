@@ -43,6 +43,7 @@ export default Vue.extend({
       return getRequiredTeamsInFt(ft);
     },
     selectFt(ft: FtWithTimespan) {
+      if (!ft) return;
       this.$accessor.assignment.setSelectedFt(ft);
       this.$accessor.assignment.setVolunteers([]);
       this.$accessor.assignment.fetchTimespansWithStats(ft.id);
