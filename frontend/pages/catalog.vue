@@ -43,6 +43,9 @@ export default Vue.extend({
       gearCreationDialogOpened: false,
     };
   },
+  head: () => ({
+    title: "Catalogue",
+  }),
   computed: {
     isCatalogWriter(): boolean {
       return this.$accessor.user.hasPermission("catalog-write");

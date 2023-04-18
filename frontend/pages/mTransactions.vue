@@ -20,6 +20,10 @@ export default {
     };
   },
 
+  head: () => ({
+    title: "Mes transactions",
+  }),
+
   computed: {
     mBalance() {
       return this.$accessor.user.me.balance || 0;

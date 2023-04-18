@@ -123,6 +123,10 @@ export default {
     };
   },
 
+  head: () => ({
+    title: "Admin",
+  }),
+
   async mounted() {
     if (this.$accessor.user.hasPermission("config-write")) {
       this.config.isSignupOpen =

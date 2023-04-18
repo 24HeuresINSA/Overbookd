@@ -193,7 +193,7 @@ interface Data {
 }
 
 export default Vue.extend({
-  name: "Index",
+  name: "Ft",
   components: { SnackNotificationContainer, SearchTeam, NewFTCard },
   data(): Data {
     return {
@@ -221,6 +221,10 @@ export default Vue.extend({
       loading: true,
     };
   },
+
+  head: () => ({
+    title: "Fiches Tâches",
+  }),
 
   computed: {
     me(): MyUserInformation {

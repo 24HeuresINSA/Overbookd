@@ -12,5 +12,8 @@ import GearRequestListing from "~/components/organisms/logistic/GearRequestListi
 export default Vue.extend({
   name: "Logistic",
   components: { GearRequestListing },
+  head: () => ({
+    title: "Logistique",
+  }),
 });
 </script>

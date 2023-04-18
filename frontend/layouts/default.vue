@@ -384,6 +384,10 @@ export default {
     };
   },
 
+  head: () => ({
+    title: "Overbookd",
+  }),
+
   computed: {
     me() {
       return this.$accessor.user.me;

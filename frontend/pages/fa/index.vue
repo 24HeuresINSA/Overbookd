@@ -207,6 +207,9 @@ export default {
       teamNames: this.$accessor.team.teamNames,
     };
   },
+  head: () => ({
+    title: "Fiches Activités",
+  }),
   computed: {
     FAs() {
       return this.$accessor.FA.FAs;

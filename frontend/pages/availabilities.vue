@@ -31,6 +31,9 @@ import AvailabilitiesStepsCard from "~/components/organisms/availabilities/Avail
 export default Vue.extend({
   name: "Availabilities",
   components: { AvailabilitiesStepsCard, SnackNotificationContainer },
+  head: () => ({
+    title: "Mes dispos",
+  }),
   computed: {
     userId(): number {
       return +this.$accessor.user.me.id;

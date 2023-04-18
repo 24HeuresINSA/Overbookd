@@ -45,7 +45,9 @@ export default {
       selectedUserID: undefined,
     };
   },
-  computed: {},
+  head: () => ({
+    title: "Transactions",
+  }),
 
   async beforeMount() {
     const usersCall = await safeCall(

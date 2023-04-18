@@ -88,6 +88,9 @@ export default {
       confirmation: false,
     };
   },
+  head: () => ({
+    title: "Export Planning",
+  }),
   methods: {
     async generatePlanning() {
       this.isLoading = true;
