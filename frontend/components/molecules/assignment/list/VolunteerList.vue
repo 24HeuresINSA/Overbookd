@@ -1,9 +1,11 @@
 <template>
   <v-virtual-scroll :items="volunteers" item-height="80" class="virtual-scroll">
     <template #default="{ item }">
-      <v-list-item :key="item.id" v-model="selectedVolunteerId" :value="item">
-        <VolunteerResume :volunteer="item" />
-      </v-list-item>
+      <v-list-item-group v-model="selectedVolunteerId">
+        <v-list-item :key="item.id" :value="item">
+          <VolunteerResume :volunteer="item" />
+        </v-list-item>
+      </v-list-item-group>
     </template>
   </v-virtual-scroll>
 </template>

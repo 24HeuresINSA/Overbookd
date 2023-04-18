@@ -1,14 +1,11 @@
 <template>
   <v-virtual-scroll :items="fts" item-height="64" class="virtual-scroll">
     <template #default="{ item }">
-      <v-list-item
-        :key="item.id"
-        v-model="selectedTaskId"
-        :value="item.id"
-        @click="selectFt(item)"
-      >
-        <TaskResume :ft="item" />
-      </v-list-item>
+      <v-list-item-group v-model="selectedTaskId">
+        <v-list-item :key="item.id" :value="item">
+          <TaskResume :ft="item" />
+        </v-list-item>
+      </v-list-item-group>
     </template>
   </v-virtual-scroll>
 </template>
@@ -36,9 +33,8 @@ export default Vue.extend({
       get(): number | null {
         return this.$accessor.assignment.selectedFt?.id ?? null;
       },
-      set(ftId: number): void {
-        const ft = this.fts.find((ft) => ft.id === ftId);
-        if (ft) this.selectFt(ft);
+      set(ft: FtWithTimespan): void {
+        this.selectFt(ft);
       },
     },
   },
