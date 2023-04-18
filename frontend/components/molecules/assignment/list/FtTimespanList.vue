@@ -6,11 +6,7 @@
       class="virtual-scroll"
     >
       <template #default="{ item }">
-        <v-list-item
-          :key="item.id"
-          @contextmenu.prevent="openFtNewTab(item.ft.id)"
-          @mouseover="hoverTimespan(item)"
-        >
+        <v-list-item :key="item.id" @mouseover="hoverTimespan(item)">
           <TimespanResume
             :timespan="item"
             @selected-team="(team) => assign(item.id, team)"
@@ -49,9 +45,6 @@ export default Vue.extend({
     },
     hoverTimespan(timespan: AvailableTimespan | null) {
       this.$accessor.assignment.setHoverTimespan(timespan);
-    },
-    openFtNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`, "_blank");
     },
     assign(timespanId: number, teamCode: string) {
       if (!this.selectedVolunteer) return;

@@ -2,7 +2,7 @@
   <div class="timespan-card" @click="teamSelectShortcut()">
     <div
       class="timespan-card-data"
-      @contextmenu.prevent="openFtNewTab(timespan.id)"
+      @contextmenu.prevent="openFtInNewTab(timespan.ft.id)"
     >
       <div class="timespan-name">
         <span>{{ timespan.ft.id }} - {{ timespan.ft.name }}</span>
@@ -52,7 +52,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    openFtNewTab(ftId: number) {
+    openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
     },
     teamSelectShortcut() {
