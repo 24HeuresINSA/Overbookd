@@ -83,11 +83,11 @@ export class AuthService {
   }
 
   async forgot({ email }: UserEmail): Promise<void> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findFirst({
+      where: { email, is_deleted: false },
+    });
 
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
     const reset_token = randomBytes(20).toString('hex');
     const expirationDate = new Date(Date.now() + ONE_HOUR);
