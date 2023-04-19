@@ -36,6 +36,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
 import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
+import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning.module';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
     FriendModule,
     AssignmentModule,
     OrgaNeedsModule,
+    VolunteerPlanningModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],

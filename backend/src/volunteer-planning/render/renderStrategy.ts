@@ -33,8 +33,14 @@ class JsonRenderStrategy implements RenderStrategy {
   }
 }
 
-class IcalRenderStrategy implements RenderStrategy {
+export class IcalRenderStrategy implements RenderStrategy {
+  private readonly EMPTY_CALENDAR =
+    "CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - 48e\nX-PUBLISHED-TTL:PT1H\nEND:VCALENDAR";
+
   render(tasks: Task[]) {
+    if (tasks.length === 0) {
+      return Promise.resolve(this.EMPTY_CALENDAR);
+    }
     return new Promise((res, rej) => {
       const events = tasks.map((task) => this.buildIcalEvent(task));
       createEvents(events, (error, value) => {

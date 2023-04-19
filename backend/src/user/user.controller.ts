@@ -42,12 +42,14 @@ import {
 } from './user.service';
 import { TaskResponseDto } from 'src/volunteer-planning/dto/taskResponse.dto';
 import { VolunteerPlanningService } from 'src/volunteer-planning/volunteer-planning.service';
-import { Request, Response } from 'express';
 import {
   IcalType,
   JsonType,
   PlanningRenderStrategy,
 } from 'src/volunteer-planning/render/renderStrategy';
+import { VolunteerSubscriptionPlanningResponseDto } from 'src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
+import { SubscriptionService } from 'src/volunteer-planning/subscription.service';
+import { Request, Response } from 'express';
 
 @ApiTags('user')
 @Controller('user')
@@ -55,6 +57,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly planningService: VolunteerPlanningService,
+    private readonly planningSubscription: SubscriptionService,
   ) {}
 
   @Post()
@@ -121,6 +124,22 @@ export class UserController {
       }
       response.status(500).send(e);
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Permission('can-view-planning')
+  @ApiBearerAuth()
+  @Get('me/planning/subscribe-link')
+  @ApiResponse({
+    status: 200,
+    description: 'Get current user subscription planning link',
+    type: VolunteerSubscriptionPlanningResponseDto,
+  })
+  async getCurrentVolunteerSubscriptionPlanningLink(
+    @RequestDecorator() request: RequestWithUserPayload,
+  ): Promise<VolunteerSubscriptionPlanningResponseDto> {
+    const volunteerId = request.user.userId ?? request.user.id;
+    return this.planningSubscription.subscribe(volunteerId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -274,8 +293,7 @@ export class UserController {
   private async formatPlanning(volunteerId: number, format: string) {
     const tasks = await this.planningService.getVolunteerPlanning(volunteerId);
     const renderStrategy = PlanningRenderStrategy.get(format);
-    const render = await renderStrategy.render(tasks);
-    return render;
+    return renderStrategy.render(tasks);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
