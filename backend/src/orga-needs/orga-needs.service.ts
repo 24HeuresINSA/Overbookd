@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { VolunteerAvailability } from '@prisma/client';
-import { WHERE_VALIDATED_USER } from 'src/assignment/volunteer.service';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { getPeriodDuration } from 'src/utils/duration';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
+
+export interface OrgaNeedsRequest {
+  start: Date;
+  end: Date;
+  teams: string[];
+}
 
 export interface OrgaNeedsResponse {
   start: Date;
@@ -60,13 +65,15 @@ type DataBaseOrgaStats = {
 export class OrgaNeedsService {
   constructor(private prisma: PrismaService) {}
 
-  async computeOrgaStats(period: Period): Promise<OrgaNeedsResponse[]> {
-    const intervals = this.buildOrgaNeedsIntervals(period);
+  async computeOrgaStats(
+    periodAndTeams: OrgaNeedsRequest,
+  ): Promise<OrgaNeedsResponse[]> {
+    const intervals = this.buildOrgaNeedsIntervals(periodAndTeams);
     const [assignments, availabilities, requestedVolunteers] =
       await Promise.all([
-        this.getAssignments(period),
-        this.getAvailabilities(period),
-        this.getRequestedVolunteers(period),
+        this.getAssignments(periodAndTeams),
+        this.getAvailabilities(periodAndTeams),
+        this.getRequestedVolunteers(periodAndTeams),
       ]);
 
     return intervals.map((interval) =>
@@ -149,12 +156,12 @@ export class OrgaNeedsService {
   }
 
   private async getAvailabilities(
-    period: Period,
+    periodWithTeams: OrgaNeedsRequest,
   ): Promise<VolunteerAvailability[]> {
     return this.prisma.volunteerAvailability.findMany({
       where: {
-        ...this.periodIncludedCondition(period),
-        user: WHERE_VALIDATED_USER,
+        ...this.periodIncludedCondition(periodWithTeams),
+        user: this.whereTeamCondition(periodWithTeams.teams),
       },
     });
   }
@@ -194,6 +201,24 @@ export class OrgaNeedsService {
     return {
       start: { lte: end },
       end: { gte: start },
+    };
+  }
+
+  private whereTeamCondition(teams: string[]) {
+    const teamCodes = teams?.length > 0 ? { in: teams } : {};
+    return {
+      team: {
+        some: {
+          team: {
+            code: teamCodes,
+            permissions: {
+              some: {
+                permission_name: 'validated-user',
+              },
+            },
+          },
+        },
+      },
     };
   }
 }

@@ -31,8 +31,14 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchStats(context, period: Period): Promise<void> {
-      const res = await safeCall(this, orgaNeedsRepo.fetchStats(this, period));
+    async fetchStats(
+      context,
+      periodAndTeams: Period & { teams: string[] }
+    ): Promise<void> {
+      const res = await safeCall(
+        this,
+        orgaNeedsRepo.fetchStats(this, periodAndTeams)
+      );
       if (!res) return;
       context.commit("SET_STATS", res.data);
     },

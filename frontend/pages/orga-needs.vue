@@ -15,6 +15,13 @@
       </div>
 
       <v-btn color="success" class="btn" @click="updateStats"> Appliquer</v-btn>
+
+      <SearchTeams
+        :value="teams"
+        class="filters__field"
+        :boxed="false"
+        @change="changeTeams"
+      ></SearchTeams>
     </v-card-text>
     <OrgaNeedsChart></OrgaNeedsChart>
   </div>
@@ -23,19 +30,22 @@
 <script lang="ts">
 import Vue from "vue";
 import { OrgaNeedsResponse } from "~/store/orgaNeeds";
+import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
+import { Team } from "~/utils/models/team";
 import { ONE_DAY_IN_MS } from "~/utils/date/dateUtils";
 
 const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 
 export default Vue.extend({
   name: "OrgaNeeds",
-  components: { DateTimeField, OrgaNeedsChart },
+  components: { DateTimeField, OrgaNeedsChart, SearchTeams },
   data() {
     return {
       start: undefined as Date | undefined,
       end: undefined as Date | undefined,
+      teams: [] as string[],
     };
   },
   computed: {
@@ -49,11 +59,16 @@ export default Vue.extend({
     this.updateStats();
   },
   methods: {
+    changeTeams(teams: Team[]) {
+      this.teams = teams.map((team) => team.code);
+      this.updateStats();
+    },
     updateStats() {
       if (!this.start || !this.end) return;
       this.$accessor.orgaNeeds.fetchStats({
         start: this.start,
         end: this.end,
+        teams: this.teams,
       });
     },
   },
