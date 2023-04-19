@@ -227,7 +227,7 @@ export const actions = actionTree(
       if (!selectedTimespan) return;
       commit("SET_SELECTED_TIMESPAN", {
         ...timespan,
-        requestedTams: selectedTimespan.requestedTeams,
+        requestedTeams: selectedTimespan.requestedTeams,
       });
       dispatch("fetchVolunteersForTimespan", timespan.id);
     },
