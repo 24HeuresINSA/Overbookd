@@ -4,7 +4,6 @@ import {
   Header,
   NotFoundException,
   Param,
-  ServiceUnavailableException,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SecretService } from './secret.service';
@@ -28,7 +27,6 @@ export class VolunteerPlanningController {
   async getVolunteerPlanning(@Param('secret') secret: string) {
     const volunteerId = await this.retrieveVolunteerId(secret);
     const tasks = await this.planningService.getVolunteerPlanning(volunteerId);
-    if (tasks.length === 0) throw new ServiceUnavailableException();
     const icalRender = new IcalRenderStrategy();
     return icalRender.render(tasks);
   }
