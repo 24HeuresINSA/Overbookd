@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <LineChart :data="courbs" />
+      <LineChart :data="courbs" :options="options" />
     </client-only>
   </div>
 </template>
@@ -26,6 +26,20 @@ export default Vue.extend({
         labels: [] as string[],
         datasets: [] as Dataset[],
       },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 20,
+              },
+            },
+          ],
+        },
+      },
     };
   },
   computed: {
@@ -35,7 +49,6 @@ export default Vue.extend({
   },
   watch: {
     stats() {
-      console.log("stats changed");
       this.courbs = {
         labels: this.labels(),
         datasets: [

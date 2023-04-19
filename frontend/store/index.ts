@@ -27,6 +27,7 @@ import * as user from "./user";
 import * as volunteerAvailability from "./volunteerAvailability";
 import * as theme from "./theme";
 import * as planning from "./planning";
+import * as orgaNeeds from "./orgaNeeds";
 
 export const state = () => ({});
 
@@ -70,5 +71,6 @@ export const accessorType = getAccessorType({
     volunteerAvailability,
     theme,
     planning,
+    orgaNeeds,
   },
 });
