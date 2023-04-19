@@ -103,7 +103,7 @@ export default Vue.extend({
   flex: 1;
   display: flex;
   align-items: start;
-  justify-content: space-between;
+  justify-content: space-around;
   padding-left: 8px;
   flex-direction: column;
 }
