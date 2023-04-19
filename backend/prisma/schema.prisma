@@ -549,6 +549,7 @@ model FtTimespan {
   @@index([end(sort: Desc)])
   @@index([start(sort: Asc), end(sort: Asc)])
   @@map("ft_timespan")
+  @@unique([timeWindowId, start, end])
 }
 
 model Assignment {
