@@ -36,11 +36,11 @@ export class StoredTask {
       (period) => includesOtherPeriod(this.period)(period),
     );
 
-    return splitedPeriods.map((period) => {
+    return splitedPeriods.reduce((assignments, period) => {
       const volunteers = this.findAssignedVolunteers(period);
-
-      return { period, volunteers };
-    });
+      if (volunteers.length === 0) return assignments;
+      return [...assignments, { period, volunteers }];
+    }, []);
   }
 
   merge(task: StoredTask): StoredTask {
