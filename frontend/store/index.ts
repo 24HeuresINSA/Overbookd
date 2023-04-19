@@ -26,6 +26,7 @@ import * as transaction from "./transaction";
 import * as user from "./user";
 import * as volunteerAvailability from "./volunteerAvailability";
 import * as theme from "./theme";
+import * as planning from "./planning";
 
 export const state = () => ({});
 
@@ -68,5 +69,6 @@ export const accessorType = getAccessorType({
     charismaPeriod,
     volunteerAvailability,
     theme,
+    planning,
   },
 });
