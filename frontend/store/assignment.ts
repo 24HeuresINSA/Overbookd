@@ -128,7 +128,6 @@ export const mutations = mutationTree(state, {
 
     state.taskAssignment = TaskAssignment.init({
       ...state.selectedTimespan,
-      id: state.selectedFt.id,
       name: state.selectedFt.name,
     })
       .withRemaingTeamRequests(teamRequests)
@@ -228,7 +227,7 @@ export const actions = actionTree(
       if (!selectedTimespan) return;
       commit("SET_SELECTED_TIMESPAN", {
         ...timespan,
-        requestedTams: selectedTimespan.requestedTeams,
+        requestedTeams: selectedTimespan.requestedTeams,
       });
       dispatch("fetchVolunteersForTimespan", timespan.id);
     },

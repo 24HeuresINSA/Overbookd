@@ -159,8 +159,11 @@ export default Vue.extend({
     taskAssignment(): TaskAssignment {
       return this.$accessor.assignment.taskAssignment;
     },
+    ftId(): number {
+      return this.$accessor.assignment.selectedFt?.id ?? 0;
+    },
     taskTitle(): string {
-      const id = this.taskAssignment.task.id;
+      const id = this.ftId;
       const name = this.taskAssignment.task.name;
       return `[${id}] ${name}`;
     },
