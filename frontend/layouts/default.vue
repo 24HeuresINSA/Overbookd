@@ -24,7 +24,7 @@
             </v-btn>
           </v-list-item-content>
         </v-list-item>
-        <template v-for="(item, i) in working_items">
+        <template v-for="(item, i) in pages">
           <v-list-item
             v-if="hasPermission(item.permission)"
             :key="i"
@@ -176,8 +176,7 @@ export default {
       AUTHORS,
       file: undefined,
       stepDetail: undefined,
-      //TODO: remove this when the new backend is over
-      working_items: [
+      pages: [
         {
           icon: "mdi-apps",
           title: "Accueil",
@@ -231,6 +230,12 @@ export default {
           to: "/assignment/task-orga",
         },
         {
+          icon: "mdi-clock",
+          title: "Besoin orgas",
+          permission: "can-affect",
+          to: "/orga-needs",
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
@@ -279,84 +284,13 @@ export default {
           to: "/stats",
         },
       ],
-      items: [
-        {
-          icon: "mdi-calendar-clock",
-          title: "Planning",
-          roles: "hard",
-          to: "/planning",
-        },
+      //TODO: remove this when the new backend is over
+      old_pages: [
         {
           icon: "mdi-calendar-export",
           title: "Export Planning",
           roles: "humain",
           to: "/exportPlanning",
-        },
-        {
-          icon: "mdi-calendar-multiple-check",
-          title: "Créneaux",
-          roles: "humain",
-          to: "/creneaux",
-        },
-        {
-          icon: "mdi-clock",
-          title: "Mes dispos",
-          roles: "everyone",
-          to: "/availabilities",
-        },
-        {
-          icon: "mdi-account",
-          title: "Liste des Orgas",
-          roles: "hard",
-          to: "/humans",
-        },
-        {
-          icon: "mdi-bus-articulated-front",
-          title: "Inventaire",
-          roles: "hard",
-          to: "/inventory",
-        },
-        {
-          icon: "mdi-truck",
-          title: "Logistique",
-          roles: "log",
-          to: "/logistics",
-        },
-        {
-          icon: "mdi-clock",
-          title: "Besoin orgas",
-          roles: "humain",
-          to: "/organeeds",
-        },
-        {
-          icon: "mdi-alert-circle",
-          title: "Conflits",
-          roles: "hard",
-          to: "/listeconflits",
-        },
-        {
-          icon: "mdi-cog",
-          roles: "admin",
-          title: "Admin",
-          to: "/config",
-        },
-        {
-          icon: "mdi-format-list-bulleted",
-          roles: "admin",
-          title: "SG",
-          to: "/SG",
-        },
-        {
-          icon: "mdi-cash-multiple",
-          roles: "admin",
-          title: "Transactions",
-          to: "/transactions",
-        },
-        {
-          icon: "mdi-passport",
-          title: "Pass sécu",
-          roles: "secu",
-          to: "/passsecu",
         },
         {
           icon: "mdi-fire",
@@ -369,12 +303,6 @@ export default {
           roles: "hard",
           title: "Trombinoscope",
           to: "/trombinoscope",
-        },
-        {
-          icon: "mdi-note",
-          title: "Patch notes",
-          roles: "hard",
-          to: "/patch_note",
         },
       ],
       miniVariant: false,

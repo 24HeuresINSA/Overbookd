@@ -80,7 +80,9 @@ export default Vue.extend({
   components: { OverCalendar, TeamChip },
   data: function () {
     return {
-      calendarCentralDate: new Date("2023-05-12 00:00+02:00"),
+      calendarCentralDate: new Date(
+        this.$accessor.config.getConfig("event_date")
+      ),
     };
   },
   computed: {
