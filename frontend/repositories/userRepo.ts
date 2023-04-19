@@ -97,4 +97,9 @@ export default {
       `${resource}/${userId}/assignments/stats`
     );
   },
+  getPlanningSubscriptionLink(context: Context) {
+    return context.$axios.get<HttpStringified<{ link: string }>>(
+      `${resource}/me/planning/subscribe-link`
+    );
+  },
 };
