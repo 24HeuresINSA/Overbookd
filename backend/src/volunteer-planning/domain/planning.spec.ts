@@ -15,6 +15,7 @@ const michel = { id: 10, name: 'michel' };
 const ana = { id: 11, name: 'ana' };
 const ambre = { id: 12, name: 'ambre' };
 const antoine = { id: 13, name: 'antoine' };
+const brenda = { id: 14, name: 'brenda' };
 
 const debarrierageAvenueDesArts = {
   name: 'Debarierrage Avenue des Arts',
@@ -35,6 +36,13 @@ const barrierageAvenueDesArts = {
   description: 'Bonsoir, il faut porter des barrieres',
   id: 3,
   location: 'Avenue des Arts',
+};
+
+const ambiancerLeQG = {
+  name: 'Ambiancer le QG',
+  description: 'Mettre la grosse ambiance au QG',
+  id: 4,
+  location: 'QG Orga',
 };
 
 const shift12hTo14hMay12 = {
@@ -195,6 +203,15 @@ const barrierageAvenueDesArtsOn02hTo03hMay13: JsonStoredTask = {
   })),
 };
 
+const ambiancerLeQGOn00hTo02hMay13: JsonStoredTask = {
+  ...ambiancerLeQG,
+  period: shift00hTo02hMay13,
+  assignees: [brenda].map((volunteer) => ({
+    ...volunteer,
+    period: shift00hTo02hMay13,
+  })),
+};
+
 describe('Planning', () => {
   const taskRepository = new InMemoryTaskRepository([
     debarrierageAvenueDesArtsOn12hTo14hMay15,
@@ -209,6 +226,7 @@ describe('Planning', () => {
     barrierageAvenueDesArtsOn23hTo01hMay12,
     barrierageAvenueDesArtsOn00hTo02hMay13,
     barrierageAvenueDesArtsOn02hTo03hMay13,
+    ambiancerLeQGOn00hTo02hMay13,
   ]);
   const planning = new Planning(taskRepository);
   describe('retrieve volunteer tasks', () => {
@@ -417,6 +435,12 @@ describe('Planning', () => {
               volunteers: [loic, tristan, constantin, michel],
             });
           });
+        });
+      });
+      describe('when volunteer is alone on a period', () => {
+        it('should not generate an assigment for this period', async () => {
+          const tasks = await planning.getVolunteerTasks(brenda.id);
+          expect(tasks.at(0)?.assignments).toHaveLength(0);
         });
       });
     });

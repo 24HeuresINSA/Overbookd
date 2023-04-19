@@ -67,6 +67,8 @@ export class IcalRenderStrategy implements RenderStrategy {
   }
 
   private buildAssignmentsDescription(assignments: Assignment[]) {
+    if (assignments.length === 0) return '';
+
     const header = '<h2>Affectés avec toi</h2>';
     const listing = assignments.reduce((description, assignment) => {
       const volunteers = this.generateVolunteerList(assignment);
