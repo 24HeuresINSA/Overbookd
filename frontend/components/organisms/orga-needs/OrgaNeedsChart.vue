@@ -65,10 +65,10 @@ export default Vue.extend({
           position: "nearest",
           callbacks: {
             label: function (tooltipItem: Tooltip, data: ChartData) {
-              var datasetLabel =
+              const datasetLabel =
                 data.datasets[tooltipItem.datasetIndex].label || "";
-              var dataPoint = tooltipItem.yLabel;
-              return datasetLabel + ": " + dataPoint;
+              const dataPoint = tooltipItem.yLabel;
+              return `${datasetLabel}: ${dataPoint}`;
             },
           },
         },

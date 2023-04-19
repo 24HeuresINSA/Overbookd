@@ -25,8 +25,9 @@ import Vue from "vue";
 import { OrgaNeedsResponse } from "~/store/orgaNeeds";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
+import { ONE_DAY_IN_MS } from "~/utils/date/dateUtils";
 
-const FOUR_DAYS_IN_MS = 4 * 24 * 60 * 60 * 1000;
+const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 
 export default Vue.extend({
   name: "OrgaNeeds",
@@ -45,12 +46,15 @@ export default Vue.extend({
   mounted() {
     this.start = new Date(this.$accessor.config.getConfig("event_date"));
     this.end = new Date(this.start.getTime() + FOUR_DAYS_IN_MS);
-    this.$accessor.orgaNeeds.fetchStats({ start: this.start, end: this.end });
+    this.updateStats();
   },
   methods: {
     updateStats() {
       if (!this.start || !this.end) return;
-      this.$accessor.orgaNeeds.fetchStats({ start: this.start, end: this.end });
+      this.$accessor.orgaNeeds.fetchStats({
+        start: this.start,
+        end: this.end,
+      });
     },
   },
 });

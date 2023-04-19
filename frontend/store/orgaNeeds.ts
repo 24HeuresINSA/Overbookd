@@ -2,6 +2,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Period } from "~/utils/models/period";
+import { HttpStringified } from "~/utils/types/http";
 
 const orgaNeedsRepo = RepoFactory.OrgaNeedsRepository;
 
@@ -22,7 +23,7 @@ export const state = (): State => ({
 });
 
 export const mutations = mutationTree(state, {
-  SET_STATS(state, stats: OrgaNeedsResponse[]) {
+  SET_STATS(state, stats: HttpStringified<OrgaNeedsResponse[]>) {
     state.stats = formatToStats(stats);
   },
 });
@@ -38,7 +39,9 @@ export const actions = actionTree(
   }
 );
 
-function formatToStats(stats: OrgaNeedsResponse[]) {
+function formatToStats(
+  stats: HttpStringified<OrgaNeedsResponse[]>
+): OrgaNeedsResponse[] {
   return stats.map((stat) => ({
     ...stat,
     start: new Date(stat.start),

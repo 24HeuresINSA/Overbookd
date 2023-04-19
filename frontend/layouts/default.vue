@@ -293,18 +293,6 @@ export default {
           to: "/exportPlanning",
         },
         {
-          icon: "mdi-alert-circle",
-          title: "Conflits",
-          roles: "hard",
-          to: "/listeconflits",
-        },
-        {
-          icon: "mdi-passport",
-          title: "Pass sécu",
-          roles: "secu",
-          to: "/passsecu",
-        },
-        {
           icon: "mdi-fire",
           roles: "hard",
           title: "OverTinder",
@@ -315,12 +303,6 @@ export default {
           roles: "hard",
           title: "Trombinoscope",
           to: "/trombinoscope",
-        },
-        {
-          icon: "mdi-note",
-          title: "Patch notes",
-          roles: "hard",
-          to: "/patch_note",
         },
       ],
       miniVariant: false,
