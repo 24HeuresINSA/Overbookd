@@ -16,6 +16,18 @@ type Dataset = {
   backgroundColor: string;
   borderColor: string;
   borderWidth: number;
+  pointRadius: number;
+  pointHitRadius: number;
+};
+
+type ChartData = {
+  labels: string[];
+  datasets: Dataset[];
+};
+
+type Tooltip = {
+  datasetIndex: number;
+  yLabel: number;
 };
 
 export default Vue.extend({
@@ -23,8 +35,13 @@ export default Vue.extend({
   data() {
     return {
       courbs: {
-        labels: [] as string[],
-        datasets: [] as Dataset[],
+        labels: [],
+        datasets: [],
+      } as ChartData,
+      datasetOptions: {
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHitRadius: 10,
       },
       options: {
         responsive: true,
@@ -38,6 +55,22 @@ export default Vue.extend({
               },
             },
           ],
+        },
+        hover: {
+          mode: "nearest",
+          intersect: true,
+        },
+        tooltips: {
+          mode: "index",
+          position: "nearest",
+          callbacks: {
+            label: function (tooltipItem: Tooltip, data: ChartData) {
+              var datasetLabel =
+                data.datasets[tooltipItem.datasetIndex].label || "";
+              var dataPoint = tooltipItem.yLabel;
+              return datasetLabel + ": " + dataPoint;
+            },
+          },
         },
       },
     };
@@ -67,27 +100,27 @@ export default Vue.extend({
       return {
         label: "Bénevoles disponibles",
         data: this.stats.map((stat) => stat.availableVolunteers),
-        backgroundColor: "rgba(20, 255, 0, 0.3)",
-        borderColor: "rgba(100, 255, 0, 1)",
-        borderWidth: 2,
+        backgroundColor: "#00ff0030",
+        borderColor: "#00ff00",
+        ...this.datasetOptions,
       };
     },
     requestedVolunteers(): Dataset {
       return {
         label: "Bénevoles demandés",
         data: this.stats.map((stat) => stat.requestedVolunteers),
-        backgroundColor: "rgba(255, 0, 0, 0.3)",
-        borderColor: "rgba(255, 0, 0, 1)",
-        borderWidth: 2,
+        backgroundColor: "#ff000030",
+        borderColor: "#ff0000",
+        ...this.datasetOptions,
       };
     },
     assignedVolunteers(): Dataset {
       return {
         label: "Bénevoles assignés",
         data: this.stats.map((stat) => stat.assignedVolunteers),
-        backgroundColor: "rgba(0, 0, 255, 0.3)",
-        borderColor: "rgba(0, 0, 255, 1)",
-        borderWidth: 2,
+        backgroundColor: "#0000ff30",
+        borderColor: "#0000ff",
+        ...this.datasetOptions,
       };
     },
   },
