@@ -33,7 +33,7 @@ class JsonRenderStrategy implements RenderStrategy {
   }
 }
 
-class IcalRenderStrategy implements RenderStrategy {
+export class IcalRenderStrategy implements RenderStrategy {
   render(tasks: Task[]) {
     return new Promise((res, rej) => {
       const events = tasks.map((task) => this.buildIcalEvent(task));
