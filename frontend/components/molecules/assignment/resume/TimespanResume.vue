@@ -4,8 +4,15 @@
       class="timespan-card-data"
       @contextmenu.prevent="openFtInNewTab(timespan.ft.id)"
     >
-      <div class="timespan-name">
-        <span>{{ timespan.ft.id }} - {{ timespan.ft.name }}</span>
+      <div class="timespan-details">
+        <div class="timespan-name">
+          <span>{{ timespan.ft.id }} - {{ timespan.ft.name }}</span>
+        </div>
+        <div class="timespan-remaining-team-requests">
+          <span v-for="request in remaingTeamRequests" :key="request.code">
+            {{ request.code }}: {{ request.quantity }}
+          </span>
+        </div>
       </div>
       <div class="timespan-teams">
         <TeamChip
@@ -51,6 +58,16 @@ export default Vue.extend({
       required: true,
     },
   },
+  computed: {
+    remaingTeamRequests(): { code: string; quantity: number }[] {
+      return this.timespan.requestedTeams
+        .filter(({ assignmentCount, quantity }) => assignmentCount < quantity)
+        .map(({ code, assignmentCount, quantity }) => ({
+          code,
+          quantity: quantity - assignmentCount,
+        }));
+    },
+  },
   methods: {
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
@@ -82,11 +99,17 @@ export default Vue.extend({
   display: flex;
 }
 
-.timespan-name {
+.timespan-details {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: start;
+  justify-content: space-between;
   padding-left: 8px;
+  flex-direction: column;
+}
+
+.timespan-remaining-team-requests {
+  color: grey;
 }
 
 .timespan-teams {
