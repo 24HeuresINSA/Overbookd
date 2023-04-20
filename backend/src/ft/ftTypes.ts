@@ -1,4 +1,5 @@
 import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
+import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { TEAM_SELECT } from 'src/team/team.service';
@@ -33,9 +34,10 @@ export interface TimeWindow {
   id: number;
   start: Date;
   end: Date;
+  sliceTime?: number;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
-  sliceTime?: number;
+  timespans: TimespanBase[];
 }
 
 export interface Timespan {
@@ -183,6 +185,13 @@ export const COMPLETE_FT_SELECT = {
         select: {
           quantity: true,
           team: TEAM_SELECT,
+        },
+      },
+      timespans: {
+        select: {
+          id: true,
+          start: true,
+          end: true,
         },
       },
     },

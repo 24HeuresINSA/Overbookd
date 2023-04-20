@@ -97,16 +97,18 @@
             <v-btn icon @click="openCalendarInNewTab(item.id)">
               <v-icon>mdi-calendar</v-icon>
             </v-btn>
-            <v-btn
-              v-if="canActivateAssignedTeamUpdate(item)"
-              icon
-              @click="toggleUpdateAssignedTeam(item)"
-            >
-              <v-icon>mdi-swap-vertical</v-icon>
-            </v-btn>
-            <v-btn icon @click="unassignVolunteer(item)">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+            <div v-if="canAffect">
+              <v-btn
+                v-if="canActivateAssignedTeamUpdate(item)"
+                icon
+                @click="toggleUpdateAssignedTeam(item)"
+              >
+                <v-icon>mdi-swap-vertical</v-icon>
+              </v-btn>
+              <v-btn icon @click="unassignVolunteer(item)">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </div>
           </template>
           <template #no-data> Aucun bénévole affecté sur ce créneau </template>
         </v-data-table>
@@ -197,6 +199,9 @@ export default Vue.extend({
         return [volunteer, assignedTeam, actions];
       }
       return [volunteer, assignedTeam, friends, actions];
+    },
+    canAffect(): boolean {
+      return this.$accessor.user.hasPermission("can-affect");
     },
   },
   methods: {

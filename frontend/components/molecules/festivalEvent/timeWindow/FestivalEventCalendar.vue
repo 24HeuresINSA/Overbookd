@@ -22,7 +22,11 @@
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       :short-weekdays="false"
+      @mousedown:event="viewEvent"
     ></v-calendar>
+    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
+      <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    </v-dialog>
   </div>
 </template>
 
@@ -30,9 +34,14 @@
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarItem } from "~/utils/models/calendar";
+import { FTStatus } from "~/utils/models/ft";
+import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
 
 export default Vue.extend({
   name: "FestivalEventCalendar",
+  components: {
+    TimespanDetails,
+  },
   props: {
     festivalEvent: {
       type: String,
@@ -41,6 +50,7 @@ export default Vue.extend({
   },
   data: () => ({
     value: new Date(),
+    displayTimespanDetailsDialog: false,
   }),
   computed: {
     manifDate(): Date {
@@ -79,13 +89,26 @@ export default Vue.extend({
       return [...animationTimeWindows, ...gearTimeWindows];
     },
     ftTimeWindows(): CalendarItem[] {
-      return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
-        start: timeWindow.start,
-        end: timeWindow.end,
-        timed: true,
-        color: "primary",
-        name: "Tâche",
-      }));
+      if (this.$accessor.FT.mFT.status !== FTStatus.READY) {
+        return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
+          start: timeWindow.start,
+          end: timeWindow.end,
+          timed: true,
+          color: "primary",
+          name: "Tâche",
+        }));
+      }
+      return (this.$accessor.FT.mFT.timeWindows ?? [])
+        .map((timeWindow) => timeWindow.timespans)
+        .flat()
+        .map((timespan) => ({
+          timespanId: timespan.id,
+          start: timespan.start,
+          end: timespan.end,
+          timed: true,
+          color: "purple",
+          name: "Tâche",
+        }));
     },
   },
   mounted() {
@@ -104,6 +127,14 @@ export default Vue.extend({
       const calendar = this.$refs.formCalendar;
       // @ts-ignore
       if (calendar) calendar.next();
+    },
+    viewEvent(event: { event: { timespanId: number | undefined } }) {
+      if (!event.event.timespanId) return;
+      this.$accessor.assignment.fetchTimespanDetails(event.event.timespanId);
+      this.displayTimespanDetailsDialog = true;
+    },
+    closeTimespanDetailsDialog() {
+      this.displayTimespanDetailsDialog = false;
     },
   },
 });

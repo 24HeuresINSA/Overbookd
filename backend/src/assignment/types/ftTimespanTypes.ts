@@ -13,7 +13,7 @@ export interface DatabaseRequestedTeam {
   };
 }
 
-type TimespanBase = {
+export type TimespanBase = {
   id: number;
   start: Date;
   end: Date;

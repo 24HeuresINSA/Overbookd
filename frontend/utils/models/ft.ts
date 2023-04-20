@@ -1,6 +1,7 @@
 import { HttpStringified } from "../types/http";
 import { FASimplified } from "./FA";
 import { Feedback } from "./feedback";
+import { FtTimespan } from "./ftTimespan";
 import { Period } from "./period";
 import { Review } from "./review";
 import { SignaLocation } from "./signaLocation";
@@ -96,6 +97,7 @@ export interface FTTimeWindow {
   sliceTime: number | null;
   userRequests: FTUserRequest[];
   teamRequests: FTTeamRequest[];
+  timespans: FtTimespan[];
 }
 
 export interface FTTimeWindowUpdate {
@@ -176,6 +178,7 @@ export function castTimeWindowWithDate(
     end: new Date(timeWindow.end),
     userRequests: timeWindow.userRequests?.map(castUserRequestWithDate) ?? [],
     teamRequests: timeWindow.teamRequests ?? [],
+    timespans: timeWindow.timespans?.map(castTimespanWithDate) ?? [],
   };
 }
 
@@ -256,5 +259,15 @@ export function castUserRequestWithDate(
         period: { start: new Date(period.start), end: new Date(period.end) },
       })
     ),
+  };
+}
+
+function castTimespanWithDate(
+  timespan: HttpStringified<FtTimespan>
+): FtTimespan {
+  return {
+    ...timespan,
+    start: new Date(timespan.start),
+    end: new Date(timespan.end),
   };
 }
