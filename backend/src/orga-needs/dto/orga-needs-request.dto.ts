@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsOptional } from 'class-validator';
+import { IsArray, IsDate, IsString } from 'class-validator';
 import { OrgaNeedsRequest } from '../orga-needs.service';
 
 export class OrgaNeedsRequestDto implements OrgaNeedsRequest {
@@ -28,6 +28,7 @@ export class OrgaNeedsRequestDto implements OrgaNeedsRequest {
     isArray: true,
     type: String,
   })
-  @IsOptional()
-  teams?: string[];
+  @IsArray()
+  @IsString({ each: true })
+  teams: string[];
 }
