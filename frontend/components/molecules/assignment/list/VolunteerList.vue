@@ -1,11 +1,18 @@
 <template>
   <v-virtual-scroll :items="volunteers" item-height="80" class="virtual-scroll">
     <template #default="{ item }">
-      <v-list-item-group v-model="selectedVolunteerId">
-        <v-list-item :key="item.id" :value="item">
-          <VolunteerResume :volunteer="item" />
-        </v-list-item>
-      </v-list-item-group>
+      <v-list-item
+        :key="item.id"
+        :value="item"
+        class="list"
+        @click="selectVolunteer(item)"
+      >
+        <VolunteerResume
+          :volunteer="item"
+          :class="{ 'is-selected': isSelected(item.id) }"
+          class="list__volunteer"
+        ></VolunteerResume>
+      </v-list-item>
     </template>
   </v-virtual-scroll>
 </template>
@@ -25,15 +32,13 @@ export default Vue.extend({
       default: () => [],
     },
   },
-  computed: {
-    selectedVolunteerId: {
-      get(): number | null {
-        return this.$accessor.assignment.selectedVolunteer?.id ?? null;
-      },
-      set(volunteer: Volunteer): void {
-        if (!volunteer) return;
-        this.$emit("select-volunteer", volunteer);
-      },
+  methods: {
+    isSelected(id: number): boolean {
+      return this.$accessor.assignment.selectedVolunteer?.id === id;
+    },
+    selectVolunteer(volunteer: Volunteer): void {
+      if (!volunteer) return;
+      this.$emit("select-volunteer", volunteer);
     },
   },
 });
@@ -43,5 +48,16 @@ export default Vue.extend({
 .virtual-scroll {
   height: 100%;
   margin-top: 4px;
+}
+
+.list {
+  padding: 0;
+  &__volunteer {
+    padding: 0 16px;
+  }
+}
+
+.is-selected {
+  background: $list-selected-item-background-color;
 }
 </style>

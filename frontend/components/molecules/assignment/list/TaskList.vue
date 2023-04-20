@@ -1,11 +1,18 @@
 <template>
   <v-virtual-scroll :items="fts" item-height="64" class="virtual-scroll">
     <template #default="{ item }">
-      <v-list-item-group v-model="selectedTaskId">
-        <v-list-item :key="item.id" :value="item">
-          <TaskResume :ft="item" />
-        </v-list-item>
-      </v-list-item-group>
+      <v-list-item
+        :key="item.id"
+        :value="item"
+        class="list"
+        @click="selectFt(item)"
+      >
+        <TaskResume
+          :ft="item"
+          :class="{ 'is-selected': isSelected(item.id) }"
+          class="list__task"
+        ></TaskResume>
+      </v-list-item>
     </template>
   </v-virtual-scroll>
 </template>
@@ -28,16 +35,6 @@ export default Vue.extend({
       default: () => [],
     },
   },
-  computed: {
-    selectedTaskId: {
-      get(): number | null {
-        return this.$accessor.assignment.selectedFt?.id ?? null;
-      },
-      set(ft: FtWithTimespan): void {
-        this.selectFt(ft);
-      },
-    },
-  },
   methods: {
     getRequiredTeams(ft: FtWithTimespan) {
       return getRequiredTeamsInFt(ft);
@@ -48,6 +45,9 @@ export default Vue.extend({
       this.$accessor.assignment.setVolunteers([]);
       this.$accessor.assignment.fetchTimespansWithStats(ft.id);
     },
+    isSelected(id: number): boolean {
+      return this.$accessor.assignment.selectedFt?.id === id;
+    },
   },
 });
 </script>
@@ -56,5 +56,16 @@ export default Vue.extend({
 .virtual-scroll {
   height: 100%;
   margin-top: 4px;
+}
+
+.list {
+  padding: 0;
+  &__task {
+    padding: 0 16px;
+  }
+}
+
+.is-selected {
+  background: $list-selected-item-background-color;
 }
 </style>
