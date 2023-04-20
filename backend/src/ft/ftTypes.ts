@@ -1,4 +1,5 @@
 import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
+import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
 import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.model';
@@ -188,11 +189,7 @@ export const COMPLETE_FT_SELECT = {
         },
       },
       timespans: {
-        select: {
-          id: true,
-          start: true,
-          end: true,
-        },
+        select: SELECT_BASE_TIMESPAN,
       },
     },
   },

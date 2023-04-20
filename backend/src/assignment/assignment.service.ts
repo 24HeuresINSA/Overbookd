@@ -17,7 +17,7 @@ const SELECT_TEAM_REQUEST = {
   quantity: true,
 };
 
-const SELECT_BASE_TIMESPAN = {
+export const SELECT_BASE_TIMESPAN = {
   id: true,
   start: true,
   end: true,
