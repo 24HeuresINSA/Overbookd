@@ -29,5 +29,5 @@ export class OrgaNeedsRequestDto implements OrgaNeedsRequest {
     type: String,
   })
   @IsOptional()
-  teams: string[];
+  teams?: string[];
 }

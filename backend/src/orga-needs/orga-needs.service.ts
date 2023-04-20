@@ -10,7 +10,7 @@ const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
 export interface OrgaNeedsRequest {
   start: Date;
   end: Date;
-  teams: string[];
+  teams?: string[];
 }
 
 export interface OrgaNeedsResponse {
@@ -139,10 +139,13 @@ export class OrgaNeedsService {
   }
 
   private async getRequestedVolunteers(
-    period: Period,
+    orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<RequestedVolunteersOverPeriod[]> {
     const timeWindows = await this.prisma.ftTimeWindows.findMany({
-      where: this.periodIncludedCondition(period),
+      where: {
+        ...this.periodIncludedCondition(orgaNeedsRequest),
+        ...this.teamRequestedCondition(orgaNeedsRequest.teams ?? []),
+      },
       select: SELECT_REQUESTED_VOLUNTEERS,
     });
 
@@ -161,16 +164,21 @@ export class OrgaNeedsService {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         ...this.periodIncludedCondition(periodWithTeams),
-        user: this.whereTeamCondition(periodWithTeams.teams),
+        user: this.whereTeamCondition(periodWithTeams.teams ?? []),
       },
     });
   }
 
   private async getAssignments(
-    period: Period,
+    orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<AssignmentsOverPeriod[]> {
+    const teams = orgaNeedsRequest.teams ?? [];
+
     const assignments = await this.prisma.ftTimespan.findMany({
-      where: this.periodIncludedCondition(period),
+      where: {
+        ...this.periodIncludedCondition(orgaNeedsRequest),
+        ...this.teamRequestedInTimeWindowCondition(teams),
+      },
       select: SELECT_ASSIGNED_VOLUNTEERS,
     });
 
@@ -202,6 +210,17 @@ export class OrgaNeedsService {
       start: { lte: end },
       end: { gte: start },
     };
+  }
+
+  private teamRequestedCondition(teams: string[]) {
+    return {
+      teamRequests: { some: { teamCode: { in: teams } } },
+    };
+  }
+
+  private teamRequestedInTimeWindowCondition(teams: string[]) {
+    if (teams.length === 0) return {};
+    return { timeWindow: this.teamRequestedCondition(teams) };
   }
 
   private whereTeamCondition(teams: string[]) {
