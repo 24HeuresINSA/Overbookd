@@ -10,7 +10,7 @@ const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
 export interface OrgaNeedsRequest {
   start: Date;
   end: Date;
-  teams?: string[];
+  teams: string[];
 }
 
 export interface OrgaNeedsResponse {
@@ -69,6 +69,7 @@ export class OrgaNeedsService {
     periodAndTeams: OrgaNeedsRequest,
   ): Promise<OrgaNeedsResponse[]> {
     const intervals = this.buildOrgaNeedsIntervals(periodAndTeams);
+
     const [assignments, availabilities, requestedVolunteers] =
       await Promise.all([
         this.getAssignments(periodAndTeams),
@@ -144,7 +145,7 @@ export class OrgaNeedsService {
     const timeWindows = await this.prisma.ftTimeWindows.findMany({
       where: {
         ...this.periodIncludedCondition(orgaNeedsRequest),
-        ...this.teamRequestedCondition(orgaNeedsRequest.teams ?? []),
+        ...this.teamRequestedCondition(orgaNeedsRequest.teams),
       },
       select: SELECT_REQUESTED_VOLUNTEERS,
     });
@@ -164,7 +165,7 @@ export class OrgaNeedsService {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         ...this.periodIncludedCondition(periodWithTeams),
-        user: this.whereTeamCondition(periodWithTeams.teams ?? []),
+        user: this.teamMemberCondition(periodWithTeams.teams),
       },
     });
   }
@@ -224,19 +225,18 @@ export class OrgaNeedsService {
     return { timeWindow: this.teamRequestedCondition(teams) };
   }
 
-  private whereTeamCondition(teams: string[]) {
-    const teamCodes = teams.length > 0 ? { code: { in: teams } } : {};
+  private teamMemberCondition(teams: string[]) {
+    const isValidUser = {
+      permissions: { some: { permission_name: 'validated-user' } },
+    };
+    const isMemberOf = { code: { in: teams } };
+
+    const teamCondition = teams.length > 0 ? isMemberOf : isValidUser;
+
     return {
       team: {
         some: {
-          team: {
-            ...teamCodes,
-            permissions: {
-              some: {
-                permission_name: 'validated-user',
-              },
-            },
-          },
+          team: teamCondition,
         },
       },
     };
