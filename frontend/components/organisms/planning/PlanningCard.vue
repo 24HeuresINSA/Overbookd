@@ -21,7 +21,7 @@
       <p>
         Ce lien sera nécesssaire pour configurer la synchronisation avec ton
         application d'agenda.<br />
-        Voici une liste d'applications supportant cette synchronisation :
+        Voici une liste d'applications supportant cette synchronisation:
       </p>
       <ul>
         <li>
@@ -64,7 +64,7 @@
     <v-card-text v-else>
       <p>Tu n'as pas encore accès à ton planning. 😅</p>
       <p>
-        L'équipe responsable des bénévoles le peaufiner encore pour qu'il soit
+        L'équipe responsable des bénévoles le peaufine encore pour qu'il soit
         aux petits oignons. 🧑‍💻
       </p>
       <p>
