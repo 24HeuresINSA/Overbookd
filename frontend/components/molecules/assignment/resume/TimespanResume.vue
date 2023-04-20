@@ -60,12 +60,17 @@ export default Vue.extend({
   },
   computed: {
     remaingTeamRequests(): { code: string; quantity: number }[] {
-      return this.timespan.requestedTeams
-        .filter(({ assignmentCount, quantity }) => assignmentCount < quantity)
-        .map(({ code, assignmentCount, quantity }) => ({
-          code,
-          quantity: quantity - assignmentCount,
-        }));
+      return (
+        this.$accessor.assignment.timespans
+          .find(({ id }) => id === this.timespan.id)
+          ?.requestedTeams?.filter(
+            ({ assignmentCount, quantity }) => assignmentCount < quantity
+          )
+          ?.map(({ code, assignmentCount, quantity }) => ({
+            code,
+            quantity: quantity - assignmentCount,
+          })) ?? []
+      );
     },
   },
   methods: {
