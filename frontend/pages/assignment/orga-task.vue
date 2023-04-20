@@ -54,6 +54,8 @@ export default Vue.extend({
     );
     if (!volunteer) return;
     this.$accessor.assignment.setSelectedVolunteer(volunteer);
+    this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
+    this.$accessor.assignment.fetchSelectedVolunteerPlanning(volunteer.id);
   },
   methods: {
     closeTimespanDetailsDialog() {
