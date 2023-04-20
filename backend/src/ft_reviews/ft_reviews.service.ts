@@ -26,6 +26,8 @@ export class FtReviewsService {
     ftId: number,
     reviewer: UpsertFtReviewsDto,
   ): Promise<CompleteFtResponseDto> {
+    await this.checkSwitchableToValidated(ftId);
+
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
@@ -97,13 +99,10 @@ export class FtReviewsService {
     userId: number,
     timeSpanParameters: TimespanParametersDto,
   ): Promise<CompleteFtResponseDto | null> {
-    const ft = await this.prisma.ft.findUnique({
-      where: { id: ftId },
-      select: COMPLETE_FT_SELECT,
-    });
+    const ft = await this.retrieveCompleteFt(ftId);
     await this.checkSwitchableToReady(ft);
 
-    const timespans = this.computeTimeSpans(ft);
+    const timespans = this.computeTimespans(ft);
 
     this.logger.log(`Setting FT #${ftId} as READY`);
     const updateStatusCategoryPriority = this.prisma.ft.update({
@@ -175,7 +174,7 @@ export class FtReviewsService {
     return null;
   }
 
-  private async checkSwitchableToReady(ft: DataBaseCompleteFt) {
+  private async checkSwitchableToReady(ft: DataBaseCompleteFt | null) {
     if (!ft) {
       throw new NotFoundException('FT introuvable');
     }
@@ -188,7 +187,29 @@ export class FtReviewsService {
     await this.hasAtLeastOneConflict(ft);
   }
 
-  private computeTimeSpans(ft: DataBaseCompleteFt): Timespan[] {
+  private async checkSwitchableToValidated(ftId: number) {
+    const ft = await this.retrieveCompleteFt(ftId);
+
+    if (!ft) {
+      throw new NotFoundException('FT introuvable');
+    }
+    if (ft.status === FtStatus.READY) {
+      throw new BadRequestException('FT prete pour affectation');
+    }
+
+    return;
+  }
+
+  private async retrieveCompleteFt(
+    ftId: number,
+  ): Promise<DataBaseCompleteFt | null> {
+    return this.prisma.ft.findUnique({
+      where: { id: ftId },
+      select: COMPLETE_FT_SELECT,
+    });
+  }
+
+  private computeTimespans(ft: DataBaseCompleteFt): Timespan[] {
     return ft.timeWindows.flatMap(TimespansGenerator.generateTimespans);
   }
 
