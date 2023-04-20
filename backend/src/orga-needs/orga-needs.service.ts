@@ -213,6 +213,7 @@ export class OrgaNeedsService {
   }
 
   private teamRequestedCondition(teams: string[]) {
+    if (teams.length === 0) return {};
     return {
       teamRequests: { some: { teamCode: { in: teams } } },
     };
@@ -224,12 +225,12 @@ export class OrgaNeedsService {
   }
 
   private whereTeamCondition(teams: string[]) {
-    const teamCodes = teams?.length > 0 ? { in: teams } : {};
+    const teamCodes = teams.length > 0 ? { code: { in: teams } } : {};
     return {
       team: {
         some: {
           team: {
-            code: teamCodes,
+            ...teamCodes,
             permissions: {
               some: {
                 permission_name: 'validated-user',
