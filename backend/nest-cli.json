@@ -16,6 +16,11 @@
         "include": "**/*.ejs",
         "outDir": "dist/src",
         "watchAssets": true
+      },
+      {
+        "include": "../fonts",
+        "outDir": "dist/fonts",
+        "watchAssets": true
       }
     ]
   }
