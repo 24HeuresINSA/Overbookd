@@ -5,9 +5,9 @@
     :hour-to-scroll-to="hourToScrollTo"
   >
     <template #title>
-      <div class="title">
+      <div v-show="selectedVolunteer" class="title">
         <h1 class="title__name">{{ volunteerName }}</h1>
-        |
+        <span v-show="stats.length > 0">|</span>
         <AssignmentUserStats :stats="stats" class="title__stats" />
       </div>
     </template>
