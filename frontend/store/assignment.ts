@@ -394,7 +394,7 @@ export const actions = actionTree(
     },
 
     async unassignVolunteer(
-      { dispatch },
+      { state, dispatch },
       { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
     ) {
       const res = await safeCall(
@@ -408,7 +408,7 @@ export const actions = actionTree(
       if (!res) return;
       dispatch("restoreStateAfterTimespanDetailsUpdate", {
         timespanId,
-        assigneeId,
+        volunteerId: state.selectedVolunteer?.id,
       });
     },
 
@@ -452,7 +452,7 @@ export const actions = actionTree(
 
     restoreStateAfterTimespanDetailsUpdate(
       { state, dispatch },
-      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
+      { timespanId, volunteerId }: { timespanId: number; volunteerId?: number }
     ) {
       dispatch("fetchTimespanDetails", timespanId);
 
@@ -460,9 +460,9 @@ export const actions = actionTree(
       const isOrgaTaskMode =
         getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
 
-      if (isOrgaTaskMode) {
-        dispatch("user/getVolunteerAssignments", assigneeId, { root: true });
-        dispatch("fetchTimespansForVolunteer", assigneeId);
+      if (isOrgaTaskMode && volunteerId) {
+        dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
+        dispatch("fetchTimespansForVolunteer", volunteerId);
         return;
       }
       dispatch("fetchTimespansWithStats", state.selectedFt?.id);
@@ -470,7 +470,7 @@ export const actions = actionTree(
     },
 
     async updateAssignedTeam(
-      { dispatch },
+      { state, dispatch },
       { timespanId, assigneeId, team }: UpdateAssignedTeam
     ) {
       const data = { timespanId, assigneeId, team };
@@ -485,7 +485,7 @@ export const actions = actionTree(
       if (!res) return;
       dispatch("restoreStateAfterTimespanDetailsUpdate", {
         timespanId,
-        assigneeId,
+        volunteerId: state.selectedVolunteer?.id,
       });
     },
   }
