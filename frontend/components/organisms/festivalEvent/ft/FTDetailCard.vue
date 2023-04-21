@@ -7,7 +7,7 @@
         <RichEditor
           :data="mFT.description"
           class="mb-4"
-          :disabled="isValidatedByOwner"
+          :disabled="!canEditDescription"
           @change="updateDescription($event)"
         ></RichEditor>
       </v-form>
@@ -38,6 +38,12 @@ export default Vue.extend({
     },
     isValidatedByOwner(): boolean {
       return isTaskValidatedBy(this.mFT.reviews, this.owner);
+    },
+    canEditDescription(): boolean {
+      return !this.isValidatedByOwner || this.canAffect;
+    },
+    canAffect(): boolean {
+      return this.$accessor.user.hasPermission("can-affect");
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();
