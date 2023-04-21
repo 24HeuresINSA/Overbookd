@@ -596,10 +596,11 @@ function convertToTimespanAssignee({
 }
 
 function extractDeduplicatedFriends(assignee: DatabaseAssignee) {
-  return [
+  const friends = [
     ...assignee.friends.map(({ requestor }) => requestor),
     ...assignee.friendRequestors.map(({ friend }) => friend),
-  ].reduce(deduplicateFriends, [] as Assignee[]);
+  ];
+  return friends.reduce(deduplicateFriends, [] as Assignee[]);
 }
 
 function deduplicateFriends(
