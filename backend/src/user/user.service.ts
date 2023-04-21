@@ -333,11 +333,17 @@ export class UserService {
   }
 
   async deleteUser(id: number): Promise<void> {
-    await this.prisma.user.update({
+    const deleteUser = this.prisma.user.update({
       where: { id },
       data: { is_deleted: true },
       select: { id: true },
     });
+
+    const removeFriendRequests = this.prisma.friend.deleteMany({
+      where: { OR: [{ requestorId: id }, { friendId: id }] },
+    });
+
+    await this.prisma.$transaction([deleteUser, removeFriendRequests]);
   }
 
   async getVolunteerAssignmentStats(

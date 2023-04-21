@@ -199,6 +199,8 @@ export class FtTimespanService {
       },
       select,
     });
+    console.log(JSON.stringify(select));
+    console.log(JSON.stringify(timespan));
     return this.formatTimespanWithDetails(timespan);
   }
 
@@ -583,6 +585,7 @@ function convertToTimespanAssignee({
   teamRequest,
 }: DatabaseAssignmentsAsTeamMember): TimespanAssignee {
   const teams = assignee.team.map(({ team }) => team.code);
+  console.log(assignee);
   const friends = extractDeduplicatedFriends(assignee);
 
   return {
@@ -596,10 +599,12 @@ function convertToTimespanAssignee({
 }
 
 function extractDeduplicatedFriends(assignee: DatabaseAssignee) {
-  return [
+  const friends = [
     ...assignee.friends.map(({ requestor }) => requestor),
     ...assignee.friendRequestors.map(({ friend }) => friend),
-  ].reduce(deduplicateFriends, [] as Assignee[]);
+  ];
+  console.log(friends);
+  return friends.reduce(deduplicateFriends, [] as Assignee[]);
 }
 
 function deduplicateFriends(
