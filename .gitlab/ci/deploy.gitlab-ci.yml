@@ -1,5 +1,6 @@
 deploy:
   image: curlimages/curl
+  interruptible : true
   stage: deploy
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'

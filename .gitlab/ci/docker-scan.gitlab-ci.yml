@@ -1,5 +1,6 @@
 container_scanning:
   interruptible: true
+  allow_failure: false
   stage: docker-scan
   rules:
     - when: never
