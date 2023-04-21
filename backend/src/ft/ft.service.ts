@@ -114,6 +114,7 @@ export class FtService {
     const ft = canAffect
       ? await this.findOne(id)
       : await this.findSubmittableFt(id);
+
     if (!ft) throw new NotFoundException(`ft #${id} not found`);
 
     this.logger.log(`Updating FT #${id}`);
