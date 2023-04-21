@@ -15,20 +15,11 @@
           class="mr-2"
         ></TeamChip>
       </div>
-      <div v-show="shouldShowStats" class="user-stats">
-        <div v-for="stat in stats" :key="stat.category" class="stat">
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <p class="stat__duration" v-bind="attrs" v-on="on">
-                {{ getDisplayedStat(stat) }}
-              </p>
-            </template>
-            <span class="stat__category">{{
-              getStatCategoryName(stat.category)
-            }}</span>
-          </v-tooltip>
-        </div>
-      </div>
+      <AssignmentUserStats
+        v-show="shouldShowStats"
+        :stats="stats"
+        class="user-stats"
+      ></AssignmentUserStats>
     </template>
     <template #interval="{ date, time }">
       <div :class="{ available: isUserAvailable(date, time) }" />
@@ -37,7 +28,7 @@
       <div
         class="event underline-on-hover"
         @click="openFt(event.ft.id)"
-        @mouseup.middle="openFtNewTab(event.ft.id)"
+        @mouseup.middle="openFtInNewTab(event.ft.id)"
       >
         {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
@@ -53,12 +44,7 @@ import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
-import { Duration } from "~/utils/date/duration";
-import {
-  TaskCategory,
-  TaskCategoryEmojis,
-  TaskCategoryEmojiMap,
-} from "~/utils/models/ftTimespan";
+
 import {
   CompleteUserWithPermissions,
   Task,
@@ -66,6 +52,7 @@ import {
   VolunteerTask,
 } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
+import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 
 interface CalendarEventWithFt {
   start: Date;
@@ -77,7 +64,7 @@ interface CalendarEventWithFt {
 
 export default Vue.extend({
   name: "Calendar",
-  components: { OverCalendar, TeamChip },
+  components: { OverCalendar, TeamChip, AssignmentUserStats },
   data: function () {
     return {
       calendarCentralDate: new Date(
@@ -138,21 +125,6 @@ export default Vue.extend({
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
-    getStatCategoryEmoji(category: TaskCategory | null): string {
-      if (category === null) return TaskCategoryEmojis.AUCUNE;
-      return TaskCategoryEmojiMap.get(category) ?? TaskCategoryEmojis.AUCUNE;
-    },
-    getStatCategoryName(category: TaskCategory | null): string {
-      return category?.toLowerCase() ?? "indeterminé";
-    },
-    getDisplayedDuration(duration: number): string {
-      return Duration.fromMilliseconds(duration).toString();
-    },
-    getDisplayedStat(stat: VolunteerAssignmentStat): string {
-      const emoji = this.getStatCategoryEmoji(stat.category);
-      const duration = this.getDisplayedDuration(stat.duration);
-      return `${emoji} ${duration}`;
-    },
     isUserAvailable(date: string, time: string): boolean {
       const start = new Date(`${date} ${time}`);
       const end = computeNextHourDate(start);
@@ -163,7 +135,7 @@ export default Vue.extend({
     openFt(ftId: number) {
       this.$router.push({ path: `/ft/${ftId}` });
     },
-    openFtNewTab(ftId: number) {
+    openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
   },
@@ -189,22 +161,7 @@ export default Vue.extend({
 }
 
 .user-stats {
-  margin-top: 4px;
-  margin-left: 5px;
-  display: flex;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-
-  &__category {
-    text-transform: capitalize;
-  }
-  &__duration {
-    font-size: 1.1rem;
-    margin: 0;
-  }
+  margin-top: 3px;
+  margin-left: 3px;
 }
 </style>

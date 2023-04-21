@@ -220,6 +220,15 @@ export const actions = actionTree(
       );
     },
 
+    setSelectedVolunteerAndFetchHisData({ dispatch }, volunteer: Volunteer) {
+      dispatch("setSelectedVolunteer", volunteer);
+      dispatch("fetchSelectedVolunteerFriends", volunteer.id);
+      dispatch("fetchSelectedVolunteerPlanning", volunteer.id);
+      dispatch("user/getVolunteerAssignmentStats", volunteer.id, {
+        root: true,
+      });
+    },
+
     setSelectedTimespan({ commit, dispatch, state }, timespan: FtTimespan) {
       const selectedTimespan = state.selectedFtTimespans.find(
         (selectedTimespan) => selectedTimespan.id === timespan.id
