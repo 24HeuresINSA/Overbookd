@@ -46,6 +46,16 @@ export default Vue.extend({
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignment.fetchVolunteers();
+
+    const volunteerId = +this.$route.query.volunteer;
+    if (!volunteerId) return;
+    const volunteer = this.volunteers.find(
+      (volunteer) => volunteer.id === volunteerId
+    );
+    if (!volunteer) return;
+    this.$accessor.assignment.setSelectedVolunteer(volunteer);
+    this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
+    this.$accessor.assignment.fetchSelectedVolunteerPlanning(volunteer.id);
   },
   methods: {
     closeTimespanDetailsDialog() {

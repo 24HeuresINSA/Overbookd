@@ -9,7 +9,7 @@
           class="friend-item"
           :value="friend.id"
           @click="selectVolunteer(friend)"
-          @contextmenu.prevent="openCalendar(friend.id)"
+          @contextmenu.prevent="openAssignmentPageInNewTab(friend.id)"
         >
           {{ formatUsername(friend) }}
         </v-list-item>
@@ -55,8 +55,8 @@ export default Vue.extend({
     formatUsername(user: User): string {
       return formatUsername(user);
     },
-    openCalendar(id: number) {
-      window.open(`/calendar/${id}`, "_blank");
+    openAssignmentPageInNewTab(id: number) {
+      window.open(`/assignment/orga-task?volunteer=${id}`, "_blank");
     },
   },
 });
