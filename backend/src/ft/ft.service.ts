@@ -22,6 +22,7 @@ import {
   LITE_FT_SELECT,
   TimeWindow,
 } from './ftTypes';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -107,11 +108,14 @@ export class FtService {
   async update(
     id: number,
     updateFtDto: UpdateFtDto,
+    author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
-    const ft = await this.findSubmittableFt(id);
-    if (!ft) {
-      throw new NotFoundException(`ft #${id} not found`);
-    }
+    const canAffect = author.hasPermission('can-affect') || author.isAdmin();
+    const ft = canAffect
+      ? await this.findOne(id)
+      : await this.findSubmittableFt(id);
+    if (!ft) throw new NotFoundException(`ft #${id} not found`);
+
     this.logger.log(`Updating FT #${id}`);
     this.logger.debug(JSON.stringify(updateFtDto));
     const updatedFt = await this.prisma.ft.update({

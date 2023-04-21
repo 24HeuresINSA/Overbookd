@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -56,6 +57,8 @@ import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
+import { RequestWithUserPayload } from 'src/app.controller';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -178,8 +181,9 @@ export class FtController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFtDto: UpdateFtDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<CompleteFtResponseDto | null> {
-    return this.ftService.update(id, updateFtDto);
+    return this.ftService.update(id, updateFtDto, new JwtUtil(req.user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
