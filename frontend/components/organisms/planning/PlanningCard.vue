@@ -3,23 +3,23 @@
     <v-card-title>Mon planning </v-card-title>
     <v-card-text v-if="canViewPlanning">
       <p>
-        Ceci est un planning <strong> provisoire</strong>, ca signifie qu'il est
-        succeptibe d'etre mis a jour. 🪄
+        Ceci est un planning <strong> provisoire</strong>, ça signifie qu'il est
+        susceptible d'être mis à jour. 🪄
       </p>
       <p>
-        Pour eviter toute deconvenue nous te conseillons de
+        Pour éviter toute déconvenue nous te conseillons de
         <strong>
           synchroniser ton planning avec ton application d'agenda.
         </strong>
         🤓
       </p>
       <p>
-        Pour realiser cette operation tu auras besoin du lien vers
+        Pour réaliser cette opération tu auras besoin du lien vers
         <a :href="personnalLink">ton planning personnel</a>
         <v-icon right @click="copyToClipBoard">mdi-content-copy</v-icon>
       </p>
       <p>
-        Ce lien sera necesssaire pour configurer la synchronisation avec ton
+        Ce lien sera nécesssaire pour configurer la synchronisation avec ton
         application d'agenda.<br />
         Voici une liste d'applications supportant cette synchronisation:
       </p>
@@ -62,13 +62,13 @@
       </ul>
     </v-card-text>
     <v-card-text v-else>
-      <p>Tu n'as pas encore acces a ton planning. 😅</p>
+      <p>Tu n'as pas encore accès à ton planning. 😅</p>
       <p>
-        L'equipe responsable des benevoles le peaufiner encore pour qu'il soit
+        L'équipe responsable des bénévoles le peaufine encore pour qu'il soit
         aux petits oignons. 🧑‍💻
       </p>
       <p>
-        Si tu as besoin d'information sur ton planning, n'hesite pas a
+        Si tu as besoin d'informations sur ton planning, n'hésite pas à
         <a href="mailto:humains@24heures.org">les contacter</a>. 📨
       </p>
     </v-card-text>
