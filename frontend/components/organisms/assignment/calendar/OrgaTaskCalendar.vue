@@ -1,10 +1,16 @@
 <template>
   <OverCalendar
     v-model="calendarMarker"
-    :title="volunteerName"
     :events="assignedTasks"
     :hour-to-scroll-to="hourToScrollTo"
   >
+    <template #title>
+      <div v-show="selectedVolunteer" class="title">
+        <h1 class="title__name">{{ volunteerName }}</h1>
+        <span v-show="stats.length > 0">|</span>
+        <AssignmentUserStats :stats="stats" class="title__stats" />
+      </div>
+    </template>
     <template #interval="{ date, time }">
       <div :class="{ available: isVolunteerAvailable(date, time) }" />
     </template>
@@ -23,6 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
+import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
@@ -30,7 +37,7 @@ import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
 import { CalendarItem } from "~/utils/models/calendar";
 import { AvailableTimespan } from "~/utils/models/ftTimespan";
-import { VolunteerTask } from "~/utils/models/user";
+import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 interface CalendarItemWithTask extends CalendarItem {
@@ -40,7 +47,7 @@ interface CalendarItemWithTask extends CalendarItem {
 
 export default Vue.extend({
   name: "OrgaTaskCalendar",
-  components: { OverCalendar },
+  components: { OverCalendar, AssignmentUserStats },
   data: () => ({
     calendarMarker: new Date(),
   }),
@@ -76,6 +83,9 @@ export default Vue.extend({
     },
     hourToScrollTo(): number | null {
       return this.hoverTimespan?.start.getHours() ?? null;
+    },
+    stats(): VolunteerAssignmentStat[] {
+      return this.$accessor.user.selectedUserAssignmentStats;
     },
   },
   watch: {
@@ -139,6 +149,19 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.title {
+  display: flex;
+  &__name {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-right: 8px;
+  }
+  &__stats {
+    margin-top: 2px;
+    margin-left: 8px;
+  }
+}
+
 .available {
   background-color: $calendar-available-background-color;
   height: 100%;

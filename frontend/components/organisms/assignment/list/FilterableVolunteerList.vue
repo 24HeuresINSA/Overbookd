@@ -65,7 +65,7 @@ export default Vue.extend({
     },
     isOrgaTaskMode(): boolean {
       return (
-        getAssignmentModeFromRoute(this.$route.fullPath) ===
+        getAssignmentModeFromRoute(this.$route.path) ===
         AssignmentModes.ORGA_TASK
       );
     },
@@ -105,9 +105,7 @@ export default Vue.extend({
     },
     handleVolunteerSelection(volunteer: Volunteer) {
       if (this.isOrgaTaskMode) {
-        this.$accessor.assignment.setSelectedVolunteer(volunteer);
-        this.$accessor.assignment.fetchSelectedVolunteerFriends(volunteer.id);
-        this.$accessor.assignment.fetchSelectedVolunteerPlanning(volunteer.id);
+        this.$accessor.assignment.selectVolunteer(volunteer);
         return;
       }
       this.$accessor.assignment.startAssignment(volunteer);
