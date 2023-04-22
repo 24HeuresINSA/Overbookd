@@ -40,6 +40,30 @@ import { AssignmentStats } from "~/store/assignment";
 import { VolunteerAssignmentStat } from "~/utils/models/user";
 import { Duration } from "~/utils/date/duration";
 
+function searchStatic(stat: VolunteerAssignmentStat): boolean {
+  return stat.category === TaskCategories.STATIQUE;
+}
+
+function searchBar(stat: VolunteerAssignmentStat): boolean {
+  return stat.category === TaskCategories.BAR;
+}
+
+function searchManutention(stat: VolunteerAssignmentStat): boolean {
+  return stat.category === TaskCategories.MANUTENTION;
+}
+
+function searchFun(stat: VolunteerAssignmentStat): boolean {
+  return stat.category === TaskCategories.FUN;
+}
+
+function searchRelou(stat: VolunteerAssignmentStat): boolean {
+  return stat.category === TaskCategories.RELOU;
+}
+
+function searchUnknown(stat: VolunteerAssignmentStat): boolean {
+  return stat.category === null;
+}
+
 export default Vue.extend({
   name: "VolunteerStatsTable",
   data: () => ({
@@ -92,33 +116,30 @@ export default Vue.extend({
     this.$accessor.assignment.fetchStats();
   },
   methods: {
-    retrieveStaticStat(stats: VolunteerAssignmentStat[]): string {
-      const stat = stats.find(
-        (stat) => stat.category === TaskCategories.STATIQUE
-      );
+    retrieveStat(
+      stats: VolunteerAssignmentStat[],
+      searchFunction: (stat: VolunteerAssignmentStat) => boolean
+    ): string {
+      const stat = stats.find(searchFunction);
       return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+    },
+    retrieveStaticStat(stats: VolunteerAssignmentStat[]): string {
+      return this.retrieveStat(stats, searchStatic);
     },
     retrieveBarStat(stats: VolunteerAssignmentStat[]): string {
-      const stat = stats.find((stat) => stat.category === TaskCategories.BAR);
-      return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+      return this.retrieveStat(stats, searchBar);
     },
     retrieveManutentionStat(stats: VolunteerAssignmentStat[]): string {
-      const stat = stats.find(
-        (stat) => stat.category === TaskCategories.MANUTENTION
-      );
-      return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+      return this.retrieveStat(stats, searchManutention);
     },
     retrieveFunStat(stats: VolunteerAssignmentStat[]): string {
-      const stat = stats.find((stat) => stat.category === TaskCategories.FUN);
-      return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+      return this.retrieveStat(stats, searchFun);
     },
     retrieveRelouStat(stats: VolunteerAssignmentStat[]): string {
-      const stat = stats.find((stat) => stat.category === TaskCategories.RELOU);
-      return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+      return this.retrieveStat(stats, searchRelou);
     },
     retrieveUnknownStat(stats: VolunteerAssignmentStat[]): string {
-      const stat = stats.find((stat) => stat.category === null);
-      return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+      return this.retrieveStat(stats, searchUnknown);
     },
   },
 });
