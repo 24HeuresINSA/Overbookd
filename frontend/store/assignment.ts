@@ -220,7 +220,7 @@ export const actions = actionTree(
       );
     },
 
-    setSelectedVolunteerAndFetchHisData({ dispatch }, volunteer: Volunteer) {
+    selectVolunteer({ dispatch }, volunteer: Volunteer) {
       dispatch("setSelectedVolunteer", volunteer);
       dispatch("fetchSelectedVolunteerFriends", volunteer.id);
       dispatch("fetchSelectedVolunteerPlanning", volunteer.id);

@@ -105,9 +105,7 @@ export default Vue.extend({
     },
     handleVolunteerSelection(volunteer: Volunteer) {
       if (this.isOrgaTaskMode) {
-        this.$accessor.assignment.setSelectedVolunteerAndFetchHisData(
-          volunteer
-        );
+        this.$accessor.assignment.selectVolunteer(volunteer);
         return;
       }
       this.$accessor.assignment.startAssignment(volunteer);

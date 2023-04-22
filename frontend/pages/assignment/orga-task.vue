@@ -53,7 +53,7 @@ export default Vue.extend({
       (volunteer) => volunteer.id === volunteerId
     );
     if (!volunteer) return;
-    this.$accessor.assignment.setSelectedVolunteerAndFetchHisData(volunteer);
+    this.$accessor.assignment.selectVolunteer(volunteer);
   },
   methods: {
     closeTimespanDetailsDialog() {

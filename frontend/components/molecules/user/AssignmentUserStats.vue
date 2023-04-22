@@ -1,6 +1,6 @@
 <template>
   <div class="user-stats">
-    <div v-for="stat in stats" :key="stat.category" class="stat">
+    <div v-for="stat in sortedStats" :key="stat.category" class="stat">
       <v-tooltip top>
         <template #activator="{ on, attrs }">
           <p class="stat__duration" v-bind="attrs" v-on="on">
@@ -19,6 +19,7 @@
 import Vue from "vue";
 import { Duration } from "~/utils/date/duration";
 import {
+  TaskCategories,
   TaskCategory,
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
@@ -31,6 +32,16 @@ export default Vue.extend({
     stats: {
       type: Array as () => VolunteerAssignmentStat[],
       required: true,
+    },
+  },
+  computed: {
+    sortedStats(): VolunteerAssignmentStat[] {
+      return [...this.stats].sort((a, b) => {
+        const categories = Object.values(TaskCategories);
+        const aIndex = categories.indexOf(a.category ?? TaskCategories.AUCUNE);
+        const bIndex = categories.indexOf(b.category ?? TaskCategories.AUCUNE);
+        return aIndex - bIndex;
+      });
     },
   },
   methods: {
