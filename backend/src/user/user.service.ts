@@ -112,7 +112,7 @@ const SELECT_VOLUNTEER_ASSIGNMENTS = {
   timespanId: true,
 };
 
-const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
+export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   timespan: {
     select: {
       start: true,
@@ -353,12 +353,10 @@ export class UserService {
       where: { assigneeId: volunteerId },
       select: SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
     });
-    return this.formatAssignmentStats(assignments);
+    return UserService.formatAssignmentStats(assignments);
   }
 
-  private formatAssignmentStats(
-    assignments: DatabaseVolunteerAssignmentStat[],
-  ) {
+  static formatAssignmentStats(assignments: DatabaseVolunteerAssignmentStat[]) {
     const stats = assignments.reduce((stats, { timespan }) => {
       const category = timespan.timeWindow.ft.category;
       const durationToAdd = getPeriodDuration(timespan);

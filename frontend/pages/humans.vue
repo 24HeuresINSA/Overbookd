@@ -9,6 +9,7 @@
               <v-text-field
                 v-model="filters.search"
                 label="Recherche"
+                :disabled="isModeStatsActive"
               ></v-text-field>
               <v-combobox
                 v-model="filters.teams"
@@ -19,6 +20,7 @@
                 label="Team"
                 :items="teams"
                 item-text="name"
+                :disabled="isModeStatsActive"
               >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
@@ -43,9 +45,14 @@
                   tile
                   color="deep-purple accent-3"
                   group
+                  :disabled="isModeStatsActive"
                 >
-                  <v-btn :value="true" small> oui</v-btn>
-                  <v-btn :value="false" small> Non</v-btn>
+                  <v-btn :value="true" small :disabled="isModeStatsActive">
+                    oui</v-btn
+                  >
+                  <v-btn :value="false" small :disabled="isModeStatsActive">
+                    Non</v-btn
+                  >
                 </v-btn-toggle>
               </template>
               <template v-if="hasPermission('bureau')">
@@ -55,10 +62,15 @@
                   tile
                   color="deep-purple accent-3"
                   group
+                  :disabled="isModeStatsActive"
                 >
-                  <v-btn :value="true" small>Payée</v-btn>
+                  <v-btn :value="true" small :disabled="isModeStatsActive">
+                    Payée
+                  </v-btn>
 
-                  <v-btn :value="false" small> Non payée</v-btn>
+                  <v-btn :value="false" small :disabled="isModeStatsActive">
+                    Non payée
+                  </v-btn>
                 </v-btn-toggle>
               </template>
             </v-card-text>
@@ -78,7 +90,7 @@
               </v-btn-toggle>
             </v-card-text>
             <v-card-text>
-              <v-btn text @click="exportCSV">exporter</v-btn>
+              <v-btn disabled text @click="exportCSV">exporter</v-btn>
             </v-card-text>
           </v-card>
         </v-col>
@@ -132,55 +144,7 @@
                 </v-container>
               </template>
             </v-data-table>
-            <v-data-table
-              v-else
-              style="max-height: 100%; overflow-y: auto"
-              :headers="statsHeaders"
-              :items="filteredUsers"
-              :options.sync="options"
-              class="elevation-1"
-              dense
-              :items-per-page="20"
-            >
-              <template #[`item.firstname`]="{ item }">
-                {{ item.firstname }} {{ item.lastname }}
-                {{ item.nickname ? `(${item.nickname})` : "" }}
-              </template>
-
-              <template #[`item.action`]="{ item }" style="display: flex">
-                <v-btn
-                  v-if="hasPermission('hard')"
-                  icon
-                  small
-                  @click="openInformationDialog(item)"
-                >
-                  <v-icon small>mdi-information-outline</v-icon>
-                </v-btn>
-                <v-btn icon small @click="openCalendar(item.id)">
-                  <v-icon small>mdi-calendar</v-icon>
-                </v-btn>
-              </template>
-
-              <template #[`item.charisma`]="{ item }">
-                {{ item.charisma || 0 }}
-              </template>
-
-              <template #[`item.charge`]="{ item }">
-                {{ `${item.charge || 0} %` }}
-              </template>
-              <template #[`item.hours`]="{ item }">
-                {{ item.hours || 0 }}</template
-              >
-              <template #[`item.statics`]="{ item }">
-                {{ item.statics || 0 }}</template
-              >
-
-              <template #[`item.team`]="{ item }">
-                <v-container style="max-width: 150px">
-                  <OverChips :roles="item.team"></OverChips>
-                </v-container>
-              </template>
-            </v-data-table>
+            <VolunteerStatsTable v-else />
           </div>
           <div v-else class="d-flex justify-center">
             <v-progress-circular
@@ -214,6 +178,7 @@
 import Fuse from "fuse.js";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
 
 const { RepoFactory } = require("../repositories/repoFactory");
@@ -224,6 +189,7 @@ export default {
     UserInformation,
     SnackNotificationContainer,
     OverChips,
+    VolunteerStatsTable,
   },
   data() {
     return {
@@ -289,12 +255,6 @@ export default {
         this.updateFilteredUsers();
       },
       deep: true,
-    },
-
-    isModeStatsActive() {
-      if (this.isModeStatsActive) {
-        this.initStats();
-      }
     },
   },
 
@@ -409,47 +369,6 @@ export default {
 
       const parsedCSV = csv.replace(regex, "");
       this.download("utilisateurs.csv", parsedCSV);
-    },
-    async initStats() {
-      this.loading = true;
-      await RepoFactory.ftRepo.getOrgaRequis(this).then((res) => {
-        const allPlanning = res.data;
-        let final = [];
-        let allStatic = [];
-        let allAffected = [];
-        allPlanning.forEach((plan) => {
-          const returnValue = {
-            _id: plan._id,
-            charge: this.getCharge(plan),
-          };
-          const staticValue = {
-            _id: plan._id,
-            statics: this.getStatic(plan),
-          };
-          const affectedHours = {
-            _id: plan._id,
-            affected: this.getAffected(plan),
-          };
-          final.push(returnValue);
-          allStatic.push(staticValue);
-          allAffected.push(affectedHours);
-        });
-        this.filteredUsers.forEach((user) => {
-          const userCharge = final.find((e) => e._id === user._id);
-          const userStatic = allStatic.find((e) => e._id === user._id);
-          const userAffected = allAffected.find((e) => e._id === user._id);
-          if (userCharge) {
-            user.charge = Math.round(userCharge.charge * 100) / 100;
-          }
-          if (userStatic) {
-            user.statics = Math.round(userStatic.statics * 100) / 100;
-          }
-          if (userAffected) {
-            user.hours = Math.round(userAffected.affected * 100) / 100;
-          }
-        });
-        this.loading = false;
-      });
     },
     getCharge(plan) {
       let charge = 0;

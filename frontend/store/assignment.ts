@@ -23,6 +23,7 @@ import {
 import { Period, castPeriods } from "~/utils/models/period";
 import {
   User,
+  VolunteerAssignmentStat,
   VolunteerTask,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user";
@@ -44,6 +45,12 @@ export type BulkAssignmentRequest = {
   timespanId: number;
 };
 
+export type AssignmentStats = {
+  firstname: string;
+  lastname: string;
+  stats: VolunteerAssignmentStat[];
+};
+
 const UserRepo = RepoFactory.userRepo;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
 const AvailabilityRepo = RepoFactory.VolunteerAvailabilityRepository;
@@ -63,6 +70,8 @@ export const state = () => ({
 
   hoverTimespan: null as AvailableTimespan | null,
   timespanToDisplayDetails: null as TimespanWithAssignees | null,
+
+  stats: [] as AssignmentStats[],
 });
 
 export const getters = getterTree(state, {
@@ -187,6 +196,10 @@ export const mutations = mutationTree(state, {
   SET_NEXT_CANDIDATE(state) {
     state.taskAssignment =
       state.taskAssignment.changeLastCandidateToNextFriend();
+  },
+
+  SET_STATS(state, stats: AssignmentStats[]) {
+    state.stats = stats;
   },
 });
 
@@ -496,6 +509,12 @@ export const actions = actionTree(
         timespanId,
         volunteerId: state.selectedVolunteer?.id,
       });
+    },
+
+    async fetchStats({ commit }) {
+      const res = await safeCall(this, AssignmentRepo.getStats(this));
+      if (!res) return;
+      commit("SET_STATS", res.data);
     },
   }
 );

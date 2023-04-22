@@ -5,6 +5,11 @@ import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { WHERE_VALIDATED_USER } from './volunteer.service';
+import { VolunteerAssignmentStat } from 'src/user/dto/volunteerAssignment.dto';
+import {
+  SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
+  UserService,
+} from 'src/user/user.service';
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -75,6 +80,12 @@ export type VolunteerAssignmentRequest = {
   id: number;
 };
 
+export type AssignmentStats = {
+  firstname: string;
+  lastname: string;
+  stats: VolunteerAssignmentStat[];
+};
+
 @Injectable()
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
@@ -141,6 +152,21 @@ export class AssignmentService {
       },
       data: { teamRequestId },
       select: SELECT_ASSIGNMENT,
+    });
+  }
+
+  async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
+    const volunteers = await this.prisma.user.findMany({
+      where: { is_deleted: false, team: { none: { team: { code: 'hard' } } } },
+      select: {
+        firstname: true,
+        lastname: true,
+        assignments: { select: SELECT_TIMESPAN_PERIOD_WITH_CATEGORY },
+      },
+    });
+    return volunteers.map(({ assignments, ...volunteer }) => {
+      const stats = UserService.formatAssignmentStats(assignments);
+      return { ...volunteer, stats };
     });
   }
 
