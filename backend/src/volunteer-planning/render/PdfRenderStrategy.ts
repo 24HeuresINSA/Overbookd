@@ -2,13 +2,46 @@ import { Task } from '../domain/task.model';
 import { RenderStrategy } from './renderStrategy';
 import Printer from 'pdfmake';
 import { join } from 'path';
-import { formatDateWithMinutes } from 'src/utils/date';
+import { formatDateToHumanReadable } from 'src/utils/date';
 import sanitizeHtml from 'sanitize-html';
+import htmlToPdfMake from 'html-to-pdfmake';
+import { Content, StyleDictionary } from 'pdfmake/interfaces';
+import { JSDOM } from 'jsdom';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 
 class PdfException extends Error {}
 
+const { window } = new JSDOM();
 export class PdfRenderStrategy implements RenderStrategy {
   private printer: Printer;
+
+  private htmlToPdfDefaultStyle: StyleDictionary = {
+    b: { bold: true },
+    strong: { bold: true },
+    u: { decoration: 'underline' },
+    s: { decoration: 'lineThrough' },
+    em: { italics: true },
+    i: { italics: true },
+    h1: { fontSize: 15, bold: true, marginBottom: 5 },
+    h2: { fontSize: 14, bold: true, marginBottom: 5 },
+    h3: { fontSize: 13, bold: true, marginBottom: 3 },
+    h4: { fontSize: 12, bold: true, marginBottom: 3 },
+    h5: { fontSize: 11, bold: true, marginBottom: 3 },
+    h6: { fontSize: 10, bold: true, marginBottom: 3 },
+    a: { color: 'blue', decoration: 'underline' },
+    strike: { decoration: 'lineThrough' },
+    p: { margin: [0, 3, 0, 3] },
+    ul: { marginBottom: 3 },
+    li: { marginLeft: 3 },
+    table: { marginBottom: 3 },
+    th: { bold: true, fillColor: '#EEEEEE' },
+  };
+
+  private pdfStyles: StyleDictionary = {
+    bold: { bold: true },
+    task: { fontSize: 20, bold: true, marginBottom: 5 },
+    details: { fontSize: 14, marginBottom: 3 },
+  };
 
   private fonts = {
     Roboto: {
@@ -29,7 +62,11 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   render(tasks: Task[]): Promise<any> {
     const pdfContent = this.generateContent(tasks);
-    const pdf = this.printer.createPdfKitDocument({ content: pdfContent });
+    const pdf = this.printer.createPdfKitDocument({
+      content: pdfContent,
+      defaultStyle: { fontSize: 10 },
+      styles: this.pdfStyles,
+    });
 
     const chunks = [];
     return new Promise((resolve, reject) => {
@@ -48,36 +85,59 @@ export class PdfRenderStrategy implements RenderStrategy {
       pdf.end();
     });
   }
-  generateContent(tasks: Task[]): string[] {
+
+  private generateContent(tasks: Task[]): Content[] {
     return tasks.flatMap((task) => this.generateTaskContent(task));
   }
 
-  generateTaskContent({ name, period, location, description }: Task): string[] {
-    const start = formatDateWithMinutes(period.start);
-    const end = formatDateWithMinutes(period.end);
-    const displayPeriod = `De ${start} A ${end}`;
-
+  private generateTaskContent({
+    name,
+    period,
+    location,
+    description,
+  }: Task): Content[] {
+    const displayPeriod = this.extractPeriod(period);
+    const displayLocation = this.extractLocation(location);
+    const displayName = { text: name, style: ['task'] };
     const displayDescription = this.extractDescription(description);
-    const taskSeparator = '\n\n\n';
+    const taskSeparator: Content = { text: '', margin: [0, 0, 0, 15] };
 
-    return [name, displayPeriod, location, displayDescription, taskSeparator];
+    return [
+      displayName,
+      displayPeriod,
+      displayLocation,
+      displayDescription,
+      taskSeparator,
+    ];
   }
 
-  private extractDescription(description: string) {
-    const newLineTagRegex = new RegExp('</p>|<br>', 'g');
-    const headerRegex = new RegExp('</h[1-6]>', 'g');
-    const inferiorRegex = new RegExp('&lt;', 'g');
-    const superiorRegex = new RegExp('&gt;', 'g');
+  private extractLocation(location: string): Content {
+    return {
+      text: [
+        { text: 'Lieu: ', style: ['details', 'bold'] },
+        { text: location, style: ['details'] },
+      ],
+      margin: [0, 0, 0, 5],
+    };
+  }
 
-    return sanitizeHtml(
-      description
-        .replace(newLineTagRegex, '$&\n')
-        .replace(headerRegex, '$&\n\n'),
-      {
-        allowedTags: [],
-      },
-    )
-      .replace(inferiorRegex, '<')
-      .replace(superiorRegex, '>');
+  private extractPeriod(period: Period): Content {
+    const start = formatDateToHumanReadable(period.start);
+    const end = formatDateToHumanReadable(period.end);
+    const displayPeriod = {
+      text: [
+        { text: 'Creneau: ', style: ['bold', 'details'] },
+        { text: `${start} - ${end}`, style: ['details'] },
+      ],
+    };
+    return displayPeriod;
+  }
+
+  private extractDescription(description: string): Content {
+    const sanitizedDescription = sanitizeHtml(description);
+    return htmlToPdfMake(sanitizedDescription, {
+      window,
+      defaultStyles: this.htmlToPdfDefaultStyle,
+    });
   }
 }

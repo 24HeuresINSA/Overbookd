@@ -33,3 +33,12 @@ export function toDateArray(date: string | Date): DateArray {
     d.getMinutes(),
   ];
 }
+
+export function formatDateToHumanReadable(date: Date | string): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    dateStyle: 'long',
+    timeStyle: 'short',
+    timeZone: 'Europe/Paris',
+  };
+  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
+}
