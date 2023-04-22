@@ -13,6 +13,7 @@ import {
   Request as RequestDecorator,
   Res,
   HttpException,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -45,6 +46,7 @@ import { VolunteerPlanningService } from 'src/volunteer-planning/volunteer-plann
 import {
   IcalType,
   JsonType,
+  PdfType,
   PlanningRenderStrategy,
 } from 'src/volunteer-planning/render/renderStrategy';
 import { VolunteerSubscriptionPlanningResponseDto } from 'src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
@@ -54,6 +56,8 @@ import { Request, Response } from 'express';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
+  private readonly logger = new Logger(UserController.name);
+
   constructor(
     private readonly userService: UserService,
     private readonly planningService: VolunteerPlanningService,
@@ -105,7 +109,7 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
-  @ApiProduces(JsonType, IcalType)
+  @ApiProduces(JsonType, IcalType, PdfType)
   async getCurrentVolunteerPlanning(
     @RequestDecorator() request: RequestWithUserPayload,
     @Res() response: Response,
@@ -118,6 +122,7 @@ export class UserController {
       response.send(planning);
       return;
     } catch (e) {
+      this.logger.error(e);
       if (e instanceof HttpException) {
         response.status(e.getStatus()).send(e.message);
         return;
@@ -269,7 +274,7 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
-  @ApiProduces(JsonType, IcalType)
+  @ApiProduces(JsonType, IcalType, PdfType)
   async getVolunteerPlanning(
     @Param('id', ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,

@@ -8,7 +8,7 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SecretService } from './secret.service';
 import { VolunteerPlanningService } from './volunteer-planning.service';
-import { IcalRenderStrategy } from './render/renderStrategy';
+import { IcalRenderStrategy } from './render/IcalRenderStrategy';
 
 @ApiTags('plannings')
 @Controller('plannings')
