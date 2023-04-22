@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :headers="headers" :items="volunteers" dense>
+  <v-data-table
+    :headers="headers"
+    :items="volunteers"
+    :items-per-page="-1"
+    dense
+  >
     <template #item.volunteer="{ item }">
       {{ item.firstname }} {{ item.lastname }}
     </template>

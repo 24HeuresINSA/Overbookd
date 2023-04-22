@@ -9,6 +9,7 @@
               <v-text-field
                 v-model="filters.search"
                 label="Recherche"
+                :disabled="isModeStatsActive"
               ></v-text-field>
               <v-combobox
                 v-model="filters.teams"
@@ -19,6 +20,7 @@
                 label="Team"
                 :items="teams"
                 item-text="name"
+                :disabled="isModeStatsActive"
               >
                 <template #selection="{ attrs, item, selected }">
                   <v-chip
@@ -43,9 +45,14 @@
                   tile
                   color="deep-purple accent-3"
                   group
+                  :disabled="isModeStatsActive"
                 >
-                  <v-btn :value="true" small> oui</v-btn>
-                  <v-btn :value="false" small> Non</v-btn>
+                  <v-btn :value="true" small :disabled="isModeStatsActive">
+                    oui</v-btn
+                  >
+                  <v-btn :value="false" small :disabled="isModeStatsActive">
+                    Non</v-btn
+                  >
                 </v-btn-toggle>
               </template>
               <template v-if="hasPermission('bureau')">
@@ -55,10 +62,15 @@
                   tile
                   color="deep-purple accent-3"
                   group
+                  :disabled="isModeStatsActive"
                 >
-                  <v-btn :value="true" small>Payée</v-btn>
+                  <v-btn :value="true" small :disabled="isModeStatsActive">
+                    Payée
+                  </v-btn>
 
-                  <v-btn :value="false" small> Non payée</v-btn>
+                  <v-btn :value="false" small :disabled="isModeStatsActive">
+                    Non payée
+                  </v-btn>
                 </v-btn-toggle>
               </template>
             </v-card-text>
