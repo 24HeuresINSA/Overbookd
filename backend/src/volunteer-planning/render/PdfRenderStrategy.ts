@@ -165,8 +165,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   private extractHours(period: Period) {
     const start = formatDateWithHoursAndMinutesOnly(period.start);
     const end = formatDateWithHoursAndMinutesOnly(period.end);
-    const displayPeriod = { text: `${start} - ${end}`, style: ['period'] };
-    return displayPeriod;
+    return { text: `${start} - ${end}`, style: ['period'] };
   }
 
   private extractLocation(location: string): Content {
