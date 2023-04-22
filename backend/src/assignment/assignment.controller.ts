@@ -20,7 +20,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { AssignmentService } from './assignment.service';
+import { AssignmentService, AssignmentStats } from './assignment.service';
 import {
   AssignmentRequestDto,
   UpdateAssignedTeamRequestDto,
@@ -39,6 +39,7 @@ import {
 import { FtTimespanService } from './ftTimespan.service';
 import { Timespan, TimespanWithAssignees } from './types/ftTimespanTypes';
 import { VolunteerService } from './volunteer.service';
+import { AssignmentStatsResponseDto } from './dto/assignmentsStatsResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -82,6 +83,20 @@ export class AssignmentController {
   })
   findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
     return this.ftTimespanService.findAllFtsWithTimespans();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('can-affect')
+  @Get('stats')
+  @ApiResponse({
+    status: 200,
+    description: 'Get duration of assignments for a volunteer',
+    isArray: true,
+    type: AssignmentStatsResponseDto,
+  })
+  async getVolunteerAssignmentStats(): Promise<AssignmentStats[]> {
+    return this.assignmentService.getVolunteersAssignmentStats();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

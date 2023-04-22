@@ -12,7 +12,7 @@ export const TaskCategories = {
 
 export type TaskCategory = keyof typeof TaskCategories;
 
-type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
+export type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
 
 export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
   STATIQUE: "🥶",
