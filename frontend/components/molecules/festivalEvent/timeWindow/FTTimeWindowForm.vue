@@ -80,7 +80,7 @@ export default Vue.extend({
         id: this.timeWindow?.id ?? undefined,
         start: this.startOrManifDate,
         end: this.endOrManifDate,
-        sliceTime: this.toSlice ? this.sliceTime : undefined,
+        sliceTime: this.toSlice ? this.sliceTime : null,
         userRequests: this.timeWindow?.userRequests ?? [],
         teamRequests: this.timeWindow?.teamRequests ?? [],
       };

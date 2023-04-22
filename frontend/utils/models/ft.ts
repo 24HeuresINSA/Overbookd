@@ -93,7 +93,7 @@ export interface FTTimeWindow {
   id?: number;
   start: Date;
   end: Date;
-  sliceTime?: number;
+  sliceTime: number | null;
   userRequests: FTUserRequest[];
   teamRequests: FTTeamRequest[];
 }
@@ -102,7 +102,7 @@ export interface FTTimeWindowUpdate {
   id?: number;
   start: Date;
   end: Date;
-  sliceTime?: number;
+  sliceTime: number | null;
 }
 
 export type SortableTimeWindowHeader = "startDate" | "endDate";
