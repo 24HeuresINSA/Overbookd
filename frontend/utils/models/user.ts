@@ -60,7 +60,7 @@ export interface UserCreation extends DisplayedUser {
 export interface UserModification
   extends Omit<UserCreation, "password" | "teamId"> {
   hasPayedContributions: boolean;
-  pp?: string;
+  profilePicture?: string;
   charisma: number;
 }
 
@@ -73,7 +73,7 @@ export interface CompleteUser extends User {
   comment?: string;
   hasPayedContributions: boolean;
   year?: Year;
-  pp?: string;
+  profilePicture?: string;
   charisma: number;
   balance: number;
   createdAt: Date;
@@ -130,7 +130,7 @@ export function castToUserModification(
     year: user.year || undefined,
     comment: user.comment || undefined,
     hasPayedContributions: user.hasPayedContributions || false,
-    pp: user.pp || undefined,
+    profilePicture: user.profilePicture || undefined,
     charisma: +user.charisma,
   };
 }

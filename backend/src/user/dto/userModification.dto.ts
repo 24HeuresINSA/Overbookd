@@ -114,7 +114,7 @@ export class UserModificationDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  pp?: string;
+  profilePicture?: string;
 
   @ApiProperty({
     required: false,

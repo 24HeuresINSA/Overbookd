@@ -4,17 +4,21 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Put,
-  UseGuards,
   Request as RequestDecorator,
   Res,
-  HttpException,
-  Logger,
+  StreamableFile,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -23,36 +27,37 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import { randomUUID } from 'crypto';
+import { Request, Response } from 'express';
+import { File as MulterFile, diskStorage } from 'multer';
+import { join } from 'path';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UserCreationDto } from './dto/userCreation.dto';
-import { UserModificationDto } from './dto/userModification.dto';
-import { Username } from './dto/userName.dto';
-import {
-  VolunteerAssignmentStatResponseDto,
-  VolunteerAssignmentDto,
-} from './dto/volunteerAssignment.dto';
-import {
-  MyUserInformation,
-  UserService,
-  UserWithoutPassword,
-  UserWithTeamAndPermission,
-} from './user.service';
+import { buildVolunteerDisplayName } from 'src/utils/volunteer';
 import { TaskResponseDto } from 'src/volunteer-planning/dto/taskResponse.dto';
-import { VolunteerPlanningService } from 'src/volunteer-planning/volunteer-planning.service';
+import { VolunteerSubscriptionPlanningResponseDto } from 'src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
 import {
   IcalType,
   JsonType,
   PdfType,
   PlanningRenderStrategy,
 } from 'src/volunteer-planning/render/renderStrategy';
-import { VolunteerSubscriptionPlanningResponseDto } from 'src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
 import { SubscriptionService } from 'src/volunteer-planning/subscription.service';
-import { Request, Response } from 'express';
-import { buildVolunteerDisplayName } from 'src/utils/volunteer';
+import { VolunteerPlanningService } from 'src/volunteer-planning/volunteer-planning.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FileUploadDto } from './dto/fileUpload.dto';
+import { UserCreationDto } from './dto/userCreation.dto';
+import { UserModificationDto } from './dto/userModification.dto';
+import { Username } from './dto/userName.dto';
+import { UserWithoutPasswordDto } from './dto/userWithoutPassword.dto';
+import {
+  VolunteerAssignmentDto,
+  VolunteerAssignmentStatResponseDto,
+} from './dto/volunteerAssignment.dto';
+import { UserWithTeamAndPermission, UserWithoutPassword } from './user.model';
+import { MyUserInformation, UserService } from './user.service';
 
 @ApiTags('user')
 @Controller('user')
@@ -354,5 +359,49 @@ export class UserController {
   })
   deleteUser(@Param('id', ParseIntPipe) userId: number): Promise<void> {
     return this.userService.deleteUser(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post('me/profile-picture')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: join(process.cwd(), 'public'),
+        filename: (req, file, cb) => {
+          const uuid = randomUUID();
+          const filenameFragments = file.originalname.split('.');
+          const extension = filenameFragments.at(-1) ?? 'jpg';
+          cb(null, `${uuid}.${extension}`);
+        },
+      }),
+    }),
+  )
+  @ApiResponse({
+    status: 201,
+    description: 'Add a profile picture to a user',
+    type: UserWithoutPasswordDto,
+  })
+  @ApiBody({
+    description: 'Add a profile picture to a user',
+    type: FileUploadDto,
+  })
+  defineProfilePicture(
+    @RequestDecorator() req: RequestWithUserPayload,
+    @UploadedFile() file: MulterFile,
+  ): Promise<UserWithTeamAndPermission> {
+    return this.userService.updateProfilePicture(req.user.id, file.filename);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(':userId/profile-picture')
+  @ApiResponse({
+    status: 200,
+    description: 'Get a users profile picture',
+    type: StreamableFile,
+  })
+  getProfilePicture(@Param('userId') userId: number): Promise<StreamableFile> {
+    return this.userService.streamProfilePicture(userId);
   }
 }

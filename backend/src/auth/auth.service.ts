@@ -10,7 +10,8 @@ import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { retrievePermissions } from '../team/utils/permissions';
-import { UserPasswordOnly, UserService } from '../user/user.service';
+import { UserPasswordOnly } from '../user/user.model';
+import { UserService } from '../user/user.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { JwtPayload } from './entities/JwtUtil.entity';
 

@@ -2,7 +2,14 @@
   <v-dialog v-model="toggled" max-width="600">
     <v-card>
       <v-card-text>
-        <v-file-input v-model="PP"> </v-file-input>
+        <v-file-input
+          v-model="profilePicture"
+          :rules="rules"
+          label="Photo de profil"
+          prepend-icon="mdi-camera"
+          accept="image/png, image/jpeg"
+          show-size
+        />
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="uploadPP()">Enregistrer</v-btn>
@@ -13,16 +20,26 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { safeCall } from "~/utils/api/calls";
 
 export default Vue.extend({
   name: "ProfilePictureDialog",
-  data() {
-    return {
-      PP: undefined as undefined | File,
-    };
-  },
+  data: () => ({
+    profilePicture: undefined as File | undefined,
+    rules: [
+      (value: File) => {
+        if (!value) {
+          return "Une photo vide c'est pas une photo";
+        }
+        if (value.size > 1024 * 1024 * 2) {
+          return "Moins de 2 Mb stp ça coûte cher le stockage.";
+        }
+        if (value.type != "image/png" && value.type != "image/jpeg") {
+          return "Seulement des images (png ou jpeg) stp mon amour";
+        }
+        return true;
+      },
+    ],
+  }),
   computed: {
     type() {
       return this.$accessor.dialog.type;
@@ -35,7 +52,7 @@ export default Vue.extend({
     },
     toggled: {
       get: function (): boolean | unknown {
-        if (this.type == "pp") {
+        if (this.type == "profilePicture") {
           return this.open;
         }
         if (!this.open) {
@@ -51,22 +68,17 @@ export default Vue.extend({
     },
   },
   methods: {
-    uploadPP: async function () {
-      if (this.me && this.PP) {
-        let form = new FormData();
-        form.append("files", this.PP, this.PP.name);
-        form.append("id", this.me.id.toString());
-        const res = await safeCall(
-          this.$store,
-          RepoFactory.userRepo.addPP(this, form)
-        );
-        if (res) {
-          this.$accessor.notif.pushNotification({
-            message: "Photo ajoutée, rafraîchis la page pour la voir.",
-          });
-          this.$accessor.dialog.closeDialog();
-        }
+    async uploadPP() {
+      if (!this.me || !this.profilePicture) {
+        return;
       }
+      const profilePictureForm = new FormData();
+      profilePictureForm.append(
+        "file",
+        this.profilePicture,
+        this.profilePicture.name
+      );
+      this.$accessor.user.addProfilePicture(profilePictureForm);
     },
   },
 });

@@ -1,5 +1,11 @@
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, Prisma, TaskCategory, User } from '@prisma/client';
+import {
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  StreamableFile,
+} from '@nestjs/common';
+import { Ft, Prisma, TaskCategory } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { ftStatuses } from '../ft/ft.model';
@@ -19,7 +25,13 @@ import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
+import { FileService } from './file.service';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
+import {
+  UserPasswordOnly,
+  UserWithTeamAndPermission,
+  UserWithoutPassword,
+} from './user.model';
 
 const SELECT_USER = {
   email: true,
@@ -35,7 +47,7 @@ const SELECT_USER = {
   resetPasswordExpires: true,
   hasPayedContributions: true,
   year: true,
-  pp: true,
+  profilePicture: true,
   charisma: true,
   balance: true,
   createdAt: true,
@@ -139,13 +151,6 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   },
 };
 
-export type UserWithoutPassword = Omit<User, 'password'>;
-
-export type UserWithTeamAndPermission = UserWithoutPassword & {
-  team: string[];
-  permissions: string[];
-};
-
 export type MyUserInformation = UserWithTeamAndPermission & {
   tasksCount: number;
 };
@@ -155,15 +160,17 @@ type DatabaseMyUserInformation = UserWithoutPassword & {
   _count: { assignments: number };
 };
 
-export type UserPasswordOnly = Pick<User, 'password'>;
-
 export type VolunteerTask = Period & {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timeSpanId?: number;
 };
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private mail: MailService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mail: MailService,
+    private fileService: FileService,
+  ) {}
   private logger = new Logger('UserService');
 
   async user(
@@ -415,5 +422,42 @@ export class UserService {
       author.hasPermission('manage-users') ||
       author.id === targetUserId
     );
+  }
+
+  private async getProfilePicture(userId: number): Promise<string | null> {
+    const { profilePicture } = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        profilePicture: true,
+      },
+    });
+    return profilePicture;
+  }
+
+  async updateProfilePicture(
+    userId: number,
+    profilePicture: string,
+  ): Promise<UserWithTeamAndPermission> {
+    const currentProfilePicture = await this.getProfilePicture(userId);
+    if (currentProfilePicture) {
+      this.fileService.deleteFile(currentProfilePicture);
+    }
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { profilePicture },
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
+      },
+    });
+    return this.getUserWithTeamAndPermission(user);
+  }
+
+  async streamProfilePicture(userId: number): Promise<StreamableFile> {
+    const profilePictureName = await this.getProfilePicture(userId);
+    if (!profilePictureName) {
+      throw new NotFoundException('Profile picture not found');
+    }
+    return this.fileService.streamFile(profilePictureName);
   }
 }

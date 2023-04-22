@@ -4,17 +4,17 @@ import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
 import {
-  castVolunteerTaskWithDate,
-  castToUserModification,
-  castUsersWithPermissionsWithDate,
-  castUserWithDate,
-  castUserWithPermissionsWithDate,
   CompleteUserWithPermissions,
-  VolunteerTask,
+  MyUserInformation,
   User,
   UserCreation,
-  MyUserInformation,
   VolunteerAssignmentStat,
+  VolunteerTask,
+  castToUserModification,
+  castUserWithDate,
+  castUserWithPermissionsWithDate,
+  castUsersWithPermissionsWithDate,
+  castVolunteerTaskWithDate,
 } from "~/utils/models/user";
 
 const UserRepo = RepoFactory.userRepo;
@@ -281,6 +281,17 @@ export const actions = actionTree(
       if (!res) return;
       const periods = castVolunteerTaskWithDate(res.data);
       commit("SET_SELECTED_USER_FT_REQUESTS", periods);
+    },
+
+    async addProfilePicture({ commit }, profilePicture: FormData) {
+      const res = await safeCall(
+        this,
+        UserRepo.addProfilePicture(this, profilePicture),
+        { successMessage: "Photo de profil mise à jour ! 🎉" }
+      );
+
+      if (!res) return;
+      commit("SET_USER", castUserWithDate(res.data));
     },
 
     async getVolunteerAssignments({ commit }, userId: number) {

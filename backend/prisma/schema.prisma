@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl", "darwin-arm64"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl", "darwin-arm64"]
   previewFeatures = ["filteredRelationCount"]
 }
 
@@ -49,62 +49,62 @@ enum Department {
 }
 
 model User {
-  id                    Int                     @id @default(autoincrement())
-  firstname             String                  @db.VarChar(30)
-  lastname              String                  @db.VarChar(30)
-  nickname              String?                 @db.VarChar(30)
-  email                 String                  @unique
-  birthdate             DateTime            
-  phone                 String                  @db.VarChar(30)
-  department            Department?           
-  comment               String?           
-  resetPasswordToken    String?                 @unique @map("reset_password_token")
-  resetPasswordExpires  DateTime?               @map("reset_password_expires")
-  hasPayedContributions Boolean                 @default(false) @map("has_payed_contributions")
-  year                  Year?           
-  pp                    String?           
-  charisma              Float                   @default(0)
-  balance               Float                   @default(0)
-  password              String                  @default("")
-  createdAt             DateTime                @default(now()) @map("created_at")
-  updatedAt             DateTime                @updatedAt @map("updated_at")
-  isDeleted             Boolean                 @default(false) @map("is_deleted")
+  id                    Int         @id @default(autoincrement())
+  firstname             String      @db.VarChar(30)
+  lastname              String      @db.VarChar(30)
+  nickname              String?     @db.VarChar(30)
+  email                 String      @unique
+  birthdate             DateTime
+  phone                 String      @db.VarChar(30)
+  department            Department?
+  comment               String?
+  resetPasswordToken    String?     @unique @map("reset_password_token")
+  resetPasswordExpires  DateTime?   @map("reset_password_expires")
+  hasPayedContributions Boolean     @default(false) @map("has_payed_contributions")
+  year                  Year?
+  profilePictue         String?
+  charisma              Float       @default(0)
+  balance               Float       @default(0)
+  password              String      @default("")
+  createdAt             DateTime    @default(now()) @map("created_at")
+  updatedAt             DateTime    @updatedAt @map("updated_at")
+  isDeleted             Boolean     @default(false) @map("is_deleted")
 
-  team                  UserTeam[]
-  Availabilities        Availability[]
+  team           UserTeam[]
+  Availabilities Availability[]
 
-  transactionsFrom      Transaction[]           @relation("from")
-  transactionsTo        Transaction[]           @relation("to")
+  transactionsFrom Transaction[] @relation("from")
+  transactionsTo   Transaction[] @relation("to")
 
-  faInCharge            Fa[]                    @relation("in_charge")
-  faValidation          FaValidation[]
-  faRefuse              FaRefuse[]
-  faFeedbacks           FaFeedback[]
+  faInCharge   Fa[]           @relation("in_charge")
+  faValidation FaValidation[]
+  faRefuse     FaRefuse[]
+  faFeedbacks  FaFeedback[]
 
-  ftsInCharge           Ft[]                    @relation("inCharge")
-  ftFeedbacks           FtFeedback[]
-  ftUserRequests        FtUserRequest[]
-  availabilities        VolunteerAvailability[]
-  friendRequestors      Friend[]                @relation("friend_requestor")
-  friends               Friend[]                @relation("friend")
-  ftsInReview           Ft[]                    @relation("reviewer")
+  ftsInCharge      Ft[]                    @relation("inCharge")
+  ftFeedbacks      FtFeedback[]
+  ftUserRequests   FtUserRequest[]
+  availabilities   VolunteerAvailability[]
+  friendRequestors Friend[]                @relation("friend_requestor")
+  friends          Friend[]                @relation("friend")
+  ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments           Assignment[]
+  assignments Assignment[]
 
   @@map("user")
 }
 
 model Team {
-  id              Int                @id @default(autoincrement())
-  name            String             @unique @db.VarChar(30)
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.VarChar(30)
   users           UserTeam[]
-  color           String             @default("#000000") @db.VarChar(30)
-  icon            String             @default("mdi-circle") @db.VarChar(255)
+  color           String            @default("#000000") @db.VarChar(30)
+  icon            String            @default("mdi-circle") @db.VarChar(255)
   fa              Fa[]
   faValidation    FaValidation[]
   faRefuse        FaRefuse[]
-  code            String?            @unique @db.VarChar(20)
-  ownedCategories CatalogCategory[]  @relation("owner")
+  code            String?           @unique @db.VarChar(20)
+  ownedCategories CatalogCategory[] @relation("owner")
   ftRequests      FtTeamRequest[]
   ftReviews       FtReview[]
   permissions     TeamPermission[]
@@ -124,9 +124,9 @@ model UserTeam {
 }
 
 model Permission {
-  id          Int               @id @default(autoincrement())
-  name        String            @unique @db.VarChar(30)
-  description String?           @db.VarChar(255)
+  id          Int              @id @default(autoincrement())
+  name        String           @unique @db.VarChar(30)
+  description String?          @db.VarChar(255)
   teams       TeamPermission[]
 
   @@map("permission")
@@ -139,18 +139,17 @@ model TeamPermission {
   permissionName String     @map("permission_name")
 
   @@id([teamCode, permissionName])
-
   @@map("team_permission")
 }
 
 model TimeSlot {
-  id             Int              @id @default(autoincrement())
-  name           String           @map("slot_name")
+  id             Int            @id @default(autoincrement())
+  name           String         @map("slot_name")
   start          DateTime
   end            DateTime
   charisma       Int
   Availabilities Availability[]
-  isDeleted      Boolean          @default(false) @map("is_deleted")
+  isDeleted      Boolean        @default(false) @map("is_deleted")
 
   @@map("time_slot")
 }
@@ -193,7 +192,7 @@ enum FaStatus {
 model Fa {
   id                     Int                     @id @default(autoincrement())
   name                   String                  @db.VarChar(255)
-  type                   FaType?                 
+  type                   FaType?
   team                   Team?                   @relation(fields: [teamId], references: [id])
   teamId                 Int?                    @map("team_id")
   userInCharge           User?                   @relation(fields: [userInChargeId], references: [id], name: "in_charge")
@@ -203,10 +202,10 @@ model Fa {
   locationId             Int?                    @map("location_id")
   status                 FaStatus                @default(DRAFT)
   description            String?                 @db.Text
-  securityNeed           String?                 @db.Text @map("security_need")
-  isPassRequired         Boolean?                @db.Boolean @map("is_pass_required")
+  securityNeed           String?                 @map("security_need") @db.Text
+  isPassRequired         Boolean?                @map("is_pass_required") @db.Boolean
   numberOfPass           Int?                    @map("number_of_pass")
-  waterNeed              String?                 @db.Text @map("water_need")
+  waterNeed              String?                 @map("water_need") @db.Text
   isDeleted              Boolean                 @default(false) @map("is_deleted")
   faValidation           FaValidation[]
   faRefuse               FaRefuse[]
@@ -292,8 +291,8 @@ model Collaborator {
   email           String?          @db.VarChar(60)
   company         String?          @db.VarChar(30)
   comment         String?          @db.Text
-  faCollaborators FaCollaborator[]  
-  
+  faCollaborators FaCollaborator[]
+
   @@unique([firstname, lastname])
   @@map("collaborator")
 }
@@ -371,11 +370,11 @@ model FaFeedback {
 }
 
 model FaSitePublishAnimation {
-  fa          Fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
-  faId        Int                                    @id @map("fa_id")
-  photoLink   String                                 @db.Text @default("") @map("photo_link")
-  description String                                 @db.Text @default("")
-  isFlagship  Boolean                            @default(false) @map("is_flagship")
+  fa          Fa                  @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId        Int                 @id @map("fa_id")
+  photoLink   String              @default("") @map("photo_link") @db.Text
+  description String              @default("") @db.Text
+  isFlagship  Boolean             @default(false) @map("is_flagship")
   categories  AnimationCategory[]
 
   @@map("fa_site_publish_animation")
@@ -392,9 +391,9 @@ enum AnimationCategory {
 }
 
 model FaTimeWindow {
-  id    Int               @id @default(autoincrement())
-  fa    Fa                @relation(fields: [faId], references: [id])
-  faId  Int               @map("fa_id")
+  id    Int      @id @default(autoincrement())
+  fa    Fa       @relation(fields: [faId], references: [id])
+  faId  Int      @map("fa_id")
   start DateTime
   end   DateTime
 
@@ -402,15 +401,15 @@ model FaTimeWindow {
 }
 
 model CatalogCategory {
-  id             Int                @id @default(autoincrement())
+  id             Int               @id @default(autoincrement())
   name           String
-  path           String             @unique
+  path           String            @unique
   parent         Int?
-  parentCategory CatalogCategory?   @relation("parent", fields: [parent], references: [id])
-  subCategories  CatalogCategory[]  @relation("parent")
-  ownerId       Int?                @map("owner_id")
-  owner          Team?              @relation("owner", fields: [ownerId], references: [id])
-  gears          CatalogGear[]      @relation("category")
+  parentCategory CatalogCategory?  @relation("parent", fields: [parent], references: [id])
+  subCategories  CatalogCategory[] @relation("parent")
+  ownerId        Int?              @map("owner_id")
+  owner          Team?             @relation("owner", fields: [ownerId], references: [id])
+  gears          CatalogGear[]     @relation("category")
 
   @@map("catalog_category")
 }
@@ -449,14 +448,14 @@ model Period {
 }
 
 model GearRequest {
-  animationId    Int?         @map("animation_id")
-  animation      Fa?          @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
-  taskId         Int?         @map("task_id")
-  task           Ft?          @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
-  rentalPeriodId Int          @map("rental_period_id")
-  rentalPeriod   Period       @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
-  gearId         Int          @map("gear_id")
-  gear           CatalogGear  @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
+  animationId    Int?        @map("animation_id")
+  animation      Fa?         @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
+  taskId         Int?        @map("task_id")
+  task           Ft?         @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
+  rentalPeriodId Int         @map("rental_period_id")
+  rentalPeriod   Period      @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
+  gearId         Int         @map("gear_id")
+  gear           CatalogGear @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
   quantity       Int
   status         String
   drive          String?
@@ -506,10 +505,10 @@ model Ft {
   hasPriority    Boolean?       @default(false) @map("has_priority")
   category       TaskCategory?
 
-  feedbacks      FtFeedback[]
-  timeWindows    FtTimeWindow[]
-  reviews        FtReview[]
-  gearRequests   GearRequest[]  @relation("gear-request-task")
+  feedbacks    FtFeedback[]
+  timeWindows  FtTimeWindow[]
+  reviews      FtReview[]
+  gearRequests GearRequest[]  @relation("gear-request-task")
 
   @@map("ft")
 }
@@ -554,62 +553,62 @@ model FtTimeWindow {
 }
 
 model FtUserRequest {
-  id              Int           @id @default(autoincrement())
-  ftTimeWindows   FtTimeWindow  @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
-  ftTimeWindowsId Int           @map("ft_time_window_id")
-  user            User          @relation(fields: [userId], references: [id])
-  userId          Int           @map("user_id")
+  id              Int          @id @default(autoincrement())
+  ftTimeWindows   FtTimeWindow @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
+  ftTimeWindowsId Int          @map("ft_time_window_id")
+  user            User         @relation(fields: [userId], references: [id])
+  userId          Int          @map("user_id")
 
-  assignments     Assignment[]
+  assignments Assignment[]
 
   @@unique([ftTimeWindowsId, userId])
   @@map("ft_user_request")
 }
 
 model FtTeamRequest {
-  id            Int           @id @default(autoincrement())
-  timeWindows   FtTimeWindow  @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
-  timeWindowsId Int           @map("ft_time_window_id")
-  team          Team          @relation(fields: [teamCode], references: [code])
-  teamCode      String        @map("team_code")
+  id            Int          @id @default(autoincrement())
+  timeWindows   FtTimeWindow @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
+  timeWindowsId Int          @map("ft_time_window_id")
+  team          Team         @relation(fields: [teamCode], references: [code])
+  teamCode      String       @map("team_code")
   quantity      Int
 
-  assignments   Assignment[]
+  assignments Assignment[]
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
 }
 
 model FtTimeSpan {
-  id           Int           @id @default(autoincrement())
-  timeWindow   FtTimeWindow  @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
-  timeWindowId Int           @map("ft_time_window_id")
+  id           Int          @id @default(autoincrement())
+  timeWindow   FtTimeWindow @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindowId Int          @map("ft_time_window_id")
   start        DateTime
   end          DateTime
 
-  assignments  Assignment[]
+  assignments Assignment[]
 
+  @@unique([timeWindowId, start, end])
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
   @@index([start(sort: Asc), end(sort: Asc)])
   @@map("ft_time_span")
-  @@unique([timeWindowId, start, end])
 }
 
 model Assignment {
-  id            Int             @id @default(autoincrement())
-  timeSpanId    Int             @map("time_span_id")
-  timeSpan      FtTimeSpan      @relation(fields: [timeSpanId], references: [id], onDelete: Cascade)
-  userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
-  userRequestId Int?            @map("user_request_id")
-  teamRequest   FtTeamRequest?  @relation(fields: [teamRequestId], references: [id], onDelete: Cascade)
-  teamRequestId Int?            @map("team_request_id")
-  assignee      User            @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
-  assigneeId    Int             @map("assignee_id")
+  id            Int            @id @default(autoincrement())
+  timeSpanId    Int            @map("time_span_id")
+  timeSpan      FtTimeSpan     @relation(fields: [timeSpanId], references: [id], onDelete: Cascade)
+  userRequest   FtUserRequest? @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
+  userRequestId Int?           @map("user_request_id")
+  teamRequest   FtTeamRequest? @relation(fields: [teamRequestId], references: [id], onDelete: Cascade)
+  teamRequestId Int?           @map("team_request_id")
+  assignee      User           @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
+  assigneeId    Int            @map("assignee_id")
 
   @@unique([timeSpanId, assigneeId])
   @@map("assignment")
-} 
+}
 
 enum ReviewStatus {
   VALIDATED
@@ -630,8 +629,8 @@ model FtReview {
 }
 
 model InventoryRecord {
-  gear     CatalogGear  @relation(fields: [gearId], references: [id], onDelete: Cascade)
-  gearId   Int          @map("gear_id")
+  gear     CatalogGear @relation(fields: [gearId], references: [id], onDelete: Cascade)
+  gearId   Int         @map("gear_id")
   storage  String
   quantity Int
 

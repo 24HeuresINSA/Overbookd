@@ -12,7 +12,7 @@
       >
         <v-img
           v-if="userBornToday.pp"
-          :src="getPPUrl() + 'api/user/pp/' + userBornToday.pp"
+          :src="birthDayProfilePicture"
           max-width="400px"
           max-height="350px"
         ></v-img>
@@ -37,8 +37,8 @@
         max-width="250px"
       >
         <v-img
-          v-if="user.pp"
-          :src="getPPUrl() + 'api/user/pp/' + user.pp"
+          v-if="user.profilePicture"
+          :src="user.profilePicture"
           max-height="250px"
         ></v-img>
         <v-card-title
@@ -57,12 +57,15 @@
 
 <script>
 import OverChips from "~/components/atoms/chip/OverChips.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
+
 export default {
   name: "Trombinoscope",
   components: { OverChips },
   data: () => ({
     users: [],
     userBornToday: undefined,
+    birthDayProfilePicture: "",
   }),
 
   async mounted() {
@@ -79,6 +82,18 @@ export default {
         path: "/",
       });
     }
+    this.users.forEach(async (user, i) => {
+      if (user.profilePicture) {
+        this.users[i].profilePicture = await this.getProfilePicture(
+          user.profilePicture
+        );
+      }
+    });
+    if (this.userBornToday && this.userBornToday.profilePicture) {
+      this.birthDayProfilePicture = await this.getProfilePicture(
+        this.userBornToday.profilePicture
+      );
+    }
   },
 
   methods: {
@@ -89,10 +104,15 @@ export default {
         someDate.getMonth() === today.getMonth()
       );
     },
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
+    async getProfilePicture(pp) {
+      const token = this.$auth.strategy.token.get();
+      if (token) {
+        const res = await RepoFactory.userRepo.getProfilePicture(token, pp);
+        if (res) {
+          return res;
+        }
+      }
+      return "";
     },
   },
 };

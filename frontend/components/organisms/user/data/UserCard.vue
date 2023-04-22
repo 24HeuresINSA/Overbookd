@@ -4,11 +4,11 @@
     <v-card v-if="me">
       <v-container class="d-flex flex-no-wrap">
         <v-img
-          v-if="me.pp"
-          :src="getPPUrl() + 'api/user/pp/' + me.pp"
+          v-if="me.profilePicture"
+          :src="profilePictureURL"
           max-width="80px"
           max-height="80px"
-          class="pp"
+          class="profilePicture"
         ></v-img>
         <div>
           <v-card-title class="pt-2">
@@ -21,9 +21,9 @@
         </div>
       </v-container>
       <v-card-actions class="d-flex justify-start">
-        <v-btn text max-width="300px" @click="openPPDialog()"
+        <v-btn text max-width="300px" @click="openProfilePictureDialog()"
           >📸
-          {{ me.pp ? `Mettre à jour` : `Ajouter` }}
+          {{ me.profilePicture ? `Mettre à jour` : `Ajouter` }}
         </v-btn>
       </v-card-actions>
       <v-card-text>
@@ -50,6 +50,7 @@
 import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
+import { RepoFactory } from "~/repositories/repoFactory";
 import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
@@ -67,6 +68,7 @@ export default Vue.extend({
   data() {
     return {
       maxCharisma: 1500,
+      profilePictureURL: "",
     };
   },
 
@@ -79,18 +81,26 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
+  async mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
+    if (this.me.profilePicture) {
+      this.profilePictureURL = await this.getProfilePicture();
+    }
   },
 
   methods: {
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
+    async getProfilePicture(): Promise<string> {
+      const token = this.$auth.strategy.token.get();
+      if (token && this.me.profilePicture) {
+        const res = RepoFactory.userRepo.getProfilePicture(token, this.me.id);
+        if (res) {
+          return res;
+        }
+      }
+      return "";
     },
-    openPPDialog() {
-      this.$store.dispatch("dialog/openDialog", "pp");
+    openProfilePictureDialog() {
+      this.$store.dispatch("dialog/openDialog", "profilePicture");
     },
   },
 });
