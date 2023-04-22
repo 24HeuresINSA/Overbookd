@@ -2,6 +2,8 @@ import { Task } from '../domain/task.model';
 import { RenderStrategy } from './renderStrategy';
 import Printer from 'pdfmake';
 import { join } from 'path';
+import { formatDateWithMinutes } from 'src/utils/date';
+import sanitizeHtml from 'sanitize-html';
 
 class PdfException extends Error {}
 
@@ -26,10 +28,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   render(tasks: Task[]): Promise<any> {
-    const pdfContent = [
-      'First paragraph',
-      'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
-    ];
+    const pdfContent = this.generateContent(tasks);
     const pdf = this.printer.createPdfKitDocument({ content: pdfContent });
 
     const chunks = [];
@@ -48,5 +47,37 @@ export class PdfRenderStrategy implements RenderStrategy {
       });
       pdf.end();
     });
+  }
+  generateContent(tasks: Task[]): string[] {
+    return tasks.flatMap((task) => this.generateTaskContent(task));
+  }
+
+  generateTaskContent({ name, period, location, description }: Task): string[] {
+    const start = formatDateWithMinutes(period.start);
+    const end = formatDateWithMinutes(period.end);
+    const displayPeriod = `De ${start} A ${end}`;
+
+    const displayDescription = this.extractDescription(description);
+    const taskSeparator = '\n\n\n';
+
+    return [name, displayPeriod, location, displayDescription, taskSeparator];
+  }
+
+  private extractDescription(description: string) {
+    const newLineTagRegex = new RegExp('</p>|<br>', 'g');
+    const headerRegex = new RegExp('</h[1-6]>', 'g');
+    const inferiorRegex = new RegExp('&lt;', 'g');
+    const superiorRegex = new RegExp('&gt;', 'g');
+
+    return sanitizeHtml(
+      description
+        .replace(newLineTagRegex, '$&\n')
+        .replace(headerRegex, '$&\n\n'),
+      {
+        allowedTags: [],
+      },
+    )
+      .replace(inferiorRegex, '<')
+      .replace(superiorRegex, '>');
   }
 }

@@ -274,7 +274,7 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
-  @ApiProduces(JsonType, IcalType)
+  @ApiProduces(JsonType, IcalType, PdfType)
   async getVolunteerPlanning(
     @Param('id', ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,
