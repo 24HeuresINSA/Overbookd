@@ -91,7 +91,7 @@ export class AssignmentController {
   @Get('stats')
   @ApiResponse({
     status: 200,
-    description: 'Get duration of assignments for a volunteer',
+    description: 'Get assignments stats for all volunteers',
     isArray: true,
     type: AssignmentStatsResponseDto,
   })
