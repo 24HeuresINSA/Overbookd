@@ -1,8 +1,11 @@
-import { Task } from '../domain/task.model';
+import { Assignment, Task, Volunteer } from '../domain/task.model';
 import { RenderStrategy } from './renderStrategy';
 import Printer from 'pdfmake';
 import { join } from 'path';
-import { formatDateToHumanReadable } from 'src/utils/date';
+import {
+  formatDateToHumanReadable,
+  formatDateWithHoursAndMinutesOnly,
+} from 'src/utils/date';
 import sanitizeHtml from 'sanitize-html';
 import htmlToPdfMake from 'html-to-pdfmake';
 import { Content, StyleDictionary } from 'pdfmake/interfaces';
@@ -12,6 +15,8 @@ import { Period } from 'src/volunteer-availability/domain/period.model';
 class PdfException extends Error {}
 
 const { window } = new JSDOM();
+const NB_ASSIGNEES_PER_LINE = 4;
+
 export class PdfRenderStrategy implements RenderStrategy {
   private printer: Printer;
 
@@ -41,6 +46,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     bold: { bold: true },
     task: { fontSize: 20, bold: true, marginBottom: 5 },
     details: { fontSize: 14, marginBottom: 3 },
+    period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
+    header: { fontSize: 14, marginTop: 5 },
   };
 
   private fonts = {
@@ -95,11 +102,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     period,
     location,
     description,
+    assignments,
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
     const displayLocation = this.extractLocation(location);
     const displayName = { text: name, style: ['task'] };
     const displayDescription = this.extractDescription(description);
+    const displayAssignment = this.extractAssignments(assignments);
     const taskSeparator: Content = { text: '', margin: [0, 0, 0, 15] };
 
     return [
@@ -107,8 +116,57 @@ export class PdfRenderStrategy implements RenderStrategy {
       displayPeriod,
       displayLocation,
       displayDescription,
+      displayAssignment,
       taskSeparator,
     ];
+  }
+
+  private extractAssignments(assignments: Assignment[]): Content {
+    if (assignments.length === 0) return '';
+
+    const header = { text: 'Affectés avec toi', style: ['header'] };
+    const listing = assignments.map(({ period, volunteers }) => {
+      const displayHours = this.extractHours(period);
+      const displayVolunteers = this.extractVolunteers(volunteers);
+      return [displayHours, displayVolunteers];
+    });
+    return [header, listing];
+  }
+
+  private extractVolunteers(volunteers: Volunteer[]) {
+    const nbLines = Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE);
+    return Array(nbLines)
+      .fill(null)
+      .map((_, index) => this.generateDisplayedAssignees(volunteers, index));
+  }
+
+  private generateDisplayedAssignees(volunteers: Volunteer[], index: number) {
+    const currentVolunteers = this.extractVolunteerSubset(volunteers, index);
+    const columns = this.generateAssigneesColumns(currentVolunteers);
+    return { columns };
+  }
+
+  private extractVolunteerSubset(volunteers: Volunteer[], index: number) {
+    return volunteers
+      .slice(NB_ASSIGNEES_PER_LINE * index, NB_ASSIGNEES_PER_LINE * (index + 1))
+      .map(({ name }) => ({ text: name }));
+  }
+
+  private generateAssigneesColumns(currentLine: { text: string }[]) {
+    const columnsDelta = NB_ASSIGNEES_PER_LINE - currentLine.length;
+    const isColumnFull = columnsDelta === 0;
+
+    if (isColumnFull) return currentLine;
+
+    const lineFill = Array(columnsDelta).fill('');
+    return [...currentLine, ...lineFill];
+  }
+
+  private extractHours(period: Period) {
+    const start = formatDateWithHoursAndMinutesOnly(period.start);
+    const end = formatDateWithHoursAndMinutesOnly(period.end);
+    const displayPeriod = { text: `${start} - ${end}`, style: ['period'] };
+    return displayPeriod;
   }
 
   private extractLocation(location: string): Content {
