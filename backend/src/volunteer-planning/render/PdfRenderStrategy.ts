@@ -12,6 +12,8 @@ import { Content, StyleDictionary } from 'pdfmake/interfaces';
 import { JSDOM } from 'jsdom';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { PurpleCocktail } from './pdf/purpleCocktail';
+import { Readable } from 'stream';
+import { generateAsynIterator } from 'src/utils/stream';
 
 class PdfException extends Error {}
 
@@ -85,7 +87,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     this.printer = new Printer(this.fonts);
   }
 
-  render(tasks: Task[], volunteer: Volunteer): Promise<any> {
+  render(tasks: Task[], volunteer: Volunteer) {
     const pdfContent = this.generateContent(tasks);
     const header = this.generateHeader(volunteer);
     const footer = this.generateFooter();
@@ -100,21 +102,21 @@ export class PdfRenderStrategy implements RenderStrategy {
     });
 
     const chunks = [];
-    return new Promise((resolve, reject) => {
+    const pdfPromise = new Promise((resolve, reject) => {
       pdf.on('data', function (chunk) {
         chunks.push(chunk);
       });
       pdf.on('end', function () {
         const result = Buffer.concat(chunks);
-        const base64Content = result.toString('base64');
-        const encodedContent = `data:application/pdf;base64,${base64Content}`;
-        resolve(encodedContent);
+        resolve(result);
       });
       pdf.on('err', function (error) {
         reject(new PdfException(error));
       });
       pdf.end();
     });
+
+    return Readable.from(generateAsynIterator(pdfPromise));
   }
 
   private generateFooter() {

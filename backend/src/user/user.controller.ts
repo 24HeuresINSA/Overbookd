@@ -12,8 +12,8 @@ import {
   UseGuards,
   Request as RequestDecorator,
   Res,
-  HttpException,
   Logger,
+  StreamableFile,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -113,23 +113,13 @@ export class UserController {
   @ApiProduces(JsonType, IcalType, PdfType)
   async getCurrentVolunteerPlanning(
     @RequestDecorator() request: RequestWithUserPayload,
-    @Res() response: Response,
-  ): Promise<TaskResponseDto[]> {
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const volunteerId = request.user.userId ?? request.user.id;
     const format = request.headers.accept;
-    try {
-      const planning = await this.formatPlanning(volunteerId, format);
-      response.setHeader('content-type', format);
-      response.send(planning);
-      return;
-    } catch (e) {
-      this.logger.error(e);
-      if (e instanceof HttpException) {
-        response.status(e.getStatus()).send(e.message);
-        return;
-      }
-      response.status(500).send(e);
-    }
+    const planning = await this.formatPlanning(volunteerId, format);
+    response.setHeader('content-type', format);
+    return new StreamableFile(planning);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -271,7 +261,7 @@ export class UserController {
   @Get(':id/planning')
   @ApiResponse({
     status: 200,
-    description: 'Get current user planning',
+    description: 'Get selected user planning',
     isArray: true,
     type: TaskResponseDto,
   })
@@ -279,21 +269,12 @@ export class UserController {
   async getVolunteerPlanning(
     @Param('id', ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,
-    @Res() response: Response,
-  ): Promise<TaskResponseDto[]> {
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const format = request.headers.accept;
-    try {
-      const planning = await this.formatPlanning(volunteerId, format);
-      response.setHeader('content-type', format);
-      response.send(planning);
-      return;
-    } catch (e) {
-      if (e instanceof HttpException) {
-        response.status(e.getStatus()).send(e.message);
-        return;
-      }
-      response.status(500).send(e);
-    }
+    const planning = await this.formatPlanning(volunteerId, format);
+    response.setHeader('content-type', format);
+    return new StreamableFile(planning);
   }
 
   private async formatPlanning(volunteerId: number, format: string) {

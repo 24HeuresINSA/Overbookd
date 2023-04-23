@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import { Task, Volunteer } from '../domain/task.model';
 import { IcalRenderStrategy } from './IcalRenderStrategy';
 import { JsonRenderStrategy } from './JsonRenderStrategy';
@@ -25,5 +26,5 @@ export class PlanningRenderStrategy {
 }
 
 export interface RenderStrategy {
-  render(tasks: Task[], volunteer?: Volunteer): Promise<any>;
+  render(tasks: Task[], volunteer?: Volunteer): Readable;
 }
