@@ -3,6 +3,7 @@ import { TaskRepository } from './domain/planning';
 import { JsonStoredTask } from './domain/storedTask';
 import { Injectable } from '@nestjs/common';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { buildVolunteerDisplayName } from 'src/utils/volunteer';
 
 type DatabaseStoredTask = {
   start: Date;
@@ -99,7 +100,7 @@ export class PrismaTaskRepository implements TaskRepository {
     const assignees = assignments
       .filter(({ timespan }) => timespan.timeWindow.ftId === id)
       .map(({ timespan: { start, end }, assignee }) => {
-        const name = `${assignee.firstname} ${assignee.lastname}`;
+        const name = buildVolunteerDisplayName(assignee);
         return {
           period: { start, end },
           id: assignee.id,

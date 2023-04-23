@@ -52,6 +52,7 @@ import {
 import { VolunteerSubscriptionPlanningResponseDto } from 'src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
 import { SubscriptionService } from 'src/volunteer-planning/subscription.service';
 import { Request, Response } from 'express';
+import { buildVolunteerDisplayName } from 'src/utils/volunteer';
 
 @ApiTags('user')
 @Controller('user')
@@ -296,9 +297,15 @@ export class UserController {
   }
 
   private async formatPlanning(volunteerId: number, format: string) {
-    const tasks = await this.planningService.getVolunteerPlanning(volunteerId);
+    const [tasks, volunteer] = await Promise.all([
+      this.planningService.getVolunteerPlanning(volunteerId),
+      this.getUserById(volunteerId),
+    ]);
     const renderStrategy = PlanningRenderStrategy.get(format);
-    return renderStrategy.render(tasks);
+    return renderStrategy.render(tasks, {
+      id: volunteerId,
+      name: buildVolunteerDisplayName(volunteer),
+    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
