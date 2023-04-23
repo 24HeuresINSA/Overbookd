@@ -94,7 +94,76 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generateContent(tasks: Task[]): Content[] {
-    return tasks.flatMap((task) => this.generateTaskContent(task));
+    const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
+    const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
+    return [...assignments, ...cocktailPurpleWorkflows];
+  }
+
+  private generatePurpleCocktailWorkflows(): Content[] {
+    const header =
+      'PROCEDURE SIMPLIFIEE COCKTAIL PURPLE A DESTINATION DES BARMANS';
+    const description =
+      'Cocktail Purple : Cocktail Purple est un dispositif mis en place par l’association Purple Effect en milieu festif. Une victime de VHSS (violences et harcèlement sexistes et sexuels) a la possibilité de commander au bar de l’événement un cocktail purple, qui est un nom de code permettant de la mettre en sécurité et de prévenir les équipes de sécurité et de prévention.';
+    const steps: Content = [
+      'Procédure:',
+      {
+        ol: [
+          {
+            text: [
+              'La ',
+              { text: 'VICTIME', style: ['bold'] },
+              ' se présente au bar et commande un cocktail purple au ',
+              { text: 'BARMAN A(=TOI).', style: ['bold'] },
+            ],
+          },
+          {
+            text: [
+              'Le ',
+              { text: 'BARMAN A', style: ['bold'] },
+              ' reste en contact avec la ',
+              { text: 'VICTIME', style: ['bold'] },
+              ' et prévient la personne la plus proche de lui',
+              { text: '(BARMAN B(=UN AUTRE BÉNÉVOLE)).', style: ['bold'] },
+            ],
+          },
+          {
+            text: [
+              'Le ',
+              { text: 'BARMAN B', style: ['bold'] },
+              ' va chercher le ',
+              {
+                text: 'RESP BARMAN (CASQUETTE NOIRE NINKASI)',
+                style: ['bold'],
+              },
+              ' et lui explique qu’il y a une commande de cocktail purple.',
+            ],
+          },
+          {
+            text: [
+              'Le ',
+              { text: 'BARMAN B', style: ['bold'] },
+              ' et le ',
+              { text: 'RESP BARMAN', style: ['bold'] },
+              ' se rendent dans la fosse pour aller à la rencontre de la ',
+              { text: 'VICTIME.', style: ['bold'] },
+            ],
+          },
+        ],
+        margin: [0, 0, 0, 5],
+      },
+    ];
+    const safetyInstructions: Content = [
+      'Consignes de sécurité:',
+      {
+        ul: [
+          'Si le BARMAN A ne se sent pas de rester seul avec la VICTIME, il peut demander à une autre personne de rester avec lui ou de le remplacer.',
+          "Si le RESP BARMAN ou le BARMAN B ne se sentent pas d'aller dans la fosse, ils peuvent prévenir le RESP BAR qui peut y aller à leur place.",
+          "Dans la fosse, si vous êtes en contact avec l'AGRESSEUR, ne pas chercher à le confronter ou à le surveiller. L'objectif est de mettre la VICTIME à l'abri, le reste sera à la charge de la SECURITE.",
+        ],
+        margin: [0, 0, 0, 5],
+      },
+    ];
+    return [header, description, steps, safetyInstructions];
   }
 
   private generateTaskContent({
