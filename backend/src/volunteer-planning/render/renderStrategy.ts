@@ -1,4 +1,4 @@
-import { Task } from '../domain/task.model';
+import { Task, Volunteer } from '../domain/task.model';
 import { IcalRenderStrategy } from './IcalRenderStrategy';
 import { JsonRenderStrategy } from './JsonRenderStrategy';
 import { PdfRenderStrategy } from './PdfRenderStrategy';
@@ -25,5 +25,5 @@ export class PlanningRenderStrategy {
 }
 
 export interface RenderStrategy {
-  render(tasks: Task[]): Promise<any>;
+  render(tasks: Task[], volunteer?: Volunteer): Promise<any>;
 }

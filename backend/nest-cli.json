@@ -21,6 +21,11 @@
         "include": "../fonts",
         "outDir": "dist/fonts",
         "watchAssets": true
+      },
+      {
+        "include": "../assets",
+        "outDir": "dist/assets",
+        "watchAssets": true
       }
     ]
   }

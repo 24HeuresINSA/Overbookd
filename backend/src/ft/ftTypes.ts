@@ -6,7 +6,7 @@ export class SignaLocation {
   id: number;
   name: string;
 }
-class UserName {
+export class UserName {
   firstname: string;
   lastname: string;
   nickname?: string;

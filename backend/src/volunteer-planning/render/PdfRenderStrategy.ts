@@ -48,6 +48,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     task: { fontSize: 20, bold: true, marginBottom: 5 },
     details: { fontSize: 14, marginBottom: 3 },
     period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
+    assign: { fontSize: 14, marginTop: 5 },
     header: {
       fontSize: 18,
       marginTop: 20,
@@ -63,6 +64,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     },
     liteSpaceBetween: { marginBottom: 3 },
     largeSpaceBetween: { marginBottom: 20 },
+    edition: { fontSize: 12, marginBottom: 10, marginTop: 10 },
+    volunteer: { fontSize: 22 },
   };
 
   private fonts = {
@@ -82,12 +85,18 @@ export class PdfRenderStrategy implements RenderStrategy {
     this.printer = new Printer(this.fonts);
   }
 
-  render(tasks: Task[]): Promise<any> {
+  render(tasks: Task[], volunteer: Volunteer): Promise<any> {
     const pdfContent = this.generateContent(tasks);
+    const header = this.generateHeader(volunteer);
+    const footer = this.generateFooter();
+
     const pdf = this.printer.createPdfKitDocument({
+      header,
+      footer,
       content: pdfContent,
       defaultStyle: { fontSize: 10 },
       styles: this.pdfStyles,
+      pageMargins: [40, 80, 40, 80],
     });
 
     const chunks = [];
@@ -106,6 +115,71 @@ export class PdfRenderStrategy implements RenderStrategy {
       });
       pdf.end();
     });
+  }
+
+  private generateFooter() {
+    return function (currentPage: number): Content {
+      return {
+        columns: [
+          {
+            stack: [
+              { text: 'Responsables Bénévoles', style: ['bold'] },
+              'Zéline: 06 82 60 88 91',
+              'Marion: 06 51 40 75 01',
+              'Julie: 07 82 91 57 99',
+            ],
+            width: 150,
+          },
+          {
+            stack: [
+              { text: 'PC Sécurité', style: ['bold'] },
+              'Principal: 04 28 29 22 11',
+              'Secondaire: 04 72 43 70 70',
+            ],
+            width: 150,
+          },
+
+          {
+            text: `- ${currentPage.toString()}`,
+            style: ['bold'],
+            alignment: 'right',
+            marginTop: 40,
+          },
+        ],
+        margin: [20, 20, 20, 0],
+      };
+    };
+  }
+
+  private generateHeader(volunteer: Volunteer): Content {
+    return {
+      columns: [
+        {
+          image: join(__dirname, '../../..', '/assets/logo_24h.png'),
+          fit: [50, 50],
+          width: 50,
+          margin: [20, 15],
+        },
+        {
+          stack: [
+            {
+              text: "24 heures de l'INSA - 48ème édition",
+              alignment: 'center',
+              style: ['edition'],
+            },
+            {
+              text: volunteer.name,
+              alignment: 'center',
+              style: ['volunteer', 'bold'],
+            },
+          ],
+        },
+        {
+          text: '',
+          width: 50,
+        },
+      ],
+    };
   }
 
   private generateContent(tasks: Task[]): Content[] {
@@ -148,7 +222,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   private extractAssignments(assignments: Assignment[]): Content {
     if (assignments.length === 0) return '';
 
-    const header = { text: 'Affectés avec toi', style: ['header'] };
+    const header = { text: 'Affectés avec toi', style: ['assign'] };
     const listing = assignments.map(({ period, volunteers }) => {
       const displayHours = this.extractHours(period);
       const displayVolunteers = this.extractVolunteers(volunteers);
