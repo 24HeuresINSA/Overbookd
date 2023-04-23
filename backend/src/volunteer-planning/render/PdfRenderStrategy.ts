@@ -11,6 +11,7 @@ import htmlToPdfMake from 'html-to-pdfmake';
 import { Content, StyleDictionary } from 'pdfmake/interfaces';
 import { JSDOM } from 'jsdom';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { PurpleCocktail } from './pdf/purpleCocktail';
 
 class PdfException extends Error {}
 
@@ -47,7 +48,21 @@ export class PdfRenderStrategy implements RenderStrategy {
     task: { fontSize: 20, bold: true, marginBottom: 5 },
     details: { fontSize: 14, marginBottom: 3 },
     period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
-    header: { fontSize: 14, marginTop: 5 },
+    header: {
+      fontSize: 18,
+      marginTop: 20,
+      marginBottom: 20,
+      marginLeft: 100,
+      marginRight: 100,
+      alignment: 'center',
+    },
+    paragraph: {
+      fontSize: 10,
+      marginLeft: 50,
+      marginRight: 50,
+    },
+    liteSpaceBetween: { marginBottom: 3 },
+    largeSpaceBetween: { marginBottom: 20 },
   };
 
   private fonts = {
@@ -94,7 +109,16 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generateContent(tasks: Task[]): Content[] {
-    return tasks.flatMap((task) => this.generateTaskContent(task));
+    const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
+    const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
+    return [...assignments, ...cocktailPurpleWorkflows];
+  }
+
+  private generatePurpleCocktailWorkflows(): Content[] {
+    return [
+      ...PurpleCocktail.generateBarmanWorkflow(),
+      ...PurpleCocktail.generateLeaderWorkflow(),
+    ];
   }
 
   private generateTaskContent({
