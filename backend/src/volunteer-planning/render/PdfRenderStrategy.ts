@@ -87,9 +87,12 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   render(tasks: Task[], volunteer: Volunteer): Promise<any> {
     const pdfContent = this.generateContent(tasks);
-    const header: Content = this.generateHeader(volunteer);
+    const header = this.generateHeader(volunteer);
+    const footer = this.generateFooter();
+
     const pdf = this.printer.createPdfKitDocument({
       header,
+      footer,
       content: pdfContent,
       defaultStyle: { fontSize: 10 },
       styles: this.pdfStyles,
@@ -112,6 +115,40 @@ export class PdfRenderStrategy implements RenderStrategy {
       });
       pdf.end();
     });
+  }
+
+  private generateFooter() {
+    return function (currentPage: number): Content {
+      return {
+        columns: [
+          {
+            stack: [
+              { text: 'Responsables Bénévoles', style: ['bold'] },
+              'Zéline: 06 82 60 88 91',
+              'Marion: 06 51 40 75 01',
+              'Julie: 07 82 91 57 99',
+            ],
+            width: 150,
+          },
+          {
+            stack: [
+              { text: 'PC Sécurité', style: ['bold'] },
+              'Principal: 04 28 29 22 11',
+              'Secondaire: 04 72 43 70 70',
+            ],
+            width: 150,
+          },
+
+          {
+            text: `- ${currentPage.toString()}`,
+            style: ['bold'],
+            alignment: 'right',
+            marginTop: 40,
+          },
+        ],
+        margin: [20, 20, 20, 0],
+      };
+    };
   }
 
   private generateHeader(volunteer: Volunteer): Content {
