@@ -108,9 +108,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       });
       pdf.on('end', function () {
         const result = Buffer.concat(chunks);
-        const base64Content = result.toString('base64');
-        const encodedContent = `data:application/pdf;base64,${base64Content}`;
-        resolve(encodedContent);
+        resolve(result.toString('base64'));
       });
       pdf.on('err', function (error) {
         reject(new PdfException(error));
