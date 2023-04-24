@@ -89,8 +89,10 @@ export class PdfRenderStrategy implements RenderStrategy {
     const pdfContent = this.generateContent(tasks);
     const header = this.generateHeader(volunteer);
     const footer = this.generateFooter();
+    const info = this.generateMetadata(volunteer);
 
     const pdf = this.printer.createPdfKitDocument({
+      info,
       header,
       footer,
       content: pdfContent,
@@ -115,6 +117,16 @@ export class PdfRenderStrategy implements RenderStrategy {
       });
       pdf.end();
     });
+  }
+
+  private generateMetadata(volunteer: Volunteer) {
+    return {
+      title: `Planning ${volunteer.name}`,
+      author: 'overbookd',
+      suject: "planning 24 heures de l'INSA",
+      creator: 'overbookd',
+      producer: 'overbookd',
+    };
   }
 
   private generateFooter() {
