@@ -89,7 +89,7 @@
                 <v-btn :value="false" small> Non</v-btn>
               </v-btn-toggle>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="ctas">
               <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
               <v-btn :loading="planningLoads" text @click="exportPlannings">
                 télécharger plannings
@@ -499,5 +499,11 @@ p {
 
 .container {
   padding: 0;
+}
+
+.ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 </style>
