@@ -73,7 +73,7 @@
       </p>
     </v-card-text>
     <v-card-actions>
-      <v-btn color="primary" disabled @click="exportPlanning">
+      <v-btn color="primary" @click="exportPlanning">
         Télécharger mon planning
       </v-btn>
     </v-card-actions>
@@ -82,6 +82,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { download } from "~/utils/planning/download";
 
 export default Vue.extend({
   name: "PlanningCard",
@@ -95,13 +96,17 @@ export default Vue.extend({
     personnalLink(): string {
       return this.$accessor.planning.link ?? "";
     },
+    planningBase64Data(): string {
+      return this.$accessor.planning.planningBase64Data;
+    },
   },
   async created() {
     await this.$accessor.planning.fetchSubscriptionLink();
   },
   methods: {
     async exportPlanning() {
-      throw new Error("Not implemented");
+      await this.$accessor.planning.fetchMyPdfPlanning();
+      download(this.planningBase64Data, this.me);
     },
     async copyToClipBoard() {
       await navigator.clipboard.writeText(this.personnalLink);
