@@ -579,28 +579,18 @@ function convertToAssignee({
   phone,
   team,
 }: DatabaseAssigneeWithTeams): Assignee {
-  return {
-    id,
-    lastname,
-    firstname,
-    phone,
-    teams: team.map(({ team }) => team.code),
-  };
+  const teams = team.map(({ team }) => team.code);
+  return { id, lastname, firstname, phone, teams };
 }
 
 function convertToTimespanAssignee({
   assignee,
   teamRequest,
 }: DatabaseAssignmentsAsTeamMember): TimespanAssignee {
-  const teams = assignee.team.map(({ team }) => team.code);
   const friends = extractDeduplicatedFriends(assignee);
 
   return {
-    id: assignee.id,
-    firstname: assignee.firstname,
-    lastname: assignee.lastname,
-    phone: assignee.phone,
-    teams,
+    ...convertToAssignee(assignee),
     assignedTeam: teamRequest.teamCode,
     friends,
   };
