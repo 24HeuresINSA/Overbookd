@@ -245,7 +245,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   private extractVolunteers(volunteers: Volunteer[]) {
     let nbLines = Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE);
     if (nbLines > MAX_LINES) nbLines = MAX_LINES;
-    const displayVolunteer = Array(nbLines)
+    const displayVolunteers = Array(nbLines)
       .fill(null)
       .map((_, index) => this.generateDisplayedAssignees(volunteers, index));
 
