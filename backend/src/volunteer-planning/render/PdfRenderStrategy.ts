@@ -17,6 +17,7 @@ class PdfException extends Error {}
 
 const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
+const MAX_LINES = 5;
 
 export class PdfRenderStrategy implements RenderStrategy {
   private printer: Printer;
@@ -242,7 +243,10 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractVolunteers(volunteers: Volunteer[]) {
-    const nbLines = Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE);
+    const nbLines = Math.min(
+      Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE),
+      MAX_LINES,
+    );
     return Array(nbLines)
       .fill(null)
       .map((_, index) => this.generateDisplayedAssignees(volunteers, index));
@@ -257,7 +261,28 @@ export class PdfRenderStrategy implements RenderStrategy {
   private extractVolunteerSubset(volunteers: Volunteer[], index: number) {
     return volunteers
       .slice(NB_ASSIGNEES_PER_LINE * index, NB_ASSIGNEES_PER_LINE * (index + 1))
-      .map(({ name }) => ({ text: name }));
+      .map(({ name }, columnIndex) => {
+        const shouldDisplayEllipsis = this.shouldDisplayEllipsis(
+          index,
+          volunteers.length,
+          columnIndex,
+        );
+        const text = shouldDisplayEllipsis ? '...' : name;
+        return { text };
+      });
+  }
+
+  shouldDisplayEllipsis(
+    lineIndex: number,
+    nbVolunteers: number,
+    columnIndex: number,
+  ): boolean {
+    const isLastLine = lineIndex === MAX_LINES - 1;
+    const maxVolunteers = MAX_LINES * NB_ASSIGNEES_PER_LINE;
+    const hasAtLeastMaxVolunteers = nbVolunteers > maxVolunteers;
+    const isLastColumn = columnIndex === NB_ASSIGNEES_PER_LINE - 1;
+
+    return hasAtLeastMaxVolunteers && isLastLine && isLastColumn;
   }
 
   private generateAssigneesColumns(currentLine: { text: string }[]) {
