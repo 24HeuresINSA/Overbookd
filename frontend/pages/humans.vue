@@ -89,9 +89,12 @@
                 <v-btn :value="false" small> Non</v-btn>
               </v-btn-toggle>
             </v-card-text>
-            <v-card-text>
-              <v-btn disabled text @click="exportCSV">exporter</v-btn>
-            </v-card-text>
+            <v-card-actions>
+              <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
+              <v-btn :loading="planningLoads" text @click="exportPlannings">
+                télécharger plannings
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
         <v-col md="10">
@@ -180,8 +183,7 @@ import OverChips from "~/components/atoms/chip/OverChips.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
-
-const { RepoFactory } = require("../repositories/repoFactory");
+import { download } from "~/utils/planning/download";
 
 export default {
   name: "Humans",
@@ -226,6 +228,8 @@ export default {
       isModeStatsActive: false,
 
       options: { page: 1 },
+
+      planningLoads: false,
     };
   },
 
@@ -239,6 +243,9 @@ export default {
     },
     teams() {
       return this.$accessor.team.allTeams;
+    },
+    volunteerPlannings() {
+      return this.$accessor.planning.volunteerPlannings;
     },
   },
 
@@ -370,6 +377,7 @@ export default {
       const parsedCSV = csv.replace(regex, "");
       this.download("utilisateurs.csv", parsedCSV);
     },
+
     getCharge(plan) {
       let charge = 0;
       plan.slots.forEach((slot) => {
@@ -386,6 +394,7 @@ export default {
         return (charge / (hours * 3600000)) * 100;
       }
     },
+
     getAffected(plan) {
       let total = 0;
       plan.slots.forEach((slot) => {
@@ -396,6 +405,7 @@ export default {
       });
       return Math.round(total / 3600000);
     },
+
     getStatic(plan) {
       let statics = 0;
       const Fts = this.$accessor.FT.Fts;
@@ -407,9 +417,11 @@ export default {
       });
       return statics;
     },
+
     openCalendar(userID) {
       window.open("/calendar/" + userID, "_blank");
     },
+
     updateFilteredUsers() {
       let mUsers = this.users;
 
@@ -461,6 +473,16 @@ export default {
         this.options.page = 1; // reset page
       }
       this.filteredUsers = mUsers;
+    },
+    async exportPlannings() {
+      this.planningLoads = true;
+      await this.$accessor.planning.fetchAllPdfPlannings(
+        this.filteredUsers.filter(({ charisma }) => charisma > 0)
+      );
+      this.planningLoads = false;
+      this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
+        download(planningBase64Data, volunteer)
+      );
     },
   },
 };

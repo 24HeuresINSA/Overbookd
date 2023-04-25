@@ -108,4 +108,10 @@ export default {
       { headers: { accept: "application/pdf" } }
     );
   },
+  getPdfPlanning(context: Context, id: number) {
+    return context.$axios.get<HttpStringified<String>>(
+      `${resource}/${id}/planning`,
+      { headers: { accept: "application/pdf" } }
+    );
+  },
 };
