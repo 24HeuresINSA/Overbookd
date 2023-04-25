@@ -259,18 +259,30 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractVolunteerSubset(volunteers: Volunteer[], index: number) {
-    const isLastLine = index === MAX_LINES - 1;
-    const MAX_VOLUNTEERS = MAX_LINES * NB_ASSIGNEES_PER_LINE;
-    const hasAtLeastMaxVolunteers = volunteers.length > MAX_VOLUNTEERS;
-
-    const volunteerSubset = volunteers
+    return volunteers
       .slice(NB_ASSIGNEES_PER_LINE * index, NB_ASSIGNEES_PER_LINE * (index + 1))
-      .map(({ name }) => ({ text: name }));
+      .map(({ name }, columnIndex) => {
+        const shouldDisplayEllipsis = this.shouldDisplayEllipsis(
+          index,
+          volunteers.length,
+          columnIndex,
+        );
+        const text = shouldDisplayEllipsis ? '...' : name;
+        return { text };
+      });
+  }
 
-    if (isLastLine && hasAtLeastMaxVolunteers) {
-      volunteerSubset[NB_ASSIGNEES_PER_LINE - 1] = { text: '...' };
-    }
-    return volunteerSubset;
+  shouldDisplayEllipsis(
+    lineIndex: number,
+    nbVolunteers: number,
+    columnIndex: number,
+  ): boolean {
+    const isLastLine = lineIndex === MAX_LINES - 1;
+    const maxVolunteers = MAX_LINES * NB_ASSIGNEES_PER_LINE;
+    const hasAtLeastMaxVolunteers = nbVolunteers > maxVolunteers;
+    const isLastColumn = columnIndex === NB_ASSIGNEES_PER_LINE - 1;
+
+    return hasAtLeastMaxVolunteers && isLastLine && isLastColumn;
   }
 
   private generateAssigneesColumns(currentLine: { text: string }[]) {
