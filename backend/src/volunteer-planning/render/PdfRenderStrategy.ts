@@ -17,6 +17,7 @@ class PdfException extends Error {}
 
 const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
+const MAX_LINES = 5;
 
 export class PdfRenderStrategy implements RenderStrategy {
   private printer: Printer;
@@ -242,10 +243,20 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractVolunteers(volunteers: Volunteer[]) {
-    const nbLines = Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE);
-    return Array(nbLines)
+    let nbLines = Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE);
+    if (nbLines > MAX_LINES) nbLines = MAX_LINES;
+    const displayVolunteer = Array(nbLines)
       .fill(null)
       .map((_, index) => this.generateDisplayedAssignees(volunteers, index));
+
+    const MAX_VOLUNTEERS = MAX_LINES * NB_ASSIGNEES_PER_LINE;
+    if (volunteers.length > MAX_VOLUNTEERS) {
+      displayVolunteer[MAX_LINES - 1].columns[NB_ASSIGNEES_PER_LINE - 1] = {
+        text: '...',
+      };
+    }
+
+    return displayVolunteer;
   }
 
   private generateDisplayedAssignees(volunteers: Volunteer[], index: number) {
