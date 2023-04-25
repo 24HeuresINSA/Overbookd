@@ -24,7 +24,7 @@ import {
   TimespanWithAssignees,
   DatabaseTimespanWithAssignees,
   Assignee,
-  DatabaseAssignee,
+  DatabaseAssigneeWithFriends,
   DatabaseAssignmentsAsTeamMember,
   TimespanAssignee,
   AssignmentAsTeamMember,
@@ -596,7 +596,7 @@ function convertToTimespanAssignee({
   };
 }
 
-function extractDeduplicatedFriends(assignee: DatabaseAssignee) {
+function extractDeduplicatedFriends(assignee: DatabaseAssigneeWithFriends) {
   const friends = [
     ...assignee.friends.map(({ requestor }) => requestor),
     ...assignee.friendRequestors.map(({ friend }) => friend),

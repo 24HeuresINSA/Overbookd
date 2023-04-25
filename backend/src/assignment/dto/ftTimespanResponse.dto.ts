@@ -138,7 +138,7 @@ class AssigneeRepresentation implements Assignee {
   id: number;
   firstname: string;
   lastname: string;
-  phone?: string;
+  phone: string;
   teams: string[];
 }
 
