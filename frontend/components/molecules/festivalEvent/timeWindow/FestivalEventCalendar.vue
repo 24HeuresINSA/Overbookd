@@ -22,7 +22,7 @@
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       :short-weekdays="false"
-      @mousedown:event="viewEvent"
+      @click:event="viewEvent"
     ></v-calendar>
     <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
       <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
@@ -121,9 +121,9 @@ export default Vue.extend({
       // @ts-ignore
       if (calendar) calendar.next();
     },
-    viewEvent(event: { event: { timespanId: number | undefined } }) {
-      if (!event.event.timespanId) return;
-      this.$accessor.assignment.fetchTimespanDetails(event.event.timespanId);
+    viewEvent({ event }: { event: { timespanId?: number } }) {
+      if (!event.timespanId) return;
+      this.$accessor.assignment.fetchTimespanDetails(event.timespanId);
       this.displayTimespanDetailsDialog = true;
     },
     getTimespanEvents(timeWindows: FTTimeWindow[]): Event[] {
