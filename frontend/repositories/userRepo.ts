@@ -102,4 +102,10 @@ export default {
       `${resource}/me/planning/subscribe-link`
     );
   },
+  getMyPdfPlanning(context: Context) {
+    return context.$axios.get<HttpStringified<String>>(
+      `${resource}/me/planning`,
+      { headers: { accept: "application/pdf" } }
+    );
+  },
 };
