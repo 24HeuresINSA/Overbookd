@@ -58,6 +58,18 @@ export class FaSignaNeedsService {
   async findSignaNeedsForExport(): Promise<ExportSignaNeeds[]> {
     const signa_needs = await this.prisma.fa_signa_needs.findMany({
       select: EXPORT_SIGNA_SELECT,
+      where: {
+        fa: {
+          is_deleted: false,
+          fa_validation: {
+            some: {
+              Team: {
+                code: 'signa',
+              },
+            },
+          },
+        },
+      },
     });
     //map the signa needs to a more readable format for the export remove the nested object
     return signa_needs.map((signa) => ({
