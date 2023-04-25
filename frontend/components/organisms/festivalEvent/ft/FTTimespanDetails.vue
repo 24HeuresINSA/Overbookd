@@ -34,7 +34,7 @@
           </template>
           <template #item.teams="{ item }">
             <TeamChip
-              v-for="team in item?.teams"
+              v-for="team in item.teams"
               :key="team"
               :team="team"
               class="assignee-team"

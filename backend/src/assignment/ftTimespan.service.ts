@@ -31,6 +31,7 @@ import {
   AvailableTimespan as AvailableTimespan,
   DatabaseAssigneeWithTeams,
 } from './types/ftTimespanTypes';
+import { SELECT_BASE_TIMESPAN } from './assignment.service';
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
@@ -101,8 +102,6 @@ const SELECT_FT_WITH_LOCATION = {
     },
   },
 };
-
-const SELECT_BASE_TIMESPAN = { id: true, start: true, end: true };
 
 const SELECT_ASSIGNEE = {
   id: true,
