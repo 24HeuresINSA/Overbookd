@@ -243,20 +243,13 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractVolunteers(volunteers: Volunteer[]) {
-    let nbLines = Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE);
-    if (nbLines > MAX_LINES) nbLines = MAX_LINES;
-    const displayVolunteers = Array(nbLines)
+    const nbLines = Math.min(
+      Math.ceil(volunteers.length / NB_ASSIGNEES_PER_LINE),
+      MAX_LINES,
+    );
+    return Array(nbLines)
       .fill(null)
       .map((_, index) => this.generateDisplayedAssignees(volunteers, index));
-
-    const MAX_VOLUNTEERS = MAX_LINES * NB_ASSIGNEES_PER_LINE;
-    if (volunteers.length > MAX_VOLUNTEERS) {
-      displayVolunteers[MAX_LINES - 1].columns[NB_ASSIGNEES_PER_LINE - 1] = {
-        text: '...',
-      };
-    }
-
-    return displayVolunteers;
   }
 
   private generateDisplayedAssignees(volunteers: Volunteer[], index: number) {
@@ -266,9 +259,18 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractVolunteerSubset(volunteers: Volunteer[], index: number) {
-    return volunteers
+    const isLastLine = index === MAX_LINES - 1;
+    const MAX_VOLUNTEERS = MAX_LINES * NB_ASSIGNEES_PER_LINE;
+    const hasAtLeastMaxVolunteers = volunteers.length > MAX_VOLUNTEERS;
+
+    const volunteerSubset = volunteers
       .slice(NB_ASSIGNEES_PER_LINE * index, NB_ASSIGNEES_PER_LINE * (index + 1))
       .map(({ name }) => ({ text: name }));
+
+    if (isLastLine && hasAtLeastMaxVolunteers) {
+      volunteerSubset[NB_ASSIGNEES_PER_LINE - 1] = { text: '...' };
+    }
+    return volunteerSubset;
   }
 
   private generateAssigneesColumns(currentLine: { text: string }[]) {
