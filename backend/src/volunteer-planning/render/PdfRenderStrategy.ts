@@ -251,12 +251,12 @@ export class PdfRenderStrategy implements RenderStrategy {
 
     const MAX_VOLUNTEERS = MAX_LINES * NB_ASSIGNEES_PER_LINE;
     if (volunteers.length > MAX_VOLUNTEERS) {
-      displayVolunteer[MAX_LINES - 1].columns[NB_ASSIGNEES_PER_LINE - 1] = {
+      displayVolunteers[MAX_LINES - 1].columns[NB_ASSIGNEES_PER_LINE - 1] = {
         text: '...',
       };
     }
 
-    return displayVolunteer;
+    return displayVolunteers;
   }
 
   private generateDisplayedAssignees(volunteers: Volunteer[], index: number) {
