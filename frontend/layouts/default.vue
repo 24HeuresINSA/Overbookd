@@ -212,6 +212,12 @@ export default {
           to: `/calendar/${this.$accessor.user.me.id}`,
         },
         {
+          icon: "mdi-clock-fast",
+          title: "Tâches en cours",
+          permission: "admin",
+          to: "/currentTasks",
+        },
+        {
           icon: "mdi-clock-edit",
           title: "Charisme des dispos",
           permission: "can-affect",
