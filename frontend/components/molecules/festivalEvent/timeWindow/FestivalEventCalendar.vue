@@ -127,17 +127,16 @@ export default Vue.extend({
       this.displayTimespanDetailsDialog = true;
     },
     getTimespanEvents(timeWindows: FTTimeWindow[]): Event[] {
-      return timeWindows
-        .map(({ timespans }) => timespans)
-        .flat()
-        .map(({ id, start, end }) => ({
+      return timeWindows.flatMap(({ timespans }) =>
+        timespans.map(({ id, start, end }) => ({
           timespanId: id,
           start,
           end,
           timed: true,
           color: "purple",
           name: "Tâche",
-        }));
+        }))
+      );
     },
     closeTimespanDetailsDialog() {
       this.displayTimespanDetailsDialog = false;
