@@ -77,7 +77,7 @@ type DatabaseWithFriends<T extends { id: number }> = {
 
 export type DatabaseAssignee = Assignee & DatabaseWithFriends<Assignee>;
 
-type DatabaseAssigneeWithTeams = DatabaseAssignee & {
+export type DatabaseAssigneeWithTeams = DatabaseAssignee & {
   team: {
     team: {
       code: string;
@@ -149,10 +149,11 @@ export type Assignee = {
   id: number;
   firstname: string;
   lastname: string;
+  phone?: string;
+  teams?: string[];
 };
 
 export type TimespanAssignee = Assignee & {
-  teams: string[];
   assignedTeam: string;
   friends: Assignee[];
 };

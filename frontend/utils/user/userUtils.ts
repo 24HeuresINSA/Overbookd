@@ -12,3 +12,8 @@ export function formatUserNameWithNickname({
   const displayedNickname = nickname ? `(${nickname})` : "";
   return `${firstname} ${lastname} ${displayedNickname}`;
 }
+
+export function formatUserPhone(userPhone: string) {
+  const phone = (userPhone ?? "").padStart(10, "0");
+  return phone.replace(/(\d{2})/g, "$1 ");
+}

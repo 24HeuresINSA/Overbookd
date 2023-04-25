@@ -171,6 +171,7 @@ import { isNumber, min } from "~/utils/rules/inputRules";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
+import { formatUserPhone } from "~/utils/user/userUtils";
 
 export default {
   name: "UserInformation",
@@ -235,8 +236,7 @@ export default {
       return this.$accessor.team.allTeams;
     },
     formattedSelectedUserPhone() {
-      const phone = (this.selectedUser.phone ?? "").padStart(10, "0");
-      return phone.replace(/(\d{2})/g, "$1 ");
+      return formatUserPhone(this.selectedUser.phone);
     },
   },
 

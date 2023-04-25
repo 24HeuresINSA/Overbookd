@@ -25,7 +25,7 @@
       @click:event="viewEvent"
     ></v-calendar>
     <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
-      <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+      <FTTimespanDetails @close-dialog="closeTimespanDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -35,7 +35,7 @@ import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarItem } from "~/utils/models/calendar";
 import { FTStatus, FTTimeWindow } from "~/utils/models/ft";
-import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
+import FTTimespanDetails from "~/components/organisms/festivalEvent/ft/FTTimespanDetails.vue";
 
 type Event = CalendarItem & {
   timespanId?: number;
@@ -44,7 +44,7 @@ type Event = CalendarItem & {
 export default Vue.extend({
   name: "FestivalEventCalendar",
   components: {
-    TimespanDetails,
+    FTTimespanDetails,
   },
   props: {
     festivalEvent: {

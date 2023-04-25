@@ -29,6 +29,7 @@ import {
   TimespanAssignee,
   AssignmentAsTeamMember,
   AvailableTimespan as AvailableTimespan,
+  DatabaseAssigneeWithTeams,
 } from './types/ftTimespanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -107,6 +108,7 @@ const SELECT_ASSIGNEE = {
   id: true,
   firstname: true,
   lastname: true,
+  phone: true,
 };
 
 const SELECT_ASSIGNED_TEAM = {
@@ -574,8 +576,16 @@ function convertToAssignee({
   id,
   lastname,
   firstname,
-}: DatabaseAssignee): Assignee {
-  return { id, lastname, firstname };
+  phone,
+  team,
+}: DatabaseAssigneeWithTeams): Assignee {
+  return {
+    id,
+    lastname,
+    firstname,
+    phone,
+    teams: team.map(({ team }) => team.code),
+  };
 }
 
 function convertToTimespanAssignee({
@@ -589,6 +599,7 @@ function convertToTimespanAssignee({
     id: assignee.id,
     firstname: assignee.firstname,
     lastname: assignee.lastname,
+    phone: assignee.phone,
     teams,
     assignedTeam: teamRequest.teamCode,
     friends,
