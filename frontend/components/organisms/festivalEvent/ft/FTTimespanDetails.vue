@@ -140,10 +140,6 @@ export default Vue.extend({
     openCalendarInNewTab(assigneeId: number) {
       window.open(`/calendar/${assigneeId}`, "_blank");
     },
-    getAllVolunteerTeams(assignee: TimespanAssignee) {
-      const underlyingTeams = getUnderlyingTeams(assignee.teams);
-      return [...underlyingTeams, ...assignee.teams];
-    },
     formatPhone(phone: string) {
       return formatUserPhone(phone);
     },
