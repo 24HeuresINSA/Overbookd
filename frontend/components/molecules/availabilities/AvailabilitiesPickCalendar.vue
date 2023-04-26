@@ -51,6 +51,7 @@ import {
   formatDateDayNumber,
   computeTomorrowDate,
   setDateHour,
+  generateParisDate,
 } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
@@ -123,15 +124,14 @@ export default Vue.extend({
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
     selectPeriod(dateString: string, hour: number) {
-      const date = new Date(dateString);
+      const date = generateParisDate(dateString, hour);
       if (this.isSaved(date, hour)) return;
 
-      const updatedDate = setDateHour(date, hour);
-      if (this.isSelected(date, hour)) return this.removePeriod(updatedDate);
-      this.addPeriod(updatedDate);
+      if (this.isSelected(date, hour)) return this.removePeriod(date);
+      this.addPeriod(date);
     },
     selectDay(dateString: string) {
-      const date = new Date(dateString);
+      const date = generateParisDate(dateString, 0);
       if (this.isAllPeriodsInDaySelected(date))
         return this.removePeriodsInDay(date);
       this.addPeriodsInDay(date);

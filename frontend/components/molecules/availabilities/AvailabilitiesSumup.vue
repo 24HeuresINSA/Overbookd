@@ -31,7 +31,7 @@ import {
 import { generateNewPeriod } from "~/utils/availabilities/period";
 import {
   formatDateWithExplicitMonth,
-  setDateHour,
+  generateParisDate,
 } from "~/utils/date/dateUtils";
 import { Period } from "~/utils/models/period";
 import { isPartyShift } from "~/utils/shift/shift";
@@ -96,10 +96,9 @@ export default Vue.extend({
     },
     togglePeriod(dateString: string, hour: number) {
       if (this.isReadonly) return;
-      const date = new Date(dateString);
-      const updatedDate = setDateHour(date, hour);
-      if (this.isSelected(date, hour)) return this.removePeriod(updatedDate);
-      this.addPeriod(updatedDate);
+      const date = generateParisDate(dateString, hour);
+      if (this.isSelected(date, hour)) return this.removePeriod(date);
+      this.addPeriod(date);
     },
     addPeriod(date: Date) {
       const periodToAdd = generateNewPeriod(date);
