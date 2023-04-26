@@ -218,7 +218,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     const displayName = { text: name, style: ['task'] };
     const displayDescription = this.extractDescription(description);
     const displayAssignment = this.extractAssignments(assignments);
-    const taskSeparator: Content = { text: '', margin: [0, 0, 0, 15] };
+    const taskSeparator: Content = {
+      table: {
+        widths: ['*'],
+        body: [[{ text: '', fillColor: '#000' }]],
+      },
+      margin: [0, 5, 0, 15],
+    };
 
     return [
       displayName,
