@@ -122,7 +122,7 @@
                 >
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
-                <v-btn icon small :href="'tel:+33' + item.phone">
+                <v-btn icon small :href="getPhoneLink(item.phone)">
                   <v-icon small>mdi-phone</v-icon>
                 </v-btn>
                 <v-btn icon small :href="'mailto:' + item.email">
@@ -184,6 +184,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
 import { download } from "~/utils/planning/download";
+import { formatPhoneLink } from "~/utils/user/userUtils";
 
 export default {
   name: "Humans",
@@ -483,6 +484,9 @@ export default {
       this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
         download(planningBase64Data, volunteer)
       );
+    },
+    getPhoneLink(phone) {
+      return formatPhoneLink(phone);
     },
   },
 };

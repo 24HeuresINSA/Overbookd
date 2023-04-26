@@ -51,7 +51,7 @@
           </template>
           <template #item.phone="{ item }">
             <div class="assignee-phone">
-              <v-btn icon :href="'tel:+33:' + item.phone">
+              <v-btn icon :href="getPhoneLink(item.phone)">
                 <v-icon>mdi-phone</v-icon>
               </v-btn>
               <h3>{{ formatPhone(item.phone) }}</h3>
@@ -75,7 +75,7 @@ import {
   TimespanWithAssignees,
 } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
-import { formatUserPhone } from "~/utils/user/userUtils";
+import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "FTTimespanDetails",
@@ -146,6 +146,9 @@ export default Vue.extend({
     },
     formatPhone(phone: string) {
       return formatUserPhone(phone);
+    },
+    getPhoneLink(phone: string) {
+      return formatPhoneLink(phone);
     },
   },
 });
