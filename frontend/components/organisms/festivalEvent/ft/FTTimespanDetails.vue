@@ -67,13 +67,9 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
-import {
-  TimespanAssignee,
-  TimespanWithAssignees,
-} from "~/utils/models/ftTimespan";
+import { TimespanWithAssignees } from "~/utils/models/ftTimespan";
 import { User } from "~/utils/models/user";
 import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
