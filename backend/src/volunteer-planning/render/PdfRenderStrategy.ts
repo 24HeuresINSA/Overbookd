@@ -18,6 +18,7 @@ class PdfException extends Error {}
 const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
 const MAX_LINES = 5;
+const SECURITY_PLAN_PAGE = 2;
 
 export class PdfRenderStrategy implements RenderStrategy {
   private printer: Printer;
@@ -162,34 +163,38 @@ export class PdfRenderStrategy implements RenderStrategy {
     };
   }
 
-  private generateHeader(volunteer: Volunteer): Content {
-    return {
-      columns: [
-        {
-          image: join(__dirname, '../../..', '/assets/logo_24h.png'),
-          fit: [50, 50],
-          width: 50,
-          margin: [20, 15],
-        },
-        {
-          stack: [
-            {
-              text: "24 heures de l'INSA - 48ème édition",
-              alignment: 'center',
-              style: ['edition'],
-            },
-            {
-              text: volunteer.name,
-              alignment: 'center',
-              style: ['volunteer', 'bold'],
-            },
-          ],
-        },
-        {
-          text: '',
-          width: 50,
-        },
-      ],
+  private generateHeader(volunteer: Volunteer) {
+    return function (currentPage: number): Content {
+      const headerTitle =
+        currentPage === SECURITY_PLAN_PAGE ? 'Plan Sécu' : volunteer.name;
+      return {
+        columns: [
+          {
+            image: join(__dirname, '../../..', '/assets/logo_24h.png'),
+            fit: [50, 50],
+            width: 50,
+            margin: [20, 15],
+          },
+          {
+            stack: [
+              {
+                text: "24 heures de l'INSA - 48ème édition",
+                alignment: 'center',
+                style: ['edition'],
+              },
+              {
+                text: headerTitle,
+                alignment: 'center',
+                style: ['volunteer', 'bold'],
+              },
+            ],
+          },
+          {
+            text: '',
+            width: 50,
+          },
+        ],
+      };
     };
   }
 
@@ -197,26 +202,33 @@ export class PdfRenderStrategy implements RenderStrategy {
     const securityPlan = this.generateSecurityPage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
     const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
-    return [securityPlan, ...assignments, ...cocktailPurpleWorkflows];
+    const switchToPortraitOrientation = this.generateSwitchPageOrientation();
+    return [
+      securityPlan,
+      switchToPortraitOrientation,
+      ...assignments,
+      ...cocktailPurpleWorkflows,
+    ];
+  }
+
+  private generateSwitchPageOrientation(): Content {
+    return {
+      pageBreak: 'before',
+      pageOrientation: 'portrait',
+      text: '',
+    };
   }
 
   private generateSecurityPage(): Content {
-    return [
-      {
-        text: 'Plan Sécu',
-        style: ['header', 'bold'],
-        pageBreak: 'before',
+    return {
+      image: join(__dirname, '../../..', '/assets/security_plan.png'),
+      fit: [680, 680],
+      pageBreak: 'before',
+      pageOrientation: 'landscape',
+      style: {
+        alignment: 'center',
       },
-      {
-        image: join(__dirname, '../../..', '/assets/security_plan.png'),
-        fit: [700, 700],
-        pageOrientation: 'landscape',
-        pageBreak: 'after',
-        style: {
-          alignment: 'center',
-        },
-      },
-    ];
+    };
   }
 
   private generatePurpleCocktailWorkflows(): Content[] {
