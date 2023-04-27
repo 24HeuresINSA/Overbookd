@@ -102,12 +102,6 @@ export default Vue.extend({
       if (!this.timespan) return [];
       return [...this.timespan.requiredVolunteers, ...this.timespan.assignees];
     },
-    allTimespansTeamCodes(): string[] {
-      if (!this.timespan) return [];
-      return this.timespan.requestedTeams
-        .filter((team) => team.quantity > team.assignmentCount)
-        .map((team) => team.code);
-    },
     headers(): Header[] {
       const volunteer = {
         text: "Bénévole",
