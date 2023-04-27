@@ -73,7 +73,7 @@
       </p>
     </v-card-text>
     <v-card-actions>
-      <v-btn color="primary" @click="exportPlanning">
+      <v-btn color="primary" @click="exportPlanning" :disabled="!canViewPlanning">
         Télécharger mon planning
       </v-btn>
     </v-card-actions>
