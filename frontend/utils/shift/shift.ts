@@ -11,5 +11,5 @@ export const SHIFT_HOURS = {
 };
 
 export function isPartyShift(hour: number): boolean {
-  return hour >= SHIFT_HOURS.PARTY || hour < SHIFT_HOURS.NIGHT;
+  return hour >= SHIFT_HOURS_UTC.PARTY || hour < SHIFT_HOURS_UTC.NIGHT;
 }

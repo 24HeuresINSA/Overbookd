@@ -12,7 +12,7 @@ export function isDateIncludedByPeriod(date: Date): (value: Period) => boolean {
 }
 
 export function generateNewPeriod(date: Date): Period {
-  const durationInHours = getPeriodDurationInHours(date.getHours());
+  const durationInHours = getPeriodDurationInHours(date.getUTCHours());
   const start = new Date(date);
   const end = new Date(start);
   end.setHours(date.getHours() + durationInHours);

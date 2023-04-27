@@ -19,9 +19,9 @@
         :class="{
           'two-hours': !isPartyShift(hour),
           'one-hour': isPartyShift(hour),
-          selected: isSelected(date, hour),
-          saved: isSaved(date, hour),
-          'is-error': hasError(date, hour),
+          selected: isSelected(generateParisDate(date, hour)),
+          saved: isSaved(generateParisDate(date, hour)),
+          'is-error': hasError(generateParisDate(date, hour)),
         }"
         @click="selectPeriod(date, hour)"
       >
@@ -78,26 +78,34 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    isSelected(): (date: string | Date, hour: number) => boolean {
+    isSelected(): (date: string | Date) => boolean {
       return isAvailabilityPeriodSelected(
         this.selectedAvailabilities,
         this.savedAvailabilities
       );
     },
-    isAllPeriodsInDaySelected(): (date: Date) => boolean {
-      return (date: Date) => {
-        const start = setDateHour(date, 0);
+    isAllPeriodsInDaySelected(): (dayDate: string) => boolean {
+      return (dayDate: string) => {
+        console.log(dayDate);
+        const start = generateParisDate(dayDate, 0);
         const end = computeTomorrowDate(start);
         const period = { start, end };
-        return this.selectedAvailabilities.some(
-          isPeriodIncludedByAnother(period)
-        );
+        console.log(period);
+        const res = this.selectedAvailabilities.some((availability) => {
+          if (!isPeriodIncludedByAnother(period)(availability)) {
+            console.log(availability);
+            return false;
+          }
+          return true;
+        });
+        console.log(res);
+        return res;
       };
     },
-    isSaved(): (date: string | Date, hour: number) => boolean {
+    isSaved(): (date: string | Date) => boolean {
       return isAvailabilityPeriodSaved(this.savedAvailabilities);
     },
-    hasError(): (date: string | Date, hour: number) => boolean {
+    hasError(): (date: string | Date) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     weekdayNumbers(): Number[] {
@@ -123,27 +131,26 @@ export default Vue.extend({
       const tomorrow = computeTomorrowDate(date);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(dateString: string, hour: number) {
-      const date = generateParisDate(dateString, hour);
-      if (this.isSaved(date, hour)) return;
+    selectPeriod(dayDate: string, hour: number) {
+      const date = generateParisDate(dayDate, hour);
+      if (this.isSaved(date)) return;
 
-      if (this.isSelected(date, hour)) return this.removePeriod(date);
+      if (this.isSelected(date)) return this.removePeriod(date);
       this.addPeriod(date);
     },
-    selectDay(dateString: string) {
-      const date = generateParisDate(dateString, 0);
-      if (this.isAllPeriodsInDaySelected(date))
-        return this.removePeriodsInDay(date);
-      this.addPeriodsInDay(date);
+    selectDay(dayDate: string) {
+      if (this.isAllPeriodsInDaySelected(dayDate))
+        return this.removePeriodsInDay(dayDate);
+      this.addPeriodsInDay(dayDate);
     },
     addPeriod(date: Date) {
       const periodToAdd = generateNewPeriod(date);
       this.$accessor.volunteerAvailability.addAvailabilityPeriod(periodToAdd);
       this.incrementCharismaByDate(periodToAdd.start);
     },
-    addPeriodsInDay(date: Date) {
-      const periodsToAdd = this.generateAllPeriodsFor(date).filter(
-        (period) => !this.isSelected(period.start, period.start.getHours())
+    addPeriodsInDay(dayDate: string) {
+      const periodsToAdd = this.generateAllPeriodsForDay(dayDate).filter(
+        (period) => !this.isSelected(period.start)
       );
       this.$accessor.volunteerAvailability.addAvailabilityPeriods(periodsToAdd);
       periodsToAdd.map((period) => this.incrementCharismaByDate(period.start));
@@ -151,12 +158,12 @@ export default Vue.extend({
     getPeriodDurationInHours(hour: number): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
-    generateAllPeriodsFor(dayDate: Date): Period[] {
+    generateAllPeriodsForDay(dayDate: string): Period[] {
       const periods = [];
       for (let hour = 0; hour < 24; hour++) {
         if (!this.isEndOfPeriod(hour)) continue;
 
-        const newPeriod = generateNewPeriod(setDateHour(dayDate, hour));
+        const newPeriod = generateNewPeriod(generateParisDate(dayDate, hour));
         periods.push(newPeriod);
       }
       return periods;
@@ -168,10 +175,11 @@ export default Vue.extend({
       );
       this.decrementCharismaByDate(date);
     },
-    removePeriodsInDay(date: Date) {
-      const periodsToRemove = this.generateAllPeriodsFor(date).filter(
-        (period) => this.isSelected(period.start, period.start.getHours())
+    removePeriodsInDay(dayDate: string) {
+      const periodsToRemove = this.generateAllPeriodsForDay(dayDate).filter(
+        (period) => this.isSelected(period.start)
       );
+      console.log(periodsToRemove);
       this.$accessor.volunteerAvailability.removeAvailabilityPeriods(
         periodsToRemove
       );
@@ -201,6 +209,9 @@ export default Vue.extend({
         this.getCharismaByDate(date) *
           this.getPeriodDurationInHours(date.getHours())
       );
+    },
+    generateParisDate(dayDate: string, hour: number = 0): Date {
+      return generateParisDate(dayDate, hour);
     },
   },
 });

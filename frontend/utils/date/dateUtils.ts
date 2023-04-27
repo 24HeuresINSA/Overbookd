@@ -83,7 +83,7 @@ export function formatDateDayNumber(date: Date | string): string {
 }
 
 export function setDateHour(date: Date, hour: number): Date {
-  return new Date(new Date(date.setHours(hour)).setMinutes(0));
+  return new Date(new Date(date.setUTCHours(hour)).setMinutes(0));
 }
 
 export function computeTomorrowDate(date: Date): Date {
@@ -106,8 +106,8 @@ export function formatDateToHumanReadable(date: Date | string): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function generateParisDate(dateString: string, hour: number): Date {
+export function generateParisDate(dayDate: string, hour: number): Date {
   const hours = hour.toString().padStart(2, "0");
-  const parisDateString = `${dateString}T${hours}:00:00.000+02:00`;
+  const parisDateString = `${dayDate}T${hours}:00:00.000+02:00`;
   return new Date(parisDateString);
 }

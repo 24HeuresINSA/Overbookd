@@ -8,8 +8,8 @@
           :class="{
             'two-hours': !isPartyShift(hour),
             'one-hour': isPartyShift(hour),
-            selected: isSelected(date, hour),
-            'is-error': hasError(date, hour),
+            selected: isSelected(generateParisDate(date, hour)),
+            'is-error': hasError(generateParisDate(date, hour)),
             'read-only': isReadonly,
           }"
           @click="togglePeriod(date, hour)"
@@ -61,10 +61,10 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    isSelected(): (date: string | Date, hour: number) => boolean {
+    isSelected(): (date: string | Date) => boolean {
       return isAvailabilityPeriodSelected(this.selectedAvailabilities, []);
     },
-    hasError(): (date: string | Date, hour: number) => boolean {
+    hasError(): (date: string | Date) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     isReadonly(): boolean {
@@ -97,7 +97,7 @@ export default Vue.extend({
     togglePeriod(dateString: string, hour: number) {
       if (this.isReadonly) return;
       const date = generateParisDate(dateString, hour);
-      if (this.isSelected(date, hour)) return this.removePeriod(date);
+      if (this.isSelected(date)) return this.removePeriod(date);
       this.addPeriod(date);
     },
     addPeriod(date: Date) {
@@ -109,6 +109,9 @@ export default Vue.extend({
       this.$accessor.volunteerAvailability.removeAvailabilityPeriod(
         periodToRemove
       );
+    },
+    generateParisDate(dayDate: string, hour: number = 0): Date {
+      return generateParisDate(dayDate, hour);
     },
   },
 });

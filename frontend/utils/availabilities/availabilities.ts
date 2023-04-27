@@ -1,5 +1,4 @@
 import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
-import { setDateHour } from "../date/dateUtils";
 import { Period } from "../models/period";
 import { isPartyShift } from "../shift/shift";
 import {
@@ -15,28 +14,25 @@ export function isEndOfAvailabilityPeriod(hour: number): boolean {
 export function isAvailabilityPeriodSelected(
   selectedAvailabilities: Period[],
   savedAvailabilities: Period[]
-): (date: string | Date, hour: number) => boolean {
-  return (date: string | Date, hour: number) =>
-    selectedAvailabilities.some(
-      isDateIncludedByPeriod(setDateHour(new Date(date), hour))
-    ) && !isAvailabilityPeriodSaved(savedAvailabilities)(date, hour);
+): (date: string | Date) => boolean {
+  return (date: string | Date) =>
+    selectedAvailabilities.some(isDateIncludedByPeriod(new Date(date))) &&
+    !isAvailabilityPeriodSaved(savedAvailabilities)(date);
 }
 
 export function isAvailabilityPeriodSaved(
   savedAvailabilities: Period[]
-): (date: string | Date, hour: number) => boolean {
-  return (date: string | Date, hour: number) => {
-    const updatedDate = setDateHour(new Date(date), hour);
-    return savedAvailabilities.some(isDateIncludedByPeriod(updatedDate));
+): (date: string | Date) => boolean {
+  return (date: string | Date) => {
+    return savedAvailabilities.some(isDateIncludedByPeriod(new Date(date)));
   };
 }
 
 export function hasAvailabilityPeriodError(
   periodOrchestrator: PeriodOrchestrator
-): (date: string | Date, hour: number) => boolean {
-  return (date: string | Date, hour: number) => {
-    const updatedDate = setDateHour(new Date(date), hour);
-    const period = generateNewPeriod(updatedDate);
+): (date: string | Date) => boolean {
+  return (date: string | Date) => {
+    const period = generateNewPeriod(new Date(date));
     return periodOrchestrator.errors.some(isSamePeriod(period));
   };
 }
