@@ -120,9 +120,9 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   private generateMetadata(volunteer: Volunteer) {
     return {
-      title: `Planning ${volunteer.name}`,
+      title: `Livret ${volunteer.name}`,
       author: 'overbookd',
-      suject: "planning 24 heures de l'INSA",
+      suject: "livret bénévole 24 heures de l'INSA",
       creator: 'overbookd',
       producer: 'overbookd',
     };
@@ -194,9 +194,26 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generateContent(tasks: Task[]): Content[] {
+    const securityPlan = this.generateSecurityPage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
     const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
-    return [...assignments, ...cocktailPurpleWorkflows];
+    return [securityPlan, ...assignments, ...cocktailPurpleWorkflows];
+  }
+
+  private generateSecurityPage(): Content {
+    return [
+      {
+        text: 'Plan Sécu',
+        style: ['header', 'bold'],
+        pageBreak: 'before',
+      },
+      {
+        image: join(__dirname, '../../..', '/assets/security_plan.png'),
+        fit: [700, 700],
+        pageOrientation: 'landscape',
+        pageBreak: 'after',
+      },
+    ];
   }
 
   private generatePurpleCocktailWorkflows(): Content[] {
