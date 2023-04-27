@@ -212,6 +212,9 @@ export class PdfRenderStrategy implements RenderStrategy {
         fit: [700, 700],
         pageOrientation: 'landscape',
         pageBreak: 'after',
+        style: {
+          alignment: 'center',
+        },
       },
     ];
   }
