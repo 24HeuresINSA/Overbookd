@@ -100,7 +100,7 @@ export class UserController {
     return this.userService.user({ id: req.user.userId ?? req.user.id });
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-view-planning')
   @ApiBearerAuth()
   @Get('me/planning')
@@ -132,7 +132,7 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-view-planning')
   @ApiBearerAuth()
   @Get('me/planning/subscribe-link')
@@ -265,7 +265,7 @@ export class UserController {
     return this.userService.getVolunteerAssignments(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
   @ApiBearerAuth()
   @Get(':id/planning')
