@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Timeline, TimelineFt } from './timeline.model';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Timeline, TimelineFt } from './timeline.model';
 
 interface DatabaseFT {
   id: number;
@@ -31,7 +31,7 @@ export class TimelineService {
       where,
       select,
     });
-    return this.formatTimelines(timelines);
+    return formatTimelines(timelines);
   }
 
   private buildTimelineSelection(start: Date, end: Date) {
@@ -94,37 +94,29 @@ export class TimelineService {
   }
 
   private buildOverlapPeriodCondition(start: Date, end: Date) {
-    return {
-      AND: [{ start: { lte: end } }, { end: { gte: start } }],
-    };
+    return { start: { lt: end }, end: { gt: start } };
   }
+}
 
-  private formatTimelines(timelines: DatabaseTimeline[]): Timeline[] {
-    return timelines.map(this.formatTimeline());
-  }
+function formatTimelines(timelines: DatabaseTimeline[]): Timeline[] {
+  return timelines.map(formatTimeline);
+}
 
-  private formatTimeline(): (timeline: DatabaseTimeline) => Timeline {
-    return (timeline) => {
-      const fts = this.formatFts(timeline.fts);
-      return {
-        fa: {
-          id: timeline.id,
-          name: timeline.name,
-        },
-        fts,
-      };
-    };
-  }
+function formatTimeline(timeline: DatabaseTimeline): Timeline {
+  const fts = formatFts(timeline.fts);
+  return {
+    fa: {
+      id: timeline.id,
+      name: timeline.name,
+    },
+    fts,
+  };
+}
 
-  private formatFts(fts: DatabaseFT[]): TimelineFt[] {
-    return fts.map((ft) => ({
-      id: ft.id,
-      name: ft.name,
-      timespans: ft.timeWindows.flatMap(this.formatTimespans()),
-    }));
-  }
-
-  private formatTimespans(): (timeWindow: DatabaseTimespans) => Period[] {
-    return ({ timespans }) => timespans;
-  }
+function formatFts(fts: DatabaseFT[]): TimelineFt[] {
+  return fts.map((ft) => ({
+    id: ft.id,
+    name: ft.name,
+    timespans: ft.timeWindows.flatMap(({ timespans }) => timespans),
+  }));
 }
