@@ -32,10 +32,10 @@ export class Introduction {
       },
       {
         ul: [
-          'te restaurer',
-          'te reposer',
-          'te proposer pour filer un coup de main',
-          "te poser avec d'autres bénévoles pour faire connaissance",
+          'Te restaurer',
+          'Te reposer',
+          'Te proposer pour filer un coup de main',
+          "Te poser avec d'autres bénévoles pour faire connaissance",
         ],
         style: ['paragraph', 'liteSpaceBetween'],
         margin: [75, 0, 50, 5],
