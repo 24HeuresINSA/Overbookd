@@ -37,6 +37,7 @@ import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
 import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
 import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning.module';
+import { TimelineModule } from './timeline/timeline.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning
     AssignmentModule,
     OrgaNeedsModule,
     VolunteerPlanningModule,
+    TimelineModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
