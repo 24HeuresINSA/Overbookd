@@ -34,10 +34,10 @@
                   <h3>{{ selectedUser.email }}</h3>
                 </v-col>
                 <v-col md="6" style="display: flex; align-items: baseline">
-                  <v-btn icon :href="'tel:+33:' + selectedUser.phone">
+                  <v-btn icon :href="selectedUserPhoneLink">
                     <v-icon>mdi-phone</v-icon>
                   </v-btn>
-                  <h3>{{ formattedSelectedUserPhone }}</h3>
+                  <h3>{{ selectedUserPhone }}</h3>
                 </v-col>
                 <v-col md="6">
                   <v-text-field
@@ -171,6 +171,7 @@ import { isNumber, min } from "~/utils/rules/inputRules";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
+import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
 export default {
   name: "UserInformation",
@@ -234,9 +235,11 @@ export default {
     teams() {
       return this.$accessor.team.allTeams;
     },
-    formattedSelectedUserPhone() {
-      const phone = (this.selectedUser.phone ?? "").padStart(10, "0");
-      return phone.replace(/(\d{2})/g, "$1 ");
+    selectedUserPhone() {
+      return formatUserPhone(this.selectedUser.phone);
+    },
+    selectedUserPhoneLink() {
+      return formatPhoneLink(this.selectedUser.phone);
     },
   },
 

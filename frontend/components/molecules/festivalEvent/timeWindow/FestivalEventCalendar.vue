@@ -22,7 +22,11 @@
       :event-ripple="false"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       :short-weekdays="false"
+      @click:event="viewEvent"
     ></v-calendar>
+    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
+      <FTTimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    </v-dialog>
   </div>
 </template>
 
@@ -30,9 +34,18 @@
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarItem } from "~/utils/models/calendar";
+import { FTStatus, FTTimeWindow } from "~/utils/models/ft";
+import FTTimespanDetails from "~/components/organisms/festivalEvent/ft/FTTimespanDetails.vue";
+
+type Event = CalendarItem & {
+  timespanId?: number;
+};
 
 export default Vue.extend({
   name: "FestivalEventCalendar",
+  components: {
+    FTTimespanDetails,
+  },
   props: {
     festivalEvent: {
       type: String,
@@ -41,6 +54,7 @@ export default Vue.extend({
   },
   data: () => ({
     value: new Date(),
+    displayTimespanDetailsDialog: false,
   }),
   computed: {
     manifDate(): Date {
@@ -49,10 +63,8 @@ export default Vue.extend({
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.value);
     },
-    calendarTimeWindows(): CalendarItem[] {
-      return this.festivalEvent === "FA"
-        ? this.faTimeWindows
-        : this.ftTimeWindows;
+    calendarTimeWindows(): Event[] {
+      return this.festivalEvent === "FA" ? this.faTimeWindows : this.ftEvents;
     },
     faTimeWindows(): CalendarItem[] {
       const animationTimeWindows: CalendarItem[] = (
@@ -78,14 +90,18 @@ export default Vue.extend({
 
       return [...animationTimeWindows, ...gearTimeWindows];
     },
-    ftTimeWindows(): CalendarItem[] {
-      return (this.$accessor.FT.mFT.timeWindows ?? []).map((timeWindow) => ({
-        start: timeWindow.start,
-        end: timeWindow.end,
-        timed: true,
-        color: "primary",
-        name: "Tâche",
-      }));
+    ftEvents(): Event[] {
+      const timeWindows = this.$accessor.FT.mFT.timeWindows ?? [];
+      if (this.$accessor.FT.mFT.status !== FTStatus.READY) {
+        return timeWindows.map(({ start, end }) => ({
+          start,
+          end,
+          timed: true,
+          color: "primary",
+          name: "Tâche",
+        }));
+      }
+      return this.getTimespanEvents(timeWindows);
     },
   },
   mounted() {
@@ -104,6 +120,26 @@ export default Vue.extend({
       const calendar = this.$refs.formCalendar;
       // @ts-ignore
       if (calendar) calendar.next();
+    },
+    viewEvent({ event }: { event: { timespanId?: number } }) {
+      if (!event.timespanId) return;
+      this.$accessor.assignment.fetchTimespanDetails(event.timespanId);
+      this.displayTimespanDetailsDialog = true;
+    },
+    getTimespanEvents(timeWindows: FTTimeWindow[]): Event[] {
+      return timeWindows.flatMap(({ timespans }) =>
+        timespans.map(({ id, start, end }) => ({
+          timespanId: id,
+          start,
+          end,
+          timed: true,
+          color: "purple",
+          name: "Tâche",
+        }))
+      );
+    },
+    closeTimespanDetailsDialog() {
+      this.displayTimespanDetailsDialog = false;
     },
   },
 });

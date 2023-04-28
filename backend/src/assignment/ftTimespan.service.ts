@@ -24,12 +24,14 @@ import {
   TimespanWithAssignees,
   DatabaseTimespanWithAssignees,
   Assignee,
-  DatabaseAssignee,
+  DatabaseAssigneeWithFriends,
   DatabaseAssignmentsAsTeamMember,
   TimespanAssignee,
   AssignmentAsTeamMember,
   AvailableTimespan as AvailableTimespan,
+  DatabaseAssigneeWithTeams,
 } from './types/ftTimespanTypes';
+import { SELECT_BASE_TIMESPAN } from './assignment.service';
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
@@ -101,12 +103,11 @@ const SELECT_FT_WITH_LOCATION = {
   },
 };
 
-const SELECT_BASE_TIMESPAN = { id: true, start: true, end: true };
-
 const SELECT_ASSIGNEE = {
   id: true,
   firstname: true,
   lastname: true,
+  phone: true,
 };
 
 const SELECT_ASSIGNED_TEAM = {
@@ -574,28 +575,27 @@ function convertToAssignee({
   id,
   lastname,
   firstname,
-}: DatabaseAssignee): Assignee {
-  return { id, lastname, firstname };
+  phone,
+  team,
+}: DatabaseAssigneeWithTeams): Assignee {
+  const teams = team.map(({ team }) => team.code);
+  return { id, lastname, firstname, phone, teams };
 }
 
 function convertToTimespanAssignee({
   assignee,
   teamRequest,
 }: DatabaseAssignmentsAsTeamMember): TimespanAssignee {
-  const teams = assignee.team.map(({ team }) => team.code);
   const friends = extractDeduplicatedFriends(assignee);
 
   return {
-    id: assignee.id,
-    firstname: assignee.firstname,
-    lastname: assignee.lastname,
-    teams,
+    ...convertToAssignee(assignee),
     assignedTeam: teamRequest.teamCode,
     friends,
   };
 }
 
-function extractDeduplicatedFriends(assignee: DatabaseAssignee) {
+function extractDeduplicatedFriends(assignee: DatabaseAssigneeWithFriends) {
   const friends = [
     ...assignee.friends.map(({ requestor }) => requestor),
     ...assignee.friendRequestors.map(({ friend }) => friend),

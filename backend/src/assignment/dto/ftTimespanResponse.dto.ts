@@ -138,13 +138,14 @@ class AssigneeRepresentation implements Assignee {
   id: number;
   firstname: string;
   lastname: string;
+  phone: string;
+  teams: string[];
 }
 
 class TimespanAssigneeRepresentation
   extends AssigneeRepresentation
   implements TimespanAssignee
 {
-  teams: string[];
   assignedTeam: string;
   friends: AssigneeRepresentation[];
 }

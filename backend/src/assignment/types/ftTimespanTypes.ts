@@ -13,7 +13,7 @@ export interface DatabaseRequestedTeam {
   };
 }
 
-type TimespanBase = {
+export type TimespanBase = {
   id: number;
   start: Date;
   end: Date;
@@ -75,9 +75,17 @@ type DatabaseWithFriends<T extends { id: number }> = {
   }[];
 };
 
-export type DatabaseAssignee = Assignee & DatabaseWithFriends<Assignee>;
+type DataBaseAssignee = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  phone: string;
+};
 
-type DatabaseAssigneeWithTeams = DatabaseAssignee & {
+export type DatabaseAssigneeWithFriends = DataBaseAssignee &
+  DatabaseWithFriends<DataBaseAssignee>;
+
+export type DatabaseAssigneeWithTeams = DatabaseAssigneeWithFriends & {
   team: {
     team: {
       code: string;
@@ -145,14 +153,11 @@ export type FtWithTimespan = SimplifiedFT & {
   timespans: Timespan[];
 };
 
-export type Assignee = {
-  id: number;
-  firstname: string;
-  lastname: string;
+export type Assignee = DataBaseAssignee & {
+  teams: string[];
 };
 
 export type TimespanAssignee = Assignee & {
-  teams: string[];
   assignedTeam: string;
   friends: Assignee[];
 };

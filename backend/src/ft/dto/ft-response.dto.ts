@@ -13,14 +13,16 @@ import {
   TimeWindow,
   UserNameWithId,
 } from '../ftTypes';
+import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
 
 class TimeWindowRepresentation implements TimeWindow {
   id: number;
   start: Date;
   end: Date;
+  sliceTime?: number;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
-  sliceTime?: number;
+  timespans: TimespanBase[];
 }
 
 export class CompleteFtResponseDto implements CompleteFtResponse {
