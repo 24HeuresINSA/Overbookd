@@ -12,6 +12,8 @@ import { Content, StyleDictionary } from 'pdfmake/interfaces';
 import { JSDOM } from 'jsdom';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { PurpleCocktail } from './pdf/purpleCocktail';
+import { SecurityPlan } from './pdf/securityPlan';
+import { Introduction } from './pdf/introduction';
 
 class PdfException extends Error {}
 
@@ -199,36 +201,16 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generateContent(tasks: Task[]): Content[] {
-    const securityPlan = this.generateSecurityPage();
+    const introductionPage = Introduction.generatePage();
+    const securityPlan = SecurityPlan.generatePage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
     const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
-    const switchToPortraitOrientation = this.generateSwitchPageOrientation();
     return [
+      introductionPage,
       securityPlan,
-      switchToPortraitOrientation,
       ...assignments,
       ...cocktailPurpleWorkflows,
     ];
-  }
-
-  private generateSwitchPageOrientation(): Content {
-    return {
-      pageBreak: 'before',
-      pageOrientation: 'portrait',
-      text: '',
-    };
-  }
-
-  private generateSecurityPage(): Content {
-    return {
-      image: join(__dirname, '../../..', '/assets/security_plan.png'),
-      fit: [680, 680],
-      pageBreak: 'before',
-      pageOrientation: 'landscape',
-      style: {
-        alignment: 'center',
-      },
-    };
   }
 
   private generatePurpleCocktailWorkflows(): Content[] {
