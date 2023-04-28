@@ -236,6 +236,12 @@ export default {
           to: "/orga-needs",
         },
         {
+          icon: "mdi-clock-fast",
+          title: "Timeline",
+          permission: "admin",
+          to: "/timeline",
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
