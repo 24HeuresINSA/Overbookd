@@ -218,7 +218,7 @@ export class PdfRenderStrategy implements RenderStrategy {
         style: ['paragraph', 'bold', 'liteSpaceBetween'],
       },
       {
-        text: 'Merci de rendre cet événement possible, vous etes plus 400 a venir nous aider pour ce week-end de folie.',
+        text: 'Merci de rendre cet événement possible, vous êtes plus 400 à venir nous aider pour ce week-end de folie.',
         style: ['paragraph', 'largeSpaceBetween'],
       },
       {
@@ -227,16 +227,16 @@ export class PdfRenderStrategy implements RenderStrategy {
       },
       {
         ul: [
-          'Le plan benevole disponible sous forme de QR Code, il te permettra de trouver ton chemin en toutes circontances avec sa carte interactive',
-          'Le plan secu en page 2, il est la pour te donner une vision specifique du site en soiree (ou est-ce que tu peux rentrer, ou sont les bars etc...)',
-          'Un planning avec une liste de creneaux ou on compte sur toi pour nous aider',
-          "Un rappel du dispositif cocktail purple en toute fin de livret, ce dispositif vise a mettre a l'abris des personnes qui se sentent en danger sur le festival",
+          'Le plan bénévole disponible sous forme de QR Code, il te permettra de trouver ton chemin en toutes circontances avec sa carte interactive',
+          'Le plan sécu en page 2, il est là pour te donner une vision spécifique du site en soirée (où est-ce que tu peux rentrer, où sont les bars etc...)',
+          'Un planning avec une liste de créneaux pendant lesquels on compte sur toi pour nous aider',
+          "Un rappel du dispositif cocktail purple en toute fin de livret, ce dispositif vise à mettre à l'abri des personnes qui se sentent en danger sur le festival",
         ],
         style: ['paragraph', 'liteSpaceBetween'],
         margin: [75, 0, 50, 5],
       },
       {
-        text: "Lorsque tu as du temps libre n'hesite pas a passer au QG pour:",
+        text: "Lorsque tu as du temps libre n'hésite pas à passer au QG pour:",
         style: ['paragraph'],
       },
       {
@@ -244,13 +244,13 @@ export class PdfRenderStrategy implements RenderStrategy {
           'te restaurer',
           'te reposer',
           'te proposer pour filer un coup de main',
-          "te poser avec d'autres benevoles pour faire connaissance",
+          "te poser avec d'autres bénévoles pour faire connaissance",
         ],
         style: ['paragraph', 'liteSpaceBetween'],
         margin: [75, 0, 50, 5],
       },
       {
-        text: 'Le plan benevole',
+        text: 'Le plan bénévole',
         style: ['header'],
       },
       {
