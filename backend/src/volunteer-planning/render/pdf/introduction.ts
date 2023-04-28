@@ -48,7 +48,6 @@ export class Introduction {
         image: join(__dirname, '../../../..', '/assets/volunteer_plan_qr.png'),
         fit: [300, 300],
         pageBreak: 'after',
-        pageOrientation: 'landscape',
         style: {
           alignment: 'center',
         },
