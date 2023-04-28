@@ -1,21 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Period } from 'src/volunteer-availability/domain/period.model';
-
-interface TimelineFa {
-  id: number;
-  name: string;
-}
-
-export interface TimelineFt {
-  id: number;
-  name: string;
-  timespans: Period[];
-}
-
-export interface Timeline {
-  fa: TimelineFa;
-  fts: TimelineFt[];
-}
+import { Timeline, TimelineFa, TimelineFt } from '../timeline.model';
 
 class TimelineFaDto implements TimelineFa {
   @ApiProperty({

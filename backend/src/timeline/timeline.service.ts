@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Timeline, TimelineFt } from './dto/timelineResponse.dto';
+import { Timeline, TimelineFt } from './timeline.model';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 
 interface DatabaseFT {
@@ -100,17 +100,19 @@ export class TimelineService {
   }
 
   private formatTimelines(timelines: DatabaseTimeline[]): Timeline[] {
-    return timelines.map((timeline) => this.formatTimeline(timeline));
+    return timelines.map(this.formatTimeline());
   }
 
-  private formatTimeline(timeline: DatabaseTimeline): Timeline {
-    const fts = this.formatFts(timeline.fts);
-    return {
-      fa: {
-        id: timeline.id,
-        name: timeline.name,
-      },
-      fts,
+  private formatTimeline(): (timeline: DatabaseTimeline) => Timeline {
+    return (timeline) => {
+      const fts = this.formatFts(timeline.fts);
+      return {
+        fa: {
+          id: timeline.id,
+          name: timeline.name,
+        },
+        fts,
+      };
     };
   }
 
@@ -118,16 +120,11 @@ export class TimelineService {
     return fts.map((ft) => ({
       id: ft.id,
       name: ft.name,
-      timespans: this.formatTimespans(ft.timeWindows),
+      timespans: ft.timeWindows.flatMap(this.formatTimespans()),
     }));
   }
 
-  private formatTimespans(timespans: DatabaseTimespans[]): Period[] {
-    return timespans.flatMap((timespan) =>
-      timespan.timespans.map(({ start, end }) => ({
-        start,
-        end,
-      })),
-    );
+  private formatTimespans(): (timeWindow: DatabaseTimespans) => Period[] {
+    return ({ timespans }) => timespans;
   }
 }
