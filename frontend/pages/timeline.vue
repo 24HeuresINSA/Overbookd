@@ -1,16 +1,16 @@
 <template>
   <div>
     <h1>Timeline</h1>
-    <TasksTimeline />
+    <TimelineComponent />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import TasksTimeline from "~/components/organisms/timeline/TasksTimeline.vue";
+import TimelineComponent from "~/components/organisms/timeline/Timeline.vue";
 
 export default Vue.extend({
   name: "Timeline",
-  components: { TasksTimeline },
+  components: { TimelineComponent },
 });
 </script>
