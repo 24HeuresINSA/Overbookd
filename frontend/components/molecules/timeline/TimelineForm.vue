@@ -2,12 +2,12 @@
   <div class="timeline-form">
     <div>
       <h3>Début de la plage horaire</h3>
-      <DateTimeField v-model="start" label="Début"></DateTimeField>
+      <DateTimeField v-model="start" label="Début" />
     </div>
 
     <div>
       <h3>Fin de la plage horaire</h3>
-      <DateTimeField v-model="end" label="Fin"></DateTimeField>
+      <DateTimeField v-model="end" label="Fin" />
     </div>
 
     <v-btn color="success" class="btn" @click="updateTimelineFilter">
