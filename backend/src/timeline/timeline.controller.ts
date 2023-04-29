@@ -11,7 +11,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { TimelineResponseDto } from './dto/timelineResponse.dto';
+import { TimelineEventResponseDto } from './dto/timelineEventResponse.dto';
 import { TimelineService } from './timeline.service';
 
 @ApiBearerAuth()
@@ -48,13 +48,13 @@ export class TimelineController {
   @ApiResponse({
     status: 200,
     description: 'The timeline has been successfully retrieved.',
-    type: TimelineResponseDto,
+    type: TimelineEventResponseDto,
     isArray: true,
   })
   async getTimelines(
     @Query('start') start: Date,
     @Query('end') end: Date,
-  ): Promise<TimelineResponseDto[]> {
+  ): Promise<TimelineEventResponseDto[]> {
     return this.timelineService.getTimelines(new Date(start), new Date(end));
   }
 }

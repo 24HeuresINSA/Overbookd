@@ -1,4 +1,4 @@
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from "./period";
 
 export interface TimelineFa {
   id: number;

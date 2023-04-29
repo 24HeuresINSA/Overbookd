@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Period } from 'src/volunteer-availability/domain/period.model';
-import { Timeline, TimelineFa, TimelineFt } from '../timeline.model';
+import { TimelineEvent, TimelineFa, TimelineFt } from '../timeline.model';
 
 class TimelineFaDto implements TimelineFa {
   @ApiProperty({
@@ -42,7 +42,7 @@ class TimelineFtDto implements TimelineFt {
   timespans: Period[];
 }
 
-export class TimelineResponseDto implements Timeline {
+export class TimelineEventResponseDto implements TimelineEvent {
   @ApiProperty({
     required: true,
     description: 'The FA of the timeline',

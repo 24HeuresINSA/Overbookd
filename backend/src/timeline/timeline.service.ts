@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Period } from 'src/volunteer-availability/domain/period.model';
-import { Timeline, TimelineFt } from './timeline.model';
+import { TimelineEvent, TimelineFt } from './timeline.model';
 
 interface DatabaseFT {
   id: number;
@@ -23,7 +23,7 @@ interface DatabaseTimeline {
 export class TimelineService {
   constructor(private prisma: PrismaService) {}
 
-  async getTimelines(start: Date, end: Date): Promise<Timeline[]> {
+  async getTimelines(start: Date, end: Date): Promise<TimelineEvent[]> {
     const where = this.buildTimelineCondition(start, end);
     const select = this.buildTimelineSelection(start, end);
 
@@ -98,11 +98,11 @@ export class TimelineService {
   }
 }
 
-function formatTimelines(timelines: DatabaseTimeline[]): Timeline[] {
+function formatTimelines(timelines: DatabaseTimeline[]): TimelineEvent[] {
   return timelines.map(formatTimeline);
 }
 
-function formatTimeline(timeline: DatabaseTimeline): Timeline {
+function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
   const fts = formatFts(timeline.fts);
   return {
     fa: {
