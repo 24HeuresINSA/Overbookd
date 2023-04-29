@@ -10,6 +10,7 @@
           width: computeTaskWidth(task),
           marginLeft: computeTaskLeftMargin(task),
         }"
+        @click="openFtInNewTab(task.id)"
       >
         <h3>{{ task.name }}</h3>
       </div>
@@ -71,6 +72,9 @@ export default Vue.extend({
       const marginPercent = this.marginPercent(task);
       return `${marginPercent}%`;
     },
+    openFtInNewTab(ftId: number) {
+      window.open(`/ft/${ftId}`, "_blank");
+    },
   },
 });
 </script>
@@ -102,6 +106,7 @@ export default Vue.extend({
       min-height: 100px;
       border-radius: 8px;
       background-color: $timeline-task-content-background-color;
+      cursor: pointer;
       h3 {
         text-align: center;
         min-width: 100%;
