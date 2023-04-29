@@ -13,7 +13,7 @@ export function castPeriods(periods: HttpStringified<Period[]>): Period[] {
   return periods.map(castPeriod);
 }
 
-function castPeriod(period: HttpStringified<Period>): Period {
+export function castPeriod(period: HttpStringified<Period>): Period {
   return {
     ...period,
     start: new Date(period.start),

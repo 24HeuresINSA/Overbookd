@@ -19,6 +19,7 @@ import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
 import { OrgaNeedsRepository } from "./orgaNeedsRepo";
 import { VolunteerAvailabilityRepository } from "./volunteerAvailabilityRepo";
+import { TimelineRepository } from "./timelineRepo";
 
 const repositories = {
   user: userRepo,
@@ -43,6 +44,7 @@ const repositories = {
   volunteerAvailability: VolunteerAvailabilityRepository,
   assignmentRepository: AssignmentRepository,
   orgaNeeds: OrgaNeedsRepository,
+  timeline: TimelineRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -71,4 +73,5 @@ export const RepoFactory = {
   VolunteerAvailabilityRepository,
   AssignmentRepository,
   OrgaNeedsRepository,
+  TimelineRepository,
 };
