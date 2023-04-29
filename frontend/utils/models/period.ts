@@ -20,3 +20,7 @@ export function castPeriod(period: HttpStringified<Period>): Period {
     end: new Date(period.end),
   };
 }
+
+export function getPeriodDuration({ start, end }: Period): number {
+  return end.getTime() - start.getTime();
+}
