@@ -1,7 +1,7 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { castPeriod } from "~/utils/models/period";
+import { Period, castPeriod } from "~/utils/models/period";
 import { TimelineEvent } from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -18,6 +18,12 @@ const defaultPeriod = {
 
 export const state = (): TimelineState => ({
   events: [],
+});
+
+export const getters = getterTree(state, {
+  period(): Period {
+    return defaultPeriod;
+  },
 });
 
 export const mutations = mutationTree(state, {
