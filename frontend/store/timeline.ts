@@ -1,4 +1,5 @@
 import { actionTree, mutationTree, getterTree } from "typed-vuex";
+import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "~/utils/date/dateUtils";
@@ -11,10 +12,15 @@ const TWO_HOURS_IN_MS = ONE_HOUR_IN_MS * 2;
 
 const timelineRepo = RepoFactory.TimelineRepository;
 
+type WithName = {
+  name: string;
+};
+
 interface TimelineState {
   events: TimelineEvent[];
   start: Date;
   end: Date;
+  search: string;
 }
 
 function defaultPeriod() {
@@ -34,11 +40,24 @@ export const state = (): TimelineState => ({
   events: [],
   start: defaultPeriod().start,
   end: defaultPeriod().end,
+  search: "",
 });
 
 export const getters = getterTree(state, {
   period(state): Period {
     return { start: state.start, end: state.end };
+  },
+  filteredEvents(state): TimelineEvent[] {
+    const faMatchingSearch = state.events.filter(({ fa }) =>
+      isMatchingSearchedName(fa, state.search)
+    );
+    const ftsMatchingSearch = filterFasWithTasksMatchingSearch(
+      state.events,
+      state.search
+    );
+    return [...faMatchingSearch, ...ftsMatchingSearch].sort(
+      (a, b) => a.fa.id - b.fa.id
+    );
   },
 });
 
@@ -51,6 +70,9 @@ export const mutations = mutationTree(state, {
   },
   SET_END(state, end: Date) {
     state.end = end;
+  },
+  SET_SEARCH(state, search: string) {
+    state.search = search;
   },
 });
 
@@ -71,8 +93,34 @@ export const actions = actionTree(
       commit("SET_END", end);
       dispatch("fetchEvents");
     },
+    updateSearch({ commit }, search: string | null) {
+      commit("SET_SEARCH", search ?? "");
+    },
   }
 );
+
+function filterFasWithTasksMatchingSearch(
+  fas: TimelineEvent[],
+  search: string
+) {
+  const faNotMatchingSearch = fas.filter(({ fa }) => {
+    return !isMatchingSearchedName(fa, search);
+  });
+  return faNotMatchingSearch
+    .filter(({ fts }) => {
+      return fts.some((ft) => isMatchingSearchedName(ft, search));
+    })
+    .map((event) => ({
+      ...event,
+      fts: event.fts.filter((ft) => isMatchingSearchedName(ft, search)),
+    }));
+}
+
+function isMatchingSearchedName(event: WithName, search: string): boolean {
+  return SlugifyService.apply(event.name).includes(
+    SlugifyService.apply(search)
+  );
+}
 
 function castTimelineEventsWithDate(
   timelineEvents: HttpStringified<TimelineEvent[]>
