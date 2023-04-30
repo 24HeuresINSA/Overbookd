@@ -27,7 +27,7 @@ export default Vue.extend({
   name: "TimelineEvents",
   computed: {
     events(): TimelineEvent[] {
-      return this.$accessor.timeline.events;
+      return this.$accessor.timeline.filteredEvents;
     },
     period(): Period {
       return this.$accessor.timeline.period;

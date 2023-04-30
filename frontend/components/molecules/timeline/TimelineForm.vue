@@ -13,6 +13,15 @@
     <v-btn color="success" class="btn" @click="updateTimelineFilter">
       Appliquer
     </v-btn>
+
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-outline-search"
+      label="Nom de la tache"
+      autofocus
+      clearable
+      clear-icon="mdi-close-circle-outline"
+    ></v-text-field>
   </div>
 </template>
 
@@ -36,6 +45,14 @@ export default Vue.extend({
         start: this.start,
         end: this.end,
       };
+    },
+    search: {
+      get(): string {
+        return this.$accessor.timeline.search;
+      },
+      set(value: string | null) {
+        this.$accessor.timeline.updateSearch(value);
+      },
     },
   },
   created() {
