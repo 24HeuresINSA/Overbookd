@@ -41,36 +41,38 @@ export default Vue.extend({
   },
   methods: {
     buildTaskPeriod(task: TimelineFt): Period {
+      const lowestStartDate = Math.min(
+        ...task.timespans.map(({ start }) => start.getTime())
+      );
+      const highestEndDate = Math.max(
+        ...task.timespans.map(({ end }) => end.getTime())
+      );
       return {
-        start: new Date(
-          Math.min(...task.timespans.map(({ start }) => start.getTime()))
-        ),
-        end: new Date(
-          Math.max(...task.timespans.map(({ end }) => end.getTime()))
-        ),
+        start: new Date(Math.max(lowestStartDate, this.period.start.getTime())),
+        end: new Date(Math.min(highestEndDate, this.period.end.getTime())),
       };
     },
     widthPercent(task: TimelineFt): number {
       const taskPeriod = this.buildTaskPeriod(task);
       const taskDuration = getPeriodDuration(taskPeriod);
-      const durationRatio = Math.floor((taskDuration / this.duration) * 100);
+      const durationRatio = (taskDuration / this.duration) * 100;
       const remainingWidthPercent = 100 - this.marginPercent(task);
       return Math.min(durationRatio, remainingWidthPercent);
     },
     computeTaskWidth(task: TimelineFt): string {
       const widthPercent = this.widthPercent(task);
-      return `${widthPercent}%`;
+      return `${widthPercent.toFixed(2)}%`;
     },
     marginPercent(task: TimelineFt): number {
       const taskPeriod = this.buildTaskPeriod(task);
       const idleDuration =
         taskPeriod.start.getTime() - this.period.start.getTime();
-      const durationRatio = Math.floor((idleDuration / this.duration) * 100);
+      const durationRatio = (idleDuration / this.duration) * 100;
       return Math.max(durationRatio, 0);
     },
     computeTaskLeftMargin(task: TimelineFt): string {
       const marginPercent = this.marginPercent(task);
-      return `${marginPercent}%`;
+      return `${marginPercent.toFixed(2)}%`;
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
