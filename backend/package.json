@@ -48,7 +48,7 @@
     "class-validator": "^0.14.0",
     "ejs": "^3.1.9",
     "express-basic-auth": "^1.2.1",
-    "html-to-pdfmake": "^2.4.19",
+    "html-to-pdfmake": "^2.4.20",
     "ics": "^3.1.0",
     "jsdom": "^21.1.1",
     "nodemailer": "^6.9.1",
