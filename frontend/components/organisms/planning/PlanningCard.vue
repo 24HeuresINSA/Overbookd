@@ -15,7 +15,7 @@
       </p>
       <p>
         Pour réaliser cette opération tu auras besoin du lien vers
-        <a :href="personnalLink">ton planning personnel</a>
+        <a href="#" @click="copyToClipBoard">ton planning personnel</a>
         <v-icon right @click="copyToClipBoard">mdi-content-copy</v-icon>
       </p>
       <p>
