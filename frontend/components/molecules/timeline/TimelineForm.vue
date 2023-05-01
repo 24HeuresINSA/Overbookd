@@ -72,5 +72,7 @@ export default Vue.extend({
   display: flex;
   gap: 70px;
   align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

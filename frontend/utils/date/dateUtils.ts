@@ -105,3 +105,12 @@ export function formatDateToHumanReadable(date: Date | string): string {
   };
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
+
+export function formatDateWithHoursAndMinutesOnly(date: string | Date): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Paris",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}
