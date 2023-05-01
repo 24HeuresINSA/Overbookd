@@ -50,7 +50,7 @@
     "express-basic-auth": "^1.2.1",
     "html-to-pdfmake": "^2.4.19",
     "ics": "^3.1.0",
-    "jsdom": "^21.1.1",
+    "jsdom": "^21.1.2",
     "nodemailer": "^6.9.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
