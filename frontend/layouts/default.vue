@@ -238,7 +238,7 @@ export default {
         {
           icon: "mdi-clock-fast",
           title: "Timeline",
-          permission: "admin",
+          permission: "can-view-timeline",
           to: "/timeline",
         },
         {
