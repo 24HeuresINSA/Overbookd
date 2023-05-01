@@ -4,8 +4,8 @@
     <v-card v-if="me">
       <v-container class="d-flex flex-no-wrap">
         <v-img
-          v-if="me.profilePicture"
-          :src="profilePictureURL"
+          v-if="hasProfilePicture"
+          :src="me.profilePicture"
           max-width="80px"
           max-height="80px"
           class="profilePicture"
@@ -50,7 +50,6 @@
 import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
 import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
@@ -68,7 +67,6 @@ export default Vue.extend({
   data() {
     return {
       maxCharisma: 1500,
-      profilePictureURL: "",
     };
   },
 
@@ -79,26 +77,20 @@ export default Vue.extend({
     friends(): number {
       return this.$accessor.user.mFriends.length;
     },
+    hasProfilePicture(): boolean | undefined {
+      return this.me.profilePicture?.includes("blob");
+    },
   },
 
   async mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
-    if (this.me.profilePicture) {
-      this.profilePictureURL = await this.getProfilePicture();
-    }
+    if (!this.me.profilePicture) return;
+    const token = this.$auth.strategy.token.get();
+    if (!token) return;
+    await this.$accessor.user.getProfilePicture({ token, userId: this.me.id });
   },
 
   methods: {
-    async getProfilePicture(): Promise<string> {
-      const token = this.$auth.strategy.token.get();
-      if (token && this.me.profilePicture) {
-        const res = RepoFactory.userRepo.getProfilePicture(token, this.me.id);
-        if (res) {
-          return res;
-        }
-      }
-      return "";
-    },
     openProfilePictureDialog() {
       this.$store.dispatch("dialog/openDialog", "profilePicture");
     },

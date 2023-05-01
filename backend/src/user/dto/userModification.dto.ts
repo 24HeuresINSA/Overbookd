@@ -10,7 +10,7 @@ import {
   IsString,
   ValidationArguments,
 } from 'class-validator';
-import { Departements, Years } from './common';
+import { Departments, Years } from './common';
 
 export class UserModificationDto {
   @ApiProperty({
@@ -69,14 +69,14 @@ export class UserModificationDto {
   @ApiProperty({
     required: false,
     description: 'The departement of the user',
-    enum: Departements,
+    enum: Departments,
   })
   @IsOptional()
-  @IsEnum(Departements, {
+  @IsEnum(Departments, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Departements}`,
+      `${va.property} must be one of ${Departments}`,
   })
-  department?: Departements;
+  department?: Departments;
 
   @ApiProperty({
     required: false,

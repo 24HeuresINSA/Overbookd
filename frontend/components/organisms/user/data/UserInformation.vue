@@ -4,10 +4,10 @@
       <div class="user-information">
         <div class="user-information__personnal-data">
           <v-img
-            v-if="selectedUser.pp"
-            :src="getPPUrl() + 'api/user/pp/' + selectedUser.pp"
+            v-if="hasProfilePicture"
+            :src="selectedUser.profilePicture"
             max-height="200px"
-          ></v-img>
+          />
           <v-card-title>
             {{ formatUserNameWithNickname }}
           </v-card-title>
@@ -168,10 +168,13 @@
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import { removeItemAtIndex } from "~/utils/functions/list";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import {
+  formatPhoneLink,
+  formatUserNameWithNickname,
+  formatUserPhone,
+} from "~/utils/user/userUtils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
-import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
 export default {
   name: "UserInformation",
@@ -241,11 +244,20 @@ export default {
     selectedUserPhoneLink() {
       return formatPhoneLink(this.selectedUser.phone);
     },
+    hasProfilePicture() {
+      return this.selectedUser.profilePicture?.includes("blob");
+    },
   },
 
   watch: {
-    selectedUser() {
+    async selectedUser(newUser, oldUser) {
       this.user = { ...this.selectedUser };
+      if (oldUser.id === newUser.id) return;
+      const token = this.$auth.strategy.token.get();
+      await this.$accessor.user.getProfilePicture({
+        token: token,
+        userId: newUser.id,
+      });
     },
   },
 
@@ -254,11 +266,6 @@ export default {
   },
 
   methods: {
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
-    },
     hasPermission(permission) {
       return this.$accessor.user.hasPermission(permission);
     },

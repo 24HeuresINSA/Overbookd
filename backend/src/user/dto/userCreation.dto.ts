@@ -14,7 +14,7 @@ import {
   MinLength,
   ValidationArguments,
 } from 'class-validator';
-import { Departements, OneNumber, Years, upperCaseCharacter } from './common';
+import { Departments, OneNumber, Years, upperCaseCharacter } from './common';
 
 export class UserCreationDto {
   @ApiProperty({
@@ -83,15 +83,15 @@ export class UserCreationDto {
   @ApiProperty({
     required: false,
     description: 'The departement of the user',
-    enum: Departements,
+    enum: Departments,
   })
   @IsOptional()
   @IsDefined()
-  @IsEnum(Departements, {
+  @IsEnum(Departments, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Departements)}`,
+      `${va.property} must be one of ${Object.values(Departments)}`,
   })
-  department?: Departements;
+  department?: Departments;
 
   @ApiProperty({
     required: false,

@@ -401,7 +401,9 @@ export class UserController {
     description: 'Get a users profile picture',
     type: StreamableFile,
   })
-  getProfilePicture(@Param('userId') userId: number): Promise<StreamableFile> {
+  getProfilePicture(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<StreamableFile> {
     return this.userService.streamProfilePicture(userId);
   }
 }

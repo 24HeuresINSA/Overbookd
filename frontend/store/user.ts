@@ -294,6 +294,19 @@ export const actions = actionTree(
       commit("SET_USER", castUserWithDate(res.data));
     },
 
+    async getProfilePicture({ commit, state }, { userId, token }) {
+      if (state.users.length === 0) commit("SET_USERS", [state.me]);
+      const index = state.users.findIndex(
+        (user: CompleteUserWithPermissions) => user.id === userId
+      );
+      const res = await RepoFactory.userRepo.getProfilePicture(token, userId);
+      if (!res) return;
+      const user = { ...state.users.at(index), profilePicture: res };
+      commit("UPDATE_USER", user);
+      if (state.selectedUser) commit("SET_SELECTED_USER", user);
+      if (state.me.id == userId) commit("SET_USER", user);
+    },
+
     async getVolunteerAssignments({ commit }, userId: number) {
       const res = await safeCall(
         this,

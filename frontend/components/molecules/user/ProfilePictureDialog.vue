@@ -12,7 +12,7 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn text @click="uploadPP()">Enregistrer</v-btn>
+        <v-btn text @click="uploadProfilePicture()">Enregistrer</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -33,8 +33,12 @@ export default Vue.extend({
         if (value.size > 1024 * 1024 * 2) {
           return "Moins de 2 Mb stp ça coûte cher le stockage.";
         }
-        if (value.type != "image/png" && value.type != "image/jpeg") {
-          return "Seulement des images (png ou jpeg) stp mon amour";
+        if (
+          value.type != "image/png" &&
+          value.type != "image/jpeg" &&
+          value.type != "image/gif"
+        ) {
+          return "Seulement des images (png, jpeg ou gif)";
         }
         return true;
       },
@@ -68,7 +72,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    async uploadPP() {
+    async uploadProfilePicture() {
       if (!this.me || !this.profilePicture) {
         return;
       }
@@ -78,7 +82,14 @@ export default Vue.extend({
         this.profilePicture,
         this.profilePicture.name
       );
-      this.$accessor.user.addProfilePicture(profilePictureForm);
+      await this.$accessor.user.addProfilePicture(profilePictureForm);
+      const token = this.$auth.strategy.token.get();
+      if (!token) return;
+      await this.$accessor.user.getProfilePicture({
+        token,
+        userId: this.me.id,
+      });
+      this.$store.dispatch("dialog/closeDialog");
     },
   },
 });

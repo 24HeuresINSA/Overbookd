@@ -1,5 +1,5 @@
-import { Department, Year } from '.prisma/client';
 import { UserWithoutPassword } from '../user.model';
+import { Departments, Years } from './common';
 
 export class UserWithoutPasswordDto implements UserWithoutPassword {
   id: number;
@@ -9,12 +9,12 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
   email: string;
   birthdate: Date;
   phone: string;
-  department: Department | null;
+  department: Departments | null;
   comment: string | null;
   reset_password_token: string | null;
   reset_password_expires: Date | null;
   has_payed_contributions: boolean;
-  year: Year | null;
+  year: Years | null;
   profilePicture: string | null;
   charisma: number;
   balance: number;

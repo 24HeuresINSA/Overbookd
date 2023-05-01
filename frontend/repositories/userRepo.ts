@@ -53,7 +53,10 @@ export default {
       profilePicture
     );
   },
-  async getProfilePicture(token: string, userId: number): Promise<string> {
+  async getProfilePicture(
+    token: string,
+    userId: number
+  ): Promise<string | undefined> {
     const response = await fetch(
       `${process.env.BASE_URL}user/${userId}/profile-picture`,
       {
@@ -67,7 +70,7 @@ export default {
       const url = URL.createObjectURL(await response.blob());
       return url;
     }
-    return "";
+    return undefined;
   },
   updateNotifications(context: Context, userId: string, data: Notification[]) {
     return context.$axios.put(`${resource}/${userId}`, data);

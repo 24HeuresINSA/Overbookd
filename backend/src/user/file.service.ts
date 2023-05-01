@@ -1,3 +1,7 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+//On desactive la regle de securite car le nom du fichier vient de la base de donnees
+//il n'est pas possible dans le workflow de l'application que le nom du fichier soit modifie
+//par un utilisateur externe
 import {
   Injectable,
   Logger,
@@ -12,10 +16,9 @@ export class FileService {
   private logger = new Logger(FileService.name);
 
   deleteFile(fileName: string): void {
-    const filePath = join(process.cwd(), '/public', fileName);
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- no user input can reach this line
-    if (!existsSync(filePath)) return;
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- no user input can reach this line
+    const filePath = join(process.cwd(), '/public/', fileName);
+    if (!existsSync(filePath)) return; // nosemgrep
+    // nosemgrep
     return unlink(filePath, (err) => {
       if (err)
         this.logger.error(`Impossible to delete Profile Picture ${fileName}`);
@@ -23,14 +26,12 @@ export class FileService {
   }
 
   streamFile(fileName: string): StreamableFile {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- no user input reach this line
-    const filePath = join(process.cwd(), '/public', fileName);
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- no user input reach this line
+    const filePath = join(process.cwd(), '/public/', fileName);
+    // nosemgrep
     if (!existsSync(filePath)) {
       throw new NotFoundException('Profile picture not found');
     }
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- no user input reach this line
-    const file = createReadStream(filePath);
+    const file = createReadStream(filePath); // nosemgrep
     return new StreamableFile(file);
   }
 }
