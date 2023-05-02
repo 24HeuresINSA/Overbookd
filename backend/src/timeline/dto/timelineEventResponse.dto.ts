@@ -47,6 +47,13 @@ class TimelineFtDto implements TimelineFt {
     isArray: true,
   })
   timespans: Period[];
+
+  @ApiProperty({
+    required: true,
+    description: 'Indicate priority FT',
+    type: Boolean,
+  })
+  hasPriority: boolean;
 }
 
 export class TimelineEventResponseDto implements TimelineEvent {

@@ -10,6 +10,7 @@ export interface TimelineFt {
   id: number;
   name: string;
   timespans: Period[];
+  hasPriority: boolean;
 }
 
 export interface TimelineEvent {
