@@ -41,7 +41,7 @@ export class Introduction {
         margin: [75, 0, 50, 5],
       },
       {
-        text: 'Le plan bénévole',
+        text: 'Le Plan Bénévole',
         style: ['header'],
       },
       {
