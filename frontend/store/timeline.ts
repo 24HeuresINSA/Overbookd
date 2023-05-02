@@ -4,6 +4,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "~/utils/date/dateUtils";
 import { Period, castPeriod } from "~/utils/models/period";
+import { Team } from "~/utils/models/team";
 import { TimelineEvent } from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -21,6 +22,7 @@ interface TimelineState {
   start: Date;
   end: Date;
   search: string;
+  teams: Team[];
 }
 
 function defaultPeriod() {
@@ -41,6 +43,7 @@ export const state = (): TimelineState => ({
   start: defaultPeriod().start,
   end: defaultPeriod().end,
   search: "",
+  teams: [],
 });
 
 export const getters = getterTree(state, {
@@ -48,14 +51,15 @@ export const getters = getterTree(state, {
     return { start: state.start, end: state.end };
   },
   filteredEvents(state): TimelineEvent[] {
-    const faMatchingSearch = state.events.filter(({ fa }) =>
+    const fasMatchingTeams = filterFasMatchingTeams(state);
+    const fasMatchingSearch = fasMatchingTeams.filter(({ fa }) =>
       isMatchingSearchedName(fa, state.search)
     );
     const ftsMatchingSearch = filterFasWithTasksMatchingSearch(
-      state.events,
+      fasMatchingTeams,
       state.search
     );
-    return [...faMatchingSearch, ...ftsMatchingSearch].sort(
+    return [...fasMatchingSearch, ...ftsMatchingSearch].sort(
       (a, b) => a.fa.id - b.fa.id
     );
   },
@@ -73,6 +77,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SEARCH(state, search: string) {
     state.search = search;
+  },
+  SET_TEAMS(state, teams: Team[]) {
+    state.teams = teams;
   },
 });
 
@@ -96,8 +103,20 @@ export const actions = actionTree(
     updateSearch({ commit }, search: string | null) {
       commit("SET_SEARCH", search ?? "");
     },
+    updateTeams({ commit }, teams: Team[]) {
+      commit("SET_TEAMS", teams);
+    },
   }
 );
+
+function filterFasMatchingTeams({ teams, events }: TimelineState) {
+  const teamsCode = teams.map(({ code }) => code);
+  const faMatchingTeams =
+    teamsCode.length === 0
+      ? [...events]
+      : events.filter(({ fa }) => teamsCode.includes(fa.team));
+  return faMatchingTeams;
+}
 
 function filterFasWithTasksMatchingSearch(
   fas: TimelineEvent[],

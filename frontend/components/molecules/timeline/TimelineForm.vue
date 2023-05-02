@@ -22,17 +22,21 @@
       clearable
       clear-icon="mdi-close-circle-outline"
     ></v-text-field>
+
+    <SearchTeams v-model="teams" label="Filtrer par équipe" :boxed="false" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
+import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { Period } from "~/utils/models/period";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "TimelineForm",
-  components: { DateTimeField },
+  components: { DateTimeField, SearchTeams },
   data() {
     return {
       start: new Date(),
@@ -52,6 +56,14 @@ export default Vue.extend({
       },
       set(value: string | null) {
         this.$accessor.timeline.updateSearch(value);
+      },
+    },
+    teams: {
+      get(): Team[] {
+        return this.$accessor.timeline.teams;
+      },
+      set(value: Team[]) {
+        this.$accessor.timeline.updateTeams(value);
       },
     },
   },
