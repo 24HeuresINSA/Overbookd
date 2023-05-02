@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-axis">
+  <div class="timeline-axis" :class="{ 'theme--dark': isDarkTheme }">
     <div class="axis"></div>
     <div class="markers">
       <span v-for="(marker, index) in markers" :key="index">
@@ -37,6 +37,9 @@ export default Vue.extend({
         return formatDateWithHoursAndMinutesOnly(stepDate);
       });
     },
+    isDarkTheme(): boolean {
+      return this.$accessor.theme.darkTheme;
+    },
   },
 });
 </script>
@@ -45,6 +48,15 @@ export default Vue.extend({
 .timeline-axis {
   position: sticky;
   top: 65px;
+  &.theme--dark {
+    .axis {
+      border-color: white;
+      background-color: hsl(0, 0%, 75%);
+    }
+    .markers span {
+      background-color: black;
+    }
+  }
 }
 .axis {
   min-height: 50px;
