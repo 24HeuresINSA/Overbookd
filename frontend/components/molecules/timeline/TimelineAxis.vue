@@ -2,8 +2,9 @@
   <div class="timeline-axis">
     <div class="axis"></div>
     <div class="markers">
-      <span>{{ startHour }}</span>
-      <span>{{ endHour }}</span>
+      <span v-for="(marker, index) in markers" :key="index">
+        {{ marker }}
+      </span>
     </div>
   </div>
 </template>
@@ -11,6 +12,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithHoursAndMinutesOnly } from "~/utils/date/dateUtils";
+import { Period, getPeriodDuration } from "~/utils/models/period";
+
+const NB_MARKERS = 9;
 
 export default Vue.extend({
   name: "TimelineAxis",
@@ -20,6 +24,18 @@ export default Vue.extend({
     },
     endHour(): string {
       return formatDateWithHoursAndMinutesOnly(this.$accessor.timeline.end);
+    },
+    period(): Period {
+      return this.$accessor.timeline.period;
+    },
+    markers(): string[] {
+      const periodDuration = getPeriodDuration(this.period);
+      const stepDuration = periodDuration / (NB_MARKERS - 1);
+      return new Array(NB_MARKERS).fill(null).map((_, index) => {
+        const startInMs = this.$accessor.timeline.start.getTime();
+        const stepDate = new Date(startInMs + index * stepDuration);
+        return formatDateWithHoursAndMinutesOnly(stepDate);
+      });
     },
   },
 });
