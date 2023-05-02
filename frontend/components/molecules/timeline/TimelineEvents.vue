@@ -12,7 +12,12 @@
         }"
         @click="openFtInNewTab(task.id)"
       >
-        <h3>{{ task.name }}</h3>
+        <h3>
+          {{ task.name }}
+          <v-icon v-show="task.hasPriority" color="orange">
+            mdi-alert-circle
+          </v-icon>
+        </h3>
       </div>
     </div>
   </div>

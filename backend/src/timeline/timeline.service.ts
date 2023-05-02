@@ -7,6 +7,7 @@ interface DatabaseFT {
   id: number;
   name: string;
   timeWindows: DatabaseTimespans[];
+  hasPriority?: boolean;
 }
 
 interface DatabaseTimespans {
@@ -62,9 +63,11 @@ export class TimelineService {
       start,
       end,
     );
+
     return {
       id: true,
       name: true,
+      hasPriority: true,
       ...timeWindowSelection,
     };
   }
@@ -122,6 +125,7 @@ function formatFts(fts: DatabaseFT[]): TimelineFt[] {
   return fts.map((ft) => ({
     id: ft.id,
     name: ft.name,
+    hasPriority: ft.hasPriority ?? false,
     timespans: ft.timeWindows.flatMap(({ timespans }) => timespans),
   }));
 }
