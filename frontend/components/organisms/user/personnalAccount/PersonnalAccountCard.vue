@@ -41,12 +41,14 @@
           </v-data-table>
         </v-card-text>
       </div>
-      <v-card-actions>
-        <v-btn v-if="areTransfersOpen" text small @click="openDialog()"
-          >Effectuer un virement
-        </v-btn>
-        <v-btn text small to="/mTransactions">Mes transactions</v-btn>
-      </v-card-actions>
+      <v-responsive>
+        <v-card-actions>
+          <v-btn v-if="areTransfersOpen" text small @click="openDialog()">
+            Effectuer un virement
+          </v-btn>
+          <v-btn text small to="/mTransactions">Mes transactions</v-btn>
+        </v-card-actions>
+      </v-responsive>
     </v-card>
   </div>
 </template>
