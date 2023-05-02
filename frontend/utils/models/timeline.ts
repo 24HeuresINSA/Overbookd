@@ -3,6 +3,7 @@ import { Period } from "./period";
 export interface TimelineFa {
   id: number;
   name: string;
+  team: string;
 }
 
 export interface TimelineFt {

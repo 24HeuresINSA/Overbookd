@@ -48,6 +48,7 @@ export default Vue.extend({
 .timeline-axis {
   position: sticky;
   top: 65px;
+  z-index: 1;
   &.theme--dark {
     .axis {
       border-color: white;

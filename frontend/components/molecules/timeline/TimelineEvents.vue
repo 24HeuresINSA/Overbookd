@@ -1,7 +1,7 @@
 <template>
   <div class="timeline-events">
     <div v-for="event in events" :key="event.fa.id" class="timeline-event">
-      <h2>{{ event.fa.name }}</h2>
+      <h2>{{ event.fa.name }} <TeamChip :team="event.fa.team" /></h2>
       <div
         v-for="task in event.fts"
         :key="task.id"
@@ -20,11 +20,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Period, getPeriodDuration } from "~/utils/models/period";
 import { TimelineEvent, TimelineFt } from "~/utils/models/timeline";
 
 export default Vue.extend({
   name: "TimelineEvents",
+  components: { TeamChip },
   computed: {
     events(): TimelineEvent[] {
       return this.$accessor.timeline.filteredEvents;

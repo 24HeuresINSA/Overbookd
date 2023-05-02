@@ -16,6 +16,13 @@ class TimelineFaDto implements TimelineFa {
     type: String,
   })
   name: string;
+
+  @ApiProperty({
+    required: true,
+    description: 'The team code in charge of the FA',
+    type: String,
+  })
+  team: string;
 }
 
 class TimelineFtDto implements TimelineFt {

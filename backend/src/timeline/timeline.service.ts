@@ -16,6 +16,7 @@ interface DatabaseTimespans {
 interface DatabaseTimeline {
   id: number;
   name: string;
+  Team: { code: string };
   fts: DatabaseFT[];
 }
 
@@ -41,6 +42,9 @@ export class TimelineService {
     return {
       id: true,
       name: true,
+      Team: {
+        select: { code: true },
+      },
       fts: {
         select: ftsSelection,
         where: ftsCondition,
@@ -108,6 +112,7 @@ function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
     fa: {
       id: timeline.id,
       name: timeline.name,
+      team: timeline.Team.code,
     },
     fts,
   };
