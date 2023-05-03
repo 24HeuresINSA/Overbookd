@@ -5,7 +5,7 @@
       <v-container class="d-flex flex-no-wrap">
         <v-img
           v-if="hasProfilePicture"
-          :src="me.profilePicture"
+          :src="me.profilePictureBlob"
           max-width="80px"
           max-height="80px"
           class="profilePicture"
@@ -77,17 +77,15 @@ export default Vue.extend({
     friends(): number {
       return this.$accessor.user.mFriends.length;
     },
-    hasProfilePicture(): boolean | undefined {
-      return this.me.profilePicture?.includes("blob");
+    hasProfilePicture(): boolean {
+      return this.me.profilePicture !== undefined;
     },
   },
 
-  async mounted() {
+  mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
     if (!this.me.profilePicture) return;
-    const token = this.$auth.strategy.token.get();
-    if (!token) return;
-    await this.$accessor.user.getProfilePicture({ token, userId: this.me.id });
+    this.$accessor.user.setMyProfilePicture();
   },
 
   methods: {

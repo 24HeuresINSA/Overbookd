@@ -5,7 +5,7 @@
         <div class="user-information__personnal-data">
           <v-img
             v-if="hasProfilePicture"
-            :src="selectedUser.profilePicture"
+            :src="selectedUser.profilePictureBlob"
             max-height="200px"
           />
           <v-card-title>
@@ -245,7 +245,7 @@ export default {
       return formatPhoneLink(this.selectedUser.phone);
     },
     hasProfilePicture() {
-      return this.selectedUser.profilePicture?.includes("blob");
+      return this.selectedUser.profilePicture !== undefined;
     },
   },
 
@@ -253,11 +253,7 @@ export default {
     async selectedUser(newUser, oldUser) {
       this.user = { ...this.selectedUser };
       if (oldUser.id === newUser.id) return;
-      const token = this.$auth.strategy.token.get();
-      await this.$accessor.user.getProfilePicture({
-        token: token,
-        userId: newUser.id,
-      });
+      await this.$accessor.user.setSelectedUserProfilePicture();
     },
   },
 

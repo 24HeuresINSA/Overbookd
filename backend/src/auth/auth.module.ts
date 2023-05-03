@@ -5,7 +5,6 @@ import { HashingUtilsModule } from '../hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
-import { FileService } from '../user/file.service';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
@@ -30,7 +29,6 @@ import { JwtStrategy } from './jwt.strategy';
     UserService,
     PrismaService,
     MailService,
-    FileService,
   ],
   exports: [AuthService],
   controllers: [AuthController],

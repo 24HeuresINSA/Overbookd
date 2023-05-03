@@ -21,26 +21,19 @@
 <script lang="ts">
 import Vue from "vue";
 
+const MAX_SIZE = 1024 * 1024 * 2;
+
 export default Vue.extend({
   name: "ProfilePictureDialog",
   data: () => ({
     profilePicture: undefined as File | undefined,
     rules: [
-      (value: File) => {
-        if (!value) {
-          return "Une photo vide c'est pas une photo";
-        }
-        if (value.size > 1024 * 1024 * 2) {
-          return "Moins de 2 Mb stp ça coûte cher le stockage.";
-        }
-        if (
-          value.type != "image/png" &&
-          value.type != "image/jpeg" &&
-          value.type != "image/gif"
-        ) {
-          return "Seulement des images (png, jpeg ou gif)";
-        }
-        return true;
+      (value?: File) => !!value || "Une photo vide c'est pas une photo",
+      (value?: File) => (value?.size ?? 0) < MAX_SIZE || "Moins de 2 Mb stp 🙏",
+      (value?: File) => {
+        const extensions = ["image/png", "image/jpeg", "image/gif"];
+        const isSupportedFile = !!value && extensions.includes(value.type);
+        return isSupportedFile || "Seulement des images (png, jpeg ou gif)";
       },
     ],
   }),
@@ -83,12 +76,7 @@ export default Vue.extend({
         this.profilePicture.name
       );
       await this.$accessor.user.addProfilePicture(profilePictureForm);
-      const token = this.$auth.strategy.token.get();
-      if (!token) return;
-      await this.$accessor.user.getProfilePicture({
-        token,
-        userId: this.me.id,
-      });
+      this.$accessor.user.setMyProfilePicture();
       this.$store.dispatch("dialog/closeDialog");
     },
   },

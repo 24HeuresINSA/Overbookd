@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { SlugifyService } from 'src/common/services/slugify.service';
 import { MailService } from 'src/mail/mail.service';
 import { TeamService } from 'src/team/team.service';
-import { FileService } from 'src/user/file.service';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from '../prisma.service';
 import { PermissionController } from './permission.controller';
@@ -18,7 +17,6 @@ import { PermissionService } from './permission.service';
     UserService,
     SlugifyService,
     MailService,
-    FileService,
   ],
 })
 export class PermissionModule {}

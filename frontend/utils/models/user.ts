@@ -74,6 +74,7 @@ export interface CompleteUser extends User {
   hasPayedContributions: boolean;
   year?: Year;
   profilePicture?: string;
+  profilePictureBlob?: string;
   charisma: number;
   balance: number;
   createdAt: Date;

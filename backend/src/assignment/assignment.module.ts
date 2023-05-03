@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MailService } from 'src/mail/mail.service';
-import { FileService } from 'src/user/file.service';
 import { UserService } from 'src/user/user.service';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import { PrismaService } from '../prisma.service';
@@ -19,7 +18,6 @@ import { VolunteerService } from './volunteer.service';
     VolunteerAvailabilityService,
     UserService,
     MailService,
-    FileService,
   ],
 })
 export class AssignmentModule {}

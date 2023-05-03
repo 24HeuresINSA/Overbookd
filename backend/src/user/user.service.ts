@@ -1,10 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  NotFoundException,
-  StreamableFile,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { Ft, Prisma, TaskCategory } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
@@ -25,7 +19,6 @@ import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
-import { FileService } from './file.service';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 import {
   UserPasswordOnly,
@@ -33,7 +26,7 @@ import {
   UserWithoutPassword,
 } from './user.model';
 
-const SELECT_USER = {
+export const SELECT_USER = {
   email: true,
   firstname: true,
   lastname: true,
@@ -67,7 +60,7 @@ export const SELECT_USER_TEAMS = {
   },
 };
 
-const SELECT_USER_TEAMS_AND_PERMISSIONS = {
+export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
   team: {
     select: {
       team: {
@@ -166,11 +159,7 @@ export type VolunteerTask = Period & {
 };
 @Injectable()
 export class UserService {
-  constructor(
-    private prisma: PrismaService,
-    private mail: MailService,
-    private fileService: FileService,
-  ) {}
+  constructor(private prisma: PrismaService, private mail: MailService) {}
   private logger = new Logger('UserService');
 
   async user(
@@ -208,7 +197,7 @@ export class UserService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return this.getUserWithTeamAndPermission(updatedUser);
+    return UserService.getUserWithTeamAndPermission(updatedUser);
   }
 
   async users(params: {
@@ -231,7 +220,7 @@ export class UserService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return users.map((user) => this.getUserWithTeamAndPermission(user));
+    return users.map((user) => UserService.getUserWithTeamAndPermission(user));
   }
 
   async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
@@ -334,7 +323,7 @@ export class UserService {
       data: userData,
       where: { id: targetUserId },
     });
-    return this.getUserWithTeamAndPermission(user);
+    return UserService.getUserWithTeamAndPermission(user);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -380,7 +369,7 @@ export class UserService {
     };
   }
 
-  private getUserWithTeamAndPermission(
+  static getUserWithTeamAndPermission(
     user: UserWithoutPassword & {
       team: TeamWithNestedPermissions[];
     },
@@ -401,7 +390,7 @@ export class UserService {
   ): MyUserInformation {
     const { _count, ...userWithoutCount } = user;
     const userWithTeamAndPermission =
-      this.getUserWithTeamAndPermission(userWithoutCount);
+      UserService.getUserWithTeamAndPermission(userWithoutCount);
     return {
       ...userWithTeamAndPermission,
       tasksCount: _count.assignments,
@@ -422,42 +411,5 @@ export class UserService {
       author.hasPermission('manage-users') ||
       author.id === targetUserId
     );
-  }
-
-  private async getProfilePicture(userId: number): Promise<string | null> {
-    const { profilePicture } = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        profilePicture: true,
-      },
-    });
-    return profilePicture;
-  }
-
-  async updateProfilePicture(
-    userId: number,
-    profilePicture: string,
-  ): Promise<UserWithTeamAndPermission> {
-    const currentProfilePicture = await this.getProfilePicture(userId);
-    if (currentProfilePicture) {
-      this.fileService.deleteFile(currentProfilePicture);
-    }
-    const user = await this.prisma.user.update({
-      where: { id: userId },
-      data: { profilePicture },
-      select: {
-        ...SELECT_USER,
-        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
-      },
-    });
-    return this.getUserWithTeamAndPermission(user);
-  }
-
-  async streamProfilePicture(userId: number): Promise<StreamableFile> {
-    const profilePictureName = await this.getProfilePicture(userId);
-    if (!profilePictureName) {
-      throw new NotFoundException('Profile picture not found');
-    }
-    return this.fileService.streamFile(profilePictureName);
   }
 }

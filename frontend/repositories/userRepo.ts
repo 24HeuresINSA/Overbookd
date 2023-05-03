@@ -54,9 +54,12 @@ export default {
     );
   },
   async getProfilePicture(
-    token: string,
+    context: Context,
     userId: number
   ): Promise<string | undefined> {
+    const token = context.$axios.defaults.headers.common["Authorization"];
+    if (!token) return undefined;
+
     const response = await fetch(
       `${process.env.BASE_URL}user/${userId}/profile-picture`,
       {
@@ -66,11 +69,11 @@ export default {
         },
       }
     );
-    if (response.status === 200) {
-      const url = URL.createObjectURL(await response.blob());
-      return url;
-    }
-    return undefined;
+
+    if (response.status !== 200) return undefined;
+
+    const url = URL.createObjectURL(await response.blob());
+    return url;
   },
   updateNotifications(context: Context, userId: string, data: Notification[]) {
     return context.$axios.put(`${resource}/${userId}`, data);

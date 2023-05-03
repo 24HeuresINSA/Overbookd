@@ -294,17 +294,45 @@ export const actions = actionTree(
       commit("SET_USER", castUserWithDate(res.data));
     },
 
-    async getProfilePicture({ commit, state }, { userId, token }) {
-      if (state.users.length === 0) commit("SET_USERS", [state.me]);
-      const index = state.users.findIndex(
-        (user: CompleteUserWithPermissions) => user.id === userId
-      );
-      const res = await RepoFactory.userRepo.getProfilePicture(token, userId);
-      if (!res) return;
-      const user = { ...state.users.at(index), profilePicture: res };
-      commit("UPDATE_USER", user);
-      if (state.selectedUser) commit("SET_SELECTED_USER", user);
-      if (state.me.id == userId) commit("SET_USER", user);
+    getProfilePicture(_, user: CompleteUserWithPermissions) {
+      if (user.profilePictureBlob) return undefined;
+
+      return RepoFactory.userRepo.getProfilePicture(this, user.id);
+    },
+
+    async setMyProfilePicture({ commit, state, dispatch }) {
+      const user = state.me;
+      const profilePictureBlob = await dispatch("getProfilePicture", user);
+      if (!profilePictureBlob) return;
+
+      commit("SET_USER", {
+        ...state.me,
+        profilePictureBlob,
+      });
+    },
+
+    async setSelectedUserProfilePicture({ commit, state, dispatch }) {
+      const user = state.selectedUser;
+      const profilePictureBlob = await dispatch("getProfilePicture", user);
+      if (!profilePictureBlob) return;
+
+      commit("SET_SELECTED_USER", {
+        ...state.selectedUser,
+        profilePictureBlob,
+      });
+    },
+
+    async setProfilePicture(
+      { commit, dispatch },
+      user: CompleteUserWithPermissions
+    ) {
+      const profilePictureBlob = await dispatch("getProfilePicture", user);
+      if (!profilePictureBlob) return;
+
+      commit("UPDATE_USER", {
+        ...user,
+        profilePictureBlob,
+      });
     },
 
     async getVolunteerAssignments({ commit }, userId: number) {

@@ -29,7 +29,7 @@ import {
 import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { Request, Response } from 'express';
-import { File as MulterFile, diskStorage } from 'multer';
+import { diskStorage } from 'multer';
 import { join } from 'path';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
@@ -56,6 +56,7 @@ import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
 } from './dto/volunteerAssignment.dto';
+import { ProfilePictureService } from './profilePicture.service';
 import { UserWithTeamAndPermission, UserWithoutPassword } from './user.model';
 import { MyUserInformation, UserService } from './user.service';
 
@@ -68,6 +69,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly planningService: VolunteerPlanningService,
     private readonly planningSubscription: SubscriptionService,
+    private readonly profilePictureService: ProfilePictureService,
   ) {}
 
   @Post()
@@ -388,9 +390,12 @@ export class UserController {
   })
   defineProfilePicture(
     @RequestDecorator() req: RequestWithUserPayload,
-    @UploadedFile() file: MulterFile,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<UserWithTeamAndPermission> {
-    return this.userService.updateProfilePicture(req.user.id, file.filename);
+    return this.profilePictureService.updateProfilePicture(
+      req.user.id,
+      file.filename,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -404,6 +409,6 @@ export class UserController {
   getProfilePicture(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<StreamableFile> {
-    return this.userService.streamProfilePicture(userId);
+    return this.profilePictureService.streamProfilePicture(userId);
   }
 }

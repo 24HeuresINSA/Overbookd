@@ -7,7 +7,7 @@
       <v-card color="#FFD700" max-width="400px" max-height="400px">
         <v-img
           v-show="hasProfilePicture(userBornToday)"
-          :src="userBornToday.profilePicture"
+          :src="userBornToday.profilePictureBlob"
           max-width="400px"
           max-height="350px"
         ></v-img>
@@ -24,29 +24,24 @@
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       "
     >
-      <v-card
-        v-for="user in users"
-        :key="user.id"
-        style="margin: 5px"
-        max-width="250px"
-      >
-        <v-lazy>
+      <v-lazy v-for="user in users" :key="user.id">
+        <v-card style="margin: 5px" max-width="250px">
           <v-img
             v-if="hasProfilePicture(user)"
-            :src="user.profilePicture"
+            :src="user.profilePictureBlob"
             max-height="250px"
           />
-        </v-lazy>
-        <v-card-title
-          >{{ user.firstname }} {{ user.lastname }} ({{ user.nickname }})
-        </v-card-title>
-        <v-card-subtitle>
-          <OverChips :roles="user.team"></OverChips>
-        </v-card-subtitle>
-        <v-card-text style="overflow-y: hidden">
-          {{ user.comment }}
-        </v-card-text>
-      </v-card>
+          <v-card-title
+            >{{ user.firstname }} {{ user.lastname }} ({{ user.nickname }})
+          </v-card-title>
+          <v-card-subtitle>
+            <OverChips :roles="user.team"></OverChips>
+          </v-card-subtitle>
+          <v-card-text style="overflow-y: hidden">
+            {{ user.comment }}
+          </v-card-text>
+        </v-card>
+      </v-lazy>
     </v-container>
   </div>
 </template>
@@ -80,17 +75,24 @@ export default Vue.extend({
     },
   },
 
-  async mounted() {
-    if (!this.$accessor.user.users.length) this.$accessor.user.fetchUsers();
+  async created() {
+    if (!this.users.length) {
+      await this.$accessor.user.fetchUsers();
+    }
+    Promise.all(
+      this.users.map((user) => {
+        if (!this.hasProfilePicture(user)) return Promise.resolve();
+        return this.getProfilePictureBlob(user);
+      })
+    );
   },
 
   methods: {
     hasProfilePicture(user: CompleteUserWithPermissions): boolean {
-      if (!user.profilePicture) return false;
-      if (user.profilePicture.includes("blob")) return true;
-      const token = this.$auth.strategy.token.get();
-      this.$accessor.user.getProfilePicture({ token, userId: user.id });
-      return true;
+      return user.profilePicture !== undefined;
+    },
+    getProfilePictureBlob(user: CompleteUserWithPermissions) {
+      return this.$accessor.user.setProfilePicture(user);
     },
   },
 });
