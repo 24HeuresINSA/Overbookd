@@ -110,7 +110,7 @@ export default Vue.extend({
   watch: {
     calendarTimeWindows(newVal: Event[], oldVal: Event[]) {
       if (oldVal.length > 0) return;
-      const firstDate = newVal?.[0]?.start;
+      const firstDate = newVal.at(0)?.start;
       if (firstDate) this.value = firstDate;
     },
   },
