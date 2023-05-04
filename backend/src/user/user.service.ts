@@ -21,6 +21,7 @@ import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 import {
+  MyUserInformation,
   UserPasswordOnly,
   UserWithTeamAndPermission,
   UserWithoutPassword,
@@ -142,10 +143,6 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
       },
     },
   },
-};
-
-export type MyUserInformation = UserWithTeamAndPermission & {
-  tasksCount: number;
 };
 
 type DatabaseMyUserInformation = UserWithoutPassword & {

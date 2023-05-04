@@ -6,3 +6,6 @@ export type UserWithTeamAndPermission = UserWithoutPassword & {
   permissions: string[];
 };
 export type UserPasswordOnly = Pick<User, 'password'>;
+export type MyUserInformation = UserWithTeamAndPermission & {
+  tasksCount: number;
+};

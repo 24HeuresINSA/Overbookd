@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container
+    <!-- <v-container
       v-if="userBornToday"
       style="display: flex; justify-content: center"
     >
@@ -17,44 +17,23 @@
           {{ userBornToday.lastname }} ({{ userBornToday.nickname }})
         </v-card-title>
       </v-card>
-    </v-container>
-    <v-container
-      style="
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      "
-    >
+    </v-container> -->
+    <div class="volunteers">
       <v-lazy v-for="user in users" :key="user.id">
-        <v-card style="margin: 5px" max-width="250px">
-          <v-img
-            v-if="hasProfilePicture(user)"
-            :src="user.profilePictureBlob"
-            max-height="250px"
-          />
-          <v-card-title
-            >{{ user.firstname }} {{ user.lastname }} ({{ user.nickname }})
-          </v-card-title>
-          <v-card-subtitle>
-            <OverChips :roles="user.team"></OverChips>
-          </v-card-subtitle>
-          <v-card-text style="overflow-y: hidden">
-            {{ user.comment }}
-          </v-card-text>
-        </v-card>
+        <TrombinoscopeCard :user="user" />
       </v-lazy>
-    </v-container>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
+import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "Trombinoscope",
-  components: { OverChips },
-
+  components: { TrombinoscopeCard },
   computed: {
     users() {
       return this.$accessor.user.users;
@@ -74,28 +53,15 @@ export default Vue.extend({
       );
     },
   },
-
-  async created() {
-    if (!this.users.length) {
-      await this.$accessor.user.fetchUsers();
-    }
-    Promise.all(
-      this.users.map((user) => {
-        if (!this.hasProfilePicture(user)) return Promise.resolve();
-        return this.getProfilePictureBlob(user);
-      })
-    );
-  },
-
-  methods: {
-    hasProfilePicture(user: CompleteUserWithPermissions): boolean {
-      return user.profilePicture !== undefined;
-    },
-    getProfilePictureBlob(user: CompleteUserWithPermissions) {
-      return this.$accessor.user.setProfilePicture(user);
-    },
+  created() {
+    if (!this.users.length) this.$accessor.user.fetchUsers();
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.volunteers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+</style>
