@@ -80,6 +80,7 @@ export class TimelineService {
     const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
     return {
       timeWindows: {
+        where: overlapPeriodCondition,
         select: {
           start: true,
           end: true,
