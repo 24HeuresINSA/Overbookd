@@ -49,10 +49,10 @@ export default Vue.extend({
   methods: {
     buildTaskPeriod(task: TimelineFt): Period {
       const lowestStartDate = Math.min(
-        ...task.timespans.map(({ start }) => start.getTime())
+        ...task.timeWindows.map(({ start }) => start.getTime())
       );
       const highestEndDate = Math.max(
-        ...task.timespans.map(({ end }) => end.getTime())
+        ...task.timeWindows.map(({ end }) => end.getTime())
       );
       return {
         start: new Date(Math.max(lowestStartDate, this.period.start.getTime())),

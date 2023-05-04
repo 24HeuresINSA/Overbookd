@@ -5,7 +5,12 @@ import { safeCall } from "~/utils/api/calls";
 import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "~/utils/date/dateUtils";
 import { Period, castPeriod } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
-import { TimelineEvent } from "~/utils/models/timeline";
+import {
+  TimelineEvent,
+  TimelineFt,
+  TimelineTimeWindow,
+  TimelineTimespan,
+} from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
 
 const QUARTER_IN_MS = ONE_MINUTE_IN_MS * 15;
@@ -144,15 +149,40 @@ function isMatchingSearchedName(event: WithName, search: string): boolean {
 function castTimelineEventsWithDate(
   timelineEvents: HttpStringified<TimelineEvent[]>
 ): TimelineEvent[] {
-  return timelineEvents.map((event) => {
-    return {
-      ...event,
-      fts: event.fts.map((ft) => {
-        return {
-          ...ft,
-          timespans: ft.timespans.map(castPeriod),
-        };
-      }),
-    };
-  });
+  return timelineEvents.map(castTimelineEventWithDate);
+}
+
+function castTimelineEventWithDate(
+  event: HttpStringified<TimelineEvent>
+): TimelineEvent {
+  return {
+    ...event,
+    fts: event.fts.map(castTimelineFtWithDate),
+  };
+}
+
+function castTimelineFtWithDate(ft: HttpStringified<TimelineFt>): TimelineFt {
+  return {
+    ...ft,
+    timeWindows: ft.timeWindows.map(castTimelineTimeWindowWithDate),
+  };
+}
+
+function castTimelineTimeWindowWithDate(
+  timeWindow: HttpStringified<TimelineTimeWindow>
+): TimelineTimeWindow {
+  return {
+    ...timeWindow,
+    ...castPeriod(timeWindow),
+    timespans: timeWindow.timespans.map(castTimelineTimespanWithDate),
+  };
+}
+
+function castTimelineTimespanWithDate(
+  timespan: HttpStringified<TimelineTimespan>
+): TimelineTimespan {
+  return {
+    ...timespan,
+    ...castPeriod(timespan),
+  };
 }
