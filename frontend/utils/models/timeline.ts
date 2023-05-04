@@ -6,10 +6,18 @@ export interface TimelineFa {
   team: string;
 }
 
+export type TimelineTimespan = Period & {
+  id: number;
+};
+
+export type TimelineTimeWindow = Period & {
+  timespans: TimelineTimespan[];
+};
+
 export interface TimelineFt {
   id: number;
   name: string;
-  timespans: Period[];
+  timeWindows: TimelineTimeWindow[];
   hasPriority: boolean;
 }
 

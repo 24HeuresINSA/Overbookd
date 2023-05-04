@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Period } from 'src/volunteer-availability/domain/period.model';
-import { TimelineEvent, TimelineFa, TimelineFt } from '../timeline.model';
+import {
+  TimelineEvent,
+  TimelineFa,
+  TimelineFt,
+  TimelineTimeWindow,
+  TimelineTimespan,
+} from '../timeline.model';
 
 class TimelineFaDto implements TimelineFa {
   @ApiProperty({
@@ -25,6 +30,53 @@ class TimelineFaDto implements TimelineFa {
   team: string;
 }
 
+class TimelineTimespanDto implements TimelineTimespan {
+  @ApiProperty({
+    required: true,
+    description: 'The start date of the Timespan',
+    type: Date,
+  })
+  start: Date;
+
+  @ApiProperty({
+    required: true,
+    description: 'The end date of the Timespan',
+    type: Date,
+  })
+  end: Date;
+
+  @ApiProperty({
+    required: true,
+    description: 'The id of the Timespan',
+    type: Number,
+  })
+  id: number;
+}
+
+class TimelineTimeWindowDto implements TimelineTimeWindow {
+  @ApiProperty({
+    required: true,
+    description: 'The start date of the Timewindow',
+    type: Date,
+  })
+  start: Date;
+
+  @ApiProperty({
+    required: true,
+    description: 'The end date of the Timewindow',
+    type: Date,
+  })
+  end: Date;
+
+  @ApiProperty({
+    required: true,
+    description: 'The timespans of the TimeWindow',
+    type: TimelineTimespanDto,
+    isArray: true,
+  })
+  timespans: TimelineTimespan[];
+}
+
 class TimelineFtDto implements TimelineFt {
   @ApiProperty({
     required: true,
@@ -42,11 +94,11 @@ class TimelineFtDto implements TimelineFt {
 
   @ApiProperty({
     required: true,
-    description: 'The timespans of the FT',
-    type: Object,
+    description: 'The timewindows of the FT',
+    type: TimelineTimeWindowDto,
     isArray: true,
   })
-  timespans: Period[];
+  timeWindows: TimelineTimeWindow[];
 
   @ApiProperty({
     required: true,

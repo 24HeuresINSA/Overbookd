@@ -6,12 +6,16 @@ import { TimelineEvent, TimelineFt } from './timeline.model';
 interface DatabaseFT {
   id: number;
   name: string;
-  timeWindows: DatabaseTimespans[];
+  timeWindows: DatabaseTimeWindow[];
   hasPriority?: boolean;
 }
 
-interface DatabaseTimespans {
-  timespans: Period[];
+type DatabaseTimespan = Period & {
+  id: number;
+};
+
+interface DatabaseTimeWindow extends Period {
+  timespans: DatabaseTimespan[];
 }
 
 interface DatabaseTimeline {
@@ -77,11 +81,14 @@ export class TimelineService {
     return {
       timeWindows: {
         select: {
+          start: true,
+          end: true,
           timespans: {
             where: overlapPeriodCondition,
             select: {
               start: true,
               end: true,
+              id: true,
             },
           },
         },
@@ -126,6 +133,6 @@ function formatFts(fts: DatabaseFT[]): TimelineFt[] {
     id: ft.id,
     name: ft.name,
     hasPriority: ft.hasPriority ?? false,
-    timespans: ft.timeWindows.flatMap(({ timespans }) => timespans),
+    timeWindows: ft.timeWindows,
   }));
 }
