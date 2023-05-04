@@ -18,6 +18,15 @@
             mdi-alert-circle
           </v-icon>
         </h3>
+        <div
+          v-for="(timeWindow, index) in task.timeWindows"
+          :key="index"
+          class="timewindow"
+          :style="{
+            width: computeTimeWindowWidth(task, timeWindow),
+            marginLeft: computeTimeWindowLeftMargin(task, timeWindow),
+          }"
+        ></div>
       </div>
     </div>
   </div>
@@ -27,7 +36,12 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Period, getPeriodDuration } from "~/utils/models/period";
-import { TimelineEvent, TimelineFt } from "~/utils/models/timeline";
+import {
+  TimelineEvent,
+  TimelineFt,
+  TimelineTimeWindow,
+} from "~/utils/models/timeline";
+import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 
 export default Vue.extend({
   name: "TimelineEvents",
@@ -59,27 +73,31 @@ export default Vue.extend({
         end: new Date(Math.min(highestEndDate, this.period.end.getTime())),
       };
     },
-    widthPercent(task: TimelineFt): number {
-      const taskPeriod = this.buildTaskPeriod(task);
-      const taskDuration = getPeriodDuration(taskPeriod);
-      const durationRatio = (taskDuration / this.duration) * 100;
-      const remainingWidthPercent = 100 - this.marginPercent(task);
-      return Math.min(durationRatio, remainingWidthPercent);
-    },
     computeTaskWidth(task: TimelineFt): string {
-      const widthPercent = this.widthPercent(task);
-      return `${widthPercent.toFixed(2)}%`;
-    },
-    marginPercent(task: TimelineFt): number {
       const taskPeriod = this.buildTaskPeriod(task);
-      const idleDuration =
-        taskPeriod.start.getTime() - this.period.start.getTime();
-      const durationRatio = (idleDuration / this.duration) * 100;
-      return Math.max(durationRatio, 0);
+      const width = widthPercent(this.period, taskPeriod);
+      return `${width.toFixed(2)}%`;
+    },
+    computeTimeWindowWidth(
+      task: TimelineFt,
+      timeWindow: TimelineTimeWindow
+    ): string {
+      const taskPeriod = this.buildTaskPeriod(task);
+      const width = widthPercent(taskPeriod, timeWindow);
+      return `${width.toFixed(2)}%`;
     },
     computeTaskLeftMargin(task: TimelineFt): string {
-      const marginPercent = this.marginPercent(task);
-      return `${marginPercent.toFixed(2)}%`;
+      const taskPeriod = this.buildTaskPeriod(task);
+      const margin = marginPercent(this.period, taskPeriod);
+      return `${margin.toFixed(2)}%`;
+    },
+    computeTimeWindowLeftMargin(
+      task: TimelineFt,
+      timeWindow: TimelineTimeWindow
+    ): string {
+      const taskPeriod = this.buildTaskPeriod(task);
+      const margin = marginPercent(taskPeriod, timeWindow);
+      return `${margin.toFixed(2)}%`;
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
@@ -112,7 +130,6 @@ export default Vue.extend({
     }
 
     &__task {
-      min-height: 100px;
       border-radius: 8px;
       background-color: $timeline-task-content-background-color;
       cursor: pointer;
@@ -122,6 +139,19 @@ export default Vue.extend({
         background-color: $timeline-task-title-background-color;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
+      }
+      .timewindow {
+        margin-top: 5px;
+        min-height: 20px;
+        cursor: pointer;
+        background-color: #41c5e5;
+        border-radius: 10px;
+        &:last-of-type {
+          margin-bottom: 10px;
+        }
+        &:first-of-type {
+          margin-top: 10px;
+        }
       }
     }
   }
