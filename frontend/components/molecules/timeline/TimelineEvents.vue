@@ -144,7 +144,7 @@ export default Vue.extend({
         margin-top: 5px;
         min-height: 20px;
         cursor: pointer;
-        background-color: #41c5e5;
+        background-color: $timeline-timewindow-background-color;
         border-radius: 10px;
         &:last-of-type {
           margin-bottom: 10px;
