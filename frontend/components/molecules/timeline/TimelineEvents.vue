@@ -48,7 +48,7 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FTTimespanDetails from "~/components/organisms/festivalEvent/ft/FTTimespanDetails.vue";
-import { Period, getPeriodDuration } from "~/utils/models/period";
+import { Period } from "~/utils/models/period";
 import {
   TimelineEvent,
   TimelineFt,
@@ -69,11 +69,8 @@ export default Vue.extend({
     events(): TimelineEvent[] {
       return this.$accessor.timeline.filteredEvents;
     },
-    period(): Period {
+    range(): Period {
       return this.$accessor.timeline.period;
-    },
-    duration(): number {
-      return getPeriodDuration(this.period);
     },
   },
   created() {
@@ -88,24 +85,24 @@ export default Vue.extend({
         ...task.timeWindows.map(({ end }) => end.getTime())
       );
       return {
-        start: new Date(Math.max(lowestStartDate, this.period.start.getTime())),
-        end: new Date(Math.min(highestEndDate, this.period.end.getTime())),
+        start: new Date(Math.max(lowestStartDate, this.range.start.getTime())),
+        end: new Date(Math.min(highestEndDate, this.range.end.getTime())),
       };
     },
-    adjustPeriodToRange(timeWindow: Period): Period {
-      const timeWindowStart = timeWindow.start.getTime();
-      const periodStart = this.period.start.getTime();
-      const timeWindowEnd = timeWindow.end.getTime();
-      const periodEnd = this.period.end.getTime();
+    adjustPeriodToRange(period: Period): Period {
+      const PeriodStart = period.start.getTime();
+      const rangeStart = this.range.start.getTime();
+      const periodEnd = period.end.getTime();
+      const rangeEnd = this.range.end.getTime();
 
-      const start = new Date(Math.max(timeWindowStart, periodStart));
-      const end = new Date(Math.min(timeWindowEnd, periodEnd));
+      const start = new Date(Math.max(PeriodStart, rangeStart));
+      const end = new Date(Math.min(periodEnd, rangeEnd));
 
       return { start, end };
     },
     computeTaskWidth(task: TimelineFt): string {
       const taskPeriod = this.buildTaskPeriod(task);
-      const width = widthPercent(this.period, taskPeriod);
+      const width = widthPercent(this.range, taskPeriod);
       return `${width.toFixed(2)}%`;
     },
     computeTimeWindowWidth(
@@ -128,7 +125,7 @@ export default Vue.extend({
     },
     computeTaskLeftMargin(task: TimelineFt): string {
       const taskPeriod = this.buildTaskPeriod(task);
-      const margin = marginPercent(this.period, taskPeriod);
+      const margin = marginPercent(this.range, taskPeriod);
       return `${margin.toFixed(2)}%`;
     },
     computeTimeWindowLeftMargin(
