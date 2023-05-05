@@ -183,6 +183,8 @@ export default Vue.extend({
         background-color: $timeline-task-title-background-color;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
+        color: white;
+        text-transform: capitalize;
       }
       .timewindow {
         --time-window-height: 20px;
