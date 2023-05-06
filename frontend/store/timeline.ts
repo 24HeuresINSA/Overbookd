@@ -2,7 +2,7 @@ import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "~/utils/date/dateUtils";
+import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "~/utils/date/dateUtils";
 import { Period, castPeriod } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
 import {
@@ -13,7 +13,6 @@ import {
 } from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
 
-const QUARTER_IN_MS = ONE_MINUTE_IN_MS * 15;
 const TWO_HOURS_IN_MS = ONE_HOUR_IN_MS * 2;
 
 const timelineRepo = RepoFactory.TimelineRepository;
