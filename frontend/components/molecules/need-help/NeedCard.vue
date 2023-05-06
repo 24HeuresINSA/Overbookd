@@ -1,12 +1,14 @@
 <template>
   <v-card class="need">
     <v-card-title> Besoin </v-card-title>
-    <v-card-text>
+    <v-card-text class="forms">
       <fieldset>
         <legend>Plage horaire</legend>
         <DateTimeField v-model="start" label="Début" :boxed="false" />
         <DateTimeField v-model="end" label="Fin" :boxed="false" />
-        <v-btn color="success" class="btn"> Appliquer </v-btn>
+        <v-btn color="success" class="btn" @click="getVolunteers">
+          Appliquer
+        </v-btn>
       </fieldset>
       <fieldset>
         <legend>Filtres</legend>
@@ -46,10 +48,20 @@ export default Vue.extend({
       search: "",
     };
   },
+  methods: {
+    getVolunteers() {
+      this.$accessor.needHelp.fetchVolunteers();
+    },
+  },
 });
 </script>
 
 <style lang="scss" scoped>
+.forms {
+  position: sticky;
+  top: $header-height;
+}
+
 fieldset {
   display: flex;
   flex-direction: column;

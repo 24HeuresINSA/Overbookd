@@ -47,7 +47,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .timeline-axis {
   position: sticky;
-  top: 65px;
+  top: $header-height;
   z-index: 1;
   &.theme--dark {
     .axis {

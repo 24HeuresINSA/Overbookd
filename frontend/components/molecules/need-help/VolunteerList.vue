@@ -32,7 +32,7 @@ export default Vue.extend({
   components: { TeamChip },
   computed: {
     volunteers(): Volunteer[] {
-      return [];
+      return this.$accessor.needHelp.volunteers;
     },
     loading(): boolean {
       return false;
@@ -69,3 +69,15 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.assignee-phone {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.teams {
+  display: flex;
+  gap: 5px;
+}
+</style>
