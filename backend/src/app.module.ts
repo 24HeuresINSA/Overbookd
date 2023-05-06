@@ -38,6 +38,7 @@ import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-
 import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
 import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning.module';
 import { TimelineModule } from './timeline/timeline.module';
+import { NeedHelpModule } from './need-help/needHelp.module';
 
 @Module({
   imports: [
@@ -93,6 +94,7 @@ import { TimelineModule } from './timeline/timeline.module';
     OrgaNeedsModule,
     VolunteerPlanningModule,
     TimelineModule,
+    NeedHelpModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, HashingUtilsService, MailService],
