@@ -19,7 +19,6 @@
           v-model="search"
           append-icon="mdi-outline-search"
           label="Nom du bénévole"
-          autofocus
           clearable
           clear-icon="mdi-close-circle-outline"
           :solo="false"
