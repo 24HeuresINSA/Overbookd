@@ -5,6 +5,7 @@
     type="datetime-local"
     :solo="boxed"
     :filled="boxed"
+    :outilned="!boxed"
     return-object
     @change="updateDate"
   >

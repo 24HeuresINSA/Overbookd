@@ -106,7 +106,7 @@ export default Vue.extend({
         sortable: false,
       };
       const teams = {
-        text: "Teams",
+        text: "Equipes",
         value: "teams",
         sortable: false,
       };
