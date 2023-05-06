@@ -18,7 +18,6 @@
       v-model="search"
       append-icon="mdi-outline-search"
       label="Nom de la tache"
-      autofocus
       clearable
       clear-icon="mdi-close-circle-outline"
     ></v-text-field>

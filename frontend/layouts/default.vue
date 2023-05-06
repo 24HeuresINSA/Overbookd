@@ -242,6 +242,12 @@ export default {
           to: "/timeline",
         },
         {
+          icon: "mdi-handshake",
+          title: "A l'aide",
+          permission: "can-ask-for-help",
+          to: "/need-help",
+        },
+        {
           icon: "mdi-cog",
           permission: "admin",
           title: "Admin",
