@@ -25,6 +25,9 @@ export default Vue.extend({
   margin-top: 10px;
   display: flex;
   gap: 20px;
+  @media (width <= 900px) {
+    flex-direction: column;
+  }
   .need {
     flex-grow: 1;
   }
