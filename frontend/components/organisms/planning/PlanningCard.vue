@@ -1,10 +1,10 @@
 <template>
   <v-card>
-    <v-card-title>Mon planning </v-card-title>
+    <v-card-title>Planning et Livret</v-card-title>
     <v-card-text v-if="canViewPlanning">
       <p>
-        Ceci est un planning <strong> provisoire</strong>, ça signifie qu'il est
-        susceptible d'être mis à jour. 🪄
+        Ceci est un planning <strong> définitif</strong>, cependant des imprévus
+        peuvent entrainer des mises à jour. 😞
       </p>
       <p>
         Pour éviter toute déconvenue nous te conseillons de
@@ -78,7 +78,7 @@
         :disabled="!canViewPlanning"
         @click="exportPlanning"
       >
-        Télécharger mon planning
+        Télécharger mon livret
       </v-btn>
     </v-card-actions>
   </v-card>
