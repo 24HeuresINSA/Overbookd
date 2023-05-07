@@ -3,7 +3,7 @@
     <h1>A l'aide</h1>
     <p>Trouve un bénévole pour venir te donner un coup de main</p>
     <div class="need-help">
-      <NeedCard class="need" />
+      <NeedHelpFormCard class="need" />
       <VolunteerList class="volunteers" />
     </div>
   </div>
@@ -11,12 +11,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import NeedCard from "~/components/molecules/need-help/NeedCard.vue";
+import NeedHelpFormCard from "~/components/molecules/need-help/NeedHelpFormCard.vue";
 import VolunteerList from "~/components/molecules/need-help/VolunteerList.vue";
 
 export default Vue.extend({
   name: "NeedHelp",
-  components: { NeedCard, VolunteerList },
+  components: { NeedHelpFormCard, VolunteerList },
 });
 </script>
 

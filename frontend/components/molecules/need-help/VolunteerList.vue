@@ -32,7 +32,7 @@ export default Vue.extend({
   components: { TeamChip },
   computed: {
     volunteers(): Volunteer[] {
-      return this.$accessor.needHelp.volunteers;
+      return this.$accessor.needHelp.filteredVolunteers;
     },
     loading(): boolean {
       return false;
@@ -55,6 +55,10 @@ export default Vue.extend({
       };
       return [volunteer, teams, phone];
     },
+  },
+  created() {
+    if (this.volunteers.length > 0) return;
+    this.$accessor.needHelp.fetchVolunteers();
   },
   methods: {
     formatPhone(phone: string) {
