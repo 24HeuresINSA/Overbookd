@@ -35,22 +35,49 @@
 import Vue from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
+import { Period } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: "NeedCard",
+  name: "NeedHelpFormCard",
   components: { DateTimeField, SearchTeams },
   data: () => {
     return {
       start: new Date(),
       end: new Date(),
-      teams: [] as Team[],
-      search: "",
     };
+  },
+  computed: {
+    period(): Period {
+      return {
+        start: this.start,
+        end: this.end,
+      };
+    },
+    search: {
+      get(): string {
+        return this.$accessor.needHelp.search;
+      },
+      set(value: string | null) {
+        this.$accessor.needHelp.updateSearch(value);
+      },
+    },
+    teams: {
+      get(): Team[] {
+        return this.$accessor.needHelp.teams;
+      },
+      set(value: Team[]) {
+        this.$accessor.needHelp.updateTeams(value);
+      },
+    },
+  },
+  created() {
+    this.start = this.$accessor.needHelp.start;
+    this.end = this.$accessor.needHelp.end;
   },
   methods: {
     getVolunteers() {
-      this.$accessor.needHelp.fetchVolunteers();
+      this.$accessor.needHelp.updatePeriod(this.period);
     },
   },
 });
