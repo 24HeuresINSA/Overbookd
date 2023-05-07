@@ -94,5 +94,8 @@ fieldset {
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+  @media (width <= 900px) {
+    gap: 3px;
+  }
 }
 </style>
