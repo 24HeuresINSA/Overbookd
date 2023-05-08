@@ -15,6 +15,10 @@ import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { getPeriodDuration } from '../utils/duration';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
+import {
+  formatAssignmentAsTask,
+  formatRequirementAsTask,
+} from 'src/utils/assignment';
 
 const SELECT_USER = {
   email: true,
@@ -81,7 +85,7 @@ export const SELECT_USERNAME_WITH_ID = {
   lastname: true,
 };
 
-const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
+export const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
   ftTimeWindows: {
     select: {
       start: true,
@@ -97,7 +101,7 @@ const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
   },
 };
 
-const SELECT_VOLUNTEER_ASSIGNMENTS = {
+export const SELECT_VOLUNTEER_ASSIGNMENTS = {
   timespan: {
     select: {
       start: true,
@@ -110,6 +114,10 @@ const SELECT_VOLUNTEER_ASSIGNMENTS = {
     },
   },
   timespanId: true,
+};
+
+export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
+  ft: { isDeleted: false, NOT: { status: FtStatus.READY } },
 };
 
 export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
@@ -152,7 +160,6 @@ export type VolunteerTask = Period & {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timespanId?: number;
 };
-
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService, private mail: MailService) {}
@@ -220,19 +227,13 @@ export class UserService {
   }
 
   async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
-    const ftTimeWindows = {
-      ft: { isDeleted: false, NOT: { status: FtStatus.READY } },
-    };
+    const ftTimeWindows = ACTIVE_NOT_ASSIGNED_FT_CONDITION;
     const userRequests = await this.prisma.ftUserRequest.findMany({
       where: { userId, ftTimeWindows },
       select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
     });
 
-    return userRequests.map(({ ftTimeWindows: { start, end, ft } }) => ({
-      start,
-      end,
-      ft,
-    }));
+    return userRequests.map(formatRequirementAsTask);
   }
 
   async getVolunteerAssignments(volunteerId: number): Promise<VolunteerTask[]> {
@@ -241,11 +242,7 @@ export class UserService {
       select: SELECT_VOLUNTEER_ASSIGNMENTS,
     });
 
-    return assignments.map(({ timespan, timespanId }) => {
-      const { start, end } = timespan;
-      const { ft } = timespan.timeWindow;
-      return { start, end, ft, timespanId };
-    });
+    return assignments.map(formatAssignmentAsTask);
   }
 
   async getUserTeams(id: number): Promise<string[]> {

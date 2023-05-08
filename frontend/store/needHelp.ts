@@ -4,9 +4,10 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/needHelp";
-import { Period } from "~/utils/models/period";
+import { Period, castPeriod } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
-import { DisplayedUser } from "~/utils/models/user";
+import { DisplayedUser, castVolunteerTaskWithDate } from "~/utils/models/user";
+import { HttpStringified } from "~/utils/types/http";
 
 interface NeedHelpState {
   volunteers: Volunteer[];
@@ -79,7 +80,8 @@ export const actions = actionTree(
         repository.getAvailableVolunteers(this, getters.period)
       );
       if (!res) return;
-      commit("SET_VOLUNTEERS", res.data);
+      const volunteers = res.data.map(castVolunteerWithDate);
+      commit("SET_VOLUNTEERS", volunteers);
     },
     updatePeriod({ commit, dispatch }, { start, end }: Period) {
       commit("SET_START", start);
@@ -109,4 +111,14 @@ function isMatchingTeam(teamsSearch: Team[], { teams }: { teams: string[] }) {
 
   const teamCodes = teamsSearch.map(({ code }) => code);
   return teams.some((team) => teamCodes.includes(team));
+}
+
+function castVolunteerWithDate(
+  volunteer: HttpStringified<Volunteer>
+): Volunteer {
+  return {
+    ...volunteer,
+    availabilities: volunteer.availabilities.map(castPeriod),
+    tasks: castVolunteerTaskWithDate(volunteer.tasks),
+  };
 }
