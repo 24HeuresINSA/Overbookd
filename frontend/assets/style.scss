@@ -3,18 +3,22 @@
     background-color: $validated-color;
     color: white;
   }
+
   &.submitted {
     background-color: $submitted-color;
     color: black;
   }
+
   &.refused {
     background-color: $refused-color;
     color: white;
   }
+
   &.draft {
     background-color: $draft-color;
     color: white;
   }
+
   &.ready {
     background-color: $ready-color;
     color: white;
@@ -27,12 +31,15 @@
     &.validated {
       border-left: 5px solid $validated-color;
     }
+
     &.submitted {
       border-left: 5px solid $submitted-color;
     }
+
     &.refused {
       border-left: 5px solid $refused-color;
     }
+
     &.draft {
       border-left: 5px solid $draft-color;
     }
@@ -42,9 +49,11 @@
     &.validated {
       color: $validated-color;
     }
+
     &.refused {
       color: $refused-color;
     }
+
     &.draft,
     &.submitted {
       color: $draft-color;
@@ -53,6 +62,7 @@
 
   #status,
   #validators {
+
     .v-chip,
     #dot {
       @include background-color-by-status();
@@ -66,9 +76,11 @@
       &.also-requested-by-ft {
         background-color: $conflict-also-requested-by-ft-color;
         color: white;
+
         .v-icon {
           color: white;
         }
+
         &.v-chip--clickable:hover {
           background-color: darken(
             $color: $conflict-also-requested-by-ft-color,
@@ -76,12 +88,15 @@
           );
         }
       }
+
       &.not-available {
         background-color: $conflict-not-available-for-ft-color;
         color: black;
+
         .v-icon {
           color: black;
         }
+
         &.v-chip--clickable:hover {
           background-color: darken(
             $color: $conflict-not-available-for-ft-color,
@@ -89,12 +104,15 @@
           );
         }
       }
+
       &.already-assigned {
         background-color: $conflict-already-assigned;
         color: white;
+
         .v-icon {
           color: white;
         }
+
         &.v-chip--clickable:hover {
           background-color: darken(
             $color: $conflict-already-assigned,
@@ -117,4 +135,30 @@
 
 .row-pointer:hover {
   cursor: pointer;
+}
+
+.shift {
+  height: 5px;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+
+  &.theme--dark {
+    &.shift-night {
+      background-color: beige;
+    }
+  }
+
+  &-party {
+    background-color: purple;
+  }
+
+  &-night {
+    background-color: black;
+  }
+
+  &-day {
+    background-color: darksalmon;
+  }
 }

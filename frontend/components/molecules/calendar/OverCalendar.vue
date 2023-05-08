@@ -114,7 +114,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CalendarItem } from "~/utils/models/calendar";
+import { CalendarEvent } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 
 export default Vue.extend({
@@ -125,7 +125,7 @@ export default Vue.extend({
   },
   props: {
     events: {
-      type: Array as () => CalendarItem[],
+      type: Array as () => CalendarEvent[],
       default: () => [],
     },
     date: {
@@ -201,28 +201,6 @@ export default Vue.extend({
     align-items: center;
     font-size: 18px;
     font-weight: 500;
-  }
-
-  .shift {
-    height: 5px;
-    position: absolute;
-    left: -1px;
-    right: 0;
-    pointer-events: none;
-    &.theme--dark {
-      &.shift-night {
-        background-color: beige;
-      }
-    }
-    &-party {
-      background-color: purple;
-    }
-    &-night {
-      background-color: black;
-    }
-    &-day {
-      background-color: darksalmon;
-    }
   }
 }
 </style>

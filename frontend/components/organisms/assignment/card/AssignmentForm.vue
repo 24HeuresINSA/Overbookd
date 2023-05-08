@@ -7,25 +7,13 @@
     <v-card-text>
       <div class="planning-list">
         <div class="planning">
-          <div class="date-navigation">
-            <v-btn icon @click="previousDay">
-              <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn icon @click="nextDay">
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-          </div>
-          <v-calendar
-            ref="calendar"
+          <OverMultiCalendar
             v-model="calendarDate"
-            type="category"
-            category-show-all
-            :categories="volunteerIds"
-            :events="events"
-            :interval-height="24"
-            class="planning__calendar"
+            :users="calendarUsers"
+            :planning-events="candidatesTaskEvents"
+            :event-to-add="currentTaskAsEvent"
           >
-            <template #category="{ category }">
+            <template #volunteer-header="{ category }">
               <div class="calendar-header">
                 <div class="calendar-header__action">
                   <v-btn
@@ -60,24 +48,7 @@
                 </div>
               </div>
             </template>
-            <template #interval="{ hour, time, date, timeToY, category }">
-              <div
-                :class="{
-                  shift: isShiftHour(hour),
-                  'shift-party': isPartyHour(hour),
-                  'shift-day': isDayHour(hour),
-                  'shift-night': isNightHour(hour),
-                  'theme--dark': isDarkTheme,
-                }"
-                :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
-              ></div>
-              <div
-                :class="{
-                  available: isVolunteerAvailable(date, time, +category),
-                }"
-              />
-            </template>
-          </v-calendar>
+          </OverMultiCalendar>
           <div class="planning__teams">
             <div
               v-for="candidate in candidates"
@@ -129,26 +100,28 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
 import {
   AssignmentCandidate,
+  Task,
   TaskAssignment,
 } from "~/domain/timespan-assignment/timespanAssignment";
 import {
+  PlanningEvent,
   convertTaskToPlanningEvent,
   createTemporaryTaskPlanningEvent,
 } from "~/domain/common/planning-events";
 import { Volunteer } from "~/utils/models/assignment";
-import { SHIFT_HOURS } from "~/utils/shift/shift";
+import { CalendarUser } from "~/utils/models/calendar";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
-import { computeNextHourDate } from "~/utils/date/dateUtils";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
+import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
 
 export default Vue.extend({
   name: "AssignmentForm",
   components: {
-    VolunteerResumeCalendarHeader,
     TeamChip,
+    OverMultiCalendar,
+    VolunteerResumeCalendarHeader,
   },
   data: () => {
     return {
@@ -178,24 +151,22 @@ export default Vue.extend({
         c.volunteer.id.toString()
       );
     },
-    events() {
-      return this.$accessor.assignment.taskAssignment.candidates.flatMap(
-        ({ volunteer, tasks }) => {
-          const currentTask = this.$accessor.assignment.taskAssignment.task;
-          return [
-            ...tasks.map((task) =>
-              convertTaskToPlanningEvent(task, volunteer.id.toString())
-            ),
-            createTemporaryTaskPlanningEvent(
-              currentTask,
-              volunteer.id.toString()
-            ),
-          ];
-        }
+    currentTask(): Task {
+      return this.taskAssignment.task;
+    },
+    calendarUsers(): CalendarUser[] {
+      return this.taskAssignment.candidates.map(
+        ({ volunteer, availabilities }) => ({ ...volunteer, availabilities })
       );
     },
-    isDarkTheme(): boolean {
-      return this.$accessor.theme.darkTheme;
+    candidatesTaskEvents(): PlanningEvent[] {
+      return this.$accessor.assignment.taskAssignment.candidates.flatMap(
+        ({ volunteer, tasks }) =>
+          tasks.map((task) => convertTaskToPlanningEvent(task, volunteer.id))
+      );
+    },
+    currentTaskAsEvent(): PlanningEvent {
+      return createTemporaryTaskPlanningEvent(this.currentTask);
     },
     canNotAssign(): boolean {
       return !this.taskAssignment.canAssign;
@@ -219,44 +190,8 @@ export default Vue.extend({
     this.calendarDate = this.start;
   },
   methods: {
-    isVolunteerAvailable(
-      date: string,
-      time: string,
-      candidateId: number
-    ): boolean {
-      const candidate = this.taskAssignment.getCandidate(candidateId);
-      if (!candidate) return false;
-
-      const start = new Date(`${date} ${time}`);
-      const end = computeNextHourDate(start);
-      return candidate.availabilities.some(
-        isPeriodIncludedByAnother({ start, end })
-      );
-    },
     retrieveVolunteer(id: string): Volunteer | undefined {
       return this.taskAssignment.getCandidate(+id)?.volunteer;
-    },
-    isPartyHour(hour: number): boolean {
-      return hour === SHIFT_HOURS.PARTY;
-    },
-    isDayHour(hour: number): boolean {
-      return hour === SHIFT_HOURS.DAY;
-    },
-    isNightHour(hour: number): boolean {
-      return hour === SHIFT_HOURS.NIGHT;
-    },
-    isShiftHour(hour: number): boolean {
-      return (
-        this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
-      );
-    },
-    previousDay() {
-      const calendar = this.$refs.calendar as any;
-      if (calendar) calendar.prev();
-    },
-    nextDay() {
-      const calendar = this.$refs.calendar as any;
-      if (calendar) calendar.next();
     },
     closeDialog() {
       this.$emit("close-dialog");
@@ -332,34 +267,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.shift {
-  height: 5px;
-  position: absolute;
-  left: -1px;
-  right: 0;
-  pointer-events: none;
-  &.theme--dark {
-    &.shift-night {
-      background-color: beige;
-    }
-  }
-  &-party {
-    background-color: purple;
-  }
-  &-night {
-    background-color: black;
-  }
-  &-day {
-    background-color: darksalmon;
-  }
-}
-
-.date-navigation {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
 .planning-list {
   display: flex;
   gap: 25px;
@@ -371,10 +278,6 @@ export default Vue.extend({
     gap: 10px;
     align-items: center;
     padding-bottom: 80px;
-    &__calendar {
-      width: 100%;
-      overflow-y: hidden;
-    }
     &__teams {
       display: flex;
       justify-content: space-around;
@@ -438,11 +341,5 @@ export default Vue.extend({
   .not-selected {
     opacity: 0.4;
   }
-}
-
-.available {
-  background-color: $calendar-available-background-color;
-  height: 100%;
-  width: 100%;
 }
 </style>

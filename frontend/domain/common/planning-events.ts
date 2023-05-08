@@ -1,17 +1,24 @@
 import { VolunteerTask } from "~/utils/models/user";
 import { getColorByStatus } from "./status-color";
 
+export type PlanningEvent = {
+  start: Date;
+  end: Date;
+  volunteerId?: number;
+  name: string;
+  color?: string;
+};
+
 export function convertTaskToPlanningEvent(
   { start, end, ft: { id, name, status } }: VolunteerTask,
-  group?: string
-) {
+  volunteerId: number
+): PlanningEvent {
   return {
     start,
     end,
-    category: group,
     name: `[${id}] ${name}`,
     color: getColorByStatus(status),
-    timed: true,
+    volunteerId,
   };
 }
 
@@ -21,15 +28,14 @@ type TemporaryTask = {
   name: string;
 };
 
-export function createTemporaryTaskPlanningEvent(
-  { start, end, name }: TemporaryTask,
-  group?: string
-) {
+export function createTemporaryTaskPlanningEvent({
+  start,
+  end,
+  name,
+}: TemporaryTask): PlanningEvent {
   return {
     start,
     end,
     name,
-    category: group,
-    timed: true,
   };
 }
