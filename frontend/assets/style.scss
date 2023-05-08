@@ -82,8 +82,10 @@
         }
 
         &.v-chip--clickable:hover {
-          background-color: darken($color: $conflict-also-requested-by-ft-color,
-              $amount: 5%);
+          background-color: darken(
+            $color: $conflict-also-requested-by-ft-color,
+            $amount: 5%
+          );
         }
       }
 
@@ -96,8 +98,10 @@
         }
 
         &.v-chip--clickable:hover {
-          background-color: darken($color: $conflict-not-available-for-ft-color,
-              $amount: 5%);
+          background-color: darken(
+            $color: $conflict-not-available-for-ft-color,
+            $amount: 5%
+          );
         }
       }
 
@@ -110,8 +114,10 @@
         }
 
         &.v-chip--clickable:hover {
-          background-color: darken($color: $conflict-already-assigned,
-              $amount: 5%);
+          background-color: darken(
+            $color: $conflict-already-assigned,
+            $amount: 5%
+          );
         }
       }
     }
