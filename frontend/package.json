@@ -34,7 +34,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "chart.js": "^2.9.4",
     "core-js": "^3.30.1",
-    "csv-parse": "^5.3.9",
+    "csv-parse": "^5.3.10",
     "eslint-plugin-prettier": "^4.2.1",
     "file-saver": "^2.0.5",
     "fuse.js": "^6.6.2",
