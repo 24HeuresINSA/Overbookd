@@ -176,4 +176,16 @@ export default Vue.extend({
   align-items: center;
   gap: 5px;
 }
+
+@media (max-width: 750px) {
+  .timespan-metadata {
+    flex-direction: column;
+  }
+
+  .timespan-metadata > .v-chip {
+    height: fit-content;
+    min-height: 32px;
+    white-space: pre-wrap;
+  }
+}
 </style>

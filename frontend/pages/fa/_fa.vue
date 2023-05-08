@@ -278,6 +278,7 @@ export default Vue.extend({
 @media only screen and (max-width: 750px) {
   .main {
     flex-direction: column;
+    overflow-y: scroll;
   }
 
   .sidebar {
@@ -287,7 +288,7 @@ export default Vue.extend({
   }
 
   .summary {
-    visibility: collapse;
+    display: none;
   }
 
   .container {

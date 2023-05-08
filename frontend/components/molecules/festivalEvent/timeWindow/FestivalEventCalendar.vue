@@ -16,7 +16,7 @@
     <v-calendar
       ref="formCalendar"
       v-model="value"
-      type="week"
+      :type="calendarType"
       :events="calendarTimeWindows"
       :event-color="getEventColor"
       :event-ripple="false"
@@ -60,6 +60,9 @@ export default Vue.extend({
     manifDate(): Date {
       return new Date(this.$accessor.config.getConfig("event_date"));
     },
+    calendarType(): string {
+      return window.screen.width < 750 ? "day" : "week";
+    },
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.value);
     },
@@ -102,6 +105,13 @@ export default Vue.extend({
         }));
       }
       return this.getTimespanEvents(timeWindows);
+    },
+  },
+  watch: {
+    calendarTimeWindows(newVal: Event[], oldVal: Event[]) {
+      if (oldVal.length > 0) return;
+      const firstDate = newVal.at(0)?.start;
+      if (firstDate) this.value = firstDate;
     },
   },
   mounted() {

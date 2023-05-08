@@ -81,7 +81,7 @@
       </v-container>
     </v-main>
     <v-footer :fixed="true" app>
-      <span>fait avec ❤️ par {{ getRandomAuthor() }}</span>
+      <span>Fait avec ❤️ par {{ getRandomAuthor() }}</span>
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">

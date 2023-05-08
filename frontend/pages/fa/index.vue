@@ -67,7 +67,7 @@
           class="elevation-1"
         >
           <template #[`item.validation`]="{ item }">
-            <v-chip-group>
+            <v-chip-group column>
               <v-chip
                 v-for="(validator, i) of validators"
                 :key="i"

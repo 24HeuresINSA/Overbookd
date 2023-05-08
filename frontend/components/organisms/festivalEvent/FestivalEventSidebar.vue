@@ -159,7 +159,7 @@ export default Vue.extend({
   }
 
   .summary {
-    visibility: collapse;
+    display: none;
   }
 }
 </style>
