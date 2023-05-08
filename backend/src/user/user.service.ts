@@ -18,7 +18,7 @@ import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentType
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
-} from 'src/utils/assignment';
+} from '../utils/assignment';
 
 const SELECT_USER = {
   email: true,
