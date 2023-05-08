@@ -12,7 +12,7 @@
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
-import { CalendarItem } from "~/utils/models/calendar";
+import { CalendarEvent } from "~/utils/models/calendar";
 import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
 
 const PRIMARY_COLOR = {
@@ -34,7 +34,7 @@ export default Vue.extend({
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.calendarMarker);
     },
-    calendarEvents(): CalendarItem[] {
+    calendarEvents(): CalendarEvent[] {
       return this.charismaPeriods.map((a) => ({
         start: a.start,
         end: a.end,

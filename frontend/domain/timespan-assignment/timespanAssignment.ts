@@ -10,7 +10,7 @@ type TeamRequest = {
   assignments: number;
 };
 
-type Task = {
+export type Task = {
   name: string;
   start: Date;
   end: Date;

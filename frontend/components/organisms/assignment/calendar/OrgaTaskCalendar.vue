@@ -35,12 +35,12 @@ import { Availability } from "~/domain/volunteer-availability/volunteer-availabi
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
-import { CalendarItem } from "~/utils/models/calendar";
+import { CalendarEvent } from "~/utils/models/calendar";
 import { AvailableTimespan } from "~/utils/models/ftTimespan";
 import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
-interface CalendarItemWithTask extends CalendarItem {
+interface CalendarItemWithTask extends CalendarEvent {
   timespanId?: number;
   ft: { id: number; name: string };
 }

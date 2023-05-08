@@ -33,11 +33,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
-import { CalendarItem } from "~/utils/models/calendar";
+import { CalendarEvent } from "~/utils/models/calendar";
 import { FTStatus, FTTimeWindow } from "~/utils/models/ft";
 import FTTimespanDetails from "~/components/organisms/festivalEvent/ft/FTTimespanDetails.vue";
 
-type Event = CalendarItem & {
+type Event = CalendarEvent & {
   timespanId?: number;
 };
 
@@ -66,8 +66,8 @@ export default Vue.extend({
     calendarTimeWindows(): Event[] {
       return this.festivalEvent === "FA" ? this.faTimeWindows : this.ftEvents;
     },
-    faTimeWindows(): CalendarItem[] {
-      const animationTimeWindows: CalendarItem[] = (
+    faTimeWindows(): CalendarEvent[] {
+      const animationTimeWindows: CalendarEvent[] = (
         this.$accessor.FA.mFA.time_windows ?? []
       ).map((timeWindow) => ({
         start: timeWindow.start,
@@ -77,7 +77,7 @@ export default Vue.extend({
         name: "Tenue de l'animation",
       }));
 
-      const gearTimeWindows: CalendarItem[] =
+      const gearTimeWindows: CalendarEvent[] =
         this.$accessor.FA.gearRequestRentalPeriods.map(
           (gearRequestRentalPeriod) => ({
             start: gearRequestRentalPeriod.start,
