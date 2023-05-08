@@ -100,7 +100,7 @@ import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
-import VolunteerResumeCalendarHeader from "../assignment/resume/VolunteerResumeCalendarHeader.vue";
+import VolunteerResumeCalendarHeader from "../need-help/VolunteerResumeCalendarHeader.vue";
 
 export default Vue.extend({
   name: "OverMultiCalendar",

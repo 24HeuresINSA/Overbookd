@@ -5,6 +5,20 @@ import { PrismaService } from 'src/prisma.service';
 import { AssignmentService } from 'src/assignment/assignment.service';
 import { WHERE_VALIDATED_USER } from 'src/assignment/volunteer.service';
 import { Injectable } from '@nestjs/common';
+import {
+  ACTIVE_NOT_ASSIGNED_FT_CONDITION,
+  SELECT_FT_USER_REQUESTS_BY_USER_ID,
+  SELECT_VOLUNTEER_ASSIGNMENTS,
+  VolunteerTask,
+} from 'src/user/user.service';
+import {
+  DatabaseAssignment,
+  DatabaseFtUserRequest,
+} from 'src/assignment/assignment.model';
+import {
+  formatAssignmentAsTask,
+  formatRequirementAsTask,
+} from 'src/utils/assignment';
 
 type DatabaseVolunteer = {
   id: number;
@@ -12,6 +26,9 @@ type DatabaseVolunteer = {
   firstname: string;
   phone: string;
   team: { team: { code: string } }[];
+  availabilities: Period[];
+  assignments: DatabaseAssignment[];
+  ftUserRequests: DatabaseFtUserRequest[];
 };
 
 const SELECT_VOLUNTEER = {
@@ -20,6 +37,7 @@ const SELECT_VOLUNTEER = {
   firstname: true,
   phone: true,
   team: { select: { team: { select: { code: true } } } },
+  availabilities: { select: { start: true, end: true } },
 };
 
 @Injectable()
@@ -31,7 +49,14 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
     const where = this.buildIsAvailableCondition(period);
 
     const volunteers = await this.prisma.user.findMany({
-      select,
+      select: {
+        ...select,
+        assignments: { select: SELECT_VOLUNTEER_ASSIGNMENTS },
+        ftUserRequests: {
+          select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
+          where: { ftTimeWindows: ACTIVE_NOT_ASSIGNED_FT_CONDITION },
+        },
+      },
       where,
     });
 
@@ -57,11 +82,28 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
 }
 
 function formatVolunteers(volunteers: DatabaseVolunteer[]): Volunteer[] {
-  return volunteers.map(({ id, lastname, firstname, phone, team }) => ({
-    id,
-    lastname,
-    firstname,
-    phone,
-    teams: team.map(({ team }) => team.code),
+  return volunteers.map((volunteer) => ({
+    id: volunteer.id,
+    lastname: volunteer.lastname,
+    firstname: volunteer.firstname,
+    phone: volunteer.phone,
+    teams: volunteer.team.map(({ team }) => team.code),
+    availabilities: volunteer.availabilities,
+    tasks: [
+      ...formatVolunteerAssignments(volunteer.assignments),
+      ...formatVolunteerRequirements(volunteer.ftUserRequests),
+    ],
   }));
+}
+
+function formatVolunteerAssignments(
+  assignments: DatabaseAssignment[],
+): VolunteerTask[] {
+  return assignments.map(formatAssignmentAsTask);
+}
+
+function formatVolunteerRequirements(
+  ftUserRequests: DatabaseFtUserRequest[],
+): VolunteerTask[] {
+  return ftUserRequests.map(formatRequirementAsTask);
 }

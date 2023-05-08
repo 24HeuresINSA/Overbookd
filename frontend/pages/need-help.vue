@@ -4,19 +4,21 @@
     <p>Trouve un bénévole pour venir te donner un coup de main</p>
     <div class="need-help">
       <NeedHelpFormCard class="need" />
-      <VolunteerList class="volunteers" />
+      <VolunteerList class="volunteers mobile" />
+      <CalendarList class="volunteers desktop" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import CalendarList from "~/components/molecules/need-help/CalendarList.vue";
 import NeedHelpFormCard from "~/components/molecules/need-help/NeedHelpFormCard.vue";
 import VolunteerList from "~/components/molecules/need-help/VolunteerList.vue";
 
 export default Vue.extend({
   name: "NeedHelp",
-  components: { NeedHelpFormCard, VolunteerList },
+  components: { NeedHelpFormCard, VolunteerList, CalendarList },
 });
 </script>
 
@@ -25,8 +27,17 @@ export default Vue.extend({
   margin-top: 10px;
   display: flex;
   gap: 20px;
+  .mobile {
+    display: none;
+  }
   @media (width <= 900px) {
     flex-direction: column;
+    .desktop {
+      display: none;
+    }
+    .mobile {
+      display: unset;
+    }
   }
   .need {
     flex-grow: 1;
