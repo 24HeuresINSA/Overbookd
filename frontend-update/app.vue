@@ -5,16 +5,17 @@
 </template>
 
 <script lang="ts">
-import { useStore } from "~/store/common";
+import { defineComponent } from "vue";
+import { useUserStore } from "./store/user";
 
-export default {
+export default defineComponent({
   name: "App",
   setup() {
-    const store = useStore();
-    store.user.setFirstname("John");
+    const userStore = useUserStore();
+    userStore.setFirstname("John");
     return {
-      user: store.user.fullName,
+      user: userStore.fullName,
     };
   },
-};
+});
 </script>
