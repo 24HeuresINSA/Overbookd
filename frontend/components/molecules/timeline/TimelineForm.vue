@@ -97,9 +97,10 @@ export default Vue.extend({
     @media (width <= 900px) {
       gap: 3px;
       flex-direction: column;
-    }
-    div {
-      width: 100%;
+      div,
+      button {
+        width: 100%;
+      }
     }
   }
 }
