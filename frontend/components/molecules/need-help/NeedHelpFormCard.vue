@@ -87,6 +87,9 @@ export default Vue.extend({
 .forms {
   position: sticky;
   top: $header-height;
+  @media (width <= 900px) {
+    top: $mobile-header-height;
+  }
 }
 
 fieldset {

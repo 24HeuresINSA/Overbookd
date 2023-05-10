@@ -1,28 +1,28 @@
 <template>
   <div class="timeline-form">
-    <div>
-      <h3>Début de la plage horaire</h3>
-      <DateTimeField v-model="start" label="Début" />
-    </div>
+    <fieldset>
+      <legend>Plage horaire</legend>
+      <DateTimeField v-model="start" label="Début" :boxed="false" />
 
-    <div>
-      <h3>Fin de la plage horaire</h3>
-      <DateTimeField v-model="end" label="Fin" />
-    </div>
+      <DateTimeField v-model="end" label="Fin" :boxed="false" />
 
-    <v-btn color="success" class="btn" @click="updateTimelineFilter">
-      Appliquer
-    </v-btn>
+      <v-btn color="success" class="btn" @click="updateTimelineFilter">
+        Appliquer
+      </v-btn>
+    </fieldset>
 
-    <v-text-field
-      v-model="search"
-      append-icon="mdi-outline-search"
-      label="Nom de la tache"
-      clearable
-      clear-icon="mdi-close-circle-outline"
-    ></v-text-field>
+    <fieldset>
+      <legend>Filtres</legend>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-outline-search"
+        label="Nom de la tache"
+        clearable
+        clear-icon="mdi-close-circle-outline"
+      ></v-text-field>
 
-    <SearchTeams v-model="teams" label="Filtrer par équipe" :boxed="false" />
+      <SearchTeams v-model="teams" label="Filtrer par équipe" :boxed="false" />
+    </fieldset>
   </div>
 </template>
 
@@ -80,10 +80,28 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .timeline-form {
+  top: $header-height;
   display: flex;
-  gap: 70px;
-  align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
+  gap: 20px;
+  @media (width <= 900px) {
+    gap: 5px;
+    flex-direction: column;
+    top: $mobile-header-height;
+  }
+
+  fieldset {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    padding: 10px;
+    @media (width <= 900px) {
+      gap: 3px;
+      flex-direction: column;
+      div,
+      button {
+        width: 100%;
+      }
+    }
+  }
 }
 </style>

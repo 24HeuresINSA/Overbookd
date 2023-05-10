@@ -2,7 +2,11 @@
   <div class="timeline-axis" :class="{ 'theme--dark': isDarkTheme }">
     <div class="axis"></div>
     <div class="markers">
-      <span v-for="(marker, index) in markers" :key="index">
+      <span
+        v-for="(marker, index) in markers"
+        :key="index"
+        :class="{ desktop: isOdd(index) }"
+      >
         {{ marker }}
       </span>
     </div>
@@ -41,6 +45,11 @@ export default Vue.extend({
       return this.$accessor.theme.darkTheme;
     },
   },
+  methods: {
+    isOdd(num: number): boolean {
+      return num % 2 === 1;
+    },
+  },
 });
 </script>
 
@@ -48,6 +57,9 @@ export default Vue.extend({
 .timeline-axis {
   position: sticky;
   top: $header-height;
+  @media (width <= 900px) {
+    top: $mobile-header-height;
+  }
   z-index: 1;
   &.theme--dark {
     .axis {
@@ -76,6 +88,11 @@ export default Vue.extend({
   justify-content: space-between;
   span {
     background-color: white;
+    @media (width <= 900px) {
+      &.desktop {
+        display: none;
+      }
+    }
   }
 }
 </style>

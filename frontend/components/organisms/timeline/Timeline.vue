@@ -1,6 +1,6 @@
 <template>
   <div class="timeline">
-    <TimelineForm />
+    <TimelineForm class="form" />
     <TimelineAxis />
     <TimelineEvents />
   </div>
@@ -17,3 +17,9 @@ export default Vue.extend({
   components: { TimelineEvents, TimelineForm, TimelineAxis },
 });
 </script>
+
+<style lang="scss" scoped>
+.form {
+  margin-bottom: 10px;
+}
+</style>
