@@ -1,7 +1,12 @@
 <template>
   <div class="timeline-form">
     <fieldset>
-      <legend>Plage horaire</legend>
+      <legend>
+        Plage horaire
+        <v-btn icon color="pink" @click="refreshToNow">
+          <v-icon>mdi-refresh</v-icon>
+        </v-btn>
+      </legend>
       <DateTimeField v-model="start" label="Début" :boxed="false" />
 
       <DateTimeField v-model="end" label="Fin" :boxed="false" />
@@ -66,13 +71,20 @@ export default Vue.extend({
       },
     },
   },
-  created() {
-    this.start = this.$accessor.timeline.start;
-    this.end = this.$accessor.timeline.end;
+  mounted() {
+    this.refreshToNow();
   },
   methods: {
     updateTimelineFilter() {
       this.$accessor.timeline.updatePeriod(this.period);
+    },
+    setTimeRange() {
+      this.start = this.$accessor.timeline.start;
+      this.end = this.$accessor.timeline.end;
+    },
+    refreshToNow() {
+      this.$accessor.timeline.resetToDefaultPeriod();
+      this.setTimeRange();
     },
   },
 });
