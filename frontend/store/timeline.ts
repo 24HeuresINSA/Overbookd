@@ -110,6 +110,10 @@ export const actions = actionTree(
     updateTeams({ commit }, teams: Team[]) {
       commit("SET_TEAMS", teams);
     },
+    resetToDefaultPeriod({ dispatch }) {
+      const period = defaultPeriod();
+      dispatch("updatePeriod", period);
+    },
   }
 );
 

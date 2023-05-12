@@ -71,13 +71,20 @@ export default Vue.extend({
       },
     },
   },
-  created() {
-    this.start = this.$accessor.needHelp.start;
-    this.end = this.$accessor.needHelp.end;
+  mounted() {
+    this.refreshToNow();
   },
   methods: {
     getVolunteers() {
       this.$accessor.needHelp.updatePeriod(this.period);
+    },
+    setTimeRange() {
+      this.start = this.$accessor.needHelp.start;
+      this.end = this.$accessor.needHelp.end;
+    },
+    refreshToNow() {
+      this.$accessor.needHelp.resetToDefaultPeriod();
+      this.setTimeRange();
     },
   },
 });
