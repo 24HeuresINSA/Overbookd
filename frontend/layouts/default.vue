@@ -58,6 +58,7 @@
       />
       <v-spacer />
       <div v-if="isPreProd" class="watermark">PREPROD</div>
+      <div v-if="isCetaitMieuxAvant" class="watermark">CTMA</div>
       <v-btn v-if="hasPermission('hard')" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
@@ -377,6 +378,9 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     },
     isPreProd() {
       return process.env.BASE_URL.includes("preprod");
+    },
+    isCetaitMieuxAvant() {
+      return process.env.BASE_URL.includes("cetaitmieuxavant");
     },
   },
 
