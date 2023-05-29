@@ -89,7 +89,7 @@
     "source-map-support": "^0.5.20",
     "supertest": "^6.3.3",
     "ts-jest": "28.0.8",
-    "ts-loader": "^9.4.2",
+    "ts-loader": "^9.4.3",
     "ts-node": "^10.0.0",
     "ts-prune": "^0.10.3",
     "tsconfig-paths": "4.2.0",
