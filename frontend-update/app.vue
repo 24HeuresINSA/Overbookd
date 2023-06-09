@@ -1,7 +1,9 @@
 <template>
-  <div>
-    {{ user }}
-  </div>
+  <v-app>
+    <v-main>
+      <v-text-field label="Nom" />
+    </v-main>
+</v-app>
 </template>
 
 <script lang="ts">
