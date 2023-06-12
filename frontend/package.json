@@ -36,7 +36,7 @@
     "@tiptap/pm": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
     "@tiptap/vue-2": "^2.0.3",
-    "core-js": "^3.30.2",
+    "core-js": "^3.31.0",
     "csv-parse": "^5.4.0",
     "eslint-plugin-prettier": "^4.2.1",
     "file-saver": "^2.0.5",
