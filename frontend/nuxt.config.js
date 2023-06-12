@@ -1,6 +1,11 @@
+import { defineNuxtConfig } from "@nuxt/bridge";
 import colors from "vuetify/es5/util/colors";
 
-export default {
+export default defineNuxtConfig({
+  bridge: {
+    typescript: false,
+  },
+  devServerHandlers: [],
   env: {
     BASE_URL: process.env.BASE_URL,
   },
@@ -146,4 +151,4 @@ export default {
       },
     },
   },
-};
+});

@@ -161,8 +161,8 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import SgConfigForm from "~/components/organisms/user/personnalAccount/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repoFactory";
-import transactionRepo from "../repositories/transactionRepo";
-const { safeCall } = require("../utils/api/calls");
+import transactionRepo from "~/repositories/transactionRepo";
+import { safeCall } from "~/utils/api/calls";
 
 export default {
   name: "SG",

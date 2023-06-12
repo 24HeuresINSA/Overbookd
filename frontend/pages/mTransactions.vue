@@ -7,7 +7,7 @@
 </template>
 
 <script>
-const { safeCall } = require("../utils/api/calls");
+import { safeCall } from "~/utils/api/calls";
 import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 
