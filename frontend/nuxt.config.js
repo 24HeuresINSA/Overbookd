@@ -4,8 +4,9 @@ import colors from "vuetify/es5/util/colors";
 export default defineNuxtConfig({
   bridge: {
     typescript: false,
+    transpile: false,
+    capi: false,
   },
-  devServerHandlers: [],
   env: {
     BASE_URL: process.env.BASE_URL,
   },
