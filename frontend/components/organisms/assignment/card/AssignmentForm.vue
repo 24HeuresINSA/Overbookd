@@ -287,7 +287,7 @@ export default Vue.extend({
       position: fixed;
       right: calc(50% - 42px);
       bottom: calc(5% + 36px);
-      @media only screen and(min-height: 1130px) {
+      @media only screen and (min-height: 1130px) {
         bottom: calc(50% - 465px);
       }
     }

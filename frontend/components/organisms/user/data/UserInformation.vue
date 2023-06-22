@@ -316,13 +316,13 @@ export default {
   justify-content: center;
 }
 
-@media only screen and(max-width: 2055px) {
+@media only screen and (max-width: 2055px) {
   .ctas {
     flex-direction: column;
   }
 }
 
-@media only screen and(max-width: 965px) {
+@media only screen and (max-width: 965px) {
   .user-information {
     flex-direction: column;
 

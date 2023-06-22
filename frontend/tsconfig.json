@@ -13,10 +13,6 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
-    },
     "types": [
       "@nuxt/types",
       "@nuxtjs/axios",
