@@ -84,6 +84,8 @@ model User {
   ftsInReview      Ft[]                    @relation("reviewer")
 
   assignments         Assignment[]
+
+  @@map("user")
 }
 
 model Team {
@@ -101,6 +103,8 @@ model Team {
   ftReviews        FtReview[]
   permissions      Team_Permission[]
   Ft               Ft[]
+
+  @@map("team")
 }
 
 model User_Team {
@@ -110,6 +114,7 @@ model User_Team {
   team_id Int
 
   @@id([user_id, team_id])
+  @@map("user_team")
 }
 
 model Permission {
@@ -117,6 +122,8 @@ model Permission {
   name        String            @unique @db.VarChar(30)
   description String?           @db.VarChar(255)
   teams       Team_Permission[]
+
+  @@map("permission")
 }
 
 model Team_Permission {
@@ -126,6 +133,8 @@ model Team_Permission {
   permission_name String     @map("permission_name")
 
   @@id([team_code, permission_name])
+
+  @@map("team_permission")
 }
 
 model TimeSlot {
@@ -137,6 +146,8 @@ model TimeSlot {
   is_hard_only   Boolean          @default(false)
   Availabilities Availabilities[]
   is_deleted     Boolean          @default(false)
+
+  @@map("time_slot")
 }
 
 model Availabilities {
@@ -147,6 +158,8 @@ model Availabilities {
   is_deleted  Boolean  @default(false)
 
   @@id([user_id, timeslot_id])
+
+  @@map("availability")
 }
 
 model Transaction {
@@ -160,6 +173,8 @@ model Transaction {
   context    String          @default("") @db.VarChar(255)
   created_at DateTime        @default(now())
   is_deleted Boolean         @default(false)
+
+  @@map("transaction")
 }
 
 enum Status {
@@ -200,6 +215,8 @@ model fa {
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
+
+  @@map("fa")
 }
 
 enum fa_type {
@@ -225,6 +242,7 @@ model fa_validation {
   is_deleted Boolean  @default(false)
 
   @@id([fa_id, team_id])
+  @@map("fa_validation")
 }
 
 model fa_collaborators {
@@ -235,6 +253,7 @@ model fa_collaborators {
   is_deleted      Boolean      @default(false)
 
   @@id([fa_id, collaborator_id])
+  @@map("fa_collaborator")
 }
 
 model fa_refuse {
@@ -248,6 +267,7 @@ model fa_refuse {
   is_deleted Boolean  @default(false)
 
   @@id([fa_id, team_id])
+  @@map("fa_refuse")
 }
 
 model Signa_Location {
@@ -255,6 +275,8 @@ model Signa_Location {
   name String @db.VarChar(255)
   fa   fa[]
   fts  Ft[]
+
+  @@map("signa_location")
 }
 
 model collaborator {
@@ -268,6 +290,7 @@ model collaborator {
   fa_collaborators fa_collaborators[]
 
   @@unique([firstname, lastname])
+  @@map("collaborator")
 }
 
 //A définir correctement plus tard, placeholder pour le moment
@@ -294,6 +317,8 @@ model fa_electricity_needs {
   power            Int
   count            Int?
   comment          String?          @db.Text
+
+  @@map("fa_electricity_need")
 }
 
 enum signa_type {
@@ -310,6 +335,8 @@ model fa_signa_needs {
   text       String     @db.Text
   count      Int        @default(1)
   comment    String?    @db.Text
+
+  @@map("fa_signa_need")
 }
 
 enum subject_type {
@@ -328,6 +355,8 @@ model fa_comments {
   User_author User         @relation(fields: [author], references: [id])
   author      Int
   created_at  DateTime     @default(now())
+
+  @@map("fa_review")
 }
 
 model FaSitePublishAnimation {
@@ -361,6 +390,8 @@ model time_windows {
   start DateTime
   end   DateTime
   type  time_windows_type
+
+  @@map("fa_time_window")
 }
 
 model Catalog_Category {
@@ -373,6 +404,8 @@ model Catalog_Category {
   owner_id       Int?
   owner          Team?              @relation("owner", fields: [owner_id], references: [id])
   gears          Catalog_Gear[]     @relation("category")
+
+  @@map("catalog_category")
 }
 
 model Catalog_Gear {
@@ -387,12 +420,15 @@ model Catalog_Gear {
   inventoryRecords InventoryRecord[] @relation()
 
   @@index([isPonctualUsage])
+  @@map("catalog_gear")
 }
 
 model Configuration {
   key        String  @id @unique
   value      Json
   is_deleted Boolean @default(false)
+
+  @@map("configuration")
 }
 
 model Period {
@@ -402,6 +438,7 @@ model Period {
   gearRequest GearRequest[] @relation("gear-request-rental-period")
 
   @@index([start, end])
+  @@map("period")
 }
 
 model GearRequest {
@@ -506,7 +543,7 @@ model FtTimeWindows {
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
-  @@map("ft_time_windows")
+  @@map("ft_time_window")
 }
 
 model FtUserRequest {
@@ -564,6 +601,7 @@ model Assignment {
   assigneeId    Int             @map("assignee_id")
 
   @@unique([timespanId, assigneeId])
+  @@map("assignment")
 } 
 
 enum reviewStatus {
@@ -628,4 +666,5 @@ model Friend {
   friendId    Int  @map("friend_id")
 
   @@id([requestorId, friendId])
+  @@map("friend")
 }
