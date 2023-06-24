@@ -10,7 +10,7 @@ ALTER TABLE "fa_collaborators" RENAME TO "fa_collaborator";
 ALTER TABLE "Signa_Location" RENAME TO "signa_location";
 ALTER TABLE "fa_electricity_needs" RENAME TO "fa_electricity_need";
 ALTER TABLE "fa_signa_needs" RENAME TO "fa_signa_need";
-ALTER TABLE "fa_comments" RENAME TO "fa_review";
+ALTER TABLE "fa_comments" RENAME TO "fa_feedback";
 ALTER TABLE "time_windows" RENAME TO "fa_time_window";
 ALTER TABLE "Catalog_Category" RENAME TO "catalog_category";
 ALTER TABLE "Catalog_Gear" RENAME TO "catalog_gear";
@@ -43,7 +43,7 @@ ALTER TABLE "fa_collaborator" RENAME CONSTRAINT "fa_collaborators_pkey" TO "fa_c
 ALTER TABLE "fa_electricity_need" RENAME CONSTRAINT "fa_electricity_needs_pkey" TO "fa_electricity_need_pkey";
 
 -- AlterTable
-ALTER TABLE "fa_review" RENAME CONSTRAINT "fa_comments_pkey" TO "fa_review_pkey";
+ALTER TABLE "fa_feedback" RENAME CONSTRAINT "fa_comments_pkey" TO "fa_feedback_pkey";
 
 -- AlterTable
 ALTER TABLE "fa_signa_need" RENAME CONSTRAINT "fa_signa_needs_pkey" TO "fa_signa_need_pkey";
@@ -121,10 +121,10 @@ ALTER TABLE "fa_collaborator" RENAME CONSTRAINT "fa_collaborators_fa_id_fkey" TO
 ALTER TABLE "fa_electricity_need" RENAME CONSTRAINT "fa_electricity_needs_fa_id_fkey" TO "fa_electricity_need_fa_id_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "fa_review" RENAME CONSTRAINT "fa_comments_author_fkey" TO "fa_review_author_fkey";
+ALTER TABLE "fa_feedback" RENAME CONSTRAINT "fa_comments_author_fkey" TO "fa_feedback_author_fkey";
 
 -- RenameForeignKey
-ALTER TABLE "fa_review" RENAME CONSTRAINT "fa_comments_fa_id_fkey" TO "fa_review_fa_id_fkey";
+ALTER TABLE "fa_feedback" RENAME CONSTRAINT "fa_comments_fa_id_fkey" TO "fa_feedback_fa_id_fkey";
 
 -- RenameForeignKey
 ALTER TABLE "fa_signa_need" RENAME CONSTRAINT "fa_signa_needs_fa_id_fkey" TO "fa_signa_need_fa_id_fkey";

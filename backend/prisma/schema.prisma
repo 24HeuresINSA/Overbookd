@@ -354,7 +354,7 @@ model fa_comments {
   author      Int
   created_at  DateTime     @default(now()) @map("created_at")
 
-  @@map("fa_review")
+  @@map("fa_feedback")
 }
 
 model FaSitePublishAnimation {
