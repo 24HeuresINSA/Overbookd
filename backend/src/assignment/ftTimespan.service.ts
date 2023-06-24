@@ -176,7 +176,7 @@ export class FtTimespanService {
   }
 
   async findTimespanWithFt(timespanId: number): Promise<TimespanWithFt> {
-    const ftTimespan = await this.prisma.ftTimespan.findFirst({
+    const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timespanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
@@ -193,7 +193,7 @@ export class FtTimespanService {
     timespanId: number,
   ): Promise<TimespanWithAssignees> {
     const select = this.buildTimespanWithAssigneesSelection(timespanId);
-    const timespan = await this.prisma.ftTimespan.findFirst({
+    const timespan = await this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timespanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
@@ -206,7 +206,7 @@ export class FtTimespanService {
   async findTimespanWithFtAndAssignment(
     timespanId: number,
   ): Promise<TimespanWithFtAndAssignees> {
-    const ftTimespan = await this.prisma.ftTimespan.findFirst({
+    const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timespanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
@@ -239,7 +239,7 @@ export class FtTimespanService {
       busyPeriods,
     );
 
-    const timespans = await this.prisma.ftTimespan.findMany({
+    const timespans = await this.prisma.ftTimeSpan.findMany({
       select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
       where,
       orderBy: { start: 'asc' },
@@ -248,7 +248,7 @@ export class FtTimespanService {
   }
 
   async getTaskCategory(timespanId: number): Promise<TaskCategory | null> {
-    const ftTimespan = await this.prisma.ftTimespan.findFirst({
+    const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timespanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,

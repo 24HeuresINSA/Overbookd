@@ -15,7 +15,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
-import { time_windows } from '@prisma/client';
+import { FaTimeWindow } from '@prisma/client';
 
 @ApiBearerAuth()
 @ApiTags('time-windows')
@@ -36,28 +36,28 @@ export class TimeWindowsController {
       }),
     )
     tWindows: CreateTimeWindowDto[],
-  ): Promise<time_windows[] | null> {
+  ): Promise<FaTimeWindow[] | null> {
     return this.timeWindowsService.upsert(+faID, tWindows);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get()
-  findAll(): Promise<time_windows[] | null> {
+  findAll(): Promise<FaTimeWindow[] | null> {
     return this.timeWindowsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<time_windows | null> {
+  findOne(@Param('id') id: string): Promise<FaTimeWindow | null> {
     return this.timeWindowsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<time_windows | null> {
+  remove(@Param('id') id: string): Promise<FaTimeWindow | null> {
     return this.timeWindowsService.remove(+id);
   }
 }

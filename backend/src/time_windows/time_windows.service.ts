@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { time_windows } from '@prisma/client';
+import { FaTimeWindow } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateTimeWindowDto } from './dto/create-time_window.dto';
 
@@ -9,11 +9,11 @@ export class TimeWindowsService {
   async upsert(
     faID: number,
     tWindows: CreateTimeWindowDto[],
-  ): Promise<time_windows[] | null> {
+  ): Promise<FaTimeWindow[] | null> {
     return Promise.all(
       tWindows.map(async (tWindow) => {
         if (tWindow.id) {
-          return await this.prisma.time_windows.update({
+          return await this.prisma.faTimeWindow.update({
             where: { id: tWindow.id },
             data: {
               ...tWindow,
@@ -21,7 +21,7 @@ export class TimeWindowsService {
             },
           });
         } else {
-          return await this.prisma.time_windows.create({
+          return await this.prisma.faTimeWindow.create({
             data: {
               ...tWindow,
               fa_id: faID,
@@ -32,20 +32,20 @@ export class TimeWindowsService {
     );
   }
 
-  async findAll(): Promise<time_windows[] | null> {
-    return await this.prisma.time_windows.findMany();
+  async findAll(): Promise<FaTimeWindow[] | null> {
+    return await this.prisma.faTimeWindow.findMany();
   }
 
-  async findOne(id: number): Promise<time_windows | null> {
-    return await this.prisma.time_windows.findUnique({
+  async findOne(id: number): Promise<FaTimeWindow | null> {
+    return await this.prisma.faTimeWindow.findUnique({
       where: {
         id: id,
       },
     });
   }
 
-  async remove(id: number): Promise<time_windows | null> {
-    return await this.prisma.time_windows.delete({
+  async remove(id: number): Promise<FaTimeWindow | null> {
+    return await this.prisma.faTimeWindow.delete({
       where: {
         id: id,
       },

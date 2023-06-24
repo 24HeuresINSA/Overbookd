@@ -25,7 +25,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { fa } from '@prisma/client';
+import { Fa } from '@prisma/client';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFaDto } from './dto/create-fa.dto';
@@ -76,7 +76,7 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Create a new fa',
-    type: Promise<fa | null>,
+    type: Promise<Fa | null>,
   })
   create(@Body() FA: CreateFaDto): Promise<FaResponse | null> {
     return this.faService.create(FA);
@@ -120,7 +120,7 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get a fa',
-    type: Promise<fa | null>,
+    type: Promise<Fa | null>,
   })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<FaResponse | null> {
     return this.faService.findOne(id);
@@ -132,7 +132,7 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
-    type: Promise<fa | null>,
+    type: Promise<Fa | null>,
   })
   @ApiBody({
     description: 'Update a fa',
@@ -151,9 +151,9 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Delete a fa',
-    type: Promise<fa | null>,
+    type: Promise<Fa | null>,
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<fa | null> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<Fa | null> {
     return this.faService.remove(id);
   }
 

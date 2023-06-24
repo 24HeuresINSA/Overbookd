@@ -142,7 +142,7 @@ export class OrgaNeedsService {
   private async getRequestedVolunteers(
     orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<RequestedVolunteersOverPeriod[]> {
-    const timeWindows = await this.prisma.ftTimeWindows.findMany({
+    const timeWindows = await this.prisma.ftTimeWindow.findMany({
       where: {
         ...this.periodIncludedCondition(orgaNeedsRequest),
         ...this.teamRequestedCondition(orgaNeedsRequest.teams),
@@ -175,7 +175,7 @@ export class OrgaNeedsService {
   ): Promise<AssignmentsOverPeriod[]> {
     const teams = orgaNeedsRequest.teams ?? [];
 
-    const assignments = await this.prisma.ftTimespan.findMany({
+    const assignments = await this.prisma.ftTimeSpan.findMany({
       where: {
         ...this.periodIncludedCondition(orgaNeedsRequest),
         ...this.teamRequestedInTimeWindowCondition(teams),

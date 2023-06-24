@@ -291,12 +291,12 @@ export class UserService {
 
     if (!payload.teamId) return newUser;
 
-    const addTeamData: Prisma.User_TeamUncheckedCreateInput = {
+    const addTeamData: Prisma.UserTeamUncheckedCreateInput = {
       team_id: payload.teamId,
       user_id: newUser.id,
     };
 
-    await this.prisma.user_Team.create({
+    await this.prisma.userTeam.create({
       data: addTeamData,
     });
     return newUser;

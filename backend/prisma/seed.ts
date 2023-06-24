@@ -451,7 +451,7 @@ async function main() {
 
   const locations = await Promise.all(
     signaLocations.map(({ name }) =>
-      prisma.signa_Location.create({ data: { name } }),
+      prisma.signaLocation.create({ data: { name } }),
     ),
   );
 

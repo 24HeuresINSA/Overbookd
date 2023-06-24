@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { PrismaService } from '../prisma.service';
-import { collaborator } from '@prisma/client';
+import { Collaborator } from '@prisma/client';
 
 @Injectable()
 export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<collaborator[] | null> {
+  async findAll(): Promise<Collaborator[] | null> {
     return await this.prisma.collaborator.findMany();
   }
 
-  async findOne(id: number): Promise<collaborator | null> {
+  async findOne(id: number): Promise<Collaborator | null> {
     return await this.prisma.collaborator.findUnique({
       where: {
         id: Number(id),
@@ -22,7 +22,7 @@ export class CollaboratorService {
   async upsert(
     faId: number,
     collab: CreateCollaboratorDto[],
-  ): Promise<collaborator[] | null> {
+  ): Promise<Collaborator[] | null> {
     const operations = collab.map((coll) => {
       const col = coll.collaborator;
       if (col.id) {

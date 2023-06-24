@@ -153,7 +153,7 @@ export class FtReviewsService {
   private async getNewFtStatusAfterValidation(
     ftId: number,
   ): Promise<FtStatus> | null {
-    const ftValidators = this.prisma.team_Permission.count({
+    const ftValidators = this.prisma.teamPermission.count({
       where: {
         permission_name: 'ft-validator',
       },
@@ -264,7 +264,7 @@ export class FtReviewsService {
   }
 
   private removeFtTimespans(ftId: number) {
-    return this.prisma.ftTimespan.deleteMany({
+    return this.prisma.ftTimeSpan.deleteMany({
       where: {
         timeWindow: {
           ftId,
@@ -276,7 +276,7 @@ export class FtReviewsService {
   private createNestedTimespansWithAssignments(timespans: Timespan[]) {
     return timespans.map((data) => {
       const { assignments, ...timespan } = data;
-      return this.prisma.ftTimespan.create({
+      return this.prisma.ftTimeSpan.create({
         data: {
           ...timespan,
           assignments: {

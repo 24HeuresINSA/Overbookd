@@ -104,13 +104,13 @@ export class TeamService {
   }
 
   private async forceUserTeams(userId: number, teamsToLink: Team[]) {
-    const deleteAll = this.prisma.user_Team.deleteMany({
+    const deleteAll = this.prisma.userTeam.deleteMany({
       where: {
         user_id: userId,
       },
     });
 
-    const createNew = this.prisma.user_Team.createMany({
+    const createNew = this.prisma.userTeam.createMany({
       data: teamsToLink.map((team) => ({
         user_id: userId,
         team_id: team.id,

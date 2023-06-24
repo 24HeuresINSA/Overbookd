@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { fa_comments, User } from '@prisma/client';
+import { FaFeedback, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateFaCommentDto } from './dto/create-fa_comment.dto';
 
-export type EnrichedFAComments = fa_comments & {
+export type EnrichedFAComments = FaFeedback & {
   User_author?: Pick<User, 'firstname' | 'lastname'>;
 };
 @Injectable()
@@ -21,13 +21,13 @@ export class FaCommentService {
   };
 
   async findAll(): Promise<EnrichedFAComments[] | null> {
-    return await this.prisma.fa_comments.findMany({
+    return await this.prisma.faFeedback.findMany({
       select: this.SELECT_COMMENT,
     });
   }
 
-  async findOne(id: number): Promise<fa_comments | null> {
-    return await this.prisma.fa_comments.findUnique({
+  async findOne(id: number): Promise<FaFeedback | null> {
+    return await this.prisma.faFeedback.findUnique({
       where: {
         id: Number(id),
       },
@@ -43,7 +43,7 @@ export class FaCommentService {
         ...faComment,
         fa_id: faID,
       };
-      return this.prisma.fa_comments.upsert({
+      return this.prisma.faFeedback.upsert({
         where: {
           id: faComment.id || 0,
         },

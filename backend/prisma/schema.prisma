@@ -64,16 +64,16 @@ model User {
   updated_at              DateTime                @updatedAt @map("updated_at")
   is_deleted              Boolean                 @default(false) @map("is_deleted")
 
-  team                    User_Team[]
-  Availabilities          Availabilities[]
+  team                    UserTeam[]
+  Availabilities          Availability[]
 
   transactions_from       Transaction[]           @relation("from")
   transactions_to         Transaction[]           @relation("to")
 
-  fa_in_charge            fa[]                    @relation("in_charge")
-  fa_validation           fa_validation[]
-  fa_refuse               fa_refuse[]
-  fa_comments             fa_comments[]
+  fa_in_charge            Fa[]                    @relation("in_charge")
+  fa_validation           FaValidation[]
+  fa_refuse               FaRefuse[]
+  fa_comments             FaFeedback[]
 
   ftsInCharge             Ft[]                    @relation("inCharge")
   ftFeedbacks             FtFeedback[]
@@ -91,23 +91,23 @@ model User {
 model Team {
   id               Int                @id @default(autoincrement())
   name             String             @unique @db.VarChar(30)
-  users            User_Team[]
+  users            UserTeam[]
   color            String             @default("#000000") @db.VarChar(30)
   icon             String             @default("mdi-circle") @db.VarChar(255)
-  fa               fa[]
-  fa_validation    fa_validation[]
-  fa_refuse        fa_refuse[]
+  fa               Fa[]
+  fa_validation    FaValidation[]
+  fa_refuse        FaRefuse[]
   code             String?            @unique @db.VarChar(20)
   owned_categories CatalogCategory[]  @relation("owner")
   ftRequests       FtTeamRequest[]
   ftReviews        FtReview[]
-  permissions      Team_Permission[]
+  permissions      TeamPermission[]
   Ft               Ft[]
 
   @@map("team")
 }
 
-model User_Team {
+model UserTeam {
   user    User @relation(fields: [user_id], references: [id])
   user_id Int  @map("user_id")
   team    Team @relation(fields: [team_id], references: [id])
@@ -121,12 +121,12 @@ model Permission {
   id          Int               @id @default(autoincrement())
   name        String            @unique @db.VarChar(30)
   description String?           @db.VarChar(255)
-  teams       Team_Permission[]
+  teams       TeamPermission[]
 
   @@map("permission")
 }
 
-model Team_Permission {
+model TeamPermission {
   team            Team       @relation(fields: [team_code], references: [code])
   team_code       String     @map("team_code")
   permission      Permission @relation(fields: [permission_name], references: [name], onDelete: Cascade)
@@ -144,13 +144,13 @@ model TimeSlot {
   end            DateTime
   charisma       Int
   is_hard_only   Boolean          @default(false) @map("is_hard_only")
-  Availabilities Availabilities[]
+  Availabilities Availability[]
   is_deleted     Boolean          @default(false) @map("is_deleted")
 
   @@map("time_slot")
 }
 
-model Availabilities {
+model Availability {
   user_id     Int      @map("user_id")
   user        User     @relation(fields: [user_id], references: [id])
   timeslot_id Int      @map("time_slot_id")
@@ -183,7 +183,7 @@ enum Status {
   REFUSED
 }
 
-model fa {
+model Fa {
   id                     Int                     @id @default(autoincrement())
   name                   String                  @db.VarChar(255)
   fa_type_name           fa_type?                @map("fa_type")
@@ -193,7 +193,7 @@ model fa {
   user_in_charge         User?                   @relation(fields: [in_charge], references: [id], name: "in_charge")
   in_charge              Int?                    @map("in_charge")
   created_at             DateTime?               @default(now()) @map("created_at")
-  location               Signa_Location?         @relation(fields: [location_id], references: [id])
+  location               SignaLocation?          @relation(fields: [location_id], references: [id])
   location_id            Int?                    @map("location_id")
   status                 Status?                 @default(DRAFT)
   description            String?                 @db.Text
@@ -203,13 +203,13 @@ model fa {
   water_needs            String?                 @db.Text @map("water_need")
   water_flow_required    Int?                    @map("water_flow_required")
   is_deleted             Boolean                 @default(false) @map("is_deleted")
-  fa_validation          fa_validation[]
-  fa_refuse              fa_refuse[]
-  fa_collaborators       fa_collaborators[]
-  fa_electricity_needs   fa_electricity_needs[]
-  fa_signa_needs         fa_signa_needs[]
-  fa_comments            fa_comments[]
-  time_windows           time_windows[]
+  fa_validation          FaValidation[]
+  fa_refuse              FaRefuse[]
+  fa_collaborators       FaCollaborator[]
+  fa_electricity_needs   FaElectricityNeed[]
+  fa_signa_needs         FaSignaNeed[]
+  fa_comments            FaFeedback[]
+  time_windows           FaTimeWindow[]
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
@@ -229,8 +229,8 @@ enum fa_type {
   Autre
 }
 
-model fa_validation {
-  fa         fa       @relation(fields: [fa_id], references: [id])
+model FaValidation {
+  fa         Fa       @relation(fields: [fa_id], references: [id])
   fa_id      Int      @map("fa_id")
   User       User     @relation(fields: [user_id], references: [id])
   user_id    Int      @map("user_id")
@@ -243,10 +243,10 @@ model fa_validation {
   @@map("fa_validation")
 }
 
-model fa_collaborators {
-  fa              fa           @relation(fields: [fa_id], references: [id])
+model FaCollaborator {
+  fa              Fa           @relation(fields: [fa_id], references: [id])
   fa_id           Int          @map("fa_id")
-  collaborator    collaborator @relation(fields: [collaborator_id], references: [id], onDelete: Cascade)
+  collaborator    Collaborator @relation(fields: [collaborator_id], references: [id], onDelete: Cascade)
   collaborator_id Int          @map("collaborator_id")
   is_deleted      Boolean      @default(false) @map("is_deleted")
 
@@ -254,8 +254,8 @@ model fa_collaborators {
   @@map("fa_collaborator")
 }
 
-model fa_refuse {
-  fa         fa       @relation(fields: [fa_id], references: [id])
+model FaRefuse {
+  fa         Fa       @relation(fields: [fa_id], references: [id])
   fa_id      Int      @map("fa_id")
   User       User     @relation(fields: [user_id], references: [id])
   user_id    Int      @map("user_id")
@@ -268,16 +268,16 @@ model fa_refuse {
   @@map("fa_refuse")
 }
 
-model Signa_Location {
+model SignaLocation {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
-  fa   fa[]
+  fa   Fa[]
   fts  Ft[]
 
   @@map("signa_location")
 }
 
-model collaborator {
+model Collaborator {
   id               Int                @id @default(autoincrement())
   firstname        String             @db.VarChar(30)
   lastname         String             @db.VarChar(30)
@@ -285,7 +285,7 @@ model collaborator {
   email            String?            @db.VarChar(60)
   company          String?            @db.VarChar(30)
   comment          String?            @db.Text
-  fa_collaborators fa_collaborators[]
+  fa_collaborators FaCollaborator[]
 
   @@unique([firstname, lastname])
   @@map("collaborator")
@@ -306,9 +306,9 @@ enum electricity_type {
   P17_125A_TETRA
 }
 
-model fa_electricity_needs {
+model FaElectricityNeed {
   id               Int              @id @default(autoincrement())
-  fa               fa               @relation(fields: [fa_id], references: [id])
+  fa               Fa               @relation(fields: [fa_id], references: [id])
   fa_id            Int              @map("fa_id")
   electricity_type electricity_type @map("electricity_type")
   device           String?          @db.Text
@@ -325,9 +325,9 @@ enum signa_type {
   PANNEAU
 }
 
-model fa_signa_needs {
+model FaSignaNeed {
   id         Int        @id @default(autoincrement())
-  fa         fa         @relation(fields: [fa_id], references: [id])
+  fa         Fa         @relation(fields: [fa_id], references: [id])
   fa_id      Int        @map("fa_id")
   signa_type signa_type @map("signa_type")
   text       String     @db.Text
@@ -344,9 +344,9 @@ enum subject_type {
   COMMENT
 }
 
-model fa_comments {
+model FaFeedback {
   id          Int          @id @default(autoincrement())
-  fa          fa           @relation(fields: [fa_id], references: [id])
+  fa          Fa           @relation(fields: [fa_id], references: [id])
   fa_id       Int          @map("fa_id")
   comment     String       @db.Text
   subject     subject_type
@@ -358,7 +358,7 @@ model fa_comments {
 }
 
 model FaSitePublishAnimation {
-  fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
+  fa          Fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId        Int                                    @id @map("fa_id")
   photoLink   String                                 @db.Text @default("") @map("photo_link")
   description String                                 @db.Text @default("")
@@ -381,9 +381,9 @@ enum time_windows_type {
   MATOS
 }
 
-model time_windows {
+model FaTimeWindow {
   id    Int               @id @default(autoincrement())
-  fa    fa                @relation(fields: [fa_id], references: [id])
+  fa    Fa                @relation(fields: [fa_id], references: [id])
   fa_id Int               @map("fa_id")
   start DateTime
   end   DateTime
@@ -441,7 +441,7 @@ model Period {
 
 model GearRequest {
   animationId    Int?         @map("animation_id")
-  animation      fa?          @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
+  animation      Fa?          @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
   taskId         Int?         @map("task_id")
   task           Ft?          @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
   rentalPeriodId Int          @map("rental_period_id")
@@ -481,7 +481,7 @@ model Ft {
   id             Int             @id @default(autoincrement())
   name           String
   status         FtStatus        @default(DRAFT)
-  fa             fa?             @relation(fields: [parentFaId], references: [id])
+  fa             Fa?             @relation(fields: [parentFaId], references: [id])
   parentFaId     Int?            @map("parent_fa_id")
   team           Team?           @relation(fields: [teamCode], references: [code])
   teamCode       String?         @map("team_code")
@@ -489,7 +489,7 @@ model Ft {
   description    String?         @db.Text
   userInCharge   User?           @relation(fields: [userInChargeId], references: [id], name: "inCharge")
   userInChargeId Int?            @map("user_in_charge_id")
-  location       Signa_Location? @relation(fields: [locationId], references: [id])
+  location       SignaLocation?  @relation(fields: [locationId], references: [id])
   locationId     Int?            @map("location_id")
   isDeleted      Boolean         @default(false) @map("is_deleted")
   reviewerId     Int?            @map("reviewer_id")
@@ -498,7 +498,7 @@ model Ft {
   category       TaskCategory?
 
   feedbacks    FtFeedback[]
-  timeWindows  FtTimeWindows[]
+  timeWindows  FtTimeWindow[]
   reviews      FtReview[]
   gearRequests GearRequest[]   @relation("gear-request-task")
 
@@ -528,7 +528,7 @@ model FtFeedback {
   @@map("ft_feedback")
 }
 
-model FtTimeWindows {
+model FtTimeWindow {
   id           Int             @id @default(autoincrement())
   ft           Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId         Int             @map("ft_id")
@@ -537,7 +537,7 @@ model FtTimeWindows {
   sliceTime    Float?          @map("slice_time")
   userRequests FtUserRequest[]
   teamRequests FtTeamRequest[]
-  timespans    FtTimespan[]
+  timespans    FtTimeSpan[]
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
@@ -546,7 +546,7 @@ model FtTimeWindows {
 
 model FtUserRequest {
   id              Int           @id @default(autoincrement())
-  ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
+  ftTimeWindows   FtTimeWindow  @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
   ftTimeWindowsId Int           @map("ft_time_window_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
@@ -559,7 +559,7 @@ model FtUserRequest {
 
 model FtTeamRequest {
   id            Int           @id @default(autoincrement())
-  timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
+  timeWindows   FtTimeWindow  @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("ft_time_window_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
@@ -571,9 +571,9 @@ model FtTeamRequest {
   @@map("ft_team_request")
 }
 
-model FtTimespan {
+model FtTimeSpan {
   id           Int           @id @default(autoincrement())
-  timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindow   FtTimeWindow  @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
   timeWindowId Int           @map("ft_time_window_id")
   start        DateTime
   end          DateTime
@@ -590,7 +590,7 @@ model FtTimespan {
 model Assignment {
   id            Int             @id @default(autoincrement())
   timespanId    Int             @map("time_span_id")
-  timespan      FtTimespan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
+  timespan      FtTimeSpan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
   userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
   userRequestId Int?            @map("user_request_id")
   teamRequest   FtTeamRequest?  @relation(fields: [teamRequestId], references: [id], onDelete: Cascade)

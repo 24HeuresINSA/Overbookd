@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { fa, Status } from '@prisma/client';
+import { Fa, Status } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
@@ -89,7 +89,7 @@ export class FaService {
     return this.prisma.fa.create({ data: fa, select: COMPLETE_FA_SELECT });
   }
 
-  async remove(id: number): Promise<fa | null> {
+  async remove(id: number): Promise<Fa | null> {
     return this.prisma.fa.update({
       where: { id: Number(id) },
       data: {
@@ -113,7 +113,7 @@ export class FaService {
     };
     //add the user validation
     await this.prisma.$transaction([
-      this.prisma.fa_validation.upsert({
+      this.prisma.faValidation.upsert({
         create: data,
         update: data,
         where: {
@@ -123,7 +123,7 @@ export class FaService {
           },
         },
       }),
-      this.prisma.fa_refuse.deleteMany({
+      this.prisma.faRefuse.deleteMany({
         where: {
           fa_id,
           team_id,
@@ -151,7 +151,7 @@ export class FaService {
       user_id,
     };
     await this.prisma.$transaction([
-      this.prisma.fa_refuse.upsert({
+      this.prisma.faRefuse.upsert({
         create: data,
         update: data,
         where: {
@@ -204,7 +204,7 @@ export class FaService {
   }
 
   private removeValidationFromTeam(fa_id: number, team_id: number) {
-    return this.prisma.fa_validation.deleteMany({
+    return this.prisma.faValidation.deleteMany({
       where: {
         fa_id,
         team_id,
