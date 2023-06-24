@@ -11,7 +11,7 @@ export interface UserRequest {
 
 export type DataBaseUserRequest = Pick<UserRequest, 'user'> & {
   id: number;
-  ftTimeWindowsId: number;
+  ftTimeWindowId: number;
 };
 
 class AlsoRequestedByFTRepresentation implements AlsoRequestedByFT {

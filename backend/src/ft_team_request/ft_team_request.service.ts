@@ -15,8 +15,8 @@ export class FtTeamRequestService {
     const allRequests = createFtTeamRequestDto.map(({ quantity, teamCode }) =>
       this.prisma.ftTeamRequest.upsert({
         where: {
-          timeWindowsId_teamCode: {
-            timeWindowsId: twId,
+          ftTimeWindowId_teamCode: {
+            ftTimeWindowId: twId,
             teamCode,
           },
         },
@@ -24,7 +24,7 @@ export class FtTeamRequestService {
           quantity,
         },
         create: {
-          timeWindowsId: twId,
+          ftTimeWindowId: twId,
           teamCode,
           quantity,
         },
@@ -40,8 +40,8 @@ export class FtTeamRequestService {
   async remove(ftId: number, twId: number, teamCode: string): Promise<void> {
     await this.prisma.ftTeamRequest.delete({
       where: {
-        timeWindowsId_teamCode: {
-          timeWindowsId: twId,
+        ftTimeWindowId_teamCode: {
+          ftTimeWindowId: twId,
           teamCode,
         },
       },

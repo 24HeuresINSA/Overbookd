@@ -546,28 +546,28 @@ model FtTimeWindows {
 
 model FtUserRequest {
   id              Int           @id @default(autoincrement())
-  ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
-  ftTimeWindowsId Int           @map("ft_time_windows_id")
+  ftTimeWindow    FtTimeWindows @relation(fields: [ftTimeWindowId], references: [id], onDelete: Cascade)
+  ftTimeWindowId  Int           @map("ft_time_window_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
 
   assignments     Assignment[]
 
-  @@unique([ftTimeWindowsId, userId])
+  @@unique([ftTimeWindowId, userId])
   @@map("ft_user_request")
 }
 
 model FtTeamRequest {
-  id            Int           @id @default(autoincrement())
-  timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
-  timeWindowsId Int           @map("time_windows_id")
-  team          Team          @relation(fields: [teamCode], references: [code])
-  teamCode      String        @map("team_code")
-  quantity      Int
+  id             Int           @id @default(autoincrement())
+  ftTimeWindow   FtTimeWindows @relation(fields: [ftTimeWindowId], references: [id], onDelete: Cascade)
+  ftTimeWindowId Int           @map("ft_time_window_id")
+  team           Team          @relation(fields: [teamCode], references: [code])
+  teamCode       String        @map("team_code")
+  quantity       Int
 
   assignments   Assignment[]
 
-  @@unique([timeWindowsId, teamCode])
+  @@unique([ftTimeWindowId, teamCode])
   @@map("ft_team_request")
 }
 

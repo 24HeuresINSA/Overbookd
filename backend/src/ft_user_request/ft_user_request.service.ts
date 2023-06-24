@@ -50,8 +50,8 @@ export class FtUserRequestService {
   async delete(twId: number, userId: number): Promise<void> {
     await this.prisma.ftUserRequest.delete({
       where: {
-        ftTimeWindowsId_userId: {
-          ftTimeWindowsId: twId,
+        ftTimeWindowId_userId: {
+          ftTimeWindowId: twId,
           userId,
         },
       },
@@ -157,7 +157,7 @@ export class FtUserRequestService {
         gt: timeWindow.start,
       },
       NOT: {
-        id: userRequest.ftTimeWindowsId,
+        id: userRequest.ftTimeWindowId,
       },
       userRequests: {
         some: {
@@ -169,7 +169,7 @@ export class FtUserRequestService {
 
   private async retrieveTimeWindow(userRequest: DataBaseUserRequest) {
     return this.prisma.ftTimeWindows.findUnique({
-      where: { id: userRequest.ftTimeWindowsId },
+      where: { id: userRequest.ftTimeWindowId },
       select: {
         start: true,
         end: true,
@@ -189,12 +189,12 @@ export class FtUserRequestService {
   ) {
     const allRequests = requestableUsers.map(({ id }) => {
       const userRequest = {
-        ftTimeWindowsId: twId,
+        ftTimeWindowId: twId,
         userId: id,
       };
       return this.prisma.ftUserRequest.upsert({
         where: {
-          ftTimeWindowsId_userId: userRequest,
+          ftTimeWindowId_userId: userRequest,
         },
         create: userRequest,
 
@@ -204,7 +204,7 @@ export class FtUserRequestService {
             select: SELECT_USERNAME_WITH_ID,
           },
           id: true,
-          ftTimeWindowsId: true,
+          ftTimeWindowId: true,
         },
       });
     });
