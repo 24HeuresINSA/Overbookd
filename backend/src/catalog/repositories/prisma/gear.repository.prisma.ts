@@ -75,7 +75,7 @@ export class PrismaGearRepository implements GearRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getGear(id: number): Promise<Gear | undefined> {
-    const gear = await this.prismaService.catalog_Gear.findUnique({
+    const gear = await this.prismaService.catalogGear.findUnique({
       select: this.SELECT_GEAR,
       where: { id },
     });
@@ -88,7 +88,7 @@ export class PrismaGearRepository implements GearRepository {
   async addGear(gear: Omit<Gear, 'id'>): Promise<Gear> {
     try {
       const data = this.buildUpsertData(gear);
-      const newGear = await this.prismaService.catalog_Gear.create({
+      const newGear = await this.prismaService.catalogGear.create({
         data,
         select: this.SELECT_GEAR,
       });
@@ -112,7 +112,7 @@ export class PrismaGearRepository implements GearRepository {
 
   async updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear> {
     const { id, category, ...data } = gear;
-    const updatedGear = await this.prismaService.catalog_Gear.update({
+    const updatedGear = await this.prismaService.catalogGear.update({
       data: { ...data, category: { connect: { id: category.id } } },
       select: this.SELECT_GEAR,
       where: { id },
@@ -121,13 +121,13 @@ export class PrismaGearRepository implements GearRepository {
   }
 
   async removeGear(id: number): Promise<void> {
-    await this.prismaService.catalog_Gear.delete({ where: { id } });
+    await this.prismaService.catalogGear.delete({ where: { id } });
   }
 
   async searchGear(search: SearchGear): Promise<Gear[]> {
     const where = this.buildSearchConditions(search);
     return (
-      await this.prismaService.catalog_Gear.findMany({
+      await this.prismaService.catalogGear.findMany({
         select: this.SELECT_GEAR,
         where,
       })

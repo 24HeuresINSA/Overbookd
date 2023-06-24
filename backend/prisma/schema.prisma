@@ -98,7 +98,7 @@ model Team {
   fa_validation    fa_validation[]
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
-  owned_categories Catalog_Category[] @relation("owner")
+  owned_categories CatalogCategory[]  @relation("owner")
   ftRequests       FtTeamRequest[]
   ftReviews        FtReview[]
   permissions      Team_Permission[]
@@ -198,7 +198,6 @@ model fa {
   location_id            Int?
   status                 Status?                 @default(DRAFT)
   description            String?                 @db.Text
-  is_major               Boolean?                @default(false)
   security_needs         String?                 @db.Text
   is_pass_required       Boolean?                @db.Boolean
   number_of_pass         Int?
@@ -362,7 +361,7 @@ model fa_comments {
 model FaSitePublishAnimation {
   fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId        Int                                    @id @map("fa_id")
-  photoLink   String                                 @default("") @map("photo_link ") @db.Text
+  photoLink   String                                 @default("") @map("photo_link") @db.Text
   description String                                 @default("") @db.Text
   isMajor     Boolean                                @default(false)
   categories  site_publish_animation_category_type[]
@@ -394,26 +393,26 @@ model time_windows {
   @@map("fa_time_window")
 }
 
-model Catalog_Category {
+model CatalogCategory {
   id             Int                @id @default(autoincrement())
   name           String
   path           String             @unique
   parent         Int?
-  parentCategory Catalog_Category?  @relation("parent", fields: [parent], references: [id])
-  subCategories  Catalog_Category[] @relation("parent")
+  parentCategory CatalogCategory?   @relation("parent", fields: [parent], references: [id])
+  subCategories  CatalogCategory[]  @relation("parent")
   owner_id       Int?
   owner          Team?              @relation("owner", fields: [owner_id], references: [id])
-  gears          Catalog_Gear[]     @relation("category")
+  gears          CatalogGear[]      @relation("category")
 
   @@map("catalog_category")
 }
 
-model Catalog_Gear {
+model CatalogGear {
   id               Int               @id @default(autoincrement())
   name             String
   slug             String            @unique
   category_id      Int?
-  category         Catalog_Category? @relation("category", fields: [category_id], references: [id])
+  category         CatalogCategory?  @relation("category", fields: [category_id], references: [id])
   requests         GearRequest[]     @relation("gear-request-gear")
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
@@ -442,14 +441,14 @@ model Period {
 }
 
 model GearRequest {
-  animationId    Int?
+  animationId    Int?         @map("animation_id")
   animation      fa?          @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
-  taskId         Int?
+  taskId         Int?         @map("task_id")
   task           Ft?          @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
-  rentalPeriodId Int
+  rentalPeriodId Int          @map("rental_period_id")
   rentalPeriod   Period       @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
-  gearId         Int
-  gear           Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
+  gearId         Int          @map("gear_id")
+  gear           CatalogGear  @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
   quantity       Int
   status         String
   drive          String?
@@ -500,7 +499,7 @@ model Ft {
   category       TaskCategory?
 
   feedbacks    FtFeedback[]
-  timeWindows  FtTimeWindows[]
+  timeWindows  FtTimeWindow[]
   reviews      FtReview[]
   gearRequests GearRequest[]   @relation("gear-request-task")
 
@@ -530,7 +529,7 @@ model FtFeedback {
   @@map("ft_feedback")
 }
 
-model FtTimeWindows {
+model FtTimeWindow {
   id           Int             @id @default(autoincrement())
   ft           Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId         Int             @map("ft_id")
@@ -548,7 +547,7 @@ model FtTimeWindows {
 
 model FtUserRequest {
   id              Int           @id @default(autoincrement())
-  ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
+  ftTimeWindows   FtTimeWindow  @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
   ftTimeWindowsId Int           @map("ft_time_windows_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
@@ -561,7 +560,7 @@ model FtUserRequest {
 
 model FtTeamRequest {
   id            Int           @id @default(autoincrement())
-  timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
+  timeWindows   FtTimeWindow @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("time_windows_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
@@ -575,7 +574,7 @@ model FtTeamRequest {
 
 model FtTimespan {
   id           Int           @id @default(autoincrement())
-  timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindow   FtTimeWindow  @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
   timeWindowId Int           @map("time_window_id")
   start        DateTime
   end          DateTime
@@ -591,7 +590,7 @@ model FtTimespan {
 
 model Assignment {
   id            Int             @id @default(autoincrement())
-  timespanId    Int
+  timespanId    Int             @map("timespan_id")
   timespan      FtTimespan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
   userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
   userRequestId Int?            @map("user_request_id")
@@ -604,7 +603,7 @@ model Assignment {
   @@map("assignment")
 } 
 
-enum reviewStatus {
+enum ReviewStatus {
   VALIDATED
   REFUSED
 
@@ -616,14 +615,14 @@ model FtReview {
   ftId     Int          @map("ft_id")
   team     Team         @relation(fields: [teamCode], references: [code])
   teamCode String       @map("team_code")
-  status   reviewStatus
+  status   ReviewStatus
 
   @@unique([ftId, teamCode])
   @@map("ft_review")
 }
 
 model InventoryRecord {
-  gear     Catalog_Gear @relation(fields: [gearId], references: [id], onDelete: Cascade)
+  gear     CatalogGear  @relation(fields: [gearId], references: [id], onDelete: Cascade)
   gearId   Int          @map("gear_id")
   storage  String
   quantity Int

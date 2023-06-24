@@ -26,14 +26,14 @@ export class PrismaCategoryRepository implements CategoryRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   getCategory(id: number): Promise<Category> {
-    return this.prismaService.catalog_Category.findUnique({
+    return this.prismaService.catalogCategory.findUnique({
       select: this.SELECT_CATEGORY,
       where: { id },
     });
   }
 
   getSubCategories(parentId: number): Promise<Category[]> {
-    return this.prismaService.catalog_Category.findMany({
+    return this.prismaService.catalogCategory.findMany({
       select: this.SELECT_CATEGORY,
       where: {
         parent: parentId,
@@ -44,7 +44,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
   async addCategory(category: Omit<Category, 'id'>): Promise<Category> {
     try {
       const data = this.buildUpsertData(category);
-      return await this.prismaService.catalog_Category.create({
+      return await this.prismaService.catalogCategory.create({
         select: this.SELECT_CATEGORY,
         data,
       });
@@ -57,7 +57,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
   }
 
   removeCategory(id: number): Promise<Category> {
-    return this.prismaService.catalog_Category.delete({ where: { id } });
+    return this.prismaService.catalogCategory.delete({ where: { id } });
   }
 
   updateCategories(categories: Category[]): Promise<Category[]> {
@@ -69,7 +69,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
   updateCategory(category: Category) {
     const { id, ...baseCategory } = category;
     const data = this.buildUpsertData(baseCategory);
-    return this.prismaService.catalog_Category.update({
+    return this.prismaService.catalogCategory.update({
       select: this.SELECT_CATEGORY,
       data,
       where: { id },
@@ -77,7 +77,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
   }
 
   getCategoryTrees(): Promise<CategoryTree[]> {
-    return this.prismaService.catalog_Category.findMany({
+    return this.prismaService.catalogCategory.findMany({
       select: {
         ...this.SELECT_CATEGORY,
         subCategories: {
@@ -102,7 +102,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
 
   searchCategory(search: SearchCategory): Promise<Category[]> {
     const where = this.buildSearchConditions(search);
-    return this.prismaService.catalog_Category.findMany({
+    return this.prismaService.catalogCategory.findMany({
       select: this.SELECT_CATEGORY,
       where,
     });

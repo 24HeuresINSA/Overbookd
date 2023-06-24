@@ -85,7 +85,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
   }
 
   private async findGear(gearId: number): Promise<Gear> {
-    const gear = await this.prismaService.catalog_Gear.findUnique({
+    const gear = await this.prismaService.catalogGear.findUnique({
       select: this.SELECT_GEAR,
       where: { id: gearId },
     });

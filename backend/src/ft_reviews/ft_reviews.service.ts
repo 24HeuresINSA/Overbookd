@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FtReview, FtStatus, reviewStatus, Status } from '@prisma/client';
+import { FtReview, FtStatus, ReviewStatus, Status } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
@@ -31,7 +31,7 @@ export class FtReviewsService {
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
-      status: reviewStatus.VALIDATED,
+      status: ReviewStatus.VALIDATED,
     };
     this.logger.log(`Validate FT #${ftId} as ${reviewer.teamCode}`);
     const upsertReview = this.prisma.ftReview.upsert({
@@ -68,7 +68,7 @@ export class FtReviewsService {
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
-      status: reviewStatus.REFUSED,
+      status: ReviewStatus.REFUSED,
     };
     this.logger.log(`Refuse FT #${ftId} as ${reviewer.teamCode}`);
     const upsertReview = this.prisma.ftReview.upsert({
@@ -161,7 +161,7 @@ export class FtReviewsService {
     const ftValidatedReviews = this.prisma.ftReview.count({
       where: {
         ftId,
-        status: reviewStatus.VALIDATED,
+        status: ReviewStatus.VALIDATED,
       },
     });
     const [ftValidatorsCount, ftValidatedReviewsCount] =

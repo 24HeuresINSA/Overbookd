@@ -1,4 +1,4 @@
-import { FtStatus, FtSubjectType, reviewStatus, Status } from '@prisma/client';
+import { FtStatus, FtSubjectType, ReviewStatus, Status } from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
 import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
@@ -59,7 +59,7 @@ interface TeamRequestAssignment {
 }
 
 export class Review {
-  status: reviewStatus;
+  status: ReviewStatus;
   team: Team;
 }
 
