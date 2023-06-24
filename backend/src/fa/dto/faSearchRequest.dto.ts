@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '@prisma/client';
+import { FaStatus } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
@@ -22,12 +22,12 @@ export class FASearchRequestDto implements SearchFa {
   @ApiProperty({
     required: false,
     description: 'FA status',
-    enum: Status,
+    enum: FaStatus,
   })
   @IsOptional()
-  @IsEnum(Status, {
+  @IsEnum(FaStatus, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Status)}`,
+      `${va.property} must be one of ${Object.values(FaStatus)}`,
   })
-  status?: Status;
+  status?: FaStatus;
 }

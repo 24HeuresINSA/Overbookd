@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import {
-  LiteSitePublishAnimation,
-  SitePublishAnimationCategoryType,
-} from '../interfaces';
+import { LiteSitePublishAnimation } from '../interfaces';
+import { SitePublishAnimationCategoryType } from '@prisma/client';
 
 export class FaSitePublishAnimationFormRequestDto
   implements LiteSitePublishAnimation

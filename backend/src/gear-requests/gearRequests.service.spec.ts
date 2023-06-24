@@ -1,7 +1,7 @@
 import { formatDateWithMinutes } from '../utils/date';
 import { Gear } from '../catalog/interfaces';
 import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
-import { Status } from '../fa/dto/update-fa.dto';
+import { FaStatus } from '../fa/dto/update-fa.dto';
 import {
   APPROVED,
   GearRequest,
@@ -38,13 +38,13 @@ const MAY_23 = {
 const CHATEAU_GONFLABLE = {
   id: 1,
   name: 'Chateau Gonflable',
-  status: Status.DRAFT,
+  status: FaStatus.DRAFT,
 };
-const KRAVMAGA = { id: 2, name: 'Kravmaga', status: Status.DRAFT };
+const KRAVMAGA = { id: 2, name: 'Kravmaga', status: FaStatus.DRAFT };
 const BAR_DECOUVERTE = {
   id: 3,
   name: 'Bar Decouverte',
-  status: Status.VALIDATED,
+  status: FaStatus.VALIDATED,
 };
 const INSTALLER_CHATEAU_GONFLABLE: Task = {
   id: 1,

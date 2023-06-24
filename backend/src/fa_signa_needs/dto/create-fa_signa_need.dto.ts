@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { SignaType } from '@prisma/client';
 import {
   IsNotEmpty,
   IsOptional,
@@ -9,12 +10,6 @@ import {
   IsDefined,
   Min,
 } from 'class-validator';
-
-enum signa_type {
-  BANNIERE = 'BANNIERE',
-  PANCARTE = 'PANCARTE',
-  PANNEAU = 'PANNEAU',
-}
 
 export class CreateFaSignaNeedDto {
   @ApiProperty({
@@ -28,14 +23,14 @@ export class CreateFaSignaNeedDto {
   @ApiProperty({
     required: true,
     description: 'The type of signalisation',
-    enum: signa_type,
+    enum: SignaType,
   })
   @IsDefined()
-  @IsEnum(signa_type, {
+  @IsEnum(SignaType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(signa_type)}`,
+      `${va.property} must be one of ${Object.values(SignaType)}`,
   })
-  signa_type: signa_type;
+  signa_type: SignaType;
 
   @ApiProperty({
     required: true,

@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { FaStatus } from '@prisma/client';
 import { AnimationAlreadyValidatedError } from '../animations/animation.error';
 import {
   GearRequestIdentifierSeeker,
@@ -29,7 +29,7 @@ export class AnimationGearSeekerRegistery implements GearSeekerRegistery {
 
   async checkSeekerInteractionPossibility(id: number): Promise<void> {
     const animation = await this.animationRepository.getAnimation(id);
-    if (animation.status === Status.VALIDATED)
+    if (animation.status === FaStatus.VALIDATED)
       throw new AnimationAlreadyValidatedError(id);
   }
 

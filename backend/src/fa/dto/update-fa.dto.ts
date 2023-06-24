@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FaStatus, FaType } from '@prisma/client';
 import {
   IsBoolean,
   IsDateString,
@@ -11,25 +12,6 @@ import {
   Min,
   ValidationArguments,
 } from 'class-validator';
-
-export enum Status {
-  DRAFT = 'DRAFT',
-  SUBMITTED = 'SUBMITTED',
-  VALIDATED = 'VALIDATED',
-  REFUSED = 'REFUSED',
-}
-
-enum fa_type {
-  Concert = 'Concert',
-  Course = 'Course',
-  Divertissement = 'Divertissement',
-  Initiation = 'Initiation',
-  Tournoi = 'Tournoi',
-  Vente = 'Vente',
-  Prevention = 'Prevention',
-  Spectacle = 'Spectacle',
-  Autre = 'Autre',
-}
 
 export class UpdateFaDto {
   @ApiProperty({
@@ -53,14 +35,14 @@ export class UpdateFaDto {
   @ApiProperty({
     required: false,
     description: 'The type of the fa',
-    enum: fa_type,
+    enum: FaType,
   })
   @IsOptional()
-  @IsEnum(fa_type, {
+  @IsEnum(FaType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Status)}`,
+      `${va.property} must be one of ${Object.values(FaStatus)}`,
   })
-  type?: fa_type;
+  type?: FaType;
 
   @ApiProperty({
     required: false,
@@ -92,14 +74,14 @@ export class UpdateFaDto {
   @ApiProperty({
     required: false,
     description: 'The status of the fa',
-    enum: Status,
+    enum: FaStatus,
   })
   @IsOptional()
-  @IsEnum(Status, {
+  @IsEnum(FaStatus, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Status)}`,
+      `${va.property} must be one of ${Object.values(FaStatus)}`,
   })
-  status?: Status;
+  status?: FaStatus;
 
   @ApiProperty({
     required: false,

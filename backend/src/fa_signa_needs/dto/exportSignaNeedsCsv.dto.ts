@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { signa_type } from '@prisma/client';
+import { SignaType } from '@prisma/client';
 
 export class FaSignaNeedsExportCsvDto {
   @ApiProperty({
@@ -10,9 +10,9 @@ export class FaSignaNeedsExportCsvDto {
 
   @ApiProperty({
     description: 'Type of the signa',
-    enum: signa_type,
+    enum: SignaType,
   })
-  signa_type: signa_type;
+  signa_type: SignaType;
 
   @ApiProperty({
     description: 'Text of the signa',

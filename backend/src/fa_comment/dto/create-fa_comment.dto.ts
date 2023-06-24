@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FaFeedbackSubjectType } from '@prisma/client';
 import {
   IsNotEmpty,
   IsOptional,
@@ -11,12 +12,6 @@ import {
   IsDateString,
 } from 'class-validator';
 
-enum subject_type {
-  REFUSED = 'REFUSED',
-  VALIDATED = 'VALIDATED',
-  COMMENT = 'COMMENT',
-  SUBMIT = 'SUBMIT',
-}
 export class CreateFaCommentDto {
   @ApiProperty({
     required: false,
@@ -38,14 +33,14 @@ export class CreateFaCommentDto {
   @ApiProperty({
     required: true,
     description: 'The subject of the comment',
-    enum: subject_type,
+    enum: FaFeedbackSubjectType,
   })
   @IsDefined()
-  @IsEnum(subject_type, {
+  @IsEnum(FaFeedbackSubjectType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(subject_type)}`,
+      `${va.property} must be one of ${Object.values(FaFeedbackSubjectType)}`,
   })
-  subject: subject_type;
+  subject: FaFeedbackSubjectType;
 
   @ApiProperty({
     required: true,

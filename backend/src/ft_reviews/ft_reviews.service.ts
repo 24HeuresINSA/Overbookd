@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FtReview, FtStatus, ReviewStatus, Status } from '@prisma/client';
+import { FtReview, FtStatus, ReviewStatus, FaStatus } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
@@ -181,7 +181,7 @@ export class FtReviewsService {
     if (ft.status !== FtStatus.VALIDATED) {
       throw new BadRequestException('FT non validée');
     }
-    if (ft.fa.status !== Status.VALIDATED) {
+    if (ft.fa.status !== FaStatus.VALIDATED) {
       throw new BadRequestException('FA non validée');
     }
     await this.hasAtLeastOneConflict(ft);

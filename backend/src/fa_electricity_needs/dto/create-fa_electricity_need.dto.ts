@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ElectricityType } from '@prisma/client';
 import {
   IsEnum,
   IsNotEmpty,
@@ -8,19 +9,6 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-enum electricity_type {
-  PC16 = 'PC16_Prise_classique',
-  P17_16A_MONO = 'P17_16A_MONO',
-  P17_16A_TRI = 'P17_16A_TRI',
-  P17_16A_TETRA = 'P17_16A_TETRA',
-  P17_32A_MONO = 'P17_32A_MONO',
-  P17_32A_TRI = 'P17_32A_TRI',
-  P17_32A_TETRA = 'P17_32A_TETRA',
-  P17_63A_MONO = 'P17_63A_MONO',
-  P17_63A_TRI = 'P17_63A_TRI',
-  P17_63A_TETRA = 'P17_63A_TETRA',
-  P17_125A_TETRA = 'P17_125A_TETRA',
-}
 export class CreateFaElectricityNeedDto {
   @ApiProperty({
     required: false,
@@ -34,11 +22,11 @@ export class CreateFaElectricityNeedDto {
     required: true,
     description: 'The type of electricity',
   })
-  @IsEnum(electricity_type, {
+  @IsEnum(ElectricityType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(electricity_type)}`,
+      `${va.property} must be one of ${Object.values(ElectricityType)}`,
   })
-  electricity_type: electricity_type;
+  electricity_type: ElectricityType;
 
   @ApiProperty({
     required: false,

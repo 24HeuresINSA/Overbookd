@@ -1,4 +1,9 @@
-import { FtStatus, FtSubjectType, ReviewStatus, Status } from '@prisma/client';
+import {
+  FtStatus,
+  FtSubjectType,
+  ReviewStatus,
+  FaStatus,
+} from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
 import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
@@ -74,7 +79,7 @@ export class Feedback {
 export class MinimalFa {
   id: number;
   name: string;
-  status: Status;
+  status: FaStatus;
 }
 
 export interface CompleteFtResponse {
