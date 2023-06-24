@@ -19,6 +19,7 @@ ALTER TABLE "Period" RENAME TO "period";
 ALTER TABLE "ft_time_windows" RENAME TO "ft_time_window";
 ALTER TABLE "Assignment" RENAME TO "assignment";
 ALTER TABLE "Friend" RENAME TO "friend";
+ALTER TABLE "ft_timespan" RENAME TO "ft_time_span";
 
 -- AlterTable
 ALTER TABLE "assignment" RENAME CONSTRAINT "Assignment_pkey" TO "assignment_pkey";

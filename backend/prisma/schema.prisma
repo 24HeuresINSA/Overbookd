@@ -153,7 +153,7 @@ model TimeSlot {
 model Availabilities {
   user_id     Int      @map("user_id")
   user        User     @relation(fields: [user_id], references: [id])
-  timeslot_id Int      @map("timeslot_id")
+  timeslot_id Int      @map("time_slot_id")
   timeslot    TimeSlot @relation(fields: [timeslot_id], references: [id])
   is_deleted  Boolean  @default(false) @map("is_deleted")
 
@@ -547,7 +547,7 @@ model FtTimeWindows {
 model FtUserRequest {
   id              Int           @id @default(autoincrement())
   ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
-  ftTimeWindowsId Int           @map("ft_time_windows_id")
+  ftTimeWindowsId Int           @map("ft_time_window_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
 
@@ -560,7 +560,7 @@ model FtUserRequest {
 model FtTeamRequest {
   id            Int           @id @default(autoincrement())
   timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
-  timeWindowsId Int           @map("time_windows_id")
+  timeWindowsId Int           @map("ft_time_window_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
   quantity      Int
@@ -574,7 +574,7 @@ model FtTeamRequest {
 model FtTimespan {
   id           Int           @id @default(autoincrement())
   timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
-  timeWindowId Int           @map("time_window_id")
+  timeWindowId Int           @map("ft_time_window_id")
   start        DateTime
   end          DateTime
 
@@ -583,13 +583,13 @@ model FtTimespan {
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
   @@index([start(sort: Asc), end(sort: Asc)])
-  @@map("ft_timespan")
+  @@map("ft_time_span")
   @@unique([timeWindowId, start, end])
 }
 
 model Assignment {
   id            Int             @id @default(autoincrement())
-  timespanId    Int             @map("timespan_id")
+  timespanId    Int             @map("time_span_id")
   timespan      FtTimespan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
   userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
   userRequestId Int?            @map("user_request_id")
