@@ -498,7 +498,7 @@ model Ft {
   category       TaskCategory?
 
   feedbacks    FtFeedback[]
-  timeWindows  FtTimeWindow[]
+  timeWindows  FtTimeWindows[]
   reviews      FtReview[]
   gearRequests GearRequest[]   @relation("gear-request-task")
 
@@ -528,7 +528,7 @@ model FtFeedback {
   @@map("ft_feedback")
 }
 
-model FtTimeWindow {
+model FtTimeWindows {
   id           Int             @id @default(autoincrement())
   ft           Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId         Int             @map("ft_id")
@@ -546,7 +546,7 @@ model FtTimeWindow {
 
 model FtUserRequest {
   id              Int           @id @default(autoincrement())
-  ftTimeWindows   FtTimeWindow  @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
+  ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
   ftTimeWindowsId Int           @map("ft_time_windows_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
@@ -559,7 +559,7 @@ model FtUserRequest {
 
 model FtTeamRequest {
   id            Int           @id @default(autoincrement())
-  timeWindows   FtTimeWindow @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
+  timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
   timeWindowsId Int           @map("time_windows_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
@@ -573,7 +573,7 @@ model FtTeamRequest {
 
 model FtTimespan {
   id           Int           @id @default(autoincrement())
-  timeWindow   FtTimeWindow  @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
+  timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
   timeWindowId Int           @map("time_window_id")
   start        DateTime
   end          DateTime
