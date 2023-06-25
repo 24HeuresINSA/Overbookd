@@ -351,7 +351,7 @@ model fa_comments {
   comment     String       @db.Text
   subject     subject_type
   User_author User         @relation(fields: [author], references: [id])
-  author      Int
+  author      Int          @map("author_id")
   created_at  DateTime     @default(now()) @map("created_at")
 
   @@map("fa_feedback")
