@@ -362,7 +362,7 @@ model FaSitePublishAnimation {
   faId        Int                                    @id @map("fa_id")
   photoLink   String                                 @db.Text @default("") @map("photo_link")
   description String                                 @db.Text @default("")
-  isMajor     Boolean                                @default(false) @map("is_major")
+  isMajor     Boolean                                @default(false) @map("is_flagship")
   categories  site_publish_animation_category_type[]
 
   @@map("fa_site_publish_animation")
