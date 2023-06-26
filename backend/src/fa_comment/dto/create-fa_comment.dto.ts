@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FaFeedbackSubjectType } from '@prisma/client';
 import {
   IsNotEmpty,
   IsOptional,
@@ -11,6 +10,13 @@ import {
   Min,
   IsDateString,
 } from 'class-validator';
+
+enum FaFeedbackSubjectType {
+  REFUSED = 'REFUSED',
+  VALIDATED = 'VALIDATED',
+  COMMENT = 'COMMENT',
+  SUBMIT = 'SUBMIT',
+}
 
 export class CreateFaCommentDto {
   @ApiProperty({
@@ -49,7 +55,7 @@ export class CreateFaCommentDto {
   @IsDefined()
   @IsNumber()
   @Min(1)
-  author: number;
+  authorId: number;
 
   @ApiProperty({
     required: false,

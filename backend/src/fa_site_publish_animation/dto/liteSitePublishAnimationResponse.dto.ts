@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean } from 'class-validator';
 import { LiteSitePublishAnimation } from '../interfaces';
-import { SitePublishAnimationCategoryType } from '@prisma/client';
+
+enum SitePublishAnimationCategoryType {
+  Divertissement = 'Divertissement',
+  Culture = 'Culture',
+  Sport = 'Sport',
+  Enfant = 'Enfant',
+  Autre = 'Autre',
+}
 
 export class LiteSitePublishAnimationResponseDto
   implements LiteSitePublishAnimation

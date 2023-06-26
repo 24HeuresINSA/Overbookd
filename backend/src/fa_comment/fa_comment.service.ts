@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateFaCommentDto } from './dto/create-fa_comment.dto';
 
 export type EnrichedFAComments = FaFeedback & {
-  User_author?: Pick<User, 'firstname' | 'lastname'>;
+  author?: Pick<User, 'firstname' | 'lastname'>;
 };
 @Injectable()
 export class FaCommentService {
@@ -16,8 +16,8 @@ export class FaCommentService {
     comment: true,
     subject: true,
     created_at: true,
-    author: true,
-    User_author: { select: { firstname: true, lastname: true } },
+    authorId: true,
+    author: { select: { firstname: true, lastname: true } },
   };
 
   async findAll(): Promise<EnrichedFAComments[] | null> {

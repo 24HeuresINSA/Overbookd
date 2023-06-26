@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FaStatus, FaType } from '@prisma/client';
 import {
   IsBoolean,
   IsDateString,
@@ -12,6 +11,19 @@ import {
   Min,
   ValidationArguments,
 } from 'class-validator';
+import { FaStatus } from '../fa_types';
+
+enum FaType {
+  Concert = 'Concert',
+  Course = 'Course',
+  Divertissement = 'Divertissement',
+  Initiation = 'Initiation',
+  Tournoi = 'Tournoi',
+  Vente = 'Vente',
+  Prevention = 'Prevention',
+  Spectacle = 'Spectacle',
+  Autre = 'Autre',
+}
 
 export class UpdateFaDto {
   @ApiProperty({

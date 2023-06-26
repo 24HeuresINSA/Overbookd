@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SignaType } from '@prisma/client';
 import {
   IsNotEmpty,
   IsOptional,
@@ -10,6 +9,12 @@ import {
   IsDefined,
   Min,
 } from 'class-validator';
+
+enum SignaType {
+  BANNIERE = 'BANNIERE',
+  PANCARTE = 'PANCARTE',
+  PANNEAU = 'PANNEAU',
+}
 
 export class CreateFaSignaNeedDto {
   @ApiProperty({

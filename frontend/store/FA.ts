@@ -10,34 +10,34 @@ import {
 } from "~/utils/functions/gearRequest";
 import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import {
-  castFaWithDate,
-  collaborator,
   CreateFA,
   FA,
   FAPageId,
   FaSignaNeedsExportCsv,
-  fa_collaborators,
-  fa_comments,
-  fa_electricity_needs,
-  fa_signa_needs,
-  fa_validation_body,
   SearchFA,
   SitePublishAnimation,
   SitePublishAnimationCreation,
   SortedStoredGearRequests,
   Status,
+  castFaWithDate,
+  collaborator,
+  fa_collaborators,
+  fa_comments,
+  fa_electricity_needs,
+  fa_signa_needs,
+  fa_validation_body,
   time_windows,
   time_windows_type,
 } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 import { FT, FTSimplified } from "~/utils/models/ft";
 import {
-  castGearRequestWithDate,
   GearRequest,
   GearRequestCreation,
   GearRequestWithDrive,
   Period,
   StoredGearRequest,
+  castGearRequestWithDate,
 } from "~/utils/models/gearRequests";
 import { sendNotification } from "./catalog";
 
@@ -331,7 +331,7 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: SubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
-        author: authorId,
+        authorId: authorId,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -426,7 +426,7 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: SubjectType.VALIDATED,
         comment: `La FA a été validée par ${team_name}.`,
-        author: author.id,
+        authorId: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -445,7 +445,7 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: SubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
-        author: author.id,
+        authorId: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -477,7 +477,7 @@ export const actions = actionTree(
       const comment: fa_comments = {
         subject: SubjectType.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
-        author: author.id,
+        authorId: author.id,
         created_at: new Date(),
       };
       dispatch("addComment", { comment, defaultAuthor: author });
@@ -534,7 +534,7 @@ export const actions = actionTree(
         defaultAuthor: { firstname: string; lastname: string };
       }
     ) {
-      commit("ADD_COMMENT", { ...comment, User_author: defaultAuthor });
+      commit("ADD_COMMENT", { ...comment, author: defaultAuthor });
       const res = await RepoFactory.faRepo.updateFAComments(
         this,
         state.mFA.id,

@@ -1,6 +1,13 @@
 import { Prisma } from '@prisma/client';
 import { TEAM_SELECT } from 'src/team/team.service';
 
+export enum FaStatus {
+  DRAFT = 'DRAFT',
+  SUBMITTED = 'SUBMITTED',
+  VALIDATED = 'VALIDATED',
+  REFUSED = 'REFUSED',
+}
+
 export type FaResponse = Prisma.FaGetPayload<{
   select: typeof COMPLETE_FA_SELECT;
 }>;
@@ -99,8 +106,8 @@ export const COMPLETE_FA_SELECT = {
       comment: true,
       subject: true,
       created_at: true,
-      author: true,
-      User_author: {
+      authorId: true,
+      author: {
         select: {
           firstname: true,
           lastname: true,

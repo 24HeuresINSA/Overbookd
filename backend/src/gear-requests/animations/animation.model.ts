@@ -1,4 +1,4 @@
-import { FaStatus } from '@prisma/client';
+import { FaStatus } from 'src/fa/fa_types';
 
 export interface Animation {
   id: number;

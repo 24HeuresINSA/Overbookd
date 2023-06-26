@@ -1,8 +1,8 @@
 import {
+  FaStatus,
   FtStatus,
   FtSubjectType,
   ReviewStatus,
-  FaStatus,
 } from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
 import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';

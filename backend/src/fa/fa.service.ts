@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Fa, FaStatus } from '@prisma/client';
+import { Fa } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
@@ -12,6 +12,7 @@ import {
   COMPLETE_FA_SELECT,
   FaIdResponse,
   FaResponse,
+  FaStatus,
 } from './fa_types';
 
 export interface SearchFa {

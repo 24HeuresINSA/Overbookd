@@ -30,10 +30,10 @@ const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
 
 function omitAuthors(comments: fa_comments[]): fa_comments[] {
-  return comments.map(({ id, comment, author, subject, created_at }) => ({
+  return comments.map(({ id, comment, authorId, subject, created_at }) => ({
     id,
     comment,
-    author,
+    authorId,
     subject,
     created_at,
   }));

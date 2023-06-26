@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ElectricityType } from '@prisma/client';
 import {
   IsEnum,
   IsNotEmpty,
@@ -8,6 +7,20 @@ import {
   IsString,
   ValidationArguments,
 } from 'class-validator';
+
+enum ElectricityType {
+  PC16 = 'PC16_Prise_classique',
+  P17_16A_MONO = 'P17_16A_MONO',
+  P17_16A_TRI = 'P17_16A_TRI',
+  P17_16A_TETRA = 'P17_16A_TETRA',
+  P17_32A_MONO = 'P17_32A_MONO',
+  P17_32A_TRI = 'P17_32A_TRI',
+  P17_32A_TETRA = 'P17_32A_TETRA',
+  P17_63A_MONO = 'P17_63A_MONO',
+  P17_63A_TRI = 'P17_63A_TRI',
+  P17_63A_TETRA = 'P17_63A_TETRA',
+  P17_125A_TETRA = 'P17_125A_TETRA',
+}
 
 export class CreateFaElectricityNeedDto {
   @ApiProperty({

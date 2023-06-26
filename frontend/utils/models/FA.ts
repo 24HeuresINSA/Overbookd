@@ -141,8 +141,8 @@ export interface fa_comments {
   comment: string;
   subject: SubjectType;
   created_at?: Date;
-  author: number;
-  User_author?: DisplayedUser;
+  authorId: number;
+  author?: DisplayedUser;
 }
 
 interface FAReview {
