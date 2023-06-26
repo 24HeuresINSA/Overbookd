@@ -30,7 +30,7 @@ export class CreateFaSignaNeedDto {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(SignaType)}`,
   })
-  signa_type: SignaType;
+  signaType: SignaType;
 
   @ApiProperty({
     required: true,

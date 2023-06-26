@@ -8,7 +8,7 @@ import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
 export class FaSignaNeedsService {
   constructor(private prisma: PrismaService) {}
   async upsert(
-    faID: number,
+    faId: number,
     createFaSignaNeedDto: CreateFaSignaNeedDto[],
   ): Promise<FaSignaNeed[] | null> {
     return Promise.all(
@@ -20,14 +20,14 @@ export class FaSignaNeedsService {
             },
             data: {
               ...faSignaNeed,
-              fa_id: faID,
+              faId,
             },
           });
         } else {
           return await this.prisma.faSignaNeed.create({
             data: {
-              fa_id: faID,
               ...faSignaNeed,
+              faId,
             },
           });
         }
@@ -49,21 +49,19 @@ export class FaSignaNeedsService {
 
   async remove(id: number): Promise<FaSignaNeed | null> {
     return await this.prisma.faSignaNeed.delete({
-      where: {
-        id: Number(id),
-      },
+      where: { id },
     });
   }
 
   async findSignaNeedsForExport(): Promise<ExportSignaNeeds[]> {
-    const signa_needs = await this.prisma.faSignaNeed.findMany({
+    const signaNeed = await this.prisma.faSignaNeed.findMany({
       select: EXPORT_SIGNA_SELECT,
       where: {
         fa: {
-          is_deleted: false,
-          fa_validation: {
+          isDeleted: false,
+          faValidation: {
             some: {
-              Team: {
+              team: {
                 code: 'signa',
               },
             },
@@ -72,10 +70,10 @@ export class FaSignaNeedsService {
       },
     });
     //map the signa needs to a more readable format for the export remove the nested object
-    return signa_needs.map((signa) => ({
-      fa_id: signa.fa_id,
-      fa_name: signa.fa.name,
-      signa_type: signa.signa_type,
+    return signaNeed.map((signa) => ({
+      faId: signa.faId,
+      faName: signa.fa.name,
+      signaType: signa.signaType,
       text: signa.text,
       count: signa.count,
       comment: signa.comment,

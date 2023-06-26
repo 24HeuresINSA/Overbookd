@@ -18,26 +18,20 @@ export class SignaLocationService {
 
   findOne(id: number) {
     return this.prisma.signaLocation.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
   }
 
   update(id: number, updateSignaLocationDto: UpdateSignaLocationDto) {
     return this.prisma.signaLocation.update({
-      where: {
-        id: id,
-      },
+      where: { id },
       data: updateSignaLocationDto,
     });
   }
 
   remove(id: number) {
     return this.prisma.signaLocation.delete({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
   }
 }

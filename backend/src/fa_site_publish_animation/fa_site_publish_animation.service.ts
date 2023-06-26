@@ -13,7 +13,7 @@ type DatabaseSitePublishAnimationFa = Omit<
   SitePublishAnimationFa,
   'timeWindows'
 > & {
-  time_windows: Period[];
+  timeWindows: Period[];
 };
 
 type DatabaseSitePublishAnimation = Omit<SitePublishAnimation, 'fa'> & {
@@ -28,7 +28,7 @@ function convertToSitePublishAnimation(
     fa: {
       id: publishAnimation.fa.id,
       name: publishAnimation.fa.name,
-      timeWindows: publishAnimation.fa.time_windows,
+      timeWindows: publishAnimation.fa.timeWindows,
     },
   };
 }
@@ -38,7 +38,7 @@ export class FaSitePublishAnimationService {
   constructor(private prisma: PrismaService) {}
 
   private readonly SELECT_LITE_PUBLISH_ANIMATION = {
-    isMajor: true,
+    isFlagship: true,
     description: true,
     photoLink: true,
     categories: true,
@@ -50,7 +50,7 @@ export class FaSitePublishAnimationService {
       select: {
         id: true,
         name: true,
-        time_windows: {
+        timeWindows: {
           select: {
             id: true,
             start: true,
@@ -65,9 +65,7 @@ export class FaSitePublishAnimationService {
     createFaSitePublishAnimation: FaSitePublishAnimationCreationFormRequestDto,
   ): Promise<LiteSitePublishAnimation | null> {
     return this.prisma.faSitePublishAnimation.create({
-      data: {
-        ...createFaSitePublishAnimation,
-      },
+      data: { ...createFaSitePublishAnimation },
       select: this.SELECT_LITE_PUBLISH_ANIMATION,
     });
   }
@@ -77,12 +75,8 @@ export class FaSitePublishAnimationService {
     updateFaSitePublishAnimation: FaSitePublishAnimationFormRequestDto,
   ): Promise<LiteSitePublishAnimation | null> {
     return this.prisma.faSitePublishAnimation.update({
-      where: {
-        faId,
-      },
-      data: {
-        ...updateFaSitePublishAnimation,
-      },
+      where: { faId },
+      data: { ...updateFaSitePublishAnimation },
       select: this.SELECT_LITE_PUBLISH_ANIMATION,
     });
   }
@@ -90,9 +84,7 @@ export class FaSitePublishAnimationService {
   async findAll(): Promise<SitePublishAnimation[]> {
     const publishAnimations = await this.prisma.faSitePublishAnimation.findMany(
       {
-        orderBy: {
-          faId: 'asc',
-        },
+        orderBy: { faId: 'asc' },
         select: this.SELECT_PUBLISH_ANIMATION,
       },
     );
@@ -101,18 +93,14 @@ export class FaSitePublishAnimationService {
 
   async findOne(faId: number): Promise<LiteSitePublishAnimation | null> {
     return this.prisma.faSitePublishAnimation.findUnique({
-      where: {
-        faId,
-      },
+      where: { faId },
       select: this.SELECT_LITE_PUBLISH_ANIMATION,
     });
   }
 
   async remove(faId: number): Promise<void> {
     await this.prisma.faSitePublishAnimation.delete({
-      where: {
-        faId,
-      },
+      where: { faId },
     });
   }
 }

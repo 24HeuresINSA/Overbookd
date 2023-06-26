@@ -39,7 +39,7 @@ export class CreateFaElectricityNeedDto {
     message: (va: ValidationArguments) =>
       `${va.property} must be one of ${Object.values(ElectricityType)}`,
   })
-  electricity_type: ElectricityType;
+  electricityType: ElectricityType;
 
   @ApiProperty({
     required: false,

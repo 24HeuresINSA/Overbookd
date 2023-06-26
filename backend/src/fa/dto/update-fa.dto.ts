@@ -42,7 +42,7 @@ export class UpdateFaDto {
   })
   @IsOptional()
   @IsDateString()
-  created_at?: Date;
+  createdAt?: Date;
 
   @ApiProperty({
     required: false,
@@ -63,7 +63,7 @@ export class UpdateFaDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  team_id?: number;
+  teamId?: number;
 
   @ApiProperty({
     required: false,
@@ -72,7 +72,7 @@ export class UpdateFaDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  in_charge?: number;
+  userInChargeId?: number;
 
   @ApiProperty({
     required: false,
@@ -81,7 +81,7 @@ export class UpdateFaDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  location_id?: number;
+  locationId?: number;
 
   @ApiProperty({
     required: false,
@@ -109,7 +109,7 @@ export class UpdateFaDto {
   })
   @IsOptional()
   @IsBoolean()
-  is_publishable?: boolean;
+  isPublishable?: boolean;
 
   @ApiProperty({
     required: false,
@@ -117,7 +117,7 @@ export class UpdateFaDto {
   })
   @IsOptional()
   @IsString()
-  photo_link?: string;
+  photoLink?: string;
 
   @ApiProperty({
     required: false,
@@ -125,7 +125,7 @@ export class UpdateFaDto {
   })
   @IsOptional()
   @IsString()
-  security_needs?: string;
+  securityNeed?: string;
 
   @ApiProperty({
     required: false,
@@ -133,7 +133,7 @@ export class UpdateFaDto {
   })
   @IsOptional()
   @IsBoolean()
-  is_pass_required?: boolean;
+  isPassRequired?: boolean;
 
   @ApiProperty({
     required: false,
@@ -142,7 +142,7 @@ export class UpdateFaDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  number_of_pass?: number;
+  numberOfPass?: number;
 
   @ApiProperty({
     required: false,
@@ -150,7 +150,7 @@ export class UpdateFaDto {
   })
   @IsOptional()
   @IsString()
-  water_needs?: string;
+  waterNeed?: string;
 
   @ApiProperty({
     required: false,
@@ -159,5 +159,5 @@ export class UpdateFaDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  water_flow_required?: number;
+  waterFlowRequired?: number;
 }

@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { EnrichedFAComments, FaCommentService } from './fa_comment.service';
+import { EnrichedFaFeeback, FaCommentService } from './fa_comment.service';
 import { CreateFaCommentDto } from './dto/create-fa_comment.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,21 +27,21 @@ export class FaCommentController {
   upsert(
     @Param('faid', ParseIntPipe) faID: string,
     @Body() createFaCommentDto: CreateFaCommentDto[],
-  ): Promise<EnrichedFAComments[] | null> {
+  ): Promise<EnrichedFaFeeback[] | null> {
     return this.faCommentService.upsert(+faID, createFaCommentDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get()
-  findAll(): Promise<EnrichedFAComments[] | null> {
+  findAll(): Promise<EnrichedFaFeeback[] | null> {
     return this.faCommentService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<EnrichedFAComments | null> {
+  findOne(@Param('id') id: string): Promise<EnrichedFaFeeback | null> {
     return this.faCommentService.findOne(+id);
   }
 }

@@ -1,27 +1,27 @@
 import {
-  Get,
-  Post,
   Body,
-  Param,
-  Delete,
-  UseGuards,
   Controller,
-  ParseIntPipe,
+  Delete,
+  Get,
+  Param,
   ParseArrayPipe,
+  ParseIntPipe,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { TimeWindowsService } from './time_windows.service';
-import { CreateTimeWindowDto } from './dto/create-time_window.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { FaTimeWindow } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
-import { FaTimeWindow } from '@prisma/client';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CreateTimeWindowDto } from './dto/create-fa_time_window.dto';
+import { FaTimeWindowsService } from './fa_time_windows.service';
 
 @ApiBearerAuth()
 @ApiTags('time-windows')
 @Controller('time-windows')
-export class TimeWindowsController {
-  constructor(private readonly timeWindowsService: TimeWindowsService) {}
+export class FaTimeWindowsController {
+  constructor(private readonly faTimeWindowsService: FaTimeWindowsService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
@@ -37,27 +37,27 @@ export class TimeWindowsController {
     )
     tWindows: CreateTimeWindowDto[],
   ): Promise<FaTimeWindow[] | null> {
-    return this.timeWindowsService.upsert(+faID, tWindows);
+    return this.faTimeWindowsService.upsert(+faID, tWindows);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get()
   findAll(): Promise<FaTimeWindow[] | null> {
-    return this.timeWindowsService.findAll();
+    return this.faTimeWindowsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
   findOne(@Param('id') id: string): Promise<FaTimeWindow | null> {
-    return this.timeWindowsService.findOne(+id);
+    return this.faTimeWindowsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
   remove(@Param('id') id: string): Promise<FaTimeWindow | null> {
-    return this.timeWindowsService.remove(+id);
+    return this.faTimeWindowsService.remove(+id);
   }
 }
