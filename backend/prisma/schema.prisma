@@ -394,20 +394,12 @@ enum SitePublishAnimationCategoryType {
   @@map("site_publish_animation_category_type")
 }
 
-enum TimeWindowType {
-  ANIM
-  MATOS
-
-  @@map("time_window_type")
-}
-
 model FaTimeWindow {
   id    Int               @id @default(autoincrement())
   fa    Fa                @relation(fields: [fa_id], references: [id])
   fa_id Int               @map("fa_id")
   start DateTime
   end   DateTime
-  type  TimeWindowType
 
   @@map("fa_time_window")
 }
