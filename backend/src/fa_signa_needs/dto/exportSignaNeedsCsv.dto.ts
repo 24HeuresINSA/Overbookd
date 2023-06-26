@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SignaType } from '@prisma/client';
+import { SignaType } from '../faSignaNeedTypes';
 
 export class FaSignaNeedsExportCsvDto {
   @ApiProperty({

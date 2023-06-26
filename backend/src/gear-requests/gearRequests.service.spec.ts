@@ -13,7 +13,7 @@ import { InMemoryGearRequestRepository } from './repositories/gearRequest.reposi
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
 import { Task, taskStatus } from './tasks/task.model';
-import { FaStatus } from 'src/fa/fa_types';
+import { FaStatus } from '../fa/fa_types';
 
 const MAGASIN = 'Magasin';
 

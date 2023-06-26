@@ -9,12 +9,7 @@ import {
   IsDefined,
   Min,
 } from 'class-validator';
-
-enum SignaType {
-  BANNIERE = 'BANNIERE',
-  PANCARTE = 'PANCARTE',
-  PANNEAU = 'PANNEAU',
-}
+import { SignaType } from '../faSignaNeedTypes';
 
 export class CreateFaSignaNeedDto {
   @ApiProperty({
