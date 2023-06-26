@@ -43,47 +43,49 @@ enum Department {
 }
 
 model User {
-  id                      Int         @id @default(autoincrement())
-  firstname               String      @db.VarChar(30)
-  lastname                String      @db.VarChar(30)
-  nickname                String?     @db.VarChar(30)
-  email                   String      @unique
-  birthdate               DateTime
-  phone                   String      @db.VarChar(30)
-  department              Department?
-  comment                 String?
-  reset_password_token    String?     @unique
-  reset_password_expires  DateTime?
-  has_payed_contributions Boolean     @default(false)
-  year                    Year?
-  pp                      String?
-  charisma                Float       @default(0)
-  balance                 Float       @default(0)
-  password                String      @default("")
-  created_at              DateTime    @default(now())
-  updated_at              DateTime    @updatedAt
+  id                      Int                     @id @default(autoincrement())
+  firstname               String                  @db.VarChar(30)
+  lastname                String                  @db.VarChar(30)
+  nickname                String?                 @db.VarChar(30)
+  email                   String                  @unique
+  birthdate               DateTime            
+  phone                   String                  @db.VarChar(30)
+  department              Department?           
+  comment                 String?           
+  reset_password_token    String?                 @unique @map("reset_password_token")
+  reset_password_expires  DateTime?               @map("reset_password_expires")
+  has_payed_contributions Boolean                 @default(false)
+  year                    Year?           
+  pp                      String?           
+  charisma                Float                   @default(0)
+  balance                 Float                   @default(0)
+  password                String                  @default("")
+  created_at              DateTime                @default(now()) @map("created_at")
+  updated_at              DateTime                @updatedAt @map("updated_at")
+  is_deleted              Boolean                 @default(false) @map("is_deleted")
 
-  team           User_Team[]
-  Availabilities Availabilities[]
+  team                    User_Team[]
+  Availabilities          Availabilities[]
 
-  transactions_from Transaction[] @relation("from")
-  transactions_to   Transaction[] @relation("to")
+  transactions_from       Transaction[]           @relation("from")
+  transactions_to         Transaction[]           @relation("to")
 
-  is_deleted    Boolean         @default(false)
-  fa_in_charge  fa[]            @relation("in_charge")
-  fa_validation fa_validation[]
-  fa_refuse     fa_refuse[]
-  fa_comments   fa_comments[]
+  fa_in_charge            fa[]                    @relation("in_charge")
+  fa_validation           fa_validation[]
+  fa_refuse               fa_refuse[]
+  fa_comments             fa_comments[]
 
-  ftsInCharge      Ft[]                    @relation("inCharge")
-  ftFeedbacks      FtFeedback[]
-  ftUserRequests   FtUserRequest[]
-  availabilities   VolunteerAvailability[]
-  friendRequestors Friend[]                @relation("friend_requestor")
-  friends          Friend[]                @relation("friend")
-  ftsInReview      Ft[]                    @relation("reviewer")
+  ftsInCharge             Ft[]                    @relation("inCharge")
+  ftFeedbacks             FtFeedback[]
+  ftUserRequests          FtUserRequest[]
+  availabilities          VolunteerAvailability[]
+  friendRequestors        Friend[]                @relation("friend_requestor")
+  friends                 Friend[]                @relation("friend")
+  ftsInReview             Ft[]                    @relation("reviewer")
 
-  assignments         Assignment[]
+  assignments             Assignment[]
+
+  @@map("user")
 }
 
 model Team {
@@ -96,20 +98,23 @@ model Team {
   fa_validation    fa_validation[]
   fa_refuse        fa_refuse[]
   code             String?            @unique @db.VarChar(20)
-  owned_categories Catalog_Category[] @relation("owner")
+  owned_categories CatalogCategory[]  @relation("owner")
   ftRequests       FtTeamRequest[]
   ftReviews        FtReview[]
   permissions      Team_Permission[]
   Ft               Ft[]
+
+  @@map("team")
 }
 
 model User_Team {
   user    User @relation(fields: [user_id], references: [id])
-  user_id Int
+  user_id Int  @map("user_id")
   team    Team @relation(fields: [team_id], references: [id])
-  team_id Int
+  team_id Int  @map("team_id")
 
   @@id([user_id, team_id])
+  @@map("user_team")
 }
 
 model Permission {
@@ -117,36 +122,43 @@ model Permission {
   name        String            @unique @db.VarChar(30)
   description String?           @db.VarChar(255)
   teams       Team_Permission[]
+
+  @@map("permission")
 }
 
 model Team_Permission {
   team            Team       @relation(fields: [team_code], references: [code])
-  team_code       String
+  team_code       String     @map("team_code")
   permission      Permission @relation(fields: [permission_name], references: [name], onDelete: Cascade)
   permission_name String     @map("permission_name")
 
   @@id([team_code, permission_name])
+
+  @@map("team_permission")
 }
 
 model TimeSlot {
   id             Int              @id @default(autoincrement())
-  group_name     String
+  group_name     String           @map("group_name")
   start          DateTime
   end            DateTime
   charisma       Int
-  is_hard_only   Boolean          @default(false)
+  is_hard_only   Boolean          @default(false) @map("is_hard_only")
   Availabilities Availabilities[]
-  is_deleted     Boolean          @default(false)
+  is_deleted     Boolean          @default(false) @map("is_deleted")
+
+  @@map("time_slot")
 }
 
 model Availabilities {
-  user_id     Int
+  user_id     Int      @map("user_id")
   user        User     @relation(fields: [user_id], references: [id])
-  timeslot_id Int
+  timeslot_id Int      @map("time_slot_id")
   timeslot    TimeSlot @relation(fields: [timeslot_id], references: [id])
-  is_deleted  Boolean  @default(false)
+  is_deleted  Boolean  @default(false) @map("is_deleted")
 
   @@id([user_id, timeslot_id])
+  @@map("availability")
 }
 
 model Transaction {
@@ -158,8 +170,10 @@ model Transaction {
   user_to    User            @relation("to", fields: [to], references: [id])
   amount     Float           @default(0)
   context    String          @default("") @db.VarChar(255)
-  created_at DateTime        @default(now())
-  is_deleted Boolean         @default(false)
+  created_at DateTime        @default(now()) @map("created_at")
+  is_deleted Boolean         @default(false) @map("is_deleted")
+
+  @@map("transaction")
 }
 
 enum Status {
@@ -172,24 +186,23 @@ enum Status {
 model fa {
   id                     Int                     @id @default(autoincrement())
   name                   String                  @db.VarChar(255)
-  fa_type_name           fa_type?
+  fa_type_name           fa_type?                @map("fa_type")
   type                   String?                 @db.VarChar(255)
   Team                   Team?                   @relation(fields: [team_id], references: [id])
-  team_id                Int?
+  team_id                Int?                    @map("team_id")
   user_in_charge         User?                   @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge              Int?
-  created_at             DateTime?               @default(now())
+  in_charge              Int?                    @map("in_charge")
+  created_at             DateTime?               @default(now()) @map("created_at")
   location               Signa_Location?         @relation(fields: [location_id], references: [id])
-  location_id            Int?
+  location_id            Int?                    @map("location_id")
   status                 Status?                 @default(DRAFT)
   description            String?                 @db.Text
-  is_major               Boolean?                @default(false)
-  security_needs         String?                 @db.Text
-  is_pass_required       Boolean?                @db.Boolean
-  number_of_pass         Int?
-  water_needs            String?                 @db.Text
-  water_flow_required    Int?
-  is_deleted             Boolean                 @default(false)
+  security_needs         String?                 @db.Text @map("security_need")
+  is_pass_required       Boolean?                @db.Boolean @map("is_pass_required")
+  number_of_pass         Int?                    @map("number_of_pass")
+  water_needs            String?                 @db.Text @map("water_need")
+  water_flow_required    Int?                    @map("water_flow_required")
+  is_deleted             Boolean                 @default(false) @map("is_deleted")
   fa_validation          fa_validation[]
   fa_refuse              fa_refuse[]
   fa_collaborators       fa_collaborators[]
@@ -200,6 +213,8 @@ model fa {
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
+
+  @@map("fa")
 }
 
 enum fa_type {
@@ -216,38 +231,41 @@ enum fa_type {
 
 model fa_validation {
   fa         fa       @relation(fields: [fa_id], references: [id])
-  fa_id      Int
+  fa_id      Int      @map("fa_id")
   User       User     @relation(fields: [user_id], references: [id])
-  user_id    Int
+  user_id    Int      @map("user_id")
   Team       Team     @relation(fields: [team_id], references: [id])
-  team_id    Int
-  created_at DateTime @default(now())
-  is_deleted Boolean  @default(false)
+  team_id    Int      @map("team_id")
+  created_at DateTime @default(now()) @map("created_at")
+  is_deleted Boolean  @default(false) @map("is_deleted")
 
   @@id([fa_id, team_id])
+  @@map("fa_validation")
 }
 
 model fa_collaborators {
   fa              fa           @relation(fields: [fa_id], references: [id])
-  fa_id           Int
+  fa_id           Int          @map("fa_id")
   collaborator    collaborator @relation(fields: [collaborator_id], references: [id], onDelete: Cascade)
-  collaborator_id Int
-  is_deleted      Boolean      @default(false)
+  collaborator_id Int          @map("collaborator_id")
+  is_deleted      Boolean      @default(false) @map("is_deleted")
 
   @@id([fa_id, collaborator_id])
+  @@map("fa_collaborator")
 }
 
 model fa_refuse {
   fa         fa       @relation(fields: [fa_id], references: [id])
-  fa_id      Int
+  fa_id      Int      @map("fa_id")
   User       User     @relation(fields: [user_id], references: [id])
-  user_id    Int
+  user_id    Int      @map("user_id")
   Team       Team     @relation(fields: [team_id], references: [id])
-  team_id    Int
-  created_at DateTime @default(now())
-  is_deleted Boolean  @default(false)
+  team_id    Int      @map("team_id")
+  created_at DateTime @default(now()) @map("created_at")
+  is_deleted Boolean  @default(false) @map("is_deleted")
 
   @@id([fa_id, team_id])
+  @@map("fa_refuse")
 }
 
 model Signa_Location {
@@ -255,6 +273,8 @@ model Signa_Location {
   name String @db.VarChar(255)
   fa   fa[]
   fts  Ft[]
+
+  @@map("signa_location")
 }
 
 model collaborator {
@@ -268,6 +288,7 @@ model collaborator {
   fa_collaborators fa_collaborators[]
 
   @@unique([firstname, lastname])
+  @@map("collaborator")
 }
 
 //A définir correctement plus tard, placeholder pour le moment
@@ -288,12 +309,14 @@ enum electricity_type {
 model fa_electricity_needs {
   id               Int              @id @default(autoincrement())
   fa               fa               @relation(fields: [fa_id], references: [id])
-  fa_id            Int
-  electricity_type electricity_type
+  fa_id            Int              @map("fa_id")
+  electricity_type electricity_type @map("electricity_type")
   device           String?          @db.Text
   power            Int
   count            Int?
   comment          String?          @db.Text
+
+  @@map("fa_electricity_need")
 }
 
 enum signa_type {
@@ -305,11 +328,13 @@ enum signa_type {
 model fa_signa_needs {
   id         Int        @id @default(autoincrement())
   fa         fa         @relation(fields: [fa_id], references: [id])
-  fa_id      Int
-  signa_type signa_type
+  fa_id      Int        @map("fa_id")
+  signa_type signa_type @map("signa_type")
   text       String     @db.Text
   count      Int        @default(1)
   comment    String?    @db.Text
+
+  @@map("fa_signa_need")
 }
 
 enum subject_type {
@@ -322,20 +347,22 @@ enum subject_type {
 model fa_comments {
   id          Int          @id @default(autoincrement())
   fa          fa           @relation(fields: [fa_id], references: [id])
-  fa_id       Int
+  fa_id       Int          @map("fa_id")
   comment     String       @db.Text
   subject     subject_type
   User_author User         @relation(fields: [author], references: [id])
-  author      Int
-  created_at  DateTime     @default(now())
+  author      Int          @map("author_id")
+  created_at  DateTime     @default(now()) @map("created_at")
+
+  @@map("fa_feedback")
 }
 
 model FaSitePublishAnimation {
   fa          fa                                     @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId        Int                                    @id @map("fa_id")
-  photoLink   String                                 @default("") @map("photo_link ") @db.Text
-  description String                                 @default("") @db.Text
-  isMajor     Boolean                                @default(false)
+  photoLink   String                                 @db.Text @default("") @map("photo_link")
+  description String                                 @db.Text @default("")
+  isMajor     Boolean                                @default(false) @map("is_flagship")
   categories  site_publish_animation_category_type[]
 
   @@map("fa_site_publish_animation")
@@ -357,42 +384,49 @@ enum time_windows_type {
 model time_windows {
   id    Int               @id @default(autoincrement())
   fa    fa                @relation(fields: [fa_id], references: [id])
-  fa_id Int
+  fa_id Int               @map("fa_id")
   start DateTime
   end   DateTime
   type  time_windows_type
+
+  @@map("fa_time_window")
 }
 
-model Catalog_Category {
+model CatalogCategory {
   id             Int                @id @default(autoincrement())
   name           String
   path           String             @unique
   parent         Int?
-  parentCategory Catalog_Category?  @relation("parent", fields: [parent], references: [id])
-  subCategories  Catalog_Category[] @relation("parent")
-  owner_id       Int?
+  parentCategory CatalogCategory?   @relation("parent", fields: [parent], references: [id])
+  subCategories  CatalogCategory[]  @relation("parent")
+  owner_id       Int?               @map("owner_id")
   owner          Team?              @relation("owner", fields: [owner_id], references: [id])
-  gears          Catalog_Gear[]     @relation("category")
+  gears          CatalogGear[]      @relation("category")
+
+  @@map("catalog_category")
 }
 
-model Catalog_Gear {
+model CatalogGear {
   id               Int               @id @default(autoincrement())
   name             String
   slug             String            @unique
-  category_id      Int?
-  category         Catalog_Category? @relation("category", fields: [category_id], references: [id])
+  category_id      Int?              @map("category_id")
+  category         CatalogCategory?  @relation("category", fields: [category_id], references: [id])
   requests         GearRequest[]     @relation("gear-request-gear")
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
 
   @@index([isPonctualUsage])
+  @@map("catalog_gear")
 }
 
 model Configuration {
   key        String  @id @unique
   value      Json
-  is_deleted Boolean @default(false)
+  is_deleted Boolean @default(false) @map("is_deleted")
+
+  @@map("configuration")
 }
 
 model Period {
@@ -402,17 +436,18 @@ model Period {
   gearRequest GearRequest[] @relation("gear-request-rental-period")
 
   @@index([start, end])
+  @@map("period")
 }
 
 model GearRequest {
-  animationId    Int?
+  animationId    Int?         @map("animation_id")
   animation      fa?          @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
-  taskId         Int?
+  taskId         Int?         @map("task_id")
   task           Ft?          @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
-  rentalPeriodId Int
+  rentalPeriodId Int          @map("rental_period_id")
   rentalPeriod   Period       @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
-  gearId         Int
-  gear           Catalog_Gear @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
+  gearId         Int          @map("gear_id")
+  gear           CatalogGear  @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
   quantity       Int
   status         String
   drive          String?
@@ -506,13 +541,13 @@ model FtTimeWindows {
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
-  @@map("ft_time_windows")
+  @@map("ft_time_window")
 }
 
 model FtUserRequest {
   id              Int           @id @default(autoincrement())
   ftTimeWindows   FtTimeWindows @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
-  ftTimeWindowsId Int           @map("ft_time_windows_id")
+  ftTimeWindowsId Int           @map("ft_time_window_id")
   user            User          @relation(fields: [userId], references: [id])
   userId          Int           @map("user_id")
 
@@ -525,7 +560,7 @@ model FtUserRequest {
 model FtTeamRequest {
   id            Int           @id @default(autoincrement())
   timeWindows   FtTimeWindows @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
-  timeWindowsId Int           @map("time_windows_id")
+  timeWindowsId Int           @map("ft_time_window_id")
   team          Team          @relation(fields: [teamCode], references: [code])
   teamCode      String        @map("team_code")
   quantity      Int
@@ -539,7 +574,7 @@ model FtTeamRequest {
 model FtTimespan {
   id           Int           @id @default(autoincrement())
   timeWindow   FtTimeWindows @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
-  timeWindowId Int           @map("time_window_id")
+  timeWindowId Int           @map("ft_time_window_id")
   start        DateTime
   end          DateTime
 
@@ -548,13 +583,13 @@ model FtTimespan {
   @@index([start(sort: Asc)])
   @@index([end(sort: Desc)])
   @@index([start(sort: Asc), end(sort: Asc)])
-  @@map("ft_timespan")
+  @@map("ft_time_span")
   @@unique([timeWindowId, start, end])
 }
 
 model Assignment {
   id            Int             @id @default(autoincrement())
-  timespanId    Int
+  timespanId    Int             @map("time_span_id")
   timespan      FtTimespan      @relation(fields: [timespanId], references: [id], onDelete: Cascade)
   userRequest   FtUserRequest?  @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
   userRequestId Int?            @map("user_request_id")
@@ -564,9 +599,10 @@ model Assignment {
   assigneeId    Int             @map("assignee_id")
 
   @@unique([timespanId, assigneeId])
+  @@map("assignment")
 } 
 
-enum reviewStatus {
+enum ReviewStatus {
   VALIDATED
   REFUSED
 
@@ -578,14 +614,14 @@ model FtReview {
   ftId     Int          @map("ft_id")
   team     Team         @relation(fields: [teamCode], references: [code])
   teamCode String       @map("team_code")
-  status   reviewStatus
+  status   ReviewStatus
 
   @@unique([ftId, teamCode])
   @@map("ft_review")
 }
 
 model InventoryRecord {
-  gear     Catalog_Gear @relation(fields: [gearId], references: [id], onDelete: Cascade)
+  gear     CatalogGear  @relation(fields: [gearId], references: [id], onDelete: Cascade)
   gearId   Int          @map("gear_id")
   storage  String
   quantity Int
@@ -628,4 +664,5 @@ model Friend {
   friendId    Int  @map("friend_id")
 
   @@id([requestorId, friendId])
+  @@map("friend")
 }

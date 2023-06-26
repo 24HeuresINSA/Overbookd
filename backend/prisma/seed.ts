@@ -23,7 +23,7 @@ async function insertOrUpdateCategory(
     : teams.find((team) => team.code === name.toLocaleLowerCase());
   const ownerPart = owner ? { owner_id: owner.id } : {};
   const category = { name, path, parent: parentId, ...ownerPart };
-  return prisma.catalog_Category.upsert({
+  return prisma.catalogCategory.upsert({
     create: category,
     update: category,
     where: { path },
@@ -33,7 +33,7 @@ async function insertOrUpdateCategory(
 function insertOrUpdateGear(name: string, categoryId: number) {
   const slug = slugify.slugify(name);
   const gear = { name, slug, category_id: categoryId };
-  return prisma.catalog_Gear.upsert({
+  return prisma.catalogGear.upsert({
     create: gear,
     update: gear,
     where: { slug },
