@@ -127,14 +127,6 @@ export class UpdateFaDto {
 
   @ApiProperty({
     required: false,
-    description: 'Is the activty a major activity',
-  })
-  @IsOptional()
-  @IsBoolean()
-  is_major?: boolean;
-
-  @ApiProperty({
-    required: false,
     description: 'The security needs',
   })
   @IsOptional()
