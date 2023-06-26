@@ -44,7 +44,7 @@
     "nuxt": "^2.14.12",
     "nuxt-typed-vuex": "^0.3.1",
     "vue-chartjs": "^3.5.1",
-    "remixicon": "^3.2.0"
+    "remixicon": "^3.4.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
