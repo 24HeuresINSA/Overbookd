@@ -15,7 +15,7 @@ export class FtTimeWindowsService {
       ...tw,
       ftId,
     };
-    return this.prisma.ftTimeWindows.upsert({
+    return this.prisma.ftTimeWindow.upsert({
       where: {
         id: completeTw.id || 0,
       },
@@ -25,7 +25,7 @@ export class FtTimeWindowsService {
   }
 
   async remove(ftId: number, id: number): Promise<void> {
-    await this.prisma.ftTimeWindows.deleteMany({
+    await this.prisma.ftTimeWindow.deleteMany({
       where: {
         AND: [
           {

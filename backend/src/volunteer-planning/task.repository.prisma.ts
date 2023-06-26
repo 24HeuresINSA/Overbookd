@@ -74,7 +74,7 @@ export class PrismaTaskRepository implements TaskRepository {
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
   ): Promise<JsonStoredTask[]> {
-    const tasks = await this.prismaService.ftTimespan.findMany({
+    const tasks = await this.prismaService.ftTimeSpan.findMany({
       where: { assignments: { some: { assigneeId: volunteerId } } },
       select: this.SELECT_TASK,
       orderBy: { start: 'asc' },

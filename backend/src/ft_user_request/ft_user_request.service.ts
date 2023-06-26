@@ -139,7 +139,7 @@ export class FtUserRequestService {
       userRequest,
     );
     const select = this.SELECT_ALSO_REQUESTED_BY_FT;
-    return this.prisma.ftTimeWindows.findMany({ where, select });
+    return this.prisma.ftTimeWindow.findMany({ where, select });
   }
 
   private buildUserIsAlsoRequestedInSamePeriodCondition(
@@ -168,7 +168,7 @@ export class FtUserRequestService {
   }
 
   private async retrieveTimeWindow(userRequest: DataBaseUserRequest) {
-    return this.prisma.ftTimeWindows.findUnique({
+    return this.prisma.ftTimeWindow.findUnique({
       where: { id: userRequest.ftTimeWindowsId },
       select: {
         start: true,

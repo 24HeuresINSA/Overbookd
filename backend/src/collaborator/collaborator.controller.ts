@@ -23,7 +23,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { collaborator } from '@prisma/client';
+import { Collaborator } from '@prisma/client';
 
 @ApiBearerAuth()
 @ApiTags('collaborator')
@@ -55,7 +55,7 @@ export class CollaboratorController {
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
     @Body() createCollaborator: CreateCollaboratorDto[],
-  ): Promise<collaborator[] | null> {
+  ): Promise<Collaborator[] | null> {
     return this.collaboratorService.upsert(faId, createCollaborator);
   }
 
@@ -90,7 +90,7 @@ export class CollaboratorController {
     status: 200,
     description: 'Get all collaborators',
   })
-  findAll(): Promise<collaborator[] | null> {
+  findAll(): Promise<Collaborator[] | null> {
     return this.collaboratorService.findAll();
   }
 
@@ -101,7 +101,7 @@ export class CollaboratorController {
     status: 200,
     description: 'Get a collaborator',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<collaborator | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Collaborator | null> {
     return this.collaboratorService.findOne(id);
   }
 }

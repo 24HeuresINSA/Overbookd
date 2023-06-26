@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { fa_electricity_needs } from '@prisma/client';
+import { FaElectricityNeed } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto';
 
@@ -7,12 +7,12 @@ import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto
 export class FaElectricityNeedsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<fa_electricity_needs[] | null> {
-    return await this.prisma.fa_electricity_needs.findMany();
+  async findAll(): Promise<FaElectricityNeed[] | null> {
+    return await this.prisma.faElectricityNeed.findMany();
   }
 
-  async findOne(id: number): Promise<fa_electricity_needs | null> {
-    return await this.prisma.fa_electricity_needs.findUnique({
+  async findOne(id: number): Promise<FaElectricityNeed | null> {
+    return await this.prisma.faElectricityNeed.findUnique({
       where: {
         id: Number(id),
       },
@@ -22,14 +22,14 @@ export class FaElectricityNeedsService {
   async upsert(
     faID: number,
     createFaElectricityNeedDto: CreateFaElectricityNeedDto[],
-  ): Promise<fa_electricity_needs[] | null> {
+  ): Promise<FaElectricityNeed[] | null> {
     const operations = createFaElectricityNeedDto.map((elecneeds) => {
       const { id, ...rest } = elecneeds;
       const data = {
         ...rest,
         fa_id: faID,
       };
-      return this.prisma.fa_electricity_needs.upsert({
+      return this.prisma.faElectricityNeed.upsert({
         where: {
           id: id ?? -1,
         },
@@ -40,8 +40,8 @@ export class FaElectricityNeedsService {
     return this.prisma.$transaction(operations);
   }
 
-  async remove(id: number): Promise<fa_electricity_needs> {
-    return await this.prisma.fa_electricity_needs.delete({
+  async remove(id: number): Promise<FaElectricityNeed> {
+    return await this.prisma.faElectricityNeed.delete({
       where: {
         id: Number(id),
       },

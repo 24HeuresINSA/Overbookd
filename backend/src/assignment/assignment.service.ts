@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FtTeamRequest, FtTimespan } from '@prisma/client';
+import { FtTeamRequest, FtTimeSpan } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
@@ -58,7 +58,7 @@ type DataBaseTeamRequestWithAssignmentStats = TeamRequest & {
   };
 };
 
-type DataBaseTimespanWithStats = Pick<FtTimespan, 'id' | 'start' | 'end'> & {
+type DataBaseTimespanWithStats = Pick<FtTimeSpan, 'id' | 'start' | 'end'> & {
   timeWindow: {
     teamRequests: DataBaseTeamRequestWithAssignmentStats[];
   };
@@ -279,7 +279,7 @@ export class AssignmentService {
   }
 
   private getTimespanWithItStats(timespanId: number, teamCode: string) {
-    return this.prisma.ftTimespan.findFirst({
+    return this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timespanId,
         timeWindow: {

@@ -1,11 +1,11 @@
 import { Prisma } from '@prisma/client';
 import { TEAM_SELECT } from 'src/team/team.service';
 
-export type FaResponse = Prisma.faGetPayload<{
+export type FaResponse = Prisma.FaGetPayload<{
   select: typeof COMPLETE_FA_SELECT;
 }>;
 
-export type AllFaResponse = Prisma.faGetPayload<{
+export type AllFaResponse = Prisma.FaGetPayload<{
   select: typeof ALL_FA_SELECT;
 }>;
 

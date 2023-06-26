@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { fa_signa_needs } from '@prisma/client';
+import { FaSignaNeed } from '@prisma/client';
 import { ExportSignaNeeds, EXPORT_SIGNA_SELECT } from 'src/fa/fa_types';
 import { PrismaService } from '../prisma.service';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
@@ -10,11 +10,11 @@ export class FaSignaNeedsService {
   async upsert(
     faID: number,
     createFaSignaNeedDto: CreateFaSignaNeedDto[],
-  ): Promise<fa_signa_needs[] | null> {
+  ): Promise<FaSignaNeed[] | null> {
     return Promise.all(
       createFaSignaNeedDto.map(async (faSignaNeed) => {
         if (faSignaNeed.id) {
-          return await this.prisma.fa_signa_needs.update({
+          return await this.prisma.faSignaNeed.update({
             where: {
               id: faSignaNeed.id,
             },
@@ -24,7 +24,7 @@ export class FaSignaNeedsService {
             },
           });
         } else {
-          return await this.prisma.fa_signa_needs.create({
+          return await this.prisma.faSignaNeed.create({
             data: {
               fa_id: faID,
               ...faSignaNeed,
@@ -35,20 +35,20 @@ export class FaSignaNeedsService {
     );
   }
 
-  async findAll(): Promise<fa_signa_needs[] | null> {
-    return await this.prisma.fa_signa_needs.findMany();
+  async findAll(): Promise<FaSignaNeed[] | null> {
+    return await this.prisma.faSignaNeed.findMany();
   }
 
-  async findOne(id: number): Promise<fa_signa_needs | null> {
-    return await this.prisma.fa_signa_needs.findUnique({
+  async findOne(id: number): Promise<FaSignaNeed | null> {
+    return await this.prisma.faSignaNeed.findUnique({
       where: {
         id: Number(id),
       },
     });
   }
 
-  async remove(id: number): Promise<fa_signa_needs | null> {
-    return await this.prisma.fa_signa_needs.delete({
+  async remove(id: number): Promise<FaSignaNeed | null> {
+    return await this.prisma.faSignaNeed.delete({
       where: {
         id: Number(id),
       },
@@ -56,7 +56,7 @@ export class FaSignaNeedsService {
   }
 
   async findSignaNeedsForExport(): Promise<ExportSignaNeeds[]> {
-    const signa_needs = await this.prisma.fa_signa_needs.findMany({
+    const signa_needs = await this.prisma.faSignaNeed.findMany({
       select: EXPORT_SIGNA_SELECT,
       where: {
         fa: {

@@ -7,17 +7,17 @@ import { UpdateSignaLocationDto } from './dto/update-signa_location.dto';
 export class SignaLocationService {
   constructor(private prisma: PrismaService) {}
   create(createSignaLocationDto: CreateSignaLocationDto) {
-    return this.prisma.signa_Location.create({
+    return this.prisma.signaLocation.create({
       data: createSignaLocationDto,
     });
   }
 
   findAll() {
-    return this.prisma.signa_Location.findMany();
+    return this.prisma.signaLocation.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.signa_Location.findUnique({
+    return this.prisma.signaLocation.findUnique({
       where: {
         id: id,
       },
@@ -25,7 +25,7 @@ export class SignaLocationService {
   }
 
   update(id: number, updateSignaLocationDto: UpdateSignaLocationDto) {
-    return this.prisma.signa_Location.update({
+    return this.prisma.signaLocation.update({
       where: {
         id: id,
       },
@@ -34,7 +34,7 @@ export class SignaLocationService {
   }
 
   remove(id: number) {
-    return this.prisma.signa_Location.delete({
+    return this.prisma.signaLocation.delete({
       where: {
         id: id,
       },
