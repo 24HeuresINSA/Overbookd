@@ -1,4 +1,4 @@
-import { FaStatus } from 'src/fa/fa_types';
+import { FaStatus } from '../../fa/fa_types';
 import { AnimationAlreadyValidatedError } from '../animations/animation.error';
 import {
   GearRequestIdentifierSeeker,
