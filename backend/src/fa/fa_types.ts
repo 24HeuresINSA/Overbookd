@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { TEAM_SELECT } from 'src/team/team.service';
+import { TEAM_SELECT } from '../team/team.service';
 
 export enum FaStatus {
   DRAFT = 'DRAFT',
