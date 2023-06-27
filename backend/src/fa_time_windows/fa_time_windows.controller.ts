@@ -25,10 +25,10 @@ export class FaTimeWindowsController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faID')
+  @Post(':faId')
   @ApiBody({ type: CreateTimeWindowDto, isArray: true })
   upsert(
-    @Param('faID', ParseIntPipe) faID: string,
+    @Param('faId', ParseIntPipe) faId: number,
     @Body(
       new ParseArrayPipe({
         items: CreateTimeWindowDto,
@@ -37,7 +37,7 @@ export class FaTimeWindowsController {
     )
     tWindows: CreateTimeWindowDto[],
   ): Promise<FaTimeWindow[] | null> {
-    return this.faTimeWindowsService.upsert(+faID, tWindows);
+    return this.faTimeWindowsService.upsert(faId, tWindows);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

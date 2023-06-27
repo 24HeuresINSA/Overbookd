@@ -18,7 +18,7 @@ export class LiteSitePublishAnimationResponseDto
 
   @ApiProperty({
     required: false,
-    description: 'Is the activty a flagship show',
+    description: 'Is the activty a flagship one',
   })
   @IsBoolean()
   isFlagship: boolean;

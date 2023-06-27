@@ -260,10 +260,7 @@ export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
 
 function castCommentWithDate(comment: HttpStringified<FaFeedback>): FaFeedback {
   const createdAt = comment.createdAt ? new Date(comment.createdAt) : undefined;
-  return {
-    ...comment,
-    createdAt: createdAt,
-  };
+  return { ...comment, createdAt };
 }
 
 function castTimeWindowWithDate(
