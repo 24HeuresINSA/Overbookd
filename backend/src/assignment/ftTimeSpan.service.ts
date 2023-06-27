@@ -3,35 +3,35 @@ import { FtStatus, TaskCategory } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
-import { UserService, SELECT_USER_TEAMS } from 'src/user/user.service';
+import { SELECT_USER_TEAMS, UserService } from 'src/user/user.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
+import { SELECT_BASE_TIMESPAN } from './assignment.service';
 import {
-  DatabaseFtWithTimespans,
+  Assignee,
+  AssignmentAsTeamMember,
+  AvailableTimeSpan,
+  DatabaseAssigneeWithFriends,
+  DatabaseAssigneeWithTeams,
+  DatabaseAssignmentsAsTeamMember,
+  DatabaseFtWithTimeSpans,
   DatabaseRequestedTeam,
-  DatabaseTimespanWithFt,
-  Timespan,
+  DatabaseTimeSpanWithAssignedTeamMembers,
+  DatabaseTimeSpanWithAssignees,
+  DatabaseTimeSpanWithFt,
+  DatabaseTimeSpanWithFtAndAssignees,
+  DatabaseTimeWindow,
+  FtWithTimeSpan,
+  RequestedTeam,
   SELECT_FT_WITH_TIMESPANS,
   SELECT_TIMESPAN_WITH_FT,
-  RequestedTeam,
-  DatabaseTimeWindow,
-  FtWithTimespan,
-  DatabaseTimespanWithAssignedTeamMembers,
-  TimespanWithFt,
   SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
-  TimespanWithFtAndAssignees,
-  DatabaseTimespanWithFtAndAssignees,
-  TimespanWithAssignees,
-  DatabaseTimespanWithAssignees,
-  Assignee,
-  DatabaseAssigneeWithFriends,
-  DatabaseAssignmentsAsTeamMember,
-  TimespanAssignee,
-  AssignmentAsTeamMember,
-  AvailableTimespan as AvailableTimespan,
-  DatabaseAssigneeWithTeams,
-} from './types/ftTimespanTypes';
-import { SELECT_BASE_TIMESPAN } from './assignment.service';
+  TimeSpan,
+  TimeSpanAssignee,
+  TimeSpanWithAssignees,
+  TimeSpanWithFt,
+  TimeSpanWithFtAndAssignees,
+} from './types/ftTimeSpanTypes';
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
@@ -66,7 +66,7 @@ const SELECT_FT_TIMESPANS_WITH_STATS = {
           },
         },
       },
-      timespans: {
+      timeSpans: {
         select: {
           id: true,
           start: true,
@@ -140,14 +140,14 @@ export const SELECT_FRIENDS = {
 };
 
 @Injectable()
-export class FtTimespanService {
+export class FtTimeSpanService {
   constructor(
     private prisma: PrismaService,
     private volunteerAvailability: VolunteerAvailabilityService,
     private user: UserService,
   ) {}
 
-  async findAllFtsWithTimespans(): Promise<FtWithTimespan[]> {
+  async findAllFtsWithTimespans(): Promise<FtWithTimeSpan[]> {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
@@ -155,10 +155,10 @@ export class FtTimespanService {
       },
       select: SELECT_FT_WITH_TIMESPANS,
     });
-    return this.formatFtsWithTimespans(fts);
+    return this.formatFtsWithTimeSpans(fts);
   }
 
-  async findTimespansForFt(ftId: number): Promise<Timespan[]> {
+  async findTimespansForFt(ftId: number): Promise<TimeSpan[]> {
     const ft = await this.prisma.ft.findFirst({
       where: {
         id: ftId,
@@ -172,56 +172,56 @@ export class FtTimespanService {
       throw new NotFoundException(`FT with id ${ftId} not found`);
     }
 
-    return this.formatTimespansWithStatsResponse(ft);
+    return this.formatTimeSpansWithStatsResponse(ft);
   }
 
-  async findTimespanWithFt(timespanId: number): Promise<TimespanWithFt> {
-    const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
+  async findTimeSpanWithFt(timeSpanId: number): Promise<TimeSpanWithFt> {
+    const timeSpan = await this.prisma.ftTimeSpan.findFirst({
       where: {
-        id: timespanId,
+        id: timeSpanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select: SELECT_TIMESPAN_WITH_FT,
     });
-    if (!ftTimespan) {
-      throw new NotFoundException(`Timespan with id ${timespanId} not found`);
+    if (!timeSpan) {
+      throw new NotFoundException(`Timespan with id ${timeSpanId} not found`);
     }
-    return this.formatTimespanWithFt(ftTimespan);
+    return this.formatTimeSpanWithFt(timeSpan);
   }
 
   async findTimespanWithAssignees(
-    timespanId: number,
-  ): Promise<TimespanWithAssignees> {
-    const select = this.buildTimespanWithAssigneesSelection(timespanId);
+    timeSpanId: number,
+  ): Promise<TimeSpanWithAssignees> {
+    const select = this.buildTimeSpanWithAssigneesSelection(timeSpanId);
     const timespan = await this.prisma.ftTimeSpan.findFirst({
       where: {
-        id: timespanId,
+        id: timeSpanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select,
     });
-    return this.formatTimespanWithDetails(timespan);
+    return this.formatTimeSpanWithDetails(timespan);
   }
 
-  async findTimespanWithFtAndAssignment(
-    timespanId: number,
-  ): Promise<TimespanWithFtAndAssignees> {
-    const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
+  async findTimeSpanWithFtAndAssignment(
+    timeSpanId: number,
+  ): Promise<TimeSpanWithFtAndAssignees> {
+    const ftTimeSpan = await this.prisma.ftTimeSpan.findFirst({
       where: {
-        id: timespanId,
+        id: timeSpanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
     });
-    if (!ftTimespan) {
-      throw new NotFoundException(`Timespan with id ${timespanId} not found`);
+    if (!ftTimeSpan) {
+      throw new NotFoundException(`Timespan with id ${timeSpanId} not found`);
     }
-    return this.formatTimespanWithFtAndAssignees(ftTimespan);
+    return this.formatTimeSpanWithFtAndAssignees(ftTimeSpan);
   }
 
   async findTimespansWithFtWhereVolunteerIsAssignableTo(
     volunteerId: number,
-  ): Promise<AvailableTimespan[]> {
+  ): Promise<AvailableTimeSpan[]> {
     const [volunteerTeams, availabilities, requests, assignments, friends] =
       await Promise.all([
         this.user.getUserTeams(volunteerId),
@@ -233,18 +233,18 @@ export class FtTimespanService {
 
     const busyPeriods = [...requests, ...assignments];
 
-    const where = this.buildAssignableToTimespanCondition(
+    const where = this.buildAssignableToTimeSpanCondition(
       volunteerTeams,
       availabilities,
       busyPeriods,
     );
 
-    const timespans = await this.prisma.ftTimeSpan.findMany({
+    const timeSpans = await this.prisma.ftTimeSpan.findMany({
       select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
       where,
       orderBy: { start: 'asc' },
     });
-    return this.formatAvailableForVolunteerTimespans(timespans, friends);
+    return this.formatAvailableForVolunteerTimeSpans(timeSpans, friends);
   }
 
   async getTaskCategory(timespanId: number): Promise<TaskCategory | null> {
@@ -284,7 +284,7 @@ export class FtTimespanService {
     ];
   }
 
-  private buildAssignableToTimespanCondition(
+  private buildAssignableToTimeSpanCondition(
     volunteerTeams: string[],
     availabilities: PeriodDto[],
     busyPeriods: PeriodDto[],
@@ -331,7 +331,7 @@ export class FtTimespanService {
     };
   }
 
-  private buildTimespanWithAssigneesSelection(timespanId: number) {
+  private buildTimeSpanWithAssigneesSelection(timeSpanId: number) {
     const SELECT_REQUESTED_TEAMS = {
       teamRequests: {
         select: {
@@ -339,7 +339,7 @@ export class FtTimespanService {
           quantity: true,
           _count: {
             select: {
-              assignments: { where: { timespanId } },
+              assignments: { where: { timeSpanId } },
             },
           },
         },
@@ -356,9 +356,7 @@ export class FtTimespanService {
         where: {
           requestor: {
             assignments: {
-              some: {
-                timespanId,
-              },
+              some: { timeSpanId },
             },
           },
         },
@@ -375,9 +373,7 @@ export class FtTimespanService {
         where: {
           friend: {
             assignments: {
-              some: {
-                timespanId,
-              },
+              some: { timeSpanId },
             },
           },
         },
@@ -410,21 +406,21 @@ export class FtTimespanService {
     return SELECT_TIMESPAN_WITH_ASSIGNEES;
   }
 
-  private formatAvailableForVolunteerTimespans(
-    ftTimespans: DatabaseTimespanWithFtAndAssignees[],
+  private formatAvailableForVolunteerTimeSpans(
+    ftTimeSpans: DatabaseTimeSpanWithFtAndAssignees[],
     friends: number[],
-  ): AvailableTimespan[] {
-    return ftTimespans.map((ts) => {
+  ): AvailableTimeSpan[] {
+    return ftTimeSpans.map((ts) => {
       const hasFriendsAssigned = ts.assignments.some(({ assignee }) =>
         friends.includes(assignee.id),
       );
-      return { ...this.formatTimespanWithFt(ts), hasFriendsAssigned };
+      return { ...this.formatTimeSpanWithFt(ts), hasFriendsAssigned };
     });
   }
 
-  private formatTimespanWithFt(
-    ftTimespan: DatabaseTimespanWithFt,
-  ): TimespanWithFt {
+  private formatTimeSpanWithFt(
+    ftTimespan: DatabaseTimeSpanWithFt,
+  ): TimeSpanWithFt {
     const requestedTeams = this.formatRequestedTeams(
       ftTimespan.timeWindow.teamRequests,
       ftTimespan.assignments,
@@ -443,25 +439,25 @@ export class FtTimespanService {
     };
   }
 
-  private formatTimespanWithFtAndAssignees(
-    timespan: DatabaseTimespanWithFtAndAssignees,
-  ): TimespanWithFtAndAssignees {
-    const assignees = formatTimespanAssignees(timespan);
+  private formatTimeSpanWithFtAndAssignees(
+    timeSpan: DatabaseTimeSpanWithFtAndAssignees,
+  ): TimeSpanWithFtAndAssignees {
+    const assignees = formatTimespanAssignees(timeSpan);
     return {
-      ...this.formatTimespanWithFt(timespan),
+      ...this.formatTimeSpanWithFt(timeSpan),
       assignees,
     };
   }
 
-  private formatFtsWithTimespans(
-    fts: DatabaseFtWithTimespans[],
-  ): FtWithTimespan[] {
-    return fts.map((ft) => this.formatFtWithTimespans(ft));
+  private formatFtsWithTimeSpans(
+    fts: DatabaseFtWithTimeSpans[],
+  ): FtWithTimeSpan[] {
+    return fts.map((ft) => this.formatFtWithTimeSpans(ft));
   }
 
-  private formatFtWithTimespans(ft: DatabaseFtWithTimespans): FtWithTimespan {
-    const timespans = ft.timeWindows.flatMap((tw) => {
-      return tw.timespans.map((ts) => {
+  private formatFtWithTimeSpans(ft: DatabaseFtWithTimeSpans): FtWithTimeSpan {
+    const timeSpans = ft.timeWindows.flatMap((tw) => {
+      return tw.timeSpans.map((ts) => {
         const requestedTeams = this.formatRequestedTeams(
           tw.teamRequests,
           ts.assignments,
@@ -479,7 +475,7 @@ export class FtTimespanService {
       name: ft.name,
       hasPriority: ft.hasPriority,
       category: ft.category,
-      timespans,
+      timeSpans,
     };
   }
 
@@ -493,17 +489,17 @@ export class FtTimespanService {
     });
   }
 
-  private formatTimespansWithStatsResponse(ft: {
+  private formatTimeSpansWithStatsResponse(ft: {
     timeWindows: DatabaseTimeWindow[];
-  }): Timespan[] {
-    return ft.timeWindows.flatMap(({ timespans, teamRequests }) =>
-      timespans.flatMap(convertToTimespan(teamRequests)),
+  }): TimeSpan[] {
+    return ft.timeWindows.flatMap(({ timeSpans, teamRequests }) =>
+      timeSpans.flatMap(convertToTimeSpan(teamRequests)),
     );
   }
 
-  private formatTimespanWithDetails(
-    timespan: DatabaseTimespanWithAssignees,
-  ): TimespanWithAssignees {
+  private formatTimeSpanWithDetails(
+    timespan: DatabaseTimeSpanWithAssignees,
+  ): TimeSpanWithAssignees {
     const { id, start, end, assignments, timeWindow } = timespan;
     const { teamRequests } = timeWindow;
     const ft = {
@@ -523,14 +519,14 @@ export class FtTimespanService {
         .map(({ assignee }) => convertToAssignee(assignee)),
       assignees: assignments
         .filter(({ teamRequest }) => teamRequest !== null)
-        .map(convertToTimespanAssignee),
+        .map(convertToTimeSpanAssignee),
     };
   }
 }
 
-function convertToTimespan(
+function convertToTimeSpan(
   teamRequests: DatabaseRequestedTeam[],
-): (value: DatabaseTimespanWithAssignedTeamMembers) => Timespan {
+): (value: DatabaseTimeSpanWithAssignedTeamMembers) => TimeSpan {
   return ({ assignments, ...timespan }) => {
     const requestedTeams = teamRequests.map((teamRequest) =>
       convertToRequestedTeam(teamRequest, assignments),
@@ -543,7 +539,7 @@ function convertToTimespan(
 }
 
 function formatTimespanAssignees(
-  ftTimespan: DatabaseTimespanWithFtAndAssignees,
+  ftTimespan: DatabaseTimeSpanWithFtAndAssignees,
 ): number[] {
   return ftTimespan.assignments.map(({ assignee }) => assignee.id);
 }
@@ -582,10 +578,10 @@ function convertToAssignee({
   return { id, lastname, firstname, phone, teams };
 }
 
-function convertToTimespanAssignee({
+function convertToTimeSpanAssignee({
   assignee,
   teamRequest,
-}: DatabaseAssignmentsAsTeamMember): TimespanAssignee {
+}: DatabaseAssignmentsAsTeamMember): TimeSpanAssignee {
   const friends = extractDeduplicatedFriends(assignee);
 
   return {

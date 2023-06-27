@@ -3,13 +3,13 @@ import { FtTeamRequest, FtTimeSpan } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
-import { Period } from 'src/volunteer-availability/domain/period.model';
-import { WHERE_VALIDATED_USER } from './volunteer.service';
 import { VolunteerAssignmentStat } from 'src/user/dto/volunteerAssignment.dto';
 import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   UserService,
 } from 'src/user/user.service';
+import { Period } from 'src/volunteer-availability/domain/period.model';
+import { WHERE_VALIDATED_USER } from './volunteer.service';
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -25,11 +25,11 @@ export const SELECT_BASE_TIMESPAN = {
 
 const SELECT_ASSIGNMENT = {
   assigneeId: true,
-  timespanId: true,
+  timeSpanId: true,
   teamRequestId: true,
 };
 
-function buildTimespanWithStatsSelection(timespanId: number, teamCode: string) {
+function buildTimespanWithStatsSelection(timeSpanId: number, teamCode: string) {
   return {
     ...SELECT_BASE_TIMESPAN,
     timeWindow: {
@@ -40,7 +40,7 @@ function buildTimespanWithStatsSelection(timespanId: number, teamCode: string) {
             ...SELECT_TEAM_REQUEST,
             _count: {
               select: {
-                assignments: { where: { timespanId } },
+                assignments: { where: { timeSpanId } },
               },
             },
           },
@@ -58,7 +58,7 @@ type DataBaseTeamRequestWithAssignmentStats = TeamRequest & {
   };
 };
 
-type DataBaseTimespanWithStats = Pick<FtTimeSpan, 'id' | 'start' | 'end'> & {
+type DataBaseTimeSpanWithStats = Pick<FtTimeSpan, 'id' | 'start' | 'end'> & {
   timeWindow: {
     teamRequests: DataBaseTeamRequestWithAssignmentStats[];
   };
@@ -70,7 +70,7 @@ type TeamRequestWithAssignmentStats = TeamRequest & {
 
 export type Assignment = {
   assigneeId: number;
-  timespanId: number;
+  timeSpanId: number;
   teamRequestId?: number;
   userRequestId?: number;
 };
@@ -92,11 +92,11 @@ export class AssignmentService {
 
   async assignVolunteersToTimespan(
     volunteers: VolunteerAssignmentRequest[],
-    timespanId: number,
+    timeSpanId: number,
   ): Promise<Assignment[]> {
     const assignments = await Promise.all(
       volunteers.map((volunteer) =>
-        this.prepareAssignment(volunteer, timespanId),
+        this.prepareAssignment(volunteer, timeSpanId),
       ),
     );
     return this.prisma.$transaction(
@@ -111,42 +111,42 @@ export class AssignmentService {
 
   private async prepareAssignment(
     { teamCode, id }: VolunteerAssignmentRequest,
-    timespanId: number,
+    timeSpanId: number,
   ): Promise<Assignment> {
-    const timespan = await this.retrieveTimespan(timespanId, teamCode);
-    await this.checkVolunteerCompatibility(id, timespan, teamCode);
+    const timeSpan = await this.retrieveTimeSpan(timeSpanId, teamCode);
+    await this.checkVolunteerCompatibility(id, timeSpan, teamCode);
 
-    const teamRequestId = this.retrieveTeamRequestId(timespan, teamCode);
+    const teamRequestId = this.retrieveTeamRequestId(timeSpan, teamCode);
     return {
-      timespanId,
+      timeSpanId: timeSpanId,
       teamRequestId,
       assigneeId: id,
     };
   }
 
-  async unassignVolunteerToTimespan(
+  async unassignVolunteerToTimeSpan(
     assigneeId: number,
-    timespanId: number,
+    timeSpanId: number,
   ): Promise<void> {
     await this.prisma.assignment.deleteMany({
       where: {
         assigneeId,
-        timespanId,
+        timeSpanId,
       },
     });
   }
 
   async updateAssignedTeam(
-    timespanId: number,
+    timeSpanId: number,
     assigneeId: number,
     teamCode: string,
   ): Promise<Assignment> {
-    const timespan = await this.retrieveTimespan(timespanId, teamCode);
-    const teamRequestId = this.retrieveTeamRequestId(timespan, teamCode);
+    const timeSpan = await this.retrieveTimeSpan(timeSpanId, teamCode);
+    const teamRequestId = this.retrieveTeamRequestId(timeSpan, teamCode);
     return this.prisma.assignment.update({
       where: {
-        timespanId_assigneeId: {
-          timespanId,
+        timeSpanId_assigneeId: {
+          timeSpanId: timeSpanId,
           assigneeId,
         },
       },
@@ -157,7 +157,7 @@ export class AssignmentService {
 
   async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
     const volunteers = await this.prisma.user.findMany({
-      where: { is_deleted: false, team: { none: { team: { code: 'hard' } } } },
+      where: { isDeleted: false, team: { none: { team: { code: 'hard' } } } },
       select: {
         firstname: true,
         lastname: true,
@@ -170,23 +170,23 @@ export class AssignmentService {
     });
   }
 
-  private async retrieveTimespan(timespanId: number, teamCode: string) {
-    const timespan = await this.getTimespanWithItStats(timespanId, teamCode);
+  private async retrieveTimeSpan(timeSpanId: number, teamCode: string) {
+    const timeSpan = await this.getTimeSpanWithItStats(timeSpanId, teamCode);
 
-    if (!timespan) {
+    if (!timeSpan) {
       throw new NotFoundException(
         "Le créneau n'existe pas avec la team demandée. Allez regarder la FT.",
       );
     }
-    return timespan;
+    return timeSpan;
   }
 
   private async checkVolunteerCompatibility(
     volunteerId: number,
-    timespan: DataBaseTimespanWithStats,
+    timeSpan: DataBaseTimeSpanWithStats,
     teamCode: string,
   ): Promise<void> {
-    const volunteer = await this.getVolunteer(volunteerId, timespan, teamCode);
+    const volunteer = await this.getVolunteer(volunteerId, timeSpan, teamCode);
 
     if (!volunteer) {
       throw new NotFoundException(
@@ -196,10 +196,10 @@ export class AssignmentService {
   }
 
   private retrieveTeamRequestId(
-    timespan: DataBaseTimespanWithStats,
+    timeSpan: DataBaseTimeSpanWithStats,
     teamCode: string,
   ) {
-    const teamRequestsStats = this.extractTeamRequestsStats(timespan);
+    const teamRequestsStats = this.extractTeamRequestsStats(timeSpan);
 
     const teamRequestId = this.selectTeamRequestId(teamRequestsStats, teamCode);
 
@@ -211,25 +211,25 @@ export class AssignmentService {
     return teamRequestId;
   }
 
-  private extractTeamRequestsStats(timespan: DataBaseTimespanWithStats) {
-    return timespan.timeWindow.teamRequests.map(
+  private extractTeamRequestsStats(timeSpan: DataBaseTimeSpanWithStats) {
+    return timeSpan.timeWindow.teamRequests.map(
       convertToTeamRequestWithAssignmentStats,
     );
   }
 
   private async getVolunteer(
     volunteerId: number,
-    ftTimespan: Period,
+    timeSpan: Period,
     teamCode: string,
   ): Promise<{ id: number } | null> {
     const availabilities =
       AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(
-        ftTimespan,
+        timeSpan,
       );
 
     const assignments =
       AssignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
-        ftTimespan,
+        timeSpan,
       );
 
     const team = this.buildVolunteerIsMemberOfTeamCondition(teamCode);
@@ -261,7 +261,7 @@ export class AssignmentService {
   }: Period) {
     return {
       every: {
-        NOT: [{ timespan: { start: { lt: end }, end: { gt: start } } }],
+        NOT: [{ timeSpan: { start: { lt: end }, end: { gt: start } } }],
       },
     };
   }
@@ -278,15 +278,15 @@ export class AssignmentService {
     };
   }
 
-  private getTimespanWithItStats(timespanId: number, teamCode: string) {
+  private getTimeSpanWithItStats(timeSpanId: number, teamCode: string) {
     return this.prisma.ftTimeSpan.findFirst({
       where: {
-        id: timespanId,
+        id: timeSpanId,
         timeWindow: {
           teamRequests: { some: { teamCode } },
         },
       },
-      select: buildTimespanWithStatsSelection(timespanId, teamCode),
+      select: buildTimespanWithStatsSelection(timeSpanId, teamCode),
     });
   }
 

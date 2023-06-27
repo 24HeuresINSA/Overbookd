@@ -1,6 +1,6 @@
-import { ONE_HOUR_IN_MS } from '../utils/date';
-import { TimeWindow, Timespan } from '../ft/ftTypes';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
+import { TimeWindow, Timespan } from '../ft/ftTypes';
+import { ONE_HOUR_IN_MS } from '../utils/date';
 import { getPeriodDuration } from '../utils/duration';
 
 type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {
@@ -10,24 +10,24 @@ type Period = {
   start: Date;
   end: Date;
 };
-class TimespansGeneratorException extends Error {}
+class TimeSpansGeneratorException extends Error {}
 
 const DIVIDABLE_ERROR_MESSAGE =
   'Time window duration is not dividable by the slice time';
 
-type TimespanBuilderParams = {
+type TimeSpanBuilderParams = {
   start: Date;
   stepDuration: number;
   timeWindowId: number;
   userRequests: DataBaseUserRequest[];
 };
 
-export class TimespansGenerator {
+export class TimeSpansGenerator {
   static generateTimespans(timeWindow: LiteTimeWindow): Timespan[] {
-    if (!TimespansGenerator.canBeSliced(timeWindow)) {
-      throw new TimespansGeneratorException(DIVIDABLE_ERROR_MESSAGE);
+    if (!TimeSpansGenerator.canBeSliced(timeWindow)) {
+      throw new TimeSpansGeneratorException(DIVIDABLE_ERROR_MESSAGE);
     }
-    return TimespansGenerator.splitInTimespans(timeWindow);
+    return TimeSpansGenerator.splitInTimespans(timeWindow);
   }
 
   private static splitInTimespans({
@@ -37,11 +37,11 @@ export class TimespansGenerator {
     sliceTime,
     userRequests,
   }: LiteTimeWindow): Timespan[] {
-    const durationInHour = TimespansGenerator.computeDuration({ start, end });
+    const durationInHour = TimeSpansGenerator.computeDuration({ start, end });
     const stepDuration = sliceTime ?? durationInHour;
     const nbTimespans = durationInHour / stepDuration;
     return Array.from({ length: nbTimespans }).map(
-      TimespansGenerator.buildTimespan({
+      TimeSpansGenerator.buildTimespan({
         start,
         userRequests,
         stepDuration,
@@ -55,14 +55,14 @@ export class TimespansGenerator {
     stepDuration,
     timeWindowId,
     userRequests,
-  }: TimespanBuilderParams) {
+  }: TimeSpanBuilderParams) {
     return (_, step: number) => {
-      const slicedStart = TimespansGenerator.computeSlicedStart(
+      const slicedStart = TimeSpansGenerator.computeSlicedStart(
         start,
         step,
         stepDuration,
       );
-      const slicedEnd = TimespansGenerator.computeSlicedEnd(
+      const slicedEnd = TimeSpansGenerator.computeSlicedEnd(
         start,
         step,
         stepDuration,
@@ -81,11 +81,11 @@ export class TimespansGenerator {
     step: number,
     duration: number,
   ) {
-    return TimespansGenerator.generateStepedDate(start, step, duration);
+    return TimeSpansGenerator.generateStepedDate(start, step, duration);
   }
 
   private static computeSlicedEnd(start: Date, step: number, duration: number) {
-    return TimespansGenerator.generateStepedDate(start, step + 1, duration);
+    return TimeSpansGenerator.generateStepedDate(start, step + 1, duration);
   }
 
   private static buildAssignments(userRequests: DataBaseUserRequest[]) {
@@ -104,7 +104,7 @@ export class TimespansGenerator {
   }
 
   private static canBeSliced({ start, end, sliceTime }: LiteTimeWindow) {
-    const durationInHour = TimespansGenerator.computeDuration({ start, end });
+    const durationInHour = TimeSpansGenerator.computeDuration({ start, end });
     return durationInHour % (sliceTime ?? durationInHour) === 0;
   }
 

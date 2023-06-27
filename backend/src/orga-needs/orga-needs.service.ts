@@ -227,7 +227,7 @@ export class OrgaNeedsService {
 
   private teamMemberCondition(teams: string[]) {
     const isValidUser = {
-      permissions: { some: { permission_name: 'validated-user' } },
+      permissions: { some: { permissionName: 'validated-user' } },
     };
     const isMemberOf = { code: { in: teams } };
 

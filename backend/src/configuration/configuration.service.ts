@@ -58,7 +58,7 @@ export class ConfigurationService {
         key,
       },
       data: {
-        is_deleted: true,
+        isDeleted: true,
       },
     });
   }

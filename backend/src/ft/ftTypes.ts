@@ -5,7 +5,7 @@ import {
   ReviewStatus,
 } from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
-import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
+import { TimeSpanBase } from 'src/assignment/types/ftTimeSpanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { PeriodForm } from 'src/gear-requests/gearRequests.model';
 import { TEAM_SELECT } from 'src/team/team.service';
@@ -43,7 +43,7 @@ export interface TimeWindow {
   sliceTime?: number;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
-  timespans: TimespanBase[];
+  timeSpans: TimeSpanBase[];
 }
 
 export interface Timespan {
@@ -193,7 +193,7 @@ export const COMPLETE_FT_SELECT = {
           team: TEAM_SELECT,
         },
       },
-      timespans: {
+      timeSpans: {
         select: SELECT_BASE_TIMESPAN,
       },
     },

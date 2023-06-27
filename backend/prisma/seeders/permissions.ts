@@ -4,7 +4,7 @@ export const permissions = [
     description: 'Admin',
     teams: {
       createMany: {
-        data: [{ team_code: 'admin' }],
+        data: [{ teamCode: 'admin' }],
       },
     },
   },
@@ -13,7 +13,7 @@ export const permissions = [
     description: 'Utilisateurs qui peuvent écrire dans la config',
     teams: {
       createMany: {
-        data: [{ team_code: 'admin' }],
+        data: [{ teamCode: 'admin' }],
       },
     },
   },
@@ -22,7 +22,7 @@ export const permissions = [
     description: 'Uniquement les hards',
     teams: {
       createMany: {
-        data: [{ team_code: 'hard' }],
+        data: [{ teamCode: 'hard' }],
       },
     },
   },
@@ -31,7 +31,7 @@ export const permissions = [
     description: 'Utilisateurs qui ont des CP',
     teams: {
       createMany: {
-        data: [{ team_code: 'hard' }, { team_code: 'vieux' }],
+        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
       },
     },
   },
@@ -41,7 +41,7 @@ export const permissions = [
       'Utilisateurs qui peuvent affecter des utilisateurs à des équipes',
     teams: {
       createMany: {
-        data: [{ team_code: 'humain' }, { team_code: 'sg' }],
+        data: [{ teamCode: 'humain' }, { teamCode: 'sg' }],
       },
     },
   },
@@ -51,12 +51,12 @@ export const permissions = [
     teams: {
       createMany: {
         data: [
-          { team_code: 'hard' },
-          { team_code: 'vieux' },
-          { team_code: 'soft' },
-          { team_code: 'camion' },
-          { team_code: 'voiture' },
-          { team_code: 'fen' },
+          { teamCode: 'hard' },
+          { teamCode: 'vieux' },
+          { teamCode: 'soft' },
+          { teamCode: 'camion' },
+          { teamCode: 'voiture' },
+          { teamCode: 'fen' },
         ],
       },
     },
@@ -67,9 +67,9 @@ export const permissions = [
     teams: {
       createMany: {
         data: [
-          { team_code: 'matos' },
-          { team_code: 'elec' },
-          { team_code: 'barrieres' },
+          { teamCode: 'matos' },
+          { teamCode: 'elec' },
+          { teamCode: 'barrieres' },
         ],
       },
     },
@@ -80,12 +80,12 @@ export const permissions = [
     teams: {
       createMany: {
         data: [
-          { team_code: 'matos' },
-          { team_code: 'elec' },
-          { team_code: 'barrieres' },
-          { team_code: 'signa' },
-          { team_code: 'bar' },
-          { team_code: 'catering' },
+          { teamCode: 'matos' },
+          { teamCode: 'elec' },
+          { teamCode: 'barrieres' },
+          { teamCode: 'signa' },
+          { teamCode: 'bar' },
+          { teamCode: 'catering' },
         ],
       },
     },
@@ -95,7 +95,7 @@ export const permissions = [
     description: "Peut éditer l'inventaire",
     teams: {
       createMany: {
-        data: [{ team_code: 'matos' }, { team_code: 'elec' }],
+        data: [{ teamCode: 'matos' }, { teamCode: 'elec' }],
       },
     },
   },
@@ -104,7 +104,7 @@ export const permissions = [
     description: 'Utilisateurs qui peuvent gérer les CP',
     teams: {
       createMany: {
-        data: [{ team_code: 'sg' }],
+        data: [{ teamCode: 'sg' }],
       },
     },
   },
@@ -113,7 +113,7 @@ export const permissions = [
     description: 'Utilisateurs qui peuvent envoyer des notifications',
     teams: {
       createMany: {
-        data: [{ team_code: 'bureau' }, { team_code: 'orga' }],
+        data: [{ teamCode: 'bureau' }, { teamCode: 'orga' }],
       },
     },
   },
@@ -122,7 +122,7 @@ export const permissions = [
     description: 'Utilisateurs qui peuvent gérer les utilisateurs',
     teams: {
       createMany: {
-        data: [{ team_code: 'bureau' }, { team_code: 'humain' }],
+        data: [{ teamCode: 'bureau' }, { teamCode: 'humain' }],
       },
     },
   },
@@ -131,7 +131,7 @@ export const permissions = [
     description: 'Le bureau',
     teams: {
       createMany: {
-        data: [{ team_code: 'bureau' }],
+        data: [{ teamCode: 'bureau' }],
       },
     },
   },
@@ -140,7 +140,7 @@ export const permissions = [
     description: 'Peut affecter',
     teams: {
       createMany: {
-        data: [{ team_code: 'humain' }],
+        data: [{ teamCode: 'humain' }],
       },
     },
   },
@@ -149,7 +149,7 @@ export const permissions = [
     description: 'Peut gérer la configuration',
     teams: {
       createMany: {
-        data: [{ team_code: 'humain' }, { team_code: 'sg' }],
+        data: [{ teamCode: 'humain' }, { teamCode: 'sg' }],
       },
     },
   },
@@ -158,7 +158,7 @@ export const permissions = [
     description: 'Peut gérer les lieux',
     teams: {
       createMany: {
-        data: [{ team_code: 'signa' }],
+        data: [{ teamCode: 'signa' }],
       },
     },
   },
@@ -167,7 +167,7 @@ export const permissions = [
     description: "L'équipe d'organisation",
     teams: {
       createMany: {
-        data: [{ team_code: 'orga' }],
+        data: [{ teamCode: 'orga' }],
       },
     },
   },
@@ -176,7 +176,7 @@ export const permissions = [
     description: 'Peut gérer les passes sécurité',
     teams: {
       createMany: {
-        data: [{ team_code: 'secu' }],
+        data: [{ teamCode: 'secu' }],
       },
     },
   },
@@ -186,12 +186,12 @@ export const permissions = [
     teams: {
       createMany: {
         data: [
-          { team_code: 'barrieres' },
-          { team_code: 'elec' },
-          { team_code: 'humain' },
-          { team_code: 'matos' },
-          { team_code: 'secu' },
-          { team_code: 'signa' },
+          { teamCode: 'barrieres' },
+          { teamCode: 'elec' },
+          { teamCode: 'humain' },
+          { teamCode: 'matos' },
+          { teamCode: 'secu' },
+          { teamCode: 'signa' },
         ],
       },
     },
@@ -201,7 +201,7 @@ export const permissions = [
     description: 'Peut valider les FT',
     teams: {
       createMany: {
-        data: [{ team_code: 'humain' }, { team_code: 'matos' }],
+        data: [{ teamCode: 'humain' }, { teamCode: 'matos' }],
       },
     },
   },
@@ -210,7 +210,7 @@ export const permissions = [
     description: 'Peut accéder à la page communication',
     teams: {
       createMany: {
-        data: [{ team_code: 'communication' }],
+        data: [{ teamCode: 'communication' }],
       },
     },
   },

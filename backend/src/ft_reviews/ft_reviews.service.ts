@@ -13,9 +13,9 @@ import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
 import { PrismaService } from '../prisma.service';
-import { TimespanParametersDto } from './dto/timespanParameters.dto';
+import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
-import { TimespansGenerator } from './timespansGenerator';
+import { TimeSpansGenerator } from './timeSpansGenerator';
 
 @Injectable()
 export class FtReviewsService {
@@ -98,7 +98,7 @@ export class FtReviewsService {
   async assignmentApproval(
     ftId: number,
     userId: number,
-    timeSpanParameters: TimespanParametersDto,
+    timeSpanParameters: TimeSpanParametersDto,
   ): Promise<CompleteFtResponseDto | null> {
     const ft = await this.retrieveCompleteFt(ftId);
     await this.checkSwitchableToReady(ft);
@@ -156,7 +156,7 @@ export class FtReviewsService {
   ): Promise<FtStatus> | null {
     const ftValidators = this.prisma.teamPermission.count({
       where: {
-        permission_name: 'ft-validator',
+        permissionName: 'ft-validator',
       },
     });
     const ftValidatedReviews = this.prisma.ftReview.count({
@@ -211,7 +211,7 @@ export class FtReviewsService {
   }
 
   private computeTimespans(ft: DataBaseCompleteFt): Timespan[] {
-    return ft.timeWindows.flatMap(TimespansGenerator.generateTimespans);
+    return ft.timeWindows.flatMap(TimeSpansGenerator.generateTimespans);
   }
 
   private async hasAtLeastOneConflict(ft: DataBaseCompleteFt): Promise<void> {

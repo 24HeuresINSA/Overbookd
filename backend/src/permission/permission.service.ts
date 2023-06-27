@@ -143,15 +143,13 @@ export class PermissionService {
     teamCodes: string[],
   ) {
     const deleteAll = this.prisma.teamPermission.deleteMany({
-      where: {
-        permission_name: permissionName,
-      },
+      where: { permissionName },
     });
 
     const createNew = this.prisma.teamPermission.createMany({
       data: teamCodes.map((teamCode) => ({
-        permission_name: permissionName,
-        team_code: teamCode,
+        permissionName,
+        teamCode,
       })),
     });
 

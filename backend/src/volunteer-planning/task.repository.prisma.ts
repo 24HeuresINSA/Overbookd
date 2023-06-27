@@ -21,7 +21,7 @@ type DatabaseStoredTask = {
 };
 
 type DatabaseAssignment = {
-  timespan: Period & { timeWindow: { ftId: number } };
+  timeSpan: Period & { timeWindow: { ftId: number } };
   assignee: { id: number; firstname: string; lastname: string };
 };
 
@@ -56,7 +56,7 @@ export class PrismaTaskRepository implements TaskRepository {
         lastname: true,
       },
     },
-    timespan: {
+    timeSpan: {
       select: {
         start: true,
         end: true,
@@ -82,11 +82,11 @@ export class PrismaTaskRepository implements TaskRepository {
     const taskIds = tasks.map(({ timeWindow }) => timeWindow.ft.id);
     const assignments = await this.prismaService.assignment.findMany({
       where: {
-        timespan: { timeWindow: { ftId: { in: taskIds } } },
+        timeSpan: { timeWindow: { ftId: { in: taskIds } } },
         NOT: { assigneeId: volunteerId },
       },
       select: this.SELECT_ASSIGNMENT,
-      orderBy: { timespan: { start: 'asc' } },
+      orderBy: { timeSpan: { start: 'asc' } },
     });
 
     return tasks.map((task) => this.formatTask(task, assignments));
@@ -98,8 +98,8 @@ export class PrismaTaskRepository implements TaskRepository {
   ): JsonStoredTask {
     const { name, description, id, location } = task.timeWindow.ft;
     const assignees = assignments
-      .filter(({ timespan }) => timespan.timeWindow.ftId === id)
-      .map(({ timespan: { start, end }, assignee }) => {
+      .filter(({ timeSpan: timespan }) => timespan.timeWindow.ftId === id)
+      .map(({ timeSpan: { start, end }, assignee }) => {
         const name = buildVolunteerDisplayName(assignee);
         return {
           period: { start, end },

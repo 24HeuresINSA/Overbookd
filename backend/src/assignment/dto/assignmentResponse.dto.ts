@@ -14,7 +14,7 @@ export class AssignmentResponseDto implements Assignment {
     description: 'The id of the timespan',
     type: Number,
   })
-  timespanId: number;
+  timeSpanId: number;
 
   @ApiProperty({
     required: false,

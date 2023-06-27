@@ -105,7 +105,7 @@ function buildQueryParamsCondition(permission: string) {
     ? {
         permissions: {
           some: {
-            permission_name: permission,
+            permissionName: permission,
           },
         },
       }

@@ -102,7 +102,7 @@ export class TimelineService {
     return {
       timeWindows: {
         some: {
-          timespans: { some: overlapPeriodCondition },
+          timeSpans: { some: overlapPeriodCondition },
         },
       },
     };

@@ -20,6 +20,6 @@ type WithDatabaseTimeWindow = {
 type DatabaseTimespan = Period & WithDatabaseTimeWindow;
 
 export type DatabaseAssignment = {
-  timespan: DatabaseTimespan;
-  timespanId: number;
+  timeSpan: DatabaseTimespan;
+  timeSpanId: number;
 };

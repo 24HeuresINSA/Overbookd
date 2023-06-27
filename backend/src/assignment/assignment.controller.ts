@@ -26,20 +26,20 @@ import {
   UpdateAssignedTeamRequestDto,
 } from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
+import { AssignmentStatsResponseDto } from './dto/assignmentsStatsResponse.dto';
 import {
-  FtTimespanResponseDto,
-  FtWithTimespansResponseDto,
+  FtTimeSpanResponseDto,
+  FtWithTimeSpansResponseDto,
+  TimeSpanWithFtResponseDto,
   TimespanWithAssigneesResponseDto,
-  TimespanWithFtResponseDto,
-} from './dto/ftTimespanResponse.dto';
+} from './dto/ftTimeSpanResponse.dto';
 import {
   AvailableVolunteerResponseDto,
   VolunteerResponseDto,
 } from './dto/volunteerResponse.dto';
-import { FtTimespanService } from './ftTimespan.service';
-import { Timespan, TimespanWithAssignees } from './types/ftTimespanTypes';
+import { FtTimeSpanService } from './ftTimeSpan.service';
+import { TimeSpan, TimeSpanWithAssignees } from './types/ftTimeSpanTypes';
 import { VolunteerService } from './volunteer.service';
-import { AssignmentStatsResponseDto } from './dto/assignmentsStatsResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -54,7 +54,7 @@ export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
     private readonly volunteerService: VolunteerService,
-    private readonly ftTimespanService: FtTimespanService,
+    private readonly ftTimeSpanService: FtTimeSpanService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -79,10 +79,10 @@ export class AssignmentController {
     status: 200,
     description: 'Get all valid ft with timespans',
     isArray: true,
-    type: FtWithTimespansResponseDto,
+    type: FtWithTimeSpansResponseDto,
   })
-  findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
-    return this.ftTimespanService.findAllFtsWithTimespans();
+  findAllFtTimespans(): Promise<FtWithTimeSpansResponseDto[]> {
+    return this.ftTimeSpanService.findAllFtsWithTimespans();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -107,12 +107,12 @@ export class AssignmentController {
     status: 200,
     description: 'Get ft with timespans and stats',
     isArray: true,
-    type: FtTimespanResponseDto,
+    type: FtTimeSpanResponseDto,
   })
   findFtTimespans(
     @Param('ftId', ParseIntPipe) ftId: number,
-  ): Promise<Timespan[]> {
-    return this.ftTimespanService.findTimespansForFt(ftId);
+  ): Promise<TimeSpan[]> {
+    return this.ftTimeSpanService.findTimespansForFt(ftId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -123,12 +123,12 @@ export class AssignmentController {
     status: 200,
     description: 'Get ft timespans available for volunteer',
     isArray: true,
-    type: TimespanWithFtResponseDto,
+    type: TimeSpanWithFtResponseDto,
   })
   findFtTimespansAvailableForVolunteer(
     @Param('volunteerId', ParseIntPipe) volunteerId: number,
-  ): Promise<TimespanWithFtResponseDto[]> {
-    return this.ftTimespanService.findTimespansWithFtWhereVolunteerIsAssignableTo(
+  ): Promise<TimeSpanWithFtResponseDto[]> {
+    return this.ftTimeSpanService.findTimespansWithFtWhereVolunteerIsAssignableTo(
       volunteerId,
     );
   }
@@ -162,8 +162,8 @@ export class AssignmentController {
   })
   findTimespanDetails(
     @Param('timespanId', ParseIntPipe) timespanId: number,
-  ): Promise<TimespanWithAssignees> {
-    return this.ftTimespanService.findTimespanWithAssignees(timespanId);
+  ): Promise<TimeSpanWithAssignees> {
+    return this.ftTimeSpanService.findTimespanWithAssignees(timespanId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -216,7 +216,7 @@ export class AssignmentController {
     @Param('timespanId', ParseIntPipe) timespanId: number,
     @Param('assigneeId', ParseIntPipe) assigneeId: number,
   ) {
-    return this.assignmentService.unassignVolunteerToTimespan(
+    return this.assignmentService.unassignVolunteerToTimeSpan(
       assigneeId,
       timespanId,
     );

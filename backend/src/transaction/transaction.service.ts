@@ -10,22 +10,22 @@ import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
 
 type CreateTransaction = Omit<
   Transaction,
-  'id' | 'from' | 'type' | 'is_deleted' | 'created_at'
+  'id' | 'from' | 'type' | 'isDeleted' | 'createdAt'
 >;
 
 const SELECT_TRANSACTION = {
   id: true,
   type: true,
-  user_from: {
+  userFrom: {
     select: SELECT_USERNAME_WITH_ID,
   },
-  user_to: {
+  userTo: {
     select: SELECT_USERNAME_WITH_ID,
   },
   amount: true,
   context: true,
-  created_at: true,
-  is_deleted: true,
+  createdAt: true,
+  isDeleted: true,
 };
 
 type TransactionUser = Pick<User, 'id' | 'lastname' | 'firstname'>;
@@ -34,8 +34,8 @@ export type TransactionWithSenderAndReceiver = Omit<
   Transaction,
   'to' | 'from'
 > & {
-  user_from: TransactionUser;
-  user_to: TransactionUser;
+  userFrom: TransactionUser;
+  userTo: TransactionUser;
 };
 
 @Injectable()
@@ -47,7 +47,7 @@ export class TransactionService {
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
       select: SELECT_TRANSACTION,
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -66,7 +66,7 @@ export class TransactionService {
     return this.prisma.transaction.findMany({
       select: SELECT_TRANSACTION,
       where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -145,7 +145,7 @@ export class TransactionService {
 
     const updateTransactionOperation = this.prisma.transaction.update({
       where: { id },
-      data: { is_deleted: true },
+      data: { isDeleted: true },
     });
 
     const balanceOperationParameters =
@@ -192,7 +192,7 @@ export class TransactionService {
         `Transaction with ID ${transactionId} not found`,
       );
     }
-    if (transaction.is_deleted) {
+    if (transaction.isDeleted) {
       throw new BadRequestException(
         `Transaction with ID ${transactionId} is already deleted`,
       );
@@ -215,7 +215,7 @@ export class TransactionService {
     if (!this.shouldUpdateReceiverBalance(transaction.type)) {
       return undefined;
     }
-    const [receiver] = await this.userExists([transaction.user_to.id]);
+    const [receiver] = await this.userExists([transaction.userTo.id]);
     return {
       where: { id: receiver.id },
       data: { balance: receiver.balance - transaction.amount },
@@ -228,7 +228,7 @@ export class TransactionService {
     if (!this.shouldUpdateSenderBalance(transaction.type)) {
       return undefined;
     }
-    const [sender] = await this.userExists([transaction.user_from.id]);
+    const [sender] = await this.userExists([transaction.userFrom.id]);
     return {
       where: { id: sender.id },
       data: { balance: sender.balance + transaction.amount },

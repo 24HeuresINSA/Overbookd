@@ -75,18 +75,14 @@ export class TeamService {
     },
   ): Promise<Team> {
     return this.prisma.team.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: payload,
     });
   }
 
   async deleteTeam(id: number): Promise<void> {
     await this.prisma.team.delete({
-      where: {
-        id,
-      },
+      where: { id },
     });
     return;
   }
@@ -95,9 +91,7 @@ export class TeamService {
     return {
       some: {
         team: {
-          code: {
-            in: teamCodes,
-          },
+          code: { in: teamCodes },
         },
       },
     };
@@ -105,15 +99,13 @@ export class TeamService {
 
   private async forceUserTeams(userId: number, teamsToLink: Team[]) {
     const deleteAll = this.prisma.userTeam.deleteMany({
-      where: {
-        user_id: userId,
-      },
+      where: { userId },
     });
 
     const createNew = this.prisma.userTeam.createMany({
       data: teamsToLink.map((team) => ({
-        user_id: userId,
-        team_id: team.id,
+        userId,
+        teamId: team.id,
       })),
     });
 
@@ -123,9 +115,7 @@ export class TeamService {
   private async fetchExistingTeams(teams: string[]): Promise<Team[]> {
     return await this.prisma.team.findMany({
       where: {
-        code: {
-          in: teams,
-        },
+        code: { in: teams },
       },
     });
   }

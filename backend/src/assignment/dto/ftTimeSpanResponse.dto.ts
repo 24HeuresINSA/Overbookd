@@ -2,15 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TaskCategory } from '@prisma/client';
 import {
   Assignee,
-  AvailableTimespan as AvailableTimespan,
+  AvailableTimeSpan,
   FtWithLocation,
-  FtWithTimespan,
+  FtWithTimeSpan,
   RequestedTeam,
   SimplifiedFT,
-  Timespan,
-  TimespanAssignee,
-  TimespanWithAssignees,
-} from '../types/ftTimespanTypes';
+  TimeSpan,
+  TimeSpanAssignee,
+  TimeSpanWithAssignees,
+} from '../types/ftTimeSpanTypes';
 
 class SimplifiedFTRepresentation implements SimplifiedFT {
   @ApiProperty({
@@ -65,7 +65,7 @@ class RequestedTeamRepresentation implements RequestedTeam {
   assignmentCount: number;
 }
 
-export class FtTimespanResponseDto implements Timespan {
+export class FtTimeSpanResponseDto implements TimeSpan {
   @ApiProperty({
     required: true,
     description: 'The id of the timespan',
@@ -96,9 +96,9 @@ export class FtTimespanResponseDto implements Timespan {
   requestedTeams: RequestedTeam[];
 }
 
-export class TimespanWithFtResponseDto
-  extends FtTimespanResponseDto
-  implements AvailableTimespan
+export class TimeSpanWithFtResponseDto
+  extends FtTimeSpanResponseDto
+  implements AvailableTimeSpan
 {
   @ApiProperty({
     required: true,
@@ -115,17 +115,17 @@ export class TimespanWithFtResponseDto
   hasFriendsAssigned: boolean;
 }
 
-export class FtWithTimespansResponseDto
+export class FtWithTimeSpansResponseDto
   extends SimplifiedFTRepresentation
-  implements FtWithTimespan
+  implements FtWithTimeSpan
 {
   @ApiProperty({
     required: true,
     description: 'The ft timespans',
-    type: FtTimespanResponseDto,
+    type: FtTimeSpanResponseDto,
     isArray: true,
   })
-  timespans: FtTimespanResponseDto[];
+  timeSpans: FtTimeSpanResponseDto[];
 }
 
 class FtWithLocationRepresentation implements FtWithLocation {
@@ -144,15 +144,15 @@ class AssigneeRepresentation implements Assignee {
 
 class TimespanAssigneeRepresentation
   extends AssigneeRepresentation
-  implements TimespanAssignee
+  implements TimeSpanAssignee
 {
   assignedTeam: string;
   friends: AssigneeRepresentation[];
 }
 
 export class TimespanWithAssigneesResponseDto
-  extends FtTimespanResponseDto
-  implements TimespanWithAssignees
+  extends FtTimeSpanResponseDto
+  implements TimeSpanWithAssignees
 {
   @ApiProperty({
     required: true,
@@ -175,5 +175,5 @@ export class TimespanWithAssigneesResponseDto
     type: TimespanAssigneeRepresentation,
     isArray: true,
   })
-  assignees: TimespanAssignee[];
+  assignees: TimeSpanAssignee[];
 }

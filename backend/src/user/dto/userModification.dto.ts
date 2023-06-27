@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Departements, Years } from './common';
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
-  IsNotEmpty,
   IsMobilePhone,
-  IsString,
-  ValidationArguments,
-  IsBoolean,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
+  ValidationArguments,
 } from 'class-validator';
+import { Departements, Years } from './common';
 
 export class UserModificationDto {
   @ApiProperty({
@@ -105,7 +105,7 @@ export class UserModificationDto {
   })
   @IsOptional()
   @IsBoolean()
-  has_payed_contributions?: boolean;
+  hasPayedContributions?: boolean;
 
   @ApiProperty({
     required: false,
