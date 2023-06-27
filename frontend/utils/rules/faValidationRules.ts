@@ -1,14 +1,14 @@
 import {
-    Collaborator,
-    Fa,
-    FaCollaborator,
-    FaElectricityNeed,
-    FaSignaNeed,
-    FaTimeWindow,
-    FaType,
-    SitePublishAnimation,
-    SortedStoredGearRequests,
-    TimeWindowType,
+  Collaborator,
+  Fa,
+  FaCollaborator,
+  FaElectricityNeed,
+  FaSignaNeed,
+  FaTimeWindow,
+  FaType,
+  SitePublishAnimation,
+  SortedStoredGearRequests,
+  TimeWindowType,
 } from "../models/FA";
 import { GearRequest } from "../models/gearRequests";
 
