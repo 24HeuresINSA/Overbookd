@@ -65,5 +65,5 @@ export class CreateFaCommentDto {
   @IsOptional()
   @IsNotEmpty()
   @IsDateString()
-  created_at?: Date;
+  createdAt?: Date;
 }

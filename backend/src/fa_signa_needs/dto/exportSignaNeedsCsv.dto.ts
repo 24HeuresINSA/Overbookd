@@ -6,13 +6,13 @@ export class FaSignaNeedsExportCsvDto {
     description: 'Name of the FA',
     type: String,
   })
-  fa_name: string;
+  faName: string;
 
   @ApiProperty({
     description: 'Type of the signa',
     enum: SignaType,
   })
-  signa_type: SignaType;
+  signaType: SignaType;
 
   @ApiProperty({
     description: 'Text of the signa',

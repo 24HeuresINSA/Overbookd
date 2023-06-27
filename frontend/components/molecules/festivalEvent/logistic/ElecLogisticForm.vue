@@ -5,7 +5,7 @@
     <v-card-text>
       <v-form>
         <v-select
-          v-model="electricity_type"
+          v-model="electricityType"
           type="select"
           label="Type de prise*"
           :items="electricityTypeLabels"
@@ -44,10 +44,10 @@
 <script lang="ts">
 import Vue from "vue";
 import {
+  ElectricityType,
   ElectricityTypeLabel,
-  electricity_type,
-  electricity_type_label,
-  fa_electricity_needs,
+  ElectricityTypeWithLabel,
+  FaElectricityNeed,
 } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
@@ -60,7 +60,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    electricity_type: "",
+    electricityType: "",
     device: "",
     power: "",
     count: "",
@@ -71,27 +71,27 @@ export default Vue.extend({
     },
   }),
   computed: {
-    elecNeed(): fa_electricity_needs | undefined {
+    elecNeed(): FaElectricityNeed | undefined {
       if (this.index === -1) return undefined;
-      return this.$accessor.FA.mFA?.fa_electricity_needs?.[this.index];
+      return this.$accessor.FA.mFA?.faElectricityNeeds?.[this.index];
     },
-    mElecNeed(): fa_electricity_needs {
+    mElecNeed(): FaElectricityNeed {
       return {
-        electricity_type: this.electricity_type as electricity_type,
+        electricityType: this.electricityType as ElectricityType,
         device: this.device,
         power: +this.power,
         count: +this.count,
         comment: this.comment,
       };
     },
-    electricityTypeLabels(): ElectricityTypeLabel[] {
-      const elecTypeLabels: ElectricityTypeLabel[] = Object.keys(
-        electricity_type_label
+    electricityTypeLabels(): ElectricityTypeWithLabel[] {
+      const elecTypeLabels: ElectricityTypeWithLabel[] = Object.keys(
+        ElectricityTypeLabel
       ).map((type) => {
         return {
-          type: type as electricity_type,
+          type: type as ElectricityType,
           label:
-            electricity_type_label[type as keyof typeof electricity_type_label],
+            ElectricityTypeLabel[type as keyof typeof ElectricityTypeLabel],
         };
       });
       return elecTypeLabels;
@@ -108,14 +108,14 @@ export default Vue.extend({
   methods: {
     updateLocalVariable() {
       if (!this.elecNeed) return this.clearLocalVariable();
-      this.electricity_type = this.elecNeed.electricity_type;
+      this.electricityType = this.elecNeed.electricityType;
       this.device = this.elecNeed.device ?? "";
       this.power = this.elecNeed.power.toString() ?? "";
       this.count = (this.elecNeed.count ?? "").toString();
       this.comment = this.elecNeed.comment ?? "";
     },
     clearLocalVariable() {
-      this.electricity_type = "";
+      this.electricityType = "";
       this.device = "";
       this.power = "";
       this.count = "";
@@ -123,7 +123,7 @@ export default Vue.extend({
     },
     formIsInvalid() {
       return (
-        !this.electricity_type || !this.device || !this.power || !this.count
+        !this.electricityType || !this.device || !this.power || !this.count
       );
     },
     confirmElectricityNeed() {

@@ -18,10 +18,10 @@ export class LiteSitePublishAnimationResponseDto
 
   @ApiProperty({
     required: false,
-    description: 'Is the activty a major activity',
+    description: 'Is the activty a flagship one',
   })
   @IsBoolean()
-  isMajor: boolean;
+  isFlagship: boolean;
 
   @ApiProperty({
     required: true,

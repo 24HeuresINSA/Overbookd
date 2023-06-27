@@ -83,19 +83,19 @@ import {
   hasAtLeastOneValidation,
   hasAllValidations,
 } from "~/utils/festivalEvent/faUtils";
-import {
-  FA,
-  fa_card_type,
-  time_windows,
-  time_windows_type,
-} from "~/utils/models/FA";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Period } from "~/utils/models/gearRequests";
 import { MyUserInformation } from "~/utils/models/user";
+import {
+  Fa,
+  FaCardType,
+  FaTimeWindow,
+  TimeWindowType,
+} from "~/utils/models/FA";
 
-interface IdentifiableTimeWindow extends time_windows {
+interface IdentifiableTimeWindow extends FaTimeWindow {
   key: string;
 }
 
@@ -110,7 +110,7 @@ export default Vue.extend({
   data: () => ({
     animOwner: "humain",
     matosOwners: ["matos", "barrieres", "elec"],
-    cardType: fa_card_type.TIME_WINDOW,
+    cardType: FaCardType.TIME_WINDOW,
     headers: [
       { text: "Type", value: "type" },
       { text: "Date de début", value: "startDate" },
@@ -126,14 +126,14 @@ export default Vue.extend({
   computed: {
     timeWindowsList(): IdentifiableTimeWindow[] {
       const animationTimeWindows =
-        this.$accessor.FA.mFA.time_windows
+        this.$accessor.FA.mFA.timeWindows
           ?.map(this.convertToIdentifiableTimeWindow)
-          ?.filter((tw) => tw.type === time_windows_type.ANIM) ?? [];
+          ?.filter((tw) => tw.type === TimeWindowType.ANIM) ?? [];
 
       const gearTimeWindows = this.$accessor.FA.gearRequestRentalPeriods.map(
         (period, index) => {
           return this.convertToIdentifiableTimeWindow(
-            { ...period, type: time_windows_type.MATOS },
+            { ...period, type: TimeWindowType.MATOS },
             index
           );
         }
@@ -141,7 +141,7 @@ export default Vue.extend({
 
       return [...animationTimeWindows, ...gearTimeWindows];
     },
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValidatedByAnimOwner(): boolean {
@@ -169,7 +169,7 @@ export default Vue.extend({
       return formatDateWithMinutes(date);
     },
     confirmToDeleteTimeframe(timeWindow: IdentifiableTimeWindow) {
-      const isMatosTimeframe = timeWindow.type === time_windows_type.MATOS;
+      const isMatosTimeframe = timeWindow.type === TimeWindowType.MATOS;
       const shouldAskConfirmation =
         isMatosTimeframe && hasAtLeastOneValidation(this.mFA, this.matosOwners);
       this.selectedTimeWindow = timeWindow;
@@ -182,7 +182,7 @@ export default Vue.extend({
       this.deleteTimeframe();
     },
     deleteTimeframe() {
-      if (this.selectedTimeWindow?.type === time_windows_type.ANIM) {
+      if (this.selectedTimeWindow?.type === TimeWindowType.ANIM) {
         const index = this.retrieveAnimationTimeWindowIndex(
           this.selectedTimeWindow
         );
@@ -192,21 +192,21 @@ export default Vue.extend({
         this.selectedTimeWindow as Period
       );
     },
-    addTimeWindow(timeWindow: time_windows) {
-      if (timeWindow.type === time_windows_type.ANIM) {
+    addTimeWindow(timeWindow: FaTimeWindow) {
+      if (timeWindow.type === TimeWindowType.ANIM) {
         return this.$accessor.FA.addTimeWindow(timeWindow);
       }
       this.$accessor.FA.addGearRequestRentalPeriod(timeWindow);
     },
-    updateTimeWindow(timeWindow: time_windows) {
-      if (timeWindow.type === time_windows_type.ANIM) {
+    updateTimeWindow(timeWindow: FaTimeWindow) {
+      if (timeWindow.type === TimeWindowType.ANIM) {
         return this.updateAnimationTimeWindow(timeWindow);
       }
       if (!timeWindow.id) return;
       this.$accessor.FA.updateGearPeriod(timeWindow as Period);
     },
     deleteTimeWindow(timeWindow: IdentifiableTimeWindow) {
-      if (timeWindow.type === time_windows_type.ANIM) {
+      if (timeWindow.type === TimeWindowType.ANIM) {
         const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
         return this.$accessor.FA.deleteTimeWindow(index);
       }
@@ -219,7 +219,7 @@ export default Vue.extend({
         ? this.findTimeWindowIndexByIdAndType(timeWindow.id, timeWindow.type)
         : this.destructTimeWindowKeyToFindIndex(timeWindow!);
     },
-    updateAnimationTimeWindow(timeWindow: time_windows) {
+    updateAnimationTimeWindow(timeWindow: FaTimeWindow) {
       if (!this.selectedTimeWindow) return;
       const index = this.retrieveAnimationTimeWindowIndex(
         this.selectedTimeWindow
@@ -231,9 +231,9 @@ export default Vue.extend({
     },
     findTimeWindowIndexByIdAndType(
       timeWindowId: number,
-      timeWindowType: time_windows_type
+      timeWindowType: TimeWindowType
     ): number {
-      return this.$accessor.FA.mFA.time_windows!.findIndex(
+      return this.$accessor.FA.mFA.timeWindows!.findIndex(
         (tw) => tw.id === timeWindowId && tw.type === timeWindowType
       );
     },
@@ -246,11 +246,11 @@ export default Vue.extend({
       this.selectedTimeWindow = timeWindow;
       this.isEditDialogOpen = true;
     },
-    isAnimationTimeWindow(timeWindow: time_windows): boolean {
-      return timeWindow.type === time_windows_type.ANIM;
+    isAnimationTimeWindow(timeWindow: FaTimeWindow): boolean {
+      return timeWindow.type === TimeWindowType.ANIM;
     },
     convertToIdentifiableTimeWindow(
-      timeWindow: time_windows,
+      timeWindow: FaTimeWindow,
       defaultId: number
     ): IdentifiableTimeWindow {
       return {
@@ -259,7 +259,7 @@ export default Vue.extend({
       };
     },
     isEditable(timeWindow: IdentifiableTimeWindow) {
-      if (timeWindow.type === time_windows_type.ANIM) {
+      if (timeWindow.type === TimeWindowType.ANIM) {
         return !this.isValidatedByAnimOwner;
       }
       return !this.isValidatedByMatosOwners;

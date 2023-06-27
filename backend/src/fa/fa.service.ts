@@ -52,9 +52,9 @@ export class FaService {
 
   async getFaStats(): Promise<StatsPayload[]> {
     const fa = await this.prisma.fa.groupBy({
-      by: ['team_id', 'status'],
+      by: ['teamId', 'status'],
       where: {
-        is_deleted: false,
+        isDeleted: false,
       },
       _count: {
         status: true,
@@ -63,7 +63,7 @@ export class FaService {
     const teams = await this.prisma.team.findMany({});
     const transformedFa = fa.map((fa) => ({
       ...fa,
-      teamCode: teams.find((team) => team.id === fa.team_id)?.code,
+      teamCode: teams.find((team) => team.id === fa.teamId)?.code,
     }));
     return this.statsService.stats(transformedFa);
   }
@@ -77,10 +77,10 @@ export class FaService {
     updatefaDto: UpdateFaDto,
   ): Promise<FaResponse | null> {
     //find the fa
-    const fa = await this.prisma.fa.findUnique({ where: { id: Number(id) } });
+    const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
     await this.prisma.fa.update({
-      where: { id: Number(id) },
+      where: { id },
       data: updatefaDto,
     });
     return await this.findOne(id);
@@ -92,25 +92,25 @@ export class FaService {
 
   async remove(id: number): Promise<Fa | null> {
     return this.prisma.fa.update({
-      where: { id: Number(id) },
+      where: { id },
       data: {
-        is_deleted: true,
+        isDeleted: true,
       },
     });
   }
 
   async validatefa(
-    user_id: number,
-    fa_id: number,
+    userId: number,
+    faId: number,
     body: validationDto,
   ): Promise<void> {
-    const team_id = body.team_id;
-    await this.checkFaExistence(fa_id);
+    const teamId = body.teamId;
+    await this.checkFaExistence(faId);
 
     const data = {
-      fa_id,
-      team_id,
-      user_id,
+      faId,
+      teamId,
+      userId,
     };
     //add the user validation
     await this.prisma.$transaction([
@@ -118,16 +118,16 @@ export class FaService {
         create: data,
         update: data,
         where: {
-          fa_id_team_id: {
-            fa_id,
-            team_id,
+          faId_teamId: {
+            faId,
+            teamId,
           },
         },
       }),
       this.prisma.faRefuse.deleteMany({
         where: {
-          fa_id,
-          team_id,
+          faId,
+          teamId,
         },
       }),
     ]);
@@ -139,30 +139,30 @@ export class FaService {
   }
 
   async refusefa(
-    user_id: number,
-    fa_id: number,
+    userId: number,
+    faId: number,
     body: validationDto,
   ): Promise<void> {
-    const team_id = body.team_id;
-    await this.checkFaExistence(fa_id);
+    const teamId = body.teamId;
+    await this.checkFaExistence(faId);
 
     const data = {
-      fa_id,
-      team_id,
-      user_id,
+      faId,
+      teamId,
+      userId,
     };
     await this.prisma.$transaction([
       this.prisma.faRefuse.upsert({
         create: data,
         update: data,
         where: {
-          fa_id_team_id: {
-            fa_id,
-            team_id,
+          faId_teamId: {
+            faId,
+            teamId,
           },
         },
       }),
-      this.removeValidationFromTeam(fa_id, team_id),
+      this.removeValidationFromTeam(faId, teamId),
     ]);
   }
 
@@ -170,7 +170,7 @@ export class FaService {
     return this.prisma.fa.findFirst({
       where: {
         id: { lt: id },
-        is_deleted: false,
+        isDeleted: false,
       },
       orderBy: { id: 'desc' },
       select: {
@@ -183,7 +183,7 @@ export class FaService {
     return this.prisma.fa.findFirst({
       where: {
         id: { gt: id },
-        is_deleted: false,
+        isDeleted: false,
       },
       orderBy: { id: 'asc' },
       select: {
@@ -204,11 +204,11 @@ export class FaService {
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
   }
 
-  private removeValidationFromTeam(fa_id: number, team_id: number) {
+  private removeValidationFromTeam(faId: number, teamId: number) {
     return this.prisma.faValidation.deleteMany({
       where: {
-        fa_id,
-        team_id,
+        faId,
+        teamId,
       },
     });
   }

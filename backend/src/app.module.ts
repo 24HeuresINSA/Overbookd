@@ -31,7 +31,7 @@ import { PermissionModule } from './permission/permission.module';
 import { PrismaService } from './prisma.service';
 import { SignaLocationModule } from './signa_location/signa_location.module';
 import { TeamModule } from './team/team.module';
-import { TimeWindowsModule } from './time_windows/time_windows.module';
+import { FaTimeWindowsModule } from './fa_time_windows/fa_time_windows.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
@@ -71,7 +71,7 @@ import { NeedHelpModule } from './need-help/needHelp.module';
     }),
     FaSignaNeedsModule,
     FaCommentModule,
-    TimeWindowsModule,
+    FaTimeWindowsModule,
     FaElectricityNeedsModule,
     CatalogModule,
     CatalogModule,

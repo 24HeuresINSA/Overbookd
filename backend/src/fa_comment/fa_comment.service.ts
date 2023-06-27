@@ -3,8 +3,13 @@ import { FaFeedback, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateFaCommentDto } from './dto/create-fa_comment.dto';
 
-export type EnrichedFAComments = FaFeedback & {
-  author?: Pick<User, 'firstname' | 'lastname'>;
+export type EnrichedFaFeeback = {
+  id: number;
+  faId: number;
+  comment: string;
+  subject: string;
+  createdAt: Date;
+  author?: Pick<User, 'id' | 'firstname' | 'lastname'>;
 };
 @Injectable()
 export class FaCommentService {
@@ -12,36 +17,33 @@ export class FaCommentService {
 
   private readonly SELECT_COMMENT = {
     id: true,
-    fa_id: true,
+    faId: true,
     comment: true,
     subject: true,
-    created_at: true,
-    authorId: true,
-    author: { select: { firstname: true, lastname: true } },
+    createdAt: true,
+    author: { select: { id: true, firstname: true, lastname: true } },
   };
 
-  async findAll(): Promise<EnrichedFAComments[] | null> {
-    return await this.prisma.faFeedback.findMany({
+  async findAll(): Promise<EnrichedFaFeeback[] | null> {
+    return this.prisma.faFeedback.findMany({
       select: this.SELECT_COMMENT,
     });
   }
 
   async findOne(id: number): Promise<FaFeedback | null> {
-    return await this.prisma.faFeedback.findUnique({
-      where: {
-        id: Number(id),
-      },
+    return this.prisma.faFeedback.findUnique({
+      where: { id },
     });
   }
 
   async upsert(
-    faID: number,
+    faId: number,
     createFaCommentDto: CreateFaCommentDto[],
-  ): Promise<EnrichedFAComments[] | null> {
+  ): Promise<EnrichedFaFeeback[] | null> {
     const operations = createFaCommentDto.map((faComment) => {
       const data = {
         ...faComment,
-        fa_id: faID,
+        faId,
       };
       return this.prisma.faFeedback.upsert({
         where: {

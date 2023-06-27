@@ -20,7 +20,7 @@ export enum FAStatusLabel {
   VALIDATED = "Validée",
 }
 
-export enum electricity_type {
+export enum ElectricityType {
   PC16 = "PC16_Prise_classique",
   P17_16A_MONO = "P17_16A_MONO",
   P17_16A_TRI = "P17_16A_TRI",
@@ -34,7 +34,7 @@ export enum electricity_type {
   P17_125A_TETRA = "P17_125A_TETRA",
 }
 
-export enum electricity_type_label {
+export enum ElectricityTypeLabel {
   PC16_Prise_classique = "Prise classique (PC16)",
   P17_16A_MONO = "16A Mono (P17_16A_MONO)",
   P17_16A_TRI = "16A Tri (P17_16A_TRI)",
@@ -48,13 +48,13 @@ export enum electricity_type_label {
   P17_125A_TETRA = "125A Tetra (P17_125A_TETRA)",
 }
 
-export enum signa_type {
+export enum SignaType {
   BANNIERE = "BANNIERE",
   PANNEAU = "PANNEAU",
   PANCARTE = "PANCARTE",
 }
 
-export enum fa_type {
+export enum FaType {
   Concert = "Concert",
   Course = "Course",
   Divertissement = "Divertissement",
@@ -65,12 +65,12 @@ export enum fa_type {
   Spectacle = "Spectacle",
   Autre = "Autre",
 }
-export enum time_windows_type {
+export enum TimeWindowType {
   ANIM = "ANIM",
   MATOS = "MATOS",
 }
 
-export enum fa_card_type {
+export enum FaCardType {
   GENERAL = "GENERAL",
   DETAIL = "DETAIL",
   SIGNA = "SIGNA",
@@ -90,43 +90,43 @@ export enum SitePublishAnimationCategoryType {
   Autre = "Autre",
 }
 
-export interface FASimplified {
+export interface FaSimplified {
   id: number;
   name: string;
   status: Status;
 }
 
-export interface FA extends FASimplified {
-  type?: fa_type;
-  team_id?: number;
-  in_charge?: number;
-  created_at?: Date;
-  location_id?: number;
+export interface Fa extends FaSimplified {
+  type?: FaType;
+  teamId?: number;
+  userInChargeId?: number;
+  createdAt?: Date;
+  locationId?: number;
   description?: string;
-  security_needs?: string;
-  is_pass_required?: boolean;
-  number_of_pass?: number;
-  water_needs?: string;
-  water_flow_required?: string;
-  is_deleted?: boolean;
-  fa_collaborators?: fa_collaborators[];
-  fa_validation?: fa_validation[];
-  fa_refuse?: fa_refuse[];
-  fa_electricity_needs?: fa_electricity_needs[];
-  fa_signa_needs?: fa_signa_needs[];
-  fa_comments?: fa_comments[];
-  time_windows?: time_windows[];
+  securityNeed?: string;
+  isPassRequired?: boolean;
+  numberOfPass?: number;
+  waterNeed?: string;
+  waterFlowRequired?: string;
+  isDeleted?: boolean;
+  faCollaborators?: FaCollaborator[];
+  faValidation?: FaValidation[];
+  faRefuse?: FaRefuse[];
+  faElectricityNeeds?: FaElectricityNeed[];
+  faSignaNeeds?: FaSignaNeed[];
+  faFeedbacks?: FaFeedback[];
+  timeWindows?: FaTimeWindow[];
   faSitePublishAnimation?: SitePublishAnimation;
   fts: FTSimplified[];
 }
 
-export type CreateFA = Pick<FA, "name">;
+export type CreateFa = Pick<Fa, "name">;
 
-export interface fa_collaborators {
-  collaborator: collaborator;
+export interface FaCollaborator {
+  collaborator: Collaborator;
 }
 
-export interface collaborator {
+export interface Collaborator {
   id?: number;
   firstname?: string;
   lastname?: string;
@@ -136,82 +136,82 @@ export interface collaborator {
   comment?: string;
 }
 
-export interface fa_comments {
+export interface FaFeedback {
   id?: number;
   comment: string;
   subject: SubjectType;
-  created_at?: Date;
-  authorId: number;
+  createdAt?: Date;
   author?: DisplayedUser;
+  authorId?: number;
 }
 
-interface FAReview {
-  User: DisplayedUser;
-  Team: Team;
+interface FaReview {
+  user: DisplayedUser;
+  team: Team;
 }
 
-export type fa_validation = FAReview;
+export type FaValidation = FaReview;
 
-export type fa_refuse = FAReview;
+export type FaRefuse = FaReview;
 
-export interface fa_electricity_needs {
+export interface FaElectricityNeed {
   id?: number;
-  fa_id?: number;
-  electricity_type: electricity_type;
+  faId?: number;
+  electricityType: ElectricityType;
   device?: string;
   power: number;
   count?: number;
   comment?: string;
 }
 
-export interface fa_signa_needs {
+export interface FaSignaNeed {
   id?: number;
-  signa_type: signa_type;
+  signaType: SignaType;
   text: string;
   count: number;
   comment?: string;
 }
 
-export interface FaSignaNeedsExportCsv extends Omit<fa_signa_needs, "id"> {
-  fa_name: string;
-  fa_id: number;
+export interface FaSignaNeedsExportCsv extends Omit<FaSignaNeed, "id"> {
+  faName: string;
+  faId: number;
 }
 
-export interface time_windows {
+export interface FaTimeWindow {
   id?: number;
-  type: time_windows_type;
+  type: TimeWindowType;
   start: Date;
   end: Date;
 }
 
-export interface fa_general_update {
+export interface FaGeneralUpdate {
   name: string;
   type?: string;
-  team_id?: number;
-  in_charge?: number;
-  created_at?: Date;
-  location_id?: number;
+  teamId?: number;
+  userInChargeId?: number;
+  createdAt?: Date;
+  locationId?: number;
   status: Status;
   description?: string;
-  is_publishable?: boolean;
-  security_needs?: string;
-  is_pass_required?: boolean;
-  number_of_pass?: number;
-  water_needs?: string;
-  water_flow_required?: string;
-  is_deleted?: boolean;
+  isPublishable?: boolean;
+  securityNeed?: string;
+  isPassRequired?: boolean;
+  numberOfPass?: number;
+  waterNeed?: string;
+  waterFlowRequired?: string;
+  isDeleted?: boolean;
 }
 
-export interface fa_validation_body {
-  team_id: number;
+export interface FaValidationBody {
+  teamId: number;
 }
 
-export interface SearchFA {
+export interface SearchFa {
   isDeleted?: boolean;
   status?: Status;
 }
 
-export interface FAPageId {
+export interface FaPageId {
   id: number;
 }
 
@@ -222,7 +222,7 @@ export interface SitePublishAnimationCreation {
 export interface SitePublishAnimation {
   photoLink?: string;
   description?: string;
-  isMajor?: boolean;
+  isFlagship?: boolean;
   categories?: SitePublishAnimationCategoryType[];
 }
 
@@ -235,9 +235,9 @@ export interface SitePublishAnimationWithFa
   };
 }
 
-export interface ElectricityTypeLabel {
-  type: electricity_type;
-  label: electricity_type_label;
+export interface ElectricityTypeWithLabel {
+  type: ElectricityType;
+  label: ElectricityTypeLabel;
 }
 
 export interface SortedStoredGearRequests {
@@ -246,33 +246,26 @@ export interface SortedStoredGearRequests {
   elec: StoredGearRequest<"FA">[];
 }
 
-export function castFaWithDate(fa: HttpStringified<FA>): FA {
-  const timeWindows = fa.time_windows?.map(castTimeWindowWithDate);
-  const created_at = fa.created_at ? new Date(fa.created_at) : undefined;
-  const faComments = fa.fa_comments?.map(castCommentWithDate);
+export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
+  const timeWindows = fa.timeWindows?.map(castTimeWindowWithDate);
+  const createdAt = fa.createdAt ? new Date(fa.createdAt) : undefined;
+  const faFeedbacks = fa.faFeedbacks?.map(castCommentWithDate);
   return {
     ...fa,
-    created_at,
-    time_windows: timeWindows,
-    fa_comments: faComments,
+    createdAt,
+    timeWindows,
+    faFeedbacks,
   };
 }
 
-function castCommentWithDate(
-  comment: HttpStringified<fa_comments>
-): fa_comments {
-  const createdAt = comment.created_at
-    ? new Date(comment.created_at)
-    : undefined;
-  return {
-    ...comment,
-    created_at: createdAt,
-  };
+function castCommentWithDate(comment: HttpStringified<FaFeedback>): FaFeedback {
+  const createdAt = comment.createdAt ? new Date(comment.createdAt) : undefined;
+  return { ...comment, createdAt };
 }
 
 function castTimeWindowWithDate(
-  timeWindow: HttpStringified<time_windows>
-): time_windows {
+  timeWindow: HttpStringified<FaTimeWindow>
+): FaTimeWindow {
   return {
     ...timeWindow,
     start: new Date(timeWindow.start),

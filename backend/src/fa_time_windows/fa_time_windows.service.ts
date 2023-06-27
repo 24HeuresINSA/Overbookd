@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { FaTimeWindow } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import { CreateTimeWindowDto } from './dto/create-time_window.dto';
+import { CreateTimeWindowDto } from './dto/create-fa_time_window.dto';
 
 @Injectable()
-export class TimeWindowsService {
+export class FaTimeWindowsService {
   constructor(private prisma: PrismaService) {}
   async upsert(
-    faID: number,
+    faId: number,
     tWindows: CreateTimeWindowDto[],
   ): Promise<FaTimeWindow[] | null> {
     return Promise.all(
@@ -17,14 +17,14 @@ export class TimeWindowsService {
             where: { id: tWindow.id },
             data: {
               ...tWindow,
-              fa_id: faID,
+              faId,
             },
           });
         } else {
           return await this.prisma.faTimeWindow.create({
             data: {
               ...tWindow,
-              fa_id: faID,
+              faId,
             },
           });
         }
@@ -38,17 +38,13 @@ export class TimeWindowsService {
 
   async findOne(id: number): Promise<FaTimeWindow | null> {
     return await this.prisma.faTimeWindow.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
   }
 
   async remove(id: number): Promise<FaTimeWindow | null> {
     return await this.prisma.faTimeWindow.delete({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
   }
 }

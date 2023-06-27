@@ -1,19 +1,19 @@
 import {
-  collaborator,
-  FA,
-  fa_collaborators,
-  fa_electricity_needs,
-  fa_signa_needs,
-  fa_type,
+  Collaborator,
+  Fa,
+  FaCollaborator,
+  FaElectricityNeed,
+  FaSignaNeed,
+  FaTimeWindow,
+  FaType,
   SitePublishAnimation,
   SortedStoredGearRequests,
-  time_windows,
-  time_windows_type,
+  TimeWindowType,
 } from "../models/FA";
 import { GearRequest } from "../models/gearRequests";
 
 export function hasAtLeastOneError(
-  mFA: FA,
+  mFA: Fa,
   gearRequests: SortedStoredGearRequests
 ): boolean {
   const errors = [
@@ -28,7 +28,7 @@ export function hasAtLeastOneError(
   return errors.length > 0;
 }
 export function hasAtLeastOneWarning(
-  mFA: FA,
+  mFA: Fa,
   gearRequests: SortedStoredGearRequests
 ): boolean {
   const warnings = [
@@ -46,7 +46,7 @@ export function hasAtLeastOneWarning(
 function hasName(value: string | undefined): string | boolean {
   return !!value || "L'animation doit avoir un nom.";
 }
-export function hasType(value: fa_type | undefined): string | boolean {
+export function hasType(value: FaType | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un type.";
 }
 export function hasTeam(value: number | undefined): string | boolean {
@@ -55,12 +55,12 @@ export function hasTeam(value: number | undefined): string | boolean {
 export function hasInCharge(value: number | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un responsable.";
 }
-export function generalErrors(fa: FA): string[] {
+export function generalErrors(fa: Fa): string[] {
   return [
     hasName(fa.name),
     hasType(fa.type),
-    hasTeam(fa.team_id),
-    hasInCharge(fa.in_charge),
+    hasTeam(fa.teamId),
+    hasInCharge(fa.userInChargeId),
   ].filter((error): error is string => error !== true);
 }
 
@@ -69,21 +69,21 @@ export function hasDescription(value: string | undefined): string | boolean {
     (!!value && value !== "<p></p>") || "L'animation n'a pas de description."
   );
 }
-export function hasDescriptionToPublish(fa: FA): string | boolean {
+export function hasDescriptionToPublish(fa: Fa): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     !!fa.faSitePublishAnimation?.description ||
     "L'animation n'a pas de description à publier sur le site."
   );
 }
-export function hasPhotoLinkToPublish(fa: FA): string | boolean {
+export function hasPhotoLinkToPublish(fa: Fa): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     !!fa.faSitePublishAnimation?.photoLink ||
     "L'animation n'a pas de photo à publier sur le site."
   );
 }
-export function hasCategoriesToPublish(fa: FA): string | boolean {
+export function hasCategoriesToPublish(fa: Fa): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     (fa.faSitePublishAnimation?.categories &&
@@ -96,14 +96,14 @@ export function isPublishable(
 ): string | boolean {
   return !!value || "L'animation ne sera pas publiée sur le site.";
 }
-export function detailErrors(fa: FA): string[] {
+export function detailErrors(fa: Fa): string[] {
   return [
     hasDescriptionToPublish(fa),
     hasPhotoLinkToPublish(fa),
     hasCategoriesToPublish(fa),
   ].filter((error): error is string => error !== true);
 }
-export function detailWarnings(fa: FA): string[] {
+export function detailWarnings(fa: Fa): string[] {
   return [
     hasDescription(fa.description),
     isPublishable(fa.faSitePublishAnimation),
@@ -114,14 +114,14 @@ export function hasLocation(value: number | undefined): string | boolean {
   return Boolean(value) || "L'animation n'a pas de localisation.";
 }
 export function hasSignaNeeds(
-  value: fa_signa_needs[] | undefined
+  value: FaSignaNeed[] | undefined
 ): string | boolean {
   return (
     (value && value.length > 0) || "L'animation n'a pas besoin de signalétique."
   );
 }
 export function hasSignaNeedsWithQuantityHigherThanZero(
-  signaNeeds: fa_signa_needs[] | undefined
+  signaNeeds: FaSignaNeed[] | undefined
 ): string | boolean {
   if (!signaNeeds || signaNeeds.length === 0) return true;
   return (
@@ -129,31 +129,31 @@ export function hasSignaNeedsWithQuantityHigherThanZero(
     "Chaque demande de signa doit avoir une quantité."
   );
 }
-export function signaErrors(fa: FA): string[] {
+export function signaErrors(fa: Fa): string[] {
   return [
-    hasLocation(fa.location_id),
-    hasSignaNeedsWithQuantityHigherThanZero(fa.fa_signa_needs),
+    hasLocation(fa.locationId),
+    hasSignaNeedsWithQuantityHigherThanZero(fa.faSignaNeeds),
   ].filter((error): error is string => error !== true);
 }
-export function signaWarnings(fa: FA): string[] {
-  return [hasSignaNeeds(fa.fa_signa_needs)].filter(
+export function signaWarnings(fa: Fa): string[] {
+  return [hasSignaNeeds(fa.faSignaNeeds)].filter(
     (warning): warning is string => warning !== true
   );
 }
 
 export function hasAtLeastOneAnimationTimeWindow(
-  timeWindows: time_windows[] | undefined
+  timeWindows: FaTimeWindow[] | undefined
 ): string | boolean {
   return (
     (timeWindows &&
       timeWindows.filter(
-        (timeWindow) => timeWindow.type === time_windows_type.ANIM
+        (timeWindow) => timeWindow.type === TimeWindowType.ANIM
       ).length > 0) ||
     "L'animation doit avoir au moins une plage horaire."
   );
 }
-export function timeWindowsErrors(fa: FA): string[] {
-  return [hasAtLeastOneAnimationTimeWindow(fa.time_windows)].filter(
+export function timeWindowsErrors(fa: Fa): string[] {
+  return [hasAtLeastOneAnimationTimeWindow(fa.timeWindows)].filter(
     (error): error is string => error !== true
   );
 }
@@ -163,10 +163,10 @@ export function hasSecurityPassNeeds(
 ): string | boolean {
   return value || "Cette activité n'a pas besoin de Pass Sécu.";
 }
-export function hasPassNumberHigherThanZero(fa: FA): string | boolean {
+export function hasPassNumberHigherThanZero(fa: Fa): string | boolean {
   return (
-    !fa.is_pass_required ||
-    (fa.number_of_pass && fa.number_of_pass > 0) ||
+    !fa.isPassRequired ||
+    (fa.numberOfPass && fa.numberOfPass > 0) ||
     "Le nombre de Pass Sécu nécessaire doit être supérieur à 0."
   );
 }
@@ -176,29 +176,29 @@ export function hasSecurityNeeds(value: string | undefined): string | boolean {
     "Cette activité n'a pas besoin de dispositif de sécurité particulier."
   );
 }
-export function securityErrors(fa: FA): string[] {
+export function securityErrors(fa: Fa): string[] {
   return [hasPassNumberHigherThanZero(fa)].filter(
     (error): error is string => error !== true
   );
 }
-export function securityWarnings(fa: FA): string[] {
+export function securityWarnings(fa: Fa): string[] {
   return [
-    hasSecurityPassNeeds(fa.is_pass_required),
-    hasSecurityNeeds(fa.security_needs),
+    hasSecurityPassNeeds(fa.isPassRequired),
+    hasSecurityNeeds(fa.securityNeed),
   ].filter((error): error is string => error !== true);
 }
 
 export function isCollaboratorNotEmpty(
-  collaborators: fa_collaborators[] | undefined
+  collaborators: FaCollaborator[] | undefined
 ): string | boolean {
   return (
     (collaborators && collaborators?.length > 0) ||
     "Cette animation n'a pas de prestataire."
   );
 }
-export function hasCollaboratorMandatoryFieldsFilled(fa: FA): string | boolean {
-  if (isCollaboratorNotEmpty(fa.fa_collaborators) !== true) return true;
-  const { firstname, lastname, phone } = getCollaborator(fa.fa_collaborators)!;
+export function hasCollaboratorMandatoryFieldsFilled(fa: Fa): string | boolean {
+  if (isCollaboratorNotEmpty(fa.faCollaborators) !== true) return true;
+  const { firstname, lastname, phone } = getCollaborator(fa.faCollaborators)!;
   const hasMandatoryFieldsFilled = Boolean(firstname && lastname && phone);
   return (
     hasMandatoryFieldsFilled ||
@@ -206,7 +206,7 @@ export function hasCollaboratorMandatoryFieldsFilled(fa: FA): string | boolean {
   );
 }
 export function hasCollaboratorOptionalFieldsFilled(
-  collaborator: collaborator | undefined
+  collaborator: Collaborator | undefined
 ): string | boolean {
   if (!collaborator) return true;
   const { email, company } = collaborator;
@@ -217,19 +217,19 @@ export function hasCollaboratorOptionalFieldsFilled(
   );
 }
 function getCollaborator(
-  collaborators: fa_collaborators[] | undefined
-): collaborator | undefined {
+  collaborators: FaCollaborator[] | undefined
+): Collaborator | undefined {
   return collaborators?.[0]?.collaborator;
 }
-export function collaboratorErrors(fa: FA): string[] {
+export function collaboratorErrors(fa: Fa): string[] {
   return [hasCollaboratorMandatoryFieldsFilled(fa)].filter(
     (error): error is string => error !== true
   );
 }
-export function collaboratorWarnings(fa: FA): string[] {
+export function collaboratorWarnings(fa: Fa): string[] {
   return [
-    isCollaboratorNotEmpty(fa.fa_collaborators),
-    hasCollaboratorOptionalFieldsFilled(getCollaborator(fa.fa_collaborators)),
+    isCollaboratorNotEmpty(fa.faCollaborators),
+    hasCollaboratorOptionalFieldsFilled(getCollaborator(fa.faCollaborators)),
   ].filter((warning): warning is string => warning !== true);
 }
 
@@ -301,15 +301,15 @@ export function gearRequestWarnings(
 }
 
 export function hasElecNeeds(
-  elecNeeds: fa_electricity_needs[] | undefined
+  elecNeeds: FaElectricityNeed[] | undefined
 ): string | boolean {
   return (
     (elecNeeds && elecNeeds.length > 0) ||
     "L'animation n'a pas besoin d'électricité."
   );
 }
-export function elecWarnings(fa: FA): string[] {
-  return [hasElecNeeds(fa.fa_electricity_needs)].filter(
+export function elecWarnings(fa: Fa): string[] {
+  return [hasElecNeeds(fa.faElectricityNeeds)].filter(
     (warning): warning is string => warning !== true
   );
 }
@@ -317,8 +317,8 @@ export function elecWarnings(fa: FA): string[] {
 export function hasWaterNeeds(value: string | undefined): string | boolean {
   return !!value || "L'animation n'a pas besoin d'eau.";
 }
-export function waterWarnings(fa: FA): string[] {
-  return [hasWaterNeeds(fa.water_needs)].filter(
+export function waterWarnings(fa: Fa): string[] {
+  return [hasWaterNeeds(fa.waterNeed)].filter(
     (warning): warning is string => warning !== true
   );
 }

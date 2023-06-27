@@ -16,7 +16,7 @@
           :disabled="isValidatedByOwner"
           item-text="name"
           item-value="id"
-          @change="onChange('location_id', $event)"
+          @change="onChange('locationId', $event)"
         ></v-autocomplete>
         <v-switch
           v-model="isSignaRequired"
@@ -100,22 +100,17 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import {
-  FA,
-  fa_card_type,
-  fa_signa_needs,
-  signa_type,
-} from "~/utils/models/FA";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import { Fa, FaCardType, FaSignaNeed, SignaType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SignaCard",
   components: { CardErrorList },
   data: () => ({
     owner: "signa",
-    cardType: fa_card_type.SIGNA,
+    cardType: FaCardType.SIGNA,
     isSignaRequired: false,
     isSignaFormOpen: false,
     headers: [
@@ -136,17 +131,17 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
-    signalisations(): fa_signa_needs[] {
-      return this.mFA.fa_signa_needs ?? [];
+    signalisations(): FaSignaNeed[] {
+      return this.mFA.faSignaNeeds ?? [];
     },
     signaType(): string[] {
-      return Object.values(signa_type);
+      return Object.values(SignaType);
     },
     currentLocations(): SignaLocation | undefined {
-      const locationId = this.$accessor.FA.mFA.location_id;
+      const locationId = this.$accessor.FA.mFA.locationId;
       if (!locationId) return undefined;
       return this.$accessor.signa.getLocationById(locationId);
     },
@@ -180,8 +175,8 @@ export default Vue.extend({
         });
       }
 
-      const newSigna: fa_signa_needs = {
-        signa_type: this.newSignalisation.type as signa_type,
+      const newSigna: FaSignaNeed = {
+        signaType: this.newSignalisation.type as SignaType,
         text: this.newSignalisation.text,
         count: 1,
         comment: this.newSignalisation.comment,

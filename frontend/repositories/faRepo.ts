@@ -1,20 +1,20 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
-  CreateFA,
-  FA,
-  FAPageId,
+  CreateFa,
+  Fa,
+  FaCollaborator,
+  FaElectricityNeed,
+  FaFeedback,
+  FaGeneralUpdate,
+  FaPageId,
+  FaSignaNeed,
   FaSignaNeedsExportCsv,
-  fa_collaborators,
-  fa_comments,
-  fa_electricity_needs,
-  fa_general_update,
-  fa_signa_needs,
-  fa_validation_body,
-  SearchFA,
+  FaTimeWindow,
+  FaValidationBody,
+  SearchFa,
   SitePublishAnimation,
   SitePublishAnimationCreation,
   SitePublishAnimationWithFa,
-  time_windows,
 } from "~/utils/models/FA";
 import {
   GearRequest,
@@ -29,29 +29,29 @@ import { HttpStringified } from "~/utils/types/http";
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
 
-function omitAuthors(comments: fa_comments[]): fa_comments[] {
-  return comments.map(({ id, comment, authorId, subject, created_at }) => ({
+function omitAuthors(comments: FaFeedback[]): FaFeedback[] {
+  return comments.map(({ id, comment, authorId, subject, createdAt }) => ({
     id,
     comment,
     authorId,
     subject,
-    created_at,
+    createdAt,
   }));
 }
 
 export default {
-  getAllFAs(context: Context, search?: SearchFA) {
-    return context.$axios.get<HttpStringified<FA>[]>(resource, {
+  getAllFAs(context: Context, search?: SearchFa) {
+    return context.$axios.get<HttpStringified<Fa>[]>(resource, {
       params: search,
     });
   },
 
   getFAById(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<FA>>(resource + `/${id}`);
+    return context.$axios.get<HttpStringified<Fa>>(resource + `/${id}`);
   },
 
-  createNewFA(context: Context, FA: CreateFA) {
-    return context.$axios.post<HttpStringified<FA>>(resource, FA);
+  createNewFA(context: Context, FA: CreateFa) {
+    return context.$axios.post<HttpStringified<Fa>>(resource, FA);
   },
 
   deleteFA(context: Context, id: number) {
@@ -62,14 +62,14 @@ export default {
     return context.$axios.get<StatsPayload>(resource + "/stats");
   },
 
-  updateFA(context: Context, id: number, FA: fa_general_update) {
-    return context.$axios.post<HttpStringified<FA>>(resource + `/${id}`, FA);
+  updateFA(context: Context, id: number, FA: FaGeneralUpdate) {
+    return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, FA);
   },
 
   updateFACollaborators(
     context: Context,
     id: number,
-    collaborators: fa_collaborators[]
+    collaborators: FaCollaborator[]
   ) {
     return context.$axios.post(`/collaborator/${id}`, collaborators);
   },
@@ -81,7 +81,7 @@ export default {
   updateFASignaNeeds(
     context: Context,
     id: number,
-    fa_signa_needs: fa_signa_needs[]
+    fa_signa_needs: FaSignaNeed[]
   ) {
     return context.$axios.post(`/fa-signa-needs/${id}`, fa_signa_needs);
   },
@@ -93,9 +93,9 @@ export default {
   updateFATimeWindows(
     context: Context,
     id: number,
-    time_windows: time_windows[]
+    time_windows: FaTimeWindow[]
   ) {
-    return context.$axios.post<HttpStringified<time_windows>[]>(
+    return context.$axios.post<HttpStringified<FaTimeWindow>[]>(
       `/time-windows/${id}`,
       time_windows
     );
@@ -108,7 +108,7 @@ export default {
   updateFAElectricityNeeds(
     context: Context,
     id: number,
-    electricity_needs: fa_electricity_needs[]
+    electricity_needs: FaElectricityNeed[]
   ) {
     return context.$axios.post(
       `/fa-electricity-needs/${id}`,
@@ -120,15 +120,15 @@ export default {
     return context.$axios.delete(`/fa-electricity-needs/${id}`);
   },
 
-  updateFAComments(context: Context, id: number, comments: fa_comments[]) {
-    const comments_update: fa_comments[] = omitAuthors(comments);
-    return context.$axios.post<fa_comments[]>(
+  updateFAComments(context: Context, id: number, comments: FaFeedback[]) {
+    const comments_update: FaFeedback[] = omitAuthors(comments);
+    return context.$axios.post<FaFeedback[]>(
       `/fa-comment/${id}`,
       comments_update
     );
   },
 
-  validateFA(context: Context, id: number, body: fa_validation_body) {
+  validateFA(context: Context, id: number, body: FaValidationBody) {
     return context.$axios.post(resource + `/${id}/validation`, body);
   },
 
@@ -136,16 +136,16 @@ export default {
     return context.$axios.delete(resource + `/${faId}/validation/${teamId}`);
   },
 
-  refuseFA(context: Context, id: number, body: fa_validation_body) {
+  refuseFA(context: Context, id: number, body: FaValidationBody) {
     return context.$axios.post(resource + `/${id}/refusal`, body);
   },
 
   getPreviousFa(context: Context, id: number) {
-    return context.$axios.get<FAPageId>(resource + `/${id}/previous`);
+    return context.$axios.get<FaPageId>(resource + `/${id}/previous`);
   },
 
   getNextFa(context: Context, id: number) {
-    return context.$axios.get<FAPageId>(resource + `/${id}/next`);
+    return context.$axios.get<FaPageId>(resource + `/${id}/next`);
   },
 
   createGearRequest(

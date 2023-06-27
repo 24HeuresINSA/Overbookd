@@ -176,9 +176,9 @@ import {
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
 import { formatDate } from "~/utils/date/dateUtils";
 import { MyUserInformation } from "~/utils/models/user";
+import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
 
 interface BrakeDownDate {
   year: number;
@@ -222,13 +222,13 @@ export default Vue.extend({
     matosOwners: ["matos", "barrieres", "elec"],
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
-    type(): time_windows_type {
+    type(): TimeWindowType {
       return this.timeWindow?.type ?? this.timeWindowType;
     },
-    mTimeWindow(): time_windows {
+    mTimeWindow(): FaTimeWindow {
       return {
         type: this.type,
         ...this.timeWindow,
@@ -237,12 +237,12 @@ export default Vue.extend({
       };
     },
     timeWindowsType(): string[] {
-      const allTimeWindowTypes = Object.values(time_windows_type);
+      const allTimeWindowTypes = Object.values(TimeWindowType);
       if (this.isValidatedByAnimOwner) {
-        return allTimeWindowTypes.filter((t) => t !== time_windows_type.ANIM);
+        return allTimeWindowTypes.filter((t) => t !== TimeWindowType.ANIM);
       }
       if (this.isValidatedByMatosOwners) {
-        return allTimeWindowTypes.filter((t) => t !== time_windows_type.MATOS);
+        return allTimeWindowTypes.filter((t) => t !== TimeWindowType.MATOS);
       }
       return allTimeWindowTypes;
     },
@@ -352,7 +352,7 @@ export default Vue.extend({
     },
     checkIfConfirmTimeWindow() {
       const logTeamCodes = ["matos", "barrieres", "elec"];
-      const isMatosTimeframe = this.type === time_windows_type.MATOS;
+      const isMatosTimeframe = this.type === TimeWindowType.MATOS;
       const shouldAskConfirmation =
         isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
 

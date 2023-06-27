@@ -12,16 +12,16 @@
       <v-form @submit.prevent="">
         <!--
         <v-switch
-          :value="waterNeed.water_flow_required"
+          :value="waterNeed.waterFlowRequired"
           label="Besoin d'eau"
-          @change="onChange('water_flow_required', $event)"
+          @change="onChange('waterFlowRequired', $event)"
         ></v-switch>
         -->
         <v-text-field
-          :value="mFA.water_needs"
+          :value="mFA.waterNeed"
           label="Desctiption du besoin en eau"
           :disabled="isValidatedByOwner"
-          @change="onChange('water_needs', $event)"
+          @change="onChange('waterNeed', $event)"
         ></v-text-field>
       </v-form>
     </v-card-text>
@@ -34,7 +34,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { FA } from "~/utils/models/FA";
+import { Fa } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "WaterLogisticCard",
@@ -42,7 +42,7 @@ export default Vue.extend({
     owner: "elec",
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {

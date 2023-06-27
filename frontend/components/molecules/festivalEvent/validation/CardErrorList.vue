@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_card_type, Status } from "~/utils/models/FA";
+import { Fa, FaCardType, Status } from "~/utils/models/FA";
 import { FT, FTCardType, FTStatus } from "~/utils/models/ft";
 import {
   generalErrors,
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {
@@ -56,17 +56,17 @@ export default Vue.extend({
     },
     faErrors(): string[] {
       switch (this.type) {
-        case fa_card_type.GENERAL:
+        case FaCardType.GENERAL:
           return generalErrors(this.mFA);
-        case fa_card_type.DETAIL:
+        case FaCardType.DETAIL:
           return detailErrors(this.mFA);
-        case fa_card_type.SIGNA:
+        case FaCardType.SIGNA:
           return signaErrors(this.mFA);
-        case fa_card_type.TIME_WINDOW:
+        case FaCardType.TIME_WINDOW:
           return timeWindowsErrors(this.mFA);
-        case fa_card_type.SECURITY:
+        case FaCardType.SECURITY:
           return securityErrors(this.mFA);
-        case fa_card_type.COLLABORATOR:
+        case FaCardType.COLLABORATOR:
           return collaboratorErrors(this.mFA);
         default:
           return [];

@@ -194,30 +194,30 @@ enum FaStatus {
 model Fa {
   id                     Int                     @id @default(autoincrement())
   name                   String                  @db.VarChar(255)
-  fa_type_name           FaType?                 @map("fa_type")
+  faType                 FaType?                 @map("fa_type")
   type                   String?                 @db.VarChar(255)
-  Team                   Team?                   @relation(fields: [team_id], references: [id])
-  team_id                Int?                    @map("team_id")
-  user_in_charge         User?                   @relation(fields: [in_charge], references: [id], name: "in_charge")
-  in_charge              Int?                    @map("in_charge")
-  created_at             DateTime?               @default(now()) @map("created_at")
-  location               SignaLocation?          @relation(fields: [location_id], references: [id])
-  location_id            Int?                    @map("location_id")
+  team                   Team?                   @relation(fields: [teamId], references: [id])
+  teamId                 Int?                    @map("team_id")
+  userInCharge           User?                   @relation(fields: [userInChargeId], references: [id], name: "in_charge")
+  userInChargeId         Int?                    @map("user_in_charge_id")
+  createdAt              DateTime?               @default(now()) @map("created_at")
+  location               SignaLocation?          @relation(fields: [locationId], references: [id])
+  locationId             Int?                    @map("location_id")
   status                 FaStatus?               @default(DRAFT)
   description            String?                 @db.Text
-  security_needs         String?                 @db.Text @map("security_need")
-  is_pass_required       Boolean?                @db.Boolean @map("is_pass_required")
-  number_of_pass         Int?                    @map("number_of_pass")
-  water_needs            String?                 @db.Text @map("water_need")
-  water_flow_required    Int?                    @map("water_flow_required")
-  is_deleted             Boolean                 @default(false) @map("is_deleted")
-  fa_validation          FaValidation[]
-  fa_refuse              FaRefuse[]
-  fa_collaborators       FaCollaborator[]
-  fa_electricity_needs   FaElectricityNeed[]
-  fa_signa_needs         FaSignaNeed[]
-  fa_comments            FaFeedback[]
-  time_windows           FaTimeWindow[]
+  securityNeed           String?                 @db.Text @map("security_need")
+  isPassRequired         Boolean?                @db.Boolean @map("is_pass_required")
+  numberOfPass           Int?                    @map("number_of_pass")
+  waterNeed              String?                 @db.Text @map("water_need")
+  waterFlowRequired      Int?                    @map("water_flow_required")
+  isDeleted              Boolean                 @default(false) @map("is_deleted")
+  faValidation           FaValidation[]
+  faRefuse               FaRefuse[]
+  faCollaborators        FaCollaborator[]
+  faElectricityNeeds     FaElectricityNeed[]
+  faSignaNeeds           FaSignaNeed[]
+  faFeedbacks            FaFeedback[]
+  timeWindows            FaTimeWindow[]
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
@@ -240,41 +240,41 @@ enum FaType {
 }
 
 model FaValidation {
-  fa         Fa       @relation(fields: [fa_id], references: [id])
-  fa_id      Int      @map("fa_id")
-  User       User     @relation(fields: [user_id], references: [id])
-  user_id    Int      @map("user_id")
-  Team       Team     @relation(fields: [team_id], references: [id])
-  team_id    Int      @map("team_id")
-  created_at DateTime @default(now()) @map("created_at")
-  is_deleted Boolean  @default(false) @map("is_deleted")
+  fa         Fa       @relation(fields: [faId], references: [id])
+  faId       Int      @map("fa_id")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @map("user_id")
+  team       Team     @relation(fields: [teamId], references: [id])
+  teamId     Int      @map("team_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
 
-  @@id([fa_id, team_id])
+  @@id([faId, teamId])
   @@map("fa_validation")
 }
 
 model FaCollaborator {
-  fa              Fa           @relation(fields: [fa_id], references: [id])
-  fa_id           Int          @map("fa_id")
-  collaborator    Collaborator @relation(fields: [collaborator_id], references: [id], onDelete: Cascade)
-  collaborator_id Int          @map("collaborator_id")
-  is_deleted      Boolean      @default(false) @map("is_deleted")
+  fa             Fa           @relation(fields: [faId], references: [id])
+  faId           Int          @map("fa_id")
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id], onDelete: Cascade)
+  collaboratorId Int          @map("collaborator_id")
+  isDeleted      Boolean      @default(false) @map("is_deleted")
 
-  @@id([fa_id, collaborator_id])
+  @@id([faId, collaboratorId])
   @@map("fa_collaborator")
 }
 
 model FaRefuse {
-  fa         Fa       @relation(fields: [fa_id], references: [id])
-  fa_id      Int      @map("fa_id")
-  User       User     @relation(fields: [user_id], references: [id])
-  user_id    Int      @map("user_id")
-  Team       Team     @relation(fields: [team_id], references: [id])
-  team_id    Int      @map("team_id")
-  created_at DateTime @default(now()) @map("created_at")
-  is_deleted Boolean  @default(false) @map("is_deleted")
+  fa        Fa       @relation(fields: [faId], references: [id])
+  faId      Int      @map("fa_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @map("user_id")
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    Int      @map("team_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
 
-  @@id([fa_id, team_id])
+  @@id([faId, teamId])
   @@map("fa_refuse")
 }
 
@@ -288,15 +288,15 @@ model SignaLocation {
 }
 
 model Collaborator {
-  id               Int                @id @default(autoincrement())
-  firstname        String             @db.VarChar(30)
-  lastname         String             @db.VarChar(30)
-  phone            String             @db.VarChar(30)
-  email            String?            @db.VarChar(60)
-  company          String?            @db.VarChar(30)
-  comment          String?            @db.Text
-  fa_collaborators FaCollaborator[]
-
+  id              Int              @id @default(autoincrement())
+  firstname       String           @db.VarChar(30)
+  lastname        String           @db.VarChar(30)
+  phone           String           @db.VarChar(30)
+  email           String?          @db.VarChar(60)
+  company         String?          @db.VarChar(30)
+  comment         String?          @db.Text
+  faCollaborators FaCollaborator[]  
+  
   @@unique([firstname, lastname])
   @@map("collaborator")
 }
@@ -319,14 +319,14 @@ enum ElectricityType {
 }
 
 model FaElectricityNeed {
-  id               Int              @id @default(autoincrement())
-  fa               Fa               @relation(fields: [fa_id], references: [id])
-  fa_id            Int              @map("fa_id")
-  electricity_type ElectricityType  @map("electricity_type")
-  device           String?          @db.Text
-  power            Int
-  count            Int?
-  comment          String?          @db.Text
+  id              Int             @id @default(autoincrement())
+  fa              Fa              @relation(fields: [faId], references: [id])
+  faId            Int             @map("fa_id")
+  electricityType ElectricityType @map("electricity_type")
+  device          String?         @db.Text
+  power           Int
+  count           Int?
+  comment         String?         @db.Text
 
   @@map("fa_electricity_need")
 }
@@ -340,13 +340,13 @@ enum SignaType {
 }
 
 model FaSignaNeed {
-  id         Int        @id @default(autoincrement())
-  fa         Fa         @relation(fields: [fa_id], references: [id])
-  fa_id      Int        @map("fa_id")
-  signa_type SignaType  @map("signa_type")
-  text       String     @db.Text
-  count      Int        @default(1)
-  comment    String?    @db.Text
+  id        Int       @id @default(autoincrement())
+  fa        Fa        @relation(fields: [faId], references: [id])
+  faId      Int       @map("fa_id")
+  signaType SignaType @map("signa_type")
+  text      String    @db.Text
+  count     Int       @default(1)
+  comment   String?   @db.Text
 
   @@map("fa_signa_need")
 }
@@ -361,14 +361,14 @@ enum FaFeedbackSubjectType {
 }
 
 model FaFeedback {
-  id          Int                   @id @default(autoincrement())
-  fa          Fa                    @relation(fields: [fa_id], references: [id])
-  fa_id       Int                   @map("fa_id")
-  comment     String                @db.Text
-  subject     FaFeedbackSubjectType
-  author      User                  @relation(fields: [authorId], references: [id])
-  authorId    Int                   @map("author_id")
-  created_at  DateTime              @default(now()) @map("created_at")
+  id        Int                   @id @default(autoincrement())
+  fa        Fa                    @relation(fields: [faId], references: [id])
+  faId      Int                   @map("fa_id")
+  comment   String                @db.Text
+  subject   FaFeedbackSubjectType
+  author    User                  @relation(fields: [authorId], references: [id])
+  authorId  Int                   @map("author_id")
+  createdAt DateTime              @default(now()) @map("created_at")
 
   @@map("fa_feedback")
 }
@@ -378,7 +378,7 @@ model FaSitePublishAnimation {
   faId        Int                                    @id @map("fa_id")
   photoLink   String                                 @db.Text @default("") @map("photo_link")
   description String                                 @db.Text @default("")
-  isMajor     Boolean                                @default(false) @map("is_flagship")
+  isFlagship  Boolean                            @default(false) @map("is_flagship")
   categories  SitePublishAnimationCategoryType[]
 
   @@map("fa_site_publish_animation")
@@ -396,8 +396,8 @@ enum SitePublishAnimationCategoryType {
 
 model FaTimeWindow {
   id    Int               @id @default(autoincrement())
-  fa    Fa                @relation(fields: [fa_id], references: [id])
-  fa_id Int               @map("fa_id")
+  fa    Fa                @relation(fields: [faId], references: [id])
+  faId  Int               @map("fa_id")
   start DateTime
   end   DateTime
 

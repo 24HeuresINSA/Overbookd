@@ -63,10 +63,10 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
-  collaborator,
-  FA,
-  fa_card_type,
-  fa_collaborators,
+  Collaborator,
+  Fa,
+  FaCardType,
+  FaCollaborator,
 } from "~/utils/models/FA";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 
@@ -75,17 +75,17 @@ export default Vue.extend({
   components: { CardErrorList },
   data: () => ({
     owner: "humain",
-    cardType: fa_card_type.COLLABORATOR,
+    cardType: FaCardType.COLLABORATOR,
     isCollaboratorRequired: false,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
-    collaborators(): fa_collaborators[] {
-      return this.mFA.fa_collaborators ?? [];
+    collaborators(): FaCollaborator[] {
+      return this.mFA.faCollaborators ?? [];
     },
-    collaborator(): collaborator {
+    collaborator(): Collaborator {
       if (this.collaborators.length > 0) {
         return this.collaborators[0].collaborator;
       }
@@ -134,7 +134,7 @@ export default Vue.extend({
       this.updateCollaborator(key, value);
     },
     addCollaborator() {
-      const newCollaborator: fa_collaborators = {
+      const newCollaborator: FaCollaborator = {
         collaborator: {
           firstname: "",
           lastname: "",

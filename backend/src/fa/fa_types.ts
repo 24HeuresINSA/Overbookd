@@ -10,9 +10,9 @@ export type AllFaResponse = Prisma.FaGetPayload<{
 }>;
 
 export type ExportSignaNeeds = {
-  fa_id: number;
-  fa_name: string;
-  signa_type: string;
+  faId: number;
+  faName: string;
+  signaType: string;
   text: string;
   count: number;
   comment: string;
@@ -26,18 +26,18 @@ export const COMPLETE_FA_SELECT = {
   id: true,
   name: true,
   type: true,
-  team_id: true,
-  in_charge: true,
-  created_at: true,
-  location_id: true,
+  teamId: true,
+  userInChargeId: true,
+  createdAt: true,
+  locationId: true,
   status: true,
   description: true,
-  security_needs: true,
-  is_pass_required: true,
-  number_of_pass: true,
-  water_needs: true,
-  water_flow_required: true,
-  fa_collaborators: {
+  securityNeed: true,
+  isPassRequired: true,
+  numberOfPass: true,
+  waterNeed: true,
+  waterFlowRequired: true,
+  faCollaborators: {
     select: {
       collaborator: {
         select: {
@@ -52,56 +52,56 @@ export const COMPLETE_FA_SELECT = {
       },
     },
   },
-  fa_validation: {
+  faValidation: {
     select: {
-      User: {
+      user: {
         select: {
           firstname: true,
           lastname: true,
         },
       },
-      Team: TEAM_SELECT,
+      team: TEAM_SELECT,
     },
   },
-  fa_refuse: {
+  faRefuse: {
     select: {
-      User: {
+      user: {
         select: {
           firstname: true,
           lastname: true,
         },
       },
-      Team: TEAM_SELECT,
+      team: TEAM_SELECT,
     },
   },
-  fa_electricity_needs: {
+  faElectricityNeeds: {
     select: {
       id: true,
-      electricity_type: true,
+      electricityType: true,
       device: true,
       power: true,
       count: true,
       comment: true,
     },
   },
-  fa_signa_needs: {
+  faSignaNeeds: {
     select: {
       id: true,
-      signa_type: true,
+      signaType: true,
       text: true,
       count: true,
       comment: true,
     },
   },
-  fa_comments: {
+  faFeedbacks: {
     select: {
       id: true,
       comment: true,
       subject: true,
-      created_at: true,
-      authorId: true,
+      createdAt: true,
       author: {
         select: {
+          id: true,
           firstname: true,
           lastname: true,
         },
@@ -112,12 +112,12 @@ export const COMPLETE_FA_SELECT = {
     select: {
       faId: true,
       photoLink: true,
-      isMajor: true,
+      isFlagship: true,
       description: true,
       categories: true,
     },
   },
-  time_windows: {
+  timeWindows: {
     select: {
       id: true,
       start: true,
@@ -139,41 +139,41 @@ export const ALL_FA_SELECT = {
   id: true,
   name: true,
   type: true,
-  team_id: true,
-  in_charge: true,
-  created_at: true,
-  location_id: true,
+  teamId: true,
+  createdAt: true,
+  locationId: true,
   status: true,
   description: true,
-  security_needs: true,
-  is_pass_required: true,
-  number_of_pass: true,
-  water_needs: true,
-  water_flow_required: true,
-  is_deleted: true,
-  user_in_charge: {
+  securityNeed: true,
+  isPassRequired: true,
+  numberOfPass: true,
+  waterNeed: true,
+  waterFlowRequired: true,
+  isDeleted: true,
+  userInCharge: {
     select: {
+      id: true,
       firstname: true,
       lastname: true,
     },
   },
-  Team: {
+  team: {
     select: {
       name: true,
     },
   },
-  fa_validation: {
+  faValidation: {
     select: {
-      Team: {
+      team: {
         select: {
           id: true,
         },
       },
     },
   },
-  fa_refuse: {
+  faRefuse: {
     select: {
-      Team: {
+      team: {
         select: {
           id: true,
         },
@@ -183,8 +183,8 @@ export const ALL_FA_SELECT = {
 };
 
 export const EXPORT_SIGNA_SELECT = {
-  fa_id: true,
-  signa_type: true,
+  faId: true,
+  signaType: true,
   text: true,
   count: true,
   comment: true,

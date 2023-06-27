@@ -8,14 +8,12 @@ export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<Collaborator[] | null> {
-    return await this.prisma.collaborator.findMany();
+    return this.prisma.collaborator.findMany();
   }
 
   async findOne(id: number): Promise<Collaborator | null> {
-    return await this.prisma.collaborator.findUnique({
-      where: {
-        id: Number(id),
-      },
+    return this.prisma.collaborator.findUnique({
+      where: { id },
     });
   }
 
@@ -30,11 +28,11 @@ export class CollaboratorService {
           where: { id: col.id },
           data: {
             ...col,
-            fa_collaborators: {
+            faCollaborators: {
               connect: {
-                fa_id_collaborator_id: {
-                  fa_id: faId,
-                  collaborator_id: col.id,
+                faId_collaboratorId: {
+                  faId,
+                  collaboratorId: col.id,
                 },
               },
             },
@@ -44,10 +42,8 @@ export class CollaboratorService {
         return this.prisma.collaborator.create({
           data: {
             ...col,
-            fa_collaborators: {
-              create: {
-                fa_id: faId,
-              },
+            faCollaborators: {
+              create: { faId },
             },
           },
         });
@@ -58,9 +54,7 @@ export class CollaboratorService {
 
   async remove(id: number): Promise<void> {
     await this.prisma.collaborator.delete({
-      where: {
-        id,
-      },
+      where: { id },
     });
   }
 }

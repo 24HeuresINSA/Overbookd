@@ -13,26 +13,22 @@ export class FaElectricityNeedsService {
 
   async findOne(id: number): Promise<FaElectricityNeed | null> {
     return await this.prisma.faElectricityNeed.findUnique({
-      where: {
-        id: Number(id),
-      },
+      where: { id },
     });
   }
 
   async upsert(
-    faID: number,
+    faId: number,
     createFaElectricityNeedDto: CreateFaElectricityNeedDto[],
   ): Promise<FaElectricityNeed[] | null> {
     const operations = createFaElectricityNeedDto.map((elecneeds) => {
       const { id, ...rest } = elecneeds;
       const data = {
         ...rest,
-        fa_id: faID,
+        faId,
       };
       return this.prisma.faElectricityNeed.upsert({
-        where: {
-          id: id ?? -1,
-        },
+        where: { id: id ?? -1 },
         create: data,
         update: data,
       });
@@ -42,9 +38,7 @@ export class FaElectricityNeedsService {
 
   async remove(id: number): Promise<FaElectricityNeed> {
     return await this.prisma.faElectricityNeed.delete({
-      where: {
-        id: Number(id),
-      },
+      where: { id },
     });
   }
 }

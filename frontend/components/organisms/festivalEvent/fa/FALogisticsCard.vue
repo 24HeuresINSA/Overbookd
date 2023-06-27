@@ -40,7 +40,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { Gear } from "~/utils/models/catalog.model";
-import { FA, time_windows, time_windows_type } from "~/utils/models/FA";
+import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
@@ -69,7 +69,7 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValid(): boolean {
@@ -80,9 +80,9 @@ export default Vue.extend({
           !this.isValidatedByOwner
       );
     },
-    timeWindow(): time_windows | undefined {
-      return this.$accessor.FA.mFA.time_windows?.find(
-        (tw) => tw.type === time_windows_type.MATOS
+    timeWindow(): FaTimeWindow | undefined {
+      return this.$accessor.FA.mFA.timeWindows?.find(
+        (tw) => tw.type === TimeWindowType.MATOS
       );
     },
     isValidatedByOwner(): boolean {

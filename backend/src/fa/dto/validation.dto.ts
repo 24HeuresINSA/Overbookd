@@ -8,5 +8,5 @@ export class validationDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  team_id: number;
+  teamId: number;
 }
