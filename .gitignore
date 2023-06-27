@@ -48,3 +48,5 @@ dist
 .triage-policies.yml
 /backend/dist/
 /backend/node_modules/
+
+.pnpm-store

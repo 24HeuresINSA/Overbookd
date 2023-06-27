@@ -2,3 +2,4 @@ packages:
   - domains/**
   - libraries/**
   - apps/**
+  - '!**/dist/**'
