@@ -12,24 +12,27 @@ import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import {
   Collaborator,
   CreateFa,
-  Fa,
+  FA,
   FaCollaborator,
   FaElectricityNeed,
-  FaFeedback,
   FaPageId,
   FaSignaNeed,
   FaSignaNeedsExportCsv,
+  FaStatus,
   FaTimeWindow,
   FaValidationBody,
   SearchFa,
   SitePublishAnimation,
   SitePublishAnimationCreation,
   SortedStoredGearRequests,
-  Status,
   TimeWindowType,
   castFaWithDate,
 } from "~/utils/models/FA";
-import { SubjectType } from "~/utils/models/feedback";
+import {
+  FaFeedback,
+  FaFeedbackSubjectType,
+  FeedbackCreation,
+} from "~/utils/models/feedback";
 import { FT, FTSimplified } from "~/utils/models/ft";
 import {
   GearRequest,
@@ -39,17 +42,18 @@ import {
   StoredGearRequest,
   castGearRequestWithDate,
 } from "~/utils/models/gearRequests";
+import { User } from "~/utils/models/user";
 import { sendNotification } from "./catalog";
 
 const repo = RepoFactory.faRepo;
 
 export const state = () => ({
-  FAs: [] as Fa[],
+  FAs: [] as FA[],
   mFA: {
-    status: Status.DRAFT,
+    status: FaStatus.DRAFT,
     name: "",
     fts: [] as FTSimplified[],
-  } as Fa,
+  } as FA,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: -1,
@@ -96,30 +100,30 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_FA(state, fa: Partial<Fa>) {
+  SET_FA(state, fa: Partial<FA>) {
     state.mFA = { ...state.mFA, ...fa };
   },
 
   RESET_FA(state) {
     state.mFA = {
-      status: Status.DRAFT,
+      status: FaStatus.DRAFT,
       name: "",
-    } as Fa;
+    } as FA;
   },
 
-  UPDATE_STATUS({ mFA }, status: Status) {
+  UPDATE_STATUS({ mFA }, status: FaStatus) {
     mFA.status = status;
   },
 
   UPDATE_FA({ mFA }, { key, value }) {
-    if (typeof mFA[key as keyof Fa] !== "undefined") {
-      mFA[key as keyof Fa] = value as never;
+    if (typeof mFA[key as keyof FA] !== "undefined") {
+      mFA[key as keyof FA] = value as never;
     }
   },
 
-  ADD_COMMENT({ mFA }, comment: FaFeedback) {
-    if (!mFA.faFeedbacks) mFA.faFeedbacks = [];
-    mFA.faFeedbacks?.push(comment);
+  ADD_FEEDBACK({ mFA }, feedback: FaFeedback) {
+    if (!mFA.feedbacks) mFA.feedbacks = [];
+    mFA.feedbacks = [...mFA.feedbacks, feedback];
   },
 
   ADD_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
@@ -262,15 +266,15 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  SET_COMMENTS({ mFA }, comments: FaFeedback[]) {
-    mFA.faFeedbacks = comments;
+  SET_FEEDBACKS({ mFA }, feedbacks: FaFeedback[]) {
+    mFA.feedbacks = feedbacks;
   },
 
-  SET_FAS(state, fas: Fa[]) {
+  SET_FAS(state, fas: FA[]) {
     state.FAs = fas;
   },
 
-  ADD_FA({ FAs }, fa: Fa) {
+  ADD_FA({ FAs }, fa: FA) {
     FAs.push(fa);
   },
 
@@ -300,7 +304,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setFA({ commit }, FA: Fa) {
+    setFA({ commit }, FA: FA) {
       commit("SET_FA", FA);
     },
 
@@ -324,18 +328,18 @@ export const actions = actionTree(
 
     submitForReview: async function (
       { commit, dispatch },
-      { faId, authorId, author }
+      { faId, author }: { faId: number; author: User }
     ) {
-      if (!faId || !authorId || !author) return;
+      if (!faId || !author) return;
       const authorName = `${author.firstname} ${author.lastname}`;
-      const comment: FaFeedback = {
-        subject: SubjectType.SUBMIT,
+      const feedback: FaFeedback = {
+        subject: FaFeedbackSubjectType.SUBMIT,
         comment: `La FA a été soumise par ${authorName}.`,
-        authorId,
+        author,
         createdAt: new Date(),
       };
-      dispatch("addComment", { comment, defaultAuthor: author });
-      commit("UPDATE_STATUS", Status.SUBMITTED);
+      dispatch("addFeedback", feedback);
+      commit("UPDATE_STATUS", FaStatus.SUBMITTED);
       dispatch("save");
     },
 
@@ -410,26 +414,25 @@ export const actions = actionTree(
         return;
       if (state.mFA.faRefuse?.length === 1) {
         if (state.mFA.faRefuse[0].team.id === validatorId) {
-          commit("UPDATE_STATUS", Status.SUBMITTED);
+          commit("UPDATE_STATUS", FaStatus.SUBMITTED);
         }
       }
       const MAX_VALIDATORS = rootState.team.faValidators.length;
       // -1 car la validation est faite avant l'ajout du validateur
       if (state.mFA.faValidation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators
-        commit("UPDATE_STATUS", Status.VALIDATED);
+        commit("UPDATE_STATUS", FaStatus.VALIDATED);
       }
-      const body: FaValidationBody = {
-        teamId: validatorId,
-      };
+      const body: FaValidationBody = { teamId: validatorId };
+
       await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
-      const comment: FaFeedback = {
-        subject: SubjectType.VALIDATED,
+      const feedback: FaFeedback = {
+        subject: FaFeedbackSubjectType.VALIDATED,
         comment: `La FA a été validée par ${teamName}.`,
-        authorId: author.id,
+        author,
         createdAt: new Date(),
       };
-      dispatch("addComment", { comment, defaultAuthor: author });
+      dispatch("addFeedback", feedback);
       dispatch("save");
     },
 
@@ -437,24 +440,24 @@ export const actions = actionTree(
       { dispatch, commit, state },
       { validator_id, message, author }
     ) {
-      commit("UPDATE_STATUS", Status.REFUSED);
+      commit("UPDATE_STATUS", FaStatus.REFUSED);
       const body: FaValidationBody = {
         teamId: validator_id,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
-      const comment: FaFeedback = {
-        subject: SubjectType.REFUSED,
+      const feedback: FaFeedback = {
+        subject: FaFeedbackSubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
-        authorId: author.id,
+        author,
         createdAt: new Date(),
       };
-      dispatch("addComment", { comment, defaultAuthor: author });
+      dispatch("addFeedback", feedback);
       dispatch("save");
     },
 
     resetLogValidations: async function (
       { dispatch, state, rootGetters },
-      { author }
+      author: User
     ) {
       const logTeamCodes = ["matos", "barrieres", "elec"];
       const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
@@ -474,13 +477,14 @@ export const actions = actionTree(
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
-      const comment: FaFeedback = {
-        subject: SubjectType.SUBMIT,
+
+      const feedback: FaFeedback = {
+        subject: FaFeedbackSubjectType.SUBMIT,
         comment: `La modification du créneau Matos a réinitialisé la validation de ${validTeams}.`,
-        authorId: author.id,
+        author,
         createdAt: new Date(),
       };
-      dispatch("addComment", { comment, defaultAuthor: author });
+      dispatch("addFeedback", feedback);
       dispatch("save");
     },
 
@@ -524,23 +528,22 @@ export const actions = actionTree(
       });
     },
 
-    async addComment(
-      { commit, state },
-      {
-        comment,
-        defaultAuthor,
-      }: {
-        comment: FaFeedback;
-        defaultAuthor: { firstname: string; lastname: string };
-      }
-    ) {
-      commit("ADD_COMMENT", { ...comment, author: defaultAuthor });
-      const res = await RepoFactory.faRepo.updateFAComments(
+    async addFeedback({ commit, state }, feedback: FaFeedback) {
+      const feedbackCreation: FeedbackCreation = {
+        ...feedback,
+        authorId: feedback.author.id,
+      };
+      const res = await safeCall(
         this,
-        state.mFA.id,
-        state.mFA.faFeedbacks ?? []
+        repo.addFAFeedback(this, state.mFA.id, feedbackCreation),
+        {
+          successMessage: "Commentaire ajouté 🥳",
+          errorMessage: "Commentaire non ajouté 😢",
+        }
       );
-      commit("SET_COMMENTS", res.data);
+      if (!res) return;
+      const createdAt = new Date(res.data.createdAt);
+      commit("ADD_FEEDBACK", { ...res.data, createdAt });
     },
 
     addSignaNeed({ commit }, signaNeed: FaSignaNeed) {

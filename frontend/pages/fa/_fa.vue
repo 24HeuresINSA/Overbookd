@@ -22,6 +22,8 @@
         </div>
       </div>
       <FestivalEventSummary class="summary" />
+      import FeedbackCard from
+      "~/components/organisms/festivalEvent/FeedbackCard.vue";
     </div>
     <v-container class="container fa">
       <FAGeneralCard id="general" />
@@ -54,7 +56,7 @@
       />
       <ElecLogisticCard id="elec" />
       <WaterLogisticCard id="water" />
-      <CommentCard id="comment" />
+      <FeedbackCard id="feedback" />
       <ChildFTCard id="ft" />
     </v-container>
     <FestivalEventBottomBar festival-event="FA" />
@@ -66,7 +68,6 @@
 import Vue from "vue";
 import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistic/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CommentCard from "~/components/organisms/festivalEvent/fa/CommentCard.vue";
 import ChildFTCard from "~/components/organisms/festivalEvent/fa/ChildFTCard.vue";
 import CollaboratorCard from "~/components/organisms/festivalEvent/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/festivalEvent/fa/ElecLogisticCard.vue";
@@ -78,6 +79,7 @@ import FATimeWindowCard from "~/components/organisms/festivalEvent/fa/FATimeWind
 import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
 import FestivalEventSummary from "~/components/organisms/festivalEvent/FestivalEventSummary.vue";
 import FALogisticsCard from "~/components/organisms/festivalEvent/fa/FALogisticsCard.vue";
+import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
@@ -91,7 +93,6 @@ export default Vue.extend({
   name: "Fa",
   components: {
     ElecLogisticCard,
-    CommentCard,
     SignaCard,
     FALogisticsCard,
     FATimeWindowCard,
@@ -105,6 +106,7 @@ export default Vue.extend({
     LogisticTimeWindow,
     ChildFTCard,
     FestivalEventBottomBar,
+    FeedbackCard,
   },
 
   data: () => ({

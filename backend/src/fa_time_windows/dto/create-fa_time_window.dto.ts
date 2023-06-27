@@ -3,16 +3,9 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsEnum,
-  ValidationArguments,
   IsDateString,
   IsDefined,
 } from 'class-validator';
-
-enum TimeWindowType {
-  ANIM = 'ANIM',
-  MATOS = 'MATOS',
-}
 
 export class CreateTimeWindowDto {
   @ApiProperty({
@@ -40,16 +33,4 @@ export class CreateTimeWindowDto {
   @IsDateString()
   @IsNotEmpty()
   end: Date;
-
-  @ApiProperty({
-    required: true,
-    description: 'The type of the time window',
-  })
-  @IsDefined()
-  @IsNotEmpty()
-  @IsEnum(TimeWindowType, {
-    message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(TimeWindowType)}`,
-  })
-  type: TimeWindowType;
 }

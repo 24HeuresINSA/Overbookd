@@ -45,7 +45,7 @@ export default Vue.extend({
       { id: "log", text: "Logistique", icon: "mdi-truck" },
       { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
       { id: "water", text: "Besoin Eau", icon: "mdi-water" },
-      { id: "comment", text: "Commentaires", icon: "mdi-comment" },
+      { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
       { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
     ],
     ftItems: [
@@ -54,7 +54,7 @@ export default Vue.extend({
       { id: "detail", text: "Détail", icon: "mdi-text-box" },
       { id: "timewindow", text: "Créneaux", icon: "mdi-calendar-clock" },
       { id: "matos", text: "Matos", icon: "mdi-truck" },
-      { id: "comment", text: "Commentaires", icon: "mdi-comment" },
+      { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
     ],
   }),
   computed: {

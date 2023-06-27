@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, FaCardType, Status } from "~/utils/models/FA";
+import { FA, FaCardType, FaStatus } from "~/utils/models/FA";
 import { FT, FTCardType, FTStatus } from "~/utils/models/ft";
 import {
   generalErrors,
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {
@@ -91,8 +91,8 @@ export default Vue.extend({
     isDisplayErrorMode(): boolean {
       if (this.isFA) {
         return (
-          this.mFA.status === Status.SUBMITTED ||
-          this.mFA.status === Status.REFUSED
+          this.mFA.status === FaStatus.SUBMITTED ||
+          this.mFA.status === FaStatus.REFUSED
         );
       }
       return (

@@ -216,7 +216,7 @@ model Fa {
   faCollaborators        FaCollaborator[]
   faElectricityNeeds     FaElectricityNeed[]
   faSignaNeeds           FaSignaNeed[]
-  faFeedbacks            FaFeedback[]
+  feedbacks              FaFeedback[]
   timeWindows            FaTimeWindow[]
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
@@ -490,29 +490,29 @@ enum TaskCategory {
 }
 
 model Ft {
-  id             Int             @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   name           String
-  status         FtStatus        @default(DRAFT)
-  fa             Fa?             @relation(fields: [parentFaId], references: [id])
-  parentFaId     Int?            @map("parent_fa_id")
-  team           Team?           @relation(fields: [teamCode], references: [code])
-  teamCode       String?         @map("team_code")
-  isStatic       Boolean         @default(false) @map("is_static")
-  description    String?         @db.Text
-  userInCharge   User?           @relation(fields: [userInChargeId], references: [id], name: "inCharge")
-  userInChargeId Int?            @map("user_in_charge_id")
-  location       SignaLocation?  @relation(fields: [locationId], references: [id])
-  locationId     Int?            @map("location_id")
-  isDeleted      Boolean         @default(false) @map("is_deleted")
-  reviewerId     Int?            @map("reviewer_id")
-  reviewer       User?           @relation("reviewer", fields: [reviewerId], references: [id])
-  hasPriority    Boolean?        @default(false) @map("has_priority")
+  status         FtStatus       @default(DRAFT)
+  fa             Fa?            @relation(fields: [parentFaId], references: [id])
+  parentFaId     Int?           @map("parent_fa_id")
+  team           Team?          @relation(fields: [teamCode], references: [code])
+  teamCode       String?        @map("team_code")
+  isStatic       Boolean        @default(false) @map("is_static")
+  description    String?        @db.Text
+  userInCharge   User?          @relation(fields: [userInChargeId], references: [id], name: "inCharge")
+  userInChargeId Int?           @map("user_in_charge_id")
+  location       SignaLocation? @relation(fields: [locationId], references: [id])
+  locationId     Int?           @map("location_id")
+  isDeleted      Boolean        @default(false) @map("is_deleted")
+  reviewerId     Int?           @map("reviewer_id")
+  reviewer       User?          @relation("reviewer", fields: [reviewerId], references: [id])
+  hasPriority    Boolean?       @default(false) @map("has_priority")
   category       TaskCategory?
 
-  feedbacks    FtFeedback[]
-  timeWindows  FtTimeWindow[]
-  reviews      FtReview[]
-  gearRequests GearRequest[]   @relation("gear-request-task")
+  feedbacks      FtFeedback[]
+  timeWindows    FtTimeWindow[]
+  reviews        FtReview[]
+  gearRequests   GearRequest[]  @relation("gear-request-task")
 
   @@map("ft")
 }

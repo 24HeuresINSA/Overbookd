@@ -93,7 +93,7 @@ export const COMPLETE_FA_SELECT = {
       comment: true,
     },
   },
-  faFeedbacks: {
+  feedbacks: {
     select: {
       id: true,
       comment: true,
@@ -122,7 +122,6 @@ export const COMPLETE_FA_SELECT = {
       id: true,
       start: true,
       end: true,
-      type: true,
     },
   },
   fts: {

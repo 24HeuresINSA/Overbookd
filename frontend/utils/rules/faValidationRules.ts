@@ -1,6 +1,6 @@
 import {
   Collaborator,
-  Fa,
+  FA,
   FaCollaborator,
   FaElectricityNeed,
   FaSignaNeed,
@@ -13,7 +13,7 @@ import {
 import { GearRequest } from "../models/gearRequests";
 
 export function hasAtLeastOneError(
-  mFA: Fa,
+  mFA: FA,
   gearRequests: SortedStoredGearRequests
 ): boolean {
   const errors = [
@@ -28,7 +28,7 @@ export function hasAtLeastOneError(
   return errors.length > 0;
 }
 export function hasAtLeastOneWarning(
-  mFA: Fa,
+  mFA: FA,
   gearRequests: SortedStoredGearRequests
 ): boolean {
   const warnings = [
@@ -55,7 +55,7 @@ export function hasTeam(value: number | undefined): string | boolean {
 export function hasInCharge(value: number | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un responsable.";
 }
-export function generalErrors(fa: Fa): string[] {
+export function generalErrors(fa: FA): string[] {
   return [
     hasName(fa.name),
     hasType(fa.type),
@@ -69,21 +69,21 @@ export function hasDescription(value: string | undefined): string | boolean {
     (!!value && value !== "<p></p>") || "L'animation n'a pas de description."
   );
 }
-export function hasDescriptionToPublish(fa: Fa): string | boolean {
+export function hasDescriptionToPublish(fa: FA): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     !!fa.faSitePublishAnimation?.description ||
     "L'animation n'a pas de description à publier sur le site."
   );
 }
-export function hasPhotoLinkToPublish(fa: Fa): string | boolean {
+export function hasPhotoLinkToPublish(fa: FA): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     !!fa.faSitePublishAnimation?.photoLink ||
     "L'animation n'a pas de photo à publier sur le site."
   );
 }
-export function hasCategoriesToPublish(fa: Fa): string | boolean {
+export function hasCategoriesToPublish(fa: FA): string | boolean {
   if (!fa.faSitePublishAnimation) return true;
   return (
     (fa.faSitePublishAnimation?.categories &&
@@ -96,14 +96,14 @@ export function isPublishable(
 ): string | boolean {
   return !!value || "L'animation ne sera pas publiée sur le site.";
 }
-export function detailErrors(fa: Fa): string[] {
+export function detailErrors(fa: FA): string[] {
   return [
     hasDescriptionToPublish(fa),
     hasPhotoLinkToPublish(fa),
     hasCategoriesToPublish(fa),
   ].filter((error): error is string => error !== true);
 }
-export function detailWarnings(fa: Fa): string[] {
+export function detailWarnings(fa: FA): string[] {
   return [
     hasDescription(fa.description),
     isPublishable(fa.faSitePublishAnimation),
@@ -129,13 +129,13 @@ export function hasSignaNeedsWithQuantityHigherThanZero(
     "Chaque demande de signa doit avoir une quantité."
   );
 }
-export function signaErrors(fa: Fa): string[] {
+export function signaErrors(fa: FA): string[] {
   return [
     hasLocation(fa.locationId),
     hasSignaNeedsWithQuantityHigherThanZero(fa.faSignaNeeds),
   ].filter((error): error is string => error !== true);
 }
-export function signaWarnings(fa: Fa): string[] {
+export function signaWarnings(fa: FA): string[] {
   return [hasSignaNeeds(fa.faSignaNeeds)].filter(
     (warning): warning is string => warning !== true
   );
@@ -152,7 +152,7 @@ export function hasAtLeastOneAnimationTimeWindow(
     "L'animation doit avoir au moins une plage horaire."
   );
 }
-export function timeWindowsErrors(fa: Fa): string[] {
+export function timeWindowsErrors(fa: FA): string[] {
   return [hasAtLeastOneAnimationTimeWindow(fa.timeWindows)].filter(
     (error): error is string => error !== true
   );
@@ -163,7 +163,7 @@ export function hasSecurityPassNeeds(
 ): string | boolean {
   return value || "Cette activité n'a pas besoin de Pass Sécu.";
 }
-export function hasPassNumberHigherThanZero(fa: Fa): string | boolean {
+export function hasPassNumberHigherThanZero(fa: FA): string | boolean {
   return (
     !fa.isPassRequired ||
     (fa.numberOfPass && fa.numberOfPass > 0) ||
@@ -176,12 +176,12 @@ export function hasSecurityNeeds(value: string | undefined): string | boolean {
     "Cette activité n'a pas besoin de dispositif de sécurité particulier."
   );
 }
-export function securityErrors(fa: Fa): string[] {
+export function securityErrors(fa: FA): string[] {
   return [hasPassNumberHigherThanZero(fa)].filter(
     (error): error is string => error !== true
   );
 }
-export function securityWarnings(fa: Fa): string[] {
+export function securityWarnings(fa: FA): string[] {
   return [
     hasSecurityPassNeeds(fa.isPassRequired),
     hasSecurityNeeds(fa.securityNeed),
@@ -196,7 +196,7 @@ export function isCollaboratorNotEmpty(
     "Cette animation n'a pas de prestataire."
   );
 }
-export function hasCollaboratorMandatoryFieldsFilled(fa: Fa): string | boolean {
+export function hasCollaboratorMandatoryFieldsFilled(fa: FA): string | boolean {
   if (isCollaboratorNotEmpty(fa.faCollaborators) !== true) return true;
   const { firstname, lastname, phone } = getCollaborator(fa.faCollaborators)!;
   const hasMandatoryFieldsFilled = Boolean(firstname && lastname && phone);
@@ -221,12 +221,12 @@ function getCollaborator(
 ): Collaborator | undefined {
   return collaborators?.[0]?.collaborator;
 }
-export function collaboratorErrors(fa: Fa): string[] {
+export function collaboratorErrors(fa: FA): string[] {
   return [hasCollaboratorMandatoryFieldsFilled(fa)].filter(
     (error): error is string => error !== true
   );
 }
-export function collaboratorWarnings(fa: Fa): string[] {
+export function collaboratorWarnings(fa: FA): string[] {
   return [
     isCollaboratorNotEmpty(fa.faCollaborators),
     hasCollaboratorOptionalFieldsFilled(getCollaborator(fa.faCollaborators)),
@@ -308,7 +308,7 @@ export function hasElecNeeds(
     "L'animation n'a pas besoin d'électricité."
   );
 }
-export function elecWarnings(fa: Fa): string[] {
+export function elecWarnings(fa: FA): string[] {
   return [hasElecNeeds(fa.faElectricityNeeds)].filter(
     (warning): warning is string => warning !== true
   );
@@ -317,7 +317,7 @@ export function elecWarnings(fa: Fa): string[] {
 export function hasWaterNeeds(value: string | undefined): string | boolean {
   return !!value || "L'animation n'a pas besoin d'eau.";
 }
-export function waterWarnings(fa: Fa): string[] {
+export function waterWarnings(fa: FA): string[] {
   return [hasWaterNeeds(fa.waterNeed)].filter(
     (warning): warning is string => warning !== true
   );

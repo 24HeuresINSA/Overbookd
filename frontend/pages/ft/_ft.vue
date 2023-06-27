@@ -7,7 +7,7 @@
       <FTDetailCard id="detail" />
       <FTTimeWindowCard id="timewindow" />
       <FTLogisticsCard id="matos" title="Matos" />
-      <FeedbackCard id="comment" form="FT" />
+      <FeedbackCard id="feedback" form="FT" />
     </v-container>
     <FestivalEventBottomBar festival-event="FT" />
     <SnackNotificationContainer />

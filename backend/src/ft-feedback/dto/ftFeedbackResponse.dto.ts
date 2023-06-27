@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtFeedbackSubjectType } from '@prisma/client';
 import { IsDateString, IsNumber, IsString } from 'class-validator';
-import { FtFeedbackAuthor, FtFeedbackResponse } from '../ftFeedback.model';
+import {
+  FtFeedbackAuthor,
+  FtFeedbackResponse,
+  FtFeedbackSubjectType,
+} from '../ftFeedback.model';
 
 export class FtFeedbackResponseDto implements FtFeedbackResponse {
   @ApiProperty({

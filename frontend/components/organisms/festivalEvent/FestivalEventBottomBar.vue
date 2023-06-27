@@ -176,7 +176,7 @@ import {
   isTaskRefusedBy,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FA, Status } from "~/utils/models/FA";
+import { Fa, FaStatus } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
   FtTimespanParameters,
@@ -219,7 +219,7 @@ export default Vue.extend({
     selectedValidator: {} as Team,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {
@@ -283,22 +283,22 @@ export default Vue.extend({
     },
     isDraft(): boolean {
       return this.isFA
-        ? this.mFA.status === Status.DRAFT
+        ? this.mFA.status === FaStatus.DRAFT
         : this.mFT.status === FTStatus.DRAFT;
     },
     isSubmitted(): boolean {
       return this.isFA
-        ? this.mFA.status === Status.SUBMITTED
+        ? this.mFA.status === FaStatus.SUBMITTED
         : this.mFT.status === FTStatus.SUBMITTED;
     },
     isRefused(): boolean {
       return this.isFA
-        ? this.mFA.status === Status.REFUSED
+        ? this.mFA.status === FaStatus.REFUSED
         : this.mFT.status === FTStatus.REFUSED;
     },
     isValidated(): boolean {
       return this.isFA
-        ? this.mFA.status === Status.VALIDATED
+        ? this.mFA.status === FaStatus.VALIDATED
         : this.mFT.status === FTStatus.VALIDATED;
     },
     isSubmittedOrRefused(): boolean {
@@ -431,7 +431,6 @@ export default Vue.extend({
       if (this.isFA)
         return this.$accessor.FA.submitForReview({
           faId: this.id,
-          authorId: author.id,
           author,
         });
       return this.$accessor.FT.submitForReview(author);

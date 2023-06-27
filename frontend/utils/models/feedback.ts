@@ -1,21 +1,42 @@
 import { User } from "./user";
 
-export interface Feedback {
+interface BaseFeedback {
   comment: string;
-  subject: SubjectType;
   createdAt: Date;
   author: User;
 }
+export interface FaFeedback extends BaseFeedback {
+  subject: FaFeedbackSubjectType;
+}
 
-export interface SavedFeedback extends Feedback {
+export interface FtFeedback extends BaseFeedback {
+  subject: FtFeedbackSubjectType;
+}
+
+export type Feedback = FaFeedback | FtFeedback;
+
+export interface SavedFaFeedback extends FaFeedback {
   id: number;
 }
+
+export interface SavedFtFeedback extends FtFeedback {
+  id: number;
+}
+
+export type SavedFeedback = SavedFaFeedback | SavedFtFeedback;
 
 export interface FeedbackCreation extends Omit<Feedback, "author"> {
   authorId: number;
 }
 
-export enum SubjectType {
+export enum FaFeedbackSubjectType {
+  REFUSED = "REFUSED",
+  VALIDATED = "VALIDATED",
+  COMMENT = "COMMENT",
+  SUBMIT = "SUBMIT",
+}
+
+export enum FtFeedbackSubjectType {
   REFUSED = "REFUSED",
   VALIDATED = "VALIDATED",
   COMMENT = "COMMENT",

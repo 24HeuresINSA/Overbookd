@@ -45,7 +45,7 @@
 import Vue from "vue";
 import { Team } from "~/utils/models/team";
 import { StatsPayload } from "~/utils/models/stats";
-import { FAStatusLabel } from "~/utils/models/FA";
+import { FaStatusLabel } from "~/utils/models/FA";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 
 export default Vue.extend({
@@ -121,7 +121,7 @@ export default Vue.extend({
       return this.$accessor.team.getTeamByCode(teamCode);
     },
     getAllStatus() {
-      return FAStatusLabel;
+      return FaStatusLabel;
     },
     displayHistory(teamCode: string): string {
       const lastYearValue = this.history(teamCode);

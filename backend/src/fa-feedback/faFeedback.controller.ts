@@ -31,7 +31,7 @@ import { FaFeedbackService } from './faFeedback.service';
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('ft')
+@Controller('fa')
 export class FaFeedbackController {
   constructor(private readonly faFeedbackService: FaFeedbackService) {}
 

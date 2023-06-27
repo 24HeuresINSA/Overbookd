@@ -1,6 +1,6 @@
 import { HttpStringified } from "../types/http";
 import { FaSimplified } from "./FA";
-import { Feedback } from "./feedback";
+import { FtFeedback } from "./feedback";
 import { FtTimespan } from "./ftTimespan";
 import { Period } from "./period";
 import { Review } from "./review";
@@ -53,7 +53,7 @@ export interface FT extends FTBase {
 
   timeWindows: FTTimeWindow[];
   reviews: Review[];
-  feedbacks: Feedback[];
+  feedbacks: FtFeedback[];
   isDeleted: boolean;
   reviewer?: User;
 }
@@ -182,7 +182,9 @@ export function castTimeWindowWithDate(
   };
 }
 
-function castFeedbackWithDate(feedback: HttpStringified<Feedback>): Feedback {
+function castFeedbackWithDate(
+  feedback: HttpStringified<FtFeedback>
+): FtFeedback {
   const createdAt = new Date(feedback.createdAt);
   return {
     ...feedback,
