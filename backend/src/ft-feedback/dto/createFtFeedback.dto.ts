@@ -1,30 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtFeedback, FtSubjectType } from '@prisma/client';
+import { FtFeedbackSubjectType } from '@prisma/client';
 import { IsDateString, IsNumber, IsString } from 'class-validator';
 
-class Author {
-  firstname: string;
-  lastname: string;
-}
-
-export class FtFeedbackResponseDto
-  implements Omit<FtFeedback, 'authorId' | 'ftId'>
-{
+export class CreateFtFeedbackDto {
   @ApiProperty({
     required: true,
-    description: 'The id of the ft feedback',
     type: Number,
+    description: 'The author id of feedback',
   })
   @IsNumber()
-  id: number;
-
-  @ApiProperty({
-    required: true,
-    type: Author,
-    description: 'The author of feedback',
-  })
-  @IsNumber()
-  author: Author;
+  authorId: number;
 
   @ApiProperty({
     required: true,
@@ -40,7 +25,7 @@ export class FtFeedbackResponseDto
     description: 'The subject of feedback',
   })
   @IsString()
-  subject: FtSubjectType;
+  subject: FtFeedbackSubjectType;
 
   @ApiProperty({
     required: true,

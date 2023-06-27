@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtSubjectType } from '@prisma/client';
 import { IsDateString, IsNumber, IsString } from 'class-validator';
+import { FaFeedbackSubjectType } from '../faFeedback.model';
 
-export class CreateFtFeedbackDto {
+export class CreateFaFeedbackDto {
   @ApiProperty({
     required: true,
     type: Number,
@@ -25,7 +25,7 @@ export class CreateFtFeedbackDto {
     description: 'The subject of feedback',
   })
   @IsString()
-  subject: FtSubjectType;
+  subject: FaFeedbackSubjectType;
 
   @ApiProperty({
     required: true,

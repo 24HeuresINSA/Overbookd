@@ -517,7 +517,7 @@ model Ft {
   @@map("ft")
 }
 
-enum FtSubjectType {
+enum FtFeedbackSubjectType {
   REFUSED
   SUBMIT
   VALIDATED
@@ -528,14 +528,14 @@ enum FtSubjectType {
 }
 
 model FtFeedback {
-  id        Int           @id @default(autoincrement())
-  ft        Ft            @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId      Int           @map("ft_id")
-  comment   String        @db.Text
-  subject   FtSubjectType
-  author    User          @relation(fields: [authorId], references: [id])
-  authorId  Int           @map("author_id")
-  createdAt DateTime      @default(now()) @map("created_at")
+  id        Int                   @id @default(autoincrement())
+  ft        Ft                    @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId      Int                   @map("ft_id")
+  comment   String                @db.Text
+  subject   FtFeedbackSubjectType
+  author    User                  @relation(fields: [authorId], references: [id])
+  authorId  Int                   @map("author_id")
+  createdAt DateTime              @default(now()) @map("created_at")
 
   @@map("ft_feedback")
 }

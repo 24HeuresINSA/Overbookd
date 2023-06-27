@@ -1,7 +1,7 @@
 import {
   FaStatus,
   FtStatus,
-  FtSubjectType,
+  FtFeedbackSubjectType,
   ReviewStatus,
 } from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
@@ -71,7 +71,7 @@ export class Review {
 export class Feedback {
   id: number;
   comment: string;
-  subject: FtSubjectType;
+  subject: FtFeedbackSubjectType;
   authorId: number;
   createdAt: Date;
   author: UserName;
