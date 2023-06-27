@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { TEAM_SELECT } from 'src/team/team.service';
+import { TEAM_SELECT } from '../team/team.service';
 
 export type FaResponse = Prisma.FaGetPayload<{
   select: typeof COMPLETE_FA_SELECT;
@@ -99,8 +99,8 @@ export const COMPLETE_FA_SELECT = {
       comment: true,
       subject: true,
       created_at: true,
-      author: true,
-      User_author: {
+      authorId: true,
+      author: {
         select: {
           firstname: true,
           lastname: true,

@@ -1,5 +1,5 @@
-import { site_publish_animation_category_type } from '@prisma/client';
 import { Period } from 'src/gear-requests/gearRequests.model';
+import { SitePublishAnimationCategoryType } from './sitePublishAnimation.model';
 
 export interface SitePublishAnimationFa {
   id: number;
@@ -16,13 +16,5 @@ export interface LiteSitePublishAnimation {
   photoLink?: string;
   description?: string;
   isMajor?: boolean;
-  categories?: site_publish_animation_category_type[];
-}
-
-export enum SitePublishAnimationCategoryType {
-  Divertissement = 'Divertissement',
-  Culture = 'Culture',
-  Sport = 'Sport',
-  Enfant = 'Enfant',
-  Autre = 'Autre',
+  categories?: SitePublishAnimationCategoryType[];
 }

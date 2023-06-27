@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { site_publish_animation_category_type } from '@prisma/client';
 import { IsBoolean } from 'class-validator';
+import { LiteSitePublishAnimation } from '../interfaces';
 import {
-  LiteSitePublishAnimation,
   SitePublishAnimationCategoryType,
-} from '../interfaces';
+  sitePublishAnimationCategoryType,
+} from '../sitePublishAnimation.model';
 
 export class LiteSitePublishAnimationResponseDto
   implements LiteSitePublishAnimation
@@ -33,8 +33,8 @@ export class LiteSitePublishAnimationResponseDto
   @ApiProperty({
     required: true,
     description: 'The categories of the animation',
-    enum: SitePublishAnimationCategoryType,
+    enum: sitePublishAnimationCategoryType,
     isArray: true,
   })
-  categories: site_publish_animation_category_type[];
+  categories: SitePublishAnimationCategoryType[];
 }

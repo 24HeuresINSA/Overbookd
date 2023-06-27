@@ -9,10 +9,10 @@
         :items-per-page="-1"
         sort-by="created_at"
       >
-        <template #[`item.User_author`]="{ item }">
+        <template #[`item.author`]="{ item }">
           {{
-            item.User_author
-              ? item.User_author.firstname + " " + item.User_author.lastname
+            item.author
+              ? item.author.firstname + " " + item.author.lastname
               : me.firstname + " " + me.lastname
           }}
         </template>
@@ -50,7 +50,7 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Auteur", value: "User_author" },
+      { text: "Auteur", value: "author" },
       { text: "Sujet", value: "subject" },
       { text: "Commentaire", value: "comment" },
       { text: "Date", value: "created_at" },
@@ -77,7 +77,7 @@ export default Vue.extend({
         const comment: fa_comments = {
           subject: SubjectType.COMMENT,
           comment: this.newComment,
-          author: this.me.id,
+          authorId: this.me.id,
           created_at: new Date(),
         };
 

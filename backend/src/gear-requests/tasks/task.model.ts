@@ -4,12 +4,23 @@ export interface Task {
   status: TaskStatus;
 }
 
-export const taskStatus = {
-  DRAFT: 'DRAFT',
-  SUBMITTED: 'SUBMITTED',
-  VALIDATED: 'VALIDATED',
-  REFUSED: 'REFUSED',
-  READY: 'READY',
+const DRAFT = 'DRAFT';
+const SUBMITTED = 'SUBMITTED';
+const VALIDATED = 'VALIDATED';
+const REFUSED = 'REFUSED';
+const READY = 'READY';
+
+export const taskStatus: Record<TaskStatus, TaskStatus> = {
+  DRAFT,
+  SUBMITTED,
+  VALIDATED,
+  REFUSED,
+  READY,
 };
 
-export type TaskStatus = (typeof taskStatus)[keyof typeof taskStatus];
+export type TaskStatus =
+  | typeof DRAFT
+  | typeof SUBMITTED
+  | typeof VALIDATED
+  | typeof REFUSED
+  | typeof READY;

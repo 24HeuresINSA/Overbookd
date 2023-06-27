@@ -16,6 +16,8 @@ enum TransactionType {
   DEPOSIT
   EXPENSE
   TRANSFER
+
+  @@map("transaction_type")
 }
 
 enum Year {
@@ -26,6 +28,8 @@ enum Year {
   A5
   VIEUX
   AUTRE
+
+  @@map("year")
 }
 
 enum Department {
@@ -40,6 +44,8 @@ enum Department {
   BS
   FIMI
   AUTRE
+
+  @@map("department")
 }
 
 model User {
@@ -176,17 +182,19 @@ model Transaction {
   @@map("transaction")
 }
 
-enum Status {
+enum FaStatus {
   DRAFT
   SUBMITTED
   VALIDATED
   REFUSED
+
+  @@map("fa_status")
 }
 
 model Fa {
   id                     Int                     @id @default(autoincrement())
   name                   String                  @db.VarChar(255)
-  fa_type_name           fa_type?                @map("fa_type")
+  fa_type_name           FaType?                 @map("fa_type")
   type                   String?                 @db.VarChar(255)
   Team                   Team?                   @relation(fields: [team_id], references: [id])
   team_id                Int?                    @map("team_id")
@@ -195,7 +203,7 @@ model Fa {
   created_at             DateTime?               @default(now()) @map("created_at")
   location               SignaLocation?          @relation(fields: [location_id], references: [id])
   location_id            Int?                    @map("location_id")
-  status                 Status?                 @default(DRAFT)
+  status                 FaStatus?               @default(DRAFT)
   description            String?                 @db.Text
   security_needs         String?                 @db.Text @map("security_need")
   is_pass_required       Boolean?                @db.Boolean @map("is_pass_required")
@@ -217,7 +225,7 @@ model Fa {
   @@map("fa")
 }
 
-enum fa_type {
+enum FaType {
   Concert
   Course
   Divertissement
@@ -227,6 +235,8 @@ enum fa_type {
   Prevention
   Spectacle
   Autre
+
+  @@map("fa_type")
 }
 
 model FaValidation {
@@ -292,7 +302,7 @@ model Collaborator {
 }
 
 //A définir correctement plus tard, placeholder pour le moment
-enum electricity_type {
+enum ElectricityType {
   PC16_Prise_classique
   P17_16A_MONO
   P17_16A_TRI
@@ -304,13 +314,15 @@ enum electricity_type {
   P17_63A_TRI
   P17_63A_TETRA
   P17_125A_TETRA
+
+  @@map("electricity_type")
 }
 
 model FaElectricityNeed {
   id               Int              @id @default(autoincrement())
   fa               Fa               @relation(fields: [fa_id], references: [id])
   fa_id            Int              @map("fa_id")
-  electricity_type electricity_type @map("electricity_type")
+  electricity_type ElectricityType  @map("electricity_type")
   device           String?          @db.Text
   power            Int
   count            Int?
@@ -319,17 +331,19 @@ model FaElectricityNeed {
   @@map("fa_electricity_need")
 }
 
-enum signa_type {
+enum SignaType {
   BANNIERE
   PANCARTE
   PANNEAU
+
+  @@map("signa_type")
 }
 
 model FaSignaNeed {
   id         Int        @id @default(autoincrement())
   fa         Fa         @relation(fields: [fa_id], references: [id])
   fa_id      Int        @map("fa_id")
-  signa_type signa_type @map("signa_type")
+  signa_type SignaType  @map("signa_type")
   text       String     @db.Text
   count      Int        @default(1)
   comment    String?    @db.Text
@@ -337,22 +351,24 @@ model FaSignaNeed {
   @@map("fa_signa_need")
 }
 
-enum subject_type {
+enum FaFeedbackSubjectType {
   REFUSED
   SUBMIT
   VALIDATED
   COMMENT
+
+  @@map("fa_feedback_subject_type")
 }
 
 model FaFeedback {
-  id          Int          @id @default(autoincrement())
-  fa          Fa           @relation(fields: [fa_id], references: [id])
-  fa_id       Int          @map("fa_id")
-  comment     String       @db.Text
-  subject     subject_type
-  User_author User         @relation(fields: [author], references: [id])
-  author      Int          @map("author_id")
-  created_at  DateTime     @default(now()) @map("created_at")
+  id          Int                   @id @default(autoincrement())
+  fa          Fa                    @relation(fields: [fa_id], references: [id])
+  fa_id       Int                   @map("fa_id")
+  comment     String                @db.Text
+  subject     FaFeedbackSubjectType
+  author      User                  @relation(fields: [authorId], references: [id])
+  authorId    Int                   @map("author_id")
+  created_at  DateTime              @default(now()) @map("created_at")
 
   @@map("fa_feedback")
 }
@@ -363,22 +379,19 @@ model FaSitePublishAnimation {
   photoLink   String                                 @db.Text @default("") @map("photo_link")
   description String                                 @db.Text @default("")
   isMajor     Boolean                                @default(false) @map("is_flagship")
-  categories  site_publish_animation_category_type[]
+  categories  SitePublishAnimationCategoryType[]
 
   @@map("fa_site_publish_animation")
 }
 
-enum site_publish_animation_category_type {
+enum SitePublishAnimationCategoryType {
   Divertissement
   Culture
   Sport
   Enfant
   Autre
-}
 
-enum time_windows_type {
-  ANIM
-  MATOS
+  @@map("site_publish_animation_category_type")
 }
 
 model FaTimeWindow {
@@ -387,7 +400,6 @@ model FaTimeWindow {
   fa_id Int               @map("fa_id")
   start DateTime
   end   DateTime
-  type  time_windows_type
 
   @@map("fa_time_window")
 }
@@ -512,7 +524,7 @@ enum FtSubjectType {
   COMMENT
   READY
 
-  @@map("ft_subject_type")
+  @@map("ft_feedback_subject_type")
 }
 
 model FtFeedback {

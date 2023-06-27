@@ -1,7 +1,6 @@
 import { formatDateWithMinutes } from '../utils/date';
 import { Gear } from '../catalog/interfaces';
 import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
-import { Status } from '../fa/dto/update-fa.dto';
 import {
   APPROVED,
   GearRequest,
@@ -14,6 +13,7 @@ import { InMemoryGearRequestRepository } from './repositories/gearRequest.reposi
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
 import { Task, taskStatus } from './tasks/task.model';
+import { faStatus } from '../fa/fa.model';
 
 const MAGASIN = 'Magasin';
 
@@ -38,13 +38,13 @@ const MAY_23 = {
 const CHATEAU_GONFLABLE = {
   id: 1,
   name: 'Chateau Gonflable',
-  status: Status.DRAFT,
+  status: faStatus.DRAFT,
 };
-const KRAVMAGA = { id: 2, name: 'Kravmaga', status: Status.DRAFT };
+const KRAVMAGA = { id: 2, name: 'Kravmaga', status: faStatus.DRAFT };
 const BAR_DECOUVERTE = {
   id: 3,
   name: 'Bar Decouverte',
-  status: Status.VALIDATED,
+  status: faStatus.VALIDATED,
 };
 const INSTALLER_CHATEAU_GONFLABLE: Task = {
   id: 1,

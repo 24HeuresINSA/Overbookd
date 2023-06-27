@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { FtStatus, Status } from '@prisma/client';
+import { FtStatus } from '@prisma/client';
 import { groupBy } from '../util/group-by';
+import { FaStatus } from 'src/fa/fa.model';
 
 export type StatsPayload = {
   teamCode: string;
   status: {
-    status: Status | FtStatus;
+    status: FaStatus | FtStatus;
     count: number;
   }[];
   total: number;
 };
 
 type StatsQueryResult = {
-  status: Status | FtStatus;
+  status: FaStatus | FtStatus;
   teamCode: string;
   _count: {
     status: number;
@@ -41,7 +42,7 @@ export class StatsService {
 
   private static extractStatusStats(
     teamStats: StatsQueryResult[],
-  ): { status: Status | FtStatus; count: number }[] {
+  ): { status: FaStatus | FtStatus; count: number }[] {
     return teamStats
       .map(({ status, _count }) => ({
         status,

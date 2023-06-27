@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Status } from 'src/fa/dto/update-fa.dto';
 import { PrismaService } from '../../prisma.service';
 import { AnimationRepository } from '../gearRequests.service';
 import { Animation } from '../animations/animation.model';
@@ -19,6 +18,6 @@ export class PrismaAnimationRepository implements AnimationRepository {
       select: this.SELECT_ANIMATION,
       where: { id },
     });
-    return { id, name, status: status as Status };
+    return { id, name, status };
   }
 }

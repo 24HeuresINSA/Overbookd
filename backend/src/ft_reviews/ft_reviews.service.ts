@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FtReview, FtStatus, ReviewStatus, Status } from '@prisma/client';
+import { FtReview, FtStatus, ReviewStatus } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
@@ -15,6 +15,7 @@ import { PrismaService } from '../prisma.service';
 import { TimespanParametersDto } from './dto/timespanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { TimespansGenerator } from './timespansGenerator';
+import { faStatus } from 'src/fa/fa.model';
 
 @Injectable()
 export class FtReviewsService {
@@ -181,7 +182,7 @@ export class FtReviewsService {
     if (ft.status !== FtStatus.VALIDATED) {
       throw new BadRequestException('FT non validée');
     }
-    if (ft.fa.status !== Status.VALIDATED) {
+    if (ft.fa.status !== faStatus.VALIDATED) {
       throw new BadRequestException('FA non validée');
     }
     await this.hasAtLeastOneConflict(ft);

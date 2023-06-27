@@ -9,7 +9,7 @@ import {
   IsDefined,
 } from 'class-validator';
 
-enum time_windows_type {
+enum TimeWindowType {
   ANIM = 'ANIM',
   MATOS = 'MATOS',
 }
@@ -47,9 +47,9 @@ export class CreateTimeWindowDto {
   })
   @IsDefined()
   @IsNotEmpty()
-  @IsEnum(time_windows_type, {
+  @IsEnum(TimeWindowType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(time_windows_type)}`,
+      `${va.property} must be one of ${Object.values(TimeWindowType)}`,
   })
-  type: time_windows_type;
+  type: TimeWindowType;
 }

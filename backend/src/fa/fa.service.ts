@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Fa, Status } from '@prisma/client';
+import { Fa } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
@@ -13,10 +13,11 @@ import {
   FaIdResponse,
   FaResponse,
 } from './fa_types';
+import { FaStatus } from './fa.model';
 
 export interface SearchFa {
   isDeleted: boolean;
-  status?: Status;
+  status?: FaStatus;
 }
 @Injectable()
 export class FaService {
