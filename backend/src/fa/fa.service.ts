@@ -77,10 +77,10 @@ export class FaService {
     updatefaDto: UpdateFaDto,
   ): Promise<FaResponse | null> {
     //find the fa
-    const fa = await this.prisma.fa.findUnique({ where: { id: Number(id) } });
+    const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
     await this.prisma.fa.update({
-      where: { id: Number(id) },
+      where: { id },
       data: updatefaDto,
     });
     return await this.findOne(id);
@@ -92,7 +92,7 @@ export class FaService {
 
   async remove(id: number): Promise<Fa | null> {
     return this.prisma.fa.update({
-      where: { id: Number(id) },
+      where: { id },
       data: {
         isDeleted: true,
       },

@@ -1,5 +1,5 @@
 import { HttpStringified } from "../types/http";
-import { FASimplified } from "./FA";
+import { FaSimplified } from "./FA";
 import { Feedback } from "./feedback";
 import { FtTimespan } from "./ftTimespan";
 import { Period } from "./period";
@@ -48,7 +48,7 @@ export interface FT extends FTBase {
   team?: Team;
   userInCharge?: User;
   isStatic: boolean;
-  fa?: FASimplified;
+  fa?: FaSimplified;
   location?: SignaLocation;
 
   timeWindows: FTTimeWindow[];

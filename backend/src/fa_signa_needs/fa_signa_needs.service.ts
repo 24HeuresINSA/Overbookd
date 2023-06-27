@@ -41,9 +41,7 @@ export class FaSignaNeedsService {
 
   async findOne(id: number): Promise<FaSignaNeed | null> {
     return await this.prisma.faSignaNeed.findUnique({
-      where: {
-        id: Number(id),
-      },
+      where: { id },
     });
   }
 

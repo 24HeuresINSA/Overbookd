@@ -7,7 +7,7 @@
         :items="comments"
         hide-default-footer
         :items-per-page="-1"
-        sort-by="created_at"
+        sort-by="createdAt"
       >
         <template #[`item.author`]="{ item }">
           {{
@@ -16,8 +16,8 @@
               : me.firstname + " " + me.lastname
           }}
         </template>
-        <template #[`item.created_at`]="{ item }">
-          {{ formatDate(item.created_at) }}
+        <template #[`item.createdAt`]="{ item }">
+          {{ formatDate(item.createdAt) }}
         </template>
       </v-data-table>
       <v-textarea
@@ -36,7 +36,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { fa_comments } from "~/utils/models/FA";
+import { FaFeedback } from "~/utils/models/FA";
 import { SubjectType } from "~/utils/models/feedback";
 import { MyUserInformation } from "~/utils/models/user";
 
@@ -53,7 +53,7 @@ export default Vue.extend({
       { text: "Auteur", value: "author" },
       { text: "Sujet", value: "subject" },
       { text: "Commentaire", value: "comment" },
-      { text: "Date", value: "created_at" },
+      { text: "Date", value: "createdAt" },
     ],
     newComment: "",
   }),
@@ -62,8 +62,8 @@ export default Vue.extend({
       if (this.form === "FA") return this.$accessor.FA;
       return this.$accessor.FT;
     },
-    comments(): fa_comments[] {
-      if (this.form === "FA") return this.$accessor.FA.mFA.fa_comments ?? [];
+    comments(): FaFeedback[] {
+      if (this.form === "FA") return this.$accessor.FA.mFA.faFeedbacks ?? [];
       return [];
     },
     me(): MyUserInformation {
@@ -74,11 +74,11 @@ export default Vue.extend({
     async addComment() {
       if (!this.newComment) return;
       if (this.form == "FA") {
-        const comment: fa_comments = {
+        const comment: FaFeedback = {
           subject: SubjectType.COMMENT,
           comment: this.newComment,
           authorId: this.me.id,
-          created_at: new Date(),
+          createdAt: new Date(),
         };
 
         await this.store.addComment({ comment, defaultAuthor: this.me });
@@ -91,5 +91,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped></style>

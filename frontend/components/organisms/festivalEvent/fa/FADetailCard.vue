@@ -48,10 +48,10 @@
           >
           </v-combobox>
           <v-switch
-            :input-value="mFA.faSitePublishAnimation?.isMajor"
+            :input-value="mFA.faSitePublishAnimation?.isFlagship"
             label="Anim phare qui sera mise en avant sur les réseaux sociaux"
             :disabled="isValidatedByOwner"
-            @change="onChangePublishAnimation('isMajor', $event)"
+            @change="onChangePublishAnimation('isFlagship', $event)"
           ></v-switch>
         </v-form>
       </v-form>
@@ -62,7 +62,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import { FA, fa_card_type } from "~/utils/models/FA";
+import { Fa, FaCardType } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -75,12 +75,12 @@ export default Vue.extend({
   components: { RichEditor, CardErrorList },
   data: () => ({
     owner: "humain",
-    cardType: fa_card_type.DETAIL,
+    cardType: FaCardType.DETAIL,
     categories: Object.values(SitePublishAnimationCategoryType),
     isPublishable: false,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {

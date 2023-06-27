@@ -13,9 +13,7 @@ export class FaElectricityNeedsService {
 
   async findOne(id: number): Promise<FaElectricityNeed | null> {
     return await this.prisma.faElectricityNeed.findUnique({
-      where: {
-        id: Number(id),
-      },
+      where: { id },
     });
   }
 

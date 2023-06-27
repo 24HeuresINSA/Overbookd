@@ -1,18 +1,18 @@
-import { FA, fa_refuse, fa_validation, Status } from "../models/FA";
+import { Fa, FaRefuse, FaValidation, Status } from "../models/FA";
 
-export function isAnimationValidatedBy(fa: FA, teamCode: string): boolean {
-  return (fa.fa_validation ?? []).some(
-    (validation: fa_validation) => validation.Team.code === teamCode
+export function isAnimationValidatedBy(fa: Fa, teamCode: string): boolean {
+  return (fa.faValidation ?? []).some(
+    (validation: FaValidation) => validation.team.code === teamCode
   );
 }
 
-export function isAnimationRefusedBy(fa: FA, teamCode: string): boolean {
-  return (fa.fa_refuse ?? []).some(
-    (refuse: fa_refuse) => refuse.Team.code === teamCode
+export function isAnimationRefusedBy(fa: Fa, teamCode: string): boolean {
+  return (fa.faRefuse ?? []).some(
+    (refuse: FaRefuse) => refuse.team.code === teamCode
   );
 }
 
-export function getFAValidationStatus(fa: FA, teamCode: string): Status {
+export function getFAValidationStatus(fa: Fa, teamCode: string): Status {
   if (fa.status === Status.DRAFT) return Status.DRAFT;
   if (isAnimationValidatedBy(fa, teamCode)) return Status.VALIDATED;
   if (isAnimationRefusedBy(fa, teamCode)) return Status.REFUSED;
@@ -20,7 +20,7 @@ export function getFAValidationStatus(fa: FA, teamCode: string): Status {
 }
 
 export function getFAValidationStatusWithMultipleTeams(
-  fa: FA,
+  fa: Fa,
   teamCodes: string[]
 ): Status {
   if (fa.status === Status.DRAFT) return Status.DRAFT;
@@ -29,18 +29,18 @@ export function getFAValidationStatusWithMultipleTeams(
   return Status.SUBMITTED;
 }
 
-export function hasAtLeastOneValidation(fa: FA, teamCodes: string[]): boolean {
+export function hasAtLeastOneValidation(fa: Fa, teamCodes: string[]): boolean {
   return teamCodes.some((code) => isAnimationValidatedBy(fa, code));
 }
 
-export function hasAtLeastOneRefusal(fa: FA, teamCodes: string[]): boolean {
+export function hasAtLeastOneRefusal(fa: Fa, teamCodes: string[]): boolean {
   return teamCodes.some((code) => isAnimationRefusedBy(fa, code));
 }
 
-export function hasAllValidations(fa: FA, teamCodes: string[]): boolean {
+export function hasAllValidations(fa: Fa, teamCodes: string[]): boolean {
   return teamCodes.every((code) => isAnimationValidatedBy(fa, code));
 }
 
-export function hasAllRefusals(fa: FA, teamCodes: string[]): boolean {
+export function hasAllRefusals(fa: Fa, teamCodes: string[]): boolean {
   return teamCodes.every((code) => isAnimationRefusedBy(fa, code));
 }

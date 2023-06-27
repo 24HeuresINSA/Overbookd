@@ -11,29 +11,29 @@
     <v-card-text>
       <v-form>
         <v-switch
-          :value="mFA.is_pass_required"
+          :value="mFA.isPassRequired"
           label="Besoin de laissez-passer"
           :disabled="isValidatedByOwner"
-          @change="onChange('is_pass_required', $event)"
+          @change="onChange('isPassRequired', $event)"
         ></v-switch>
         <v-text-field
-          v-if="mFA.is_pass_required"
-          :value="mFA.number_of_pass"
+          v-if="mFA.isPassRequired"
+          :value="mFA.numberOfPass"
           label="Nombre de Pass Sécu"
           type="number"
           :rules="[rules.number, rules.min]"
           :disabled="isValidatedByOwner"
-          @change="onChange('number_of_pass', $event)"
+          @change="onChange('numberOfPass', $event)"
         ></v-text-field>
       </v-form>
       <v-textarea
-        :value="mFA.security_needs"
+        :value="mFA.securityNeed"
         label="Dispositif de sécurité particulier"
         auto-grow
         rows="2"
         :disabled="isValidatedByOwner"
         prepend-icon="mdi-security"
-        @change="onChange('security_needs', $event)"
+        @change="onChange('securityNeed', $event)"
       ></v-textarea>
     </v-card-text>
   </v-card>
@@ -46,7 +46,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { FA, fa_card_type } from "~/utils/models/FA";
+import { Fa, FaCardType } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
@@ -54,14 +54,14 @@ export default Vue.extend({
   components: { CardErrorList },
   data: () => ({
     owner: "secu",
-    cardType: fa_card_type.SECURITY,
+    cardType: FaCardType.SECURITY,
     rules: {
       number: isNumber,
       min: min(1),
     },
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {
@@ -74,7 +74,7 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      if (key === "number_of_pass") value = parseInt(value);
+      if (key === "numberOfPass") value = parseInt(value);
       this.$accessor.FA.updateFA({ key: key, value: value });
     },
   },

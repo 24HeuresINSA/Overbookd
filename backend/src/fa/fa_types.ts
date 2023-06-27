@@ -27,7 +27,7 @@ export const COMPLETE_FA_SELECT = {
   name: true,
   type: true,
   teamId: true,
-  inCharge: true,
+  userInChargeId: true,
   createdAt: true,
   locationId: true,
   status: true,

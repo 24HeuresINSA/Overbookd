@@ -63,11 +63,11 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
+  ElectricityTypeWithLabel,
+  ElectricityType,
   ElectricityTypeLabel,
-  electricity_type,
-  electricity_type_label,
-  FA,
-  fa_electricity_needs,
+  Fa,
+  FaElectricityNeed,
 } from "~/utils/models/FA";
 import ElecLogisticForm from "~/components/molecules/festivalEvent/logistic/ElecLogisticForm.vue";
 
@@ -92,23 +92,23 @@ export default Vue.extend({
     selectedIndex: null as number | null,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
-    electricityNeeds(): any {
-      return this.mFA.fa_electricity_needs;
+    electricityNeeds(): FaElectricityNeed[] {
+      return this.mFA.faElectricityNeeds ?? [];
     },
     electricityType(): string[] {
-      return Object.values(electricity_type);
+      return Object.values(ElectricityType);
     },
-    electricityTypeLabels(): ElectricityTypeLabel[] {
-      const elecTypeLabels: ElectricityTypeLabel[] = Object.keys(
-        electricity_type_label
+    electricityTypeLabels(): ElectricityTypeWithLabel[] {
+      const elecTypeLabels: ElectricityTypeWithLabel[] = Object.keys(
+        ElectricityTypeLabel
       ).map((type) => {
         return {
-          type: type as electricity_type,
+          type: type as ElectricityType,
           label:
-            electricity_type_label[type as keyof typeof electricity_type_label],
+            ElectricityTypeLabel[type as keyof typeof ElectricityTypeLabel],
         };
       });
       return elecTypeLabels;
@@ -121,7 +121,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    getElectricityTypeLabel(type: electricity_type): string {
+    getElectricityTypeLabel(type: ElectricityType): string {
       return (
         this.electricityTypeLabels.find((label) => label.type === type)
           ?.label || ""
@@ -131,10 +131,10 @@ export default Vue.extend({
       this.selectedIndex = index;
       this.isEditDialogOpen = true;
     },
-    addElectricityNeed(elecNeed: fa_electricity_needs) {
+    addElectricityNeed(elecNeed: FaElectricityNeed) {
       this.$accessor.FA.addElectricityNeed(elecNeed);
     },
-    updateElectricityNeed(elecNeed: fa_electricity_needs) {
+    updateElectricityNeed(elecNeed: FaElectricityNeed) {
       if (this.selectedIndex === null) return;
       this.$accessor.FA.updateElectricityNeed({
         index: this.selectedIndex,

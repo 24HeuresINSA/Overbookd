@@ -25,22 +25,22 @@
           @change="onChange('type', $event)"
         ></v-select>
         <v-select
-          :value="mFA.team_id"
+          :value="mFA.teamId"
           label="Equipe"
           :items="teams"
           item-value="id"
           item-text="name"
           :disabled="isValidatedByOwner"
-          @change="onChange('team_id', $event)"
+          @change="onChange('teamId', $event)"
         ></v-select>
         <v-autocomplete
-          :value="mFA.in_charge"
+          :value="mFA.userInChargeId"
           label="Responsable"
           :items="users"
           item-value="id"
           :item-text="displayUsername"
           :disabled="isValidatedByOwner"
-          @change="onChange('in_charge', $event)"
+          @change="onChange('userInChargeId', $event)"
         ></v-autocomplete>
       </v-form>
     </v-card-text>
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, fa_card_type, fa_type } from "~/utils/models/FA";
+import { Fa, FaCardType, FaType } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -63,17 +63,17 @@ export default Vue.extend({
   components: { CardErrorList },
   data: () => ({
     owner: "humain",
-    cardType: fa_card_type.GENERAL,
+    cardType: FaCardType.GENERAL,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     teams(): Team[] {
       return this.$accessor.team.allTeams;
     },
     allTypes(): string[] {
-      return Object.values(fa_type);
+      return Object.values(FaType);
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);

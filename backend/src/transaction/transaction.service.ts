@@ -56,7 +56,7 @@ export class TransactionService {
   ): Promise<TransactionWithSenderAndReceiver | null> {
     return this.prisma.transaction.findUnique({
       select: SELECT_TRANSACTION,
-      where: { id: Number(id) },
+      where: { id },
     });
   }
 
@@ -144,7 +144,7 @@ export class TransactionService {
     const transaction = await this.transactionExists(id);
 
     const updateTransactionOperation = this.prisma.transaction.update({
-      where: { id: Number(id) },
+      where: { id },
       data: { is_deleted: true },
     });
 

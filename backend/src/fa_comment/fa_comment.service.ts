@@ -32,9 +32,7 @@ export class FaCommentService {
 
   async findOne(id: number): Promise<FaFeedback | null> {
     return this.prisma.faFeedback.findUnique({
-      where: {
-        id: Number(id),
-      },
+      where: { id },
     });
   }
 
