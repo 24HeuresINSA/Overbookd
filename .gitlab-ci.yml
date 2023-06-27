@@ -16,6 +16,7 @@ stages:
   - deploy
 
 include:
+  - local: '/.gitlab/ci/setup-pnpm.gitlab-ci.yml'
   - local: /.gitlab/ci/triage.gitlab-ci.yml
   - local: /.gitlab/ci/unconfidentializer.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml

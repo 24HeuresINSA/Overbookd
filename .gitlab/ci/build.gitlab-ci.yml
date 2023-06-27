@@ -1,30 +1,30 @@
 .build:
   stage: build
+  extends: .setup-pnpm
   interruptible: true
   image: node:16-alpine
+  script:
+    - pnpm i --filter ${PNPM_WORKSPACE}
+    - pnpm run --filter ${PNPM_WORKSPACE} build:ci
 
-backend_build:
+'@overbookd/api_build':
   extends: .build
-  needs: [backend_install]
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
     - when: never
-  before_script:
-    - cd backend
-  script:
-    - npm run build
+  variables:
+    PNPM_WORKSPACE: '@overbookd/api'
 
-frontend_build:
+'@overbookd/web_build':
   extends: .build
-  needs: [frontend_install]
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
     - when: never
-  before_script:
-    - cd frontend
-  script:
-    - npm run build:ci
+  variables:
+    PNPM_WORKSPACE: '@overbookd/web'

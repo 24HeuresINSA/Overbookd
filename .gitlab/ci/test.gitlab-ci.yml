@@ -1,42 +1,44 @@
 .test:
+  extends: .setup-pnpm
   stage: test
   interruptible: true
   image: node:16-alpine
   script:
-    - npm run test:ci
+    - pnpm i
+    - pnpm run --filter ${PNPM_WORKSPACE} test:ci
 
-backend_test:
+'@overbookd/api_test':
   extends: .test
-  needs: [backend_install]
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
     - when: never
-  before_script:
-    - 'cd backend'
+  variables:
+    PNPM_WORKSPACE: '@overbookd/api'
   artifacts:
     when: always
     reports:
-      junit: backend/junit.xml
+      junit: apps/api/junit.xml
       coverage_report:
         coverage_format: cobertura
-        path: backend/coverage/cobertura-coverage.xml
+        path: apps/api/coverage/cobertura-coverage.xml
 
-frontend_test:
+'@overbookd/web_test':
   extends: .test
-  needs: [frontend_install]
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
     - when: never
-  before_script:
-    - 'cd frontend'
+  variables:
+    PNPM_WORKSPACE: '@overbookd/web'
   artifacts:
     when: always
     reports:
-      junit: frontend/junit.xml
+      junit: apps/web/junit.xml
       coverage_report:
         coverage_format: cobertura
-        path: frontend/coverage/cobertura-coverage.xml
+        path: apps/web/coverage/cobertura-coverage.xml
