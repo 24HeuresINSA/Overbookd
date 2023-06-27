@@ -4,17 +4,6 @@ const VALIDATED = 'VALIDATED';
 const COMMENT = 'COMMENT';
 const READY = 'READY';
 
-export const ftFeedbackSubjectType: Record<
-  FtFeedbackSubjectType,
-  FtFeedbackSubjectType
-> = {
-  REFUSED,
-  SUBMIT,
-  VALIDATED,
-  COMMENT,
-  READY,
-};
-
 export type FtFeedbackSubjectType =
   | typeof REFUSED
   | typeof SUBMIT

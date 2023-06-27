@@ -3,16 +3,6 @@ const SUBMIT = 'SUBMIT';
 const VALIDATED = 'VALIDATED';
 const COMMENT = 'COMMENT';
 
-export const faFeedbackSubjectType: Record<
-  FaFeedbackSubjectType,
-  FaFeedbackSubjectType
-> = {
-  REFUSED,
-  SUBMIT,
-  VALIDATED,
-  COMMENT,
-};
-
 export type FaFeedbackSubjectType =
   | typeof REFUSED
   | typeof SUBMIT
