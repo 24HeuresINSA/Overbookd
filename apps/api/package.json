@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "@overbookd/api",
   "version": "1.16.4-rc.7",
-  "description": "Backend pour le logiciel de gestion du festival des 24 heures de l'INSA",
+  "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "backend"
+    "directory": "apps/api"
   },
   "scripts": {
     "prebuild": "rimraf dist",
