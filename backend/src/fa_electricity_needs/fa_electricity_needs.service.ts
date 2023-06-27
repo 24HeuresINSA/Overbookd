@@ -28,7 +28,7 @@ export class FaElectricityNeedsService {
         faId,
       };
       return this.prisma.faElectricityNeed.upsert({
-        where: { id },
+        where: { id: id ?? -1 },
         create: data,
         update: data,
       });

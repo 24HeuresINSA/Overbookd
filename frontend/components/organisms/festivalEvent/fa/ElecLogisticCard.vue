@@ -10,8 +10,8 @@
       >
       <v-card-text>
         <v-data-table :headers="headers" :items="electricityNeeds">
-          <template #[`item.electricity_type`]="{ item }">
-            {{ getElectricityTypeLabel(item.electricity_type) }}
+          <template #[`item.electricityType`]="{ item }">
+            {{ getElectricityTypeLabel(item.electricityType) }}
           </template>
           <template #[`item.power`]="{ item }"> {{ item.power }} W </template>
           <template #[`item.action`]="{ index }">
@@ -72,7 +72,7 @@ import {
 import ElecLogisticForm from "~/components/molecules/festivalEvent/logistic/ElecLogisticForm.vue";
 
 const headers = [
-  { text: "Type de raccordement", value: "electricity_type" },
+  { text: "Type de raccordement", value: "electricityType" },
   { text: "Appareil", value: "device" },
   { text: "Puissance par appareil", value: "power" },
   { text: "Nombre", value: "count" },
