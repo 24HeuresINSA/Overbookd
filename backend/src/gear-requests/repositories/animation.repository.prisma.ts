@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { AnimationRepository } from '../gearRequests.service';
 import { Animation } from '../animations/animation.model';
-import { FaStatus } from 'src/fa/fa_types';
 
 @Injectable()
 export class PrismaAnimationRepository implements AnimationRepository {
@@ -19,6 +18,6 @@ export class PrismaAnimationRepository implements AnimationRepository {
       select: this.SELECT_ANIMATION,
       where: { id },
     });
-    return { id, name, status: status as FaStatus };
+    return { id, name, status };
   }
 }

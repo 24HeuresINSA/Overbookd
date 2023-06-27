@@ -15,7 +15,7 @@ import { PrismaService } from '../prisma.service';
 import { TimespanParametersDto } from './dto/timespanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { TimespansGenerator } from './timespansGenerator';
-import { FaStatus } from 'src/fa/fa_types';
+import { faStatus } from 'src/fa/fa.model';
 
 @Injectable()
 export class FtReviewsService {
@@ -182,7 +182,7 @@ export class FtReviewsService {
     if (ft.status !== FtStatus.VALIDATED) {
       throw new BadRequestException('FT non validée');
     }
-    if (ft.fa.status !== FaStatus.VALIDATED) {
+    if (ft.fa.status !== faStatus.VALIDATED) {
       throw new BadRequestException('FA non validée');
     }
     await this.hasAtLeastOneConflict(ft);

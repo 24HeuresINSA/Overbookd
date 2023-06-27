@@ -1,4 +1,4 @@
-import { FaStatus } from 'src/fa/fa_types';
+import { FaStatus } from 'src/fa/fa.model';
 
 export interface Animation {
   id: number;

@@ -13,7 +13,7 @@ import { InMemoryGearRequestRepository } from './repositories/gearRequest.reposi
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
 import { Task, taskStatus } from './tasks/task.model';
-import { FaStatus } from '../fa/fa_types';
+import { faStatus } from '../fa/fa.model';
 
 const MAGASIN = 'Magasin';
 
@@ -38,13 +38,13 @@ const MAY_23 = {
 const CHATEAU_GONFLABLE = {
   id: 1,
   name: 'Chateau Gonflable',
-  status: FaStatus.DRAFT,
+  status: faStatus.DRAFT,
 };
-const KRAVMAGA = { id: 2, name: 'Kravmaga', status: FaStatus.DRAFT };
+const KRAVMAGA = { id: 2, name: 'Kravmaga', status: faStatus.DRAFT };
 const BAR_DECOUVERTE = {
   id: 3,
   name: 'Bar Decouverte',
-  status: FaStatus.VALIDATED,
+  status: faStatus.VALIDATED,
 };
 const INSTALLER_CHATEAU_GONFLABLE: Task = {
   id: 1,

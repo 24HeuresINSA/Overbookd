@@ -11,7 +11,7 @@ import {
   Min,
   ValidationArguments,
 } from 'class-validator';
-import { FaStatus } from '../fa_types';
+import { FaStatus, faStatus } from '../fa.model';
 
 enum FaType {
   Concert = 'Concert',
@@ -52,7 +52,7 @@ export class UpdateFaDto {
   @IsOptional()
   @IsEnum(FaType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(FaStatus)}`,
+      `${va.property} must be one of ${Object.values(FaType)}`,
   })
   type?: FaType;
 
@@ -86,12 +86,12 @@ export class UpdateFaDto {
   @ApiProperty({
     required: false,
     description: 'The status of the fa',
-    enum: FaStatus,
+    enum: faStatus,
   })
   @IsOptional()
-  @IsEnum(FaStatus, {
+  @IsEnum(faStatus, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(FaStatus)}`,
+      `${va.property} must be one of ${Object.values(faStatus)}`,
   })
   status?: FaStatus;
 

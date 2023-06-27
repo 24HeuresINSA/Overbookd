@@ -12,8 +12,8 @@ import {
   COMPLETE_FA_SELECT,
   FaIdResponse,
   FaResponse,
-  FaStatus,
 } from './fa_types';
+import { FaStatus } from './fa.model';
 
 export interface SearchFa {
   isDeleted: boolean;

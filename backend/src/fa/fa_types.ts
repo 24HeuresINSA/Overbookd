@@ -1,13 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { TEAM_SELECT } from '../team/team.service';
 
-export enum FaStatus {
-  DRAFT = 'DRAFT',
-  SUBMITTED = 'SUBMITTED',
-  VALIDATED = 'VALIDATED',
-  REFUSED = 'REFUSED',
-}
-
 export type FaResponse = Prisma.FaGetPayload<{
   select: typeof COMPLETE_FA_SELECT;
 }>;
