@@ -1,9 +1,9 @@
 import {
-    BadRequestException,
-    ForbiddenException,
-    Injectable,
-    Logger,
-    NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { FtReview, FtStatus, ReviewStatus } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
