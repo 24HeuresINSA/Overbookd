@@ -4,7 +4,7 @@
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="feedbacks"
+        :items="sortedFeedbacks"
         hide-default-footer
         :items-per-page="-1"
       >
@@ -26,7 +26,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Feedback, SubjectType } from "~/utils/models/feedback";
+import {
+  FaFeedback,
+  FaFeedbackSubjectType,
+  Feedback,
+  FtFeedback,
+  FtFeedbackSubjectType,
+} from "~/utils/models/feedback";
 import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user";
 import { formatDate } from "~/utils/date/dateUtils";
 
@@ -48,14 +54,25 @@ export default Vue.extend({
     comment: "",
   }),
   computed: {
-    feedbacks(): Feedback[] {
-      const feedbacks = [...this.$accessor.FT.mFT.feedbacks];
+    sortedFeedbacks(): Feedback[] {
+      const feedbacks = this.isFa
+        ? [...this.faFeedbacks]
+        : [...this.fatFeedbacks];
       return feedbacks.sort(
         (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
       );
     },
+    faFeedbacks(): FaFeedback[] {
+      return this.$accessor.FA.mFA.feedbacks ?? [];
+    },
+    fatFeedbacks(): FtFeedback[] {
+      return this.$accessor.FT.mFT.feedbacks;
+    },
     me(): MyUserInformation {
       return this.$accessor.user.me;
+    },
+    isFa(): boolean {
+      return this.form === "FA";
     },
   },
   methods: {
@@ -69,14 +86,23 @@ export default Vue.extend({
         lastname: this.me.lastname,
       };
 
-      const feedback: Feedback = {
-        subject: SubjectType.COMMENT,
-        comment: trimedComment,
-        author,
-        createdAt: new Date(),
-      };
-
-      await this.$accessor.FT.addFeedback(feedback);
+      if (this.isFa) {
+        const feedback: FaFeedback = {
+          subject: FaFeedbackSubjectType.COMMENT,
+          comment: trimedComment,
+          author,
+          createdAt: new Date(),
+        };
+        await this.$accessor.FA.addFeedback(feedback);
+      } else {
+        const feedback: FtFeedback = {
+          subject: FtFeedbackSubjectType.COMMENT,
+          comment: trimedComment,
+          author,
+          createdAt: new Date(),
+        };
+        await this.$accessor.FT.addFeedback(feedback);
+      }
       this.comment = "";
     },
     getAuthorName(user?: DisplayedUser) {

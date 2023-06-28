@@ -1,19 +1,19 @@
 import { HttpStringified } from "../types/http";
-import { SubjectType } from "./feedback";
+import { FaFeedback } from "./feedback";
 import { FTSimplified } from "./ft";
 import { StoredGearRequest } from "./gearRequests";
 import { PeriodWithId } from "./period";
 import { Team } from "./team";
 import { DisplayedUser } from "./user";
 
-export enum Status {
+export enum FaStatus {
   DRAFT = "DRAFT",
   REFUSED = "REFUSED",
   SUBMITTED = "SUBMITTED",
   VALIDATED = "VALIDATED",
 }
 
-export enum FAStatusLabel {
+export enum FaStatusLabel {
   DRAFT = "Brouillon",
   REFUSED = "Refusée",
   SUBMITTED = "Soumise à validation",
@@ -93,10 +93,10 @@ export enum SitePublishAnimationCategoryType {
 export interface FaSimplified {
   id: number;
   name: string;
-  status: Status;
+  status: FaStatus;
 }
 
-export interface Fa extends FaSimplified {
+export interface FA extends FaSimplified {
   type?: FaType;
   teamId?: number;
   userInChargeId?: number;
@@ -114,13 +114,13 @@ export interface Fa extends FaSimplified {
   faRefuse?: FaRefuse[];
   faElectricityNeeds?: FaElectricityNeed[];
   faSignaNeeds?: FaSignaNeed[];
-  faFeedbacks?: FaFeedback[];
+  feedbacks?: FaFeedback[];
   timeWindows?: FaTimeWindow[];
   faSitePublishAnimation?: SitePublishAnimation;
   fts: FTSimplified[];
 }
 
-export type CreateFa = Pick<Fa, "name">;
+export type CreateFa = Pick<FA, "name">;
 
 export interface FaCollaborator {
   collaborator: Collaborator;
@@ -134,15 +134,6 @@ export interface Collaborator {
   email?: string;
   company?: string;
   comment?: string;
-}
-
-export interface FaFeedback {
-  id?: number;
-  comment: string;
-  subject: SubjectType;
-  createdAt?: Date;
-  author?: DisplayedUser;
-  authorId?: number;
 }
 
 interface FaReview {
@@ -191,7 +182,7 @@ export interface FaGeneralUpdate {
   userInChargeId?: number;
   createdAt?: Date;
   locationId?: number;
-  status: Status;
+  status: FaStatus;
   description?: string;
   isPublishable?: boolean;
   securityNeed?: string;
@@ -208,7 +199,7 @@ export interface FaValidationBody {
 
 export interface SearchFa {
   isDeleted?: boolean;
-  status?: Status;
+  status?: FaStatus;
 }
 
 export interface FaPageId {
@@ -246,21 +237,16 @@ export interface SortedStoredGearRequests {
   elec: StoredGearRequest<"FA">[];
 }
 
-export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
-  const timeWindows = fa.timeWindows?.map(castTimeWindowWithDate);
+export function castFaWithDate(fa: HttpStringified<FA>): FA {
+  const timeWindows = fa.timeWindows?.map(castTimeWindowWithDate) ?? [];
   const createdAt = fa.createdAt ? new Date(fa.createdAt) : undefined;
-  const faFeedbacks = fa.faFeedbacks?.map(castCommentWithDate);
+  const feedbacks = fa.feedbacks?.map(castFeedbackWithDate) ?? [];
   return {
     ...fa,
     createdAt,
     timeWindows,
-    faFeedbacks,
+    feedbacks,
   };
-}
-
-function castCommentWithDate(comment: HttpStringified<FaFeedback>): FaFeedback {
-  const createdAt = comment.createdAt ? new Date(comment.createdAt) : undefined;
-  return { ...comment, createdAt };
 }
 
 function castTimeWindowWithDate(
@@ -270,5 +256,15 @@ function castTimeWindowWithDate(
     ...timeWindow,
     start: new Date(timeWindow.start),
     end: new Date(timeWindow.end),
+  };
+}
+
+function castFeedbackWithDate(
+  feedback: HttpStringified<FaFeedback>
+): FaFeedback {
+  const createdAt = new Date(feedback.createdAt);
+  return {
+    ...feedback,
+    createdAt: createdAt,
   };
 }

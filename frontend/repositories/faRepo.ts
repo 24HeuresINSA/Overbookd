@@ -1,10 +1,9 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CreateFa,
-  Fa,
+  FA,
   FaCollaborator,
   FaElectricityNeed,
-  FaFeedback,
   FaGeneralUpdate,
   FaPageId,
   FaSignaNeed,
@@ -16,6 +15,7 @@ import {
   SitePublishAnimationCreation,
   SitePublishAnimationWithFa,
 } from "~/utils/models/FA";
+import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
   GearRequest,
   GearRequestCreation,
@@ -29,29 +29,19 @@ import { HttpStringified } from "~/utils/types/http";
 const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
 
-function omitAuthors(comments: FaFeedback[]): FaFeedback[] {
-  return comments.map(({ id, comment, authorId, subject, createdAt }) => ({
-    id,
-    comment,
-    authorId,
-    subject,
-    createdAt,
-  }));
-}
-
 export default {
   getAllFAs(context: Context, search?: SearchFa) {
-    return context.$axios.get<HttpStringified<Fa>[]>(resource, {
+    return context.$axios.get<HttpStringified<FA>[]>(resource, {
       params: search,
     });
   },
 
   getFAById(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<Fa>>(resource + `/${id}`);
+    return context.$axios.get<HttpStringified<FA>>(resource + `/${id}`);
   },
 
   createNewFA(context: Context, FA: CreateFa) {
-    return context.$axios.post<HttpStringified<Fa>>(resource, FA);
+    return context.$axios.post<HttpStringified<FA>>(resource, FA);
   },
 
   deleteFA(context: Context, id: number) {
@@ -63,7 +53,7 @@ export default {
   },
 
   updateFA(context: Context, id: number, FA: FaGeneralUpdate) {
-    return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, FA);
+    return context.$axios.post<HttpStringified<FA>>(resource + `/${id}`, FA);
   },
 
   updateFACollaborators(
@@ -120,11 +110,10 @@ export default {
     return context.$axios.delete(`/fa-electricity-needs/${id}`);
   },
 
-  updateFAComments(context: Context, id: number, comments: FaFeedback[]) {
-    const comments_update: FaFeedback[] = omitAuthors(comments);
-    return context.$axios.post<FaFeedback[]>(
-      `/fa-comment/${id}`,
-      comments_update
+  addFAFeedback(context: Context, faId: number, feedback: FeedbackCreation) {
+    return context.$axios.post<HttpStringified<SavedFeedback>>(
+      `${resource}/${faId}/feedback`,
+      feedback
     );
   },
 

@@ -192,9 +192,9 @@ export class FaService {
     });
   }
 
-  private buildFindCondition({ isDeleted: is_deleted, status }: SearchFa) {
+  private buildFindCondition({ isDeleted, status }: SearchFa) {
     const statusCondition = status ? { status } : {};
-    return { is_deleted, ...statusCondition };
+    return { isDeleted, ...statusCondition };
   }
 
   private async checkFaExistence(id: number): Promise<void> {

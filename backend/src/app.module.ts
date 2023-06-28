@@ -11,13 +11,13 @@ import { CollaboratorModule } from './collaborator/collaborator.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { FaModule } from './fa/fa.module';
-import { FaCommentModule } from './fa_comment/fa_comment.module';
 import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
 import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
 import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
+import { FaTimeWindowsModule } from './fa_time_windows/fa_time_windows.module';
 import { FriendModule } from './friend/friend.module';
+import { FtFeedbackModule } from './ft-feedback/ftFeedback.module';
 import { FtModule } from './ft/ft.module';
-import { FtFeedbackModule } from './ft_feedback/ft_feedback.module';
 import { FtReviewsModule } from './ft_reviews/ft_reviews.module';
 import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
 import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
@@ -27,18 +27,18 @@ import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { InventoryModule } from './inventory/inventory.module';
 import { MailService } from './mail/mail.service';
+import { NeedHelpModule } from './need-help/needHelp.module';
+import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
 import { PermissionModule } from './permission/permission.module';
 import { PrismaService } from './prisma.service';
 import { SignaLocationModule } from './signa_location/signa_location.module';
 import { TeamModule } from './team/team.module';
-import { FaTimeWindowsModule } from './fa_time_windows/fa_time_windows.module';
+import { TimelineModule } from './timeline/timeline.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
-import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
 import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning.module';
-import { TimelineModule } from './timeline/timeline.module';
-import { NeedHelpModule } from './need-help/needHelp.module';
+import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
 
 @Module({
   imports: [
@@ -70,7 +70,7 @@ import { NeedHelpModule } from './need-help/needHelp.module';
       },
     }),
     FaSignaNeedsModule,
-    FaCommentModule,
+    FaFeedbackModule,
     FaTimeWindowsModule,
     FaElectricityNeedsModule,
     CatalogModule,

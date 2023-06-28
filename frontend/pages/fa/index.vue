@@ -169,7 +169,7 @@
 <script>
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { Status } from "~/utils/models/FA";
+import { FaStatus } from "~/utils/models/FA";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default {
@@ -302,7 +302,7 @@ export default {
           if (value === 2) {
             return (
               !this.isAnimationValidatedBy(FA, validatorId) &&
-              FA.status === Status.SUBMITTED
+              FA.status === FaStatus.SUBMITTED
             );
           }
           return true;

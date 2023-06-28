@@ -16,11 +16,10 @@ import { updateItemToList } from "~/utils/functions/list";
 import {
   Feedback,
   FeedbackCreation,
-  SubjectType,
+  FtFeedback,
+  FtFeedbackSubjectType,
 } from "~/utils/models/feedback";
 import {
-  castFTWithDate,
-  castTimeWindowWithDate,
   FT,
   FTCreation,
   FTPageId,
@@ -32,16 +31,18 @@ import {
   FTTimeWindow,
   FTUserRequest,
   FTUserRequestUpdate,
+  castFTWithDate,
+  castTimeWindowWithDate,
   getTimeWindowWithoutRequests,
   toUpdateFT,
 } from "~/utils/models/ft";
 import { FtTimespanParameters } from "~/utils/models/ftTimespan";
 import {
-  castGearRequestWithDate,
   GearRequestCreation,
   GearRequestWithDrive,
   Period,
   StoredGearRequest,
+  castGearRequestWithDate,
 } from "~/utils/models/gearRequests";
 import { Review, Reviewer } from "~/utils/models/review";
 import { Team } from "~/utils/models/team";
@@ -200,7 +201,7 @@ export const mutations = mutationTree(state, {
     mFT.reviews = mFT.reviews.filter((r) => !reviews.includes(r));
   },
 
-  ADD_FEEDBACK({ mFT }, feedback: Feedback) {
+  ADD_FEEDBACK({ mFT }, feedback: FtFeedback) {
     mFT.feedbacks = [...mFT.feedbacks, feedback];
   },
 
@@ -353,12 +354,12 @@ export const actions = actionTree(
 
       const authorName = formatUsername(author);
       const feedback: Feedback = {
-        subject: SubjectType.SUBMIT,
+        subject: FtFeedbackSubjectType.SUBMIT,
         comment: `La FT a été soumise à validation par ${authorName}.`,
         author,
         createdAt: new Date(),
       };
-      dispatch("addFeedback", { ...feedback, author });
+      dispatch("addFeedback", feedback);
     },
 
     async validate(
@@ -376,7 +377,7 @@ export const actions = actionTree(
       commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
-        subject: SubjectType.VALIDATED,
+        subject: FtFeedbackSubjectType.VALIDATED,
         comment: `La FT a été validée par ${team.name}.`,
         author,
         createdAt: new Date(),
@@ -399,7 +400,7 @@ export const actions = actionTree(
       commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
-        subject: SubjectType.REFUSED,
+        subject: FtFeedbackSubjectType.REFUSED,
         comment: `La FT a été refusée${message ? `: ${message}` : "."}`,
         author,
         createdAt: new Date(),
@@ -424,7 +425,7 @@ export const actions = actionTree(
       commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
-        subject: SubjectType.READY,
+        subject: FtFeedbackSubjectType.READY,
         comment: "Prête pour affectation !",
         author,
         createdAt: new Date(),
@@ -639,7 +640,7 @@ export const actions = actionTree(
       commit("DELETE_REVIEWS", validationReviews);
     },
 
-    async addFeedback({ commit, state }, feedback: Feedback) {
+    async addFeedback({ commit, state }, feedback: FtFeedback) {
       const feedbackCreation: FeedbackCreation = {
         ...feedback,
         authorId: feedback.author.id,

@@ -19,9 +19,9 @@ import {
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { FtFeedbackResponseDto } from './dto/ftFeedbackResponse.dto';
 import { CreateFtFeedbackDto } from './dto/createFtFeedback.dto';
-import { FtFeedbackService } from './ft_feedback.service';
+import { FtFeedbackResponseDto } from './dto/ftFeedbackResponse.dto';
+import { FtFeedbackService } from './ftFeedback.service';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -33,7 +33,7 @@ import { FtFeedbackService } from './ft_feedback.service';
 })
 @Controller('ft')
 export class FtFeedbackController {
-  constructor(private readonly ftFeedbacksService: FtFeedbackService) {}
+  constructor(private readonly ftFeedbackService: FtFeedbackService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
@@ -41,7 +41,7 @@ export class FtFeedbackController {
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'The ft feedbacks have been successfully created.',
+    description: 'The ft feedback have been successfully created.',
     type: FtFeedbackResponseDto,
   })
   @ApiParam({
@@ -56,8 +56,8 @@ export class FtFeedbackController {
   })
   create(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Body() createFtFeedbacksDto: CreateFtFeedbackDto,
+    @Body() feedback: CreateFtFeedbackDto,
   ): Promise<FtFeedbackResponseDto> {
-    return this.ftFeedbacksService.create(ftId, createFtFeedbacksDto);
+    return this.ftFeedbackService.create(ftId, feedback);
   }
 }
