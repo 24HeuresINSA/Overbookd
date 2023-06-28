@@ -4,6 +4,9 @@ export default {
   env: {
     BASE_URL: process.env.BASE_URL,
   },
+
+  telemetry: false,
+  
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
