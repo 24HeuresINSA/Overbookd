@@ -32,10 +32,10 @@
     "@nuxtjs/auth-next": "5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.3.5",
-    "chart.js": "^2.9.4",
     "@tiptap/pm": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
     "@tiptap/vue-2": "^2.0.3",
+    "chart.js": "^2.9.4",
     "core-js": "^3.31.0",
     "csv-parse": "^5.4.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -43,8 +43,8 @@
     "fuse.js": "^6.6.2",
     "nuxt": "^2.14.12",
     "nuxt-typed-vuex": "^0.3.1",
-    "vue-chartjs": "^3.5.1",
-    "remixicon": "^3.4.0"
+    "remixicon": "^3.4.0",
+    "vue-chartjs": "^3.5.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
@@ -60,7 +60,7 @@
     "@vue/cli-plugin-babel": "^5.0.8",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.18.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-nuxt": "^4.0.0",
