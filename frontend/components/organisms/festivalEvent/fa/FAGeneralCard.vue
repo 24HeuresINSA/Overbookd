@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, FaCardType, FaType } from "~/utils/models/FA";
+import { FA, FaCardType, FaType } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -66,7 +66,7 @@ export default Vue.extend({
     cardType: FaCardType.GENERAL,
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     teams(): Team[] {

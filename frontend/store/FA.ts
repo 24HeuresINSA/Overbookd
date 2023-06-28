@@ -438,11 +438,11 @@ export const actions = actionTree(
 
     refuse: async function (
       { dispatch, commit, state },
-      { validator_id, message, author }
+      { validatorId, message, author }
     ) {
       commit("UPDATE_STATUS", FaStatus.REFUSED);
       const body: FaValidationBody = {
-        teamId: validator_id,
+        teamId: validatorId,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
       const feedback: FaFeedback = {

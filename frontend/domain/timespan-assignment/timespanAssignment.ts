@@ -1,8 +1,8 @@
 import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import { Volunteer } from "~/utils/models/assignment";
+import { Period } from "~/utils/models/period";
 import { VolunteerTask } from "~/utils/models/user";
 import { getUnderlyingTeams } from "./underlying-teams";
-import { Period } from "~/utils/models/period";
 
 type TeamRequest = {
   teamCode: string;
@@ -183,8 +183,8 @@ export class TaskAssignment {
         teamCode: candidate.assignment,
         id: candidate.volunteer.id,
       }));
-    const timespanId = this.task.id;
-    return { volunteers, timespanId };
+    const timeSpanId = this.task.id;
+    return { volunteers, timeSpanId };
   }
 
   withCandidatesFriends(friends: Volunteer[]): TaskAssignment {

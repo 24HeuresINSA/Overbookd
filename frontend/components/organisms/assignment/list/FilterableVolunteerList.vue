@@ -17,7 +17,7 @@
         @select-volunteer="handleVolunteerSelection"
       ></VolunteerList>
       <div v-else class="error-message">
-        <p v-if="!selectedTimespan">Aucun créneau séléctionné</p>
+        <p v-if="!selectedTimeSpan">Aucun créneau séléctionné</p>
         <p v-else>Aucun bénévole disponible pour ce créneau</p>
       </div>
       <FriendsDisplay
@@ -42,7 +42,7 @@ import {
   AssignmentModes,
   getAssignmentModeFromRoute,
 } from "~/utils/models/assignment";
-import { FtTimespan } from "~/utils/models/ftTimespan";
+import { FtTimeSpan } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",
@@ -72,13 +72,13 @@ export default Vue.extend({
     hasSelectedVolunteer(): boolean {
       return !!this.$accessor.assignment.selectedVolunteer;
     },
-    selectedTimespan(): FtTimespan | null {
-      return this.$accessor.assignment.selectedTimespan;
+    selectedTimeSpan(): FtTimeSpan | null {
+      return this.$accessor.assignment.selectedTimeSpan;
     },
     shouldShowVolunteerList(): boolean {
       return (
         this.isOrgaTaskMode ||
-        (this.selectedTimespan !== null && this.filteredVolunteers.length > 0)
+        (this.selectedTimeSpan !== null && this.filteredVolunteers.length > 0)
       );
     },
   },

@@ -149,7 +149,7 @@ import {
   elecWarnings,
   waterWarnings,
 } from "~/utils/rules/faValidationRules";
-import { Fa, SortedStoredGearRequests } from "~/utils/models/FA";
+import { FA, SortedStoredGearRequests } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FACheckBeforeSubmitCard",
@@ -157,7 +157,7 @@ export default Vue.extend({
     FA(): any {
       return this.$accessor.FA;
     },
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     allSortedGearRequests(): SortedStoredGearRequests {

@@ -64,7 +64,7 @@ import {
 } from "~/utils/festivalEvent/faUtils";
 import {
   Collaborator,
-  Fa,
+  FA,
   FaCardType,
   FaCollaborator,
 } from "~/utils/models/FA";
@@ -79,7 +79,7 @@ export default Vue.extend({
     isCollaboratorRequired: false,
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     collaborators(): FaCollaborator[] {

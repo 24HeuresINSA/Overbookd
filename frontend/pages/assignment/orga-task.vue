@@ -3,13 +3,13 @@
     <FilterableVolunteerList class="volunteer-list" />
     <OrgaTaskCalendar
       class="calendar"
-      @display-timespan-details="openTimespanDetailsDialog"
+      @display-time-span-details="openTimeSpanDetailsDialog"
     />
-    <FilterableTimespanList class="task-list" />
+    <FilterableTimeSpanList class="task-list" />
     <SnackNotificationContainer />
 
-    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
-      <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
+      <TimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
     </v-dialog>
   </v-container>
 </template>
@@ -17,23 +17,23 @@
 <script lang="ts">
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
-import FilterableTimespanList from "~/components/organisms/assignment/list/FilterableTimespanList.vue";
+import FilterableTimeSpanList from "~/components/organisms/assignment/list/FilterableTimeSpanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
+import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
 
 export default Vue.extend({
   name: "OrgaTask",
   components: {
     FilterableVolunteerList,
-    FilterableTimespanList,
+    FilterableTimeSpanList,
     OrgaTaskCalendar,
     SnackNotificationContainer,
-    TimespanDetails,
+    TimeSpanDetails,
   },
   data: () => ({
-    displayTimespanDetailsDialog: false,
+    displayTimeSpanDetailsDialog: false,
   }),
   head: () => ({
     title: "Affect Orga-Tâche",
@@ -56,12 +56,12 @@ export default Vue.extend({
     this.$accessor.assignment.selectVolunteer(volunteer);
   },
   methods: {
-    closeTimespanDetailsDialog() {
-      this.displayTimespanDetailsDialog = false;
+    closeTimeSpanDetailsDialog() {
+      this.displayTimeSpanDetailsDialog = false;
     },
-    openTimespanDetailsDialog(timespanId: number) {
-      this.$accessor.assignment.fetchTimespanDetails(timespanId);
-      this.displayTimespanDetailsDialog = true;
+    openTimeSpanDetailsDialog(timeSpanId: number) {
+      this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
+      this.displayTimeSpanDetailsDialog = true;
     },
   },
 });

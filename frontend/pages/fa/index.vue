@@ -84,22 +84,20 @@
             <nuxt-link
               :to="`/fa/${item.id}`"
               :style="
-                item.is_deleted === true
+                item.isDeleted === true
                   ? `text-decoration:line-through;`
                   : `text-decoration:none;`
               "
               >{{ item.name ? item.name : "" }}
             </nuxt-link>
           </template>
-          <template #[`item.Team`]="{ item }">
+          <template #[`item.team`]="{ item }">
             {{ item.Team ? item.Team.name : "" }}
           </template>
-          <template #[`item.user_in_charge`]="{ item }">
+          <template #[`item.userInCharge`]="{ item }">
             {{
-              item.user_in_charge
-                ? item.user_in_charge.firstname +
-                  " " +
-                  item.user_in_charge.lastname
+              item.userInCharge
+                ? item.userInCharge.firstname + " " + item.userInCharge.lastname
                 : ""
             }}
           </template>
@@ -191,7 +189,7 @@ export default {
         { text: "Validation", value: "validation" },
         { text: "Nom", value: "name" },
         { text: "Equipe", value: "Team" },
-        { text: "Resp", value: "user_in_charge" },
+        { text: "Resp", value: "userInCharge" },
         { text: "Action", value: "action", sortable: false },
       ],
       color: {
@@ -326,12 +324,12 @@ export default {
       return FAs.filter((FA) => FA?.status === s.at(status));
     },
     isAnimationValidatedBy(FA, validatorId) {
-      return FA.fa_validation.some(
+      return FA.faValidation.some(
         (validation) => validation.Team.id === parseInt(validatorId)
       );
     },
     isAnimationRefusedBy(FA, validatorId) {
-      return FA.fa_refuse?.some(
+      return FA.faRefuse?.some(
         (refuse) => refuse.Team.id === parseInt(validatorId)
       );
     },
@@ -362,16 +360,16 @@ export default {
     },
     getValidatorColor(fa, validator) {
       let color = "grey";
-      if (fa.fa_validation) {
-        fa.fa_validation.forEach((validation) => {
-          if (Number(validation.Team.id) === Number(validator.id)) {
+      if (fa.faValidation) {
+        fa.faValidation.forEach((validation) => {
+          if (Number(validation.team.id) === Number(validator.id)) {
             color = "green";
           }
         });
       }
       if (fa.fa_refuse) {
         fa.fa_refuse.forEach((validation) => {
-          if (Number(validation.Team.id) === Number(validator.id)) {
+          if (Number(validation.team.id) === Number(validator.id)) {
             color = "red";
           }
         });

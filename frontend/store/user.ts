@@ -228,7 +228,7 @@ export const actions = actionTree(
         errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
       });
       if (!res) return;
-      const user = { ...state.selectedUser, is_deleted: true };
+      const user = { ...state.selectedUser, isDeleted: true };
       commit("UPDATE_USER", user);
       if (user.id === state.me.id) commit("SET_USER", user);
     },

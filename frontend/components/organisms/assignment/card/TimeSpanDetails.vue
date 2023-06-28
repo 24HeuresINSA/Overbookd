@@ -123,52 +123,52 @@ import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
 import { UpdateAssignedTeam } from "~/utils/models/assignment";
 import {
-  TimespanAssignee,
-  TimespanWithAssignees,
-} from "~/utils/models/ftTimespan";
+  TimeSpanAssignee,
+  TimeSpanWithAssignees,
+} from "~/utils/models/ftTimeSpan";
 import { User } from "~/utils/models/user";
 import { isNumber, isString } from "~/utils/types/check";
 
 export default Vue.extend({
-  name: "TimespanDetails",
+  name: "TimeSpanDetails",
   components: { TeamChip },
   data: () => ({
     selectedAssigneeId: null as number | null,
     selectedTeamToAssign: null as string | null,
   }),
   computed: {
-    timespan(): TimespanWithAssignees | null {
-      return this.$accessor.assignment.timespanToDisplayDetails;
+    timeSpan(): TimeSpanWithAssignees | null {
+      return this.$accessor.assignment.timeSpanToDisplayDetails;
     },
     task(): string {
-      if (!this.timespan) return "";
-      return `[${this.timespan.ft.id}] ${this.timespan.ft.name}`;
+      if (!this.timeSpan) return "";
+      return `[${this.timeSpan.ft.id}] ${this.timeSpan.ft.name}`;
     },
     location(): string {
-      if (!this.timespan) return "";
-      return this.timespan.ft.location;
+      if (!this.timeSpan) return "";
+      return this.timeSpan.ft.location;
     },
     timetable(): string {
-      if (!this.timespan) return "";
-      const start = formatDateToHumanReadable(this.timespan.start);
-      const end = formatDateToHumanReadable(this.timespan.end);
+      if (!this.timeSpan) return "";
+      const start = formatDateToHumanReadable(this.timeSpan.start);
+      const end = formatDateToHumanReadable(this.timeSpan.end);
       return `${start} - ${end}`;
     },
     requestedTeams(): string[] {
-      if (!this.timespan) return [];
-      return this.timespan.requestedTeams.map((team) => team.code);
+      if (!this.timeSpan) return [];
+      return this.timeSpan.requestedTeams.map((team) => team.code);
     },
     requiredVolunteers(): User[] {
-      if (!this.timespan) return [];
-      return this.timespan.requiredVolunteers;
+      if (!this.timeSpan) return [];
+      return this.timeSpan.requiredVolunteers;
     },
-    assignees(): TimespanAssignee[] {
-      if (!this.timespan) return [];
-      return this.timespan.assignees;
+    assignees(): TimeSpanAssignee[] {
+      if (!this.timeSpan) return [];
+      return this.timeSpan.assignees;
     },
-    allTimespansTeamCodes(): string[] {
-      if (!this.timespan) return [];
-      return this.timespan.requestedTeams
+    allTimeSpansTeamCodes(): string[] {
+      if (!this.timeSpan) return [];
+      return this.timeSpan.requestedTeams
         .filter((team) => team.quantity > team.assignmentCount)
         .map((team) => team.code);
     },
@@ -200,10 +200,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    unassignVolunteer(assignee: TimespanAssignee) {
-      if (!this.timespan) return;
+    unassignVolunteer(assignee: TimeSpanAssignee) {
+      if (!this.timeSpan) return;
       this.$accessor.assignment.unassignVolunteer({
-        timespanId: this.timespan.id,
+        timeSpanId: this.timeSpan.id,
         assigneeId: assignee.id,
       });
     },
@@ -211,29 +211,29 @@ export default Vue.extend({
       this.$emit("close-dialog");
     },
     openFtInNewTab() {
-      if (!this.timespan) return;
-      const ftId = this.timespan.ft.id;
+      if (!this.timeSpan) return;
+      const ftId = this.timeSpan.ft.id;
       window.open(`/ft/${ftId}`, "_blank");
     },
     openCalendarInNewTab(assigneeId: number) {
       window.open(`/calendar/${assigneeId}`, "_blank");
     },
-    getAllVolunteerTeams(assignee: TimespanAssignee) {
+    getAllVolunteerTeams(assignee: TimeSpanAssignee) {
       const underlyingTeams = getUnderlyingTeams(assignee.teams);
       return [...underlyingTeams, ...assignee.teams];
     },
-    getAssignableTeamsForVolunteer(assignee: TimespanAssignee) {
+    getAssignableTeamsForVolunteer(assignee: TimeSpanAssignee) {
       const volunteerTeams = this.getAllVolunteerTeams(assignee);
-      const assignableTeams = this.allTimespansTeamCodes.filter(
+      const assignableTeams = this.allTimeSpansTeamCodes.filter(
         (team) =>
           volunteerTeams.includes(team) && team !== assignee.assignedTeam
       );
       return [assignee.assignedTeam, ...assignableTeams];
     },
-    canActivateAssignedTeamUpdate(assignee: TimespanAssignee): boolean {
+    canActivateAssignedTeamUpdate(assignee: TimeSpanAssignee): boolean {
       return this.getAssignableTeamsForVolunteer(assignee).length > 1;
     },
-    toggleUpdateAssignedTeam(assignee: TimespanAssignee) {
+    toggleUpdateAssignedTeam(assignee: TimeSpanAssignee) {
       if (this.isUpdateAssignedTeamActive) {
         this.cancelUpdateAssignedTeam();
         return;
@@ -255,19 +255,19 @@ export default Vue.extend({
       this.selectedTeamToAssign = null;
     },
     canUpdateAssignedTeam(input: {
-      timespanId?: number | null;
+      timeSpanId?: number | null;
       assigneeId: number | null;
       team: string | null;
     }): input is UpdateAssignedTeam {
       return (
-        isNumber(input.timespanId) &&
+        isNumber(input.timeSpanId) &&
         isNumber(input.assigneeId) &&
         isString(input.team)
       );
     },
-    updateAssignedTeam(assignee: TimespanAssignee) {
+    updateAssignedTeam(assignee: TimeSpanAssignee) {
       const updateAssignedTeamForm = {
-        timespanId: this.timespan?.id,
+        timeSpanId: this.timeSpan?.id,
         assigneeId: this.selectedAssigneeId,
         team: this.selectedTeamToAssign,
       };

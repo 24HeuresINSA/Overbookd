@@ -11,7 +11,7 @@
       </template>
 
       <template #[`item.type`]="{ item }">
-        <label :style="item.is_deleted ? 'background-color: red' : ''">
+        <label :style="item.isDeleted ? 'background-color: red' : ''">
           {{ item.type }}
         </label>
       </template>
@@ -36,7 +36,7 @@
         }}
       </template>
 
-      <template #[`item.created_at`]="{ item }">
+      <template #[`item.createdAt`]="{ item }">
         {{
           new Date(item.created_at).toLocaleString("fr", {
             timezone: "Europe/Paris",
@@ -46,7 +46,7 @@
 
       <template #[`item.action`]="{ item }">
         <v-btn
-          v-if="!item.is_deleted"
+          v-if="!item.isDeleted"
           icon
           small
           @click="deleteTransaction(item.id)"
@@ -87,7 +87,7 @@ export default {
           value: "to",
         },
         { text: "Contexte", value: "context" },
-        { text: "Date", value: "created_at" },
+        { text: "Date", value: "createdAt" },
         {
           text: "Montant",
           value: "amount",

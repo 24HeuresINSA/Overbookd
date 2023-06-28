@@ -58,7 +58,7 @@
               <template v-if="hasPermission('bureau')">
                 <p>Cotisation</p>
                 <v-btn-toggle
-                  v-model="filters.hasPayedContribution"
+                  v-model="filters.hasPayedContributions"
                   tile
                   color="deep-purple accent-3"
                   group
@@ -218,7 +218,7 @@ export default {
         search: undefined,
         teams: [],
         isValidated: undefined,
-        hasPayedContribution: undefined,
+        hasPayedContributions: undefined,
       },
 
       isUserDialogOpen: false,
@@ -240,7 +240,7 @@ export default {
 
   computed: {
     users() {
-      return this.$accessor.user.users.filter(({ is_deleted }) => !is_deleted);
+      return this.$accessor.user.users.filter(({ isDeleted }) => !isDeleted);
     },
     teams() {
       return this.$accessor.team.allTeams;
@@ -367,7 +367,7 @@ export default {
           user.department,
           user.year,
           user.balance,
-          user.has_payed_contributions,
+          user.hasPayedContributions,
           user.comment?.replace(lineReturnRegex, " ") ?? "",
         ].join(";");
       });
@@ -449,11 +449,11 @@ export default {
       }
 
       // filter by payed contributions
-      if (this.filters.hasPayedContribution !== undefined) {
-        if (this.filters.hasPayedContribution) {
-          mUsers = mUsers.filter((user) => user.has_payed_contributions);
+      if (this.filters.hasPayedContributions !== undefined) {
+        if (this.filters.hasPayedContributions) {
+          mUsers = mUsers.filter((user) => user.hasPayedContributions);
         } else {
-          mUsers = mUsers.filter((user) => !user.has_payed_contributions);
+          mUsers = mUsers.filter((user) => !user.hasPayedContributions);
         }
         this.options.page = 1; // reset page
       }

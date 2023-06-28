@@ -177,8 +177,8 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { formatDate } from "~/utils/date/dateUtils";
-import { MyUserInformation } from "~/utils/models/user";
-import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
+import { MyUserInformation, User } from "~/utils/models/user";
+import { FA, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
 
 interface BrakeDownDate {
   year: number;
@@ -222,7 +222,7 @@ export default Vue.extend({
     matosOwners: ["matos", "barrieres", "elec"],
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     type(): TimeWindowType {
@@ -360,7 +360,12 @@ export default Vue.extend({
       this.isConfirmationDialogOpen = true;
     },
     resetLogValidations() {
-      this.$accessor.FA.resetLogValidations({ author: this.me });
+      const author: User = {
+        id: this.me.id,
+        firstname: this.me.firstname,
+        lastname: this.me.lastname,
+      };
+      this.$accessor.FA.resetLogValidations(author);
       this.confirmTimeWindow();
     },
     closeAllDialogs() {

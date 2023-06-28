@@ -1,7 +1,7 @@
 <template>
   <v-card class="filterable-task-list">
     <v-card-text class="filterable-task-list__text">
-      <FtTimespanFilters
+      <FtTimeSpanFilters
         :list-length="filteredFts.length"
         class="filters"
         type="ft"
@@ -9,7 +9,7 @@
         @change:teams="teams = $event"
         @change:category="category = $event"
         @change:completed="completed = $event"
-      ></FtTimespanFilters>
+      ></FtTimeSpanFilters>
       <v-divider />
       <TaskList :fts="filteredFts" class="task-list" />
     </v-card-text>
@@ -19,20 +19,20 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
+import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
 import {
-  FtWithTimespan,
+  FtWithTimeSpan,
   TaskCategory,
   TaskPriority,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 import { Team } from "~/utils/models/team";
-import { TaskPriorities } from "~/utils/models/ftTimespan";
+import { TaskPriorities } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
   name: "FilterableTaskList",
-  components: { FtTimespanFilters, TaskList },
+  components: { FtTimeSpanFilters, TaskList },
   data: () => ({
     completed: false,
     teams: [] as Team[],
@@ -40,7 +40,7 @@ export default Vue.extend({
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
-    filteredFts(): FtWithTimespan[] {
+    filteredFts(): FtWithTimeSpan[] {
       const filteredFts = this.$accessor.assignment.fts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&
@@ -54,12 +54,12 @@ export default Vue.extend({
   methods: {
     filterFtByTeamRequests(
       teamsSearched: Team[]
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTimeSpan) => boolean {
       return teamsSearched.length > 0
         ? (ft) =>
             teamsSearched.every((teamSearched) =>
               getRequiredTeamsInFt(ft).some(
-                (timespanTeamCode) => teamSearched.code === timespanTeamCode
+                (timeSpanTeamCode) => teamSearched.code === timeSpanTeamCode
               )
             )
         : () => true;
@@ -71,7 +71,7 @@ export default Vue.extend({
     },
     filterFtByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTimeSpan) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
         return this.filterByPriority(categorySearched);
@@ -80,7 +80,7 @@ export default Vue.extend({
     },
     filterFtByCategory(
       categorySearched: TaskCategory
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTimeSpan) => boolean {
       return (ft) => {
         if (categorySearched === "AUCUNE") return ft.category === null;
         return ft.category === categorySearched;
@@ -88,19 +88,19 @@ export default Vue.extend({
     },
     filterByPriority(
       prioritySearched: TaskPriority
-    ): (ft: FtWithTimespan) => boolean {
+    ): (ft: FtWithTimeSpan) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
     },
-    filterFtByQuantity({ timespans }: FtWithTimespan): boolean {
+    filterFtByQuantity({ timeSpans }: FtWithTimeSpan): boolean {
       if (this.completed) return true;
-      return timespans.some(({ requestedTeams }) =>
+      return timeSpans.some(({ requestedTeams }) =>
         requestedTeams.some(
           ({ quantity, assignmentCount }) => quantity > assignmentCount
         )
       );
     },
-    fuzzyFindFt(fts: FtWithTimespan[], search?: string): FtWithTimespan[] {
+    fuzzyFindFt(fts: FtWithTimeSpan[], search?: string): FtWithTimeSpan[] {
       if (!search) return fts;
       const fuse = new Fuse(fts, {
         keys: ["id", "name"],

@@ -29,11 +29,11 @@
               {{ item.amount.toFixed ? item.amount.toFixed(2) : item.amount }} €
             </template>
             <template #[`item.context`]="{ item }">
-              {{ item.is_deleted ? "[SUPPRIME] " : "" }}{{ item.context }}
+              {{ item.isDeleted ? "[SUPPRIME] " : "" }}{{ item.context }}
             </template>
-            <template #[`item.created_at`]="{ item }">
+            <template #[`item.createdAt`]="{ item }">
               {{
-                new Date(item.created_at).toLocaleDateString("fr-FR", {
+                new Date(item.createdAt).toLocaleDateString("fr-FR", {
                   timeZone: "Europe/Paris",
                 })
               }}
@@ -65,7 +65,7 @@ export default Vue.extend({
       headers: [
         { text: "type", value: "type" },
         { text: "context", value: "context" },
-        { text: "date", value: "created_at" },
+        { text: "date", value: "createdAt" },
         { text: "montant", value: "amount", align: "end" },
       ],
       areTransfersOpen: false,

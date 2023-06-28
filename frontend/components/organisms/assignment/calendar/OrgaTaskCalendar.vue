@@ -18,7 +18,7 @@
       <div
         class="event underline-on-hover"
         @mouseup.middle="openFtInNewTab(event.ft.id)"
-        @contextmenu.prevent="selectTimespanToDisplayDetails(event.timespanId)"
+        @contextmenu.prevent="selectTimeSpanToDisplayDetails(event.timeSpanId)"
       >
         {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
@@ -36,12 +36,12 @@ import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";
 import { CalendarEvent } from "~/utils/models/calendar";
-import { AvailableTimespan } from "~/utils/models/ftTimespan";
+import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
 import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
 interface CalendarItemWithTask extends CalendarEvent {
-  timespanId?: number;
+  timeSpanId?: number;
   ft: { id: number; name: string };
 }
 
@@ -65,32 +65,32 @@ export default Vue.extend({
     availabilities(): Availability[] {
       return this.$accessor.volunteerAvailability.mAvailabilities;
     },
-    hoverTimespan(): AvailableTimespan | null {
-      return this.$accessor.assignment.hoverTimespan;
+    hoverTimeSpan(): AvailableTimeSpan | null {
+      return this.$accessor.assignment.hoverTimeSpan;
     },
     assignedTasks(): CalendarItemWithTask[] {
       const tasks = [
         ...this.$accessor.user.selectedUserFtRequests,
         ...this.$accessor.user.selectedUserAssignments,
       ];
-      const timespans = this.hoverTimespan
-        ? [this.formatTimespanForCalendar(this.hoverTimespan)]
+      const timeSpans = this.hoverTimeSpan
+        ? [this.formatTimeSpanForCalendar(this.hoverTimeSpan)]
         : [];
       return [
         ...tasks.map((task) => this.formatTaskForCalendar(task)),
-        ...timespans,
+        ...timeSpans,
       ];
     },
     hourToScrollTo(): number | null {
-      return this.hoverTimespan?.start.getHours() ?? null;
+      return this.hoverTimeSpan?.start.getHours() ?? null;
     },
     stats(): VolunteerAssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
   },
   watch: {
-    hoverTimespan() {
-      this.calendarMarker = this.hoverTimespan?.start || this.manifDate;
+    hoverTimeSpan() {
+      this.calendarMarker = this.hoverTimeSpan?.start || this.manifDate;
     },
   },
   mounted() {
@@ -104,22 +104,22 @@ export default Vue.extend({
         isPeriodIncludedByAnother({ start, end })
       );
     },
-    selectTimespanToDisplayDetails(timespanId?: number) {
-      if (!timespanId) {
+    selectTimeSpanToDisplayDetails(timeSpanId?: number) {
+      if (!timeSpanId) {
         return this.$accessor.notif.pushNotification({
           message: "La FT n'est pas prête à être affectée",
         });
       }
-      this.$emit("display-timespan-details", timespanId);
+      this.$emit("display-time-span-details", timeSpanId);
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
-    formatTimespanForCalendar({
+    formatTimeSpanForCalendar({
       ft,
       start,
       end,
-    }: AvailableTimespan): CalendarItemWithTask {
+    }: AvailableTimeSpan): CalendarItemWithTask {
       return {
         start,
         end,
@@ -132,7 +132,7 @@ export default Vue.extend({
       ft,
       start,
       end,
-      timespanId,
+      timeSpanId,
     }: VolunteerTask): CalendarItemWithTask {
       return {
         start,
@@ -141,7 +141,7 @@ export default Vue.extend({
         color: getColorByStatus(ft.status),
         timed: true,
         ft,
-        timespanId,
+        timeSpanId,
       };
     },
   },

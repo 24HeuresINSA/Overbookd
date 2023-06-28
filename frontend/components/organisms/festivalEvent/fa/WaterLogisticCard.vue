@@ -34,7 +34,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { Fa } from "~/utils/models/FA";
+import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "WaterLogisticCard",
@@ -42,7 +42,7 @@ export default Vue.extend({
     owner: "elec",
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {

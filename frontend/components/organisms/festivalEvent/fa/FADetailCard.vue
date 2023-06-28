@@ -62,7 +62,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import { Fa, FaCardType } from "~/utils/models/FA";
+import { FA, FaCardType } from "~/utils/models/FA";
 import {
   isAnimationValidatedBy,
   getFAValidationStatus,
@@ -80,7 +80,7 @@ export default Vue.extend({
     isPublishable: false,
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {

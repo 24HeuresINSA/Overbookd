@@ -42,7 +42,7 @@
 <script lang="ts">
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
-import { Fa } from "~/utils/models/FA";
+import { FA } from "~/utils/models/FA";
 import { FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -57,7 +57,7 @@ export default Vue.extend({
     isNewFTDialogOpen: false,
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     childFTs(): FTSimplified[] {

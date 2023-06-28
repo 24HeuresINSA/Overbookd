@@ -103,7 +103,7 @@ import {
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import { Fa, FaCardType, FaSignaNeed, SignaType } from "~/utils/models/FA";
+import { FA, FaCardType, FaSignaNeed, SignaType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SignaCard",
@@ -131,7 +131,7 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     signalisations(): FaSignaNeed[] {

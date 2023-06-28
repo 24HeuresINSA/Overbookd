@@ -24,8 +24,8 @@
       :short-weekdays="false"
       @click:event="viewEvent"
     ></v-calendar>
-    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
-      <FTTimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
+      <FTTimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -35,16 +35,16 @@ import Vue from "vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarEvent } from "~/utils/models/calendar";
 import { FTStatus, FTTimeWindow } from "~/utils/models/ft";
-import FTTimespanDetails from "~/components/organisms/festivalEvent/ft/FTTimespanDetails.vue";
+import FTTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FTTimeSpanDetails.vue";
 
 type Event = CalendarEvent & {
-  timespanId?: number;
+  timeSpanId?: number;
 };
 
 export default Vue.extend({
   name: "FestivalEventCalendar",
   components: {
-    FTTimespanDetails,
+    FTTimeSpanDetails,
   },
   props: {
     festivalEvent: {
@@ -54,7 +54,7 @@ export default Vue.extend({
   },
   data: () => ({
     value: new Date(),
-    displayTimespanDetailsDialog: false,
+    displayTimeSpanDetailsDialog: false,
   }),
   computed: {
     manifDate(): Date {
@@ -71,7 +71,7 @@ export default Vue.extend({
     },
     faTimeWindows(): CalendarEvent[] {
       const animationTimeWindows: CalendarEvent[] = (
-        this.$accessor.FA.mFA.time_windows ?? []
+        this.$accessor.FA.mFA.timeWindows ?? []
       ).map((timeWindow) => ({
         start: timeWindow.start,
         end: timeWindow.end,
@@ -104,7 +104,7 @@ export default Vue.extend({
           name: "Tâche",
         }));
       }
-      return this.getTimespanEvents(timeWindows);
+      return this.getTimeSpanEvents(timeWindows);
     },
   },
   watch: {
@@ -131,15 +131,15 @@ export default Vue.extend({
       // @ts-ignore
       if (calendar) calendar.next();
     },
-    viewEvent({ event }: { event: { timespanId?: number } }) {
-      if (!event.timespanId) return;
-      this.$accessor.assignment.fetchTimespanDetails(event.timespanId);
-      this.displayTimespanDetailsDialog = true;
+    viewEvent({ event }: { event: { timeSpanId?: number } }) {
+      if (!event.timeSpanId) return;
+      this.$accessor.assignment.fetchTimeSpanDetails(event.timeSpanId);
+      this.displayTimeSpanDetailsDialog = true;
     },
-    getTimespanEvents(timeWindows: FTTimeWindow[]): Event[] {
-      return timeWindows.flatMap(({ timespans }) =>
-        timespans.map(({ id, start, end }) => ({
-          timespanId: id,
+    getTimeSpanEvents(timeWindows: FTTimeWindow[]): Event[] {
+      return timeWindows.flatMap(({ timeSpans }) =>
+        timeSpans.map(({ id, start, end }) => ({
+          timeSpanId: id,
           start,
           end,
           timed: true,
@@ -148,8 +148,8 @@ export default Vue.extend({
         }))
       );
     },
-    closeTimespanDetailsDialog() {
-      this.displayTimespanDetailsDialog = false;
+    closeTimeSpanDetailsDialog() {
+      this.displayTimeSpanDetailsDialog = false;
     },
   },
 });

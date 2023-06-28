@@ -1,19 +1,19 @@
 <template>
   <v-card class="filterable-timespan-list">
     <v-card-text class="filterable-timespan-list__text">
-      <FtTimespanFilters
-        :list-length="filteredTimespans.length"
+      <FtTimeSpanFilters
+        :list-length="filteredTimeSpans.length"
         class="filters"
-        @change:search="timespan = $event"
+        @change:search="timeSpan = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
-      ></FtTimespanFilters>
+      ></FtTimeSpanFilters>
       <v-divider />
-      <FtTimespanList
-        v-if="shouldShowTimespanList"
-        :timespans="filteredTimespans"
+      <FtTimeSpanList
+        v-if="shouldShowTimeSpanList"
+        :time-spans="filteredTimeSpans"
         class="timespan-list"
-      ></FtTimespanList>
+      ></FtTimeSpanList>
       <div v-else class="error-message">
         <p v-if="!selectedVolunteer">Aucun bénévole séléctionné</p>
         <p v-else>
@@ -27,52 +27,52 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import FtTimespanFilters from "~/components/molecules/assignment/filter/FtTimespanFilters.vue";
-import FtTimespanList from "~/components/molecules/assignment/list/FtTimespanList.vue";
+import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
+import FtTimeSpanList from "~/components/molecules/assignment/list/FtTimeSpanList.vue";
 import { Volunteer } from "~/utils/models/assignment";
 import {
-  AvailableTimespan,
+  AvailableTimeSpan,
   SimplifiedFT,
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 import { Team } from "~/utils/models/team";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timespanAssignment";
 
 export default Vue.extend({
-  name: "FilterableTimespanList",
-  components: { FtTimespanFilters, FtTimespanList },
+  name: "FilterableTimeSpanList",
+  components: { FtTimeSpanFilters, FtTimeSpanList },
   data: () => ({
     teams: [] as Team[],
-    timespan: "",
+    timeSpan: "",
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
-    filteredTimespans(): AvailableTimespan[] {
-      const filteredTimespans = this.$accessor.assignment.timespans
-        .filter((timespan) => this.isMatchingFilter(timespan))
-        .map((timespan) => this.removeUnavailableTeamRequests(timespan));
-      return this.fuzzyFindTimespan(filteredTimespans, this.timespan);
+    filteredTimeSpans(): AvailableTimeSpan[] {
+      const filteredTimeSpans = this.$accessor.assignment.timeSpans
+        .filter((timeSpan) => this.isMatchingFilter(timeSpan))
+        .map((timeSpan) => this.removeUnavailableTeamRequests(timeSpan));
+      return this.fuzzyFindTimeSpan(filteredTimeSpans, this.timeSpan);
     },
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
     },
-    shouldShowTimespanList(): boolean {
+    shouldShowTimeSpanList(): boolean {
       return (
-        this.selectedVolunteer !== null && this.filteredTimespans.length > 0
+        this.selectedVolunteer !== null && this.filteredTimeSpans.length > 0
       );
     },
   },
   methods: {
-    filterTimespansByTeams(
+    filterTimeSpansByTeams(
       teamsSearched: Team[]
-    ): (timespan: AvailableTimespan) => boolean {
+    ): (timeSpan: AvailableTimeSpan) => boolean {
       return teamsSearched.length > 0
-        ? (timespan) =>
+        ? (timeSpan) =>
             teamsSearched.every((teamSearched) =>
-              timespan.requestedTeams.some(
-                (timespanTeam) => teamSearched.code === timespanTeam.code
+              timeSpan.requestedTeams.some(
+                (timeSpanTeam) => teamSearched.code === timeSpanTeam.code
               )
             )
         : () => true;
@@ -108,26 +108,26 @@ export default Vue.extend({
       return candidate.canBeAssignedAs(teamCode);
     },
     removeUnavailableTeamRequests(
-      timespan: AvailableTimespan
-    ): AvailableTimespan {
-      const requestedTeams = timespan.requestedTeams.filter(
+      timeSpan: AvailableTimeSpan
+    ): AvailableTimeSpan {
+      const requestedTeams = timeSpan.requestedTeams.filter(
         ({ code, quantity, assignmentCount }) =>
           this.isVolunteerAssignableTo(code) && quantity > assignmentCount
       );
       return {
-        ...timespan,
+        ...timeSpan,
         requestedTeams,
       };
     },
-    isMatchingFilter(timespan: AvailableTimespan): boolean {
+    isMatchingFilter(timeSpan: AvailableTimeSpan): boolean {
       return (
-        this.hasAssignableSlotsAvailable(timespan) &&
-        this.filterTimespansByTeams(this.teams)(timespan) &&
-        this.filterFtByCatergoryOrPriority(this.category)(timespan.ft)
+        this.hasAssignableSlotsAvailable(timeSpan) &&
+        this.filterTimeSpansByTeams(this.teams)(timeSpan) &&
+        this.filterFtByCatergoryOrPriority(this.category)(timeSpan.ft)
       );
     },
-    hasAssignableSlotsAvailable(timespan: AvailableTimespan): boolean {
-      return timespan.requestedTeams.some(
+    hasAssignableSlotsAvailable(timeSpan: AvailableTimeSpan): boolean {
+      return timeSpan.requestedTeams.some(
         ({ code, quantity, assignmentCount }) => {
           if (!this.selectedVolunteer) return false;
           const candidate = new AssignmentCandidate(this.selectedVolunteer);
@@ -135,12 +135,12 @@ export default Vue.extend({
         }
       );
     },
-    fuzzyFindTimespan(
-      timespans: AvailableTimespan[],
+    fuzzyFindTimeSpan(
+      timeSpans: AvailableTimeSpan[],
       search?: string
-    ): AvailableTimespan[] {
-      if (!search) return timespans;
-      const fuse = new Fuse(timespans, {
+    ): AvailableTimeSpan[] {
+      if (!search) return timeSpans;
+      const fuse = new Fuse(timeSpans, {
         keys: ["ft.id", "ft.name"],
         threshold: 0.4,
       });

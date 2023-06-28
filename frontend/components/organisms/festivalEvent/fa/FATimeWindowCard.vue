@@ -87,9 +87,9 @@ import CardErrorList from "~/components/molecules/festivalEvent/validation/CardE
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Period } from "~/utils/models/gearRequests";
-import { MyUserInformation } from "~/utils/models/user";
+import { MyUserInformation, User } from "~/utils/models/user";
 import {
-  Fa,
+  FA,
   FaCardType,
   FaTimeWindow,
   TimeWindowType,
@@ -141,7 +141,7 @@ export default Vue.extend({
 
       return [...animationTimeWindows, ...gearTimeWindows];
     },
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     isValidatedByAnimOwner(): boolean {
@@ -178,7 +178,12 @@ export default Vue.extend({
       this.isConfirmationDialogOpen = true;
     },
     resetLogValidations() {
-      this.$accessor.FA.resetLogValidations({ author: this.me });
+      const author: User = {
+        id: this.me.id,
+        firstname: this.me.firstname,
+        lastname: this.me.lastname,
+      };
+      this.$accessor.FA.resetLogValidations(author);
       this.deleteTimeframe();
     },
     deleteTimeframe() {

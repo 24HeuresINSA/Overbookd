@@ -46,7 +46,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { Fa, FaCardType } from "~/utils/models/FA";
+import { FA, FaCardType } from "~/utils/models/FA";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
@@ -61,7 +61,7 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {

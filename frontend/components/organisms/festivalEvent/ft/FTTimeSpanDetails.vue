@@ -69,34 +69,34 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
-import { TimespanWithAssignees } from "~/utils/models/ftTimespan";
+import { TimeSpanWithAssignees } from "~/utils/models/ftTimeSpan";
 import { User } from "~/utils/models/user";
 import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "FTTimespanDetails",
+  name: "FTTimeSpanDetails",
   components: { TeamChip },
   computed: {
-    timespan(): TimespanWithAssignees | null {
-      return this.$accessor.assignment.timespanToDisplayDetails;
+    timeSpan(): TimeSpanWithAssignees | null {
+      return this.$accessor.assignment.timeSpanToDisplayDetails;
     },
     task(): string {
-      if (!this.timespan) return "";
-      return `[${this.timespan.ft.id}] ${this.timespan.ft.name}`;
+      if (!this.timeSpan) return "";
+      return `[${this.timeSpan.ft.id}] ${this.timeSpan.ft.name}`;
     },
     location(): string {
-      if (!this.timespan) return "";
-      return this.timespan.ft.location;
+      if (!this.timeSpan) return "";
+      return this.timeSpan.ft.location;
     },
     timetable(): string {
-      if (!this.timespan) return "";
-      const start = formatDateToHumanReadable(this.timespan.start);
-      const end = formatDateToHumanReadable(this.timespan.end);
+      if (!this.timeSpan) return "";
+      const start = formatDateToHumanReadable(this.timeSpan.start);
+      const end = formatDateToHumanReadable(this.timeSpan.end);
       return `${start} - ${end}`;
     },
     assignees(): User[] {
-      if (!this.timespan) return [];
-      return [...this.timespan.requiredVolunteers, ...this.timespan.assignees];
+      if (!this.timeSpan) return [];
+      return [...this.timeSpan.requiredVolunteers, ...this.timeSpan.assignees];
     },
     headers(): Header[] {
       const volunteer = {

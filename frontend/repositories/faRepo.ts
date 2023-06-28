@@ -83,11 +83,11 @@ export default {
   updateFATimeWindows(
     context: Context,
     id: number,
-    time_windows: FaTimeWindow[]
+    timeWindows: FaTimeWindow[]
   ) {
     return context.$axios.post<HttpStringified<FaTimeWindow>[]>(
       `/time-windows/${id}`,
-      time_windows
+      timeWindows
     );
   },
 

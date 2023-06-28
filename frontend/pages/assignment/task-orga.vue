@@ -3,7 +3,7 @@
     <FilterableVolunteerList class="volunteer-list" />
     <TaskOrgaCalendar
       class="calendar"
-      @display-timespan-details="openTimespanDetailsDialog"
+      @display-time-span-details="openTimeSpanDetailsDialog"
     />
     <FilterableTaskList class="task-list" />
     <SnackNotificationContainer />
@@ -11,8 +11,8 @@
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
       <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
     </v-dialog>
-    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
-      <TimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
+      <TimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
     </v-dialog>
   </v-container>
 </template>
@@ -24,8 +24,8 @@ import AssignmentForm from "~/components/organisms/assignment/card/AssignmentFor
 import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
-import TimespanDetails from "~/components/organisms/assignment/card/TimespanDetails.vue";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
+import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -34,17 +34,17 @@ export default Vue.extend({
     FilterableTaskList,
     TaskOrgaCalendar,
     AssignmentForm,
-    TimespanDetails,
+    TimeSpanDetails,
     SnackNotificationContainer,
   },
   data: () => ({
-    displayTimespanDetailsDialog: false,
+    displayTimeSpanDetailsDialog: false,
   }),
   head: () => ({
     title: "Affect Tâche-Orga",
   }),
   computed: {
-    ftWithTimespans(): FtWithTimespan[] {
+    ftWithTimeSpans(): FtWithTimeSpan[] {
       return this.$accessor.assignment.fts;
     },
     openTaskAssignmentDialog: {
@@ -58,18 +58,18 @@ export default Vue.extend({
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchFtsWithTimespans();
+    await this.$accessor.assignment.fetchFtsWithTimeSpans();
   },
   methods: {
     closeTaskAssignmentDialog() {
       this.openTaskAssignmentDialog = false;
     },
-    closeTimespanDetailsDialog() {
-      this.displayTimespanDetailsDialog = false;
+    closeTimeSpanDetailsDialog() {
+      this.displayTimeSpanDetailsDialog = false;
     },
-    openTimespanDetailsDialog(timespanId: number) {
-      this.$accessor.assignment.fetchTimespanDetails(timespanId);
-      this.displayTimespanDetailsDialog = true;
+    openTimeSpanDetailsDialog(timeSpanId: number) {
+      this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
+      this.displayTimeSpanDetailsDialog = true;
     },
   },
 });

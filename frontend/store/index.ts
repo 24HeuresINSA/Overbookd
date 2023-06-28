@@ -6,6 +6,7 @@ import * as catalog from "./catalog";
 import * as charismaPeriod from "./charismaPeriod";
 import * as config from "./config";
 import * as configuration from "./configuration";
+import * as dialog from "./dialog";
 import * as FA from "./FA";
 import * as FT from "./FT";
 import * as gearRequest from "./gearRequest";
@@ -42,6 +43,7 @@ export const accessorType = getAccessorType({
   mutations,
   actions,
   modules: {
+    dialog,
     notif,
     config,
     user,

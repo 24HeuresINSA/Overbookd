@@ -66,7 +66,7 @@ import {
   ElectricityTypeWithLabel,
   ElectricityType,
   ElectricityTypeLabel,
-  Fa,
+  FA,
   FaElectricityNeed,
 } from "~/utils/models/FA";
 import ElecLogisticForm from "~/components/molecules/festivalEvent/logistic/ElecLogisticForm.vue";
@@ -92,7 +92,7 @@ export default Vue.extend({
     selectedIndex: null as number | null,
   }),
   computed: {
-    mFA(): Fa {
+    mFA(): FA {
       return this.$accessor.FA.mFA;
     },
     electricityNeeds(): FaElectricityNeed[] {

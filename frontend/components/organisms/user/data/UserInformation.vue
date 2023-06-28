@@ -118,7 +118,7 @@
                 </v-col>
                 <v-col md="4">
                   <v-switch
-                    v-model="user.has_payed_contributions"
+                    v-model="user.hasPayedContributions"
                     label="Cotisation"
                     :disabled="!hasEditingRole"
                   ></v-switch>

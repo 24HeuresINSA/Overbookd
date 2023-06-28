@@ -27,19 +27,19 @@
           }"
         >
           <div
-            v-for="timespan in timeWindow.timespans"
-            :key="timespan.id"
+            v-for="timeSpan in timeWindow.timeSpans"
+            :key="timeSpan.id"
             class="timespan"
             :style="{
-              width: computeTimespanWidth(timeWindow, timespan),
+              width: computeTimeSpanWidth(timeWindow, timeSpan),
             }"
-            @click="openTimespanDetailsDialog(timespan.id)"
+            @click="openTimeSpanDetailsDialog(timeSpan.id)"
           ></div>
         </div>
       </div>
     </div>
-    <v-dialog v-model="displayTimespanDetailsDialog" width="1000px">
-      <FTTimespanDetails @close-dialog="closeTimespanDetailsDialog" />
+    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
+      <FTTimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -47,22 +47,22 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import FTTimespanDetails from "~/components/organisms/festivalEvent/ft/FTTimespanDetails.vue";
+import FTTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FTTimeSpanDetails.vue";
 import { Period } from "~/utils/models/period";
 import {
   TimelineEvent,
   TimelineFt,
   TimelineTimeWindow,
-  TimelineTimespan,
+  TimelineTimeSpan,
 } from "~/utils/models/timeline";
 import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 
 export default Vue.extend({
   name: "TimelineEvents",
-  components: { TeamChip, FTTimespanDetails },
+  components: { TeamChip, FTTimeSpanDetails },
   data: () => {
     return {
-      displayTimespanDetailsDialog: false,
+      displayTimeSpanDetailsDialog: false,
     };
   },
   computed: {
@@ -114,13 +114,13 @@ export default Vue.extend({
       const width = widthPercent(taskPeriod, timeWindowPeriod);
       return `${width.toFixed(2)}%`;
     },
-    computeTimespanWidth(
+    computeTimeSpanWidth(
       timeWindow: TimelineTimeWindow,
-      timespan: TimelineTimespan
+      timeSpan: TimelineTimeSpan
     ): string {
       const timeWindowPeriod = this.adjustPeriodToRange(timeWindow);
-      const timespanPeriod = this.adjustPeriodToRange(timespan);
-      const width = widthPercent(timeWindowPeriod, timespanPeriod);
+      const timeSpanPeriod = this.adjustPeriodToRange(timeSpan);
+      const width = widthPercent(timeWindowPeriod, timeSpanPeriod);
       return `${width.toFixed(2)}%`;
     },
     computeTaskLeftMargin(task: TimelineFt): string {
@@ -139,12 +139,12 @@ export default Vue.extend({
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
     },
-    openTimespanDetailsDialog(timespanId: number) {
-      this.$accessor.assignment.fetchTimespanDetails(timespanId);
-      this.displayTimespanDetailsDialog = true;
+    openTimeSpanDetailsDialog(timeSpanId: number) {
+      this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
+      this.displayTimeSpanDetailsDialog = true;
     },
-    closeTimespanDetailsDialog() {
-      this.displayTimespanDetailsDialog = false;
+    closeTimeSpanDetailsDialog() {
+      this.displayTimeSpanDetailsDialog = false;
     },
   },
 });

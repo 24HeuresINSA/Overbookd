@@ -20,9 +20,9 @@
 <script lang="ts">
 import Vue from "vue";
 import {
-  FtWithTimespan,
+  FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 import TaskResume from "../resume/TaskResume.vue";
 
 export default Vue.extend({
@@ -30,20 +30,20 @@ export default Vue.extend({
   components: { TaskResume },
   props: {
     fts: {
-      type: Array as () => FtWithTimespan[],
+      type: Array as () => FtWithTimeSpan[],
       required: true,
       default: () => [],
     },
   },
   methods: {
-    getRequiredTeams(ft: FtWithTimespan) {
+    getRequiredTeams(ft: FtWithTimeSpan) {
       return getRequiredTeamsInFt(ft);
     },
-    selectFt(ft: FtWithTimespan) {
+    selectFt(ft: FtWithTimeSpan) {
       if (!ft) return;
       this.$accessor.assignment.setSelectedFt(ft);
       this.$accessor.assignment.setVolunteers([]);
-      this.$accessor.assignment.fetchTimespansWithStats(ft.id);
+      this.$accessor.assignment.fetchTimeSpansWithStats(ft.id);
     },
     isSelected(id: number): boolean {
       return this.$accessor.assignment.selectedFt?.id === id;
