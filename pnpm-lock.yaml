@@ -321,9 +321,18 @@ importers:
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.3.2)(typescript@5.1.3)
+      typed-vuex:
+        specifier: ^0.3.1
+        version: 0.3.1(vuex@4.1.0)
       typescript:
         specifier: ^5.1.3
         version: 5.1.3
+      vue:
+        specifier: ^2.7.14
+        version: 2.7.14
+      vuex:
+        specifier: ^4.1.0
+        version: 4.1.0(vue@2.7.14)
 
 packages:
 
@@ -4896,7 +4905,6 @@ packages:
 
   /@vue/devtools-api@6.5.0:
     resolution: {integrity: sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==}
-    dev: false
 
   /@vue/web-component-wrapper@1.3.0:
     resolution: {integrity: sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==}
@@ -17856,7 +17864,6 @@ packages:
       vuex: ^3.6.2 || ^4.0.0
     dependencies:
       vuex: 4.1.0(vue@2.7.14)
-    dev: false
 
   /typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
@@ -18507,7 +18514,6 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.5.0
       vue: 2.7.14
-    dev: false
 
   /w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
