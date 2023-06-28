@@ -367,8 +367,8 @@ export default {
           }
         });
       }
-      if (fa.fa_refuse) {
-        fa.fa_refuse.forEach((validation) => {
+      if (fa.faRefuse) {
+        fa.faRefuse.forEach((validation) => {
           if (Number(validation.team.id) === Number(validator.id)) {
             color = "red";
           }

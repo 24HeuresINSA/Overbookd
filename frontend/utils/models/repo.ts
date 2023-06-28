@@ -20,8 +20,8 @@ export interface Expense {
   to: null;
   amount: number;
   context: string;
-  created_at: Date;
-  is_deleted: boolean;
+  createdAt: Date;
+  isDeleted: boolean;
 }
 
 export interface Deposit {
@@ -30,8 +30,8 @@ export interface Deposit {
   to: null;
   amount: number;
   context: string;
-  created_at: Date;
-  is_deleted: boolean;
+  createdAt: Date;
+  isDeleted: boolean;
 }
 
 export interface Transfer {
@@ -40,8 +40,8 @@ export interface Transfer {
   to: number;
   amount: number;
   context: string;
-  created_at: Date;
-  is_deleted: boolean;
+  createdAt: Date;
+  isDeleted: boolean;
 }
 
 export type Transaction = Expense | Deposit | Transfer;

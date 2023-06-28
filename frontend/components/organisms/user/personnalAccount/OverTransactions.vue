@@ -38,7 +38,7 @@
 
       <template #[`item.createdAt`]="{ item }">
         {{
-          new Date(item.created_at).toLocaleString("fr", {
+          new Date(item.createdAt).toLocaleString("fr", {
             timezone: "Europe/Paris",
           })
         }}
