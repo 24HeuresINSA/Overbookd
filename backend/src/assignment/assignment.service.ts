@@ -29,7 +29,7 @@ const SELECT_ASSIGNMENT = {
   teamRequestId: true,
 };
 
-function buildTimespanWithStatsSelection(timeSpanId: number, teamCode: string) {
+function buildTimeSpanWithStatsSelection(timeSpanId: number, teamCode: string) {
   return {
     ...SELECT_BASE_TIMESPAN,
     timeWindow: {
@@ -90,7 +90,7 @@ export type AssignmentStats = {
 export class AssignmentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async assignVolunteersToTimespan(
+  async assignVolunteersToTimeSpan(
     volunteers: VolunteerAssignmentRequest[],
     timeSpanId: number,
   ): Promise<Assignment[]> {
@@ -286,7 +286,7 @@ export class AssignmentService {
           teamRequests: { some: { teamCode } },
         },
       },
-      select: buildTimespanWithStatsSelection(timeSpanId, teamCode),
+      select: buildTimeSpanWithStatsSelection(timeSpanId, teamCode),
     });
   }
 

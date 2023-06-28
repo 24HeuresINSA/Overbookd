@@ -22,13 +22,13 @@ export class InMemoryTaskRepository implements TaskRepository {
   }
 
   private findAllOtherAssignees(task: JsonStoredTask, volunteerId: number) {
-    const assigneesFromOtherTimespans =
-      this.findAssigneesFromOtherTimespans(task);
-    const assignees = [...task.assignees, ...assigneesFromOtherTimespans];
+    const assigneesFromOtherTimeSpans =
+      this.findAssigneesFromOtherTimeSpans(task);
+    const assignees = [...task.assignees, ...assigneesFromOtherTimeSpans];
     return assignees.filter(({ id }) => id !== volunteerId);
   }
 
-  private findAssigneesFromOtherTimespans(task: JsonStoredTask) {
+  private findAssigneesFromOtherTimeSpans(task: JsonStoredTask) {
     return this.tasks
       .filter(isSimultaneousTask(task))
       .flatMap(({ assignees }) => assignees);

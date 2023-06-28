@@ -15,7 +15,6 @@ import teamRepo from "./teamRepo";
 import userRepo from "./userRepo";
 import { OrgaNeedsRepository } from "./orgaNeedsRepo";
 import { VolunteerAvailabilityRepository } from "./volunteerAvailabilityRepo";
-import { TimelineRepository } from "./timeline.repository";
 import { NeedHelpRepository } from "./needHelp.repository";
 
 const repositories = {
@@ -37,7 +36,6 @@ const repositories = {
   volunteerAvailability: VolunteerAvailabilityRepository,
   assignmentRepository: AssignmentRepository,
   orgaNeeds: OrgaNeedsRepository,
-  timeline: TimelineRepository,
   needHelp: NeedHelpRepository,
 };
 
@@ -63,6 +61,5 @@ export const RepoFactory = {
   VolunteerAvailabilityRepository,
   AssignmentRepository,
   OrgaNeedsRepository,
-  TimelineRepository,
   NeedHelpRepository,
 };

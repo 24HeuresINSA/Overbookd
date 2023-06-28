@@ -1,7 +1,7 @@
 import {
   FaStatus,
-  FtStatus,
   FtFeedbackSubjectType,
+  FtStatus,
   ReviewStatus,
 } from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from 'src/assignment/assignment.service';
@@ -46,7 +46,7 @@ export interface TimeWindow {
   timeSpans: TimeSpanBase[];
 }
 
-export interface Timespan {
+export interface TimeSpan {
   timeWindowId: number;
   start: Date;
   end: Date;

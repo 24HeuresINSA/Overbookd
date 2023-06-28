@@ -147,7 +147,7 @@ export class FtTimeSpanService {
     private user: UserService,
   ) {}
 
-  async findAllFtsWithTimespans(): Promise<FtWithTimeSpan[]> {
+  async findAllFtsWithTimeSpans(): Promise<FtWithTimeSpan[]> {
     const fts = await this.prisma.ft.findMany({
       where: {
         ...WHERE_EXISTS_AND_READY,
@@ -158,7 +158,7 @@ export class FtTimeSpanService {
     return this.formatFtsWithTimeSpans(fts);
   }
 
-  async findTimespansForFt(ftId: number): Promise<TimeSpan[]> {
+  async findTimeSpansForFt(ftId: number): Promise<TimeSpan[]> {
     const ft = await this.prisma.ft.findFirst({
       where: {
         id: ftId,
@@ -184,12 +184,12 @@ export class FtTimeSpanService {
       select: SELECT_TIMESPAN_WITH_FT,
     });
     if (!timeSpan) {
-      throw new NotFoundException(`Timespan with id ${timeSpanId} not found`);
+      throw new NotFoundException(`Time span with id ${timeSpanId} not found`);
     }
     return this.formatTimeSpanWithFt(timeSpan);
   }
 
-  async findTimespanWithAssignees(
+  async findTimeSpanWithAssignees(
     timeSpanId: number,
   ): Promise<TimeSpanWithAssignees> {
     const select = this.buildTimeSpanWithAssigneesSelection(timeSpanId);
@@ -214,12 +214,12 @@ export class FtTimeSpanService {
       select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
     });
     if (!ftTimeSpan) {
-      throw new NotFoundException(`Timespan with id ${timeSpanId} not found`);
+      throw new NotFoundException(`Time span with id ${timeSpanId} not found`);
     }
     return this.formatTimeSpanWithFtAndAssignees(ftTimeSpan);
   }
 
-  async findTimespansWithFtWhereVolunteerIsAssignableTo(
+  async findTimeSpansWithFtWhereVolunteerIsAssignableTo(
     volunteerId: number,
   ): Promise<AvailableTimeSpan[]> {
     const [volunteerTeams, availabilities, requests, assignments, friends] =
@@ -248,7 +248,7 @@ export class FtTimeSpanService {
   }
 
   async getTaskCategory(timeSpanId: number): Promise<TaskCategory | null> {
-    const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
+    const ftTimeSpan = await this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timeSpanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
@@ -265,10 +265,10 @@ export class FtTimeSpanService {
         },
       },
     });
-    if (!ftTimespan) {
+    if (!ftTimeSpan) {
       throw new NotFoundException(`Créneau ${timeSpanId} non trouvé`);
     }
-    return ftTimespan.timeWindow.ft.category;
+    return ftTimeSpan.timeWindow.ft.category;
   }
 
   private async findAllVolunteerFriends(
@@ -293,7 +293,7 @@ export class FtTimeSpanService {
     const teams = [...volunteerTeams, ...underlyingTeams];
     const teamRequests = TeamService.buildIsMemberOfCondition(teams);
 
-    const availabilitiesCondition = this.buildTimespanConditionOverAvailability(
+    const availabilitiesCondition = this.buildTimeSpanConditionOverAvailability(
       availabilities,
       busyPeriods,
     );
@@ -307,7 +307,7 @@ export class FtTimeSpanService {
     };
   }
 
-  private buildTimespanConditionOverAvailability(
+  private buildTimeSpanConditionOverAvailability(
     availabilities: PeriodDto[],
     busyPeriods: PeriodDto[],
   ) {
@@ -419,21 +419,21 @@ export class FtTimeSpanService {
   }
 
   private formatTimeSpanWithFt(
-    ftTimespan: DatabaseTimeSpanWithFt,
+    ftTimeSpan: DatabaseTimeSpanWithFt,
   ): TimeSpanWithFt {
     const requestedTeams = this.formatRequestedTeams(
-      ftTimespan.timeWindow.teamRequests,
-      ftTimespan.assignments,
+      ftTimeSpan.timeWindow.teamRequests,
+      ftTimeSpan.assignments,
     );
     return {
-      id: ftTimespan.id,
-      start: ftTimespan.start,
-      end: ftTimespan.end,
+      id: ftTimeSpan.id,
+      start: ftTimeSpan.start,
+      end: ftTimeSpan.end,
       ft: {
-        id: ftTimespan.timeWindow.ft.id,
-        name: ftTimespan.timeWindow.ft.name,
-        hasPriority: ftTimespan.timeWindow.ft.hasPriority,
-        category: ftTimespan.timeWindow.ft.category,
+        id: ftTimeSpan.timeWindow.ft.id,
+        name: ftTimeSpan.timeWindow.ft.name,
+        hasPriority: ftTimeSpan.timeWindow.ft.hasPriority,
+        category: ftTimeSpan.timeWindow.ft.category,
       },
       requestedTeams,
     };
@@ -442,7 +442,7 @@ export class FtTimeSpanService {
   private formatTimeSpanWithFtAndAssignees(
     timeSpan: DatabaseTimeSpanWithFtAndAssignees,
   ): TimeSpanWithFtAndAssignees {
-    const assignees = formatTimespanAssignees(timeSpan);
+    const assignees = formatTimeSpanAssignees(timeSpan);
     return {
       ...this.formatTimeSpanWithFt(timeSpan),
       assignees,
@@ -538,10 +538,10 @@ function convertToTimeSpan(
   };
 }
 
-function formatTimespanAssignees(
-  ftTimespan: DatabaseTimeSpanWithFtAndAssignees,
+function formatTimeSpanAssignees(
+  ftTimeSpan: DatabaseTimeSpanWithFtAndAssignees,
 ): number[] {
-  return ftTimespan.assignments.map(({ assignee }) => assignee.id);
+  return ftTimeSpan.assignments.map(({ assignee }) => assignee.id);
 }
 
 function convertToRequestedTeam(

@@ -1,5 +1,5 @@
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { TimeWindow, Timespan } from '../ft/ftTypes';
+import { TimeSpan, TimeWindow } from '../ft/ftTypes';
 import { ONE_HOUR_IN_MS } from '../utils/date';
 import { getPeriodDuration } from '../utils/duration';
 
@@ -23,25 +23,25 @@ type TimeSpanBuilderParams = {
 };
 
 export class TimeSpansGenerator {
-  static generateTimespans(timeWindow: LiteTimeWindow): Timespan[] {
+  static generateTimeSpans(timeWindow: LiteTimeWindow): TimeSpan[] {
     if (!TimeSpansGenerator.canBeSliced(timeWindow)) {
       throw new TimeSpansGeneratorException(DIVIDABLE_ERROR_MESSAGE);
     }
-    return TimeSpansGenerator.splitInTimespans(timeWindow);
+    return TimeSpansGenerator.splitInTimeSpans(timeWindow);
   }
 
-  private static splitInTimespans({
+  private static splitInTimeSpans({
     id,
     start,
     end,
     sliceTime,
     userRequests,
-  }: LiteTimeWindow): Timespan[] {
+  }: LiteTimeWindow): TimeSpan[] {
     const durationInHour = TimeSpansGenerator.computeDuration({ start, end });
     const stepDuration = sliceTime ?? durationInHour;
-    const nbTimespans = durationInHour / stepDuration;
-    return Array.from({ length: nbTimespans }).map(
-      TimeSpansGenerator.buildTimespan({
+    const nbTimeSpans = durationInHour / stepDuration;
+    return Array.from({ length: nbTimeSpans }).map(
+      TimeSpansGenerator.buildTimeSpan({
         start,
         userRequests,
         stepDuration,
@@ -50,7 +50,7 @@ export class TimeSpansGenerator {
     );
   }
 
-  private static buildTimespan({
+  private static buildTimeSpan({
     start,
     stepDuration,
     timeWindowId,

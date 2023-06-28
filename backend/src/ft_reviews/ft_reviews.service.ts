@@ -11,7 +11,7 @@ import { faStatus } from 'src/fa/fa.model';
 import { CreateFtFeedbackDto } from 'src/ft-feedback/dto/createFtFeedback.dto';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
-import { COMPLETE_FT_SELECT, Timespan } from 'src/ft/ftTypes';
+import { COMPLETE_FT_SELECT, TimeSpan } from 'src/ft/ftTypes';
 import { PrismaService } from '../prisma.service';
 import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
@@ -85,12 +85,12 @@ export class FtReviewsService {
       select: COMPLETE_FT_SELECT,
     });
 
-    const removeTimespans = this.removeFtTimespans(ftId);
+    const removeTimeSpans = this.removeFtTimeSpans(ftId);
 
     const [_, updatedFt] = await this.prisma.$transaction([
       upsertReview,
       updateStatus,
-      removeTimespans,
+      removeTimeSpans,
     ]);
     return this.ftService.convertFTtoApiContract(updatedFt);
   }
@@ -103,7 +103,7 @@ export class FtReviewsService {
     const ft = await this.retrieveCompleteFt(ftId);
     await this.checkSwitchableToReady(ft);
 
-    const timespans = this.computeTimespans(ft);
+    const timeSpans = this.computeTimeSpans(ft);
 
     this.logger.log(`Setting FT #${ftId} as READY`);
     const updateStatusCategoryPriority = this.prisma.ft.update({
@@ -116,9 +116,9 @@ export class FtReviewsService {
       select: COMPLETE_FT_SELECT,
     });
 
-    this.logger.log(`Creating timespans for FT #${ftId}`);
-    const insertTimespans =
-      this.createNestedTimespansWithAssignments(timespans);
+    this.logger.log(`Creating time spans for FT #${ftId}`);
+    const insertTimeSpans =
+      this.createNestedTimeSpansWithAssignments(timeSpans);
 
     const feedback: CreateFtFeedbackDto = {
       comment: 'Prête pour affectation !',
@@ -139,7 +139,7 @@ export class FtReviewsService {
     const [_, updatedFt] = await this.prisma.$transaction([
       insertFeedback,
       updateStatusCategoryPriority,
-      ...insertTimespans,
+      ...insertTimeSpans,
     ]);
 
     return this.ftService.convertFTtoApiContract(updatedFt);
@@ -210,8 +210,8 @@ export class FtReviewsService {
     });
   }
 
-  private computeTimespans(ft: DataBaseCompleteFt): Timespan[] {
-    return ft.timeWindows.flatMap(TimeSpansGenerator.generateTimespans);
+  private computeTimeSpans(ft: DataBaseCompleteFt): TimeSpan[] {
+    return ft.timeWindows.flatMap(TimeSpansGenerator.generateTimeSpans);
   }
 
   private async hasAtLeastOneConflict(ft: DataBaseCompleteFt): Promise<void> {
@@ -264,7 +264,7 @@ export class FtReviewsService {
     }
   }
 
-  private removeFtTimespans(ftId: number) {
+  private removeFtTimeSpans(ftId: number) {
     return this.prisma.ftTimeSpan.deleteMany({
       where: {
         timeWindow: {
@@ -274,8 +274,8 @@ export class FtReviewsService {
     });
   }
 
-  private createNestedTimespansWithAssignments(timespans: Timespan[]) {
-    return timespans.map((data) => {
+  private createNestedTimeSpansWithAssignments(timeSpans: TimeSpan[]) {
+    return timeSpans.map((data) => {
       const { assignments, ...timeSpan } = data;
       return this.prisma.ftTimeSpan.create({
         data: {

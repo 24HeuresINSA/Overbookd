@@ -297,7 +297,7 @@ describe('Planning', () => {
     });
     describe('volunteer also assigned during task', () => {
       describe(`Given task barrierage avenue des arts with:
-      - 18h00-02h00: Loic and Tristan + 20 volunteers on 2 hours timespans => with Ana and Ambre from 18h00 to 22h00 and Michel from 22h00 to 02h00
+      - 18h00-02h00: Loic and Tristan + 20 volunteers on 2 hours time spans => with Ana and Ambre from 18h00 to 22h00 and Michel from 22h00 to 02h00
       - 02h00-03h00: Loic and Tristan
       - 20h00-03h00: Constantin
       - 23h00-01h00: Antoine

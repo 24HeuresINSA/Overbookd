@@ -121,7 +121,7 @@ export class FtWithTimeSpansResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'The ft timespans',
+    description: 'The ft time spans',
     type: FtTimeSpanResponseDto,
     isArray: true,
   })
@@ -142,7 +142,7 @@ class AssigneeRepresentation implements Assignee {
   teams: string[];
 }
 
-class TimespanAssigneeRepresentation
+class TimeSpanAssigneeRepresentation
   extends AssigneeRepresentation
   implements TimeSpanAssignee
 {
@@ -150,7 +150,7 @@ class TimespanAssigneeRepresentation
   friends: AssigneeRepresentation[];
 }
 
-export class TimespanWithAssigneesResponseDto
+export class TimeSpanWithAssigneesResponseDto
   extends FtTimeSpanResponseDto
   implements TimeSpanWithAssignees
 {
@@ -172,7 +172,7 @@ export class TimespanWithAssigneesResponseDto
   @ApiProperty({
     required: true,
     description: 'Volunteer assigned on this time span as team member',
-    type: TimespanAssigneeRepresentation,
+    type: TimeSpanAssigneeRepresentation,
     isArray: true,
   })
   assignees: TimeSpanAssignee[];

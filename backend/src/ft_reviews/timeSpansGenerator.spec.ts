@@ -1,16 +1,16 @@
 import { TimeSpansGenerator } from './timeSpansGenerator';
 
-describe('Timespans Generator', () => {
+describe('Time spans Generator', () => {
   describe('when time window is not sliced', () => {
-    it('should return a single timespan', () => {
-      const timespans = TimeSpansGenerator.generateTimespans({
+    it('should return a single time span', () => {
+      const timeSpans = TimeSpansGenerator.generateTimeSpans({
         id: 1,
         start: new Date('2023-05-13 10:00'),
         end: new Date('2023-05-13 12:30'),
         sliceTime: null,
         userRequests: [],
       });
-      expect(timespans).toEqual([
+      expect(timeSpans).toEqual([
         {
           timeWindowId: 1,
           start: new Date('2023-05-13 10:00'),
@@ -24,7 +24,7 @@ describe('Timespans Generator', () => {
     describe('when time window duration is not dividable by slice time', () => {
       it('should inform that the time window duration is not dividable by the slice time', () => {
         expect(() => {
-          TimeSpansGenerator.generateTimespans({
+          TimeSpansGenerator.generateTimeSpans({
             id: 1,
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 12:01'),
@@ -35,15 +35,15 @@ describe('Timespans Generator', () => {
       });
     });
     describe('when time window duration is the slice time', () => {
-      it('should return a single timespan', () => {
-        const timespans = TimeSpansGenerator.generateTimespans({
+      it('should return a single time span', () => {
+        const timeSpans = TimeSpansGenerator.generateTimeSpans({
           id: 1,
           start: new Date('2023-05-13 10:00'),
           end: new Date('2023-05-13 11:00'),
           sliceTime: 1,
           userRequests: [],
         });
-        expect(timespans).toEqual([
+        expect(timeSpans).toEqual([
           {
             timeWindowId: 1,
             start: new Date('2023-05-13 10:00'),
@@ -55,16 +55,16 @@ describe('Timespans Generator', () => {
     });
     describe('when time window duration is dividable by the slice time', () => {
       describe('when time duration is 3h and slice time is 1h', () => {
-        it('should return 3 timespans', () => {
-          const timespans = TimeSpansGenerator.generateTimespans({
+        it('should return 3 time spans', () => {
+          const timeSpans = TimeSpansGenerator.generateTimeSpans({
             id: 1,
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 13:00'),
             sliceTime: 1,
             userRequests: [],
           });
-          expect(timespans).toHaveLength(3);
-          expect(timespans).toEqual([
+          expect(timeSpans).toHaveLength(3);
+          expect(timeSpans).toEqual([
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
@@ -87,16 +87,16 @@ describe('Timespans Generator', () => {
         });
       });
       describe('when time duration is 3h and slice time is 1.5h', () => {
-        it('should return 2 timespans', () => {
-          const timespans = TimeSpansGenerator.generateTimespans({
+        it('should return 2 time spans', () => {
+          const timeSpans = TimeSpansGenerator.generateTimeSpans({
             id: 1,
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 13:00'),
             sliceTime: 1.5,
             userRequests: [],
           });
-          expect(timespans).toHaveLength(2);
-          expect(timespans).toEqual([
+          expect(timeSpans).toHaveLength(2);
+          expect(timeSpans).toEqual([
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),
@@ -113,8 +113,8 @@ describe('Timespans Generator', () => {
         });
       });
       describe('when time duration is 3h and slice time is 1.5h and there is 2 userRequests', () => {
-        it('should return 2 timespans with 2 nested assignments', () => {
-          const timespans = TimeSpansGenerator.generateTimespans({
+        it('should return 2 time spans with 2 nested assignments', () => {
+          const timeSpans = TimeSpansGenerator.generateTimeSpans({
             id: 1,
             start: new Date('2023-05-13 10:00'),
             end: new Date('2023-05-13 13:00'),
@@ -140,8 +140,8 @@ describe('Timespans Generator', () => {
               },
             ],
           });
-          expect(timespans).toHaveLength(2);
-          expect(timespans).toEqual([
+          expect(timeSpans).toHaveLength(2);
+          expect(timeSpans).toEqual([
             {
               timeWindowId: 1,
               start: new Date('2023-05-13 10:00'),

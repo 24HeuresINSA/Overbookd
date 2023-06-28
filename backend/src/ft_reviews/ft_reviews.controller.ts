@@ -109,7 +109,7 @@ export class FtReviewsController {
   })
   @ApiBody({
     type: TimeSpanParametersDto,
-    description: 'Timespan parameters',
+    description: 'Time span parameters',
   })
   assignmentApproval(
     @Param('ftId', ParseIntPipe) ftId: number,
