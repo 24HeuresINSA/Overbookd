@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Store } from 'vuex'
+import { Store } from "vuex";
 import { accessorType } from "~/store";
 import { safeCall } from "utils/api/calls";
 
@@ -29,7 +29,7 @@ declare module "vue/types/vue" {
     $accessor: typeof accessorType;
     $safeCall: typeof safeCall;
     $auth: Auth;
-    $store: Store<unknown>
+    $store: Store<unknown>;
   }
 }
 
