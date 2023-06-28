@@ -38,7 +38,7 @@ import {
   TaskPriority,
 } from "~/utils/models/ftTimeSpan";
 import { Team } from "~/utils/models/team";
-import { AssignmentCandidate } from "~/domain/timespan-assignment/timespanAssignment";
+import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 
 export default Vue.extend({
   name: "FilterableTimeSpanList",

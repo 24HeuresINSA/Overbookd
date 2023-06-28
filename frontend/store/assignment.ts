@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import {
   AssignmentCandidate,
   TaskAssignment,
-} from "~/domain/timespan-assignment/timespanAssignment";
+} from "~/domain/timespan-assignment/timeSpanAssignment";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import {
