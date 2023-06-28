@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from '@jest/globals';
 import { PeriodOrchestrator } from './period-orchestrator';
 
 describe('Period orchestrator', () => {

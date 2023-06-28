@@ -1,4 +1,3 @@
-import { describe, expect, it } from '@jest/globals';
 import { formatDateWithMinutes } from '../../utils/date';
 import { Period } from './period.model';
 import { Availability } from './volunteer-availability';
